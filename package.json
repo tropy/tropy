@@ -23,7 +23,7 @@
   "engines": {
     "node": ">=5"
   },
-  "main": "index.js",
+  "main": "src/browser/main.js",
   "scripts": {
     "test": "electron-mocha",
     "start": "electron ."
