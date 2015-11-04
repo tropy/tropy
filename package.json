@@ -25,10 +25,12 @@
   },
   "main": "src/browser/main.js",
   "scripts": {
+    "lint": "eslint src test static",
     "test": "electron-mocha",
     "start": "electron ."
   },
   "devDependencies": {
-    "electron-prebuilt": "^0.34.2"
+    "electron-prebuilt": "^0.34.2",
+    "eslint": "^1.8.0"
   }
 }

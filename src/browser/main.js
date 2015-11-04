@@ -18,5 +18,5 @@ app
 
     win.loadUrl(`file://${ROOT}/static/index.html`);
 
-    win.once('closed', () => { win = undefined });
+    win.once('closed', () => { win = undefined; });
   });
