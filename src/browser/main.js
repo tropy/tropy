@@ -1,7 +1,7 @@
 'use strict';
 
 const app = require('app');
-const join = require('path').join;
+const { join } = require('path');
 const BrowserWindow = require('browser-window');
 
 const ROOT = join(__dirname, '../..');

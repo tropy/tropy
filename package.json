@@ -23,13 +23,17 @@
   "engines": {
     "node": ">=5"
   },
-  "main": "src/browser/main.js",
+  "main": "lib/browser/main.js",
   "scripts": {
+    "build": "babel -D -d lib src",
     "lint": "eslint src test static",
-    "test": "electron-mocha",
-    "start": "electron ."
+    "prepublish": "npm run build",
+    "start": "npm run build && electron .",
+    "test": "electron-mocha"
   },
   "devDependencies": {
+    "babel-cli": "^6.1.2",
+    "babel-plugin-transform-es2015-destructuring": "^6.0.18",
     "electron-prebuilt": "^0.34.2",
     "eslint": "^1.8.0"
   }
