@@ -28,7 +28,7 @@
     "build": "babel -D -d lib src",
     "lint": "eslint src test static",
     "start": "npm run build && electron .",
-    "test": "electron-mocha"
+    "test": "electron-mocha --renderer test"
   },
   "devDependencies": {
     "babel-cli": "^6.1.2",
