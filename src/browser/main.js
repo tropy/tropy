@@ -1,8 +1,7 @@
 'use strict';
 
-const app = require('app');
+const { app, BrowserWindow } = require('electron');
 const { join } = require('path');
-const BrowserWindow = require('browser-window');
 
 const ROOT = join(__dirname, '../..');
 
@@ -16,7 +15,7 @@ app
   .on('ready', () => {
     win = new BrowserWindow({});
 
-    win.loadUrl(`file://${ROOT}/static/index.html`);
+    win.loadURL(`file://${ROOT}/static/index.html`);
 
     win.once('closed', () => { win = undefined; });
   });
