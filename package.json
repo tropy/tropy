@@ -25,10 +25,12 @@
   },
   "main": "lib/browser/main.js",
   "scripts": {
-    "build": "babel -D -d lib src",
+    "build": "node scripts/build",
+    "clean": "node scripts/clean",
     "lint": "eslint src test static",
     "start": "npm run build && electron .",
-    "test": "electron-mocha --renderer test"
+    "test": "electron-mocha --renderer test",
+    "watch": "node scripts/watch"
   },
   "devDependencies": {
     "babel-cli": "^6.1.2",
