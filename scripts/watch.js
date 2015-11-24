@@ -2,12 +2,11 @@
 
 require('shelljs/make');
 
-const join = require('path').join;
-const babel = require('babel-core');
 const gaze = require('gaze');
 const electron = require('electron-connect').server.create();
 
-const cwd = process.cwd();
+const build = require('./build');
+
 
 target.all = () => {
   target.src();
@@ -18,14 +17,14 @@ target.src = () => {
   gaze('src/**/*.js', function (err) {
     if (err) return console.error(err);
 
-    this.on('all', (event, path) => {
-      console.log(event, path);
+    this.on('all', (event, file) => {
+      console.log(event, file);
 
       if (event === 'deleted') {
-        return rm(path);
+        return rm(file);
       }
 
-      compile(path, swap(path, 'src', 'lib'));
+      build.compile(file);
     });
   });
 };
@@ -36,21 +35,9 @@ target.lib = () => {
   gaze('lib/**/*.js', function (err)  {
     if (error) return console.error(err);
 
-    this.on('all', (event, path) => {
-      console.log(event, path);
-      electron[(/\/browser\//).test(path) ? 'restart' : 'reload']();
+    this.on('all', (event, file) => {
+      console.log(event, file);
+      electron[(/\/browser\//).test(file) ? 'restart' : 'reload']();
     });
   });
 };
-
-
-function compile(src, dst) {
-  babel.transformFile(src, (err, result) => {
-    if (err) return console.error(err);
-    result.code.to(dst);
-  });
-}
-
-function swap(path, src, dst) {
-  return path.replace(join(cwd, src), join(cwd, dst));
-}
