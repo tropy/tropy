@@ -33,7 +33,7 @@ target.lib = () => {
   electron.start();
 
   gaze('lib/**/*.js', function (err)  {
-    if (error) return console.error(err);
+    if (err) return console.error(err);
 
     this.on('all', (event, file) => {
       console.log(event, file);
