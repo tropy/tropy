@@ -28,7 +28,7 @@
     "clean": "node scripts/clean",
     "compile": "node scripts/compile",
     "lint": "eslint src test static",
-    "start": "npm run build && electron .",
+    "start": "npm run compile && electron .",
     "test": "electron-mocha --renderer test",
     "watch": "node scripts/watch"
   },
