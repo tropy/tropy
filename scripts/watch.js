@@ -30,6 +30,7 @@ target.src = () => {
 };
 
 target.lib = () => {
+  process.env.ELECTRON_CONNECT = 'true';
   electron.start();
 
   gaze('lib/**/*.js', function (err)  {

@@ -2,7 +2,6 @@
 
 const { app, BrowserWindow } = require('electron');
 const { join } = require('path');
-const { client } = require('electron-connect');
 
 const ROOT = join(__dirname, '../..');
 
@@ -18,8 +17,9 @@ app
 
     win.loadURL(`file://${ROOT}/static/index.html`);
 
-    // Enable live-reloading in dev environment
-    client.create(win);
+    if (process.env.ELECTRON_CONNECT) {
+      require('electron-connect').client.create(win);
+    }
 
     win.once('closed', () => { win = undefined; });
   });
