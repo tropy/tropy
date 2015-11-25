@@ -5,7 +5,7 @@ require('shelljs/make');
 const gaze = require('gaze');
 const electron = require('electron-connect').server.create();
 
-const build = require('./build');
+const compile = require('./compile');
 
 
 target.all = () => {
@@ -24,7 +24,7 @@ target.src = () => {
         return rm(file);
       }
 
-      build.compile(file);
+      compile.js(file);
     });
   });
 };

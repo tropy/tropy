@@ -25,8 +25,8 @@
   },
   "main": "lib/browser/main.js",
   "scripts": {
-    "build": "node scripts/build",
     "clean": "node scripts/clean",
+    "compile": "node scripts/compile",
     "lint": "eslint src test static",
     "start": "npm run build && electron .",
     "test": "electron-mocha --renderer test",

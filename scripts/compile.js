@@ -18,12 +18,12 @@ target.js = (args) => {
 
   glob(selection, function (err, files) {
     if (err) return console.error(err);
-    files.forEach(exports.compile);
+    files.forEach(exports.js);
   });
 };
 
 
-exports.compile = function (file) {
+exports.js = function (file) {
   let src = path.relative(home, file);
   let dst = src.replace('src', 'lib');
 
