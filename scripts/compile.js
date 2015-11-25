@@ -22,7 +22,6 @@ target.js = (args) => {
   });
 };
 
-
 exports.js = function (file) {
   let src = path.relative(home, file);
   let dst = src.replace('src', 'lib');
