@@ -31,6 +31,7 @@ target.pack = (args) => {
       '/node_modules/.bin',
       '/dist',
       '/src',
+      '/test',
       '/scripts'
     ]
 
