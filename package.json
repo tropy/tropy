@@ -30,7 +30,7 @@
     "compile": "node scripts/compile",
     "lint": "eslint src test static",
     "start": "npm run compile && electron .",
-    "test": "npm run lint && electron-mocha --renderer test",
+    "test": "node scripts/make test",
     "watch": "node scripts/watch"
   },
   "devDependencies": {
