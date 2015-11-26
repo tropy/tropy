@@ -22,7 +22,7 @@
     "Sylvester Keil <sylvester@keil.or.at>"
   ],
   "engines": {
-    "node": ">=5"
+    "node": ">=4"
   },
   "main": "lib/browser/main.js",
   "scripts": {
@@ -30,7 +30,7 @@
     "compile": "node scripts/compile",
     "lint": "eslint src test static",
     "start": "npm run compile && electron .",
-    "test": "npm run lint && electron-mocha --renderer test",
+    "test": "node scripts/make test",
     "watch": "node scripts/watch"
   },
   "devDependencies": {
