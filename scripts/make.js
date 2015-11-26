@@ -13,9 +13,11 @@ const lint = path.join(nbin, 'eslint');
 
 process.env.ELECTRON_PATH = require('electron-prebuilt');
 
+
 target.lint = () => {
   exec(`${lint} --color src test static scripts`);
 };
+
 
 target.test = () => {
   target['lint']();
@@ -24,20 +26,23 @@ target.test = () => {
 };
 
 target['test-renderer'] = (args) => {
-  let files = glob
-    .sync(args || 'test/**/*_test.js', { ignore: 'test/browser/*' });
+  let pattern = args || 'test/**/*_test.js';
+  let files = glob.sync(pattern, { ignore: 'test/browser/*' });
 
   exec(`${mocha} --renderer ${files.join(' ')}`, { silent: false });
 };
 
 target['test-browser'] = (args) => {
-  let files = glob.sync(args || 'test/browser/**/*_test.js');
+  let pattern = args || 'test/browser/**/*_test.js';
+  let files = glob.sync(pattern);
 
   exec(`${mocha} ${files.join(' ')}`, { silent: false });
 };
 
+
 target.compile = () => {
 };
+
 
 target.clean = () => {
   rm('-rf', path.join(home, 'lib'));
