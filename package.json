@@ -46,5 +46,8 @@
     "glob": "^6.0.1",
     "node-sass": "^3.4.2",
     "shelljs": "^0.5.3"
+  },
+  "dependencies": {
+    "yargs": "^3.30.0"
   }
 }
