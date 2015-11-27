@@ -26,9 +26,9 @@
   },
   "main": "lib/browser/main.js",
   "scripts": {
-    "clean": "node scripts/clean",
-    "compile": "node scripts/compile",
-    "lint": "eslint src test static",
+    "clean": "node scripts/make clean",
+    "compile": "node scripts/make compile",
+    "lint": "node scripts/make lint",
     "start": "npm run compile && electron .",
     "test": "node scripts/make test",
     "watch": "node scripts/watch"
@@ -44,6 +44,7 @@
     "eslint": "^1.8.0",
     "gaze": "^0.5.2",
     "glob": "^6.0.1",
+    "node-sass": "^3.4.2",
     "shelljs": "^0.5.3"
   }
 }

@@ -6,6 +6,7 @@ const assert = require('assert');
 const path = require('path');
 const babel = require('babel-core');
 const glob = require('glob');
+const sass = require('node-sass');
 
 const home = path.resolve(__dirname, '..');
 const nbin = path.resolve(home, 'node_modules', '.bin');
@@ -43,6 +44,8 @@ target['test-browser'] = (pattern) => {
 
 
 target.compile = () => {
+  target['compile-js']();
+  target['compile-css']();
 };
 
 target['compile-js'] = (pattern) => {
@@ -52,7 +55,7 @@ target['compile-js'] = (pattern) => {
 
     .on('match', (file) => {
       let src = path.relative(home, file);
-      let dst = src.replace('src', 'lib');
+      let dst = swap(src, 'src', 'lib', '.js');
 
       assert(src.startsWith('src'));
       console.log('compiling %s to %s', src, dst);
@@ -66,11 +69,46 @@ target['compile-js'] = (pattern) => {
     });
 };
 
+target['compile-css'] = (pattern) => {
+  new glob
+    .Glob(pattern || 'src/stylesheets/**/!(_*).{sass,scss}')
+    .on('error', (err) => fail('compile-css', err))
+
+    .on('match', (file) => {
+      let src = path.relative(home, file);
+      let dst = swap(src, 'src', 'lib', '.css');
+
+      assert(src.startsWith('src/stylesheets'));
+      console.log('compiling %s to %s', src, dst);
+
+      let options = {
+        file: src,
+        outFile: dst,
+        outputStyle: 'compressed',
+        sourceMap: true
+      };
+
+      sass.render(options, (err, result) => {
+        if (err) return fail('compile-css', `${err.line}: ${err.message}`);
+
+        mkdir('-p', path.dirname(dst));
+        String(result.css).to(dst);
+        String(result.map).to(`${dst}.map`);
+      });
+    });
+};
+
 target.clean = () => {
   rm('-rf', path.join(home, 'lib'));
   rm('-rf', path.join(home, 'dist'));
 };
 
+
+function swap(filename, src, dst, ext) {
+  return filename
+    .replace(src, dst)
+    .replace(/(\..+)$/, (m) => ext || m[1]);
+}
 
 function fail(mod, reason) {
   console.error('[%s] %s', mod, reason);
