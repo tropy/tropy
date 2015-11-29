@@ -98,6 +98,16 @@ target['compile-css'] = (pattern) => {
     });
 };
 
+
+target.link = () => {
+  let resources = (process.platform === 'darwin') ?
+   path.join(process.env.ELECTRON_PATH, 'Contents', 'Resources') :
+   path.resolve(process.env.ELECTRON_PATH, '..', 'resources');
+
+  ln('-sf', home, path.join(resources, 'app'));
+};
+
+
 target.clean = () => {
   rm('-rf', path.join(home, 'lib'));
   rm('-rf', path.join(home, 'dist'));

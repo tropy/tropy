@@ -29,7 +29,8 @@
     "clean": "node scripts/make clean",
     "compile": "node scripts/make compile",
     "lint": "node scripts/make lint",
-    "start": "npm run compile && electron .",
+    "postinstall": "node scripts/make link",
+    "start": "npm run compile && electron",
     "test": "node scripts/make test",
     "watch": "node scripts/watch"
   },
