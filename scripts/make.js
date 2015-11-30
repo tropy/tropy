@@ -14,7 +14,11 @@ const nbin = path.resolve(home, 'node_modules', '.bin');
 const mocha = path.join(nbin, 'electron-mocha');
 const lint = path.join(nbin, 'eslint');
 
-process.env.ELECTRON_PATH = require('electron-prebuilt');
+const electron = process.env.ELECTRON_PATH = require('electron-prebuilt');
+
+const resources = (process.platform === 'darwin') ?
+  path.join(electron, 'Contents', 'Resources') :
+  path.resolve(electron, '..', 'resources');
 
 
 target.lint = () => {
@@ -40,6 +44,11 @@ target['test-browser'] = (pattern) => {
   let files = glob.sync(pattern);
 
   exec(`${mocha} ${files.join(' ')}`, { silent: false });
+};
+
+target.mocha = (args) => {
+  args = args || [];
+  exec(`${mocha} ${args.join(' ')}`, { silent: false });
 };
 
 
@@ -99,16 +108,28 @@ target['compile-css'] = (pattern) => {
 };
 
 
-target.link = () => {
-  let resources = (process.platform === 'darwin') ?
-   path.join(process.env.ELECTRON_PATH, 'Contents', 'Resources') :
-   path.resolve(process.env.ELECTRON_PATH, '..', 'resources');
+target.electron = (args) => {
+  args = args || [];
 
+  try {
+    target.link();
+    exec(`${electron} ${args.join(' ')}`, { silent: false });
+  } finally {
+    target.unlink();
+  }
+};
+
+target.link = () => {
   ln('-sf', home, path.join(resources, 'app'));
+};
+
+target.unlink = () => {
+  rm('-f', path.join(resources, 'app'));
 };
 
 
 target.clean = () => {
+  target.unlink();
   rm('-rf', path.join(home, 'lib'));
   rm('-rf', path.join(home, 'dist'));
 };
