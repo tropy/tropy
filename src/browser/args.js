@@ -2,10 +2,7 @@
 
 const { basename } = require('path');
 const pkg = require('../../package');
-
 const exe = basename(process.argv[0]);
-const NAME = pkg.name.toUpperCase();
-
 
 module.exports = require('yargs')
   .usage(`Usage: ${exe} [options]`)
@@ -18,17 +15,12 @@ module.exports = require('yargs')
     describe: 'Set mode',
     choices: ['debug', 'dev', 'test', 'normal']
   })
-  .default('mode', defaultmode, '"normal"')
+  .default('mode', () => (process.env.TROPY_MODE || 'normal'), '"normal"')
 
   .help('help')
   .version(pkg.version)
 
   .epilogue([
     'Environment Variables:',
-    `  ${NAME}_MODE  Set default mode`
+    '  TROPY_MODE  Set default mode'
   ].join('\n'));
-
-
-function defaultmode() {
-  return process.env[`${NAME}_MODE`] || 'normal';
-}
