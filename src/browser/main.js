@@ -19,9 +19,5 @@ app
 
     win.loadURL(`file://${ROOT}/static/index.html`);
 
-    if (process.env.ELECTRON_CONNECT) {
-      require('electron-connect').client.create(win);
-    }
-
     win.once('closed', () => { win = undefined; });
   });

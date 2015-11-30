@@ -37,7 +37,6 @@
     "babel-cli": "^6.1.2",
     "babel-core": "^6.1.2",
     "babel-plugin-transform-es2015-destructuring": "^6.0.18",
-    "electron-connect": "^0.3.3",
     "electron-mocha": "^0.6.1",
     "electron-packager": "^5.1.1",
     "electron-prebuilt": "^0.35.0",
