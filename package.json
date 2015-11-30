@@ -42,7 +42,7 @@
     "electron-mocha": "^0.6.1",
     "electron-packager": "^5.1.1",
     "electron-prebuilt": "^0.35.0",
-    "eslint": "^1.8.0",
+    "eslint": "^1.10.2",
     "gaze": "^0.5.2",
     "glob": "^6.0.1",
     "node-sass": "^3.4.2",

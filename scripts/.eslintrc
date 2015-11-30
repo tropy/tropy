@@ -2,7 +2,5 @@
 
 env:
   shelljs: true
-globals:
-  ln: true
 rules:
   no-console: 0
