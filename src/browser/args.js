@@ -13,14 +13,15 @@ module.exports = require('yargs')
     alias: 'm',
     type: 'string',
     describe: 'Set mode',
-    choices: ['debug', 'dev', 'test', 'normal']
+    choices: ['debug', 'dev', 'test', 'production']
   })
-  .default('mode', () => (process.env.TROPY_MODE || 'normal'), '"normal"')
+  .default('mode',
+      () => (process.env.NODE_ENV || 'production'), '"production"')
 
   .help('help')
   .version(pkg.version)
 
   .epilogue([
     'Environment Variables:',
-    '  TROPY_MODE  Set default mode'
+    '  NODE_ENV  Set default mode'
   ].join('\n'));
