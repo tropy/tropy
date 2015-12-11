@@ -1,0 +1,88 @@
+linux:
+  - &file
+    label: '&File'
+    submenu:
+      - label: 'Quit'
+        accelerator: 'CmdOrCtrl+Q'
+        command: 'application:quit'
+  - &edit
+    label: '&Edit'
+    submenu:
+      - label: 'Undo'
+        accelerator: 'CmdOrCtrl+Z'
+        role: 'undo'
+      - label: 'Redo'
+        accelerator: 'Shift+CmdOrCtrl+Z'
+        role: 'redo'
+      - type: 'separator'
+      - label: 'Cut'
+        accelerator: 'CmdOrCtrl+X'
+        role: 'cut'
+      - label: 'Copy'
+        accelerator: 'CmdOrCtrl+C'
+        role: 'copy'
+      - label: 'Paste'
+        accelerator: 'CmdOrCtrl+V'
+        role: 'paste'
+      - type: 'separator'
+      - label: 'Select All'
+        accelerator: 'CmdOrCtrl+A'
+        role: 'selectall'
+  - &view
+    label: '&View'
+    submenu:
+      - label: '&Reload'
+        accelerator: 'CmdOrCtrl+R'
+        command: 'window:reload'
+      - label: 'Toggle &Full Screen'
+        command: 'window:toggle-full-screen'
+      - label: 'Toggle &Menu Bar'
+        command: 'window:toggle-menu-bar'
+  - &dev
+    label: 'Developer'
+    submenu:
+      - label: 'Toggle &Developer Tools'
+        accelerator: 'Ctrl+Shift+I'
+        command: 'window:toggle-dev-tools'
+  - &help
+    label: 'Help'
+    submenu:
+      - label: 'View &License'
+        command: 'application:open-license'
+      - type: 'separator'
+      - label: 'Search Issues'
+        command: 'application:search-issues'
+      - type: 'separator'
+      - label: 'About'
+        command: 'application:about'
+
+darwin:
+  - label: 'Tropy'
+    submenu:
+      - label: 'About %name'
+        role: 'about'
+      - type: 'separator'
+      - label: 'Hide %name'
+        accelerator: 'Command+H'
+        role: 'hide'
+      - label: 'Hide Others'
+        accelerator: 'Command+Shift+H'
+        role: 'hideothers'
+      - label: 'Show All'
+        role: 'unhide'
+      - type: 'separator'
+      - label: 'Quit'
+        accelerator: 'Command+Q'
+        command: 'application:quit'
+
+  - *edit
+  - *view
+  - *dev
+  - *help
+
+win32:
+  - *file
+  - *edit
+  - *view
+  - *dev
+  - *help
