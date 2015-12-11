@@ -13,6 +13,6 @@ app
     // TODO reopen window on mac
   })
 
-  .on('ready', () => {
+  .once('ready', () => {
     tropy.instance.open();
   });
