@@ -48,6 +48,7 @@
     "shelljs": "^0.5.3"
   },
   "dependencies": {
+    "js-yaml": "^3.4.6",
     "yargs": "^3.30.0"
   }
 }
