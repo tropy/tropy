@@ -1,12 +1,11 @@
 'use strict';
 
-const { app, BrowserWindow } = require('electron');
-const { join } = require('path');
+const { app } = require('electron');
 
-require('./args').parse(process.argv.slice(1));
-const ROOT = join(__dirname, '../..');
+const tropy = require('./tropy');
+const args = require('./args').parse(process.argv.slice(1));
 
-let win;
+process.env.NODE_ENV = args.mode;
 
 app
   .on('window-all-closed', () => {
@@ -15,9 +14,5 @@ app
   })
 
   .on('ready', () => {
-    win = new BrowserWindow({});
-
-    win.loadURL(`file://${ROOT}/static/index.html`);
-
-    win.once('closed', () => { win = undefined; });
+    tropy.instance.open();
   });
