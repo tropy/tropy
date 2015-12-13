@@ -2,7 +2,7 @@
 
 const { app } = require('electron');
 
-const tropy = require('./tropy');
+const Tropy = require('./tropy');
 const args = require('./args').parse(process.argv.slice(1));
 
 process.env.NODE_ENV = args.mode;
@@ -14,5 +14,5 @@ app
   })
 
   .once('ready', () => {
-    tropy.instance.open();
+    new Tropy().open();
   });
