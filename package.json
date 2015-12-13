@@ -29,7 +29,7 @@
     "clean": "node scripts/make clean",
     "compile": "node scripts/make compile",
     "lint": "node scripts/make lint",
-    "start": "node scripts/make electron",
+    "start": "npm run compile && node scripts/make electron",
     "test": "node scripts/make test",
     "watch": "node scripts/watch"
   },
