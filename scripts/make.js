@@ -18,7 +18,7 @@ const istanbul = path.join(nbin, 'istanbul');
 const electron = process.env.ELECTRON_PATH = require('electron-prebuilt');
 
 const resources = (process.platform === 'darwin') ?
-  path.join(electron, 'Contents', 'Resources') :
+  path.resolve(electron, '..', '..', 'Resources') :
   path.resolve(electron, '..', 'resources');
 
 
