@@ -1,3 +1,6 @@
 node_modules
 dist
 lib
+lib-cov
+src-cov
+coverage

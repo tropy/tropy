@@ -3,3 +3,4 @@
 --compilers js:babel-core/register
 --require test/support/mode
 --require test/support/chai
+--require test/support/load

@@ -13,6 +13,7 @@ const nbin = path.resolve(home, 'node_modules', '.bin');
 
 const mocha = path.join(nbin, 'electron-mocha');
 const lint = path.join(nbin, 'eslint');
+const istanbul = path.join(nbin, 'istanbul');
 
 const electron = process.env.ELECTRON_PATH = require('electron-prebuilt');
 
@@ -32,24 +33,20 @@ target.test = () => {
   target['test-renderer']();
 };
 
-target['test-renderer'] = (pattern) => {
-  pattern = pattern || 'test/**/*_test.js';
-  let files = glob.sync(pattern, { ignore: 'test/browser/*' });
-
-  exec(`${mocha} --renderer ${files.join(' ')}`, { silent: false });
-};
-
-target['test-browser'] = (pattern) => {
-  pattern = pattern || 'test/browser/**/*_test.js';
-  let files = glob.sync(pattern);
-
-  exec(`${mocha} ${files.join(' ')}`, { silent: false });
-};
-
-target.mocha = (args) => {
+target['test-renderer'] = (args) => {
   args = args || [];
-  exec(`${mocha} ${args.join(' ')}`, { silent: false });
+  args.unshift('--renderer');
+
+  test(args.concat(
+    glob.sync('test/**/*_test.js', { ignore: 'test/browser/*' })));
 };
+
+target['test-browser'] = (args) => {
+  args = args || [];
+  test(args.concat(glob.sync('test/browser/**/*_test.js')));
+};
+
+target.mocha = (args) => test(args);
 
 
 target.compile = () => {
@@ -108,6 +105,17 @@ target['compile-css'] = (pattern) => {
 };
 
 
+target.cover = () => {
+  exec(`${istanbul} instrument -o src-cov src`);
+
+  target['test-browser']([
+    '--reporter test/support/coverage'
+  ]);
+
+  rm('-rf', path.join(home, 'src-cov'));
+};
+
+
 target.electron = (args) => {
   args = args || [];
 
@@ -131,14 +139,20 @@ target.unlink = () => {
 target.clean = () => {
   target.unlink();
   rm('-rf', path.join(home, 'lib'));
+  rm('-rf', path.join(home, 'src-cov'));
   rm('-rf', path.join(home, 'dist'));
+  rm('-rf', path.join(home, 'coverage'));
 };
 
 
 function swap(filename, src, dst, ext) {
   return filename
     .replace(src, dst)
-    .replace(/(\..+)$/, (m) => ext || m[1]);
+    .replace(/(\..+)$/, m => ext || m[1]);
+}
+
+function test(options) {
+  exec(`${mocha} ${options.join(' ')}`, { silent: false });
 }
 
 function fail(mod, reason) {
