@@ -8,12 +8,13 @@ const pkg = require('../../package');
 
 const prop = Object.defineProperty;
 
-let tropy;
-
-class Tropy extends EventEmitter {
+module.exports = class Tropy extends EventEmitter {
 
   constructor(mode = process.env.NODE_ENV) {
+    if (Tropy.instance) return Tropy.instance;
+
     super();
+    Tropy.instance = this;
 
     prop(this, 'mode', { value: mode });
 
@@ -36,10 +37,4 @@ class Tropy extends EventEmitter {
   get version() {
     return pkg.version;
   }
-}
-
-module.exports = {
-  Tropy,
-
-  get instance() { return tropy || new Tropy(); }
 };
