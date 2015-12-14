@@ -10,7 +10,8 @@ const sass = require('node-sass');
 
 const home = path.resolve(__dirname, '..');
 const nbin = path.join(home, 'node_modules', '.bin');
-const coverage = path.join(home, 'coverage');
+const cov = path.join(home, 'coverage');
+const scov = path.join(home, 'src-cov');
 
 const mocha = path.join(nbin, 'electron-mocha');
 const lint = path.join(nbin, 'eslint');
@@ -106,26 +107,23 @@ target['compile-css'] = (pattern) => {
 };
 
 
-target.cover = () => {
-  rm('-rf', coverage);
+target.cover = (args) => {
+  args = args || ['html'];
+
+  rm('-rf', cov);
+  rm('-rf', scov);
 
   exec(`${istanbul} instrument -o src-cov src`);
 
-  target['test-browser']([
-    '--reporter test/support/coverage'
-  ]);
+  target['test-browser'](['--reporter test/support/coverage']);
+  mv(`${cov}/coverage-final.json`, `${cov}/coverage-browser.json`);
 
-  mv(`${coverage}/coverage-final.json`, `${coverage}/coverage-browser.json`);
+  target['test-renderer'](['--reporter test/support/coverage']);
+  mv(`${cov}/coverage-final.json`, `${cov}/coverage-renderer.json`);
 
-  target['test-renderer']([
-    '--reporter test/support/coverage'
-  ]);
+  exec(`${istanbul} report --root ${cov} ${args.join(' ')}`);
 
-  mv(`${coverage}/coverage-final.json`, `${coverage}/coverage-renderer.json`);
-
-  exec(`${istanbul} report --include "${coverage}/*.json" html`);
-
-  rm('-rf', path.join(home, 'src-cov'));
+  rm('-rf', scov);
 };
 
 
@@ -152,9 +150,9 @@ target.unlink = () => {
 target.clean = () => {
   target.unlink();
   rm('-rf', path.join(home, 'lib'));
-  rm('-rf', path.join(home, 'src-cov'));
   rm('-rf', path.join(home, 'dist'));
-  rm('-rf', coverage);
+  rm('-rf', cov);
+  rm('-rf', scov);
 };
 
 
