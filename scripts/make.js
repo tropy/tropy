@@ -147,6 +147,11 @@ target.unlink = () => {
 };
 
 
+target.rules = () => {
+  for (let rule in target) console.log('  - %s', rule);
+};
+
+
 target.clean = () => {
   target.unlink();
   rm('-rf', path.join(home, 'lib'));
