@@ -1,32 +1,23 @@
 'use strict';
 
 const path = require('path');
-const exists = require('fs').existsSync;
-const read = require('fs').readFileSync;
-
 const istanbul = require('istanbul');
 
-const dir = path.resolve(__dirname, '..', '..', 'coverage');
-let prev;
+const resolve = path.resolve;
 
-// Add results from previous browser/renderer tests
-if (exists(path.join(dir, 'coverage-final.json'))) {
-  prev = JSON.parse(read('coverage-final.json', 'utf8'));
-}
+const REPORTERS = ['text-summary', 'json'];
+
+// Override __src to point to instrumented sources!
+global.__src = resolve(__dirname, '..', '..', 'src-cov');
 
 module.exports = function (runner) {
   runner.on('end', function () {
-    let reporter = new istanbul.Reporter(null, dir);
+    let reporter = new istanbul.Reporter();
     let collector = new istanbul.Collector();
 
-    if (prev) collector.add(prev);
     collector.add(__coverage__);
 
-    reporter.add('text-summary');
-    reporter.add('lcovonly');
-    reporter.add('json');
-    reporter.add('html');
-
+    reporter.addAll(REPORTERS);
     reporter.write(collector, true, () => {});
   });
 };

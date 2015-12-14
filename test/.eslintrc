@@ -8,3 +8,4 @@ globals:
   load: true
   __coverage__: true
   __src: true
+  __require: true
