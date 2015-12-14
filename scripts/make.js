@@ -106,11 +106,16 @@ target['compile-css'] = (pattern) => {
 
 
 target.cover = () => {
+  rm('-rf', path.join(home, 'coverage'));
   exec(`${istanbul} instrument -o src-cov src`);
+
+  process.env.COVERAGE = 'browser';
 
   target['test-browser']([
     '--reporter test/support/coverage'
   ]);
+
+  process.env.COVERAGE = 'renderer';
 
   rm('-rf', path.join(home, 'src-cov'));
 };

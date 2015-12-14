@@ -7,3 +7,4 @@ globals:
   expect: true
   load: true
   __coverage__: true
+  __src: true

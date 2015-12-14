@@ -1,7 +1,5 @@
 'use strict';
 
-process.env.COVERAGE = true;
-
 const istanbul = require('istanbul');
 
 module.exports = function (runner) {
