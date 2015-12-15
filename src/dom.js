@@ -1,18 +1,18 @@
-'use strict';
+'use strict'
 
 module.exports = {
 
   css(text) {
-    let node = document.createElement('style');
+    let node = document.createElement('style')
 
-    node.type = 'text/css';
-    node.textContent = text;
+    node.type = 'text/css'
+    node.textContent = text
 
-    return node;
+    return node
   },
 
   append(node, to) {
-    return to.appendChild(node);
+    return to.appendChild(node)
   }
 
-};
+}

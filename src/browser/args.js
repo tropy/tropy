@@ -1,8 +1,8 @@
-'use strict';
+'use strict'
 
-const { basename } = require('path');
-const pkg = require('../../package');
-const exe = basename(process.argv[0]);
+const { basename } = require('path')
+const pkg = require('../../package')
+const exe = basename(process.argv[0])
 
 module.exports = require('yargs')
   .usage(`Usage: ${exe} [options]`)
@@ -24,4 +24,4 @@ module.exports = require('yargs')
   .epilogue([
     'Environment Variables:',
     '  NODE_ENV  Set default mode'
-  ].join('\n'));
+  ].join('\n'))

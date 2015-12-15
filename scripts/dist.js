@@ -1,20 +1,20 @@
-'use strict';
+'use strict'
 
-require('shelljs/make');
+require('shelljs/make')
 
-const packager = require('electron-packager');
-const pkg = require('../package');
-const path = require('path');
+const packager = require('electron-packager')
+const pkg = require('../package')
+const path = require('path')
 
-const home = path.resolve(__dirname, '..');
-const electron = require('electron-prebuilt/package');
+const home = path.resolve(__dirname, '..')
+const electron = require('electron-prebuilt/package')
 
 target.all = () => {
-  target.pack();
-};
+  target.pack()
+}
 
 target.pack = (args) => {
-  args = args || ['all', 'all'];
+  args = args || ['all', 'all']
 
   packager({ // eslint-disable-line quote-props
     dir: home,
@@ -36,9 +36,9 @@ target.pack = (args) => {
     ]
 
   }, (err, dst) => {
-    if (err) return console.error(err);
-    console.log('%s package written to %s', args[0], dst);
-  });
-};
+    if (err) return console.error(err)
+    console.log('%s package written to %s', args[0], dst)
+  })
+}
 
-exports.package = target.pack;
+exports.package = target.pack

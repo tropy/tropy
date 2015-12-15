@@ -1,18 +1,18 @@
-'use strict';
+'use strict'
 
-const { app } = require('electron');
+const { app } = require('electron')
 
-const Tropy = require('./tropy');
-const args = require('./args').parse(process.argv.slice(1));
+const Tropy = require('./tropy')
+const args = require('./args').parse(process.argv.slice(1))
 
-process.env.NODE_ENV = args.mode;
+process.env.NODE_ENV = args.mode
 
 app
   .on('window-all-closed', () => {
-    if (process.platform !== 'darwin') app.quit();
+    if (process.platform !== 'darwin') app.quit()
     // TODO reopen window on mac
   })
 
   .once('ready', () => {
-    new Tropy().open();
-  });
+    new Tropy().open()
+  })
