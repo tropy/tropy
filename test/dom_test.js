@@ -1,11 +1,11 @@
-'use strict';
+'use strict'
 
-describe('dom', function () {
-  let dom = __require('dom');
+describe('dom', () => {
+  const dom = __require('dom')
 
-  describe('.css', function () {
+  describe('.css', () => {
     it('creates a style node', function () {
-      expect(dom.css()).to.be.instanceof(HTMLStyleElement);
-    });
-  });
-});
+      expect(dom.css()).to.be.instanceof(HTMLStyleElement)
+    })
+  })
+})
