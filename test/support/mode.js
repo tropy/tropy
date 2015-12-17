@@ -1,2 +1,2 @@
-'use strict';
-process.env.NODE_ENV = 'test';
+'use strict'
+process.env.NODE_ENV = 'test'
