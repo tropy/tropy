@@ -47,7 +47,9 @@
     "glob": "^6.0.1",
     "istanbul": "^0.4.1",
     "node-sass": "^3.4.2",
-    "shelljs": "^0.5.3"
+    "shelljs": "^0.5.3",
+    "sinon": "^1.17.2",
+    "sinon-chai": "^2.8.0"
   },
   "dependencies": {
     "js-yaml": "^3.4.6",

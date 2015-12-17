@@ -5,7 +5,10 @@ env:
 
 globals:
   expect: true
-  load: true
+  sinon: true
   __coverage__: true
   __src: true
   __require: true
+
+rules:
+  no-console: 0
