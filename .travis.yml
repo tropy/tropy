@@ -1,0 +1,18 @@
+language: node_js
+
+node_js:
+  - "4.1"
+
+sudo: false
+cache:
+  directories:
+    - node_modules
+
+matrix:
+  fast_finish: true
+
+script: "node scripts/make cover -- lcovonly"
+after_script: "npm install coveralls && cat ./coverage/lcov.info | coveralls"
+
+notifications:
+  email: false
