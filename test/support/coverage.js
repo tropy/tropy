@@ -3,14 +3,10 @@
 const path = require('path')
 const istanbul = require('istanbul')
 const mocha = require('mocha')
-const inherits = require('util').inherits
-
-const resolve = path.resolve
-
-const REPORTERS = ['text-summary', 'json']
+const util = require('util')
 
 // Override __src to point to instrumented sources!
-global.__src = resolve(__dirname, '..', '..', 'src-cov')
+global.__src = path.resolve(__dirname, '..', '..', 'src-cov')
 
 module.exports = Cover
 
@@ -23,9 +19,9 @@ function Cover(runner) {
 
     collector.add(__coverage__)
 
-    reporter.addAll(REPORTERS)
+    reporter.addAll(['text-summary', 'json'])
     reporter.write(collector, true, () => {})
   })
 }
 
-inherits(Cover, mocha.reporters.Dot)
+util.inherits(Cover, mocha.reporters.Dot)
