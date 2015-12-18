@@ -36,6 +36,8 @@ target.test = () => {
 }
 
 target['test-renderer'] = (args) => {
+  target.unlink()
+
   args = args || []
   args.unshift('--renderer')
 
@@ -44,6 +46,8 @@ target['test-renderer'] = (args) => {
 }
 
 target['test-browser'] = (args) => {
+  target.unlink()
+
   args = args || []
   test(args.concat(glob.sync('test/browser/**/*_test.js')))
 }
