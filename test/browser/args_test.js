@@ -3,7 +3,7 @@
 describe('args', () => {
   const args = __require('browser/args')
 
-  describe('--mode', () => {
+  describe('--environment', () => {
 
     beforeEach(() => {
       sinon.stub(console, 'error')
@@ -16,15 +16,17 @@ describe('args', () => {
     })
 
     it('falls back to node env', () => {
-      expect(args.parse([])).to.have.property('mode', process.env.NODE_ENV)
+      expect(args.parse([]))
+        .to.have.property('environment', process.env.NODE_ENV)
     })
 
-    it('sets mode', () => {
-      expect(args.parse(['-m', 'dev'])).to.have.property('mode', 'dev')
+    it('sets environment', () => {
+      expect(args.parse(['-e', 'dev']))
+        .to.have.property('environment', 'dev')
     })
 
-    it('rejects invalid mode', () => {
-      args.parse(['-m', 'foo'])
+    it('rejects invalid environment', () => {
+      args.parse(['-e', 'foo'])
       expect(process.exit).to.have.been.calledWith(1)
       expect(console.error).to.have.been.called
     })

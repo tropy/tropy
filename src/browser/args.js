@@ -9,13 +9,13 @@ module.exports = require('yargs')
   .strict()
   .wrap(78)
 
-  .option('mode', {
-    alias: 'm',
+  .option('environment', {
+    alias: 'e',
     type: 'string',
-    describe: 'Set mode',
+    describe: 'Set environment',
     choices: ['dev', 'test', 'production']
   })
-  .default('mode',
+  .default('environment',
       () => (process.env.NODE_ENV || 'production'), '"production"')
 
   .option('debug', {
@@ -28,5 +28,5 @@ module.exports = require('yargs')
 
   .epilogue([
     'Environment Variables:',
-    '  NODE_ENV  Set default mode'
+    '  NODE_ENV  Set default environment'
   ].join('\n'))

@@ -5,7 +5,7 @@ const { app } = require('electron')
 const Tropy = require('./tropy')
 const args = require('./args').parse(process.argv.slice(1))
 
-process.env.NODE_ENV = args.mode
+process.env.NODE_ENV = args.environment
 
 app
   .on('window-all-closed', () => {
