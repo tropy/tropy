@@ -13,10 +13,15 @@ module.exports = require('yargs')
     alias: 'm',
     type: 'string',
     describe: 'Set mode',
-    choices: ['debug', 'dev', 'test', 'production']
+    choices: ['dev', 'test', 'production']
   })
   .default('mode',
       () => (process.env.NODE_ENV || 'production'), '"production"')
+
+  .option('debug', {
+    type: 'boolean',
+    describe: 'Set debug flag'
+  })
 
   .help('help')
   .version(pkg.version)
