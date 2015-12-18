@@ -35,7 +35,7 @@ class Resource {
 class Menu extends Resource {
   static get base() { return join(super.base, 'menu') }
 
-  constructor(data) {
+  constructor(data = {}) {
     super(data[process.platform])
   }
 }

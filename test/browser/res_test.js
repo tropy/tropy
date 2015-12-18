@@ -1,8 +1,8 @@
 'use strict'
 
-describe('Resource', () => {
-  const { Resource } = __require('common/res')
+const { Resource, Menu } = __require('common/res')
 
+describe('Resource', () => {
   it('is a constructor', () => expect(Resource).to.be.a('function'))
 
   describe('.expand', () => {
@@ -12,6 +12,18 @@ describe('Resource', () => {
 
     it('adds base directory', () => {
       expect(Resource.expand('main')).to.start(Resource.base)
+    })
+  })
+})
+
+describe('Menu', () => {
+  it('is a Resource', () => {
+    expect(new Menu()).to.be.instanceof(Resource)
+  })
+
+  describe('.expand', () => {
+    it('adds menu directory', () => {
+      expect(Menu.expand('main')).to.match(/menu.main\.yml/)
     })
   })
 })
