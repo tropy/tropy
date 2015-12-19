@@ -26,4 +26,11 @@ describe('Menu', () => {
       expect(Menu.expand('main')).to.match(/menu.main\.yml/)
     })
   })
+
+  describe('.open', () => {
+    it('loads and parses the given menu', () => {
+      expect(Menu.open('app'))
+        .to.have.property('template').and.have.length(5)
+    })
+  })
 })

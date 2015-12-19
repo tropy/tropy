@@ -19,7 +19,7 @@ class Resource {
   }
 
   static open(name) {
-    read(this.expand(name))
+    return new this(this.parse(read(this.expand(name))))
   }
 
   static expand(name) {
@@ -27,8 +27,8 @@ class Resource {
   }
 
 
-  constructor(data) {
-    this.data = data
+  constructor(template = []) {
+    this.template = template
   }
 }
 
