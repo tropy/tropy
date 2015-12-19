@@ -52,6 +52,7 @@
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
+    "bluebird": "^3.1.1",
     "js-yaml": "^3.4.6",
     "yargs": "^3.30.0"
   }
