@@ -134,12 +134,10 @@ target.cover = (args) => {
 target.electron = (args) => {
   args = args || []
 
-  try {
-    target.link()
-    exec(`${electron} ${args.join(' ')}`, { silent: false })
-  } finally {
+  target.link()
+  exec(`${electron} ${args.join(' ')}`, () => {
     target.unlink()
-  }
+  })
 }
 
 target.link = () => {
