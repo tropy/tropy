@@ -132,7 +132,7 @@ target.cover = (args) => {
 
 
 target.electron = (args) => {
-  args = args || []
+  args = args || ['-e development']
 
   target.link()
   exec(`${electron} ${args.join(' ')}`, () => {
