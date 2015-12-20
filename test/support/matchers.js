@@ -29,4 +29,4 @@ module.exports = {
     chai.Assertion.addChainableMethod('endWith', ends)
     chai.Assertion.addChainableMethod('end', ends)
   }
-};
+}
