@@ -13,7 +13,7 @@ module.exports = require('yargs')
     alias: 'e',
     type: 'string',
     describe: 'Set environment',
-    choices: ['dev', 'test', 'production']
+    choices: ['development', 'test', 'production']
   })
   .default('environment',
       () => (process.env.NODE_ENV || 'production'), '"production"')

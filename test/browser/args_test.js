@@ -21,8 +21,8 @@ describe('args', () => {
     })
 
     it('sets environment', () => {
-      expect(args.parse(['-e', 'dev']))
-        .to.have.property('environment', 'dev')
+      expect(args.parse(['-e', 'development']))
+        .to.have.property('environment', 'development')
     })
 
     it('rejects invalid environment', () => {
