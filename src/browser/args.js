@@ -20,6 +20,7 @@ module.exports = require('yargs')
 
   .option('debug', {
     type: 'boolean',
+    default: false,
     describe: 'Set debug flag'
   })
 

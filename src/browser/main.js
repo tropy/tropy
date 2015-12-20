@@ -14,5 +14,5 @@ app
   })
 
   .once('ready', () => {
-    new Tropy().open()
+    new Tropy(args).open()
   })

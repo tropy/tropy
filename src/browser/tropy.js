@@ -10,13 +10,14 @@ const prop = Object.defineProperty
 
 module.exports = class Tropy extends EventEmitter {
 
-  constructor(mode = process.env.NODE_ENV) {
+  constructor({ environment, debug } = {}) {
     if (Tropy.instance) return Tropy.instance
 
     super()
     Tropy.instance = this
 
-    prop(this, 'mode', { value: mode })
+    prop(this, 'debug', { value: debug })
+    prop(this, 'environment', { value: environment || process.env.NODE_ENV })
 
     prop(this, 'home', {
       value: resolve(__dirname, '..', '..')
@@ -36,5 +37,12 @@ module.exports = class Tropy extends EventEmitter {
 
   get version() {
     return pkg.version
+  }
+
+  get development() {
+    return this.environment === 'development'
+  }
+  get production() {
+    return this.environment === 'production'
   }
 }
