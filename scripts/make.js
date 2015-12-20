@@ -7,6 +7,7 @@ const path = require('path')
 const babel = require('babel-core')
 const glob = require('glob')
 const sass = require('node-sass')
+const log = require('winston').cli()
 
 const home = path.resolve(__dirname, '..')
 const nbin = path.join(home, 'node_modules', '.bin')
@@ -70,7 +71,7 @@ target['compile-js'] = (pattern) => {
       let dst = swap(src, 'src', 'lib', '.js')
 
       assert(src.startsWith('src'))
-      console.log('compiling %s to %s', src, dst)
+      log.info('compiling %s to %s', src, dst)
 
       babel.transformFile(src, (err, result) => {
         if (err) return fail('compile-js', err)
@@ -91,7 +92,7 @@ target['compile-css'] = (pattern) => {
       let dst = swap(src, 'src', 'lib', '.css')
 
       assert(src.startsWith('src/stylesheets'))
-      console.log('compiling %s to %s', src, dst)
+      log.info('compiling %s to %s', src, dst)
 
       let options = {
         file: src,
@@ -150,7 +151,7 @@ target.unlink = () => {
 
 
 target.rules = () => {
-  for (let rule in target) console.log('  - %s', rule)
+  for (let rule in target) log.info('  - %s', rule)
 }
 
 
@@ -174,7 +175,7 @@ function test(options) {
 }
 
 function fail(mod, reason) {
-  console.error('[%s] %s', mod, reason)
+  log.error('[%s] %s', mod, reason)
 }
 
 // We need to make a copy when exposing targets to other scripts,

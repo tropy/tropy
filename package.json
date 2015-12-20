@@ -54,6 +54,7 @@
   "dependencies": {
     "bluebird": "^3.1.1",
     "js-yaml": "^3.4.6",
+    "winston": "^2.1.1",
     "yargs": "^3.30.0"
   }
 }

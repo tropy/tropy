@@ -5,6 +5,7 @@ require('shelljs/make')
 const packager = require('electron-packager')
 const pkg = require('../package')
 const path = require('path')
+const log = require('winston').cli()
 
 const home = path.resolve(__dirname, '..')
 const electron = require('electron-prebuilt/package')
@@ -36,8 +37,8 @@ target.pack = (args) => {
     ]
 
   }, (err, dst) => {
-    if (err) return console.error(err)
-    console.log('%s package written to %s', args[0], dst)
+    if (err) return log.error(err)
+    log.info('%s package written to %s', args[0], dst)
   })
 }
 
