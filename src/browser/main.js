@@ -6,8 +6,7 @@ const opts = args.parse(process.argv.slice(1))
 process.env.NODE_ENV = opts.environment
 
 const { app } = require('electron')
-const Tropy = require('./tropy')
-const tropy = new Tropy(opts)
+const tropy = new (require('./tropy'))(opts)
 
 if (app.makeSingleInstance(() => tropy.open())) app.exit(0)
 

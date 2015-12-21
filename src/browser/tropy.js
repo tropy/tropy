@@ -3,6 +3,7 @@
 const { EventEmitter } = require('events')
 const { resolve } = require('path')
 const { BrowserWindow } = require('electron')
+const url = require('url')
 
 const pkg = require('../../package')
 
@@ -22,20 +23,34 @@ module.exports = class Tropy extends EventEmitter {
     prop(this, 'home', {
       value: resolve(__dirname, '..', '..')
     })
+
+    prop(this, 'hash', {
+      value: encode({ environment, debug })
+    })
   }
 
   open() {
     if (!this.win) {
-      this.win = new BrowserWindow({})
+      this.win = new BrowserWindow({
+        preload: resolve(__dirname, '..', 'preload.js')
+      })
         .once('closed', () => { this.win = undefined })
 
-      this.win.loadURL(`file://${this.home}/static/index.html`)
+      this.win.loadURL(this.url('index.html'))
 
     } else {
-      this.win.focus()
+      this.win.show()
     }
 
     return this
+  }
+
+  url(filename) {
+    return url.format({
+      protocol: 'file',
+      pathname: `${this.home}/static/${filename}`,
+      hash: this.hash
+    })
   }
 
   get version() {
@@ -48,4 +63,8 @@ module.exports = class Tropy extends EventEmitter {
   get production() {
     return this.environment === 'production'
   }
+}
+
+function encode(data) {
+  return encodeURIComponent(JSON.stringify(data))
 }
