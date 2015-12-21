@@ -30,6 +30,9 @@ module.exports = class Tropy extends EventEmitter {
         .once('closed', () => { this.win = undefined })
 
       this.win.loadURL(`file://${this.home}/static/index.html`)
+
+    } else {
+      this.win.focus()
     }
 
     return this
