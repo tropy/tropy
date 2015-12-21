@@ -32,11 +32,15 @@ module.exports = class Tropy extends EventEmitter {
   open() {
     if (!this.win) {
       this.win = new BrowserWindow({
+        show: false,
         preload: resolve(__dirname, '..', 'preload.js')
       })
-        .once('closed', () => { this.win = undefined })
 
-      this.win.loadURL(this.url('index.html'))
+      this.win.webContents.once('dom-ready', () => this.win.show())
+
+      this.win
+        .once('closed', () => { this.win = undefined })
+        .loadURL(this.url('index.html'))
 
     } else {
       this.win.show()
