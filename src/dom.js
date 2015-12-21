@@ -11,6 +11,16 @@ module.exports = {
     return node
   },
 
+  stylesheet(url) {
+    let node = document.createElement('link')
+
+    node.rel = 'stylesheet'
+    node.type = 'text/css'
+    node.href = url
+
+    return node
+  },
+
   append(node, to) {
     return to.appendChild(node)
   }

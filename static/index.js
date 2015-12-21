@@ -10,6 +10,6 @@
   }
 
   dom.append(
-    dom.css(`@import '../lib/stylesheets/${process.platform}.css';`),
+    dom.stylesheet(`../lib/stylesheets/${process.platform}.css`),
     document.head)
 }
