@@ -157,10 +157,13 @@ target.rules = () => {
 
 target.clean = () => {
   target.unlink()
+
   rm('-rf', path.join(home, 'lib'))
   rm('-rf', path.join(home, 'dist'))
   rm('-rf', cov)
   rm('-rf', scov)
+
+  rm('-f', path.join(home, 'npm-debug.log'))
 }
 
 
