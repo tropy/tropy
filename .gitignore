@@ -4,3 +4,5 @@ lib
 lib-cov
 src-cov
 coverage
+tmp
+npm-debug.log
