@@ -14,8 +14,9 @@ if (app.makeSingleInstance(() => tropy.open())) app.exit(0)
 app
   .on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit()
-    // TODO reopen window on mac
   })
+
+  .on('activate', () => tropy.open())
 
   .once('ready', () => {
     tropy.open()
