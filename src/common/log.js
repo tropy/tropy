@@ -1,34 +1,44 @@
 'use strict'
 
 const { Logger, transports } = require('winston')
+const { join } = require('path')
+const { assign } = Object
+
 const logger = new Logger({
   level: 'info',
   transports: []
 })
 
 
-function init(environment = process.env.NODE_ENV) {
-  for (let tr of logger.transports) logger.remove(tr)
+function init(environment = process.env.NODE_ENV, basedir) {
+  logger.clear()
 
   switch (environment) {
-    case 'production':
-      break
-
     case 'development':
       logger.level = 'verbose'
       logger.add(transports.Console)
+      // eslint-disable-line no-fallthrough
+
+    case 'production':
+      if (basedir) {
+        logger.add(transports.File, {
+          filename: join(basedir, 'Log', `${process.type}.log`)
+        })
+      }
+
       break
+
 
     case 'test':
       logger.add(transports.Memory)
       break
   }
 
-  return this
+  return module.exports
 }
 
 
-module.exports = Object.assign(init, {
+module.exports = assign(init, {
   logger,
 
   query: logger.query.bind(logger),
