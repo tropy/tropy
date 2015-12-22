@@ -2,7 +2,7 @@
 
 const { EventEmitter } = require('events')
 const { resolve } = require('path')
-const { BrowserWindow } = require('electron')
+const { app, BrowserWindow } = require('electron')
 const url = require('url')
 
 const pkg = require('../../package')
@@ -25,7 +25,7 @@ module.exports = class Tropy extends EventEmitter {
     })
 
     prop(this, 'hash', {
-      value: encode({ environment, debug })
+      value: encode({ environment, debug, home: app.getPath('userData') })
     })
   }
 

@@ -12,9 +12,7 @@ if (opts.environment !== 'production') {
   app.setPath('userData', join(process.cwd(), 'tmp', opts.environment))
 }
 
-const { info } =
-  require('../common/log')(opts.environment, app.getPath('userData'))
-
+const { info } = require('../common/log')(app.getPath('userData'))
 const tropy = new (require('./tropy'))(opts)
 
 if (opts.environment !== 'test') {

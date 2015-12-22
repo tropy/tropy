@@ -10,7 +10,7 @@ const logger = new Logger({
 })
 
 
-function init(environment = process.env.NODE_ENV, basedir) {
+function init(dir, environment = process.env.NODE_ENV) {
   logger.clear()
 
   switch (environment) {
@@ -20,9 +20,9 @@ function init(environment = process.env.NODE_ENV, basedir) {
       // eslint-disable-line no-fallthrough
 
     case 'production':
-      if (basedir) {
+      if (dir) {
         logger.add(transports.File, {
-          filename: join(basedir, 'Log', `${process.type}.log`)
+          filename: join(dir, `${process.type}.log`)
         })
       }
 
