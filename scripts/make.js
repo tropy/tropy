@@ -13,7 +13,6 @@ const home = path.resolve(__dirname, '..')
 const nbin = path.join(home, 'node_modules', '.bin')
 const cov = path.join(home, 'coverage')
 const scov = path.join(home, 'src-cov')
-const covrep = path.join(home, 'test', 'support', 'coverage.js')
 
 const mocha = path.join(nbin, 'electron-mocha')
 const lint = path.join(nbin, 'eslint')
@@ -121,11 +120,10 @@ target.cover = (args) => {
 
   exec(`${istanbul} instrument -o src-cov src`)
 
-  require(covrep)
-  target['test-browser']([`--reporter ${covrep}`])
+  target['test-browser'](['--reporter test/support/coverage'])
   mv(`${cov}/coverage-final.json`, `${cov}/coverage-browser.json`)
 
-  target['test-renderer']([`--reporter ${covrep}`])
+  target['test-renderer'](['--reporter test/support/coverage'])
   mv(`${cov}/coverage-final.json`, `${cov}/coverage-renderer.json`)
 
   exec(`${istanbul} report --root ${cov} ${args.join(' ')}`)
