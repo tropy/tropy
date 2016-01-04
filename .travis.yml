@@ -21,6 +21,7 @@ cache:
 matrix:
   fast_finish: true
 
+script: "/home/travis/build/tropy/tropy/node_modules/.bin/electron-mocha test/browser/args_test.js test/browser/main_test.js test/browser/res_test.js test/browser/tropy_test.js"
 #script: "node scripts/make cover -- lcovonly"
 #after_script: "npm install coveralls && cat ./coverage/lcov.info | coveralls"
 

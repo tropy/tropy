@@ -31,7 +31,7 @@ target.lint = () => {
 
 
 target.test = () => {
-  // target['lint']()
+  target['lint']()
   target['test-browser']()
   target['test-renderer']()
 }
@@ -47,7 +47,7 @@ target['test-renderer'] = (args) => {
 }
 
 target['test-browser'] = (args) => {
-  // target.unlink()
+  target.unlink()
 
   args = args || []
   test(args.concat(glob.sync('test/browser/**/*_test.js')))
@@ -174,7 +174,6 @@ function swap(filename, src, dst, ext) {
 }
 
 function test(options) {
-  console.log(`${mocha} ${options.join(' ')}`)
   exec(`${mocha} ${options.join(' ')}`, { silent: false })
 }
 
