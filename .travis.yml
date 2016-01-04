@@ -21,8 +21,8 @@ cache:
 matrix:
   fast_finish: true
 
-script: "node scripts/make cover -- lcovonly"
-after_script: "npm install coveralls && cat ./coverage/lcov.info | coveralls"
+#script: "node scripts/make cover -- lcovonly"
+#after_script: "npm install coveralls && cat ./coverage/lcov.info | coveralls"
 
 notifications:
   email: false
