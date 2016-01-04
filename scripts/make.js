@@ -121,6 +121,7 @@ target.cover = (args) => {
 
   exec(`${istanbul} instrument -o src-cov src`)
 
+  require(covrep)
   target['test-browser']([`--reporter ${covrep}`])
   mv(`${cov}/coverage-final.json`, `${cov}/coverage-browser.json`)
 
