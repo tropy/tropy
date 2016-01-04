@@ -16,13 +16,20 @@ function init(dir, environment = process.env.NODE_ENV) {
   switch (environment) {
     case 'development':
       logger.level = 'verbose'
-      logger.add(transports.Console)
+      logger.add(transports.Console, {
+        colorize: true
+      })
       // eslint-disable-line no-fallthrough
 
     case 'production':
       if (dir) {
         logger.add(transports.File, {
-          filename: join(dir, `${process.type}.log`)
+          filename: join(dir, `${process.type}.log`),
+          maxsize: 1024 * 1024,
+          maxFiles: 5,
+          tailable: true,
+          handleExceptions: true,
+          humanReadableUnhandledException: true
         })
       }
 
