@@ -2,7 +2,16 @@
 
 const { Logger, transports } = require('winston')
 const { join } = require('path')
+const { inspect } = require('util')
 const { assign } = Object
+
+const ms = require('ms')
+const pad = require('string.prototype.padstart')
+const colors = require('colors/safe')
+const symbol = (process.type === 'renderer') ? 'ρ' : 'β'
+
+const COLORS = { info: 'blue', warn: 'yellow', error: 'red', debug: 'magenta' }
+const seq = timer()
 
 const logger = new Logger({
   level: 'info',
@@ -17,7 +26,9 @@ function init(dir, environment = process.env.NODE_ENV) {
     case 'development':
       logger.level = 'verbose'
       logger.add(transports.Console, {
-        colorize: true
+        handleExceptions: true,
+        humanReadableUnhandledException: true,
+        formatter
       })
       // eslint-disable-line no-fallthrough
 
@@ -42,6 +53,29 @@ function init(dir, environment = process.env.NODE_ENV) {
   }
 
   return module.exports
+}
+
+function *timer() {
+  for (let a = Date.now(), b;; a = b) {
+    yield ((b = Date.now()), b - a)
+  }
+}
+
+function time() {
+  return colors.gray(pad(`+${ms(seq.next().value)}`, 8, ' '))
+}
+
+function colorize(level, string = level) {
+  return colors[COLORS[level] || 'gray'](string)
+}
+
+function text(options) {
+  if (!options.meta) return options.message
+  return [options.message, inspect(options.meta)].join(' ')
+}
+
+function formatter(options) {
+  return `${time()} ${colorize(options.level, symbol)} ${text(options)}`
 }
 
 

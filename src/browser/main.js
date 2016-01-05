@@ -15,6 +15,8 @@ if (opts.environment !== 'production') {
 const { info } = require('../common/log')(app.getPath('userData'))
 const tropy = new (require('./tropy'))(opts)
 
+info('startup')
+
 if (opts.environment !== 'test') {
   if (app.makeSingleInstance(() => tropy.open())) app.exit(0)
 }
