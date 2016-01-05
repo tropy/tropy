@@ -3,7 +3,7 @@
 const { Logger, transports } = require('winston')
 const { join } = require('path')
 const { inspect } = require('util')
-const { assign } = Object
+const { assign, keys } = Object
 
 const ms = require('ms')
 const pad = require('string.prototype.padstart')
@@ -70,8 +70,11 @@ function colorize(level, string = level) {
 }
 
 function text(options) {
-  if (!options.meta) return options.message
-  return [options.message, inspect(options.meta)].join(' ')
+  if (options.meta && keys(options.meta).length) {
+    return [options.message, inspect(options.meta)].join(' ')
+  }
+
+  return options.message
 }
 
 function formatter(options) {
