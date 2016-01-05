@@ -73,6 +73,9 @@ target['compile:js'] = (pattern) => {
       let dst = swap(src, 'src', 'lib', '.js')
 
       assert(src.startsWith('src'))
+
+      // TODO skip if up to date!
+
       log.info(dst, { tag })
 
       babel.transformFile(src, (err, result) => {
@@ -136,16 +139,6 @@ target.cover = (args) => {
   exec(`${istanbul} report --root ${cov} ${args.join(' ')}`, { silent: true })
 
   rm('-rf', scov)
-}
-
-
-target.electron = (args) => {
-  args = args || ['-e development']
-
-  target.link()
-  exec(`${electron} ${args.join(' ')}`, () => {
-    target.unlink()
-  })
 }
 
 target.link = () => {
