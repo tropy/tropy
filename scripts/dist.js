@@ -5,7 +5,7 @@ require('shelljs/make')
 const packager = require('electron-packager')
 const pkg = require('../package')
 const path = require('path')
-const log = require('winston').cli()
+const log = require('./log')
 
 const home = path.resolve(__dirname, '..')
 const electron = require('electron-prebuilt/package')

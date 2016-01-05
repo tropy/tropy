@@ -5,14 +5,14 @@ const winston = require('winston')
 const colors = require('colors/safe')
 const pad = require('string.prototype.padstart')
 
-const COLORS = { info: 'cyan', warn: 'yellow', error: 'red' }
+const COLORS = { info: 'gray', warn: 'yellow', error: 'red' }
 
 function colorize(level, text) {
   return colors[COLORS[level] || 'gray'](text || level)
 }
 
 function prefix(options) {
-  return pad(colorize(options.level, options.meta.tag), 19, ' ')
+  return pad(colorize(options.level, options.meta.tag), 24, ' ')
 }
 
 module.exports = new winston.Logger({

@@ -10,7 +10,7 @@ const make = require('./make')
 const log = require('./log')
 const cwd = process.cwd()
 
-const COLORS = { changed: 'yellow', deleted: 'red', added: 'green' }
+const COLORS = { changed: 'blue', deleted: 'red', added: 'green' }
 
 function colorize(event, text) {
   return colors[COLORS[event] || 'white'](text)
@@ -21,12 +21,11 @@ function shorten(file) {
 }
 
 target.all = () => {
-  log.info('', { tag: 'watch' })
   target.src()
 }
 
 target.src = () => {
-  const tag = ':src'
+  const tag = 'watch:src'
 
   gaze('src/**/*.{js,jsx}', function (err) {
     if (err) return log.error(err, { tag })

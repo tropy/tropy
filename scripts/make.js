@@ -57,14 +57,12 @@ target.mocha = (args) => test(args)
 
 
 target.compile = () => {
-  log.info('', { tag: 'compile' })
-
   target['compile:js']()
   target['compile:css']()
 }
 
 target['compile:js'] = (pattern) => {
-  const tag = ':js'
+  const tag = 'compile:js'
 
   new glob
     .Glob(pattern || 'src/**/*.{js,jsx}')
@@ -75,7 +73,7 @@ target['compile:js'] = (pattern) => {
       let dst = swap(src, 'src', 'lib', '.js')
 
       assert(src.startsWith('src'))
-      log.info('%s -> %s', src, dst, { tag })
+      log.info(dst, { tag })
 
       babel.transformFile(src, (err, result) => {
         if (err) return log.error(err, { tag })
@@ -87,7 +85,7 @@ target['compile:js'] = (pattern) => {
 }
 
 target['compile:css'] = (pattern) => {
-  const tag = ':css'
+  const tag = 'compile:css'
 
   new glob
     .Glob(pattern || 'src/stylesheets/**/!(_*).{sass,scss}')
@@ -98,7 +96,7 @@ target['compile:css'] = (pattern) => {
       let dst = swap(src, 'src', 'lib', '.css')
 
       assert(src.startsWith('src/stylesheets'))
-      log.info('%s -> %s', src, dst, { tag })
+      log.info(dst, { tag })
 
       let options = {
         file: src,
