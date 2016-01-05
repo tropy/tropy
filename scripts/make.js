@@ -7,7 +7,7 @@ const path = require('path')
 const babel = require('babel-core')
 const glob = require('glob')
 const sass = require('node-sass')
-const log = require('winston').cli()
+const log = require('./log')
 
 const home = path.resolve(__dirname, '..')
 const nbin = path.join(home, 'node_modules', '.bin')
@@ -32,11 +32,11 @@ target.lint = () => {
 
 target.test = () => {
   target['lint']()
-  target['test-browser']()
-  target['test-renderer']()
+  target['test:browser']()
+  target['test:renderer']()
 }
 
-target['test-renderer'] = (args) => {
+target['test:renderer'] = (args) => {
   target.unlink()
 
   args = args || []
@@ -46,7 +46,7 @@ target['test-renderer'] = (args) => {
     glob.sync('test/**/*_test.js', { ignore: 'test/browser/*' })))
 }
 
-target['test-browser'] = (args) => {
+target['test:browser'] = (args) => {
   target.unlink()
 
   args = args || []
@@ -57,24 +57,28 @@ target.mocha = (args) => test(args)
 
 
 target.compile = () => {
-  target['compile-js']()
-  target['compile-css']()
+  log.info('', { tag: 'compile' })
+
+  target['compile:js']()
+  target['compile:css']()
 }
 
-target['compile-js'] = (pattern) => {
+target['compile:js'] = (pattern) => {
+  const tag = ':js'
+
   new glob
     .Glob(pattern || 'src/**/*.{js,jsx}')
-    .on('error', (err) => fail('compile-js', err))
+    .on('error', (err) => log.error(err, { tag }))
 
     .on('match', (file) => {
       let src = path.relative(home, file)
       let dst = swap(src, 'src', 'lib', '.js')
 
       assert(src.startsWith('src'))
-      log.info('compiling %s to %s', src, dst)
+      log.info('%s -> %s', src, dst, { tag })
 
       babel.transformFile(src, (err, result) => {
-        if (err) return fail('compile-js', err)
+        if (err) return log.error(err, { tag })
 
         mkdir('-p', path.dirname(dst))
         result.code.to(dst)
@@ -82,17 +86,19 @@ target['compile-js'] = (pattern) => {
     })
 }
 
-target['compile-css'] = (pattern) => {
+target['compile:css'] = (pattern) => {
+  const tag = ':css'
+
   new glob
     .Glob(pattern || 'src/stylesheets/**/!(_*).{sass,scss}')
-    .on('error', (err) => fail('compile-css', err))
+    .on('error', (err) => log.error(err, { tag }))
 
     .on('match', (file) => {
       let src = path.relative(home, file)
       let dst = swap(src, 'src', 'lib', '.css')
 
       assert(src.startsWith('src/stylesheets'))
-      log.info('compiling %s to %s', src, dst)
+      log.info('%s -> %s', src, dst, { tag })
 
       let options = {
         file: src,
@@ -102,7 +108,7 @@ target['compile-css'] = (pattern) => {
       }
 
       sass.render(options, (err, result) => {
-        if (err) return fail('compile-css', `${err.line}: ${err.message}`)
+        if (err) return log.error(`${err.line}: ${err.message}`, { tag })
 
         mkdir('-p', path.dirname(dst))
         String(result.css).to(dst)
@@ -113,12 +119,14 @@ target['compile-css'] = (pattern) => {
 
 
 target.cover = (args) => {
+  const tag = 'cover'
   args = args || ['html']
 
   rm('-rf', cov)
   rm('-rf', scov)
 
-  exec(`${istanbul} instrument -o src-cov src`)
+  log.info('instrumenting source files...', { tag })
+  exec(`${istanbul} instrument -o src-cov src`, { silent: true })
 
   target['test-browser'](['--reporter test/support/coverage'])
   mv(`${cov}/coverage-final.json`, `${cov}/coverage-browser.json`)
@@ -126,7 +134,8 @@ target.cover = (args) => {
   target['test-renderer'](['--reporter test/support/coverage'])
   mv(`${cov}/coverage-final.json`, `${cov}/coverage-renderer.json`)
 
-  exec(`${istanbul} report --root ${cov} ${args.join(' ')}`)
+  log.info('writing coverage report...', { tag })
+  exec(`${istanbul} report --root ${cov} ${args.join(' ')}`, { silent: true })
 
   rm('-rf', scov)
 }
@@ -151,7 +160,7 @@ target.unlink = () => {
 
 
 target.rules = () => {
-  for (let rule in target) log.info('  - %s', rule)
+  for (let rule in target) log.info(rule, { tag: 'make' })
 }
 
 
@@ -175,10 +184,6 @@ function swap(filename, src, dst, ext) {
 
 function test(options) {
   exec(`${mocha} ${options.join(' ')}`, { silent: false })
-}
-
-function fail(mod, reason) {
-  log.error('[%s] %s', mod, reason)
 }
 
 // We need to make a copy when exposing targets to other scripts,

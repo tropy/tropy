@@ -39,6 +39,7 @@
     "babel-plugin-transform-es2015-destructuring": "^6.0.18",
     "babel-plugin-transform-es2015-parameters": "^6.3.13",
     "chai": "^3.4.1",
+    "colors": "^1.1.2",
     "electron-mocha": "^0.7.0",
     "electron-packager": "^5.1.1",
     "electron-prebuilt": "^0.36.0",
@@ -55,6 +56,7 @@
   "dependencies": {
     "bluebird": "^3.1.1",
     "js-yaml": "^3.4.6",
+    "string.prototype.padstart": "^3.0.0",
     "winston": "^2.1.1",
     "yargs": "^3.30.0"
   }
