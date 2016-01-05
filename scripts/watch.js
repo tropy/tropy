@@ -10,10 +10,10 @@ const make = require('./make')
 const log = require('./log')
 const cwd = process.cwd()
 
-const COLORS = { changed: 'blue', deleted: 'red', added: 'green' }
+const COLOR = { changed: 'blue', deleted: 'red', added: 'green' }
 
 function colorize(event, text) {
-  return colors[COLORS[event] || 'white'](text)
+  return colors[COLOR[event] || 'white'](text)
 }
 
 function shorten(file) {
