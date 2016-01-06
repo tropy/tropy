@@ -1,10 +1,12 @@
 'use strict'
 
+global.START_TIME = Date.now()
+
 const decode = decodeURIComponent
 const hash = window.location.hash.slice(1)
-const args = Object.freeze(JSON.parse(decode(hash)))
 
-process.env.NODE_ENV = args.environment
+global.args = Object.freeze(JSON.parse(decode(hash)))
 
-global.home = args.home
-require('common/log')(args.home)
+process.env.NODE_ENV = global.args.environment
+
+require('common/log')(global.args.home, global.args.debug)

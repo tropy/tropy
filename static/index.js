@@ -6,7 +6,8 @@
   const log = require('../lib/common/log')(global.home)
 
   window.onload = () => {
-    log.info('load')
+    log.info('window ready after %sms', Date.now() - global.START_TIME)
+
     document.body.innerHTML =
       `${pkg.name} ${pkg.version} ${process.env.NODE_ENV}`
 

@@ -1,5 +1,7 @@
 'use strict'
 
+const START_TIME = Date.now()
+
 const args = require('./args')
 const opts = args.parse(process.argv.slice(1))
 
@@ -12,10 +14,10 @@ if (opts.environment !== 'production') {
   app.setPath('userData', join(process.cwd(), 'tmp', opts.environment))
 }
 
-const { info } = require('../common/log')(app.getPath('userData'))
-const tropy = new (require('./tropy'))(opts)
+const { info } =
+  require('../common/log')(app.getPath('userData'), opts.debug)
 
-info('startup')
+const tropy = new (require('./tropy'))(opts)
 
 if (opts.environment !== 'test') {
   if (app.makeSingleInstance(() => tropy.open())) app.exit(0)
@@ -29,6 +31,7 @@ app
   .on('activate', () => tropy.open())
 
   .once('ready', () => {
-    info('ready')
     tropy.open()
+
+    info('application ready after %sms', Date.now() - START_TIME)
   })
