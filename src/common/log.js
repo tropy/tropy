@@ -82,7 +82,10 @@ function colorize(level, string = level) {
 
 function text(options) {
   if (options.meta && keys(options.meta).length) {
-    return [options.message, inspect(options.meta)].join(' ')
+    return [
+      options.message,
+      inspect(options.meta, { colors: true }).replace(/^/mg, '         ')
+    ].join('\n')
   }
 
   return options.message
