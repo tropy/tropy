@@ -10,7 +10,14 @@ const pad = require('string.prototype.padstart')
 const colors = require('colors/safe')
 const symbol = (process.type === 'renderer') ? 'ρ' : 'β'
 
-const COLORS = { info: 'blue', warn: 'yellow', error: 'red', debug: 'magenta' }
+const COLORS = {
+  error: 'red',
+  warn: 'yellow',
+  info: 'blue',
+  verbose: 'magenta',
+  debug: 'green'
+}
+
 const seq = timer()
 
 const logger = new Logger({
@@ -19,7 +26,7 @@ const logger = new Logger({
 })
 
 
-function init(dir, environment = process.env.NODE_ENV) {
+function init(dir, debug = false, environment = process.env.NODE_ENV) {
   logger.clear()
 
   switch (environment) {
@@ -51,6 +58,10 @@ function init(dir, environment = process.env.NODE_ENV) {
       logger.add(transports.Memory)
       break
   }
+
+  if (debug) logger.level = 'debug'
+
+  logger.debug('logger initialized at level %s', logger.level)
 
   return module.exports
 }
