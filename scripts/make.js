@@ -4,6 +4,7 @@ require('shelljs/make')
 
 const assert = require('assert')
 const path = require('path')
+const fs = require('fs')
 const babel = require('babel-core')
 const glob = require('glob')
 const sass = require('node-sass')
@@ -73,8 +74,7 @@ target['compile:js'] = (pattern) => {
       let dst = swap(src, 'src', 'lib', '.js')
 
       assert(src.startsWith('src'))
-
-      // TODO skip if up to date!
+      if (fresh(src, dst)) return
 
       log.info(dst, { tag })
 
@@ -166,6 +166,15 @@ target.clean = () => {
   rm('-f', path.join(home, 'npm-debug.log'))
 }
 
+
+function fresh(src, dst) {
+  try {
+    return fs.statSync(dst).mtime > fs.statSync(src).mtime
+
+  } catch (_) {
+    return false
+  }
+}
 
 function swap(filename, src, dst, ext) {
   return filename
