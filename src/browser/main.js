@@ -14,13 +14,16 @@ if (opts.environment !== 'production') {
   app.setPath('userData', join(process.cwd(), 'tmp', opts.environment))
 }
 
-const { info } =
+const { info, debug } =
   require('../common/log')(app.getPath('userData'), opts.debug)
 
 const tropy = new (require('./tropy'))(opts)
 
 if (opts.environment !== 'test') {
-  if (app.makeSingleInstance(() => tropy.open())) app.exit(0)
+  if (app.makeSingleInstance(() => tropy.open())) {
+    debug('other live instance detected, exiting...')
+    app.exit(0)
+  }
 }
 
 app
