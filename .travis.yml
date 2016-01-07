@@ -1,18 +1,14 @@
 language: node_js
-
 node_js:
-  - "4.1"
+  - '4.1'
 env:
   - CXX=g++-4.8
-
 sudo: false
 cache:
   directories:
     - node_modules
-
 matrix:
   fast_finish: true
-
 before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
@@ -21,10 +17,12 @@ script:
 after_script:
   - npm install coveralls
   - cat ./coverage/lcov.info | coveralls
-
 notifications:
   email: false
-
+  slack:
+    secure: sj1s7XDF0GINij7mW1GNAWAyHS2rJG1Dx69okM2agu92aAaCKas99d3eWp7N7cLbVO6A68MOvY8zgBIkdp/uebCI6fA2dnVoBPTul8eu9ZanTrXROT9H8vgJ7szyAmnKySCYTfcfJ0k0GyeXlzzoBJwgwwIX3jGYr8G+SoaQYKB7kVzRtkyzVVOXQ+Fuj8xDAVeBfZzxFu8ay5rPuk1/8VyBzHtumZkkCixF6niWGYGIQrJ5zdYwn4XtjiY7tv231JiDKhcHRg7z+CcwYC+rla1EXFoMVNziOq2lgm8s1wWEX87YUV4CwTIgMeRlYOCvgDzx+eGy+UOk8899hsZq9kpqv0y+ai4QoVm1XsdRK6qDvWH7nlPTDZLeSfkY9e+6rn3upRV6XldgnUJSQpEc/bKm3QMNic1E5aCHDAZhh8RhZuyqpEv4GQffhaXvq5jIV6M28ykrC5OZgxVfBH2gj+JPWmaU0/GIHme3P+THasu2Oim8Npi0qmit0UAghiFZHFN47Za5KCu5EctgBQiF3qR5kIaI21BtmEsEfbdlinCm+IvLlv2EJV2/eUvLUowJ9HgFgt3WhBwSa76iZD4js9ZV4H8jzRchRZEI6gwwxhRppeLLm5ZdER97MQqHz7qsWk7LB3javMd4EsTUiUZY8noSXkiMtU7gt89fVgy8OAg=
+  on_success: change
+  on_failure: change
 addons:
   apt:
     sources:
