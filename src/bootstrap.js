@@ -10,4 +10,4 @@ global.args = Object.freeze(JSON.parse(decode(hash)))
 process.env.NODE_ENV = global.args.environment
 process.env.DEBUG = global.args.debug
 
-require('common/log')(global.args.home)
+require('./common/log')(global.args.home)
