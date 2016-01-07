@@ -26,10 +26,10 @@ const logger = new Logger({
 })
 
 
-function init(dir, debug = false, environment = process.env.NODE_ENV) {
+function init(dir) {
   logger.clear()
 
-  switch (environment) {
+  switch (process.env.NODE_ENV) {
     case 'development':
       logger.level = 'verbose'
       logger.add(transports.Console, {
@@ -59,7 +59,7 @@ function init(dir, debug = false, environment = process.env.NODE_ENV) {
       break
   }
 
-  if (debug) logger.level = 'debug'
+  if (process.env.DEBUG === 'true') logger.level = 'debug'
 
   logger.debug('logger initialized at level %s', logger.level)
 

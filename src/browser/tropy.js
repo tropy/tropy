@@ -33,7 +33,7 @@ module.exports = class Tropy extends EventEmitter {
     if (!this.win) {
       this.win = new BrowserWindow({
         show: false,
-        preload: resolve(__dirname, '..', 'preload.js')
+        preload: resolve(__dirname, '..', 'bootstrap.js')
       })
 
       this.win.webContents.once('dom-ready', () => this.win.show())

@@ -34,7 +34,7 @@ target.src = () => {
       log.info(colorize(event, shorten(file)), { tag })
 
       if (event === 'deleted') {
-        return rm(file)
+        return rm(file.replace(/^src/, 'lib'))
       }
 
       make['compile:js'](file)
