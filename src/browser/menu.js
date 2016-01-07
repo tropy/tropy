@@ -2,7 +2,7 @@
 
 const res = require('../common/res')
 const { warn } = require('../common/log')
-const { format } = require('util')
+// const { format } = require('util')
 const { Menu } = require('electron')
 
 module.exports = class AppMenu {

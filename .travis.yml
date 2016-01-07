@@ -13,7 +13,7 @@ before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
 script:
-  - node scripts/make cover -- lcovonly
+  - node scripts/make lint cover -- lcovonly
 after_script:
   - npm install coveralls
   - cat ./coverage/lcov.info | coveralls
