@@ -10,6 +10,8 @@ const pad = require('string.prototype.padstart')
 const colors = require('colors/safe')
 const symbol = (process.type === 'renderer') ? 'ρ' : 'β'
 
+const PADDING = 8
+
 const COLORS = {
   error: 'red',
   warn: 'yellow',
@@ -73,7 +75,7 @@ function *timer() {
 }
 
 function time() {
-  return colors.gray(pad(`+${ms(seq.next().value)}`, 8, ' '))
+  return colors.gray(pad(`+${ms(seq.next().value)}`, PADDING, ' '))
 }
 
 function colorize(level, string = level) {
@@ -84,7 +86,9 @@ function text(options) {
   if (options.meta && keys(options.meta).length) {
     return [
       options.message,
-      inspect(options.meta, { colors: true }).replace(/^/mg, '         ')
+      inspect(options.meta, { colors: true })
+        .replace(/^/mg, ' '.repeat(PADDING))
+
     ].join('\n')
   }
 
