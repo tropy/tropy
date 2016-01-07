@@ -2,7 +2,6 @@
 
 const res = require('../common/res')
 const { warn } = require('../common/log')
-// const { format } = require('util')
 const { Menu } = require('electron')
 
 module.exports = class AppMenu {
@@ -58,7 +57,10 @@ module.exports = class AppMenu {
         item.click = this.responder(item.command)
       }
 
-      //item.label = format(item.label, this.app)
+      if (item.label) {
+        item.label = item.label
+          .replace(/%(\w+)/g, (_, prop) => this.app[prop])
+      }
 
       if (item.submenu) {
         item.submenu = this.translate(item.submenu)
