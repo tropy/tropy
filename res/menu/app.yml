@@ -2,6 +2,9 @@ linux:
   - &file
     label: '&File'
     submenu:
+      - label: 'Close'
+        accelerator: 'CmdOrCtrl+W'
+        role: 'close'
       - label: 'Quit'
         accelerator: 'CmdOrCtrl+Q'
         command: 'application:quit'
@@ -31,9 +34,6 @@ linux:
   - &view
     label: '&View'
     submenu:
-      - label: '&Reload'
-        accelerator: 'CmdOrCtrl+R'
-        command: 'window:reload'
       - label: 'Toggle &Full Screen'
         command: 'window:toggle-full-screen'
       - label: 'Toggle &Menu Bar'
@@ -43,9 +43,12 @@ linux:
     environment: 'development'
     debug: true
     submenu:
+      - label: '&Reload'
+        accelerator: 'CmdOrCtrl+R'
+        command: 'window:reload'
       - label: 'Toggle &Developer Tools'
         accelerator: 'Ctrl+Shift+I'
-        command: 'window:toggle-dev-tools'
+        command: 'window:toggleDevTools'
   - &help
     label: 'Help'
     submenu:
@@ -55,7 +58,7 @@ linux:
       - label: 'Search Issues'
         command: 'application:search-issues'
       - type: 'separator'
-      - label: 'About'
+      - label: 'About %name'
         command: 'application:about'
 
 darwin:
