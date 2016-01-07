@@ -15,13 +15,12 @@ if (opts.environment !== 'production') {
   app.setPath('userData', join(process.cwd(), 'tmp', opts.environment))
 }
 
-const { info, debug } = require('../common/log')(app.getPath('userData'))
-
+const { info, verbose } = require('../common/log')(app.getPath('userData'))
 const tropy = new (require('./tropy'))(opts)
 
 if (opts.environment !== 'test') {
   if (app.makeSingleInstance(() => tropy.open())) {
-    debug('other live instance detected, exiting...')
+    verbose('other live instance detected, exiting...')
     app.exit(0)
   }
 }
@@ -36,5 +35,5 @@ app
   .once('ready', () => {
     tropy.open()
 
-    info('application ready after %sms', Date.now() - START_TIME)
+    info('app ready after %sms', Date.now() - START_TIME)
   })

@@ -28,9 +28,10 @@ describe('Menu', () => {
   })
 
   describe('.open', () => {
-    it('loads and parses the given menu', () => {
+    it('loads and parses the given menu', () => (
       expect(Menu.open('app'))
-        .to.have.property('template').and.have.length(5)
-    })
+        .eventually.to.have.property('template')
+        .and.have.length(5)
+    ))
   })
 })

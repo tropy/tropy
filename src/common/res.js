@@ -1,7 +1,9 @@
 'use strict'
 
+require('./promisify')
+
 const { resolve, join } = require('path')
-const { readFileSync: read } = require('fs')
+const { readFileAsync: read } = require('fs')
 const yaml = require('js-yaml')
 const root = resolve(__dirname, '..', '..', 'res')
 
@@ -18,8 +20,8 @@ class Resource {
     return yaml.safeLoad(data)
   }
 
-  static open(name) {
-    return new this(this.parse(read(this.expand(name))))
+  static async open(name) {
+    return new this(this.parse(await read(this.expand(name))))
   }
 
   static expand(name) {
