@@ -45,6 +45,9 @@ module.exports = class AppMenu {
   translate(template) {
     return template.map(item => {
 
+      // Hiding of root items does not work at the moment.
+      // See Electron #2895
+
       if (item.environment) {
         item.visible = item.environment === this.app.environment
       }
