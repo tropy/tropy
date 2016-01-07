@@ -26,11 +26,13 @@
   },
   "main": "lib/browser/main.js",
   "scripts": {
-    "clean": "node scripts/make clean",
     "compile": "node scripts/make compile",
-    "lint": "node scripts/make lint",
-    "start": "node scripts/make compile link && electron -e development",
+    "make": "node scripts/make",
+    "prestart": "node scripts/make compile link",
+    "start": "electron -e development",
+    "poststart": "node scripts/make unlink",
     "test": "node scripts/make test",
+    "prewatch": "node scripts/make compile",
     "watch": "node scripts/watch"
   },
   "devDependencies": {
