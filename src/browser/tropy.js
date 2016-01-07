@@ -3,6 +3,8 @@
 const { EventEmitter } = require('events')
 const { resolve } = require('path')
 const { app, BrowserWindow } = require('electron')
+const { verbose } = require('../common/log')
+const AppMenu = require('./menu')
 const url = require('url')
 
 const pkg = require('../../package')
@@ -16,6 +18,9 @@ module.exports = class Tropy extends EventEmitter {
 
     super()
     Tropy.instance = this
+
+    this.menu = new AppMenu(this)
+    this.menu.load('app')
 
     prop(this, 'debug', { value: debug })
     prop(this, 'environment', { value: environment || process.env.NODE_ENV })
@@ -55,6 +60,15 @@ module.exports = class Tropy extends EventEmitter {
       pathname: `${this.home}/static/${filename}`,
       hash: this.hash
     })
+  }
+
+
+  exec(command) {
+    verbose(`executing ${command}`)
+  }
+
+  get name() {
+    return pkg.productName || pkg.name
   }
 
   get version() {

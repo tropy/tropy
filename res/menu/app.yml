@@ -40,6 +40,8 @@ linux:
         command: 'window:toggle-menu-bar'
   - &dev
     label: 'Developer'
+    environment: 'development'
+    debug: true
     submenu:
       - label: 'Toggle &Developer Tools'
         accelerator: 'Ctrl+Shift+I'
@@ -57,7 +59,7 @@ linux:
         command: 'application:about'
 
 darwin:
-  - label: 'Tropy'
+  - label: '%name'
     submenu:
       - label: 'About %name'
         role: 'about'
