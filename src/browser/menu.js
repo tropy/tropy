@@ -3,30 +3,29 @@
 const res = require('../common/res')
 const { warn } = require('../common/log')
 const { Menu } = require('electron')
+const { assign } = Object
 
 module.exports = class AppMenu {
   constructor(app) {
     this.app = app
   }
 
+  update() {
+    return Menu.setApplicationMenu(this.menu), this
+  }
+
+  clear() {
+    delete this.menu
+    return this.update()
+  }
+
   async load(name = 'app') {
-    this.unload()
+    if (this.menu) this.clear()
 
-    let menu = await res.Menu.open(name)
-    this.template = this.translate(menu.template)
+    let template = (await res.Menu.open(name)).template
+    this.menu = this.build(template)
 
-    Menu.setApplicationMenu(Menu.buildFromTemplate(this.template))
-  }
-
-  unload() {
-    if (this.template) this.unbind(this.template)
-  }
-
-  unbind(template) {
-    for (let item of template) {
-      delete item.click
-      if (item.submenu) this.unbind(item.submenu)
-    }
+    return this.update()
   }
 
   responder(command) {
@@ -38,12 +37,17 @@ module.exports = class AppMenu {
       case 'window':
         return (_, win) => win[action]()
       default:
-        warn(`cannot bind menu command ${command}`)
+        warn(`no responder for menu command ${command}`)
     }
+  }
+
+  build(template) {
+    return Menu.buildFromTemplate(this.translate(template))
   }
 
   translate(template) {
     return template.map(item => {
+      item = assign({}, item)
 
       // Hiding of root items does not work at the moment.
       // See Electron #2895
