@@ -2,9 +2,6 @@ linux:
   - &file
     label: '&File'
     submenu:
-      - label: 'Close'
-        accelerator: 'CmdOrCtrl+W'
-        role: 'close'
       - label: 'Quit'
         accelerator: 'CmdOrCtrl+Q'
         command: 'application:quit'
@@ -35,9 +32,18 @@ linux:
     label: '&View'
     submenu:
       - label: 'Toggle &Full Screen'
-        command: 'window:toggle-full-screen'
-      - label: 'Toggle &Menu Bar'
-        command: 'window:toggle-menu-bar'
+        command: 'application:toggle-full-screen'
+      - label: 'Toggle Hide &Menu Bar'
+        command: 'application:toggle-menu-bar'
+  - &win
+    label: 'Window'
+    submenu:
+      - label: 'Minimize'
+        accelerator: 'CmdOrCtrl+M'
+        role: 'minimize'
+      - label: 'Close'
+        accelerator: 'CmdOrCtrl+W'
+        role: 'close'
   - &dev
     label: 'Developer'
     environment: 'development'
@@ -54,7 +60,6 @@ linux:
     submenu:
       - label: 'View &License'
         command: 'application:open-license'
-      - type: 'separator'
       - label: 'Search Issues'
         command: 'application:search-issues'
       - type: 'separator'
@@ -82,12 +87,31 @@ darwin:
 
   - *edit
   - *view
+  - label: 'Window'
+    role: 'window'
+    submenu:
+      - label: 'Minimize'
+        accelerator: 'CmdOrCtrl+M'
+        role: 'minimize'
+      - label: 'Close'
+        accelerator: 'CmdOrCtrl+W'
+        role: 'close'
+      - type: 'seperator'
+      - label: 'Bring All to Front'
+        role: 'front'
   - *dev
-  - *help
+  - label: 'Help'
+    role: 'help'
+    submenu:
+      - label: 'View &License'
+        command: 'application:open-license'
+      - label: 'Search Issues'
+        command: 'application:search-issues'
 
 win32:
   - *file
   - *edit
   - *view
+  - *win
   - *dev
   - *help

@@ -39,3 +39,7 @@ app
 
     info('app ready after %sms', Date.now() - START_TIME)
   })
+
+  .on('quit', (_, code) => {
+    verbose(`app quit with exit code ${code}`)
+  })

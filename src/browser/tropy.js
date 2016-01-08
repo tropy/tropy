@@ -2,7 +2,7 @@
 
 const { EventEmitter } = require('events')
 const { resolve } = require('path')
-const { app, BrowserWindow } = require('electron')
+const { app, shell, BrowserWindow } = require('electron')
 const { verbose } = require('../common/log')
 const AppMenu = require('./menu')
 const url = require('url')
@@ -32,6 +32,8 @@ module.exports = class Tropy extends EventEmitter {
     prop(this, 'hash', {
       value: encode({ environment, debug, home: app.getPath('userData') })
     })
+
+    this.listen()
   }
 
   open() {
@@ -62,10 +64,35 @@ module.exports = class Tropy extends EventEmitter {
     })
   }
 
+  listen() {
+    this
+      .on('application:quit', () => app.quit())
 
-  exec(command) {
-    verbose(`executing ${command}`)
+      .on('application:toggle-full-screen', win => {
+        verbose('toggle fullscreen')
+        win.setFullScreen(!win.isFullScreen())
+      })
+
+      .on('application:toggle-menu-bar', win => {
+        verbose('toggle menu bar')
+
+        if (win.isMenuBarAutoHide()) {
+          win.setAutoHideMenuBar(false)
+        } else {
+          win.setAutoHideMenuBar(true)
+          win.setMenuBarVisibility(false)
+        }
+      })
+
+      .on('application:open-license', () => {
+        shell.openExternal('https://github.com/tropy/tropy/blob/master/LICENSE')
+      })
+
+      .on('application:search-issues', () => {
+        shell.openExternal('https://github.com/tropy/tropy/issues')
+      })
   }
+
 
   get name() {
     return pkg.productName || pkg.name

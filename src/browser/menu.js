@@ -33,7 +33,7 @@ module.exports = class AppMenu {
 
     switch (prefix) {
       case 'application':
-        return () => this.app.exec(action)
+        return (_, win) => this.app.emit(command, win)
       case 'window':
         return (_, win) => win[action]()
       default:
