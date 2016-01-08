@@ -2,7 +2,7 @@
 
 const { EventEmitter } = require('events')
 const { resolve } = require('path')
-const { app, shell, BrowserWindow } = require('electron')
+const { app, shell, BrowserWindow, ipcMain: ipc } = require('electron')
 const { verbose } = require('../common/log')
 const AppMenu = require('./menu')
 const url = require('url')
@@ -91,6 +91,14 @@ module.exports = class Tropy extends EventEmitter {
       .on('application:search-issues', () => {
         shell.openExternal('https://github.com/tropy/tropy/issues')
       })
+
+    app
+      .on('before-quit', () => {
+        verbose('saving state...')
+      })
+
+    ipc
+      .on('command', (_, command) => this.emit(command))
   }
 
 
