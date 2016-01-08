@@ -96,7 +96,7 @@ darwin:
       - label: 'Close'
         accelerator: 'CmdOrCtrl+W'
         role: 'close'
-      - type: 'seperator'
+      - type: 'separator'
       - label: 'Bring All to Front'
         role: 'front'
   - *dev
