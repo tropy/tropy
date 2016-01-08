@@ -31,7 +31,7 @@ describe('Menu', () => {
     it('loads and parses the given menu', () => (
       expect(Menu.open('app'))
         .eventually.to.have.property('template')
-        .and.have.length(5)
+        .and.have.length(6)
     ))
   })
 })
