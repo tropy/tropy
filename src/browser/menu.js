@@ -32,9 +32,9 @@ module.exports = class AppMenu {
     let [prefix, action] = command.split(':')
 
     switch (prefix) {
-      case 'application':
+      case 'app':
         return (_, win) => this.app.emit(command, win)
-      case 'window':
+      case 'win':
         return (_, win) => win[action]()
       default:
         warn(`no responder for menu command ${command}`)

@@ -4,7 +4,7 @@ linux:
     submenu:
       - label: 'Quit'
         accelerator: 'CmdOrCtrl+Q'
-        command: 'application:quit'
+        command: 'app:quit'
   - &edit
     label: '&Edit'
     submenu:
@@ -32,9 +32,9 @@ linux:
     label: '&View'
     submenu:
       - label: 'Toggle &Full Screen'
-        command: 'application:toggle-full-screen'
+        command: 'app:toggle-full-screen'
       - label: 'Toggle Hide &Menu Bar'
-        command: 'application:toggle-menu-bar'
+        command: 'app:toggle-menu-bar'
   - &win
     label: 'Window'
     submenu:
@@ -51,20 +51,20 @@ linux:
     submenu:
       - label: '&Reload'
         accelerator: 'CmdOrCtrl+R'
-        command: 'window:reload'
+        command: 'win:reload'
       - label: 'Toggle &Developer Tools'
         accelerator: 'Ctrl+Shift+I'
-        command: 'window:toggleDevTools'
+        command: 'win:toggleDevTools'
   - &help
     label: 'Help'
     submenu:
       - label: 'View &License'
-        command: 'application:open-license'
+        command: 'app:open-license'
       - label: 'Search Issues'
-        command: 'application:search-issues'
+        command: 'app:search-issues'
       - type: 'separator'
       - label: 'About %name'
-        command: 'application:about'
+        command: 'app:about'
 
 darwin:
   - label: '%name'
@@ -83,7 +83,7 @@ darwin:
       - type: 'separator'
       - label: 'Quit'
         accelerator: 'Command+Q'
-        command: 'application:quit'
+        command: 'app:quit'
 
   - *edit
   - *view
@@ -104,9 +104,9 @@ darwin:
     role: 'help'
     submenu:
       - label: 'View &License'
-        command: 'application:open-license'
+        command: 'app:open-license'
       - label: 'Search Issues'
-        command: 'application:search-issues'
+        command: 'app:search-issues'
 
 win32:
   - *file

@@ -66,14 +66,14 @@ module.exports = class Tropy extends EventEmitter {
 
   listen() {
     this
-      .on('application:quit', () => app.quit())
+      .on('app:quit', () => app.quit())
 
-      .on('application:toggle-full-screen', win => {
+      .on('app:toggle-full-screen', win => {
         verbose('toggle fullscreen')
         win.setFullScreen(!win.isFullScreen())
       })
 
-      .on('application:toggle-menu-bar', win => {
+      .on('app:toggle-menu-bar', win => {
         verbose('toggle menu bar')
 
         if (win.isMenuBarAutoHide()) {
@@ -84,11 +84,11 @@ module.exports = class Tropy extends EventEmitter {
         }
       })
 
-      .on('application:open-license', () => {
+      .on('app:open-license', () => {
         shell.openExternal('https://github.com/tropy/tropy/blob/master/LICENSE')
       })
 
-      .on('application:search-issues', () => {
+      .on('app:search-issues', () => {
         shell.openExternal('https://github.com/tropy/tropy/issues')
       })
 
