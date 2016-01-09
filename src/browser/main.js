@@ -18,6 +18,9 @@ if (opts.environment !== 'production') {
 const { info, verbose } =
   require('../common/log')(app.getPath('userData'))
 
+verbose(`app started in ${opts.e} mode`)
+verbose(`using ${app.getPath('userData')}`)
+
 const tropy = new (require('./tropy'))(opts)
 
 if (opts.environment !== 'test') {
