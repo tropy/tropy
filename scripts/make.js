@@ -98,7 +98,7 @@ target['compile:css'] = (pattern) => {
       let src = path.relative(home, file)
       let dst = swap(src, 'src', 'lib', '.css')
 
-      assert(src.startsWith('src/stylesheets'))
+      assert(src.startsWith(path.join('src', 'stylesheets')))
       log.info(dst, { tag })
 
       let options = {
