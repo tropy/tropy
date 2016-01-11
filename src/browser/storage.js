@@ -3,22 +3,29 @@
 
 require('../common/promisify')
 
+const { promisify } = require('bluebird')
 const { app } = require('electron')
 const { join } = require('path')
-const { readFileAsync: read, writeFileAsync: write } = require('fs')
+const { readFileAsync: read } = require('fs')
+
+const write = promisify(require('write-file-atomic'))
+write.sync = require('write-file-atomic').sync
 
 
 class Storage {
   constructor(path = app.getPath('userData')) {
     this.path = path
+    this.save.sync = (name, object) => (
+      write.sync(this.expand(name), JSON.stringify(object))
+    )
   }
 
   async load(name) {
-    return JSON.parse(await read(this.expand(name), 'utf-8'))
+    return JSON.parse(await read(this.expand(name)))
   }
 
   async save(name, object) {
-    return await write(this.expand(name), JSON.stringify(object), 'utf-8')
+    return await write(this.expand(name), JSON.stringify(object))
   }
 
   expand(name) {

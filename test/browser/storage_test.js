@@ -9,14 +9,24 @@ describe('Storage', () => {
     const folder = new Storage()
 
     describe('#save', () => {
+      after(done => {
+        fs.unlink(folder.expand('test-a.json'), done)
+      })
+
       it('saves object with given name', () => (
         expect(folder.save('test-a.json', { name: 'a' }))
           .eventually.to.be.fulfilled
       ))
+    })
 
+    describe('#save.sync', () => {
       after(done => {
         fs.unlink(folder.expand('test-a.json'), done)
       })
+
+      it('saves object with given name', () => (
+        expect(folder.save.sync('test-a.json', { name: 'a' })).not.to.throw
+      ))
     })
 
     describe('#load', () => {
