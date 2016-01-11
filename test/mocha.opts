@@ -4,3 +4,4 @@
 --require test/support/mode
 --require test/support/chai
 --require test/support/src
+--require test/support/path

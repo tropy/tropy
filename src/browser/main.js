@@ -8,13 +8,9 @@ const opts = args.parse(process.argv.slice(1))
 process.env.NODE_ENV = opts.environment
 process.env.DEBUG = opts.debug
 
+require('./path')
+
 const { app } = require('electron')
-const { join } = require('path')
-
-if (opts.environment !== 'production') {
-  app.setPath('userData', join(process.cwd(), 'tmp', opts.environment))
-}
-
 const { info, verbose } =
   require('../common/log')(app.getPath('userData'))
 
@@ -40,7 +36,7 @@ app
   .once('ready', () => {
     tropy.open()
 
-    info('app ready after %sms', Date.now() - START_TIME)
+    info('electron ready after %sms', Date.now() - START_TIME)
   })
 
   .on('quit', (_, code) => {
