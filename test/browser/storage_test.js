@@ -1,23 +1,16 @@
 'use strict'
 
-const e = require('electron')
-const app = (process.type === 'renderer' ? e.remote.app : e.app)
 const fs = require('fs')
 
 describe('Storage', () => {
   const Storage = __require('browser/storage')
 
   describe('given a storage folder', () => {
-    let folder
+    const folder = new Storage()
 
-    before(() => {
-      folder = new Storage(app.getPath('temp'))
-    })
-
-
-    describe('#store', () => {
+    describe('#save', () => {
       it('saves object with given name', () => (
-        expect(folder.store('test-a.json', { name: 'a' }))
+        expect(folder.save('test-a.json', { name: 'a' }))
           .eventually.to.be.fulfilled
       ))
 
@@ -28,7 +21,7 @@ describe('Storage', () => {
 
     describe('#load', () => {
       before(() => {
-        folder.store('test-b.json', { name: 'b' })
+        folder.save('test-b.json', { name: 'b' })
       })
 
       after(done => {

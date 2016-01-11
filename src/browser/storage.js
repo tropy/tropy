@@ -17,7 +17,7 @@ class Storage {
     return JSON.parse(await read(this.expand(name), 'utf-8'))
   }
 
-  async store(name, object) {
+  async save(name, object) {
     return await write(this.expand(name), JSON.stringify(object), 'utf-8')
   }
 
