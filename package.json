@@ -66,6 +66,7 @@
     "ms": "^0.7.1",
     "string.prototype.padstart": "^3.0.0",
     "winston": "^2.1.1",
+    "write-file-atomic": "^1.1.4",
     "yargs": "^3.30.0"
   }
 }
