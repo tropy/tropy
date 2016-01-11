@@ -12,3 +12,4 @@ globals:
 
 rules:
   no-console: 0
+  max-nested-callbacks: [1, 6]

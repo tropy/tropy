@@ -46,6 +46,7 @@
     "babel-plugin-transform-es2015-parameters": "^6.3.13",
     "chai": "^3.4.1",
     "chai-as-promised": "^5.2.0",
+    "chai-fs": "^0.1.0",
     "colors": "^1.1.2",
     "electron-mocha": "^0.7.0",
     "electron-packager": "^5.1.1",
