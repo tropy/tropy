@@ -14,21 +14,16 @@ describe('Storage', () => {
       folder = new Storage(app.getPath('temp'))
     })
 
-    after(done => {
-      fs.unlink(folder.expand('test-a.json'), done)
-    })
 
     describe('#store', () => {
-
       it('saves object with given name', () => (
-        expect(
-          folder
-            .store('test-a.json', { name: 'a' })
-            .then(() => {
-              expect(folder.expand('test-a.json')).to.be.a.file().with.json
-            })
-        ).to.eventually.be.fulfilled
+        expect(folder.store('test-a.json', { name: 'a' }))
+          .eventually.to.be.fulfilled
       ))
+
+      after(done => {
+        fs.unlink(folder.expand('test-a.json'), done)
+      })
     })
 
     describe('#load', () => {
