@@ -120,6 +120,8 @@ target['compile:css'] = (pattern) => {
 
 
 target.cover = (args) => {
+  target['compile:js']()
+
   const tag = 'cover'
   args = args || ['html']
 
@@ -127,7 +129,7 @@ target.cover = (args) => {
   rm('-rf', scov)
 
   log.info('instrumenting source files...', { tag })
-  exec(`${istanbul} instrument -o src-cov src`, { silent: true })
+  exec(`${istanbul} instrument -o src-cov lib`, { silent: true })
 
   target['test:browser'](['--reporter test/support/coverage'])
   mv(`${cov}/coverage-final.json`, `${cov}/coverage-browser.json`)
