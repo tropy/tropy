@@ -13,19 +13,10 @@ const defaults = {
 }
 
 class Window extends BrowserWindow {
-  constructor(state = {}, options = {}) {
+  constructor(options = {}) {
     super(assign({}, defaults, options))
 
-    //this.state = state
-    this.webContents.once('dom-ready', () => this.show())
-  }
-
-  get state() {
-    return this.getBounds()
-  }
-
-  set state(state) {
-    this.setBounds(state)
+    this.webContents.on('dom-ready', () => this.show())
   }
 
   open(file, data = {}) {
