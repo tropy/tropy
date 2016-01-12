@@ -15,6 +15,7 @@ target.all = () => {
 }
 
 target.pack = (args) => {
+  const tag = 'pack'
   args = args || ['all', 'all']
 
   packager({ // eslint-disable-line quote-props
@@ -38,7 +39,7 @@ target.pack = (args) => {
 
   }, (err, dst) => {
     if (err) return log.error(err)
-    log.info('%s package written to %s', args[0], dst)
+    log.info('%s package written to %s', args[0], dst, { tag })
   })
 }
 
