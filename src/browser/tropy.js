@@ -2,11 +2,11 @@
 
 const { EventEmitter } = require('events')
 const { resolve } = require('path')
-const { app, shell, BrowserWindow, ipcMain: ipc } = require('electron')
+const { app, shell, ipcMain: ipc } = require('electron')
 const { verbose } = require('../common/log')
 const AppMenu = require('./menu')
+const Window = require('./window')
 const Storage = require('./storage')
-const url = require('url')
 
 const pkg = require('../../package')
 
@@ -33,7 +33,7 @@ module.exports = class Tropy extends EventEmitter {
     })
 
     prop(this, 'hash', {
-      value: encode({ environment, debug, home: app.getPath('userData') })
+      value: { environment, debug, home: app.getPath('userData') }
     })
 
     this.resume()
@@ -42,30 +42,15 @@ module.exports = class Tropy extends EventEmitter {
 
   open() {
     if (!this.win) {
-      this.win = new BrowserWindow({
-        show: false,
-        preload: resolve(__dirname, '..', 'bootstrap.js')
-      })
-
-      this.win.webContents.once('dom-ready', () => this.win.show())
-
-      this.win
+      this.win = new Window()
         .once('closed', () => { this.win = undefined })
-        .loadURL(this.url('index.html'))
+        .open('index.html', this.hash)
 
     } else {
       this.win.show()
     }
 
     return this
-  }
-
-  url(filename) {
-    return url.format({
-      protocol: 'file',
-      pathname: `${this.home}/static/${filename}`,
-      hash: this.hash
-    })
   }
 
   resume() {
@@ -136,8 +121,4 @@ module.exports = class Tropy extends EventEmitter {
   get production() {
     return this.environment === 'production'
   }
-}
-
-function encode(data) {
-  return encodeURIComponent(JSON.stringify(data))
 }
