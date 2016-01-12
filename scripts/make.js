@@ -120,8 +120,6 @@ target['compile:css'] = (pattern) => {
 
 
 target.cover = (args) => {
-  target['compile:js']()
-
   const tag = 'cover'
   args = args || ['html']
 
