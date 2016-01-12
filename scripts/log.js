@@ -12,7 +12,7 @@ function colorize(level, text) {
 }
 
 function prefix(options) {
-  return colorize(options.level, pad(options.meta.tag, 12, ' '))
+  return colorize(options.level, pad(options.meta.tag || '', 12, ' '))
 }
 
 module.exports = new winston.Logger({
