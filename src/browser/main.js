@@ -27,10 +27,6 @@ if (opts.environment !== 'test') {
 }
 
 app
-  .on('window-all-closed', () => {
-    if (process.platform !== 'darwin') app.quit()
-  })
-
   .once('ready', () => {
     info('electron ready after %sms', Date.now() - START_TIME)
   })

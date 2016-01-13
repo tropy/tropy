@@ -98,6 +98,9 @@ module.exports = class Tropy extends EventEmitter {
       })
 
     app
+      .on('window-all-closed', () => {
+        if (process.platform !== 'darwin') this.emit('app:quit')
+      })
       .on('before-quit', () => {
         verbose('saving app state')
         this.persist()
