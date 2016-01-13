@@ -31,11 +31,7 @@ app
     if (process.platform !== 'darwin') app.quit()
   })
 
-  .on('activate', () => tropy.open())
-
   .once('ready', () => {
-    tropy.open()
-
     info('electron ready after %sms', Date.now() - START_TIME)
   })
 

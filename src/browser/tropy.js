@@ -4,6 +4,7 @@ const { EventEmitter } = require('events')
 const { resolve } = require('path')
 const { app, shell, ipcMain: ipc } = require('electron')
 const { verbose } = require('../common/log')
+const { Observable } = require('@reactivex/rxjs')
 const AppMenu = require('./menu')
 const Window = require('./window')
 const Storage = require('./storage')
@@ -36,7 +37,7 @@ module.exports = class Tropy extends EventEmitter {
       value: { environment, debug, home: app.getPath('userData') }
     })
 
-    this.resume()
+    this.restore()
     this.listen()
   }
 
@@ -53,14 +54,14 @@ module.exports = class Tropy extends EventEmitter {
     return this
   }
 
-  resume() {
+  restore() {
     return this.store
       .load('state.json')
       .catch({ code: 'ENOENT' }, () => ({}))
 
       .then(state => {
         this.state = state
-        this.emit('app:resume')
+        this.emit('app:restore')
       })
   }
 
@@ -102,8 +103,19 @@ module.exports = class Tropy extends EventEmitter {
         this.persist()
       })
 
+    if (process.platform === 'darwin') {
+      app
+        .on('activate', () => this.open())
+    }
+
     ipc
       .on('command', (_, command) => this.emit(command))
+
+    Observable.zip(
+        Observable.fromEvent(app, 'ready'),
+        Observable.fromEvent(this, 'app:restore'))
+      .take(1)
+      .subscribe(() => this.open())
   }
 
 
