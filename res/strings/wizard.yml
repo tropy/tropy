@@ -1,2 +1,3 @@
-states:
-  - title: Hello
+en:
+  states:
+    - title: Hello
