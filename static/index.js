@@ -5,7 +5,7 @@
   const dom = require('../lib/dom')
   const log = require('../lib/common/log')
 
-  dom.on(window, 'load', () => {
+  dom.ready(() => {
     log.info('window ready after %sms', Date.now() - global.START_TIME)
 
     document.body.innerHTML =
