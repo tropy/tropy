@@ -2,6 +2,10 @@ linux:
   - &file
     label: '&File'
     submenu:
+      - label: 'New'
+        submenu:
+          - label: 'Archive'
+            command: 'app:new-archive'
       - label: 'Quit'
         accelerator: 'CmdOrCtrl+Q'
         command: 'app:quit'

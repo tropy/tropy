@@ -5,8 +5,8 @@ const { resolve } = require('path')
 const { app, shell, ipcMain: ipc } = require('electron')
 const { verbose } = require('../common/log')
 const { Observable } = require('@reactivex/rxjs')
+const { Window, Wizard } = require('./window')
 const AppMenu = require('./menu')
-const Window = require('./window')
 const Storage = require('./storage')
 
 const pkg = require('../../package')
@@ -42,14 +42,21 @@ module.exports = class Tropy extends EventEmitter {
   }
 
   open() {
-    if (!this.win) {
-      this.win = new Window({ title: this.name })
-        .once('closed', () => { this.win = undefined })
-        .open('index.html', this.hash)
+    if (this.win) return this.win.show(), this
 
-    } else {
-      this.win.show()
-    }
+    this.win = new Window()
+      .once('closed', () => { this.win = undefined })
+      .open('index.html', this.hash)
+
+    return this
+  }
+
+  create() {
+    if (this.wizard) return this.wizard.show(), this
+
+    this.wizard = new Wizard()
+      .once('closed', () => { this.wizard = undefined })
+      .open('index.html', this.hash)
 
     return this
   }
@@ -71,6 +78,7 @@ module.exports = class Tropy extends EventEmitter {
 
   listen() {
     this
+      .on('app:new-archive', () => this.create())
       .on('app:quit', () => app.quit())
 
       .on('app:toggle-full-screen', win => {

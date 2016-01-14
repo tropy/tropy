@@ -1,21 +1,25 @@
 'use strict'
 
-const { BrowserWindow } = require('electron')
+const { app, BrowserWindow } = require('electron')
 const { resolve } = require('path')
 const { format } = require('url')
 const { assign } = Object
 
 const root = resolve(__dirname, '..', '..', 'static')
 
-const defaults = {
-  show: false,
-  preload: resolve(__dirname, '..', 'bootstrap.js'),
-  overlayScrollbars: true
-}
 
 class Window extends BrowserWindow {
+  static get defaults() {
+    return {
+      title: app.getName(),
+      show: false,
+      preload: resolve(__dirname, '..', 'bootstrap.js'),
+      overlayScrollbars: true
+    }
+  }
+
   constructor(options = {}) {
-    super(assign({}, defaults, options))
+    super(assign({}, new.target.defaults, options))
 
     this.webContents.on('dom-ready', () => this.show())
   }
@@ -29,4 +33,14 @@ class Window extends BrowserWindow {
   }
 }
 
-module.exports = Window
+class Wizard extends Window {
+  static get defaults() {
+    return assign(super.defaults, {
+      frame: false
+    })
+  }
+}
+
+module.exports = {
+  Window, Wizard
+}

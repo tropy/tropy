@@ -11,6 +11,7 @@ ecmaFeatures:
   arrowFunctions: true
   blockBindings: true
   classes: true
+  newTarget: true
   destructuring: true
   forOf: true
   generators: true
@@ -23,6 +24,11 @@ ecmaFeatures:
 env:
   node: true
   browser: true
+
+globals:
+  # Workaround to make babel-eslint allow new.target
+  new: true
+  target: true
 
 rules:
   array-bracket-spacing: 2
