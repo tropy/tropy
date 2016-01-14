@@ -1,12 +1,14 @@
 {
   "plugins": [
     "syntax-async-functions",
+    "syntax-jsx",
     ["transform-async-to-module-method", {
       "module": "bluebird",
       "method": "coroutine"
     }],
     "transform-es2015-destructuring",
     "transform-es2015-modules-commonjs",
-    "transform-es2015-parameters"
+    "transform-es2015-parameters",
+    "transform-react-jsx",
   ]
 }
