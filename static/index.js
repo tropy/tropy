@@ -3,7 +3,7 @@
 {
   const pkg = require('../package')
   const dom = require('../lib/dom')
-  const log = require('../lib/common/log')(global.home)
+  const log = require('../lib/common/log')
 
   window.onload = () => {
     log.info('window ready after %sms', Date.now() - global.START_TIME)

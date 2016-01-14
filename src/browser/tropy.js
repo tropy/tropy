@@ -56,7 +56,7 @@ module.exports = class Tropy extends EventEmitter {
 
     this.wizard = new Wizard()
       .once('closed', () => { this.wizard = undefined })
-      .open('index.html', this.hash)
+      .open('wizard.html', this.hash)
 
     return this
   }
