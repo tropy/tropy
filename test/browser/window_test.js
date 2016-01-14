@@ -1,7 +1,7 @@
 'use strict'
 
 describe('Window', () => {
-  const Window = __require('browser/window')
+  const { Window } = __require('browser/window')
   const { BrowserWindow } = require('electron')
 
   let win
