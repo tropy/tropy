@@ -23,6 +23,9 @@ module.exports = {
 
   append(node, to) {
     return to.appendChild(node)
-  }
+  },
 
+  on(node, ...args) {
+    return node.addEventListener(...args)
+  }
 }
