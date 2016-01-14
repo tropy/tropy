@@ -11,3 +11,5 @@ process.env.NODE_ENV = global.args.environment
 process.env.DEBUG = global.args.debug
 
 require('./common/log')(global.args.home)
+
+global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {}
