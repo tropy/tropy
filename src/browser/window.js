@@ -9,7 +9,8 @@ const root = resolve(__dirname, '..', '..', 'static')
 
 const defaults = {
   show: false,
-  preload: resolve(__dirname, '..', 'bootstrap.js')
+  preload: resolve(__dirname, '..', 'bootstrap.js'),
+  overlayScrollbars: true
 }
 
 class Window extends BrowserWindow {

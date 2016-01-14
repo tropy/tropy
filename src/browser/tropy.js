@@ -26,7 +26,7 @@ module.exports = class Tropy extends EventEmitter {
 
     prop(this, 'store', { value: new Storage() })
 
-    prop(this, 'debug', { value: debug })
+    prop(this, 'debug', { value: debug || process.env.DEBUG === 'true' })
     prop(this, 'environment', { value: environment || process.env.NODE_ENV })
 
     prop(this, 'home', {
@@ -43,7 +43,7 @@ module.exports = class Tropy extends EventEmitter {
 
   open() {
     if (!this.win) {
-      this.win = new Window()
+      this.win = new Window({ title: this.name })
         .once('closed', () => { this.win = undefined })
         .open('index.html', this.hash)
 
@@ -59,10 +59,10 @@ module.exports = class Tropy extends EventEmitter {
       .load('state.json')
       .catch({ code: 'ENOENT' }, () => ({}))
 
-      .then(state => {
-        this.state = state
-        this.emit('app:restore')
-      })
+      .then(state => (this.state = state, this))
+
+      .tap(() => this.emit('app:restore'))
+      .tap(() => verbose('app state restored'))
   }
 
   persist() {
