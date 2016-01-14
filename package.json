@@ -27,6 +27,7 @@
   "main": "lib/browser/main.js",
   "scripts": {
     "compile": "node scripts/make compile",
+    "lint": "node scripts/make lint || true",
     "make": "node scripts/make",
     "prestart": "node scripts/make compile link",
     "start": "electron -e development",
