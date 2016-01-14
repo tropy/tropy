@@ -66,6 +66,7 @@
     "bluebird": "^3.1.1",
     "js-yaml": "^3.4.6",
     "ms": "^0.7.1",
+    "react": "^0.14.6",
     "string.prototype.padstart": "^3.0.0",
     "winston": "^2.1.1",
     "write-file-atomic": "^1.1.4",
