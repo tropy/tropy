@@ -20,8 +20,8 @@ class Resource {
     return yaml.safeLoad(data)
   }
 
-  static async open(name) {
-    return new this(this.parse(await read(this.expand(name))))
+  static async open(name, ...args) {
+    return new this(this.parse(await read(this.expand(name))), ...args)
   }
 
   static expand(name) {
@@ -42,7 +42,14 @@ class Menu extends Resource {
   }
 }
 
+class Strings extends Resource {
+  static get base() { return join(super.base, 'strings') }
+
+  constructor(data = {}, locale = 'en') {
+    this.data = data[locale]
+  }
+}
+
 module.exports = {
-  Resource,
-  Menu
+  Resource, Menu, Strings
 }
