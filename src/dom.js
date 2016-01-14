@@ -1,9 +1,12 @@
 'use strict'
 
+const { assign } = Object
+
 const dom =
 module.exports = {
 
   $: document.querySelector.bind(document),
+
   $$: document.querySelectorAll.bind(document),
 
   ready: (fn) => {
@@ -11,23 +14,18 @@ module.exports = {
     else dom.once(document, 'DOMContentLoaded', fn)
   },
 
+  element: document.createElement.bind(document),
+
   css(text) {
-    let node = document.createElement('style')
-
-    node.type = 'text/css'
-    node.textContent = text
-
-    return node
+    return assign(dom.element('style'), {
+      type: 'text/css', textContent: text
+    })
   },
 
-  stylesheet(url) {
-    let node = document.createElement('link')
-
-    node.rel = 'stylesheet'
-    node.type = 'text/css'
-    node.href = url
-
-    return node
+  stylesheet(href) {
+    return assign(dom.element('link'), {
+      rel: 'stylesheet', type: 'text', href
+    })
   },
 
   append(node, to) {
