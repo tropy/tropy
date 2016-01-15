@@ -1,6 +1,7 @@
 'use strict'
 
 global.START_TIME = Date.now()
+global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {}
 
 const decode = decodeURIComponent
 const hash = window.location.hash.slice(1)
@@ -10,6 +11,16 @@ global.args = Object.freeze(JSON.parse(decode(hash)))
 process.env.NODE_ENV = global.args.environment
 process.env.DEBUG = global.args.debug
 
-require('./common/log')(global.args.home)
+if (global.args.environment !== 'production') {
+  if (process.platform !== 'linux') {
+    const props = Object.defineProperties
+    const { remote } = require('electron')
 
-global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {}
+    props(process, {
+      stdout: { value: remote.process.stdout },
+      stderr: { value: remote.process.stderr }
+    })
+  }
+}
+
+require('./common/log')(global.args.home)
