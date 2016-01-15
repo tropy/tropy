@@ -6,6 +6,10 @@ linux:
         submenu:
           - label: 'Archive'
             command: 'app:new-archive'
+      - type: 'separator'
+      - label: 'Close'
+        accelerator: 'CmdOrCtrl+W'
+        role: 'close'
       - label: 'Quit'
         accelerator: 'CmdOrCtrl+Q'
         command: 'app:quit'
@@ -45,9 +49,6 @@ linux:
       - label: 'Minimize'
         accelerator: 'CmdOrCtrl+M'
         role: 'minimize'
-      - label: 'Close'
-        accelerator: 'CmdOrCtrl+W'
-        role: 'close'
   - &dev
     label: 'Developer'
     environment: 'development'
@@ -89,6 +90,16 @@ darwin:
         accelerator: 'Command+Q'
         command: 'app:quit'
 
+  - label: '&File'
+    submenu:
+      - label: 'New'
+        submenu:
+          - label: 'Archive'
+            command: 'app:new-archive'
+      - type: 'separator'
+      - label: 'Close'
+        accelerator: 'CmdOrCtrl+W'
+        role: 'close'
   - *edit
   - *view
   - label: 'Window'
