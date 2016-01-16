@@ -11,7 +11,7 @@ global.args = Object.freeze(JSON.parse(decode(hash)))
 process.env.NODE_ENV = global.args.environment
 process.env.DEBUG = global.args.debug
 
-if (global.args.environment !== 'production') {
+if (global.args.environment === 'development') {
   if (process.platform !== 'linux') {
     const props = Object.defineProperties
     const { remote } = require('electron')
