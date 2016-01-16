@@ -4,8 +4,9 @@ const { EventEmitter } = require('events')
 const { resolve } = require('path')
 const { app, shell, ipcMain: ipc } = require('electron')
 const { verbose } = require('../common/log')
-const { Observable } = require('@reactivex/rxjs')
+const { once } = require('../common/util')
 const { Window, Wizard } = require('./window')
+const { all }  = require('bluebird')
 const AppMenu = require('./menu')
 const Storage = require('./storage')
 
@@ -122,11 +123,9 @@ module.exports = class Tropy extends EventEmitter {
     ipc
       .on('command', (_, command) => this.emit(command))
 
-    Observable.zip(
-        Observable.fromEvent(app, 'ready'),
-        Observable.fromEvent(this, 'app:restore'))
-      .take(1)
-      .subscribe(() => this.open())
+
+    all([once(app, 'ready'), once(this, 'app:restore')])
+      .then(() => this.open())
   }
 
 
