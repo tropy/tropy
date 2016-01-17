@@ -64,13 +64,13 @@
     "sinon-chai": "^2.8.0"
   },
   "dependencies": {
-    "@reactivex/rxjs": "^5.0.0-beta.1",
     "bluebird": "^3.1.1",
     "js-yaml": "^3.4.6",
     "ms": "^0.7.1",
     "react": "^0.14.6",
     "react-dom": "^0.14.6",
     "string.prototype.padstart": "^3.0.0",
+    "transducers.js": "^0.3.2",
     "winston": "^2.1.1",
     "write-file-atomic": "^1.1.4",
     "yargs": "^3.30.0"
