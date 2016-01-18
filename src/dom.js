@@ -47,5 +47,9 @@ module.exports = {
 
   off(node, ...args) {
     return node.removeEventListener(...args)
+  },
+
+  emit(node, event) {
+    return node.dispatchEvent(event)
   }
 }
