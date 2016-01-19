@@ -50,7 +50,7 @@
     "chai": "^3.4.1",
     "chai-as-promised": "^5.2.0",
     "colors": "^1.1.2",
-    "electron-mocha": "^0.7.0",
+    "electron-mocha": "^0.8.0",
     "electron-packager": "^5.1.1",
     "electron-prebuilt": "^0.36.0",
     "eslint": "^1.10.2",
