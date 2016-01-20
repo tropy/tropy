@@ -79,7 +79,7 @@ describe('dom', () => {
         expect(node.removeEventListener)
           .not.to.have.been.called
 
-        dom.emit(node, new Event('click'))
+        dom.emit(node, 'click')
       })
     })
   })

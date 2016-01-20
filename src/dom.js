@@ -49,7 +49,7 @@ module.exports = {
     return node.removeEventListener(...args)
   },
 
-  emit(node, event) {
-    return node.dispatchEvent(event)
+  emit(node, ...args) {
+    return node.dispatchEvent(new Event(...args))
   }
 }
