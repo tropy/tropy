@@ -3,14 +3,25 @@
 const React = require('react')
 const ReactDOM = require('react-dom')
 
-class Assistant extends React.Component {
+const { Component, PropTypes } = React
+
+
+class Assistant extends Component {
   render() {
     return (
-      <div className="assistant">
-        {this.props.children}
-      </div>
+      <ol className="assistant">{
+        this.props.steps.map((step, idx) => (
+          <Step {...step} key={idx}/>
+        ))
+      }</ol>
     )
   }
+}
+
+Assistant.propTypes = {
+  steps: PropTypes.arrayOf(PropTypes.shape({
+    done: PropTypes.bool.isRequired
+  }).isRequired).isRequired
 }
 
 module.exports = {
