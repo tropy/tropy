@@ -39,7 +39,7 @@
   "devDependencies": {
     "babel-cli": "^6.1.2",
     "babel-core": "^6.1.2",
-    "babel-eslint": "^4.1.6",
+    "babel-eslint": "^5.0.0",
     "babel-plugin-syntax-async-functions": "^6.3.13",
     "babel-plugin-syntax-jsx": "^6.3.13",
     "babel-plugin-transform-async-to-module-method": "^6.4.0",
@@ -56,11 +56,11 @@
     "electron-prebuilt": "^0.36.0",
     "eslint": "^1.10.2",
     "gaze": "^0.5.2",
-    "glob": "^6.0.1",
+    "glob": "^7.0.0",
     "istanbul": "^0.4.1",
     "mocha": "^2.3.4",
     "node-sass": "^3.4.2",
-    "shelljs": "^0.5.3",
+    "shelljs": "^0.6.0",
     "sinon": "^1.17.2",
     "sinon-chai": "^2.8.0"
   },
@@ -74,6 +74,6 @@
     "transducers.js": "^0.3.2",
     "winston": "^2.1.1",
     "write-file-atomic": "^1.1.4",
-    "yargs": "^3.30.0"
+    "yargs": "^4.2.0"
   }
 }
