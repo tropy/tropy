@@ -2,7 +2,7 @@
 
 require('shelljs/make')
 
-const gaze = require('gaze')
+const chokidar = require('chokidar')
 const colors = require('colors/safe')
 const path = require('path')
 
@@ -10,7 +10,7 @@ const make = require('./make')
 const log = require('./log')
 const cwd = process.cwd()
 
-const COLOR = { changed: 'blue', deleted: 'red', added: 'green' }
+const COLOR = { change: 'blue', unlink: 'red', add: 'green' }
 
 function colorize(event, text) {
   return colors[COLOR[event] || 'white'](text)
@@ -27,17 +27,22 @@ target.all = () => {
 target.src = () => {
   const tag = 'watch:src'
 
-  gaze('src/**/*.{js,jsx}', function (err) {
-    if (err) return log.error(err, { tag })
+  chokidar
+    .watch('src/**/*.{js,jsx}', {
+      persistent: true
+    })
 
-    this.on('all', (event, file) => {
+    .on('all', (event, file) => {
+      if (event === 'error') {
+        return log.error(shorten(file), { tag })
+      }
+
       log.info(colorize(event, shorten(file)), { tag })
 
-      if (event === 'deleted') {
+      if (event === 'unlink') {
         return rm(shorten(file).replace(/^src/, 'lib'))
       }
 
       make['compile:js'](file)
     })
-  })
 }
