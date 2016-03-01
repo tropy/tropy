@@ -25,7 +25,7 @@ Assistant.propTypes = {
 }
 
 module.exports = {
-  mount(node) { ReactDOM.render(<Assistant/>, node) },
+  mount(node) { ReactDOM.render(<Assistant steps={[]}/>, node) },
 
   Assistant
 }
