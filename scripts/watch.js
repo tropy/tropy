@@ -47,17 +47,24 @@ target.src = () => {
 
       make['compile:js'](file)
 
-      const spec = file
-        .replace(/^src/, 'test')
-        .replace(/\.jsx?$/, '_test.js')
+      if (event === 'change') {
+        const spec = file
+          .replace(/^src/, 'test')
+          .replace(/\.jsx?$/, '_test.js')
 
-      if (test('-f', spec)) {
-        if (!(/browser/).test(spec)) {
-          make.mocha(['--renderer', spec])
-        } else {
-          make.mocha([spec])
+        if (test('-f', spec)) {
+          const args = (/browser/).test(spec) ?
+            [spec] : ['--renderer' , spec]
+
+          make.mocha(args, true, (code, stdout) => {
+            if (code === 0) {
+              log.info(colors.green(spec), { tag })
+            } else {
+              log.error(colors.red(spec), { tag })
+              process.stderr.write(stdout)
+            }
+          })
         }
       }
-
     })
 }

@@ -54,7 +54,7 @@ target['test:browser'] = (args) => {
   test(args.concat(glob.sync('test/browser/**/*_test.js')))
 }
 
-target.mocha = (args) => test(args)
+target.mocha = (args, silent, cb) => test(args, silent, cb)
 
 
 target.compile = () => {
@@ -182,8 +182,8 @@ function swap(filename, src, dst, ext) {
     .replace(/(\..+)$/, m => ext || m[1])
 }
 
-function test(options) {
-  exec(`${mocha} ${options.join(' ')}`, { silent: false })
+function test(options, silent, cb) {
+  return exec(`${mocha} ${options.join(' ')}`, { silent }, cb)
 }
 
 // We need to make a copy when exposing targets to other scripts,
