@@ -33,16 +33,31 @@ target.src = () => {
     })
 
     .on('all', (event, file) => {
+      file = shorten(file)
+
       if (event === 'error') {
-        return log.error(shorten(file), { tag })
+        return log.error(file, { tag })
       }
 
-      log.info(colorize(event, shorten(file)), { tag })
+      log.info(colorize(event, file), { tag })
 
       if (event === 'unlink') {
-        return rm(shorten(file).replace(/^src/, 'lib'))
+        return rm(file.replace(/^src/, 'lib'))
       }
 
       make['compile:js'](file)
+
+      const spec = file
+        .replace(/^src/, 'test')
+        .replace(/\.jsx?$/, '_test.js')
+
+      if (test('-f', spec)) {
+        if (!(/browser/).test(spec)) {
+          make.mocha(['--renderer', spec])
+        } else {
+          make.mocha([spec])
+        }
+      }
+
     })
 }
