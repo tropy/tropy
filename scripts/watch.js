@@ -54,7 +54,7 @@ target.src = () => {
 
         if (test('-f', spec)) {
           const args = (/browser/).test(spec) ?
-            [spec] : ['--renderer' , spec]
+            [spec] : ['--renderer', spec]
 
           make.mocha(args, true, (code, stdout) => {
             if (code === 0) {
