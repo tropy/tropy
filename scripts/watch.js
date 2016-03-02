@@ -20,8 +20,24 @@ function shorten(file) {
   return path.relative(cwd, file)
 }
 
+function mocha(spec, tag) {
+  const args = (/browser|common/).test(spec) ?
+    [spec] : ['--renderer', spec]
+
+  make.mocha(args, true, (code, stdout) => {
+    if (code === 0) {
+      log.info(colors.green(spec), { tag })
+    } else {
+      log.error(colors.red(spec), { tag })
+      process.stderr.write(stdout)
+    }
+  })
+}
+
+
 target.all = () => {
   target.src()
+  target.test()
 }
 
 target.src = () => {
@@ -52,19 +68,17 @@ target.src = () => {
           .replace(/^src/, 'test')
           .replace(/\.jsx?$/, '_test.js')
 
-        if (test('-f', spec)) {
-          const args = (/browser/).test(spec) ?
-            [spec] : ['--renderer', spec]
-
-          make.mocha(args, true, (code, stdout) => {
-            if (code === 0) {
-              log.info(colors.green(spec), { tag })
-            } else {
-              log.error(colors.red(spec), { tag })
-              process.stderr.write(stdout)
-            }
-          })
-        }
+        if (test('-f', spec)) mocha(spec, tag)
       }
+    })
+}
+
+target.test = () => {
+  chokidar
+    .watch('test/**/*_test.js', {
+      persistent: true
+    })
+    .on('change', (file) => {
+      mocha(shorten(file), 'watch:test')
     })
 }
