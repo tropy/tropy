@@ -51,7 +51,7 @@ target['test:browser'] = (args) => {
   target.unlink()
 
   args = args || []
-  test(args.concat(glob.sync('test/browser/**/*_test.js')))
+  test(args.concat(glob.sync('test/{browser,common}/**/*_test.js')))
 }
 
 target.mocha = (args, silent, cb) => test(args, silent, cb)
