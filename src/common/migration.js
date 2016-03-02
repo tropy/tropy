@@ -2,7 +2,9 @@
 
 const { readdirAsync: ls } = require('fs')
 const { basename, resolve } = require('path')
+
 const root = resolve(__dirname, '..', 'db', 'migrate')
+
 
 class Migration {
 
@@ -12,7 +14,7 @@ class Migration {
 
   constructor(path) {
     this.path = path
-    [this.version, this.name] = basename(path).split('.')
+    this.version = Number(basename(path).split('.', 2)[0])
   }
 
   up(db) {
@@ -24,3 +26,4 @@ class Migration {
   }
 }
 
+module.exports = Migration
