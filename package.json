@@ -70,6 +70,7 @@
     "ms": "^0.7.1",
     "react": "^0.14.6",
     "react-dom": "^0.14.6",
+    "sqlite3": "^3.1.1",
     "string.prototype.padstart": "^3.0.0",
     "transducers.js": "^0.3.2",
     "winston": "^2.1.1",
