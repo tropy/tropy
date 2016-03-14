@@ -22,4 +22,18 @@ describe('Migration', () => {
     })
   })
 
+  describe('#fresh', () => {
+    it('is true by default', () => {
+      expect(new Migration('1.js').fresh()).to.be.true
+      expect(new Migration('1.js').fresh(null)).to.be.true
+    })
+
+    it('is true if #number is greater than given number', () => {
+      expect(new Migration('1.js').fresh(0)).to.be.true
+      expect(new Migration('1.js').fresh(1)).to.be.false
+      expect(new Migration('1.js').fresh(2)).to.be.false
+      expect(new Migration('2.js').fresh(1)).to.be.true
+    })
+  })
+
 })

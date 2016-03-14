@@ -12,6 +12,10 @@ class Migration {
     return (await ls(dir)).map(this)
   }
 
+  static async since(number = 0, dir = root) {
+    return (await this.all(dir)).filter(m => m.fresh(number))
+  }
+
   constructor(path) {
     this.path = path
     this.type = extname(this.path).slice(1)
@@ -24,6 +28,9 @@ class Migration {
       db.run(await read(this.path))
   }
 
+  fresh(number) {
+    return !number || this.number > number
+  }
 }
 
 module.exports = Migration
