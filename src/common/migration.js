@@ -1,7 +1,7 @@
 'use strict'
 
-const { readdirAsync: ls } = require('fs')
-const { basename, resolve } = require('path')
+const { readdirAsync: ls, readFileAsync: read } = require('fs')
+const { basename, extname, resolve } = require('path')
 
 const root = resolve(__dirname, '..', 'db', 'migrate')
 
@@ -14,16 +14,16 @@ class Migration {
 
   constructor(path) {
     this.path = path
-    this.version = Number(basename(path).split('.', 2)[0])
+    this.type = extname(this.path).slice(1)
+    this.number = Number(basename(path).split('.', 2)[0])
   }
 
-  up(db) {
-    return require(this.path).up(db)
+  async up(db) {
+    return (this.type === 'js') ?
+      require(this.path).up(db) :
+      db.run(await read(this.path))
   }
 
-  down(db) {
-    return require(this.path).down(db)
-  }
 }
 
 module.exports = Migration
