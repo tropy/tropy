@@ -46,6 +46,7 @@ class Strings extends Resource {
   static get base() { return join(super.base, 'strings') }
 
   constructor(data = {}, locale = 'en') {
+    super()
     this.data = data[locale]
   }
 }

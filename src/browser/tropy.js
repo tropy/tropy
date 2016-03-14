@@ -16,7 +16,7 @@ const { defineProperty: prop } = Object
 
 module.exports = class Tropy extends EventEmitter {
 
-  constructor({ environment, debug } = {}) {
+  constructor({ environment, debug } = {}) { // eslint-disable-line constructor-super
     if (Tropy.instance) return Tropy.instance
 
     super()

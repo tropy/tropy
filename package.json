@@ -39,7 +39,7 @@
   "devDependencies": {
     "babel-cli": "^6.1.2",
     "babel-core": "^6.1.2",
-    "babel-eslint": "^5.0.0",
+    "babel-eslint": "^6.0.0-beta.6",
     "babel-plugin-syntax-async-functions": "^6.3.13",
     "babel-plugin-syntax-jsx": "^6.3.13",
     "babel-plugin-transform-async-to-module-method": "^6.4.0",
@@ -55,7 +55,7 @@
     "electron-mocha": "^0.8.0",
     "electron-packager": "^5.1.1",
     "electron-prebuilt": "^0.36.0",
-    "eslint": "^1.10.2",
+    "eslint": "^2.4.0",
     "glob": "^7.0.0",
     "istanbul": "^0.4.1",
     "mocha": "^2.3.4",
