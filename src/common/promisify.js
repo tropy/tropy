@@ -1,5 +1,11 @@
 'use strict'
 
-const P = require('bluebird')
+const bb = require('bluebird')
 
-P.promisifyAll(require('fs'))
+const { Database, Statement } = require('sqlite3')
+const { Pool } = require('generic-pool')
+
+bb.promisifyAll(require('fs'))
+bb.promisifyAll([Database, Statement, Pool])
+
+module.exports = bb
