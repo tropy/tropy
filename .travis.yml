@@ -22,10 +22,10 @@ matrix:
 
 before_install:
   - if [[ ! -d $HOME/.nvm ]]; then
-      git clone https://github.com/creationix/nvm.git .nvm;
+      git clone https://github.com/creationix/nvm.git $HOME/.nvm;
     fi
-  - git -C .nvm checkout "$(git -C .nvm describe --tags `git -C .nvm rev-list --tags --max-count=1`)"
-  - source .nvm/nvm.sh
+  - git -C $HOME/.nvm checkout "$(git -C $HOME/.nvm describe --tags `git -C $HOME/.nvm rev-list --tags --max-count=1`)"
+  - source $HOME/.nvm/nvm.sh
   - if [[ $NODE_VERSION != `nvm current` ]]; then
       nvm install $NODE_VERSION;
       nvm alias default $NODE_VERSION;
