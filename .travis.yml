@@ -19,7 +19,8 @@ cache:
     - $HOME/.nvm
 matrix:
   fast_finish: true
-before_script:
+
+before_install:
   - if [[ ! -d $HOME/.nvm ]]; then
       git clone https://github.com/creationix/nvm.git .nvm;
     fi
@@ -29,11 +30,13 @@ before_script:
       nvm install $NODE_VERSION;
       nvm alias default $NODE_VERSION;
     fi
+install:
+  - npm install
+
+before_script:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
       sh -e /etc/init.d/xvfb start;
     fi
-install:
-  - npm install
 script:
   - node scripts/make lint compile:js
   - node scripts/make cover -- lcovonly
@@ -42,6 +45,7 @@ after_script:
       npm install coveralls;
       cat ./coverage/lcov.info | coveralls;
     fi
+
 notifications:
   email: false
   slack:
