@@ -14,6 +14,7 @@ sudo: false
 cache:
   directories:
     - node_modules
+    - ~/.nvm
 matrix:
   fast_finish: true
 before_script:
