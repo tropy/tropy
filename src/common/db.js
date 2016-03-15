@@ -24,7 +24,9 @@ class Database {
 
   create(callback) {
     info(`opening ${this.path}`)
-    new sqlite.Database(this.path, callback)
+    new sqlite.Database(this.path, (error, db) => {
+      callback(error, new Connection(db))
+    })
   }
 
   destroy(db) {
@@ -32,25 +34,54 @@ class Database {
     db.close()
   }
 
-  all(...args) {
+
+  acquire() {
     return this.pool.acquireAsync()
-      .then(db => db.getAsync(...args))
+  }
+
+  release(connection) {
+    return this.pool.release(connection)
+  }
+
+
+  all(...args) {
+    return this.acquire().call('all', ...args)
   }
 
   get(...args) {
-    return this.pool.acquireAsync()
-      .then(db => db.getAsync(...args))
+    return this.acquire().call('get', ...args)
   }
 
   run(...args) {
-    return this.pool.acquireAsync()
-      .then(db => db.runAsync(...args))
+    return this.acquire().call('run', ...args)
   }
 
   exec(...args) {
-    return this.pool.acquireAsync()
-      .then(db => db.execAsync(...args))
+    return this.acquire().call('exec', ...args)
   }
 }
 
-module.exports = { Database }
+
+class Connection {
+  constructor(db) {
+    this.db = db
+  }
+
+  all(...args) {
+    return this.db.allAsync(...args)
+  }
+
+  get(...args) {
+    return this.db.getAsync(...args)
+  }
+
+  run(...args) {
+    return this.db.runAsync(...args)
+  }
+
+  exec(...args) {
+    return this.db.execAsync(...args)
+  }
+}
+
+module.exports = { Database, Connection }
