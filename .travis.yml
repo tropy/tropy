@@ -21,7 +21,10 @@ matrix:
   fast_finish: true
 
 before_install:
-  - git clone https://github.com/creationix/nvm.git $HOME/.nvm;
+  - if [[ ! -d $HOME/.nvm ]]; then
+      git clone https://github.com/creationix/nvm.git $HOME/.nvm;
+    fi
+  - ls -al $HOME/.nvm
   - git -C $HOME/.nvm checkout "$(git -C $HOME/.nvm describe --tags `git -C $HOME/.nvm rev-list --tags --max-count=1`)"
   - source $HOME/.nvm/nvm.sh
   - if [[ $NODE_VERSION != `nvm current` ]]; then
