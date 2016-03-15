@@ -8,7 +8,7 @@ env:
   global:
     - DISPLAY=:99.0
     - NODE_ENV=test
-    - NVM=$HOME/.nvmx
+    - NVM=$HOME/.nvm
   matrix:
     - NODE_VERSION=v5.1.1
 sudo: false
@@ -22,10 +22,10 @@ matrix:
   fast_finish: true
 
 before_install:
-  - if [[ ! -d $NVM ]]; then
+  - if [[ ! -d $NVM/.git ]]; then
+      rm -rf $NVM;
       git clone https://github.com/creationix/nvm.git $NVM;
     fi
-  - ls -la $NVM
   - git -C $NVM pull origin master
   - git -C $NVM checkout `git -C $NVM describe --abbrev=0 --tags`
   - source $NVM/nvm.sh
