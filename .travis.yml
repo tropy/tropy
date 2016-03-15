@@ -12,13 +12,14 @@ env:
     - NODE_VERSION=v5.1.1
 sudo: false
 cache:
+  apt: true
   directories:
     - node_modules
-    - ~/.nvm
+    - $HOME/.nvm
 matrix:
   fast_finish: true
 before_script:
-  - if [[ ! -d ~/.nvm ]]; then git clone https://github.com/creationix/nvm.git ~/.nvm; fi;
+  - if [[ ! -d $HOME/.nvm ]]; then git clone https://github.com/creationix/nvm.git $HOME/.nvm; fi;
   - source ~/.nvm/nvm.sh
   - if [[ $NODE_VERSION != `nvm current` ]]; then nvm install $NODE_VERSION; fi;
   - nvm alias default $NODE_VERSION
