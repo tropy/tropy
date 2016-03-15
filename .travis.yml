@@ -31,7 +31,9 @@ before_script:
       nvm install $NODE_VERSION;
     fi
   - nvm alias default $NODE_VERSION
-  - sh -e /etc/init.d/xvfb start
+  - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
+      sh -e /etc/init.d/xvfb start;
+    fi
 install:
   - npm install
 script:
