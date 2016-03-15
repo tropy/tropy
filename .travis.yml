@@ -2,32 +2,34 @@ language: cpp
 git:
   depth: 9
 os:
-- linux
-- osx
+  - linux
+  - osx
 env:
   global:
-  - DISPLAY=:99.0
-  - NODE_ENV=test
+    - DISPLAY=:99.0
+    - NODE_ENV=test
   matrix:
-  - NODE_VERSION=v5.1.1
+    - NODE_VERSION=v5.1.1
 sudo: false
 cache:
   directories:
-  - node_modules
+    - node_modules
 matrix:
   fast_finish: true
 before_script:
-- if [[ ! -d ~/.nvm ]]; then git clone https://github.com/creationix/nvm.git ~/.nvm; fi;
-- source ~/.nvm/nvm.sh
-- if [[ $NODE_VERSION != `nvm current` ]]; then nvm install $NODE_VERSION; fi;
-- nvm alias default $NODE_VERSION
-- sh -e /etc/init.d/xvfb start
+  - if [[ ! -d ~/.nvm ]]; then git clone https://github.com/creationix/nvm.git ~/.nvm; fi;
+  - source ~/.nvm/nvm.sh
+  - if [[ $NODE_VERSION != `nvm current` ]]; then nvm install $NODE_VERSION; fi;
+  - nvm alias default $NODE_VERSION
+  - sh -e /etc/init.d/xvfb start
+install:
+  - npm install
 script:
-- node scripts/make lint compile:js
-- node scripts/make cover -- lcovonly
+  - node scripts/make lint compile:js
+  - node scripts/make cover -- lcovonly
 after_script:
-- npm install coveralls
-- cat ./coverage/lcov.info | coveralls
+  - npm install coveralls
+  - cat ./coverage/lcov.info | coveralls
 notifications:
   email: false
   slack:
