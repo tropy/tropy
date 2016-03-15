@@ -2,35 +2,37 @@ language: cpp
 git:
   depth: 9
 os:
-  - linux
-  - osx
+- linux
+- osx
 env:
   global:
-    - DISPLAY=:99.0
-    - NODE_ENV=test
+  - DISPLAY=:99.0
+  - NODE_ENV=test
   matrix:
-    - NODE_VERSION=v5.1.1
+  - NODE_VERSION=v5.1.1
 sudo: false
 cache:
   directories:
-    - node_modules
+  - node_modules
 matrix:
   fast_finish: true
 before_script:
-  - if [[ ! -d ~/.nvm ]]; then git clone https://github.com/creationix/nvm.git ~/.nvm; fi;
-  - source ~/.nvm/nvm.sh
-  - if [[ $NODE_VERSION != `nvm current` ]]; then nvm install $NODE_VERSION; fi;
-  - nvm alias default $NODE_VERSION
-  - sh -e /etc/init.d/xvfb start
+- if [[ ! -d ~/.nvm ]]; then git clone https://github.com/creationix/nvm.git ~/.nvm;
+  fi;
+- source ~/.nvm/nvm.sh
+- if [[ $NODE_VERSION != `nvm current` ]]; then nvm install $NODE_VERSION; fi;
+- nvm alias default $NODE_VERSION
+- sh -e /etc/init.d/xvfb start
 script:
-  - node scripts/make lint compile:js
-  - node scripts/make cover -- lcovonly
+- node scripts/make lint compile:js
+- node scripts/make cover -- lcovonly
 after_script:
-  - npm install coveralls
-  - cat ./coverage/lcov.info | coveralls
+- npm install coveralls
+- cat ./coverage/lcov.info | coveralls
 notifications:
   email: false
   slack:
-    secure: sj1s7XDF0GINij7mW1GNAWAyHS2rJG1Dx69okM2agu92aAaCKas99d3eWp7N7cLbVO6A68MOvY8zgBIkdp/uebCI6fA2dnVoBPTul8eu9ZanTrXROT9H8vgJ7szyAmnKySCYTfcfJ0k0GyeXlzzoBJwgwwIX3jGYr8G+SoaQYKB7kVzRtkyzVVOXQ+Fuj8xDAVeBfZzxFu8ay5rPuk1/8VyBzHtumZkkCixF6niWGYGIQrJ5zdYwn4XtjiY7tv231JiDKhcHRg7z+CcwYC+rla1EXFoMVNziOq2lgm8s1wWEX87YUV4CwTIgMeRlYOCvgDzx+eGy+UOk8899hsZq9kpqv0y+ai4QoVm1XsdRK6qDvWH7nlPTDZLeSfkY9e+6rn3upRV6XldgnUJSQpEc/bKm3QMNic1E5aCHDAZhh8RhZuyqpEv4GQffhaXvq5jIV6M28ykrC5OZgxVfBH2gj+JPWmaU0/GIHme3P+THasu2Oim8Npi0qmit0UAghiFZHFN47Za5KCu5EctgBQiF3qR5kIaI21BtmEsEfbdlinCm+IvLlv2EJV2/eUvLUowJ9HgFgt3WhBwSa76iZD4js9ZV4H8jzRchRZEI6gwwxhRppeLLm5ZdER97MQqHz7qsWk7LB3javMd4EsTUiUZY8noSXkiMtU7gt89fVgy8OAg=
-  on_success: change
-  on_failure: change
+    rooms:
+      secure: sj1s7XDF0GINij7mW1GNAWAyHS2rJG1Dx69okM2agu92aAaCKas99d3eWp7N7cLbVO6A68MOvY8zgBIkdp/uebCI6fA2dnVoBPTul8eu9ZanTrXROT9H8vgJ7szyAmnKySCYTfcfJ0k0GyeXlzzoBJwgwwIX3jGYr8G+SoaQYKB7kVzRtkyzVVOXQ+Fuj8xDAVeBfZzxFu8ay5rPuk1/8VyBzHtumZkkCixF6niWGYGIQrJ5zdYwn4XtjiY7tv231JiDKhcHRg7z+CcwYC+rla1EXFoMVNziOq2lgm8s1wWEX87YUV4CwTIgMeRlYOCvgDzx+eGy+UOk8899hsZq9kpqv0y+ai4QoVm1XsdRK6qDvWH7nlPTDZLeSfkY9e+6rn3upRV6XldgnUJSQpEc/bKm3QMNic1E5aCHDAZhh8RhZuyqpEv4GQffhaXvq5jIV6M28ykrC5OZgxVfBH2gj+JPWmaU0/GIHme3P+THasu2Oim8Npi0qmit0UAghiFZHFN47Za5KCu5EctgBQiF3qR5kIaI21BtmEsEfbdlinCm+IvLlv2EJV2/eUvLUowJ9HgFgt3WhBwSa76iZD4js9ZV4H8jzRchRZEI6gwwxhRppeLLm5ZdER97MQqHz7qsWk7LB3javMd4EsTUiUZY8noSXkiMtU7gt89fVgy8OAg=
+    on_success: change
+    on_failure: change
