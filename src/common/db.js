@@ -3,6 +3,7 @@
 require('./promisify')
 
 const sqlite = require('sqlite3')
+const { using } = require('bluebird')
 
 const { Pool } = require('generic-pool')
 const { log, debug, info } = require('./log')
@@ -34,30 +35,26 @@ class Database {
     db.close()
   }
 
-
   acquire() {
     return this.pool.acquireAsync()
-  }
-
-  release(connection) {
-    return this.pool.release(connection)
+      .disposer(conn => { this.pool.release(db) })
   }
 
 
   all(...args) {
-    return this.acquire().call('all', ...args)
+    return using(this.acquire(), c => { c.all(...args) })
   }
 
   get(...args) {
-    return this.acquire().call('get', ...args)
+    return using(this.acquire(), c => { c.get(...args) })
   }
 
   run(...args) {
-    return this.acquire().call('run', ...args)
+    return using(this.acquire(), c => { c.run(...args) })
   }
 
   exec(...args) {
-    return this.acquire().call('exec', ...args)
+    return using(this.acquire(), c => { c.exec(...args) })
   }
 }
 
@@ -82,6 +79,25 @@ class Connection {
   exec(...args) {
     return this.db.execAsync(...args)
   }
+
+
+  begin() {
+    return run('BEGIN IMMEDIATE TRANSACTION')
+  }
+
+  commit() {
+    return run('COMMIT TRANSACTION')
+  }
+
+  rollback() {
+    return run('ROLLBACK TRANSACTION')
+  }
 }
 
-module.exports = { Database, Connection }
+function transaction(connection) {
+  return connection
+    .begin()
+    .disposer((tx, p) => p.isFulfilled() ? tx.commit() : tx.rollback())
+}
+
+module.exports = { Database, Connection, transaction }
