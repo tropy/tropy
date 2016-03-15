@@ -25,6 +25,7 @@ before_install:
   - if [[ ! -d $NVM ]]; then
       git clone https://github.com/creationix/nvm.git $NVM;
     fi
+  - ls -la $NVM
   - git -C $NVM pull origin master
   - git -C $NVM checkout `git -C $NVM describe --abbrev=0 --tags`
   - source $NVM/nvm.sh
