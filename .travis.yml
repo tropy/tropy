@@ -4,6 +4,9 @@ os:
 language: node_js
 node_js:
   - '5'
+env:
+  - CI=true
+  - NODE_ENV=test
 sudo: false
 cache:
   directories:
