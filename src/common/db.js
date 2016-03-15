@@ -37,7 +37,7 @@ class Database {
 
   acquire() {
     return this.pool.acquireAsync()
-      .disposer(conn => { this.pool.release(db) })
+      .disposer(db => { this.pool.release(db) })
   }
 
 
@@ -82,15 +82,15 @@ class Connection {
 
 
   begin() {
-    return run('BEGIN IMMEDIATE TRANSACTION')
+    return this.run('BEGIN IMMEDIATE TRANSACTION')
   }
 
   commit() {
-    return run('COMMIT TRANSACTION')
+    return this.run('COMMIT TRANSACTION')
   }
 
   rollback() {
-    return run('ROLLBACK TRANSACTION')
+    return this.run('ROLLBACK TRANSACTION')
   }
 }
 
