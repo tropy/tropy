@@ -1,13 +1,15 @@
+language: cpp
+git:
+  depth: 9
 os:
   - linux
   - osx
-language: node_js
-node_js:
-  - '5'
-global:
-  - CI=true
-  - NODE_ENV=test
-  - DISPLAY=:99.0
+env:
+  global:
+    - DISPLAY=:99.0
+    - NODE_ENV=test
+  matrix:
+    - NODE_VERSION=v5.1.1
 sudo: false
 cache:
   directories:
@@ -15,7 +17,10 @@ cache:
 matrix:
   fast_finish: true
 before_script:
-  - export DISPLAY=:99.0
+  - if [[ ! -d ~/.nvm ]]; then git clone https://github.com/creationix/nvm.git ~/.nvm; fi;
+  - source ~/.nvm/nvm.sh
+  - if [[ $NODE_VERSION != `nvm current` ]]; then nvm install $NODE_VERSION; fi;
+  - nvm alias default $NODE_VERSION
   - sh -e /etc/init.d/xvfb start
 script:
   - node scripts/make lint compile:js
