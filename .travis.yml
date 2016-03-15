@@ -21,16 +21,14 @@ matrix:
   fast_finish: true
 before_script:
   - if [[ ! -d $HOME/.nvm ]]; then
-      git clone https://github.com/creationix/nvm.git $HOME/.nvm;
+      git clone https://github.com/creationix/nvm.git .nvm;
     fi
-  - pushd $HOME/.nvm
-  - git checkout `git describe --abbrev=0 --tags`
-  - source nvm.sh
-  - popd
+  - git -C .nvm checkout "$(git -C .nvm describe --tags `git -C .nvm rev-list --tags --max-count=1`)"
+  - source .nvm/nvm.sh
   - if [[ $NODE_VERSION != `nvm current` ]]; then
       nvm install $NODE_VERSION;
+      nvm alias default $NODE_VERSION;
     fi
-  - nvm alias default $NODE_VERSION
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
       sh -e /etc/init.d/xvfb start;
     fi
