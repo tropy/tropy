@@ -24,14 +24,14 @@ class Database {
   }
 
   create(callback) {
-    info(`opening ${this.path}`)
+    info(`opening db ${this.path}`)
     new sqlite.Database(this.path, (error, db) => {
       callback(error, new Connection(db))
     })
   }
 
   destroy(db) {
-    info(`closing ${this.path}`)
+    info(`closing db ${this.path}`)
     db.close()
   }
 
