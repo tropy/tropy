@@ -57,7 +57,12 @@ function init(dir) {
 
 
     case 'test':
-      logger.add(transports.Memory)
+      logger.level = 'error'
+      logger.add(transports.Console, {
+        handleExceptions: true,
+        humanReadableUnhandledException: true,
+        formatter
+      })
       break
   }
 
