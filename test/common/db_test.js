@@ -4,7 +4,7 @@ const tmpdir = require('../support/tmpdir')
 
 const { join } = require('path')
 const { unlinkAsync: rm } = require('fs')
-const { using, coroutine: co } = require('bluebird')
+const { using } = require('bluebird')
 
 describe('Database', () => {
   const { Database, Connection } = __require('common/db')
@@ -50,9 +50,9 @@ describe('Database', () => {
 
     describe('#exec()', () => {
       it('executes arbitrary sql', () => (
-        expect(co(function *() {
-          yield db.exec('CREATE TABLE exec (a);')
-          yield db.exec('DROP TABLE exec;')
+        expect((async function () {
+          await db.exec('CREATE TABLE exec (a);')
+          await db.exec('DROP TABLE exec;')
         })()).to.eventually.be.fulfilled
       ))
     })
