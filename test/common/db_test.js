@@ -20,6 +20,16 @@ describe('Database', () => {
     after(() =>
       db.close().then(() => rm(dbFile)))
 
+    beforeEach(() => {
+      sinon.spy(db.pool, 'acquire')
+      sinon.spy(db.pool, 'release')
+    })
+
+    afterEach(() => {
+      db.pool.acquire.restore()
+      db.pool.release.restore()
+    })
+
     describe('constructor', () => {
       it('creates a connection pool', () => {
         expect(db.pool.getPoolSize()).to.be.at.least(1)
@@ -30,8 +40,14 @@ describe('Database', () => {
     describe('#acquire()', () => {
       it('returns a disposable connection', () => (
         using(db.acquire(), c => {
+          expect(db.pool.acquire).to.have.been.called
+          expect(db.pool.release).not.to.have.been.called
+
           expect(c).to.be.instanceof(Connection)
         })
+          .then(() => {
+            expect(db.pool.release).to.have.been.called
+          })
       ))
 
       it('draws from the connection pool', () => {
@@ -46,6 +62,17 @@ describe('Database', () => {
           })
         })
       })
+
+      it('rejects on error', () => (
+        expect(
+          using(db.acquire(), () => { throw 'error' })
+        ).to.eventually.be.rejected
+      ))
+
+      it('releases on error', () => (
+        using(db.acquire(), () => { throw 'error' })
+          .catch(() => expect(db.pool.release).to.have.been.called)
+      ))
     })
 
     describe('#exec()', () => {
