@@ -76,8 +76,8 @@ class Database {
     return this.seq(c => c.all(...args))
   }
 
-  get(...args) {
-    return this.seq(c => c.get(...args))
+  first(...args) {
+    return this.seq(c => c.first(...args))
   }
 
   run(...args) {
@@ -104,7 +104,7 @@ class Connection {
     return this.db.allAsync(...args)
   }
 
-  get(...args) {
+  first(...args) {
     return this.db.getAsync(...args)
   }
 

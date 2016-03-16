@@ -127,26 +127,51 @@ describe('Database', () => {
       it('rejects on error', () => (
         expect(db.seq(() => { throw 'error' })).to.eventually.be.rejected
       ))
+
+      it('does not roll back on error', () => (
+        expect(
+          db.seq(async function (c) {
+            await c.run('CREATE TABLE s1 (a)')
+            await c.run('XNSERT INTO s1 (a) VALUES (1)')
+
+          })
+            .catch(() => db.run('INSERT INTO s1 (a) VALUES (2)'))
+            .finally(() => db.run('DROP TABLE s1'))
+
+        ).to.eventually.be.fulfilled
+      ))
     })
 
     describe('#transaction()', () => {
-      //it('commits on success', () => (
-      //  expect(db.transaction(async function (t) {
-      //    await t.exec('CREATE TABLE t1 (a,b DEFAULT current_timestamp);')
+      it('rejects on error', () => (
+        expect(
+          db.transaction(() => { throw 'error' })
+        ).to.eventually.be.rejected
+      ))
 
-      //    t.exec('INSERT INTO t1 (a) VALUES (1);')
-      //    t.exec('INSERT INTO t1 (a) VALUES (2);')
+      it('rolls back on error', () => (
+        expect(
+          db.transaction(async function (tx) {
+            await tx.run('CREATE TABLE t1 (a)')
+            await tx.run('XNSERT INTO t1 (a) VALUES (1)')
 
-      //    await t.exec('DROP TABLE t1;')
+          })
+            .catch(() => db.run('INSERT INTO t1 (a) VALUES (2)'))
 
-      //  })).to.eventually.be.fulfilled
-      //))
+        ).to.eventually.be.rejected
+      ))
 
-      //it('rolls back on error', () => (
-      //  expect(db.transaction(async function (t) {
-      //    throw 'something'
-      //  })).to.eventually.be.rejected
-      //))
+      it('commits on success', () => (
+        expect(
+          db.transaction(async function (tx) {
+            await tx.run('CREATE TABLE t1 (a)')
+            await tx.run('INSERT INTO t1 (a) VALUES (42)')
+
+          }).then(() => db.first('SELECT a FROM t1'))
+
+        ).to.eventually.be.fulfilled
+          .and.have.property('a', 42)
+      ))
     })
   })
 })
