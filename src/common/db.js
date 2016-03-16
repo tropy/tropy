@@ -24,6 +24,7 @@ class Database {
     })
   }
 
+
   create(callback) {
     info(`opening db ${this.path}`)
     let db = new sqlite.Database(this.path, (error) => {
@@ -47,20 +48,29 @@ class Database {
   }
 
 
+  seq(actions) {
+    return using(this.acquire(), actions)
+  }
+
+  transaction(actions) {
+    return this.seq(c => using(transaction(c), actions))
+  }
+
+
   all(...args) {
-    return using(this.acquire(), c => { c.all(...args) })
+    return this.seq(c => c.all(...args))
   }
 
   get(...args) {
-    return using(this.acquire(), c => { c.get(...args) })
+    return this.seq(c => c.get(...args))
   }
 
   run(...args) {
-    return using(this.acquire(), c => { c.run(...args) })
+    return this.seq(c => c.run(...args))
   }
 
   exec(...args) {
-    return using(this.acquire(), c => { c.exec(...args) })
+    return this.seq(c => c.exec(...args))
   }
 }
 
