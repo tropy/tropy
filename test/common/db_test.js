@@ -115,11 +115,18 @@ describe('Database', () => {
     })
 
     describe('#seq()', () => {
-      //it('rolls back on error', () => (
-      //  expect(db.transaction(async function (t) {
-      //    throw 'something'
-      //  })).to.eventually.be.rejected
-      //))
+      it('exposes a connection', () => (
+        expect(db.seq(c => {
+          expect(db.busy).to.eql(1)
+          c.run('SELECT * FROM sqlite_master')
+          c.run('SELECT * FROM sqlite_master')
+          expect(db.busy).to.eql(1)
+        })).to.eventually.be.fulfilled
+      ))
+
+      it('rejects on error', () => (
+        expect(db.seq(() => { throw 'error' })).to.eventually.be.rejected
+      ))
     })
 
     describe('#transaction()', () => {
