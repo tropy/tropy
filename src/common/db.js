@@ -17,7 +17,7 @@ class Database {
     this.pool = new Pool({
       min: 1,
       max: 8,
-      idleTimeoutMillis: 9000,
+      idleTimeoutMillis: 30000,
       log,
       create: this.create.bind(this),
       destroy: this.destroy.bind(this)
@@ -42,9 +42,12 @@ class Database {
       .disposer(db => { this.pool.release(db) })
   }
 
-  close() {
+  drain() {
     return this.pool.drainAsync()
-      .then(() => this.pool.destroyAllNowAsync())
+  }
+
+  close() {
+    return this.drain().then(() => this.pool.destroyAllNowAsync())
   }
 
 
