@@ -167,6 +167,9 @@ describe('Database', () => {
             await tx.run('CREATE TABLE t1 (a)')
             await tx.run('INSERT INTO t1 (a) VALUES (42)')
 
+            await expect(db.first('SELECT a FROM t1'))
+              .to.eventually.be.rejected
+
           }).then(() => db.first('SELECT a FROM t1'))
 
         ).to.eventually.be.fulfilled
