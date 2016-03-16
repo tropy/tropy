@@ -96,10 +96,13 @@ describe('Database', () => {
         expect(db.busy).to.eql(2)
       })
 
-      it('executes arbitrary sql', () => (
+      it('re-uses connections if possible', () => (
         expect((async function () {
+          expect(db.busy).to.eql(0)
           await db.exec('CREATE TABLE exec (a);')
+          expect(db.busy).to.eql(0)
           await db.exec('DROP TABLE exec;')
+          expect(db.busy).to.eql(0)
         })()).to.eventually.be.fulfilled
       ))
 
