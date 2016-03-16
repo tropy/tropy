@@ -17,6 +17,7 @@ class Database {
     this.pool = new Pool({
       min: 1,
       max: 8,
+      idleTimeoutMillis: 9000,
       log,
       create: this.create.bind(this),
       destroy: this.destroy.bind(this)
@@ -25,7 +26,7 @@ class Database {
 
   create(callback) {
     info(`opening db ${this.path}`)
-    new sqlite.Database(this.path, (error, db) => {
+    let db = new sqlite.Database(this.path, (error) => {
       callback(error, new Connection(db))
     })
   }
@@ -38,6 +39,11 @@ class Database {
   acquire() {
     return this.pool.acquireAsync()
       .disposer(db => { this.pool.release(db) })
+  }
+
+  close() {
+    return this.pool.drainAsync()
+      .then(() => this.pool.destroyAllNowAsync())
   }
 
 
@@ -63,6 +69,11 @@ class Connection {
   constructor(db) {
     this.db = db
   }
+
+  close() {
+    return this.db.closeAsync()
+  }
+
 
   all(...args) {
     return this.db.allAsync(...args)
