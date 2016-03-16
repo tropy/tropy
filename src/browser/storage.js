@@ -1,14 +1,9 @@
 'use strict'
 
-require('../common/promisify')
-
-const { promisify } = require('bluebird')
 const { app } = require('electron')
 const { join } = require('path')
 const { readFileAsync: read } = require('fs')
-
-const write = promisify(require('write-file-atomic'))
-write.sync = require('write-file-atomic').sync
+const { write } = require('../common/atomic')
 
 
 class Storage {
