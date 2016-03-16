@@ -30,9 +30,9 @@ describe('Storage', () => {
     })
 
     describe('#load', () => {
-      before(() => {
+      before(() => (
         folder.save('test-b.json', { name: 'b' })
-      })
+      ))
 
       after(done => {
         fs.unlink(folder.expand('test-b.json'), done)
