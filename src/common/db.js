@@ -109,16 +109,16 @@ class Connection {
   }
 
   run(...args) {
-    return this.db.runAsync(...args)
+    return this.db.runAsync(...args).return(this)
   }
 
   exec(...args) {
-    return this.db.execAsync(...args)
+    return this.db.execAsync(...args).return(this)
   }
 
 
-  begin() {
-    return this.run('BEGIN IMMEDIATE TRANSACTION')
+  begin(mode = 'IMMEDIATE') {
+    return this.run(`BEGIN ${mode} TRANSACTION`)
   }
 
   commit() {
