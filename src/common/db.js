@@ -25,6 +25,18 @@ class Database {
   }
 
 
+  get size() {
+    return this.pool.getPoolSize()
+  }
+
+  get ready() {
+    return this.pool.availableObjectsCount()
+  }
+
+  get busy() {
+    return this.size - this.ready
+  }
+
   create(callback) {
     info(`opening db ${this.path}`)
     let db = new sqlite.Database(this.path, (error) => {

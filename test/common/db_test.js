@@ -32,7 +32,7 @@ describe('Database', () => {
 
     describe('constructor', () => {
       it('creates a connection pool', () => {
-        expect(db.pool.getPoolSize()).to.be.at.least(1)
+        expect(db.size).to.be.at.least(1)
       })
     })
 
@@ -51,13 +51,13 @@ describe('Database', () => {
       ))
 
       it('draws from the connection pool', () => {
-        let count = db.pool.availableObjectsCount()
+        let count = db.ready
 
         return using(db.acquire(), c1 => {
-          expect(db.pool.availableObjectsCount()).to.be.below(count)
+          expect(db.ready).to.be.below(count)
 
           return using(db.acquire(), c2 => {
-            expect(db.pool.getPoolSize()).to.be.at.least(2)
+            expect(db.size).to.be.at.least(2)
             expect(c1).not.to.equal(c2)
           })
         })
@@ -77,14 +77,66 @@ describe('Database', () => {
 
     describe('#exec()', () => {
       it('executes arbitrary sql', () => (
+        expect(
+          db.exec('SELECT * FROM sqlite_master;')
+        ).to.eventually.be.fulfilled
+      ))
+
+      it('rejects on error', () => (
+        expect(
+          db.exec('SELECT foobar FROM sqlite_master;')
+        ).to.eventually.be.rejected
+      ))
+
+      it('acquires connection for every call', () => {
+        expect(db.busy).to.eql(0)
+        db.exec('SELECT * FROM sqlite_master;')
+        expect(db.busy).to.eql(1)
+        db.exec('SELECT * FROM sqlite_master;')
+        expect(db.busy).to.eql(2)
+      })
+
+      it('executes arbitrary sql', () => (
         expect((async function () {
           await db.exec('CREATE TABLE exec (a);')
           await db.exec('DROP TABLE exec;')
         })()).to.eventually.be.fulfilled
       ))
+
+      it('ignores comments', () => (
+        expect(db.exec(
+          `-- A comment
+          SELECT * FROM sqlite_master; -- Another comment`
+        )).to.eventually.be.fulfilled
+      ))
+    })
+
+    describe('#seq()', () => {
+      //it('rolls back on error', () => (
+      //  expect(db.transaction(async function (t) {
+      //    throw 'something'
+      //  })).to.eventually.be.rejected
+      //))
     })
 
     describe('#transaction()', () => {
+      //it('commits on success', () => (
+      //  expect(db.transaction(async function (t) {
+      //    await t.exec('CREATE TABLE t1 (a,b DEFAULT current_timestamp);')
+
+      //    t.exec('INSERT INTO t1 (a) VALUES (1);')
+      //    t.exec('INSERT INTO t1 (a) VALUES (2);')
+
+      //    await t.exec('DROP TABLE t1;')
+
+      //  })).to.eventually.be.fulfilled
+      //))
+
+      //it('rolls back on error', () => (
+      //  expect(db.transaction(async function (t) {
+      //    throw 'something'
+      //  })).to.eventually.be.rejected
+      //))
     })
   })
 })
