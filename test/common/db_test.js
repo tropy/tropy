@@ -5,7 +5,7 @@ const tmpdir = require('../support/tmpdir')
 
 const { join } = require('path')
 const { unlinkAsync: rm } = require('fs')
-const { using } = require('bluebird')
+const { map, using } = require('bluebird')
 
 describe('Database', () => {
   const { Database, Connection, Statement } = __require('common/db')
@@ -202,25 +202,25 @@ describe('Database', () => {
     })
 
     describe('concurrency', () => {
-      //beforeEach(() =>
-      //  db.seq(async function (conn) {
-      //    await conn.run('CREATE TABLE cc (a)')
-      //    //for (let i = 0; i < 9; ++i) await conn.run('INSERT INTO cc VALUES (?)', i)
-      //  }))
+      beforeEach(() =>
+        db.seq(async function (conn) {
+          await conn.run('CREATE TABLE cc (a)')
+          for (let i = 0; i < 9; ++i) await conn.run('INSERT INTO cc VALUES (?)', i)
+        }))
 
-      //afterEach(() =>
-      //  db.run('DROP TABLE cc'))
+      afterEach(() =>
+        db.run('DROP TABLE cc'))
 
-      //function count() {
-      //  return db.get('SELECT COUNT(*) FROM cc')
-      //}
+      function count() {
+        return db.get('SELECT COUNT(*) FROM cc')
+      }
 
-      //it('parallel reading', () =>
-      //  expect(
-      //    map([count(), count(), count(), count()])
-      //  ).eventually.to.be.fulfilled
-      //    .and.eql([9, 9, 9, 9])
-      //)
+      it('parallel reading', () =>
+        expect(
+          map([count(), count(), count(), count()], x => x)
+        ).eventually.to.be.fulfilled
+          .and.eql([9, 9, 9, 9])
+      )
 
     })
   })

@@ -18,7 +18,7 @@ class Database {
       min: 0,
       max: 8,
       idleTimeoutMillis: 60000,
-      log,
+      log: (msg, level) => log(level, msg),
       create: this.create.bind(this),
       destroy: this.destroy.bind(this)
     })
