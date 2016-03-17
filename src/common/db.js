@@ -3,6 +3,7 @@
 require('./promisify')
 
 const sqlite = require('sqlite3')
+const entries = require('object.entries')
 
 const { using } = require('bluebird')
 const { Pool } = require('generic-pool')
@@ -40,11 +41,12 @@ class Database {
 
   create(callback) {
     info(`opening db ${this.path}`)
+
     let db = new sqlite.Database(this.path, (error) => {
       if (error) return callback(error)
 
       new Connection(db)
-        .exec('PRAGMA busy_timeout = 1500;')
+        .init()
         .then(conn => callback(null, conn))
         .catch(callback)
     })
@@ -119,6 +121,16 @@ class Connection {
     this.db = db
   }
 
+  get pragma() {
+    return entries(Connection.pragma)
+      .map(nv => `PRAGMA ${nv.join(' = ')};`)
+      .join('\n')
+  }
+
+  init() {
+    return this.exec(this.pragma)
+  }
+
   close() {
     return this.db.closeAsync()
   }
@@ -166,6 +178,11 @@ class Connection {
     return this.run('ROLLBACK TRANSACTION')
   }
 }
+
+Connection.pragma = {
+  busy_timeout: 1000
+}
+
 
 
 class Statement {

@@ -8,10 +8,9 @@ const { join } = require('path')
 const { unlinkAsync: rm } = require('fs')
 const { all, map, using } = require('bluebird')
 const { times } = __require('common/util')
+const { Database, Connection, Statement } = __require('common/db')
 
 describe('Database', () => {
-  const { Database, Connection, Statement } = __require('common/db')
-
   describe('given a database file', () => {
     let db
     const dbFile = join(tmpdir, 'db_test.sqlite')
@@ -224,5 +223,13 @@ describe('Database', () => {
 
       })
     })
+  })
+})
+
+describe('Connection', () => {
+  describe('#pragma', () => {
+    it('returns the default pragmas sql', () =>
+      expect(new Connection().pragma)
+        .to.match(/PRAGMA busy_timeout = \d+;/))
   })
 })
