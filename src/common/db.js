@@ -3,8 +3,8 @@
 require('./promisify')
 
 const sqlite = require('sqlite3')
-const { using } = require('bluebird')
 
+const { using } = require('bluebird')
 const { Pool } = require('generic-pool')
 const { log, debug, info } = require('./log')
 
@@ -70,29 +70,34 @@ class Database {
   }
 
 
-  seq(actions) {
-    return using(this.acquire(), actions)
+  seq(fn) {
+    return using(this.acquire(), fn)
   }
 
-  transaction(actions) {
-    return this.seq(c => using(transaction(c), actions))
+  transaction(fn) {
+    return this.seq(conn => using(transaction(conn), fn))
+  }
+
+  prepare(fn) {
+    return this.seq(conn =>
+      conn.prepare().then(stmt => fn(stmt, conn)))
   }
 
 
   all(...args) {
-    return this.seq(c => c.all(...args))
+    return this.seq(conn => conn.all(...args))
   }
 
   get(...args) {
-    return this.seq(c => c.get(...args))
+    return this.seq(conn => conn.get(...args))
   }
 
   run(...args) {
-    return this.seq(c => c.run(...args))
+    return this.seq(conn => conn.run(...args))
   }
 
   exec(...args) {
-    return this.seq(c => c.exec(...args))
+    return this.seq(conn => conn.exec(...args))
   }
 }
 
@@ -114,6 +119,11 @@ class Connection {
     return this.db.serialize(), this
   }
 
+
+  prepare(...args) {
+    return this.db.prepareAsync(...args)
+      .then(stmt => new Statement(stmt))
+  }
 
   all(...args) {
     return this.db.allAsync(...args)
@@ -145,10 +155,42 @@ class Connection {
   }
 }
 
+
+class Statement {
+  constructor(stmt) {
+    this.stmt = stmt
+  }
+
+  bind(...args) {
+    return this.stmt.bindAsync(...args).return(this)
+  }
+
+  reset() {
+    return this.stmt.resetAsync().return(this)
+  }
+
+  finalize() {
+    return this.stmt.finalizeAsync().return(this)
+  }
+
+  run(...args) {
+    return this.stmt.runAsync(...args).return(this)
+  }
+
+  get(...args) {
+    return this.stmt.getAsync(...args)
+  }
+
+  all(...args) {
+    return this.stmt.allAsync(...args)
+  }
+}
+
+
 function transaction(connection) {
   return connection
     .begin()
     .disposer((tx, p) => p.isFulfilled() ? tx.commit() : tx.rollback())
 }
 
-module.exports = { Database, Connection, transaction }
+module.exports = { Database, Connection, Statement, transaction }
