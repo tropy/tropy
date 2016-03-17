@@ -1,6 +1,7 @@
 'use strict'
 
 __require('common/promisify')
+
 const tmpdir = require('../support/tmpdir')
 
 const { join } = require('path')
@@ -203,21 +204,23 @@ describe('Database', () => {
 
     describe('concurrency', () => {
       beforeEach(() =>
-        db.seq(async function (conn) {
-          await conn.run('CREATE TABLE cc (a)')
-          for (let i = 0; i < 9; ++i) await conn.run('INSERT INTO cc VALUES (?)', i)
+        db.run('CREATE TABLE cc (a)'))
+
+      beforeEach(() =>
+        db.prepare('INSERT INTO cc VALUES (?)', stmt => {
+          for (let i = 0; i < 9; ++i) stmt.run(i)
         }))
 
       afterEach(() =>
         db.run('DROP TABLE cc'))
 
       function count() {
-        return db.get('SELECT COUNT(*) FROM cc')
+        return db.get('SELECT COUNT(*) AS count FROM cc')
       }
 
       it('parallel reading', () =>
         expect(
-          map([count(), count(), count(), count()], x => x)
+          map([count(), count(), count(), count()], r => r.count)
         ).eventually.to.be.fulfilled
           .and.eql([9, 9, 9, 9])
       )
