@@ -6,7 +6,8 @@ const tmpdir = require('../support/tmpdir')
 
 const { join } = require('path')
 const { unlinkAsync: rm } = require('fs')
-const { map, using } = require('bluebird')
+const { all, map, using } = require('bluebird')
+const { times } = __require('common/util')
 
 describe('Database', () => {
   const { Database, Connection, Statement } = __require('common/db')
@@ -65,14 +66,13 @@ describe('Database', () => {
 
       it('rejects on error', () => (
         expect(
-          using(db.acquire(), () => { throw 'error' })
+          using(db.acquire(), () => { throw new Error() })
         ).to.eventually.be.rejected
       ))
 
-      it('releases on error', () => (
-        using(db.acquire(), () => { throw 'error' })
-          .catch(() => expect(db.pool.release).to.have.been.called)
-      ))
+      it('releases on error', () =>
+        using(db.acquire(), () => { throw new Error() })
+          .catch(() => expect(db.pool.release).to.have.been.called))
     })
 
     describe('#prepare()', () => {
@@ -140,18 +140,20 @@ describe('Database', () => {
     })
 
     describe('#seq()', () => {
-      it('exposes a connection', () => (
-        expect(db.seq(c => {
-          expect(db.busy).to.eql(1)
-          c.run('SELECT * FROM sqlite_master')
-          c.run('SELECT * FROM sqlite_master')
-          expect(db.busy).to.eql(1)
-        })).to.eventually.be.fulfilled
-      ))
+      it('exposes a connection', () =>
+        expect(db.seq(conn => {
+          let ps = []
 
-      it('rejects on error', () => (
-        expect(db.seq(() => { throw 'error' })).to.eventually.be.rejected
-      ))
+          expect(db.busy).to.eql(1)
+          ps.push(conn.run('SELECT * FROM sqlite_master'))
+          ps.push(conn.run('SELECT * FROM sqlite_master'))
+          expect(db.busy).to.eql(1)
+
+          return all(ps)
+        })).to.eventually.be.fulfilled)
+
+      it('rejects on error', () =>
+        expect(db.seq(() => { throw new Error() })).to.eventually.be.rejected)
 
       it('does not roll back on error', () => (
         expect(
@@ -170,7 +172,7 @@ describe('Database', () => {
     describe('#transaction()', () => {
       it('rejects on error', () => (
         expect(
-          db.transaction(() => { throw 'error' })
+          db.transaction(() => { throw new Error() })
         ).to.eventually.be.rejected
       ))
 
@@ -207,24 +209,34 @@ describe('Database', () => {
         db.run('CREATE TABLE cc (a)'))
 
       beforeEach(() =>
-        db.prepare('INSERT INTO cc VALUES (?)', stmt => {
-          for (let i = 0; i < 9; ++i) stmt.run(i)
-        }))
+        db.prepare('INSERT INTO cc VALUES (?)', (stmt) =>
+          times(9, i => stmt.run(i))))
 
       afterEach(() =>
         db.run('DROP TABLE cc'))
 
-      function count() {
-        return db.get('SELECT COUNT(*) AS count FROM cc')
-      }
+      describe('on multiple connections', () => {
 
-      it('parallel reading', () =>
-        expect(
-          map([count(), count(), count(), count()], r => r.count)
-        ).eventually.to.be.fulfilled
-          .and.eql([9, 9, 9, 9])
-      )
+        function count() {
+          return db.get('SELECT COUNT(*) AS count FROM cc')
+        }
 
+        //function write(...args) {
+        //  db.run('INSERT INTO cc VALUES (?)', ...args)
+        //}
+
+        it('supports parallel reading', () =>
+          expect(
+            map([count(), count(), count(), count()], r => r.count)
+          ).to.eventually.eql([9, 9, 9, 9]))
+
+        //it('supports parallel writing', () =>
+        //  expect(
+        //    map([write('w1'), write('w2'), write('w3'), write('w4')], x => x)
+        //      .then(count)
+        //  ).to.eventually.have.property('count', 13))
+
+      })
     })
   })
 })

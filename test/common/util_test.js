@@ -36,7 +36,7 @@ describe('util', () => {
       describe('when the error event fires', () => {
         beforeEach(() => {
           sinon.spy(ee, 'removeListener')
-          setTimeout(() => ee.emit('error'), 25)
+          setTimeout(() => ee.emit('error', new Error()), 25)
         })
 
         afterEach(() => {

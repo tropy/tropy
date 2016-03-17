@@ -6,7 +6,7 @@ const B = require('bluebird')
 module.exports = {
 
   once(emitter, event) {
-    return new B(function (resolve, reject) {
+    return new B((resolve, reject) => {
       const on = (emitter.on || emitter.addEventListener).bind(emitter)
       const off = (emitter.removeListener || emitter.removeEventListener)
         .bind(emitter)
@@ -28,6 +28,10 @@ module.exports = {
       on('error', failure)
       on(event, success)
     })
-  }
+  },
 
+  times(n, fn) {
+    for (var i = 0, res = []; i < n; ++i) res.push(fn(i))
+    return res
+  }
 }
