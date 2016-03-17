@@ -56,17 +56,19 @@ function init(dir) {
       break
 
     case 'test':
-      logger.level = 'verbose'
-      logger.add(transports.File, {
-        filename: join(__dirname, '..', '..', 'tmp', 'test.log'),
-        maxsize: 1024 * 1024,
-        maxFiles: 1,
-        tailable: true,
-        handleExceptions: true,
-        humanReadableUnhandledException: true,
-        json: false,
-        formatter
-      })
+      if (!process.env.CI) {
+        logger.level = 'verbose'
+        logger.add(transports.File, {
+          filename: join(__dirname, '..', '..', 'tmp', 'test.log'),
+          maxsize: 1024 * 1024,
+          maxFiles: 1,
+          tailable: true,
+          handleExceptions: true,
+          humanReadableUnhandledException: true,
+          json: false,
+          formatter
+        })
+      }
       break
   }
 
