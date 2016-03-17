@@ -206,9 +206,6 @@ describe('Database', () => {
           return db.get('SELECT COUNT(*) AS count FROM cc')
         }
 
-        function write(value) {
-          return db.run('INSERT INTO cc VALUES (?)', value)
-        }
 
         it('supports parallel reading', () =>
           expect(
@@ -217,6 +214,24 @@ describe('Database', () => {
 
         it('supports parallel writing', function () {
           this.timeout(10000)
+
+          function write(value) {
+            return db.run('INSERT INTO cc VALUES (?)', value)
+          }
+
+          return expect(
+            map([write('w1'), write('w2'), write('w3'), write('w4')], x => x)
+              .then(count)
+          ).to.eventually.have.property('count', 13)
+        })
+
+        it('supports parallel writing transactions', function () {
+          this.timeout(10000)
+
+          function write(value) {
+            return db.transaction(tx =>
+                tx.run('INSERT INTO cc VALUES (?)', value))
+          }
 
           return expect(
             map([write('w1'), write('w2'), write('w3'), write('w4')], x => x)
