@@ -6,10 +6,18 @@ global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {}
 const decode = decodeURIComponent
 const hash = window.location.hash.slice(1)
 
-global.args = Object.freeze(JSON.parse(decode(hash)))
+if (process.env.NODE_ENV !== 'test') {
+  global.args = Object.freeze(JSON.parse(decode(hash)))
 
-process.env.NODE_ENV = global.args.environment
-process.env.DEBUG = global.args.debug
+  process.env.NODE_ENV = global.args.environment
+  process.env.DEBUG = global.args.debug
+
+} else {
+  global.args = {
+    environment: 'test',
+    debug: process.env.DEBUG
+  }
+}
 
 if (global.args.environment === 'development') {
   if (process.platform !== 'linux') {
