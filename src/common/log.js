@@ -88,16 +88,23 @@ function colorize(level, string = level) {
 }
 
 function text(options) {
-  if (options.meta && keys(options.meta).length) {
-    return [
-      options.message,
-      inspect(options.meta, { colors: true })
-        .replace(/^/mg, ' '.repeat(PADDING))
+  let meta = assign({}, options.meta)
+  let message = options.message
 
+  if (meta.module) {
+    message = `[${meta.module}] ${message}`
+    delete meta.module
+  }
+
+  if (keys(meta).length) {
+    return [
+      message,
+      inspect(meta, { colors: true })
+        .replace(/^/mg, ' '.repeat(PADDING))
     ].join('\n')
   }
 
-  return options.message
+  return message
 }
 
 function formatter(options) {

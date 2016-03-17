@@ -18,7 +18,7 @@ class Database {
       min: 0,
       max: 8,
       idleTimeoutMillis: 60000,
-      log: (msg, level) => log(level, msg),
+      log: (msg, level) => log(level, msg, { module: 'db:pool' }),
       create: this.create.bind(this),
       destroy: this.destroy.bind(this)
     })
@@ -42,6 +42,10 @@ class Database {
     let db = new sqlite.Database(this.path, (error) => {
       callback(error, new Connection(db))
     })
+
+    if (process.env.DEBUG) {
+      db.on('trace', query => debug(query, { module: 'db:trace' }))
+    }
   }
 
   destroy(conn) {
