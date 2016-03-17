@@ -78,9 +78,11 @@ class Database {
     return this.seq(conn => using(transaction(conn), fn))
   }
 
-  prepare(fn) {
+  prepare(...args) {
+    let fn = args.pop()
+
     return this.seq(conn =>
-      conn.prepare().then(stmt => fn(stmt, conn)))
+      conn.prepare(...args).then(stmt => fn(stmt, conn)))
   }
 
 

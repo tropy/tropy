@@ -7,7 +7,7 @@ const { unlinkAsync: rm } = require('fs')
 const { using } = require('bluebird')
 
 describe('Database', () => {
-  const { Database, Connection } = __require('common/db')
+  const { Database, Connection, Statement } = __require('common/db')
 
   describe('given a database file', () => {
     let db
@@ -70,6 +70,17 @@ describe('Database', () => {
       it('releases on error', () => (
         using(db.acquire(), () => { throw 'error' })
           .catch(() => expect(db.pool.release).to.have.been.called)
+      ))
+    })
+
+    describe('#prepare()', () => {
+      it('returns a disposable statement', () => (
+        expect(
+          db.prepare('', (stmt, conn) => {
+            expect(stmt).to.be.instanceof(Statement)
+            expect(conn).to.be.instanceof(Connection)
+          })
+        ).to.eventually.be.fulfilled
       ))
     })
 
@@ -173,6 +184,21 @@ describe('Database', () => {
         ).to.eventually.be.fulfilled
           .and.have.property('a', 42)
       ))
+    })
+
+    describe('concurrency', () => {
+      beforeEach(() =>
+        db.run('CREATE TABLE cc (a, b DEFAULT current_timestamp'))
+
+      afterEach(() =>
+        db.run('DROP TABLE cc'))
+
+      //it('parallel reading', () =>
+      //  expect(
+      //    map([
+      //    ])
+      //  ).to.eventually.be.fulfilled)
+
     })
   })
 })
