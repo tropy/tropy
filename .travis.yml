@@ -34,7 +34,7 @@ before_install:
       nvm alias default $NODE_VERSION;
     fi
 install:
-  - npm install
+  - npm update
 
 before_script:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
