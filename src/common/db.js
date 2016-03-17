@@ -44,14 +44,23 @@ class Database {
     })
   }
 
-  destroy(db) {
+  destroy(conn) {
     info(`closing db ${this.path}`)
-    db.close()
+    conn.close()
   }
 
   acquire() {
     return this.pool.acquireAsync()
-      .disposer(db => { this.pool.release(db) })
+      .disposer(conn => this.release(conn))
+  }
+
+  release(conn) {
+    try {
+      conn.parallelize()
+
+    } finally {
+      this.pool.release(conn)
+    }
   }
 
 
@@ -95,6 +104,14 @@ class Connection {
 
   close() {
     return this.db.closeAsync()
+  }
+
+  parallelize() {
+    return this.db.parallelize(), this
+  }
+
+  serialize() {
+    return this.db.serialize(), this
   }
 
 
