@@ -1,10 +1,11 @@
 'use strict'
 
+__require('common/promisify')
 const tmpdir = require('../support/tmpdir')
 
 const { join } = require('path')
 const { unlinkAsync: rm } = require('fs')
-const { map, using } = require('bluebird')
+const { using } = require('bluebird')
 
 describe('Database', () => {
   const { Database, Connection, Statement } = __require('common/db')
