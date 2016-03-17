@@ -20,7 +20,8 @@ class Database {
       idleTimeoutMillis: 60000,
       log: (msg, level) => log(level, msg, { module: 'db:pool' }),
       create: this.create.bind(this),
-      destroy: this.destroy.bind(this)
+      destroy: this.destroy.bind(this),
+      validate: conn => conn.db.open
     })
   }
 
@@ -40,10 +41,15 @@ class Database {
   create(callback) {
     info(`opening db ${this.path}`)
     let db = new sqlite.Database(this.path, (error) => {
-      callback(error, new Connection(db))
+      if (error) return callback(error)
+
+      new Connection(db)
+        .exec('PRAGMA busy_timeout = 1500;')
+        .then(conn => callback(null, conn))
+        .catch(callback)
     })
 
-    if (process.env.DEBUG) {
+    if (process.env.DEBUG === 'true') {
       db.on('trace', query => debug(query, { module: 'db:trace' }))
     }
   }

@@ -16,27 +16,23 @@ describe('Database', () => {
     let db
     const dbFile = join(tmpdir, 'db_test.sqlite')
 
-    before(() => {
+    beforeEach(() => {
       db = new Database(dbFile)
 
       sinon.spy(db.pool, 'acquire')
       sinon.spy(db.pool, 'release')
     })
 
-    after(() =>
-      db.close().then(() => rm(dbFile)))
-
-    afterEach(() => {
-      db.pool.acquire.reset()
-      db.pool.release.reset()
-    })
+    afterEach(() =>
+      db.close()
+        .then(() => rm(dbFile))
+        .catch({ code: 'ENOENT' }, () => {}))
 
     describe('constructor', () => {
       it('creates an empty connection pool', () => {
         expect(db.size).to.be.zero
       })
     })
-
 
     describe('#acquire()', () => {
       it('returns a disposable connection', () => (
@@ -51,24 +47,19 @@ describe('Database', () => {
           })
       ))
 
-      it('draws from the connection pool', () => {
-        let count = db.ready
-
-        return using(db.acquire(), c1 => {
-          expect(db.ready).to.be.below(count)
+      it('draws from the connection pool', () =>
+        using(db.acquire(), c1 => {
+          expect(db.size).to.be.at.least(1)
 
           return using(db.acquire(), c2 => {
             expect(db.size).to.be.at.least(2)
             expect(c1).not.to.equal(c2)
           })
-        })
-      })
+        }))
 
-      it('rejects on error', () => (
-        expect(
-          using(db.acquire(), () => { throw new Error() })
-        ).to.eventually.be.rejected
-      ))
+      it('rejects on error', () =>
+        expect(using(db.acquire(), () => { throw new Error() }))
+          .to.eventually.be.rejected)
 
       it('releases on error', () =>
         using(db.acquire(), () => { throw new Error() })
@@ -101,17 +92,13 @@ describe('Database', () => {
     })
 
     describe('#exec()', () => {
-      it('executes arbitrary sql', () => (
-        expect(
-          db.exec('SELECT * FROM sqlite_master;')
-        ).to.eventually.be.fulfilled
-      ))
+      it('executes arbitrary sql', () =>
+        expect(db.exec('SELECT * FROM sqlite_master;'))
+          .to.eventually.be.fulfilled)
 
-      it('rejects on error', () => (
-        expect(
-          db.exec('SELECT foobar FROM sqlite_master;')
-        ).to.eventually.be.rejected
-      ))
+      it('rejects on error', () =>
+        expect(db.exec('SELECT foobar FROM sqlite_master;'))
+          .to.eventually.be.rejected)
 
       it('acquires connection for every call', () => {
         expect(db.busy).to.eql(0)
@@ -209,11 +196,8 @@ describe('Database', () => {
         db.run('CREATE TABLE cc (a)'))
 
       beforeEach(() =>
-        db.prepare('INSERT INTO cc VALUES (?)', (stmt) =>
+        db.prepare('INSERT INTO cc VALUES (?)', stmt =>
           times(9, i => stmt.run(i))))
-
-      afterEach(() =>
-        db.run('DROP TABLE cc'))
 
       describe('on multiple connections', () => {
 
@@ -221,20 +205,22 @@ describe('Database', () => {
           return db.get('SELECT COUNT(*) AS count FROM cc')
         }
 
-        //function write(...args) {
-        //  db.run('INSERT INTO cc VALUES (?)', ...args)
-        //}
+        function write(value) {
+          return db.transaction(tx =>
+            tx.run('INSERT INTO cc VALUES (?)', value)
+          )
+        }
 
         it('supports parallel reading', () =>
           expect(
             map([count(), count(), count(), count()], r => r.count)
           ).to.eventually.eql([9, 9, 9, 9]))
 
-        //it('supports parallel writing', () =>
-        //  expect(
-        //    map([write('w1'), write('w2'), write('w3'), write('w4')], x => x)
-        //      .then(count)
-        //  ).to.eventually.have.property('count', 13))
+        it.skip('supports parallel writing', () =>
+          expect(
+            map([write('w1'), write('w2'), write('w3'), write('w4')], x => x)
+              .then(count)
+          ).to.eventually.have.property('count', 13))
 
       })
     })
