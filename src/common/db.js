@@ -15,9 +15,9 @@ class Database {
 
     this.path = path
     this.pool = new Pool({
-      min: 1,
+      min: 0,
       max: 8,
-      idleTimeoutMillis: 30000,
+      idleTimeoutMillis: 60000,
       log,
       create: this.create.bind(this),
       destroy: this.destroy.bind(this)
@@ -54,12 +54,10 @@ class Database {
       .disposer(db => { this.pool.release(db) })
   }
 
-  drain() {
-    return this.pool.drainAsync()
-  }
 
   close() {
-    return this.drain().then(() => this.pool.destroyAllNowAsync())
+    return this.pool.drainAsync().then(() =>
+        this.pool.destroyAllNowAsync())
   }
 
 
@@ -76,8 +74,8 @@ class Database {
     return this.seq(c => c.all(...args))
   }
 
-  first(...args) {
-    return this.seq(c => c.first(...args))
+  get(...args) {
+    return this.seq(c => c.get(...args))
   }
 
   run(...args) {
@@ -104,7 +102,7 @@ class Connection {
     return this.db.allAsync(...args)
   }
 
-  first(...args) {
+  get(...args) {
     return this.db.getAsync(...args)
   }
 

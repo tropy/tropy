@@ -15,24 +15,22 @@ describe('Database', () => {
 
     before(() => {
       db = new Database(dbFile)
+
+      sinon.spy(db.pool, 'acquire')
+      sinon.spy(db.pool, 'release')
     })
 
     after(() =>
       db.close().then(() => rm(dbFile)))
 
-    beforeEach(() => {
-      sinon.spy(db.pool, 'acquire')
-      sinon.spy(db.pool, 'release')
-    })
-
     afterEach(() => {
-      db.pool.acquire.restore()
-      db.pool.release.restore()
+      db.pool.acquire.reset()
+      db.pool.release.reset()
     })
 
     describe('constructor', () => {
-      it('creates a connection pool', () => {
-        expect(db.size).to.be.at.least(1)
+      it('creates an empty connection pool', () => {
+        expect(db.size).to.be.zero
       })
     })
 
@@ -167,10 +165,10 @@ describe('Database', () => {
             await tx.run('CREATE TABLE t1 (a)')
             await tx.run('INSERT INTO t1 (a) VALUES (42)')
 
-            await expect(db.first('SELECT a FROM t1'))
+            await expect(db.get('SELECT a FROM t1'))
               .to.eventually.be.rejected
 
-          }).then(() => db.first('SELECT a FROM t1'))
+          }).then(() => db.get('SELECT a FROM t1'))
 
         ).to.eventually.be.fulfilled
           .and.have.property('a', 42)
