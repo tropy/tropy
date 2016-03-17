@@ -55,12 +55,16 @@ function init(dir) {
 
       break
 
-
     case 'test':
-      logger.level = 'error'
-      logger.add(transports.Console, {
+      logger.level = 'verbose'
+      logger.add(transports.File, {
+        filename: join(__dirname, '..', '..', 'tmp', 'test.log'),
+        maxsize: 1024 * 1024,
+        maxFiles: 1,
+        tailable: true,
         handleExceptions: true,
         humanReadableUnhandledException: true,
+        json: false,
         formatter
       })
       break
