@@ -193,8 +193,6 @@ describe('Database', () => {
     describe('concurrency', () => {
       beforeEach(() =>
         db.run('CREATE TABLE cc (a)'))
-      beforeEach(() =>
-        db.run('PRAGMA journal_mode = WAL'))
 
       beforeEach(() =>
         db.prepare('INSERT INTO cc VALUES (?)', stmt =>
