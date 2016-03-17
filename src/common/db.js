@@ -180,7 +180,7 @@ class Connection {
 }
 
 Connection.pragma = {
-  busy_timeout: 1000
+  busy_timeout: 4000
 }
 
 

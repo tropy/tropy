@@ -193,6 +193,8 @@ describe('Database', () => {
     describe('concurrency', () => {
       beforeEach(() =>
         db.run('CREATE TABLE cc (a)'))
+      beforeEach(() =>
+        db.run('PRAGMA journal_mode = WAL'))
 
       beforeEach(() =>
         db.prepare('INSERT INTO cc VALUES (?)', stmt =>
@@ -205,9 +207,7 @@ describe('Database', () => {
         }
 
         function write(value) {
-          return db.transaction(tx =>
-            tx.run('INSERT INTO cc VALUES (?)', value)
-          )
+          return db.run('INSERT INTO cc VALUES (?)', value)
         }
 
         it('supports parallel reading', () =>
@@ -215,11 +215,14 @@ describe('Database', () => {
             map([count(), count(), count(), count()], r => r.count)
           ).to.eventually.eql([9, 9, 9, 9]))
 
-        it.skip('supports parallel writing', () =>
-          expect(
+        it('supports parallel writing', function () {
+          this.timeout(10000)
+
+          return expect(
             map([write('w1'), write('w2'), write('w3'), write('w4')], x => x)
               .then(count)
-          ).to.eventually.have.property('count', 13))
+          ).to.eventually.have.property('count', 13)
+        })
 
       })
     })
