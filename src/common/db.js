@@ -122,25 +122,25 @@ class Connection {
   }
 
 
-  prepare(...args) {
-    return this.db.prepareAsync(...args)
+  prepare(sql, ...params) {
+    return this.db.prepareAsync(sql, flatten(params))
       .then(stmt => new Statement(stmt))
   }
 
-  all(...args) {
-    return this.db.allAsync(...args)
+  all(sql, ...params) {
+    return this.db.allAsync(sql, flatten(params))
   }
 
-  get(...args) {
-    return this.db.getAsync(...args)
+  get(sql, ...params) {
+    return this.db.getAsync(sql, flatten(params))
   }
 
-  run(...args) {
-    return this.db.runAsync(...args).return(this)
+  run(sql, ...params) {
+    return this.db.runAsync(sql, flatten(params)).return(this)
   }
 
-  exec(...args) {
-    return this.db.execAsync(...args).return(this)
+  exec(sql) {
+    return this.db.execAsync(sql).return(this)
   }
 
 
@@ -170,8 +170,8 @@ class Statement {
     this.stmt = stmt
   }
 
-  bind(...args) {
-    return this.stmt.bindAsync(...args).return(this)
+  bind(...params) {
+    return this.stmt.bindAsync(flatten(params)).return(this)
   }
 
   reset() {
@@ -182,16 +182,16 @@ class Statement {
     return this.stmt.finalizeAsync().return(this)
   }
 
-  run(...args) {
-    return this.stmt.runAsync(...args).return(this)
+  run(...params) {
+    return this.stmt.runAsync(flatten(params)).return(this)
   }
 
-  get(...args) {
-    return this.stmt.getAsync(...args)
+  get(...params) {
+    return this.stmt.getAsync(flatten(params))
   }
 
-  all(...args) {
-    return this.stmt.allAsync(...args)
+  all(...params) {
+    return this.stmt.allAsync(flatten(params))
   }
 }
 
@@ -200,6 +200,10 @@ function transaction(conn) {
   return conn
     .begin()
     .disposer((tx, p) => p.isFulfilled() ? tx.commit() : tx.rollback())
+}
+
+function flatten(params) {
+  return (params.length === 1) ? params[0] : params
 }
 
 module.exports = { Database, Connection, Statement, transaction }
