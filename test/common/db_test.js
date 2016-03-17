@@ -4,7 +4,7 @@ const tmpdir = require('../support/tmpdir')
 
 const { join } = require('path')
 const { unlinkAsync: rm } = require('fs')
-const { using } = require('bluebird')
+const { map, using } = require('bluebird')
 
 describe('Database', () => {
   const { Database, Connection, Statement } = __require('common/db')
@@ -74,14 +74,28 @@ describe('Database', () => {
     })
 
     describe('#prepare()', () => {
-      it('returns a disposable statement', () => (
+      it('returns disposable statement and connection', () => (
         expect(
-          db.prepare('', (stmt, conn) => {
+          db.prepare('SELECT * FROM sqlite_master', (stmt, conn) => {
             expect(stmt).to.be.instanceof(Statement)
             expect(conn).to.be.instanceof(Connection)
           })
-        ).to.eventually.be.fulfilled
+        ).eventually.to.be.fulfilled
       ))
+
+      it('finalizes statement when done', () => {
+        sinon.spy(Statement.prototype, 'finalize')
+
+        return expect(
+          db
+            .prepare('SELECT * FROM sqlite_master', () => {})
+            .tap(() => {
+              expect(Statement.prototype.finalize).to.have.been.called
+            })
+            .finally(() => { Statement.prototype.finalize.restore() })
+
+        ).eventually.to.be.fulfilled
+      })
     })
 
     describe('#exec()', () => {
@@ -187,17 +201,25 @@ describe('Database', () => {
     })
 
     describe('concurrency', () => {
-      beforeEach(() =>
-        db.run('CREATE TABLE cc (a, b DEFAULT current_timestamp'))
+      //beforeEach(() =>
+      //  db.seq(async function (conn) {
+      //    await conn.run('CREATE TABLE cc (a)')
+      //    //for (let i = 0; i < 9; ++i) await conn.run('INSERT INTO cc VALUES (?)', i)
+      //  }))
 
-      afterEach(() =>
-        db.run('DROP TABLE cc'))
+      //afterEach(() =>
+      //  db.run('DROP TABLE cc'))
+
+      //function count() {
+      //  return db.get('SELECT COUNT(*) FROM cc')
+      //}
 
       //it('parallel reading', () =>
       //  expect(
-      //    map([
-      //    ])
-      //  ).to.eventually.be.fulfilled)
+      //    map([count(), count(), count(), count()])
+      //  ).eventually.to.be.fulfilled
+      //    .and.eql([9, 9, 9, 9])
+      //)
 
     })
   })

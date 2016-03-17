@@ -82,7 +82,7 @@ class Database {
     let fn = args.pop()
 
     return this.seq(conn =>
-      conn.prepare(...args).then(stmt => fn(stmt, conn)))
+      using(Statement.disposable(conn, ...args), stmt => fn(stmt, conn)))
   }
 
 
@@ -159,6 +159,13 @@ class Connection {
 
 
 class Statement {
+
+  static disposable(conn, ...args) {
+    return conn
+      .prepare(...args)
+      .disposer(stmt => stmt.finalize())
+  }
+
   constructor(stmt) {
     this.stmt = stmt
   }
@@ -189,8 +196,8 @@ class Statement {
 }
 
 
-function transaction(connection) {
-  return connection
+function transaction(conn) {
+  return conn
     .begin()
     .disposer((tx, p) => p.isFulfilled() ? tx.commit() : tx.rollback())
 }
