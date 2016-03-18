@@ -88,6 +88,17 @@ describe('Database', () => {
 
         ).eventually.to.be.fulfilled
       })
+
+      it('can be run multiple times', () =>
+        expect((async function () {
+          await db.run('CREATE TABLE s(a)')
+
+          await db.prepare('INSERT INTO s VALUES (?)', stmt =>
+            all(times(9, i => stmt.run(i))))
+
+          return db.get('SELECT COUNT(*) AS count FROM s')
+
+        }())).to.eventually.have.property('count', 9))
     })
 
     describe('#exec()', () => {
@@ -194,47 +205,27 @@ describe('Database', () => {
       beforeEach(() =>
         db.run('CREATE TABLE cc (a)'))
 
-      beforeEach(() =>
-        db.prepare('INSERT INTO cc VALUES (?)', stmt =>
-          times(9, i => stmt.run(i))))
-
       describe('on multiple connections', () => {
-
         function count() {
           return db.get('SELECT COUNT(*) AS count FROM cc')
         }
 
+        function write(value) {
+          return db.transaction(tx =>
+              tx.run('INSERT INTO cc VALUES (?)', value))
+        }
 
         it('supports parallel reading', () =>
           expect(
-            map([count(), count(), count(), count()], r => r.count)
-          ).to.eventually.eql([9, 9, 9, 9]))
-
-        it('supports parallel writing', function () {
-          this.timeout(10000)
-
-          function write(value) {
-            return db.run('INSERT INTO cc VALUES (?)', value)
-          }
-
-          return expect(
-            map([write('w1'), write('w2'), write('w3'), write('w4')], x => x)
-              .then(count)
-          ).to.eventually.have.property('count', 13)
-        })
+            map(times(db.max * 2, count), res => res.count)
+          ).to.eventually.eql(times(db.max * 2, () => 0)))
 
         it('supports parallel writing transactions', function () {
-          this.timeout(10000)
-
-          function write(value) {
-            return db.transaction(tx =>
-                tx.run('INSERT INTO cc VALUES (?)', value))
-          }
+          this.timeout(db.max * 1000) // this may take a while!
 
           return expect(
-            map([write('w1'), write('w2'), write('w3'), write('w4')], x => x)
-              .then(count)
-          ).to.eventually.have.property('count', 13)
+            map(times(db.max + 2, write), x => x).then(count)
+          ).to.eventually.have.property('count', db.max + 2)
         })
 
       })
@@ -251,10 +242,10 @@ describe('Connection', () => {
   })
 
   describe('#configure', () => {
-    it('sets the default pragmas', () => {
-      conn.configure()
-      expect(conn.exec).to.have.been.calledWith(
-        `PRAGMA busy_timeout = ${Connection.pragma.busy_timeout};`)
+    it('sets the given pragmas', () => {
+      conn.configure({ busy_timeout: 2500 })
+      expect(conn.exec)
+        .to.have.been.calledWith('PRAGMA busy_timeout = 2500;')
     })
   })
 })

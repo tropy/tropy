@@ -17,7 +17,7 @@ class Database {
     this.path = path
     this.pool = new Pool({
       min: 0,
-      max: 8,
+      max: 4,
       idleTimeoutMillis: 60000,
       log: (msg, level) => log(level, msg, { module: 'db:pool' }),
       create: this.create.bind(this),
@@ -29,6 +29,10 @@ class Database {
 
   get size() {
     return this.pool.getPoolSize()
+  }
+
+  get max() {
+    return this.pool.getMaxPoolSize()
   }
 
   get ready() {
@@ -46,7 +50,9 @@ class Database {
       if (error) return callback(error)
 
       new Connection(db)
-        .configure()
+        .configure({
+          busy_timeout: this.max * 1000
+        })
         .then(conn => callback(null, conn))
         .catch(callback)
     })
@@ -121,11 +127,10 @@ class Connection {
     this.db = db
   }
 
-  configure(pragma = Connection.pragma) {
-    return this.exec(
-      entries(pragma)
-        .map(nv => `PRAGMA ${nv.join(' = ')};`)
-        .join('\n'))
+  configure(pragma) {
+    return this.exec(entries(pragma)
+      .map(nv => `PRAGMA ${nv.join(' = ')};`)
+      .join('\n'))
   }
 
   close() {
@@ -174,10 +179,6 @@ class Connection {
   rollback() {
     return this.run('ROLLBACK TRANSACTION')
   }
-}
-
-Connection.pragma = {
-  busy_timeout: 4000
 }
 
 
