@@ -221,7 +221,7 @@ describe('Database', () => {
           ).to.eventually.eql(times(db.max * 2, () => 0)))
 
         it('supports parallel writing transactions', function () {
-          this.timeout(db.max * 1000) // this may take a while!
+          this.timeout((db.max + 2) * 1000) // this may take a while!
 
           return expect(
             map(times(db.max + 2, write), x => x).then(count)
