@@ -243,9 +243,18 @@ describe('Database', () => {
 })
 
 describe('Connection', () => {
-  describe('#pragma', () => {
-    it('returns the default pragmas sql', () =>
-      expect(new Connection().pragma)
-        .to.match(/PRAGMA busy_timeout = \d+;/))
+  let conn
+
+  beforeEach(() => {
+    conn = new Connection()
+    sinon.stub(conn, 'exec')
+  })
+
+  describe('#configure', () => {
+    it('sets the default pragmas', () => {
+      conn.configure()
+      expect(conn.exec).to.have.been.calledWith(
+        `PRAGMA busy_timeout = ${Connection.pragma.busy_timeout};`)
+    })
   })
 })

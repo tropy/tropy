@@ -46,7 +46,7 @@ class Database {
       if (error) return callback(error)
 
       new Connection(db)
-        .init()
+        .configure()
         .then(conn => callback(null, conn))
         .catch(callback)
     })
@@ -121,14 +121,11 @@ class Connection {
     this.db = db
   }
 
-  get pragma() {
-    return entries(Connection.pragma)
-      .map(nv => `PRAGMA ${nv.join(' = ')};`)
-      .join('\n')
-  }
-
-  init() {
-    return this.exec(this.pragma)
+  configure(pragma = Connection.pragma) {
+    return this.exec(
+      entries(pragma)
+        .map(nv => `PRAGMA ${nv.join(' = ')};`)
+        .join('\n'))
   }
 
   close() {
