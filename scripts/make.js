@@ -191,8 +191,8 @@ function migration(type, name) {
   return (type === 'sql') ?
     '' :
 `'use strict'
-exports.up = function ${name}$up(db) {
-  return db.run(\`\`)
+exports.up = function ${name}$up(tx) {
+  // Return a promise here!
 }`
 }
 

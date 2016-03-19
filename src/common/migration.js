@@ -24,10 +24,16 @@ class Migration {
     this.number = Number(basename(path).split('.', 2)[0])
   }
 
-  async up(db) {
-    return (this.type === 'js') ?
-      require(this.path).up(db) :
-      db.run(await read(this.path))
+  up(db) {
+    return db.transaction(async function (tx) {
+      if (this.type === 'js') {
+        await require(this.path).up(tx)
+      } else {
+        tx.exec(await read(this.path))
+      }
+
+      await tx.run('INSERT INTO migrations (number) VALUES (?)', this.number)
+    })
   }
 
   fresh(number) {
