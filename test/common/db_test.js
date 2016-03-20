@@ -50,10 +50,12 @@ describe('Database', () => {
         using(db.acquire(), c1 => {
           expect(db.size).to.be.at.least(1)
 
-          return using(db.acquire(), c2 => {
-            expect(db.size).to.be.at.least(2)
-            expect(c1).not.to.equal(c2)
-          })
+          if (db.max > 1) {
+            return using(db.acquire(), c2 => {
+              expect(db.size).to.be.at.least(2)
+              expect(c1).not.to.equal(c2)
+            })
+          }
         }))
 
       it('rejects on error', () =>
@@ -115,7 +117,7 @@ describe('Database', () => {
         db.exec('SELECT * FROM sqlite_master;')
         expect(db.busy).to.eql(1)
         db.exec('SELECT * FROM sqlite_master;')
-        expect(db.busy).to.eql(2)
+        expect(db.busy).to.eql(db.max > 1 ? 2 : 1)
       })
 
       it('re-uses connections if possible', () => (
@@ -191,8 +193,11 @@ describe('Database', () => {
             await tx.run('CREATE TABLE t1 (a)')
             await tx.run('INSERT INTO t1 (a) VALUES (42)')
 
-            await expect(db.get('SELECT a FROM t1'))
-              .to.eventually.be.rejected
+            // Checks dirty read (skip if max 1 connection)
+            if (db.max > 1) {
+              await expect(db.get('SELECT a FROM t1'))
+                .to.eventually.be.rejected
+            }
 
           }).then(() => db.get('SELECT a FROM t1'))
 
@@ -217,15 +222,15 @@ describe('Database', () => {
 
         it('supports parallel reading', () =>
           expect(
-            map(times(db.max * 2, count), res => res.count)
-          ).to.eventually.eql(times(db.max * 2, () => 0)))
+            map(times(4 * 2, count), res => res.count)
+          ).to.eventually.eql(times(4 * 2, () => 0)))
 
         it('supports parallel writing transactions', function () {
-          this.timeout((db.max + 2) * 1000) // this may take a while!
+          this.timeout((4 + 2) * 1000) // this may take a while!
 
           return expect(
-            map(times(db.max + 2, write), x => x).then(count)
-          ).to.eventually.have.property('count', db.max + 2)
+            map(times(4 + 2, write), x => x).then(count)
+          ).to.eventually.have.property('count', 4 + 2)
         })
 
       })

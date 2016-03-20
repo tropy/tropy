@@ -17,7 +17,7 @@ class Database {
     this.path = path
     this.pool = new Pool({
       min: 0,
-      max: 4,
+      max: 1,
       idleTimeoutMillis: 60000,
       log: (msg, level) => log(level, msg, { module: 'db:pool' }),
       create: this.create.bind(this),
