@@ -178,8 +178,8 @@ class Connection {
 
   version(version) {
     return (version) ?
-      this.run('PRAGMA user_version = ?', version) :
-      this.run('PRAGMA user_version')
+      this.exec(`PRAGMA user_version = ${version}`) :
+      this.get('PRAGMA user_version').get('user_version')
   }
 
   begin(mode = 'IMMEDIATE') {
@@ -198,7 +198,7 @@ class Connection {
 
 Connection.defaults = {
   busy_timeout: 2000,
-  foreign_keys: 'true'
+  foreign_keys: 'on'
 }
 
 

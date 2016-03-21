@@ -165,6 +165,46 @@ target.migration = (args) => {
   log.info(`${name} created`, { tag: 'migration' })
 }
 
+target.migrate = () => {
+  target['compile:js']()
+
+  const tag = 'migrate'
+
+  const Migration = require('../lib/common/migration')
+  const Database = require('../lib/common/db').Database
+
+  const tmp = path.join(home, 'db', 'db.sqlite')
+  const schema = path.join(home, 'db', 'schema.sql')
+  const structure = path.join(home, 'db', 'structure.sql')
+
+  const db = new Database(tmp)
+
+  rm('-f', tmp)
+
+  Migration
+    .migrate(db)
+
+    .tap(ms => {
+      log.info(`applied ${ms.lengt} migrations`, { tag })
+    })
+
+    .then(() => db.version())
+
+    .tap(() => {
+      exec(`sqlite3 ${tmp} .schema > ${schema}`)
+      log.info(`schema written to ${schema}`, { tag })
+    })
+
+    .tap(() => {
+      exec(`sqlite3 ${tmp} .dump > ${structure}`)
+      log.info(`structure dumped to ${structure}`, { tag })
+    })
+
+    .finally(() => db.close())
+    .finally(() => rm(tmp))
+}
+
+
 target.rebuild = () => {
   const version = v('sqlite3')
 
