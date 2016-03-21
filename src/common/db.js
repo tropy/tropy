@@ -50,9 +50,7 @@ class Database {
       if (error) return callback(error)
 
       new Connection(db)
-        .configure({
-          busy_timeout: this.max * 1000
-        })
+        .configure()
         .then(conn => callback(null, conn))
         .catch(callback)
     })
@@ -122,12 +120,17 @@ class Database {
 }
 
 
+Database.defaults = {
+  application_id: '0x0fa1afe1',
+  encoding: 'UTF-8'
+}
+
 class Connection {
   constructor(db) {
     this.db = db
   }
 
-  configure(pragma) {
+  configure(pragma = Connection.defaults) {
     return this.exec(entries(pragma)
       .map(nv => `PRAGMA ${nv.join(' = ')};`)
       .join('\n'))
@@ -181,6 +184,11 @@ class Connection {
   }
 }
 
+
+Connection.defaults = {
+  busy_timeout: 2000,
+  foreign_keys: 'true'
+}
 
 
 class Statement {

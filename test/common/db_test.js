@@ -228,13 +228,10 @@ describe('Database', () => {
             map(times(NUM_READ, count), res => res.count)
           ).to.eventually.eql(times(NUM_READ, () => 0)))
 
-        it('supports parallel writing transactions', function () {
-          this.timeout(NUM_WRITE * 1000) // this may take a while!
-
-          return expect(
+        it('supports parallel writing transactions', () =>
+          expect(
             map(times(NUM_WRITE, write), x => x).then(count)
-          ).to.eventually.have.property('count', NUM_WRITE)
-        })
+          ).to.eventually.have.property('count', NUM_WRITE))
 
       })
     })
