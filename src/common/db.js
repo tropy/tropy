@@ -117,6 +117,11 @@ class Database {
   exec(...args) {
     return this.seq(conn => conn.exec(...args))
   }
+
+
+  version(...args) {
+    return this.seq(conn => conn.version(...args))
+  }
 }
 
 
@@ -170,6 +175,12 @@ class Connection {
     return this.db.execAsync(sql).return(this)
   }
 
+
+  version(version) {
+    return (version) ?
+      this.run('PRAGMA user_version = ?', version) :
+      this.run('PRAGMA user_version')
+  }
 
   begin(mode = 'IMMEDIATE') {
     return this.run(`BEGIN ${mode} TRANSACTION`)

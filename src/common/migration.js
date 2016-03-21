@@ -32,7 +32,7 @@ class Migration {
         tx.exec(await read(this.path))
       }
 
-      await tx.run('INSERT INTO migrations (number) VALUES (?)', this.number)
+      await tx.version(this.number)
     })
   }
 
