@@ -165,10 +165,10 @@ target.migration = (args) => {
   log.info(`${name} created`, { tag: 'migration' })
 }
 
-target.migrate = () => {
+target.schema = () => {
   target['compile:js']()
 
-  const tag = 'migrate'
+  const tag = 'schema'
 
   const Migration = require('../lib/common/migration')
   const Database = require('../lib/common/db').Database
@@ -185,20 +185,26 @@ target.migrate = () => {
     .migrate(db)
 
     .tap(ms => {
-      log.info(`applied ${ms.lengt} migrations`, { tag })
+      log.info(`applied ${ms} migrations`, { tag })
     })
 
     .then(() => db.version())
+
+    .tap(version => {
+      (`PRAGMA user_version = ${version};\n` +
+       'PRAGMA synchronous = off;\n' +
+       'PRAGMA journal_mode = off;\n'
+      ).to(structure)
+
+      exec(`sqlite3 ${tmp} .dump >> ${structure}`)
+      log.info(`structure dumped to ${structure}`, { tag })
+    })
 
     .tap(() => {
       exec(`sqlite3 ${tmp} .schema > ${schema}`)
       log.info(`schema written to ${schema}`, { tag })
     })
 
-    .tap(() => {
-      exec(`sqlite3 ${tmp} .dump > ${structure}`)
-      log.info(`structure dumped to ${structure}`, { tag })
-    })
 
     .finally(() => db.close())
     .finally(() => rm(tmp))
