@@ -207,6 +207,9 @@ describe('Database', () => {
     })
 
     describe('concurrency', () => {
+      const NUM_READ = 8
+      const NUM_WRITE = 6
+
       beforeEach(() =>
         db.run('CREATE TABLE cc (a)'))
 
@@ -222,15 +225,15 @@ describe('Database', () => {
 
         it('supports parallel reading', () =>
           expect(
-            map(times(4 * 2, count), res => res.count)
-          ).to.eventually.eql(times(4 * 2, () => 0)))
+            map(times(NUM_READ, count), res => res.count)
+          ).to.eventually.eql(times(NUM_READ, () => 0)))
 
         it('supports parallel writing transactions', function () {
-          this.timeout((4 + 2) * 1000) // this may take a while!
+          this.timeout(NUM_WRITE * 1000) // this may take a while!
 
           return expect(
-            map(times(4 + 2, write), x => x).then(count)
-          ).to.eventually.have.property('count', 4 + 2)
+            map(times(NUM_WRITE, write), x => x).then(count)
+          ).to.eventually.have.property('count', NUM_WRITE)
         })
 
       })
