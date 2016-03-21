@@ -2,3 +2,20 @@
 [![Coverage Status](https://coveralls.io/repos/tropy/tropy/badge.svg?branch=master&service=github)](https://coveralls.io/github/tropy/tropy?branch=master)
 
 # tropy
+
+## Development
+
+Install the latest version of Node.js (or at least the version that ships
+with the current Electron release). Run `npm install` to install all
+dependencies (`npm update` if you want to update the dependcies later on).
+
+To rebuild native modules please make sure you have a C/C++ compiler and
+node-gyp installed (`npm install -g node-gyp`). Then run `npm run rebuild`.
+
+Run `npm test` to run all tests; `npm run test:renderer` or
+`npm run test:browser` to run only the Renderer/Browser tests, or
+`node scripts/make mocha -- <path>` to run only a given test file.
+
+See `node scripts/make rules` for all available targets.
+
+To start the app in development mode, run `npm start`.
