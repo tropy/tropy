@@ -17,7 +17,7 @@ const cov = path.join(home, 'coverage')
 const scov = path.join(home, 'src-cov')
 const migrate = path.join(home, 'db', 'migrate')
 
-const mocha = path.join(nbin, 'electron-mocha')
+const emocha = path.join(nbin, 'electron-mocha')
 const lint = path.join(nbin, 'eslint')
 const istanbul = path.join(nbin, 'istanbul')
 
@@ -45,7 +45,7 @@ target['test:renderer'] = (args) => {
   args = args || []
   args.unshift('--renderer')
 
-  test(args.concat(
+  mocha(args.concat(
     glob.sync('test/**/*_test.js', { ignore: 'test/browser/*' })))
 }
 
@@ -53,10 +53,10 @@ target['test:browser'] = (args) => {
   target.unlink()
 
   args = args || []
-  test(args.concat(glob.sync('test/{browser,common}/**/*_test.js')))
+  mocha(args.concat(glob.sync('test/{browser,common}/**/*_test.js')))
 }
 
-target.mocha = (args, silent, cb) => test(args, silent, cb)
+target.mocha = (args, silent, cb) => mocha(args, silent, cb)
 
 
 target.compile = () => {
@@ -165,6 +165,26 @@ target.migration = (args) => {
   log.info(`${name} created`, { tag: 'migration' })
 }
 
+target.rebuild = () => {
+  const version = v('sqlite3')
+
+  if (version !== mtag('sqlite3')) {
+    exec('CFLAGS=-DHAVE_USLEEP=1 npm rebuild sqlite3 --build-from-source')
+    mtag('sqlite3', version)
+  }
+}
+
+function v(module) {
+  return require(`../node_modules/${module}/package`).version
+}
+
+function mtag(module, version) {
+  const file = path.join(home, 'node_modules', module, 'REBUILD')
+
+  if (version) return version.to(file)
+  return test('-f', file) && cat(file)
+}
+
 target.rules = () => {
   for (let rule in target) log.info(rule, { tag: 'make' })
 }
@@ -211,8 +231,8 @@ function swap(filename, src, dst, ext) {
     .replace(/(\..+)$/, m => ext || m[1])
 }
 
-function test(options, silent, cb) {
-  return exec(`${mocha} ${options.join(' ')}`, { silent }, cb)
+function mocha(options, silent, cb) {
+  return exec(`${emocha} ${options.join(' ')}`, { silent }, cb)
 }
 
 // We need to make a copy when exposing targets to other scripts,

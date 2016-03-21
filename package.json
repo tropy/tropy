@@ -32,6 +32,7 @@
     "prestart": "node scripts/make compile link",
     "start": "electron -e development",
     "poststart": "node scripts/make unlink",
+    "postinstall": "node scripts/make rebuild",
     "test": "node scripts/make test",
     "prewatch": "node scripts/make compile",
     "watch": "node scripts/watch"
