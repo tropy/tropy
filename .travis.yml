@@ -1,9 +1,10 @@
-language: cpp
+language: c
 git:
   depth: 9
 os:
   - linux
   - osx
+compiler: clang
 env:
   global:
     - DISPLAY=:99.0
@@ -21,6 +22,17 @@ cache:
     - $NVM
 matrix:
   fast_finish: true
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-precise-3.5
+      - gcc-multilib
+      - g++-multilib
+      - libsqlite3-dev
+    packages:
+      - clang-3.5
 
 before_install:
   - if [[ ! -d $NVM/.git ]]; then
