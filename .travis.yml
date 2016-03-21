@@ -17,6 +17,7 @@ cache:
   directories:
     - node_modules
     - $HOME/.npm
+    - $HOME/.node-gyp
     - $NVM
 matrix:
   fast_finish: true
@@ -34,7 +35,9 @@ before_install:
       nvm alias default $NODE_VERSION;
     fi
 install:
+  - npm install -g node-gyp
   - npm update
+  - npm run rebuild
 
 before_script:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
