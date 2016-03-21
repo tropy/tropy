@@ -46,6 +46,10 @@ before_install:
       nvm install $NODE_VERSION;
       nvm alias default $NODE_VERSION;
     fi
+  - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
+      export CXX="clang++-3.5";
+      export CC="clang-3.5";
+    fi
 install:
   - npm install -g node-gyp
   - npm update
