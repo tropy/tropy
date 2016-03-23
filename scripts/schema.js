@@ -26,13 +26,21 @@ const argv = require('yargs')
   .argv
 
 function schema(db, stream, cb) {
-  stream.write(`digraph {
+  const promise =  new Promise((resolve) => {
+    stream.write(`digraph {
   node [shape=Mrecord];
   graph [overlap=false];
 
 
 }`)
-  cb()
+    resolve()
+  })
+
+  if (cb) {
+    promise.then(cb).catch(cb)
+  }
+
+  return promise
 }
 
 function fail(error) {
@@ -41,14 +49,20 @@ function fail(error) {
   }
 }
 
-const db = new sqlite.Database(argv._[0], sqlite.OPEN_READONLY, fail)
-const proc = spawn(argv.type, [`-T${argv.format}`, `-o${argv.out}`])
 
-schema(db, proc.stdin, error => {
-  if (error) fail(error)
+const db = new sqlite.Database(argv._[0], sqlite.OPEN_READONLY, error => {
+  if (error) return fail(error)
 
-  db.close()
-  proc.stdin.end()
+  const proc = spawn(argv.type, [`-T${argv.format}`, `-o${argv.out}`])
+
+  proc.stderr.pipe(process.stderr)
+
+  schema(db, proc.stdin)
+    .catch(fail)
+    .then(() => {
+      db.close()
+      proc.stdin.end()
+    })
 })
 
-proc.stderr.pipe(process.stderr)
+
