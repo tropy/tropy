@@ -14,6 +14,7 @@ parserOptions:
     modules: false
 
 env:
+  es6: true
   node: true
   browser: true
 
