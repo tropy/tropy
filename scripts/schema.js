@@ -26,23 +26,24 @@ const argv = require('yargs')
   .argv
 
 
-const q = {
-  tables: 'SELECT name FROM sqlite_master WHERE type = "table"'
-}
-
-function tables(db, stream) {
+function all(db, query, params) {
   return new Promise((resolve, reject) => {
-    db.all(q.tables, (err, ts) => {
+    db.all(query, params, (err, rows) => {
       if (err) return reject(err)
-
-      for (let table of ts) {
-        stream.write(`  t_${table.name} [label="${table.name}"]`)
-      }
-
-      resolve()
+      resolve(rows)
     })
   })
 }
+
+function tables(db) {
+  return all(db, 'SELECT name FROM sqlite_master WHERE type = "table"')
+    .then(ts =>
+      Promise.all(ts.map(table =>
+        all(db, `PRAGMA table_info('${table.name}')`)
+          .then(columns => { table.columns = columns })
+          .then(() => table))))
+}
+
 
 function digraph(db, stream) {
   return new Promise((resolve, reject) => {
@@ -50,7 +51,13 @@ function digraph(db, stream) {
     stream.write('  node [shape=Mrecord];\n')
     stream.write('  graph [overlap=false];\n')
 
-    return tables(db, stream)
+    return tables(db)
+      .then(ts => {
+        for (let table of ts) {
+          stream.write(`  t_${table.name} [label="${table.name}"]`)
+        }
+        return ts
+      })
       .then(() => { stream.write('}\n') })
       .then(resolve, reject)
   })
