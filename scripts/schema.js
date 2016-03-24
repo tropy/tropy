@@ -59,13 +59,21 @@ function tables(db) {
 function digraph(db, stream) {
   return new Promise((resolve, reject) => {
     stream.write('digraph {\n')
-    stream.write('  node [shape=Mrecord];\n')
+    stream.write('  rankdir="LR";\n')
+    stream.write('  concentrate="true";\n')
+    stream.write('  pad="0.4,0.4";\n')
+    stream.write('  fontname="Helvetica Bold";\n')
+    stream.write('  fontsize="10";\n')
+    stream.write(`  label="${argv._[0]}";\n`)
+
+    stream.write('  node [shape="Mrecord", fontsize="10", fontname="Helvetica", margin="0.07,0.05", penwidth="1.0"];\n')
+    stream.write('  edge [arrowsize="0.9", fontsize="7", fontname="Helvetica", margin="0.07,0.05", penwidth="1.0"];\n')
     stream.write('  graph [overlap=false];\n')
 
     return tables(db)
       .then(ts => {
         for (let table of ts) {
-          stream.write(`  t_${table.name} [label="${table.name}"];\n`)
+          stream.write(`  t_${table.name} [label="${table.name}|xy dfs"];\n`)
         }
 
         for (let table of ts) {
