@@ -35,13 +35,24 @@ function all(db, query, params) {
   })
 }
 
+function keys(db, ts) {
+  return Promise.all(ts.map(table =>
+    all(db, `PRAGMA foreign_key_list('${table.name}')`)
+      .then(fks => { table.fk = fks.map(fk => fk.table) })
+      .then(() => table)))
+}
+
+function columns(db, ts) {
+  return Promise.all(ts.map(table =>
+    all(db, `PRAGMA table_info('${table.name}')`)
+      .then(cs => { table.columns = cs })
+      .then(() => table)))
+}
+
 function tables(db) {
   return all(db, 'SELECT name FROM sqlite_master WHERE type = "table"')
-    .then(ts =>
-      Promise.all(ts.map(table =>
-        all(db, `PRAGMA table_info('${table.name}')`)
-          .then(columns => { table.columns = columns })
-          .then(() => table))))
+    .then(ts => columns(db, ts))
+    .then(ts => keys(db, ts))
 }
 
 
@@ -54,8 +65,17 @@ function digraph(db, stream) {
     return tables(db)
       .then(ts => {
         for (let table of ts) {
-          stream.write(`  t_${table.name} [label="${table.name}"]`)
+          stream.write(`  t_${table.name} [label="${table.name}"];\n`)
         }
+
+        for (let table of ts) {
+          if (table.fk.length) {
+            for (let fk of table.fk) {
+              stream.write(`  t_${table.name} -> t_${fk} [];\n`)
+            }
+          }
+        }
+
         return ts
       })
       .then(() => { stream.write('}\n') })
