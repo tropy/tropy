@@ -45,7 +45,7 @@ class Migration {
       if (this.type === 'js') {
         await require(this.path).up(tx)
       } else {
-        tx.exec(String(await read(this.path)))
+        await tx.exec(String(await read(this.path)))
       }
 
       await tx.version(this.number)
