@@ -49,7 +49,7 @@ before_install:
     fi
 install:
   - npm install -g node-gyp
-  - npm install
+  - npm update
   - npm run rebuild
 
 before_script:
