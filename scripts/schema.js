@@ -123,7 +123,7 @@ function type(t) {
 }
 
 function cols(column) {
-  return [[[`${column.name} ${i(type(column.type))}`]]]
+  return [[[`${column.name}${column.pk ? '* ' : ' '}${i(type(column.type))}`]]]
 }
 
 function body(table) {
