@@ -4,6 +4,7 @@
 
 const spawn = require('child_process').spawn
 const sqlite = require('sqlite3')
+const assign = Object.assign
 
 
 const argv = require('yargs')
@@ -77,21 +78,52 @@ function tag(name, content, options) {
     `<${name}>${content}</${name}>`
 }
 
+function font(content, options) {
+  return tag('font', content, options)
+}
+
+function b(content, options) {
+  return font(content, assign({ face: 'Helvetica Bold'  }, options))
+}
+
+function i(content, options) {
+  return font(content, assign({
+    face: 'Helvetica Italic', color: 'grey60'
+  }, options))
+}
+
 function td(content, options) {
-  return tag('td', content, options)
+  return tag('td', content, assign({
+    align: 'left', width: 130
+  }, options))
 }
 
 function tr(tds, options) {
-  return tag('tr', tds.map(args => td(...args)), options)
+  return tag('tr', tds.map(args => td(...args)).join(''), options)
+}
+
+function tb(trs, options) {
+  return tag('table', trs.map(args => tr(...args)).join(''), assign({
+    border: 0, align: 'left', cellspacing: 2, width: 134
+  }, options))
 }
 
 function head(table) {
-  return tag('table', tr([[table.name]]))
+  return tb([[[[b(table.name, { 'point-size': 11 })]]]], {
+    align: 'center', cellspacing: '0.5'
+  })
+}
+
+function type(t) {
+  return (t || 'none').toLowerCase()
+}
+
+function cols(column) {
+  return [[[`${column.name} ${i(type(column.type))}`]]]
 }
 
 function body(table) {
-  return tag('table', table.columns.map(col =>
-      tr([[col.name], [col.type]])))
+  return tb(table.columns.map(cols))
 }
 
 function label(table) {
