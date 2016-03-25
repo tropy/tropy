@@ -13,7 +13,7 @@ const argv = require('yargs')
   .wrap(78)
 
   .option('L', {
-    alias: 'layout', default: 'neato', choices: [
+    alias: 'layout', default: 'sfdp', choices: [
       'neato', 'dot', 'circo', 'fdp', 'osage', 'sfdp', 'twopi'
     ]
   })
@@ -98,7 +98,7 @@ function i(content, options) {
 
 function td(content, options) {
   return tag('td', content, assign({
-    align: 'left'
+    align: 'left', width: 134
   }, options))
 }
 
@@ -108,12 +108,12 @@ function tr(tds, options) {
 
 function tb(trs, options) {
   return tag('table', trs.map(args => tr(...args)).join(''), assign({
-    border: 0, align: 'left', cellspacing: 2, width: 100
+    border: 0, align: 'left', cellspacing: 2, width: 134
   }, options))
 }
 
 function head(table) {
-  return tb([[[[b(table.name, { 'point-size': 11 })]], { align: 'center' }]], {
+  return tb([[[[b(table.name, { 'point-size': 11 }), { align: 'center' }]]]], {
     align: 'center', cellspacing: '0.5'
   })
 }
@@ -168,10 +168,10 @@ function digraph(db, stream) {
 
     stream.write(`  edge[${attr({
       arrowsize: '0.9',
-      fontsize: 7,
+      fontsize: 6,
       fontname: 'Helvetica',
-      labelangle: 32,
-      labeldistance: '1.8'
+      labelangle: 33,
+      labeldistance: '2.0'
     })}];\n`)
 
     stream.write('  graph [overlap=false];\n')
