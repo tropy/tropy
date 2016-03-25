@@ -18,6 +18,10 @@ const argv = require('yargs')
     ]
   })
 
+  .options('e', {
+    alias: 'edge-labels', type: 'boolean'
+  })
+
   .option('f', {
     alias: 'format', default: 'pdf', choices: [
       'pdf', 'png', 'svg', 'ps'
@@ -94,7 +98,7 @@ function i(content, options) {
 
 function td(content, options) {
   return tag('td', content, assign({
-    align: 'left', width: 130
+    align: 'left'
   }, options))
 }
 
@@ -104,12 +108,12 @@ function tr(tds, options) {
 
 function tb(trs, options) {
   return tag('table', trs.map(args => tr(...args)).join(''), assign({
-    border: 0, align: 'left', cellspacing: 2, width: 134
+    border: 0, align: 'left', cellspacing: 2, width: 100
   }, options))
 }
 
 function head(table) {
-  return tb([[[[b(table.name, { 'point-size': 11 })]]]], {
+  return tb([[[[b(table.name, { 'point-size': 11 })]], { align: 'center' }]], {
     align: 'center', cellspacing: '0.5'
   })
 }
@@ -128,6 +132,18 @@ function body(table) {
 
 function label(table) {
   return `${head(table)}|${body(table)}`
+}
+
+function edge(table, fk) {
+  let options = argv.e ?
+    { taillabel: fk.from, headlabel: fk.to } : {}
+
+  return `t_${table.name} -> t_${fk.table} [${attr(options)}];`
+}
+
+function node(table) {
+  let options = { label: label(table) }
+  return `t_${table.name} [${attr(options)}];`
 }
 
 function digraph(db, stream) {
@@ -163,14 +179,12 @@ function digraph(db, stream) {
     return tables(db)
       .then(ts => {
         for (let table of ts) {
-          stream.write(`  t_${table.name} [${attr({
-            label: label(table)
-          })}];\n`)
+          stream.write(`  ${node(table)}\n`)
         }
 
         for (let table of ts) {
           for (let fk of table.fk) {
-            stream.write(`  t_${table.name} -> t_${fk.table} [];\n`)
+            stream.write(`  ${edge(table, fk)}\n`)
           }
         }
 
