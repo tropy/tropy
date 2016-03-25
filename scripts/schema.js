@@ -11,12 +11,16 @@ const argv = require('yargs')
   .demand(1)
   .wrap(78)
 
-  .option('t', {
-    alias: 'type', choices: ['neato', 'dot'], default: 'dot'
+  .option('L', {
+    alias: 'layout', default: 'neato', choices: [
+      'neato', 'dot', 'circo', 'fdp', 'osage', 'sfdp', 'twopi'
+    ]
   })
 
   .option('f', {
-    alias: 'format', choices: ['pdf', 'png'], default: 'pdf'
+    alias: 'format', default: 'pdf', choices: [
+      'pdf', 'png', 'svg', 'ps'
+    ]
   })
 
   .option('o', {
@@ -38,7 +42,7 @@ function all(db, query, params) {
 function keys(db, ts) {
   return Promise.all(ts.map(table =>
     all(db, `PRAGMA foreign_key_list('${table.name}')`)
-      .then(fks => { table.fk = fks.map(fk => fk.table) })
+      .then(fk => { table.fk = fk })
       .then(() => table)))
 }
 
@@ -56,11 +60,42 @@ function tables(db) {
 }
 
 
-function attr(attrs) {
+function quote(value) {
+  return (value[0] === '<') ? `<${value}>` : `"${value}"`
+}
+
+function attr(attrs, sep) {
   return Object
     .keys(attrs)
-    .map(prop => `${prop}="${attrs[prop]}"`)
-    .join(', ')
+    .map(prop => `${prop}=${quote(attrs[prop])}`)
+    .join(sep || ', ')
+}
+
+function tag(name, content, options) {
+  return (options) ?
+    `<${name} ${attr(options, ' ')}>${content}</${name}>` :
+    `<${name}>${content}</${name}>`
+}
+
+function td(content, options) {
+  return tag('td', content, options)
+}
+
+function tr(tds, options) {
+  return tag('tr', tds.map(args => td(...args)), options)
+}
+
+function head(table) {
+  return tag('table', tr([[table.name]]))
+}
+
+function body(table) {
+  return tag('table', table.columns.map(col =>
+      tr([[col.name], [col.type]])))
+}
+
+function label(table) {
+  return `${head(table)}|${body(table)}`
 }
 
 function digraph(db, stream) {
@@ -96,14 +131,14 @@ function digraph(db, stream) {
     return tables(db)
       .then(ts => {
         for (let table of ts) {
-          stream.write(`  t_${table.name} [label="${table.name}|xy dfs"];\n`)
+          stream.write(`  t_${table.name} [${attr({
+            label: label(table)
+          })}];\n`)
         }
 
         for (let table of ts) {
-          if (table.fk.length) {
-            for (let fk of table.fk) {
-              stream.write(`  t_${table.name} -> t_${fk} [];\n`)
-            }
+          for (let fk of table.fk) {
+            stream.write(`  t_${table.name} -> t_${fk.table} [];\n`)
           }
         }
 
@@ -137,7 +172,7 @@ function fail(error) {
 const db = new sqlite.Database(argv._[0], sqlite.OPEN_READONLY, error => {
   if (error) return fail(error)
 
-  const proc = spawn(argv.type, [`-T${argv.format}`, `-o${argv.out}`])
+  const proc = spawn(argv.layout, [`-T${argv.format}`, `-o${argv.out}`])
 
   proc.stderr.pipe(process.stderr)
 
@@ -148,5 +183,3 @@ const db = new sqlite.Database(argv._[0], sqlite.OPEN_READONLY, error => {
     })
     .catch(fail)
 })
-
-
