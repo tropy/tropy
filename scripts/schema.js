@@ -5,6 +5,7 @@
 const spawn = require('child_process').spawn
 const sqlite = require('sqlite3')
 const assign = Object.assign
+const extname = require('path').extname
 
 
 const argv = require('yargs')
@@ -22,18 +23,16 @@ const argv = require('yargs')
     alias: 'edge-labels', type: 'boolean'
   })
 
-  .option('f', {
-    alias: 'format', default: 'pdf', choices: [
-      'pdf', 'png', 'svg', 'ps'
-    ]
+  .options('t', {
+    alias: 'title'
   })
 
   .option('o', {
-    alias: 'out', required: true
+    alias: 'out', required: true, describe:
+      'Supported formats include pdf, png, svg, ps, dot)'
   })
 
   .argv
-
 
 function all(db, query, params) {
   return new Promise((resolve, reject) => {
@@ -146,7 +145,7 @@ function node(table) {
   return `t_${table.name} [${attr(options)}];`
 }
 
-function digraph(db, stream) {
+function digraph(db, title, stream) {
   return new Promise((resolve, reject) => {
     stream.write('digraph {\n')
     stream.write('  rankdir="LR";\n')
@@ -156,7 +155,7 @@ function digraph(db, stream) {
     stream.write('  pad="0.4,0.4";\n')
     stream.write('  fontname="Helvetica Bold";\n')
     stream.write('  fontsize="10";\n')
-    stream.write(`  label="${db.filename}";\n`)
+    stream.write(`  label="${title}";\n`)
 
     stream.write(`  node[${attr({
       shape: 'Mrecord',
@@ -197,7 +196,7 @@ function digraph(db, stream) {
 
 function schema(db, stream, cb) {
   const promise =  new Promise((resolve, reject) => {
-    digraph(db, stream).then(resolve, reject)
+    digraph(db, argv.title || db.filename, stream).then(resolve, reject)
   })
 
   if (cb) {
@@ -218,7 +217,9 @@ function fail(error) {
 const db = new sqlite.Database(argv._[0], sqlite.OPEN_READONLY, error => {
   if (error) return fail(error)
 
-  const proc = spawn(argv.layout, [`-T${argv.format}`, `-o${argv.out}`])
+  const proc = spawn(argv.layout, [
+    `-T${extname(argv.out).slice(1)}`, `-o${argv.out}`
+  ])
 
   proc.stderr.pipe(process.stderr)
 
