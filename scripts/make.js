@@ -197,7 +197,7 @@ target.schema = () => {
 -- and then regenerate this schema file.
 --
 
--- Current migration number
+-- Save current migration number
 PRAGMA user_version = ${version};
 
 -- SQLite schema dump
