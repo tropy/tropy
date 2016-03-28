@@ -6,3 +6,4 @@ src-cov
 coverage
 tmp
 npm-debug.log
+db/schema.pdf
