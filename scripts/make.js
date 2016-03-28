@@ -205,7 +205,7 @@ PRAGMA user_version = ${version};
       ).to(`${schema}.sql`)
 
       exec(`sqlite3 ${tmp} .schema >> ${schema}.sql`)
-      log.info(`schema saved to ${schema}.sql`, { tag })
+      log.info(`saved to ${schema}.sql`, { tag })
 
       exec([
         sqleton,
@@ -215,7 +215,7 @@ PRAGMA user_version = ${version};
         tmp
       ].join(' '))
 
-      log.info(`schema diagram saved to ${schema}.pdf`, { tag })
+      log.info(`diagram saved to ${schema}.pdf`, { tag })
     })
 
 
