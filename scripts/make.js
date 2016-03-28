@@ -10,6 +10,7 @@ const glob = require('glob')
 const moment = require('moment')
 const sass = require('node-sass')
 const log = require('./log')
+const pkg = require('../package')
 
 const home = path.resolve(__dirname, '..')
 const nbin = path.join(home, 'node_modules', '.bin')
@@ -20,6 +21,7 @@ const migrate = path.join(home, 'db', 'migrate')
 const emocha = path.join(nbin, 'electron-mocha')
 const lint = path.join(nbin, 'eslint')
 const istanbul = path.join(nbin, 'istanbul')
+const sqleton = path.join(nbin, 'sqleton')
 
 const electron = process.env.ELECTRON_PATH = require('electron-prebuilt')
 
@@ -166,16 +168,13 @@ target.migration = (args) => {
 }
 
 target.schema = () => {
-  target['compile:js']()
-
   const tag = 'schema'
 
   const Migration = require('../lib/common/migration')
   const Database = require('../lib/common/db').Database
 
   const tmp = path.join(home, 'db', 'db.sqlite')
-  const schema = path.join(home, 'db', 'schema.sql')
-  const structure = path.join(home, 'db', 'structure.sql')
+  const schema = path.join(home, 'db', 'schema')
 
   const db = new Database(tmp)
 
@@ -184,25 +183,38 @@ target.schema = () => {
   Migration
     .migrate(db)
 
-    .tap(ms => {
+    .then(ms => {
       log.info(`applied ${ms} migrations`, { tag })
     })
 
     .then(() => db.version())
 
-    .tap(version => {
-      (`PRAGMA user_version = ${version};\n` +
-       'PRAGMA synchronous = off;\n' +
-       'PRAGMA journal_mode = off;\n'
-      ).to(structure)
+    .then(version => {
+      (`--
+-- This file is auto-generated from the current state of
+-- the database. Instead of editing this file, please
+-- create migratios to incrementally modify the database,
+-- and then regenerate this schema file.
+--
 
-      exec(`sqlite3 ${tmp} .dump >> ${structure}`)
-      log.info(`structure dumped to ${structure}`, { tag })
-    })
+-- Current migration number
+PRAGMA user_version = ${version};
 
-    .tap(() => {
-      exec(`sqlite3 ${tmp} .schema > ${schema}`)
-      log.info(`schema written to ${schema}`, { tag })
+-- SQLite schema dump
+`
+      ).to(`${schema}.sql`)
+
+      exec(`sqlite3 ${tmp} .schema >> ${schema}.sql`)
+      log.info(`schema saved to ${schema}.sql`, { tag })
+
+      exec([
+        sqleton,
+        `-t "${pkg.productName} #${version}"`,
+        `-o ${schema}.pdf`,
+        tmp
+      ].join(' '))
+
+      log.info(`schema diagram saved to ${schema}.pdf`, { tag })
     })
 
 
@@ -239,7 +251,7 @@ target.clean = () => {
 }
 
 function mname(type, name) {
-  return [moment().format('YYMMDDhhmm'), name, type]
+  return [moment().format('YYMMDDHHmm'), name, type]
     .filter(x => x)
     .join('.')
 }
