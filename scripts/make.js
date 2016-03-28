@@ -210,6 +210,7 @@ PRAGMA user_version = ${version};
       exec([
         sqleton,
         `-t "${pkg.productName} #${version}"`,
+        '-f "Helvetica Neue"',
         `-o ${schema}.pdf`,
         tmp
       ].join(' '))
