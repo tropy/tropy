@@ -6,6 +6,7 @@ const spawn = require('child_process').spawn
 const sqlite = require('sqlite3')
 const assign = Object.assign
 const extname = require('path').extname
+const open = require('fs').createWriteStream
 
 
 const argv = require('yargs')
@@ -14,22 +15,23 @@ const argv = require('yargs')
   .wrap(78)
 
   .option('L', {
-    alias: 'layout', default: 'sfdp', choices: [
+    alias: 'layout', describe: 'Layout command.', default: 'sfdp', choices: [
       'neato', 'dot', 'circo', 'fdp', 'osage', 'sfdp', 'twopi'
     ]
   })
 
   .options('e', {
-    alias: 'edge-labels', type: 'boolean'
+    alias: 'edge-labels', type: 'boolean',
+    describe: 'Label foreign key edges.'
   })
 
   .options('t', {
-    alias: 'title'
+    alias: 'title', describe: 'Optional title string.'
   })
 
   .option('o', {
     alias: 'out', required: true, describe:
-      'Supported formats include pdf, png, svg, ps, dot)'
+      'Output file (determines output format).'
   })
 
   .argv
@@ -86,35 +88,33 @@ function font(content, options) {
 }
 
 function b(content, options) {
-  return font(content, assign({ face: 'Helvetica Bold'  }, options))
+  return font(tag('b', content), assign({}, options))
 }
 
 function i(content, options) {
-  return font(content, assign({
-    face: 'Helvetica Italic', color: 'grey60'
-  }, options))
+  return font(tag('i', content), assign({ color: 'grey60' }, options))
 }
 
 function td(content, options) {
   return tag('td', content, assign({
-    align: 'left', width: 134
+    align: 'left'
   }, options))
 }
 
-function tr(tds, options) {
-  return tag('tr', tds.map(args => td(...args)).join(''), options)
+function tr(tds) {
+  return tag('tr', tds.map(args => td(...args)).join(''))
 }
 
 function tb(trs, options) {
   return tag('table', trs.map(args => tr(...args)).join(''), assign({
-    border: 0, align: 'left', cellspacing: 2, width: 134
+    border: 0, cellspacing: 0.5
   }, options))
 }
 
 function head(table) {
-  return tb([[[[b(table.name, { 'point-size': 11 }), { align: 'center' }]]]], {
-    align: 'center', cellspacing: '0.5'
-  })
+  return tb([[[
+    [b(table.name, { 'point-size': 11 }), { height: 24, valign: 'bottom' }]
+  ]]])
 }
 
 function type(t) {
@@ -126,7 +126,7 @@ function cols(column) {
 }
 
 function body(table) {
-  return tb(table.columns.map(cols))
+  return tb(table.columns.map(cols), { width: 134 })
 }
 
 function label(table) {
@@ -147,15 +147,15 @@ function node(table) {
 
 function digraph(db, title, stream) {
   return new Promise((resolve, reject) => {
-    stream.write('digraph {\n')
+    stream.write(`digraph ${db.name} {\n`)
     stream.write('  rankdir="LR";\n')
-    stream.write('  ranksep="0.5";\n')
-    stream.write('  nodesep="0.4";\n')
+    stream.write('  ranksep="1.5";\n')
+    stream.write('  nodesep="1.4";\n')
     stream.write('  concentrate="true";\n')
     stream.write('  pad="0.4,0.4";\n')
-    stream.write('  fontname="Helvetica Bold";\n')
+    stream.write('  fontname="Helvetica";\n')
     stream.write('  fontsize="10";\n')
-    stream.write(`  label="${title}";\n`)
+    stream.write(`  label=<${b(title)}>;\n`)
 
     stream.write(`  node[${attr({
       shape: 'Mrecord',
@@ -166,8 +166,10 @@ function digraph(db, title, stream) {
     })}];\n`)
 
     stream.write(`  edge[${attr({
-      arrowsize: '0.9',
+      arrowsize: '0.8',
       fontsize: 6,
+      style: 'solid',
+      penwidth: '0.9',
       fontname: 'Helvetica',
       labelangle: 33,
       labeldistance: '2.0'
@@ -217,16 +219,21 @@ function fail(error) {
 const db = new sqlite.Database(argv._[0], sqlite.OPEN_READONLY, error => {
   if (error) return fail(error)
 
-  const proc = spawn(argv.layout, [
-    `-T${extname(argv.out).slice(1)}`, `-o${argv.out}`
-  ])
+  let format = extname(argv.out).slice(1)
+  let stream, proc
 
-  proc.stderr.pipe(process.stderr)
+  if (format !== 'dot') {
+    proc = spawn(argv.layout, [`-T${format}`, `-o${argv.out}`])
+    proc.stderr.pipe(process.stderr)
 
-  schema(db, proc.stdin)
-    .then(() => {
-      db.close()
-      proc.stdin.end()
-    })
+    stream = proc.stdin
+
+  } else {
+    stream = open(argv.out, { autoClose: true })
+  }
+
+  schema(db, stream)
+    .then(() => { db.close() })
+    .then(() => { stream.end() })
     .catch(fail)
 })
