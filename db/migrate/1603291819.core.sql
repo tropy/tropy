@@ -1,27 +1,17 @@
---
--- This file is auto-generated from the current state of
--- the database. Instead of editing this file, please
--- create migratios to incrementally modify the database,
--- and then regenerate this schema file.
---
 
--- Save current migration number
-PRAGMA user_version=1603291819;
-
--- SQLite schema dump
-PRAGMA foreign_keys=OFF;
-BEGIN TRANSACTION;
 CREATE TABLE archive (
   id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
   opened_at TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
+
 CREATE TABLE items (
   id INTEGER PRIMARY KEY,
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
   modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
+
 CREATE TABLE photos (
   id INTEGER PRIMARY KEY,
   item_id INTEGER NOT NULL REFERENCES items(id),
@@ -32,6 +22,7 @@ CREATE TABLE photos (
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
   modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
+
 CREATE TABLE selections (
   id INTEGER PRIMARY KEY,
   photo_id INTEGER NOT NULL REFERENCES photos(id),
@@ -39,11 +30,13 @@ CREATE TABLE selections (
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
   modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
+
 CREATE TABLE notes (
   id INTEGER PRIMARY KEY,
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
   modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
+
 CREATE TABLE lists (
   id INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
@@ -51,6 +44,7 @@ CREATE TABLE lists (
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
   modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
+
 CREATE TABLE list_items (
   item_id INTEGER REFERENCES items(id),
   list_id INTEGER REFERENCES lists(id),
@@ -58,6 +52,7 @@ CREATE TABLE list_items (
 
   PRIMARY KEY(item_id, list_id)
 );
+
 CREATE TABLE tags (
   id INTEGER PRIMARY KEY,
   name TEXT UNIQUE NOT NULL COLLATE NOCASE,
@@ -65,17 +60,17 @@ CREATE TABLE tags (
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
   modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
+
 CREATE TABLE item_tags (
   item_id INTEGER REFERENCES items(id),
   tag_id INTEGER REFERENCES tags(id),
 
   PRIMARY KEY(item_id, tag_id)
 );
+
 CREATE TABLE deleted_items (
   item_id INTEGER NOT NULL REFERENCES items(id),
   deleted_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
 
   PRIMARY KEY(item_id, deleted_at)
 );
-COMMIT;
-PRAGMA foreign_keys=ON;
