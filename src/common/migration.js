@@ -41,15 +41,20 @@ class Migration {
   up(db) {
     debug(`migrating ${db.path} to #${this.number}`)
 
-    return db.migration(async function (tx) {
-      if (this.type === 'js') {
-        await require(this.path).up(tx)
-      } else {
-        await tx.exec(String(await read(this.path)))
-      }
+    return db
+      .migration(async function (tx) {
+        if (this.type === 'js') {
+          await require(this.path).up(tx)
+        } else {
+          await tx.exec(String(await read(this.path)))
+        }
 
-      await tx.version(this.number)
-    }.bind(this))
+        await tx.version(this.number)
+      }.bind(this))
+
+      .catch(error => {
+        throw new Error(`Migration #${this.number} failed: ${error.message}`)
+      })
   }
 
   fresh(number) {

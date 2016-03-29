@@ -198,13 +198,13 @@ target.schema = () => {
 --
 
 -- Save current migration number
-PRAGMA user_version = ${version};
+PRAGMA user_version=${version};
 
 -- SQLite schema dump
 `
       ).to(`${schema}.sql`)
 
-      exec(`sqlite3 ${tmp} .schema >> ${schema}.sql`)
+      exec(`sqlite3 ${tmp} .dump >> ${schema}.sql`)
       log.info(`saved to ${schema}.sql`, { tag })
 
       exec([
@@ -214,6 +214,8 @@ PRAGMA user_version = ${version};
         `-o ${schema}.pdf`,
         tmp
       ].join(' '))
+
+      'PRAGMA foreign_keys=ON;'.toEnd(`${schema}.sql`)
 
       log.info(`diagram saved to ${schema}.pdf`, { tag })
     })
