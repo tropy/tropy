@@ -206,10 +206,10 @@ describe('Database', () => {
     })
 
     describe('#migration()', () => {
-      beforeEach(() => db.seq(conn => {
-        conn.run('CREATE TABLE m1 (id INTEGER PRIMARY KEY)')
+      beforeEach(() => db.seq(conn => all([
+        conn.run('CREATE TABLE m1 (id INTEGER PRIMARY KEY)'),
         conn.run('CREATE TABLE m2 (m1id REFERENCES m1(id))')
-      }))
+      ])))
 
       beforeEach(() => {
         sinon.spy(Connection.prototype, 'check')
