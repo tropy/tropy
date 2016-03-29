@@ -36,8 +36,14 @@ CREATE TABLE selections (
   id INTEGER PRIMARY KEY,
   photo_id INTEGER NOT NULL REFERENCES photos(id),
   position INTEGER NOT NULL DEFAULT 0,
+  top INTEGER NOT NULL DEFAULT 0,
+  left INTEGER NOT NULL DEFAULT 0,
+  bottom INTEGER NOT NULL DEFAULT 0,
+  right INTEGER NOT NULL DEFAULT 0,
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
-  modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp
+  modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
+
+  UNIQUE(photo_id, position)
 );
 CREATE TABLE notes (
   id INTEGER PRIMARY KEY,
@@ -56,7 +62,8 @@ CREATE TABLE list_items (
   list_id INTEGER REFERENCES lists(id),
   position INTEGER NOT NULL DEFAULT 0,
 
-  PRIMARY KEY(item_id, list_id)
+  PRIMARY KEY(item_id, list_id),
+  UNIQUE(item_id, list_id, position)
 );
 CREATE TABLE tags (
   id INTEGER PRIMARY KEY,
