@@ -6,9 +6,11 @@ const tmpdir = require('../support/tmpdir')
 
 const { join } = require('path')
 const { unlinkAsync: rm } = require('fs')
-const { all, map, using } = require('bluebird')
+const { all, map, using, reject } = require('bluebird')
 const { times } = __require('common/util')
 const { Database, Connection, Statement } = __require('common/db')
+
+function failure() { throw new Error() }
 
 describe('Database', () => {
   describe('given a database file', () => {
@@ -59,11 +61,11 @@ describe('Database', () => {
         }))
 
       it('rejects on error', () =>
-        expect(using(db.acquire(), () => { throw new Error() }))
+        expect(using(db.acquire(), failure))
           .to.eventually.be.rejected)
 
       it('releases on error', () =>
-        using(db.acquire(), () => { throw new Error() })
+        using(db.acquire(), failure)
           .catch(() => expect(db.pool.release).to.have.been.called))
     })
 
@@ -152,7 +154,7 @@ describe('Database', () => {
         })).to.eventually.be.fulfilled)
 
       it('rejects on error', () =>
-        expect(db.seq(() => { throw new Error() })).to.eventually.be.rejected)
+        expect(db.seq(failure)).to.eventually.be.rejected)
 
       it('does not roll back on error', () => (
         expect(
@@ -169,11 +171,8 @@ describe('Database', () => {
     })
 
     describe('#transaction()', () => {
-      it('rejects on error', () => (
-        expect(
-          db.transaction(() => { throw new Error() })
-        ).to.eventually.be.rejected
-      ))
+      it('rejects on error', () =>
+        expect(db.transaction(failure)).to.eventually.be.rejected)
 
       it('rolls back on error', () => (
         expect(
@@ -204,6 +203,51 @@ describe('Database', () => {
         ).to.eventually.be.fulfilled
           .and.have.property('a', 42)
       ))
+    })
+
+    describe('#migration()', () => {
+      beforeEach(() => db.seq(conn => {
+        conn.run('CREATE TABLE m1 (id INTEGER PRIMARY KEY)')
+        conn.run('CREATE TABLE m2 (m1id REFERENCES m1(id))')
+      }))
+
+      beforeEach(() => {
+        sinon.spy(Connection.prototype, 'check')
+        sinon.spy(Connection.prototype, 'commit')
+        sinon.spy(Connection.prototype, 'rollback')
+      })
+
+      afterEach(() => {
+        Connection.prototype.check.restore()
+        Connection.prototype.commit.restore()
+        Connection.prototype.rollback.restore()
+      })
+
+      it('rejects back on error', () =>
+        expect(db.migration(failure)).to.eventually.be.rejected)
+
+      it('rolls back on error', () =>
+        db.migration(failure).catch(() => {
+          expect(Connection.prototype.check).not.to.have.been.called
+          expect(Connection.prototype.commit).not.to.have.been.called
+          expect(Connection.prototype.rollback).to.have.been.called
+        }))
+
+      it('rolls back on fk constraint violation', () =>
+        db
+          .migration(tx => tx.run('INSERT INTO m2 VALUES (23)'))
+          .catch(() => {
+            expect(Connection.prototype.check).to.have.been.called
+            expect(Connection.prototype.commit).not.to.have.been.called
+            expect(Connection.prototype.rollback).to.have.been.called
+          }))
+
+      it('checks and commits on success', () =>
+        db.migration(() => {}).then(() => {
+          expect(Connection.prototype.check).to.have.been.called
+          expect(Connection.prototype.commit).to.have.been.called
+          expect(Connection.prototype.rollback).not.to.have.been.called
+        }))
     })
 
     describe('concurrency', () => {

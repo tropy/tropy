@@ -109,7 +109,7 @@ class Database {
     return this.seq(conn =>
         using(nofk(conn), conn =>
           using(transaction(conn), tx =>
-            resolve(fn(tx)).then(res => tx.check().return(res)))))
+            resolve(fn(tx)).then(() => tx.check()))))
   }
 
 
