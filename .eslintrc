@@ -46,7 +46,7 @@ rules:
   no-loop-func: 2
   no-mixed-spaces-and-tabs: 2
   no-multi-str: 2
-  no-shadow: 2
+  no-shadow: [2, { allow: ['done', 'reject', 'resolve', 'conn', 'cb', 'err', 'error']}]
   no-spaced-func: 2
   no-trailing-spaces: 2
   no-unexpected-multiline: 2
