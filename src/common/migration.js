@@ -41,7 +41,7 @@ class Migration {
   up(db) {
     debug(`migrating ${db.path} to #${this.number}`)
 
-    return db.transaction(async function (tx) {
+    return db.migration(async function (tx) {
       if (this.type === 'js') {
         await require(this.path).up(tx)
       } else {

@@ -5,7 +5,7 @@ require('./promisify')
 const sqlite = require('sqlite3')
 const entries = require('object.entries')
 
-const { using } = require('bluebird')
+const { using, resolve } = require('bluebird')
 const { Pool } = require('generic-pool')
 const { log, debug, info } = require('./log')
 
@@ -93,6 +93,25 @@ class Database {
   transaction(fn) {
     return this.seq(conn => using(transaction(conn), fn))
   }
+
+  /*
+   * Migrations are special transactions which can be used for schema
+   * changes, as explained at https://www.sqlite.org/lang_altertable.html
+   *
+   *   1. Disable foreign keys
+   *   2. Start transaction
+   *   3. fn
+   *   4. Check foreign key constraints
+   *   5. Commit or rollback transaction
+   *   6. Enable foreign keys
+   */
+  migration(fn) {
+    return this.seq(conn =>
+        using(nofk(conn), conn =>
+          using(transaction(conn), tx =>
+            resolve(fn(tx)).then(res => tx.check().return(res)))))
+  }
+
 
   prepare(...args) {
     let fn = args.pop()
@@ -193,6 +212,19 @@ class Connection {
   rollback() {
     return this.run('ROLLBACK TRANSACTION')
   }
+
+  check(table) {
+    table = table ? `('${table}')` : ''
+
+    return this
+      .all(`PRAGMA foreign_key_check${table}`)
+      .then(errors => {
+        if (!errors.length) return this
+
+        debug('FK constraint violations detected', { errors })
+        throw new Error('FK constraint violations detected')
+      })
+  }
 }
 
 
@@ -239,6 +271,12 @@ class Statement {
   }
 }
 
+
+function nofk(conn) {
+  return conn
+    .configure({ foreign_keys: 'off' })
+    .disposer(() => conn.configure({ foreign_keys: 'on' }))
+}
 
 function transaction(conn) {
   return conn
