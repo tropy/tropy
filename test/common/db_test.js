@@ -6,7 +6,7 @@ const tmpdir = require('../support/tmpdir')
 
 const { join } = require('path')
 const { unlinkAsync: rm } = require('fs')
-const { all, map, using, reject } = require('bluebird')
+const { all, map, using } = require('bluebird')
 const { times } = __require('common/util')
 const { Database, Connection, Statement } = __require('common/db')
 
