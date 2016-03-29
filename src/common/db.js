@@ -9,9 +9,15 @@ const { using, resolve } = require('bluebird')
 const { Pool } = require('generic-pool')
 const { log, debug, info } = require('./log')
 
+const M = {
+  'r': sqlite.OPEN_READONLY,
+  'w': sqlite.OPEN_READWRITE,
+  'w+': sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE
+}
+
 
 class Database {
-  constructor(path = ':memory:') {
+  constructor(path = ':memory:', mode = 'w+') {
     debug(`init db ${path}`)
 
     this.path = path
@@ -20,7 +26,7 @@ class Database {
       max: 4,
       idleTimeoutMillis: 60000,
       log: (msg, level) => log(level, msg, { module: 'db:pool' }),
-      create: this.create.bind(this),
+      create: this.create.bind(this, mode),
       destroy: this.destroy.bind(this),
       validate: conn => conn.db.open
     })
@@ -43,16 +49,16 @@ class Database {
     return this.size - this.ready
   }
 
-  create(callback) {
+  create(mode, cb) {
     info(`opening db ${this.path}`)
 
-    let db = new sqlite.Database(this.path, (error) => {
-      if (error) return callback(error)
+    let db = new sqlite.Database(this.path, M[mode], (error) => {
+      if (error) return cb(error)
 
       new Connection(db)
         .configure()
-        .then(conn => callback(null, conn))
-        .catch(callback)
+        .then(conn => cb(null, conn))
+        .catch(cb)
     })
 
     if (process.env.DEBUG === 'true') {
