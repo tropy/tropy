@@ -13,8 +13,10 @@ class Window extends BrowserWindow {
     return {
       title: app.getName(),
       show: false,
-      preload: resolve(__dirname, '..', 'bootstrap.js'),
-      overlayScrollbars: true
+      overlayScrollbars: true,
+      webPreferences: {
+        preload: resolve(__dirname, '..', 'bootstrap.js')
+      }
     }
   }
 
