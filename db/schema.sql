@@ -40,7 +40,11 @@ CREATE TABLE photos (
 CREATE TABLE images (
   id INTEGER PRIMARY KEY REFERENCES objects(id) ON DELETE CASCADE,
   photo_id INTEGER NOT NULL REFERENCES photos(photo_id),
-  quality INTEGER REFERENCES image_qualities
+  quality TEXT NOT NULL DEFAULT 'default',
+
+  FOREIGN KEY(quality) REFERENCES image_qualities(quality)
+    ON UPDATE CASCADE
+    ON DELETE SET DEFAULT
 );
 CREATE TABLE image_regions (
   id INTEGER PRIMARY KEY REFERENCES images(id) ON DELETE CASCADE,
@@ -63,9 +67,12 @@ CREATE TABLE image_rotations (
   mirror BOOLEAN NOT NULL DEFAULT FALSE
 );
 CREATE TABLE image_qualities (
-  id INTEGER PRIMARY KEY,
-  name TEXT
+  quality TEXT PRIMARY KEY
 );
+INSERT INTO "image_qualities" VALUES('default');
+INSERT INTO "image_qualities" VALUES('color');
+INSERT INTO "image_qualities" VALUES('gray');
+INSERT INTO "image_qualities" VALUES('bitonal');
 CREATE TABLE notes (
   note_id INTEGER PRIMARY KEY,
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
