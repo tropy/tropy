@@ -6,6 +6,7 @@ CREATE TABLE archive (
   opened_at TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
 
+
 CREATE TABLE objects (
   id INTEGER PRIMARY KEY,
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
@@ -14,7 +15,13 @@ CREATE TABLE objects (
 
 
 CREATE TABLE items (
-  id INTEGER PRIMARY KEY REFERENCES objects(id) ON DELETE CASCADE
+  id INTEGER PRIMARY KEY,
+  cover_image_id INTEGER,
+
+  FOREIGN KEY(id) REFERENCES objects(id)
+    ON DELETE CASCADE,
+  FOREIGN KEY (cover_image_id) REFERENCES images(id)
+    ON DELETE SET NULL
 );
 
 
@@ -57,13 +64,13 @@ CREATE TABLE image_scales (
   id INTEGER PRIMARY KEY REFERENCES images(id) ON DELETE CASCADE,
   x NUMERIC,
   y NUMERIC,
-  pct NUMERIC,
+  factor NUMERIC,
   fit BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE image_rotations (
   id INTEGER PRIMARY KEY REFERENCES images(id) ON DELETE CASCADE,
-  deg NUMERIC,
+  angle NUMERIC,
   mirror BOOLEAN NOT NULL DEFAULT FALSE
 );
 
@@ -73,6 +80,7 @@ CREATE TABLE image_qualities (
 
 INSERT INTO image_qualities VALUES
   ('default'), ('color'), ('gray'), ('bitonal');
+
 
 -- Notes
 
