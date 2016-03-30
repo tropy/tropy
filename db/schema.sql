@@ -17,69 +17,115 @@ CREATE TABLE archive (
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
   opened_at TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
-CREATE TABLE items (
-  item_id INTEGER PRIMARY KEY,
+CREATE TABLE objects (
+  id INTEGER PRIMARY KEY,
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
   modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
+CREATE TABLE items (
+  id INTEGER PRIMARY KEY REFERENCES objects(id) ON DELETE CASCADE
+);
 CREATE TABLE photos (
   photo_id INTEGER PRIMARY KEY,
-  item_id INTEGER NOT NULL REFERENCES items(item_id),
+  item_id INTEGER NOT NULL REFERENCES items(id),
   path TEXT NOT NULL,
+  width INTEGER NOT NULL DEFAULT 0,
+  height INTEGER NOT NULL DEFAULT 0,
   mimetype TEXT,
   checksum TEXT,
   exif JSON,
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
   modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
-CREATE TABLE selections (
-  selection_id INTEGER PRIMARY KEY,
+CREATE TABLE images (
+  id INTEGER PRIMARY KEY REFERENCES objects(id) ON DELETE CASCADE,
   photo_id INTEGER NOT NULL REFERENCES photos(photo_id),
-  position INTEGER NOT NULL DEFAULT 0,
-  top INTEGER NOT NULL DEFAULT 0,
-  left INTEGER NOT NULL DEFAULT 0,
-  bottom INTEGER NOT NULL DEFAULT 0,
-  right INTEGER NOT NULL DEFAULT 0,
-  created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
-  modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
-
-  UNIQUE(photo_id, position)
+  quality INTEGER REFERENCES image_qualities
+);
+CREATE TABLE image_regions (
+  id INTEGER PRIMARY KEY REFERENCES images(id) ON DELETE CASCADE,
+  x NUMERIC NOT NULL DEFAULT 0,
+  y NUMERIC NOT NULL DEFAULT 0,
+  width NUMERIC NOT NULL DEFAULT 100,
+  height NUMERIC NOT NULL DEFAULT 100,
+  pct BOOLEAN NOT NULL DEFAULT TRUE
+);
+CREATE TABLE image_scales (
+  id INTEGER PRIMARY KEY REFERENCES images(id) ON DELETE CASCADE,
+  x NUMERIC,
+  y NUMERIC,
+  pct NUMERIC,
+  fit BOOLEAN NOT NULL DEFAULT FALSE
+);
+CREATE TABLE image_rotations (
+  id INTEGER PRIMARY KEY REFERENCES images(id) ON DELETE CASCADE,
+  deg NUMERIC,
+  mirror BOOLEAN NOT NULL DEFAULT FALSE
+);
+CREATE TABLE image_qualities (
+  id INTEGER PRIMARY KEY,
+  name TEXT
 );
 CREATE TABLE notes (
   note_id INTEGER PRIMARY KEY,
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
   modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
+CREATE TABLE object_notes (
+  id INTEGER,
+  note_id INTEGER,
+
+  PRIMARY KEY(id, note_id),
+
+  FOREIGN KEY(id) REFERENCES objects(id)
+    ON DELETE CASCADE,
+  FOREIGN KEY(note_id) REFERENCES notes(note_id)
+    ON DELETE CASCADE
+);
 CREATE TABLE lists (
   list_id INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
-  parent_list_id INTEGER REFERENCES lists(list_id),
+  parent_list_id INTEGER,
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
-  modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp
+  modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
+
+  FOREIGN KEY(parent_list_id) REFERENCES lists(list_id)
+    ON DELETE CASCADE
 );
 CREATE TABLE list_items (
-  item_id INTEGER REFERENCES items(item_id),
-  list_id INTEGER REFERENCES lists(list_id),
+  id INTEGER,
+  list_id INTEGER,
   position INTEGER NOT NULL DEFAULT 0,
 
-  PRIMARY KEY(item_id, list_id),
-  UNIQUE(item_id, list_id, position)
+  PRIMARY KEY(id, list_id),
+
+  FOREIGN KEY(id) REFERENCES items(id)
+    ON DELETE CASCADE,
+  FOREIGN KEY(list_id) REFERENCES lists(list_id)
+    ON DELETE CASCADE,
+
+  UNIQUE(id, list_id, position)
 );
 CREATE TABLE tags (
   tag_id INTEGER PRIMARY KEY,
   name TEXT UNIQUE NOT NULL COLLATE NOCASE,
-  color INTEGER,
+  color,
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
   modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
-CREATE TABLE item_tags (
-  item_id INTEGER REFERENCES items(item_id),
-  tag_id INTEGER REFERENCES tags(tag_id),
+CREATE TABLE object_tags (
+  id INTEGER,
+  tag_id INTEGER,
 
-  PRIMARY KEY(item_id, tag_id)
+  PRIMARY KEY(id, tag_id),
+
+  FOREIGN KEY(id) REFERENCES objects(id)
+    ON DELETE CASCADE,
+  FOREIGN KEY(tag_id) REFERENCES tags(tag_id)
+    ON DELETE CASCADE
 );
-CREATE TABLE deleted_items (
-  item_id INTEGER PRIMARY KEY REFERENCES items(item_id),
+CREATE TABLE trash (
+  id INTEGER PRIMARY KEY REFERENCES objects(id) ON DELETE CASCADE,
   deleted_at TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
 COMMIT;
