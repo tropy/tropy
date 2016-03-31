@@ -31,6 +31,7 @@ CREATE TABLE photos (
   path TEXT NOT NULL,
   width INTEGER NOT NULL DEFAULT 0,
   height INTEGER NOT NULL DEFAULT 0,
+  orientation INTEGER NOT NULL DEFAULT 1,
   mimetype TEXT,
   checksum TEXT,
   exif JSON,
