@@ -49,11 +49,9 @@ before_install:
     fi
 install:
   - npm install -g node-gyp
-  #- npm update || true
-  - rm -rf node_modules
+    npm update || true
   - npm install
-  - ls node_modules
-  - ls node_modules/electron-prebuilt
+  - npm run rebuild
 
 before_script:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
