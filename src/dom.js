@@ -24,7 +24,7 @@ module.exports = {
 
   stylesheet(href) {
     return assign(dom.element('link'), {
-      rel: 'stylesheet', type: 'text', href
+      rel: 'stylesheet', type: 'text/css', href
     })
   },
 
