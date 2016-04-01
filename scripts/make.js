@@ -226,17 +226,6 @@ PRAGMA user_version=${version};
 }
 
 
-target.rebuild = () => {
-  const version = v('sqlite3')
-
-  if (version !== mtag('sqlite3')) {
-    log.info('sqlite3...', { tag: 'rebuild' })
-    exec('CFLAGS=-DHAVE_USLEEP=1 npm rebuild sqlite3 --build-from-source')
-    mtag('sqlite3', version)
-  }
-}
-
-
 target.rules = () => {
   for (let rule in target) log.info(rule, { tag: 'make' })
 }
@@ -285,17 +274,6 @@ function swap(filename, src, dst, ext) {
 
 function mocha(options, silent, cb) {
   return exec(`${emocha} ${options.join(' ')}`, { silent }, cb)
-}
-
-function v(module) {
-  return require(`../node_modules/${module}/package`).version
-}
-
-function mtag(module, version) {
-  const file = path.join(home, 'node_modules', module, 'REBUILD')
-
-  if (version) return version.to(file)
-  return test('-f', file) && cat(file)
 }
 
 // We need to make a copy when exposing targets to other scripts,
