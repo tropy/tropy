@@ -49,9 +49,8 @@ before_install:
     fi
 install:
   - npm install -g node-gyp
-    npm update || true
+  - npm update || true
   - npm install
-  - npm run rebuild
 
 before_script:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
