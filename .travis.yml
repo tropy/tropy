@@ -52,6 +52,7 @@ install:
   #- npm update || true
   - npm install
   - ls node_modules
+  - ls node_modules/electron-prebuilt
 
 before_script:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then

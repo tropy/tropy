@@ -68,7 +68,7 @@
   },
   "dependencies": {
     "bluebird": "^3.1.1",
-    "electron-prebuilt": "^0.37.2",
+    "electron-prebuilt": "^0.37.3",
     "generic-pool": "^2.4.1",
     "js-yaml": "^3.4.6",
     "moment": "^2.12.0",
