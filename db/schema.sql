@@ -24,31 +24,33 @@ CREATE TABLE objects (
 );
 CREATE TABLE metadata (
   id INTEGER,
-  attribute_id INTEGER,
+  field_id INTEGER,
   position INTEGER NOT NULL DEFAULT 0,
   value,
 
-  PRIMARY KEY(id, attribute_id),
+  PRIMARY KEY(id, field_id),
+
   UNIQUE(id, position),
+
   FOREIGN KEY(id) REFERENCES objects(id)
     ON DELETE CASCADE,
-  FOREIGN KEY(attribute_id) REFERENCES attributes(attribute_id)
+  FOREIGN KEY(field_id) REFERENCES fields(field_id)
     ON DELETE CASCADE
 );
-CREATE TABLE attributes (
-  attribute_id INTEGER PRIMARY KEY,
+CREATE TABLE fields (
+  field_id INTEGER PRIMARY KEY,
   type_id INTEGER,
-  attribute TEXT UNIQUE NOT NULL COLLATE NOCASE,
+  field_name TEXT UNIQUE NOT NULL COLLATE NOCASE,
 
   FOREIGN KEY(type_id) REFERENCES types(type_id)
 );
 CREATE TABLE types (
   type_id INTEGER PRIMARY KEY,
-  type TEXT UNIQUE NOT NULL COLLATE NOCASE
+  type_name TEXT UNIQUE NOT NULL COLLATE NOCASE
 );
 CREATE TABLE templates (
   id INTEGER PRIMARY KEY,
-  template TEXT UNIQUE NOT NULL COLLATE NOCASE,
+  template_name TEXT UNIQUE NOT NULL COLLATE NOCASE,
 
   FOREIGN KEY(id) REFERENCES objects(id)
     ON DELETE CASCADE
@@ -106,11 +108,11 @@ CREATE TABLE image_rotations (
 );
 CREATE TABLE image_qualities (
   quality TEXT PRIMARY KEY
-);
-INSERT INTO "image_qualities" VALUES('default');
-INSERT INTO "image_qualities" VALUES('color');
-INSERT INTO "image_qualities" VALUES('gray');
+) WITHOUT ROWID;
 INSERT INTO "image_qualities" VALUES('bitonal');
+INSERT INTO "image_qualities" VALUES('color');
+INSERT INTO "image_qualities" VALUES('default');
+INSERT INTO "image_qualities" VALUES('gray');
 CREATE TABLE notes (
   note_id INTEGER PRIMARY KEY,
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
