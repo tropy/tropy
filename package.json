@@ -80,6 +80,6 @@
     "transducers.js": "^0.3.2",
     "winston": "^2.1.1",
     "write-file-atomic": "^1.1.4",
-    "yargs": "^4.2.0"
+    "yargs": "^4.3.2"
   }
 }
