@@ -14,12 +14,16 @@ CREATE TABLE objects (
 );
 
 
+-- Metadata
+
 CREATE TABLE metadata (
   id INTEGER,
   attribute_id INTEGER,
+  position INTEGER NOT NULL DEFAULT 0,
   value,
 
   PRIMARY KEY(id, attribute_id),
+  UNIQUE(id, position),
   FOREIGN KEY(id) REFERENCES objects(id)
     ON DELETE CASCADE,
   FOREIGN KEY(attribute_id) REFERENCES attributes(attribute_id)
@@ -39,6 +43,16 @@ CREATE TABLE types (
   type TEXT UNIQUE NOT NULL COLLATE NOCASE
 );
 
+CREATE TABLE templates (
+  id INTEGER PRIMARY KEY,
+  template TEXT UNIQUE NOT NULL COLLATE NOCASE,
+
+  FOREIGN KEY(id) REFERENCES objects(id)
+    ON DELETE CASCADE
+);
+
+
+-- Items
 
 CREATE TABLE items (
   id INTEGER PRIMARY KEY,
@@ -50,6 +64,8 @@ CREATE TABLE items (
     ON DELETE SET NULL
 );
 
+
+-- Photos
 
 CREATE TABLE photos (
   photo_id INTEGER PRIMARY KEY,
