@@ -22,6 +22,28 @@ CREATE TABLE objects (
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
   modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp
 );
+CREATE TABLE metadata (
+  id INTEGER,
+  attribute_id INTEGER,
+  value,
+
+  PRIMARY KEY(id, attribute_id),
+  FOREIGN KEY(id) REFERENCES objects(id)
+    ON DELETE CASCADE,
+  FOREIGN KEY(attribute_id) REFERENCES attributes(attribute_id)
+    ON DELETE CASCADE
+);
+CREATE TABLE attributes (
+  attribute_id INTEGER PRIMARY KEY,
+  type_id INTEGER,
+  attribute TEXT UNIQUE NOT NULL COLLATE NOCASE,
+
+  FOREIGN KEY(type_id) REFERENCES types(type_id)
+);
+CREATE TABLE types (
+  type_id INTEGER PRIMARY KEY,
+  type TEXT UNIQUE NOT NULL COLLATE NOCASE
+);
 CREATE TABLE items (
   id INTEGER PRIMARY KEY,
   cover_image_id INTEGER,
@@ -37,6 +59,7 @@ CREATE TABLE photos (
   path TEXT NOT NULL,
   width INTEGER NOT NULL DEFAULT 0,
   height INTEGER NOT NULL DEFAULT 0,
+  orientation INTEGER NOT NULL DEFAULT 1,
   mimetype TEXT,
   checksum TEXT,
   exif JSON,

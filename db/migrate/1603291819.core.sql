@@ -14,6 +14,32 @@ CREATE TABLE objects (
 );
 
 
+CREATE TABLE metadata (
+  id INTEGER,
+  attribute_id INTEGER,
+  value,
+
+  PRIMARY KEY(id, attribute_id),
+  FOREIGN KEY(id) REFERENCES objects(id)
+    ON DELETE CASCADE,
+  FOREIGN KEY(attribute_id) REFERENCES attributes(attribute_id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE attributes (
+  attribute_id INTEGER PRIMARY KEY,
+  type_id INTEGER,
+  attribute TEXT UNIQUE NOT NULL COLLATE NOCASE,
+
+  FOREIGN KEY(type_id) REFERENCES types(type_id)
+);
+
+CREATE TABLE types (
+  type_id INTEGER PRIMARY KEY,
+  type TEXT UNIQUE NOT NULL COLLATE NOCASE
+);
+
+
 CREATE TABLE items (
   id INTEGER PRIMARY KEY,
   cover_image_id INTEGER,
