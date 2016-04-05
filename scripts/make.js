@@ -177,7 +177,7 @@ target.schema = () => {
   const sql = path.join(home, 'db', 'schema.sql')
   const pdf = path.join(doc, 'db.pdf')
 
-  mkdir(doc)
+  mkdir('-p', doc)
   rm('-f', tmp)
 
   const db = new Database(tmp)
@@ -238,6 +238,7 @@ target.clean = () => {
 
   rm('-rf', path.join(home, 'lib'))
   rm('-rf', path.join(home, 'dist'))
+  rm('-rf', doc)
   rm('-rf', cov)
   rm('-rf', scov)
 
