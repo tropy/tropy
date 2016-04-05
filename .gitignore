@@ -4,6 +4,6 @@ lib
 lib-cov
 src-cov
 coverage
+doc
 tmp
 npm-debug.log
-db/schema.pdf

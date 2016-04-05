@@ -14,6 +14,7 @@ const pkg = require('../package')
 
 const home = path.resolve(__dirname, '..')
 const nbin = path.join(home, 'node_modules', '.bin')
+const doc = path.join(home, 'doc')
 const cov = path.join(home, 'coverage')
 const scov = path.join(home, 'src-cov')
 const migrate = path.join(home, 'db', 'migrate')
@@ -173,8 +174,10 @@ target.schema = () => {
   const Database = require('../lib/common/db').Database
 
   const tmp = path.join(home, 'db', 'db.sqlite')
-  const schema = path.join(home, 'db', 'schema')
+  const sql = path.join(home, 'db', 'schema.sql')
+  const pdf = path.join(doc, 'db.pdf')
 
+  mkdir(doc)
   rm('-f', tmp)
 
   const db = new Database(tmp)
@@ -201,22 +204,22 @@ PRAGMA user_version=${version};
 
 -- SQLite schema dump
 `
-      ).to(`${schema}.sql`)
+      ).to(sql)
 
-      exec(`sqlite3 ${tmp} .dump >> ${schema}.sql`)
-      log.info(`saved to ${schema}.sql`, { tag })
+      exec(`sqlite3 ${tmp} .dump >> ${sql}`)
+      'PRAGMA foreign_keys=ON;'.toEnd(sql)
+
+      log.info(`saved to ${sql}`, { tag })
 
       exec([
         sqleton,
         `-t "${pkg.productName} #${version}"`,
         '-f "Helvetica Neue"',
-        `-o ${schema}.pdf`,
+        `-o ${pdf}`,
         tmp
       ].join(' '))
 
-      'PRAGMA foreign_keys=ON;'.toEnd(`${schema}.sql`)
-
-      log.info(`diagram saved to ${schema}.pdf`, { tag })
+      log.info(`diagram saved to ${pdf}`, { tag })
     })
 
 
