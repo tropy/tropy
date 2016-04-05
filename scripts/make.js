@@ -7,7 +7,6 @@ const path = require('path')
 const fs = require('fs')
 const babel = require('babel-core')
 const glob = require('glob')
-const moment = require('moment')
 const sass = require('node-sass')
 const log = require('./log')
 
@@ -16,7 +15,6 @@ const nbin = path.join(home, 'node_modules', '.bin')
 const doc = path.join(home, 'doc')
 const cov = path.join(home, 'coverage')
 const scov = path.join(home, 'src-cov')
-const migrate = path.join(home, 'db', 'migrate')
 
 const emocha = path.join(nbin, 'electron-mocha')
 const lint = path.join(nbin, 'eslint')
@@ -152,20 +150,6 @@ target.unlink = () => {
   rm('-f', path.join(resources, 'app'))
 }
 
-target.migration = (args) => {
-  args = (args || ['sql']).reverse()
-
-  assert(args.length)
-  assert(args[0] === 'sql' || args[0] === 'js')
-
-  let name = mname.apply(null, args)
-
-  mkdir('-p', migrate)
-  migration.apply(null, args).to(path.join(migrate, name))
-
-  log.info(`${name} created`, { tag: 'migration' })
-}
-
 
 target.rules = () => {
   for (let rule in target) log.info(rule, { tag: 'make' })
@@ -184,20 +168,6 @@ target.clean = () => {
   rm('-f', path.join(home, 'npm-debug.log'))
 }
 
-function mname(type, name) {
-  return [moment().format('YYMMDDHHmm'), name, type]
-    .filter(x => x)
-    .join('.')
-}
-
-function migration(type, name) {
-  return (type === 'sql') ?
-    '' :
-`'use strict'
-exports.up = function ${name}$up(tx) {
-  // Return a promise here!
-}`
-}
 
 function fresh(src, dst) {
   try {

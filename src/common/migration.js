@@ -6,7 +6,6 @@ const { readdirAsync: ls, readFileAsync: read } = require('fs')
 const { basename, extname, resolve, join } = require('path')
 const { debug } = require('./log')
 
-const root = resolve(__dirname, '..', '..', 'db', 'migrate')
 
 
 class Migration {
@@ -16,14 +15,14 @@ class Migration {
     this.number = Number(basename(path).split('.', 2)[0])
   }
 
-  static async all(dir = root) {
+  static async all(dir = Migration.root) {
     return (await ls(dir))
       .filter(migration => (/^\d+[\w\.]*\.(js|sql)$/).test(migration))
       .sort()
       .map(migration => new this(join(dir, migration)))
   }
 
-  static async since(number = 0, dir = root) {
+  static async since(number = 0, dir = Migration.root) {
     return (await this.all(dir)).filter(m => m.fresh(number))
   }
 
@@ -51,4 +50,6 @@ class Migration {
   }
 }
 
-module.exports = Migration
+Migration.root = resolve(__dirname, '..', '..', 'db', 'migrate')
+
+module.exports =  { Migration }

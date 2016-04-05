@@ -1,6 +1,6 @@
 'use strict'
 
-const Migration = __require('common/migration')
+const { Migration } = __require('common/migration')
 
 describe('Migration', () => {
 

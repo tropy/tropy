@@ -4,8 +4,8 @@ require('./promisify')
 
 const sqlite = require('sqlite3')
 const entries = require('object.entries')
-const Migration = require('./migration')
 
+const { Migration } = require('./migration')
 const { resolve: cd, join } = require('path')
 const { using, resolve } = require('bluebird')
 const { readFileAsync: read } = require('fs')

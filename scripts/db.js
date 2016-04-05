@@ -5,10 +5,12 @@ require('shelljs/make')
 const assert = require('assert')
 const pkg = require('../package')
 const log = require('./log')
+const moment = require('moment')
 
 const { resolve, join, dirname } = require('path')
 const { assign } = Object
 const { Database } = require('../lib/common/db')
+const { Migration } = require('../lib/common/migration')
 
 const home = resolve(__dirname, '..')
 const DB = join(home, 'db', 'db.sqlite')
@@ -37,7 +39,10 @@ target.migrate = () => {
 -- then regenerate this schema file.
 --
 -- To create a new empty migration, run:
---   node scripts/make migration -- <name> <sql|js>
+--   npm run db -- migration -- [name] [sql|js]
+--
+-- To re-generate this file, run:
+--   npm run db -- migrate
 --
 
 -- Save the current migration number
@@ -84,6 +89,21 @@ target.viz = (args = []) => {
     .finally(() => db.close())
 }
 
+target.migration = (args = []) => {
+  if (args.length < 2) args.push('sql')
+
+  const [type, name] = args.reverse()
+  const file = migration(name, type)
+
+  const content = (type === 'sql') ?  '' : `'use strict'
+exports.up = function ${name}$up(tx) {
+  // Return a promise here!
+}`
+
+  content.to(join(Migration.root, file))
+  info(`migration ${file} created...`)
+}
+
 target.rules = () => {
   for (let rule in target) info(rule)
 }
@@ -98,6 +118,15 @@ function create(file) {
   rm('-f', file)
 
   return new Database(file).read(Database.schema)
+}
+
+function migration(name, type) {
+  assert(type === 'sql' || type === 'js',
+      `migration type '${type}' not supported`)
+
+  return [moment().format('YYMMDDHHmm'), name, type]
+    .filter(x => x)
+    .join('.')
 }
 
 
