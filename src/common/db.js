@@ -7,6 +7,7 @@ const entries = require('object.entries')
 const Migration = require('./migration')
 
 const { using, resolve } = require('bluebird')
+const { readFileAsync: read } = require('fs')
 const { Pool } = require('generic-pool')
 const { log, debug, info } = require('./log')
 
@@ -151,12 +152,16 @@ class Database {
   }
 
   exec(...args) {
-    return this.seq(conn => conn.exec(...args))
+    return this.seq(conn => conn.exec(...args)).return(this)
   }
 
 
   version(...args) {
     return this.seq(conn => conn.version(...args))
+  }
+
+  async read(file) {
+    return this.exec(String(await read(file)))
   }
 }
 
