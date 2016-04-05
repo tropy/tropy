@@ -10,7 +10,6 @@ const glob = require('glob')
 const moment = require('moment')
 const sass = require('node-sass')
 const log = require('./log')
-const pkg = require('../package')
 
 const home = path.resolve(__dirname, '..')
 const nbin = path.join(home, 'node_modules', '.bin')
@@ -22,7 +21,6 @@ const migrate = path.join(home, 'db', 'migrate')
 const emocha = path.join(nbin, 'electron-mocha')
 const lint = path.join(nbin, 'eslint')
 const istanbul = path.join(nbin, 'istanbul')
-const sqleton = path.join(nbin, 'sqleton')
 
 const electron = process.env.ELECTRON_PATH = require('electron-prebuilt')
 
@@ -166,67 +164,6 @@ target.migration = (args) => {
   migration.apply(null, args).to(path.join(migrate, name))
 
   log.info(`${name} created`, { tag: 'migration' })
-}
-
-target.schema = () => {
-  const tag = 'schema'
-  const Database = require('../lib/common/db').Database
-
-  const tmp = path.join(home, 'db', 'db.sqlite')
-  const sql = path.join(home, 'db', 'schema.sql')
-  const pdf = path.join(doc, 'db.pdf')
-
-  mkdir('-p', doc)
-  rm('-f', tmp)
-
-  const db = new Database(tmp)
-
-  return db
-    .migrate()
-
-    .then(ms => {
-      log.info(`applied ${ms.length} migrations`, { tag })
-    })
-
-    .then(() => db.version())
-
-    .then(version => {
-      (`--
--- This file is auto-generated from the current state of
--- the database. Instead of editing this file, please
--- create migrations to incrementally modify the database,
--- and then regenerate this schema file.
---
--- To create a new empty migration, run:
---   node scripts/make migration -- <name> <sql|js>
---
-
--- Save current migration number
-PRAGMA user_version=${version};
-
--- SQLite schema dump
-`
-      ).to(sql)
-
-      exec(`sqlite3 ${tmp} .dump >> ${sql}`)
-      'PRAGMA foreign_keys=ON;'.toEnd(sql)
-
-      log.info(`saved to ${sql}`, { tag })
-
-      exec([
-        sqleton,
-        `-t "${pkg.productName} #${version}"`,
-        '-f "Helvetica Neue"',
-        `-o ${pdf}`,
-        tmp
-      ].join(' '))
-
-      log.info(`diagram saved to ${pdf}`, { tag })
-    })
-
-
-    .finally(() => db.close())
-    .finally(() => rm(tmp))
 }
 
 

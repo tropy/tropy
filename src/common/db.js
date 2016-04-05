@@ -6,10 +6,13 @@ const sqlite = require('sqlite3')
 const entries = require('object.entries')
 const Migration = require('./migration')
 
+const { resolve: cd, join } = require('path')
 const { using, resolve } = require('bluebird')
 const { readFileAsync: read } = require('fs')
 const { Pool } = require('generic-pool')
 const { log, debug, info } = require('./log')
+
+const root = cd(__dirname, '..', '..', 'db')
 
 const M = {
   'r': sqlite.OPEN_READONLY,
@@ -170,6 +173,8 @@ Database.defaults = {
   application_id: '0x0fa1afe1',
   encoding: 'UTF-8'
 }
+
+Database.schema = join(root, 'schema.sql')
 
 
 class Connection {
