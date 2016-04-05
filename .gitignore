@@ -7,3 +7,4 @@ coverage
 doc
 tmp
 npm-debug.log
+db/db.sqlite
