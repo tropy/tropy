@@ -170,7 +170,6 @@ target.migration = (args) => {
 
 target.schema = () => {
   const tag = 'schema'
-
   const Database = require('../lib/common/db').Database
 
   const tmp = path.join(home, 'db', 'db.sqlite')
@@ -195,8 +194,11 @@ target.schema = () => {
       (`--
 -- This file is auto-generated from the current state of
 -- the database. Instead of editing this file, please
--- create migratios to incrementally modify the database,
+-- create migrations to incrementally modify the database,
 -- and then regenerate this schema file.
+--
+-- To create a new empty migration, run:
+--   node scripts/make migration -- <name> <sql|js>
 --
 
 -- Save current migration number
