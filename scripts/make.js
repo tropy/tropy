@@ -170,21 +170,20 @@ target.migration = (args) => {
 target.schema = () => {
   const tag = 'schema'
 
-  const Migration = require('../lib/common/migration')
   const Database = require('../lib/common/db').Database
 
   const tmp = path.join(home, 'db', 'db.sqlite')
   const schema = path.join(home, 'db', 'schema')
 
-  const db = new Database(tmp)
-
   rm('-f', tmp)
 
-  Migration
-    .migrate(db)
+  const db = new Database(tmp)
+
+  return db
+    .migrate()
 
     .then(ms => {
-      log.info(`applied ${ms} migrations`, { tag })
+      log.info(`applied ${ms.length} migrations`, { tag })
     })
 
     .then(() => db.version())

@@ -4,6 +4,7 @@ require('./promisify')
 
 const sqlite = require('sqlite3')
 const entries = require('object.entries')
+const Migration = require('./migration')
 
 const { using, resolve } = require('bluebird')
 const { Pool } = require('generic-pool')
@@ -32,6 +33,16 @@ class Database {
     })
   }
 
+  async migrate(...args) {
+    const version = await this.version()
+    const migrations = await Migration.since(version, ...args)
+
+    for (let migration of migrations) {
+      await migration.up(this)
+    }
+
+    return migrations
+  }
 
   get size() {
     return this.pool.getPoolSize()
@@ -154,6 +165,7 @@ Database.defaults = {
   application_id: '0x0fa1afe1',
   encoding: 'UTF-8'
 }
+
 
 class Connection {
   constructor(db) {

@@ -10,6 +10,11 @@ const root = resolve(__dirname, '..', '..', 'db', 'migrate')
 
 
 class Migration {
+  constructor(path) {
+    this.path = path
+    this.type = extname(this.path).slice(1)
+    this.number = Number(basename(path).split('.', 2)[0])
+  }
 
   static async all(dir = root) {
     return (await ls(dir))
@@ -20,23 +25,6 @@ class Migration {
 
   static async since(number = 0, dir = root) {
     return (await this.all(dir)).filter(m => m.fresh(number))
-  }
-
-  static async migrate(db) {
-    const version = await db.version()
-    const migrations = await this.since(version)
-
-    for (let migration of migrations) {
-      await migration.up(db)
-    }
-
-    return migrations.length || 0
-  }
-
-  constructor(path) {
-    this.path = path
-    this.type = extname(this.path).slice(1)
-    this.number = Number(basename(path).split('.', 2)[0])
   }
 
   up(db) {
