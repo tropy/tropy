@@ -53,7 +53,7 @@
     "chai-as-promised": "^5.2.0",
     "chokidar": "^1.4.3",
     "colors": "^1.1.2",
-    "electron-mocha": "^1.0.0",
+    "electron-mocha": "^1.0.3",
     "electron-packager": "^6.0.0",
     "eslint": "^2.4.0",
     "glob": "^7.0.0",
@@ -67,7 +67,7 @@
   },
   "dependencies": {
     "bluebird": "^3.1.1",
-    "electron-prebuilt": "0.37.3",
+    "electron-prebuilt": "^0.37.5",
     "generic-pool": "^2.4.1",
     "js-yaml": "^3.4.6",
     "moment": "^2.12.0",
