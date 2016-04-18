@@ -4,8 +4,8 @@ CREATE TABLE archive (
   archive_id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   settings TEXT NOT NULL,
-  created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
-  opened_at TIMESTAMP NOT NULL DEFAULT current_timestamp
+  created_at DATETIME NOT NULL DEFAULT current_timestamp,
+  opened_at DATETIME NOT NULL DEFAULT current_timestamp
 ) WITHOUT ROWID;
 
 
@@ -14,8 +14,8 @@ CREATE TABLE archive (
 -- a row in the objects table.
 CREATE TABLE objects (
   id INTEGER PRIMARY KEY,
-  created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
-  modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp
+  created_at DATETIME NOT NULL DEFAULT current_timestamp,
+  updated_at DATETIME NOT NULL DEFAULT current_timestamp
 );
 
 
@@ -44,8 +44,8 @@ CREATE TABLE items (
 CREATE TABLE notes (
   note_id INTEGER PRIMARY KEY,
   text TEXT NOT NULL,
-  created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
-  modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp
+  created_at DATETIME NOT NULL DEFAULT current_timestamp,
+  updated_at DATETIME NOT NULL DEFAULT current_timestamp
 );
 
 CREATE TABLE object_notes (
@@ -68,8 +68,8 @@ CREATE TABLE lists (
   list_id INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
   parent_list_id INTEGER,
-  created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
-  modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
+  created_at DATETIME NOT NULL DEFAULT current_timestamp,
+  updated_at DATETIME NOT NULL DEFAULT current_timestamp,
 
   FOREIGN KEY(parent_list_id) REFERENCES lists(list_id)
     ON DELETE CASCADE
@@ -95,14 +95,14 @@ CREATE TABLE tags (
   tag_id INTEGER PRIMARY KEY,
   name TEXT UNIQUE NOT NULL COLLATE NOCASE,
   color,
-  created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
-  modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp
+  created_at DATETIME NOT NULL DEFAULT current_timestamp,
+  updated_at DATETIME NOT NULL DEFAULT current_timestamp
 );
 
 CREATE TABLE object_tags (
   id INTEGER,
   tag_id INTEGER,
-  tagged_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
+  tagged_at DATETIME NOT NULL DEFAULT current_timestamp,
 
   PRIMARY KEY(id, tag_id),
 
@@ -115,7 +115,7 @@ CREATE TABLE object_tags (
 
 CREATE TABLE trash (
   id INTEGER PRIMARY KEY,
-  deleted_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
+  deleted_at DATETIME NOT NULL DEFAULT current_timestamp,
 
   FOREIGN KEY (id) REFERENCES objects(id)
     ON DELETE CASCADE

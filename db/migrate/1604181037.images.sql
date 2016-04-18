@@ -4,6 +4,7 @@ CREATE TABLE photos (
   item_id INTEGER NOT NULL,
 
   path TEXT NOT NULL,
+  protocol TEXT NOT NULL DEFAULT 'file',
   mimetype TEXT NOT NULL,
   checksum TEXT NOT NULL,
   orientation INTEGER NOT NULL DEFAULT 1,
@@ -53,6 +54,5 @@ CREATE TABLE image_qualities (
   quality TEXT PRIMARY KEY
 ) WITHOUT ROWID;
 
-INSERT INTO image_qualities VALUES
+INSERT INTO image_qualities (quality) VALUES
   ('default'), ('color'), ('gray'), ('bitonal');
-

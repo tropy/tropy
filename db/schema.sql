@@ -21,13 +21,13 @@ CREATE TABLE archive (
   archive_id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   settings TEXT NOT NULL,
-  created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
-  opened_at TIMESTAMP NOT NULL DEFAULT current_timestamp
+  created_at DATETIME NOT NULL DEFAULT current_timestamp,
+  opened_at DATETIME NOT NULL DEFAULT current_timestamp
 ) WITHOUT ROWID;
 CREATE TABLE objects (
   id INTEGER PRIMARY KEY,
-  created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
-  modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp
+  created_at DATETIME NOT NULL DEFAULT current_timestamp,
+  updated_at DATETIME NOT NULL DEFAULT current_timestamp
 );
 CREATE TABLE images (
   id INTEGER PRIMARY KEY,
@@ -48,8 +48,8 @@ CREATE TABLE items (
 CREATE TABLE notes (
   note_id INTEGER PRIMARY KEY,
   text TEXT NOT NULL,
-  created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
-  modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp
+  created_at DATETIME NOT NULL DEFAULT current_timestamp,
+  updated_at DATETIME NOT NULL DEFAULT current_timestamp
 );
 CREATE TABLE object_notes (
   id INTEGER,
@@ -68,8 +68,8 @@ CREATE TABLE lists (
   list_id INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
   parent_list_id INTEGER,
-  created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
-  modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
+  created_at DATETIME NOT NULL DEFAULT current_timestamp,
+  updated_at DATETIME NOT NULL DEFAULT current_timestamp,
 
   FOREIGN KEY(parent_list_id) REFERENCES lists(list_id)
     ON DELETE CASCADE
@@ -91,13 +91,13 @@ CREATE TABLE tags (
   tag_id INTEGER PRIMARY KEY,
   name TEXT UNIQUE NOT NULL COLLATE NOCASE,
   color,
-  created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
-  modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp
+  created_at DATETIME NOT NULL DEFAULT current_timestamp,
+  updated_at DATETIME NOT NULL DEFAULT current_timestamp
 );
 CREATE TABLE object_tags (
   id INTEGER,
   tag_id INTEGER,
-  tagged_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
+  tagged_at DATETIME NOT NULL DEFAULT current_timestamp,
 
   PRIMARY KEY(id, tag_id),
 
@@ -108,7 +108,7 @@ CREATE TABLE object_tags (
 ) WITHOUT ROWID;
 CREATE TABLE trash (
   id INTEGER PRIMARY KEY,
-  deleted_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
+  deleted_at DATETIME NOT NULL DEFAULT current_timestamp,
 
   FOREIGN KEY (id) REFERENCES objects(id)
     ON DELETE CASCADE
@@ -118,6 +118,7 @@ CREATE TABLE photos (
   item_id INTEGER NOT NULL,
 
   path TEXT NOT NULL,
+  protocol TEXT NOT NULL DEFAULT 'file',
   mimetype TEXT NOT NULL,
   checksum TEXT NOT NULL,
   orientation INTEGER NOT NULL DEFAULT 1,
@@ -163,5 +164,46 @@ INSERT INTO "image_qualities" VALUES('bitonal');
 INSERT INTO "image_qualities" VALUES('color');
 INSERT INTO "image_qualities" VALUES('default');
 INSERT INTO "image_qualities" VALUES('gray');
+CREATE TABLE metadata (
+  id INTEGER,
+  field_name TEXT,
+  type_name TEXT,
+  position INTEGER NOT NULL DEFAULT 0,
+
+  value,
+
+  PRIMARY KEY(id, field_name, type_name),
+  UNIQUE(id, position),
+
+  FOREIGN KEY(id) REFERENCES objects(id)
+    ON DELETE CASCADE,
+  FOREIGN KEY(field_name, type_name) REFERENCES fields(field_name, type_name)
+    ON DELETE CASCADE
+  FOREIGN KEY(type_name) REFERENCES types(type_name)
+    ON DELETE CASCADE
+) WITHOUT ROWID;
+CREATE TABLE fields (
+  field_name TEXT NOT NULL COLLATE NOCASE,
+  type_name TEXT NOT NULL COLLATE NOCASE,
+
+  PRIMARY KEY(field_name, type_name),
+  FOREIGN KEY(type_name) REFERENCES types(type_name)
+    ON UPDATE CASCADE
+) WITHOUT ROWID;
+CREATE TABLE types (
+  type_name TEXT PRIMARY KEY COLLATE NOCASE
+) WITHOUT ROWID;
+INSERT INTO "types" VALUES('boolean');
+INSERT INTO "types" VALUES('datetime');
+INSERT INTO "types" VALUES('name');
+INSERT INTO "types" VALUES('numeric');
+INSERT INTO "types" VALUES('text');
+CREATE TABLE templates (
+  template_id INTEGER PRIMARY KEY,
+  template_name TEXT UNIQUE NOT NULL COLLATE NOCASE,
+
+  created_at DATETIME NOT NULL DEFAULT current_timestamp,
+  updated_at DATETIME NOT NULL DEFAULT current_timestamp
+) WITHOUT ROWID;
 COMMIT;
 PRAGMA foreign_keys=ON;
