@@ -54,7 +54,7 @@
     "chokidar": "^1.4.3",
     "colors": "^1.1.2",
     "electron-mocha": "^1.1.0",
-    "electron-packager": "^6.0.0",
+    "electron-packager": "^7.0.0",
     "eslint": "^2.4.0",
     "glob": "^7.0.0",
     "istanbul": "^0.4.1",
