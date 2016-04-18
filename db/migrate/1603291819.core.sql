@@ -3,7 +3,7 @@
 CREATE TABLE archive (
   archive_id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
-  settings NOT NULL,
+  settings TEXT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
   opened_at TIMESTAMP NOT NULL DEFAULT current_timestamp
 ) WITHOUT ROWID;

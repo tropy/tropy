@@ -7,7 +7,7 @@ CREATE TABLE photos (
   mimetype TEXT NOT NULL,
   checksum TEXT NOT NULL,
   orientation INTEGER NOT NULL DEFAULT 1,
-  exif,
+  exif TEXT,
 
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
   modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
