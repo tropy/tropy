@@ -20,7 +20,7 @@ BEGIN TRANSACTION;
 CREATE TABLE archive (
   archive_id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
-  settings NOT NULL,
+  settings TEXT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
   opened_at TIMESTAMP NOT NULL DEFAULT current_timestamp
 ) WITHOUT ROWID;
@@ -121,10 +121,7 @@ CREATE TABLE photos (
   mimetype TEXT NOT NULL,
   checksum TEXT NOT NULL,
   orientation INTEGER NOT NULL DEFAULT 1,
-  exif,
-
-  created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
-  modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
+  exif TEXT,
 
   FOREIGN KEY (id) REFERENCES images(id) ON DELETE CASCADE,
   FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE

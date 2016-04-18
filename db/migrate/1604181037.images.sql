@@ -9,9 +9,6 @@ CREATE TABLE photos (
   orientation INTEGER NOT NULL DEFAULT 1,
   exif TEXT,
 
-  created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
-  modified_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
-
   FOREIGN KEY (id) REFERENCES images(id) ON DELETE CASCADE,
   FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
 ) WITHOUT ROWID;
