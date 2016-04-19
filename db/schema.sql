@@ -12,7 +12,7 @@
 --
 
 -- Save the current migration number
-PRAGMA user_version=1604181106;
+PRAGMA user_version=1604191233;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -88,23 +88,25 @@ CREATE TABLE list_items (
     ON DELETE CASCADE
 ) WITHOUT ROWID;
 CREATE TABLE tags (
-  tag_id INTEGER PRIMARY KEY,
-  name TEXT UNIQUE NOT NULL COLLATE NOCASE,
-  color,
+  tag_name TEXT PRIMARY KEY COLLATE NOCASE,
+  tag_color,
   created_at DATETIME NOT NULL DEFAULT current_timestamp,
-  updated_at DATETIME NOT NULL DEFAULT current_timestamp
+  updated_at DATETIME NOT NULL DEFAULT current_timestamp,
+
+  CHECK (tag_name <> '')
 );
 CREATE TABLE object_tags (
   id INTEGER,
-  tag_id INTEGER,
+  tag_name TEXT,
   tagged_at DATETIME NOT NULL DEFAULT current_timestamp,
 
-  PRIMARY KEY(id, tag_id),
+  PRIMARY KEY(id, tag_name),
 
   FOREIGN KEY(id) REFERENCES objects(id)
     ON DELETE CASCADE,
-  FOREIGN KEY(tag_id) REFERENCES tags(tag_id)
+  FOREIGN KEY(tag_name) REFERENCES tags(tag_name)
     ON DELETE CASCADE
+    ON UPDATE CASCADE
 ) WITHOUT ROWID;
 CREATE TABLE trash (
   id INTEGER PRIMARY KEY,
@@ -205,5 +207,19 @@ CREATE TABLE templates (
   created_at DATETIME NOT NULL DEFAULT current_timestamp,
   updated_at DATETIME NOT NULL DEFAULT current_timestamp
 ) WITHOUT ROWID;
+CREATE TRIGGER insert_tags
+  AFTER INSERT ON tags
+  BEGIN
+    UPDATE tags
+      SET tag_name = trim(tag_name)
+      WHERE tag_name = NEW.tag_name;
+  END;
+CREATE TRIGGER update_tags
+  AFTER UPDATE ON tags
+  BEGIN
+    UPDATE tags
+      SET tag_name = trim(tag_name)
+      WHERE tag_name = NEW.tag_name;
+  END;
 COMMIT;
 PRAGMA foreign_keys=ON;

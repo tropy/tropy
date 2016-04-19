@@ -92,24 +92,26 @@ CREATE TABLE list_items (
 
 -- Tags
 CREATE TABLE tags (
-  tag_id INTEGER PRIMARY KEY,
-  name TEXT UNIQUE NOT NULL COLLATE NOCASE,
-  color,
+  tag_name TEXT PRIMARY KEY COLLATE NOCASE,
+  tag_color,
   created_at DATETIME NOT NULL DEFAULT current_timestamp,
-  updated_at DATETIME NOT NULL DEFAULT current_timestamp
+  updated_at DATETIME NOT NULL DEFAULT current_timestamp,
+
+  CHECK (tag_name <> '')
 );
 
 CREATE TABLE object_tags (
   id INTEGER,
-  tag_id INTEGER,
+  tag_name TEXT,
   tagged_at DATETIME NOT NULL DEFAULT current_timestamp,
 
-  PRIMARY KEY(id, tag_id),
+  PRIMARY KEY(id, tag_name),
 
   FOREIGN KEY(id) REFERENCES objects(id)
     ON DELETE CASCADE,
-  FOREIGN KEY(tag_id) REFERENCES tags(tag_id)
+  FOREIGN KEY(tag_name) REFERENCES tags(tag_name)
     ON DELETE CASCADE
+    ON UPDATE CASCADE
 ) WITHOUT ROWID;
 
 
