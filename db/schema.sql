@@ -201,12 +201,24 @@ INSERT INTO "types" VALUES('name');
 INSERT INTO "types" VALUES('numeric');
 INSERT INTO "types" VALUES('text');
 CREATE TABLE templates (
-  template_id INTEGER PRIMARY KEY,
+  id INTEGER PRIMARY KEY,
   template_name TEXT UNIQUE NOT NULL COLLATE NOCASE,
 
-  created_at DATETIME NOT NULL DEFAULT current_timestamp,
-  updated_at DATETIME NOT NULL DEFAULT current_timestamp
+  FOREIGN KEY (id) REFERENCES items(id)
+    ON DELETE CASCADE
 ) WITHOUT ROWID;
+CREATE TABLE constraints (
+  id INTEGER NOT NULL,
+  field_name TEXT NOT NULL COLLATE NOCASE,
+  type_name TEXT NOT NULL COLLATE NOCASE,
+  definition,
+
+  PRIMARY KEY (id, field_name, type_name),
+  FOREIGN KEY (id) REFERENCES templates(id)
+    ON DELETE CASCADE,
+  FOREIGN KEY (field_name, type_name) REFERENCES fields(field_name, type_name)
+    ON DELETE CASCADE
+);
 CREATE TRIGGER insert_tags
   AFTER INSERT ON tags
   BEGIN
