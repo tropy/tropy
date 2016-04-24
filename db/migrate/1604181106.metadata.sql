@@ -9,7 +9,7 @@ CREATE TABLE metadata (
   PRIMARY KEY(id, field_name, type_name),
   UNIQUE(id, position),
 
-  FOREIGN KEY(id) REFERENCES objects(id)
+  FOREIGN KEY(id) REFERENCES subjects(id)
     ON DELETE CASCADE,
   FOREIGN KEY(field_name, type_name) REFERENCES fields(field_name, type_name)
     ON DELETE CASCADE

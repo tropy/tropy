@@ -24,7 +24,7 @@ CREATE TABLE archive (
   created_at DATETIME NOT NULL DEFAULT current_timestamp,
   opened_at DATETIME NOT NULL DEFAULT current_timestamp
 ) WITHOUT ROWID;
-CREATE TABLE objects (
+CREATE TABLE subjects (
   id INTEGER PRIMARY KEY,
   created_at DATETIME NOT NULL DEFAULT current_timestamp,
   updated_at DATETIME NOT NULL DEFAULT current_timestamp
@@ -33,14 +33,14 @@ CREATE TABLE images (
   id INTEGER PRIMARY KEY,
   width INTEGER NOT NULL DEFAULT 0,
   height INTEGER NOT NULL DEFAULT 0,
-  FOREIGN KEY(id) REFERENCES objects(id)
+  FOREIGN KEY(id) REFERENCES subjects(id)
     ON DELETE CASCADE
 ) WITHOUT ROWID;
 CREATE TABLE items (
   id INTEGER PRIMARY KEY,
   cover_image_id INTEGER,
 
-  FOREIGN KEY(id) REFERENCES objects(id)
+  FOREIGN KEY(id) REFERENCES subjects(id)
     ON DELETE CASCADE,
   FOREIGN KEY (cover_image_id) REFERENCES images(id)
     ON DELETE SET NULL
@@ -51,7 +51,7 @@ CREATE TABLE notes (
   created_at DATETIME NOT NULL DEFAULT current_timestamp,
   updated_at DATETIME NOT NULL DEFAULT current_timestamp
 );
-CREATE TABLE object_notes (
+CREATE TABLE subject_notes (
   id INTEGER,
   note_id INTEGER,
   position INTEGER NOT NULL DEFAULT 0,
@@ -59,7 +59,7 @@ CREATE TABLE object_notes (
   PRIMARY KEY(id, note_id),
   UNIQUE(id, note_id, position),
 
-  FOREIGN KEY(id) REFERENCES objects(id)
+  FOREIGN KEY(id) REFERENCES subjects(id)
     ON DELETE CASCADE,
   FOREIGN KEY(note_id) REFERENCES notes(note_id)
     ON DELETE CASCADE
@@ -95,14 +95,14 @@ CREATE TABLE tags (
 
   CHECK (tag_name <> '')
 );
-CREATE TABLE object_tags (
+CREATE TABLE subject_tags (
   id INTEGER,
   tag_name TEXT,
   tagged_at DATETIME NOT NULL DEFAULT current_timestamp,
 
   PRIMARY KEY(id, tag_name),
 
-  FOREIGN KEY(id) REFERENCES objects(id)
+  FOREIGN KEY(id) REFERENCES subjects(id)
     ON DELETE CASCADE,
   FOREIGN KEY(tag_name) REFERENCES tags(tag_name)
     ON DELETE CASCADE
@@ -112,7 +112,7 @@ CREATE TABLE trash (
   id INTEGER PRIMARY KEY,
   deleted_at DATETIME NOT NULL DEFAULT current_timestamp,
 
-  FOREIGN KEY (id) REFERENCES objects(id)
+  FOREIGN KEY (id) REFERENCES subjects(id)
     ON DELETE CASCADE
 ) WITHOUT ROWID;
 CREATE TABLE photos (
@@ -177,7 +177,7 @@ CREATE TABLE metadata (
   PRIMARY KEY(id, field_name, type_name),
   UNIQUE(id, position),
 
-  FOREIGN KEY(id) REFERENCES objects(id)
+  FOREIGN KEY(id) REFERENCES subjects(id)
     ON DELETE CASCADE,
   FOREIGN KEY(field_name, type_name) REFERENCES fields(field_name, type_name)
     ON DELETE CASCADE
