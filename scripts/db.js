@@ -17,7 +17,9 @@ const DB = join(home, 'db', 'db.sqlite')
 
 
 target.create = (args = []) => {
-  return create(args[0]).call('close')
+  return create(args[0])
+    .tap((db) => info(`created as ${db.path}`))
+    .call('close')
 }
 
 target.migrate = () => {
@@ -58,6 +60,11 @@ PRAGMA user_version=${version};
       return [Database.schema, version]
     })
 
+    .tap(([schema, version]) => {
+      info(`schema migrated to #${version}`)
+      info(`schema written to #${schema}`)
+    })
+
     .finally(() => db.close())
     .finally(() => rm(tmp))
 }
@@ -67,7 +74,7 @@ target.viz = (args = []) => {
   const pdf = args[1] || join(home, 'doc', 'db.pdf')
   const viz = join(home, 'node_modules', '.bin', 'sqleton')
 
-  assert(test('-f', sql), 'db not found: run `npm run db -- create`')
+  assert(test('-f', sql), `${sql} not found: run \`npm run db -- create\``)
   mkdir('-p', dirname(pdf))
 
   const db = new Database(sql)
@@ -86,6 +93,8 @@ target.viz = (args = []) => {
       return [pdf, v]
     })
 
+    .tap(() => info(`visual written to ${pdf}`))
+
     .finally(() => db.close())
 }
 
@@ -103,6 +112,12 @@ exports.up = function ${name}$up(tx) {
   content.to(join(Migration.root, file))
   info(`migration ${file} created...`)
 }
+
+target.all = () =>
+  target.migrate()
+    .then(() => target.create())
+    .then(() => target.viz())
+
 
 target.rules = () => {
   for (let rule in target) info(rule)
