@@ -4,8 +4,8 @@ CREATE TABLE archive (
   archive_id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   settings TEXT NOT NULL,
-  created_at DATETIME NOT NULL DEFAULT current_timestamp,
-  opened_at DATETIME NOT NULL DEFAULT current_timestamp
+  created_at NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  opened_at NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) WITHOUT ROWID;
 
 
@@ -14,8 +14,8 @@ CREATE TABLE archive (
 -- a row in the subjects table.
 CREATE TABLE subjects (
   id INTEGER PRIMARY KEY,
-  created_at DATETIME NOT NULL DEFAULT current_timestamp,
-  updated_at DATETIME NOT NULL DEFAULT current_timestamp
+  created_at NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -44,8 +44,8 @@ CREATE TABLE items (
 CREATE TABLE notes (
   note_id INTEGER PRIMARY KEY,
   text TEXT NOT NULL,
-  created_at DATETIME NOT NULL DEFAULT current_timestamp,
-  updated_at DATETIME NOT NULL DEFAULT current_timestamp
+  created_at NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE subject_notes (
@@ -68,8 +68,8 @@ CREATE TABLE lists (
   list_id INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
   parent_list_id INTEGER,
-  created_at DATETIME NOT NULL DEFAULT current_timestamp,
-  updated_at DATETIME NOT NULL DEFAULT current_timestamp,
+  created_at NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   FOREIGN KEY(parent_list_id) REFERENCES lists(list_id)
     ON DELETE CASCADE
@@ -94,8 +94,8 @@ CREATE TABLE list_items (
 CREATE TABLE tags (
   tag_name TEXT PRIMARY KEY COLLATE NOCASE,
   tag_color,
-  created_at DATETIME NOT NULL DEFAULT current_timestamp,
-  updated_at DATETIME NOT NULL DEFAULT current_timestamp,
+  created_at NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CHECK (tag_name <> '')
 );
@@ -103,7 +103,7 @@ CREATE TABLE tags (
 CREATE TABLE subject_tags (
   id INTEGER,
   tag_name TEXT,
-  tagged_at DATETIME NOT NULL DEFAULT current_timestamp,
+  tagged_at NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   PRIMARY KEY(id, tag_name),
 
@@ -117,7 +117,7 @@ CREATE TABLE subject_tags (
 
 CREATE TABLE trash (
   id INTEGER PRIMARY KEY,
-  deleted_at DATETIME NOT NULL DEFAULT current_timestamp,
+  deleted_at NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   FOREIGN KEY (id) REFERENCES subjects(id)
     ON DELETE CASCADE
