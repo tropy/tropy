@@ -120,7 +120,7 @@ class Database {
    * changes, as explained at https://www.sqlite.org/lang_altertable.html
    *
    *   1. Disable foreign keys
-   *   2. Start transaction
+   *   2. Start exclusive transaction
    *   3. fn
    *   4. Check foreign key constraints
    *   5. Commit or rollback transaction
@@ -129,7 +129,7 @@ class Database {
   migration(fn) {
     return this.seq(conn =>
         using(nofk(conn), conn =>
-          using(transaction(conn), tx =>
+          using(transaction(conn, 'EXCLUSIVE'), tx =>
             resolve(fn(tx)).then(() => tx.check()))))
   }
 
@@ -306,9 +306,9 @@ function nofk(conn) {
     .disposer(() => conn.configure({ foreign_keys: 'on' }))
 }
 
-function transaction(conn) {
+function transaction(conn, mode = 'IMMEDIATE') {
   return conn
-    .begin()
+    .begin(mode)
     .disposer((tx, p) => p.isFulfilled() ? tx.commit() : tx.rollback())
 }
 
