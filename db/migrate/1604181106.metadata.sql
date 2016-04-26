@@ -1,43 +1,39 @@
 CREATE TABLE metadata (
-  id INTEGER NOT NULL,
-  property_id TEXT NOT NULL,
-  position INTEGER NOT NULL DEFAULT 0,
-  value,
-  language_code TEXT COLLATE NOCASE,
+  metadata_id  INTEGER  PRIMARY KEY,
+  id           INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
+  property_id  TEXT     NOT NULL REFERENCES properties,
+  value_id     INTEGER  NOT NULL REFERENCES metadata_values,
+  position     INTEGER  NOT NULL DEFAULT 0,
 
-  PRIMARY KEY(id, property_id),
-  UNIQUE(id, position),
+  UNIQUE (id, position)
 
-  FOREIGN KEY(id) REFERENCES subjects(id)
-    ON DELETE CASCADE,
-  FOREIGN KEY(property_id) REFERENCES properties(property_id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  FOREIGN KEY (language_code) REFERENCES languages(language_code)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
-) WITHOUT ROWID;
+);
+
+CREATE TABLE metadata_values (
+  value_id       INTEGER  NOT NULL PRIMARY KEY,
+  value                   NOT NULL,
+  language_code  TEXT     COLLATE NOCASE REFERENCES languages,
+
+  UNIQUE (value, language_code)
+);
 
 CREATE TABLE properties (
-  property_id TEXT NOT NULL PRIMARY KEY,
-  property_name TEXT NOT NULL COLLATE NOCASE,
-  type_id TEXT NOT NULL,
-
-  FOREIGN KEY(type_id) REFERENCES types(type_id)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE
-) WITHOUT ROWID;
+  property_id    TEXT  NOT NULL PRIMARY KEY,
+  property_name  TEXT  NOT NULL COLLATE NOCASE,
+  type_name      TEXT  NOT NULL COLLATE NOCASE REFERENCES types
+);
 
 CREATE TABLE types (
-  type_id TEXT NOT NULL PRIMARY KEY,
-  type_name TEXT NOT NULL COLLATE NOCASE
+  type_name    TEXT  NOT NULL COLLATE NOCASE PRIMARY KEY,
+  type_schema  TEXT  NOT NULL UNIQUE
 ) WITHOUT ROWID;
 
-INSERT INTO types (type_id, type_name) VALUES
-  ('https://schema.org/Text', 'Text'),
-  ('https://schema.org/DateTime', 'DateTime'),
-  ('https://schema.org/Boolean', 'Boolean'),
-  ('https://schema.org/Number', 'Number');
+INSERT INTO types (type_name, type_schema) VALUES
+  ('text', 'https://schema.org/Text'),
+  ('datetime', 'https://schema.trop.io/datetime'),
+  ('name', 'https://schema.trop.io/name'),
+  ('boolean', 'https://schema.org/Boolean'),
+  ('number', 'https://schema.org/Number');
 
 
 
@@ -52,7 +48,7 @@ CREATE TABLE templates (
 --CREATE TABLE constraints (
 --  template_id INTEGER NOT NULL,
 --  property_id TEXT NOT NULL COLLATE NOCASE,
---  type_name TEXT NOT NULL COLLATE NOCASE,
+--  type_name TEXT NOT NULL 
 --  definition,
 --
 --  PRIMARY KEY (id, predicate_name, type_name),
@@ -62,8 +58,3 @@ CREATE TABLE templates (
 --    ON DELETE CASCADE
 --);
 
-CREATE TABLE languages (
-  language_code TEXT NOT NULL COLLATE NOCASE PRIMARY KEY
-) WITHOUT ROWID;
-
-INSERT INTO languages (language_code) VALUES ('en');
