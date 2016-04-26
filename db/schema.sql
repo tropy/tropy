@@ -43,7 +43,7 @@ CREATE TABLE notes (
   sid         INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   position    INTEGER  NOT NULL DEFAULT 0,
   text        TEXT     NOT NULL,
-  language    TEXT     COLLATE NOCASE REFERENCES languages,
+  language    TEXT     NOT NULL DEFAULT 'en' REFERENCES languages,
   created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -85,7 +85,10 @@ CREATE TABLE trash (
   deleted_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) WITHOUT ROWID;
 CREATE TABLE languages (
-  language TEXT NOT NULL COLLATE NOCASE PRIMARY KEY
+  language TEXT NOT NULL PRIMARY KEY,
+
+  CHECK (language != ''),
+  CHECK (language = trim(lower(language)))
 ) WITHOUT ROWID;
 INSERT INTO "languages" VALUES('aa');
 INSERT INTO "languages" VALUES('ab');
@@ -309,7 +312,7 @@ CREATE TABLE metadata (
 CREATE TABLE metadata_values (
   value_id  INTEGER  NOT NULL PRIMARY KEY,
   value              NOT NULL,
-  language  TEXT     COLLATE NOCASE REFERENCES languages,
+  language  TEXT     REFERENCES languages,
 
   UNIQUE (value, language)
 );

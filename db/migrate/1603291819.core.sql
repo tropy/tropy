@@ -38,7 +38,7 @@ CREATE TABLE notes (
   sid         INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   position    INTEGER  NOT NULL DEFAULT 0,
   text        TEXT     NOT NULL,
-  language    TEXT     COLLATE NOCASE REFERENCES languages,
+  language    TEXT     NOT NULL DEFAULT 'en' REFERENCES languages,
   created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

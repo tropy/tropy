@@ -1,5 +1,8 @@
 CREATE TABLE languages (
-  language TEXT NOT NULL COLLATE NOCASE PRIMARY KEY
+  language TEXT NOT NULL PRIMARY KEY,
+
+  CHECK (language != ''),
+  CHECK (language = trim(lower(language)))
 ) WITHOUT ROWID;
 
 

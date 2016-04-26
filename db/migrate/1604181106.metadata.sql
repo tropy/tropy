@@ -12,7 +12,7 @@ CREATE TABLE metadata (
 CREATE TABLE metadata_values (
   value_id  INTEGER  NOT NULL PRIMARY KEY,
   value              NOT NULL,
-  language  TEXT     COLLATE NOCASE REFERENCES languages,
+  language  TEXT     REFERENCES languages,
 
   UNIQUE (value, language)
 );
