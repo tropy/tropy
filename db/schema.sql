@@ -20,34 +20,34 @@ BEGIN TRANSACTION;
 CREATE TABLE archive (
   archive_id  TEXT     NOT NULL PRIMARY KEY,
   name        TEXT     NOT NULL,
-  settings    TEXT     NOT NULL,
+  settings             NOT NULL,
   created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   opened_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) WITHOUT ROWID;
 CREATE TABLE subjects (
-  id          INTEGER  PRIMARY KEY,
+  sid         INTEGER  PRIMARY KEY,
   created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE images (
-  id      INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
+  sid     INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   width   INTEGER  NOT NULL DEFAULT 0,
   height  INTEGER  NOT NULL DEFAULT 0
 ) WITHOUT ROWID;
 CREATE TABLE items (
-  id              INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
+  sid             INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   cover_image_id  INTEGER  REFERENCES images ON DELETE SET NULL
 ) WITHOUT ROWID;
 CREATE TABLE notes (
-  note_id        INTEGER  PRIMARY KEY,
-  id             INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
-  position       INTEGER  NOT NULL DEFAULT 0,
-  text           TEXT     NOT NULL,
-  language_code  TEXT     COLLATE NOCASE REFERENCES languages,
-  created_at     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  note_id     INTEGER  PRIMARY KEY,
+  sid         INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
+  position    INTEGER  NOT NULL DEFAULT 0,
+  text        TEXT     NOT NULL,
+  language    TEXT     COLLATE NOCASE REFERENCES languages,
+  created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  UNIQUE (id, position)
+  UNIQUE (sid, position)
 );
 CREATE TABLE lists (
   list_id         INTEGER  PRIMARY KEY,
@@ -57,12 +57,12 @@ CREATE TABLE lists (
   updated_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE list_items (
-  id       INTEGER REFERENCES items ON DELETE CASCADE,
+  sid      INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
   position INTEGER NOT NULL DEFAULT 0,
 
-  PRIMARY KEY (id, list_id),
-  UNIQUE (id, list_id, position)
+  PRIMARY KEY (sid, list_id),
+  UNIQUE (sid, list_id, position)
 ) WITHOUT ROWID;
 CREATE TABLE tags (
   tag_name    TEXT     NOT NULL PRIMARY KEY COLLATE NOCASE,
@@ -71,21 +71,21 @@ CREATE TABLE tags (
   updated_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CHECK (tag_name <> '')
-);
-CREATE TABLE subject_tags (
-  id         INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
+) WITHOUT ROWID;
+CREATE TABLE taggings (
+  sid        INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   tag_name   TEXT     NOT NULL COLLATE NOCASE
                       REFERENCES tags ON DELETE CASCADE ON UPDATE CASCADE,
   tagged_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  PRIMARY KEY(id, tag_name)
+  PRIMARY KEY (sid, tag_name)
 ) WITHOUT ROWID;
 CREATE TABLE trash (
-  id          INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
+  sid         INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   deleted_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) WITHOUT ROWID;
 CREATE TABLE languages (
-  language_code TEXT NOT NULL COLLATE NOCASE PRIMARY KEY
+  language TEXT NOT NULL COLLATE NOCASE PRIMARY KEY
 ) WITHOUT ROWID;
 INSERT INTO "languages" VALUES('aa');
 INSERT INTO "languages" VALUES('ab');
@@ -260,51 +260,37 @@ INSERT INTO "languages" VALUES('za');
 INSERT INTO "languages" VALUES('zh');
 INSERT INTO "languages" VALUES('zu');
 CREATE TABLE photos (
-  id INTEGER PRIMARY KEY,
-  item_id INTEGER NOT NULL,
-
-  path TEXT NOT NULL,
-  protocol TEXT NOT NULL DEFAULT 'file',
-  mimetype TEXT NOT NULL,
-  checksum TEXT NOT NULL,
-  orientation INTEGER NOT NULL DEFAULT 1,
-  exif TEXT,
-
-  FOREIGN KEY (id) REFERENCES images(id) ON DELETE CASCADE,
-  FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
+  sid          INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
+  item_id      INTEGER  NOT NULL REFERENCES items ON DELETE CASCADE,
+  path         TEXT     NOT NULL,
+  protocol     TEXT     NOT NULL DEFAULT 'file',
+  mimetype     TEXT     NOT NULL,
+  checksum     TEXT     NOT NULL,
+  orientation  INTEGER  NOT NULL DEFAULT 1,
+  exif
 ) WITHOUT ROWID;
 CREATE TABLE selections (
-  id INTEGER PRIMARY KEY,
-  photo_id INTEGER NOT NULL,
-
-  quality TEXT NOT NULL DEFAULT 'default',
-
-  x NUMERIC NOT NULL DEFAULT 0,
-  y NUMERIC NOT NULL DEFAULT 0,
-  pct BOOLEAN NOT NULL DEFAULT FALSE,
-
-  FOREIGN KEY (id) REFERENCES images(id) ON DELETE CASCADE,
-  FOREIGN KEY (photo_id) REFERENCES photos(id) ON DELETE CASCADE,
-  FOREIGN KEY(quality) REFERENCES image_qualities(quality)
-    ON UPDATE CASCADE
-    ON DELETE SET DEFAULT
+  sid       INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
+  photo_id  INTEGER  NOT NULL REFERENCES photos ON DELETE CASCADE,
+  quality   TEXT     NOT NULL DEFAULT 'default' REFERENCES image_qualities,
+  x         NUMERIC  NOT NULL DEFAULT 0,
+  y         NUMERIC  NOT NULL DEFAULT 0,
+  pct       BOOLEAN  NOT NULL DEFAULT FALSE
 ) WITHOUT ROWID;
 CREATE TABLE image_scales (
-  id INTEGER PRIMARY KEY,
-  x NUMERIC,
-  y NUMERIC,
-  factor NUMERIC,
-  fit BOOLEAN NOT NULL DEFAULT FALSE,
-  FOREIGN KEY (id) REFERENCES selections(id) ON DELETE CASCADE
+  sid     INTEGER  PRIMARY KEY REFERENCES selections ON DELETE CASCADE,
+  x       NUMERIC  NOT NULL DEFAULT 0,
+  y       NUMERIC  NOT NULL DEFAULT 0,
+  factor  NUMERIC  NOT NULL,
+  fit     BOOLEAN  NOT NULL DEFAULT FALSE
 ) WITHOUT ROWID;
 CREATE TABLE image_rotations (
-  id INTEGER PRIMARY KEY,
-  angle NUMERIC,
-  mirror BOOLEAN NOT NULL DEFAULT FALSE,
-  FOREIGN KEY (id) REFERENCES selections(id) ON DELETE CASCADE
+  sid     INTEGER  PRIMARY KEY REFERENCES selections ON DELETE CASCADE,
+  angle   NUMERIC  NOT NULL DEFAULT 0,
+  mirror  BOOLEAN  NOT NULL DEFAULT FALSE
 ) WITHOUT ROWID;
 CREATE TABLE image_qualities (
-  quality TEXT PRIMARY KEY
+  quality  TEXT  NOT NULL PRIMARY KEY
 ) WITHOUT ROWID;
 INSERT INTO "image_qualities" VALUES('bitonal');
 INSERT INTO "image_qualities" VALUES('color');
@@ -312,20 +298,20 @@ INSERT INTO "image_qualities" VALUES('default');
 INSERT INTO "image_qualities" VALUES('gray');
 CREATE TABLE metadata (
   metadata_id  INTEGER  PRIMARY KEY,
-  id           INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
+  sid          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   property_id  TEXT     NOT NULL REFERENCES properties,
   value_id     INTEGER  NOT NULL REFERENCES metadata_values,
   position     INTEGER  NOT NULL DEFAULT 0,
 
-  UNIQUE (id, position)
+  UNIQUE (sid, position)
 
 );
 CREATE TABLE metadata_values (
-  value_id       INTEGER  NOT NULL PRIMARY KEY,
-  value                   NOT NULL,
-  language_code  TEXT     COLLATE NOCASE REFERENCES languages,
+  value_id  INTEGER  NOT NULL PRIMARY KEY,
+  value              NOT NULL,
+  language  TEXT     COLLATE NOCASE REFERENCES languages,
 
-  UNIQUE (value, language_code)
+  UNIQUE (value, language)
 );
 CREATE TABLE properties (
   property_id    TEXT  NOT NULL PRIMARY KEY,

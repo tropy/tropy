@@ -1,9 +1,9 @@
 CREATE TABLE languages (
-  language_code TEXT NOT NULL COLLATE NOCASE PRIMARY KEY
+  language TEXT NOT NULL COLLATE NOCASE PRIMARY KEY
 ) WITHOUT ROWID;
 
 
-INSERT INTO languages (language_code) VALUES
+INSERT INTO languages (language) VALUES
   ('aa'), ('ab'), ('ae'), ('af'), ('am'), ('an'), ('ar'), ('as'), ('ay'),
   ('az'), ('ba'), ('be'), ('bg'), ('bh'), ('bi'), ('bn'), ('bo'), ('br'),
   ('bs'), ('ca'), ('ce'), ('ch'), ('co'), ('cs'), ('cu'), ('cv'), ('cy'),

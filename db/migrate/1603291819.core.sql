@@ -3,17 +3,17 @@
 CREATE TABLE archive (
   archive_id  TEXT     NOT NULL PRIMARY KEY,
   name        TEXT     NOT NULL,
-  settings    TEXT     NOT NULL,
+  settings             NOT NULL,
   created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   opened_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) WITHOUT ROWID;
 
 
 -- Metatable for items, photos, and selections.
--- A field `id` in the database always references
+-- A field `sid` in the database always references
 -- a row in the subjects table.
 CREATE TABLE subjects (
-  id          INTEGER  PRIMARY KEY,
+  sid         INTEGER  PRIMARY KEY,
   created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -21,28 +21,28 @@ CREATE TABLE subjects (
 
 -- Metatable for photos and selections.
 CREATE TABLE images (
-  id      INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
+  sid     INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   width   INTEGER  NOT NULL DEFAULT 0,
   height  INTEGER  NOT NULL DEFAULT 0
 ) WITHOUT ROWID;
 
 
 CREATE TABLE items (
-  id              INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
+  sid             INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   cover_image_id  INTEGER  REFERENCES images ON DELETE SET NULL
 ) WITHOUT ROWID;
 
 
 CREATE TABLE notes (
-  note_id        INTEGER  PRIMARY KEY,
-  id             INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
-  position       INTEGER  NOT NULL DEFAULT 0,
-  text           TEXT     NOT NULL,
-  language_code  TEXT     COLLATE NOCASE REFERENCES languages,
-  created_at     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  note_id     INTEGER  PRIMARY KEY,
+  sid         INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
+  position    INTEGER  NOT NULL DEFAULT 0,
+  text        TEXT     NOT NULL,
+  language    TEXT     COLLATE NOCASE REFERENCES languages,
+  created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  UNIQUE (id, position)
+  UNIQUE (sid, position)
 );
 
 
@@ -55,12 +55,12 @@ CREATE TABLE lists (
 );
 
 CREATE TABLE list_items (
-  id       INTEGER REFERENCES items ON DELETE CASCADE,
+  sid      INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
   position INTEGER NOT NULL DEFAULT 0,
 
-  PRIMARY KEY (id, list_id),
-  UNIQUE (id, list_id, position)
+  PRIMARY KEY (sid, list_id),
+  UNIQUE (sid, list_id, position)
 ) WITHOUT ROWID;
 
 
@@ -71,19 +71,19 @@ CREATE TABLE tags (
   updated_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CHECK (tag_name <> '')
-);
+) WITHOUT ROWID;
 
-CREATE TABLE subject_tags (
-  id         INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
+CREATE TABLE taggings (
+  sid        INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   tag_name   TEXT     NOT NULL COLLATE NOCASE
                       REFERENCES tags ON DELETE CASCADE ON UPDATE CASCADE,
   tagged_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  PRIMARY KEY(id, tag_name)
+  PRIMARY KEY (sid, tag_name)
 ) WITHOUT ROWID;
 
 
 CREATE TABLE trash (
-  id          INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
+  sid         INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   deleted_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) WITHOUT ROWID;

@@ -1,20 +1,20 @@
 CREATE TABLE metadata (
   metadata_id  INTEGER  PRIMARY KEY,
-  id           INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
+  sid          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   property_id  TEXT     NOT NULL REFERENCES properties,
   value_id     INTEGER  NOT NULL REFERENCES metadata_values,
   position     INTEGER  NOT NULL DEFAULT 0,
 
-  UNIQUE (id, position)
+  UNIQUE (sid, position)
 
 );
 
 CREATE TABLE metadata_values (
-  value_id       INTEGER  NOT NULL PRIMARY KEY,
-  value                   NOT NULL,
-  language_code  TEXT     COLLATE NOCASE REFERENCES languages,
+  value_id  INTEGER  NOT NULL PRIMARY KEY,
+  value              NOT NULL,
+  language  TEXT     COLLATE NOCASE REFERENCES languages,
 
-  UNIQUE (value, language_code)
+  UNIQUE (value, language)
 );
 
 CREATE TABLE properties (
