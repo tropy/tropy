@@ -3,9 +3,12 @@
 CREATE TABLE archive (
   archive_id  TEXT     NOT NULL PRIMARY KEY,
   name        TEXT     NOT NULL,
-  settings             NOT NULL,
+  settings             NOT NULL DEFAULT '{}',
   created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  opened_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
+  opened_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  CHECK (archive_id != ''),
+  CHECK (name != '')
 ) WITHOUT ROWID;
 
 
@@ -31,6 +34,25 @@ CREATE TABLE items (
   sid             INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   cover_image_id  INTEGER  REFERENCES images ON DELETE SET NULL
 ) WITHOUT ROWID;
+
+
+CREATE TABLE metadata (
+  metadata_id  INTEGER  PRIMARY KEY,
+  sid          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
+  property_id  TEXT     NOT NULL REFERENCES properties,
+  value_id     INTEGER  NOT NULL REFERENCES metadata_values,
+  position     INTEGER  NOT NULL DEFAULT 0,
+
+  UNIQUE (sid, position)
+);
+
+CREATE TABLE metadata_values (
+  value_id  INTEGER  NOT NULL PRIMARY KEY,
+  value              NOT NULL,
+  language  TEXT     REFERENCES languages,
+
+  UNIQUE (value, language)
+);
 
 
 CREATE TABLE notes (

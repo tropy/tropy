@@ -12,17 +12,59 @@
 --
 
 -- Save the current migration number
-PRAGMA user_version=1604191233;
+PRAGMA user_version=1604261942;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
+CREATE TABLE properties (
+  property_id    TEXT  NOT NULL PRIMARY KEY,
+  property_name  TEXT  NOT NULL COLLATE NOCASE,
+  type_name      TEXT  NOT NULL COLLATE NOCASE REFERENCES types
+
+  CHECK (property_id != ''),
+  CHECK (property_name != '')
+);
+CREATE TABLE types (
+  type_name    TEXT  NOT NULL COLLATE NOCASE PRIMARY KEY,
+  type_schema  TEXT  NOT NULL UNIQUE
+
+  CHECK (type_name != ''),
+  CHECK (type_schema != '')
+) WITHOUT ROWID;
+INSERT INTO "types" VALUES('boolean','https://schema.org/Boolean');
+INSERT INTO "types" VALUES('number','https://schema.org/Number');
+INSERT INTO "types" VALUES('text','https://schema.org/Text');
+INSERT INTO "types" VALUES('datetime','https://schema.trop.io/datetime');
+INSERT INTO "types" VALUES('name','https://schema.trop.io/name');
+CREATE TABLE templates (
+  template_id    TEXT     NOT NULL PRIMARY KEY,
+  template_name  TEXT     NOT NULL COLLATE NOCASE,
+  created_at     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  CHECK (template_id != ''),
+  CHECK (template_name != '')
+) WITHOUT ROWID;
+CREATE TABLE template_data (
+  template_id    TEXT     NOT NULL REFERENCES templates ON DELETE CASCADE,
+  property_id    TEXT     NOT NULL REFERENCES properties,
+  position       INTEGER  NOT NULL DEFAULT 0,
+  default_value,
+  constraints,
+
+  PRIMARY KEY (template_id, property_id),
+  UNIQUE (template_id, position)
+);
 CREATE TABLE archive (
   archive_id  TEXT     NOT NULL PRIMARY KEY,
   name        TEXT     NOT NULL,
-  settings             NOT NULL,
+  settings             NOT NULL DEFAULT '{}',
   created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  opened_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
+  opened_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  CHECK (archive_id != ''),
+  CHECK (name != '')
 ) WITHOUT ROWID;
 CREATE TABLE subjects (
   sid         INTEGER  PRIMARY KEY,
@@ -38,6 +80,22 @@ CREATE TABLE items (
   sid             INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   cover_image_id  INTEGER  REFERENCES images ON DELETE SET NULL
 ) WITHOUT ROWID;
+CREATE TABLE metadata (
+  metadata_id  INTEGER  PRIMARY KEY,
+  sid          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
+  property_id  TEXT     NOT NULL REFERENCES properties,
+  value_id     INTEGER  NOT NULL REFERENCES metadata_values,
+  position     INTEGER  NOT NULL DEFAULT 0,
+
+  UNIQUE (sid, position)
+);
+CREATE TABLE metadata_values (
+  value_id  INTEGER  NOT NULL PRIMARY KEY,
+  value              NOT NULL,
+  language  TEXT     REFERENCES languages,
+
+  UNIQUE (value, language)
+);
 CREATE TABLE notes (
   note_id     INTEGER  PRIMARY KEY,
   sid         INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
@@ -84,6 +142,43 @@ CREATE TABLE trash (
   sid         INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   deleted_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) WITHOUT ROWID;
+CREATE TABLE photos (
+  sid          INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
+  item_id      INTEGER  NOT NULL REFERENCES items ON DELETE CASCADE,
+  path         TEXT     NOT NULL,
+  protocol     TEXT     NOT NULL DEFAULT 'file',
+  mimetype     TEXT     NOT NULL,
+  checksum     TEXT     NOT NULL,
+  orientation  INTEGER  NOT NULL DEFAULT 1,
+  exif
+) WITHOUT ROWID;
+CREATE TABLE selections (
+  sid       INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
+  photo_id  INTEGER  NOT NULL REFERENCES photos ON DELETE CASCADE,
+  quality   TEXT     NOT NULL DEFAULT 'default' REFERENCES image_qualities,
+  x         NUMERIC  NOT NULL DEFAULT 0,
+  y         NUMERIC  NOT NULL DEFAULT 0,
+  pct       BOOLEAN  NOT NULL DEFAULT FALSE
+) WITHOUT ROWID;
+CREATE TABLE image_scales (
+  sid     INTEGER  PRIMARY KEY REFERENCES selections ON DELETE CASCADE,
+  x       NUMERIC  NOT NULL DEFAULT 0,
+  y       NUMERIC  NOT NULL DEFAULT 0,
+  factor  NUMERIC  NOT NULL,
+  fit     BOOLEAN  NOT NULL DEFAULT FALSE
+) WITHOUT ROWID;
+CREATE TABLE image_rotations (
+  sid     INTEGER  PRIMARY KEY REFERENCES selections ON DELETE CASCADE,
+  angle   NUMERIC  NOT NULL DEFAULT 0,
+  mirror  BOOLEAN  NOT NULL DEFAULT FALSE
+) WITHOUT ROWID;
+CREATE TABLE image_qualities (
+  quality  TEXT  NOT NULL PRIMARY KEY
+) WITHOUT ROWID;
+INSERT INTO "image_qualities" VALUES('bitonal');
+INSERT INTO "image_qualities" VALUES('color');
+INSERT INTO "image_qualities" VALUES('default');
+INSERT INTO "image_qualities" VALUES('gray');
 CREATE TABLE languages (
   language TEXT NOT NULL PRIMARY KEY,
 
@@ -262,81 +357,6 @@ INSERT INTO "languages" VALUES('yo');
 INSERT INTO "languages" VALUES('za');
 INSERT INTO "languages" VALUES('zh');
 INSERT INTO "languages" VALUES('zu');
-CREATE TABLE photos (
-  sid          INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
-  item_id      INTEGER  NOT NULL REFERENCES items ON DELETE CASCADE,
-  path         TEXT     NOT NULL,
-  protocol     TEXT     NOT NULL DEFAULT 'file',
-  mimetype     TEXT     NOT NULL,
-  checksum     TEXT     NOT NULL,
-  orientation  INTEGER  NOT NULL DEFAULT 1,
-  exif
-) WITHOUT ROWID;
-CREATE TABLE selections (
-  sid       INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
-  photo_id  INTEGER  NOT NULL REFERENCES photos ON DELETE CASCADE,
-  quality   TEXT     NOT NULL DEFAULT 'default' REFERENCES image_qualities,
-  x         NUMERIC  NOT NULL DEFAULT 0,
-  y         NUMERIC  NOT NULL DEFAULT 0,
-  pct       BOOLEAN  NOT NULL DEFAULT FALSE
-) WITHOUT ROWID;
-CREATE TABLE image_scales (
-  sid     INTEGER  PRIMARY KEY REFERENCES selections ON DELETE CASCADE,
-  x       NUMERIC  NOT NULL DEFAULT 0,
-  y       NUMERIC  NOT NULL DEFAULT 0,
-  factor  NUMERIC  NOT NULL,
-  fit     BOOLEAN  NOT NULL DEFAULT FALSE
-) WITHOUT ROWID;
-CREATE TABLE image_rotations (
-  sid     INTEGER  PRIMARY KEY REFERENCES selections ON DELETE CASCADE,
-  angle   NUMERIC  NOT NULL DEFAULT 0,
-  mirror  BOOLEAN  NOT NULL DEFAULT FALSE
-) WITHOUT ROWID;
-CREATE TABLE image_qualities (
-  quality  TEXT  NOT NULL PRIMARY KEY
-) WITHOUT ROWID;
-INSERT INTO "image_qualities" VALUES('bitonal');
-INSERT INTO "image_qualities" VALUES('color');
-INSERT INTO "image_qualities" VALUES('default');
-INSERT INTO "image_qualities" VALUES('gray');
-CREATE TABLE metadata (
-  metadata_id  INTEGER  PRIMARY KEY,
-  sid          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
-  property_id  TEXT     NOT NULL REFERENCES properties,
-  value_id     INTEGER  NOT NULL REFERENCES metadata_values,
-  position     INTEGER  NOT NULL DEFAULT 0,
-
-  UNIQUE (sid, position)
-
-);
-CREATE TABLE metadata_values (
-  value_id  INTEGER  NOT NULL PRIMARY KEY,
-  value              NOT NULL,
-  language  TEXT     REFERENCES languages,
-
-  UNIQUE (value, language)
-);
-CREATE TABLE properties (
-  property_id    TEXT  NOT NULL PRIMARY KEY,
-  property_name  TEXT  NOT NULL COLLATE NOCASE,
-  type_name      TEXT  NOT NULL COLLATE NOCASE REFERENCES types
-);
-CREATE TABLE types (
-  type_name    TEXT  NOT NULL COLLATE NOCASE PRIMARY KEY,
-  type_schema  TEXT  NOT NULL UNIQUE
-) WITHOUT ROWID;
-INSERT INTO "types" VALUES('boolean','https://schema.org/Boolean');
-INSERT INTO "types" VALUES('number','https://schema.org/Number');
-INSERT INTO "types" VALUES('text','https://schema.org/Text');
-INSERT INTO "types" VALUES('datetime','https://schema.trop.io/datetime');
-INSERT INTO "types" VALUES('name','https://schema.trop.io/name');
-CREATE TABLE templates (
-  template_id TEXT NOT NULL PRIMARY KEY,
-  template_name TEXT NOT NULL COLLATE NOCASE,
-
-  created_at NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at NUMERIC NOT NULL DEFAULT CURRENT_TIMESTAMP
-) WITHOUT ROWID;
 CREATE TRIGGER insert_tags
   AFTER INSERT ON tags
   BEGIN
