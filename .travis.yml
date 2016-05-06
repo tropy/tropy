@@ -36,7 +36,7 @@ before_install:
     fi
   - git -C $NVM pull origin master
   - git -C $NVM checkout `git -C $NVM describe --abbrev=0 --tags`
-  - source $NVM/nvm.sh
+  - source $NVM/nvm.sh || true
   - nvm install
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
       export CXX="clang++-3.5";
