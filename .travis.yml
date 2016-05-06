@@ -35,7 +35,7 @@ before_install:
       git clone https://github.com/creationix/nvm.git $NVM;
     fi
   - git -C $NVM pull origin master
-  - git -C $NVM checkout `git -C $NVM describe --abbrev=0 --tags`
+  - git -C $NVM checkout -f `git -C $NVM describe --abbrev=0 --tags`
   - source $NVM/nvm.sh || true
   - nvm install
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
