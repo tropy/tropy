@@ -1,11 +1,14 @@
 'use strict'
 
 const { app, BrowserWindow } = require('electron')
-const { resolve } = require('path')
+const { resolve, join } = require('path')
 const { format } = require('url')
 const { assign } = Object
 
 const root = resolve(__dirname, '..', '..', 'static')
+
+const channel = process.env.NODE_ENV === 'production' ? 'stable' : 'dev'
+const icons = resolve(__dirname, '..', '..', 'res', 'icons', channel)
 
 
 class Window extends BrowserWindow {
@@ -14,6 +17,8 @@ class Window extends BrowserWindow {
       title: app.getName(),
       show: false,
       overlayScrollbars: true,
+      icon: (process.platform === 'linux') ?
+        join(icons, 'tropy.png') : undefined,
       webPreferences: {
         preload: resolve(__dirname, '..', 'bootstrap.js')
       }

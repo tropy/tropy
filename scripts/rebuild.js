@@ -2,13 +2,13 @@
 
 require('shelljs/make')
 
-const path = require('path')
 const entries = require('object.entries')
 const log = require('./log')
 const say = msg => log.info(msg, { tag: 'rebuild' })
+const { join, resolve } = require('path')
 
-const home = path.resolve(__dirname, '..')
-const mods = path.join(home, 'node_modules')
+const home = resolve(__dirname, '..')
+const mods = join(home, 'node_modules')
 
 const ELECTRON = v('electron-prebuilt').split('.')
 const HEADERS = 'https://atom.io/download/atom-shell'
@@ -21,14 +21,14 @@ const CONFIG = [
 
 
 target.all = (args) => {
-  target['sqlite3'](args)
+  target.sqlite3(args)
 }
 
 target.headers = () => {
   exec(`node-gyp install --dist-url=${HEADERS} ${CONFIG.join(' ')}`)
 }
 
-target['sqlite3'] = (force) => {
+target.sqlite3 = (force) => {
   const mod = 'sqlite3'
 
   if (force || check(mod)) {
@@ -57,11 +57,11 @@ target['sqlite3'] = (force) => {
 
 
 function check(mod) {
-  return !test('-d', path.join(binding(mod)))
+  return !test('-d', join(binding(mod)))
 }
 
 function binding(mod, platform, arch) {
-  return path.join(mods, mod, 'lib', 'binding', [
+  return join(mods, mod, 'lib', 'binding', [
     'electron',
     `v${ELECTRON.slice(0, 2).join('.')}`,
     platform || process.platform,

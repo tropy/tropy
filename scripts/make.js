@@ -15,6 +15,7 @@ const nbin = path.join(home, 'node_modules', '.bin')
 const doc = path.join(home, 'doc')
 const cov = path.join(home, 'coverage')
 const scov = path.join(home, 'src-cov')
+const icons = path.join(home, 'res', 'icons', 'dev')
 
 const emocha = path.join(nbin, 'electron-mocha')
 const lint = path.join(nbin, 'eslint')
@@ -148,6 +149,14 @@ target.link = () => {
 
 target.unlink = () => {
   rm('-f', path.join(resources, 'app'))
+}
+
+target.icon = () => {
+  switch (process.platform) {
+    case 'darwin':
+      mv(path.join(icons, 'tropy.icns', path.join(resources, 'electron.icns')))
+      break
+  }
 }
 
 
