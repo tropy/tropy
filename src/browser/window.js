@@ -18,7 +18,7 @@ class Window extends BrowserWindow {
       show: false,
       overlayScrollbars: true,
       icon: (process.platform === 'linux') ?
-        join(icons, 'tropy.png') : undefined,
+        join(icons, 'tropy', '512.png') : undefined,
       webPreferences: {
         preload: resolve(__dirname, '..', 'bootstrap.js')
       }
