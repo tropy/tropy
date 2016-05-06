@@ -4,34 +4,51 @@ require('shelljs/make')
 
 const packager = require('electron-packager')
 const pkg = require('../package')
-const path = require('path')
 const log = require('./log')
 
-const home = path.resolve(__dirname, '..')
+const { join, resolve } = require('path')
+
+const dir = resolve(__dirname, '..')
 const electron = require('electron-prebuilt/package')
 
 target.all = () => {
   target.pack()
 }
 
-target.pack = (args) => {
+target.pack = (args = []) => {
   const tag = 'pack'
-  args = args || ['all', 'all']
+
+  const channel = args[0] || 'dev'
+  const platform = args[1] || process.platform
+  const arch = args[2] || process.arch
+
+  const icon = platform === 'win32' ?
+    join(dir, 'res', 'icons', channel, `${pkg.name}.ico`) :
+    join(dir, 'res', 'icons', channel, `${pkg.name}.icns`)
+
+  const out = join(dir, 'dist', channel)
 
   packager({ // eslint-disable-line quote-props
-    dir: home,
-    out: path.join(home, 'dist'),
+    platform, arch, icon, out, dir,
+
     name: pkg.productName,
-    platform: args[0],
-    arch: args[1],
-    version: electron.version,
     asar: true,
-    'app-version': pkg.version,
     prune: true,
     overwrite: true,
+
+    'version': electron.version,
+    'build-version': '',  // use git describe
+    'app-version': pkg.version,
+    'app-copyright':
+      `Copyright (c) 2015-${new Date().getFullYear()} ${pkg.author.name}. ` +
+      'All rights not expressly granted are reserved.',
+
     ignore: [
       '/node_modules/.bin',
       '/dist',
+      '/doc',
+      '/coverage',
+      '/tmp',
       '/src',
       '/test',
       '/scripts'
@@ -39,8 +56,19 @@ target.pack = (args) => {
 
   }, (err, dst) => {
     if (err) return log.error(err)
-    log.info('%s package written to %s', args[0], dst, { tag })
+    log.info(`saved to ${dst}`, { tag })
+
+    switch (platform) {
+      case 'linux':
+        rename(String(dst), pkg.productName, pkg.name)
+        log.info('renamed executable', { tag })
+        break
+    }
   })
+}
+
+function rename(ctx, from, to) {
+  mv(join(ctx, from), join(ctx, to))
 }
 
 exports.package = target.pack

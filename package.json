@@ -15,18 +15,19 @@
   },
   "keywords": [],
   "author": {
-    "name": "Roy Rosenzweig Center for History and New Media",
+    "name": "Center for History and New Media, George Mason University",
     "url": "https://chnm.gmu.edu"
   },
   "contributors": [
     "Sylvester Keil <sylvester@keil.or.at>"
   ],
   "engines": {
-    "node": ">=4"
+    "node": ">=5"
   },
   "main": "lib/browser/main.js",
   "scripts": {
     "compile": "node scripts/make compile",
+    "pack": "node --harmony --harmony_destructuring --harmony_default_parameters scripts/dist pack --",
     "lint": "node scripts/make lint || true",
     "make": "node scripts/make",
     "db": "node --harmony --harmony_default_parameters --harmony_destructuring scripts/db",
@@ -52,7 +53,6 @@
     "chai": "^3.4.1",
     "chai-as-promised": "^5.2.0",
     "chokidar": "^1.4.3",
-    "colors": "^1.1.2",
     "electron-mocha": "^1.1.0",
     "electron-packager": "^7.0.0",
     "eslint": "^2.4.0",
@@ -67,6 +67,7 @@
   },
   "dependencies": {
     "bluebird": "^3.1.1",
+    "colors": "^1.1.2",
     "electron-prebuilt": "^0.37.5",
     "generic-pool": "^2.4.1",
     "js-yaml": "^3.4.6",
