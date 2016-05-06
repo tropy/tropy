@@ -27,6 +27,7 @@ target.pack = (args = []) => {
     join(dir, 'res', 'icons', channel, `${pkg.name}.icns`)
 
   const out = join(dir, 'dist', channel)
+  const build = exec('git describe --tags --long').stdout
 
   packager({ // eslint-disable-line quote-props
     platform, arch, icon, out, dir,
@@ -37,7 +38,7 @@ target.pack = (args = []) => {
     overwrite: true,
 
     'version': electron.version,
-    'build-version': '',  // use git describe
+    'build-version': build,
     'app-version': pkg.version,
     'app-copyright':
       `Copyright (c) 2015-${new Date().getFullYear()} ${pkg.author.name}. ` +
