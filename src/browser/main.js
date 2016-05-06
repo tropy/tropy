@@ -14,7 +14,7 @@ const { app } = require('electron')
 const { info, verbose } =
   require('../common/log')(app.getPath('userData'))
 
-verbose(`app started in ${opts.e} mode`)
+verbose(`started in ${opts.e} mode`)
 verbose(`using ${app.getPath('userData')}`)
 
 const tropy = new (require('./tropy'))(opts)
@@ -32,5 +32,5 @@ app
   })
 
   .on('quit', (_, code) => {
-    verbose(`app quit with exit code ${code}`)
+    verbose(`quit with exit code ${code}`)
   })
