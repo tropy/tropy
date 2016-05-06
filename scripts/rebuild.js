@@ -4,8 +4,10 @@ require('shelljs/make')
 
 const entries = require('object.entries')
 const log = require('./log')
-const say = msg => log.info(msg, { tag: 'rebuild' })
+
 const { join, resolve } = require('path')
+
+const say = msg => log.info(msg, { tag: 'rebuild' })
 
 const home = resolve(__dirname, '..')
 const mods = join(home, 'node_modules')
@@ -60,12 +62,12 @@ function check(mod) {
   return !test('-d', join(binding(mod)))
 }
 
-function binding(mod, platform, arch) {
+function binding(mod, platform = process.platform, arch = process.arch) {
   return join(mods, mod, 'lib', 'binding', [
     'electron',
     `v${ELECTRON.slice(0, 2).join('.')}`,
-    platform || process.platform,
-    arch || process.arch
+    platform,
+    arch
   ].join('-'))
 }
 
@@ -82,9 +84,7 @@ function rebuild(mod, opts) {
 }
 
 function env(vars) {
-  return entries(vars)
-    .map(nv => nv.join('='))
-    .join(' ')
+  return entries(vars).map(nv => nv.join('=')).join(' ')
 }
 
 function v(module) {
