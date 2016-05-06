@@ -50,6 +50,7 @@ install:
 before_script:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
       sh -e /etc/init.d/xvfb start;
+      sleep 3;
     fi
 script:
   - node scripts/make lint compile:js
