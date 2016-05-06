@@ -55,7 +55,7 @@ before_script:
 script:
   - node scripts/make lint compile:js
   - node scripts/make cover -- lcovonly
-after_script:
+after_success:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
       npm install coveralls;
       cat ./coverage/lcov.info | coveralls;
