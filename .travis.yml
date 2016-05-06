@@ -11,7 +11,7 @@ env:
     - NODE_ENV=test
     - NVM=$HOME/.nvm
   matrix:
-    - NODE_VERSION=v5.10.1
+    - NODE_VERSION=v5.11.1
 sudo: false
 cache:
   apt: true
