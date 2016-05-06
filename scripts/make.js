@@ -154,7 +154,7 @@ target.unlink = () => {
 target.icon = () => {
   switch (process.platform) {
     case 'darwin':
-      mv(path.join(icons, 'tropy.icns', path.join(resources, 'electron.icns')))
+      cp(path.join(icons, 'tropy.icns'), path.join(resources, 'electron.icns'))
       break
   }
 }
