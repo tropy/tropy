@@ -106,18 +106,17 @@ module.exports = class Tropy extends EventEmitter {
         shell.openExternal('https://github.com/tropy/tropy/issues')
       })
 
-    app
-      .on('window-all-closed', () => {
-        if (process.platform !== 'darwin') this.emit('app:quit')
-      })
-      .on('before-quit', () => {
-        verbose('saving app state')
-        this.persist()
-      })
+    app.on('window-all-closed', () => {
+      if (process.platform !== 'darwin') this.emit('app:quit')
+    })
+
+    app.on('before-quit', () => {
+      verbose('saving app state')
+      this.persist()
+    })
 
     if (process.platform === 'darwin') {
-      app
-        .on('activate', () => this.open())
+      app.on('activate', () => this.open())
     }
 
     ipc
