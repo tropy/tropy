@@ -15,17 +15,12 @@ const nbin = path.join(home, 'node_modules', '.bin')
 const doc = path.join(home, 'doc')
 const cov = path.join(home, 'coverage')
 const scov = path.join(home, 'src-cov')
-const icons = path.join(home, 'res', 'icons', 'dev')
 
 const emocha = path.join(nbin, 'electron-mocha')
 const lint = path.join(nbin, 'eslint')
 const istanbul = path.join(nbin, 'istanbul')
 
-const electron = process.env.ELECTRON_PATH = require('electron-prebuilt')
-
-const resources = (process.platform === 'darwin') ?
-  path.resolve(electron, '..', '..', 'Resources') :
-  path.resolve(electron, '..', 'resources')
+Object.assign(target, require('./electron'))
 
 
 target.lint = () => {
@@ -141,22 +136,6 @@ target.cover = (args) => {
   exec(`${istanbul} report --root ${cov} ${args.join(' ')}`, { silent: true })
 
   rm('-rf', scov)
-}
-
-target.link = () => {
-  ln('-sf', home, path.join(resources, 'app'))
-}
-
-target.unlink = () => {
-  rm('-f', path.join(resources, 'app'))
-}
-
-target.icon = () => {
-  switch (process.platform) {
-    case 'darwin':
-      cp(path.join(icons, 'tropy.icns'), path.join(resources, 'electron.icns'))
-      break
-  }
 }
 
 
