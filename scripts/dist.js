@@ -27,7 +27,7 @@ target.pack = (args = []) => {
     join(dir, 'res', 'icons', channel, `${pkg.name}.icns`)
 
   const out = join(dir, 'dist', channel)
-  const build = exec('git describe --tags --long').stdout
+  const build = exec('git describe --tags --long', { silent: true }).stdout
 
   packager({ // eslint-disable-line quote-props
     platform, arch, icon, out, dir,

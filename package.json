@@ -29,7 +29,7 @@
     "branding": "npm run make branding --",
     "compile": "npm run make compile",
     "dist": "node --harmony --harmony_destructuring --harmony_default_parameters scripts/dist",
-    "pack": "npm run dist pack --",
+    "pack": "node --harmony --harmony_destructuring --harmony_default_parameters scripts/dist pack --",
     "lint": "npm run make lint || true",
     "make": "node --harmony --harmony_destructuring --harmony_default_parameters scripts/make",
     "db": "node --harmony --harmony_default_parameters --harmony_destructuring scripts/db",
