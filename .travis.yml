@@ -53,8 +53,8 @@ before_script:
       sleep 3;
     fi
 script:
-  - node scripts/make lint compile:js
-  - node scripts/make cover -- lcovonly
+  - npm run make lint compile:js
+  - npm run make cover
 after_success:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
       npm install coveralls;
