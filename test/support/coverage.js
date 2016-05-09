@@ -2,26 +2,25 @@
 
 const path = require('path')
 const istanbul = require('istanbul')
-const mocha = require('mocha')
-const util = require('util')
 
 // Override __src to point to instrumented sources!
 global.__src = path.resolve(__dirname, '..', '..', 'src-cov')
 
-module.exports = Cover
+const reporter = new istanbul.Reporter()
+reporter.addAll(['text-summary', 'json'])
 
-function Cover(runner) {
-  mocha.reporters.Dot.call(this, runner)
+function done() {
+  // Check for global variable
+  // Touch uncovered files
+  let collector = new istanbul.Collector()
 
-  runner.on('end', function () {
-    let reporter = new istanbul.Reporter()
-    let collector = new istanbul.Collector()
+  collector.add(__coverage__)
 
-    collector.add(__coverage__)
-
-    reporter.addAll(['text-summary', 'json'])
-    reporter.write(collector, true, () => {})
-  })
+  reporter.write(collector, true, () => {})
 }
 
-util.inherits(Cover, mocha.reporters.Dot)
+if (process.type === 'browser') {
+  process.on('exit', done)
+} else {
+  window.addEventListener('mocha-done', done)
+}

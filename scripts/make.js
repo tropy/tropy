@@ -136,10 +136,10 @@ target.cover = (args) => {
   log.info('instrumenting source files...', { tag })
   exec(`${istanbul} instrument -o src-cov lib`, { silent: true })
 
-  target['test:browser'](['--reporter test/support/coverage'])
+  target['test:browser'](['--require test/support/coverage'])
   mv(`${cov}/coverage-final.json`, `${cov}/coverage-browser.json`)
 
-  target['test:renderer'](['--reporter test/support/coverage'])
+  target['test:renderer'](['--require test/support/coverage'])
   mv(`${cov}/coverage-final.json`, `${cov}/coverage-renderer.json`)
 
   log.info('writing coverage report...', { tag })

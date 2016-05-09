@@ -19,13 +19,13 @@ describe('Storage', () => {
       ))
     })
 
-    describe('#save.sync', () => {
+    describe.skip('#save.sync', () => {
       after(done => {
-        fs.unlink(folder.expand('test-a.json'), done)
+        fs.unlink(folder.expand('test-s.json'), done)
       })
 
       it('saves object with given name', () => (
-        expect(folder.save.sync('test-a.json', { name: 'a' })).not.to.throw
+        expect(folder.save.sync('test-s.json', { name: 'a' })).not.to.throw
       ))
     })
 
