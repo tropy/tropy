@@ -133,8 +133,8 @@ target.cover = (args) => {
   rm('-rf', cov)
   rm('-rf', scov)
 
-  log.info('instrumenting source files...', { tag })
-  exec(`${istanbul} instrument -o src-cov lib`, { silent: true })
+  //log.info('instrumenting source files...', { tag })
+  //exec(`${istanbul} instrument -o src-cov lib`, { silent: true })
 
   target['test:browser'](['--require test/support/coverage'])
   mv(`${cov}/coverage-final.json`, `${cov}/coverage-browser.json`)
