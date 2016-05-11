@@ -20,8 +20,6 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 if (global.args.environment === 'development') {
-  //require('devtron').install()
-
   if (process.platform !== 'linux') {
     const props = Object.defineProperties
     const { remote } = require('electron')
@@ -30,6 +28,12 @@ if (global.args.environment === 'development') {
       stdout: { value: remote.process.stdout },
       stderr: { value: remote.process.stderr }
     })
+  }
+
+  try {
+    require('devtron').install()
+  } catch (_) {
+    // ignore
   }
 }
 
