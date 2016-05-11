@@ -54,7 +54,7 @@
     "babel-plugin-transform-react-jsx": "^6.4.0",
     "chai": "^3.4.1",
     "chai-as-promised": "^5.2.0",
-    "chokidar": "^1.4.3",
+    "chokidar": "^1.5.0",
     "electron-mocha": "^1.1.0",
     "electron-packager": "^7.0.0",
     "eslint": "^2.4.0",
