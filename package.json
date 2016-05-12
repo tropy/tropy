@@ -56,7 +56,7 @@
     "chai-as-promised": "^5.2.0",
     "chokidar": "^1.5.0",
     "devtron": "^1.0.0",
-    "electron-mocha": "^1.3.0",
+    "electron-mocha": "^2.0.0",
     "electron-packager": "^7.0.0",
     "eslint": "^2.4.0",
     "glob": "^7.0.0",
