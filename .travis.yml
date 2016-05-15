@@ -1,16 +1,11 @@
 language: c
+compiler: clang
 git:
   depth: 9
-os:
-  - linux
-  - osx
-compiler: clang
 env:
   global:
-    - DISPLAY=:99.0
     - NODE_ENV=test
     - NVM=$HOME/.nvm
-sudo: false
 cache:
   apt: true
   directories:
@@ -19,15 +14,24 @@ cache:
     - $HOME/.node-gyp
     - $NVM
 matrix:
+  include:
+    - os: linux
+      sudo: false
+      env:
+        - DISPLAY=:99.0
+        - CXX=clang++-3.5
+        - CC=clang-3.5
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.5
+          packages:
+            - clang-3.5
+            - xvfb
+    - os: osx
+      sudo: false
   fast_finish: true
-
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-precise-3.5
-    packages:
-      - clang-3.5
 
 before_install:
   - if [[ ! -d $NVM/.git ]]; then
@@ -38,10 +42,7 @@ before_install:
   - git -C $NVM checkout -f `git -C $NVM describe --abbrev=0 --tags`
   - source $NVM/nvm.sh || true
   - nvm install
-  - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
-      export CXX="clang++-3.5";
-      export CC="clang-3.5";
-    fi
+  - node --version && npm --version
 install:
   - npm install -g node-gyp
   - npm update || true
@@ -55,6 +56,7 @@ before_script:
 script:
   - npm run make lint compile:js
   - npm run make cover
+
 after_success:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
       npm install coveralls;
