@@ -2,10 +2,6 @@ language: c
 compiler: clang
 git:
   depth: 9
-env:
-  global:
-    - NODE_ENV=test
-    - NVM=$HOME/.nvm
 cache:
   apt: true
   directories:
@@ -18,6 +14,8 @@ matrix:
     - os: linux
       sudo: false
       env:
+        - NODE_ENV=test
+        - NVM=$HOME/.nvm
         - DISPLAY=:99.0
         - CXX=clang++-3.5
         - CC=clang-3.5
@@ -31,6 +29,9 @@ matrix:
             - xvfb
     - os: osx
       sudo: false
+      env:
+        - NODE_ENV=test
+        - NVM=$HOME/.nvm
   fast_finish: true
 
 before_install:
