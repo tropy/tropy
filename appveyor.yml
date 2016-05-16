@@ -5,7 +5,7 @@ clone_depth: 1
 
 environment:
   matrix:
-    - nodejs_version: '5.1'
+    - nodejs_version: 5
 
 platform:
   - x64
@@ -15,13 +15,13 @@ cache:
   - '%APPDATA%\npm-cache'
 
 install:
-  - ps: Install-Product node 5.1
-  - npm version
-  - npm install --no-optional --no-color --no-progress --ignore-scripts
+  - ps: Install-Product node $env:nodejs_version $env:platform
+  - node --version
+  - npm --version
+  - npm install --no-optional --no-color --no-progress
 
 test_script:
   - npm test
 
 version: '{build}'
-build:
-  verbosity: minimal
+build: off
