@@ -1,0 +1,27 @@
+init:
+  - git config --global core.autocrlf true
+
+clone_depth: 1
+
+environment:
+  matrix:
+    - nodejs_version: '5.1'
+
+platform:
+  - x64
+
+cache:
+  - node_modules -> package.json
+  - '%APPDATA%\npm-cache'
+
+install:
+  - ps: Install-Product node 5.1
+  - npm version
+  - npm install --no-optional --no-color --no-progress --ignore-scripts
+
+test_script:
+  - npm test
+
+version: '{build}'
+build:
+  verbosity: minimal
