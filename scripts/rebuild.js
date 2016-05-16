@@ -33,6 +33,10 @@ target.headers = () => {
 target.sqlite3 = (force) => {
   const mod = 'sqlite3'
 
+  if (process.platform === 'win32') {
+    return say(`${mod} ...skipped on win32`)
+  }
+
   if (force || check(mod)) {
     say(`${mod} ${force ? '(forced)' : ''}...`)
 
