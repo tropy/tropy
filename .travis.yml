@@ -1,3 +1,4 @@
+language: c
 git:
   depth: 9
 sudo: false
