@@ -1,5 +1,4 @@
 language: c
-compiler: clang
 git:
   depth: 9
 sudo: false
@@ -13,6 +12,7 @@ cache:
 matrix:
   include:
     - os: linux
+      compiler: clang
       env:
         - NODE_ENV=test
         - NVM=$HOME/.nvm
@@ -28,6 +28,7 @@ matrix:
             - clang-3.5
             - xvfb
     - os: osx
+      compiler: clang
       env:
         - NODE_ENV=test
         - NVM=$HOME/.nvm
