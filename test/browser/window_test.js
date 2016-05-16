@@ -16,7 +16,7 @@ describe('Window', () => {
   })
 
   it('extends BrowserWindow', () => {
-    expect(new Window()).to.be.instanceof(BrowserWindow)
+    expect(win).to.be.instanceof(BrowserWindow)
   })
 
   describe('#open', () => {
