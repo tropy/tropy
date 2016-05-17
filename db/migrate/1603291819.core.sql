@@ -57,7 +57,7 @@ INSERT INTO metadata_types (type_name, type_schema) VALUES
 CREATE TABLE metadata (
   metadata_id  INTEGER  PRIMARY KEY,
   sid          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
-  term_id      TEXT     NOT NULL,
+  property_id  TEXT     NOT NULL,
   value_id     INTEGER  NOT NULL REFERENCES metadata_values,
   position     INTEGER  NOT NULL DEFAULT 0,
 
