@@ -16,9 +16,10 @@ CREATE TABLE project (
 -- A field `sid` in the database always references
 -- a row in the subjects table.
 CREATE TABLE subjects (
-  sid         INTEGER  PRIMARY KEY,
-  created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
+  sid          INTEGER  PRIMARY KEY,
+  template_id  TEXT,
+  created_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 
