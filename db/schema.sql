@@ -17,53 +17,14 @@ PRAGMA user_version=1604261942;
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
-CREATE TABLE properties (
-  property_id    TEXT  NOT NULL PRIMARY KEY,
-  property_name  TEXT  NOT NULL COLLATE NOCASE,
-  type_name      TEXT  NOT NULL COLLATE NOCASE REFERENCES types
-
-  CHECK (property_id != ''),
-  CHECK (property_name != '')
-);
-CREATE TABLE types (
-  type_name    TEXT  NOT NULL COLLATE NOCASE PRIMARY KEY,
-  type_schema  TEXT  NOT NULL UNIQUE
-
-  CHECK (type_name != ''),
-  CHECK (type_schema != '')
-) WITHOUT ROWID;
-INSERT INTO "types" VALUES('boolean','https://schema.org/Boolean');
-INSERT INTO "types" VALUES('number','https://schema.org/Number');
-INSERT INTO "types" VALUES('text','https://schema.org/Text');
-INSERT INTO "types" VALUES('datetime','https://schema.trop.io/datetime');
-INSERT INTO "types" VALUES('name','https://schema.trop.io/name');
-CREATE TABLE templates (
-  template_id    TEXT     NOT NULL PRIMARY KEY,
-  template_name  TEXT     NOT NULL COLLATE NOCASE,
-  created_at     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-  CHECK (template_id != ''),
-  CHECK (template_name != '')
-) WITHOUT ROWID;
-CREATE TABLE template_data (
-  template_id    TEXT     NOT NULL REFERENCES templates ON DELETE CASCADE,
-  property_id    TEXT     NOT NULL REFERENCES properties,
-  position       INTEGER  NOT NULL DEFAULT 0,
-  default_value,
-  constraints,
-
-  PRIMARY KEY (template_id, property_id),
-  UNIQUE (template_id, position)
-);
-CREATE TABLE archive (
-  archive_id  TEXT     NOT NULL PRIMARY KEY,
+CREATE TABLE project (
+  project_id  TEXT     NOT NULL PRIMARY KEY,
   name        TEXT     NOT NULL,
   settings             NOT NULL DEFAULT '{}',
   created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   opened_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  CHECK (archive_id != ''),
+  CHECK (project_id != ''),
   CHECK (name != '')
 ) WITHOUT ROWID;
 CREATE TABLE subjects (
@@ -80,10 +41,22 @@ CREATE TABLE items (
   sid             INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   cover_image_id  INTEGER  REFERENCES images ON DELETE SET NULL
 ) WITHOUT ROWID;
+CREATE TABLE types (
+  type_id    TEXT  NOT NULL PRIMARY KEY,
+  type_name  TEXT  NOT NULL UNIQUE COLLATE NOCASE,
+
+  CHECK (type_id != ''),
+  CHECK (type_name != '')
+) WITHOUT ROWID;
+INSERT INTO "types" VALUES('https://schema.org/Boolean','boolean');
+INSERT INTO "types" VALUES('https://schema.tropy.org/types/datetime','datetime');
+INSERT INTO "types" VALUES('https://schema.tropy.org/types/name','name');
+INSERT INTO "types" VALUES('https://schema.org/Number','number');
+INSERT INTO "types" VALUES('https://schema.org/Text','text');
 CREATE TABLE metadata (
   metadata_id  INTEGER  PRIMARY KEY,
   sid          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
-  property_id  TEXT     NOT NULL REFERENCES properties,
+  term_id      TEXT     NOT NULL,
   value_id     INTEGER  NOT NULL REFERENCES metadata_values,
   position     INTEGER  NOT NULL DEFAULT 0,
 
@@ -91,10 +64,14 @@ CREATE TABLE metadata (
 );
 CREATE TABLE metadata_values (
   value_id  INTEGER  NOT NULL PRIMARY KEY,
+  type_name TEXT     NOT NULL REFERENCES types(type_name)
+                     ON DELETE CASCADE
+                     ON UPDATE CASCADE,
   value              NOT NULL,
+  struct    TEXT     DEFAULT '{}',
   language  TEXT     REFERENCES languages,
 
-  UNIQUE (value, language)
+  UNIQUE (type_name, value, language)
 );
 CREATE TABLE notes (
   note_id     INTEGER  PRIMARY KEY,

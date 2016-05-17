@@ -1,13 +1,13 @@
--- Archive metadata and settings which must be bound
+-- Project metadata and settings which must be bound
 -- to the database file.
-CREATE TABLE archive (
-  archive_id  TEXT     NOT NULL PRIMARY KEY,
+CREATE TABLE project (
+  project_id  TEXT     NOT NULL PRIMARY KEY,
   name        TEXT     NOT NULL,
   settings             NOT NULL DEFAULT '{}',
   created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   opened_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  CHECK (archive_id != ''),
+  CHECK (project_id != ''),
   CHECK (name != '')
 ) WITHOUT ROWID;
 
@@ -36,10 +36,26 @@ CREATE TABLE items (
 ) WITHOUT ROWID;
 
 
+CREATE TABLE types (
+  type_id    TEXT  NOT NULL PRIMARY KEY,
+  type_name  TEXT  NOT NULL UNIQUE COLLATE NOCASE,
+
+  CHECK (type_id != ''),
+  CHECK (type_name != '')
+) WITHOUT ROWID;
+
+INSERT INTO types (type_name, type_id) VALUES
+  ('text', 'https://schema.org/Text'),
+  ('datetime', 'https://schema.tropy.org/types/datetime'),
+  ('name', 'https://schema.tropy.org/types/name'),
+  ('boolean', 'https://schema.org/Boolean'),
+  ('number', 'https://schema.org/Number');
+
+
 CREATE TABLE metadata (
   metadata_id  INTEGER  PRIMARY KEY,
   sid          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
-  property_id  TEXT     NOT NULL REFERENCES properties,
+  term_id      TEXT     NOT NULL,
   value_id     INTEGER  NOT NULL REFERENCES metadata_values,
   position     INTEGER  NOT NULL DEFAULT 0,
 
@@ -48,10 +64,14 @@ CREATE TABLE metadata (
 
 CREATE TABLE metadata_values (
   value_id  INTEGER  NOT NULL PRIMARY KEY,
+  type_name TEXT     NOT NULL REFERENCES types(type_name)
+                     ON DELETE CASCADE
+                     ON UPDATE CASCADE,
   value              NOT NULL,
+  struct    TEXT     DEFAULT '{}',
   language  TEXT     REFERENCES languages,
 
-  UNIQUE (value, language)
+  UNIQUE (type_name, value, language)
 );
 
 
