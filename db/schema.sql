@@ -41,18 +41,19 @@ CREATE TABLE items (
   sid             INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   cover_image_id  INTEGER  REFERENCES images ON DELETE SET NULL
 ) WITHOUT ROWID;
-CREATE TABLE types (
-  type_id    TEXT  NOT NULL PRIMARY KEY,
-  type_name  TEXT  NOT NULL UNIQUE COLLATE NOCASE,
+CREATE TABLE metadata_types (
+  type_name    TEXT  NOT NULL PRIMARY KEY COLLATE NOCASE,
+  type_schema  TEXT  NOT NULL UNIQUE,
 
-  CHECK (type_id != ''),
+  CHECK (type_schema != ''),
   CHECK (type_name != '')
 ) WITHOUT ROWID;
-INSERT INTO "types" VALUES('https://schema.org/Boolean','boolean');
-INSERT INTO "types" VALUES('https://schema.tropy.org/types/datetime','datetime');
-INSERT INTO "types" VALUES('https://schema.tropy.org/types/name','name');
-INSERT INTO "types" VALUES('https://schema.org/Number','number');
-INSERT INTO "types" VALUES('https://schema.org/Text','text');
+INSERT INTO "metadata_types" VALUES('boolean','https://schema.org/Boolean');
+INSERT INTO "metadata_types" VALUES('location','https://schema.org/GeoCoordinates');
+INSERT INTO "metadata_types" VALUES('number','https://schema.org/Number');
+INSERT INTO "metadata_types" VALUES('text','https://schema.org/Text');
+INSERT INTO "metadata_types" VALUES('datetime','https://schema.tropy.org/types/datetime');
+INSERT INTO "metadata_types" VALUES('name','https://schema.tropy.org/types/name');
 CREATE TABLE metadata (
   metadata_id  INTEGER  PRIMARY KEY,
   sid          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
@@ -64,23 +65,22 @@ CREATE TABLE metadata (
 );
 CREATE TABLE metadata_values (
   value_id  INTEGER  NOT NULL PRIMARY KEY,
-  type_name TEXT     NOT NULL REFERENCES types(type_name)
-                     ON DELETE CASCADE
-                     ON UPDATE CASCADE,
+  type_name TEXT     NOT NULL REFERENCES metadata_types
+                       ON DELETE CASCADE ON UPDATE CASCADE,
   value              NOT NULL,
-  struct    TEXT     DEFAULT '{}',
+  struct             NOT NULL DEFAULT '{}',
   language  TEXT     REFERENCES languages,
 
   UNIQUE (type_name, value, language)
 );
 CREATE TABLE notes (
-  note_id     INTEGER  PRIMARY KEY,
-  sid         INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
-  position    INTEGER  NOT NULL DEFAULT 0,
-  text        TEXT     NOT NULL,
-  language    TEXT     NOT NULL DEFAULT 'en' REFERENCES languages,
-  created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  note_id      INTEGER  PRIMARY KEY,
+  sid          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
+  position     INTEGER  NOT NULL DEFAULT 0,
+  text         TEXT     NOT NULL,
+  language     TEXT     NOT NULL DEFAULT 'en' REFERENCES languages,
+  created_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   UNIQUE (sid, position)
 );
@@ -127,7 +127,7 @@ CREATE TABLE photos (
   mimetype     TEXT     NOT NULL,
   checksum     TEXT     NOT NULL,
   orientation  INTEGER  NOT NULL DEFAULT 1,
-  exif
+  exif                  NOT NULL DEFAULT '{}'
 ) WITHOUT ROWID;
 CREATE TABLE selections (
   sid       INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
