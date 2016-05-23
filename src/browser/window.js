@@ -24,14 +24,17 @@ class Window extends BrowserWindow {
     super(assign({}, new.target.defaults, options))
 
     this.webContents.on('dom-ready', () => this.show())
-  }
 
-  open(file, data = {}) {
-    return this.loadURL(format({
-      protocol: 'file',
-      pathname: [root, file].join('/'),
-      hash: encodeURIComponent(JSON.stringify(data))
-    })), this
+    // Temporary workaround until we decide what to do about Electron#5652
+    assign(this, {
+      open(file, data = {}) {
+        return this.loadURL(format({
+          protocol: 'file',
+          pathname: [root, file].join('/'),
+          hash: encodeURIComponent(JSON.stringify(data))
+        })), this
+      }
+    })
   }
 }
 
