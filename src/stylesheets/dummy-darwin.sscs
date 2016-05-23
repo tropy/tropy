@@ -1,0 +1,2 @@
+$platform: 'darwin';
+@import "common";

@@ -5,7 +5,7 @@ const { resolve } = require('path')
 const { app, shell, ipcMain: ipc } = require('electron')
 const { verbose } = require('../common/log')
 const { once } = require('../common/util')
-const { Window, Wizard } = require('./window')
+const { Window, Wizard, Dummy } = require('./window')
 const { all }  = require('bluebird')
 const AppMenu = require('./menu')
 const Storage = require('./storage')
@@ -48,6 +48,17 @@ module.exports = class Tropy extends EventEmitter {
     this.win = new Window()
       .once('closed', () => { this.win = undefined })
       .open('index.html', this.hash)
+
+    this.dummy()
+    return this
+  }
+
+  dummy() {
+    if (this.dum) return this.dum.show(), this
+
+    this.dum = new Dummy()
+      .once('closed', () => { this.dum = undefined })
+      .open('dummy.html', this.hash)
 
     return this
   }

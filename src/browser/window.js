@@ -48,6 +48,16 @@ class Wizard extends Window {
   }
 }
 
+class Dummy extends Window {
+  static get defaults() {
+    return assign(super.defaults, {
+      frame: true,
+      width: 1440,
+      height: 878
+    })
+  }
+}
+
 module.exports = {
-  Window, Wizard
+  Window, Wizard, Dummy
 }
