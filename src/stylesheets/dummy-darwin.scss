@@ -1,7 +1,7 @@
 $platform: 'darwin';
 @import "common";
 
-$duration: 0.5s;
+$duration: 1s;
 $timing: cubic-bezier(0.23, 1, 0.32, 1);
 
 * {
@@ -42,7 +42,7 @@ body {
 
 .item-view {
   overflow: hidden;
-  transform: translate3d(200px, 0, 0);
+  transform: translate3d(1080px, 0, 0);
   backface-visibility: hidden;
   transition: transform $duration $timing;
   will-change: transform;
@@ -51,7 +51,7 @@ body {
 
 .container.item {
   .project-view {
-    transform: translate3d(-100px, 0, 0);
+    transform: translate3d(-270px, 0, 0);
   }
 
   .item-view {
