@@ -1,4 +1,4 @@
-$duration: 1s;
+$duration: 0.8s;
 $timing: cubic-bezier(0.23, 1, 0.32, 1);
 
 * {
@@ -12,8 +12,6 @@ html, body {
 
 body {
   overflow: hidden;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
 }
 
 .container {
@@ -26,32 +24,28 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
+  backface-visibility: hidden;
+  will-change: transform;
 }
 
 .project-view {
   overflow: hidden;
   transition: transform $duration $timing;
   transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  will-change: transform;
   z-index: 1;
+
+  .item & {
+    transform: translate3d(-270px, 0, 0);
+  }
 }
 
 .item-view {
   overflow: hidden;
   transform: translate3d(1080px, 0, 0);
-  backface-visibility: hidden;
   transition: transform $duration $timing;
-  will-change: transform;
   z-index: 2;
-}
 
-.container.item {
-  .project-view {
-    transform: translate3d(-270px, 0, 0);
-  }
-
-  .item-view {
+  .item & {
     transform: translate3d(0, 0, 0);
   }
 }
