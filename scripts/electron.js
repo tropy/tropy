@@ -48,8 +48,11 @@ target.branding = (args = []) => {
         let variant = basename(icon, ext)
         let target = join(theme, variant, 'apps')
 
+        let file = (variant === 'symbolic') ?
+          `${name}-symbolic${ext}` : `${name}${ext}`
+
         mkdir('-p', target)
-        cp(join(source, icon), join(target, `${name}${ext}`))
+        cp(join(source, icon), join(target, file))
       }
 
       info(`copied icons to ${theme}`, { tag })
