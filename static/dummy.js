@@ -3,6 +3,7 @@
 {
   const { ready, append, stylesheet, $, on, toggle } = require('../lib/dom')
   const { info } = require('../lib/common/log')
+  const { release } = require('os')
 
   ready(() => {
     info('dummy ready after %sms', Date.now() - global.START_TIME)
@@ -18,4 +19,7 @@
 
   toggle(document.body, 'frameless', !global.args.frame)
 
+  if (process.platform === 'darwin' && release() > '10.10') {
+    toggle(document.body, 'hidden-inset', true)
+  }
 }

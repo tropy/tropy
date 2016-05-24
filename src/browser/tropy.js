@@ -9,6 +9,7 @@ const { Window, Wizard } = require('./window')
 const { all }  = require('bluebird')
 const AppMenu = require('./menu')
 const Storage = require('./storage')
+const os = require('os')
 
 const pkg = require('../../package')
 
@@ -57,11 +58,19 @@ module.exports = class Tropy extends EventEmitter {
 
   dummy(frame = false) {
     this.dummies = this.dummies || []
+    const options = { width: 1440, height: 878 }
+
+    if (!frame) {
+      if (os.platform() === 'darwin' && os.release() > '10.10') {
+        options.titleBarStyle = 'hidden-inset'
+
+      } else {
+        options.frame = false
+      }
+    }
 
     const idx = this.dummies.length
-    const dum = new Window({
-      frame, width: 1440, height: 878
-    })
+    const dum = new Window(options)
       .once('closed', () => { this.dummies.splice(idx, 1) })
       .open('dummy.html', { frame, ...this.hash })
 
