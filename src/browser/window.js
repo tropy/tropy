@@ -13,7 +13,6 @@ class Window extends BrowserWindow {
     return {
       title: app.getName(),
       show: false,
-      overlayScrollbars: true,
       webPreferences: {
         preload: resolve(__dirname, '..', 'bootstrap.js')
       }
@@ -48,16 +47,6 @@ class Wizard extends Window {
   }
 }
 
-class Dummy extends Window {
-  static get defaults() {
-    return assign(super.defaults, {
-      frame: true,
-      width: 1440,
-      height: 878
-    })
-  }
-}
-
 module.exports = {
-  Window, Wizard, Dummy
+  Window, Wizard
 }

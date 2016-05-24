@@ -15,4 +15,7 @@
   on($('.container'), 'click', function () {
     toggle(this, 'item')
   })
+
+  toggle(document.body, 'frameless', !global.args.frame)
+
 }
