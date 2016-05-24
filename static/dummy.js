@@ -1,7 +1,7 @@
 'use strict'
 
 {
-  const { ready, append, stylesheet, $, on } = require('../lib/dom')
+  const { ready, append, stylesheet, $, on, toggle } = require('../lib/dom')
   const { info } = require('../lib/common/log')
 
   ready(() => {
@@ -13,6 +13,6 @@
       document.head)
 
   on($('.container'), 'click', function () {
-    this.classList.toggle('item')
+    toggle(this, 'item')
   })
 }

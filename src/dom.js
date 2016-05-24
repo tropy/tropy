@@ -51,5 +51,9 @@ module.exports = {
 
   emit(node, ...args) {
     return node.dispatchEvent(new Event(...args))
+  },
+
+  toggle(node, ...args) {
+    return node.classList.toggle(...args)
   }
 }
