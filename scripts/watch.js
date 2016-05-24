@@ -4,7 +4,7 @@ require('shelljs/make')
 
 const chokidar = require('chokidar')
 const colors = require('colors/safe')
-const path = require('path')
+const { relative, extname, basename } = require('path')
 
 const make = require('./make')
 const log = require('./log')
@@ -17,7 +17,7 @@ function colorize(event, text) {
 }
 
 function shorten(file) {
-  return path.relative(cwd, file)
+  return relative(cwd, file)
 }
 
 function mocha(spec, tag) {
@@ -44,7 +44,7 @@ target.src = () => {
   const tag = 'watch:src'
 
   chokidar
-    .watch('src/**/*.{js,jsx}', {
+    .watch('src/**/*.{js,jsx,scss,sass}', {
       persistent: true
     })
 
@@ -61,14 +61,20 @@ target.src = () => {
         return rm(file.replace(/^src/, 'lib'))
       }
 
-      make['compile:js'](file)
+      if ((/^\.jsx?$/).test(extname(file))) {
+        make['compile:js'](file)
 
-      if (event === 'change') {
-        const spec = file
-          .replace(/^src/, 'test')
-          .replace(/\.jsx?$/, '_test.js')
+        if (event === 'change') {
+          const spec = file
+            .replace(/^src/, 'test')
+            .replace(/\.jsx?$/, '_test.js')
 
-        if (test('-f', spec)) mocha(spec, tag)
+          if (test('-f', spec)) mocha(spec, tag)
+        }
+
+      } else {
+
+        make['compile:css']((basename(file)[0] === '_') ? undefined : file)
       }
     })
 }
