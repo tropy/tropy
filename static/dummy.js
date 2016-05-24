@@ -17,9 +17,11 @@
     toggle(this, 'item')
   })
 
-  toggle(document.body, 'frameless', !global.args.frame)
+  if (!global.args.frame) {
+    toggle(document.body, 'frameless', true)
 
-  if (process.platform === 'darwin' && release() > '10.10') {
-    toggle(document.body, 'hidden-inset', true)
+    if (process.platform === 'darwin' && release() > '10.10') {
+      toggle(document.body, 'hidden-inset', true)
+    }
   }
 }
