@@ -1,6 +1,9 @@
 init:
   - git config --global core.autocrlf true
 
+clone_depth: 8
+os: unstable
+
 environment:
   nodejs_version: "6.2"
 
