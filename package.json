@@ -22,7 +22,7 @@
     "Sylvester Keil <sylvester@keil.or.at>"
   ],
   "engines": {
-    "node": ">=5"
+    "node": ">=6"
   },
   "main": "lib/browser/main.js",
   "scripts": {
