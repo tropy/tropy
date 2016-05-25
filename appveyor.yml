@@ -2,7 +2,7 @@ init:
   - git config --global core.autocrlf true
 
 environment:
-  - nodejs_version: 6
+  nodejs_version: 6
 
 platform:
   - x64
