@@ -23,6 +23,10 @@ install:
 test_script:
   - node --version
   - node scripts\make compile
-  - node scripts\make test
+  - node scripts\make lint
+  - node scripts\make unlink
+  - node scripts\make test:browser
+  - node scripts\make test:renderer
+
 
 build: off
