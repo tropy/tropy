@@ -22,6 +22,7 @@ install:
 
 test_script:
   - node --version
+  - node scripts\make compile
   - node scripts\make test
 
 build: off
