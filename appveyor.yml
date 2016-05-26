@@ -17,16 +17,12 @@ cache:
 
 install:
   - ps: Install-Product node $env:nodejs_version $env:platform
+  - node --version
   - npm --version
   - npm install --no-optional --no-color --no-progress
 
 test_script:
-  - node --version
-  - node scripts\make compile
-  - node scripts\make lint
-  - node scripts\make unlink
-  - node scripts\make test:browser
-  - node scripts\make test:renderer
+  - npm test
 
 
 build: off
