@@ -33,10 +33,6 @@ target.headers = () => {
 target.sqlite3 = (force) => {
   const mod = 'sqlite3'
 
-  if (process.platform === 'win32') {
-    return say(`${mod} ...skipped on win32`)
-  }
-
   if (force || check(mod)) {
     say(`${mod} ${force ? '(forced)' : ''}...`)
 
@@ -81,6 +77,10 @@ function cflags(flags) {
 
 function rebuild(mod, opts) {
   target.headers()
+
+  if (process.platform === 'win32') {
+    return exec(`npm rebuild ${mod} ${opts.params} ${CONFIG.join(' ')}`)
+  }
 
   return exec(
     `${env(opts.env)} npm rebuild ${mod} ${opts.params} ${CONFIG.join(' ')}`
