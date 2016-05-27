@@ -61,7 +61,7 @@ module.exports = class Tropy extends EventEmitter {
     const options = { width: 1440, height: 878 }
 
     if (!frame) {
-      if (os.platform() === 'darwin' && os.release() > '10.10') {
+      if (os.platform() === 'darwin' && os.release() > '15') {
         options.titleBarStyle = 'hidden-inset'
 
       } else {
