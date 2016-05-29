@@ -18,6 +18,7 @@ Run `npm test` to run all tests; `npm run test:renderer` or
 `npm run test:browser` to run only the Renderer/Browser tests, or
 `node scripts/make mocha -- <path>` to run only a given test file.
 
-See `node scripts/make rules` for all available targets.
+See `node scripts/make rules` and `node scripts/db rules` for additional
+available targets.
 
 To start the app in development mode, run `npm start`.
