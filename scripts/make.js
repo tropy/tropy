@@ -40,7 +40,7 @@ target['test:renderer'] = (args) => {
   args = args || []
   args.unshift('--renderer')
 
-  if (process.env.APPVEYOR) args.push('--no-colors')
+  if (process.env.APPVEYOR) args.push('--no-colors --no-timeouts')
 
   mocha(args.concat(
     glob.sync('test/**/*_test.js', { ignore: 'test/browser/*' })))
@@ -51,7 +51,7 @@ target['test:browser'] = (args) => {
 
   args = args || []
 
-  if (process.env.APPVEYOR) args.push('--no-colors')
+  if (process.env.APPVEYOR) args.push('--no-colors --no-timeouts')
 
   mocha(args.concat(glob.sync('test/{browser,common}/**/*_test.js')))
 }
