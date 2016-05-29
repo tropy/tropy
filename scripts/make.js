@@ -123,7 +123,7 @@ target['compile:css'] = (pattern) => {
 
 target.cover = (args) => {
   const tag = 'cover'
-  args = args || ['html']
+  args = args || ['html', 'lcov']
 
   rm('-rf', cov)
   rm('-rf', scov)
