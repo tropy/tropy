@@ -1,5 +1,12 @@
+$brand-primary: #5c93e6;
+
 $duration: 0.8s;
 $timing: cubic-bezier(0.23, 1, 0.32, 1);
+
+$toolbar-height: 32px;
+
+$zindex-view: 10;
+$zindex-draggable-region: 20;
 
 * {
   box-sizing: border-box;
@@ -32,7 +39,7 @@ body {
   overflow: hidden;
   transition: transform $duration $timing;
   transform: translate3d(0, 0, 0);
-  z-index: 1;
+  z-index: $zindex-view;
 
   .item & {
     transform: translate3d(-270px, 0, 0);
@@ -43,9 +50,31 @@ body {
   overflow: hidden;
   transform: translate3d(1080px, 0, 0);
   transition: transform $duration $timing;
-  z-index: 2;
+  z-index: $zindex-view;
 
   .item & {
     transform: translate3d(0, 0, 0);
   }
+}
+
+.toolbar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: $toolbar-height;
+  -webkit-app-region: drag;
+  -webkit-user-select: none;
+  cursor: default;
+  z-index: $zindex-draggable-region;
+}
+
+.drag {
+  -webkit-app-region: drag;
+  -webkit-user-select: none;
+  cursor: default;
+}
+
+.no-drag {
+  -webkit-app-region: no-drag;
 }
