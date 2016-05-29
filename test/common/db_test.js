@@ -19,7 +19,7 @@ function rm(file, retry = 5000) {
   } catch (error) {
     if (process.env.APPVEYOR) {
       if (error.code === 'EBUSY' && retry > 0) return rm(file, --retry)
-      return;
+      return
     }
 
     throw error
