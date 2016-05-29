@@ -5,7 +5,7 @@ __require('common/promisify')
 const tmpdir = require('../support/tmpdir')
 
 const { join } = require('path')
-const { unlinkAsync: rm } = require('fs')
+const { rm } = require('shelljs')
 const { all, map, using } = require('bluebird')
 const { times } = __require('common/util')
 const { Database, Connection, Statement } = __require('common/db')
@@ -26,8 +26,7 @@ describe('Database', () => {
 
     afterEach(() =>
       db.close()
-        .then(() => rm(dbFile))
-        .catch({ code: 'ENOENT' }, () => {}))
+        .then(() => rm('-f', dbFile)))
 
     describe('constructor', () => {
       it('creates an empty connection pool', () => {
