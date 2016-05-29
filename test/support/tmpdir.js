@@ -2,10 +2,11 @@
 
 const { tmpdir } = require('os')
 const { join } = require('path')
-const { mkdir, rmdir } = require('fs')
+const { mkdir } = require('fs')
+const rmdir = require('./rm')
 
 const TMPDIR = module.exports = join(tmpdir(), `tropy-${Date.now()}`)
 
 before(done => mkdir(TMPDIR, done))
 
-after(done => rmdir(TMPDIR, done))
+after(() => rmdir(TMPDIR))

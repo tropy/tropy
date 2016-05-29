@@ -3,7 +3,7 @@
 __require('common/promisify')
 
 const tmpdir = require('../support/tmpdir')
-const sh = require('shelljs')
+const rm = require('../support/rm')
 
 const { join } = require('path')
 const { all, map, using } = require('bluebird')
@@ -11,20 +11,6 @@ const { times } = __require('common/util')
 const { Database, Connection, Statement } = __require('common/db')
 
 function failure() { throw new Error() }
-
-function rm(file, retry = 5000) {
-  try {
-    sh.rm('-f', file)
-
-  } catch (error) {
-    if (process.env.APPVEYOR) {
-      if (error.code === 'EBUSY' && retry > 0) return rm(file, --retry)
-      return
-    }
-
-    throw error
-  }
-}
 
 describe('Database', () => {
   describe('given a database file', () => {
