@@ -1,3 +1,20 @@
+Tropy is Copyright (c) 2015, 2016
+Center for History and New Media, George Mason University,
+Fairfax, Virginia, USA
+
+The Center for History and New Media distributes the EDTF.js source code
+under the GNU Affero General Public License, version 3 (AGPL-3.0).
+The full text of this license is given below.
+
+The Tropy name is a registered trademark of George Mason University.
+See https://tropy.org/trademark for more information.
+
+Third-party copyright in this distribution is noted where applicable.
+
+All rights not expressly granted are reserved.
+
+==============================================================================
+
                     GNU AFFERO GENERAL PUBLIC LICENSE
                        Version 3, 19 November 2007
 
@@ -659,4 +676,3 @@ specific requirements.
 if any, to sign a "copyright disclaimer" for the program, if necessary.
 For more information on this, and how to apply and follow the GNU AGPL, see
 <http://www.gnu.org/licenses/>.
-
