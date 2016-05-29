@@ -63,9 +63,6 @@ body {
   top: 0;
   width: 100%;
   height: $toolbar-height;
-  -webkit-app-region: drag;
-  -webkit-user-select: none;
-  cursor: default;
   z-index: $zindex-draggable-region;
 }
 
