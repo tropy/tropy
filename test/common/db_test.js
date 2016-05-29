@@ -39,7 +39,7 @@ describe('Database', () => {
 
     afterEach(() =>
       db.close()
-        .then(() => rm(dbFile, 3)))
+        .then(() => rm(dbFile, 1000)))
 
     describe('constructor', () => {
       it('creates an empty connection pool', () => {
