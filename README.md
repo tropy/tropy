@@ -8,11 +8,14 @@
 ## Development
 
 Install the latest version of Node.js (or at least the version that ships
-with the current Electron release). Run `npm install` to install all
-dependencies (`npm update` if you want to update the dependencies later on).
+with the current Electron release) and run:
 
-To rebuild native modules please make sure you have a C/C++ compiler and
-node-gyp installed (`npm install -g node-gyp`). Then run `npm run rebuild`.
+     $ npm install -g node-gyp
+     $ npm install
+
+If rebuilding native modules fails, please ensure you have a supported C/C++
+compiler installed, see [node-gyp](https://www.npmjs.com/package/node-gyp)
+for details.
 
 Run `npm test` to run all tests; `npm run test:renderer` or
 `npm run test:browser` to run only the Renderer/Browser tests, or
