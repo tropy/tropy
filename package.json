@@ -58,7 +58,7 @@
     "devtron": "^1.0.0",
     "electron-mocha": "^2.1.0",
     "electron-packager": "^7.0.0",
-    "eslint": "^2.4.0",
+    "eslint": "^2.11.0",
     "glob": "^7.0.0",
     "istanbul": "^0.4.1",
     "mocha": "^2.3.4",
