@@ -3,14 +3,27 @@
 __require('common/promisify')
 
 const tmpdir = require('../support/tmpdir')
+const sh = require('shelljs')
 
 const { join } = require('path')
-const { rm } = require('shelljs')
 const { all, map, using } = require('bluebird')
 const { times } = __require('common/util')
 const { Database, Connection, Statement } = __require('common/db')
 
 function failure() { throw new Error() }
+
+function rm(file, retry = 0) {
+  try {
+    sh.rm('-f', file)
+
+  } catch (error) {
+    if (process.platform === 'win32' && error.code === 'EBUSY' && retry > 0) {
+      return rm(file, --retry)
+    }
+
+    throw error
+  }
+}
 
 describe('Database', () => {
   describe('given a database file', () => {
@@ -26,7 +39,7 @@ describe('Database', () => {
 
     afterEach(() =>
       db.close()
-        .then(() => rm('-f', dbFile)))
+        .then(() => rm(dbFile, 3)))
 
     describe('constructor', () => {
       it('creates an empty connection pool', () => {
