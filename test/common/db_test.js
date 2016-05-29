@@ -12,13 +12,14 @@ const { Database, Connection, Statement } = __require('common/db')
 
 function failure() { throw new Error() }
 
-function rm(file, retry = 0) {
+function rm(file, retry = 5000) {
   try {
     sh.rm('-f', file)
 
   } catch (error) {
-    if (process.platform === 'win32' && error.code === 'EBUSY' && retry > 0) {
-      return rm(file, --retry)
+    if (process.env.APPVEYOR) {
+      if (error.code === 'EBUSY' && retry > 0) return rm(file, --retry)
+      return;
     }
 
     throw error
@@ -39,7 +40,7 @@ describe('Database', () => {
 
     afterEach(() =>
       db.close()
-        .then(() => rm(dbFile, 1000)))
+        .then(() => rm(dbFile)))
 
     describe('constructor', () => {
       it('creates an empty connection pool', () => {
