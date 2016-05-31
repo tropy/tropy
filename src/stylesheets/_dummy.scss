@@ -68,7 +68,6 @@ body {
   width: 100%;
   height: $toolbar-height;
   z-index: $zindex-draggable-region;
-  display: flex;
 }
 
 .drag {
@@ -82,7 +81,7 @@ body {
 }
 
 .toolbar-window-controls {
-  flex: 0 0 auto;
+  width: 60px;
   margin: {
     left: 9px;
     top: 9px;
@@ -114,7 +113,7 @@ body {
     }
   }
 
-  @for $action in close, minimize, maximize {
+  @each $action in close, minimize, maximize {
     .#{$action} {
       background-image:
         -webkit-image-set(
