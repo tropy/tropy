@@ -3,13 +3,17 @@ $brand-primary: #5c93e6;
 $duration: 0.8s;
 $timing: cubic-bezier(0.23, 1, 0.32, 1);
 
-$toolbar-height: 32px;
+$toolbar-height: 38px;
 
 $zindex-view: 10;
 $zindex-draggable-region: 20;
 
 * {
   box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+  }
 }
 
 html, body {
@@ -64,6 +68,7 @@ body {
   width: 100%;
   height: $toolbar-height;
   z-index: $zindex-draggable-region;
+  display: flex;
 }
 
 .drag {
@@ -74,4 +79,47 @@ body {
 
 .no-drag {
   -webkit-app-region: no-drag;
+}
+
+.toolbar-window-controls {
+  flex: 0 0 auto;
+  margin: {
+    left: 9px;
+    top: 9px;
+  }
+
+  &:hover button {
+    background-position-y: -12px;
+  }
+
+  .is-blurred & button {
+    background-position-y: -36px;
+  }
+
+  button {
+    width: 12px;
+    height: 12px;
+    border: none;
+    background: {
+      repeat: no-repeat;
+      position: 0 0;
+      size: 12px auto;
+      color: transparent;
+    }
+    margin: 4px;
+    vertical-align: top;
+
+    &:active {
+      background-position-y: -24px;
+    }
+  }
+
+  @for $action in close, minimize, maximize {
+    .#{$action} {
+      background-image:
+        -webkit-image-set(
+          url("../../static/assets/images/application-frame/#{$action}@1x.svg") 1x,
+          url("../../static/assets/images/application-frame/#{$action}@2x.svg") 2x);
+    }
+  }
 }
