@@ -46,7 +46,7 @@ body {
   z-index: $zindex-view;
 
   .item & {
-    transform: translate3d(-270px, 0, 0);
+    transform: translate3d(-280px, 0, 0);
   }
 }
 
@@ -68,7 +68,9 @@ body {
   width: 100%;
   height: $toolbar-height;
   z-index: $zindex-draggable-region;
+  display: none;
 }
+
 
 .drag {
   -webkit-app-region: drag;
