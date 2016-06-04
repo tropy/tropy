@@ -36,8 +36,8 @@ before_install:
   - node --version && npm --version
 
 install:
-  - npm install -g node-gyp
-  - npm install
+  - npm install -g node-gyp --no-progress
+  - npm install --no-progress
 
 before_script:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
@@ -52,7 +52,7 @@ script:
 
 after_success:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
-    npm install -g coveralls;
+    npm install -g coveralls --no-progress;
       cat ./coverage/lcov.info | coveralls;
     fi
 
