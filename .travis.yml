@@ -8,7 +8,6 @@ cache:
   directories:
     - $HOME/.npm
     - $HOME/.node-gyp
-    - $HOME/.electron
     - $NVM
 
 env:
