@@ -13,8 +13,9 @@ cache:
     - $NVM
 
 env:
-  - NODE_ENV=test
-  - NVM=$HOME/.nvm
+  global:
+    - NODE_ENV=test
+    - NVM=$HOME/.nvm
 
 matrix:
   include:
