@@ -1,37 +1,27 @@
 language: c
+compiler: clang
+
 git:
   depth: 9
-sudo: false
+
 cache:
   apt: true
   directories:
-    - node_modules
     - $HOME/.npm
     - $HOME/.node-gyp
+    - $HOME/.electron
     - $NVM
+
+env:
+  - NODE_ENV=test
+  - NVM=$HOME/.nvm
+
 matrix:
   include:
     - os: linux
-      compiler: clang
-      env:
-        - NODE_ENV=test
-        - NVM=$HOME/.nvm
-        - DISPLAY=:99.0
-        - CXX=clang++-3.5
-        - CC=clang-3.5
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.5
-          packages:
-            - clang-3.5
-            - xvfb
+      dist: trusty
+      sudo: required
     - os: osx
-      compiler: clang
-      env:
-        - NODE_ENV=test
-        - NVM=$HOME/.nvm
 
 before_install:
   - if [[ ! -d $NVM/.git ]]; then
@@ -43,23 +33,25 @@ before_install:
   - source $NVM/nvm.sh || true
   - nvm install
   - node --version && npm --version
+
 install:
   - npm install -g node-gyp
-  - npm update || true
-  - npm run rebuild
+  - npm install
 
 before_script:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
+      export DISPLAY=:99.0;
       sh -e /etc/init.d/xvfb start;
-      sleep 5;
+      sleep 3;
     fi
+
 script:
   - npm run make lint compile:js
   - npm run make cover
 
 after_success:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
-      npm install coveralls;
+    npm install -g coveralls;
       cat ./coverage/lcov.info | coveralls;
     fi
 
