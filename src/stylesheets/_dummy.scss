@@ -68,7 +68,6 @@ body {
   width: 100%;
   height: $toolbar-height;
   z-index: $zindex-draggable-region;
-  display: none;
 }
 
 
@@ -114,6 +113,7 @@ body {
       background-position-y: -24px;
     }
   }
+
 
   @each $action in close, minimize, maximize {
     .#{$action} {
