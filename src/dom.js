@@ -2,15 +2,14 @@
 
 const { assign } = Object
 
-const dom =
-module.exports = {
+const dom = module.exports = {
 
   $: document.querySelector.bind(document),
 
   $$: document.querySelectorAll.bind(document),
 
-  ready: (fn) => {
-    if (document.readyState !== 'loading') fn()
+  ready(fn) {
+    if (document.readyState !== 'loading') process.nextTick(fn)
     else dom.once(document, 'DOMContentLoaded', fn)
   },
 
