@@ -48,16 +48,16 @@ module.exports = class Tropy extends EventEmitter {
 
     this.win = new Window()
       .once('closed', () => { this.win = undefined })
-      .open('index.html', this.hash)
+      .open('project.html', this.hash)
 
-    this.dummy()
-    this.dummy(true)
+    this.dummy(os.platform() !== 'darwin')
 
     return this
   }
 
   dummy(frame = false) {
-    this.dummies = this.dummies || []
+    if (this.dum) return this.dum.show(), this
+
     const options = { width: 1440, height: 878 }
 
     if (!frame) {
@@ -69,12 +69,10 @@ module.exports = class Tropy extends EventEmitter {
       }
     }
 
-    const idx = this.dummies.length
-    const dum = new Window(options)
-      .once('closed', () => { this.dummies.splice(idx, 1) })
+    this.dum = new Window(options)
+      .once('closed', () => { this.dum = undefined })
       .open('dummy.html', { frame, ...this.hash })
 
-    this.dummies.push(dum)
     return this
   }
 
