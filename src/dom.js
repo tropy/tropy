@@ -16,6 +16,18 @@ module.exports = {
 
   element: document.createElement.bind(document),
 
+  create(tag, attr = {}) {
+    return dom.attr(dom.element(tag), attr)
+  },
+
+  attr(node, attributes) {
+    for (let name in attributes) {
+      node.setAttribute(name, attributes[name])
+    }
+
+    return node
+  },
+
   css(text) {
     return assign(dom.element('style'), {
       type: 'text/css', textContent: text
