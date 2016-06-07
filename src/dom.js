@@ -17,10 +17,17 @@ module.exports = {
   element: document.createElement.bind(document),
 
   create(tag, attr = {}) {
-    return dom.attr(dom.element(tag), attr)
+    return dom.attrs(dom.element(tag), attr)
   },
 
-  attr(node, attributes) {
+  attr(node, name, value) {
+    if (arguments.length === 2) return node.getAttribute(name)
+
+    return (value == null) ?
+      node.removeAttribute(name) : node.setAttribute(name, value)
+  },
+
+  attrs(node, attributes) {
     for (let name in attributes) {
       node.setAttribute(name, attributes[name])
     }
