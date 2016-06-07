@@ -51,7 +51,7 @@ target['test:browser'] = (args) => {
 
   args = args || []
 
-  if (process.env.APPVEYOR) args.push('-C -t 10000 -s 2000')
+  if (process.env.APPVEYOR) args.push('-C -t 20000 -s 2000')
 
   mocha(args.concat(glob.sync('test/{browser,common}/**/*_test.js')))
 }
