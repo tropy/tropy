@@ -23,9 +23,10 @@ global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {}
 
 
 const { verbose } = require('./common/log')(global.args.home)
+const { remote } = require('electron')
 const { basename } = require('path')
 const { release } = require('os')
-const { ready, append, stylesheet, toggle } = require('./dom')
+const { ready, append, stylesheet, create, on, toggle } = require('./dom')
 
 const PAGE = basename(window.location.pathname, '.html')
 
@@ -36,7 +37,28 @@ ready(() => {
     stylesheet(`../lib/stylesheets/${process.platform}/${PAGE}.css`),
     document.head)
 
-  if (!global.args.frame) {
+  if (global.args.frameless) {
+    const controls = create('div', { class: 'window-controls' })
+
+    const close = create('button', { tabindex: '-1', class: 'close' })
+    const min = create('button', { tabindex: '-1', class: 'minimize' })
+    const max = create('button', { tabindex: '-1', class: 'maximize' })
+
+    const win = (action) => {
+      return () => remote.BrowserWindow.getFocusedWindow()[action]()
+    }
+
+    on(close, 'click', win('close'))
+    append(close, controls)
+
+    on(min, 'click', win('minimize'))
+    append(min, controls)
+
+    on(max, 'click', win('maximize'))
+    append(max, controls)
+
+    append(controls, document.body)
+
     toggle(document.body, 'frameless', true)
   }
 
@@ -48,7 +70,6 @@ ready(() => {
 
 if (global.args.environment === 'development') {
   if (process.platform !== 'linux') {
-    const { remote } = require('electron')
     const props = Object.defineProperties
 
     props(process, {

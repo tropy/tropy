@@ -50,17 +50,17 @@ module.exports = class Tropy extends EventEmitter {
       .once('closed', () => { this.win = undefined })
       .open('project.html', this.hash)
 
-    this.dummy(os.platform() !== 'darwin')
+    this.dummy(os.platform() === 'darwin')
 
     return this
   }
 
-  dummy(frame = false) {
+  dummy(frameless = false) {
     if (this.dum) return this.dum.show(), this
 
     const options = { width: 1440, height: 878 }
 
-    if (!frame) {
+    if (frameless) {
       if (os.platform() === 'darwin' && os.release() > '15') {
         options.titleBarStyle = 'hidden-inset'
 
@@ -71,7 +71,7 @@ module.exports = class Tropy extends EventEmitter {
 
     this.dum = new Window(options)
       .once('closed', () => { this.dum = undefined })
-      .open('dummy.html', { frame, ...this.hash })
+      .open('dummy.html', { frameless, ...this.hash })
 
     return this
   }

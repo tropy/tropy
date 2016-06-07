@@ -13,6 +13,7 @@ class Window extends BrowserWindow {
     return {
       title: app.getName(),
       show: false,
+      frame: true,
       webPreferences: {
         preload: resolve(__dirname, '..', 'bootstrap.js')
       }
