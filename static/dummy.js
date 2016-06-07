@@ -15,7 +15,7 @@
       P.src = `assets/images/dummy/p-${attr(node, 'data-p')}.png`
       I.src = `assets/images/dummy/i-${attr(node, 'data-i')}.png`
 
-      toggle(C, 'item', attr(node, 'data-view') === 'item')
+      toggle(C, 'item', attr(node, 'data-view') === 'i')
     }
 
     for (let hs of hotspots) {
