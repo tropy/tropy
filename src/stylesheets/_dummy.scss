@@ -24,6 +24,9 @@ html, body {
 
 body {
   overflow: hidden;
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
 }
 
 .container {
@@ -127,20 +130,26 @@ body {
 }
 
 .hotspot {
-  background: $hotspot-color;
+  background: rgba($hotspot-color, 0.6);
   position: absolute;
   width: 100px;
   height: 20px;
   left: 0;
   top: 0;
   z-index: 30;
-  opacity: 0.6;
   display: none;
+  color: #fff;
 
   &.active {
-    opacity: 1;
+    border: 1px solid #000933;
+
+    & + .hotspot {
+      border: 1px dashed #000933;
+    }
   }
 }
+
+// Project view hotspots
 
 .container:not(.item) ~ .hotspots {
   [data-p="000"],
@@ -158,6 +167,8 @@ body {
     display: block;
   }
 }
+
+// Item view hotspots
 
 .container.item ~ .hotspots {
   [data-p="110"],
@@ -229,28 +240,38 @@ body {
 // Item view
 
 [data-p="110"] {
-  left: 100px;
-  top: 100px;
+  left: 372px;
+  top: 7px;
+  width: 24px;
+  height: 24px;
 }
 
 [data-p="120"] {
-  left: 100px;
-  top: 130px;
+  left: 376px;
+  top: 50px;
+  width: 1052px;
+  height: 377px;
 }
 
 [data-p="130"] {
-  left: 100px;
-  top: 160px;
+  left: 376px;
+  top: 451px;
+  width: 1052px;
+  height: 360px;
 }
 
 [data-p="140"] {
-  left: 100px;
-  top: 190px;
+  left: 376px;
+  top: 823px;
+  width: 1052px;
+  height: 55px;
 }
 
 [data-p="150"] {
-  left: 100px;
-  top: 220px;
+  left: 70px;
+  top: 7px;
+  width: 24px;
+  height: 24px;
 }
 
 // Project view
