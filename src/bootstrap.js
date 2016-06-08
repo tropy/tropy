@@ -52,10 +52,8 @@ ready(() => {
 
     on(min, 'click', () => win().minimize())
 
-    on(max, 'click', 'maximize', () => {
-      let w = win()
-      w[w.isMaximized() ? 'unmaximize' : 'maximize']()
-    })
+    on(max, 'click', () =>
+      win()[win().isMaximized() ? 'unmaximize' : 'maximize']())
 
     append(close, controls)
 
