@@ -16,15 +16,15 @@
       P.src = `assets/images/dummy/p-${attr(node, 'data-p')}.png`
       I.src = `assets/images/dummy/i-${attr(node, 'data-i')}.png`
 
-      for (let hs of hotspots) {
-        toggle(hs, 'active', hs === node)
+      for (let i = 0; i < hotspots.length; ++i) {
+        toggle(hotspots[i], 'active', hotspots[i] === node)
       }
 
       toggle(C, 'item', attr(node, 'data-view') === 'i')
     }
 
-    for (let hs of hotspots) {
-      on(hs, 'click', function () { activate(this) })
+    for (let i = 0; i < hotspots.length; ++i) {
+      on(hotspots[i], 'click', function () { activate(this) })
     }
 
     activate(hotspots[0])
