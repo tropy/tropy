@@ -135,11 +135,41 @@ body {
   top: 0;
   z-index: 30;
   opacity: 0.6;
+  display: none;
 
   &.active {
     opacity: 1;
   }
 }
+
+.container:not(.item) ~ .hotspots {
+  [data-p="000"],
+  [data-p="010"],
+  [data-p="020"],
+  [data-p="030"],
+  [data-p="040"],
+  [data-p="050"],
+  [data-p="060"],
+  [data-p="070"],
+  [data-p="080"],
+  [data-p="090"],
+  [data-p="100"],
+  [data-p="160"] {
+    display: block;
+  }
+}
+
+.container.item ~ .hotspots {
+  [data-p="110"],
+  [data-p="120"],
+  [data-p="130"],
+  [data-p="140"],
+  [data-p="150"] {
+    display: block;
+  }
+}
+
+// Project view
 
 [data-p="000"] {
   left: 100px;
@@ -191,43 +221,41 @@ body {
   top: 370px;
 }
 
-
 [data-p="100"] {
-  left: 210px;
+  left: 100px;
+  top: 400px;
+}
+
+// Item view
+
+[data-p="110"] {
+  left: 100px;
   top: 100px;
 }
 
-[data-p="110"] {
-  left: 210px;
+[data-p="120"] {
+  left: 100px;
   top: 130px;
 }
 
-[data-p="120"] {
-  left: 210px;
+[data-p="130"] {
+  left: 100px;
   top: 160px;
 }
 
-[data-p="130"] {
-  left: 210px;
+[data-p="140"] {
+  left: 100px;
   top: 190px;
 }
 
-[data-p="140"] {
-  left: 210px;
+[data-p="150"] {
+  left: 100px;
   top: 220px;
 }
 
-[data-p="150"] {
-  left: 210px;
-  top: 250px;
-}
-
-[data-p="150"] {
-  left: 210px;
-  top: 250px;
-}
+// Project view
 
 [data-p="160"] {
-  left: 210px;
-  top: 280px;
+  left: 100px;
+  top: 430px;
 }
