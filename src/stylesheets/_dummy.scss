@@ -1,4 +1,5 @@
 $brand-primary: #5c93e6;
+$hotspot-color: #4ec3f5;
 
 $duration: 0.8s;
 $timing: cubic-bezier(0.23, 1, 0.32, 1);
@@ -123,4 +124,106 @@ body {
           url("../../../static/assets/images/application-frame/#{$action}@2x.svg") 2x);
     }
   }
+}
+
+.hotspot {
+  background: $hotspot-color;
+  position: absolute;
+  width: 100px;
+  height: 20px;
+  left: 0;
+  top: 0;
+  z-index: 30;
+  opacity: 0.6;
+}
+
+[data-p="000"] {
+  left: 100px;
+  top: 100px;
+}
+
+[data-p="010"] {
+  left: 100px;
+  top: 130px;
+}
+
+[data-p="020"] {
+  left: 100px;
+  top: 160px;
+}
+
+[data-p="030"] {
+  left: 100px;
+  top: 190px;
+}
+
+[data-p="040"] {
+  left: 100px;
+  top: 220px;
+}
+
+[data-p="050"] {
+  left: 100px;
+  top: 250px;
+}
+
+[data-p="060"] {
+  left: 100px;
+  top: 280px;
+}
+
+[data-p="070"] {
+  left: 100px;
+  top: 310px;
+}
+
+[data-p="080"] {
+  left: 100px;
+  top: 340px;
+}
+
+[data-p="090"] {
+  left: 100px;
+  top: 370px;
+}
+
+
+[data-p="100"] {
+  left: 210px;
+  top: 100px;
+}
+
+[data-p="110"] {
+  left: 210px;
+  top: 130px;
+}
+
+[data-p="120"] {
+  left: 210px;
+  top: 160px;
+}
+
+[data-p="130"] {
+  left: 210px;
+  top: 190px;
+}
+
+[data-p="140"] {
+  left: 210px;
+  top: 220px;
+}
+
+[data-p="150"] {
+  left: 210px;
+  top: 250px;
+}
+
+[data-p="150"] {
+  left: 210px;
+  top: 250px;
+}
+
+[data-p="160"] {
+  left: 210px;
+  top: 280px;
 }
