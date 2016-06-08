@@ -9,7 +9,6 @@ const { Window, Wizard } = require('./window')
 const { all }  = require('bluebird')
 const AppMenu = require('./menu')
 const Storage = require('./storage')
-const os = require('os')
 
 const pkg = require('../../package')
 
@@ -35,8 +34,13 @@ module.exports = class Tropy extends EventEmitter {
       value: resolve(__dirname, '..', '..')
     })
 
+    // TODO make configurable
+    const frameless = (process.platform === 'darwin')
+
     prop(this, 'hash', {
-      value: { environment, debug, home: app.getPath('userData') }
+      value: {
+        environment, debug, frameless, home: app.getPath('userData')
+      }
     })
 
     this.restore()
@@ -46,30 +50,23 @@ module.exports = class Tropy extends EventEmitter {
   open() {
     if (this.win) return this.win.show(), this
 
-    this.win = new Window()
+    this.win = new Window({
+      frame: !this.hash.frameless
+    })
       .once('closed', () => { this.win = undefined })
       .open('project.html', this.hash)
 
     return this
   }
 
-  dummy(frameless = false) {
+  dummy() {
     if (this.dum) return this.dum.show(), this
 
-    const options = { width: 1440, height: 878 }
-
-    if (frameless) {
-      if (os.platform() === 'darwin' && os.release() > '15') {
-        options.titleBarStyle = 'hidden-inset'
-
-      } else {
-        options.frame = false
-      }
-    }
-
-    this.dum = new Window(options)
+    this.dum = new Window({
+      width: 1440, height: 878, frame: !this.hash.frameless
+    })
       .once('closed', () => { this.dum = undefined })
-      .open('dummy.html', { frameless, ...this.hash })
+      .open('dummy.html', this.hash)
 
     return this
   }
@@ -139,7 +136,7 @@ module.exports = class Tropy extends EventEmitter {
 
     if (process.platform === 'darwin') {
       app.on('activate', () => this.open())
-      app.on('activate', () => this.dummy(true))
+      app.on('activate', () => this.dummy())
     }
 
     ipc
@@ -148,7 +145,7 @@ module.exports = class Tropy extends EventEmitter {
 
     all([once(app, 'ready'), once(this, 'app:restore')])
       .then(() => this.open())
-      .then(() => this.dummy(process.platform === 'darwin'))
+      .then(() => this.dummy())
   }
 
 

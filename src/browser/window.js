@@ -3,6 +3,7 @@
 const { app, BrowserWindow } = require('electron')
 const { resolve } = require('path')
 const { format } = require('url')
+const { EL_CAPITAN } = require('../common/os')
 const { assign } = Object
 
 const root = resolve(__dirname, '..', '..', 'static')
@@ -21,7 +22,14 @@ class Window extends BrowserWindow {
   }
 
   constructor(options = {}) {
-    super(assign({}, new.target.defaults, options))
+    options = assign({}, new.target.defaults, options)
+
+    if (!options.frame && EL_CAPITAN) {
+      options.frame = true
+      options.titleBarStyle = 'hidden-inset'
+    }
+
+    super(options)
 
     this.webContents.on('dom-ready', () => this.show())
 
