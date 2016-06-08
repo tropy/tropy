@@ -50,8 +50,6 @@ module.exports = class Tropy extends EventEmitter {
       .once('closed', () => { this.win = undefined })
       .open('project.html', this.hash)
 
-    this.dummy(os.platform() === 'darwin')
-
     return this
   }
 
@@ -141,6 +139,7 @@ module.exports = class Tropy extends EventEmitter {
 
     if (process.platform === 'darwin') {
       app.on('activate', () => this.open())
+      app.on('activate', () => this.dummy(true))
     }
 
     ipc
@@ -149,6 +148,7 @@ module.exports = class Tropy extends EventEmitter {
 
     all([once(app, 'ready'), once(this, 'app:restore')])
       .then(() => this.open())
+      .then(() => this.dummy(process.platform === 'darwin'))
   }
 
 
