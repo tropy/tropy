@@ -2,12 +2,11 @@
 
 {
   const { name } = require('../package')
-  const { ready } = require('../lib/dom')
+  const { ready, html } = require('../lib/dom')
   const v = process.versions
 
   ready(() => {
-    document.body.innerHTML =
-      `${name} ${process.env.NODE_ENV} ${v.electron} / ${v.node}`
-
+    html(document.body,
+      `${name} ${process.env.NODE_ENV} ${v.electron} / ${v.node}`)
   })
 }

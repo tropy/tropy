@@ -34,6 +34,16 @@ const dom = module.exports = {
     return node
   },
 
+  html(node, html) {
+    return (arguments.length > 1) ?
+      (node.innerHTML = html) : node.innerHTML.trim()
+  },
+
+  text(node, text) {
+    return (arguments.length > 1) ?
+      (node.textContent = text) : node.textContent.trim()
+  },
+
   css(text) {
     return assign(dom.element('style'), {
       type: 'text/css', textContent: text
