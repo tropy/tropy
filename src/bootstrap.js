@@ -24,50 +24,14 @@ global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {}
 
 const { verbose } = require('./common/log')(global.args.home)
 const { remote } = require('electron')
-const { basename } = require('path')
-const { release } = require('os')
-const { ready, append, stylesheet, create, on, toggle } = require('./dom')
-
-const PAGE = basename(window.location.pathname, '.html')
-
-function win() {
-  return remote.BrowserWindow.getFocusedWindow()
-}
+const Window = require('./window')
+const { ready } = require('./dom')
 
 ready(() => {
-  verbose('%s ready after %dms', PAGE, Date.now() - global.START_TIME)
+  Window.setup()
 
-  append(
-    stylesheet(`../lib/stylesheets/${process.platform}/${PAGE}.css`),
-    document.head)
-
-  if (global.args.frameless) {
-    const controls = create('div', { class: 'window-controls' })
-
-    const close = create('button', { tabindex: '-1', class: 'close' })
-    const min = create('button', { tabindex: '-1', class: 'minimize' })
-    const max = create('button', { tabindex: '-1', class: 'maximize' })
-
-    on(close, 'click', () => win().close())
-
-    on(min, 'click', () => win().minimize())
-
-    on(max, 'click', () =>
-      win()[win().isMaximized() ? 'unmaximize' : 'maximize']())
-
-    append(close, controls)
-
-    append(min, controls)
-    append(max, controls)
-
-    append(controls, document.body)
-
-    toggle(document.body, 'frameless', true)
-  }
-
-  if (process.platform === 'darwin' && release() > '15') {
-    toggle(document.body, 'hidden-inset', true)
-  }
+  verbose('%s ready after %dms',
+      Window.type, Date.now() - global.START_TIME)
 })
 
 
