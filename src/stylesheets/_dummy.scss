@@ -139,6 +139,8 @@ body {
   z-index: 30;
   display: none;
   color: #fff;
+  align-items: center;
+  justify-content: center;
 
   &.active {
     border: 1px solid #000933;
@@ -164,7 +166,7 @@ body {
   [data-p="090"],
   [data-p="100"],
   [data-p="160"] {
-    display: block;
+    display: flex;
   }
 }
 
@@ -176,65 +178,87 @@ body {
   [data-p="130"],
   [data-p="140"],
   [data-p="150"] {
-    display: block;
+    display: flex;
   }
 }
 
 // Project view
 
 [data-p="000"] {
-  left: 100px;
-  top: 100px;
+  left: 0px;
+  top: 42px;
+  width: 280px;
+  height: 26px;
 }
 
 [data-p="010"] {
-  left: 100px;
-  top: 130px;
+  left: 420px;
+  top: 439px;
+  width: 600px;
+  height: 30px;
 }
 
 [data-p="020"] {
-  left: 100px;
-  top: 160px;
+  left: 420px;
+  top: 481px;
+  width: 600px;
+  height: 30px;
 }
 
 [data-p="030"] {
-  left: 100px;
-  top: 190px;
+  left: 420px;
+  top: 523px;
+  width: 600px;
+  height: 30px;
 }
 
 [data-p="040"] {
-  left: 100px;
-  top: 220px;
+  left: 284px;
+  top: 129px;
+  width: 792px;
+  height: 30px;
 }
 
 [data-p="050"] {
-  left: 100px;
-  top: 250px;
+  left: 284px;
+  top: 849px;
+  width: 792px;
+  height: 29px;
 }
 
 [data-p="060"] {
-  left: 100px;
-  top: 280px;
+  left: 1080px;
+  top: 160px;
+  width: 360px;
+  height: 26px;
 }
 
 [data-p="070"] {
-  left: 100px;
-  top: 310px;
+  left: 284px;
+  top: 189px;
+  width: 792px;
+  height: 60px;
 }
 
 [data-p="080"] {
-  left: 100px;
-  top: 340px;
+  left: 680px;
+  top: 261px;
+  width: 280px;
+  height: 60px;
 }
 
 [data-p="090"] {
-  left: 100px;
-  top: 370px;
+  left: 1080px;
+  top: 82px;
+  width: 360px;
+  height: 26px;
 }
 
 [data-p="100"] {
-  left: 100px;
-  top: 400px;
+  left: 1080px;
+  top: 346px;
+  width: 360px;
+  height: 252px;
 }
 
 // Item view
@@ -277,6 +301,8 @@ body {
 // Project view
 
 [data-p="160"] {
-  left: 100px;
+  left: 0px;
   top: 430px;
+  width: 280px;
+  height: 26px;
 }
