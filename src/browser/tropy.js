@@ -63,7 +63,12 @@ module.exports = class Tropy extends EventEmitter {
     if (this.dum) return this.dum.show(), this
 
     this.dum = new Window({
-      width: 1440, height: 878, frame: !this.hash.frameless
+      width: 1440,
+      height: 878,
+      frame: !this.hash.frameless,
+      resizable: false,
+      center: true,
+      fullscreenable: false
     })
       .once('closed', () => { this.dum = undefined })
       .open('dummy.html', this.hash)
