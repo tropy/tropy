@@ -30,6 +30,10 @@ const { ready, append, stylesheet, create, on, toggle } = require('./dom')
 
 const PAGE = basename(window.location.pathname, '.html')
 
+function win() {
+  return remote.BrowserWindow.getFocusedWindow()
+}
+
 ready(() => {
   verbose('%s ready after %dms', PAGE, Date.now() - global.START_TIME)
 
@@ -44,17 +48,18 @@ ready(() => {
     const min = create('button', { tabindex: '-1', class: 'minimize' })
     const max = create('button', { tabindex: '-1', class: 'maximize' })
 
-    const win = (action) => {
-      return () => remote.BrowserWindow.getFocusedWindow()[action]()
-    }
+    on(close, 'click', () => win().close())
 
-    on(close, 'click', win('close'))
+    on(min, 'click', () => win().minimize())
+
+    on(max, 'click', 'maximize', () => {
+      let w = win()
+      w[w.isMaximized() ? 'unmaximize' : 'maximize']()
+    })
+
     append(close, controls)
 
-    on(min, 'click', win('minimize'))
     append(min, controls)
-
-    on(max, 'click', win('maximize'))
     append(max, controls)
 
     append(controls, document.body)
