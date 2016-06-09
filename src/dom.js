@@ -83,5 +83,9 @@ const dom = module.exports = {
 
   toggle(node, ...args) {
     return node.classList.toggle(...args)
+  },
+
+  has(node, name) {
+    return node.classList.contains(name)
   }
 }
