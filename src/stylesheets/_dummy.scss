@@ -141,6 +141,12 @@ body {
   color: #fff;
   align-items: center;
   justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+
+  .shift & {
+    opacity: 1;
+  }
 
   &.active {
     border: 1px solid #000933;
