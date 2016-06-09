@@ -33,6 +33,10 @@ class Window extends BrowserWindow {
 
     this.webContents.on('dom-ready', () => this.show())
 
+    for (let event of ['focus', 'blur', 'maximize', 'unmaximize']) {
+      this.on(event, () => this.webContents.send('win', event))
+    }
+
     // Temporary workaround until we decide what to do about Electron#5652
     assign(this, {
       open(file, data = {}) {
