@@ -143,6 +143,7 @@ body {
   justify-content: center;
   opacity: 0;
   transition: opacity 0.2s ease;
+  cursor: default;
 
   .shift & {
     opacity: 1;
