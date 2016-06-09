@@ -29,5 +29,12 @@
 
     activate(hotspots[0])
 
+    function shift(event) {
+      toggle(document.body, 'shift', event.shiftKey)
+    }
+
+    on(window, 'keydown', shift)
+    on(window, 'keyup', shift)
+
   })
 }

@@ -8,7 +8,7 @@ const { EL_CAPITAN } = require('./common/os')
 const Window = {
 
   get current() {
-    return remote.BrowserWindow.getFocusedWindow()
+    return remote.getCurrentWindow()
   },
 
   get type() {
