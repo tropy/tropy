@@ -68,6 +68,7 @@ module.exports = class Tropy extends EventEmitter {
     this.dum = new Window({
       width: 1280,
       height: 720,
+      useContentSize: true,
       frame: !this.hash.frameless,
       resizable: false,
       center: true,
