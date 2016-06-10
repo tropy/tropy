@@ -56,7 +56,7 @@ body {
 
 .item-view {
   overflow: hidden;
-  transform: translate3d(1080px, 0, 0);
+  transform: translate3d(960px, 0, 0);
   transition: transform $duration $timing;
   z-index: $zindex-view;
 
@@ -194,106 +194,106 @@ body {
 [data-p="000"] {
   left: 0px;
   top: 42px;
-  width: 280px;
+  width: 250px;
   height: 26px;
 }
 
 [data-p="010"] {
-  left: 420px;
-  top: 439px;
-  width: 600px;
+  left: 254px;
+  top: 69px;
+  width: 702px;
   height: 30px;
 }
 
 [data-p="020"] {
-  left: 420px;
-  top: 481px;
-  width: 600px;
-  height: 30px;
+  left: 554px;
+  top: 145px;
+  width: 320px;
+  height: 24px;
 }
 
 [data-p="030"] {
-  left: 420px;
-  top: 523px;
-  width: 600px;
-  height: 30px;
+  left: 555px;
+  top: 195px;
+  width: 318px;
+  height: 24px;
 }
 
 [data-p="040"] {
-  left: 284px;
-  top: 129px;
-  width: 792px;
+  left: 254px;
+  top: 249px;
+  width: 702px;
   height: 30px;
 }
 
 [data-p="050"] {
-  left: 284px;
-  top: 849px;
-  width: 792px;
-  height: 29px;
+  left: 254px;
+  top: 459px;
+  width: 702px;
+  height: 30px;
 }
 
 [data-p="060"] {
-  left: 1080px;
+  left: 960px;
   top: 160px;
-  width: 360px;
+  width: 320px;
   height: 26px;
 }
 
 [data-p="070"] {
-  left: 284px;
-  top: 189px;
-  width: 792px;
-  height: 60px;
+  left: 254px;
+  top: 279px;
+  width: 702px;
+  height: 30px;
 }
 
 [data-p="080"] {
-  left: 680px;
-  top: 261px;
-  width: 280px;
-  height: 60px;
+  left: 605px;
+  top: 352px;
+  width: 250px;
+  height: 19px;
 }
 
 [data-p="090"] {
-  left: 1080px;
+  left: 960px;
   top: 82px;
-  width: 360px;
+  width: 320px;
   height: 26px;
 }
 
 [data-p="100"] {
-  left: 1080px;
-  top: 346px;
-  width: 360px;
-  height: 252px;
+  left: 960px;
+  top: 293px;
+  width: 320px;
+  height: 199px;
 }
 
 // Item view
 
 [data-p="110"] {
-  left: 372px;
+  left: 332px;
   top: 7px;
   width: 24px;
   height: 24px;
 }
 
 [data-p="120"] {
-  left: 376px;
-  top: 50px;
-  width: 1052px;
-  height: 377px;
+  left: 324px;
+  top: 42px;
+  width: 956px;
+  height: 318px;
 }
 
 [data-p="130"] {
-  left: 376px;
-  top: 451px;
-  width: 1052px;
-  height: 360px;
+  left: 324px;
+  top: 364px;
+  width: 956px;
+  height: 297px;
 }
 
 [data-p="140"] {
-  left: 376px;
-  top: 823px;
+  left: 324px;
+  top: 665px;
   width: 1052px;
   height: 55px;
 }
@@ -310,6 +310,6 @@ body {
 [data-p="160"] {
   left: 0px;
   top: 430px;
-  width: 280px;
+  width: 250px;
   height: 26px;
 }
