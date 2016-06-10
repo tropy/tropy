@@ -24,6 +24,12 @@ module.exports = require('yargs')
   })
   .default('debug', () => (process.env.DEBUG || 'false'), 'false')
 
+  .option('demo', {
+    type: 'boolean',
+    describe: 'Start demo'
+  })
+  .default('demo', () => (process.env.DEMO || 'false'), 'false')
+
   .help('help')
   .version(pkg.version)
 

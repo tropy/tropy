@@ -16,7 +16,7 @@ const { defineProperty: prop } = Object
 
 module.exports = class Tropy extends EventEmitter {
 
-  constructor({ environment, debug } = {}) { // eslint-disable-line constructor-super
+  constructor({ environment, debug, demo } = {}) { // eslint-disable-line constructor-super
     if (Tropy.instance) return Tropy.instance
 
     super()
@@ -33,6 +33,9 @@ module.exports = class Tropy extends EventEmitter {
     prop(this, 'home', {
       value: resolve(__dirname, '..', '..')
     })
+
+    // TEMP demo mode
+    if (demo) this.open = this.demo
 
     // TODO make configurable
     const frameless = (process.platform === 'darwin')
@@ -59,7 +62,7 @@ module.exports = class Tropy extends EventEmitter {
     return this
   }
 
-  dummy() {
+  demo() {
     if (this.dum) return this.dum.show(), this
 
     this.dum = new Window({
@@ -141,7 +144,6 @@ module.exports = class Tropy extends EventEmitter {
 
     if (process.platform === 'darwin') {
       app.on('activate', () => this.open())
-      app.on('activate', () => this.dummy())
     }
 
     ipc
@@ -150,7 +152,6 @@ module.exports = class Tropy extends EventEmitter {
 
     all([once(app, 'ready'), once(this, 'app:restore')])
       .then(() => this.open())
-      .then(() => this.dummy())
   }
 
 

@@ -1,6 +1,6 @@
 'use strict'
 
-global.START_TIME = Date.now()
+const START_TIME = Date.now()
 global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {}
 
 {
@@ -31,7 +31,7 @@ ready(() => {
   Window.setup()
 
   verbose('%s ready after %dms',
-      Window.type, Date.now() - global.START_TIME)
+      Window.type, Date.now() - START_TIME)
 })
 
 
