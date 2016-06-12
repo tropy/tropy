@@ -171,6 +171,7 @@ body {
   [data-p="070"],
   [data-p="080"],
   [data-p="090"],
+  [data-p="095"],
   [data-p="100"],
   [data-p="160"] {
     display: flex;
@@ -183,6 +184,7 @@ body {
   [data-p="110"],
   [data-p="120"],
   [data-p="130"],
+  [data-p="135"],
   [data-p="140"],
   [data-p="150"] {
     display: flex;
@@ -261,6 +263,13 @@ body {
   height: 192px;
 }
 
+[data-p="095"] {
+  left: 960px;
+  top: 162px;
+  width: 309px;
+  height: 24px;
+}
+
 [data-p="100"] {
   left: 960px;
   top: 293px;
@@ -289,6 +298,13 @@ body {
   top: 364px;
   width: 956px;
   height: 297px;
+}
+
+[data-p="135"] {
+  left: 0px;
+  top: 114px;
+  width: 320px;
+  height: 24px;
 }
 
 [data-p="140"] {
