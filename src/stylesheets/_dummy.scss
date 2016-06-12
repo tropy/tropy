@@ -145,16 +145,17 @@ body {
   transition: opacity 0.2s ease;
   cursor: default;
   -webkit-user-select: none;
+  font-weight: 700;
 
   .shift & {
     opacity: 1;
   }
 
   &.active {
-    border: 1px solid #000933;
+    border: 2px solid #2450b5;
 
     & + .hotspot {
-      border: 1px dashed #000933;
+      border: 2px dotted #2450b5;
     }
   }
 }
@@ -311,7 +312,7 @@ body {
 [data-p="140"] {
   left: 324px;
   top: 665px;
-  width: 1052px;
+  width: 956px;
   height: 55px;
 }
 
