@@ -144,6 +144,7 @@ body {
   opacity: 0;
   transition: opacity 0.2s ease;
   cursor: default;
+  -webkit-user-select: none;
 
   .shift & {
     opacity: 1;
