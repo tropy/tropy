@@ -2,9 +2,6 @@
 
 root: true
 
-plugins:
-  - 'react'
-
 extends:
   - 'eslint:recommended'
 
