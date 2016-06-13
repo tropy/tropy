@@ -21,7 +21,7 @@ const ext = function (profile) {
   }
 }
 
-module.export = function (profile = 'Default') {
+module.exports = function (profile = 'Default') {
   try {
     const ID = 'fmkadmapgofadopljbjfkapdkoienihi'
     const rd = join(ext(profile), ID)
