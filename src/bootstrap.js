@@ -1,7 +1,6 @@
 'use strict'
 
 const START_TIME = Date.now()
-global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {}
 
 {
   const decode = decodeURIComponent
@@ -45,9 +44,6 @@ if (global.args.environment === 'development') {
     })
   }
 
-  // try {
-  //   require('devtron').install()
-  // } catch (_) {
-  //   // ignore
-  // }
+} else {
+  global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {}
 }
