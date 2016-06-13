@@ -22,6 +22,8 @@ const istanbul = path.join(nbin, 'istanbul')
 
 Object.assign(target, require('./electron'))
 
+config.fatal = false
+config.silent = false
 
 target.lint = () => {
   exec(`${lint} --color src test static scripts`)
