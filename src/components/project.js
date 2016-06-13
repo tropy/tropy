@@ -3,10 +3,8 @@
 const React = require('react')
 const Sidebar = require('./sidebar')
 
-function Project() {
-  return (
-    <Sidebar/>
-  )
-}
+const Project = () => (
+  <Sidebar/>
+)
 
 module.exports = Project
