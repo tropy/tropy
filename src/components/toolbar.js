@@ -3,8 +3,10 @@
 const React = require('react')
 
 const Toolbar = () => (
-  <div className="toolbar">
-  </div>
+  <header className="toolbar">
+  </header>
 )
 
-module.exports = Toolbar
+module.exports = {
+  Toolbar
+}

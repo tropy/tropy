@@ -1,12 +1,24 @@
 'use strict'
 
 const React = require('react')
-const Toolbar = require('./toolbar')
+const { Toolbar } = require('./toolbar')
 
-const Sidebar = () => (
+
+const Sidebar = (props) => (
   <div id="sidebar">
-    <Toolbar/>
+    {props.children}
   </div>
 )
 
-module.exports = Sidebar
+const ProjectSidebar = (props) => (
+  <Sidebar>
+    <Toolbar/>
+
+    <h1>{props.project.name}</h1>
+
+  </Sidebar>
+)
+
+module.exports = {
+  Sidebar, ProjectSidebar
+}
