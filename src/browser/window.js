@@ -50,16 +50,6 @@ class Window extends BrowserWindow {
   }
 }
 
-class Wizard extends Window {
-  static get defaults() {
-    return assign(super.defaults, {
-      frame: false,
-      width: 320,
-      height: 480
-    })
-  }
-}
-
 module.exports = {
-  Window, Wizard
+  Window
 }
