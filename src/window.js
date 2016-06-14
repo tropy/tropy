@@ -53,7 +53,7 @@ const Window = {
         toggle(document.body, 'frameless', true)
 
         if (EL_CAPITAN) {
-          toggle(document.body, 'hidden-inset', true)
+          toggle(document.body, 'el-capitan', true)
 
         } else {
           Window.controls = {
