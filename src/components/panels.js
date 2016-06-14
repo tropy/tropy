@@ -4,7 +4,7 @@ const React = require('react')
 const { Toolbar } = require('./toolbar')
 
 const Panels = () => (
-  <div className="panels">
+  <div id="panels">
     <Toolbar/>
   </div>
 )

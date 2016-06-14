@@ -8,11 +8,13 @@ const { Panels } = require('./panels')
 const { Viewer } = require('./viewer')
 
 const Project = () => (
-  <div>
+  <div id="project">
     <ProjectSidebar project={{ name: 'Tropy' }}/>
     <Items/>
-    <Panels/>
-    <Viewer/>
+    <div id="item">
+      <Panels/>
+      <Viewer/>
+    </div>
   </div>
 )
 
