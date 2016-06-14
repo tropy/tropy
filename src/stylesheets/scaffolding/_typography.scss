@@ -3,5 +3,9 @@
 // --------------------------------------------------
 
 body {
-  font-family: $font-family-base;
+  font: {
+    family: $font-family-base;
+    size: $font-size-base;
+  }
+  color: $text-color;
 }

@@ -6,10 +6,16 @@
 // Colors
 // --------------------------------------------------
 
-$white: #fff;
+$white:         #fff;
 $gray-lightest: #f6f6f6;
-$gray-light: #e6e6e6;
-$black: #000;
+$gray-lighter:  #e6e6e6;
+$gray-light:    #ccc;
+$gray:          #777;
+$gray-dark:     #444;
+$gray-darkest:  #222;
+$black:         #000;
+
+$text-color: $gray-darkest;
 
 
 // Typography
@@ -17,6 +23,8 @@ $black: #000;
 
 $font-family-sans-serif:  "Helvetica Neue", Helvetica, sans-serif;
 $font-family-base:        $font-family-sans-serif;
+
+$font-size-base: 14px;
 
 
 // Default Dimensions
