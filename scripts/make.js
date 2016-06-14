@@ -3,22 +3,23 @@
 require('shelljs/make')
 
 const assert = require('assert')
-const path = require('path')
-const fs = require('fs')
 const babel = require('babel-core')
 const glob = require('glob')
 const sass = require('node-sass')
 const log = require('./log')
 
-const home = path.resolve(__dirname, '..')
-const nbin = path.join(home, 'node_modules', '.bin')
-const doc = path.join(home, 'doc')
-const cov = path.join(home, 'coverage')
-const scov = path.join(home, 'src-cov')
+const { statSync: stat } = require('fs')
+const { join, resolve, relative, dirname } = require('path')
 
-const emocha = path.join(nbin, 'electron-mocha')
-const lint = path.join(nbin, 'eslint')
-const istanbul = path.join(nbin, 'istanbul')
+const home = resolve(__dirname, '..')
+const nbin = join(home, 'node_modules', '.bin')
+const doc = join(home, 'doc')
+const cov = join(home, 'coverage')
+const scov = join(home, 'src-cov')
+
+const emocha = join(nbin, 'electron-mocha')
+const lint = join(nbin, 'eslint')
+const istanbul = join(nbin, 'istanbul')
 
 Object.assign(target, require('./electron'))
 
@@ -75,7 +76,7 @@ target['compile:js'] = (pattern) => {
     .on('error', (err) => log.error(err, { tag }))
 
     .on('match', (file) => {
-      let src = path.relative(home, file)
+      let src = relative(home, file)
       let dst = swap(src, 'src', 'lib', '.js')
 
       assert(src.startsWith('src'))
@@ -86,7 +87,7 @@ target['compile:js'] = (pattern) => {
       babel.transformFile(src, (err, result) => {
         if (err) return log.error(err, { tag })
 
-        mkdir('-p', path.dirname(dst))
+        mkdir('-p', dirname(dst))
         result.code.to(dst)
       })
     })
@@ -100,10 +101,10 @@ target['compile:css'] = (pattern) => {
     .on('error', (err) => log.error(err, { tag }))
 
     .on('match', (file) => {
-      let src = path.relative(home, file)
+      let src = relative(home, file)
       let dst = swap(src, 'src', 'lib', '.css')
 
-      assert(src.startsWith(path.join('src', 'stylesheets')))
+      assert(src.startsWith(join('src', 'stylesheets')))
       log.info(dst, { tag })
 
       let options = {
@@ -116,7 +117,7 @@ target['compile:css'] = (pattern) => {
       sass.render(options, (err, result) => {
         if (err) return log.error(`${err.line}: ${err.message}`, { tag })
 
-        mkdir('-p', path.dirname(dst))
+        mkdir('-p', dirname(dst))
         String(result.css).to(dst)
         String(result.map).to(`${dst}.map`)
       })
@@ -155,19 +156,19 @@ target.rules = () => {
 target.clean = () => {
   target.unlink()
 
-  rm('-rf', path.join(home, 'lib'))
-  rm('-rf', path.join(home, 'dist'))
+  rm('-rf', join(home, 'lib'))
+  rm('-rf', join(home, 'dist'))
   rm('-rf', doc)
   rm('-rf', cov)
   rm('-rf', scov)
 
-  rm('-f', path.join(home, 'npm-debug.log'))
+  rm('-f', join(home, 'npm-debug.log'))
 }
 
 
 function fresh(src, dst) {
   try {
-    return fs.statSync(dst).mtime > fs.statSync(src).mtime
+    return stat(dst).mtime > stat(src).mtime
 
   } catch (_) {
     return false
