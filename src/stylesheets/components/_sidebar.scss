@@ -4,5 +4,5 @@
 
 #sidebar {
   background: $gray-lightest;
-  width: $sidebar-default-width;
+  flex-basis: $sidebar-default-width;
 }

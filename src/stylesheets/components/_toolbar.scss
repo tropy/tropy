@@ -6,11 +6,9 @@
   height: $toolbar-height;
 
   .frameless & {
-    &.drag {
-      -webkit-app-region: drag;
-      -webkit-user-select: none;
-      cursor: default;
-    }
+    -webkit-app-region: drag;
+    -webkit-user-select: none;
+    cursor: default;
 
     .no-drag {
       -webkit-app-region: no-drag;

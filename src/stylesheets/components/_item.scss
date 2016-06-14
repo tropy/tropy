@@ -1,0 +1,12 @@
+//
+// Item
+// --------------------------------------------------
+
+#item {
+  position: absolute;
+  left: calc(100% - #{$panels-default-width});
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+}

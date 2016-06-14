@@ -6,6 +6,7 @@ const { Toolbar } = require('./toolbar')
 const Panels = () => (
   <div id="panels">
     <Toolbar/>
+    Panels
   </div>
 )
 

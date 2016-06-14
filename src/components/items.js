@@ -10,6 +10,7 @@ const { Viewer } = require('./viewer')
 const Items = () => (
   <div id="items">
     <Toolbar/>
+    Items
   </div>
 )
 
