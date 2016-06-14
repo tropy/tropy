@@ -3,7 +3,7 @@
 const React = require('react')
 
 const Toolbar = () => (
-  <header className="toolbar">
+  <header className="toolbar drag">
   </header>
 )
 

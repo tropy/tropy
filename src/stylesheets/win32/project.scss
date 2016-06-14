@@ -1,1 +1,28 @@
+//
+// Project window
+// --------------------------------------------------
 
+
+// Abstracts
+// --------------------------------------------------
+
+@import
+  "../abstracts/variables",
+  "../abstracts/placeholders";
+
+
+// Scaffolding
+// --------------------------------------------------
+
+@import
+  "../scaffolding/reset",
+  "../scaffolding/scaffolding",
+  "../scaffolding/typography";
+
+
+// Components
+// --------------------------------------------------
+
+@import
+  "../components/sidebar",
+  "../components/toolbar";
