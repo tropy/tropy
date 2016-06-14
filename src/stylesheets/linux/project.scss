@@ -24,5 +24,17 @@
 // --------------------------------------------------
 
 @import
+  "../components/project",
+  "../components/toolbar",
   "../components/sidebar",
-  "../components/toolbar";
+  "../components/items",
+  "../components/item",
+  "../components/panels",
+  "../components/viewer";
+
+
+// Partials
+// --------------------------------------------------
+
+@import
+ "../partials/window-controls";
