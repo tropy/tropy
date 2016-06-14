@@ -2,8 +2,12 @@
 
 root: true
 
+plugins:
+  - 'react'
+
 extends:
   - 'eslint:recommended'
+  - 'plugin:react/recommended'
 
 parser: babel-eslint
 
@@ -22,13 +26,14 @@ rules:
   array-bracket-spacing: 2
   block-spacing: 2
   brace-style: [2, '1tbs', { allowSingleLine: true }]
-  comma-style: 2
   comma-spacing: 2
+  comma-style: 2
   complexity: [1, 9]
   curly: [2, 'multi-line']
   dot-location: [2, 'property']
   eqeqeq: [2, 'smart']
   indent: [2, 2, { SwitchCase: 1 }]
+  jsx-quotes: [2, 'prefer-double']
   key-spacing: [1, { beforeColon: false, afterColon: true }]
   keyword-spacing: 2
   max-depth: [1, 6]
@@ -46,13 +51,28 @@ rules:
   no-trailing-spaces: 2
   no-unexpected-multiline: 2
   no-unneeded-ternary: 2
-  no-useless-concat: 2
   no-unreachable: 2
+  no-useless-concat: 2
   object-curly-spacing: [2, 'always']
   operator-linebreak: [2, 'after']
   quote-props: [2, 'consistent-as-needed']
   quotes: [2, 'single', 'avoid-escape']
   radix: 2
+  react/display-name: 0
+  react/jsx-boolean-value: 2
+  react/jsx-closing-bracket-location: [2, 'after-props']
+  react/jsx-curly-spacing: [2, 'never']
+  react/jsx-equals-spacing: [2, 'never']
+  react/jsx-indent-props: [2, 2]
+  react/jsx-indent: [2, 2]
+  react/jsx-key: 2
+  react/jsx-no-bind: 2
+  react/jsx-pascal-case: 2
+  react/prefer-es6-class: 2
+  react/prefer-stateless-function: 2
+  react/require-render-return: 2
+  react/self-closing-comp: 2
+  react/wrap-multilines: 2
   semi-spacing: 0
   semi: [2, 'never']
   space-before-blocks: 2
