@@ -13,4 +13,6 @@ const Project = () => (
   </div>
 )
 
-module.exports = Project
+module.exports = {
+  Project
+}
