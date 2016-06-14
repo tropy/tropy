@@ -8,6 +8,7 @@
 
 @import
   "../abstracts/variables",
+  "../abstracts/functions",
   "../abstracts/placeholders";
 
 
@@ -36,8 +37,6 @@
 // Partials
 // --------------------------------------------------
 
-@import
- "../partials/window-controls";
 
 
 // Operating system specific styles
