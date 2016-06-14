@@ -49,9 +49,9 @@ before_script:
     fi
 
 script:
-  - npm run make lint
-  - npm run make compile
-  - npm run make cover
+  - node scripts/make lint -- true
+  - node scripts/make compile
+  - node scripts/make cover
 
 after_success:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then

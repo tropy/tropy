@@ -25,8 +25,9 @@ Object.assign(target, require('./electron'))
 config.fatal = false
 config.silent = false
 
-target.lint = () => {
-  exec(`${lint} --color src test static scripts`)
+target.lint = (bail) => {
+  const { code } = exec(`${lint} --color src test static scripts`)
+  if (bail && code) process.exit(code)
 }
 
 
