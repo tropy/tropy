@@ -109,6 +109,7 @@ target['compile:css'] = (pattern) => {
 
       let options = {
         file: src,
+        functions: SassExtensions,
         outFile: dst,
         outputStyle: 'compressed',
         sourceMap: true
@@ -183,6 +184,9 @@ function swap(filename, src, dst, ext) {
 
 function mocha(options, silent, cb) {
   return exec(`${emocha} ${options.join(' ')}`, { silent }, cb)
+}
+
+const SassExtensions = {
 }
 
 // We need to make a copy when exposing targets to other scripts,
