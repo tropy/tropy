@@ -24,14 +24,26 @@ const START_TIME = Date.now()
 const { verbose } = require('./common/log')(global.args.home)
 const { remote } = require('electron')
 const Window = require('./window')
-const { ready } = require('./dom')
+const { Strings } = require('./common/res')
+const { all } = require('bluebird')
+const { once } = require('./common/util')
+const { emit } = require('./dom')
 
-ready(() => {
-  Window.setup()
+all([
+  Strings.all().then((strings) => {
+    global.R = { strings }
+  }),
 
-  verbose('%s ready after %dms',
-      Window.type, Date.now() - START_TIME)
-})
+  once(document, 'DOMContentLoaded')
+])
+  .then(() => {
+    Window.setup()
+
+    verbose('%s ready after %dms',
+        Window.type, Date.now() - START_TIME)
+
+    emit(document, 'tropy:ready')
+  })
 
 
 if (global.args.environment === 'development') {

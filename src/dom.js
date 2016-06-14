@@ -9,8 +9,7 @@ const dom = module.exports = {
   $$: document.querySelectorAll.bind(document),
 
   ready(fn) {
-    if (document.readyState !== 'loading') process.nextTick(fn)
-    else dom.once(document, 'DOMContentLoaded', fn)
+    dom.once(document, 'tropy:ready', fn)
   },
 
   element: document.createElement.bind(document),

@@ -3,6 +3,9 @@
 plugins:
   - 'react'
 
+globals:
+  R: true
+
 extends:
   - 'plugin:react/recommended'
 
