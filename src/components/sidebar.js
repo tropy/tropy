@@ -1,14 +1,19 @@
 'use strict'
 
 const React = require('react')
-const { Toolbar } = require('./toolbar')
+const T = React.PropTypes
 
+const { Toolbar } = require('./toolbar')
 
 const Sidebar = (props) => (
   <div id="sidebar">
     {props.children}
   </div>
 )
+
+Sidebar.propTypes = {
+  children: T.node
+}
 
 const ProjectSidebar = (props) => (
   <Sidebar>
@@ -18,6 +23,12 @@ const ProjectSidebar = (props) => (
 
   </Sidebar>
 )
+
+ProjectSidebar.propTypes = {
+  project: T.shape({
+    name: T.string.isRequired
+  }).isRequired
+}
 
 module.exports = {
   Sidebar, ProjectSidebar
