@@ -54,6 +54,9 @@ module.exports = class Tropy extends EventEmitter {
     if (this.win) return this.win.show(), this
 
     this.win = new Window({
+      width: 1280,
+      height: 720,
+      useContentSize: true,
       frame: !this.hash.frameless
     })
       .once('closed', () => { this.win = undefined })
