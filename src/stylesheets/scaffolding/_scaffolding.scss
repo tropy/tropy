@@ -2,6 +2,14 @@
 // Scaffolding
 // --------------------------------------------------
 
+* {
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+  }
+}
+
 html, body, main {
   height: 100%;
 }
