@@ -30,7 +30,7 @@ const { once } = require('./common/util')
 const { emit } = require('./dom')
 
 all([
-  Strings.all().then((strings) => {
+  Strings.open('en').then((strings) => {
     global.R = { strings }
   }),
 

@@ -2,8 +2,8 @@
 
 require('./promisify')
 
-const { resolve, join, basename } = require('path')
-const { readFileAsync: read, readdirAsync: ls } = require('fs')
+const { resolve, join } = require('path')
+const { readFileAsync: read } = require('fs')
 const { assign } = Object
 
 const yaml = require('js-yaml')
@@ -46,23 +46,13 @@ class Menu extends Resource {
 class Strings extends Resource {
   static get base() { return join(super.base, 'strings') }
 
-  static async all(locale = 'en') {
-    const dict = new Strings({ [locale]: {} })
-
-    for (let s of await ls(Strings.base)) {
-      dict.merge(await Strings.open(basename(s, Strings.ext), locale))
-    }
-
-    return dict
-  }
-
-  constructor(data = {}, locale = 'en') {
+  constructor(data = {}) {
     super()
-    this.data = data[locale]
+    this.merge(data)
   }
 
-  merge(other) {
-    return (assign(this.data, other.data)), this
+  merge(data) {
+    return assign(this, data)
   }
 }
 

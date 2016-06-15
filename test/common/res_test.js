@@ -41,23 +41,15 @@ describe('Strings', () => {
     expect(new Strings()).to.be.instanceof(Resource)
   })
 
-  describe('.all', () => {
-    it('opens all dictionaries', () =>
-      expect(Strings.all())
-        .eventually.to.be.instanceof(Strings)
-        .and.have.deep.property('data.list.name', 'List'))
-  })
-
   describe('.expand', () => {
     it('adds string directory', () => {
-      expect(Strings.expand('mod')).to.match(/strings.mod\.yml/)
+      expect(Strings.expand('en')).to.match(/strings.en\.yml/)
     })
   })
 
   describe('.open', () => {
     it('loads and parses the strings in the given locale', () =>
-      expect(Strings.open('mod', 'en'))
-        .eventually.to.have.property('data')
-        .and.not.be.empty)
+      expect(Strings.open('en'))
+        .eventually.to.be.fulfilled)
   })
 })
