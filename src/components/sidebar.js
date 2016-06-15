@@ -5,6 +5,7 @@ const React = require('react')
 const { FormattedMessage } = require('react-intl')
 const { PropTypes } = React
 const { Toolbar } = require('./toolbar')
+const { IconFolder } = require('./icons')
 
 const Sidebar = (props) => (
   <div id="sidebar">
@@ -21,6 +22,8 @@ const ProjectSidebar = (props) => (
     <Toolbar/>
 
     <h1>{props.project.name}</h1>
+
+    <IconFolder/>
     <FormattedMessage id="sidebar.lists"/>
   </Sidebar>
 )
