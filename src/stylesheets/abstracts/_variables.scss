@@ -30,7 +30,16 @@ $line-height-base: 1.43;
 $line-height-computed: floor(($font-size-base * $line-height-base));
 
 
-// Default Dimensions
+// Space sizes
+// --------------------------------------------------
+
+$space-min: 4px;
+$space-xs: 8px;
+$space-sm: 12px;
+$space-md: 16px;
+
+
+// Dimensions
 // --------------------------------------------------
 
 $toolbar-height: 38px;

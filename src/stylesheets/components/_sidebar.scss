@@ -4,5 +4,7 @@
 
 #sidebar {
   background: $gray-lightest;
+  color: $gray-dark;
   flex-basis: $sidebar-default-width;
+  padding-left: $space-sm;
 }
