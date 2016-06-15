@@ -4,7 +4,6 @@ require('./promisify')
 
 const { resolve, join } = require('path')
 const { readFileAsync: read } = require('fs')
-const { assign } = Object
 const { flatten } = require('./util')
 
 const yaml = require('js-yaml')
