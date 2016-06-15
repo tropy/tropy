@@ -20,7 +20,6 @@ const ProjectSidebar = (props) => (
     <Toolbar/>
 
     <h1>{props.project.name}</h1>
-    <h2>{global.R.strings.list.name}</h2>
 
   </Sidebar>
 )
