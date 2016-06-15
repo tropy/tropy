@@ -4,7 +4,7 @@ describe('util', () => {
   const util = __require('common/util')
 
   describe('.once', () => {
-    const once = util.once
+    const { once } = util
 
     describe('given an event emitter', () => {
       const { EventEmitter } = require('events')
@@ -58,4 +58,13 @@ describe('util', () => {
     })
   })
 
+  describe('.flatten', () => {
+    const { flatten } = util
+
+    it('flattens empty objects', () =>
+      expect(flatten({})).to.eql({}))
+
+    it('flattens dictionaries', () =>
+      expect(flatten({ foo: { bar: 'baz' } })).to.eql({ 'foo.bar': 'baz' }))
+  })
 })

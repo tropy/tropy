@@ -5,6 +5,7 @@ require('./promisify')
 const { resolve, join } = require('path')
 const { readFileAsync: read } = require('fs')
 const { assign } = Object
+const { flatten } = require('./util')
 
 const yaml = require('js-yaml')
 const root = resolve(__dirname, '..', '..', 'res')
@@ -46,13 +47,13 @@ class Menu extends Resource {
 class Strings extends Resource {
   static get base() { return join(super.base, 'strings') }
 
-  constructor(data = {}) {
+  constructor(dict = {}) {
     super()
-    this.merge(data)
+    this.dict = dict
   }
 
-  merge(data) {
-    return assign(this, data)
+  flatten() {
+    return flatten(this.dict)
   }
 }
 

@@ -2,7 +2,6 @@
 
 const B = require('bluebird')
 
-
 module.exports = {
 
   once(emitter, event) {
@@ -33,5 +32,18 @@ module.exports = {
   times(n, fn) {
     for (var i = 0, res = []; i < n; ++i) res.push(fn(i))
     return res
+  },
+
+  flatten(obj) {
+    const res = {}
+
+    function reduce(cur, prop = '') {
+      if (Object(cur) !== cur) res[prop] = cur
+      else for (let p in cur) reduce(cur[p], prop ? `${prop}.${p}` : p)
+
+      return res
+    }
+
+    return reduce(obj)
   }
 }
