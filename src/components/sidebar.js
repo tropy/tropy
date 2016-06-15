@@ -22,9 +22,13 @@ const ProjectSidebar = (props) => (
     <Toolbar/>
 
     <h1>{props.project.name}</h1>
-
-    <IconFolder/>
     <FormattedMessage id="sidebar.lists"/>
+    <br/>
+    <IconFolder/>
+    <br/>
+    <IconFolder classes={{ active: true }}/>
+    <br/>
+    <IconFolder classes={{ blockActive: true }}/>
   </Sidebar>
 )
 
