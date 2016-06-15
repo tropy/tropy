@@ -26,6 +26,8 @@ $font-family-base:       $font-family-sans-serif;
 
 $font-size-base: 14px;
 
+$line-height-base: 1.43;
+$line-height-computed: floor(($font-size-base * $line-height-base));
 
 // Default Dimensions
 // --------------------------------------------------
