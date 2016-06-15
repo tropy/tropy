@@ -26,7 +26,7 @@ class ProjectContainer extends React.Component {
           Strings.open(this.state.defaultLocale))
 
       .then(strings => {
-        this.setState({ messages: strings })
+        this.setState({ messages: strings.flatten() })
       })
   }
 
