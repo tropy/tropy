@@ -39,10 +39,11 @@ module.exports = class Tropy extends EventEmitter {
 
     // TODO make configurable
     const frameless = (process.platform === 'darwin')
+    const locale = app.getLocale()
 
     prop(this, 'hash', {
       value: {
-        environment, debug, frameless, home: app.getPath('userData')
+        environment, debug, frameless, locale, home: app.getPath('userData')
       }
     })
 

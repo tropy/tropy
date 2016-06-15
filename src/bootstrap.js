@@ -7,13 +7,13 @@ const START_TIME = Date.now()
   const hash = window.location.hash.slice(1)
 
   if (process.env.NODE_ENV !== 'test') {
-    global.args = Object.freeze(JSON.parse(decode(hash)))
+    global.ARGS = Object.freeze(JSON.parse(decode(hash)))
 
-    process.env.NODE_ENV = global.args.environment
-    process.env.DEBUG = global.args.debug
+    process.env.NODE_ENV = ARGS.environment
+    process.env.DEBUG = ARGS.debug
 
   } else {
-    global.args = {
+    global.ARGS = {
       environment: 'test',
       debug: process.env.DEBUG
     }
@@ -21,7 +21,7 @@ const START_TIME = Date.now()
 }
 
 
-const { verbose } = require('./common/log')(global.args.home)
+const { verbose } = require('./common/log')(ARGS.home)
 const { remote } = require('electron')
 const Window = require('./window')
 const { ready } = require('./dom')
@@ -34,7 +34,7 @@ ready(() => {
 })
 
 
-if (global.args.environment === 'development') {
+if (ARGS.environment === 'development') {
   if (process.platform !== 'linux') {
     const props = Object.defineProperties
 

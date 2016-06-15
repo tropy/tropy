@@ -49,7 +49,7 @@ const Window = {
 
       ipc.on('win', (_, state) => this.toggle(state))
 
-      if (global.args.frameless) {
+      if (ARGS.frameless) {
         toggle(document.body, 'frameless', true)
 
         if (EL_CAPITAN) {
