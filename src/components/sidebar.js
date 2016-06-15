@@ -1,8 +1,9 @@
 'use strict'
 
 const React = require('react')
-const T = React.PropTypes
 
+const { FormattedMessage } = require('react-intl')
+const { PropTypes } = React
 const { Toolbar } = require('./toolbar')
 
 const Sidebar = (props) => (
@@ -12,7 +13,7 @@ const Sidebar = (props) => (
 )
 
 Sidebar.propTypes = {
-  children: T.node
+  children: PropTypes.node
 }
 
 const ProjectSidebar = (props) => (
@@ -20,13 +21,13 @@ const ProjectSidebar = (props) => (
     <Toolbar/>
 
     <h1>{props.project.name}</h1>
-
+    <FormattedMessage id="sidebar.lists"/>
   </Sidebar>
 )
 
 ProjectSidebar.propTypes = {
-  project: T.shape({
-    name: T.string.isRequired
+  project: PropTypes.shape({
+    name: PropTypes.string.isRequired
   }).isRequired
 }
 
