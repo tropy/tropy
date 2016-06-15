@@ -31,7 +31,7 @@ class ProjectContainer extends React.Component {
   }
 
   render() {
-    return (
+    return (!this.state.messages) ? null : (
       <IntlProvider {...this.state} key={this.state.locale}>
         <Project/>
       </IntlProvider>
