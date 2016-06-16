@@ -9,11 +9,6 @@ describe('Icon', () => {
   it('renders an .icon', () => {
     expect(shallow(<Icon/>)).to.have.className('icon')
   })
-
-  it('accepts extra classes', () => {
-    expect(shallow(<Icon classes={{ foo: true, bar: false }}/>))
-      .to.have.className('icon foo')
-  })
 })
 
 describe('IconFolder', () => {
