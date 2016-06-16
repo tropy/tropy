@@ -14,7 +14,15 @@ const pkg = require('../../package')
 
 const { defineProperty: prop } = Object
 
-module.exports = class Tropy extends EventEmitter {
+
+class Tropy extends EventEmitter {
+
+  static get defaults() {
+    return {
+      frameless: (process.platform === 'darwin'),
+      locale: app.getLocale()
+    }
+  }
 
   constructor({ environment, debug, demo } = {}) { // eslint-disable-line constructor-super
     if (Tropy.instance) return Tropy.instance
@@ -36,16 +44,6 @@ module.exports = class Tropy extends EventEmitter {
 
     // TEMP demo mode
     if (demo) this.open = this.demo
-
-    // TODO make configurable
-    const frameless = (process.platform === 'darwin')
-    const locale = app.getLocale() || 'en'
-
-    prop(this, 'hash', {
-      value: {
-        environment, debug, frameless, locale, home: app.getPath('userData')
-      }
-    })
 
     this.restore()
     this.listen()
@@ -90,7 +88,7 @@ module.exports = class Tropy extends EventEmitter {
   restore() {
     return this.store
       .load('state.json')
-      .catch({ code: 'ENOENT' }, () => ({}))
+      .catch({ code: 'ENOENT' }, () => Tropy.defaults)
 
       .then(state => (this.state = state, this))
 
@@ -152,6 +150,16 @@ module.exports = class Tropy extends EventEmitter {
       .then(() => this.open())
   }
 
+  get hash() {
+    return {
+      environment: this.environment,
+      debug: this.debug,
+      home: app.getPath('userData'),
+      frameless: this.store.frameless,
+      locale: this.store.locale
+    }
+  }
+
 
   get name() {
     return pkg.productName || pkg.name
@@ -168,3 +176,5 @@ module.exports = class Tropy extends EventEmitter {
     return this.environment === 'production'
   }
 }
+
+module.exports = Tropy
