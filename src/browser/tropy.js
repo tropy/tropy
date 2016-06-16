@@ -155,8 +155,8 @@ class Tropy extends EventEmitter {
       environment: this.environment,
       debug: this.debug,
       home: app.getPath('userData'),
-      frameless: this.store.frameless,
-      locale: this.store.locale
+      frameless: this.state.frameless,
+      locale: this.state.locale
     }
   }
 
