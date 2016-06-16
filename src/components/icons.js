@@ -27,6 +27,7 @@ function i(name, svg) {
   module.exports[icon.displayName] = icon
 }
 
+/* eslint-disable max-len */
 
 i('Folder', (
   <svg width="16" height="16">
