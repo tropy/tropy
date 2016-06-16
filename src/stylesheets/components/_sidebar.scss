@@ -7,4 +7,9 @@
   color: $gray-dark;
   flex-basis: $sidebar-default-width;
   padding-left: $space-sm;
+
+  .icon {
+    margin-right: $space-xs;
+    vertical-align: -2px;
+  }
 }

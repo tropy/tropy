@@ -4,9 +4,13 @@
 
 .icon {
   display: inline-block;
-  fill: $gray;
 
-  .block {
-    display: none;
+  svg {
+    display: block;
+    fill: $gray;
+
+    .block {
+      display: none;
+    }
   }
 }

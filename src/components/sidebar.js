@@ -24,7 +24,8 @@ const ProjectSidebar = (props) => (
     <h1>{props.project.name}</h1>
     <FormattedMessage id="sidebar.lists"/>
     <br/>
-    <IconFolder/>
+    <div><IconFolder/>Text</div>
+    <div>Text</div>
   </Sidebar>
 )
 
