@@ -46,6 +46,10 @@ class Menu extends Resource {
 class Strings extends Resource {
   static get base() { return join(super.base, 'strings') }
 
+  static expand(name) {
+    return super.expand(String(name).slice(0, 2))
+  }
+
   constructor(dict = {}) {
     super()
     this.dict = dict
