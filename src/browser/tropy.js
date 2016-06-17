@@ -42,8 +42,6 @@ class Tropy extends EventEmitter {
       value: resolve(__dirname, '..', '..')
     })
 
-    this.open = this.demo
-
     this.restore()
     this.listen()
   }
@@ -59,24 +57,6 @@ class Tropy extends EventEmitter {
     })
       .once('closed', () => { this.win = undefined })
       .open('project.html', this.hash)
-
-    return this
-  }
-
-  demo() {
-    if (this.dum) return this.dum.show(), this
-
-    this.dum = new Window({
-      width: 1280,
-      height: 720,
-      useContentSize: true,
-      frame: !this.hash.frameless,
-      resizable: false,
-      center: true,
-      fullscreenable: false
-    })
-      .once('closed', () => { this.dum = undefined })
-      .open('dummy.html', this.hash)
 
     return this
   }
