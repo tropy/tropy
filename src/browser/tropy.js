@@ -24,7 +24,7 @@ class Tropy extends EventEmitter {
     }
   }
 
-  constructor({ environment, debug, demo } = {}) { // eslint-disable-line constructor-super
+  constructor({ environment, debug } = {}) { // eslint-disable-line constructor-super
     if (Tropy.instance) return Tropy.instance
 
     super()
@@ -41,9 +41,6 @@ class Tropy extends EventEmitter {
     prop(this, 'home', {
       value: resolve(__dirname, '..', '..')
     })
-
-    // TEMP demo mode
-    if (demo) this.open = this.demo
 
     this.restore()
     this.listen()
