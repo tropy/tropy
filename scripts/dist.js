@@ -55,6 +55,7 @@ target.pack = (args = []) => {
       '/doc',
       '/node_modules/.bin',
       '/res/icons',
+      '/res/dmg',
       '/scripts',
       '/src',
       '/test',
@@ -71,6 +72,48 @@ target.pack = (args = []) => {
         rename(String(dst), pkg.productName, pkg.name)
         log.info('renamed executable', { tag })
         break
+
+      case 'darwin': {
+        const appdmg = require('appdmg')
+
+        const ee = appdmg({
+          target: `${out}/tropy.dmg`,
+          basepath: dir,
+          specification: { // eslint-disable-line quote-props
+            background: `res/dmg/${channel}/background.png`,
+            icon: `res/icon/${channel}/tropy.icns`,
+            'icon-size': 80,
+            contents: [
+              {
+                x: 448,
+                y: 344,
+                type: 'link',
+                path: '/Applications'
+              },
+              {
+                x: 192,
+                y: 344,
+                type: 'file',
+                path: `dist/${channel}/Tropy-darwin-x64/Tropy.app`
+              },
+              {
+                x: 512,
+                y: 128,
+                type: 'file',
+                path: `dist/${channel}/Tropy-darwin-x64/LICENSES.chromium.html`
+              }
+            ]
+          }
+        })
+
+        ee.on('finish', () => {
+          log.info(`tropy.dmg written to ${out}`, { tag })
+        })
+
+        ee.on('error', (err) => { log.error(err) })
+
+        break
+      }
     }
   })
 }
