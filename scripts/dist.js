@@ -45,15 +45,21 @@ target.pack = (args = []) => {
       'All rights not expressly granted are reserved.',
 
     ignore: [
-      'appveyor.yml',
-      '/node_modules/.bin',
+      '.babelrc',
+      '.eslintrc',
+      '.gitignore',
+      '.nvmrc',
+      '.travis.yml',
+      '/coverage',
       '/dist',
       '/doc',
-      '/coverage',
-      '/tmp',
+      '/node_modules/.bin',
+      '/res/icons',
+      '/scripts',
       '/src',
       '/test',
-      '/scripts'
+      '/tmp',
+      'appveyor.yml'
     ]
 
   }, (err, dst) => {
