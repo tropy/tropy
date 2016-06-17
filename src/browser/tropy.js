@@ -42,6 +42,8 @@ class Tropy extends EventEmitter {
       value: resolve(__dirname, '..', '..')
     })
 
+    this.open = this.demo
+
     this.restore()
     this.listen()
   }
