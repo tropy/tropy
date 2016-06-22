@@ -3,16 +3,12 @@
 const glob = require('glob')
 
 const { resolve } = require('path')
+const { readFileSync: read } = require('fs')
 const { Reporter, Instrumenter, Collector, hook } = require('istanbul')
+const { keys } = Object
 
-// Override __src to point to instrumented sources!
-global.__src = resolve(__dirname, '..', '..', 'lib')
 
-const root = resolve(__dirname, '..', '..')
-const reporter = new Reporter()
-reporter.addAll(['text-summary', 'json'])
-
-function matcher(pattern) {
+function match() {
   const map = {}
   const fn = function (file) { return map[file] }
 
@@ -22,25 +18,52 @@ function matcher(pattern) {
   return fn
 }
 
-const instrumenter = new Instrumenter()
-const transformer = instrumenter.instrumentSync.bind(instrumenter)
+function report() {
+  for (let file of matched.files) {
+    if (!cov[file]) {
+      // Files that are not touched by code ran by the test runner is
+      // manually instrumented, to illustrate the missing coverage.
+      transformer(read(file, 'utf-8'), file)
 
-hook.hookRequire(matcher('lib/**/*.js'), transformer, {})
+      // When instrumenting the code, istanbul will give each
+      // FunctionDeclaration a value of 1 in coverState.s,
+      // presumably to compensate for function hoisting.
+      // We need to reset this, as the function was not hoisted,
+      // as it was never loaded.
+      for (let key of keys(instrumenter.coverState.s)) {
+        instrumenter.coverState.s[key] = 0
+      }
 
-global.__coverage__ = {}
+      cov[file] = instrumenter.coverState
+    }
+  }
 
-function done() {
-  // Check for global variable
-  // Touch uncovered files
   const collector = new Collector()
+  collector.add(cov)
 
-  collector.add(__coverage__)
-
+  const reporter = new Reporter()
+  reporter.addAll(['text-summary', 'json'])
   reporter.write(collector, true, () => {})
 }
 
+
+const instrumenter = new Instrumenter()
+const transformer = instrumenter.instrumentSync.bind(instrumenter)
+const cov = global.__coverage__ = {}
+
+// Override __src to point to compiled sources!
+global.__src = resolve(__dirname, '..', '..', 'lib')
+
+const root = resolve(__dirname, '..', '..')
+const pattern = (process.type === 'browser') ?
+  'lib/{browser,common}/**/*.js' :
+  '{lib/!(browser)/**,lib}/*.js'
+
+const matched = match()
+hook.hookRequire(matched, transformer, {})
+
 if (process.type === 'browser') {
-  process.on('exit', done)
+  process.on('exit', report)
 } else {
-  window.addEventListener('unload', done)
+  window.addEventListener('unload', report)
 }
