@@ -42,9 +42,5 @@ function done() {
 if (process.type === 'browser') {
   process.on('exit', done)
 } else {
-  console.log('register unload handler')
-  window.addEventListener('beforeunload', done)
-  window.addEventListener('beforeunload', () => {
-    console.log('unloading...')
-  })
+  window.addEventListener('unload', done)
 }
