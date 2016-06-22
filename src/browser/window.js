@@ -31,7 +31,7 @@ class Window extends BrowserWindow {
 
     super(options)
 
-    this.webContents.on('dom-ready', () => this.show())
+    this.once('ready-to-show', () => this.show())
 
     for (let event of ['focus', 'blur', 'maximize', 'unmaximize']) {
       this.on(event, () => this.webContents.send('win', event))
