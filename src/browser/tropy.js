@@ -67,6 +67,7 @@ class Tropy extends EventEmitter {
   restore() {
     return this.store
       .load('state.json')
+      .then(state => ({ ...Tropy.defaults, ...state }))
       .catch({ code: 'ENOENT' }, () => Tropy.defaults)
 
       .then(state => (this.state = state, this))
