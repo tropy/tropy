@@ -83,12 +83,6 @@ class Tropy extends EventEmitter {
   listen() {
     this
       .on('app:new-archive', () => this.create())
-      .on('app:quit', () => app.quit())
-
-      .on('app:toggle-full-screen', win => {
-        verbose('toggle fullscreen')
-        win.setFullScreen(!win.isFullScreen())
-      })
 
       .on('app:toggle-menu-bar', win => {
         verbose('toggle menu bar')

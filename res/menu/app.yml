@@ -12,7 +12,7 @@ linux:
         role: 'close'
       - label: 'Quit'
         accelerator: 'CmdOrCtrl+Q'
-        command: 'app:quit'
+        role: 'quit'
   - &edit
     label: '&Edit'
     submenu:
@@ -40,7 +40,7 @@ linux:
     label: '&View'
     submenu:
       - label: 'Toggle &Full Screen'
-        command: 'app:toggle-full-screen'
+        role: 'togglefullscreen'
       - label: 'Toggle Hide &Menu Bar'
         command: 'app:toggle-menu-bar'
   - &win
@@ -58,7 +58,7 @@ linux:
         accelerator: 'CmdOrCtrl+R'
         command: 'win:reload'
       - label: 'Toggle &Developer Tools'
-        accelerator: 'Ctrl+Shift+I'
+        accelerator: 'CmdOrCtrl+Shift+I'
         command: 'win:toggleDevTools'
   - &help
     label: 'Help'
