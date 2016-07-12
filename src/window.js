@@ -1,8 +1,9 @@
 'use strict'
 
 const { remote, ipcRenderer: ipc } = require('electron')
-const { basename } = require('path')
+const { basename, resolve } = require('path')
 const { append, create, on, toggle, stylesheet } = require('./dom')
+const { existsSync: exists } = require('fs')
 const { EL_CAPITAN } = require('./common/os')
 
 const Window = {
@@ -44,7 +45,9 @@ const Window = {
 
 
       for (let css of Window.styles) {
-        append(stylesheet(css), document.head)
+        if (exists(resolve(__dirname, css))) {
+          append(stylesheet(css), document.head)
+        }
       }
 
       ipc.on('win', (_, state) => this.toggle(state))
