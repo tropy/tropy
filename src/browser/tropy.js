@@ -104,7 +104,7 @@ class Tropy extends EventEmitter {
       })
 
     app.on('window-all-closed', () => {
-      if (process.platform !== 'darwin') this.emit('app:quit')
+      if (process.platform !== 'darwin') app.quit()
     })
 
     app.on('before-quit', () => {
