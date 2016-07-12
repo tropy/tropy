@@ -2,11 +2,13 @@
 
 const { tmpdir } = require('os')
 const { join } = require('path')
-const { mkdir } = require('fs')
-const rmdir = require('./rm')
+const { mkdtempSync: mkdir } = require('fs')
+const { rm } = require('./rm')
 
-const TMPDIR = module.exports = join(tmpdir(), `tropy-${Date.now()}`)
-
-before(done => mkdir(TMPDIR, done))
-
-after(() => rmdir(TMPDIR))
+module.exports = {
+  mkdtmp() {
+    const dir = mkdir(join(tmpdir(), 'tropy-test-'))
+    after(() => rm(dir))
+    return dir
+  }
+}

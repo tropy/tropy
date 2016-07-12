@@ -2,8 +2,8 @@
 
 __require('common/promisify')
 
-const tmpdir = require('../support/tmpdir')
-const rm = require('../support/rm')
+const { mkdtmp } = require('../support/tmpdir')
+const { rm } = require('../support/rm')
 
 const { join } = require('path')
 const { all, map, using } = require('bluebird')
@@ -18,7 +18,7 @@ if (!process.env.APPVEYOR || process.type !== 'browser') {
   describe('Database', () => {
     describe('given a database file', () => {
       let db
-      const dbFile = join(tmpdir, 'db_test.sqlite')
+      const dbFile = join(mkdtmp(), 'db_test.sqlite')
 
       beforeEach(() => {
         db = new Database(dbFile)
