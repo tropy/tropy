@@ -51,9 +51,6 @@ const instrumenter = new Instrumenter()
 const transformer = instrumenter.instrumentSync.bind(instrumenter)
 const cov = global.__coverage__ = {}
 
-// Override __src to point to compiled sources!
-global.__src = resolve(__dirname, '..', '..', 'lib')
-
 const root = resolve(__dirname, '..', '..')
 const pattern = (process.type === 'browser') ?
   'lib/{browser,common}/**/*.js' :

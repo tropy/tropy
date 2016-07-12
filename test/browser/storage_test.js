@@ -21,14 +21,14 @@ describe('Storage', () => {
 
     describe('#save.sync', () => {
       after(done => {
-        rm(folder.expand('test-a.json'), done)
+        rm(folder.expand('test-c.json'), done)
       })
 
-      it('saves object with given name', () => (
+      it('saves object with given name', () => {
         expect(() =>
-          folder.save.sync('test-a.json', { name: 'a' })
+          folder.save.sync('test-c.json', { name: 'c' })
         ).not.to.throw()
-      ))
+      })
     })
 
     describe('#load', () => {
