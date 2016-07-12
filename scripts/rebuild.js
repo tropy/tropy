@@ -55,6 +55,11 @@ target.sqlite3 = (force) => {
   }
 }
 
+target.inspector = () => {
+  rebuild('v8-debug', { params: '--build-from-source' })
+  rebuild('v8-profiler', { params: '--build-from-source' })
+}
+
 
 
 
@@ -75,10 +80,10 @@ function cflags(flags) {
   return '"' + flags.map(flag => `-D${flag}=1`).join(' ') + '"'
 }
 
-function rebuild(mod, opts) {
+function rebuild(mod, opts = {}) {
   target.headers()
 
-  if (process.platform === 'win32') {
+  if (!opts.env || process.platform === 'win32') {
     return exec(`npm rebuild ${mod} ${opts.params} ${CONFIG.join(' ')}`)
   }
 
