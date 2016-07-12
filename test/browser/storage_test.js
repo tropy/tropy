@@ -25,7 +25,9 @@ describe('Storage', () => {
       })
 
       it('saves object with given name', () => (
-        expect(folder.save.sync('test-a.json', { name: 'a' })).not.to.throw
+        expect(() =>
+          folder.save.sync('test-a.json', { name: 'a' })
+        ).not.to.throw()
       ))
     })
 
