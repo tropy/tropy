@@ -1,6 +1,6 @@
 'use strict'
 
-const fs = require('fs')
+const { unlink: rm } = require('fs')
 
 describe('Storage', () => {
   const Storage = __require('browser/storage')
@@ -10,7 +10,7 @@ describe('Storage', () => {
 
     describe('#save', () => {
       after(done => {
-        fs.unlink(folder.expand('test-a.json'), done)
+        rm(folder.expand('test-a.json'), done)
       })
 
       it('saves object with given name', () => (
@@ -19,9 +19,9 @@ describe('Storage', () => {
       ))
     })
 
-    describe.skip('#save.sync', () => {
+    describe('#save.sync', () => {
       after(done => {
-        fs.unlink(folder.expand('test-a.json'), done)
+        rm(folder.expand('test-a.json'), done)
       })
 
       it('saves object with given name', () => (
@@ -35,7 +35,7 @@ describe('Storage', () => {
       ))
 
       after(done => {
-        fs.unlink(folder.expand('test-b.json'), done)
+        rm(folder.expand('test-b.json'), done)
       })
 
       it('opens and parses the given file', () => (
