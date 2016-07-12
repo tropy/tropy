@@ -18,7 +18,8 @@ const Window = {
 
   get styles() {
     return [
-      `../lib/stylesheets/${process.platform}/${Window.type}.css`
+      `../lib/stylesheets/${process.platform}/${Window.type}.css`,
+      `${ARGS.home}/style.css`
     ]
   },
 
