@@ -32,10 +32,10 @@ target.lint = (bail) => {
 }
 
 
-target.test = () => {
+target.test = (...args) => {
   target['lint']()
-  target['test:browser']()
-  target['test:renderer']()
+  target['test:browser'](...args)
+  target['test:renderer'](...args)
 }
 
 target['test:renderer'] = (args) => {

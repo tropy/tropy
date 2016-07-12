@@ -28,6 +28,7 @@
   "scripts": {
     "branding": "node scripts/electron branding --",
     "compile": "npm run make compile",
+    "debug": "node scripts/make test -- --debug",
     "dist": "node scripts/dist",
     "pack": "node scripts/dist pack --",
     "lint": "npm run make lint || true",
