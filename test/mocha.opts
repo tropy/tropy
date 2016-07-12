@@ -2,6 +2,6 @@
 --recursive
 --compilers js:babel-core/register
 --require test/support/mode
---require test/support/chai
 --require test/support/src
---require test/support/path
+--require test/support/chai
+--require test/support/args

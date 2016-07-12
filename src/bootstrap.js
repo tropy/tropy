@@ -1,36 +1,33 @@
 'use strict'
 
-const START_TIME = Date.now()
+const START = Date.now()
 
 {
+  const freeze = Object.freeze
   const decode = decodeURIComponent
   const hash = window.location.hash.slice(1)
 
-  if (process.env.NODE_ENV !== 'test') {
-    global.ARGS = Object.freeze(JSON.parse(decode(hash)))
+  global.ARGS = freeze(JSON.parse(decode(hash)))
 
-    process.env.NODE_ENV = ARGS.environment
-    process.env.DEBUG = ARGS.debug
-
-  } else {
-    global.ARGS = {
-      environment: 'test',
-      debug: process.env.DEBUG
-    }
-  }
+  process.env.NODE_ENV = ARGS.environment
+  process.env.DEBUG = ARGS.debug
 }
 
 
 const { verbose } = require('./common/log')(ARGS.home)
 const { remote } = require('electron')
-const Window = require('./window')
 const { ready } = require('./dom')
 
 ready(() => {
+  const READY = Date.now()
+  const Window = require('./window')
+
   Window.setup()
 
-  verbose('%s ready after %dms',
-      Window.type, Date.now() - START_TIME)
+  const DONE = Date.now()
+
+  verbose('%s ready after %dms (%dms)',
+      Window.type, DONE - START, DONE - READY)
 })
 
 
