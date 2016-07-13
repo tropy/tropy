@@ -24,6 +24,9 @@ if (opts.environment !== 'test') {
     verbose('other live instance detected, exiting...')
     app.exit(0)
   }
+
+  tropy.listen()
+  tropy.restore()
 }
 
 app

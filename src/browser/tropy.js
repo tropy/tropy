@@ -41,9 +41,6 @@ class Tropy extends EventEmitter {
     prop(this, 'home', {
       value: resolve(__dirname, '..', '..')
     })
-
-    this.restore()
-    this.listen()
   }
 
   open() {
@@ -107,7 +104,7 @@ class Tropy extends EventEmitter {
       if (process.platform !== 'darwin') app.quit()
     })
 
-    app.on('before-quit', () => {
+    app.on('quit', () => {
       verbose('saving app state')
       this.persist()
     })
