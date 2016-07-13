@@ -34,30 +34,28 @@ target.lint = (bail) => {
 
 target.test = (...args) => {
   target['lint']()
+
+  // Disk I/O can be very slow on AppVeyor!
+  if (process.env.APPVEYOR) args.push('-C -t 8000 -s 2000')
+
   target['test:browser'](...args)
   target['test:renderer'](...args)
 }
 
-target['test:renderer'] = (args) => {
+target['test:renderer'] = (...args) => {
   target.unlink()
 
-  args = args || []
   args.unshift('--renderer')
-
-  if (process.env.APPVEYOR) args.push('-C -t 8000 -s 2000')
 
   mocha(args.concat(
     glob.sync('test/**/*_test.js', { ignore: 'test/browser/*' })))
 }
 
-target['test:browser'] = (args) => {
+target['test:browser'] = (...args) => {
   target.unlink()
 
-  args = args || []
-
-  if (process.env.APPVEYOR) args.push('-C --no-timeouts -s 2000')
-
-  mocha(args.concat(glob.sync('test/{browser,common}/**/*_test.js')))
+  mocha(args.concat(
+    glob.sync('test/{browser,common}/**/*_test.js')))
 }
 
 target.mocha = (args, silent, cb) => mocha(args, silent, cb)
