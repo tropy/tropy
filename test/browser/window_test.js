@@ -17,6 +17,10 @@ describe('window', () => {
     afterEach(() =>
         win && win.destroy())
 
+    it('returns a BrowserWindow', () => {
+      expect(open('index.html')).to.be.instanceof(BrowserWindow)
+    })
+
     it('loads static page', () => {
       open('index.html')
 

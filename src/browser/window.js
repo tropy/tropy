@@ -10,6 +10,7 @@ const root = resolve(__dirname, '..', '..', 'static')
 const DEFAULTS = {
   show: false,
   frame: true,
+  useContentSize: true,
   webPreferences: {
     preload: resolve(__dirname, '..', 'bootstrap.js')
   }
@@ -30,7 +31,6 @@ module.exports = {
     }
 
     let win = new BrowserWindow(options)
-      .once('closed', () => { win = undefined })
       .once('ready-to-show', () => { win.show() })
 
     for (let event of EVENTS) {
