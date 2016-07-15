@@ -19,7 +19,7 @@ describe('Tropy', () => {
   describe('#debug', () => {
     it('falls back to DEBUG', () => {
       expect(new Tropy())
-        .to.have.property('debug', !!process.env.DEBUG)
+        .to.have.property('debug', process.env.DEBUG === 'true')
     })
   })
 })
