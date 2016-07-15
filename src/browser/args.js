@@ -10,6 +10,8 @@ module.exports = require('yargs')
   .wrap(78)
   .env(pkg.name.toUpperCase())
 
+  .demand(0, 1)
+
   .option('environment', {
     alias: 'e',
     type: 'string',
