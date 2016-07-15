@@ -16,7 +16,7 @@ const { once } = require('../common/util')
 const { info, verbose } =
   require('../common/log')(app.getPath('userData'))
 
-if (app.makeSingleInstance(() => tropy.open(opts.project))) {
+if (app.makeSingleInstance(() => tropy.open(...opts._))) {
   verbose('other live instance detected, exiting...')
   app.exit(0)
 }
@@ -34,7 +34,7 @@ all([
   once(tropy, 'app:restore')
 
 ]).then(() => {
-  tropy.open(opts.project)
+  tropy.open(...opts._)
 })
 
 app

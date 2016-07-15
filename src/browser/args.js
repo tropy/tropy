@@ -8,6 +8,7 @@ module.exports = require('yargs')
   .usage(`Usage: ${exe} [options]`)
   .strict()
   .wrap(78)
+  .env(pkg.name.toUpperCase())
 
   .option('environment', {
     alias: 'e',
@@ -23,12 +24,6 @@ module.exports = require('yargs')
     describe: 'Set debug flag'
   })
   .default('debug', () => (process.env.DEBUG || 'false'), 'false')
-
-  .option('project', {
-    alias: 'p',
-    type: 'string',
-    describe: 'Open the given project'
-  })
 
   .help('help')
   .version(pkg.version)
