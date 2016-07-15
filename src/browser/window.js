@@ -1,11 +1,11 @@
 'use strict'
 
 const { BrowserWindow } = require('electron')
-const { resolve } = require('path')
+const { resolve, join } = require('path')
 const { format } = require('url')
 const { EL_CAPITAN } = require('../common/os')
 
-const root = resolve(__dirname, '..', '..', 'static')
+const ROOT = resolve(__dirname, '..', '..', 'static')
 
 const DEFAULTS = {
   show: false,
@@ -39,7 +39,7 @@ module.exports = {
 
     win.loadURL(format({
       protocol: 'file',
-      pathname: [root, file].join('/'),
+      pathname: join(ROOT, `${file}.html`),
       hash: encodeURIComponent(JSON.stringify(data))
     }))
 

@@ -31,7 +31,7 @@ tropy.restore()
 
 all([
   once(app, 'ready'),
-  once(tropy, 'app:restore')
+  once(tropy, 'app:restored')
 
 ]).then(() => {
   tropy.open(...opts._)

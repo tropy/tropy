@@ -3,8 +3,9 @@
 const { EventEmitter } = require('events')
 const { resolve } = require('path')
 const { app, shell, ipcMain: ipc } = require('electron')
-const { verbose } = require('../common/log')
+const { verbose, debug } = require('../common/log')
 const { open } = require('./window')
+
 const AppMenu = require('./menu')
 const Storage = require('./storage')
 
@@ -18,7 +19,8 @@ class Tropy extends EventEmitter {
   static get defaults() {
     return {
       frameless: (process.platform === 'darwin'),
-      locale: app.getLocale()
+      locale: app.getLocale(),
+      recent: []
     }
   }
 
@@ -40,17 +42,27 @@ class Tropy extends EventEmitter {
     })
   }
 
-  open() {
+  open(file = this.state.recent[0]) {
     if (this.win) return this.win.show(), this
+    if (!file) return this.create()
 
-    this.win = open('project.html', this.hash, {
+    file = resolve(file)
+
+    debug(`opening ${file}...`)
+
+    this.win = open('project', { file, ...this.hash }, {
       width: 1280,
       height: 720,
       frame: !this.hash.frameless
     })
       .once('closed', () => { this.win = undefined })
 
+
     return this
+  }
+
+  opened(file) {
+    this.state.recent = [file, ...this.state.recent.slice(0, 8)]
   }
 
   create() {
@@ -64,7 +76,7 @@ class Tropy extends EventEmitter {
 
       .then(state => (this.state = state, this))
 
-      .tap(() => this.emit('app:restore'))
+      .tap(() => this.emit('app:restored'))
       .tap(() => verbose('app state restored'))
   }
 
@@ -109,7 +121,10 @@ class Tropy extends EventEmitter {
     }
 
     ipc
-      .on('command', (_, command) => this.emit(command))
+      .on('cmd', (_, command) => this.emit(command))
+
+      .on('file:opened', (_, file) => this.opened(file))
+      .on('file:created', (_, file) => this.open(file))
 
     return this
   }
