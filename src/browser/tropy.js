@@ -1,18 +1,20 @@
 'use strict'
 
 const { EventEmitter } = require('events')
-const { resolve } = require('path')
+const { resolve, join } = require('path')
 const { app, shell, ipcMain: ipc } = require('electron')
 const { verbose, debug } = require('../common/log')
 const { open } = require('./window')
+const { Database } = require('../common/db')
+const { into, compose, remove, take } = require('transducers.js')
 
+const uuid = require('node-uuid')
 const AppMenu = require('./menu')
 const Storage = require('./storage')
 
 const pkg = require('../../package')
 
 const { defineProperty: prop } = Object
-
 
 class Tropy extends EventEmitter {
 
@@ -62,10 +64,24 @@ class Tropy extends EventEmitter {
   }
 
   opened(file) {
-    this.state.recent = [file, ...this.state.recent.slice(0, 8)]
+    this.state.recent = into([file],
+        compose(remove(f => f === file), take(9)), this.state.recent)
   }
 
-  create() {
+  async create() {
+    const file = join(app.getPath('userData'), 'dev.tpy')
+
+    debug(`creating db ${file}...`)
+
+    const db = new Database(file)
+
+    await db.read(Database.schema)
+    await db.run('INSERT INTO project (project_id,name) VALUES (?,?)',
+          uuid.v4(), 'My Research')
+
+    await db.close()
+
+    this.open(file)
   }
 
   restore() {
@@ -141,7 +157,7 @@ class Tropy extends EventEmitter {
 
 
   get debug() {
-    return !!process.env.DEBUG
+    return process.env.DEBUG === 'true'
   }
 
   get environment() {

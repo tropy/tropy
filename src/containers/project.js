@@ -6,6 +6,9 @@ const { IntlProvider } = require('react-intl')
 const { Project } = require('../components/project')
 const { Strings } = require('../common/res')
 
+const { Database } = require('../common/db')
+const { ipcRenderer: ipc } = require('electron')
+
 
 class ProjectContainer extends React.Component {
   constructor() {
@@ -13,6 +16,7 @@ class ProjectContainer extends React.Component {
 
     this.state = {
       locale: ARGS.locale,
+      file: ARGS.file,
       messages: null,
       defaultLocale: 'en'
     }
@@ -28,6 +32,17 @@ class ProjectContainer extends React.Component {
       .then(strings => {
         this.setState({ messages: strings.flatten() })
       })
+
+    if (this.state.file) {
+      const db = new Database(this.state.file)
+
+      db
+        .get('SELECT project_id AS uuid, name FROM project')
+        .then(res => this.setState(res))
+        .then(() => db.close())
+
+      ipc.send('file:opened', this.state.file)
+    }
   }
 
   render() {

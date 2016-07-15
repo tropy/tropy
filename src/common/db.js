@@ -10,7 +10,7 @@ const { resolve: cd, join } = require('path')
 const { using, resolve } = require('bluebird')
 const { readFileAsync: read } = require('fs')
 const { Pool } = require('generic-pool')
-const { log, debug, info } = require('./log')
+const { debug, info } = require('./log')
 
 const root = cd(__dirname, '..', '..', 'db')
 
@@ -30,7 +30,7 @@ class Database {
       min: 0,
       max: 4,
       idleTimeoutMillis: 60000,
-      log: (msg, level) => log(level, msg, { module: 'db:pool' }),
+      log: (msg) => debug(msg, { module: 'db:pool' }),
       create: this.create.bind(this, mode),
       destroy: this.destroy.bind(this),
       validate: conn => conn.db.open

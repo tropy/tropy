@@ -10,7 +10,7 @@ const START = Date.now()
   global.ARGS = freeze(JSON.parse(decode(hash)))
 
   process.env.NODE_ENV = ARGS.environment
-  process.env.DEBUG = ARGS.debug
+  if (ARGS.debug) process.env.DEBUG = true
 }
 
 
