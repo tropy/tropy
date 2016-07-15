@@ -10,24 +10,32 @@ process.env.DEBUG = opts.debug
 
 require('./path')
 
-const { app } = require('electron')
+const { app }  = require('electron')
+const { all }  = require('bluebird')
+const { once } = require('../common/util')
 const { info, verbose } =
   require('../common/log')(app.getPath('userData'))
+
+if (app.makeSingleInstance(() => tropy.open(opts.project))) {
+  verbose('other live instance detected, exiting...')
+  app.exit(0)
+}
 
 verbose(`started in ${opts.e} mode`)
 verbose(`using ${app.getPath('userData')}`)
 
 const tropy = new (require('./tropy'))(opts)
 
-if (opts.environment !== 'test') {
-  if (app.makeSingleInstance(() => tropy.open())) {
-    verbose('other live instance detected, exiting...')
-    app.exit(0)
-  }
+tropy.listen()
+tropy.restore()
 
-  tropy.listen()
-  tropy.restore()
-}
+all([
+  once(app, 'ready'),
+  once(tropy, 'app:restore')
+
+]).then(() => {
+  tropy.open(opts.project)
+})
 
 app
   .once('ready', () => {

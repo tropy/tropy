@@ -6,9 +6,10 @@ module.exports = {
 
   once(emitter, event) {
     return new B((resolve, reject) => {
-      const on = (emitter.on || emitter.addEventListener).bind(emitter)
-      const off = (emitter.removeListener || emitter.removeEventListener)
-        .bind(emitter)
+      const on =
+        (emitter.on || emitter.addEventListener).bind(emitter)
+      const off =
+        (emitter.removeListener || emitter.removeEventListener).bind(emitter)
 
       function success(...args) {
         off(event, success)

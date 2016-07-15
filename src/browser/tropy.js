@@ -4,9 +4,7 @@ const { EventEmitter } = require('events')
 const { resolve } = require('path')
 const { app, shell, ipcMain: ipc } = require('electron')
 const { verbose } = require('../common/log')
-const { once } = require('../common/util')
 const { Window } = require('./window')
-const { all }  = require('bluebird')
 const AppMenu = require('./menu')
 const Storage = require('./storage')
 
@@ -116,9 +114,7 @@ class Tropy extends EventEmitter {
     ipc
       .on('command', (_, command) => this.emit(command))
 
-
-    all([once(app, 'ready'), once(this, 'app:restore')])
-      .then(() => this.open())
+    return this
   }
 
   get hash() {

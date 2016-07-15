@@ -24,6 +24,12 @@ module.exports = require('yargs')
   })
   .default('debug', () => (process.env.DEBUG || 'false'), 'false')
 
+  .option('project', {
+    alias: 'p',
+    type: 'string',
+    describe: 'Open the given project'
+  })
+
   .help('help')
   .version(pkg.version)
 
