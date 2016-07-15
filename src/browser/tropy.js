@@ -4,7 +4,7 @@ const { EventEmitter } = require('events')
 const { resolve } = require('path')
 const { app, shell, ipcMain: ipc } = require('electron')
 const { verbose } = require('../common/log')
-const { Window } = require('./window')
+const { open } = require('./window')
 const AppMenu = require('./menu')
 const Storage = require('./storage')
 
@@ -22,7 +22,7 @@ class Tropy extends EventEmitter {
     }
   }
 
-  constructor({ environment, debug } = {}) { // eslint-disable-line constructor-super
+  constructor() { // eslint-disable-line constructor-super
     if (Tropy.instance) return Tropy.instance
 
     super()
@@ -33,8 +33,7 @@ class Tropy extends EventEmitter {
 
     prop(this, 'store', { value: new Storage() })
 
-    prop(this, 'debug', { value: debug || process.env.DEBUG === 'true' })
-    prop(this, 'environment', { value: environment || process.env.NODE_ENV })
+    prop(this, 'projects', { value: new Map() })
 
     prop(this, 'home', {
       value: resolve(__dirname, '..', '..')
@@ -44,14 +43,12 @@ class Tropy extends EventEmitter {
   open() {
     if (this.win) return this.win.show(), this
 
-    this.win = new Window({
+    this.win = open('project.html', this.hash, {
       width: 1280,
       height: 720,
-      useContentSize: true,
       frame: !this.hash.frameless
     })
       .once('closed', () => { this.win = undefined })
-      .open('project.html', this.hash)
 
     return this
   }
@@ -128,19 +125,16 @@ class Tropy extends EventEmitter {
   }
 
 
-  get name() {
-    return pkg.productName || pkg.name
+  get debug() {
+    return !!process.env.DEBUG
+  }
+
+  get environment() {
+    return process.env.NODE_ENV
   }
 
   get version() {
     return pkg.version
-  }
-
-  get development() {
-    return this.environment === 'development'
-  }
-  get production() {
-    return this.environment === 'production'
   }
 }
 

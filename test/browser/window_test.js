@@ -1,36 +1,31 @@
 'use strict'
 
-describe('Window', () => {
-  const { Window } = __require('browser/window')
-  const { BrowserWindow } = require('electron')
+const { BrowserWindow } = require('electron')
 
-  let win
+describe('window', () => {
+  const window = __require('browser/window')
 
-  beforeEach(() => {
-    win = new Window()
-    win.webContents.removeAllListeners('dom-ready')
-  })
+  describe('.open', () => {
+    let win
 
-  afterEach(() => {
-    win.destroy()
-  })
+    function open(...args) { return win = window.open(...args) }
 
-  it('extends BrowserWindow', () => {
-    expect(win).to.be.instanceof(BrowserWindow)
-  })
-
-  describe('#open', () => {
-    beforeEach(() => sinon.spy(win, 'loadURL'))
-    afterEach(() => win.loadURL.restore())
+    beforeEach(() =>
+        sinon.spy(BrowserWindow.prototype, 'loadURL'))
+    afterEach(() =>
+        BrowserWindow.prototype.loadURL.restore())
+    afterEach(() =>
+        win && win.destroy())
 
     it('loads static page', () => {
-      win.open('index.html')
+      open('index.html')
+
       expect(win.loadURL)
         .to.have.been.calledWithMatch('static/index.html')
     })
 
     it('loads url with encoded data', () => {
-      win.open('index.html', { foo: 'bar' })
+      open('index.html', { foo: 'bar' })
       expect(win.loadURL)
         .to.have.been.calledWithMatch('#%7B%22foo%22%3A%22bar%22%7D')
     })

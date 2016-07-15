@@ -10,29 +10,16 @@ describe('Tropy', () => {
   })
 
   describe('#environment', () => {
-    it('falls back to node env', () => {
-      expect(new Tropy()).to.have.property('environment', 'test')
-
-      expect(new Tropy()).to.have.property('production', false)
-      expect(new Tropy()).to.have.property('development', false)
-    })
-
-    it('can be set on create', () => {
-      expect(new Tropy({ environment: 'production' }))
-        .to.have.property('environment', 'production')
-
-      expect(new Tropy()).to.have.property('production', true)
-      expect(new Tropy()).to.have.property('development', false)
+    it('falls back to NODE_ENV', () => {
+      expect(new Tropy())
+        .to.have.property('environment', process.env.NODE_ENV)
     })
   })
 
   describe('#debug', () => {
-    it('false by default', () => {
-      expect(new Tropy().debug).to.be.falsy
-    })
-
-    it('can be set on create', () => {
-      expect(new Tropy({ debug: true })).to.have.property('debug', true)
+    it('falls back to DEBUG', () => {
+      expect(new Tropy())
+        .to.have.property('debug', !!process.env.DEBUG)
     })
   })
 })

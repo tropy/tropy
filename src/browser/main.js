@@ -24,7 +24,7 @@ if (app.makeSingleInstance(() => tropy.open(...opts._))) {
 verbose(`started in ${opts.e} mode`)
 verbose(`using ${app.getPath('userData')}`)
 
-const tropy = new (require('./tropy'))(opts)
+const tropy = new (require('./tropy'))()
 
 tropy.listen()
 tropy.restore()
