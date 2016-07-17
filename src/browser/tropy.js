@@ -66,6 +66,13 @@ class Tropy extends EventEmitter {
   opened(file) {
     this.state.recent = into([file],
         compose(remove(f => f === file), take(9)), this.state.recent)
+
+    switch (process.platform) {
+      case 'darwin':
+      case 'win32':
+        app.addRecentDocument(file)
+        break
+    }
   }
 
   async create() {
