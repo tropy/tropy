@@ -1,6 +1,6 @@
 'use strict'
 
-const START = Date.now()
+const START = performance.now()
 
 {
   const freeze = Object.freeze
@@ -19,15 +19,15 @@ const { remote } = require('electron')
 const { ready } = require('./dom')
 
 ready(() => {
-  const READY = Date.now()
+  const READY = performance.now()
   const Window = require('./window')
 
   Window.setup()
 
-  const DONE = Date.now()
+  const DONE = performance.now()
 
   verbose('%s ready after %dms (%dms)',
-      Window.type, DONE - START, DONE - READY)
+      Window.type, (DONE - START).toFixed(3), (DONE - READY).toFixed(3))
 })
 
 

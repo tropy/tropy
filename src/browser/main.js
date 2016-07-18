@@ -1,6 +1,6 @@
 'use strict'
 
-const START_TIME = Date.now()
+const START = Date.now()
 
 const args = require('./args')
 const opts = args.parse(process.argv.slice(1))
@@ -39,7 +39,7 @@ all([
 
 app
   .once('ready', () => {
-    info('electron ready after %sms', Date.now() - START_TIME)
+    info('electron ready after %sms', Date.now() - START)
   })
 
   .on('quit', (_, code) => {
