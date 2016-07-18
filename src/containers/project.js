@@ -2,12 +2,49 @@
 
 const React = require('react')
 
-const { IntlProvider } = require('react-intl')
+const { createStore } = require('redux')
+const { Provider, connect } = require('react-redux')
+const { all } = require('bluebird')
 const { Project } = require('../components/project')
 const { Strings } = require('../common/res')
 
+const ReactIntl = require('react-intl')
+//const reducers = require('../reducers/project')
+const reducers = (state = {}) => state
+
 const { Database } = require('../common/db')
 const { ipcRenderer: ipc } = require('electron')
+
+const IntlProvider = connect(state => {
+  const { intl } = state
+  return {
+    ...intl,
+    key: intl.locale
+  }
+})(ReactIntl.IntlProvider)
+
+function getIntlState(locale = ARGS.locale, defaultLocale = 'en') {
+  return Strings
+    .open(locale)
+
+    .catch({ code: 'ENOENT' }, () =>
+        Strings.open(defaultLocale))
+
+    .then(strings => ({
+      locale,
+      defaultLocale,
+      messages: strings.flatten()
+    }))
+}
+
+function getProjectState(file = ARGS.file) {
+  const db = new Database(file)
+
+  db
+    .get('SELECT project_id AS uuid, name FROM project')
+    .tap(() => ipc.send('file:opened', file))
+    .finally(() => db.close())
+}
 
 
 class ProjectContainer extends React.Component {
@@ -15,41 +52,32 @@ class ProjectContainer extends React.Component {
     super()
 
     this.state = {
-      locale: ARGS.locale,
-      file: ARGS.file,
-      messages: null,
-      defaultLocale: 'en'
+      loaded: false, loading: true, error: false
     }
   }
 
   componentWillMount() {
-    Strings
-      .open(this.state.locale)
-
-      .catch({ code: 'ENOENT' }, () =>
-          Strings.open(this.state.defaultLocale))
-
-      .then(strings => {
-        this.setState({ messages: strings.flatten() })
+    all([
+      getProjectState(),
+      getIntlState()
+    ])
+      .then(([project, intl]) => {
+        this.setState({
+          store: createStore(reducers, { project, intl })
+        })
       })
-
-    if (this.state.file) {
-      const db = new Database(this.state.file)
-
-      db
-        .get('SELECT project_id AS uuid, name FROM project')
-        .then(res => this.setState(res))
-        .then(() => db.close())
-
-      ipc.send('file:opened', this.state.file)
-    }
+      .catch(error => {
+        this.setState({ loading: false, error })
+      })
   }
 
   render() {
-    return (!this.state.messages) ? null : (
-      <IntlProvider {...this.state} key={this.state.locale}>
-        <Project/>
-      </IntlProvider>
+    return (!this.state.store) ? null : (
+      <Provider store={this.state.store}>
+        <IntlProvider>
+          <Project/>
+        </IntlProvider>
+      </Provider>
     )
   }
 }
