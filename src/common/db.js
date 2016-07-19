@@ -5,6 +5,7 @@ require('./promisify')
 const sqlite = require('sqlite3')
 const entries = require('object.entries')
 
+const { EventEmitter } = require('events')
 const { Migration } = require('./migration')
 const { resolve: cd, join } = require('path')
 const { using, resolve } = require('bluebird')
@@ -21,8 +22,9 @@ const M = {
 }
 
 
-class Database {
+class Database extends EventEmitter {
   constructor(path = ':memory:', mode = 'w+') {
+    super()
     debug(`init db ${path}`)
 
     this.path = path
@@ -67,13 +69,19 @@ class Database {
   create(mode, cb) {
     info(`opening db ${this.path}`)
 
+    const failed = (error) => {
+      this.emit('error', error)
+      return cb(error)
+    }
+
     let db = new sqlite.Database(this.path, M[mode], (error) => {
-      if (error) return cb(error)
+      if (error) return failed(error)
 
       new Connection(db)
         .configure()
         .then(conn => cb(null, conn))
-        .catch(cb)
+        .tap(() => this.emit('create'))
+        .catch(failed)
     })
 
     if (process.env.DEBUG === 'true') {
@@ -83,7 +91,10 @@ class Database {
 
   destroy(conn) {
     info(`closing db ${this.path}`)
-    conn.close()
+    conn.close(error => {
+      if (error) return this.emit('error', error)
+      this.emit('destroy')
+    })
   }
 
   acquire() {
@@ -102,8 +113,9 @@ class Database {
 
 
   close() {
-    return this.pool.drainAsync().then(() =>
-        this.pool.destroyAllNowAsync())
+    return this.pool.drainAsync()
+      .then(() => this.pool.destroyAllNowAsync())
+      .tap(() => this.emit('close'))
   }
 
 
