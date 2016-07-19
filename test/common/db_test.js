@@ -279,6 +279,44 @@ describe('Database', () => {
       })
     })
   })
+
+  describe('Instance Cache', () => {
+    const tmp = mkdtmp()
+    const db1 = join(tmp, 'db1.sqlite')
+    const db2 = join(tmp, 'db2.sqlite')
+
+    it('caches db pool instances for each file', (done) => {
+      const a = Database.cached(db1)
+      const b = Database.cached(db1)
+      const c = Database.cached(db2)
+
+      expect(a).to.equal(b)
+      expect(a).not.to.equal(c)
+
+      const closed = sinon.spy()
+
+      b.on('close', closed)
+
+      c.close()
+      a.close().then(() => {
+        expect(closed).to.have.been.called
+        done()
+      })
+    })
+
+    it('invalidates cache on close', (done) => {
+      const a = Database.cached(db1)
+
+      a.close()
+        .then(() => {
+          const b = Database.cached(db1)
+          expect(a).not.to.equal(b)
+
+          return b.close()
+        })
+        .then(done)
+    })
+  })
 })
 
 describe('Connection', () => {
