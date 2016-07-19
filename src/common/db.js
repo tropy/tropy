@@ -7,7 +7,7 @@ const entries = require('object.entries')
 
 const { EventEmitter } = require('events')
 const { Migration } = require('./migration')
-const { resolve: cd, join } = require('path')
+const { resolve: cd, join, normalize } = require('path')
 const { using, resolve } = require('bluebird')
 const { readFileAsync: read } = require('fs')
 const { Pool } = require('generic-pool')
@@ -21,8 +21,22 @@ const M = {
   'w+': sqlite.OPEN_READWRITE | sqlite.OPEN_CREATE
 }
 
+const cache = {}
+
 
 class Database extends EventEmitter {
+
+  static cached(path, mode = 'w+') {
+    path = normalize(path)
+
+    if (!cache[path]) {
+      cache[path] = new Database(path, mode)
+        .once('close', () => { cache[path] = null })
+    }
+
+    return cache[path]
+  }
+
   constructor(path = ':memory:', mode = 'w+') {
     super()
     debug(`init db ${path}`)
