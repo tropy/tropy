@@ -7,21 +7,19 @@ const { PropTypes } = React
 const { Toolbar } = require('./toolbar')
 const { IconFolder } = require('./icons')
 
-const Sidebar = (props) => (
-  <div id="sidebar">
-    {props.children}
-  </div>
+const Sidebar = ({ children }) => (
+  <div id="sidebar">{children}</div>
 )
 
 Sidebar.propTypes = {
   children: PropTypes.node
 }
 
-const ProjectSidebar = (props) => (
+const ProjectSidebar = ({ project }) => (
   <Sidebar>
     <Toolbar/>
 
-    <h1>{props.project.name}</h1>
+    <h1>{project.name}</h1>
     <FormattedMessage id="sidebar.lists"/>
     <br/>
     <div><IconFolder/>Text</div>

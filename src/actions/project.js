@@ -20,7 +20,7 @@ function open(file) {
       ipc.send(OPENED, { file: db.path, id: project.id })
       db.close() // TODO remove
 
-      return update({ file: db.path, ...project })
+      return dispatch(update({ file: db.path, ...project }))
     }
 
     if (current === db.path) {
@@ -40,6 +40,6 @@ function update(payload) {
 }
 
 module.exports = {
-  open
+  open,
+  update
 }
-
