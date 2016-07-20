@@ -88,7 +88,7 @@ darwin:
       - type: 'separator'
       - label: 'Quit'
         accelerator: 'Command+Q'
-        command: 'app:quit'
+        role: 'quit'
 
   - label: '&File'
     submenu:
