@@ -15,6 +15,8 @@ const Storage = require('./storage')
 const pkg = require('../../package')
 
 const { defineProperty: prop } = Object
+const { OPENED, CREATED } = require('../constants/project')
+
 
 class Tropy extends EventEmitter {
 
@@ -63,7 +65,7 @@ class Tropy extends EventEmitter {
     return this
   }
 
-  opened(file) {
+  opened({ file }) {
     this.state.recent = into([file],
         compose(remove(f => f === file), take(9)), this.state.recent)
 
@@ -146,8 +148,8 @@ class Tropy extends EventEmitter {
     ipc
       .on('cmd', (_, command) => this.emit(command))
 
-      .on('file:opened', (_, file) => this.opened(file))
-      .on('file:created', (_, file) => this.open(file))
+      .on(OPENED, (_, project) => this.opened(project))
+      .on(CREATED, (_, project) => this.open(project.file))
 
     return this
   }

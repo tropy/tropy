@@ -6,11 +6,14 @@
   const { ready, $ } = require('../lib/dom')
   const { create } = require('../lib/stores/project')
   const { Provider } = require('../lib/containers/provider')
-  const { Project } = require('../lib/containers/project')
+  const { Project } = require('../lib/components/project')
   const { getMessages } = require('../lib/actions/intl')
+  const { open } = require('../lib/actions/project')
 
   const store = create()
+
   store.dispatch(getMessages())
+  store.dispatch(open(ARGS.file))
 
   ready(() => {
     render(

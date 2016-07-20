@@ -14,7 +14,7 @@ function getMessages() {
           Strings.open(defaultLocale))
 
       .then(strings => strings.flatten())
-      .tap(messages => dispatch(update({ messages })))
+      .tap(messages => dispatch(update({ locale, messages })))
   }
 }
 
