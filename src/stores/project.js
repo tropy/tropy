@@ -6,9 +6,11 @@ const { default: thunk } = require('redux-thunk')
 const { project } = require('../reducers/project')
 const { intl } = require('../reducers/intl')
 
+const { getMessages } = require('../actions/intl')
+
 module.exports = {
   create(init = {}) {
-    return createStore(
+    const store = createStore(
       combineReducers({
         project,
         intl
@@ -18,5 +20,9 @@ module.exports = {
         thunk
       )
     )
+
+    store.dispatch(getMessages())
+
+    return store
   }
 }

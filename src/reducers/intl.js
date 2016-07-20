@@ -1,11 +1,10 @@
 'use strict'
 
-const init = {
-  defaultLocale: 'en'
-}
-
 module.exports = {
-  intl(state = init, action) {
+  intl(state = {
+    locale: ARGS.locale,
+    defaultLocale: 'en'
+  }, action) {
     switch (action.type) {
       case 'intl:update':
         return { ...state, ...action.payload }

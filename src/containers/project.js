@@ -5,25 +5,9 @@ const React = require('react')
 //const { connect } = require('react-redux')
 const { all } = require('bluebird')
 const { Project } = require('../components/project')
-const { Strings } = require('../common/res')
 
 const { Database } = require('../common/db')
 const { ipcRenderer: ipc } = require('electron')
-
-
-function getIntlState(locale = ARGS.locale, defaultLocale = 'en') {
-  return Strings
-    .open(locale)
-
-    .catch({ code: 'ENOENT' }, () =>
-        Strings.open(defaultLocale))
-
-    .then(strings => ({
-      locale,
-      defaultLocale,
-      messages: strings.flatten()
-    }))
-}
 
 function getProjectState(file = ARGS.file) {
   const db = new Database(file)
@@ -47,7 +31,6 @@ class ProjectContainer extends React.Component {
   componentWillMount() {
     all([
       getProjectState(),
-      getIntlState()
     ])
       //.then(([project, intl]) => {
       //  this.setState({
