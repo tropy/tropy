@@ -2,26 +2,14 @@
 
 const React = require('react')
 
-const { createStore } = require('redux')
-const { Provider, connect } = require('react-redux')
+//const { connect } = require('react-redux')
 const { all } = require('bluebird')
 const { Project } = require('../components/project')
 const { Strings } = require('../common/res')
 
-const ReactIntl = require('react-intl')
-//const reducers = require('../reducers/project')
-const reducers = (state = {}) => state
-
 const { Database } = require('../common/db')
 const { ipcRenderer: ipc } = require('electron')
 
-const IntlProvider = connect(state => {
-  const { intl } = state
-  return {
-    ...intl,
-    key: intl.locale
-  }
-})(ReactIntl.IntlProvider)
 
 function getIntlState(locale = ARGS.locale, defaultLocale = 'en') {
   return Strings
@@ -61,26 +49,24 @@ class ProjectContainer extends React.Component {
       getProjectState(),
       getIntlState()
     ])
-      .then(([project, intl]) => {
-        this.setState({
-          store: createStore(reducers, { project, intl })
-        })
-      })
-      .catch(error => {
-        this.setState({ loading: false, error })
-      })
+      //.then(([project, intl]) => {
+      //  this.setState({
+      //    store: createStore(reducers, { project, intl })
+      //  })
+      //})
+      //.catch(error => {
+      //  this.setState({ loading: false, error })
+      //})
   }
 
   render() {
-    return (!this.state.store) ? null : (
-      <Provider store={this.state.store}>
-        <IntlProvider>
-          <Project/>
-        </IntlProvider>
-      </Provider>
+    return (
+      <Project/>
     )
   }
 }
 
 
-module.exports = ProjectContainer
+module.exports = {
+  Project: ProjectContainer
+}

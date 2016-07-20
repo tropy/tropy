@@ -7,7 +7,7 @@ const { resolve } = require('bluebird')
 const { Strings } = __require('common/res')
 
 describe('Project', () => {
-  const Project = __require('containers/project')
+  const { Project } = __require('containers/project')
 
   beforeEach(() => {
     sinon.stub(Strings, 'open', () => resolve(new Strings()))
