@@ -1,6 +1,7 @@
 'use strict'
 
 const { assign } = Object
+const { once } = require('./common/util')
 
 const dom = module.exports = {
 
@@ -8,10 +9,9 @@ const dom = module.exports = {
 
   $$: document.querySelectorAll.bind(document),
 
-  ready(fn) {
-    if (document.readyState !== 'loading') process.nextTick(fn)
-    else dom.once(document, 'DOMContentLoaded', fn)
-  },
+  ready: (document.readyState !== 'loading') ?
+    Promise.resolve() :
+    once(document, 'DOMContentLoaded'),
 
   element: document.createElement.bind(document),
 

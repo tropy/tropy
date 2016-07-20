@@ -1,6 +1,6 @@
 'use strict'
 
-const { Provider: ReduxProvider, connect } = require('react-redux')
+const { Provider, connect } = require('react-redux')
 const ReactIntl = require('react-intl')
 const React = require('react')
 const { PropTypes } = React
@@ -11,19 +11,19 @@ const IntlProvider = connect(state => {
   }
 })(ReactIntl.IntlProvider)
 
-const Provider = ({ store, children }) => (
-  <ReduxProvider store={store}>
+const Main = ({ store, children }) => (
+  <Provider store={store}>
     <IntlProvider>
       {children}
     </IntlProvider>
-  </ReduxProvider>
+  </Provider>
 )
 
-Provider.propTypes = {
+Main.propTypes = {
   children: PropTypes.element.isRequired,
   store: PropTypes.object.isRequired
 }
 
 module.exports = {
-  Provider
+  Main
 }

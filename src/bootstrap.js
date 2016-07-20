@@ -18,7 +18,7 @@ const { verbose } = require('./common/log')(ARGS.home)
 const { remote } = require('electron')
 const { ready } = require('./dom')
 
-ready(() => {
+ready.then(() => {
   const READY = performance.now()
   const Window = require('./window')
 

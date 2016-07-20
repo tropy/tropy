@@ -18,6 +18,11 @@ describe('dom', () => {
     })
   })
 
+  describe('ready', () => {
+    it('resolves eventually', () =>
+      expect(dom.ready).eventually.to.be.resolved)
+  })
+
   describe('.attr()', () => {
     const attr = dom.attr
     let node
