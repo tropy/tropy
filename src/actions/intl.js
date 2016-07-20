@@ -1,6 +1,7 @@
 'use strict'
 
 const { Strings } = require('../common/res')
+const { UPDATE } = require('../constants/intl')
 
 function getMessages() {
   return (dispatch, getState) => {
@@ -19,7 +20,7 @@ function getMessages() {
 
 function update(payload) {
   return {
-    type: 'intl:update',
+    type: UPDATE,
     payload
   }
 }
