@@ -2,48 +2,33 @@
 
 /* eslint no-console: "off" */
 
-const { remote } = require('electron')
-const { join } = require('path')
-const { readdirSync: ls } = require('fs')
+const {
+  default: dti,
 
-const ext = function (profile) {
-  switch (process.platform) {
-    case 'linux':
-      return join(process.env.HOME, '.config/chromium', profile, 'Extensions')
+  REACT_DEVELOPER_TOOLS,
+  REDUX_DEVTOOLS
 
-    case 'darwin':
-      return join(process.env.HOME,
-        'Library/Application Support/Google/Chrome', profile, 'Extensions')
+} = require('electron-devtools-installer')
 
-    case 'win32':
-      return join(process.env.LOCALAPPDATA,
-        '\\Google\\Chrome\\User Data', profile, 'Extensions')
-  }
+
+function install(ext) {
+  return dti(ext)
+    .then(name => console.log(`Added Extension "${name}"`))
+    .catch(error => console.log('An Error occurred: ', error))
 }
 
-module.exports = function (profile = 'Default') {
-  try {
-    const ID = 'fmkadmapgofadopljbjfkapdkoienihi'
-    const rd = join(ext(profile), ID)
+module.exports = {
+  install,
 
-    const version = ls(rd)[0]
+  react() {
+    install(REACT_DEVELOPER_TOOLS)
+  },
 
-    if (version) {
-      console.log(remote.BrowserWindow.addDevToolsExtension(join(rd, version)))
+  redux() {
+    return install(REDUX_DEVTOOLS)
+  },
 
-    } else {
-      console.log('React DevTools not found')
-    }
-
-  } catch (_) {
-    console.log(_)
-  }
-
-
-  try {
+  devtron() {
     require('devtron').install()
-
-  } catch (_) {
-    // ignore
   }
 }
