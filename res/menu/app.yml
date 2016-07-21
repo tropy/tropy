@@ -7,6 +7,9 @@ linux:
           - label: 'Archive'
             command: 'app:new-archive'
       - type: 'separator'
+      - label: 'Open'
+        accelerator: 'CmdOrCtrl+O'
+        command: 'app:open'
       - label: 'Close'
         accelerator: 'CmdOrCtrl+W'
         role: 'close'
@@ -96,9 +99,12 @@ darwin:
         submenu:
           - label: 'Archive'
             command: 'app:new-archive'
+      - label: 'Open'
+        accelerator: 'Command+O'
+        command: 'app:open'
       - type: 'separator'
       - label: 'Close'
-        accelerator: 'CmdOrCtrl+W'
+        accelerator: 'Command+W'
         role: 'close'
   - *edit
   - *view

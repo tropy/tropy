@@ -11,24 +11,26 @@ function open(file) {
     const { project: { file: current } } = getState()
     const db = Database.cached(file)
 
-    if (!current) {
-      const project = await db.get(
-        'SELECT project_id AS id, name FROM project'
-      )
-
-      info(`opened project ${project.id}`)
-      ipc.send(OPENED, { file: db.path, id: project.id })
-      db.close() // TODO remove
-
-      return dispatch(update({ file: db.path, ...project }))
+    if (current && current !== db.path) {
+      await dispatch(close())
     }
 
-    if (current === db.path) {
-      return // TODO reload
-    }
+    const project = await db.get(
+      'SELECT project_id AS id, name FROM project'
+    )
 
-    // TODO replace
-    return
+    info(`opened project ${project.id}`)
+    ipc.send(OPENED, { file: db.path, id: project.id })
+    db.close() // TODO remove
+
+    return dispatch(update({ file: db.path, ...project }))
+  }
+}
+
+function close() {
+  return async (dispatch, getState) => {
+    const { project: { file } } = getState()
+    await Database.cached(file).close()
   }
 }
 
@@ -41,5 +43,6 @@ function update(payload) {
 
 module.exports = {
   open,
+  close,
   update
 }

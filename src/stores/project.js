@@ -7,6 +7,9 @@ const {
 const { default: thunk } = require('redux-thunk')
 const { project } = require('../reducers/project')
 const { intl } = require('../reducers/intl')
+const { ipcRenderer: ipc } = require('electron')
+const { open } = require('../actions/project')
+const { OPEN } = require('../constants/project')
 
 const dev = (ARGS.environment === 'development' || ARGS.debug)
 
@@ -25,6 +28,11 @@ module.exports = {
       compose(middleware, window.devToolsExtension()) :
       middleware
 
-    return createStore(reducer, init, enhancer)
+    const store = createStore(reducer, init, enhancer)
+
+    ipc
+      .on(OPEN, (_, file) => store.dispatch(open(file)))
+
+    return store
   }
 }

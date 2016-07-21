@@ -14,7 +14,7 @@ const Storage = require('./storage')
 const pkg = require('../../package')
 
 const { defineProperty: prop } = Object
-const { OPENED, CREATED } = require('../constants/project')
+const { OPEN, OPENED, CREATED } = require('../constants/project')
 
 
 class Tropy extends EventEmitter {
@@ -46,12 +46,15 @@ class Tropy extends EventEmitter {
   }
 
   open(file = this.state.recent[0]) {
-    if (this.win) return this.win.show(), this
     if (!file) return this.create()
-
-    file = resolve(file)
+    if (file) file = resolve(file)
 
     debug(`opening ${file}...`)
+
+    if (this.win) {
+      if (file) this.win.webContents.send(OPEN, file)
+      return this.win.show(), this
+    }
 
     this.win = open('project', { file, ...this.hash }, {
       width: 1280,
