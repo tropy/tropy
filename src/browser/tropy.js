@@ -8,7 +8,6 @@ const { open } = require('./window')
 const { Database } = require('../common/db')
 const { into, compose, remove, take } = require('transducers.js')
 
-const uuid = require('node-uuid')
 const AppMenu = require('./menu')
 const Storage = require('./storage')
 
@@ -79,16 +78,7 @@ class Tropy extends EventEmitter {
 
   async create() {
     const file = join(app.getPath('userData'), 'dev.tpy')
-
-    debug(`creating db ${file}...`)
-
-    const db = new Database(file)
-
-    await db.read(Database.schema)
-    await db.run('INSERT INTO project (project_id,name) VALUES (?,?)',
-          uuid.v4(), 'My Research')
-
-    await db.close()
+    await Database.create(file, { name: 'My Research' })
 
     this.open(file)
   }

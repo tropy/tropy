@@ -11,7 +11,8 @@ const { resolve: cd, join, normalize } = require('path')
 const { using, resolve } = require('bluebird')
 const { readFileAsync: read } = require('fs')
 const { Pool } = require('generic-pool')
-const { debug, info } = require('./log')
+const { debug, info, verbose } = require('./log')
+const { v4: uuid } = require('node-uuid')
 
 const root = cd(__dirname, '..', '..', 'db')
 
@@ -26,18 +27,38 @@ const cache = {}
 
 class Database extends EventEmitter {
 
-  static cached(path, mode = 'w+') {
+  static async create(path, { name, id } = {}) {
+    try {
+      id = id || uuid()
+
+      var db = new Database(path, 'w+', { max: 1 })
+
+      await db.read(Database.schema)
+      await db.run(
+        'INSERT INTO project (project_id,name) VALUES (?,?)', id, name
+      )
+
+      verbose(`created project db "${name}"`)
+
+      return db.path
+
+    } finally {
+      if (db) await db.close()
+    }
+  }
+
+  static cached(path) {
     path = normalize(path)
 
     if (!cache[path]) {
-      cache[path] = new Database(path, mode)
+      cache[path] = new Database(path, 'w')
         .once('close', () => { cache[path] = null })
     }
 
     return cache[path]
   }
 
-  constructor(path = ':memory:', mode = 'w+') {
+  constructor(path = ':memory:', mode = 'w+', options = {}) {
     super()
     debug(`init db ${path}`)
 
@@ -46,6 +67,7 @@ class Database extends EventEmitter {
       min: 0,
       max: 4,
       idleTimeoutMillis: 60000,
+      ...options,
       log: (msg) => debug(msg, { module: 'db:pool' }),
       create: this.create.bind(this, mode),
       destroy: this.destroy.bind(this),

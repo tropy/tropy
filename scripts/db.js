@@ -17,9 +17,12 @@ const DB = join(home, 'db', 'db.sqlite')
 
 
 target.create = (args = []) => {
-  return create(args[0])
-    .tap((db) => info(`created as ${db.path}`))
-    .call('close')
+  args[0] = args[0] || DB
+  rm('-f', args[0])
+
+  return Database
+    .create(args[0], { name: 'Tropy' })
+    .tap(path => info(`created as ${path}`))
 }
 
 target.migrate = () => {
@@ -126,13 +129,6 @@ target.rules = () => {
 
 function info(msg) {
   log.info(msg, { tag: 'db' })
-}
-
-function create(file) {
-  file = file || DB
-  rm('-f', file)
-
-  return new Database(file).read(Database.schema)
 }
 
 function migration(name, type) {
