@@ -8,3 +8,4 @@ doc
 tmp
 npm-debug.log
 db/db.sqlite
+*.tpy
