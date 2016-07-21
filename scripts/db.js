@@ -17,12 +17,14 @@ const DB = join(home, 'db', 'db.sqlite')
 
 
 target.create = (args = []) => {
-  args[0] = args[0] || DB
-  rm('-f', args[0])
+  const file = args[0] || DB
+  const name = args[1] || 'Tropy'
+
+  rm('-f', file)
 
   return Database
-    .create(args[0], { name: 'Tropy' })
-    .tap(path => info(`created as ${path}`))
+    .create(file, { name })
+    .tap(path => info(`created project "${name}" at ${path}`))
 }
 
 target.migrate = () => {
