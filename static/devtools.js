@@ -6,10 +6,12 @@ const {
   default: dti,
 
   REACT_DEVELOPER_TOOLS,
+  REACT_PERF,
   REDUX_DEVTOOLS
 
 } = require('electron-devtools-installer')
 
+const { all } = require('bluebird')
 
 function install(ext) {
   return dti(ext)
@@ -21,7 +23,10 @@ module.exports = {
   install,
 
   react() {
-    install(REACT_DEVELOPER_TOOLS)
+    return all([
+      install(REACT_DEVELOPER_TOOLS),
+      install(REACT_PERF)
+    ])
   },
 
   redux() {
