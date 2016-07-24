@@ -43,24 +43,25 @@ target.pack = (args = []) => {
       `Copyright (c) 2015-${new Date().getFullYear()} ` +
       `${release.author.name}. All rights not expressly granted are reserved.`,
 
+    'extend-info': join(dir, 'res', 'ext.plist'),
+
     ignore: [
       '.babelrc',
       '.eslintrc',
       '.gitignore',
       '.nvmrc',
       '.travis.yml',
-      '/coverage',
-      '/dist',
-      '/doc',
-      '/node_modules/.bin',
-      '/res/icons',
-      '/res/dmg',
-      '/scripts',
-      '/src',
-      '/test',
-      '/tmp',
+      'coverage',
+      'dist',
+      'doc',
+      'res/icons',
+      'res/dmg',
+      'scripts',
+      'src',
+      'test',
+      'tmp',
       'appveyor.yml'
-    ]
+    ].map(i => join(dir, i))
 
   }, (err, dst) => {
     if (err) return log.error(err)
