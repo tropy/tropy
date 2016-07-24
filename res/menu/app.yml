@@ -4,12 +4,12 @@ linux:
     submenu:
       - label: 'New'
         submenu:
-          - label: 'Archive'
-            command: 'app:new-archive'
+          - label: 'Project'
+            command: 'app:new-project'
       - type: 'separator'
       - label: 'Open'
         accelerator: 'CmdOrCtrl+O'
-        command: 'app:open'
+        command: 'app:open-dialog'
       - label: 'Close'
         accelerator: 'CmdOrCtrl+W'
         role: 'close'
@@ -97,11 +97,11 @@ darwin:
     submenu:
       - label: 'New'
         submenu:
-          - label: 'Archive'
-            command: 'app:new-archive'
+          - label: 'Project'
+            command: 'app:new-project'
       - label: 'Open'
         accelerator: 'Command+O'
-        command: 'app:open'
+        command: 'app:open-dialog'
       - type: 'separator'
       - label: 'Close'
         accelerator: 'Command+W'

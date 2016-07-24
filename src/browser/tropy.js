@@ -2,8 +2,8 @@
 
 const { EventEmitter } = require('events')
 const { resolve, join } = require('path')
-const { app, shell, ipcMain: ipc } = require('electron')
-const { verbose, debug } = require('../common/log')
+const { app, dialog, shell, ipcMain: ipc } = require('electron')
+const { verbose } = require('../common/log')
 const { open } = require('./window')
 const { Database } = require('../common/db')
 const { into, compose, remove, take } = require('transducers.js')
@@ -49,7 +49,7 @@ class Tropy extends EventEmitter {
     if (!file) return this.create()
     if (file) file = resolve(file)
 
-    debug(`opening ${file}...`)
+    verbose(`opening ${file}...`)
 
     if (this.win) {
       if (file) this.win.webContents.send(OPEN, file)
@@ -125,21 +125,34 @@ class Tropy extends EventEmitter {
         shell.openExternal('https://github.com/tropy/tropy/issues')
       })
 
-    app.on('window-all-closed', () => {
-      if (process.platform !== 'darwin') app.quit()
-    })
+      .on('app:open-dialog', (win, options = {}) => {
+        dialog.showOpenDialog(win, {
+          ...options,
+          defaultPath: app.getPath('userData'),
+          filters: [{ name: 'Tropy Projects', extensions: ['tpy'] }],
+          properties: ['openFile']
 
-    app.on('quit', () => {
-      verbose('saving app state')
-      this.persist()
-    })
+        }, files => {
+          if (files) this.open(...files)
+        })
+      })
+
+    app
+      .on('window-all-closed', () => {
+        if (process.platform !== 'darwin') app.quit()
+      })
+
+      .on('quit', () => {
+        verbose('saving app state')
+        this.persist()
+      })
 
     if (process.platform === 'darwin') {
       app.on('activate', () => this.open())
     }
 
     ipc
-      .on('cmd', (_, command) => this.emit(command))
+      .on('cmd', (_, command, ...params) => this.emit(command, ...params))
 
       .on(OPENED, (_, project) => this.opened(project))
       .on(CREATED, (_, project) => this.open(project.file))
