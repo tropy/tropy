@@ -1,6 +1,7 @@
 'use strict'
 
 const START = Date.now()
+let READY = undefined
 
 const args = require('./args')
 const opts = args.parse(process.argv.slice(1))
@@ -29,17 +30,28 @@ const tropy = new (require('./tropy'))()
 tropy.listen()
 tropy.restore()
 
+if (process.platform === 'darwin') {
+  app.on('open-file', (event, file) => {
+    event.preventDefault()
+
+    if (!READY) opts._ = [file]
+    else tropy.open(file)
+  })
+}
+
 all([
   once(app, 'ready'),
   once(tropy, 'app:restored')
 
 ]).then(() => {
+  READY = Date.now()
+  info('ready after %sms', READY - START)
+
   tropy.open(...opts._)
 })
 
 app
   .once('ready', () => {
-    info('electron ready after %sms', Date.now() - START)
   })
 
   .on('quit', (_, code) => {

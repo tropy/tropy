@@ -3,7 +3,6 @@
 const res = require('../common/res')
 const { warn } = require('../common/log')
 const { Menu } = require('electron')
-const { assign } = Object
 
 module.exports = class AppMenu {
   constructor(app) {
@@ -47,7 +46,7 @@ module.exports = class AppMenu {
 
   translate(template) {
     return template.map(item => {
-      item = assign({}, item)
+      item = { ...item }
 
       // Hiding of root items does not work at the moment.
       // See Electron #2895
