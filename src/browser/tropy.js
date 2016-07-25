@@ -23,6 +23,7 @@ class Tropy extends EventEmitter {
     return {
       frameless: (process.platform === 'darwin'),
       locale: app.getLocale(),
+      theme: 'light',
       recent: []
     }
   }
@@ -178,6 +179,7 @@ class Tropy extends EventEmitter {
       debug: this.debug,
       home: app.getPath('userData'),
       frameless: this.state.frameless,
+      theme: this.state.theme,
       locale: this.state.locale
     }
   }
