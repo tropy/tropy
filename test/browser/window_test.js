@@ -11,7 +11,7 @@ describe('window', () => {
     function open(...args) { return win = window.open(...args) }
 
     beforeEach(() =>
-        sinon.stub(BrowserWindow.prototype, 'loadURL'))
+        sinon.spy(BrowserWindow.prototype, 'loadURL'))
     afterEach(() =>
         BrowserWindow.prototype.loadURL.restore())
     afterEach(() =>
@@ -25,7 +25,7 @@ describe('window', () => {
       open('index')
 
       expect(win.loadURL)
-        .to.have.been.calledWithMatch('static/index.html')
+        .to.have.been.calledWithMatch(/static.index\.html/)
     })
 
     it('loads url with encoded data', () => {
