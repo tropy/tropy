@@ -1,6 +1,7 @@
 linux:
   - &file
     label: '&File'
+    id: 'file'
     submenu:
       - label: 'New'
         submenu:
@@ -10,9 +11,17 @@ linux:
       - label: 'Open'
         accelerator: 'CmdOrCtrl+O'
         command: 'app:open-dialog'
+      - label: 'Recent Projects'
+        id: 'recent'
+        enabled: false
+        submenu:
+          - type: 'separator'
+          - label: 'Clear List'
+            command: 'app:clear-recent-projects'
       - label: 'Close'
         accelerator: 'CmdOrCtrl+W'
         role: 'close'
+      - type: 'separator'
       - label: 'Quit'
         accelerator: 'CmdOrCtrl+Q'
         role: 'quit'

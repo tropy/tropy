@@ -1,6 +1,7 @@
 'use strict'
 
 const res = require('../common/res')
+const { basename } = require('path')
 const { warn } = require('../common/log')
 const { Menu } = require('electron')
 
@@ -13,14 +14,17 @@ module.exports = class AppMenu {
     return Menu.setApplicationMenu(this.menu), this
   }
 
-  clear() {
-    delete this.menu
-    return this.update()
-  }
+  // find(ids, menu = this.menu) {
+  //   const [id, ...tail] = ids
+  //   const item = menu.items.find(x => x.id === id)
+
+  //   if (!tail.length) return item
+  //   if (!item.submenu) return undefined
+
+  //   return this.find(tail, item.submenu)
+  // }
 
   async load(name = 'app') {
-    if (this.menu) this.clear()
-
     let template = (await res.Menu.open(name)).template
     this.menu = this.build(template)
 
@@ -50,7 +54,6 @@ module.exports = class AppMenu {
 
       // Hiding of root items does not work at the moment.
       // See Electron #2895
-
       if (item.environment) {
         item.visible = item.environment === this.app.environment
       }
@@ -70,6 +73,23 @@ module.exports = class AppMenu {
 
       if (item.submenu) {
         item.submenu = this.translate(item.submenu)
+      }
+
+      // Electron does not support removing menu items
+      // dynamically (#527), therefore we currently populate
+      // recent projects only in the translation loop.
+      if (item.id === 'recent') {
+        if (this.app.state.recent.length) {
+          item.enabled =  true
+
+          item.submenu = [
+            ...this.app.state.recent.map((file, idx) => ({
+              label: `${idx + 1}. ${basename(file)}`,
+              click: () => this.app.open(file)
+            })),
+            ...item.submenu
+          ]
+        }
       }
 
       return item

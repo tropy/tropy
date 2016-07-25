@@ -7,7 +7,10 @@ describe('AppMenu', () => {
   let appmenu
 
   before(() => {
-    appmenu = new AppMenu(sinon.stub())
+    const app = sinon.stub()
+    app.state = { recent: [] }
+
+    appmenu = new AppMenu(app)
   })
 
   describe('#load', () => {

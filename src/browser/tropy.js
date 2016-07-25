@@ -34,7 +34,6 @@ class Tropy extends EventEmitter {
     Tropy.instance = this
 
     this.menu = new AppMenu(this)
-    this.menu.load('app')
 
     prop(this, 'store', { value: new Storage() })
 
@@ -77,6 +76,11 @@ class Tropy extends EventEmitter {
         app.addRecentDocument(file)
         break
     }
+
+    // Note: there may be Electron issues when reloading
+    // the main menu. But since we cannot remove items
+    // dynamically (#527) this is our only option.
+    this.menu.load()
   }
 
   async create() {
@@ -94,6 +98,7 @@ class Tropy extends EventEmitter {
 
       .then(state => (this.state = state, this))
 
+      .tap(() => this.menu.load())
       .tap(() => this.emit('app:restored'))
       .tap(() => verbose('app state restored'))
   }
@@ -107,14 +112,21 @@ class Tropy extends EventEmitter {
       .on('app:new-archive', () => this.create())
 
       .on('app:toggle-menu-bar', win => {
-        verbose('toggle menu bar')
-
         if (win.isMenuBarAutoHide()) {
           win.setAutoHideMenuBar(false)
         } else {
           win.setAutoHideMenuBar(true)
           win.setMenuBarVisibility(false)
         }
+      })
+      .on('app:clear-recent-projects', () => {
+        verbose('clearing recent projects...')
+        this.state.recent = []
+
+        // Note: there may be Electron issues when reloading
+        // the main menu. But since we cannot remove items
+        // dynamically (#527) this is our only option.
+        this.menu.load()
       })
 
       .on('app:open-license', () => {
