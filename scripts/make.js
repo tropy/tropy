@@ -29,17 +29,20 @@ config.silent = false
 target.lint = (bail) => {
   const { code } = exec(`${lint} --color src test static scripts`)
   if (bail && code) process.exit(code)
+  return code
 }
 
 
 target.test = (...args) => {
-  target['lint']()
+  const { code: c1 } = target['lint']()
 
   // Disk I/O can be very slow on AppVeyor!
   if (process.env.APPVEYOR) args.push('-C -t 8000 -s 2000')
 
-  target['test:browser'](...args)
-  target['test:renderer'](...args)
+  const { code: c2 } = target['test:browser'](...args)
+  const { code: c3 } = target['test:renderer'](...args)
+
+  if (c1 || c2 || c3) process.exit(1)
 }
 
 target['test:renderer'] = (...args) => {
@@ -47,18 +50,18 @@ target['test:renderer'] = (...args) => {
 
   args.unshift('--renderer')
 
-  mocha(args.concat(
+  return mocha(args.concat(
     glob.sync('test/**/*_test.js', { ignore: 'test/browser/*' })))
 }
 
 target['test:browser'] = (...args) => {
   target.unlink()
 
-  mocha(args.concat(
+  return mocha(args.concat(
     glob.sync('test/{browser,common}/**/*_test.js')))
 }
 
-target.mocha = (args, silent, cb) => mocha(args, silent, cb)
+target.mocha = (args, silent) => mocha(args, silent)
 
 
 target.compile = () => {
@@ -133,16 +136,20 @@ target.cover = (args) => {
 
   process.env.COVERAGE = true
 
-  target['test:browser'](['--require test/support/coverage'])
+  const { code: c1 } =
+    target['test:browser'](['--require test/support/coverage'])
   mv(`${cov}/coverage-final.json`, `${cov}/coverage-browser.json`)
 
-  target['test:renderer'](['--require test/support/coverage'])
+  const { code: c2 } =
+    target['test:renderer'](['--require test/support/coverage'])
   mv(`${cov}/coverage-final.json`, `${cov}/coverage-renderer.json`)
 
   log.info('writing coverage report...', { tag })
   exec(`${istanbul} report --root ${cov} ${args.join(' ')}`, { silent: true })
 
   rm('-rf', scov)
+
+  if (c1 || c2) process.exit(1)
 }
 
 
@@ -179,8 +186,8 @@ function swap(filename, src, dst, ext) {
     .replace(/(\..+)$/, m => ext || m[1])
 }
 
-function mocha(options, silent, cb) {
-  return exec(`${emocha} ${options.join(' ')}`, { silent }, cb)
+function mocha(options, silent) {
+  return exec(`${emocha} ${options.join(' ')}`, { silent })
 }
 
 const SassExtensions = {
