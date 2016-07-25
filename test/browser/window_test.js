@@ -11,7 +11,7 @@ describe('window', () => {
     function open(...args) { return win = window.open(...args) }
 
     beforeEach(() =>
-        sinon.spy(BrowserWindow.prototype, 'loadURL'))
+        sinon.stub(BrowserWindow.prototype, 'loadURL'))
     afterEach(() =>
         BrowserWindow.prototype.loadURL.restore())
     afterEach(() =>
