@@ -63,8 +63,7 @@ linux:
         role: 'minimize'
   - &dev
     label: 'Developer'
-    environment: 'development'
-    debug: true
+    id: 'dev'
     submenu:
       - label: '&Reload'
         accelerator: 'CmdOrCtrl+R'
@@ -72,6 +71,17 @@ linux:
       - label: 'Toggle &Developer Tools'
         accelerator: 'CmdOrCtrl+Shift+I'
         command: 'win:toggleDevTools'
+      - type: 'separator'
+      - label: 'Theme'
+        id: 'theme'
+        submenu:
+          - label: 'Light'
+            id: 'light'
+            type: 'checkbox'
+          - label: 'Dark'
+            id: 'dark'
+            type: 'checkbox'
+
   - &help
     label: 'Help'
     submenu:

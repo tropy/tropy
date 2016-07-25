@@ -60,6 +60,10 @@ const dom = module.exports = {
     return to.appendChild(node)
   },
 
+  remove(node) {
+    return node.parentNode.removeChild(node)
+  },
+
   on(node, ...args) {
     return node.addEventListener(...args)
   },

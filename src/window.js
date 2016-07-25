@@ -2,7 +2,7 @@
 
 const { remote, ipcRenderer: ipc } = require('electron')
 const { basename, resolve } = require('path')
-const { append, create, on, toggle, stylesheet } = require('./dom')
+const { $$, append, create, on, toggle, stylesheet, remove } = require('./dom')
 const { existsSync: exists } = require('fs')
 const { EL_CAPITAN } = require('./common/os')
 
@@ -16,12 +16,26 @@ const Window = {
     return basename(window.location.pathname, '.html')
   },
 
-  get styles() {
+  styles(theme = ARGS.theme) {
     return [
-      `../lib/stylesheets/${process.platform}/${Window.type}-${ARGS.theme}.css`,
+      `../lib/stylesheets/${process.platform}/${Window.type}-${theme}.css`,
       `${ARGS.home}/style.css`,
-      `${ARGS.home}/style-${ARGS.theme}.css`
+      `${ARGS.home}/style-${theme}.css`
     ]
+  },
+
+  style(theme = ARGS.theme, prune = false) {
+    var css
+
+    if (prune) {
+      for (css of $$('head > link[rel="stylesheet"]')) remove(css)
+    }
+
+    for (css of Window.styles(theme)) {
+      if (exists(resolve(__dirname, css))) {
+        append(stylesheet(css), document.head)
+      }
+    }
   },
 
   toggle(state) {
@@ -44,15 +58,11 @@ const Window = {
   setup() {
     if (!Window.setup.called) {
       Window.setup.called = true
+      Window.style()
 
-
-      for (let css of Window.styles) {
-        if (exists(resolve(__dirname, css))) {
-          append(stylesheet(css), document.head)
-        }
-      }
-
-      ipc.on('win', (_, state) => this.toggle(state))
+      ipc
+        .on('win', (_, state) => this.toggle(state))
+        .on('theme', (_, theme) => this.style(theme, true))
 
       if (ARGS.frameless) {
         toggle(document.body, 'frameless', true)

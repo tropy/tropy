@@ -2,7 +2,7 @@
 
 const { EventEmitter } = require('events')
 const { resolve, join } = require('path')
-const { app, dialog, shell, ipcMain: ipc } = require('electron')
+const { app, dialog, shell, ipcMain: ipc, BrowserWindow } = require('electron')
 const { verbose } = require('../common/log')
 const { open } = require('./window')
 const { Database } = require('../common/db')
@@ -120,14 +120,34 @@ class Tropy extends EventEmitter {
           win.setMenuBarVisibility(false)
         }
       })
+
       .on('app:clear-recent-projects', () => {
         verbose('clearing recent projects...')
+
         this.state.recent = []
 
         // Note: there may be Electron issues when reloading
         // the main menu. But since we cannot remove items
         // dynamically (#527) this is our only option.
         this.menu.load()
+      })
+
+      .on('app:switch-theme', (_, theme) => {
+        verbose(`switching to "${theme}" theme...`)
+
+        this.state.theme = theme
+
+        for (let win of BrowserWindow.getAllWindows()) {
+          win.webContents.send('theme', theme)
+        }
+
+        if (this.development || this.debug) {
+          const tm = this.menu.find(['dev', 'theme']).submenu
+
+          for (let item of tm.items) {
+            item.checked = (item.id === theme)
+          }
+        }
       })
 
       .on('app:open-license', () => {
@@ -187,6 +207,14 @@ class Tropy extends EventEmitter {
 
   get debug() {
     return process.env.DEBUG === 'true'
+  }
+
+  get development() {
+    return this.environment === 'development'
+  }
+
+  get production() {
+    return this.environment === 'production'
   }
 
   get environment() {
