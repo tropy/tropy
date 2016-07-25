@@ -43,21 +43,21 @@ target.test = (...args) => {
   if (code) process.exit(1)
 }
 
-target['test:renderer'] = (args) => {
+target['test:renderer'] = (args = []) => {
   target.unlink()
 
   return mocha(['--renderer', ...args].concat(
     glob.sync('test/**/*_test.js', { ignore: 'test/browser/*' }))).code
 }
 
-target['test:browser'] = (args) => {
+target['test:browser'] = (args = []) => {
   target.unlink()
 
   return mocha([...args].concat(
     glob.sync('test/{browser,common}/**/*_test.js'))).code
 }
 
-target.mocha = (args) => mocha([...args], false)
+target.mocha = (args = []) => mocha([...args], false)
 
 
 target.compile = () => {

@@ -18,7 +18,7 @@ const { info, verbose } =
   require('../common/log')(app.getPath('userData'))
 
 if (app.makeSingleInstance(() => tropy.open(...opts._))) {
-  verbose('other live instance detected, exiting...')
+  verbose('other instance detected, exiting...')
   app.exit(0)
 }
 
@@ -51,9 +51,6 @@ all([
 })
 
 app
-  .once('ready', () => {
-  })
-
   .on('quit', (_, code) => {
     verbose(`quit with exit code ${code}`)
   })
