@@ -34,15 +34,13 @@ target.lint = (bail) => {
 
 
 target.test = (...args) => {
-  const { code: c1 } = target['lint']()
+  let code
 
-  // Disk I/O can be very slow on AppVeyor!
-  if (process.env.APPVEYOR) args.push('-C -t 8000 -s 2000')
+  code = target['lint']()
+  code = target['test:browser'](...args) || code
+  code = target['test:renderer'](...args) || code
 
-  const { code: c2 } = target['test:browser'](...args)
-  const { code: c3 } = target['test:renderer'](...args)
-
-  if (c1 || c2 || c3) process.exit(1)
+  if (code) process.exit(1)
 }
 
 target['test:renderer'] = (...args) => {
@@ -51,14 +49,14 @@ target['test:renderer'] = (...args) => {
   args.unshift('--renderer')
 
   return mocha(args.concat(
-    glob.sync('test/**/*_test.js', { ignore: 'test/browser/*' })))
+    glob.sync('test/**/*_test.js', { ignore: 'test/browser/*' }))).code
 }
 
 target['test:browser'] = (...args) => {
   target.unlink()
 
   return mocha(args.concat(
-    glob.sync('test/{browser,common}/**/*_test.js')))
+    glob.sync('test/{browser,common}/**/*_test.js'))).code
 }
 
 target.mocha = (args, silent) => mocha(args, silent)
@@ -136,12 +134,12 @@ target.cover = (args) => {
 
   process.env.COVERAGE = true
 
-  const { code: c1 } =
-    target['test:browser'](['--require test/support/coverage'])
+  let code
+
+  code = target['test:browser'](['--require test/support/coverage'])
   mv(`${cov}/coverage-final.json`, `${cov}/coverage-browser.json`)
 
-  const { code: c2 } =
-    target['test:renderer'](['--require test/support/coverage'])
+  code = target['test:renderer'](['--require test/support/coverage']) || code
   mv(`${cov}/coverage-final.json`, `${cov}/coverage-renderer.json`)
 
   log.info('writing coverage report...', { tag })
@@ -149,7 +147,7 @@ target.cover = (args) => {
 
   rm('-rf', scov)
 
-  if (c1 || c2) process.exit(1)
+  if (code) process.exit(1)
 }
 
 

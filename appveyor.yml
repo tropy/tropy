@@ -29,7 +29,13 @@ install:
   - npm install --no-optional --no-color --no-progress
 
 test_script:
-  - npm run compile
-  - npm test
+  - node scripts\make.js compile
+  - node scripts\make.js mocha -- test\browser\args_test.js
+  - node scripts\make.js mocha -- test\browser\menu_test.js
+  - node scripts\make.js mocha -- test\browser\main.js
+  - node scripts\make.js mocha -- test\browser\storage.js
+  - node scripts\make.js mocha -- test\browser\tropy.js
+  - node scripts\make.js mocha -- test\browser\window.js
+  - node scripts\make.js test -- -C -t 8000 -s 2000
 
 build: off
