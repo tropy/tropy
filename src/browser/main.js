@@ -17,10 +17,12 @@ const { once } = require('../common/util')
 const { info, verbose } =
   require('../common/log')(app.getPath('userData'))
 
-//if (app.makeSingleInstance(() => tropy.open(...opts._))) {
-//  verbose('other instance detected, exiting...')
-//  app.exit(0)
-//}
+if (process.env.NODE_ENV !== 'test') {
+  if (app.makeSingleInstance(() => tropy.open(...opts._))) {
+    verbose('other instance detected, exiting...')
+    app.exit(0)
+  }
+}
 
 verbose(`started in ${opts.e} mode`)
 verbose(`using ${app.getPath('userData')}`)
