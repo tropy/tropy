@@ -14,8 +14,11 @@ describe('window', () => {
         sinon.spy(BrowserWindow.prototype, 'loadURL'))
     afterEach(() =>
         BrowserWindow.prototype.loadURL.restore())
-    afterEach(() =>
-        win && win.destroy())
+    afterEach((done) => {
+      if (!win) return done()
+      win.on('closed', () => done())
+      win.destroy()
+    })
 
     it('returns a BrowserWindow', () => {
       expect(open('index')).to.be.instanceof(BrowserWindow)
