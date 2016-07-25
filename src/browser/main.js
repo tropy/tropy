@@ -47,10 +47,10 @@ all([
   READY = Date.now()
   info('ready after %sms', READY - START)
 
-  //tropy.open(...opts._)
+  tropy.open(...opts._)
 })
 
-//app
-//  .on('quit', (_, code) => {
-//    verbose(`quit with exit code ${code}`)
-//  })
+app
+  .on('quit', (_, code) => {
+    verbose(`quit with exit code ${code}`)
+  })
