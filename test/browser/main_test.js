@@ -3,7 +3,7 @@
 const { app } = require('electron')
 const { EventEmitter } = require('events')
 
-describe.skip('main process', () => {
+describe('main process', () => {
   const Tropy = __require('browser/tropy')
   const tropy = Tropy.instance
 
@@ -43,7 +43,7 @@ describe.skip('main process', () => {
     })
 
     it('registers event listeners', () => {
-      expect(app.once).to.have.been.calledWith('ready')
+      expect(app.on).to.have.been.calledWith('ready')
       expect(Tropy.instance.listen).to.have.been.calledOnce
     })
 

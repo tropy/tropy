@@ -1,6 +1,6 @@
 'use strict'
 
-const START = Date.now()
+//const START = Date.now()
 let READY = undefined
 
 const args = require('./args')
@@ -14,16 +14,16 @@ require('./path')
 const { app }  = require('electron')
 const { all }  = require('bluebird')
 const { once } = require('../common/util')
-const { info, verbose } =
-  require('../common/log')(app.getPath('userData'))
+//const { info, verbose } =
+//  require('../common/log')(app.getPath('userData'))
 
-if (app.makeSingleInstance(() => tropy.open(...opts._))) {
-  verbose('other instance detected, exiting...')
-  app.exit(0)
-}
+//if (app.makeSingleInstance(() => tropy.open(...opts._))) {
+//  verbose('other instance detected, exiting...')
+//  app.exit(0)
+//}
 
-verbose(`started in ${opts.e} mode`)
-verbose(`using ${app.getPath('userData')}`)
+//verbose(`started in ${opts.e} mode`)
+//verbose(`using ${app.getPath('userData')}`)
 
 const tropy = new (require('./tropy'))()
 
@@ -45,12 +45,12 @@ all([
 
 ]).then(() => {
   READY = Date.now()
-  info('ready after %sms', READY - START)
+  //info('ready after %sms', READY - START)
 
-  tropy.open(...opts._)
+  //tropy.open(...opts._)
 })
 
-app
-  .on('quit', (_, code) => {
-    verbose(`quit with exit code ${code}`)
-  })
+//app
+//  .on('quit', (_, code) => {
+//    verbose(`quit with exit code ${code}`)
+//  })
