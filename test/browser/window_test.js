@@ -5,7 +5,7 @@ const { BrowserWindow } = require('electron')
 describe('window', () => {
   const window = __require('browser/window')
 
-  describe('.open', () => {
+  describe.skip('.open', () => {
     let win
 
     function open(...args) { return win = window.open(...args) }
