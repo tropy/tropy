@@ -1,2 +1,7 @@
 sidebar:
   lists: Lists
+
+wizard:
+  project:
+    title: Create a new Tropy project
+    name: Project name
