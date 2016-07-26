@@ -8,7 +8,7 @@ const glob = require('glob')
 const sass = require('node-sass')
 const log = require('./log')
 
-const { statSync: stat } = require('fs')
+const { statSync: stat, existsSync: exists } = require('fs')
 const { join, resolve, relative, dirname } = require('path')
 
 const home = resolve(__dirname, '..')
@@ -146,6 +146,48 @@ target.cover = (args) => {
   rm('-rf', scov)
 
   if (code) process.exit(1)
+}
+
+
+target.window = ([name]) => {
+  template(join(home, 'static', `${name}.html`),
+`<!DOCTYPE html>
+<html>
+<head>
+  <script src="${name}.js"></script>
+</head>
+<body tabindex="-1">
+  <main></main>
+</body>
+</html>`)
+
+  template(join(home, 'static', `${name}.js`),
+`'use strict'
+
+{
+
+}`)
+
+  const PLATFORMS = ['linux', 'darwin', 'win32']
+  const THEMES = ['light', 'dark']
+
+  for (let platform of PLATFORMS) {
+    for (let theme of THEMES) {
+      template(
+        join(home, 'src', 'stylesheets', platform, `${name}-${theme}.scss`),
+        `$platform: "${platform}";\n$theme: "${theme}";`
+      )
+    }
+  }
+}
+
+function template(path, content) {
+  if (!exists(path)) {
+    content.to(path)
+    log.info(path, { tag: 'created' })
+  } else {
+    log.warn(path, { tag: 'skipped' })
+  }
 }
 
 
