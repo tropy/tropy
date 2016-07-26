@@ -1,11 +1,10 @@
 'use strict'
 
 const { EventEmitter } = require('events')
-const { resolve, join } = require('path')
+const { resolve } = require('path')
 const { app, dialog, shell, ipcMain: ipc, BrowserWindow } = require('electron')
 const { verbose } = require('../common/log')
 const { open } = require('./window')
-const { Database } = require('../common/db')
 const { into, compose, remove, take } = require('transducers.js')
 
 const AppMenu = require('./menu')
@@ -59,6 +58,7 @@ class Tropy extends EventEmitter {
     this.win = open('project', { file, ...this.hash }, {
       width: 1280,
       height: 720,
+      darkTheme: (this.state.theme === 'dark'),
       frame: !this.hash.frameless
     })
       .once('closed', () => { this.win = undefined })
@@ -84,11 +84,23 @@ class Tropy extends EventEmitter {
     this.menu.load()
   }
 
-  async create() {
-    const file = join(app.getPath('userData'), 'dev.tpy')
-    await Database.create(file, { name: 'My Research' })
+  create() {
+    if (this.wiz) return this.wiz.show(), this
 
-    this.open(file)
+    this.wiz = open('wizard', this.hash, {
+      width: 1024,
+      height: 680,
+      parent: this.win,
+      modal: !!this.win,
+      autoHideMenuBar: true,
+      maximizable: false,
+      fullscreenable: false,
+      darkTheme: (this.state.theme === 'dark'),
+      frame: !this.hash.frameless
+    })
+      .once('closed', () => { this.wiz = undefined })
+
+    return this
   }
 
   restore() {
@@ -110,7 +122,7 @@ class Tropy extends EventEmitter {
 
   listen() {
     this
-      .on('app:new-archive', () => this.create())
+      .on('app:new-project', () => this.create())
 
       .on('app:toggle-menu-bar', win => {
         if (win.isMenuBarAutoHide()) {
