@@ -4,6 +4,7 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { FormattedMessage, intlShape } = require('react-intl')
 const { Steps, Step } = require('./steps')
+const { debounce } = require('../common/util')
 
 
 class Wizard extends Component {
@@ -11,8 +12,12 @@ class Wizard extends Component {
   constructor(props) {
     super(props)
 
+    const update = debounce((name) => {
+      this.props.update({ name })
+    }, 500)
+
     this.update = (event) =>
-      this.props.update({ name: event.target.value })
+      update(event.target.value)
   }
 
   render() {
@@ -27,7 +32,6 @@ class Wizard extends Component {
 
             <input
               type="text"
-              value={project.name}
               onChange={this.update}
               placeholder={
                 intl.formatMessage({ id: 'wizard.project.name' })

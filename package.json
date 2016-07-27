@@ -84,6 +84,7 @@
     "colors": "^1.1.2",
     "generic-pool": "^2.4.1",
     "js-yaml": "^3.4.6",
+    "lodash.debounce": "^4.0.7",
     "moment": "^2.12.0",
     "ms": "^0.7.1",
     "node-uuid": "^1.4.7",
