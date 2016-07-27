@@ -4,6 +4,7 @@ const { connect } = require('react-redux')
 const { injectIntl } = require('react-intl')
 const { Wizard } = require('../components/wizard')
 const { update } = require('../actions/project')
+const { submit } = require('../actions/wizard')
 
 module.exports = {
   Wizard: injectIntl(
@@ -14,8 +15,8 @@ module.exports = {
       }),
 
       dispatch => ({
-        update: (project) => (dispatch(update(project))),
-        submit: () => {}
+        update: (project) => dispatch(update(project)),
+        submit: () => dispatch(submit())
       })
 
     )(Wizard)

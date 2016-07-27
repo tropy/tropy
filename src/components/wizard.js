@@ -37,7 +37,7 @@ class Wizard extends Component {
                 intl.formatMessage({ id: 'wizard.project.name' })
               }/>
 
-            <button onClick={submit()} disabled={!project.name}>
+            <button onClick={submit} disabled={!project.name}>
               <FormattedMessage id="wizard.project.submit"/>
             </button>
 
