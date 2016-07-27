@@ -4,4 +4,5 @@ sidebar:
 wizard:
   project:
     title: Create a new Tropy project
-    name: Project name
+    submit: Create project
+    name: Name
