@@ -12,7 +12,8 @@ function submit() {
     const { project } = getState()
 
     const file = await Database.create(
-      join(ARGS.home, `${project.name}.tpy`), project)
+      join(ARGS.home, `${project.name}.tpy`),
+      project)
 
     ipc.send(CREATED, { file })
     win.current.close()
