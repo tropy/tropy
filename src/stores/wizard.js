@@ -6,6 +6,7 @@ const {
 
 const { default: thunk } = require('redux-thunk')
 const { wizard } = require('../reducers/wizard')
+const { project } = require('../reducers/project')
 const { intl } = require('../reducers/intl')
 
 const dev = (ARGS.environment === 'development' || ARGS.debug)
@@ -15,6 +16,7 @@ module.exports = {
 
     const reducer = combineReducers({
       wizard,
+      project,
       intl
     })
 

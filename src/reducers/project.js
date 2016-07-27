@@ -2,8 +2,11 @@
 
 const { UPDATE } = require('../constants/project')
 
+const init = {
+  name: ''
+}
 module.exports = {
-  project(state = {}, action) {
+  project(state = init, action) {
     switch (action.type) {
 
       case UPDATE:

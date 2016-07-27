@@ -31,7 +31,7 @@ const Step = ({ children }) => (
 )
 
 Step.propTypes = {
-  children: PropTypes.element.isRequired
+  children: PropTypes.node.isRequired
 }
 
 module.exports = {

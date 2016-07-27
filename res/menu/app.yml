@@ -7,6 +7,7 @@ linux:
         submenu:
           - label: 'Project'
             command: 'app:new-project'
+            accelerator: 'CmdOrCtrl+Shift+P'
       - type: 'separator'
       - label: 'Open'
         accelerator: 'CmdOrCtrl+O'

@@ -1,58 +1,60 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = React
-const { connect } = require('react-redux')
-const { FormattedMessage, injectIntl, intlShape } = require('react-intl')
+const { Component, PropTypes } = React
+const { FormattedMessage, intlShape } = require('react-intl')
 const { Steps, Step } = require('./steps')
 
-let Wizard = ({ submit, update, project, intl }) => (
-  <div id="wizard">
-    <Steps>
-      <Step>
 
-        <h1><FormattedMessage id="wizard.project.title"/></h1>
+class Wizard extends Component {
 
-        <input
-          type="text"
-          value={project.name}
-          onChange={update()}
-          placeholder={
-            intl.formatMessage({ id: 'wizard.project.name' })
-          }/>
+  constructor(props) {
+    super(props)
 
-        <button onClick={submit()} disabled={!project.name}>
-          <FormattedMessage id="wizard.project.submit"/>
-        </button>
+    this.update = (event) =>
+      this.props.update({ name: event.target.value })
+  }
 
-      </Step>
-    </Steps>
-  </div>
-)
+  render() {
+    const { submit, project, intl } = this.props
+
+    return (
+      <div id="wizard">
+        <Steps>
+          <Step>
+
+            <h1><FormattedMessage id="wizard.project.title"/></h1>
+
+            <input
+              type="text"
+              value={project.name}
+              onChange={this.update}
+              placeholder={
+                intl.formatMessage({ id: 'wizard.project.name' })
+              }/>
+
+            <button onClick={submit()} disabled={!project.name}>
+              <FormattedMessage id="wizard.project.submit"/>
+            </button>
+
+          </Step>
+        </Steps>
+      </div>
+    )
+  }
+}
 
 Wizard.propTypes = {
   intl: intlShape.isRequired,
 
-  submit: PropTypes.function,
-  update: PropTypes.function,
+  submit: PropTypes.func.isRequired,
+  update: PropTypes.func.isRequired,
 
   project: PropTypes.shape({
     name: PropTypes.string
   })
 }
 
-module.exports.Component = Wizard
-
-Wizard = connect(
-  state => ({
-    project: state.project || {}
-  }),
-  () => ({
-    update: () => {},
-    submit: () => {}
-  })
-)(Wizard)
-
-Wizard = injectIntl(Wizard)
-
-module.exports.Wizard = Wizard
+module.exports = {
+  Wizard
+}

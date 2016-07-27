@@ -7,7 +7,7 @@
   const { ready, $ } = require('../lib/dom')
   const { create } = require('../lib/stores/wizard')
   const { Main } = require('../lib/containers/main')
-  const { Wizard } = require('../lib/components/wizard')
+  const { Wizard } = require('../lib/containers/wizard')
   const { getMessages } = require('../lib/actions/intl')
 
   const store = create()
