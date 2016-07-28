@@ -5,6 +5,7 @@ const { resolve } = require('path')
 const { app, dialog, shell, ipcMain: ipc, BrowserWindow } = require('electron')
 const { verbose } = require('../common/log')
 const { open } = require('./window')
+const { existsSync: exists } = require('fs')
 const { into, compose, remove, take } = require('transducers.js')
 
 const AppMenu = require('./menu')
@@ -44,16 +45,24 @@ class Tropy extends EventEmitter {
     })
   }
 
-  open(file = this.state.recent[0]) {
-    if (!file) return this.create()
-    if (file) file = resolve(file)
+  open(file) {
+    if (!file) {
+      if (this.win) return this.win.show(), this
 
+      file = this.state.recent[0]
+      verbose('trying...', file)
+      if (!file || !exists(file)) return this.create()
+    }
+
+    file = resolve(file)
     verbose(`opening ${file}...`)
+
 
     if (this.win) {
       if (file) this.win.webContents.send(OPEN, file)
       return this.win.show(), this
     }
+
 
     this.win = open('project', { file, ...this.hash }, {
       width: 1280,
@@ -68,6 +77,8 @@ class Tropy extends EventEmitter {
   }
 
   opened({ file }) {
+    if (this.wiz) this.wiz.close()
+
     this.state.recent = into([file],
         compose(remove(f => f === file), take(9)), this.state.recent)
 
@@ -88,7 +99,7 @@ class Tropy extends EventEmitter {
     if (this.wiz) return this.wiz.show(), this
 
     this.wiz = open('wizard', this.hash, {
-      width: 1024,
+      width: 920,
       height: 680,
       parent: this.win,
       modal: !!this.win,

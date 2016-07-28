@@ -3,7 +3,6 @@
 const { Database } = require('../common/db')
 const { ipcRenderer: ipc } = require('electron')
 const { join } = require('path')
-const win = require('../window')
 
 const { CREATED } = require('../constants/project')
 
@@ -16,7 +15,6 @@ function submit() {
       project)
 
     ipc.send(CREATED, { file })
-    win.current.close()
   }
 }
 
