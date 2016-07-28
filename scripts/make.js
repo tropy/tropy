@@ -154,19 +154,14 @@ target.window = ([name]) => {
 `<!DOCTYPE html>
 <html>
 <head>
-  <script src="${name}.js"></script>
+  <script>require("../lib/${name}.js")</script>
 </head>
 <body tabindex="-1">
   <main></main>
 </body>
 </html>`)
 
-  template(join(home, 'static', `${name}.js`),
-`'use strict'
-
-{
-
-}`)
+  template(join(home, 'src', `${name}.js`), "'use strict'\n\n{\n\}")
 
   const PLATFORMS = ['linux', 'darwin', 'win32']
   const THEMES = ['light', 'dark']
