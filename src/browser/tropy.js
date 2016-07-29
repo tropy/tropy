@@ -50,9 +50,7 @@ class Tropy extends EventEmitter {
       if (this.win) return this.win.show(), this
 
       file = this.state.recent[0]
-      if (!file || !exists(file)) {
-        return (process.platform === 'darwin') ? this : this.create()
-      }
+      if (!file || !exists(file)) return this.create()
     }
 
     file = resolve(file)
