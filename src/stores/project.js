@@ -6,10 +6,12 @@ const {
 
 const { default: thunk } = require('redux-thunk')
 const { project } = require('../reducers/project')
+const { nav } = require('../reducers/nav')
 const { intl } = require('../reducers/intl')
 const { ipcRenderer: ipc } = require('electron')
 const { open } = require('../actions/project')
 const { OPEN } = require('../constants/project')
+const { debounce } = require('../middleware/debounce')
 
 const dev = (ARGS.environment === 'development' || ARGS.debug)
 
@@ -17,11 +19,13 @@ module.exports = {
   create(init = {}) {
 
     const reducer = combineReducers({
+      nav,
       project,
       intl
     })
 
     const middleware = applyMiddleware(
+      debounce,
       thunk
     )
     const enhancer = (dev && window.devToolsExtension) ?

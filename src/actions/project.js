@@ -1,6 +1,7 @@
 'use strict'
 
 const { Database } = require('../common/db')
+const { Storage } = require('../storage')
 const { info } = require('../common/log')
 const { ipcRenderer: ipc } = require('electron')
 
@@ -21,7 +22,6 @@ function open(file) {
 
     info(`opened project ${project.id}`)
     ipc.send(OPENED, { file: db.path, id: project.id })
-    db.close() // TODO remove
 
     return dispatch(update({ file: db.path, ...project }))
   }
@@ -29,8 +29,14 @@ function open(file) {
 
 function close() {
   return async (dispatch, getState) => {
-    const { project: { file } } = getState()
-    await Database.cached(file).close()
+    const { project, nav } = getState()
+
+    Storage.save('nav', nav, project.id)
+
+    await Database.cached(project.file).close()
+    info(`closed project ${project.id}`)
+
+    dispatch(update({}))
   }
 }
 

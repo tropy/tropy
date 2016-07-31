@@ -3,12 +3,12 @@
 const React = require('react')
 const { render } = require('react-dom')
 const { all } = require('bluebird')
-const { ready, $ } = require('./dom')
+const { ready, on, $ } = require('./dom')
 const { create } = require('./stores/project')
 const { Main } = require('./containers/main')
 const { Project } = require('./components/project')
 const { getMessages } = require('./actions/intl')
-const { open } = require('./actions/project')
+const { open, close } = require('./actions/project')
 
 const store = create()
 
@@ -23,3 +23,7 @@ all([
       $('main')
     )
   })
+
+on(window, 'unload', () => {
+  store.dispatch(close())
+})
