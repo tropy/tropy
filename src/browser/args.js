@@ -12,6 +12,13 @@ module.exports = require('yargs')
 
   .demand(0, 1)
 
+  .option('dir', {
+    alias: 'd',
+    type: 'string',
+    normalize: true,
+    describe: 'Set user data directory'
+  })
+
   .option('environment', {
     alias: 'e',
     type: 'string',

@@ -9,7 +9,7 @@ const opts = args.parse(process.argv.slice(1))
 process.env.NODE_ENV = opts.environment
 process.env.DEBUG = opts.debug
 
-require('./path')
+require('./path')(opts.dir)
 
 const { app }  = require('electron')
 const { all }  = require('bluebird')

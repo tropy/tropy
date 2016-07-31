@@ -1,8 +1,6 @@
 'use strict'
 
-const path = require('path')
-const resolve = path.resolve
-const join = path.join
+const { resolve, join } = require('path')
 
 if (!global.__src) {
   global.__src = process.env.COVERAGE ?
