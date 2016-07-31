@@ -34,8 +34,9 @@ function close() {
   }
 }
 
-function update(payload) {
+function update(payload, { debounce } = {}) {
   return {
+    meta: { debounce },
     type: UPDATE,
     payload
   }

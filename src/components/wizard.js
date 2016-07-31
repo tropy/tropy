@@ -4,7 +4,6 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { FormattedMessage, intlShape } = require('react-intl')
 const { Steps, Step } = require('./steps')
-const debounce = require('lodash.debounce')
 
 
 class Wizard extends Component {
@@ -12,12 +11,8 @@ class Wizard extends Component {
   constructor(props) {
     super(props)
 
-    const update = debounce((name) => {
-      this.props.update({ name })
-    }, 500)
-
     this.update = (event) =>
-      update(event.target.value)
+      this.props.update({ name: event.target.value })
   }
 
   render() {

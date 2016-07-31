@@ -15,7 +15,7 @@ module.exports = {
       }),
 
       dispatch => ({
-        update: (project) => dispatch(update(project)),
+        update: (project) => dispatch(update(project, { debounce: true })),
         submit: () => dispatch(submit())
       })
 

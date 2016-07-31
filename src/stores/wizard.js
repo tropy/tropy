@@ -8,6 +8,7 @@ const { default: thunk } = require('redux-thunk')
 const { wizard } = require('../reducers/wizard')
 const { project } = require('../reducers/project')
 const { intl } = require('../reducers/intl')
+const { debounce } = require('../middleware/debounce')
 
 const dev = (ARGS.environment === 'development' || ARGS.debug)
 
@@ -21,6 +22,7 @@ module.exports = {
     })
 
     const middleware = applyMiddleware(
+      debounce,
       thunk
     )
     const enhancer = (dev && window.devToolsExtension) ?
