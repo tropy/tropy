@@ -46,8 +46,6 @@ module.exports = {
     }
 
     return reduce(obj)
-  },
-
-  debounce: require('lodash.debounce')
+  }
 
 }

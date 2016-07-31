@@ -4,7 +4,7 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { FormattedMessage, intlShape } = require('react-intl')
 const { Steps, Step } = require('./steps')
-const { debounce } = require('../common/util')
+const debounce = require('lodash.debounce')
 
 
 class Wizard extends Component {
