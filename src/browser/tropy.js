@@ -193,13 +193,13 @@ class Tropy extends EventEmitter {
       })
 
 
+    let quit = false
+
     app
-      .once('before-quit', () => {
-        app.removeAllListeners('window-all-closed')
-      })
+      .once('before-quit', () => { quit = true })
 
       .on('window-all-closed', () => {
-        if (process.platform !== 'darwin') app.quit()
+        if (quit || process.platform !== 'darwin') app.quit()
       })
       .on('quit', () => {
         verbose('saving app state')
