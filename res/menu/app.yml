@@ -3,16 +3,19 @@ linux:
     label: '&File'
     id: 'file'
     submenu:
-      - label: 'New'
+      - &new
+        label: 'New'
         submenu:
           - label: 'Project'
             command: 'app:new-project'
             accelerator: 'CmdOrCtrl+Shift+P'
       - type: 'separator'
-      - label: 'Open'
+      - &open
+        label: 'Open'
         accelerator: 'CmdOrCtrl+O'
         command: 'app:open-dialog'
-      - label: 'Recent Projects'
+      - &recent
+        label: 'Recent Projects'
         id: 'recent'
         enabled: false
         submenu:
@@ -115,13 +118,10 @@ darwin:
 
   - label: '&File'
     submenu:
-      - label: 'New'
-        submenu:
-          - label: 'Project'
-            command: 'app:new-project'
-      - label: 'Open'
-        accelerator: 'Command+O'
-        command: 'app:open-dialog'
+      - *new
+      - type: 'separator'
+      - *open
+      - *recent
       - type: 'separator'
       - label: 'Close'
         accelerator: 'Command+W'

@@ -227,6 +227,10 @@ class Tropy extends EventEmitter {
   }
 
 
+  get name() {
+    return pkg.productName
+  }
+
   get debug() {
     return process.env.DEBUG === 'true'
   }
