@@ -1,10 +1,12 @@
 'use strict'
 
-const { all } = require('bluebird')
+const { each } = require('bluebird')
 const { remote, ipcRenderer: ipc } = require('electron')
 const { basename, resolve } = require('path')
 const { existsSync: exists } = require('fs')
+const { debug } = require('./common/log')
 const { EL_CAPITAN } = require('./common/os')
+
 const {
   $$, append, create, on, once, toggle, stylesheet, remove
 } = require('./dom')
@@ -71,12 +73,15 @@ const Window = {
       Window.closeable = false
 
       once(window, 'beforeunload', event => {
+        debug(`closing ${Window.type}...`)
+
         event.returnValue = false
         toggle(document.body, 'closing', true)
 
-        all(Window.unloaders, unload => unload())
+        each(Window.unloaders, unload => unload())
           .then(() => Window.closeable = true)
           .then(() => Window.current.close())
+          .tap(() => debug(`${Window.type} ready to close`))
       })
 
       on(window, 'beforeunload', event => {
