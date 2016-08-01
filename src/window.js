@@ -1,10 +1,13 @@
 'use strict'
 
+const { all } = require('bluebird')
 const { remote, ipcRenderer: ipc } = require('electron')
 const { basename, resolve } = require('path')
-const { $$, append, create, on, toggle, stylesheet, remove } = require('./dom')
 const { existsSync: exists } = require('fs')
 const { EL_CAPITAN } = require('./common/os')
+const {
+  $$, append, create, on, once, toggle, stylesheet, remove
+} = require('./dom')
 
 const Window = {
 
@@ -64,6 +67,23 @@ const Window = {
         .on('win', (_, state) => this.toggle(state))
         .on('theme', (_, theme) => this.style(theme, true))
 
+
+      Window.closeable = false
+
+      once(window, 'beforeunload', event => {
+        event.returnValue = false
+        toggle(document.body, 'closing', true)
+
+        all(Window.unloaders, unload => unload())
+          .then(() => Window.closeable = true)
+          .then(() => Window.current.close())
+      })
+
+      on(window, 'beforeunload', event => {
+        if (!Window.closeable) event.returnValue = false
+      })
+
+
       if (ARGS.frameless) {
         toggle(document.body, 'frameless', true)
 
@@ -109,5 +129,7 @@ const Window = {
     }
   }
 }
+
+Window.unloaders = []
 
 module.exports = Window
