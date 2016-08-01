@@ -195,7 +195,7 @@ class Tropy extends EventEmitter {
 
     app
       .once('before-quit', () => {
-        app.off('window-all-closed')
+        app.removeAllListeners('window-all-closed')
       })
 
       .on('window-all-closed', () => {
