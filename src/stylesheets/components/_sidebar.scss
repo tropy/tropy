@@ -3,8 +3,8 @@
 // --------------------------------------------------
 
 #sidebar {
-  background: $gray-lightest;
-  color: $gray-dark;
+  background: $sidebar-bg;
+  color: $sidebar-text-color;
   flex: 0 0 $sidebar-default-width;
   padding-left: $space-sm;
 

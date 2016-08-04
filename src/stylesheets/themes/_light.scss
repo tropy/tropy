@@ -1,3 +1,49 @@
 //
 // Light theme
 // --------------------------------------------------
+
+
+// Colors
+// --------------------------------------------------
+
+$blue: #5c93e5;
+
+$brand-primary: $blue;
+
+
+// Grays
+// --------------------------------------------------
+
+$white:  #fff;
+$smoke:  #f6f6f6;
+$silver: #e6e6e6;
+$slate:  #777;
+$iron:   #444;
+$coal:   #222;
+$black:  #000;
+
+
+// Scaffolding
+// --------------------------------------------------
+
+$body-bg:    $white;
+$text-color: $coal;
+
+$link-color:       $brand-primary;
+$link-hover-color: $brand-primary;
+
+
+// Partials
+// --------------------------------------------------
+
+
+// Components
+// --------------------------------------------------
+
+
+// Icons
+$icon-color: $slate;
+
+// Sidebar
+$sidebar-bg:         $smoke;
+$sidebar-text-color: $iron;
