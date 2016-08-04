@@ -1,3 +1,27 @@
+//
+// Light project window
+// --------------------------------------------------
+
 $platform: "linux";
 $theme: "light";
-@import "project";
+
+
+// Theme
+// --------------------------------------------------
+
+@import
+  "../themes/light";
+
+
+// Window
+// --------------------------------------------------
+
+@import
+  "../windows/project";
+
+
+// Operating system specific styles
+// --------------------------------------------------
+
+@import
+  "os";

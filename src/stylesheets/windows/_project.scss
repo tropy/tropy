@@ -16,10 +16,10 @@
 // --------------------------------------------------
 
 @import
-  "../scaffolding/reset",
-  "../scaffolding/scaffolding",
-  "../scaffolding/typography",
-  "../scaffolding/utilities";
+  "../base/reset",
+  "../base/base",
+  "../base/typography",
+  "../base/utilities";
 
 
 // Components
@@ -39,10 +39,5 @@
 // Partials
 // --------------------------------------------------
 
-
-
-// Operating system specific styles
-// --------------------------------------------------
-
 @import
-  "os";
+ "../partials/window-controls";
