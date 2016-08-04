@@ -8,7 +8,7 @@ const { Toolbar } = require('./toolbar')
 const { IconFolder } = require('./icons')
 
 const Sidebar = ({ children }) => (
-  <div id="sidebar">{children}</div>
+  <header id="sidebar">{children}</header>
 )
 
 Sidebar.propTypes = {

@@ -8,8 +8,9 @@ const { Items, Item } = require('./items')
 const Project = () => (
   <div id="project">
     <ProjectSidebar/>
-    <Items/>
-    <Item/>
+    <main>
+      <Items/>
+    </main>
   </div>
 )
 

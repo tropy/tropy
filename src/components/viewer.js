@@ -4,10 +4,12 @@ const React = require('react')
 const { Toolbar } = require('./toolbar')
 
 const Viewer = () => (
-  <div id="viewer">
-    <Toolbar/>
+  <section id="viewer">
+    <header>
+      <Toolbar/>
+    </header>
     Viewer
-  </div>
+  </section>
 )
 
 module.exports = {

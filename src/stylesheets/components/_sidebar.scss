@@ -5,7 +5,7 @@
 #sidebar {
   background: $gray-lightest;
   color: $gray-dark;
-  flex-basis: $sidebar-default-width;
+  flex: 0 0 $sidebar-default-width;
   padding-left: $space-sm;
 
   .icon {

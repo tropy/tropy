@@ -8,18 +8,21 @@ const { Viewer } = require('./viewer')
 
 
 const Items = () => (
-  <div id="items">
-    <Toolbar/>
+  <section id="items">
+    <header>
+      <Toolbar/>
+    </header>
     Items
-  </div>
+    <Item/>
+  </section>
 )
 
 
 const Item = () => (
-  <div id="item">
+  <section id="item">
     <Panels/>
     <Viewer/>
-  </div>
+  </section>
 )
 
 

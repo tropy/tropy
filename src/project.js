@@ -21,7 +21,7 @@ all([
   .then(() => {
     render(
       <Main store={store}><Project/></Main>,
-      $('main')
+      $('#view')
     )
   })
 
