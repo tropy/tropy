@@ -1,5 +1,5 @@
 @function asset-url($type, $path) {
-  @return url(unquote("../../../static/assets/#{$type}/#{$path}"));
+  @return url(unquote("../../../static/#{$type}/#{$path}"));
 }
 
 @function image-url($path) {
