@@ -10,3 +10,12 @@ body {
   line-height: $line-height-base;
   color: $text-color;
 }
+
+
+// Lists
+
+ul, ol {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
