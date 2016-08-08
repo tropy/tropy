@@ -19,15 +19,22 @@ $line-height-computed: floor(($font-size-base * $line-height-base));
 // --------------------------------------------------
 
 $space-min: 4px;
-$space-xs: 8px;
-$space-sm: 12px;
-$space-md: 16px;
+$space-xs:  8px;
+$space-sm:  12px;
+$space-md:  16px;
+$space-lg:  24px;
 
 
 // Dimensions
 // --------------------------------------------------
 
-$toolbar-height: 38px;
+@if $platform == linux {
+  $toolbar-height: 46px !global;
+} @else if $platform == win32 {
+  $toolbar-height: 38px !global; // todo
+} @else {
+  $toolbar-height: 38px !global; // Darwin
+}
 
 
 // Default Dimensions
@@ -41,3 +48,16 @@ $panels-default-width: 320px;
 // --------------------------------------------------
 
 $zindex-window-controls: 1000;
+
+
+// Thumbnails
+// --------------------------------------------------
+
+$thumbnail-size: $space-lg;
+
+
+// List view
+// --------------------------------------------------
+
+$row-height: $thumbnail-size + 6px; // todo: share
+$item-list-header-height: $space-lg;

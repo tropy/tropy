@@ -4,6 +4,7 @@
 
 .toolbar {
   height: $toolbar-height;
+  margin-bottom: $space-min;
 
   .frameless & {
     -webkit-app-region: drag;

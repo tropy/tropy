@@ -4,4 +4,66 @@
 
 #items {
   flex-basis: calc(100% - #{$panels-default-width});
+  padding: 0 $space-min;
+  display: flex;
+  flex-direction: column;
+  .item-list {
+    .item {
+
+    }
+  }
+
+  // List view
+  &.list-view {
+    .item-list-header {
+      display: table;
+      width: 100%;
+      border: {
+        top: 1px solid $item-list-header-border-color;
+        bottom: 1px solid $item-list-header-border-color;
+      }
+      height: $item-list-header-height;
+      color: $item-list-header-color;
+    }
+
+    .item-list-header-row {
+      display: table-row;
+
+      > div {
+        display: table-cell;
+        vertical-align: middle;
+      }
+    }
+
+    .item-list-container {
+      background: repeating-linear-gradient(to bottom, $items-odd-bg 0px,
+        $items-odd-bg ($row-height + 0px), transparent ($row-height + 0px),
+        transparent (2 * $row-height + 0px));
+      flex: 1 1 auto;
+      overflow-y: scroll;
+    }
+
+    .item-list {
+      display: table;
+      width: 100%;
+    }
+
+    .item {
+      display: table-row;
+
+      > div {
+        display: table-cell;
+        vertical-align: middle;
+        height: $row-height;
+      }
+    }
+
+  }
+
+  // Grid view
+  &.grid-view {
+    .item-list-header {
+      display: none;
+    }
+  }
 }

@@ -14,6 +14,10 @@ html, body, #view {
   height: 100%;
 }
 
+body {
+  overflow: hidden;
+}
+
 main {
   display: flex;
   flex: 1 1 auto;
