@@ -45,6 +45,7 @@
 
     .item-list {
       display: table;
+      table-layout: fixed;
       width: 100%;
     }
 
@@ -55,6 +56,7 @@
         display: table-cell;
         vertical-align: middle;
         height: $row-height;
+        @include css-truncate;
       }
     }
 

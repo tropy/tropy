@@ -10,3 +10,8 @@
   top: auto;
   width: 1px;
 }
+
+// CSS truncate
+.css-truncate {
+  @include css-truncate;
+}
