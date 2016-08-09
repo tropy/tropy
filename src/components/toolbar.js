@@ -3,7 +3,7 @@
 const React = require('react')
 const { PropTypes } = React
 
-const Toolbar = ({ children}) => (
+const Toolbar = ({ children }) => (
   <div className="toolbar">{children}</div>
 )
 
