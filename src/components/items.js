@@ -23,7 +23,7 @@ const Items = () => (
           <div className="metadata-head" style={col1}>Title</div>
           <div className="metadata-head" style={col2}>Type</div>
           <div className="metadata-head" style={col3}>Date</div>
-          <div className="metadata-head number" style={col4}>Box</div>
+          <div className="metadata-head number ascending" style={col4}>Box</div>
           <div className="metadata-head number" style={col5}>Photos</div>
         </li>
       </ul>

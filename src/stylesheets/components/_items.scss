@@ -48,15 +48,15 @@
     .item-head,
     .item {
       display: table-row;
+    }
+
+    .item {
+      height: $row-height;
 
       &.active {
         color: $items-active-color;
         background: $items-active-bg;
       }
-    }
-
-    .item {
-      height: $row-height;
 
       img {
         vertical-align: middle;
@@ -95,6 +95,11 @@
 
       &:first-child:before {
         content: none;
+      }
+
+      &.ascending,
+      &.descending {
+        color: $item-list-header-sort-color;
       }
     }
 
