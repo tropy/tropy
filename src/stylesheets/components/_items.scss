@@ -17,6 +17,7 @@
   // List view
   &.list-view {
     .item-list-head {
+      height: $item-list-header-height;
       border: {
         top: 1px solid $item-list-header-border-color;
         bottom: 1px solid $item-list-header-border-color;
@@ -27,7 +28,7 @@
     .item-list-container {
       background: repeating-linear-gradient(to bottom, $items-odd-bg,
         $items-odd-bg $row-height, transparent $row-height,
-        transparent (2 * $row-height);
+        transparent (2 * $row-height));
       flex: 1 1 auto;
       overflow-y: scroll;
     }
@@ -46,22 +47,44 @@
         color: $items-active-color;
         background: $items-active-bg;
       }
-
-      .metadata-head,
-      .metadata {
-        display: table-cell;
-        vertical-align: middle;
-        @include css-truncate;
-        padding: 0 $space-xs;
-      }
-    }
-
-    .item-head {
-      height: $item-list-header-height;
     }
 
     .item {
       height: $row-height;
+    }
+
+    .metadata-head,
+    .metadata {
+      display: table-cell;
+      vertical-align: middle;
+      @include css-truncate;
+      padding: 0 $space-xs 0 ($space-xs + 1px);
+
+      &:first-child {
+        padding-left: $space-sm;
+      }
+
+      &:last-child {
+        padding-right: $space-sm;
+      }
+    }
+
+    .metadata-head {
+      position: relative;
+
+      &:before {
+        content: " ";
+        position: absolute;
+        left: 0;
+        top: 2px;
+        bottom: 2px;
+        width: 1px;
+        background: $item-list-header-border-color;
+      }
+
+      &:first-child:before {
+        content: none;
+      }
     }
   }
 
