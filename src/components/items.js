@@ -20,10 +20,10 @@ const Items = () => (
     <ul className="item-list-header">
       <li className="item-list-header-row">
         <div className="title" style={col1}>Title</div>
-        <div className="type" style={{col2}>Type</div>
-        <div className="date" style={col3>Date</div>
-        <div className="box" style={col4>Box</div>
-        <div className="photos" style={col5>Photos</div>
+        <div className="type" style={col2}>Type</div>
+        <div className="date" style={col3}>Date</div>
+        <div className="box" style={col4}>Box</div>
+        <div className="photos" style={col5}>Photos</div>
       </li>
     </ul>
     <div className="item-list-container">
@@ -32,7 +32,7 @@ const Items = () => (
           <div className="title" style={col1}>Application Norman Bailey</div>
           <div className="type" style={col2}>Application Form</div>
           <div className="date" style={col3}>1897-07-26</div>
-          <div className="box" style={col4>17</div>
+          <div className="box" style={col4}>17</div>
           <div className="photos" style={col5}>2</div>
         </li>
         <li className="item">
