@@ -57,6 +57,11 @@
 
     .item {
       height: $row-height;
+
+      img {
+        vertical-align: middle;
+        margin-right: $space-xs;
+      }
     }
 
     .metadata-head,
@@ -96,7 +101,6 @@
     .number {
       text-align: right;
     }
-
   }
 
   // Grid view
