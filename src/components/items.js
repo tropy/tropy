@@ -17,15 +17,17 @@ const Items = () => (
     <header>
       <Toolbar/>
     </header>
-    <ul className="item-list item-list-head">
-      <li className="item-head">
-        <div className="metadata-head" style={col1}>Title</div>
-        <div className="metadata-head" style={col2}>Type</div>
-        <div className="metadata-head" style={col3}>Date</div>
-        <div className="metadata-head" style={col4}>Box</div>
-        <div className="metadata-head" style={col5}>Photos</div>
-      </li>
-    </ul>
+    <div className="item-list-head-container">
+      <ul className="item-list item-list-head">
+        <li className="item-head">
+          <div className="metadata-head" style={col1}>Title</div>
+          <div className="metadata-head" style={col2}>Type</div>
+          <div className="metadata-head" style={col3}>Date</div>
+          <div className="metadata-head" style={col4}>Box</div>
+          <div className="metadata-head" style={col5}>Photos</div>
+        </li>
+      </ul>
+    </div>
     <div className="item-list-container">
       <ul className="item-list">
         <li className="item">

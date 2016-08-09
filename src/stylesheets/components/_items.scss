@@ -16,8 +16,13 @@
 
   // List view
   &.list-view {
+
+    .item-list-head-container {
+      flex: 0 0 $item-list-header-height;
+    }
+
     .item-list-head {
-      height: $item-list-header-height;
+      height: 100%;
       border: {
         top: 1px solid $item-list-header-border-color;
         bottom: 1px solid $item-list-header-border-color;
@@ -29,6 +34,7 @@
       background: repeating-linear-gradient(to bottom, $items-odd-bg,
         $items-odd-bg $row-height, transparent $row-height,
         transparent (2 * $row-height));
+      background-attachment: local;
       flex: 1 1 auto;
       overflow-y: scroll;
     }
