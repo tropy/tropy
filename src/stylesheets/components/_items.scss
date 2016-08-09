@@ -16,30 +16,18 @@
 
   // List view
   &.list-view {
-    .item-list-header {
-      display: table;
-      width: 100%;
+    .item-list-head {
       border: {
         top: 1px solid $item-list-header-border-color;
         bottom: 1px solid $item-list-header-border-color;
       }
-      height: $item-list-header-height;
       color: $item-list-header-color;
     }
 
-    .item-list-header-row {
-      display: table-row;
-
-      > div {
-        display: table-cell;
-        vertical-align: middle;
-      }
-    }
-
     .item-list-container {
-      background: repeating-linear-gradient(to bottom, $items-odd-bg 0px,
-        $items-odd-bg ($row-height + 0px), transparent ($row-height + 0px),
-        transparent (2 * $row-height + 0px));
+      background: repeating-linear-gradient(to bottom, $items-odd-bg,
+        $items-odd-bg $row-height, transparent $row-height,
+        transparent (2 * $row-height);
       flex: 1 1 auto;
       overflow-y: scroll;
     }
@@ -50,22 +38,36 @@
       width: 100%;
     }
 
+    .item-head,
     .item {
       display: table-row;
 
-      > div {
+      &.active {
+        color: $items-active-color;
+        background: $items-active-bg;
+      }
+
+      .metadata-head,
+      .metadata {
         display: table-cell;
         vertical-align: middle;
-        height: $row-height;
         @include css-truncate;
+        padding: 0 $space-xs;
       }
     }
 
+    .item-head {
+      height: $item-list-header-height;
+    }
+
+    .item {
+      height: $row-height;
+    }
   }
 
   // Grid view
   &.grid-view {
-    .item-list-header {
+    .item-list-head {
       display: none;
     }
   }

@@ -17,51 +17,58 @@ const Items = () => (
     <header>
       <Toolbar/>
     </header>
-    <ul className="item-list-header">
-      <li className="item-list-header-row">
-        <div className="title" style={col1}>Title</div>
-        <div className="type" style={col2}>Type</div>
-        <div className="date" style={col3}>Date</div>
-        <div className="box" style={col4}>Box</div>
-        <div className="photos" style={col5}>Photos</div>
+    <ul className="item-list item-list-head">
+      <li className="item-head">
+        <div className="metadata-head" style={col1}>Title</div>
+        <div className="metadata-head" style={col2}>Type</div>
+        <div className="metadata-head" style={col3}>Date</div>
+        <div className="metadata-head" style={col4}>Box</div>
+        <div className="metadata-head" style={col5}>Photos</div>
       </li>
     </ul>
     <div className="item-list-container">
       <ul className="item-list">
         <li className="item">
-          <div className="title" style={col1}>Application Norman Bailey</div>
-          <div className="type" style={col2}>Application Form</div>
-          <div className="date" style={col3}>1897-07-26</div>
-          <div className="box" style={col4}>17</div>
-          <div className="photos" style={col5}>2</div>
+          <div className="metadata" style={col1}>Application Norman Bailey</div>
+          <div className="metadata" style={col2}>Application Form</div>
+          <div className="metadata" style={col3}>1897-07-26</div>
+          <div className="metadata" style={col4}>17</div>
+          <div className="metadata" style={col5}>2</div>
         </li>
         <li className="item">
-          <div className="title">Norman Bailey</div>
-          <div className="type">Portrait</div>
-          <div className="date">1844</div>
-          <div className="box">17</div>
-          <div className="photos">1</div>
+          <div className="metadata">Norman Bailey</div>
+          <div className="metadata">Portrait</div>
+          <div className="metadata">1844</div>
+          <div className="metadata">17</div>
+          <div className="metadata">1</div>
         </li>
         <li className="item">
-          <div className="title">Application H. F. Cary</div>
-          <div className="type">Application Form</div>
-          <div className="date">1899-10-24</div>
-          <div className="box">17</div>
-          <div className="photos">2</div>
+          <div className="metadata">Application H. F. Cary</div>
+          <div className="metadata">Application Form</div>
+          <div className="metadata">1899-10-24</div>
+          <div className="metadata">17</div>
+          <div className="metadata">2</div>
         </li>
         <li className="item">
-          <div className="title">Denver International Communication</div>
-          <div className="type">Correspondence</div>
-          <div className="date">1899-12-16</div>
-          <div className="box">17</div>
-          <div className="photos">1</div>
+          <div className="metadata">Denver International Communication</div>
+          <div className="metadata">Correspondence</div>
+          <div className="metadata">1899-12-16</div>
+          <div className="metadata">17</div>
+          <div className="metadata">1</div>
         </li>
         <li className="item">
-          <div className="title">Frank Cary</div>
-          <div className="type">Portrait</div>
-          <div className="date">1868</div>
-          <div className="box">17</div>
-          <div className="photos">1</div>
+          <div className="metadata">Frank Cary</div>
+          <div className="metadata">Portrait</div>
+          <div className="metadata">1868</div>
+          <div className="metadata">17</div>
+          <div className="metadata">1</div>
+        </li>
+        <li className="item active">
+          <div className="metadata">Denver to Chicago</div>
+          <div className="metadata">Correspondence</div>
+          <div className="metadata">1899-12-24</div>
+          <div className="metadata">27</div>
+          <div className="metadata">2</div>
         </li>
       </ul>
     </div>
