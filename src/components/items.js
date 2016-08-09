@@ -23,8 +23,8 @@ const Items = () => (
           <div className="metadata-head" style={col1}>Title</div>
           <div className="metadata-head" style={col2}>Type</div>
           <div className="metadata-head" style={col3}>Date</div>
-          <div className="metadata-head" style={col4}>Box</div>
-          <div className="metadata-head" style={col5}>Photos</div>
+          <div className="metadata-head number" style={col4}>Box</div>
+          <div className="metadata-head number" style={col5}>Photos</div>
         </li>
       </ul>
     </div>
@@ -34,43 +34,43 @@ const Items = () => (
           <div className="metadata" style={col1}>Application Norman Bailey</div>
           <div className="metadata" style={col2}>Application Form</div>
           <div className="metadata" style={col3}>1897-07-26</div>
-          <div className="metadata" style={col4}>17</div>
-          <div className="metadata" style={col5}>2</div>
+          <div className="metadata number" style={col4}>17</div>
+          <div className="metadata number" style={col5}>2</div>
         </li>
         <li className="item">
           <div className="metadata">Norman Bailey</div>
           <div className="metadata">Portrait</div>
           <div className="metadata">1844</div>
-          <div className="metadata">17</div>
-          <div className="metadata">1</div>
+          <div className="metadata number">17</div>
+          <div className="metadata number">1</div>
         </li>
         <li className="item">
           <div className="metadata">Application H. F. Cary</div>
           <div className="metadata">Application Form</div>
           <div className="metadata">1899-10-24</div>
-          <div className="metadata">17</div>
-          <div className="metadata">2</div>
+          <div className="metadata number">17</div>
+          <div className="metadata number">2</div>
         </li>
         <li className="item">
           <div className="metadata">Denver International Communication</div>
           <div className="metadata">Correspondence</div>
           <div className="metadata">1899-12-16</div>
-          <div className="metadata">17</div>
-          <div className="metadata">1</div>
+          <div className="metadata number">17</div>
+          <div className="metadata number">1</div>
         </li>
         <li className="item">
           <div className="metadata">Frank Cary</div>
           <div className="metadata">Portrait</div>
           <div className="metadata">1868</div>
-          <div className="metadata">17</div>
-          <div className="metadata">1</div>
+          <div className="metadata number">17</div>
+          <div className="metadata number">1</div>
         </li>
         <li className="item active">
           <div className="metadata">Denver to Chicago</div>
           <div className="metadata">Correspondence</div>
           <div className="metadata">1899-12-24</div>
-          <div className="metadata">27</div>
-          <div className="metadata">2</div>
+          <div className="metadata number">27</div>
+          <div className="metadata number">2</div>
         </li>
       </ul>
     </div>
