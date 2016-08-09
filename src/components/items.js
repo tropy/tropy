@@ -14,21 +14,21 @@ const Items = () => (
     </header>
     <ul className="item-list-header">
       <li className="item-list-header-row">
-        <div className="title">Title</div>
-        <div className="type">Type</div>
-        <div className="date">Date</div>
-        <div className="box">Box</div>
-        <div className="photos">Photos</div>
+        <div className="title" style={{width: '40%'}}>Title</div>
+        <div className="type" style={{width: '25%'}}>Type</div>
+        <div className="date" style={{width: '15%'}}>Date</div>
+        <div className="box" style={{width: '10%'}}>Box</div>
+        <div className="photos" style={{width: '10%'}}>Photos</div>
       </li>
     </ul>
     <div className="item-list-container">
       <ul className="item-list">
         <li className="item">
-          <div className="title">Application Norman Bailey</div>
-          <div className="type">Application Form</div>
-          <div className="date">1897-07-26</div>
-          <div className="box">17</div>
-          <div className="photos">2</div>
+          <div className="title" style={{width: '40%'}}>Application Norman Bailey</div>
+          <div className="type" style={{width: '25%'}}>Application Form</div>
+          <div className="date" style={{width: '15%'}}>1897-07-26</div>
+          <div className="box" style={{width: '10%'}}>17</div>
+          <div className="photos" style={{width: '10%'}}>2</div>
         </li>
         <li className="item">
           <div className="title">Norman Bailey</div>
