@@ -3,8 +3,12 @@
 // --------------------------------------------------
 
 .toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   height: $toolbar-height;
   margin-bottom: $space-min;
+  padding: $space-min $space-sm 0;
 
   .frameless & {
     -webkit-app-region: drag;
@@ -14,5 +18,13 @@
     .no-drag {
       -webkit-app-region: no-drag;
     }
+  }
+
+  .toolbar-left {
+
+  }
+
+  .toolbar-right {
+
   }
 }

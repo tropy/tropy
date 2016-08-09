@@ -15,7 +15,10 @@ const col5 = { width: '10%' }
 const Items = () => (
   <section id="items" className="list-view">
     <header>
-      <Toolbar/>
+      <Toolbar>
+        <div className="toolbar-left">Left</div>
+        <div className="toolbar-right">Right</div>
+      </Toolbar>
     </header>
     <div className="item-list-head-container">
       <ul className="item-list item-list-head">
