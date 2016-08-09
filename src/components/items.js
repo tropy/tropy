@@ -6,6 +6,11 @@ const { Toolbar } = require('./toolbar')
 const { Panels } = require('./panels')
 const { Viewer } = require('./viewer')
 
+const col1 = { width: '40%' }
+const col2 = { width: '25%' }
+const col3 = { width: '15%' }
+const col4 = { width: '10%' }
+const col5 = { width: '10%' }
 
 const Items = () => (
   <section id="items" className="list-view">
@@ -14,21 +19,21 @@ const Items = () => (
     </header>
     <ul className="item-list-header">
       <li className="item-list-header-row">
-        <div className="title" style={{width: '40%'}}>Title</div>
-        <div className="type" style={{width: '25%'}}>Type</div>
-        <div className="date" style={{width: '15%'}}>Date</div>
-        <div className="box" style={{width: '10%'}}>Box</div>
-        <div className="photos" style={{width: '10%'}}>Photos</div>
+        <div className="title" style={col1}>Title</div>
+        <div className="type" style={{col2}>Type</div>
+        <div className="date" style={col3>Date</div>
+        <div className="box" style={col4>Box</div>
+        <div className="photos" style={col5>Photos</div>
       </li>
     </ul>
     <div className="item-list-container">
       <ul className="item-list">
         <li className="item">
-          <div className="title" style={{width: '40%'}}>Application Norman Bailey</div>
-          <div className="type" style={{width: '25%'}}>Application Form</div>
-          <div className="date" style={{width: '15%'}}>1897-07-26</div>
-          <div className="box" style={{width: '10%'}}>17</div>
-          <div className="photos" style={{width: '10%'}}>2</div>
+          <div className="title" style={col1}>Application Norman Bailey</div>
+          <div className="type" style={col2}>Application Form</div>
+          <div className="date" style={col3}>1897-07-26</div>
+          <div className="box" style={col4>17</div>
+          <div className="photos" style={col5}>2</div>
         </li>
         <li className="item">
           <div className="title">Norman Bailey</div>
