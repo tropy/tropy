@@ -11,8 +11,16 @@ $font-family-base:       $font-family-sans-serif;
 
 $font-size-base: 14px;
 
-$line-height-base: 1.43;
+$line-height-base:     1.43;
 $line-height-computed: floor(($font-size-base * $line-height-base));
+$line-height-ui:       26px;
+
+$link-hover-decoration: underline;
+
+$headings-font-family:    inherit;
+$headings-font-weight:    400;
+$headings-line-height:    inherit;
+$headings-color:          inherit;
 
 
 // Space sizes
@@ -44,6 +52,7 @@ $sidebar-default-width: 250px;
 $panels-default-width: 320px;
 $search-width: 200px;
 
+
 // Common Dimensions
 // --------------------------------------------------
 
@@ -53,6 +62,7 @@ $padding-base-horizontal: $space-xs;
 $border-radius-base: 0px;
 $border-radius-large: 3px;
 
+$component-padding: $space-sm;
 
 // Forms
 // --------------------------------------------------
@@ -78,3 +88,10 @@ $thumbnail-size: $space-lg;
 
 $row-height: $thumbnail-size + 6px; // todo: share
 $item-list-header-height: $space-lg;
+
+
+// Panel
+// --------------------------------------------------
+
+$panel-header-height: $space-lg;
+

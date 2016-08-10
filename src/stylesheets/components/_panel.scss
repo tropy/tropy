@@ -4,5 +4,18 @@
 
 .panel {
   background: $panel-bg;
-  flex: 1 1 auto;
+  flex: 1 1 calc(100% / 3); // More generic solution possible?
+  display: flex;
+  flex-direction: column;
+
+  .panel-header {
+    flex: 0 0 $panel-header-height;
+    color: $panel-header-color;
+    display: flex;
+  }
+
+  .panel-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+  }
 }

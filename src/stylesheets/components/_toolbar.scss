@@ -5,10 +5,17 @@
 .toolbar {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
   height: $toolbar-height;
   margin-bottom: $space-min;
-  padding: $space-min $space-sm 0;
+  padding: $space-min $component-padding 0;
+
+  .panel-header & {
+    height: auto;
+    flex: 1 1 auto;
+    margin: 0;
+    padding-top: 0;
+  }
 
   .frameless & {
     &.draggable {
@@ -27,5 +34,11 @@
   .toolbar-center,
   .toolbar-right {
     display: flex;
+    align-items: center;
   }
+
+  .icon + h4 {
+    margin-left: $space-xs;
+  }
+
 }

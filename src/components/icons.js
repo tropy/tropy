@@ -40,6 +40,17 @@ i('Folder', (
   </svg>
 ))
 
+i('Note', (
+  <svg width="16" height="16">
+    <g>
+      <path fill="#777777" d="M15,10.707V0L1,0v16h8.707L15,10.707z M10,14.293V11h3.293L10,14.293z M14,10H9v5H2V1h12V10z"/>
+      <rect x="4" y="10" fill="#777777" width="3" height="1"/>
+      <rect x="4" y="7" fill="#777777" width="8" height="1"/>
+      <rect x="4" y="4" fill="#777777" width="8" height="1"/>
+    </g>
+  </svg>
+))
+
 i('Plus', (
   <svg width="16" height="16">
     <g className="line">
