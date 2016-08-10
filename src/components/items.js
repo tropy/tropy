@@ -3,7 +3,7 @@
 const React = require('react')
 
 const { Toolbar } = require('./toolbar')
-const { PanelGroup } = require('./panel-group')
+const { PanelGroup } = require('./panelgroup')
 const { Viewer } = require('./viewer')
 const { Search } = require('./search')
 const { Button } = require('./button')

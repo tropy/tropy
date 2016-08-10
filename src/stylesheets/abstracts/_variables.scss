@@ -11,7 +11,7 @@ $font-family-base:       $font-family-sans-serif;
 
 $font-size-base: 14px;
 
-$line-height-base:     1.43;
+$line-height-base:     1.429;
 $line-height-computed: floor(($font-size-base * $line-height-base));
 $line-height-ui:       26px;
 
@@ -31,7 +31,7 @@ $space-xs:  8px;
 $space-sm:  12px;
 $space-md:  16px;
 $space-lg:  24px;
-
+$space-xl:  32px;
 
 // Dimensions
 // --------------------------------------------------
@@ -62,7 +62,7 @@ $padding-base-horizontal: $space-xs;
 $border-radius-base: 0px;
 $border-radius-large: 3px;
 
-$component-padding: $space-sm;
+$component-padding-horizontal: $space-sm;
 
 // Forms
 // --------------------------------------------------
@@ -93,5 +93,10 @@ $item-list-header-height: $space-lg;
 // Panel
 // --------------------------------------------------
 
-$panel-header-height: $space-lg;
+$panel-header-height: $space-xl;
 
+
+// Note list
+// --------------------------------------------------
+
+$note-padding-vertical: 11px; // 16px

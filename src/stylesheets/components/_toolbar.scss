@@ -8,7 +8,7 @@
   align-items: stretch;
   height: $toolbar-height;
   margin-bottom: $space-min;
-  padding: $space-min $component-padding 0;
+  padding: $space-min $component-padding-horizontal 0;
 
   .panel-header & {
     height: auto;

@@ -7,6 +7,8 @@ const { Toolbar } = require('./toolbar')
 const { Button } = require('./button')
 const { IconPlus } = require('./icons')
 const { IconNote } = require('./icons')
+const { NoteList } = require('./notelist')
+
 
 const PanelGroup = () => (
   <div id="panel-group">
@@ -46,7 +48,9 @@ const PanelGroup = () => (
           </div>
         </Toolbar>
       </header>
-      <div className="panel-body"></div>
+      <div className="panel-body">
+        <NoteList/>
+      </div>
     </Panel>
   </div>
 )
