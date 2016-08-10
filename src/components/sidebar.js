@@ -17,7 +17,7 @@ Sidebar.propTypes = {
 
 const ProjectSidebar = ({ project }) => (
   <Sidebar>
-    <Toolbar/>
+    <Toolbar draggable={true}/>
 
     <h1>{project.name}</h1>
     <FormattedMessage id="sidebar.lists"/>

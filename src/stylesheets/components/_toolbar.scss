@@ -11,13 +11,15 @@
   padding: $space-min $space-sm 0;
 
   .frameless & {
-    -webkit-app-region: drag;
-    -webkit-user-select: none;
-    cursor: default;
+    &.draggable {
+      -webkit-app-region: drag;
+      -webkit-user-select: none;
+      cursor: default;
 
-    .no-drag,
-    .btn {
-      @include no-drag;
+      .no-drag,
+      .btn {
+        @include no-drag;
+      }
     }
   }
 

@@ -8,7 +8,7 @@ const { Toolbar } = require('./toolbar')
 const PanelGroup = () => (
   <div id="panel-group">
     <header>
-      <Toolbar/>
+      <Toolbar draggable={true}/>
     </header>
     <Panel>
       <header className="panel-header">Panel header</header>
