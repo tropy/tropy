@@ -1,0 +1,7 @@
+//
+// Toolbar
+// --------------------------------------------------
+
+@mixin no-drag {
+  -webkit-app-region: no-drag;
+}

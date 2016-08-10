@@ -1,0 +1,10 @@
+//
+// Forms
+// --------------------------------------------------
+
+@mixin form-control-focus($color: $input-border-focus) {
+  &:focus {
+    border-color: $input-border-focus;
+    box-shadow: 0 0 0px 1px $input-border-focus;
+  }
+}

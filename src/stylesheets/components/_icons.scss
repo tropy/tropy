@@ -9,8 +9,14 @@
     display: block;
     fill: $icon-color;
 
-    .block {
-      display: none;
+    @if $icon-style == "line" {
+      .block {
+        display: none;
+      }
+    } @else {
+      .line {
+        display: none;
+      }
     }
   }
 }

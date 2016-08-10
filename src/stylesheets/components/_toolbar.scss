@@ -16,7 +16,7 @@
     cursor: default;
 
     .no-drag {
-      -webkit-app-region: no-drag;
+      @include no-drag;
     }
   }
 

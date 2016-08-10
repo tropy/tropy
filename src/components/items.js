@@ -5,6 +5,8 @@ const React = require('react')
 const { Toolbar } = require('./toolbar')
 const { Panels } = require('./panels')
 const { Viewer } = require('./viewer')
+const { Search } = require('./search')
+const { IconSearch } = require('./icons')
 
 const col1 = { width: '40%' }
 const col2 = { width: '25%' }
@@ -17,7 +19,9 @@ const Items = () => (
     <header>
       <Toolbar>
         <div className="toolbar-left">Left</div>
-        <div className="toolbar-right">Right</div>
+        <div className="toolbar-right">
+          <Search/>
+        </div>
       </Toolbar>
     </header>
     <div className="item-list-head-container">

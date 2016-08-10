@@ -1,0 +1,18 @@
+//
+// Search
+// --------------------------------------------------
+
+.search {
+  position: relative;
+  @include no-drag;
+
+  .icon-search {
+    position: absolute;
+    left: ($space-min + 1px);
+    top: (($input-height-base - $space-md) / 2);
+  }
+
+  .search-input {
+    padding-left: ($space-xs + $space-md);
+  }
+}

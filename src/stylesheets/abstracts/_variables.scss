@@ -42,6 +42,23 @@ $space-lg:  24px;
 
 $sidebar-default-width: 250px;
 $panels-default-width: 320px;
+$search-width: 200px;
+
+// Common Dimensions
+// --------------------------------------------------
+
+$padding-base-vertical: 2px;
+$padding-base-horizontal: $space-xs;
+
+$border-radius-base: 0px;
+$border-radius-large: 3px;
+
+
+// Forms
+// --------------------------------------------------
+
+$input-height-base: ($line-height-computed + ($padding-base-vertical * 2) + 2);
+$input-border-radius-base: $border-radius-base;
 
 
 // Z-index master list

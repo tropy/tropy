@@ -1,0 +1,25 @@
+//
+// Forms
+// --------------------------------------------------
+
+.form-control {
+  display: block;
+  width: 100%;
+  height: $input-height-base;
+  padding: $padding-base-vertical $padding-base-horizontal;
+  font-family: inherit;
+  font-size: $font-size-base;
+  line-height: $line-height-base;
+  color: $input-color;
+  background: $input-bg;
+  border: 1px solid $input-border;
+  border-radius: $input-border-radius-base;
+  box-shadow: none;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+
+  @include form-control-focus;
+
+  &::-webkit-input-placeholder {
+    color: $input-color-placeholder;
+  }
+}

@@ -34,11 +34,13 @@
   "../components/item",
   "../components/panels",
   "../components/viewer",
-  "../components/icons";
+  "../components/icons",
+  "../components/search";
 
 
 // Partials
 // --------------------------------------------------
 
 @import
- "../partials/window-controls";
+ "../partials/window-controls",
+ "../partials/forms";
