@@ -47,3 +47,14 @@ i('Search', (
     </g>
   </svg>
 ))
+
+i('Plus', (
+  <svg width="16" height="16">
+    <g className="line">
+      <polygon points="16,7 9,7 9,0 8,0 8,7 1,7 1,8 8,8 8,15 9,15 9,8 16,8 "/>
+    </g>
+  </svg>
+))
+
+
+

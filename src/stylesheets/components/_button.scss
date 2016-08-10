@@ -1,0 +1,22 @@
+//
+// Button
+// --------------------------------------------------
+
+.btn {
+  border: none;
+}
+
+.btn-icon {
+  background: transparent;
+  padding: $space-min;
+
+  .icon {
+    vertical-align: middle;
+  }
+
+  &:active {
+    .icon svg {
+      fill: $icon-active-color;
+    }
+  }
+}

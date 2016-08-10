@@ -15,7 +15,8 @@
     -webkit-user-select: none;
     cursor: default;
 
-    .no-drag {
+    .no-drag,
+    .btn {
       @include no-drag;
     }
   }

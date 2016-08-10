@@ -6,6 +6,8 @@ const { Toolbar } = require('./toolbar')
 const { Panels } = require('./panels')
 const { Viewer } = require('./viewer')
 const { Search } = require('./search')
+const { Button } = require('./button')
+const { IconPlus } = require('./icons')
 
 const col1 = { width: '40%' }
 const col2 = { width: '25%' }
@@ -19,11 +21,9 @@ const Items = () => (
       <Toolbar>
         <div className="toolbar-left">
           <div className="tool-group">
-            Slider
-          </div>
-          <div className="tool-group">
-            <button className="btn">1</button>
-            <button className="btn">2</button>
+            <Button classes={'btn btn-icon'}>
+              <IconPlus/>
+            </Button>
           </div>
         </div>
         <div className="toolbar-right">
