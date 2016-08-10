@@ -20,11 +20,9 @@
     }
   }
 
-  .toolbar-left {
-
-  }
-
+  .toolbar-left,
+  .toolbar-center,
   .toolbar-right {
-
+    display: flex;
   }
 }

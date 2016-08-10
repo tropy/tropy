@@ -17,7 +17,15 @@ const Items = () => (
   <section id="items" className="list-view">
     <header>
       <Toolbar>
-        <div className="toolbar-left">Left</div>
+        <div className="toolbar-left">
+          <div className="tool-group">
+            Slider
+          </div>
+          <div className="tool-group">
+            <button className="btn">1</button>
+            <button className="btn">2</button>
+          </div>
+        </div>
         <div className="toolbar-right">
           <Search/>
         </div>
