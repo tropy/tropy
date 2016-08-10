@@ -12,6 +12,6 @@ describe('Viewer', () => {
   })
 
   it('contains a Toolbar', () => {
-    expect(shallow(<Viewer/>)).to.contain(<Toolbar/>)
+    expect(shallow(<Viewer/>)).to.contain(<Toolbar draggable/>)
   })
 })

@@ -6,7 +6,7 @@ const { Toolbar } = require('./toolbar')
 const Viewer = () => (
   <section id="viewer">
     <header>
-      <Toolbar draggable={true}/>
+      <Toolbar draggable/>
     </header>
     Viewer
   </section>

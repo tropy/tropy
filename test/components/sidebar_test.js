@@ -21,7 +21,7 @@ describe('ProjectSidebar', () => {
   it('renders a toolbar', () => {
     expect(
       shallow(<ProjectSidebar project={project}/>)
-    ).to.contain(<Toolbar/>)
+    ).to.contain(<Toolbar draggable/>)
   })
 
   it('renders a the project name', () => {
