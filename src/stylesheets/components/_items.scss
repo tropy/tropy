@@ -35,12 +35,13 @@
     }
 
     .item-list-container {
-      background: repeating-linear-gradient(to bottom, $items-odd-bg,
-        $items-odd-bg $row-height, transparent $row-height,
-        transparent (2 * $row-height));
+      background: repeating-linear-gradient(to bottom, $items-odd-bg 3px,
+        $items-odd-bg ($row-height + 3px), transparent ($row-height + 3px),
+        transparent (2 * $row-height + 3px));
       background-attachment: local;
       flex: 1 1 auto;
       overflow-y: scroll;
+      padding-top: 3px;
     }
 
     .item-list {
