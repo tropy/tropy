@@ -3,7 +3,7 @@
 const React = require('react')
 
 const { Toolbar } = require('./toolbar')
-const { Panels } = require('./panels')
+const { PanelGroup } = require('./panel-group')
 const { Viewer } = require('./viewer')
 const { Search } = require('./search')
 const { Button } = require('./button')
@@ -119,7 +119,7 @@ const Items = () => (
 
 const Item = () => (
   <section id="item">
-    <Panels/>
+    <PanelGroup/>
     <Viewer/>
   </section>
 )

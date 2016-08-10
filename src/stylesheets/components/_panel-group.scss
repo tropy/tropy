@@ -1,0 +1,17 @@
+//
+// Panels
+// --------------------------------------------------
+
+#panel-group {
+  width: $panels-default-width;
+  display: flex;
+  flex-direction: column;
+
+  .toolbar {
+    background: $panels-bg;
+  }
+
+  .panel + .panel {
+    margin-top: $space-min;
+  }
+}
