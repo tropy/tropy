@@ -6,7 +6,6 @@ const { Toolbar } = require('./toolbar')
 const { Panels } = require('./panels')
 const { Viewer } = require('./viewer')
 const { Search } = require('./search')
-const { IconSearch } = require('./icons')
 
 const col1 = { width: '40%' }
 const col2 = { width: '25%' }
