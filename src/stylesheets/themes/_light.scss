@@ -14,21 +14,22 @@ $brand-primary: $blue;
 // Grays
 // --------------------------------------------------
 
-$white:  #fff;
-$smoke:  #f6f6f6;
-$cloud:  #e6e6e6;
-$silver: #ccc;
-$slate:  #777;
-$iron:   #444;
-$coal:   #222;
-$black:  #000;
+$shade-0: #fff;
+$shade-1: #f6f6f6;
+$shade-2: #e6e6e6;
+$shade-3: #dcdcdc;
+$shade-4: #ccc;
+$shade-5: #777;
+$shade-6: #444;
+$shade-7: #222;
+$shade-8: #000;
 
 
 // Scaffolding
 // --------------------------------------------------
 
-$body-bg:    $white;
-$text-color: $coal;
+$body-bg:    $shade-0;
+$text-color: $shade-7;
 
 $link-color:       $brand-primary;
 $link-hover-color: $brand-primary;
@@ -38,11 +39,11 @@ $link-hover-color: $brand-primary;
 // --------------------------------------------------
 
 // Forms
-$input-color: $coal;
-$input-bg:    $white;
-$input-border: $cloud;
+$input-color: $shade-7;
+$input-bg:    $shade-0;
+$input-border: $shade-2;
 $input-border-focus: $brand-primary;
-$input-color-placeholder: $silver;
+$input-color-placeholder: $shade-4;
 
 
 // Components
@@ -50,29 +51,30 @@ $input-color-placeholder: $silver;
 
 // Icons
 $icon-style:        "line";
-$icon-color:        $slate;
-$icon-active-color: $coal;
+$icon-color:        $shade-5;
+$icon-active-color: $shade-7;
 
 // Sidebar
-$sidebar-bg:         $smoke;
-$sidebar-text-color: $iron;
+$sidebar-bg:         $shade-1;
+$sidebar-text-color: $shade-6;
 
 // Items
-$item-list-header-color: $iron;
-$item-list-header-sort-color: $coal;
-$item-list-header-border-color: $cloud;
-$items-odd-bg: $smoke;
-$items-active-color: $white;
+$item-list-header-color: $shade-6;
+$item-list-header-sort-color: $shade-7;
+$item-list-header-border-color: $shade-2;
+$items-odd-bg: $shade-1;
+$items-active-color: $shade-0;
 $items-active-bg: $blue;
 
 // Panel group
-$panels-bg: $smoke;
+$panels-bg: $shade-1;
 
 // Panel
-$panel-bg: $smoke;
-$panel-header-color: $iron;
+$panel-bg: $shade-1;
+$panel-header-color: $shade-6;
+$panel-header-shadow: $shade-8;
 
 // Note list
-$note-separator-color: #dcdcdc;
-$note-active-color: $white;
+$note-separator-color: $shade-3;
+$note-active-color: $shade-0;
 $note-active-bg: $brand-primary;

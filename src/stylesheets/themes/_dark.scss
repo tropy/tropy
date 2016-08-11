@@ -4,3 +4,80 @@
 
 
 @import "light"; // dev only
+
+
+// Colors
+// --------------------------------------------------
+
+$blue: #344155;
+
+$brand-primary: $blue;
+
+
+// Grays
+// --------------------------------------------------
+
+$shade-0: #2b2b2b;
+$shade-1: #333;
+$shade-2: #1a1a1a;
+$shade-3: #222;
+$shade-4: #444;
+$shade-5: #777;
+$shade-6: #444;
+$shade-7: #808080;
+$shade-8: #e6e6e6;
+
+
+// Scaffolding
+// --------------------------------------------------
+
+$body-bg:    $shade-0;
+$text-color: $shade-7;
+
+$link-color:       $brand-primary;
+$link-hover-color: $brand-primary;
+
+
+// Partials
+// --------------------------------------------------
+
+// Forms
+$input-color: $shade-7;
+$input-bg:    $shade-0;
+$input-border: $shade-2;
+$input-border-focus: $brand-primary;
+$input-color-placeholder: $shade-4;
+
+
+// Components
+// --------------------------------------------------
+
+// Icons
+$icon-style:        "line";
+$icon-color:        $shade-5;
+$icon-active-color: $shade-7;
+
+// Sidebar
+$sidebar-bg:         $shade-1;
+$sidebar-text-color: $shade-6;
+
+// Items
+$item-list-header-color: $shade-6;
+$item-list-header-sort-color: $shade-7;
+$item-list-header-border-color: $shade-2;
+$items-odd-bg: $shade-1;
+$items-active-color: $shade-8;
+$items-active-bg: $blue;
+
+// Panel group
+$panels-bg: $shade-1;
+
+// Panel
+$panel-bg: $shade-1;
+$panel-header-color: $shade-6;
+$panel-header-shadow: black;
+
+// Note list
+$note-separator-color: $shade-3;
+$note-active-color: $shade-8;
+$note-active-bg: $brand-primary;
