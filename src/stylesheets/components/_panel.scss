@@ -15,9 +15,10 @@
     display: flex;
     position: relative;
     z-index: 1;
+    margin-bottom: $space-min;
 
     &:after {
-      content: " ";
+      //content: " ";
       position: absolute;
       top: 100%;
       left: $component-padding-horizontal;
@@ -35,6 +36,6 @@
     flex: 1 1 auto;
     overflow-y: auto;
     margin-bottom: $space-min;
-    padding-top: $space-min;
+    //padding-top: $space-min;
   }
 }

@@ -8,6 +8,10 @@ const { Button } = require('./button')
 const { Tabs } = require('./tabs')
 const { Tab } = require('./tabs')
 const { NoteList } = require('./notelist')
+const { Dl } = require('./Dl')
+const { Dt } = require('./Dl')
+const { Dd } = require('./Dl')
+
 
 const { IconPlus } = require('./icons')
 const { IconPhoto } = require('./icons')
@@ -33,7 +37,37 @@ const PanelGroup = () => (
           </Tab>
         </Tabs>
       </header>
-      <div className="panel-body"></div>
+      <div className="panel-body">
+        <Dl>
+          <Dt>Publisher</Dt>
+          <Dd>Manuscript Division, Library of Congress, Washington, D.C.</Dd>
+          <Dt>Source</Dt>
+          <Dd>Pinkerton’s National Detective Agency Records</Dd>
+          <Dt>Rights</Dt>
+          <Dd>
+            <a href="#">http://findingaids.loc.gov/db/search/xq/searchMfer02.xq?
+              _id=loc.mss.eadmss.ms003007&_faSection=usingThisCollection&_faSubs
+              ection=userestrict&_dmdid=d5489e15
+            </a>
+          </Dd>
+          <Dt>Box</Dt>
+          <Dd>27</Dd>
+          <Dt>Folder</Dt>
+          <Dd/>
+          <Dt>Date</Dt>
+          <Dd>1899-12-24</Dd>
+          <Dt>Creator</Dt>
+          <Dd/>
+          <Dt>Type</Dt>
+          <Dd>Correspondence</Dd>
+          <Dt>Title</Dt>
+          <Dd>Denver to Chicago</Dd>
+          <Dt>Recipient</Dt>
+          <Dd/>
+          <Dt>Description</Dt>
+          <Dd/>
+        </Dl>
+      </div>
     </Panel>
     <Panel>
       <header className="panel-header">

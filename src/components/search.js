@@ -11,6 +11,4 @@ const Search = () => (
   </div>
 )
 
-module.exports = {
-  Search
-}
+module.exports = { Search }
