@@ -39,5 +39,10 @@
         }
       }
     }
+
+    // CSS multiline truncate
+    .css-multiline-truncate {
+      @include css-multiline-truncate($note-lines);
+    }
   }
 }
