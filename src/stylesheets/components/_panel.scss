@@ -13,11 +13,24 @@
     flex: 0 0 $panel-header-height;
     color: $panel-header-color;
     display: flex;
+    position: relative;
+    z-index: 1;
+
+    &:after {
+      content: " ";
+      position: absolute;
+      top: 100%;
+      left: $component-padding-horizontal;
+      right: $component-padding-horizontal;
+      height: 1px;
+      background: rgba($black, 0.08);
+    }
   }
 
   .panel-body {
     flex: 1 1 auto;
     overflow-y: auto;
     margin-bottom: $space-min;
+    padding-top: $space-min;
   }
 }
