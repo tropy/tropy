@@ -5,10 +5,11 @@ const React = require('react')
 const { PropTypes } = React
 const { Toolbar } = require('./toolbar')
 const { Button } = require('./button')
-const { IconPlus } = require('./icons')
-const { IconNote } = require('./icons')
 const { NoteList } = require('./notelist')
 
+const { IconPlus } = require('./icons')
+const { IconPhoto } = require('./icons')
+const { IconNote } = require('./icons')
 
 const PanelGroup = () => (
   <div id="panel-group">
@@ -17,20 +18,20 @@ const PanelGroup = () => (
     </header>
     <Panel>
       <header className="panel-header">Panel header</header>
-      <div className="panel-body">Panel body</div>
+      <div className="panel-body"></div>
     </Panel>
     <Panel>
       <header className="panel-header">
         <Toolbar>
           <div className="toolbar-left">
+            <IconPhoto/>
             <h4>Photos</h4>
           </div>
           <div className="toolbar-right">
-            Slider
           </div>
         </Toolbar>
       </header>
-      <div className="panel-body">Panel body</div>
+      <div className="panel-body"></div>
     </Panel>
     <Panel>
       <header className="panel-header">
