@@ -5,11 +5,15 @@ const React = require('react')
 const { PropTypes } = React
 const { Toolbar } = require('./toolbar')
 const { Button } = require('./button')
+const { Tabs } = require('./tabs')
+const { Tab } = require('./tabs')
 const { NoteList } = require('./notelist')
 
 const { IconPlus } = require('./icons')
 const { IconPhoto } = require('./icons')
 const { IconNote } = require('./icons')
+const { IconMetadata } = require('./icons')
+const { IconTag } = require('./icons')
 
 const PanelGroup = () => (
   <div id="panel-group">
@@ -17,7 +21,18 @@ const PanelGroup = () => (
       <Toolbar draggable/>
     </header>
     <Panel>
-      <header className="panel-header">Panel header</header>
+      <header className="panel-header">
+        <Tabs justified>
+          <Tab active>
+            <IconMetadata/>
+            Metadata
+          </Tab>
+          <Tab>
+            <IconTag/>
+            Tags
+          </Tab>
+        </Tabs>
+      </header>
       <div className="panel-body"></div>
     </Panel>
     <Panel>

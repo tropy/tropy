@@ -1,0 +1,40 @@
+//
+// Tabs
+// --------------------------------------------------
+
+.tabs {
+  display: flex;
+
+  li {
+    flex: 0 0 auto;
+
+    a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: $tabs-height;
+      color: inherit;
+      background: $tab-link-bg;
+      padding: 0 $tabs-padding-horizontal;
+      cursor: default;
+
+      .icon {
+        margin-right: $space-xs;
+      }
+    }
+
+    &.active {
+      a {
+        background: $tab-link-active-bg;
+      }
+    }
+  }
+
+  &.justified {
+    width: 100%;
+
+    li {
+      flex: 1 1 0;
+    }
+  }
+}
