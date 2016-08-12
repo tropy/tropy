@@ -8,9 +8,7 @@ const { Button } = require('./button')
 const { Tabs } = require('./tabs')
 const { Tab } = require('./tabs')
 const { NoteList } = require('./notelist')
-const { Dl } = require('./Dl')
-const { Dt } = require('./Dl')
-const { Dd } = require('./Dl')
+const { Dl, Dt, Dd } = require('./dl')
 
 
 const { IconPlus } = require('./icons')
@@ -30,8 +28,7 @@ const PanelGroup = () => (
           <Tab active>
             <IconMetadata/>
             Metadata
-          </Tab>
-          <Tab>
+          </Tab> <Tab>
             <IconTag/>
             Tags
           </Tab>
