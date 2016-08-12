@@ -34,7 +34,7 @@ const PanelGroup = () => (
         </Tabs>
       </header>
       <div className="panel-body">
-        <dl>
+        <dl className="dl-horizontal">
           <dt>Publisher</dt>
           <dd>Manuscript Division, Library of Congress, Washington, D.C.</dd>
           <dt>Source</dt>
