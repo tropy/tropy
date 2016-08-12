@@ -8,7 +8,6 @@ const { Button } = require('./button')
 const { Tabs } = require('./tabs')
 const { Tab } = require('./tabs')
 const { NoteList } = require('./notelist')
-const { Dl, Dt, Dd } = require('./dl')
 
 
 const { IconPlus } = require('./icons')
@@ -35,35 +34,35 @@ const PanelGroup = () => (
         </Tabs>
       </header>
       <div className="panel-body">
-        <Dl>
-          <Dt>Publisher</Dt>
-          <Dd>Manuscript Division, Library of Congress, Washington, D.C.</Dd>
-          <Dt>Source</Dt>
-          <Dd>Pinkerton’s National Detective Agency Records</Dd>
-          <Dt>Rights</Dt>
-          <Dd>
+        <dl>
+          <dt>Publisher</dt>
+          <dd>Manuscript Division, Library of Congress, Washington, D.C.</dd>
+          <dt>Source</dt>
+          <dd>Pinkerton’s National Detective Agency Records</dd>
+          <dt>Rights</dt>
+          <dd>
             <a href="#">http://findingaids.loc.gov/db/search/xq/searchMfer02.xq?
               _id=loc.mss.eadmss.ms003007&_faSection=usingThisCollection&_faSubs
               ection=userestrict&_dmdid=d5489e15
             </a>
-          </Dd>
-          <Dt>Box</Dt>
-          <Dd>27</Dd>
-          <Dt>Folder</Dt>
-          <Dd/>
-          <Dt>Date</Dt>
-          <Dd>1899-12-24</Dd>
-          <Dt>Creator</Dt>
-          <Dd/>
-          <Dt>Type</Dt>
-          <Dd>Correspondence</Dd>
-          <Dt>Title</Dt>
-          <Dd>Denver to Chicago</Dd>
-          <Dt>Recipient</Dt>
-          <Dd/>
-          <Dt>Description</Dt>
-          <Dd/>
-        </Dl>
+          </dd>
+          <dt>Box</dt>
+          <dd>27</dd>
+          <dt>Folder</dt>
+          <dd/>
+          <dt>Date</dt>
+          <dd>1899-12-24</dd>
+          <dt>Creator</dt>
+          <dd/>
+          <dt>Type</dt>
+          <dd>Correspondence</dd>
+          <dt>Title</dt>
+          <dd>Denver to Chicago</dd>
+          <dt>Recipient</dt>
+          <dd/>
+          <dt>Description</dt>
+          <dd/>
+        </dl>
       </div>
     </Panel>
     <Panel>
