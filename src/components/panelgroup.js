@@ -73,11 +73,10 @@ const PanelGroup = () => (
             <IconPhoto/>
             <h4>Photos</h4>
           </div>
-          <div className="toolbar-right">
-          </div>
+          <div className="toolbar-right"/>
         </Toolbar>
       </header>
-      <div className="panel-body"></div>
+      <div className="panel-body"/>
     </Panel>
     <Panel>
       <header className="panel-header">
