@@ -172,6 +172,14 @@ class Tropy extends EventEmitter {
         }
       })
 
+      .on('app:reload', () => {
+        const win = BrowserWindow.getFocusedWindow()
+
+        if (win) {
+          win.webContents.send('reload')
+        }
+      })
+
       .on('app:open-license', () => {
         shell.openExternal('https://github.com/tropy/tropy/blob/master/LICENSE')
       })

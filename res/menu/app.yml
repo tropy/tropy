@@ -71,7 +71,7 @@ linux:
     submenu:
       - label: '&Reload'
         accelerator: 'CmdOrCtrl+R'
-        command: 'win:reload'
+        command: 'app:reload'
       - label: 'Toggle &Developer Tools'
         accelerator: 'CmdOrCtrl+Shift+I'
         command: 'win:toggleDevTools'

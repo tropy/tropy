@@ -21,22 +21,26 @@ const Window = {
     return basename(window.location.pathname, '.html')
   },
 
-  styles(theme = ARGS.theme) {
+  styles() {
+    debug(`applying ${Window.type} ${Window.theme} styles`)
+
     return [
-      `../lib/stylesheets/${process.platform}/${Window.type}-${theme}.css`,
+      `../lib/stylesheets/${process.platform}/${Window.type}-${Window.theme}.css`,
       `${ARGS.home}/style.css`,
-      `${ARGS.home}/style-${theme}.css`
+      `${ARGS.home}/style-${Window.theme}.css`
     ]
   },
 
-  style(theme = ARGS.theme, prune = false) {
+  style(theme, prune = false) {
     var css
+
+    if (theme) Window.theme = theme
 
     if (prune) {
       for (css of $$('head > link[rel="stylesheet"]')) remove(css)
     }
 
-    for (css of Window.styles(theme)) {
+    for (css of Window.styles()) {
       if (exists(resolve(__dirname, css))) {
         append(stylesheet(css), document.head)
       }
@@ -63,11 +67,12 @@ const Window = {
   setup() {
     if (!Window.setup.called) {
       Window.setup.called = true
-      Window.style()
+      Window.style(ARGS.theme)
 
       ipc
         .on('win', (_, state) => this.toggle(state))
         .on('theme', (_, theme) => this.style(theme, true))
+        .on('reload', () => this.style(false, true))
 
 
       Window.closeable = false
