@@ -12,7 +12,7 @@ const say = msg => log.info(msg, { tag: 'rebuild' })
 const home = resolve(__dirname, '..')
 const mods = join(home, 'node_modules')
 
-const ELECTRON = v('electron-prebuilt').split('.')
+const ELECTRON = v('electron').split('.')
 const HEADERS = 'https://atom.io/download/atom-shell'
 
 const CONFIG = [

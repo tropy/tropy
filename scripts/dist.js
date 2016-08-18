@@ -9,7 +9,7 @@ const release = require('../lib/common/release')
 const { join, resolve } = require('path')
 
 const dir = resolve(__dirname, '..')
-const electron = require('electron-prebuilt/package')
+const electron = require('electron/package')
 
 target.all = () => {
   target.pack()

@@ -4,7 +4,7 @@ require('shelljs/make')
 
 const { info } = require('./log')
 const { join, resolve, extname, basename } = require('path')
-const electron = process.env.ELECTRON_PATH = require('electron-prebuilt')
+const electron = require('electron')
 const pkg = require('../package')
 
 const resources = (process.platform === 'darwin') ?
