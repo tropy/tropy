@@ -27,6 +27,10 @@ matrix:
       compiler: clang
 
 before_install:
+  - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
+      export DISPLAY=:99.0;
+      Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+    fi
   - if [[ ! -d $NVM/.git ]]; then
       rm -rf $NVM;
       git clone https://github.com/creationix/nvm.git $NVM;
@@ -40,13 +44,6 @@ before_install:
 install:
   - npm install -g node-gyp --no-progress
   - npm install --no-progress
-
-before_script:
-  - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
-      export DISPLAY=:99.0;
-      sh -e /etc/init.d/xvfb start;
-      sleep 3;
-    fi
 
 script:
   - node scripts/make lint -- true
