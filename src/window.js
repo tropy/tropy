@@ -75,22 +75,25 @@ const Window = {
         .on('reload', () => this.style(false, true))
 
 
-      Window.closeable = false
+      Window.unloaded = false
 
       once(window, 'beforeunload', event => {
-        debug(`closing ${Window.type}...`)
+        debug(`unloading ${Window.type}...`)
 
         event.returnValue = false
         toggle(document.body, 'closing', true)
 
         each(Window.unloaders, unload => unload())
-          .then(() => Window.closeable = true)
-          .then(() => Window.current.close())
-          .tap(() => debug(`${Window.type} ready to close`))
+          .finally(() => {
+            debug(`ready to close ${Window.type}`)
+
+            Window.unloaded = true
+            setTimeout(() => Window.current.close(), 15)
+          })
       })
 
       on(window, 'beforeunload', event => {
-        if (!Window.closeable) event.returnValue = false
+        if (!Window.unloaded) event.returnValue = false
       })
 
 
