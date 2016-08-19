@@ -72,10 +72,15 @@ const Window = {
       ipc
         .on('win', (_, state) => this.toggle(state))
         .on('theme', (_, theme) => this.style(theme, true))
-        .on('reload', () => this.style(false, true))
+        .on('refresh', () => this.style(false, true))
+        .on('reload', () => {
+          unloader = 'reload'
+          Window.current.reload()
+        })
 
 
       Window.unloaded = false
+      let unloader = 'close'
 
       once(window, 'beforeunload', event => {
         debug(`unloading ${Window.type}...`)
@@ -88,7 +93,7 @@ const Window = {
             debug(`ready to close ${Window.type}`)
 
             Window.unloaded = true
-            setTimeout(() => Window.current.close(), 15)
+            setTimeout(() => Window.current[unloader](), 15)
           })
       })
 
