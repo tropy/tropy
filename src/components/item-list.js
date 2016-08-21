@@ -4,23 +4,38 @@ const React = require('react')
 const { PropTypes } = React
 const classes = require('classnames')
 
-const col1 = { width: '40%' }
-const col2 = { width: '25%' }
-const col3 = { width: '15%' }
-const col4 = { width: '10%' }
-const col5 = { width: '10%' }
+const cols = [
+  { width: '40%', field: { name: 'title', type: 'string' } },
+  { width: '25%', field: { name: 'type', type: 'string' } },
+  { width: '15%', field: { name: 'date', type: 'date' } },
+  {
+    width: '10%',
+    order: 'ascending',
+    field: { name: 'box', type: 'number' }
+  },
+  { width: '10%', field: { name: 'photos', type: 'number' } }
+]
 
+const Header = ({ width, field, order }, idx) => (
+  <div key={idx}
+    className={classes(['metadata-head', field.type, order])}
+    style={{ width }}>
+    {field.name}
+  </div>
+)
 
-const List = () => (
+Header.propTypes = {
+  width: PropTypes.string,
+  field: PropTypes.object,
+  order: PropTypes.string
+}
+
+const List = ({ columns }) => (
   <div className="item-list">
     <div className="item-list-head-container">
       <ul className="item-list item-list-head">
         <li className="item-head">
-          <div className="metadata-head" style={col1}>Title</div>
-          <div className="metadata-head" style={col2}>Type</div>
-          <div className="metadata-head" style={col3}>Date</div>
-          <div className="metadata-head number ascending" style={col4}>Box</div>
-          <div className="metadata-head number" style={col5}>Photos</div>
+          {columns.map(Header)}
         </li>
       </ul>
     </div>
@@ -146,7 +161,15 @@ const List = () => (
   </div>
 )
 
-const ColumnIcon = ({ image, width, height }) => {
+List.propTypes = {
+  columns: PropTypes.arrayOf(PropTypes.object)
+}
+
+List.defaultProps = {
+  columns: cols
+}
+
+const CellIcon = ({ image, width, height }) => {
   return (image) ? (
     <img
       src={`${image}-${width}.jpg`}
@@ -155,43 +178,51 @@ const ColumnIcon = ({ image, width, height }) => {
   ) : null
 }
 
-ColumnIcon.propTypes = {
+CellIcon.propTypes = {
   image: PropTypes.string,
   width: PropTypes.number,
   height: PropTypes.number
 }
 
-ColumnIcon.defaultProps = {
+CellIcon.defaultProps = {
   width: 24, height: 24
 }
 
-const Column = ({ image, type, value, style }) => (
-  <div className={classes({ metadata: true, [type]: type })} style={style}>
-    <ColumnIcon image={image} width={24} height={24}/>
+const Cell = ({ image, type, value, width }) => (
+  <div className={classes(['metadata', type])} style={{ width }}>
+    <CellIcon image={image} width={24} height={24}/>
     {value}
   </div>
 )
 
-Column.propTypes = {
+Cell.propTypes = {
   image: PropTypes.string,
   type: PropTypes.string,
   value: PropTypes.string,
-  style: PropTypes.object
+  width: PropTypes.string
 }
 
-const ListItem = ({ data, active }) => (
+const ListItem = ({ data, active, columns }) => (
   <li className={classes({ item: true, active })}>
-    <Column {...data.title} image={data.image} style={col1}/>
-    <Column {...data.type} style={col2}/>
-    <Column {...data.date} style={col3}/>
-    <Column {...data.box} style={col4}/>
-    <Column {...data.photos} style={col5}/>
+    {columns.map((column, idx) => (
+      <Cell key={idx}
+        type={column.field.type}
+        value={data[column.field.name].value}
+        image={idx ? null : data.image}
+        width={column.width}/>
+    ))}
   </li>
 )
 
 ListItem.propTypes = {
   active: PropTypes.bool,
-  data: PropTypes.object
+  data: PropTypes.object,
+  columns: PropTypes.arrayOf(PropTypes.object)
+}
+
+ListItem.defaultProps = {
+  active: false,
+  columns: cols
 }
 
 
