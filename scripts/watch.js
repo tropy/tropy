@@ -43,6 +43,8 @@ target.all = () => {
 target.src = () => {
   const tag = 'watch:src'
 
+  process.env.TROPY_RUN_UNIT_TESTS = 'true'
+
   chokidar
     .watch('src/**/*.{js,jsx,scss,sass}', {
       persistent: true
