@@ -6,3 +6,10 @@ wizard:
     title: Create a new Tropy project
     submit: Create project
     name: Name
+
+fields:
+  title: Title
+  type: Type
+  date: Date
+  box: Box
+  photos: Photos

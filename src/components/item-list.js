@@ -2,6 +2,7 @@
 
 const React = require('react')
 const { PropTypes } = React
+const { FormattedMessage } = require('react-intl')
 const classes = require('classnames')
 
 const cols = [
@@ -20,7 +21,7 @@ const Header = ({ width, field, order }, idx) => (
   <div key={idx}
     className={classes(['metadata-head', field.type, order])}
     style={{ width }}>
-    {field.name}
+    <FormattedMessage id={`fields.${field.name}`}/>
   </div>
 )
 
