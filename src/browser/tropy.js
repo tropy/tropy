@@ -67,6 +67,8 @@ class Tropy extends EventEmitter {
     this.win = open('project', { file, ...this.hash }, {
       width: 1280,
       height: 720,
+      minWidth: 640,
+      minHeight: 480,
       darkTheme: (this.state.theme === 'dark'),
       frame: !this.hash.frameless
     })
