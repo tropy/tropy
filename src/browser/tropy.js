@@ -24,7 +24,8 @@ class Tropy extends EventEmitter {
       frameless: (process.platform === 'darwin'),
       locale: app.getLocale(),
       theme: 'light',
-      recent: []
+      recent: [],
+      win: {}
     }
   }
 
@@ -69,8 +70,16 @@ class Tropy extends EventEmitter {
       darkTheme: (this.state.theme === 'dark'),
       frame: !this.hash.frameless
     })
+      .on('close', () => {
+        if (!this.win.isFullScreen()) {
+          this.state.win.bounds = this.win.getBounds()
+        }
+      })
       .once('closed', () => { this.win = undefined })
 
+    if (this.state.win.bounds) {
+      this.win.setBounds(this.state.win.bounds)
+    }
 
     return this
   }
