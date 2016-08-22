@@ -2,13 +2,13 @@
 
 const React = require('react')
 
-const { Toolbar } = require('./toolbar')
-const { PanelGroup } = require('./panelgroup')
-const { Viewer } = require('./viewer')
-const { Search } = require('./search')
-const { Button } = require('./button')
-const { IconPlus } = require('./icons')
-const { ItemList } = require('./item-list')
+const { Toolbar } = require('../toolbar')
+const { PanelGroup } = require('../panelgroup')
+const { Viewer } = require('../viewer')
+const { Search } = require('../search')
+const { Button } = require('../button')
+const { IconPlus } = require('../icons')
+const { List } = require('./list')
 
 const Items = () => (
   <section id="items" className="list-view">
@@ -26,19 +26,16 @@ const Items = () => (
         </div>
       </Toolbar>
     </header>
-    <ItemList/>
-    <Item/>
+
+    <List/>
+
+    <section id="item">
+      <PanelGroup/>
+      <Viewer/>
+    </section>
   </section>
 )
-
-const Item = () => (
-  <section id="item">
-    <PanelGroup/>
-    <Viewer/>
-  </section>
-)
-
 
 module.exports = {
-  Items, Item
+  Items
 }
