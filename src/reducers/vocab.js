@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = {
-  nav(state = {}, action) {
+  vocab(state = {}, action) {
     switch (action.type) {
       default:
         return state
