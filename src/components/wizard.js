@@ -8,11 +8,23 @@ const { Steps, Step } = require('./steps')
 
 class Wizard extends Component {
 
+  static propTypes = {
+    intl: intlShape.isRequired,
+
+    submit: PropTypes.func.isRequired,
+    update: PropTypes.func.isRequired,
+
+    project: PropTypes.shape({
+      name: PropTypes.string
+    })
+  }
+
   constructor(props) {
     super(props)
+  }
 
-    this.update = (event) =>
-      this.props.update({ name: event.target.value })
+  update = (event) => {
+    this.props.update({ name: event.target.value })
   }
 
   render() {
@@ -43,16 +55,6 @@ class Wizard extends Component {
   }
 }
 
-Wizard.propTypes = {
-  intl: intlShape.isRequired,
-
-  submit: PropTypes.func.isRequired,
-  update: PropTypes.func.isRequired,
-
-  project: PropTypes.shape({
-    name: PropTypes.string
-  })
-}
 
 module.exports = {
   Wizard
