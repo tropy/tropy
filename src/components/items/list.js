@@ -3,6 +3,8 @@
 const React = require('react')
 
 const { PropTypes } = React
+const { connect } = require('react-redux')
+const { update } = require('../../actions/nav')
 const { ListItem } = require('./list-item')
 const { ListHead } = require('./list-head')
 
@@ -142,7 +144,7 @@ const itms = [
 ]
 
 
-const List = ({ items, columns }) => (
+const List = ({ items, columns, current, select }) => (
   <div className="item-list">
     <div className="item-list-head-container">
       <ListHead columns={columns}/>
@@ -150,7 +152,12 @@ const List = ({ items, columns }) => (
     <div className="item-list-container">
       <ul className="item-list">
         {items.map((item) => (
-          <ListItem key={item.id} data={{ ...item }} columns={columns}/>
+          <ListItem
+            key={item.id}
+            current={current}
+            activate={select}
+            item={item}
+            columns={columns}/>
         ))}
       </ul>
     </div>
@@ -158,15 +165,24 @@ const List = ({ items, columns }) => (
 )
 
 List.propTypes = {
+  current: PropTypes.number,
+  select: PropTypes.func,
   columns: PropTypes.arrayOf(PropTypes.object),
   items: PropTypes.arrayOf(PropTypes.object)
 }
 
-List.defaultProps = {
-  columns: cols,
-  items: itms
-}
 
 module.exports = {
-  List
+  List: connect(
+    state => ({
+      current: state.nav.item,
+      columns: cols,
+      items: itms
+    }),
+
+    dispatch => ({
+      select: (item) => dispatch(update({ item }))
+    })
+
+  )(List)
 }

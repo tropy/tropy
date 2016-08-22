@@ -1,30 +1,45 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = React
-const classes = require('classnames')
+const { Component, PropTypes } = React
+const cn = require('classnames')
 const { Cell } = require('./cell')
 
-const ListItem = ({ data, active, columns }) => (
-  <li className={classes({ item: true, active })}>
-    {columns.map(({ field, width }, idx) => (
-      <Cell key={idx}
-        type={field.type}
-        value={data[field.name].value}
-        icon={idx ? null : data.image}
-        width={width}/>
-    ))}
-  </li>
-)
+class ListItem extends Component {
 
-ListItem.propTypes = {
-  active: PropTypes.bool,
-  data: PropTypes.object,
-  columns: PropTypes.arrayOf(PropTypes.object)
-}
+  static propTypes = {
+    current: PropTypes.number,
+    activate: PropTypes.func,
+    item: PropTypes.object,
+    columns: PropTypes.arrayOf(PropTypes.object)
+  }
 
-ListItem.defaultProps = {
-  active: false
+  constructor(props) {
+    super(props)
+  }
+
+  activate = () => {
+    this.props.activate(this.props.item.id)
+  }
+
+  render() {
+    const { item, current, columns } = this.props
+
+    return (
+      <li
+        className={cn({ item: true, active: current === item.id })}
+        onClick={this.activate}>
+        {columns.map(({ field, width }, idx) => (
+          <Cell
+            key={idx}
+            type={field.type}
+            value={item[field.name].value}
+            icon={idx ? null : item.image}
+            width={width}/>
+        ))}
+      </li>
+    )
+  }
 }
 
 
