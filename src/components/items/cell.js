@@ -2,7 +2,8 @@
 
 const React = require('react')
 const { PropTypes } = React
-const classes = require('classnames')
+const { Editable } = require('../editable')
+const cn = require('classnames')
 
 const CellIcon = ({ icon, width, height }) => {
   return (icon) ? (
@@ -23,10 +24,12 @@ CellIcon.defaultProps = {
   width: 24, height: 24
 }
 
+const noop = () => {}
+
 const Cell = ({ icon, type, value, width }) => (
-  <div className={classes(['metadata', type])} style={{ width }}>
+  <div className={cn(['metadata', type])} style={{ width }}>
     <CellIcon icon={icon}/>
-    {value}
+    <Editable value={value} onChange={noop}/>
   </div>
 )
 
@@ -34,7 +37,7 @@ Cell.propTypes = {
   icon: PropTypes.string,
   type: PropTypes.string,
   value: PropTypes.string,
-  width: PropTypes.string
+  width: PropTypes.string,
 }
 
 module.exports = {
