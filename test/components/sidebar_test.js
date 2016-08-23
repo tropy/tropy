@@ -13,7 +13,8 @@ describe('Sidebar', () => {
 })
 
 describe('ProjectSidebar', () => {
-  const { ProjectSidebar } = __require('components/sidebar')
+  const { ProjectSidebar: { WrappedComponent: ProjectSidebar } } =
+    __require('components/sidebar')
   const { Toolbar } = __require('components/toolbar')
 
   const project = { name: 'My Research' }

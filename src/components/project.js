@@ -2,7 +2,7 @@
 
 const React = require('react')
 
-const { ProjectSidebar } = require('../containers/sidebar')
+const { ProjectSidebar } = require('./sidebar')
 const { Items } = require('./items')
 
 const Project = () => (

@@ -2,6 +2,7 @@
 
 const React = require('react')
 
+const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
 const { PropTypes } = React
 const { Toolbar } = require('./toolbar')
@@ -34,5 +35,11 @@ ProjectSidebar.propTypes = {
 }
 
 module.exports = {
-  Sidebar, ProjectSidebar
+  Sidebar,
+
+  ProjectSidebar: connect(
+    state => ({
+      project: state.project
+    })
+  )(ProjectSidebar)
 }
