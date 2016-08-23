@@ -5,7 +5,9 @@ const { shallow } = require('enzyme')
 const { intl } = require('../support/intl')
 
 describe('Wizard', () => {
-  const { Wizard } = __require('components/wizard')
+  const {
+    Wizard: { WrappedComponent: { WrappedComponent: Wizard } }
+  } = __require('components/wizard')
 
   let update
   let submit

@@ -4,6 +4,10 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { FormattedMessage, intlShape } = require('react-intl')
 const { Steps, Step } = require('./steps')
+const { connect } = require('react-redux')
+const { injectIntl } = require('react-intl')
+const { update } = require('../actions/project')
+const { submit } = require('../actions/wizard')
 
 
 class Wizard extends Component {
@@ -28,6 +32,7 @@ class Wizard extends Component {
   }
 
   render() {
+    // eslint-disable-next-line no-shadow
     const { submit, project, intl } = this.props
 
     return (
@@ -57,5 +62,18 @@ class Wizard extends Component {
 
 
 module.exports = {
-  Wizard
+  Wizard: injectIntl(
+    connect(
+
+      state => ({
+        project: state.project
+      }),
+
+      dispatch => ({
+        update: (project) => dispatch(update(project, { debounce: true })),
+        submit: () => dispatch(submit())
+      })
+
+    )(Wizard)
+  )
 }
