@@ -51,7 +51,7 @@ module.exports = {
     }),
     dispatch => ({
       onProjectChange(name) {
-        dispatch(update({ name }))
+        dispatch(update({ name }, { persist: true }))
       }
     })
   )(ProjectSidebar)

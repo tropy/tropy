@@ -44,7 +44,7 @@ function close() {
 
 const update = action(UPDATE,
   (payload) => payload,
-  (_, { debounce } = {}) => ({ debounce }))
+  (_, meta) => ({ ...meta }))
 
 module.exports = {
   open,
