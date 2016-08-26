@@ -1,6 +1,7 @@
 'use strict'
 
 const { Storage } = require('../storage')
+const { createAction: action } = require('redux-actions')
 const { UPDATE, INSERT } = require('../constants/vocab')
 
 const TERMS = {
@@ -36,19 +37,8 @@ function restore() {
   }
 }
 
-function update(payload) {
-  return {
-    type: UPDATE,
-    payload
-  }
-}
-
-function insert(payload) {
-  return {
-    type: INSERT,
-    payload
-  }
-}
+const update = action(UPDATE)
+const insert = action(INSERT)
 
 module.exports = {
   persist,

@@ -4,6 +4,7 @@ const { Database } = require('../common/db')
 const { info } = require('../common/log')
 const { ipcRenderer: ipc } = require('electron')
 const { persist, restore } = require('./nav')
+const { createAction: action } = require('redux-actions')
 
 const { OPENED, UPDATE } = require('../constants/project')
 
@@ -41,13 +42,9 @@ function close() {
   }
 }
 
-function update(payload, { debounce } = {}) {
-  return {
-    meta: { debounce },
-    type: UPDATE,
-    payload
-  }
-}
+const update = action(UPDATE,
+  (payload) => payload,
+  (_, { debounce } = {}) => ({ debounce }))
 
 module.exports = {
   open,
