@@ -19,7 +19,8 @@
     "url": "https://chnm.gmu.edu"
   },
   "contributors": [
-    "Sylvester Keil <sylvester@keil.or.at>"
+    "Sylvester Keil <sylvester@keil.or.at>",
+    "Johannes Krtek <johannes.krtek@flachware.com>"
   ],
   "engines": {
     "node": ">=6"
