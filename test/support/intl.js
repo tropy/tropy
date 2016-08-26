@@ -16,7 +16,7 @@ function clone(node) {
   return React.cloneElement(node, { intl })
 }
 
-function mount(node, { context, childContextTypes }) {
+function mount(node, { context, childContextTypes } = {}) {
   return enzyme.mount(
       clone(node), {
         context: { ...context, intl },
