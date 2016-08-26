@@ -1,18 +1,12 @@
 'use strict'
 
+const { handleActions: handle } = require('redux-actions')
 const { UPDATE } = require('../constants/project')
 
 module.exports = {
-  project(state = {
-    name: ''
-  }, action) {
-    switch (action.type) {
-
-      case UPDATE:
-        return { ...state, ...action.payload }
-
-      default:
-        return state
-    }
-  }
+  project: handle({
+    [UPDATE]: (state, { payload }) => ({
+      ...state, ...payload
+    })
+  }, { name: '' })
 }

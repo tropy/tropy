@@ -1,16 +1,13 @@
 'use strict'
 
+const { handleActions: handle } = require('redux-actions')
 const { UPDATE } = require('../constants/nav')
 
 module.exports = {
-  nav(state = {}, action) {
-    switch (action.type) {
+  nav: handle({
+    [UPDATE]: (state, { payload }) => ({
+      ...state, ...payload
+    })
 
-      case UPDATE:
-        return { ...state, ...action.payload }
-
-      default:
-        return state
-    }
-  }
+  }, {})
 }

@@ -1,19 +1,15 @@
 'use strict'
 
+const { handleActions: handle } = require('redux-actions')
 const { UPDATE } = require('../constants/intl')
 
 module.exports = {
-  intl(state = {
+  intl: handle({
+    [UPDATE]: (state, { payload }) => ({
+      ...state, ...payload
+    })
+  }, {
     locale: ARGS.locale,
     defaultLocale: 'en'
-  }, action) {
-    switch (action.type) {
-
-      case UPDATE:
-        return { ...state, ...action.payload }
-
-      default:
-        return state
-    }
-  }
+  })
 }
