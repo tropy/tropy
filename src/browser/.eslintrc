@@ -1,4 +1,3 @@
-# vi: set ft=yaml
-
+# vi: set ft=yaml :
 env:
   browser: false

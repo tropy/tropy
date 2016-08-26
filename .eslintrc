@@ -1,5 +1,4 @@
-# vi: set ft=yaml
-
+# vi: set ft=yaml :
 root: true
 
 plugins:
