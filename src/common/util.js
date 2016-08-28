@@ -46,6 +46,8 @@ module.exports = {
     }
 
     return reduce(obj)
-  }
+  },
+
+  noop() {}
 
 }
