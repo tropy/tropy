@@ -42,6 +42,19 @@ function close() {
   }
 }
 
+function save({ name }) {
+  return async (dispatch, getState) => {
+    const { project } = getState()
+    const db = Database.cached(project.file)
+
+    await db.run(
+      'UPDATE project SET name = ? WHERE project_id = ?', name, project.id
+    )
+
+    dispatch(update({ name }))
+  }
+}
+
 const update = action(UPDATE,
   (payload) => payload,
   (_, meta) => ({ ...meta }))
@@ -49,5 +62,6 @@ const update = action(UPDATE,
 module.exports = {
   open,
   close,
+  save,
   update
 }

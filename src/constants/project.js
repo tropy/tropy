@@ -11,6 +11,7 @@ module.exports = {
 
   HISTORY: 'project:history',
 
+  SAVE: 'project:save',
   UPDATE: 'project:update'
 
 }

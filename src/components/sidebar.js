@@ -8,7 +8,7 @@ const { PropTypes } = React
 const { Toolbar } = require('./toolbar')
 const { IconFolder } = require('./icons')
 const { Editable } = require('./editable')
-const { update } = require('../actions/project')
+const { save } = require('../actions/project')
 
 const Sidebar = ({ children }) => (
   <header id="sidebar">{children}</header>
@@ -51,7 +51,7 @@ module.exports = {
     }),
     dispatch => ({
       onProjectChange(name) {
-        dispatch(update({ name }, { persist: true }))
+        dispatch(save({ name }))
       }
     })
   )(ProjectSidebar)
