@@ -3,11 +3,17 @@
 const React = require('react')
 
 const { Component, PropTypes } = React
+const { noop } = require('../common/util')
 
 class Editable extends Component {
   static propTypes = {
     value: PropTypes.string,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    onCancel: PropTypes.func
+  }
+
+  static defaultProps = {
+    onCancel: noop
   }
 
   constructor(props) {
@@ -28,7 +34,12 @@ class Editable extends Component {
   }
 
   stop = () => {
-    this.props.onChange(this.state.value)
+    if (this.state.value !== this.props.value) {
+      this.props.onChange(this.state.value)
+    } else {
+      this.props.onCancel()
+    }
+
     this.setState({ editing: false })
   }
 
