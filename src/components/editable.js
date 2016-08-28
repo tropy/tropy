@@ -43,6 +43,14 @@ class Editable extends Component {
     this.setState({ editing: false })
   }
 
+  focus(input) {
+    if (input) {
+      input.focus()
+      input.select()
+    }
+  }
+
+
   componentWillReceiveProps({ value }) {
     this.setState({ value, editing: false })
   }
@@ -52,6 +60,7 @@ class Editable extends Component {
       <input
         className="editable"
         type="text"
+        ref={this.focus}
         value={this.state.value}
         onChange={this.update}
         onBlur={this.stop}/>
