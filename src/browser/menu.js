@@ -49,7 +49,8 @@ module.exports = class AppMenu {
   }
 
   translate(template) {
-    return template.map(item => { // eslint-disable-line complexity
+    // eslint-disable-next-line complexity
+    return template.map(item => {
       item = { ...item }
 
       if (item.command) {
@@ -92,6 +93,15 @@ module.exports = class AppMenu {
             theme.checked = (theme.id === this.app.state.theme)
             theme.click = this.responder('app:switch-theme', theme.id)
           }
+          break
+
+        case 'undo':
+          item.enabled = this.app.history.past > 0
+          break
+
+        case 'redo':
+          item.enabled = this.app.history.future > 0
+          break
       }
 
       if (item.submenu) {

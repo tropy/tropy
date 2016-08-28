@@ -4,18 +4,18 @@ describe('AppMenu', () => {
   const { Menu } = require('electron')
   const AppMenu = __require('browser/menu')
 
-  let appmenu
+  let menu
 
   before(() => {
-    const app = sinon.stub()
-    app.state = { recent: [] }
-
-    appmenu = new AppMenu(app)
+    menu = new AppMenu({
+      state: { recent: [] },
+      history: {}
+    })
   })
 
   describe('#load', () => {
     it('loads and translates menu template', () => (
-      expect(appmenu.load())
+      expect(menu.load())
         .eventually
         .to.have.property('menu')
         .and.be.instanceof(Menu)

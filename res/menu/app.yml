@@ -32,12 +32,16 @@ linux:
   - &edit
     label: '&Edit'
     submenu:
-      - label: 'Undo'
+      - id: 'undo'
+        label: 'Undo'
         accelerator: 'CmdOrCtrl+Z'
-        role: 'undo'
-      - label: 'Redo'
+        command: 'app:undo'
+        enabled: false
+      - id: 'redo'
+        label: 'Redo'
         accelerator: 'Shift+CmdOrCtrl+Z'
-        role: 'redo'
+        command: 'app:redo'
+        enabled: false
       - type: 'separator'
       - label: 'Cut'
         accelerator: 'CmdOrCtrl+X'

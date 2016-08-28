@@ -9,6 +9,8 @@ module.exports = {
 
   CREATED: 'project:created',
 
+  HISTORY: 'project:history',
+
   UPDATE: 'project:update'
 
 }

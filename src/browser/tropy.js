@@ -14,8 +14,9 @@ const Storage = require('./storage')
 const pkg = require('../../package')
 
 const { defineProperty: prop } = Object
-const { OPEN, OPENED, CREATED } = require('../constants/project')
+const { OPEN, OPENED, CREATED, HISTORY } = require('../constants/project')
 
+const H = new WeakMap()
 
 class Tropy extends EventEmitter {
 
@@ -54,36 +55,41 @@ class Tropy extends EventEmitter {
       if (!file || !exists(file)) return this.create()
     }
 
-    file = resolve(file)
-    verbose(`opening ${file}...`)
+    try {
+      file = resolve(file)
+      verbose(`opening ${file}...`)
 
 
-    if (this.win) {
-      if (file) this.win.webContents.send(OPEN, file)
-      return this.win.show(), this
-    }
+      if (this.win) {
+        if (file) this.win.webContents.send(OPEN, file)
+        return this.win.show(), this
+      }
 
 
-    this.win = open('project', { file, ...this.hash }, {
-      width: 1280,
-      height: 720,
-      minWidth: 640,
-      minHeight: 480,
-      darkTheme: (this.state.theme === 'dark'),
-      frame: !this.hash.frameless
-    })
-      .on('close', () => {
-        if (!this.win.isFullScreen()) {
-          this.state.win.bounds = this.win.getBounds()
-        }
+      this.win = open('project', { file, ...this.hash }, {
+        width: 1280,
+        height: 720,
+        minWidth: 640,
+        minHeight: 480,
+        darkTheme: (this.state.theme === 'dark'),
+        frame: !this.hash.frameless
       })
-      .once('closed', () => { this.win = undefined })
+        .on('close', () => {
+          if (!this.win.isFullScreen()) {
+            this.state.win.bounds = this.win.getBounds()
+          }
+        })
+        .once('closed', () => { this.win = undefined })
 
-    if (this.state.win.bounds) {
-      this.win.setBounds(this.state.win.bounds)
+      if (this.state.win.bounds) {
+        this.win.setBounds(this.state.win.bounds)
+      }
+
+      return this
+
+    } finally {
+      this.emit('app:reload-menu')
     }
-
-    return this
   }
 
   opened({ file }) {
@@ -99,10 +105,7 @@ class Tropy extends EventEmitter {
         break
     }
 
-    // Note: there may be Electron issues when reloading
-    // the main menu. But since we cannot remove items
-    // dynamically (#527) this is our only option.
-    this.menu.load()
+    this.emit('app:reload-menu')
   }
 
   create() {
@@ -132,7 +135,7 @@ class Tropy extends EventEmitter {
 
       .then(state => (this.state = state, this))
 
-      .tap(() => this.menu.load())
+      .tap(() => this.emit('app:reload-menu'))
       .tap(() => this.emit('app:restored'))
       .tap(() => verbose('app state restored'))
   }
@@ -158,11 +161,7 @@ class Tropy extends EventEmitter {
         verbose('clearing recent projects...')
 
         this.state.recent = []
-
-        // Note: there may be Electron issues when reloading
-        // the main menu. But since we cannot remove items
-        // dynamically (#527) this is our only option.
-        this.menu.load()
+        this.emit('app:reload-menu')
       })
 
       .on('app:switch-theme', (_, theme) => {
@@ -183,6 +182,14 @@ class Tropy extends EventEmitter {
         }
       })
 
+
+      .on('app:reload-menu', () => {
+        // Note: there may be Electron issues when reloading
+        // the main menu. But since we cannot remove items
+        // dynamically (#527) this is our only option.
+        this.menu.load()
+      })
+
       .on('app:reload', () => {
         const win = BrowserWindow.getFocusedWindow()
 
@@ -197,6 +204,14 @@ class Tropy extends EventEmitter {
         if (win) {
           win.webContents.send('refresh')
         }
+      })
+
+      .on('app:undo', () => {
+        if (!this.history.past) return
+      })
+
+      .on('app:redo', () => {
+        if (!this.history.future) return
       })
 
       .on('app:open-license', () => {
@@ -243,6 +258,11 @@ class Tropy extends EventEmitter {
       .on(OPENED, (_, project) => this.opened(project))
       .on(CREATED, (_, project) => this.open(project.file))
 
+      .on(HISTORY, (_, history) => {
+        H.set(this.win, history)
+        this.emit('app:reload-menu')
+      })
+
     return this
   }
 
@@ -257,6 +277,10 @@ class Tropy extends EventEmitter {
     }
   }
 
+
+  get history() {
+    return H.get(this.win) || {}
+  }
 
   get name() {
     return pkg.productName
