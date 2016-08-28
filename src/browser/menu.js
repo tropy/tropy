@@ -45,7 +45,12 @@ module.exports = class AppMenu {
   }
 
   build(template) {
-    return Menu.buildFromTemplate(this.translate(template))
+    return Menu.buildFromTemplate(
+      this.translate(template)
+        // Hiding of root items does not work at the moment.
+        // See Electron #2895
+        .filter(item => item.visible !== false)
+    )
   }
 
   translate(template) {
@@ -82,8 +87,6 @@ module.exports = class AppMenu {
           }
           break
 
-        // Hiding of root items does not work at the moment.
-        // See Electron #2895
         case 'dev':
           item.visible = (this.app.development || this.app.debug)
           break
