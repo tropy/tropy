@@ -11,7 +11,7 @@ const { into, compose, remove, take } = require('transducers.js')
 const AppMenu = require('./menu')
 const Storage = require('./storage')
 
-const pkg = require('../../package')
+const release = require('../common/release')
 
 const { defineProperty: prop } = Object
 const { OPEN, OPENED, CREATED, HISTORY } = require('../constants/project')
@@ -270,6 +270,7 @@ class Tropy extends EventEmitter {
     return {
       environment: this.environment,
       debug: this.debug,
+      dev: this.dev,
       home: app.getPath('userData'),
       frameless: this.state.frameless,
       theme: this.state.theme,
@@ -283,19 +284,15 @@ class Tropy extends EventEmitter {
   }
 
   get name() {
-    return pkg.productName
+    return release.product
   }
 
   get debug() {
     return process.env.DEBUG === 'true'
   }
 
-  get development() {
-    return this.environment === 'development'
-  }
-
-  get production() {
-    return this.environment === 'production'
+  get dev() {
+    return release.channel === 'dev' || this.environment === 'development'
   }
 
   get environment() {
@@ -303,7 +300,7 @@ class Tropy extends EventEmitter {
   }
 
   get version() {
-    return pkg.version
+    return release.version
   }
 }
 

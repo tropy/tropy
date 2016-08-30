@@ -88,7 +88,7 @@ module.exports = class AppMenu {
           break
 
         case 'dev':
-          item.visible = (this.app.development || this.app.debug)
+          item.visible = (this.app.dev || this.app.debug)
           break
 
         case 'theme':

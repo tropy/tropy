@@ -13,7 +13,7 @@ const { open } = require('../actions/project')
 const { OPEN } = require('../constants/project')
 const { debounce } = require('../middleware/debounce')
 
-const dev = (ARGS.environment === 'development' || ARGS.debug)
+const dev = (ARGS.dev || ARGS.debug)
 
 module.exports = {
   create(init = {}) {

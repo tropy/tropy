@@ -10,7 +10,7 @@ const { project } = require('../reducers/project')
 const { intl } = require('../reducers/intl')
 const { debounce } = require('../middleware/debounce')
 
-const dev = (ARGS.environment === 'development' || ARGS.debug)
+const dev = (ARGS.dev || ARGS.debug)
 
 module.exports = {
   create(init = {}) {

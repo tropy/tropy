@@ -31,7 +31,7 @@ ready.then(() => {
 })
 
 
-if (ARGS.environment === 'development') {
+if (ARGS.dev) {
   if (process.platform !== 'linux') {
     const props = Object.defineProperties
 
