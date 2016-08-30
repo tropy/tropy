@@ -2,11 +2,12 @@
 
 const { Database } = require('../common/db')
 const { info } = require('../common/log')
+const { id } = require('../common/util')
 const { ipcRenderer: ipc } = require('electron')
 const { persist, restore } = require('./nav')
 const { createAction: action } = require('redux-actions')
 
-const { OPENED, UPDATE } = require('../constants/project')
+const { OPENED, UPDATE, SAVE } = require('../constants/project')
 
 function open(file) {
   return async (dispatch, getState) => {
@@ -31,33 +32,19 @@ function open(file) {
 
 function close() {
   return async (dispatch, getState) => {
-    const { project: { id, file } } = getState()
+    const { project } = getState()
 
-    dispatch(persist(id))
+    dispatch(persist(project.id))
 
-    await Database.cached(file).close()
-    info(`closed project ${id}`)
+    await Database.cached(project.file).close()
+    info(`closed project ${project.id}`)
 
     dispatch(update({}))
   }
 }
 
-function save({ name }) {
-  return async (dispatch, getState) => {
-    const { project } = getState()
-    const db = Database.cached(project.file)
-
-    await db.run(
-      'UPDATE project SET name = ? WHERE project_id = ?', name, project.id
-    )
-
-    dispatch(update({ name }))
-  }
-}
-
-const update = action(UPDATE,
-  (payload) => payload,
-  (_, meta) => ({ ...meta }))
+const save = action(SAVE, id)
+const update = action(UPDATE, id, (_, meta) => ({ ...meta }))
 
 module.exports = {
   open,
