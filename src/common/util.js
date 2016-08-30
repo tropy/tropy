@@ -48,6 +48,8 @@ module.exports = {
     return reduce(obj)
   },
 
-  noop() {}
+  noop() {},
+
+  id(payload) { return payload }
 
 }
