@@ -2,10 +2,8 @@
 
 const { Database } = require('../common/db')
 const { info } = require('../common/log')
-const { id } = require('../common/util')
 const { ipcRenderer: ipc } = require('electron')
 const { persist, restore } = require('./nav')
-const { createAction: action } = require('redux-actions')
 
 const { OPENED, UPDATE, SAVE } = require('../constants/project')
 
@@ -43,8 +41,13 @@ function close() {
   }
 }
 
-const save = action(SAVE, id)
-const update = action(UPDATE, id, (_, meta) => ({ ...meta }))
+function save(payload) {
+  return { type: SAVE, payload }
+}
+
+function update(payload, meta) {
+  return { type: UPDATE, payload, meta }
+}
 
 module.exports = {
   open,

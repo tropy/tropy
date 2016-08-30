@@ -1,6 +1,5 @@
 'use strict'
 
-const { createAction: action } = require('redux-actions')
 const { Storage } = require('../storage')
 const { UPDATE } = require('../constants/nav')
 
@@ -18,7 +17,9 @@ function restore(id) {
   }
 }
 
-const update = action(UPDATE)
+function update(payload) {
+  return { type: UPDATE, payload }
+}
 
 module.exports = {
   persist,

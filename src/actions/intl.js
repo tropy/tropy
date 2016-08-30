@@ -1,6 +1,5 @@
 'use strict'
 
-const { createAction: action } = require('redux-actions')
 const { Strings } = require('../common/res')
 const { UPDATE } = require('../constants/intl')
 
@@ -19,7 +18,9 @@ function getMessages() {
   }
 }
 
-const update = action(UPDATE)
+function update(payload) {
+  return { type: UPDATE, payload }
+}
 
 module.exports = {
   getMessages,
