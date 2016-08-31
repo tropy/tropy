@@ -8,13 +8,12 @@ const { create } = require('../stores/project')
 const { Main } = require('../components/main')
 const { Project } = require('../components/project')
 const { getMessages } = require('../actions/intl')
-const { open, close } = require('../actions/project')
-const { project } = require('../sagas/project')
+const { open } = require('../actions/project')
+const { main } = require('../sagas/project')
 const { unloaders } = require('../window')
 
 const store = create()
-
-store.saga.run(project)
+const tasks = store.saga.run(main)
 
 all([
   store.dispatch(getMessages()),
@@ -28,4 +27,4 @@ all([
     )
   })
 
-unloaders.push(() => store.dispatch(close()))
+unloaders.push(() => (tasks.cancel(), tasks.done))

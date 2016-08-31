@@ -1,48 +1,15 @@
 'use strict'
 
-const { Database } = require('../common/db')
-const { info } = require('../common/log')
-const { ipcRenderer: ipc } = require('electron')
-const { persist, restore } = require('./nav')
-
-const { OPENED, UPDATE, SAVE } = require('../constants/project')
+const {
+  OPEN, OPENED, UPDATE, SAVE
+} = require('../constants/project')
 
 function opened(payload, meta) {
-  return { type: OPENED, payload, meta }
+  return { type: OPENED, error: (payload instanceof Error), payload, meta }
 }
 
-function open(file) {
-  return async (dispatch, getState) => {
-    const { project: { file: current } } = getState()
-    const db = Database.cached(file)
-
-    if (current && current !== db.path) {
-      await dispatch(close())
-    }
-
-    const project = await db.get(
-      'SELECT project_id AS id, name FROM project'
-    )
-
-    info(`opened project ${project.id}`)
-    ipc.send(OPENED, { file: db.path, id: project.id })
-
-    dispatch(restore(project.id))
-    return dispatch(opened({ file: db.path, ...project }))
-  }
-}
-
-function close() {
-  return async (dispatch, getState) => {
-    const { project } = getState()
-
-    dispatch(persist(project.id))
-
-    await Database.cached(project.file).close()
-    info(`closed project ${project.id}`)
-
-    dispatch(update({}))
-  }
+function open(payload, meta) {
+  return { type: OPEN, payload, meta }
 }
 
 function save(payload) {
@@ -56,7 +23,6 @@ function update(payload, meta) {
 module.exports = {
   open,
   opened,
-  close,
   save,
   update
 }

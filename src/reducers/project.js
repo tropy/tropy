@@ -1,6 +1,6 @@
 'use strict'
 
-const { UPDATE, OPENED } = require('../constants/project')
+const { UPDATE, OPENED, CLOSED } = require('../constants/project')
 
 const init = { name: '' }
 
@@ -17,6 +17,8 @@ module.exports = {
       case UPDATE:
         return { ...state, ...action.payload }
 
+      case CLOSED:
+        return { ...init }
 
       default:
         return state
