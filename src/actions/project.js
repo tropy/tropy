@@ -7,6 +7,10 @@ const { persist, restore } = require('./nav')
 
 const { OPENED, UPDATE, SAVE } = require('../constants/project')
 
+function opened(payload, meta) {
+  return { type: OPENED, payload, meta }
+}
+
 function open(file) {
   return async (dispatch, getState) => {
     const { project: { file: current } } = getState()
@@ -24,7 +28,7 @@ function open(file) {
     ipc.send(OPENED, { file: db.path, id: project.id })
 
     dispatch(restore(project.id))
-    return dispatch(update({ file: db.path, ...project }))
+    return dispatch(opened({ file: db.path, ...project }))
   }
 }
 
@@ -51,6 +55,7 @@ function update(payload, meta) {
 
 module.exports = {
   open,
+  opened,
   close,
   save,
   update
