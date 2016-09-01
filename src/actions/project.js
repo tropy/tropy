@@ -1,7 +1,7 @@
 'use strict'
 
 const {
-  OPEN, OPENED, UPDATE, SAVE
+  OPEN, OPENED, PERSIST, UPDATE
 } = require('../constants/project')
 
 function opened(payload, meta) {
@@ -12,8 +12,8 @@ function open(payload, meta) {
   return { type: OPEN, payload, meta }
 }
 
-function save(payload) {
-  return { type: SAVE, payload }
+function persist(payload, meta) {
+  return { type: PERSIST, payload, meta: { ...meta, persist: true } }
 }
 
 function update(payload, meta) {
@@ -23,6 +23,6 @@ function update(payload, meta) {
 module.exports = {
   open,
   opened,
-  save,
+  persist,
   update
 }

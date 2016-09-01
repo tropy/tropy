@@ -106,7 +106,7 @@ function text(options) {
     return [
       message,
       inspect(meta, { colors: true })
-        .replace(/^/mg, ' '.repeat(PADDING))
+        .replace(/^/mg, ' '.repeat(PADDING + 3))
     ].join('\n')
   }
 

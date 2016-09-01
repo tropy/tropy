@@ -7,9 +7,8 @@ module.exports = {
 
   CREATED: 'project:created',
 
-  HISTORY: 'project:history',
+  PERSIST: 'project:persist',
 
-  SAVE: 'project:save',
   UPDATE: 'project:update'
 
 }

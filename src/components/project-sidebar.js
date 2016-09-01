@@ -9,7 +9,7 @@ const { Toolbar } = require('./toolbar')
 const { IconFolder } = require('./icons')
 const { Editable } = require('./editable')
 const { Sidebar } = require('./sidebar')
-const { save } = require('../actions/project')
+const { persist } = require('../actions/project')
 
 const ProjectSidebar = ({ project, onProjectChange }) => (
   <Sidebar>
@@ -42,7 +42,7 @@ module.exports = {
     }),
     dispatch => ({
       onProjectChange(name) {
-        dispatch(save({ name }))
+        dispatch(persist({ name }))
       }
     })
   )(ProjectSidebar)
