@@ -5,7 +5,12 @@ const {
 } = require('../constants/project')
 
 function opened(payload, meta) {
-  return { type: OPENED, error: (payload instanceof Error), payload, meta }
+  return {
+    type: OPENED,
+    error: (payload instanceof Error),
+    payload,
+    meta: { ...meta, ipc: true }
+  }
 }
 
 function open(payload, meta) {

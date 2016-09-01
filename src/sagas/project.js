@@ -2,12 +2,12 @@
 
 const { takeEvery: every } = require('redux-saga')
 const { fork, cancel, call, put, take, select } = require('redux-saga/effects')
-const { OPEN, OPENED, PERSIST } = require('../constants/project')
+const { OPEN, PERSIST } = require('../constants/project')
 const { update, opened } = require('../actions/project')
 const nav = require('../actions/nav')
 const { Database } = require('../common/db')
 const { verbose, warn, info, debug } = require('../common/log')
-const { ipcRenderer: ipc } = require('electron')
+const { ipc } = require('./ipc')
 
 
 const persistable = (action) =>
@@ -25,9 +25,7 @@ function *open(file) {
     )
 
     id = project.id
-
     info(`opened project ${id}`)
-    ipc.send(OPENED, { file: db.path, id })
 
     yield put(nav.restore(id))
     yield put(opened({ file: db.path, ...project }))
@@ -78,6 +76,8 @@ module.exports = {
     let task
 
     try {
+      yield fork(ipc)
+
       while (true) {
         const { payload } = yield take(OPEN)
 
