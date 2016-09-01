@@ -4,10 +4,10 @@ const { takeEvery: every } = require('redux-saga')
 const { fork, cancel, call, put, take, select } = require('redux-saga/effects')
 const { OPEN, PERSIST } = require('../constants/project')
 const { update, opened } = require('../actions/project')
-const nav = require('../actions/nav')
 const { Database } = require('../common/db')
 const { verbose, warn, info, debug } = require('../common/log')
 const { ipc } = require('./ipc')
+const nav = require('./nav')
 
 
 const persistable = (action) =>
@@ -27,8 +27,8 @@ function *open(file) {
     id = project.id
     info(`opened project ${id}`)
 
-    yield put(nav.restore(id))
     yield put(opened({ file: db.path, ...project }))
+    yield call(nav.restore, id)
 
     yield* every(persistable, persist, db, id)
 
@@ -37,7 +37,7 @@ function *open(file) {
     debug(error)
 
   } finally {
-    if (id) yield put(nav.persist(id))
+    if (id) yield call(nav.persist, id)
     if (db) yield call([db, db.close])
 
     info(`closed project ${id}`)

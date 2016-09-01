@@ -1,13 +1,18 @@
 'use strict'
 
-const { UPDATE } = require('../constants/nav')
+const { UPDATE, RESTORE } = require('../constants/nav')
+
+const init = {}
 
 module.exports = {
-  nav(state = {}, action) {
-    switch (action.type) {
+  nav(state = init, { type, payload }) {
+    switch (type) {
+
+      case RESTORE:
+        return { ...payload }
 
       case UPDATE:
-        return { ...state, ...action.payload }
+        return { ...state, ...payload }
 
       default:
         return state

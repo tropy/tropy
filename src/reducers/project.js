@@ -5,17 +5,14 @@ const { UPDATE, OPENED } = require('../constants/project')
 const init = { name: '' }
 
 module.exports = {
-  project(state = init, action) {
-    switch (action.type) {
+  project(state = init, { type, payload }) {
+    switch (type) {
 
       case OPENED:
-        if (!action.error) {
-          return { ...action.payload }
-        }
-        break
+        return { ...payload }
 
       case UPDATE:
-        return { ...state, ...action.payload }
+        return { ...state, ...payload }
 
       default:
         return state

@@ -1,28 +1,13 @@
 'use strict'
 
-const { Storage } = require('../storage')
-const { UPDATE } = require('../constants/nav')
-
-function persist(id) {
-  return (_, getState) => {
-    const { nav } = getState()
-    Storage.save('nav', nav, id)
-  }
-}
-
-function restore(id) {
-  return (dispatch) => {
-    const nav = Storage.load('nav', id)
-    dispatch(update(nav))
-  }
-}
-
-function update(payload) {
-  return { type: UPDATE, payload }
-}
+const { UPDATE, RESTORE } = require('../constants/nav')
 
 module.exports = {
-  persist,
-  restore,
-  update
+  restore(payload) {
+    return { type: RESTORE, payload }
+  },
+
+  update(payload) {
+    return { type: UPDATE, payload }
+  }
 }
