@@ -14,7 +14,8 @@ const Storage = require('./storage')
 const release = require('../common/release')
 
 const { defineProperty: prop } = Object
-const { OPEN, OPENED, CREATED, HISTORY } = require('../constants/project')
+const { OPEN, OPENED, CREATED } = require('../constants/project')
+const { TICK } = require('../constants/history')
 
 const H = new WeakMap()
 
@@ -206,14 +207,6 @@ class Tropy extends EventEmitter {
         }
       })
 
-      .on('app:undo', () => {
-        if (!this.history.past) return
-      })
-
-      .on('app:redo', () => {
-        if (!this.history.future) return
-      })
-
       .on('app:open-license', () => {
         shell.openExternal('https://github.com/tropy/tropy/blob/master/LICENSE')
       })
@@ -258,7 +251,7 @@ class Tropy extends EventEmitter {
       .on(OPENED, (_, project) => this.opened(project))
       .on(CREATED, (_, project) => this.open(project.file))
 
-      .on(HISTORY, (_, history) => {
+      .on(TICK, (_, history) => {
         H.set(this.win, history)
         this.emit('app:reload-menu')
       })

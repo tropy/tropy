@@ -32,13 +32,17 @@ module.exports = class AppMenu {
   }
 
   responder(command, ...params) {
-    let [prefix, action] = command.split(':')
+    let [prefix, ...action] = command.split(':')
 
     switch (prefix) {
       case 'app':
         return (_, win) => this.app.emit(command, win, ...params)
       case 'win':
-        return (_, win) => win[action]()
+        return (_, win) => win[action](...params)
+      case 'dispatch':
+        return (_, win) => win.webContents.send('dispatch', {
+          type: action, payload: params
+        })
       default:
         warn(`no responder for menu command ${command}`)
     }
