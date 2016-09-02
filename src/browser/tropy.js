@@ -14,7 +14,8 @@ const Storage = require('./storage')
 const release = require('../common/release')
 
 const { defineProperty: prop } = Object
-const { OPEN, OPENED, CREATED } = require('../constants/project')
+const { OPENED, CREATED } = require('../constants/project')
+const project = require('../actions/project')
 const { TICK } = require('../constants/history')
 
 const H = new WeakMap()
@@ -62,7 +63,10 @@ class Tropy extends EventEmitter {
 
 
       if (this.win) {
-        if (file) this.win.webContents.send(OPEN, file)
+        if (file) {
+          this.win.webContents.send('dispatch', project.open(file))
+        }
+
         return this.win.show(), this
       }
 
@@ -248,8 +252,8 @@ class Tropy extends EventEmitter {
     ipc
       .on('cmd', (_, command, ...params) => this.emit(command, ...params))
 
-      .on(OPENED, (_, project) => this.opened(project))
-      .on(CREATED, (_, project) => this.open(project.file))
+      .on(OPENED, (_, { file }) => this.opened({ file }))
+      .on(CREATED, (_, { file }) => this.open(file))
 
       .on(TICK, (_, history) => {
         H.set(this.win, history)

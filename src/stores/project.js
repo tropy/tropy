@@ -11,9 +11,6 @@ const { project } = require('../reducers/project')
 const { nav } = require('../reducers/nav')
 const { intl } = require('../reducers/intl')
 const { history } = require('../reducers/history')
-const { ipcRenderer: ipc } = require('electron')
-const { open } = require('../actions/project')
-const { OPEN } = require('../constants/project')
 const { debounce, log } = require('../middleware')
 
 const dev = (ARGS.dev || ARGS.debug)
@@ -42,9 +39,6 @@ module.exports = {
       middleware
 
     const store = createStore(reducer, init, enhancer)
-
-    ipc
-      .on(OPEN, (_, file) => store.dispatch(open(file)))
 
     return { ...store, saga }
   }
