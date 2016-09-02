@@ -33,7 +33,7 @@ module.exports = {
 
       } catch (error) {
         warn(`unexpected error in ipc:receive: ${error.message}`)
-        debug(error)
+        debug(error.stack)
       }
     }
   },

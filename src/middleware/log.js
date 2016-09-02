@@ -15,7 +15,7 @@ module.exports = {
           break
         case !!error:
           warn(`${type} failed: ${payload.message}`)
-          debug(payload)
+          debug(payload.stack)
           break
         default:
           verbose(type)

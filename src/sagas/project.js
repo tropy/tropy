@@ -34,7 +34,7 @@ function *open(file) {
 
   } catch (error) {
     warn(`unexpected error in open: ${error.message}`)
-    debug(error)
+    debug(error.stack)
 
   } finally {
     if (id) yield call(nav.persist, id)
@@ -66,7 +66,7 @@ function *persist(db, id, { type, payload }) {
 
   } catch (error) {
     warn(`persist saga failed: ${error.message}`)
-    debug(error)
+    debug(error.stack)
   }
 }
 
@@ -90,7 +90,7 @@ module.exports = {
 
     } catch (error) {
       warn(`unexpected error in main: ${error.message}`)
-      debug(error)
+      debug(error.stack)
     }
   },
 
