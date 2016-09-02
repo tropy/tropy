@@ -1,6 +1,6 @@
 'use strict'
 
-const { debug, warn, verbose, log } = require('../common/log')
+const { debug, warn, verbose } = require('../common/log')
 
 module.exports = {
   log() {
@@ -9,9 +9,6 @@ module.exports = {
 
       switch (true) {
         case (type === undefined):
-          break
-        case !!(meta && meta.log):
-          log(meta.log, type, payload)
           break
         case !!error:
           warn(`${type} failed: ${payload.message}`)
