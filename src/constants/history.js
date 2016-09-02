@@ -3,5 +3,6 @@
 module.exports = {
   UNDO: 'history:undo',
   REDO: 'history:redo',
-  TICK: 'history:tick'
+  TICK: 'history:tick',
+  DROP: 'history:drop'
 }
