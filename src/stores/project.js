@@ -29,8 +29,8 @@ module.exports = {
 
     const middleware = applyMiddleware(
       debounce,
-      log,
       thunk,
+      log,
       saga
     )
 

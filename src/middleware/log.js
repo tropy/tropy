@@ -8,8 +8,6 @@ module.exports = {
       const { type, payload, meta, error } = action
 
       switch (true) {
-        case (type === undefined):
-          break
         case !!error:
           warn(`${type} failed: ${payload.message}`)
           debug(payload.message, payload.stack)
