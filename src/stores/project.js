@@ -6,21 +6,21 @@ const {
 
 const { default: thunk } = require('redux-thunk')
 const { default: createSagaMiddleware } = require('redux-saga')
-const { log } = require('../common/log')
+const { log: logger } = require('../common/log')
 const { project } = require('../reducers/project')
 const { nav } = require('../reducers/nav')
 const { intl } = require('../reducers/intl')
 const { ipcRenderer: ipc } = require('electron')
 const { open } = require('../actions/project')
 const { OPEN } = require('../constants/project')
-const { debounce } = require('../middleware/debounce')
+const { debounce, log } = require('../middleware')
 
 const dev = (ARGS.dev || ARGS.debug)
 
 module.exports = {
   create(init = {}) {
 
-    const saga = createSagaMiddleware({ logger: log })
+    const saga = createSagaMiddleware({ logger })
 
     const reducer = combineReducers({
       nav,
@@ -30,9 +30,11 @@ module.exports = {
 
     const middleware = applyMiddleware(
       debounce,
+      log,
       thunk,
       saga
     )
+
     const enhancer = (dev && window.devToolsExtension) ?
       compose(middleware, window.devToolsExtension()) :
       middleware
