@@ -3,9 +3,10 @@
 const { takeEvery: every } = require('redux-saga')
 const { fork, cancel, call, put, take, select } = require('redux-saga/effects')
 const { OPEN, PERSIST } = require('../constants/project')
-const { update, opened } = require('../actions/project')
+const { update, opened, persist } = require('../actions/project')
+const { tick } = require('../actions/history')
 const { Database } = require('../common/db')
-const { verbose, warn, info, debug } = require('../common/log')
+const { warn, info, debug } = require('../common/log')
 const { ipc } = require('./ipc')
 const nav = require('./nav')
 
@@ -30,7 +31,7 @@ function *open(file) {
     yield put(opened({ file: db.path, ...project }))
     yield call(nav.restore, id)
 
-    yield* every(persistable, persist, db, id)
+    yield* every(persistable, persistence, db, id)
 
   } catch (error) {
     warn(`unexpected error in open: ${error.message}`)
@@ -45,10 +46,10 @@ function *open(file) {
 }
 
 
-function *persist(db, id, { type, payload }) {
+function *persistence(db, id, action) {
   try {
+    const { type, payload } = action
     if (type !== PERSIST) return
-    verbose(type, payload)
 
     const { project: prev } = yield select()
 
@@ -64,8 +65,10 @@ function *persist(db, id, { type, payload }) {
       throw error
     }
 
+    yield put(tick({ redo: action, undo: persist(prev) }))
+
   } catch (error) {
-    warn(`persist saga failed: ${error.message}`)
+    warn(`persistence saga failed: ${error.message}`)
     debug(error.stack)
   }
 }

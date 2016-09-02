@@ -10,6 +10,7 @@ const { log: logger } = require('../common/log')
 const { project } = require('../reducers/project')
 const { nav } = require('../reducers/nav')
 const { intl } = require('../reducers/intl')
+const { history } = require('../reducers/history')
 const { ipcRenderer: ipc } = require('electron')
 const { open } = require('../actions/project')
 const { OPEN } = require('../constants/project')
@@ -25,7 +26,8 @@ module.exports = {
     const reducer = combineReducers({
       nav,
       project,
-      intl
+      intl,
+      history
     })
 
     const middleware = applyMiddleware(

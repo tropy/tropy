@@ -12,11 +12,11 @@ module.exports = {
           break
         case !!error:
           warn(`${type} failed: ${payload.message}`)
-          debug(payload.stack)
+          debug(payload.message, payload.stack)
           break
         default:
           verbose(type)
-          debug({ payload, meta, error })
+          debug(type, { payload, meta, error })
       }
 
       return next(action)

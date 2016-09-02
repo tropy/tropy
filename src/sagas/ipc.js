@@ -1,7 +1,7 @@
 'use strict'
 
 const { takeEvery: every, eventChannel } = require('redux-saga')
-const { call, fork, put, take } = require('redux-saga/effects')
+const { call, fork, put, take, select } = require('redux-saga/effects')
 const { ipcRenderer: ipc } = require('electron')
 const { warn, debug } = require('../common/log')
 const { id } = require('../common/util')
@@ -9,9 +9,15 @@ const { TICK } = require('../constants/history')
 
 module.exports = {
 
-  forward({ type, payload, meta }) {
-    if (meta && meta.ipc) {
-      ipc.send(type, (ACTION_FILTER[type] || id)(payload))
+  *forward({ type, payload, meta }) {
+    try {
+      if (meta && meta.ipc) {
+        const data = yield call(ACTION_FILTER[type] || id, payload)
+        yield call([ipc, ipc.send], type, data)
+      }
+    } catch (error) {
+      warn(`unexpected error in ipc:forward: ${error.message}`)
+      debug(error.message, error.stack)
     }
   },
 
@@ -25,7 +31,7 @@ module.exports = {
 
       } catch (error) {
         warn(`unexpected error in ipc:receive: ${error.message}`)
-        debug(error.stack)
+        debug(error.message, error.stack)
       }
     }
   },
@@ -38,10 +44,14 @@ module.exports = {
 }
 
 const ACTION_FILTER = {
-  [TICK]: payload => ({
-    past: payload.past.length,
-    future: payload.future.length
-  })
+  *[TICK]() {
+    // TODO use selector
+    const { history } = yield select()
+    return {
+      past: history.past.length,
+      future: history.future.length
+    }
+  }
 }
 
 function channel(name) {
