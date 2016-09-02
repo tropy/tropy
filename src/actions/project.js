@@ -9,7 +9,7 @@ function opened(payload, meta) {
     type: OPENED,
     error: (payload instanceof Error),
     payload,
-    meta: { ...meta, ipc: true }
+    meta: { ipc: true, ...meta }
   }
 }
 
@@ -18,7 +18,15 @@ function open(payload, meta) {
 }
 
 function persist(payload, meta) {
-  return { type: PERSIST, payload, meta: { ...meta, persist: true } }
+  return {
+    type: PERSIST,
+    payload,
+    meta: {
+      persist: true,
+      history: true,
+      ...meta
+    }
+  }
 }
 
 function update(payload, meta) {

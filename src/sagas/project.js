@@ -4,10 +4,11 @@ const { takeEvery: every } = require('redux-saga')
 const { fork, cancel, call, put, take, select } = require('redux-saga/effects')
 const { OPEN, PERSIST } = require('../constants/project')
 const { update, opened, persist } = require('../actions/project')
-const { tick } = require('../actions/history')
+const { drop, tick } = require('../actions/history')
 const { Database } = require('../common/db')
 const { warn, info, debug } = require('../common/log')
 const { ipc } = require('./ipc')
+const { history } = require('./history')
 const nav = require('./nav')
 
 
@@ -29,6 +30,7 @@ function *open(file) {
     info(`opened project ${id}`)
 
     yield put(opened({ file: db.path, ...project }))
+    yield put(drop())
     yield call(nav.restore, id)
 
     yield* every(persistable, persistence, db, id)
@@ -48,14 +50,13 @@ function *open(file) {
 
 function *persistence(db, id, action) {
   try {
-    const { type, payload } = action
+    const { type, payload, meta } = action
     if (type !== PERSIST) return
 
     const { project: prev } = yield select()
 
-    yield put(update(payload))
-
     try {
+      yield put(update(payload))
       yield call([db, db.run],
         'UPDATE project SET name = ? WHERE project_id = ?', payload.name, id
       )
@@ -65,7 +66,9 @@ function *persistence(db, id, action) {
       throw error
     }
 
-    yield put(tick({ redo: action, undo: persist(prev) }))
+    if (meta.history) {
+      yield put(tick({ redo: action, undo: persist({ name: prev.name }) }))
+    }
 
   } catch (error) {
     warn(`persistence saga failed: ${error.message}`)
@@ -80,6 +83,7 @@ module.exports = {
 
     try {
       yield fork(ipc)
+      yield fork(history)
 
       while (true) {
         const { payload } = yield take(OPEN)

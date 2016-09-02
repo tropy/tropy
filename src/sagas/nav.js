@@ -15,4 +15,5 @@ module.exports = {
     const { nav } = yield select()
     Storage.save('nav', nav, id)
   }
+
 }

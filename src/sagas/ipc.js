@@ -5,16 +5,18 @@ const { call, fork, put, take, select } = require('redux-saga/effects')
 const { ipcRenderer: ipc } = require('electron')
 const { warn, debug } = require('../common/log')
 const { id } = require('../common/util')
-const { TICK } = require('../constants/history')
+const { TICK, DROP, UNDO, REDO } = require('../constants/history')
 
 module.exports = {
 
   *forward({ type, payload, meta }) {
     try {
       if (meta && meta.ipc) {
-        const data = yield call(ACTION_FILTER[type] || id, payload)
-        yield call([ipc, ipc.send], type, data)
+        const event = meta.ipc === true ? type : meta.ipc
+        const data = yield call(FILTER[type] || id, payload)
+        yield call([ipc, ipc.send], event, data)
       }
+
     } catch (error) {
       warn(`unexpected error in ipc:forward: ${error.message}`)
       debug(error.message, error.stack)
@@ -43,16 +45,19 @@ module.exports = {
 
 }
 
-const ACTION_FILTER = {
+const FILTER = {
   *[TICK]() {
     // TODO use selector
     const { history } = yield select()
+
     return {
       past: history.past.length,
       future: history.future.length
     }
   }
 }
+
+FILTER[DROP] = FILTER[UNDO] = FILTER[REDO] = FILTER[TICK]
 
 function channel(name) {
   return eventChannel(emitter => {

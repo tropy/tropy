@@ -35,12 +35,12 @@ linux:
       - id: 'undo'
         label: 'Undo'
         accelerator: 'CmdOrCtrl+Z'
-        command: 'dispatch:history:undo'
+        command: 'app:undo'
         enabled: false
       - id: 'redo'
         label: 'Redo'
         accelerator: 'Shift+CmdOrCtrl+Z'
-        command: 'dispatch:history:redo'
+        command: 'app:redo'
         enabled: false
       - type: 'separator'
       - label: 'Cut'

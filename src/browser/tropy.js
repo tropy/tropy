@@ -16,7 +16,8 @@ const release = require('../common/release')
 const { defineProperty: prop } = Object
 const { OPENED, CREATED } = require('../constants/project')
 const project = require('../actions/project')
-const { TICK } = require('../constants/history')
+const { redo, undo } = require('../actions/history')
+const { HISTORY } = require('../constants/history')
 
 const H = new WeakMap()
 
@@ -211,6 +212,19 @@ class Tropy extends EventEmitter {
         }
       })
 
+      .on('app:undo', () => {
+        if (this.history.past && this.win) {
+          this.win.webContents.send('dispatch', undo())
+        }
+      })
+
+      .on('app:redo', () => {
+        if (this.history.future && this.win) {
+          this.win.webContents.send('dispatch', redo())
+        }
+      })
+
+
       .on('app:open-license', () => {
         shell.openExternal('https://github.com/tropy/tropy/blob/master/LICENSE')
       })
@@ -255,7 +269,8 @@ class Tropy extends EventEmitter {
       .on(OPENED, (_, { file }) => this.opened({ file }))
       .on(CREATED, (_, { file }) => this.open(file))
 
-      .on(TICK, (_, history) => {
+      .on(HISTORY, (_, history) => {
+        verbose('history', history)
         H.set(this.win, history)
         this.emit('app:reload-menu')
       })
