@@ -16,6 +16,7 @@ const release = require('../common/release')
 const { defineProperty: prop } = Object
 const { OPENED, CREATED } = require('../constants/project')
 const project = require('../actions/project')
+const list = require('../actions/list')
 const { redo, undo } = require('../actions/history')
 const { HISTORY } = require('../constants/history')
 
@@ -65,7 +66,7 @@ class Tropy extends EventEmitter {
 
       if (this.win) {
         if (file) {
-          this.win.webContents.send('dispatch', project.open(file))
+          this.dispatch(project.open(file))
         }
 
         return this.win.show(), this
@@ -152,7 +153,8 @@ class Tropy extends EventEmitter {
 
   listen() {
     this
-      .on('app:new-project', () => this.create())
+      .on('app:create-project', () => this.create())
+      .on('app:create-list', () => this.dispatch(list.create()))
 
       .on('app:toggle-menu-bar', win => {
         if (win.isMenuBarAutoHide()) {
@@ -213,15 +215,11 @@ class Tropy extends EventEmitter {
       })
 
       .on('app:undo', () => {
-        if (this.history.past && this.win) {
-          this.win.webContents.send('dispatch', undo())
-        }
+        if (this.history.past) this.dispatch(undo())
       })
 
       .on('app:redo', () => {
-        if (this.history.future && this.win) {
-          this.win.webContents.send('dispatch', redo())
-        }
+        if (this.history.future) this.dispatch(redo())
       })
 
 
@@ -289,6 +287,12 @@ class Tropy extends EventEmitter {
     }
   }
 
+
+  dispatch(action) {
+    if (this.win) {
+      this.win.webContents.send('dispatch', action)
+    }
+  }
 
   get history() {
     return H.get(this.win) || {}

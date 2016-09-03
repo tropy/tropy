@@ -11,6 +11,7 @@ const { project } = require('../reducers/project')
 const { nav } = require('../reducers/nav')
 const { intl } = require('../reducers/intl')
 const { history } = require('../reducers/history')
+const { lists } = require('../reducers/list')
 const { debounce, log } = require('../middleware')
 
 const dev = (ARGS.dev || ARGS.debug)
@@ -21,9 +22,10 @@ module.exports = {
     const saga = createSagaMiddleware({ logger })
 
     const reducer = combineReducers({
+      intl,
       nav,
       project,
-      intl,
+      lists,
       history
     })
 

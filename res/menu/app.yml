@@ -7,8 +7,10 @@ linux:
         label: 'New'
         submenu:
           - label: 'Project'
-            command: 'app:new-project'
+            command: 'app:create-project'
             accelerator: 'CmdOrCtrl+Shift+P'
+          - label: 'List'
+            command: 'app:create-list'
       - type: 'separator'
       - &open
         label: 'Open'
