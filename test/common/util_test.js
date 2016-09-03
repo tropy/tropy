@@ -67,4 +67,16 @@ describe('util', () => {
     it('flattens dictionaries', () =>
       expect(flatten({ foo: { bar: 'baz' } })).to.eql({ 'foo.bar': 'baz' }))
   })
+
+  describe('.strftime', () => {
+    const { strftime } = util
+
+    it('supports subset of stdlib strftime', () => {
+      const date = new Date(2016, 8, 3, 23, 11, 5)
+
+      expect(strftime('%Y-%m-%d %H:%M:%S', date)).to.eql('2016-09-03 23:11:05')
+      expect(strftime('%y-%m-%d %H:%M:%S', date)).to.eql('16-09-03 23:11:05')
+      expect(strftime('y-m-d', date)).to.eql('y-m-d')
+    })
+  })
 })

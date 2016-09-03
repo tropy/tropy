@@ -1,6 +1,7 @@
 'use strict'
 
 const B = require('bluebird')
+const pad = require('string.prototype.padstart')
 
 module.exports = {
 
@@ -50,6 +51,29 @@ module.exports = {
 
   noop() {},
 
-  id(payload) { return payload }
+  id(payload) { return payload },
+
+  strftime(format, date) {
+    return format.replace(/%([YymdHMS])/g, (match, code) => {
+      switch (code) {
+        case 'Y':
+          return pad(date.getFullYear(), 4, '0')
+        case 'y':
+          return pad(date.getFullYear() % 100, 2, '0')
+        case 'm':
+          return pad(date.getMonth() + 1, 2, '0')
+        case 'd':
+          return pad(date.getDate(), 2, '0')
+        case 'H':
+          return pad(date.getHours(), 2, '0')
+        case 'M':
+          return pad(date.getMinutes(), 2, '0')
+        case 'S':
+          return pad(date.getSeconds(), 2, '0')
+        default:
+          return match
+      }
+    })
+  }
 
 }
