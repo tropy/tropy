@@ -53,7 +53,7 @@ module.exports = {
 
   id(payload) { return payload },
 
-  strftime(format, date) {
+  strftime(format, date = new Date()) {
     return format.replace(/%([YymdHMS])/g, (match, code) => {
       switch (code) {
         case 'Y':

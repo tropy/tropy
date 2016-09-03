@@ -5,12 +5,12 @@ require('shelljs/make')
 const assert = require('assert')
 const pkg = require('../package')
 const log = require('./log')
-const moment = require('moment')
 
 const { resolve, join, dirname } = require('path')
 const { assign } = Object
 const { Database } = require('../lib/common/db')
 const { Migration } = require('../lib/common/migration')
+const { strftime } = require('../lib/common/util')
 
 const home = resolve(__dirname, '..')
 const DB = join(home, 'db', 'db.sqlite')
@@ -137,7 +137,7 @@ function migration(name, type) {
   assert(type === 'sql' || type === 'js',
       `migration type '${type}' not supported`)
 
-  return [moment().format('YYMMDDHHmm'), name, type]
+  return [strftime('%y%m%d%H%M'), name, type]
     .filter(x => x)
     .join('.')
 }
