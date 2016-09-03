@@ -8,6 +8,7 @@ const { noop } = require('../common/util')
 class Editable extends Component {
   static propTypes = {
     value: PropTypes.string,
+    enabled: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func
   }
@@ -20,7 +21,7 @@ class Editable extends Component {
     super(props)
 
     this.state = {
-      editing: false,
+      editing: props.enabled,
       value: props.value
     }
   }
