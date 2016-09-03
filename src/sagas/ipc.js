@@ -5,6 +5,7 @@ const { call, fork, put, take, select } = require('redux-saga/effects')
 const { ipcRenderer: ipc } = require('electron')
 const { warn, debug } = require('../common/log')
 const { id } = require('../common/util')
+const history = require('../selectors/history')
 const { TICK, DROP, UNDO, REDO } = require('../constants/history')
 
 module.exports = {
@@ -47,13 +48,7 @@ module.exports = {
 
 const FILTER = {
   *[TICK]() {
-    // TODO use selector
-    const { history } = yield select()
-
-    return {
-      past: history.past.length,
-      future: history.future.length
-    }
+    return yield select(history.length)
   }
 }
 

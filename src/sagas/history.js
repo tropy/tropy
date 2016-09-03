@@ -3,14 +3,14 @@
 const { takeEvery: every } = require('redux-saga')
 const { fork, put, select } = require('redux-saga/effects')
 const { warn, debug } = require('../common/log')
+const { undone, redone } = require('../selectors/history')
 const { UNDO, REDO } = require('../constants/history')
 
 module.exports = {
 
   *undo() {
     try {
-      const { history: { future } } = yield select()
-      yield put(future[0].undo)
+      yield put(yield select(undone))
 
     } catch (error) {
       warn(`unexpected error in history:undo: ${error.message}`)
@@ -20,8 +20,7 @@ module.exports = {
 
   *redo() {
     try {
-      const { history: { past } } = yield select()
-      yield put(past[0].redo)
+      yield put(yield select(redone))
 
     } catch (error) {
       warn(`unexpected error in history:undo: ${error.message}`)

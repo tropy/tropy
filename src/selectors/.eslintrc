@@ -1,0 +1,3 @@
+# vi: set ft=yaml :
+rules:
+  no-shadow: 0

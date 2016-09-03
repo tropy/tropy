@@ -270,7 +270,6 @@ class Tropy extends EventEmitter {
       .on(CREATED, (_, { file }) => this.open(file))
 
       .on(HISTORY, (_, history) => {
-        verbose('history', history)
         H.set(this.win, history)
         this.emit('app:reload-menu')
       })
