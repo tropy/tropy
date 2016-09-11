@@ -74,6 +74,7 @@
     "istanbul": "^0.4.1",
     "node-sass": "^3.4.2",
     "react-addons-test-utils": "^15.1.0",
+    "sass-lint": "^1.9.1",
     "shelljs": "^0.7.0",
     "sinon": "^1.17.2",
     "sinon-chai": "^2.8.0",
