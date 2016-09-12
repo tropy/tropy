@@ -3,6 +3,6 @@
 module.exports = {
   CREATE: 'list:create',
   REMOVE: 'list:remove',
-  PERSIST: 'list:persist',
+  SAVE: 'list:save',
   UPDATE: 'list:update'
 }

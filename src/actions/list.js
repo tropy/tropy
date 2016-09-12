@@ -1,7 +1,7 @@
 'use strict'
 
 const {
-  CREATE, REMOVE, PERSIST, UPDATE
+  CREATE, REMOVE, SAVE, UPDATE
 } = require('../constants/list')
 
 let tseq = 0
@@ -23,8 +23,8 @@ module.exports = {
     return { type: REMOVE, payload, meta }
   },
 
-  persist(payload, meta) {
-    return { type: PERSIST, payload, meta: { persist: true, ...meta } }
+  save(payload, meta) {
+    return { type: SAVE, payload, meta: { persist: true, ...meta } }
   },
 
   update(payload, meta) {
