@@ -12,7 +12,8 @@ module.exports = {
       type: CREATE,
       payload: {
         id: `transient-${++tseq}`,
-        ...payload
+        ...payload,
+        transient: true
       },
       meta
     }
