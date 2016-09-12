@@ -2,5 +2,7 @@
 
 module.exports = {
   CREATE: 'list:create',
-  TRANSIENT: 'NEW'
+  REMOVE: 'list:remove',
+  PERSIST: 'list:persist',
+  UPDATE: 'list:update'
 }

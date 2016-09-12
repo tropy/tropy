@@ -1,7 +1,7 @@
 'use strict'
 
 const {
-  CREATE
+  CREATE, REMOVE, UPDATE
 } = require('../constants/list')
 
 module.exports = {
@@ -9,6 +9,18 @@ module.exports = {
     switch (type) {
       case CREATE:
         return { ...state, [payload.id]: payload }
+
+      case REMOVE:
+        return state
+
+      case UPDATE:
+        return {
+          ...state,
+          [payload.id]: {
+            ...state[payload.id],
+            ...payload
+          }
+        }
 
       default:
         return state
