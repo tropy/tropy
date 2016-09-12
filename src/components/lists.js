@@ -17,7 +17,8 @@ const Lists = ({ lists, onListChange }) => (
     <br/>
     {
       lists.map(list => (
-        <div key={list.id}>
+        <div className="list"
+          key={list.id}>
           <IconFolder/>
           <Editable
             value={list.name}
