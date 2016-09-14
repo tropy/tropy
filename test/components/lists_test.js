@@ -11,7 +11,7 @@ describe('Lists', () => {
       shallow(
         <Lists.WrappedComponent lists={[]}/>
       )
-    ).not.to.have.descendants('.list')
+    ).not.to.have.descendants('List')
 
     expect(
       shallow(
@@ -20,6 +20,6 @@ describe('Lists', () => {
           { id: 2, name: 'B' },
         ]}/>
       )
-    ).to.have.exactly(2).descendants('.list')
+    ).to.have.exactly(2).descendants('List')
   })
 })

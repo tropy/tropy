@@ -10,25 +10,33 @@ const { root } = require('../selectors/list')
 const { save } = require('../actions/list')
 
 
-const Lists = ({ lists, onListChange }) => (
+const List = ({ list, onUpdate }) => (
+  <li className="list">
+    <IconFolder/>
+    <Editable
+      value={list.name}
+      onChange={onUpdate}/>
+  </li>
+)
+
+List.propTypes = {
+  list: PropTypes.object,
+  onUpdate: PropTypes.func
+}
+
+
+const Lists = ({ lists, onUpdate }) => (
   <ol className="lists">
     {
-      lists.map(list => (
-        <li className="list"
-          key={list.id}>
-          <IconFolder/>
-          <Editable
-            value={list.name}
-            enabled={!list.name}
-            onChange={onListChange}/>
-        </li>))
+      lists.map(list =>
+        <List key={list.id} list={list} onUpdate={onUpdate}/>)
     }
   </ol>
 )
 
 Lists.propTypes = {
   lists: PropTypes.array,
-  onListChange: PropTypes.func
+  onUpdate: PropTypes.func
 }
 
 module.exports = {
@@ -39,7 +47,7 @@ module.exports = {
     }),
 
     dispatch => ({
-      onListChange() {
+      updated() {
         dispatch(save())
       }
     })
