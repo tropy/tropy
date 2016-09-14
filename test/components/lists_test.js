@@ -1,20 +1,20 @@
 'use strict'
 
 const React = require('react')
-const { mount } = require('../support/intl')
+const { shallow } = require('enzyme')
 
 describe('Lists', () => {
   const { Lists } = __require('components/lists')
 
   it('renders all lists', () => {
     expect(
-      mount(
+      shallow(
         <Lists.WrappedComponent lists={[]}/>
       )
     ).not.to.have.descendants('.list')
 
     expect(
-      mount(
+      shallow(
         <Lists.WrappedComponent lists={[
           { id: 1, name: 'A' },
           { id: 2, name: 'B' },

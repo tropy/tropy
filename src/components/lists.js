@@ -4,7 +4,6 @@ const React = require('react')
 
 const { PropTypes } = React
 const { connect } = require('react-redux')
-const { FormattedMessage } = require('react-intl')
 const { Editable } = require('./editable')
 const { IconFolder } = require('./icons')
 const { root } = require('../selectors/list')
@@ -12,21 +11,19 @@ const { save } = require('../actions/list')
 
 
 const Lists = ({ lists, onListChange }) => (
-  <div className="lists">
-    <FormattedMessage id="sidebar.lists"/>
-    <br/>
+  <ol className="lists">
     {
       lists.map(list => (
-        <div className="list"
+        <li className="list"
           key={list.id}>
           <IconFolder/>
           <Editable
             value={list.name}
             enabled={!list.name}
             onChange={onListChange}/>
-        </div>))
+        </li>))
     }
-  </div>
+  </ol>
 )
 
 Lists.propTypes = {

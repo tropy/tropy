@@ -4,6 +4,7 @@ const React = require('react')
 
 const { connect } = require('react-redux')
 const { PropTypes } = React
+const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('./toolbar')
 const { Editable } = require('./editable')
 const { Lists } = require('./lists')
@@ -23,6 +24,8 @@ const ProjectSidebar = ({
         onChange={onProjectChange}/>
     </h1>
 
+    <FormattedMessage id="sidebar.lists"/>
+    <br/>
     <Lists/>
 
   </Sidebar>
