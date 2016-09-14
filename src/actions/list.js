@@ -14,7 +14,7 @@ module.exports = {
       payload: {
         id: `t${++tseq}`,
         ...payload,
-        transient: true
+        tmp: true
       },
       meta
     }

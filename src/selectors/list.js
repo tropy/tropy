@@ -4,14 +4,29 @@ const {
   createSelector: memo
 } = require('reselect')
 
-const values = require('object.values')
+const {
+  into, compose, map, filter
+} = require('transducers.js')
 
 
-const lists = ({ lists }) => lists
+const tx = (parent, tmp) =>
+  compose(
+    map(([, list]) => list),
+    // eslint-disable-next-line eqeqeq
+    filter(list => list.parent == parent && list.tmp == tmp))
 
-const root = memo([lists], (lists) => values(lists))
+const children = () =>
+  memo(
+    ({ lists }) => lists,
+    (_, { parent }) => parent,
+    (_, { tmp }) => tmp,
+
+    (lists, parent, tmp) =>
+      into([], tx(parent, tmp), lists)
+        .sort((a, b) => a - b)
+  )
+
 
 module.exports = {
-  lists,
-  root
+  children
 }
