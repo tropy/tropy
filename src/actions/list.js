@@ -1,22 +1,35 @@
 'use strict'
 
 const {
-  CREATE, REMOVE, SAVE, UPDATE
+  NEW, CREATE, INSERT, REMOVE, SAVE, UPDATE
 } = require('../constants/list')
 
 let tseq = 0
 
 module.exports = {
-  create(payload, meta) {
+
+  new(payload, meta) {
     return {
-      type: CREATE,
+      type: NEW,
       payload: {
-        id: `transient-${++tseq}`,
+        id: `t${++tseq}`,
         ...payload,
         transient: true
       },
       meta
     }
+  },
+
+  drop(payload, meta) {
+    return { type: CREATE, payload, meta }
+  },
+
+  create(payload, meta) {
+    return { type: CREATE, payload, meta }
+  },
+
+  insert(payload, meta) {
+    return { type: INSERT, payload, meta }
   },
 
   remove(payload, meta) {

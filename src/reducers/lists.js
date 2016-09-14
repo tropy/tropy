@@ -1,13 +1,13 @@
 'use strict'
 
 const {
-  CREATE, REMOVE, UPDATE
+  NEW, REMOVE, UPDATE
 } = require('../constants/list')
 
 module.exports = {
   lists(state = {}, { type, payload }) {
     switch (type) {
-      case CREATE:
+      case NEW:
         return { ...state, [payload.id]: payload }
 
       case REMOVE:

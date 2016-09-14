@@ -154,7 +154,7 @@ class Tropy extends EventEmitter {
   listen() {
     this
       .on('app:create-project', () => this.create())
-      .on('app:create-list', () => this.dispatch(list.create()))
+      .on('app:create-list', () => this.dispatch(list.new()))
 
       .on('app:toggle-menu-bar', win => {
         if (win.isMenuBarAutoHide()) {
