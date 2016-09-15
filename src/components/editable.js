@@ -8,7 +8,6 @@ const { noop } = require('../common/util')
 class Editable extends Component {
   static propTypes = {
     value: PropTypes.string,
-    enabled: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func
   }
@@ -21,7 +20,7 @@ class Editable extends Component {
     super(props)
 
     this.state = {
-      editing: props.enabled,
+      editing: !props.value,
       value: props.value
     }
   }
@@ -35,13 +34,22 @@ class Editable extends Component {
   }
 
   stop = () => {
+    this.setState({ editing: false })
+
     if (this.state.value !== this.props.value) {
       this.props.onChange(this.state.value)
     } else {
       this.props.onCancel()
     }
+  }
 
-    this.setState({ editing: false })
+  cancel() {
+    this.setState({ editing: false, value: this.props.value })
+    this.props.onCancel()
+  }
+
+  keyup = (event) => {
+    if (event.which === 27) this.cancel()
   }
 
   focus(input) {
@@ -64,6 +72,7 @@ class Editable extends Component {
         ref={this.focus}
         value={this.state.value}
         onChange={this.update}
+        onKeyUp={this.keyup}
         onBlur={this.stop}/>
     ) : (
       <span

@@ -13,6 +13,7 @@ module.exports = {
       type: NEW,
       payload: {
         id: `t${++tseq}`,
+        name: '',
         ...payload,
         tmp: true
       },
