@@ -8,7 +8,7 @@
     position: relative;
     cursor: pointer;
 
-    &:before {
+    &::before {
       content: " ";
       position: absolute;
       top: 0;
@@ -18,15 +18,17 @@
       background: $note-separator-color;
     }
 
-    &:first-child:before {
-      content: none;
+    &:first-child {
+      &::before {
+        content: none;
+      }
     }
 
     &.active {
       color: $note-active-color;
       background: $note-active-bg;
 
-      &:before {
+      &::before {
         content: none;
       }
 
@@ -34,7 +36,7 @@
         border-top: 1px solid $note-active-bg;
         padding-top: ($note-padding-vertical - 1px);
 
-        &:before {
+        &::before {
           content: none;
         }
       }

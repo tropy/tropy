@@ -88,7 +88,7 @@
     .metadata-head {
       position: relative;
 
-      &:before {
+      &::before {
         content: " ";
         position: absolute;
         left: 0;
@@ -98,8 +98,10 @@
         background: $item-list-header-border-color;
       }
 
-      &:first-child:before {
-        content: none;
+      &:first-child {
+        &::before {
+          content: none;
+        }
       }
 
       &.ascending,

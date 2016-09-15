@@ -9,15 +9,17 @@
   width: 60px;
   z-index: $zindex-window-controls;
 
-  &:hover button {
-    background-position-y: -12px;
+  &:hover {
+    button {
+      background-position-y: -12px;
 
-    &.maximize {
-      .is-maximized & {
-        background-position-y: -48px;
+      &.maximize {
+        .is-maximized & {
+          background-position-y: -48px;
 
-        &:active {
-          background-position-y: -60px;
+          &:active {
+            background-position-y: -60px;
+          }
         }
       }
     }
@@ -30,7 +32,7 @@
   button {
     width: 12px;
     height: 12px;
-    border: none;
+    border: 0;
     background: {
       repeat: no-repeat;
       position: 0 0;
