@@ -57,7 +57,9 @@ rules:
   variable-name-format: 1
 
   # Style Guide
-  attribute-quotes: 1
+  attribute-quotes:
+    - 1
+    - style: double
   bem-depth: 0
   border-zero: 1
   brace-style: 1
@@ -70,9 +72,13 @@ rules:
   nesting-depth: 1
   property-sort-order: 1
   pseudo-element: 1
-  quotes: 1
+  quotes:
+    - 1
+    - style: double
   shorthand-values: 1
-  url-quotes: 1
+  url-quotes:
+    - 1
+    - style: double
   variable-for-property: 1
   zero-unit: 1
 
