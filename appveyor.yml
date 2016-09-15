@@ -12,7 +12,7 @@ os: unstable
 
 environment:
   ELECTRON_NO_ATTACH_CONSOLE: true
-  nodejs_version: 6.3
+  nodejs_version: 6.5
 
 platform:
   - x64
