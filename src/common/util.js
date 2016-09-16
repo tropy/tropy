@@ -49,6 +49,22 @@ module.exports = {
     return reduce(obj)
   },
 
+  pick(src, props = [], into = {}) {
+    return props.reduce((res, key) => {
+      if (src.hasOwnProperty(key)) {
+        res[key] = src[key]
+      }
+
+      return res
+
+    }, into)
+  },
+
+  omit(src, props = [], into = {}) {
+    return module.exports.pick(src,
+      Object.keys(src).filter(key => !props.includes(key)), into)
+  },
+
   noop() {},
 
   id(payload) { return payload },
