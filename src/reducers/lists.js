@@ -4,6 +4,8 @@ const {
   NEW, REMOVE, UPDATE
 } = require('../constants/list')
 
+const { omit } = require('../common/util')
+
 module.exports = {
   lists(state = {}, { type, payload }) {
     switch (type) {
@@ -11,7 +13,7 @@ module.exports = {
         return { ...state, [payload.id]: payload }
 
       case REMOVE:
-        return state
+        return omit(state, [payload])
 
       case UPDATE:
         return {
