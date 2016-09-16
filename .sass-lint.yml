@@ -71,7 +71,9 @@ rules:
   leading-zero:
     - 1
     - include: 1
-  nesting-depth: 1
+  nesting-depth:
+    - 1
+    - max-depth: 4
   property-sort-order: 0
   pseudo-element: 1
   quotes:
