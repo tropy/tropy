@@ -12,14 +12,14 @@
   &:hover {
     button {
       background-position-y: -12px;
+    }
 
-      &.maximize {
-        .is-maximized & {
-          background-position-y: -48px;
+    .maximize {
+      .is-maximized & {
+        background-position-y: -48px;
 
-          &:active {
-            background-position-y: -60px;
-          }
+        &:active {
+          background-position-y: -60px;
         }
       }
     }
