@@ -1,7 +1,7 @@
 'use strict'
 
 const {
-  NEW, REMOVE, UPDATE
+  NEW, INSERT, REMOVE, UPDATE
 } = require('../constants/list')
 
 const { omit } = require('../common/util')
@@ -10,6 +10,7 @@ module.exports = {
   lists(state = {}, { type, payload }) {
     switch (type) {
       case NEW:
+      case INSERT:
         return { ...state, [payload.id]: payload }
 
       case REMOVE:

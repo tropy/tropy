@@ -87,7 +87,7 @@ module.exports = {
       },
 
       onUpdate({ id, tmp }, values) {
-        dispatch(tmp ? create(id, values) : save(id, values))
+        dispatch(tmp ? create([id, values]) : save([id, values]))
       }
     })
 

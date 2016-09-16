@@ -26,7 +26,7 @@ module.exports = {
   },
 
   create(payload, meta) {
-    return { type: CREATE, payload, meta }
+    return { type: CREATE, payload, meta: { ...meta, persist: true } }
   },
 
   insert(payload, meta) {
