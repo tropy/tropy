@@ -39,7 +39,7 @@ rules:
   no-transition-all: 1
   no-universal-selectors: 0
   no-url-protocols: 1
-  no-vendor-prefixes: 1
+  no-vendor-prefixes: 0
   no-warn: 1
   property-units: 0
 
