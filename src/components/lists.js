@@ -2,34 +2,62 @@
 
 const React = require('react')
 
-const { PropTypes } = React
+const { PropTypes, Component } = React
 const { connect } = require('react-redux')
 const { Editable } = require('./editable')
 const { IconFolder } = require('./icons')
 const { children } = require('../selectors/list')
-const { save } = require('../actions/list')
+const { create, save, remove } = require('../actions/list')
+const { noop } = require('../common/util')
 
 
-const List = ({ list, onUpdate }) => (
-  <li className="list">
-    <IconFolder/>
-    <Editable
-      value={list.name}
-      onChange={onUpdate}/>
-  </li>
-)
+class List extends Component {
 
-List.propTypes = {
-  list: PropTypes.object,
-  onUpdate: PropTypes.func
+  static propTypes = {
+    list: PropTypes.object,
+    onCancel: PropTypes.func,
+    onUpdate: PropTypes.func
+  }
+
+  static defaultProps = {
+    onCancel: noop,
+    onUpdate: noop
+  }
+
+  update = (name) => {
+    this.props.onUpdate(this.props.list, { name })
+  }
+
+  cancel = () => {
+    this.props.onCancel(this.props.list)
+  }
+
+  render() {
+    const { list } = this.props
+
+    return (
+      <li className="list">
+        <IconFolder/>
+        <Editable
+          value={list.name}
+          onChange={this.update}
+          onCancel={this.cancel}/>
+      </li>
+    )
+  }
 }
 
 
-const Lists = ({ lists, onUpdate }) => (
+const Lists = ({ lists, onUpdate, onCancel }) => (
   <ol className="lists">
     {
-      lists.map(list =>
-        <List key={list.id} list={list} onUpdate={onUpdate}/>)
+      lists.map(list => (
+        <List
+          key={list.id}
+          list={list}
+          onUpdate={onUpdate}
+          onCancel={onCancel}/>
+      ))
     }
   </ol>
 )
@@ -38,6 +66,7 @@ Lists.propTypes = {
   lists: PropTypes.array,
   parent: PropTypes.number,
   tmp: PropTypes.bool,
+  onCancel: PropTypes.func,
   onUpdate: PropTypes.func
 }
 
@@ -53,8 +82,12 @@ module.exports = {
     },
 
     dispatch => ({
-      onUpdate() {
-        dispatch(save())
+      onCancel({ id, tmp }) {
+        if (tmp) dispatch(remove(id))
+      },
+
+      onUpdate({ id, tmp }, values) {
+        dispatch(tmp ? create(id, values) : save(id, values))
       }
     })
 
