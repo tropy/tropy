@@ -108,6 +108,8 @@ const Window = {
       })
 
 
+      if (ARGS.aqua) toggle(document.body, ARGS.aqua, true)
+
       if (ARGS.frameless) {
         toggle(document.body, 'frameless', true)
 

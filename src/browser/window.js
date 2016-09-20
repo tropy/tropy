@@ -1,9 +1,9 @@
 'use strict'
 
-const { BrowserWindow } = require('electron')
+const { BrowserWindow, systemPreferences: pref } = require('electron')
 const { resolve, join } = require('path')
 const { format } = require('url')
-const { EL_CAPITAN } = require('../common/os')
+const { EL_CAPITAN, darwin } = require('../common/os')
 
 const ROOT = resolve(__dirname, '..', '..', 'static')
 
@@ -21,6 +21,10 @@ const EVENTS = [
   'enter-full-screen', 'leave-full-screen'
 ]
 
+const AQUA = {
+  1: 'blue', 6: 'graphite'
+}
+
 module.exports = {
 
   open(file, data = {}, options = {}) {
@@ -29,6 +33,12 @@ module.exports = {
     if (!options.frame && EL_CAPITAN) {
       options.frame = true
       options.titleBarStyle = 'hidden-inset'
+    }
+
+    if (darwin) {
+      data.aqua = AQUA[
+        pref.getUserDefault('AppleAquaColorVariant', 'integer')
+      ]
     }
 
     let win = new BrowserWindow(options)
