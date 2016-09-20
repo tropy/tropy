@@ -47,12 +47,17 @@
     }
   }
 
-  @each $action in close, minimize, maximize {
-    .#{$action} {
-      background-image:
-        -webkit-image-set(
-          image-url("application-frame/#{$action}@1x.svg") 1x,
-          image-url("application-frame/#{$action}@2x.svg") 2x);
+  @each $aqua in blue, graphite {
+    .#{$aqua} & {
+
+      @each $action in close, minimize, maximize {
+        .#{$action} {
+          background-image:
+            -webkit-image-set(
+              image-url("application-frame/#{$aqua}/#{$action}@1x.svg") 1x,
+              image-url("application-frame/#{$aqua}/#{$action}@2x.svg") 2x);
+        }
+      }
     }
   }
 }
