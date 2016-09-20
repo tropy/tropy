@@ -17,7 +17,8 @@ const DEFAULTS = {
 }
 
 const EVENTS = [
-  'focus', 'blur', 'maximize', 'unmaximize'
+  'focus', 'blur', 'maximize', 'unmaximize',
+  'enter-full-screen', 'leave-full-screen'
 ]
 
 module.exports = {

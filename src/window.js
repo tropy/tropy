@@ -61,6 +61,12 @@ const Window = {
       case 'unmaximize':
         toggle(document.body, 'is-maximized', false)
         break
+      case 'enter-full-screen':
+        toggle(document.body, 'is-full-screen', true)
+        break
+      case 'leave-full-screen':
+        toggle(document.body, 'is-full-screen', false)
+        break
     }
   },
 
