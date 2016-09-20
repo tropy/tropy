@@ -18,7 +18,8 @@ const cov = join(home, 'coverage')
 const scov = join(home, 'src-cov')
 
 const emocha = join(nbin, 'electron-mocha')
-const lint = join(nbin, 'eslint')
+const eslint = join(nbin, 'eslint')
+const sasslint = join(nbin, 'sass-lint')
 const istanbul = join(nbin, 'istanbul')
 
 Object.assign(target, require('./electron'))
@@ -26,8 +27,19 @@ Object.assign(target, require('./electron'))
 config.fatal = false
 config.silent = false
 
-target.lint = (bail) => {
-  const { code } = exec(`${lint} --color src test static scripts`)
+target.lint = (...args) => {
+  target['lint:js'](...args)
+  target['lint:css'](...args)
+}
+
+target['lint:js'] = (bail) => {
+  const { code } = exec(`${eslint} --color src test static scripts`)
+  if (bail && code) process.exit(code)
+  return code
+}
+
+target['lint:css'] = (bail) => {
+  const { code } = exec(`${sasslint} --verbose`)
   if (bail && code) process.exit(code)
   return code
 }

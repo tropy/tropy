@@ -17,4 +17,13 @@ Database.prototype.prepareAsync = function (...args) {
   })
 }
 
+Database.prototype.runAsync = function (...args) {
+  return new bb((resolve, reject) => {
+    this.run(...args, function (error) {
+      if (error) reject(error)
+      else resolve(this)
+    })
+  })
+}
+
 module.exports = bb

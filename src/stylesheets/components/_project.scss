@@ -3,8 +3,16 @@
 // --------------------------------------------------
 
 #project {
-  width: 100%;
   height: 100%;
   overflow: hidden;
+}
+
+#project-view {
   display: flex;
+  height: 100%;
+}
+
+main {
+  display: flex;
+  flex: 1 1 auto;
 }

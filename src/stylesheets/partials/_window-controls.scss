@@ -9,10 +9,12 @@
   width: 60px;
   z-index: $zindex-window-controls;
 
-  &:hover button {
-    background-position-y: -12px;
+  &:hover {
+    button {
+      background-position-y: -12px;
+    }
 
-    &.maximize {
+    .maximize {
       .is-maximized & {
         background-position-y: -48px;
 
@@ -30,7 +32,7 @@
   button {
     width: 12px;
     height: 12px;
-    border: none;
+    border: 0;
     background: {
       repeat: no-repeat;
       position: 0 0;
@@ -45,12 +47,17 @@
     }
   }
 
-  @each $action in close, minimize, maximize {
-    .#{$action} {
-      background-image:
-        -webkit-image-set(
-          image-url("application-frame/#{$action}@1x.svg") 1x,
-          image-url("application-frame/#{$action}@2x.svg") 2x);
+  @each $aqua in blue, graphite {
+    .#{$aqua} & {
+
+      @each $action in close, minimize, maximize {
+        .#{$action} {
+          background-image:
+            -webkit-image-set(
+              image-url("application-frame/#{$aqua}/#{$action}@1x.svg") 1x,
+              image-url("application-frame/#{$aqua}/#{$action}@2x.svg") 2x);
+        }
+      }
     }
   }
 }

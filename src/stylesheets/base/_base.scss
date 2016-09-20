@@ -10,16 +10,14 @@
   }
 }
 
-html, body, #view {
+html,
+body,
+#view {
   height: 100%;
 }
 
 body {
   background: $body-bg;
   overflow: hidden;
-}
-
-main {
-  display: flex;
-  flex: 1 1 auto;
+  cursor: default;
 }

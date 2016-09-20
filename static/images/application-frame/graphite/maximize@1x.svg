@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 72">
+  <g>
+    <circle fill="#8F8F94" cx="6" cy="6" r="5.5"/>
+    <circle fill="none" stroke="#717177" stroke-miterlimit="10" cx="6" cy="6" r="5.5"/>
+  </g>
+  <g>
+    <circle fill="#DEDEDE" cx="6" cy="42" r="5.5"/>
+    <circle fill="none" stroke="#CFCFCF" stroke-miterlimit="10" cx="6" cy="42" r="5.5"/>
+  </g>
+  <g>
+    <circle fill="#8F8F94" cx="6" cy="18" r="5.5"/>
+    <circle fill="none" stroke="#717177" stroke-miterlimit="10" cx="6" cy="18" r="5.5"/>
+    <g>
+      <path fill="#28282C" d="M9,19.5L4.5,15h3.4C8.508,15,9,15.492,9,16.1V19.5z"/>
+      <path fill="#28282C" d="M3,16.5L7.5,21H4.1C3.492,21,3,20.508,3,19.9V16.5z"/>
+    </g>
+  </g>
+  <g>
+    <circle fill="#8F8F94" cx="6" cy="54" r="5.5"/>
+    <circle fill="none" stroke="#717177" stroke-miterlimit="10" cx="6" cy="54" r="5.5"/>
+    <path fill="#28282C" d="M6,58.5L1.5,54h3.4C5.508,54,6,54.492,6,55.1V58.5z"/>
+    <path fill="#28282C" d="M6,49.5l4.5,4.5H7.1C6.492,54,6,53.508,6,52.9V49.5z"/>
+  </g>
+  <g>
+    <circle fill="#6B6B6F" cx="6" cy="66" r="5.5"/>
+    <circle fill="none" stroke="#59595E" stroke-miterlimit="10" cx="6" cy="66" r="5.5"/>
+    <path fill="#020206" d="M6,70.5L1.5,66h3.4C5.508,66,6,66.492,6,67.1V70.5z"/>
+    <path fill="#020206" d="M6,61.5l4.5,4.5H7.1C6.492,66,6,65.508,6,64.9V61.5z"/>
+  </g>
+  <g>
+    <circle fill="#6B6B6F" cx="6" cy="30" r="5.5"/>
+    <circle fill="none" stroke="#59595E" stroke-miterlimit="10" cx="6" cy="30" r="5.5"/>
+    <g>
+      <path fill="#020206" d="M9,31.5L4.5,27h3.4C8.508,27,9,27.492,9,28.1V31.5z"/>
+      <path fill="#020206" d="M3,28.5L7.5,33H4.1C3.492,33,3,32.508,3,31.9V28.5z"/>
+    </g>
+  </g>
+</svg>

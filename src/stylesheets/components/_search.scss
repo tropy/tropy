@@ -3,8 +3,8 @@
 // --------------------------------------------------
 
 .search {
-  position: relative;
   @include no-drag;
+  position: relative;
 
   .icon-search {
     position: absolute;

@@ -7,8 +7,10 @@
   display: flex;
   flex-direction: column;
 
-  > header .toolbar {
-    background: $panels-bg;
+  > header {
+    .toolbar {
+      background: $panels-bg;
+    }
   }
 
   .panel + .panel {

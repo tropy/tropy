@@ -3,7 +3,7 @@
 // --------------------------------------------------
 
 .btn {
-  border: none;
+  border: 0;
 }
 
 .btn-icon {
@@ -15,8 +15,10 @@
   }
 
   &:active {
-    .icon svg {
-      fill: $icon-active-color;
+    .icon {
+      svg {
+        fill: $icon-active-color;
+      }
     }
   }
 }

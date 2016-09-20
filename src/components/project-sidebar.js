@@ -3,20 +3,17 @@
 const React = require('react')
 
 const { connect } = require('react-redux')
-const { FormattedMessage } = require('react-intl')
 const { PropTypes } = React
+const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('./toolbar')
-const { IconFolder } = require('./icons')
 const { Editable } = require('./editable')
+const { Lists } = require('./lists')
 const { Sidebar } = require('./sidebar')
 const { persist } = require('../actions/project')
-const { root } = require('../selectors/list')
 
 const ProjectSidebar = ({
   project,
-  lists,
   onProjectChange,
-  onListChange
 }) => (
   <Sidebar>
     <Toolbar draggable/>
@@ -29,45 +26,28 @@ const ProjectSidebar = ({
 
     <FormattedMessage id="sidebar.lists"/>
     <br/>
-    {
-      lists.map(list => (
-        <div key={list.id}>
-          <IconFolder/>
-          <Editable
-            value={list.name}
-            enabled={!list.name}
-            onChange={onListChange}/>
-        </div>))
-    }
+    <Lists parent={null}/>
+    <Lists parent={null} tmp/>
+
   </Sidebar>
 )
 
 ProjectSidebar.propTypes = {
-  lists: PropTypes.array,
   project: PropTypes.shape({
     name: PropTypes.string.isRequired
   }).isRequired,
-  onProjectChange: PropTypes.func,
-  onListChange: PropTypes.func
-}
-
-ProjectSidebar.defaultProps = {
-  lists: []
+  onProjectChange: PropTypes.func
 }
 
 module.exports = {
   ProjectSidebar: connect(
     state => ({
-      project: state.project,
-      lists: root(state)
+      project: state.project
     }),
 
     dispatch => ({
       onProjectChange(name) {
         dispatch(persist({ name }))
-      },
-
-      onListChange() {
       }
     })
   )(ProjectSidebar)

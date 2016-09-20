@@ -12,12 +12,6 @@
     width: $search-width;
   }
 
-  .item-list {
-    .item {
-
-    }
-  }
-
   // List view
   &.list-view {
 
@@ -71,9 +65,9 @@
 
     .metadata-head,
     .metadata {
+      @include css-truncate;
       display: table-cell;
       vertical-align: middle;
-      @include css-truncate;
       padding: 0 $space-xs 0 ($space-xs + 1px);
 
       &:first-child {
@@ -88,7 +82,7 @@
     .metadata-head {
       position: relative;
 
-      &:before {
+      &::before {
         content: " ";
         position: absolute;
         left: 0;
@@ -98,8 +92,10 @@
         background: $item-list-header-border-color;
       }
 
-      &:first-child:before {
-        content: none;
+      &:first-child {
+        &::before {
+          content: none;
+        }
       }
 
       &.ascending,

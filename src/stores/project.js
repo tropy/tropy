@@ -11,7 +11,7 @@ const { project } = require('../reducers/project')
 const { nav } = require('../reducers/nav')
 const { intl } = require('../reducers/intl')
 const { history } = require('../reducers/history')
-const { lists } = require('../reducers/list')
+const { lists } = require('../reducers/lists')
 const { debounce, log } = require('../middleware')
 
 const dev = (ARGS.dev || ARGS.debug)

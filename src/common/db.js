@@ -263,7 +263,7 @@ class Connection {
   }
 
   run(sql, ...params) {
-    return this.db.runAsync(sql, flatten(params)).return(this)
+    return this.db.runAsync(sql, flatten(params))
   }
 
   exec(sql) {
@@ -278,15 +278,15 @@ class Connection {
   }
 
   begin(mode = 'IMMEDIATE') {
-    return this.run(`BEGIN ${mode} TRANSACTION`)
+    return this.exec(`BEGIN ${mode} TRANSACTION`)
   }
 
   commit() {
-    return this.run('COMMIT TRANSACTION')
+    return this.exec('COMMIT TRANSACTION')
   }
 
   rollback() {
-    return this.run('ROLLBACK TRANSACTION')
+    return this.exec('ROLLBACK TRANSACTION')
   }
 
   check(table) {

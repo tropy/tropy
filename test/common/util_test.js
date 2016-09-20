@@ -79,4 +79,34 @@ describe('util', () => {
       expect(strftime('y-m-d', date)).to.eql('y-m-d')
     })
   })
+
+  describe('.pick', () => {
+    const { pick } = util
+
+    it('picks the given properties', () =>
+      expect(pick({ foo: 1, bar: 2 }, ['bar'])).to.eql({ bar: 2 }))
+
+    it('is empty when there is no match', () =>
+      expect(pick({ foo: 1, bar: 2 }, ['baz'])).to.be.empty)
+
+    it('returns a new object', () => {
+      const obj = { foo: 1 }
+      expect(pick(obj, ['foo'])).to.eql(obj).and.not.equal(obj)
+    })
+  })
+
+  describe('.omit', () => {
+    const { omit } = util
+
+    it('picks the given properties', () =>
+      expect(omit({ foo: 1, bar: 2 }, ['bar'])).to.eql({ foo: 1 }))
+
+    it('is empty when there is a complete match', () =>
+      expect(omit({ foo: 1, bar: 2 }, ['bar', 'foo'])).to.be.empty)
+
+    it('returns a new object', () => {
+      const obj = { foo: 1 }
+      expect(omit(obj, ['bar'])).to.eql(obj).and.not.equal(obj)
+    })
+  })
 })

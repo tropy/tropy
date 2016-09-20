@@ -10,6 +10,8 @@ const { warn, info, debug } = require('../common/log')
 const { ipc } = require('./ipc')
 const { history } = require('./history')
 const nav = require('./nav')
+const { CREATE } = require('../constants/list')
+const list = require('../actions/list')
 
 
 const persistable = (action) =>
@@ -49,25 +51,50 @@ function *open(file) {
 
 
 function *persistence(db, id, action) {
+  const { type, payload, meta } = action
+
   try {
-    const { type, payload, meta } = action
-    if (type !== PERSIST) return
+    switch (type) {
+      case PERSIST: {
+        const { project: prev } = yield select()
 
-    const { project: prev } = yield select()
+        try {
+          yield put(update(payload))
+          yield call([db, db.run],
+            'UPDATE project SET name = ? WHERE project_id = ?', payload.name, id
+          )
 
-    try {
-      yield put(update(payload))
-      yield call([db, db.run],
-        'UPDATE project SET name = ? WHERE project_id = ?', payload.name, id
-      )
+        } catch (error) {
+          yield put(update({ name: prev.name }))
+          throw error
+        }
 
-    } catch (error) {
-      yield put(update({ name: prev.name }))
-      throw error
-    }
+        if (meta.history) {
+          yield put(tick({ redo: action, undo: persist({ name: prev.name }) }))
+        }
 
-    if (meta.history) {
-      yield put(tick({ redo: action, undo: persist({ name: prev.name }) }))
+        break
+      }
+
+      case CREATE: {
+        try {
+          // TODO put this in a transaction
+          const { lastID } = yield call([db, db.run],
+            'INSERT INTO lists (name) VALUES (?)', payload[1].name)
+
+          const res = yield call([db, db.get],
+            'SELECT list_id AS id, name, parent_list_id AS parent FROM lists WHERE id = ?',
+            lastID)
+
+          yield put(list.remove(payload[0]))
+          yield put(list.insert(res))
+
+        } catch (error) {
+          throw error
+        }
+
+        break
+      }
     }
 
   } catch (error) {
