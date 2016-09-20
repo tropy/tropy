@@ -34,7 +34,7 @@ describe('window', () => {
     it('loads url with encoded data', () => {
       open('index', { foo: 'bar' })
       expect(win.loadURL)
-        .to.have.been.calledWithMatch('#%7B%22foo%22%3A%22bar%22%7D')
+        .to.have.been.calledWithMatch('#%7B%22foo%22%3A%22bar')
     })
   })
 })
