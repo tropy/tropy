@@ -4,6 +4,10 @@ const {
   NEW, INSERT, REMOVE, UPDATE
 } = require('../constants/list')
 
+const {
+  OPENED
+} = require('../constants/project')
+
 const { omit } = require('../common/util')
 const { into, map } = require('transducers.js')
 
@@ -27,6 +31,9 @@ module.exports = {
             ...payload
           }
         }
+
+      case OPENED:
+        return {}
 
       default:
         return state
