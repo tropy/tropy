@@ -20,8 +20,9 @@ CREATE TRIGGER insert_lists
   AFTER INSERT ON lists
   BEGIN
     UPDATE lists
-      SET position = (
-        SELECT count(*) FROM lists WHERE parent_list_id = NEW.parent_list_id
-      )
+      SET position =
+        (
+          SELECT count(*) FROM lists WHERE parent_list_id = NEW.parent_list_id
+        )
       WHERE list_id = NEW.list_id;
   END;
