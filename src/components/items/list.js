@@ -146,10 +146,8 @@ const itms = [
 
 const List = ({ items, columns, current, select }) => (
   <div className="list-view">
-    <div className="item-list-head-container">
-      <ListHead columns={columns}/>
-    </div>
-    <div className="item-list-container">
+    <ListHead columns={columns}/>
+    <div className="list-body">
       <table className="item-list">
         <tbody>
           {items.map((item) => (

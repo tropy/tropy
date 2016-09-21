@@ -7,7 +7,7 @@ const classes = require('classnames')
 
 
 const ListHead = ({ columns }) => (
-  <table className="item-list list-head">
+  <table className="list-head">
     <thead>
       <tr className="item-head">
         {columns.map(({ width, field, order }, idx) => (

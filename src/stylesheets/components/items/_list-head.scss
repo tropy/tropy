@@ -3,7 +3,11 @@
 // --------------------------------------------------
 
 .list-head {
-  height: 100%;
+  box-sizing: content-box;
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
   border: {
     top: 1px solid $item-list-header-border-color;
     bottom: 1px solid $item-list-header-border-color;
@@ -17,6 +21,7 @@
   position: relative;
   text-align: left;
   font-weight: 400;
+  height: $item-list-header-height - 2px;
 
   &:first-child {
     padding-left: $space-sm;
