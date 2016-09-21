@@ -27,10 +27,10 @@ CellIcon.defaultProps = {
 const noop = () => {}
 
 const Cell = ({ icon, type, value, width }) => (
-  <div className={cn(['metadata', type])} style={{ width }}>
+  <td className={cn(['metadata', type])} style={{ width }}>
     <CellIcon icon={icon}/>
     <Editable value={value} onChange={noop}/>
-  </div>
+  </td>
 )
 
 Cell.propTypes = {

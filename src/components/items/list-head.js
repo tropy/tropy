@@ -7,17 +7,19 @@ const classes = require('classnames')
 
 
 const ListHead = ({ columns }) => (
-  <ul className="item-list item-list-head">
-    <li className="item-head">
-      {columns.map(({ width, field, order }, idx) => (
-        <div key={idx}
-          className={classes(['metadata-head', field.type, order])}
-          style={{ width }}>
-          <FormattedMessage id={`fields.${field.name}`}/>
-        </div>
-      ))}
-    </li>
-  </ul>
+  <table className="item-list list-head">
+    <thead>
+      <tr className="item-head">
+        {columns.map(({ width, field, order }, idx) => (
+          <th key={idx}
+            className={classes(['metadata-head', field.type, order])}
+            style={{ width }}>
+            <FormattedMessage id={`fields.${field.name}`}/>
+          </th>
+        ))}
+      </tr>
+    </thead>
+  </table>
 )
 
 ListHead.propTypes = {

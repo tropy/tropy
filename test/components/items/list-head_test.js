@@ -6,9 +6,9 @@ const { shallow } = require('enzyme')
 describe('ListHead', () => {
   const { ListHead } = __require('components/items/list-head')
 
-  it('has class item-list-head', () => {
+  it('has class list-head', () => {
     expect(shallow(<ListHead columns={[]}/>))
-      .to.have.className('item-list-head')
+      .to.have.className('list-head')
   })
 
   it('renders head columns', () => {

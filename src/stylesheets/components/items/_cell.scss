@@ -1,0 +1,20 @@
+//
+// Cell
+// --------------------------------------------------
+
+.metadata {
+  @include css-truncate;
+  padding: 0 $space-xs 0 ($space-xs + 1px);
+
+  &:first-child {
+    padding-left: $space-sm;
+  }
+
+  &:last-child {
+    padding-right: $space-sm;
+  }
+
+  &.number {
+    text-align: right;
+  }
+}

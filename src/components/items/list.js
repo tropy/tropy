@@ -145,21 +145,23 @@ const itms = [
 
 
 const List = ({ items, columns, current, select }) => (
-  <div className="item-list">
+  <div className="list-view">
     <div className="item-list-head-container">
       <ListHead columns={columns}/>
     </div>
     <div className="item-list-container">
-      <ul className="item-list">
-        {items.map((item) => (
-          <ListItem
-            key={item.id}
-            current={current}
-            activate={select}
-            item={item}
-            columns={columns}/>
-        ))}
-      </ul>
+      <table className="item-list">
+        <tbody>
+          {items.map((item) => (
+            <ListItem
+              key={item.id}
+              current={current}
+              activate={select}
+              item={item}
+              columns={columns}/>
+          ))}
+        </tbody>
+      </table>
     </div>
   </div>
 )

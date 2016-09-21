@@ -1,0 +1,17 @@
+//
+// List view
+// --------------------------------------------------
+
+.item {
+  height: $row-height;
+
+  &.active {
+    color: $items-active-color;
+    background: $items-active-bg;
+  }
+
+  img {
+    vertical-align: middle;
+    margin-right: $space-xs;
+  }
+}

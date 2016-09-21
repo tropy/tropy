@@ -1,0 +1,51 @@
+//
+// List head
+// --------------------------------------------------
+
+.list-head {
+  height: 100%;
+  border: {
+    top: 1px solid $item-list-header-border-color;
+    bottom: 1px solid $item-list-header-border-color;
+  }
+  color: $item-list-header-color;
+}
+
+.metadata-head {
+  @include css-truncate;
+  padding: 0 $space-xs;
+  position: relative;
+  text-align: left;
+  font-weight: 400;
+
+  &:first-child {
+    padding-left: $space-sm;
+
+    &::before {
+      content: none;
+    }
+  }
+
+  &:last-child {
+    padding-right: $space-sm;
+  }
+
+  &::before {
+    content: " ";
+    position: absolute;
+    left: 0;
+    top: 2px;
+    bottom: 2px;
+    width: 1px;
+    background: $item-list-header-border-color;
+  }
+
+  &.ascending,
+  &.descending {
+    color: $item-list-header-sort-color;
+  }
+
+  &.number {
+    text-align: right;
+  }
+}

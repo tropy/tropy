@@ -1,0 +1,29 @@
+//
+// List view
+// --------------------------------------------------
+
+.list-view {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+
+  .item-list-head-container {
+    flex: 0 0 $item-list-header-height;
+  }
+
+  .item-list-container {
+    background: repeating-linear-gradient(to bottom, $items-odd-bg 3px,
+      $items-odd-bg ($row-height + 3px), transparent ($row-height + 3px),
+      transparent (2 * $row-height + 3px));
+    background-attachment: local;
+    flex: 1 1 auto;
+    overflow-y: scroll;
+    padding-top: 3px;
+  }
+
+  .item-list {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+  }
+}

@@ -26,7 +26,7 @@ class ListItem extends Component {
     const { item, current, columns } = this.props
 
     return (
-      <li
+      <tr
         className={cn({ item: true, active: current === item.id })}
         onClick={this.activate}>
         {columns.map(({ field, width }, idx) => (
@@ -37,7 +37,7 @@ class ListItem extends Component {
             icon={idx ? null : item.image}
             width={width}/>
         ))}
-      </li>
+      </tr>
     )
   }
 }

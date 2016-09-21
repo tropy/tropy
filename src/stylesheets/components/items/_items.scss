@@ -1,0 +1,10 @@
+//
+// Items
+// --------------------------------------------------
+
+#items {
+  flex-basis: calc(100% - #{$panels-default-width});
+  padding: 0 $space-min;
+  display: flex;
+  flex-direction: column;
+}

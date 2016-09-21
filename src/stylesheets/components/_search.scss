@@ -4,6 +4,7 @@
 
 .search {
   @include no-drag;
+  width: $search-width;
   position: relative;
 
   .icon-search {

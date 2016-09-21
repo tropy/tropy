@@ -9,7 +9,7 @@ const { IconPlus } = require('../icons')
 const { List } = require('./list')
 
 const Items = () => (
-  <section id="items" className="list-view">
+  <section id="items">
     <header>
       <Toolbar draggable>
         <div className="toolbar-left">
