@@ -10,13 +10,15 @@ const { warn, info, debug } = require('../common/log')
 const { ipc } = require('./ipc')
 const { history } = require('./history')
 const nav = require('./nav')
-const { CREATE } = require('../constants/list')
+const { CREATE, LOAD } = require('../constants/list')
 const list = require('../actions/list')
 
 
 const persistable = (action) =>
   action.meta && action.meta.persist
 
+const retrievable = (action) =>
+  action.meta && action.meta.retrieve
 
 function *open(file) {
   let db, id
@@ -35,6 +37,9 @@ function *open(file) {
     yield put(drop())
     yield call(nav.restore, id)
 
+    yield fork(every, retrievable, retrieval, db)
+    yield put(list.load(null))
+
     yield* every(persistable, persistence, db, id)
 
   } catch (error) {
@@ -49,6 +54,27 @@ function *open(file) {
   }
 }
 
+function *retrieval(db, action) {
+  const { type } = action
+
+  try {
+    switch (type) {
+      case LOAD: {
+        const res = yield call([db, db.all],
+          'SELECT list_id AS id, name, parent_list_id AS parent FROM lists WHERE parent_list_id IS NULL'
+        )
+
+        yield put(list.insert(res))
+
+        break
+      }
+    }
+
+  } catch (error) {
+    warn(`unexpected error retrieval: ${error.message}`)
+    debug(error.stack)
+  }
+}
 
 function *persistence(db, id, action) {
   const { type, payload, meta } = action
@@ -87,7 +113,7 @@ function *persistence(db, id, action) {
             lastID)
 
           yield put(list.remove(payload[0]))
-          yield put(list.insert(res))
+          yield put(list.insert([res]))
 
         } catch (error) {
           throw error

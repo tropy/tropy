@@ -5,13 +5,16 @@ const {
 } = require('../constants/list')
 
 const { omit } = require('../common/util')
+const { into, map } = require('transducers.js')
 
 module.exports = {
   lists(state = {}, { type, payload }) {
     switch (type) {
       case NEW:
-      case INSERT:
         return { ...state, [payload.id]: payload }
+
+      case INSERT:
+        return into({ ...state }, map(list => [list.id, list]), payload)
 
       case REMOVE:
         return omit(state, [payload])
