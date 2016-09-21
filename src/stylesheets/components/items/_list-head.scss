@@ -21,7 +21,7 @@
   position: relative;
   text-align: left;
   font-weight: 400;
-  height: $item-list-header-height - 2px;
+  height: $item-list-header-height;
 
   &:first-child {
     padding-left: $space-sm;

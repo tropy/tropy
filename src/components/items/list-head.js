@@ -9,7 +9,7 @@ const classes = require('classnames')
 const ListHead = ({ columns }) => (
   <table className="list-head">
     <thead>
-      <tr className="item-head">
+      <tr>
         {columns.map(({ width, field, order }, idx) => (
           <th key={idx}
             className={classes(['metadata-head', field.type, order])}

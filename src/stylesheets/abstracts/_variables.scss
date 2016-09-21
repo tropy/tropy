@@ -87,7 +87,7 @@ $thumbnail-size: $space-lg;
 // --------------------------------------------------
 
 $row-height: $thumbnail-size + 6px; // todo: share
-$item-list-header-height: $space-lg;
+$item-list-header-height: $space-lg - 2px; // 24px (content-box)
 
 
 // Panel
