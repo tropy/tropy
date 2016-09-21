@@ -1,0 +1,28 @@
+//
+// Editable
+// --------------------------------------------------
+
+.editable {
+  font: {
+    family: inherit;
+    size: inherit;
+    weight: inherit;
+  }
+  text-align: inherit;
+}
+
+.editable-control {
+  &.editable {
+    @include form-control-focus;
+    background: $editable-bg;
+    padding: 1px 4px;
+    margin: -2px 0;
+    border: 1px solid $editable-border-color;
+    //border-radius: 3px;
+    max-width: 100%;
+    position: relative;
+    left: -5px;
+    line-height: $line-height-computed;
+    display: inline;
+  }
+}

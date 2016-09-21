@@ -5,9 +5,10 @@
 .metadata {
   @include css-truncate;
   padding: 0 $space-xs 0 ($space-xs + 1px);
+  position: relative;
 
   &:first-child {
-    padding-left: $space-sm;
+    padding-left: $component-padding-horizontal + $thumbnail-size + $padding-base-horizontal;
   }
 
   &:last-child {
@@ -16,5 +17,11 @@
 
   &.number {
     text-align: right;
+  }
+
+  img {
+    position: absolute;
+    left: $component-padding-horizontal;
+    top: ($row-height - $thumbnail-size) / 2;
   }
 }

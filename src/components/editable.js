@@ -67,7 +67,7 @@ class Editable extends Component {
   render() {
     return (this.state.editing) ? (
       <input
-        className="editable"
+        className="editable editable-control"
         type="text"
         ref={this.focus}
         value={this.state.value}

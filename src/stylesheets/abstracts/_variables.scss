@@ -13,7 +13,6 @@ $font-size-base: 14px;
 
 $line-height-base:     1.429;
 $line-height-computed: floor(($font-size-base * $line-height-base));
-$line-height-ui:       26px;
 
 $link-hover-decoration: underline;
 
@@ -21,6 +20,12 @@ $headings-font-family:    inherit;
 $headings-font-weight:    400;
 $headings-line-height:    inherit;
 $headings-color:          inherit;
+
+
+// Common lenghts
+// --------------------------------------------------
+
+$line-height-large:    26px;
 
 
 // Space sizes
@@ -32,6 +37,7 @@ $space-sm:  12px;
 $space-md:  16px;
 $space-lg:  24px;
 $space-xl:  32px;
+
 
 // Dimensions
 // --------------------------------------------------
@@ -63,6 +69,7 @@ $border-radius-base: 0;
 $border-radius-large: 3px;
 
 $component-padding-horizontal: $space-sm;
+
 
 // Forms
 // --------------------------------------------------
