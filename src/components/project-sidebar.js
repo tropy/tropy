@@ -26,8 +26,8 @@ const ProjectSidebar = ({
 
     <FormattedMessage id="sidebar.lists"/>
     <br/>
-    <Lists parent={null}/>
-    <Lists parent={null} tmp/>
+    <Lists parent={0}/>
+    <Lists parent={0} tmp/>
 
   </Sidebar>
 )

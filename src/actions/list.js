@@ -14,6 +14,7 @@ module.exports = {
       payload: {
         id: `t${++tseq}`,
         name: '',
+        parent: 0,
         ...payload,
         tmp: true
       },

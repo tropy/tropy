@@ -61,7 +61,7 @@ function *retrieval(db, action) {
     switch (type) {
       case LOAD: {
         const res = yield call([db, db.all],
-          'SELECT list_id AS id, name, parent_list_id AS parent FROM lists WHERE parent_list_id IS NULL'
+          'SELECT list_id AS id, name, parent_list_id AS parent, position FROM lists WHERE parent_list_id NOT NULL'
         )
 
         yield put(list.insert(res))
