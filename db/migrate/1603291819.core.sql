@@ -92,7 +92,7 @@ CREATE TABLE notes (
 CREATE TABLE lists (
   list_id         INTEGER  PRIMARY KEY,
   name            TEXT     NOT NULL COLLATE NOCASE,
-  parent_list_id  INTEGER  REFERENCES lists,
+  parent_list_id  INTEGER  DEFAULT 0 REFERENCES lists ON DELETE CASCADE,
   position        INTEGER  NOT NULL DEFAULT 0,
   created_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -100,6 +100,8 @@ CREATE TABLE lists (
   UNIQUE (parent_list_id, name),
   UNIQUE (parent_list_id, position)
 );
+
+INSERT INTO lists (list_id, name, parent_list_id) VALUES (0, '', NULL);
 
 CREATE TABLE list_items (
   sid      INTEGER REFERENCES items ON DELETE CASCADE,

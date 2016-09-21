@@ -88,7 +88,7 @@ CREATE TABLE notes (
 CREATE TABLE lists (
   list_id         INTEGER  PRIMARY KEY,
   name            TEXT     NOT NULL COLLATE NOCASE,
-  parent_list_id  INTEGER  REFERENCES lists,
+  parent_list_id  INTEGER  DEFAULT 0 REFERENCES lists ON DELETE CASCADE,
   position        INTEGER  NOT NULL DEFAULT 0,
   created_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -96,6 +96,7 @@ CREATE TABLE lists (
   UNIQUE (parent_list_id, name),
   UNIQUE (parent_list_id, position)
 );
+INSERT INTO "lists" VALUES(0,'',NULL,0,'2016-09-21 18:29:07','2016-09-21 18:29:07');
 CREATE TABLE list_items (
   sid      INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
@@ -352,6 +353,15 @@ CREATE TRIGGER update_tags
     UPDATE tags
       SET tag_name = trim(tag_name)
       WHERE tag_name = NEW.tag_name;
+  END;
+CREATE TRIGGER insert_lists
+  AFTER INSERT ON lists
+  BEGIN
+    UPDATE lists
+      SET position = (
+        SELECT count(*) FROM lists WHERE parent_list_id = NEW.parent_list_id
+      )
+      WHERE list_id = NEW.list_id;
   END;
 COMMIT;
 PRAGMA foreign_keys=ON;
