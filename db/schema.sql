@@ -58,7 +58,7 @@ INSERT INTO "metadata_types" VALUES('name','https://schema.tropy.org/types/name'
 CREATE TABLE metadata (
   metadata_id  INTEGER  PRIMARY KEY,
   sid          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
-  term_id      TEXT     NOT NULL,
+  property_id  TEXT     NOT NULL,
   value_id     INTEGER  NOT NULL REFERENCES metadata_values,
   position     INTEGER  NOT NULL DEFAULT 0,
 
@@ -87,10 +87,14 @@ CREATE TABLE notes (
 );
 CREATE TABLE lists (
   list_id         INTEGER  PRIMARY KEY,
-  name            TEXT     NOT NULL,
+  name            TEXT     NOT NULL COLLATE NOCASE,
   parent_list_id  INTEGER  REFERENCES lists,
+  position        INTEGER  NOT NULL DEFAULT 0,
   created_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
+  updated_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  UNIQUE (parent_list_id, name),
+  UNIQUE (parent_list_id, position)
 );
 CREATE TABLE list_items (
   sid      INTEGER REFERENCES items ON DELETE CASCADE,
