@@ -50,6 +50,7 @@ class Editable extends Component {
 
   keyup = (event) => {
     if (event.which === 27) this.cancel()
+    if (event.which === 13) this.stop()
   }
 
   focus(input) {
