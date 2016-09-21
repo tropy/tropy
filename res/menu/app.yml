@@ -79,7 +79,7 @@ linux:
         accelerator: 'CmdOrCtrl+R'
         command: 'app:reload'
       - label: 'Reload &Styles'
-        accelerator: 'Shift+CmdOrCtrl+R'
+        accelerator: 'CmdOrCtrl+S'
         command: 'app:refresh'
       - label: 'Toggle &Developer Tools'
         accelerator: 'CmdOrCtrl+Shift+I'
