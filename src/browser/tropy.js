@@ -8,7 +8,7 @@ const { open } = require('./window')
 const { existsSync: exists } = require('fs')
 const { into, compose, remove, take } = require('transducers.js')
 
-const AppMenu = require('./menu')
+const { AppMenu } = require('./menu')
 const Storage = require('./storage')
 
 const release = require('../common/release')
@@ -141,8 +141,8 @@ class Tropy extends EventEmitter {
       .catch({ code: 'ENOENT' }, () => Tropy.defaults)
 
       .then(state => (this.state = state, this))
+      .then(() => this.menu.load())
 
-      .tap(() => this.emit('app:reload-menu'))
       .tap(() => this.emit('app:restored'))
       .tap(() => verbose('app state restored'))
   }
@@ -195,7 +195,7 @@ class Tropy extends EventEmitter {
         // Note: there may be Electron issues when reloading
         // the main menu. But since we cannot remove items
         // dynamically (#527) this is our only option.
-        this.menu.load()
+        this.menu.reload()
       })
 
       .on('app:reload', () => {

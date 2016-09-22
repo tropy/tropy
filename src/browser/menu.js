@@ -5,7 +5,7 @@ const { basename } = require('path')
 const { warn } = require('../common/log')
 const { Menu } = require('electron')
 
-module.exports = class AppMenu {
+class AppMenu {
   constructor(app) {
     this.app = app
   }
@@ -25,9 +25,12 @@ module.exports = class AppMenu {
   }
 
   async load(name = 'app') {
-    let template = (await res.Menu.open(name)).template
-    this.menu = this.build(template)
+    this.template = (await res.Menu.open(name)).template
+    return this.reload()
+  }
 
+  reload() {
+    this.menu = this.build(this.template)
     return this.update()
   }
 
@@ -119,4 +122,8 @@ module.exports = class AppMenu {
     })
   }
 
+}
+
+module.exports = {
+  AppMenu
 }

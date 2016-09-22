@@ -2,7 +2,7 @@
 
 describe('AppMenu', () => {
   const { Menu } = require('electron')
-  const AppMenu = __require('browser/menu')
+  const { AppMenu } = __require('browser/menu')
 
   let menu
 
