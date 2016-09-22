@@ -1,0 +1,106 @@
+//
+// List view
+// --------------------------------------------------
+
+.list-view {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+
+  .list-head {
+    box-sizing: content-box;
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: {
+      top: 1px solid $item-list-header-border-color;
+      bottom: 1px solid $item-list-header-border-color;
+    }
+    color: $item-list-header-color;
+  }
+
+  .metadata-head,
+  .metadata {
+    @include css-truncate;
+    padding: 0 $space-xs 0 ($space-xs + 1px);
+    position: relative;
+
+    &:last-child {
+      padding-right: $space-sm;
+    }
+
+    &.number {
+      text-align: right;
+    }
+  }
+
+  .metadata-head {
+    text-align: left;
+    font-weight: 400;
+    height: $item-list-header-height;
+
+    &:first-child {
+      padding-left: $space-sm;
+
+      &::before {
+        content: none;
+      }
+    }
+
+    &::before {
+      content: " ";
+      position: absolute;
+      left: 0;
+      top: 2px;
+      bottom: 2px;
+      width: 1px;
+      background: $item-list-header-border-color;
+    }
+
+    &.ascending,
+    &.descending {
+      color: $item-list-header-sort-color;
+    }
+  }
+
+  .list-body {
+    background: repeating-linear-gradient(to bottom, $items-odd-bg 3px,
+      $items-odd-bg ($row-height + 3px), transparent ($row-height + 3px),
+      transparent (2 * $row-height + 3px));
+    background-attachment: local;
+    flex: 1 1 auto;
+    overflow-y: scroll;
+    padding-top: 3px;
+  }
+
+  .item-list {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+  }
+
+  .item {
+    height: $row-height;
+
+    &.active {
+      color: $items-active-color;
+      background: $items-active-bg;
+    }
+  }
+
+  .metadata {
+    &:first-child {
+      padding-left:
+        $component-padding-horizontal
+        + $thumbnail-size
+        + $padding-base-horizontal;
+    }
+
+    img {
+      position: absolute;
+      left: $component-padding-horizontal;
+      top: ($row-height - $thumbnail-size) / 2;
+    }
+  }
+}
