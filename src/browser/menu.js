@@ -131,25 +131,34 @@ const separate = transformer(
 )
 
 class ContextMenu extends Menu {
+  static settings = {
+    global: ['history'],
+    lists: ['history', 'lists'],
+    list: ['history', 'lists', 'list']
+  }
+
   async load(name = 'context') {
     return (this.template = (await res.Menu.open(name)).template), this
   }
 
-  prepare(template, config = ['history']) {
+  prepare(template, context) {
     if (this.app.dev) {
-      config = [...config, 'dev']
+      context = [...context, 'dev']
     }
 
     return transduce(
       template,
-      filter(([key]) => config.includes(key)),
+      filter(([key]) => context.includes(key)),
       separate,
       []
     ).slice(1)
   }
 
-  show(event, win = this.app.win, ...args) {
-    this.build(this.prepare(this.template), event).popup(win, ...args)
+  show({ context, event }, win = this.app.win, ...args) {
+    this.build(
+      this.prepare(this.template, ContextMenu.settings[context]),
+      event
+    ).popup(win, ...args)
   }
 }
 

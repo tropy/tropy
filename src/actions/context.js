@@ -3,7 +3,17 @@
 const { SHOW } = require('../constants/context')
 
 module.exports = {
-  show(payload, meta) {
-    return { type: SHOW, payload, meta: { ipc: true, ...meta } }
+  show(event, context = 'global', meta) {
+    return {
+      type: SHOW,
+      payload: {
+        context,
+        event: {
+          x: event.clientX,
+          y: event.clientY
+        }
+      },
+      meta: { ipc: true, ...meta }
+    }
   }
 }

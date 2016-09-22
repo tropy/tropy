@@ -38,7 +38,7 @@ module.exports = {
     null,
     dispatch => ({
       showContextMenu(event) {
-        dispatch(context.show({ x: event.clientX, y: event.clientY }))
+        dispatch(context.show(event))
       }
     })
   )(Project)

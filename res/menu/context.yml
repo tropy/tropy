@@ -16,11 +16,23 @@ linux:
     - type: 'separator'
     - label: 'Inspect Element'
       command: 'app:inspect'
+  lists: &lists
+    - label: 'New List'
+      command: 'app:create-list'
+  list: &list
+    - label: 'Rename List'
+      command: 'app:rename-list'
+    - label: 'Delete List'
+      command: 'app:delete-list'
 
 darwin:
   history: *history
   dev: *dev
+  lists: *lists
+  list: *list
 
 win32:
   history: *history
   dev: *dev
+  lists: *lists
+  list: *list
