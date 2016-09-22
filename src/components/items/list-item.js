@@ -9,7 +9,7 @@ class ListItem extends Component {
 
   static propTypes = {
     current: PropTypes.number,
-    activate: PropTypes.func,
+    onSelect: PropTypes.func,
     item: PropTypes.object,
     columns: PropTypes.arrayOf(PropTypes.object)
   }
@@ -18,8 +18,8 @@ class ListItem extends Component {
     super(props)
   }
 
-  activate = () => {
-    this.props.activate(this.props.item.id)
+  select = () => {
+    this.props.onSelect(this.props.item.id)
   }
 
   render() {
@@ -28,7 +28,7 @@ class ListItem extends Component {
     return (
       <tr
         className={cn({ item: true, active: current === item.id })}
-        onClick={this.activate}>
+        onClick={this.select}>
         {columns.map(({ field, width }, idx) => (
           <Cell
             key={idx}

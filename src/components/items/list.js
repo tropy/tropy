@@ -144,7 +144,7 @@ const itms = [
 ]
 
 
-const List = ({ items, columns, current, select }) => (
+const List = ({ items, columns, current, onSelect }) => (
   <div className="list-view">
     <ListHead columns={columns}/>
     <div className="list-body">
@@ -154,7 +154,7 @@ const List = ({ items, columns, current, select }) => (
             <ListItem
               key={item.id}
               current={current}
-              activate={select}
+              onSelect={onSelect}
               item={item}
               columns={columns}/>
           ))}
@@ -166,7 +166,7 @@ const List = ({ items, columns, current, select }) => (
 
 List.propTypes = {
   current: PropTypes.number,
-  select: PropTypes.func,
+  onSelect: PropTypes.func,
   columns: PropTypes.arrayOf(PropTypes.object),
   items: PropTypes.arrayOf(PropTypes.object)
 }
@@ -181,7 +181,7 @@ module.exports = {
     }),
 
     dispatch => ({
-      select: (item) => dispatch(update({ item }))
+      onSelect: (item) => dispatch(update({ item }))
     })
 
   )(List)

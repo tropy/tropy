@@ -9,18 +9,23 @@ const { IconFolder } = require('./icons')
 const { children } = require('../selectors/list')
 const { create, save, remove } = require('../actions/list')
 const { noop } = require('../common/util')
+const nav = require('../actions/nav')
+const cn = require('classnames')
 
 
 class List extends Component {
 
   static propTypes = {
     list: PropTypes.object,
+    active: PropTypes.bool,
     onCancel: PropTypes.func,
+    onSelect: PropTypes.func,
     onUpdate: PropTypes.func
   }
 
   static defaultProps = {
     onCancel: noop,
+    onSelect: noop,
     onUpdate: noop
   }
 
@@ -28,15 +33,21 @@ class List extends Component {
     this.props.onUpdate(this.props.list, { name })
   }
 
+  select = () => {
+    this.props.onSelect(this.props.list.id)
+  }
+
   cancel = () => {
     this.props.onCancel(this.props.list)
   }
 
   render() {
-    const { list } = this.props
+    const { list, active } = this.props
 
     return (
-      <li className="list">
+      <li
+        className={cn({ list: true, active })}
+        onClick={this.select}>
         <IconFolder/>
         <div className="title">
           <Editable
@@ -50,14 +61,16 @@ class List extends Component {
 }
 
 
-const Lists = ({ lists, onUpdate, onCancel }) => (
+const Lists = ({ lists, current, onUpdate, onCancel, onSelect }) => (
   <ol className="lists">
     {
       lists.map(list => (
         <List
           key={list.id}
+          active={current === list.id}
           list={list}
           onUpdate={onUpdate}
+          onSelect={onSelect}
           onCancel={onCancel}/>
       ))
     }
@@ -66,9 +79,11 @@ const Lists = ({ lists, onUpdate, onCancel }) => (
 
 Lists.propTypes = {
   lists: PropTypes.array,
+  current: PropTypes.number,
   parent: PropTypes.number,
   tmp: PropTypes.bool,
   onCancel: PropTypes.func,
+  onSelect: PropTypes.func,
   onUpdate: PropTypes.func
 }
 
@@ -79,6 +94,7 @@ module.exports = {
       const selector = children()
 
       return (state, props) => ({
+        current: state.nav.list,
         lists: selector(state, props)
       })
     },
@@ -86,6 +102,10 @@ module.exports = {
     dispatch => ({
       onCancel({ id, tmp }) {
         if (tmp) dispatch(remove(id))
+      },
+
+      onSelect(list) {
+        dispatch(nav.update({ list }))
       },
 
       onUpdate({ id, tmp }, values) {
