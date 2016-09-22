@@ -12,6 +12,7 @@ const { Lists } = require('./lists')
 const { Sidebar } = require('./sidebar')
 const { persist } = require('../actions/project')
 const { update } = require('../actions/nav')
+const context = require('../actions/context')
 const cn = require('classnames')
 
 const ProjectSidebar = ({
@@ -19,6 +20,7 @@ const ProjectSidebar = ({
   active,
   onSelect,
   onProjectChange,
+  showListsMenu
 }) => (
   <Sidebar>
     <Toolbar draggable/>
@@ -36,7 +38,7 @@ const ProjectSidebar = ({
         </ol>
       </nav>
     </section>
-    <section>
+    <section onContextMenu={showListsMenu}>
       <h2><FormattedMessage id="sidebar.lists"/></h2>
       <nav>
         <Lists parent={0}/>
@@ -55,7 +57,8 @@ ProjectSidebar.propTypes = {
     name: PropTypes.string.isRequired
   }).isRequired,
   onProjectChange: PropTypes.func,
-  onSelect: PropTypes.func
+  onSelect: PropTypes.func,
+  showListsMenu: PropTypes.func
 }
 
 module.exports = {
@@ -72,6 +75,11 @@ module.exports = {
 
       onSelect() {
         dispatch(update({ list: undefined }))
+      },
+
+      showListsMenu(event) {
+        event.stopPropagation()
+        dispatch(context.show(event, 'lists'))
       }
     })
   )(ProjectSidebar)

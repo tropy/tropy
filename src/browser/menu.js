@@ -3,7 +3,7 @@
 const res = require('../common/res')
 const { basename } = require('path')
 const { warn } = require('../common/log')
-const { transduce, filter, transformer } = require('transducers.js')
+const { transduce, map, transformer } = require('transducers.js')
 const electron = require('electron')
 
 class Menu {
@@ -127,7 +127,7 @@ class AppMenu extends Menu {
 }
 
 const separate = transformer(
-  (menu, [, items]) => ([...menu, { type: 'separator' }, ...items]),
+  (menu, items) => ([...menu, { type: 'separator' }, ...items]),
 )
 
 class ContextMenu extends Menu {
@@ -141,16 +141,13 @@ class ContextMenu extends Menu {
     return (this.template = (await res.Menu.open(name)).template), this
   }
 
-  prepare(template, context) {
+  prepare(template, settings) {
     if (this.app.dev) {
-      context = [...context, 'dev']
+      settings = [...settings, 'dev']
     }
 
     return transduce(
-      template,
-      filter(([key]) => context.includes(key)),
-      separate,
-      []
+      settings, map(key => template[key]), separate, []
     ).slice(1)
   }
 
