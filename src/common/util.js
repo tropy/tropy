@@ -62,7 +62,8 @@ module.exports = {
 
   omit(src, props = [], into = {}) {
     return module.exports.pick(src,
-      Object.keys(src).filter(key => !props.includes(key)), into)
+      // eslint-disable-next-line eqeqeq
+      Object.keys(src).filter(key => !props.find(prop => prop == key)), into)
   },
 
   noop() {},

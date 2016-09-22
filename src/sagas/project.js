@@ -10,7 +10,7 @@ const { warn, info, debug } = require('../common/log')
 const { ipc } = require('./ipc')
 const { history } = require('./history')
 const nav = require('./nav')
-const { CREATE, LOAD } = require('../constants/list')
+const { CREATE, LOAD, DELETE } = require('../constants/list')
 const list = require('../actions/list')
 
 
@@ -116,6 +116,25 @@ function *persistence(db, id, action) {
           yield put(list.insert([res]))
 
         } catch (error) {
+          throw error
+        }
+
+        break
+      }
+
+      case DELETE: {
+        const original = (yield select()).lists[payload]
+
+        try {
+          if (original.id) {
+            yield put(list.remove(original.id))
+            yield call([db, db.run],
+              'DELETE FROM lists WHERE list_id = ?', original.id)
+          }
+
+
+        } catch (error) {
+          yield put(list.insert([original]))
           throw error
         }
 
