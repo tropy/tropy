@@ -20,4 +20,5 @@ body {
   background: $body-bg;
   overflow: hidden;
   cursor: default;
+  -webkit-user-select: none;
 }
