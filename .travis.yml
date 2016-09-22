@@ -35,7 +35,7 @@ before_install:
       rm -rf $NVM;
       git clone https://github.com/creationix/nvm.git $NVM;
     fi
-  - git -C $NVM pull -f origin master
+  - git -C $NVM pull -f origin master || true
   - git -C $NVM checkout -f `git -C $NVM describe --abbrev=0 --tags`
   - source $NVM/nvm.sh || true
   - nvm install
