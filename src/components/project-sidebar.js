@@ -18,8 +18,8 @@ const ProjectSidebar = ({
 }) => (
   <Sidebar>
     <Toolbar draggable/>
-    <nav>
-      <section>
+    <section>
+      <nav>
         <ol>
           <li>
             <IconLibrary/>
@@ -30,16 +30,19 @@ const ProjectSidebar = ({
             </div>
           </li>
         </ol>
-      </section>
-      <section>
-        <h3><FormattedMessage id="sidebar.lists"/></h3>
+      </nav>
+    </section>
+    <section>
+      <h2><FormattedMessage id="sidebar.lists"/></h2>
+      <nav>
         <Lists parent={0}/>
         <Lists parent={0} tmp/>
-      </section>
-      <section>
-        <h3>Tags</h3>
-      </section>
-    </nav>
+      </nav>
+    </section>
+    <section>
+      <h2>Tags</h2>
+      <nav></nav>
+    </section>
   </Sidebar>
 )
 

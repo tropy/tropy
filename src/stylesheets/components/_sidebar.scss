@@ -8,26 +8,39 @@
   flex: 0 0 $sidebar-default-width;
   line-height: $line-height-large;
 
-  h3 {
+  h2 {
     color: $sidebar-headings-color;
     padding: 0 $component-padding-horizontal;
   }
 
-  li {
-    display: flex;
-    align-items: center;
-    height: $line-height-large;
-    padding: 0 $component-padding-horizontal;
-  }
+  nav {
+    li {
+      display: flex;
+      align-items: center;
+      height: $line-height-large;
+      padding: 0 $component-padding-horizontal;
 
-  .icon {
-    flex: 0 0 auto;
-    margin-right: $space-xs;
-    position: relative;
-    top: -1px;
-  }
+      &.active {
+        color: $sidebar-active-color;
+        background: $sidebar-active-bg;
 
-  .title {
-    flex: 1 1 auto;
+        .icon {
+          svg {
+            fill: $sidebar-active-icon-color;
+          }
+        }
+      }
+    }
+
+    .icon {
+      flex: 0 0 auto;
+      margin-right: $space-xs;
+      position: relative;
+      top: -1px;
+    }
+
+    .title {
+      flex: 1 1 auto;
+    }
   }
 }
