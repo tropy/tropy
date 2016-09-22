@@ -23,9 +23,11 @@ const ProjectSidebar = ({
         <ol>
           <li>
             <IconLibrary/>
-            <Editable
-              value={project.name}
-              onChange={onProjectChange}/>
+            <div className="title project-title">
+              <Editable
+                value={project.name}
+                onChange={onProjectChange}/>
+            </div>
           </li>
         </ol>
       </section>
