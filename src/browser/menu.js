@@ -47,13 +47,13 @@ class Menu {
     )
   }
 
-  translate(template) {
+  translate(template, ...params) {
     // eslint-disable-next-line complexity
     return template.map(item => {
       item = { ...item }
 
       if (item.command) {
-        item.click = this.responder(item.command)
+        item.click = this.responder(item.command, ...params)
       }
 
       if (item.label) {
@@ -149,7 +149,7 @@ class ContextMenu extends Menu {
   }
 
   show(event, win = this.app.win, ...args) {
-    this.build(this.prepare(this.template)).popup(win, ...args)
+    this.build(this.prepare(this.template), event).popup(win, ...args)
   }
 }
 

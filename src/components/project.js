@@ -8,6 +8,7 @@ const { Items } = require('./items')
 const { PanelGroup } = require('./panelgroup')
 const { Viewer } = require('./viewer')
 const { noop } = require('../common/util')
+const context = require('../actions/context')
 
 const Project = ({ showContextMenu }) => (
   <div id="project" onContextMenu={showContextMenu}>
@@ -36,11 +37,8 @@ module.exports = {
   Project: connect(
     null,
     dispatch => ({
-      showContextMenu() {
-        dispatch({
-          type: 'context:show',
-          meta: { ipc: true }
-        })
+      showContextMenu(event) {
+        dispatch(context.show({ x: event.clientX, y: event.clientY }))
       }
     })
   )(Project)

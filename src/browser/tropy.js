@@ -16,6 +16,7 @@ const release = require('../common/release')
 
 const { defineProperty: prop } = Object
 const { OPENED, CREATED } = require('../constants/project')
+const CTX = require('../constants/context')
 const project = require('../actions/project')
 const list = require('../actions/list')
 const { redo, undo } = require('../actions/history')
@@ -227,6 +228,12 @@ class Tropy extends EventEmitter {
         if (this.history.future) this.dispatch(redo())
       })
 
+      .on('app:inspect', (win, { x, y }) => {
+        if (win) {
+          win.webContents.inspectElement(x, y)
+        }
+      })
+
 
       .on('app:open-license', () => {
         shell.openExternal('https://github.com/tropy/tropy/blob/master/LICENSE')
@@ -277,8 +284,8 @@ class Tropy extends EventEmitter {
         this.emit('app:reload-menu')
       })
 
-      .on('context:show', () => {
-        this.ctx.show()
+      .on(CTX.SHOW, (_, event) => {
+        this.ctx.show(event)
       })
 
 
