@@ -41,7 +41,6 @@ const ProjectSidebar = ({
     </section>
     <section>
       <h2>Tags</h2>
-      <nav></nav>
     </section>
   </Sidebar>
 )
