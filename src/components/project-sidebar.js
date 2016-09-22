@@ -11,9 +11,13 @@ const { Editable } = require('./editable')
 const { Lists } = require('./lists')
 const { Sidebar } = require('./sidebar')
 const { persist } = require('../actions/project')
+const { update } = require('../actions/nav')
+const cn = require('classnames')
 
 const ProjectSidebar = ({
   project,
+  active,
+  onSelect,
   onProjectChange,
 }) => (
   <Sidebar>
@@ -21,7 +25,7 @@ const ProjectSidebar = ({
     <section>
       <nav>
         <ol>
-          <li>
+          <li className={cn({ active })} onClick={onSelect}>
             <IconLibrary/>
             <div className="title project-title">
               <Editable
@@ -46,21 +50,28 @@ const ProjectSidebar = ({
 )
 
 ProjectSidebar.propTypes = {
+  active: PropTypes.bool,
   project: PropTypes.shape({
     name: PropTypes.string.isRequired
   }).isRequired,
-  onProjectChange: PropTypes.func
+  onProjectChange: PropTypes.func,
+  onSelect: PropTypes.func
 }
 
 module.exports = {
   ProjectSidebar: connect(
     state => ({
-      project: state.project
+      project: state.project,
+      active: !state.nav.list
     }),
 
     dispatch => ({
       onProjectChange(name) {
         dispatch(persist({ name }))
+      },
+
+      onSelect() {
+        dispatch(update({ list: undefined }))
       }
     })
   )(ProjectSidebar)
