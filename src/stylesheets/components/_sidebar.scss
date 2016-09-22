@@ -6,11 +6,29 @@
   background: $sidebar-bg;
   color: $sidebar-text-color;
   flex: 0 0 $sidebar-default-width;
-  padding: 0 $component-padding-horizontal;
   line-height: $line-height-large;
 
+  h3 {
+    color: $sidebar-headings-color;
+    padding: 0 $component-padding-horizontal;
+  }
+
+  li {
+    padding: 0 $component-padding-horizontal;
+    display: flex;
+    align-items: center;
+    height: $line-height-large;
+    padding: 0 $component-padding-horizontal;
+  }
+
   .icon {
+    flex: 0 0 auto;
     margin-right: $space-xs;
-    vertical-align: -2px;
+    position: relative;
+    top: -1px;
+  }
+
+  .title {
+    flex: 1 1 auto;
   }
 }

@@ -38,10 +38,12 @@ class List extends Component {
     return (
       <li className="list">
         <IconFolder/>
-        <Editable
-          value={list.name}
-          onChange={this.update}
-          onCancel={this.cancel}/>
+        <div className="title">
+          <Editable
+            value={list.name}
+            onChange={this.update}
+            onCancel={this.cancel}/>
+        </div>
       </li>
     )
   }

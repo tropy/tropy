@@ -43,6 +43,18 @@ i('Folder', (
   </svg>
 ))
 
+i('Library', (
+  <svg width="16" height="16">
+    <g className="line">
+    	<path d="M15,14v1H2v-1H15 M15,13H2c-0.552,0-1,0.448-1,1v2h15v-2C16,13.448,15.552,13,15,13L15,13z"/>
+    	<path d="M8.5,1.077l6.5,2.6V4H2V3.677L8.5,1.077 M8.5,0L1,3v2h15V3L8.5,0L8.5,0z"/>
+    	<path d="M5,7v4H4V7H5 M6,6H3v6h3V6L6,6z"/>
+    	<path d="M9,7v4H8V7H9 M10,6H7v6h3V6L10,6z"/>
+    	<path d="M13,7v4h-1V7H13 M14,6h-3v6h3V6L14,6z"/>
+    </g>
+  </svg>
+))
+
 i('Metadata', (
   <svg width="16" height="16">
     <g className="line">
@@ -95,6 +107,3 @@ i('Tag', (
     </g>
   </svg>
 ))
-
-
-

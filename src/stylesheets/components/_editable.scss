@@ -13,7 +13,7 @@
   position: relative;
   left: -($editable-border-width + $editable-padding-horizontal);
   width: calc(
-    100% + 2 * #{$editable-border-width + $editable-padding-horizontal}
+    100% + #{$editable-border-width + $editable-padding-horizontal}
   );
   line-height: 1em * $line-height-base;
   padding: $editable-padding-vertical $editable-padding-horizontal;
