@@ -10,6 +10,7 @@ const { children } = require('../selectors/list')
 const { create, save, remove } = require('../actions/list')
 const { noop } = require('../common/util')
 const nav = require('../actions/nav')
+const ctx = require('../actions/context')
 const cn = require('classnames')
 
 
@@ -19,12 +20,14 @@ class List extends Component {
     list: PropTypes.object,
     active: PropTypes.bool,
     onCancel: PropTypes.func,
+    onContextMenu: PropTypes.func,
     onSelect: PropTypes.func,
     onUpdate: PropTypes.func
   }
 
   static defaultProps = {
     onCancel: noop,
+    onContextMenu: noop,
     onSelect: noop,
     onUpdate: noop
   }
@@ -41,12 +44,17 @@ class List extends Component {
     this.props.onCancel(this.props.list)
   }
 
+  popup = (event) => {
+    this.props.onContextMenu(event, this.props.list.id)
+  }
+
   render() {
     const { list, active } = this.props
 
     return (
       <li
         className={cn({ list: true, active })}
+        onContextMenu={this.popup}
         onClick={this.select}>
         <IconFolder/>
         <div className="title">
@@ -61,7 +69,14 @@ class List extends Component {
 }
 
 
-const Lists = ({ lists, current, onUpdate, onCancel, onSelect }) => (
+const Lists = ({
+  lists,
+  current,
+  onUpdate,
+  onCancel,
+  onSelect,
+  showListMenu
+}) => (
   <ol className="lists">
     {
       lists.map(list => (
@@ -69,6 +84,7 @@ const Lists = ({ lists, current, onUpdate, onCancel, onSelect }) => (
           key={list.id}
           active={current === list.id}
           list={list}
+          onContextMenu={showListMenu}
           onUpdate={onUpdate}
           onSelect={onSelect}
           onCancel={onCancel}/>
@@ -84,7 +100,8 @@ Lists.propTypes = {
   tmp: PropTypes.bool,
   onCancel: PropTypes.func,
   onSelect: PropTypes.func,
-  onUpdate: PropTypes.func
+  onUpdate: PropTypes.func,
+  showListMenu: PropTypes.func
 }
 
 module.exports = {
@@ -110,6 +127,11 @@ module.exports = {
 
       onUpdate({ id, tmp }, values) {
         dispatch(tmp ? create([id, values]) : save([id, values]))
+      },
+
+      showListMenu(event, target) {
+        event.stopPropagation()
+        dispatch(ctx.show(event, 'list', target))
       }
     })
 

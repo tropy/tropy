@@ -11,6 +11,7 @@ module.exports = {
   REMOVE: 'list:remove',
 
   SAVE: 'list:save',
+  EDIT: 'list:edit',
   UPDATE: 'list:update',
 
   LOAD: 'list:load',
