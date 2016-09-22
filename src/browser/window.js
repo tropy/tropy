@@ -30,12 +30,12 @@ module.exports = {
   open(file, data = {}, options = {}) {
     options = { ...DEFAULTS, ...options }
 
-    if (!options.frame && EL_CAPITAN) {
-      options.frame = true
-      options.titleBarStyle = 'hidden-inset'
-    }
-
     if (darwin) {
+      if (!options.frame && EL_CAPITAN) {
+        options.frame = true
+        options.titleBarStyle = 'hidden-inset'
+      }
+
       data.aqua = AQUA[
         pref.getUserDefault('AppleAquaColorVariant', 'integer')
       ]
