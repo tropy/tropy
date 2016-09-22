@@ -5,10 +5,11 @@ const { resolve } = require('path')
 const { app, dialog, shell, ipcMain: ipc, BrowserWindow } = require('electron')
 const { verbose } = require('../common/log')
 const { open } = require('./window')
+const { all } = require('bluebird')
 const { existsSync: exists } = require('fs')
 const { into, compose, remove, take } = require('transducers.js')
 
-const { AppMenu } = require('./menu')
+const { AppMenu, ContextMenu } = require('./menu')
 const Storage = require('./storage')
 
 const release = require('../common/release')
@@ -41,6 +42,7 @@ class Tropy extends EventEmitter {
     Tropy.instance = this
 
     this.menu = new AppMenu(this)
+    this.ctx = new ContextMenu(this)
 
     prop(this, 'store', { value: new Storage() })
 
@@ -141,7 +143,10 @@ class Tropy extends EventEmitter {
       .catch({ code: 'ENOENT' }, () => Tropy.defaults)
 
       .then(state => (this.state = state, this))
-      .then(() => this.menu.load())
+
+      .tap(() => all([
+        this.menu.load(), this.ctx.load()
+      ]))
 
       .tap(() => this.emit('app:restored'))
       .tap(() => verbose('app state restored'))
@@ -271,6 +276,11 @@ class Tropy extends EventEmitter {
         H.set(this.win, history)
         this.emit('app:reload-menu')
       })
+
+      .on('context:show', () => {
+        this.ctx.show()
+      })
+
 
     return this
   }

@@ -3,15 +3,12 @@
 const res = require('../common/res')
 const { basename } = require('path')
 const { warn } = require('../common/log')
-const { Menu } = require('electron')
+const { transduce, filter, transformer } = require('transducers.js')
+const electron = require('electron')
 
-class AppMenu {
+class Menu {
   constructor(app) {
     this.app = app
-  }
-
-  update() {
-    return Menu.setApplicationMenu(this.menu), this
   }
 
   find(ids, menu = this.menu) {
@@ -22,16 +19,6 @@ class AppMenu {
     if (!item.submenu) return undefined
 
     return this.find(tail, item.submenu)
-  }
-
-  async load(name = 'app') {
-    this.template = (await res.Menu.open(name)).template
-    return this.reload()
-  }
-
-  reload() {
-    this.menu = this.build(this.template)
-    return this.update()
   }
 
   responder(command, ...params) {
@@ -51,9 +38,9 @@ class AppMenu {
     }
   }
 
-  build(template) {
-    return Menu.buildFromTemplate(
-      this.translate(template)
+  build(...args) {
+    return electron.Menu.buildFromTemplate(
+      this.translate(...args)
         // Hiding of root items does not work at the moment.
         // See Electron #2895
         .filter(item => item.visible !== false)
@@ -121,9 +108,52 @@ class AppMenu {
       return item
     })
   }
+}
 
+class AppMenu extends Menu {
+  async load(name = 'app') {
+    this.template = (await res.Menu.open(name)).template
+    return this.reload()
+  }
+
+  reload() {
+    this.menu = this.build(this.template)
+    return this.update()
+  }
+
+  update() {
+    return electron.Menu.setApplicationMenu(this.menu), this
+  }
+}
+
+const separate = transformer(
+  (menu, [, items]) => ([...menu, { type: 'separator' }, ...items]),
+)
+
+class ContextMenu extends Menu {
+  async load(name = 'context') {
+    return (this.template = (await res.Menu.open(name)).template), this
+  }
+
+  prepare(template, config = ['history']) {
+    if (this.app.dev) {
+      config = [...config, 'dev']
+    }
+
+    return transduce(
+      template,
+      filter(([key]) => config.includes(key)),
+      separate,
+      []
+    ).slice(1)
+  }
+
+  show(event, win = this.app.win, ...args) {
+    this.build(this.prepare(this.template)).popup(win, ...args)
+  }
 }
 
 module.exports = {
-  AppMenu
+  AppMenu,
+  ContextMenu
 }

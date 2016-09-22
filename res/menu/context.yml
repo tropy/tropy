@@ -1,0 +1,38 @@
+linux:
+  history: &history
+    - id: 'undo'
+      label: 'Undo'
+      command: 'app:undo'
+      enabled: false
+    - id: 'redo'
+      label: 'Redo'
+      command: 'app:redo'
+      enabled: false
+  dev: &dev
+    - label: '&Reload'
+      accelerator: 'CmdOrCtrl+R'
+      command: 'app:reload'
+    - label: 'Reload &Styles'
+      accelerator: 'CmdOrCtrl+S'
+      command: 'app:refresh'
+    - label: 'Toggle &Developer Tools'
+      accelerator: 'CmdOrCtrl+Shift+I'
+      command: 'win:toggleDevTools'
+    - type: 'separator'
+    - label: 'Theme'
+      id: 'theme'
+      submenu:
+        - label: 'Light'
+          id: 'light'
+          type: 'checkbox'
+        - label: 'Dark'
+          id: 'dark'
+          type: 'checkbox'
+
+darwin:
+  history: *history
+  dev: *dev
+
+win32:
+  history: *history
+  dev: *dev

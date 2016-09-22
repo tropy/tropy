@@ -7,7 +7,7 @@ describe('Project', () => {
   const { Project } = __require('components/project')
 
   it('has id project', () => {
-    expect(shallow(<Project/>)).to.have.id('project')
+    expect(shallow(<Project.WrappedComponent/>)).to.have.id('project')
   })
 
 })
