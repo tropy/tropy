@@ -118,8 +118,19 @@ $dl-line-height: $space-lg;
 $dl-gutter: $space-sm;
 $dl-horizontal-offset: 33%;
 
+
 // Note list
 // --------------------------------------------------
 
 $note-padding-vertical: 11px; // 16px
 $note-lines: 2;
+
+
+// Editable
+// --------------------------------------------------
+
+$editable-border-width: 1em / 14;
+$editable-padding-vertical: 1em / 14;
+$editable-padding-horizontal: 4em / 14;
+$editable-border-radius: 0;
+
