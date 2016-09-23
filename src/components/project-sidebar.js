@@ -7,6 +7,7 @@ const { PropTypes } = React
 const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('./toolbar')
 const { IconLibrary } = require('./icons')
+const { IconTag } = require('./icons')
 const { Editable } = require('./editable')
 const { Lists } = require('./lists')
 const { Sidebar } = require('./sidebar')
@@ -48,6 +49,14 @@ const ProjectSidebar = ({
       </section>
       <section>
         <h2>Tags</h2>
+        <nav>
+          <ol>
+            <li>
+              <IconTag/>
+              <div className="title">Betrayal</div>
+            </li>
+          </ol>
+        </nav>
       </section>
       <div className="resizable-handle-col resizable-handle-right"/>
     </div>
