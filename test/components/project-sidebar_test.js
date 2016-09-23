@@ -20,7 +20,7 @@ describe('ProjectSidebar', () => {
     expect(
       shallow(
         <ProjectSidebar.WrappedComponent project={project}/>
-      ).find('.project-title Editable')
-    ).to.have.prop('value', project.name)
+      ).find('ProjectName')
+    ).to.have.prop('name', project.name)
   })
 })

@@ -1,9 +1,8 @@
 'use strict'
 
 const React = require('react')
-
 const { connect } = require('react-redux')
-const { PropTypes } = React
+const { Component, PropTypes } = React
 const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('./toolbar')
 const { IconLibrary } = require('./icons')
@@ -17,11 +16,44 @@ const { update } = require('../actions/nav')
 const context = require('../actions/context')
 const cn = require('classnames')
 
+class ProjectName extends Component {
+  static propTypes = {
+    active: PropTypes.bool,
+    name: PropTypes.string,
+    onChange: PropTypes.func.isRequired,
+    onSelect: PropTypes.func.isRequired
+  }
+
+  select = () => {
+    if (!this.props.active) {
+      this.props.onSelect()
+    }
+  }
+
+  render() {
+    const { active, name, onChange } = this.props
+
+    return (
+      <ol>
+        <li className={cn({ active })} onClick={this.select}>
+          <IconLibrary/>
+          <div className="title project-title">
+            <Editable
+              value={name}
+              required
+              onChange={onChange}/>
+          </div>
+        </li>
+      </ol>
+    )
+  }
+}
+
 const ProjectSidebar = ({
   project,
   active,
   onSelect,
-  onProjectChange,
+  onChange,
   showListsMenu
 }) => (
   <Sidebar>
@@ -30,17 +62,11 @@ const ProjectSidebar = ({
       <div className="sidebar-body">
         <section>
           <nav>
-            <ol>
-              <li className={cn({ active })} onClick={onSelect}>
-                <IconLibrary/>
-                <div className="title project-title">
-                  <Editable
-                    value={project.name}
-                    required
-                    onChange={onProjectChange}/>
-                </div>
-              </li>
-            </ol>
+            <ProjectName
+              name={project.name}
+              active={active}
+              onChange={onChange}
+              onSelect={onSelect}/>
           </nav>
         </section>
         <section onContextMenu={showListsMenu}>
@@ -78,7 +104,7 @@ ProjectSidebar.propTypes = {
   project: PropTypes.shape({
     name: PropTypes.string.isRequired
   }).isRequired,
-  onProjectChange: PropTypes.func,
+  onChange: PropTypes.func,
   onSelect: PropTypes.func,
   showListsMenu: PropTypes.func
 }
@@ -91,7 +117,7 @@ module.exports = {
     }),
 
     dispatch => ({
-      onProjectChange(name) {
+      onChange(name) {
         dispatch(persist({ name }))
       },
 

@@ -37,7 +37,9 @@ class List extends Component {
   }
 
   select = () => {
-    this.props.onSelect(this.props.list.id)
+    if (!this.props.active) {
+      this.props.onSelect(this.props.list.id)
+    }
   }
 
   cancel = () => {
