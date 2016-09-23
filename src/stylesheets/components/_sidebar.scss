@@ -5,7 +5,7 @@
 #sidebar {
   background: $sidebar-bg;
   color: $sidebar-text-color;
-  flex: 0 0 $sidebar-default-width;
+  width: $sidebar-default-width;
   line-height: $line-height-large;
   display: flex;
   flex-direction: column;

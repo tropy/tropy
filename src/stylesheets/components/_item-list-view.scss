@@ -85,8 +85,10 @@
     height: $row-height;
 
     &.active {
-      color: $items-active-color;
-      background: $items-active-bg;
+      .metadata {
+        color: $items-active-color;
+        background: $items-active-bg;
+      }
     }
   }
 
