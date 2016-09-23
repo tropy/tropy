@@ -16,7 +16,7 @@ describe('ProjectSidebar', () => {
     ).to.have.exactly(1).descendants('Toolbar')
   })
 
-  it('renders a the project name', () => {
+  it('renders the project name', () => {
     expect(
       shallow(
         <ProjectSidebar.WrappedComponent project={project}/>
