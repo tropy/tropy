@@ -34,7 +34,7 @@
 
   .panel-body {
     flex: 1 1 auto;
-    overflow-y: auto;
+    overflow-y: scroll;
     margin-bottom: $space-min;
     //padding-top: $space-min;
   }

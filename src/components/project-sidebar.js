@@ -26,38 +26,40 @@ const ProjectSidebar = ({
   <Sidebar>
     <Toolbar draggable/>
     <div className="resizable-container">
-      <section>
-        <nav>
-          <ol>
-            <li className={cn({ active })} onClick={onSelect}>
-              <IconLibrary/>
-              <div className="title project-title">
-                <Editable
-                  value={project.name}
-                  onChange={onProjectChange}/>
-              </div>
-            </li>
-          </ol>
-        </nav>
-      </section>
-      <section onContextMenu={showListsMenu}>
-        <h2><FormattedMessage id="sidebar.lists"/></h2>
-        <nav>
-          <Lists parent={0}/>
-          <Lists parent={0} tmp/>
-        </nav>
-      </section>
-      <section>
-        <h2>Tags</h2>
-        <nav>
-          <ol>
-            <li>
-              <IconTag/>
-              <div className="title">Betrayal</div>
-            </li>
-          </ol>
-        </nav>
-      </section>
+      <div className="sidebar-body">
+        <section>
+          <nav>
+            <ol>
+              <li className={cn({ active })} onClick={onSelect}>
+                <IconLibrary/>
+                <div className="title project-title">
+                  <Editable
+                    value={project.name}
+                    onChange={onProjectChange}/>
+                </div>
+              </li>
+            </ol>
+          </nav>
+        </section>
+        <section onContextMenu={showListsMenu}>
+          <h2><FormattedMessage id="sidebar.lists"/></h2>
+          <nav>
+            <Lists parent={0}/>
+            <Lists parent={0} tmp/>
+          </nav>
+        </section>
+        <section>
+          <h2>Tags</h2>
+          <nav>
+            <ol>
+              <li>
+                <IconTag/>
+                <div className="title">Betrayal</div>
+              </li>
+            </ol>
+          </nav>
+        </section>
+      </div>
       <div className="resizable-handle-col resizable-handle-right"/>
     </div>
   </Sidebar>

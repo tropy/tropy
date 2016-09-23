@@ -13,7 +13,13 @@
   .resizable-container {
     flex: 1 1 auto;
     position: relative;
+    display: flex;
     padding-top: $space-min;
+  }
+
+  .sidebar-body {
+    flex: 1 1 auto;
+    overflow-y: scroll;
   }
 
   h2 {
