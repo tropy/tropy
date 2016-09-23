@@ -145,7 +145,7 @@ const itms = [
 
 
 const List = ({ items, columns, current, onSelect }) => (
-  <div className="list-view">
+  <div className="item-list-view">
     <ListHead columns={columns}/>
     <div className="list-body">
       <table className="item-list">

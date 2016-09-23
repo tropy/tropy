@@ -7,8 +7,8 @@ describe('List', () => {
   const { List: { WrappedComponent: List } } =
     __require('components/items/list')
 
-  it('has class list-view', () => {
+  it('has class item-list-view', () => {
     expect(shallow(<List items={[]} columns={[]}/>))
-      .to.have.className('list-view')
+      .to.have.className('item-list-view')
   })
 })
