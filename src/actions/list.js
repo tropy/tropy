@@ -27,7 +27,15 @@ module.exports = {
   },
 
   create(payload, meta) {
-    return { type: CREATE, payload, meta: { ...meta, persist: true } }
+    return {
+      type: CREATE,
+      payload,
+      meta: {
+        persist: true,
+        history: true,
+        ...meta
+      }
+    }
   },
 
   insert(payload, meta) {

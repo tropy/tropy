@@ -12,6 +12,7 @@ const { history } = require('./history')
 const nav = require('./nav')
 const { CREATE, LOAD, DELETE } = require('../constants/list')
 const list = require('../actions/list')
+const { Create } = require('../commands/list')
 
 
 const persistable = (action) =>
@@ -103,21 +104,8 @@ function *persistence(db, id, action) {
       }
 
       case CREATE: {
-        try {
-          // TODO put this in a transaction
-          const { lastID } = yield call([db, db.run],
-            'INSERT INTO lists (name) VALUES (?)', payload[1].name)
-
-          const res = yield call([db, db.get],
-            'SELECT list_id AS id, name, parent_list_id AS parent FROM lists WHERE id = ?',
-            lastID)
-
-          yield put(list.remove(payload[0]))
-          yield put(list.insert([res]))
-
-        } catch (error) {
-          throw error
-        }
+        const cmd = new Create(db, action)
+        yield cmd.execute()
 
         break
       }
