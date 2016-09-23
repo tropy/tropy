@@ -4,7 +4,13 @@
 
 #items {
   flex-basis: calc(100% - #{$panels-default-width});
-  padding: 0 $space-min;
   display: flex;
   flex-direction: column;
+
+  .toolbar {
+    padding: {
+      left: ($component-padding-horizontal + $space-min);
+      right: ($component-padding-horizontal + $space-min);
+    }
+  }
 }
