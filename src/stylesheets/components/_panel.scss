@@ -4,7 +4,7 @@
 
 .panel {
   background: $panel-bg;
-  flex: 1 1 0;
+  height: (100% / 3);
   display: flex;
   flex-direction: column;
   position: relative;
