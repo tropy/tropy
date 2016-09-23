@@ -81,7 +81,8 @@ $input-border-radius-base: $border-radius-base;
 // Z-index master list
 // --------------------------------------------------
 
-$zindex-window-controls: 1000;
+$zindex-resizable:       1000;
+$zindex-window-controls: 1010;
 
 
 // Thumbnails
@@ -134,3 +135,8 @@ $editable-padding-vertical: 1em / 14;
 $editable-padding-horizontal: 4em / 14;
 $editable-border-radius: 0;
 
+
+// Resizable
+// --------------------------------------------------
+
+$resizable-threshold: $space-xs;

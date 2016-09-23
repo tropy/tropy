@@ -1,0 +1,50 @@
+//
+// Resizable
+// --------------------------------------------------
+
+// Requires
+//
+// - $zindex-resizable
+// - $resizable-threshold
+
+$resizable-bg: #9bebeb; // dev only
+
+.resizable-handle {
+  &-col,
+  &-row {
+    position: absolute;
+    z-index: $zindex-resizable;
+    background: $resizable-bg;
+    mix-blend-mode: multiply;
+  }
+
+  &-col {
+    top: 0;
+    bottom: 0;
+    width: $resizable-threshold;
+    cursor: col-resize;
+  }
+
+  &-left {
+    left: -($resizable-threshold / 2);
+  }
+
+  &-right {
+    right: -($resizable-threshold / 2);
+  }
+
+  &-row {
+    left: 0;
+    right: 0;
+    height: $resizable-threshold;
+    cursor: row-resize;
+  }
+
+  &-top {
+    top: -($resizable-threshold / 2);
+  }
+
+  &-bottom {
+    bottom: -($resizable-threshold / 2);
+  }
+}

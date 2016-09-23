@@ -7,6 +7,13 @@
   color: $sidebar-text-color;
   flex: 0 0 $sidebar-default-width;
   line-height: $line-height-large;
+  display: flex;
+  flex-direction: column;
+
+  .resizable-container {
+    flex: 1 1 auto;
+    position: relative;
+  }
 
   h2 {
     color: $sidebar-headings-color;

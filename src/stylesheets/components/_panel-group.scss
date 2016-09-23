@@ -7,10 +7,17 @@
   display: flex;
   flex-direction: column;
 
-  > header {
+  .panel-group-header {
     .toolbar {
       background: $panels-bg;
     }
+  }
+
+  .resizable-container {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    position: relative;
   }
 
   .panel + .panel {
