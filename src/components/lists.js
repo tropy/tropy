@@ -60,6 +60,7 @@ class List extends Component {
         <div className="title">
           <Editable
             value={list.name}
+            required
             onChange={this.update}
             onCancel={this.cancel}/>
         </div>

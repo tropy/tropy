@@ -8,6 +8,7 @@ const { noop } = require('../common/util')
 class Editable extends Component {
   static propTypes = {
     value: PropTypes.string,
+    required: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func
   }
@@ -25,6 +26,14 @@ class Editable extends Component {
     }
   }
 
+  get valid() {
+    return !(this.props.required && !this.state.value)
+  }
+
+  get changed() {
+    return this.state.value !== this.props.value && this.valid
+  }
+
   update = (event) => {
     this.setState({ value: event.target.value })
   }
@@ -36,7 +45,7 @@ class Editable extends Component {
   stop = () => {
     this.setState({ editing: false })
 
-    if (this.state.value !== this.props.value) {
+    if (this.changed) {
       this.props.onChange(this.state.value)
     } else {
       this.props.onCancel()

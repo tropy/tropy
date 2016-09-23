@@ -36,6 +36,7 @@ const ProjectSidebar = ({
                 <div className="title project-title">
                   <Editable
                     value={project.name}
+                    required
                     onChange={onProjectChange}/>
                 </div>
               </li>
