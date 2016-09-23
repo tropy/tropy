@@ -19,7 +19,10 @@ class Create extends Command {
       'SELECT list_id AS id, name, parent_list_id AS parent FROM lists WHERE id = ?',
       id)
 
-    yield put(actions.remove(tmp))
+    if (tmp) {
+      yield put(actions.remove(tmp))
+    }
+
     yield put(actions.insert([list]))
 
     return actions.delete(id)
@@ -38,7 +41,7 @@ class Delete extends Command {
       yield call([db, db.run],
         'DELETE FROM lists WHERE list_id = ?', this.original.id)
 
-      return actions.create(this.original)
+      return actions.create([null, this.original])
     }
   }
 

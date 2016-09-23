@@ -10,7 +10,7 @@ const { warn, info, debug } = require('../common/log')
 const { ipc } = require('./ipc')
 const { history } = require('./history')
 const nav = require('./nav')
-const { CREATE, LOAD, DELETE } = require('../constants/list')
+const { LOAD } = require('../constants/list')
 const list = require('../actions/list')
 const { handle } = require('../commands')
 

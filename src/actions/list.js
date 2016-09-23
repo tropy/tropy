@@ -51,7 +51,15 @@ module.exports = {
   },
 
   delete(payload, meta) {
-    return { type: DELETE, payload, meta: { persist: true, ...meta } }
+    return {
+      type: DELETE,
+      payload,
+      meta: {
+        persist: true,
+        history: true,
+        ...meta
+      }
+    }
   },
 
   load(payload, meta) {
