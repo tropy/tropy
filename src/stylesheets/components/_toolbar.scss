@@ -2,14 +2,11 @@
 // Toolbar
 // --------------------------------------------------
 
-$toolbar-bg: #ff7376;
-
 .toolbar {
   display: flex;
   justify-content: space-between;
   align-items: stretch;
   height: $toolbar-height;
-  margin-bottom: $space-min;
   padding: $space-min $component-padding-horizontal 0;
 
   .panel-header & {
@@ -24,7 +21,6 @@ $toolbar-bg: #ff7376;
       -webkit-app-region: drag;
       -webkit-user-select: none;
       cursor: default;
-      background: $toolbar-bg !important;
 
       .no-drag,
       .btn {
