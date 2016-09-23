@@ -14,7 +14,7 @@ const Tabs = ({ children, justified }) => (
 
 const Tab = ({ children, active }) => (
   <li className={`${active ? 'active' : ''}`}>
-    <a href="#">{children}</a>
+    {children}
   </li>
 )
 

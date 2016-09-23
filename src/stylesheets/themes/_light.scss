@@ -81,8 +81,10 @@ $panel-header-color: $shade-7;
 $panel-header-shadow: rgba($shade-9, 0.08);
 
 // Tabs
-$tab-link-bg: $shade-2;
-$tab-link-active-bg: transparent;
+$tab-bg: $shade-2;
+$tab-active-color: inherit;
+$tab-active-bg: transparent;
+$tab-inactive-color: $shade-5;
 
 // Description list
 $dt-color: $shade-5;

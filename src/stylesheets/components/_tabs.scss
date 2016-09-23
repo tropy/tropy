@@ -7,26 +7,25 @@
 
   li {
     flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: $tabs-height;
+    color: $tab-inactive-color;
+    background: $tab-bg;
+    padding: 0 $tabs-padding-horizontal;
 
-    a {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: $tabs-height;
-      color: inherit;
-      background: $tab-link-bg;
-      padding: 0 $tabs-padding-horizontal;
-      cursor: default;
+    .icon {
+      margin-right: $space-xs;
+    }
 
-      .icon {
-        margin-right: $space-xs;
-      }
+    &:hover {
+      color: $tab-active-color;
     }
 
     &.active {
-      a {
-        background: $tab-link-active-bg;
-      }
+      color: $tab-active-color;
+      background: $tab-active-bg;
     }
   }
 
