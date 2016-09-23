@@ -3,57 +3,26 @@
 const { call, put } = require('redux-saga/effects')
 //const { CREATE, DELETE } = require('../constants/list')
 const actions = require('../actions/list')
-const { tick } = require('../actions/history')
-const { freeze } = Object
+const { Command } = require('./command')
 
-class Create {
+class Create extends Command {
 
-  constructor(db, action) {
-    this.db = db
-    this.action = action
-  }
+  *exec() {
+    const { db, action: { payload } } = this
+    const [tmp, data] = payload
 
-  *execute() {
-    try {
-      this.init = performance.now()
+    // TODO put this in a transaction
+    const { lastID: id } = yield call([db, db.run],
+      'INSERT INTO lists (name) VALUES (?)', data.name)
 
-      const { db, action: { payload, meta } } = this
-      const [tmp, data] = payload
+    const list = yield call([db, db.get],
+      'SELECT list_id AS id, name, parent_list_id AS parent FROM lists WHERE id = ?',
+      id)
 
-      // TODO put this in a transaction
-      const { lastID: id } = yield call([db, db.run],
-        'INSERT INTO lists (name) VALUES (?)', data.name)
+    yield put(actions.remove(tmp))
+    yield put(actions.insert([list]))
 
-      const list = yield call([db, db.get],
-        'SELECT list_id AS id, name, parent_list_id AS parent FROM lists WHERE id = ?',
-        id)
-
-      yield put(actions.remove(tmp))
-      yield put(actions.insert([list]))
-
-      this.undo = actions.delete(id)
-
-      if (meta.history) {
-        yield put(tick(this))
-      }
-
-    } catch (error) {
-      this.error = error
-      yield this.abort()
-
-      throw error
-
-    } finally {
-      this.done = performance.now()
-      freeze(this)
-    }
-  }
-
-  *abort() {
-  }
-
-  get redo() {
-    return this.action
+    return actions.delete(id)
   }
 }
 
