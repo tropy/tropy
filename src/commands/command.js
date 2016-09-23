@@ -5,10 +5,9 @@ const { tick } = require('../actions/history')
 const { freeze } = Object
 
 class Command {
-
-  constructor(db, action) {
-    this.db = db
+  constructor(action, options) {
     this.action = action
+    this.options = options
   }
 
   get duration() {

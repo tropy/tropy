@@ -1,14 +1,13 @@
 'use strict'
 
 const { call, put } = require('redux-saga/effects')
-//const { CREATE, DELETE } = require('../constants/list')
+const { CREATE } = require('../constants/list')
 const actions = require('../actions/list')
 const { Command } = require('./command')
 
 class Create extends Command {
-
   *exec() {
-    const { db, action: { payload } } = this
+    const { action: { payload }, options: { db } } = this
     const [tmp, data] = payload
 
     // TODO put this in a transaction

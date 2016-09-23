@@ -12,7 +12,7 @@ const { history } = require('./history')
 const nav = require('./nav')
 const { CREATE, LOAD, DELETE } = require('../constants/list')
 const list = require('../actions/list')
-const { Create } = require('../commands/list')
+const { handle } = require('../commands')
 
 
 const persistable = (action) =>
@@ -103,13 +103,6 @@ function *persistence(db, id, action) {
         break
       }
 
-      case CREATE: {
-        const cmd = new Create(db, action)
-        yield cmd.execute()
-
-        break
-      }
-
       case DELETE: {
         const original = (yield select()).lists[payload]
 
@@ -125,6 +118,13 @@ function *persistence(db, id, action) {
           yield put(list.insert([original]))
           throw error
         }
+
+        break
+      }
+
+      default: {
+        const cmd = handle(action, { db })
+        yield cmd.execute()
 
         break
       }
