@@ -8,6 +8,7 @@ const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('./toolbar')
 const { IconLibrary } = require('./icons')
 const { IconTag } = require('./icons')
+const { IconSpin } = require('./icons')
 const { Editable } = require('./editable')
 const { Lists } = require('./lists')
 const { Sidebar } = require('./sidebar')
@@ -59,6 +60,12 @@ const ProjectSidebar = ({
             </ol>
           </nav>
         </section>
+      </div>
+      <div className="activity busy">
+        <div className="activity-container">
+          <IconSpin/>
+          Indexing …
+        </div>
       </div>
       <div className="resizable-handle-col resizable-handle-right"/>
     </div>

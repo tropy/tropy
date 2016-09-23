@@ -9,7 +9,8 @@
 $font-family-sans-serif: "Helvetica Neue", Helvetica, sans-serif;
 $font-family-base:       $font-family-sans-serif;
 
-$font-size-base: 14px;
+$font-size-small: 13px;
+$font-size-base:  14px;
 
 $line-height-base:     1.429;
 $line-height-computed: floor(($font-size-base * $line-height-base));
@@ -37,6 +38,7 @@ $space-sm:  12px;
 $space-md:  16px;
 $space-lg:  24px;
 $space-xl:  32px;
+$space-xxl: 48px;
 
 
 // Dimensions
@@ -54,7 +56,6 @@ $space-xl:  32px;
 // Default Dimensions
 // --------------------------------------------------
 
-$sidebar-default-width: 250px;
 $panels-default-width: 320px;
 $search-width: 200px;
 
@@ -89,6 +90,14 @@ $zindex-window-controls: 1010;
 // --------------------------------------------------
 
 $thumbnail-size: $space-lg;
+
+
+// Sidebar
+// --------------------------------------------------
+
+$sidebar-default-width: 250px;
+$activity-transition-duration:        0.2s;
+$activity-transition-timing-function: ease-out;
 
 
 // List view
