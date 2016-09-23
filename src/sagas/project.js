@@ -103,25 +103,6 @@ function *persistence(db, id, action) {
         break
       }
 
-      case DELETE: {
-        const original = (yield select()).lists[payload]
-
-        try {
-          if (original.id) {
-            yield put(list.remove(original.id))
-            yield call([db, db.run],
-              'DELETE FROM lists WHERE list_id = ?', original.id)
-          }
-
-
-        } catch (error) {
-          yield put(list.insert([original]))
-          throw error
-        }
-
-        break
-      }
-
       default: {
         const cmd = handle(action, { db })
         yield cmd.execute()
