@@ -2,10 +2,8 @@
 // Resizable
 // --------------------------------------------------
 
-// Requires
-//
-// - $zindex-resizable
-// - $resizable-threshold
+$zindex-resizable: 1000 !default;
+$resizable-threshold: 8px !default;
 
 $resizable-bg: #9bebeb; // dev only
 
@@ -14,8 +12,8 @@ $resizable-bg: #9bebeb; // dev only
   &-row {
     position: absolute;
     z-index: $zindex-resizable;
-    background: $resizable-bg;
-    mix-blend-mode: multiply;
+    background: $resizable-bg; // dev only
+    mix-blend-mode: multiply; // dev only
   }
 
   &-col {
