@@ -18,7 +18,8 @@ dl {
     display: flex;
     flex-wrap: wrap;
 
-    dt, dd {
+    dt,
+    dd {
       @include css-truncate;
     }
 
