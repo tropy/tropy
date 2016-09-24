@@ -2,6 +2,10 @@
 
 const { debug, warn, verbose } = require('../common/log')
 
+function format(type, meta) {
+  return `${type} #${meta.seq}` + (meta.rel ? `(${meta.rel})` : '')
+}
+
 module.exports = {
   log() {
     return next => action => {
@@ -9,11 +13,11 @@ module.exports = {
 
       switch (true) {
         case !!error:
-          warn(`${type} failed: ${payload.message}`)
+          warn(`${format(type, meta)} failed: ${payload.message}`)
           debug(payload.message, payload.stack)
           break
         default:
-          verbose(type)
+          verbose(format(type, meta))
           debug(type, { payload, meta, error })
       }
 

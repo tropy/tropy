@@ -12,7 +12,7 @@ const { nav } = require('../reducers/nav')
 const { intl } = require('../reducers/intl')
 const { history } = require('../reducers/history')
 const { lists } = require('../reducers/lists')
-const { debounce, log } = require('../middleware')
+const { seq, debounce, log } = require('../middleware')
 
 const dev = (ARGS.dev || ARGS.debug)
 
@@ -32,6 +32,7 @@ module.exports = {
     const middleware = applyMiddleware(
       debounce,
       thunk,
+      seq,
       log,
       saga
     )
