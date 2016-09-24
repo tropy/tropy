@@ -2,6 +2,7 @@
 
 const { put } = require('redux-saga/effects')
 const { tick } = require('../actions/history')
+const { done } = require('../actions/activity')
 const { pick } = require('../common/util')
 const { freeze } = Object
 
@@ -21,6 +22,8 @@ class Command {
 
       const undo = yield this.exec()
 
+      yield put(done(this.action))
+
       if (undo && this.action.meta.history) {
         yield put(tick({ undo, redo: this.action }))
       }
@@ -28,13 +31,8 @@ class Command {
     } catch (error) {
       this.error = error
 
+      yield put(done(this.action, error))
       yield this.abort()
-      yield put({
-        type: this.action.type,
-        payload: error,
-        error: true,
-        meta: { rel: this.action.meta.seq }
-      })
 
     } finally {
       this.done = performance.now()

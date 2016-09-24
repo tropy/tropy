@@ -7,8 +7,14 @@ const sequence = (k = 1) => () => (
 module.exports = {
   seq() {
     const inc = sequence()
+
     return next => action => {
-      action.meta = { ...action.meta, seq: inc() }
+      action.meta = {
+        ...action.meta,
+        seq: inc(),
+        now: Date.now()
+      }
+
       return next(action)
     }
   }
