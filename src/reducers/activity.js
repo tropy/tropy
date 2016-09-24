@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = {
-  activity(state = {}, { type, payload, error, meta }) {
+  activities(state = {}, { type, payload, error, meta }) {
     if (meta) {
       const { rel, seq, now } = meta
 
@@ -21,7 +21,7 @@ module.exports = {
         return {
           ...state,
           [seq]: {
-            type: 'persist', action: type, init: now
+            id: seq, type: 'persist', action: type, init: now
           }
         }
       }
