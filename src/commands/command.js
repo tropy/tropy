@@ -31,7 +31,8 @@ class Command {
       yield this.abort()
       yield put({
         type: this.action.type,
-        error,
+        payload: error,
+        error: true,
         meta: { rel: this.action.meta.seq }
       })
 
@@ -45,7 +46,7 @@ class Command {
   }
 
   toJSON() {
-    return pick(this, ['name', 'init', 'done', 'error', 'action'])
+    return pick(this, ['init', 'done', 'error', 'action'])
   }
 }
 

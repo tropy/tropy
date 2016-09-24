@@ -1,10 +1,13 @@
 'use strict'
 
 const { call, put, select } = require('redux-saga/effects')
-const actions = require('../actions/list')
 const { Command } = require('./command')
+const { CREATE, DELETE } = require('../constants/list')
+const actions = require('../actions/list')
 
 class Create extends Command {
+  static get action() { return CREATE }
+
   *exec() {
     const { payload } = this.action
     const { db } = this.options
@@ -30,6 +33,8 @@ class Create extends Command {
 }
 
 class Delete extends Command {
+  static get action() { return DELETE }
+
   *exec() {
     const { payload } = this.action
     const { db } = this.options

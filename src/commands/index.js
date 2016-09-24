@@ -1,12 +1,11 @@
 'use strict'
 
-const LIST = require('../constants/list')
-const List = require('./list')
+const { seq, map } = require('transducers.js')
+const handles = map(([, cmd]) => [cmd.action, cmd])
 
 module.exports = {
 
-  [LIST.CREATE]: List.Create,
-  [LIST.DELETE]: List.Delete,
+  ...seq(require('./list'), handles),
 
   handle(action, options) {
     return new module.exports[action.type](action, options)
