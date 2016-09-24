@@ -1,10 +1,10 @@
 'use strict'
 
 const { takeEvery: every } = require('redux-saga')
-const { fork, cancel, call, put, take, select } = require('redux-saga/effects')
-const { OPEN, PERSIST } = require('../constants/project')
-const { update, opened, persist } = require('../actions/project')
-const { drop, tick } = require('../actions/history')
+const { fork, cancel, call, put, take } = require('redux-saga/effects')
+const { OPEN } = require('../constants/project')
+const { opened } = require('../actions/project')
+const { drop } = require('../actions/history')
 const { Database } = require('../common/db')
 const { warn, info, debug } = require('../common/log')
 const { ipc } = require('./ipc')
