@@ -11,7 +11,7 @@ const { IconSpin } = require('./icons')
 const { Editable } = require('./editable')
 const { Lists } = require('./lists')
 const { Sidebar } = require('./sidebar')
-const { persist } = require('../actions/project')
+const { save } = require('../actions/project')
 const { update } = require('../actions/nav')
 const context = require('../actions/context')
 const cn = require('classnames')
@@ -118,7 +118,7 @@ module.exports = {
 
     dispatch => ({
       onChange(name) {
-        dispatch(persist({ name }))
+        dispatch(save({ name }))
       },
 
       onSelect() {

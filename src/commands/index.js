@@ -5,6 +5,7 @@ const handles = map(([, cmd]) => [cmd.action, cmd])
 
 module.exports = {
 
+  ...seq(require('./project'), handles),
   ...seq(require('./list'), handles),
 
   handle(action, options) {

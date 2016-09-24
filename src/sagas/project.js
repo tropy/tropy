@@ -79,41 +79,12 @@ function *retrieval(db, action) {
 }
 
 function *persistence(db, id, action) {
-  const { type, payload, meta } = action
-
   try {
-    switch (type) {
-      case PERSIST: {
-        const { project: prev } = yield select()
+    const cmd = handle(action, { db, id })
+    yield cmd.execute()
 
-        try {
-          yield put(update(payload))
-          yield call([db, db.run],
-            'UPDATE project SET name = ? WHERE project_id = ?', payload.name, id
-          )
-
-        } catch (error) {
-          yield put(update({ name: prev.name }))
-          throw error
-        }
-
-        if (meta.history) {
-          yield put(tick({ redo: action, undo: persist({ name: prev.name }) }))
-        }
-
-        break
-      }
-
-      default: {
-        const cmd = handle(action, { db, id })
-        yield cmd.execute()
-
-        if (cmd.duration > TOO_LONG) {
-          warn('slow command detected', cmd)
-        }
-
-        break
-      }
+    if (cmd.duration > TOO_LONG) {
+      warn('SLOW COMMAND', cmd)
     }
 
   } catch (error) {
