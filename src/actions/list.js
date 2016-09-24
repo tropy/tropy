@@ -12,7 +12,7 @@ module.exports = {
     return {
       type: NEW,
       payload: {
-        id: `t${++tseq}`,
+        id: --tseq,
         name: '',
         parent: 0,
         ...payload,
