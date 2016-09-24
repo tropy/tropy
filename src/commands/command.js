@@ -2,6 +2,7 @@
 
 const { put } = require('redux-saga/effects')
 const { tick } = require('../actions/history')
+const { pick } = require('../common/util')
 const { freeze } = Object
 
 class Command {
@@ -26,8 +27,13 @@ class Command {
 
     } catch (error) {
       this.error = error
+
       yield this.abort()
-      throw error
+      yield put({
+        type: this.action.type,
+        error,
+        meta: { rel: this.action.meta.seq }
+      })
 
     } finally {
       this.done = performance.now()
@@ -36,6 +42,10 @@ class Command {
   }
 
   *abort() {
+  }
+
+  toJSON() {
+    return pick(this, ['name', 'init', 'done', 'error', 'action'])
   }
 }
 

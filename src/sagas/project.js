@@ -16,10 +16,10 @@ const { handle } = require('../commands')
 
 
 const persistable = (action) =>
-  action.meta && action.meta.persist
+  !action.error && action.meta && action.meta.persist
 
 const retrievable = (action) =>
-  action.meta && action.meta.retrieve
+  !action.error && action.meta && action.meta.retrieve
 
 function *open(file) {
   let db, id
@@ -104,15 +104,19 @@ function *persistence(db, id, action) {
       }
 
       default: {
-        const cmd = handle(action, { db })
+        const cmd = handle(action, { db, id })
         yield cmd.execute()
+
+        if (cmd.duration > 1500) {
+          warn('slow command detected', cmd)
+        }
 
         break
       }
     }
 
   } catch (error) {
-    warn(`persistence saga failed: ${error.message}`)
+    warn(`unexpected error in persistence: ${error.message}`)
     debug(error.stack)
   }
 }
