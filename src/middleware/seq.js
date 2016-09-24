@@ -1,9 +1,9 @@
 'use strict'
 
 module.exports = {
-  seq(k = 0) {
+  seq(k = 1) {
     function inc() {
-      return (k = Number.isSafeInteger(k) ? ++k : 0), k
+      return (k = Number.isSafeInteger(k) ? ++k : -k), k
     }
 
     return next => action => {
