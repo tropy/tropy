@@ -14,6 +14,7 @@ const { LOAD } = require('../constants/list')
 const list = require('../actions/list')
 const { handle } = require('../commands')
 
+const TOO_LONG = ARGS.dev ? 500 : 1500
 
 const persistable = (action) =>
   !action.error && action.meta && action.meta.persist
@@ -107,7 +108,7 @@ function *persistence(db, id, action) {
         const cmd = handle(action, { db, id })
         yield cmd.execute()
 
-        if (cmd.duration > 1500) {
+        if (cmd.duration > TOO_LONG) {
           warn('slow command detected', cmd)
         }
 
