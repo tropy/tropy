@@ -7,6 +7,10 @@ $resizable-threshold: 8px !default;
 
 $resizable-bg: #9bebeb; // dev only
 
+.resizable {
+  position: relative;
+}
+
 .resizable-handle {
   &-col,
   &-row {

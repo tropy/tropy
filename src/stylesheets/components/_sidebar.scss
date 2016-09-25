@@ -5,18 +5,10 @@
 #sidebar {
   background: $sidebar-bg;
   color: $sidebar-text-color;
-  width: $sidebar-default-width;
+  height: 100%;
   line-height: $line-height-large;
   display: flex;
   flex-direction: column;
-
-  .resizable-container {
-    flex: 1 1 auto;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    padding-top: $space-min;
-  }
 
   .sidebar-body {
     flex: 1 1 auto;

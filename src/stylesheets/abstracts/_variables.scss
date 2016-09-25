@@ -83,7 +83,8 @@ $input-border-radius-base: $border-radius-base;
 // --------------------------------------------------
 
 $zindex-resizable:       1000;
-$zindex-window-controls: 1010;
+$zindex-draggable:       1010;
+$zindex-window-controls: 1020;
 
 
 // Thumbnails
@@ -95,7 +96,6 @@ $thumbnail-size: $space-lg;
 // Sidebar
 // --------------------------------------------------
 
-$sidebar-default-width: 250px;
 $activity-transition-duration:        0.2s;
 $activity-transition-timing-function: ease-out;
 

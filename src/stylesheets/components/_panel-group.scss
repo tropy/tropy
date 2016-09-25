@@ -3,26 +3,18 @@
 // --------------------------------------------------
 
 #panel-group {
-  width: $panels-default-width;
   display: flex;
   flex-direction: column;
+  height: 100%;
 
   .panel-group-header {
     .toolbar {
-      background: $panels-bg;
+      background: $toolbar-bg;
     }
   }
 
-  .resizable-container {
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    padding-top: $space-min;
-    height: 100%;
-  }
-
-  .panel + .panel {
-    margin-top: $space-min;
+  .panel-group-body {
+    flex: 1 1 0;
+    height: calc(100% - #{$toolbar-height + $space-min});
   }
 }
