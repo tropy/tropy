@@ -13,3 +13,6 @@ fields:
   date: Date
   box: Box
   photos: Photos
+
+activity:
+  persist: Saving...

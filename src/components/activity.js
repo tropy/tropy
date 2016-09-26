@@ -5,16 +5,17 @@ const { PropTypes } = React
 const { connect } = require('react-redux')
 const { busy } = require('../selectors/activity')
 const { IconSpin } = require('./icons')
+const { FormattedMessage } = require('react-intl')
 const cn = require('classnames')
 
 const ActivityPane = ({ activities }) => (
   <div className={cn({ activity: true, busy: activities.length })}>
     {
-      activities.map(({ id, action, type }) => (
+      activities.map(({ id, type }) => (
         <div key={id}
           className={cn({ 'activity-container': true, type })}>
           <IconSpin/>
-          {action}
+          <FormattedMessage id={`activity.${type}`}/>
         </div>
       ))
     }
