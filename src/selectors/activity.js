@@ -5,11 +5,14 @@ const {
 } = require('reselect')
 
 const {
-  into, compose, take, filter
+  into, compose, map, take, filter
 } = require('transducers.js')
 
 
-const open = filter(activity => !activity.done)
+const open = compose(
+  map(([, activity]) => activity),
+  filter(activity => !activity.done || activity.error)
+)
 
 const busy = memo(
   ({ activities }) => activities,

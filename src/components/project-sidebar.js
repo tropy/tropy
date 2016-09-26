@@ -5,10 +5,9 @@ const { connect } = require('react-redux')
 const { Component, PropTypes } = React
 const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('./toolbar')
-const { IconLibrary } = require('./icons')
-const { IconTag } = require('./icons')
-const { IconSpin } = require('./icons')
+const { IconLibrary, IconTag } = require('./icons')
 const { Editable } = require('./editable')
+const { ActivityPane } = require('./activity')
 const { Lists } = require('./lists')
 const { Sidebar } = require('./sidebar')
 const { save } = require('../actions/project')
@@ -87,12 +86,7 @@ const ProjectSidebar = ({
         </nav>
       </section>
     </div>
-    <div className="activity busy">
-      <div className="activity-container">
-        <IconSpin/>
-        Indexing …
-      </div>
-    </div>
+    <ActivityPane/>
   </Sidebar>
 )
 

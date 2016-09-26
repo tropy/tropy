@@ -12,7 +12,7 @@ const { nav } = require('../reducers/nav')
 const { intl } = require('../reducers/intl')
 const { history } = require('../reducers/history')
 const { lists } = require('../reducers/lists')
-const { activity } = require('../reducers/activity')
+const { activities } = require('../reducers/activity')
 const { seq, debounce, log } = require('../middleware')
 
 const dev = (ARGS.dev || ARGS.debug)
@@ -25,7 +25,7 @@ module.exports = {
     const reducer = combineReducers({
       intl,
       nav,
-      activity,
+      activities,
       project,
       lists,
       history
