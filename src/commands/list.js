@@ -13,6 +13,10 @@ class Create extends Command {
     const { db } = this.options
     const [tmp, data] = payload
 
+    if (tmp) {
+      yield put(actions.remove(tmp))
+    }
+
     // TODO put this in a transaction
     // TODO id, position
     const { lastID: id } = yield call([db, db.run],
@@ -21,10 +25,6 @@ class Create extends Command {
     const list = yield call([db, db.get],
       'SELECT list_id AS id, name, parent_list_id AS parent FROM lists WHERE id = ?',
       id)
-
-    if (tmp) {
-      yield put(actions.remove(tmp))
-    }
 
     yield put(actions.insert([list]))
 

@@ -9,6 +9,7 @@ class Editable extends Component {
   static propTypes = {
     value: PropTypes.string,
     required: PropTypes.bool,
+    editing: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func
   }
@@ -21,7 +22,7 @@ class Editable extends Component {
     super(props)
 
     this.state = {
-      editing: !props.value,
+      editing: this.props.editing,
       value: props.value
     }
   }
@@ -43,7 +44,7 @@ class Editable extends Component {
   }
 
   stop = () => {
-    this.setState({ editing: false })
+    this.setState({ editing: this.props.editing })
 
     if (this.changed) {
       this.props.onChange(this.state.value)

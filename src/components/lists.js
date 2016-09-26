@@ -63,6 +63,7 @@ class List extends Component {
           <Editable
             value={list.name}
             required
+            editing={list.tmp}
             onChange={this.update}
             onCancel={this.cancel}/>
         </div>
@@ -119,13 +120,13 @@ module.exports = {
       })
     },
 
-    dispatch => ({
+    (dispatch, props) => ({
       onCancel({ id, tmp }) {
         if (tmp) dispatch(remove(id))
       },
 
       onSelect(list) {
-        dispatch(nav.update({ list }))
+        if (!props.tmp) dispatch(nav.update({ list }))
       },
 
       onUpdate({ id, tmp }, values) {
