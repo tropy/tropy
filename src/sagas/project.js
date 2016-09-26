@@ -14,6 +14,7 @@ const { LOAD } = require('../constants/list')
 const list = require('../actions/list')
 const { done } = require('../actions/activity')
 const { handle } = require('../commands')
+const { fail } = require('../notify')
 
 const TOO_LONG = ARGS.dev ? 500 : 1500
 
@@ -81,17 +82,16 @@ function *retrieval(db, action) {
 
 function *persistence(db, id, action) {
   try {
-    const cmd = handle(action, { db, id })
+    var cmd = handle(action, { db, id })
 
     yield cmd.execute()
     yield put(done(action, cmd.error))
 
-    if (cmd.duration > TOO_LONG) {
-      warn('SLOW COMMAND', cmd)
-    }
+    if (cmd.error) fail(cmd.error, action.type)
+    if (cmd.duration > TOO_LONG) warn('SLOW COMMAND', cmd)
 
   } catch (error) {
-    warn(`unexpected error in persistence: ${error.message}`)
+    warn(`unexpected error in *persistence: ${error.message}`)
     debug(error.stack)
   }
 }

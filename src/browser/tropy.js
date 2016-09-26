@@ -294,6 +294,10 @@ class Tropy extends EventEmitter {
         this.ctx.show(event)
       })
 
+      .on('dialog', (_, options) => {
+        dialog.showMessageBox(BrowserWindow.getFocusedWindow(), options)
+      })
+
 
     return this
   }
