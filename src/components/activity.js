@@ -9,17 +9,19 @@ const { FormattedMessage } = require('react-intl')
 const cn = require('classnames')
 
 const ActivityPane = ({ activities }) => (
-  <div className={cn({ activity: true, busy: activities.length })}
-    style={{ height: activities.length * 26 }}>
-    {
-      activities.map(({ id, type }) => (
-        <div key={id}
-          className={cn({ 'activity-container': true, type })}>
-          <IconSpin/>
-          <FormattedMessage id={`activity.${type}`}/>
-        </div>
-      ))
-    }
+  <div className={cn({ activitypane: true, busy: activities.length })}
+    style={{ height: activities.length * 26 + 23 }}>
+    <div className="activity-container">
+      {
+        activities.map(({ id, type }) => (
+          <div key={id}
+            className={cn({ activity: true, type })}>
+            <IconSpin/>
+            <FormattedMessage id={`activity.${type}`}/>
+          </div>
+        ))
+      }
+    </div>
   </div>
 )
 

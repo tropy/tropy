@@ -52,29 +52,42 @@
     }
   }
 
-  .activity {
-    flex: 0 0 0;
+  .activitypane {
+    height: 0;
     overflow: hidden;
     transition:
-      flex
+      height
       $activity-transition-duration
       $activity-transition-timing-function;
-    display: flex;
-    flex-direction: column;
     color: $activity-color;
     font-size: $font-size-small;
 
     &.busy {
-      flex: 0 0 $space-xxl;
+      display: block;
     }
   }
 
   .activity-container {
     border-top: 1px solid $activity-border-color;
-    padding: 0 $component-padding-horizontal;
-    flex: 0 0 $space-xxl;
+    padding: 11px $component-padding-horizontal;
+  }
+
+  @at-root {
+    @keyframes activity-in {
+      0% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+  }
+
+  .activity {
     display: flex;
     align-items: center;
+    animation: activity-in 0.2s ease 0.2s both;
   }
 
   @at-root {
