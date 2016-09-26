@@ -9,7 +9,7 @@ const { FormattedMessage } = require('react-intl')
 const cn = require('classnames')
 
 const ActivityPane = ({ activities }) => (
-  <div className={cn({ activitypane: true, busy: activities.length })}
+  <div className={cn({ 'activity-pane': true, 'busy': activities.length })}
     style={{ height: activities.length * 26 + 23 }}>
     <div className="activity-container">
       {
