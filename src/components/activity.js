@@ -9,7 +9,7 @@ const { FormattedMessage } = require('react-intl')
 const cn = require('classnames')
 
 function h(num) {
-  return num ? num * 26 + 23 : 0
+  return num ? num * 26 + 17 : 0
 }
 
 const ActivityPane = ({ activities }) => (

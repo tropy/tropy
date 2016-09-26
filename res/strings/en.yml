@@ -15,4 +15,4 @@ fields:
   photos: Photos
 
 activity:
-  persist: Saving...
+  persist: Saving …

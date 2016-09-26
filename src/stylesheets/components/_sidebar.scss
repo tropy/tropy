@@ -69,7 +69,7 @@
 
   .activity-container {
     border-top: 1px solid $activity-border-color;
-    padding: 11px $component-padding-horizontal;
+    padding: 9px $component-padding-horizontal 7px;
   }
 
   @at-root {
@@ -87,7 +87,7 @@
   .activity {
     display: flex;
     align-items: center;
-    animation: activity-in 0.2s ease 0.2s both;
+    animation: activity-in 0.125s ease both;
   }
 
   @at-root {
