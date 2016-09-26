@@ -10,10 +10,11 @@ const cn = require('classnames')
 const ActivityPane = ({ activities }) => (
   <div className={cn({ activity: true, busy: activities.length })}>
     {
-      activities.map((activity) => (
-        <div key={activity.id} className="activity-container">
+      activities.map(({ id, action, type }) => (
+        <div key={id}
+          className={cn({ 'activity-container': true, type })}>
           <IconSpin/>
-          {activity.action}
+          {action}
         </div>
       ))
     }
