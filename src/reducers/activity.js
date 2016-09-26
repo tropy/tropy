@@ -1,19 +1,14 @@
 'use strict'
 
+const { omit } = require('../common/util')
+
 module.exports = {
-  activities(state = {}, { type, payload, error, meta }) {
+  activities(state = {}, { type, meta }) {
     if (meta) {
       const { rel, seq, now } = meta
 
       if (rel) {
-        return {
-          ...state,
-          [rel]: {
-            ...state[rel],
-            done: now,
-            error: error ? payload.message : null
-          }
-        }
+        return omit(state, [rel])
       }
 
       // TODO use meta.activity
