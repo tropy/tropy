@@ -8,9 +8,13 @@ const { IconSpin } = require('./icons')
 const { FormattedMessage } = require('react-intl')
 const cn = require('classnames')
 
+function h(num) {
+  return num ? num * 26 + 23 : 0
+}
+
 const ActivityPane = ({ activities }) => (
   <div className={cn({ 'activity-pane': true, 'busy': activities.length })}
-    style={{ height: activities.length * 26 + 23 }}>
+    style={{ height: h(activities.length) }}>
     <div className="activity-container">
       {
         activities.map(({ id, type }) => (
