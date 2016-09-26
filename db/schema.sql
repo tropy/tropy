@@ -92,11 +92,12 @@ CREATE TABLE lists (
   position        INTEGER  NOT NULL DEFAULT 0,
   created_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  deleted_at      NUMERIC,
 
-  UNIQUE (parent_list_id, name),
-  UNIQUE (parent_list_id, position)
+  UNIQUE (parent_list_id, deleted_at, name),
+  UNIQUE (parent_list_id, deleted_at, position)
 );
-INSERT INTO "lists" VALUES(0,'',NULL,0,'2016-09-21 18:29:07','2016-09-21 18:29:07');
+INSERT INTO "lists" VALUES(0,'',NULL,0,'2016-09-26 19:33:15','2016-09-26 19:33:15',NULL);
 CREATE TABLE list_items (
   sid      INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
@@ -358,9 +359,10 @@ CREATE TRIGGER insert_lists
   AFTER INSERT ON lists
   BEGIN
     UPDATE lists
-      SET position = (
-        SELECT count(*) FROM lists WHERE parent_list_id = NEW.parent_list_id
-      )
+      SET position =
+        (
+          SELECT count(*) FROM lists WHERE parent_list_id = NEW.parent_list_id
+        )
       WHERE list_id = NEW.list_id;
   END;
 COMMIT;
