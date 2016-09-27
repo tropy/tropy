@@ -97,7 +97,7 @@ CREATE TABLE lists (
   UNIQUE (parent_list_id, name),
   UNIQUE (parent_list_id, position)
 );
-INSERT INTO "lists" VALUES(0,'',NULL,0,'2016-09-27 20:30:10','2016-09-27 20:30:10');
+INSERT INTO "lists" VALUES(0,'',NULL,0,'2016-09-27 21:23:27','2016-09-27 21:23:27');
 CREATE TABLE list_items (
   sid      INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
@@ -353,12 +353,17 @@ CREATE TRIGGER update_tags
     UPDATE tags SET tag_name = trim(tag_name)
       WHERE tag_name = NEW.tag_name;
   END;
+CREATE TRIGGER insert_lists_trim_name
+  AFTER INSERT ON lists
+  BEGIN
+    UPDATE lists SET name = trim(name)
+      WHERE list_id = NEW.list_id;
+  END;
 CREATE TRIGGER insert_lists_set_position
   AFTER INSERT ON lists
   FOR EACH ROW WHEN NEW.position = 0
   BEGIN
-    UPDATE lists SET name = trim(name),
-      position = 1 + coalesce(
+    UPDATE lists SET position = 1 + coalesce(
         (
           SELECT max(position)
           FROM lists
@@ -367,6 +372,32 @@ CREATE TRIGGER insert_lists_set_position
         0
       )
       WHERE list_id = NEW.list_id;
+  END;
+CREATE TRIGGER update_lists_trim_name
+  AFTER UPDATE ON lists
+  BEGIN
+    UPDATE lists SET name = trim(name)
+      WHERE list_id = NEW.list_id;
+  END;
+CREATE TRIGGER update_lists_check_cycle
+  BEFORE UPDATE ON lists
+  BEGIN
+    SELECT CASE (
+        WITH RECURSIVE
+          ancestors(id) AS (
+            SELECT parent_list_id
+              FROM lists
+              WHERE list_id = OLD.list_id
+            UNION
+            SELECT parent_list_id
+              FROM lists, ancestors
+              WHERE lists.list_id = ancestors.id
+          )
+          SELECT count(*) FROM ancestors WHERE id = OLD.list_id LIMIT 1
+      )
+      WHEN 1 THEN
+        RAISE(ABORT, 'Lists may not contain cycles')
+      END;
   END;
 COMMIT;
 PRAGMA foreign_keys=ON;

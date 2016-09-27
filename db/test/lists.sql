@@ -20,8 +20,8 @@ UPDATE OR IGNORE
   lists SET parent_list_id = list_id WHERE list_id = 3;
 
 -- Cycles
---UPDATE OR IGNORE
---  lists SET parent_list_id = 1 WHERE list_id = 0;
+UPDATE OR IGNORE
+  lists SET parent_list_id = 1 WHERE list_id = 0;
 
 
 -- Soft-delete
@@ -35,7 +35,7 @@ SELECT list_id AS deleted_list_id
 -- Ancestors
 WITH RECURSIVE
   ancestors(id) AS (
-    VALUES(6)
+    SELECT parent_list_id FROM lists WHERE list_id = 6
     UNION
     SELECT parent_list_id
       FROM lists, ancestors
