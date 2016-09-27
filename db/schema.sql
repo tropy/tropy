@@ -92,12 +92,12 @@ CREATE TABLE lists (
   position        INTEGER  NOT NULL DEFAULT 0,
   created_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted         BOOLEAN  DEFAULT FALSE,
 
-  UNIQUE (parent_list_id, deleted, name),
-  UNIQUE (parent_list_id, deleted, position)
+  CHECK (list_id <> parent_list_id),
+  UNIQUE (parent_list_id, name),
+  UNIQUE (parent_list_id, position)
 );
-INSERT INTO "lists" VALUES(0,'',NULL,0,'2016-09-27 13:52:31','2016-09-27 13:52:31','FALSE');
+INSERT INTO "lists" VALUES(0,'',NULL,0,'2016-09-27 20:30:10','2016-09-27 20:30:10');
 CREATE TABLE list_items (
   sid      INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
@@ -344,23 +344,21 @@ INSERT INTO "languages" VALUES('zu');
 CREATE TRIGGER insert_tags
   AFTER INSERT ON tags
   BEGIN
-    UPDATE tags
-      SET tag_name = trim(tag_name)
+    UPDATE tags SET tag_name = trim(tag_name)
       WHERE tag_name = NEW.tag_name;
   END;
 CREATE TRIGGER update_tags
   AFTER UPDATE ON tags
   BEGIN
-    UPDATE tags
-      SET tag_name = trim(tag_name)
+    UPDATE tags SET tag_name = trim(tag_name)
       WHERE tag_name = NEW.tag_name;
   END;
 CREATE TRIGGER insert_lists_set_position
   AFTER INSERT ON lists
-  FOR EACH ROW WHEN NEW.position IS NULL
+  FOR EACH ROW WHEN NEW.position = 0
   BEGIN
-    UPDATE lists
-      SET position = 1 + coalesce(
+    UPDATE lists SET name = trim(name),
+      position = 1 + coalesce(
         (
           SELECT max(position)
           FROM lists
