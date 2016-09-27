@@ -218,7 +218,7 @@ class Database extends EventEmitter {
 
 
 Database.defaults = {
-  application_id: '0x0fa1afe1',
+  application_id: '0xDAEDA105',
   encoding: 'UTF-8'
 }
 
