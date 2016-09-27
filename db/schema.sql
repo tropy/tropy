@@ -97,7 +97,7 @@ CREATE TABLE lists (
   UNIQUE (parent_list_id, deleted_at, name),
   UNIQUE (parent_list_id, deleted_at, position)
 );
-INSERT INTO "lists" VALUES(0,'',NULL,0,'2016-09-26 19:33:15','2016-09-26 19:33:15',NULL);
+INSERT INTO "lists" VALUES(0,'',NULL,0,'2016-09-26 20:23:34','2016-09-26 20:23:34',NULL);
 CREATE TABLE list_items (
   sid      INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
@@ -355,14 +355,19 @@ CREATE TRIGGER update_tags
       SET tag_name = trim(tag_name)
       WHERE tag_name = NEW.tag_name;
   END;
-CREATE TRIGGER insert_lists
+CREATE TRIGGER insert_lists_set_position
   AFTER INSERT ON lists
+  FOR EACH ROW WHEN NEW.position IS NULL
   BEGIN
     UPDATE lists
-      SET position =
+      SET position = 1 + coalesce(
         (
-          SELECT count(*) FROM lists WHERE parent_list_id = NEW.parent_list_id
-        )
+          SELECT max(position)
+          FROM lists
+          WHERE parent_list_id = NEW.parent_list_id
+        ),
+        0
+      )
       WHERE list_id = NEW.list_id;
   END;
 COMMIT;
