@@ -67,7 +67,7 @@ PRAGMA user_version=${version};
 
     .tap(([schema, version]) => {
       info(`schema migrated to #${version}`)
-      info(`schema written to #${schema}`)
+      info(`schema written to ${schema}`)
     })
 
     .finally(() => db.close())

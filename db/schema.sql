@@ -92,12 +92,12 @@ CREATE TABLE lists (
   position        INTEGER  NOT NULL DEFAULT 0,
   created_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted_at      NUMERIC,
+  deleted         BOOLEAN  DEFAULT FALSE,
 
-  UNIQUE (parent_list_id, deleted_at, name),
-  UNIQUE (parent_list_id, deleted_at, position)
+  UNIQUE (parent_list_id, deleted, name),
+  UNIQUE (parent_list_id, deleted, position)
 );
-INSERT INTO "lists" VALUES(0,'',NULL,0,'2016-09-26 20:23:34','2016-09-26 20:23:34',NULL);
+INSERT INTO "lists" VALUES(0,'',NULL,0,'2016-09-27 13:52:31','2016-09-27 13:52:31','FALSE');
 CREATE TABLE list_items (
   sid      INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,

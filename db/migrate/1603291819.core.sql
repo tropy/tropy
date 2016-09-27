@@ -96,10 +96,10 @@ CREATE TABLE lists (
   position        INTEGER  NOT NULL DEFAULT 0,
   created_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted_at      NUMERIC,
+  deleted         BOOLEAN  DEFAULT FALSE,
 
-  UNIQUE (parent_list_id, deleted_at, name),
-  UNIQUE (parent_list_id, deleted_at, position)
+  UNIQUE (parent_list_id, deleted, name),
+  UNIQUE (parent_list_id, deleted, position)
 );
 
 INSERT INTO lists (list_id, name, parent_list_id) VALUES (0, '', NULL);
