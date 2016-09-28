@@ -5,8 +5,33 @@ const { Command } = require('./command')
 const { CREATE, DELETE, LOAD } = require('../constants/list')
 const actions = require('../actions/list')
 
+function sort(children) {
+  return children ?
+    children
+      .split(/,/)
+      .reduce((res, nxt) => {
+        const [pos, id] = nxt.split(/:/).map(Number)
+        res[pos - 1] = id
+        return res
+      }, []) : []
+
+}
+
 class Load extends Command {
   static get action() { return LOAD }
+
+  *exec() {
+    const { db } = this.options
+
+    const lists = (yield call([db, db.all],
+      `SELECT l1.list_id AS id, l1.name, l1.parent_list_id AS parent,
+        group_concat(l2.position || ':' || l2.list_id) AS children
+        FROM lists l1 LEFT OUTER JOIN lists l2 ON l2.parent_list_id = l1.list_id
+        GROUP BY l1.list_id;
+      `)).map(list => ({ ...list, children: sort(list.children) }))
+
+    yield put(actions.insert(lists))
+  }
 }
 
 class Create extends Command {
@@ -63,5 +88,6 @@ class Delete extends Command {
 
 module.exports = {
   Create,
-  Delete
+  Delete,
+  Load
 }
