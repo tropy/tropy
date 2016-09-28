@@ -2,8 +2,12 @@
 
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-const { CREATE, DELETE } = require('../constants/list')
+const { CREATE, DELETE, LOAD } = require('../constants/list')
 const actions = require('../actions/list')
+
+class Load extends Command {
+  static get action() { return LOAD }
+}
 
 class Create extends Command {
   static get action() { return CREATE }

@@ -15,4 +15,5 @@ fields:
   photos: Photos
 
 activity:
-  persist: Saving …
+  project:
+    save: Saving …

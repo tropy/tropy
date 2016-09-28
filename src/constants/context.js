@@ -1,5 +1,5 @@
 'use strict'
 
 module.exports = {
-  SHOW: 'context:show'
+  SHOW: 'context.show'
 }

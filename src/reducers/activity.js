@@ -15,7 +15,7 @@ module.exports = {
         return {
           ...state,
           [seq]: {
-            id: seq, type: cmd, action: type, init: now
+            id: seq, type, init: now
           }
         }
       }

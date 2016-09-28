@@ -2,7 +2,7 @@
 
 module.exports = {
 
-  INSERT: 'vocab:insert',
-  UPDATE: 'vocab:update'
+  INSERT: 'vocab.insert',
+  UPDATE: 'vocab.update'
 
 }
