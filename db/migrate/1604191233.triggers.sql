@@ -47,7 +47,7 @@ CREATE TRIGGER update_lists_trim_name
       WHERE list_id = NEW.list_id;
   END;
 
-CREATE TRIGGER update_lists_check_cycle
+CREATE TRIGGER update_lists_cycle_check
   BEFORE UPDATE ON lists
   BEGIN
     SELECT CASE (

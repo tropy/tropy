@@ -94,10 +94,9 @@ CREATE TABLE lists (
   updated_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CHECK (list_id <> parent_list_id),
-  UNIQUE (parent_list_id, name),
-  UNIQUE (parent_list_id, position)
+  UNIQUE (parent_list_id, name)
 );
-INSERT INTO "lists" VALUES(0,'',NULL,0,'2016-09-27 21:23:27','2016-09-27 21:23:27');
+INSERT INTO "lists" VALUES(0,'',NULL,0,'2016-09-28 09:10:51','2016-09-28 09:10:51');
 CREATE TABLE list_items (
   sid      INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
@@ -396,7 +395,7 @@ CREATE TRIGGER update_lists_check_cycle
           SELECT count(*) FROM ancestors WHERE id = OLD.list_id LIMIT 1
       )
       WHEN 1 THEN
-        RAISE(ABORT, 'Lists may not contain cycles')
+        RAISE(ROLLBACK, 'Lists may not contain cycles')
       END;
   END;
 COMMIT;

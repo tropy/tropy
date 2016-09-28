@@ -98,8 +98,7 @@ CREATE TABLE lists (
   updated_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CHECK (list_id <> parent_list_id),
-  UNIQUE (parent_list_id, name),
-  UNIQUE (parent_list_id, position)
+  UNIQUE (parent_list_id, name)
 );
 
 INSERT INTO lists (list_id, name, parent_list_id) VALUES (0, '', NULL);
