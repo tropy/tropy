@@ -13,6 +13,11 @@
   .sidebar-body {
     flex: 1 1 auto;
     overflow-y: scroll;
+    padding-top: $space-xs;
+
+      .frameless & {
+        padding-top: 0;
+      }
   }
 
   h2 {
