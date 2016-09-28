@@ -22,7 +22,7 @@ function save(payload, meta) {
     type: SAVE,
     payload,
     meta: {
-      persist: true,
+      cmd: 'persist',
       history: true,
       ...meta
     }

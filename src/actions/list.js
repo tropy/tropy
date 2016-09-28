@@ -31,7 +31,7 @@ module.exports = {
       type: CREATE,
       payload,
       meta: {
-        persist: true,
+        cmd: 'persist',
         history: true,
         ...meta
       }
@@ -47,7 +47,7 @@ module.exports = {
   },
 
   save(payload, meta) {
-    return { type: SAVE, payload, meta: { persist: true, ...meta } }
+    return { type: SAVE, payload, meta: { cmd: 'persist', ...meta } }
   },
 
   delete(payload, meta) {
@@ -55,7 +55,7 @@ module.exports = {
       type: DELETE,
       payload,
       meta: {
-        persist: true,
+        cmd: 'persist',
         history: true,
         ...meta
       }

@@ -18,11 +18,8 @@ const { fail } = require('../notify')
 
 const TOO_LONG = ARGS.dev ? 500 : 1500
 
-const persistable = (action) =>
-  !action.error && action.meta && action.meta.persist
-
-const retrievable = (action) =>
-  !action.error && action.meta && action.meta.retrieve
+const commands = (action) =>
+  !action.error && action.meta && action.meta.cmd
 
 function *open(file) {
   let db, id
@@ -41,10 +38,10 @@ function *open(file) {
     yield put(drop())
     yield call(nav.restore, id)
 
-    yield fork(every, retrievable, retrieval, db)
+    // todo
     yield put(list.load(null))
 
-    yield* every(persistable, persistence, db, id)
+    yield* every(commands, command, db, id)
 
   } catch (error) {
     warn(`unexpected error in open: ${error.message}`)
@@ -59,10 +56,8 @@ function *open(file) {
 }
 
 function *retrieval(db, action) {
-  const { type } = action
-
   try {
-    switch (type) {
+    switch (action.type) {
       case LOAD: {
         const res = yield call([db, db.all],
           'SELECT list_id AS id, name, parent_list_id AS parent, position FROM lists WHERE parent_list_id NOT NULL'
@@ -75,12 +70,12 @@ function *retrieval(db, action) {
     }
 
   } catch (error) {
-    warn(`unexpected error retrieval: ${error.message}`)
+    warn(`unexpected error *retrieval: ${error.message}`)
     debug(error.stack)
   }
 }
 
-function *persistence(db, id, action) {
+function *command(db, id, action) {
   try {
     var cmd = handle(action, { db, id })
 
@@ -88,10 +83,10 @@ function *persistence(db, id, action) {
     yield put(done(action, cmd.error))
 
     if (cmd.error) fail(cmd.error, action.type)
-    if (cmd.duration > TOO_LONG) warn('SLOW COMMAND', cmd)
+    if (cmd.duration > TOO_LONG) warn('SLOW', cmd)
 
   } catch (error) {
-    warn(`unexpected error in *persistence: ${error.message}`)
+    warn(`unexpected error in *command: ${error.message}`)
     debug(error.stack)
   }
 }
