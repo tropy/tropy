@@ -24,7 +24,7 @@ $resizable-bg: #9bebeb; // dev only
     top: 0;
     bottom: 0;
     width: $resizable-threshold;
-    cursor: col-resize;
+    cursor: ew-resize;
   }
 
   &-left {
@@ -39,7 +39,7 @@ $resizable-bg: #9bebeb; // dev only
     left: 0;
     right: 0;
     height: $resizable-threshold;
-    cursor: row-resize;
+    cursor: ns-resize;
   }
 
   &-top {
