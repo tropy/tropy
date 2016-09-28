@@ -89,31 +89,8 @@ SELECT l1.list_id, l1.name, json_group_array(l2.list_id) AS children
   GROUP BY l1.list_id
   ORDER BY l1.position ASC;
 
--- Sub-tree with child ids (unordered, with position)
-SELECT l1.list_id, l1.name,
-  json_group_array(json_array(l2.position, l2.list_id)) AS children
-  FROM lists l1 LEFT OUTER JOIN lists l2 ON l2.parent_list_id = l1.list_id
-  WHERE l1.parent_list_id = 0
-  GROUP BY l1.list_id
-  ORDER BY l1.position ASC;
-
--- Sub-tree with child ids (unordered, with position)
+-- All lists with child ids (unordered, with position)
 SELECT l1.list_id, l1.name,
   group_concat(l2.position || ':' || l2.list_id) AS children
   FROM lists l1 LEFT OUTER JOIN lists l2 ON l2.parent_list_id = l1.list_id
-  WHERE l1.parent_list_id = 0
-  GROUP BY l1.list_id
-  ORDER BY l1.position ASC;
-
--- Sub-tree with child ids (ordered, via sub-query)
---WITH
---  children(list_id, parent_list_id) AS (
---    SELECT list_id, parent_list_id
---      FROM lists
---      ORDER BY parent_list_id, position ASC
---  )
---  SELECT p.list_id, p.name, json_group_array(c.list_id) AS children
---    FROM lists p LEFT OUTER JOIN children c ON c.parent_list_id = p.list_id
---    WHERE p.parent_list_id = 0
---    GROUP BY p.list_id
---    ORDER BY p.position ASC;
+  GROUP BY l1.list_id;
