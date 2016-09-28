@@ -53,10 +53,11 @@ const ProjectSidebar = ({
   active,
   onSelect,
   onChange,
+  toolbar,
   showListsMenu
 }) => (
   <Sidebar>
-    <Toolbar draggable/>
+    { toolbar ? <Toolbar draggable/> : undefined }
     <div className="sidebar-body">
       <section>
         <nav>
@@ -92,6 +93,7 @@ const ProjectSidebar = ({
 
 ProjectSidebar.propTypes = {
   active: PropTypes.bool,
+  toolbar: PropTypes.bool,
   project: PropTypes.shape({
     name: PropTypes.string.isRequired
   }).isRequired,

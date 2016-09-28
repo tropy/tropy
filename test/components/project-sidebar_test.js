@@ -8,10 +8,10 @@ describe('ProjectSidebar', () => {
 
   const project = { name: 'My Research' }
 
-  it('renders a toolbar', () => {
+  it('renders a toolbar when prop is set', () => {
     expect(
       shallow(
-        <ProjectSidebar.WrappedComponent project={project}/>
+        <ProjectSidebar.WrappedComponent project={project} toolbar/>
       )
     ).to.have.exactly(1).descendants('Toolbar')
   })
