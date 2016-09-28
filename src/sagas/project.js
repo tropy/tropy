@@ -30,7 +30,9 @@ function *open(file) {
     id = project.id
 
     yield put(opened({ file: db.path, ...project }))
-    yield fork(init, db, id)
+    yield call(nav.restore, id)
+
+    yield fork(init)
 
     yield* every(action => (
       !action.error && action.meta && action.meta.cmd
@@ -49,10 +51,11 @@ function *open(file) {
   }
 }
 
-function *init(db, id) {
-  yield put(drop())
-  yield call(nav.restore, id)
-  yield put(list.load())
+function *init() {
+  yield [
+    put(drop()),
+    put(list.load())
+  ]
 }
 
 function *command(db, id, action) {
