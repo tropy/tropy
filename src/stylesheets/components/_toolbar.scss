@@ -19,15 +19,16 @@ $toolbar-bg: #ff7376;
     padding-top: 0;
   }
 
-  .frameless & {
     &.draggable {
+      margin-bottom: $space-min;
+
+      .frameless & {
       -webkit-app-region: drag;
       -webkit-user-select: none;
       cursor: default;
       background: $toolbar-bg;
       position: relative;
       z-index: $zindex-draggable;
-      margin-bottom: $space-min;
 
       .no-drag,
       .btn {
