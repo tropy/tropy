@@ -1,7 +1,7 @@
 'use strict'
 
 const {
-  NEW, INSERT, REMOVE, UPDATE
+  INSERT, REMOVE, UPDATE
 } = require('../constants/list')
 
 const {
@@ -14,8 +14,6 @@ const { into, map } = require('transducers.js')
 module.exports = {
   lists(state = {}, { type, payload }) {
     switch (type) {
-      case NEW:
-        return { ...state, [payload.id]: payload }
 
       case INSERT:
         return into({ ...state }, map(list => [list.id, list]), payload)
