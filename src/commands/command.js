@@ -15,15 +15,21 @@ class Command {
     return this.done ? this.done - this.init : 0
   }
 
+  get reversible() {
+    return this.undo && this.action.meta.history
+  }
+
   *execute() {
     try {
       this.init = performance.now()
 
-      const undo = yield this.exec()
+      this.result = yield this.exec()
 
-      if (undo && this.action.meta.history) {
-        yield put(tick({ undo, redo: this.action }))
+      if (this.reversible) {
+        yield put(tick({ undo: this.undo, redo: this.redo || this.action }))
       }
+
+      return this
 
     } catch (error) {
       this.error = error

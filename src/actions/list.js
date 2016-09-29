@@ -1,7 +1,7 @@
 'use strict'
 
 const {
-  NEW, CREATE, INSERT, REMOVE, LOAD, SAVE, DELETE, EDIT, UPDATE
+  NEW, CREATE, INSERT, REMOVE, RESTORE, PRUNE, LOAD, SAVE, DELETE, EDIT, UPDATE
 } = require('../constants/list')
 
 let tseq = 0
@@ -20,10 +20,6 @@ module.exports = {
       },
       meta
     }
-  },
-
-  drop(payload, meta) {
-    return { type: CREATE, payload, meta }
   },
 
   create(payload, meta) {
@@ -60,6 +56,14 @@ module.exports = {
         ...meta
       }
     }
+  },
+
+  prune(payload, meta) {
+    return { type: PRUNE, payload, meta: { cmd: true, ...meta } }
+  },
+
+  restore(payload, meta) {
+    return { type: RESTORE, payload, meta: { cmd: true, ...meta } }
   },
 
   load(payload, meta) {

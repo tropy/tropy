@@ -12,7 +12,7 @@ const { history } = require('./history')
 const nav = require('./nav')
 const list = require('../actions/list')
 const { done } = require('../actions/activity')
-const { handle } = require('../commands')
+const { exec } = require('../commands')
 const { fail } = require('../notify')
 
 const TOO_LONG = ARGS.dev ? 500 : 1500
@@ -60,10 +60,9 @@ function *init() {
 
 function *command(db, id, action) {
   try {
-    var cmd = handle(action, { db, id })
+    var cmd = yield exec(action, { db, id })
 
-    yield cmd.execute()
-    yield put(done(action, cmd.error))
+    yield put(done(action, cmd.error || cmd.result))
 
     if (cmd.error) fail(cmd.error, action.type)
     if (cmd.duration > TOO_LONG) warn('SLOW', cmd)

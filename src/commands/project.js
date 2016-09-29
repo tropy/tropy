@@ -19,7 +19,7 @@ class Save extends Command {
       'UPDATE project SET name = ? WHERE project_id = ?', payload.name, id
     )
 
-    return actions.save({ name: this.original.name })
+    this.undo = actions.save({ name: this.original.name })
   }
 
   *abort() {

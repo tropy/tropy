@@ -8,7 +8,7 @@ module.exports = {
   ...seq(require('./project'), handles),
   ...seq(require('./list'), handles),
 
-  handle(action, options) {
-    return new module.exports[action.type](action, options)
+  exec(action, options) {
+    return new module.exports[action.type](action, options).execute()
   }
 }
