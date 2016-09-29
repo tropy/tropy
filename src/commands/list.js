@@ -23,12 +23,17 @@ class Load extends Command {
   *exec() {
     const { db } = this.options
 
-    const lists = (yield call([db, db.all],
+    const lists = []
+
+    yield call([db, db.each],
       `SELECT l1.list_id AS id, l1.name, l1.parent_list_id AS parent,
         group_concat(l2.position || ':' || l2.list_id) AS children
         FROM lists l1 LEFT OUTER JOIN lists l2 ON l2.parent_list_id = l1.list_id
         GROUP BY l1.list_id;
-      `)).map(list => ({ ...list, children: sort(list.children) }))
+      `,
+      list => {
+        lists.push({ ...list, children: sort(list.children) })
+      })
 
     yield put(actions.insert(lists))
   }
@@ -48,7 +53,7 @@ class Create extends Command {
 
     // TODO put this in a transaction
     // TODO id, position
-    const { lastID: id } = yield call([db, db.run],
+    const { id } = yield call([db, db.run],
       'INSERT INTO lists (name) VALUES (?)', data.name)
 
     const list = yield call([db, db.get],

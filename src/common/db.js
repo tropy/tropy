@@ -194,6 +194,10 @@ class Database extends EventEmitter {
     return this.seq(conn => conn.all(...args))
   }
 
+  each(...args) {
+    return this.seq(conn => conn.each(...args))
+  }
+
   get(...args) {
     return this.seq(conn => conn.get(...args))
   }
@@ -256,6 +260,10 @@ class Connection {
 
   all(sql, ...params) {
     return this.db.allAsync(sql, flatten(params))
+  }
+
+  each(...args) {
+    return this.db.eachAsync(...args)
   }
 
   get(sql, ...params) {
@@ -344,6 +352,10 @@ class Statement {
 
   all(...params) {
     return this.stmt.allAsync(flatten(params))
+  }
+
+  each(...args) {
+    return this.stmt.eachAsync(...args)
   }
 }
 
