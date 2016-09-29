@@ -29,8 +29,6 @@ class Command {
         yield put(tick({ undo: this.undo, redo: this.redo || this.action }))
       }
 
-      return this
-
     } catch (error) {
       this.error = error
       yield this.abort()
@@ -39,6 +37,8 @@ class Command {
       this.done = performance.now()
       freeze(this)
     }
+
+    return this
   }
 
   *abort() {

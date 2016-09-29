@@ -21,7 +21,7 @@ Database.prototype.runAsync = function (...args) {
   return new bb((resolve, reject) => {
     this.run(...args, function (error) {
       if (error) reject(error)
-      else resolve({ id: this.id, changes: this.changes })
+      else resolve({ id: this.lastID, changes: this.changes })
     })
   })
 }
