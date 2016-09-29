@@ -1,15 +1,15 @@
 'use strict'
 
-const { EDITABLE } = require('../constants/ui')
+const { EDIT } = require('../constants/ui')
 
-const editable = {
+const edit = {
   cancel(payload, meta) {
-    return { type: EDITABLE.CANCEL, payload, meta }
+    return { type: EDIT.CANCEL, payload, meta }
   }
 }
 
 module.exports = {
   ui: {
-    editable
+    edit
   }
 }

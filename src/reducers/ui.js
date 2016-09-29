@@ -3,12 +3,12 @@
 const { combineReducers: combine } = require('redux')
 const { LIST, UI } = require('../constants')
 
-function editable(state = {}, { type, payload }) {
+function edit(state = {}, { type, payload }) {
   switch (type) {
     case LIST.NEW:
       return { list: payload }
 
-    case UI.EDITABLE.CANCEL:
+    case UI.EDIT.CANCEL:
       return {}
 
     default:
@@ -18,6 +18,6 @@ function editable(state = {}, { type, payload }) {
 
 module.exports = {
   ui: combine({
-    editable
+    edit
   })
 }

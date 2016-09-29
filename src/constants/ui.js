@@ -1,7 +1,8 @@
 'use strict'
 
 module.exports = {
-  EDITABLE: {
-    CANCEL: 'ui.editable.cancel'
+  EDIT: {
+    START: 'ui.edit.start',
+    CANCEL: 'ui.edit.cancel'
   }
 }

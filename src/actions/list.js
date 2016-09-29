@@ -4,22 +4,10 @@ const {
   NEW, CREATE, INSERT, REMOVE, RESTORE, PRUNE, LOAD, SAVE, DELETE, EDIT, UPDATE
 } = require('../constants/list')
 
-let tseq = 0
-
 module.exports = {
 
   new(payload, meta) {
-    return {
-      type: NEW,
-      payload: {
-        id: --tseq,
-        name: '',
-        parent: 0,
-        ...payload,
-        tmp: true
-      },
-      meta
-    }
+    return { type: NEW, payload: { name: '', ...payload, }, meta }
   },
 
   create(payload, meta) {
