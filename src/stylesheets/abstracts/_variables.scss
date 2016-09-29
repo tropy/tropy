@@ -47,7 +47,7 @@ $space-xxl: 48px;
 @if $platform == linux {
   $toolbar-height: 46px !global;
 } @else if $platform == win32 {
-  $toolbar-height: 38px !global; // todo
+  $toolbar-height: 30px !global;
 } @else {
   $toolbar-height: 38px !global; // Darwin
 }
