@@ -7,9 +7,8 @@ const { connect } = require('react-redux')
 const { Editable } = require('./editable')
 const { IconFolder } = require('./icons')
 const { getChildren } = require('../selectors/list')
-const { create, save, remove } = require('../actions/list')
-const { edit } = require('../actions/ui')
-const { ROOT } = require('../constants/list')
+const { create, save, remove, edit } = require('../actions/list')
+const { edit: { cancel } } = require('../actions/ui')
 const { noop } = require('../common/util')
 const nav = require('../actions/nav')
 const ctx = require('../actions/context')
@@ -22,16 +21,18 @@ class List extends Component {
     list: PropTypes.object,
     active: PropTypes.bool,
     editing: PropTypes.bool,
+    onActivate: PropTypes.func,
     onCancel: PropTypes.func,
     onContextMenu: PropTypes.func,
-    onSelect: PropTypes.func,
+    onRename: PropTypes.func,
     onUpdate: PropTypes.func
   }
 
   static defaultProps = {
+    onActivate: noop,
     onCancel: noop,
     onContextMenu: noop,
-    onSelect: noop,
+    onRename: noop,
     onUpdate: noop
   }
 
@@ -39,10 +40,14 @@ class List extends Component {
     this.props.onUpdate(this.props.list.id, { name })
   }
 
-  select = () => {
+  activate = () => {
     if (!this.props.active) {
-      this.props.onSelect(this.props.list.id)
+      this.props.onActivate(this.props.list.id)
     }
+  }
+
+  rename = () => {
+    this.props.onRename(this.props.list)
   }
 
   cancel = () => {
@@ -60,13 +65,14 @@ class List extends Component {
       <li
         className={cn({ list: true, active })}
         onContextMenu={this.popup}
-        onClick={this.select}>
+        onClick={this.activate}>
         <IconFolder/>
         <div className="title">
           <Editable
             value={list.name}
             required
             editing={editing}
+            onActivate={this.rename}
             onChange={this.update}
             onCancel={this.cancel}/>
         </div>
@@ -82,6 +88,7 @@ const Lists = ({
   onUpdate,
   onCancel,
   onSelect,
+  onRename,
   showListMenu,
   editing,
   parent
@@ -97,6 +104,7 @@ const Lists = ({
           onContextMenu={showListMenu}
           onUpdate={onUpdate}
           onSelect={onSelect}
+          onRename={onRename}
           onCancel={onCancel}/>
       ))
     }
@@ -116,16 +124,13 @@ const Lists = ({
 Lists.propTypes = {
   lists: PropTypes.array,
   selected: PropTypes.number,
-  parent: PropTypes.number,
+  parent: PropTypes.number.isRequired,
   editing: PropTypes.object,
   onCancel: PropTypes.func,
   onSelect: PropTypes.func,
+  onRename: PropTypes.func,
   onUpdate: PropTypes.func,
   showListMenu: PropTypes.func
-}
-
-Lists.defaultProps = {
-  parent: ROOT
 }
 
 module.exports = {
@@ -142,18 +147,23 @@ module.exports = {
     },
 
     (dispatch, props) => ({
-      onCancel(list) {
-        dispatch(edit.cancel({ list }))
+      onCancel() {
+        dispatch(cancel())
       },
 
       onSelect(list) {
         dispatch(nav.update({ list }))
       },
 
-      onUpdate({ id, parent }, values) {
+      onRename(id) {
+        dispatch(edit({ id }))
+      },
+
+      onUpdate(id, values) {
         dispatch(id ?
           save([id, values]) :
           create({ ...values, parent: props.parent }))
+        dispatch(cancel())
       },
 
       showListMenu(event, target) {

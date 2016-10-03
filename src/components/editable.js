@@ -10,11 +10,13 @@ class Editable extends Component {
     value: PropTypes.string,
     required: PropTypes.bool,
     editing: PropTypes.bool,
+    onActivate: PropTypes.func,
     onChange: PropTypes.func.isRequired,
     onCancel: PropTypes.func
   }
 
   static defaultProps = {
+    onActivate: noop,
     onCancel: noop
   }
 
@@ -22,7 +24,6 @@ class Editable extends Component {
     super(props)
 
     this.state = {
-      editing: this.props.editing,
       value: props.value
     }
   }
@@ -39,13 +40,7 @@ class Editable extends Component {
     this.setState({ value: event.target.value })
   }
 
-  start = () => {
-    this.setState({ editing: true })
-  }
-
   stop = () => {
-    this.setState({ editing: this.props.editing })
-
     if (this.changed) {
       this.props.onChange(this.state.value)
     } else {
@@ -54,7 +49,7 @@ class Editable extends Component {
   }
 
   cancel() {
-    this.setState({ editing: false, value: this.props.value })
+    this.setState({ value: this.props.value })
     this.props.onCancel()
   }
 
@@ -72,11 +67,11 @@ class Editable extends Component {
 
 
   componentWillReceiveProps({ value }) {
-    this.setState({ value, editing: false })
+    this.setState({ value })
   }
 
   render() {
-    return (this.state.editing) ? (
+    return (this.props.editing) ? (
       <input
         className="editable editable-control"
         type="text"
@@ -88,7 +83,7 @@ class Editable extends Component {
     ) : (
       <span
         className="editable"
-        onDoubleClick={this.start}>
+        onDoubleClick={this.props.onActivate}>
         {this.props.value}
       </span>
     )

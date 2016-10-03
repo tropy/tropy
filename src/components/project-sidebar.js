@@ -12,6 +12,7 @@ const { Lists } = require('./lists')
 const { Sidebar } = require('./sidebar')
 const { save } = require('../actions/project')
 const { update } = require('../actions/nav')
+const { ROOT } = require('../constants/list')
 const context = require('../actions/context')
 const cn = require('classnames')
 
@@ -71,7 +72,7 @@ const ProjectSidebar = ({
       <section onContextMenu={showListsMenu}>
         <h2><FormattedMessage id="sidebar.lists"/></h2>
         <nav>
-          <Lists/>
+          <Lists parent={ROOT}/>
         </nav>
       </section>
       <section>

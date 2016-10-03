@@ -47,23 +47,25 @@ class Create extends Command {
   *exec() {
     const { payload } = this.action
     const { db } = this.options
-    const [tmp, data] = payload
-
-    if (tmp) {
-      yield put(actions.remove(tmp))
-    }
+    const { name, parent: pid } = payload
 
     // TODO put this in a transaction and remove abort
-
     this.result = yield call([db, db.run],
-      'INSERT INTO lists (name, parent_list_id) VALUES (?, ?)',
-      data.name, data.parent)
+      'INSERT INTO lists (name, parent_list_id) VALUES (?, ?)', name, pid)
 
     const list = yield call([db, db.get],
       'SELECT list_id AS id, name, parent_list_id AS parent FROM lists WHERE id = ?',
       this.result.id)
 
-    yield put(actions.insert([list]))
+    const parent = (yield select()).lists[pid]
+
+    yield [
+      put(actions.insert([list])),
+      put(actions.update({
+        id: parent.id,
+        children: [...parent.children, list.id]
+      }))
+    ]
 
     this.undo = actions.delete(list.id)
     this.redo = actions.restore(list)
