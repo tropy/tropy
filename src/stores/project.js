@@ -12,6 +12,7 @@ const { nav } = require('../reducers/nav')
 const { intl } = require('../reducers/intl')
 const { history } = require('../reducers/history')
 const { lists } = require('../reducers/lists')
+const { ui } = require('../reducers/ui')
 const { activities } = require('../reducers/activity')
 const { seq, debounce, log } = require('../middleware')
 
@@ -31,6 +32,7 @@ module.exports = {
     const reducer = combineReducers({
       intl,
       nav,
+      ui,
       activities,
       project,
       lists,

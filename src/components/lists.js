@@ -6,8 +6,9 @@ const { PropTypes, Component } = React
 const { connect } = require('react-redux')
 const { Editable } = require('./editable')
 const { IconFolder } = require('./icons')
-const { children } = require('../selectors/list')
+const { getChildren } = require('../selectors/list')
 const { create, save, remove } = require('../actions/list')
+const { ROOT } = require('../constants/list')
 const { noop } = require('../common/util')
 const nav = require('../actions/nav')
 const ctx = require('../actions/context')
@@ -19,6 +20,7 @@ class List extends Component {
   static propTypes = {
     list: PropTypes.object,
     active: PropTypes.bool,
+    editing: PropTypes.bool,
     onCancel: PropTypes.func,
     onContextMenu: PropTypes.func,
     onSelect: PropTypes.func,
@@ -33,7 +35,7 @@ class List extends Component {
   }
 
   update = (name) => {
-    this.props.onUpdate(this.props.list, { name })
+    this.props.onUpdate(this.props.list.id, { name })
   }
 
   select = () => {
@@ -51,7 +53,7 @@ class List extends Component {
   }
 
   render() {
-    const { list, active } = this.props
+    const { list, active, editing } = this.props
 
     return (
       <li
@@ -63,7 +65,7 @@ class List extends Component {
           <Editable
             value={list.name}
             required
-            editing={list.tmp}
+            editing={editing}
             onChange={this.update}
             onCancel={this.cancel}/>
         </div>
@@ -75,18 +77,21 @@ class List extends Component {
 
 const Lists = ({
   lists,
-  current,
+  selected,
   onUpdate,
   onCancel,
   onSelect,
-  showListMenu
+  showListMenu,
+  editing,
+  parent
 }) => (
   <ol className="lists">
     {
       lists.map(list => (
         <List
           key={list.id}
-          active={current === list.id}
+          active={selected === list.id}
+          editing={editing && editing.id === list.id}
           list={list}
           onContextMenu={showListMenu}
           onUpdate={onUpdate}
@@ -94,29 +99,44 @@ const Lists = ({
           onCancel={onCancel}/>
       ))
     }
+    {
+      editing && editing.parent === parent ? (
+        <List
+          key={editing.parent}
+          list={editing}
+          editing
+          onUpdate={onUpdate}
+          onCancel={onCancel}/>
+      ) : undefined
+    }
   </ol>
 )
 
 Lists.propTypes = {
   lists: PropTypes.array,
-  current: PropTypes.number,
+  selected: PropTypes.number,
   parent: PropTypes.number,
-  tmp: PropTypes.bool,
+  editing: PropTypes.object,
   onCancel: PropTypes.func,
   onSelect: PropTypes.func,
   onUpdate: PropTypes.func,
   showListMenu: PropTypes.func
 }
 
+Lists.defaultProps = {
+  parent: ROOT
+}
+
 module.exports = {
   Lists: connect(
 
     () => {
-      const selector = children()
+      const children = getChildren()
 
       return (state, props) => ({
-        current: state.nav.list,
-        lists: selector(state, props)
+        selected: state.nav.list,
+        editing: state.ui.edit.list,
+        lists: children(state, props)
       })
     },
 
@@ -126,11 +146,13 @@ module.exports = {
       },
 
       onSelect(list) {
-        if (!props.tmp) dispatch(nav.update({ list }))
+        dispatch(nav.update({ list }))
       },
 
-      onUpdate({ id, tmp }, values) {
-        dispatch(tmp ? create([id, values]) : save([id, values]))
+      onUpdate({ id, parent }, values) {
+        dispatch(id ?
+          save([id, values]) :
+          create({ ...values, parent: props.parent }))
       },
 
       showListMenu(event, target) {

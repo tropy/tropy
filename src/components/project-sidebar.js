@@ -71,8 +71,7 @@ const ProjectSidebar = ({
       <section onContextMenu={showListsMenu}>
         <h2><FormattedMessage id="sidebar.lists"/></h2>
         <nav>
-          <Lists parent={0}/>
-          <Lists parent={0} tmp/>
+          <Lists/>
         </nav>
       </section>
       <section>

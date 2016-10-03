@@ -1,13 +1,22 @@
 'use strict'
 
 const {
-  NEW, CREATE, INSERT, REMOVE, RESTORE, PRUNE, LOAD, SAVE, DELETE, EDIT, UPDATE
+  CREATE, INSERT, REMOVE, SAVE, DELETE, RESTORE, LOAD, UPDATE, PRUNE, ROOT
 } = require('../constants/list')
+
+const { EDIT } = require('../constants/ui')
+
 
 module.exports = {
 
   new(payload, meta) {
-    return { type: NEW, payload: { name: '', ...payload, }, meta }
+    return {
+      type: EDIT.START,
+      payload: {
+        list: { name: '', parent: ROOT, ...payload, }
+      },
+      meta
+    }
   },
 
   create(payload, meta) {
@@ -59,7 +68,13 @@ module.exports = {
   },
 
   edit(payload, meta) {
-    return { type: EDIT, payload, meta }
+    return {
+      type: EDIT.START,
+      payload: {
+        list: { ...payload }
+      },
+      meta
+    }
   },
 
   update(payload, meta) {

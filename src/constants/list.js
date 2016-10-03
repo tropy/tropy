@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = {
-  NEW: 'list.new',
+  ROOT: 0,
 
   CREATE: 'list.create',
   DELETE: 'list.delete',
@@ -12,7 +12,6 @@ module.exports = {
   REMOVE: 'list.remove',
 
   SAVE: 'list.save',
-  EDIT: 'list.edit',
   UPDATE: 'list.update',
 
   LOAD: 'list.load',

@@ -1,14 +1,14 @@
 'use strict'
 
 const { combineReducers: combine } = require('redux')
-const { LIST, UI } = require('../constants')
+const { EDIT } = require('../constants/ui')
 
 function edit(state = {}, { type, payload }) {
   switch (type) {
-    case LIST.NEW:
-      return { list: payload }
+    case EDIT.START:
+      return { ...payload }
 
-    case UI.EDIT.CANCEL:
+    case EDIT.CANCEL:
       return {}
 
     default:
