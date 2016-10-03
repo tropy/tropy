@@ -9,7 +9,5 @@ const edit = {
 }
 
 module.exports = {
-  ui: {
-    edit
-  }
+  edit
 }

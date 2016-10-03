@@ -8,6 +8,7 @@ const { Editable } = require('./editable')
 const { IconFolder } = require('./icons')
 const { getChildren } = require('../selectors/list')
 const { create, save, remove } = require('../actions/list')
+const { edit } = require('../actions/ui')
 const { ROOT } = require('../constants/list')
 const { noop } = require('../common/util')
 const nav = require('../actions/nav')
@@ -141,8 +142,8 @@ module.exports = {
     },
 
     (dispatch, props) => ({
-      onCancel({ id, tmp }) {
-        if (tmp) dispatch(remove(id))
+      onCancel(list) {
+        dispatch(edit.cancel({ list }))
       },
 
       onSelect(list) {
