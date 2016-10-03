@@ -40,7 +40,7 @@ module.exports = {
   },
 
   *ipc() {
-    yield fork(every, '*', module.exports.forward)
+    yield every('*', module.exports.forward)
     yield fork(module.exports.receive)
   }
 

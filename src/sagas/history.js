@@ -1,7 +1,7 @@
 'use strict'
 
 const { takeEvery: every } = require('redux-saga')
-const { fork, put, select } = require('redux-saga/effects')
+const { put, select } = require('redux-saga/effects')
 const { warn, debug } = require('../common/log')
 const { undone, redone } = require('../selectors/history')
 const { UNDO, REDO } = require('../constants/history')
@@ -29,8 +29,8 @@ module.exports = {
   },
 
   *history() {
-    yield fork(every, UNDO, module.exports.undo)
-    yield fork(every, REDO, module.exports.redo)
+    yield every(UNDO, module.exports.undo)
+    yield every(REDO, module.exports.redo)
   }
 
 }
