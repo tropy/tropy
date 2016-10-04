@@ -144,8 +144,8 @@ module.exports = {
 
       return (state, props) => ({
         selected: state.nav.list,
-        context: state.ui.context.scope === 'list' &&
-          state.ui.context.event.target,
+        context: (state.ui.context.scope === 'list') ?
+          state.ui.context.event.target : undefined,
         editing: state.ui.edit.list,
         lists: children(state, props)
       })
