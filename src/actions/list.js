@@ -31,7 +31,7 @@ module.exports = {
     }
   },
 
-  insert(payload, meta) {
+  insert(payload, meta = {}) {
     return { type: INSERT, payload, meta }
   },
 

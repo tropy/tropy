@@ -4,10 +4,6 @@ const {
   INSERT, LOAD, REMOVE, UPDATE
 } = require('../constants/list')
 
-const {
-  OPENED
-} = require('../constants/project')
-
 const { omit } = require('../common/util')
 const { into, map } = require('transducers.js')
 
@@ -16,10 +12,28 @@ module.exports = {
     switch (type) {
       case LOAD:
         return (meta.done && !error) ?
-          into({ ...state }, map(list => [list.id, list]), payload) : state
+          into({ ...state }, map(list => [list.id, list]), payload) :
+          {}
 
-      case INSERT:
-        return into({ ...state }, map(list => [list.id, list]), payload)
+      case INSERT: {
+        const parent = state[payload.parent]
+        const idx = meta.position - 1
+
+        return {
+          ...state,
+
+          [parent.id]: {
+            ...parent,
+            children: [
+              ...parent.children.slice(0, idx),
+              payload.id,
+              ...parent.children.slice(idx)
+            ]
+          },
+
+          [payload.id]: payload
+        }
+      }
 
       case REMOVE:
         return omit(state, [payload])
@@ -32,9 +46,6 @@ module.exports = {
             ...payload
           }
         }
-
-      case OPENED:
-        return {}
 
       default:
         return state

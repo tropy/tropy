@@ -4,28 +4,35 @@ const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { CREATE, DELETE, LOAD, PRUNE, RESTORE } = require('../constants/list')
 const actions = require('../actions/list')
+const get = require('../selectors/list')
 
+const List = {
 
-class Load extends Command {
-  static get action() { return LOAD }
-
-  *exec() {
-    const { db } = this.options
-
+  async all(db) {
     const lists = []
 
-    yield call([db, db.each],
-      `SELECT l1.list_id AS id, l1.name, l1.parent_list_id AS parent,
+    await db.each(`
+      SELECT l1.list_id AS id, l1.name, l1.parent_list_id AS parent,
         group_concat(l2.position || ':' || l2.list_id) AS children
-        FROM lists l1 LEFT OUTER JOIN lists l2 ON l2.parent_list_id = l1.list_id
-        GROUP BY l1.list_id;
+      FROM lists l1 LEFT OUTER JOIN lists l2 ON l2.parent_list_id = l1.list_id
+      GROUP BY l1.list_id;
       `,
       list => {
-        lists.push({ ...list, children: this.sort(list.children) })
+        lists.push({ ...list, children: List.sort(list.children) })
       })
 
     return lists
-  }
+  },
+
+  async create(db, { name, parent, position }) {
+    const { id } = await db.run(
+      'INSERT INTO lists (name, parent_list_id, position) VALUES (?, ?, ?)',
+      name, parent, position)
+
+    return { id, name, parent }
+  },
+
+
 
   sort(children) {
     return children ?
@@ -41,6 +48,16 @@ class Load extends Command {
 }
 
 
+class Load extends Command {
+  static get action() { return LOAD }
+
+  *exec() {
+    const { db } = this.options
+    return (yield call(List.all, db))
+  }
+}
+
+
 class Create extends Command {
   static get action() { return CREATE }
 
@@ -49,39 +66,17 @@ class Create extends Command {
     const { db } = this.options
     const { name, parent } = payload
 
-    // TODO put this in a transaction and remove abort
-    this.result = yield call([db, db.run],
-      'INSERT INTO lists (name, parent_list_id) VALUES (?, ?)', name, parent)
+    const position =
+      (yield select(get.list, { list: parent })).children.length + 1
 
-    let [list, children] = yield [
-      call([db, db.get],
-        'SELECT list_id AS id, name, parent_list_id AS parent FROM lists WHERE id = ?',
-        this.result.id),
-      call([db, db.all],
-        'SELECT list_id AS id FROM lists WHERE parent_list_id = ? ORDER BY position ASC',
-        parent)
-    ]
+    const list = yield call(List.create, db, { name, parent, position })
 
-    children = children.map(({ id }) => id)
-
-    yield [
-      put(actions.insert([list])),
-      put(actions.update({ id: parent, children }))
-    ]
+    yield put(actions.insert(list, { position }))
 
     this.undo = actions.delete(list.id)
     this.redo = actions.restore(list)
 
     return list
-  }
-
-  *abort() {
-    if (this.result) {
-      const { db } = this.options
-
-      yield call([db, db.run],
-        'DELETE FROM lists WHERE list_id = ?', this.result.id)
-    }
   }
 }
 

@@ -4,6 +4,8 @@ const {
   createSelector: memo
 } = require('reselect')
 
+const list = ({ lists }, { list }) => lists[list]
+
 const getChildren = () =>
   memo(
     ({ lists }) => lists,
@@ -16,5 +18,6 @@ const getChildren = () =>
 
 
 module.exports = {
+  list,
   getChildren
 }
