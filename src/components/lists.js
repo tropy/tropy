@@ -47,7 +47,7 @@ class List extends Component {
   }
 
   rename = () => {
-    this.props.onRename(this.props.list)
+    this.props.onRename(this.props.list.id)
   }
 
   cancel = () => {
