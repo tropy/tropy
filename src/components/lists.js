@@ -8,10 +8,9 @@ const { Editable } = require('./editable')
 const { IconFolder } = require('./icons')
 const { getChildren } = require('../selectors/list')
 const { create, save, edit } = require('../actions/list')
-const { edit: { cancel } } = require('../actions/ui')
+const ui = require('../actions/ui')
 const { noop } = require('../common/util')
 const nav = require('../actions/nav')
-const ctx = require('../actions/context')
 const cn = require('classnames')
 
 
@@ -20,6 +19,7 @@ class List extends Component {
   static propTypes = {
     list: PropTypes.object,
     active: PropTypes.bool,
+    context: PropTypes.bool,
     editing: PropTypes.bool,
     onActivate: PropTypes.func,
     onCancel: PropTypes.func,
@@ -59,11 +59,11 @@ class List extends Component {
   }
 
   render() {
-    const { list, active, editing } = this.props
+    const { list, active, context, editing } = this.props
 
     return (
       <li
-        className={cn({ list: true, active })}
+        className={cn({ list: true, active, context })}
         onContextMenu={this.popup}
         onClick={this.activate}>
         <IconFolder/>
@@ -91,6 +91,7 @@ const Lists = ({
   onRename,
   showListMenu,
   editing,
+  context,
   parent
 }) => (
   <ol className="lists">
@@ -99,6 +100,7 @@ const Lists = ({
         <List
           key={list.id}
           active={selected === list.id}
+          context={context === list.id}
           editing={editing && editing.id === list.id}
           list={list}
           onContextMenu={showListMenu}
@@ -124,6 +126,7 @@ const Lists = ({
 Lists.propTypes = {
   lists: PropTypes.array,
   selected: PropTypes.number,
+  context: PropTypes.number,
   parent: PropTypes.number.isRequired,
   editing: PropTypes.object,
   onCancel: PropTypes.func,
@@ -141,6 +144,8 @@ module.exports = {
 
       return (state, props) => ({
         selected: state.nav.list,
+        context: state.ui.context.scope === 'list' &&
+          state.ui.context.event.target,
         editing: state.ui.edit.list,
         lists: children(state, props)
       })
@@ -148,7 +153,7 @@ module.exports = {
 
     (dispatch, props) => ({
       onCancel() {
-        dispatch(cancel())
+        dispatch(ui.edit.cancel())
       },
 
       onSelect(list) {
@@ -160,7 +165,7 @@ module.exports = {
       },
 
       onUpdate(id, values) {
-        dispatch(cancel())
+        dispatch(ui.edit.cancel())
         dispatch(id ?
           save({ id, ...values }) :
           create({ ...values, parent: props.parent }))
@@ -168,7 +173,7 @@ module.exports = {
 
       showListMenu(event, target) {
         event.stopPropagation()
-        dispatch(ctx.show(event, 'list', target))
+        dispatch(ui.context.show(event, 'list', target))
       }
     })
 

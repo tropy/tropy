@@ -8,7 +8,7 @@ const { Items } = require('./items')
 const { PanelGroup } = require('./panelgroup')
 const { Viewer } = require('./viewer')
 const { noop } = require('../common/util')
-const context = require('../actions/context')
+const { context } = require('../actions/ui')
 
 const sidebarWidth = { width: '250px' }
 const panelWidth = { width: '320px' }

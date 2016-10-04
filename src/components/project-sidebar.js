@@ -13,7 +13,7 @@ const { Sidebar } = require('./sidebar')
 const { save } = require('../actions/project')
 const { update } = require('../actions/nav')
 const { ROOT } = require('../constants/list')
-const context = require('../actions/context')
+const ui = require('../actions/ui')
 const cn = require('classnames')
 
 class ProjectName extends Component {
@@ -120,7 +120,7 @@ module.exports = {
 
       showListsMenu(event) {
         event.stopPropagation()
-        dispatch(context.show(event, 'lists'))
+        dispatch(ui.context.show(event, 'lists'))
       }
     })
   )(ProjectSidebar)

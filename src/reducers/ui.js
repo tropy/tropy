@@ -1,7 +1,20 @@
 'use strict'
 
 const { combineReducers: combine } = require('redux')
-const { EDIT } = require('../constants/ui')
+const { CONTEXT, EDIT } = require('../constants/ui')
+
+function context(state = {}, { type, payload }) {
+  switch (type) {
+    case CONTEXT.SHOW:
+      return { ...payload }
+
+    case CONTEXT.CLEAR:
+      return {}
+
+    default:
+      return state
+  }
+}
 
 function edit(state = {}, { type, payload }) {
   switch (type) {
@@ -18,6 +31,7 @@ function edit(state = {}, { type, payload }) {
 
 module.exports = {
   ui: combine({
+    context,
     edit
   })
 }

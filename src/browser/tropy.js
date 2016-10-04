@@ -16,7 +16,8 @@ const release = require('../common/release')
 
 const { defineProperty: prop } = Object
 const { OPENED, CREATED } = require('../constants/project')
-const CTX = require('../constants/context')
+const { CONTEXT } = require('../constants/ui')
+const ui = require('../actions/ui')
 const project = require('../actions/project')
 const list = require('../actions/list')
 const { redo, undo } = require('../actions/history')
@@ -290,8 +291,9 @@ class Tropy extends EventEmitter {
         this.emit('app:reload-menu')
       })
 
-      .on(CTX.SHOW, (_, event) => {
+      .on(CONTEXT.SHOW, (_, event) => {
         this.ctx.show(event)
+        this.dispatch(ui.context.clear())
       })
 
       .on('dialog', (_, options) => {

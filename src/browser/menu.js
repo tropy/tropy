@@ -151,9 +151,9 @@ class ContextMenu extends Menu {
     ).slice(1)
   }
 
-  show({ context, event }, win = this.app.win, ...args) {
+  show({ scope, event }, win = this.app.win, ...args) {
     this.build(
-      this.prepare(this.template, ContextMenu.settings[context]),
+      this.prepare(this.template, ContextMenu.settings[scope]),
       event
     ).popup(win, ...args)
   }

@@ -36,6 +36,10 @@
       height: $line-height-large;
       padding: 0 $component-padding-horizontal;
 
+      &.context {
+        background: $sidebar-active-bg;
+      }
+
       &.active {
         color: $sidebar-active-color;
         background: $sidebar-active-bg;

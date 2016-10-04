@@ -1,6 +1,6 @@
 'use strict'
 
-const { EDIT } = require('../constants/ui')
+const { CONTEXT, EDIT } = require('../constants/ui')
 
 const edit = {
   cancel(payload, meta) {
@@ -8,6 +8,28 @@ const edit = {
   }
 }
 
+const context = {
+  show(event, scope = 'global', target, meta) {
+    return {
+      type: CONTEXT.SHOW,
+      payload: {
+        scope,
+        event: {
+          target,
+          x: event.clientX,
+          y: event.clientY
+        }
+      },
+      meta: { ipc: true, ...meta }
+    }
+  },
+
+  clear(payload, meta) {
+    return { type: CONTEXT.CLEAR, payload, meta }
+  }
+}
+
 module.exports = {
+  context,
   edit
 }
