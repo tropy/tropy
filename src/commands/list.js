@@ -14,7 +14,7 @@ class Load extends Command {
 
     const lists = []
 
-    this.result = yield call([db, db.each],
+    yield call([db, db.each],
       `SELECT l1.list_id AS id, l1.name, l1.parent_list_id AS parent,
         group_concat(l2.position || ':' || l2.list_id) AS children
         FROM lists l1 LEFT OUTER JOIN lists l2 ON l2.parent_list_id = l1.list_id
@@ -24,7 +24,7 @@ class Load extends Command {
         lists.push({ ...list, children: this.sort(list.children) })
       })
 
-    yield put(actions.insert(lists))
+    return lists
   }
 
   sort(children) {
@@ -71,6 +71,8 @@ class Create extends Command {
 
     this.undo = actions.delete(list.id)
     this.redo = actions.restore(list)
+
+    return list
   }
 
   *abort() {
