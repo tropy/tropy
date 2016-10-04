@@ -127,7 +127,7 @@ class Restore extends Command {
     const { payload: list, meta: { position } } = this.action
     const { db } = this.options
 
-    yield call(List.restore, db, list.id, position)
+    yield call(List.restore, db, list.id, list.parent)
     yield put(actions.insert(list, { position }))
 
     this.undo = actions.delete(list.id)
