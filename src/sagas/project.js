@@ -77,7 +77,7 @@ function *command(db, id, action) {
     }
 
   } catch (error) {
-    warn(`unexpected error in *command: ${error.message}`)
+    warn(`${action.type} unexpectedly failed in *command: ${error.message}`)
     debug(error.stack)
   }
 }
