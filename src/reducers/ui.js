@@ -6,7 +6,9 @@ const { CONTEXT, EDIT } = require('../constants/ui')
 function context(state = {}, { type, payload }) {
   switch (type) {
     case CONTEXT.SHOW:
-      return { ...payload }
+      return {
+        [payload.scope]: payload.event.target
+      }
 
     case CONTEXT.CLEAR:
       return {}
