@@ -13,11 +13,12 @@ INSERT INTO lists (parent_list_id, list_id, name) VALUES
 -- Constraints
 INSERT OR IGNORE
   INTO lists (parent_list_id, name) VALUES (0, "uno");
---INSERT OR IGNORE
---  INTO lists (parent_list_id, name, position) VALUES (0, "otto", 3);
-
+INSERT OR IGNORE
+  INTO lists (parent_list_id, name) VALUES (0, "");
 UPDATE OR IGNORE lists
   SET parent_list_id = list_id WHERE list_id = 3;
+UPDATE OR IGNORE lists
+  SET name = "" WHERE list_id = 3;
 
 -- Cycles (raises abort!)
 --UPDATE lists SET parent_list_id = 1 WHERE list_id = 0;

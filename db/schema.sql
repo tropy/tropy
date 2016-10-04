@@ -89,14 +89,15 @@ CREATE TABLE lists (
   list_id         INTEGER  PRIMARY KEY,
   name            TEXT     NOT NULL COLLATE NOCASE,
   parent_list_id  INTEGER  DEFAULT 0 REFERENCES lists ON DELETE CASCADE,
-  position        INTEGER  NOT NULL DEFAULT 0,
+  position        INTEGER,
   created_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CHECK (list_id <> parent_list_id),
+  CHECK (name <> ''),
   UNIQUE (parent_list_id, name)
 );
-INSERT INTO "lists" VALUES(0,'',NULL,0,'2016-09-28 15:14:40','2016-09-28 15:14:40');
+INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-10-04 08:45:11','2016-10-04 08:45:11');
 CREATE TABLE list_items (
   sid      INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
@@ -356,20 +357,6 @@ CREATE TRIGGER insert_lists_trim_name
   AFTER INSERT ON lists
   BEGIN
     UPDATE lists SET name = trim(name)
-      WHERE list_id = NEW.list_id;
-  END;
-CREATE TRIGGER insert_lists_set_position
-  AFTER INSERT ON lists
-  FOR EACH ROW WHEN NEW.position = 0
-  BEGIN
-    UPDATE lists SET position = 1 + coalesce(
-        (
-          SELECT max(position)
-          FROM lists
-          WHERE parent_list_id = NEW.parent_list_id
-        ),
-        0
-      )
       WHERE list_id = NEW.list_id;
   END;
 CREATE TRIGGER update_lists_trim_name

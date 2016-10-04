@@ -25,21 +25,6 @@ CREATE TRIGGER insert_lists_trim_name
       WHERE list_id = NEW.list_id;
   END;
 
-CREATE TRIGGER insert_lists_set_position
-  AFTER INSERT ON lists
-  FOR EACH ROW WHEN NEW.position = 0
-  BEGIN
-    UPDATE lists SET position = 1 + coalesce(
-        (
-          SELECT max(position)
-          FROM lists
-          WHERE parent_list_id = NEW.parent_list_id
-        ),
-        0
-      )
-      WHERE list_id = NEW.list_id;
-  END;
-
 CREATE TRIGGER update_lists_trim_name
   AFTER UPDATE ON lists
   BEGIN
