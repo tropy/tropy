@@ -2,7 +2,11 @@
 
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-const { CREATE, DELETE, LOAD, PRUNE, RESTORE } = require('../constants/list')
+
+const {
+  CREATE, DELETE, LOAD, PRUNE, RESTORE, ROOT
+} = require('../constants/list')
+
 const actions = require('../actions/list')
 const get = require('../selectors/list')
 
@@ -32,6 +36,20 @@ const List = {
     return { id, name, parent }
   },
 
+  delete(db, id) {
+    return db.run(
+      'UPDATE lists SET parent_list_id = NULL WHERE list_id = ?', id)
+  },
+
+  restore(db, id, parent) {
+    return db.run(
+      'UPDATE lists SET parent_list_id = ? WHERE list_id = ?', parent, id)
+  },
+
+  prune(db) {
+    return db.run(
+      'DELETE FROM lists WHERE list_id <> ? AND parent_list_id IS NULL', ROOT)
+  },
 
 
   sort(children) {
@@ -85,25 +103,19 @@ class Delete extends Command {
   static get action() { return DELETE }
 
   *exec() {
-    const { payload } = this.action
+    const { payload: id } = this.action
     const { db } = this.options
+    const { lists } = yield select()
 
-    this.original = (yield select()).lists[payload]
+    const original = lists[id]
+    const position = lists[original.parent].children.indexOf(id) + 1
 
-    if (this.original) {
-      yield put(actions.remove(this.original.id))
-      yield call([db, db.run],
-        'UPDATE lists SET parent_list_id = NULL WHERE list_id = ?',
-        this.original.id)
+    yield call(List.delete, db, id)
+    yield put(actions.remove(id))
 
-      this.undo = actions.restore([null, this.original])
-    }
-  }
+    this.undo = actions.restore(original, { position })
 
-  *abort() {
-    if (this.original) {
-      yield put(actions.insert([this.original]))
-    }
+    return [original, position]
   }
 }
 
@@ -112,20 +124,13 @@ class Restore extends Command {
   static get action() { return RESTORE }
 
   *exec() {
-    const { payload } = this.action
+    const { payload: list, meta: { position } } = this.action
     const { db } = this.options
 
-    yield put(actions.insert(payload))
+    yield call(List.restore, db, list.id, position)
+    yield put(actions.insert(list, { position }))
 
-    yield call([db, db.run],
-      'UPDATE lists SET parent_list_id = ? WHERE list_id = ?',
-      payload.parent, payload.id)
-
-    this.undo = actions.delete(payload.id)
-  }
-
-  *abort() {
-    yield put(actions.remove(this.action.payload.id))
+    this.undo = actions.delete(list.id)
   }
 }
 
@@ -135,9 +140,7 @@ class Prune extends Command {
 
   *exec() {
     const { db } = this.options
-
-    yield call([db, db.run],
-      'DELETE FROM lists WHERE list_id <> 0 AND parent_list_id IS NULL')
+    yield call(List.prune, db)
   }
 }
 

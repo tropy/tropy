@@ -35,8 +35,19 @@ module.exports = {
         }
       }
 
-      case REMOVE:
-        return omit(state, [payload])
+      case REMOVE: {
+        const original = state[payload]
+        const parent = state[original.parent]
+
+        return {
+          ...omit(state, [original.id]),
+
+          [parent.id]: {
+            ...parent,
+            children: parent.children.filter(id => id !== original.id)
+          }
+        }
+      }
 
       case UPDATE:
         return {
