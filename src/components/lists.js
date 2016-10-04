@@ -160,10 +160,10 @@ module.exports = {
       },
 
       onUpdate(id, values) {
-        dispatch(id ?
-          save([id, values]) :
-          create({ ...values, parent: props.parent }))
         dispatch(cancel())
+        dispatch(id ?
+          save({ id, ...values }) :
+          create({ ...values, parent: props.parent }))
       },
 
       showListMenu(event, target) {

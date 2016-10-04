@@ -4,7 +4,7 @@ const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 
 const {
-  CREATE, DELETE, LOAD, PRUNE, RESTORE, ROOT
+  CREATE, DELETE, LOAD, PRUNE, RESTORE, ROOT, SAVE
 } = require('../constants/list')
 
 const actions = require('../actions/list')
@@ -51,6 +51,11 @@ const List = {
       'DELETE FROM lists WHERE list_id <> ? AND parent_list_id IS NULL', ROOT)
   },
 
+  save(db, { id, name }) {
+    return db.run(
+      'UPDATE lists SET name = ? WHERE list_id = ?', name, id)
+  },
+
 
   sort(children) {
     return children ?
@@ -95,6 +100,28 @@ class Create extends Command {
     this.redo = actions.restore(list)
 
     return list
+  }
+}
+
+class Save extends Command {
+  static get action() { return SAVE }
+
+  *exec() {
+    const { payload } = this.action
+    const { db } = this.options
+
+    this.original = (yield select(get.list, { list: payload.id }))
+
+    yield put(actions.update(payload))
+    yield call(List.save, db, payload)
+
+    this.undo = actions.save(this.original)
+  }
+
+  *abort() {
+    if (this.original) {
+      yield put(actions.update(this.original))
+    }
   }
 }
 
@@ -149,5 +176,6 @@ module.exports = {
   Delete,
   Load,
   Prune,
-  Restore
+  Restore,
+  Save
 }

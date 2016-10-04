@@ -1,7 +1,7 @@
 'use strict'
 
 const {
-  INSERT, LOAD, REMOVE, UPDATE
+  INSERT, LOAD, REMOVE, SAVE, UPDATE
 } = require('../constants/list')
 
 const { omit } = require('../common/util')
