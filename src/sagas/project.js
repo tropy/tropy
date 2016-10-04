@@ -4,7 +4,7 @@ const { takeEvery: every } = require('redux-saga')
 const { fork, cancel, call, put, take } = require('redux-saga/effects')
 const { OPEN } = require('../constants/project')
 const { opened } = require('../actions/project')
-const { drop } = require('../actions/history')
+const { drop, tick } = require('../actions/history')
 const { Database } = require('../common/db')
 const { warn, info, debug } = require('../common/log')
 const { ipc } = require('./ipc')
@@ -60,12 +60,21 @@ function *init() {
 
 function *command(db, id, action) {
   try {
-    var cmd = yield exec(action, { db, id })
+    const cmd = yield exec(action, { db, id })
 
     yield put(done(action, cmd.error || cmd.result))
 
-    if (cmd.error) fail(cmd.error, action.type)
-    if (cmd.duration > TOO_LONG) warn('SLOW', cmd)
+    if (cmd.reversible) {
+      yield put(tick(cmd.history()))
+    }
+
+    if (cmd.error) {
+      fail(cmd.error, action.type)
+    }
+
+    if (cmd.duration > TOO_LONG) {
+      warn(`too slow: ${action.type}`, cmd)
+    }
 
   } catch (error) {
     warn(`unexpected error in *command: ${error.message}`)

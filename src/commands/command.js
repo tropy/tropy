@@ -1,7 +1,5 @@
 'use strict'
 
-const { put } = require('redux-saga/effects')
-const { tick } = require('../actions/history')
 const { pick } = require('../common/util')
 const { freeze } = Object
 
@@ -16,18 +14,13 @@ class Command {
   }
 
   get reversible() {
-    return this.undo && this.action.meta.history
+    return !this.error && this.undo && this.action.meta.history
   }
 
   *execute() {
     try {
       this.init = performance.now()
-
       this.result = yield this.exec()
-
-      if (this.reversible) {
-        yield put(tick({ undo: this.undo, redo: this.redo || this.action }))
-      }
 
     } catch (error) {
       this.error = error
@@ -44,8 +37,12 @@ class Command {
   *abort() {
   }
 
+  history() {
+    return { undo: this.undo, redo: this.redo || this.action }
+  }
+
   toJSON() {
-    return pick(this, ['init', 'done', 'error', 'action'])
+    return pick(this, ['init', 'done', 'result', 'error', 'action'])
   }
 }
 
