@@ -22,7 +22,6 @@ linux:
   list: &list
     - label: 'Rename List'
       command: 'app:rename-list'
-      enabled: false
     - label: 'Delete List'
       command: 'app:delete-list'
 
