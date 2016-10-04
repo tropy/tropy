@@ -2,8 +2,7 @@
 
 const { Logger, transports } = require('winston')
 const { join } = require('path')
-const { inspect } = require('util')
-const { assign, keys } = Object
+const { assign } = Object
 
 const ms = require('ms')
 const pad = require('string.prototype.padstart')
@@ -65,8 +64,6 @@ function init(dir) {
           tailable: true,
           handleExceptions: true,
           humanReadableUnhandledException: true,
-          json: false,
-          formatter
         })
       }
       break
@@ -99,15 +96,6 @@ function text(options) {
 
   if (meta.module) {
     message = `[${meta.module}] ${message}`
-    delete meta.module
-  }
-
-  if (keys(meta).length) {
-    return [
-      message,
-      inspect(meta, { colors: true })
-        .replace(/^/mg, ' '.repeat(PADDING + 3))
-    ].join('\n')
   }
 
   return message
