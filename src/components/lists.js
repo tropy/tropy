@@ -103,7 +103,7 @@ const Lists = ({
           list={list}
           onContextMenu={showListMenu}
           onUpdate={onUpdate}
-          onSelect={onSelect}
+          onActivate={onSelect}
           onRename={onRename}
           onCancel={onCancel}/>
       ))
