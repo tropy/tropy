@@ -17,8 +17,7 @@ module.exports = {
           debug(payload.message, payload.stack)
           break
         default:
-          verbose(format(type, meta))
-          debug(type, { payload, meta, error })
+          verbose(format(type, meta), { payload, meta })
       }
 
       return next(action)
