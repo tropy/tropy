@@ -40,24 +40,25 @@ module.exports = {
     return { id, name, parent }
   },
 
-  delete(db, id) {
-    return db.run(
+  async remove(db, id) {
+    return await db.run(
       'UPDATE lists SET parent_list_id = NULL WHERE list_id = ?', id)
   },
 
-  restore(db, id, parent) {
-    return db.run(
+  async restore(db, id, parent) {
+    return await db.run(
       'UPDATE lists SET parent_list_id = ? WHERE list_id = ?', parent, id)
   },
 
-  prune(db) {
-    return db.run(
+  async prune(db) {
+    return await db.run(
       'DELETE FROM lists WHERE list_id <> ? AND parent_list_id IS NULL',
       ROOT)
   },
 
-  save(db, { id, name }) {
-    return db.run(
+  async save(db, { id, name }) {
+    return await db.run(
       'UPDATE lists SET name = ? WHERE list_id = ?', name, id)
   }
+
 }
