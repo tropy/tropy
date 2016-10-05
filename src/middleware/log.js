@@ -1,9 +1,13 @@
 'use strict'
 
 const { debug, warn, verbose } = require('../common/log')
+const { gray } = require('colors/safe')
+const ms = require('ms')
 
 function format(type, meta) {
-  return `${type} #${meta.seq}` + (meta.rel ? `(${meta.rel})` : '')
+  return (meta.rel) ?
+    `${type} ${gray(`#${meta.seq}(${meta.rel}) Δ${ms(meta.now - meta.was)}`)}` :
+    `${type} ${gray('#' + meta.seq)}`
 }
 
 module.exports = {

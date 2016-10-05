@@ -8,7 +8,8 @@ module.exports = {
       error: payload instanceof Error,
       meta: {
         done: true,
-        rel: action.meta.seq
+        rel: action.meta.seq,
+        was: action.meta.now
       }
     }
   }

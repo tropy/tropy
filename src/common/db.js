@@ -120,7 +120,7 @@ class Database extends EventEmitter {
         .catch(failed)
     })
 
-    db.on('trace', query => verbose(query, { module: 'db' }))
+    db.on('trace', query => verbose(query))
   }
 
   destroy(conn) {
