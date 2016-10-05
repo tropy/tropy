@@ -4,71 +4,16 @@ const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 
 const {
-  CREATE, DELETE, LOAD, PRUNE, RESTORE, ROOT, SAVE
+  CREATE, DELETE, LOAD, PRUNE, RESTORE, SAVE
 } = require('../constants/list')
 
 const actions = require('../actions/list')
 const get = require('../selectors/list')
 
-const List = {
+const {
+  all, create, remove, restore, save, prune
+} = require('../models/list')
 
-  async all(db) {
-    const lists = []
-
-    await db.each(`
-      SELECT l1.list_id AS id, l1.name, l1.parent_list_id AS parent,
-        group_concat(l2.position || ':' || l2.list_id) AS children
-      FROM lists l1 LEFT OUTER JOIN lists l2 ON l2.parent_list_id = l1.list_id
-      GROUP BY l1.list_id;
-      `,
-      list => {
-        lists.push({ ...list, children: List.sort(list.children) })
-      })
-
-    return lists
-  },
-
-  async create(db, { name, parent, position }) {
-    const { id } = await db.run(
-      'INSERT INTO lists (name, parent_list_id, position) VALUES (?, ?, ?)',
-      name, parent, position)
-
-    return { id, name, parent }
-  },
-
-  delete(db, id) {
-    return db.run(
-      'UPDATE lists SET parent_list_id = NULL WHERE list_id = ?', id)
-  },
-
-  restore(db, id, parent) {
-    return db.run(
-      'UPDATE lists SET parent_list_id = ? WHERE list_id = ?', parent, id)
-  },
-
-  prune(db) {
-    return db.run(
-      'DELETE FROM lists WHERE list_id <> ? AND parent_list_id IS NULL', ROOT)
-  },
-
-  save(db, { id, name }) {
-    return db.run(
-      'UPDATE lists SET name = ? WHERE list_id = ?', name, id)
-  },
-
-
-  sort(children) {
-    return children ?
-      children
-        .split(/,/)
-        .reduce((res, nxt) => {
-          const [pos, id] = nxt.split(/:/).map(Number)
-          res[pos - 1] = id
-          return res
-        }, []) : []
-
-  }
-}
 
 
 class Load extends Command {
@@ -76,7 +21,7 @@ class Load extends Command {
 
   *exec() {
     const { db } = this.options
-    return (yield call(List.all, db))
+    return (yield call(all, db))
   }
 }
 
@@ -92,7 +37,7 @@ class Create extends Command {
     const position =
       (yield select(get.list, { list: parent })).children.length + 1
 
-    const list = yield call(List.create, db, { name, parent, position })
+    const list = yield call(create, db, { name, parent, position })
 
     yield put(actions.insert(list, { position }))
 
@@ -113,7 +58,7 @@ class Save extends Command {
     this.original = (yield select(get.list, { list: payload.id }))
 
     yield put(actions.update(payload))
-    yield call(List.save, db, payload)
+    yield call(save, db, payload)
 
     this.undo = actions.save(this.original)
   }
@@ -137,7 +82,7 @@ class Delete extends Command {
     const original = lists[id]
     const position = lists[original.parent].children.indexOf(id) + 1
 
-    yield call(List.delete, db, id)
+    yield call(remove, db, id)
     yield put(actions.remove(id))
 
     this.undo = actions.restore(original, { position })
@@ -154,7 +99,7 @@ class Restore extends Command {
     const { payload: list, meta: { position } } = this.action
     const { db } = this.options
 
-    yield call(List.restore, db, list.id, list.parent)
+    yield call(restore, db, list.id, list.parent)
     yield put(actions.insert(list, { position }))
 
     this.undo = actions.delete(list.id)
@@ -167,7 +112,7 @@ class Prune extends Command {
 
   *exec() {
     const { db } = this.options
-    yield call(List.prune, db)
+    yield call(prune, db)
   }
 }
 
