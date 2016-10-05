@@ -3,7 +3,7 @@
 const React = require('react')
 const { PropTypes } = React
 const { connect } = require('react-redux')
-const { ProjectSidebar } = require('./project-sidebar')
+const { ProjectSidebar } = require('./project/sidebar')
 const { Items } = require('./items')
 const { PanelGroup } = require('./panelgroup')
 const { Viewer } = require('./viewer')

@@ -166,6 +166,8 @@ class Tropy extends EventEmitter {
         this.dispatch(list.new()))
       .on('app:rename-list', (_, { target: id }) =>
         this.dispatch(list.edit({ id })))
+      .on('app:rename-project', () =>
+        this.dispatch(project.edit({ name: true })))
       .on('app:delete-list', (_, { target }) =>
         this.dispatch(list.delete(target)))
 

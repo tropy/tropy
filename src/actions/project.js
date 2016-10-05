@@ -4,38 +4,48 @@ const {
   OPEN, OPENED, SAVE, UPDATE
 } = require('../constants/project')
 
-function opened(payload, meta) {
-  return {
-    type: OPENED,
-    error: (payload instanceof Error),
-    payload,
-    meta: { ipc: true, ...meta }
-  }
-}
+const { EDIT } = require('../constants/ui')
 
-function open(payload, meta) {
-  return { type: OPEN, payload, meta }
-}
-
-function save(payload, meta) {
-  return {
-    type: SAVE,
-    payload,
-    meta: {
-      async: true,
-      record: true,
-      ...meta
-    }
-  }
-}
-
-function update(payload, meta) {
-  return { type: UPDATE, payload, meta }
-}
 
 module.exports = {
-  open,
-  opened,
-  save,
-  update
+
+  opened(payload, meta) {
+    return {
+      type: OPENED,
+      error: (payload instanceof Error),
+      payload,
+      meta: { ipc: true, ...meta }
+    }
+  },
+
+  open(payload, meta) {
+    return { type: OPEN, payload, meta }
+  },
+
+  save(payload, meta) {
+    return {
+      type: SAVE,
+      payload,
+      meta: {
+        async: true,
+        record: true,
+        ...meta
+      }
+    }
+  },
+
+  update(payload, meta) {
+    return { type: UPDATE, payload, meta }
+  },
+
+  edit(payload, meta) {
+    return {
+      type: EDIT.START,
+      payload: {
+        project: { ...payload }
+      },
+      meta
+    }
+  }
+
 }

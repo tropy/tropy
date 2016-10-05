@@ -4,7 +4,7 @@ const React = require('react')
 const { shallow } = require('enzyme')
 
 describe('ProjectSidebar', () => {
-  const { ProjectSidebar } = __require('components/project-sidebar')
+  const { ProjectSidebar } = __require('components/project/sidebar')
 
   const project = { name: 'My Research' }
 

@@ -22,10 +22,7 @@ module.exports = {
     try {
       var db = new Database(file)
 
-      const project = yield call([db, db.get],
-        'SELECT project_id AS id, name FROM project'
-      )
-
+      const project = yield call(mod.project.load, db)
       var { id } = project
 
       yield put(act.project.opened({ file: db.path, ...project }))

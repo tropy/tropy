@@ -2,8 +2,10 @@
 
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-const { SAVE } = require('../constants/project')
 const actions = require('../actions/project')
+const { SAVE } = require('../constants/project')
+const { save } = require('../models/project')
+
 
 class Save extends Command {
   static get action() { return SAVE }
@@ -15,9 +17,7 @@ class Save extends Command {
     this.original = (yield select()).project
 
     yield put(actions.update(payload))
-    yield call([db, db.run],
-      'UPDATE project SET name = ? WHERE project_id = ?', payload.name, id
-    )
+    yield call(save, db, { id, ...payload })
 
     this.undo = actions.save({ name: this.original.name })
   }
@@ -32,4 +32,3 @@ class Save extends Command {
 module.exports = {
   Save
 }
-

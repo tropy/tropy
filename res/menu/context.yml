@@ -8,14 +8,9 @@ linux:
       label: 'Redo'
       command: 'app:redo'
       enabled: false
-  dev: &dev
-    - label: 'Reload'
-      command: 'app:reload'
-    - label: 'Reload Styles'
-      command: 'app:refresh'
-    - type: 'separator'
-    - label: 'Inspect Element'
-      command: 'app:inspect'
+  sidebar: &sidebar
+    - label: 'Rename Project'
+      command: 'app:rename-project'
   lists: &lists
     - label: 'New List'
       command: 'app:create-list'
@@ -24,6 +19,14 @@ linux:
       command: 'app:rename-list'
     - label: 'Delete List'
       command: 'app:delete-list'
+  dev: &dev
+    - label: 'Reload'
+      command: 'app:reload'
+    - label: 'Reload Styles'
+      command: 'app:refresh'
+    - type: 'separator'
+    - label: 'Inspect Element'
+      command: 'app:inspect'
 
 darwin:
   history: *history

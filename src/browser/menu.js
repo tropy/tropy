@@ -131,10 +131,9 @@ const separate = transformer(
 )
 
 class ContextMenu extends Menu {
-  static settings = {
-    global: ['history'],
-    lists: ['history', 'lists'],
-    list: ['history', 'lists', 'list']
+
+  static scopes = {
+    global: ['history']
   }
 
   async load(name = 'context') {
@@ -153,10 +152,18 @@ class ContextMenu extends Menu {
 
   show({ scope, event }, win = this.app.win, ...args) {
     this.build(
-      this.prepare(this.template, ContextMenu.settings[scope]),
+      this.prepare(this.template, ContextMenu.scopes[scope]),
       event
     ).popup(win, ...args)
   }
+}
+
+{
+  const { scopes } = ContextMenu
+
+  scopes.sidebar = [...scopes.global, 'sidebar']
+  scopes.lists = [...scopes.sidebar, 'lists']
+  scopes.list = [...scopes.lists, 'list']
 }
 
 module.exports = {
