@@ -22,8 +22,8 @@ function save(payload, meta) {
     type: SAVE,
     payload,
     meta: {
-      cmd: true,
-      history: true,
+      async: true,
+      record: true,
       ...meta
     }
   }

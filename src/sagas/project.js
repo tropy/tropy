@@ -39,7 +39,7 @@ module.exports = {
       })
 
       yield* every(action => (
-        !action.error && action.meta && action.meta.cmd
+        !action.error && action.meta && action.meta.async
       ), module.exports.command, db, id)
 
 
@@ -65,7 +65,7 @@ module.exports = {
 
       yield put(act.activity.done(action, cmd.error || cmd.result))
 
-      if (cmd.reversible) {
+      if (action.meta.record && cmd.isomorph) {
         yield put(act.history.tick(cmd.history()))
       }
 

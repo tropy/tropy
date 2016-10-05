@@ -13,8 +13,8 @@ class Command {
     return this.done ? this.done - this.init : 0
   }
 
-  get reversible() {
-    return !this.error && this.undo && this.action.meta.history
+  get isomorph() {
+    return !this.error && this.undo
   }
 
   *execute() {

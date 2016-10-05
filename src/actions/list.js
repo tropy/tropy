@@ -24,8 +24,8 @@ module.exports = {
       type: CREATE,
       payload,
       meta: {
-        cmd: true,
-        history: true,
+        async: true,
+        record: true,
         ...meta
       }
     }
@@ -40,7 +40,7 @@ module.exports = {
   },
 
   save(payload, meta) {
-    return { type: SAVE, payload, meta: { cmd: true, ...meta } }
+    return { type: SAVE, payload, meta: { async: true, ...meta } }
   },
 
   delete(payload, meta) {
@@ -48,23 +48,23 @@ module.exports = {
       type: DELETE,
       payload,
       meta: {
-        cmd: true,
-        history: true,
+        async: true,
+        record: true,
         ...meta
       }
     }
   },
 
   prune(payload, meta) {
-    return { type: PRUNE, payload, meta: { cmd: true, ...meta } }
+    return { type: PRUNE, payload, meta: { async: true, ...meta } }
   },
 
   restore(payload, meta) {
-    return { type: RESTORE, payload, meta: { cmd: true, ...meta } }
+    return { type: RESTORE, payload, meta: { async: true, ...meta } }
   },
 
   load(payload, meta) {
-    return { type: LOAD, payload, meta: { cmd: true, ...meta } }
+    return { type: LOAD, payload, meta: { async: true, ...meta } }
   },
 
   edit(payload, meta) {
