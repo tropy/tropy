@@ -11,7 +11,7 @@ const { resolve: cd, join, normalize } = require('path')
 const { using, resolve } = require('bluebird')
 const { readFileAsync: read } = require('fs')
 const { Pool } = require('generic-pool')
-const { debug, info, verbose } = require('./log')
+const { debug, info, verbose, log } = require('./log')
 const { v4: uuid } = require('node-uuid')
 
 const root = cd(__dirname, '..', '..', 'db')
@@ -68,7 +68,7 @@ class Database extends EventEmitter {
       max: 4,
       idleTimeoutMillis: 60000,
       ...options,
-      log: (msg) => debug(msg, { module: 'db:pool' }),
+      log: (msg) => log('silly', msg, { module: 'db:pool' }),
       create: this.create.bind(this, mode),
       destroy: this.destroy.bind(this),
       validate: conn => conn.db.open
@@ -120,8 +120,9 @@ class Database extends EventEmitter {
         .catch(failed)
     })
 
-    if (process.env.DEBUG === 'true') {
-      db.on('trace', query => debug(query, { module: 'db:trace' }))
+    if (process.env.NODE_ENV === 'development' ||
+        process.env.DEBUG === 'true') {
+      db.on('trace', query => debug(query, { module: 'db' }))
     }
   }
 
