@@ -4,14 +4,14 @@ const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 
 const {
-  CREATE, DELETE, LOAD, PRUNE, RESTORE, SAVE
+  CREATE, DELETE, LOAD, RESTORE, SAVE
 } = require('../constants/list')
 
 const actions = require('../actions/list')
 const get = require('../selectors/list')
 
 const {
-  all, create, remove, restore, save, prune
+  all, create, remove, restore, save
 } = require('../models/list')
 
 
@@ -107,20 +107,10 @@ class Restore extends Command {
 }
 
 
-class Prune extends Command {
-  static get action() { return PRUNE }
-
-  *exec() {
-    const { db } = this.options
-    yield call(prune, db)
-  }
-}
-
 module.exports = {
   Create,
   Delete,
   Load,
-  Prune,
   Restore,
   Save
 }

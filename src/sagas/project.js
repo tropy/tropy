@@ -3,87 +3,86 @@
 const { takeEvery: every } = require('redux-saga')
 const { fork, cancel, call, put, take } = require('redux-saga/effects')
 const { OPEN } = require('../constants/project')
-const { opened } = require('../actions/project')
-const { drop, tick } = require('../actions/history')
 const { Database } = require('../common/db')
 const { warn, info, debug } = require('../common/log')
-const { ipc } = require('./ipc')
-const { history } = require('./history')
-const nav = require('./nav')
-const list = require('../actions/list')
-const { done } = require('../actions/activity')
 const { exec } = require('../commands')
 const { fail } = require('../notify')
+const { ipc } = require('./ipc')
+const { history } = require('./history')
+const mod = require('../models')
+const act = require('../actions')
+const nav = require('./nav')
 
 const TOO_LONG = ARGS.dev ? 500 : 1500
 
-function *open(file) {
-  let db, id
-
-  try {
-    db = new Database(file)
-
-    const project = yield call([db, db.get],
-      'SELECT project_id AS id, name FROM project'
-    )
-
-    id = project.id
-
-    yield put(opened({ file: db.path, ...project }))
-    yield call(nav.restore, id)
-
-    yield fork(init)
-
-    yield* every(action => (
-      !action.error && action.meta && action.meta.cmd
-    ), command, db, id)
-
-
-  } catch (error) {
-    warn(`unexpected error in open: ${error.message}`)
-    debug(error.stack)
-
-  } finally {
-    if (id) yield call(nav.persist, id)
-    if (db) yield call([db, db.close])
-
-    info(`closed project ${id}`)
-  }
-}
-
-function *init() {
-  yield [
-    put(drop()),
-    put(list.load())
-  ]
-}
-
-function *command(db, id, action) {
-  try {
-    const cmd = yield exec(action, { db, id })
-
-    yield put(done(action, cmd.error || cmd.result))
-
-    if (cmd.reversible) {
-      yield put(tick(cmd.history()))
-    }
-
-    if (cmd.error) {
-      fail(cmd.error, action.type)
-    }
-
-    if (cmd.duration > TOO_LONG) {
-      warn(`too slow: ${action.type}`, cmd)
-    }
-
-  } catch (error) {
-    warn(`${action.type} unexpectedly failed in *command: ${error.message}`)
-    debug(error.stack)
-  }
-}
-
 
 module.exports = {
+
+  *open(file) {
+    try {
+      var db = new Database(file)
+
+      const project = yield call([db, db.get],
+        'SELECT project_id AS id, name FROM project'
+      )
+
+      var { id } = project
+
+      yield put(act.project.opened({ file: db.path, ...project }))
+      yield call(nav.restore, id)
+
+      yield fork(function* () {
+        yield [
+          put(act.history.drop()),
+          put(act.list.load())
+        ]
+      })
+
+      yield* every(action => (
+        !action.error && action.meta && action.meta.cmd
+      ), module.exports.command, db, id)
+
+
+    } catch (error) {
+      warn(`unexpected error in open: ${error.message}`)
+      debug(error.stack)
+
+    } finally {
+      if (id) yield call(nav.persist, id)
+      if (db) {
+        yield call(mod.list.prune, db)
+        yield call([db, db.close])
+      }
+
+      info(`closed project ${id}`)
+    }
+  },
+
+
+  *command(db, id, action) {
+    try {
+      const cmd = yield exec(action, { db, id })
+
+      yield put(act.activity.done(action, cmd.error || cmd.result))
+
+      if (cmd.reversible) {
+        yield put(act.history.tick(cmd.history()))
+      }
+
+      if (cmd.error) {
+        fail(cmd.error, action.type)
+      }
+
+      if (cmd.duration > TOO_LONG) {
+        warn(`too slow: ${action.type}`, cmd)
+      }
+
+    } catch (error) {
+      warn(`${action.type} unexpectedly failed in *command: ${error.message}`)
+      debug(error.stack)
+    }
+  },
+
   *main() {
     let task
 
@@ -98,14 +97,12 @@ module.exports = {
           yield cancel(task)
         }
 
-        task = yield fork(open, payload)
+        task = yield fork(module.exports.open, payload)
       }
 
     } catch (error) {
       warn(`unexpected error in main: ${error.message}`)
       debug(error.stack)
     }
-  },
-
-  open
+  }
 }
