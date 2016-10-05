@@ -8,6 +8,7 @@ CREATE TRIGGER insert_tags
 
 CREATE TRIGGER update_tags
   AFTER UPDATE ON tags
+  FOR EACH ROW WHEN NEW.tag_name <> OLD.tag_name
   BEGIN
     UPDATE tags SET tag_name = trim(tag_name)
       WHERE tag_name = NEW.tag_name;
@@ -27,6 +28,7 @@ CREATE TRIGGER insert_lists_trim_name
 
 CREATE TRIGGER update_lists_trim_name
   AFTER UPDATE ON lists
+  FOR EACH ROW WHEN NEW.name <> OLD.name
   BEGIN
     UPDATE lists SET name = trim(name)
       WHERE list_id = NEW.list_id;
@@ -34,6 +36,8 @@ CREATE TRIGGER update_lists_trim_name
 
 CREATE TRIGGER update_lists_cycle_check
   BEFORE UPDATE ON lists
+  FOR EACH ROW WHEN NEW.parent_list_id NOT NULL
+    AND NEW.parent_list_id <> OLD.parent_list_id
   BEGIN
     SELECT CASE (
         WITH RECURSIVE
