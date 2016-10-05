@@ -40,7 +40,7 @@ module.exports = {
   },
 
   save(payload, meta) {
-    return { type: SAVE, payload, meta: { async: true, ...meta } }
+    return { type: SAVE, payload, meta: { async: true, record: true, ...meta } }
   },
 
   delete(payload, meta) {
