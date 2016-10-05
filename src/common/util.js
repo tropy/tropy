@@ -36,6 +36,10 @@ module.exports = {
     return res
   },
 
+  splice(arr, at, count = 0, ...items) {
+    return [...arr.slice(0, at), ...items, ...arr.slice(at + count)]
+  },
+
   flatten(obj) {
     const res = {}
 
