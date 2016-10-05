@@ -2,6 +2,7 @@
 
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
+const { splice } = require('../common/util')
 
 const {
   CREATE, DELETE, LOAD, RESTORE, SAVE
@@ -11,7 +12,7 @@ const actions = require('../actions/list')
 const get = require('../selectors/list')
 
 const {
-  all, create, remove, restore, save
+  all, create, remove, restore, save, order
 } = require('../models/list')
 
 
@@ -34,12 +35,12 @@ class Create extends Command {
     const { db } = this.options
     const { name, parent } = payload
 
-    const position =
-      (yield select(get.list, { list: parent })).children.length + 1
+    const idx =
+      (yield select(get.list, { list: parent })).children.length
 
-    const list = yield call(create, db, { name, parent, position })
+    const list = yield call(create, db, { name, parent, position: idx + 1 })
 
-    yield put(actions.insert(list, { position }))
+    yield put(actions.insert(list, { idx }))
 
     this.undo = actions.delete(list.id)
     this.redo = actions.restore(list)
@@ -80,14 +81,21 @@ class Delete extends Command {
     const { lists } = yield select()
 
     const original = lists[id]
-    const position = lists[original.parent].children.indexOf(id) + 1
+    const parent = lists[original.parent]
 
-    yield call(remove, db, id)
+    const idx = parent.children.indexOf(id)
+    const cid = splice(parent.children, idx, 1)
+
+    yield call([db, db.transaction], async tx => {
+      await remove(tx, id)
+      await order(tx, parent.id, cid)
+    })
+
     yield put(actions.remove(id))
 
-    this.undo = actions.restore(original, { position })
+    this.undo = actions.restore(original, { idx })
 
-    return [original, position]
+    return [original, idx]
   }
 }
 
@@ -96,11 +104,18 @@ class Restore extends Command {
   static get action() { return RESTORE }
 
   *exec() {
-    const { payload: list, meta: { position } } = this.action
+    const { payload: list, meta: { idx } } = this.action
     const { db } = this.options
 
-    yield call(restore, db, list.id, list.parent)
-    yield put(actions.insert(list, { position }))
+    const { children } = yield select(get.list, { list: list.parent })
+    const cid = splice(children, idx, 0, list.id)
+
+    yield call([db, db.transaction], async tx => {
+      await restore(tx, list.id, list.parent)
+      await order(tx, list.parent, cid)
+    })
+
+    yield put(actions.insert(list, { idx }))
 
     this.undo = actions.delete(list.id)
   }

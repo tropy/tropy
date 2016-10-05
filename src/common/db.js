@@ -120,10 +120,7 @@ class Database extends EventEmitter {
         .catch(failed)
     })
 
-    if (process.env.NODE_ENV === 'development' ||
-        process.env.DEBUG === 'true') {
-      db.on('trace', query => debug(query, { module: 'db' }))
-    }
+    db.on('trace', query => verbose(query, { module: 'db' }))
   }
 
   destroy(conn) {

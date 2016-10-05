@@ -23,8 +23,7 @@ module.exports = {
       SELECT l1.list_id AS id, l1.name, l1.parent_list_id AS parent,
         group_concat(l2.position || ':' || l2.list_id) AS children
       FROM lists l1 LEFT OUTER JOIN lists l2 ON l2.parent_list_id = l1.list_id
-      GROUP BY l1.list_id;
-      `,
+      GROUP BY l1.list_id;`,
       list => {
         lists.push({ ...list, children: sort(list.children) })
       })
@@ -59,6 +58,18 @@ module.exports = {
   async save(db, { id, name }) {
     return await db.run(
       'UPDATE lists SET name = ? WHERE list_id = ?', name, id)
+  },
+
+  async order(db, parent, order) {
+    if (order.length) {
+      return await db.run(`
+        UPDATE lists
+        SET position = CASE list_id
+          ${order.map((_, idx) => (`WHEN ? THEN ${idx + 1}`)).join(' ')}
+          END
+        WHERE parent_list_id = ?`,
+        ...order, parent)
+    }
   }
 
 }

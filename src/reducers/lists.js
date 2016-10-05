@@ -4,7 +4,7 @@ const {
   INSERT, LOAD, REMOVE, UPDATE
 } = require('../constants/list')
 
-const { omit } = require('../common/util')
+const { omit, splice } = require('../common/util')
 const { into, map } = require('transducers.js')
 
 module.exports = {
@@ -17,18 +17,13 @@ module.exports = {
 
       case INSERT: {
         const parent = state[payload.parent]
-        const idx = meta.position - 1
 
         return {
           ...state,
 
           [parent.id]: {
             ...parent,
-            children: [
-              ...parent.children.slice(0, idx),
-              payload.id,
-              ...parent.children.slice(idx)
-            ]
+            children: splice(parent.children, meta.idx, 0, payload.id)
           },
 
           [payload.id]: payload
