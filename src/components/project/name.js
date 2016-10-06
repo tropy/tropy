@@ -13,11 +13,11 @@ class ProjectName extends Component {
   }
 
   render() {
-    const { active } = this.props
+    const { active, context } = this.props
 
     return (
       <ol>
-        <li className={cn({ active })} onClick={this.select}>
+        <li className={cn({ active, context })} onClick={this.select}>
           <IconLibrary/>
           <div className="title project-title">
             <Editable
@@ -35,6 +35,7 @@ class ProjectName extends Component {
 
   static propTypes = {
     active: PropTypes.bool,
+    context: PropTypes.bool,
     editing: PropTypes.bool,
 
     name: PropTypes.string.isRequired,

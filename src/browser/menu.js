@@ -162,6 +162,7 @@ class ContextMenu extends Menu {
   const { scopes } = ContextMenu
 
   scopes.sidebar = [...scopes.global, 'sidebar']
+  scopes.project = [...scopes.sidebar, 'project']
   scopes.lists = [...scopes.sidebar, 'lists']
   scopes.list = [...scopes.lists, 'list']
 }

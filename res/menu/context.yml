@@ -9,8 +9,14 @@ linux:
       command: 'app:redo'
       enabled: false
   sidebar: &sidebar
+    - label: 'Hide Sidebar'
+      command: 'app:hide-sidebar'
+      enabled: false
+  project: &project
     - label: 'Rename Project'
       command: 'app:rename-project'
+    - label: 'Show Project File…'
+      command: 'app:show-project-file'
   lists: &lists
     - label: 'New List'
       command: 'app:create-list'
@@ -30,12 +36,16 @@ linux:
 
 darwin:
   history: *history
-  dev: *dev
+  sidebar: *sidebar
+  project: *project
   lists: *lists
   list: *list
+  dev: *dev
 
 win32:
   history: *history
-  dev: *dev
+  sidebar: *sidebar
+  project: *project
   lists: *lists
   list: *list
+  dev: *dev

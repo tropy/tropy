@@ -21,6 +21,12 @@ class ProjectSidebar extends Component {
     this.props.onContextMenu(event, 'sidebar')
   }
 
+  showProjectMenu = (event) => {
+    this.props.onContextMenu(
+      event, 'project', this.props.project.file
+    )
+  }
+
   showListsMenu = (event) => {
     this.props.onContextMenu(event, 'lists')
   }
@@ -37,10 +43,11 @@ class ProjectSidebar extends Component {
         <div
           className="sidebar-body"
           onContextMenu={this.showSidebarMenu}>
-          <section>
+          <section onContextMenu={this.showProjectMenu}>
             <nav>
               <ProjectName
                 active={this.props.active}
+                context={this.props.context}
                 editing={this.props.editing}
                 name={this.props.project.name}
                 onChange={this.props.onChange}
@@ -78,10 +85,12 @@ class ProjectSidebar extends Component {
 
   static propTypes = {
     active: PropTypes.bool,
+    context: PropTypes.bool,
     editing: PropTypes.bool,
     toolbar: PropTypes.bool,
 
     project: PropTypes.shape({
+      file: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired
     }).isRequired,
 
@@ -99,6 +108,7 @@ module.exports = {
   ProjectSidebar: connect(
     ({ project, nav, ui }) => ({
       active: !nav.list,
+      context: has(ui.context, 'project'),
       editing: has(ui.edit, 'project.name'),
       project,
     }),
@@ -121,9 +131,9 @@ module.exports = {
         dispatch(actions.nav.update({ list: null }))
       },
 
-      onContextMenu(event, scope) {
+      onContextMenu(event, ...args) {
         event.stopPropagation()
-        dispatch(actions.ui.context.show(event, scope))
+        dispatch(actions.ui.context.show(event, ...args))
       }
     })
   )(ProjectSidebar)
