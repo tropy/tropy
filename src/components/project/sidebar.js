@@ -12,7 +12,7 @@ const { Sidebar } = require('../sidebar')
 const { ProjectName } = require('./name')
 const { ROOT } = require('../../constants/list')
 const { has } = require('dot-prop')
-const actions = require('../../actions')
+const act = require('../../actions')
 
 
 class ProjectSidebar extends Component {
@@ -115,25 +115,25 @@ module.exports = {
 
     (dispatch) => ({
       onChange(name) {
-        dispatch(actions.ui.edit.cancel())
-        dispatch(actions.project.save({ name }))
+        dispatch(act.ui.edit.cancel())
+        dispatch(act.project.save({ name }))
       },
 
       onEditStart() {
-        dispatch(actions.project.edit({ name: true }))
+        dispatch(act.project.edit({ name: true }))
       },
 
       onEditCancel() {
-        dispatch(actions.ui.edit.cancel())
+        dispatch(act.ui.edit.cancel())
       },
 
       onSelect() {
-        dispatch(actions.nav.update({ list: null }))
+        dispatch(act.nav.update({ list: null }))
       },
 
       onContextMenu(event, ...args) {
         event.stopPropagation()
-        dispatch(actions.ui.context.show(event, ...args))
+        dispatch(act.ui.context.show(event, ...args))
       }
     })
   )(ProjectSidebar)
