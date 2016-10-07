@@ -25,6 +25,14 @@ linux:
       command: 'app:rename-list'
     - label: 'Delete List'
       command: 'app:delete-list'
+  tags: &tags
+    - label: 'New Tag'
+      command: 'app:create-tag'
+  tag: &tag
+    - label: 'Rename Tag'
+      command: 'app:rename-tag'
+    - label: 'Delete Tag'
+      command: 'app:delete-tag'
   dev: &dev
     - label: 'Reload'
       command: 'app:reload'
@@ -40,6 +48,8 @@ darwin:
   project: *project
   lists: *lists
   list: *list
+  tags: *tags
+  tag: *tag
   dev: *dev
 
 win32:
@@ -48,4 +58,6 @@ win32:
   project: *project
   lists: *lists
   list: *list
+  tags: *tags
+  tag: *tag
   dev: *dev

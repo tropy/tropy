@@ -30,6 +30,9 @@ class ProjectSidebar extends Component {
   showListsMenu = (event) => {
     this.props.onContextMenu(event, 'lists')
   }
+  showTagsMenu = (event) => {
+    this.props.onContextMenu(event, 'tags')
+  }
 
   render() {
     if (this.props.toolbar) {
@@ -64,7 +67,7 @@ class ProjectSidebar extends Component {
             </nav>
           </section>
 
-          <section>
+          <section onContextMenu={this.showTagsMenu}>
             <h2><FormattedMessage id="sidebar.tags"/></h2>
             <nav>
               <Tags/>

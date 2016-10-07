@@ -17,10 +17,7 @@ const release = require('../common/release')
 const { defineProperty: prop } = Object
 const { OPENED, CREATED } = require('../constants/project')
 const { CONTEXT } = require('../constants/ui')
-const ui = require('../actions/ui')
-const project = require('../actions/project')
-const list = require('../actions/list')
-const { redo, undo } = require('../actions/history')
+const act = require('../actions')
 const { HISTORY } = require('../constants/history')
 
 const H = new WeakMap()
@@ -70,7 +67,7 @@ class Tropy extends EventEmitter {
 
       if (this.win) {
         if (file) {
-          this.dispatch(project.open(file))
+          this.dispatch(act.project.open(file))
         }
 
         return this.win.show(), this
@@ -162,16 +159,23 @@ class Tropy extends EventEmitter {
     this
       .on('app:create-project', () => this.create())
       .on('app:rename-project', () =>
-        this.dispatch(project.edit({ name: true })))
+        this.dispatch(act.project.edit({ name: true })))
       .on('app:show-project-file', (_, { target }) =>
         shell.showItemInFolder(target))
 
       .on('app:create-list', () =>
-        this.dispatch(list.new()))
+        this.dispatch(act.list.new()))
       .on('app:rename-list', (_, { target: id }) =>
-        this.dispatch(list.edit({ id })))
+        this.dispatch(act.list.edit({ id })))
       .on('app:delete-list', (_, { target }) =>
-        this.dispatch(list.delete(target)))
+        this.dispatch(act.list.delete(target)))
+
+      .on('app:create-tag', () =>
+        this.dispatch(act.tag.new()))
+      .on('app:rename-tag', (_, { target: id }) =>
+        this.dispatch(act.tag.edit({ id })))
+      .on('app:delete-tag', (_, { target }) =>
+        this.dispatch(act.tag.hide(target)))
 
       .on('app:toggle-menu-bar', win => {
         if (win.isMenuBarAutoHide()) {
@@ -232,11 +236,10 @@ class Tropy extends EventEmitter {
       })
 
       .on('app:undo', () => {
-        if (this.history.past) this.dispatch(undo())
+        if (this.history.past) this.dispatch(act.history.undo())
       })
-
       .on('app:redo', () => {
-        if (this.history.future) this.dispatch(redo())
+        if (this.history.future) this.dispatch(act.history.redo())
       })
 
       .on('app:inspect', (win, { x, y }) => {
@@ -297,7 +300,7 @@ class Tropy extends EventEmitter {
 
       .on(CONTEXT.SHOW, (_, event) => {
         this.ctx.show(event)
-        this.dispatch(ui.context.clear())
+        this.dispatch(act.ui.context.clear())
       })
 
       .on('dialog', (_, options) => {

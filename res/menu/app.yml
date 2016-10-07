@@ -11,6 +11,8 @@ linux:
             accelerator: 'CmdOrCtrl+Shift+P'
           - label: 'List'
             command: 'app:create-list'
+          - label: 'Tag'
+            command: 'app:create-tag'
       - type: 'separator'
       - &open
         label: 'Open'
@@ -65,6 +67,9 @@ linux:
         role: 'togglefullscreen'
       - label: 'Toggle Hide &Menu Bar'
         command: 'app:toggle-menu-bar'
+      - label: 'Hide &Sidebar'
+        command: 'app:toggle-sidebar'
+        enabled: false
   - &win
     label: 'Window'
     submenu:

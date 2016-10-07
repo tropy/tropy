@@ -2,5 +2,6 @@
 
 module.exports = {
   list: require('./list'),
-  project: require('./project')
+  project: require('./project'),
+  tag: require('./tag')
 }

@@ -165,6 +165,8 @@ class ContextMenu extends Menu {
   scopes.project = [...scopes.sidebar, 'project']
   scopes.lists = [...scopes.sidebar, 'lists']
   scopes.list = [...scopes.lists, 'list']
+  scopes.tags = [...scopes.sidebar, 'tags']
+  scopes.tag = [...scopes.tags, 'tag']
 }
 
 module.exports = {

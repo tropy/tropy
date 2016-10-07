@@ -32,7 +32,8 @@ module.exports = {
         yield [
           call(mod.project.touch, db, { id }),
           put(act.history.drop()),
-          put(act.list.load())
+          put(act.list.load()),
+          put(act.tag.load())
         ]
       })
 
@@ -48,7 +49,11 @@ module.exports = {
     } finally {
       if (id) yield call(nav.persist, id)
       if (db) {
-        yield call(mod.list.prune, db)
+        yield [
+          call(mod.list.prune, db),
+          call(mod.tag.prune, db)
+        ]
+
         yield call([db, db.close])
       }
 

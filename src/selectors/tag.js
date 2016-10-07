@@ -6,7 +6,7 @@ const {
   createSelector: memo
 } = require('reselect')
 
-const tag = ({ tags }) => tags[tag]
+const tag = ({ tags }, { tag }) => tags[tag]
 
 const visible = memo(
   ({ tags }) => tags,
