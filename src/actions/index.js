@@ -7,5 +7,6 @@ module.exports = {
   list: require('./list'),
   nav: require('./nav'),
   project: require('./project'),
+  tag: require('./tag'),
   ui: require('./ui')
 }
