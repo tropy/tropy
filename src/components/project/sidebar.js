@@ -88,8 +88,8 @@ class ProjectSidebar extends Component {
     toolbar: PropTypes.bool,
 
     project: PropTypes.shape({
-      file: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired
+      file: PropTypes.string,
+      name: PropTypes.string
     }).isRequired,
 
     onChange: PropTypes.func,
