@@ -9,7 +9,15 @@ module.exports = {
 
   async save(db, { id, name }) {
     return await db.run(
-      'UPDATE project SET name = ? WHERE project_id = ?', name, id
+      'UPDATE project SET name = ?, updated_at = datetime("now") WHERE project_id = ?',
+      name, id
+    )
+  },
+
+  async touch(db, { id }) {
+    return await db.run(
+      'UPDATE project SET opened_at = datetime("now") WHERE project_id = ?',
+      id
     )
   }
 }

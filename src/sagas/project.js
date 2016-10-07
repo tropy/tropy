@@ -30,6 +30,7 @@ module.exports = {
 
       yield fork(function* () {
         yield [
+          call(mod.project.touch, db, { id }),
           put(act.history.drop()),
           put(act.list.load())
         ]

@@ -22,6 +22,7 @@ CREATE TABLE project (
   name        TEXT     NOT NULL,
   settings             NOT NULL DEFAULT '{}',
   created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   opened_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CHECK (project_id != ''),
@@ -93,11 +94,11 @@ CREATE TABLE lists (
   created_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  CHECK (list_id <> parent_list_id),
-  CHECK (name <> ''),
+  CHECK (list_id != parent_list_id),
+  CHECK (name != ''),
   UNIQUE (parent_list_id, name)
 );
-INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-10-07 15:07:10','2016-10-07 15:07:10');
+INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-10-07 15:24:53','2016-10-07 15:24:53');
 CREATE TABLE list_items (
   sid      INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
@@ -114,7 +115,7 @@ CREATE TABLE tags (
   created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  CHECK (name <> ''),
+  CHECK (name != ''),
   UNIQUE (visible, name)
 );
 CREATE TABLE taggings (
@@ -144,19 +145,19 @@ CREATE TABLE selections (
   quality   TEXT     NOT NULL DEFAULT 'default' REFERENCES image_qualities,
   x         NUMERIC  NOT NULL DEFAULT 0,
   y         NUMERIC  NOT NULL DEFAULT 0,
-  pct       BOOLEAN  NOT NULL DEFAULT FALSE
+  pct       BOOLEAN  NOT NULL DEFAULT 0
 ) WITHOUT ROWID;
 CREATE TABLE image_scales (
   sid     INTEGER  PRIMARY KEY REFERENCES selections ON DELETE CASCADE,
   x       NUMERIC  NOT NULL DEFAULT 0,
   y       NUMERIC  NOT NULL DEFAULT 0,
   factor  NUMERIC  NOT NULL,
-  fit     BOOLEAN  NOT NULL DEFAULT FALSE
+  fit     BOOLEAN  NOT NULL DEFAULT 0
 ) WITHOUT ROWID;
 CREATE TABLE image_rotations (
   sid     INTEGER  PRIMARY KEY REFERENCES selections ON DELETE CASCADE,
   angle   NUMERIC  NOT NULL DEFAULT 0,
-  mirror  BOOLEAN  NOT NULL DEFAULT FALSE
+  mirror  BOOLEAN  NOT NULL DEFAULT 0
 ) WITHOUT ROWID;
 CREATE TABLE image_qualities (
   quality  TEXT  NOT NULL PRIMARY KEY
@@ -351,7 +352,7 @@ CREATE TRIGGER insert_tags_trim_name
   END;
 CREATE TRIGGER update_tags_trim_name
   AFTER UPDATE ON tags
-  FOR EACH ROW WHEN NEW.name <> OLD.name
+  FOR EACH ROW WHEN NEW.name != OLD.name
   BEGIN
     UPDATE tags SET name = trim(name)
       WHERE tag_id = NEW.tag_id;
@@ -364,7 +365,7 @@ CREATE TRIGGER insert_lists_trim_name
   END;
 CREATE TRIGGER update_lists_trim_name
   AFTER UPDATE ON lists
-  FOR EACH ROW WHEN NEW.name <> OLD.name
+  FOR EACH ROW WHEN NEW.name != OLD.name
   BEGIN
     UPDATE lists SET name = trim(name)
       WHERE list_id = NEW.list_id;
@@ -372,7 +373,7 @@ CREATE TRIGGER update_lists_trim_name
 CREATE TRIGGER update_lists_cycle_check
   BEFORE UPDATE ON lists
   FOR EACH ROW WHEN NEW.parent_list_id NOT NULL
-    AND NEW.parent_list_id <> OLD.parent_list_id
+    AND NEW.parent_list_id != OLD.parent_list_id
   BEGIN
     SELECT CASE (
         WITH RECURSIVE
