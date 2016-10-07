@@ -7,14 +7,11 @@ const {
 const { default: thunk } = require('redux-thunk')
 const { default: createSagaMiddleware } = require('redux-saga')
 const { log: logger, warn, debug } = require('../common/log')
-const { project } = require('../reducers/project')
-const { nav } = require('../reducers/nav')
-const { intl } = require('../reducers/intl')
-const { history } = require('../reducers/history')
-const { lists } = require('../reducers/lists')
-const { ui } = require('../reducers/ui')
-const { activities } = require('../reducers/activity')
 const { seq, debounce, log } = require('../middleware')
+
+const {
+  activities, project, nav, intl, history, lists, tags, ui
+} = require('../reducers')
 
 const dev = (ARGS.dev || ARGS.debug)
 
@@ -36,6 +33,7 @@ module.exports = {
       activities,
       project,
       lists,
+      tags,
       history
     })
 
