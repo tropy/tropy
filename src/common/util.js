@@ -36,8 +36,12 @@ module.exports = {
     return res
   },
 
-  splice(arr, at, count = 0, ...items) {
-    return [...arr.slice(0, at), ...items, ...arr.slice(at + count)]
+  splice(array, at, count = 0, ...items) {
+    return [...array.slice(0, at), ...items, ...array.slice(at + count)]
+  },
+
+  sort(array, ...args) {
+    return [...array].sort(...args)
   },
 
   flatten(obj) {

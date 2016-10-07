@@ -3,8 +3,8 @@
 module.exports = {
 
   CREATE: 'tag.create',
-  DELETE: 'tag.delete',
-  RESTORE: 'tag.restore',
+  HIDE: 'tag.delete',
+  SHOW: 'tag.restore',
   PRUNE: 'tag.prune',
 
   INSERT: 'tag.insert',

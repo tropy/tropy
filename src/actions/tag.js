@@ -1,7 +1,7 @@
 'use strict'
 
 const {
-  CREATE, INSERT, REMOVE, SAVE, DELETE, RESTORE, LOAD, UPDATE, PRUNE, ROOT
+  CREATE, INSERT, REMOVE, SAVE, HIDE, SHOW, LOAD, UPDATE, PRUNE
 } = require('../constants/tag')
 
 const { EDIT } = require('../constants/ui')
@@ -43,9 +43,9 @@ module.exports = {
     return { type: SAVE, payload, meta: { async: true, record: true, ...meta } }
   },
 
-  delete(payload, meta) {
+  hide(payload, meta) {
     return {
-      type: DELETE,
+      type: HIDE,
       payload,
       meta: {
         async: true,
@@ -59,8 +59,8 @@ module.exports = {
     return { type: PRUNE, payload, meta: { async: true, ...meta } }
   },
 
-  restore(payload, meta) {
-    return { type: RESTORE, payload, meta: { async: true, ...meta } }
+  show(payload, meta) {
+    return { type: SHOW, payload, meta: { async: true, ...meta } }
   },
 
   load(payload, meta) {
