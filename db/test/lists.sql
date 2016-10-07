@@ -29,7 +29,7 @@ UPDATE lists SET parent_list_id = NULL WHERE list_id = 4;
 
 SELECT list_id AS deleted_list_id
   FROM lists
-  WHERE parent_list_id IS NULL AND list_id <> 0;
+  WHERE parent_list_id IS NULL AND list_id != 0;
 
 -- Re-order
 UPDATE lists

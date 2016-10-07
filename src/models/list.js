@@ -51,7 +51,7 @@ module.exports = {
 
   async prune(db) {
     return await db.run(
-      'DELETE FROM lists WHERE list_id <> ? AND parent_list_id IS NULL',
+      'DELETE FROM lists WHERE list_id != ? AND parent_list_id IS NULL',
       ROOT)
   },
 

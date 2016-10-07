@@ -5,6 +5,7 @@ CREATE TABLE project (
   name        TEXT     NOT NULL,
   settings             NOT NULL DEFAULT '{}',
   created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   opened_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CHECK (project_id != ''),
@@ -97,8 +98,8 @@ CREATE TABLE lists (
   created_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  CHECK (list_id <> parent_list_id),
-  CHECK (name <> ''),
+  CHECK (list_id != parent_list_id),
+  CHECK (name != ''),
   UNIQUE (parent_list_id, name)
 );
 
@@ -122,7 +123,7 @@ CREATE TABLE tags (
   created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  CHECK (name <> ''),
+  CHECK (name != ''),
   UNIQUE (visible, name)
 );
 
