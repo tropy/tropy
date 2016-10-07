@@ -5,9 +5,9 @@ const { connect } = require('react-redux')
 const { Component, PropTypes } = React
 const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')
-const { IconTag } = require('../icons')
 const { ActivityPane } = require('../activity')
 const { Lists } = require('../lists')
+const { Tags } = require('../tags')
 const { Sidebar } = require('../sidebar')
 const { ProjectName } = require('./name')
 const { ROOT } = require('../../constants/list')
@@ -67,12 +67,7 @@ class ProjectSidebar extends Component {
           <section>
             <h2><FormattedMessage id="sidebar.tags"/></h2>
             <nav>
-              <ol>
-                <li>
-                  <IconTag/>
-                  <div className="title">Betrayal</div>
-                </li>
-              </ol>
+              <Tags/>
             </nav>
           </section>
         </div>
