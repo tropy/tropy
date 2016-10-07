@@ -115,21 +115,23 @@ CREATE TABLE list_items (
 
 
 CREATE TABLE tags (
-  tag_name    TEXT     NOT NULL PRIMARY KEY COLLATE NOCASE,
-  tag_color,
+  tag_id      INTEGER  PRIMARY KEY,
+  name        TEXT     NOT NULL COLLATE NOCASE,
+  color,
+  visible     BOOLEAN  NOT NULL DEFAULT 1,
   created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  CHECK (tag_name <> '')
-) WITHOUT ROWID;
+  CHECK (name <> ''),
+  UNIQUE (visible, name)
+);
 
 CREATE TABLE taggings (
   sid        INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
-  tag_name   TEXT     NOT NULL COLLATE NOCASE
-                      REFERENCES tags ON DELETE CASCADE ON UPDATE CASCADE,
+  tag_id     INTEGER  NOT NULL REFERENCES tags ON DELETE CASCADE,
   tagged_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  PRIMARY KEY (sid, tag_name)
+  PRIMARY KEY (sid, tag_id)
 ) WITHOUT ROWID;
 
 

@@ -1,23 +1,25 @@
 
-CREATE TRIGGER insert_tags
+-- Tag Triggers
+-- ------------------------------------------------------------
+
+CREATE TRIGGER insert_tags_trim_name
   AFTER INSERT ON tags
   BEGIN
-    UPDATE tags SET tag_name = trim(tag_name)
-      WHERE tag_name = NEW.tag_name;
+    UPDATE tags SET name = trim(name)
+      WHERE tag_id = NEW.tag_id;
   END;
 
-CREATE TRIGGER update_tags
+CREATE TRIGGER update_tags_trim_name
   AFTER UPDATE ON tags
-  FOR EACH ROW WHEN NEW.tag_name <> OLD.tag_name
+  FOR EACH ROW WHEN NEW.name <> OLD.name
   BEGIN
-    UPDATE tags SET tag_name = trim(tag_name)
-      WHERE tag_name = NEW.tag_name;
+    UPDATE tags SET name = trim(name)
+      WHERE tag_id = NEW.tag_id;
   END;
-
 
 
 -- List Triggers
--- -------------
+-- ------------------------------------------------------------
 
 CREATE TRIGGER insert_lists_trim_name
   AFTER INSERT ON lists

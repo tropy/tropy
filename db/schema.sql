@@ -97,7 +97,7 @@ CREATE TABLE lists (
   CHECK (name <> ''),
   UNIQUE (parent_list_id, name)
 );
-INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-10-05 16:22:18','2016-10-05 16:22:18');
+INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-10-07 15:07:10','2016-10-07 15:07:10');
 CREATE TABLE list_items (
   sid      INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
@@ -107,20 +107,22 @@ CREATE TABLE list_items (
   UNIQUE (sid, list_id, position)
 ) WITHOUT ROWID;
 CREATE TABLE tags (
-  tag_name    TEXT     NOT NULL PRIMARY KEY COLLATE NOCASE,
-  tag_color,
+  tag_id      INTEGER  PRIMARY KEY,
+  name        TEXT     NOT NULL COLLATE NOCASE,
+  color,
+  visible     BOOLEAN  NOT NULL DEFAULT 1,
   created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  CHECK (tag_name <> '')
-) WITHOUT ROWID;
+  CHECK (name <> ''),
+  UNIQUE (visible, name)
+);
 CREATE TABLE taggings (
   sid        INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
-  tag_name   TEXT     NOT NULL COLLATE NOCASE
-                      REFERENCES tags ON DELETE CASCADE ON UPDATE CASCADE,
+  tag_id     INTEGER  NOT NULL REFERENCES tags ON DELETE CASCADE,
   tagged_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  PRIMARY KEY (sid, tag_name)
+  PRIMARY KEY (sid, tag_id)
 ) WITHOUT ROWID;
 CREATE TABLE trash (
   sid         INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
@@ -341,18 +343,18 @@ INSERT INTO "languages" VALUES('yo');
 INSERT INTO "languages" VALUES('za');
 INSERT INTO "languages" VALUES('zh');
 INSERT INTO "languages" VALUES('zu');
-CREATE TRIGGER insert_tags
+CREATE TRIGGER insert_tags_trim_name
   AFTER INSERT ON tags
   BEGIN
-    UPDATE tags SET tag_name = trim(tag_name)
-      WHERE tag_name = NEW.tag_name;
+    UPDATE tags SET name = trim(name)
+      WHERE tag_id = NEW.tag_id;
   END;
-CREATE TRIGGER update_tags
+CREATE TRIGGER update_tags_trim_name
   AFTER UPDATE ON tags
-  FOR EACH ROW WHEN NEW.tag_name <> OLD.tag_name
+  FOR EACH ROW WHEN NEW.name <> OLD.name
   BEGIN
-    UPDATE tags SET tag_name = trim(tag_name)
-      WHERE tag_name = NEW.tag_name;
+    UPDATE tags SET name = trim(name)
+      WHERE tag_id = NEW.tag_id;
   END;
 CREATE TRIGGER insert_lists_trim_name
   AFTER INSERT ON lists
