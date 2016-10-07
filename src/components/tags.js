@@ -39,9 +39,7 @@ class Tag extends Component {
   }
 
   activate = () => {
-    if (!this.props.active) {
-      this.props.onActivate(this.props.tag.id)
-    }
+    this.props.onActivate(this.props.active ? null : this.props.tag.id)
   }
 
   rename = () => {
@@ -136,7 +134,7 @@ module.exports = {
   Tags: connect(
 
     (state) => ({
-      selected: state.nav.list,
+      selected: state.nav.tag,
       context: state.ui.context.tag,
       editing: state.ui.edit.tag,
       tags: get.visible(state)
