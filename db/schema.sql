@@ -98,7 +98,7 @@ CREATE TABLE lists (
   CHECK (name != ''),
   UNIQUE (parent_list_id, name)
 );
-INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-10-07 15:24:53','2016-10-07 15:24:53');
+INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-10-08 18:44:17','2016-10-08 18:44:17');
 CREATE TABLE list_items (
   sid      INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
@@ -351,8 +351,7 @@ CREATE TRIGGER insert_tags_trim_name
       WHERE tag_id = NEW.tag_id;
   END;
 CREATE TRIGGER update_tags_trim_name
-  AFTER UPDATE ON tags
-  FOR EACH ROW WHEN NEW.name != OLD.name
+  AFTER UPDATE OF name ON tags
   BEGIN
     UPDATE tags SET name = trim(name)
       WHERE tag_id = NEW.tag_id;
@@ -364,16 +363,14 @@ CREATE TRIGGER insert_lists_trim_name
       WHERE list_id = NEW.list_id;
   END;
 CREATE TRIGGER update_lists_trim_name
-  AFTER UPDATE ON lists
-  FOR EACH ROW WHEN NEW.name != OLD.name
+  AFTER UPDATE OF name ON lists
   BEGIN
     UPDATE lists SET name = trim(name)
       WHERE list_id = NEW.list_id;
   END;
 CREATE TRIGGER update_lists_cycle_check
-  BEFORE UPDATE ON lists
+  BEFORE UPDATE OF parent_list_id ON lists
   FOR EACH ROW WHEN NEW.parent_list_id NOT NULL
-    AND NEW.parent_list_id != OLD.parent_list_id
   BEGIN
     SELECT CASE (
         WITH RECURSIVE
