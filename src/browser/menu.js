@@ -82,7 +82,7 @@ class Menu {
           break
 
         case 'dev':
-          item.visible = (this.app.dev || this.app.args.debug)
+          item.visible = (this.app.dev || ARGS.debug)
           break
 
         case 'theme':
