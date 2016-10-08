@@ -30,15 +30,14 @@ module.exports = require('yargs')
 
   .option('debug', {
     type: 'boolean',
-    describe: 'Set debug flag'
+    describe: 'Set debug flag',
+    default: false
   })
-  .default('debug', () => (process.env.DEBUG || false), false)
 
   .help('help')
   .version(pkg.version)
 
   .epilogue([
     'Environment Variables:',
-    '  DEBUG     Set debug mode default',
     '  NODE_ENV  Set default environment'
   ].join('\n'))
