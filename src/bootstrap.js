@@ -8,13 +8,11 @@ const START = performance.now()
   const hash = window.location.hash.slice(1)
 
   global.ARGS = freeze(JSON.parse(decode(hash)))
-
   process.env.NODE_ENV = ARGS.environment
-  if (ARGS.debug) process.env.DEBUG = true
 }
 
 
-const { verbose } = require('./common/log')(ARGS.home)
+const { verbose } = require('./common/log')(ARGS.home, ARGS)
 const { remote } = require('electron')
 const { ready } = require('./dom')
 

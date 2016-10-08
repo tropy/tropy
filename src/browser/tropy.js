@@ -34,7 +34,7 @@ class Tropy extends EventEmitter {
     }
   }
 
-  constructor() { // eslint-disable-line constructor-super
+  constructor(args = {}) { // eslint-disable-line constructor-super
     if (Tropy.instance) return Tropy.instance
 
     super()
@@ -43,6 +43,7 @@ class Tropy extends EventEmitter {
     this.menu = new AppMenu(this)
     this.ctx = new ContextMenu(this)
 
+    prop(this, 'args', { value: args })
     prop(this, 'store', { value: new Storage() })
 
     prop(this, 'projects', { value: new Map() })
@@ -313,8 +314,8 @@ class Tropy extends EventEmitter {
 
   get hash() {
     return {
-      environment: this.environment,
-      debug: this.debug,
+      environment: this.args.environment,
+      debug: this.args.debug,
       dev: this.dev,
       home: app.getPath('userData'),
       frameless: this.state.frameless,
@@ -338,16 +339,8 @@ class Tropy extends EventEmitter {
     return release.product
   }
 
-  get debug() {
-    return process.env.DEBUG === 'true'
-  }
-
   get dev() {
-    return release.channel === 'dev' || this.environment === 'development'
-  }
-
-  get environment() {
-    return process.env.NODE_ENV
+    return release.channel === 'dev' || this.args.environment === 'development'
   }
 
   get version() {

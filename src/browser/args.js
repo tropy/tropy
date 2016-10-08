@@ -32,7 +32,7 @@ module.exports = require('yargs')
     type: 'boolean',
     describe: 'Set debug flag'
   })
-  .default('debug', () => (process.env.DEBUG || 'false'), 'false')
+  .default('debug', () => (process.env.DEBUG || false), false)
 
   .help('help')
   .version(pkg.version)

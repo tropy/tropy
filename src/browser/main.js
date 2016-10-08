@@ -12,7 +12,6 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
   const opts = args.parse(process.argv.slice(1))
 
   process.env.NODE_ENV = opts.environment
-  process.env.DEBUG = opts.debug
 
   require('./path')(opts.dir)
 
@@ -20,7 +19,7 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
   const { all }  = require('bluebird')
   const { once } = require('../common/util')
   const { info, verbose } =
-    require('../common/log')(app.getPath('userData'))
+    require('../common/log')(app.getPath('userData'), opts)
 
   if (process.env.NODE_ENV !== 'test') {
     if (app.makeSingleInstance(() => tropy.open(...opts._))) {
@@ -32,7 +31,7 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
   verbose(`started in ${opts.e} mode`)
   verbose(`using ${app.getPath('userData')}`)
 
-  const tropy = new (require('./tropy'))()
+  const tropy = new (require('./tropy'))(opts)
 
   tropy.listen()
   tropy.restore()
