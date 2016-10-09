@@ -29,18 +29,18 @@ CREATE TABLE project (
   CHECK (name != '')
 ) WITHOUT ROWID;
 CREATE TABLE subjects (
-  sid          INTEGER  PRIMARY KEY,
+  id           INTEGER  PRIMARY KEY,
   template_id  TEXT,
   created_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE images (
-  sid     INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
+  id      INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   width   INTEGER  NOT NULL DEFAULT 0,
   height  INTEGER  NOT NULL DEFAULT 0
 ) WITHOUT ROWID;
 CREATE TABLE items (
-  sid             INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
+  id              INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   cover_image_id  INTEGER  REFERENCES images ON DELETE SET NULL
 ) WITHOUT ROWID;
 CREATE TABLE metadata_types (
@@ -51,40 +51,39 @@ CREATE TABLE metadata_types (
   CHECK (type_name != '')
 ) WITHOUT ROWID;
 INSERT INTO "metadata_types" VALUES('boolean','https://schema.org/Boolean');
+INSERT INTO "metadata_types" VALUES('datetime','https://schema.org/DateTime');
 INSERT INTO "metadata_types" VALUES('location','https://schema.org/GeoCoordinates');
 INSERT INTO "metadata_types" VALUES('number','https://schema.org/Number');
 INSERT INTO "metadata_types" VALUES('text','https://schema.org/Text');
-INSERT INTO "metadata_types" VALUES('datetime','https://schema.tropy.org/types/datetime');
+INSERT INTO "metadata_types" VALUES('date','https://schema.tropy.org/types/date');
 INSERT INTO "metadata_types" VALUES('name','https://schema.tropy.org/types/name');
 CREATE TABLE metadata (
-  metadata_id  INTEGER  PRIMARY KEY,
-  sid          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
-  property_id  TEXT     NOT NULL,
-  value_id     INTEGER  NOT NULL REFERENCES metadata_values,
-  position     INTEGER  NOT NULL DEFAULT 0,
+  id        INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
+  property  TEXT     NOT NULL,
+  value_id  INTEGER  NOT NULL REFERENCES metadata_values,
+  position  INTEGER  NOT NULL DEFAULT 0,
 
-  UNIQUE (sid, position)
-);
+  PRIMARY KEY (id, property),
+  UNIQUE (id, position)
+) WITHOUT ROWID;
 CREATE TABLE metadata_values (
-  value_id  INTEGER  NOT NULL PRIMARY KEY,
-  type_name TEXT     NOT NULL REFERENCES metadata_types
-                       ON DELETE CASCADE ON UPDATE CASCADE,
-  value              NOT NULL,
-  struct             NOT NULL DEFAULT '{}',
-  language  TEXT     REFERENCES languages,
+  value_id   INTEGER  PRIMARY KEY,
+  type_name  TEXT     NOT NULL REFERENCES metadata_types ON UPDATE CASCADE,
+  value               NOT NULL,
+  struct              NOT NULL DEFAULT '{}',
 
-  UNIQUE (type_name, value, language)
+  UNIQUE (type_name, value)
 );
 CREATE TABLE notes (
   note_id      INTEGER  PRIMARY KEY,
-  sid          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
+  id           INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   position     INTEGER  NOT NULL DEFAULT 0,
   text         TEXT     NOT NULL,
   language     TEXT     NOT NULL DEFAULT 'en' REFERENCES languages,
   created_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  UNIQUE (sid, position)
+  UNIQUE (id, position)
 );
 CREATE TABLE lists (
   list_id         INTEGER  PRIMARY KEY,
@@ -98,14 +97,14 @@ CREATE TABLE lists (
   CHECK (name != ''),
   UNIQUE (parent_list_id, name)
 );
-INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-10-08 18:44:17','2016-10-08 18:44:17');
+INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-10-09 13:28:33','2016-10-09 13:28:33');
 CREATE TABLE list_items (
-  sid      INTEGER REFERENCES items ON DELETE CASCADE,
+  id       INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
   position INTEGER NOT NULL DEFAULT 0,
 
-  PRIMARY KEY (sid, list_id),
-  UNIQUE (sid, list_id, position)
+  PRIMARY KEY (id, list_id),
+  UNIQUE (id, list_id, position)
 ) WITHOUT ROWID;
 CREATE TABLE tags (
   tag_id      INTEGER  PRIMARY KEY,
@@ -119,18 +118,18 @@ CREATE TABLE tags (
   UNIQUE (visible, name)
 );
 CREATE TABLE taggings (
-  sid        INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
+  id         INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   tag_id     INTEGER  NOT NULL REFERENCES tags ON DELETE CASCADE,
   tagged_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  PRIMARY KEY (sid, tag_id)
+  PRIMARY KEY (id, tag_id)
 ) WITHOUT ROWID;
 CREATE TABLE trash (
-  sid         INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
+  id          INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   deleted_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) WITHOUT ROWID;
 CREATE TABLE photos (
-  sid          INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
+  id           INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
   item_id      INTEGER  NOT NULL REFERENCES items ON DELETE CASCADE,
   path         TEXT     NOT NULL,
   protocol     TEXT     NOT NULL DEFAULT 'file',
@@ -140,7 +139,7 @@ CREATE TABLE photos (
   exif                  NOT NULL DEFAULT '{}'
 ) WITHOUT ROWID;
 CREATE TABLE selections (
-  sid       INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
+  id        INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
   photo_id  INTEGER  NOT NULL REFERENCES photos ON DELETE CASCADE,
   quality   TEXT     NOT NULL DEFAULT 'default' REFERENCES image_qualities,
   x         NUMERIC  NOT NULL DEFAULT 0,
@@ -148,14 +147,14 @@ CREATE TABLE selections (
   pct       BOOLEAN  NOT NULL DEFAULT 0
 ) WITHOUT ROWID;
 CREATE TABLE image_scales (
-  sid     INTEGER  PRIMARY KEY REFERENCES selections ON DELETE CASCADE,
+  id      INTEGER  PRIMARY KEY REFERENCES selections ON DELETE CASCADE,
   x       NUMERIC  NOT NULL DEFAULT 0,
   y       NUMERIC  NOT NULL DEFAULT 0,
   factor  NUMERIC  NOT NULL,
   fit     BOOLEAN  NOT NULL DEFAULT 0
 ) WITHOUT ROWID;
 CREATE TABLE image_rotations (
-  sid     INTEGER  PRIMARY KEY REFERENCES selections ON DELETE CASCADE,
+  id      INTEGER  PRIMARY KEY REFERENCES selections ON DELETE CASCADE,
   angle   NUMERIC  NOT NULL DEFAULT 0,
   mirror  BOOLEAN  NOT NULL DEFAULT 0
 ) WITHOUT ROWID;

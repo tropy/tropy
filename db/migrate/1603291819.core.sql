@@ -14,10 +14,10 @@ CREATE TABLE project (
 
 
 -- Metatable for items, photos, and selections.
--- A field `sid` in the database always references
+-- A field `id` in the database always references
 -- a row in the subjects table.
 CREATE TABLE subjects (
-  sid          INTEGER  PRIMARY KEY,
+  id           INTEGER  PRIMARY KEY,
   template_id  TEXT,
   created_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -26,14 +26,14 @@ CREATE TABLE subjects (
 
 -- Metatable for photos and selections.
 CREATE TABLE images (
-  sid     INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
+  id      INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   width   INTEGER  NOT NULL DEFAULT 0,
   height  INTEGER  NOT NULL DEFAULT 0
 ) WITHOUT ROWID;
 
 
 CREATE TABLE items (
-  sid             INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
+  id              INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   cover_image_id  INTEGER  REFERENCES images ON DELETE SET NULL
 ) WITHOUT ROWID;
 
@@ -48,7 +48,8 @@ CREATE TABLE metadata_types (
 
 INSERT INTO metadata_types (type_name, type_schema) VALUES
   ('text', 'https://schema.org/Text'),
-  ('datetime', 'https://schema.tropy.org/types/datetime'),
+  ('date', 'https://schema.tropy.org/types/date'),
+  ('datetime', 'https://schema.org/DateTime'),
   ('name', 'https://schema.tropy.org/types/name'),
   ('boolean', 'https://schema.org/Boolean'),
   ('number', 'https://schema.org/Number'),
@@ -56,37 +57,35 @@ INSERT INTO metadata_types (type_name, type_schema) VALUES
 
 
 CREATE TABLE metadata (
-  metadata_id  INTEGER  PRIMARY KEY,
-  sid          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
-  property_id  TEXT     NOT NULL,
-  value_id     INTEGER  NOT NULL REFERENCES metadata_values,
-  position     INTEGER  NOT NULL DEFAULT 0,
+  id        INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
+  property  TEXT     NOT NULL,
+  value_id  INTEGER  NOT NULL REFERENCES metadata_values,
+  position  INTEGER  NOT NULL DEFAULT 0,
 
-  UNIQUE (sid, position)
-);
+  PRIMARY KEY (id, property),
+  UNIQUE (id, position)
+) WITHOUT ROWID;
 
 CREATE TABLE metadata_values (
-  value_id  INTEGER  NOT NULL PRIMARY KEY,
-  type_name TEXT     NOT NULL REFERENCES metadata_types
-                       ON DELETE CASCADE ON UPDATE CASCADE,
-  value              NOT NULL,
-  struct             NOT NULL DEFAULT '{}',
-  language  TEXT     REFERENCES languages,
+  value_id   INTEGER  PRIMARY KEY,
+  type_name  TEXT     NOT NULL REFERENCES metadata_types ON UPDATE CASCADE,
+  value               NOT NULL,
+  struct              NOT NULL DEFAULT '{}',
 
-  UNIQUE (type_name, value, language)
+  UNIQUE (type_name, value)
 );
 
 
 CREATE TABLE notes (
   note_id      INTEGER  PRIMARY KEY,
-  sid          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
+  id           INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   position     INTEGER  NOT NULL DEFAULT 0,
   text         TEXT     NOT NULL,
   language     TEXT     NOT NULL DEFAULT 'en' REFERENCES languages,
   created_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  UNIQUE (sid, position)
+  UNIQUE (id, position)
 );
 
 
@@ -106,12 +105,12 @@ CREATE TABLE lists (
 INSERT INTO lists (list_id, name, parent_list_id) VALUES (0, 'ROOT', NULL);
 
 CREATE TABLE list_items (
-  sid      INTEGER REFERENCES items ON DELETE CASCADE,
+  id       INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
   position INTEGER NOT NULL DEFAULT 0,
 
-  PRIMARY KEY (sid, list_id),
-  UNIQUE (sid, list_id, position)
+  PRIMARY KEY (id, list_id),
+  UNIQUE (id, list_id, position)
 ) WITHOUT ROWID;
 
 
@@ -128,15 +127,15 @@ CREATE TABLE tags (
 );
 
 CREATE TABLE taggings (
-  sid        INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
+  id         INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   tag_id     INTEGER  NOT NULL REFERENCES tags ON DELETE CASCADE,
   tagged_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  PRIMARY KEY (sid, tag_id)
+  PRIMARY KEY (id, tag_id)
 ) WITHOUT ROWID;
 
 
 CREATE TABLE trash (
-  sid         INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
+  id          INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   deleted_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) WITHOUT ROWID;
