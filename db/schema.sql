@@ -12,7 +12,7 @@
 --
 
 -- Save the current migration number
-PRAGMA user_version=1604261942;
+PRAGMA user_version=1604191233;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -27,6 +27,7 @@ CREATE TABLE project (
 
   CHECK (project_id != ''),
   CHECK (name != '')
+
 ) WITHOUT ROWID;
 CREATE TABLE subjects (
   id           INTEGER  PRIMARY KEY,
@@ -49,6 +50,7 @@ CREATE TABLE metadata_types (
 
   CHECK (type_schema != ''),
   CHECK (type_name != '')
+
 ) WITHOUT ROWID;
 INSERT INTO "metadata_types" VALUES('boolean','https://schema.org/Boolean');
 INSERT INTO "metadata_types" VALUES('datetime','https://schema.org/DateTime');
@@ -62,6 +64,11 @@ CREATE TABLE metadata (
   property  TEXT     NOT NULL,
   value_id  INTEGER  NOT NULL REFERENCES metadata_values,
   position  INTEGER  NOT NULL DEFAULT 0,
+  language  TEXT,
+
+  CHECK (
+    language IS NULL OR language != '' AND language = trim(lower(language))
+  ),
 
   PRIMARY KEY (id, property),
   UNIQUE (id, position)
@@ -79,9 +86,13 @@ CREATE TABLE notes (
   id           INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   position     INTEGER  NOT NULL DEFAULT 0,
   text         TEXT     NOT NULL,
-  language     TEXT     NOT NULL DEFAULT 'en' REFERENCES languages,
+  language     TEXT     NOT NULL DEFAULT 'en',
   created_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  CHECK (
+    language != '' AND language = trim(lower(language))
+  ),
 
   UNIQUE (id, position)
 );
@@ -95,9 +106,10 @@ CREATE TABLE lists (
 
   CHECK (list_id != parent_list_id),
   CHECK (name != ''),
+
   UNIQUE (parent_list_id, name)
 );
-INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-10-09 13:28:33','2016-10-09 13:28:33');
+INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-10-16 11:50:17','2016-10-16 11:50:17');
 CREATE TABLE list_items (
   id       INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
@@ -165,184 +177,6 @@ INSERT INTO "image_qualities" VALUES('bitonal');
 INSERT INTO "image_qualities" VALUES('color');
 INSERT INTO "image_qualities" VALUES('default');
 INSERT INTO "image_qualities" VALUES('gray');
-CREATE TABLE languages (
-  language TEXT NOT NULL PRIMARY KEY,
-
-  CHECK (language != ''),
-  CHECK (language = trim(lower(language)))
-) WITHOUT ROWID;
-INSERT INTO "languages" VALUES('aa');
-INSERT INTO "languages" VALUES('ab');
-INSERT INTO "languages" VALUES('ae');
-INSERT INTO "languages" VALUES('af');
-INSERT INTO "languages" VALUES('am');
-INSERT INTO "languages" VALUES('an');
-INSERT INTO "languages" VALUES('ar');
-INSERT INTO "languages" VALUES('as');
-INSERT INTO "languages" VALUES('ay');
-INSERT INTO "languages" VALUES('az');
-INSERT INTO "languages" VALUES('ba');
-INSERT INTO "languages" VALUES('be');
-INSERT INTO "languages" VALUES('bg');
-INSERT INTO "languages" VALUES('bh');
-INSERT INTO "languages" VALUES('bi');
-INSERT INTO "languages" VALUES('bn');
-INSERT INTO "languages" VALUES('bo');
-INSERT INTO "languages" VALUES('br');
-INSERT INTO "languages" VALUES('bs');
-INSERT INTO "languages" VALUES('ca');
-INSERT INTO "languages" VALUES('ce');
-INSERT INTO "languages" VALUES('ch');
-INSERT INTO "languages" VALUES('co');
-INSERT INTO "languages" VALUES('cs');
-INSERT INTO "languages" VALUES('cu');
-INSERT INTO "languages" VALUES('cv');
-INSERT INTO "languages" VALUES('cy');
-INSERT INTO "languages" VALUES('da');
-INSERT INTO "languages" VALUES('de');
-INSERT INTO "languages" VALUES('dv');
-INSERT INTO "languages" VALUES('dz');
-INSERT INTO "languages" VALUES('el');
-INSERT INTO "languages" VALUES('en');
-INSERT INTO "languages" VALUES('eo');
-INSERT INTO "languages" VALUES('es');
-INSERT INTO "languages" VALUES('et');
-INSERT INTO "languages" VALUES('eu');
-INSERT INTO "languages" VALUES('fa');
-INSERT INTO "languages" VALUES('fi');
-INSERT INTO "languages" VALUES('fj');
-INSERT INTO "languages" VALUES('fo');
-INSERT INTO "languages" VALUES('fr');
-INSERT INTO "languages" VALUES('fy');
-INSERT INTO "languages" VALUES('ga');
-INSERT INTO "languages" VALUES('gd');
-INSERT INTO "languages" VALUES('gl');
-INSERT INTO "languages" VALUES('gn');
-INSERT INTO "languages" VALUES('gu');
-INSERT INTO "languages" VALUES('gv');
-INSERT INTO "languages" VALUES('ha');
-INSERT INTO "languages" VALUES('he');
-INSERT INTO "languages" VALUES('hi');
-INSERT INTO "languages" VALUES('ho');
-INSERT INTO "languages" VALUES('hr');
-INSERT INTO "languages" VALUES('ht');
-INSERT INTO "languages" VALUES('hu');
-INSERT INTO "languages" VALUES('hy');
-INSERT INTO "languages" VALUES('hz');
-INSERT INTO "languages" VALUES('ia');
-INSERT INTO "languages" VALUES('id');
-INSERT INTO "languages" VALUES('ie');
-INSERT INTO "languages" VALUES('ii');
-INSERT INTO "languages" VALUES('ik');
-INSERT INTO "languages" VALUES('io');
-INSERT INTO "languages" VALUES('is');
-INSERT INTO "languages" VALUES('it');
-INSERT INTO "languages" VALUES('iu');
-INSERT INTO "languages" VALUES('ja');
-INSERT INTO "languages" VALUES('jv');
-INSERT INTO "languages" VALUES('ka');
-INSERT INTO "languages" VALUES('ki');
-INSERT INTO "languages" VALUES('kj');
-INSERT INTO "languages" VALUES('kk');
-INSERT INTO "languages" VALUES('kl');
-INSERT INTO "languages" VALUES('km');
-INSERT INTO "languages" VALUES('kn');
-INSERT INTO "languages" VALUES('ko');
-INSERT INTO "languages" VALUES('ks');
-INSERT INTO "languages" VALUES('ku');
-INSERT INTO "languages" VALUES('kv');
-INSERT INTO "languages" VALUES('kw');
-INSERT INTO "languages" VALUES('ky');
-INSERT INTO "languages" VALUES('la');
-INSERT INTO "languages" VALUES('lb');
-INSERT INTO "languages" VALUES('li');
-INSERT INTO "languages" VALUES('ln');
-INSERT INTO "languages" VALUES('lo');
-INSERT INTO "languages" VALUES('lt');
-INSERT INTO "languages" VALUES('lv');
-INSERT INTO "languages" VALUES('mg');
-INSERT INTO "languages" VALUES('mh');
-INSERT INTO "languages" VALUES('mi');
-INSERT INTO "languages" VALUES('mk');
-INSERT INTO "languages" VALUES('ml');
-INSERT INTO "languages" VALUES('mn');
-INSERT INTO "languages" VALUES('mo');
-INSERT INTO "languages" VALUES('mr');
-INSERT INTO "languages" VALUES('ms');
-INSERT INTO "languages" VALUES('mt');
-INSERT INTO "languages" VALUES('my');
-INSERT INTO "languages" VALUES('na');
-INSERT INTO "languages" VALUES('nb');
-INSERT INTO "languages" VALUES('nd');
-INSERT INTO "languages" VALUES('ne');
-INSERT INTO "languages" VALUES('ng');
-INSERT INTO "languages" VALUES('nl');
-INSERT INTO "languages" VALUES('nn');
-INSERT INTO "languages" VALUES('no');
-INSERT INTO "languages" VALUES('nr');
-INSERT INTO "languages" VALUES('nv');
-INSERT INTO "languages" VALUES('ny');
-INSERT INTO "languages" VALUES('oc');
-INSERT INTO "languages" VALUES('om');
-INSERT INTO "languages" VALUES('or');
-INSERT INTO "languages" VALUES('os');
-INSERT INTO "languages" VALUES('pa');
-INSERT INTO "languages" VALUES('pi');
-INSERT INTO "languages" VALUES('pl');
-INSERT INTO "languages" VALUES('ps');
-INSERT INTO "languages" VALUES('pt');
-INSERT INTO "languages" VALUES('qu');
-INSERT INTO "languages" VALUES('rm');
-INSERT INTO "languages" VALUES('rn');
-INSERT INTO "languages" VALUES('ro');
-INSERT INTO "languages" VALUES('ru');
-INSERT INTO "languages" VALUES('rw');
-INSERT INTO "languages" VALUES('sa');
-INSERT INTO "languages" VALUES('sc');
-INSERT INTO "languages" VALUES('sd');
-INSERT INTO "languages" VALUES('se');
-INSERT INTO "languages" VALUES('sg');
-INSERT INTO "languages" VALUES('si');
-INSERT INTO "languages" VALUES('sk');
-INSERT INTO "languages" VALUES('sl');
-INSERT INTO "languages" VALUES('sm');
-INSERT INTO "languages" VALUES('sn');
-INSERT INTO "languages" VALUES('so');
-INSERT INTO "languages" VALUES('sq');
-INSERT INTO "languages" VALUES('sr');
-INSERT INTO "languages" VALUES('ss');
-INSERT INTO "languages" VALUES('st');
-INSERT INTO "languages" VALUES('su');
-INSERT INTO "languages" VALUES('sv');
-INSERT INTO "languages" VALUES('sw');
-INSERT INTO "languages" VALUES('ta');
-INSERT INTO "languages" VALUES('te');
-INSERT INTO "languages" VALUES('tg');
-INSERT INTO "languages" VALUES('th');
-INSERT INTO "languages" VALUES('ti');
-INSERT INTO "languages" VALUES('tk');
-INSERT INTO "languages" VALUES('tl');
-INSERT INTO "languages" VALUES('tn');
-INSERT INTO "languages" VALUES('to');
-INSERT INTO "languages" VALUES('tr');
-INSERT INTO "languages" VALUES('ts');
-INSERT INTO "languages" VALUES('tt');
-INSERT INTO "languages" VALUES('tw');
-INSERT INTO "languages" VALUES('ty');
-INSERT INTO "languages" VALUES('ug');
-INSERT INTO "languages" VALUES('uk');
-INSERT INTO "languages" VALUES('ur');
-INSERT INTO "languages" VALUES('uz');
-INSERT INTO "languages" VALUES('vi');
-INSERT INTO "languages" VALUES('vo');
-INSERT INTO "languages" VALUES('wa');
-INSERT INTO "languages" VALUES('wo');
-INSERT INTO "languages" VALUES('xh');
-INSERT INTO "languages" VALUES('yi');
-INSERT INTO "languages" VALUES('yo');
-INSERT INTO "languages" VALUES('za');
-INSERT INTO "languages" VALUES('zh');
-INSERT INTO "languages" VALUES('zu');
 CREATE TRIGGER insert_tags_trim_name
   AFTER INSERT ON tags
   BEGIN

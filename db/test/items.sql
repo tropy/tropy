@@ -24,8 +24,8 @@ INSERT INTO metadata_values (type_name, value)
 INSERT INTO metadata_values (type_name, value)
   VALUES ('date', '2017');
 
-REPLACE INTO metadata (id, property, value_id, position)
-  VALUES (1, 'title', 1, 1);
+REPLACE INTO metadata (id, property, value_id, position, language)
+  VALUES (1, 'title', 1, 1, 'en');
 REPLACE INTO metadata (id, property, value_id, position)
   VALUES (1, 'date', 3, 2);
 

@@ -10,6 +10,7 @@ CREATE TABLE project (
 
   CHECK (project_id != ''),
   CHECK (name != '')
+
 ) WITHOUT ROWID;
 
 
@@ -44,6 +45,7 @@ CREATE TABLE metadata_types (
 
   CHECK (type_schema != ''),
   CHECK (type_name != '')
+
 ) WITHOUT ROWID;
 
 INSERT INTO metadata_types (type_name, type_schema) VALUES
@@ -61,6 +63,11 @@ CREATE TABLE metadata (
   property  TEXT     NOT NULL,
   value_id  INTEGER  NOT NULL REFERENCES metadata_values,
   position  INTEGER  NOT NULL DEFAULT 0,
+  language  TEXT,
+
+  CHECK (
+    language IS NULL OR language != '' AND language = trim(lower(language))
+  ),
 
   PRIMARY KEY (id, property),
   UNIQUE (id, position)
@@ -81,9 +88,13 @@ CREATE TABLE notes (
   id           INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   position     INTEGER  NOT NULL DEFAULT 0,
   text         TEXT     NOT NULL,
-  language     TEXT     NOT NULL DEFAULT 'en' REFERENCES languages,
+  language     TEXT     NOT NULL DEFAULT 'en',
   created_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  CHECK (
+    language != '' AND language = trim(lower(language))
+  ),
 
   UNIQUE (id, position)
 );
@@ -99,6 +110,7 @@ CREATE TABLE lists (
 
   CHECK (list_id != parent_list_id),
   CHECK (name != ''),
+
   UNIQUE (parent_list_id, name)
 );
 
