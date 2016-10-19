@@ -8,5 +8,6 @@ module.exports = {
   ...require('./nav'),
   ...require('./project'),
   ...require('./tags'),
-  ...require('./ui')
+  ...require('./ui'),
+  ...require('./vocab')
 }

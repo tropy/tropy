@@ -29,11 +29,11 @@ class ListItem extends Component {
       <tr
         className={cn({ item: true, active: current === item.id })}
         onClick={this.select}>
-        {columns.map(({ field, width }, idx) => (
+        {columns.map(({ property, width }, idx) => (
           <Cell
             key={idx}
-            type={field.type}
-            value={item[field.name].value}
+            type={property.type}
+            value={item[property.name].value}
             icon={idx ? null : item.image}
             width={width}/>
         ))}

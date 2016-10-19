@@ -10,11 +10,11 @@ const ListHead = ({ columns }) => (
   <table className="list-head">
     <thead>
       <tr>
-        {columns.map(({ width, field, order }, idx) => (
+        {columns.map(({ width, property, order }, idx) => (
           <th key={idx}
-            className={classes(['metadata-head', field.type, order])}
+            className={classes(['metadata-head', property.type, order])}
             style={{ width }}>
-            <FormattedMessage id={`fields.${field.name}`}/>
+            <FormattedMessage id={`fields.${property.name}`}/>
           </th>
         ))}
       </tr>

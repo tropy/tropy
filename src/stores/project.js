@@ -10,7 +10,7 @@ const { log: logger, warn, debug } = require('../common/log')
 const { seq, debounce, log } = require('../middleware')
 
 const {
-  activities, project, nav, intl, history, lists, tags, ui
+  activities, project, nav, intl, history, lists, tags, ui, vocab
 } = require('../reducers')
 
 const dev = (ARGS.dev || ARGS.debug)
@@ -34,7 +34,8 @@ module.exports = {
       project,
       lists,
       tags,
-      history
+      history,
+      vocab
     })
 
     const middleware = applyMiddleware(

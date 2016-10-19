@@ -7,18 +7,8 @@ const { connect } = require('react-redux')
 const { update } = require('../../actions/nav')
 const { ListItem } = require('./list-item')
 const { ListHead } = require('./list-head')
+const { getColumns } = require('../../selectors/ui')
 
-const cols = [
-  { width: '40%', field: { name: 'title', type: 'string' } },
-  { width: '25%', field: { name: 'type', type: 'string' } },
-  { width: '15%', field: { name: 'date', type: 'date' } },
-  {
-    width: '10%',
-    order: 'ascending',
-    field: { name: 'box', type: 'number' }
-  },
-  { width: '10%', field: { name: 'photos', type: 'number' } }
-]
 
 const itms = [
   {
@@ -176,7 +166,7 @@ module.exports = {
   List: connect(
     state => ({
       current: state.nav.item,
-      columns: cols,
+      columns: getColumns(state),
       items: itms
     }),
 
