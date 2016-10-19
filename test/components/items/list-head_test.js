@@ -13,8 +13,8 @@ describe('ListHead', () => {
 
   it('renders head columns', () => {
     const columns = [
-      { width: '40%', field: { name: 'x', type: 'string' } },
-      { width: '60%', field: { name: 'y', type: 'number' } },
+      { width: '40%', property: { name: 'x', type: 'string' } },
+      { width: '60%', property: { name: 'y', type: 'number' } },
     ]
 
     expect(shallow(<ListHead columns={columns}/>))
