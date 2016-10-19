@@ -54,6 +54,7 @@ target.pack = (args = []) => {
       'coverage',
       'dist',
       'doc',
+      'ext',
       'res/icons',
       'res/dmg',
       'scripts',

@@ -2,7 +2,6 @@
 
 require('shelljs/make')
 
-const entries = require('object.entries')
 const log = require('./log')
 
 const { join, resolve } = require('path')
@@ -36,15 +35,10 @@ target.sqlite3 = (force) => {
   if (force || check(mod)) {
     say(`${mod} ${force ? '(forced)' : ''}...`)
 
-    const flags = [
-      'HAVE_USLEEP',
-      'SQLITE_ENABLE_FTS5',
-      'SQLITE_ENABLE_JSON1',
-      'SQLITE_ENABLE_RTREE'
-    ]
+    say(`${mod} patching...`)
+    cp(join(home, 'ext', mod, '*'), join(mods, mod, 'deps'))
 
     rebuild(mod, {
-      env: { CFLAGS: cflags(flags) },
       params: '--build-from-source'
     })
 
@@ -61,8 +55,6 @@ target.inspector = () => {
 }
 
 
-
-
 function check(mod) {
   return !test('-d', join(binding(mod)))
 }
@@ -76,24 +68,9 @@ function binding(mod, platform = process.platform, arch = process.arch) {
   ].join('-'))
 }
 
-function cflags(flags) {
-  return '"' + flags.map(flag => `-D${flag}=1`).join(' ') + '"'
-}
-
 function rebuild(mod, opts = {}) {
   target.headers()
-
-  if (!opts.env || process.platform === 'win32') {
-    return exec(`npm rebuild ${mod} ${opts.params} ${CONFIG.join(' ')}`)
-  }
-
-  return exec(
-    `${env(opts.env)} npm rebuild ${mod} ${opts.params} ${CONFIG.join(' ')}`
-  )
-}
-
-function env(vars) {
-  return entries(vars).map(nv => nv.join('=')).join(' ')
+  return exec(`npm rebuild ${mod} ${opts.params} ${CONFIG.join(' ')}`)
 }
 
 function v(module) {
