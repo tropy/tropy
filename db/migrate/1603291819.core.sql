@@ -76,11 +76,13 @@ CREATE TABLE metadata (
 CREATE TABLE metadata_values (
   value_id   INTEGER  PRIMARY KEY,
   type_name  TEXT     NOT NULL REFERENCES metadata_types ON UPDATE CASCADE,
-  value               NOT NULL,
+  value      TEXT     NOT NULL,
   struct              NOT NULL DEFAULT '{}',
 
   UNIQUE (type_name, value)
 );
+
+CREATE INDEX metadata_values_index ON metadata_values (value ASC);
 
 
 CREATE TABLE notes (

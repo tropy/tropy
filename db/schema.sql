@@ -12,7 +12,7 @@
 --
 
 -- Save the current migration number
-PRAGMA user_version=1604191233;
+PRAGMA user_version=1610181540;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -76,7 +76,7 @@ CREATE TABLE metadata (
 CREATE TABLE metadata_values (
   value_id   INTEGER  PRIMARY KEY,
   type_name  TEXT     NOT NULL REFERENCES metadata_types ON UPDATE CASCADE,
-  value               NOT NULL,
+  value      TEXT     NOT NULL,
   struct              NOT NULL DEFAULT '{}',
 
   UNIQUE (type_name, value)
@@ -109,7 +109,7 @@ CREATE TABLE lists (
 
   UNIQUE (parent_list_id, name)
 );
-INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-10-16 11:50:17','2016-10-16 11:50:17');
+INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-10-19 12:02:12','2016-10-19 12:02:12');
 CREATE TABLE list_items (
   id       INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
@@ -177,6 +177,34 @@ INSERT INTO "image_qualities" VALUES('bitonal');
 INSERT INTO "image_qualities" VALUES('color');
 INSERT INTO "image_qualities" VALUES('default');
 INSERT INTO "image_qualities" VALUES('gray');
+PRAGMA writable_schema=ON;
+INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','ft_metadata','ft_metadata',0,'CREATE VIRTUAL TABLE ft_metadata USING fts5(
+  id UNINDEXED,
+  title,
+  names,
+  other
+)');
+CREATE TABLE 'ft_metadata_data'(id INTEGER PRIMARY KEY, block BLOB);
+INSERT INTO "ft_metadata_data" VALUES(1,X'');
+INSERT INTO "ft_metadata_data" VALUES(10,X'00000000000000');
+CREATE TABLE 'ft_metadata_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
+CREATE TABLE 'ft_metadata_content'(id INTEGER PRIMARY KEY, c0, c1, c2, c3);
+CREATE TABLE 'ft_metadata_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
+CREATE TABLE 'ft_metadata_config'(k PRIMARY KEY, v) WITHOUT ROWID;
+INSERT INTO "ft_metadata_config" VALUES('version',4);
+INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','ft_notes','ft_notes',0,'CREATE VIRTUAL TABLE ft_notes USING fts5(
+  id UNINDEXED,
+  text,
+  content=''notes''
+)');
+CREATE TABLE 'ft_notes_data'(id INTEGER PRIMARY KEY, block BLOB);
+INSERT INTO "ft_notes_data" VALUES(1,X'');
+INSERT INTO "ft_notes_data" VALUES(10,X'00000000000000');
+CREATE TABLE 'ft_notes_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
+CREATE TABLE 'ft_notes_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
+CREATE TABLE 'ft_notes_config'(k PRIMARY KEY, v) WITHOUT ROWID;
+INSERT INTO "ft_notes_config" VALUES('version',4);
+CREATE INDEX metadata_values_index ON metadata_values (value ASC);
 CREATE TRIGGER insert_tags_trim_name
   AFTER INSERT ON tags
   BEGIN
@@ -222,5 +250,26 @@ CREATE TRIGGER update_lists_cycle_check
         RAISE(ABORT, 'Lists may not contain cycles')
       END;
   END;
+CREATE TRIGGER ai_notes_index
+  AFTER INSERT ON notes
+  BEGIN
+    INSERT INTO ft_notes (rowid, id, text)
+      VALUES (NEW.note_id, NEW.id, NEW.text);
+  END;
+CREATE TRIGGER ad_notes_index
+  AFTER DELETE ON notes
+  BEGIN
+    INSERT INTO ft_notes (ft_notes, rowid, id, text)
+      VALUES ('delete', OLD.note_id, OLD.id, OLD.text);
+  END;
+CREATE TRIGGER au_notes_index
+  AFTER UPDATE ON notes
+  BEGIN
+    INSERT INTO ft_notes (fts_notes, rowid, id, text)
+      VALUES ('delete', OLD.note_id, OLD.id, OLD.text);
+    INSERT INTO ft_notes (rowid, id, text)
+      VALUES (NEW.note_id, NEW.id, NEW.text);
+  END;
+PRAGMA writable_schema=OFF;
 COMMIT;
 PRAGMA foreign_keys=ON;

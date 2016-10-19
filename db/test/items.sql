@@ -45,15 +45,15 @@ REPLACE INTO metadata (id, property, value_id, position)
 
 -- All items sorted by title
 WITH
-  titles(id, title) AS (
+  titles(id, value) AS (
     SELECT id, value AS title
     FROM metadata JOIN metadata_values USING (value_id)
-    WHERE property= 'title'
+    WHERE property = 'title'
   )
-  SELECT id, title
-    FROM items LEFT OUTER JOIN titles USING (id)
+  SELECT id, t.value
+    FROM items LEFT OUTER JOIN titles t USING (id)
     WHERE id NOT IN (SELECT id FROM trash)
-    ORDER BY title ASC, id ASC;
+    ORDER BY t.value ASC, id ASC;
 
 -- Metadata for specific items
 SELECT id, property AS property, value, type_name
