@@ -8,131 +8,7 @@ const { update } = require('../../actions/nav')
 const { ListItem } = require('./list-item')
 const { ListHead } = require('./list-head')
 const { getColumns } = require('../../selectors/ui')
-
-
-const itms = [
-  {
-    id: 1,
-    image: 'dev/dummy',
-    title: {
-      value: 'Application Norman Bailey',
-      type: 'string'
-    },
-    type: {
-      value: 'Application Form',
-      type: 'string'
-    },
-    date: {
-      value: '1897-07-26',
-      type: 'date'
-    },
-    box: {
-      value: '17',
-      type: 'number'
-    },
-    photos: {
-      value: '2',
-      type: 'number'
-    }
-  },
-  {
-    id: 2,
-    image: 'dev/dummy',
-    title: {
-      value: 'Norman Bailey',
-      type: 'string'
-    },
-    type: {
-      value: 'Portrait',
-      type: 'string'
-    },
-    date: {
-      value: '1844',
-      type: 'date'
-    },
-    box: {
-      value: '17',
-      type: 'number'
-    },
-    photos: {
-      value: '1',
-      type: 'number'
-    }
-  },
-  {
-    id: 3,
-    image: 'dev/dummy',
-    title: {
-      value: 'Application H. F. Cary',
-      type: 'string'
-    },
-    type: {
-      value: 'Application Form',
-      type: 'string'
-    },
-    date: {
-      value: '1899-10-24',
-      type: 'date'
-    },
-    box: {
-      value: '17',
-      type: 'number'
-    },
-    photos: {
-      value: '2',
-      type: 'number'
-    }
-  },
-  {
-    id: 4,
-    image: 'dev/dummy',
-    title: {
-      value: 'Frank Cary',
-      type: 'string'
-    },
-    type: {
-      value: 'Portrait',
-      type: 'string'
-    },
-    date: {
-      value: '1868',
-      type: 'date'
-    },
-    box: {
-      value: '17',
-      type: 'number'
-    },
-    photos: {
-      value: '1',
-      type: 'number'
-    }
-  },
-  {
-    id: 5,
-    image: 'dev/dummy',
-    title: {
-      value: 'Denver to Chicago',
-      type: 'string'
-    },
-    type: {
-      value: 'Correspondence',
-      type: 'string'
-    },
-    date: {
-      value: '1899-12-24',
-      type: 'date'
-    },
-    box: {
-      value: '27',
-      type: 'number'
-    },
-    photos: {
-      value: '2',
-      type: 'number'
-    }
-  }
-]
-
+const { getItems } = require('../../selectors/items')
 
 const List = ({ items, columns, current, onSelect }) => (
   <div className="item-list-view">
@@ -167,7 +43,7 @@ module.exports = {
     state => ({
       current: state.nav.item,
       columns: getColumns(state),
-      items: itms
+      items: getItems(state)
     }),
 
     dispatch => ({

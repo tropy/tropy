@@ -10,7 +10,7 @@ const { log: logger, warn, debug } = require('../common/log')
 const { seq, debounce, log } = require('../middleware')
 
 const {
-  activities, project, nav, intl, history, lists, tags, ui, vocab
+  activities, project, nav, intl, items, history, lists, tags, ui, vocab
 } = require('../reducers')
 
 const dev = (ARGS.dev || ARGS.debug)
@@ -33,6 +33,7 @@ module.exports = {
       activities,
       project,
       lists,
+      items,
       tags,
       history,
       vocab
