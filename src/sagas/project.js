@@ -4,7 +4,7 @@ const { takeEvery: every } = require('redux-saga')
 const { fork, cancel, call, put, take } = require('redux-saga/effects')
 const { OPEN } = require('../constants/project')
 const { Database } = require('../common/db')
-const { warn, info, debug } = require('../common/log')
+const { warn, info, debug, verbose } = require('../common/log')
 const { exec } = require('../commands')
 const { fail } = require('../notify')
 const { ipc } = require('./ipc')
@@ -82,7 +82,7 @@ module.exports = {
 
     } catch (error) {
       warn(`${action.type} unexpectedly failed in *command: ${error.message}`)
-      debug(error.stack)
+      verbose(error.stack)
     }
   },
 

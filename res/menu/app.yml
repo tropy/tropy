@@ -9,6 +9,8 @@ linux:
           - label: 'Project'
             command: 'app:create-project'
             accelerator: 'CmdOrCtrl+Shift+P'
+          - label: 'Item'
+            command: 'app:create-item'
           - label: 'List'
             command: 'app:create-list'
           - label: 'Tag'

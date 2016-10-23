@@ -4,7 +4,6 @@ const React = require('react')
 
 const { PropTypes } = React
 const { Toolbar } = require('./toolbar')
-const { Button } = require('./button')
 const { Tabs } = require('./tabs')
 const { Tab } = require('./tabs')
 const { NoteList } = require('./notelist')
@@ -98,9 +97,9 @@ const PanelGroup = () => (
               </h4>
             </div>
             <div className="toolbar-right">
-              <Button classes={'btn btn-icon'}>
+              <button className="btn btn-icon">
                 <IconPlus/>
-              </Button>
+              </button>
             </div>
           </Toolbar>
         </header>

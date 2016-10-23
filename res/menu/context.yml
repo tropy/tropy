@@ -33,13 +33,19 @@ linux:
       command: 'app:rename-tag'
     - label: 'Delete Tag'
       command: 'app:delete-tag'
+  items: &items
+    - label: 'New Item'
+      command: 'app:create-item'
+  item: &item
+    - label: 'Delete Item'
+      command: 'app:delete-item'
   dev: &dev
     - label: 'Reload'
       command: 'app:reload'
     - label: 'Reload Styles'
       command: 'app:refresh'
     - type: 'separator'
-    - label: 'Inspect Element'
+    - label: 'Inspect'
       command: 'app:inspect'
 
 darwin:
@@ -50,6 +56,8 @@ darwin:
   list: *list
   tags: *tags
   tag: *tag
+  items: *items
+  item: *item
   dev: *dev
 
 win32:
@@ -60,4 +68,6 @@ win32:
   list: *list
   tags: *tags
   tag: *tag
+  items: *items
+  item: *item
   dev: *dev

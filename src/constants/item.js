@@ -2,5 +2,8 @@
 
 module.exports = {
   CREATE: 'item.create',
-  DELETE: 'item.delete'
+  DELETE: 'item.delete',
+  INSERT: 'item.insert',
+  REMOVE: 'item.remove',
+  RESTORE: 'item.restore'
 }
