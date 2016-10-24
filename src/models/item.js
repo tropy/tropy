@@ -18,7 +18,10 @@ module.exports = {
   },
 
   async load(db, ids) {
-    const items = {}
+    const items = ids.reduce((i, id) => {
+      i[id] = { id }
+      return i
+    }, {})
 
     if (ids.length) {
       await db.each(`
@@ -26,11 +29,11 @@ module.exports = {
           FROM items
             JOIN metadata USING (id)
             JOIN metadata_values USING (value_id)
-          WHERE id IN ?
-          ORDER BY id, created_at ASC`, ids,
+          WHERE id IN (${ids.join(',')})
+          ORDER BY id, created_at ASC`,
 
         ({ id, property, type, value }) => {
-          items[id] = { ...items[id], [property]: { type, value } }
+          items[id].data = { ...items[id].data, [property]: { type, value } }
         }
       )
     }
@@ -48,10 +51,9 @@ module.exports = {
 
   async create(db, template) {
     const { id } = await db.run(`
-      INSERT INTO subjects (template_id) VALUES (?);
-      INSERT INTO items (id) VALUES (last_insert_rowid())`,
-      template
-    )
+      INSERT INTO subjects (template_id) VALUES (?)`, template)
+
+    await db.run('INSERT INTO items (id) VALUES (?)', id)
 
     return { id }
   },

@@ -19,7 +19,7 @@ class Create extends Command {
   *exec() {
     const { db } = this.options
 
-    const item = yield call(create, db)
+    const item = yield call([db, db.transaction], tx => create(tx))
     yield put(act.insert(item))
 
     this.undo = act.remove(item.id)
@@ -34,10 +34,9 @@ class Load extends Command {
 
   *exec() {
     const { db } = this.options
-    const ids = yield select(({ ui }) => ui.items)
+    const { payload } = this.action
 
-    const items = yield call(load, db, ids)
-    yield put(act.insert(items))
+    const items = yield call(load, db, payload)
 
     return items
   }

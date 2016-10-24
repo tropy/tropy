@@ -29,14 +29,14 @@ const noop = () => {}
 const Cell = ({ icon, type, value, width }) => (
   <td className={cn(['metadata', type])} style={{ width }}>
     <CellIcon icon={icon}/>
-    <Editable value={value} onChange={noop}/>
+    <Editable value={value ? value.value : value} onChange={noop}/>
   </td>
 )
 
 Cell.propTypes = {
   icon: PropTypes.string,
   type: PropTypes.string,
-  value: PropTypes.string,
+  value: PropTypes.object,
   width: PropTypes.string,
 }
 

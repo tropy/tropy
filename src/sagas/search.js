@@ -13,7 +13,6 @@ module.exports = {
       const { list, tag, query, sort } = nav
 
       const ids = yield call(all, db, { list, tag, query, sort })
-      verbose(`found ${ids}`)
 
       yield put(act.item.load(ids.filter(id => !(id in items))))
       yield put(act.ui.items.update(ids))

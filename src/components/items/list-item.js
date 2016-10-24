@@ -33,7 +33,7 @@ class ListItem extends Component {
           <Cell
             key={idx}
             type={property.type}
-            value={item[property.name].value}
+            value={item[property.name]}
             icon={idx ? null : item.image}
             width={width}/>
         ))}

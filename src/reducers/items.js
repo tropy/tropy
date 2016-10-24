@@ -1,7 +1,6 @@
 'use strict'
 
 const { omit } = require('../common/util')
-const { into, map } = require('transducers.js')
 
 const {
   INSERT, REMOVE, LOAD
@@ -13,8 +12,7 @@ module.exports = {
 
       case LOAD:
         return (meta.done && !error) ?
-          into({ ...state }, map(item => [item.id, item]), payload) :
-          {}
+          { ...state, ...payload } : state
 
       case INSERT:
         return {
