@@ -60,11 +60,12 @@ INSERT INTO "metadata_types" VALUES('text','https://schema.org/Text');
 INSERT INTO "metadata_types" VALUES('date','https://schema.tropy.org/types/date');
 INSERT INTO "metadata_types" VALUES('name','https://schema.tropy.org/types/name');
 CREATE TABLE metadata (
-  id        INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
-  property  TEXT     NOT NULL,
-  value_id  INTEGER  NOT NULL REFERENCES metadata_values,
-  position  INTEGER  NOT NULL DEFAULT 0,
-  language  TEXT,
+  id          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
+  property    TEXT     NOT NULL,
+  value_id    INTEGER  NOT NULL REFERENCES metadata_values,
+  language    TEXT,
+  position    INTEGER  NOT NULL DEFAULT 0,
+  created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CHECK (
     language IS NULL OR language != '' AND language = trim(lower(language))
@@ -109,7 +110,7 @@ CREATE TABLE lists (
 
   UNIQUE (parent_list_id, name)
 );
-INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-10-19 12:02:12','2016-10-19 12:02:12');
+INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-10-24 20:02:38','2016-10-24 20:02:38');
 CREATE TABLE list_items (
   id       INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
