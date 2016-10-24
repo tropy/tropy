@@ -1,6 +1,6 @@
 'use strict'
 
-const { call, put, select } = require('redux-saga/effects')
+const { call, put } = require('redux-saga/effects')
 const { Command } = require('./command')
 const act = require('../actions/item')
 
