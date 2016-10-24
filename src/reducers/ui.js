@@ -7,11 +7,7 @@ const cols = [
   { width: '40%', property: 'title' },
   { width: '25%', property: 'type' },
   { width: '15%', property: 'date' },
-  {
-    width: '10%',
-    order: 'ascending',
-    property: 'box'
-  },
+  { width: '10%', property: 'box' },
   { width: '10%', property: 'photos' }
 ]
 

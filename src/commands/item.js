@@ -1,16 +1,15 @@
 'use strict'
 
-const { call, put } = require('redux-saga/effects')
+const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-
-const {
-  CREATE
-} = require('../constants/item')
-
 const act = require('../actions/item')
 
 const {
-  create
+  CREATE, LOAD
+} = require('../constants/item')
+
+const {
+  create, load
 } = require('../models/item')
 
 
@@ -24,12 +23,27 @@ class Create extends Command {
     yield put(act.insert(item))
 
     this.undo = act.remove(item.id)
-    this.redo = act.restore(item.id)
+    this.redo = act.insert(item)
 
     return item
   }
 }
 
+class Load extends Command {
+  static get action() { return LOAD }
+
+  *exec() {
+    const { db } = this.options
+    const ids = yield select(({ ui }) => ui.items)
+
+    const items = yield call(load, db, ids)
+    yield put(act.insert(items))
+
+    return items
+  }
+}
+
 module.exports = {
-  Create
+  Create,
+  Load
 }

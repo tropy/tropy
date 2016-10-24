@@ -1,7 +1,5 @@
 'use strict'
 
-const values = require('object.values')
-
 const {
   createSelector: memo
 } = require('reselect')
@@ -9,9 +7,10 @@ const {
 
 const getItems = memo(
   ({ items }) => items,
+  ({ ui }) => ui.items,
 
-  (items) =>
-    values(items)
+  (items, ids) =>
+    ids.map(id => (items[id] || { id }))
 )
 
 

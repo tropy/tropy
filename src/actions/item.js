@@ -1,7 +1,7 @@
 'use strict'
 
 const {
-  CREATE, DELETE, INSERT, REMOVE, RESTORE
+  CREATE, DELETE, INSERT, LOAD, REMOVE, RESTORE
 } = require('../constants/item')
 
 
@@ -24,6 +24,14 @@ module.exports = {
 
   insert(payload, meta) {
     return { type: INSERT, payload, meta }
+  },
+
+  load(payload, meta) {
+    return {
+      type: LOAD,
+      payload,
+      meta: { async: true, ...meta }
+    }
   },
 
   remove(payload, meta) {

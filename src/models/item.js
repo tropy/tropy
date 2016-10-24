@@ -17,6 +17,27 @@ module.exports = {
     )).map(item => item.id)
   },
 
+  async load(db, ids) {
+    const items = {}
+
+    if (ids.length) {
+      await db.each(`
+        SELECT id, property AS property, value, type_name AS type, created_at
+          FROM items
+            JOIN metadata USING (id)
+            JOIN metadata_values USING (value_id)
+          WHERE id IN ?
+          ORDER BY id, created_at ASC`, ids,
+
+        ({ id, property, type, value }) => {
+          items[id] = { ...items[id], [property]: { type, value } }
+        }
+      )
+    }
+
+    return items
+  },
+
   async deleted(db) {
     return await db.all(`
       SELECT id AS id, created_at AS created, updated_ad AS modified
