@@ -23,7 +23,11 @@ module.exports = {
   },
 
   insert(payload, meta) {
-    return { type: INSERT, payload, meta }
+    return {
+      type: INSERT,
+      payload,
+      meta: { ...meta }
+    }
   },
 
   load(payload, meta) {
