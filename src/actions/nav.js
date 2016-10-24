@@ -3,8 +3,8 @@
 const { UPDATE, RESTORE } = require('../constants/nav')
 
 module.exports = {
-  restore(payload) {
-    return { type: RESTORE, payload }
+  restore(payload, meta) {
+    return { type: RESTORE, payload, meta: { search: true, ...meta } }
   },
 
   update(payload) {

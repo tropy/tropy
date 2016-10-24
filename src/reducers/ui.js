@@ -1,7 +1,7 @@
 'use strict'
 
 const { combineReducers: combine } = require('redux')
-const { CONTEXT, EDIT } = require('../constants/ui')
+const { CONTEXT, EDIT, ITEMS } = require('../constants/ui')
 
 const cols = [
   { width: '40%', property: 'title' },
@@ -47,10 +47,21 @@ function edit(state = {}, { type, payload }) {
   }
 }
 
+function items(state = [], { type, payload }) {
+  switch (type) {
+    case ITEMS.UPDATE:
+      return [...payload]
+
+    default:
+      return state
+  }
+}
+
 module.exports = {
   ui: combine({
     columns,
     context,
-    edit
+    edit,
+    items
   })
 }

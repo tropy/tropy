@@ -1,6 +1,6 @@
 'use strict'
 
-const { CONTEXT, EDIT } = require('../constants/ui')
+const { CONTEXT, EDIT, ITEMS } = require('../constants/ui')
 
 const edit = {
   cancel(payload, meta) {
@@ -29,7 +29,14 @@ const context = {
   }
 }
 
+const items = {
+  update(payload, meta) {
+    return { type: ITEMS.UPDATE, payload, meta }
+  }
+}
+
 module.exports = {
   context,
-  edit
+  edit,
+  items
 }

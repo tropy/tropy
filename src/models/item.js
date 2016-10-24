@@ -3,12 +3,18 @@
 module.exports = {
 
   async all(db) {
-    return await db.all(`
-      SELECT id AS id, created_at AS created, updated_ad AS modified
-      FROM subjects JOIN items USING (id)
-      WHERE id NOT IN (SELECT id FROM trash)
-      LIMIT 100`
-    )
+    return (await db.all(`
+      WITH
+        titles(id, value) AS (
+          SELECT id, value AS title
+          FROM metadata JOIN metadata_values USING (value_id)
+          WHERE property = 'title'
+        )
+        SELECT id, t.value
+          FROM items LEFT OUTER JOIN titles t USING (id)
+          WHERE id NOT IN (SELECT id FROM trash)
+          ORDER BY t.value ASC, id ASC`
+    )).map(item => item.id)
   },
 
   async deleted(db) {

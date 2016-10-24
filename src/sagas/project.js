@@ -9,6 +9,7 @@ const { exec } = require('../commands')
 const { fail } = require('../notify')
 const { ipc } = require('./ipc')
 const { history } = require('./history')
+const { search } = require('./search')
 const mod = require('../models')
 const act = require('../actions')
 const nav = require('./nav')
@@ -26,6 +27,11 @@ module.exports = {
       var { id } = project
 
       yield put(act.project.opened({ file: db.path, ...project }))
+
+      yield every(action => (
+        !action.error && action.meta && action.meta.search
+      ), search, db)
+
       yield call(nav.restore, id)
 
       yield fork(function* () {
