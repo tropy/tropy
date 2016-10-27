@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = {
-  async create(db, { value, type }) {
+  async save(db, { value, type }) {
     let v = await db.get(`
       SELECT value_id AS id
         FROM metadata_values
