@@ -1,5 +1,7 @@
 'use strict'
 
+const { save } = require('./value')
+
 module.exports = {
 
   async all(db) {
@@ -27,7 +29,7 @@ module.exports = {
 
     if (ids.length) {
       await db.each(`
-        SELECT id, property AS property, value, type_name AS type, created_at
+        SELECT id, property, value, type_name AS type, created_at
           FROM items
             JOIN metadata USING (id)
             JOIN metadata_values USING (value_id)
@@ -46,8 +48,8 @@ module.exports = {
   async deleted(db) {
     return await db.all(`
       SELECT id AS id, created_at AS created, updated_ad AS modified
-      FROM subjects JOIN trash USING (id)
-      LIMIT 100`
+        FROM subjects JOIN trash USING (id)
+        LIMIT 100`
     )
   },
 
@@ -58,6 +60,14 @@ module.exports = {
     await db.run('INSERT INTO items (id) VALUES (?)', id)
 
     return { id }
+  },
+
+  async update(db, { id, property, value }) {
+    const v = await save(db, value)
+
+    return await db.run(`
+      REPLACE INTO metadata (id, property, value_id)
+        VALUES (?, ?, ?)`, id, property, v.id)
   },
 
   async delete(db, id) {
@@ -75,10 +85,10 @@ module.exports = {
   async prune(db) {
     return await db.run(`
       DELETE FROM subjects
-      WHERE id IN (
-        SELECT id
-        FROM trash JOIN items USING (id)
-        WHERE deleted_at < datetime("now", "-1 month"))`
+        WHERE id IN (
+          SELECT id
+          FROM trash JOIN items USING (id)
+          WHERE deleted_at < datetime("now", "-1 month"))`
     )
   }
 }

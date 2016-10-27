@@ -1,16 +1,14 @@
 'use strict'
 
-const { call, put } = require('redux-saga/effects')
+const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const act = require('../actions/item')
+const mod = require('../models/item')
 
 const {
-  CREATE, LOAD
+  CREATE, LOAD, SAVE
 } = require('../constants/item')
 
-const {
-  create, load
-} = require('../models/item')
 
 
 class Create extends Command {
@@ -19,7 +17,7 @@ class Create extends Command {
   *exec() {
     const { db } = this.options
 
-    const item = yield call([db, db.transaction], tx => create(tx))
+    const item = yield call([db, db.transaction], tx => mod.create(tx))
     yield put(act.insert(item))
 
     this.undo = act.remove(item.id)
@@ -36,13 +34,32 @@ class Load extends Command {
     const { db } = this.options
     const { payload } = this.action
 
-    const items = yield call(load, db, payload)
+    const items = yield call(mod.load, db, payload)
 
     return items
   }
 }
 
+class Save extends Command {
+  static get action() { return SAVE }
+
+  *exec() {
+    const { db } = this.options
+    const { id, property, value } = this.action.payload
+
+    const cur = yield select(({ items }) => items[id])
+    this.original = { id, property, value: cur[property] }
+
+    yield put(act.update(id, { property, value }))
+    yield call(mod.update, db, { id, property, value })
+
+    this.undo = act.save(this.original)
+    this.redo = this.action
+  }
+}
+
 module.exports = {
   Create,
-  Load
+  Load,
+  Save
 }
