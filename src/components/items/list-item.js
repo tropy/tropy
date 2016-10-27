@@ -18,16 +18,22 @@ class ListItem extends Component {
     super(props)
   }
 
+  get active() {
+    return this.props.item.id === this.props.current
+  }
+
   select = () => {
-    this.props.onSelect(this.props.item.id)
+    if (!this.active) {
+      this.props.onSelect(this.props.item.id)
+    }
   }
 
   render() {
-    const { item, current, columns } = this.props
+    const { item, columns } = this.props
 
     return (
       <tr
-        className={cn({ item: true, active: current === item.id })}
+        className={cn({ item: true, active: this.active })}
         onClick={this.select}>
         {columns.map(({ property, width }, idx) => (
           <Cell
