@@ -7,7 +7,7 @@ const { connect } = require('react-redux')
 const { Editable } = require('./editable')
 const { IconFolder } = require('./icons')
 const { getChildren } = require('../selectors/list')
-const { create, save, edit } = require('../actions/list')
+const { create, save } = require('../actions/list')
 const ui = require('../actions/ui')
 const { noop } = require('../common/util')
 const nav = require('../actions/nav')
@@ -160,7 +160,7 @@ module.exports = {
       },
 
       onRename(id) {
-        dispatch(edit({ id }))
+        dispatch(ui.edit.start({ list: { id } }))
       },
 
       onUpdate(id, values) {

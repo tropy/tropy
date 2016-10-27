@@ -4,8 +4,6 @@ const {
   CREATE, INSERT, REMOVE, SAVE, DELETE, RESTORE, LOAD, UPDATE, PRUNE, ROOT
 } = require('../constants/list')
 
-const { EDIT } = require('../constants/ui')
-
 
 module.exports = {
 
@@ -65,16 +63,6 @@ module.exports = {
 
   load(payload, meta) {
     return { type: LOAD, payload, meta: { async: true, ...meta } }
-  },
-
-  edit(payload, meta) {
-    return {
-      type: EDIT.START,
-      payload: {
-        list: { ...payload }
-      },
-      meta
-    }
   },
 
   update(payload, meta) {

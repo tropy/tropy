@@ -118,7 +118,7 @@ module.exports = {
       },
 
       onEditStart() {
-        dispatch(act.project.edit({ name: true }))
+        dispatch(act.ui.edit.start({ project: { name: true } }))
       },
 
       onEditCancel() {

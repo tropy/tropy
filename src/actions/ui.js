@@ -5,7 +5,16 @@ const { CONTEXT, EDIT, ITEMS } = require('../constants/ui')
 const edit = {
   cancel(payload, meta) {
     return { type: EDIT.CANCEL, payload, meta }
-  }
+  },
+
+  start(payload, meta) {
+    return {
+      type: EDIT.START,
+      payload,
+      meta
+    }
+  },
+
 }
 
 const context = {

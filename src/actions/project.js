@@ -4,8 +4,6 @@ const {
   OPEN, OPENED, SAVE, UPDATE
 } = require('../constants/project')
 
-const { EDIT } = require('../constants/ui')
-
 
 module.exports = {
 
@@ -36,16 +34,6 @@ module.exports = {
 
   update(payload, meta) {
     return { type: UPDATE, payload, meta }
-  },
-
-  edit(payload, meta) {
-    return {
-      type: EDIT.START,
-      payload: {
-        project: { ...payload }
-      },
-      meta
-    }
   }
 
 }

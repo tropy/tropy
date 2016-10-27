@@ -150,7 +150,7 @@ module.exports = {
       },
 
       onRename(id) {
-        dispatch(act.tag.edit({ id }))
+        dispatch(act.ui.edit.start({ tag: { id } }))
       },
 
       onUpdate(id, values) {
