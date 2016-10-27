@@ -23,6 +23,8 @@ INSERT INTO metadata_values (type_name, value)
   VALUES ('date', '2016');
 INSERT INTO metadata_values (type_name, value)
   VALUES ('date', '2017');
+INSERT INTO metadata_values (type_name, value)
+  VALUES ('date', '2018');
 
 REPLACE INTO metadata (id, property, value_id, position, language)
   VALUES (1, 'title', 1, 1, 'en');
@@ -42,6 +44,11 @@ REPLACE INTO metadata (id, property, value_id, position)
 
 -- Soft-delete item
 --INSERT INTO trash (id) VALUES (3);
+
+-- Dangling values
+SELECT v.value_id
+  FROM metadata_values v LEFT OUTER JOIN metadata m USING (value_id)
+  WHERE m.value_id IS NULL;
 
 -- All items sorted by title
 WITH
