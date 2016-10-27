@@ -4,8 +4,6 @@ const {
   CREATE, INSERT, REMOVE, SAVE, HIDE, SHOW, LOAD, UPDATE, PRUNE
 } = require('../constants/tag')
 
-const { EDIT } = require('../constants/ui')
-
 
 module.exports = {
 
@@ -65,16 +63,6 @@ module.exports = {
 
   load(payload, meta) {
     return { type: LOAD, payload, meta: { async: true, ...meta } }
-  },
-
-  edit(payload, meta) {
-    return {
-      type: EDIT.START,
-      payload: {
-        tag: { ...payload }
-      },
-      meta
-    }
   },
 
   update(payload, meta) {

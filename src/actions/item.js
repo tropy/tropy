@@ -26,7 +26,7 @@ module.exports = {
     return {
       type: INSERT,
       payload,
-      meta: { ...meta }
+      meta: { search: true, ...meta }
     }
   },
 
@@ -42,7 +42,7 @@ module.exports = {
     return {
       type: REMOVE,
       payload,
-      meta: { ...meta }
+      meta: { search: true, ...meta }
     }
   },
 
