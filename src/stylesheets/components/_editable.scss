@@ -26,10 +26,12 @@
 
 td {
   span {
-    &.editable.empty {
-      display: block;
-      width: 100%;
-      height: $row-height;
+    &.editable {
+      &.empty {
+        display: block;
+        width: 100%;
+        height: $row-height;
+      }
     }
   }
 }
