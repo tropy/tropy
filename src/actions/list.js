@@ -4,6 +4,7 @@ const {
   CREATE, INSERT, REMOVE, SAVE, DELETE, RESTORE, LOAD, UPDATE, PRUNE, ROOT
 } = require('../constants/list')
 
+const { EDIT } = require('../constants/ui')
 
 module.exports = {
 

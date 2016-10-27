@@ -24,8 +24,12 @@
   margin: -2em 0; // For the sake of safety
 }
 
-span.editable {
-  display: block;
-  width: 100%;
-  height: $row-height;
+td {
+  span {
+    &.editable {
+      display: block;
+      width: 100%;
+      height: $row-height;
+    }
+  }
 }

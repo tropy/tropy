@@ -4,6 +4,7 @@ const {
   CREATE, INSERT, REMOVE, SAVE, HIDE, SHOW, LOAD, UPDATE, PRUNE
 } = require('../constants/tag')
 
+const { EDIT } = require('../constants/ui')
 
 module.exports = {
 
