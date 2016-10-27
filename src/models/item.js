@@ -11,8 +11,10 @@ module.exports = {
           WHERE property = 'title'
         )
         SELECT id, t.value
-          FROM items LEFT OUTER JOIN titles t USING (id)
-          WHERE id NOT IN (SELECT id FROM trash)
+          FROM items
+            LEFT OUTER JOIN titles t USING (id)
+            LEFT OUTER JOIN trash USING (id)
+          WHERE deleted_at IS NULL
           ORDER BY t.value ASC, id ASC`
     )).map(item => item.id)
   },

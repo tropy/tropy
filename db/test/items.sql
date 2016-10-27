@@ -42,13 +42,15 @@ REPLACE INTO metadata (id, property, value_id, position)
 REPLACE INTO metadata (id, property, value_id, position)
   VALUES (4, 'date', 4, 1);
 
--- Soft-delete item
---INSERT INTO trash (id) VALUES (3);
-
 -- Dangling values
-SELECT v.value_id
+SELECT v.value_id AS dangling_value
   FROM metadata_values v LEFT OUTER JOIN metadata m USING (value_id)
   WHERE m.value_id IS NULL;
+
+-- Soft-delete item
+--INSERT INTO trash (id) VALUES (2);
+-- Deleted items
+--SELECT id AS id, deleted_at FROM trash JOIN items USING (id);
 
 -- All items sorted by title
 WITH
@@ -58,8 +60,10 @@ WITH
     WHERE property = 'title'
   )
   SELECT id, t.value
-    FROM items LEFT OUTER JOIN titles t USING (id)
-    WHERE id NOT IN (SELECT id FROM trash)
+    FROM items
+      LEFT OUTER JOIN titles t USING (id)
+      LEFT OUTER JOIN trash d USING (id)
+    WHERE d.id IS NULL
     ORDER BY t.value ASC, id ASC;
 
 -- Metadata for specific items
@@ -69,9 +73,6 @@ SELECT id, property AS property, value, type_name
     JOIN metadata_values USING (value_id)
   WHERE id in (1, 2, 3, 4)
   ORDER BY id, position ASC;
-
--- Deleted items
---SELECT id AS id, deleted_at FROM trash JOIN items USING (id);
 
 -- Query by first/last name
 -- Query using time functions
