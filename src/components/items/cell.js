@@ -22,11 +22,11 @@ class Cell extends Component {
 
     return (
       <td
-        className={cn(['metadata', property.type])}
+        className={cn({ metadata: true, [property.type]: true })}
         style={{ width }}>
         <CellIcon icon={icon}/>
         <Editable
-          value={value ? value.value : value}
+          value={value ? value.value : null}
           editing={active}
           onActivate={this.activate}
           onCancel={onCancel}

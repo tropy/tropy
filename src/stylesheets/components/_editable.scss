@@ -26,7 +26,7 @@
 
 td {
   span {
-    &.editable {
+    &.editable.empty {
       display: block;
       width: 100%;
       height: $row-height;
