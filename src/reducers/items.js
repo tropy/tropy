@@ -3,7 +3,7 @@
 const { omit } = require('../common/util')
 
 const {
-  INSERT, REMOVE, LOAD
+  INSERT, REMOVE, LOAD, UPDATE
 } = require('../constants/item')
 
 module.exports = {
@@ -22,6 +22,15 @@ module.exports = {
 
       case REMOVE:
         return omit(state, [payload])
+
+      case UPDATE:
+        return {
+          ...state,
+          [payload.id]: {
+            ...state[payload.id],
+            ...payload
+          }
+        }
 
       default:
         return state
