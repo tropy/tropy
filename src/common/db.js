@@ -10,8 +10,8 @@ const { Migration } = require('./migration')
 const { resolve: cd, join, normalize } = require('path')
 const { using, resolve } = require('bluebird')
 const { readFileAsync: read } = require('fs')
-const { Pool } = require('generic-pool')
-const { debug, info, verbose, log } = require('./log')
+const { createPool } = require('generic-pool')
+const { debug, info, verbose } = require('./log')
 const { v4: uuid } = require('node-uuid')
 
 const root = cd(__dirname, '..', '..', 'db')
@@ -27,6 +27,7 @@ const cache = {}
 
 class Database extends EventEmitter {
 
+  // TODO move to models/project
   static async create(path, { name, id } = {}) {
     try {
       id = id || uuid()
@@ -63,15 +64,15 @@ class Database extends EventEmitter {
     debug(`init db ${path}`)
 
     this.path = path
-    this.pool = new Pool({
+    this.pool = createPool({
+      create: () => this.create(mode),
+      destroy: (conn) => this.destroy(conn)
+    }, {
       min: 0,
       max: 4,
       idleTimeoutMillis: 60000,
       ...options,
-      log: (msg) => log('silly', msg, { module: 'db:pool' }),
-      create: this.create.bind(this, mode),
-      destroy: this.destroy.bind(this),
-      validate: conn => conn.db.open
+      validate: (conn) => resolve(conn.db.open)
     })
   }
 
@@ -86,70 +87,50 @@ class Database extends EventEmitter {
     return migrations
   }
 
-  get size() {
-    return this.pool.getPoolSize()
-  }
-
-  get max() {
-    return this.pool.getMaxPoolSize()
-  }
-
-  get ready() {
-    return this.pool.availableObjectsCount()
-  }
-
   get busy() {
-    return this.size - this.ready
+    return this.pool.size - this.pool.available
   }
 
-  create(mode, cb) {
-    info(`opening db ${this.path}`)
+  create(mode) {
+    return new Promise((resolve, reject) => {
+      info(`opening db ${this.path}`)
 
-    const failed = (error) => {
-      this.emit('error', error)
-      return cb(error)
-    }
+      let db = new sqlite.Database(this.path, M[mode], (error) => {
+        if (error) {
+          return reject(error), this.emit('error', error)
+        }
 
-    let db = new sqlite.Database(this.path, M[mode], (error) => {
-      if (error) return failed(error)
+        new Connection(db)
+          .configure()
+          .tap(() => this.emit('create'))
+          .then(resolve, reject)
+      })
 
-      new Connection(db)
-        .configure()
-        .then(conn => cb(null, conn))
-        .tap(() => this.emit('create'))
-        .catch(failed)
+      db.on('trace', query => debug(query))
     })
-
-    db.on('trace', query => debug(query))
   }
 
   destroy(conn) {
     info(`closing db ${this.path}`)
-    conn.close(error => {
-      if (error) return this.emit('error', error)
-      this.emit('destroy')
-    })
+    return conn.close()
+      .then(() => this.emit('destroy'))
   }
 
   acquire() {
-    return this.pool.acquireAsync()
+    return resolve(this.pool.acquire())
       .disposer(conn => this.release(conn))
   }
 
   release(conn) {
-    try {
-      conn.parallelize()
-
-    } finally {
-      this.pool.release(conn)
-    }
+    conn.parallelize()
+    return this.pool.release(conn)
   }
 
 
   close() {
-    return this.pool.drainAsync()
-      .then(() => this.pool.destroyAllNowAsync())
-      .tap(() => this.emit('close'))
+    return this.pool.drain()
+      .then(() => this.pool.clear())
+      .then(() => this.emit('close'))
   }
 
 

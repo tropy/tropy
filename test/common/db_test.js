@@ -30,7 +30,7 @@ describe('Database', () => {
 
     describe('constructor', () => {
       it('creates an empty connection pool', () => {
-        expect(db.size).to.be.zero
+        expect(db.pool.size).to.be.zero
       })
     })
 
@@ -49,11 +49,11 @@ describe('Database', () => {
 
       it('draws from the connection pool', () =>
         using(db.acquire(), c1 => {
-          expect(db.size).to.be.at.least(1)
+          expect(db.pool.size).to.be.at.least(1)
 
-          if (db.max > 1) {
+          if (db.pool.max > 1) {
             return using(db.acquire(), c2 => {
-              expect(db.size).to.be.at.least(2)
+              expect(db.pool.size).to.be.at.least(2)
               expect(c1).not.to.equal(c2)
             })
           }
@@ -118,7 +118,7 @@ describe('Database', () => {
         db.exec('SELECT * FROM sqlite_master;')
         expect(db.busy).to.eql(1)
         db.exec('SELECT * FROM sqlite_master;')
-        expect(db.busy).to.eql(db.max > 1 ? 2 : 1)
+        expect(db.busy).to.eql(db.pool.max > 1 ? 2 : 1)
       })
 
       it('re-uses connections if possible', () => (
@@ -192,7 +192,7 @@ describe('Database', () => {
             await tx.run('INSERT INTO t1 (a) VALUES (42)')
 
             // Checks dirty read (skip if max 1 connection)
-            if (db.max > 1) {
+            if (db.pool.max > 1) {
               await expect(db.get('SELECT a FROM t1'))
                 .to.eventually.be.rejected
             }
@@ -314,7 +314,7 @@ describe('Database', () => {
 
           return b.close()
         })
-        .then(done)
+        .then(() => done())
     })
   })
 })
