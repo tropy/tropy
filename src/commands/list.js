@@ -43,7 +43,7 @@ class Create extends Command {
     yield put(actions.insert(list, { idx }))
 
     this.undo = actions.delete(list.id)
-    this.redo = actions.restore(list)
+    this.redo = actions.restore(list, { idx })
 
     return list
   }
