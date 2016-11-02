@@ -1,6 +1,5 @@
 'use strict'
 
-const { save } = require('./value')
 
 module.exports = {
 
@@ -21,30 +20,6 @@ module.exports = {
     )).map(item => item.id)
   },
 
-  async load(db, ids) {
-    const items = ids.reduce((i, id) => {
-      i[id] = { id }
-      return i
-    }, {})
-
-    if (ids.length) {
-      await db.each(`
-        SELECT id, property, value, type_name AS type, created_at
-          FROM items
-            JOIN metadata USING (id)
-            JOIN metadata_values USING (value_id)
-          WHERE id IN (${ids.join(',')})
-          ORDER BY id, created_at ASC`,
-
-        ({ id, property, type, value }) => {
-          items[id].data = { ...items[id].data, [property]: { type, value } }
-        }
-      )
-    }
-
-    return items
-  },
-
   async deleted(db) {
     return await db.all(`
       SELECT id AS id, created_at AS created, updated_ad AS modified
@@ -60,14 +35,6 @@ module.exports = {
     await db.run('INSERT INTO items (id) VALUES (?)', id)
 
     return { id }
-  },
-
-  async update(db, { id, property, value }) {
-    const v = await save(db, value)
-
-    return await db.run(`
-      REPLACE INTO metadata (id, property, value_id)
-        VALUES (?, ?, ?)`, id, property, v.id)
   },
 
   async delete(db, id) {

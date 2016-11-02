@@ -6,7 +6,7 @@ const act = require('../actions/item')
 const mod = require('../models/item')
 
 const {
-  CREATE, LOAD, SAVE
+  CREATE, SAVE
 } = require('../constants/item')
 
 
@@ -24,19 +24,6 @@ class Create extends Command {
     this.redo = act.insert(item)
 
     return item
-  }
-}
-
-class Load extends Command {
-  static get action() { return LOAD }
-
-  *exec() {
-    const { db } = this.options
-    const { payload } = this.action
-
-    const items = yield call(mod.load, db, payload)
-
-    return items
   }
 }
 
@@ -60,6 +47,5 @@ class Save extends Command {
 
 module.exports = {
   Create,
-  Load,
   Save
 }

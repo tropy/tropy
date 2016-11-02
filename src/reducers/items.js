@@ -3,16 +3,12 @@
 const { omit } = require('../common/util')
 
 const {
-  INSERT, REMOVE, LOAD, UPDATE
+  INSERT, REMOVE, UPDATE
 } = require('../constants/item')
 
 module.exports = {
-  items(state = {}, { type, payload, meta, error }) {
+  items(state = {}, { type, payload }) {
     switch (type) {
-
-      case LOAD:
-        return (meta.done && !error) ?
-          { ...state, ...payload } : state
 
       case INSERT:
         return {

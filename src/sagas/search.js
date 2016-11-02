@@ -14,7 +14,7 @@ module.exports = {
 
       const ids = yield call(all, db, { list, tag, query, sort })
 
-      yield put(act.item.load(ids.filter(id => !(id in items))))
+      yield put(act.metadata.load(ids.filter(id => !(id in items))))
       yield put(act.ui.items.update(ids))
 
     } catch (error) {

@@ -6,6 +6,7 @@ module.exports = {
   intl: require('./intl'),
   item: require('./item'),
   list: require('./list'),
+  metadata: require('./metadata'),
   nav: require('./nav'),
   project: require('./project'),
   tag: require('./tag'),

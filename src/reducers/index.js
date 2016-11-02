@@ -6,6 +6,7 @@ module.exports = {
   ...require('./intl'),
   ...require('./items'),
   ...require('./lists'),
+  ...require('./metadata'),
   ...require('./nav'),
   ...require('./project'),
   ...require('./tags'),
