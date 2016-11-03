@@ -6,7 +6,8 @@
 // Colors
 // --------------------------------------------------
 
-$blue: #5c93e5;
+$blue:       #5c93e5;
+$blue-light: #cbdcf7;
 
 $brand-primary: $blue;
 
@@ -62,6 +63,7 @@ $sidebar-headings-color:    $shade-5;
 $sidebar-active-icon-color: $shade-6;
 $sidebar-active-color:      $shade-8;
 $sidebar-active-bg:         $shade-2;
+$sidebar-context-bg:        $blue-light;
 $activity-color:            $shade-5;
 $activity-border-color:     $shade-3;
 

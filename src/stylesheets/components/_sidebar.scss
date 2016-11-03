@@ -15,9 +15,9 @@
     overflow-y: scroll;
     padding-top: $space-xs;
 
-      .frameless & {
-        padding-top: 0;
-      }
+    .frameless & {
+      padding-top: 0;
+    }
   }
 
   h2 {
@@ -37,7 +37,7 @@
       padding: 0 $component-padding-horizontal;
 
       &.context {
-        background: $sidebar-active-bg;
+        background: $sidebar-context-bg;
       }
 
       &.active {
