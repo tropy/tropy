@@ -2,6 +2,13 @@
 // Editable
 // --------------------------------------------------
 
+.editable {
+  &.empty {
+    display: block;
+    height: 100%;
+  }
+}
+
 .editable-control {
   @include form-control-focus;
   font: {
@@ -22,16 +29,4 @@
   background: $editable-bg;
   border-radius: $editable-border-radius;
   margin: -2em 0; // For the sake of safety
-}
-
-td {
-  span {
-    &.editable {
-      &.empty {
-        display: block;
-        width: 100%;
-        height: $row-height;
-      }
-    }
-  }
 }

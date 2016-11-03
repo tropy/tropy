@@ -82,7 +82,9 @@
   }
 
   .item {
-    height: $row-height;
+    .metadata {
+      height: $row-height;
+    }
 
     &.active {
       .metadata {
