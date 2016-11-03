@@ -36,6 +36,15 @@
       height: $line-height-large;
       padding: 0 $component-padding-horizontal;
 
+      &.active,
+      &.context {
+        .icon {
+          svg {
+            fill: $sidebar-active-icon-color;
+          }
+        }
+      }
+
       &.context {
         background: $sidebar-context-bg;
       }
@@ -43,12 +52,6 @@
       &.active {
         color: $sidebar-active-color;
         background: $sidebar-active-bg;
-
-        .icon {
-          svg {
-            fill: $sidebar-active-icon-color;
-          }
-        }
       }
     }
 
