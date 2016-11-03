@@ -8,6 +8,7 @@ const { connect } = require('react-redux')
 const { injectIntl } = require('react-intl')
 const { update } = require('../actions/project')
 const { submit } = require('../actions/wizard')
+const { Toolbar } = require('./toolbar')
 
 
 class Wizard extends Component {
@@ -37,6 +38,8 @@ class Wizard extends Component {
 
     return (
       <div id="wizard">
+        <Toolbar draggable />
+
         <Steps>
           <Step>
 

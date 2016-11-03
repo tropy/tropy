@@ -1,0 +1,34 @@
+//
+// Wizard window
+// --------------------------------------------------
+
+
+// Abstracts
+// --------------------------------------------------
+
+@import
+  "../abstracts/variables",
+  "../abstracts/mixins",
+  "../abstracts/functions";
+
+
+// Scaffolding
+// --------------------------------------------------
+
+@import
+  "../base/reset",
+  "../base/base";
+
+
+// Components
+// --------------------------------------------------
+
+@import
+  "../components/toolbar";
+
+
+// Partials
+// --------------------------------------------------
+
+@import
+  "../partials/window-controls";

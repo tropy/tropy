@@ -1,2 +1,27 @@
+//
+// Light wizard window
+// --------------------------------------------------
+
 $platform: "darwin";
 $theme: "dark";
+
+
+// Theme
+// --------------------------------------------------
+
+@import
+  "../themes/light";
+
+
+// Window
+// --------------------------------------------------
+
+@import
+  "../windows/wizard";
+
+
+// Operating system specific styles
+// --------------------------------------------------
+
+@import
+  "os";
