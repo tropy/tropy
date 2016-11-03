@@ -2,8 +2,6 @@
 // Toolbar
 // --------------------------------------------------
 
-$toolbar-bg: #ff7376;
-
 .toolbar {
   display: flex;
   justify-content: space-between;
@@ -26,7 +24,6 @@ $toolbar-bg: #ff7376;
       -webkit-app-region: drag;
       -webkit-user-select: none;
       cursor: default;
-      background: $toolbar-bg;
       position: relative;
       z-index: $zindex-draggable;
 

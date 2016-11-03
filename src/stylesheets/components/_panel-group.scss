@@ -7,12 +7,6 @@
   flex-direction: column;
   height: 100%;
 
-  .panel-group-header {
-    .toolbar {
-      background: $toolbar-bg;
-    }
-  }
-
   .panel-group-body {
     flex: 1 1 0;
     height: calc(100% - #{$toolbar-height + $space-min});
