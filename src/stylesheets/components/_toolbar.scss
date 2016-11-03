@@ -9,18 +9,16 @@
   height: $toolbar-height;
   flex: 0 0 auto;
   padding: $space-min $component-padding-horizontal 0;
+  margin-bottom: $space-min;
 
   .panel-header & {
-    height: auto;
-    flex: 1 1 auto;
+    height: 100%;
     margin: 0;
     padding-top: 0;
   }
 
-    &.draggable {
-      margin-bottom: $space-min;
-
-      .frameless & {
+  &.draggable {
+    .frameless & {
       -webkit-app-region: drag;
       -webkit-user-select: none;
       cursor: default;
