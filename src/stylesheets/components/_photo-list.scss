@@ -13,9 +13,19 @@
     &:nth-child(odd) {
       background: $photo-odd-bg;
     }
+
+    &.active {
+      color: $photo-active-color;
+      background: $photo-active-bg;
+    }
   }
 
   .thumbnail {
     margin-right: $space-xs;
+  }
+
+  .file-name {
+    @include css-truncate;
+    flex: 1 1 0;
   }
 }

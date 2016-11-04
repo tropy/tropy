@@ -73,7 +73,7 @@ $item-list-header-sort-color: $shade-8;
 $item-list-header-border-color: $shade-2;
 $items-odd-bg: $shade-1;
 $items-active-color: $shade-0;
-$items-active-bg: $blue;
+$items-active-bg: $brand-primary;
 
 // Panel group
 $panels-bg: $shade-1;
@@ -94,6 +94,8 @@ $dt-color: $shade-5;
 
 // Photo list
 $photo-odd-bg: rgba($shade-9, 0.04);
+$photo-active-color: $shade-0;
+$photo-active-bg: $brand-primary;
 
 // Note list
 $note-separator-color: $shade-3;

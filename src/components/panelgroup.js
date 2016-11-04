@@ -89,15 +89,15 @@ const PanelGroup = () => (
           </header>
           <div className="panel-body">
             <ul className="photo-list">
-              <li className="photo">
+              <li className="photo active">
                 <img src={'dev/dummy-24.jpg'} srcSet={'dev/dummy-24-2x.jpg 2x'}
                   width={24} height={24} className="thumbnail"/>
-                PC110098.JPG
+                <div className="file-name">PC110098.JPG</div>
               </li>
               <li className="photo">
                 <img src={'dev/dummy-24.jpg'} srcSet={'dev/dummy-24-2x.jpg 2x'}
                   width={24} height={24} className="thumbnail"/>
-                PC110099.JPG
+                <div className="file-name">PC110099.JPG</div>
               </li>
             </ul>
           </div>
