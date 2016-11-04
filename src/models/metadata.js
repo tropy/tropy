@@ -25,12 +25,18 @@ module.exports = {
     return data
   },
 
-  async update(db, { id, property, value }) {
-    const v = await save(db, value)
+  async update(db, { id, data }) {
+    // TODO use transaction / prepared statement
+    for (let property in data) {
 
-    return await db.run(`
-      REPLACE INTO metadata (id, property, value_id)
-        VALUES (?, ?, ?)`, id, property, v.id)
+      if (data[property] == null) continue
+
+      const vid = await save(db, data[property])
+
+      await db.run(`
+        REPLACE INTO metadata (id, property, value_id)
+          VALUES (?, ?, ?)`, id, property, vid)
+    }
   },
 
 }

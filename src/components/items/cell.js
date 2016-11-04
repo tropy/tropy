@@ -15,22 +15,37 @@ class Cell extends Component {
     this.props.onActivate(this.props.property.name)
   }
 
+  changed = (value) => {
+    this.props.onChange({
+      [this.props.property.name]: { value, type: this.type }
+    })
+  }
+
+  get value() {
+    return this.props.value ? this.props.value.value : null
+  }
+
+  get type() {
+    return this.props.value ?
+      this.props.value.type : this.props.property.type
+  }
+
   render() {
     const {
-      active, property, width, icon, value, onCancel, onChange
+      active, width, icon, onCancel
     } = this.props
 
     return (
       <td
-        className={cn({ metadata: true, [property.type]: true })}
+        className={cn({ metadata: true, [this.type]: true })}
         style={{ width }}>
         <CellIcon icon={icon}/>
         <Editable
-          value={value ? value.value : null}
+          value={this.value}
           editing={active}
           onActivate={this.activate}
           onCancel={onCancel}
-          onChange={onChange}/>
+          onChange={this.changed}/>
       </td>
     )
   }

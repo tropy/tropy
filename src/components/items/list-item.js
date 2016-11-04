@@ -4,7 +4,7 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { connect } = require('react-redux')
 const { Cell } = require('./cell')
-const ui = require('../../actions/ui')
+const act = require('../../actions')
 const cn = require('classnames')
 
 class ListItem extends Component {
@@ -25,7 +25,7 @@ class ListItem extends Component {
 
   render() {
     const {
-      edit, item, columns, onActivate, onCancel, onChange, onContextMenu
+      edit, item, data, columns, onActivate, onCancel, onChange, onContextMenu
     } = this.props
 
     return (
@@ -38,7 +38,7 @@ class ListItem extends Component {
             <Cell
               key={idx}
               property={property}
-              value={item[property.name]}
+              value={data[property.name]}
               icon={idx ? null : item.image}
               width={width}
               active={
@@ -62,6 +62,7 @@ class ListItem extends Component {
     onChange: PropTypes.func,
     onContextMenu: PropTypes.func,
     item: PropTypes.object,
+    data: PropTypes.object,
     columns: PropTypes.arrayOf(PropTypes.object)
   }
 }
@@ -69,13 +70,14 @@ class ListItem extends Component {
 
 module.exports = {
   ListItem: connect(
-    (state) => ({
+    (state, props) => ({
+      data: state.metadata[props.item.id] || {},
       edit: state.ui.edit.column
     }),
 
     (dispatch, props) => ({
       onActivate(property) {
-        dispatch(ui.edit.start({
+        dispatch(act.ui.edit.start({
           column: {
             item: props.item.id, property
           }
@@ -83,15 +85,17 @@ module.exports = {
       },
 
       onCancel() {
-        dispatch(ui.edit.cancel())
+        dispatch(act.ui.edit.cancel())
       },
 
-      onChange() {
+      onChange(data) {
+        dispatch(act.metadata.save({ id: props.item.id, data }))
+        dispatch(act.ui.edit.cancel())
       },
 
       onContextMenu(event) {
         event.stopPropagation()
-        dispatch(ui.context.show(event, 'item', props.item.id))
+        dispatch(act.ui.context.show(event, 'item', props.item.id))
       }
     })
   )(ListItem)

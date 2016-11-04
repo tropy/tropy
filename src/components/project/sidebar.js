@@ -113,8 +113,8 @@ module.exports = {
 
     (dispatch) => ({
       onChange(name) {
-        dispatch(act.ui.edit.cancel())
         dispatch(act.project.save({ name }))
+        dispatch(act.ui.edit.cancel())
       },
 
       onEditStart() {
