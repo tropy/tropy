@@ -39,7 +39,7 @@ class Save extends Command {
     )
 
     yield put(act.update([id, data]))
-    yield call(mod.update, db, { id, data })
+    yield call([db, db.transaction], tx => mod.update(tx, { id, data }))
 
     this.undo = act.save({ id, data: this.original })
   }
