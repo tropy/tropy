@@ -62,7 +62,7 @@ INSERT INTO "metadata_types" VALUES('date','https://schema.tropy.org/types/date'
 INSERT INTO "metadata_types" VALUES('name','https://schema.tropy.org/types/name');
 CREATE TABLE metadata (
   id          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
-  item_id     INTEGER  NOT NULL REFERENCES items ON DELETE CASCADE,
+  --item_id     INTEGER  NOT NULL REFERENCES items ON DELETE CASCADE,
   property    TEXT     NOT NULL,
   value_id    INTEGER  NOT NULL REFERENCES metadata_values,
   language    TEXT,
@@ -74,7 +74,7 @@ CREATE TABLE metadata (
   ),
 
   --UNIQUE (id, position),
-  UNIQUE (item_id, id, property),
+  --UNIQUE (item_id, id, property),
   PRIMARY KEY (id, property)
 ) WITHOUT ROWID;
 CREATE TABLE metadata_values (
@@ -113,7 +113,7 @@ CREATE TABLE lists (
 
   UNIQUE (parent_list_id, name)
 );
-INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-11-04 20:53:59','2016-11-04 20:53:59');
+INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-11-04 21:41:34','2016-11-04 21:41:34');
 CREATE TABLE list_items (
   id       INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
