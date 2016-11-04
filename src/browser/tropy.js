@@ -120,8 +120,8 @@ class Tropy extends EventEmitter {
     if (this.wiz) return this.wiz.show(), this
 
     this.wiz = open('wizard', this.hash, {
-      width: 920,
-      height: 680,
+      width: 456,
+      height: 580,
       parent: this.win,
       modal: !!this.win,
       autoHideMenuBar: true,
