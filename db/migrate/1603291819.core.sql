@@ -60,7 +60,7 @@ INSERT INTO metadata_types (type_name, type_schema) VALUES
 
 CREATE TABLE metadata (
   id          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
-  --item_id     INTEGER  NOT NULL REFERENCES items ON DELETE CASCADE,
+  item_id     INTEGER  NOT NULL REFERENCES items ON DELETE CASCADE,
   property    TEXT     NOT NULL,
   value_id    INTEGER  NOT NULL REFERENCES metadata_values,
   language    TEXT,
@@ -72,6 +72,7 @@ CREATE TABLE metadata (
   ),
 
   --UNIQUE (id, position),
+  UNIQUE (item_id, id, property),
   PRIMARY KEY (id, property)
 ) WITHOUT ROWID;
 
