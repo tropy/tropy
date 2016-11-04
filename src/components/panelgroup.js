@@ -87,7 +87,12 @@ const PanelGroup = () => (
               </div>
             </Toolbar>
           </header>
-          <div className="panel-body"/>
+          <div className="panel-body">
+            <ul className="photo-list">
+              <li className="photo">PC110098.JPG</li>
+              <li className="photo">PC110099.JPG</li>
+            </ul>
+          </div>
         </Panel>
         <div className="resizable-handle-row resizable-handle-bottom"/>
       </div>

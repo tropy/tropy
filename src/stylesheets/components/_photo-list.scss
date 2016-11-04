@@ -1,0 +1,15 @@
+//
+// Photo list
+// --------------------------------------------------
+
+.photo-list {
+  line-height: $row-height;
+
+  .photo {
+    padding: 0 $component-padding-horizontal;
+
+    &:nth-child(odd) {
+      background: $photo-odd-bg;
+    }
+  }
+}

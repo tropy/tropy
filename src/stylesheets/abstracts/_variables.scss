@@ -36,6 +36,12 @@ $space-xl:  32px;
 $space-xxl: 48px;
 
 
+// Thumbnails
+// --------------------------------------------------
+
+$thumbnail-size: $space-lg;
+
+
 // Dimensions
 // --------------------------------------------------
 
@@ -66,6 +72,8 @@ $border-radius-large: 3px;
 
 $component-padding-horizontal: $space-sm;
 
+$row-height: $thumbnail-size + 6px;
+
 
 // Forms
 // --------------------------------------------------
@@ -82,12 +90,6 @@ $zindex-draggable:       1010;
 $zindex-window-controls: 1020;
 
 
-// Thumbnails
-// --------------------------------------------------
-
-$thumbnail-size: $space-lg;
-
-
 // Sidebar
 // --------------------------------------------------
 
@@ -98,7 +100,6 @@ $activity-transition-timing-function: ease-out;
 // List view
 // --------------------------------------------------
 
-$row-height: $thumbnail-size + 6px; // todo: share
 $item-list-header-height: $space-lg - 2px; // 24px (content-box)
 
 
@@ -122,6 +123,12 @@ $tabs-compact-padding-horizontal: $space-xs;
 $dl-line-height: $space-lg;
 $dl-gutter: $space-sm;
 $dl-horizontal-offset: 33%;
+
+
+// Photo list
+// --------------------------------------------------
+
+
 
 
 // Note list
