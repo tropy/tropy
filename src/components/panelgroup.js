@@ -80,7 +80,11 @@ const PanelGroup = () => (
                 <IconPhoto/>
                 <h4>Photos</h4>
               </div>
-              <div className="toolbar-right"/>
+              <div className="toolbar-right">
+                <button className="btn btn-icon">
+                  <IconPlus/>
+                </button>
+              </div>
             </Toolbar>
           </header>
           <div className="panel-body"/>
