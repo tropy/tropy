@@ -26,25 +26,49 @@ INSERT INTO metadata_values (type_name, value)
 INSERT INTO metadata_values (type_name, value)
   VALUES ('date', '2018');
 
-REPLACE INTO metadata (id, property, value_id, language)
-  VALUES (1, 'title', 1, 'en');
-REPLACE INTO metadata (id, property, value_id)
-  VALUES (1, 'date', 3);
+-- Add metadata
+UPDATE metadata
+  SET value_id = 1, language = 'en'
+  WHERE id = 1 AND property = 'title';
+INSERT INTO metadata (id, property, value_id, language)
+  SELECT 1, 'title', 1, 'en' WHERE changes() = 0;
 
-REPLACE INTO metadata (id, property, value_id)
-  VALUES (2, 'title', 1);
-REPLACE INTO metadata (id, property, value_id)
-  VALUES (2, 'date', 4);
+UPDATE metadata
+  SET value_id = 3
+  WHERE id = 1 AND property = 'date';
+INSERT INTO metadata (id, property, value_id)
+  SELECT 1, 'date', 3 WHERE changes() = 0;
 
-REPLACE INTO metadata (id, property, value_id)
-  VALUES (3, 'title', 2);
+UPDATE metadata
+  SET value_id = 1
+  WHERE id = 2 AND property = 'title';
+INSERT INTO metadata (id, property, value_id)
+  SELECT 2, 'title', 1 WHERE changes() = 0;
 
-REPLACE INTO metadata (id, property, value_id)
-  VALUES (4, 'date', 4);
+UPDATE metadata
+  SET value_id = 4
+  WHERE id = 2 AND property = 'date';
+INSERT INTO metadata (id, property, value_id)
+  SELECT 2, 'date', 4 WHERE changes() = 0;
+
+UPDATE metadata
+  SET value_id = 2
+  WHERE id = 3 AND property = 'title';
+INSERT INTO metadata (id, property, value_id)
+  SELECT 3, 'title', 2 WHERE changes() = 0;
+
+UPDATE metadata
+  SET value_id = 4
+  WHERE id = 4 AND property = 'date';
+INSERT INTO metadata (id, property, value_id)
+  SELECT 4, 'date', 4 WHERE changes() = 0;
 
 -- Overwrite a property
-REPLACE INTO metadata (id, property, value_id)
-  VALUES (2, 'title', 2);
+UPDATE metadata
+  SET value_id = 2
+  WHERE id = 2 AND property = 'title';
+INSERT INTO metadata (id, property, value_id)
+  SELECT 2, 'title', 2 WHERE changes() = 0;
 
 -- Dangling values
 SELECT v.value_id AS dangling_value

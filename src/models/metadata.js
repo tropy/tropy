@@ -26,16 +26,29 @@ module.exports = {
   },
 
   async update(db, { id, data }) {
-    // TODO use transaction / prepared statement
     for (let property in data) {
 
       if (data[property] == null) continue
 
-      const vid = await save(db, data[property])
+      const value = await save(db, data[property])
 
-      await db.run(`
-        REPLACE INTO metadata (id, property, value_id)
-          VALUES (?, ?, ?)`, id, property, vid)
+      const params = {
+        $id: id, $property: property, $value: value, $language: null
+      }
+
+      // To speed this up, we could use db.exec using
+      // changes() and sanitize the params ourselves.
+      const { changes } = await db.run(`
+        UPDATE metadata
+          SET value_id = $value, language = $language
+          WHERE id = $id AND property = $property`, params)
+
+      if (!changes) {
+        await db.run(`
+          INSERT INTO metadata (id, property, value_id, language)
+            VALUES ($id, $property, $value, $language)`, params
+        )
+      }
     }
   },
 
