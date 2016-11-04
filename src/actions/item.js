@@ -19,7 +19,11 @@ module.exports = {
   },
 
   delete(payload, meta) {
-    return { type: DELETE, payload, meta }
+    return {
+      type: DELETE,
+      payload,
+      meta: { async: true, record: true, ...meta }
+    }
   },
 
   insert(payload, meta) {
@@ -42,7 +46,7 @@ module.exports = {
     return {
       type: RESTORE,
       payload,
-      meta: { ...meta }
+      meta: { async: true, record: true, ...meta }
     }
   },
 

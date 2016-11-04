@@ -44,9 +44,10 @@ module.exports = {
   },
 
   async restore(db, id) {
-    return await db.run(
+    await db.run(
       'DELETE FROM trash WHERE id = ?', id
     )
+    return { id }
   },
 
   async prune(db) {

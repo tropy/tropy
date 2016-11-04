@@ -6,7 +6,7 @@ const act = require('../actions/item')
 const mod = require('../models/item')
 
 const {
-  CREATE, SAVE
+  CREATE, DELETE, RESTORE, SAVE
 } = require('../constants/item')
 
 
@@ -20,10 +20,38 @@ class Create extends Command {
     const item = yield call([db, db.transaction], tx => mod.create(tx))
     yield put(act.insert(item))
 
-    this.undo = act.remove(item.id)
-    this.redo = act.insert(item)
+    this.undo = act.delete(item.id)
+    this.redo = act.restore(item.id)
 
     return item
+  }
+}
+
+class Delete extends Command {
+  static get action() { return DELETE }
+
+  *exec() {
+    const { db } = this.options
+    const id = this.action.payload
+
+    yield call(mod.delete, db, id)
+    yield put(act.remove(id))
+
+    this.undo = act.restore(id)
+  }
+}
+
+class Restore extends Command {
+  static get action() { return RESTORE }
+
+  *exec() {
+    const { db } = this.options
+    const id = this.action.payload
+
+    const item = yield call([db, db.transaction], tx => mod.restore(tx, id))
+    yield put(act.insert(item))
+
+    this.undo = act.delete(item.id)
   }
 }
 
@@ -47,5 +75,7 @@ class Save extends Command {
 
 module.exports = {
   Create,
+  Delete,
+  Restore,
   Save
 }
