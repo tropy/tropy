@@ -57,6 +57,7 @@ INSERT INTO "metadata_types" VALUES('datetime','https://schema.org/DateTime');
 INSERT INTO "metadata_types" VALUES('location','https://schema.org/GeoCoordinates');
 INSERT INTO "metadata_types" VALUES('number','https://schema.org/Number');
 INSERT INTO "metadata_types" VALUES('text','https://schema.org/Text');
+INSERT INTO "metadata_types" VALUES('url','https://schema.org/URL');
 INSERT INTO "metadata_types" VALUES('date','https://schema.tropy.org/types/date');
 INSERT INTO "metadata_types" VALUES('name','https://schema.tropy.org/types/name');
 CREATE TABLE metadata (
@@ -112,7 +113,7 @@ CREATE TABLE lists (
 
   UNIQUE (parent_list_id, name)
 );
-INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-11-04 16:12:06','2016-11-04 16:12:06');
+INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-11-04 20:53:59','2016-11-04 20:53:59');
 CREATE TABLE list_items (
   id       INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,

@@ -55,7 +55,8 @@ INSERT INTO metadata_types (type_name, type_schema) VALUES
   ('name', 'https://schema.tropy.org/types/name'),
   ('boolean', 'https://schema.org/Boolean'),
   ('number', 'https://schema.org/Number'),
-  ('location', 'https://schema.org/GeoCoordinates');
+  ('location', 'https://schema.org/GeoCoordinates'),
+  ('url', 'https://schema.org/URL');
 
 
 CREATE TABLE metadata (
