@@ -6,10 +6,16 @@
   line-height: $row-height;
 
   .photo {
+    display: flex;
+    align-items: center;
     padding: 0 $component-padding-horizontal;
 
     &:nth-child(odd) {
       background: $photo-odd-bg;
     }
+  }
+
+  .thumbnail {
+    margin-right: $space-xs;
   }
 }
