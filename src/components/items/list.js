@@ -1,14 +1,12 @@
 'use strict'
 
 const React = require('react')
-
 const { PropTypes } = React
 const { connect } = require('react-redux')
 const { update } = require('../../actions/nav')
 const { ListItem } = require('./list-item')
 const { ListHead } = require('./list-head')
 const { getColumns } = require('../../selectors/ui')
-const { getItems } = require('../../selectors/items')
 
 const List = ({ items, columns, current, onSelect }) => (
   <div className="item-list-view">
@@ -42,8 +40,7 @@ module.exports = {
   List: connect(
     state => ({
       current: state.nav.item,
-      columns: getColumns(state),
-      items: getItems(state)
+      columns: getColumns(state)
     }),
 
     dispatch => ({

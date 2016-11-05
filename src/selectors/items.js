@@ -17,4 +17,3 @@ const getItems = memo(
 module.exports = {
   getItems
 }
-
