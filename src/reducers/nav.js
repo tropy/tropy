@@ -3,14 +3,14 @@
 const { UPDATE, RESTORE } = require('../constants/nav')
 const LIST = require('../constants/list')
 
-const init = {}
+const init = { items: [] }
 
 module.exports = {
   nav(state = init, { type, payload }) {
     switch (type) {
 
       case RESTORE:
-        return { ...payload }
+        return { ...init, ...payload }
 
       case UPDATE:
         return { ...state, ...payload }

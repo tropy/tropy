@@ -8,7 +8,7 @@ const { ListItem } = require('./list-item')
 const { ListHead } = require('./list-head')
 const { getColumns } = require('../../selectors/ui')
 
-const List = ({ items, columns, current, onSelect }) => (
+const List = ({ items, columns, selection, onSelect }) => (
   <div className="item-list-view">
     <ListHead columns={columns}/>
     <div className="list-body">
@@ -17,7 +17,7 @@ const List = ({ items, columns, current, onSelect }) => (
           {items.map((item) => (
             <ListItem
               key={item.id}
-              current={current}
+              selected={selection.includes(item.id)}
               onSelect={onSelect}
               item={item}
               columns={columns}/>
@@ -29,8 +29,9 @@ const List = ({ items, columns, current, onSelect }) => (
 )
 
 List.propTypes = {
-  current: PropTypes.number,
+  selection: PropTypes.arrayOf(PropTypes.number),
   onSelect: PropTypes.func,
+  onDeselect: PropTypes.func,
   columns: PropTypes.arrayOf(PropTypes.object),
   items: PropTypes.arrayOf(PropTypes.object)
 }
@@ -39,12 +40,12 @@ List.propTypes = {
 module.exports = {
   List: connect(
     state => ({
-      current: state.nav.item,
+      selection: state.nav.items,
       columns: getColumns(state)
     }),
 
     dispatch => ({
-      onSelect: (item) => dispatch(update({ item }))
+      onSelect: (items) => dispatch(update({ items })),
     })
 
   )(List)

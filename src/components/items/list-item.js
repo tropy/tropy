@@ -13,24 +13,21 @@ class ListItem extends Component {
     super(props)
   }
 
-  get active() {
-    return this.props.item.id === this.props.current
-  }
-
   select = () => {
-    if (!this.active) {
-      this.props.onSelect(this.props.item.id)
-    }
+    this.props.onSelect(
+      this.props.selected ? [] : [this.props.item.id]
+    )
   }
 
   render() {
     const {
-      edit, item, data, columns, onActivate, onCancel, onChange, onContextMenu
+      edit, item, data, columns, onActivate, onCancel,
+      onChange, onContextMenu, selected
     } = this.props
 
     return (
       <tr
-        className={cn({ item: true, active: this.active })}
+        className={cn({ item: true, active: selected })}
         onContextMenu={onContextMenu}
         onClick={this.select}>
         {
@@ -54,7 +51,7 @@ class ListItem extends Component {
   }
 
   static propTypes = {
-    current: PropTypes.number,
+    selected: PropTypes.bool,
     edit: PropTypes.object,
     onSelect: PropTypes.func,
     onActivate: PropTypes.func,
