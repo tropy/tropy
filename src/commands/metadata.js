@@ -34,7 +34,7 @@ class Save extends Command {
     const { id, data } = this.action.payload
 
     this.original = pick(
-      yield select(({ metadata }) => metadata[id]),
+      (yield select(({ metadata }) => metadata[id])) || {},
       keys(data)
     )
 
