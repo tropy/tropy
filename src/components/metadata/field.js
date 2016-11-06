@@ -12,7 +12,7 @@ class Field extends Component {
     super(props)
   }
 
-  get label() {
+  get name() {
     return this.props.property.name
   }
 
@@ -25,21 +25,25 @@ class Field extends Component {
   }
 
   activate = () => {
+    this.props.onActivate(this.name)
   }
 
-  changed = () => {
+  changed = (value) => {
+    this.props.onChange({
+      [this.name]: { value, type: this.type }
+    })
   }
 
   render() {
-    const { onCancel } = this.props
-    const { value, type, label, activate, changed } = this
+    const { editing, onCancel } = this.props
+    const { value, type, name, activate, changed } = this
 
     return (
       <li className={cn({ 'metadata-field': true, [type]: true })}>
-        <label>{label}</label>
+        <label>{name}</label>
         <Editable
           value={value ? value.value : null}
-          editing={false}
+          editing={editing}
           onActivate={activate}
           onCancel={onCancel}
           onChange={changed}/>
@@ -48,6 +52,8 @@ class Field extends Component {
   }
 
   static propTypes = {
+    editing: PropTypes.bool,
+
     property: PropTypes.shape({
       name: PropTypes.string.isRequired,
       type: PropTypes.string.isRequired,

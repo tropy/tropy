@@ -30,28 +30,35 @@ const TEMPLATE = [
   { name: 'folder', type: 'text' }
 ]
 
-const Item = ({ item }) => {
+const Item = ({ selection }) => {
+  let fp
+
+  if (selection.length === 1) {
+    fp = (
+      <Panel header={
+        <Tabs justified>
+          <Tab active><IconMetadata/>Metadata</Tab>
+          <Tab><IconTag/>Tags</Tab>
+        </Tabs>
+      }>
+        <Fields id={selection[0]} template={TEMPLATE}/>
+      </Panel>
+    )
+  } else {
+    fp = (
+      <Panel>
+        <span>{selection.length} items selected</span>
+      </Panel>
+    )
+  }
+
   return (
-    <section id="item" className={cn({ disabled: !item })}>
+    <section id="item">
       <div className="resizable" style={{ width: '320px' }}>
         <PanelGroup header={
           <Toolbar draggable={frameless}/>
         }>
-
-          <Panel header={
-            <Tabs justified>
-              <Tab active><IconMetadata/>Metadata</Tab>
-              <Tab><IconTag/>Tags</Tab>
-            </Tabs>
-          }>
-            {
-              item ?
-                <Fields
-                  template={TEMPLATE}
-                  data={item.data}/> :
-                null
-            }
-          </Panel>
+          {fp}
 
           <Panel header={
             <Toolbar>
@@ -102,14 +109,15 @@ const Item = ({ item }) => {
 }
 
 Item.propTypes = {
-  item: PropTypes.object
+  selection: PropTypes.arrayOf(PropTypes.number)
 }
 
 
 module.exports = {
   Item: connect(
     (state) => ({
-      item: getSelectedItem(state)
+      item: getSelectedItem(state),
+      selection: state.nav.items
     }),
 
     (dispatch) => ({

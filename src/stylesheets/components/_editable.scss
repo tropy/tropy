@@ -6,6 +6,8 @@
   &.empty {
     display: block;
     height: 100%;
+    min-width: 30px; // Temporary workaround
+    min-height: 1em * $line-height-base;
   }
 }
 

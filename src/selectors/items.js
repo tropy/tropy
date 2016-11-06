@@ -5,9 +5,7 @@ const {
 } = require('reselect')
 
 
-const getItem = ({ items, metadata }, { item }) => ({
-  ...items[item], data: { ...metadata[item] }
-})
+const getItem = ({ items }, { item }) => items[item]
 
 const getSelectedItem = (state) =>
   state.nav.items.length === 1 ?
