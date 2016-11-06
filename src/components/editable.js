@@ -58,16 +58,20 @@ class Editable extends Component {
   }
 
   render() {
-    return (this.props.editing) ? (
-      <input
-        className="editable editable-control"
-        type="text"
-        ref={this.focus}
-        value={this.state.value}
-        onChange={this.update}
-        onKeyUp={this.keyup}
-        onBlur={this.stop}/>
-    ) : (
+    if (this.props.editing) {
+      return (
+        <input
+          className="editable editable-control"
+          type="text"
+          ref={this.focus}
+          value={this.state.value}
+          onChange={this.update}
+          onKeyUp={this.keyup}
+          onBlur={this.stop}/>
+      )
+    }
+
+    return (
       <span
         className={cn({ editable: true, empty: !this.props.value })}
         onDoubleClick={this.props.onActivate}>
