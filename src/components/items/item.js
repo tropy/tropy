@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const createFragment = require('react-addons-create-fragment')
 const { PropTypes } = React
 const { connect } = require('react-redux')
 const { Toolbar } = require('../toolbar')
@@ -9,6 +8,7 @@ const { Tab, Tabs } = require('../tabs')
 const { NoteList } = require('../notelist')
 const { PanelGroup, Panel } = require('../panel')
 const { Viewer } = require('../viewer')
+const { Fields } = require('../metadata')
 const { getSelectedItem } = require('../../selectors/items')
 const { frameless } = ARGS
 const cn = require('classnames')
@@ -18,8 +18,16 @@ const {
 } = require('../icons')
 
 const TEMPLATE = [
-  'type', 'title', 'description', 'date', 'creator', 'publisher',
-  'source', 'rights', 'box', 'folder'
+  { name: 'type', type: 'text' },
+  { name: 'title', type: 'text' },
+  { name: 'description', type: 'text' },
+  { name: 'date', type: 'date' },
+  { name: 'creator', type: 'name' },
+  { name: 'publisher', type: 'text' },
+  { name: 'source', type: 'text' },
+  { name: 'rights', type: 'url' },
+  { name: 'box', type: 'number' },
+  { name: 'folder', type: 'text' }
 ]
 
 const Item = ({ item }) => {
@@ -37,16 +45,11 @@ const Item = ({ item }) => {
             </Tabs>
           }>
             {
-              item ? (
-                <dl className="dl-horizontal">
-                  {TEMPLATE.map(property => createFragment({
-                    dt: <dt>{property}</dt>,
-                    dd: <dd>{
-                      item.data[property] ? item.data[property].value : null
-                    }</dd>
-                  }))}
-                </dl>
-              ) : null
+              item ?
+                <Fields
+                  template={TEMPLATE}
+                  data={item.data}/> :
+                null
             }
           </Panel>
 
