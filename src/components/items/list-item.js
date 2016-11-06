@@ -4,6 +4,7 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { connect } = require('react-redux')
 const { Cell } = require('./cell')
+const { get } = require('dot-prop')
 const act = require('../../actions')
 const cn = require('classnames')
 
@@ -21,8 +22,8 @@ class ListItem extends Component {
 
   render() {
     const {
-      edit, item, data, columns, onActivate, onCancel,
-      onChange, onContextMenu, selected
+      active, item, data, columns, selected,
+      onActivate, onCancel, onChange, onContextMenu
     } = this.props
 
     return (
@@ -38,9 +39,7 @@ class ListItem extends Component {
               value={data[property.name]}
               icon={idx ? null : item.image}
               width={width}
-              active={
-                edit && item.id === edit.item && property.name === edit.property
-              }
+              active={property.name === active}
               onActivate={onActivate}
               onCancel={onCancel}
               onChange={onChange}/>
@@ -52,7 +51,7 @@ class ListItem extends Component {
 
   static propTypes = {
     selected: PropTypes.bool,
-    edit: PropTypes.object,
+    active: PropTypes.string,
     onSelect: PropTypes.func,
     onActivate: PropTypes.func,
     onCancel: PropTypes.func,
@@ -67,16 +66,16 @@ class ListItem extends Component {
 
 module.exports = {
   ListItem: connect(
-    (state, props) => ({
-      data: state.metadata[props.item.id] || {},
-      edit: state.ui.edit.column
+    (state, { item }) => ({
+      data: state.metadata[item.id] || {},
+      active: get(state, `ui.edit.column.${item.id}`)
     }),
 
-    (dispatch, props) => ({
+    (dispatch, { item }) => ({
       onActivate(property) {
         dispatch(act.ui.edit.start({
           column: {
-            item: props.item.id, property
+            [item.id]: property
           }
         }))
       },
@@ -86,13 +85,13 @@ module.exports = {
       },
 
       onChange(data) {
-        dispatch(act.metadata.save({ id: props.item.id, data }))
+        dispatch(act.metadata.save({ id: item.id, data }))
         dispatch(act.ui.edit.cancel())
       },
 
       onContextMenu(event) {
         event.stopPropagation()
-        dispatch(act.ui.context.show(event, 'item', props.item.id))
+        dispatch(act.ui.context.show(event, 'item', item.id))
       }
     })
   )(ListItem)
