@@ -13,8 +13,7 @@ const Fields = (props) => {
         <Field
           key={property.name}
           property={property}
-          data={data}
-          />
+          data={data}/>
       )
     }</ol>
   )
