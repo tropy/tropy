@@ -8,7 +8,7 @@
     }],
     "transform-class-properties",
     "transform-es2015-modules-commonjs",
-    "transform-object-rest-spread",
+    ["transform-object-rest-spread", { useBuiltIns: true }],
     "transform-react-jsx",
   ]
 }
