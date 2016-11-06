@@ -11,7 +11,6 @@ const { Viewer } = require('../viewer')
 const { Fields } = require('../metadata')
 const { getSelectedItem } = require('../../selectors/items')
 const { frameless } = ARGS
-const cn = require('classnames')
 
 const {
   IconPhoto, IconMetadata, IconNote, IconTag, IconPlus
