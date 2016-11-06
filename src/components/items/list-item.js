@@ -5,6 +5,7 @@ const { Component, PropTypes } = React
 const { connect } = require('react-redux')
 const { Cell } = require('./cell')
 const { get } = require('dot-prop')
+const { meta } = require('../../common/os')
 const act = require('../../actions')
 const cn = require('classnames')
 
@@ -14,9 +15,12 @@ class ListItem extends Component {
     super(props)
   }
 
-  select = () => {
-    this.props.onSelect(
-      this.props.selected ? [] : [this.props.item.id]
+  select = (event) => {
+    return this.props.onSelect(
+      this.props.item.id,
+      this.props.selected ?
+        (meta(event) ? 'remove' : 'clear') :
+        (meta(event) ? 'merge' : 'replace')
     )
   }
 

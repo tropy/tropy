@@ -1,6 +1,8 @@
 'use strict'
 
-const { UPDATE, RESTORE } = require('../constants/nav')
+const {
+  UPDATE, RESTORE
+} = require('../constants/nav')
 
 module.exports = {
   restore(payload, meta) {

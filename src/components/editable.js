@@ -45,6 +45,11 @@ class Editable extends Component {
     if (event.which === 13) this.stop()
   }
 
+  activate = (event) => {
+    event.stopPropagation()
+    this.props.onActivate()
+  }
+
   focus(input) {
     if (input) {
       input.focus()
@@ -74,7 +79,7 @@ class Editable extends Component {
     return (
       <span
         className={cn({ editable: true, empty: !this.props.value })}
-        onDoubleClick={this.props.onActivate}>
+        onDoubleClick={this.activate}>
         {this.props.value}
       </span>
     )

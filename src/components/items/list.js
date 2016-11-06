@@ -3,10 +3,10 @@
 const React = require('react')
 const { PropTypes } = React
 const { connect } = require('react-redux')
-const { update } = require('../../actions/nav')
 const { ListItem } = require('./list-item')
 const { ListHead } = require('./list-head')
 const { getColumns } = require('../../selectors/ui')
+const { select } = require('../../actions/item')
 
 const List = ({ items, columns, selection, onSelect }) => (
   <div className="item-list-view">
@@ -39,13 +39,15 @@ List.propTypes = {
 
 module.exports = {
   List: connect(
-    state => ({
+    (state) => ({
       selection: state.nav.items,
       columns: getColumns(state)
     }),
 
-    dispatch => ({
-      onSelect: (items) => dispatch(update({ items })),
+    (dispatch) => ({
+      onSelect: (id, mod) => {
+        dispatch(select(id, { mod }))
+      }
     })
 
   )(List)

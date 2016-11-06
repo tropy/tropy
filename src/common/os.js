@@ -10,6 +10,9 @@ module.exports = {
 
   get darwin() {
     return process.platform === 'darwin'
-  }
+  },
 
+  meta: process.platform === 'darwin' ?
+    (event) => event.metaKey :
+    (event) => event.ctrlKey
 }
