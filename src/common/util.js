@@ -2,6 +2,7 @@
 
 const B = require('bluebird')
 const pad = require('string.prototype.padstart')
+const { keys } = Object
 
 module.exports = {
 
@@ -71,7 +72,19 @@ module.exports = {
   omit(src, props = [], into = {}) {
     return module.exports.pick(src,
       // eslint-disable-next-line eqeqeq
-      Object.keys(src).filter(key => !props.find(prop => prop == key)), into)
+      keys(src).filter(key => !props.find(prop => prop == key)), into)
+  },
+
+  map(src, fn, into = {}) {
+    //if (typeof fn !== 'function') fn = () => fn
+
+    for (let prop in src) {
+      if (src.hasOwnProperty(prop)) {
+        into[prop] = fn(prop, src[prop], src)
+      }
+    }
+
+    return into
   },
 
   noop() {},
