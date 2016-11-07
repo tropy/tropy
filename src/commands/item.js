@@ -35,7 +35,7 @@ class Delete extends Command {
     const id = this.action.payload
 
     yield call(mod.delete, db, id)
-    yield put(act.remove(id))
+    yield put(act.update({ id, deleted: true }, { search: true }))
 
     this.undo = act.restore(id)
   }
@@ -62,10 +62,10 @@ class Restore extends Command {
     const { db } = this.options
     const id = this.action.payload
 
-    const item = yield call([db, db.transaction], tx => mod.restore(tx, id))
-    yield put(act.insert(item))
+    yield call([db, db.transaction], tx => mod.restore(tx, id))
+    yield put(act.update({ id, deleted: false }, { search: true }))
 
-    this.undo = act.delete(item.id)
+    this.undo = act.delete(id)
   }
 }
 

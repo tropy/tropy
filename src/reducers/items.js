@@ -20,7 +20,7 @@ module.exports = {
         }
 
       case REMOVE:
-        return omit(state, [payload])
+        return omit(state, payload)
 
       case UPDATE:
         return {
