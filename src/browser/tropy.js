@@ -167,6 +167,8 @@ class Tropy extends EventEmitter {
         this.dispatch(act.item.create()))
       .on('app:delete-item', (_, { target }) =>
         this.dispatch(act.item.delete(target)))
+      .on('app:restore-item', (_, { target }) =>
+        this.dispatch(act.item.restore(target)))
 
       .on('app:create-list', () =>
         this.dispatch(act.list.new()))

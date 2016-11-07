@@ -2,7 +2,7 @@
 
 const { warn, verbose } = require('../common/log')
 const { call, put, select } = require('redux-saga/effects')
-const { all, deleted } = require('../models/item')
+const { all } = require('../models/item')
 const act = require('../actions')
 const ms = require('ms')
 
@@ -15,8 +15,7 @@ module.exports = {
 
       const START = Date.now()
 
-      const ids =
-        yield call(trash ? deleted : all, db, { list, tag, query, sort })
+      const ids = yield call(all, db, { list, tag, query, sort, trash })
 
       verbose(`*search query took ${ms(Date.now() - START)}`)
 

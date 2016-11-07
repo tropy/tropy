@@ -32,7 +32,7 @@ class Cell extends Component {
 
   render() {
     const {
-      active, width, icon, onCancel
+      active, width, icon, disabled, onCancel
     } = this.props
 
     return (
@@ -43,6 +43,7 @@ class Cell extends Component {
         <Editable
           value={this.value}
           editing={active}
+          disabled={disabled}
           onActivate={this.activate}
           onCancel={onCancel}
           onChange={this.changed}/>
@@ -52,6 +53,7 @@ class Cell extends Component {
 
   static propTypes = {
     icon: PropTypes.string,
+    disabled: PropTypes.bool,
     property: PropTypes.shape({
       name: PropTypes.string,
       type: PropTypes.string,

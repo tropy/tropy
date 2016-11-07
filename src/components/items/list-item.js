@@ -39,6 +39,7 @@ class ListItem extends Component {
           columns.map(({ property, width }, idx) => (
             <Cell
               key={idx}
+              disabled={!!item.deleted}
               property={property}
               value={data[property.name]}
               icon={idx ? null : item.image}
@@ -95,7 +96,12 @@ module.exports = {
 
       onContextMenu(event) {
         event.stopPropagation()
-        dispatch(act.ui.context.show(event, 'item', item.id))
+
+        dispatch(
+          act.ui.context.show(
+            event, item.deleted ? 'deleted-item' : 'item', item.id
+          )
+        )
       }
     })
   )(ListItem)

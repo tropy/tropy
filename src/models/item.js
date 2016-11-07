@@ -2,7 +2,7 @@
 
 module.exports = {
 
-  async all(db) {
+  async all(db, { trash }) {
     return (await db.all(`
       WITH
         titles(id, value) AS (
@@ -14,17 +14,9 @@ module.exports = {
           FROM items
             LEFT OUTER JOIN titles t USING (id)
             LEFT OUTER JOIN trash USING (id)
-          WHERE deleted_at IS NULL
+          WHERE deleted_at ${trash ? 'NOT' : 'IS'} NULL
           ORDER BY t.value ASC, id ASC`
     )).map(item => item.id)
-  },
-
-  async deleted(db) {
-    return await db.all(`
-      SELECT id AS id, created_at AS created, updated_at AS modified,
-          deleted_at AS deleted
-        FROM subjects JOIN trash USING (id)`
-    ).map(item => item.id)
   },
 
   async load(db, ids) {
@@ -32,9 +24,11 @@ module.exports = {
 
     if (ids.length) {
       await db.each(`
-        SELECT id, created_at AS created, updated_at AS modified
+        SELECT id, created_at AS created,
+            updated_at AS modified, deleted_at AS deleted
           FROM subjects
             JOIN items USING (id)
+            LEFT OUTER JOIN trash USING (id)
           WHERE id IN (${ids.join(',')})`,
 
         (item) => {

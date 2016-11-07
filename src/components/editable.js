@@ -47,7 +47,7 @@ class Editable extends Component {
 
   activate = (event) => {
     event.stopPropagation()
-    this.props.onActivate()
+    if (!this.props.disabled) this.props.onActivate()
   }
 
   focus(input) {
@@ -63,7 +63,9 @@ class Editable extends Component {
   }
 
   render() {
-    if (this.props.editing) {
+    const { editing, disabled, value } = this.props
+
+    if (!disabled && editing) {
       return (
         <input
           className="editable editable-control"
@@ -78,9 +80,9 @@ class Editable extends Component {
 
     return (
       <span
-        className={cn({ editable: true, empty: !this.props.value })}
+        className={cn({ editable: true, empty: !value, disabled })}
         onDoubleClick={this.activate}>
-        {this.props.value}
+        {value}
       </span>
     )
   }
@@ -89,6 +91,7 @@ class Editable extends Component {
   static propTypes = {
     value: PropTypes.string,
     required: PropTypes.bool,
+    disabled: PropTypes.bool,
     editing: PropTypes.bool,
     onActivate: PropTypes.func,
     onChange: PropTypes.func.isRequired,
