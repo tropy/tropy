@@ -1,0 +1,35 @@
+//
+// Metadata
+// --------------------------------------------------
+
+.metadata-fields {
+  .metadata-field {
+    display: flex;
+    line-height: $metadata-line-height;
+  }
+
+  label,
+  .value {
+    @include css-truncate;
+  }
+
+  label {
+    flex: 0 0 $metadata-horizontal-offset;
+    text-align: right;
+    padding-left: $component-padding-horizontal;
+    padding-right: ($metadata-gutter / 2);
+    color: $label-color;
+  }
+
+  .value {
+    flex: 0 0 calc(100% - #{$metadata-horizontal-offset});
+    padding-left: ($metadata-gutter / 2);
+    padding-right: $component-padding-horizontal;
+    max-width: 100%;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
