@@ -31,7 +31,7 @@ CREATE TABLE project (
 ) WITHOUT ROWID;
 CREATE TABLE subjects (
   id           INTEGER  PRIMARY KEY,
-  template_id  TEXT,
+  template     TEXT     NOT NULL DEFAULT 'https://schema.tropy.org/v1/templates/core',
   created_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -58,8 +58,8 @@ INSERT INTO "metadata_types" VALUES('location','https://schema.org/GeoCoordinate
 INSERT INTO "metadata_types" VALUES('number','https://schema.org/Number');
 INSERT INTO "metadata_types" VALUES('text','https://schema.org/Text');
 INSERT INTO "metadata_types" VALUES('url','https://schema.org/URL');
-INSERT INTO "metadata_types" VALUES('date','https://schema.tropy.org/types/date');
-INSERT INTO "metadata_types" VALUES('name','https://schema.tropy.org/types/name');
+INSERT INTO "metadata_types" VALUES('date','https://schema.tropy.org/v1/types/date');
+INSERT INTO "metadata_types" VALUES('name','https://schema.tropy.org/v1/types/name');
 CREATE TABLE metadata (
   id          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   --item_id     INTEGER  NOT NULL REFERENCES items ON DELETE CASCADE,
@@ -113,7 +113,7 @@ CREATE TABLE lists (
 
   UNIQUE (parent_list_id, name)
 );
-INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-11-04 21:41:34','2016-11-04 21:41:34');
+INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-11-07 16:48:54','2016-11-07 16:48:54');
 CREATE TABLE list_items (
   id       INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
