@@ -42,20 +42,47 @@ class Wizard extends Component {
 
         <Steps>
           <Step>
+            <img src={'images/wizard/tropy-icon.svg'} className="tropy-icon"
+              width={202} height={174}/>
 
             <h1><FormattedMessage id="wizard.project.title"/></h1>
 
-            <input
-              type="text"
-              onChange={this.update}
-              placeholder={
-                intl.formatMessage({ id: 'wizard.project.name' })
-              }/>
+            <div className="form-group compact">
+              <input
+                type="text"
+                className="form-control input-lg"
+                onChange={this.update}
+                placeholder={
+                  intl.formatMessage({ id: 'wizard.project.name' })
+                }
+                autoFocus/>
+            </div>
 
-            <button onClick={submit} disabled={!project.name}>
+            <div className="form-group save-as">
+              <div className="save-as-link-container">
+                <a href="#" className="save-as-link">
+                  <FormattedMessage id="wizard.project.save_as"/>
+                </a>
+              </div>
+              <div className="save-as-controls">
+                <input
+                  type="text"
+                  className="form-control input-lg"
+                  value="Path"
+                  readOnly/>
+                <button className="btn btn-default btn-lg">
+                  <FormattedMessage id="wizard.project.change"/>
+                </button>
+              </div>
+            </div>
+
+            <button
+              className="btn btn-primary btn-lg btn-block"
+              onClick={submit}
+              disabled={!project.name}>
+
               <FormattedMessage id="wizard.project.submit"/>
             </button>
-
           </Step>
         </Steps>
       </div>

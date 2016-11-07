@@ -17,18 +17,21 @@
 
 @import
   "../base/reset",
-  "../base/base";
-
+  "../base/base",
+  "../base/type";
 
 // Components
 // --------------------------------------------------
 
 @import
-  "../components/toolbar";
+  "../components/toolbar",
+  "../components/button",
+  "../components/wizard";
 
 
 // Partials
 // --------------------------------------------------
 
 @import
-  "../partials/window-controls";
+  "../partials/window-controls",
+  "../partials/forms";

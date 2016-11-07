@@ -4,4 +4,10 @@
 
 .el-capitan {
   font-family: BlinkMacSystemFont, $font-family-base;
+
+  #wizard {
+    h1 {
+      font-family: BlinkMacSystemFont, $font-family-base; // Reset San Francisco
+    }
+  }
 }

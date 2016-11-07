@@ -125,6 +125,8 @@ class Tropy extends EventEmitter {
       parent: this.win,
       modal: !!this.win,
       autoHideMenuBar: true,
+      resizable: false,
+      minimizable: false,
       maximizable: false,
       fullscreenable: false,
       darkTheme: (this.state.theme === 'dark'),

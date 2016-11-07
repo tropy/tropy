@@ -11,6 +11,7 @@ $font-family-base:       $font-family-sans-serif;
 
 $font-size-small: 13px;
 $font-size-base:  14px;
+$font-size-large: 16px;
 
 $line-height-base:     1.429;
 $line-height-computed: floor(($font-size-base * $line-height-base));
@@ -47,10 +48,15 @@ $thumbnail-size: $space-lg;
 
 @if $platform == linux {
   $toolbar-height: 46px !global;
+  $wizard-spacing-top: 29px !global;
+
 } @else if $platform == win32 {
   $toolbar-height: 30px !global;
-} @else {
-  $toolbar-height: 38px !global; // Darwin
+  $wizard-spacing-top: 45px !global;
+
+} @else { // Darwin
+  $toolbar-height: 38px !global;
+  $wizard-spacing-top: 37px !global;
 }
 
 
@@ -64,10 +70,11 @@ $search-width: 200px;
 // Common Dimensions
 // --------------------------------------------------
 
-$padding-base-vertical:   2px;
 $padding-base-horizontal: $space-xs;
+$padding-large-horizontal: $space-sm;
 
-$border-radius-base:  0;
+$border-radius-small: 3px;
+$border-radius-base:  4px;
 $border-radius-large: 3px;
 
 $component-padding-horizontal: $space-sm;
@@ -78,8 +85,9 @@ $row-height: $thumbnail-size + 6px;
 // Forms
 // --------------------------------------------------
 
-$input-height-base: ($line-height-computed + ($padding-base-vertical * 2) + 2);
-$input-border-radius-base: $border-radius-base;
+$input-height-base: $space-lg;
+$input-height-large: ($space-xl + $space-xs);
+$input-border-radius-base: 0;
 
 
 // Z-index master list

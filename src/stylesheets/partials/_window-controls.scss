@@ -25,10 +25,6 @@
     }
   }
 
-  .is-blurred & button {
-    background-position-y: -36px;
-  }
-
   button {
     width: 12px;
     height: 12px;
@@ -44,6 +40,22 @@
 
     &:active {
       background-position-y: -24px;
+    }
+
+    .is-blurred & {
+      background-position-y: -36px;
+    }
+  }
+
+  .minimize {
+    .not-minimizable & {
+      background-position-y: -36px;
+    }
+  }
+
+  .maximize {
+    .not-maximizable & {
+      background-position-y: -36px;
     }
   }
 

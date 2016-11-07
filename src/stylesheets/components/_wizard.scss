@@ -1,0 +1,69 @@
+//
+// Wizard
+// --------------------------------------------------
+
+main,
+#wizard {
+  height: 100%;
+}
+
+#wizard {
+  text-align: center;
+  padding: 0 $space-xxl;
+  background: image-url("wizard/key-visual.svg") no-repeat center bottom / auto 131px;
+
+  .tropy-icon {
+    margin: $wizard-spacing-top 0 22px;
+  }
+
+  h1 {
+    font: {
+      family: "HelveticaNeue-Thin", $font-family-base;
+      weight: 200;
+      size: 32px;
+    }
+    line-height: 1.1;
+    color: $wizard-heading-color;
+    margin-bottom: 26px;
+  }
+
+  .form-control {
+    border-radius: $border-radius-small;
+  }
+
+  a {
+    text-decoration: none;
+    color: $wizard-link-color;
+  }
+
+  .save-as {
+    height: $input-height-large;
+
+    &.custom {
+      .save-as-link {
+        display: none;
+      }
+
+      .save-as-controls {
+        display: flex;
+      }
+    }
+  }
+
+  .save-as-link-container {
+    margin-top: 11px;
+  }
+
+  .save-as-controls {
+    display: none;
+
+    .form-control {
+      flex: 1 1 0;
+    }
+
+    .btn {
+      flex: 0 0 auto;
+      margin-left: $space-min;
+    }
+  }
+}

@@ -5,9 +5,11 @@ sidebar:
 
 wizard:
   project:
-    title: Create a new Tropy project
+    title: Create a new project
     submit: Create project
     name: Name
+    save_as: Change file name and location
+    change: Change
 
 fields:
   title: Title

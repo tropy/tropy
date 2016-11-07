@@ -3,7 +3,49 @@
 // --------------------------------------------------
 
 .btn {
+  font: {
+    family: inherit;
+    size: inherit;
+  }
+  color: inherit;
   border: 0;
+  border-radius: $border-radius-small;
+  padding: 0 $padding-base-horizontal;
+
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 0.64;
+  }
+}
+
+.btn-lg {
+  font-size: $font-size-large;
+  height: $input-height-large;
+  padding: 0 $padding-large-horizontal;
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+.btn-default {
+  color: $btn-default-color;
+  background: $btn-default-bg;
+  border: 1px solid $btn-default-border;
+
+  &:active {
+    background: $btn-default-active-bg;
+  }
+}
+
+.btn-primary {
+  color: $btn-primary-color;
+  background: $btn-primary-bg;
+
+  &:active {
+    background: $btn-primary-active-bg;
+  }
 }
 
 .btn-icon {

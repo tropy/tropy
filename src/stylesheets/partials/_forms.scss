@@ -6,7 +6,7 @@
   display: block;
   width: 100%;
   height: $input-height-base;
-  padding: $padding-base-vertical $padding-base-horizontal;
+  padding: 0 $padding-base-horizontal;
   font-family: inherit;
   font-size: $font-size-base;
   line-height: $line-height-base;
@@ -21,5 +21,23 @@
 
   &::-webkit-input-placeholder {
     color: $input-color-placeholder;
+  }
+
+  &[readonly] {
+    color: #777;
+  }
+}
+
+.input-lg {
+  font-size: $font-size-large;
+  height: $input-height-large;
+  padding: 0 $padding-large-horizontal;
+}
+
+.form-group {
+  margin-bottom: $space-md;
+
+  &.compact {
+    margin-bottom: $space-xs;
   }
 }

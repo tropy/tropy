@@ -106,3 +106,16 @@ $note-active-bg: $brand-primary;
 $editable-color: $text-color;
 $editable-bg: $shade-0;
 $editable-border-color: $brand-primary;
+
+// Wizard
+$wizard-heading-color: $shade-7;
+$wizard-link-color:    $brand-primary;
+
+// Button
+$btn-default-color:     $shade-8;
+$btn-default-bg:        $shade-0;
+$btn-default-border:    $shade-2;
+$btn-default-active-bg: $shade-1;
+$btn-primary-color:     $shade-0;
+$btn-primary-bg:        $brand-primary;
+$btn-primary-active-bg: darken($btn-primary-bg, 4%);
