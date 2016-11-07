@@ -22,10 +22,9 @@ module.exports = {
 
   async deleted(db) {
     return await db.all(`
-      SELECT id AS id, created_at AS created, updated_ad AS modified
-        FROM subjects JOIN trash USING (id)
-        LIMIT 100`
-    )
+      SELECT id AS id, created_at AS created, updated_at AS modified
+        FROM subjects JOIN trash USING (id)`
+    ).map(item => item.id)
   },
 
   async create(db, template) {

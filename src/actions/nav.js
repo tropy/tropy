@@ -1,7 +1,7 @@
 'use strict'
 
 const {
-  UPDATE, RESTORE
+  UPDATE, RESTORE, SELECT
 } = require('../constants/nav')
 
 module.exports = {
@@ -9,7 +9,11 @@ module.exports = {
     return { type: RESTORE, payload, meta: { search: true, ...meta } }
   },
 
-  update(payload) {
-    return { type: UPDATE, payload }
+  update(payload, meta) {
+    return { type: UPDATE, payload, meta }
+  },
+
+  select(payload, meta) {
+    return { type: SELECT, payload, meta: { search: true, ...meta } }
   }
 }

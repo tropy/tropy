@@ -1,6 +1,7 @@
 sidebar:
   lists: Lists
   tags: Tags
+  trash: Deleted Items
 
 wizard:
   project:

@@ -34,6 +34,12 @@ class ProjectSidebar extends Component {
     this.props.onContextMenu(event, 'tags')
   }
 
+  trash = () => {
+    if (!this.props.trash) {
+      this.props.onSelect({ trash: true, tag: null })
+    }
+  }
+
   render() {
     if (this.props.toolbar) {
       var toolbar = <Toolbar draggable/>
@@ -67,6 +73,17 @@ class ProjectSidebar extends Component {
             </nav>
           </section>
 
+          <section>
+            <nav>
+              <ol>
+                <li className={this.props.trash && 'active'}
+                  onClick={this.trash}>
+                  <FormattedMessage id="sidebar.trash"/>
+                </li>
+              </ol>
+            </nav>
+          </section>
+
           <section onContextMenu={this.showTagsMenu}>
             <h2><FormattedMessage id="sidebar.tags"/></h2>
             <nav>
@@ -83,6 +100,7 @@ class ProjectSidebar extends Component {
 
   static propTypes = {
     active: PropTypes.bool,
+    trash: PropTypes.bool,
     context: PropTypes.bool,
     editing: PropTypes.bool,
     toolbar: PropTypes.bool,
@@ -105,7 +123,8 @@ class ProjectSidebar extends Component {
 module.exports = {
   ProjectSidebar: connect(
     ({ project, nav, ui }) => ({
-      active: !nav.list,
+      active: !nav.list && !nav.trash,
+      trash: nav.trash,
       context: has(ui.context, 'project'),
       editing: has(ui.edit, 'project.name'),
       project,
@@ -125,8 +144,8 @@ module.exports = {
         dispatch(act.ui.edit.cancel())
       },
 
-      onSelect() {
-        dispatch(act.nav.update({ list: null }))
+      onSelect(opts) {
+        dispatch(act.nav.select({ list: null, trash: null, ...opts }))
       },
 
       onContextMenu(event, ...args) {

@@ -2,19 +2,20 @@
 
 const { warn, verbose } = require('../common/log')
 const { call, put, select } = require('redux-saga/effects')
-const { all } = require('../models/item')
+const { all, deleted } = require('../models/item')
 const act = require('../actions')
 
 module.exports = {
 
   *search(db) {
     try {
-      const { nav, items } = yield select()
-      const { list, tag, query, sort } = nav
+      const { nav, metadata } = yield select()
+      const { list, tag, query, sort, trash } = nav
 
-      const ids = yield call(all, db, { list, tag, query, sort })
+      const ids =
+        yield call(trash ? deleted : all, db, { list, tag, query, sort })
 
-      yield put(act.metadata.load(ids.filter(id => !(id in items))))
+      yield put(act.metadata.load(ids.filter(id => !(id in metadata))))
       yield put(act.ui.items.update(ids))
 
     } catch (error) {
