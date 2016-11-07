@@ -35,7 +35,7 @@ class Field extends Component {
   }
 
   render() {
-    const { editing, onCancel } = this.props
+    const { editing, disabled, onCancel } = this.props
     const { value, type, name, activate, changed } = this
 
     return (
@@ -44,6 +44,7 @@ class Field extends Component {
         <div className="value">
           <Editable
             value={value ? value.value : null}
+            disabled={disabled}
             editing={editing}
             onActivate={activate}
             onCancel={onCancel}
@@ -55,6 +56,7 @@ class Field extends Component {
 
   static propTypes = {
     editing: PropTypes.bool,
+    disabled: PropTypes.bool,
 
     property: PropTypes.shape({
       name: PropTypes.string.isRequired,

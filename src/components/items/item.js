@@ -29,10 +29,10 @@ const TEMPLATE = [
   { name: 'folder', type: 'text' }
 ]
 
-const Item = ({ selection }) => {
+const Item = ({ item, selection }) => {
   let fp
 
-  if (selection.length === 1) {
+  if (selection.length === 1 && item) {
     fp = (
       <Panel header={
         <Tabs justified>
@@ -40,7 +40,7 @@ const Item = ({ selection }) => {
           <Tab><IconTag/>Tags</Tab>
         </Tabs>
       }>
-        <Fields id={selection[0]} template={TEMPLATE}/>
+        <Fields id={item.id} disabled={!!item.deleted} template={TEMPLATE}/>
       </Panel>
     )
   } else {
@@ -108,6 +108,7 @@ const Item = ({ selection }) => {
 }
 
 Item.propTypes = {
+  item: PropTypes.object,
   selection: PropTypes.arrayOf(PropTypes.number)
 }
 

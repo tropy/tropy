@@ -25,6 +25,7 @@ const Fields = (props) => {
 
 Fields.propTypes = {
   editing: PropTypes.string,
+  disabled: PropTypes.bool,
   template: PropTypes.array.isRequired,
   id: PropTypes.number.isRequired,
   data: PropTypes.object,
