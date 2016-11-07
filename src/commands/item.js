@@ -6,7 +6,7 @@ const act = require('../actions/item')
 const mod = require('../models/item')
 
 const {
-  CREATE, DELETE, RESTORE, SAVE
+  CREATE, DELETE, LOAD, RESTORE, SAVE
 } = require('../constants/item')
 
 
@@ -40,6 +40,20 @@ class Delete extends Command {
     this.undo = act.restore(id)
   }
 }
+
+class Load extends Command {
+  static get action() { return LOAD }
+
+  *exec() {
+    const { db } = this.options
+    const ids = this.action.payload
+
+    const items = yield call(mod.load, db, ids)
+
+    return items
+  }
+}
+
 
 class Restore extends Command {
   static get action() { return RESTORE }
@@ -76,6 +90,7 @@ class Save extends Command {
 module.exports = {
   Create,
   Delete,
+  Load,
   Restore,
   Save
 }

@@ -1,6 +1,5 @@
 'use strict'
 
-
 module.exports = {
 
   async all(db) {
@@ -22,18 +21,38 @@ module.exports = {
 
   async deleted(db) {
     return await db.all(`
-      SELECT id AS id, created_at AS created, updated_at AS modified
+      SELECT id AS id, created_at AS created, updated_at AS modified,
+          deleted_at AS deleted
         FROM subjects JOIN trash USING (id)`
     ).map(item => item.id)
   },
 
-  async create(db, template) {
+  async load(db, ids) {
+    const items = {}
+
+    if (ids.length) {
+      await db.each(`
+        SELECT id, created_at AS created, updated_at AS modified
+          FROM subjects
+            JOIN items USING (id)
+          WHERE id IN (${ids.join(',')})`,
+
+        (item) => {
+          items[item.id] = item
+        }
+      )
+    }
+
+    return items
+  },
+
+  async create(db) {
     const { id } = await db.run(`
-      INSERT INTO subjects (template_id) VALUES (?)`, template)
+      INSERT INTO subjects DEFAULT VALUES`)
+    await db.run(`
+      INSERT INTO items (id) VALUES (?)`, id)
 
-    await db.run('INSERT INTO items (id) VALUES (?)', id)
-
-    return { id }
+    return await module.exports.load(db, [id])
   },
 
   async delete(db, id) {
