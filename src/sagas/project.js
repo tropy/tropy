@@ -84,7 +84,7 @@ module.exports = {
       }
 
       if (cmd.duration > TOO_LONG) {
-        warn(`SLOW: ${action.type}`, cmd)
+        warn(`SLOW: ${action.type}`)
       }
 
     } catch (error) {

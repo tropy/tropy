@@ -45,7 +45,7 @@ function init(dir) {
         logger.add(transports.File, {
           filename: join(dir, `${process.type}.log`),
           maxsize: 1024 * 1024,
-          maxFiles: 5,
+          maxFiles: 1,
           tailable: true,
           handleExceptions: true,
           humanReadableUnhandledException: true
