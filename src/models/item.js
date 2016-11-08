@@ -52,7 +52,7 @@ module.exports = {
     await db.run(`
       INSERT INTO items (id) VALUES (?)`, id)
 
-    return await module.exports.load(db, [id])
+    return (await module.exports.load(db, [id]))[id]
   },
 
   async delete(db, id) {
