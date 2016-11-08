@@ -56,13 +56,13 @@ module.exports = {
   },
 
   async delete(db, id) {
-    return await db.run(
+    return db.run(
       'INSERT INTO trash (id) VALUES (?)', id
     )
   },
 
   async destroy(db, id) {
-    return await db.run(
+    return db.run(
       'DElETE FROM subjects WHERE id = ?', id
     )
   },
@@ -75,7 +75,7 @@ module.exports = {
   },
 
   async prune(db) {
-    return await db.run(`
+    return db.run(`
       DELETE FROM subjects
         WHERE id IN (
           SELECT id
