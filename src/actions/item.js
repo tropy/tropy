@@ -1,7 +1,7 @@
 'use strict'
 
 const {
-  CREATE, DELETE, INSERT, LOAD, REMOVE, RESTORE, SAVE, SELECT, UPDATE
+  CREATE, DELETE, DESTROY, INSERT, LOAD, REMOVE, RESTORE, SAVE, SELECT, UPDATE
 } = require('../constants/item')
 
 
@@ -23,6 +23,14 @@ module.exports = {
       type: DELETE,
       payload,
       meta: { async: true, record: true, ...meta }
+    }
+  },
+
+  destroy(payload, meta) {
+    return {
+      type: DESTROY,
+      payload,
+      meta: { async: true, prompt: true, ...meta }
     }
   },
 

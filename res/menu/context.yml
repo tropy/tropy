@@ -42,6 +42,8 @@ linux:
   deleted-item: &deleted-item
     - label: 'Restore Item'
       command: 'app:restore-item'
+    - label: 'Permanently Delete Item'
+      command: 'app:destroy-item'
   dev: &dev
     - label: 'Reload'
       command: 'app:reload'

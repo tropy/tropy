@@ -61,6 +61,12 @@ module.exports = {
     )
   },
 
+  async destroy(db, id) {
+    return await db.run(
+      'DElETE FROM subjects WHERE id = ?', id
+    )
+  },
+
   async restore(db, id) {
     await db.run(
       'DELETE FROM trash WHERE id = ?', id

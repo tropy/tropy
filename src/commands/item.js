@@ -6,7 +6,7 @@ const act = require('../actions/item')
 const mod = require('../models/item')
 
 const {
-  CREATE, DELETE, LOAD, RESTORE, SAVE
+  CREATE, DELETE, DESTROY, LOAD, RESTORE, SAVE
 } = require('../constants/item')
 
 
@@ -38,6 +38,18 @@ class Delete extends Command {
     yield put(act.update({ id, deleted: true }, { search: true }))
 
     this.undo = act.restore(id)
+  }
+}
+
+class Destroy extends Command {
+  static get action() { return DESTROY }
+
+  *exec() {
+    const { db } = this.options
+    const id = this.action.payload
+
+    yield call(mod.destroy, db, id)
+    yield put(act.remove([id], { search: true }))
   }
 }
 
@@ -90,6 +102,7 @@ class Save extends Command {
 module.exports = {
   Create,
   Delete,
+  Destroy,
   Load,
   Restore,
   Save
