@@ -19,6 +19,7 @@ const { OPENED, CREATED } = require('../constants/project')
 const { CONTEXT } = require('../constants/ui')
 const act = require('../actions')
 const { HISTORY } = require('../constants/history')
+const { darwin } = require('../common/os')
 
 const H = new WeakMap()
 
@@ -26,7 +27,7 @@ class Tropy extends EventEmitter {
 
   static get defaults() {
     return {
-      frameless: (process.platform === 'darwin'),
+      frameless: darwin,
       locale: app.getLocale(),
       theme: 'light',
       recent: [],
@@ -123,7 +124,7 @@ class Tropy extends EventEmitter {
       width: 456,
       height: 580,
       parent: this.win,
-      modal: !!this.win,
+      modal: !darwin && !!this.win,
       autoHideMenuBar: true,
       resizable: false,
       minimizable: false,
@@ -285,14 +286,14 @@ class Tropy extends EventEmitter {
       .once('before-quit', () => { quit = true })
 
       .on('window-all-closed', () => {
-        if (quit || process.platform !== 'darwin') app.quit()
+        if (quit || !darwin) app.quit()
       })
       .on('quit', () => {
         verbose('saving app state')
         this.persist()
       })
 
-    if (process.platform === 'darwin') {
+    if (darwin) {
       app.on('activate', () => this.open())
     }
 
