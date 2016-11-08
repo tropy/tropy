@@ -89,7 +89,7 @@ module.exports = {
 
   noop() {},
 
-  id(payload) { return payload },
+  identity(payload) { return payload },
 
   strftime(format, date = new Date()) {
     return format.replace(/%([YymdHMS])/g, (match, code) => {

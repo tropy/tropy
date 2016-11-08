@@ -4,7 +4,7 @@ const { takeEvery: every, eventChannel } = require('redux-saga')
 const { call, fork, put, take, select } = require('redux-saga/effects')
 const { ipcRenderer: ipc } = require('electron')
 const { warn, debug } = require('../common/log')
-const { id } = require('../common/util')
+const { identity } = require('../common/util')
 const history = require('../selectors/history')
 const { TICK, DROP, UNDO, REDO } = require('../constants/history')
 
@@ -14,7 +14,7 @@ module.exports = {
     try {
       if (meta && meta.ipc) {
         const event = meta.ipc === true ? type : meta.ipc
-        const data = yield call(FILTER[type] || id, payload)
+        const data = yield call(FILTER[type] || identity, payload)
         yield call([ipc, ipc.send], event, data)
       }
 
