@@ -7,5 +7,7 @@ module.exports = {
   LOAD: 'photo.load',
   SAVE: 'photo.save',
   SELECT: 'photo.select',
-  UPDATE: 'photo.update'
+  UPDATE: 'photo.update',
+
+  TEMPLATE: 'https://schema.tropy.org/v1/templates/photo'
 }

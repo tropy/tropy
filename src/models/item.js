@@ -26,7 +26,7 @@ module.exports = {
       await db.each(`
         SELECT s.id, created_at AS created,
             updated_at AS modified, deleted_at AS deleted,
-            group_concat(photos.item_id) AS photos
+            group_concat(photos.id) AS photos
           FROM subjects s
             JOIN items USING (id)
             LEFT OUTER JOIN trash USING (id)
