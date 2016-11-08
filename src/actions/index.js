@@ -8,6 +8,7 @@ module.exports = {
   list: require('./list'),
   metadata: require('./metadata'),
   nav: require('./nav'),
+  photo: require('./photo'),
   project: require('./project'),
   tag: require('./tag'),
   ui: require('./ui')
