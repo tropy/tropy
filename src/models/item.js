@@ -24,15 +24,21 @@ module.exports = {
 
     if (ids.length) {
       await db.each(`
-        SELECT id, created_at AS created,
-            updated_at AS modified, deleted_at AS deleted
-          FROM subjects
+        SELECT s.id, created_at AS created,
+            updated_at AS modified, deleted_at AS deleted,
+            group_concat(photos.item_id) AS photos
+          FROM subjects s
             JOIN items USING (id)
             LEFT OUTER JOIN trash USING (id)
-          WHERE id IN (${ids.join(',')})`,
+            LEFT OUTER JOIN photos ON s.id = photos.item_id
+          WHERE s.id IN (${ids.join(',')})
+          GROUP BY s.id`,
 
         (item) => {
-          items[item.id] = item
+          items[item.id] = {
+            ...item,
+            photos: item.photos ? item.photos.split(',').map(Number) : []
+          }
         }
       )
     }
