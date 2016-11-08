@@ -3,6 +3,12 @@ sidebar:
   tags: Tags
   trash: Deleted Items
 
+panel:
+  metadata: Metadata
+  tags: Tags
+  photos: Photos
+  notes: Notes
+
 wizard:
   project:
     title: Create a new project

@@ -30,8 +30,9 @@ const TEMPLATE = [
   { name: 'folder', type: 'text' }
 ]
 
-const Item = ({ item, selection }) => {
+const Item = ({ item, selection, handleCreatePhoto }) => {
   let fp
+  const locked = !item || item.deleted
 
   if (selection.length === 1 && item) {
     fp = (
@@ -60,7 +61,11 @@ const Item = ({ item, selection }) => {
         }>
           {fp}
 
-          <Panel header={<PhotoPanelHeader/>}>
+          <Panel header={
+            <PhotoPanelHeader
+              hasCreateButton={!locked}
+              onCreate={handleCreatePhoto}/>
+          }>
             <PhotoPanel/>
           </Panel>
 
@@ -87,7 +92,8 @@ const Item = ({ item, selection }) => {
 
 Item.propTypes = {
   item: PropTypes.object,
-  selection: PropTypes.arrayOf(PropTypes.number)
+  selection: PropTypes.arrayOf(PropTypes.number),
+  handleCreatePhoto: PropTypes.func
 }
 
 
@@ -99,7 +105,7 @@ module.exports = {
     }),
 
     (dispatch) => ({
-      addPhoto: () => dispatch()
+      handleCreatePhoto: () => dispatch()
     })
   )(Item)
 }

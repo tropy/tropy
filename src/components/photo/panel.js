@@ -1,8 +1,10 @@
 'use strict'
 
 const React = require('react')
+const { PropTypes } = React
 const { Toolbar } = require('../toolbar')
 const { IconPhoto, IconPlus } = require('../icons')
+const { FormattedMessage } = require('react-intl')
 
 
 const PhotoPanel = () => (
@@ -20,19 +22,34 @@ const PhotoPanel = () => (
   </ul>
 )
 
-const PhotoPanelHeader = () => (
-  <Toolbar>
-    <div className="toolbar-left">
-      <IconPhoto/>
-      <h4>Photos</h4>
-    </div>
-    <div className="toolbar-right">
-      <button className="btn btn-icon">
+const PhotoPanelHeader = ({ hasCreateButton, onCreate }) => {
+  const buttons = []
+
+  if (hasCreateButton) {
+    buttons.push(
+      <button key="create" className="btn btn-icon" onClick={onCreate}>
         <IconPlus/>
       </button>
-    </div>
-  </Toolbar>
-)
+    )
+  }
+
+  return (
+    <Toolbar>
+      <div className="toolbar-left">
+        <IconPhoto/>
+        <h4><FormattedMessage id="panel.photos"/></h4>
+      </div>
+      <div className="toolbar-right">
+        {buttons}
+      </div>
+    </Toolbar>
+  )
+}
+
+PhotoPanelHeader.propTypes = {
+  hasCreateButton: PropTypes.bool,
+  onCreate: PropTypes.func
+}
 
 module.exports = {
   PhotoPanel,
