@@ -6,17 +6,17 @@ const { ipcRenderer: ipc } = require('electron')
 const { warn, debug } = require('../common/log')
 const { identity } = require('../common/util')
 const history = require('../selectors/history')
-const { TICK, DROP, UNDO, REDO } = require('../constants/history')
+const tag = require('../selectors/tag')
+const { TAG, HISTORY } = require('../constants')
+
 
 module.exports = {
 
-  *forward({ type, payload, meta }) {
+  *forward(filter, { type, payload, meta }) {
     try {
-      if (meta && meta.ipc) {
-        const event = meta.ipc === true ? type : meta.ipc
-        const data = yield call(FILTER[type] || identity, payload)
-        yield call([ipc, ipc.send], event, data)
-      }
+      const event = meta.ipc === true ? type : meta.ipc
+      const data = yield call(filter[event] || identity, payload)
+      yield call([ipc, ipc.send], event, data)
 
     } catch (error) {
       warn(`unexpected error in ipc:forward: ${error.message}`)
@@ -40,19 +40,22 @@ module.exports = {
   },
 
   *ipc() {
-    yield every('*', module.exports.forward)
+    yield every(({ meta }) => meta && meta.ipc, module.exports.forward, FILTER)
     yield fork(module.exports.receive)
   }
 
 }
 
+
 const FILTER = {
-  *[TICK]() {
+  *[HISTORY.CHANGED]() {
     return yield select(history.length)
+  },
+
+  *[TAG.CHANGED]() {
+    return yield select(tag.visible)
   }
 }
-
-FILTER[DROP] = FILTER[UNDO] = FILTER[REDO] = FILTER[TICK]
 
 function channel(name) {
   return eventChannel(emitter => {

@@ -13,6 +13,7 @@ module.exports = {
   SAVE: 'tag.save',
   UPDATE: 'tag.update',
 
-  LOAD: 'tag.load'
+  LOAD: 'tag.load',
 
+  CHANGED: 'tag.changed'
 }

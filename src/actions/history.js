@@ -1,7 +1,7 @@
 'use strict'
 
 const {
-  UNDO, REDO, TICK, DROP, HISTORY
+  UNDO, REDO, TICK, DROP, CHANGED
 } = require('../constants/history')
 
 const { omit } = require('../common/util')
@@ -9,11 +9,11 @@ const { omit } = require('../common/util')
 module.exports = {
 
   undo(payload, meta) {
-    return { type: UNDO, payload, meta: { ipc: HISTORY, ...meta } }
+    return { type: UNDO, payload, meta: { ipc: CHANGED, ...meta } }
   },
 
   redo(payload, meta) {
-    return { type: REDO, payload, meta: { ipc: HISTORY, ...meta } }
+    return { type: REDO, payload, meta: { ipc: CHANGED, ...meta } }
   },
 
   tick({ undo, redo }, meta) {
@@ -27,14 +27,14 @@ module.exports = {
         redo
       },
       meta: {
-        ipc: HISTORY,
+        ipc: CHANGED,
         ...meta
       }
     }
   },
 
   drop(payload, meta) {
-    return { type: DROP, payload, meta: { ipc: HISTORY, ...meta } }
+    return { type: DROP, payload, meta: { ipc: CHANGED, ...meta } }
   }
 
 }

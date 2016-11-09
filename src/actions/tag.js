@@ -1,7 +1,7 @@
 'use strict'
 
 const {
-  CREATE, INSERT, REMOVE, SAVE, HIDE, SHOW, LOAD, UPDATE, PRUNE
+  CHANGED, CREATE, INSERT, REMOVE, SAVE, HIDE, SHOW, LOAD, UPDATE, PRUNE
 } = require('../constants/tag')
 
 const { EDIT } = require('../constants/ui')
@@ -31,11 +31,11 @@ module.exports = {
   },
 
   insert(payload, meta = {}) {
-    return { type: INSERT, payload, meta }
+    return { type: INSERT, payload, meta: { ipc: CHANGED, ...meta } }
   },
 
   remove(payload, meta) {
-    return { type: REMOVE, payload, meta }
+    return { type: REMOVE, payload, meta: { ipc: CHANGED, ...meta } }
   },
 
   save(payload, meta) {
@@ -63,11 +63,15 @@ module.exports = {
   },
 
   load(payload, meta) {
-    return { type: LOAD, payload, meta: { async: true, ...meta } }
+    return {
+      type: LOAD,
+      payload,
+      meta: { async: true, ipc: CHANGED, ...meta }
+    }
   },
 
   update(payload, meta) {
-    return { type: UPDATE, payload, meta }
+    return { type: UPDATE, payload, meta: { ipc: CHANGED, ...meta } }
   }
 }
 

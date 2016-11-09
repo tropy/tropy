@@ -99,6 +99,19 @@ class Menu {
         case 'redo':
           item.enabled = this.app.history.future > 0
           break
+
+        case 'tag':
+          item.submenu = [
+            ...item.submenu,
+            ...this.app.tags.map(tag => ({
+              type: 'checkbox',
+              label: tag.name,
+              checked: false,
+              click: this.responder('app:tag-item', tag.id)
+            }))
+          ]
+          break
+
       }
 
       if (item.submenu) {

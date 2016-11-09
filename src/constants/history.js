@@ -6,5 +6,5 @@ module.exports = {
   TICK: 'history.tick',
   DROP: 'history.drop',
 
-  HISTORY: 'history'
+  CHANGED: 'history.changed'
 }

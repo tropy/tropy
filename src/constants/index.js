@@ -1,6 +1,7 @@
 'use strict'
 
 module.exports = {
+  HISTORY: require('./history'),
   ITEM: require('./item'),
   LIST: require('./list'),
   METADATA: require('./metadata'),

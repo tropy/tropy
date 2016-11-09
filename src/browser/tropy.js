@@ -18,10 +18,11 @@ const { defineProperty: prop } = Object
 const { OPENED, CREATED } = require('../constants/project')
 const { CONTEXT } = require('../constants/ui')
 const act = require('../actions')
-const { HISTORY } = require('../constants/history')
+const { HISTORY, TAG } = require('../constants')
 const { darwin } = require('../common/os')
 
 const H = new WeakMap()
+const T = new WeakMap()
 
 class Tropy extends EventEmitter {
 
@@ -305,9 +306,12 @@ class Tropy extends EventEmitter {
       .on(OPENED, (_, { file }) => this.opened({ file }))
       .on(CREATED, (_, { file }) => this.open(file))
 
-      .on(HISTORY, (_, history) => {
+      .on(HISTORY.CHANGED, (_, history) => {
         H.set(this.win, history)
         this.emit('app:reload-menu')
+      })
+      .on(TAG.CHANGED, (_, tags) => {
+        T.set(this.win, tags)
       })
 
       .on(CONTEXT.SHOW, (_, event) => {
@@ -344,6 +348,10 @@ class Tropy extends EventEmitter {
 
   get history() {
     return H.get(this.win) || {}
+  }
+
+  get tags() {
+    return T.get(this.win) || []
   }
 
   get name() {
