@@ -4,6 +4,7 @@ const res = require('../common/res')
 const { basename } = require('path')
 const { warn } = require('../common/log')
 const { transduce, map, transformer } = require('transducers.js')
+const { get } = require('dot-prop')
 const electron = require('electron')
 
 class Menu {
@@ -100,17 +101,22 @@ class Menu {
           item.enabled = this.app.history.future > 0
           break
 
-        case 'tag':
-          item.submenu = [
-            ...item.submenu,
-            ...this.app.tags.map(tag => ({
-              type: 'checkbox',
-              label: tag.name,
-              checked: false,
-              click: this.responder('app:tag-item', tag.id)
-            }))
-          ]
+        case 'tag': {
+          const checked = get(params[0], 'target.tags')
+
+          if (checked) {
+            item.submenu = [
+              ...item.submenu,
+              ...this.app.tags.map(tag => ({
+                type: 'checkbox',
+                label: tag.name,
+                checked: checked.includes(id => id === tag.id),
+                click: this.responder('app:tag-item', tag.id)
+              }))
+            ]
+          }
           break
+        }
 
       }
 

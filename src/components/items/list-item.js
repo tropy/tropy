@@ -99,7 +99,10 @@ module.exports = {
 
         dispatch(
           act.ui.context.show(
-            event, item.deleted ? 'deleted-item' : 'item', item.id
+            event, item.deleted ? 'deleted-item' : 'item', {
+              id: item.id,
+              tags: []
+            }
           )
         )
       }
