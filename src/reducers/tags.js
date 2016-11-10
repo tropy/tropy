@@ -1,30 +1,27 @@
 'use strict'
 
-const {
-  INSERT, LOAD, REMOVE, UPDATE
-} = require('../constants/tag')
-
+const { TAG } = require('../constants')
 const { omit } = require('../common/util')
 const { into, map } = require('transducers.js')
 
 module.exports = {
   tags(state = {}, { type, payload, error, meta }) {
     switch (type) {
-      case LOAD:
+      case TAG.LOAD:
         return (meta.done && !error) ?
           into({ ...state }, map(tag => [tag.id, tag]), payload) :
           {}
 
-      case INSERT:
+      case TAG.INSERT:
         return {
           ...state,
           [payload.id]: payload
         }
 
-      case REMOVE:
+      case TAG.REMOVE:
         return omit(state, [payload])
 
-      case UPDATE:
+      case TAG.UPDATE:
         return {
           ...state,
           [payload.id]: {

@@ -1,16 +1,12 @@
 'use strict'
 
-const {
-  CHANGED, CREATE, INSERT, REMOVE, SAVE, HIDE, SHOW, LOAD, UPDATE, PRUNE
-} = require('../constants/tag')
-
-const { EDIT } = require('../constants/ui')
+const { TAG, UI } = require('../constants')
 
 module.exports = {
 
   new(payload, meta) {
     return {
-      type: EDIT.START,
+      type: UI.EDIT.START,
       payload: {
         tag: { name: '', ...payload, }
       },
@@ -20,7 +16,7 @@ module.exports = {
 
   create(payload, meta) {
     return {
-      type: CREATE,
+      type: TAG.CREATE,
       payload,
       meta: {
         async: true,
@@ -31,20 +27,32 @@ module.exports = {
   },
 
   insert(payload, meta = {}) {
-    return { type: INSERT, payload, meta: { ipc: CHANGED, ...meta } }
+    return {
+      type: TAG.INSERT,
+      payload,
+      meta: { ipc: TAG.CHANGED, ...meta }
+    }
   },
 
   remove(payload, meta) {
-    return { type: REMOVE, payload, meta: { ipc: CHANGED, ...meta } }
+    return {
+      type: TAG.REMOVE,
+      payload,
+      meta: { ipc: TAG.CHANGED, ...meta }
+    }
   },
 
   save(payload, meta) {
-    return { type: SAVE, payload, meta: { async: true, record: true, ...meta } }
+    return {
+      type: TAG.SAVE,
+      payload,
+      meta: { async: true, record: true, ...meta }
+    }
   },
 
   hide(payload, meta) {
     return {
-      type: HIDE,
+      type: TAG.HIDE,
       payload,
       meta: {
         async: true,
@@ -55,23 +63,42 @@ module.exports = {
   },
 
   prune(payload, meta) {
-    return { type: PRUNE, payload, meta: { async: true, ...meta } }
+    return {
+      type: TAG.PRUNE,
+      payload,
+      meta: { async: true, ...meta }
+    }
   },
 
   show(payload, meta) {
-    return { type: SHOW, payload, meta: { async: true, ...meta } }
+    return {
+      type: TAG.SHOW,
+      payload,
+      meta: { async: true, ...meta }
+    }
   },
 
   load(payload, meta) {
     return {
-      type: LOAD,
+      type: TAG.LOAD,
       payload,
-      meta: { async: true, ipc: CHANGED, ...meta }
+      meta: { async: true, ipc: TAG.CHANGED, ...meta }
     }
   },
 
   update(payload, meta) {
-    return { type: UPDATE, payload, meta: { ipc: CHANGED, ...meta } }
+    return {
+      type: TAG.UPDATE,
+      payload,
+      meta: { ipc: TAG.CHANGED, ...meta }
+    }
+  },
+
+  select(payload, meta) {
+    return {
+      type: TAG.SELECT,
+      payload,
+      meta: { search: true, ...meta }
+    }
   }
 }
-

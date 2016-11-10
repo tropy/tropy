@@ -1,10 +1,7 @@
 'use strict'
 
-const { UPDATE, RESTORE, SELECT } = require('../constants/nav')
-const LIST = require('../constants/list')
-const ITEM = require('../constants/item')
-
-const init = { items: [] }
+const { NAV, ITEM, LIST, TAG } = require('../constants')
+const init = { items: [], tags: [] }
 
 function select(selection, id, mod) {
   switch (mod) {
@@ -24,13 +21,14 @@ function isSelected(selection, id) {
 }
 
 module.exports = {
+  // eslint-disable-next-line complexity
   nav(state = init, { type, payload, meta }) {
     switch (type) {
 
-      case RESTORE:
+      case NAV.RESTORE:
         return { ...init, ...payload }
 
-      case UPDATE:
+      case NAV.UPDATE:
         return { ...state, ...payload }
 
       case LIST.REMOVE:
@@ -49,7 +47,18 @@ module.exports = {
           items: select(state.items, payload, meta.mod)
         }
 
-      case SELECT:
+      case TAG.REMOVE:
+        return isSelected(state.tags, payload) ?
+          { ...state, tags: select(state.tags) } :
+          state
+
+      case TAG.SELECT:
+        return {
+          ...state,
+          tags: select(state.tags, payload, meta.mod)
+        }
+
+      case NAV.SELECT:
         return {
           ...state,
           items: select(state.items),

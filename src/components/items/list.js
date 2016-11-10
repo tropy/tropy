@@ -45,7 +45,7 @@ module.exports = {
     }),
 
     (dispatch) => ({
-      onSelect: (id, mod) => {
+      onSelect(id, mod) {
         dispatch(select(id, { mod }))
       }
     })

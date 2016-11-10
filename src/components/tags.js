@@ -9,37 +9,25 @@ const { IconTag } = require('./icons')
 const get = require('../selectors/tag')
 const act = require('../actions')
 const { noop } = require('../common/util')
+const { meta } = require('../common/os')
 const cn = require('classnames')
 
 
 class Tag extends Component {
-
-  static propTypes = {
-    tag: PropTypes.object,
-    active: PropTypes.bool,
-    context: PropTypes.bool,
-    editing: PropTypes.bool,
-    onActivate: PropTypes.func,
-    onCancel: PropTypes.func,
-    onContextMenu: PropTypes.func,
-    onRename: PropTypes.func,
-    onUpdate: PropTypes.func
-  }
-
-  static defaultProps = {
-    onActivate: noop,
-    onCancel: noop,
-    onContextMenu: noop,
-    onRename: noop,
-    onUpdate: noop
+  constructor(props) {
+    super(props)
   }
 
   update = (name) => {
     this.props.onUpdate(this.props.tag.id, { name })
   }
 
-  activate = () => {
-    this.props.onActivate(this.props.active ? null : this.props.tag.id)
+  select = (event) => {
+    const { tag, selected, onSelect } =  this.props
+
+    onSelect(tag.id, selected ?
+      (meta(event) ? 'remove' : 'clear') :
+      (meta(event) ? 'merge' : 'replace'))
   }
 
   rename = () => {
@@ -55,13 +43,13 @@ class Tag extends Component {
   }
 
   render() {
-    const { tag, active, context, editing } = this.props
+    const { tag, selected, context, editing } = this.props
 
     return (
       <li
-        className={cn({ tag: true, active, context })}
+        className={cn({ tag: true, active: selected, context })}
         onContextMenu={this.popup}
-        onClick={this.activate}>
+        onClick={this.select}>
         <IconTag/>
         <div className="name">
           <Editable
@@ -75,12 +63,33 @@ class Tag extends Component {
       </li>
     )
   }
+
+  static propTypes = {
+    tag: PropTypes.object,
+    selected: PropTypes.bool,
+    context: PropTypes.bool,
+    editing: PropTypes.bool,
+    onSelect: PropTypes.func,
+    onCancel: PropTypes.func,
+    onContextMenu: PropTypes.func,
+    onRename: PropTypes.func,
+    onUpdate: PropTypes.func
+  }
+
+  static defaultProps = {
+    onActivate: noop,
+    onCancel: noop,
+    onContextMenu: noop,
+    onRename: noop,
+    onUpdate: noop
+  }
+
 }
 
 
 const Tags = ({
   tags,
-  selected,
+  selection,
   onUpdate,
   onCancel,
   onSelect,
@@ -94,13 +103,13 @@ const Tags = ({
       tags.map(tag => (
         <Tag
           key={tag.id}
-          active={selected === tag.id}
+          selected={selection.includes(tag.id)}
           context={context === tag.id}
           editing={editing && editing.id === tag.id}
           tag={tag}
           onContextMenu={onContextMenu}
           onUpdate={onUpdate}
-          onActivate={onSelect}
+          onSelect={onSelect}
           onRename={onRename}
           onCancel={onCancel}/>
       ))
@@ -119,8 +128,8 @@ const Tags = ({
 )
 
 Tags.propTypes = {
-  tags: PropTypes.array,
-  selected: PropTypes.number,
+  tags: PropTypes.arrayOf(PropTypes.object),
+  selection: PropTypes.arrayOf(PropTypes.number),
   context: PropTypes.number,
   editing: PropTypes.object,
   onCancel: PropTypes.func,
@@ -134,7 +143,7 @@ module.exports = {
   Tags: connect(
 
     (state) => ({
-      selected: state.nav.tag,
+      selection: state.nav.tags,
       context: state.ui.context.tag,
       editing: state.ui.edit.tag,
       tags: get.visible(state)
@@ -145,8 +154,8 @@ module.exports = {
         dispatch(act.ui.edit.cancel())
       },
 
-      onSelect(tag) {
-        dispatch(act.nav.update({ tag }))
+      onSelect(id, mod) {
+        dispatch(act.tag.select(id, { mod }))
       },
 
       onRename(id) {

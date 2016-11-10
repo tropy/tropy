@@ -11,6 +11,7 @@ module.exports = {
   REMOVE: 'tag.remove',
 
   SAVE: 'tag.save',
+  SELECT: 'tag.select',
   UPDATE: 'tag.update',
 
   LOAD: 'tag.load',
