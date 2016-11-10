@@ -5,21 +5,33 @@ const num = (list, separator = ',') =>
 
 module.exports = {
 
-  async all(db, { trash }) {
-    return (await db.all(`
+  async all(db, { trash, tags }) {
+    const items = []
+
+    const sort = 'title'
+
+    await db.each(`
       WITH
-        titles(id, value) AS (
-          SELECT id, value AS title
+        sort(id, value) AS (
+          SELECT id, value
           FROM metadata JOIN metadata_values USING (value_id)
-          WHERE property = 'title'
+          WHERE property = $sort
         )
-        SELECT id, t.value
+        SELECT id, sort.value
           FROM items
-            LEFT OUTER JOIN titles t USING (id)
+            ${tags.length ? 'JOIN taggings USING (id)' : ''}
+            LEFT OUTER JOIN sort USING (id)
             LEFT OUTER JOIN trash USING (id)
-          WHERE deleted_at ${trash ? 'NOT' : 'IS'} NULL
-          ORDER BY t.value ASC, id ASC`
-    )).map(item => item.id)
+          WHERE
+            ${tags.length ? `tag_id IN (${tags.join(',')}) AND` : ''}
+            deleted_at ${trash ? 'NOT' : 'IS'} NULL
+          ORDER BY sort.value ASC, id ASC`, {
+
+            $sort: sort
+
+          }, ({ id }) => { items.push(id) })
+
+    return items
   },
 
   async load(db, ids) {

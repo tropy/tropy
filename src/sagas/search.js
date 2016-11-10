@@ -11,11 +11,11 @@ module.exports = {
   *search(db) {
     try {
       const { nav, metadata, items } = yield select()
-      const { list, tag, query, sort, trash } = nav
+      const { list, tags, query, sort, trash } = nav
 
       const START = Date.now()
 
-      const ids = yield call(all, db, { list, tag, query, sort, trash })
+      const ids = yield call(all, db, { list, tags, query, sort, trash })
 
       verbose(`*search query took ${ms(Date.now() - START)}`)
 
