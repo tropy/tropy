@@ -1,5 +1,8 @@
 'use strict'
 
+const num = (list, separator = ',') =>
+  list ? list.split(separator).map(Number) : []
+
 module.exports = {
 
   async all(db, { trash }) {
@@ -26,10 +29,12 @@ module.exports = {
       await db.each(`
         SELECT s.id, created_at AS created,
             updated_at AS modified, deleted_at AS deleted,
+            group_concat(tag_id) AS tags,
             group_concat(photos.id) AS photos
           FROM subjects s
             JOIN items USING (id)
             LEFT OUTER JOIN trash USING (id)
+            LEFT OUTER JOIN taggings USING (id)
             LEFT OUTER JOIN photos ON s.id = photos.item_id
           WHERE s.id IN (${ids.join(',')})
           GROUP BY s.id`,
@@ -37,7 +42,8 @@ module.exports = {
         (item) => {
           items[item.id] = {
             ...item,
-            photos: item.photos ? item.photos.split(',').map(Number) : []
+            photos: num(item.photos),
+            tags: num(item.tags)
           }
         }
       )
