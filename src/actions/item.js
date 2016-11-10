@@ -1,14 +1,11 @@
 'use strict'
 
-const {
-  CREATE, DELETE, DESTROY, INSERT, LOAD, REMOVE, RESTORE, SAVE, SELECT, UPDATE
-} = require('../constants/item')
-
+const { ITEM } = require('../constants')
 
 module.exports = {
   create(payload, meta) {
     return {
-      type: CREATE,
+      type: ITEM.CREATE,
       payload,
       meta: {
         async: true,
@@ -20,7 +17,7 @@ module.exports = {
 
   delete(payload, meta) {
     return {
-      type: DELETE,
+      type: ITEM.DELETE,
       payload,
       meta: { async: true, record: true, ...meta }
     }
@@ -28,7 +25,7 @@ module.exports = {
 
   destroy(payload, meta) {
     return {
-      type: DESTROY,
+      type: ITEM.DESTROY,
       payload,
       meta: { async: true, prompt: true, ...meta }
     }
@@ -36,7 +33,7 @@ module.exports = {
 
   insert(payload, meta) {
     return {
-      type: INSERT,
+      type: ITEM.INSERT,
       payload,
       meta: { search: true, ...meta }
     }
@@ -44,7 +41,7 @@ module.exports = {
 
   load(payload, meta) {
     return {
-      type: LOAD,
+      type: ITEM.LOAD,
       payload,
       meta: { async: true, ...meta }
     }
@@ -52,7 +49,7 @@ module.exports = {
 
   remove(payload, meta) {
     return {
-      type: REMOVE,
+      type: ITEM.REMOVE,
       payload,
       meta: { search: true, ...meta }
     }
@@ -60,7 +57,7 @@ module.exports = {
 
   restore(payload, meta) {
     return {
-      type: RESTORE,
+      type: ITEM.RESTORE,
       payload,
       meta: { async: true, record: true, ...meta }
     }
@@ -68,7 +65,7 @@ module.exports = {
 
   save(payload, meta) {
     return {
-      type: SAVE,
+      type: ITEM.SAVE,
       payload,
       meta: { async: true, ...meta }
     }
@@ -76,13 +73,31 @@ module.exports = {
 
   update(payload, meta) {
     return {
-      type: UPDATE,
+      type: ITEM.UPDATE,
       payload,
       meta: meta
     }
   },
 
   select(payload, meta = {}) {
-    return { type: SELECT, payload, meta }
+    return { type: ITEM.SELECT, payload, meta }
+  },
+
+  tags: {
+    add(payload, meta = {}) {
+      return {
+        type: ITEM.ADD_TAG,
+        payload,
+        meta: { async: true, record: true, ...meta }
+      }
+    },
+
+    remove(payload, meta = {}) {
+      return {
+        type: ITEM.REMOVE_TAG,
+        payload,
+        meta: { async: true, record: true, ...meta }
+      }
+    }
   }
 }
