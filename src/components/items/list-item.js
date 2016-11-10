@@ -101,7 +101,7 @@ module.exports = {
           act.ui.context.show(
             event, item.deleted ? 'deleted-item' : 'item', {
               id: item.id,
-              tags: []
+              tags: item.tags
             }
           )
         )

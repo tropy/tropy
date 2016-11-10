@@ -5,14 +5,10 @@ const { Command } = require('./command')
 const act = require('../actions/item')
 const mod = require('../models/item')
 
-const {
-  CREATE, DELETE, DESTROY, LOAD, RESTORE, SAVE
-} = require('../constants/item')
-
-
+const { ITEM } = require('../constants')
 
 class Create extends Command {
-  static get action() { return CREATE }
+  static get action() { return ITEM.CREATE }
 
   *exec() {
     const { db } = this.options
@@ -28,7 +24,7 @@ class Create extends Command {
 }
 
 class Delete extends Command {
-  static get action() { return DELETE }
+  static get action() { return ITEM.DELETE }
 
   *exec() {
     const { db } = this.options
@@ -42,7 +38,7 @@ class Delete extends Command {
 }
 
 class Destroy extends Command {
-  static get action() { return DESTROY }
+  static get action() { return ITEM.DESTROY }
 
   *exec() {
     const { db } = this.options
@@ -54,7 +50,7 @@ class Destroy extends Command {
 }
 
 class Load extends Command {
-  static get action() { return LOAD }
+  static get action() { return ITEM.LOAD }
 
   *exec() {
     const { db } = this.options
@@ -68,7 +64,7 @@ class Load extends Command {
 
 
 class Restore extends Command {
-  static get action() { return RESTORE }
+  static get action() { return ITEM.RESTORE }
 
   *exec() {
     const { db } = this.options
@@ -82,7 +78,7 @@ class Restore extends Command {
 }
 
 class Save extends Command {
-  static get action() { return SAVE }
+  static get action() { return ITEM.SAVE }
 
   *exec() {
     const { db } = this.options
@@ -99,11 +95,29 @@ class Save extends Command {
   }
 }
 
+class TagToggle extends Command {
+  static get action() { return ITEM.TAG.TOGGLE }
+
+  *exec() {
+    const { db } = this.options
+    const { id, tag } = this.action.payload
+
+    const tags = yield select(({ items }) => items[id].tags)
+    const action = tags.includes(tag) ? 'remove' : 'add'
+
+    yield call(mod.tags[action], db, { id, tag })
+    yield put(act.tags[action]({ id, tag }))
+
+    this.undo = this.action
+  }
+}
+
 module.exports = {
   Create,
   Delete,
   Destroy,
   Load,
   Restore,
-  Save
+  Save,
+  TagToggle
 }

@@ -84,19 +84,27 @@ module.exports = {
   },
 
   tags: {
-    add(payload, meta = {}) {
+    toggle(payload, meta = {}) {
       return {
-        type: ITEM.ADD_TAG,
+        type: ITEM.TAG.TOGGLE,
         payload,
         meta: { async: true, record: true, ...meta }
       }
     },
 
+    add(payload, meta = {}) {
+      return {
+        type: ITEM.TAG.ADD,
+        payload,
+        meta
+      }
+    },
+
     remove(payload, meta = {}) {
       return {
-        type: ITEM.REMOVE_TAG,
+        type: ITEM.TAG.REMOVE,
         payload,
-        meta: { async: true, record: true, ...meta }
+        meta
       }
     }
   }

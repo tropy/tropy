@@ -102,16 +102,19 @@ class Menu {
           break
 
         case 'tag': {
-          const checked = get(params[0], 'target.tags')
+          const { target } = params[0]
 
-          if (checked) {
+          if (target.tags) {
             item.submenu = [
               ...item.submenu,
               ...this.app.tags.map(tag => ({
                 type: 'checkbox',
                 label: tag.name,
-                checked: checked.includes(id => id === tag.id),
-                click: this.responder('app:tag-item', tag.id)
+                checked: target.tags.includes(tag.id),
+                click: this.responder('app:toggle-item-tag', {
+                  id: target.id,
+                  tag: tag.id
+                })
               }))
             ]
           }

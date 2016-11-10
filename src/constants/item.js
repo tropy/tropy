@@ -10,5 +10,11 @@ module.exports = {
   RESTORE: 'item.restore',
   SAVE: 'item.save',
   SELECT: 'item.select',
-  UPDATE: 'item.update'
+  UPDATE: 'item.update',
+
+  TAG: {
+    ADD: 'item.tag.add',
+    REMOVE: 'item.tag.remove',
+    TOGGLE: 'item.tag.toggle',
+  }
 }

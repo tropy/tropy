@@ -88,5 +88,17 @@ module.exports = {
           FROM trash JOIN items USING (id)
           WHERE deleted_at < datetime("now", "-1 month"))`
     )
+  },
+
+  tags: {
+    async add(db, { id, tag }) {
+      return db.run(`
+        INSERT INTO taggings (id, tag_id) VALUES (?, ?)`, id, tag)
+    },
+
+    async remove(db, { id, tag }) {
+      return db.run(`
+        DELETE FROM taggings WHERE id = ? AND tag_id = ?`, id, tag)
+    }
   }
 }
