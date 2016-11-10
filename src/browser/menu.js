@@ -4,7 +4,6 @@ const res = require('../common/res')
 const { basename } = require('path')
 const { warn } = require('../common/log')
 const { transduce, map, transformer } = require('transducers.js')
-const { get } = require('dot-prop')
 const electron = require('electron')
 
 class Menu {
