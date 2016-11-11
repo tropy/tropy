@@ -103,12 +103,21 @@ module.exports = {
   },
 
   tags: {
-    async add(db, { id, tag }) {
+    async add(db, values) {
       return db.run(`
-        INSERT INTO taggings (id, tag_id) VALUES (?, ?)`, id, tag)
+        INSERT INTO taggings (id, tag_id) ${
+          values.map(({ id, tag }) =>
+            `VALUES (${Number(id)}, ${Number(tag)})`
+          ).join(' ')
+          }`)
     },
 
     async remove(db, { id, tag }) {
+      if (tag == null) {
+        return db.run(`
+          DELETE FROM taggings WHERE id = ?`, id)
+      }
+
       return db.run(`
         DELETE FROM taggings WHERE id = ? AND tag_id = ?`, id, tag)
     }
