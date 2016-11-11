@@ -95,27 +95,36 @@ class Save extends Command {
   }
 }
 
-class ToggleTag extends Command {
+class ToggleTags extends Command {
   static get action() { return ITEM.TAG.TOGGLE }
 
   *exec() {
     const { db } = this.options
-    const { id, tag } = this.action.payload
+    const { id, tags } = this.action.payload
 
-    const tags = yield select(({ items }) => items[id].tags)
+    const current = yield select(({ items }) => items[id].tags)
 
-    if (tags.includes(tag)) {
-      yield call(mod.tags.remove, db, { id, tags: [tag] })
-      yield put(act.tags.remove({ id, tags: [tag] }))
+    const add = []
+    const remove = []
 
-    } else {
-      yield call(mod.tags.add, db, [{ id, tag }])
-      yield put(act.tags.add({ id, tags: [tag] }))
+    for (let tag of tags) {
+      (current.includes(tag) ? remove : add).push(tag)
+    }
+
+    if (add.length) {
+      yield call(mod.tags.add, db, add.map(tag => ({ id, tag })))
+      yield put(act.tags.add({ id, tags: add }))
+    }
+
+    if (remove.length) {
+      yield call(mod.tags.remove, db, { id, tags: remove })
+      yield put(act.tags.remove({ id, tags: remove }))
     }
 
     this.undo = this.action
   }
 }
+
 
 class ClearTags extends Command {
   static get action() { return ITEM.TAG.CLEAR }
@@ -129,7 +138,7 @@ class ClearTags extends Command {
     yield call(mod.tags.clear, db, id)
     yield put(act.tags.remove({ id, tags }))
 
-    // undo!
+    this.undo = act.tags.toggle({ id, tags })
   }
 }
 
@@ -140,6 +149,6 @@ module.exports = {
   Load,
   Restore,
   Save,
-  ToggleTag,
+  ToggleTags,
   ClearTags
 }

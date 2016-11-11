@@ -105,10 +105,9 @@ module.exports = {
   tags: {
     async add(db, values) {
       return db.run(`
-        INSERT INTO taggings (id, tag_id) ${
+        INSERT INTO taggings (id, tag_id) VALUES ${
           values.map(({ id, tag }) =>
-            `VALUES (${Number(id)}, ${Number(tag)})`
-          ).join(' ')
+            `(${Number(id)}, ${Number(tag)})`).join(',')
           }`)
     },
 
