@@ -30,10 +30,10 @@ module.exports = {
         }
 
       case ITEM.TAG.ADD:
-        return nested.add('tag', state, payload)
+        return nested.add('tags', state, payload)
 
       case ITEM.TAG.REMOVE:
-        return nested.remove('tag', state, payload)
+        return nested.remove('tags', state, payload)
 
       default:
         return state
@@ -49,7 +49,7 @@ const nested = {
       ...state,
       [id]: {
         ...state[id],
-        [`${name}s`]: [...state[id][`${name}s`], added]
+        [name]: [...state[id][name], ...added]
       }
     }
   },
@@ -61,7 +61,7 @@ const nested = {
       ...state,
       [id]: {
         ...state[id],
-        [`${name}s`]: state[id][`${name}s`].filter(x => x !== removed)
+        [name]: state[id][name].filter(x => !removed.includes(x))
       }
     }
   }

@@ -95,7 +95,7 @@ class Save extends Command {
   }
 }
 
-class TagToggle extends Command {
+class ToggleTag extends Command {
   static get action() { return ITEM.TAG.TOGGLE }
 
   *exec() {
@@ -103,12 +103,33 @@ class TagToggle extends Command {
     const { id, tag } = this.action.payload
 
     const tags = yield select(({ items }) => items[id].tags)
-    const action = tags.includes(tag) ? 'remove' : 'add'
 
-    yield call(mod.tags[action], db, { id, tag })
-    yield put(act.tags[action]({ id, tag }))
+    if (tags.includes(tag)) {
+      yield call(mod.tags.remove, db, { id, tags: [tag] })
+      yield put(act.tags.remove({ id, tags: [tag] }))
+
+    } else {
+      yield call(mod.tags.add, db, [{ id, tag }])
+      yield put(act.tags.add({ id, tags: [tag] }))
+    }
 
     this.undo = this.action
+  }
+}
+
+class ClearTags extends Command {
+  static get action() { return ITEM.TAG.CLEAR }
+
+  *exec() {
+    const { db } = this.options
+    const id = this.action.payload
+
+    const tags = yield select(({ items }) => items[id].tags)
+
+    yield call(mod.tags.clear, db, id)
+    yield put(act.tags.remove({ id, tags }))
+
+    // undo!
   }
 }
 
@@ -119,5 +140,6 @@ module.exports = {
   Load,
   Restore,
   Save,
-  TagToggle
+  ToggleTag,
+  ClearTags
 }

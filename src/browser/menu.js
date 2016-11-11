@@ -2,7 +2,7 @@
 
 const res = require('../common/res')
 const { basename } = require('path')
-const { warn } = require('../common/log')
+const { warn, verbose } = require('../common/log')
 const { transduce, map, transformer } = require('transducers.js')
 const electron = require('electron')
 
@@ -86,10 +86,10 @@ class Menu {
           break
 
         case 'theme':
-          for (let theme of item.submenu) {
-            theme.checked = (theme.id === this.app.state.theme)
-            theme.click = this.responder('app:switch-theme', theme.id)
-          }
+          item.submenu = item.submenu.map(theme => ({
+            checked: (theme.id === this.app.state.theme),
+            click: this.responder('app:switch-theme', theme.id)
+          }))
           break
 
         case 'undo':
@@ -103,7 +103,10 @@ class Menu {
         case 'tag': {
           const { target } = params[0]
 
-          if (target.tags) {
+          if (!this.app.tags.length) {
+            item.enabled = false
+
+          } else {
             item.submenu = [
               ...item.submenu,
               ...this.app.tags.map(tag => ({
@@ -116,7 +119,19 @@ class Menu {
                 })
               }))
             ]
+
+            if (target.tags.length) {
+              item.submenu[0] = {
+                ...item.submenu[0],
+                checked: false,
+                enabled: true,
+                click: this.responder('app:clear-item-tags', {
+                  id: target.id
+                })
+              }
+            }
           }
+
           break
         }
 
@@ -172,10 +187,16 @@ class ContextMenu extends Menu {
   }
 
   show({ scope, event }, win = this.app.win, ...args) {
-    this.build(
-      this.prepare(this.template, ContextMenu.scopes[scope]),
-      event
-    ).popup(win, ...args)
+    try {
+      this.build(
+        this.prepare(this.template, ContextMenu.scopes[scope]),
+        event
+      ).popup(win, ...args)
+
+    } catch (error) {
+      warn(`failed to show context-menu: ${error.message}`)
+      verbose(error.stack)
+    }
   }
 }
 

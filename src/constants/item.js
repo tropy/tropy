@@ -15,6 +15,7 @@ module.exports = {
   TAG: {
     ADD: 'item.tag.add',
     REMOVE: 'item.tag.remove',
-    TOGGLE: 'item.tag.toggle',
+    CLEAR: 'item.tag.clear',
+    TOGGLE: 'item.tag.toggle'
   }
 }

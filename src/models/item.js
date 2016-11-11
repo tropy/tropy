@@ -112,14 +112,14 @@ module.exports = {
           }`)
     },
 
-    async remove(db, { id, tag }) {
-      if (tag == null) {
-        return db.run(`
-          DELETE FROM taggings WHERE id = ?`, id)
-      }
+    async clear(db, id) {
+      return db.run('DELETE FROM taggings WHERE id = ?', id)
+    },
 
+    async remove(db, { id, tags }) {
       return db.run(`
-        DELETE FROM taggings WHERE id = ? AND tag_id = ?`, id, tag)
+        DELETE FROM taggings
+          WHERE id = ? AND tag_id IN (${tags.map(Number).join(',')})`, id)
     }
   }
 }

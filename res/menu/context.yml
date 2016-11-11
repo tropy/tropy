@@ -39,11 +39,13 @@ linux:
   item: &item
     - label: 'Delete Item'
       command: 'app:delete-item'
-    - label: 'Tag'
+    - label: 'Tags'
       id: 'tag'
       submenu:
         - label: 'None'
-          command: 'app:clear-tags'
+          type: checkbox
+          checked: true
+          enabled: false
         - type: separator
   deleted-item: &deleted-item
     - label: 'Restore Item'

@@ -92,6 +92,14 @@ module.exports = {
       }
     },
 
+    clear(payload, meta = {}) {
+      return {
+        type: ITEM.TAG.CLEAR,
+        payload,
+        meta: { async: true, record: true, ...meta }
+      }
+    },
+
     add(payload, meta = {}) {
       return {
         type: ITEM.TAG.ADD,
