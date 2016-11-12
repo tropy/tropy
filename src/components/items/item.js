@@ -7,7 +7,7 @@ const { Toolbar } = require('../toolbar')
 const { Tab, Tabs } = require('../tabs')
 const { NoteList } = require('../notelist')
 const { PanelGroup, Panel } = require('../panel')
-const { PhotoPanel, PhotoPanelHeader } = require('../photo/panel')
+const { PhotoPanel } = require('../photo/panel')
 const { Viewer } = require('../viewer')
 const { Fields } = require('../metadata')
 const { getSelectedItem } = require('../../selectors/items')
@@ -30,9 +30,8 @@ const TEMPLATE = [
   { name: 'folder', type: 'text' }
 ]
 
-const Item = ({ item, selection, handleCreatePhoto }) => {
+const Item = ({ item, selection }) => {
   let fp
-  const locked = !item || item.deleted
 
   if (selection.length === 1 && item) {
     fp = (
@@ -61,13 +60,7 @@ const Item = ({ item, selection, handleCreatePhoto }) => {
         }>
           {fp}
 
-          <Panel header={
-            <PhotoPanelHeader
-              hasCreateButton={!locked}
-              onCreate={handleCreatePhoto}/>
-          }>
-            <PhotoPanel/>
-          </Panel>
+          <PhotoPanel item={item}/>
 
           <Panel header={
             <Toolbar>
@@ -92,8 +85,7 @@ const Item = ({ item, selection, handleCreatePhoto }) => {
 
 Item.propTypes = {
   item: PropTypes.object,
-  selection: PropTypes.arrayOf(PropTypes.number),
-  handleCreatePhoto: PropTypes.func
+  selection: PropTypes.arrayOf(PropTypes.number)
 }
 
 
@@ -102,10 +94,6 @@ module.exports = {
     (state) => ({
       item: getSelectedItem(state),
       selection: state.nav.items
-    }),
-
-    (dispatch) => ({
-      handleCreatePhoto: () => dispatch()
     })
   )(Item)
 }
