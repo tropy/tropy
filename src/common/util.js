@@ -91,6 +91,10 @@ module.exports = {
 
   identity(payload) { return payload },
 
+  sequence(k = 0) {
+    return () => ((k = Number.isSafeInteger(k) ? ++k : -k), k)
+  },
+
   strftime(format, date = new Date()) {
     return format.replace(/%([YymdHMS])/g, (match, code) => {
       switch (code) {

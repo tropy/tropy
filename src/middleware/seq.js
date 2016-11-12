@@ -1,8 +1,6 @@
 'use strict'
 
-const sequence = (k = 1) => () => (
-  (k = Number.isSafeInteger(k) ? ++k : -k), k
-)
+const { sequence } = require('../common/util')
 
 module.exports = {
   seq() {
