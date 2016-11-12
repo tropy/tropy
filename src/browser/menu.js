@@ -87,7 +87,9 @@ class Menu {
 
         case 'theme':
           item.submenu = item.submenu.map(theme => ({
+            ...theme,
             checked: (theme.id === this.app.state.theme),
+            enabled: (theme.id !== this.app.state.theme),
             click: this.responder('app:switch-theme', theme.id)
           }))
           break

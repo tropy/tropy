@@ -219,13 +219,7 @@ class Tropy extends EventEmitter {
           win.webContents.send('theme', theme)
         }
 
-        if (this.development || this.debug) {
-          const tm = this.menu.find(['dev', 'theme']).submenu
-
-          for (let item of tm.items) {
-            item.checked = (item.id === theme)
-          }
-        }
+        this.emit('app:reload-menu')
       })
 
 
