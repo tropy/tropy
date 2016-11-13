@@ -11,6 +11,7 @@ const { getMessages } = require('../actions/intl')
 const { open } = require('../actions/project')
 const { main } = require('../sagas/project')
 const { unloaders } = require('../window')
+const dialog = require('../dialog')
 
 const store = create()
 const tasks = store.saga.run(main)
@@ -27,6 +28,9 @@ all([
     )
   })
 
+dialog.init()
+
+unloaders.push(dialog.destroy)
 unloaders.push(() => (tasks.cancel(), tasks.done))
 
 if (ARGS.dev || ARGS.debug) {
