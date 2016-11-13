@@ -91,8 +91,11 @@ module.exports = {
 
   identity(payload) { return payload },
 
-  sequence(k = 0) {
-    return () => ((k = Number.isSafeInteger(k) ? ++k : -k), k)
+  *counter(k = 0) {
+    while (true) {
+      k = Number.isSafeInteger(k) ? ++k : -k
+      yield k
+    }
   },
 
   strftime(format, date = new Date()) {

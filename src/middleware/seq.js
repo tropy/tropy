@@ -1,15 +1,15 @@
 'use strict'
 
-const { sequence } = require('../common/util')
+const { counter } = require('../common/util')
 
 module.exports = {
   seq() {
-    const inc = sequence()
+    const seq = counter()
 
     return next => action => {
       action.meta = {
         ...action.meta,
-        seq: inc(),
+        seq: seq.next(),
         now: Date.now()
       }
 
