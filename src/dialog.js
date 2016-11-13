@@ -5,59 +5,68 @@ const { ipcRenderer: ipc } = require('electron')
 const { counter } = require('./common/util')
 const { warn } = require('./common/log')
 
+let seq = null
+let pending = null
 
-const dialog = {
+function start() {
+  assert(!seq, 'already initialized')
 
-  start() {
-    assert(!dialog.seq, 'already initialized')
+  seq = counter()
+  pending = {}
 
-    dialog.seq = counter()
-    dialog.pending = {}
+  ipc.on('dialog', onClosed)
+}
 
-    ipc.on('dialog.closed', dialog.onClosed)
-  },
+function stop() {
+  ipc.removeListener('dialog', onClosed)
+  seq = null
+  pending = null
+}
 
-  stop() {
-    ipc.removeListener('dialog.closed', dialog.onClosed)
+function onClosed(_, { id, payload, error }) {
+  try {
+    pending[id][error ? 'reject' : 'resolve'](payload)
 
-    delete dialog.seq
-    delete dialog.pending
-  },
+  } catch (error) {
+    warn(`failed to resolve dialog #${id}: ${error.message}`)
 
-  onClosed(_, { id, payload, error }) {
-    try {
-      dialog.pending[id][error ? 'reject' : 'resolve'](payload)
-
-    } catch (error) {
-      warn(`failed to resolve dialog #${id}: ${error.message}`)
-
-    } finally {
-      delete dialog.pending[id]
-    }
-  },
-
-  open(type, options = {}) {
-    return new Promise((resolve, reject) => {
-      const id = dialog.seq.next().value
-
-      ipc.send('dialog', { id, type, options })
-      dialog.pending[id] = { resolve, reject }
-    })
-  },
-
-  notify(options) {
-    return dialog.open('message-box', {
-      type: 'none', buttons: ['OK'], ...options
-    })
-  },
-
-  fail(error, context = 'global') {
-    return dialog.notify({
-      type: 'error',
-      title: 'Error',
-      message: `${context}: ${error.message}`
-    })
+  } finally {
+    delete pending[id]
   }
 }
 
-module.exports = dialog
+function open(type, options = {}) {
+  return new Promise((resolve, reject) => {
+    const id = seq.next().value
+
+    ipc.send('dialog', { id, type, options })
+    pending[id] = { resolve, reject }
+  })
+}
+
+function notify(options) {
+  return open('message-box', {
+    type: 'none', buttons: ['OK'], ...options
+  })
+}
+
+function fail(error, context = 'global') {
+  return notify({
+    type: 'error',
+    title: 'Error',
+    message: `${context}: ${error.message}`
+  })
+}
+
+function save() {
+  return open('save')
+}
+
+module.exports = {
+  start,
+  stop,
+  open,
+  notify,
+  fail,
+  save
+}

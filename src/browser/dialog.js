@@ -14,16 +14,16 @@ module.exports = {
   },
 
   onOpen({ sender }, { id, type, options }) {
-    module.exports.show(type, BrowserWindow.fromWebContents, options)
+    module.exports.show(type, BrowserWindow.fromWebContents(sender), options)
       .then(payload => {
-        sender.send('dialog.closed', { id, payload })
+        sender.send('dialog', { id, payload })
       })
 
       .catch(error => {
         warn(`dialog open failed: ${error.message}`)
         verbose(error.stack)
 
-        sender.send('dialog.closed', { id, payload: {
+        sender.send('dialog', { id, payload: {
           message: error.message
         }, error: true })
       })
