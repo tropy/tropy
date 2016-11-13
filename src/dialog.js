@@ -36,13 +36,13 @@ const dialog = {
     }
   },
 
-  open(type, options) {
-    const id = dialog.seq.next()
+  open(type, options = {}) {
+    return new Promise((resolve, reject) => {
+      const id = dialog.seq.next().value
 
-    ipc.send('dialog', { id, type, options })
-
-    dialog.pending[id] = Promise.defer()
-    return dialog.pending[id].promise
+      ipc.send('dialog', { id, type, options })
+      dialog.pending[id] = { resolve, reject }
+    })
   },
 
   notify(options) {
