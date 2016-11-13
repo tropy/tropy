@@ -1,14 +1,11 @@
 'use strict'
 
-const {
-  CREATE, DELETE, INSERT, LOAD, REMOVE, SAVE, SELECT, UPDATE
-} = require('../constants/item')
-
+const { PHOTO } = require('../constants')
 
 module.exports = {
   create(payload, meta) {
     return {
-      type: CREATE,
+      type: PHOTO.CREATE,
       payload,
       meta: {
         async: true,
@@ -18,55 +15,7 @@ module.exports = {
     }
   },
 
-  delete(payload, meta) {
-    return {
-      type: DELETE,
-      payload,
-      meta: { async: true, record: true, ...meta }
-    }
-  },
-
-  insert(payload, meta) {
-    return {
-      type: INSERT,
-      payload,
-      meta: { search: true, ...meta }
-    }
-  },
-
-  load(payload, meta) {
-    return {
-      type: LOAD,
-      payload,
-      meta: { async: true, ...meta }
-    }
-  },
-
-  remove(payload, meta) {
-    return {
-      type: REMOVE,
-      payload,
-      meta: { search: true, ...meta }
-    }
-  },
-
-  save(payload, meta) {
-    return {
-      type: SAVE,
-      payload,
-      meta: { async: true, ...meta }
-    }
-  },
-
-  update(payload, meta) {
-    return {
-      type: UPDATE,
-      payload,
-      meta: meta
-    }
-  },
-
   select(payload, meta = {}) {
-    return { type: SELECT, payload, meta }
+    return { type: PHOTO.SELECT, payload, meta }
   }
 }

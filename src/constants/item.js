@@ -17,5 +17,10 @@ module.exports = {
     REMOVE: 'item.tag.remove',
     CLEAR: 'item.tag.clear',
     TOGGLE: 'item.tag.toggle'
+  },
+
+  PHOTO: {
+    ADD: 'item.photo.add',
+    REMOVE: 'item.photo.remove'
   }
 }

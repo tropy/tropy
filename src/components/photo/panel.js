@@ -8,6 +8,7 @@ const { IconPhoto, IconPlus } = require('../icons')
 const { FormattedMessage } = require('react-intl')
 const { Panel } = require('../panel')
 const { getPhotos } = require('../../selectors/photos')
+const act = require('../../actions/photo')
 
 
 const PhotoPanelHeader = ({ hasCreateButton, onCreate }) => {
@@ -77,8 +78,8 @@ module.exports = {
       photos: item ? getPhotos(state, item) : []
     }),
 
-    (dispatch) => ({
-      handleCreatePhoto: () => dispatch()
+    (dispatch, { item }) => ({
+      handleCreatePhoto: () => dispatch(act.create({ item: item.id }))
     })
 
   )(PhotoPanel),

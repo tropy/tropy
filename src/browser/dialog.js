@@ -22,7 +22,10 @@ module.exports = {
       .catch(error => {
         warn(`dialog open failed: ${error.message}`)
         verbose(error.stack)
-        sender.send('dialog.closed', { id, payload: error, error: true })
+
+        sender.send('dialog.closed', { id, payload: {
+          message: error.message
+        }, error: true })
       })
   },
 

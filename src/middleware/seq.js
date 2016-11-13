@@ -9,7 +9,7 @@ module.exports = {
     return next => action => {
       action.meta = {
         ...action.meta,
-        seq: seq.next(),
+        seq: seq.next().value,
         now: Date.now()
       }
 

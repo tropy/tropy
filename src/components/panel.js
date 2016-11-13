@@ -45,19 +45,7 @@ const PanelGroup = ({ header, children }) => {
 
 PanelGroup.propTypes = {
   header: PropTypes.node,
-  children: (props, name, component) => {
-    let error
-
-    Children.forEach(props[name], node => {
-      if (error) return
-
-      if (node.type !== Panel) {
-        error = new Error(`${component} accepts only 'Panel' child nodes.`)
-      }
-    })
-
-    return error
-  }
+  children: PropTypes.node
 }
 
 module.exports = {
