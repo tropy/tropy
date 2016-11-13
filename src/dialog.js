@@ -8,7 +8,7 @@ const { warn } = require('./common/log')
 
 const dialog = {
 
-  init() {
+  start() {
     assert(!dialog.seq, 'already initialized')
 
     dialog.seq = counter()
@@ -17,7 +17,7 @@ const dialog = {
     ipc.on('dialog.closed', dialog.onClosed)
   },
 
-  destroy() {
+  stop() {
     ipc.removeListener('dialog.closed', dialog.onClosed)
 
     delete dialog.seq
@@ -36,25 +36,23 @@ const dialog = {
     }
   },
 
-  open(options) {
+  open(type, options) {
     const id = dialog.seq.next()
 
-    ipc.send('dialog', {
-      type: 'none',
-      buttons: ['OK'],
-      ...options
-    }, { id })
+    ipc.send('dialog', { id, type, options })
 
     dialog.pending[id] = Promise.defer()
     return dialog.pending[id].promise
   },
 
   notify(options) {
-    return dialog.open(options)
+    return dialog.open('message-box', {
+      type: 'none', buttons: ['OK'], ...options
+    })
   },
 
   fail(error, context = 'global') {
-    return dialog.open({
+    return dialog.notify({
       type: 'error',
       title: 'Error',
       message: `${context}: ${error.message}`

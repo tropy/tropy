@@ -2,7 +2,7 @@
 
 const { EventEmitter } = require('events')
 const { resolve } = require('path')
-const { app, dialog, shell, ipcMain: ipc, BrowserWindow } = require('electron')
+const { app, shell, ipcMain: ipc, BrowserWindow } = require('electron')
 const { verbose } = require('../common/log')
 const { open } = require('./window')
 const { all } = require('bluebird')
@@ -11,6 +11,7 @@ const { into, compose, remove, take } = require('transducers.js')
 
 const { AppMenu, ContextMenu } = require('./menu')
 const Storage = require('./storage')
+const dialog = require('./dialog')
 
 const release = require('../common/release')
 
@@ -269,15 +270,17 @@ class Tropy extends EventEmitter {
       })
 
       .on('app:open-dialog', (win, options = {}) => {
-        dialog.showOpenDialog(win, {
-          ...options,
-          defaultPath: app.getPath('userData'),
-          filters: [{ name: 'Tropy Projects', extensions: ['tpy'] }],
-          properties: ['openFile']
+        dialog
+          .show('open', win, {
+            ...options,
+            defaultPath: app.getPath('userData'),
+            filters: [{ name: 'Tropy Projects', extensions: ['tpy'] }],
+            properties: ['openFile']
 
-        }, files => {
-          if (files) this.open(...files)
-        })
+          })
+          .then(files => {
+            if (files) this.open(...files)
+          })
       })
 
 
@@ -317,10 +320,7 @@ class Tropy extends EventEmitter {
         this.dispatch(act.ui.context.clear())
       })
 
-      .on('dialog', (_, options) => {
-        dialog.showMessageBox(BrowserWindow.getFocusedWindow(), options)
-      })
-
+    dialog.start()
 
     return this
   }

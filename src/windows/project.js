@@ -28,9 +28,9 @@ all([
     )
   })
 
-dialog.init()
+dialog.start()
 
-unloaders.push(dialog.destroy)
+unloaders.push(dialog.stop)
 unloaders.push(() => (tasks.cancel(), tasks.done))
 
 if (ARGS.dev || ARGS.debug) {
