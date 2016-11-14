@@ -32,11 +32,14 @@ class Create extends Command {
         // TODO set title
       ))
 
-      yield put(act.item.photos.add(photo))
       photos.push(photo.id)
     }
 
-    //this.undo(act.photo.delete(photos))
+    yield put(act.photo.load([item])) // TODO use photo ids!
+    yield put(act.item.photos.add(photos))
+
+    this.undo(act.photo.delete(photos))
+
     return photos
   }
 }

@@ -177,7 +177,7 @@ class Tropy extends EventEmitter {
       .on('app:destroy-item', (_, { target }) =>
         this.dispatch(act.item.destroy(target.id)))
       .on('app:create-item-photo', (_, { target }) =>
-        this.dispatch(act.photo.create({ item: target })))
+        this.dispatch(act.photo.create({ item: target.id })))
       .on('app:toggle-item-tag', (_, { id, tag }) =>
         this.dispatch(act.item.tags.toggle({ id, tags: [tag] })))
       .on('app:clear-item-tags', (_, { id }) =>
