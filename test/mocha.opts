@@ -5,3 +5,4 @@
 --require test/support/src
 --require test/support/chai
 --require test/support/args
+--require test/support/fixtures

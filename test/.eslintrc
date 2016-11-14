@@ -5,6 +5,7 @@ env:
 globals:
   expect: true
   sinon: true
+  F: true
   __coverage__: true
   __src: true
   __require: true
