@@ -7,12 +7,14 @@ const {
 const { omit, splice } = require('../common/util')
 const { into, map } = require('transducers.js')
 
+const init = {}
+
 module.exports = {
-  lists(state = {}, { type, payload, error, meta }) {
+  lists(state = init, { type, payload, error, meta }) {
     switch (type) {
       case LOAD:
         return (meta.done && !error) ?
-          into({ ...state }, map(list => [list.id, list]), payload) :
+          into({ ...init }, map(list => [list.id, list]), payload) :
           {}
 
       case INSERT: {

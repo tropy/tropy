@@ -1,12 +1,17 @@
 'use strict'
 
 const { LOAD, UPDATE } = require('../constants/metadata')
-const { ITEM, PHOTO } = require('../constants')
+const { ITEM, PHOTO, PROJECT } = require('../constants')
 const { omit } = require('../common/util')
 
+const init = {}
+
 module.exports = {
-  metadata(state = {}, { type, payload, meta, error }) {
+  metadata(state = init, { type, payload, meta, error }) {
     switch (type) {
+      case PROJECT.OPEN:
+        return { ...init }
+
       case LOAD:
         return (meta.done && !error) ? { ...state, ...payload } : state
 

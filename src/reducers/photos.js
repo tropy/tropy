@@ -1,24 +1,26 @@
 'use strict'
 
-const {
-  INSERT, LOAD, REMOVE, UPDATE
-} = require('../constants/photo')
+const { PHOTO, PROJECT } = require('../constants')
 
 const { omit } = require('../common/util')
+const init = {}
 
 module.exports = {
-  photos(state = {}, { type, payload, error, meta }) {
+  photos(state = init, { type, payload, error, meta }) {
     switch (type) {
-      case LOAD:
+      case PROJECT.OPEN:
+        return { ...init }
+
+      case PHOTO.LOAD:
         return (meta.done && !error) ? { ...state, ...payload } : state
 
-      case INSERT:
+      case PHOTO.INSERT:
         return { ...state, [payload.id]: payload }
 
-      case REMOVE:
+      case PHOTO.REMOVE:
         return omit(state, [payload])
 
-      case UPDATE:
+      case PHOTO.UPDATE:
         return {
           ...state,
           [payload.id]: {

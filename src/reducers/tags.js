@@ -4,12 +4,14 @@ const { TAG } = require('../constants')
 const { omit } = require('../common/util')
 const { into, map } = require('transducers.js')
 
+const init = {}
+
 module.exports = {
-  tags(state = {}, { type, payload, error, meta }) {
+  tags(state = init, { type, payload, error, meta }) {
     switch (type) {
       case TAG.LOAD:
         return (meta.done && !error) ?
-          into({ ...state }, map(tag => [tag.id, tag]), payload) :
+          into({ ...init }, map(tag => [tag.id, tag]), payload) :
           {}
 
       case TAG.INSERT:

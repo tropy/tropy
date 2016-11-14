@@ -1,12 +1,17 @@
 'use strict'
 
 const { omit } = require('../common/util')
-const { ITEM } = require('../constants')
+const { ITEM, PROJECT } = require('../constants')
 
+const init = {}
 
 module.exports = {
-  items(state = {}, { type, payload, meta, error }) {
+  //eslint-disable-next-line complexity
+  items(state = init, { type, payload, meta, error }) {
     switch (type) {
+      case PROJECT.OPEN:
+        return { ...init }
+
       case ITEM.LOAD:
         return (meta.done && !error) ?
           { ...state, ...payload } : state
