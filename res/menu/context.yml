@@ -39,6 +39,8 @@ linux:
   item: &item
     - label: 'Delete Item'
       command: 'app:delete-item'
+    - label: 'Add Photo …'
+      command: 'app:create-item-photo'
     - label: 'Tags'
       id: 'tag'
       submenu:
