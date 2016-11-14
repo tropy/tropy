@@ -51,5 +51,27 @@ module.exports = {
     }
 
     return photos
+  },
+
+  async delete(db, ids) {
+    return db.run(`
+      UPDATE photos SET item_id = NULL
+        WHERE id IN (${ids.join(',')})`
+    )
+  },
+
+  async restore(db, photos) {
+    for (let { item, id } of photos) {
+      await db.run('UPDATE photos SET item_id = ? WHERE id = ?', item, id)
+    }
+  },
+
+  async prune(db) {
+    return db.run(`
+      DELETE FROM subjects
+        WHERE id IN (
+          SELECT id FROM photos WHERE item_id IS NULL
+        )`
+    )
   }
 }

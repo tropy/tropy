@@ -58,7 +58,8 @@ module.exports = {
         yield [
           call(mod.list.prune, db),
           call(mod.tag.prune, db),
-          call(mod.value.prune, db)
+          call(mod.value.prune, db),
+          call(mod.photo.prune, db)
         ]
 
         yield call([db, db.close])
