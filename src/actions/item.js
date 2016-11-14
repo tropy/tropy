@@ -115,5 +115,15 @@ module.exports = {
         meta
       }
     }
+  },
+
+  photos: {
+    add(payload, meta = {}) {
+      return {
+        type: ITEM.PHOTO.ADD,
+        payload,
+        meta
+      }
+    }
   }
 }

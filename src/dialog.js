@@ -58,8 +58,22 @@ function fail(error, context = 'global') {
   })
 }
 
-function save() {
-  return open('save')
+function save(options) {
+  return open('save', options)
+}
+
+function file(options) {
+  return open('file', options)
+}
+
+function images(options) {
+  return open('file', {
+    filters: [
+      { name: 'Images', extensions: ['jpg'] }
+    ],
+    properties: ['openFile', 'multiSelections'],
+    ...options
+  })
 }
 
 module.exports = {
@@ -68,5 +82,7 @@ module.exports = {
   open,
   notify,
   fail,
+  file,
+  images,
   save
 }

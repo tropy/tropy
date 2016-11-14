@@ -34,7 +34,7 @@ module.exports = {
       switch (type) {
         case 'save':
           return dialog.showSaveDialog(win, options, resolve)
-        case 'open':
+        case 'file':
           return dialog.showOpenDialog(win, options, resolve)
         case 'message-box':
           return dialog.showMessageBox(win, options, resolve)

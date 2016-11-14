@@ -35,6 +35,12 @@ module.exports = {
       case ITEM.TAG.REMOVE:
         return nested.remove('tags', state, payload)
 
+      case ITEM.PHOTO.ADD:
+        return nested.add('photos', state, payload)
+
+      case ITEM.PHOTO.REMOVE:
+        return nested.remove('photos', state, payload)
+
       default:
         return state
     }
