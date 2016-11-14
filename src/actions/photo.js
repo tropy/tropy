@@ -15,6 +15,14 @@ module.exports = {
     }
   },
 
+  load(payload, meta) {
+    return {
+      type: PHOTO.LOAD,
+      payload,
+      meta: { async: true, ...meta }
+    }
+  },
+
   select(payload, meta = {}) {
     return { type: PHOTO.SELECT, payload, meta }
   }

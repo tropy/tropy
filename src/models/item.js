@@ -97,8 +97,8 @@ module.exports = {
       DELETE FROM subjects
         WHERE id IN (
           SELECT id
-          FROM trash JOIN items USING (id)
-          WHERE deleted_at < datetime("now", "-1 month"))`
+            FROM trash
+            WHERE deleted_at < datetime("now", "-1 month"))`
     )
   },
 

@@ -6,6 +6,7 @@ const dialog = require('../dialog')
 const mod = require('../models')
 const act = require('../actions')
 const { PHOTO } = require('../constants')
+const { Image } = require('../common/image')
 
 class Create extends Command {
   static get action() { return PHOTO.CREATE }
@@ -20,13 +21,41 @@ class Create extends Command {
     // Ignore time spent in open dialog
     this.init = performance.now()
 
-    const photo = yield call(mod.photo.create, db, { item, path: files[0] })
-    yield put(act.item.photos.add(photo))
+    const photos = []
 
-    return photo
+    // TODO Improve handling of multiple photos!
+    for (let file of files) {
+      const image = yield call(Image.read, file)
+
+      const photo = yield call([db, db.transaction], tx => (
+        mod.photo.create(tx, { item, image })
+        // TODO set title
+      ))
+
+      yield put(act.item.photos.add(photo))
+      photos.push(photo.id)
+    }
+
+    //this.undo(act.photo.delete(photos))
+    return photos
+  }
+}
+
+
+class Load extends Command {
+  static get action() { return PHOTO.LOAD }
+
+  *exec() {
+    const { db } = this.options
+    const ids = this.action.payload
+
+    const photos = yield call(mod.photo.load, db, ids)
+
+    return photos
   }
 }
 
 module.exports = {
-  Create
+  Create,
+  Load
 }

@@ -11,6 +11,10 @@ function magic(buffer) {
 }
 
 class Image {
+  static read(path) {
+    return (new Image(path)).read()
+  }
+
   constructor(path) {
     this.path = path
   }

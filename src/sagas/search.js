@@ -21,9 +21,19 @@ module.exports = {
 
       yield put(act.ui.items.update(ids))
 
+      const missing = {
+        items: [], metadata: []
+      }
+
+      for (let id of ids) {
+        if (!(id in items)) missing.items.push(id)
+        if (!(id in metadata)) missing.metadata.push(id)
+      }
+
       yield [
-        put(act.item.load(ids.filter(id => !(id in items)))),
-        put(act.metadata.load(ids.filter(id => !(id in metadata))))
+        put(act.item.load(missing.items)),
+        put(act.metadata.load(missing.metadata)),
+        put(act.photo.load(missing.items)) // TODO temporary
       ]
 
 
