@@ -91,7 +91,7 @@ CREATE INDEX metadata_values_index ON metadata_values (value ASC);
 
 CREATE TABLE notes (
   note_id      INTEGER  PRIMARY KEY,
-  id           INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
+  id           INTEGER  REFERENCES subjects ON DELETE CASCADE,
   position     INTEGER  NOT NULL DEFAULT 0,
   text         TEXT     NOT NULL,
   language     TEXT     NOT NULL DEFAULT 'en',
@@ -154,6 +154,6 @@ CREATE TABLE taggings (
 
 
 CREATE TABLE trash (
-  id          INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
+  id          INTEGER  PRIMARY KEY REFERENCES items ON DELETE CASCADE,
   deleted_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) WITHOUT ROWID;
