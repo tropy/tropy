@@ -12,7 +12,7 @@ const home = resolve(__dirname, '..')
 const mods = join(home, 'node_modules')
 
 const ELECTRON = v('electron').split('.')
-const HEADERS = 'https://atom.io/download/atom-shell'
+const HEADERS = 'https://atom.io/download/electron'
 
 const CONFIG = [
   `--arch=${process.arch}`,
