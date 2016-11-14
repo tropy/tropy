@@ -69,7 +69,7 @@ function file(options) {
 function images(options) {
   return open('file', {
     filters: [
-      { name: 'Images', extensions: ['jpg'] }
+      { name: 'Images', extensions: ['jpg', 'jpeg'] }
     ],
     properties: ['openFile', 'multiSelections'],
     ...options

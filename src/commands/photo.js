@@ -17,6 +17,9 @@ class Create extends Command {
     if (!files) files = yield call(dialog.images)
     if (!files || !files.length) return
 
+    // Ignore time spent in open dialog
+    this.init = performance.now()
+
     const photo = yield call(mod.photo.create, db, { item, path: files[0] })
     yield put(act.item.photos.add(photo))
 
