@@ -4,12 +4,6 @@ const { basename, extname } = require('path')
 const { createReadStream } = require('fs')
 const { createHash } = require('crypto')
 
-function magic(buffer) {
-  if (buffer[0] === 0xFF && buffer[1] === 0xD8 && buffer[2] === 0xFF) {
-    return 'image/jpeg'
-  }
-}
-
 class Image {
   static read(path) {
     return (new Image(path)).read()
@@ -60,6 +54,14 @@ class Image {
           }
         })
     })
+  }
+}
+
+function magic(b) {
+  if (!b || !b.length) return
+
+  if (b[0] === 0xFF && b[1] === 0xD8 && b[2] === 0xFF) {
+    return 'image/jpeg'
   }
 }
 
