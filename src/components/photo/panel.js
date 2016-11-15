@@ -7,6 +7,7 @@ const { Toolbar } = require('../toolbar')
 const { IconPhoto, IconPlus } = require('../icons')
 const { FormattedMessage } = require('react-intl')
 const { Panel } = require('../panel')
+const { ListItem } = require('./list-item')
 const { getPhotos } = require('../../selectors/photos')
 const act = require('../../actions/photo')
 
@@ -52,11 +53,7 @@ const PhotoPanel = ({ item, photos, handleCreatePhoto }) => {
     }>
       <ul className="photo-list">
         {photos.map(photo => (
-          <li key={photo.id} className="photo active">
-            <img src={'dev/dummy-24.jpg'} srcSet={'dev/dummy-24-2x.jpg 2x'}
-              width={24} height={24} className="thumbnail"/>
-            <div className="file-name">PC110098.JPG</div>
-          </li>
+          <ListItem key={photo.id} photo={photo}/>
         ))}
       </ul>
     </Panel>

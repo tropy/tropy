@@ -36,7 +36,9 @@ class Create extends Command {
       photos.push(photo.id)
     }
 
-    yield put(act.photo.load([item])) // TODO use photo ids!
+    yield put(act.photo.load(photos))
+    yield put(act.metadata.load(photos))
+
     yield put(act.item.photos.add(photos))
 
     this.undo(act.photo.delete(photos))

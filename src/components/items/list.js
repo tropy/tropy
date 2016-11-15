@@ -31,7 +31,6 @@ const List = ({ items, columns, selection, onSelect }) => (
 List.propTypes = {
   selection: PropTypes.arrayOf(PropTypes.number),
   onSelect: PropTypes.func,
-  onDeselect: PropTypes.func,
   columns: PropTypes.arrayOf(PropTypes.object),
   items: PropTypes.arrayOf(PropTypes.object)
 }
