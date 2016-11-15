@@ -9,12 +9,12 @@ module.exports = {
 
     if (ids.length) {
       await db.each(`
-        SELECT id, property, value, type_name AS type, created_at
-          FROM items
+        SELECT id, property, value, type_name AS type, metadata.created_at
+          FROM subjects
             JOIN metadata USING (id)
             JOIN metadata_values USING (value_id)
           WHERE id IN (${ids.join(',')})
-          ORDER BY id, created_at ASC`,
+          ORDER BY id, metadata.created_at ASC`,
 
         ({ id, property, type, value }) => {
           data[id][property] = { type, value }

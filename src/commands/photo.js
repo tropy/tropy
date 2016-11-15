@@ -29,19 +29,17 @@ class Create extends Command {
       const image = yield call(Image.read, file)
 
       const photo = yield call([db, db.transaction], tx => (
-        mod.photo.create(tx, { item, image })
-        // TODO set title
+        mod.photo.create(tx, { item, image }, 'title')
       ))
 
+      yield put(act.photo.insert(photo))
       photos.push(photo.id)
     }
 
-    yield put(act.photo.load(photos))
     yield put(act.metadata.load(photos))
+    yield put(act.item.photos.add({ id: item, photos }))
 
-    yield put(act.item.photos.add(photos))
-
-    this.undo(act.photo.delete(photos))
+    this.undo = act.photo.delete(photos)
 
     return photos
   }

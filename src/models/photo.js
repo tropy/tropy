@@ -2,11 +2,12 @@
 
 const { TEMPLATE } = require('../constants/photo')
 const { all } = require('bluebird')
+const metadata = require('./metadata')
 
 module.exports = {
 
-  async create(db, { item, image, template }) {
-    const { path, checksum, mimetype } = image
+  async create(db, { item, image, template }, property) {
+    const { path, checksum, mimetype, title } = image
 
     const { id } = await db.run(`
       INSERT INTO subjects (template) VALUES (?)`, template || TEMPLATE)
@@ -20,7 +21,17 @@ module.exports = {
       )
     ])
 
-    return (await module.exports.load(db, [id]))[id]
+    if (property) {
+      await metadata.update(db, {
+        id,
+        data: {
+          [property]: { value: title, type: 'text' }
+        }
+      })
+    }
+
+    const photo = (await module.exports.load(db, [id]))[id]
+    return photo
   },
 
   async load(db, ids) {

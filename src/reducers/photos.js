@@ -14,6 +14,11 @@ module.exports = {
       case PHOTO.LOAD:
         return (meta.done && !error) ? { ...state, ...payload } : state
 
+      case PHOTO.CREATE:
+        return (meta.done && !error) ?
+          { ...state, [payload.id]: payload } :
+          state
+
       case PHOTO.INSERT:
         return { ...state, [payload.id]: payload }
 

@@ -7,11 +7,15 @@ module.exports = {
     return {
       type: PHOTO.CREATE,
       payload,
-      meta: {
-        async: true,
-        record: true,
-        ...meta
-      }
+      meta: { async: true, record: true, ...meta }
+    }
+  },
+
+  delete(payload, meta) {
+    return {
+      type: PHOTO.DELETE,
+      payload,
+      meta: { async: true, record: true, ...meta }
     }
   },
 
@@ -20,6 +24,14 @@ module.exports = {
       type: PHOTO.LOAD,
       payload,
       meta: { async: true, ...meta }
+    }
+  },
+
+  insert(payload, meta) {
+    return {
+      type: PHOTO.INSERT,
+      payload,
+      meta: { ...meta }
     }
   },
 

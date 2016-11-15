@@ -17,7 +17,9 @@ class ListItem extends Component {
       <li key={photo.id} className="photo">
         <img src="dev/dummy-24-2x.jpg"
           width={24} height={24} className="thumbnail"/>
-        <div className="title">{data[title] && data[title].value}</div>
+        <div className="title">
+          {data[title] && data[title].value}
+        </div>
       </li>
     )
   }
