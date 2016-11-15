@@ -6,7 +6,10 @@ const {
 
 module.exports = {
   restore(payload, meta) {
-    return { type: RESTORE, payload, meta: { search: true, ...meta } }
+    return {
+      type: RESTORE,
+      payload,
+      meta: { ...meta } }
   },
 
   update(payload, meta) {

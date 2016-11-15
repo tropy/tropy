@@ -9,13 +9,16 @@ const { exec } = require('../commands')
 const { fail } = require('../dialog')
 const { ipc } = require('./ipc')
 const { history } = require('./history')
-const { search } = require('./search')
+const { search, load } = require('./search')
 const mod = require('../models')
 const act = require('../actions')
 const nav = require('./nav')
 
 const TOO_LONG = ARGS.dev ? 500 : 1500
 
+const has = (condition, { error, meta }) => (
+  !error && meta && (!meta.async || meta.done) && meta[condition]
+)
 
 module.exports = {
 
@@ -28,9 +31,8 @@ module.exports = {
 
       yield put(act.project.opened({ file: db.path, ...project }))
 
-      yield every(action => (
-        !action.error && action.meta && action.meta.search
-      ), search, db)
+      yield every(action => has('search', action), search, db)
+      yield every(action => has('load', action), load)
 
       yield call(nav.restore, id)
 
@@ -41,6 +43,9 @@ module.exports = {
           put(act.list.load()),
           put(act.tag.load())
         ]
+
+        yield call(search, db)
+        yield call(load, db)
       })
 
       yield* every(action => (

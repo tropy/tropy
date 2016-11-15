@@ -26,7 +26,6 @@ module.exports = {
   async load(db, ids) {
     const photos = {}
 
-    // TODO load by photo id
     if (ids.length) {
       await db.each(`
         SELECT s.id, item_id AS item, width, height, path,
@@ -37,7 +36,7 @@ module.exports = {
             JOIN images USING (id)
             JOIN photos USING (id)
             LEFT OUTER JOIN selections ON s.id = selections.photo_id
-          WHERE item_id IN (${ids.join(',')})
+          WHERE s.id IN (${ids.join(',')})
           GROUP BY s.id`,
 
         (photo) => {

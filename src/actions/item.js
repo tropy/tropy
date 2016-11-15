@@ -79,8 +79,12 @@ module.exports = {
     }
   },
 
-  select(payload, meta = {}) {
-    return { type: ITEM.SELECT, payload, meta }
+  select(payload, meta) {
+    return {
+      type: ITEM.SELECT,
+      payload,
+      meta: { load: true, ...meta }
+    }
   },
 
   tags: {

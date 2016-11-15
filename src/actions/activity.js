@@ -9,6 +9,7 @@ module.exports = {
       meta: {
         done: true,
         ipc: action.meta.ipc,
+        load: action.meta.load,
         rel: action.meta.seq,
         was: action.meta.now
       }
