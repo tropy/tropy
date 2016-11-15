@@ -15,11 +15,12 @@ class Create extends Command {
     const { db } = this.options
     let { item, files } = this.action.payload
 
-    if (!files) files = yield call(dialog.images)
-    if (!files || !files.length) return
+    if (!files) {
+      files = yield call(dialog.images)
+      this.init = performance.now()
+    }
 
-    // Ignore time spent in open dialog
-    this.init = performance.now()
+    if (!files || !files.length) return
 
     const photos = []
 
