@@ -55,7 +55,7 @@ const PhotoPanel = (props) => {
       <ul
         className="photo-list">
         {photos.map(photo => (
-          <ListItem key={photo.id} photo={photo}/>
+          <ListItem key={photo.id} photo={photo} disabled={locked}/>
         ))}
       </ul>
     </Panel>

@@ -21,8 +21,8 @@ class ListItem extends Component {
 
   render() {
     const {
-      data, title, selected, context, editing,
-      onCancel, onChange, onContextMenu, onRename, onSelect
+      data, title, selected, context, onContextMenu,
+      onRename, onSelect, ...editable
     } = this.props
 
     return (
@@ -33,12 +33,9 @@ class ListItem extends Component {
         <img src="dev/dummy-24-2x.jpg"
           width={24} height={24} className="thumbnail"/>
         <div className="title">
-          <Editable
+          <Editable {...editable}
             value={data[title] && data[title].value}
-            editing={editing}
-            onActivate={onRename}
-            onChange={onChange}
-            onCancel={onCancel}/>
+            onActivate={onRename}/>
         </div>
       </li>
     )
@@ -51,6 +48,7 @@ class ListItem extends Component {
     data: PropTypes.object,
     title: PropTypes.string,
     editing: PropTypes.bool,
+    disabled: PropTypes.bool,
     selected: PropTypes.bool,
     context: PropTypes.bool,
     onContextMenu: PropTypes.func,
