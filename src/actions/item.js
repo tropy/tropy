@@ -128,6 +128,14 @@ module.exports = {
         payload,
         meta
       }
+    },
+
+    remove(payload, meta = {}) {
+      return {
+        type: ITEM.PHOTO.REMOVE,
+        payload,
+        meta
+      }
     }
   }
 }

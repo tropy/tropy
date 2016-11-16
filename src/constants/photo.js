@@ -3,11 +3,10 @@
 module.exports = {
   CREATE: 'photo.create',
   INSERT: 'photo.insert',
-  REMOVE: 'photo.remove',
   LOAD: 'photo.load',
-  SAVE: 'photo.save',
   SELECT: 'photo.select',
-  UPDATE: 'photo.update',
+  DELETE: 'photo.delete',
+  RESTORE: 'photo.restore',
 
   TEMPLATE: 'https://schema.tropy.org/v1/templates/photo'
 }

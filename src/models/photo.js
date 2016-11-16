@@ -65,15 +65,14 @@ module.exports = {
 
   async delete(db, ids) {
     return db.run(`
-      UPDATE photos SET item_id = NULL
-        WHERE id IN (${ids.join(',')})`
+      UPDATE photos SET item_id = NULL WHERE id IN (${ids.join(',')})`
     )
   },
 
-  async restore(db, photos) {
-    for (let { item, id } of photos) {
-      await db.run('UPDATE photos SET item_id = ? WHERE id = ?', item, id)
-    }
+  async restore(db, { item, ids }) {
+    return db.run(`
+      UPDATE photos SET item_id = ? WHERE id IN (${ids.join(',')})`, item
+    )
   },
 
   async prune(db) {

@@ -19,6 +19,14 @@ module.exports = {
     }
   },
 
+  restore(payload, meta) {
+    return {
+      type: PHOTO.RESTORE,
+      payload,
+      meta: { async: true, record: true, ...meta }
+    }
+  },
+
   load(payload, meta) {
     return {
       type: PHOTO.LOAD,
