@@ -113,7 +113,7 @@ CREATE TABLE lists (
 
   UNIQUE (parent_list_id, name)
 );
-INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-11-14 16:35:46','2016-11-14 16:35:46');
+INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-11-16 17:55:01','2016-11-16 17:55:01');
 CREATE TABLE list_items (
   id       INTEGER REFERENCES items ON DELETE CASCADE,
   list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
@@ -147,6 +147,7 @@ CREATE TABLE trash (
 CREATE TABLE photos (
   id           INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
   item_id      INTEGER  REFERENCES items ON DELETE CASCADE,
+  position     INTEGER,
   path         TEXT     NOT NULL,
   protocol     TEXT     NOT NULL DEFAULT 'file',
   mimetype     TEXT     NOT NULL,

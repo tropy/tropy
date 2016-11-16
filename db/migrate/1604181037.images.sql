@@ -2,6 +2,7 @@
 CREATE TABLE photos (
   id           INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
   item_id      INTEGER  REFERENCES items ON DELETE CASCADE,
+  position     INTEGER,
   path         TEXT     NOT NULL,
   protocol     TEXT     NOT NULL DEFAULT 'file',
   mimetype     TEXT     NOT NULL,
