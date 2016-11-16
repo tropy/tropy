@@ -36,8 +36,10 @@ module.exports = {
           { ...state, list: null } :
           state
 
+      case ITEM.DELETE:
+      case ITEM.RESTORE:
       case ITEM.REMOVE:
-        return isSelected(state.items, payload) ?
+        return !meta.done && isSelected(state.items, payload) ?
           { ...state, items: select(state.items) } :
           state
 
