@@ -17,7 +17,7 @@ const {
   IconMetadata, IconNote, IconTag, IconPlus
 } = require('../icons')
 
-const TEMPLATE = [
+const ITEM_TEMPLATE = [
   { name: 'type', type: 'text' },
   { name: 'title', type: 'text' },
   { name: 'description', type: 'text' },
@@ -30,7 +30,13 @@ const TEMPLATE = [
   { name: 'folder', type: 'text' }
 ]
 
-const Item = ({ item, selection }) => {
+const PHOTO_TEMPLATE = [
+  { name: 'title', type: 'text' },
+  { name: 'description', type: 'text' },
+  { name: 'date', type: 'date' }
+]
+
+const Item = ({ photo, item, selection }) => {
   let fp
 
   if (selection.length === 1 && item) {
@@ -41,7 +47,16 @@ const Item = ({ item, selection }) => {
           <Tab><IconTag/>Tags</Tab>
         </Tabs>
       }>
-        <Fields id={item.id} disabled={!!item.deleted} template={TEMPLATE}/>
+        { photo &&
+          <Fields
+            id={photo}
+            disabled={!!item.deleted}
+            template={PHOTO_TEMPLATE}/>
+        }
+        <Fields
+          id={item.id}
+          disabled={!!item.deleted}
+          template={ITEM_TEMPLATE}/>
       </Panel>
     )
   } else {
@@ -85,6 +100,7 @@ const Item = ({ item, selection }) => {
 
 Item.propTypes = {
   item: PropTypes.object,
+  photo: PropTypes.number,
   selection: PropTypes.arrayOf(PropTypes.number)
 }
 
@@ -93,6 +109,7 @@ module.exports = {
   Item: connect(
     (state) => ({
       item: getSelectedItem(state),
+      photo: state.nav.photo,
       selection: state.nav.items
     })
   )(Item)

@@ -44,6 +44,7 @@ module.exports = {
       case ITEM.SELECT:
         return {
           ...state,
+          photo: null,
           items: select(state.items, payload, meta.mod)
         }
 
