@@ -4,6 +4,7 @@ const React = require('react')
 const { PropTypes, Component } = React
 const { connect } = require('react-redux')
 const { Editable } = require('../editable')
+const { noop } = require('../../common/util')
 const act = require('../../actions')
 const cn = require('classnames')
 
@@ -29,7 +30,7 @@ class ListItem extends Component {
       <li
         className={cn({ photo: true, active: selected, context })}
         onClick={onSelect}
-        onContextMenu={onContextMenu}>
+        onContextMenu={this.props.disabled ? noop : onContextMenu}>
         <img src="dev/dummy-24-2x.jpg"
           width={24} height={24} className="thumbnail"/>
         <div className="title">
