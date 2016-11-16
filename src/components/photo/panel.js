@@ -9,7 +9,7 @@ const { FormattedMessage } = require('react-intl')
 const { Panel } = require('../panel')
 const { ListItem } = require('./list-item')
 const { getPhotos } = require('../../selectors/photos')
-const act = require('../../actions/photo')
+const act = require('../../actions')
 
 
 const PhotoPanelHeader = ({ hasCreateButton, onCreate }) => {
@@ -42,7 +42,8 @@ PhotoPanelHeader.propTypes = {
 }
 
 
-const PhotoPanel = ({ item, photos, handleCreatePhoto }) => {
+const PhotoPanel = (props) => {
+  const { item, photos, handleCreatePhoto } = props
   const locked = !item || item.deleted
 
   return (
@@ -51,7 +52,8 @@ const PhotoPanel = ({ item, photos, handleCreatePhoto }) => {
         hasCreateButton={!locked}
         onCreate={handleCreatePhoto}/>
     }>
-      <ul className="photo-list">
+      <ul
+        className="photo-list">
         {photos.map(photo => (
           <ListItem key={photo.id} photo={photo}/>
         ))}
@@ -66,17 +68,20 @@ PhotoPanel.propTypes = {
     photos: PropTypes.arrayOf(PropTypes.number).isRequired
   }),
   photos: PropTypes.arrayOf(PropTypes.object).isRequired,
-  handleCreatePhoto: PropTypes.func
+  handleCreatePhoto: PropTypes.func,
+  onContextMenu: PropTypes.func
 }
 
 module.exports = {
   PhotoPanel: connect(
     (state, { item }) => ({
-      photos: item ? getPhotos(state, item) : []
+      photos: item ? getPhotos(state, item) : [],
     }),
 
     (dispatch, { item }) => ({
-      handleCreatePhoto: () => dispatch(act.create({ item: item.id }))
+      handleCreatePhoto() {
+        dispatch(act.photo.create({ item: item.id }))
+      }
     })
 
   )(PhotoPanel),

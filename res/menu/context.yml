@@ -49,6 +49,11 @@ linux:
           checked: true
           enabled: false
         - type: separator
+  photo: &photo
+    - label: 'Rename Photo'
+      command: 'app:rename-photo'
+    - label: 'Delete Photo'
+      command: 'app:delete-photo'
   deleted-item: &deleted-item
     - label: 'Restore Item'
       command: 'app:restore-item'
@@ -74,6 +79,7 @@ darwin:
   items: *items
   item: *item
   deleted-item: *deleted-item
+  photo: *photo
   dev: *dev
 
 win32:
@@ -87,4 +93,5 @@ win32:
   items: *items
   item: *item
   deleted-item: *deleted-item
+  photo: *photo
   dev: *dev

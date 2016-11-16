@@ -1,6 +1,6 @@
 'use strict'
 
-const { NAV, ITEM, LIST, TAG } = require('../constants')
+const { NAV, ITEM, LIST, TAG, PHOTO } = require('../constants')
 const init = { items: [], tags: [] }
 
 function select(selection, id, mod) {
@@ -57,6 +57,15 @@ module.exports = {
           ...state,
           tags: select(state.tags, payload, meta.mod)
         }
+
+      case PHOTO.SELECT:
+        return { ...state, photo: payload }
+
+      case ITEM.PHOTO.REMOVE:
+        return isSelected(state.items, payload.id) &&
+          payload.photos.includes(state.photo) ?
+          { ...state, photo: null } : state
+
 
       case NAV.SELECT:
         return {

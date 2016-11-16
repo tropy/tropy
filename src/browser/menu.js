@@ -214,6 +214,7 @@ class ContextMenu extends Menu {
   scopes.items = [...scopes.global, 'items']
   scopes.item = [...scopes.items, 'item']
   scopes['deleted-item'] = [...scopes.global, 'deleted-item']
+  scopes.photo = [...scopes.global, 'photo']
 }
 
 module.exports = {

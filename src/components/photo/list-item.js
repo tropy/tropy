@@ -3,6 +3,9 @@
 const React = require('react')
 const { PropTypes, Component } = React
 const { connect } = require('react-redux')
+const { Editable } = require('../editable')
+const act = require('../../actions')
+const cn = require('classnames')
 
 
 class ListItem extends Component {
@@ -10,15 +13,32 @@ class ListItem extends Component {
     super(props)
   }
 
+  update = (title) => {
+    this.props.onUpdate(this.props.photo.id, {
+      [this.props.title]: title
+    })
+  }
+
   render() {
-    const { photo, data, title } = this.props
+    const {
+      data, title, selected, context, editing,
+      onCancel, onChange, onContextMenu, onRename, onSelect
+    } = this.props
 
     return (
-      <li key={photo.id} className="photo">
+      <li
+        className={cn({ photo: true, active: selected, context })}
+        onClick={onSelect}
+        onContextMenu={onContextMenu}>
         <img src="dev/dummy-24-2x.jpg"
           width={24} height={24} className="thumbnail"/>
         <div className="title">
-          {data[title] && data[title].value}
+          <Editable
+            value={data[title] && data[title].value}
+            editing={editing}
+            onActivate={onRename}
+            onChange={onChange}
+            onCancel={onCancel}/>
         </div>
       </li>
     )
@@ -29,7 +49,16 @@ class ListItem extends Component {
       id: PropTypes.number.isRequired
     }).isRequired,
     data: PropTypes.object,
-    title: PropTypes.string
+    title: PropTypes.string,
+    editing: PropTypes.bool,
+    selected: PropTypes.bool,
+    context: PropTypes.bool,
+    onContextMenu: PropTypes.func,
+    onCancel: PropTypes.func,
+    onChange: PropTypes.func,
+    onUpdate: PropTypes.func,
+    onRename: PropTypes.func,
+    onSelect: PropTypes.func
   }
 
   static defaultProps = {
@@ -41,7 +70,44 @@ class ListItem extends Component {
 module.exports = {
   ListItem: connect(
     (state, { photo }) => ({
-      data: state.metadata[photo.id] || {}
+      data: state.metadata[photo.id] || {},
+      selected: state.nav.photo === photo.id,
+      editing: state.ui.edit.photo === photo.id,
+      context: state.ui.context.photo === photo.id
+    }),
+
+    (dispatch, { photo, selected, title }) => ({
+
+      onRename() {
+        dispatch(act.ui.edit.start({ photo: photo.id }))
+      },
+
+      onChange(value) {
+        dispatch(act.metadata.save({
+          id: photo.id,
+          data: {
+            [title || 'title']: { value, type: 'text' }
+          }
+        }))
+        dispatch(act.ui.edit.cancel())
+      },
+
+      onCancel() {
+        dispatch(act.ui.edit.cancel())
+      },
+
+      onSelect() {
+        dispatch(act.photo.select(selected ? null : photo.id))
+      },
+
+      onContextMenu(event) {
+        event.stopPropagation()
+        dispatch(act.ui.context.show(event, 'photo', {
+          id: photo.id,
+          item: photo.item
+        }))
+      }
     })
+
   )(ListItem)
 }

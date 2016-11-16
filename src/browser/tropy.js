@@ -167,7 +167,6 @@ class Tropy extends EventEmitter {
         this.dispatch(act.ui.edit.start({ project: { name: true } })))
       .on('app:show-project-file', (_, { target }) =>
         shell.showItemInFolder(target))
-
       .on('app:create-item', () =>
         this.dispatch(act.item.create()))
       .on('app:delete-item', (_, { target }) =>
@@ -182,14 +181,18 @@ class Tropy extends EventEmitter {
         this.dispatch(act.item.tags.toggle({ id, tags: [tag] })))
       .on('app:clear-item-tags', (_, { id }) =>
         this.dispatch(act.item.tags.clear(id)))
-
+      .on('app:rename-photo', (_, { target }) =>
+        this.dispatch(act.ui.edit.start({ photo: target.id })))
+      .on('app:delete-photo', (_, { target }) =>
+        this.dispatch(act.photo.delete({
+          item: target.item, photos: [target.id]
+        })))
       .on('app:create-list', () =>
         this.dispatch(act.list.new()))
       .on('app:rename-list', (_, { target: id }) =>
         this.dispatch(act.ui.edit.start({ list: { id } })))
       .on('app:delete-list', (_, { target }) =>
         this.dispatch(act.list.delete(target)))
-
       .on('app:create-tag', () =>
         this.dispatch(act.tag.new()))
       .on('app:rename-tag', (_, { target: id }) =>
