@@ -24,6 +24,10 @@ fields:
   box: Box
   photos: Photos
 
+prompt:
+  item:
+    destroy: Are your sure you want to permanently delete items? This action cannot be undone.
+
 activity:
   project:
     save: Saving …

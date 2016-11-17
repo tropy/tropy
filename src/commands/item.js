@@ -3,6 +3,7 @@
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { prompt } = require('../dialog')
+const intl = require('../selectors/intl')
 const act = require('../actions')
 const mod = require('../models/item')
 
@@ -46,7 +47,7 @@ class Destroy extends Command {
     const id = this.action.payload
 
     const confirmed = yield call(prompt,
-      'Are you sure you want to permentenly delete items? This action cannot be undone.'
+      yield select(intl.message, { id: 'prompt.item.destroy' })
     )
 
     this.init = performance.now()
