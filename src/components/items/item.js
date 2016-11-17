@@ -50,8 +50,16 @@ class Item extends Component {
 
   select = {
     tab: {
-      metadata: () => this.props.onSelectTab('metadata'),
-      tags: () => this.props.onSelectTab('tags')
+      metadata: () => {
+        if (this.props.panel.tab !== 'metadata') {
+          this.props.onSelectTab('metadata')
+        }
+      },
+      tags: () => {
+        if (this.props.panel.tab !== 'tags') {
+          this.props.onSelectTab('tags')
+        }
+      }
     }
   }
 
