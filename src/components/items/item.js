@@ -182,7 +182,8 @@ class Item extends Component {
   static propTypes = {
     item: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      tags: PropTypes.arrayOf(PropTypes.number).isRequired
+      tags: PropTypes.arrayOf(PropTypes.number).isRequired,
+      deleted: PropTypes.string
     }),
 
     panel: PropTypes.shape({
