@@ -1,7 +1,13 @@
 'use strict'
 
 const { NAV, ITEM, LIST, TAG, PHOTO } = require('../constants')
-const init = { items: [], tags: [], panel: { tab: 'metadata' } }
+
+const init = {
+  items: [],
+  tags: [],
+  panel: { tab: 'metadata' },
+  itemsZoom: 0
+}
 
 function select(selection, id, mod) {
   switch (mod) {
