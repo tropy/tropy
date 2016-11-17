@@ -2,26 +2,27 @@
 
 const React = require('react')
 const { PropTypes } = React
+const { only } = require('./util')
+const cn = require('classnames')
 
 const Tabs = ({ children, justified }) => (
   <nav>
-    <ul className={`nav tabs ${justified ? 'justified' : ''}`}>
+    <ul className={cn({ nav: true, tabs: true, justified })}>
       {children}
     </ul>
   </nav>
 )
 
-
 const Tab = ({ children, active }) => (
-  <li className={`${active ? 'active' : ''}`}>
+  <li className={cn({ tab: true, active })}>
     {children}
   </li>
 )
 
 
 Tabs.propTypes = {
-  children: PropTypes.node,
-  justified: PropTypes.bool
+  justified: PropTypes.bool,
+  children: only(Tab)
 }
 
 Tab.propTypes = {
