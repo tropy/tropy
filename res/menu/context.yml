@@ -16,7 +16,7 @@ linux:
     - label: 'Rename Project'
       command: 'app:rename-project'
     - label: 'Show Project File…'
-      command: 'app:show-project-file'
+      command: 'app:show-in-folder'
   lists: &lists
     - label: 'New List'
       command: 'app:create-list'
@@ -39,7 +39,7 @@ linux:
   item: &item
     - label: 'Delete Item'
       command: 'app:delete-item'
-    - label: 'Add Photo …'
+    - label: 'Add Photo…'
       command: 'app:create-item-photo'
     - label: 'Tags'
       id: 'tag'
@@ -54,6 +54,8 @@ linux:
       command: 'app:rename-photo'
     - label: 'Delete Photo'
       command: 'app:delete-photo'
+    - label: 'Show Photo in Folder…'
+      command: 'app:show-in-folder'
   deleted: &deleted
     - label: 'Restore Item'
       command: 'app:restore-item'

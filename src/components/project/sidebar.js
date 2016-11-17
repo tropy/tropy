@@ -23,7 +23,7 @@ class ProjectSidebar extends Component {
 
   showProjectMenu = (event) => {
     this.props.onContextMenu(
-      event, 'project', this.props.project.file
+      event, 'project', { file: this.props.project.file }
     )
   }
 

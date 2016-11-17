@@ -103,7 +103,8 @@ module.exports = {
         event.stopPropagation()
         dispatch(act.ui.context.show(event, 'photo', {
           id: photo.id,
-          item: photo.item
+          item: photo.item,
+          file: photo.path
         }))
       }
     })
