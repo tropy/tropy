@@ -64,18 +64,20 @@ class Item extends Component {
   }
 
   renderComboTabs() {
-    const { panel } = this.props
+    const { panel, selection } = this.props
 
     return (
       <Tabs justified>
         <Tab
           active={panel.tab === 'metadata'}
+          disabled={!selection.length}
           onActivate={this.select.tab.metadata}>
           <IconMetadata/>
           <FormattedMessage id="panel.metadata"/>
         </Tab>
         <Tab
           active={panel.tab === 'tags'}
+          disabled={!selection.length}
           onActivate={this.select.tab.tags}>
           <IconTag/>
           <FormattedMessage id="panel.tags"/>

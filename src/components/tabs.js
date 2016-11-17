@@ -3,6 +3,7 @@
 const React = require('react')
 const { PropTypes } = React
 const { only } = require('./util')
+const { noop } = require('../common/util')
 const cn = require('classnames')
 
 const Tabs = ({ children, justified }) => (
@@ -13,8 +14,10 @@ const Tabs = ({ children, justified }) => (
   </nav>
 )
 
-const Tab = ({ children, active, onActivate }) => (
-  <li className={cn({ tab: true, active })} onClick={onActivate}>
+const Tab = ({ children, active, onActivate, disabled }) => (
+  <li
+    className={cn({ tab: true, active, disabled })}
+    onClick={disabled ? noop : onActivate}>
     {children}
   </li>
 )
@@ -28,6 +31,7 @@ Tabs.propTypes = {
 Tab.propTypes = {
   children: PropTypes.node,
   active: PropTypes.bool,
+  disabled: PropTypes.bool,
   onActivate: PropTypes.func.isRequired
 }
 
