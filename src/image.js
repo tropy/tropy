@@ -68,7 +68,7 @@ class Image {
             .all([exif(buffer), ni(buffer)])
 
             .then(([metadata, image]) =>
-              assign(this, { metadata, size: image.getSize() }))
+              assign(this, { metadata }, image.getSize()))
 
             .then(resolve, reject)
 

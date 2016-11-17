@@ -7,18 +7,21 @@ const metadata = require('./metadata')
 module.exports = {
 
   async create(db, { item, image, template }, property) {
-    const { path, checksum, mimetype, title } = image
+    const {
+      path, checksum, mimetype, title, width, height, orientation
+    } = image
 
     const { id } = await db.run(`
       INSERT INTO subjects (template) VALUES (?)`, template || TEMPLATE)
 
     await all([
-      db.run('INSERT INTO images (id) VALUES (?)', id),
       db.run(`
-        INSERT INTO photos (id, item_id, path, checksum, mimetype)
-          VALUES (?,?,?,?,?)`,
-        [id, item, path, checksum, mimetype]
-      )
+        INSERT INTO images (id, width, height)
+          VALUES (?,?,?)`, [id, width, height]),
+      db.run(`
+        INSERT INTO photos (id, item_id, path, checksum, mimetype, orientation)
+          VALUES (?,?,?,?,?,?)`,
+        [id, item, path, checksum, mimetype, orientation || 0])
     ])
 
     if (property) {

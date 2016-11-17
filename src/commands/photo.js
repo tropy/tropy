@@ -23,7 +23,8 @@ class Create extends Command {
     }
 
     if (files && files.length) {
-      // TODO Improve handling of multiple photos!
+      // TODO Improve handling of multiple photos! The parsing
+      // part can be done in parallel.
       for (let file of files) {
         const image = yield call(Image.read, file)
 

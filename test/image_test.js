@@ -21,9 +21,8 @@ describe('Image', () => {
     })
 
     it('computes its size', () => {
-      expect(image)
-        .to.have.property('size')
-        .eql({ width: 2048, height: 1536 })
+      expect(image).to.have.property('width', 2048)
+      expect(image).to.have.property('height', 1536)
     })
 
     it('computes exif data', () => {
