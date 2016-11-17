@@ -1,7 +1,7 @@
 'use strict'
 
 const { NAV, ITEM, LIST, TAG, PHOTO } = require('../constants')
-const init = { items: [], tags: [] }
+const init = { items: [], tags: [], panel: { tab: 'metadata' } }
 
 function select(selection, id, mod) {
   switch (mod) {
@@ -76,6 +76,12 @@ module.exports = {
           items: select(state.items),
           ...payload
         }
+
+      case NAV.PANEL.TAB.SELECT: {
+        return {
+          ...state, panel: { ...state.panel, tab: payload }
+        }
+      }
 
       default:
         return state

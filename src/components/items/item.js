@@ -3,6 +3,7 @@
 const React = require('react')
 const { Component, PropTypes } = React
 const { connect } = require('react-redux')
+const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')
 const { Tab, Tabs } = require('../tabs')
 const { NoteList } = require('../notelist')
@@ -12,6 +13,7 @@ const { Viewer } = require('../viewer')
 const { Fields } = require('../metadata')
 const { getSelectedItem } = require('../../selectors/items')
 const { frameless } = ARGS
+const act = require('../../actions')
 
 const {
   IconMetadata, IconNote, IconTag, IconPlus
@@ -46,11 +48,30 @@ class Item extends Component {
     return !this.props.item || !!this.props.item.deleted
   }
 
+  select = {
+    tab: {
+      metadata: () => this.props.onSelectTab('metadata'),
+      tags: () => this.props.onSelectTab('tags')
+    }
+  }
+
   renderComboTabs() {
+    const { panel } = this.props
+
     return (
       <Tabs justified>
-        <Tab active><IconMetadata/>Metadata</Tab>
-        <Tab><IconTag/>Tags</Tab>
+        <Tab
+          active={panel.tab === 'metadata'}
+          onActivate={this.select.tab.metadata}>
+          <IconMetadata/>
+          <FormattedMessage id="panel.metadata"/>
+        </Tab>
+        <Tab
+          active={panel.tab === 'tags'}
+          onActivate={this.select.tab.tags}>
+          <IconTag/>
+          <FormattedMessage id="panel.tags"/>
+        </Tab>
       </Tabs>
     )
   }
@@ -135,8 +156,10 @@ class Item extends Component {
 
   static propTypes = {
     item: PropTypes.object,
+    panel: PropTypes.object,
     photo: PropTypes.number,
-    selection: PropTypes.arrayOf(PropTypes.number)
+    selection: PropTypes.arrayOf(PropTypes.number),
+    onSelectTab: PropTypes.func
   }
 }
 
@@ -146,7 +169,14 @@ module.exports = {
     (state) => ({
       item: getSelectedItem(state),
       photo: state.nav.photo,
-      selection: state.nav.items
+      selection: state.nav.items,
+      panel: state.nav.panel
+    }),
+
+    (dispatch) => ({
+      onSelectTab(tab) {
+        dispatch(act.nav.panel.tab.select(tab))
+      }
     })
   )(Item)
 }

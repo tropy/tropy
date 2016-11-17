@@ -13,8 +13,8 @@ const Tabs = ({ children, justified }) => (
   </nav>
 )
 
-const Tab = ({ children, active }) => (
-  <li className={cn({ tab: true, active })}>
+const Tab = ({ children, active, onActivate }) => (
+  <li className={cn({ tab: true, active })} onClick={onActivate}>
     {children}
   </li>
 )
@@ -27,7 +27,8 @@ Tabs.propTypes = {
 
 Tab.propTypes = {
   children: PropTypes.node,
-  active: PropTypes.bool
+  active: PropTypes.bool,
+  onActivate: PropTypes.func.isRequired
 }
 
 module.exports = {
