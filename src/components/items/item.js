@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = React
+const { Component, PropTypes } = React
 const { connect } = require('react-redux')
 const { Toolbar } = require('../toolbar')
 const { Tab, Tabs } = require('../tabs')
@@ -36,72 +36,108 @@ const PHOTO_TEMPLATE = [
   { name: 'date', type: 'date' }
 ]
 
-const Item = ({ photo, item, selection }) => {
-  let fp
+class Item extends Component {
+  constructor(props) {
+    super(props)
+  }
 
-  if (selection.length === 1 && item) {
-    fp = (
-      <Panel header={
-        <Tabs justified>
-          <Tab active><IconMetadata/>Metadata</Tab>
-          <Tab><IconTag/>Tags</Tab>
-        </Tabs>
-      }>
-        { photo &&
-          <Fields
-            id={photo}
-            disabled={!!item.deleted}
-            template={PHOTO_TEMPLATE}/>
-        }
-        <Fields
-          id={item.id}
-          disabled={!!item.deleted}
-          template={ITEM_TEMPLATE}/>
-      </Panel>
-    )
-  } else {
-    fp = (
-      <Panel>
-        <span>{selection.length} items selected</span>
-      </Panel>
+
+  get disabled() {
+    return !this.props.item || !!this.props.item.deleted
+  }
+
+  renderComboTabs() {
+    return (
+      <Tabs justified>
+        <Tab active><IconMetadata/>Metadata</Tab>
+        <Tab><IconTag/>Tags</Tab>
+      </Tabs>
     )
   }
 
-  return (
-    <section id="item">
-      <div className="resizable" style={{ width: '320px' }}>
-        <PanelGroup header={
-          <Toolbar draggable={frameless}/>
-        }>
-          {fp}
+  renderComboPanel() {
+    const { selection } = this.props
 
-          <PhotoPanel item={item}/>
+    switch (selection.length) {
+      case 0:
+        return <span>No items selected</span>
 
-          <Panel header={
-            <Toolbar>
-              <div className="toolbar-left">
-                <IconNote/><h4>Notes</h4>
-              </div>
-              <div className="toolbar-right">
-                <button className="btn btn-icon"><IconPlus/></button>
-              </div>
-            </Toolbar>
-          }>
-            <NoteList/>
-          </Panel>
+      case 1:
+        return this.renderMetadataPanel()
 
-        </PanelGroup>
-        <div className="resizable-handle-col resizable-handle-left"/>
+      default:
+        return <span>{selection.length} items selected</span>
+    }
+  }
+
+  renderMetadataPanel() {
+    const { photo, item } = this.props
+
+    return (
+      <div>
+        {photo &&
+          <Fields
+            id={photo}
+            disabled={this.disabled}
+            template={PHOTO_TEMPLATE}/>}
+        {item &&
+          <Fields
+            id={item.id}
+            disabled={this.disabled}
+            template={ITEM_TEMPLATE}/>}
       </div>
-      <Viewer/>
-    </section>
-  )
-}
+    )
+  }
 
-Item.propTypes = {
-  item: PropTypes.object,
-  photo: PropTypes.number,
-  selection: PropTypes.arrayOf(PropTypes.number)
+  renderNotesToolbar() {
+    return (
+      <Toolbar>
+        <div className="toolbar-left">
+          <IconNote/><h4>Notes</h4>
+        </div>
+        <div className="toolbar-right">
+          <button className="btn btn-icon"><IconPlus/></button>
+        </div>
+      </Toolbar>
+    )
+  }
+
+  renderToolbar() {
+    return (
+      <Toolbar draggable={frameless}/>
+    )
+  }
+
+  render() {
+    const { item } = this.props
+
+    return (
+      <section id="item">
+        <div className="resizable" style={{ width: '320px' }}>
+          <PanelGroup header={this.renderToolbar()}>
+            <Panel header={this.renderComboTabs()}>
+              {this.renderComboPanel()}
+            </Panel>
+
+            <PhotoPanel item={item}/>
+
+            <Panel header={this.renderNotesToolbar()}>
+              <NoteList/>
+            </Panel>
+
+          </PanelGroup>
+          <div className="resizable-handle-col resizable-handle-left"/>
+        </div>
+        <Viewer/>
+      </section>
+    )
+  }
+
+  static propTypes = {
+    item: PropTypes.object,
+    photo: PropTypes.number,
+    selection: PropTypes.arrayOf(PropTypes.number)
+  }
 }
 
 
