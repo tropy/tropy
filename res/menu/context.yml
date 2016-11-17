@@ -54,10 +54,13 @@ linux:
       command: 'app:rename-photo'
     - label: 'Delete Photo'
       command: 'app:delete-photo'
-  deleted-item: &deleted-item
+  deleted: &deleted
     - label: 'Restore Item'
       command: 'app:restore-item'
     - label: 'Permanently Delete Item'
+      command: 'app:destroy-item'
+  trash: &trash
+    - label: 'Permanently Delete Items'
       command: 'app:destroy-item'
   dev: &dev
     - label: 'Reload'
@@ -78,7 +81,8 @@ darwin:
   tag: *tag
   items: *items
   item: *item
-  deleted-item: *deleted-item
+  deleted: *deleted
+  trash: *trash
   photo: *photo
   dev: *dev
 
@@ -92,6 +96,7 @@ win32:
   tag: *tag
   items: *items
   item: *item
-  deleted-item: *deleted-item
+  deleted: *deleted
+  trash: *trash
   photo: *photo
   dev: *dev

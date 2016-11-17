@@ -51,7 +51,7 @@ class Destroy extends Command {
       yield put(act.item.remove([id]))
 
     } else {
-      yield call(mod.prune, db)
+      yield call(mod.prune, db, false)
       // Remove deleted items
     }
 

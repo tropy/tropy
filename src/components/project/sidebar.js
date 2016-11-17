@@ -33,6 +33,9 @@ class ProjectSidebar extends Component {
   showTagsMenu = (event) => {
     this.props.onContextMenu(event, 'tags')
   }
+  showTrashMenu = (event) => {
+    this.props.onContextMenu(event, 'trash', {})
+  }
 
   trash = () => {
     if (!this.props.trash) {
@@ -76,7 +79,9 @@ class ProjectSidebar extends Component {
           <section>
             <nav>
               <ol>
-                <li className={this.props.trash && 'active'}
+                <li
+                  className={this.props.trash && 'active'}
+                  onContextMenu={this.showTrashMenu}
                   onClick={this.trash}>
                   <FormattedMessage id="sidebar.trash"/>
                 </li>

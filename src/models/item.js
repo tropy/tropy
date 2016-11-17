@@ -92,13 +92,13 @@ module.exports = {
     return { id }
   },
 
-  async prune(db) {
+  async prune(db, since = '-1 month') {
+    const condition = since ?
+      ` WHERE deleted_at < datetime("now", "${since}"))` : ''
+
     return db.run(`
       DELETE FROM subjects
-        WHERE id IN (
-          SELECT id
-            FROM trash
-            WHERE deleted_at < datetime("now", "-1 month"))`
+        WHERE id IN (SELECT id FROM trash${condition})`
     )
   },
 
