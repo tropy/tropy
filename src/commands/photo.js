@@ -6,7 +6,7 @@ const dialog = require('../dialog')
 const mod = require('../models')
 const act = require('../actions')
 const { PHOTO } = require('../constants')
-const { Image } = require('../common/image')
+const { Image } = require('../image')
 
 
 class Create extends Command {
