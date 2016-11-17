@@ -19,5 +19,17 @@ describe('Image', () => {
     it('computes its title', () => {
       expect(image.title).to.eql('PA140105')
     })
+
+    it('computes its size', () => {
+      expect(image)
+        .to.have.property('size')
+        .eql({ width: 2048, height: 1536 })
+    })
+
+    it('computes exif data', () => {
+      expect(image)
+        .to.have.property('metadata')
+        .that.has.keys(['image', 'exif', 'thumbnail'])
+    })
   })
 })

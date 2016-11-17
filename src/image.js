@@ -3,6 +3,10 @@
 const { basename, extname } = require('path')
 const { createReadStream } = require('fs')
 const { createHash } = require('crypto')
+const { exif } = require('./exif')
+const { nativeImage } = require('electron')
+const { assign } = Object
+
 
 class Image {
   static read(path) {
@@ -39,22 +43,44 @@ class Image {
       this.hash = createHash('md5')
       this.mimetype = null
 
-      let isFirstChunk = true
+      const chunks = []
 
       createReadStream(this.path)
         .on('error', reject)
-        .on('end', () => resolve(this))
 
         .on('data', chunk => {
           this.hash.update(chunk)
+          chunks.push(chunk)
 
-          if (isFirstChunk) {
-            isFirstChunk = false
+          if (chunks.length === 1) {
             this.mimetype = magic(chunk)
           }
         })
+
+        .on('end', () => {
+          if (!this.mimetype) {
+            return reject(new Error('unsupported image'))
+          }
+
+          const buffer = Buffer.concat(chunks)
+
+          Promise
+            .all([exif(buffer), ni(buffer)])
+
+            .then(([metadata, image]) =>
+              assign(this, { metadata, size: image.getSize() }))
+
+            .then(resolve, reject)
+
+        })
     })
   }
+}
+
+function ni(buffer) {
+  return new Promise((resolve) => {
+    resolve(nativeImage.createFromBuffer(buffer))
+  })
 }
 
 function magic(b) {
