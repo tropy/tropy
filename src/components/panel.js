@@ -32,7 +32,9 @@ const PanelGroup = ({ header, children }) => {
       </header>
       <div className="panel-group-body">
         {panels.map((panel, idx) => (
-          <div key={idx} className="resizable" style={{ height: `${height}%` }}>
+          <div
+            key={['panel', idx].join('-')}
+            className="resizable" style={{ height: `${height}%` }}>
             {panel}
             <div className="resizable-handle-row resizable-handle-bottom"/>
           </div>
