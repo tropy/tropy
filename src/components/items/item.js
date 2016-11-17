@@ -85,14 +85,21 @@ class Item extends Component {
   }
 
   renderComboPanel() {
-    const { selection } = this.props
+    const { selection, panel } = this.props
 
     switch (selection.length) {
       case 0:
         return <span>No items selected</span>
 
       case 1:
-        return this.renderMetadataPanel()
+        switch (panel.tab) {
+          case 'metadata':
+            return this.renderMetadataPanel()
+          case 'tags':
+            return this.renderTagsPanel()
+          default:
+            return null
+        }
 
       default:
         return <span>{selection.length} items selected</span>
@@ -115,6 +122,16 @@ class Item extends Component {
             disabled={this.disabled}
             template={ITEM_TEMPLATE}/>}
       </div>
+    )
+  }
+
+  renderTagsPanel() {
+    const { item } = this.props
+
+    return (
+      <ul>
+        {item && item.tags.map(tag => <li key={tag}>{tag}</li>)}
+      </ul>
     )
   }
 
@@ -163,10 +180,18 @@ class Item extends Component {
   }
 
   static propTypes = {
-    item: PropTypes.object,
-    panel: PropTypes.object,
+    item: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      tags: PropTypes.arrayOf(PropTypes.number).isRequired
+    }),
+
+    panel: PropTypes.shape({
+      tab: PropTypes.oneOf(['metadata', 'tags']).isRequired
+    }).isRequired,
+
     photo: PropTypes.number,
     selection: PropTypes.arrayOf(PropTypes.number),
+
     onSelectTab: PropTypes.func
   }
 }
