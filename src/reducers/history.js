@@ -29,7 +29,7 @@ module.exports = {
         }
 
       case DROP:
-        return init
+        return { ...init }
 
       default:
         return state

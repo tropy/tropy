@@ -44,7 +44,7 @@ PhotoPanelHeader.propTypes = {
 
 const PhotoPanel = (props) => {
   const { item, photos, handleCreatePhoto } = props
-  const locked = !item || item.deleted
+  const locked = !item || !!item.deleted
 
   return (
     <Panel header={
