@@ -58,6 +58,18 @@ function fail(error, context = 'global') {
   })
 }
 
+async function prompt(message) {
+  const response = await open('message-box', {
+    type: 'question',
+    buttons: ['Cancel', 'Yes'],
+    message,
+    defaultId: 0,
+    cancelId: 0
+  })
+
+  return response !== 0
+}
+
 function save(options) {
   return open('save', options)
 }
@@ -84,5 +96,6 @@ module.exports = {
   fail,
   file,
   images,
-  save
+  save,
+  prompt
 }
