@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { Component, PropTypes } = React
-const { IconLibrary } = require('../icons')
+const { IconMaze } = require('../icons')
 const { Editable } = require('../editable')
 const cn = require('classnames')
 
@@ -18,7 +18,7 @@ class ProjectName extends Component {
     return (
       <ol>
         <li className={cn({ active, context })} onClick={this.select}>
-          <IconLibrary/>
+          <IconMaze/>
           <div className="title project-title">
             <Editable
               value={this.props.name}

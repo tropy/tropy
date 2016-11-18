@@ -43,14 +43,10 @@ i('Folder', (
   </svg>
 ))
 
-i('Library', (
+i('Maze', (
   <svg width="16" height="16">
     <g className="line">
-      <path d="M15,14v1H2v-1H15 M15,13H2c-0.552,0-1,0.448-1,1v2h15v-2C16,13.448,15.552,13,15,13L15,13z"/>
-      <path d="M8.5,1.077l6.5,2.6V4H2V3.677L8.5,1.077 M8.5,0L1,3v2h15V3L8.5,0L8.5,0z"/>
-      <path d="M5,7v4H4V7H5 M6,6H3v6h3V6L6,6z"/>
-      <path d="M9,7v4H8V7H9 M10,6H7v6h3V6L10,6z"/>
-      <path d="M13,7v4h-1V7H13 M14,6h-3v6h3V6L14,6z"/>
+      <path d="M16,0v15H9v-1h4v-2h1v2h1v-3h-3v2h-1V8h1v2h3V5h-4V4h4V1h-5v1h4v1H9V0H16z M5,13h5V8H5v1h4v3H6v-1h2v-1H4V7h9v2h1V6h-4V4H8V0H1v15h7v-1H4v-2H3v2H2V1h5v3H6V2H5v3h4v1H4V2H3v9h2V13L5,13z"/>
     </g>
   </svg>
 ))
