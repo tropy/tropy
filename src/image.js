@@ -78,19 +78,46 @@ class Image {
           Promise
             .all([exif(buffer), ni(buffer), stat(this.path)])
 
-            .then(([data, image, file]) =>
-              assign(this, image.getSize(), { exif: data, file }))
+            .then(([data, original, file]) =>
+              assign(this, original.getSize(), { exif: data, original, file }))
 
             .then(resolve, reject)
 
         })
     })
   }
+
+  async resize(...args) {
+    return resize(this.original || await ni(this.path), ...args)
+  }
 }
 
-function ni(buffer) {
+function resize(image, size) {
+  let current = image.getSize()
+  let delta = current.width - current.height
+  let target = delta > 0 ? 'height' : 'width'
+
+  if (size >= current[target]) return image
+
+  image = image.resize({ [target]: size, quality: 'best' })
+
+  current = image.getSize()
+  delta = current.width - current.height
+
+  if (delta === 0) return image
+
+  const position = { x: 0, y: 0, width: size, height: size }
+
+  position[delta > 0 ? 'x' : 'y'] = Math.abs(delta / 2)
+
+  return image.crop(position)
+}
+
+function ni(src) {
   return new Promise((resolve) => {
-    resolve(nativeImage.createFromBuffer(buffer))
+    resolve(typeof src === 'string' ?
+      nativeImage.createFromPath(src) :
+      nativeImage.createFromBuffer(src))
   })
 }
 
@@ -103,5 +130,6 @@ function magic(b) {
 }
 
 module.exports = {
-  Image
+  Image,
+  resize
 }

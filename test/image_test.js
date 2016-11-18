@@ -1,5 +1,6 @@
 'use strict'
 
+
 describe('Image', () => {
   const { Image } = __require('image')
 
@@ -36,5 +37,24 @@ describe('Image', () => {
         .to.have.property('file')
         .that.contains.keys(['size', 'ctime'])
     })
+  })
+})
+
+describe('resize()', () => {
+  const { nativeImage } = require('electron')
+  const { resize } = __require('image')
+
+  let image
+
+  beforeEach(() => {
+    image = nativeImage.createFromPath(F.images('PA140105.JPG').path)
+  })
+
+  it('scales and crops the image as necessary', () => {
+    const x = resize(image, 48)
+
+    //expect(resize(image, 48).getSize())
+    expect(x.getSize())
+      .to.eql({ width: 48, height: 48 })
   })
 })
