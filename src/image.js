@@ -40,7 +40,8 @@ class Image {
   }
 
   get date() {
-    return this.exif.DateTimeOriginal || this.file.ctime
+    // temporarily return as string until we add value types
+    return String(this.exif.DateTimeOriginal || this.file.ctime)
   }
 
   digest(encoding = 'hex') {

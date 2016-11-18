@@ -6,9 +6,9 @@ const metadata = require('./metadata')
 
 module.exports = {
 
-  async create(db, { item, image, template }, property) {
+  async create(db, { item, image, template }) {
     const {
-      path, checksum, mimetype, title, width, height, orientation
+      path, checksum, mimetype, width, height, orientation
     } = image
 
     const { id } = await db.run(`
@@ -24,17 +24,15 @@ module.exports = {
         [id, item, path, checksum, mimetype, orientation])
     ])
 
-    if (property) {
-      await metadata.update(db, {
-        id,
-        data: {
-          [property]: { value: title, type: 'text' }
-        }
-      })
-    }
+    await metadata.update(db, {
+      id,
+      data: {
+        title: { value: image.title, type: 'text' },
+        date: { value: image.date, type: 'datetime' }
+      }
+    })
 
-    const photo = (await module.exports.load(db, [id]))[id]
-    return photo
+    return (await module.exports.load(db, [id]))[id]
   },
 
   async load(db, ids) {
