@@ -12,6 +12,7 @@ const { Sidebar } = require('../sidebar')
 const { ProjectName } = require('./name')
 const { ROOT } = require('../../constants/list')
 const { has } = require('dot-prop')
+const { IconTrash } = require('../icons')
 const act = require('../../actions')
 
 
@@ -83,7 +84,10 @@ class ProjectSidebar extends Component {
                   className={this.props.trash && 'active'}
                   onContextMenu={this.showTrashMenu}
                   onClick={this.trash}>
-                  <FormattedMessage id="sidebar.trash"/>
+                  <IconTrash/>
+                  <div className="title">
+                    <FormattedMessage id="sidebar.trash"/>
+                  </div>
                 </li>
               </ol>
             </nav>
