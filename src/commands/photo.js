@@ -7,6 +7,7 @@ const mod = require('../models')
 const act = require('../actions')
 const { PHOTO } = require('../constants')
 const { Image } = require('../image')
+const { warn, verbose } = require('../common/log')
 
 
 class Create extends Command {
@@ -35,9 +36,15 @@ class Create extends Command {
         yield put(act.photo.insert(photo))
         photos.push(photo.id)
 
-        const icon = yield call([image, image.resize], 48)
-        yield call([cache, cache.save],
-          `photo-${photo.id}_48.png`, icon.toPNG())
+        try {
+          const icon = yield call([image, image.resize], 48)
+          yield call([cache, cache.save],
+            `photo-${photo.id}_48.png`, icon.toPNG())
+
+        } catch (error) {
+          warn(`Failed to create thumbnail: ${error.message}`)
+          verbose(error.stack)
+        }
       }
 
       yield put(act.metadata.load(photos))

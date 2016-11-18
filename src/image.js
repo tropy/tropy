@@ -108,7 +108,7 @@ function resize(image, size) {
 
   const position = { x: 0, y: 0, width: size, height: size }
 
-  position[delta > 0 ? 'x' : 'y'] = Math.abs(delta / 2)
+  position[delta > 0 ? 'x' : 'y'] = ~~Math.abs(delta / 2)
 
   return image.crop(position)
 }
