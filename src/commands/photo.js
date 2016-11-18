@@ -13,7 +13,7 @@ class Create extends Command {
   static get action() { return PHOTO.CREATE }
 
   *exec() {
-    const { db } = this.options
+    const { db, cache } = this.options
     let { item, files } = this.action.payload
     const photos = []
 
@@ -34,6 +34,10 @@ class Create extends Command {
 
         yield put(act.photo.insert(photo))
         photos.push(photo.id)
+
+        const icon = yield call([image, image.resize], 48)
+        yield call([cache, cache.save],
+          `photo-${photo.id}_48.png`, icon.toPNG())
       }
 
       yield put(act.metadata.load(photos))

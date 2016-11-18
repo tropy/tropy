@@ -5,6 +5,7 @@ const { PropTypes, Component } = React
 const { connect } = require('react-redux')
 const { Editable } = require('../editable')
 const { noop } = require('../../common/util')
+const { join } = require('path')
 const act = require('../../actions')
 const cn = require('classnames')
 
@@ -22,16 +23,18 @@ class ListItem extends Component {
 
   render() {
     const {
-      data, title, selected, context, onContextMenu,
-      onRename, onSelect, ...editable
+      photo, cache, data, title, selected, context,
+      onContextMenu, onRename, onSelect, ...editable
     } = this.props
+
+    const src = join(cache, `photo-${photo.id}_48.png`)
 
     return (
       <li
         className={cn({ photo: true, active: selected, context })}
         onClick={onSelect}
         onContextMenu={this.props.disabled ? noop : onContextMenu}>
-        <img src="dev/dummy-24-2x.jpg"
+        <img srcSet={`${encodeURI(src)} 2x`}
           width={24} height={24} className="thumbnail"/>
         <div className="title">
           <Editable {...editable}
@@ -46,6 +49,7 @@ class ListItem extends Component {
     photo: PropTypes.shape({
       id: PropTypes.number.isRequired
     }).isRequired,
+    cache: PropTypes.string,
     data: PropTypes.object,
     title: PropTypes.string,
     editing: PropTypes.bool,
@@ -72,7 +76,8 @@ module.exports = {
       data: state.metadata[photo.id] || {},
       selected: state.nav.photo === photo.id,
       editing: state.ui.edit.photo === photo.id,
-      context: state.ui.context.photo === photo.id
+      context: state.ui.context.photo === photo.id,
+      cache: join(ARGS.cache, state.project.id)
     }),
 
     (dispatch, { photo, selected, title }) => ({

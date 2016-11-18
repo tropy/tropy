@@ -51,10 +51,7 @@ describe('resize()', () => {
   })
 
   it('scales and crops the image as necessary', () => {
-    const x = resize(image, 48)
-
-    //expect(resize(image, 48).getSize())
-    expect(x.getSize())
+    expect(resize(image, 48).getSize())
       .to.eql({ width: 48, height: 48 })
   })
 })
