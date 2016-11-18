@@ -1,7 +1,9 @@
 'use strict'
 
+require('./common/promisify')
+
 const { basename, extname } = require('path')
-const { createReadStream } = require('fs')
+const { createReadStream, statAsync: stat } = require('fs')
 const { createHash } = require('crypto')
 const { exif } = require('./exif')
 const { nativeImage } = require('electron')
@@ -31,6 +33,14 @@ class Image {
 
   get checksum() {
     return this.digest()
+  }
+
+  get orientation() {
+    return this.exif.Orientation || 1
+  }
+
+  get date() {
+    return this.exif.DateTimeOriginal || this.file.ctime
   }
 
   digest(encoding = 'hex') {
@@ -65,10 +75,14 @@ class Image {
           const buffer = Buffer.concat(chunks)
 
           Promise
-            .all([exif(buffer), ni(buffer)])
+            .all([exif(buffer), ni(buffer), stat(this.path)])
 
-            .then(([metadata, image]) =>
-              assign(this, { metadata }, image.getSize()))
+            .then(([data, image, file]) =>
+              assign(this, image.getSize(), {
+                file,
+                exif: { ...data.gps, ...data.exif, ...data.image }
+              })
+            )
 
             .then(resolve, reject)
 

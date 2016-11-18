@@ -21,7 +21,7 @@ module.exports = {
       db.run(`
         INSERT INTO photos (id, item_id, path, checksum, mimetype, orientation)
           VALUES (?,?,?,?,?,?)`,
-        [id, item, path, checksum, mimetype, orientation || 0])
+        [id, item, path, checksum, mimetype, orientation])
     ])
 
     if (property) {

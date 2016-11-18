@@ -27,8 +27,14 @@ describe('Image', () => {
 
     it('computes exif data', () => {
       expect(image)
-        .to.have.property('metadata')
-        .that.has.keys(['image', 'exif', 'thumbnail'])
+        .to.have.property('exif')
+        .that.contains.keys(['Orientation', 'DateTimeOriginal'])
+    })
+
+    it('computes file stats', () => {
+      expect(image)
+        .to.have.property('file')
+        .that.contains.keys(['size', 'ctime'])
     })
   })
 })
