@@ -4,6 +4,7 @@ const { takeEvery: every } = require('redux-saga')
 const { fork, cancel, call, put, take } = require('redux-saga/effects')
 const { OPEN } = require('../constants/project')
 const { Database } = require('../common/db')
+const { Cache } = require('../common/cache')
 const { warn, info, debug, verbose } = require('../common/log')
 const { exec } = require('../commands')
 const { fail } = require('../dialog')
@@ -28,7 +29,9 @@ module.exports = {
 
       const project = yield call(mod.project.load, db)
       var { id } = project
+      const cache = new Cache(ARGS.cache, id)
 
+      yield call([cache, cache.init])
       yield put(act.project.opened({ file: db.path, ...project }))
 
       yield every(action => has('search', action), search, db)
@@ -50,7 +53,7 @@ module.exports = {
 
       yield* every(action => (
         !action.error && action.meta && action.meta.async
-      ), module.exports.command, db, id)
+      ), module.exports.command, { db, id, cache })
 
 
     } catch (error) {
@@ -75,9 +78,9 @@ module.exports = {
   },
 
 
-  *command(db, id, action) {
+  *command({ db, id, cache }, action) {
     try {
-      const cmd = yield exec(action, { db, id })
+      const cmd = yield exec(action, { db, id, cache })
 
       yield put(act.activity.done(action, cmd.error || cmd.result))
 

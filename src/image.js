@@ -79,7 +79,7 @@ class Image {
             .all([exif(buffer), ni(buffer), stat(this.path)])
 
             .then(([data, image, file]) =>
-              assign(this, image.getSize(), { file, exif: data }))
+              assign(this, image.getSize(), { exif: data, file }))
 
             .then(resolve, reject)
 

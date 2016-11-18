@@ -10,6 +10,7 @@ const { existsSync: exists } = require('fs')
 const { into, compose, remove, take } = require('transducers.js')
 
 const { AppMenu, ContextMenu } = require('./menu')
+const { Cache } = require('../common/cache')
 const Storage = require('./storage')
 const dialog = require('./dialog')
 
@@ -27,17 +28,16 @@ const T = new WeakMap()
 
 class Tropy extends EventEmitter {
 
-  static get defaults() {
-    return {
-      frameless: darwin,
-      locale: app.getLocale(),
-      theme: 'light',
-      recent: [],
-      win: {}
-    }
+  static defaults = {
+    frameless: darwin,
+    locale: app.getLocale(),
+    theme: 'light',
+    recent: [],
+    win: {}
   }
 
-  constructor() { // eslint-disable-line constructor-super
+  // eslint-disable-next-line constructor-super
+  constructor() {
     if (Tropy.instance) return Tropy.instance
 
     super()
@@ -45,6 +45,10 @@ class Tropy extends EventEmitter {
 
     this.menu = new AppMenu(this)
     this.ctx = new ContextMenu(this)
+
+    prop(this, 'cache', {
+      value: new Cache(app.getPath('userData'), 'cache')
+    })
 
     prop(this, 'store', { value: new Storage() })
 
@@ -149,7 +153,7 @@ class Tropy extends EventEmitter {
       .then(state => (this.state = state, this))
 
       .tap(() => all([
-        this.menu.load(), this.ctx.load()
+        this.menu.load(), this.ctx.load(), this.cache.init()
       ]))
 
       .tap(() => this.emit('app:restored'))
@@ -336,6 +340,7 @@ class Tropy extends EventEmitter {
       debug: ARGS.debug,
       dev: this.dev,
       home: app.getPath('userData'),
+      cache: this.cache.root,
       frameless: this.state.frameless,
       theme: this.state.theme,
       locale: this.state.locale
