@@ -11,7 +11,12 @@ module.exports = {
 
         while (offset < buffer.length) {
           if (buffer[offset++] === 0xFF && buffer[offset++] === 0xE1) {
-            resolve(parse(buffer.slice(offset + 2)))
+            const data = parse(buffer.slice(offset + 2))
+
+            resolve({
+              ...data.gps, ...data.exif, ...data.image
+            })
+
             break
           }
         }
