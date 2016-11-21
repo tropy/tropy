@@ -1,0 +1,52 @@
+//
+// Slider
+// --------------------------------------------------
+
+.slider {
+  display: flex;
+  align-items: center;
+}
+
+.frameless {
+  .draggable {
+    .slider-scale,
+    .slider-range,
+    .slider-handle {
+      -webkit-app-region: no-drag;
+    }
+  }
+}
+
+.slider-scale {
+  width: $slider-scale-width;
+  height: $slider-scale-height;
+  background: $slider-scale-bg;
+  border-radius: $slider-scale-height / 2;
+  margin: 0 $space-min;
+  position: relative;
+  border-left: ($slider-handle-size / 2) solid $slider-scale-bg;
+  border-right: ($slider-handle-size / 2) solid $slider-scale-bg;
+}
+
+.slider-range {
+  box-sizing: content-box;
+  background: $slider-range-bg;
+  height: $slider-scale-height;
+  border-radius: $slider-scale-height / 2;
+  border-left: ($slider-handle-size / 2) solid $slider-range-bg;
+  border-right: ($slider-handle-size / 2) solid $slider-range-bg;
+  margin-left: -($slider-handle-size / 2);
+}
+
+.slider-handle {
+  box-sizing: content-box;
+  width: $slider-handle-size;
+  height: $slider-handle-size;
+  background: $slider-handle-bg;
+  background-clip: content-box;
+  border: 1px solid $slider-handle-border;
+  border-radius: 50%;
+  position: absolute;
+  top: -($slider-handle-size / 2 + 1px - $slider-scale-height / 2);
+  margin-left: -($slider-handle-size / 2 + 1px);
+}

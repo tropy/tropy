@@ -4,6 +4,9 @@ const React = require('react')
 const { Component, PropTypes } = React
 const cn = require('classnames')
 
+var range = { width: '50%' }
+var handle = { left: '50%' }
+
 class Slider extends Component {
   constructor(props) {
     super(props)
@@ -25,7 +28,7 @@ class Slider extends Component {
 
     if (minIcon) {
       return (
-        <button className={cn({ active })} onClick={this.min}>
+        <button className={cn({ active }, 'btn btn-icon')} onClick={this.min}>
           {this.props.minIcon}
         </button>
       )
@@ -38,7 +41,7 @@ class Slider extends Component {
 
     if (maxIcon) {
       return (
-        <button className={cn({ active })} onClick={this.max}>
+        <button className={cn({ active }, 'btn btn-icon')} onClick={this.max}>
           {this.props.maxIcon}
         </button>
       )
@@ -51,7 +54,10 @@ class Slider extends Component {
     return (
       <div className={cn({ slider: true, disabled })}>
         {this.renderMinButton()}
-        <div>...</div>
+        <div className="slider-scale">
+          <div className="slider-range" style={range}/>
+          <div className="slider-handle" style={handle}/>
+        </div>
         {this.renderMaxButton()}
       </div>
     )

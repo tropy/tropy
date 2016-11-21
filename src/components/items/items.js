@@ -5,6 +5,8 @@ const { PropTypes } = React
 const { connect } = require('react-redux')
 const { Toolbar } = require('../toolbar')
 const { Search } = require('../search')
+const { IconList } = require('../icons')
+const { IconGrid } = require('../icons')
 const { IconPlus } = require('../icons')
 const { List } = require('./list')
 const { Grid } = require('./grid')
@@ -18,14 +20,16 @@ const Items = ({ createItem, items, zoom, handleZoomChange }) => (
       <Toolbar draggable>
         <div className="toolbar-left">
           <div className="tool-group">
-            <button className="btn btn-icon" onClick={createItem}>
-              <IconPlus/>
-            </button>
             <Slider
               value={zoom}
               onChange={handleZoomChange}
-              minIcon={<IconPlus/>}
-              maxIcon={<IconPlus/>}/>
+              minIcon={<IconList/>}
+              maxIcon={<IconGrid/>}/>
+          </div>
+          <div className="tool-group">
+            <button className="btn btn-icon" onClick={createItem}>
+              <IconPlus/>
+            </button>
           </div>
         </div>
         <div className="toolbar-right">

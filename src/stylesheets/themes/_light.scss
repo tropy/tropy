@@ -119,3 +119,9 @@ $btn-default-active-bg: $shade-1;
 $btn-primary-color:     $shade-0;
 $btn-primary-bg:        $brand-primary;
 $btn-primary-active-bg: darken($btn-primary-bg, 4%);
+
+// Slider
+$slider-scale-bg: $shade-4;
+$slider-range-bg: $shade-5;
+$slider-handle-bg: $shade-0;
+$slider-handle-border: rgba($shade-9, 0.2);

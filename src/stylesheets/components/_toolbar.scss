@@ -20,15 +20,8 @@
   &.draggable {
     .frameless & {
       -webkit-app-region: drag;
-      -webkit-user-select: none;
-      cursor: default;
       position: relative;
       z-index: $zindex-draggable;
-
-      .no-drag,
-      .btn {
-        @include no-drag;
-      }
     }
   }
 

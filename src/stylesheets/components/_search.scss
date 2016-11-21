@@ -3,9 +3,9 @@
 // --------------------------------------------------
 
 .search {
-  @include no-drag;
   width: $search-width;
   position: relative;
+  -webkit-app-region: no-drag;
 
   .icon-search {
     position: absolute;

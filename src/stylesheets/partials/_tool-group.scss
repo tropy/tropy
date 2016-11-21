@@ -4,10 +4,6 @@
 
 .tool-group {
   & + .tool-group {
-    margin-left: $space-md;
-  }
-
-  .btn + .btn {
-    //margin-left: $space-xs;
+    margin-left: $space-xs;
   }
 }
