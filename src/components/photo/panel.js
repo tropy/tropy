@@ -18,6 +18,7 @@ const PhotoPanelHeader = ({ hasCreateButton, onCreate }) => {
     <Slider
       key="zoom-level"
       value={0}
+      max={8}
       minIcon={<IconList/>}
       maxIcon={<IconGrid/>}/>
   ]

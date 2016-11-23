@@ -12,7 +12,7 @@ const { Slider } = require('../slider')
 const { getItems } = require('../../selectors/items')
 const act = require('../../actions')
 
-const Items = ({ createItem, items, zoom, handleZoomChange }) => (
+const Items = ({ createItem, items, zoom, maxZoom, handleZoomChange }) => (
   <section id="items">
     <header>
       <Toolbar draggable>
@@ -20,6 +20,7 @@ const Items = ({ createItem, items, zoom, handleZoomChange }) => (
           <div className="tool-group">
             <Slider
               value={zoom}
+              max={maxZoom}
               onChange={handleZoomChange}
               minIcon={<IconList/>}
               maxIcon={<IconGrid/>}/>
@@ -43,7 +44,12 @@ Items.propTypes = {
   createItem: PropTypes.func,
   items: PropTypes.arrayOf(PropTypes.object),
   zoom: PropTypes.number,
+  maxZoom: PropTypes.number,
   handleZoomChange: PropTypes.func
+}
+
+Items.defaultProps = {
+  maxZoom: 8
 }
 
 
