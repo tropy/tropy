@@ -131,18 +131,18 @@ class Slider extends Component {
     const { dragging } = this.state
     const { offset, delta } = this
 
-    const pos = `${100 * offset / delta}%`
+    const percentage = `${100 * offset / delta}%`
 
     return (
       <div
         className={cn({ slider: true, disabled, dragging })}
-        onMouseDown={this.handleMouseDown}>
+        onMouseDown={disabled ? noop : this.handleMouseDown}>
         {this.renderMinButton()}
         <div
           ref={this.setScale}
           className="slider-scale">
-          <div className="slider-range" style={{ width: pos }}/>
-          <div className="slider-handle" style={{ left: pos }}/>
+          <div className="slider-range" style={{ width: percentage }}/>
+          <div className="slider-handle" style={{ left: percentage }}/>
         </div>
         {this.renderMaxButton()}
       </div>
