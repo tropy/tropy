@@ -240,22 +240,6 @@ class Tropy extends EventEmitter {
         this.menu.reload()
       })
 
-      .on('app:reload', () => {
-        const win = BrowserWindow.getFocusedWindow()
-
-        if (win) {
-          win.webContents.send('reload')
-        }
-      })
-
-      .on('app:refresh', () => {
-        const win = BrowserWindow.getFocusedWindow()
-
-        if (win) {
-          win.webContents.send('refresh')
-        }
-      })
-
       .on('app:undo', () => {
         if (this.history.past) this.dispatch(act.history.undo())
       })

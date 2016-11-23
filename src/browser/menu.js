@@ -28,7 +28,7 @@ class Menu {
       case 'app':
         return (_, win) => this.app.emit(command, win, ...params)
       case 'win':
-        return (_, win) => win[action[0]](...params)
+        return (_, win) => win.webContents.send(...action)
       case 'dispatch':
         return (_, win) => win.webContents.send('dispatch', {
           type: action.join(':'), payload: params
