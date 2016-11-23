@@ -66,9 +66,9 @@ linux:
       command: 'app:destroy-item'
   dev: &dev
     - label: 'Reload'
-      command: 'app:reload'
+      command: 'win:reload'
     - label: 'Reload Styles'
-      command: 'app:refresh'
+      command: 'win:refresh'
     - type: 'separator'
     - label: 'Inspect'
       command: 'app:inspect'
