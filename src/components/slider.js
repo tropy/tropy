@@ -3,9 +3,8 @@
 const React = require('react')
 const { Component, PropTypes } = React
 const cn = require('classnames')
+const { bounds } = require('../dom')
 
-var range = { width: '50%' }
-var handle = { left: '50%' }
 
 class Slider extends Component {
   constructor(props) {
@@ -20,14 +19,35 @@ class Slider extends Component {
     this.setState({ value })
   }
 
+  setScale = (scale) => {
+    this.scale = scale
+  }
+
+  handleClick = (event) => {
+    const { min, max } = this.props
+    const { left, width } = bounds(this.scale)
+    this.set(min + restrict((event.pageX - left) / width) * max)
+  }
+
   set = (value) => {
-    if (value !== this.props.value) {
-      this.props.onChange(value)
+    this.setState({ value })
+
+    const int = Math.round(value)
+
+    if (int !== this.props.value) {
+      this.props.onChange(int)
     }
   }
 
-  min = (e) => (e.stopPropagation(), this.set(this.props.min))
-  max = (e) => (e.stopPropagation(), this.set(this.props.max))
+  min = (event) => {
+    event.stopPropagation()
+    this.set(this.props.min)
+  }
+
+  max = (event) => {
+    event.stopPropagation()
+    this.set(this.props.max)
+  }
 
   get offset() {
     return this.state.value - this.props.min
@@ -72,9 +92,13 @@ class Slider extends Component {
     const pos = `${100 * offset / delta}%`
 
     return (
-      <div className={cn({ slider: true, disabled })}>
+      <div
+        className={cn({ slider: true, disabled })}
+        onClick={this.handleClick}>
         {this.renderMinButton()}
-        <div className="slider-scale">
+        <div
+          ref={this.setScale}
+          className="slider-scale">
           <div className="slider-range" style={{ width: pos }}/>
           <div className="slider-handle" style={{ left: pos }}/>
         </div>
@@ -100,6 +124,10 @@ class Slider extends Component {
     min: 0,
     max: 1
   }
+}
+
+function restrict(value, lower = 0, upper = 1) {
+  return Math.min(Math.max(value, lower), upper)
 }
 
 module.exports = {

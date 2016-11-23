@@ -91,5 +91,9 @@ const dom = module.exports = {
 
   has(node, name) {
     return node.classList.contains(name)
+  },
+
+  bounds(node) {
+    return node.getBoundingClientRect()
   }
 }
