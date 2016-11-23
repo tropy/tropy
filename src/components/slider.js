@@ -10,6 +10,14 @@ var handle = { left: '50%' }
 class Slider extends Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      value: props.value
+    }
+  }
+
+  componentWillReceiveProps({ value }) {
+    this.setState({ value })
   }
 
   set = (value) => {
@@ -18,12 +26,20 @@ class Slider extends Component {
     }
   }
 
-  min = () => this.set(this.props.min)
-  max = () => this.set(this.props.max)
+  min = (e) => (e.stopPropagation(), this.set(this.props.min))
+  max = (e) => (e.stopPropagation(), this.set(this.props.max))
 
+  get offset() {
+    return this.state.value - this.props.min
+  }
+
+  get delta() {
+    return this.props.max - this.props.min
+  }
 
   renderMinButton() {
-    const { min, minIcon, value } = this.props
+    const { min, minIcon } = this.props
+    const { value } = this.state
     const active = value === min
 
     if (minIcon) {
@@ -36,7 +52,8 @@ class Slider extends Component {
   }
 
   renderMaxButton() {
-    const { max, maxIcon, value } = this.props
+    const { max, maxIcon } = this.props
+    const { value } = this.state
     const active = value === max
 
     if (maxIcon) {
@@ -50,13 +67,16 @@ class Slider extends Component {
 
   render() {
     const { disabled } = this.props
+    const { offset, delta } = this
+
+    const pos = `${100 * offset / delta}%`
 
     return (
       <div className={cn({ slider: true, disabled })}>
         {this.renderMinButton()}
         <div className="slider-scale">
-          <div className="slider-range" style={range}/>
-          <div className="slider-handle" style={handle}/>
+          <div className="slider-range" style={{ width: pos }}/>
+          <div className="slider-handle" style={{ left: pos }}/>
         </div>
         {this.renderMaxButton()}
       </div>
