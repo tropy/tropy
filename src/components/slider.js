@@ -17,7 +17,10 @@ class Slider extends Component {
   }
 
   componentWillReceiveProps({ value }) {
-    this.setState({ value })
+    if (value !== this.props.value &&
+        value !== Math.round(this.state.value)) {
+      this.setState({ value })
+    }
   }
 
   componentWillUnmount() {
@@ -27,16 +30,19 @@ class Slider extends Component {
   }
 
   update = (event) => {
+    if (this.delayed) {
+      clearTimeout(this.delayed)
+      this.delayed = null
+    }
+
     const { min, max } = this.props
     const { left, width } = bounds(this.scale)
 
     this.set(min + restrict((event.pageX - left) / width) * max)
   }
 
-  handleMouseDown = (event) => {
-    event.stopPropagation()
-
-    this.update(event)
+  handleMouseDown = ({ pageX }) => {
+    this.delayed = setTimeout(() => this.update({ pageX }), 50)
     this.startDragging()
   }
 
@@ -80,8 +86,8 @@ class Slider extends Component {
   startDragging() {
     this.setState({ dragging: true })
 
-    on(document.body, 'mousemove', this.update)
-    on(document.body, 'mouseup', this.handleMouseUp)
+    on(document, 'mousemove', this.update)
+    on(document, 'mouseup', this.handleMouseUp)
     on(document, 'mouseleave', this.stopDragging)
     on(window, 'blur', this.handleMouseUp)
   }
@@ -89,10 +95,15 @@ class Slider extends Component {
   stopDragging = () => {
     this.setState({ dragging: false })
 
-    off(document.body, 'mousemove', this.update)
-    off(document.body, 'mouseup', this.handleMouseUp)
+    off(document, 'mousemove', this.update)
+    off(document, 'mouseup', this.handleMouseUp)
     off(document, 'mouseleave', this.stopDragging)
     off(window, 'blur', this.handleMouseUp)
+
+    if (this.delayed) {
+      clearTimeout(this.delayed)
+      this.delayed = null
+    }
   }
 
 
