@@ -66,13 +66,13 @@ module.exports = {
 
   async delete(db, ids) {
     return db.run(`
-      UPDATE photos SET item_id = NULL WHERE id IN (${ids.join(',')})`
+      INSERT INTO trash (id) VALUES (${ids.join(',')})`
     )
   },
 
-  async restore(db, { item, ids }) {
+  async restore(db, { ids }) {
     return db.run(`
-      UPDATE photos SET item_id = ? WHERE id IN (${ids.join(',')})`, item
+      DELETE FROM trash WHERE id IN (${ids.join(',')})`
     )
   },
 
@@ -80,7 +80,7 @@ module.exports = {
     return db.run(`
       DELETE FROM subjects
         WHERE id IN (
-          SELECT id FROM photos WHERE item_id IS NULL
+          SELECT id FROM trash JOIN photos USING (id)
         )`
     )
   }

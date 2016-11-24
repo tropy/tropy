@@ -97,7 +97,8 @@ module.exports = {
 
     return db.run(`
       DELETE FROM subjects
-        WHERE id IN (SELECT id FROM trash${condition})`
+        WHERE id IN (
+          SELECT id FROM trash JOIN items USING (id)${condition})`
     )
   },
 
