@@ -6,7 +6,7 @@ CREATE TABLE project (
   settings             NOT NULL DEFAULT '{}',
   created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified    NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  opened_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  opened      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CHECK (project_id != ''),
   CHECK (name != '')
