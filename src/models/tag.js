@@ -17,7 +17,7 @@ module.exports = {
 
   async save(db, { id, name }) {
     return await db.run(
-      'UPDATE tags SET name = ?, updated_at = datetime("now") WHERE tag_id = ?',
+      'UPDATE tags SET name = ?, modified = datetime("now") WHERE tag_id = ?',
       name, id
     )
   },

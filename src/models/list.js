@@ -57,7 +57,7 @@ module.exports = {
 
   async save(db, { id, name }) {
     return await db.run(
-      'UPDATE lists SET name = ?, updated_at = datetime("now") WHERE list_id = ?',
+      'UPDATE lists SET name = ?, modified = datetime("now") WHERE list_id = ?',
       name, id)
   },
 
