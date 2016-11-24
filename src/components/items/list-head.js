@@ -2,8 +2,7 @@
 
 const React = require('react')
 const { PropTypes } = React
-const { FormattedMessage } = require('react-intl')
-const classes = require('classnames')
+const cn = require('classnames')
 
 
 const ListHead = ({ columns }) => (
@@ -12,9 +11,9 @@ const ListHead = ({ columns }) => (
       <tr>
         {columns.map(({ width, property, order }, idx) => (
           <th key={idx}
-            className={classes(['metadata-head', property.type, order])}
+            className={cn(['metadata-head', property.type || 'text', order])}
             style={{ width }}>
-            <FormattedMessage id={`fields.${property.name}`}/>
+            {property.label}
           </th>
         ))}
       </tr>

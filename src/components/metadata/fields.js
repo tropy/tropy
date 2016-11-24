@@ -15,9 +15,9 @@ const Fields = (props) => {
     <ol className="metadata-fields">{
       template.map(property =>
         <Field {...props}
-          key={property.name}
+          key={property.uri}
           property={property}
-          editing={editing === property.name}/>
+          editing={editing === property.uri}/>
       )
     }</ol>
   )

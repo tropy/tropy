@@ -41,10 +41,10 @@ class ListItem extends Component {
               key={idx}
               disabled={!!item.deleted}
               property={property}
-              value={data[property.name]}
+              value={data[property.uri]}
               icon={idx ? null : item.image}
               width={width}
-              active={property.name === active}
+              active={property.uri === active}
               onActivate={onActivate}
               onCancel={onCancel}
               onChange={onChange}/>

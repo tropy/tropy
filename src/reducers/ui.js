@@ -2,13 +2,13 @@
 
 const { combineReducers: combine } = require('redux')
 const { CONTEXT, EDIT, ITEMS } = require('../constants/ui')
+const { DC } = require('../constants/properties')
 
 const cols = [
-  { width: '40%', property: 'title' },
-  { width: '25%', property: 'type' },
-  { width: '15%', property: 'date' },
-  { width: '10%', property: 'box' },
-  { width: '10%', property: 'photos' }
+  { width: '40%', property: DC.TITLE },
+  { width: '25%', property: DC.TYPE },
+  { width: '20%', property: DC.DATE },
+  { width: '15%', property: DC.RIGHTS }
 ]
 
 function columns(state = cols) {

@@ -6,12 +6,12 @@ const {
 
 const getColumns = memo(
   ({ ui }) => ui.columns,
-  ({ vocab }) => vocab,
+  ({ properties }) => properties,
 
-  (columns, vocab) =>
+  (columns, properties) =>
     columns.map(col => ({
       ...col,
-      property: vocab[col.property]
+      property: properties[col.property]
     }))
 )
 

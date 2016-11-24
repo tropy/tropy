@@ -13,15 +13,16 @@ class Field extends Component {
   }
 
   get name() {
-    return this.props.property.name
+    return this.props.property.label
   }
 
   get value() {
-    return this.props.data[this.props.property.name]
+    return this.props.data[this.props.property.uri]
   }
 
   get type() {
-    return this.value ? this.value.type : this.props.property.type
+    return this.value ?
+      this.value.type : this.props.property.type || 'text'
   }
 
   activate = () => {
@@ -59,8 +60,9 @@ class Field extends Component {
     disabled: PropTypes.bool,
 
     property: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
+      uri: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      type: PropTypes.string,
     }),
 
     data: PropTypes.object.isRequired,

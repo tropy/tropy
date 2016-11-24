@@ -12,12 +12,12 @@ class Cell extends Component {
   }
 
   activate = () => {
-    this.props.onActivate(this.props.property.name)
+    this.props.onActivate(this.props.property.uri)
   }
 
   changed = (value) => {
     this.props.onChange({
-      [this.props.property.name]: { value, type: this.type }
+      [this.props.property.uri]: { value, type: this.type }
     })
   }
 
@@ -27,7 +27,7 @@ class Cell extends Component {
 
   get type() {
     return this.props.value ?
-      this.props.value.type : this.props.property.type
+      this.props.value.type : this.props.property.type || 'text'
   }
 
   render() {
@@ -55,7 +55,7 @@ class Cell extends Component {
     icon: PropTypes.string,
     disabled: PropTypes.bool,
     property: PropTypes.shape({
-      name: PropTypes.string,
+      uri: PropTypes.string.isRequired,
       type: PropTypes.string,
     }),
     value: PropTypes.object,

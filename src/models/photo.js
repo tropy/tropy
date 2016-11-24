@@ -1,6 +1,7 @@
 'use strict'
 
 const { TEMPLATE } = require('../constants/photo')
+const { DC } = require('../constants/properties')
 const { all } = require('bluebird')
 const metadata = require('./metadata')
 
@@ -27,8 +28,8 @@ module.exports = {
     await metadata.update(db, {
       id,
       data: {
-        title: { value: image.title, type: 'text' },
-        date: { value: image.date, type: 'datetime' }
+        [DC.TITLE]: { value: image.title, type: 'text' },
+        [DC.DATE]: { value: image.date, type: 'datetime' }
       }
     })
 
