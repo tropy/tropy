@@ -6,6 +6,7 @@ const { connect } = require('react-redux')
 const { Editable } = require('../editable')
 const { noop } = require('../../common/util')
 const { join } = require('path')
+const { DC } = require('../../constants/properties')
 const act = require('../../actions')
 const cn = require('classnames')
 
@@ -65,7 +66,7 @@ class ListItem extends Component {
   }
 
   static defaultProps = {
-    title: 'title'
+    title: DC.TITLE
   }
 }
 
@@ -90,7 +91,7 @@ module.exports = {
         dispatch(act.metadata.save({
           id: photo.id,
           data: {
-            [title || 'title']: { value, type: 'text' }
+            [title || DC.TITLE]: { value, type: 'text' }
           }
         }))
         dispatch(act.ui.edit.cancel())
