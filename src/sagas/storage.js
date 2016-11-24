@@ -2,18 +2,18 @@
 
 const { put, select } = require('redux-saga/effects')
 const { Storage } = require('../storage')
-const { restore } = require('../actions/nav')
+const actions = require('../actions')
 
 module.exports = {
 
-  *restore(id) {
-    const nav = Storage.load('nav', id)
-    yield put(restore(nav))
+  *restore(name, ...args) {
+    const data = Storage.load(name, ...args)
+    yield put(actions[name].restore(data))
   },
 
-  *persist(id) {
-    const { nav } = yield select()
-    Storage.save('nav', nav, id)
+  *persist(name, ...args) {
+    const data = yield select(state => state[name])
+    Storage.save(name, data, ...args)
   }
 
 }

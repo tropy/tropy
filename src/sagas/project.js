@@ -13,7 +13,7 @@ const { history } = require('./history')
 const { search, load } = require('./search')
 const mod = require('../models')
 const act = require('../actions')
-const nav = require('./nav')
+const storage = require('./storage')
 
 const TOO_LONG = ARGS.dev ? 500 : 1500
 
@@ -37,7 +37,7 @@ module.exports = {
       yield every(action => has('search', action), search, db)
       yield every(action => has('load', action), load)
 
-      yield call(nav.restore, id)
+      yield call(storage.restore, 'nav', id)
 
       yield fork(function* () {
         yield [
@@ -61,7 +61,7 @@ module.exports = {
       debug(error.stack)
 
     } finally {
-      if (id) yield call(nav.persist, id)
+      if (id) yield call(storage.persist, 'nav', id)
       if (db) {
         yield [
           call(mod.list.prune, db),
@@ -108,6 +108,7 @@ module.exports = {
     try {
       yield fork(ipc)
       yield fork(history)
+      yield call(storage.restore, 'properties')
 
       while (true) {
         const { payload } = yield take(OPEN)
@@ -122,6 +123,9 @@ module.exports = {
     } catch (error) {
       warn(`unexpected error in main: ${error.message}`)
       debug(error.stack)
+
+    } finally {
+      yield call(storage.persist, 'properties')
     }
   }
 }
