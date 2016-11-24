@@ -78,7 +78,7 @@ SELECT v.value_id AS dangling_value
 -- Soft-delete item
 --INSERT INTO trash (id) VALUES (2);
 -- Deleted items
---SELECT id AS id, deleted_at FROM trash JOIN items USING (id);
+--SELECT id AS id, deleted FROM trash JOIN items USING (id);
 
 -- All items sorted by title
 WITH
@@ -100,7 +100,7 @@ SELECT id, property AS property, value, type_name
     JOIN metadata USING (id)
     JOIN metadata_values USING (value_id)
   WHERE id in (1, 2, 3, 4)
-  ORDER BY id, created_at ASC;
+  ORDER BY id, created ASC;
 
 -- Query by first/last name
 -- Query using time functions

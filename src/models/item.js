@@ -24,7 +24,7 @@ module.exports = {
             LEFT OUTER JOIN trash USING (id)
           WHERE
             ${tags.length ? `tag_id IN (${tags.join(',')}) AND` : ''}
-            deleted_at ${trash ? 'NOT' : 'IS'} NULL
+            deleted ${trash ? 'NOT' : 'IS'} NULL
           ORDER BY sort.value ASC, id ASC`, {
 
             $sort: sort
@@ -39,8 +39,7 @@ module.exports = {
 
     if (ids.length) {
       await db.each(`
-        SELECT s.id, created_at AS created,
-            updated_at AS modified, deleted_at AS deleted,
+        SELECT s.id, created, modified, deleted,
             group_concat(tag_id) AS tags,
             group_concat(photos.id) AS photos
           FROM subjects s
@@ -94,7 +93,7 @@ module.exports = {
 
   async prune(db, since = '-1 month') {
     const condition = since ?
-      ` WHERE deleted_at < datetime("now", "${since}"))` : ''
+      ` WHERE deleted < datetime("now", "${since}"))` : ''
 
     return db.run(`
       DELETE FROM subjects

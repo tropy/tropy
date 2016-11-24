@@ -40,9 +40,9 @@ module.exports = {
 
     if (ids.length) {
       await db.each(`
-        SELECT s.id, item_id AS item, width, height, path,
-            protocol, mimetype, checksum, orientation, exif,
-            created_at AS created, updated_at AS modified,
+        SELECT s.id, item_id AS item, created, modified,
+            width, height, path, protocol, mimetype,
+            checksum, orientation, exif,
             group_concat(selections.id) AS selections
           FROM subjects s
             JOIN images USING (id)

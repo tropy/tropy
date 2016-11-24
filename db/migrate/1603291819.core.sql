@@ -4,8 +4,8 @@ CREATE TABLE project (
   project_id  TEXT     NOT NULL PRIMARY KEY,
   name        TEXT     NOT NULL,
   settings             NOT NULL DEFAULT '{}',
-  created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified    NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   opened_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CHECK (project_id != ''),
@@ -20,8 +20,8 @@ CREATE TABLE project (
 CREATE TABLE subjects (
   id           INTEGER  PRIMARY KEY,
   template     TEXT     NOT NULL DEFAULT 'https://schema.tropy.org/v1/templates/core',
-  created_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
+  created      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -66,7 +66,7 @@ CREATE TABLE metadata (
   value_id    INTEGER  NOT NULL REFERENCES metadata_values,
   language    TEXT,
   --position    INTEGER  NOT NULL DEFAULT 0,
-  created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CHECK (
     language IS NULL OR language != '' AND language = trim(lower(language))
@@ -95,8 +95,8 @@ CREATE TABLE notes (
   position     INTEGER  NOT NULL DEFAULT 0,
   text         TEXT     NOT NULL,
   language     TEXT     NOT NULL DEFAULT 'en',
-  created_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at   NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CHECK (
     language != '' AND language = trim(lower(language))
@@ -111,8 +111,8 @@ CREATE TABLE lists (
   name            TEXT     NOT NULL COLLATE NOCASE,
   parent_list_id  INTEGER  DEFAULT 0 REFERENCES lists ON DELETE CASCADE,
   position        INTEGER,
-  created_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created         NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified        NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CHECK (list_id != parent_list_id),
   CHECK (name != ''),
@@ -137,8 +137,8 @@ CREATE TABLE tags (
   name        TEXT     NOT NULL COLLATE NOCASE,
   color,
   visible     BOOLEAN  NOT NULL DEFAULT 1,
-  created_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified    NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CHECK (name != ''),
   UNIQUE (visible, name)
@@ -155,5 +155,5 @@ CREATE TABLE taggings (
 
 CREATE TABLE trash (
   id          INTEGER  PRIMARY KEY REFERENCES items ON DELETE CASCADE,
-  deleted_at  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
+  deleted     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) WITHOUT ROWID;
