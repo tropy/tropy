@@ -10,6 +10,7 @@ module.exports = {
   ...require('./nav'),
   ...require('./photos'),
   ...require('./project'),
+  ...require('./properties'),
   ...require('./tags'),
   ...require('./ui'),
   ...require('./vocab')

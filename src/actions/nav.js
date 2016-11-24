@@ -9,7 +9,8 @@ module.exports = {
     return {
       type: RESTORE,
       payload,
-      meta: { ...meta } }
+      meta: { ...meta }
+    }
   },
 
   update(payload, meta) {

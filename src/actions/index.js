@@ -10,6 +10,7 @@ module.exports = {
   nav: require('./nav'),
   photo: require('./photo'),
   project: require('./project'),
+  properties: require('./properties'),
   tag: require('./tag'),
   ui: require('./ui')
 }

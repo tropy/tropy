@@ -8,6 +8,7 @@ module.exports = {
   NAV: require('./nav'),
   PHOTO: require('./photo'),
   PROJECT: require('./project'),
+  PROPERTIES: require('./properties'),
   TAG: require('./tag'),
   UI: require('./ui'),
 }
