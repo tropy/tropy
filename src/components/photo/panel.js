@@ -14,14 +14,7 @@ const act = require('../../actions')
 
 
 const PhotoPanelHeader = ({ hasCreateButton, onCreate }) => {
-  const buttons = [
-    <Slider
-      key="zoom-level"
-      value={0}
-      max={8}
-      minIcon={<IconList/>}
-      maxIcon={<IconGrid/>}/>
-  ]
+  const buttons = []
 
   if (hasCreateButton) {
     buttons.push(
@@ -30,6 +23,15 @@ const PhotoPanelHeader = ({ hasCreateButton, onCreate }) => {
       </button>
     )
   }
+
+  buttons.push(
+    <Slider
+      key="zoom"
+      value={0}
+      max={3}
+      minIcon={<IconList/>}
+      maxIcon={<IconGrid/>}/>
+  )
 
   return (
     <Toolbar>
