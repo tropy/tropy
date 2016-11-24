@@ -19,24 +19,6 @@ const {
   IconMetadata, IconNote, IconTag, IconPlus
 } = require('../icons')
 
-const ITEM_TEMPLATE = [
-  { name: 'type', type: 'text' },
-  { name: 'title', type: 'text' },
-  { name: 'description', type: 'text' },
-  { name: 'date', type: 'date' },
-  { name: 'creator', type: 'name' },
-  { name: 'publisher', type: 'text' },
-  { name: 'source', type: 'text' },
-  { name: 'rights', type: 'url' },
-  { name: 'box', type: 'number' },
-  { name: 'folder', type: 'text' }
-]
-
-const PHOTO_TEMPLATE = [
-  { name: 'title', type: 'text' },
-  { name: 'description', type: 'text' },
-  { name: 'date', type: 'date' }
-]
 
 class Item extends Component {
   constructor(props) {
@@ -117,12 +99,12 @@ class Item extends Component {
           <Fields
             id={photo}
             disabled={this.disabled}
-            template={PHOTO_TEMPLATE}/>}
+            template="photo"/>}
         {item &&
           <Fields
             id={item.id}
             disabled={this.disabled}
-            template={ITEM_TEMPLATE}/>}
+            template="core"/>}
       </div>
     )
   }

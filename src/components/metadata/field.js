@@ -12,12 +12,16 @@ class Field extends Component {
     super(props)
   }
 
-  get name() {
+  get label() {
     return this.props.property.label
   }
 
+  get name() {
+    return this.props.property.uri
+  }
+
   get value() {
-    return this.props.data[this.props.property.uri]
+    return this.props.data[this.name]
   }
 
   get type() {
@@ -37,11 +41,11 @@ class Field extends Component {
 
   render() {
     const { editing, disabled, onCancel } = this.props
-    const { value, type, name, activate, changed } = this
+    const { value, type, label, activate, changed } = this
 
     return (
       <li className={cn({ 'metadata-field': true, [type]: true })}>
-        <label>{name}</label>
+        <label>{label}</label>
         <div className="value">
           <Editable
             value={value ? value.value : null}
