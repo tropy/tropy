@@ -16,6 +16,18 @@ module.exports = {
     }
   },
 
+  import(payload, meta) {
+    return {
+      type: ITEM.IMPORT,
+      payload,
+      meta: {
+        async: true,
+        record: true,
+        ...meta
+      }
+    }
+  },
+
   delete(payload, meta) {
     return {
       type: ITEM.DELETE,

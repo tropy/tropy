@@ -28,6 +28,11 @@ linux:
           - type: 'separator'
           - label: 'Clear List'
             command: 'app:clear-recent-projects'
+      - type: 'separator'
+      - &import
+        label: 'Import Photos…'
+        command: 'app:import-photos'
+      - type: 'separator'
       - label: 'Close'
         accelerator: 'CmdOrCtrl+W'
         role: 'close'
@@ -138,6 +143,8 @@ darwin:
       - type: 'separator'
       - *open
       - *recent
+      - type: 'separator'
+      - *import
       - type: 'separator'
       - label: 'Close'
         accelerator: 'Command+W'

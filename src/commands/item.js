@@ -1,11 +1,13 @@
 'use strict'
 
+const { warn, verbose } = require('../common/log')
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-const { prompt } = require('../dialog')
+const { prompt, openImages  } = require('../dialog')
+const { Image } = require('../image')
 const intl = require('../selectors/intl')
 const act = require('../actions')
-const mod = require('../models/item')
+const mod = require('../models')
 
 const { ITEM } = require('../constants')
 
@@ -15,13 +17,63 @@ class Create extends Command {
   *exec() {
     const { db } = this.options
 
-    const item = yield call([db, db.transaction], tx => mod.create(tx))
+    const item = yield call([db, db.transaction], tx => mod.item.create(tx))
     yield put(act.item.insert(item))
 
     this.undo = act.item.delete([item.id])
     this.redo = act.item.restore([item.id])
+  }
+}
 
-    return [item]
+class Import extends Command {
+  static get action() { return ITEM.IMPORT }
+
+  *exec() {
+    const { db, cache } = this.options
+
+    const items = []
+    const metadata = []
+
+    const files = yield call(openImages)
+    this.init = performance.now()
+
+    // TODO Improve handling of multiple photos!
+    // Progress reporting, cancel import etc.
+    for (let file of files) {
+      let item
+      let photo
+      let image = yield call(Image.read, file)
+
+      yield call([db, db.transaction], async tx => {
+        item = await mod.item.create(tx)
+        photo = await mod.photo.create(tx, { item: item.id, image })
+
+        item.photos.push(photo.id)
+      })
+
+      yield put(act.item.insert(item))
+      yield put(act.photo.insert(photo))
+
+      items.push(item.id)
+      metadata.push(item.id, photo.id)
+
+      try {
+        const thumb = yield call([image, image.resize], 48)
+        yield call([cache, cache.save],
+          `photo-${photo.id}_48.png`, thumb.toPNG())
+
+      } catch (error) {
+        warn(`Failed to create thumbnail: ${error.message}`)
+        verbose(error.stack)
+      }
+    }
+
+    if (items.length) {
+      yield put(act.metadata.load(metadata))
+
+      this.undo = act.item.delete(items)
+      this.redo = act.item.restore(items)
+    }
   }
 }
 
@@ -32,7 +84,7 @@ class Delete extends Command {
     const { db } = this.options
     const ids = this.action.payload
 
-    yield call(mod.delete, db, ids)
+    yield call(mod.item.delete, db, ids)
     yield put(act.item.bulk.update([ids, { deleted: true }], { search: true }))
 
     this.undo = act.item.restore(ids)
@@ -57,11 +109,11 @@ class Destroy extends Command {
 
     try {
       if (ids) {
-        yield call(mod.destroy, db, ids)
+        yield call(mod.item.destroy, db, ids)
         yield put(act.item.remove(ids))
 
       } else {
-        yield call(mod.prune, db, false)
+        yield call(mod.item.prune, db, false)
         // Remove deleted items
       }
 
@@ -78,7 +130,7 @@ class Load extends Command {
     const { db } = this.options
     const ids = this.action.payload
 
-    const items = yield call(mod.load, db, ids)
+    const items = yield call(mod.item.load, db, ids)
 
     return items
   }
@@ -92,7 +144,7 @@ class Restore extends Command {
     const { db } = this.options
     const ids = this.action.payload
 
-    yield call(mod.restore, db, ids)
+    yield call(mod.item.restore, db, ids)
     yield put(act.item.bulk.update([ids, { deleted: false }], { search: true }))
 
     this.undo = act.item.delete(ids)
@@ -110,7 +162,7 @@ class Save extends Command {
     this.original = { id, property, value: cur[property] }
 
     yield put(act.item.update(id, { property, value }))
-    yield call(mod.update, db, { id, property, value })
+    yield call(mod.item.update, db, { id, property, value })
 
     this.undo = act.item.save(this.original)
     this.redo = this.action
@@ -134,12 +186,12 @@ class ToggleTags extends Command {
     }
 
     if (add.length) {
-      yield call(mod.tags.add, db, add.map(tag => ({ id, tag })))
+      yield call(mod.item.tags.add, db, add.map(tag => ({ id, tag })))
       yield put(act.item.tags.add({ id, tags: add }))
     }
 
     if (remove.length) {
-      yield call(mod.tags.remove, db, { id, tags: remove })
+      yield call(mod.item.tags.remove, db, { id, tags: remove })
       yield put(act.item.tags.remove({ id, tags: remove }))
     }
 
@@ -157,7 +209,7 @@ class ClearTags extends Command {
 
     const tags = yield select(({ items }) => items[id].tags)
 
-    yield call(mod.tags.clear, db, id)
+    yield call(mod.item.tags.clear, db, id)
     yield put(act.item.tags.remove({ id, tags }))
 
     this.undo = act.item.tags.toggle({ id, tags })
@@ -168,6 +220,7 @@ module.exports = {
   Create,
   Delete,
   Destroy,
+  Import,
   Load,
   Restore,
   Save,

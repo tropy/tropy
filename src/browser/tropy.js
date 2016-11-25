@@ -166,7 +166,10 @@ class Tropy extends EventEmitter {
 
   listen() {
     this
-      .on('app:create-project', () => this.create())
+      .on('app:create-project', () =>
+        this.create())
+      .on('app:import-photos', () =>
+        this.dispatch(act.item.import()))
       .on('app:rename-project', () =>
         this.dispatch(act.ui.edit.start({ project: { name: true } })))
       .on('app:show-in-folder', (_, { target }) =>

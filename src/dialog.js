@@ -78,7 +78,7 @@ function file(options) {
   return open('file', options)
 }
 
-function images(options) {
+function openImages(options) {
   return open('file', {
     filters: [
       { name: 'Images', extensions: ['jpg', 'jpeg'] }
@@ -95,7 +95,7 @@ module.exports = {
   notify,
   fail,
   file,
-  images,
+  openImages,
   save,
   prompt
 }
