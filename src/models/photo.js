@@ -67,7 +67,8 @@ module.exports = {
 
   async delete(db, ids) {
     return db.run(`
-      INSERT INTO trash (id) VALUES (${ids.join(',')})`
+      INSERT INTO trash (id)
+        VALUES ${ids.map(id => `(${id})`).join(',')}`
     )
   },
 
