@@ -5,13 +5,14 @@ const { PropTypes } = React
 const cn = require('classnames')
 
 
-const ListHead = ({ columns }) => (
+const TableHead = ({ columns }) => (
   <table className="list-head">
     <thead>
       <tr>
-        {columns.map(({ width, property, order }, idx) => (
-          <th key={idx}
-            className={cn(['metadata-head', property.type || 'text', order])}
+        {columns.map(({ width, property, order }) => (
+          <th
+            key={property.uri}
+            className={cn(['metadata-head', property.type, order])}
             style={{ width }}>
             {property.label}
           </th>
@@ -21,10 +22,10 @@ const ListHead = ({ columns }) => (
   </table>
 )
 
-ListHead.propTypes = {
+TableHead.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object)
 }
 
 module.exports = {
-  ListHead
+  TableHead
 }

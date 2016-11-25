@@ -3,14 +3,14 @@
 const React = require('react')
 const { Component, PropTypes } = React
 const { connect } = require('react-redux')
-const { Cell } = require('./cell')
+const { TableCell } = require('./table-cell')
 const { get } = require('dot-prop')
 const { meta } = require('../../common/os')
 const { DC } = require('../../constants/properties')
 const act = require('../../actions')
 const cn = require('classnames')
 
-class ListItem extends Component {
+class TableRow extends Component {
 
   constructor(props) {
     super(props)
@@ -38,7 +38,7 @@ class ListItem extends Component {
         onClick={this.select}>
         {
           columns.map(({ property, width }) => (
-            <Cell {...this.props}
+            <TableCell {...this.props}
               key={property.uri}
               isActive={property.uri === active}
               isDisabled={!!item.deleted}
@@ -75,7 +75,7 @@ class ListItem extends Component {
 
 
 module.exports = {
-  ListItem: connect(
+  TableRow: connect(
     (state, { item }) => ({
       data: state.metadata[item.id] || {},
       active: get(state, `ui.edit.column.${item.id}`)
@@ -112,5 +112,5 @@ module.exports = {
         )
       }
     })
-  )(ListItem)
+  )(TableRow)
 }

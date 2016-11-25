@@ -3,12 +3,12 @@
 const React = require('react')
 const { shallow } = require('enzyme')
 
-describe('List', () => {
-  const { List: { WrappedComponent: List } } =
-    __require('components/items/list')
+describe('Table', () => {
+  const { Table: { WrappedComponent: Table } } =
+    __require('components/items/table')
 
   it('has class item-list-view', () => {
-    expect(shallow(<List items={[]} columns={[]}/>))
+    expect(shallow(<Table items={[]} columns={[]}/>))
       .to.have.className('item-list-view')
   })
 })

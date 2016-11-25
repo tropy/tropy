@@ -1,10 +1,10 @@
 'use strict'
 
 module.exports = {
-  ...require('./cell'),
   ...require('./item'),
   ...require('./items'),
-  ...require('./list'),
-  ...require('./list-item'),
-  ...require('./list-head')
+  ...require('./table'),
+  ...require('./table-cell'),
+  ...require('./table-head'),
+  ...require('./table-row')
 }

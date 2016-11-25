@@ -3,21 +3,21 @@
 const React = require('react')
 const { PropTypes } = React
 const { connect } = require('react-redux')
-const { ListItem } = require('./list-item')
-const { ListHead } = require('./list-head')
+const { TableRow } = require('./table-row')
+const { TableHead } = require('./table-head')
 const { getColumns } = require('../../selectors/ui')
 const { getCachePrefix } = require('../../selectors/project')
 const { select } = require('../../actions/item')
 
-const List = ({ items, selection, ...props }) => (
+const Table = ({ items, selection, ...props }) => (
   <div className="item-list-view">
-    <ListHead columns={props.columns}/>
+    <TableHead columns={props.columns}/>
 
     <div className="list-body">
       <table className="item-list">
         <tbody>
           {items.map((item) => (
-            <ListItem {...props}
+            <TableRow {...props}
               key={item.id}
               item={item}
               isSelected={selection.includes(item.id)}/>
@@ -28,7 +28,7 @@ const List = ({ items, selection, ...props }) => (
   </div>
 )
 
-List.propTypes = {
+Table.propTypes = {
   selection: PropTypes.arrayOf(PropTypes.number),
   handleSelection: PropTypes.func,
   columns: PropTypes.arrayOf(PropTypes.object),
@@ -38,7 +38,7 @@ List.propTypes = {
 
 
 module.exports = {
-  List: connect(
+  Table: connect(
     (state) => ({
       selection: state.nav.items,
       columns: getColumns(state),
@@ -51,5 +51,5 @@ module.exports = {
       }
     })
 
-  )(List)
+  )(Table)
 }

@@ -8,7 +8,7 @@ const cn = require('classnames')
 
 const ICON_SIZE = 24
 
-class Cell extends Component {
+class TableCell extends Component {
   constructor(props) {
     super(props)
   }
@@ -54,7 +54,7 @@ class Cell extends Component {
 
   renderIcon() {
     if (this.props.hasIcon) {
-      return <CellIcon src={this.icon} size={ICON_SIZE}/>
+      return <TableCellIcon src={this.icon} size={ICON_SIZE}/>
     }
   }
 
@@ -109,19 +109,19 @@ class Cell extends Component {
 }
 
 
-const CellIcon = ({ src, size }) => {
+const TableCellIcon = ({ src, size }) => {
   return (
     <img srcSet={`${encodeURI(src)} 2x`} width={size} height={size}/>
   )
 }
 
-CellIcon.propTypes = {
+TableCellIcon.propTypes = {
   src: PropTypes.string.isRequired,
   size: PropTypes.number.isRequired
 }
 
 
 module.exports = {
-  Cell,
-  CellIcon
+  TableCell,
+  TableCellIcon
 }
