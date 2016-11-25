@@ -54,7 +54,8 @@ module.exports = {
           items[item.id] = {
             ...item,
             photos: num(item.photos),
-            tags: num(item.tags)
+            tags: num(item.tags),
+            deleted: !!item.deleted
           }
         }
       )
@@ -72,23 +73,23 @@ module.exports = {
     return (await module.exports.load(db, [id]))[id]
   },
 
-  async delete(db, id) {
-    return db.run(
-      'INSERT INTO trash (id) VALUES (?)', id
+  async delete(db, ids) {
+    return db.run(`
+      INSERT INTO trash (id)
+        VALUES ${ids.map(id => `(${id})`).join(',')}`
     )
   },
 
-  async destroy(db, id) {
+  async restore(db, ids) {
     return db.run(
-      'DElETE FROM subjects WHERE id = ?', id
+      `DELETE FROM trash WHERE id IN (${ids.join(',')})`
     )
   },
 
-  async restore(db, id) {
-    await db.run(
-      'DELETE FROM trash WHERE id = ?', id
+  async destroy(db, ids) {
+    return db.run(
+      `DELETE FROM subjects WHERE id IN (${ids.join(',')})`
     )
-    return { id }
   },
 
   async prune(db, since = '-1 month') {

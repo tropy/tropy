@@ -2,6 +2,7 @@
 
 const { omit } = require('../common/util')
 const { ITEM, PROJECT } = require('../constants')
+const { into, map } = require('transducers.js')
 
 const init = {}
 
@@ -33,6 +34,16 @@ module.exports = {
             ...payload
           }
         }
+
+      case ITEM.BULK.UPDATE: {
+        const [ids, data] = payload
+
+        return into(
+          { ...state },
+          map(id => ({ [id]: { ...state[id], ...data } })),
+          ids
+        )
+      }
 
       case ITEM.TAG.ADD:
         return nested.add('tags', state, payload)

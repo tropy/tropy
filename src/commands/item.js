@@ -18,10 +18,10 @@ class Create extends Command {
     const item = yield call([db, db.transaction], tx => mod.create(tx))
     yield put(act.item.insert(item))
 
-    this.undo = act.item.delete(item.id)
-    this.redo = act.item.restore(item.id)
+    this.undo = act.item.delete([item.id])
+    this.redo = act.item.restore([item.id])
 
-    return item
+    return [item]
   }
 }
 
@@ -30,12 +30,14 @@ class Delete extends Command {
 
   *exec() {
     const { db } = this.options
-    const id = this.action.payload
+    const ids = this.action.payload
 
-    yield call(mod.delete, db, id)
-    yield put(act.item.update({ id, deleted: true }, { search: true }))
+    yield call(mod.delete, db, ids)
+    yield put(act.item.bulk.update([ids, { deleted: true }], { search: true }))
 
-    this.undo = act.item.restore(id)
+    this.undo = act.item.restore(ids)
+
+    return ids
   }
 }
 
@@ -44,7 +46,7 @@ class Destroy extends Command {
 
   *exec() {
     const { db } = this.options
-    const id = this.action.payload
+    const ids = this.action.payload
 
     const confirmed = yield call(prompt,
       yield select(intl.message, { id: 'prompt.item.destroy' })
@@ -53,16 +55,19 @@ class Destroy extends Command {
     this.init = performance.now()
     if (!confirmed) return
 
-    if (id) {
-      yield call(mod.destroy, db, id)
-      yield put(act.item.remove([id]))
+    try {
+      if (ids) {
+        yield call(mod.destroy, db, ids)
+        yield put(act.item.remove(ids))
 
-    } else {
-      yield call(mod.prune, db, false)
-      // Remove deleted items
+      } else {
+        yield call(mod.prune, db, false)
+        // Remove deleted items
+      }
+
+    } finally {
+      yield put(act.history.drop(null, { search: true }))
     }
-
-    yield put(act.history.drop(null, { search: true }))
   }
 }
 
@@ -85,12 +90,12 @@ class Restore extends Command {
 
   *exec() {
     const { db } = this.options
-    const id = this.action.payload
+    const ids = this.action.payload
 
-    yield call([db, db.transaction], tx => mod.restore(tx, id))
-    yield put(act.item.update({ id, deleted: false }, { search: true }))
+    yield call(mod.restore, db, ids)
+    yield put(act.item.bulk.update([ids, { deleted: false }], { search: true }))
 
-    this.undo = act.item.delete(id)
+    this.undo = act.item.delete(ids)
   }
 }
 

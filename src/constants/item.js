@@ -12,6 +12,10 @@ module.exports = {
   SELECT: 'item.select',
   UPDATE: 'item.update',
 
+  BULK: {
+    UPDATE: 'item.bulk.update'
+  },
+
   TAG: {
     ADD: 'item.tag.add',
     REMOVE: 'item.tag.remove',

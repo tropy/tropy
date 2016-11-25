@@ -1,6 +1,7 @@
 'use strict'
 
 const { ITEM } = require('../constants')
+const { array } = require('../common/util')
 
 module.exports = {
   create(payload, meta) {
@@ -18,7 +19,7 @@ module.exports = {
   delete(payload, meta) {
     return {
       type: ITEM.DELETE,
-      payload,
+      payload: array(payload),
       meta: { async: true, record: true, ...meta }
     }
   },
@@ -26,7 +27,7 @@ module.exports = {
   destroy(payload, meta) {
     return {
       type: ITEM.DESTROY,
-      payload,
+      payload: array(payload),
       meta: { async: true, prompt: true, ...meta }
     }
   },
@@ -58,7 +59,7 @@ module.exports = {
   restore(payload, meta) {
     return {
       type: ITEM.RESTORE,
-      payload,
+      payload: array(payload),
       meta: { async: true, record: true, ...meta }
     }
   },
@@ -84,6 +85,16 @@ module.exports = {
       type: ITEM.SELECT,
       payload,
       meta: { load: true, ...meta }
+    }
+  },
+
+  bulk: {
+    update(payload, meta) {
+      return {
+        type: ITEM.BULK.UPDATE,
+        payload,
+        meta: meta
+      }
     }
   },
 
