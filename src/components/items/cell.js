@@ -40,13 +40,13 @@ class Cell extends Component {
   }
 
   get icon() {
-    const { item, cache } = this.props
+    const { item: { cover, photos }, cache } = this.props
 
     switch (true) {
-      case !!item.cover:
-        return imageURL(cache, item.cover, ICON_SIZE * 2)
-      case !!item.photos.length:
-        return imageURL(cache, item.photos[0], ICON_SIZE * 2)
+      case !!(cover):
+        return imageURL(cache, cover, ICON_SIZE * 2)
+      case !!(photos && photos.length):
+        return imageURL(cache, photos[0], ICON_SIZE * 2)
       default:
         return 'ITEM_ICON'
     }
@@ -92,7 +92,12 @@ class Cell extends Component {
       type: PropTypes.string,
     }),
 
-    item: PropTypes.object.isRequired,
+    item: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      cover: PropTypes.number,
+      photos: PropTypes.array
+    }).isRequired,
+
     data: PropTypes.object.isRequired,
     cache: PropTypes.string.isRequired,
     width: PropTypes.string.isRequired,
