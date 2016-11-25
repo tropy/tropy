@@ -5,8 +5,9 @@ const { PropTypes, Component } = React
 const { connect } = require('react-redux')
 const { Editable } = require('../editable')
 const { noop } = require('../../common/util')
-const { join } = require('path')
+const { imageURL } = require('../../common/cache')
 const { DC } = require('../../constants/properties')
+const { getCachePrefix } = require('../../selectors/project')
 const act = require('../../actions')
 const cn = require('classnames')
 
@@ -28,7 +29,7 @@ class ListItem extends Component {
       onContextMenu, onRename, onSelect, ...editable
     } = this.props
 
-    const src = join(cache, `photo-${photo.id}_48.png`)
+    const src = imageURL(cache, photo.id, 48)
 
     return (
       <li
@@ -78,7 +79,7 @@ module.exports = {
       selected: state.nav.photo === photo.id,
       editing: state.ui.edit.photo === photo.id,
       context: state.ui.context.photo === photo.id,
-      cache: join(ARGS.cache, state.project.id)
+      cache: getCachePrefix(state)
     }),
 
     (dispatch, { photo, selected, title }) => ({

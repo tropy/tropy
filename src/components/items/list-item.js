@@ -6,6 +6,7 @@ const { connect } = require('react-redux')
 const { Cell } = require('./cell')
 const { get } = require('dot-prop')
 const { meta } = require('../../common/os')
+const { DC } = require('../../constants/properties')
 const act = require('../../actions')
 const cn = require('classnames')
 
@@ -16,38 +17,34 @@ class ListItem extends Component {
   }
 
   select = (event) => {
-    return this.props.onSelect(
+    return this.props.handleSelection(
       this.props.item.id,
-      this.props.selected ?
+      this.props.isSelected ?
         (meta(event) ? 'remove' : 'clear') :
         (meta(event) ? 'merge' : 'replace')
     )
   }
 
+
   render() {
     const {
-      active, item, data, columns, selected,
-      onActivate, onCancel, onChange, onContextMenu
+      active, item, columns, isSelected, onContextMenu
     } = this.props
 
     return (
       <tr
-        className={cn({ item: true, active: selected })}
+        className={cn({ item: true, active: isSelected })}
         onContextMenu={onContextMenu}
         onClick={this.select}>
         {
-          columns.map(({ property, width }, idx) => (
-            <Cell
-              key={idx}
-              disabled={!!item.deleted}
+          columns.map(({ property, width }) => (
+            <Cell {...this.props}
+              key={property.uri}
+              isActive={property.uri === active}
+              isDisabled={!!item.deleted}
+              hasIcon={property.uri === DC.TITLE}
               property={property}
-              value={data[property.uri]}
-              icon={idx ? null : item.image}
-              width={width}
-              active={property.uri === active}
-              onActivate={onActivate}
-              onCancel={onCancel}
-              onChange={onChange}/>
+              width={width}/>
           ))
         }
       </tr>
@@ -55,15 +52,23 @@ class ListItem extends Component {
   }
 
   static propTypes = {
-    selected: PropTypes.bool,
+    item: PropTypes.shape({
+      id: PropTypes.number.isRequired
+    }).isRequired,
+
+    data: PropTypes.object,
     active: PropTypes.string,
-    onSelect: PropTypes.func,
+    cache: PropTypes.string.isRequired,
+
+    isSelected: PropTypes.bool,
+
+
+    handleSelection: PropTypes.func.isRequired,
+
     onActivate: PropTypes.func,
     onCancel: PropTypes.func,
     onChange: PropTypes.func,
     onContextMenu: PropTypes.func,
-    item: PropTypes.object,
-    data: PropTypes.object,
     columns: PropTypes.arrayOf(PropTypes.object)
   }
 }

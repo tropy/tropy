@@ -31,6 +31,16 @@ class Cache {
   }
 }
 
+function imageURL(cache, ...args) {
+  return join(cache, imagePath(...args))
+}
+
+function imagePath(image, size, ext) {
+  return `photo-${image}_${size}${ext || size < 128 ? '.png' : '.jpg'}`
+}
+
 module.exports = {
-  Cache
+  Cache,
+  imageURL,
+  imagePath
 }

@@ -3,13 +3,16 @@
 const React = require('react')
 const { Component, PropTypes } = React
 const { Editable } = require('../editable')
+const { imageURL } = require('../../common/cache')
 const cn = require('classnames')
 
+const ICON_SIZE = 24
 
 class Cell extends Component {
   constructor(props) {
     super(props)
   }
+
 
   activate = () => {
     this.props.onActivate(this.props.property.uri)
@@ -21,29 +24,56 @@ class Cell extends Component {
     })
   }
 
+
   get value() {
-    return this.props.value ? this.props.value.value : null
+    const { data, property } = this.props
+
+    return data[property.uri] ?
+      data[property.uri].value : null
   }
 
   get type() {
-    return this.props.value ?
-      this.props.value.type : this.props.property.type || 'text'
+    const { data, property } = this.props
+
+    return data[property.uri] ?
+      data[property.uri].type : (property.type || 'text')
+  }
+
+  get icon() {
+    const { item, cache } = this.props
+
+    switch (true) {
+      case !!item.cover:
+        return imageURL(cache, item.cover, ICON_SIZE * 2)
+      case !!item.photos.length:
+        return imageURL(cache, item.photos[0], ICON_SIZE * 2)
+      default:
+        return 'ITEM_ICON'
+    }
+  }
+
+  renderIcon() {
+    if (this.props.hasIcon) {
+      return <CellIcon src={this.icon} size={ICON_SIZE}/>
+    }
   }
 
   render() {
     const {
-      active, width, icon, disabled, onCancel
+      isActive, isDisabled, width, onCancel
     } = this.props
 
     return (
       <td
         className={cn({ metadata: true, [this.type]: true })}
         style={{ width }}>
-        <CellIcon icon={icon}/>
+
+        {this.renderIcon()}
+
         <Editable
           value={this.value}
-          editing={active}
-          disabled={disabled}
+          editing={isActive}
+          disabled={isDisabled}
           onActivate={this.activate}
           onCancel={onCancel}
           onChange={this.changed}/>
@@ -51,39 +81,38 @@ class Cell extends Component {
     )
   }
 
+
   static propTypes = {
-    icon: PropTypes.string,
-    disabled: PropTypes.bool,
+    isActive: PropTypes.bool,
+    isDisabled: PropTypes.bool,
+    hasIcon: PropTypes.bool,
+
     property: PropTypes.shape({
       uri: PropTypes.string.isRequired,
       type: PropTypes.string,
     }),
-    value: PropTypes.object,
-    width: PropTypes.string,
-    active: PropTypes.bool,
+
+    item: PropTypes.object.isRequired,
+    data: PropTypes.object.isRequired,
+    cache: PropTypes.string.isRequired,
+    width: PropTypes.string.isRequired,
+
     onActivate: PropTypes.func,
     onCancel: PropTypes.func,
     onChange: PropTypes.func
   }
 }
 
-const CellIcon = ({ icon, width, height }) => {
-  return (icon) ? (
-    <img
-      src={`${icon}-${width}.jpg`}
-      srcSet={`${icon}-${width}-2x.jpg 2x`}
-      width={width} height={height}/>
-  ) : null
+
+const CellIcon = ({ src, size }) => {
+  return (
+    <img srcSet={`${encodeURI(src)} 2x`} width={size} height={size}/>
+  )
 }
 
 CellIcon.propTypes = {
-  icon: PropTypes.string,
-  width: PropTypes.number,
-  height: PropTypes.number
-}
-
-CellIcon.defaultProps = {
-  width: 24, height: 24
+  src: PropTypes.string.isRequired,
+  size: PropTypes.number.isRequired
 }
 
 
