@@ -22,16 +22,17 @@ module.exports = {
       db.run(`
         INSERT INTO photos (id, item_id, path, checksum, mimetype, orientation)
           VALUES (?,?,?,?,?,?)`,
-        [id, item, path, checksum, mimetype, orientation])
+        [id, item, path, checksum, mimetype, orientation]),
+
+      metadata.update(db, {
+        id,
+        data: {
+          [DC.TITLE]: { value: image.title, type: 'text' },
+          [DC.DATE]: { value: image.date, type: 'datetime' }
+        }
+      })
     ])
 
-    await metadata.update(db, {
-      id,
-      data: {
-        [DC.TITLE]: { value: image.title, type: 'text' },
-        [DC.DATE]: { value: image.date, type: 'datetime' }
-      }
-    })
 
     return (await module.exports.load(db, [id]))[id]
   },
