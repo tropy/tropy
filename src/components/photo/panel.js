@@ -19,8 +19,8 @@ const PhotoPanelHeader = ({ hasCreateButton, onCreate }) => {
 
   if (hasCreateButton) {
     buttons.push(
-      <div className="tool-group">
-        <button key="create" className="btn btn-icon" onClick={onCreate}>
+      <div key="create" className="tool-group">
+        <button className="btn btn-icon" onClick={onCreate}>
           <IconPlus/>
         </button>
       </div>
@@ -28,9 +28,8 @@ const PhotoPanelHeader = ({ hasCreateButton, onCreate }) => {
   }
 
   buttons.push(
-    <div className="tool-group">
+    <div key="zoom" className="tool-group">
       <Slider
-        key="zoom"
         value={0}
         max={3}
         minIcon={<IconListSmall/>}
