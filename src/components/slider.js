@@ -111,11 +111,12 @@ class Slider extends Component {
     const { min, minIcon } = this.props
     const { value } = this.state
 
-    const active = value === min
-
     if (minIcon) {
       return (
-        <button className={cn({ active }, 'btn btn-icon')} onClick={this.min}>
+        <button
+          className="btn btn-icon"
+          disabled={value === min}
+          onClick={this.min}>
           {this.props.minIcon}
         </button>
       )
@@ -126,11 +127,12 @@ class Slider extends Component {
     const { max, maxIcon } = this.props
     const { value } = this.state
 
-    const active = value === max
-
     if (maxIcon) {
       return (
-        <button className={cn({ active }, 'btn btn-icon')} onClick={this.max}>
+        <button
+          className="btn btn-icon"
+          disabled={value === max}
+          onClick={this.max}>
           {this.props.maxIcon}
         </button>
       )
