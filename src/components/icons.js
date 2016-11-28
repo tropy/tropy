@@ -54,6 +54,17 @@ i('Grid', (
   </svg>
 ))
 
+i('GridSmall', (
+  <svg width="16" height="16">
+    <g className="line">
+      <path d="M6,3v3H3V3H6 M6,2H3C2.448,2,2,2.448,2,3v3c0,0.552,0.448,1,1,1h3c0.552,0,1-0.448,1-1V3C7,2.448,6.552,2,6,2L6,2z"/>
+      <path d="M13,3v3h-3V3H13 M13,2h-3C9.448,2,9,2.448,9,3v3c0,0.552,0.448,1,1,1h3c0.552,0,1-0.448,1-1V3C14,2.448,13.552,2,13,2L13,2z"/>
+      <path d="M13,10v3h-3v-3H13 M13,9h-3c-0.552,0-1,0.448-1,1v3c0,0.552,0.448,1,1,1h3c0.552,0,1-0.448,1-1v-3C14,9.448,13.552,9,13,9L13,9z"/>
+      <path d="M6,10v3H3v-3H6 M6,9H3c-0.552,0-1,0.448-1,1v3c0,0.552,0.448,1,1,1h3c0.552,0,1-0.448,1-1v-3C7,9.448,6.552,9,6,9L6,9z"/>
+    </g>
+  </svg>
+))
+
 i('List', (
   <svg width="16" height="16">
     <g className="line">
@@ -61,6 +72,17 @@ i('List', (
       <rect x="1" y="6" width="14" height="1"/>
       <rect x="1" y="9" width="14" height="1"/>
       <rect x="1" y="12" width="14" height="1"/>
+    </g>
+  </svg>
+))
+
+i('ListSmall', (
+  <svg width="16" height="16">
+    <g className="line">
+      <rect x="2" y="3" width="12" height="1"/>
+      <rect x="2" y="6" width="12" height="1"/>
+      <rect x="2" y="9" width="12" height="1"/>
+      <rect x="2" y="12" width="12" height="1"/>
     </g>
   </svg>
 ))

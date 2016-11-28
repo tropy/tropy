@@ -5,5 +5,9 @@
 .tool-group {
   & + .tool-group {
     margin-left: $space-xs;
+
+    .panel & {
+      margin-left: $space-min;
+    }
   }
 }

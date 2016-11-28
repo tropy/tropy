@@ -26,6 +26,12 @@
   position: relative;
   border-left: ($slider-handle-size / 2) solid $slider-scale-bg;
   border-right: ($slider-handle-size / 2) solid $slider-scale-bg;
+
+  .panel-header & {
+    width: $panel-slider-scale-width;
+    border-left-width: ($panel-slider-handle-size / 2);
+    border-right-width: ($panel-slider-handle-size / 2);
+  }
 }
 
 .slider-range {
@@ -36,6 +42,12 @@
   border-left: ($slider-handle-size / 2) solid $slider-range-bg;
   border-right: ($slider-handle-size / 2) solid $slider-range-bg;
   margin-left: -($slider-handle-size / 2);
+
+  .panel-header & {
+    border-left-width: ($panel-slider-handle-size / 2);
+    border-right-width: ($panel-slider-handle-size / 2);
+    margin-left: -($panel-slider-handle-size / 2);
+  }
 }
 
 .slider-handle {
@@ -49,4 +61,11 @@
   position: absolute;
   top: -($slider-handle-size / 2 + 1px - $slider-scale-height / 2);
   margin-left: -($slider-handle-size / 2 + 1px);
+
+  .panel-header & {
+    width: $panel-slider-handle-size;
+    height: $panel-slider-handle-size;
+    top: -($panel-slider-handle-size / 2 + 1px - $slider-scale-height / 2);
+    margin-left: -($panel-slider-handle-size / 2 + 1px);
+  }
 }

@@ -13,7 +13,6 @@
   padding: 0 $padding-base-horizontal;
 
   &[disabled] {
-    cursor: not-allowed;
     opacity: 0.64;
   }
 
@@ -63,9 +62,11 @@
   }
 
   &:active {
-    .icon {
-      svg {
-        fill: $icon-active-color;
+    &:not([disabled]) {
+      .icon {
+        svg {
+          fill: $icon-active-color;
+        }
       }
     }
   }

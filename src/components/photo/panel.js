@@ -4,7 +4,8 @@ const React = require('react')
 const { PropTypes } = React
 const { connect } = require('react-redux')
 const { Toolbar } = require('../toolbar')
-const { IconPhoto, IconPlus, IconList, IconGrid } = require('../icons')
+const { IconPhoto, IconPlus, IconListSmall, IconGridSmall } =
+  require('../icons')
 const { FormattedMessage } = require('react-intl')
 const { Panel } = require('../panel')
 const { Slider } = require('../slider')
@@ -18,19 +19,23 @@ const PhotoPanelHeader = ({ hasCreateButton, onCreate }) => {
 
   if (hasCreateButton) {
     buttons.push(
-      <button key="create" className="btn btn-icon" onClick={onCreate}>
-        <IconPlus/>
-      </button>
+      <div className="tool-group">
+        <button key="create" className="btn btn-icon" onClick={onCreate}>
+          <IconPlus/>
+        </button>
+      </div>
     )
   }
 
   buttons.push(
-    <Slider
-      key="zoom"
-      value={0}
-      max={3}
-      minIcon={<IconList/>}
-      maxIcon={<IconGrid/>}/>
+    <div className="tool-group">
+      <Slider
+        key="zoom"
+        value={0}
+        max={3}
+        minIcon={<IconListSmall/>}
+        maxIcon={<IconGridSmall/>}/>
+    </div>
   )
 
   return (

@@ -66,4 +66,10 @@ main,
       margin-left: $space-min;
     }
   }
+
+  .btn {
+    &[disabled] {
+      cursor: not-allowed;
+    }
+  }
 }
