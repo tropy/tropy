@@ -11,14 +11,14 @@ const {
 } = require('../icons')
 
 
-const PhotoCreateButton = ({ handlePhotoCreate }) => (
-  <button className="btn btn-icon" onClick={handlePhotoCreate}>
+const PhotoCreateButton = ({ onPhotoCreate }) => (
+  <button className="btn btn-icon" onClick={onPhotoCreate}>
     <IconPlus/>
   </button>
 )
 
 PhotoCreateButton.propTypes = {
-  handlePhotoCreate: PropTypes.func
+  onPhotoCreate: PropTypes.func
 }
 
 
@@ -55,7 +55,7 @@ const PhotoToolbar = ({ hasPhotoCreateButton, ...props }) => (
 
 PhotoToolbar.propTypes = {
   hasPhotoCreateButton: PropTypes.bool,
-  handlePhotoCreate: PropTypes.func
+  onPhotoCreate: PropTypes.func
 }
 
 module.exports = {

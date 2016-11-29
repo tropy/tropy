@@ -8,7 +8,8 @@ const { Toolbar } = require('../toolbar')
 const { Tab, Tabs } = require('../tabs')
 const { NoteList } = require('../notelist')
 const { PanelGroup, Panel } = require('../panel')
-const { PhotoPanel } = require('../photo/panel')
+const { Resizable } = require('../resizable')
+const { PhotoToolbar, PhotoList } = require('../photo')
 const { Viewer } = require('../viewer')
 const { Fields } = require('../metadata')
 const { getSelectedItem } = require('../../selectors/items')
@@ -30,22 +31,25 @@ class Item extends Component {
     return !this.props.item || !!this.props.item.deleted
   }
 
-  select = {
-    tab: {
-      metadata: () => {
-        if (this.props.panel.tab !== 'metadata') {
-          this.props.onSelectTab('metadata')
-        }
-      },
-      tags: () => {
-        if (this.props.panel.tab !== 'tags') {
-          this.props.onSelectTab('tags')
-        }
-      }
+  handleMetadataTabSelect = () => {
+    if (this.props.panel.tab !== 'metadata') {
+      this.props.handleTabSelect('metadata')
     }
   }
 
-  renderComboTabs() {
+  handleTagsTabSelect = () => {
+    if (this.props.panel.tab !== 'tags') {
+      this.props.handleTabSelect('tags')
+    }
+  }
+
+  handlePhotoCreate = (event) => {
+    event.stopPropagation()
+    this.props.handlePhotoCreate({ item: this.props.item.id })
+  }
+
+
+  renderItemTabs() {
     const { panel, selection } = this.props
 
     return (
@@ -53,14 +57,14 @@ class Item extends Component {
         <Tab
           active={panel.tab === 'metadata'}
           disabled={!selection.length}
-          onActivate={this.select.tab.metadata}>
+          onActivate={this.handleMetadataTabSelect}>
           <IconMetadata/>
           <FormattedMessage id="panel.metadata"/>
         </Tab>
         <Tab
           active={panel.tab === 'tags'}
           disabled={!selection.length}
-          onActivate={this.select.tab.tags}>
+          onActivate={this.handleTagsTabSelect}>
           <IconTag/>
           <FormattedMessage id="panel.tags"/>
         </Tab>
@@ -68,7 +72,7 @@ class Item extends Component {
     )
   }
 
-  renderComboPanel() {
+  renderItemPanel() {
     const { selection, panel } = this.props
 
     switch (selection.length) {
@@ -119,6 +123,25 @@ class Item extends Component {
     )
   }
 
+  renderPhotosToolbar() {
+    return (
+      <PhotoToolbar
+        hasPhotoCreateButton={!this.disabled}
+        onPhotoCreate={this.handlePhotoCreate}/>
+    )
+  }
+
+  renderPhotoPanel() {
+    const { item, photo } = this.props
+
+    return item && (
+      <PhotoList
+        ids={item.photos}
+        selected={photo}
+        isDisabled={this.disabled}/>
+    )
+  }
+
   renderNotesToolbar() {
     return (
       <Toolbar>
@@ -139,25 +162,24 @@ class Item extends Component {
   }
 
   render() {
-    const { item } = this.props
-
     return (
       <section id="item">
-        <div className="resizable" style={{ width: '320px' }}>
+        <Resizable width={320} orientation="left">
           <PanelGroup header={this.renderToolbar()}>
-            <Panel header={this.renderComboTabs()}>
-              {this.renderComboPanel()}
+            <Panel header={this.renderItemTabs()}>
+              {this.renderItemPanel()}
             </Panel>
 
-            <PhotoPanel item={item}/>
+            <Panel header={this.renderPhotosToolbar()}>
+              {this.renderPhotoPanel()}
+            </Panel>
 
             <Panel header={this.renderNotesToolbar()}>
               <NoteList/>
             </Panel>
-
           </PanelGroup>
-          <div className="resizable-handle-col resizable-handle-left"/>
-        </div>
+        </Resizable>
+
         <Viewer/>
       </section>
     )
@@ -177,7 +199,8 @@ class Item extends Component {
     photo: PropTypes.number,
     selection: PropTypes.arrayOf(PropTypes.number),
 
-    onSelectTab: PropTypes.func
+    handleTabSelect: PropTypes.func,
+    handlePhotoCreate: PropTypes.func
   }
 }
 
@@ -192,8 +215,12 @@ module.exports = {
     }),
 
     (dispatch) => ({
-      onSelectTab(tab) {
+      handleTabSelect(tab) {
         dispatch(act.nav.panel.tab.select(tab))
+      },
+
+      handlePhotoCreate(item) {
+        dispatch(act.photo.create({ item }))
       }
     })
   )(Item)

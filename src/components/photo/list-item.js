@@ -11,8 +11,9 @@ const { getCachePrefix } = require('../../selectors/project')
 const act = require('../../actions')
 const cn = require('classnames')
 
+// TODO move connect logic to list
 
-class ListItem extends Component {
+class PhotoListItem extends Component {
   constructor(props) {
     super(props)
   }
@@ -73,7 +74,7 @@ class ListItem extends Component {
 
 
 module.exports = {
-  ListItem: connect(
+  PhotoListItem: connect(
     (state, { photo }) => ({
       data: state.metadata[photo.id] || {},
       selected: state.nav.photo === photo.id,
@@ -116,5 +117,5 @@ module.exports = {
       }
     })
 
-  )(ListItem)
+  )(PhotoListItem)
 }

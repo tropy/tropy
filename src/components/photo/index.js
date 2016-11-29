@@ -1,6 +1,7 @@
 'use strict'
 
 module.exports = {
-  ...require('./toolbar'),
-  ...require('./list-item')
+  ...require('./list'),
+  ...require('./list-item'),
+  ...require('./toolbar')
 }
