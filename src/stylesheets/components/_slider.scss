@@ -5,20 +5,29 @@
 .slider {
   display: flex;
   align-items: center;
+  width: $slider-width;
+  height: $slider-handle-size + 2px;
+
+  .btn {
+    flex: 0 0 auto;
+  }
+
+  .panel-header & {
+    width: $panel-slider-width;
+    height: $panel-slider-handle-size + 2px;
+  }
 }
 
 .frameless {
   .draggable {
-    .slider-scale,
-    .slider-range,
-    .slider-handle {
+    .slider {
       -webkit-app-region: no-drag;
     }
   }
 }
 
 .slider-scale {
-  width: $slider-scale-width;
+  flex: 1 1 0;
   height: $slider-scale-height;
   background: $slider-scale-bg;
   border-radius: $slider-scale-height / 2;
@@ -28,7 +37,6 @@
   border-right: ($slider-handle-size / 2) solid $slider-scale-bg;
 
   .panel-header & {
-    width: $panel-slider-scale-width;
     border-left-width: ($panel-slider-handle-size / 2);
     border-right-width: ($panel-slider-handle-size / 2);
   }
