@@ -6,6 +6,8 @@ const { connect } = require('react-redux')
 const { PhotoListItem } = require('./list-item')
 const { getPhotos } = require('../../selectors/photos')
 
+const act = require('../../actions')
+
 
 const PhotoList = ({ photos, selected, ...props }) => (
   <ul className="photo-list">
@@ -25,13 +27,22 @@ PhotoList.propTypes = {
 
   photos: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.number.isRequired
-  }))
+  })),
+
+  showPhotoMenu: PropTypes.func
 }
 
 module.exports = {
   PhotoList: connect(
     (state, props) => ({
       photos: getPhotos(state, props)
+    }),
+
+    (dispatch) => ({
+      showPhotoMenu(event, { id, item, path }) {
+        event.stopPropagation()
+        dispatch(act.ui.context.show(event, 'photo', { id, item, path }))
+      }
     })
   )(PhotoList)
 }

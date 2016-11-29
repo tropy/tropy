@@ -146,7 +146,8 @@ class Item extends Component {
     return (
       <Toolbar>
         <div className="toolbar-left">
-          <IconNote/><h4>Notes</h4>
+          <IconNote/>
+          <h4><FormattedMessage id="panel.notes"/></h4>
         </div>
         <div className="toolbar-right">
           <button className="btn btn-icon"><IconPlus/></button>

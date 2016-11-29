@@ -24,10 +24,16 @@ class PhotoListItem extends Component {
     })
   }
 
+  popup = (event) => {
+    if (!this.props.isDisabled) {
+      this.props.showPhotoMenu(event, this.props.photo)
+    }
+  }
+
   render() {
     const {
       photo, cache, data, title, selected, context,
-      onContextMenu, onRename, onSelect, ...editable
+      showPhotoMenu, onRename, onSelect, ...editable
     } = this.props
 
     const src = imageURL(cache, photo.id, 48)
@@ -36,7 +42,7 @@ class PhotoListItem extends Component {
       <li
         className={cn({ photo: true, active: selected, context })}
         onClick={onSelect}
-        onContextMenu={this.props.disabled ? noop : onContextMenu}>
+        onContextMenu={this.popup}>
         <img srcSet={`${encodeURI(src)} 2x`}
           width={24} height={24} className="thumbnail"/>
         <div className="title">
@@ -56,10 +62,10 @@ class PhotoListItem extends Component {
     data: PropTypes.object,
     title: PropTypes.string,
     editing: PropTypes.bool,
-    disabled: PropTypes.bool,
+    isDisabled: PropTypes.bool,
     selected: PropTypes.bool,
     context: PropTypes.bool,
-    onContextMenu: PropTypes.func,
+    showPhotoMenu: PropTypes.func,
     onCancel: PropTypes.func,
     onChange: PropTypes.func,
     onUpdate: PropTypes.func,
@@ -105,15 +111,6 @@ module.exports = {
 
       onSelect() {
         dispatch(act.photo.select(selected ? null : photo.id))
-      },
-
-      onContextMenu(event) {
-        event.stopPropagation()
-        dispatch(act.ui.context.show(event, 'photo', {
-          id: photo.id,
-          item: photo.item,
-          file: photo.path
-        }))
       }
     })
 
