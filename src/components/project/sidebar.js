@@ -45,13 +45,13 @@ class ProjectSidebar extends Component {
   }
 
   render() {
-    if (this.props.toolbar) {
+    if (this.props.hasToolbar) {
       var toolbar = <Toolbar draggable/>
     }
 
     return (
       <Sidebar>
-        { toolbar }
+        {toolbar}
 
         <div
           className="sidebar-body"
@@ -112,7 +112,7 @@ class ProjectSidebar extends Component {
     trash: PropTypes.bool,
     context: PropTypes.bool,
     editing: PropTypes.bool,
-    toolbar: PropTypes.bool,
+    hasToolbar: PropTypes.bool,
 
     project: PropTypes.shape({
       file: PropTypes.string,

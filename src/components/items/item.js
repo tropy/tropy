@@ -219,8 +219,8 @@ module.exports = {
         dispatch(act.nav.panel.tab.select(tab))
       },
 
-      handlePhotoCreate(item) {
-        dispatch(act.photo.create({ item }))
+      handlePhotoCreate(...args) {
+        dispatch(act.photo.create(...args))
       }
     })
   )(Item)

@@ -14,7 +14,7 @@ const Project = ({ showContextMenu }) => (
   <div id="project" onContextMenu={showContextMenu}>
     <div id="project-view">
       <Resizable edge="right" value={250}>
-        <ProjectSidebar toolbar={frameless}/>
+        <ProjectSidebar hasToolbar={frameless}/>
       </Resizable>
       <main>
         <Items/>

@@ -11,7 +11,7 @@ describe('ProjectSidebar', () => {
   it('renders a toolbar when prop is set', () => {
     expect(
       shallow(
-        <ProjectSidebar.WrappedComponent project={project} toolbar/>
+        <ProjectSidebar.WrappedComponent project={project} hasToolbar/>
       )
     ).to.have.exactly(1).descendants('Toolbar')
   })
