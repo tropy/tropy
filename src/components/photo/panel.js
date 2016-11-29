@@ -4,8 +4,9 @@ const React = require('react')
 const { PropTypes } = React
 const { connect } = require('react-redux')
 const { Toolbar } = require('../toolbar')
-const { IconPhoto, IconPlus, IconListSmall, IconGridSmall } =
-  require('../icons')
+const {
+  IconPhoto, IconPlus, IconListSmall, IconGridSmall
+} = require('../icons')
 const { FormattedMessage } = require('react-intl')
 const { Panel } = require('../panel')
 const { Slider } = require('../slider')
