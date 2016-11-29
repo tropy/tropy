@@ -131,7 +131,7 @@ class Slider extends Component {
         <button
           className="btn btn-icon"
           disabled={disabled || value === min}
-          onClick={this.min}>
+          onMouseDown={this.min}>
           {this.props.minIcon}
         </button>
       )
@@ -147,7 +147,7 @@ class Slider extends Component {
         <button
           className="btn btn-icon"
           disabled={disabled || value === max}
-          onClick={this.max}>
+          onMouseDown={this.max}>
           {this.props.maxIcon}
         </button>
       )
