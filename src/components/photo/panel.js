@@ -34,7 +34,8 @@ const PhotoPanelHeader = ({ hasCreateButton, onCreate }) => {
         value={0}
         max={3}
         minIcon={<IconListSmall/>}
-        maxIcon={<IconGridSmall/>}/>
+        maxIcon={<IconGridSmall/>}
+        size="sm"/>
     </div>
   )
 
