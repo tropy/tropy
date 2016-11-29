@@ -5,9 +5,18 @@ const { PropTypes } = React
 const { Shapes } = require('./util')
 const cn = require('classnames')
 
+const DIR = {
+  top: 'row', right: 'col', bottom: 'row', left: 'col'
+}
+
+const DIM = {
+  top: 'height', right: 'width', bottom: 'height', left: 'width'
+}
+
+
 const ResizableHandle = ({ edge }) => (
   <div className={cn([
-    'resizable-handle-col',
+    `resizable-handle-${DIR[edge]}`,
     `resizable-handle-${edge}`
   ])}/>
 )
@@ -17,17 +26,20 @@ ResizableHandle.propTypes = {
 }
 
 
-const Resizable = ({ width, children, ...props }) => (
-  <div className="resizable" style={{ width: `${width}px` }}>
+const Resizable = ({ value, children, edge, relative }) => (
+  <div
+    className="resizable"
+    style={{ [DIM[edge]]: `${value}${relative ? '%' : 'px'}` }}>
     {children}
-    <ResizableHandle {...props}/>
+    <ResizableHandle edge={edge}/>
   </div>
 )
 
 Resizable.propTypes = {
   children: PropTypes.node,
   edge: Shapes.edge.isRequired,
-  width: PropTypes.number.isRequired
+  relative: PropTypes.bool,
+  value: PropTypes.number.isRequired
 }
 
 module.exports = {

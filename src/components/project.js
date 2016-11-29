@@ -4,6 +4,7 @@ const React = require('react')
 const { PropTypes } = React
 const { connect } = require('react-redux')
 const { ProjectSidebar } = require('./project/sidebar')
+const { Resizable } = require('./resizable')
 const { Item, Items } = require('./items')
 const { noop } = require('../common/util')
 const { context } = require('../actions/ui')
@@ -12,10 +13,9 @@ const { frameless } = ARGS
 const Project = ({ showContextMenu }) => (
   <div id="project" onContextMenu={showContextMenu}>
     <div id="project-view">
-      <div className="resizable" style={{ width: '250px' }}>
+      <Resizable edge="right" value={250}>
         <ProjectSidebar toolbar={frameless}/>
-        <div className="resizable-handle-col resizable-handle-right"/>
-      </div>
+      </Resizable>
       <main>
         <Items/>
       </main>

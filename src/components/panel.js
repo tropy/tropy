@@ -2,6 +2,8 @@
 
 const React = require('react')
 const { PropTypes, Children } = React
+const { only } = require('./util')
+const { Resizable } = require('./resizable')
 
 const Panel = ({ header, children }) => (
   <section className="panel">
@@ -32,12 +34,9 @@ const PanelGroup = ({ header, children }) => {
       </header>
       <div className="panel-group-body">
         {panels.map((panel, idx) => (
-          <div
-            key={['panel', idx].join('-')}
-            className="resizable" style={{ height: `${height}%` }}>
+          <Resizable key={idx} relative edge="bottom" value={height}>
             {panel}
-            <div className="resizable-handle-row resizable-handle-bottom"/>
-          </div>
+          </Resizable>
         ))}
         {last}
       </div>
@@ -47,7 +46,7 @@ const PanelGroup = ({ header, children }) => {
 
 PanelGroup.propTypes = {
   header: PropTypes.node,
-  children: PropTypes.node
+  children: only(Panel)
 }
 
 module.exports = {
