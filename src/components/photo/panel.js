@@ -15,13 +15,13 @@ const { getPhotos } = require('../../selectors/photos')
 const act = require('../../actions')
 
 
-const PhotoPanelHeader = ({ hasCreateButton, onCreate }) => {
+const PhotoPanelHeader = ({ hasCreateButton, handlePhotoCreate }) => {
   const buttons = []
 
   if (hasCreateButton) {
     buttons.push(
       <div key="create" className="tool-group">
-        <button className="btn btn-icon" onClick={onCreate}>
+        <button className="btn btn-icon" onClick={handlePhotoCreate}>
           <IconPlus/>
         </button>
       </div>
