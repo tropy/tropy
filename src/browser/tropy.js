@@ -173,7 +173,7 @@ class Tropy extends EventEmitter {
       .on('app:rename-project', () =>
         this.dispatch(act.ui.edit.start({ project: { name: true } })))
       .on('app:show-in-folder', (_, { target }) =>
-        shell.showItemInFolder(target.file))
+        shell.showItemInFolder(target.path))
       .on('app:create-item', () =>
         this.dispatch(act.item.create()))
       .on('app:delete-item', (_, { target }) =>

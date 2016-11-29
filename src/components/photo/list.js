@@ -29,6 +29,7 @@ PhotoList.propTypes = {
     id: PropTypes.number.isRequired
   })),
 
+  handlePhotoSelect: PropTypes.func,
   showPhotoMenu: PropTypes.func
 }
 
@@ -39,6 +40,11 @@ module.exports = {
     }),
 
     (dispatch) => ({
+
+      handlePhotoSelect(...args) {
+        dispatch(act.photo.select(...args))
+      },
+
       showPhotoMenu(event, { id, item, path }) {
         event.stopPropagation()
         dispatch(act.ui.context.show(event, 'photo', { id, item, path }))

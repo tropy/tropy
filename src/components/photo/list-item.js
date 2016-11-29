@@ -24,6 +24,11 @@ class PhotoListItem extends Component {
     })
   }
 
+  select = () => {
+    const { photo, handlePhotoSelect, isSelected } = this.props
+    handlePhotoSelect(isSelected ? null : photo.id)
+  }
+
   popup = (event) => {
     if (!this.props.isDisabled) {
       this.props.showPhotoMenu(event, this.props.photo)
@@ -32,16 +37,16 @@ class PhotoListItem extends Component {
 
   render() {
     const {
-      photo, cache, data, title, selected, context,
-      showPhotoMenu, onRename, onSelect, ...editable
+      photo, cache, data, title, isSelected, context,
+      showPhotoMenu, onRename, ...editable
     } = this.props
 
     const src = imageURL(cache, photo.id, 48)
 
     return (
       <li
-        className={cn({ photo: true, active: selected, context })}
-        onClick={onSelect}
+        className={cn({ photo: true, active: isSelected, context })}
+        onClick={this.select}
         onContextMenu={this.popup}>
         <img srcSet={`${encodeURI(src)} 2x`}
           width={24} height={24} className="thumbnail"/>
@@ -63,18 +68,19 @@ class PhotoListItem extends Component {
     title: PropTypes.string,
     editing: PropTypes.bool,
     isDisabled: PropTypes.bool,
-    selected: PropTypes.bool,
+    isSelected: PropTypes.bool,
     context: PropTypes.bool,
     showPhotoMenu: PropTypes.func,
     onCancel: PropTypes.func,
     onChange: PropTypes.func,
     onUpdate: PropTypes.func,
     onRename: PropTypes.func,
-    onSelect: PropTypes.func
+    handlePhotoSelect: PropTypes.func
   }
 
   static defaultProps = {
-    title: DC.TITLE
+    title: DC.TITLE,
+    handlePhotoSelect: noop
   }
 }
 
@@ -107,10 +113,6 @@ module.exports = {
 
       onCancel() {
         dispatch(act.ui.edit.cancel())
-      },
-
-      onSelect() {
-        dispatch(act.photo.select(selected ? null : photo.id))
       }
     })
 
