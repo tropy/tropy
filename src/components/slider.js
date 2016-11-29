@@ -3,7 +3,7 @@
 const React = require('react')
 const { Component, PropTypes } = React
 const cn = require('classnames')
-const { bounds, on, off } = require('../dom')
+const { bounds, borders, on, off } = require('../dom')
 const { noop } = require('../common/util')
 
 
@@ -36,7 +36,11 @@ class Slider extends Component {
     }
 
     const { min, max } = this.props
-    const { left, width } = bounds(this.scale)
+    const box = bounds(this.scale)
+    const border = borders(this.scale)
+
+    const left = box.left + border.left
+    const width = box.width - border.left - border.right
 
     this.set(min + restrict((event.pageX - left) / width) * max)
   }

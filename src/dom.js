@@ -95,5 +95,20 @@ const dom = module.exports = {
 
   bounds(node) {
     return node.getBoundingClientRect()
+  },
+
+  style(node) {
+    return getComputedStyle(node)
+  },
+
+  borders(node) {
+    const style = dom.style(node)
+
+    return {
+      top: parseInt(style.borderTopWidth, 10),
+      right: parseInt(style.borderRightWidth, 10),
+      bottom: parseInt(style.borderBottomWidth, 10),
+      left: parseInt(style.borderLeftWidth, 10)
+    }
   }
 }
