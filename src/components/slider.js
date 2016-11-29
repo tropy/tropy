@@ -87,6 +87,15 @@ class Slider extends Component {
     return this.props.max - this.props.min
   }
 
+  get classes() {
+    return {
+      slider: true,
+      [`slider-${this.props.size}`]: true,
+      disabled: this.props.disabled,
+      dragging: this.state.dragging
+    }
+  }
+
   startDragging() {
     this.setState({ dragging: true })
 
@@ -112,14 +121,14 @@ class Slider extends Component {
 
 
   renderMinButton() {
-    const { min, minIcon } = this.props
+    const { min, minIcon, disabled } = this.props
     const { value } = this.state
 
     if (minIcon) {
       return (
         <button
           className="btn btn-icon"
-          disabled={value === min}
+          disabled={disabled || value === min}
           onClick={this.min}>
           {this.props.minIcon}
         </button>
@@ -128,14 +137,14 @@ class Slider extends Component {
   }
 
   renderMaxButton() {
-    const { max, maxIcon } = this.props
+    const { max, maxIcon, disabled } = this.props
     const { value } = this.state
 
     if (maxIcon) {
       return (
         <button
           className="btn btn-icon"
-          disabled={value === max}
+          disabled={disabled || value === max}
           onClick={this.max}>
           {this.props.maxIcon}
         </button>
@@ -145,14 +154,13 @@ class Slider extends Component {
 
   render() {
     const { disabled } = this.props
-    const { dragging } = this.state
     const { offset, delta } = this
 
     const percentage = `${100 * offset / delta}%`
 
     return (
       <div
-        className={cn({ slider: true, disabled, dragging })}
+        className={cn(this.classes)}
         onMouseDown={disabled ? noop : this.handleMouseDown}>
         {this.renderMinButton()}
         <div
@@ -173,6 +181,8 @@ class Slider extends Component {
     min: PropTypes.number,
     max: PropTypes.number,
 
+    size: PropTypes.oneOf(['sm', 'md', 'lg']),
+
     minIcon: PropTypes.element,
     maxIcon: PropTypes.element,
 
@@ -182,6 +192,7 @@ class Slider extends Component {
   static defaultProps = {
     min: 0,
     max: 1,
+    size: 'md',
     onChange: noop
   }
 }
