@@ -45,7 +45,9 @@ class Slider extends Component {
     this.set(min + restrict((event.pageX - left) / width) * max)
   }
 
-  handleMouseDown = ({ pageX }) => {
+  handleMouseDown = ({ button, pageX }) => {
+    if (button !== 0) return
+
     this.delayed = setTimeout(() => this.update({ pageX }), 50)
     this.startDragging()
   }
