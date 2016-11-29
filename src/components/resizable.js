@@ -2,18 +2,18 @@
 
 const React = require('react')
 const { PropTypes } = React
-const T = require('./types')
+const { Shapes } = require('./util')
 const cn = require('classnames')
 
-const ResizableHandle = ({ orientation }) => (
+const ResizableHandle = ({ edge }) => (
   <div className={cn([
     'resizable-handle-col',
-    `resizable-handle-${orientation}`
+    `resizable-handle-${edge}`
   ])}/>
 )
 
 ResizableHandle.propTypes = {
-  orientation: T.orientation.isRequired
+  edge: Shapes.edge.isRequired
 }
 
 
@@ -26,7 +26,7 @@ const Resizable = ({ width, children, ...props }) => (
 
 Resizable.propTypes = {
   children: PropTypes.node,
-  orientation: T.orientation.isRequired,
+  edge: Shapes.edge.isRequired,
   width: PropTypes.number.isRequired
 }
 

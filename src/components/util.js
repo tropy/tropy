@@ -1,8 +1,9 @@
 'use strict'
 
-const { Children } = require('react')
+const { Children, PropTypes } = require('react')
 
 module.exports = {
+
   only(type) {
     return (props, name, component) => {
       let error
@@ -19,5 +20,9 @@ module.exports = {
 
       return error
     }
+  },
+
+  Shapes: {
+    edge: PropTypes.oneOf(['top', 'right', 'bottom', 'left'])
   }
 }

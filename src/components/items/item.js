@@ -164,7 +164,7 @@ class Item extends Component {
   render() {
     return (
       <section id="item">
-        <Resizable width={320} orientation="left">
+        <Resizable width={320} edge="left">
           <PanelGroup header={this.renderToolbar()}>
             <Panel header={this.renderItemTabs()}>
               {this.renderItemPanel()}
