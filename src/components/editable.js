@@ -28,26 +28,33 @@ class Editable extends Component {
   }
 
   stop = () => {
+    const { onEditableCancel, onEditableChange } = this.props
+
     if (this.changed) {
-      this.props.onChange(this.state.value)
+      onEditableChange(this.state.value)
     } else {
-      this.props.onCancel()
+      onEditableCancel()
     }
   }
 
   cancel() {
-    this.setState({ value: this.props.value })
-    this.props.onCancel()
+    const { value, onEditableCancel } = this.props
+
+    this.setState({ value: value || '' })
+    onEditableCancel()
   }
 
-  keyup = (event) => {
-    if (event.which === 27) this.cancel()
-    if (event.which === 13) this.stop()
-  }
-
-  activate = (event) => {
-    event.stopPropagation()
-    if (!this.props.isDisabled) this.props.onActivate()
+  handleKeyUp = (event) => {
+    switch (event.which) {
+      case 27:
+        event.stopPropagation()
+        this.cancel()
+        break
+      case 13:
+        event.stopPropagation()
+        this.stop()
+        break
+    }
   }
 
   focus(input) {
@@ -63,25 +70,34 @@ class Editable extends Component {
   }
 
   render() {
-    const { isEditing, isDisabled, value } = this.props
+    const {
+      value, type, isEditing, isDisabled, isRequired, ...props
+    } = this.props
 
-    if (!isDisabled && isEditing) {
+    delete props.onEditableChange
+    delete props.onEditableCancel
+
+    if (isEditing) {
       return (
-        <input
+        <input {...props}
           className="editable editable-control"
-          type="text"
-          ref={this.focus}
+          type={type}
           value={this.state.value}
+          disabled={isDisabled}
+          required={isRequired}
+          ref={this.focus}
           onChange={this.update}
-          onKeyUp={this.keyup}
+          onKeyUp={this.handleKeyUp}
           onBlur={this.stop}/>
       )
     }
 
     return (
-      <span
-        className={cn({ editable: true, empty: !value, disabled: isDisabled })}
-        onDoubleClick={this.activate}>
+      <span {...props} className={cn({
+        editable: true,
+        empty: !value,
+        disabled: isDisabled
+      })}>
         {value}
       </span>
     )
@@ -94,14 +110,21 @@ class Editable extends Component {
     isRequired: PropTypes.bool,
 
     value: PropTypes.string,
-    onActivate: PropTypes.func,
-    onChange: PropTypes.func.isRequired,
-    onCancel: PropTypes.func
+    type: PropTypes.oneOf(['text', 'number']),
+
+    onMouseDown: PropTypes.func,
+    onMouseUp: PropTypes.func,
+    onClick: PropTypes.func,
+    onDoubleClick: PropTypes.func,
+
+    onEditableChange: PropTypes.func,
+    onEditableCancel: PropTypes.func
   }
 
   static defaultProps = {
-    onActivate: noop,
-    onCancel: noop
+    type: 'text',
+    onEditableCancel: noop,
+    onEditableChange: noop
   }
 }
 

@@ -19,54 +19,48 @@ const act = require('../../actions')
 class ProjectSidebar extends Component {
 
   showSidebarMenu = (event) => {
-    this.props.onContextMenu(event, 'sidebar')
+    this.props.showContextMenu(event, 'sidebar')
   }
 
   showProjectMenu = (event) => {
-    this.props.onContextMenu(
+    this.props.showContextMenu(
       event, 'project', { path: this.props.project.file }
     )
   }
 
   showListsMenu = (event) => {
-    this.props.onContextMenu(event, 'lists')
-  }
-  showTagsMenu = (event) => {
-    this.props.onContextMenu(event, 'tags')
-  }
-  showTrashMenu = (event) => {
-    this.props.onContextMenu(event, 'trash', {})
+    this.props.showContextMenu(event, 'lists')
   }
 
-  trash = () => {
-    if (!this.props.trash) {
+  showTagsMenu = (event) => {
+    this.props.showContextMenu(event, 'tags')
+  }
+
+  showTrashMenu = (event) => {
+    this.props.showContextMenu(event, 'trash', {})
+  }
+
+  handleTrashSelect = () => {
+    if (!this.props.isTrashSelected) {
       this.props.onSelect({ trash: true, tag: null })
     }
   }
 
   render() {
-    if (this.props.hasToolbar) {
-      var toolbar = <Toolbar draggable/>
-    }
+    const { project, hasToolbar, isTrashSelected, ...props } = this.props
+
+    delete props.showContextMenu
 
     return (
       <Sidebar>
-        {toolbar}
+        {hasToolbar && <Toolbar draggable/>}
 
         <div
           className="sidebar-body"
           onContextMenu={this.showSidebarMenu}>
           <section onContextMenu={this.showProjectMenu}>
             <nav>
-              <ProjectName
-                active={this.props.active}
-                context={this.props.context}
-                isEditing={this.props.isEditing}
-                name={this.props.project.name}
-                onChange={this.props.onChange}
-                onEditCancel={this.props.onEditCancel}
-                onEditStart={this.props.onEditStart}
-                onSelect={this.props.onSelect}/>
+              <ProjectName {...props} name={project.name}/>
             </nav>
           </section>
 
@@ -81,9 +75,9 @@ class ProjectSidebar extends Component {
             <nav>
               <ol>
                 <li
-                  className={this.props.trash && 'active'}
+                  className={isTrashSelected && 'active'}
                   onContextMenu={this.showTrashMenu}
-                  onClick={this.trash}>
+                  onClick={this.handleTrashSelect}>
                   <IconTrash/>
                   <div className="title">
                     <FormattedMessage id="sidebar.trash"/>
@@ -109,22 +103,24 @@ class ProjectSidebar extends Component {
 
   static propTypes = {
     isEditing: PropTypes.bool,
+    isSelected: PropTypes.bool,
+    isTrashSelected: PropTypes.bool,
 
-    active: PropTypes.bool,
-    trash: PropTypes.bool,
-    context: PropTypes.bool,
     hasToolbar: PropTypes.bool,
+
+    context: PropTypes.bool,
 
     project: PropTypes.shape({
       file: PropTypes.string,
       name: PropTypes.string
     }).isRequired,
 
-    onChange: PropTypes.func,
-    onEditStart: PropTypes.func,
-    onEditCancel: PropTypes.func,
+    onProjectRename: PropTypes.func,
     onSelect: PropTypes.func,
-    onContextMenu: PropTypes.func
+    onEditableCancel: PropTypes.func,
+    onEditableChange: PropTypes.func,
+
+    showContextMenu: PropTypes.func
   }
 }
 
@@ -133,35 +129,37 @@ class ProjectSidebar extends Component {
 module.exports = {
   ProjectSidebar: connect(
     ({ project, nav, ui }) => ({
-      active: !nav.list && !nav.trash,
-      trash: nav.trash,
-      context: has(ui.context, 'project'),
       isEditing: has(ui.edit, 'project.name'),
+      isSelected: !nav.list && !nav.trash,
+      isTrashSelected: nav.trash,
+      context: has(ui.context, 'project'),
       project,
     }),
 
     (dispatch) => ({
-      onChange(name) {
-        dispatch(act.project.save({ name }))
-        dispatch(act.ui.edit.cancel())
-      },
 
-      onEditStart() {
+      onProjectRename() {
         dispatch(act.ui.edit.start({ project: { name: true } }))
-      },
-
-      onEditCancel() {
-        dispatch(act.ui.edit.cancel())
       },
 
       onSelect(opts) {
         dispatch(act.nav.select({ list: null, trash: null, ...opts }))
       },
 
-      onContextMenu(event, ...args) {
+      onEditableChange(name) {
+        dispatch(act.project.save({ name }))
+        dispatch(act.ui.edit.cancel())
+      },
+
+      onEditableCancel() {
+        dispatch(act.ui.edit.cancel())
+      },
+
+      showContextMenu(event, ...args) {
         event.stopPropagation()
         dispatch(act.ui.context.show(event, ...args))
       }
+
     })
   )(ProjectSidebar)
 }

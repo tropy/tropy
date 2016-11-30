@@ -8,25 +8,27 @@ const cn = require('classnames')
 
 class ProjectName extends Component {
 
-  select = () => {
-    if (!this.props.active) this.props.onSelect()
+  handleClick = () => {
+    if (this.props.isSelected) {
+      this.props.onProjectRename()
+    } else {
+      this.props.onSelect()
+    }
   }
 
   render() {
-    const { active, context } = this.props
+    const { name, isSelected, context, ...props } = this.props
+
+    delete props.onProjectRename
 
     return (
       <ol>
-        <li className={cn({ active, context })} onClick={this.select}>
+        <li
+          className={cn({ active: isSelected, context })}
+          onClick={this.handleClick}>
           <IconMaze/>
           <div className="title project-title">
-            <Editable
-              value={this.props.name}
-              isRequired
-              isEditing={this.props.isEditing}
-              onActivate={this.props.onEditStart}
-              onChange={this.props.onChange}
-              onCancel={this.props.onEditCancel}/>
+            <Editable {...props} value={name} isRequired/>
           </div>
         </li>
       </ol>
@@ -35,15 +37,16 @@ class ProjectName extends Component {
 
   static propTypes = {
     isEditing: PropTypes.bool,
+    isSelected: PropTypes.bool,
 
-    active: PropTypes.bool,
     context: PropTypes.bool,
 
     name: PropTypes.string.isRequired,
 
-    onChange: PropTypes.func.isRequired,
-    onEditCancel: PropTypes.func.isRequired,
-    onEditStart: PropTypes.func.isRequired,
+    onEditableCancel: PropTypes.func.isRequired,
+    onEditableChange: PropTypes.func.isRequired,
+
+    onProjectRename: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired
   }
 }
