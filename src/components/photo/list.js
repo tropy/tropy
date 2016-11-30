@@ -4,7 +4,7 @@ const React = require('react')
 const { PropTypes } = React
 const { connect } = require('react-redux')
 const { PhotoListItem } = require('./list-item')
-const { getPhotos } = require('../../selectors/photos')
+const { DC } = require('../../constants/properties')
 
 const act = require('../../actions')
 
@@ -13,35 +13,31 @@ const PhotoList = ({ photos, selected, ...props }) => (
   <ul className="photo-list">
     {photos.map(photo =>
       <PhotoListItem {...props}
-        key={photo.id}
-        photo={photo}
-        isSelected={photo.id === selected}/>
+        key={photo}
+        id={photo}
+        isSelected={photo === selected}
+        title={DC.TITLE}/>
     )}
   </ul>
 )
 
 PhotoList.propTypes = {
-  ids: PropTypes.arrayOf(PropTypes.number),
+  photos: PropTypes.arrayOf(PropTypes.number),
   selected: PropTypes.number,
+
   isDisabled: PropTypes.bool,
 
-  photos: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.number.isRequired
-  })),
-
-  handlePhotoSelect: PropTypes.func,
+  handlePhotoSelection: PropTypes.func,
   showPhotoMenu: PropTypes.func
 }
 
 module.exports = {
   PhotoList: connect(
-    (state, props) => ({
-      photos: getPhotos(state, props)
-    }),
+    null,
 
     (dispatch) => ({
 
-      handlePhotoSelect(...args) {
+      handlePhotoSelection(...args) {
         dispatch(act.photo.select(...args))
       },
 

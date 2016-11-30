@@ -6,27 +6,19 @@ const { connect } = require('react-redux')
 const { Editable } = require('../editable')
 const { noop } = require('../../common/util')
 const { imageURL } = require('../../common/cache')
-const { DC } = require('../../constants/properties')
 const { getCachePrefix } = require('../../selectors/project')
 const act = require('../../actions')
 const cn = require('classnames')
 
-// TODO move connect logic to list
 
 class PhotoListItem extends Component {
   constructor(props) {
     super(props)
   }
 
-  update = (title) => {
-    this.props.onUpdate(this.props.photo.id, {
-      [this.props.title]: title
-    })
-  }
-
   select = () => {
-    const { photo, handlePhotoSelect, isSelected } = this.props
-    handlePhotoSelect(isSelected ? null : photo.id)
+    const { photo, handlePhotoSelection, isSelected } = this.props
+    handlePhotoSelection(isSelected ? null : photo.id)
   }
 
   popup = (event) => {
@@ -35,77 +27,93 @@ class PhotoListItem extends Component {
     }
   }
 
+
   render() {
     const {
-      photo, cache, data, title, isSelected, context,
-      showPhotoMenu, onRename, ...editable
+      photo, cache, data, title, isSelected, context, ...props
     } = this.props
-
-    const src = imageURL(cache, photo.id, 48)
 
     return (
       <li
         className={cn({ photo: true, active: isSelected, context })}
         onClick={this.select}
         onContextMenu={this.popup}>
-        <img srcSet={`${encodeURI(src)} 2x`}
-          width={24} height={24} className="thumbnail"/>
+
+        <Thumbnail src={imageURL(cache, photo.id, 48)} size={24}/>
+
         <div className="title">
-          <Editable {...editable}
-            value={data[title] && data[title].value}
-            onActivate={onRename}/>
+          <Editable {...props} value={data[title] && data[title].value}/>
         </div>
       </li>
     )
   }
 
   static propTypes = {
+    id: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+
+    isDisabled: PropTypes.bool,
+    isSelected: PropTypes.bool,
+
+    cache: PropTypes.string,
+    data: PropTypes.object,
+
     photo: PropTypes.shape({
       id: PropTypes.number.isRequired
     }).isRequired,
-    cache: PropTypes.string,
-    data: PropTypes.object,
-    title: PropTypes.string,
-    editing: PropTypes.bool,
-    isDisabled: PropTypes.bool,
-    isSelected: PropTypes.bool,
+
+
     context: PropTypes.bool,
-    showPhotoMenu: PropTypes.func,
+
+    editing: PropTypes.bool,
     onCancel: PropTypes.func,
     onChange: PropTypes.func,
-    onUpdate: PropTypes.func,
-    onRename: PropTypes.func,
-    handlePhotoSelect: PropTypes.func
+    onActivate: PropTypes.func,
+
+    showPhotoMenu: PropTypes.func,
+    handlePhotoSelection: PropTypes.func
   }
 
   static defaultProps = {
-    title: DC.TITLE,
-    handlePhotoSelect: noop
+    handlePhotoSelection: noop
   }
+}
+
+const Thumbnail = ({ src, size }) => (
+  <img
+    className="thumbnail"
+    srcSet={`${encodeURI(src)} 2x`}
+    width={size}
+    height={size}/>
+)
+
+Thumbnail.propTypes = {
+  src: PropTypes.string.isRequired,
+  size: PropTypes.number.isRequired
 }
 
 
 module.exports = {
   PhotoListItem: connect(
-    (state, { photo }) => ({
-      data: state.metadata[photo.id] || {},
-      selected: state.nav.photo === photo.id,
-      editing: state.ui.edit.photo === photo.id,
-      context: state.ui.context.photo === photo.id,
+    (state, { id }) => ({
+      data: state.metadata[id] || {},
+      photo: state.photos[id] || { id },
+      editing: state.ui.edit.photo === id,
+      context: state.ui.context.photo === id,
       cache: getCachePrefix(state)
     }),
 
-    (dispatch, { photo, selected, title }) => ({
+    (dispatch, { id, title }) => ({
 
-      onRename() {
-        dispatch(act.ui.edit.start({ photo: photo.id }))
+      onActivate() {
+        dispatch(act.ui.edit.start({ photo: id }))
       },
 
       onChange(value) {
         dispatch(act.metadata.save({
-          id: photo.id,
+          id,
           data: {
-            [title || DC.TITLE]: { value, type: 'text' }
+            [title]: { value, type: 'text' }
           }
         }))
         dispatch(act.ui.edit.cancel())

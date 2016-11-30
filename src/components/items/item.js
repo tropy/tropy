@@ -136,7 +136,7 @@ class Item extends Component {
 
     return item && (
       <PhotoList
-        ids={item.photos}
+        photos={item.photos}
         selected={photo}
         isDisabled={this.disabled}/>
     )
