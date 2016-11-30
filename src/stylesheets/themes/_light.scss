@@ -18,7 +18,7 @@ $brand-primary: $blue;
 $shade-0: #fff;
 $shade-1: #f6f6f6;
 $shade-2: #e6e6e6;
-$shade-3: #dcdcdc;
+$shade-3: #ddd;
 $shade-4: #ccc;
 $shade-5: #777;
 $shade-6: #555;
@@ -55,6 +55,9 @@ $input-color-placeholder: $shade-4;
 $icon-style:        "line";
 $icon-color:        $shade-5;
 $icon-active-color: $shade-8;
+
+$icon-item-color:   rgba($icon-color, 0.6);
+$icon-item-bg:      $shade-3;
 
 // Sidebar
 $sidebar-bg:                $shade-1;

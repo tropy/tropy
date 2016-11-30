@@ -20,3 +20,10 @@
     }
   }
 }
+
+.icon-item {
+  svg {
+    fill: $icon-item-color;
+    background: $icon-item-bg;
+  }
+}
