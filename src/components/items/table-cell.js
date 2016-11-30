@@ -4,6 +4,7 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { Editable } = require('../editable')
 const { imageURL } = require('../../common/cache')
+const { IconItem } = require('../icons')
 const cn = require('classnames')
 
 const ICON_SIZE = 24
@@ -47,8 +48,6 @@ class TableCell extends Component {
         return imageURL(cache, cover, ICON_SIZE * 2)
       case !!(photos && photos.length):
         return imageURL(cache, photos[0], ICON_SIZE * 2)
-      default:
-        return 'ITEM_ICON'
     }
   }
 
@@ -112,13 +111,15 @@ class TableCell extends Component {
 
 
 const TableCellIcon = ({ src, size }) => {
+  if (!src) return <IconItem/>
+
   return (
     <img srcSet={`${encodeURI(src)} 2x`} width={size} height={size}/>
   )
 }
 
 TableCellIcon.propTypes = {
-  src: PropTypes.string.isRequired,
+  src: PropTypes.string,
   size: PropTypes.number.isRequired
 }
 
