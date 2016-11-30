@@ -22,8 +22,8 @@ class ProjectName extends Component {
           <div className="title project-title">
             <Editable
               value={this.props.name}
-              required
-              editing={this.props.editing}
+              isRequired
+              isEditing={this.props.isEditing}
               onActivate={this.props.onEditStart}
               onChange={this.props.onChange}
               onCancel={this.props.onEditCancel}/>
@@ -34,9 +34,10 @@ class ProjectName extends Component {
   }
 
   static propTypes = {
+    isEditing: PropTypes.bool,
+
     active: PropTypes.bool,
     context: PropTypes.bool,
-    editing: PropTypes.bool,
 
     name: PropTypes.string.isRequired,
 

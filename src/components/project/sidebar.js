@@ -61,7 +61,7 @@ class ProjectSidebar extends Component {
               <ProjectName
                 active={this.props.active}
                 context={this.props.context}
-                editing={this.props.editing}
+                isEditing={this.props.isEditing}
                 name={this.props.project.name}
                 onChange={this.props.onChange}
                 onEditCancel={this.props.onEditCancel}
@@ -108,10 +108,11 @@ class ProjectSidebar extends Component {
   }
 
   static propTypes = {
+    isEditing: PropTypes.bool,
+
     active: PropTypes.bool,
     trash: PropTypes.bool,
     context: PropTypes.bool,
-    editing: PropTypes.bool,
     hasToolbar: PropTypes.bool,
 
     project: PropTypes.shape({
@@ -135,7 +136,7 @@ module.exports = {
       active: !nav.list && !nav.trash,
       trash: nav.trash,
       context: has(ui.context, 'project'),
-      editing: has(ui.edit, 'project.name'),
+      isEditing: has(ui.edit, 'project.name'),
       project,
     }),
 

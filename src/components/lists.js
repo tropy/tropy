@@ -20,7 +20,7 @@ class List extends Component {
     list: PropTypes.object,
     active: PropTypes.bool,
     context: PropTypes.bool,
-    editing: PropTypes.bool,
+    isEditing: PropTypes.bool,
     onActivate: PropTypes.func,
     onCancel: PropTypes.func,
     onContextMenu: PropTypes.func,
@@ -59,7 +59,7 @@ class List extends Component {
   }
 
   render() {
-    const { list, active, context, editing } = this.props
+    const { list, active, context, isEditing } = this.props
 
     return (
       <li
@@ -70,8 +70,8 @@ class List extends Component {
         <div className="title">
           <Editable
             value={list.name}
-            required
-            editing={editing}
+            isRequired
+            isEditing={isEditing}
             onActivate={this.rename}
             onChange={this.update}
             onCancel={this.cancel}/>
@@ -101,7 +101,7 @@ const Lists = ({
           key={list.id}
           active={selected === list.id}
           context={context === list.id}
-          editing={editing && editing.id === list.id}
+          isEditing={editing && editing.id === list.id}
           list={list}
           onContextMenu={showListMenu}
           onUpdate={onUpdate}
@@ -115,7 +115,7 @@ const Lists = ({
         <List
           key={editing.parent}
           list={editing}
-          editing
+          isEditing
           onUpdate={onUpdate}
           onCancel={onCancel}/>
       ) : undefined

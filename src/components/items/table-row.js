@@ -28,7 +28,7 @@ class TableRow extends Component {
 
   render() {
     const {
-      active, item, columns, isSelected, onContextMenu
+      editing, item, columns, isSelected, onContextMenu
     } = this.props
 
     return (
@@ -40,7 +40,7 @@ class TableRow extends Component {
           columns.map(({ property, width }) => (
             <TableCell {...this.props}
               key={property.uri}
-              isActive={property.uri === active}
+              isEditing={property.uri === editing}
               isDisabled={!!item.deleted}
               hasIcon={property.uri === DC.TITLE}
               property={property}
@@ -57,7 +57,7 @@ class TableRow extends Component {
     }).isRequired,
 
     data: PropTypes.object,
-    active: PropTypes.string,
+    editing: PropTypes.string,
     cache: PropTypes.string.isRequired,
 
     isSelected: PropTypes.bool,
@@ -78,7 +78,7 @@ module.exports = {
   TableRow: connect(
     (state, { item }) => ({
       data: state.metadata[item.id] || {},
-      active: get(state, `ui.edit.column.${item.id}`)
+      editing: get(state, `ui.edit.column.${item.id}`)
     }),
 
     (dispatch, { item }) => ({

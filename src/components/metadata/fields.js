@@ -18,7 +18,7 @@ const Fields = (props) => {
         <Field {...props}
           key={property.uri}
           property={property}
-          editing={editing === property.uri}/>
+          isEditing={editing === property.uri}/>
       )
     }</ol>
   )
@@ -26,7 +26,7 @@ const Fields = (props) => {
 
 Fields.propTypes = {
   editing: PropTypes.string,
-  disabled: PropTypes.bool,
+  isDisabled: PropTypes.bool,
   template: PropTypes.string.isRequired,
   fields: PropTypes.arrayOf(PropTypes.shape({
     property: PropTypes.object.isRequired

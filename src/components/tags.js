@@ -43,7 +43,7 @@ class Tag extends Component {
   }
 
   render() {
-    const { tag, selected, context, editing } = this.props
+    const { tag, selected, context, isEditing } = this.props
 
     return (
       <li
@@ -54,8 +54,8 @@ class Tag extends Component {
         <div className="name">
           <Editable
             value={tag.name}
-            required
-            editing={editing}
+            isRequired
+            isEditing={isEditing}
             onActivate={this.rename}
             onChange={this.update}
             onCancel={this.cancel}/>
@@ -68,7 +68,7 @@ class Tag extends Component {
     tag: PropTypes.object,
     selected: PropTypes.bool,
     context: PropTypes.bool,
-    editing: PropTypes.bool,
+    isEditing: PropTypes.bool,
     onSelect: PropTypes.func,
     onCancel: PropTypes.func,
     onContextMenu: PropTypes.func,
@@ -105,7 +105,7 @@ const Tags = ({
           key={tag.id}
           selected={selection.includes(tag.id)}
           context={context === tag.id}
-          editing={editing && editing.id === tag.id}
+          isEditing={editing && editing.id === tag.id}
           tag={tag}
           onContextMenu={onContextMenu}
           onUpdate={onUpdate}
@@ -119,7 +119,7 @@ const Tags = ({
         <Tag
           key={-1}
           tag={editing}
-          editing
+          isEditing
           onUpdate={onUpdate}
           onCancel={onCancel}/>
       ) : undefined

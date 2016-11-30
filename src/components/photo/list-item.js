@@ -53,6 +53,7 @@ class PhotoListItem extends Component {
     title: PropTypes.string.isRequired,
 
     isDisabled: PropTypes.bool,
+    isEditing: PropTypes.bool,
     isSelected: PropTypes.bool,
 
     cache: PropTypes.string,
@@ -65,7 +66,6 @@ class PhotoListItem extends Component {
 
     context: PropTypes.bool,
 
-    editing: PropTypes.bool,
     onCancel: PropTypes.func,
     onChange: PropTypes.func,
     onActivate: PropTypes.func,
@@ -98,7 +98,7 @@ module.exports = {
     (state, { id }) => ({
       data: state.metadata[id] || {},
       photo: state.photos[id] || { id },
-      editing: state.ui.edit.photo === id,
+      isEditing: state.ui.edit.photo === id,
       context: state.ui.context.photo === id,
       cache: getCachePrefix(state)
     }),
