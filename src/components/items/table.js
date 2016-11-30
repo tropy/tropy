@@ -7,7 +7,8 @@ const { TableRow } = require('./table-row')
 const { TableHead } = require('./table-head')
 const { getColumns } = require('../../selectors/ui')
 const { getCachePrefix } = require('../../selectors/project')
-const { select } = require('../../actions/item')
+const act = require('../../actions')
+
 
 const Table = ({ items, selection, ...props }) => (
   <div className="item-list-view">
@@ -30,10 +31,11 @@ const Table = ({ items, selection, ...props }) => (
 
 Table.propTypes = {
   selection: PropTypes.arrayOf(PropTypes.number),
-  handleSelection: PropTypes.func,
   columns: PropTypes.arrayOf(PropTypes.object),
   items: PropTypes.arrayOf(PropTypes.object),
-  cache: PropTypes.string
+  cache: PropTypes.string,
+  onSelection: PropTypes.func,
+  onEditableCancel: PropTypes.func
 }
 
 
@@ -46,8 +48,12 @@ module.exports = {
     }),
 
     (dispatch) => ({
-      handleSelection(id, mod) {
-        dispatch(select(id, { mod }))
+      onSelection(id, mod) {
+        dispatch(act.item.select(id, { mod }))
+      },
+
+      onEditableCancel() {
+        dispatch(act.ui.edit.cancel())
       }
     })
 

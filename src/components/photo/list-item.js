@@ -12,13 +12,10 @@ const cn = require('classnames')
 
 
 class PhotoListItem extends Component {
-  constructor(props) {
-    super(props)
-  }
 
   select = () => {
-    const { photo, handlePhotoSelection, isSelected } = this.props
-    handlePhotoSelection(isSelected ? null : photo.id)
+    const { photo, onPhotoSelection, isSelected } = this.props
+    onPhotoSelection(isSelected ? null : photo.id)
   }
 
   popup = (event) => {
@@ -32,6 +29,9 @@ class PhotoListItem extends Component {
     const {
       photo, cache, data, title, isSelected, context, ...props
     } = this.props
+
+    delete props.onPhotoSelection
+    delete props.showPhotoMenu
 
     return (
       <li
@@ -63,19 +63,17 @@ class PhotoListItem extends Component {
       id: PropTypes.number.isRequired
     }).isRequired,
 
-
     context: PropTypes.bool,
 
-    onCancel: PropTypes.func,
-    onChange: PropTypes.func,
-    onActivate: PropTypes.func,
+    onEditableCancel: PropTypes.func,
+    onEditableChange: PropTypes.func,
 
     showPhotoMenu: PropTypes.func,
-    handlePhotoSelection: PropTypes.func
+    onPhotoSelection: PropTypes.func
   }
 
   static defaultProps = {
-    handlePhotoSelection: noop
+    onPhotoSelection: noop
   }
 }
 
@@ -105,11 +103,7 @@ module.exports = {
 
     (dispatch, { id, title }) => ({
 
-      onActivate() {
-        dispatch(act.ui.edit.start({ photo: id }))
-      },
-
-      onChange(value) {
+      onEditableChange(value) {
         dispatch(act.metadata.save({
           id,
           data: {
@@ -119,7 +113,7 @@ module.exports = {
         dispatch(act.ui.edit.cancel())
       },
 
-      onCancel() {
+      onEditableCancel() {
         dispatch(act.ui.edit.cancel())
       }
     })

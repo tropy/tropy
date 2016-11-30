@@ -9,14 +9,6 @@ const cn = require('classnames')
 const ICON_SIZE = 24
 
 class TableCell extends Component {
-  constructor(props) {
-    super(props)
-  }
-
-
-  activate = () => {
-    this.props.onActivate(this.props.property.uri)
-  }
 
   changed = (value) => {
     this.props.onChange({
@@ -24,6 +16,14 @@ class TableCell extends Component {
     })
   }
 
+  handleClick = (event) => {
+    const { isSelected, onActivate, property } = this.props
+
+    if (isSelected) {
+      event.stopPropagation()
+      onActivate(property.uri)
+    }
+  }
 
   get value() {
     const { data, property } = this.props
@@ -60,13 +60,14 @@ class TableCell extends Component {
 
   render() {
     const {
-      isEditing, isDisabled, width, onCancel
+      isEditing, isDisabled, width, onEditableCancel
     } = this.props
 
     return (
       <td
         className={cn({ metadata: true, [this.type]: true })}
-        style={{ width }}>
+        style={{ width }}
+        onClick={this.handleClick}>
 
         {this.renderIcon()}
 
@@ -74,9 +75,8 @@ class TableCell extends Component {
           value={this.value}
           isEditing={isEditing}
           isDisabled={isDisabled}
-          onActivate={this.activate}
-          onCancel={onCancel}
-          onChange={this.changed}/>
+          onEditableCancel={onEditableCancel}
+          onEditableChange={this.changed}/>
       </td>
     )
   }
@@ -85,6 +85,7 @@ class TableCell extends Component {
   static propTypes = {
     isEditing: PropTypes.bool,
     isDisabled: PropTypes.bool,
+    isSelected: PropTypes.bool,
 
     hasIcon: PropTypes.bool,
 
@@ -104,7 +105,7 @@ class TableCell extends Component {
     width: PropTypes.string.isRequired,
 
     onActivate: PropTypes.func,
-    onCancel: PropTypes.func,
+    onEditableCancel: PropTypes.func,
     onChange: PropTypes.func
   }
 }

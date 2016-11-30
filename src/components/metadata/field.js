@@ -46,14 +46,13 @@ class Field extends Component {
     return (
       <li className={cn({ 'metadata-field': true, [type]: true })}>
         <label>{label}</label>
-        <div className="value">
+        <div className="value" onClick={activate}>
           <Editable
             value={value ? value.value : null}
             isDisabled={isDisabled}
             isEditing={isEditing}
-            onActivate={activate}
-            onCancel={onCancel}
-            onChange={changed}/>
+            onEditableCancel={onCancel}
+            onEditableChange={changed}/>
         </div>
       </li>
     )

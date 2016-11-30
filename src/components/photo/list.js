@@ -27,7 +27,7 @@ PhotoList.propTypes = {
 
   isDisabled: PropTypes.bool,
 
-  handlePhotoSelection: PropTypes.func,
+  onPhotoSelection: PropTypes.func,
   showPhotoMenu: PropTypes.func
 }
 
@@ -36,8 +36,7 @@ module.exports = {
     null,
 
     (dispatch) => ({
-
-      handlePhotoSelection(...args) {
+      onPhotoSelection(...args) {
         dispatch(act.photo.select(...args))
       },
 

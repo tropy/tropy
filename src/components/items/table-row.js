@@ -12,12 +12,8 @@ const cn = require('classnames')
 
 class TableRow extends Component {
 
-  constructor(props) {
-    super(props)
-  }
-
   select = (event) => {
-    return this.props.handleSelection(
+    return this.props.onSelection(
       this.props.item.id,
       this.props.isSelected ?
         (meta(event) ? 'remove' : 'clear') :
@@ -62,11 +58,10 @@ class TableRow extends Component {
 
     isSelected: PropTypes.bool,
 
-
-    handleSelection: PropTypes.func.isRequired,
+    onSelection: PropTypes.func.isRequired,
 
     onActivate: PropTypes.func,
-    onCancel: PropTypes.func,
+    onEditableCancel: PropTypes.func,
     onChange: PropTypes.func,
     onContextMenu: PropTypes.func,
     columns: PropTypes.arrayOf(PropTypes.object)
@@ -88,10 +83,6 @@ module.exports = {
             [item.id]: property
           }
         }))
-      },
-
-      onCancel() {
-        dispatch(act.ui.edit.cancel())
       },
 
       onChange(data) {
