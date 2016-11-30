@@ -36,8 +36,8 @@ class Slider extends Component {
     }
 
     const { min, max } = this.props
-    const box = bounds(this.scale)
-    const border = borders(this.scale)
+    const box = bounds(this.track)
+    const border = borders(this.track)
 
     const left = box.left + border.left
     const width = box.width - border.left - border.right
@@ -79,7 +79,7 @@ class Slider extends Component {
     this.set(this.props.max)
   }
 
-  setScale = (scale) => this.scale = scale
+  setTrack = (track) => this.track = track
 
   get offset() {
     return this.state.value - this.props.min
@@ -166,8 +166,8 @@ class Slider extends Component {
         onMouseDown={disabled ? noop : this.handleMouseDown}>
         {this.renderMinButton()}
         <div
-          ref={this.setScale}
-          className="slider-scale">
+          ref={this.setTrack}
+          className="slider-track">
           <div className="slider-range" style={{ width: percentage }}/>
           <div className="slider-handle" style={{ left: percentage }}/>
         </div>
