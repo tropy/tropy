@@ -38,7 +38,7 @@ module.exports = {
   },
 
   array(obj) {
-    return Array.isArray(obj) ? [...obj] : [obj]
+    return obj == null ? [] : Array.isArray(obj) ? [...obj] : [obj]
   },
 
   splice(array, at, count = 0, ...items) {

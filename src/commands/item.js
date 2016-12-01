@@ -111,7 +111,7 @@ class Destroy extends Command {
     if (!confirmed) return
 
     try {
-      if (ids) {
+      if (ids.length) {
         yield call(mod.item.destroy, db, ids)
         yield put(act.item.remove(ids))
 
