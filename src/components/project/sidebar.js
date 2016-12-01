@@ -19,25 +19,25 @@ const act = require('../../actions')
 class ProjectSidebar extends Component {
 
   showSidebarMenu = (event) => {
-    this.props.showContextMenu(event, 'sidebar')
+    this.props.onContextMenu(event, 'sidebar')
   }
 
   showProjectMenu = (event) => {
-    this.props.showContextMenu(
+    this.props.onContextMenu(
       event, 'project', { path: this.props.project.file }
     )
   }
 
   showListsMenu = (event) => {
-    this.props.showContextMenu(event, 'lists')
+    this.props.onContextMenu(event, 'lists')
   }
 
   showTagsMenu = (event) => {
-    this.props.showContextMenu(event, 'tags')
+    this.props.onContextMenu(event, 'tags')
   }
 
   showTrashMenu = (event) => {
-    this.props.showContextMenu(event, 'trash', {})
+    this.props.onContextMenu(event, 'trash', {})
   }
 
   handleTrashSelect = () => {
@@ -49,7 +49,7 @@ class ProjectSidebar extends Component {
   render() {
     const { project, hasToolbar, isTrashSelected, ...props } = this.props
 
-    delete props.showContextMenu
+    delete props.onContextMenu
 
     return (
       <Sidebar>
@@ -115,12 +115,12 @@ class ProjectSidebar extends Component {
       name: PropTypes.string
     }).isRequired,
 
-    onProjectRename: PropTypes.func,
+    onRename: PropTypes.func,
     onSelect: PropTypes.func,
     onCancel: PropTypes.func,
     onChange: PropTypes.func,
 
-    showContextMenu: PropTypes.func
+    onContextMenu: PropTypes.func
   }
 }
 
@@ -138,7 +138,7 @@ module.exports = {
 
     (dispatch) => ({
 
-      onProjectRename() {
+      onRename() {
         dispatch(act.ui.edit.start({ project: { name: true } }))
       },
 
@@ -155,7 +155,7 @@ module.exports = {
         dispatch(act.ui.edit.cancel())
       },
 
-      showContextMenu(event, ...args) {
+      onContextMenu(event, ...args) {
         event.stopPropagation()
         dispatch(act.ui.context.show(event, ...args))
       }
