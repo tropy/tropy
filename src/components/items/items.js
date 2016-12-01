@@ -12,7 +12,7 @@ const { Slider } = require('../slider')
 const { getItems } = require('../../selectors/items')
 const act = require('../../actions')
 
-const Items = ({ createItem, items, zoom, maxZoom, handleZoomChange }) => (
+const Items = ({ createItem, items, zoom, maxZoom, onZoomChange }) => (
   <section id="items">
     <header>
       <Toolbar draggable>
@@ -21,7 +21,7 @@ const Items = ({ createItem, items, zoom, maxZoom, handleZoomChange }) => (
             <Slider
               value={zoom}
               max={maxZoom}
-              onChange={handleZoomChange}
+              onChange={onZoomChange}
               minIcon={<IconList/>}
               maxIcon={<IconGrid/>}/>
           </div>
@@ -45,7 +45,7 @@ Items.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object),
   zoom: PropTypes.number,
   maxZoom: PropTypes.number,
-  handleZoomChange: PropTypes.func
+  onZoomChange: PropTypes.func
 }
 
 Items.defaultProps = {
@@ -65,7 +65,7 @@ module.exports = {
         dispatch(act.item.create())
       },
 
-      handleZoomChange(itemsZoom) {
+      onZoomChange(itemsZoom) {
         dispatch(act.nav.update({ itemsZoom }))
       }
     })

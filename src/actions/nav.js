@@ -22,10 +22,8 @@ module.exports = {
   },
 
   panel: {
-    tab: {
-      select(payload, meta) {
-        return { type: PANEL.TAB.SELECT, payload, meta }
-      }
+    update(payload, meta) {
+      return { type: PANEL.UPDATE, payload, meta }
     }
   }
 }

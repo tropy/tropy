@@ -11,28 +11,9 @@ const {
 } = require('../icons')
 
 
-const PhotoCreateButton = ({ onPhotoCreate }) => (
-  <button className="btn btn-icon" onClick={onPhotoCreate}>
-    <IconPlus/>
-  </button>
-)
-
-PhotoCreateButton.propTypes = {
-  onPhotoCreate: PropTypes.func
-}
-
-
-const PhotoSlider = () => (
-  <Slider
-    value={0}
-    max={3}
-    size="sm"
-    minIcon={<IconListSmall/>}
-    maxIcon={<IconGridSmall/>}/>
-)
-
-
-const PhotoToolbar = ({ hasPhotoCreateButton, ...props }) => (
+const PhotoToolbar = ({
+  hasCreateButton, onCreate, zoom, maxZoom, onZoomChange
+}) => (
   <Toolbar>
     <div className="toolbar-left">
       <IconPhoto/>
@@ -41,25 +22,38 @@ const PhotoToolbar = ({ hasPhotoCreateButton, ...props }) => (
 
     <div className="toolbar-right">
       {
-        hasPhotoCreateButton &&
+        hasCreateButton &&
           <ToolGroup>
-            <PhotoCreateButton {...props}/>
+            <button className="btn btn-icon" onClick={onCreate}>
+              <IconPlus/>
+            </button>
           </ToolGroup>
       }
       <ToolGroup>
-        <PhotoSlider {...props}/>
+        <Slider
+          value={zoom}
+          max={maxZoom}
+          size="sm"
+          minIcon={<IconListSmall/>}
+          maxIcon={<IconGridSmall/>}
+          onChange={onZoomChange}/>
       </ToolGroup>
     </div>
   </Toolbar>
 )
 
 PhotoToolbar.propTypes = {
-  hasPhotoCreateButton: PropTypes.bool,
-  onPhotoCreate: PropTypes.func
+  maxZoom: PropTypes.number,
+  zoom: PropTypes.number,
+  hasCreateButton: PropTypes.bool,
+  onCreate: PropTypes.func,
+  onZoomChange: PropTypes.func
+}
+
+PhotoToolbar.defaultProps = {
+  maxZoom: 5
 }
 
 module.exports = {
-  PhotoToolbar,
-  PhotoSlider,
-  PhotoCreateButton
+  PhotoToolbar
 }

@@ -33,19 +33,19 @@ class Item extends Component {
 
   handleMetadataTabSelect = () => {
     if (this.props.panel.tab !== 'metadata') {
-      this.props.handleTabSelect('metadata')
+      this.props.onTabSelect('metadata')
     }
   }
 
   handleTagsTabSelect = () => {
     if (this.props.panel.tab !== 'tags') {
-      this.props.handleTabSelect('tags')
+      this.props.onTabSelect('tags')
     }
   }
 
   handlePhotoCreate = (event) => {
     event.stopPropagation()
-    this.props.handlePhotoCreate({ item: this.props.item.id })
+    this.props.onPhotoCreate({ item: this.props.item.id })
   }
 
 
@@ -124,10 +124,14 @@ class Item extends Component {
   }
 
   renderPhotosToolbar() {
+    const { panel, onPhotoZoomChange } = this.props
+
     return (
       <PhotoToolbar
-        hasPhotoCreateButton={!this.disabled}
-        onPhotoCreate={this.handlePhotoCreate}/>
+        zoom={panel.photoZoom}
+        onZoomChange={onPhotoZoomChange}
+        hasCreateButton={!this.disabled}
+        onCreate={this.handlePhotoCreate}/>
     )
   }
 
@@ -194,14 +198,16 @@ class Item extends Component {
     }),
 
     panel: PropTypes.shape({
-      tab: PropTypes.oneOf(['metadata', 'tags']).isRequired
+      tab: PropTypes.oneOf(['metadata', 'tags']).isRequired,
+      photoZoom: PropTypes.number.isRequired
     }).isRequired,
 
     photo: PropTypes.number,
     selection: PropTypes.arrayOf(PropTypes.number),
 
-    handleTabSelect: PropTypes.func,
-    handlePhotoCreate: PropTypes.func
+    onTabSelect: PropTypes.func,
+    onPhotoCreate: PropTypes.func,
+    onPhotoZoomChange: PropTypes.func
   }
 }
 
@@ -216,12 +222,16 @@ module.exports = {
     }),
 
     (dispatch) => ({
-      handleTabSelect(tab) {
-        dispatch(act.nav.panel.tab.select(tab))
+      onTabSelect(tab) {
+        dispatch(act.nav.panel.update({ tab }))
       },
 
-      handlePhotoCreate(...args) {
+      onPhotoCreate(...args) {
         dispatch(act.photo.create(...args))
+      },
+
+      onPhotoZoomChange(photoZoom) {
+        dispatch(act.nav.panel.update({ photoZoom }))
       }
     })
   )(Item)

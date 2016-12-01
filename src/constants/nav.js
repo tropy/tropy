@@ -7,8 +7,6 @@ module.exports = {
   SELECT: 'nav.select',
 
   PANEL: {
-    TAB: {
-      SELECT: 'ui.panel.tab.select'
-    }
+    UPDATE: 'nav.panel.update'
   }
 }

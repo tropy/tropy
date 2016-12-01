@@ -5,7 +5,7 @@ const { NAV, ITEM, LIST, TAG, PHOTO } = require('../constants')
 const init = {
   items: [],
   tags: [],
-  panel: { tab: 'metadata' },
+  panel: { tab: 'metadata', photoZoom: 0 },
   itemsZoom: 0
 }
 
@@ -83,11 +83,10 @@ module.exports = {
           ...payload
         }
 
-      case NAV.PANEL.TAB.SELECT: {
+      case NAV.PANEL.UPDATE:
         return {
-          ...state, panel: { ...state.panel, tab: payload }
+          ...state, panel: { ...state.panel, ...payload }
         }
-      }
 
       default:
         return state
