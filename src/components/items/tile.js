@@ -19,7 +19,11 @@ class ItemTile extends Component {
     return (
       <li
         className={cn({ 'item-tile': true, 'active': isSelected })}
-        onClick={this.handleClick}>
+        onClick={this.handleClick}
+        style={{
+          flexBasis: (size * 1.25 + 'px'),
+          height: (size * 1.25 + 'px')
+        }}>
         <CoverImage item={item} size={size} cache={cache}/>
       </li>
     )

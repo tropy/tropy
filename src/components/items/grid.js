@@ -11,7 +11,7 @@ const Z = [32, 48, 64, 96, 128, 144, 256, 304, 512]
 
 const ItemGrid = ({ items, selection, zoom, ...props }) => (
   <div className="item-grid-view">
-    <ul className="grid-body">
+    <ul className="item-grid">
       {items.map((item) =>
         <ItemTile {...props}
           key={item.id}
@@ -19,6 +19,16 @@ const ItemGrid = ({ items, selection, zoom, ...props }) => (
           size={Z[zoom]}
           isSelected={selection.includes(item.id)}/>
       )}
+      <li className="item-tile" style={{ flexBasis: (Z[zoom] * 1.25 + 'px') }}/>
+      <li className="item-tile" style={{ flexBasis: (Z[zoom] * 1.25 + 'px') }}/>
+      <li className="item-tile" style={{ flexBasis: (Z[zoom] * 1.25 + 'px') }}/>
+      <li className="item-tile" style={{ flexBasis: (Z[zoom] * 1.25 + 'px') }}/>
+      <li className="item-tile" style={{ flexBasis: (Z[zoom] * 1.25 + 'px') }}/>
+      <li className="item-tile" style={{ flexBasis: (Z[zoom] * 1.25 + 'px') }}/>
+      <li className="item-tile" style={{ flexBasis: (Z[zoom] * 1.25 + 'px') }}/>
+      <li className="item-tile" style={{ flexBasis: (Z[zoom] * 1.25 + 'px') }}/>
+      <li className="item-tile" style={{ flexBasis: (Z[zoom] * 1.25 + 'px') }}/>
+      <li className="item-tile" style={{ flexBasis: (Z[zoom] * 1.25 + 'px') }}/>
     </ul>
   </div>
 )

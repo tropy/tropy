@@ -1,0 +1,33 @@
+//
+// Item grid view
+// --------------------------------------------------
+
+.item-grid-view {
+  flex: 1 1 0;
+  display: flex;
+  padding: 0 $space-min;
+}
+
+.item-grid {
+  flex: 1 1 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  border-top: 1px solid $item-list-header-border-color;
+  overflow-y: scroll;
+}
+
+.item-tile {
+  display: flex;
+  flex-grow: 1;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+
+  &.active {
+    img {
+      box-sizing: content-box;
+      border: 3px solid $brand-primary;
+    }
+  }
+}

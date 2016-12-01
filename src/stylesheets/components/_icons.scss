@@ -22,6 +22,9 @@
 }
 
 .icon-item {
+  width: $thumbnail-size;
+  height: $thumbnail-size;
+
   svg {
     fill: $icon-item-color;
     background: $icon-item-bg;
