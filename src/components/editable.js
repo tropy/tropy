@@ -95,7 +95,6 @@ class Editable extends Component {
     return (
       <div {...props} className={cn({
         editable: true,
-        empty: !value,
         disabled: isDisabled
       })}>
         {value}
