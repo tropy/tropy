@@ -10,7 +10,7 @@ class ProjectName extends Component {
 
   handleClick = () => {
     if (this.props.isSelected) {
-      this.props.onProjectRename()
+      this.props.onRename()
     } else {
       this.props.onSelect()
     }
@@ -19,7 +19,7 @@ class ProjectName extends Component {
   render() {
     const { name, isSelected, context, ...props } = this.props
 
-    delete props.onProjectRename
+    delete props.onRename
 
     return (
       <ol>
@@ -45,8 +45,7 @@ class ProjectName extends Component {
 
     onCancel: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
-
-    onProjectRename: PropTypes.func.isRequired,
+    onRename: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired
   }
 }
