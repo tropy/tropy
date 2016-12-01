@@ -2,7 +2,7 @@
 // Utilities
 // --------------------------------------------------
 
-@mixin css-truncate {
+@mixin css-truncation {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

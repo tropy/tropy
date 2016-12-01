@@ -24,8 +24,12 @@
     margin-right: $space-xs;
   }
 
-  .file-name {
-    @include css-truncate;
+  .title {
     flex: 1 1 0;
+    min-width: 0; // Fix truncation
+
+    .editable {
+      @include css-truncation;
+    }
   }
 }

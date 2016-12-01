@@ -9,8 +9,8 @@
   }
 
   label,
-  .value {
-    @include css-truncate;
+  .editable {
+    @include css-truncation;
   }
 
   label {
@@ -26,6 +26,7 @@
     padding-left: ($metadata-gutter / 2);
     padding-right: $component-padding-horizontal;
     max-width: 100%;
+    min-width: 0; // Fix truncation
   }
 
   a {

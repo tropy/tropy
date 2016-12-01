@@ -62,6 +62,11 @@
     .title,
     .name {
       flex: 1 1 auto;
+      min-width: 0; // Fix truncation
+
+      .editable {
+        @include css-truncation;
+      }
     }
   }
 

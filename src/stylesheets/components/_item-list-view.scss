@@ -23,7 +23,6 @@
 
   .metadata-head,
   .metadata {
-    @include css-truncate;
     padding: 0 $space-xs 0 ($space-xs + 1px);
     position: relative;
 
@@ -33,6 +32,10 @@
 
     &.number {
       text-align: right;
+    }
+
+    .editable {
+      @include css-truncation;
     }
   }
 

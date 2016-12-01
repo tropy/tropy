@@ -93,13 +93,13 @@ class Editable extends Component {
     }
 
     return (
-      <span {...props} className={cn({
+      <div {...props} className={cn({
         editable: true,
         empty: !value,
         disabled: isDisabled
       })}>
         {value}
-      </span>
+      </div>
     )
   }
 
