@@ -61,7 +61,7 @@ class TableRow extends Component {
     onSelection: PropTypes.func.isRequired,
 
     onActivate: PropTypes.func,
-    onEditableCancel: PropTypes.func,
+    onCancel: PropTypes.func,
     onChange: PropTypes.func,
     onContextMenu: PropTypes.func,
     columns: PropTypes.arrayOf(PropTypes.object)

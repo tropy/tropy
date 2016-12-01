@@ -117,8 +117,8 @@ class ProjectSidebar extends Component {
 
     onProjectRename: PropTypes.func,
     onSelect: PropTypes.func,
-    onEditableCancel: PropTypes.func,
-    onEditableChange: PropTypes.func,
+    onCancel: PropTypes.func,
+    onChange: PropTypes.func,
 
     showContextMenu: PropTypes.func
   }
@@ -146,12 +146,12 @@ module.exports = {
         dispatch(act.nav.select({ list: null, trash: null, ...opts }))
       },
 
-      onEditableChange(name) {
+      onChange(name) {
         dispatch(act.project.save({ name }))
         dispatch(act.ui.edit.cancel())
       },
 
-      onEditableCancel() {
+      onCancel() {
         dispatch(act.ui.edit.cancel())
       },
 

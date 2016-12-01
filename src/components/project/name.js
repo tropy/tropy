@@ -43,8 +43,8 @@ class ProjectName extends Component {
 
     name: PropTypes.string.isRequired,
 
-    onEditableCancel: PropTypes.func.isRequired,
-    onEditableChange: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
 
     onProjectRename: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired

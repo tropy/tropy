@@ -32,7 +32,7 @@ class List extends Component {
 
   render() {
     const {
-      list, isSelected, context, isEditing, onEditableCancel
+      list, isSelected, context, isEditing, onCancel
     } = this.props
 
     return (
@@ -46,8 +46,8 @@ class List extends Component {
             value={list.name}
             isRequired
             isEditing={isEditing}
-            onEditableCancel={onEditableCancel}
-            onEditableChange={this.update}/>
+            onCancel={onCancel}
+            onChange={this.update}/>
         </div>
       </li>
     )
@@ -59,7 +59,7 @@ class List extends Component {
     context: PropTypes.bool,
 
     isEditing: PropTypes.bool,
-    onEditableCancel: PropTypes.func,
+    onCancel: PropTypes.func,
 
     onContextMenu: PropTypes.func,
     onRename: PropTypes.func,
@@ -104,7 +104,7 @@ Lists.propTypes = {
   context: PropTypes.number,
   editing: PropTypes.object,
 
-  onEditableCancel: PropTypes.func,
+  onCancel: PropTypes.func,
 
   onUpdate: PropTypes.func,
   onRename: PropTypes.func,
@@ -128,7 +128,7 @@ module.exports = {
     },
 
     (dispatch, props) => ({
-      onEditableCancel() {
+      onCancel() {
         dispatch(ui.edit.cancel())
       },
 

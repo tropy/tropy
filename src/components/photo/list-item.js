@@ -65,8 +65,8 @@ class PhotoListItem extends Component {
 
     context: PropTypes.bool,
 
-    onEditableCancel: PropTypes.func,
-    onEditableChange: PropTypes.func,
+    onCancel: PropTypes.func,
+    onChange: PropTypes.func,
 
     showPhotoMenu: PropTypes.func,
     onPhotoSelection: PropTypes.func
@@ -103,7 +103,7 @@ module.exports = {
 
     (dispatch, { id, title }) => ({
 
-      onEditableChange(value) {
+      onChange(value) {
         dispatch(act.metadata.save({
           id,
           data: {
@@ -113,7 +113,7 @@ module.exports = {
         dispatch(act.ui.edit.cancel())
       },
 
-      onEditableCancel() {
+      onCancel() {
         dispatch(act.ui.edit.cancel())
       }
     })

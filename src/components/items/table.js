@@ -35,7 +35,7 @@ Table.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object),
   cache: PropTypes.string,
   onSelection: PropTypes.func,
-  onEditableCancel: PropTypes.func
+  onCancel: PropTypes.func
 }
 
 
@@ -52,7 +52,7 @@ module.exports = {
         dispatch(act.item.select(id, { mod }))
       },
 
-      onEditableCancel() {
+      onCancel() {
         dispatch(act.ui.edit.cancel())
       }
     })

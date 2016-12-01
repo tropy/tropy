@@ -59,7 +59,7 @@ class TableCell extends Component {
 
   render() {
     const {
-      isEditing, isDisabled, width, onEditableCancel
+      isEditing, isDisabled, width, onCancel
     } = this.props
 
     return (
@@ -74,8 +74,8 @@ class TableCell extends Component {
           value={this.value}
           isEditing={isEditing}
           isDisabled={isDisabled}
-          onEditableCancel={onEditableCancel}
-          onEditableChange={this.changed}/>
+          onCancel={onCancel}
+          onChange={this.changed}/>
       </td>
     )
   }
@@ -104,7 +104,7 @@ class TableCell extends Component {
     width: PropTypes.string.isRequired,
 
     onActivate: PropTypes.func,
-    onEditableCancel: PropTypes.func,
+    onCancel: PropTypes.func,
     onChange: PropTypes.func
   }
 }

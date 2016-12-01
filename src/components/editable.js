@@ -28,20 +28,20 @@ class Editable extends Component {
   }
 
   stop = () => {
-    const { onEditableCancel, onEditableChange } = this.props
+    const { onCancel, onChange } = this.props
 
     if (this.changed) {
-      onEditableChange(this.state.value)
+      onChange(this.state.value)
     } else {
-      onEditableCancel()
+      onCancel()
     }
   }
 
   cancel() {
-    const { value, onEditableCancel } = this.props
+    const { value, onCancel } = this.props
 
     this.setState({ value: value || '' })
-    onEditableCancel()
+    onCancel()
   }
 
   handleKeyUp = (event) => {
@@ -74,8 +74,8 @@ class Editable extends Component {
       value, type, isEditing, isDisabled, isRequired, ...props
     } = this.props
 
-    delete props.onEditableChange
-    delete props.onEditableCancel
+    delete props.onChange
+    delete props.onCancel
 
     if (isEditing) {
       return (
@@ -116,14 +116,14 @@ class Editable extends Component {
     onClick: PropTypes.func,
     onDoubleClick: PropTypes.func,
 
-    onEditableChange: PropTypes.func,
-    onEditableCancel: PropTypes.func
+    onChange: PropTypes.func,
+    onCancel: PropTypes.func
   }
 
   static defaultProps = {
     type: 'text',
-    onEditableCancel: noop,
-    onEditableChange: noop
+    onCancel: noop,
+    onChange: noop
   }
 }
 

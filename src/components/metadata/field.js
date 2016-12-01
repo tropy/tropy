@@ -51,8 +51,8 @@ class Field extends Component {
             value={value ? value.value : null}
             isDisabled={isDisabled}
             isEditing={isEditing}
-            onEditableCancel={onCancel}
-            onEditableChange={changed}/>
+            onCancel={onCancel}
+            onChange={changed}/>
         </div>
       </li>
     )

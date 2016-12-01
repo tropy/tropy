@@ -31,7 +31,7 @@ class Tag extends Component {
 
   render() {
     const {
-      tag, isSelected, context, isEditing, onEditableCancel
+      tag, isSelected, context, isEditing, onCancel
     } = this.props
 
     return (
@@ -45,8 +45,8 @@ class Tag extends Component {
             value={tag.name}
             isRequired
             isEditing={isEditing}
-            onEditableCancel={onEditableCancel}
-            onEditableChange={this.update}/>
+            onCancel={onCancel}
+            onChange={this.update}/>
         </div>
       </li>
     )
@@ -61,7 +61,7 @@ class Tag extends Component {
 
     onSelect: PropTypes.func,
     onContextMenu: PropTypes.func,
-    onEditableCancel: PropTypes.func,
+    onCancel: PropTypes.func,
     onUpdate: PropTypes.func
   }
 }
@@ -99,7 +99,7 @@ Tags.propTypes = {
   selection: PropTypes.arrayOf(PropTypes.number),
   context: PropTypes.number,
   editing: PropTypes.object,
-  onEditableCancel: PropTypes.func,
+  onCancel: PropTypes.func,
   onSelect: PropTypes.func,
   onUpdate: PropTypes.func,
   showTagMenu: PropTypes.func
@@ -115,7 +115,7 @@ module.exports = {
     }),
 
     (dispatch) => ({
-      onEditableCancel() {
+      onCancel() {
         dispatch(act.ui.edit.cancel())
       },
 
