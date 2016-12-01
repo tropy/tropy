@@ -5,6 +5,7 @@ const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { prompt, openImages  } = require('../dialog')
 const { Image } = require('../image')
+const { imagePath } = require('../common/cache')
 const intl = require('../selectors/intl')
 const act = require('../actions')
 const mod = require('../models')
@@ -58,9 +59,11 @@ class Import extends Command {
       metadata.push(item.id, photo.id)
 
       try {
-        const thumb = yield call([image, image.resize], 48)
-        yield call([cache, cache.save],
-          `photo-${photo.id}_48.png`, thumb.toPNG())
+        for (let size of [512, 48]) {
+          const thumb = yield call([image, image.resize], size)
+          yield call([cache, cache.save],
+            imagePath(photo.id, size), thumb.toJPG(100))
+        }
 
       } catch (error) {
         warn(`Failed to create thumbnail: ${error.message}`)
