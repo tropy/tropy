@@ -39,9 +39,11 @@ class Create extends Command {
         photos.push(photo.id)
 
         try {
-          const icon = yield call([image, image.resize], 48)
-          yield call([cache, cache.save],
-            imagePath(photo.id, 48), icon.toJPG(100))
+          for (let size of [512, 48]) {
+            const icon = yield call([image, image.resize], size)
+            yield call([cache, cache.save],
+              imagePath(photo.id, size), icon.toJPG(100))
+          }
 
         } catch (error) {
           warn(`Failed to create thumbnail: ${error.message}`)
