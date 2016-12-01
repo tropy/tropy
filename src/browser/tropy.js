@@ -267,7 +267,7 @@ class Tropy extends EventEmitter {
 
       .on('app:open-dialog', (win, options = {}) => {
         dialog
-          .show('open', win, {
+          .show('file', win, {
             ...options,
             defaultPath: app.getPath('userData'),
             filters: [{ name: 'Tropy Projects', extensions: ['tpy'] }],
