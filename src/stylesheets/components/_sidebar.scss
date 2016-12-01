@@ -68,6 +68,19 @@
         @include css-truncation;
       }
     }
+
+    .tags {
+      .active {
+        background: $sidebar-tag-active-bg;
+        color: $sidebar-tag-active-color;
+
+        .icon {
+          svg {
+            fill: $sidebar-tag-active-color;
+          }
+        }
+      }
+    }
   }
 
   .activity-pane {
