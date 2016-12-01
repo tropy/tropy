@@ -59,10 +59,10 @@ class Import extends Command {
       metadata.push(item.id, photo.id)
 
       try {
-        for (let size of [512, 48]) {
+        for (let size of [48, 512]) {
           const thumb = yield call([image, image.resize], size)
           yield call([cache, cache.save],
-            imagePath(photo.id, size), thumb.toJPG(100))
+            imagePath(photo.id, size), thumb.toJPEG(100))
         }
 
       } catch (error) {

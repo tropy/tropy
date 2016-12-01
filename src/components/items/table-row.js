@@ -38,7 +38,7 @@ class TableRow extends Component {
               key={property.uri}
               isEditing={property.uri === editing}
               isDisabled={!!item.deleted}
-              hasIcon={property.uri === DC.TITLE}
+              hasCoverImage={property.uri === DC.TITLE}
               property={property}
               width={width}/>
           ))

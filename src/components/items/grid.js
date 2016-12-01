@@ -3,30 +3,37 @@
 const React = require('react')
 const { PropTypes } = React
 const { connect } = require('react-redux')
+const { ItemTile } = require('./tile')
 const { select } = require('../../actions/item')
+const { getCachePrefix } = require('../../selectors/project')
 
-const Grid = ({ items }) => (
+const ItemGrid = ({ items, selection, ...props }) => (
   <div className="item-grid-view">
     <div className="grid-body">
-      {items.map((item) => (
-        <div key={item.id} className="item">{item.id}</div>
-      ))}
+      {items.map((item) =>
+        <ItemTile {...props}
+          key={item.id}
+          item={item}
+          isSelected={selection.includes(item.id)}/>
+      )}
     </div>
   </div>
 )
 
-Grid.propTypes = {
+ItemGrid.propTypes = {
   selection: PropTypes.arrayOf(PropTypes.number),
   onSelect: PropTypes.func,
   columns: PropTypes.arrayOf(PropTypes.object),
-  items: PropTypes.arrayOf(PropTypes.object)
+  items: PropTypes.arrayOf(PropTypes.object),
+  cache: PropTypes.string.isRequired
 }
 
 
 module.exports = {
-  Grid: connect(
+  ItemGrid: connect(
     (state) => ({
-      selection: state.nav.items
+      selection: state.nav.items,
+      cache: getCachePrefix(state)
     }),
 
     (dispatch) => ({
@@ -35,5 +42,5 @@ module.exports = {
       }
     })
 
-  )(Grid)
+  )(ItemGrid)
 }

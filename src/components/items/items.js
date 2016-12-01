@@ -7,7 +7,7 @@ const { Toolbar } = require('../toolbar')
 const { Search } = require('../search')
 const { IconPlus, IconList, IconGrid } = require('../icons')
 const { Table } = require('./table')
-const { Grid } = require('./grid')
+const { ItemGrid } = require('./grid')
 const { Slider } = require('../slider')
 const { getItems } = require('../../selectors/items')
 const act = require('../../actions')
@@ -36,7 +36,7 @@ const Items = ({ createItem, items, zoom, maxZoom, handleZoomChange }) => (
         </div>
       </Toolbar>
     </header>
-    {zoom ? <Grid items={items}/> : <Table items={items}/>}
+    {zoom ? <ItemGrid items={items}/> : <Table items={items}/>}
   </section>
 )
 

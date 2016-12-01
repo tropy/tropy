@@ -2,12 +2,10 @@
 
 const React = require('react')
 const { Component, PropTypes } = React
+const { CoverImage } = require('./cover-image')
 const { Editable } = require('../editable')
-const { imageURL } = require('../../common/cache')
-const { IconItem } = require('../icons')
 const cn = require('classnames')
 
-const ICON_SIZE = 24
 
 class TableCell extends Component {
 
@@ -40,26 +38,11 @@ class TableCell extends Component {
       data[property.uri].type : (property.type || 'text')
   }
 
-  get icon() {
-    const { item: { cover, photos }, cache } = this.props
 
-    switch (true) {
-      case !!(cover):
-        return imageURL(cache, cover, ICON_SIZE * 2)
-      case !!(photos && photos.length):
-        return imageURL(cache, photos[0], ICON_SIZE * 2)
-    }
-  }
-
-  renderIcon() {
-    if (this.props.hasIcon) {
-      return <TableCellIcon src={this.icon} size={ICON_SIZE}/>
-    }
-  }
 
   render() {
     const {
-      isEditing, isDisabled, width, onCancel
+      item, cache, width, isEditing, isDisabled, onCancel, hasCoverImage
     } = this.props
 
     return (
@@ -68,7 +51,7 @@ class TableCell extends Component {
         style={{ width }}
         onClick={this.handleClick}>
 
-        {this.renderIcon()}
+        {hasCoverImage && <CoverImage item={item} size={24} cache={cache}/>}
 
         <Editable
           value={this.value}
@@ -86,7 +69,7 @@ class TableCell extends Component {
     isDisabled: PropTypes.bool,
     isSelected: PropTypes.bool,
 
-    hasIcon: PropTypes.bool,
+    hasCoverImage: PropTypes.bool,
 
     property: PropTypes.shape({
       uri: PropTypes.string.isRequired,
@@ -110,21 +93,6 @@ class TableCell extends Component {
 }
 
 
-const TableCellIcon = ({ src, size }) => {
-  if (!src) return <IconItem/>
-
-  return (
-    <img srcSet={`${encodeURI(src)} 2x`} width={size} height={size}/>
-  )
-}
-
-TableCellIcon.propTypes = {
-  src: PropTypes.string,
-  size: PropTypes.number.isRequired
-}
-
-
 module.exports = {
-  TableCell,
-  TableCellIcon
+  TableCell
 }
