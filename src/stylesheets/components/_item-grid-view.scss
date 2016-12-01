@@ -25,7 +25,8 @@
   align-items: center;
 
   &.active {
-    img {
+    img,
+    .icon-item {
       box-sizing: content-box;
       border: 3px solid $brand-primary;
     }
