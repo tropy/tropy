@@ -36,7 +36,7 @@ const Items = ({ createItem, items, zoom, maxZoom, onZoomChange }) => (
         </div>
       </Toolbar>
     </header>
-    {zoom ? <ItemGrid items={items}/> : <Table items={items}/>}
+    {zoom ? <ItemGrid items={items} zoom={zoom}/> : <Table items={items}/>}
   </section>
 )
 

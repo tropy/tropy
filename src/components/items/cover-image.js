@@ -14,12 +14,13 @@ class CoverImage extends Component {
 
   get src() {
     const { item: { cover, photos }, cache, size } = this.props
+    const csize = size > 48 ? 512 : 48
 
     switch (true) {
       case !!(cover):
-        return imageURL(cache, cover, size * 2)
+        return imageURL(cache, cover, csize)
       case !!(photos.length):
-        return imageURL(cache, photos[0], size * 2)
+        return imageURL(cache, photos[0], csize)
     }
   }
 

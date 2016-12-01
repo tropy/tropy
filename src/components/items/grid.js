@@ -7,16 +7,19 @@ const { ItemTile } = require('./tile')
 const { select } = require('../../actions/item')
 const { getCachePrefix } = require('../../selectors/project')
 
-const ItemGrid = ({ items, selection, ...props }) => (
+const Z = [32, 48, 64, 96, 128, 144, 256, 304, 512]
+
+const ItemGrid = ({ items, selection, zoom, ...props }) => (
   <div className="item-grid-view">
-    <div className="grid-body">
+    <ul className="grid-body">
       {items.map((item) =>
         <ItemTile {...props}
           key={item.id}
           item={item}
+          size={Z[zoom]}
           isSelected={selection.includes(item.id)}/>
       )}
-    </div>
+    </ul>
   </div>
 )
 
@@ -25,7 +28,8 @@ ItemGrid.propTypes = {
   onSelect: PropTypes.func,
   columns: PropTypes.arrayOf(PropTypes.object),
   items: PropTypes.arrayOf(PropTypes.object),
-  cache: PropTypes.string.isRequired
+  cache: PropTypes.string.isRequired,
+  zoom: PropTypes.number.isRequired
 }
 
 

@@ -14,13 +14,13 @@ class ItemTile extends Component {
   }
 
   render() {
-    const { item, cache, isSelected } = this.props
+    const { item, cache, size, isSelected } = this.props
 
     return (
       <li
         className={cn({ 'item-tile': true, 'active': isSelected })}
         onClick={this.handleClick}>
-        <CoverImage item={item} size={256} cache={cache}/>
+        <CoverImage item={item} size={size} cache={cache}/>
       </li>
     )
   }
@@ -28,6 +28,7 @@ class ItemTile extends Component {
   static propTypes = {
     isSelected: PropTypes.bool,
 
+    size: PropTypes.number.isRequired,
     cache: PropTypes.string.isRequired,
     item: PropTypes.shape({
       id: PropTypes.number.isRequired
