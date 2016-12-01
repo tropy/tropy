@@ -129,7 +129,7 @@ $tabs-compact-padding-horizontal: $space-xs;
 // --------------------------------------------------
 
 $metadata-line-height: $space-lg;
-$metadata-gutter: $space-sm;
+$metadata-gutter: 12em / 14; // Cannot mix em with px in calculations
 $metadata-horizontal-offset: 33%;
 
 
