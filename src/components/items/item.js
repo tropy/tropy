@@ -9,7 +9,7 @@ const { Tab, Tabs } = require('../tabs')
 const { NoteList } = require('../notelist')
 const { PanelGroup, Panel } = require('../panel')
 const { Resizable } = require('../resizable')
-const { PhotoToolbar, PhotoList } = require('../photo')
+const { PhotoToolbar, PhotoList, PhotoGrid } = require('../photo')
 const { Viewer } = require('../viewer')
 const { Fields } = require('../metadata')
 const { getSelectedItem } = require('../../selectors/items')
@@ -136,9 +136,20 @@ class Item extends Component {
   }
 
   renderPhotoPanel() {
-    const { item, photo } = this.props
+    const { item, photo, panel } = this.props
 
-    return item && (
+    if (!item) return
+
+    if (panel.photoZoom) {
+      return (
+        <PhotoGrid
+          photos={item.photos}
+          selected={photo}
+          isDisabled={this.disabled}/>
+      )
+    }
+
+    return (
       <PhotoList
         photos={item.photos}
         selected={photo}
