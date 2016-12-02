@@ -28,7 +28,8 @@ target.pack = (args = []) => {
   const out = join(dir, 'dist', release.channel)
   const build = exec('git describe --tags --long', { silent: true }).stdout
 
-  packager({ /*eslint quote-props: 0 */
+  //eslint-disable-next-line quote-props
+  packager({
     platform, arch, icon, out, dir,
 
     name: release.product,
@@ -45,24 +46,29 @@ target.pack = (args = []) => {
 
     'extend-info': join(dir, 'res', 'ext.plist'),
 
-    ignore: [
-      '.babelrc',
-      '.eslintrc',
-      '.gitignore',
-      '.nvmrc',
-      '.travis.yml',
-      'coverage',
-      'dist',
-      'doc',
-      'ext',
-      'res/icons',
-      'res/dmg',
-      'scripts',
-      'src',
-      'test',
-      'tmp',
-      'appveyor.yml'
-    ].map(i => join(dir, i))
+    'ignore': [
+      /.DS_Store/,
+      /.babelrc/,
+      /.eslintrc/,
+      /.gitignore/,
+      /.nvmrc/,
+      /.sass-lint\.yml/,
+      /.travis\.yml/,
+      /.vimrc/,
+      /^\/coverage/,
+      /^\/db.test/,
+      /^\/dist/,
+      /^\/doc/,
+      /^\/ext/,
+      /^\/res.icons/,
+      /^\/res.dmg/,
+      /^\/res.ext\.plist/,
+      /^\/scripts/,
+      /^\/src/,
+      /^\/test/,
+      /^\/tmp/,
+      /appveyor\.yml/
+    ]
 
   }, (err, dst) => {
     if (err) return log.error(err)
