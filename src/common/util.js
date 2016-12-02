@@ -102,6 +102,14 @@ module.exports = {
     }
   },
 
+  titlecase(string) {
+    return string.replace(/\b[a-z]/g, (match) => match.toUpperCase())
+  },
+
+  downcase(string) {
+    return string.toLowerCase().replace(/\s+/g, '-')
+  },
+
   strftime(format, date = new Date()) {
     return format.replace(/%([YymdHMS])/g, (match, code) => {
       switch (code) {
