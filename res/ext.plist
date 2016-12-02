@@ -5,15 +5,67 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>tpy</string>
-			</array>
+      <key>LSItemContentTypes</key>
+      <array>
+        <string>org.tropy.schema.v1.mime-types.tpy</string>
+      </array>
+      <key>NSExportableTypes</key>
+      <array>
+        <string>org.tropy.schema.v1.mime-types.tpy</string>
+      </array>
+			<key>CFBundleTypeIconFile</key>
+			<string>tpy.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Tropy Project</string>
 			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
 		</dict>
+    <dict>
+      <key>CFBundleTypeName</key>
+      <string>Image</string>
+      <key>LSHandlerRank</key>
+      <string>Alternate</string>
+      <key>LSItemContentTypes</key>
+      <array>
+        <string>public.jpeg</string>
+      </array>
+    </dict>
+    <dict>
+      <key>CFBundleTypeName</key>
+      <string>Folder</string>
+      <key>LSHandlerRank</key>
+      <string>Alternate</string>
+      <key>LSItemContentTypes</key>
+      <array>
+        <string>public.folder</string>
+      </array>
+    </dict>
+	</array>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+    <dict>
+      <key>UTTypeIdentifier</key>
+      <string>org.tropy.schema.v1.mime-types.tpy</string>
+      <key>UTTypeReferenceURL</key>
+      <string>https://schema.tropy.org/v1/mime-types/tpy</string>
+      <key>UTTypeDescription</key>
+      <string>Tropy Project</string>
+      <key>UTTypeIconFile</key>
+      <string>tpy.icns</string>
+      <key>UTTypeConformsTo</key>
+      <array>
+        <string>public.data</string>
+      </array>
+      <key>UTTypeTagSpecification</key>
+      <dict>
+        <key>public.filename-extension</key>
+        <string>tpy</string>
+        <key>public.mime-type</key>
+        <string>application/tpy</string>
+      </dict>
+    </dict>
 	</array>
 </dict>
 </plist>

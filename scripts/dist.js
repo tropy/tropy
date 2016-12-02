@@ -9,6 +9,8 @@ const release = require('../lib/common/release')
 const { join, resolve } = require('path')
 
 const dir = resolve(__dirname, '..')
+const res = join(dir, 'res')
+
 const electron = require('electron/package')
 
 target.all = () => {
@@ -22,11 +24,12 @@ target.pack = (args = []) => {
   const arch = args[1] || process.arch
 
   const icon = platform === 'win32' ?
-    join(dir, 'res', 'icons', release.channel, `${release.name}.ico`) :
-    join(dir, 'res', 'icons', release.channel, `${release.name}.icns`)
+    join(res, 'icons', release.channel, `${release.name}.ico`) :
+    join(res, 'icons', release.channel, `${release.name}.icns`)
 
   const out = join(dir, 'dist', release.channel)
-  const build = exec('git describe --tags --long', { silent: true }).stdout
+  const build =
+    exec('git describe --tags --long', { silent: true }).stdout.trim()
 
   //eslint-disable-next-line quote-props
   packager({
@@ -40,11 +43,18 @@ target.pack = (args = []) => {
     'version': electron.version,
     'build-version': build,
     'app-version': release.version,
+    'app-bundle-id': 'org.tropy.tropy',
+    'helper-bundle-id': 'org.tropy.tropy-helper',
+    'app-category-type': 'public.app-category.productivity',
     'app-copyright':
       `Copyright (c) 2015-${new Date().getFullYear()} ` +
       `${release.author.name}. All rights not expressly granted are reserved.`,
 
-    'extend-info': join(dir, 'res', 'ext.plist'),
+    'extend-info': join(res, 'ext.plist'),
+
+    'extra-resource': [
+      join(res, 'icons', 'mime', 'tpy.icns')
+    ],
 
     'ignore': [
       /.DS_Store/,
