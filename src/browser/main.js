@@ -19,6 +19,7 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
   const { app }  = require('electron')
   const { all }  = require('bluebird')
   const { once } = require('../common/util')
+  const { extname } = require('path')
   const { info, verbose } =
     require('../common/log')(app.getPath('userData'))
 
@@ -39,10 +40,21 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
 
   if (process.platform === 'darwin') {
     app.on('open-file', (event, file) => {
-      event.preventDefault()
+      switch (extname(file)) {
+        case '.tpy':
+          event.preventDefault()
+          if (!READY) opts._ = [file]
+          else tropy.open(file)
+          break
 
-      if (!READY) opts._ = [file]
-      else tropy.open(file)
+        case '.jpg':
+        case '.jpeg':
+          if (READY && tropy.win) {
+            event.preventDefault()
+            tropy.import([file])
+          }
+          break
+      }
     })
   }
 

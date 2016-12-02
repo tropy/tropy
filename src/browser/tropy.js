@@ -123,6 +123,12 @@ class Tropy extends EventEmitter {
     this.emit('app:reload-menu')
   }
 
+  import(...args) {
+    if (this.win) {
+      this.dispatch(act.item.import(...args))
+    }
+  }
+
   create() {
     if (this.wiz) return this.wiz.show(), this
 
@@ -169,7 +175,7 @@ class Tropy extends EventEmitter {
       .on('app:create-project', () =>
         this.create())
       .on('app:import-photos', () =>
-        this.dispatch(act.item.import()))
+        this.import())
       .on('app:rename-project', () =>
         this.dispatch(act.ui.edit.start({ project: { name: true } })))
       .on('app:show-in-folder', (_, { target }) =>
