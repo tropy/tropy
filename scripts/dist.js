@@ -31,14 +31,14 @@ target.pack = (args = []) => {
   const build =
     exec('git describe --tags --long', { silent: true }).stdout.trim()
 
-  //eslint-disable-next-line quote-props
   packager({
     platform, arch, icon, out, dir,
 
-    name: release.product,
-    prune: true,
-    overwrite: true,
-    asar: {
+    'name': release.product,
+    'prune': true,
+    'overwrite': true,
+
+    'asar': {
       unpack: '**/*.node'
     },
 
