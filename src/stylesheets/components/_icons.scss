@@ -30,3 +30,10 @@
     background: $icon-item-bg;
   }
 }
+
+.icon-spin {
+  svg {
+    fill: none;
+    stroke: $icon-spin-color;
+  }
+}
