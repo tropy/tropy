@@ -21,17 +21,6 @@
     color: $panel-header-color;
     position: relative;
     z-index: 1;
-    margin-bottom: $space-min;
-
-    &::after {
-      //content: " ";
-      position: absolute;
-      top: 100%;
-      left: $component-padding-horizontal;
-      right: $component-padding-horizontal;
-      height: 1px;
-      background: $panel-header-shadow;
-    }
 
     nav {
       width: 100%;
@@ -42,6 +31,11 @@
     flex: 1 1 auto;
     overflow-y: scroll;
     margin-bottom: $space-min;
-    //padding-top: $space-min;
+  }
+
+  &.item-panel {
+    .panel-header {
+      margin-bottom: $space-min;
+    }
   }
 }

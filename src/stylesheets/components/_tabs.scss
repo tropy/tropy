@@ -4,6 +4,7 @@
 
 .tabs {
   display: flex;
+  margin-bottom: $space-min;
 
   li {
     flex: 0 0 auto;
