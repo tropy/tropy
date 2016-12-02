@@ -11,11 +11,11 @@ const act = require('../../actions')
 
 
 const Table = ({ items, selection, ...props }) => (
-  <div className="item-list-view">
+  <div className="item-table-view">
     <TableHead columns={props.columns}/>
 
-    <div className="list-body">
-      <table className="item-list">
+    <div className="table-body">
+      <table className="item-table">
         <tbody>
           {items.map((item) => (
             <TableRow {...props}

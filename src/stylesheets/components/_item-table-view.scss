@@ -1,24 +1,24 @@
 //
-// Item list view
+// Item table view
 // --------------------------------------------------
 
-.item-list-view {
+.item-table-view {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
   padding: 0 $space-min;
 
-  .list-head {
+  .table-head {
     box-sizing: content-box;
     width: 100%;
     table-layout: fixed;
     border-collapse: separate;
     border-spacing: 0;
     border: {
-      top: 1px solid $item-list-header-border-color;
-      bottom: 1px solid $item-list-header-border-color;
+      top: 1px solid $item-table-header-border-color;
+      bottom: 1px solid $item-table-header-border-color;
     }
-    color: $item-list-header-color;
+    color: $item-table-header-color;
   }
 
   .metadata-head,
@@ -42,7 +42,7 @@
   .metadata-head {
     text-align: left;
     font-weight: 400;
-    height: $item-list-header-height;
+    height: $item-table-header-height;
 
     &:first-child {
       padding-left: $space-sm;
@@ -59,16 +59,16 @@
       top: 2px;
       bottom: 2px;
       width: 1px;
-      background: $item-list-header-border-color;
+      background: $item-table-header-border-color;
     }
 
     &.ascending,
     &.descending {
-      color: $item-list-header-sort-color;
+      color: $item-table-header-sort-color;
     }
   }
 
-  .list-body {
+  .table-body {
     background: repeating-linear-gradient(to bottom, $items-odd-bg 3px,
       $items-odd-bg ($row-height + 3px), transparent ($row-height + 3px),
       transparent (2 * $row-height + 3px));
@@ -78,7 +78,7 @@
     padding-top: 3px;
   }
 
-  .item-list {
+  .item-table {
     width: 100%;
     table-layout: fixed;
     border-collapse: collapse;

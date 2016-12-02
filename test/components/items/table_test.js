@@ -7,8 +7,8 @@ describe('Table', () => {
   const { Table: { WrappedComponent: Table } } =
     __require('components/items/table')
 
-  it('has class item-list-view', () => {
+  it('has class item-table-view', () => {
     expect(shallow(<Table items={[]} columns={[]}/>))
-      .to.have.className('item-list-view')
+      .to.have.className('item-table-view')
   })
 })
