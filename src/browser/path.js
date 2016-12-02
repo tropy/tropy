@@ -24,7 +24,7 @@ module.exports = function (dir) {
         name = downcase(name)
       }
 
-      app.setPath('userData', join(app.getPah('appData'), name))
+      app.setPath('userData', join(app.getPath('appData'), name))
       break
     }
 
