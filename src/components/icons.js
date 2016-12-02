@@ -142,8 +142,7 @@ i('Search', (
 i('Spin', (
   <svg width="16" height="16">
     <g className="line">
-      <path d="M13.553,4.381L8,14L2.447,4.381H13.553 M15.285,3.381H0.715L8,16L15.285,3.381L15.285,3.381z"/>
-      <path fill="none" stroke="#000000" strokeMiterlimit="10" d="M8,16"/>
+      <path strokeWidth="1.5" d="M8,15c-3.866,0-7-3.134-7-7s3.134-7,7-7s7,3.134,7,7"/>
     </g>
   </svg>
 ))
