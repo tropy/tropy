@@ -38,6 +38,7 @@
   div {
     &.editable {
       padding-left: $editable-border-width + $editable-padding-horizontal;
+      height: 100%; // For empty fields
 
       &:hover {
         background: $value-hover-color;
