@@ -36,9 +36,11 @@ target.pack = (args = []) => {
     platform, arch, icon, out, dir,
 
     name: release.product,
-    asar: true,
     prune: true,
     overwrite: true,
+    asar: {
+      unpack: '**/*.node'
+    },
 
     'version': electron.version,
     'build-version': build,
