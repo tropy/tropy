@@ -95,8 +95,9 @@ target.pack = (args = []) => {
   })
 }
 
+
 function rename(ctx, from, to) {
   mv(join(ctx, from), join(ctx, to))
 }
 
-exports.package = target.pack
+exports.package = { ...target }
