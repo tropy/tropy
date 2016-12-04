@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = React
+const { Component, PropTypes } = React
 const { connect } = require('react-redux')
 const { ItemTile } = require('./tile')
 const { select } = require('../../actions/item')
@@ -9,37 +9,48 @@ const { getCachePrefix } = require('../../selectors/project')
 
 const Z = [32, 48, 64, 96, 128, 144, 256, 304, 512]
 
-const ItemGrid = ({ items, selection, zoom, ...props }) => (
-  <div className="item-grid-view">
-    <ul className="item-grid">
-      {items.map((item) =>
-        <ItemTile {...props}
-          key={item.id}
-          item={item}
-          size={Z[zoom]}
-          isSelected={selection.includes(item.id)}/>
-      )}
-      <li className="item-tile" style={{ flexBasis: (Z[zoom] * 1.25 + 'px') }}/>
-      <li className="item-tile" style={{ flexBasis: (Z[zoom] * 1.25 + 'px') }}/>
-      <li className="item-tile" style={{ flexBasis: (Z[zoom] * 1.25 + 'px') }}/>
-      <li className="item-tile" style={{ flexBasis: (Z[zoom] * 1.25 + 'px') }}/>
-      <li className="item-tile" style={{ flexBasis: (Z[zoom] * 1.25 + 'px') }}/>
-      <li className="item-tile" style={{ flexBasis: (Z[zoom] * 1.25 + 'px') }}/>
-      <li className="item-tile" style={{ flexBasis: (Z[zoom] * 1.25 + 'px') }}/>
-      <li className="item-tile" style={{ flexBasis: (Z[zoom] * 1.25 + 'px') }}/>
-      <li className="item-tile" style={{ flexBasis: (Z[zoom] * 1.25 + 'px') }}/>
-      <li className="item-tile" style={{ flexBasis: (Z[zoom] * 1.25 + 'px') }}/>
-    </ul>
-  </div>
-)
+class ItemGrid extends Component {
 
-ItemGrid.propTypes = {
-  selection: PropTypes.arrayOf(PropTypes.number),
-  onSelect: PropTypes.func,
-  columns: PropTypes.arrayOf(PropTypes.object),
-  items: PropTypes.arrayOf(PropTypes.object),
-  cache: PropTypes.string.isRequired,
-  zoom: PropTypes.number.isRequired
+  get size() {
+    return Z[this.props.zoom] || 32
+  }
+
+  get placeholder() {
+    return (
+      <li className="item-tile" style={{ flexBasis: `${this.size * 1.25}px` }}/>
+    )
+  }
+
+  render() {
+    const { items, selection, ...props } = this.props
+    const tile = this.placeholder
+
+    return (
+      <div className="item-grid-view">
+        <ul className="item-grid">
+          {items.map((item) =>
+            <ItemTile {...props}
+              key={item.id}
+              item={item}
+              size={this.size}
+              isSelected={selection.includes(item.id)}/>
+          )}
+
+          {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
+        </ul>
+      </div>
+    )
+  }
+
+
+  static propTypes = {
+    selection: PropTypes.arrayOf(PropTypes.number),
+    onSelect: PropTypes.func,
+    columns: PropTypes.arrayOf(PropTypes.object),
+    items: PropTypes.arrayOf(PropTypes.object),
+    cache: PropTypes.string.isRequired,
+    zoom: PropTypes.number.isRequired
+  }
 }
 
 

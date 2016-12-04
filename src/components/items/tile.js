@@ -13,18 +13,23 @@ class ItemTile extends Component {
     onSelect(item.id, isSelected ? 'clear' : 'replace')
   }
 
+  get style() {
+    const height = `${this.props.size * 1.25}px`
+
+    return {
+      height, flexBasis: height
+    }
+  }
+
   render() {
-    const { item, cache, size, isSelected } = this.props
+    const { isSelected, ...props } = this.props
 
     return (
       <li
         className={cn({ 'item-tile': true, 'active': isSelected })}
         onClick={this.handleClick}
-        style={{
-          flexBasis: (size * 1.25 + 'px'),
-          height: (size * 1.25 + 'px')
-        }}>
-        <CoverImage item={item} size={size} cache={cache}/>
+        style={this.style}>
+        <CoverImage {...props}/>
       </li>
     )
   }

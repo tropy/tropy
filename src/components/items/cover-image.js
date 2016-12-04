@@ -24,7 +24,7 @@ class CoverImage extends Component {
     }
   }
 
-  render() {
+  renderImage() {
     if (this.empty) return <IconItem/>
 
     return (
@@ -32,6 +32,14 @@ class CoverImage extends Component {
         srcSet={`${encodeURI(this.src)} 2x`}
         width={this.props.size}
         height={this.props.size}/>
+    )
+  }
+
+  render() {
+    return (
+      <figure className="cover-image">
+        {this.renderImage()}
+      </figure>
     )
   }
 
