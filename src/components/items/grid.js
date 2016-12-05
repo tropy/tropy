@@ -7,12 +7,12 @@ const { ItemTile } = require('./tile')
 const { select } = require('../../actions/item')
 const { getCachePrefix } = require('../../selectors/project')
 
-const Z = [32, 48, 64, 96, 128, 144, 256, 304, 512]
+const Z = [24, 32, 48, 64, 96, 128, 144, 256, 304, 512]
 
 class ItemGrid extends Component {
 
   get size() {
-    return Z[this.props.zoom] || 32
+    return Z[this.props.zoom]
   }
 
   get placeholder() {
@@ -49,7 +49,7 @@ class ItemGrid extends Component {
     columns: PropTypes.arrayOf(PropTypes.object),
     items: PropTypes.arrayOf(PropTypes.object),
     cache: PropTypes.string.isRequired,
-    zoom: PropTypes.number.isRequired
+    zoom: PropTypes.oneOf([1, 2, 3, 4, 5, 6, 7, 8, 9]).isRequired
   }
 }
 
