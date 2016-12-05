@@ -3,6 +3,7 @@
 const { TEMPLATE } = require('../constants/photo')
 const { DC } = require('../constants/properties')
 const { all } = require('bluebird')
+const { text, datetime } = require('../value')
 const metadata = require('./metadata')
 
 module.exports = {
@@ -27,8 +28,8 @@ module.exports = {
       metadata.update(db, {
         id,
         data: {
-          [DC.TITLE]: { value: image.title, type: 'text' },
-          [DC.DATE]: { value: image.date, type: 'datetime' }
+          [DC.TITLE]: text(image.title),
+          [DC.DATE]: datetime(image.date)
         }
       })
     ])

@@ -6,6 +6,8 @@ const { Command } = require('./command')
 const { prompt, openImages  } = require('../dialog')
 const { Image } = require('../image')
 const { imagePath } = require('../common/cache')
+const { DC } = require('../constants/properties')
+const { text } = require('../value')
 const intl = require('../selectors/intl')
 const act = require('../actions')
 const mod = require('../models')
@@ -46,7 +48,9 @@ class Import extends Command {
       let image = yield call(Image.read, file)
 
       yield call([db, db.transaction], async tx => {
-        item = await mod.item.create(tx)
+        item = await mod.item.create(tx, {
+          [DC.TITLE]: text(image.title)
+        })
         photo = await mod.photo.create(tx, { item: item.id, image })
 
         item.photos.push(photo.id)

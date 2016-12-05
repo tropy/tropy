@@ -1,5 +1,7 @@
 'use strict'
 
+const metadata = require('./metadata')
+
 const num = (list, separator = ',') =>
   list ? list.split(separator).map(Number) : []
 
@@ -64,13 +66,19 @@ module.exports = {
     return items
   },
 
-  async create(db) {
+  async create(db, data) {
     const { id } = await db.run(`
       INSERT INTO subjects DEFAULT VALUES`)
     await db.run(`
       INSERT INTO items (id) VALUES (?)`, id)
 
-    return (await module.exports.load(db, [id]))[id]
+    if (data) {
+      await metadata.update(db, { id, data })
+    }
+
+    const { [id]: item } = await module.exports.load(db, [id])
+    return item
+
   },
 
   async delete(db, ids) {
