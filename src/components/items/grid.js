@@ -38,6 +38,8 @@ class ItemGrid extends Component {
           )}
 
           {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
+          {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
+          {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
         </ul>
       </div>
     )
