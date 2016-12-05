@@ -2,6 +2,7 @@
 
 const { Database } = require('../common/db')
 const { ipcRenderer: ipc } = require('electron')
+const { fail } = require('../dialog')
 
 const { CREATED } = require('../constants/project')
 
@@ -12,7 +13,7 @@ module.exports = {
         const file = await Database.create(payload.file, payload)
         ipc.send(CREATED, { file })
       } catch (error) {
-        //console.error(error.message)
+        fail(error)
       }
     }
   }
