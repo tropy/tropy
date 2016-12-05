@@ -8,6 +8,8 @@ const { create } = require('../stores/wizard')
 const { Main } = require('../components/main')
 const { Wizard } = require('../components/wizard')
 const { getMessages } = require('../actions/intl')
+const { unloaders } = require('../window')
+const dialog = require('../dialog')
 
 const store = create()
 
@@ -21,3 +23,6 @@ all([
       $('main')
     )
   })
+
+dialog.start()
+unloaders.push(dialog.stop)

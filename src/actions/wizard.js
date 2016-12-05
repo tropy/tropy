@@ -12,7 +12,7 @@ module.exports = {
         const file = await Database.create(payload.file, payload)
         ipc.send(CREATED, { file })
       } catch (error) {
-        console.error(error.message)
+        //console.error(error.message)
       }
     }
   }

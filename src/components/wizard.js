@@ -7,8 +7,10 @@ const { Steps, Step } = require('./steps')
 const { connect } = require('react-redux')
 const { injectIntl } = require('react-intl')
 const { Toolbar } = require('./toolbar')
-const { join } = require('path')
+const { join, basename } = require('path')
+const { saveProject } = require('../dialog')
 const actions = require('../actions')
+const cn = require('classnames')
 
 
 class Wizard extends Component {
@@ -21,9 +23,13 @@ class Wizard extends Component {
     }
   }
 
+  get hasDefaultFilename() {
+    return this.state.file === this.getDefaultFilename()
+  }
+
   getDefaultFilename(name = this.state.name) {
     return name ?
-      join(this.props.home, `${name}.tpy`) :
+      join(this.props.root, `${name}.tpy`) :
       null
   }
 
@@ -40,6 +46,12 @@ class Wizard extends Component {
   }
 
   handleSaveAsClick = () => {
+    saveProject({
+      defaultPath: this.state.file || this.props.root
+    })
+      .then(file => {
+        if (file) this.setState({ file })
+      })
   }
 
 
@@ -72,7 +84,11 @@ class Wizard extends Component {
                 autoFocus/>
             </div>
 
-            <div className="form-group save-as">
+            <div className={cn({
+              'form-group': true,
+              'save-as': true,
+              'custom': !this.hasDefaultFilename
+            })}>
               <div className="save-as-link-container">
                 <a
                   className="save-as-link"
@@ -82,11 +98,13 @@ class Wizard extends Component {
               </div>
               <div className="save-as-controls">
                 <input
+                  value={this.state.file}
                   type="text"
                   className="form-control input-lg"
-                  value="Path"
                   readOnly/>
-                <button className="btn btn-default btn-lg">
+                <button
+                  className="btn btn-default btn-lg"
+                  onClick={this.handleSaveAsClick}>
                   <FormattedMessage id="wizard.project.change"/>
                 </button>
               </div>
@@ -107,12 +125,12 @@ class Wizard extends Component {
 
   static propTypes = {
     intl: intlShape.isRequired,
-    home: PropTypes.string,
+    root: PropTypes.string,
     onSubmit: PropTypes.func.isRequired
   }
 
   static defaultProps = {
-    home: ARGS.documents
+    root: ARGS.documents
   }
 }
 
@@ -123,8 +141,8 @@ module.exports = {
       null,
 
       (dispatch) => ({
-        onSubmit(project) {
-          dispatch(actions.wizard.submit(project))
+        onSubmit(...args) {
+          dispatch(actions.wizard.submit(...args))
         }
       })
     )(Wizard)

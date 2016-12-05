@@ -88,6 +88,15 @@ function openImages(options) {
   })
 }
 
+function saveProject(options) {
+  return open('save', {
+    filters: [
+      { name: 'Tropy Projects', extensions: ['tpy'] }
+    ],
+    ...options
+  })
+}
+
 module.exports = {
   start,
   stop,
@@ -97,5 +106,6 @@ module.exports = {
   file,
   openImages,
   save,
+  saveProject,
   prompt
 }
