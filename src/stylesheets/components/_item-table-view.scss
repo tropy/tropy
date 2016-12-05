@@ -105,8 +105,7 @@
         + $padding-base-horizontal;
     }
 
-    img,
-    .icon {
+    .cover-image {
       position: absolute;
       left: $component-padding-horizontal;
       top: ($row-height - $thumbnail-size) / 2;
