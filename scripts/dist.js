@@ -100,4 +100,4 @@ function rename(ctx, from, to) {
   mv(join(ctx, from), join(ctx, to))
 }
 
-exports.package = { ...target }
+exports.package = Object.assign({}, target)
