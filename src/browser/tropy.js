@@ -63,8 +63,16 @@ class Tropy extends EventEmitter {
     if (!file) {
       if (this.win) return this.win.show(), this
 
-      file = this.state.recent[0]
-      if (!file || !exists(file)) return this.create()
+      while (this.state.recent.length) {
+        const recent = this.state.recent.shift()
+
+        if (exists(recent)) {
+          file = recent
+          break
+        }
+      }
+
+      if (!file) return this.create()
     }
 
     try {
