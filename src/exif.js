@@ -6,15 +6,17 @@ const { verbose } = require('./common/log')
 module.exports = {
   exif(buffer) {
     return new Promise((resolve) => {
+      let data = {}
+
       try {
         let offset = 0
 
         while (offset < buffer.length) {
           if (buffer[offset++] === 0xFF && buffer[offset++] === 0xE1) {
-            const data = parse(buffer.slice(offset + 2))
+            const meta = parse(buffer.slice(offset + 2))
 
-            resolve({
-              ...data.gps, ...data.exif, ...data.image
+            data = ({
+              ...meta.gps, ...meta.exif, ...meta.image
             })
 
             break
@@ -23,7 +25,8 @@ module.exports = {
 
       } catch (error) {
         verbose(`EXIF extraction failed: ${error.message}`)
-        resolve({})
+      } finally {
+        resolve(data)
       }
     })
   }
