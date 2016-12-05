@@ -49,7 +49,7 @@ Items.propTypes = {
 }
 
 Items.defaultProps = {
-  maxZoom: 8
+  maxZoom: ItemGrid.ZOOM.length - 1
 }
 
 

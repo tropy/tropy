@@ -6,13 +6,14 @@ const { connect } = require('react-redux')
 const { ItemTile } = require('./tile')
 const { select } = require('../../actions/item')
 const { getCachePrefix } = require('../../selectors/project')
+const { Shapes } = require('../util')
+const { times } = require('../../common/util')
 
-const Z = [24, 32, 48, 64, 96, 128, 144, 256, 304, 512]
 
 class ItemGrid extends Component {
 
   get size() {
-    return Z[this.props.zoom]
+    return ItemGrid.ZOOM[this.props.zoom]
   }
 
   get placeholder() {
@@ -42,6 +43,12 @@ class ItemGrid extends Component {
     )
   }
 
+  static ZOOM = [
+    24,
+    ...times(56, i => i * 4 + 32),
+    ...times(32, i => i * 8 + 256),
+    512
+  ]
 
   static propTypes = {
     selection: PropTypes.arrayOf(PropTypes.number),
@@ -49,7 +56,7 @@ class ItemGrid extends Component {
     columns: PropTypes.arrayOf(PropTypes.object),
     items: PropTypes.arrayOf(PropTypes.object),
     cache: PropTypes.string.isRequired,
-    zoom: PropTypes.oneOf([1, 2, 3, 4, 5, 6, 7, 8, 9]).isRequired
+    zoom: Shapes.number(1, ItemGrid.ZOOM.length - 1)
   }
 }
 

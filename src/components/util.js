@@ -23,6 +23,22 @@ module.exports = {
   },
 
   Shapes: {
-    edge: PropTypes.oneOf(['top', 'right', 'bottom', 'left'])
+    edge: PropTypes.oneOf(['top', 'right', 'bottom', 'left']),
+
+    number(min, max, required = true) {
+      return (props, name, component) => {
+        const value = props[name]
+
+        if (required && value == null) {
+          throw new Error(`Missing prop '${name}' for ${component}`)
+        }
+
+        if (typeof value !== 'number' || value < min || value > max) {
+          throw new Error(
+            `Invalid prop '${name}' supplied to ${component}. Out of bounds.`
+          )
+        }
+      }
+    }
   }
 }
