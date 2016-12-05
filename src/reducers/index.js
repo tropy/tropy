@@ -13,5 +13,6 @@ module.exports = {
   ...require('./properties'),
   ...require('./tags'),
   ...require('./ui'),
-  ...require('./vocab')
+  ...require('./vocab'),
+  ...require('./wizard')
 }

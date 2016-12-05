@@ -333,6 +333,7 @@ class Tropy extends EventEmitter {
       debug: ARGS.debug,
       dev: this.dev,
       home: app.getPath('userData'),
+      documents: app.getPath('documents'),
       cache: this.cache.root,
       frameless: this.state.frameless,
       theme: this.state.theme,

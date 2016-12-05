@@ -12,5 +12,6 @@ module.exports = {
   project: require('./project'),
   properties: require('./properties'),
   tag: require('./tag'),
-  ui: require('./ui')
+  ui: require('./ui'),
+  wizard: require('./wizard')
 }

@@ -9,20 +9,16 @@ describe('Wizard', () => {
     Wizard: { WrappedComponent: { WrappedComponent: Wizard } }
   } = __require('components/wizard')
 
-  let update
   let submit
 
   beforeEach(() => {
-    update = sinon.spy()
     submit = sinon.spy()
   })
 
   it('has id wizard', () => {
     expect(shallow(
       <Wizard
-        update={update}
-        submit={submit}
-        project={{ name: 'tropy' }}
+        onSubmit={submit}
         intl={intl}/>
 
     )).to.have.id('wizard')

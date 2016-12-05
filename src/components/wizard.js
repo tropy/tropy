@@ -6,61 +6,77 @@ const { FormattedMessage, intlShape } = require('react-intl')
 const { Steps, Step } = require('./steps')
 const { connect } = require('react-redux')
 const { injectIntl } = require('react-intl')
-const { update } = require('../actions/project')
-const { submit } = require('../actions/wizard')
 const { Toolbar } = require('./toolbar')
+const { join } = require('path')
+const actions = require('../actions')
 
 
 class Wizard extends Component {
+  constructor(props) {
+    super(props)
 
-  static propTypes = {
-    intl: intlShape.isRequired,
+    this.state = {
+      name: '',
+      file: null
+    }
+  }
 
-    submit: PropTypes.func.isRequired,
-    update: PropTypes.func.isRequired,
+  getDefaultFilename(name = this.state.name) {
+    return name ?
+      join(this.props.home, `${name}.tpy`) :
+      null
+  }
 
-    project: PropTypes.shape({
-      name: PropTypes.string
+  submit = () => {
+    const { name, file } = this.state
+    this.props.onSubmit({ name, file })
+  }
+
+  handleNameChange = ({ target }) => {
+    this.setState({
+      name: target.value,
+      file: this.getDefaultFilename(target.value)
     })
   }
 
-  constructor(props) {
-    super(props)
+  handleSaveAsClick = () => {
   }
 
-  update = (event) => {
-    this.props.update({ name: event.target.value })
-  }
 
   render() {
-    // eslint-disable-next-line no-shadow
-    const { submit, project, intl } = this.props
+    const { intl } = this.props
 
     return (
       <div id="wizard">
-        <Toolbar draggable />
+        <Toolbar draggable={ARGS.frameless}/>
 
         <Steps>
           <Step>
-            <img src={'images/wizard/tropy-icon.svg'} className="tropy-icon"
-              width={202} height={174}/>
+            <img
+              className="tropy-icon"
+              src="images/wizard/tropy-icon.svg"
+              width={202}
+              height={174}/>
 
             <h1><FormattedMessage id="wizard.project.title"/></h1>
 
             <div className="form-group compact">
               <input
-                type="text"
                 className="form-control input-lg"
-                onChange={this.update}
+                value={this.state.name}
+                type="text"
                 placeholder={
                   intl.formatMessage({ id: 'wizard.project.name' })
                 }
+                onChange={this.handleNameChange}
                 autoFocus/>
             </div>
 
             <div className="form-group save-as">
               <div className="save-as-link-container">
-                <a href="#" className="save-as-link">
+                <a
+                  className="save-as-link"
+                  onClick={this.handleSaveAsClick}>
                   <FormattedMessage id="wizard.project.save_as"/>
                 </a>
               </div>
@@ -78,8 +94,8 @@ class Wizard extends Component {
 
             <button
               className="btn btn-primary btn-lg btn-block"
-              onClick={submit}
-              disabled={!project.name}>
+              onClick={this.submit}
+              disabled={!this.state.file}>
 
               <FormattedMessage id="wizard.project.submit"/>
             </button>
@@ -88,22 +104,29 @@ class Wizard extends Component {
       </div>
     )
   }
+
+  static propTypes = {
+    intl: intlShape.isRequired,
+    home: PropTypes.string,
+    onSubmit: PropTypes.func.isRequired
+  }
+
+  static defaultProps = {
+    home: ARGS.documents
+  }
 }
 
 
 module.exports = {
   Wizard: injectIntl(
     connect(
+      null,
 
-      state => ({
-        project: state.project
-      }),
-
-      dispatch => ({
-        update: (project) => dispatch(update(project, { debounce: true })),
-        submit: () => dispatch(submit())
+      (dispatch) => ({
+        onSubmit(project) {
+          dispatch(actions.wizard.submit(project))
+        }
       })
-
     )(Wizard)
   )
 }
