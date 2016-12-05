@@ -6,19 +6,16 @@ const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')
 const { Tab, Tabs } = require('../tabs')
-const { NoteList } = require('../notelist')
+const { NoteToolbar, NoteList } = require('../note')
 const { PanelGroup, Panel } = require('../panel')
 const { Resizable } = require('../resizable')
 const { PhotoToolbar, PhotoList, PhotoGrid } = require('../photo')
+const { IconMetadata, IconTag } = require('../icons')
 const { Viewer } = require('../viewer')
 const { Fields } = require('../metadata')
 const { getSelectedItem } = require('../../selectors/items')
 const { frameless } = ARGS
 const act = require('../../actions')
-
-const {
-  IconMetadata, IconNote, IconTag, IconPlus
-} = require('../icons')
 
 
 class Item extends Component {
@@ -46,6 +43,10 @@ class Item extends Component {
   handlePhotoCreate = (event) => {
     event.stopPropagation()
     this.props.onPhotoCreate({ item: this.props.item.id })
+  }
+
+  handleNoteCreate = (event) => {
+    event.stopPropagation()
   }
 
 
@@ -123,7 +124,7 @@ class Item extends Component {
     )
   }
 
-  renderPhotosToolbar() {
+  renderPhotoToolbar() {
     const { panel, onPhotoZoomChange } = this.props
 
     return (
@@ -157,17 +158,22 @@ class Item extends Component {
     )
   }
 
-  renderNotesToolbar() {
+  renderNoteToolbar() {
     return (
-      <Toolbar>
-        <div className="toolbar-left">
-          <IconNote/>
-          <h4><FormattedMessage id="panel.notes"/></h4>
-        </div>
-        <div className="toolbar-right">
-          <button className="btn btn-icon"><IconPlus/></button>
-        </div>
-      </Toolbar>
+      <NoteToolbar
+        hasCreateButton={false}
+        onCreate={this.handleNoteCreate}/>
+    )
+  }
+
+  renderNotePanel() {
+    const { item, note } = this.props
+
+    return item && (
+      <NoteList
+        notes={item.notes || []}
+        selected={note}
+        isDisabled={this.disabled}/>
     )
   }
 
@@ -186,12 +192,12 @@ class Item extends Component {
               {this.renderItemPanel()}
             </Panel>
 
-            <Panel header={this.renderPhotosToolbar()}>
+            <Panel header={this.renderPhotoToolbar()}>
               {this.renderPhotoPanel()}
             </Panel>
 
-            <Panel header={this.renderNotesToolbar()}>
-              <NoteList/>
+            <Panel header={this.renderNoteToolbar()}>
+              {this.renderNotePanel()}
             </Panel>
           </PanelGroup>
         </Resizable>
@@ -214,6 +220,7 @@ class Item extends Component {
     }).isRequired,
 
     photo: PropTypes.number,
+    note: PropTypes.number,
     selection: PropTypes.arrayOf(PropTypes.number),
 
     onTabSelect: PropTypes.func,
@@ -228,6 +235,7 @@ module.exports = {
     (state) => ({
       item: getSelectedItem(state),
       photo: state.nav.photo,
+      note: state.nav.note,
       selection: state.nav.items,
       panel: state.nav.panel
     }),
