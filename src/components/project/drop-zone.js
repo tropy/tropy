@@ -12,6 +12,7 @@ class ProjectDropZone extends Component {
   get classes() {
     return {
       'project-drop-zone': true,
+      'drop-zone': true,
       'is-over': this.props.isOver
     }
   }
@@ -39,16 +40,23 @@ module.exports = {
     NativeTypes.FILE, {
 
       drop(props, monitor) {
-        if (!monitor.didDrop()) {
-          const file = monitor
-            .getItem()
-            .files
-            .find(({ path }) => extname(path) === '.tpy')
+        if (monitor.didDrop()) return
 
-          if (file) {
-            props.onDrop(file.path)
-            return { open: file.path }
+        const accepted = { images: [] }
+
+        for (let file of monitor.getItem().files) {
+          if (extname(file.path) === '.tpy') {
+            accepted.project = file.path
+            break
           }
+
+          if (file.type === 'image/jpeg') {
+            accepted.images.push(file.path)
+          }
+        }
+
+        if (accepted.project || accepted.images.length) {
+          return props.onDrop(accepted), accepted
         }
       }
 

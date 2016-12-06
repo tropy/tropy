@@ -33,12 +33,17 @@ class Import extends Command {
 
   *exec() {
     const { db, cache } = this.options
+    let files = this.action.payload
 
     const items = []
     const metadata = []
 
-    const files = yield call(openImages)
-    this.init = performance.now()
+    if (!files) {
+      files = yield call(openImages)
+      this.init = performance.now()
+    }
+
+    if (!files) return
 
     // TODO Improve handling of multiple photos!
     // Progress reporting, cancel import etc.

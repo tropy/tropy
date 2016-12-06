@@ -10,9 +10,9 @@ const { Item, Items } = require('./items')
 const actions = require('../actions')
 
 
-const Project = ({ onContextMenu, onOpen }) => (
+const Project = ({ onContextMenu, onDrop }) => (
   <div id="project" onContextMenu={onContextMenu}>
-    <ProjectDropZone onDrop={onOpen}>
+    <ProjectDropZone onDrop={onDrop}>
       <div id="project-view">
         <Resizable edge="right" value={250}>
           <ProjectSidebar hasToolbar={ARGS.frameless}/>
@@ -28,7 +28,7 @@ const Project = ({ onContextMenu, onOpen }) => (
 
 Project.propTypes = {
   onContextMenu: PropTypes.func,
-  onOpen: PropTypes.func
+  onDrop: PropTypes.func
 }
 
 module.exports = {
@@ -39,8 +39,14 @@ module.exports = {
         dispatch(actions.ui.context.show(event))
       },
 
-      onOpen(file) {
-        dispatch(actions.project.open(file))
+      onDrop({ project, images }) {
+        if (project) {
+          return dispatch(actions.project.open(project))
+        }
+
+        if (images && images.length) {
+          return dispatch(actions.item.import(images))
+        }
       }
     })
   )(Project)
