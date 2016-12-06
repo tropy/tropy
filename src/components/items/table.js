@@ -34,8 +34,9 @@ Table.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object),
   items: PropTypes.arrayOf(PropTypes.object),
   cache: PropTypes.string,
-  onSelection: PropTypes.func,
-  onCancel: PropTypes.func
+  onSelect: PropTypes.func,
+  onCancel: PropTypes.func,
+  onContextMenu: PropTypes.func
 }
 
 
@@ -48,12 +49,23 @@ module.exports = {
     }),
 
     (dispatch) => ({
-      onSelection(id, mod) {
+      onSelect(id, mod) {
         dispatch(act.item.select(id, { mod }))
       },
 
       onCancel() {
         dispatch(act.ui.edit.cancel())
+      },
+
+      onContextMenu(event, item) {
+        dispatch(
+          act.ui.context.show(
+            event, item.deleted ? 'deleted' : 'item', {
+              id: item.id,
+              tags: item.tags
+            }
+          )
+        )
       }
     })
 

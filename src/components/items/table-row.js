@@ -12,8 +12,12 @@ const cn = require('classnames')
 
 class TableRow extends Component {
 
-  select = (event) => {
-    return this.props.onSelection(
+  get isDisabled() {
+    return !!this.props.item.deleted
+  }
+
+  handleClick = (event) => {
+    return this.props.onSelect(
       this.props.item.id,
       this.props.isSelected ?
         (meta(event) ? 'remove' : 'clear') :
@@ -21,23 +25,29 @@ class TableRow extends Component {
     )
   }
 
+  handleContextMenu = (event) => {
+    event.stopPropagation()
+    this.props.onContextMenu(event, this.props.item)
+  }
 
   render() {
-    const {
-      editing, item, columns, isSelected, onContextMenu
-    } = this.props
+    const { editing, columns, isSelected, ...props } = this.props
+
+    delete props.onSelect
+    delete props.onContextMenu
 
     return (
       <tr
         className={cn({ item: true, active: isSelected })}
-        onContextMenu={onContextMenu}
-        onClick={this.select}>
+        onContextMenu={this.handleContextMenu}
+        onClick={this.handleClick}>
         {
           columns.map(({ property, width }) => (
-            <TableCell {...this.props}
+            <TableCell {...props}
               key={property.uri}
               isEditing={property.uri === editing}
-              isDisabled={!!item.deleted}
+              isDisabled={this.isDisabled}
+              isSelected={isSelected}
               hasCoverImage={property.uri === DC.TITLE}
               property={property}
               width={width}/>
@@ -55,16 +65,16 @@ class TableRow extends Component {
     data: PropTypes.object,
     editing: PropTypes.string,
     cache: PropTypes.string.isRequired,
+    columns: PropTypes.arrayOf(PropTypes.object),
 
     isSelected: PropTypes.bool,
 
-    onSelection: PropTypes.func.isRequired,
+    onSelect: PropTypes.func.isRequired,
+    onContextMenu: PropTypes.func,
 
     onActivate: PropTypes.func,
     onCancel: PropTypes.func,
-    onChange: PropTypes.func,
-    onContextMenu: PropTypes.func,
-    columns: PropTypes.arrayOf(PropTypes.object)
+    onChange: PropTypes.func
   }
 }
 
@@ -88,19 +98,6 @@ module.exports = {
       onChange(data) {
         dispatch(act.metadata.save({ id: item.id, data }))
         dispatch(act.ui.edit.cancel())
-      },
-
-      onContextMenu(event) {
-        event.stopPropagation()
-
-        dispatch(
-          act.ui.context.show(
-            event, item.deleted ? 'deleted' : 'item', {
-              id: item.id,
-              tags: item.tags
-            }
-          )
-        )
       }
     })
   )(TableRow)
