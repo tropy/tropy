@@ -133,7 +133,7 @@ module.exports = {
       },
 
       onSelect(list) {
-        dispatch(nav.update({ list }))
+        dispatch(nav.select({ list }))
       },
 
       onRename(id) {

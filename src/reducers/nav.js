@@ -89,6 +89,7 @@ module.exports = {
           ...state,
           items: select(state.items),
           tags: select(state.tags),
+          trash: null,
           list: null,
           photo: null,
           ...payload
