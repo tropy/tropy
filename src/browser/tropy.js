@@ -22,6 +22,7 @@ const { CONTEXT } = require('../constants/ui')
 const act = require('../actions')
 const { HISTORY, TAG } = require('../constants')
 const { darwin } = require('../common/os')
+const { version } = require('../common/release')
 
 const H = new WeakMap()
 const T = new WeakMap()
@@ -30,10 +31,11 @@ class Tropy extends EventEmitter {
 
   static defaults = {
     frameless: darwin,
-    locale: app.getLocale(),
+    locale: app.getLocale() || 'en',
     theme: 'light',
     recent: [],
-    win: {}
+    win: {},
+    version
   }
 
   // eslint-disable-next-line constructor-super
