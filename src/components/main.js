@@ -3,7 +3,9 @@
 const { Provider, connect } = require('react-redux')
 const ReactIntl = require('react-intl')
 const React = require('react')
-const { PropTypes } = React
+const { Component, PropTypes } = React
+const { DragDropContext } = require('react-dnd')
+const HTML5Backend = require('react-dnd-html5-backend')
 
 const IntlProvider = connect(state => {
   return {
@@ -11,19 +13,25 @@ const IntlProvider = connect(state => {
   }
 })(ReactIntl.IntlProvider)
 
-const Main = ({ store, children }) => (
-  <Provider store={store}>
-    <IntlProvider>
-      {children}
-    </IntlProvider>
-  </Provider>
-)
+// Need component for React DnD
+// eslint-disable-next-line react/prefer-stateless-function
+class Main extends Component {
+  render() {
+    return (
+      <Provider store={this.props.store}>
+        <IntlProvider>
+          {this.props.children}
+        </IntlProvider>
+      </Provider>
+    )
+  }
 
-Main.propTypes = {
-  children: PropTypes.element.isRequired,
-  store: PropTypes.object.isRequired
+  static propTypes = {
+    children: PropTypes.element.isRequired,
+    store: PropTypes.object.isRequired
+  }
 }
 
 module.exports = {
-  Main
+  Main: DragDropContext(HTML5Backend)(Main)
 }

@@ -3,41 +3,44 @@
 const React = require('react')
 const { PropTypes } = React
 const { connect } = require('react-redux')
+const { ProjectDropZone } = require('./project/drop-zone')
 const { ProjectSidebar } = require('./project/sidebar')
 const { Resizable } = require('./resizable')
 const { Item, Items } = require('./items')
-const { noop } = require('../common/util')
-const { context } = require('../actions/ui')
-const { frameless } = ARGS
+const actions = require('../actions')
 
-const Project = ({ showContextMenu }) => (
-  <div id="project" onContextMenu={showContextMenu}>
-    <div id="project-view">
-      <Resizable edge="right" value={250}>
-        <ProjectSidebar hasToolbar={frameless}/>
-      </Resizable>
-      <main>
-        <Items/>
-      </main>
-    </div>
-    <Item/>
+
+const Project = ({ onContextMenu, onOpen }) => (
+  <div id="project" onContextMenu={onContextMenu}>
+    <ProjectDropZone onDrop={onOpen}>
+      <div id="project-view">
+        <Resizable edge="right" value={250}>
+          <ProjectSidebar hasToolbar={ARGS.frameless}/>
+        </Resizable>
+        <main>
+          <Items/>
+        </main>
+      </div>
+      <Item/>
+    </ProjectDropZone>
   </div>
 )
 
 Project.propTypes = {
-  showContextMenu: PropTypes.func
-}
-
-Project.defaultProps = {
-  showContextMenu: noop
+  onContextMenu: PropTypes.func,
+  onOpen: PropTypes.func
 }
 
 module.exports = {
   Project: connect(
     null,
     dispatch => ({
-      showContextMenu(event) {
-        dispatch(context.show(event))
+      onContextMenu(event) {
+        dispatch(actions.ui.context.show(event))
+      },
+
+      onOpen(file) {
+        dispatch(actions.project.open(file))
       }
     })
   )(Project)
