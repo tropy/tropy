@@ -16,10 +16,14 @@ class TableRow extends Component {
     return !!this.props.item.deleted
   }
 
+  get isSelected() {
+    return this.props.selection.includes(this.props.item.id)
+  }
+
   handleClick = (event) => {
     return this.props.onSelect(
       this.props.item.id,
-      this.props.isSelected ?
+      this.isSelected ?
         (meta(event) ? 'remove' : 'clear') :
         (meta(event) ? 'merge' : 'replace')
     )
@@ -27,11 +31,30 @@ class TableRow extends Component {
 
   handleContextMenu = (event) => {
     event.stopPropagation()
-    this.props.onContextMenu(event, this.props.item)
+
+    const { item, selection, onSelect, onContextMenu } = this.props
+
+    const context = ['item']
+    const target = { id: item.id, tags: item.tags }
+
+    if (this.isSelected) {
+      if (selection.length > 1) {
+        context.push('bulk')
+        target.id = selection
+      }
+
+    } else {
+      onSelect(item.id, 'replace')
+    }
+
+    if (item.deleted) context.push('deleted')
+
+    onContextMenu(event, context.join('-'), target)
   }
 
   render() {
-    const { editing, columns, isSelected, ...props } = this.props
+    const { editing, columns, ...props } = this.props
+    const { isSelected, isDisabled } = this
 
     delete props.onSelect
     delete props.onContextMenu
@@ -46,7 +69,7 @@ class TableRow extends Component {
             <TableCell {...props}
               key={property.uri}
               isEditing={property.uri === editing}
-              isDisabled={this.isDisabled}
+              isDisabled={isDisabled}
               isSelected={isSelected}
               hasCoverImage={property.uri === DC.TITLE}
               property={property}
@@ -59,15 +82,15 @@ class TableRow extends Component {
 
   static propTypes = {
     item: PropTypes.shape({
-      id: PropTypes.number.isRequired
+      id: PropTypes.number.isRequired,
+      deleted: PropTypes.bool
     }).isRequired,
 
     data: PropTypes.object,
     editing: PropTypes.string,
     cache: PropTypes.string.isRequired,
     columns: PropTypes.arrayOf(PropTypes.object),
-
-    isSelected: PropTypes.bool,
+    selection: PropTypes.arrayOf(PropTypes.number),
 
     onSelect: PropTypes.func.isRequired,
     onContextMenu: PropTypes.func,

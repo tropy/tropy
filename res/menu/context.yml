@@ -49,6 +49,9 @@ linux:
           checked: true
           enabled: false
         - type: separator
+  item-bulk: &item-bulk
+    - label: 'Delete Selected Items'
+      command: 'app:delete-item'
   photo: &photo
     - label: 'Rename Photo'
       command: 'app:rename-photo'
@@ -56,10 +59,15 @@ linux:
       command: 'app:delete-photo'
     - label: 'Show Photo in Folder…'
       command: 'app:show-in-folder'
-  deleted: &deleted
+  item-deleted: &item-deleted
     - label: 'Restore Item'
       command: 'app:restore-item'
     - label: 'Permanently Delete Item'
+      command: 'app:destroy-item'
+  item-bulk-deleted: &item-bulk-deleted
+    - label: 'Restore Selected Items'
+      command: 'app:restore-item'
+    - label: 'Permanently Delete Selected Items'
       command: 'app:destroy-item'
   trash: &trash
     - label: 'Permanently Delete Items'
@@ -83,7 +91,9 @@ darwin:
   tag: *tag
   items: *items
   item: *item
-  deleted: *deleted
+  item-bulk: *item-bulk
+  item-bulk-deleted: *item-bulk-deleted
+  item-deleted: *item-deleted
   trash: *trash
   photo: *photo
   dev: *dev
@@ -98,7 +108,9 @@ win32:
   tag: *tag
   items: *items
   item: *item
-  deleted: *deleted
+  item-bulk: *item-bulk
+  item-bulk-deleted: *item-bulk-deleted
+  item-deleted: *item-deleted
   trash: *trash
   photo: *photo
   dev: *dev

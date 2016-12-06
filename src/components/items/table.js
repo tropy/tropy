@@ -10,19 +10,16 @@ const { getCachePrefix } = require('../../selectors/project')
 const act = require('../../actions')
 
 
-const Table = ({ items, selection, ...props }) => (
+const Table = ({ items, ...props }) => (
   <div className="item-table-view">
     <TableHead columns={props.columns}/>
 
     <div className="table-body">
       <table className="item-table">
         <tbody>
-          {items.map((item) => (
-            <TableRow {...props}
-              key={item.id}
-              item={item}
-              isSelected={selection.includes(item.id)}/>
-          ))}
+          {items.map(item =>
+            <TableRow {...props} key={item.id} item={item}/>
+          )}
         </tbody>
       </table>
     </div>
@@ -57,15 +54,8 @@ module.exports = {
         dispatch(act.ui.edit.cancel())
       },
 
-      onContextMenu(event, item) {
-        dispatch(
-          act.ui.context.show(
-            event, item.deleted ? 'deleted' : 'item', {
-              id: item.id,
-              tags: item.tags
-            }
-          )
-        )
+      onContextMenu(...args) {
+        dispatch(act.ui.context.show(...args))
       }
     })
 
