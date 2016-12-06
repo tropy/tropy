@@ -22,9 +22,8 @@ Panel.propTypes = {
 }
 
 
-const PanelGroup = ({ header, children }) => {
+const PanelGroup = ({ header, children, height }) => {
   const panels = Children.toArray(children)
-  const height = 100 / panels.length
   const last = panels.pop()
 
   return (
@@ -34,7 +33,7 @@ const PanelGroup = ({ header, children }) => {
       </header>
       <div className="panel-group-body">
         {panels.map((panel, idx) => (
-          <Resizable key={idx} relative edge="bottom" value={height}>
+          <Resizable key={idx} relative edge="bottom" value={height[idx]}>
             {panel}
           </Resizable>
         ))}
@@ -46,6 +45,7 @@ const PanelGroup = ({ header, children }) => {
 
 PanelGroup.propTypes = {
   header: PropTypes.node,
+  height: PropTypes.arrayOf(PropTypes.number),
   children: only(Panel)
 }
 
