@@ -109,7 +109,9 @@ class Item extends Component {
       <div>
         {photo &&
           <section>
-            <h1><FormattedMessage id="panel.metadata.photo"/></h1>
+            <h5 className="metadata-heading">
+              <FormattedMessage id="panel.metadata.photo"/>
+            </h5>
             <Fields
               id={photo}
               disabled={isDisabled}
@@ -117,7 +119,9 @@ class Item extends Component {
           </section>}
         {item &&
           <section>
-            <h1><FormattedMessage id="panel.metadata.item"/></h1>
+            <h5 className="metadata-heading">
+              <FormattedMessage id="panel.metadata.item"/>
+            </h5>
             <Fields
               id={item.id}
               disabled={isDisabled}

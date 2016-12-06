@@ -2,6 +2,8 @@
 // Note list
 // --------------------------------------------------
 
+$panel-separator-color: #ddd !default;
+
 .note-list {
   .note {
     padding: $note-padding-vertical $component-padding-horizontal;
@@ -15,7 +17,7 @@
       right: $component-padding-horizontal;
       left: $component-padding-horizontal;
       height: 1px;
-      background: $note-separator-color;
+      background: $panel-separator-color;
     }
 
     &:first-child {

@@ -2,6 +2,16 @@
 // Metadata
 // --------------------------------------------------
 
+$component-padding-horizontal: 12px !default;
+
+.metadata-heading {
+  color: $panel-heading-color;
+  line-height: $metadata-line-height;
+  margin: ($font-size-base / 2) $component-padding-horizontal;
+  margin-bottom: (($metadata-line-height - 10px) / 2); // 10px: Caps height
+  border-bottom: 1px solid $panel-separator-color;
+}
+
 .metadata-fields {
   .metadata-field {
     display: flex;
