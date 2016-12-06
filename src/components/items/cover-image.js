@@ -9,7 +9,8 @@ const cn = require('classnames')
 class CoverImage extends Component {
 
   get cardinality() {
-    return this.props.item.photos.length
+    const { item } = this.props
+    return item && item.photos ? item.photos.length : 0
   }
 
   get src() {
