@@ -4,7 +4,10 @@ sidebar:
   trash: Deleted Items
 
 panel:
-  metadata: Metadata
+  metadata:
+    tab: Metadata
+    photo: Photo
+    item: Item
   tags: Tags
   photos: Photos
   notes: Notes

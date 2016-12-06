@@ -66,7 +66,7 @@ class Item extends Component {
           disabled={!selection.length}
           onActivate={this.handleMetadataTabSelect}>
           <IconMetadata/>
-          <FormattedMessage id="panel.metadata"/>
+          <FormattedMessage id="panel.metadata.tab"/>
         </Tab>
         <Tab
           active={panel.tab === 'tags'}
@@ -108,15 +108,21 @@ class Item extends Component {
     return (
       <div>
         {photo &&
-          <Fields
-            id={photo}
-            disabled={isDisabled}
-            template="photo"/>}
+          <section>
+            <h1><FormattedMessage id="panel.metadata.photo"/></h1>
+            <Fields
+              id={photo}
+              disabled={isDisabled}
+              template="photo"/>
+          </section>}
         {item &&
-          <Fields
-            id={item.id}
-            disabled={isDisabled}
-            template="core"/>}
+          <section>
+            <h1><FormattedMessage id="panel.metadata.item"/></h1>
+            <Fields
+              id={item.id}
+              disabled={isDisabled}
+              template="core"/>
+          </section>}
       </div>
     )
   }
