@@ -176,6 +176,10 @@ class Save extends Command {
   }
 }
 
+class Merge extends Command {
+  static get action() { return ITEM.MERGE }
+}
+
 class ToggleTags extends Command {
   static get action() { return ITEM.TAG.TOGGLE }
 
@@ -229,6 +233,7 @@ module.exports = {
   Destroy,
   Import,
   Load,
+  Merge,
   Restore,
   Save,
   ToggleTags,

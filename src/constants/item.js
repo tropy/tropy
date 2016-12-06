@@ -7,6 +7,7 @@ module.exports = {
   INSERT: 'item.insert',
   IMPORT: 'item.import',
   LOAD: 'item.load',
+  MERGE: 'item.merge',
   REMOVE: 'item.remove',
   RESTORE: 'item.restore',
   SAVE: 'item.save',
