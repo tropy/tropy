@@ -4,12 +4,12 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { IconItem } = require('../icons')
 const { imageURL } = require('../../common/cache')
+const cn = require('classnames')
 
 class CoverImage extends Component {
 
-  get empty() {
-    const { item } = this.props
-    return !item.photos || !item.photos.length
+  get cardinality() {
+    return this.props.item.photos.length
   }
 
   get src() {
@@ -32,9 +32,13 @@ class CoverImage extends Component {
   }
 
   render() {
+    const { cardinality } = this
+
     return (
-      <figure className="cover-image" style={this.style}>
-        {this.empty ?
+      <figure
+        className={cn({ 'cover-image': true, 'stack': cardinality > 1 })}
+        style={this.style}>
+        {cardinality === 0 ?
           <IconItem/> :
           <img srcSet={`${encodeURI(this.src)} 2x`}/>
         }
