@@ -1,6 +1,7 @@
 'use strict'
 
 const { NAV, ITEM, LIST, TAG, PHOTO } = require('../constants')
+const { any } = require('../common/util')
 
 const init = {
   items: [],
@@ -22,8 +23,8 @@ function select(selection, id, mod) {
   }
 }
 
-function isSelected(selection, id) {
-  return selection.includes(id)
+function isSelected(selection, ...ids) {
+  return any(ids, id => selection.includes(id))
 }
 
 module.exports = {
@@ -39,14 +40,14 @@ module.exports = {
 
       case LIST.REMOVE:
         return state.list === payload ?
-          { ...state, list: null } :
+          { ...state, list: null, items: select(state.items), photo: null } :
           state
 
       case ITEM.DELETE:
       case ITEM.RESTORE:
       case ITEM.REMOVE:
-        return !meta.done && isSelected(state.items, payload) ?
-          { ...state, items: select(state.items) } :
+        return !meta.done && isSelected(state.items, ...payload) ?
+          { ...state, items: select(state.items), photo: null } :
           state
 
       case ITEM.SELECT:
@@ -64,10 +65,14 @@ module.exports = {
       case TAG.SELECT:
         return {
           ...state,
+          photo: null,
+          items: select(state.items),
+          trash: null,
           tags: select(state.tags, payload, meta.mod)
         }
 
       case PHOTO.SELECT:
+        // select item!
         return { ...state, photo: payload }
 
       case ITEM.PHOTO.REMOVE:
@@ -80,6 +85,9 @@ module.exports = {
         return {
           ...state,
           items: select(state.items),
+          tags: select(state.tags),
+          list: null,
+          photo: null,
           ...payload
         }
 

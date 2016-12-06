@@ -42,7 +42,7 @@ class ProjectSidebar extends Component {
 
   handleTrashSelect = () => {
     if (!this.props.isTrashSelected) {
-      this.props.onSelect({ trash: true, tag: null })
+      this.props.onSelect({ trash: true })
     }
   }
 
