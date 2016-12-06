@@ -22,7 +22,7 @@ module.exports = {
       // Work around macOS not updating the renderer before
       // opening the context menu.
       if (type === UI.CONTEXT.SHOW && darwin) {
-        yield call(delay, 50)
+        yield call(delay, 80)
       }
 
       yield call([ipc, ipc.send], event, data)
