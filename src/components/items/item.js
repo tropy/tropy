@@ -13,19 +13,22 @@ const { PhotoToolbar, PhotoList, PhotoGrid } = require('../photo')
 const { IconMetadata, IconTag } = require('../icons')
 const { Viewer } = require('../viewer')
 const { Fields } = require('../metadata')
-const { getSelectedItem } = require('../../selectors/items')
+const { getSelectedItems } = require('../../selectors/items')
 const { frameless } = ARGS
+const { seq, mapcat } = require('transducers.js')
 const act = require('../../actions')
 
 
 class Item extends Component {
-  constructor(props) {
-    super(props)
+
+  get item() {
+    const { items } = this.props
+    return items.length === 1 ? items[0] : null
   }
 
-
-  get disabled() {
-    return !this.props.item || !!this.props.item.deleted
+  get isDisabled() {
+    const { item } = this
+    return !(item && !item.deleted)
   }
 
   handleMetadataTabSelect = () => {
@@ -41,8 +44,11 @@ class Item extends Component {
   }
 
   handlePhotoCreate = (event) => {
+    const { onPhotoCreate } = this.props
+    const { item } = this
+
     event.stopPropagation()
-    this.props.onPhotoCreate({ item: this.props.item.id })
+    onPhotoCreate({ item: item.id })
   }
 
   handleNoteCreate = (event) => {
@@ -96,26 +102,27 @@ class Item extends Component {
   }
 
   renderMetadataPanel() {
-    const { photo, item } = this.props
+    const { photo } = this.props
+    const { item, isDisabled } = this
 
     return (
       <div>
         {photo &&
           <Fields
             id={photo}
-            disabled={this.disabled}
+            disabled={isDisabled}
             template="photo"/>}
         {item &&
           <Fields
             id={item.id}
-            disabled={this.disabled}
+            disabled={isDisabled}
             template="core"/>}
       </div>
     )
   }
 
   renderTagsPanel() {
-    const { item } = this.props
+    const { item } = this
 
     return (
       <ul>
@@ -131,30 +138,29 @@ class Item extends Component {
       <PhotoToolbar
         zoom={panel.photoZoom}
         onZoomChange={onPhotoZoomChange}
-        hasCreateButton={!this.disabled}
+        hasCreateButton={!this.isDisabled}
         onCreate={this.handlePhotoCreate}/>
     )
   }
 
   renderPhotoPanel() {
-    const { item, photo, panel } = this.props
-
-    if (!item) return
+    const { items, photo, panel } = this.props
+    const photos = seq(items, mapcat(i => i && i.photos || []))
 
     if (panel.photoZoom) {
       return (
         <PhotoGrid
-          photos={item.photos}
+          photos={photos}
           selected={photo}
-          isDisabled={this.disabled}/>
+          isDisabled={this.isDisabled}/>
       )
     }
 
     return (
       <PhotoList
-        photos={item.photos}
+        photos={photos}
         selected={photo}
-        isDisabled={this.disabled}/>
+        isDisabled={this.isDisabled}/>
     )
   }
 
@@ -167,13 +173,14 @@ class Item extends Component {
   }
 
   renderNotePanel() {
-    const { item, note } = this.props
+    const { note } = this.props
+    const { item } = this
 
     return item && (
       <NoteList
         notes={item.notes || []}
         selected={note}
-        isDisabled={this.disabled}/>
+        isDisabled={this.isDisabled}/>
     )
   }
 
@@ -208,11 +215,13 @@ class Item extends Component {
   }
 
   static propTypes = {
-    item: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      tags: PropTypes.arrayOf(PropTypes.number).isRequired,
-      deleted: PropTypes.bool
-    }),
+    items: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        tags: PropTypes.arrayOf(PropTypes.number).isRequired,
+        deleted: PropTypes.bool
+      })
+    ),
 
     panel: PropTypes.shape({
       tab: PropTypes.oneOf(['metadata', 'tags']).isRequired,
@@ -233,7 +242,7 @@ class Item extends Component {
 module.exports = {
   Item: connect(
     (state) => ({
-      item: getSelectedItem(state),
+      items: getSelectedItems(state),
       photo: state.nav.photo,
       note: state.nav.note,
       selection: state.nav.items,

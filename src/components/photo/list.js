@@ -27,8 +27,8 @@ PhotoList.propTypes = {
 
   isDisabled: PropTypes.bool,
 
-  onPhotoSelection: PropTypes.func,
-  showPhotoMenu: PropTypes.func
+  onSelect: PropTypes.func,
+  onContextMenu: PropTypes.func
 }
 
 module.exports = {
@@ -36,11 +36,11 @@ module.exports = {
     null,
 
     (dispatch) => ({
-      onPhotoSelection(...args) {
+      onSelect(...args) {
         dispatch(act.photo.select(...args))
       },
 
-      showPhotoMenu(event, { id, item, path }) {
+      onContextMenu(event, { id, item, path }) {
         event.stopPropagation()
         dispatch(act.ui.context.show(event, 'photo', { id, item, path }))
       }

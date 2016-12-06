@@ -4,7 +4,6 @@ const React = require('react')
 const { PropTypes, Component } = React
 const { connect } = require('react-redux')
 const { Editable } = require('../editable')
-const { noop } = require('../../common/util')
 const { imageURL } = require('../../common/cache')
 const { getCachePrefix } = require('../../selectors/project')
 const act = require('../../actions')
@@ -14,13 +13,13 @@ const cn = require('classnames')
 class PhotoListItem extends Component {
 
   select = () => {
-    const { photo, onPhotoSelection, isSelected } = this.props
-    onPhotoSelection(isSelected ? null : photo.id)
+    const { photo, onSelect, isSelected } = this.props
+    onSelect(isSelected ? null : { photo: photo.id, item: photo.item })
   }
 
   popup = (event) => {
     if (!this.props.isDisabled) {
-      this.props.showPhotoMenu(event, this.props.photo)
+      this.props.onContextMenu(event, this.props.photo)
     }
   }
 
@@ -30,8 +29,8 @@ class PhotoListItem extends Component {
       photo, cache, data, title, isSelected, context, ...props
     } = this.props
 
-    delete props.onPhotoSelection
-    delete props.showPhotoMenu
+    delete props.onSelect
+    delete props.onContextMenu
 
     return (
       <li
@@ -68,12 +67,8 @@ class PhotoListItem extends Component {
     onCancel: PropTypes.func,
     onChange: PropTypes.func,
 
-    showPhotoMenu: PropTypes.func,
-    onPhotoSelection: PropTypes.func
-  }
-
-  static defaultProps = {
-    onPhotoSelection: noop
+    onContextMenu: PropTypes.func,
+    onSelect: PropTypes.func
   }
 }
 

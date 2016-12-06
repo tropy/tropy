@@ -4,6 +4,7 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { CoverImage } = require('./cover-image')
 const { Editable } = require('../editable')
+const { meta } = require('../../common/os')
 const cn = require('classnames')
 
 
@@ -18,7 +19,7 @@ class TableCell extends Component {
   handleClick = (event) => {
     const { isSelected, onActivate, property } = this.props
 
-    if (isSelected) {
+    if (isSelected && !meta(event)) {
       event.stopPropagation()
       onActivate(property.uri)
     }

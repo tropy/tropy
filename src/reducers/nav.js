@@ -72,8 +72,11 @@ module.exports = {
         }
 
       case PHOTO.SELECT:
-        // select item!
-        return { ...state, photo: payload }
+        return {
+          ...state,
+          photo: payload.photo,
+          items: select(state.items, payload.item, 'replace')
+        }
 
       case ITEM.PHOTO.REMOVE:
         return isSelected(state.items, payload.id) &&
