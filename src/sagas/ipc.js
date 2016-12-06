@@ -7,7 +7,9 @@ const { warn, debug } = require('../common/log')
 const { identity } = require('../common/util')
 const history = require('../selectors/history')
 const tag = require('../selectors/tag')
-const { TAG, HISTORY } = require('../constants')
+const { TAG, HISTORY, UI } = require('../constants')
+const { darwin } = require('../common/os')
+const { delay } = require('../common/util')
 
 
 module.exports = {
@@ -16,6 +18,13 @@ module.exports = {
     try {
       const event = meta.ipc === true ? type : meta.ipc
       const data = yield call(filter[event] || identity, payload)
+
+      // Work around macOS not updating the renderer before
+      // opening the context menu.
+      if (type === UI.CONTEXT.SHOW && darwin) {
+        yield call(delay, 50)
+      }
+
       yield call([ipc, ipc.send], event, data)
 
     } catch (error) {

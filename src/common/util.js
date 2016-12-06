@@ -106,6 +106,10 @@ module.exports = {
 
   identity(payload) { return payload },
 
+  delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  },
+
   *counter(k = 0) {
     while (true) {
       k = Number.isSafeInteger(k) ? ++k : -k

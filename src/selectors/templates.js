@@ -16,7 +16,6 @@ const T = {
 
   photo: [
     DC.TITLE,
-    DC.DESCRIPTION,
     DC.DATE
   ]
 }
