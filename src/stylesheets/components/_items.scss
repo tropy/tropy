@@ -17,10 +17,76 @@
 
 .cover-image {
   box-sizing: content-box;
+  position: relative;
+
+  .item-table-view & {
+    position: absolute;
+    left: $component-padding-horizontal;
+    top: ($row-height - $thumbnail-size) / 2;
+  }
+
+  .active & {
+    .item-grid-view & {
+      border: $space-min solid $brand-primary;
+    }
+  }
 
   img,
   .icon-item {
     width: 100%;
     height: 100%;
+  }
+
+  &.stack {
+    .item-table-view & {
+      img,
+      .icon-item {
+        -webkit-clip-path: inset(4px 0 0 0);
+      }
+    }
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      height: 1px;
+      background: $cover-image-color;
+
+      .active & {
+        .item-table-view & {
+          background: $cover-image-active-color;
+        }
+
+        .item-grid-view & {
+          content: none;
+        }
+      }
+    }
+
+    &::before {
+      left: 4px;
+      width: calc(100% - 8px);
+
+      .item-table-view & {
+        top: 0;
+      }
+
+      .item-grid-view & {
+        top: -4px;
+      }
+    }
+
+    &::after {
+      left: 2px;
+      width: calc(100% - 4px);
+
+      .item-table-view & {
+        top: 2px;
+      }
+
+      .item-grid-view & {
+        top: -2px;
+      }
+    }
   }
 }
