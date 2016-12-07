@@ -3,6 +3,7 @@
 const React = require('react')
 const { Component, PropTypes } = React
 const { CoverImage } = require('./cover-image')
+const { meta } = require('../../common/os')
 const cn = require('classnames')
 
 
@@ -12,9 +13,16 @@ class ItemTile extends Component {
     return this.props.selection.includes(this.props.item.id)
   }
 
-  handleClick = () => {
+  // DRY (see ItemTableRow)
+  handleClick = (event) => {
     const { item, onSelect } = this.props
-    onSelect(item.id, this.isSelected ? 'clear' : 'replace')
+
+    return onSelect(
+      item.id,
+      this.isSelected ?
+        (meta(event) ? 'remove' : 'clear') :
+        (meta(event) ? 'merge' : 'replace')
+    )
   }
 
   // DRY (see ItemTableRow)
