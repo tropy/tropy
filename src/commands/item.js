@@ -61,12 +61,6 @@ class Import extends Command {
         item.photos.push(photo.id)
       })
 
-      yield put(act.item.insert(item))
-      yield put(act.photo.insert(photo))
-
-      items.push(item.id)
-      metadata.push(item.id, photo.id)
-
       try {
         for (let size of [48, 512]) {
           const thumb = yield call([image, image.resize], size)
@@ -78,6 +72,13 @@ class Import extends Command {
         warn(`Failed to create thumbnail: ${error.message}`)
         verbose(error.stack)
       }
+
+      yield put(act.item.insert(item))
+      yield put(act.photo.insert(photo))
+
+      items.push(item.id)
+      metadata.push(item.id, photo.id)
+
     }
 
     if (items.length) {
