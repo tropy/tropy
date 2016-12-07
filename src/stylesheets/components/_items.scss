@@ -43,6 +43,12 @@
       .icon-item {
         -webkit-clip-path: inset(4px 0 0 0);
       }
+
+      .icon-item {
+        g {
+          transform: translateY(2px);
+        }
+      }
     }
 
     &::before,
