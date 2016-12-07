@@ -5,6 +5,7 @@
 $component-padding-horizontal: 12px !default;
 
 .metadata-heading {
+  font-size: $font-size-small;
   color: $panel-heading-color;
   line-height: $metadata-line-height;
   margin: ($font-size-base / 2) $component-padding-horizontal;
