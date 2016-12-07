@@ -119,7 +119,6 @@ class ProjectSidebar extends Component {
     onSelect: PropTypes.func,
     onCancel: PropTypes.func,
     onChange: PropTypes.func,
-
     onContextMenu: PropTypes.func
   }
 }
@@ -153,11 +152,6 @@ module.exports = {
 
       onCancel() {
         dispatch(act.ui.edit.cancel())
-      },
-
-      onContextMenu(event, ...args) {
-        event.stopPropagation()
-        dispatch(act.ui.context.show(event, ...args))
       }
 
     })

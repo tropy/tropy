@@ -12,10 +12,10 @@ const { Slider } = require('../slider')
 const { getItems } = require('../../selectors/items')
 const act = require('../../actions')
 
-const Items = ({ createItem, items, zoom, maxZoom, onZoomChange }) => (
+const Items = ({ createItem, zoom, maxZoom, onZoomChange, ...props }) => (
   <section id="items">
     <header>
-      <Toolbar draggable>
+      <Toolbar draggable={ARGS.frameless}>
         <div className="toolbar-left">
           <div className="tool-group">
             <Slider
@@ -36,7 +36,9 @@ const Items = ({ createItem, items, zoom, maxZoom, onZoomChange }) => (
         </div>
       </Toolbar>
     </header>
-    {zoom ? <ItemGrid items={items} zoom={zoom}/> : <Table items={items}/>}
+    {
+      zoom ? <ItemGrid {...props} zoom={zoom}/> : <Table {...props}/>
+    }
   </section>
 )
 
@@ -45,7 +47,8 @@ Items.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object),
   zoom: PropTypes.number,
   maxZoom: PropTypes.number,
-  onZoomChange: PropTypes.func
+  onZoomChange: PropTypes.func,
+  onContextMenu: PropTypes.func
 }
 
 Items.defaultProps = {

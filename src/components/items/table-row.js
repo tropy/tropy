@@ -30,8 +30,6 @@ class TableRow extends Component {
   }
 
   handleContextMenu = (event) => {
-    event.stopPropagation()
-
     const { item, selection, onSelect, onContextMenu } = this.props
 
     const context = ['item']

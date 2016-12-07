@@ -23,7 +23,7 @@ class ItemGrid extends Component {
   }
 
   render() {
-    const { items, selection, ...props } = this.props
+    const { items, ...props } = this.props
     const tile = this.placeholder
 
     return (
@@ -33,8 +33,7 @@ class ItemGrid extends Component {
             <ItemTile {...props}
               key={item.id}
               item={item}
-              size={this.size}
-              isSelected={selection.includes(item.id)}/>
+              size={this.size}/>
           )}
 
           {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
@@ -54,11 +53,12 @@ class ItemGrid extends Component {
 
   static propTypes = {
     selection: PropTypes.arrayOf(PropTypes.number),
-    onSelect: PropTypes.func,
     columns: PropTypes.arrayOf(PropTypes.object),
     items: PropTypes.arrayOf(PropTypes.object),
     cache: PropTypes.string.isRequired,
-    zoom: Shapes.number(1, ItemGrid.ZOOM.length - 1)
+    zoom: Shapes.number(1, ItemGrid.ZOOM.length - 1),
+    onSelect: PropTypes.func,
+    onContextMenu: PropTypes.func
   }
 }
 

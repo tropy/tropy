@@ -15,10 +15,12 @@ const Project = ({ onContextMenu, onDrop }) => (
     <ProjectDropZone onDrop={onDrop}>
       <div id="project-view">
         <Resizable edge="right" value={250}>
-          <ProjectSidebar hasToolbar={ARGS.frameless}/>
+          <ProjectSidebar
+            hasToolbar={ARGS.frameless}
+            onContextMenu={onContextMenu}/>
         </Resizable>
         <main>
-          <Items/>
+          <Items onContextMenu={onContextMenu}/>
         </main>
       </div>
       <Item/>
@@ -35,8 +37,9 @@ module.exports = {
   Project: connect(
     null,
     dispatch => ({
-      onContextMenu(event) {
-        dispatch(actions.ui.context.show(event))
+      onContextMenu(event, ...args) {
+        event.stopPropagation()
+        dispatch(actions.ui.context.show(event, ...args))
       },
 
       onDrop({ project, images }) {

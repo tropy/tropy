@@ -52,10 +52,6 @@ module.exports = {
 
       onCancel() {
         dispatch(act.ui.edit.cancel())
-      },
-
-      onContextMenu(...args) {
-        dispatch(act.ui.context.show(...args))
       }
     })
 
