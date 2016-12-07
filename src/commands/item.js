@@ -3,7 +3,7 @@
 const { warn, verbose } = require('../common/log')
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-const { prompt, openImages  } = require('../dialog')
+const { prompt, openImages, fail  } = require('../dialog')
 const { Image } = require('../image')
 const { imagePath } = require('../common/cache')
 const { DC } = require('../constants/properties')
@@ -48,37 +48,44 @@ class Import extends Command {
     // TODO Improve handling of multiple photos!
     // Progress reporting, cancel import etc.
     for (let file of files) {
-      let item
-      let photo
-      let image = yield call(Image.read, file)
-
-      yield call([db, db.transaction], async tx => {
-        item = await mod.item.create(tx, {
-          [DC.TITLE]: text(image.title)
-        })
-        photo = await mod.photo.create(tx, { item: item.id, image })
-
-        item.photos.push(photo.id)
-      })
-
       try {
-        for (let size of [48, 512]) {
-          const thumb = yield call([image, image.resize], size)
-          yield call([cache, cache.save],
-            imagePath(photo.id, size), thumb.toJPEG(100))
+        let item
+        let photo
+        let image = yield call(Image.read, file)
+
+        yield call([db, db.transaction], async tx => {
+          item = await mod.item.create(tx, {
+            [DC.TITLE]: text(image.title)
+          })
+          photo = await mod.photo.create(tx, { item: item.id, image })
+
+          item.photos.push(photo.id)
+        })
+
+        try {
+          for (let size of [48, 512]) {
+            const thumb = yield call([image, image.resize], size)
+            yield call([cache, cache.save],
+              imagePath(photo.id, size), thumb.toJPEG(100))
+          }
+
+        } catch (error) {
+          warn(`Failed to create thumbnail: ${error.message}`)
+          verbose(error.stack)
         }
 
+        yield put(act.item.insert(item))
+        yield put(act.photo.insert(photo))
+
+        items.push(item.id)
+        metadata.push(item.id, photo.id)
+
       } catch (error) {
-        warn(`Failed to create thumbnail: ${error.message}`)
+        warn(`Failed to import photo: ${error.message}`)
         verbose(error.stack)
+
+        fail(error)
       }
-
-      yield put(act.item.insert(item))
-      yield put(act.photo.insert(photo))
-
-      items.push(item.id)
-      metadata.push(item.id, photo.id)
-
     }
 
     if (items.length) {
