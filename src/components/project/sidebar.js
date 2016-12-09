@@ -7,12 +7,13 @@ const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')
 const { ActivityPane } = require('../activity')
 const { Lists } = require('../lists')
-const { Tags } = require('../tags')
+const { TagList } = require('../tag')
 const { Sidebar } = require('../sidebar')
 const { ProjectName } = require('./name')
 const { ROOT } = require('../../constants/list')
 const { has } = require('dot-prop')
 const { IconTrash } = require('../icons')
+const { getAllVisibleTags } = require('../../selectors/tag')
 const act = require('../../actions')
 
 
@@ -47,9 +48,9 @@ class ProjectSidebar extends Component {
   }
 
   render() {
-    const { project, hasToolbar, isTrashSelected, ...props } = this.props
-
-    delete props.onContextMenu
+    const {
+      project, tags, hasToolbar, isTrashSelected, onContextMenu, ...props
+    } = this.props
 
     return (
       <Sidebar>
@@ -90,7 +91,7 @@ class ProjectSidebar extends Component {
           <section onContextMenu={this.showTagsMenu}>
             <h2><FormattedMessage id="sidebar.tags"/></h2>
             <nav>
-              <Tags/>
+              <TagList tags={tags} onContextMenu={onContextMenu}/>
             </nav>
           </section>
         </div>
@@ -115,6 +116,8 @@ class ProjectSidebar extends Component {
       name: PropTypes.string
     }).isRequired,
 
+    tags: PropTypes.arrayOf(PropTypes.object),
+
     onRename: PropTypes.func,
     onSelect: PropTypes.func,
     onCancel: PropTypes.func,
@@ -127,12 +130,13 @@ class ProjectSidebar extends Component {
 
 module.exports = {
   ProjectSidebar: connect(
-    ({ project, nav, ui }) => ({
-      isEditing: has(ui.edit, 'project.name'),
-      isSelected: !nav.list && !nav.trash,
-      isTrashSelected: nav.trash,
-      context: has(ui.context, 'project'),
-      project,
+    (state) => ({
+      isEditing: has(state.ui.edit, 'project.name'),
+      isSelected: !state.nav.list && !state.nav.trash,
+      isTrashSelected: state.nav.trash,
+      context: has(state.ui.context, 'project'),
+      project: state.project,
+      tags: getAllVisibleTags(state)
     }),
 
     (dispatch) => ({

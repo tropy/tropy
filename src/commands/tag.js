@@ -8,7 +8,6 @@ const {
 } = require('../constants/tag')
 
 const act = require('../actions/tag')
-const get = require('../selectors/tag')
 
 const {
   all, create, hide, save, show
@@ -50,7 +49,7 @@ class Save extends Command {
     const { db } = this.options
     const { id, name } = this.action.payload
 
-    this.original = yield select(get.tag, { tag: id })
+    this.original = yield select(({ tags }) => tags[id])
 
     yield put(act.update({ id, name }))
     yield call(save, db, { id, name })

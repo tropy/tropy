@@ -6,9 +6,7 @@ const {
   createSelector: memo
 } = require('reselect')
 
-const tag = ({ tags }, { tag }) => tags[tag]
-
-const visible = memo(
+const getAllVisibleTags = memo(
   ({ tags }) => tags,
 
   (tags) =>
@@ -19,6 +17,5 @@ const visible = memo(
 
 
 module.exports = {
-  tag,
-  visible
+  getAllVisibleTags
 }
