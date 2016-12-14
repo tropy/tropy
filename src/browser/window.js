@@ -51,18 +51,10 @@ module.exports = {
       .once('ready-to-show', () => { win.show() })
 
     win.webContents
-      .on('crashed', () => {
-        warn(`window ${win.id} contents crashed, closing...`)
-        win.close()
-      })
       .on('devtools-reload-page', () => {
         win.webContents.send('reload')
       })
 
-    win.on('unresponsive', () => {
-      warn(`window ${win.id} has become unresponsive, closing...`)
-      win.close()
-    })
 
     for (let event of EVENTS) {
       win.on(event, () => { win.webContents.send('win', event) })

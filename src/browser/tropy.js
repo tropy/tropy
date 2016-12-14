@@ -3,7 +3,7 @@
 const { EventEmitter } = require('events')
 const { resolve } = require('path')
 const { app, shell, ipcMain: ipc, BrowserWindow } = require('electron')
-const { verbose } = require('../common/log')
+const { verbose, warn } = require('../common/log')
 const { open } = require('./window')
 const { all } = require('bluebird')
 const { existsSync: exists } = require('fs')
@@ -11,6 +11,7 @@ const { into, compose, remove, take } = require('transducers.js')
 
 const { AppMenu, ContextMenu } = require('./menu')
 const { Cache } = require('../common/cache')
+const { Strings } = require('../common/res')
 const Storage = require('./storage')
 const dialog = require('./dialog')
 
@@ -99,12 +100,44 @@ class Tropy extends EventEmitter {
         darkTheme: (this.state.theme === 'dark'),
         frame: !this.hash.frameless
       })
+
+      this.win
+        .on('unresponsive', async () => {
+          warn(`win#${this.win.id} has become unresponsive`)
+
+          const chosen = await dialog.show('message-box', this.win, {
+            type: 'warning',
+            ...this.strings.dict.dialogs.unresponsive
+          })
+
+          switch (chosen) {
+            case 0: return this.win.destroy()
+          }
+        })
+
         .on('close', () => {
           if (!this.win.isFullScreen()) {
             this.state.win.bounds = this.win.getBounds()
           }
         })
-        .once('closed', () => { this.win = undefined })
+
+        .on('closed', () => { this.win = undefined })
+
+      this.win.webContents
+        .on('crashed', async () => {
+          warn(`win#${this.win.id} contents crashed`)
+
+          const chosen = await dialog.show('message-box', this.win, {
+            type: 'warning',
+            ...this.strings.dict.dialogs.crashed
+          })
+
+          switch (chosen) {
+            case 0: return this.win.close()
+            case 1: return this.win.reload()
+          }
+        })
+
 
       if (this.state.win.bounds) {
         this.win.setBounds(this.state.win.bounds)
@@ -161,15 +194,21 @@ class Tropy extends EventEmitter {
   }
 
   restore() {
-    return this.store
-      .load('state.json')
-      .then(state => ({ ...Tropy.defaults, ...state }))
+    return all([
+      this.store.load('state.json')
+    ])
+      .then(([state]) => ({ ...Tropy.defaults, ...state }))
       .catch({ code: 'ENOENT' }, () => Tropy.defaults)
 
       .then(state => (this.state = state, this))
 
-      .tap(() => all([
-        this.menu.load(), this.ctx.load(), this.cache.init()
+      .tap(state => all([
+        this.menu.load(),
+        this.ctx.load(),
+        this.cache.init(),
+        Strings
+          .openWithFallback(state.locale, Tropy.defaults.locale)
+          .then(strings => this.strings = strings)
       ]))
 
       .tap(() => this.emit('app:restored'))
