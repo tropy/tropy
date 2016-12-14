@@ -4,17 +4,15 @@ const { Strings } = require('../common/res')
 const { UPDATE } = require('../constants/intl')
 
 function getMessages() {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const { intl: { locale, defaultLocale } } = getState()
 
-    return Strings
-      .open(locale)
+    const strings = await Strings.openWithFallback(locale, defaultLocale)
+    const messages = strings.flatten()
 
-      .catch({ code: 'ENOENT' }, () =>
-          Strings.open(defaultLocale))
+    dispatch(update({ locale, messages }))
 
-      .then(strings => strings.flatten())
-      .tap(messages => dispatch(update({ locale, messages })))
+    return messages
   }
 }
 
