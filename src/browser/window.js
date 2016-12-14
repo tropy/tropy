@@ -4,6 +4,7 @@ const { BrowserWindow, systemPreferences: pref } = require('electron')
 const { resolve, join } = require('path')
 const { format } = require('url')
 const { EL_CAPITAN, darwin } = require('../common/os')
+const { warn } = require('../common/log')
 
 const ROOT = resolve(__dirname, '..', '..', 'static')
 
@@ -41,8 +42,22 @@ module.exports = {
       ]
     }
 
-    let win = new BrowserWindow(options)
+    const win = new BrowserWindow(options)
       .once('ready-to-show', () => { win.show() })
+
+    win.webContents
+      .on('crashed', () => {
+        warn(`window ${win.id} contents crashed, closing...`)
+        win.close()
+      })
+      .on('devtools-reload-page', () => {
+        win.webContents.send('reload')
+      })
+
+    win.on('unresponsive', () => {
+      warn(`window ${win.id} has become unresponsive, closing...`)
+      win.close()
+    })
 
     for (let event of EVENTS) {
       win.on(event, () => { win.webContents.send('win', event) })

@@ -3,11 +3,10 @@
 const START = performance.now()
 
 {
-  const freeze = Object.freeze
   const decode = decodeURIComponent
   const hash = window.location.hash.slice(1)
 
-  global.ARGS = freeze(JSON.parse(decode(hash)))
+  global.ARGS = JSON.parse(decode(hash))
   process.env.NODE_ENV = ARGS.environment
 }
 
