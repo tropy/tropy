@@ -55,6 +55,13 @@ module.exports = {
         win.webContents.send('reload')
       })
 
+      .on('will-navigate', (event, url) => {
+        if (url !== win.webContents.getURL()) {
+          warn(`win#${win.id} attempted to navigate to ${url}`)
+          event.preventDefault()
+        }
+      })
+
 
     for (let event of EVENTS) {
       win.on(event, () => { win.webContents.send('win', event) })
