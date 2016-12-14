@@ -1,6 +1,6 @@
 'use strict'
 
-require('./promisify')
+const B = require('./promisify')
 
 const { resolve, join } = require('path')
 const { readFileAsync: read } = require('fs')
@@ -35,7 +35,9 @@ class Resource {
 }
 
 class Menu extends Resource {
-  static get base() { return join(super.base, 'menu') }
+  static get base() {
+    return join(super.base, 'menu')
+  }
 
   constructor(data = {}) {
     super()
@@ -44,15 +46,28 @@ class Menu extends Resource {
 }
 
 class Strings extends Resource {
-  static get base() { return join(super.base, 'strings') }
-
-  static expand(name) {
-    return super.expand(String(name).slice(0, 2))
+  static get base() {
+    return join(super.base, 'strings')
   }
 
-  constructor(dict = {}) {
+  static open(locale, ...args) {
+    return super.open(locale, locale, ...args)
+  }
+
+  static openWithFallback(locale, fallback = 'en', ...args) {
+    return B
+      .resolve(this.open(locale, ...args))
+      .catch({ code: 'ENOENT' }, () => this.open(fallback, ...args))
+  }
+
+  static expand(locale) {
+    return super.expand(`${process.type}.${String(locale).slice(0, 2)}`)
+  }
+
+  constructor(dict = {}, locale = 'en') {
     super()
     this.dict = dict
+    this.locale = locale
   }
 
   flatten() {

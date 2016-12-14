@@ -18,12 +18,17 @@ const DEFAULTS = {
 }
 
 const EVENTS = [
-  'focus', 'blur', 'maximize', 'unmaximize',
-  'enter-full-screen', 'leave-full-screen'
+  'focus',
+  'blur',
+  'maximize',
+  'unmaximize',
+  'enter-full-screen',
+  'leave-full-screen'
 ]
 
 const AQUA = {
-  1: 'blue', 6: 'graphite'
+  1: 'blue',
+  6: 'graphite'
 }
 
 module.exports = {

@@ -43,13 +43,21 @@ describe('Strings', () => {
 
   describe('.expand', () => {
     it('adds string directory', () => {
-      expect(Strings.expand('en')).to.match(/strings.en\.yml/)
+      expect(Strings.expand('en')).to.match(/en\.yml/)
     })
   })
 
   describe('.open', () => {
     it('loads and parses the strings in the given locale', () =>
-      expect(Strings.open('en'))
-        .eventually.to.be.fulfilled)
+      expect(Strings.open('en')).eventually.to.have.property('locale', 'en'))
+
+    it('fails if locale does not exist', () =>
+      expect(Strings.open('yz')).eventually.to.be.rejected)
+  })
+
+  describe('.openWithFallback', () => {
+    it('fallsback to the default locale', () =>
+      expect(Strings.openWithFallback('yz'))
+        .eventually.to.have.property('locale', 'en'))
   })
 })
