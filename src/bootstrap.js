@@ -6,7 +6,7 @@ const START = performance.now()
   const decode = decodeURIComponent
   const hash = window.location.hash.slice(1)
 
-  global.ARGS = JSON.parse(decode(hash))
+  global.ARGS = Object.freeze(JSON.parse(decode(hash)))
   process.env.NODE_ENV = ARGS.environment
 }
 
