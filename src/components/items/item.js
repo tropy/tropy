@@ -6,12 +6,12 @@ const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')
 const { Tab, Tabs } = require('../tabs')
-const { NoteToolbar, NoteList } = require('../note')
+const { Note, NoteToolbar, NoteList } = require('../note')
 const { PanelGroup, Panel } = require('../panel')
 const { Resizable } = require('../resizable')
 const { PhotoToolbar, PhotoList, PhotoGrid } = require('../photo')
 const { IconMetadata, IconTag } = require('../icons')
-const { Viewer } = require('../viewer')
+const { Image } = require('../image')
 const { Fields } = require('../metadata')
 const { getSelectedItems } = require('../../selectors/items')
 const { frameless } = ARGS
@@ -203,7 +203,7 @@ class Item extends Component {
   render() {
     return (
       <section id="item">
-        <Resizable edge="left" value={320}>
+        <Resizable edge={'left'} value={320}>
           <PanelGroup header={this.renderToolbar()} height={[50, 30, 20]}>
             <Panel header={this.renderItemTabs()}>
               {this.renderItemPanel()}
@@ -219,7 +219,10 @@ class Item extends Component {
           </PanelGroup>
         </Resizable>
 
-        <Viewer/>
+        <div className="item-container">
+          <Image/>
+          <Note/>
+        </div>
       </section>
     )
   }
