@@ -33,7 +33,11 @@ module.exports = {
   },
 
   update(payload, meta) {
-    return { type: UPDATE, payload, meta }
+    return {
+      type: UPDATE,
+      payload,
+      meta: { ipc: true, ...meta }
+    }
   }
 
 }

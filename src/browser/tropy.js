@@ -18,10 +18,8 @@ const dialog = require('./dialog')
 const release = require('../common/release')
 
 const { defineProperty: prop } = Object
-const { OPENED, CREATED } = require('../constants/project')
-const { CONTEXT } = require('../constants/ui')
 const act = require('../actions')
-const { HISTORY, TAG } = require('../constants')
+const { HISTORY, TAG, PROJECT, UI } = require('../constants')
 const { darwin } = require('../common/os')
 const { version } = require('../common/release')
 
@@ -150,11 +148,14 @@ class Tropy extends EventEmitter {
     }
   }
 
-  opened({ file }) {
+  opened({ file, name }) {
     if (this.wiz) this.wiz.close()
 
     this.state.recent = into([file],
         compose(remove(f => f === file), take(9)), this.state.recent)
+
+    if (darwin) this.setRepresentedFilename(file)
+    if (name) this.win.setTitle(name)
 
     switch (process.platform) {
       case 'darwin':
@@ -355,8 +356,12 @@ class Tropy extends EventEmitter {
     ipc
       .on('cmd', (_, command, ...params) => this.emit(command, ...params))
 
-      .on(OPENED, (_, { file }) => this.opened({ file }))
-      .on(CREATED, (_, { file }) => this.open(file))
+      .on(PROJECT.OPENED, (_, project) => this.opened(project))
+      .on(PROJECT.CREATED, (_, { file }) => this.open(file))
+
+      .on(PROJECT.UPDATE, (_, { name }) => {
+        if (name) this.win.setTitle(name)
+      })
 
       .on(HISTORY.CHANGED, (_, history) => {
         H.set(this.win, history)
@@ -366,7 +371,7 @@ class Tropy extends EventEmitter {
         T.set(this.win, tags)
       })
 
-      .on(CONTEXT.SHOW, (_, event) => {
+      .on(UI.CONTEXT.SHOW, (_, event) => {
         this.ctx.show(event)
         this.dispatch(act.ui.context.clear())
       })
