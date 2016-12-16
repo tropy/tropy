@@ -15,11 +15,19 @@ class Project extends Component {
     this.props.onContextMenu(event)
   }
 
+  handleModeChange = () => {
+    const { mode, onModeChange } = this.props
+    onModeChange(mode === 'project' ? 'item' : 'project')
+  }
+
   render() {
-    const { onContextMenu, onDrop } = this.props
+    const { mode, onContextMenu, onDrop } = this.props
 
     return (
-      <div id="project" onContextMenu={this.handleContextMenu}>
+      <div
+        id="project"
+        className={`${mode}-mode`}
+        onContextMenu={this.handleContextMenu}>
         <ProjectDropZone onDrop={onDrop}>
           <div id="project-view">
             <Resizable edge="right" value={250}>
@@ -31,22 +39,31 @@ class Project extends Component {
               <Items onContextMenu={onContextMenu}/>
             </main>
           </div>
-          <Item/>
+          <Item onModeChange={this.handleModeChange}/>
         </ProjectDropZone>
       </div>
     )
   }
 
   static propTypes = {
+    mode: PropTypes.oneOf(['project', 'item']).isRequired,
     onContextMenu: PropTypes.func,
-    onDrop: PropTypes.func
+    onDrop: PropTypes.func,
+    onModeChange: PropTypes.func
+  }
+
+  static defaultProps = {
+    mode: 'project'
   }
 }
 
 
 module.exports = {
   Project: connect(
-    null,
+    state => ({
+      mode: state.nav.mode
+    }),
+
     dispatch => ({
       onContextMenu(event, ...args) {
         event.stopPropagation()
@@ -61,6 +78,10 @@ module.exports = {
         if (images && images.length) {
           return dispatch(actions.item.import(images))
         }
+      },
+
+      onModeChange(mode) {
+        dispatch(actions.nav.update({ mode }))
       }
     })
   )(Project)

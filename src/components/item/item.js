@@ -195,8 +195,14 @@ class Item extends Component {
   }
 
   renderToolbar() {
+    const { onModeChange } = this.props
+
     return (
-      <Toolbar draggable={frameless}/>
+      <Toolbar draggable={ARGS.frameless}>
+        <ToolGroup>
+          <IconButton icon={<IconPlus/>} onClick={onModeChange}/>
+        </ToolGroup>
+      </Toolbar>
     )
   }
 
@@ -245,6 +251,7 @@ class Item extends Component {
     note: PropTypes.number,
     selection: PropTypes.arrayOf(PropTypes.number),
 
+    onModeChange: PropTypes.func,
     onTabSelect: PropTypes.func,
     onPhotoCreate: PropTypes.func,
     onPhotoZoomChange: PropTypes.func

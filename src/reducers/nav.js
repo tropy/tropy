@@ -4,6 +4,7 @@ const { NAV, ITEM, LIST, TAG, PHOTO } = require('../constants')
 const { any } = require('../common/util')
 
 const init = {
+  mode: 'project',
   items: [],
   tags: [],
   panel: { tab: 'metadata', photoZoom: 0 },
