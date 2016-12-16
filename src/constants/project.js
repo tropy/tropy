@@ -9,6 +9,10 @@ module.exports = {
 
   SAVE: 'project.save',
 
-  UPDATE: 'project.update'
+  UPDATE: 'project.update',
 
+  MODE: {
+    PROJECT: 'project',
+    ITEM: 'item'
+  }
 }

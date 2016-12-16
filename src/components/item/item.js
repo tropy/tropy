@@ -15,6 +15,8 @@ const { IconButton } = require('../button')
 const { Image } = require('../image')
 const { Fields } = require('../metadata')
 const { getSelectedItems } = require('../../selectors/items')
+const { getSelectedPhoto } = require('../../selectors/photos')
+const { PROJECT } = require('../../constants')
 const { seq, mapcat } = require('transducers.js')
 const act = require('../../actions')
 
@@ -29,6 +31,10 @@ class Item extends Component {
   get isDisabled() {
     const { item } = this
     return !(item && !item.deleted)
+  }
+
+  get isItemMode() {
+    return this.props.mode === PROJECT.MODE.ITEM
   }
 
   handleMetadataTabSelect = () => {
@@ -113,7 +119,7 @@ class Item extends Component {
               <FormattedMessage id="panel.metadata.photo"/>
             </h5>
             <Fields
-              id={photo}
+              id={photo.id}
               disabled={isDisabled}
               template="photo"/>
           </section>}
@@ -161,7 +167,7 @@ class Item extends Component {
       return (
         <PhotoGrid
           photos={photos}
-          selected={photo}
+          selected={photo && photo.id}
           isDisabled={this.isDisabled}/>
       )
     }
@@ -169,7 +175,7 @@ class Item extends Component {
     return (
       <PhotoList
         photos={photos}
-        selected={photo}
+        selected={photo && photo.id}
         isDisabled={this.isDisabled}/>
     )
   }
@@ -207,6 +213,8 @@ class Item extends Component {
   }
 
   render() {
+    const { photo } = this.props
+
     return (
       <section id="item">
         <Resizable edge={'left'} value={320}>
@@ -226,7 +234,7 @@ class Item extends Component {
         </Resizable>
 
         <div className="item-container">
-          <Image/>
+          <Image isVisible={this.isItemMode} photo={photo}/>
           <Note/>
         </div>
       </section>
@@ -242,12 +250,16 @@ class Item extends Component {
       })
     ),
 
+    photo: PropTypes.shape({
+      id: PropTypes.number.isRequired
+    }),
+
     panel: PropTypes.shape({
       tab: PropTypes.oneOf(['metadata', 'tags']).isRequired,
       photoZoom: PropTypes.number.isRequired
     }).isRequired,
 
-    photo: PropTypes.number,
+    mode: PropTypes.string,
     note: PropTypes.number,
     selection: PropTypes.arrayOf(PropTypes.number),
 
@@ -263,7 +275,7 @@ module.exports = {
   Item: connect(
     (state) => ({
       items: getSelectedItems(state),
-      photo: state.nav.photo,
+      photo: getSelectedPhoto(state),
       note: state.nav.note,
       selection: state.nav.items,
       panel: state.nav.panel

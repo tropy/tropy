@@ -7,7 +7,14 @@ const { ProjectDropZone } = require('./project/drop-zone')
 const { ProjectSidebar } = require('./project/sidebar')
 const { Resizable } = require('./resizable')
 const { Item, Items } = require('./item')
+const { MODE } = require('../constants/project')
+const values = require('object.values')
 const actions = require('../actions')
+
+const TM = {
+  [MODE.PROJECT]: MODE.ITEM,
+  [MODE.ITEM]: MODE.PROJECT
+}
 
 class Project extends Component {
 
@@ -16,8 +23,7 @@ class Project extends Component {
   }
 
   handleModeChange = () => {
-    const { mode, onModeChange } = this.props
-    onModeChange(mode === 'project' ? 'item' : 'project')
+    this.props.onModeChange(TM[this.props.mode])
   }
 
   render() {
@@ -39,21 +45,21 @@ class Project extends Component {
               <Items onContextMenu={onContextMenu}/>
             </main>
           </div>
-          <Item onModeChange={this.handleModeChange}/>
+          <Item mode={mode} onModeChange={this.handleModeChange}/>
         </ProjectDropZone>
       </div>
     )
   }
 
   static propTypes = {
-    mode: PropTypes.oneOf(['project', 'item']).isRequired,
+    mode: PropTypes.oneOf(values(MODE)).isRequired,
     onContextMenu: PropTypes.func,
     onDrop: PropTypes.func,
     onModeChange: PropTypes.func
   }
 
   static defaultProps = {
-    mode: 'project'
+    mode: MODE.PROJECT
   }
 }
 
