@@ -6,7 +6,7 @@ const { connect } = require('react-redux')
 const { ProjectDropZone } = require('./project/drop-zone')
 const { ProjectSidebar } = require('./project/sidebar')
 const { Resizable } = require('./resizable')
-const { Item, Items } = require('./items')
+const { Item, Items } = require('./item')
 const actions = require('../actions')
 
 

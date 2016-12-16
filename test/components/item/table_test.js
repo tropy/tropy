@@ -5,7 +5,7 @@ const { shallow } = require('enzyme')
 
 describe('Table', () => {
   const { Table: { WrappedComponent: Table } } =
-    __require('components/items/table')
+    __require('components/item/table')
 
   it('has class item-table-view', () => {
     expect(shallow(<Table items={[]} columns={[]}/>))

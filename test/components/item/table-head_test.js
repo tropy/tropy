@@ -4,7 +4,7 @@ const React = require('react')
 const { shallow } = require('enzyme')
 
 describe('TableHead', () => {
-  const { TableHead } = __require('components/items/table-head')
+  const { TableHead } = __require('components/item/table-head')
 
   it('has class table-head', () => {
     expect(shallow(<TableHead columns={[]}/>))
