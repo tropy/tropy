@@ -5,6 +5,7 @@ const { PropTypes } = React
 const { FormattedMessage } = require('react-intl')
 const { Toolbar, ToolGroup } = require('../toolbar')
 const { IconNote, IconPlus } = require('../icons')
+const { IconButton } = require('../button')
 
 
 const NoteToolbar = ({ hasCreateButton, onCreate }) => (
@@ -18,9 +19,7 @@ const NoteToolbar = ({ hasCreateButton, onCreate }) => (
       {
         hasCreateButton &&
           <ToolGroup>
-            <button className="btn btn-icon" onClick={onCreate}>
-              <IconPlus/>
-            </button>
+            <IconButton icon={<IconPlus/>} onClick={onCreate}/>
           </ToolGroup>
       }
     </div>

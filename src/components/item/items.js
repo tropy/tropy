@@ -9,6 +9,7 @@ const { IconPlus, IconList, IconGrid } = require('../icons')
 const { Table } = require('./table')
 const { ItemGrid } = require('./grid')
 const { Slider } = require('../slider')
+const { IconButton } = require('../button')
 const { getItems } = require('../../selectors/items')
 const act = require('../../actions')
 
@@ -26,9 +27,7 @@ const Items = ({ createItem, zoom, maxZoom, onZoomChange, ...props }) => (
               maxIcon={<IconGrid/>}/>
           </div>
           <div className="tool-group">
-            <button className="btn btn-icon" onClick={createItem}>
-              <IconPlus/>
-            </button>
+            <IconButton icon={<IconPlus/>} onClick={createItem}/>
           </div>
         </div>
         <div className="toolbar-right">

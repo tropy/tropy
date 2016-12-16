@@ -2,6 +2,7 @@
 
 const React = require('react')
 const { Component, PropTypes } = React
+const { IconButton } = require('./button')
 const cn = require('classnames')
 const { bounds, borders, on, off } = require('../dom')
 const { noop } = require('../common/util')
@@ -128,12 +129,10 @@ class Slider extends Component {
 
     if (minIcon) {
       return (
-        <button
-          className="btn btn-icon"
+        <IconButton
+          icon={this.props.minIcon}
           disabled={disabled || value === min}
-          onMouseDown={this.min}>
-          {this.props.minIcon}
-        </button>
+          onMouseDown={this.min}/>
       )
     }
   }
@@ -144,12 +143,10 @@ class Slider extends Component {
 
     if (maxIcon) {
       return (
-        <button
-          className="btn btn-icon"
+        <IconButton
+          icon={this.props.maxIcon}
           disabled={disabled || value === max}
-          onMouseDown={this.max}>
-          {this.props.maxIcon}
-        </button>
+          onMouseDown={this.max}/>
       )
     }
   }

@@ -9,7 +9,6 @@ const { Resizable } = require('./resizable')
 const { Item, Items } = require('./item')
 const actions = require('../actions')
 
-
 class Project extends Component {
 
   handleContextMenu = (event) => {
