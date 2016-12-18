@@ -154,7 +154,7 @@ class Tropy extends EventEmitter {
     this.state.recent = into([file],
         compose(remove(f => f === file), take(9)), this.state.recent)
 
-    if (darwin) this.setRepresentedFilename(file)
+    if (darwin) this.win.setRepresentedFilename(file)
     if (name) this.win.setTitle(name)
 
     switch (process.platform) {
