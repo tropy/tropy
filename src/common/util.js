@@ -49,17 +49,6 @@ module.exports = {
     return [...array].sort(...args)
   },
 
-  any(array, predicate) {
-    let item
-    let idx = 0
-
-    for (item of array) {
-      if (predicate(item, idx++, array)) return true
-    }
-
-    return false
-  },
-
   flatten(obj) {
     const res = {}
 
