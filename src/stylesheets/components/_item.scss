@@ -17,7 +17,7 @@
 
     @if $platform == darwin {
       .panel-group-header {
-        .tool-group {
+        .toolbar-left {
           margin-left: (
             $window-controls-width
             + $window-controls-offset-x

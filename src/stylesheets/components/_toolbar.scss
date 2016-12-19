@@ -11,6 +11,10 @@
   padding: $space-min $component-padding-horizontal 0;
   margin-bottom: $space-min;
 
+  .panel-group-header & {
+    padding-top: 0;
+  }
+
   .panel-header & {
     height: 100%;
     margin: 0;

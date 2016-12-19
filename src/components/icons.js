@@ -32,6 +32,14 @@ function i(name, svg) {
 
 /* 16 x 16 */
 
+i('ChevronLeft', (
+  <svg width="16" height="16">
+    <g className="line">
+      <polygon points="11.146,15.854 3.293,8 11.146,0.146 11.854,0.854 4.707,8 11.854,15.146 	"/>
+    </g>
+  </svg>
+))
+
 i('Folder', (
   <svg width="16" height="16">
     <g className="line">

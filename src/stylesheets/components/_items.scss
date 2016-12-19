@@ -9,7 +9,7 @@
 
   .toolbar {
     padding: {
-      left: ($component-padding-horizontal + $space-min);
+      left: $component-padding-horizontal;
       right: ($component-padding-horizontal + $space-min);
     }
   }
