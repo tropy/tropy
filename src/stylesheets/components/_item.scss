@@ -8,5 +8,22 @@
   top: 0;
   width: 100%;
   height: 100%;
+  z-index: $zindex-item;
   display: flex;
+  background: $body-bg;
+
+  .item-mode & {
+    left: 0;
+
+    @if $platform == darwin {
+      .panel-group-header {
+        .tool-group {
+          margin-left: (
+            $window-controls-width
+            + $window-controls-offset-x
+            - $window-controls-margin);
+        }
+      }
+    }
+  }
 }

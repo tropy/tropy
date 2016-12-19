@@ -95,9 +95,17 @@ $input-border-radius-base: 0;
 
 $zindex-resizable:       1000;
 $zindex-draggable:       1010;
-$zindex-drop-zone:       1020;
-$zindex-window-controls: 1030;
+$zindex-item:            1020;
+$zindex-drop-zone:       1030;
+$zindex-window-controls: 1040;
 
+
+// Darwin window controls
+// --------------------------------------------------
+$window-controls-width: 60px;
+$window-controls-offset-x: 9px;
+$window-controls-offset-y: 9px;
+$window-controls-margin: 4px;
 
 // Sidebar
 // --------------------------------------------------

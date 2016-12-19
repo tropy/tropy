@@ -4,9 +4,9 @@
 
 .window-controls {
   position: absolute;
-  left: 9px;
-  top: 9px;
-  width: 60px;
+  left: $window-controls-offset-x;
+  top: $window-controls-offset-y;
+  width: $window-controls-width;
   z-index: $zindex-window-controls;
 
   &:hover {
@@ -35,7 +35,7 @@
       size: 12px auto;
       color: transparent;
     }
-    margin: 4px;
+    margin: $window-controls-margin;
     vertical-align: top;
 
     &:active {
