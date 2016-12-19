@@ -15,7 +15,13 @@
     left: 0;
     top: 0;
     width: 100%;
-    background: $toolbar-bg;
+    transition: background-color $toolbar-transition;
+  }
+
+  &:hover {
+    .toolbar {
+      background: $toolbar-hover-bg;
+    }
   }
 
   img {
