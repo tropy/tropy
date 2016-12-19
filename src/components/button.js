@@ -13,7 +13,8 @@ IconButton.propTypes = {
   icon: PropTypes.element.isRequired,
   disabled: PropTypes.bool,
   onClick: PropTypes.func,
-  onMouseDown: PropTypes.func
+  onMouseDown: PropTypes.func,
+  onMouseUp: PropTypes.func
 }
 
 module.exports = {
