@@ -1,0 +1,26 @@
+//
+// Image
+// --------------------------------------------------
+
+#image {
+  height: 50%;
+  background: $image-bg;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+
+  .toolbar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: $toolbar-bg;
+  }
+
+  img {
+    flex: 0 0 0;
+    max-width: 100%;
+    max-height: 100%;
+  }
+}

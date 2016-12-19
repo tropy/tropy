@@ -94,10 +94,11 @@ $input-border-radius-base: 0;
 // --------------------------------------------------
 
 $zindex-resizable:       1000;
-$zindex-draggable:       1010;
+$zindex-project:         1010;
 $zindex-item:            1020;
-$zindex-drop-zone:       1030;
-$zindex-window-controls: 1040;
+$zindex-draggable:       1030;
+$zindex-drop-zone:       1040;
+$zindex-window-controls: 1050;
 
 
 // Darwin window controls
