@@ -4,11 +4,15 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { CoverImage } = require('./cover-image')
 const { Editable } = require('../editable')
-const { meta } = require('../../common/os')
+const { clickable } = require('../util')
 const cn = require('classnames')
 
 
 class TableCell extends Component {
+  constructor(props) {
+    super(props)
+    clickable(this)
+  }
 
   changed = (value) => {
     this.props.onChange({
@@ -16,13 +20,9 @@ class TableCell extends Component {
     })
   }
 
-  handleClick = (event) => {
-    const { isSelected, onActivate, property } = this.props
-
-    if (isSelected && !meta(event)) {
-      event.stopPropagation()
-      onActivate(property.uri)
-    }
+  handleSingleClick = () => {
+    const { item, property, onSingleClick } = this.props
+    onSingleClick({ id: item.id, property: property.uri })
   }
 
   get value() {
@@ -50,7 +50,7 @@ class TableCell extends Component {
       <td
         className={cn({ metadata: true, [this.type]: true })}
         style={{ width }}
-        onClick={this.handleClick}>
+        onClick={this.click}>
 
         {hasCoverImage && <CoverImage item={item} size={24} cache={cache}/>}
 
@@ -87,7 +87,9 @@ class TableCell extends Component {
     cache: PropTypes.string.isRequired,
     width: PropTypes.string.isRequired,
 
-    onActivate: PropTypes.func,
+    onClick: PropTypes.func,
+    onSingleClick: PropTypes.func,
+    onDoubleClick: PropTypes.func,
     onCancel: PropTypes.func,
     onChange: PropTypes.func
   }

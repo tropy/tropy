@@ -22,20 +22,31 @@ class TableRow extends Component {
 
     if (mod) {
       onSelect(item.id, isSelected ? 'remove' : 'merge')
+      event.stopPropagation()
 
     } else {
+      onSelect(item.id, 'replace')
+
       if (!isSelected) {
-        onSelect(item.id, 'replace')
+        event.stopPropagation()
       }
     }
   }
 
+  handleDoubleClick = () => {
+    const { item, onOpen } = this.props
+    onOpen({ id: item.id, photos: item.photos })
+  }
+
   handleContextMenu = (event) => {
-    this.props.onContextMenu(event, this.props.item)
+    this.props.onContextMenu(this.props.item, event)
   }
 
   render() {
-    const { editing, columns, isSelected, ...props } = this.props
+    const {
+      editing, columns, isSelected, onColumnEdit, ...props
+    } = this.props
+
     const { isDisabled } = this
 
     delete props.onSelect
@@ -44,8 +55,7 @@ class TableRow extends Component {
     return (
       <tr
         className={cn({ item: true, active: isSelected })}
-        onContextMenu={this.handleContextMenu}
-        onClick={this.handleClick}>
+        onContextMenu={this.handleContextMenu}>
         {
           columns.map(({ property, width }) => (
             <TableCell {...props}
@@ -55,7 +65,10 @@ class TableRow extends Component {
               isSelected={isSelected}
               hasCoverImage={property.uri === DC.TITLE}
               property={property}
-              width={width}/>
+              width={width}
+              onClick={this.handleClick}
+              onSingleClick={onColumnEdit}
+              onDoubleClick={this.handleDoubleClick}/>
           ))
         }
       </tr>
@@ -65,6 +78,7 @@ class TableRow extends Component {
   static propTypes = {
     item: PropTypes.shape({
       id: PropTypes.number.isRequired,
+      photos: PropTypes.arrayOf(PropTypes.number),
       deleted: PropTypes.bool
     }).isRequired,
 
@@ -78,9 +92,10 @@ class TableRow extends Component {
     onSelect: PropTypes.func.isRequired,
     onContextMenu: PropTypes.func,
 
-    onActivate: PropTypes.func,
+    onColumnEdit: PropTypes.func,
     onCancel: PropTypes.func,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    onOpen: PropTypes.func
   }
 }
 
@@ -93,13 +108,6 @@ module.exports = {
     }),
 
     (dispatch, { item }) => ({
-      onActivate(property) {
-        dispatch(act.ui.edit.start({
-          column: {
-            [item.id]: property
-          }
-        }))
-      },
 
       onChange(data) {
         dispatch(act.metadata.save({ id: item.id, data }))

@@ -2,12 +2,8 @@
 
 const React = require('react')
 const { Component, PropTypes } = React
-const { connect } = require('react-redux')
 const { TableRow } = require('./table-row')
 const { TableHead } = require('./table-head')
-const { getColumns } = require('../../selectors/ui')
-const { getCachePrefix } = require('../../selectors/project')
-const act = require('../../actions')
 
 
 class Table extends Component {
@@ -64,28 +60,12 @@ class Table extends Component {
     cache: PropTypes.string,
     onSelect: PropTypes.func,
     onCancel: PropTypes.func,
+    onColumnEdit: PropTypes.func,
     onContextMenu: PropTypes.func
   }
 }
 
 
 module.exports = {
-  Table: connect(
-    (state) => ({
-      selection: state.nav.items,
-      columns: getColumns(state),
-      cache: getCachePrefix(state)
-    }),
-
-    (dispatch) => ({
-      onSelect(id, mod) {
-        dispatch(act.item.select(id, { mod }))
-      },
-
-      onCancel() {
-        dispatch(act.ui.edit.cancel())
-      }
-    })
-
-  )(Table)
+  Table
 }

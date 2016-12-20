@@ -2,10 +2,7 @@
 
 const React = require('react')
 const { Component, PropTypes } = React
-const { connect } = require('react-redux')
 const { ItemTile } = require('./tile')
-const { select } = require('../../actions/item')
-const { getCachePrefix } = require('../../selectors/project')
 const { Shapes } = require('../util')
 const { times } = require('../../common/util')
 
@@ -76,9 +73,9 @@ class ItemGrid extends Component {
 
   static propTypes = {
     selection: PropTypes.arrayOf(PropTypes.number),
+    cache: PropTypes.string.isRequired,
     columns: PropTypes.arrayOf(PropTypes.object),
     items: PropTypes.arrayOf(PropTypes.object),
-    cache: PropTypes.string.isRequired,
     zoom: Shapes.number(1, ItemGrid.ZOOM.length - 1),
     onOpen: PropTypes.func,
     onSelect: PropTypes.func,
@@ -88,17 +85,5 @@ class ItemGrid extends Component {
 
 
 module.exports = {
-  ItemGrid: connect(
-    (state) => ({
-      selection: state.nav.items,
-      cache: getCachePrefix(state)
-    }),
-
-    (dispatch) => ({
-      onSelect(id, mod) {
-        dispatch(select(id, { mod }))
-      }
-    })
-
-  )(ItemGrid)
+  ItemGrid
 }

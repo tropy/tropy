@@ -11,9 +11,11 @@ const { ItemGrid } = require('./grid')
 const { Slider } = require('../slider')
 const { IconButton } = require('../button')
 const { getItems } = require('../../selectors/items')
+const { getCachePrefix } = require('../../selectors/project')
+const { getColumns } = require('../../selectors/ui')
 const act = require('../../actions')
 
-const Items = ({ createItem, zoom, maxZoom, onZoomChange, ...props }) => (
+const Items = ({ onCreate, zoom, maxZoom, onZoomChange, ...props }) => (
   <section id="items">
     <header>
       <Toolbar draggable={ARGS.frameless}>
@@ -27,7 +29,7 @@ const Items = ({ createItem, zoom, maxZoom, onZoomChange, ...props }) => (
               maxIcon={<IconGrid/>}/>
           </div>
           <div className="tool-group">
-            <IconButton icon={<IconPlus/>} onClick={createItem}/>
+            <IconButton icon={<IconPlus/>} onClick={onCreate}/>
           </div>
         </div>
         <div className="toolbar-right">
@@ -42,13 +44,19 @@ const Items = ({ createItem, zoom, maxZoom, onZoomChange, ...props }) => (
 )
 
 Items.propTypes = {
-  createItem: PropTypes.func,
   items: PropTypes.arrayOf(PropTypes.object),
+  selection: PropTypes.arrayOf(PropTypes.number),
+  columns: PropTypes.arrayOf(PropTypes.object),
+  cache: PropTypes.string.isRequired,
   zoom: PropTypes.number,
   maxZoom: PropTypes.number,
-  onZoomChange: PropTypes.func,
+  onCreate: PropTypes.func,
   onOpen: PropTypes.func,
-  onContextMenu: PropTypes.func
+  onSelect: PropTypes.func,
+  onCancel: PropTypes.func,
+  onColumnEdit: PropTypes.func,
+  onContextMenu: PropTypes.func,
+  onZoomChange: PropTypes.func,
 }
 
 Items.defaultProps = {
@@ -59,12 +67,15 @@ Items.defaultProps = {
 module.exports = {
   Items: connect(
     (state) => ({
+      columns: getColumns(state),
       items: getItems(state),
+      selection: state.nav.items,
+      cache: getCachePrefix(state),
       zoom: state.nav.itemsZoom
     }),
 
     (dispatch) => ({
-      createItem() {
+      onCreate() {
         dispatch(act.item.create())
       },
 
@@ -72,8 +83,24 @@ module.exports = {
         dispatch(act.item.open(item))
       },
 
+      onSelect(id, mod) {
+        dispatch(act.item.select(id, { mod }))
+      },
+
       onZoomChange(itemsZoom) {
         dispatch(act.nav.update({ itemsZoom }))
+      },
+
+      onColumnEdit({ id, property }) {
+        dispatch(act.ui.edit.start({
+          column: {
+            [id]: property
+          }
+        }))
+      },
+
+      onCancel() {
+        dispatch(act.ui.edit.cancel())
       }
     })
   )(Items)
