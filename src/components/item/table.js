@@ -4,12 +4,23 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { TableRow } = require('./table-row')
 const { TableHead } = require('./table-head')
+const { meta } = require('../../common/os')
 
 
 class Table extends Component {
 
-  handleSelect = (id, mod) => {
-    this.props.onSelect(id, mod)
+  handleSelect = (item, event) => {
+    const { selection, onSelect } = this.props
+    const isSelected = selection.includes(item.id)
+
+    if (meta(event)) {
+      onSelect(item.id, isSelected ? 'remove' : 'merge')
+
+    } else {
+      if (!isSelected || selection.length > 1) {
+        onSelect(item.id, 'replace')
+      }
+    }
   }
 
   handleContextMenu = (item, event) => {

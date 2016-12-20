@@ -18,19 +18,12 @@ class TableRow extends Component {
 
   handleClick = (event) => {
     const { item, isSelected, onSelect } = this.props
-    const mod = meta(event)
 
-    if (mod) {
-      onSelect(item.id, isSelected ? 'remove' : 'merge')
-      event.stopPropagation()
-
-    } else {
-      onSelect(item.id, 'replace')
-
-      if (!isSelected) {
-        event.stopPropagation()
-      }
+    if (!isSelected || meta(event)) {
+      event.stopPropagation() // Swallow single click!
     }
+
+    onSelect(item, event)
   }
 
   handleDoubleClick = () => {
