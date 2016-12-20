@@ -13,7 +13,7 @@
   padding: 0 $padding-base-horizontal;
 
   &[disabled] {
-    opacity: 0.64;
+    opacity: $btn-disabled-opacity;
   }
 
   .draggable & {
