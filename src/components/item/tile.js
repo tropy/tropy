@@ -9,19 +9,27 @@ const cn = require('classnames')
 
 class ItemTile extends Component {
 
-  handleClick = (event) => {
-    const { item, isSelected, onSelect } = this.props
-
-    return onSelect(
-      item.id,
-      isSelected ?
-        (meta(event) ? 'remove' : 'clear') :
-        (meta(event) ? 'merge' : 'replace')
-    )
-  }
-
   handleContextMenu = (event) => {
     this.props.onContextMenu(event, this.props.item)
+  }
+
+  handleSingleClick = (event) => {
+    const { item, isSelected, onSelect } = this.props
+    const mod = meta(event)
+
+    if (mod) {
+      onSelect(item.id, isSelected ? 'remove' : 'merge')
+
+    } else {
+      if (!isSelected) {
+        onSelect(item.id, 'replace')
+      }
+    }
+  }
+
+  handleDoubleClick = () => {
+    const { item, onOpen } = this.props
+    onOpen({ id: item.id, photos: item.photos })
   }
 
   get style() {
@@ -44,9 +52,10 @@ class ItemTile extends Component {
       <li
         className={cn(this.classes)}
         style={this.style}
-        onClick={this.handleClick}
         onContextMenu={this.handleContextMenu}>
-        <CoverImage {...this.props}/>
+        <CoverImage {...this.props}
+          onSingleClick={this.handleSingleClick}
+          onDoubleClick={this.handleDoubleClick}/>
       </li>
     )
   }
@@ -59,6 +68,7 @@ class ItemTile extends Component {
       id: PropTypes.number.isRequired
     }),
 
+    onOpen: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired,
     onContextMenu: PropTypes.func.isRequired
   }

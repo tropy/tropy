@@ -80,6 +80,7 @@ class ItemGrid extends Component {
     items: PropTypes.arrayOf(PropTypes.object),
     cache: PropTypes.string.isRequired,
     zoom: Shapes.number(1, ItemGrid.ZOOM.length - 1),
+    onOpen: PropTypes.func,
     onSelect: PropTypes.func,
     onContextMenu: PropTypes.func
   }

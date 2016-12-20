@@ -1,6 +1,9 @@
 'use strict'
 
-const { NAV, ITEM, LIST, TAG, PHOTO } = require('../constants')
+const {
+  NAV, ITEM, LIST, TAG, PHOTO, PROJECT
+} = require('../constants')
+
 const { isSelected } = require('../selection')
 
 const init = {
@@ -51,8 +54,22 @@ module.exports = {
         return {
           ...state,
           photo: null,
+          note: null,
           items: select(state.items, payload, meta.mod)
         }
+
+      case ITEM.OPEN: {
+        const { id, photos } = payload
+        const photo = photos ?
+          (photos.includes(state.photo) ? state.photo : photos[0]) : null
+
+        return {
+          ...state,
+          mode: PROJECT.MODE.ITEM,
+          photo,
+          items: select(state.items, id, 'replace')
+        }
+      }
 
       case TAG.REMOVE:
         return isSelected(state.tags, payload) ?

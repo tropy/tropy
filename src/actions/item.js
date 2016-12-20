@@ -100,6 +100,14 @@ module.exports = {
     }
   },
 
+  open(payload, meta) {
+    return {
+      type: ITEM.OPEN,
+      payload,
+      meta: { load: true, ...meta }
+    }
+  },
+
   bulk: {
     update(payload, meta) {
       return {

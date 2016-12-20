@@ -22,6 +22,45 @@ module.exports = {
     }
   },
 
+  getClickHandler(component, delay = 350) {
+    let tm
+
+    function clear() {
+      clearTimeout(tm)
+      tm = undefined
+    }
+
+    function set(action) {
+      tm = setTimeout(() => {
+        tm = undefined
+        action()
+      }, delay)
+
+    }
+
+    function handleClick(event) {
+      const {
+        onClick, onSingleClick, onDoubleClick
+      } = component.props
+
+      try {
+        if (tm) {
+          clear()
+          if (onDoubleClick) onDoubleClick(event)
+
+        } else {
+          event.persist()
+          set(() => { if (onSingleClick) onSingleClick(event) })
+        }
+
+      } finally {
+        if (onClick) onClick(event)
+      }
+    }
+
+    return handleClick.bind(component)
+  },
+
   Shapes: {
     edge: PropTypes.oneOf(['top', 'right', 'bottom', 'left']),
 

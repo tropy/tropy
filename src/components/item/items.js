@@ -47,6 +47,7 @@ Items.propTypes = {
   zoom: PropTypes.number,
   maxZoom: PropTypes.number,
   onZoomChange: PropTypes.func,
+  onOpen: PropTypes.func,
   onContextMenu: PropTypes.func
 }
 
@@ -65,6 +66,10 @@ module.exports = {
     (dispatch) => ({
       createItem() {
         dispatch(act.item.create())
+      },
+
+      onOpen(item) {
+        dispatch(act.item.open(item))
       },
 
       onZoomChange(itemsZoom) {
