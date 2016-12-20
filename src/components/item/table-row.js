@@ -16,43 +16,27 @@ class TableRow extends Component {
     return !!this.props.item.deleted
   }
 
-  get isSelected() {
-    return this.props.selection.includes(this.props.item.id)
-  }
-
   handleClick = (event) => {
-    return this.props.onSelect(
-      this.props.item.id,
-      this.isSelected ?
-        (meta(event) ? 'remove' : 'clear') :
-        (meta(event) ? 'merge' : 'replace')
-    )
+    const { item, isSelected, onSelect } = this.props
+    const mod = meta(event)
+
+    if (mod) {
+      onSelect(item.id, isSelected ? 'remove' : 'merge')
+
+    } else {
+      if (!isSelected) {
+        onSelect(item.id, 'replace')
+      }
+    }
   }
 
   handleContextMenu = (event) => {
-    const { item, selection, onSelect, onContextMenu } = this.props
-
-    const context = ['item']
-    const target = { id: item.id, tags: item.tags }
-
-    if (this.isSelected) {
-      if (selection.length > 1) {
-        context.push('bulk')
-        target.id = selection
-      }
-
-    } else {
-      onSelect(item.id, 'replace')
-    }
-
-    if (item.deleted) context.push('deleted')
-
-    onContextMenu(event, context.join('-'), target)
+    this.props.onContextMenu(event, this.props.item)
   }
 
   render() {
-    const { editing, columns, ...props } = this.props
-    const { isSelected, isDisabled } = this
+    const { editing, columns, isSelected, ...props } = this.props
+    const { isDisabled } = this
 
     delete props.onSelect
     delete props.onContextMenu
@@ -88,7 +72,8 @@ class TableRow extends Component {
     editing: PropTypes.string,
     cache: PropTypes.string.isRequired,
     columns: PropTypes.arrayOf(PropTypes.object),
-    selection: PropTypes.arrayOf(PropTypes.number),
+
+    isSelected: PropTypes.bool,
 
     onSelect: PropTypes.func.isRequired,
     onContextMenu: PropTypes.func,
