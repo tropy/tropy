@@ -13,7 +13,7 @@ class ItemTile extends Component {
     this.props.onContextMenu(event, this.props.item)
   }
 
-  handleSingleClick = (event) => {
+  handleClick = (event) => {
     const { item, isSelected, onSelect } = this.props
     const mod = meta(event)
 
@@ -54,7 +54,7 @@ class ItemTile extends Component {
         style={this.style}
         onContextMenu={this.handleContextMenu}>
         <CoverImage {...this.props}
-          onSingleClick={this.handleSingleClick}
+          onClick={this.handleClick}
           onDoubleClick={this.handleDoubleClick}/>
       </li>
     )

@@ -43,17 +43,13 @@ module.exports = {
         onClick, onSingleClick, onDoubleClick
       } = component.props
 
-      try {
-        if (tm) {
-          clear()
-          if (onDoubleClick) onDoubleClick(event)
+      if (tm) {
+        clear()
+        if (onDoubleClick) onDoubleClick(event)
 
-        } else {
-          event.persist()
-          set(() => { if (onSingleClick) onSingleClick(event) })
-        }
-
-      } finally {
+      } else {
+        event.persist()
+        set(() => { if (onSingleClick) onSingleClick(event) })
         if (onClick) onClick(event)
       }
     }
