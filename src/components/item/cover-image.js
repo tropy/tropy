@@ -4,13 +4,13 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { IconItem } = require('../icons')
 const { imageURL } = require('../../common/cache')
-const { getClickHandler } = require('../util')
+const { clickable } = require('../util')
 const cn = require('classnames')
 
 class CoverImage extends Component {
   constructor(props) {
     super(props)
-    this.handleClick = getClickHandler(this)
+    clickable(this)
   }
 
   get cardinality() {
@@ -44,7 +44,7 @@ class CoverImage extends Component {
       <figure
         className={cn({ 'cover-image': true, 'stack': cardinality > 1 })}
         style={this.style}
-        onClick={this.handleClick}>
+        onClick={this.click}>
         {cardinality === 0
           ? <IconItem/>
           : <img srcSet={`${encodeURI(this.src)} 2x`}/>

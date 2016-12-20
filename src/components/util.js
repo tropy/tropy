@@ -22,7 +22,7 @@ module.exports = {
     }
   },
 
-  getClickHandler(component, delay = 350) {
+  clickable(component, delay = 350) {
     let tm
 
     function clear() {
@@ -38,23 +38,32 @@ module.exports = {
 
     }
 
-    function handleClick(event) {
-      const {
-        onClick, onSingleClick, onDoubleClick
-      } = component.props
+    function handle(which, ...args) {
+      const handler = component[`handle${which}`] ||
+        component.props[`on${which}`]
 
+      if (handler) handler.call(component, ...args)
+    }
+
+    function click(event) {
       if (tm) {
         clear()
-        if (onDoubleClick) onDoubleClick(event)
+        handle('DoubleClick', event)
 
       } else {
         event.persist()
-        set(() => { if (onSingleClick) onSingleClick(event) })
-        if (onClick) onClick(event)
+
+        set(() => {
+          if (!event.isPropagationStopped()) {
+            handle('SingleClick', event)
+          }
+        })
+
+        handle('Click', event)
       }
     }
 
-    return handleClick.bind(component)
+    component.click = click.bind(component)
   },
 
   Shapes: {
