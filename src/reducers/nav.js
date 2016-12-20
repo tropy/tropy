@@ -1,7 +1,7 @@
 'use strict'
 
 const { NAV, ITEM, LIST, TAG, PHOTO } = require('../constants')
-const { any } = require('../common/util')
+const { isSelected } = require('../selection')
 
 const init = {
   mode: 'project',
@@ -22,10 +22,6 @@ function select(selection, id, mod) {
     default:
       return []
   }
-}
-
-function isSelected(selection, ...ids) {
-  return any(ids, id => selection.includes(id))
 }
 
 module.exports = {
