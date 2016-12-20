@@ -10,7 +10,7 @@ const { Note, NoteToolbar, NoteList } = require('../note')
 const { PanelGroup, Panel } = require('../panel')
 const { Resizable } = require('../resizable')
 const { PhotoToolbar, PhotoList, PhotoGrid } = require('../photo')
-const { IconMetadata, IconTag, IconChevronLeft } = require('../icons')
+const { IconMetadata, IconTag, IconChevron } = require('../icons')
 const { IconButton } = require('../button')
 const { Image } = require('../image')
 const { Fields } = require('../metadata')
@@ -207,7 +207,7 @@ class Item extends Component {
       <Toolbar draggable={ARGS.frameless}>
         <div className="toolbar-left">
           <ToolGroup>
-            <IconButton icon={<IconChevronLeft/>} onClick={onModeChange}/>
+            <IconButton icon={<IconChevron/>} onClick={onModeChange}/>
           </ToolGroup>
         </div>
       </Toolbar>

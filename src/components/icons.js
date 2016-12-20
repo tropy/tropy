@@ -32,10 +32,10 @@ function i(name, svg) {
 
 /* 16 x 16 */
 
-i('ChevronLeft', (
+i('Chevron', (
   <svg width="16" height="16">
     <g className="line">
-      <polygon points="11.146,15.854 3.293,8 11.146,0.146 11.854,0.854 4.707,8 11.854,15.146 	"/>
+      <polygon points="15.146,11.854 8,4.707 0.854,11.854 0.146,11.146 8,3.293 15.854,11.146"/>
     </g>
   </svg>
 ))
