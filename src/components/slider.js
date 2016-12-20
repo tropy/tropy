@@ -131,7 +131,8 @@ class Slider extends Component {
       return (
         <IconButton
           icon={this.props.minIcon}
-          disabled={disabled || value === min}
+          classes={{ active: value === min }}
+          disabled={disabled}
           onMouseDown={this.min}/>
       )
     }
@@ -145,7 +146,8 @@ class Slider extends Component {
       return (
         <IconButton
           icon={this.props.maxIcon}
-          disabled={disabled || value === max}
+          classes={{ active: value === max }}
+          disabled={disabled}
           onMouseDown={this.max}/>
       )
     }
