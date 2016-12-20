@@ -207,7 +207,11 @@ class Item extends Component {
       <Toolbar draggable={ARGS.frameless}>
         <div className="toolbar-left">
           <ToolGroup>
-            <IconButton icon={<IconChevron/>} onClick={onModeChange}/>
+            {this.isItemMode &&
+              <IconButton
+                icon={<IconChevron/>}
+                onClick={onModeChange}/>
+            }
           </ToolGroup>
         </div>
       </Toolbar>
