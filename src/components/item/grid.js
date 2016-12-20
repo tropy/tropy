@@ -22,8 +22,28 @@ class ItemGrid extends Component {
     )
   }
 
+  handleSelect = (id, mod) => {
+    this.props.onSelect(id, mod)
+  }
+
+  handleContextMenu = (event, item) => {
+    const { selection, onContextMenu } = this.props
+
+    const context = ['item']
+    const target = { id: item.id, tags: item.tags }
+
+    if (selection.length > 1) {
+      context.push('bulk')
+      target.id = selection
+    }
+
+    if (item.deleted) context.push('deleted')
+
+    onContextMenu(event, context.join('-'), target)
+  }
+
   render() {
-    const { items, ...props } = this.props
+    const { selection, items, ...props } = this.props
     const tile = this.placeholder
 
     return (
@@ -33,7 +53,10 @@ class ItemGrid extends Component {
             <ItemTile {...props}
               key={item.id}
               item={item}
-              size={this.size}/>
+              size={this.size}
+              isSelected={selection.includes(item.id)}
+              onSelect={this.handleSelect}
+              onContextMenu={this.handleContextMenu}/>
           )}
 
           {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}

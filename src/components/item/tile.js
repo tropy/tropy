@@ -9,42 +9,19 @@ const cn = require('classnames')
 
 class ItemTile extends Component {
 
-  get isSelected() {
-    return this.props.selection.includes(this.props.item.id)
-  }
-
-  // DRY (see ItemTableRow)
   handleClick = (event) => {
-    const { item, onSelect } = this.props
+    const { item, isSelected, onSelect } = this.props
 
     return onSelect(
       item.id,
-      this.isSelected ?
+      isSelected ?
         (meta(event) ? 'remove' : 'clear') :
         (meta(event) ? 'merge' : 'replace')
     )
   }
 
-  // DRY (see ItemTableRow)
   handleContextMenu = (event) => {
-    const { item, selection, onSelect, onContextMenu } = this.props
-
-    const context = ['item']
-    const target = { id: item.id, tags: item.tags }
-
-    if (this.isSelected) {
-      if (selection.length > 1) {
-        context.push('bulk')
-        target.id = selection
-      }
-
-    } else {
-      onSelect(item.id, 'replace')
-    }
-
-    if (item.deleted) context.push('deleted')
-
-    onContextMenu(event, context.join('-'), target)
+    this.props.onContextMenu(event, this.props.item)
   }
 
   get style() {
@@ -55,10 +32,17 @@ class ItemTile extends Component {
     }
   }
 
+  get classes() {
+    return {
+      'item-tile': true,
+      'active': this.props.isSelected
+    }
+  }
+
   render() {
     return (
       <li
-        className={cn({ 'item-tile': true, 'active': this.isSelected })}
+        className={cn(this.classes)}
         style={this.style}
         onClick={this.handleClick}
         onContextMenu={this.handleContextMenu}>
@@ -70,7 +54,7 @@ class ItemTile extends Component {
   static propTypes = {
     size: PropTypes.number.isRequired,
     cache: PropTypes.string.isRequired,
-    selection: PropTypes.arrayOf(PropTypes.number),
+    isSelected: PropTypes.bool,
     item: PropTypes.shape({
       id: PropTypes.number.isRequired
     }),
