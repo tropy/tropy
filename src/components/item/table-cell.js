@@ -50,6 +50,9 @@ class TableCell extends Component {
   render() {
     const { item, cache, width, hasCoverImage, ...props } = this.props
 
+    delete props.onClick
+    delete props.onDoubleClick
+
     return (
       <td
         className={cn({ metadata: true, [this.type]: true })}
