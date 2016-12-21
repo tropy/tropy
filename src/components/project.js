@@ -11,10 +11,6 @@ const { MODE } = require('../constants/project')
 const values = require('object.values')
 const actions = require('../actions')
 
-const TM = {
-  [MODE.PROJECT]: MODE.ITEM,
-  [MODE.ITEM]: MODE.PROJECT
-}
 
 class Project extends Component {
 
@@ -22,8 +18,8 @@ class Project extends Component {
     this.props.onContextMenu(event)
   }
 
-  handleModeChange = () => {
-    this.props.onModeChange(TM[this.props.mode])
+  handleModeChange = (mode) => {
+    this.props.onModeChange(mode)
   }
 
   render() {

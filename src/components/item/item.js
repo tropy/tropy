@@ -16,7 +16,7 @@ const { Image } = require('../image')
 const { Fields } = require('../metadata')
 const { getSelectedItems } = require('../../selectors/items')
 const { getSelectedPhoto } = require('../../selectors/photos')
-const { PROJECT } = require('../../constants')
+const { MODE } = require('../../constants/project')
 const { seq, mapcat } = require('transducers.js')
 const act = require('../../actions')
 
@@ -34,7 +34,12 @@ class Item extends Component {
   }
 
   get isItemMode() {
-    return this.props.mode === PROJECT.MODE.ITEM
+    return this.props.mode === MODE.ITEM
+  }
+
+
+  handleModeChange = () => {
+    this.props.onModeChange(MODE.PROJECT)
   }
 
   handleMetadataTabSelect = () => {
@@ -201,8 +206,6 @@ class Item extends Component {
   }
 
   renderToolbar() {
-    const { onModeChange } = this.props
-
     return (
       <Toolbar draggable={ARGS.frameless}>
         <div className="toolbar-left">
@@ -210,7 +213,7 @@ class Item extends Component {
             {this.isItemMode &&
               <IconButton
                 icon={<IconChevron/>}
-                onClick={onModeChange}/>
+                onClick={this.handleModeChange}/>
             }
           </ToolGroup>
         </div>
