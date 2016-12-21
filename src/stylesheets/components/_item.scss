@@ -11,11 +11,22 @@
   z-index: $zindex-item;
   display: flex;
   background: $body-bg;
-  transition: left $mode-transition;
+
+  .item-mode-enter &,
+  .item-mode-leave & {
+    transition: left $mode-transition;
+  }
+
+  .item-mode &,
+  .item-mode-enter-active & {
+    left: 0;
+  }
+
+  .item-mode-leave-active & {
+    left: calc(100% - #{$panels-default-width});
+  }
 
   .item-mode & {
-    left: 0;
-
     @if $platform == darwin {
       .panel-group-header {
         .toolbar-left {

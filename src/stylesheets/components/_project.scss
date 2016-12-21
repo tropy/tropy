@@ -17,10 +17,42 @@
   position: relative;
   left: 0;
   z-index: $zindex-project;
-  transition: left $mode-transition;
 
-  .item-mode & {
+  &::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: $project-darken-color;
+    opacity: 0;
+    transition: opacity $mode-transition;
+  }
+
+  .project-mode-leave &,
+  .project-mode-enter & {
+    transition: left $mode-transition;
+
+    &::after {
+      content: "";
+    }
+  }
+
+  .item-mode &,
+  .project-mode-leave-active & {
     left: -25%;
+
+    &::after {
+      opacity: 1;
+    }
+  }
+
+  .project-mode-enter-active & {
+    left: 0;
+
+    &::after {
+      opacity: 0;
+    }
   }
 }
 
