@@ -8,11 +8,78 @@ const { ProjectSidebar } = require('./project/sidebar')
 const { Resizable } = require('./resizable')
 const { Item, Items } = require('./item')
 const { MODE } = require('../constants/project')
+const cn = require('classnames')
 const values = require('object.values')
 const actions = require('../actions')
 
 
 class Project extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      mode: props.mode,
+      willModeChange: false,
+      isModeChanging: false
+    }
+  }
+
+  componentWillUnmount() {
+    this.clearTimeouts()
+  }
+
+  componentWillReceiveProps({ mode }) {
+    console.log(`received props mode ${mode} (${this.props.mode})`)
+    if (mode !== this.props.mode) {
+      this.modeWillChange(mode)
+    }
+  }
+
+  modeWillChange(mode) {
+    console.log(`mode will change ${this.state.mode} -> ${mode}`)
+    if (mode === this.state.mode) {
+      this.setState({ willModeChange: false, isModeChanging: false })
+
+    } else {
+      this.setState({ willModeChange: true, isModeChanging: false })
+
+      setTimeout(() => {
+        console.log('mode is changing')
+        this.setState({ isModeChanging: true })
+      }, 0)
+
+      this.tetid = setTimeout(this.handleTransitionEnd, 5000)
+    }
+  }
+
+  clearTimeouts() {
+    if (this.tetid) {
+      this.tetid = clearTimeout(this.tetid), undefined
+    }
+  }
+
+  get classes() {
+    const { willModeChange, isModeChanging } = this.state
+
+    return {
+      [`${this.state.mode}-mode`]: true,
+      [`${this.state.mode}-mode-leave`]: willModeChange,
+      [`${this.state.mode}-mode-leave-active`]: isModeChanging,
+      [`${this.props.mode}-mode-enter`]: willModeChange,
+      [`${this.props.mode}-mode-enter-active`]: isModeChanging
+    }
+  }
+
+  handleTransitionEnd = () => {
+    console.log('transition end')
+    this.clearTimeouts()
+
+    this.setState({
+      mode: this.props.mode,
+      willModeChange: false,
+      isModeChanging: false
+    })
+  }
 
   handleContextMenu = (event) => {
     this.props.onContextMenu(event)
@@ -23,12 +90,16 @@ class Project extends Component {
   }
 
   render() {
-    const { mode, onContextMenu, onDrop } = this.props
+    const { onContextMenu, onDrop } = this.props
+    const { mode } = this.state
+
+    console.log(`rendering: ${cn(this.classes)}`)
 
     return (
       <div
         id="project"
-        className={`${mode}-mode`}
+        className={cn(this.classes)}
+        onTransitionEnd={this.handleTransitionEnd}
         onContextMenu={this.handleContextMenu}>
         <ProjectDropZone onDrop={onDrop}>
           <div id="project-view">
