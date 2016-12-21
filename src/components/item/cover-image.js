@@ -4,14 +4,11 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { IconItem } = require('../icons')
 const { imageURL } = require('../../common/cache')
-const { clickable } = require('../util')
+const { createClickHandler } = require('../util')
+const { noop } = require('../../common/util')
 const cn = require('classnames')
 
 class CoverImage extends Component {
-  constructor(props) {
-    super(props)
-    clickable(this)
-  }
 
   get cardinality() {
     const { item } = this.props
@@ -37,6 +34,11 @@ class CoverImage extends Component {
     }
   }
 
+  handleClick = createClickHandler({
+    onClick: event => this.props.onClick(event),
+    onDoubleClick: event => this.props.onDoubleClick(event)
+  })
+
   render() {
     const { cardinality } = this
 
@@ -44,7 +46,7 @@ class CoverImage extends Component {
       <figure
         className={cn({ 'cover-image': true, 'stack': cardinality > 1 })}
         style={this.style}
-        onClick={this.click}>
+        onClick={this.handleClick}>
         {cardinality === 0
           ? <IconItem/>
           : <img srcSet={`${encodeURI(this.src)} 2x`}/>
@@ -63,10 +65,14 @@ class CoverImage extends Component {
     size: PropTypes.number.isRequired,
     cache: PropTypes.string.isRequired,
 
-    onSingleClick: PropTypes.func,
+    onClick: PropTypes.func,
     onDoubleClick: PropTypes.func
   }
 
+  static defaultProps = {
+    onClick: noop,
+    onDoubleClick: noop
+  }
 }
 
 module.exports = {

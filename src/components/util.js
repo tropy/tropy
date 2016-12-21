@@ -22,48 +22,27 @@ module.exports = {
     }
   },
 
-  clickable(component, delay = 350) {
-    let tm
+  createClickHandler({ onClick, onSingleClick, onDoubleClick }, delay = 350) {
+    let tid
 
-    function clear() {
-      clearTimeout(tm)
-      tm = undefined
-    }
-
-    function set(action) {
-      tm = setTimeout(() => {
-        tm = undefined
-        action()
-      }, delay)
-
-    }
-
-    function handle(which, ...args) {
-      const handler = component[`handle${which}`] ||
-        component.props[`on${which}`]
-
-      if (handler) handler.call(component, ...args)
-    }
-
-    function click(event) {
-      if (tm) {
-        clear()
-        handle('DoubleClick', event)
+    return function handleClick(event) {
+      if (tid) {
+        tid = clearTimeout(tid), undefined
+        if (onDoubleClick) onDoubleClick(event)
 
       } else {
-        event.persist()
+        tid = setTimeout(() => {
+          tid = undefined
 
-        set(() => {
-          if (!event.isPropagationStopped()) {
-            handle('SingleClick', event)
+          if (onSingleClick && !event.isPropagationStopped()) {
+            onSingleClick(event)
           }
-        })
+        }, delay)
 
-        handle('Click', event)
+        event.persist()
+        if (onClick) onClick(event)
       }
     }
-
-    component.click = click.bind(component)
   },
 
   Shapes: {
