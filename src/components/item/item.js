@@ -165,7 +165,7 @@ class Item extends Component {
   }
 
   renderPhotoPanel() {
-    const { items, photo, panel, onContextMenu } = this.props
+    const { items, photo, panel, onContextMenu, onPhotoSelect } = this.props
     const photos = seq(items, mapcat(i => i && i.photos || []))
 
     if (panel.photoZoom) {
@@ -182,6 +182,7 @@ class Item extends Component {
       <PhotoList
         photos={photos}
         selected={photo && photo.id}
+        onSelect={onPhotoSelect}
         onContextMenu={onContextMenu}
         isDisabled={this.isDisabled}/>
     )
@@ -276,6 +277,7 @@ class Item extends Component {
     onModeChange: PropTypes.func,
     onTabSelect: PropTypes.func,
     onPhotoCreate: PropTypes.func,
+    onPhotoSelect: PropTypes.func,
     onPhotoZoomChange: PropTypes.func
   }
 }
@@ -298,6 +300,10 @@ module.exports = {
 
       onPhotoCreate(...args) {
         dispatch(act.photo.create(...args))
+      },
+
+      onPhotoSelect(...args) {
+        dispatch(act.photo.select(...args))
       },
 
       onPhotoZoomChange(photoZoom) {

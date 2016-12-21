@@ -2,17 +2,23 @@
 
 const React = require('react')
 const { Component, PropTypes } = React
-const { connect } = require('react-redux')
 const { PhotoListItem } = require('./list-item')
 const { DC } = require('../../constants/properties')
-
-const act = require('../../actions')
 
 
 class PhotoList extends Component {
 
   handleContextMenu = (photo, event) => {
     this.props.onContextMenu(event, 'photo', photo)
+  }
+
+  handleSelect = (photo) => {
+    const { selected, onSelect } = this.props
+
+    onSelect(selected === photo.id ? null : {
+      photo: photo.id,
+      item: photo.item
+    })
   }
 
   render() {
@@ -26,6 +32,7 @@ class PhotoList extends Component {
             id={photo}
             isSelected={photo === selected}
             title={DC.TITLE}
+            onSelect={this.handleSelect}
             onContextMenu={this.handleContextMenu}/>
         )}
       </ul>
@@ -44,13 +51,5 @@ class PhotoList extends Component {
 }
 
 module.exports = {
-  PhotoList: connect(
-    null,
-
-    (dispatch) => ({
-      onSelect(...args) {
-        dispatch(act.photo.select(...args))
-      }
-    })
-  )(PhotoList)
+  PhotoList
 }

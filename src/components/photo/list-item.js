@@ -12,9 +12,10 @@ const cn = require('classnames')
 
 class PhotoListItem extends Component {
 
-  select = () => {
-    const { photo, onSelect, isSelected } = this.props
-    onSelect(isSelected ? null : { photo: photo.id, item: photo.item })
+  handleClick = (event) => {
+    if (!this.props.isDisabled) {
+      this.props.onSelect(this.props.photo, event)
+    }
   }
 
   handleContextMenu = (event) => {
@@ -35,7 +36,7 @@ class PhotoListItem extends Component {
     return (
       <li
         className={cn({ photo: true, active: isSelected, context })}
-        onClick={this.select}
+        onClick={this.handleClick}
         onContextMenu={this.handleContextMenu}>
 
         <Thumbnail src={imageURL(cache, photo.id, 48)} size={24}/>
