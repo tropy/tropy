@@ -167,7 +167,7 @@ class Item extends Component {
   renderPhotoPanel() {
     const {
       items, photo, panel, onContextMenu,
-      onPhotoSelect, onPhotoChange, onEditCancel
+      onPhotoSelect, onPhotoChange, onPhotoEdit, onEditCancel
     } = this.props
 
     const photos = seq(items, mapcat(i => i && i.photos || []))
@@ -189,6 +189,7 @@ class Item extends Component {
         onSelect={onPhotoSelect}
         onCancel={onEditCancel}
         onChange={onPhotoChange}
+        onEdit={onPhotoEdit}
         onContextMenu={onContextMenu}
         isDisabled={this.isDisabled}/>
     )
@@ -283,7 +284,9 @@ class Item extends Component {
     onEditCancel: PropTypes.func,
     onModeChange: PropTypes.func,
     onTabSelect: PropTypes.func,
+    onPhotoChange: PropTypes.func,
     onPhotoCreate: PropTypes.func,
+    onPhotoEdit: PropTypes.func,
     onPhotoSelect: PropTypes.func,
     onPhotoZoomChange: PropTypes.func
   }
@@ -311,6 +314,10 @@ module.exports = {
 
       onPhotoSelect(...args) {
         dispatch(act.photo.select(...args))
+      },
+
+      onPhotoEdit(photo) {
+        dispatch(act.ui.edit.start({ photo }))
       },
 
       onPhotoChange({ id, title }, value) {

@@ -25,16 +25,12 @@ class PhotoList extends Component {
     }
   }
 
-  handleSingleClick = () => {
-    // edit
-  }
-
   handleDoubleClick = () => {
     // open
   }
 
   render() {
-    const { photos, selected, ...props } = this.props
+    const { photos, selected, onEdit, ...props } = this.props
 
     return (
       <ul className="photo-list">
@@ -45,7 +41,7 @@ class PhotoList extends Component {
             isSelected={photo === selected}
             title={DC.TITLE}
             onClick={this.handleClick}
-            onSingelClick={this.handleSingleClick}
+            onSingleClick={onEdit}
             onDoubleClick={this.handleDoubleClick}
             onContextMenu={this.handleContextMenu}/>
         )}
@@ -61,6 +57,7 @@ class PhotoList extends Component {
 
     onSelect: PropTypes.func,
     onOpen: PropTypes.func,
+    onEdit: PropTypes.func,
     onCancel: PropTypes.func,
     onContextMenu: PropTypes.func
   }

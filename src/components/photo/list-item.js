@@ -7,7 +7,6 @@ const { Editable } = require('../editable')
 const { imageURL } = require('../../common/cache')
 const { getCachePrefix } = require('../../selectors/project')
 const { createClickHandler } = require('../util')
-const act = require('../../actions')
 const cn = require('classnames')
 
 
@@ -20,7 +19,10 @@ class PhotoListItem extends Component {
       }
     },
 
-    onSingleClick: (event) => {
+    onSingleClick: () => {
+      if (!this.props.isDisabled) {
+        this.props.onSingleClick(this.props.photo.id)
+      }
     },
 
     onDoubleClick: (event) => {
