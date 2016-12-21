@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { Component, PropTypes } = React
-const { noop } = require('../common/util')
+const { noop, pick } = require('../common/util')
 const cn = require('classnames')
 
 class Editable extends Component {
@@ -70,12 +70,8 @@ class Editable extends Component {
   }
 
   render() {
-    const {
-      value, type, isEditing, isDisabled, isRequired, ...props
-    } = this.props
-
-    delete props.onChange
-    delete props.onCancel
+    const { value, type, isEditing, isDisabled, isRequired } = this.props
+    const props = pick(this.props, ['onClick'])
 
     if (isEditing) {
       return (
@@ -107,15 +103,9 @@ class Editable extends Component {
     isEditing: PropTypes.bool,
     isDisabled: PropTypes.bool,
     isRequired: PropTypes.bool,
-
     value: PropTypes.string,
     type: PropTypes.oneOf(['text', 'number']),
-
-    onMouseDown: PropTypes.func,
-    onMouseUp: PropTypes.func,
     onClick: PropTypes.func,
-    onDoubleClick: PropTypes.func,
-
     onChange: PropTypes.func,
     onCancel: PropTypes.func
   }

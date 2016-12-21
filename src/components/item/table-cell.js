@@ -5,13 +5,12 @@ const { Component, PropTypes } = React
 const { CoverImage } = require('./cover-image')
 const { Editable } = require('../editable')
 const { createClickHandler } = require('../util')
-const { noop } = require('../../common/util')
 const cn = require('classnames')
 
 
 class TableCell extends Component {
 
-  changed = (value) => {
+  handleChange = (value) => {
     this.props.onChange({
       [this.props.property.uri]: { value, type: this.type }
     })
@@ -49,9 +48,7 @@ class TableCell extends Component {
 
 
   render() {
-    const {
-      item, cache, width, isEditing, isDisabled, onCancel, hasCoverImage
-    } = this.props
+    const { item, cache, width, hasCoverImage, ...props } = this.props
 
     return (
       <td
@@ -61,12 +58,9 @@ class TableCell extends Component {
 
         {hasCoverImage && <CoverImage item={item} size={24} cache={cache}/>}
 
-        <Editable
+        <Editable {...props}
           value={this.value}
-          isEditing={isEditing}
-          isDisabled={isDisabled}
-          onCancel={onCancel}
-          onChange={this.changed}/>
+          onChange={this.handleChange}/>
       </td>
     )
   }
@@ -99,12 +93,6 @@ class TableCell extends Component {
     onDoubleClick: PropTypes.func,
     onCancel: PropTypes.func,
     onChange: PropTypes.func
-  }
-
-  static defaultProps = {
-    onClick: noop,
-    onSingleClick: noop,
-    onDoubleClick: noop
   }
 }
 
