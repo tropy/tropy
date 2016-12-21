@@ -241,7 +241,7 @@ class Item extends Component {
         </Resizable>
 
         <div className="item-container">
-          <Image isVisible={this.isItemMode} photo={photo}/>
+          <Image isVisible photo={photo}/>
           <Note/>
         </div>
       </section>
