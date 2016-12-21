@@ -8,6 +8,7 @@ const { ProjectSidebar } = require('./project/sidebar')
 const { Resizable } = require('./resizable')
 const { Item, Items } = require('./item')
 const { MODE } = require('../constants/project')
+const { once } = require('../dom')
 const cn = require('classnames')
 const values = require('object.values')
 const actions = require('../actions')
@@ -29,33 +30,45 @@ class Project extends Component {
   }
 
   componentWillReceiveProps({ mode }) {
-    console.log(`received props mode ${mode} (${this.props.mode})`)
     if (mode !== this.props.mode) {
-      this.modeWillChange(mode)
+      this.modeWillChange()
     }
   }
 
-  modeWillChange(mode) {
-    console.log(`mode will change ${this.state.mode} -> ${mode}`)
-    if (mode === this.state.mode) {
-      this.setState({ willModeChange: false, isModeChanging: false })
+  modeWillChange() {
+    if (this.state.willModeChange) return
 
-    } else {
-      this.setState({ willModeChange: true, isModeChanging: false })
+    once(this.container, 'transitionend', this.modeDidChange)
+    this.modeDidChange.timeout = setTimeout(this.modeDidChange, 5000)
 
-      setTimeout(() => {
-        console.log('mode is changing')
-        this.setState({ isModeChanging: true })
-      }, 0)
+    this.setState({ willModeChange: true, isModeChanging: false })
 
-      this.tetid = setTimeout(this.handleTransitionEnd, 5000)
+    setTimeout(() => {
+      this.setState({ isModeChanging: true })
+    }, 0)
+  }
+
+  modeDidChange = () => {
+    try {
+      this.setState({
+        mode: this.props.mode,
+        willModeChange: false,
+        isModeChanging: false
+      })
+    } finally {
+      this.clearTimeouts()
     }
   }
 
   clearTimeouts() {
-    if (this.tetid) {
-      this.tetid = clearTimeout(this.tetid), undefined
+    if (this.modeDidChange.timeout) {
+      clearTimeout(this.modeDidChange.timeout)
+      this.modeDidChange.timeout = undefined
     }
+  }
+
+  setContainer = (container) => {
+    this.container = container
   }
 
   get classes() {
@@ -70,17 +83,6 @@ class Project extends Component {
     }
   }
 
-  handleTransitionEnd = () => {
-    console.log('transition end')
-    this.clearTimeouts()
-
-    this.setState({
-      mode: this.props.mode,
-      willModeChange: false,
-      isModeChanging: false
-    })
-  }
-
   handleContextMenu = (event) => {
     this.props.onContextMenu(event)
   }
@@ -93,13 +95,11 @@ class Project extends Component {
     const { onContextMenu, onDrop } = this.props
     const { mode } = this.state
 
-    console.log(`rendering: ${cn(this.classes)}`)
-
     return (
       <div
         id="project"
         className={cn(this.classes)}
-        onTransitionEnd={this.handleTransitionEnd}
+        ref={this.setContainer}
         onContextMenu={this.handleContextMenu}>
         <ProjectDropZone onDrop={onDrop}>
           <div id="project-view">
