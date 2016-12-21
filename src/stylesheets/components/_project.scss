@@ -26,7 +26,6 @@
     left: 0;
     background: $project-darken-color;
     opacity: 0;
-    transition: opacity $mode-transition;
   }
 
   .project-mode-leave &,
@@ -35,6 +34,7 @@
 
     &::after {
       content: "";
+      transition: opacity $mode-transition;
     }
   }
 
