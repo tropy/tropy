@@ -12,13 +12,25 @@ class PhotoList extends Component {
     this.props.onContextMenu(event, 'photo', photo)
   }
 
-  handleSelect = (photo) => {
+  handleClick = (photo, event) => {
     const { selected, onSelect } = this.props
 
-    onSelect(selected === photo.id ? null : {
-      photo: photo.id,
-      item: photo.item
-    })
+    if (selected !== photo.id) {
+      onSelect({
+        photo: photo.id,
+        item: photo.item
+      })
+
+      event.stopPropagation()
+    }
+  }
+
+  handleSingleClick = () => {
+    // edit
+  }
+
+  handleDoubleClick = () => {
+    // open
   }
 
   render() {
@@ -32,7 +44,9 @@ class PhotoList extends Component {
             id={photo}
             isSelected={photo === selected}
             title={DC.TITLE}
-            onSelect={this.handleSelect}
+            onClick={this.handleClick}
+            onSingelClick={this.handleSingleClick}
+            onDoubleClick={this.handleDoubleClick}
             onContextMenu={this.handleContextMenu}/>
         )}
       </ul>
@@ -46,6 +60,8 @@ class PhotoList extends Component {
     isDisabled: PropTypes.bool,
 
     onSelect: PropTypes.func,
+    onOpen: PropTypes.func,
+    onCancel: PropTypes.func,
     onContextMenu: PropTypes.func
   }
 }

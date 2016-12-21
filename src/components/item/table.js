@@ -40,7 +40,7 @@ class Table extends Component {
   }
 
   render() {
-    const { selection, items, ...props } = this.props
+    const { selection, items, onEditCancel, ...props } = this.props
 
     return (
       <div className="item-table-view">
@@ -55,6 +55,7 @@ class Table extends Component {
                   item={item}
                   isSelected={selection.includes(item.id)}
                   onSelect={this.handleSelect}
+                  onCancel={onEditCancel}
                   onContextMenu={this.handleContextMenu}/>
               )}
             </tbody>
@@ -70,7 +71,7 @@ class Table extends Component {
     items: PropTypes.arrayOf(PropTypes.object),
     cache: PropTypes.string,
     onSelect: PropTypes.func,
-    onCancel: PropTypes.func,
+    onEditCancel: PropTypes.func,
     onColumnEdit: PropTypes.func,
     onContextMenu: PropTypes.func
   }

@@ -9,6 +9,7 @@ const { Resizable } = require('./resizable')
 const { Item, Items } = require('./item')
 const { MODE } = require('../constants/project')
 const { once } = require('../dom')
+const { pick } = require('../common/util')
 const cn = require('classnames')
 const values = require('object.values')
 const actions = require('../actions')
@@ -92,7 +93,7 @@ class Project extends Component {
   }
 
   render() {
-    const { mode, onContextMenu, onDrop } = this.props
+    const { onDrop, ...props } = this.props
 
     return (
       <div
@@ -103,18 +104,13 @@ class Project extends Component {
         <ProjectDropZone onDrop={onDrop}>
           <div id="project-view">
             <Resizable edge="right" value={250}>
-              <ProjectSidebar
-                hasToolbar={ARGS.frameless}
-                onContextMenu={onContextMenu}/>
+              <ProjectSidebar {...props} hasToolbar={ARGS.frameless}/>
             </Resizable>
             <main>
-              <Items onContextMenu={onContextMenu}/>
+              <Items {...props}/>
             </main>
           </div>
-          <Item
-            mode={mode}
-            onContextMenu={onContextMenu}
-            onModeChange={this.handleModeChange}/>
+          <Item {...props}/>
         </ProjectDropZone>
       </div>
     )
@@ -123,6 +119,7 @@ class Project extends Component {
   static propTypes = {
     mode: PropTypes.oneOf(values(MODE)).isRequired,
     onContextMenu: PropTypes.func,
+    onEditCancel: PropTypes.func,
     onDrop: PropTypes.func,
     onModeChange: PropTypes.func
   }
@@ -157,6 +154,10 @@ module.exports = {
 
       onModeChange(mode) {
         dispatch(actions.nav.update({ mode }))
+      },
+
+      onEditCancel() {
+        dispatch(actions.ui.edit.cancel())
       }
     })
   )(Project)

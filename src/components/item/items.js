@@ -53,7 +53,7 @@ Items.propTypes = {
   onCreate: PropTypes.func,
   onOpen: PropTypes.func,
   onSelect: PropTypes.func,
-  onCancel: PropTypes.func,
+  onEditCancel: PropTypes.func,
   onColumnEdit: PropTypes.func,
   onContextMenu: PropTypes.func,
   onZoomChange: PropTypes.func,
@@ -97,10 +97,6 @@ module.exports = {
             [id]: property
           }
         }))
-      },
-
-      onCancel() {
-        dispatch(act.ui.edit.cancel())
       }
     })
   )(Items)

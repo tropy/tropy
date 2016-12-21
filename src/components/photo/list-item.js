@@ -6,22 +6,36 @@ const { connect } = require('react-redux')
 const { Editable } = require('../editable')
 const { imageURL } = require('../../common/cache')
 const { getCachePrefix } = require('../../selectors/project')
+const { createClickHandler } = require('../util')
 const act = require('../../actions')
 const cn = require('classnames')
 
 
 class PhotoListItem extends Component {
 
-  handleClick = (event) => {
-    if (!this.props.isDisabled) {
-      this.props.onSelect(this.props.photo, event)
+  handleClick = createClickHandler({
+    onClick: (event) => {
+      if (!this.props.isDisabled) {
+        this.props.onClick(this.props.photo, event)
+      }
+    },
+
+    onSingleClick: (event) => {
+    },
+
+    onDoubleClick: (event) => {
     }
-  }
+  })
 
   handleContextMenu = (event) => {
     if (!this.props.isDisabled) {
       this.props.onContextMenu(this.props.photo, event)
     }
+  }
+
+  handleChange = (value) => {
+    const { id, title, onChange } = this.props
+    onChange({ id, title }, value)
   }
 
 
@@ -30,7 +44,9 @@ class PhotoListItem extends Component {
       photo, cache, data, title, isSelected, context, ...props
     } = this.props
 
-    delete props.onSelect
+    delete props.onClick
+    delete props.onSingleClick
+    delete props.onDoubleClick
     delete props.onContextMenu
 
     return (
@@ -42,7 +58,9 @@ class PhotoListItem extends Component {
         <Thumbnail src={imageURL(cache, photo.id, 48)} size={24}/>
 
         <div className="title">
-          <Editable {...props} value={data[title] && data[title].value}/>
+          <Editable {...props}
+            value={data[title] && data[title].value}
+            onChange={this.handleChange}/>
         </div>
       </li>
     )
@@ -69,9 +87,12 @@ class PhotoListItem extends Component {
     onChange: PropTypes.func,
 
     onContextMenu: PropTypes.func,
-    onSelect: PropTypes.func
+    onClick: PropTypes.func,
+    onSingleClick: PropTypes.func,
+    onDoubleClick: PropTypes.func
   }
 }
+
 
 const Thumbnail = ({ src, size }) => (
   <img
@@ -95,23 +116,6 @@ module.exports = {
       isEditing: state.ui.edit.photo === id,
       context: state.ui.context.photo === id,
       cache: getCachePrefix(state)
-    }),
-
-    (dispatch, { id, title }) => ({
-
-      onChange(value) {
-        dispatch(act.metadata.save({
-          id,
-          data: {
-            [title]: { value, type: 'text' }
-          }
-        }))
-        dispatch(act.ui.edit.cancel())
-      },
-
-      onCancel() {
-        dispatch(act.ui.edit.cancel())
-      }
     })
 
   )(PhotoListItem)
