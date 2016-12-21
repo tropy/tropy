@@ -165,7 +165,7 @@ class Item extends Component {
   }
 
   renderPhotoPanel() {
-    const { items, photo, panel } = this.props
+    const { items, photo, panel, onContextMenu } = this.props
     const photos = seq(items, mapcat(i => i && i.photos || []))
 
     if (panel.photoZoom) {
@@ -173,6 +173,7 @@ class Item extends Component {
         <PhotoGrid
           photos={photos}
           selected={photo && photo.id}
+          onContextMenu={onContextMenu}
           isDisabled={this.isDisabled}/>
       )
     }
@@ -181,6 +182,7 @@ class Item extends Component {
       <PhotoList
         photos={photos}
         selected={photo && photo.id}
+        onContextMenu={onContextMenu}
         isDisabled={this.isDisabled}/>
     )
   }
@@ -270,6 +272,7 @@ class Item extends Component {
     note: PropTypes.number,
     selection: PropTypes.arrayOf(PropTypes.number),
 
+    onContextMenu: PropTypes.func,
     onModeChange: PropTypes.func,
     onTabSelect: PropTypes.func,
     onPhotoCreate: PropTypes.func,

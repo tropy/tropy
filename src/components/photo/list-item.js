@@ -17,9 +17,9 @@ class PhotoListItem extends Component {
     onSelect(isSelected ? null : { photo: photo.id, item: photo.item })
   }
 
-  popup = (event) => {
+  handleContextMenu = (event) => {
     if (!this.props.isDisabled) {
-      this.props.onContextMenu(event, this.props.photo)
+      this.props.onContextMenu(this.props.photo, event)
     }
   }
 
@@ -36,7 +36,7 @@ class PhotoListItem extends Component {
       <li
         className={cn({ photo: true, active: isSelected, context })}
         onClick={this.select}
-        onContextMenu={this.popup}>
+        onContextMenu={this.handleContextMenu}>
 
         <Thumbnail src={imageURL(cache, photo.id, 48)} size={24}/>
 

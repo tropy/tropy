@@ -23,7 +23,7 @@ class ItemGrid extends Component {
     this.props.onSelect(id, mod)
   }
 
-  handleContextMenu = (event, item) => {
+  handleContextMenu = (item, event) => {
     const { selection, onContextMenu } = this.props
 
     const context = ['item']

@@ -92,8 +92,7 @@ class Project extends Component {
   }
 
   render() {
-    const { onContextMenu, onDrop } = this.props
-    const { mode } = this.state
+    const { mode, onContextMenu, onDrop } = this.props
 
     return (
       <div
@@ -112,7 +111,10 @@ class Project extends Component {
               <Items onContextMenu={onContextMenu}/>
             </main>
           </div>
-          <Item mode={mode} onModeChange={this.handleModeChange}/>
+          <Item
+            mode={mode}
+            onContextMenu={onContextMenu}
+            onModeChange={this.handleModeChange}/>
         </ProjectDropZone>
       </div>
     )

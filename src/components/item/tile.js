@@ -10,7 +10,7 @@ const cn = require('classnames')
 class ItemTile extends Component {
 
   handleContextMenu = (event) => {
-    this.props.onContextMenu(event, this.props.item)
+    this.props.onContextMenu(this.props.item, event)
   }
 
   handleClick = (event) => {
