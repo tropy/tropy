@@ -79,10 +79,6 @@ module.exports = {
         dispatch(act.item.create())
       },
 
-      onOpen(item) {
-        dispatch(act.item.open(item))
-      },
-
       onSelect(id, mod) {
         dispatch(act.item.select(id, { mod }))
       },

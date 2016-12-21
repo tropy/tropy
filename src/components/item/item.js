@@ -166,7 +166,7 @@ class Item extends Component {
 
   renderPhotoPanel() {
     const {
-      items, photo, panel, onContextMenu,
+      items, photo, panel, onContextMenu, onOpen,
       onPhotoSelect, onPhotoChange, onPhotoEdit, onEditCancel
     } = this.props
 
@@ -186,6 +186,8 @@ class Item extends Component {
       <PhotoList
         photos={photos}
         selected={photo && photo.id}
+        isOpen={this.isItemMode}
+        onOpen={onOpen}
         onSelect={onPhotoSelect}
         onCancel={onEditCancel}
         onChange={onPhotoChange}
@@ -280,6 +282,7 @@ class Item extends Component {
     note: PropTypes.number,
     selection: PropTypes.arrayOf(PropTypes.number),
 
+    onOpen: PropTypes.func,
     onContextMenu: PropTypes.func,
     onEditCancel: PropTypes.func,
     onModeChange: PropTypes.func,

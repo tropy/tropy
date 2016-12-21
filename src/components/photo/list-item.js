@@ -14,9 +14,7 @@ class PhotoListItem extends Component {
 
   handleClick = createClickHandler({
     onClick: (event) => {
-      if (!this.props.isDisabled) {
-        this.props.onClick(this.props.photo, event)
-      }
+      this.props.onClick(this.props.photo, event)
     },
 
     onSingleClick: () => {
@@ -25,7 +23,8 @@ class PhotoListItem extends Component {
       }
     },
 
-    onDoubleClick: (event) => {
+    onDoubleClick: () => {
+      this.props.onDoubleClick(this.props.photo)
     }
   })
 

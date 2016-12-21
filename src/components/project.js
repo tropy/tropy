@@ -93,7 +93,7 @@ class Project extends Component {
   }
 
   render() {
-    const { onDrop, ...props } = this.props
+    const { onDrop, onItemOpen, ...props } = this.props
 
     return (
       <div
@@ -107,10 +107,10 @@ class Project extends Component {
               <ProjectSidebar {...props} hasToolbar={ARGS.frameless}/>
             </Resizable>
             <main>
-              <Items {...props}/>
+              <Items {...props} onOpen={onItemOpen}/>
             </main>
           </div>
-          <Item {...props}/>
+          <Item {...props} onOpen={onItemOpen}/>
         </ProjectDropZone>
       </div>
     )
@@ -121,6 +121,7 @@ class Project extends Component {
     onContextMenu: PropTypes.func,
     onEditCancel: PropTypes.func,
     onDrop: PropTypes.func,
+    onItemOpen: PropTypes.func,
     onModeChange: PropTypes.func
   }
 
@@ -154,6 +155,10 @@ module.exports = {
 
       onModeChange(mode) {
         dispatch(actions.nav.update({ mode }))
+      },
+
+      onItemOpen(item) {
+        dispatch(actions.item.open(item))
       },
 
       onEditCancel() {

@@ -25,8 +25,12 @@ class PhotoList extends Component {
     }
   }
 
-  handleDoubleClick = () => {
-    // open
+  handleDoubleClick = (photo) => {
+    const { isOpen, onOpen } = this.props
+
+    if (!isOpen) {
+      onOpen({ id: photo.item, photos: [photo.id] })
+    }
   }
 
   render() {
@@ -54,6 +58,7 @@ class PhotoList extends Component {
     selected: PropTypes.number,
 
     isDisabled: PropTypes.bool,
+    isOpen: PropTypes.bool,
 
     onSelect: PropTypes.func,
     onOpen: PropTypes.func,
