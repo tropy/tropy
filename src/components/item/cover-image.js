@@ -5,6 +5,7 @@ const { Component, PropTypes } = React
 const { IconItem } = require('../icons')
 const { imageURL } = require('../../common/cache')
 const { createClickHandler } = require('../util')
+const { noop } = require('../../common/util')
 const cn = require('classnames')
 
 class CoverImage extends Component {
@@ -66,6 +67,11 @@ class CoverImage extends Component {
 
     onClick: PropTypes.func,
     onDoubleClick: PropTypes.func
+  }
+
+  static defaultProps = {
+    onClick: noop,
+    onDoubleClick: noop
   }
 }
 
