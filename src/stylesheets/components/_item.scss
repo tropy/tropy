@@ -26,14 +26,19 @@
     left: calc(100% - #{$panels-default-width});
   }
 
-  .item-mode & {
-    @if $platform == darwin {
-      .panel-group-header {
-        .toolbar-left {
+  @if $platform == darwin {
+    .panel-group-header {
+      .toolbar-left {
+        .item-mode &,
+        .item-mode-enter-active & {
           margin-left: (
             $window-controls-width
             + $window-controls-offset-x
             - $window-controls-margin);
+        }
+
+        .project-mode-enter-active & {
+          margin-left: 0;
         }
       }
     }
