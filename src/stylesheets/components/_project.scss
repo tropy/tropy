@@ -26,7 +26,7 @@
     left: 0;
     background: $project-darken-color;
     z-index: $zindex-draggable;
-    opacity: 1;
+    opacity: 0;
   }
 
   .project-mode-leave &,
