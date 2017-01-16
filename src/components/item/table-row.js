@@ -2,18 +2,20 @@
 
 const React = require('react')
 const { Component, PropTypes } = React
-const { connect } = require('react-redux')
 const { TableCell } = require('./table-cell')
-const { get } = require('dot-prop')
 const { meta } = require('../../common/os')
 const { DC } = require('../../constants/properties')
-const act = require('../../actions')
 const cn = require('classnames')
 
 class TableRow extends Component {
 
   get isDisabled() {
     return !!this.props.item.deleted
+  }
+
+  isEditing = (uri) => {
+    const { editing, item } = this.props
+    return editing.column && editing.column[item.id] === uri
   }
 
   handleClick = (event) => {
@@ -37,7 +39,7 @@ class TableRow extends Component {
 
   render() {
     const {
-      editing, columns, isSelected, onColumnChange, onColumnEdit, ...props
+      columns, isSelected, onColumnChange, onColumnEdit, ...props
     } = this.props
 
     const { isDisabled } = this
@@ -53,7 +55,7 @@ class TableRow extends Component {
           columns.map(({ property, width }) => (
             <TableCell {...props}
               key={property.uri}
-              isEditing={property.uri === editing}
+              isEditing={this.isEditing(property.uri)}
               isDisabled={isDisabled}
               isSelected={isSelected}
               hasCoverImage={property.uri === DC.TITLE}
@@ -77,7 +79,7 @@ class TableRow extends Component {
       photos: PropTypes.arrayOf(PropTypes.number)
     }).isRequired,
 
-    editing: PropTypes.string,
+    editing: PropTypes.object,
     cache: PropTypes.string.isRequired,
     columns: PropTypes.arrayOf(PropTypes.object),
 
@@ -94,9 +96,5 @@ class TableRow extends Component {
 
 
 module.exports = {
-  TableRow: connect(
-    (state, { item }) => ({
-      editing: get(state, `ui.edit.column.${item.id}`)
-    })
-  )(TableRow)
+  TableRow
 }

@@ -44,6 +44,7 @@ const Items = ({ onCreate, zoom, maxZoom, onZoomChange, ...props }) => (
 )
 
 Items.propTypes = {
+  editing: PropTypes.object,
   items: PropTypes.arrayOf(PropTypes.object),
   selection: PropTypes.arrayOf(PropTypes.number),
   columns: PropTypes.arrayOf(PropTypes.object),
@@ -68,6 +69,7 @@ Items.defaultProps = {
 module.exports = {
   Items: connect(
     (state) => ({
+      editing: state.ui.edit,
       columns: getColumns(state),
       items: getItems(state),
       selection: state.nav.items,
