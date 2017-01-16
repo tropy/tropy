@@ -72,6 +72,7 @@ class Table extends Component {
     cache: PropTypes.string,
     onSelect: PropTypes.func,
     onEditCancel: PropTypes.func,
+    onColumnChange: PropTypes.func,
     onColumnEdit: PropTypes.func,
     onContextMenu: PropTypes.func
   }

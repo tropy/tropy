@@ -37,7 +37,7 @@ class TableRow extends Component {
 
   render() {
     const {
-      editing, columns, isSelected, onColumnEdit, ...props
+      editing, columns, isSelected, onColumnChange, onColumnEdit, ...props
     } = this.props
 
     const { isDisabled } = this
@@ -59,6 +59,7 @@ class TableRow extends Component {
               hasCoverImage={property.uri === DC.TITLE}
               property={property}
               width={width}
+              onChange={onColumnChange}
               onClick={this.handleClick}
               onSingleClick={onColumnEdit}
               onDoubleClick={this.handleDoubleClick}/>
@@ -84,10 +85,9 @@ class TableRow extends Component {
 
     onSelect: PropTypes.func.isRequired,
     onContextMenu: PropTypes.func,
-
+    onColumnChange: PropTypes.func,
     onColumnEdit: PropTypes.func,
     onCancel: PropTypes.func,
-    onChange: PropTypes.func,
     onOpen: PropTypes.func
   }
 }
@@ -98,14 +98,6 @@ module.exports = {
     (state, { item }) => ({
       data: state.metadata[item.id] || {},
       editing: get(state, `ui.edit.column.${item.id}`)
-    }),
-
-    (dispatch, { item }) => ({
-
-      onChange(data) {
-        dispatch(act.metadata.save({ id: item.id, data }))
-        dispatch(act.ui.edit.cancel())
-      }
     })
   )(TableRow)
 }

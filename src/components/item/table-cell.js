@@ -12,7 +12,10 @@ class TableCell extends Component {
 
   handleChange = (value) => {
     this.props.onChange({
-      [this.props.property.uri]: { value, type: this.type }
+      id: this.props.item.id,
+      data: {
+        [this.props.property.uri]: { value, type: this.type }
+      }
     })
   }
 
