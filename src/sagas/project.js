@@ -1,7 +1,5 @@
 'use strict'
 
-const { takeEvery: every } = require('redux-saga')
-const { fork, cancel, call, put, take } = require('redux-saga/effects')
 const { OPEN } = require('../constants/project')
 const { Database } = require('../common/db')
 const { Cache } = require('../common/cache')
@@ -14,6 +12,10 @@ const { search, load } = require('./search')
 const mod = require('../models')
 const act = require('../actions')
 const storage = require('./storage')
+
+const {
+  fork, cancel, call, put, take, takeEvery: every
+} = require('redux-saga/effects')
 
 const TOO_LONG = ARGS.dev ? 500 : 1500
 
@@ -51,9 +53,10 @@ module.exports = {
         yield call(load, db)
       })
 
-      yield* every(action => (
-        !action.error && action.meta && action.meta.async
-      ), module.exports.command, { db, id, cache })
+      while (true) {
+        const action = yield take(a => (!a.error && a.meta && a.meta.async))
+        yield fork(module.exports.command, { db, id, cache }, action)
+      }
 
 
     } catch (error) {

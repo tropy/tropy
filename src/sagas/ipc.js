@@ -1,7 +1,10 @@
 'use strict'
 
-const { takeEvery: every, eventChannel } = require('redux-saga')
-const { call, fork, put, take, select } = require('redux-saga/effects')
+const { eventChannel } = require('redux-saga')
+const {
+  call, fork, put, take, select, takeEvery: every
+} = require('redux-saga/effects')
+
 const { ipcRenderer: ipc } = require('electron')
 const { warn, debug } = require('../common/log')
 const { identity } = require('../common/util')

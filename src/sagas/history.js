@@ -1,7 +1,6 @@
 'use strict'
 
-const { takeEvery: every } = require('redux-saga')
-const { put, select } = require('redux-saga/effects')
+const { put, select, takeEvery: every } = require('redux-saga/effects')
 const { warn, debug } = require('../common/log')
 const { undone, redone } = require('../selectors/history')
 const { UNDO, REDO } = require('../constants/history')
