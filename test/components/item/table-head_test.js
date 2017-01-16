@@ -3,11 +3,11 @@
 const React = require('react')
 const { shallow } = require('enzyme')
 
-describe('TableHead', () => {
-  const { TableHead } = __require('components/item/table-head')
+describe('ItemTableHead', () => {
+  const { ItemTableHead } = __require('components/item/table-head')
 
   it('has class table-head', () => {
-    expect(shallow(<TableHead columns={[]}/>))
+    expect(shallow(<ItemTableHead columns={[]}/>))
       .to.have.className('table-head')
   })
 
@@ -17,7 +17,7 @@ describe('TableHead', () => {
       { width: '60%', property: { uri: 'y', type: 'number' } },
     ]
 
-    expect(shallow(<TableHead columns={columns}/>))
+    expect(shallow(<ItemTableHead columns={columns}/>))
       .to.have.exactly(2).descendants('.metadata-head')
   })
 })

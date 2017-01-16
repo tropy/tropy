@@ -2,12 +2,12 @@
 
 const React = require('react')
 const { Component, PropTypes } = React
-const { TableRow } = require('./table-row')
-const { TableHead } = require('./table-head')
+const { ItemTableRow } = require('./table-row')
+const { ItemTableHead } = require('./table-head')
 const { meta } = require('../../common/os')
 
 
-class Table extends Component {
+class ItemTable extends Component {
 
   handleSelect = (item, event) => {
     const { selection, onSelect } = this.props
@@ -44,13 +44,13 @@ class Table extends Component {
 
     return (
       <div className="item-table-view">
-        <TableHead columns={props.columns}/>
+        <ItemTableHead columns={props.columns}/>
 
         <div className="table-body">
           <table className="item-table">
             <tbody>
               {items.map(item =>
-                <TableRow {...props}
+                <ItemTableRow {...props}
                   key={item.id}
                   item={item}
                   isSelected={selection.includes(item.id)}
@@ -80,5 +80,5 @@ class Table extends Component {
 
 
 module.exports = {
-  Table
+  ItemTable
 }

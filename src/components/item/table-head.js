@@ -5,7 +5,7 @@ const { PropTypes } = React
 const cn = require('classnames')
 
 
-const TableHead = ({ columns }) => (
+const ItemTableHead = ({ columns }) => (
   <table className="table-head">
     <thead>
       <tr>
@@ -22,10 +22,10 @@ const TableHead = ({ columns }) => (
   </table>
 )
 
-TableHead.propTypes = {
+ItemTableHead.propTypes = {
   columns: PropTypes.arrayOf(PropTypes.object)
 }
 
 module.exports = {
-  TableHead
+  ItemTableHead
 }

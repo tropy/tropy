@@ -2,12 +2,12 @@
 
 const React = require('react')
 const { Component, PropTypes } = React
-const { TableCell } = require('./table-cell')
+const { ItemTableCell } = require('./table-cell')
 const { meta } = require('../../common/os')
 const { DC } = require('../../constants/properties')
 const cn = require('classnames')
 
-class TableRow extends Component {
+class ItemTableRow extends Component {
 
   get isDisabled() {
     return !!this.props.item.deleted
@@ -53,7 +53,7 @@ class TableRow extends Component {
         onContextMenu={this.handleContextMenu}>
         {
           columns.map(({ property, width }) => (
-            <TableCell {...props}
+            <ItemTableCell {...props}
               key={property.uri}
               isEditing={this.isEditing(property.uri)}
               isDisabled={isDisabled}
@@ -96,5 +96,5 @@ class TableRow extends Component {
 
 
 module.exports = {
-  TableRow
+  ItemTableRow
 }

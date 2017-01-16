@@ -8,7 +8,7 @@ const { createClickHandler } = require('../util')
 const cn = require('classnames')
 
 
-class TableCell extends Component {
+class ItemTableCell extends Component {
 
   handleChange = (value) => {
     this.props.onChange({
@@ -104,5 +104,5 @@ class TableCell extends Component {
 
 
 module.exports = {
-  TableCell
+  ItemTableCell
 }

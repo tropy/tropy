@@ -6,7 +6,7 @@ const { connect } = require('react-redux')
 const { Toolbar } = require('../toolbar')
 const { Search } = require('../search')
 const { IconPlus, IconList, IconGrid } = require('../icons')
-const { Table } = require('./table')
+const { ItemTable } = require('./table')
 const { ItemGrid } = require('./grid')
 const { Slider } = require('../slider')
 const { IconButton } = require('../button')
@@ -38,7 +38,7 @@ const Items = ({ onCreate, zoom, maxZoom, onZoomChange, ...props }) => (
       </Toolbar>
     </header>
     {
-      zoom ? <ItemGrid {...props} zoom={zoom}/> : <Table {...props}/>
+      zoom ? <ItemGrid {...props} zoom={zoom}/> : <ItemTable {...props}/>
     }
   </section>
 )
