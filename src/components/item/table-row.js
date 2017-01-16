@@ -72,11 +72,11 @@ class TableRow extends Component {
   static propTypes = {
     item: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      photos: PropTypes.arrayOf(PropTypes.number),
-      deleted: PropTypes.bool
+      data: PropTypes.object,
+      deleted: PropTypes.bool,
+      photos: PropTypes.arrayOf(PropTypes.number)
     }).isRequired,
 
-    data: PropTypes.object,
     editing: PropTypes.string,
     cache: PropTypes.string.isRequired,
     columns: PropTypes.arrayOf(PropTypes.object),
@@ -96,7 +96,6 @@ class TableRow extends Component {
 module.exports = {
   TableRow: connect(
     (state, { item }) => ({
-      data: state.metadata[item.id] || {},
       editing: get(state, `ui.edit.column.${item.id}`)
     })
   )(TableRow)

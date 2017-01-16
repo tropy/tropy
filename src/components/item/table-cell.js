@@ -35,17 +35,17 @@ class TableCell extends Component {
   })
 
   get value() {
-    const { data, property } = this.props
+    const { item, property } = this.props
 
-    return data[property.uri] ?
-      data[property.uri].value : null
+    return item.data[property.uri] ?
+      item.data[property.uri].value : null
   }
 
   get type() {
-    const { data, property } = this.props
+    const { item, property } = this.props
 
-    return data[property.uri] ?
-      data[property.uri].type : (property.type || 'text')
+    return item.data[property.uri] ?
+      item.data[property.uri].type : (property.type || 'text')
   }
 
 
@@ -87,10 +87,10 @@ class TableCell extends Component {
     item: PropTypes.shape({
       id: PropTypes.number.isRequired,
       cover: PropTypes.number,
+      data: PropTypes.object.isRequired,
       photos: PropTypes.array
     }).isRequired,
 
-    data: PropTypes.object.isRequired,
     cache: PropTypes.string.isRequired,
     width: PropTypes.string.isRequired,
 

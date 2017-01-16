@@ -12,10 +12,11 @@ const getSelectedItems = ({ items, nav }) =>
 
 const getItems = memo(
   ({ items }) => items,
+  ({ metadata }) => metadata,
   ({ ui }) => ui.items,
 
-  (items, ids) =>
-    ids.map(id => (items[id] || { id }))
+  (items, metadata, ids) =>
+    ids.map(id => ({ id, ...items[id], data: metadata[id] || {} }))
 )
 
 
