@@ -30,6 +30,10 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
     }
   }
 
+  if (opts.scale) {
+    app.commandLine.appendSwitch('force-device-scale-factor', opts.scale)
+  }
+
   verbose(`started in ${opts.e} mode`)
   verbose(`using ${app.getPath('userData')}`)
 

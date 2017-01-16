@@ -28,6 +28,13 @@ module.exports = require('yargs')
   .default('environment',
       () => (process.env.NODE_ENV || 'production'), '"production"')
 
+  .option('scale', {
+    alias: 'force-device-scale-factor',
+    type: 'number',
+    normalize: true,
+    describe: 'Set a device scale factor for HiDPI screens'
+  })
+
   .option('debug', {
     type: 'boolean',
     describe: 'Set debug flag',
