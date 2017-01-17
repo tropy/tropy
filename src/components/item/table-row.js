@@ -2,17 +2,17 @@
 
 const React = require('react')
 const { Component, PropTypes } = React
-const { DragSource } = require('react-dnd')
 const { getEmptyImage } = require('react-dnd-html5-backend')
 const { ItemTableCell } = require('./table-cell')
+const { ItemDragSource } = require('./drag-source')
 const { meta } = require('../../common/os')
-const { DND, PROPERTIES: { DC } } = require('../../constants')
+const { DC } = require('../../constants/properties')
 const cn = require('classnames')
+
 
 class ItemTableRow extends Component {
 
   componentDidMount() {
-
     this.props.dp(getEmptyImage())
   }
 
@@ -109,18 +109,5 @@ class ItemTableRow extends Component {
 
 
 module.exports = {
-  ItemTableRow: DragSource(DND.ITEM, {
-    beginDrag(props) {
-      return { id: props.item.id }
-    },
-
-    canDrag(props) {
-      return !props.item.deleted
-    }
-  },
-  (connect, monitor) => ({
-    ds: connect.dragSource(),
-    dp: connect.dragPreview(),
-    isDragging: monitor.isDragging()
-  }))(ItemTableRow)
+  ItemTableRow: ItemDragSource()(ItemTableRow)
 }
