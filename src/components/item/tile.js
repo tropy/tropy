@@ -3,11 +3,17 @@
 const React = require('react')
 const { Component, PropTypes } = React
 const { CoverImage } = require('./cover-image')
+const { ItemDragSource } = require('./drag-source')
+const { getEmptyImage } = require('react-dnd-html5-backend')
 const { meta } = require('../../common/os')
 const cn = require('classnames')
 
 
 class ItemTile extends Component {
+
+  componentDidMount() {
+    this.props.dp(getEmptyImage())
+  }
 
   handleContextMenu = (event) => {
     this.props.onContextMenu(this.props.item, event)
@@ -43,17 +49,20 @@ class ItemTile extends Component {
   get classes() {
     return {
       'item-tile': true,
-      'active': this.props.isSelected
+      'active': this.props.isSelected,
+      'dragging': this.props.isDragging
     }
   }
 
   render() {
-    return (
+    const { ds, ...props } = this.props
+
+    return ds(
       <li
         className={cn(this.classes)}
         style={this.style}
         onContextMenu={this.handleContextMenu}>
-        <CoverImage {...this.props}
+        <CoverImage {...props}
           onClick={this.handleClick}
           onDoubleClick={this.handleDoubleClick}/>
       </li>
@@ -68,6 +77,11 @@ class ItemTile extends Component {
       id: PropTypes.number.isRequired
     }),
 
+    isDragging: PropTypes.bool,
+
+    ds: PropTypes.func.isRequired,
+    dp: PropTypes.func.isRequired,
+
     onOpen: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired,
     onContextMenu: PropTypes.func.isRequired
@@ -75,5 +89,5 @@ class ItemTile extends Component {
 }
 
 module.exports = {
-  ItemTile
+  ItemTile: ItemDragSource()(ItemTile)
 }
