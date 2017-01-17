@@ -6,6 +6,7 @@ const { DragLayer } = require('react-dnd')
 const { ItemDragPreview } = require('../item')
 const { DND } = require('../../constants')
 
+
 class ProjectDragLayer extends Component {
 
   get position() {
@@ -33,7 +34,7 @@ class ProjectDragLayer extends Component {
 
     return (
       <div id="project-drag-layer" className="drag-layer">
-        <div style={this.position}>
+        <div className="drag-preview-positioner" style={this.position}>
           {this.renderItem()}
         </div>
       </div>
