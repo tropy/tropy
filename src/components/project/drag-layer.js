@@ -10,10 +10,10 @@ const { DND } = require('../../constants')
 class ProjectDragLayer extends Component {
 
   get position() {
-    const { x, y } = this.props.offset
+    const { offset } = this.props
 
     return {
-      transform: `translate(${x}px, ${y}px)`
+      transform: offset ? `translate(${offset.x}px, ${offset.y}px)` : null
     }
   }
 
