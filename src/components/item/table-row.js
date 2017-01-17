@@ -2,9 +2,10 @@
 
 const React = require('react')
 const { Component, PropTypes } = React
+const { DragSource } = require('react-dnd')
 const { ItemTableCell } = require('./table-cell')
 const { meta } = require('../../common/os')
-const { DC } = require('../../constants/properties')
+const { DND, PROPERTIES: { DC } } = require('../../constants')
 const cn = require('classnames')
 
 class ItemTableRow extends Component {
@@ -39,7 +40,8 @@ class ItemTableRow extends Component {
 
   render() {
     const {
-      columns, isSelected, onColumnChange, onColumnEdit, ...props
+      dnd, columns, isDragging, isSelected,
+      onColumnChange, onColumnEdit, ...props
     } = this.props
 
     const { isDisabled } = this
@@ -47,9 +49,9 @@ class ItemTableRow extends Component {
     delete props.onSelect
     delete props.onContextMenu
 
-    return (
+    return dnd(
       <tr
-        className={cn({ item: true, active: isSelected })}
+        className={cn({ item: true, active: isSelected, dragging: isDragging })}
         onContextMenu={this.handleContextMenu}>
         {
           columns.map(({ property, width }) => (
@@ -84,6 +86,9 @@ class ItemTableRow extends Component {
     columns: PropTypes.arrayOf(PropTypes.object),
 
     isSelected: PropTypes.bool,
+    isDragging: PropTypes.bool,
+
+    dnd: PropTypes.func.isRequired,
 
     onSelect: PropTypes.func.isRequired,
     onContextMenu: PropTypes.func,
@@ -96,5 +101,13 @@ class ItemTableRow extends Component {
 
 
 module.exports = {
-  ItemTableRow
+  ItemTableRow: DragSource(DND.ITEM, {
+    beginDrag(props) {
+      return { id: props.item.id }
+    }
+  },
+  (connect, monitor) => ({
+    dnd: connect.dragSource(),
+    isDragging: monitor.isDragging()
+  }))(ItemTableRow)
 }
