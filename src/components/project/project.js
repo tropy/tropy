@@ -3,15 +3,20 @@
 const React = require('react')
 const { PropTypes, Component } = React
 const { connect } = require('react-redux')
-const { ProjectDropZone } = require('./project/drop-zone')
-const { ProjectSidebar } = require('./project/sidebar')
-const { Resizable } = require('./resizable')
-const { Item, Items } = require('./item')
-const { MODE } = require('../constants/project')
-const { once } = require('../dom')
+
+const { Resizable } = require('../resizable')
+const { Item, Items } = require('../item')
+const { ProjectSidebar } = require('./sidebar')
+const { ProjectDropZone } = require('./drop-zone')
+const { ProjectDragLayer } = require('./drag-layer')
+
+const { MODE } = require('../../constants/project')
+const { once } = require('../../dom')
+
 const cn = require('classnames')
 const values = require('object.values')
-const actions = require('../actions')
+const actions = require('../../actions')
+
 
 
 class Project extends Component {
@@ -111,6 +116,7 @@ class Project extends Component {
           </div>
           <Item {...props} onOpen={onItemOpen}/>
         </ProjectDropZone>
+        <ProjectDragLayer/>
       </div>
     )
   }

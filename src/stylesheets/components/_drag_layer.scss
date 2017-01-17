@@ -1,0 +1,13 @@
+//
+// Drag Layer
+// --------------------------------------------------
+
+.drag-layer {
+  position: fixed;
+  pointer-events: none;
+  z-index: $zindex-drag-layer;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}

@@ -3,12 +3,18 @@
 const React = require('react')
 const { Component, PropTypes } = React
 const { DragSource } = require('react-dnd')
+const { getEmptyImage } = require('react-dnd-html5-backend')
 const { ItemTableCell } = require('./table-cell')
 const { meta } = require('../../common/os')
 const { DND, PROPERTIES: { DC } } = require('../../constants')
 const cn = require('classnames')
 
 class ItemTableRow extends Component {
+
+  componentDidMount() {
+
+    this.props.dp(getEmptyImage())
+  }
 
   get isDisabled() {
     return !!this.props.item.deleted
@@ -46,6 +52,7 @@ class ItemTableRow extends Component {
 
     const { isDisabled } = this
 
+    delete props.dp
     delete props.onSelect
     delete props.onContextMenu
 
@@ -89,6 +96,7 @@ class ItemTableRow extends Component {
     isDragging: PropTypes.bool,
 
     ds: PropTypes.func.isRequired,
+    dp: PropTypes.func.isRequired,
 
     onSelect: PropTypes.func.isRequired,
     onContextMenu: PropTypes.func,
@@ -112,6 +120,7 @@ module.exports = {
   },
   (connect, monitor) => ({
     ds: connect.dragSource(),
+    dp: connect.dragPreview(),
     isDragging: monitor.isDragging()
   }))(ItemTableRow)
 }
