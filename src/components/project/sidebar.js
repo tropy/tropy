@@ -7,12 +7,12 @@ const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')
 const { ActivityPane } = require('../activity')
 const { Lists } = require('../lists')
+const { TrashListItem } = require('../list')
 const { TagList } = require('../tag')
 const { Sidebar } = require('../sidebar')
 const { ProjectName } = require('./name')
 const { ROOT } = require('../../constants/list')
 const { has } = require('dot-prop')
-const { IconTrash } = require('../icons')
 const { getAllVisibleTags } = require('../../selectors/tag')
 const act = require('../../actions')
 
@@ -35,16 +35,6 @@ class ProjectSidebar extends Component {
 
   showTagsMenu = (event) => {
     this.props.onContextMenu(event, 'tags')
-  }
-
-  showTrashMenu = (event) => {
-    this.props.onContextMenu(event, 'trash', {})
-  }
-
-  handleTrashSelect = () => {
-    if (!this.props.isTrashSelected) {
-      this.props.onSelect({ trash: true })
-    }
   }
 
   render() {
@@ -75,15 +65,10 @@ class ProjectSidebar extends Component {
           <section>
             <nav>
               <ol>
-                <li
-                  className={isTrashSelected && 'active'}
-                  onContextMenu={this.showTrashMenu}
-                  onClick={this.handleTrashSelect}>
-                  <IconTrash/>
-                  <div className="title">
-                    <FormattedMessage id="sidebar.trash"/>
-                  </div>
-                </li>
+                <TrashListItem
+                  isSelected={isTrashSelected}
+                  onSelect={this.props.onSelect}
+                  onContextMenu={onContextMenu}/>
               </ol>
             </nav>
           </section>
