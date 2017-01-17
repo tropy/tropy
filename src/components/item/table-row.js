@@ -40,7 +40,7 @@ class ItemTableRow extends Component {
 
   render() {
     const {
-      dnd, columns, isDragging, isSelected,
+      ds, columns, isDragging, isSelected,
       onColumnChange, onColumnEdit, ...props
     } = this.props
 
@@ -49,7 +49,7 @@ class ItemTableRow extends Component {
     delete props.onSelect
     delete props.onContextMenu
 
-    return dnd(
+    return ds(
       <tr
         className={cn({ item: true, active: isSelected, dragging: isDragging })}
         onContextMenu={this.handleContextMenu}>
@@ -88,7 +88,7 @@ class ItemTableRow extends Component {
     isSelected: PropTypes.bool,
     isDragging: PropTypes.bool,
 
-    dnd: PropTypes.func.isRequired,
+    ds: PropTypes.func.isRequired,
 
     onSelect: PropTypes.func.isRequired,
     onContextMenu: PropTypes.func,
@@ -104,10 +104,14 @@ module.exports = {
   ItemTableRow: DragSource(DND.ITEM, {
     beginDrag(props) {
       return { id: props.item.id }
+    },
+
+    canDrag(props) {
+      return !props.item.deleted
     }
   },
   (connect, monitor) => ({
-    dnd: connect.dragSource(),
+    ds: connect.dragSource(),
     isDragging: monitor.isDragging()
   }))(ItemTableRow)
 }

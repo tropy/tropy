@@ -160,6 +160,10 @@ module.exports = {
         dispatch(actions.item.open(item))
       },
 
+      onItemDelete(item) {
+        dispatch(actions.item.delete(item.id))
+      },
+
       onEditCancel() {
         dispatch(actions.ui.edit.cancel())
       }

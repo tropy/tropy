@@ -39,7 +39,8 @@ class ProjectSidebar extends Component {
 
   render() {
     const {
-      project, tags, hasToolbar, isTrashSelected, onContextMenu, ...props
+      project, tags, hasToolbar, isTrashSelected,
+      onItemDelete, onContextMenu, ...props
     } = this.props
 
     return (
@@ -68,7 +69,8 @@ class ProjectSidebar extends Component {
                 <TrashListItem
                   isSelected={isTrashSelected}
                   onSelect={this.props.onSelect}
-                  onContextMenu={onContextMenu}/>
+                  onContextMenu={onContextMenu}
+                  onDropItem={onItemDelete}/>
               </ol>
             </nav>
           </section>
@@ -107,7 +109,8 @@ class ProjectSidebar extends Component {
     onSelect: PropTypes.func,
     onCancel: PropTypes.func,
     onChange: PropTypes.func,
-    onContextMenu: PropTypes.func
+    onContextMenu: PropTypes.func,
+    onItemDelete: PropTypes.func
   }
 }
 

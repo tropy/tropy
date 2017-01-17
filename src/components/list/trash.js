@@ -5,6 +5,8 @@ const { Component, PropTypes } = React
 const cn = require('classnames')
 const { IconTrash } = require('../icons')
 const { FormattedMessage } = require('react-intl')
+const { DropTarget } = require('react-dnd')
+const { DND } = require('../../constants')
 
 
 class TrashListItem extends Component {
@@ -20,11 +22,11 @@ class TrashListItem extends Component {
   }
 
   render() {
-    const { isSelected } = this.props
+    const { dt, isSelected, isOver } = this.props
 
-    return (
+    return dt(
       <li
-        className={cn({ active: isSelected })}
+        className={cn({ active: isSelected, over: isOver })}
         onContextMenu={this.handleContextMenu}
         onClick={this.handleClick}>
         <IconTrash/>
@@ -37,6 +39,10 @@ class TrashListItem extends Component {
 
   static propTypes = {
     isSelected: PropTypes.bool,
+    isOver: PropTypes.bool,
+
+    dt: PropTypes.func.isRequired,
+
     onContextMenu: PropTypes.func,
     onSelect: PropTypes.func,
     onDropItem: PropTypes.func
@@ -44,5 +50,13 @@ class TrashListItem extends Component {
 }
 
 module.exports = {
-  TrashListItem
+  TrashListItem: DropTarget(DND.ITEM, {
+    drop(props, monitor) {
+      props.onDropItem(monitor.getItem())
+    }
+  },
+  (connect, monitor) => ({
+    dt: connect.dropTarget(),
+    isOver: monitor.isOver()
+  }))(TrashListItem)
 }
