@@ -1,23 +1,41 @@
 'use strict'
 
-
 const React = require('react')
 const { Component, PropTypes } = React
 const { DragLayer } = require('react-dnd')
+const { ItemDragPreview } = require('../item')
+const { DND } = require('../../constants')
 
 class ProjectDragLayer extends Component {
 
+  get position() {
+    const { x, y } = this.props.offset
+
+    return {
+      transform: `translate(${x}px, ${y}px)`
+    }
+  }
+
   renderItem() {
+    const { item, type } = this.props
+
+    switch (type) {
+      case DND.ITEM:
+        return <ItemDragPreview item={item}/>
+
+      default:
+        throw new Error(`unknown dnd type "${type}"`)
+    }
   }
 
   render() {
-    const { item, type, isDragging } = this.props
-
-    if (!isDragging) return null
+    if (!this.props.isDragging) return null
 
     return (
       <div id="project-drag-layer" className="drag-layer">
-        <div>{`${type} ${item.id}`}</div>
+        <div style={this.position}>
+          {this.renderItem()}
+        </div>
       </div>
     )
   }

@@ -1,6 +1,7 @@
 'use strict'
 
 module.exports = {
+  ...require('./drag-preview'),
   ...require('./item'),
   ...require('./items'),
   ...require('./table'),
