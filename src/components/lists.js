@@ -1,73 +1,13 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes, Component } = React
+const { PropTypes } = React
+const { ListName } = require('./list/name')
 const { connect } = require('react-redux')
-const { Editable } = require('./editable')
-const { IconFolder } = require('./icons')
 const { getChildren } = require('../selectors/list')
 const { create, save } = require('../actions/list')
 const ui = require('../actions/ui')
 const nav = require('../actions/nav')
-const cn = require('classnames')
-
-
-class List extends Component {
-
-  update = (name) => {
-    this.props.onUpdate(this.props.list.id, { name })
-  }
-
-  click = () => {
-    if (this.props.isSelected) {
-      this.props.onRename(this.props.list.id)
-    } else {
-      this.props.onSelect(this.props.list.id)
-    }
-  }
-
-  popup = (event) => {
-    this.props.onContextMenu(event, this.props.list.id)
-  }
-
-  render() {
-    const {
-      list, isSelected, context, isEditing, onCancel
-    } = this.props
-
-    return (
-      <li
-        className={cn({ list: true, active: isSelected, context })}
-        onContextMenu={this.popup}
-        onClick={this.click}>
-        <IconFolder/>
-        <div className="title">
-          <Editable
-            value={list.name}
-            isRequired
-            isEditing={isEditing}
-            onCancel={onCancel}
-            onChange={this.update}/>
-        </div>
-      </li>
-    )
-  }
-
-  static propTypes = {
-    list: PropTypes.object,
-    isSelected: PropTypes.bool,
-    context: PropTypes.bool,
-
-    isEditing: PropTypes.bool,
-    onCancel: PropTypes.func,
-
-    onContextMenu: PropTypes.func,
-    onRename: PropTypes.func,
-    onSelect: PropTypes.func,
-    onUpdate: PropTypes.func
-  }
-
-}
 
 
 const Lists = ({
@@ -76,14 +16,14 @@ const Lists = ({
 
   if (editing && editing.parent === parent) {
     var newListNode =
-      <List {...props} list={editing} isEditing/>
+      <ListName {...props} list={editing} isEditing/>
   }
 
   return (
     <ol className="lists">
       {
         lists.map(list =>
-          <List {...props}
+          <ListName {...props}
             key={list.id}
             list={list}
             isSelected={selected === list.id}

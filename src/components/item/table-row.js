@@ -52,7 +52,14 @@ class ItemTableRow extends Component {
   }
 
   handleContextMenu = (event) => {
-    this.props.onContextMenu(this.props.item, event)
+    const { item, isSelected, onContextMenu, onSelect } = this.props
+
+    if (!isSelected) {
+      onSelect(item, event)
+    }
+
+    // TODO needs updated selection
+    onContextMenu(item, event)
   }
 
   render() {
