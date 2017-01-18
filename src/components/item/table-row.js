@@ -35,6 +35,12 @@ class ItemTableRow extends Component {
     onSelect(item, event)
   }
 
+  handleSingleClick = (...args) => {
+    if (!this.props.isDragging) {
+      this.props.onColumnEdit(...args)
+    }
+  }
+
   handleDoubleClick = () => {
     const { item, onOpen } = this.props
     onOpen({ id: item.id, photos: item.photos })
@@ -46,8 +52,7 @@ class ItemTableRow extends Component {
 
   render() {
     const {
-      ds, columns, isDragging, isSelected,
-      onColumnChange, onColumnEdit, ...props
+      ds, columns, isDragging, isSelected, onColumnChange, ...props
     } = this.props
 
     const { isDisabled } = this
@@ -55,6 +60,7 @@ class ItemTableRow extends Component {
     delete props.dp
     delete props.onSelect
     delete props.onContextMenu
+    delete props.onColumnEdit
 
     return ds(
       <tr
@@ -72,7 +78,7 @@ class ItemTableRow extends Component {
               width={width}
               onChange={onColumnChange}
               onClick={this.handleClick}
-              onSingleClick={onColumnEdit}
+              onSingleClick={this.handleSingleClick}
               onDoubleClick={this.handleDoubleClick}/>
           ))
         }
