@@ -50,9 +50,9 @@ class TrashListItem extends Component {
 }
 
 module.exports = {
-  TrashListItem: DropTarget(DND.ITEM, {
+  TrashListItem: DropTarget(DND.ITEMS, {
     drop(props, monitor) {
-      props.onDropItem(monitor.getItem())
+      props.onDropItem(monitor.getItem().items.map(item => item.id))
     }
   },
   (connect, monitor) => ({

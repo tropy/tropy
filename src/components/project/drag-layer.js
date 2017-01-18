@@ -19,11 +19,11 @@ class ProjectDragLayer extends Component {
   }
 
   renderItem() {
-    const { type, ...props } = this.props
+    const { item, type, ...props } = this.props
 
     switch (type) {
-      case DND.ITEM:
-        return <ItemDragPreview {...props}/>
+      case DND.ITEMS:
+        return <ItemDragPreview {...props} items={item.items}/>
 
       default:
         warn(`unknown dnd type "${type}"`)

@@ -24,9 +24,9 @@ class ItemTableCell extends Component {
       this.props.onClick(event)
     },
 
-    onSingleClick: () => {
+    onSingleClick: (event) => {
       const { item, property, onSingleClick } = this.props
-      onSingleClick({ id: item.id, property: property.uri })
+      onSingleClick(event, { id: item.id, property: property.uri })
     },
 
     onDoubleClick: (event) => {

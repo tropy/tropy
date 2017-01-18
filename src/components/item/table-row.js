@@ -30,14 +30,19 @@ class ItemTableRow extends Component {
 
     if (!isSelected || meta(event)) {
       event.stopPropagation() // Swallow single click!
+      onSelect(item, event)
     }
-
-    onSelect(item, event)
   }
 
-  handleSingleClick = (...args) => {
-    if (!this.props.isDragging) {
-      this.props.onColumnEdit(...args)
+  handleSingleClick = (event, ...args) => {
+    const { item, isDragging, isSelected, onSelect, onColumnEdit } = this.props
+
+    if (isDragging) return
+
+    if (isSelected) {
+      onColumnEdit(...args)
+    } else {
+      onSelect(item, event)
     }
   }
 

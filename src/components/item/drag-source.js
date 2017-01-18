@@ -5,7 +5,9 @@ const { DND } = require('../../constants')
 
 const spec = {
   beginDrag(props) {
-    return { ...props.item }
+    return {
+      items: [{ ...props.item }]
+    }
   },
 
   canDrag(props) {
@@ -20,7 +22,7 @@ const collect = (connect, monitor) => ({
 })
 
 const ItemDragSource = () =>
-  DragSource(DND.ITEM, spec, collect)
+  DragSource(DND.ITEMS, spec, collect)
 
 
 module.exports = {

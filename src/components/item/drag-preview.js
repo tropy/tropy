@@ -15,14 +15,25 @@ class ItemDragPreview extends Component {
   get classes() {
     return {
       'item-drag-preview': true,
-      'multiple': false
+      'multiple': this.count > 1
     }
+  }
+
+  get item() {
+    return this.props.items[0]
+  }
+
+  get count() {
+    return this.props.items.length
   }
 
   render() {
     return (
       <div className={cn(this.classes)}>
-        <CoverImage {...this.props} size={this.size}/>
+        <CoverImage {...this.props} item={this.item} size={this.size}/>
+        {this.count > 1 &&
+          <div className="count">{this.count}</div>
+        }
       </div>
     )
 
@@ -31,13 +42,12 @@ class ItemDragPreview extends Component {
   static propTypes = {
     zoom: PropTypes.number.isRequired,
     cache: PropTypes.string.isRequired,
-    item: PropTypes.shape({
+    items: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number.isRequired
-    })
+    })).isRequired
   }
 }
 
 module.exports = {
   ItemDragPreview
 }
-
