@@ -13,7 +13,7 @@ class ProjectDropZone extends Component {
     return {
       'project-drop-zone': true,
       'drop-zone': true,
-      'is-over': this.props.isOver
+      'over': this.props.isOver
     }
   }
 
