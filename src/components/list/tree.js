@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = React
+const { Component, PropTypes } = React
 const { ListNode } = require('./node')
 const { connect } = require('react-redux')
 const { getChildren } = require('../../selectors/list')
@@ -10,47 +10,56 @@ const ui = require('../../actions/ui')
 const nav = require('../../actions/nav')
 
 
-const ListTree = ({
-  lists, selected, editing, context, parent, showListMenu, ...props
-}) => {
+class ListTree extends Component {
 
-  if (editing && editing.parent === parent) {
-    var newListNode =
-      <ListNode {...props} list={editing} isEditing/>
+  renderNewListNode() {
+    const { editing, parent, onEditCancel } = this.props
+
+    if (!editing || editing.parent !== parent) return null
+
+    return (
+      <ListNode list={editing} isEditing onEditCancel={onEditCancel}/>
+    )
   }
 
-  return (
-    <ol className="lists">
-      {
-        lists.map(list =>
-          <ListNode {...props}
-            key={list.id}
-            list={list}
-            isSelected={selected === list.id}
-            isEditing={editing && editing.id === list.id}
-            context={context === list.id}
-            onContextMenu={showListMenu}/>)
-      }
-      {newListNode}
-    </ol>
-  )
-}
+  render() {
+    const {
+      lists, selected, editing, context, ...props
+    } = this.props
 
-ListTree.propTypes = {
-  parent: PropTypes.number.isRequired,
 
-  lists: PropTypes.array,
-  selected: PropTypes.number,
-  context: PropTypes.number,
-  editing: PropTypes.object,
+    return (
+      <ol className="lists">
+        {
+          lists.map(list =>
+            <ListNode {...props}
+              key={list.id}
+              list={list}
+              isSelected={selected === list.id}
+              isEditing={editing && editing.id === list.id}
+              isContext={context === list.id}/>)
+        }
+        {this.renderNewListNode()}
+      </ol>
+    )
+  }
 
-  onCancel: PropTypes.func,
+  static propTypes = {
+    parent: PropTypes.number.isRequired,
 
-  onUpdate: PropTypes.func,
-  onRename: PropTypes.func,
-  onSelect: PropTypes.func,
+    lists: PropTypes.array,
+    selected: PropTypes.number,
+    context: PropTypes.number,
+    editing: PropTypes.object,
 
-  showListMenu: PropTypes.func
+    onEditCancel: PropTypes.func,
+
+    onUpdate: PropTypes.func,
+    onRename: PropTypes.func,
+    onSelect: PropTypes.func,
+
+    onContextMenu: PropTypes.func
+  }
 }
 
 module.exports = {
@@ -68,10 +77,6 @@ module.exports = {
     },
 
     (dispatch, props) => ({
-      onCancel() {
-        dispatch(ui.edit.cancel())
-      },
-
       onSelect(list) {
         dispatch(nav.select({ list }))
       },
@@ -87,7 +92,7 @@ module.exports = {
           create({ ...values, parent: props.parent }))
       },
 
-      showListMenu(event, target) {
+      onContextMenu(event, target) {
         event.stopPropagation()
         dispatch(ui.context.show(event, 'list', target))
       }

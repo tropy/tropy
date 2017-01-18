@@ -4,6 +4,7 @@ const React = require('react')
 const { PropTypes, Component } = React
 const { Editable } = require('../editable')
 const { IconFolder } = require('../icons')
+const { noop } = require('../../common/util')
 const cn = require('classnames')
 
 
@@ -27,12 +28,12 @@ class ListNode extends Component {
 
   render() {
     const {
-      list, isSelected, context, isEditing, onCancel
+      list, isSelected, isContext, isEditing, onEditCancel
     } = this.props
 
     return (
       <li
-        className={cn({ list: true, active: isSelected, context })}
+        className={cn({ list: true, active: isSelected, context: isContext })}
         onContextMenu={this.handleContextMenu}
         onClick={this.handleClick}>
         <IconFolder/>
@@ -41,7 +42,7 @@ class ListNode extends Component {
             value={list.name}
             isRequired
             isEditing={isEditing}
-            onCancel={onCancel}
+            onCancel={onEditCancel}
             onChange={this.handleChange}/>
         </div>
       </li>
@@ -50,16 +51,21 @@ class ListNode extends Component {
 
   static propTypes = {
     list: PropTypes.object,
-    context: PropTypes.bool,
 
+    isContext: PropTypes.bool,
     isSelected: PropTypes.bool,
     isEditing: PropTypes.bool,
 
-    onCancel: PropTypes.func,
+    onEditCancel: PropTypes.func,
     onContextMenu: PropTypes.func,
     onRename: PropTypes.func,
     onSelect: PropTypes.func,
     onUpdate: PropTypes.func
+  }
+
+  static defaultProps = {
+    onContextMenu: noop,
+    onSelect: noop
   }
 }
 

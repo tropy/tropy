@@ -17,7 +17,7 @@ class ProjectName extends Component {
   }
 
   render() {
-    const { name, isSelected, context, ...props } = this.props
+    const { name, isSelected, context, onEditCancel, ...props } = this.props
 
     delete props.onRename
 
@@ -28,7 +28,11 @@ class ProjectName extends Component {
           onClick={this.handleClick}>
           <IconMaze/>
           <div className="title project-title">
-            <Editable {...props} value={name} isRequired/>
+            <Editable
+              {...props}
+              value={name}
+              isRequired
+              onCancel={onEditCancel}/>
           </div>
         </li>
       </ol>
@@ -43,7 +47,7 @@ class ProjectName extends Component {
 
     name: PropTypes.string.isRequired,
 
-    onCancel: PropTypes.func.isRequired,
+    onEditCancel: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     onRename: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired

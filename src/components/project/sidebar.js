@@ -58,7 +58,7 @@ class ProjectSidebar extends Component {
           <section onContextMenu={this.showListsMenu}>
             <h2><FormattedMessage id="sidebar.lists"/></h2>
             <nav>
-              <ListTree parent={ROOT}/>
+              <ListTree {...props} parent={ROOT}/>
             </nav>
           </section>
 
@@ -106,7 +106,7 @@ class ProjectSidebar extends Component {
 
     onRename: PropTypes.func,
     onSelect: PropTypes.func,
-    onCancel: PropTypes.func,
+    onEditCancel: PropTypes.func,
     onChange: PropTypes.func,
     onContextMenu: PropTypes.func,
     onItemsDelete: PropTypes.func
@@ -127,7 +127,6 @@ module.exports = {
     }),
 
     (dispatch) => ({
-
       onRename() {
         dispatch(act.ui.edit.start({ project: { name: true } }))
       },
@@ -139,12 +138,7 @@ module.exports = {
       onChange(name) {
         dispatch(act.project.save({ name }))
         dispatch(act.ui.edit.cancel())
-      },
-
-      onCancel() {
-        dispatch(act.ui.edit.cancel())
       }
-
     })
   )(ProjectSidebar)
 }
