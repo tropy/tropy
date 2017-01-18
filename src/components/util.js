@@ -26,6 +26,9 @@ module.exports = {
     let tid
 
     return function handleClick(event) {
+      // Handle only clicks with the left/primary button!
+      if (event.button) return
+
       if (tid) {
         tid = clearTimeout(tid), undefined
         if (onDoubleClick) onDoubleClick(event)
