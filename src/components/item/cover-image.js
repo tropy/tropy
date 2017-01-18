@@ -46,7 +46,7 @@ class CoverImage extends Component {
       <figure
         className={cn({ 'cover-image': true, 'stack': cardinality > 1 })}
         style={this.style}
-        onClick={this.handleClick}>
+        onMouseDown={this.handleClick}>
         {cardinality === 0
           ? <IconItem/>
           : <img srcSet={`${encodeURI(this.src)} 2x`}/>
