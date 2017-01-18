@@ -35,6 +35,7 @@
       align-items: center;
       height: $line-height-large;
       padding: 0 $component-padding-horizontal;
+      position: relative;
 
       &.active,
       &.context {
@@ -52,6 +53,20 @@
       &.active {
         color: $sidebar-active-color;
         background: $sidebar-active-bg;
+      }
+
+      &.over {
+        &::after {
+          content: "";
+          position: absolute;
+          top: 1px;
+          right: 5px;
+          bottom: 1px;
+          left: 5px;
+          border: 2px solid $drop-zone-border;
+          background: $drop-zone-bg;
+          border-radius: $border-radius-small;
+        }
       }
     }
 
