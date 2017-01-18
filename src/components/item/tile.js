@@ -72,11 +72,12 @@ class ItemTile extends Component {
   static propTypes = {
     size: PropTypes.number.isRequired,
     cache: PropTypes.string.isRequired,
-    isSelected: PropTypes.bool,
+    selection: PropTypes.arrayOf(PropTypes.number),
     item: PropTypes.shape({
       id: PropTypes.number.isRequired
     }),
 
+    isSelected: PropTypes.bool,
     isDragging: PropTypes.bool,
 
     ds: PropTypes.func.isRequired,

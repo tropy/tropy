@@ -19,6 +19,11 @@ class ItemGrid extends Component {
     )
   }
 
+  isSelected(item) {
+    return this.props.selection.includes(item.id)
+  }
+
+
   handleSelect = (id, mod) => {
     this.props.onSelect(id, mod)
   }
@@ -40,7 +45,7 @@ class ItemGrid extends Component {
   }
 
   render() {
-    const { selection, items, ...props } = this.props
+    const { items, ...props } = this.props
     const tile = this.placeholder
 
     return (
@@ -51,7 +56,7 @@ class ItemGrid extends Component {
               key={item.id}
               item={item}
               size={this.size}
-              isSelected={selection.includes(item.id)}
+              isSelected={this.isSelected(item)}
               onSelect={this.handleSelect}
               onContextMenu={this.handleContextMenu}/>
           )}

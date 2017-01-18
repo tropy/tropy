@@ -45,14 +45,14 @@ class TrashListItem extends Component {
 
     onContextMenu: PropTypes.func,
     onSelect: PropTypes.func,
-    onDropItem: PropTypes.func
+    onDropItems: PropTypes.func
   }
 }
 
 module.exports = {
   TrashListItem: DropTarget(DND.ITEMS, {
-    drop(props, monitor) {
-      props.onDropItem(monitor.getItem().items.map(item => item.id))
+    drop({ onDropItems }, monitor) {
+      onDropItems(monitor.getItem().items)
     }
   },
   (connect, monitor) => ({

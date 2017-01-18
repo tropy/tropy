@@ -9,9 +9,13 @@ const { meta } = require('../../common/os')
 
 class ItemTable extends Component {
 
+  isSelected(item) {
+    return this.props.selection.includes(item.id)
+  }
+
   handleSelect = (item, event) => {
     const { selection, onSelect } = this.props
-    const isSelected = selection.includes(item.id)
+    const isSelected = this.isSelected(item)
 
     if (meta(event)) {
       onSelect(item.id, isSelected ? 'remove' : 'merge')
@@ -40,7 +44,7 @@ class ItemTable extends Component {
   }
 
   render() {
-    const { selection, items, onEditCancel, ...props } = this.props
+    const { items, onEditCancel, ...props } = this.props
 
     return (
       <div className="item-table-view">
@@ -53,7 +57,7 @@ class ItemTable extends Component {
                 <ItemTableRow {...props}
                   key={item.id}
                   item={item}
-                  isSelected={selection.includes(item.id)}
+                  isSelected={this.isSelected(item)}
                   onSelect={this.handleSelect}
                   onCancel={onEditCancel}
                   onContextMenu={this.handleContextMenu}/>

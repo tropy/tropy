@@ -102,6 +102,7 @@ class ItemTableRow extends Component {
     editing: PropTypes.object,
     cache: PropTypes.string.isRequired,
     columns: PropTypes.arrayOf(PropTypes.object),
+    selection: PropTypes.arrayOf(PropTypes.number),
 
     isSelected: PropTypes.bool,
     isDragging: PropTypes.bool,

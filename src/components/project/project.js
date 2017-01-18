@@ -130,6 +130,7 @@ class Project extends Component {
     onEditCancel: PropTypes.func,
     onDrop: PropTypes.func,
     onItemOpen: PropTypes.func,
+    onItemsDelete: PropTypes.func,
     onModeChange: PropTypes.func
   }
 
@@ -171,8 +172,8 @@ module.exports = {
         dispatch(actions.item.open(item))
       },
 
-      onItemDelete(item) {
-        dispatch(actions.item.delete(item.id))
+      onItemsDelete(items) {
+        dispatch(actions.item.delete(items.map(item => item.id)))
       },
 
       onEditCancel() {

@@ -2,16 +2,21 @@
 
 const { DragSource } = require('react-dnd')
 const { DND } = require('../../constants')
+const { compose, map, filter, into } = require('transducers.js')
 
 const spec = {
-  beginDrag(props) {
+  beginDrag({ item, selection }) {
     return {
-      items: [{ ...props.item }]
+      items: into(
+        [{ ...item }],
+        compose(filter(id => id !== item.id), map(id => ({ id }))),
+        selection
+      )
     }
   },
 
-  canDrag(props) {
-    return !props.item.deleted
+  canDrag({ item }) {
+    return !item.deleted
   }
 }
 
