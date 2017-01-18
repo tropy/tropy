@@ -6,8 +6,7 @@ const { Component, PropTypes } = React
 const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')
 const { ActivityPane } = require('../activity')
-const { Lists } = require('../lists')
-const { TrashListItem } = require('../list')
+const { ListTree, TrashListNode } = require('../list')
 const { TagList } = require('../tag')
 const { Sidebar } = require('../sidebar')
 const { ProjectName } = require('./name')
@@ -59,14 +58,14 @@ class ProjectSidebar extends Component {
           <section onContextMenu={this.showListsMenu}>
             <h2><FormattedMessage id="sidebar.lists"/></h2>
             <nav>
-              <Lists parent={ROOT}/>
+              <ListTree parent={ROOT}/>
             </nav>
           </section>
 
           <section>
             <nav>
               <ol>
-                <TrashListItem
+                <TrashListNode
                   isSelected={isTrashSelected}
                   onSelect={this.props.onSelect}
                   onContextMenu={onContextMenu}

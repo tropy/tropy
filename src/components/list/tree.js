@@ -2,28 +2,28 @@
 
 const React = require('react')
 const { PropTypes } = React
-const { ListName } = require('./list/name')
+const { ListNode } = require('./node')
 const { connect } = require('react-redux')
-const { getChildren } = require('../selectors/list')
-const { create, save } = require('../actions/list')
-const ui = require('../actions/ui')
-const nav = require('../actions/nav')
+const { getChildren } = require('../../selectors/list')
+const { create, save } = require('../../actions/list')
+const ui = require('../../actions/ui')
+const nav = require('../../actions/nav')
 
 
-const Lists = ({
+const ListTree = ({
   lists, selected, editing, context, parent, showListMenu, ...props
 }) => {
 
   if (editing && editing.parent === parent) {
     var newListNode =
-      <ListName {...props} list={editing} isEditing/>
+      <ListNode {...props} list={editing} isEditing/>
   }
 
   return (
     <ol className="lists">
       {
         lists.map(list =>
-          <ListName {...props}
+          <ListNode {...props}
             key={list.id}
             list={list}
             isSelected={selected === list.id}
@@ -36,7 +36,7 @@ const Lists = ({
   )
 }
 
-Lists.propTypes = {
+ListTree.propTypes = {
   parent: PropTypes.number.isRequired,
 
   lists: PropTypes.array,
@@ -54,7 +54,7 @@ Lists.propTypes = {
 }
 
 module.exports = {
-  Lists: connect(
+  ListTree: connect(
 
     () => {
       const children = getChildren()
@@ -93,5 +93,5 @@ module.exports = {
       }
     })
 
-  )(Lists)
+  )(ListTree)
 }

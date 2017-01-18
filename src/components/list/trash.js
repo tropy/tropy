@@ -9,7 +9,7 @@ const { DropTarget } = require('react-dnd')
 const { DND } = require('../../constants')
 
 
-class TrashListItem extends Component {
+class TrashListNode extends Component {
 
   handleContextMenu = (event) => {
     this.props.onContextMenu(event, 'trash', {})
@@ -50,7 +50,7 @@ class TrashListItem extends Component {
 }
 
 module.exports = {
-  TrashListItem: DropTarget(DND.ITEMS, {
+  TrashListNode: DropTarget(DND.ITEMS, {
     drop({ onDropItems }, monitor) {
       onDropItems(monitor.getItem().items)
     }
@@ -58,5 +58,5 @@ module.exports = {
   (connect, monitor) => ({
     dt: connect.dropTarget(),
     isOver: monitor.isOver()
-  }))(TrashListItem)
+  }))(TrashListNode)
 }

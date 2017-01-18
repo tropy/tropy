@@ -7,7 +7,7 @@ const { IconFolder } = require('../icons')
 const cn = require('classnames')
 
 
-class ListName extends Component {
+class ListNode extends Component {
 
   handleChange = (name) => {
     this.props.onUpdate(this.props.list.id, { name })
@@ -64,5 +64,5 @@ class ListName extends Component {
 }
 
 module.exports = {
-  ListName
+  ListNode
 }

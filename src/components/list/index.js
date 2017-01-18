@@ -1,5 +1,7 @@
 'use strict'
 
 module.exports = {
-  ...require('./trash')
+  ...require('./node'),
+  ...require('./trash'),
+  ...require('./tree')
 }
