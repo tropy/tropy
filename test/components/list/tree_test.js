@@ -3,23 +3,23 @@
 const React = require('react')
 const { shallow } = require('enzyme')
 
-describe('Lists', () => {
-  const { Lists } = __require('components/lists')
+describe('Tree', () => {
+  const { ListTree } = __require('components/list')
 
   it('renders all lists', () => {
     expect(
       shallow(
-        <Lists.WrappedComponent lists={[]}/>
+        <ListTree.WrappedComponent lists={[]}/>
       )
-    ).not.to.have.descendants('List')
+    ).not.to.have.descendants('ListNode')
 
     expect(
       shallow(
-        <Lists.WrappedComponent lists={[
+        <ListTree.WrappedComponent lists={[
           { id: 1, name: 'A' },
           { id: 2, name: 'B' },
         ]}/>
       )
-    ).to.have.exactly(2).descendants('List')
+    ).to.have.exactly(2).descendants('ListNode')
   })
 })
