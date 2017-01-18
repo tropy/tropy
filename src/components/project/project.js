@@ -10,6 +10,7 @@ const { ProjectSidebar } = require('./sidebar')
 const { ProjectDropZone } = require('./drop-zone')
 const { ProjectDragLayer } = require('./drag-layer')
 
+const { getCachePrefix } = require('../../selectors/project')
 const { MODE } = require('../../constants/project')
 const { once } = require('../../dom')
 
@@ -116,13 +117,15 @@ class Project extends Component {
           </div>
           <Item {...props} onOpen={onItemOpen}/>
         </ProjectDropZone>
-        <ProjectDragLayer/>
+        <ProjectDragLayer {...props}/>
       </div>
     )
   }
 
   static propTypes = {
+    cache: PropTypes.string.isRequired,
     mode: PropTypes.oneOf(values(MODE)).isRequired,
+    zoom: PropTypes.number,
     onContextMenu: PropTypes.func,
     onEditCancel: PropTypes.func,
     onDrop: PropTypes.func,
@@ -139,7 +142,9 @@ class Project extends Component {
 module.exports = {
   Project: connect(
     state => ({
-      mode: state.nav.mode
+      cache: getCachePrefix(state),
+      mode: state.nav.mode,
+      zoom: state.nav.itemsZoom
     }),
 
     dispatch => ({

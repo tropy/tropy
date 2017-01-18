@@ -5,6 +5,7 @@ const { Component, PropTypes } = React
 const { DragLayer } = require('react-dnd')
 const { ItemDragPreview } = require('../item')
 const { DND } = require('../../constants')
+const { warn } = require('../../common/log')
 
 
 class ProjectDragLayer extends Component {
@@ -18,14 +19,14 @@ class ProjectDragLayer extends Component {
   }
 
   renderItem() {
-    const { item, type } = this.props
+    const { type, ...props } = this.props
 
     switch (type) {
       case DND.ITEM:
-        return <ItemDragPreview item={item}/>
+        return <ItemDragPreview {...props}/>
 
       default:
-        throw new Error(`unknown dnd type "${type}"`)
+        warn(`unknown dnd type "${type}"`)
     }
   }
 
@@ -42,6 +43,8 @@ class ProjectDragLayer extends Component {
   }
 
   static propTypes = {
+    cache: PropTypes.string,
+    zoom: PropTypes.number,
     item: PropTypes.object,
     type: PropTypes.string,
     offset: PropTypes.shape({

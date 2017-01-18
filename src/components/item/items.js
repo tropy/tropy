@@ -11,7 +11,6 @@ const { ItemGrid } = require('./grid')
 const { Slider } = require('../slider')
 const { IconButton } = require('../button')
 const { getItems } = require('../../selectors/items')
-const { getCachePrefix } = require('../../selectors/project')
 const { getColumns } = require('../../selectors/ui')
 const act = require('../../actions')
 
@@ -48,7 +47,6 @@ Items.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object),
   selection: PropTypes.arrayOf(PropTypes.number),
   columns: PropTypes.arrayOf(PropTypes.object),
-  cache: PropTypes.string.isRequired,
   zoom: PropTypes.number,
   maxZoom: PropTypes.number,
   onCreate: PropTypes.func,
@@ -72,9 +70,7 @@ module.exports = {
       editing: state.ui.edit,
       columns: getColumns(state),
       items: getItems(state),
-      selection: state.nav.items,
-      cache: getCachePrefix(state),
-      zoom: state.nav.itemsZoom
+      selection: state.nav.items
     }),
 
     (dispatch) => ({
