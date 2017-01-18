@@ -60,7 +60,7 @@ class ItemTableCell extends Component {
       <td
         className={cn({ metadata: true, [this.type]: true })}
         style={{ width }}
-        onClick={this.handleClick}>
+        onMouseDown={this.handleClick}>
 
         {hasCoverImage && <CoverImage item={item} size={24} cache={cache}/>}
 
