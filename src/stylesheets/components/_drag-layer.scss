@@ -6,8 +6,12 @@
   position: fixed;
   pointer-events: none;
   z-index: $zindex-drag-layer;
-  left: 0;
   top: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.item-drag-preview {
+  opacity: 0.6;
 }
