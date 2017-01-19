@@ -8,17 +8,17 @@ describe('Tree', () => {
 
   it('renders all lists', () => {
     expect(
-      shallow(
-        <ListTree.WrappedComponent lists={[]}/>
-      )
+      shallow(<ListTree.WrappedComponent/>)
     ).not.to.have.descendants('ListNode')
 
     expect(
       shallow(
-        <ListTree.WrappedComponent lists={[
-          { id: 1, name: 'A' },
-          { id: 2, name: 'B' },
-        ]}/>
+        <ListTree.WrappedComponent
+          parent={{ children: [2, 1] }}
+          lists={{
+            1: { id: 1, name: 'A' },
+            2: { id: 2, name: 'B' }
+          }}/>
       )
     ).to.have.exactly(2).descendants('ListNode')
   })

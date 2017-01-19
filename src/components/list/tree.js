@@ -4,39 +4,58 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { ListNode } = require('./node')
 const { connect } = require('react-redux')
-const { GetChildNodes } = require('../../selectors/list')
-const { create, save } = require('../../actions/list')
-const ui = require('../../actions/ui')
+const { get } = require('dot-prop')
+const act = require('../../actions')
 
 
 class ListTree extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      order: get(props, 'parent.children') || []
+    }
+  }
+
+  componentWillReceiveProps(props) {
+    const order = get(props, 'parent.children') || []
+
+    if (order !== this.state.order) {
+      this.setState({ order })
+    }
+  }
+
 
   renderNewListNode() {
-    const { editing, parent, onEditCancel } = this.props
+    const { editing, parent, onEditCancel, onListSave } = this.props
 
-    if (!editing || editing.parent !== parent) return null
+    if (!editing || editing.parent !== parent.id) return null
 
     return (
-      <ListNode list={editing} isEditing onEditCancel={onEditCancel}/>
+      <ListNode
+        list={editing}
+        isEditing
+        onEditCancel={onEditCancel}
+        onSave={onListSave}/>
     )
   }
 
   render() {
     const {
-      lists, selected, editing, context, ...props
+      lists, selected, editing, context, onListSave, ...props
     } = this.props
-
 
     return (
       <ol className="lists">
         {
-          lists.map(list =>
+          this.state.order.map(id =>
             <ListNode {...props}
-              key={list.id}
-              list={list}
-              isSelected={selected === list.id}
-              isEditing={editing && editing.id === list.id}
-              isContext={context === list.id}/>)
+              key={id}
+              list={lists[id] || { id }}
+              isSelected={selected === id}
+              isEditing={editing && editing.id === id}
+              isContext={context === id}
+              onSave={onListSave}/>)
         }
         {this.renderNewListNode()}
       </ol>
@@ -44,9 +63,12 @@ class ListTree extends Component {
   }
 
   static propTypes = {
-    parent: PropTypes.number.isRequired,
+    parent: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      children: PropTypes.arrayOf(PropTypes.number).isRequired
+    }),
 
-    lists: PropTypes.array,
+    lists: PropTypes.object,
     selected: PropTypes.number,
     context: PropTypes.number,
     editing: PropTypes.object,
@@ -54,7 +76,7 @@ class ListTree extends Component {
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
 
-    onUpdate: PropTypes.func,
+    onListSave: PropTypes.func,
     onSelect: PropTypes.func,
 
     onContextMenu: PropTypes.func
@@ -63,26 +85,11 @@ class ListTree extends Component {
 
 module.exports = {
   ListTree: connect(
-
-    () => {
-      const getChildNodes = GetChildNodes()
-
-      return (state, props) => ({
-        selected: state.nav.list,
-        context: state.ui.context.list,
-        editing: state.ui.edit.list,
-        lists: getChildNodes(state, props)
-      })
-    },
-
-    (dispatch, props) => ({
-      onUpdate(id, values) {
-        dispatch(ui.edit.cancel())
-        dispatch(id ?
-          save({ id, ...values }) :
-          create({ ...values, parent: props.parent }))
-      }
+    (state) => ({
+      selected: state.nav.list,
+      context: state.ui.context.list,
+      editing: state.ui.edit.list,
+      lists: state.lists
     })
-
   )(ListTree)
 }

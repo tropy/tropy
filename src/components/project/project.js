@@ -176,6 +176,11 @@ module.exports = {
         dispatch(actions.item.delete(items.map(item => item.id)))
       },
 
+      onListSave(...args) {
+        dispatch(actions.ui.edit.cancel())
+        dispatch(actions.list.save(...args))
+      },
+
       onEdit(...args) {
         dispatch(actions.ui.edit.start(...args))
       },

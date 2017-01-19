@@ -37,13 +37,13 @@ class ProjectSidebar extends Component {
   }
 
   renderLists() {
-    const { isTrashSelected, onItemsDelete, ...props } = this.props
+    const { list, isTrashSelected, onItemsDelete, ...props } = this.props
 
     return (
       <section onContextMenu={this.showListsMenu}>
         <h2><FormattedMessage id="sidebar.lists"/></h2>
         <nav>
-          <ListTree {...props} parent={ROOT}/>
+          <ListTree {...props} parent={list}/>
 
           <ol>
             <TrashListNode {...props}
@@ -107,6 +107,7 @@ class ProjectSidebar extends Component {
       name: PropTypes.string
     }).isRequired,
 
+    list: PropTypes.object,
     tags: PropTypes.arrayOf(PropTypes.object),
 
     onSelect: PropTypes.func,
@@ -114,7 +115,8 @@ class ProjectSidebar extends Component {
     onEditCancel: PropTypes.func,
     onChange: PropTypes.func,
     onContextMenu: PropTypes.func,
-    onItemsDelete: PropTypes.func
+    onItemsDelete: PropTypes.func,
+    onListSave: PropTypes.func
   }
 }
 
@@ -128,6 +130,7 @@ module.exports = {
       isTrashSelected: state.nav.trash,
       context: has(state.ui.context, 'project'),
       project: state.project,
+      list: state.lists[ROOT],
       tags: getAllVisibleTags(state)
     }),
 

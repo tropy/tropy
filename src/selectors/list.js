@@ -1,5 +1,7 @@
 'use strict'
 
+const { pick } = require('../common/util')
+
 const {
   createSelector: memo
 } = require('reselect')
@@ -12,7 +14,7 @@ const GetChildNodes = () =>
     (_, { parent }) => parent,
 
     (lists, parent) =>
-      lists[parent] ? lists[parent].children.map(id => lists[id]) : []
+      lists[parent] ? pick(lists, lists[parent].children) : {}
   )
 
 

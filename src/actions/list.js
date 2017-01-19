@@ -18,18 +18,6 @@ module.exports = {
     }
   },
 
-  create(payload, meta) {
-    return {
-      type: CREATE,
-      payload,
-      meta: {
-        async: true,
-        record: true,
-        ...meta
-      }
-    }
-  },
-
   insert(payload, meta = {}) {
     return { type: INSERT, payload, meta }
   },
@@ -39,7 +27,11 @@ module.exports = {
   },
 
   save(payload, meta) {
-    return { type: SAVE, payload, meta: { async: true, record: true, ...meta } }
+    return {
+      type: ('id' in payload) ? SAVE : CREATE,
+      payload,
+      meta: { async: true, record: true, ...meta }
+    }
   },
 
   delete(payload, meta) {

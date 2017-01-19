@@ -11,7 +11,8 @@ const cn = require('classnames')
 class ListNode extends Component {
 
   handleChange = (name) => {
-    this.props.onUpdate(this.props.list.id, { name })
+    const { list: { id, parent }, onSave } = this.props
+    onSave(id ? { id, name } : { parent, name })
   }
 
   handleClick = () => {
@@ -52,7 +53,11 @@ class ListNode extends Component {
   }
 
   static propTypes = {
-    list: PropTypes.object,
+    list: PropTypes.shape({
+      id: PropTypes.number,
+      parent: PropTypes.number,
+      name: PropTypes.string
+    }),
 
     isContext: PropTypes.bool,
     isSelected: PropTypes.bool,
@@ -62,7 +67,7 @@ class ListNode extends Component {
     onEditCancel: PropTypes.func,
     onContextMenu: PropTypes.func,
     onSelect: PropTypes.func,
-    onUpdate: PropTypes.func
+    onSave: PropTypes.func
   }
 
   static defaultProps = {
