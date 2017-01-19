@@ -4,10 +4,9 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { ListNode } = require('./node')
 const { connect } = require('react-redux')
-const { makeGetChildNodes } = require('../../selectors/list')
+const { GetChildNodes } = require('../../selectors/list')
 const { create, save } = require('../../actions/list')
 const ui = require('../../actions/ui')
-const nav = require('../../actions/nav')
 
 
 class ListTree extends Component {
@@ -66,7 +65,7 @@ module.exports = {
   ListTree: connect(
 
     () => {
-      const getChildNodes = makeGetChildNodes()
+      const getChildNodes = GetChildNodes()
 
       return (state, props) => ({
         selected: state.nav.list,

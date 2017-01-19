@@ -6,7 +6,7 @@ const {
 
 const list = ({ lists }, { list }) => lists[list]
 
-const makeGetChildNodes = () =>
+const GetChildNodes = () =>
   memo(
     ({ lists }) => lists,
     (_, { parent }) => parent,
@@ -18,5 +18,5 @@ const makeGetChildNodes = () =>
 
 module.exports = {
   list,
-  makeGetChildNodes
+  GetChildNodes
 }
