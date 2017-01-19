@@ -4,6 +4,7 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { ListNode } = require('./node')
 const { get } = require('dot-prop')
+const { move } = require('../../common/util')
 
 
 class ListTree extends Component {
@@ -16,11 +17,9 @@ class ListTree extends Component {
   }
 
   componentWillReceiveProps(props) {
-    const order = get(props, 'parent.children') || []
-
-    if (order !== this.state.order) {
-      this.setState({ order })
-    }
+    this.setState({
+      order: get(props, 'parent.children') || []
+    })
   }
 
   isEditing(id) {
@@ -33,6 +32,25 @@ class ListTree extends Component {
 
   isSelected(id) {
     return get(this.props, 'nav.list') === id
+  }
+
+  handleMove = (node, to, offset = 0) => {
+    const order = this.state.order
+
+    this.setState({
+      order: move(order, node, to, offset)
+    })
+  }
+
+  handleMoveReset = () => {
+    this.setState({
+      order: get(this.props, 'parent.children') || []
+    })
+  }
+
+  handleMoveCommit = () => {
+    const { onSort } = this.props
+    if (onSort) onSort(this.state.order)
   }
 
   renderNewListNode() {
@@ -54,7 +72,7 @@ class ListTree extends Component {
     const { lists, onListSave, ...props } = this.props
 
     return (
-      <ol className="lists sortable">
+      <ol className="list-tree sortable" ref={this.setContainer}>
         {
           this.state.order.map(id =>
             <ListNode {...props}
@@ -63,7 +81,11 @@ class ListTree extends Component {
               isSelected={this.isSelected(id)}
               isEditing={this.isEditing(id)}
               isContext={this.isContext(id)}
-              onSave={onListSave}/>)
+              isSortable
+              onSave={onListSave}
+              onMove={this.handleMove}
+              onMoveReset={this.handleMoveReset}
+              onMoveCommit={this.handleMoveCommit}/>)
         }
         {this.renderNewListNode()}
       </ol>
@@ -83,6 +105,7 @@ class ListTree extends Component {
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
     onListSave: PropTypes.func,
+    onSort: PropTypes.func,
     onSelect: PropTypes.func,
     onContextMenu: PropTypes.func
   }
