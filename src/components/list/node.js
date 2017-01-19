@@ -5,10 +5,21 @@ const { PropTypes, Component } = React
 const { Editable } = require('../editable')
 const { IconFolder } = require('../icons')
 const { noop } = require('../../common/util')
+const { DragSource } = require('react-dnd')
+const { DND } = require('../../constants')
 const cn = require('classnames')
 
 
 class ListNode extends Component {
+
+  get classes() {
+    return {
+      list: true,
+      active: this.props.isSelected,
+      context: this.props.isContext,
+      dragging: this.props.isDragging
+    }
+  }
 
   handleChange = (name) => {
     const { list: { id, parent }, onSave } = this.props
@@ -30,13 +41,11 @@ class ListNode extends Component {
   }
 
   render() {
-    const {
-      list, isSelected, isContext, isEditing, onEditCancel
-    } = this.props
+    const { ds, list, isEditing, onEditCancel } = this.props
 
-    return (
+    return ds(
       <li
-        className={cn({ list: true, active: isSelected, context: isContext })}
+        className={cn(this.classes)}
         onContextMenu={this.handleContextMenu}
         onClick={this.handleClick}>
         <IconFolder/>
@@ -62,6 +71,9 @@ class ListNode extends Component {
     isContext: PropTypes.bool,
     isSelected: PropTypes.bool,
     isEditing: PropTypes.bool,
+    isDragging: PropTypes.bool,
+
+    ds: PropTypes.func,
 
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
@@ -76,6 +88,19 @@ class ListNode extends Component {
   }
 }
 
+const dsSpec = {
+  beginDrag({ list }) {
+    return { id: list.id }
+  }
+}
+
+const dsCollect = (connect, monitor) => ({
+  ds: connect.dragSource(),
+  isDragging: monitor.isDragging()
+})
+
+
 module.exports = {
-  ListNode
+  ListNode:
+    DragSource(DND.LIST, dsSpec, dsCollect)(ListNode)
 }

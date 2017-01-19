@@ -1,5 +1,6 @@
 'use strict'
 
 module.exports = {
-  ITEMS: 'items'
+  ITEMS: 'items',
+  LIST: 'list'
 }
