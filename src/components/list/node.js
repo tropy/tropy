@@ -40,7 +40,7 @@ class ListNode extends Component {
         onContextMenu={this.handleContextMenu}
         onClick={this.handleClick}>
         <IconFolder/>
-        <div className="name">
+        <div className="title">
           <Editable
             value={list.name}
             isRequired

@@ -125,6 +125,7 @@ class Project extends Component {
     cache: PropTypes.string.isRequired,
     mode: PropTypes.oneOf(values(MODE)).isRequired,
     zoom: PropTypes.number,
+    ui: PropTypes.object,
     onContextMenu: PropTypes.func,
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
@@ -145,7 +146,8 @@ module.exports = {
     state => ({
       cache: getCachePrefix(state),
       mode: state.nav.mode,
-      zoom: state.nav.itemsZoom
+      zoom: state.nav.itemsZoom,
+      ui: state.ui
     }),
 
     dispatch => ({

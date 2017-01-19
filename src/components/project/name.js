@@ -17,33 +17,32 @@ class ProjectName extends Component {
   }
 
   render() {
-    const { name, isSelected, context, onEditCancel, ...props } = this.props
+    const { name, isSelected, isContext, onEditCancel, ...props } = this.props
 
     delete props.onEdit
 
     return (
-      <ol>
-        <li
-          className={cn({ active: isSelected, context })}
-          onClick={this.handleClick}>
-          <IconMaze/>
-          <div className="title project-title">
-            <Editable
-              {...props}
-              value={name}
-              isRequired
-              onCancel={onEditCancel}/>
-          </div>
-        </li>
-      </ol>
+      <li
+        className={cn({
+          'project-name': true, 'active': isSelected, 'context': isContext
+        })}
+        onClick={this.handleClick}>
+        <IconMaze/>
+        <div className="title">
+          <Editable
+            {...props}
+            value={name}
+            isRequired
+            onCancel={onEditCancel}/>
+        </div>
+      </li>
     )
   }
 
   static propTypes = {
+    isContext: PropTypes.bool,
     isEditing: PropTypes.bool,
     isSelected: PropTypes.bool,
-
-    context: PropTypes.bool,
 
     name: PropTypes.string.isRequired,
 

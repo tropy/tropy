@@ -3,9 +3,7 @@
 const React = require('react')
 const { Component, PropTypes } = React
 const { ListNode } = require('./node')
-const { connect } = require('react-redux')
 const { get } = require('dot-prop')
-const act = require('../../actions')
 
 
 class ListTree extends Component {
@@ -25,15 +23,27 @@ class ListTree extends Component {
     }
   }
 
+  isEditing(id) {
+    return get(this.props, 'ui.edit.list.id') === id
+  }
+
+  isContext(id) {
+    return get(this.props, 'ui.context.list') === id
+  }
+
+  isSelected(id) {
+    return get(this.props, 'nav.list') === id
+  }
 
   renderNewListNode() {
-    const { editing, parent, onEditCancel, onListSave } = this.props
+    const { parent, onEditCancel, onListSave } = this.props
+    const list = get(this.props, 'ui.edit.list')
 
-    if (!editing || editing.parent !== parent.id) return null
+    if (!list || list.parent !== parent.id) return null
 
     return (
       <ListNode
-        list={editing}
+        list={list}
         isEditing
         onEditCancel={onEditCancel}
         onSave={onListSave}/>
@@ -41,9 +51,7 @@ class ListTree extends Component {
   }
 
   render() {
-    const {
-      lists, selected, editing, context, onListSave, ...props
-    } = this.props
+    const { lists, onListSave, ...props } = this.props
 
     return (
       <ol className="lists">
@@ -52,9 +60,9 @@ class ListTree extends Component {
             <ListNode {...props}
               key={id}
               list={lists[id] || { id }}
-              isSelected={selected === id}
-              isEditing={editing && editing.id === id}
-              isContext={context === id}
+              isSelected={this.isSelected(id)}
+              isEditing={this.isEditing(id)}
+              isContext={this.isContext(id)}
               onSave={onListSave}/>)
         }
         {this.renderNewListNode()}
@@ -68,28 +76,18 @@ class ListTree extends Component {
       children: PropTypes.arrayOf(PropTypes.number).isRequired
     }),
 
-    lists: PropTypes.object,
-    selected: PropTypes.number,
-    context: PropTypes.number,
-    editing: PropTypes.object,
+    lists: PropTypes.object.isRequired,
+    ui: PropTypes.object,
+    nav: PropTypes.object,
 
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
-
     onListSave: PropTypes.func,
     onSelect: PropTypes.func,
-
     onContextMenu: PropTypes.func
   }
 }
 
 module.exports = {
-  ListTree: connect(
-    (state) => ({
-      selected: state.nav.list,
-      context: state.ui.context.list,
-      editing: state.ui.edit.list,
-      lists: state.lists
-    })
-  )(ListTree)
+  ListTree
 }

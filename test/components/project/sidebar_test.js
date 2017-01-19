@@ -11,7 +11,11 @@ describe('ProjectSidebar', () => {
   it('renders a toolbar when prop is set', () => {
     expect(
       shallow(
-        <ProjectSidebar.WrappedComponent project={project} hasToolbar/>
+        <ProjectSidebar.WrappedComponent
+          project={project}
+          lists={{}}
+          nav={{}}
+          hasToolbar/>
       )
     ).to.have.exactly(1).descendants('Toolbar')
   })
@@ -19,7 +23,7 @@ describe('ProjectSidebar', () => {
   it('renders the project name', () => {
     expect(
       shallow(
-        <ProjectSidebar.WrappedComponent project={project}/>
+        <ProjectSidebar.WrappedComponent project={project} lists={{}} nav={{}}/>
       ).find('ProjectName')
     ).to.have.prop('name', project.name)
   })

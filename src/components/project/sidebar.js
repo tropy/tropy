@@ -18,6 +18,22 @@ const act = require('../../actions')
 
 class ProjectSidebar extends Component {
 
+  get isContext() {
+    return has(this.props, 'ui.context.project')
+  }
+
+  get isEditing() {
+    return has(this.props, 'ui.edit.project')
+  }
+
+  get isSelected() {
+    return !(this.props.nav.list || this.props.nav.trash)
+  }
+
+  get isTrashSelected() {
+    return this.props.nav.trash
+  }
+
   showSidebarMenu = (event) => {
     this.props.onContextMenu(event, 'sidebar')
   }
@@ -36,18 +52,37 @@ class ProjectSidebar extends Component {
     this.props.onContextMenu(event, 'tags')
   }
 
+
+  renderProject() {
+    const { project, ...props } = this.props
+
+    return (
+      <section onContextMenu={this.showProjectMenu}>
+        <nav>
+          <ol>
+            <ProjectName {...props}
+              name={project.name}
+              isSelected={this.isSelected}
+              isEditing={this.isEditing}
+              isContext={this.isContext}/>
+          </ol>
+        </nav>
+      </section>
+    )
+  }
+
   renderLists() {
-    const { list, isTrashSelected, onItemsDelete, ...props } = this.props
+    const { lists, onItemsDelete, ...props } = this.props
 
     return (
       <section onContextMenu={this.showListsMenu}>
         <h2><FormattedMessage id="sidebar.lists"/></h2>
         <nav>
-          <ListTree {...props} parent={list}/>
+          <ListTree {...props} parent={lists[ROOT]} lists={lists}/>
 
           <ol>
             <TrashListNode {...props}
-              isSelected={isTrashSelected}
+              isSelected={this.isTrashSelected}
               onDropItems={onItemsDelete}/>
           </ol>
         </nav>
@@ -69,45 +104,30 @@ class ProjectSidebar extends Component {
   }
 
   render() {
-    const { project, hasToolbar, ...props } = this.props
-
     return (
       <Sidebar>
-        {hasToolbar && <Toolbar draggable/>}
-
-        <div
-          className="sidebar-body"
-          onContextMenu={this.showSidebarMenu}>
-          <section onContextMenu={this.showProjectMenu}>
-            <nav>
-              <ProjectName {...props} name={project.name}/>
-            </nav>
-          </section>
-
+        {this.props.hasToolbar && <Toolbar draggable/>}
+        <div className="sidebar-body" onContextMenu={this.showSidebarMenu}>
+          {this.renderProject()}
           {this.renderLists()}
           {this.renderTags()}
         </div>
-
         <ActivityPane/>
       </Sidebar>
     )
   }
 
   static propTypes = {
-    isEditing: PropTypes.bool,
-    isSelected: PropTypes.bool,
-    isTrashSelected: PropTypes.bool,
-
     hasToolbar: PropTypes.bool,
-
-    context: PropTypes.bool,
 
     project: PropTypes.shape({
       file: PropTypes.string,
       name: PropTypes.string
     }).isRequired,
 
-    list: PropTypes.object,
+    ui: PropTypes.object,
+    nav: PropTypes.object,
+    lists: PropTypes.object,
     tags: PropTypes.arrayOf(PropTypes.object),
 
     onSelect: PropTypes.func,
@@ -125,12 +145,9 @@ class ProjectSidebar extends Component {
 module.exports = {
   ProjectSidebar: connect(
     (state) => ({
-      isEditing: has(state.ui.edit, 'project.name'),
-      isSelected: !state.nav.list && !state.nav.trash,
-      isTrashSelected: state.nav.trash,
-      context: has(state.ui.context, 'project'),
       project: state.project,
-      list: state.lists[ROOT],
+      nav: state.nav,
+      lists: state.lists,
       tags: getAllVisibleTags(state)
     }),
 

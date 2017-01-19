@@ -8,12 +8,12 @@ describe('Tree', () => {
 
   it('renders all lists', () => {
     expect(
-      shallow(<ListTree.WrappedComponent/>)
+      shallow(<ListTree/>)
     ).not.to.have.descendants('ListNode')
 
     expect(
       shallow(
-        <ListTree.WrappedComponent
+        <ListTree
           parent={{ children: [2, 1] }}
           lists={{
             1: { id: 1, name: 'A' },
