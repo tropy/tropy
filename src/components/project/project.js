@@ -126,6 +126,7 @@ class Project extends Component {
     mode: PropTypes.oneOf(values(MODE)).isRequired,
     zoom: PropTypes.number,
     onContextMenu: PropTypes.func,
+    onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
     onDrop: PropTypes.func,
     onItemOpen: PropTypes.func,
@@ -173,6 +174,10 @@ module.exports = {
 
       onItemsDelete(items) {
         dispatch(actions.item.delete(items.map(item => item.id)))
+      },
+
+      onEdit(...args) {
+        dispatch(actions.ui.edit.start(...args))
       },
 
       onEditCancel() {

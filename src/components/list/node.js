@@ -15,10 +15,12 @@ class ListNode extends Component {
   }
 
   handleClick = () => {
-    if (this.props.isSelected) {
-      this.props.onRename(this.props.list.id)
+    const { list, isSelected, onEdit, onSelect } = this.props
+
+    if (isSelected) {
+      onEdit({ list: { id: list.id } })
     } else {
-      this.props.onSelect({ list: this.props.list.id })
+      onSelect({ list: list.id })
     }
   }
 
@@ -56,9 +58,9 @@ class ListNode extends Component {
     isSelected: PropTypes.bool,
     isEditing: PropTypes.bool,
 
+    onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
     onContextMenu: PropTypes.func,
-    onRename: PropTypes.func,
     onSelect: PropTypes.func,
     onUpdate: PropTypes.func
   }

@@ -109,8 +109,8 @@ class ProjectSidebar extends Component {
 
     tags: PropTypes.arrayOf(PropTypes.object),
 
-    onRename: PropTypes.func,
     onSelect: PropTypes.func,
+    onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
     onChange: PropTypes.func,
     onContextMenu: PropTypes.func,
@@ -132,10 +132,6 @@ module.exports = {
     }),
 
     (dispatch) => ({
-      onRename() {
-        dispatch(act.ui.edit.start({ project: { name: true } }))
-      },
-
       onSelect(opts) {
         dispatch(act.nav.select({ list: null, trash: null, ...opts }))
       },

@@ -9,17 +9,17 @@ const cn = require('classnames')
 class ProjectName extends Component {
 
   handleClick = () => {
-    if (this.props.isSelected) {
-      this.props.onRename()
-    } else {
-      this.props.onSelect()
-    }
+    const { isSelected, onEdit, onSelect } = this.props
+
+    isSelected ?
+      onEdit({ project: { name: true } }) :
+      onSelect()
   }
 
   render() {
     const { name, isSelected, context, onEditCancel, ...props } = this.props
 
-    delete props.onRename
+    delete props.onEdit
 
     return (
       <ol>
@@ -47,9 +47,9 @@ class ProjectName extends Component {
 
     name: PropTypes.string.isRequired,
 
+    onEdit: PropTypes.func.isRequired,
     onEditCancel: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
-    onRename: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired
   }
 }

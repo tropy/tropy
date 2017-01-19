@@ -51,10 +51,10 @@ class ListTree extends Component {
     context: PropTypes.number,
     editing: PropTypes.object,
 
+    onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
 
     onUpdate: PropTypes.func,
-    onRename: PropTypes.func,
     onSelect: PropTypes.func,
 
     onContextMenu: PropTypes.func
@@ -76,10 +76,6 @@ module.exports = {
     },
 
     (dispatch, props) => ({
-      onRename(id) {
-        dispatch(ui.edit.start({ list: { id } }))
-      },
-
       onUpdate(id, values) {
         dispatch(ui.edit.cancel())
         dispatch(id ?
