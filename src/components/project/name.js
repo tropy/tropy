@@ -28,7 +28,7 @@ class ProjectName extends Component {
         })}
         onClick={this.handleClick}>
         <IconMaze/>
-        <div className="title">
+        <div className="name">
           <Editable
             {...props}
             value={name}

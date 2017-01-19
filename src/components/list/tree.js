@@ -54,7 +54,7 @@ class ListTree extends Component {
     const { lists, onListSave, ...props } = this.props
 
     return (
-      <ol className="lists">
+      <ol className="lists sortable">
         {
           this.state.order.map(id =>
             <ListNode {...props}

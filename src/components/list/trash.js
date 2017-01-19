@@ -30,7 +30,7 @@ class TrashListNode extends Component {
         onContextMenu={this.handleContextMenu}
         onClick={this.handleClick}>
         <IconTrash/>
-        <div className="title">
+        <div className="name">
           <FormattedMessage id="sidebar.trash"/>
         </div>
       </li>
