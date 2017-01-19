@@ -1,18 +1,19 @@
 'use strict'
 
 const React = require('react')
-const { shallow } = require('enzyme')
+const { render } = require('enzyme')
+const dnd = require('../../support/dnd')
 
 describe('Tree', () => {
-  const { ListTree } = __require('components/list')
+  const ListTree = dnd.wrap(__require('components/list').ListTree)
 
   it('renders all lists', () => {
     expect(
-      shallow(<ListTree/>)
-    ).not.to.have.descendants('ListNode')
+      render(<ListTree/>)
+    ).not.to.have.descendants('.list')
 
     expect(
-      shallow(
+      render(
         <ListTree
           parent={{ children: [2, 1] }}
           lists={{
@@ -20,6 +21,6 @@ describe('Tree', () => {
             2: { id: 2, name: 'B' }
           }}/>
       )
-    ).to.have.exactly(2).descendants('ListNode')
+    ).to.have.exactly(2).descendants('.list')
   })
 })
