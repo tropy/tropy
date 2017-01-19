@@ -15,7 +15,7 @@
   display: flex;
   height: 100%;
   position: relative;
-  left: 0;
+  transform: translate3d(0, 0, 0);
   z-index: $zindex-project;
 
   &::after {
@@ -31,7 +31,7 @@
 
   .project-mode-leave &,
   .project-mode-enter & {
-    transition: left $mode-transition;
+    transition: transform $mode-transition;
 
     &::after {
       content: "";
@@ -41,7 +41,7 @@
 
   .item-mode &,
   .project-mode-leave-active & {
-    left: -25%;
+    transform: translate3d(-25%, 0, 0);
 
     &::after {
       opacity: 1;
@@ -49,7 +49,7 @@
   }
 
   .project-mode-enter-active & {
-    left: 0;
+    transform: translate3d(0, 0, 0);
 
     &::after {
       opacity: 0;
