@@ -5,7 +5,7 @@
 .drop-zone {
   position: relative;
 
-  &.is-over {
+  &.over {
     &::after {
       content: "";
       position: absolute;
