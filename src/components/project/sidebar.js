@@ -34,6 +34,11 @@ class ProjectSidebar extends Component {
     return this.props.nav.trash
   }
 
+
+  handleProjectNameChange = (name) => {
+    this.props.onProjectSave({ name })
+  }
+
   showSidebarMenu = (event) => {
     this.props.onContextMenu(event, 'sidebar')
   }
@@ -64,7 +69,8 @@ class ProjectSidebar extends Component {
               name={project.name}
               isSelected={this.isSelected}
               isEditing={this.isEditing}
-              isContext={this.isContext}/>
+              isContext={this.isContext}
+              onChange={this.handleProjectNameChange}/>
           </ol>
         </nav>
       </section>
@@ -133,10 +139,10 @@ class ProjectSidebar extends Component {
     onSelect: PropTypes.func,
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
-    onChange: PropTypes.func,
     onContextMenu: PropTypes.func,
     onItemsDelete: PropTypes.func,
-    onListSave: PropTypes.func
+    onListSave: PropTypes.func,
+    onProjectSave: PropTypes.func
   }
 }
 
@@ -154,11 +160,6 @@ module.exports = {
     (dispatch) => ({
       onSelect(opts) {
         dispatch(act.nav.select({ list: null, trash: null, ...opts }))
-      },
-
-      onChange(name) {
-        dispatch(act.project.save({ name }))
-        dispatch(act.ui.edit.cancel())
       }
     })
   )(ProjectSidebar)
