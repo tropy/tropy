@@ -77,10 +77,6 @@ module.exports = {
     },
 
     (dispatch, props) => ({
-      onSelect(list) {
-        dispatch(nav.select({ list }))
-      },
-
       onRename(id) {
         dispatch(ui.edit.start({ list: { id } }))
       },

@@ -18,7 +18,7 @@ class ListNode extends Component {
     if (this.props.isSelected) {
       this.props.onRename(this.props.list.id)
     } else {
-      this.props.onSelect(this.props.list.id)
+      this.props.onSelect({ list: this.props.list.id })
     }
   }
 
