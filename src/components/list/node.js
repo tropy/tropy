@@ -23,7 +23,7 @@ class ListNode extends Component {
   }
 
   handleContextMenu = (event) => {
-    this.props.onContextMenu(event, this.props.list.id)
+    this.props.onContextMenu(event, 'list', this.props.list.id)
   }
 
   render() {

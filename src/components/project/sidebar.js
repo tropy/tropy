@@ -36,11 +36,40 @@ class ProjectSidebar extends Component {
     this.props.onContextMenu(event, 'tags')
   }
 
+  renderLists() {
+    const { isTrashSelected, onItemsDelete, ...props } = this.props
+
+    return (
+      <section onContextMenu={this.showListsMenu}>
+        <h2><FormattedMessage id="sidebar.lists"/></h2>
+        <nav>
+          <ListTree {...props} parent={ROOT}/>
+
+          <ol>
+            <TrashListNode {...props}
+              isSelected={isTrashSelected}
+              onDropItems={onItemsDelete}/>
+          </ol>
+        </nav>
+      </section>
+    )
+  }
+
+  renderTags() {
+    const { tags, onContextMenu } = this.props
+
+    return (
+      <section onContextMenu={this.showTagsMenu}>
+        <h2><FormattedMessage id="sidebar.tags"/></h2>
+        <nav>
+          <TagList tags={tags} onContextMenu={onContextMenu}/>
+        </nav>
+      </section>
+    )
+  }
+
   render() {
-    const {
-      project, tags, hasToolbar, isTrashSelected,
-      onItemsDelete, onContextMenu, ...props
-    } = this.props
+    const { project, hasToolbar, ...props } = this.props
 
     return (
       <Sidebar>
@@ -55,35 +84,11 @@ class ProjectSidebar extends Component {
             </nav>
           </section>
 
-          <section onContextMenu={this.showListsMenu}>
-            <h2><FormattedMessage id="sidebar.lists"/></h2>
-            <nav>
-              <ListTree {...props} parent={ROOT}/>
-            </nav>
-          </section>
-
-          <section>
-            <nav>
-              <ol>
-                <TrashListNode
-                  isSelected={isTrashSelected}
-                  onSelect={this.props.onSelect}
-                  onContextMenu={onContextMenu}
-                  onDropItems={onItemsDelete}/>
-              </ol>
-            </nav>
-          </section>
-
-          <section onContextMenu={this.showTagsMenu}>
-            <h2><FormattedMessage id="sidebar.tags"/></h2>
-            <nav>
-              <TagList tags={tags} onContextMenu={onContextMenu}/>
-            </nav>
-          </section>
+          {this.renderLists()}
+          {this.renderTags()}
         </div>
 
         <ActivityPane/>
-
       </Sidebar>
     )
   }

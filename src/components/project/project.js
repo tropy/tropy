@@ -19,7 +19,6 @@ const values = require('object.values')
 const actions = require('../../actions')
 
 
-
 class Project extends Component {
   constructor(props) {
     super(props)

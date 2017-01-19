@@ -6,18 +6,17 @@ const {
 
 const list = ({ lists }, { list }) => lists[list]
 
-const getChildren = () =>
+const makeGetChildNodes = () =>
   memo(
     ({ lists }) => lists,
     (_, { parent }) => parent,
 
     (lists, parent) =>
-      lists[parent] ?
-        lists[parent].children.map(id => lists[id]) : []
+      lists[parent] ? lists[parent].children.map(id => lists[id]) : []
   )
 
 
 module.exports = {
   list,
-  getChildren
+  makeGetChildNodes
 }

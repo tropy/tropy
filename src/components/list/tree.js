@@ -4,7 +4,7 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { ListNode } = require('./node')
 const { connect } = require('react-redux')
-const { getChildren } = require('../../selectors/list')
+const { makeGetChildNodes } = require('../../selectors/list')
 const { create, save } = require('../../actions/list')
 const ui = require('../../actions/ui')
 const nav = require('../../actions/nav')
@@ -66,13 +66,13 @@ module.exports = {
   ListTree: connect(
 
     () => {
-      const children = getChildren()
+      const getChildNodes = makeGetChildNodes()
 
       return (state, props) => ({
         selected: state.nav.list,
         context: state.ui.context.list,
         editing: state.ui.edit.list,
-        lists: children(state, props)
+        lists: getChildNodes(state, props)
       })
     },
 
@@ -90,11 +90,6 @@ module.exports = {
         dispatch(id ?
           save({ id, ...values }) :
           create({ ...values, parent: props.parent }))
-      },
-
-      onContextMenu(event, target) {
-        event.stopPropagation()
-        dispatch(ui.context.show(event, 'list', target))
       }
     })
 
