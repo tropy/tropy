@@ -109,4 +109,34 @@ describe('util', () => {
       expect(omit(obj, ['bar'])).to.eql(obj).and.not.equal(obj)
     })
   })
+
+  describe('.move', () => {
+    const { move } = util
+
+    describe('with offset 0', () => {
+      it('moves a in front of b', () => {
+        expect(move([1, 2, 3], 3, 2, 0)).to.eql([1, 3, 2])
+        expect(move([1, 2, 3], 3, 1, 0)).to.eql([3, 1, 2])
+
+        expect(move([1, 2, 3], 2, 1, 0)).to.eql([2, 1, 3])
+        expect(move([1, 2, 3], 2, 3, 0)).to.eql([1, 2, 3])
+
+        expect(move([1, 2, 3], 1, 3, 0)).to.eql([2, 1, 3])
+        expect(move([1, 2, 3], 1, 2, 0)).to.eql([1, 2, 3])
+      })
+    })
+
+    describe('with offset 1', () => {
+      it('moves a behind b', () => {
+        expect(move([1, 2, 3], 3, 2, 1)).to.eql([1, 2, 3])
+        expect(move([1, 2, 3], 3, 1, 1)).to.eql([1, 3, 2])
+
+        expect(move([1, 2, 3], 2, 1, 1)).to.eql([1, 2, 3])
+        expect(move([1, 2, 3], 2, 3, 1)).to.eql([1, 3, 2])
+
+        expect(move([1, 2, 3], 1, 3, 1)).to.eql([2, 3, 1])
+        expect(move([1, 2, 3], 1, 2, 1)).to.eql([2, 1, 3])
+      })
+    })
+  })
 })

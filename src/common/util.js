@@ -49,6 +49,32 @@ module.exports = {
     return [...array].sort(...args)
   },
 
+  move(array, a, b, offset = 0) {
+    const res = []
+
+    for (let i = 0, adj = 0; i < array.length; ++i) {
+      let cur = array[i]
+
+      if (cur === a) {
+        --adj
+
+        continue
+      }
+
+      if (cur === b) {
+        res[i + adj + offset] = a
+        ++adj
+        res[i + adj - offset] = b
+
+        continue
+      }
+
+      res[i + adj] = cur
+    }
+
+    return res
+  },
+
   flatten(obj) {
     const res = {}
 
