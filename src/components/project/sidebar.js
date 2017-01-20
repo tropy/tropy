@@ -141,6 +141,7 @@ class ProjectSidebar extends Component {
     onEditCancel: PropTypes.func,
     onContextMenu: PropTypes.func,
     onItemsDelete: PropTypes.func,
+    onListItemsAdd: PropTypes.func,
     onListSave: PropTypes.func,
     onProjectSave: PropTypes.func
   }

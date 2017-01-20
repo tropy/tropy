@@ -133,7 +133,9 @@ class Project extends Component {
     onItemOpen: PropTypes.func,
     onItemsDelete: PropTypes.func,
     onModeChange: PropTypes.func,
-    onProjectSave: PropTypes.func
+    onProjectSave: PropTypes.func,
+    onListItemsAdd: PropTypes.func,
+    onListSave: PropTypes.func
   }
 
   static defaultProps = {
@@ -187,6 +189,10 @@ module.exports = {
       onListSave(...args) {
         dispatch(actions.ui.edit.cancel())
         dispatch(actions.list.save(...args))
+      },
+
+      onListItemsAdd(...args) {
+        dispatch(actions.list.items.add(...args))
       },
 
       onEdit(...args) {

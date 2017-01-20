@@ -16,5 +16,10 @@ module.exports = {
 
   LOAD: 'list.load',
 
-  ORDER: 'list.order'
+  ORDER: 'list.order',
+
+  ITEM: {
+    ADD: 'list.item.add',
+    REMOVE: 'list.item.remove'
+  }
 }

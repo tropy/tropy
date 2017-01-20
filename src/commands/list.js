@@ -5,7 +5,7 @@ const { Command } = require('./command')
 const { splice } = require('../common/util')
 
 const {
-  CREATE, DELETE, LOAD, RESTORE, SAVE
+  CREATE, DELETE, LOAD, RESTORE, SAVE, ITEM
 } = require('../constants/list')
 
 const actions = require('../actions/list')
@@ -121,11 +121,27 @@ class Restore extends Command {
   }
 }
 
+class AddItems extends Command {
+  static get action() { return ITEM.ADD }
+
+  *exec() {
+  }
+}
+
+class RemoveItems extends Command {
+  static get action() { return ITEM.REMOVE }
+
+  *exec() {
+  }
+}
+
 
 module.exports = {
   Create,
   Delete,
   Load,
   Restore,
-  Save
+  Save,
+  AddItems,
+  RemoveItems
 }

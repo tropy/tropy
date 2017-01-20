@@ -69,7 +69,7 @@ class ListTree extends Component {
   }
 
   render() {
-    const { lists, onListSave, ...props } = this.props
+    const { lists, onListSave, onListItemsAdd, ...props } = this.props
 
     return (
       <ol className="list-tree sortable" ref={this.setContainer}>
@@ -82,6 +82,7 @@ class ListTree extends Component {
               isEditing={this.isEditing(id)}
               isContext={this.isContext(id)}
               isSortable
+              onDropItems={onListItemsAdd}
               onSave={onListSave}
               onMove={this.handleMove}
               onMoveReset={this.handleMoveReset}
@@ -104,6 +105,7 @@ class ListTree extends Component {
 
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
+    onListItemsAdd: PropTypes.func,
     onListSave: PropTypes.func,
     onSort: PropTypes.func,
     onSelect: PropTypes.func,
