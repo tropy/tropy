@@ -1,6 +1,7 @@
 'use strict'
 
 const { LIST, UI } = require('../constants')
+const { array } = require('../common/util')
 
 module.exports = {
 
@@ -59,19 +60,19 @@ module.exports = {
   },
 
   items: {
-    add(payload, meta) {
+    add({ id, items }, meta) {
       return {
         type: LIST.ITEM.ADD,
-        payload,
-        meta: { async: true, record: true, load: true, ...meta }
+        payload: { id, items: array(items) },
+        meta: { async: true, record: true, search: true, ...meta }
       }
     },
 
-    remove(payload, meta) {
+    remove({ id, items }, meta) {
       return {
         type: LIST.ITEM.REMOVE,
-        payload,
-        meta: { async: true, record: true, load: true, ...meta }
+        payload: { id, items: array(items) },
+        meta: { async: true, record: true, search: true, ...meta }
       }
     }
   }

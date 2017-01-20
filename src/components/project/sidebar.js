@@ -153,7 +153,6 @@ module.exports = {
   ProjectSidebar: connect(
     (state) => ({
       project: state.project,
-      nav: state.nav,
       lists: state.lists,
       tags: getAllVisibleTags(state)
     }),

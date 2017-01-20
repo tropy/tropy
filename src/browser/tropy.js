@@ -244,6 +244,11 @@ class Tropy extends EventEmitter {
         this.dispatch(act.item.tags.toggle({ id, tags: [tag] })))
       .on('app:clear-item-tags', (_, { id }) =>
         this.dispatch(act.item.tags.clear(id)))
+      .on('app:list-item-remove', (_, { target }) =>
+        this.dispatch(act.list.items.remove({
+          id: target.list,
+          items: target.id
+        })))
       .on('app:rename-photo', (_, { target }) =>
         this.dispatch(act.ui.edit.start({ photo: target.id })))
       .on('app:delete-photo', (_, { target }) =>
