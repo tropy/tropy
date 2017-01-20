@@ -123,12 +123,12 @@ CREATE TABLE lists (
 INSERT INTO lists (list_id, name, parent_list_id) VALUES (0, 'ROOT', NULL);
 
 CREATE TABLE list_items (
-  id       INTEGER REFERENCES items ON DELETE CASCADE,
-  list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
-  position INTEGER NOT NULL DEFAULT 0,
+  id       INTEGER  REFERENCES items ON DELETE CASCADE,
+  list_id  INTEGER  REFERENCES lists ON DELETE CASCADE,
+  position INTEGER,
+  created  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  PRIMARY KEY (id, list_id),
-  UNIQUE (id, list_id, position)
+  PRIMARY KEY (id, list_id)
 ) WITHOUT ROWID;
 
 

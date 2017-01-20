@@ -113,14 +113,14 @@ CREATE TABLE lists (
 
   UNIQUE (parent_list_id, name)
 );
-INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2016-11-24 11:44:48','2016-11-24 11:44:48');
+INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2017-01-20 13:20:03','2017-01-20 13:20:03');
 CREATE TABLE list_items (
-  id       INTEGER REFERENCES items ON DELETE CASCADE,
-  list_id  INTEGER REFERENCES lists ON DELETE CASCADE,
-  position INTEGER NOT NULL DEFAULT 0,
+  id       INTEGER  REFERENCES items ON DELETE CASCADE,
+  list_id  INTEGER  REFERENCES lists ON DELETE CASCADE,
+  position INTEGER,
+  created  NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  PRIMARY KEY (id, list_id),
-  UNIQUE (id, list_id, position)
+  PRIMARY KEY (id, list_id)
 ) WITHOUT ROWID;
 CREATE TABLE tags (
   tag_id      INTEGER  PRIMARY KEY,
@@ -189,25 +189,25 @@ INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','ft_met
   names,
   other
 )');
-CREATE TABLE 'ft_metadata_data'(id INTEGER PRIMARY KEY, block BLOB);
+CREATE TABLE IF NOT EXISTS 'ft_metadata_data'(id INTEGER PRIMARY KEY, block BLOB);
 INSERT INTO "ft_metadata_data" VALUES(1,X'');
 INSERT INTO "ft_metadata_data" VALUES(10,X'00000000000000');
-CREATE TABLE 'ft_metadata_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
-CREATE TABLE 'ft_metadata_content'(id INTEGER PRIMARY KEY, c0, c1, c2, c3);
-CREATE TABLE 'ft_metadata_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
-CREATE TABLE 'ft_metadata_config'(k PRIMARY KEY, v) WITHOUT ROWID;
+CREATE TABLE IF NOT EXISTS 'ft_metadata_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
+CREATE TABLE IF NOT EXISTS 'ft_metadata_content'(id INTEGER PRIMARY KEY, c0, c1, c2, c3);
+CREATE TABLE IF NOT EXISTS 'ft_metadata_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
+CREATE TABLE IF NOT EXISTS 'ft_metadata_config'(k PRIMARY KEY, v) WITHOUT ROWID;
 INSERT INTO "ft_metadata_config" VALUES('version',4);
 INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','ft_notes','ft_notes',0,'CREATE VIRTUAL TABLE ft_notes USING fts5(
   id UNINDEXED,
   text,
   content=''notes''
 )');
-CREATE TABLE 'ft_notes_data'(id INTEGER PRIMARY KEY, block BLOB);
+CREATE TABLE IF NOT EXISTS 'ft_notes_data'(id INTEGER PRIMARY KEY, block BLOB);
 INSERT INTO "ft_notes_data" VALUES(1,X'');
 INSERT INTO "ft_notes_data" VALUES(10,X'00000000000000');
-CREATE TABLE 'ft_notes_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
-CREATE TABLE 'ft_notes_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
-CREATE TABLE 'ft_notes_config'(k PRIMARY KEY, v) WITHOUT ROWID;
+CREATE TABLE IF NOT EXISTS 'ft_notes_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
+CREATE TABLE IF NOT EXISTS 'ft_notes_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
+CREATE TABLE IF NOT EXISTS 'ft_notes_config'(k PRIMARY KEY, v) WITHOUT ROWID;
 INSERT INTO "ft_notes_config" VALUES('version',4);
 CREATE INDEX metadata_values_index ON metadata_values (value ASC);
 CREATE TRIGGER insert_tags_trim_name
