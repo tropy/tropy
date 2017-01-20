@@ -23,22 +23,40 @@ const dsCollect = (connect, monitor) => ({
   isDragging: monitor.isDragging()
 })
 
+
 const dtSpec = {
   hover({ list, onMove }, monitor, { container }) {
+    const type = monitor.getItemType()
     const item = monitor.getItem()
 
-    if (item.id === list.id) return
+    switch (type) {
+      case DND.LIST:
+        if (item.id === list.id) break
 
-    const { top, height } = bounds(container)
-    const offset = Math.round((monitor.getClientOffset().y - top) / height)
+        var { top, height } = bounds(container)
+        var offset = Math.round((monitor.getClientOffset().y - top) / height)
 
-    onMove(item.id, list.id, offset)
+        onMove(item.id, list.id, offset)
+        break
+    }
+  },
+
+  drop({ list, onDropItems }, monitor) {
+    const type = monitor.getItemType()
+    const item = monitor.getItem()
+
+    switch (type) {
+      case DND.ITEMS:
+        onDropItems({ list: list.id, items: item.items })
+        break
+    }
   }
 }
 
 const dtCollect = (connect, monitor) => ({
   dt: connect.dropTarget(),
-  isOver: monitor.isOver()
+  isOver: monitor.isOver(),
+  dtType: monitor.getItemType()
 })
 
 
@@ -49,6 +67,6 @@ module.exports = {
 
   Sortable(Component) {
     return DragSource(DND.LIST, dsSpec, dsCollect)(
-      DropTarget(DND.LIST, dtSpec, dtCollect)(Component))
+      DropTarget([DND.LIST, DND.ITEMS], dtSpec, dtCollect)(Component))
   }
 }

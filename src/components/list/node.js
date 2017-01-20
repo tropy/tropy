@@ -6,6 +6,7 @@ const { Editable } = require('../editable')
 const { IconFolder } = require('../icons')
 const { Sortable, connect } = require('./sortable')
 const { noop } = require('../../common/util')
+const { DND } = require('../../constants')
 const cn = require('classnames')
 
 
@@ -16,7 +17,8 @@ class ListNode extends Component {
       list: true,
       active: this.props.isSelected,
       context: this.props.isContext,
-      dragging: this.props.isDragging
+      dragging: this.props.isDragging,
+      over: this.props.isOver && this.props.dtType === DND.ITEMS
     }
   }
 
@@ -81,12 +83,14 @@ class ListNode extends Component {
     isDragging: PropTypes.bool,
     isOver: PropTypes.bool,
 
-    ds: PropTypes.func,
+    ds: PropTypes.func.isRequired,
     dt: PropTypes.func.isRequired,
+    dtType: PropTypes.string,
 
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
     onContextMenu: PropTypes.func,
+    onDropItems: PropTypes.func,
     onSelect: PropTypes.func,
     onSave: PropTypes.func,
     onMove: PropTypes.func,
