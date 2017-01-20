@@ -52,6 +52,12 @@ linux:
   item-bulk: &item-bulk
     - label: 'Delete Selected Items'
       command: 'app:delete-item'
+  item-list: &item-list
+    - label: 'Remove Item From List'
+      command: 'app:list-item-remove'
+  item-bulk-list: &item-bulk-list
+    - label: 'Remove Selected Items From List'
+      command: 'app:list-item-remove'
   photo: &photo
     - label: 'Rename Photo'
       command: 'app:rename-photo'
@@ -92,8 +98,10 @@ darwin:
   items: *items
   item: *item
   item-bulk: *item-bulk
-  item-bulk-deleted: *item-bulk-deleted
+  item-list: *item-list
+  item-bulk-list: *item-bulk-list
   item-deleted: *item-deleted
+  item-bulk-deleted: *item-bulk-deleted
   trash: *trash
   photo: *photo
   dev: *dev
@@ -109,8 +117,10 @@ win32:
   items: *items
   item: *item
   item-bulk: *item-bulk
-  item-bulk-deleted: *item-bulk-deleted
+  item-list: *item-list
+  item-bulk-list: *item-bulk-list
   item-deleted: *item-deleted
+  item-bulk-deleted: *item-bulk-deleted
   trash: *trash
   photo: *photo
   dev: *dev

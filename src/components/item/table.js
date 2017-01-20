@@ -28,7 +28,7 @@ class ItemTable extends Component {
   }
 
   handleContextMenu = (item, event) => {
-    const { selection, onContextMenu } = this.props
+    const { nav, selection, onContextMenu } = this.props
 
     const context = ['item']
     const target = { id: item.id, tags: item.tags }
@@ -38,6 +38,7 @@ class ItemTable extends Component {
       target.id = selection
     }
 
+    if (nav.list) context.push('list')
     if (item.deleted) context.push('deleted')
 
     onContextMenu(event, context.join('-'), target)
@@ -73,6 +74,7 @@ class ItemTable extends Component {
     selection: PropTypes.arrayOf(PropTypes.number),
     columns: PropTypes.arrayOf(PropTypes.object),
     items: PropTypes.arrayOf(PropTypes.object),
+    nav: PropTypes.object,
     cache: PropTypes.string,
     onSelect: PropTypes.func,
     onEditCancel: PropTypes.func,

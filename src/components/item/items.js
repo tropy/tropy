@@ -48,6 +48,7 @@ Items.propTypes = {
   selection: PropTypes.arrayOf(PropTypes.number),
   columns: PropTypes.arrayOf(PropTypes.object),
   zoom: PropTypes.number,
+  nav: PropTypes.object,
   maxZoom: PropTypes.number,
   onCreate: PropTypes.func,
   onOpen: PropTypes.func,

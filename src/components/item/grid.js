@@ -29,7 +29,7 @@ class ItemGrid extends Component {
   }
 
   handleContextMenu = (item, event) => {
-    const { selection, onContextMenu } = this.props
+    const { nav, selection, onContextMenu } = this.props
 
     const context = ['item']
     const target = { id: item.id, tags: item.tags }
@@ -39,6 +39,7 @@ class ItemGrid extends Component {
       target.id = selection
     }
 
+    if (nav.list) context.push('list')
     if (item.deleted) context.push('deleted')
 
     onContextMenu(event, context.join('-'), target)
@@ -79,6 +80,7 @@ class ItemGrid extends Component {
   static propTypes = {
     selection: PropTypes.arrayOf(PropTypes.number),
     cache: PropTypes.string.isRequired,
+    nav: PropTypes.object,
     columns: PropTypes.arrayOf(PropTypes.object),
     items: PropTypes.arrayOf(PropTypes.object),
     zoom: Shapes.number(1, ItemGrid.ZOOM.length - 1),
