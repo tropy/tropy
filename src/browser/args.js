@@ -41,6 +41,12 @@ module.exports = require('yargs')
     default: false
   })
 
+  .option('app', {
+    type: 'string',
+    normalize: true,
+    describe: 'Set Electron app directory'
+  })
+
   .help('help')
   .version(pkg.version)
 
