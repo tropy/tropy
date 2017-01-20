@@ -39,7 +39,11 @@ class ItemGrid extends Component {
       target.id = selection
     }
 
-    if (nav.list) context.push('list')
+    if (nav.list) {
+      context.push('list')
+      target.list = nav.list
+    }
+
     if (item.deleted) context.push('deleted')
 
     onContextMenu(event, context.join('-'), target)
