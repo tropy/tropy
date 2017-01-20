@@ -4,10 +4,8 @@ const React = require('react')
 const { PropTypes, Component } = React
 const { Editable } = require('../editable')
 const { IconFolder } = require('../icons')
+const { Sortable, connect } = require('./sortable')
 const { noop } = require('../../common/util')
-const { DragSource, DropTarget } = require('react-dnd')
-const { DND } = require('../../constants')
-const { bounds } = require('../../dom')
 const cn = require('classnames')
 
 
@@ -20,11 +18,6 @@ class ListNode extends Component {
       context: this.props.isContext,
       dragging: this.props.isDragging
     }
-  }
-
-  sortable(element) {
-    const { ds, dt, isSortable } = this.props
-    return isSortable ? ds(dt(element)) : element
   }
 
   handleChange = (name) => {
@@ -53,7 +46,7 @@ class ListNode extends Component {
   render() {
     const { list, isEditing, onEditCancel } = this.props
 
-    return this.sortable(
+    return connect(this.props,
       <li
         className={cn(this.classes)}
         ref={this.setContainer}
@@ -107,45 +100,6 @@ class ListNode extends Component {
   }
 }
 
-const dsSpec = {
-  beginDrag({ list }) {
-    return { id: list.id }
-  },
-
-  endDrag({ onMoveReset, onMoveCommit }, monitor) {
-    if (monitor.didDrop()) {
-      onMoveCommit()
-    } else {
-      onMoveReset()
-    }
-  }
-}
-
-const dsCollect = (connect, monitor) => ({
-  ds: connect.dragSource(),
-  isDragging: monitor.isDragging()
-})
-
-const dtSpec = {
-  hover({ list, onMove }, monitor, { container }) {
-    const item = monitor.getItem()
-
-    if (item.id === list.id) return
-
-    const { top, height } = bounds(container)
-    const offset = Math.round((monitor.getClientOffset().y - top) / height)
-
-    onMove(item.id, list.id, offset)
-  }
-}
-
-const dtCollect = (connect, monitor) => ({
-  dt: connect.dropTarget(),
-  isOver: monitor.isOver()
-})
-
 module.exports = {
-  ListNode:
-    DragSource(DND.LIST, dsSpec, dsCollect)(
-      DropTarget(DND.LIST, dtSpec, dtCollect)(ListNode))
+  ListNode: Sortable(ListNode)
 }
