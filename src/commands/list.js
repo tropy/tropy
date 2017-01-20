@@ -10,11 +10,7 @@ const {
 
 const actions = require('../actions/list')
 const get = require('../selectors/list')
-
-const {
-  all, create, remove, restore, save, order
-} = require('../models/list')
-
+const mod = require('../models/list')
 
 
 class Load extends Command {
@@ -22,7 +18,7 @@ class Load extends Command {
 
   *exec() {
     const { db } = this.options
-    return (yield call(all, db))
+    return (yield call(mod.all, db))
   }
 }
 
@@ -38,7 +34,7 @@ class Create extends Command {
     const idx =
       (yield select(get.list, { list: parent })).children.length
 
-    const list = yield call(create, db, { name, parent, position: idx + 1 })
+    const list = yield call(mod.create, db, { name, parent, position: idx + 1 })
 
     yield put(actions.insert(list, { idx }))
 
@@ -59,7 +55,7 @@ class Save extends Command {
     this.original = (yield select(get.list, { list: payload.id }))
 
     yield put(actions.update(payload))
-    yield call(save, db, payload)
+    yield call(mod.save, db, payload)
 
     this.undo = actions.save(this.original)
   }
@@ -87,8 +83,8 @@ class Delete extends Command {
     const cid = splice(parent.children, idx, 1)
 
     yield call([db, db.transaction], async tx => {
-      await remove(tx, id)
-      await order(tx, parent.id, cid)
+      await mod.remove(tx, id)
+      await mod.order(tx, parent.id, cid)
     })
 
     yield put(actions.remove(id))
@@ -111,8 +107,8 @@ class Restore extends Command {
     const cid = splice(children, idx, 0, list.id)
 
     yield call([db, db.transaction], async tx => {
-      await restore(tx, list.id, list.parent)
-      await order(tx, list.parent, cid)
+      await mod.restore(tx, list.id, list.parent)
+      await mod.order(tx, list.parent, cid)
     })
 
     yield put(actions.insert(list, { idx }))
@@ -125,6 +121,12 @@ class AddItems extends Command {
   static get action() { return ITEM.ADD }
 
   *exec() {
+    const { db } = this.options
+    const { id, items } = this.action.payload
+
+    yield call([db, db.transaction], tx => mod.items.add(tx, id, items))
+
+    this.undo = actions.items.remove({ id, items })
   }
 }
 
@@ -132,6 +134,12 @@ class RemoveItems extends Command {
   static get action() { return ITEM.REMOVE }
 
   *exec() {
+    const { db } = this.options
+    const { id, items } = this.action.payload
+
+    yield call(mod.items.remove, db, id, items)
+
+    this.undo = actions.items.add({ id, items })
   }
 }
 

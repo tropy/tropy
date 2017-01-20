@@ -71,6 +71,21 @@ module.exports = {
         WHERE parent_list_id = ?`,
         ...order, parent)
     }
-  }
+  },
 
+  items: {
+    async add(db, id, items) {
+      return db.run(`
+        INSERT INTO list_items (list_id, id) VALUES ${
+          items.map(item =>
+            `(${Number(id)}, ${Number(item)})`).join(',')
+          }`)
+    },
+
+    async remove(db, id, items) {
+      return db.run(`
+        DELETE FROM list_items
+          WHERE list_id = ? AND id IN (${items.map(Number).join(',')})`, id)
+    }
+  }
 }

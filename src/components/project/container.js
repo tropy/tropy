@@ -191,8 +191,10 @@ module.exports = {
         dispatch(actions.list.save(...args))
       },
 
-      onListItemsAdd(...args) {
-        dispatch(actions.list.items.add(...args))
+      onListItemsAdd({ list, items }) {
+        dispatch(actions.list.items.add({
+          id: list, items: items.map(item => item.id)
+        }))
       },
 
       onEdit(...args) {
