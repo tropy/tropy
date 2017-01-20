@@ -1,37 +1,57 @@
 'use strict'
 
 const metadata = require('./metadata')
+const { DC } = require('../constants/properties')
 
 const num = (list, separator = ',') =>
   list ? list.split(separator).map(Number) : []
 
 module.exports = {
 
-  async all(db, { trash, tags }) {
+  async all(db, { trash, tags, list }) {
     const items = []
 
-    const sort = 'title'
+    switch (true) {
+      case (list != null):
+        await db.each(`
+          SELECT id, added_at
+            FROM items
+              ${tags.length ? 'JOIN taggings USING (id)' : ''}
+              LEFT OUTER JOIN list_items USING (id)
+              LEFT OUTER JOIN trash USING (id)
+              WHERE
+                list_id = $list AND
+                ${tags.length ? `tag_id IN (${tags.join(',')}) AND` : ''}
+                deleted ${trash ? 'NOT' : 'IS'} NULL
+              ORDER BY added_at ASC, id ASC`, {
 
-    await db.each(`
-      WITH
-        sort(id, value) AS (
-          SELECT id, value
-          FROM metadata JOIN metadata_values USING (value_id)
-          WHERE property = $sort
-        )
-        SELECT id, sort.value
-          FROM items
-            ${tags.length ? 'JOIN taggings USING (id)' : ''}
-            LEFT OUTER JOIN sort USING (id)
-            LEFT OUTER JOIN trash USING (id)
-          WHERE
-            ${tags.length ? `tag_id IN (${tags.join(',')}) AND` : ''}
-            deleted ${trash ? 'NOT' : 'IS'} NULL
-          ORDER BY sort.value ASC, id ASC`, {
+                $list: list
 
-            $sort: sort
+              }, ({ id }) => { items.push(id) })
+        break
 
-          }, ({ id }) => { items.push(id) })
+      default:
+        await db.each(`
+          WITH
+            sort(id, value) AS (
+              SELECT id, value
+              FROM metadata JOIN metadata_values USING (value_id)
+              WHERE property = $sort
+            )
+            SELECT id, sort.value
+              FROM items
+                ${tags.length ? 'JOIN taggings USING (id)' : ''}
+                LEFT OUTER JOIN sort USING (id)
+                LEFT OUTER JOIN trash USING (id)
+              WHERE
+                ${tags.length ? `tag_id IN (${tags.join(',')}) AND` : ''}
+                deleted ${trash ? 'NOT' : 'IS'} NULL
+              ORDER BY sort.value ASC, id ASC`, {
+
+                $sort: DC.TITLE
+
+              }, ({ id }) => { items.push(id) })
+    }
 
     return items
   },
