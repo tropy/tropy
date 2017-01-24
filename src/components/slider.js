@@ -60,6 +60,10 @@ class Slider extends Component {
     this.stopDragging()
   }
 
+  handleDoubleClick(event) {
+    event.stopPropagation()
+  }
+
   set = (value) => {
     this.setState({ value })
 
@@ -162,6 +166,7 @@ class Slider extends Component {
     return (
       <div
         className={cn(this.classes)}
+        onDoubleClick={this.handleDoubleClick}
         onMouseDown={disabled ? noop : this.handleMouseDown}>
         {this.renderMinButton()}
         <div

@@ -219,7 +219,7 @@ class Item extends Component {
 
   renderToolbar() {
     return (
-      <Toolbar draggable={ARGS.frameless}>
+      <Toolbar {...this.props} draggable={ARGS.frameless}>
         <div className="toolbar-left">
           <ToolGroup>
             <IconButton
@@ -285,6 +285,7 @@ class Item extends Component {
     onOpen: PropTypes.func,
     onContextMenu: PropTypes.func,
     onEditCancel: PropTypes.func,
+    onMaximize: PropTypes.func,
     onModeChange: PropTypes.func,
     onTabSelect: PropTypes.func,
     onPhotoChange: PropTypes.func,

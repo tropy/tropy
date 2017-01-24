@@ -109,10 +109,17 @@ class ProjectSidebar extends Component {
     )
   }
 
+  renderToolbar() {
+    return this.props.hasToolbar ?
+      <Toolbar {...this.props} draggable/> :
+      null
+
+  }
+
   render() {
     return (
       <Sidebar>
-        {this.props.hasToolbar && <Toolbar draggable/>}
+        {this.renderToolbar()}
         <div className="sidebar-body" onContextMenu={this.showSidebarMenu}>
           {this.renderProject()}
           {this.renderLists()}
@@ -136,6 +143,7 @@ class ProjectSidebar extends Component {
     lists: PropTypes.object,
     tags: PropTypes.arrayOf(PropTypes.object),
 
+    onMaximize: PropTypes.func,
     onSelect: PropTypes.func,
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,

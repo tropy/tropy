@@ -17,7 +17,7 @@ const act = require('../../actions')
 const Items = ({ onCreate, zoom, maxZoom, onZoomChange, ...props }) => (
   <section id="items">
     <header>
-      <Toolbar draggable={ARGS.frameless}>
+      <Toolbar {...props} draggable={ARGS.frameless}>
         <div className="toolbar-left">
           <div className="tool-group">
             <Slider
@@ -50,6 +50,7 @@ Items.propTypes = {
   zoom: PropTypes.number,
   nav: PropTypes.object,
   maxZoom: PropTypes.number,
+  onMaximize: PropTypes.func,
   onCreate: PropTypes.func,
   onOpen: PropTypes.func,
   onSelect: PropTypes.func,

@@ -2,6 +2,7 @@
 
 const React = require('react')
 const { PropTypes } = React
+const { noop } = require('../common/util')
 const cn = require('classnames')
 
 const ToolGroup = ({ children }) => (
@@ -12,15 +13,18 @@ ToolGroup.propTypes = {
   children: PropTypes.node
 }
 
-const Toolbar = ({ children, draggable }) => (
-  <div className={cn({ toolbar: true,  draggable })}>
+const Toolbar = ({ children, draggable, onMaximize }) => (
+  <div
+    className={cn({ toolbar: true,  draggable })}
+    onDoubleClick={draggable ? onMaximize : noop}>
     {children}
   </div>
 )
 
 Toolbar.propTypes = {
   children: PropTypes.node,
-  draggable: PropTypes.bool
+  draggable: PropTypes.bool,
+  onMaximize: PropTypes.func
 }
 
 

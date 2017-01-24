@@ -4,6 +4,7 @@ const React = require('react')
 const { PropTypes, Component } = React
 const { connect } = require('react-redux')
 
+const Window = require('../../window')
 const { Resizable } = require('../resizable')
 const { Item, Items } = require('../item')
 const { ProjectSidebar } = require('./sidebar')
@@ -133,6 +134,7 @@ class Project extends Component {
     onDrop: PropTypes.func,
     onItemOpen: PropTypes.func,
     onItemsDelete: PropTypes.func,
+    onMaximize: PropTypes.func,
     onModeChange: PropTypes.func,
     onProjectSave: PropTypes.func,
     onListItemsAdd: PropTypes.func,
@@ -156,6 +158,10 @@ module.exports = {
     }),
 
     dispatch => ({
+      onMaximize() {
+        Window.maximize()
+      },
+
       onContextMenu(event, ...args) {
         event.stopPropagation()
         dispatch(actions.ui.context.show(event, ...args))

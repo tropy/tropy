@@ -127,17 +127,14 @@ const Window = {
               Window.current.close())
 
           if (Window.current.isMinimizable()) {
-            on(Window.controls.min, 'click', () =>
-                Window.current.minimize())
+            on(Window.controls.min, 'click', () => Window.minimize())
 
           } else {
             toggle(document.body, 'not-minimizable', true)
           }
 
           if (Window.current.isMaximizable()) {
-            on(Window.controls.max, 'click', () =>
-                Window.current.isMaximized() ?
-                  Window.current.unmaximize() : Window.current.maximize())
+            on(Window.controls.max, 'click', () => Window.maximize())
 
           } else {
             toggle(document.body, 'not-maximizable', true)
@@ -153,6 +150,15 @@ const Window = {
         }
       }
     }
+  },
+
+  maximize() {
+    Window.current.isMaximized() ?
+      Window.current.unmaximize() : Window.current.maximize()
+  },
+
+  minimize() {
+    Window.current.minimize()
   }
 }
 
