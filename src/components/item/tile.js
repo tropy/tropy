@@ -63,9 +63,9 @@ class ItemTile extends Component {
       <li
         className={cn(this.classes)}
         style={this.style}
-        onClick={onClick}
         onContextMenu={this.handleContextMenu}>
         <CoverImage {...props}
+          onClickInside={onClick}
           onClick={this.handleClick}
           onDoubleClick={this.handleDoubleClick}/>
       </li>

@@ -125,7 +125,7 @@ class Item extends Component {
             </h5>
             <Fields
               id={photo.id}
-              disabled={isDisabled}
+              isDisabled={isDisabled}
               template="photo"/>
           </section>}
         {item &&
@@ -135,7 +135,7 @@ class Item extends Component {
             </h5>
             <Fields
               id={item.id}
-              disabled={isDisabled}
+              isDisabled={isDisabled}
               template="core"/>
           </section>}
       </div>

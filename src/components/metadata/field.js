@@ -29,11 +29,11 @@ class Field extends Component {
       this.value.type : this.props.property.type || 'text'
   }
 
-  activate = () => {
+  handleClick = () => {
     this.props.onActivate(this.name)
   }
 
-  changed = (value) => {
+  handleChange = (value) => {
     this.props.onChange({
       [this.name]: { value, type: this.type }
     })
@@ -41,18 +41,18 @@ class Field extends Component {
 
   render() {
     const { isEditing, isDisabled, onCancel } = this.props
-    const { value, type, label, activate, changed } = this
+    const { value, type, label, handleClick, handleChange } = this
 
     return (
       <li className={cn({ 'metadata-field': true, [type]: true })}>
         <label>{label}</label>
-        <div className="value" onClick={activate}>
+        <div className="value" onClick={handleClick}>
           <Editable
             value={value ? value.value : null}
             isDisabled={isDisabled}
             isEditing={isEditing}
             onCancel={onCancel}
-            onChange={changed}/>
+            onChange={handleChange}/>
         </div>
       </li>
     )

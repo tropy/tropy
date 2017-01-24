@@ -40,13 +40,15 @@ class CoverImage extends Component {
   })
 
   render() {
-    const { cardinality } = this
+    const { onClickInside } = this.props
+    const { style, cardinality, handleClick } = this
 
     return (
       <figure
         className={cn({ 'cover-image': true, 'stack': cardinality > 1 })}
-        style={this.style}
-        onMouseDown={this.handleClick}>
+        style={style}
+        onClick={onClickInside}
+        onMouseDown={handleClick}>
         {cardinality === 0
           ? <IconItem/>
           : <img srcSet={`${encodeURI(this.src)} 2x`}/>
@@ -65,12 +67,14 @@ class CoverImage extends Component {
     size: PropTypes.number.isRequired,
     cache: PropTypes.string.isRequired,
 
+    onClickInside: PropTypes.func,
     onClick: PropTypes.func,
     onDoubleClick: PropTypes.func
   }
 
   static defaultProps = {
     onClick: noop,
+    onClickInside: noop,
     onDoubleClick: noop
   }
 }
