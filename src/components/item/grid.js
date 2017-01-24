@@ -49,13 +49,24 @@ class ItemGrid extends Component {
     onContextMenu(event, context.join('-'), target)
   }
 
+  handleClickOutside = () => {
+    this.props.onSelect()
+  }
+
+  handleClickInside = (event) => {
+    event.stopPropagation()
+  }
+
+
   render() {
     const { items, ...props } = this.props
     const tile = this.placeholder
 
     return (
       <div className="item-grid-view">
-        <ul className="item-grid">
+        <ul
+          className="item-grid"
+          onClick={this.handleClickOutside}>
           {items.map((item) =>
             <ItemTile {...props}
               key={item.id}
@@ -63,6 +74,7 @@ class ItemGrid extends Component {
               size={this.size}
               isSelected={this.isSelected(item)}
               onSelect={this.handleSelect}
+              onClick={this.handleClickInside}
               onContextMenu={this.handleContextMenu}/>
           )}
 

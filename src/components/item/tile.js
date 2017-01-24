@@ -23,6 +23,8 @@ class ItemTile extends Component {
     const { item, isSelected, onSelect } = this.props
     const mod = meta(event)
 
+    event.stopPropagation()
+
     if (mod) {
       onSelect(item.id, isSelected ? 'remove' : 'merge')
 
@@ -55,12 +57,13 @@ class ItemTile extends Component {
   }
 
   render() {
-    const { ds, ...props } = this.props
+    const { ds, onClick, ...props } = this.props
 
     return ds(
       <li
         className={cn(this.classes)}
         style={this.style}
+        onClick={onClick}
         onContextMenu={this.handleContextMenu}>
         <CoverImage {...props}
           onClick={this.handleClick}
@@ -83,6 +86,7 @@ class ItemTile extends Component {
     ds: PropTypes.func.isRequired,
     dp: PropTypes.func.isRequired,
 
+    onClick: PropTypes.func,
     onOpen: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired,
     onContextMenu: PropTypes.func.isRequired

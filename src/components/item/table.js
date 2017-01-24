@@ -48,6 +48,14 @@ class ItemTable extends Component {
     onContextMenu(event, context.join('-'), target)
   }
 
+  handleClickOutside = () => {
+    this.props.onSelect()
+  }
+
+  handleClickInside = (event) => {
+    event.stopPropagation()
+  }
+
   render() {
     const { items, onEditCancel, ...props } = this.props
 
@@ -55,8 +63,12 @@ class ItemTable extends Component {
       <div className="item-table-view">
         <ItemTableHead columns={props.columns}/>
 
-        <div className="table-body">
-          <table className="item-table">
+        <div
+          className="table-body"
+          onClick={this.handleClickOutside}>
+          <table
+            className="item-table"
+            onClick={this.handleClickInside}>
             <tbody>
               {items.map(item =>
                 <ItemTableRow {...props}
