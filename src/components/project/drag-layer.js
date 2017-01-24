@@ -32,7 +32,7 @@ class ProjectDragLayer extends Component {
 
   render() {
     if (!this.props.isDragging) return null
-    if (this.props.type !== DND.ITEMS) return null
+    if (this.props.type && this.props.type !== DND.ITEMS) return null
 
     return (
       <div id="project-drag-layer" className="drag-layer">
@@ -60,7 +60,7 @@ class ProjectDragLayer extends Component {
 const collect = (monitor) => ({
   item: monitor.getItem(),
   type: monitor.getItemType(),
-  offset: monitor.getSourceClientOffset(),
+  offset: monitor.getClientOffset(),
   isDragging: monitor.isDragging()
 })
 

@@ -4,7 +4,8 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { CoverImage } = require('./cover-image')
 const cn = require('classnames')
-const size = 64
+
+const SIZE = 64
 
 class ItemDragPreview extends Component {
 
@@ -26,7 +27,7 @@ class ItemDragPreview extends Component {
   render() {
     return (
       <div className={cn(this.classes)}>
-        <CoverImage {...this.props} item={this.item} size={size}/>
+        <CoverImage {...this.props} item={this.item} size={SIZE}/>
         {this.count > 1 &&
           <div className="badge">{this.count}</div>
         }
