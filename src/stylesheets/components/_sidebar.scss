@@ -39,6 +39,8 @@
 
       &.active,
       &.context {
+        color: $sidebar-active-color;
+
         .icon {
           svg {
             fill: $sidebar-active-icon-color;
@@ -46,13 +48,12 @@
         }
       }
 
-      &.context {
-        background: $sidebar-context-bg;
+      &.active {
+        background: $sidebar-active-bg;
       }
 
-      &.active {
-        color: $sidebar-active-color;
-        background: $sidebar-active-bg;
+      &.context {
+        background: $sidebar-context-bg;
       }
 
       &.over {
