@@ -3,14 +3,10 @@
 const React = require('react')
 const { Component, PropTypes } = React
 const { CoverImage } = require('./cover-image')
-const { ItemGrid } = require('./grid')
 const cn = require('classnames')
+const size = 64
 
 class ItemDragPreview extends Component {
-
-  get size() {
-    return ItemGrid.ZOOM[this.props.zoom]
-  }
 
   get classes() {
     return {
@@ -30,9 +26,9 @@ class ItemDragPreview extends Component {
   render() {
     return (
       <div className={cn(this.classes)}>
-        <CoverImage {...this.props} item={this.item} size={this.size}/>
+        <CoverImage {...this.props} item={this.item} size={size}/>
         {this.count > 1 &&
-          <div className="count">{this.count}</div>
+          <div className="badge">{this.count}</div>
         }
       </div>
     )

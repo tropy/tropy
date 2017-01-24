@@ -8,6 +8,7 @@
 
 $blue:       #5c93e5;
 $blue-light: #dbe7fa;
+$red:        #e62e2e;
 
 $brand-primary: $blue;
 
@@ -52,6 +53,10 @@ $input-bg:    $shade-0;
 $input-border: $shade-2;
 $input-border-focus: $brand-primary;
 $input-color-placeholder: $shade-4;
+
+// Badge
+$badge-color: $shade-0;
+$badge-bg:    $red;
 
 
 // Components
@@ -152,3 +157,7 @@ $drop-zone-bg:     rgba($brand-primary, 0.2);
 // Image
 $image-bg: $shade-2;
 $toolbar-hover-bg: rgba($shade-9, 0.6);
+
+// Item drag preview
+$item-drag-preview-opacity:       0.8;
+$item-drag-preview-badge-opacity: 0.8;

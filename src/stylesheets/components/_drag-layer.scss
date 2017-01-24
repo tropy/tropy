@@ -13,5 +13,10 @@
 }
 
 .item-drag-preview {
-  opacity: 0.6;
+  opacity: $item-drag-preview-opacity;
+  position: absolute; // Collapse width
+
+  .cover-image {
+    opacity: $item-drag-preview-badge-opacity;
+  }
 }
