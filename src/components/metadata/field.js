@@ -88,7 +88,7 @@ const StaticField = ({ type, label, value }) => (
 StaticField.propTypes = {
   label: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
-  value: PropTypes.onOf([
+  value: PropTypes.oneOf([
     PropTypes.string,
     PropTypes.number
   ]).isRequired
