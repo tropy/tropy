@@ -54,10 +54,10 @@ Items.propTypes = {
   onCreate: PropTypes.func,
   onOpen: PropTypes.func,
   onSelect: PropTypes.func,
+  onEdit: PropTypes.func,
   onEditCancel: PropTypes.func,
-  onColumnChange: PropTypes.func,
-  onColumnEdit: PropTypes.func,
   onContextMenu: PropTypes.func,
+  onMetadataSave: PropTypes.func,
   onZoomChange: PropTypes.func,
 }
 
@@ -86,19 +86,6 @@ module.exports = {
 
       onZoomChange(itemsZoom) {
         dispatch(act.nav.update({ itemsZoom }))
-      },
-
-      onColumnChange({ id, data }) {
-        dispatch(act.metadata.save({ id, data }))
-        dispatch(act.ui.edit.cancel())
-      },
-
-      onColumnEdit({ id, property }) {
-        dispatch(act.ui.edit.start({
-          column: {
-            [id]: property
-          }
-        }))
       }
     })
   )(Items)

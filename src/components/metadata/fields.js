@@ -34,7 +34,7 @@ Fields.propTypes = {
   id: PropTypes.number.isRequired,
   data: PropTypes.object,
   onActivate: PropTypes.func,
-  onCancel: PropTypes.func,
+  onEditCancel: PropTypes.func,
   onChange: PropTypes.func,
   onContextMenu: PropTypes.func
 }
@@ -53,17 +53,9 @@ module.exports = {
         dispatch(ui.edit.start({ field: { [id]: property } }))
       },
 
-      onCancel() {
-        dispatch(ui.edit.cancel())
-      },
-
       onChange(data) {
         dispatch(metadata.save({ id, data }))
         dispatch(ui.edit.cancel())
-      },
-
-      onContextMenu(property) {
-        dispatch(ui.context.show(event, 'metadata', { id, property }))
       }
     })
   )(Fields)

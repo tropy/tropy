@@ -37,7 +37,7 @@ class Field extends Component {
   }
 
   render() {
-    const { isEditing, isDisabled, onCancel } = this.props
+    const { isEditing, isDisabled, onEditCancel } = this.props
     const { value, type, label, handleClick, handleChange } = this
 
     return (
@@ -48,7 +48,7 @@ class Field extends Component {
             value={value ? value.value : null}
             isDisabled={isDisabled}
             isEditing={isEditing}
-            onCancel={onCancel}
+            onCancel={onEditCancel}
             onChange={handleChange}/>
         </div>
       </li>
@@ -68,8 +68,9 @@ class Field extends Component {
     data: PropTypes.object.isRequired,
 
     onActivate: PropTypes.func,
-    onCancel: PropTypes.func,
-    onChange: PropTypes.func
+    onEditCancel: PropTypes.func,
+    onChange: PropTypes.func,
+    onContextMenu: PropTypes.func
   }
 
   static defaultProps = {

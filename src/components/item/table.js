@@ -13,6 +13,12 @@ class ItemTable extends Component {
     return this.props.selection.includes(item.id)
   }
 
+  handleColumnEdit = ({ id, property }) => {
+    this.props.onEdit({
+      column: { [id]: property }
+    })
+  }
+
   handleSelect = (item, event) => {
     const { selection, onSelect } = this.props
     const isSelected = this.isSelected(item)
@@ -77,6 +83,7 @@ class ItemTable extends Component {
                   isSelected={this.isSelected(item)}
                   onSelect={this.handleSelect}
                   onCancel={onEditCancel}
+                  onColumnEdit={this.handleColumnEdit}
                   onContextMenu={this.handleContextMenu}/>
               )}
             </tbody>
@@ -93,9 +100,9 @@ class ItemTable extends Component {
     nav: PropTypes.object,
     cache: PropTypes.string,
     onSelect: PropTypes.func,
+    onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
-    onColumnChange: PropTypes.func,
-    onColumnEdit: PropTypes.func,
+    onMetadataSave: PropTypes.func,
     onContextMenu: PropTypes.func
   }
 }

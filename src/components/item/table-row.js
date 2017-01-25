@@ -64,7 +64,7 @@ class ItemTableRow extends Component {
 
   render() {
     const {
-      ds, columns, isDragging, isSelected, onColumnChange, ...props
+      ds, columns, isDragging, isSelected, ...props
     } = this.props
 
     const { isDisabled } = this
@@ -88,7 +88,6 @@ class ItemTableRow extends Component {
               hasCoverImage={property.uri === DC.TITLE}
               property={property}
               width={width}
-              onChange={onColumnChange}
               onClick={this.handleClick}
               onSingleClick={this.handleSingleClick}
               onDoubleClick={this.handleDoubleClick}/>
@@ -119,9 +118,9 @@ class ItemTableRow extends Component {
 
     onSelect: PropTypes.func.isRequired,
     onContextMenu: PropTypes.func,
-    onColumnChange: PropTypes.func,
     onColumnEdit: PropTypes.func,
     onCancel: PropTypes.func,
+    onMetadataSave: PropTypes.func,
     onOpen: PropTypes.func
   }
 }

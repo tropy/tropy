@@ -135,6 +135,7 @@ class Project extends Component {
     onItemOpen: PropTypes.func,
     onItemsDelete: PropTypes.func,
     onMaximize: PropTypes.func,
+    onMetadataSave: PropTypes.func,
     onModeChange: PropTypes.func,
     onProjectSave: PropTypes.func,
     onListItemsAdd: PropTypes.func,
@@ -182,8 +183,8 @@ module.exports = {
       },
 
       onProjectSave(...args) {
-        dispatch(actions.ui.edit.cancel())
         dispatch(actions.project.save(...args))
+        dispatch(actions.ui.edit.cancel())
       },
 
       onItemOpen(item) {
@@ -194,9 +195,14 @@ module.exports = {
         dispatch(actions.item.delete(items.map(item => item.id)))
       },
 
-      onListSave(...args) {
+      onMetadataSave(...args) {
+        dispatch(actions.metadata.save(...args))
         dispatch(actions.ui.edit.cancel())
+      },
+
+      onListSave(...args) {
         dispatch(actions.list.save(...args))
+        dispatch(actions.ui.edit.cancel())
       },
 
       onListItemsAdd({ list, items }) {

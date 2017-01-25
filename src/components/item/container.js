@@ -113,7 +113,7 @@ class Item extends Component {
   }
 
   renderMetadataPanel() {
-    const { photo } = this.props
+    const { photo, ...props } = this.props
     const { item, isDisabled } = this
 
     return (
@@ -123,7 +123,7 @@ class Item extends Component {
             <h5 className="metadata-heading">
               <FormattedMessage id="panel.metadata.photo"/>
             </h5>
-            <Fields
+            <Fields {...props}
               id={photo.id}
               isDisabled={isDisabled}
               template="photo"/>
@@ -133,7 +133,7 @@ class Item extends Component {
             <h5 className="metadata-heading">
               <FormattedMessage id="panel.metadata.item"/>
             </h5>
-            <Fields
+            <Fields {...props}
               id={item.id}
               isDisabled={isDisabled}
               template="core"/>

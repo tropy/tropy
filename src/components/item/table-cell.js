@@ -11,7 +11,7 @@ const cn = require('classnames')
 class ItemTableCell extends Component {
 
   handleChange = (value) => {
-    this.props.onChange({
+    this.props.onMetadataSave({
       id: this.props.item.id,
       data: {
         [this.props.property.uri]: { value, type: this.type }
@@ -98,7 +98,7 @@ class ItemTableCell extends Component {
     onSingleClick: PropTypes.func,
     onDoubleClick: PropTypes.func,
     onCancel: PropTypes.func,
-    onChange: PropTypes.func
+    onMetadataSave: PropTypes.func
   }
 }
 
