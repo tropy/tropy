@@ -31,8 +31,12 @@ module.exports = require('yargs')
   .option('scale', {
     alias: 'force-device-scale-factor',
     type: 'number',
-    normalize: true,
-    describe: 'Set a device scale factor for HiDPI screens'
+    describe: 'Set the device scale factor'
+  })
+
+  .option('zoom', {
+    type: 'number',
+    describe: 'Set the zoom factor'
   })
 
   .option('debug', {

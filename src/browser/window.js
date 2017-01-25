@@ -13,6 +13,7 @@ const DEFAULTS = {
   frame: true,
   useContentSize: true,
   webPreferences: {
+    zoomFactor: global.ARGS.zoom || 1,
     preload: resolve(__dirname, '..', 'bootstrap.js')
   }
 }
