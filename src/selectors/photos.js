@@ -1,15 +1,24 @@
 'use strict'
 
-const { createSelector: memo } = require('reselect')
+const {
+  createSelector: memo
+} = require('reselect')
+
+const collect = (photos, metadata, id) => ({
+  ...photos[id],
+  data: { ...metadata[id] }
+})
+
 
 const getPhotos = ({ photos }, { ids }) =>
   ids.map(id => photos[id] || { id })
 
+
 const getSelectedPhoto = memo(
-  state => state.photos,
-  state => state.nav.photo,
-  (photos, id) => photos && id && photos[id]
-)
+  ({ photos }) => photos,
+  ({ metadata }) => metadata,
+  ({ nav }) => nav.photo,
+  collect)
 
 module.exports = {
   getSelectedPhoto,

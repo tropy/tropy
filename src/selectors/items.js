@@ -5,19 +5,23 @@ const {
 } = require('reselect')
 
 
+const collect = (items, metadata, ids) =>
+  ids.map(id => ({ id, ...items[id], data: metadata[id] || {} }))
+
+
 const getItem = ({ items }, { item }) => items[item]
 
-const getSelectedItems = ({ items, nav }) =>
-  nav.items.map(id => items[id])
+const getSelectedItems = memo(
+  ({ items }) => items,
+  ({ metadata }) => metadata,
+  ({ nav }) => nav.items,
+  collect)
 
 const getItems = memo(
   ({ items }) => items,
   ({ metadata }) => metadata,
   ({ ui }) => ui.items,
-
-  (items, metadata, ids) =>
-    ids.map(id => ({ id, ...items[id], data: metadata[id] || {} }))
-)
+  collect)
 
 
 module.exports = {
