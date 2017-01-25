@@ -15,14 +15,6 @@ const home = resolve(__dirname, '..')
 const icons = join(home, 'res', 'icons')
 
 
-target.link = () => {
-  ln('-sf', home, join(resources, 'app'))
-}
-
-target.unlink = () => {
-  rm('-f', join(resources, 'app'))
-}
-
 target.branding = (args = []) => {
   const tag = 'branding'
   const channel = args[0] || 'dev'

@@ -56,15 +56,11 @@ target.test = (...args) => {
 }
 
 target['test:renderer'] = (args = []) => {
-  target.unlink()
-
   return mocha(['--renderer', ...args].concat(
     glob.sync('test/**/*_test.js', { ignore: 'test/browser/*' }))).code
 }
 
 target['test:browser'] = (args = []) => {
-  target.unlink()
-
   return mocha([...args].concat(
     glob.sync('test/{browser,common}/**/*_test.js'))).code
 }
@@ -204,8 +200,6 @@ target.rules = () => {
 
 
 target.clean = () => {
-  target.unlink()
-
   rm('-rf', join(home, 'lib'))
   rm('-rf', join(home, 'dist'))
   rm('-rf', doc)
