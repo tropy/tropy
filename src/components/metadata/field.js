@@ -3,15 +3,12 @@
 const React = require('react')
 const { Component, PropTypes } = React
 const { Editable } = require('../editable')
+const { FormattedMessage } = require('react-intl')
 const { noop } = require('../../common/util')
 const cn = require('classnames')
 
 
 class Field extends Component {
-  constructor(props) {
-    super(props)
-  }
-
   get label() {
     return this.props.property.label
   }
@@ -80,6 +77,24 @@ class Field extends Component {
   }
 }
 
+
+const StaticField = ({ type, label, value }) => (
+  <li className={cn({ 'metadata-field': true, 'static': true, [type]: true })}>
+    <label><FormattedMessage id={label}/></label>
+    <div className="value static">{value}</div>
+  </li>
+)
+
+StaticField.propTypes = {
+  label: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
+  value: PropTypes.onOf([
+    PropTypes.string,
+    PropTypes.number
+  ]).isRequired
+}
+
 module.exports = {
-  Field
+  Field,
+  StaticField
 }
