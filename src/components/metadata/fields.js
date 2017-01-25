@@ -6,7 +6,7 @@ const { connect } = require('react-redux')
 const { Field } = require('./field')
 const { metadata, ui } = require('../../actions')
 const { getTemplate } = require('../../selectors/templates')
-const { get } = require('dot-prop')
+const { get } = require('../../common/util')
 
 
 const Fields = (props) => {

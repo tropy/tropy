@@ -3,8 +3,7 @@
 const React = require('react')
 const { Component, PropTypes } = React
 const { ListNode } = require('./node')
-const { get } = require('dot-prop')
-const { move } = require('../../common/util')
+const { get, move } = require('../../common/util')
 
 
 class ListTree extends Component {

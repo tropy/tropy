@@ -139,4 +139,40 @@ describe('util', () => {
       })
     })
   })
+
+  describe('.get', () => {
+    const { get } = util
+
+    it('returns the value', () => {
+      expect(get({}, '')).to.eql({})
+      expect(get(null, '')).to.be.undefined
+      expect(get(undefined, '')).to.be.undefined
+
+      expect(get({}, 'a')).to.be.undefined
+      expect(get({ a: 1 }, 'a')).to.eql(1)
+      expect(get({ a: { b: 1 } }, 'a')).to.eql({ b: 1 })
+      expect(get({ a: { b: 1 } }, 'a.b')).to.eql(1)
+      expect(get({ a: { b: 1 } }, 'a.c')).to.undefined
+      expect(get({ a: { b: null } }, 'a.b')).to.be.null
+    })
+  })
+
+  describe('.has', () => {
+    const { has } = util
+
+    it('tests for existence', () => {
+      expect(has({}, '')).to.be.true
+      expect(has(null, '')).to.be.false
+      expect(has(undefined, '')).to.be.false
+
+      expect(has({}, 'a')).to.be.false
+      expect(has({ a: 1 }, 'a')).to.be.true
+      expect(has({ a: { b: 1 } }, 'a')).to.be.true
+      expect(has({ a: { b: 1 } }, 'a.b')).to.be.true
+      expect(has({ a: { b: false } }, 'a.b')).to.be.true
+      expect(has({ a: { b: null } }, 'a.b')).to.be.true
+      expect(has({ a: { b: undefined } }, 'a.b')).to.be.true
+      expect(has({ a: { b: 1 } }, 'a.c')).to.be.false
+    })
+  })
 })

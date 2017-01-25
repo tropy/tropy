@@ -88,6 +88,45 @@ module.exports = {
     return reduce(obj)
   },
 
+  get(src, path, value) {
+    if (src == null) return value
+    if (!path) return src
+
+    let parts = path.split('.')
+    let obj = src
+    let i, ii
+
+    for (i = 0, ii = parts.length; i < ii; ++i) {
+      if (!obj.propertyIsEnumerable(parts[i])) {
+        return value
+      }
+
+      obj = obj[parts[i]]
+
+      if (obj == null) {
+        return (i !== ii - 1) ? value : obj
+      }
+    }
+
+    return obj
+  },
+
+  has(src, path) {
+    if (src == null) return false
+    if (!path) return true
+
+    let parts = path.split('.')
+    let obj = src
+    let i, ii
+
+    for (i = 0, ii = parts.length; i < ii; ++i) {
+      if (!(parts[i] in obj)) return false
+      obj = obj[parts[i]]
+    }
+
+    return true
+  },
+
   pick(src, props = [], into = {}) {
     return props.reduce((res, key) => {
       if (src.hasOwnProperty(key)) {

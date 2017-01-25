@@ -11,7 +11,7 @@ const { TagList } = require('../tag')
 const { Sidebar } = require('../sidebar')
 const { ProjectName } = require('./name')
 const { ROOT } = require('../../constants/list')
-const { has } = require('dot-prop')
+const { has } = require('../../common/util')
 const { getAllVisibleTags } = require('../../selectors/tag')
 const act = require('../../actions')
 
