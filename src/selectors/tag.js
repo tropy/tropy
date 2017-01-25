@@ -1,6 +1,6 @@
 'use strict'
 
-const values = require('object.values')
+const { values } = Object
 
 const {
   createSelector: memo

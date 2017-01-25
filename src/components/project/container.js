@@ -14,9 +14,9 @@ const { ProjectDragLayer } = require('./drag-layer')
 const { getCachePrefix } = require('../../selectors/project')
 const { MODE } = require('../../constants/project')
 const { once } = require('../../dom')
+const { values } = Object
 
 const cn = require('classnames')
-const values = require('object.values')
 const actions = require('../../actions')
 
 

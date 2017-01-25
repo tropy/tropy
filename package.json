@@ -90,8 +90,6 @@
     "lodash.debounce": "^4.0.7",
     "ms": "^0.7.1",
     "node-uuid": "^1.4.7",
-    "object.entries": "^1.0.3",
-    "object.values": "^1.0.3",
     "react": "^15.0.0",
     "react-dnd": "^2.1.4",
     "react-dnd-html5-backend": "^2.1.2",

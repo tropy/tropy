@@ -3,7 +3,6 @@
 require('./promisify')
 
 const sqlite = require('sqlite3')
-const entries = require('object.entries')
 
 const { EventEmitter } = require('events')
 const { Migration } = require('./migration')
@@ -13,6 +12,7 @@ const { readFileAsync: read } = require('fs')
 const { createPool } = require('generic-pool')
 const { debug, info, verbose } = require('./log')
 const { v4: uuid } = require('node-uuid')
+const { entries } = Object
 
 const root = cd(__dirname, '..', '..', 'db')
 
