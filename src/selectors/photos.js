@@ -4,10 +4,12 @@ const {
   createSelector: memo
 } = require('reselect')
 
-const collect = (photos, metadata, id) => ({
-  ...photos[id],
-  data: { ...metadata[id] }
-})
+const collect = (photos, metadata, id) => {
+  if (id == null) return null
+  return {
+    id, ...photos[id], data: { ...metadata[id] }
+  }
+}
 
 
 const getPhotos = ({ photos }, { ids }) =>

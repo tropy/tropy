@@ -4,7 +4,6 @@ const React = require('react')
 const { PropTypes } = React
 const { connect } = require('react-redux')
 const { Field } = require('./field')
-const { metadata, ui } = require('../../actions')
 const { getTemplate } = require('../../selectors/templates')
 const { get } = require('../../common/util')
 
@@ -33,9 +32,9 @@ Fields.propTypes = {
   })),
   id: PropTypes.number.isRequired,
   data: PropTypes.object,
-  onActivate: PropTypes.func,
+  onEdit: PropTypes.func,
   onEditCancel: PropTypes.func,
-  onChange: PropTypes.func,
+  onMetadataSave: PropTypes.func,
   onContextMenu: PropTypes.func
 }
 
@@ -46,17 +45,6 @@ module.exports = {
       data: state.metadata[id] || {},
       fields: getTemplate(state, { template }) || [],
       editing: get(state, `ui.edit.field.${id}`)
-    }),
-
-    (dispatch, { id }) => ({
-      onActivate(property) {
-        dispatch(ui.edit.start({ field: { [id]: property } }))
-      },
-
-      onChange(data) {
-        dispatch(metadata.save({ id, data }))
-        dispatch(ui.edit.cancel())
-      }
     })
   )(Fields)
 }

@@ -54,6 +54,19 @@ class Item extends Component {
     }
   }
 
+  handlePhotoEdit = (photo) => {
+    this.props.onEdit({ photo })
+  }
+
+  handlePhotoChange = ({ id, title }, value) => {
+    this.props.onMetadataSave({
+      id,
+      data: {
+        [title]: { value, type: 'text' }
+      }
+    })
+  }
+
   handlePhotoCreate = (event) => {
     const { onPhotoCreate } = this.props
     const { item } = this
@@ -144,10 +157,11 @@ class Item extends Component {
 
   renderTagsPanel() {
     const { item } = this
+    if (!item || !item.tags) return
 
     return (
       <ul>
-        {item && item.tags.map(tag => <li key={tag}>{tag}</li>)}
+        {item.tags.map(tag => <li key={tag}>{tag}</li>)}
       </ul>
     )
   }
@@ -166,8 +180,13 @@ class Item extends Component {
 
   renderPhotoPanel() {
     const {
-      items, photo, panel, onContextMenu, onOpen,
-      onPhotoSelect, onPhotoChange, onPhotoEdit, onEditCancel
+      items,
+      photo,
+      panel,
+      onContextMenu,
+      onOpen,
+      onPhotoSelect,
+      onEditCancel
     } = this.props
 
     const photos = seq(items, mapcat(i => i && i.photos || []))
@@ -190,8 +209,8 @@ class Item extends Component {
         onOpen={onOpen}
         onSelect={onPhotoSelect}
         onCancel={onEditCancel}
-        onChange={onPhotoChange}
-        onEdit={onPhotoEdit}
+        onChange={this.handlePhotoChange}
+        onEdit={this.handlePhotoEdit}
         onContextMenu={onContextMenu}
         isDisabled={this.isDisabled}/>
     )
@@ -264,7 +283,7 @@ class Item extends Component {
     items: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.number.isRequired,
-        tags: PropTypes.arrayOf(PropTypes.number).isRequired,
+        tags: PropTypes.arrayOf(PropTypes.number),
         deleted: PropTypes.bool
       })
     ),
@@ -284,13 +303,13 @@ class Item extends Component {
 
     onOpen: PropTypes.func,
     onContextMenu: PropTypes.func,
+    onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
     onMaximize: PropTypes.func,
+    onMetadataSave: PropTypes.func,
     onModeChange: PropTypes.func,
     onTabSelect: PropTypes.func,
-    onPhotoChange: PropTypes.func,
     onPhotoCreate: PropTypes.func,
-    onPhotoEdit: PropTypes.func,
     onPhotoSelect: PropTypes.func,
     onPhotoZoomChange: PropTypes.func
   }
@@ -318,20 +337,6 @@ module.exports = {
 
       onPhotoSelect(...args) {
         dispatch(act.photo.select(...args))
-      },
-
-      onPhotoEdit(photo) {
-        dispatch(act.ui.edit.start({ photo }))
-      },
-
-      onPhotoChange({ id, title }, value) {
-        dispatch(act.metadata.save({
-          id,
-          data: {
-            [title]: { value, type: 'text' }
-          }
-        }))
-        dispatch(act.ui.edit.cancel())
       },
 
       onPhotoZoomChange(photoZoom) {

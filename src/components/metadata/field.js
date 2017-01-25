@@ -4,7 +4,6 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { Editable } = require('../editable')
 const { FormattedMessage } = require('react-intl')
-const { noop } = require('../../common/util')
 const cn = require('classnames')
 
 
@@ -27,54 +26,55 @@ class Field extends Component {
   }
 
   handleClick = () => {
-    this.props.onActivate(this.name)
+    this.props.onEdit({
+      field: { [this.props.id]: this.name }
+    })
   }
 
   handleChange = (value) => {
-    this.props.onChange({
-      [this.name]: { value, type: this.type }
+    this.props.onMetadataSave({
+      id: this.props.id,
+      data: {
+        [this.name]: { value, type: this.type }
+      }
     })
   }
 
   render() {
     const { isEditing, isDisabled, onEditCancel } = this.props
-    const { value, type, label, handleClick, handleChange } = this
+    const { value, type, label } = this
 
     return (
       <li className={cn({ 'metadata-field': true, [type]: true })}>
         <label>{label}</label>
-        <div className="value" onClick={handleClick}>
+        <div className="value" onClick={this.handleClick}>
           <Editable
             value={value ? value.value : null}
             isDisabled={isDisabled}
             isEditing={isEditing}
             onCancel={onEditCancel}
-            onChange={handleChange}/>
+            onChange={this.handleChange}/>
         </div>
       </li>
     )
   }
 
   static propTypes = {
-    isEditing: PropTypes.bool,
-    isDisabled: PropTypes.bool,
-
+    id: PropTypes.number.isRequired,
+    data: PropTypes.object.isRequired,
     property: PropTypes.shape({
       uri: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,
       type: PropTypes.string,
     }),
 
-    data: PropTypes.object.isRequired,
+    isEditing: PropTypes.bool,
+    isDisabled: PropTypes.bool,
 
-    onActivate: PropTypes.func,
+    onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
-    onChange: PropTypes.func,
+    onMetadataSave: PropTypes.func,
     onContextMenu: PropTypes.func
-  }
-
-  static defaultProps = {
-    onActivate: noop, onCancel: noop, onChange: noop
   }
 }
 

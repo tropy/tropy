@@ -10,7 +10,8 @@ const Image = ({ photo, isVisible }) => (
       <Toolbar draggable={ARGS.frameless}/>
     </header>
 
-    {isVisible && photo && <img src={`${photo.protocol}://${photo.path}`}/>}
+    {isVisible && photo && photo.path &&
+      <img src={`${photo.protocol}://${photo.path}`}/>}
 
   </section>
 )
