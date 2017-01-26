@@ -129,6 +129,7 @@ class Project extends Component {
     zoom: PropTypes.number,
     nav: PropTypes.object,
     ui: PropTypes.object,
+    properties: PropTypes.object,
     templates: PropTypes.object,
     onContextMenu: PropTypes.func,
     onEdit: PropTypes.func,
@@ -158,6 +159,7 @@ module.exports = {
       zoom: state.nav.itemsZoom,
       nav: state.nav,
       ui: state.ui,
+      properties: state.properties,
       templates: getTemplates(state)
     }),
 

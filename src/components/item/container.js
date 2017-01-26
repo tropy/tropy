@@ -300,6 +300,7 @@ class Item extends Component {
     mode: PropTypes.string,
     note: PropTypes.number,
     selection: PropTypes.arrayOf(PropTypes.number),
+    properties: PropTypes.object,
     templates: PropTypes.object,
 
     onOpen: PropTypes.func,

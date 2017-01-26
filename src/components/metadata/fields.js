@@ -9,22 +9,53 @@ const { get } = require('../../common/util')
 class Fields extends Component {
 
   isEditing(uri) {
-    return get(this.props.ui, ['edit', 'field', this.props.subject.id]) === uri
+    return get(this.props,
+      ['ui', 'edit', 'field', this.props.subject.id]) === uri
+  }
+
+  isExtra(uri) {
+    if (uri === 'id') return false
+
+    return !this.props.template.find(({ property }) =>
+      property.uri === uri)
+  }
+
+  *extras() {
+    for (let uri in this.props.subject.data) {
+      if (this.isExtra(uri)) yield uri
+    }
+  }
+
+  renderTemplateFields() {
+    const { template, subject, ...props } = this.props
+
+    return template.map(({ property }) =>
+      <Field {...props}
+        key={property.uri}
+        data={subject.data}
+        property={property}
+        isEditing={this.isEditing(property.uri)}/>
+    )
+  }
+
+  renderExtraFields() {
+    const { subject, properties, ...props } = this.props
+
+    return [...this.extras()].map(uri =>
+      <Field {...props}
+        key={uri}
+        data={subject.data}
+        property={properties[uri] || { uri }}
+        isEditing={this.isEditing(uri)}/>
+    )
   }
 
   render() {
-    const { template, subject, ...props } = this.props
-
     return (
-      <ol className="metadata-fields">{
-        template.map(({ property }) =>
-          <Field {...props}
-            key={property.uri}
-            data={subject.data}
-            property={property}
-            isEditing={this.isEditing(property.uri)}/>
-        )
-      }</ol>
+      <ol className="metadata-fields">
+        {this.renderTemplateFields()}
+        {this.renderExtraFields()}
+      </ol>
     )
   }
 
@@ -35,6 +66,9 @@ class Fields extends Component {
     template: PropTypes.arrayOf(PropTypes.shape({
       property: PropTypes.object.isRequired
     })).isRequired,
+
+    properties: PropTypes.object,
+    static: PropTypes.string,
 
     subject: PropTypes.shape({
       id: PropTypes.number.isRequired,

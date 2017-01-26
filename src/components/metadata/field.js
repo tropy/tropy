@@ -4,12 +4,21 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { Editable } = require('../editable')
 const { FormattedMessage } = require('react-intl')
+const { parse } = require('url')
+const { basename } = require('path')
 const cn = require('classnames')
 
 
 class Field extends Component {
+  get defaultLabel() {
+    const parts = parse(this.name)
+
+    return parts.hash ?
+      parts.hash.slice(1) : basename(parts.pathname)
+  }
+
   get label() {
-    return this.props.property.label
+    return this.props.property.label || this.defaultLabel
   }
 
   get name() {
@@ -23,6 +32,14 @@ class Field extends Component {
   get type() {
     return this.value ?
       this.value.type : this.props.property.type || 'text'
+  }
+
+  get classes() {
+    return {
+      'metadata-field': true,
+      'extra': this.props.isExtra,
+      [this.type]: true
+    }
   }
 
   handleClick = () => {
@@ -42,10 +59,10 @@ class Field extends Component {
 
   render() {
     const { isEditing, isDisabled, onEditCancel } = this.props
-    const { value, type, label } = this
+    const { value, label, classes } = this
 
     return (
-      <li className={cn({ 'metadata-field': true, [type]: true })}>
+      <li className={cn(classes)}>
         <label>{label}</label>
         <div className="value" onClick={this.handleClick}>
           <Editable
@@ -59,20 +76,21 @@ class Field extends Component {
     )
   }
 
-  static propTypes = {
 
+  static propTypes = {
     data: PropTypes.shape({
       id: PropTypes.number.isRequired
     }).isRequired,
 
     property: PropTypes.shape({
       uri: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
+      label: PropTypes.string,
       type: PropTypes.string,
     }),
 
     isEditing: PropTypes.bool,
     isDisabled: PropTypes.bool,
+    isExtra: PropTypes.bool,
 
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
