@@ -1,5 +1,6 @@
 'use strict'
 
+const { all } = require('bluebird')
 const { ROOT } = require('../constants/list')
 
 function sort(children) {
@@ -50,9 +51,12 @@ module.exports = {
   },
 
   async prune(db) {
-    return await db.run(
-      'DELETE FROM lists WHERE list_id != ? AND parent_list_id IS NULL',
-      ROOT)
+    return await db.seq(conn => all([
+      conn.run(
+        'DELETE FROM lists WHERE list_id != ? AND parent_list_id IS NULL', ROOT
+      ),
+      conn.run('DELETE FROM list_items WHERE deleted NOT NULL')
+    ]))
   },
 
   async save(db, { id, name }) {

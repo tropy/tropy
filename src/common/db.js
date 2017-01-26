@@ -223,12 +223,12 @@ class Connection {
     return this.db.closeAsync()
   }
 
-  parallelize() {
-    return this.db.parallelize(), this
+  parallelize(...args) {
+    return this.db.parallelize(...args), this
   }
 
-  serialize() {
-    return this.db.serialize(), this
+  serialize(...args) {
+    return this.db.serialize(...args), this
   }
 
 
