@@ -139,7 +139,20 @@ class RemoveItems extends Command {
 
     yield call(mod.items.remove, db, id, items)
 
-    this.undo = actions.items.add({ id, items })
+    this.undo = actions.items.restore({ id, items })
+  }
+}
+
+class RestoreItems extends Command {
+  static get action() { return ITEM.RESTORE }
+
+  *exec() {
+    const { db } = this.options
+    const { id, items } = this.action.payload
+
+    yield call(mod.items.restore, db, id, items)
+
+    this.undo = actions.items.remove({ id, items })
   }
 }
 
@@ -151,5 +164,6 @@ module.exports = {
   Restore,
   Save,
   AddItems,
-  RemoveItems
+  RemoveItems,
+  RestoreItems
 }

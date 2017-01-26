@@ -74,6 +74,14 @@ module.exports = {
         payload: { id, items: array(items) },
         meta: { async: true, record: true, search: true, ...meta }
       }
+    },
+
+    restore({ id, items }, meta) {
+      return {
+        type: LIST.ITEM.RESTORE,
+        payload: { id, items: array(items) },
+        meta: { async: true, search: true, ...meta }
+      }
     }
   }
 }

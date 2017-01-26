@@ -88,7 +88,13 @@ module.exports = {
 
     async remove(db, id, items) {
       return db.run(`
-        DELETE FROM list_items
+        UPDATE list_items SET deleted = datetime("now")
+          WHERE list_id = ? AND id IN (${items.map(Number).join(',')})`, id)
+    },
+
+    async restore(db, id, items) {
+      return db.run(`
+        UPDATE list_items SET deleted = NULL
           WHERE list_id = ? AND id IN (${items.map(Number).join(',')})`, id)
     }
   }

@@ -20,6 +20,7 @@ module.exports = {
 
   ITEM: {
     ADD: 'list.item.add',
-    REMOVE: 'list.item.remove'
+    REMOVE: 'list.item.remove',
+    RESTORE: 'list.item.restore'
   }
 }
