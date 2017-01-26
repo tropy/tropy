@@ -4,16 +4,15 @@ const React = require('react')
 const { PropTypes } = React
 const { connect } = require('react-redux')
 const { Field } = require('./field')
-const { getTemplate } = require('../../selectors/templates')
 const { get } = require('../../common/util')
 
 
 const Fields = (props) => {
-  const { fields, editing } = props
+  const { template, editing } = props
 
   return (
     <ol className="metadata-fields">{
-      fields.map(({ property }) =>
+      template.map(({ property }) =>
         <Field {...props}
           key={property.uri}
           property={property}
@@ -26,10 +25,9 @@ const Fields = (props) => {
 Fields.propTypes = {
   editing: PropTypes.string,
   isDisabled: PropTypes.bool,
-  template: PropTypes.string.isRequired,
-  fields: PropTypes.arrayOf(PropTypes.shape({
+  template: PropTypes.arrayOf(PropTypes.shape({
     property: PropTypes.object.isRequired
-  })),
+  })).isRequired,
   id: PropTypes.number.isRequired,
   data: PropTypes.object,
   onEdit: PropTypes.func,
@@ -41,9 +39,8 @@ Fields.propTypes = {
 
 module.exports = {
   Fields: connect(
-    (state, { id, template }) => ({
+    (state, { id }) => ({
       data: state.metadata[id] || {},
-      fields: getTemplate(state, { template }) || [],
       editing: get(state, `ui.edit.field.${id}`)
     })
   )(Fields)

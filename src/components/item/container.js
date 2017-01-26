@@ -126,7 +126,7 @@ class Item extends Component {
   }
 
   renderMetadataPanel() {
-    const { photo, ...props } = this.props
+    const { photo, templates, ...props } = this.props
     const { item, isDisabled } = this
 
     return (
@@ -139,7 +139,7 @@ class Item extends Component {
             <Fields {...props}
               id={photo.id}
               isDisabled={isDisabled}
-              template="photo"/>
+              template={templates.photo}/>
           </section>}
         {item &&
           <section>
@@ -149,7 +149,7 @@ class Item extends Component {
             <Fields {...props}
               id={item.id}
               isDisabled={isDisabled}
-              template="core"/>
+              template={templates.core}/>
           </section>}
       </div>
     )
@@ -300,6 +300,7 @@ class Item extends Component {
     mode: PropTypes.string,
     note: PropTypes.number,
     selection: PropTypes.arrayOf(PropTypes.number),
+    templates: PropTypes.object,
 
     onOpen: PropTypes.func,
     onContextMenu: PropTypes.func,

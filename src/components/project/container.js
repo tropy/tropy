@@ -12,6 +12,7 @@ const { ProjectDropZone } = require('./drop-zone')
 const { ProjectDragLayer } = require('./drag-layer')
 
 const { getCachePrefix } = require('../../selectors/project')
+const { getTemplates } = require('../../selectors/templates')
 const { MODE } = require('../../constants/project')
 const { once } = require('../../dom')
 const { values } = Object
@@ -128,6 +129,7 @@ class Project extends Component {
     zoom: PropTypes.number,
     nav: PropTypes.object,
     ui: PropTypes.object,
+    templates: PropTypes.object,
     onContextMenu: PropTypes.func,
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
@@ -155,7 +157,8 @@ module.exports = {
       mode: state.nav.mode,
       zoom: state.nav.itemsZoom,
       nav: state.nav,
-      ui: state.ui
+      ui: state.ui,
+      templates: getTemplates(state)
     }),
 
     dispatch => ({
