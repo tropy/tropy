@@ -15,14 +15,14 @@ module.exports = {
       case (list != null):
         await db.each(`
           SELECT id, added
-            FROM items
+            FROM list_items
               ${tags.length ? 'JOIN taggings USING (id)' : ''}
-              LEFT OUTER JOIN list_items USING (id)
+              LEFT OUTER JOIN items USING (id)
               LEFT OUTER JOIN trash USING (id)
               WHERE
-                list_id = $list AND
+                list_id = $list AND list_items.deleted IS NULL AND
                 ${tags.length ? `tag_id IN (${tags.join(',')}) AND` : ''}
-                deleted ${trash ? 'NOT' : 'IS'} NULL
+                trash.deleted ${trash ? 'NOT' : 'IS'} NULL
               ORDER BY added ASC, id ASC`, {
 
                 $list: list
