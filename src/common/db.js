@@ -6,15 +6,14 @@ const sqlite = require('sqlite3')
 
 const { EventEmitter } = require('events')
 const { Migration } = require('./migration')
-const { resolve: cd, join, normalize } = require('path')
+const { normalize } = require('path')
 const { using, resolve } = require('bluebird')
 const { readFileAsync: read } = require('fs')
 const { createPool } = require('generic-pool')
 const { debug, info, verbose } = require('./log')
-const { v4: uuid } = require('node-uuid')
 const { entries } = Object
+const { project } = require('../models')
 
-const root = cd(__dirname, '..', '..', 'db')
 
 const M = {
   'r': sqlite.OPEN_READONLY,
@@ -27,19 +26,12 @@ const cache = {}
 
 class Database extends EventEmitter {
 
-  // TODO move to models/project
-  static async create(path, { name, id } = {}) {
+  static async create(path, options = {}) {
     try {
-      id = id || uuid()
-
       var db = new Database(path, 'w+', { max: 1 })
+      await project.create(db, options)
 
-      await db.read(Database.schema)
-      await db.run(
-        'INSERT INTO project (project_id,name) VALUES (?,?)', id, name
-      )
-
-      verbose(`created project db "${name}"`)
+      verbose(`created project db at ${db.path}`)
 
       return db.path
 
@@ -204,8 +196,6 @@ Database.defaults = {
   application_id: '0xDAEDA105',
   encoding: 'UTF-8'
 }
-
-Database.schema = join(root, 'schema.sql')
 
 
 class Connection {
