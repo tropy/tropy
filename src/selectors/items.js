@@ -6,7 +6,7 @@ const {
 
 
 const collect = (items, metadata, ids) =>
-  ids.map(id => ({ id, ...items[id], data: metadata[id] || {} }))
+  ids.map(id => ({ id, ...items[id], data: { id, ...metadata[id] } }))
 
 
 const getItem = ({ items }, { item }) => items[item]

@@ -27,13 +27,13 @@ class Field extends Component {
 
   handleClick = () => {
     this.props.onEdit({
-      field: { [this.props.id]: this.name }
+      field: { [this.props.data.id]: this.name }
     })
   }
 
   handleChange = (value) => {
     this.props.onMetadataSave({
-      id: this.props.id,
+      id: this.props.data.id,
       data: {
         [this.name]: { value, type: this.type }
       }
@@ -60,8 +60,11 @@ class Field extends Component {
   }
 
   static propTypes = {
-    id: PropTypes.number.isRequired,
-    data: PropTypes.object.isRequired,
+
+    data: PropTypes.shape({
+      id: PropTypes.number.isRequired
+    }).isRequired,
+
     property: PropTypes.shape({
       uri: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,

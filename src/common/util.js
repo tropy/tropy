@@ -90,9 +90,9 @@ module.exports = {
 
   get(src, path, value) {
     if (src == null) return value
-    if (!path) return src
+    if (!path || !path.length) return src
 
-    let parts = path.split('.')
+    let parts = Array.isArray(path) ? path : path.split('.')
     let obj = src
     let i, ii
 
@@ -113,9 +113,9 @@ module.exports = {
 
   has(src, path) {
     if (src == null) return false
-    if (!path) return true
+    if (!path || !path.length) return true
 
-    let parts = path.split('.')
+    let parts = Array.isArray(path) ? path : path.split('.')
     let obj = src
     let i, ii
 

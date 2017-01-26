@@ -7,7 +7,7 @@ const {
 const collect = (photos, metadata, id) => {
   if (id == null) return null
   return {
-    id, ...photos[id], data: { ...metadata[id] }
+    id, ...photos[id], data: { id, ...metadata[id] }
   }
 }
 

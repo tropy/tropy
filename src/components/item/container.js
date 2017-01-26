@@ -137,7 +137,7 @@ class Item extends Component {
               <FormattedMessage id="panel.metadata.photo"/>
             </h5>
             <Fields {...props}
-              id={photo.id}
+              subject={photo}
               isDisabled={isDisabled}
               template={templates.photo}/>
           </section>}
@@ -147,7 +147,7 @@ class Item extends Component {
               <FormattedMessage id="panel.metadata.item"/>
             </h5>
             <Fields {...props}
-              id={item.id}
+              subject={item}
               isDisabled={isDisabled}
               template={templates.core}/>
           </section>}
