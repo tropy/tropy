@@ -14,7 +14,7 @@ module.exports = {
     switch (true) {
       case (list != null):
         await db.each(`
-          SELECT id, added_at
+          SELECT id, added
             FROM items
               ${tags.length ? 'JOIN taggings USING (id)' : ''}
               LEFT OUTER JOIN list_items USING (id)
@@ -23,7 +23,7 @@ module.exports = {
                 list_id = $list AND
                 ${tags.length ? `tag_id IN (${tags.join(',')}) AND` : ''}
                 deleted ${trash ? 'NOT' : 'IS'} NULL
-              ORDER BY added_at ASC, id ASC`, {
+              ORDER BY added ASC, id ASC`, {
 
                 $list: list
 
