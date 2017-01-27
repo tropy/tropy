@@ -3,12 +3,18 @@
 const React = require('react')
 const { PropTypes, Component } = React
 const { Editable } = require('../editable')
-const { imageURL } = require('../../common/cache')
 const { createClickHandler } = require('../util')
+const { Thumbnail } = require('./thumbnail')
+const { PhotoDragSource } = require('./drag-source')
+const { getEmptyImage } = require('react-dnd-html5-backend')
 const cn = require('classnames')
 
 
 class PhotoListItem extends Component {
+
+  componentDidMount() {
+    this.props.dp(getEmptyImage())
+  }
 
   get classes() {
     return {
@@ -47,16 +53,25 @@ class PhotoListItem extends Component {
 
 
   render() {
-    const { photo, cache, title, isEditing, isDisabled, onCancel } = this.props
+    const {
+      ds,
+      photo,
+      cache,
+      title,
+      isEditing,
+      isDisabled,
+      onCancel
+    } = this.props
+
     const value = photo.data[title] && photo.data[title].value
 
-    return (
+    return ds(
       <li
         className={cn(this.classes)}
         onClick={this.handleClick}
         onContextMenu={this.handleContextMenu}>
 
-        <Thumbnail src={imageURL(cache, photo.id, 48)} size={24}/>
+        <Thumbnail cache={cache} photo={photo} size={24}/>
 
         <div className="title">
           <Editable
@@ -85,6 +100,10 @@ class PhotoListItem extends Component {
       data: PropTypes.object,
     }).isRequired,
 
+    ds: PropTypes.func.isRequired,
+    dp: PropTypes.func.isRequired,
+    isDragging: PropTypes.bool,
+
     onCancel: PropTypes.func,
     onChange: PropTypes.func,
 
@@ -96,20 +115,6 @@ class PhotoListItem extends Component {
 }
 
 
-const Thumbnail = ({ src, size }) => (
-  <img
-    className="thumbnail"
-    srcSet={`${encodeURI(src)} 2x`}
-    width={size}
-    height={size}/>
-)
-
-Thumbnail.propTypes = {
-  src: PropTypes.string.isRequired,
-  size: PropTypes.number.isRequired
-}
-
-
 module.exports = {
-  PhotoListItem
+  PhotoListItem: PhotoDragSource()(PhotoListItem)
 }

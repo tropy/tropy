@@ -4,6 +4,7 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { DragLayer } = require('react-dnd')
 const { ItemDragPreview } = require('../item')
+const { PhotoDragPreview } = require('../photo')
 const { DND } = require('../../constants')
 const { warn } = require('../../common/log')
 
@@ -25,6 +26,9 @@ class ProjectDragLayer extends Component {
       case DND.ITEMS:
         return <ItemDragPreview {...props} items={item.items}/>
 
+      case DND.PHOTO:
+        return <PhotoDragPreview {...props} items={[item]}/>
+
       default:
         warn(`unknown dnd type "${type}"`)
     }
@@ -32,7 +36,10 @@ class ProjectDragLayer extends Component {
 
   render() {
     if (!this.props.isDragging) return null
-    if (this.props.type && this.props.type !== DND.ITEMS) return null
+
+    if (this.props.type) {
+      if (![DND.ITEMS, DND.PHOTO].includes(this.props.type)) return null
+    }
 
     return (
       <div id="project-drag-layer" className="drag-layer">

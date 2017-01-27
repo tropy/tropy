@@ -2,5 +2,6 @@
 
 module.exports = {
   ITEMS: 'items',
-  LIST: 'list'
+  LIST: 'list',
+  PHOTO: 'photo'
 }
