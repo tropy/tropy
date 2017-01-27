@@ -15,9 +15,8 @@ const { IconButton } = require('../button')
 const { Image } = require('../image')
 const { Fields } = require('../metadata')
 const { getSelectedItems } = require('../../selectors/items')
-const { getSelectedPhoto } = require('../../selectors/photos')
+const { getPhotos, getSelectedPhoto } = require('../../selectors/photos')
 const { MODE } = require('../../constants/project')
-const { seq, mapcat } = require('transducers.js')
 const act = require('../../actions')
 
 
@@ -43,13 +42,13 @@ class Item extends Component {
   }
 
   handleMetadataTabSelect = () => {
-    if (this.props.panel.tab !== 'metadata') {
+    if (this.props.nav.panel.tab !== 'metadata') {
       this.props.onTabSelect('metadata')
     }
   }
 
   handleTagsTabSelect = () => {
-    if (this.props.panel.tab !== 'tags') {
+    if (this.props.nav.panel.tab !== 'tags') {
       this.props.onTabSelect('tags')
     }
   }
@@ -81,19 +80,19 @@ class Item extends Component {
 
 
   renderItemTabs() {
-    const { panel, selection } = this.props
+    const { nav, selection } = this.props
 
     return (
       <Tabs justified>
         <Tab
-          active={panel.tab === 'metadata'}
+          active={nav.panel.tab === 'metadata'}
           disabled={!selection.length}
           onActivate={this.handleMetadataTabSelect}>
           <IconMetadata/>
           <FormattedMessage id="panel.metadata.tab"/>
         </Tab>
         <Tab
-          active={panel.tab === 'tags'}
+          active={nav.panel.tab === 'tags'}
           disabled={!selection.length}
           onActivate={this.handleTagsTabSelect}>
           <IconTag/>
@@ -104,14 +103,14 @@ class Item extends Component {
   }
 
   renderItemPanel() {
-    const { selection, panel } = this.props
+    const { selection, nav } = this.props
 
     switch (selection.length) {
       case 0:
         return <span>No items selected</span>
 
       case 1:
-        switch (panel.tab) {
+        switch (nav.panel.tab) {
           case 'metadata':
             return this.renderMetadataPanel()
           case 'tags':
@@ -167,11 +166,11 @@ class Item extends Component {
   }
 
   renderPhotoToolbar() {
-    const { panel, onPhotoZoomChange } = this.props
+    const { nav, onPhotoZoomChange } = this.props
 
     return (
       <PhotoToolbar
-        zoom={panel.photoZoom}
+        zoom={nav.panel.photoZoom}
         onZoomChange={onPhotoZoomChange}
         hasCreateButton={!this.isDisabled}
         onCreate={this.handlePhotoCreate}/>
@@ -180,38 +179,32 @@ class Item extends Component {
 
   renderPhotoPanel() {
     const {
-      items,
       photo,
-      panel,
-      onContextMenu,
-      onOpen,
+      photos,
+      nav,
       onPhotoSelect,
-      onEditCancel
+      onEditCancel,
+      ...props
     } = this.props
 
-    const photos = seq(items, mapcat(i => i && i.photos || []))
-
-    if (panel.photoZoom) {
+    if (nav.panel.photoZoom) {
       return (
-        <PhotoGrid
+        <PhotoGrid {...props}
           photos={photos}
           selected={photo && photo.id}
-          onContextMenu={onContextMenu}
           isDisabled={this.isDisabled}/>
       )
     }
 
     return (
-      <PhotoList
+      <PhotoList {...props}
         photos={photos}
         selected={photo && photo.id}
         isOpen={this.isItemMode}
-        onOpen={onOpen}
         onSelect={onPhotoSelect}
         onCancel={onEditCancel}
         onChange={this.handlePhotoChange}
         onEdit={this.handlePhotoEdit}
-        onContextMenu={onContextMenu}
         isDisabled={this.isDisabled}/>
     )
   }
@@ -288,13 +281,22 @@ class Item extends Component {
       })
     ),
 
+    photos: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        deleted: PropTypes.bool
+      })
+    ),
+
     photo: PropTypes.shape({
       id: PropTypes.number.isRequired
     }),
 
-    panel: PropTypes.shape({
-      tab: PropTypes.oneOf(['metadata', 'tags']).isRequired,
-      photoZoom: PropTypes.number.isRequired
+    nav: PropTypes.shape({
+      panel: PropTypes.shape({
+        tab: PropTypes.oneOf(['metadata', 'tags']).isRequired,
+        photoZoom: PropTypes.number.isRequired
+      }).isRequired,
     }).isRequired,
 
     mode: PropTypes.string,
@@ -323,9 +325,9 @@ module.exports = {
     (state) => ({
       items: getSelectedItems(state),
       photo: getSelectedPhoto(state),
+      photos: getPhotos(state),
       note: state.nav.note,
-      selection: state.nav.items,
-      panel: state.nav.panel
+      selection: state.nav.items
     }),
 
     (dispatch) => ({

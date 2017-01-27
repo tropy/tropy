@@ -4,9 +4,22 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { PhotoListItem } = require('./list-item')
 const { DC } = require('../../constants/properties')
+const { get } = require('../../common/util')
 
 
 class PhotoList extends Component {
+
+  isSelected(photo) {
+    return this.props.selected === photo.id
+  }
+
+  isEditing(photo) {
+    return get(this.props, 'ui.edit.photo') === photo.id
+  }
+
+  isContext(photo) {
+    return get(this.props, 'ui.context.photo') === photo.id
+  }
 
   handleContextMenu = (photo, event) => {
     this.props.onContextMenu(event, 'photo', photo)
@@ -34,15 +47,17 @@ class PhotoList extends Component {
   }
 
   render() {
-    const { photos, selected, onEdit, ...props } = this.props
+    const { photos, onEdit, ...props } = this.props
 
     return (
       <ul className="photo-list">
         {photos.map(photo =>
           <PhotoListItem {...props}
-            key={photo}
-            id={photo}
-            isSelected={photo === selected}
+            key={photo.id}
+            photo={photo}
+            isSelected={this.isSelected(photo)}
+            isEditing={this.isEditing(photo)}
+            isContext={this.isContext(photo)}
             title={DC.TITLE}
             onClick={this.handleClick}
             onSingleClick={onEdit}
@@ -54,7 +69,13 @@ class PhotoList extends Component {
   }
 
   static propTypes = {
-    photos: PropTypes.arrayOf(PropTypes.number),
+    photos: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired
+      })
+    ),
+
+    cache: PropTypes.string,
     selected: PropTypes.number,
 
     isDisabled: PropTypes.bool,

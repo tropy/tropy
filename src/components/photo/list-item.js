@@ -2,15 +2,21 @@
 
 const React = require('react')
 const { PropTypes, Component } = React
-const { connect } = require('react-redux')
 const { Editable } = require('../editable')
 const { imageURL } = require('../../common/cache')
-const { getCachePrefix } = require('../../selectors/project')
 const { createClickHandler } = require('../util')
 const cn = require('classnames')
 
 
 class PhotoListItem extends Component {
+
+  get classes() {
+    return {
+      photo: true,
+      active: this.props.isSelected,
+      context: this.props.isContext
+    }
+  }
 
   handleClick = createClickHandler({
     onClick: (event) => {
@@ -35,32 +41,29 @@ class PhotoListItem extends Component {
   }
 
   handleChange = (value) => {
-    const { id, title, onChange } = this.props
-    onChange({ id, title }, value)
+    const { photo, title, onChange } = this.props
+    onChange({ id: photo.id, title }, value)
   }
 
 
   render() {
-    const {
-      photo, cache, data, title, isSelected, context, ...props
-    } = this.props
-
-    delete props.onClick
-    delete props.onSingleClick
-    delete props.onDoubleClick
-    delete props.onContextMenu
+    const { photo, cache, title, isEditing, isDisabled, onCancel } = this.props
+    const value = photo.data[title] && photo.data[title].value
 
     return (
       <li
-        className={cn({ photo: true, active: isSelected, context })}
+        className={cn(this.classes)}
         onClick={this.handleClick}
         onContextMenu={this.handleContextMenu}>
 
         <Thumbnail src={imageURL(cache, photo.id, 48)} size={24}/>
 
         <div className="title">
-          <Editable {...props}
-            value={data[title] && data[title].value}
+          <Editable
+            value={value}
+            isEditing={isEditing}
+            isDisabled={isDisabled}
+            onCancel={onCancel}
             onChange={this.handleChange}/>
         </div>
       </li>
@@ -68,21 +71,19 @@ class PhotoListItem extends Component {
   }
 
   static propTypes = {
-    id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
 
+    isContext: PropTypes.bool,
     isDisabled: PropTypes.bool,
     isEditing: PropTypes.bool,
     isSelected: PropTypes.bool,
 
     cache: PropTypes.string,
-    data: PropTypes.object,
 
     photo: PropTypes.shape({
-      id: PropTypes.number.isRequired
+      id: PropTypes.number.isRequired,
+      data: PropTypes.object,
     }).isRequired,
-
-    context: PropTypes.bool,
 
     onCancel: PropTypes.func,
     onChange: PropTypes.func,
@@ -110,14 +111,5 @@ Thumbnail.propTypes = {
 
 
 module.exports = {
-  PhotoListItem: connect(
-    (state, { id }) => ({
-      data: state.metadata[id] || {},
-      photo: state.photos[id] || { id },
-      isEditing: state.ui.edit.photo === id,
-      context: state.ui.context.photo === id,
-      cache: getCachePrefix(state)
-    })
-
-  )(PhotoListItem)
+  PhotoListItem
 }
