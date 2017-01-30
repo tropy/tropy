@@ -59,7 +59,7 @@ class ItemGrid extends Component {
 
 
   render() {
-    const { items, ...props } = this.props
+    const { items, onPhotosMove, ...props } = this.props
     const tile = this.placeholder
 
     return (
@@ -75,7 +75,8 @@ class ItemGrid extends Component {
               isSelected={this.isSelected(item)}
               onSelect={this.handleSelect}
               onClick={this.handleClickInside}
-              onContextMenu={this.handleContextMenu}/>
+              onContextMenu={this.handleContextMenu}
+              onDropPhotos={onPhotosMove}/>
           )}
 
           {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
@@ -102,7 +103,8 @@ class ItemGrid extends Component {
     zoom: Shapes.number(1, ItemGrid.ZOOM.length - 1),
     onOpen: PropTypes.func,
     onSelect: PropTypes.func,
-    onContextMenu: PropTypes.func
+    onContextMenu: PropTypes.func,
+    onPhotosMove: PropTypes.func
   }
 }
 

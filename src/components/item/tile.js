@@ -93,7 +93,8 @@ class ItemTile extends Component {
     onClick: PropTypes.func,
     onOpen: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired,
-    onContextMenu: PropTypes.func.isRequired
+    onContextMenu: PropTypes.func.isRequired,
+    onPhotosMove: PropTypes.func
   }
 }
 
