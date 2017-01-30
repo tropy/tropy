@@ -5,7 +5,7 @@ const { PropTypes, Component } = React
 const { Editable } = require('../editable')
 const { createClickHandler } = require('../util')
 const { Thumbnail } = require('./thumbnail')
-const { PhotoDragSource } = require('./drag-source')
+const { PhotoDragSource } = require('./dnd')
 const { getEmptyImage } = require('react-dnd-html5-backend')
 const cn = require('classnames')
 

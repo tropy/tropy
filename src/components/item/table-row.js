@@ -4,10 +4,9 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { getEmptyImage } = require('react-dnd-html5-backend')
 const { ItemTableCell } = require('./table-cell')
-const { ItemDragSource } = require('./drag-source')
-const { ItemDropTarget } = require('./drop-target')
 const { meta } = require('../../common/os')
 const { DC } = require('../../constants/properties')
+const dnd = require('./dnd')
 const cn = require('classnames')
 
 
@@ -74,16 +73,9 @@ class ItemTableRow extends Component {
   }
 
   render() {
-    const {
-      ds, dt, columns, isSelected, ...props
-    } = this.props
+    const { columns, isSelected, ...props } = this.props
 
-    delete props.dp
-    delete props.onSelect
-    delete props.onContextMenu
-    delete props.onColumnEdit
-
-    return ds(dt(
+    return dnd.connect(this.props, (
       <tr
         className={cn(this.classes)}
         onContextMenu={this.handleContextMenu}>
@@ -139,5 +131,5 @@ class ItemTableRow extends Component {
 
 
 module.exports = {
-  ItemTableRow: ItemDragSource()(ItemDropTarget()(ItemTableRow))
+  ItemTableRow: dnd.wrap(ItemTableRow)
 }

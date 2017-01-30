@@ -3,11 +3,10 @@
 const React = require('react')
 const { Component, PropTypes } = React
 const { CoverImage } = require('./cover-image')
-const { ItemDragSource } = require('./drag-source')
-const { ItemDropTarget } = require('./drop-target')
 const { getEmptyImage } = require('react-dnd-html5-backend')
 const { meta } = require('../../common/os')
 const cn = require('classnames')
+const dnd = require('./dnd')
 
 
 class ItemTile extends Component {
@@ -59,9 +58,9 @@ class ItemTile extends Component {
   }
 
   render() {
-    const { ds, dt, onClick, ...props } = this.props
+    const { onClick, ...props } = this.props
 
-    return ds(dt(
+    return dnd.connect(this.props, (
       <li
         className={cn(this.classes)}
         style={this.style}
@@ -99,5 +98,5 @@ class ItemTile extends Component {
 }
 
 module.exports = {
-  ItemTile: ItemDragSource()(ItemDropTarget()(ItemTile))
+  ItemTile: dnd.wrap(ItemTile)
 }
