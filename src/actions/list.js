@@ -51,6 +51,14 @@ module.exports = {
     return { type: LIST.RESTORE, payload, meta: { async: true, ...meta } }
   },
 
+  order(payload, meta) {
+    return {
+      type: LIST.ORDER,
+      payload,
+      meta: { async: true, record: true, ...meta }
+    }
+  },
+
   load(payload, meta) {
     return { type: LIST.LOAD, payload, meta: { async: true, ...meta } }
   },

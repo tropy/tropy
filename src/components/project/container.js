@@ -143,7 +143,8 @@ class Project extends Component {
     onProjectSave: PropTypes.func,
     onPhotosMove: PropTypes.func,
     onListItemsAdd: PropTypes.func,
-    onListSave: PropTypes.func
+    onListSave: PropTypes.func,
+    onListSort: PropTypes.func
   }
 
   static defaultProps = {
@@ -213,6 +214,10 @@ module.exports = {
       onListSave(...args) {
         dispatch(actions.list.save(...args))
         dispatch(actions.ui.edit.cancel())
+      },
+
+      onListSort(...args) {
+        dispatch(actions.list.order(...args))
       },
 
       onListItemsAdd({ list, items }) {

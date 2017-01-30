@@ -66,11 +66,6 @@ module.exports = {
 
       handleMoveReset() {
         component.setState({ order: component.order })
-      },
-
-      handleMoveCommit() {
-        const { onSort } = component.props
-        if (onSort) onSort(component.state.order)
       }
     })
   },

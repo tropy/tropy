@@ -36,6 +36,11 @@ class ListTree extends Component {
   }
 
 
+  handleSort = () => {
+    const { parent, onSort } = this.props
+    onSort({ id: parent.id, children: this.state.order })
+  }
+
   renderNewListNode() {
     const { parent, onEditCancel, onListSave } = this.props
     const list = get(this.props, 'ui.edit.list')
@@ -69,7 +74,7 @@ class ListTree extends Component {
               onSave={onListSave}
               onMove={this.handleMove}
               onMoveReset={this.handleMoveReset}
-              onMoveCommit={this.handleMoveCommit}/>)
+              onMoveCommit={this.handleSort}/>)
         }
         {this.renderNewListNode()}
       </ol>

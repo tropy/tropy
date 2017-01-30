@@ -5,11 +5,10 @@ const { Command } = require('./command')
 const { splice } = require('../common/util')
 
 const {
-  CREATE, DELETE, LOAD, RESTORE, SAVE, ITEM
+  CREATE, DELETE, LOAD, RESTORE, ORDER, SAVE, ITEM
 } = require('../constants/list')
 
 const actions = require('../actions/list')
-const get = require('../selectors/list')
 const mod = require('../models/list')
 
 
@@ -31,8 +30,8 @@ class Create extends Command {
     const { db } = this.options
     const { name, parent } = payload
 
-    const idx =
-      (yield select(get.list, { list: parent })).children.length
+    const { children } = yield select(state => state.lists[parent])
+    const idx = children.length
 
     const list = yield call(mod.create, db, { name, parent, position: idx + 1 })
 
@@ -52,7 +51,7 @@ class Save extends Command {
     const { payload } = this.action
     const { db } = this.options
 
-    this.original = (yield select(get.list, { list: payload.id }))
+    this.original = yield select(state => state.lists[payload.id])
 
     yield put(actions.update(payload))
     yield call(mod.save, db, payload)
@@ -100,10 +99,11 @@ class Restore extends Command {
   static get action() { return RESTORE }
 
   *exec() {
-    const { payload: list, meta: { idx } } = this.action
     const { db } = this.options
+    const { idx } = this.action.meta
+    const list = this.action.payload
 
-    const { children } = yield select(get.list, { list: list.parent })
+    const { children } = yield select(state => state.lists[list.parent])
     const cid = splice(children, idx, 0, list.id)
 
     yield call([db, db.transaction], async tx => {
@@ -114,6 +114,22 @@ class Restore extends Command {
     yield put(actions.insert(list, { idx }))
 
     this.undo = actions.delete(list.id)
+  }
+}
+
+class Order extends Command {
+  static get action() { return ORDER }
+
+  *exec() {
+    const { db } = this.options
+    const { id, children } = this.action.payload
+
+    const original = yield select(state => state.lists[id].children)
+
+    yield call(mod.order, db, id, children)
+    yield put(actions.update({ id, children }))
+
+    this.undo = actions.order({ id, children: original })
   }
 }
 
@@ -163,6 +179,7 @@ module.exports = {
   Load,
   Restore,
   Save,
+  Order,
   AddItems,
   RemoveItems,
   RestoreItems

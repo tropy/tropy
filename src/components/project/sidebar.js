@@ -78,13 +78,16 @@ class ProjectSidebar extends Component {
   }
 
   renderLists() {
-    const { lists, onItemsDelete, ...props } = this.props
+    const { lists, onItemsDelete, onListSort, ...props } = this.props
 
     return (
       <section onContextMenu={this.showListsMenu}>
         <h2><FormattedMessage id="sidebar.lists"/></h2>
         <nav>
-          <ListTree {...props} parent={lists[ROOT]} lists={lists}/>
+          <ListTree {...props}
+            parent={lists[ROOT]}
+            lists={lists}
+            onSort={onListSort}/>
 
           <ol>
             <TrashListNode {...props}
@@ -151,6 +154,7 @@ class ProjectSidebar extends Component {
     onItemsDelete: PropTypes.func,
     onListItemsAdd: PropTypes.func,
     onListSave: PropTypes.func,
+    onListSort: PropTypes.func,
     onProjectSave: PropTypes.func
   }
 }
