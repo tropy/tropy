@@ -10,7 +10,11 @@ const { get } = require('../../common/util')
 class ListTree extends Component {
   constructor(props) {
     super(props)
-    sortable(this, props, 'parent.children')
+    sortable(this)
+  }
+
+  get order() {
+    return get(this.props, 'parent.children') || []
   }
 
   componentWillReceiveProps(props) {
