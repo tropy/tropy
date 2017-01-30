@@ -4,10 +4,10 @@ const React = require('react')
 const { PropTypes, Component } = React
 const { Editable } = require('../editable')
 const { IconFolder } = require('../icons')
-const { Sortable, connect } = require('./sortable')
 const { noop } = require('../../common/util')
 const { DND } = require('../../constants')
 const cn = require('classnames')
+const dnd = require('./dnd')
 
 
 class ListNode extends Component {
@@ -48,7 +48,7 @@ class ListNode extends Component {
   render() {
     const { list, isEditing, onEditCancel } = this.props
 
-    return connect(this.props,
+    return dnd.connect(this.props,
       <li
         className={cn(this.classes)}
         ref={this.setContainer}
@@ -105,5 +105,5 @@ class ListNode extends Component {
 }
 
 module.exports = {
-  ListNode: Sortable(ListNode)
+  ListNode: dnd.wrap(ListNode)
 }
