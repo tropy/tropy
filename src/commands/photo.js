@@ -132,21 +132,38 @@ class Move extends Command {
     const { db } = this.options
     const { photos, item } = this.action.payload
 
-    // Assuming all photos being moved from the same item!
-    const cur = photos[0].item
+    let { idx } = this.action.meta
+    let { order, original } = yield select(state => ({
+      order: state.items[item].photos,
+
+      // Assuming all photos being moved from the same item!
+      original: state.items[photos[0].item]
+    }))
+
     const ids = photos.map(photo => photo.id)
 
-    yield call(mod.photo.move, db, { ids, item })
+    idx = (idx == null || idx < 0) ? order.length : idx
+    order = splice(order, idx, 0, ...ids)
+
+    yield call([db, db.transaction], async tx => {
+      await mod.photo.move(tx, { item, ids })
+      await mod.photo.order(tx, item, order)
+    })
 
     yield [
       put(act.photo.bulk.update([ids, { item }])),
-      put(act.item.photos.remove({ id: cur, photos: ids })),
-      put(act.item.photos.add({ id: item, photos: ids }))
+      put(act.item.photos.remove({ id: original.id, photos: ids })),
+      put(act.item.photos.add({ id: item, photos: ids }, { idx }))
     ]
 
     this.undo = act.photo.move({
-      photos: photos.map(photo => ({ id: photo.id, item })),
-      item: cur
+      photos: photos.map(({ id }) => ({ id, item })),
+      item: original.id
+    }, {
+      // Restores all photos at the original position of the first
+      // of the moved photos. Adjust if we want to support moving
+      // arbitrary selections!
+      idx: original.photos.indexOf(ids[0])
     })
   }
 }
