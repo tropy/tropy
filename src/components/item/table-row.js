@@ -5,6 +5,7 @@ const { Component, PropTypes } = React
 const { getEmptyImage } = require('react-dnd-html5-backend')
 const { ItemTableCell } = require('./table-cell')
 const { ItemDragSource } = require('./drag-source')
+const { ItemDropTarget } = require('./drop-target')
 const { meta } = require('../../common/os')
 const { DC } = require('../../constants/properties')
 const cn = require('classnames')
@@ -18,6 +19,16 @@ class ItemTableRow extends Component {
 
   get isDisabled() {
     return !!this.props.item.deleted
+  }
+
+
+  get classes() {
+    return {
+      item: true,
+      active: this.props.isSelected,
+      dragging: this.props.isDragging,
+      over: this.props.isOver
+    }
   }
 
   isEditing = (uri) => {
@@ -64,26 +75,24 @@ class ItemTableRow extends Component {
 
   render() {
     const {
-      ds, columns, isDragging, isSelected, ...props
+      ds, dt, columns, isSelected, ...props
     } = this.props
-
-    const { isDisabled } = this
 
     delete props.dp
     delete props.onSelect
     delete props.onContextMenu
     delete props.onColumnEdit
 
-    return ds(
+    return ds(dt(
       <tr
-        className={cn({ item: true, active: isSelected, dragging: isDragging })}
+        className={cn(this.classes)}
         onContextMenu={this.handleContextMenu}>
         {
           columns.map(({ property, width }) => (
             <ItemTableCell {...props}
               key={property.uri}
               isEditing={this.isEditing(property.uri)}
-              isDisabled={isDisabled}
+              isDisabled={this.isDisabled}
               isSelected={isSelected}
               hasCoverImage={property.uri === DC.TITLE}
               property={property}
@@ -94,7 +103,7 @@ class ItemTableRow extends Component {
           ))
         }
       </tr>
-    )
+    ))
   }
 
   static propTypes = {
@@ -112,9 +121,11 @@ class ItemTableRow extends Component {
 
     isSelected: PropTypes.bool,
     isDragging: PropTypes.bool,
+    isOver: PropTypes.bool,
 
     ds: PropTypes.func.isRequired,
     dp: PropTypes.func.isRequired,
+    dt: PropTypes.func.isRequired,
 
     onSelect: PropTypes.func.isRequired,
     onContextMenu: PropTypes.func,
@@ -127,5 +138,5 @@ class ItemTableRow extends Component {
 
 
 module.exports = {
-  ItemTableRow: ItemDragSource()(ItemTableRow)
+  ItemTableRow: ItemDragSource()(ItemDropTarget()(ItemTableRow))
 }

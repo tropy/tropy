@@ -4,6 +4,7 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { CoverImage } = require('./cover-image')
 const { ItemDragSource } = require('./drag-source')
+const { ItemDropTarget } = require('./drop-target')
 const { getEmptyImage } = require('react-dnd-html5-backend')
 const { meta } = require('../../common/os')
 const cn = require('classnames')
@@ -52,14 +53,15 @@ class ItemTile extends Component {
     return {
       'item-tile': true,
       'active': this.props.isSelected,
-      'dragging': this.props.isDragging
+      'dragging': this.props.isDragging,
+      'over': this.props.isOver
     }
   }
 
   render() {
-    const { ds, onClick, ...props } = this.props
+    const { ds, dt, onClick, ...props } = this.props
 
-    return ds(
+    return ds(dt(
       <li
         className={cn(this.classes)}
         style={this.style}
@@ -69,7 +71,7 @@ class ItemTile extends Component {
           onClick={this.handleClick}
           onDoubleClick={this.handleDoubleClick}/>
       </li>
-    )
+    ))
   }
 
   static propTypes = {
@@ -82,9 +84,11 @@ class ItemTile extends Component {
 
     isSelected: PropTypes.bool,
     isDragging: PropTypes.bool,
+    isOver: PropTypes.bool,
 
     ds: PropTypes.func.isRequired,
     dp: PropTypes.func.isRequired,
+    dt: PropTypes.func.isRequired,
 
     onClick: PropTypes.func,
     onOpen: PropTypes.func.isRequired,
@@ -94,5 +98,5 @@ class ItemTile extends Component {
 }
 
 module.exports = {
-  ItemTile: ItemDragSource()(ItemTile)
+  ItemTile: ItemDragSource()(ItemDropTarget()(ItemTile))
 }
