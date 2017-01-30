@@ -3,6 +3,7 @@
 const React = require('react')
 const { PropTypes } = React
 const cn = require('classnames')
+const { IconChevron7 } = require('../icons')
 
 
 const ItemTableHead = ({ columns }) => (
@@ -14,7 +15,10 @@ const ItemTableHead = ({ columns }) => (
             key={property.uri}
             className={cn(['metadata-head', property.type, order])}
             style={{ width }}>
-            {property.label}
+            <div className={cn(['metadata-head-container'])}>
+              <div className="label">{property.label}</div>
+              <IconChevron7/>
+            </div>
           </th>
         ))}
       </tr>

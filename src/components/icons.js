@@ -32,7 +32,15 @@ function i(name, svg) {
 
 /* 16 x 16 */
 
-i('Chevron', (
+i('Chevron7', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <polygon points="5.707,10 8.5,7.207 11.293,10 12,9.293 8.5,5.793 5,9.293"/>
+    </g>
+  </svg>
+))
+
+i('Chevron16', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
       <polygon points="15.146,11.854 8,4.707 0.854,11.854 0.146,11.146 8,3.293 15.854,11.146"/>
