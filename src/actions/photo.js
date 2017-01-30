@@ -45,5 +45,23 @@ module.exports = {
 
   select(payload, meta = {}) {
     return { type: PHOTO.SELECT, payload, meta }
+  },
+
+  move(payload, meta) {
+    return {
+      type: PHOTO.MOVE,
+      payload,
+      meta: { async: true, record: true, ...meta }
+    }
+  },
+
+  bulk: {
+    update(payload, meta) {
+      return {
+        type: PHOTO.BULK.UPDATE,
+        payload,
+        meta: { ...meta }
+      }
+    }
   }
 }

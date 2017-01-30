@@ -141,6 +141,7 @@ class Project extends Component {
     onMetadataSave: PropTypes.func,
     onModeChange: PropTypes.func,
     onProjectSave: PropTypes.func,
+    onPhotosMove: PropTypes.func,
     onListItemsAdd: PropTypes.func,
     onListSave: PropTypes.func
   }
@@ -203,6 +204,10 @@ module.exports = {
       onMetadataSave(...args) {
         dispatch(actions.metadata.save(...args))
         dispatch(actions.ui.edit.cancel())
+      },
+
+      onPhotosMove(...args) {
+        dispatch(actions.photo.move(...args))
       },
 
       onListSave(...args) {

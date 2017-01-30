@@ -5,7 +5,7 @@ const { DND } = require('../../constants')
 
 const spec = {
   beginDrag({ photo }) {
-    return { id: photo.id }
+    return { id: photo.id, item: photo.item }
   },
 
   canDrag({ isDisabled }) {

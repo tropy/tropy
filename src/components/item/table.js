@@ -63,7 +63,7 @@ class ItemTable extends Component {
   }
 
   render() {
-    const { items, onEditCancel, ...props } = this.props
+    const { items, onEditCancel, onPhotosMove, ...props } = this.props
 
     return (
       <div className="item-table-view">
@@ -84,7 +84,8 @@ class ItemTable extends Component {
                   onSelect={this.handleSelect}
                   onCancel={onEditCancel}
                   onColumnEdit={this.handleColumnEdit}
-                  onContextMenu={this.handleContextMenu}/>
+                  onContextMenu={this.handleContextMenu}
+                  onDropPhotos={onPhotosMove}/>
               )}
             </tbody>
           </table>
@@ -103,6 +104,7 @@ class ItemTable extends Component {
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
     onMetadataSave: PropTypes.func,
+    onPhotosMove: PropTypes.func,
     onContextMenu: PropTypes.func
   }
 }

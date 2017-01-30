@@ -105,9 +105,36 @@ class Load extends Command {
   }
 }
 
+class Move extends Command {
+  static get action() { return PHOTO.MOVE }
+
+  *exec() {
+    const { db } = this.options
+    const { photos, item } = this.action.payload
+
+    // Assuming all photos being moved from the same item!
+    const cur = photos[0].item
+    const ids = photos.map(photo => photo.id)
+
+    yield call(mod.photo.move, db, { ids, item })
+
+    yield [
+      put(act.photo.bulk.update([ids, { item }])),
+      put(act.item.photos.remove({ id: cur, photos: ids })),
+      put(act.item.photos.add({ id: item, photos: ids }))
+    ]
+
+    this.undo = act.photo.move({
+      photos: photos.map(photo => ({ id: photo.id, item })),
+      item: cur
+    })
+  }
+}
+
 module.exports = {
   Create,
   Delete,
   Load,
-  Restore
+  Restore,
+  Move
 }

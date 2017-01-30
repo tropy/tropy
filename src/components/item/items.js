@@ -58,6 +58,7 @@ Items.propTypes = {
   onEditCancel: PropTypes.func,
   onContextMenu: PropTypes.func,
   onMetadataSave: PropTypes.func,
+  onPhotosMove: PropTypes.func,
   onZoomChange: PropTypes.func,
 }
 

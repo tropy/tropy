@@ -67,6 +67,12 @@ module.exports = {
     return photos
   },
 
+  async move(db, { ids, item }) {
+    return db.run(`
+      UPDATE photos SET item_id = ?  WHERE id in (${ids.join(',')})`,
+      item)
+  },
+
   async delete(db, ids) {
     return db.run(`
       INSERT INTO trash (id)

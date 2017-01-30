@@ -3,9 +3,11 @@
 const { PHOTO, PROJECT } = require('../constants')
 
 const { omit } = require('../common/util')
+const { into, map } = require('transducers.js')
 const init = {}
 
 module.exports = {
+  // eslint-disable-next-line complexity
   photos(state = init, { type, payload, error, meta }) {
     switch (type) {
       case PROJECT.OPEN:
@@ -33,6 +35,17 @@ module.exports = {
             ...payload
           }
         }
+
+      case PHOTO.BULK.UPDATE: {
+        const [ids, data] = payload
+
+        return into(
+          { ...state },
+          map(id => ({ [id]: { ...state[id], ...data } })),
+          ids
+        )
+      }
+
 
       default:
         return state

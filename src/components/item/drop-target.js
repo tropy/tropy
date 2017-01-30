@@ -5,6 +5,13 @@ const { DND } = require('../../constants')
 
 
 const spec = {
+  drop({ item, onDropPhotos }, monitor) {
+    const photo = monitor.getItem()
+
+    onDropPhotos({
+      item: item.id, photos: [photo]
+    })
+  }
 }
 
 const collect = (connect, monitor) => ({

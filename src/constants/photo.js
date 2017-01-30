@@ -7,6 +7,11 @@ module.exports = {
   SELECT: 'photo.select',
   DELETE: 'photo.delete',
   RESTORE: 'photo.restore',
+  MOVE: 'photo.move',
+
+  BULK: {
+    UPDATE: 'photo.bulk.update'
+  },
 
   TEMPLATE: 'https://schema.tropy.org/v1/templates/photo'
 }

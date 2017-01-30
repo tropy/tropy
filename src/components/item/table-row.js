@@ -131,6 +131,7 @@ class ItemTableRow extends Component {
     onContextMenu: PropTypes.func,
     onColumnEdit: PropTypes.func,
     onCancel: PropTypes.func,
+    onDropPhotos: PropTypes.func,
     onMetadataSave: PropTypes.func,
     onOpen: PropTypes.func
   }
