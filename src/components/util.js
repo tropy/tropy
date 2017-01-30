@@ -1,6 +1,9 @@
 'use strict'
 
 const { Children, PropTypes } = require('react')
+const { get, move } = require('../common/util')
+const { assign } = Object
+
 
 module.exports = {
 
@@ -46,6 +49,33 @@ module.exports = {
         if (onClick) onClick(event)
       }
     }
+  },
+
+  sortable(component, props, propName = 'order') {
+
+    component.state = {
+      ...component.state,
+      order: get(props, propName) || []
+    }
+
+    component.handleMove = function (item, to, offset = 0) {
+      this.setState({
+        order: move(this.state.order, item, to, offset)
+      })
+    }.bind(component)
+
+    component.handleMoveReset = function () {
+      this.setState({
+        order: get(this.props, propName) || []
+      })
+    }.bind(component)
+
+    component.handleMoveCommit = function () {
+      const { onSort } = this.props
+      if (onSort) onSort(this.state.order)
+    }.bind(component)
+
+    return component
   },
 
   Shapes: {

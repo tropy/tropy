@@ -3,16 +3,14 @@
 const React = require('react')
 const { Component, PropTypes } = React
 const { ListNode } = require('./node')
-const { get, move } = require('../../common/util')
+const { sortable } = require('../util')
+const { get } = require('../../common/util')
 
 
 class ListTree extends Component {
   constructor(props) {
     super(props)
-
-    this.state = {
-      order: get(props, 'parent.children') || []
-    }
+    sortable(this, props, 'parent.children')
   }
 
   componentWillReceiveProps(props) {
@@ -33,24 +31,6 @@ class ListTree extends Component {
     return get(this.props, 'nav.list') === id
   }
 
-  handleMove = (node, to, offset = 0) => {
-    const order = this.state.order
-
-    this.setState({
-      order: move(order, node, to, offset)
-    })
-  }
-
-  handleMoveReset = () => {
-    this.setState({
-      order: get(this.props, 'parent.children') || []
-    })
-  }
-
-  handleMoveCommit = () => {
-    const { onSort } = this.props
-    if (onSort) onSort(this.state.order)
-  }
 
   renderNewListNode() {
     const { parent, onEditCancel, onListSave } = this.props
