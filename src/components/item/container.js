@@ -183,6 +183,7 @@ class Item extends Component {
       photos,
       nav,
       onPhotoSelect,
+      onPhotoSort,
       onEditCancel,
       ...props
     } = this.props
@@ -202,6 +203,7 @@ class Item extends Component {
         selected={photo && photo.id}
         isOpen={this.isItemMode}
         onSelect={onPhotoSelect}
+        onSort={onPhotoSort}
         onCancel={onEditCancel}
         onChange={this.handlePhotoChange}
         onEdit={this.handlePhotoEdit}
@@ -315,6 +317,7 @@ class Item extends Component {
     onTabSelect: PropTypes.func,
     onPhotoCreate: PropTypes.func,
     onPhotoSelect: PropTypes.func,
+    onPhotoSort: PropTypes.func,
     onPhotoZoomChange: PropTypes.func
   }
 }

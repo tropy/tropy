@@ -59,7 +59,7 @@ class ItemGrid extends Component {
 
 
   render() {
-    const { items, onPhotosMove, ...props } = this.props
+    const { items, onPhotoMove, ...props } = this.props
     const tile = this.placeholder
 
     return (
@@ -76,7 +76,7 @@ class ItemGrid extends Component {
               onSelect={this.handleSelect}
               onClick={this.handleClickInside}
               onContextMenu={this.handleContextMenu}
-              onDropPhotos={onPhotosMove}/>
+              onDropPhotos={onPhotoMove}/>
           )}
 
           {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
@@ -104,7 +104,7 @@ class ItemGrid extends Component {
     onOpen: PropTypes.func,
     onSelect: PropTypes.func,
     onContextMenu: PropTypes.func,
-    onPhotosMove: PropTypes.func
+    onPhotoMove: PropTypes.func
   }
 }
 

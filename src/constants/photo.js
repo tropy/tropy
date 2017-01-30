@@ -8,6 +8,7 @@ module.exports = {
   DELETE: 'photo.delete',
   RESTORE: 'photo.restore',
   MOVE: 'photo.move',
+  ORDER: 'photo.order',
 
   BULK: {
     UPDATE: 'photo.bulk.update'

@@ -55,6 +55,14 @@ module.exports = {
     }
   },
 
+  order(payload, meta) {
+    return {
+      type: PHOTO.ORDER,
+      payload,
+      meta: { async: true, record: true, ...meta }
+    }
+  },
+
   bulk: {
     update(payload, meta) {
       return {

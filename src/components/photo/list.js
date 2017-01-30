@@ -4,7 +4,7 @@ const React = require('react')
 const { Component, PropTypes } = React
 const { PhotoListItem } = require('./list-item')
 const { DC } = require('../../constants/properties')
-const { get } = require('../../common/util')
+const { get, move } = require('../../common/util')
 
 
 class PhotoList extends Component {
@@ -46,6 +46,15 @@ class PhotoList extends Component {
     }
   }
 
+  handleDropPhoto = ({ id, to, offset }) => {
+    const { onSort, photos } = this.props
+
+    const item = photos[0].item
+    const order = move(photos.map(photo => photo.id), id, to, offset)
+
+    onSort({ item, photos: order })
+  }
+
   render() {
     const { photos, onEdit, ...props } = this.props
 
@@ -62,6 +71,7 @@ class PhotoList extends Component {
             onClick={this.handleClick}
             onSingleClick={onEdit}
             onDoubleClick={this.handleDoubleClick}
+            onDropPhoto={this.handleDropPhoto}
             onContextMenu={this.handleContextMenu}/>
         )}
       </ul>
@@ -82,6 +92,7 @@ class PhotoList extends Component {
     isOpen: PropTypes.bool,
 
     onSelect: PropTypes.func,
+    onSort: PropTypes.func,
     onOpen: PropTypes.func,
     onEdit: PropTypes.func,
     onCancel: PropTypes.func,

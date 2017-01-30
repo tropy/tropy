@@ -168,10 +168,28 @@ class Move extends Command {
   }
 }
 
+class Order extends Command {
+  static get action() { return PHOTO.ORDER }
+
+  *exec() {
+    const { db } = this.options
+    const { item, photos } = this.action.payload
+
+    const original = yield select(state => state.items[item].photos)
+
+    yield call(mod.photo.order, db, item, photos)
+    yield put(act.item.update({ id: item, photos }))
+
+    this.undo = act.photo.order({ item, photos: original })
+  }
+}
+
+
 module.exports = {
   Create,
   Delete,
   Load,
   Restore,
-  Move
+  Move,
+  Order
 }

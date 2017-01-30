@@ -35,6 +35,14 @@ const DT = {
       const offset = Math.round((monitor.getClientOffset().y - top) / height)
 
       component.setState({ offset })
+    },
+
+    drop({ photo, onDropPhoto }, monitor, { state }) {
+      const item = monitor.getItem()
+
+      onDropPhoto({
+        id: item.id, to: photo.id, offset: state.offset
+      })
     }
   },
 
@@ -52,8 +60,8 @@ const DT = {
 
 
 module.exports = {
-  connect({ isSortable, ds, dt }, element) {
-    return isSortable ? ds(dt(element)) : ds(element)
+  connect({ isDisabled, ds, dt }, element) {
+    return isDisabled ? element : ds(dt(element))
   },
 
   wrap(Component) {
