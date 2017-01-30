@@ -9,6 +9,7 @@ const { PHOTO } = require('../constants')
 const { Image } = require('../image')
 const { imagePath } = require('../common/cache')
 const { warn, verbose } = require('../common/log')
+const { splice } = require('../common/util')
 
 
 class Create extends Command {
@@ -67,17 +68,21 @@ class Delete extends Command {
 
   *exec() {
     const { db } = this.options
-    const { payload } = this.action
+    const { item, photos } = this.action.payload
 
-    const item = yield select(state => state.items[payload.item])
+    let order = yield select(state => state.items[item].photos)
+    let idx = photos.map(id => order.indexOf(id))
 
-    const photos = payload.photos
-    const idx = photos.map(photo => item.photos.indexOf(photo))
+    order = order.filter(id => !photos.includes(id))
 
-    yield put(act.item.photos.remove({ id: item.id, photos }))
-    yield call(mod.photo.delete, db, photos)
+    yield call([db, db.transaction], async tx => {
+      await mod.photo.delete(tx, photos)
+      await mod.photo.order(tx, item, order)
+    })
 
-    this.undo = act.photo.restore({ item: item.id, photos }, { idx })
+    yield put(act.item.photos.remove({ id: item, photos }))
+
+    this.undo = act.photo.restore({ item, photos }, { idx })
   }
 }
 
@@ -91,10 +96,16 @@ class Restore extends Command {
     // Restore all photos in a batch at the former index
     // of the first photo to be restored. Need to differentiate
     // if we support selecting multiple photos!
-    const [idx] = this.action.meta.idx
+    let [idx] = this.action.meta.idx
+    let order = yield select(state => state.items[item].photos)
 
-    yield call(mod.photo.restore, db, { item, ids: photos })
-    // reorder!
+    order = splice(order, idx, 0, ...photos)
+
+    yield call([db, db.transaction], async tx => {
+      await mod.photo.restore(tx, { item, ids: photos })
+      await mod.photo.order(tx, item, order)
+    })
+
     yield put(act.item.photos.add({ id: item, photos }, { idx }))
 
     this.undo = act.photo.delete({ item, photos })

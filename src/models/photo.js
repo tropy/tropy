@@ -73,6 +73,18 @@ module.exports = {
       item)
   },
 
+  async order(db, item, order) {
+    if (order.length) {
+      return await db.run(`
+        UPDATE photos
+        SET position = CASE id
+          ${order.map((_, idx) => (`WHEN ? THEN ${idx + 1}`)).join(' ')}
+          END
+        WHERE item_id = ?`,
+        ...order, item)
+    }
+  },
+
   async delete(db, ids) {
     return db.run(`
       INSERT INTO trash (id)
