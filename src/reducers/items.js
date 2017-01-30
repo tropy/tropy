@@ -1,6 +1,6 @@
 'use strict'
 
-const { omit } = require('../common/util')
+const { omit, splice } = require('../common/util')
 const { ITEM, PROJECT } = require('../constants')
 const { into, map } = require('transducers.js')
 
@@ -46,16 +46,16 @@ module.exports = {
       }
 
       case ITEM.TAG.ADD:
-        return nested.add('tags', state, payload)
+        return nested.add('tags', state, payload, meta)
 
       case ITEM.TAG.REMOVE:
-        return nested.remove('tags', state, payload)
+        return nested.remove('tags', state, payload, meta)
 
       case ITEM.PHOTO.ADD:
-        return nested.add('photos', state, payload)
+        return nested.add('photos', state, payload, meta)
 
       case ITEM.PHOTO.REMOVE:
-        return nested.remove('photos', state, payload)
+        return nested.remove('photos', state, payload, meta)
 
       default:
         return state
@@ -64,14 +64,16 @@ module.exports = {
 }
 
 const nested = {
-  add(name, state = {}, payload) {
+  add(name, state = {}, payload, { idx }) {
     const { id, [name]: added } = payload
+
+    if (idx == null || idx < 0) idx = state[id][name].length
 
     return {
       ...state,
       [id]: {
         ...state[id],
-        [name]: [...state[id][name], ...added]
+        [name]: splice(state[id][name], idx, 0, ...added)
       }
     }
   },

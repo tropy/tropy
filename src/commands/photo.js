@@ -1,6 +1,6 @@
 'use strict'
 
-const { call, put } = require('redux-saga/effects')
+const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { openImages } = require('../dialog')
 const mod = require('../models')
@@ -67,12 +67,17 @@ class Delete extends Command {
 
   *exec() {
     const { db } = this.options
-    const { item, photos } = this.action.payload
+    const { payload } = this.action
 
-    yield put(act.item.photos.remove({ id: item, photos }))
+    const item = yield select(state => state.items[payload.item])
+
+    const photos = payload.photos
+    const idx = photos.map(photo => item.photos.indexOf(photo))
+
+    yield put(act.item.photos.remove({ id: item.id, photos }))
     yield call(mod.photo.delete, db, photos)
 
-    this.undo = act.photo.restore({ item, photos })
+    this.undo = act.photo.restore({ item: item.id, photos }, { idx })
   }
 }
 
@@ -83,10 +88,14 @@ class Restore extends Command {
     const { db } = this.options
     const { item, photos } = this.action.payload
 
-    // TODO restore positions!
+    // Restore all photos in a batch at the former index
+    // of the first photo to be restored. Need to differentiate
+    // if we support selecting multiple photos!
+    const [idx] = this.action.meta.idx
 
     yield call(mod.photo.restore, db, { item, ids: photos })
-    yield put(act.item.photos.add({ id: item, photos }))
+    // reorder!
+    yield put(act.item.photos.add({ id: item, photos }, { idx }))
 
     this.undo = act.photo.delete({ item, photos })
   }

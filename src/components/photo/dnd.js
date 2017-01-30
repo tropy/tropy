@@ -52,8 +52,8 @@ const DT = {
 
 
 module.exports = {
-  connect({ ds, dt }, element) {
-    return ds(dt(element))
+  connect({ isSortable, ds, dt }, element) {
+    return isSortable ? ds(dt(element)) : ds(element)
   },
 
   wrap(Component) {

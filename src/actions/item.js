@@ -135,37 +135,37 @@ module.exports = {
       }
     },
 
-    add(payload, meta = {}) {
+    add(payload, meta) {
       return {
         type: ITEM.TAG.ADD,
         payload,
-        meta
+        meta: { ...meta }
       }
     },
 
-    remove(payload, meta = {}) {
+    remove(payload, meta) {
       return {
         type: ITEM.TAG.REMOVE,
         payload,
-        meta
+        meta: { ...meta }
       }
     }
   },
 
   photos: {
-    add(payload, meta = {}) {
+    add(payload, meta) {
       return {
         type: ITEM.PHOTO.ADD,
         payload,
-        meta
+        meta: { ...meta }
       }
     },
 
-    remove(payload, meta = {}) {
+    remove(payload, meta) {
       return {
         type: ITEM.PHOTO.REMOVE,
         payload,
-        meta
+        meta: { ...meta }
       }
     }
   }
