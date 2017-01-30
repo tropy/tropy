@@ -7,7 +7,7 @@
 
   svg {
     display: block;
-    fill: $icon-color;
+    color: $icon-color;
 
     @if $icon-style == "line" {
       .block {
@@ -26,14 +26,13 @@
   height: $thumbnail-size;
 
   svg {
-    fill: $icon-item-color;
+    color: $icon-item-color;
     background: $icon-item-bg;
   }
 }
 
 .icon-spin {
   svg {
-    fill: none;
-    stroke: $icon-spin-color;
+    color: $icon-spin-color;
   }
 }

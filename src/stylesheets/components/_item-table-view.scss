@@ -40,9 +40,14 @@
   }
 
   .metadata-head {
-    text-align: left;
+    text-align: justify;
     font-weight: 400;
     height: $item-table-header-height;
+    position: relative;
+
+    &:active {
+      background: $item-table-header-active-bg;
+    }
 
     &:first-child {
       padding-left: $space-sm;
@@ -62,9 +67,52 @@
       background: $item-table-header-border-color;
     }
 
+    &.number {
+      .label {
+        padding-left: $space-min;
+      }
+
+      .icon {
+        order: -1;
+      }
+    }
+
     &.ascending,
     &.descending {
       color: $item-table-header-sort-color;
+
+      .icon {
+        display: block;
+      }
+    }
+
+    &.descending {
+      .icon {
+        transform: scaleY(-1);
+      }
+    }
+
+    &-container {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .label {
+      @include css-truncation;
+      flex: 1 1 auto;
+      padding-right: $space-min;
+    }
+
+    .icon {
+      display: none;
+      margin: 0 -4px 0 -5px;
+
+      svg {
+        color: inherit;
+      }
     }
   }
 
