@@ -4,6 +4,7 @@ const {
   createSelector: memo
 } = require('reselect')
 
+const { entries } = Object
 const { DC } = require('../constants/properties')
 
 const CORE = 'https://schema.tropy.org/v1/templates/core'
@@ -55,8 +56,7 @@ const getTemplates = memo(
   ({ properties }) => properties,
 
   (templates, properties) =>
-    Object
-      .entries(templates)
+    entries(templates)
       .reduce((tpl, [k, v]) => {
         tpl[k] = {
           ...v,
