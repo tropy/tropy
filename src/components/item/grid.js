@@ -89,7 +89,7 @@ class ItemGrid extends Component {
 
   static ZOOM = [
     24,
-    ...times(56, i => i * 4 + 32),
+    ...times(57, i => i * 4 + 28),
     ...times(32, i => i * 8 + 256),
     512
   ]
