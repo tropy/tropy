@@ -120,7 +120,8 @@ CREATE TABLE lists (
   UNIQUE (parent_list_id, name)
 );
 
-INSERT INTO lists (list_id, name, parent_list_id) VALUES (0, 'ROOT', NULL);
+INSERT INTO lists (list_id, name, parent_list_id, created, modified)
+  VALUES (0, 'ROOT', NULL, '2017-01-31 12:00:00', '2017-01-31 12:00:00');
 
 CREATE TABLE list_items (
   list_id  INTEGER  REFERENCES lists ON DELETE CASCADE,
@@ -150,7 +151,7 @@ CREATE TABLE taggings (
   id         INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   tagged     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  PRIMARY KEY (tag_id, id)
+  PRIMARY KEY (id, tag_id)
 ) WITHOUT ROWID;
 
 

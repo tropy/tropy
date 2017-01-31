@@ -14,6 +14,7 @@ const { strftime } = require('../lib/common/util')
 
 const home = resolve(__dirname, '..')
 const DB = join(home, 'db', 'db.sqlite')
+const SCHEMA = join(home, 'db', 'schema.sql')
 
 
 target.create = (args = []) => {
@@ -31,7 +32,7 @@ target.migrate = () => {
   const tmp = join(home, 'tmp.db')
 
   rm('-f', tmp)
-  rm('-f', Database.schema)
+  rm('-f', SCHEMA)
 
   const db = new Database(tmp)
 
@@ -57,17 +58,17 @@ PRAGMA user_version=${version};
 
 -- Load sqlite3 .dump
 `
-      ).to(Database.schema)
+      ).to(SCHEMA)
 
-      exec(`sqlite3 ${tmp} .dump >> ${Database.schema}`)
-      'PRAGMA foreign_keys=ON;'.toEnd(Database.schema)
+      exec(`sqlite3 ${tmp} .dump >> ${SCHEMA}`)
+      'PRAGMA foreign_keys=ON;'.toEnd(SCHEMA)
 
-      return [Database.schema, version]
+      return version
     })
 
-    .tap(([schema, version]) => {
+    .tap((version) => {
       info(`schema migrated to #${version}`)
-      info(`schema written to ${schema}`)
+      info(`schema written to ${SCHEMA}`)
     })
 
     .finally(() => db.close())
