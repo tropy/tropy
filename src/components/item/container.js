@@ -13,7 +13,7 @@ const { PhotoToolbar, PhotoList, PhotoGrid } = require('../photo')
 const { IconMetadata, IconTag, IconChevron16 } = require('../icons')
 const { IconButton } = require('../button')
 const { Image } = require('../image')
-const { Fields } = require('../metadata')
+const { Fields, TemplateSelect } = require('../metadata')
 const { getSelectedItems } = require('../../selectors/items')
 const { getPhotos, getSelectedPhoto } = require('../../selectors/photos')
 const { MODE } = require('../../constants/project')
@@ -76,6 +76,9 @@ class Item extends Component {
 
   handleNoteCreate = (event) => {
     event.stopPropagation()
+  }
+
+  handleTemplateChange = () => {
   }
 
 
@@ -145,6 +148,10 @@ class Item extends Component {
             <h5 className="metadata-heading">
               <FormattedMessage id="panel.metadata.item"/>
             </h5>
+            <TemplateSelect
+              templates={templates}
+              selected="core"
+              onChange={this.handleTemplateChange}/>
             <Fields {...props}
               subject={item}
               isDisabled={isDisabled}

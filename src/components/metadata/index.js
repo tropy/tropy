@@ -2,5 +2,6 @@
 
 module.exports = {
   ...require('./fields'),
-  ...require('./field')
+  ...require('./field'),
+  ...require('./select')
 }
