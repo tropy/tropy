@@ -44,7 +44,7 @@ class PhotoList extends PhotoIterator {
     isDisabled: PropTypes.bool,
 
     onEdit: PropTypes.func,
-    onCancel: PropTypes.func
+    onEditCancel: PropTypes.func
   }
 }
 

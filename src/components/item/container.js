@@ -196,7 +196,6 @@ class Item extends Component {
       nav,
       onPhotoSelect,
       onPhotoSort,
-      onEditCancel,
       ...props
     } = this.props
 
@@ -216,7 +215,6 @@ class Item extends Component {
         isOpen={this.isItemMode}
         onSelect={onPhotoSelect}
         onSort={onPhotoSort}
-        onCancel={onEditCancel}
         onChange={this.handlePhotoChange}
         onEdit={this.handlePhotoEdit}
         isDisabled={this.isDisabled}/>

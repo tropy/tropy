@@ -80,7 +80,7 @@ class PhotoListItem extends Component {
       title,
       isEditing,
       isDisabled,
-      onCancel
+      onEditCancel
     } = this.props
 
     const value = photo.data[title] && photo.data[title].value
@@ -99,7 +99,7 @@ class PhotoListItem extends Component {
             value={value}
             isEditing={isEditing}
             isDisabled={isDisabled}
-            onCancel={onCancel}
+            onCancel={onEditCancel}
             onChange={this.handleChange}/>
         </div>
       </li>
@@ -126,7 +126,7 @@ class PhotoListItem extends Component {
     dp: PropTypes.func.isRequired,
     isDragging: PropTypes.bool,
 
-    onCancel: PropTypes.func,
+    onEditCancel: PropTypes.func,
     onChange: PropTypes.func,
 
     onContextMenu: PropTypes.func,
