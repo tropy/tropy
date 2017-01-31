@@ -20,7 +20,7 @@ class Storage {
   }
 
   async save(name, object) {
-    return await write(this.expand(name), JSON.stringify(object))
+    return write(this.expand(name), JSON.stringify(object))
   }
 
   expand(name) {

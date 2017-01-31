@@ -2,7 +2,7 @@
 
 module.exports = {
   async all(db) {
-    return await db.all(
+    return db.all(
       'SELECT tag_id AS id, name, visible FROM tags'
     )
   },
@@ -16,26 +16,26 @@ module.exports = {
   },
 
   async save(db, { id, name }) {
-    return await db.run(
+    return db.run(
       'UPDATE tags SET name = ?, modified = datetime("now") WHERE tag_id = ?',
       name, id
     )
   },
 
   async hide(db, id) {
-    return await db.run(
+    return db.run(
       'UPDATE tags SET visible = 0 WHERE tag_id = ?', id
     )
   },
 
   async show(db, id) {
-    return await db.run(
+    return db.run(
       'UPDATE tags SET visible = 1 WHERE tag_id = ?', id
     )
   },
 
   async prune(db) {
-    return await db.run(
+    return db.run(
       'DELETE FROM tags WHERE visible = 0'
     )
   }

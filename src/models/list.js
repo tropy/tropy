@@ -41,17 +41,17 @@ module.exports = {
   },
 
   async remove(db, id) {
-    return await db.run(
+    return db.run(
       'UPDATE lists SET parent_list_id = NULL WHERE list_id = ?', id)
   },
 
   async restore(db, id, parent) {
-    return await db.run(
+    return db.run(
       'UPDATE lists SET parent_list_id = ? WHERE list_id = ?', parent, id)
   },
 
   async prune(db) {
-    return await db.seq(conn => all([
+    return db.seq(conn => all([
       conn.run(
         'DELETE FROM lists WHERE list_id != ? AND parent_list_id IS NULL', ROOT
       ),
@@ -60,14 +60,14 @@ module.exports = {
   },
 
   async save(db, { id, name }) {
-    return await db.run(
+    return db.run(
       'UPDATE lists SET name = ?, modified = datetime("now") WHERE list_id = ?',
       name, id)
   },
 
   async order(db, parent, order) {
     if (order.length) {
-      return await db.run(`
+      return db.run(`
         UPDATE lists
         SET position = CASE list_id
           ${order.map((_, idx) => (`WHEN ? THEN ${idx + 1}`)).join(' ')}

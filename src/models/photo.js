@@ -75,7 +75,7 @@ module.exports = {
 
   async order(db, item, order) {
     if (order.length) {
-      return await db.run(`
+      return db.run(`
         UPDATE photos
         SET position = CASE id
           ${order.map((_, idx) => (`WHEN ? THEN ${idx + 1}`)).join(' ')}
