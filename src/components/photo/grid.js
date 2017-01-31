@@ -1,50 +1,12 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
+const { PropTypes } = React
+const { PhotoIterator } = require('./iterator')
 const { PhotoTile } = require('./tile')
-const { move } = require('../../common/util')
 
 
-class PhotoGrid extends Component {
-
-  isSelected(photo) {
-    return this.props.selected === photo.id
-  }
-
-  handleContextMenu = (photo, event) => {
-    this.props.onContextMenu(event, 'photo', photo)
-  }
-
-  handleClick = (photo, event) => {
-    const { selected, onSelect } = this.props
-
-    if (selected !== photo.id) {
-      onSelect({
-        photo: photo.id,
-        item: photo.item
-      })
-
-      event.stopPropagation()
-    }
-  }
-
-  handleDoubleClick = (photo) => {
-    const { isOpen, onOpen } = this.props
-
-    if (!isOpen) {
-      onOpen({ id: photo.item, photos: [photo.id] })
-    }
-  }
-
-  handleDropPhoto = ({ id, to, offset }) => {
-    const { onSort, photos } = this.props
-
-    const item = photos[0].item
-    const order = move(photos.map(photo => photo.id), id, to, offset)
-
-    onSort({ item, photos: order })
-  }
+class PhotoGrid extends PhotoIterator {
 
   render() {
     const { photos, ...props } = this.props
@@ -61,6 +23,7 @@ class PhotoGrid extends Component {
       </ul>
     )
   }
+
 
   static propTypes = {
     photos: PropTypes.arrayOf(

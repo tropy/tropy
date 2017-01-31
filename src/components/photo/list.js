@@ -11,16 +11,7 @@ const { get } = require('../../common/util')
 class PhotoList extends PhotoIterator {
 
   isEditing(photo) {
-    return get(this.props, 'ui.edit.photo') === photo.id
-  }
-
-
-  handleDoubleClick = (photo) => {
-    const { isOpen, onOpen } = this.props
-
-    if (!isOpen) {
-      onOpen({ id: photo.item, photos: [photo.id] })
-    }
+    return get(this.props.ui, 'edit.photo') === photo.id
   }
 
   render() {
@@ -47,24 +38,13 @@ class PhotoList extends PhotoIterator {
   }
 
   static propTypes = {
-    photos: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number.isRequired
-      })
-    ),
+    ...PhotoIterator.propTypes,
 
     cache: PropTypes.string,
-    selected: PropTypes.number,
-
     isDisabled: PropTypes.bool,
-    isOpen: PropTypes.bool,
 
-    onSelect: PropTypes.func,
-    onSort: PropTypes.func,
-    onOpen: PropTypes.func,
     onEdit: PropTypes.func,
-    onCancel: PropTypes.func,
-    onContextMenu: PropTypes.func
+    onCancel: PropTypes.func
   }
 }
 

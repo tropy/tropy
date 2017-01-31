@@ -1,9 +1,7 @@
 'use strict'
 
-/* eslint-disable react/prop-types */
-
 const React = require('react')
-const { Component } = React
+const { Component, PropTypes } = React
 const { get, move } = require('../../common/util')
 
 
@@ -17,7 +15,7 @@ class PhotoIterator extends Component {
   }
 
   isContext(photo) {
-    return get(this.props, 'ui.context.photo.id') === photo.id
+    return get(this.props.ui, 'context.photo.id') === photo.id
   }
 
   select = (photo) => {
@@ -52,6 +50,22 @@ class PhotoIterator extends Component {
     onSort({ item, photos: order })
   }
 
+  static propTypes = {
+    photos: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired
+      })
+    ).isRequired,
+
+    isOpen: PropTypes.bool,
+    selected: PropTypes.number,
+    ui: PropTypes.object,
+
+    onContextMenu: PropTypes.func,
+    onOpen: PropTypes.func,
+    onSelect: PropTypes.func,
+    onSort: PropTypes.func
+  }
 }
 
 module.exports = {
