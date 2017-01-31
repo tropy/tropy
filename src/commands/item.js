@@ -150,7 +150,8 @@ class Load extends Command {
     const { db } = this.options
     const ids = this.action.payload
 
-    const items = yield call(mod.item.load, db, ids)
+    const items =
+      yield call([db, db.seq], conn => mod.item.load(conn, ids))
 
     return items
   }

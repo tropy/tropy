@@ -2,9 +2,8 @@
 
 const metadata = require('./metadata')
 const { DC } = require('../constants/properties')
-
-const num = (list, separator = ',') =>
-  list ? list.split(separator).map(Number) : []
+const { all } = require('bluebird')
+const { assign } = Object
 
 module.exports = {
 
@@ -57,30 +56,43 @@ module.exports = {
   },
 
   async load(db, ids) {
-    const items = {}
+    const items = ids.reduce((i, id) =>
+      ((i[id] = { id, tags: [], photos: [] }), i), {})
 
     if (ids.length) {
-      await db.each(`
-        SELECT s.id, created, modified, deleted,
-            group_concat(tag_id) AS tags,
-            group_concat(photos.id) AS photos
-          FROM subjects s
-            JOIN items USING (id)
-            LEFT OUTER JOIN trash USING (id)
-            LEFT OUTER JOIN taggings USING (id)
-            LEFT OUTER JOIN photos ON s.id = photos.item_id
-          WHERE s.id IN (${ids.join(',')})
-          GROUP BY s.id`,
+      ids = ids.join(',')
 
-        (item) => {
-          items[item.id] = {
-            ...item,
-            photos: num(item.photos),
-            tags: num(item.tags),
-            deleted: !!item.deleted
+      await all([
+        db.each(`
+          SELECT id, created, modified, deleted
+            FROM subjects
+              JOIN items USING (id)
+              LEFT OUTER JOIN trash USING (id)
+            WHERE id IN (${ids})`,
+
+          ({ id, deleted, ...data }) => {
+            assign(items[id], data, { deleted: !!deleted })
           }
-        }
-      )
+        ),
+
+        db.each(`
+          SELECT id, tag_id AS tag
+            FROM taggings WHERE id IN (${ids})
+            ORDER BY id, tagged`,
+          ({ id, tag }) => {
+            items[id].tags.push(tag)
+          }
+        ),
+
+        db.each(`
+          SELECT id AS photo, item_id AS item
+            FROM photos WHERE item IN (${ids})
+            ORDER BY item, position`,
+          ({ item, photo }) => {
+            items[item].photos.push(photo)
+          }
+        )
+      ])
     }
 
     return items
