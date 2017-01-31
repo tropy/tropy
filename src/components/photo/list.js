@@ -1,42 +1,19 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
+const { PropTypes } = React
 const { PhotoListItem } = require('./list-item')
+const { PhotoIterator } = require('./iterator')
 const { DC } = require('../../constants/properties')
-const { get, move } = require('../../common/util')
+const { get } = require('../../common/util')
 
 
-class PhotoList extends Component {
-
-  isSelected(photo) {
-    return this.props.selected === photo.id
-  }
+class PhotoList extends PhotoIterator {
 
   isEditing(photo) {
     return get(this.props, 'ui.edit.photo') === photo.id
   }
 
-  isContext(photo) {
-    return get(this.props, 'ui.context.photo') === photo.id
-  }
-
-  handleContextMenu = (photo, event) => {
-    this.props.onContextMenu(event, 'photo', photo)
-  }
-
-  handleClick = (photo, event) => {
-    const { selected, onSelect } = this.props
-
-    if (selected !== photo.id) {
-      onSelect({
-        photo: photo.id,
-        item: photo.item
-      })
-
-      event.stopPropagation()
-    }
-  }
 
   handleDoubleClick = (photo) => {
     const { isOpen, onOpen } = this.props
@@ -44,15 +21,6 @@ class PhotoList extends Component {
     if (!isOpen) {
       onOpen({ id: photo.item, photos: [photo.id] })
     }
-  }
-
-  handleDropPhoto = ({ id, to, offset }) => {
-    const { onSort, photos } = this.props
-
-    const item = photos[0].item
-    const order = move(photos.map(photo => photo.id), id, to, offset)
-
-    onSort({ item, photos: order })
   }
 
   render() {
@@ -68,9 +36,9 @@ class PhotoList extends Component {
             isEditing={this.isEditing(photo)}
             isContext={this.isContext(photo)}
             title={DC.TITLE}
-            onClick={this.handleClick}
+            onClick={this.select}
             onSingleClick={onEdit}
-            onDoubleClick={this.handleDoubleClick}
+            onDoubleClick={this.open}
             onDropPhoto={this.handleDropPhoto}
             onContextMenu={this.handleContextMenu}/>
         )}

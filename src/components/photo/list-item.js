@@ -37,7 +37,13 @@ class PhotoListItem extends Component {
 
   handleClick = createClickHandler({
     onClick: (event) => {
-      this.props.onClick(this.props.photo, event)
+      const { photo, isSelected, onClick } = this.props
+
+      if (!isSelected) {
+        event.stopPropagation()
+      }
+
+      onClick(photo)
     },
 
     onSingleClick: () => {
