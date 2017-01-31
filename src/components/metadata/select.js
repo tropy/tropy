@@ -2,24 +2,44 @@
 
 const React = require('react')
 const { PropTypes } = React
-const { keys } = Object
+const { into, map, filter, compose } = require('transducers.js')
 
-const TemplateSelect = ({ templates, selected, onChange }) => (
-  <select
-    name="template-select"
-    required
-    value={selected}
-    onChange={onChange}>
-    {keys(templates).map(template =>
-      <option key={template} value={template}>{template}</option>)
-    }
-  </select>
-)
+const templates = (props) => {
+  return into(
+    [],
+    compose(
+      map(kv => kv[1]),
+      filter(t => t.type === props.type),
+      map(({ uri, name }) =>
+        <option key={uri} value={uri}>{name}</option>
+      )
+    ),
+    props.templates)
+}
+
+const TemplateSelect = (props) => {
+  const { selected, onChange } = props
+
+  return (
+    <select
+      name="template-select"
+      required
+      value={selected}
+      onChange={onChange}>
+      {templates(props)}
+    </select>
+  )
+}
 
 TemplateSelect.propTypes = {
   templates: PropTypes.object.isRequired,
+  type: PropTypes.oneOf(['item', 'photo']),
   selected: PropTypes.string,
   onChange: PropTypes.func
+}
+
+TemplateSelect.defaultProps = {
+  type: 'item'
 }
 
 module.exports = {

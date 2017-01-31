@@ -78,7 +78,12 @@ class Item extends Component {
     event.stopPropagation()
   }
 
-  handleTemplateChange = () => {
+  handleTemplateChange = (event) => {
+    this.props.onSave({
+      id: this.item.id,
+      property: 'template',
+      value: event.target.value
+    })
   }
 
 
@@ -141,7 +146,7 @@ class Item extends Component {
             <Fields {...props}
               subject={photo}
               isDisabled={isDisabled}
-              template={templates.photo}/>
+              template={templates[photo.template]}/>
           </section>}
         {item &&
           <section>
@@ -150,12 +155,12 @@ class Item extends Component {
             </h5>
             <TemplateSelect
               templates={templates}
-              selected="core"
+              selected={item.template}
               onChange={this.handleTemplateChange}/>
             <Fields {...props}
               subject={item}
               isDisabled={isDisabled}
-              template={templates.core}/>
+              template={templates[item.template]}/>
           </section>}
       </div>
     )
@@ -315,6 +320,7 @@ class Item extends Component {
     templates: PropTypes.object,
 
     onOpen: PropTypes.func,
+    onSave: PropTypes.func,
     onContextMenu: PropTypes.func,
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,

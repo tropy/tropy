@@ -64,7 +64,7 @@ module.exports = {
 
       await all([
         db.each(`
-          SELECT id, created, modified, deleted
+          SELECT id, template, created, modified, deleted
             FROM subjects
               JOIN items USING (id)
               LEFT OUTER JOIN trash USING (id)
@@ -112,6 +112,14 @@ module.exports = {
     return item
 
   },
+
+  async update(db, { id, property, value }) {
+    if (property !== 'template') return
+
+    return db.run(`
+      UPDATE subjects SET template = ? WHERE id = ?`, value, id)
+  },
+
 
   async delete(db, ids) {
     return db.run(`

@@ -6,22 +6,48 @@ const {
 
 const { DC } = require('../constants/properties')
 
-const T = {
-  core: [
-    DC.TYPE,
-    DC.TITLE,
-    DC.DESCRIPTION,
-    DC.DATE,
-    DC.CREATOR,
-    DC.PUBLISHER,
-    DC.SOURCE,
-    DC.RIGHTS
-  ],
+const CORE = 'https://schema.tropy.org/v1/templates/core'
+const FULL = 'https://schema.tropy.org/v1/templates/full'
+const PHOTO = 'https://schema.tropy.org/v1/templates/photo'
 
-  photo: [
-    DC.TITLE,
-    DC.DATE
-  ]
+const T = {
+  [CORE]: {
+    uri: CORE,
+    name: 'Core Item',
+    type: 'item',
+    fields: [
+      DC.TYPE,
+      DC.TITLE,
+      DC.DATE,
+      DC.DESCRIPTION
+    ],
+  },
+
+  [FULL]: {
+    uri: FULL,
+    name: 'Expanded Item',
+    type: 'item',
+    fields: [
+      DC.TYPE,
+      DC.TITLE,
+      DC.DESCRIPTION,
+      DC.DATE,
+      DC.CREATOR,
+      DC.PUBLISHER,
+      DC.SOURCE,
+      DC.RIGHTS
+    ],
+  },
+
+  [PHOTO]: {
+    uri: PHOTO,
+    name: 'Tropy Photo',
+    type: 'photo',
+    fields: [
+      DC.TITLE,
+      DC.DATE
+    ]
+  }
 }
 
 const getTemplates = memo(
@@ -31,16 +57,17 @@ const getTemplates = memo(
   (templates, properties) =>
     Object
       .entries(templates)
-      .reduce((t, [k, v]) => (
-        (t[k] = v.map(p => ({ property: properties[p] }))), t
-      ), {}))
+      .reduce((tpl, [k, v]) => {
+        tpl[k] = {
+          ...v,
+          fields: v.fields.map(p => ({ property: properties[p] }))
+        }
 
-const getTemplate = (state, props) =>
-  T[props.template]
-    .map(property => ({ property: state.properties[property] }))
+        return tpl
+
+      }, {}))
 
 
 module.exports = {
-  getTemplates,
-  getTemplate
+  getTemplates
 }

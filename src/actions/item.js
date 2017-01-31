@@ -80,7 +80,7 @@ module.exports = {
     return {
       type: ITEM.SAVE,
       payload,
-      meta: { async: true, ...meta }
+      meta: { async: true, record: true, ...meta }
     }
   },
 

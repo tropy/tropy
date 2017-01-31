@@ -14,10 +14,12 @@ class Fields extends Component {
   }
 
   isExtra(uri) {
-    if (uri === 'id') return false
+    const { template } = this.props
 
-    return !this.props.template.find(({ property }) =>
-      property.uri === uri)
+    if (uri === 'id') return false
+    if (!template) return true
+
+    return !template.fields.find(({ property }) => property.uri === uri)
   }
 
   *extras() {
@@ -29,7 +31,9 @@ class Fields extends Component {
   renderTemplateFields() {
     const { template, subject, ...props } = this.props
 
-    return template.map(({ property }) =>
+    if (!template) return
+
+    return template.fields.map(({ property }) =>
       <Field {...props}
         key={property.uri}
         data={subject.data}
@@ -63,9 +67,11 @@ class Fields extends Component {
     ui: PropTypes.object,
     isDisabled: PropTypes.bool,
 
-    template: PropTypes.arrayOf(PropTypes.shape({
-      property: PropTypes.object.isRequired
-    })).isRequired,
+    template: PropTypes.shape({
+      fields: PropTypes.arrayOf(PropTypes.shape({
+        property: PropTypes.object.isRequired
+      })).isRequired,
+    }),
 
     properties: PropTypes.object,
     static: PropTypes.string,

@@ -182,7 +182,7 @@ class Save extends Command {
     const cur = yield select(({ items }) => items[id])
     this.original = { id, property, value: cur[property] }
 
-    yield put(act.item.update(id, { property, value }))
+    yield put(act.item.update({ id, [property]: value }))
     yield call(mod.item.update, db, { id, property, value })
 
     this.undo = act.item.save(this.original)

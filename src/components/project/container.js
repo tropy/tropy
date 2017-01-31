@@ -99,7 +99,7 @@ class Project extends Component {
   }
 
   render() {
-    const { onDrop, onItemOpen, ...props } = this.props
+    const { onDrop, onItemOpen, onItemSave, ...props } = this.props
 
     return (
       <div
@@ -116,7 +116,7 @@ class Project extends Component {
               <Items {...props} onOpen={onItemOpen}/>
             </main>
           </div>
-          <Item {...props} onOpen={onItemOpen}/>
+          <Item {...props} onOpen={onItemOpen} onSave={onItemSave}/>
         </ProjectDropZone>
         <ProjectDragLayer {...props}/>
       </div>
@@ -136,6 +136,7 @@ class Project extends Component {
     onEditCancel: PropTypes.func,
     onDrop: PropTypes.func,
     onItemOpen: PropTypes.func,
+    onItemSave: PropTypes.func,
     onItemsDelete: PropTypes.func,
     onMaximize: PropTypes.func,
     onMetadataSave: PropTypes.func,
@@ -197,6 +198,10 @@ module.exports = {
 
       onItemOpen(item) {
         dispatch(actions.item.open(item))
+      },
+
+      onItemSave(...args) {
+        dispatch(actions.item.save(...args))
       },
 
       onItemsDelete(items) {
