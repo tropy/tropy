@@ -50,6 +50,18 @@ class PhotoIterator extends Component {
     onSort({ item, photos: order })
   }
 
+  map(fn) {
+    return this.props.photos.map(photo => fn({
+      photo,
+      cache: this.props.cache,
+      isSelected: this.isSelected(photo),
+      isContext: this.isContext(photo),
+      isDisabled: this.props.isDisabled,
+      onDropPhoto: this.handleDropPhoto,
+      onContextMenu: this.handleContextMenu
+    }))
+  }
+
   static propTypes = {
     photos: PropTypes.arrayOf(
       PropTypes.shape({
@@ -57,9 +69,12 @@ class PhotoIterator extends Component {
       })
     ).isRequired,
 
-    isOpen: PropTypes.bool,
+    cache: PropTypes.string,
     selected: PropTypes.number,
     ui: PropTypes.object,
+
+    isOpen: PropTypes.bool,
+    isDisabled: PropTypes.bool,
 
     onContextMenu: PropTypes.func,
     onOpen: PropTypes.func,

@@ -15,23 +15,19 @@ class PhotoList extends PhotoIterator {
   }
 
   render() {
-    const { photos, onEdit, ...props } = this.props
+    const { onEdit, onEditCancel } = this.props
 
     return (
       <ul className="photo-list">
-        {photos.map(photo =>
+        {this.map(props =>
           <PhotoListItem {...props}
-            key={photo.id}
-            photo={photo}
-            isSelected={this.isSelected(photo)}
-            isEditing={this.isEditing(photo)}
-            isContext={this.isContext(photo)}
+            key={props.photo.id}
             title={DC.TITLE}
+            isEditing={this.isEditing(props.photo)}
             onClick={this.select}
             onSingleClick={onEdit}
             onDoubleClick={this.open}
-            onDropPhoto={this.handleDropPhoto}
-            onContextMenu={this.handleContextMenu}/>
+            onEditCancel={onEditCancel}/>
         )}
       </ul>
     )
@@ -39,9 +35,6 @@ class PhotoList extends PhotoIterator {
 
   static propTypes = {
     ...PhotoIterator.propTypes,
-
-    cache: PropTypes.string,
-    isDisabled: PropTypes.bool,
 
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func
