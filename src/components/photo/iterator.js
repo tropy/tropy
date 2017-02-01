@@ -19,7 +19,7 @@ class PhotoIterator extends Component {
     return get(this.props.ui, 'context.photo.id') === photo.id
   }
 
-  select = (photo) => {
+  handleSelect = (photo) => {
     if (!this.isSelected(photo)) {
       this.props.onSelect({
         photo: photo.id, item: photo.item
@@ -27,7 +27,7 @@ class PhotoIterator extends Component {
     }
   }
 
-  open = (photo) => {
+  handleOpen = (photo) => {
     if (!this.props.isOpen) {
       this.props.onOpen({
         id: photo.item, photos: [photo.id]
@@ -44,6 +44,17 @@ class PhotoIterator extends Component {
     onSort({ item, photos: order })
   }
 
+  handleClickOutside = () => {
+    if (this.props.selected) {
+      this.props.onSelect()
+    }
+  }
+
+  handleClickInside = (event) => {
+    event.stopPropagation()
+  }
+
+
   map(fn) {
     return this.props.photos.map(photo => fn({
       photo,
@@ -53,6 +64,8 @@ class PhotoIterator extends Component {
       isSelected: this.isSelected(photo),
       isContext: this.isContext(photo),
       onDropPhoto: this.handleDropPhoto,
+      onSelect: this.handleSelect,
+      onOpen: this.handleOpen,
       onContextMenu: this.props.onContextMenu
     }))
   }

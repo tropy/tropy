@@ -17,23 +17,23 @@ class PhotoListItem extends PhotoIterable {
 
   handleClick = createClickHandler({
     onClick: (event) => {
-      const { photo, isSelected, onClick } = this.props
+      const { photo, isSelected, onSelect } = this.props
 
       if (!isSelected) {
         event.stopPropagation()
       }
 
-      onClick(photo)
+      onSelect(photo, event)
     },
 
     onSingleClick: () => {
       if (!this.props.isDisabled) {
-        this.props.onSingleClick(this.props.photo.id)
+        this.props.onEdit(this.props.photo.id)
       }
     },
 
     onDoubleClick: () => {
-      this.props.onDoubleClick(this.props.photo)
+      this.props.onOpen(this.props.photo)
     }
   })
 
@@ -81,11 +81,9 @@ class PhotoListItem extends PhotoIterable {
 
     isEditing: PropTypes.bool,
 
-    onEditCancel: PropTypes.func,
     onChange: PropTypes.func,
-    onClick: PropTypes.func,
-    onSingleClick: PropTypes.func,
-    onDoubleClick: PropTypes.func
+    onEdit: PropTypes.func,
+    onEditCancel: PropTypes.func
   }
 }
 

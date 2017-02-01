@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = React
+//const { PropTypes } = React
 const { PhotoIterable } = require('./iterable')
 const cn = require('classnames')
 
@@ -9,11 +9,11 @@ const cn = require('classnames')
 class PhotoTile extends PhotoIterable {
 
   handleClick = () => {
-    this.props.onClick(this.props.photo)
+    this.props.onSelect(this.props.photo)
   }
 
   handleDoubleClick = () => {
-    this.props.onDoubleClick(this.props.photo)
+    this.props.onOpen(this.props.photo)
   }
 
   render() {
@@ -22,6 +22,7 @@ class PhotoTile extends PhotoIterable {
         className={cn(this.classes)}
         ref={this.setContainer}
         onClick={this.handleClick}
+        onDoubleClick={this.handleDoubleClick}
         onContextMenu={this.handleContextMenu}>
         {this.renderThumbnail()}
       </li>
@@ -29,10 +30,7 @@ class PhotoTile extends PhotoIterable {
   }
 
   static propTypes = {
-    ...PhotoIterable.propTypes,
-
-    onClick: PropTypes.func,
-    onDoubleClick: PropTypes.func
+    ...PhotoIterable.propTypes
   }
 }
 

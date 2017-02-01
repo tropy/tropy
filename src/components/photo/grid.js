@@ -10,14 +10,14 @@ class PhotoGrid extends PhotoIterator {
 
   render() {
     return (
-      <ul className="photo-grid">
+      <ul
+        className="photo-grid"
+        onClick={this.handleClickOutside}>
         {this.map(({ photo, ...props }) =>
           <PhotoTile {...props}
             key={photo.id}
             photo={photo}
-            orientation="horizontal"
-            onClick={this.select}
-            onDoubleClick={this.open}/>)}
+            orientation="horizontal"/>)}
       </ul>
     )
   }
