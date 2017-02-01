@@ -8,9 +8,22 @@ $component-padding-horizontal: 12px !default;
   font-size: $font-size-small;
   color: $panel-heading-color;
   line-height: $metadata-line-height;
-  margin: ($font-size-base / 2) $component-padding-horizontal;
-  margin-bottom: (($metadata-line-height - 10px) / 2); // 10px: Caps height
-  border-bottom: 1px solid $panel-separator-color;
+  margin: ($font-size-base / 2) $component-padding-horizontal 0;
+
+  &.separator {
+    margin-bottom: (($metadata-line-height - 10px) / 2); // 10px: Caps height
+    border-bottom: 1px solid $panel-separator-color;
+  }
+}
+
+.form-control {
+  &.template-select {
+    width: calc(100% - 2 * #{$component-padding-horizontal});
+    margin: auto;
+    border-color: $template-select-border;
+    font-size: $font-size-small;
+    margin-bottom: (($metadata-line-height - 10px) / 2);
+  }
 }
 
 .metadata-fields {

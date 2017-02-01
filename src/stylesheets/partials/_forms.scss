@@ -28,6 +28,14 @@
   }
 }
 
+select {
+  &.form-control {
+    -webkit-appearance: none;
+    line-height: 1;
+    background: image-url("project/icon-chevron7.svg") no-repeat right $space-min center;
+  }
+}
+
 .input-lg {
   font-size: $font-size-large;
   height: $input-height-large;

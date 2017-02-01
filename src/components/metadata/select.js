@@ -23,6 +23,7 @@ const TemplateSelect = (props) => {
   return (
     <select
       name="template-select"
+      className="template-select form-control"
       required
       value={selected}
       onChange={onChange}>
