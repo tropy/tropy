@@ -26,7 +26,7 @@ class ItemTableRow extends Component {
       item: true,
       active: this.props.isSelected,
       dragging: this.props.isDragging,
-      over: this.props.isOver
+      over: this.props.isOver && this.props.canDrop
     }
   }
 
@@ -114,6 +114,7 @@ class ItemTableRow extends Component {
     isSelected: PropTypes.bool,
     isDragging: PropTypes.bool,
     isOver: PropTypes.bool,
+    canDrop: PropTypes.bool,
 
     ds: PropTypes.func.isRequired,
     dp: PropTypes.func.isRequired,

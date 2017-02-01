@@ -53,7 +53,7 @@ class ItemTile extends Component {
       'item-tile': true,
       'active': this.props.isSelected,
       'dragging': this.props.isDragging,
-      'over': this.props.isOver
+      'over': this.props.isOver && this.props.canDrop
     }
   }
 
@@ -84,12 +84,14 @@ class ItemTile extends Component {
     isSelected: PropTypes.bool,
     isDragging: PropTypes.bool,
     isOver: PropTypes.bool,
+    canDrop: PropTypes.bool,
 
     ds: PropTypes.func.isRequired,
     dp: PropTypes.func.isRequired,
     dt: PropTypes.func.isRequired,
 
     onClick: PropTypes.func,
+    onDropPhotos: PropTypes.func,
     onOpen: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired,
     onContextMenu: PropTypes.func.isRequired,

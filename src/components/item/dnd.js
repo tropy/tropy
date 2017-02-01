@@ -44,13 +44,19 @@ const DT = {
       onDropPhotos({
         item: item.id, photos: [photo]
       })
+    },
+
+    canDrop({ item }, monitor) {
+      const photo = monitor.getItem()
+      return item.id !== photo.item
     }
   },
 
   collect(connect, monitor) {
     return {
       dt: connect.dropTarget(),
-      isOver: monitor.isOver()
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop()
     }
   },
 
