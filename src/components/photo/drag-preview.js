@@ -9,7 +9,8 @@ class PhotoDragPreview extends Component {
 
   get classes() {
     return {
-      'photo-drag-preview': true,
+      'photo': true,
+      'drag-preview': true,
       'multiple': this.count > 1
     }
   }

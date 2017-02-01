@@ -11,7 +11,8 @@ class ItemDragPreview extends Component {
 
   get classes() {
     return {
-      'item-drag-preview': true,
+      'item': true,
+      'drag-preview': true,
       'multiple': this.count > 1
     }
   }
