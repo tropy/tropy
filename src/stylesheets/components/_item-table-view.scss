@@ -143,6 +143,12 @@
         background: $items-active-bg;
       }
     }
+
+    &.over {
+      .metadata {
+        background: $blue-light;
+      }
+    }
   }
 
   .metadata {

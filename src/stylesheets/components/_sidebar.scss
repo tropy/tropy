@@ -43,7 +43,7 @@
 
         .icon {
           svg {
-            fill: $sidebar-active-icon-color;
+            color: $sidebar-active-icon-color;
           }
         }
       }
@@ -57,17 +57,7 @@
       }
 
       &.over {
-        &::after {
-          content: "";
-          position: absolute;
-          top: 1px;
-          right: 5px;
-          bottom: 1px;
-          left: 5px;
-          border: 2px solid $drop-zone-border;
-          background: $drop-zone-bg;
-          border-radius: $border-radius-small;
-        }
+        background: $blue-light;
       }
     }
 
