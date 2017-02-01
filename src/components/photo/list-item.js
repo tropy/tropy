@@ -16,11 +16,11 @@ class PhotoListItem extends PhotoIterable {
   }
 
   handleClick = createClickHandler({
-    onClick: (event) => {
+    onClick: (event, cancel) => {
       const { photo, isSelected, onSelect } = this.props
 
       if (!isSelected) {
-        event.stopPropagation()
+        cancel()
       }
 
       onSelect(photo, event)
@@ -51,13 +51,14 @@ class PhotoListItem extends PhotoIterable {
 
 
   render() {
-    const { isEditing, isDisabled, onEditCancel } = this.props
+    const { isEditing, isDisabled, onEditCancel, onClick } = this.props
 
     return this.connect(
       <li
         className={cn(this.classes)}
         ref={this.setContainer}
-        onClick={this.handleClick}
+        onMouseDown={this.handleClick}
+        onClick={onClick}
         onContextMenu={this.handleContextMenu}>
 
         {this.renderThumbnail()}

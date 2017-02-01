@@ -35,11 +35,11 @@ class ItemTableRow extends Component {
     return editing.column && editing.column[item.id] === uri
   }
 
-  handleClick = (event) => {
+  handleClick = (event, cancel) => {
     const { item, isSelected, onSelect } = this.props
 
     if (!isSelected || meta(event)) {
-      event.stopPropagation() // Swallow single click!
+      cancel()
       onSelect(item, event)
     }
   }

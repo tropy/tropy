@@ -8,7 +8,15 @@ const { PhotoTile } = require('./tile')
 
 class PhotoGrid extends PhotoIterator {
 
+  get placeholder() {
+    return (
+      <li className="photo-tile" style={{ flexBasis: `${this.size * 1.25}px` }}/>
+    )
+  }
+
   render() {
+    const { tile } = this.placeholder
+
     return (
       <ul
         className="photo-grid"
@@ -18,6 +26,9 @@ class PhotoGrid extends PhotoIterator {
             key={photo.id}
             photo={photo}
             orientation="horizontal"/>)}
+
+        {tile}{tile}{tile}{tile}{tile}{tile}{tile}
+        {tile}{tile}{tile}{tile}{tile}{tile}{tile}
       </ul>
     )
   }

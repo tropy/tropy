@@ -20,8 +20,8 @@ class ItemTableCell extends Component {
   }
 
   handleClick = createClickHandler({
-    onClick: (event) => {
-      this.props.onClick(event)
+    onClick: (...args) => {
+      this.props.onClick(...args)
     },
 
     onSingleClick: (event) => {

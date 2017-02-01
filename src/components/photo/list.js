@@ -28,6 +28,7 @@ class PhotoList extends PhotoIterator {
             title={DC.TITLE}
             isEditing={this.isEditing(photo)}
             onChange={onChange}
+            onClick={this.handleClickInside}
             onEdit={onEdit}
             onEditCancel={onEditCancel}/>)}
       </ul>

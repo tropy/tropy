@@ -63,6 +63,7 @@ class PhotoIterator extends Component {
       isDisabled: this.props.isDisabled,
       isSelected: this.isSelected(photo),
       isContext: this.isContext(photo),
+      onClick: this.handleClickInside,
       onDropPhoto: this.handleDropPhoto,
       onSelect: this.handleSelect,
       onOpen: this.handleOpen,

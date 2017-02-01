@@ -8,8 +8,8 @@ const cn = require('classnames')
 
 class PhotoTile extends PhotoIterable {
 
-  handleClick = () => {
-    this.props.onSelect(this.props.photo)
+  handleClick = (event) => {
+    this.props.onSelect(this.props.photo, event)
   }
 
   handleDoubleClick = () => {
@@ -21,7 +21,8 @@ class PhotoTile extends PhotoIterable {
       <li
         className={cn(this.classes)}
         ref={this.setContainer}
-        onClick={this.handleClick}
+        onMouseDown={this.handleClick}
+        onClick={this.props.onClick}
         onDoubleClick={this.handleDoubleClick}
         onContextMenu={this.handleContextMenu}>
         {this.renderThumbnail()}
