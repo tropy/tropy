@@ -18,24 +18,19 @@ class PhotoList extends PhotoIterator {
     const { onChange, onEdit, onEditCancel } = this.props
 
     return (
-      <div
-        className="photo-list-view"
+      <ul
+        className="photo-list"
         onClick={this.handleClickOutside}>
-
-        <ul
-          className="photo-list"
-          onClick={this.handleClickInside}>
-          {this.map(({ photo, ...props }) =>
-            <PhotoListItem {...props}
-              key={photo.id}
-              photo={photo}
-              title={DC.TITLE}
-              isEditing={this.isEditing(photo)}
-              onChange={onChange}
-              onEdit={onEdit}
-              onEditCancel={onEditCancel}/>)}
-        </ul>
-      </div>
+        {this.map(({ photo, ...props }) =>
+          <PhotoListItem {...props}
+            key={photo.id}
+            photo={photo}
+            title={DC.TITLE}
+            isEditing={this.isEditing(photo)}
+            onChange={onChange}
+            onEdit={onEdit}
+            onEditCancel={onEditCancel}/>)}
+      </ul>
     )
   }
 

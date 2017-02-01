@@ -8,7 +8,7 @@ const { get, move, times } = require('../../common/util')
 class PhotoIterator extends Component {
 
   get size() {
-    return PhotoIterator.ZOOM[this.props.zoom]
+    return this.constructor.ZOOM[this.props.zoom]
   }
 
   isSelected(photo) {
