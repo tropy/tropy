@@ -6,6 +6,7 @@ const { FormattedMessage } = require('react-intl')
 const { Toolbar, ToolGroup } = require('../toolbar')
 const { Slider } = require('../slider')
 const { IconButton } = require('../button')
+const { PhotoIterator } = require('./iterator')
 
 const {
   IconPhoto, IconPlus, IconListSmall, IconGridSmall
@@ -50,7 +51,7 @@ PhotoToolbar.propTypes = {
 }
 
 PhotoToolbar.defaultProps = {
-  maxZoom: 5
+  maxZoom: PhotoIterator.ZOOM.length - 1
 }
 
 module.exports = {
