@@ -132,7 +132,7 @@ class Item extends Component {
       <div>
         {photo &&
           <section>
-            <h5 className="metadata-heading">
+            <h5 className="metadata-heading separator">
               <FormattedMessage id="panel.metadata.photo"/>
             </h5>
             <Fields {...props}
