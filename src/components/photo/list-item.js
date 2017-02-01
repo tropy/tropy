@@ -4,12 +4,16 @@ const React = require('react')
 const { PropTypes } = React
 const { Editable } = require('../editable')
 const { createClickHandler } = require('../util')
-const { Thumbnail } = require('./thumbnail')
 const { PhotoIterable } = require('./iterable')
+const { get } = require('../../common/util')
 const cn = require('classnames')
 
 
 class PhotoListItem extends PhotoIterable {
+
+  get title() {
+    return get(this.props.photo, ['data', this.props.title, 'value'])
+  }
 
   handleClick = createClickHandler({
     onClick: (event) => {
@@ -33,31 +37,21 @@ class PhotoListItem extends PhotoIterable {
     }
   })
 
-  handleContextMenu = (event) => {
-    if (!this.props.isDisabled) {
-      this.props.onContextMenu(this.props.photo, event)
-    }
-  }
 
   handleChange = (value) => {
     const { photo, title, onChange } = this.props
-    onChange({ id: photo.id, title }, value)
+
+    onChange({
+      id: photo.id,
+      data: {
+        [title]: { value, type: 'text' }
+      }
+    })
   }
 
 
-
   _render() {
-    const {
-      photo,
-      cache,
-      title,
-      size,
-      isEditing,
-      isDisabled,
-      onEditCancel
-    } = this.props
-
-    const value = photo.data[title] && photo.data[title].value
+    const { isEditing, isDisabled, onEditCancel } = this.props
 
     return (
       <li
@@ -66,11 +60,11 @@ class PhotoListItem extends PhotoIterable {
         onClick={this.handleClick}
         onContextMenu={this.handleContextMenu}>
 
-        <Thumbnail cache={cache} photo={photo} size={size}/>
+        {this.renderThumbnail()}
 
         <div className="title">
           <Editable
-            value={value}
+            value={this.title}
             isEditing={isEditing}
             isDisabled={isDisabled}
             onCancel={onEditCancel}

@@ -22,8 +22,7 @@ class PhotoIterator extends Component {
   select = (photo) => {
     if (!this.isSelected(photo)) {
       this.props.onSelect({
-        photo: photo.id,
-        item: photo.item
+        photo: photo.id, item: photo.item
       })
     }
   }
@@ -34,12 +33,6 @@ class PhotoIterator extends Component {
         id: photo.item, photos: [photo.id]
       })
     }
-  }
-
-  handleContextMenu = (photo, event) => {
-    this.props.onContextMenu(event, 'photo', {
-      id: photo.id
-    })
   }
 
   handleDropPhoto = ({ id, to, offset }) => {
@@ -60,7 +53,7 @@ class PhotoIterator extends Component {
       isSelected: this.isSelected(photo),
       isContext: this.isContext(photo),
       onDropPhoto: this.handleDropPhoto,
-      onContextMenu: this.handleContextMenu
+      onContextMenu: this.props.onContextMenu
     }))
   }
 

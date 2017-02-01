@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = React
+//const { PropTypes } = React
 const { PhotoIterator } = require('./iterator')
 const { PhotoTile } = require('./tile')
 
@@ -11,18 +11,19 @@ class PhotoGrid extends PhotoIterator {
   render() {
     return (
       <ul className="photo-grid">
-        {this.map(props =>
+        {this.map(({ photo, ...props }) =>
           <PhotoTile {...props}
-            key={props.photo.id}/>)}
+            key={photo.id}
+            photo={photo}
+            onClick={this.select}
+            onDoubleClick={this.open}/>)}
       </ul>
     )
   }
 
 
   static propTypes = {
-    ...PhotoIterator.propTypes,
-
-    zoom: PropTypes.number
+    ...PhotoIterator.propTypes
   }
 }
 

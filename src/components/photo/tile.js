@@ -1,39 +1,35 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
-const { Thumbnail } = require('./thumbnail')
-const dnd = require('./dnd')
+const { PropTypes } = React
+const { PhotoIterable } = require('./iterable')
+const cn = require('classnames')
 
 
-// eslint-disable-next-line
-class PhotoTile extends Component {
+class PhotoTile extends PhotoIterable {
 
-  render() {
-    const { photo, cache } = this.props
+  handleClick = () => {
+    this.props.onClick(this.props.photo)
+  }
 
+  handleDoubleClick = () => {
+    this.props.onDoubleClick(this.props.photo)
+  }
+
+  _render() {
     return (
-      <li>
-        <Thumbnail photo={photo} cache={cache} size={64}/>
+      <li
+        className={cn(this.classes)}
+        ref={this.setContainer}
+        onClick={this.handleClick}
+        onContextMenu={this.handleContextMenu}>
+        {this.renderThumbnail()}
       </li>
     )
   }
 
   static propTypes = {
-    photo: PropTypes.shape({
-      id: PropTypes.number.isRequired
-    }).isRequired,
-
-    cache: PropTypes.string,
-
-    isSelected: PropTypes.bool,
-    isDisabled: PropTypes.bool,
-    isDragging: PropTypes.bool,
-    isOver: PropTypes.bool,
-
-    ds: PropTypes.func.isRequired,
-    dp: PropTypes.func.isRequired,
-    dt: PropTypes.func.isRequired,
+    ...PhotoIterable.propTypes,
 
     onClick: PropTypes.func,
     onDoubleClick: PropTypes.func
@@ -42,5 +38,5 @@ class PhotoTile extends Component {
 
 
 module.exports = {
-  PhotoTile: dnd.wrap(PhotoTile)
+  PhotoTile: PhotoTile.wrap()
 }

@@ -2,15 +2,14 @@
 
 const React = require('react')
 const { PropTypes, Component } = React
+const { Thumbnail } = require('./thumbnail')
 const { getEmptyImage } = require('react-dnd-html5-backend')
+const { pick } = require('../../common/util')
+const { keys } = Object
 const dnd = require('./dnd')
 
 
 class PhotoIterable extends Component {
-  static wrap() {
-    return dnd.wrap(this)
-  }
-
   constructor(props) {
     super(props)
 
@@ -38,14 +37,34 @@ class PhotoIterable extends Component {
     return this.state.offset ? 'after' : 'before'
   }
 
+  handleContextMenu = (event) => {
+    const { photo, isDisabled, onContextMenu } = this.props
+
+    if (!isDisabled) {
+      onContextMenu(event, 'photo', { id: photo.id })
+    }
+  }
+
   setContainer = (container) => {
     this.container = container
+  }
+
+  renderThumbnail(props) {
+    return (
+      <Thumbnail
+        {...pick(this.props, keys(Thumbnail.propTypes))}
+        {...props}/>
+    )
   }
 
   render() {
     return dnd.connect(this.props, this._render())
   }
 
+
+  static wrap() {
+    return dnd.wrap(this)
+  }
 
   static propTypes = {
     isContext: PropTypes.bool,

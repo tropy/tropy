@@ -17,6 +17,7 @@ const { Fields, TemplateSelect } = require('../metadata')
 const { getSelectedItems } = require('../../selectors/items')
 const { getPhotos, getSelectedPhoto } = require('../../selectors/photos')
 const { MODE } = require('../../constants/project')
+const { assign } = Object
 const act = require('../../actions')
 
 
@@ -55,15 +56,6 @@ class Item extends Component {
 
   handlePhotoEdit = (photo) => {
     this.props.onEdit({ photo })
-  }
-
-  handlePhotoChange = ({ id, title }, value) => {
-    this.props.onMetadataSave({
-      id,
-      data: {
-        [title]: { value, type: 'text' }
-      }
-    })
   }
 
   handlePhotoCreate = (event) => {
@@ -192,35 +184,27 @@ class Item extends Component {
   renderPhotoPanel() {
     const {
       photo,
-      photos,
       nav,
+      onMetadataSave,
       onPhotoSelect,
       onPhotoSort,
       ...props
     } = this.props
 
-    if (nav.panel.photoZoom) {
-      return (
-        <PhotoGrid {...props}
-          photos={photos}
-          selected={photo && photo.id}
-          zoom={nav.panel.photoZoom}
-          isDisabled={this.isDisabled}/>
-      )
-    }
+    assign(props, {
+      selected: photo && photo.id,
+      zoom: nav.panel.photoZoom,
+      isOpen: this.isItemMode,
+      onSelect: onPhotoSelect,
+      onSort: onPhotoSort,
+      isDisabled: this.isDisabled
+    })
 
-    return (
-      <PhotoList {...props}
-        photos={photos}
-        selected={photo && photo.id}
-        zoom={nav.panel.photoZoom}
-        isOpen={this.isItemMode}
-        onSelect={onPhotoSelect}
-        onSort={onPhotoSort}
-        onChange={this.handlePhotoChange}
-        onEdit={this.handlePhotoEdit}
-        isDisabled={this.isDisabled}/>
-    )
+    return props.zoom
+      ? <PhotoGrid {...props}/>
+      : <PhotoList {...props}
+        onChange={onMetadataSave}
+        onEdit={this.handlePhotoEdit}/>
   }
 
   renderNoteToolbar() {
