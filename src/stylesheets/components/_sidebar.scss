@@ -38,7 +38,8 @@
       position: relative;
 
       &.active,
-      &.context {
+      &.context,
+      &.over {
         color: $sidebar-active-color;
 
         .icon {
