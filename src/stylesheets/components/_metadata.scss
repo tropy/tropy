@@ -4,6 +4,10 @@
 
 $component-padding-horizontal: 12px !default;
 
+.metadata-container {
+  flex: 1 1 0;
+}
+
 .metadata-heading {
   font-size: $font-size-small;
   color: $panel-heading-color;

@@ -5,6 +5,8 @@
 $panel-separator-color: #ddd !default;
 
 .note-list {
+  flex: 1 1 0; // Todo: recheck
+
   .note {
     padding: $note-padding-vertical $component-padding-horizontal;
     position: relative;

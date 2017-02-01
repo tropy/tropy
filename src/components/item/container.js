@@ -129,7 +129,7 @@ class Item extends Component {
     const { item, isDisabled } = this
 
     return (
-      <div>
+      <div className="metadata-container">
         {photo &&
           <section>
             <h5 className="metadata-heading separator">
