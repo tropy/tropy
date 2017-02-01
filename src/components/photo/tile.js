@@ -8,6 +8,14 @@ const cn = require('classnames')
 
 class PhotoTile extends PhotoIterable {
 
+  get style() {
+    const height = `${this.props.size * 1.25}px`
+
+    return {
+      height, flexBasis: height
+    }
+  }
+
   handleClick = (event) => {
     this.props.onSelect(this.props.photo, event)
   }
@@ -21,6 +29,7 @@ class PhotoTile extends PhotoIterable {
       <li
         className={cn(this.classes)}
         ref={this.setContainer}
+        style={this.style}
         onMouseDown={this.handleClick}
         onClick={this.props.onClick}
         onDoubleClick={this.handleDoubleClick}
