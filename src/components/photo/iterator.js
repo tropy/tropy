@@ -73,9 +73,9 @@ class PhotoIterator extends Component {
 
   static ZOOM = [
     24,
-    ...times(57, i => i * 4 + 28),
-    ...times(32, i => i * 8 + 256),
-    512
+    ...times(51, i => i * 2 + 26),
+    ...times(32, i => i * 4 + 128),
+    256
   ]
 
   static propTypes = {
