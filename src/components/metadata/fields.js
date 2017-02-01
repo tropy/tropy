@@ -50,6 +50,7 @@ class Fields extends Component {
         key={uri}
         data={subject.data}
         property={properties[uri] || { uri }}
+        isExtra
         isEditing={this.isEditing(uri)}/>
     )
   }
