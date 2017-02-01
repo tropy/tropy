@@ -50,10 +50,10 @@ class PhotoListItem extends PhotoIterable {
   }
 
 
-  _render() {
+  render() {
     const { isEditing, isDisabled, onEditCancel } = this.props
 
-    return (
+    return this.connect(
       <li
         className={cn(this.classes)}
         ref={this.setContainer}

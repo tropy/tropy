@@ -3,10 +3,12 @@
 const React = require('react')
 const { PropTypes, Component } = React
 const { Thumbnail } = require('./thumbnail')
+const { DragSource, DropTarget } = require('react-dnd')
 const { getEmptyImage } = require('react-dnd-html5-backend')
+const { bounds } = require('../../dom')
 const { pick } = require('../../common/util')
 const { keys } = Object
-const dnd = require('./dnd')
+const { DND } = require('../../constants')
 
 
 class PhotoIterable extends Component {
@@ -59,13 +61,62 @@ class PhotoIterable extends Component {
     )
   }
 
-  render() {
-    return dnd.connect(this.props, this._render())
+  connect(element) {
+    return this.props.isDisabled ?
+      element : this.props.ds(this.props.dt(element))
+  }
+
+
+  static ds = {
+    spec: {
+      beginDrag({ photo }) {
+        return { id: photo.id, item: photo.item }
+      },
+
+      canDrag({ isDisabled }) {
+        return !isDisabled
+      }
+    },
+
+    collect(connect, monitor) {
+      return {
+        ds: connect.dragSource(),
+        dp: connect.dragPreview(),
+        isDragging: monitor.isDragging()
+      }
+    }
+  }
+
+  static dt = {
+    spec: {
+      hover({ photo, onOver }, monitor, component) {
+        const { top, height } = bounds(component.container)
+        const offset = Math.round((monitor.getClientOffset().y - top) / height)
+
+        component.setState({ offset })
+      },
+
+      drop({ photo, onDropPhoto }, monitor, { state }) {
+        const item = monitor.getItem()
+
+        onDropPhoto({
+          id: item.id, to: photo.id, offset: state.offset
+        })
+      }
+    },
+
+    collect(connect, monitor) {
+      return {
+        dt: connect.dropTarget(),
+        isOver: monitor.isOver(),
+      }
+    }
   }
 
 
   static wrap() {
-    return dnd.wrap(this)
+    return DragSource(DND.PHOTO, this.ds.spec, this.ds.collect)(
+      DropTarget(DND.PHOTO, this.dt.spec, this.dt.collect)(this))
   }
 
   static propTypes = {
@@ -85,6 +136,7 @@ class PhotoIterable extends Component {
     size: PropTypes.number.isRequired,
 
     ds: PropTypes.func.isRequired,
+    dt: PropTypes.func.isRequired,
     dp: PropTypes.func.isRequired,
 
     onContextMenu: PropTypes.func

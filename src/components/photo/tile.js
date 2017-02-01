@@ -16,8 +16,8 @@ class PhotoTile extends PhotoIterable {
     this.props.onDoubleClick(this.props.photo)
   }
 
-  _render() {
-    return (
+  render() {
+    return this.connect(
       <li
         className={cn(this.classes)}
         ref={this.setContainer}
