@@ -15,6 +15,7 @@ class PhotoGrid extends PhotoIterator {
           <PhotoTile {...props}
             key={photo.id}
             photo={photo}
+            orientation="horizontal"
             onClick={this.select}
             onDoubleClick={this.open}/>)}
       </ul>

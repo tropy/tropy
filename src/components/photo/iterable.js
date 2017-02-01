@@ -31,6 +31,7 @@ class PhotoIterable extends Component {
       context: this.props.isContext,
       over: this.props.isOver,
       dragging: this.props.isDragging,
+      [this.props.orientation]: true,
       [this.direction]: this.props.isOver
     }
   }
@@ -47,6 +48,10 @@ class PhotoIterable extends Component {
         id: photo.id, item: photo.item, path: photo.path
       })
     }
+  }
+
+  get isVertical() {
+    return this.props.orientation === 'vertical'
   }
 
   setContainer = (container) => {
@@ -90,8 +95,12 @@ class PhotoIterable extends Component {
   static dt = {
     spec: {
       hover({ photo, onOver }, monitor, component) {
-        const { top, height } = bounds(component.container)
-        const offset = Math.round((monitor.getClientOffset().y - top) / height)
+        const { top, left, width, height } = bounds(component.container)
+        const { x, y } = monitor.getClientOffset()
+
+        const offset = Math.round(
+          component.isVertical ? ((y - top) / height) : ((x - left) / width)
+        )
 
         component.setState({ offset })
       },
@@ -113,11 +122,11 @@ class PhotoIterable extends Component {
     }
   }
 
-
   static wrap() {
     return DragSource(DND.PHOTO, this.ds.spec, this.ds.collect)(
       DropTarget(DND.PHOTO, this.dt.spec, this.dt.collect)(this))
   }
+
 
   static propTypes = {
     isContext: PropTypes.bool,
@@ -132,6 +141,8 @@ class PhotoIterable extends Component {
       data: PropTypes.object
     }).isRequired,
 
+    orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+
     cache: PropTypes.string.isRequired,
     size: PropTypes.number.isRequired,
 
@@ -140,6 +151,10 @@ class PhotoIterable extends Component {
     dp: PropTypes.func.isRequired,
 
     onContextMenu: PropTypes.func
+  }
+
+  static defaultProps = {
+    orientation: 'vertical'
   }
 }
 
