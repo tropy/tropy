@@ -6,6 +6,7 @@ $component-padding-horizontal: 12px !default;
 
 .metadata-container {
   flex: 1 1 0;
+  min-width: 0; // Fix truncation
 }
 
 .metadata-heading {
