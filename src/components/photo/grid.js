@@ -1,6 +1,7 @@
 'use strict'
 
 const React = require('react')
+const { PropTypes } = React
 const { PhotoIterator } = require('./iterator')
 const { PhotoTile } = require('./tile')
 
@@ -19,7 +20,9 @@ class PhotoGrid extends PhotoIterator {
 
 
   static propTypes = {
-    ...PhotoIterator.propTypes
+    ...PhotoIterator.propTypes,
+
+    zoom: PropTypes.number
   }
 }
 

@@ -1,39 +1,15 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes, Component } = React
+const { PropTypes } = React
 const { Editable } = require('../editable')
 const { createClickHandler } = require('../util')
 const { Thumbnail } = require('./thumbnail')
-const { getEmptyImage } = require('react-dnd-html5-backend')
+const { PhotoIterable } = require('./iterable')
 const cn = require('classnames')
-const dnd = require('./dnd')
 
 
-class PhotoListItem extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      offset: 0
-    }
-  }
-
-
-  componentDidMount() {
-    this.props.dp(getEmptyImage())
-  }
-
-  get classes() {
-    return {
-      photo: true,
-      active: this.props.isSelected,
-      context: this.props.isContext,
-      over: this.props.isOver,
-      before: this.props.isOver && !this.state.offset,
-      after: this.props.isOver && this.state.offset
-    }
-  }
+class PhotoListItem extends PhotoIterable {
 
   handleClick = createClickHandler({
     onClick: (event) => {
@@ -68,16 +44,14 @@ class PhotoListItem extends Component {
     onChange({ id: photo.id, title }, value)
   }
 
-  setContainer = (container) => {
-    this.container = container
-  }
 
 
-  render() {
+  _render() {
     const {
       photo,
       cache,
       title,
+      size,
       isEditing,
       isDisabled,
       onEditCancel
@@ -85,14 +59,14 @@ class PhotoListItem extends Component {
 
     const value = photo.data[title] && photo.data[title].value
 
-    return dnd.connect(this.props,
+    return (
       <li
         className={cn(this.classes)}
         ref={this.setContainer}
         onClick={this.handleClick}
         onContextMenu={this.handleContextMenu}>
 
-        <Thumbnail cache={cache} photo={photo} size={24}/>
+        <Thumbnail cache={cache} photo={photo} size={size}/>
 
         <div className="title">
           <Editable
@@ -107,29 +81,14 @@ class PhotoListItem extends Component {
   }
 
   static propTypes = {
+    ...PhotoIterable.propTypes,
+
     title: PropTypes.string.isRequired,
 
-    isContext: PropTypes.bool,
-    isDisabled: PropTypes.bool,
     isEditing: PropTypes.bool,
-    isSelected: PropTypes.bool,
-    isOver: PropTypes.bool,
-
-    cache: PropTypes.string,
-
-    photo: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      data: PropTypes.object,
-    }).isRequired,
-
-    ds: PropTypes.func.isRequired,
-    dp: PropTypes.func.isRequired,
-    isDragging: PropTypes.bool,
 
     onEditCancel: PropTypes.func,
     onChange: PropTypes.func,
-
-    onContextMenu: PropTypes.func,
     onClick: PropTypes.func,
     onSingleClick: PropTypes.func,
     onDoubleClick: PropTypes.func
@@ -138,5 +97,5 @@ class PhotoListItem extends Component {
 
 
 module.exports = {
-  PhotoListItem: dnd.wrap(PhotoListItem)
+  PhotoListItem: PhotoListItem.wrap()
 }

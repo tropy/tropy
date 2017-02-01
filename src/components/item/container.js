@@ -204,6 +204,7 @@ class Item extends Component {
         <PhotoGrid {...props}
           photos={photos}
           selected={photo && photo.id}
+          zoom={nav.panel.photoZoom}
           isDisabled={this.isDisabled}/>
       )
     }
@@ -212,6 +213,7 @@ class Item extends Component {
       <PhotoList {...props}
         photos={photos}
         selected={photo && photo.id}
+        zoom={nav.panel.photoZoom}
         isOpen={this.isItemMode}
         onSelect={onPhotoSelect}
         onSort={onPhotoSort}

@@ -2,12 +2,13 @@
 
 const React = require('react')
 const { Component, PropTypes } = React
-const { get, move } = require('../../common/util')
+const { get, move, times } = require('../../common/util')
 
 
 class PhotoIterator extends Component {
-  constructor(props) {
-    super(props)
+
+  get size() {
+    return PhotoIterator.ZOOM[this.props.zoom]
   }
 
   isSelected(photo) {
@@ -54,13 +55,22 @@ class PhotoIterator extends Component {
     return this.props.photos.map(photo => fn({
       photo,
       cache: this.props.cache,
+      size: this.size,
+      isDisabled: this.props.isDisabled,
       isSelected: this.isSelected(photo),
       isContext: this.isContext(photo),
-      isDisabled: this.props.isDisabled,
       onDropPhoto: this.handleDropPhoto,
       onContextMenu: this.handleContextMenu
     }))
   }
+
+
+  static ZOOM = [
+    24,
+    ...times(57, i => i * 4 + 28),
+    ...times(32, i => i * 8 + 256),
+    512
+  ]
 
   static propTypes = {
     photos: PropTypes.arrayOf(
@@ -72,6 +82,7 @@ class PhotoIterator extends Component {
     cache: PropTypes.string,
     selected: PropTypes.number,
     ui: PropTypes.object,
+    zoom: PropTypes.number,
 
     isOpen: PropTypes.bool,
     isDisabled: PropTypes.bool,

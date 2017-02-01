@@ -19,19 +19,20 @@ class PhotoList extends PhotoIterator {
 
     return (
       <ul className="photo-list">
-        {this.map(props =>
+        {this.map(({ photo, ...props }) =>
           <PhotoListItem {...props}
-            key={props.photo.id}
+            key={photo.id}
+            photo={photo}
             title={DC.TITLE}
-            isEditing={this.isEditing(props.photo)}
+            isEditing={this.isEditing(photo)}
             onClick={this.select}
             onSingleClick={onEdit}
             onDoubleClick={this.open}
-            onEditCancel={onEditCancel}/>
-        )}
+            onEditCancel={onEditCancel}/>)}
       </ul>
     )
   }
+
 
   static propTypes = {
     ...PhotoIterator.propTypes,
@@ -40,6 +41,7 @@ class PhotoList extends PhotoIterator {
     onEditCancel: PropTypes.func
   }
 }
+
 
 module.exports = {
   PhotoList
