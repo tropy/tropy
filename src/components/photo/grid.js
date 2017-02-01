@@ -10,7 +10,9 @@ class PhotoGrid extends PhotoIterator {
 
   get placeholder() {
     return (
-      <li className="photo-tile" style={{ flexBasis: `${this.size * 1.25}px` }}/>
+      <li
+        className="photo-tile"
+        style={{ flexBasis: `${this.size * 1.25}px` }}/>
     )
   }
 
