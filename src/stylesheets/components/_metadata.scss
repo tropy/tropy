@@ -17,6 +17,12 @@ $component-padding-horizontal: 12px !default;
   .metadata-field {
     display: flex;
     line-height: $metadata-line-height;
+
+    &.extra {
+      label {
+        font-style: italic;
+      }
+    }
   }
 
   label,
