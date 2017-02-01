@@ -59,8 +59,6 @@ linux:
     - label: 'Remove Selected Items From List'
       command: 'app:list-item-remove'
   photo: &photo
-    - label: 'Rename Photo'
-      command: 'app:rename-photo'
     - label: 'Delete Photo'
       command: 'app:delete-photo'
     - label: 'Show Photo in Folder…'

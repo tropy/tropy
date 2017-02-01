@@ -41,7 +41,9 @@ class PhotoIterable extends Component {
     const { photo, isDisabled, onContextMenu } = this.props
 
     if (!isDisabled) {
-      onContextMenu(event, 'photo', { id: photo.id })
+      onContextMenu(event, 'photo', {
+        id: photo.id, item: photo.item, path: photo.path
+      })
     }
   }
 
