@@ -7,7 +7,7 @@
 // --------------------------------------------------
 
 $blue:       #5c93e5;
-$blue-light: #dbe7fa;
+$blue-light: #cedef7;
 $red:        #e62e2e;
 
 $brand-primary: $blue;
@@ -83,6 +83,7 @@ $sidebar-active-icon-color: $shade-6;
 $sidebar-active-color:      $shade-8;
 $sidebar-active-bg:         $shade-2;
 $sidebar-context-bg:        $blue-light;
+$sidebar-over-bg:           $blue-light;
 $activity-color:            $shade-5;
 $activity-border-color:     $shade-3;
 $sidebar-tag-active-color:  $shade-0;
@@ -96,6 +97,7 @@ $item-table-header-border-color: $shade-2;
 $items-odd-bg:                   $shade-1;
 $items-active-color:             $shade-0;
 $items-active-bg:                $brand-primary;
+$items-over-bg:                  $blue-light;
 $cover-image-color:              $icon-color;
 $cover-image-active-color:       $shade-4;
 
@@ -159,6 +161,6 @@ $drop-zone-bg:     rgba($brand-primary, 0.2);
 $image-bg: $shade-2;
 $toolbar-hover-bg: rgba($shade-9, 0.6);
 
-// Item drag preview
-$item-drag-preview-opacity:       0.8;
-$item-drag-preview-badge-opacity: 0.8;
+// Drag preview
+$drag-preview-opacity:       0.8;
+$drag-preview-badge-opacity: 0.8;

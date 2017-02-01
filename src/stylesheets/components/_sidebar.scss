@@ -38,12 +38,13 @@
       position: relative;
 
       &.active,
-      &.context {
+      &.context,
+      &.over {
         color: $sidebar-active-color;
 
         .icon {
           svg {
-            fill: $sidebar-active-icon-color;
+            color: $sidebar-active-icon-color;
           }
         }
       }
@@ -57,17 +58,7 @@
       }
 
       &.over {
-        &::after {
-          content: "";
-          position: absolute;
-          top: 1px;
-          right: 5px;
-          bottom: 1px;
-          left: 5px;
-          border: 2px solid $drop-zone-border;
-          background: $drop-zone-bg;
-          border-radius: $border-radius-small;
-        }
+        background: $blue-light;
       }
     }
 
@@ -91,7 +82,7 @@
 
         .icon {
           svg {
-            fill: $sidebar-tag-active-color;
+            color: $sidebar-tag-active-color;
           }
         }
       }

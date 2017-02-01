@@ -65,7 +65,7 @@
     &:not([disabled]) {
       .icon {
         svg {
-          fill: $icon-active-color;
+          color: $icon-active-color;
         }
       }
     }

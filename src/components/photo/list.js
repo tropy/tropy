@@ -15,7 +15,7 @@ class PhotoList extends PhotoIterator {
   }
 
   render() {
-    const { onEdit, onEditCancel } = this.props
+    const { onChange, onEdit, onEditCancel } = this.props
 
     return (
       <ul className="photo-list">
@@ -28,6 +28,7 @@ class PhotoList extends PhotoIterator {
             onClick={this.select}
             onSingleClick={onEdit}
             onDoubleClick={this.open}
+            onChange={onChange}
             onEditCancel={onEditCancel}/>)}
       </ul>
     )
@@ -37,6 +38,7 @@ class PhotoList extends PhotoIterator {
   static propTypes = {
     ...PhotoIterator.propTypes,
 
+    onChange: PropTypes.func,
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func
   }

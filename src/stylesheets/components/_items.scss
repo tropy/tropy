@@ -31,6 +31,12 @@
     }
   }
 
+  .over & {
+    .item-grid-view & {
+      border: $space-min solid $items-over-bg;
+    }
+  }
+
   img,
   .icon-item {
     width: 100%;
@@ -63,6 +69,12 @@
           background: $cover-image-active-color;
         }
 
+        .item-grid-view & {
+          content: none;
+        }
+      }
+
+      .over & {
         .item-grid-view & {
           content: none;
         }
