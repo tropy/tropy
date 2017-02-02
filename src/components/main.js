@@ -5,7 +5,7 @@ const ReactIntl = require('react-intl')
 const React = require('react')
 const { Component, PropTypes } = React
 const { DragDropContext } = require('react-dnd')
-const HTML5Backend = require('react-dnd-html5-backend')
+const ElectronBackend = require('../../../electron/react-dnd-backend/lib')
 
 const IntlProvider = connect(state => {
   return {
@@ -33,5 +33,5 @@ class Main extends Component {
 }
 
 module.exports = {
-  Main: DragDropContext(HTML5Backend)(Main)
+  Main: DragDropContext(ElectronBackend)(Main)
 }

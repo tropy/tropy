@@ -3,7 +3,7 @@
 const React = require('react')
 const { Component, PropTypes } = React
 const { CoverImage } = require('./cover-image')
-const { getEmptyImage } = require('react-dnd-html5-backend')
+const { getEmptyImage } = require('react-dnd-electron-backend')
 const { meta } = require('../../common/os')
 const cn = require('classnames')
 const dnd = require('./dnd')

@@ -3,7 +3,7 @@
 const React = require('react')
 const { Component, PropTypes } = React
 const { DropTarget } = require('react-dnd')
-const { NativeTypes } = require('react-dnd-html5-backend')
+const { NativeTypes } = require('react-dnd-electron-backend')
 const { extname } = require('path')
 const cn = require('classnames')
 
@@ -61,6 +61,7 @@ module.exports = {
       }
 
     },
+
 
     (connect, monitor) => ({
       connectDropTarget: connect.dropTarget(),

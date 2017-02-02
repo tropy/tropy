@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { Component, PropTypes } = React
-const { getEmptyImage } = require('react-dnd-html5-backend')
+const { getEmptyImage } = require('react-dnd-electron-backend')
 const { ItemTableCell } = require('./table-cell')
 const { meta } = require('../../common/os')
 const { DC } = require('../../constants/properties')
