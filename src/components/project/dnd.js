@@ -8,7 +8,6 @@ const { extname } = require('path')
 const { ItemDragPreview } = require('../item')
 const { PhotoDragPreview } = require('../photo')
 const { DND } = require('../../constants')
-const { warn } = require('../../common/log')
 const cn = require('classnames')
 
 
