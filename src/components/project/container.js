@@ -8,7 +8,7 @@ const Window = require('../../window')
 const { Resizable } = require('../resizable')
 const { Item, Items } = require('../item')
 const { ProjectSidebar } = require('./sidebar')
-const { DragLayer, ProjectDropTarget } = require('./dnd')
+const { DragLayer } = require('./dnd')
 
 const { getCachePrefix } = require('../../selectors/project')
 const { getTemplates } = require('../../selectors/templates')
@@ -16,6 +16,7 @@ const { MODE } = require('../../constants/project')
 const { once } = require('../../dom')
 const { values } = Object
 
+const dnd = require('./dnd')
 const cn = require('classnames')
 const actions = require('../../actions')
 
@@ -78,9 +79,12 @@ class Project extends Component {
   }
 
   get classes() {
+    const { isOver, canDrop } = this.props
     const { willModeChange, isModeChanging } = this.state
 
     return {
+      'project-container': true,
+      'over': isOver && canDrop,
       [`${this.state.mode}-mode`]: true,
       [`${this.state.mode}-mode-leave`]: willModeChange,
       [`${this.state.mode}-mode-leave-active`]: isModeChanging,
@@ -98,7 +102,7 @@ class Project extends Component {
   }
 
   render() {
-    const { onDrop, onItemOpen, onItemSave, ...props } = this.props
+    const { onItemOpen, onItemSave, ...props } = this.props
 
     return (
       <div
@@ -106,17 +110,16 @@ class Project extends Component {
         className={cn(this.classes)}
         ref={this.setContainer}
         onContextMenu={this.handleContextMenu}>
-        <ProjectDropTarget onDrop={onDrop}>
-          <div id="project-view">
-            <Resizable edge="right" value={250}>
-              <ProjectSidebar {...props} hasToolbar={ARGS.frameless}/>
-            </Resizable>
-            <main>
-              <Items {...props} onOpen={onItemOpen}/>
-            </main>
-          </div>
-          <Item {...props} onOpen={onItemOpen} onSave={onItemSave}/>
-        </ProjectDropTarget>
+        <div id="project-view">
+          <Resizable edge="right" value={250}>
+            <ProjectSidebar {...props} hasToolbar={ARGS.frameless}/>
+          </Resizable>
+          <main>
+            <Items {...props} onOpen={onItemOpen}/>
+          </main>
+        </div>
+        <Item {...props} onOpen={onItemOpen} onSave={onItemSave}/>
+
         <DragLayer cache={props.cache}/>
       </div>
     )
@@ -130,10 +133,16 @@ class Project extends Component {
     ui: PropTypes.object,
     properties: PropTypes.object,
     templates: PropTypes.object,
+
+    isOver: PropTypes.bool,
+    canDrop: PropTypes.bool,
+    dt: PropTypes.func.isRequired,
+
     onContextMenu: PropTypes.func,
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
-    onDrop: PropTypes.func,
+    onDropProject: PropTypes.func,
+    onDropImages: PropTypes.func,
     onItemOpen: PropTypes.func,
     onItemSave: PropTypes.func,
     onItemsDelete: PropTypes.func,
@@ -155,7 +164,7 @@ class Project extends Component {
 
 
 module.exports = {
-  Project: connect(
+  ProjectContainer: connect(
     state => ({
       cache: getCachePrefix(state),
       mode: state.nav.mode,
@@ -176,14 +185,12 @@ module.exports = {
         dispatch(actions.ui.context.show(event, ...args))
       },
 
-      onDrop({ project, images }) {
-        if (project) {
-          return dispatch(actions.project.open(project))
-        }
+      onDropProject(path) {
+        dispatch(actions.project.open(path))
+      },
 
-        if (images && images.length) {
-          return dispatch(actions.item.import(images))
-        }
+      onDropImages(paths) {
+        dispatch(actions.item.import(paths))
       },
 
       onModeChange(mode) {
@@ -243,5 +250,5 @@ module.exports = {
         dispatch(actions.ui.edit.cancel())
       }
     })
-  )(Project)
+  )(dnd.wrap(Project))
 }

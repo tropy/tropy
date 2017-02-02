@@ -6,7 +6,7 @@ const { all } = require('bluebird')
 const { ready, $ } = require('../dom')
 const { create } = require('../stores/project')
 const { Main } = require('../components/main')
-const { Project } = require('../components/project')
+const { ProjectContainer } = require('../components/project')
 const { getMessages } = require('../actions/intl')
 const { open } = require('../actions/project')
 const { main } = require('../sagas/project')
@@ -23,7 +23,7 @@ all([
 ])
   .then(() => {
     render(
-      <Main store={store}><Project/></Main>,
+      <Main store={store}><ProjectContainer/></Main>,
       $('#view')
     )
   })

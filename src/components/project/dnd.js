@@ -8,7 +8,6 @@ const { extname } = require('path')
 const { ItemDragPreview } = require('../item')
 const { PhotoDragPreview } = require('../photo')
 const { DND } = require('../../constants')
-const cn = require('classnames')
 
 
 class ProjectDragLayer extends Component {
@@ -62,34 +61,32 @@ class ProjectDragLayer extends Component {
 }
 
 
+const spec = {
+  drop({ onDropProject, onDropImages }, monitor) {
+    const { files } = monitor.getItem()
+    const images = []
 
-class ProjectDropTarget extends Component {
+    for (let file of files) {
+      if (extname(file.path) === '.tpy') {
+        return onDropProject(file.path), { project: file.path }
+      }
 
-  get classes() {
-    return {
-      'project-drop-zone': true,
-      'drop-zone': true,
-      'over': this.props.isOver
+      if (file.type === 'image/jpeg') {
+        images.push(file.path)
+      }
+    }
+
+    if (images.length) {
+      return onDropImages(images), { images }
     }
   }
-
-  render() {
-    const { children, connectDropTarget } = this.props
-
-    return connectDropTarget(
-      <div className={cn(this.classes)}>
-        {children}
-      </div>
-    )
-  }
-
-  static propTypes = {
-    children: PropTypes.node,
-    isOver: PropTypes.bool,
-    connectDropTarget: PropTypes.func,
-    onDrop: PropTypes.func
-  }
 }
+
+const collect = (connect, monitor) => ({
+  dt: connect.dropTarget(),
+  isOver: monitor.isOver(),
+  canDrop: monitor.canDrop()
+})
 
 module.exports = {
 
@@ -100,37 +97,11 @@ module.exports = {
     isDragging: monitor.isDragging()
   }))(ProjectDragLayer),
 
+  connect({ dt }, element) {
+    return dt(element)
+  },
 
-  ProjectDropTarget: DropTarget(
-    NativeTypes.FILE, {
-
-      drop(props, monitor) {
-        if (monitor.didDrop()) return
-
-        const accepted = { images: [] }
-
-        for (let file of monitor.getItem().files) {
-          if (extname(file.path) === '.tpy') {
-            accepted.project = file.path
-            break
-          }
-
-          if (file.type === 'image/jpeg') {
-            accepted.images.push(file.path)
-          }
-        }
-
-        if (accepted.project || accepted.images.length) {
-          return props.onDrop(accepted), accepted
-        }
-      }
-
-    },
-
-
-    (connect, monitor) => ({
-      connectDropTarget: connect.dropTarget(),
-      isOver: monitor.isOver()
-    })
-  )(ProjectDropTarget)
+  wrap(component) {
+    return DropTarget(NativeTypes.FILE, spec, collect)(component)
+  }
 }

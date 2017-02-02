@@ -5,8 +5,6 @@ const { Component, PropTypes } = React
 const { CoverImage } = require('./cover-image')
 const cn = require('classnames')
 
-const SIZE = 64
-
 class ItemDragPreview extends Component {
 
   get classes() {
