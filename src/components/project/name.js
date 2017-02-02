@@ -13,7 +13,7 @@ class ProjectName extends Component {
 
     isSelected ?
       onEdit({ project: { name: true } }) :
-      onSelect()
+      onSelect({ list: null, trash: null })
   }
 
   render() {

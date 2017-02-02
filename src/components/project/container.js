@@ -3,22 +3,19 @@
 const React = require('react')
 const { PropTypes, Component } = React
 const { connect } = require('react-redux')
-
-const Window = require('../../window')
-
 const { ProjectView } = require('./view')
 const { ItemView } = require('../item')
 const { DragLayer } = require('../drag-layer')
 const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
 const { extname } = require('path')
-
 const { getCachePrefix } = require('../../selectors/project')
+const { getAllVisibleTags } = require('../../selectors/tag')
 const { getTemplates } = require('../../selectors/templates')
 const { MODE } = require('../../constants/project')
 const { once } = require('../../dom')
 const { values } = Object
-
+const Window = require('../../window')
 const cn = require('classnames')
 const actions = require('../../actions')
 
@@ -124,6 +121,10 @@ class ProjectContainer extends Component {
   }
 
   static propTypes = {
+    project: PropTypes.shape({
+      file: PropTypes.string
+    }).isRequired,
+
     cache: PropTypes.string.isRequired,
     mode: PropTypes.oneOf(values(MODE)).isRequired,
 
@@ -133,7 +134,6 @@ class ProjectContainer extends Component {
 
     onContextMenu: PropTypes.func,
     onDropProject: PropTypes.func,
-    onDropImages: PropTypes.func,
     onModeChange: PropTypes.func
   }
 
@@ -149,21 +149,19 @@ class ProjectContainer extends Component {
 const spec = {
   drop({ onDropProject, onDropImages }, monitor) {
     const { files } = monitor.getItem()
-    const images = []
+    const project = files[0].path
 
-    for (let file of files) {
-      if (extname(file.path) === '.tpy') {
-        return onDropProject(file.path), { project: file.path }
-      }
+    return onDropProject(project), { project }
+  },
 
-      if (file.type === 'image/jpeg') {
-        images.push(file.path)
-      }
-    }
+  canDrop({ project }, monitor) {
+    const { files } = monitor.getItem()
 
-    if (images.length) {
-      return onDropImages(images), { images }
-    }
+    if (files.length !== 1) return false
+    if (extname(files[0].path) !== '.tpy') return false
+    if (files[0].path === project.file) return false
+
+    return true
   }
 }
 
@@ -171,8 +169,11 @@ const spec = {
 module.exports = {
   ProjectContainer: connect(
     state => ({
-      cache: getCachePrefix(state),
+      project: state.project,
       mode: state.nav.mode,
+      lists: state.lists,
+      tags: getAllVisibleTags(state),
+      cache: getCachePrefix(state),
       zoom: state.nav.itemsZoom,
       nav: state.nav,
       ui: state.ui,
@@ -205,6 +206,10 @@ module.exports = {
       onProjectSave(...args) {
         dispatch(actions.project.save(...args))
         dispatch(actions.ui.edit.cancel())
+      },
+
+      onSelect(...args) {
+        dispatch(actions.nav.select(...args))
       },
 
       onItemOpen(item) {

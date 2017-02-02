@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { connect } = require('react-redux')
 const { Component, PropTypes } = React
 const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')
@@ -12,8 +11,6 @@ const { Sidebar } = require('../sidebar')
 const { ProjectName } = require('./name')
 const { ROOT } = require('../../constants/list')
 const { has } = require('../../common/util')
-const { getAllVisibleTags } = require('../../selectors/tag')
-const act = require('../../actions')
 
 
 class ProjectSidebar extends Component {
@@ -147,7 +144,6 @@ class ProjectSidebar extends Component {
     tags: PropTypes.arrayOf(PropTypes.object),
 
     onMaximize: PropTypes.func,
-    onSelect: PropTypes.func,
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
     onContextMenu: PropTypes.func,
@@ -155,24 +151,12 @@ class ProjectSidebar extends Component {
     onListItemsAdd: PropTypes.func,
     onListSave: PropTypes.func,
     onListSort: PropTypes.func,
-    onProjectSave: PropTypes.func
+    onProjectSave: PropTypes.func,
+    onProjectSelect: PropTypes.func
   }
 }
 
 
-
 module.exports = {
-  ProjectSidebar: connect(
-    (state) => ({
-      project: state.project,
-      lists: state.lists,
-      tags: getAllVisibleTags(state)
-    }),
-
-    (dispatch) => ({
-      onSelect(opts) {
-        dispatch(act.nav.select({ list: null, trash: null, ...opts }))
-      }
-    })
-  )(ProjectSidebar)
+  ProjectSidebar
 }

@@ -11,7 +11,7 @@ describe('ProjectSidebar', () => {
   it('renders a toolbar when prop is set', () => {
     expect(
       shallow(
-        <ProjectSidebar.WrappedComponent
+        <ProjectSidebar
           project={project}
           lists={{}}
           nav={{}}
@@ -23,7 +23,7 @@ describe('ProjectSidebar', () => {
   it('renders the project name', () => {
     expect(
       shallow(
-        <ProjectSidebar.WrappedComponent project={project} lists={{}} nav={{}}/>
+        <ProjectSidebar project={project} lists={{}} nav={{}}/>
       ).find('ProjectName')
     ).to.have.prop('name', project.name)
   })
