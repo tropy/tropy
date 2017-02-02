@@ -5,9 +5,9 @@ const { PropTypes, Component } = React
 const { connect } = require('react-redux')
 
 const Window = require('../../window')
-const { Resizable } = require('../resizable')
-const { Item, Items } = require('../item')
-const { ProjectSidebar } = require('./sidebar')
+
+const { ProjectView } = require('./view')
+const { ItemView } = require('../item')
 const { DragLayer } = require('../drag-layer')
 const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
@@ -23,8 +23,7 @@ const cn = require('classnames')
 const actions = require('../../actions')
 
 
-
-class Project extends Component {
+class ProjectContainer extends Component {
   constructor(props) {
     super(props)
 
@@ -108,7 +107,7 @@ class Project extends Component {
 
 
   render() {
-    const { dt, onItemOpen, onItemSave, ...props } = this.props
+    const { dt, ...props } = this.props
 
     return dt(
       <div
@@ -117,17 +116,8 @@ class Project extends Component {
         ref={this.setContainer}
         onContextMenu={this.handleContextMenu}>
 
-        <div id="project-view">
-          <Resizable edge="right" value={250}>
-            <ProjectSidebar {...props} hasToolbar={ARGS.frameless}/>
-          </Resizable>
-          <main>
-            <Items {...props} onOpen={onItemOpen}/>
-          </main>
-        </div>
-
-        <Item {...props} onOpen={onItemOpen} onSave={onItemSave}/>
-
+        <ProjectView {...props}/>
+        <ItemView {...props}/>
         <DragLayer cache={props.cache}/>
       </div>
     )
@@ -136,33 +126,15 @@ class Project extends Component {
   static propTypes = {
     cache: PropTypes.string.isRequired,
     mode: PropTypes.oneOf(values(MODE)).isRequired,
-    zoom: PropTypes.number,
-    nav: PropTypes.object,
-    ui: PropTypes.object,
-    properties: PropTypes.object,
-    templates: PropTypes.object,
 
     isOver: PropTypes.bool,
     canDrop: PropTypes.bool,
     dt: PropTypes.func.isRequired,
 
     onContextMenu: PropTypes.func,
-    onEdit: PropTypes.func,
-    onEditCancel: PropTypes.func,
     onDropProject: PropTypes.func,
     onDropImages: PropTypes.func,
-    onItemOpen: PropTypes.func,
-    onItemSave: PropTypes.func,
-    onItemsDelete: PropTypes.func,
-    onMaximize: PropTypes.func,
-    onMetadataSave: PropTypes.func,
-    onModeChange: PropTypes.func,
-    onProjectSave: PropTypes.func,
-    onPhotoMove: PropTypes.func,
-    onPhotoSort: PropTypes.func,
-    onListItemsAdd: PropTypes.func,
-    onListSave: PropTypes.func,
-    onListSort: PropTypes.func
+    onModeChange: PropTypes.func
   }
 
   static defaultProps = {
@@ -171,8 +143,8 @@ class Project extends Component {
 }
 
 
-// Project Drop Target
-// -------------------
+// Project Drop Target Spec
+// ------------------------
 
 const spec = {
   drop({ onDropProject, onDropImages }, monitor) {
@@ -286,5 +258,5 @@ module.exports = {
 
   )(DropTarget(NativeTypes.FILE, spec, (c, m) => ({
     dt: c.dropTarget(), isOver: m.isOver(), canDrop: m.canDrop()
-  }))(Project))
+  }))(ProjectContainer))
 }

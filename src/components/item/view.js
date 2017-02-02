@@ -21,7 +21,7 @@ const { assign } = Object
 const act = require('../../actions')
 
 
-class Item extends Component {
+class ItemView extends Component {
 
   get item() {
     const { items } = this.props
@@ -324,7 +324,7 @@ class Item extends Component {
 
 
 module.exports = {
-  Item: connect(
+  ItemView: connect(
     (state) => ({
       items: getSelectedItems(state),
       photo: getSelectedPhoto(state),
@@ -350,5 +350,5 @@ module.exports = {
         dispatch(act.nav.panel.update({ photoZoom }))
       }
     })
-  )(Item)
+  )(ItemView)
 }

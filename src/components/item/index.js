@@ -2,7 +2,7 @@
 
 module.exports = {
   ...require('./drag-preview'),
-  ...require('./container'),
+  ...require('./view'),
   ...require('./items'),
   ...require('./table'),
   ...require('./table-cell'),
