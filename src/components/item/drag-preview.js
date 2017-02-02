@@ -28,7 +28,7 @@ class ItemDragPreview extends Component {
   render() {
     return (
       <div className={cn(this.classes)}>
-        <CoverImage {...this.props} item={this.item} size={SIZE}/>
+        <CoverImage {...this.props} item={this.item}/>
         {this.count > 1 &&
           <div className="badge">{this.count}</div>
         }
@@ -38,11 +38,15 @@ class ItemDragPreview extends Component {
   }
 
   static propTypes = {
-    zoom: PropTypes.number.isRequired,
+    size: PropTypes.number,
     cache: PropTypes.string.isRequired,
     items: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number.isRequired
     })).isRequired
+  }
+
+  static defaultProps = {
+    size: 64
   }
 }
 

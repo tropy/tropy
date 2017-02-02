@@ -8,8 +8,7 @@ const Window = require('../../window')
 const { Resizable } = require('../resizable')
 const { Item, Items } = require('../item')
 const { ProjectSidebar } = require('./sidebar')
-const { ProjectDropZone } = require('./drop-zone')
-const { ProjectDragLayer } = require('./drag-layer')
+const { DragLayer, ProjectDropTarget } = require('./dnd')
 
 const { getCachePrefix } = require('../../selectors/project')
 const { getTemplates } = require('../../selectors/templates')
@@ -107,7 +106,7 @@ class Project extends Component {
         className={cn(this.classes)}
         ref={this.setContainer}
         onContextMenu={this.handleContextMenu}>
-        <ProjectDropZone onDrop={onDrop}>
+        <ProjectDropTarget onDrop={onDrop}>
           <div id="project-view">
             <Resizable edge="right" value={250}>
               <ProjectSidebar {...props} hasToolbar={ARGS.frameless}/>
@@ -117,8 +116,8 @@ class Project extends Component {
             </main>
           </div>
           <Item {...props} onOpen={onItemOpen} onSave={onItemSave}/>
-        </ProjectDropZone>
-        <ProjectDragLayer {...props}/>
+        </ProjectDropTarget>
+        <DragLayer cache={props.cache}/>
       </div>
     )
   }

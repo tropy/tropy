@@ -26,7 +26,7 @@ class PhotoDragPreview extends Component {
   render() {
     return (
       <div className={cn(this.classes)}>
-        <Thumbnail {...this.props} photo={this.item} size={64}/>
+        <Thumbnail {...this.props} photo={this.item}/>
         {this.count > 1 &&
           <div className="badge">{this.count}</div>
         }
@@ -36,10 +36,15 @@ class PhotoDragPreview extends Component {
   }
 
   static propTypes = {
+    size: PropTypes.number,
     cache: PropTypes.string.isRequired,
     items: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number.isRequired
     })).isRequired
+  }
+
+  static defaultProps = {
+    size: 64
   }
 }
 

@@ -2,8 +2,7 @@
 
 module.exports = {
   ...require('./container'),
-  ...require('./drag-layer'),
-  ...require('./drop-zone'),
+  ...require('./dnd'),
   ...require('./name'),
   ...require('./sidebar')
 }
