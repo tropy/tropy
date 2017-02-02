@@ -5,10 +5,20 @@
 #project {
   height: 100%;
   overflow: hidden;
-}
 
-.project-drop-zone {
-  height: 100%;
+  &.over {
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: $zindex-drop-zone;
+      border: $space-min solid $drop-zone-border;
+      background: $drop-zone-bg;
+    }
+  }
 }
 
 #project-view {

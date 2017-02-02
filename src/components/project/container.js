@@ -8,7 +8,10 @@ const Window = require('../../window')
 const { Resizable } = require('../resizable')
 const { Item, Items } = require('../item')
 const { ProjectSidebar } = require('./sidebar')
-const { DragLayer } = require('./dnd')
+const { DragLayer } = require('../drag-layer')
+const { DropTarget } = require('react-dnd')
+const { NativeTypes } = require('react-dnd-electron-backend')
+const { extname } = require('path')
 
 const { getCachePrefix } = require('../../selectors/project')
 const { getTemplates } = require('../../selectors/templates')
@@ -16,9 +19,9 @@ const { MODE } = require('../../constants/project')
 const { once } = require('../../dom')
 const { values } = Object
 
-const dnd = require('./dnd')
 const cn = require('classnames')
 const actions = require('../../actions')
+
 
 
 class Project extends Component {
@@ -41,6 +44,23 @@ class Project extends Component {
       this.modeWillChange()
     }
   }
+
+
+  get classes() {
+    const { isOver, canDrop } = this.props
+    const { willModeChange, isModeChanging } = this.state
+
+    return {
+      'project-container': true,
+      'over': isOver && canDrop,
+      [`${this.state.mode}-mode`]: true,
+      [`${this.state.mode}-mode-leave`]: willModeChange,
+      [`${this.state.mode}-mode-leave-active`]: isModeChanging,
+      [`${this.props.mode}-mode-enter`]: willModeChange,
+      [`${this.props.mode}-mode-enter-active`]: isModeChanging
+    }
+  }
+
 
   modeWillChange() {
     if (this.state.willModeChange) return
@@ -74,25 +94,6 @@ class Project extends Component {
     }
   }
 
-  setContainer = (container) => {
-    this.container = container
-  }
-
-  get classes() {
-    const { isOver, canDrop } = this.props
-    const { willModeChange, isModeChanging } = this.state
-
-    return {
-      'project-container': true,
-      'over': isOver && canDrop,
-      [`${this.state.mode}-mode`]: true,
-      [`${this.state.mode}-mode-leave`]: willModeChange,
-      [`${this.state.mode}-mode-leave-active`]: isModeChanging,
-      [`${this.props.mode}-mode-enter`]: willModeChange,
-      [`${this.props.mode}-mode-enter-active`]: isModeChanging
-    }
-  }
-
   handleContextMenu = (event) => {
     this.props.onContextMenu(event)
   }
@@ -101,15 +102,21 @@ class Project extends Component {
     this.props.onModeChange(mode)
   }
 
-  render() {
-    const { onItemOpen, onItemSave, ...props } = this.props
+  setContainer = (container) => {
+    this.container = container
+  }
 
-    return (
+
+  render() {
+    const { dt, onItemOpen, onItemSave, ...props } = this.props
+
+    return dt(
       <div
         id="project"
         className={cn(this.classes)}
         ref={this.setContainer}
         onContextMenu={this.handleContextMenu}>
+
         <div id="project-view">
           <Resizable edge="right" value={250}>
             <ProjectSidebar {...props} hasToolbar={ARGS.frameless}/>
@@ -118,6 +125,7 @@ class Project extends Component {
             <Items {...props} onOpen={onItemOpen}/>
           </main>
         </div>
+
         <Item {...props} onOpen={onItemOpen} onSave={onItemSave}/>
 
         <DragLayer cache={props.cache}/>
@@ -159,6 +167,31 @@ class Project extends Component {
 
   static defaultProps = {
     mode: MODE.PROJECT
+  }
+}
+
+
+// Project Drop Target
+// -------------------
+
+const spec = {
+  drop({ onDropProject, onDropImages }, monitor) {
+    const { files } = monitor.getItem()
+    const images = []
+
+    for (let file of files) {
+      if (extname(file.path) === '.tpy') {
+        return onDropProject(file.path), { project: file.path }
+      }
+
+      if (file.type === 'image/jpeg') {
+        images.push(file.path)
+      }
+    }
+
+    if (images.length) {
+      return onDropImages(images), { images }
+    }
   }
 }
 
@@ -250,5 +283,8 @@ module.exports = {
         dispatch(actions.ui.edit.cancel())
       }
     })
-  )(dnd.wrap(Project))
+
+  )(DropTarget(NativeTypes.FILE, spec, (c, m) => ({
+    dt: c.dropTarget(), isOver: m.isOver(), canDrop: m.canDrop()
+  }))(Project))
 }

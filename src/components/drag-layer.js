@@ -1,16 +1,14 @@
 'use strict'
 
 const React = require('react')
+const ReactDnD = require('react-dnd')
 const { Component, PropTypes } = React
-const { DragLayer, DropTarget } = require('react-dnd')
-const { NativeTypes } = require('react-dnd-electron-backend')
-const { extname } = require('path')
-const { ItemDragPreview } = require('../item')
-const { PhotoDragPreview } = require('../photo')
-const { DND } = require('../../constants')
+const { ItemDragPreview } = require('./item')
+const { PhotoDragPreview } = require('./photo')
+const { DND } = require('../constants')
 
 
-class ProjectDragLayer extends Component {
+class DragLayer extends Component {
   get position() {
     const { offset } = this.props
 
@@ -60,48 +58,12 @@ class ProjectDragLayer extends Component {
   }
 }
 
-
-const spec = {
-  drop({ onDropProject, onDropImages }, monitor) {
-    const { files } = monitor.getItem()
-    const images = []
-
-    for (let file of files) {
-      if (extname(file.path) === '.tpy') {
-        return onDropProject(file.path), { project: file.path }
-      }
-
-      if (file.type === 'image/jpeg') {
-        images.push(file.path)
-      }
-    }
-
-    if (images.length) {
-      return onDropImages(images), { images }
-    }
-  }
-}
-
-const collect = (connect, monitor) => ({
-  dt: connect.dropTarget(),
-  isOver: monitor.isOver(),
-  canDrop: monitor.canDrop()
-})
-
 module.exports = {
-
-  DragLayer: DragLayer((monitor) => ({
+  DragLayer: ReactDnD.DragLayer((monitor) => ({
     item: monitor.getItem(),
     type: monitor.getItemType(),
     offset: monitor.getClientOffset(),
     isDragging: monitor.isDragging()
-  }))(ProjectDragLayer),
-
-  connect({ dt }, element) {
-    return dt(element)
-  },
-
-  wrap(component) {
-    return DropTarget(NativeTypes.FILE, spec, collect)(component)
-  }
+  }))(DragLayer)
 }
+
