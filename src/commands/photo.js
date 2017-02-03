@@ -18,7 +18,13 @@ class Create extends Command {
   *exec() {
     const { db, cache } = this.options
     let { item, files } = this.action.payload
+    let { idx } = this.action.meta
+
     const photos = []
+
+    if (idx == null) {
+      idx = [yield select(state => state.items[item].photos.length)]
+    }
 
     if (!files) {
       files = yield call(openImages)
@@ -36,7 +42,7 @@ class Create extends Command {
           mod.photo.create(tx, { item, image })
         ))
 
-        yield put(act.photo.insert(photo))
+        yield put(act.photo.insert(photo, { idx: [idx[0] + photos.length] }))
         photos.push(photo.id)
 
         try {
@@ -56,7 +62,7 @@ class Create extends Command {
       yield put(act.item.photos.add({ id: item, photos }))
 
       this.undo = act.photo.delete({ item, photos })
-      this.redo = act.photo.restore({ item, photos })
+      this.redo = act.photo.restore({ item, photos }, { idx })
     }
 
     return photos
