@@ -101,7 +101,6 @@ class ItemGrid extends Component {
     columns: PropTypes.arrayOf(PropTypes.object),
     items: PropTypes.arrayOf(PropTypes.object),
     zoom: Shapes.number(1, ItemGrid.ZOOM.length - 1),
-    onOpen: PropTypes.func,
     onSelect: PropTypes.func,
     onContextMenu: PropTypes.func,
     onPhotoMove: PropTypes.func

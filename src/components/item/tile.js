@@ -36,8 +36,8 @@ class ItemTile extends Component {
   }
 
   handleDoubleClick = () => {
-    const { item, onOpen } = this.props
-    onOpen({ id: item.id, photos: item.photos })
+    const { item, onItemOpen } = this.props
+    onItemOpen({ id: item.id, photos: item.photos })
   }
 
   get style() {
@@ -92,7 +92,7 @@ class ItemTile extends Component {
 
     onClick: PropTypes.func,
     onDropPhotos: PropTypes.func,
-    onOpen: PropTypes.func.isRequired,
+    onItemOpen: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired,
     onContextMenu: PropTypes.func.isRequired,
     onPhotosMove: PropTypes.func

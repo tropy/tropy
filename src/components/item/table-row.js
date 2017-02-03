@@ -57,8 +57,8 @@ class ItemTableRow extends Component {
   }
 
   handleDoubleClick = () => {
-    const { item, onOpen } = this.props
-    onOpen({ id: item.id, photos: item.photos })
+    const { item, onItemOpen } = this.props
+    onItemOpen({ id: item.id, photos: item.photos })
   }
 
   handleContextMenu = (event) => {
@@ -126,7 +126,7 @@ class ItemTableRow extends Component {
     onCancel: PropTypes.func,
     onDropPhotos: PropTypes.func,
     onMetadataSave: PropTypes.func,
-    onOpen: PropTypes.func
+    onItemOpen: PropTypes.func
   }
 }
 

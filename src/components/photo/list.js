@@ -6,9 +6,17 @@ const { PhotoListItem } = require('./list-item')
 const { PhotoIterator } = require('./iterator')
 const { DC } = require('../../constants/properties')
 const { get } = require('../../common/util')
+const cn = require('classnames')
 
 
 class PhotoList extends PhotoIterator {
+
+  get classes() {
+    return {
+      ...super.classes,
+      'photo-list': true
+    }
+  }
 
   isEditing(photo) {
     return get(this.props.ui, 'edit.photo') === photo.id
@@ -17,9 +25,9 @@ class PhotoList extends PhotoIterator {
   render() {
     const { onChange, onEdit, onEditCancel } = this.props
 
-    return (
+    return this.connect(
       <ul
-        className="photo-list"
+        className={cn(this.classes)}
         onClick={this.handleClickOutside}>
         {this.map(({ photo, ...props }) =>
           <PhotoListItem {...props}
@@ -47,5 +55,5 @@ class PhotoList extends PhotoIterator {
 
 
 module.exports = {
-  PhotoList
+  PhotoList: PhotoList.wrap()
 }

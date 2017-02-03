@@ -33,7 +33,7 @@ class PhotoListItem extends PhotoIterable {
     },
 
     onDoubleClick: () => {
-      this.props.onOpen(this.props.photo)
+      this.props.onItemOpen(this.props.photo)
     }
   })
 

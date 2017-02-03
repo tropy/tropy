@@ -151,7 +151,7 @@ class PhotoIterable extends Component {
     dp: PropTypes.func.isRequired,
 
     onContextMenu: PropTypes.func,
-    onOpen: PropTypes.func,
+    onItemOpen: PropTypes.func,
     onSelect: PropTypes.func
   }
 

@@ -2,13 +2,24 @@
 
 const React = require('react')
 const { Component, PropTypes } = React
+const { DropTarget } = require('react-dnd')
+const { NativeTypes } = require('react-dnd-electron-backend')
 const { get, move, times } = require('../../common/util')
+
+const isValidImage = file => file.type === 'image/jpeg'
 
 
 class PhotoIterator extends Component {
 
   get size() {
     return this.constructor.ZOOM[this.props.zoom]
+  }
+
+  get classes() {
+    return {
+      'drop-target': true,
+      'over': this.props.isOver && this.props.canDrop
+    }
   }
 
   isSelected(photo) {
@@ -27,9 +38,9 @@ class PhotoIterator extends Component {
     }
   }
 
-  handleOpen = (photo) => {
-    if (!this.props.isOpen) {
-      this.props.onOpen({
+  handleItemOpen = (photo) => {
+    if (!this.props.isItemOpen) {
+      this.props.onItemOpen({
         id: photo.item, photos: [photo.id]
       })
     }
@@ -54,6 +65,9 @@ class PhotoIterator extends Component {
     event.stopPropagation()
   }
 
+  connect(element) {
+    return this.props.isDisabled ? element : this.props.dt(element)
+  }
 
   map(fn) {
     return this.props.photos.map(photo => fn({
@@ -66,7 +80,7 @@ class PhotoIterator extends Component {
       onClick: this.handleClickInside,
       onDropPhoto: this.handleDropPhoto,
       onSelect: this.handleSelect,
-      onOpen: this.handleOpen,
+      onItemOpen: this.handleItemOpen,
       onContextMenu: this.props.onContextMenu
     }))
   }
@@ -79,6 +93,31 @@ class PhotoIterator extends Component {
     256
   ]
 
+  static DropTargetSpec = {
+    drop({ onDropImages }, monitor) {
+      const { files } = monitor.getItem()
+      const images = files.filter(isValidImage)
+
+      return onDropImages(images), { images }
+    },
+
+    canDrop({ project }, monitor) {
+      return !!monitor.getItem().files.find(isValidImage)
+    }
+  }
+
+  static DropTargetCollect = (connect, monitor) => ({
+    dt: connect.dropTarget(),
+    isOver: monitor.isOver(),
+    canDrop: monitor.canDrop()
+  })
+
+  static wrap() {
+    return DropTarget(
+      NativeTypes.FILE, this.DropTargetSpec, this.DropTargetCollect
+    )(this)
+  }
+
   static propTypes = {
     photos: PropTypes.arrayOf(
       PropTypes.shape({
@@ -86,18 +125,23 @@ class PhotoIterator extends Component {
       })
     ).isRequired,
 
-    cache: PropTypes.string,
+    cache: PropTypes.string.isRequired,
     selected: PropTypes.number,
     ui: PropTypes.object,
     zoom: PropTypes.number,
 
-    isOpen: PropTypes.bool,
+    isItemOpen: PropTypes.bool,
     isDisabled: PropTypes.bool,
+    isOver: PropTypes.bool,
+    canDrop: PropTypes.bool,
 
-    onContextMenu: PropTypes.func,
-    onOpen: PropTypes.func,
-    onSelect: PropTypes.func,
-    onSort: PropTypes.func
+    dt: PropTypes.func.isRequired,
+
+    onDropImages: PropTypes.func.isRequired,
+    onContextMenu: PropTypes.func.isRequired,
+    onItemOpen: PropTypes.func.isRequired,
+    onSelect: PropTypes.func.isRequired,
+    onSort: PropTypes.func.isRequired
   }
 }
 

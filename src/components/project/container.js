@@ -143,10 +143,7 @@ class ProjectContainer extends Component {
 }
 
 
-// Project Drop Target Spec
-// ------------------------
-
-const spec = {
+const DropTargetSpec = {
   drop({ onDropProject, onDropImages }, monitor) {
     const { files } = monitor.getItem()
     const project = files[0].path
@@ -261,7 +258,7 @@ module.exports = {
       }
     })
 
-  )(DropTarget(NativeTypes.FILE, spec, (c, m) => ({
+  )(DropTarget(NativeTypes.FILE, DropTargetSpec, (c, m) => ({
     dt: c.dropTarget(), isOver: m.isOver(), canDrop: m.canDrop()
   }))(ProjectContainer))
 }

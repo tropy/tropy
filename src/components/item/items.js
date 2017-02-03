@@ -52,7 +52,6 @@ Items.propTypes = {
   maxZoom: PropTypes.number,
   onMaximize: PropTypes.func,
   onCreate: PropTypes.func,
-  onOpen: PropTypes.func,
   onSelect: PropTypes.func,
   onEdit: PropTypes.func,
   onEditCancel: PropTypes.func,

@@ -194,7 +194,7 @@ class ItemView extends Component {
     assign(props, {
       selected: photo && photo.id,
       zoom: nav.panel.photoZoom,
-      isOpen: this.isItemMode,
+      isItemOpen: this.isItemMode,
       onSelect: onPhotoSelect,
       onSort: onPhotoSort,
       isDisabled: this.isDisabled
@@ -306,7 +306,6 @@ class ItemView extends Component {
     properties: PropTypes.object,
     templates: PropTypes.object,
 
-    onOpen: PropTypes.func,
     onSave: PropTypes.func,
     onContextMenu: PropTypes.func,
     onEdit: PropTypes.func,

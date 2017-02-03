@@ -21,7 +21,7 @@ class PhotoTile extends PhotoIterable {
   }
 
   handleDoubleClick = () => {
-    this.props.onOpen(this.props.photo)
+    this.props.onItemOpen(this.props.photo)
   }
 
   render() {

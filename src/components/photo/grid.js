@@ -4,9 +4,16 @@ const React = require('react')
 //const { PropTypes } = React
 const { PhotoIterator } = require('./iterator')
 const { PhotoTile } = require('./tile')
+const cn = require('classnames')
 
 
 class PhotoGrid extends PhotoIterator {
+  get classes() {
+    return {
+      ...super.classes,
+      'photo-grid': true
+    }
+  }
 
   get placeholder() {
     return (
@@ -19,9 +26,9 @@ class PhotoGrid extends PhotoIterator {
   render() {
     const { tile } = this.placeholder
 
-    return (
+    return this.connect(
       <ul
-        className="photo-grid"
+        className={cn(this.classes)}
         onClick={this.handleClickOutside}>
         {this.map(({ photo, ...props }) =>
           <PhotoTile {...props}
@@ -42,5 +49,5 @@ class PhotoGrid extends PhotoIterator {
 }
 
 module.exports = {
-  PhotoGrid
+  PhotoGrid: PhotoGrid.wrap()
 }
