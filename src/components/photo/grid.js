@@ -18,13 +18,13 @@ class PhotoGrid extends PhotoIterator {
   get placeholder() {
     return (
       <li
-        className="photo-tile"
+        className="placeholder tile"
         style={{ flexBasis: `${this.size * 1.25}px` }}/>
     )
   }
 
   render() {
-    const { tile } = this.placeholder
+    const tile = this.placeholder
 
     return this.connect(
       <ul
