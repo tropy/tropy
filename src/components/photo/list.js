@@ -47,9 +47,9 @@ class PhotoList extends PhotoIterator {
   static propTypes = {
     ...PhotoIterator.propTypes,
 
-    onChange: PropTypes.func,
-    onEdit: PropTypes.func,
-    onEditCancel: PropTypes.func
+    onChange: PropTypes.func.isRequired,
+    onEdit: PropTypes.func.isRequired,
+    onEditCancel: PropTypes.func.isRequired
   }
 }
 

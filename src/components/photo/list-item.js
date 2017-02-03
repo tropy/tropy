@@ -82,9 +82,9 @@ class PhotoListItem extends PhotoIterable {
 
     isEditing: PropTypes.bool,
 
-    onChange: PropTypes.func,
-    onEdit: PropTypes.func,
-    onEditCancel: PropTypes.func
+    onChange: PropTypes.func.isRequired,
+    onEdit: PropTypes.func.isRequired,
+    onEditCancel: PropTypes.func.isRequired
   }
 }
 

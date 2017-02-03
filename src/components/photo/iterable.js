@@ -151,9 +151,9 @@ class PhotoIterable extends Component {
     dt: PropTypes.func.isRequired,
     dp: PropTypes.func.isRequired,
 
-    onContextMenu: PropTypes.func,
-    onItemOpen: PropTypes.func,
-    onSelect: PropTypes.func
+    onContextMenu: PropTypes.func.isRequired,
+    onItemOpen: PropTypes.func.isRequired,
+    onSelect: PropTypes.func.isRequired
   }
 
   static defaultProps = {
