@@ -6,6 +6,7 @@
   line-height: $row-height;
   flex: 1 1 0;
   min-width: 0; // Fix truncation
+  overflow-y: scroll;
 
   .photo {
     display: flex;

@@ -7,4 +7,10 @@
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
+  overflow-y: scroll;
+  padding: 0 $component-padding-horizontal;
+}
+
+.photo {
+  position: relative;
 }

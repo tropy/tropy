@@ -29,7 +29,7 @@
 
   .panel-body {
     flex: 1 1 auto;
-    overflow-y: scroll;
+    overflow: hidden;
     margin-bottom: $space-min;
     display: flex;
   }

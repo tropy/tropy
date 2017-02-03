@@ -15,7 +15,9 @@ class ItemGrid extends Component {
 
   get placeholder() {
     return (
-      <li className="placeholder tile" style={{ flexBasis: `${this.size * 1.25}px` }}/>
+      <li
+        className="placeholder tile"
+        style={{ flexBasis: `${this.size * 1.25}px` }}/>
     )
   }
 
