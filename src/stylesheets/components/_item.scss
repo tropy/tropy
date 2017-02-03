@@ -2,7 +2,7 @@
 // Item
 // --------------------------------------------------
 
-#item {
+#item-view {
   position: absolute;
   left: 0;
   transform: translate3d(calc(100% - #{$panels-default-width}), 0, 0);

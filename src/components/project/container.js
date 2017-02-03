@@ -132,9 +132,9 @@ class ProjectContainer extends Component {
     canDrop: PropTypes.bool,
     dt: PropTypes.func.isRequired,
 
-    onContextMenu: PropTypes.func,
-    onDropProject: PropTypes.func,
-    onModeChange: PropTypes.func
+    onContextMenu: PropTypes.func.isRequired,
+    onProjectOpen: PropTypes.func.isRequired,
+    onModeChange: PropTypes.func.isRequired
   }
 
   static defaultProps = {
@@ -144,11 +144,11 @@ class ProjectContainer extends Component {
 
 
 const DropTargetSpec = {
-  drop({ onDropProject, onDropImages }, monitor) {
+  drop({ onProjectOpen }, monitor) {
     const { files } = monitor.getItem()
     const project = files[0].path
 
-    return onDropProject(project), { project }
+    return onProjectOpen(project), { project }
   },
 
   canDrop({ project }, monitor) {
@@ -188,16 +188,12 @@ module.exports = {
         dispatch(actions.ui.context.show(event, ...args))
       },
 
-      onDropProject(path) {
-        dispatch(actions.project.open(path))
-      },
-
-      onDropImages(paths) {
-        dispatch(actions.item.import(paths))
-      },
-
       onModeChange(mode) {
         dispatch(actions.nav.update({ mode }))
+      },
+
+      onProjectOpen(path) {
+        dispatch(actions.project.open(path))
       },
 
       onProjectSave(...args) {
@@ -215,6 +211,10 @@ module.exports = {
 
       onItemSave(...args) {
         dispatch(actions.item.save(...args))
+      },
+
+      onItemImport(...args) {
+        dispatch(actions.item.import(...args))
       },
 
       onItemsDelete(items) {

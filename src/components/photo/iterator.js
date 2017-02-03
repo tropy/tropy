@@ -96,12 +96,15 @@ class PhotoIterator extends Component {
   static DropTargetSpec = {
     drop({ onDropImages }, monitor) {
       const { files } = monitor.getItem()
-      const images = files.filter(isValidImage)
+
+      const images = files
+        .filter(isValidImage)
+        .map(file => file.path)
 
       return onDropImages(images), { images }
     },
 
-    canDrop({ project }, monitor) {
+    canDrop(_, monitor) {
       return !!monitor.getItem().files.find(isValidImage)
     }
   }

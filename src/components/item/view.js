@@ -66,6 +66,13 @@ class ItemView extends Component {
     onPhotoCreate({ item: item.id })
   }
 
+  handleDropImages = (files) => {
+    const { onPhotoCreate } = this.props
+    const { item } = this
+
+    onPhotoCreate({ item: item.id, files })
+  }
+
   handleNoteCreate = (event) => {
     event.stopPropagation()
   }
@@ -195,9 +202,10 @@ class ItemView extends Component {
       selected: photo && photo.id,
       zoom: nav.panel.photoZoom,
       isItemOpen: this.isItemMode,
+      isDisabled: this.isDisabled,
       onSelect: onPhotoSelect,
       onSort: onPhotoSort,
-      isDisabled: this.isDisabled
+      onDropImages: this.handleDropImages
     })
 
     return props.zoom
@@ -245,7 +253,7 @@ class ItemView extends Component {
     const { photo } = this.props
 
     return (
-      <section id="item">
+      <section id="item-view">
         <Resizable edge={'left'} value={320}>
           <PanelGroup
             header={this.renderToolbar()}

@@ -24,13 +24,16 @@ class PhotoIterable extends Component {
     this.props.dp(getEmptyImage())
   }
 
+
   get classes() {
     return {
-      photo: true,
-      active: this.props.isSelected,
-      context: this.props.isContext,
-      over: this.props.isOver,
-      dragging: this.props.isDragging,
+      'photo': true,
+      'drag-source': true,
+      'drop-target': true,
+      'active': this.props.isSelected,
+      'context': this.props.isContext,
+      'over': this.props.isOver,
+      'dragging': this.props.isDragging,
       [this.props.orientation]: true,
       [this.direction]: this.props.isOver
     }
@@ -39,6 +42,11 @@ class PhotoIterable extends Component {
   get direction() {
     return this.state.offset ? 'after' : 'before'
   }
+
+  get isVertical() {
+    return this.props.orientation === 'vertical'
+  }
+
 
   handleContextMenu = (event) => {
     const { photo, isDisabled, onContextMenu } = this.props
@@ -50,12 +58,14 @@ class PhotoIterable extends Component {
     }
   }
 
-  get isVertical() {
-    return this.props.orientation === 'vertical'
-  }
-
   setContainer = (container) => {
     this.container = container
+  }
+
+
+  connect(element) {
+    return this.props.isDisabled ?
+      element : this.props.ds(this.props.dt(element))
   }
 
   renderThumbnail(props) {
@@ -66,65 +76,56 @@ class PhotoIterable extends Component {
     )
   }
 
-  connect(element) {
-    return this.props.isDisabled ?
-      element : this.props.ds(this.props.dt(element))
-  }
 
-
-  static ds = {
-    spec: {
-      beginDrag({ photo }) {
-        return { id: photo.id, item: photo.item }
-      },
-
-      canDrag({ isDisabled }) {
-        return !isDisabled
-      }
+  static DragSourceSpec = {
+    beginDrag({ photo }) {
+      return { id: photo.id, item: photo.item }
     },
 
-    collect(connect, monitor) {
-      return {
-        ds: connect.dragSource(),
-        dp: connect.dragPreview(),
-        isDragging: monitor.isDragging()
-      }
+    canDrag({ isDisabled }) {
+      return !isDisabled
     }
   }
 
-  static dt = {
-    spec: {
-      hover({ photo, onOver }, monitor, component) {
-        const { top, left, width, height } = bounds(component.container)
-        const { x, y } = monitor.getClientOffset()
+  static DragSourceCollect = (connect, monitor) => ({
+    ds: connect.dragSource(),
+    dp: connect.dragPreview(),
+    isDragging: monitor.isDragging()
+  })
 
-        const offset = Math.round(
-          component.isVertical ? ((y - top) / height) : ((x - left) / width)
-        )
 
-        component.setState({ offset })
-      },
+  static DropTargetSpec = {
+    hover({ photo, onOver }, monitor, component) {
+      const { top, left, width, height } = bounds(component.container)
+      const { x, y } = monitor.getClientOffset()
 
-      drop({ photo, onDropPhoto }, monitor, { state }) {
-        const item = monitor.getItem()
+      const offset = Math.round(
+        component.isVertical ? ((y - top) / height) : ((x - left) / width)
+      )
 
-        onDropPhoto({
-          id: item.id, to: photo.id, offset: state.offset
-        })
-      }
+      component.setState({ offset })
     },
 
-    collect(connect, monitor) {
-      return {
-        dt: connect.dropTarget(),
-        isOver: monitor.isOver(),
-      }
+    drop({ photo, onDropPhoto }, monitor, { state }) {
+      const item = monitor.getItem()
+
+      onDropPhoto({
+        id: item.id, to: photo.id, offset: state.offset
+      })
     }
   }
+
+  static DropTargetCollect = (connect, monitor) => ({
+    dt: connect.dropTarget(),
+    isOver: monitor.isOver(),
+  })
 
   static wrap() {
-    return DragSource(DND.PHOTO, this.ds.spec, this.ds.collect)(
-      DropTarget(DND.PHOTO, this.dt.spec, this.dt.collect)(this))
+    return DragSource(
+      DND.PHOTO, this.DragSourceSpec, this.DragSourceCollect
+    )(DropTarget(
+      DND.PHOTO, this.DropTargetSpec, this.DropTargetCollect
+    )(this))
   }
 
 
