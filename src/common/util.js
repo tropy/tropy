@@ -50,6 +50,8 @@ module.exports = {
   },
 
   move(array, a, b, offset = 0) {
+    if (a === b) return [...array]
+
     const res = []
 
     for (let i = 0, adj = 0; i < array.length; ++i) {

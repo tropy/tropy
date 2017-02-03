@@ -123,6 +123,10 @@ describe('util', () => {
 
         expect(move([1, 2, 3], 1, 3, 0)).to.eql([2, 1, 3])
         expect(move([1, 2, 3], 1, 2, 0)).to.eql([1, 2, 3])
+
+        expect(move([1, 2, 3], 1, 1, 0)).to.eql([1, 2, 3])
+        expect(move([1, 2, 3], 2, 2, 0)).to.eql([1, 2, 3])
+        expect(move([1, 2, 3], 3, 3, 0)).to.eql([1, 2, 3])
       })
     })
 
@@ -136,6 +140,10 @@ describe('util', () => {
 
         expect(move([1, 2, 3], 1, 3, 1)).to.eql([2, 3, 1])
         expect(move([1, 2, 3], 1, 2, 1)).to.eql([2, 1, 3])
+
+        expect(move([1, 2, 3], 1, 1, 1)).to.eql([1, 2, 3])
+        expect(move([1, 2, 3], 2, 2, 1)).to.eql([1, 2, 3])
+        expect(move([1, 2, 3], 3, 3, 1)).to.eql([1, 2, 3])
       })
     })
   })
