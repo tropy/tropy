@@ -112,6 +112,15 @@ class PhotoIterable extends Component {
       onDropPhoto({
         id: item.id, to: photo.id, offset: state.offset
       })
+    },
+
+    canDrop({ photo, isDisabled }, monitor) {
+      const item = monitor.getItem()
+
+      if (isDisabled) return false
+      if (photo.id === item.id) return false
+
+      return true
     }
   }
 
