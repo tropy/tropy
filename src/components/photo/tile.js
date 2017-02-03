@@ -8,6 +8,12 @@ const cn = require('classnames')
 
 class PhotoTile extends PhotoIterable {
 
+  get classes() {
+    return {
+      ...super.classes, tile: true
+    }
+  }
+
   get style() {
     const height = `${this.props.size * 1.25}px`
 

@@ -50,10 +50,11 @@ class ItemTile extends Component {
 
   get classes() {
     return {
-      'item-tile': true,
-      'active': this.props.isSelected,
-      'dragging': this.props.isDragging,
-      'over': this.props.isOver && this.props.canDrop
+      item: true,
+      tile: true,
+      active: this.props.isSelected,
+      dragging: this.props.isDragging,
+      over: this.props.isOver && this.props.canDrop
     }
   }
 
