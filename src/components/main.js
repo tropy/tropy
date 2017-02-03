@@ -5,7 +5,7 @@ const ReactIntl = require('react-intl')
 const React = require('react')
 const { Component, PropTypes } = React
 const { DragDropContext } = require('react-dnd')
-const ElectronBackend = require('../../../electron/react-dnd-backend/lib')
+const ElectronBackend = require('react-dnd-electron-backend')
 
 const IntlProvider = connect(state => {
   return {
