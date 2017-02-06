@@ -55,14 +55,14 @@
     &.before {
       &::before {
         content: "";
-        right: 112.5%;
+        right: 100%;
       }
     }
 
     &.after {
       &::after {
         content: "";
-        left: 112.5%;
+        left: 100%;
       }
     }
   }
