@@ -2,7 +2,6 @@
 // Sort indicator
 // --------------------------------------------------
 
-
 .photo {
   &.over {
     position: relative;
@@ -35,13 +34,11 @@
           top: 100%;
         }
 
+        // Expand sortable area
         &.last {
           &::before {
             content: "";
-            position: absolute;
             top: 100%;
-            left: 0;
-            width: 100%;
             height: $line-height-large;
             outline: none;
           }
@@ -53,7 +50,7 @@
       &::before,
       &::after {
         top: 50%;
-        height: 60%;
+        height: 100%;
         transform: translateY(-50%);
       }
 
