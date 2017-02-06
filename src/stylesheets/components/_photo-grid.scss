@@ -9,8 +9,6 @@
   align-content: flex-start;
   overflow-y: scroll;
   padding: 0 $component-padding-horizontal;
-}
-
-.photo {
   position: relative;
+  z-index: 0;
 }

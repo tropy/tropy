@@ -5,6 +5,8 @@
 
 .photo {
   &.over {
+    position: relative;
+
     &::before,
     &::after {
       position: absolute;
@@ -31,6 +33,18 @@
         &::after {
           content: "";
           top: 100%;
+        }
+
+        &.last {
+          &::before {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            height: $line-height-large;
+            outline: none;
+          }
         }
       }
     }
