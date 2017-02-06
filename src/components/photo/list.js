@@ -27,7 +27,7 @@ class PhotoList extends PhotoIterator {
 
     return (
       <ul className={cn(this.classes)}>
-        <li className="click-catcher" onClick={this.handleClickOutside}/>
+        {this.renderClickCatcher()}
         {this.map(({ photo, ...props }) =>
           <PhotoListItem {...props}
             key={photo.id}

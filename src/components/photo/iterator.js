@@ -1,11 +1,13 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
+const { PureComponent, PropTypes } = React
+const { ClickCatcher } = require('../click-catcher')
+const { DND } = require('../../constants')
 const { get, move, times } = require('../../common/util')
 
 
-class PhotoIterator extends Component {
+class PhotoIterator extends PureComponent {
 
   get size() {
     return this.constructor.ZOOM[this.props.zoom]
@@ -52,6 +54,15 @@ class PhotoIterator extends Component {
     onSort({ item, photos: order })
   }
 
+  handleDropLastPhoto = ({ id }) => {
+    const { photos } = this.props
+    const to = photos[photos.length - 1].id
+
+    if (id !== to) {
+      this.handleDropPhoto({ id, to, offset: 1 })
+    }
+  }
+
   handleClickOutside = () => {
     if (this.props.selected) {
       this.props.onSelect()
@@ -74,6 +85,16 @@ class PhotoIterator extends Component {
       onItemOpen: this.handleItemOpen,
       onContextMenu: this.props.onContextMenu
     }))
+  }
+
+  renderClickCatcher() {
+    return (
+      <ClickCatcher
+        isDisabled={!this.isSortable}
+        accept={[DND.PHOTO]}
+        onDrop={this.handleDropLastPhoto}
+        onClick={this.handleClickOutside}/>
+    )
   }
 
 
