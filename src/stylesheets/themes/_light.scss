@@ -67,9 +67,6 @@ $icon-style:        "line";
 $icon-color:        $shade-5;
 $icon-active-color: $shade-8;
 
-$icon-item-color:   rgba($icon-color, 0.6);
-$icon-item-bg:      $shade-3;
-
 $icon-spin-color:   $brand-primary;
 
 // Project
@@ -168,3 +165,7 @@ $toolbar-hover-bg: rgba($shade-9, 0.6);
 // Drag preview
 $drag-preview-opacity:       0.8;
 $drag-preview-badge-opacity: 0.8;
+
+// Thumbnail
+$thumbnail-color: rgba($icon-color, 0.6);
+$thumbnail-bg:    $shade-3;
