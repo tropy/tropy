@@ -29,7 +29,7 @@ class Thumbnail extends PureComponent {
     const { src, style } = this
 
     const listeners = pick(this.props, [
-      'onClick', 'onDoubleClick', 'onMouseDown'
+      'onClick', 'onDoubleClick', 'onMouseDown', 'onContextMenu'
     ])
 
     return (
@@ -45,6 +45,7 @@ class Thumbnail extends PureComponent {
     id: number,
     size: number.isRequired,
     onClick: func,
+    onContextMenu: func,
     onDoubleClick: func,
     onMouseDown: func
   }
