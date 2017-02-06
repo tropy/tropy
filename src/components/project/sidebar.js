@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
+const { PureComponent, PropTypes } = React
 const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')
 const { ActivityPane } = require('../activity')
@@ -13,7 +13,7 @@ const { ROOT } = require('../../constants/list')
 const { has } = require('../../common/util')
 
 
-class ProjectSidebar extends Component {
+class ProjectSidebar extends PureComponent {
 
   get isContext() {
     return has(this.props, 'ui.context.project')
@@ -177,6 +177,10 @@ class ProjectSidebar extends Component {
     onListSort: PropTypes.func.isRequired,
     onProjectSave: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired
+  }
+
+  static defaultProps = {
+    hasToolbar: ARGS.frameless
   }
 }
 

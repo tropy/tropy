@@ -3,5 +3,6 @@
 module.exports = {
   ...require('./container'),
   ...require('./name'),
-  ...require('./sidebar')
+  ...require('./sidebar'),
+  ...require('./toolbar')
 }

@@ -12,6 +12,8 @@ const { extname } = require('path')
 const { getCachePrefix } = require('../../selectors/project')
 const { getAllVisibleTags } = require('../../selectors/tag')
 const { getTemplates } = require('../../selectors/templates')
+const { getItems } = require('../../selectors/items')
+const { getColumns } = require('../../selectors/ui')
 const { MODE } = require('../../constants/project')
 const { once } = require('../../dom')
 const { values } = Object
@@ -104,7 +106,7 @@ class ProjectContainer extends Component {
 
 
   render() {
-    const { dt, ...props } = this.props
+    const { dt, items, columns, ...props } = this.props
 
     return dt(
       <div
@@ -113,7 +115,7 @@ class ProjectContainer extends Component {
         ref={this.setContainer}
         onContextMenu={this.handleContextMenu}>
 
-        <ProjectView {...props}/>
+        <ProjectView {...props} items={items} columns={columns}/>
         <ItemView {...props}/>
         <DragLayer cache={props.cache}/>
       </div>
@@ -125,6 +127,8 @@ class ProjectContainer extends Component {
       file: PropTypes.string
     }).isRequired,
 
+    items: PropTypes.arrayOf(PropTypes.object),
+    columns: PropTypes.arrayOf(PropTypes.object),
     cache: PropTypes.string.isRequired,
     mode: PropTypes.oneOf(values(MODE)).isRequired,
 
@@ -170,8 +174,9 @@ module.exports = {
       mode: state.nav.mode,
       lists: state.lists,
       tags: getAllVisibleTags(state),
+      columns: getColumns(state),
+      items: getItems(state),
       cache: getCachePrefix(state),
-      zoom: state.nav.itemsZoom,
       nav: state.nav,
       ui: state.ui,
       properties: state.properties,
@@ -205,12 +210,24 @@ module.exports = {
         dispatch(actions.nav.select(...args))
       },
 
+      onItemSelect(id, mod) {
+        dispatch(actions.item.select(id, { mod }))
+      },
+
       onItemOpen(item) {
         dispatch(actions.item.open(item))
       },
 
+      onItemCreate() {
+        dispatch(actions.item.create())
+      },
+
       onItemSave(...args) {
         dispatch(actions.item.save(...args))
+      },
+
+      onItemZoomChange(itemsZoom) {
+        dispatch(actions.nav.update({ itemsZoom }))
       },
 
       onItemImport(...args) {

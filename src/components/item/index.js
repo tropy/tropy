@@ -2,10 +2,10 @@
 
 module.exports = {
   ...require('./drag-preview'),
-  ...require('./view'),
-  ...require('./items'),
+  ...require('./grid'),
   ...require('./table'),
   ...require('./table-cell'),
   ...require('./table-head'),
-  ...require('./table-row')
+  ...require('./table-row'),
+  ...require('./view')
 }

@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = React
+const { node, bool, func } = React.PropTypes
 const { noop } = require('../common/util')
 const cn = require('classnames')
 
@@ -10,7 +10,7 @@ const ToolGroup = ({ children }) => (
 )
 
 ToolGroup.propTypes = {
-  children: PropTypes.node
+  children: node
 }
 
 const Toolbar = ({ children, draggable, onMaximize }) => (
@@ -22,9 +22,13 @@ const Toolbar = ({ children, draggable, onMaximize }) => (
 )
 
 Toolbar.propTypes = {
-  children: PropTypes.node,
-  draggable: PropTypes.bool,
-  onMaximize: PropTypes.func
+  children: node,
+  draggable: bool,
+  onMaximize: func
+}
+
+Toolbar.defaultProps = {
+  onMaximize: noop
 }
 
 
