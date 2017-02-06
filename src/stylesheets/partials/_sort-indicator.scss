@@ -21,6 +21,10 @@
       width: 100%;
     }
 
+    &::before {
+      bottom: 100%;
+    }
+
     &::after {
       top: 100%;
     }
@@ -28,14 +32,14 @@
     &.before {
       &::before {
         content: "";
-        bottom: 100%;
       }
     }
 
+    .click-catcher.over ~ &:last-child,
+    .click-catcher.over ~ &.last,
     &.after {
       &::after {
         content: "";
-        top: 100%;
       }
     }
   }
@@ -64,9 +68,3 @@
   }
 }
 
-.click-catcher.over ~ .photo:last-child,
-.click-catcher.over ~ .photo.last {
-  &::after {
-    content: "";
-  }
-}
