@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = React
+const { PureComponent, PropTypes } = React
 const { FormattedMessage } = require('react-intl')
 const { Toolbar, ToolGroup } = require('../toolbar')
 const { Slider } = require('../slider')
@@ -13,45 +13,53 @@ const {
 } = require('../icons')
 
 
-const PhotoToolbar = ({
-  hasCreateButton, onCreate, zoom, maxZoom, onZoomChange
-}) => (
-  <Toolbar>
-    <div className="toolbar-left">
-      <IconPhoto/>
-      <h4><FormattedMessage id="panel.photos"/></h4>
-    </div>
+class PhotoToolbar extends PureComponent {
 
-    <div className="toolbar-right">
-      {
-        hasCreateButton &&
+  handleCreate = () => this.props.onCreate()
+
+  render() {
+    const { hasCreateButton, zoom, maxZoom, onZoomChange } = this.props
+
+    return (
+      <Toolbar>
+        <div className="toolbar-left">
+          <IconPhoto/>
+          <h4><FormattedMessage id="panel.photos"/></h4>
+        </div>
+
+        <div className="toolbar-right">
+          {
+            hasCreateButton &&
+              <ToolGroup>
+                <IconButton icon={<IconPlus/>} onClick={this.handleCreate}/>
+              </ToolGroup>
+          }
           <ToolGroup>
-            <IconButton icon={<IconPlus/>} onClick={onCreate}/>
+            <Slider
+              value={zoom}
+              max={maxZoom}
+              size="sm"
+              minIcon={<IconListSmall/>}
+              maxIcon={<IconGridSmall/>}
+              onChange={onZoomChange}/>
           </ToolGroup>
-      }
-      <ToolGroup>
-        <Slider
-          value={zoom}
-          max={maxZoom}
-          size="sm"
-          minIcon={<IconListSmall/>}
-          maxIcon={<IconGridSmall/>}
-          onChange={onZoomChange}/>
-      </ToolGroup>
-    </div>
-  </Toolbar>
-)
+        </div>
+      </Toolbar>
+    )
+  }
 
-PhotoToolbar.propTypes = {
-  maxZoom: PropTypes.number,
-  zoom: PropTypes.number,
-  hasCreateButton: PropTypes.bool,
-  onCreate: PropTypes.func,
-  onZoomChange: PropTypes.func
-}
 
-PhotoToolbar.defaultProps = {
-  maxZoom: PhotoIterator.ZOOM.length - 1
+  static propTypes = {
+    maxZoom: PropTypes.number.isRequired,
+    zoom: PropTypes.number.isRequired,
+    hasCreateButton: PropTypes.bool,
+    onCreate: PropTypes.func,
+    onZoomChange: PropTypes.func.isRequired
+  }
+
+  static defaultProps = {
+    maxZoom: PhotoIterator.ZOOM.length - 1
+  }
 }
 
 module.exports = {

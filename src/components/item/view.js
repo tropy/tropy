@@ -9,7 +9,7 @@ const { Tab, Tabs } = require('../tabs')
 const { Note, NoteToolbar, NoteList } = require('../note')
 const { PanelGroup, Panel } = require('../panel')
 const { Resizable } = require('../resizable')
-const { PhotoToolbar, PhotoList, PhotoGrid } = require('../photo')
+const { PhotoPanel, PhotoList, PhotoGrid } = require('../photo')
 const { IconMetadata, IconTag, IconChevron16 } = require('../icons')
 const { IconButton } = require('../button')
 const { Image } = require('../image')
@@ -54,24 +54,14 @@ class ItemView extends Component {
     }
   }
 
-  handlePhotoEdit = (photo) => {
-    this.props.onEdit({ photo })
-  }
 
-  handlePhotoCreate = (event) => {
+  handlePhotoCreate = (options) => {
     const { onPhotoCreate } = this.props
     const { item } = this
 
-    event.stopPropagation()
-    onPhotoCreate({ item: item.id })
+    onPhotoCreate({ ...options, item: item.id })
   }
 
-  handleDropImages = (files) => {
-    const { onPhotoCreate } = this.props
-    const { item } = this
-
-    onPhotoCreate({ item: item.id, files })
-  }
 
   handleNoteCreate = (event) => {
     event.stopPropagation()
@@ -176,44 +166,6 @@ class ItemView extends Component {
     )
   }
 
-  renderPhotoToolbar() {
-    const { nav, onPhotoZoomChange } = this.props
-
-    return (
-      <PhotoToolbar
-        zoom={nav.panel.photoZoom}
-        onZoomChange={onPhotoZoomChange}
-        hasCreateButton={!this.isDisabled}
-        onCreate={this.handlePhotoCreate}/>
-    )
-  }
-
-  renderPhotoPanel() {
-    const {
-      photo,
-      nav,
-      onMetadataSave,
-      onPhotoSelect,
-      onPhotoSort,
-      ...props
-    } = this.props
-
-    assign(props, {
-      selected: photo && photo.id,
-      zoom: nav.panel.photoZoom,
-      isItemOpen: this.isItemMode,
-      isDisabled: this.isDisabled,
-      onSelect: onPhotoSelect,
-      onSort: onPhotoSort,
-      onDropImages: this.handleDropImages
-    })
-
-    return props.zoom
-      ? <PhotoGrid {...props}/>
-      : <PhotoList {...props}
-        onChange={onMetadataSave}
-        onEdit={this.handlePhotoEdit}/>
-  }
 
   renderNoteToolbar() {
     return (
@@ -250,7 +202,14 @@ class ItemView extends Component {
   }
 
   render() {
-    const { photo } = this.props
+    const {
+      nav,
+      photo,
+      onPhotoSelect,
+      onPhotoSort,
+      onPhotoZoomChange,
+      ...props
+    } = this.props
 
     return (
       <section id="item-view">
@@ -259,15 +218,23 @@ class ItemView extends Component {
             header={this.renderToolbar()}
             height={[33.33, 33.33, 33.33]}>
 
-            <Panel header={this.renderItemTabs()}>
+            <Panel>
+              {this.renderItemTabs()}
               {this.renderItemPanel()}
             </Panel>
 
-            <Panel header={this.renderPhotoToolbar()}>
-              {this.renderPhotoPanel()}
-            </Panel>
+            <PhotoPanel {...props}
+              zoom={nav.panel.photoZoom}
+              selected={photo && photo.id}
+              onZoomChange={onPhotoZoomChange}
+              isItemOpen={this.isItemMode}
+              isDisabled={this.isDisabled}
+              onSelect={onPhotoSelect}
+              onSort={onPhotoSort}
+              onCreate={this.handlePhotoCreate}/>
 
-            <Panel header={this.renderNoteToolbar()}>
+            <Panel>
+              {this.renderNoteToolbar()}
               {this.renderNotePanel()}
             </Panel>
           </PanelGroup>

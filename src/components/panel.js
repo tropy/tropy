@@ -1,24 +1,42 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes, Children } = React
+const { Component, PropTypes, Children } = React
 const { only } = require('./util')
 const { Resizable } = require('./resizable')
 
-const Panel = ({ header, children }) => (
-  <section className="panel">
-    <header className="panel-header">
-      {header}
-    </header>
-    <div className="panel-body">
-      {children}
-    </div>
-  </section>
-)
+class Panel extends Component {
 
-Panel.propTypes = {
-  children: PropTypes.node,
-  header: PropTypes.node
+  renderHeader(header, props) {
+    return (
+      <header className="panel-header" {...props}>
+        {header}
+      </header>
+    )
+  }
+
+  renderBody(body, props) {
+    return (
+      <div className="panel-body" {...props}>
+        {body}
+      </div>
+    )
+  }
+
+  render() {
+    const [header, ...body] = Children.toArray(this.props.children)
+
+    return (
+      <section className="panel">
+        {this.renderHeader(header)}
+        {this.renderBody(body)}
+      </section>
+    )
+  }
+
+  static propTypes = {
+    children: PropTypes.node
+  }
 }
 
 
