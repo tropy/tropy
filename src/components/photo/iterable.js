@@ -28,8 +28,8 @@ class PhotoIterable extends Component {
   get classes() {
     return {
       'photo': true,
-      'drag-source': !this.props.isDisabled,
-      'drop-target': !this.props.isDisabled && this.isSortable,
+      'drag-source': this.isDraggable,
+      'drop-target': this.isSortable,
       'active': this.props.isSelected,
       'context': this.props.isContext,
       'over': this.props.isOver,
@@ -49,8 +49,13 @@ class PhotoIterable extends Component {
     return this.props.orientation === 'vertical'
   }
 
+  get isDraggable() {
+    return !this.props.isDisabled
+  }
+
   get isSortable() {
-    return !(this.props.isFirst && this.props.isLast)
+    return !this.props.isDisabled &&
+      !(this.props.isFirst && this.props.isLast)
   }
 
 
@@ -70,10 +75,10 @@ class PhotoIterable extends Component {
 
 
   connect(element) {
-    if (this.isDisabled) return element
-    if (this.isSortable) return this.props.ds(this.props.dt(element))
+    if (this.isSortable) element = this.props.dt(element)
+    if (this.isDraggable) element = this.props.ds(element)
 
-    return this.props.ds(element)
+    return element
   }
 
   renderThumbnail(props) {

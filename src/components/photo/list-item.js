@@ -15,6 +15,10 @@ class PhotoListItem extends PhotoIterable {
     return get(this.props.photo, ['data', this.props.title, 'value'])
   }
 
+  get isDraggable() {
+    return !this.props.isEditing && super.isDraggable
+  }
+
   handleClick = createClickHandler({
     onClick: (event, cancel) => {
       const { photo, isSelected, onSelect } = this.props
