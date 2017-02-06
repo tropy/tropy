@@ -9,7 +9,7 @@ const { Tab, Tabs } = require('../tabs')
 const { Note, NoteToolbar, NoteList } = require('../note')
 const { PanelGroup, Panel } = require('../panel')
 const { Resizable } = require('../resizable')
-const { PhotoPanel, PhotoList, PhotoGrid } = require('../photo')
+const { PhotoPanel } = require('../photo')
 const { IconMetadata, IconTag, IconChevron16 } = require('../icons')
 const { IconButton } = require('../button')
 const { Image } = require('../image')
@@ -17,7 +17,6 @@ const { Fields, TemplateSelect } = require('../metadata')
 const { getSelectedItems } = require('../../selectors/items')
 const { getPhotos, getSelectedPhoto } = require('../../selectors/photos')
 const { MODE } = require('../../constants/project')
-const { assign } = Object
 const act = require('../../actions')
 
 
