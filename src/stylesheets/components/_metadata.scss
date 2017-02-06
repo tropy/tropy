@@ -4,12 +4,6 @@
 
 $component-padding-horizontal: 12px !default;
 
-.metadata-container {
-  flex: 1 1 0;
-  min-width: 0; // Fix truncation
-  overflow-y: scroll;
-}
-
 .metadata-heading {
   font-size: $font-size-small;
   color: $panel-heading-color;

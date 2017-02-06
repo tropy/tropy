@@ -3,12 +3,13 @@
 // --------------------------------------------------
 
 .photo-grid {
-  flex: 1 1 0;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
   overflow-y: scroll;
   padding: 0 $component-padding-horizontal;
-  position: relative;
-  z-index: 0;
+
+  .photo {
+    position: relative;
+  }
 }

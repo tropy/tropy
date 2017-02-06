@@ -29,9 +29,9 @@
 
   .panel-body {
     flex: 1 1 auto;
-    overflow: hidden;
+    overflow-y: scroll;
     margin-bottom: $space-min;
-    display: flex;
+    position: relative;
   }
 
   &.item-panel {

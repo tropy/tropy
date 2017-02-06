@@ -4,16 +4,12 @@
 
 .photo-list {
   line-height: $row-height;
-  flex: 1 1 0;
-  min-width: 0; // Fix truncation
-  overflow-y: scroll;
-  position: relative;
-  z-index: 0;
 
   .photo {
     display: flex;
     align-items: center;
     padding: 0 $component-padding-horizontal;
+    position: relative;
 
     &.active {
       color: $photo-active-color;
