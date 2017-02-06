@@ -217,7 +217,7 @@ module.exports = {
         dispatch(actions.item.import(...args))
       },
 
-      onItemsDelete(items) {
+      onItemDelete(items) {
         dispatch(actions.item.delete(items.map(item => item.id)))
       },
 

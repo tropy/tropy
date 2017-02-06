@@ -56,18 +56,28 @@ class ProjectSidebar extends Component {
 
 
   renderProject() {
-    const { project, ...props } = this.props
+    const {
+      project,
+      onItemImport,
+      onEdit,
+      onEditCancel,
+      onSelect
+    } = this.props
 
     return (
       <section onContextMenu={this.showProjectMenu}>
         <nav>
           <ol>
-            <ProjectName {...props}
+            <ProjectName
               name={project.name}
               isSelected={this.isSelected}
               isEditing={this.isEditing}
               isContext={this.isContext}
-              onChange={this.handleProjectNameChange}/>
+              onEdit={onEdit}
+              onEditCancel={onEditCancel}
+              onChange={this.handleProjectNameChange}
+              onDrop={onItemImport}
+              onSelect={onSelect}/>
           </ol>
         </nav>
       </section>
@@ -75,7 +85,7 @@ class ProjectSidebar extends Component {
   }
 
   renderLists() {
-    const { lists, onItemsDelete, onListSort, ...props } = this.props
+    const { lists, onItemDelete, onListSort, ...props } = this.props
 
     return (
       <section onContextMenu={this.showListsMenu}>
@@ -89,7 +99,7 @@ class ProjectSidebar extends Component {
           <ol>
             <TrashListNode {...props}
               isSelected={this.isTrashSelected}
-              onDropItems={onItemsDelete}/>
+              onDropItems={onItemDelete}/>
           </ol>
         </nav>
       </section>
@@ -138,21 +148,22 @@ class ProjectSidebar extends Component {
       name: PropTypes.string
     }).isRequired,
 
-    ui: PropTypes.object,
-    nav: PropTypes.object,
-    lists: PropTypes.object,
-    tags: PropTypes.arrayOf(PropTypes.object),
+    ui: PropTypes.object.isRequired,
+    nav: PropTypes.object.isRequired,
+    lists: PropTypes.object.isRequired,
+    tags: PropTypes.arrayOf(PropTypes.object).isRequired,
 
-    onMaximize: PropTypes.func,
-    onEdit: PropTypes.func,
-    onEditCancel: PropTypes.func,
-    onContextMenu: PropTypes.func,
-    onItemsDelete: PropTypes.func,
-    onListItemsAdd: PropTypes.func,
-    onListSave: PropTypes.func,
-    onListSort: PropTypes.func,
-    onProjectSave: PropTypes.func,
-    onProjectSelect: PropTypes.func
+    onMaximize: PropTypes.func.isRequired,
+    onEdit: PropTypes.func.isRequired,
+    onEditCancel: PropTypes.func.isRequired,
+    onContextMenu: PropTypes.func.isRequired,
+    onItemDelete: PropTypes.func.isRequired,
+    onItemImport: PropTypes.func.isRequired,
+    onListItemsAdd: PropTypes.func.isRequired,
+    onListSave: PropTypes.func.isRequired,
+    onListSort: PropTypes.func.isRequired,
+    onProjectSave: PropTypes.func.isRequired,
+    onSelect: PropTypes.func.isRequired
   }
 }
 

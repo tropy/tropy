@@ -167,9 +167,9 @@ class Tropy extends EventEmitter {
     this.emit('app:reload-menu')
   }
 
-  import(...args) {
+  import() {
     if (this.win) {
-      this.dispatch(act.item.import(...args))
+      this.dispatch(act.item.import())
     }
   }
 

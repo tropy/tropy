@@ -113,6 +113,11 @@ function resize(image, size) {
   return image.crop(position)
 }
 
+function isValidImage(file) {
+  return file.type === 'image/jpeg'
+}
+
+
 function ni(src) {
   return new Promise((resolve) => {
     resolve(typeof src === 'string' ?
@@ -131,5 +136,6 @@ function magic(b) {
 
 module.exports = {
   Image,
-  resize
+  resize,
+  isValidImage,
 }

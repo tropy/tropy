@@ -8,8 +8,7 @@ const { Panel } = require('../panel')
 const { PhotoToolbar } = require('./toolbar')
 const { PhotoList } = require('./list')
 const { PhotoGrid } = require('./grid')
-
-const isValidImage = file => file.type === 'image/jpeg'
+const { isValidImage } = require('../../image')
 
 
 class PhotoPanel extends Panel {

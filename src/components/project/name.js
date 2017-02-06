@@ -1,12 +1,27 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
+const { PureComponent, PropTypes } = React
+const { DropTarget } = require('react-dnd')
+const { NativeTypes } = require('react-dnd-electron-backend')
 const { IconMaze } = require('../icons')
 const { Editable } = require('../editable')
+const { isValidImage } = require('../../image')
 const cn = require('classnames')
 
-class ProjectName extends Component {
+const { bool, string, func } = PropTypes
+
+
+class ProjectName extends PureComponent {
+
+  get classes() {
+    return {
+      'project-name': true,
+      'active': this.props.isSelected,
+      'context': this.props.isContext,
+      'over': this.props.isOver && this.props.canDrop
+    }
+  }
 
   handleClick = () => {
     const { isSelected, onEdit, onSelect } = this.props
@@ -17,42 +32,65 @@ class ProjectName extends Component {
   }
 
   render() {
-    const { name, isSelected, isContext, onEditCancel, ...props } = this.props
+    const { name, dt, isEditing, onChange, onEditCancel } = this.props
 
-    delete props.onEdit
-
-    return (
+    return dt(
       <li
-        className={cn({
-          'project-name': true, 'active': isSelected, 'context': isContext
-        })}
+        className={cn(this.classes)}
         onClick={this.handleClick}>
         <IconMaze/>
         <div className="name">
           <Editable
-            {...props}
             value={name}
             isRequired
-            onCancel={onEditCancel}/>
+            isEditing={isEditing}
+            onCancel={onEditCancel}
+            onChange={onChange}/>
         </div>
       </li>
     )
   }
 
+
   static propTypes = {
-    isContext: PropTypes.bool,
-    isEditing: PropTypes.bool,
-    isSelected: PropTypes.bool,
-
-    name: PropTypes.string.isRequired,
-
-    onEdit: PropTypes.func.isRequired,
-    onEditCancel: PropTypes.func.isRequired,
-    onChange: PropTypes.func.isRequired,
-    onSelect: PropTypes.func.isRequired
+    name: string.isRequired,
+    isContext: bool,
+    isEditing: bool,
+    isSelected: bool,
+    isOver: bool,
+    canDrop: bool,
+    dt: func.isRequired,
+    onEdit: func.isRequired,
+    onEditCancel: func.isRequired,
+    onChange: func.isRequired,
+    onDrop: func.isRequired,
+    onSelect: func.isRequired
   }
 }
 
+const spec = {
+  drop({ onDrop }, monitor) {
+    const { files } = monitor.getItem()
+
+    const images = files
+      .filter(isValidImage)
+      .map(file => file.path)
+
+    return onDrop({ files: images }), { images }
+  },
+
+  canDrop(_, monitor) {
+    return !!monitor.getItem().files.find(isValidImage)
+  }
+}
+
+const collect = (connect, monitor) => ({
+  dt: connect.dropTarget(),
+  isOver: monitor.isOver(),
+  canDrop: monitor.canDrop()
+})
+
+
 module.exports = {
-  ProjectName
+  ProjectName: DropTarget(NativeTypes.FILE, spec, collect)(ProjectName)
 }

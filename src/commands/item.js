@@ -33,7 +33,7 @@ class Import extends Command {
 
   *exec() {
     const { db, cache } = this.options
-    let files = this.action.payload
+    let { files } = this.action.payload
 
     const items = []
     const metadata = []

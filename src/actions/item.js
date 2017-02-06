@@ -16,15 +16,11 @@ module.exports = {
     }
   },
 
-  import(payload, meta) {
+  import(payload = {}, meta) {
     return {
       type: ITEM.IMPORT,
       payload,
-      meta: {
-        async: true,
-        record: true,
-        ...meta
-      }
+      meta: { async: true, record: true, ...meta }
     }
   },
 

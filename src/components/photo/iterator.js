@@ -87,8 +87,8 @@ class PhotoIterator extends Component {
 
     cache: PropTypes.string.isRequired,
     selected: PropTypes.number,
-    ui: PropTypes.object,
-    zoom: PropTypes.number,
+    ui: PropTypes.object.isRequired,
+    zoom: PropTypes.number.isRequired,
 
     isItemOpen: PropTypes.bool,
     isDisabled: PropTypes.bool,
