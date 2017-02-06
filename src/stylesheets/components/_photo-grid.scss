@@ -6,10 +6,16 @@
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  overflow-y: scroll;
-  padding: 0 $component-padding-horizontal;
+  padding: $space-min $component-padding-horizontal 0;
 
   .photo {
     position: relative;
+
+    &.active {
+      .thumbnail {
+        box-sizing: content-box;
+        border: $space-min solid $brand-primary;
+      }
+    }
   }
 }
