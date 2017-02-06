@@ -55,10 +55,12 @@ class PhotoIterator extends Component {
   }
 
   map(fn) {
-    return this.props.photos.map(photo => fn({
+    return this.props.photos.map((photo, idx) => fn({
       photo,
       cache: this.props.cache,
       size: this.size,
+      isFirst: idx === 0,
+      isLast: idx === this.props.photos.length - 1,
       isDisabled: this.props.isDisabled,
       isSelected: this.isSelected(photo),
       isContext: this.isContext(photo),
