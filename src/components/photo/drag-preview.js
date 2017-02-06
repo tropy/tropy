@@ -26,7 +26,7 @@ class PhotoDragPreview extends Component {
   render() {
     return (
       <div className={cn(this.classes)}>
-        <Thumbnail {...this.props} photo={this.item}/>
+        <Thumbnail {...this.props} id={this.item.id}/>
         {this.count > 1 &&
           <div className="badge">{this.count}</div>
         }
