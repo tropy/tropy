@@ -33,7 +33,7 @@ class Import extends Command {
 
   *exec() {
     const { db, cache } = this.options
-    let { files } = this.action.payload
+    let { files, list } = this.action.payload
 
     const items = []
     const metadata = []
@@ -57,7 +57,13 @@ class Import extends Command {
           item = await mod.item.create(tx, {
             [DC.TITLE]: text(image.title)
           })
+
           photo = await mod.photo.create(tx, { item: item.id, image })
+
+          if (list) {
+            await mod.list.items.add(tx, list, [item.id])
+            // item.lists.push(list)
+          }
 
           item.photos.push(photo.id)
         })
