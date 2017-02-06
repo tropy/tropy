@@ -4,9 +4,10 @@ const React = require('react')
 const { PropTypes, PureComponent } = React
 const { Editable } = require('../editable')
 const { IconFolder } = require('../icons')
+const { DragSource, DropTarget } = require('react-dnd')
 const { DND } = require('../../constants')
+const { bounds } = require('../../dom')
 const cn = require('classnames')
-const dnd = require('./dnd')
 
 
 class ListNode extends PureComponent {
@@ -19,6 +20,10 @@ class ListNode extends PureComponent {
       dragging: this.props.isDragging,
       over: this.props.isOver && this.props.dtType === DND.ITEMS
     }
+  }
+
+  get isDraggable() {
+    return !this.props.isEditing
   }
 
   handleChange = (name) => {
@@ -44,10 +49,18 @@ class ListNode extends PureComponent {
     this.container = container
   }
 
+  connect(element) {
+    if (this.props.isSortable) element = this.props.dt(element)
+    if (this.isDraggable) element = this.props.ds(element)
+
+    return element
+  }
+
+
   render() {
     const { list, isEditing, onEditCancel } = this.props
 
-    return dnd.connect(this.props,
+    return this.connect(
       <li
         className={cn(this.classes)}
         ref={this.setContainer}
@@ -99,6 +112,64 @@ class ListNode extends PureComponent {
 
 }
 
+const DragSourceSpec = {
+  beginDrag({ list }) {
+    return { id: list.id }
+  },
+
+  endDrag({ onSort, onSortReset }, monitor) {
+    if (monitor.didDrop()) {
+      onSort()
+    } else {
+      onSortReset()
+    }
+  }
+}
+
+const DragSourceCollect = (connect, monitor) => ({
+  ds: connect.dragSource(),
+  isDragging: monitor.isDragging()
+})
+
+const DropTargetSpec = {
+  hover({ list, onSortPreview }, monitor, { container }) {
+    const type = monitor.getItemType()
+    const item = monitor.getItem()
+
+    switch (type) {
+      case DND.LIST:
+        if (item.id === list.id) break
+
+        var { top, height } = bounds(container)
+        var offset = Math.round((monitor.getClientOffset().y - top) / height)
+
+        onSortPreview(item.id, list.id, offset)
+        break
+    }
+  },
+
+  drop({ list, onDropItems }, monitor) {
+    const type = monitor.getItemType()
+    const item = monitor.getItem()
+
+    switch (type) {
+      case DND.ITEMS:
+        onDropItems({ list: list.id, items: item.items })
+        break
+    }
+  }
+}
+
+const DropTargetCollect = (connect, monitor) => ({
+  dt: connect.dropTarget(),
+  isOver: monitor.isOver(),
+  dtType: monitor.getItemType()
+})
+
+
 module.exports = {
-  ListNode: dnd.wrap(ListNode)
+  ListNode:
+    DragSource(DND.LIST, DragSourceSpec, DragSourceCollect)(
+      DropTarget([DND.LIST, DND.ITEMS], DropTargetSpec, DropTargetCollect)(
+        ListNode))
 }
