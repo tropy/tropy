@@ -1,34 +1,52 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
+const { PureComponent, PropTypes } = React
+const { IconPhoto } = require('../icons')
 const { imageURL } = require('../../common/cache')
+const { pick } = require('../../common/util')
+const { string, number, func } = PropTypes
 
-class Thumbnail extends Component {
+
+class Thumbnail extends PureComponent {
 
   get src() {
-    const { cache, photo, size } = this.props
-    return imageURL(cache, photo.id, size > 48 ? 512 : 48)
+    const { cache, id, size } = this.props
+
+    return (id != null) ?
+      imageURL(cache, id, size > 48 ? 512 : 48) : null
+  }
+
+  get style() {
+    return {
+      width: `${this.props.size}px`,
+      height: `${this.props.size}px`
+    }
   }
 
   render() {
     const { size } = this.props
+    const { src, style } = this
+
+    const listeners = pick(this.props, [
+      'onClick', 'onDoubleClick', 'onMouseDown'
+    ])
 
     return (
-      <img
-        className="thumbnail"
-        src={encodeURI(this.src)}
-        width={size}
-        height={size}/>
+      <figure className="thumbnail" style={style} {...listeners}>
+        <IconPhoto/>
+        {src && <img src={encodeURI(src)} width={size} height={size}/>}
+      </figure>
     )
   }
 
   static propTypes = {
-    cache: PropTypes.string.isRequired,
-    photo: PropTypes.shape({
-      id: PropTypes.number.isRequired
-    }),
-    size: PropTypes.number.isRequired
+    cache: string.isRequired,
+    id: number,
+    size: number.isRequired,
+    onClick: func,
+    onDoubleClick: func,
+    onMouseDown: func
   }
 }
 

@@ -82,9 +82,10 @@ class PhotoIterable extends Component {
 
   renderThumbnail(props) {
     return (
-      <Thumbnail
-        {...pick(this.props, keys(Thumbnail.propTypes))}
-        {...props}/>
+      <Thumbnail {...props}
+        id={this.props.photo.id}
+        cache={this.props.cache}
+        size={this.props.size}/>
     )
   }
 
