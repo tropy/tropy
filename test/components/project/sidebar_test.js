@@ -24,7 +24,7 @@ describe('ProjectSidebar', () => {
     expect(
       shallow(
         <ProjectSidebar project={project} lists={{}} nav={{}}/>
-      ).find('ProjectName')
+      ).find('DropTarget(ProjectName)')
     ).to.have.prop('name', project.name)
   })
 })
