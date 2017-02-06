@@ -13,8 +13,11 @@ module.exports = {
 
       Children.forEach(props[name], node => {
         if (error) return
-        if (node.type === type) return
-        if (node.type.prototype instanceof type) return
+
+        const actual = node.type.DecoratedComponent || node.type
+
+        if (actual === type) return
+        if (actual.prototype instanceof type) return
 
         error = new Error(
           `${component} accepts only ${type.displayName || type.name} nodes as children.`

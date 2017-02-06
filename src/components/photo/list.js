@@ -25,7 +25,7 @@ class PhotoList extends PhotoIterator {
   render() {
     const { onChange, onEdit, onEditCancel } = this.props
 
-    return this.connect(
+    return (
       <ul
         className={cn(this.classes)}
         onClick={this.handleClickOutside}>
@@ -55,5 +55,5 @@ class PhotoList extends PhotoIterator {
 
 
 module.exports = {
-  PhotoList: PhotoList.wrap()
+  PhotoList
 }

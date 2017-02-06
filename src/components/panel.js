@@ -4,8 +4,13 @@ const React = require('react')
 const { Component, PropTypes, Children } = React
 const { only } = require('./util')
 const { Resizable } = require('./resizable')
+const cn = require('classnames')
 
 class Panel extends Component {
+
+  get classes() {
+    return { 'panel-body': true }
+  }
 
   renderHeader(header, props) {
     return (
@@ -17,7 +22,7 @@ class Panel extends Component {
 
   renderBody(body, props) {
     return (
-      <div className="panel-body" {...props}>
+      <div {...props} className={cn(this.classes)}>
         {body}
       </div>
     )

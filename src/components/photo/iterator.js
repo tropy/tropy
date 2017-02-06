@@ -2,11 +2,7 @@
 
 const React = require('react')
 const { Component, PropTypes } = React
-const { DropTarget } = require('react-dnd')
-const { NativeTypes } = require('react-dnd-electron-backend')
 const { get, move, times } = require('../../common/util')
-
-const isValidImage = file => file.type === 'image/jpeg'
 
 
 class PhotoIterator extends Component {
@@ -16,10 +12,7 @@ class PhotoIterator extends Component {
   }
 
   get classes() {
-    return {
-      'drop-target': true,
-      'over': this.props.isOver && this.props.canDrop
-    }
+    return {}
   }
 
   isSelected(photo) {
@@ -65,10 +58,6 @@ class PhotoIterator extends Component {
     event.stopPropagation()
   }
 
-  connect(element) {
-    return this.props.isDisabled ? element : this.props.dt(element)
-  }
-
   map(fn) {
     return this.props.photos.map(photo => fn({
       photo,
@@ -93,33 +82,6 @@ class PhotoIterator extends Component {
     256
   ]
 
-  static DropTargetSpec = {
-    drop({ onDropImages }, monitor) {
-      const { files } = monitor.getItem()
-
-      const images = files
-        .filter(isValidImage)
-        .map(file => file.path)
-
-      return onDropImages(images), { images }
-    },
-
-    canDrop(_, monitor) {
-      return !!monitor.getItem().files.find(isValidImage)
-    }
-  }
-
-  static DropTargetCollect = (connect, monitor) => ({
-    dt: connect.dropTarget(),
-    isOver: monitor.isOver(),
-    canDrop: monitor.canDrop()
-  })
-
-  static wrap() {
-    return DropTarget(
-      NativeTypes.FILE, this.DropTargetSpec, this.DropTargetCollect
-    )(this)
-  }
 
   static propTypes = {
     photos: PropTypes.arrayOf(
@@ -135,12 +97,7 @@ class PhotoIterator extends Component {
 
     isItemOpen: PropTypes.bool,
     isDisabled: PropTypes.bool,
-    isOver: PropTypes.bool,
-    canDrop: PropTypes.bool,
 
-    dt: PropTypes.func.isRequired,
-
-    onDropImages: PropTypes.func.isRequired,
     onContextMenu: PropTypes.func.isRequired,
     onItemOpen: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired,

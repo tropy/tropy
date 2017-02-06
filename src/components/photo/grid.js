@@ -26,7 +26,7 @@ class PhotoGrid extends PhotoIterator {
   render() {
     const tile = this.placeholder
 
-    return this.connect(
+    return (
       <ul
         className={cn(this.classes)}
         onClick={this.handleClickOutside}>
@@ -49,5 +49,5 @@ class PhotoGrid extends PhotoIterator {
 }
 
 module.exports = {
-  PhotoGrid: PhotoGrid.wrap()
+  PhotoGrid
 }
