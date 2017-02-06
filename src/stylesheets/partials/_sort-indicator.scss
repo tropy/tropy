@@ -3,70 +3,70 @@
 // --------------------------------------------------
 
 .photo {
+  &::before,
+  &::after {
+    position: absolute;
+    outline: 1px solid $photo-sort-indicator;
+  }
+
   &.over {
     position: relative;
+    z-index: 1;
+  }
 
+  &.vertical {
     &::before,
     &::after {
-      position: absolute;
-      outline: 1px solid $photo-sort-indicator;
+      left: 0;
+      width: 100%;
     }
 
-    &.vertical {
-      z-index: 2;
+    &::after {
+      top: 100%;
+    }
 
-      &::before,
+    &.before {
+      &::before {
+        content: "";
+        bottom: 100%;
+      }
+    }
+
+    &.after {
       &::after {
-        left: 0;
-        width: 100%;
+        content: "";
+        top: 100%;
       }
+    }
+  }
 
-      &.before {
-        &::before {
-          content: "";
-          bottom: 100%;
-        }
-      }
+  &.horizontal {
+    &::before,
+    &::after {
+      top: 50%;
+      height: 100%;
+      transform: translateY(-50%);
+    }
 
-      &.after {
-        &::after {
-          content: "";
-          top: 100%;
-        }
-
-        // Expand sortable area
-        &.last {
-          &::before {
-            content: "";
-            top: 100%;
-            height: $line-height-large;
-            outline: none;
-          }
-        }
+    &.before {
+      &::before {
+        content: "";
+        right: 112.5%;
       }
     }
 
-    &.horizontal {
-      &::before,
+    &.after {
       &::after {
-        top: 50%;
-        height: 100%;
-        transform: translateY(-50%);
-      }
-
-      &.before {
-        &::before {
-          content: "";
-          right: 100%;
-        }
-      }
-
-      &.after {
-        &::after {
-          content: "";
-          left: 100%;
-        }
+        content: "";
+        left: 112.5%;
       }
     }
+  }
+}
+
+.click-catcher.over ~ .photo:last-child,
+.click-catcher.over ~ .photo.last {
+  &::after {
+    content: "";
   }
 }
