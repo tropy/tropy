@@ -1,16 +1,15 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes, Component } = React
+const { PropTypes, PureComponent } = React
 const { Editable } = require('../editable')
 const { IconFolder } = require('../icons')
-const { noop } = require('../../common/util')
 const { DND } = require('../../constants')
 const cn = require('classnames')
 const dnd = require('./dnd')
 
 
-class ListNode extends Component {
+class ListNode extends PureComponent {
 
   get classes() {
     return {
@@ -89,19 +88,15 @@ class ListNode extends Component {
 
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
-    onContextMenu: PropTypes.func,
+    onContextMenu: PropTypes.func.isRequired,
     onDropItems: PropTypes.func,
-    onSelect: PropTypes.func,
+    onSelect: PropTypes.func.isRequired,
     onSave: PropTypes.func,
-    onMove: PropTypes.func,
-    onMoveReset: PropTypes.func,
-    onMoveCommit: PropTypes.func
+    onSort: PropTypes.func.isRequired,
+    onSortPreview: PropTypes.func.isRequired,
+    onSortReset: PropTypes.func.isRequired
   }
 
-  static defaultProps = {
-    onContextMenu: noop,
-    onSelect: noop
-  }
 }
 
 module.exports = {

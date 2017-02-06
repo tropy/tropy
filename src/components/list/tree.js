@@ -1,16 +1,18 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
+const { PureComponent, PropTypes } = React
 const { ListNode } = require('./node')
-const { sortable } = require('../util')
-const { get } = require('../../common/util')
+const { get, move } = require('../../common/util')
 
 
-class ListTree extends Component {
+class ListTree extends PureComponent {
   constructor(props) {
     super(props)
-    sortable(this)
+
+    this.state = {
+      order: get(props, 'parent.children') || []
+    }
   }
 
   get order() {
@@ -35,6 +37,16 @@ class ListTree extends Component {
     return get(this.props, 'nav.list') === id
   }
 
+
+  handleSortPreview = (item, to, offset = 0) => {
+    this.setState({
+      order: move(this.state.order, item, to, offset)
+    })
+  }
+
+  handleSortReset = () => {
+    this.setState({ order: this.order })
+  }
 
   handleSort = () => {
     const { parent, onSort } = this.props
@@ -72,9 +84,9 @@ class ListTree extends Component {
               isSortable
               onDropItems={onListItemsAdd}
               onSave={onListSave}
-              onMove={this.handleMove}
-              onMoveReset={this.handleMoveReset}
-              onMoveCommit={this.handleSort}/>)
+              onSortPreview={this.handleSortPreview}
+              onSortReset={this.handleSortReset}
+              onSort={this.handleSort}/>)
         }
         {this.renderNewListNode()}
       </ol>

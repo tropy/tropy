@@ -10,11 +10,11 @@ const DS = {
       return { id: list.id }
     },
 
-    endDrag({ onMoveReset, onMoveCommit }, monitor) {
+    endDrag({ onSort, onSortReset }, monitor) {
       if (monitor.didDrop()) {
-        onMoveCommit()
+        onSort()
       } else {
-        onMoveReset()
+        onSortReset()
       }
     }
   },
@@ -30,7 +30,7 @@ const DS = {
 
 const DT = {
   spec: {
-    hover({ list, onMove }, monitor, { container }) {
+    hover({ list, onSortPreview }, monitor, { container }) {
       const type = monitor.getItemType()
       const item = monitor.getItem()
 
@@ -41,7 +41,7 @@ const DT = {
           var { top, height } = bounds(container)
           var offset = Math.round((monitor.getClientOffset().y - top) / height)
 
-          onMove(item.id, list.id, offset)
+          onSortPreview(item.id, list.id, offset)
           break
       }
     },
