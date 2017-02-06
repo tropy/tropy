@@ -65,7 +65,7 @@ class PhotoIterable extends Component {
 
 
   connect(element) {
-    if (this.isSortable) element = this.props.dt(element)
+    if (this.props.isSortable) element = this.props.dt(element)
     if (this.isDraggable) element = this.props.ds(element)
 
     return element

@@ -1,11 +1,11 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
+const { PureComponent, PropTypes } = React
 const { Thumbnail } = require('./thumbnail')
 const cn = require('classnames')
 
-class PhotoDragPreview extends Component {
+class PhotoDragPreview extends PureComponent {
 
   get classes() {
     return {
