@@ -69,7 +69,7 @@ class ListTree extends PureComponent {
   }
 
   render() {
-    const { lists, onListSave, onListItemsAdd, ...props } = this.props
+    const { lists, onListSave, ...props } = this.props
 
     return (
       <ol className="list-tree sortable" ref={this.setContainer}>
@@ -82,7 +82,6 @@ class ListTree extends PureComponent {
               isEditing={this.isEditing(id)}
               isContext={this.isContext(id)}
               isSortable
-              onDropItems={onListItemsAdd}
               onSave={onListSave}
               onSortPreview={this.handleSortPreview}
               onSortReset={this.handleSortReset}
@@ -97,19 +96,20 @@ class ListTree extends PureComponent {
     parent: PropTypes.shape({
       id: PropTypes.number.isRequired,
       children: PropTypes.arrayOf(PropTypes.number).isRequired
-    }),
+    }).isRequired,
 
     lists: PropTypes.object.isRequired,
-    ui: PropTypes.object,
-    nav: PropTypes.object,
+    ui: PropTypes.object.isRequired,
+    nav: PropTypes.object.isRequired,
 
-    onEdit: PropTypes.func,
-    onEditCancel: PropTypes.func,
-    onListItemsAdd: PropTypes.func,
-    onListSave: PropTypes.func,
-    onSort: PropTypes.func,
-    onSelect: PropTypes.func,
-    onContextMenu: PropTypes.func
+    onEdit: PropTypes.func.isRequired,
+    onEditCancel: PropTypes.func.isRequired,
+    onDropFiles: PropTypes.func.isRequired,
+    onDropItems: PropTypes.func.isRequired,
+    onListSave: PropTypes.func.isRequired,
+    onSort: PropTypes.func.isRequired,
+    onSelect: PropTypes.func.isRequired,
+    onContextMenu: PropTypes.func.isRequired
   }
 }
 

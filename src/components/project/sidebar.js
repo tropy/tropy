@@ -85,16 +85,29 @@ class ProjectSidebar extends Component {
   }
 
   renderLists() {
-    const { lists, onItemDelete, onListSort, ...props } = this.props
+    const {
+      lists,
+      onItemImport,
+      onItemDelete,
+      onListSort,
+      onListItemsAdd,
+      ...props
+    } = this.props
+
+    const root = lists[ROOT]
 
     return (
       <section onContextMenu={this.showListsMenu}>
         <h2><FormattedMessage id="sidebar.lists"/></h2>
         <nav>
-          <ListTree {...props}
-            parent={lists[ROOT]}
-            lists={lists}
-            onSort={onListSort}/>
+          {root &&
+            <ListTree {...props}
+              parent={root}
+              lists={lists}
+              onDropItems={onListItemsAdd}
+              onDropFiles={onItemImport}
+              onSort={onListSort}/>
+          }
 
           <ol>
             <TrashListNode {...props}

@@ -28,7 +28,6 @@ class PhotoIterable extends Component {
   get classes() {
     return {
       'photo': true,
-      'drag-source': this.isDraggable,
       'drop-target': this.isSortable,
       'active': this.props.isSelected,
       'context': this.props.isContext,

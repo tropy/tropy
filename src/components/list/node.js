@@ -5,8 +5,10 @@ const { PropTypes, PureComponent } = React
 const { Editable } = require('../editable')
 const { IconFolder } = require('../icons')
 const { DragSource, DropTarget } = require('react-dnd')
+const { NativeTypes } = require('react-dnd-electron-backend')
 const { DND } = require('../../constants')
 const { bounds } = require('../../dom')
+const { isValidImage } = require('../../image')
 const cn = require('classnames')
 
 
@@ -14,12 +16,18 @@ class ListNode extends PureComponent {
 
   get classes() {
     return {
-      list: true,
-      active: this.props.isSelected,
-      context: this.props.isContext,
-      dragging: this.props.isDragging,
-      over: this.props.isOver && this.props.dtType === DND.ITEMS
+      'list': true,
+      'drop-target': this.props.isSortable,
+      'active': this.props.isSelected,
+      'context': this.props.isContext,
+      'dragging': this.props.isDragging,
+      'over': this.isOver
     }
+  }
+
+  get isOver() {
+    return this.props.isOver && this.props.canDrop &&
+      this.props.dtType !== DND.LIST
   }
 
   get isDraggable() {
@@ -94,6 +102,7 @@ class ListNode extends PureComponent {
 
     isDragging: PropTypes.bool,
     isOver: PropTypes.bool,
+    canDrop: PropTypes.bool,
 
     ds: PropTypes.func.isRequired,
     dt: PropTypes.func.isRequired,
@@ -103,6 +112,7 @@ class ListNode extends PureComponent {
     onEditCancel: PropTypes.func,
     onContextMenu: PropTypes.func.isRequired,
     onDropItems: PropTypes.func,
+    onDropFiles: PropTypes.func,
     onSelect: PropTypes.func.isRequired,
     onSave: PropTypes.func,
     onSort: PropTypes.func.isRequired,
@@ -148,13 +158,40 @@ const DropTargetSpec = {
     }
   },
 
-  drop({ list, onDropItems }, monitor) {
+  canDrop({ list }, monitor) {
+    const type = monitor.getItemType()
+    const item = monitor.getItem()
+
+    switch (type) {
+      case DND.LIST:
+        return item.id !== list.id
+
+      case NativeTypes.FILE:
+        return !!item.files.find(isValidImage)
+
+      default:
+        return true
+    }
+  },
+
+  drop({ list, onDropItems, onDropFiles }, monitor) {
     const type = monitor.getItemType()
     const item = monitor.getItem()
 
     switch (type) {
       case DND.ITEMS:
-        onDropItems({ list: list.id, items: item.items })
+        onDropItems({
+          list: list.id, items: item.items
+        })
+
+        break
+
+      case NativeTypes.FILE:
+        onDropFiles({
+          list: list.id,
+          files: item.files.filter(isValidImage).map(file => file.path)
+        })
+
         break
     }
   }
@@ -163,13 +200,17 @@ const DropTargetSpec = {
 const DropTargetCollect = (connect, monitor) => ({
   dt: connect.dropTarget(),
   isOver: monitor.isOver(),
+  canDrop: monitor.canDrop(),
   dtType: monitor.getItemType()
 })
 
 
 module.exports = {
   ListNode:
-    DragSource(DND.LIST, DragSourceSpec, DragSourceCollect)(
-      DropTarget([DND.LIST, DND.ITEMS], DropTargetSpec, DropTargetCollect)(
-        ListNode))
+    DragSource(
+      DND.LIST, DragSourceSpec, DragSourceCollect)(
+        DropTarget(
+          [DND.LIST, DND.ITEMS, NativeTypes.FILE],
+          DropTargetSpec,
+          DropTargetCollect)(ListNode))
 }
