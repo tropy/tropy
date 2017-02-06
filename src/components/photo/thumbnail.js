@@ -33,7 +33,7 @@ class Thumbnail extends PureComponent {
     ])
 
     return (
-      <figure className="thumbnail" style={style} {...listeners}>
+      <figure {...listeners} className="thumbnail" style={style}>
         <IconPhoto/>
         {src && <img src={encodeURI(src)} width={size} height={size}/>}
       </figure>

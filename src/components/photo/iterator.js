@@ -15,6 +15,10 @@ class PhotoIterator extends Component {
     return {}
   }
 
+  get isSortable() {
+    return !this.props.isDisabled && this.props.photos.length > 1
+  }
+
   isSelected(photo) {
     return this.props.selected === photo.id
   }
@@ -55,14 +59,15 @@ class PhotoIterator extends Component {
   }
 
   map(fn) {
-    return this.props.photos.map((photo, idx) => fn({
+    const { isSortable } = this
+
+    return this.props.photos.map(photo => fn({
       photo,
       cache: this.props.cache,
       size: this.size,
-      isFirst: idx === 0,
-      isLast: idx === this.props.photos.length - 1,
       isDisabled: this.props.isDisabled,
       isSelected: this.isSelected(photo),
+      isSortable,
       isContext: this.isContext(photo),
       onDropPhoto: this.handleDropPhoto,
       onSelect: this.handleSelect,
