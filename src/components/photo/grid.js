@@ -27,9 +27,8 @@ class PhotoGrid extends PhotoIterator {
     const tile = this.placeholder
 
     return (
-      <ul
-        className={cn(this.classes)}
-        onClick={this.handleClickOutside}>
+      <ul className={cn(this.classes)}>
+        <li className="click-catcher" onClick={this.handleClickOutside}/>
         {this.map(({ photo, ...props }) =>
           <PhotoTile {...props}
             key={photo.id}

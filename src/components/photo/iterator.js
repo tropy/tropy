@@ -54,10 +54,6 @@ class PhotoIterator extends Component {
     }
   }
 
-  handleClickInside = (event) => {
-    event.stopPropagation()
-  }
-
   map(fn) {
     return this.props.photos.map(photo => fn({
       photo,
@@ -66,7 +62,6 @@ class PhotoIterator extends Component {
       isDisabled: this.props.isDisabled,
       isSelected: this.isSelected(photo),
       isContext: this.isContext(photo),
-      onClick: this.handleClickInside,
       onDropPhoto: this.handleDropPhoto,
       onSelect: this.handleSelect,
       onItemOpen: this.handleItemOpen,

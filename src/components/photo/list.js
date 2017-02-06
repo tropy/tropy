@@ -26,9 +26,8 @@ class PhotoList extends PhotoIterator {
     const { onChange, onEdit, onEditCancel } = this.props
 
     return (
-      <ul
-        className={cn(this.classes)}
-        onClick={this.handleClickOutside}>
+      <ul className={cn(this.classes)}>
+        <li className="click-catcher" onClick={this.handleClickOutside}/>
         {this.map(({ photo, ...props }) =>
           <PhotoListItem {...props}
             key={photo.id}
@@ -36,7 +35,6 @@ class PhotoList extends PhotoIterator {
             title={DC.TITLE}
             isEditing={this.isEditing(photo)}
             onChange={onChange}
-            onClick={this.handleClickInside}
             onEdit={onEdit}
             onEditCancel={onEditCancel}/>)}
       </ul>
