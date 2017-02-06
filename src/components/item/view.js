@@ -67,7 +67,7 @@ class ItemView extends Component {
   }
 
   handleTemplateChange = (event) => {
-    this.props.onSave({
+    this.props.onItemSave({
       id: this.item.id,
       property: 'template',
       value: event.target.value
@@ -280,7 +280,7 @@ class ItemView extends Component {
     properties: PropTypes.object,
     templates: PropTypes.object,
 
-    onSave: PropTypes.func,
+    onItemSave: PropTypes.func,
     onContextMenu: PropTypes.func,
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
