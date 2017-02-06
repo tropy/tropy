@@ -163,9 +163,6 @@ const DropTargetSpec = {
     const item = monitor.getItem()
 
     switch (type) {
-      case DND.LIST:
-        return item.id !== list.id
-
       case NativeTypes.FILE:
         return !!item.files.find(isValidImage)
 
@@ -183,7 +180,6 @@ const DropTargetSpec = {
         onDropItems({
           list: list.id, items: item.items
         })
-
         break
 
       case NativeTypes.FILE:
@@ -191,7 +187,6 @@ const DropTargetSpec = {
           list: list.id,
           files: item.files.filter(isValidImage).map(file => file.path)
         })
-
         break
     }
   }
