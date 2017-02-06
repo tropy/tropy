@@ -31,8 +31,10 @@ class PhotoListItem extends PhotoIterable {
     },
 
     onSingleClick: () => {
-      if (!this.props.isDisabled) {
-        this.props.onEdit(this.props.photo.id)
+      const { photo, isDisabled, isDragging, onEdit } = this.props
+
+      if (!(isDisabled || isDragging)) {
+        onEdit(photo.id)
       }
     },
 
@@ -55,14 +57,13 @@ class PhotoListItem extends PhotoIterable {
 
 
   render() {
-    const { isEditing, isDisabled, onEditCancel, onClick } = this.props
+    const { isEditing, isDisabled, onEditCancel } = this.props
 
     return this.connect(
       <li
         className={cn(this.classes)}
         ref={this.setContainer}
         onMouseDown={this.handleClick}
-        onClick={onClick}
         onContextMenu={this.handleContextMenu}>
 
         {this.renderThumbnail()}
