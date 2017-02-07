@@ -4,7 +4,7 @@
 
 .drop-target {
   &.over:not(.before):not(.after) {
-    background: $blue-light;
+    background: $drop-target-bg;
 
     .photo-panel & {
       overflow: hidden;
