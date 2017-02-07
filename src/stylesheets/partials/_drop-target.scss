@@ -3,7 +3,7 @@
 // --------------------------------------------------
 
 .drop-target {
-  &.over {
+  &.over:not(.before):not(.after) {
     background: $blue-light;
 
     .photo-panel & {
