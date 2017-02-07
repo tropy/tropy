@@ -1,17 +1,12 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
+const { ItemIterator } = require('./iterator')
 const { ItemTile } = require('./tile')
 const { Shapes } = require('../util')
-const { times } = require('../../common/util')
 
 
-class ItemGrid extends Component {
-
-  get size() {
-    return ItemGrid.ZOOM[this.props.zoom]
-  }
+class ItemGrid extends ItemIterator {
 
   get placeholder() {
     return (
@@ -21,64 +16,17 @@ class ItemGrid extends Component {
     )
   }
 
-  isSelected(item) {
-    return this.props.selection.includes(item.id)
-  }
-
-
-  handleSelect = (id, mod) => {
-    this.props.onSelect(id, mod)
-  }
-
-  handleContextMenu = (item, event) => {
-    const { nav, selection, onContextMenu } = this.props
-
-    const context = ['item']
-    const target = { id: item.id, tags: item.tags }
-
-    if (selection.length > 1) {
-      context.push('bulk')
-      target.id = selection
-    }
-
-    if (nav.list) {
-      context.push('list')
-      target.list = nav.list
-    }
-
-    if (item.deleted) context.push('deleted')
-
-    onContextMenu(event, context.join('-'), target)
-  }
-
-  handleClickOutside = () => {
-    this.props.onSelect()
-  }
-
-  handleClickInside = (event) => {
-    event.stopPropagation()
-  }
-
 
   render() {
-    const { items, onPhotoMove, ...props } = this.props
     const tile = this.placeholder
 
     return (
       <div className="item-grid-view">
-        <ul
-          className="item-grid"
-          onClick={this.handleClickOutside}>
-          {items.map((item) =>
+        <ul className="item-grid">
+          {this.map(({ item, ...props }) =>
             <ItemTile {...props}
               key={item.id}
-              item={item}
-              size={this.size}
-              isSelected={this.isSelected(item)}
-              onSelect={this.handleSelect}
-              onClick={this.handleClickInside}
-              onContextMenu={this.handleContextMenu}
-              onDropPhotos={onPhotoMove}/>
+              item={item}/>
           )}
 
           {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
@@ -89,23 +37,10 @@ class ItemGrid extends Component {
     )
   }
 
-  static ZOOM = [
-    24,
-    ...times(57, i => i * 4 + 28),
-    ...times(32, i => i * 8 + 256),
-    512
-  ]
 
   static propTypes = {
-    selection: PropTypes.arrayOf(PropTypes.number),
-    cache: PropTypes.string.isRequired,
-    nav: PropTypes.object,
-    columns: PropTypes.arrayOf(PropTypes.object),
-    items: PropTypes.arrayOf(PropTypes.object),
-    zoom: Shapes.number(1, ItemGrid.ZOOM.length - 1),
-    onSelect: PropTypes.func,
-    onContextMenu: PropTypes.func,
-    onPhotoMove: PropTypes.func
+    ...ItemIterator.propTypes,
+    zoom: Shapes.number(1, ItemIterator.ZOOM.length - 1)
   }
 }
 

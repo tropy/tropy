@@ -1,17 +1,13 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
+const { ItemIterator } = require('./iterator')
 const { ItemTableRow } = require('./table-row')
 const { ItemTableHead } = require('./table-head')
-const { meta } = require('../../common/os')
+const { arrayOf, oneOf, func, object } = React.PropTypes
 
 
-class ItemTable extends Component {
-
-  isSelected(item) {
-    return this.props.selection.includes(item.id)
-  }
+class ItemTable extends ItemIterator {
 
   handleColumnEdit = ({ id, property }) => {
     this.props.onEdit({
@@ -19,73 +15,26 @@ class ItemTable extends Component {
     })
   }
 
-  handleSelect = (item, event) => {
-    const { selection, onSelect } = this.props
-    const isSelected = this.isSelected(item)
-
-    if (meta(event)) {
-      onSelect(item.id, isSelected ? 'remove' : 'merge')
-
-    } else {
-      if (!isSelected || selection.length > 1) {
-        onSelect(item.id, 'replace')
-      }
-    }
-  }
-
-  handleContextMenu = (item, event) => {
-    const { nav, selection, onContextMenu } = this.props
-
-    const context = ['item']
-    const target = { id: item.id, tags: item.tags }
-
-    if (selection.length > 1) {
-      context.push('bulk')
-      target.id = selection
-    }
-
-    if (nav.list) {
-      context.push('list')
-      target.list = nav.list
-    }
-
-    if (item.deleted) context.push('deleted')
-
-    onContextMenu(event, context.join('-'), target)
-  }
-
-  handleClickOutside = () => {
-    this.props.onSelect()
-  }
-
-  handleClickInside = (event) => {
-    event.stopPropagation()
-  }
 
   render() {
-    const { items, onEditCancel, onPhotoMove, ...props } = this.props
+    const { columns, editing, onEditCancel, onMetadataSave } = this.props
 
     return (
       <div className="item-table-view">
-        <ItemTableHead columns={props.columns}/>
+        <ItemTableHead columns={columns}/>
 
-        <div
-          className="table-body"
-          onClick={this.handleClickOutside}>
-          <table
-            className="item-table"
-            onClick={this.handleClickInside}>
+        <div className="table-body">
+          <table className="item-table">
             <tbody>
-              {items.map(item =>
+              {this.map(({ item, ...props }) =>
                 <ItemTableRow {...props}
                   key={item.id}
                   item={item}
-                  isSelected={this.isSelected(item)}
-                  onSelect={this.handleSelect}
+                  columns={columns}
+                  editing={editing}
                   onCancel={onEditCancel}
                   onColumnEdit={this.handleColumnEdit}
-                  onContextMenu={this.handleContextMenu}
-                  onDropPhotos={onPhotoMove}/>
+                  onMetadataSave={onMetadataSave}/>
               )}
             </tbody>
           </table>
@@ -95,17 +44,13 @@ class ItemTable extends Component {
   }
 
   static propTypes = {
-    selection: PropTypes.arrayOf(PropTypes.number),
-    columns: PropTypes.arrayOf(PropTypes.object),
-    items: PropTypes.arrayOf(PropTypes.object),
-    nav: PropTypes.object,
-    cache: PropTypes.string,
-    onSelect: PropTypes.func,
-    onEdit: PropTypes.func,
-    onEditCancel: PropTypes.func,
-    onMetadataSave: PropTypes.func,
-    onPhotoMove: PropTypes.func,
-    onContextMenu: PropTypes.func
+    ...ItemIterator.propTypes,
+    columns: arrayOf(object).isRequired,
+    editing: object.isRequired,
+    onEdit: func.isRequired,
+    onEditCancel: func.isRequired,
+    onMetadataSave: func.isRequired,
+    zoom: oneOf([0]).isRequired
   }
 }
 

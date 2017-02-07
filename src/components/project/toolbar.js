@@ -3,7 +3,7 @@
 const React = require('react')
 const { Toolbar } = require('../toolbar')
 const { IconPlus, IconList, IconGrid } = require('../icons')
-const { ItemGrid } = require('../item')
+const { ZOOM } = require('../item')
 const { Slider } = require('../slider')
 const { SearchField } = require('../search')
 const { IconButton } = require('../button')
@@ -41,7 +41,7 @@ ProjectToolbar.propTypes = {
 }
 
 ProjectToolbar.defaultProps = {
-  maxZoom: ItemGrid.ZOOM.length - 1,
+  maxZoom: ZOOM.length - 1,
   isDraggable: ARGS.frameless
 }
 

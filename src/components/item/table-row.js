@@ -121,12 +121,12 @@ class ItemTableRow extends Component {
     dt: PropTypes.func.isRequired,
 
     onSelect: PropTypes.func.isRequired,
-    onContextMenu: PropTypes.func,
-    onColumnEdit: PropTypes.func,
-    onCancel: PropTypes.func,
-    onDropPhotos: PropTypes.func,
-    onMetadataSave: PropTypes.func,
-    onItemOpen: PropTypes.func
+    onContextMenu: PropTypes.func.isRequired,
+    onColumnEdit: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
+    onDropPhotos: PropTypes.func.isRequired,
+    onMetadataSave: PropTypes.func.isRequired,
+    onItemOpen: PropTypes.func.isRequired
   }
 }
 
