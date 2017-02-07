@@ -61,6 +61,7 @@ class ItemIterator extends PureComponent {
     return this.props.items.map((item, idx) => fn({
       item,
       cache: this.props.cache,
+      selection: this.props.selection,
       size: this.size,
       isLast: idx === this.props.items.length,
       isSelected: this.isSelected(item),
