@@ -63,7 +63,7 @@ class PhotoListItem extends PhotoIterable {
       <li
         className={cn(this.classes)}
         ref={this.setContainer}
-        onMouseDown={this.handleClick}
+        onClick={this.handleClick}
         onContextMenu={this.handleContextMenu}>
 
         {this.renderThumbnail()}

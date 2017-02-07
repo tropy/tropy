@@ -40,7 +40,7 @@ class PhotoTile extends PhotoIterable {
         ref={this.setContainer}
         style={this.style}>
         {this.renderThumbnail({
-          onMouseDown: this.handleClick,
+          onClick: this.handleClick,
           onContextMenu: this.handleContextMenu
         })}
       </li>
