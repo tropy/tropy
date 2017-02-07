@@ -7,6 +7,7 @@ const { DragSource, DropTarget } = require('react-dnd')
 const { getEmptyImage } = require('react-dnd-electron-backend')
 const { bounds } = require('../../dom')
 const { DND } = require('../../constants')
+const { bool, func, number, string, object, shape, oneOf } = PropTypes
 
 
 class PhotoIterable extends Component {
@@ -144,32 +145,32 @@ class PhotoIterable extends Component {
 
 
   static propTypes = {
-    isContext: PropTypes.bool,
-    isDisabled: PropTypes.bool,
-    isDragging: PropTypes.bool,
-    isEditing: PropTypes.bool,
-    isLast: PropTypes.bool,
-    isOver: PropTypes.bool,
-    isSelected: PropTypes.bool,
-    isSortable: PropTypes.bool,
+    isContext: bool,
+    isDisabled: bool,
+    isDragging: bool,
+    isEditing: bool,
+    isLast: bool,
+    isOver: bool,
+    isSelected: bool,
+    isSortable: bool,
 
-    photo: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      data: PropTypes.object
+    photo: shape({
+      id: number.isRequired,
+      data: object
     }).isRequired,
 
-    orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+    orientation: oneOf(['horizontal', 'vertical']),
 
-    cache: PropTypes.string.isRequired,
-    size: PropTypes.number.isRequired,
+    cache: string.isRequired,
+    size: number.isRequired,
 
-    ds: PropTypes.func.isRequired,
-    dt: PropTypes.func.isRequired,
-    dp: PropTypes.func.isRequired,
+    ds: func.isRequired,
+    dt: func.isRequired,
+    dp: func.isRequired,
 
-    onContextMenu: PropTypes.func.isRequired,
-    onItemOpen: PropTypes.func.isRequired,
-    onSelect: PropTypes.func.isRequired
+    onContextMenu: func.isRequired,
+    onItemOpen: func.isRequired,
+    onSelect: func.isRequired
   }
 
   static defaultProps = {

@@ -5,6 +5,7 @@ const { PureComponent, PropTypes } = React
 const { ClickCatcher } = require('../click-catcher')
 const { DND } = require('../../constants')
 const { get, move, times } = require('../../common/util')
+const { bool, func, number, string, object, shape, arrayOf } = PropTypes
 
 
 class PhotoIterator extends PureComponent {
@@ -108,24 +109,24 @@ class PhotoIterator extends PureComponent {
 
 
   static propTypes = {
-    photos: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number.isRequired
+    photos: arrayOf(
+      shape({
+        id: number.isRequired
       })
     ).isRequired,
 
-    cache: PropTypes.string.isRequired,
-    selected: PropTypes.number,
-    ui: PropTypes.object.isRequired,
-    zoom: PropTypes.number.isRequired,
+    cache: string.isRequired,
+    selected: number,
+    ui: object.isRequired,
+    zoom: number.isRequired,
 
-    isItemOpen: PropTypes.bool,
-    isDisabled: PropTypes.bool,
+    isItemOpen: bool,
+    isDisabled: bool,
 
-    onContextMenu: PropTypes.func.isRequired,
-    onItemOpen: PropTypes.func.isRequired,
-    onSelect: PropTypes.func.isRequired,
-    onSort: PropTypes.func.isRequired
+    onContextMenu: func.isRequired,
+    onItemOpen: func.isRequired,
+    onSelect: func.isRequired,
+    onSort: func.isRequired
   }
 }
 
