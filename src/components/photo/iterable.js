@@ -31,6 +31,7 @@ class PhotoIterable extends Component {
       'context': this.props.isContext,
       'over': this.props.isOver,
       'dragging': this.props.isDragging,
+      'last': this.props.isLast,
       [this.props.orientation]: true,
       [this.direction]: this.props.isOver
     }
@@ -147,6 +148,7 @@ class PhotoIterable extends Component {
     isDisabled: PropTypes.bool,
     isDragging: PropTypes.bool,
     isEditing: PropTypes.bool,
+    isLast: PropTypes.bool,
     isOver: PropTypes.bool,
     isSelected: PropTypes.bool,
     isSortable: PropTypes.bool,
