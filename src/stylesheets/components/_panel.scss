@@ -30,7 +30,7 @@
   .panel-body {
     flex: 1 1 auto;
     overflow-y: scroll;
-    margin-bottom: $space-min;
+    border-bottom: $space-min solid transparent;
     position: relative;
   }
 

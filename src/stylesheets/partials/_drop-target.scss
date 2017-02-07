@@ -1,0 +1,13 @@
+//
+// Drop target
+// --------------------------------------------------
+
+.drop-target {
+  &.over {
+    background: $blue-light;
+
+    .photo-panel & {
+      overflow: hidden;
+    }
+  }
+}
