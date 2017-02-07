@@ -58,7 +58,39 @@
       }
 
       &.over {
-        background: $blue-light;
+        background: $sidebar-over-bg;
+      }
+
+      &.dragging {
+        background: transparent;
+
+        .icon,
+        .name {
+          visibility: hidden;
+        }
+
+        &::before,
+        &::after {
+          position: absolute;
+          left: 0;
+          width: 100%;
+          height: $line-height-large;
+        }
+
+        &:first-child {
+          &::before {
+            content: "";
+            bottom: 100%;
+          }
+        }
+
+        &:last-child {
+          &::after {
+            content: "";
+            top: 100%;
+            z-index: 1;
+          }
+        }
       }
     }
 
@@ -85,12 +117,6 @@
             color: $sidebar-tag-active-color;
           }
         }
-      }
-    }
-
-    .sortable {
-      .dragging {
-        opacity: 0;
       }
     }
   }
