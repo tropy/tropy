@@ -35,7 +35,6 @@
       }
     }
 
-    .click-catcher.over ~ &:last-child,
     .click-catcher.over ~ &.last,
     &.after {
       &::after {
