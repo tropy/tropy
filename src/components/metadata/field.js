@@ -6,6 +6,7 @@ const { Editable } = require('../editable')
 const { FormattedMessage } = require('react-intl')
 const { parse } = require('url')
 const { basename } = require('path')
+const { pluck } = require('../../common/util')
 const cn = require('classnames')
 
 
@@ -26,7 +27,7 @@ class Field extends Component {
   }
 
   get details() {
-    return this.props.property.definition || this.props.property.comment
+    return pluck(this.props.property, ['uri', 'definition', 'comment'])
   }
 
   get value() {
@@ -63,11 +64,11 @@ class Field extends Component {
 
   render() {
     const { isEditing, isDisabled, onEditCancel } = this.props
-    const { value, label, classes,  name, details } = this
+    const { value, label, classes,  details } = this
 
     return (
       <li className={cn(classes)}>
-        <label title={[name, details].join('\n')}>{label}</label>
+        <label title={details.join('\n\n')}>{label}</label>
         <div className="value" onClick={this.handleClick}>
           <Editable
             value={value ? value.value : null}
