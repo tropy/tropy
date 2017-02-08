@@ -25,6 +25,10 @@ class Field extends Component {
     return this.props.property.uri
   }
 
+  get details() {
+    return this.props.property.definition || this.props.property.comment
+  }
+
   get value() {
     return this.props.data[this.name]
   }
@@ -59,11 +63,11 @@ class Field extends Component {
 
   render() {
     const { isEditing, isDisabled, onEditCancel } = this.props
-    const { value, label, classes } = this
+    const { value, label, classes,  name, details } = this
 
     return (
       <li className={cn(classes)}>
-        <label>{label}</label>
+        <label title={[name, details].join('\n')}>{label}</label>
         <div className="value" onClick={this.handleClick}>
           <Editable
             value={value ? value.value : null}
@@ -86,6 +90,8 @@ class Field extends Component {
       uri: PropTypes.string.isRequired,
       label: PropTypes.string,
       type: PropTypes.string,
+      definition: PropTypes.string,
+      comment: PropTypes.string
     }),
 
     isEditing: PropTypes.bool,
