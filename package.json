@@ -70,6 +70,7 @@
     "glob": "^7.0.0",
     "istanbul": "^0.4.1",
     "node-sass": "^4.0.0",
+    "react-addons-perf": "^15.4.2",
     "react-addons-test-utils": "^15.1.0",
     "react-dnd-test-backend": "^2.2.3",
     "sass-lint": "^1.9.1",
