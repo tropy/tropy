@@ -25,10 +25,12 @@ class PhotoTile extends PhotoIterable {
 
   handleClick = createClickHandler({
     onClick: (event) => {
+      event.stopPropagation()
       this.props.onSelect(this.props.photo, event)
     },
 
-    onDoubleClick: () => {
+    onDoubleClick: (event) => {
+      event.stopPropagation()
       this.props.onItemOpen(this.props.photo)
     }
   })
@@ -38,7 +40,8 @@ class PhotoTile extends PhotoIterable {
       <li
         className={cn(this.classes)}
         ref={this.setContainer}
-        style={this.style}>
+        style={this.style}
+        onClick={this.props.onClickOutside}>
         {this.renderThumbnail({
           onClick: this.handleClick,
           onContextMenu: this.handleContextMenu

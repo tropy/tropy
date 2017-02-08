@@ -85,6 +85,7 @@ class PhotoIterator extends PureComponent {
       onDropPhoto: this.handleDropPhoto,
       onSelect: this.handleSelect,
       onItemOpen: this.handleItemOpen,
+      onClickOutside: this.handleClickOutside,
       onContextMenu: this.props.onContextMenu
     }))
   }
