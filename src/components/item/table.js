@@ -38,6 +38,7 @@ class ItemTable extends ItemIterator {
 
         {this.connect(
           <div className={cn(this.classes)}>
+            {this.renderClickCatcher({ node: 'div' })}
             <table>
               <tbody>
                 {this.map(({ item, ...props }) =>

@@ -2,6 +2,8 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
+const { ClickCatcher } = require('../click-catcher')
+const { DND } = require('../../constants')
 const { times } = require('../../common/util')
 const { arrayOf, shape, bool, func, number, object, string } = PropTypes
 
@@ -38,6 +40,15 @@ class ItemIterator extends PureComponent {
       onItemOpen: this.props.onItemOpen,
       onSelect: this.props.onSelect
     }))
+  }
+
+  renderClickCatcher(props) {
+    return (
+      <ClickCatcher {...props}
+        accept={DND.ITEMS}
+        isDisabled
+        onClick={this.handleClickOutside}/>
+    )
   }
 
   static ZOOM = [

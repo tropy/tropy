@@ -1,11 +1,11 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent, PropTypes } = React
+const { PureComponent, PropTypes, createElement: create } = React
 const { DropTarget } = require('react-dnd')
 const cn = require('classnames')
 
-const { arrayOf, bool, func, string } = PropTypes
+const { arrayOf, oneOfType, bool, func, string } = PropTypes
 
 class ClickCatcher extends PureComponent {
 
@@ -15,19 +15,25 @@ class ClickCatcher extends PureComponent {
 
   render() {
     return this.connect(
-      <li
-        className={cn({ 'click-catcher': true, 'over': this.props.isOver })}
-        onClick={this.props.onClick}/>
+      create(this.props.node, {
+        className: cn({ 'click-catcher': true, 'over': this.props.isOver }),
+        onClick: this.props.onClick
+      })
     )
   }
 
   static propTypes = {
-    accept: arrayOf(string).isRequired,
+    accept: oneOfType([arrayOf(string), string]).isRequired,
     isDisabled: bool,
     isOver: bool,
     dt: func.isRequired,
+    node: string,
     onClick: func.isRequired,
-    onDrop: func.isRequired
+    onDrop: func
+  }
+
+  static defaultProps = {
+    node: 'li'
   }
 }
 
