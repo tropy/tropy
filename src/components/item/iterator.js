@@ -2,7 +2,6 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const { meta } = require('../../common/os')
 const { times } = require('../../common/util')
 const { arrayOf, shape, func, number, object, string } = PropTypes
 
@@ -17,45 +16,9 @@ class ItemIterator extends PureComponent {
     return this.props.selection.includes(item.id)
   }
 
-  handleSelect = (item, event) => {
-    const { selection, onSelect } = this.props
-    const isSelected = this.isSelected(item)
-
-    if (meta(event)) {
-      onSelect(item.id, isSelected ? 'remove' : 'merge')
-
-    } else {
-      if (!isSelected || selection.length > 1) {
-        onSelect(item.id, 'replace')
-      }
-    }
-  }
-
-  handleContextMenu = (event, item) => {
-    const { nav, selection, onContextMenu } = this.props
-
-    const context = ['item']
-    const target = { id: item.id, tags: item.tags }
-
-    if (selection.length > 1) {
-      context.push('bulk')
-      target.id = selection
-    }
-
-    if (nav.list) {
-      context.push('list')
-      target.list = nav.list
-    }
-
-    if (item.deleted) context.push('deleted')
-
-    onContextMenu(event, context.join('-'), target)
-  }
-
   handleClickOutside = () => {
     this.props.onSelect()
   }
-
 
   map(fn) {
     return this.props.items.map((item, idx) => fn({
@@ -66,10 +29,10 @@ class ItemIterator extends PureComponent {
       isLast: idx === this.props.items.length,
       isSelected: this.isSelected(item),
       nav: this.props.nav,
-      onContextMenu: this.handleContextMenu,
+      onContextMenu: this.props.onContextMenu,
       onDropPhotos: this.props.onPhotoMove,
       onItemOpen: this.props.onItemOpen,
-      onSelect: this.handleSelect
+      onSelect: this.props.onSelect
     }))
   }
 

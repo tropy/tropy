@@ -18,29 +18,22 @@ class ItemTableRow extends ItemIterable {
   }
 
   handleClick = (event, cancel) => {
-    const { item, isSelected, onSelect } = this.props
-
-    if (!isSelected || meta(event)) {
+    if (!this.props.isSelected || meta(event)) {
       cancel()
-      onSelect(item, event)
+      this.handleSelect(event)
     }
   }
 
   handleSingleClick = (event, ...args) => {
-    const { item, isDragging, isSelected, onSelect, onColumnEdit } = this.props
+    const { isDragging, isSelected, onColumnEdit } = this.props
 
     if (isDragging) return
 
     if (isSelected) {
       onColumnEdit(...args)
     } else {
-      onSelect(item, event)
+      this.handleSelect(event)
     }
-  }
-
-  handleDoubleClick = () => {
-    const { item, onItemOpen } = this.props
-    onItemOpen({ id: item.id, photos: item.photos })
   }
 
   render() {
@@ -62,7 +55,7 @@ class ItemTableRow extends ItemIterable {
               width={width}
               onClick={this.handleClick}
               onSingleClick={this.handleSingleClick}
-              onDoubleClick={this.handleDoubleClick}/>
+              onDoubleClick={this.handleOpen}/>
           ))
         }
       </tr>

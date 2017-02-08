@@ -6,6 +6,7 @@ const { DragSource, DropTarget } = require('react-dnd')
 const { getEmptyImage } = require('react-dnd-electron-backend')
 const { compose, map, filter, into } = require('transducers.js')
 const { DND } = require('../../constants')
+const { meta } = require('../../common/os')
 const { bool, func, number, object, shape, oneOf, arrayOf } = PropTypes
 
 
@@ -40,17 +41,49 @@ class ItemIterable extends PureComponent {
   }
 
 
-  handleContextMenu = (event) => {
-    const { item, isSelected, onContextMenu, onSelect } = this.props
+  handleOpen = () => {
+    const { item, onItemOpen } = this.props
 
-    if (this.isDisabled) return
-
-    if (!isSelected) onSelect(item, event)
-
-    // TODO needs updated selection
-    onContextMenu(event, {
-      id: item.id, tags: item.tags, deleted: item.deleted
+    onItemOpen({
+      id: item.id, photos: item.photos
     })
+  }
+
+  handleSelect = (event) => {
+    const { item, selection, isSelected, onSelect } = this.props
+
+    if (meta(event)) {
+      onSelect(item.id, isSelected ? 'remove' : 'merge')
+
+    } else {
+      if (!isSelected || selection.length > 1) {
+        onSelect(item.id, 'replace')
+      }
+    }
+  }
+
+
+  handleContextMenu = (event) => {
+    const { nav, item, isSelected, selection, onContextMenu } = this.props
+
+    if (!isSelected) this.handleSelect(event)
+
+    const context = ['item']
+    const target = { id: item.id, tags: item.tags }
+
+    if (selection.length > 1) {
+      context.push('bulk')
+      target.id = selection
+    }
+
+    if (nav.list) {
+      context.push('list')
+      target.list = nav.list
+    }
+
+    if (item.deleted) context.push('deleted')
+
+    onContextMenu(event, context.join('-'), target)
   }
 
   setContainer = (container) => {
@@ -135,7 +168,9 @@ class ItemIterable extends PureComponent {
       photos: arrayOf(number)
     }).isRequired,
 
+    nav: object.isRequired,
     selection: arrayOf(number).isRequired,
+    size: number.isRequired,
     orientation: oneOf(['horizontal', 'vertical']),
 
     ds: func.isRequired,

@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes, Component } = React
+const { PropTypes, PureComponent } = React
 const { Thumbnail } = require('./thumbnail')
 const { DragSource, DropTarget } = require('react-dnd')
 const { getEmptyImage } = require('react-dnd-electron-backend')
@@ -10,7 +10,7 @@ const { DND } = require('../../constants')
 const { bool, func, number, string, object, shape, oneOf } = PropTypes
 
 
-class PhotoIterable extends Component {
+class PhotoIterable extends PureComponent {
   constructor(props) {
     super(props)
 
