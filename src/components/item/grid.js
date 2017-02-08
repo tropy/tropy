@@ -4,9 +4,18 @@ const React = require('react')
 const { ItemIterator } = require('./iterator')
 const { ItemTile } = require('./tile')
 const { Shapes } = require('../util')
+const cn = require('classnames')
 
 
 class ItemGrid extends ItemIterator {
+
+  get classes() {
+    return {
+      'item-grid': true,
+      'drop-target': !this.props.isDisabled,
+      'over': this.props.isOver
+    }
+  }
 
   get placeholder() {
     return (
@@ -22,17 +31,19 @@ class ItemGrid extends ItemIterator {
 
     return (
       <div className="item-grid-view">
-        <ul className="item-grid">
-          {this.map(({ item, ...props }) =>
-            <ItemTile {...props}
-              key={item.id}
-              item={item}/>
-          )}
+        {this.connect(
+          <ul className={cn(this.classes)}>
+            {this.map(({ item, ...props }) =>
+              <ItemTile {...props}
+                key={item.id}
+                item={item}/>
+            )}
 
-          {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
-          {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
-          {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
-        </ul>
+            {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
+            {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
+            {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
+          </ul>
+        )}
       </div>
     )
   }

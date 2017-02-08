@@ -5,9 +5,18 @@ const { ItemIterator } = require('./iterator')
 const { ItemTableRow } = require('./table-row')
 const { ItemTableHead } = require('./table-head')
 const { arrayOf, oneOf, func, object } = React.PropTypes
+const cn = require('classnames')
 
 
 class ItemTable extends ItemIterator {
+
+  get classes() {
+    return {
+      'table-body': true,
+      'drop-target': !this.props.isDisabled,
+      'over': this.props.isOver
+    }
+  }
 
   handleColumnEdit = ({ id, property }) => {
     this.props.onEdit({
@@ -15,30 +24,36 @@ class ItemTable extends ItemIterator {
     })
   }
 
-
   render() {
-    const { columns, editing, onEditCancel, onMetadataSave } = this.props
+    const {
+      columns,
+      editing,
+      onEditCancel,
+      onMetadataSave
+    } = this.props
 
     return (
       <div className="item-table-view">
         <ItemTableHead columns={columns}/>
 
-        <div className="table-body">
-          <table className="item-table">
-            <tbody>
-              {this.map(({ item, ...props }) =>
-                <ItemTableRow {...props}
-                  key={item.id}
-                  item={item}
-                  columns={columns}
-                  editing={editing}
-                  onCancel={onEditCancel}
-                  onColumnEdit={this.handleColumnEdit}
-                  onMetadataSave={onMetadataSave}/>
-              )}
-            </tbody>
-          </table>
-        </div>
+        {this.connect(
+          <div className={cn(this.classes)}>
+            <table className="item-table">
+              <tbody>
+                {this.map(({ item, ...props }) =>
+                  <ItemTableRow {...props}
+                    key={item.id}
+                    item={item}
+                    columns={columns}
+                    editing={editing}
+                    onCancel={onEditCancel}
+                    onColumnEdit={this.handleColumnEdit}
+                    onMetadataSave={onMetadataSave}/>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     )
   }

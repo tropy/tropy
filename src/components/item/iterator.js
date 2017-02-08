@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent, PropTypes } = React
 const { times } = require('../../common/util')
-const { arrayOf, shape, func, number, object, string } = PropTypes
+const { arrayOf, shape, bool, func, number, object, string } = PropTypes
 
 
 class ItemIterator extends PureComponent {
@@ -18,6 +18,10 @@ class ItemIterator extends PureComponent {
 
   handleClickOutside = () => {
     this.props.onSelect()
+  }
+
+  connect(element) {
+    return (this.props.isDisabled) ? element : this.props.dt(element)
   }
 
   map(fn) {
@@ -44,6 +48,9 @@ class ItemIterator extends PureComponent {
   ]
 
   static propTypes = {
+    isOver: bool,
+    isDisabled: bool,
+
     cache: string.isRequired,
     items: arrayOf(shape({
       id: number.isRequired
@@ -52,6 +59,7 @@ class ItemIterator extends PureComponent {
     selection: arrayOf(number).isRequired,
     zoom: number.isRequired,
 
+    dt: func.isRequired,
     onContextMenu: func.isRequired,
     onItemOpen: func.isRequired,
     onPhotoMove: func.isRequired,

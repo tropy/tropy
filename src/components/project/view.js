@@ -2,11 +2,14 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
+const { DropTarget } = require('react-dnd')
+const { NativeTypes } = require('react-dnd-electron-backend')
 const { Resizable } = require('../resizable')
 const { ItemGrid, ItemTable } = require('../item')
 const { ProjectSidebar } = require('./sidebar')
 const { ProjectToolbar } = require('./toolbar')
-const { func, object } = PropTypes
+const { isValidImage } = require('../../image')
+const { bool, func, object } = PropTypes
 
 
 class ProjectView extends PureComponent {
@@ -25,6 +28,9 @@ class ProjectView extends PureComponent {
 
   render() {
     const {
+      dt,
+      isOver,
+      canDrop,
       onItemCreate,
       onItemSelect,
       onItemZoomChange,
@@ -50,6 +56,9 @@ class ProjectView extends PureComponent {
             </header>
 
             <ItemIterator {...props}
+              dt={dt}
+              isOver={isOver && canDrop}
+              isDisabled={this.props.nav.trash}
               editing={editing}
               selection={selection}
               zoom={zoom}
@@ -63,16 +72,41 @@ class ProjectView extends PureComponent {
   }
 
   static propTypes = {
+    isOver: bool,
+    canDrop: bool,
     nav: object.isRequired,
     ui: object.isRequired,
+    dt: func.isRequired,
     onItemCreate: func.isRequired,
+    onItemImport: func.isRequired,
     onItemSelect: func.isRequired,
     onMaximize: func.isRequired,
     onItemZoomChange: func.isRequired
   }
 }
 
+const spec = {
+  drop({ nav, onItemImport }, monitor) {
+    const files = monitor
+      .getItem()
+      .files
+      .filter(isValidImage)
+      .map(file => file.path)
+
+    return onItemImport({ files, list: nav.list })
+  },
+
+  canDrop(_, monitor) {
+    return !!monitor.getItem().files.find(isValidImage)
+  }
+}
+
+const collect = (connect, monitor) => ({
+  dt: connect.dropTarget(),
+  isOver: monitor.isOver(),
+  canDrop: monitor.canDrop()
+})
 
 module.exports = {
-  ProjectView
+  ProjectView: DropTarget(NativeTypes.FILE, spec, collect)(ProjectView)
 }
