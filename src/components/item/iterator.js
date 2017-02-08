@@ -26,7 +26,7 @@ class ItemIterator extends PureComponent {
       cache: this.props.cache,
       selection: this.props.selection,
       size: this.size,
-      isLast: idx === this.props.items.length,
+      isLast: idx === this.props.items.length - 1,
       isSelected: this.isSelected(item),
       nav: this.props.nav,
       onContextMenu: this.props.onContextMenu,
