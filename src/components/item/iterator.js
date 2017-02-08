@@ -31,7 +31,7 @@ class ItemIterator extends PureComponent {
     }
   }
 
-  handleContextMenu = (item, event) => {
+  handleContextMenu = (event, item) => {
     const { nav, selection, onContextMenu } = this.props
 
     const context = ['item']

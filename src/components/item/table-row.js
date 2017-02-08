@@ -1,34 +1,16 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
-const { getEmptyImage } = require('react-dnd-electron-backend')
+const { PropTypes } = React
+const { ItemIterable } = require('./iterable')
 const { ItemTableCell } = require('./table-cell')
 const { meta } = require('../../common/os')
 const { DC } = require('../../constants/properties')
-const dnd = require('./dnd')
 const cn = require('classnames')
+const { arrayOf, func, object } = PropTypes
 
 
-class ItemTableRow extends Component {
-
-  componentDidMount() {
-    this.props.dp(getEmptyImage())
-  }
-
-  get isDisabled() {
-    return !!this.props.item.deleted
-  }
-
-
-  get classes() {
-    return {
-      item: true,
-      active: this.props.isSelected,
-      dragging: this.props.isDragging,
-      over: this.props.isOver && this.props.canDrop
-    }
-  }
+class ItemTableRow extends ItemIterable {
 
   isEditing = (uri) => {
     const { editing, item } = this.props
@@ -61,21 +43,10 @@ class ItemTableRow extends Component {
     onItemOpen({ id: item.id, photos: item.photos })
   }
 
-  handleContextMenu = (event) => {
-    const { item, isSelected, onContextMenu, onSelect } = this.props
-
-    if (!isSelected) {
-      onSelect(item, event)
-    }
-
-    // TODO needs updated selection
-    onContextMenu(item, event)
-  }
-
   render() {
     const { columns, isSelected, ...props } = this.props
 
-    return dnd.connect(this.props, (
+    return this.connect(
       <tr
         className={cn(this.classes)}
         onContextMenu={this.handleContextMenu}>
@@ -95,42 +66,22 @@ class ItemTableRow extends Component {
           ))
         }
       </tr>
-    ))
+    )
   }
 
   static propTypes = {
-    item: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      data: PropTypes.object,
-      deleted: PropTypes.bool,
-      photos: PropTypes.arrayOf(PropTypes.number)
-    }).isRequired,
+    ...ItemIterable.propTypes,
 
-    editing: PropTypes.object,
-    cache: PropTypes.string.isRequired,
-    columns: PropTypes.arrayOf(PropTypes.object),
-    selection: PropTypes.arrayOf(PropTypes.number),
+    editing: object,
+    columns: arrayOf(object),
 
-    isSelected: PropTypes.bool,
-    isDragging: PropTypes.bool,
-    isOver: PropTypes.bool,
-    canDrop: PropTypes.bool,
-
-    ds: PropTypes.func.isRequired,
-    dp: PropTypes.func.isRequired,
-    dt: PropTypes.func.isRequired,
-
-    onSelect: PropTypes.func.isRequired,
-    onContextMenu: PropTypes.func.isRequired,
-    onColumnEdit: PropTypes.func.isRequired,
-    onCancel: PropTypes.func.isRequired,
-    onDropPhotos: PropTypes.func.isRequired,
-    onMetadataSave: PropTypes.func.isRequired,
-    onItemOpen: PropTypes.func.isRequired
+    onColumnEdit: func.isRequired,
+    onCancel: func.isRequired,
+    onMetadataSave: func.isRequired
   }
 }
 
 
 module.exports = {
-  ItemTableRow: dnd.wrap(ItemTableRow)
+  ItemTableRow: ItemTableRow.wrap()
 }
