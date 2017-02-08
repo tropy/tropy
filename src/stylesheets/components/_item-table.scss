@@ -1,8 +1,8 @@
 //
-// Item table view
+// Item table
 // --------------------------------------------------
 
-.item-table-view {
+.item-table {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
@@ -124,12 +124,12 @@
     flex: 1 1 auto;
     overflow-y: scroll;
     padding-top: 3px;
-  }
 
-  .item-table {
-    width: 100%;
-    table-layout: fixed;
-    border-collapse: collapse;
+    table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+    }
   }
 
   .item {

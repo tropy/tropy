@@ -33,12 +33,12 @@ class ItemTable extends ItemIterator {
     } = this.props
 
     return (
-      <div className="item-table-view">
+      <div className="item-table">
         <ItemTableHead columns={columns}/>
 
         {this.connect(
           <div className={cn(this.classes)}>
-            <table className="item-table">
+            <table>
               <tbody>
                 {this.map(({ item, ...props }) =>
                   <ItemTableRow {...props}

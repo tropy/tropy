@@ -19,20 +19,20 @@
   box-sizing: content-box;
   position: relative;
 
-  .item-table-view & {
+  .item-table & {
     position: absolute;
     left: $component-padding-horizontal;
     top: ($row-height - $thumbnail-size) / 2;
   }
 
   .active & {
-    .item-grid-view & {
+    .item-grid & {
       border: $space-min solid $brand-primary;
     }
   }
 
   .over & {
-    .item-grid-view & {
+    .item-grid & {
       border: $space-min solid $items-over-bg;
     }
   }
@@ -44,7 +44,7 @@
   }
 
   &.stack {
-    .item-table-view & {
+    .item-table & {
       img,
       .icon-item {
         -webkit-clip-path: inset(4px 0 0 0);
@@ -65,17 +65,17 @@
       background: $cover-image-color;
 
       .active & {
-        .item-table-view & {
+        .item-table & {
           background: $cover-image-active-color;
         }
 
-        .item-grid-view & {
+        .item-grid & {
           content: none;
         }
       }
 
       .over & {
-        .item-grid-view & {
+        .item-grid & {
           content: none;
         }
       }
@@ -85,11 +85,11 @@
       left: 4px;
       width: calc(100% - 8px);
 
-      .item-table-view & {
+      .item-table & {
         top: 0;
       }
 
-      .item-grid-view & {
+      .item-grid & {
         top: -4px;
       }
     }
@@ -98,11 +98,11 @@
       left: 2px;
       width: calc(100% - 4px);
 
-      .item-table-view & {
+      .item-table & {
         top: 2px;
       }
 
-      .item-grid-view & {
+      .item-grid & {
         top: -2px;
       }
     }

@@ -29,22 +29,18 @@ class ItemGrid extends ItemIterator {
   render() {
     const tile = this.placeholder
 
-    return (
-      <div className="item-grid-view">
-        {this.connect(
-          <ul className={cn(this.classes)}>
-            {this.map(({ item, ...props }) =>
-              <ItemTile {...props}
-                key={item.id}
-                item={item}/>
-            )}
-
-            {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
-            {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
-            {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
-          </ul>
+    return this.connect(
+      <ul className={cn(this.classes)}>
+        {this.map(({ item, ...props }) =>
+          <ItemTile {...props}
+            key={item.id}
+            item={item}/>
         )}
-      </div>
+
+        {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
+        {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
+        {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
+      </ul>
     )
   }
 
