@@ -8,8 +8,8 @@ const cn = require('classnames')
 
 const { shape, number, arrayOf } = PropTypes
 
-const card = (item) =>
-  get(item, 'photos.length', 0)
+const card = ({ photos }) =>
+  photos && photos.length || 0
 
 const cover = (item) =>
   item.cover || get(item, ['photos', 0])
@@ -23,7 +23,6 @@ const CoverImage = ({ item, ...props }) => (
 
 CoverImage.propTypes = {
   item: shape({
-    id: number.isRequired,
     photos: arrayOf(number),
     cover: number
   }).isRequired,
