@@ -129,6 +129,17 @@ module.exports = {
     return true
   },
 
+  pluck(src, props = [], into = []) {
+    return props.reduce((res, key) => {
+      if (src.hasOwnProperty(key)) {
+        res.push(src[key])
+      }
+
+      return res
+
+    }, into)
+  },
+
   pick(src, props = [], into = {}) {
     return props.reduce((res, key) => {
       if (src.hasOwnProperty(key)) {
