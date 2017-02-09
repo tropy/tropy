@@ -1,16 +1,17 @@
 'use strict'
 
 module.exports = {
-  done(action, payload) {
+  done(action, result, meta) {
     return {
       type: action.type,
-      payload,
-      error: payload instanceof Error,
+      payload: result,
+      error: result instanceof Error,
       meta: {
-        done: true,
         ipc: action.meta.ipc,
         load: action.meta.load,
         search: action.meta.search,
+        ...meta,
+        done: true,
         rel: action.meta.seq,
         was: action.meta.now
       }

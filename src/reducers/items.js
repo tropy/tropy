@@ -1,7 +1,7 @@
 'use strict'
 
 const { omit, splice } = require('../common/util')
-const { ITEM, PROJECT } = require('../constants')
+const { ITEM, PROJECT, LIST } = require('../constants')
 const { into, map } = require('transducers.js')
 
 const init = {}
@@ -56,6 +56,30 @@ module.exports = {
 
       case ITEM.PHOTO.REMOVE:
         return nested.remove('photos', state, payload, meta)
+
+      case LIST.ITEM.ADD:
+      case LIST.ITEM.RESTORE: {
+        if (!meta.done) return state
+
+        const { id: list, items } = payload
+
+        return into({ ...state }, map(id => ({
+          [id]: { ...state[id], lists: [...state[id].lists, list] }
+        })), items)
+      }
+
+      case LIST.ITEM.REMOVE: {
+        if (!meta.done) return state
+
+        const { id: list, items } = payload
+
+        return into({ ...state }, map(id => ({
+          [id]: {
+            ...state[id],
+            lists: state[id].lists.filter(lid => lid !== list)
+          }
+        })), items)
+      }
 
       default:
         return state

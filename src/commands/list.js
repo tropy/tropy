@@ -143,6 +143,8 @@ class AddItems extends Command {
     yield call([db, db.transaction], tx => mod.items.add(tx, id, items))
 
     this.undo = actions.items.remove({ id, items })
+
+    return { id, items }
   }
 }
 
@@ -156,6 +158,8 @@ class RemoveItems extends Command {
     yield call(mod.items.remove, db, id, items)
 
     this.undo = actions.items.restore({ id, items })
+
+    return { id, items }
   }
 }
 
@@ -169,6 +173,8 @@ class RestoreItems extends Command {
     yield call(mod.items.restore, db, id, items)
 
     this.undo = actions.items.remove({ id, items })
+
+    return { id, items }
   }
 }
 

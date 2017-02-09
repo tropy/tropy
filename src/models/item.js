@@ -57,7 +57,7 @@ module.exports = {
 
   async load(db, ids) {
     const items = ids.reduce((i, id) =>
-      ((i[id] = { id, tags: [], photos: [] }), i), {})
+      ((i[id] = { id, tags: [], photos: [], lists: [] }), i), {})
 
     if (ids.length) {
       ids = ids.join(',')
@@ -90,6 +90,14 @@ module.exports = {
             ORDER BY item, position`,
           ({ item, photo }) => {
             items[item].photos.push(photo)
+          }
+        ),
+
+        db.each(`
+          SELECT id, list_id AS list
+            FROM list_items WHERE id IN (${ids})`,
+          ({ id, list }) => {
+            items[id].lists.push(list)
           }
         )
       ])
