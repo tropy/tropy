@@ -1,14 +1,15 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
+const { PureComponent, PropTypes } = React
 const { IconButton } = require('./button')
 const cn = require('classnames')
 const { bounds, borders, on, off } = require('../dom')
 const { noop } = require('../common/util')
+const { bool, element, func, number, oneOf } = PropTypes
 
 
-class Slider extends Component {
+class Slider extends PureComponent {
   constructor(props) {
     super(props)
 
@@ -107,7 +108,7 @@ class Slider extends Component {
     this.setState({ dragging: true })
 
     on(document, 'mousemove', this.update)
-    on(document, 'mouseup', this.handleMouseUp)
+    on(document, 'mouseup', this.handleMouseUp, { capture: true })
     on(document, 'mouseleave', this.stopDragging)
     on(window, 'blur', this.handleMouseUp)
   }
@@ -181,18 +182,18 @@ class Slider extends Component {
   }
 
   static propTypes = {
-    value: PropTypes.number.isRequired,
-    disabled: PropTypes.bool,
+    value: number.isRequired,
+    disabled: bool,
 
-    min: PropTypes.number,
-    max: PropTypes.number,
+    min: number,
+    max: number,
 
-    size: PropTypes.oneOf(['sm', 'md', 'lg']),
+    size: oneOf(['sm', 'md', 'lg']),
 
-    minIcon: PropTypes.element,
-    maxIcon: PropTypes.element,
+    minIcon: element,
+    maxIcon: element,
 
-    onChange: PropTypes.func
+    onChange: func
   }
 
   static defaultProps = {
