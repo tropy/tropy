@@ -87,6 +87,18 @@ describe('dom', () => {
         expect(node.addEventListener)
           .to.have.been.calledWith('click', noop)
       })
+
+      it('can be called', () => {
+        const listener = sinon.spy()
+        node.addEventListener.restore()
+
+        dom.on(node, 'custom', listener)
+
+        dom.emit(node, 'custom')
+        dom.emit(node, 'custom')
+
+        expect(listener).to.have.been.calledTwice
+      })
     })
 
     describe('.off', () => {
@@ -105,20 +117,16 @@ describe('dom', () => {
           .to.have.been.called
       })
 
-      it('removes listener after first callback', (done) => {
+      it('is removed after the first call', () => {
+        const listener = sinon.spy()
         node.addEventListener.restore()
 
-        dom.once(node, 'click', () => {
-          expect(node.removeEventListener)
-            .to.have.been.called
+        dom.once(node, 'custom', listener)
 
-          done()
-        })
+        dom.emit(node, 'custom')
+        dom.emit(node, 'custom')
 
-        expect(node.removeEventListener)
-          .not.to.have.been.called
-
-        dom.emit(node, 'click')
+        expect(listener).to.have.been.calledOnce
       })
     })
   })
