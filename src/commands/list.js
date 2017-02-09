@@ -143,6 +143,7 @@ class AddItems extends Command {
     yield call([db, db.transaction], tx => mod.items.add(tx, id, items))
 
     this.undo = actions.items.remove({ id, items })
+    this.redo = actions.items.restore({ id, items })
 
     return { id, items }
   }

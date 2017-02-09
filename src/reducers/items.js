@@ -59,7 +59,7 @@ module.exports = {
 
       case LIST.ITEM.ADD:
       case LIST.ITEM.RESTORE: {
-        if (!meta.done) return state
+        if (error || !meta.done) return state
 
         const { id: list, items } = payload
 
@@ -69,7 +69,7 @@ module.exports = {
       }
 
       case LIST.ITEM.REMOVE: {
-        if (!meta.done) return state
+        if (error || !meta.done) return state
 
         const { id: list, items } = payload
 
