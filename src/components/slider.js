@@ -55,10 +55,15 @@ class Slider extends PureComponent {
   }
 
   handleMouseUp = (event) => {
-    event.stopPropagation()
+    try {
+      if (event instanceof MouseEvent) {
+        event.stopPropagation()
+        this.update(event)
+      }
 
-    this.update(event)
-    this.stopDragging()
+    } finally {
+      this.stopDragging()
+    }
   }
 
   handleDoubleClick(event) {
@@ -117,7 +122,7 @@ class Slider extends PureComponent {
     this.setState({ dragging: false })
 
     off(document, 'mousemove', this.update)
-    off(document, 'mouseup', this.handleMouseUp)
+    off(document, 'mouseup', this.handleMouseUp, { capture: true })
     off(document, 'mouseleave', this.stopDragging)
     off(window, 'blur', this.handleMouseUp)
 
