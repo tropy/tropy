@@ -27,12 +27,6 @@ class ItemTableCell extends Component {
   }
 
 
-  handleEdit = () => {
-    this.props.onEdit({
-      column: { [this.props.item.id]: this.props.property.uri }
-    })
-  }
-
   handleChange = (value) => {
     this.props.onChange({
       id: this.props.item.id,
@@ -42,6 +36,11 @@ class ItemTableCell extends Component {
     })
   }
 
+  // Subtle: We want to enable click-to-edit for selected cells only;
+  // since selection happens during mouse down and click-to-edit on
+  // click, we record the current selection state on mouse down --
+  // selections happens as the event bubbles therefore allowing us to
+  // detect a click event that was associated to the item's selection.
   handleMouseDown = () => {
     this.wasSelected = this.props.isSelected
   }
@@ -51,12 +50,23 @@ class ItemTableCell extends Component {
       return !this.props.isSelected || meta(event) || !this.wasSelected
     },
 
-    onSingleClick: this.handleEdit
+    onSingleClick: () => {
+      this.props.onEdit({
+        column: { [this.props.item.id]: this.props.property.uri }
+      })
+    }
   })
 
-
   render() {
-    const { item, cache, width, hasCoverImage, ...props } = this.props
+    const {
+      item,
+      cache,
+      width,
+      isEditing,
+      isDisabled,
+      hasCoverImage,
+      onCancel
+    } = this.props
 
     return (
       <td
@@ -67,13 +77,15 @@ class ItemTableCell extends Component {
 
         {hasCoverImage && <CoverImage item={item} size={24} cache={cache}/>}
 
-        <Editable {...props}
+        <Editable
           value={this.value}
+          isEditing={isEditing}
+          isDisabled={isDisabled}
+          onCancel={onCancel}
           onChange={this.handleChange}/>
       </td>
     )
   }
-
 
   static propTypes = {
     isEditing: bool,

@@ -33,9 +33,7 @@ class ItemGrid extends ItemIterator {
       <ul className={cn(this.classes)}>
         {this.renderClickCatcher()}
         {this.map(({ item, ...props }) =>
-          <ItemTile {...props}
-            key={item.id}
-            item={item}/>
+          <ItemTile {...props} key={item.id} item={item}/>
         )}
 
         {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}

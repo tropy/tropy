@@ -71,15 +71,13 @@ class Editable extends Component {
 
   render() {
     const { value, type, isEditing, isDisabled, isRequired } = this.props
-    const props = pick(this.props, ['onClick'])
 
-    if (isEditing) {
+    if (isEditing && !isDisabled) {
       return (
-        <input {...props}
+        <input
           className="editable editable-control"
           type={type}
           value={this.state.value}
-          disabled={isDisabled}
           required={isRequired}
           ref={this.focus}
           onChange={this.update}
@@ -89,7 +87,7 @@ class Editable extends Component {
     }
 
     return (
-      <div {...props} className={cn({
+      <div className={cn({
         editable: true,
         disabled: isDisabled
       })}>
@@ -105,15 +103,12 @@ class Editable extends Component {
     isRequired: PropTypes.bool,
     value: PropTypes.string,
     type: PropTypes.oneOf(['text', 'number']),
-    onClick: PropTypes.func,
-    onChange: PropTypes.func,
-    onCancel: PropTypes.func
+    onChange: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired
   }
 
   static defaultProps = {
-    type: 'text',
-    onCancel: noop,
-    onChange: noop
+    type: 'text'
   }
 }
 

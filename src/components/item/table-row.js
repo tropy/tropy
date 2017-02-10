@@ -5,10 +5,12 @@ const { PropTypes } = React
 const { ItemIterable } = require('./iterable')
 const { ItemTableCell } = require('./table-cell')
 const { meta } = require('../../common/os')
+const { pick } = require('../../common/util')
 const { DC } = require('../../constants/properties')
 const cn = require('classnames')
 const { arrayOf, object } = PropTypes
 
+const CellProps = Object.keys(ItemTableCell.propTypes)
 
 class ItemTableRow extends ItemIterable {
 
@@ -24,7 +26,7 @@ class ItemTableRow extends ItemIterable {
   }
 
   render() {
-    const { columns, isSelected, ...props } = this.props
+    const { columns, ...props } = this.props
 
     return this.connect(
       <tr
@@ -34,14 +36,13 @@ class ItemTableRow extends ItemIterable {
         onContextMenu={this.handleContextMenu}>
         {
           columns.map(({ property, width }) => (
-            <ItemTableCell {...props}
+            <ItemTableCell {...pick(props, CellProps)}
               key={property.uri}
+              property={property}
+              width={width}
               isEditing={this.isEditing(property.uri)}
               isDisabled={this.isDisabled}
-              isSelected={isSelected}
-              hasCoverImage={property.uri === DC.TITLE}
-              property={property}
-              width={width}/>
+              hasCoverImage={property.uri === DC.TITLE}/>
           ))
         }
       </tr>
