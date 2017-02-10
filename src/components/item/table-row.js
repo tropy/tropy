@@ -17,21 +17,8 @@ class ItemTableRow extends ItemIterable {
     return editing.column && editing.column[item.id] === uri
   }
 
-  handleClick = (event, cancel) => {
+  handleMouseDown = (event) => {
     if (!this.props.isSelected || meta(event)) {
-      cancel()
-      this.handleSelect(event)
-    }
-  }
-
-  handleSingleClick = (event, ...args) => {
-    const { isDragging, isSelected, onColumnEdit } = this.props
-
-    if (isDragging) return
-
-    if (isSelected) {
-      onColumnEdit(...args)
-    } else {
       this.handleSelect(event)
     }
   }
@@ -42,6 +29,8 @@ class ItemTableRow extends ItemIterable {
     return this.connect(
       <tr
         className={cn(this.classes)}
+        onMouseDown={this.handleMouseDown}
+        onDoubleClick={this.handleOpen}
         onContextMenu={this.handleContextMenu}>
         {
           columns.map(({ property, width }) => (
@@ -52,10 +41,7 @@ class ItemTableRow extends ItemIterable {
               isSelected={isSelected}
               hasCoverImage={property.uri === DC.TITLE}
               property={property}
-              width={width}
-              onClick={this.handleClick}
-              onSingleClick={this.handleSingleClick}
-              onDoubleClick={this.handleOpen}/>
+              width={width}/>
           ))
         }
       </tr>
@@ -64,13 +50,8 @@ class ItemTableRow extends ItemIterable {
 
   static propTypes = {
     ...ItemIterable.propTypes,
-
     editing: object,
-    columns: arrayOf(object),
-
-    onColumnEdit: func.isRequired,
-    onCancel: func.isRequired,
-    onMetadataSave: func.isRequired
+    columns: arrayOf(object)
   }
 }
 

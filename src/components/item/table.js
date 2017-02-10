@@ -18,16 +18,11 @@ class ItemTable extends ItemIterator {
     }
   }
 
-  handleColumnEdit = ({ id, property }) => {
-    this.props.onEdit({
-      column: { [id]: property }
-    })
-  }
-
   render() {
     const {
       columns,
       editing,
+      onEdit,
       onEditCancel,
       onMetadataSave
     } = this.props
@@ -48,8 +43,8 @@ class ItemTable extends ItemIterator {
                     columns={columns}
                     editing={editing}
                     onCancel={onEditCancel}
-                    onColumnEdit={this.handleColumnEdit}
-                    onMetadataSave={onMetadataSave}/>
+                    onEdit={onEdit}
+                    onChange={onMetadataSave}/>
                 )}
               </tbody>
             </table>
