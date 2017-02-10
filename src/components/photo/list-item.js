@@ -87,6 +87,10 @@ class PhotoListItem extends PhotoIterable {
     onEdit: PropTypes.func.isRequired,
     onEditCancel: PropTypes.func.isRequired
   }
+
+  static defaultProps = {
+    data: {}
+  }
 }
 
 
