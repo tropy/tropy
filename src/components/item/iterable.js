@@ -11,14 +11,10 @@ const { bool, func, number, object, shape, oneOf, arrayOf } = PropTypes
 
 
 class ItemIterable extends PureComponent {
-  constructor(props) {
-    super(props)
-  }
 
   componentDidMount() {
     this.props.dp(getEmptyImage())
   }
-
 
   get classes() {
     return {
