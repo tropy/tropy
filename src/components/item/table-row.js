@@ -5,7 +5,7 @@ const { PropTypes } = React
 const { ItemIterable } = require('./iterable')
 const { ItemTableCell } = require('./table-cell')
 const { meta } = require('../../common/os')
-const { pick } = require('../../common/util')
+const { get, pick } = require('../../common/util')
 const { DC } = require('../../constants/properties')
 const cn = require('classnames')
 const { arrayOf, object } = PropTypes
@@ -15,8 +15,7 @@ const CellProps = Object.keys(ItemTableCell.propTypes)
 class ItemTableRow extends ItemIterable {
 
   isEditing = (uri) => {
-    const { editing, item } = this.props
-    return editing.column && editing.column[item.id] === uri
+    return get(this.props.edit, [this.props.item.id]) === uri
   }
 
   handleMouseDown = (event) => {
@@ -48,7 +47,7 @@ class ItemTableRow extends ItemIterable {
 
   static propTypes = {
     ...ItemIterable.propTypes,
-    editing: object.isRequired,
+    edit: object,
     data: object.isRequired,
     columns: arrayOf(object).isRequired
   }

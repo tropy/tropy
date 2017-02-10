@@ -57,7 +57,7 @@ class ProjectView extends PureComponent {
             </header>
 
             <ItemIterator {...pick(props, ItemIterator.props)}
-              editing={ui.edit}
+              edit={ui.edit.column}
               list={nav.list}
               selection={nav.items}
               zoom={zoom}

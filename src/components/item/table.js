@@ -21,7 +21,7 @@ class ItemTable extends ItemIterator {
   render() {
     const {
       columns,
-      editing,
+      edit,
       data,
       onEdit,
       onEditCancel,
@@ -43,7 +43,7 @@ class ItemTable extends ItemIterator {
                     item={item}
                     data={data[item.id]}
                     columns={columns}
-                    editing={editing}
+                    edit={edit}
                     onCancel={onEditCancel}
                     onChange={onMetadataSave}
                     onEdit={onEdit}/>
@@ -59,7 +59,7 @@ class ItemTable extends ItemIterator {
   static propTypes = {
     ...ItemIterator.propTypes,
     columns: arrayOf(object).isRequired,
-    editing: object.isRequired,
+    edit: object,
     data: object.isRequired,
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,
