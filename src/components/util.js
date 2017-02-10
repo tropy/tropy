@@ -1,7 +1,7 @@
 'use strict'
 
 const { Children, PropTypes } = require('react')
-
+const { diff } = require('../common/util')
 
 module.exports = {
 
@@ -54,6 +54,16 @@ module.exports = {
         }
       }
     }
+  },
+
+  why(component, props, state) {
+    const name = component.constructor.name
+
+    const dp = diff(component.props, props)
+    const ds = diff(component.state, state)
+
+    // eslint-disable-next-line no-console
+    console.log(`${name}: [${ds.join(', ')}] [${dp.join(', ')}]`)
   },
 
   Shapes: {

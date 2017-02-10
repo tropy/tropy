@@ -192,6 +192,20 @@ module.exports = {
     return string.toLowerCase().replace(/\s+/g, '-')
   },
 
+  diff(a, b) {
+    const delta = []
+
+    for (let prop in b) {
+      if (a[prop] !== b[prop]) delta.push(prop)
+    }
+
+    for (let prop in a) {
+      if (!(prop in b)) delta.push(prop)
+    }
+
+    return delta
+  },
+
   strftime(format, date = new Date()) {
     return format.replace(/%([YymdHMS])/g, (match, code) => {
       switch (code) {
