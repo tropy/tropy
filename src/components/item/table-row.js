@@ -33,19 +33,16 @@ class ItemTableRow extends ItemIterable {
         className={cn(this.classes)}
         onMouseDown={this.handleMouseDown}
         onDoubleClick={this.handleOpen}
-        onContextMenu={this.handleContextMenu}>
-        {
-          columns.map(({ property, width }) => (
+        onContextMenu={this.handleContextMenu}>{
+          columns.map(({ property, width }) =>
             <ItemTableCell {...pick(props, CellProps)}
               key={property.uri}
               property={property}
               width={width}
               isEditing={this.isEditing(property.uri)}
               isDisabled={this.isDisabled}
-              hasCoverImage={property.uri === DC.TITLE}/>
-          ))
-        }
-      </tr>
+              hasCoverImage={property.uri === DC.TITLE}/>)
+      }</tr>
     )
   }
 

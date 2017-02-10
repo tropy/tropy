@@ -1,12 +1,12 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
-const { noop, pick } = require('../common/util')
+const { PureComponent } = React
+const { bool, func, oneOf } = React.PropTypes
 const cn = require('classnames')
 
-class Editable extends Component {
 
+class Editable extends PureComponent {
   constructor(props) {
     super(props)
 
@@ -23,7 +23,7 @@ class Editable extends Component {
     return this.state.value !== (this.props.value || '') && this.valid
   }
 
-  update = (event) => {
+  handleChange = (event) => {
     this.setState({ value: event.target.value })
   }
 
@@ -80,7 +80,7 @@ class Editable extends Component {
           value={this.state.value}
           required={isRequired}
           ref={this.focus}
-          onChange={this.update}
+          onChange={this.handleChange}
           onKeyUp={this.handleKeyUp}
           onBlur={this.stop}/>
       )
@@ -98,13 +98,13 @@ class Editable extends Component {
 
 
   static propTypes = {
-    isEditing: PropTypes.bool,
-    isDisabled: PropTypes.bool,
-    isRequired: PropTypes.bool,
-    value: PropTypes.string,
-    type: PropTypes.oneOf(['text', 'number']),
-    onChange: PropTypes.func.isRequired,
-    onCancel: PropTypes.func.isRequired
+    isEditing: bool,
+    isDisabled: bool,
+    isRequired: bool,
+    value: string,
+    type: oneOf(['text', 'number']),
+    onChange: func.isRequired,
+    onCancel: func.isRequired
   }
 
   static defaultProps = {
