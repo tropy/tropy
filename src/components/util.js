@@ -38,18 +38,20 @@ module.exports = {
         if (onDoubleClick) onDoubleClick(event)
 
       } else {
-        const cancel = () => { cancel.called = true }
+        let cancelled = false
 
-        tid = setTimeout(() => {
-          tid = undefined
+        if (onClick) cancelled = onClick(event)
+        if (onSingleClick && !cancelled) {
+          event.persist()
 
-          if (onSingleClick && !cancel.called) {
-            onSingleClick(event)
-          }
-        }, delay)
+          tid = setTimeout(() => {
+            tid = undefined
 
-        if (onClick) onClick(event, cancel)
-        if (onSingleClick && !cancel.called) event.persist()
+            if (onSingleClick) {
+              onSingleClick(event)
+            }
+          }, delay)
+        }
       }
     }
   },
