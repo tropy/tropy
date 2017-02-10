@@ -101,7 +101,6 @@ class ItemTableCell extends Component {
 
     onCancel: func.isRequired,
     onChange: func.isRequired,
-    onCancel: func.isRequired,
     onEdit: func.isRequired
   }
 }

@@ -5,7 +5,6 @@ const { ItemIterable } = require('./iterable')
 const { CoverImage } = require('./cover-image')
 const { createClickHandler } = require('../util')
 const cn = require('classnames')
-const { string } = React.PropTypes
 
 
 class ItemTile extends ItemIterable {

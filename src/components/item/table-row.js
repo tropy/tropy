@@ -7,7 +7,7 @@ const { ItemTableCell } = require('./table-cell')
 const { meta } = require('../../common/os')
 const { DC } = require('../../constants/properties')
 const cn = require('classnames')
-const { arrayOf, func, object } = PropTypes
+const { arrayOf, object } = PropTypes
 
 
 class ItemTableRow extends ItemIterable {
