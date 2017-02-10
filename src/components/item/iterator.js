@@ -5,7 +5,7 @@ const { PureComponent, PropTypes } = React
 const { ClickCatcher } = require('../click-catcher')
 const { DND } = require('../../constants')
 const { times } = require('../../common/util')
-const { arrayOf, shape, bool, func, number, object, string } = PropTypes
+const { arrayOf, shape, bool, func, number, string } = PropTypes
 
 
 class ItemIterator extends PureComponent {
@@ -31,10 +31,11 @@ class ItemIterator extends PureComponent {
       item,
       cache: this.props.cache,
       selection: this.props.selection,
+      list: this.props.list,
       size: this.size,
       isLast: idx === this.props.items.length - 1,
       isSelected: this.isSelected(item),
-      nav: this.props.nav,
+      isDisabled: this.props.isDisabled,
       onContextMenu: this.props.onContextMenu,
       onDropPhotos: this.props.onPhotoMove,
       onItemOpen: this.props.onItemOpen,
@@ -66,8 +67,8 @@ class ItemIterator extends PureComponent {
     items: arrayOf(shape({
       id: number.isRequired
     })).isRequired,
-    nav: object.isRequired,
     selection: arrayOf(number).isRequired,
+    list: number,
     zoom: number.isRequired,
 
     dt: func.isRequired,

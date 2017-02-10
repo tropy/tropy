@@ -20,14 +20,10 @@ class ItemIterable extends PureComponent {
   }
 
 
-  get isDisabled() {
-    return !!this.props.item.deleted
-  }
-
   get classes() {
     return {
       'item': true,
-      'drop-target': !this.isDisabled,
+      'drop-target': !this.props.isDisabled,
       'active': this.props.isSelected,
       'over': this.props.isOver && this.props.canDrop,
       'dragging': this.props.isDragging,
@@ -64,24 +60,29 @@ class ItemIterable extends PureComponent {
 
 
   handleContextMenu = (event) => {
-    const { nav, item, isSelected, selection, onContextMenu } = this.props
+    const {
+      item,
+      list,
+      isDisabled,
+      isSelected,
+      selection,
+      onContextMenu
+    } = this.props
 
+    // FIX handle selection in time
     if (!isSelected) this.handleSelect(event)
 
     const context = ['item']
-    const target = { id: item.id, tags: item.tags }
+    const target = { id: item.id, tags: item.tags, list }
 
+    // FIX
     if (selection.length > 1) {
       context.push('bulk')
       target.id = selection
     }
 
-    if (nav.list) {
-      context.push('list')
-      target.list = nav.list
-    }
-
-    if (item.deleted) context.push('deleted')
+    if (list) context.push('list')
+    if (isDisabled) context.push('deleted')
 
     onContextMenu(event, context.join('-'), target)
   }
@@ -92,7 +93,7 @@ class ItemIterable extends PureComponent {
 
 
   connect(element) {
-    return (this.isDisabled) ?
+    return (this.props.isDisabled) ?
       element : this.props.ds(this.props.dt(element))
   }
 
@@ -159,6 +160,7 @@ class ItemIterable extends PureComponent {
     isLast: bool,
     isOver: bool,
     isSelected: bool,
+    isDisabled: bool,
     canDrop: bool,
 
     item: shape({
@@ -168,8 +170,8 @@ class ItemIterable extends PureComponent {
       photos: arrayOf(number)
     }).isRequired,
 
-    nav: object.isRequired,
     selection: arrayOf(number).isRequired,
+    list: number,
     size: number.isRequired,
     orientation: oneOf(['horizontal', 'vertical']),
 

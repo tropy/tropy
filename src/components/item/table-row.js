@@ -40,7 +40,6 @@ class ItemTableRow extends ItemIterable {
               property={property}
               width={width}
               isEditing={this.isEditing(property.uri)}
-              isDisabled={this.isDisabled}
               hasCoverImage={property.uri === DC.TITLE}/>)
       }</tr>
     )

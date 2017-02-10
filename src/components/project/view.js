@@ -12,38 +12,32 @@ const { isValidImage } = require('../../image')
 const { bool, func, object } = PropTypes
 
 
+// eslint-disable-next-line react/prefer-stateless-function
 class ProjectView extends PureComponent {
-
-  get zoom() {
-    return this.props.nav.itemsZoom
-  }
-
-  get selection() {
-    return this.props.nav.items
-  }
-
-  get editing() {
-    return this.props.ui.edit
-  }
 
   render() {
     const {
       dt,
       isOver,
       canDrop,
+      nav,
+      ui,
       onItemCreate,
       onItemSelect,
       onItemZoomChange,
       ...props
     } = this.props
 
-    const { zoom, selection, editing } = this
+    const zoom = nav.itemsZoom
     const ItemIterator = zoom ? ItemGrid : ItemTable
 
     return (
       <div id="project-view">
         <Resizable edge="right" value={250}>
-          <ProjectSidebar {...props}/>
+          <ProjectSidebar {...props}
+            edit={ui.edit}
+            context={ui.context}
+            nav={nav}/>
         </Resizable>
         <main>
           <section id="items">
@@ -58,13 +52,13 @@ class ProjectView extends PureComponent {
             <ItemIterator {...props}
               dt={dt}
               isOver={isOver && canDrop}
-              isDisabled={this.props.nav.trash}
-              editing={editing}
-              selection={selection}
+              isDisabled={nav.trash}
+              list={nav.list}
+              editing={ui.edit}
+              selection={nav.items}
               zoom={zoom}
               onCreate={onItemCreate}
               onSelect={onItemSelect}/>
-
           </section>
         </main>
       </div>

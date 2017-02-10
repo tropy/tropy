@@ -26,15 +26,15 @@ class ListTree extends PureComponent {
   }
 
   isEditing(id) {
-    return get(this.props, 'ui.edit.list.id') === id
+    return get(this.props, 'edit.list.id') === id
   }
 
   isContext(id) {
-    return get(this.props, 'ui.context.list') === id
+    return get(this.props, 'context.list') === id
   }
 
   isSelected(id) {
-    return get(this.props, 'nav.list') === id
+    return this.props.selection === id
   }
 
 
@@ -55,7 +55,7 @@ class ListTree extends PureComponent {
 
   renderNewListNode() {
     const { parent, onEditCancel, onListSave } = this.props
-    const list = get(this.props, 'ui.edit.list')
+    const list = get(this.props, 'edit.list')
 
     if (!list || list.parent !== parent.id) return null
 
@@ -99,8 +99,9 @@ class ListTree extends PureComponent {
     }).isRequired,
 
     lists: PropTypes.object.isRequired,
-    ui: PropTypes.object.isRequired,
-    nav: PropTypes.object.isRequired,
+    context: PropTypes.object.isRequired,
+    edit: PropTypes.object.isRequired,
+    selection: PropTypes.number,
 
     onEdit: PropTypes.func.isRequired,
     onEditCancel: PropTypes.func.isRequired,

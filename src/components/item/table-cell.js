@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
+const { PureComponent, PropTypes } = React
 const { CoverImage } = require('./cover-image')
 const { Editable } = require('../editable')
 const { createClickHandler } = require('../util')
@@ -10,7 +10,7 @@ const cn = require('classnames')
 const { bool, shape, string, number, object, arrayOf, func } = PropTypes
 
 
-class ItemTableCell extends Component {
+class ItemTableCell extends PureComponent {
 
   get value() {
     const { item, property } = this.props

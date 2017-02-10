@@ -16,11 +16,11 @@ const { has } = require('../../common/util')
 class ProjectSidebar extends PureComponent {
 
   get isContext() {
-    return has(this.props, 'ui.context.project')
+    return has(this.props.context, 'project')
   }
 
   get isEditing() {
-    return has(this.props, 'ui.edit.project')
+    return has(this.props.edit, 'project')
   }
 
   get isSelected() {
@@ -87,6 +87,7 @@ class ProjectSidebar extends PureComponent {
   renderLists() {
     const {
       lists,
+      nav,
       onItemImport,
       onItemDelete,
       onListSort,
@@ -104,6 +105,7 @@ class ProjectSidebar extends PureComponent {
             <ListTree {...props}
               parent={root}
               lists={lists}
+              selection={nav.list}
               onDropItems={onListItemsAdd}
               onDropFiles={onItemImport}
               onSort={onListSort}/>
@@ -161,7 +163,8 @@ class ProjectSidebar extends PureComponent {
       name: PropTypes.string
     }).isRequired,
 
-    ui: PropTypes.object.isRequired,
+    context: PropTypes.object.isRequired,
+    edit: PropTypes.object.isRequired,
     nav: PropTypes.object.isRequired,
     lists: PropTypes.object.isRequired,
     tags: PropTypes.arrayOf(PropTypes.object).isRequired,
