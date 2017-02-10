@@ -12,7 +12,7 @@ const cn = require('classnames')
 class PhotoListItem extends PhotoIterable {
 
   get title() {
-    return get(this.props.photo, ['data', this.props.title, 'value'])
+    return get(this.props, ['data', this.props.title, 'value'])
   }
 
   get isDraggable() {
@@ -79,6 +79,7 @@ class PhotoListItem extends PhotoIterable {
     ...PhotoIterable.propTypes,
 
     title: PropTypes.string.isRequired,
+    data: PropTypes.object.isRequired,
 
     isEditing: PropTypes.bool,
 

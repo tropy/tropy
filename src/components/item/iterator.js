@@ -59,6 +59,10 @@ class ItemIterator extends PureComponent {
     512
   ]
 
+  static get props() {
+    return Object.keys(this.propTypes)
+  }
+
   static propTypes = {
     isOver: bool,
     isDisabled: bool,

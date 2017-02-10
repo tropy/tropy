@@ -23,32 +23,30 @@ class Fields extends Component {
   }
 
   *extras() {
-    for (let uri in this.props.subject.data) {
+    for (let uri in this.props.data) {
       if (this.isExtra(uri)) yield uri
     }
   }
 
   renderTemplateFields() {
-    const { template, subject, ...props } = this.props
+    const { template, ...props } = this.props
 
     if (!template) return
 
     return template.fields.map(({ property }) =>
       <Field {...props}
         key={property.uri}
-        data={subject.data}
         property={property}
         isEditing={this.isEditing(property.uri)}/>
     )
   }
 
   renderExtraFields() {
-    const { subject, properties, ...props } = this.props
+    const { properties, ...props } = this.props
 
     return [...this.extras()].map(uri =>
       <Field {...props}
         key={uri}
-        data={subject.data}
         property={properties[uri] || { uri }}
         isExtra
         isEditing={this.isEditing(uri)}/>
@@ -78,14 +76,19 @@ class Fields extends Component {
     static: PropTypes.string,
 
     subject: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      data: PropTypes.object.isRequired,
+      id: PropTypes.number.isRequired
     }).isRequired,
+
+    data: PropTypes.object.isRequired,
 
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
     onMetadataSave: PropTypes.func,
     onContextMenu: PropTypes.func
+  }
+
+  static defaultProps = {
+    data: {}
   }
 }
 

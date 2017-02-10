@@ -84,7 +84,7 @@ class Field extends Component {
 
   static propTypes = {
     data: PropTypes.shape({
-      id: PropTypes.number.isRequired
+      id: PropTypes.number
     }).isRequired,
 
     property: PropTypes.shape({
@@ -103,6 +103,10 @@ class Field extends Component {
     onEditCancel: PropTypes.func,
     onMetadataSave: PropTypes.func,
     onContextMenu: PropTypes.func
+  }
+
+  static defaultProps = {
+    data: {}
   }
 }
 

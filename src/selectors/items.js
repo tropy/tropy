@@ -1,31 +1,23 @@
 'use strict'
 
-const {
-  createSelector: memo
-} = require('reselect')
+const { pluck } = require('../common/util')
+const { createSelector: memo } = require('reselect')
 
+const getItem = ({ items }, { id }) => items[id]
 
-const collect = (items, metadata, ids) =>
-  ids.map(id => ({ id, ...items[id], data: { id, ...metadata[id] } }))
-
-
-const getItem = ({ items }, { item }) => items[item]
+const getItems = ({ items }) => items
 
 const getSelectedItems = memo(
-  ({ items }) => items,
-  ({ metadata }) => metadata,
-  ({ nav }) => nav.items,
-  collect)
+  getItems, ({ nav }) => (nav.items), pluck
+)
 
-const getItems = memo(
-  ({ items }) => items,
-  ({ metadata }) => metadata,
-  ({ ui }) => ui.items,
-  collect)
-
+const getVisibleItems = memo(
+  getItems, ({ ui }) => (ui.items), pluck
+)
 
 module.exports = {
   getItem,
   getItems,
-  getSelectedItems
+  getSelectedItems,
+  getVisibleItems
 }

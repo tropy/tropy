@@ -185,6 +185,8 @@ class ProjectSidebar extends PureComponent {
   static defaultProps = {
     hasToolbar: ARGS.frameless
   }
+
+  static props = Object.keys(ProjectSidebar.propTypes)
 }
 
 

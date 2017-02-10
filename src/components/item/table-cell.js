@@ -13,17 +13,17 @@ const { bool, shape, string, number, object, arrayOf, func } = PropTypes
 class ItemTableCell extends PureComponent {
 
   get value() {
-    const { item, property } = this.props
+    const { data, property } = this.props
 
-    return item.data[property.uri] ?
-      item.data[property.uri].value : null
+    return data[property.uri] ?
+      data[property.uri].value : null
   }
 
   get type() {
-    const { item, property } = this.props
+    const { data, property } = this.props
 
-    return item.data[property.uri] ?
-      item.data[property.uri].type : (property.type || 'text')
+    return data[property.uri] ?
+      data[property.uri].type : (property.type || 'text')
   }
 
 
@@ -102,9 +102,10 @@ class ItemTableCell extends PureComponent {
     item: shape({
       id: number.isRequired,
       cover: number,
-      data: object.isRequired,
       photos: arrayOf(number)
     }).isRequired,
+
+    data: object.isRequired,
 
     cache: string.isRequired,
     width: string.isRequired,
@@ -112,6 +113,10 @@ class ItemTableCell extends PureComponent {
     onCancel: func.isRequired,
     onChange: func.isRequired,
     onEdit: func.isRequired
+  }
+
+  static defaultProps = {
+    data: {}
   }
 }
 

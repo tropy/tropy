@@ -26,7 +26,7 @@ class ItemTableRow extends ItemIterable {
   }
 
   render() {
-    const { columns, ...props } = this.props
+    const { columns, data, ...props } = this.props
 
     return this.connect(
       <tr
@@ -38,6 +38,7 @@ class ItemTableRow extends ItemIterable {
             <ItemTableCell {...pick(props, CellProps)}
               key={property.uri}
               property={property}
+              data={data}
               width={width}
               isEditing={this.isEditing(property.uri)}
               hasCoverImage={property.uri === DC.TITLE}/>)
@@ -47,8 +48,13 @@ class ItemTableRow extends ItemIterable {
 
   static propTypes = {
     ...ItemIterable.propTypes,
-    editing: object,
-    columns: arrayOf(object)
+    editing: object.isRequired,
+    data: object.isRequired,
+    columns: arrayOf(object).isRequired
+  }
+
+  static defaultProps = {
+    data: {}
   }
 }
 

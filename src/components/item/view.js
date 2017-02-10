@@ -15,7 +15,7 @@ const { IconButton } = require('../button')
 const { Image } = require('../image')
 const { Fields, TemplateSelect } = require('../metadata')
 const { getSelectedItems } = require('../../selectors/items')
-const { getPhotos, getSelectedPhoto } = require('../../selectors/photos')
+const { getVisiblePhotos, getSelectedPhoto } = require('../../selectors/photos')
 const { MODE } = require('../../constants/project')
 const act = require('../../actions')
 
@@ -121,7 +121,7 @@ class ItemView extends Component {
   }
 
   renderMetadataPanel() {
-    const { photo, templates, ...props } = this.props
+    const { photo, data, templates, ...props } = this.props
     const { item, isDisabled } = this
 
     return (
@@ -133,6 +133,7 @@ class ItemView extends Component {
             </h5>
             <Fields {...props}
               subject={photo}
+              data={data[photo.id]}
               isDisabled={isDisabled}
               template={templates[photo.template]}/>
           </section>}
@@ -147,6 +148,7 @@ class ItemView extends Component {
               onChange={this.handleTemplateChange}/>
             <Fields {...props}
               subject={item}
+              data={data[item.id]}
               isDisabled={isDisabled}
               template={templates[item.template]}/>
           </section>}
@@ -256,6 +258,8 @@ class ItemView extends Component {
       })
     ),
 
+    data: PropTypes.object.isRequired,
+
     photos: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.number.isRequired,
@@ -300,8 +304,9 @@ module.exports = {
   ItemView: connect(
     (state) => ({
       items: getSelectedItems(state),
+      data: state.metadata,
       photo: getSelectedPhoto(state),
-      photos: getPhotos(state),
+      photos: getVisiblePhotos(state),
       note: state.nav.note,
       selection: state.nav.items
     }),

@@ -7,7 +7,7 @@ const { getEmptyImage } = require('react-dnd-electron-backend')
 const { compose, map, filter, into } = require('transducers.js')
 const { DND } = require('../../constants')
 const { meta } = require('../../common/os')
-const { bool, func, number, object, shape, oneOf, arrayOf } = PropTypes
+const { bool, func, number, shape, oneOf, arrayOf } = PropTypes
 
 
 class ItemIterable extends PureComponent {
@@ -161,7 +161,6 @@ class ItemIterable extends PureComponent {
 
     item: shape({
       id: number.isRequired,
-      data: object,
       deleted: bool,
       photos: arrayOf(number)
     }).isRequired,

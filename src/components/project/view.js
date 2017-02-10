@@ -9,15 +9,23 @@ const { ItemGrid, ItemTable } = require('../item')
 const { ProjectSidebar } = require('./sidebar')
 const { ProjectToolbar } = require('./toolbar')
 const { isValidImage } = require('../../image')
+const { pick } = require('../../common/util')
 const { bool, func, object } = PropTypes
 
 
 // eslint-disable-next-line react/prefer-stateless-function
 class ProjectView extends PureComponent {
 
+  get zoom() {
+    return this.props.nav.itemsZoom
+  }
+
+  get ItemIterator() {
+    return this.zoom ? ItemGrid : ItemTable
+  }
+
   render() {
     const {
-      dt,
       isOver,
       canDrop,
       nav,
@@ -28,13 +36,12 @@ class ProjectView extends PureComponent {
       ...props
     } = this.props
 
-    const zoom = nav.itemsZoom
-    const ItemIterator = zoom ? ItemGrid : ItemTable
+    const { zoom, ItemIterator } = this
 
     return (
       <div id="project-view">
         <Resizable edge="right" value={250}>
-          <ProjectSidebar {...props}
+          <ProjectSidebar {...pick(props, ProjectSidebar.props)}
             edit={ui.edit}
             context={ui.context}
             nav={nav}/>
@@ -49,14 +56,13 @@ class ProjectView extends PureComponent {
                 onZoomChange={onItemZoomChange}/>
             </header>
 
-            <ItemIterator {...props}
-              dt={dt}
-              isOver={isOver && canDrop}
-              isDisabled={nav.trash}
-              list={nav.list}
+            <ItemIterator {...pick(props, ItemIterator.props)}
               editing={ui.edit}
+              list={nav.list}
               selection={nav.items}
               zoom={zoom}
+              isDisabled={nav.trash}
+              isOver={isOver && canDrop}
               onCreate={onItemCreate}
               onSelect={onItemSelect}/>
           </section>

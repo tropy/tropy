@@ -1,39 +1,31 @@
 'use strict'
 
-const {
-  createSelector: memo
-} = require('reselect')
-
-const { seq, compose, map, mapcat } = require('transducers.js')
+const { createSelector: memo } = require('reselect')
+const { seq, compose, map, mapcat, keep } = require('transducers.js')
 const { get } = require('../common/util')
 
+const getPhotos = ({ photos }) => photos
 
-const collect = (photos, metadata, id) => {
-  if (id == null) return null
-  return {
-    id, ...photos[id], data: { id, ...metadata[id] }
-  }
-}
+const getVisiblePhotos = memo(
+  getPhotos,
+  ({ items }) => (items),
+  ({ nav }) => (nav.items),
 
-const getPhotos = memo(
-  ({ photos }) => photos,
-  ({ metadata }) => metadata,
-  ({ items }) => items,
-  ({ nav }) => nav.items,
-
-  (photos, metadata, items, selection) =>
+  (photos, items, selection) =>
     seq(selection, compose(
       mapcat(id => get(items, [id, 'photos']) || []),
-      map(id => collect(photos, metadata, id))
-    )))
+      map(id => photos[id]),
+      keep()
+    ))
+)
 
 const getSelectedPhoto = memo(
-  ({ photos }) => photos,
-  ({ metadata }) => metadata,
+  getPhotos,
   ({ nav }) => nav.photo,
-  collect)
+  (photos, id) => photos[id]
+)
 
 module.exports = {
   getSelectedPhoto,
-  getPhotos
+  getVisiblePhotos
 }

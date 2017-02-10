@@ -12,7 +12,7 @@ const { extname } = require('path')
 const { getCachePrefix } = require('../../selectors/project')
 const { getAllVisibleTags } = require('../../selectors/tag')
 const { getTemplates } = require('../../selectors/templates')
-const { getItems } = require('../../selectors/items')
+const { getVisibleItems } = require('../../selectors')
 const { getColumns } = require('../../selectors/ui')
 const { MODE } = require('../../constants/project')
 const { once } = require('../../dom')
@@ -106,7 +106,7 @@ class ProjectContainer extends Component {
 
 
   render() {
-    const { dt, items, columns, ...props } = this.props
+    const { dt, items, data, columns, ...props } = this.props
 
     return dt(
       <div
@@ -115,7 +115,11 @@ class ProjectContainer extends Component {
         ref={this.setContainer}
         onContextMenu={this.handleContextMenu}>
 
-        <ProjectView {...props} items={items} columns={columns}/>
+        <ProjectView {...props}
+          items={items}
+          data={data}
+          columns={columns}/>
+
         <ItemView {...props}/>
         <DragLayer cache={props.cache}/>
       </div>
@@ -127,7 +131,8 @@ class ProjectContainer extends Component {
       file: PropTypes.string
     }).isRequired,
 
-    items: PropTypes.arrayOf(PropTypes.object),
+    items: PropTypes.arrayOf(PropTypes.object).isRequired,
+    data: PropTypes.object.isRequired,
     columns: PropTypes.arrayOf(PropTypes.object),
     cache: PropTypes.string.isRequired,
     mode: PropTypes.oneOf(values(MODE)).isRequired,
@@ -175,7 +180,8 @@ module.exports = {
       lists: state.lists,
       tags: getAllVisibleTags(state),
       columns: getColumns(state),
-      items: getItems(state),
+      items: getVisibleItems(state),
+      data: state.metadata,
       cache: getCachePrefix(state),
       nav: state.nav,
       ui: state.ui,
