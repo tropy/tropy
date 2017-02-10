@@ -47,10 +47,8 @@ class ItemTableCell extends Component {
   }
 
   handleClick = createClickHandler({
-    onClick: (event, cancel) => {
-      if (!this.props.isSelected) return cancel()
-      if (meta(event)) return cancel()
-      if (!this.wasSelected) return cancel()
+    onClick: (event) => {
+      return !this.props.isSelected || meta(event) || !this.wasSelected
     },
 
     onSingleClick: this.handleEdit
