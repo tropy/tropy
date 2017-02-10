@@ -9,12 +9,12 @@ const { DND } = require('../../constants')
 const { meta } = require('../../common/os')
 const { bool, func, number, shape, oneOf, arrayOf } = PropTypes
 
-
 class ItemIterable extends PureComponent {
 
   componentDidMount() {
     this.props.dp(getEmptyImage())
   }
+
 
   get classes() {
     return {
@@ -42,45 +42,24 @@ class ItemIterable extends PureComponent {
   }
 
   handleSelect = (event) => {
-    const { item, selection, isSelected, onSelect } = this.props
+    const { item, isSelected, onSelect } = this.props
 
     if (meta(event)) {
       onSelect(item.id, isSelected ? 'remove' : 'merge')
 
     } else {
-      if (!isSelected || selection.length > 1) {
+      if (!isSelected) {
         onSelect(item.id, 'replace')
       }
     }
   }
 
-
   handleContextMenu = (event) => {
-    const {
-      item,
-      list,
-      isDisabled,
-      isSelected,
-      selection,
-      onContextMenu
-    } = this.props
-
-    // FIX handle selection in time
-    if (!isSelected) this.handleSelect(event)
-
-    const context = ['item']
-    const target = { id: item.id, tags: item.tags, list }
-
-    // FIX
-    if (selection.length > 1) {
-      context.push('bulk')
-      target.id = selection
+    if (!this.props.isSelected) {
+      this.handleSelect(event)
     }
 
-    if (list) context.push('list')
-    if (isDisabled) context.push('deleted')
-
-    onContextMenu(event, context.join('-'), target)
+    this.props.onContextMenu(event, this.props.item)
   }
 
   setContainer = (container) => {
@@ -95,12 +74,12 @@ class ItemIterable extends PureComponent {
 
 
   static DragSourceSpec = {
-    beginDrag({ item, selection }) {
+    beginDrag({ item, getSelection }) {
       return {
         items: into(
           [{ ...item }],
           compose(filter(id => id !== item.id), map(id => ({ id }))),
-          selection
+          getSelection()
         )
       }
     },
@@ -165,14 +144,14 @@ class ItemIterable extends PureComponent {
       photos: arrayOf(number)
     }).isRequired,
 
-    selection: arrayOf(number).isRequired,
-    list: number,
     size: number.isRequired,
     orientation: oneOf(['horizontal', 'vertical']),
 
     ds: func.isRequired,
     dt: func.isRequired,
     dp: func.isRequired,
+
+    getSelection: func.isRequired,
 
     onContextMenu: func.isRequired,
     onDropPhotos: func.isRequired,

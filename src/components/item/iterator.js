@@ -18,8 +18,32 @@ class ItemIterator extends PureComponent {
     return this.props.selection.includes(item.id)
   }
 
+  getSelection = () => this.props.selection
+
   handleClickOutside = () => {
     this.props.onSelect()
+  }
+
+  handleContextMenu = (event, item) => {
+    const {
+      list,
+      isDisabled,
+      selection,
+      onContextMenu
+    } = this.props
+
+    const context = ['item']
+    const target = { id: item.id, tags: item.tags, list }
+
+    if (selection.length > 1) {
+      context.push('bulk')
+      target.id = selection
+    }
+
+    if (list) context.push('list')
+    if (isDisabled) context.push('deleted')
+
+    onContextMenu(event, context.join('-'), target)
   }
 
   connect(element) {
@@ -30,13 +54,12 @@ class ItemIterator extends PureComponent {
     return this.props.items.map((item, idx) => fn({
       item,
       cache: this.props.cache,
-      selection: this.props.selection,
-      list: this.props.list,
       size: this.size,
       isLast: idx === this.props.items.length - 1,
       isSelected: this.isSelected(item),
       isDisabled: this.props.isDisabled,
-      onContextMenu: this.props.onContextMenu,
+      getSelection: this.getSelection,
+      onContextMenu: this.handleContextMenu,
       onDropPhotos: this.props.onPhotoMove,
       onItemOpen: this.props.onItemOpen,
       onSelect: this.props.onSelect
