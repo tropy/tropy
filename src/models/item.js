@@ -4,6 +4,11 @@ const metadata = require('./metadata')
 const { DC } = require('../constants/properties')
 const { all } = require('bluebird')
 const { assign } = Object
+const { into, map } = require('transducers.js')
+
+const skel = (id) => ({
+  id, tags: [], photos: [], lists: []
+})
 
 module.exports = {
 
@@ -56,8 +61,7 @@ module.exports = {
   },
 
   async load(db, ids) {
-    const items = ids.reduce((i, id) =>
-      ((i[id] = { id, tags: [], photos: [], lists: [] }), i), {})
+    const items = into({}, map(id => [id, skel(id)]), ids)
 
     if (ids.length) {
       ids = ids.join(',')

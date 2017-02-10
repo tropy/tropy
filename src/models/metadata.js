@@ -5,7 +5,7 @@ const { into, map } = require('transducers.js')
 
 module.exports = {
   async load(db, ids) {
-    const data = into({}, map(id => [id, {}]), ids)
+    const data = into({}, map(id => [id, { id }]), ids)
 
     if (ids.length) {
       await db.each(`
