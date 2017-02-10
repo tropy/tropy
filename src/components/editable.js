@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { bool, func, oneOf } = React.PropTypes
+const { bool, func, string, oneOf } = React.PropTypes
 const cn = require('classnames')
 
 
