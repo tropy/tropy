@@ -3,6 +3,7 @@
 const React = require('react')
 const { ItemIterable } = require('./iterable')
 const { CoverImage } = require('./cover-image')
+const { createClickHandler } = require('../util')
 const cn = require('classnames')
 const { string } = React.PropTypes
 
@@ -20,20 +21,23 @@ class ItemTile extends ItemIterable {
     return { height, flexBasis: height }
   }
 
+  handleMouseDown = createClickHandler({
+    onClick: this.handleSelect,
+    onDoubleClick: this.handleOpen
+  })
+
   render() {
     return this.connect(
       <li className={cn(this.classes)} style={this.style}>
         <CoverImage {...this.props}
-          onClick={this.handleSelect}
-          onContextMenu={this.handleContextMenu}
-          onDoubleClick={this.handleOpen}/>
+          onMouseDown={this.handleMouseDown}
+          onContextMenu={this.handleContextMenu}/>
       </li>
     )
   }
 
   static propTypes = {
-    ...ItemIterable.propTypes,
-    cache: string.isRequired
+    ...ItemIterable.propTypes
   }
 }
 
