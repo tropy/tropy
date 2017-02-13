@@ -99,9 +99,11 @@ class PhotoIterable extends PureComponent {
     endDrag({ onDropPhoto }, monitor) {
       const result = monitor.didDrop() && monitor.getDropResult()
 
-      if (result && result.offset != null) {
-        onDropPhoto(result)
-      }
+      if (!result) return
+      if (result.id === result.to) return
+      if (result.offset == null) return
+
+      onDropPhoto(result)
     }
   }
 
@@ -114,13 +116,13 @@ class PhotoIterable extends PureComponent {
 
   static DropTargetSpec = {
     hover({ photo, onOver }, monitor, component) {
-      const { adj } = monitor.getItem()
+      const { id, adj } = monitor.getItem()
       const { top, left, width, height } = bounds(component.container)
       const { x, y } = monitor.getClientOffset()
 
       let offset = null
 
-      if (monitor.canDrop()) {
+      if (photo.id !== id) {
         offset = Math.round(
           component.isVertical ? ((y - top) / height) : ((x - left) / width)
         )
@@ -144,15 +146,6 @@ class PhotoIterable extends PureComponent {
       } finally {
         component.setState({ offset: null })
       }
-    },
-
-    canDrop({ photo, isDisabled }, monitor) {
-      const item = monitor.getItem()
-
-      if (isDisabled) return false
-      if (photo.id === item.id) return false
-
-      return true
     }
   }
 
