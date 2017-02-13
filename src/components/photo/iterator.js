@@ -120,11 +120,19 @@ class PhotoIterator extends PureComponent {
   })
 
   static wrap() {
-    return DropTarget(
-      DND.PHOTO,
-      this.DropTargetSpec,
-      this.DropTargetCollect
-    )(this)
+    const Component = DropTarget(
+        DND.PHOTO,
+        this.DropTargetSpec,
+        this.DropTargetCollect
+      )(this)
+
+    Component.props = this.props
+
+    return Component
+  }
+
+  static get props() {
+    return Object.keys(this.propTypes)
   }
 
   static propTypes = {

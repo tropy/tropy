@@ -9,10 +9,10 @@ const { PhotoToolbar } = require('./toolbar')
 const { PhotoList } = require('./list')
 const { PhotoGrid } = require('./grid')
 const { isValidImage } = require('../../image')
+const { pick } = require('../../common/util')
 
 
 class PhotoPanel extends Panel {
-
   get classes() {
     return {
       ...super.classes,
@@ -44,12 +44,13 @@ class PhotoPanel extends Panel {
 
     if (props.zoom) {
       return (
-        <PhotoGrid {...props} onDropImages={this.handleDropFiles}/>
+        <PhotoGrid {...pick(props, PhotoGrid.props)}
+          onDropImages={this.handleDropFiles}/>
       )
     }
 
     return (
-      <PhotoList {...props}
+      <PhotoList {...pick(props, PhotoList.props)}
         onDropImages={this.handleDropFiles}
         onChange={onMetadataSave}
         onEdit={this.handleEdit}/>

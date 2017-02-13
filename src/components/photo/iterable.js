@@ -148,7 +148,6 @@ class PhotoIterable extends PureComponent {
     isContext: bool,
     isDisabled: bool,
     isDragging: bool,
-    isEditing: bool,
     isLast: bool,
     isOver: bool,
     isSelected: bool,
@@ -169,6 +168,7 @@ class PhotoIterable extends PureComponent {
     dp: func.isRequired,
 
     onContextMenu: func.isRequired,
+    onDropPhoto: func.isRequired,
     onItemOpen: func.isRequired,
     onSelect: func.isRequired
   }
