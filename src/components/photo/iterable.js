@@ -15,7 +15,7 @@ class PhotoIterable extends PureComponent {
     super(props)
 
     this.state = {
-      offset: 0
+      offset: null
     }
   }
 
@@ -34,7 +34,7 @@ class PhotoIterable extends PureComponent {
       'dragging': this.props.isDragging,
       'last': this.props.isLast,
       [this.props.orientation]: true,
-      [this.direction]: this.props.isOver
+      [this.direction]: this.props.isOver && this.state.offset != null
     }
   }
 
@@ -84,8 +84,12 @@ class PhotoIterable extends PureComponent {
 
 
   static DragSourceSpec = {
-    beginDrag({ photo }) {
-      return { id: photo.id, item: photo.item }
+    beginDrag({ photo, getAdjacent }) {
+      return {
+        id: photo.id,
+        item: photo.item,
+        adj: getAdjacent(photo).map(p => p && p.id)
+      }
     },
 
     canDrag({ isDisabled }) {
@@ -95,7 +99,7 @@ class PhotoIterable extends PureComponent {
     endDrag({ onDropPhoto }, monitor) {
       const result = monitor.didDrop() && monitor.getDropResult()
 
-      if (result) {
+      if (result && result.offset != null) {
         onDropPhoto(result)
       }
     }
@@ -110,21 +114,35 @@ class PhotoIterable extends PureComponent {
 
   static DropTargetSpec = {
     hover({ photo, onOver }, monitor, component) {
+      const { adj } = monitor.getItem()
       const { top, left, width, height } = bounds(component.container)
       const { x, y } = monitor.getClientOffset()
 
-      const offset = Math.round(
-        component.isVertical ? ((y - top) / height) : ((x - left) / width)
-      )
+      let offset = null
+
+      if (monitor.canDrop()) {
+        offset = Math.round(
+          component.isVertical ? ((y - top) / height) : ((x - left) / width)
+        )
+
+        if (adj[1 - offset] === photo.id) {
+          offset = null
+        }
+      }
 
       component.setState({ offset })
     },
 
-    drop({ photo }, monitor, { state }) {
-      return {
-        id: monitor.getItem().id,
-        to: photo.id,
-        offset: state.offset
+    drop({ photo }, monitor, component) {
+      try {
+        return {
+          id: monitor.getItem().id,
+          to: photo.id,
+          offset: component.state.offset
+        }
+
+      } finally {
+        component.setState({ offset: null })
       }
     },
 
@@ -174,6 +192,8 @@ class PhotoIterable extends PureComponent {
     ds: func.isRequired,
     dt: func.isRequired,
     dp: func.isRequired,
+
+    getAdjacent: func.isRequired,
 
     onContextMenu: func.isRequired,
     onDropPhoto: func.isRequired,

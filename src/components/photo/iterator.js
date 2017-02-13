@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent, PropTypes } = React
 const { DropTarget } = require('react-dnd')
 const { DND } = require('../../constants')
-const { get, move, times } = require('../../common/util')
+const { get, move, times, adjacent } = require('../../common/util')
 const { has } = require('../../dom')
 const { bool, func, number, string, object, shape, arrayOf } = PropTypes
 
@@ -31,6 +31,10 @@ class PhotoIterator extends PureComponent {
 
   isContext(photo) {
     return get(this.props.ui, 'context.photo.id') === photo.id
+  }
+
+  getAdjacent = (photo) => {
+    return adjacent(this.props.photos, photo)
   }
 
   handleSelect = (photo) => {
@@ -76,6 +80,7 @@ class PhotoIterator extends PureComponent {
       isSortable,
       isContext: this.isContext(photo),
       isLast: idx === this.props.photos.length - 1,
+      getAdjacent: this.getAdjacent,
       onDropPhoto: this.handleDropPhoto,
       onSelect: this.handleSelect,
       onItemOpen: this.handleItemOpen,
