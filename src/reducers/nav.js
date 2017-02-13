@@ -1,7 +1,7 @@
 'use strict'
 
 const {
-  NAV, ITEM, LIST, TAG, PHOTO, PROJECT
+  NAV, ITEM, LIST, TAG, PHOTO, PROJECT, PROPERTIES: { DC }
 } = require('../constants')
 
 const { isSelected } = require('../selection')
@@ -10,7 +10,9 @@ const init = {
   mode: 'project',
   items: [],
   tags: [],
+  sort: { type: 'property', column: DC.TITLE, asc: true },
   panel: { tab: 'metadata', photoZoom: 0 },
+  lists: {},
   itemsZoom: 0
 }
 
@@ -37,6 +39,26 @@ module.exports = {
 
       case NAV.UPDATE:
         return { ...state, ...payload }
+
+      case NAV.SORT: {
+        const { list, ...sort } = payload
+
+        if (list) {
+          return {
+            ...state,
+            lists: {
+              ...state.lists,
+              [list]: { ...state.lists[list], ...sort }
+            }
+          }
+
+        } else {
+          return {
+            ...state,
+            sort: { ...state.sort, ...sort }
+          }
+        }
+      }
 
       case LIST.REMOVE:
         return state.list === payload ?

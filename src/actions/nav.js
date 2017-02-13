@@ -1,29 +1,43 @@
 'use strict'
 
-const {
-  UPDATE, RESTORE, SELECT, PANEL
-} = require('../constants/nav')
+const { NAV } = require('../constants')
 
 module.exports = {
   restore(payload, meta) {
     return {
-      type: RESTORE,
+      type: NAV.RESTORE,
       payload,
       meta: { ...meta }
     }
   },
 
   update(payload, meta) {
-    return { type: UPDATE, payload, meta }
+    return { type: NAV.UPDATE, payload, meta }
   },
 
   select(payload, meta) {
-    return { type: SELECT, payload, meta: { search: true, ...meta } }
+    return {
+      type: NAV.SELECT,
+      payload,
+      meta: { search: true, ...meta }
+    }
+  },
+
+  sort(payload, meta) {
+    return {
+      type: NAV.SORT,
+      payload,
+      meta: { search: true, ...meta }
+    }
   },
 
   panel: {
     update(payload, meta) {
-      return { type: PANEL.UPDATE, payload, meta }
+      return {
+        type: NAV.PANEL.UPDATE,
+        payload,
+        meta
+      }
     }
   }
 }

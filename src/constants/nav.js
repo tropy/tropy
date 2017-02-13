@@ -5,6 +5,7 @@ module.exports = {
   RESTORE: 'nav.restore',
   UPDATE: 'nav.update',
   SELECT: 'nav.select',
+  SORT: 'nav.sort',
 
   PANEL: {
     UPDATE: 'nav.panel.update'
