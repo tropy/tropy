@@ -59,6 +59,7 @@
 
       &.over {
         background: $sidebar-over-bg;
+        mix-blend-mode: multiply;
       }
 
       &.dragging {

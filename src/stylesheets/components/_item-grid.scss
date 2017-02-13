@@ -15,5 +15,9 @@
   &.over {
     background: $drop-target-bg;
     overflow: hidden;
+
+    li {
+      mix-blend-mode: multiply;
+    }
   }
 }
