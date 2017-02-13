@@ -148,6 +148,22 @@ describe('util', () => {
     })
   })
 
+  describe('.adjacent', () => {
+    const { adjacent } = util
+
+    it('returns the two items adjacent to the given item', () => {
+      expect(adjacent([])).to.eql([])
+      expect(adjacent([], 1)).to.eql([])
+
+      expect(adjacent([1], 1)).to.eql([])
+      expect(adjacent([1, 2], 1)).to.eql([undefined, 2])
+      expect(adjacent([1, 2], 2)).to.eql([1])
+      expect(adjacent([1, 2, 3], 1)).to.eql([undefined, 2])
+      expect(adjacent([1, 2, 3], 2)).to.eql([1, 3])
+      expect(adjacent([1, 2, 3], 3)).to.eql([2])
+    })
+  })
+
   describe('.get', () => {
     const { get } = util
 
