@@ -4,6 +4,7 @@
 
 .photo-list {
   line-height: $row-height;
+  min-height: 100%;
 
   .photo {
     display: flex;

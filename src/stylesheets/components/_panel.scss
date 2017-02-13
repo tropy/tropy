@@ -32,6 +32,7 @@
     overflow-y: scroll;
     border-bottom: $space-min solid transparent;
     position: relative;
+    height: 100%;
   }
 
   &.item-panel {
