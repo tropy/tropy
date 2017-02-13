@@ -82,7 +82,7 @@ class PhotoIterator extends PureComponent {
   }
 
   connect(element) {
-    return this.props.isDisabled ? element : this.props.dt(element)
+    return this.isSortable ? this.props.dt(element) : element
   }
 
   renderClickCatcher() {
