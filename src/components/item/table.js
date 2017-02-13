@@ -13,6 +13,7 @@ class ItemTable extends ItemIterator {
   get classes() {
     return {
       'table-body': true,
+      'click-catcher': true,
       'drop-target': !this.props.isDisabled,
       'over': this.props.isOver
     }
@@ -33,8 +34,9 @@ class ItemTable extends ItemIterator {
         <ItemTableHead columns={columns}/>
 
         {this.connect(
-          <div className={cn(this.classes)}>
-            {this.renderClickCatcher({ node: 'div' })}
+          <div
+            className={cn(this.classes)}
+            onClick={this.handleClickOutside}>
             <table>
               <tbody>
                 {this.map(({ item, ...props }) =>

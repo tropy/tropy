@@ -2,9 +2,8 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const { ClickCatcher } = require('../click-catcher')
-const { DND } = require('../../constants')
 const { times } = require('../../common/util')
+const { has } = require('../../dom')
 const { arrayOf, shape, bool, func, number, string } = PropTypes
 
 
@@ -20,8 +19,10 @@ class ItemIterator extends PureComponent {
 
   getSelection = () => this.props.selection
 
-  handleClickOutside = () => {
-    this.props.onSelect()
+  handleClickOutside = (event) => {
+    if (has(event.target, 'click-catcher')) {
+      this.props.onSelect()
+    }
   }
 
   handleContextMenu = (event, item) => {
@@ -64,15 +65,6 @@ class ItemIterator extends PureComponent {
       onItemOpen: this.props.onItemOpen,
       onSelect: this.props.onSelect
     }))
-  }
-
-  renderClickCatcher(props) {
-    return (
-      <ClickCatcher {...props}
-        accept={DND.ITEMS}
-        isDisabled
-        onClick={this.handleClickOutside}/>
-    )
   }
 
   static ZOOM = [

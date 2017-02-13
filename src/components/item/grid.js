@@ -12,6 +12,7 @@ class ItemGrid extends ItemIterator {
   get classes() {
     return {
       'item-grid': true,
+      'click-catcher': true,
       'drop-target': !this.props.isDisabled,
       'over': this.props.isOver
     }
@@ -20,7 +21,7 @@ class ItemGrid extends ItemIterator {
   get placeholder() {
     return (
       <li
-        className="placeholder tile"
+        className="placeholder tile click-catcher"
         style={{ flexBasis: `${this.size * 1.25}px` }}/>
     )
   }
@@ -30,10 +31,14 @@ class ItemGrid extends ItemIterator {
     const tile = this.placeholder
 
     return this.connect(
-      <ul className={cn(this.classes)}>
-        {this.renderClickCatcher()}
+      <ul
+        className={cn(this.classes)}
+        onClick={this.handleClickOutside}>
         {this.map(({ item, ...props }) =>
-          <ItemTile {...props} key={item.id} item={item}/>
+          <ItemTile {...props}
+            key={item.id}
+            item={item}
+            onClickOutside={this.handleClickOutside}/>
         )}
 
         {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
