@@ -125,10 +125,15 @@
     flex: 1 1 auto;
     overflow-y: scroll;
     padding-top: 3px;
+    position: relative;
 
     &.over {
-      background: $drop-target-bg;
       overflow: hidden;
+      background: $drop-target-bg;
+
+      table {
+        mix-blend-mode: multiply;
+      }
     }
 
     table {

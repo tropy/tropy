@@ -9,11 +9,16 @@
   align-content: flex-start;
   border-top: 1px solid $item-table-header-border-color;
   padding-top: $space-min;
+  margin: 0 $space-min;
   overflow-y: scroll;
   position: relative;
 
   &.over {
     background: $drop-target-bg;
     overflow: hidden;
+
+    li {
+      mix-blend-mode: multiply;
+    }
   }
 }

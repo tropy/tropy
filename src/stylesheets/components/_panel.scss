@@ -37,6 +37,10 @@
     &.over {
       background: $drop-target-bg;
       overflow: hidden;
+
+      > * {
+        mix-blend-mode: multiply;
+      }
     }
   }
 
