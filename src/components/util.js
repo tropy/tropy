@@ -30,6 +30,8 @@ module.exports = {
     let tid
 
     return function handleClick(event) {
+      let cancelled = false
+
       // Handle only clicks with the left/primary button!
       if (event.button) return
 
@@ -46,10 +48,9 @@ module.exports = {
           }
         }, delay)
 
-        let cancelled = false
         if (onClick) cancelled = onClick(event)
 
-        if (!onClick(event) && onSingleClick) {
+        if (!cancelled && onSingleClick) {
           event.persist()
         }
       }
