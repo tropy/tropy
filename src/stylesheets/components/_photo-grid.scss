@@ -6,7 +6,8 @@
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  padding: $space-min $component-padding-horizontal 0;
+  padding-top: $space-min;
+  margin: 0 $component-padding-horizontal;
   min-height: 100%;
 
   .photo {
