@@ -45,8 +45,7 @@
 
   &.stack {
     .item-table & {
-      img,
-      .icon-item {
+      .thumbnail {
         -webkit-clip-path: inset(4px 0 0 0);
       }
 
