@@ -38,7 +38,11 @@ class ItemIterator extends PureComponent {
 
     if (selection.length > 1) {
       context.push('bulk')
-      target.id = selection
+      target.id = [...selection]
+
+      if (!this.isSelected(item)) {
+        target.id.push(item.id)
+      }
     }
 
     if (list) context.push('list')
