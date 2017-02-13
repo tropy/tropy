@@ -110,7 +110,7 @@ class PhotoIterator extends PureComponent {
 
   static DropTargetCollect = (connect, monitor) => ({
     dt: connect.dropTarget(),
-    isOver: monitor.isOver()
+    isOver: monitor.isOver({ shallow: true })
   })
 
   static wrap() {
