@@ -47,15 +47,13 @@ module.exports = {
           return {
             ...state,
             lists: {
-              ...state.lists,
-              [list]: { ...state.lists[list], ...sort }
+              ...state.lists, [list]: { ...sort }
             }
           }
 
         } else {
           return {
-            ...state,
-            sort: { ...state.sort, ...sort }
+            ...state, sort: { ...sort }
           }
         }
       }

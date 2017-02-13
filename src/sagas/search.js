@@ -2,7 +2,8 @@
 
 const { warn, verbose } = require('../common/log')
 const { call, put, select } = require('redux-saga/effects')
-const { all } = require('../models/item')
+const { get } = require('../common/util')
+const mod = require('../models/item')
 const act = require('../actions')
 const ms = require('ms')
 
@@ -11,21 +12,38 @@ module.exports = {
   *search(db) {
     try {
       const { nav, metadata, items } = yield select()
-      const { list, tags, query, sort, trash } = nav
+      const { list, tags, trash, sort, lists } = nav
 
       const START = Date.now()
 
-      const ids = yield call(all, db, { list, tags, query, sort, trash })
+      let result
+
+      switch (true) {
+        case (trash):
+          result = yield call(mod.trash, db, { sort })
+          break
+
+        case (list != null):
+          result = yield call(mod.list, db, list, {
+            tags,
+            sort: get(lists, [list, 'sort']) || sort
+          })
+
+          break
+
+        default:
+          result = yield call(mod.all, db, { tags, sort })
+      }
 
       verbose(`*search query took ${ms(Date.now() - START)}`)
 
-      yield put(act.ui.items.update(ids))
+      yield put(act.ui.items.update(result))
 
       const missing = {
         items: [], metadata: []
       }
 
-      for (let id of ids) {
+      for (let id of result) {
         if (!(id in items)) missing.items.push(id)
         if (!(id in metadata)) missing.metadata.push(id)
       }
@@ -48,6 +66,7 @@ module.exports = {
     try {
       const { nav, items, metadata, photos } = yield select()
 
+      // TODO ignore pending
       const missing = {
         items: [], photos: [], metadata: []
       }

@@ -1,7 +1,6 @@
 'use strict'
 
 const metadata = require('./metadata')
-const { DC } = require('../constants/properties')
 const { all } = require('bluebird')
 const { assign } = Object
 const { into, map } = require('transducers.js')
@@ -12,50 +11,77 @@ const skel = (id) => ({
 
 module.exports = {
 
-  async all(db, { trash, tags, list }) {
+  async all(db, { trash, tags, sort }) {
     const items = []
+    const dir = sort.asc ? 'ASC' : 'DESC'
 
-    switch (true) {
-      case (list != null):
-        await db.each(`
-          SELECT id, added
-            FROM list_items
-              ${tags.length ? 'JOIN taggings USING (id)' : ''}
-              LEFT OUTER JOIN items USING (id)
-              LEFT OUTER JOIN trash USING (id)
-              WHERE
-                list_id = $list AND list_items.deleted IS NULL AND
-                ${tags.length ? `tag_id IN (${tags.join(',')}) AND` : ''}
-                trash.deleted ${trash ? 'NOT' : 'IS'} NULL
-              ORDER BY added ASC, id ASC`, {
+    await db.each(`
+      WITH
+        sort(id, value) AS (
+          SELECT id, value
+          FROM metadata JOIN metadata_values USING (value_id)
+          WHERE property = $sort
+        )
+        SELECT id, sort.value
+          FROM items
+            ${tags.length ? 'JOIN taggings USING (id)' : ''}
+            LEFT OUTER JOIN sort USING (id)
+            LEFT OUTER JOIN trash USING (id)
+          WHERE
+            ${tags.length ? `tag_id IN (${tags.join(',')}) AND` : ''}
+            deleted ${trash ? 'NOT' : 'IS'} NULL
+          ORDER BY sort.value ${dir}, id ${dir}`, {
 
-                $list: list
+            $sort: sort.column
 
-              }, ({ id }) => { items.push(id) })
-        break
+          }, ({ id }) => { items.push(id) })
 
-      default:
-        await db.each(`
-          WITH
-            sort(id, value) AS (
-              SELECT id, value
-              FROM metadata JOIN metadata_values USING (value_id)
-              WHERE property = $sort
-            )
-            SELECT id, sort.value
-              FROM items
-                ${tags.length ? 'JOIN taggings USING (id)' : ''}
-                LEFT OUTER JOIN sort USING (id)
-                LEFT OUTER JOIN trash USING (id)
-              WHERE
-                ${tags.length ? `tag_id IN (${tags.join(',')}) AND` : ''}
-                deleted ${trash ? 'NOT' : 'IS'} NULL
-              ORDER BY sort.value ASC, id ASC`, {
+    return items
+  },
 
-                $sort: DC.TITLE
+  async trash(db, { sort }) {
+    const items = []
+    const dir = sort.asc ? 'ASC' : 'DESC'
 
-              }, ({ id }) => { items.push(id) })
-    }
+    await db.each(`
+      WITH
+        sort(id, value) AS (
+          SELECT id, value
+          FROM metadata JOIN metadata_values USING (value_id)
+          WHERE property = $sort
+        )
+        SELECT id, sort.value
+          FROM items
+            JOIN trash USING (id)
+            LEFT OUTER JOIN sort USING (id)
+          ORDER BY sort.value ${dir}, id ${dir}`, {
+
+            $sort: sort.column
+
+          }, ({ id }) => { items.push(id) })
+
+    return items
+  },
+
+  async list(db, list, { tags, sort }) {
+    const items = []
+    const dir = sort.asc ? 'ASC' : 'DESC'
+
+    await db.each(`
+      SELECT id, added
+        FROM list_items
+          ${tags.length ? 'JOIN taggings USING (id)' : ''}
+          LEFT OUTER JOIN items USING (id)
+          LEFT OUTER JOIN trash USING (id)
+          WHERE
+            list_id = $list AND list_items.deleted IS NULL AND
+            ${tags.length ? `tag_id IN (${tags.join(',')}) AND` : ''}
+            trash.deleted IS NULL
+          ORDER BY added ${dir}, id ${dir}`, {
+
+            $list: list
+
+          }, ({ id }) => { items.push(id) })
 
     return items
   },
