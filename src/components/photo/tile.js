@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-//const { PropTypes } = React
 const { PhotoIterable } = require('./iterable')
 const { createClickHandler } = require('../util')
 const cn = require('classnames')
@@ -11,7 +10,9 @@ class PhotoTile extends PhotoIterable {
 
   get classes() {
     return {
-      ...super.classes, tile: true
+      ...super.classes,
+      'tile': true,
+      'click-catcher': true
     }
   }
 
@@ -25,12 +26,10 @@ class PhotoTile extends PhotoIterable {
 
   handleClick = createClickHandler({
     onClick: (event) => {
-      event.stopPropagation()
       this.props.onSelect(this.props.photo, event)
     },
 
-    onDoubleClick: (event) => {
-      event.stopPropagation()
+    onDoubleClick: () => {
       this.props.onItemOpen(this.props.photo)
     }
   })
@@ -40,8 +39,7 @@ class PhotoTile extends PhotoIterable {
       <li
         className={cn(this.classes)}
         ref={this.setContainer}
-        style={this.style}
-        onClick={this.props.onClickOutside}>
+        style={this.style}>
         {this.renderThumbnail({
           onClick: this.handleClick,
           onContextMenu: this.handleContextMenu
@@ -52,6 +50,10 @@ class PhotoTile extends PhotoIterable {
 
   static propTypes = {
     ...PhotoIterable.propTypes
+  }
+
+  static defaultProps = {
+    orientation: 'horizontal'
   }
 }
 

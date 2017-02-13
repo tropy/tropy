@@ -35,10 +35,7 @@ class ItemGrid extends ItemIterator {
         className={cn(this.classes)}
         onClick={this.handleClickOutside}>
         {this.map(({ item, ...props }) =>
-          <ItemTile {...props}
-            key={item.id}
-            item={item}
-            onClickOutside={this.handleClickOutside}/>
+          <ItemTile {...props} key={item.id} item={item}/>
         )}
 
         {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}

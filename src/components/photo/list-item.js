@@ -21,8 +21,9 @@ class PhotoListItem extends PhotoIterable {
 
   handleClick = createClickHandler({
     onClick: (event) => {
+      const cancel = !this.props.isSelected
       this.props.onSelect(this.props.photo, event)
-      return !this.props.isSelected
+      return cancel
     },
 
     onSingleClick: () => {
@@ -89,7 +90,8 @@ class PhotoListItem extends PhotoIterable {
   }
 
   static defaultProps = {
-    data: {}
+    data: {},
+    orientation: 'vertical'
   }
 }
 

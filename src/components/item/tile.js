@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { func } = React.PropTypes
 const { ItemIterable } = require('./iterable')
 const { CoverImage } = require('./cover-image')
 const { createClickHandler } = require('../util')
@@ -30,10 +29,7 @@ class ItemTile extends ItemIterable {
 
   render() {
     return this.connect(
-      <li
-        className={cn(this.classes)}
-        style={this.style}
-        onClick={this.handleClickOutside}>
+      <li className={cn(this.classes)} style={this.style}>
         <CoverImage
           cache={this.props.cache}
           size={this.props.size}
@@ -45,8 +41,7 @@ class ItemTile extends ItemIterable {
   }
 
   static propTypes = {
-    ...ItemIterable.propTypes,
-    onClickOutside: func.isRequired
+    ...ItemIterable.propTypes
   }
 }
 

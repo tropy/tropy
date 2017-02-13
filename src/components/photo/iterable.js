@@ -169,7 +169,6 @@ class PhotoIterable extends PureComponent {
     dp: func.isRequired,
 
     onContextMenu: func.isRequired,
-    onClickOutside: func.isRequired,
     onItemOpen: func.isRequired,
     onSelect: func.isRequired
   }

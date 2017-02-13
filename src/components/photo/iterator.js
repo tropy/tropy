@@ -2,14 +2,15 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const { ClickCatcher } = require('../click-catcher')
+const { DropTarget } = require('react-dnd')
 const { DND } = require('../../constants')
 const { get, move, times } = require('../../common/util')
+const { has } = require('../../dom')
 const { bool, func, number, string, object, shape, arrayOf } = PropTypes
+const cn = require('classnames')
 
 
 class PhotoIterator extends PureComponent {
-
   get size() {
     return this.constructor.ZOOM[this.props.zoom]
   }
@@ -55,17 +56,8 @@ class PhotoIterator extends PureComponent {
     onSort({ item, photos: order })
   }
 
-  handleDropLastPhoto = ({ id }) => {
-    const { photos } = this.props
-    const to = photos[photos.length - 1].id
-
-    if (id !== to) {
-      this.handleDropPhoto({ id, to, offset: 1 })
-    }
-  }
-
-  handleClickOutside = () => {
-    if (this.props.selected) {
+  handleClickOutside = (event) => {
+    if (has(event.target, 'click-catcher')) {
       this.props.onSelect()
     }
   }
@@ -85,18 +77,21 @@ class PhotoIterator extends PureComponent {
       onDropPhoto: this.handleDropPhoto,
       onSelect: this.handleSelect,
       onItemOpen: this.handleItemOpen,
-      onClickOutside: this.handleClickOutside,
       onContextMenu: this.props.onContextMenu
     }))
   }
 
+  connect(element) {
+    return this.props.isDisabled ? element : this.props.dt(element)
+  }
+
   renderClickCatcher() {
-    return (
-      <ClickCatcher
-        isDisabled={!this.isSortable}
-        accept={[DND.PHOTO]}
-        onDrop={this.handleDropLastPhoto}
-        onClick={this.handleClickOutside}/>
+    return this.connect(
+      <li className={cn({
+        'click-catcher': true,
+        'drop-outside': true,
+        'over': this.props.isOver
+      })}/>
     )
   }
 
@@ -108,6 +103,29 @@ class PhotoIterator extends PureComponent {
     256
   ]
 
+  static DropTargetSpec = {
+    drop({ photos }, monitor, component) {
+      const { id } = monitor.getItem()
+      const to = photos[photos.length - 1].id
+
+      if (id !== to) {
+        component.handleDropPhoto({ id, to, offset: 1 })
+      }
+    }
+  }
+
+  static DropTargetCollect = (connect, monitor) => ({
+    dt: connect.dropTarget(),
+    isOver: monitor.isOver()
+  })
+
+  static wrap() {
+    return DropTarget(
+      DND.PHOTO,
+      this.DropTargetSpec,
+      this.DropTargetCollect
+    )(this)
+  }
 
   static propTypes = {
     photos: arrayOf(
@@ -123,6 +141,9 @@ class PhotoIterator extends PureComponent {
 
     isItemOpen: bool,
     isDisabled: bool,
+    isOver: bool,
+
+    dt: func.isRequired,
 
     onContextMenu: func.isRequired,
     onItemOpen: func.isRequired,
@@ -130,6 +151,7 @@ class PhotoIterator extends PureComponent {
     onSort: func.isRequired
   }
 }
+
 
 module.exports = {
   PhotoIterator

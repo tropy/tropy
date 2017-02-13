@@ -26,7 +26,7 @@ class PhotoList extends PhotoIterator {
     const { data, onChange, onEdit, onEditCancel } = this.props
 
     return (
-      <ul className={cn(this.classes)}>
+      <ul className={cn(this.classes)} onClick={this.handleClickOutside}>
         {this.renderClickCatcher()}
         {this.map(({ photo, ...props }) =>
           <PhotoListItem {...props}
@@ -53,5 +53,5 @@ class PhotoList extends PhotoIterator {
 
 
 module.exports = {
-  PhotoList
+  PhotoList: PhotoList.wrap()
 }
