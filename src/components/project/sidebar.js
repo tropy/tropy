@@ -136,7 +136,7 @@ class ProjectSidebar extends PureComponent {
 
   renderToolbar() {
     return this.props.hasToolbar ?
-      <Toolbar {...this.props} draggable/> :
+      <Toolbar onDoubleClick={this.props.onMaximize}/> :
       null
 
   }

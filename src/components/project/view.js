@@ -52,7 +52,7 @@ class ProjectView extends PureComponent {
               <ProjectToolbar
                 zoom={zoom}
                 onItemCreate={onItemCreate}
-                onMaximize={props.onMaximize}
+                onDoubleClick={ARGS.frameless ? props.onMaximize : null}
                 onZoomChange={onItemZoomChange}/>
             </header>
 

@@ -62,8 +62,7 @@ class ItemView extends Component {
   }
 
 
-  handleNoteCreate = (event) => {
-    event.stopPropagation()
+  handleNoteCreate = () => {
   }
 
   handleTemplateChange = (event) => {
@@ -190,7 +189,7 @@ class ItemView extends Component {
 
   renderToolbar() {
     return (
-      <Toolbar {...this.props} draggable={ARGS.frameless}>
+      <Toolbar onDoubleClick={ARGS.frameless ? this.props.onMaximize : null}>
         <div className="toolbar-left">
           <ToolGroup>
             <IconButton

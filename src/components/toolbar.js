@@ -1,8 +1,8 @@
 'use strict'
 
 const React = require('react')
+const { PureComponent } = React
 const { node, bool, func } = React.PropTypes
-const { noop } = require('../common/util')
 const cn = require('classnames')
 
 const ToolGroup = ({ children }) => (
@@ -13,22 +13,38 @@ ToolGroup.propTypes = {
   children: node
 }
 
-const Toolbar = ({ children, draggable, onMaximize }) => (
-  <div
-    className={cn({ toolbar: true,  draggable })}
-    onDoubleClick={draggable ? onMaximize : noop}>
-    {children}
-  </div>
-)
+class Toolbar extends PureComponent {
 
-Toolbar.propTypes = {
-  children: node,
-  draggable: bool,
-  onMaximize: func
-}
+  handleDoubleClick = (event) => {
+    if (this.props.onDoubleClick && event.target === this.container) {
+      this.props.onDoubleClick()
+    }
+  }
 
-Toolbar.defaultProps = {
-  onMaximize: noop
+  setContainer = (container) => {
+    this.container = container
+  }
+
+  render() {
+    return (
+      <div
+        className={cn({ toolbar: true,  draggable: this.props.isDraggable })}
+        ref={this.setContainer}
+        onDoubleClick={this.handleDoubleClick}>
+        {this.props.children}
+      </div>
+    )
+  }
+
+  static propTypes = {
+    children: node,
+    isDraggable: bool,
+    onDoubleClick: func
+  }
+
+  static defaultProps = {
+    isDraggable: ARGS.frameless
+  }
 }
 
 

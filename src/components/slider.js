@@ -57,17 +57,12 @@ class Slider extends PureComponent {
   handleMouseUp = (event) => {
     try {
       if (event instanceof MouseEvent) {
-        event.stopPropagation()
         this.update(event)
       }
 
     } finally {
       this.stopDragging()
     }
-  }
-
-  handleDoubleClick(event) {
-    event.stopPropagation()
   }
 
   set = (value) => {
@@ -80,13 +75,11 @@ class Slider extends PureComponent {
     }
   }
 
-  min = (event) => {
-    event.stopPropagation()
+  min = () => {
     this.set(this.props.min)
   }
 
-  max = (event) => {
-    event.stopPropagation()
+  max = () => {
     this.set(this.props.max)
   }
 
@@ -172,7 +165,6 @@ class Slider extends PureComponent {
     return (
       <div
         className={cn(this.classes)}
-        onDoubleClick={this.handleDoubleClick}
         onMouseDown={disabled ? noop : this.handleMouseDown}>
         {this.renderMinButton()}
         <div
