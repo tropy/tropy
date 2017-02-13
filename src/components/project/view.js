@@ -60,6 +60,7 @@ class ProjectView extends PureComponent {
               edit={ui.edit.column}
               list={nav.list}
               selection={nav.items}
+              sort={nav.sort}
               zoom={zoom}
               isDisabled={nav.trash}
               isOver={isOver && canDrop}

@@ -17,7 +17,11 @@ describe('ItemTableHead', () => {
       { width: '60%', property: { uri: 'y', type: 'number' } },
     ]
 
-    expect(shallow(<ItemTableHead columns={columns}/>))
+    const sort = {
+      column: 'y', asc: true, type: 'property'
+    }
+
+    expect(shallow(<ItemTableHead columns={columns} sort={sort}/>))
       .to.have.exactly(2).descendants('.metadata-head')
   })
 })

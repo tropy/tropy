@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent, PropTypes } = React
 const { times } = require('../../common/util')
 const { has } = require('../../dom')
-const { arrayOf, shape, bool, func, number, string } = PropTypes
+const { arrayOf, oneOf, shape, bool, func, number, string } = PropTypes
 
 
 class ItemIterator extends PureComponent {
@@ -83,13 +83,20 @@ class ItemIterator extends PureComponent {
   }
 
   static propTypes = {
+    items: arrayOf(shape({
+      id: number.isRequired
+    })).isRequired,
+
+    sort: shape({
+      asc: bool,
+      column: string.isRequired,
+      type: oneOf(['property']).isRequired
+    }).isRequired,
+
     isOver: bool,
     isDisabled: bool,
 
     cache: string.isRequired,
-    items: arrayOf(shape({
-      id: number.isRequired
-    })).isRequired,
     selection: arrayOf(number).isRequired,
     list: number,
     zoom: number.isRequired,

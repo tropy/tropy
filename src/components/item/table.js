@@ -22,8 +22,9 @@ class ItemTable extends ItemIterator {
   render() {
     const {
       columns,
-      edit,
       data,
+      edit,
+      sort,
       onEdit,
       onEditCancel,
       onMetadataSave
@@ -31,7 +32,7 @@ class ItemTable extends ItemIterator {
 
     return (
       <div className="item-table">
-        <ItemTableHead columns={columns}/>
+        <ItemTableHead columns={columns} sort={sort}/>
 
         {this.connect(
           <div
