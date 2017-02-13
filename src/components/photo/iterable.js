@@ -90,6 +90,14 @@ class PhotoIterable extends PureComponent {
 
     canDrag({ isDisabled }) {
       return !isDisabled
+    },
+
+    endDrag({ onDropPhoto }, monitor) {
+      const result = monitor.didDrop() && monitor.getDropResult()
+
+      if (result) {
+        onDropPhoto(result)
+      }
     }
   }
 
@@ -112,12 +120,12 @@ class PhotoIterable extends PureComponent {
       component.setState({ offset })
     },
 
-    drop({ photo, onDropPhoto }, monitor, { state }) {
-      const item = monitor.getItem()
-
-      onDropPhoto({
-        id: item.id, to: photo.id, offset: state.offset
-      })
+    drop({ photo }, monitor, { state }) {
+      return {
+        id: monitor.getItem().id,
+        to: photo.id,
+        offset: state.offset
+      }
     },
 
     canDrop({ photo, isDisabled }, monitor) {

@@ -26,9 +26,8 @@ class PhotoGrid extends PhotoIterator {
   render() {
     const tile = this.placeholder
 
-    return (
+    return this.connect(
       <ul className={cn(this.classes)} onClick={this.handleClickOutside}>
-        {this.renderClickCatcher()}
         {this.map(({ photo, ...props }) =>
           <PhotoTile {...props} key={photo.id} photo={photo}/>)}
 

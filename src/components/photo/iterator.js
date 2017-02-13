@@ -7,7 +7,6 @@ const { DND } = require('../../constants')
 const { get, move, times } = require('../../common/util')
 const { has } = require('../../dom')
 const { bool, func, number, string, object, shape, arrayOf } = PropTypes
-const cn = require('classnames')
 
 
 class PhotoIterator extends PureComponent {
@@ -16,7 +15,10 @@ class PhotoIterator extends PureComponent {
   }
 
   get classes() {
-    return {}
+    return {
+      'drop-target': this.isSortable,
+      'over': this.props.isOver
+    }
   }
 
   get isSortable() {
@@ -85,16 +87,6 @@ class PhotoIterator extends PureComponent {
     return this.isSortable ? this.props.dt(element) : element
   }
 
-  renderClickCatcher() {
-    return this.connect(
-      <li className={cn({
-        'click-catcher': true,
-        'drop-outside': true,
-        'over': this.props.isOver
-      })}/>
-    )
-  }
-
 
   static ZOOM = [
     24,
@@ -104,12 +96,14 @@ class PhotoIterator extends PureComponent {
   ]
 
   static DropTargetSpec = {
-    drop({ photos }, monitor, component) {
+    drop({ photos }, monitor) {
+      if (monitor.didDrop()) return
+
       const { id } = monitor.getItem()
       const to = photos[photos.length - 1].id
 
       if (id !== to) {
-        component.handleDropPhoto({ id, to, offset: 1 })
+        return { id, to, offset: 1 }
       }
     }
   }
