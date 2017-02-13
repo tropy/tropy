@@ -9,6 +9,26 @@
     outline: 1px solid $photo-sort-indicator;
   }
 
+  &.before {
+    &::before {
+      content: "";
+    }
+  }
+
+  &.after {
+    &::after {
+      content: "";
+    }
+  }
+
+  &.last {
+    .over > & {
+      &::after {
+        content: "";
+      }
+    }
+  }
+
   &.over {
     position: relative;
     z-index: 1;
@@ -21,6 +41,12 @@
       width: 100%;
     }
 
+    &:first-child {
+      &::before {
+        bottom: calc(100% - 1px);
+      }
+    }
+
     &::before {
       bottom: 100%;
     }
@@ -29,18 +55,13 @@
       top: 100%;
     }
 
-    &.before {
-      &::before {
-        content: "";
+    &:last-child {
+      &::after {
+        top: calc(100% - 1px);
       }
     }
 
-    .drop-outside.over ~ &.last,
-    &.after {
-      &::after {
-        content: "";
-      }
-    }
+
   }
 
   &.horizontal {
@@ -51,18 +72,12 @@
       transform: translateY(-50%);
     }
 
-    &.before {
-      &::before {
-        content: "";
-        right: 100%;
-      }
+    &::before {
+      right: 100%;
     }
 
-    &.after {
-      &::after {
-        content: "";
-        left: 100%;
-      }
+    &::after {
+      left: 100%;
     }
   }
 }

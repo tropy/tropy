@@ -11,4 +11,9 @@
   padding-top: $space-min;
   overflow-y: scroll;
   position: relative;
+
+  &.over {
+    background: $drop-target-bg;
+    overflow: hidden;
+  }
 }

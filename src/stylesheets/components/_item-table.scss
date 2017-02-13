@@ -126,6 +126,11 @@
     overflow-y: scroll;
     padding-top: 3px;
 
+    &.over {
+      background: $drop-target-bg;
+      overflow: hidden;
+    }
+
     table {
       width: 100%;
       table-layout: fixed;

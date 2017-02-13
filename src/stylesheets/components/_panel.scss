@@ -33,6 +33,11 @@
     border-bottom: $space-min solid transparent;
     position: relative;
     height: 100%;
+
+    &.over {
+      background: $drop-target-bg;
+      overflow: hidden;
+    }
   }
 
   &.item-panel {
