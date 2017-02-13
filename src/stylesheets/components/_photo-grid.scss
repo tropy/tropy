@@ -6,9 +6,8 @@
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  padding-top: $space-min;
-  margin: 0 $component-padding-horizontal;
-  min-height: 100%;
+  margin: $space-min $component-padding-horizontal 0;
+  min-height: calc(100% - 4px);
 
   .photo {
     position: relative;
