@@ -22,6 +22,6 @@ describe('ItemTableHead', () => {
     }
 
     expect(shallow(<ItemTableHead columns={columns} sort={sort}/>))
-      .to.have.exactly(2).descendants('.metadata-head')
+      .to.have.exactly(2).descendants('ItemTableHeadCell')
   })
 })

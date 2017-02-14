@@ -105,7 +105,8 @@ class ItemIterator extends PureComponent {
     onContextMenu: func.isRequired,
     onItemOpen: func.isRequired,
     onPhotoMove: func.isRequired,
-    onSelect: func.isRequired
+    onSelect: func.isRequired,
+    onSort: func.isRequired
   }
 }
 

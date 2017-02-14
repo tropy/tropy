@@ -106,7 +106,7 @@ class ProjectContainer extends Component {
 
 
   render() {
-    const { dt, items, data, columns, ...props } = this.props
+    const { dt, items, data, columns, onSort, ...props } = this.props
 
     return dt(
       <div
@@ -118,7 +118,8 @@ class ProjectContainer extends Component {
         <ProjectView {...props}
           items={items}
           data={data}
-          columns={columns}/>
+          columns={columns}
+          onSort={onSort}/>
 
         <ItemView {...props}/>
         <DragLayer cache={props.cache}/>
@@ -143,7 +144,8 @@ class ProjectContainer extends Component {
 
     onContextMenu: PropTypes.func.isRequired,
     onProjectOpen: PropTypes.func.isRequired,
-    onModeChange: PropTypes.func.isRequired
+    onModeChange: PropTypes.func.isRequired,
+    onSort: PropTypes.func.isRequired
   }
 
   static defaultProps = {
@@ -214,6 +216,10 @@ module.exports = {
 
       onSelect(...args) {
         dispatch(actions.nav.select(...args))
+      },
+
+      onSort(...args) {
+        dispatch(actions.nav.sort(...args))
       },
 
       onItemSelect(id, mod) {

@@ -27,12 +27,13 @@ class ItemTable extends ItemIterator {
       sort,
       onEdit,
       onEditCancel,
-      onMetadataSave
+      onMetadataSave,
+      onSort
     } = this.props
 
     return (
       <div className="item-table">
-        <ItemTableHead columns={columns} sort={sort}/>
+        <ItemTableHead columns={columns} sort={sort} onSort={onSort}/>
 
         {this.connect(
           <div
