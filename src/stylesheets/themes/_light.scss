@@ -16,15 +16,15 @@ $brand-primary: $blue;
 // Grays
 // --------------------------------------------------
 
-$shade-0: #fff;
-$shade-1: #f6f6f6;
-$shade-2: #e6e6e6;
-$shade-3: #ddd;
-$shade-4: #ccc;
-$shade-5: #777;
-$shade-6: #555;
-$shade-7: #444;
-$shade-8: #222;
+$shade-0: #fff;    // Body
+$shade-1: #f6f6f6; // Sidbar bg, panel bg
+$shade-2: #e6e6e6; // Inactive tab, sidebar active bg
+$shade-3: #ddd;    // 14%
+$shade-4: #ccc;    // Slider track, …
+$shade-5: #777;    // Icon color
+$shade-6: #555;    // Sidebar active icon
+$shade-7: #444;    // Softened text
+$shade-8: #222;    // Text color, active icon
 $shade-9: #000;
 
 
@@ -106,7 +106,7 @@ $cover-image-active-color:       $shade-4;
 $panels-bg: $shade-1;
 
 // Panel
-$panel-bg: $shade-1;
+$panel-bg:              $shade-1;
 $panel-header-color:    $shade-7;
 $panel-header-shadow:   rgba($shade-9, 0.08);
 $panel-separator-color: $shade-3;

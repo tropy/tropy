@@ -17,67 +17,86 @@ $brand-primary: $blue;
 // Grays
 // --------------------------------------------------
 
-$shade-0: #2b2b2b;
-$shade-1: #333;
-$shade-2: #1a1a1a;
-$shade-3: #222;
-$shade-4: #444;
-$shade-5: #777;
-$shade-6: #444;
-$shade-7: #808080;
-$shade-8: #e6e6e6;
+$shade-0: #000;
+$shade-x: #242424;  // Slider track
+$shade-1: #292929;  // Inactive tab
+$shade-2: #2e2e2e;  // Body
+$shade-3: #333;     // Sidebar bg, panel bg
+$shade-4: #3d3d3d;  // Sidebar active bg, thumbnail bg
+$shade-5: #777;     // Icon color, sidebar headings
 
+$shade-7: #999;     // Softened text
+$shade-8: #bbb;     // Text color, active icon
+$shade-9: #fff;
 
 // Scaffolding
 // --------------------------------------------------
 
-$body-bg:    $shade-0;
-$text-color: $shade-7;
-
-$link-color:       $brand-primary;
-$link-hover-color: $brand-primary;
-
-
-// Partials
-// --------------------------------------------------
-
-// Forms
-$input-color: $shade-7;
-$input-bg:    $shade-0;
-$input-border: $shade-2;
-$input-border-focus: $brand-primary;
-$input-color-placeholder: $shade-4;
+$body-bg:    $shade-2; // Ok
+$text-color: $shade-8; // Ok
 
 
 // Components
 // --------------------------------------------------
 
 // Icons
-$icon-style:        "line";
-$icon-color:        $shade-5;
-$icon-active-color: $shade-7;
+$icon-style:        "line"; // Ok
+$icon-color:        $shade-5; // Ok
+$icon-active-color: $shade-8; // Ok
 
 // Sidebar
-$sidebar-bg:         $shade-1;
-$sidebar-text-color: $shade-6;
+$sidebar-bg:                $shade-3; // Ok
+$sidebar-text-color:        $shade-7; // Ok
+$sidebar-headings-color:    $shade-5; // Ok
+$sidebar-active-icon-color: $shade-7; // Ok
+$sidebar-active-color:      $shade-8; // Ok
+$sidebar-active-bg:         $shade-4; // Ok
+$sidebar-context-bg:        $blue-light;
+$sidebar-over-bg:           $blue-light;
+$sidebar-over-bg:           $blue-light;
+$activity-color:            $shade-5;
+$activity-border-color:     $shade-3;
+$sidebar-tag-active-color:  $shade-0;
+$sidebar-tag-active-bg:     $brand-primary;
 
 // Items
-$item-table-header-color: $shade-6;
-$item-table-header-sort-color: $shade-7;
+$item-table-header-color:        $shade-7;
+$item-table-header-sort-color:   $shade-8;
+$item-table-header-active-bg:    $shade-1;
 $item-table-header-border-color: $shade-2;
-$items-odd-bg: $shade-1;
-$items-active-color: $shade-8;
-$items-active-bg: $blue;
+$items-odd-bg:                   $shade-3; // Ok
+$items-active-color:             $shade-0;
+$items-active-bg:                $brand-primary;
+$items-over-bg:                  $blue-light;
+$cover-image-color:              $icon-color;
+$cover-image-active-color:       $shade-4;
 
 // Panel group
-$panels-bg: $shade-1;
+$panels-bg: $shade-3;
 
 // Panel
-$panel-bg: $shade-1;
-$panel-header-color: $shade-6;
-$panel-header-shadow: #000;
+$panel-bg:              $shade-3; // Ok
+$panel-header-color:    $shade-7;
+$panel-header-shadow:   rgba($shade-9, 0.08);
+$panel-separator-color: $shade-3;
+$panel-heading-color:   #bbb; // Todo
 
-// Note list
-$note-separator-color: $shade-3;
-$note-active-color: $shade-8;
-$note-active-bg: $brand-primary;
+// Tabs
+$tab-bg: $shade-1; // Ok
+$tab-active-color: inherit; // Ok
+$tab-active-bg: transparent; // Ok
+$tab-inactive-color: $shade-5; // Ok
+
+// Slider
+$slider-track-bg: #404040;
+$slider-range-bg: #535353;
+$slider-handle-bg: $shade-5;
+$slider-handle-border: rgba($shade-4, 0);
+
+// Image
+$image-bg: $shade-1; // Ok
+$toolbar-hover-bg: rgba($shade-9, 0);
+
+// Thumbnail
+$thumbnail-color: rgba($icon-color, 0.6); // Ok
+$thumbnail-bg:    $shade-4; // Ok
