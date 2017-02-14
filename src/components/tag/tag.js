@@ -38,9 +38,11 @@ class Tag extends Component {
   handleClick = (event) => {
     return this.props.onSelect(
       this.id,
-      this.isSelected ?
-        (meta(event) ? 'remove' : 'clear') :
-        (meta(event) ? 'merge' : 'replace')
+      {
+        mod: this.isSelected ?
+          (meta(event) ? 'remove' : 'clear') :
+          (meta(event) ? 'merge' : 'replace')
+      }
     )
   }
 
@@ -80,7 +82,7 @@ class Tag extends Component {
 
   static propTypes = {
     tag: PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.number,
       name: PropTypes.string.isRequired
     }).isRequired,
 
