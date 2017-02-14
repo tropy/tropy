@@ -46,10 +46,6 @@
     height: $item-table-header-height;
     position: relative;
 
-    &:active {
-      background: $item-table-header-active-bg;
-    }
-
     &:first-child {
       padding-left: $space-sm;
 
@@ -66,6 +62,22 @@
       bottom: 2px;
       width: 1px;
       background: $item-table-header-border-color;
+    }
+
+    &:active {
+      background: $item-table-header-active-bg;
+
+      &::before {
+        top: 0;
+        bottom: 0;
+      }
+
+      & + .metadata-head {
+        &::before {
+          top: 0;
+          bottom: 0;
+        }
+      }
     }
 
     &.number {
