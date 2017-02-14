@@ -20,6 +20,7 @@ const { values } = Object
 const Window = require('../../window')
 const cn = require('classnames')
 const actions = require('../../actions')
+const { arrayOf, oneOf, shape, bool, object, func, string } = PropTypes
 
 
 class ProjectContainer extends Component {
@@ -100,6 +101,16 @@ class ProjectContainer extends Component {
     this.props.onModeChange(mode)
   }
 
+  handleMetadataSave = (payload, meta = {}) => {
+    const { sort, onMetadataSave } = this.props
+
+    if (sort.column in payload.data) {
+      meta.search = true
+    }
+
+    onMetadataSave(payload, meta)
+  }
+
   setContainer = (container) => {
     this.container = container
   }
@@ -119,33 +130,43 @@ class ProjectContainer extends Component {
           items={items}
           data={data}
           columns={columns}
-          onSort={onSort}/>
+          onSort={onSort}
+          onMetadataSave={this.handleMetadataSave}/>
 
-        <ItemView {...props}/>
+        <ItemView {...props}
+          onMetadataSave={this.handleMetadataSave}/>
+
         <DragLayer cache={props.cache}/>
       </div>
     )
   }
 
+
   static propTypes = {
-    project: PropTypes.shape({
-      file: PropTypes.string
+    project: shape({
+      file: string
     }).isRequired,
 
-    items: PropTypes.arrayOf(PropTypes.object).isRequired,
-    data: PropTypes.object.isRequired,
-    columns: PropTypes.arrayOf(PropTypes.object),
-    cache: PropTypes.string.isRequired,
-    mode: PropTypes.oneOf(values(MODE)).isRequired,
+    items: arrayOf(object).isRequired,
+    data: object.isRequired,
+    columns: arrayOf(object),
+    cache: string.isRequired,
+    mode: oneOf(values(MODE)).isRequired,
+    sort: shape({
+      asc: bool,
+      column: string.isRequired,
+      type: oneOf(['property']).isRequired
+    }).isRequired,
 
-    isOver: PropTypes.bool,
-    canDrop: PropTypes.bool,
-    dt: PropTypes.func.isRequired,
+    isOver: bool,
+    canDrop: bool,
+    dt: func.isRequired,
 
-    onContextMenu: PropTypes.func.isRequired,
-    onProjectOpen: PropTypes.func.isRequired,
-    onModeChange: PropTypes.func.isRequired,
-    onSort: PropTypes.func.isRequired
+    onContextMenu: func.isRequired,
+    onProjectOpen: func.isRequired,
+    onModeChange: func.isRequired,
+    onMetadataSave: func.isRequired,
+    onSort: func.isRequired
   }
 
   static defaultProps = {
@@ -183,6 +204,7 @@ module.exports = {
       tags: getAllVisibleTags(state),
       columns: getColumns(state),
       items: getVisibleItems(state),
+      sort: state.nav.sort,
       data: state.metadata,
       cache: getCachePrefix(state),
       nav: state.nav,
