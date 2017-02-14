@@ -72,8 +72,8 @@ class ListNode extends PureComponent {
       <li
         className={cn(this.classes)}
         ref={this.setContainer}
-        onContextMenu={this.handleContextMenu}
-        onClick={this.handleClick}>
+        onContextMenu={isEditing ? null : this.handleContextMenu}
+        onClick={isEditing ? null : this.handleClick}>
         <IconFolder/>
         <div className="name">
           <Editable
@@ -110,14 +110,14 @@ class ListNode extends PureComponent {
 
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
-    onContextMenu: PropTypes.func.isRequired,
+    onContextMenu: PropTypes.func,
     onDropItems: PropTypes.func,
     onDropFiles: PropTypes.func,
-    onSelect: PropTypes.func.isRequired,
+    onSelect: PropTypes.func,
     onSave: PropTypes.func,
-    onSort: PropTypes.func.isRequired,
-    onSortPreview: PropTypes.func.isRequired,
-    onSortReset: PropTypes.func.isRequired
+    onSort: PropTypes.func,
+    onSortPreview: PropTypes.func,
+    onSortReset: PropTypes.func
   }
 
 }
