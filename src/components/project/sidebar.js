@@ -129,6 +129,7 @@ class ProjectSidebar extends PureComponent {
       nav,
       onContextMenu,
       onEditCancel,
+      onTagCreate,
       onTagSave,
       onTagSelect
     } = this.props
@@ -142,7 +143,8 @@ class ProjectSidebar extends PureComponent {
             selection={nav.tags}
             edit={edit.tag}
             onCancel={onEditCancel}
-            onChange={onTagSave}
+            onCreate={onTagCreate}
+            onSave={onTagSave}
             onSelect={onTagSelect}
             onContextMenu={onContextMenu}/>
         </nav>
@@ -194,6 +196,7 @@ class ProjectSidebar extends PureComponent {
     onListItemsAdd: func.isRequired,
     onListSave: func.isRequired,
     onListSort: func.isRequired,
+    onTagCreate: func.isRequired,
     onTagSave: func.isRequired,
     onTagSelect: func.isRequired,
     onProjectSave: func.isRequired,

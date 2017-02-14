@@ -1,75 +1,53 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes, Component } = React
+const { PropTypes, PureComponent } = React
 const { Editable } = require('../editable')
 const { IconTag } = require('../icons')
 const { meta } = require('../../common/os')
 const cn = require('classnames')
+const { shape, number, string, bool, func } = PropTypes
 
 
-class Tag extends Component {
-
-  get name() {
-    return this.props.tag.name
-  }
-
-  get id() {
-    return this.props.tag.id
-  }
-
-  get isSelected() {
-    return this.props.selection.includes(this.props.tag.id)
-  }
+class Tag extends PureComponent {
 
   get classes() {
     return {
       tag: true,
-      active: this.isSelected
+      active: this.props.isSelected
     }
   }
-
 
   handleChange = (name) => {
-    this.props.onChange(this.props.tag.id, { name })
+    this.props.onChange({ name }, this.props.tag.id)
   }
 
-  // DRY (see ItemTableRow)
   handleClick = (event) => {
-    return this.props.onSelect(
-      this.id,
-      {
-        mod: this.isSelected ?
-          (meta(event) ? 'remove' : 'clear') :
-          (meta(event) ? 'merge' : 'replace')
-      }
-    )
+    const { tag, isSelected, onSelect } = this.props
+
+    const mod = isSelected ?
+      (meta(event) ? 'remove' : 'clear') :
+      (meta(event) ? 'merge' : 'replace')
+
+    onSelect(tag.id, { mod })
   }
 
-  // DRY (see ItemTableRow)
   handleContextMenu = (event) => {
-    const { selection, onSelect, onContextMenu } = this.props
-
-    if (!this.isSelected || selection.length > 1) {
-      onSelect(this.id, 'replace')
-    }
-
-    onContextMenu(event, 'tag', this.id)
+    this.props.onContextMenu(event, this.props.tag)
   }
-
 
   render() {
-    const { isEditing, onCancel } = this.props
+    const { tag, isEditing, onCancel } = this.props
 
     return (
       <li
         className={cn(this.classes)}
-        onContextMenu={this.handleContextMenu}
-        onClick={this.handleClick}>
+        onContextMenu={isEditing ? null : this.handleContextMenu}
+        onClick={isEditing ? null : this.handleClick}>
         <IconTag/>
         <div className="name">
           <Editable
-            value={this.name}
+            value={tag.name}
             isRequired
             isEditing={isEditing}
             onCancel={onCancel}
@@ -81,19 +59,18 @@ class Tag extends Component {
 
 
   static propTypes = {
-    tag: PropTypes.shape({
-      id: PropTypes.number,
-      name: PropTypes.string.isRequired
+    tag: shape({
+      id: number,
+      name: string.isRequired
     }).isRequired,
 
-    selection: PropTypes.arrayOf(PropTypes.number).isRequired,
+    isEditing: bool,
+    isSelected: bool,
 
-    isEditing: PropTypes.bool,
-
-    onSelect: PropTypes.func,
-    onContextMenu: PropTypes.func,
-    onCancel: PropTypes.func,
-    onChange: PropTypes.func
+    onSelect: func,
+    onContextMenu: func,
+    onCancel: func.isRequired,
+    onChange: func.isRequired
   }
 }
 

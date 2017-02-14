@@ -300,10 +300,13 @@ module.exports = {
         }))
       },
 
-      onTagSave(id, data) {
-        dispatch(id ?
-          actions.tag.save({ id, ...data }) :
-          actions.tag.create({ ...data }))
+      onTagCreate(data) {
+        dispatch(actions.tag.create(data))
+        dispatch(actions.ui.edit.cancel())
+      },
+
+      onTagSave(data, id) {
+        dispatch(actions.tag.save({ ...data, id }))
         dispatch(actions.ui.edit.cancel())
       },
 
