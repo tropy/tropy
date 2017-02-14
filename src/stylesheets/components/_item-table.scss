@@ -118,7 +118,7 @@
   }
 
   .table-body {
-    background: repeating-linear-gradient(to bottom, $items-odd-bg 3px,
+    background-image: repeating-linear-gradient(to bottom, $items-odd-bg 3px,
       $items-odd-bg ($row-height + 3px), transparent ($row-height + 3px),
       transparent (2 * $row-height + 3px));
     background-attachment: local;
@@ -129,7 +129,8 @@
 
     &.over {
       overflow: hidden;
-      background: $drop-target-bg;
+      background-color: $drop-target-bg;
+      background-blend-mode: multiply;
 
       table {
         mix-blend-mode: multiply;
