@@ -1,0 +1,9 @@
+//
+// Debug
+// --------------------------------------------------
+
+@if $debug == true {
+  *:focus {
+    outline: 3px solid transparentize($debug-color, 0.5);
+  }
+}
