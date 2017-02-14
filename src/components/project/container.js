@@ -300,6 +300,17 @@ module.exports = {
         }))
       },
 
+      onTagSave(id, data) {
+        dispatch(id ?
+          actions.tag.save({ id, ...data }) :
+          actions.tag.create({ ...data }))
+        dispatch(actions.ui.edit.cancel())
+      },
+
+      onTagSelect(...args) {
+        dispatch(actions.tag.select(...args))
+      },
+
       onEdit(...args) {
         dispatch(actions.ui.edit.start(...args))
       },

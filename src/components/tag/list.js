@@ -2,16 +2,15 @@
 
 const React = require('react')
 const { PropTypes } = React
-const { connect } = require('react-redux')
 const { Tag } = require('./tag')
-const actions = require('../../actions')
+const { arrayOf, number, string, shape, object, func } = PropTypes
 
 
-const TagList = ({ tags, editing, ...props }) => {
+const TagList = ({ tags, edit, ...props }) => {
 
-  if (editing && !editing.id) {
+  if (edit && !edit.id) {
     var newTagEditable =
-      <Tag {...props} tag={editing} isEditing/>
+      <Tag {...props} tag={edit} isEditing/>
   }
 
   return (
@@ -21,7 +20,7 @@ const TagList = ({ tags, editing, ...props }) => {
           <Tag {...props}
             key={tag.id}
             tag={tag}
-            isEditing={editing && editing.id === tag.id}/>)
+            isEditing={edit && edit.id === tag.id}/>)
       }
       {newTagEditable}
     </ol>
@@ -29,45 +28,23 @@ const TagList = ({ tags, editing, ...props }) => {
 }
 
 TagList.propTypes = {
-  tags: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired
+  tags: arrayOf(
+    shape({
+      id: number.isRequired,
+      name: string.isRequired
     })
   ).isRequired,
 
-  selection: PropTypes.arrayOf(PropTypes.number).isRequired,
-  editing: PropTypes.object,
+  selection: arrayOf(number).isRequired,
+  edit: object,
 
-  onCancel: PropTypes.func,
-  onSelect: PropTypes.func,
-  onChange: PropTypes.func,
-  onContextMenu: PropTypes.func
+  onCancel: func.isRequired,
+  onSelect: func.isRequired,
+  onChange: func.isRequired,
+  onContextMenu: func.isRequired
 }
 
 
 module.exports = {
-  TagList: connect(
-    (state) => ({
-      selection: state.nav.tags,
-      editing: state.ui.edit.tag,
-    }),
-
-    (dispatch) => ({
-      onCancel() {
-        dispatch(actions.ui.edit.cancel())
-      },
-
-      onSelect(id, mod) {
-        dispatch(actions.tag.select(id, { mod }))
-      },
-
-      onChange(id, values) {
-        dispatch(actions.ui.edit.cancel())
-        dispatch(id ?
-          actions.tag.save({ id, ...values }) :
-          actions.tag.create({ ...values }))
-      }
-    })
-  )(TagList)
+  TagList
 }

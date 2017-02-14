@@ -11,6 +11,7 @@ const { Sidebar } = require('../sidebar')
 const { ProjectName } = require('./name')
 const { ROOT } = require('../../constants/list')
 const { has } = require('../../common/util')
+const { bool, shape, string, object, arrayOf, func } = PropTypes
 
 
 class ProjectSidebar extends PureComponent {
@@ -122,13 +123,28 @@ class ProjectSidebar extends PureComponent {
   }
 
   renderTags() {
-    const { tags, onContextMenu } = this.props
+    const {
+      tags,
+      edit,
+      nav,
+      onContextMenu,
+      onEditCancel,
+      onTagSave,
+      onTagSelect
+    } = this.props
 
     return (
       <section onContextMenu={this.showTagsMenu}>
         <h2><FormattedMessage id="sidebar.tags"/></h2>
         <nav>
-          <TagList tags={tags} onContextMenu={onContextMenu}/>
+          <TagList
+            tags={tags}
+            selection={nav.tags}
+            edit={edit.tag}
+            onCancel={onEditCancel}
+            onChange={onTagSave}
+            onSelect={onTagSelect}
+            onContextMenu={onContextMenu}/>
         </nav>
       </section>
     )
@@ -156,30 +172,32 @@ class ProjectSidebar extends PureComponent {
   }
 
   static propTypes = {
-    hasToolbar: PropTypes.bool,
+    hasToolbar: bool,
 
-    project: PropTypes.shape({
-      file: PropTypes.string,
-      name: PropTypes.string
+    project: shape({
+      file: string,
+      name: string
     }).isRequired,
 
-    context: PropTypes.object.isRequired,
-    edit: PropTypes.object.isRequired,
-    nav: PropTypes.object.isRequired,
-    lists: PropTypes.object.isRequired,
-    tags: PropTypes.arrayOf(PropTypes.object).isRequired,
+    context: object.isRequired,
+    edit: object.isRequired,
+    nav: object.isRequired,
+    lists: object.isRequired,
+    tags: arrayOf(object).isRequired,
 
-    onMaximize: PropTypes.func.isRequired,
-    onEdit: PropTypes.func.isRequired,
-    onEditCancel: PropTypes.func.isRequired,
-    onContextMenu: PropTypes.func.isRequired,
-    onItemDelete: PropTypes.func.isRequired,
-    onItemImport: PropTypes.func.isRequired,
-    onListItemsAdd: PropTypes.func.isRequired,
-    onListSave: PropTypes.func.isRequired,
-    onListSort: PropTypes.func.isRequired,
-    onProjectSave: PropTypes.func.isRequired,
-    onSelect: PropTypes.func.isRequired
+    onMaximize: func.isRequired,
+    onEdit: func.isRequired,
+    onEditCancel: func.isRequired,
+    onContextMenu: func.isRequired,
+    onItemDelete: func.isRequired,
+    onItemImport: func.isRequired,
+    onListItemsAdd: func.isRequired,
+    onListSave: func.isRequired,
+    onListSort: func.isRequired,
+    onTagSave: func.isRequired,
+    onTagSelect: func.isRequired,
+    onProjectSave: func.isRequired,
+    onSelect: func.isRequired
   }
 
   static defaultProps = {
