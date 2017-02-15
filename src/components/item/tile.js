@@ -43,11 +43,6 @@ class ItemTile extends ItemIterable {
   static propTypes = {
     ...ItemIterable.propTypes
   }
-
-  static defaultProps = {
-    ...ItemIterable.defaultProps,
-    orientation: 'horizontal'
-  }
 }
 
 module.exports = {

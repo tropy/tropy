@@ -9,6 +9,10 @@ const cn = require('classnames')
 
 class ItemGrid extends ItemIterator {
 
+  get isVertical() {
+    return false
+  }
+
   get classes() {
     return {
       'item-grid': true,

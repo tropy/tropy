@@ -144,7 +144,7 @@ class ItemIterable extends PureComponent {
     }).isRequired,
 
     size: number.isRequired,
-    orientation: oneOf(['horizontal', 'vertical']),
+    orientation: oneOf(['horizontal', 'vertical']).isRequired,
 
     ds: func.isRequired,
     dt: func.isRequired,
@@ -156,10 +156,6 @@ class ItemIterable extends PureComponent {
     onDropPhotos: func.isRequired,
     onItemOpen: func.isRequired,
     onSelect: func.isRequired
-  }
-
-  static defaultProps = {
-    orientation: 'vertical'
   }
 }
 

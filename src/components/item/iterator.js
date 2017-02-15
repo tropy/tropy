@@ -13,6 +13,14 @@ class ItemIterator extends PureComponent {
     return this.constructor.ZOOM[this.props.zoom]
   }
 
+  get orientation() {
+    return this.isVertical ? 'vertical' : 'horizontal'
+  }
+
+  get isVertical() {
+    return true
+  }
+
   get isEmpty() {
     return this.props.items.length === 0
   }
@@ -113,6 +121,7 @@ class ItemIterator extends PureComponent {
       return fn({
         item,
         cache: this.props.cache,
+        orientation: this.orientation,
         size: this.size,
         isLast: index === this.props.items.length - 1,
         isSelected: this.isSelected(item),
