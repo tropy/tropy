@@ -17,6 +17,13 @@ class ItemIterator extends PureComponent {
     return this.props.selection.includes(item.id)
   }
 
+  hasFocus(item, index) {
+    const { selection } = this.props
+
+    return selection.length ?
+      selection[selection.length - 1] === item.id : index === 0
+  }
+
   getSelection = () => this.props.selection
 
   handleClickOutside = (event) => {
@@ -51,23 +58,34 @@ class ItemIterator extends PureComponent {
     onContextMenu(event, context.join('-'), target)
   }
 
+  handleSelectAt = (index) => {
+    const { items, onSelect } = this.props
+
+    if (index >= 0 && index < items.length) {
+      onSelect(items[index].id, 'replace')
+    }
+  }
+
   connect(element) {
     return (this.props.isDisabled) ? element : this.props.dt(element)
   }
 
   map(fn) {
-    return this.props.items.map((item, idx) => fn({
+    return this.props.items.map((item, index) => fn({
       item,
+      index,
       cache: this.props.cache,
       size: this.size,
-      isLast: idx === this.props.items.length - 1,
+      hasFocus: this.hasFocus(item, index),
+      isLast: index === this.props.items.length - 1,
       isSelected: this.isSelected(item),
       isDisabled: this.props.isDisabled,
       getSelection: this.getSelection,
       onContextMenu: this.handleContextMenu,
       onDropPhotos: this.props.onPhotoMove,
       onItemOpen: this.props.onItemOpen,
-      onSelect: this.props.onSelect
+      onSelect: this.props.onSelect,
+      onSelectAt: this.handleSelectAt
     }))
   }
 

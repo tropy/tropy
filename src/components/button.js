@@ -6,6 +6,7 @@ const cn = require('classnames')
 
 const IconButton = ({ classes, icon, ...props }) => (
   <button {...props}
+    tabIndex="-1"
     className={cn({ ...classes, 'btn': true, 'btn-icon': true })}>
     {icon}
   </button>

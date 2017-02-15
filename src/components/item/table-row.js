@@ -29,9 +29,12 @@ class ItemTableRow extends ItemIterable {
 
     return this.connect(
       <tr
+        ref={this.setContainer}
+        tabIndex={this.tabIndex}
         className={cn(this.classes)}
         onMouseDown={this.handleMouseDown}
         onDoubleClick={this.handleOpen}
+        onKeyDown={this.handleKeyDown}
         onContextMenu={this.handleContextMenu}>{
           columns.map(({ property, width }) =>
             <ItemTableCell {...pick(props, CellProps)}
