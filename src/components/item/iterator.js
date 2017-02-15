@@ -77,11 +77,11 @@ class ItemIterator extends PureComponent {
 
   handleKeyDown = (event) => {
     switch (event.key) {
-      case 'ArrowUp':
+      case (this.isVertical ? 'ArrowUp' : 'ArrowLeft'):
         this.select(this.getPrevItem())
         break
 
-      case 'ArrowDown':
+      case (this.isVertical ? 'ArrowDown' : 'ArrowRight'):
         this.select(this.getNextItem())
         break
 

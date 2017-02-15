@@ -33,6 +33,8 @@ class ItemGrid extends ItemIterator {
     return this.connect(
       <ul
         className={cn(this.classes)}
+        tabIndex={this.tabIndex}
+        onKeyDown={this.handleKeyDown}
         onClick={this.handleClickOutside}>
         {this.map(({ item, ...props }) =>
           <ItemTile {...props} key={item.id} item={item}/>
