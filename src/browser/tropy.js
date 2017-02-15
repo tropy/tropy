@@ -22,7 +22,6 @@ const act = require('../actions')
 const { HISTORY, TAG, PROJECT, UI, ITEM } = require('../constants')
 const { darwin } = require('../common/os')
 const { version } = require('../common/release')
-const { get } = require('../common/util')
 
 const H = new WeakMap()
 const T = new WeakMap()
