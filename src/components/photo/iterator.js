@@ -50,6 +50,25 @@ class PhotoIterator extends PureComponent {
     return get(this.props.ui, 'context.photo.id') === photo.id
   }
 
+  getNextPhoto(offset = 1) {
+    const { photos, selected } = this.props
+
+    if (!photos.length) return null
+    if (!selected) return photos[0]
+
+    const idx = this.idx[selected] + offset
+
+    return (idx >= 0 && idx < photos.length) ? photos[idx] : null
+  }
+
+  getPrevPhoto(offset = 1) {
+    return this.getNextPhoto(-offset)
+  }
+
+  getCurrentPhoto() {
+    return this.getNextPhoto(0)
+  }
+
   getAdjacent = (photo) => {
     return adjacent(this.props.photos, photo)
   }
@@ -59,7 +78,7 @@ class PhotoIterator extends PureComponent {
   }
 
   handleSelect = (photo) => {
-    if (!this.isSelected(photo)) {
+    if (photo && !this.isSelected(photo)) {
       this.props.onSelect({
         photo: photo.id, item: photo.item
       })
@@ -89,25 +108,48 @@ class PhotoIterator extends PureComponent {
     }
   }
 
+  handleKeyDown = (event) => {
+    switch (event.key) {
+      case (this.isVertical ? 'ArrowUp' : 'ArrowLeft'):
+        this.handleSelect(this.getPrevPhoto())
+        break
+
+      case (this.isVertical ? 'ArrowDown' : 'ArrowRight'):
+        this.handleSelect(this.getNextPhoto())
+        break
+
+      default:
+        return
+    }
+
+    event.preventDefault()
+    event.stopPropagation()
+  }
+
   map(fn) {
+    this.idx = {}
     const { isSortable } = this
 
-    return this.props.photos.map((photo, index) => fn({
-      photo,
-      cache: this.props.cache,
-      orientation: this.orientation,
-      size: this.size,
-      isDisabled: this.props.isDisabled,
-      isSelected: this.isSelected(photo),
-      isSortable,
-      isContext: this.isContext(photo),
-      isLast: index === this.props.photos.length - 1,
-      getAdjacent: this.getAdjacent,
-      onDropPhoto: this.handleDropPhoto,
-      onSelect: this.handleSelect,
-      onItemOpen: this.handleItemOpen,
-      onContextMenu: this.props.onContextMenu
-    }))
+    return this.props.photos.map((photo, index) => {
+      this.idx[photo.id] = index
+
+      return fn({
+        photo,
+        cache: this.props.cache,
+        orientation: this.orientation,
+        size: this.size,
+        isDisabled: this.props.isDisabled,
+        isSelected: this.isSelected(photo),
+        isSortable,
+        isContext: this.isContext(photo),
+        isLast: index === this.props.photos.length - 1,
+        getAdjacent: this.getAdjacent,
+        onDropPhoto: this.handleDropPhoto,
+        onSelect: this.handleSelect,
+        onItemOpen: this.handleItemOpen,
+        onContextMenu: this.props.onContextMenu
+      })
+    })
   }
 
   connect(element) {

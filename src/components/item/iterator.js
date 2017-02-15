@@ -140,8 +140,7 @@ class ItemIterator extends PureComponent {
         onContextMenu: this.handleContextMenu,
         onDropPhotos: this.props.onPhotoMove,
         onItemOpen: this.props.onItemOpen,
-        onSelect: this.props.onSelect,
-        onSelectAt: this.handleSelectAt
+        onSelect: this.props.onSelect
       })
     })
   }

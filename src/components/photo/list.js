@@ -26,7 +26,11 @@ class PhotoList extends PhotoIterator {
     const { data, onChange, onEdit, onEditCancel } = this.props
 
     return this.connect(
-      <ul className={cn(this.classes)} onClick={this.handleClickOutside}>
+      <ul
+        className={cn(this.classes)}
+        tabIndex={this.tabIndex}
+        onKeyDown={this.handleKeyDown}
+        onClick={this.handleClickOutside}>
         {this.map(({ photo, ...props }) =>
           <PhotoListItem {...props}
             key={photo.id}

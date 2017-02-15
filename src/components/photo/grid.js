@@ -14,6 +14,30 @@ class PhotoGrid extends PhotoIterator {
     this.state = {
       cols: 0
     }
+
+    const superKeyDown = this.handleKeyDown
+
+    this.handleKeyDown = (event) => {
+      superKeyDown(event)
+
+      if (!event.isPropagationStopped()) {
+        switch (event.key) {
+          case (this.isVertical ? 'ArrowLeft' : 'ArrowUp'):
+            this.handleSelect(this.getPrevPhoto(this.state.cols))
+            break
+
+          case (this.isVertical ? 'ArrowRight' : 'ArrowDown'):
+            this.handleSelect(this.getNextPhoto(this.state.cols))
+            break
+
+          default:
+            return
+        }
+
+        event.preventDefault()
+        event.stopPropagation()
+      }
+    }
   }
 
   componentDidMount() {
@@ -67,6 +91,8 @@ class PhotoGrid extends PhotoIterator {
       <ul
         className={cx(this.classes)}
         ref={this.setContainer}
+        tabIndex={this.tabIndex}
+        onKeyDown={this.handleKeyDown}
         onClick={this.handleClickOutside}>
         {this.map(({ photo, ...props }) =>
           <PhotoTile {...props} key={photo.id} photo={photo}/>)}
