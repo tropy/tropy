@@ -6,9 +6,9 @@ const middleware = () => next => {
   const dnxt = debounce(next, 75)
 
   return action => {
-    const { meta = {} } = action
+    const { meta } = action
 
-    return (meta.debounce) ?
+    return (meta && meta.debounce) ?
       dnxt(action) :
       next(action)
   }
