@@ -1,4 +1,6 @@
-//
+// sass-lint:disable nesting-depth
+
+
 // Sidebar
 // --------------------------------------------------
 
@@ -116,6 +118,23 @@
         .icon {
           svg {
             color: $sidebar-tag-active-color;
+          }
+        }
+      }
+    }
+  }
+
+  :focus {
+    nav {
+      li {
+        &.active {
+          color: $sidebar-focus-color;
+          background: $sidebar-focus-bg;
+
+          .icon {
+            svg {
+              color: $sidebar-focus-icon-color;
+            }
           }
         }
       }

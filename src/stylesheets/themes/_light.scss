@@ -16,12 +16,12 @@
   #{--red}:           #e62e2e;
 }
 
-$blue:          var(--blue);
-$blue-light:    var(--blue-light);
-$blue-30:       var(--blue-30);
-$blue-darken-4: var(--blue-darken-4);
+$blue:                   var(--blue);
+$blue-light:             var(--blue-light);
+$blue-30:                var(--blue-30);
+$blue-darken-4:          var(--blue-darken-4);
 
-$red:           var(--red);
+$red:                    var(--red);
 
 $brand-primary:          $blue;
 $brand-primary-30:       $blue-30;
@@ -121,6 +121,9 @@ $project-darken-color: $shade-9-10;
 $sidebar-bg:                $shade-1;
 $sidebar-text-color:        $shade-7;
 $sidebar-headings-color:    $shade-5;
+$sidebar-focus-icon-color:  $shade-0;
+$sidebar-focus-color:       $shade-0;
+$sidebar-focus-bg:          $brand-primary;
 $sidebar-active-icon-color: $shade-6;
 $sidebar-active-color:      $shade-8;
 $sidebar-active-bg:         $shade-2;
@@ -138,8 +141,10 @@ $item-table-header-sort-color:   $shade-8;
 $item-table-header-active-bg:    $shade-1;
 $item-table-header-border-color: $shade-2;
 $items-odd-bg:                   $shade-1;
+$items-focus-color:              $shade-0;
+$items-focus-bg:                 $brand-primary;
 $items-active-color:             $shade-0;
-$items-active-bg:                $brand-primary;
+$items-active-bg:                $shade-2;
 $items-over-bg:                  $blue-light;
 $cover-image-color:              $icon-color;
 $cover-image-active-color:       $shade-4;

@@ -27,6 +27,10 @@
 
   .active & {
     .item-grid & {
+      border: $space-min solid $shade-2;
+    }
+
+    .item-grid:focus & {
       border: $space-min solid $brand-primary;
     }
   }

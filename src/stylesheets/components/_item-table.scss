@@ -163,7 +163,7 @@
 
     &.active {
       .metadata {
-        color: $items-active-color;
+        color: inherit;
         background: $items-active-bg;
       }
     }
@@ -171,6 +171,17 @@
     &.over {
       .metadata {
         background: $blue-light;
+      }
+    }
+  }
+
+  &:focus {
+    .item {
+      &.active {
+        .metadata {
+          color: $items-focus-color;
+          background: $items-focus-bg;
+        }
       }
     }
   }
