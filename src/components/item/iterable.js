@@ -15,13 +15,6 @@ class ItemIterable extends PureComponent {
     this.props.dp(getEmptyImage())
   }
 
-  componentDidUpdate(props) {
-    if (this.props.hasFocus && !props.hasFocus) {
-      this.container.focus()
-    }
-  }
-
-
   get classes() {
     return {
       'item': true,
@@ -37,11 +30,6 @@ class ItemIterable extends PureComponent {
   get isVertical() {
     return this.props.orientation === 'vertical'
   }
-
-  get tabIndex() {
-    return this.props.hasFocus ? 0 : -1
-  }
-
 
   handleOpen = () => {
     const { item, onItemOpen } = this.props
@@ -70,19 +58,6 @@ class ItemIterable extends PureComponent {
     }
 
     this.props.onContextMenu(event, this.props.item)
-  }
-
-  handleKeyDown = (event) => {
-    const { index, isSelected, onSelectAt } = this.props
-
-    switch (event.key) {
-      case 'ArrowUp':
-        onSelectAt(isSelected ? index - 1 : index)
-        break
-      case 'ArrowDown':
-        onSelectAt(isSelected ? index + 1 : index)
-        break
-    }
   }
 
 
@@ -155,7 +130,6 @@ class ItemIterable extends PureComponent {
 
 
   static propTypes = {
-    hasFocus: bool,
     isDragging: bool,
     isLast: bool,
     isOver: bool,
@@ -169,7 +143,6 @@ class ItemIterable extends PureComponent {
       photos: arrayOf(number)
     }).isRequired,
 
-    index: number.isRequired,
     size: number.isRequired,
     orientation: oneOf(['horizontal', 'vertical']),
 
@@ -182,8 +155,7 @@ class ItemIterable extends PureComponent {
     onContextMenu: func.isRequired,
     onDropPhotos: func.isRequired,
     onItemOpen: func.isRequired,
-    onSelect: func.isRequired,
-    onSelectAt: func.isRequired
+    onSelect: func.isRequired
   }
 
   static defaultProps = {

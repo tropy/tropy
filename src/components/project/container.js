@@ -244,8 +244,8 @@ module.exports = {
         dispatch(actions.nav.sort(...args))
       },
 
-      onItemSelect(id, mod) {
-        dispatch(actions.item.select(id, { mod }))
+      onItemSelect(id, mod, meta) {
+        dispatch(actions.item.select(id, { mod, ...meta }))
       },
 
       onItemOpen(item) {

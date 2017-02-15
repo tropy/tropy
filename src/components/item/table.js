@@ -32,7 +32,10 @@ class ItemTable extends ItemIterator {
     } = this.props
 
     return (
-      <div className="item-table">
+      <div
+        className="item-table"
+        tabIndex={this.tabIndex}
+        onKeyDown={this.handleKeyDown}>
         <ItemTableHead columns={columns} sort={sort} onSort={onSort}/>
 
         {this.connect(
