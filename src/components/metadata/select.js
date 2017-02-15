@@ -22,6 +22,7 @@ const TemplateSelect = (props) => {
 
   return (
     <select
+      tabIndex="-1"
       name="template-select"
       className="template-select form-control"
       required

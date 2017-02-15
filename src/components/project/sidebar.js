@@ -164,8 +164,10 @@ class ProjectSidebar extends PureComponent {
       <Sidebar>
         {this.renderToolbar()}
         <div className="sidebar-body" onContextMenu={this.showSidebarMenu}>
-          {this.renderProject()}
-          {this.renderLists()}
+          <div tabIndex="0">
+            {this.renderProject()}
+            {this.renderLists()}
+          </div>
           {this.renderTags()}
         </div>
         <ActivityPane/>
