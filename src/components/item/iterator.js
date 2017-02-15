@@ -48,6 +48,10 @@ class ItemIterator extends PureComponent {
     return this.getNextItem(-offset)
   }
 
+  getCurrentItem() {
+    return this.getNextItem(0)
+  }
+
   getSelection = () => this.props.selection
 
   setContainer = (container) => {
@@ -94,6 +98,10 @@ class ItemIterator extends PureComponent {
 
       case (this.isVertical ? 'ArrowDown' : 'ArrowRight'):
         this.select(this.getNextItem())
+        break
+
+      case ' ':
+        this.props.onItemPreview(this.getCurrentItem())
         break
 
       default:
@@ -172,6 +180,7 @@ class ItemIterator extends PureComponent {
     dt: func.isRequired,
     onContextMenu: func.isRequired,
     onItemOpen: func.isRequired,
+    onItemPreview: func.isRequired,
     onPhotoMove: func.isRequired,
     onSelect: func.isRequired,
     onSort: func.isRequired

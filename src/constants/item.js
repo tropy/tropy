@@ -14,6 +14,7 @@ module.exports = {
   SAVE: 'item.save',
   SELECT: 'item.select',
   UPDATE: 'item.update',
+  PREVIEW: 'item.preview',
 
   BULK: {
     UPDATE: 'item.bulk.update'

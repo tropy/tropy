@@ -10,7 +10,7 @@ const { warn, debug } = require('../common/log')
 const { identity } = require('../common/util')
 const history = require('../selectors/history')
 const { getAllVisibleTags } = require('../selectors/tag')
-const { TAG, HISTORY, UI } = require('../constants')
+const { TAG, HISTORY, UI, ITEM } = require('../constants')
 const { darwin } = require('../common/os')
 const { delay } = require('../common/util')
 
@@ -66,6 +66,11 @@ const FILTER = {
 
   *[TAG.CHANGED]() {
     return yield select(getAllVisibleTags)
+  },
+
+  *[ITEM.PREVIEW](item) {
+    return yield select(state =>
+      item.photos.map(id => state.photos[id].path))
   }
 }
 

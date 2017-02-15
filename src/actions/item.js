@@ -104,6 +104,14 @@ module.exports = {
     }
   },
 
+  preview({ id, photos }, meta) {
+    return {
+      type: ITEM.PREVIEW,
+      payload: { id, photos },
+      meta: { ipc: true, ...meta }
+    }
+  },
+
   bulk: {
     update(payload, meta) {
       return {

@@ -19,9 +19,10 @@ const release = require('../common/release')
 
 const { defineProperty: prop } = Object
 const act = require('../actions')
-const { HISTORY, TAG, PROJECT, UI } = require('../constants')
+const { HISTORY, TAG, PROJECT, UI, ITEM } = require('../constants')
 const { darwin } = require('../common/os')
 const { version } = require('../common/release')
+const { get } = require('../common/util')
 
 const H = new WeakMap()
 const T = new WeakMap()
@@ -379,6 +380,12 @@ class Tropy extends EventEmitter {
       .on(UI.CONTEXT.SHOW, (_, event) => {
         this.ctx.show(event)
         this.dispatch(act.ui.context.clear())
+      })
+
+      .on(ITEM.PREVIEW, (_, item) => {
+        if (darwin && item.photos.length) {
+          this.win.previewFile(item.photos[0])
+        }
       })
 
     dialog.start()

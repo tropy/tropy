@@ -272,6 +272,10 @@ module.exports = {
         dispatch(actions.item.delete(items.map(item => item.id)))
       },
 
+      onItemPreview(...args) {
+        dispatch(actions.item.preview(...args))
+      },
+
       onMetadataSave(...args) {
         dispatch(actions.metadata.save(...args))
         dispatch(actions.ui.edit.cancel())
