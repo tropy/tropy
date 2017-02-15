@@ -4,13 +4,36 @@ const React = require('react')
 const { ItemIterator } = require('./iterator')
 const { ItemTile } = require('./tile')
 const { Shapes } = require('../util')
-const cn = require('classnames')
+const { bounds, on, off } = require('../../dom')
+const cx = require('classnames')
 
 
 class ItemGrid extends ItemIterator {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      cols: 0
+    }
+  }
+
+  componentDidMount() {
+    on(window, 'resize', this.resize)
+    this.resize()
+  }
+
+  componentWillUnmount() {
+    off(window, 'resize', this.resize)
+  }
+
+  componentDidUpdate(props) {
+    if (this.props.zoom !== props.zoom) {
+      this.resize()
+    }
+  }
 
   get isVertical() {
-    return false
+    return this.state.cols === 1
   }
 
   get classes() {
@@ -30,15 +53,24 @@ class ItemGrid extends ItemIterator {
     )
   }
 
+  resize = () => {
+    const { width } = bounds(this.container)
+
+    this.setState({
+      cols: Math.floor(width / (this.size * 1.25))
+    })
+  }
+
 
   render() {
     const tile = this.placeholder
 
     return this.connect(
       <ul
-        className={cn(this.classes)}
+        className={cx(this.classes)}
         tabIndex={this.tabIndex}
         onKeyDown={this.handleKeyDown}
+        ref={this.setContainer}
         onClick={this.handleClickOutside}>
         {this.map(({ item, ...props }) =>
           <ItemTile {...props} key={item.id} item={item}/>

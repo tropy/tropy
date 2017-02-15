@@ -27,7 +27,6 @@ class ItemIterator extends PureComponent {
 
   get tabIndex() {
     return this.isEmpty ? null : 0
-
   }
 
   isSelected(item) {
@@ -50,6 +49,10 @@ class ItemIterator extends PureComponent {
   }
 
   getSelection = () => this.props.selection
+
+  setContainer = (container) => {
+    this.container = container
+  }
 
   handleClickOutside = (event) => {
     if (has(event.target, 'click-catcher')) {
