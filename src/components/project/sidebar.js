@@ -9,7 +9,7 @@ const { ListTree, TrashListNode } = require('../list')
 const { TagList } = require('../tag')
 const { Sidebar } = require('../sidebar')
 const { ProjectName } = require('./name')
-const { ROOT } = require('../../constants/list')
+const { TABINDEX, LIST } = require('../../constants')
 const { has } = require('../../common/util')
 const { bool, shape, string, object, arrayOf, func } = PropTypes
 
@@ -96,7 +96,7 @@ class ProjectSidebar extends PureComponent {
       ...props
     } = this.props
 
-    const root = lists[ROOT]
+    const root = lists[LIST.ROOT]
 
     return (
       <section onContextMenu={this.showListsMenu}>
@@ -164,7 +164,7 @@ class ProjectSidebar extends PureComponent {
       <Sidebar>
         {this.renderToolbar()}
         <div className="sidebar-body" onContextMenu={this.showSidebarMenu}>
-          <div tabIndex="0">
+          <div tabIndex={TABINDEX.ProjectSidebar}>
             {this.renderProject()}
             {this.renderLists()}
           </div>

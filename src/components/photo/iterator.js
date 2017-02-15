@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent, PropTypes } = React
 const { DropTarget } = require('react-dnd')
-const { DND } = require('../../constants')
+const { DND, TABINDEX } = require('../../constants')
 const { get, move, times, adjacent } = require('../../common/util')
 const { has } = require('../../dom')
 const { bool, func, number, string, object, shape, arrayOf } = PropTypes
@@ -26,7 +26,7 @@ class PhotoIterator extends PureComponent {
   }
 
   get tabIndex() {
-    return this.isEmpty ? null : 0
+    return this.isEmpty ? null : TABINDEX[this.constructor.name]
   }
 
   get isVertical() {

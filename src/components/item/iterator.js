@@ -4,6 +4,7 @@ const React = require('react')
 const { PureComponent, PropTypes } = React
 const { times } = require('../../common/util')
 const { has } = require('../../dom')
+const { TABINDEX } = require('../../constants')
 const { arrayOf, oneOf, shape, bool, func, number, string } = PropTypes
 
 
@@ -25,7 +26,7 @@ class ItemIterator extends PureComponent {
   }
 
   get tabIndex() {
-    return this.isEmpty ? null : 0
+    return this.isEmpty ? null : TABINDEX[this.constructor.name]
   }
 
   isSelected(item) {
