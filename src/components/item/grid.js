@@ -15,6 +15,27 @@ class ItemGrid extends ItemIterator {
     this.state = {
       cols: 0
     }
+
+    const superKeyDown = this.handleKeyDown
+
+    this.handleKeyDown = (event) => {
+      superKeyDown(event)
+
+      if (!event.isPropagationStopped()) {
+        switch (event.key) {
+          case (this.isVertical ? 'ArrowLeft' : 'ArrowUp'):
+            this.select(this.getPrevItem(this.state.cols))
+            break
+
+          case (this.isVertical ? 'ArrowRight' : 'ArrowDown'):
+            this.select(this.getNextItem(this.state.cols))
+            break
+
+          default:
+            return
+        }
+      }
+    }
   }
 
   componentDidMount() {

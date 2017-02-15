@@ -44,8 +44,8 @@ class ItemIterator extends PureComponent {
     return (idx >= 0 && idx < items.length) ? items[idx] : null
   }
 
-  getPrevItem() {
-    return this.getNextItem(-1)
+  getPrevItem(offset = 1) {
+    return this.getNextItem(-offset)
   }
 
   getSelection = () => this.props.selection
