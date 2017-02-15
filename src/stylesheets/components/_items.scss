@@ -27,11 +27,11 @@
 
   .active & {
     .item-grid & {
-      border: $space-min solid $shade-2;
+      border: $space-min solid $items-active-bg;
     }
 
     .item-grid:focus & {
-      border: $space-min solid $brand-primary;
+      border: $space-min solid $items-focus-bg;
     }
   }
 
