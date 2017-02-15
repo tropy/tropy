@@ -381,9 +381,9 @@ class Tropy extends EventEmitter {
         this.dispatch(act.ui.context.clear())
       })
 
-      .on(ITEM.PREVIEW, (_, item) => {
-        if (darwin && item.photos.length) {
-          this.win.previewFile(item.photos[0])
+      .on(ITEM.PREVIEW, (_, paths) => {
+        if (darwin && paths && paths.length) {
+          this.win.previewFile(paths[0])
         }
       })
 
