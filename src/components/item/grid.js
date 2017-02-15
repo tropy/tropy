@@ -34,6 +34,9 @@ class ItemGrid extends ItemIterator {
           default:
             return
         }
+
+        event.preventDefault()
+        event.stopPropagation()
       }
     }
   }
