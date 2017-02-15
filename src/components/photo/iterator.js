@@ -21,9 +21,26 @@ class PhotoIterator extends PureComponent {
     }
   }
 
+  get orientation() {
+    return this.isVertical ? 'vertical' : 'horizontal'
+  }
+
+  get tabIndex() {
+    return this.isEmpty ? null : 0
+  }
+
+  get isVertical() {
+    return true
+  }
+
+  get isEmpty() {
+    return this.props.photos.length === 0
+  }
+
   get isSortable() {
     return !this.props.isDisabled && this.props.photos.length > 1
   }
+
 
   isSelected(photo) {
     return this.props.selected === photo.id
@@ -35,6 +52,10 @@ class PhotoIterator extends PureComponent {
 
   getAdjacent = (photo) => {
     return adjacent(this.props.photos, photo)
+  }
+
+  setContainer = (container) => {
+    this.container = container
   }
 
   handleSelect = (photo) => {
@@ -71,15 +92,16 @@ class PhotoIterator extends PureComponent {
   map(fn) {
     const { isSortable } = this
 
-    return this.props.photos.map((photo, idx) => fn({
+    return this.props.photos.map((photo, index) => fn({
       photo,
       cache: this.props.cache,
+      orientation: this.orientation,
       size: this.size,
       isDisabled: this.props.isDisabled,
       isSelected: this.isSelected(photo),
       isSortable,
       isContext: this.isContext(photo),
-      isLast: idx === this.props.photos.length - 1,
+      isLast: index === this.props.photos.length - 1,
       getAdjacent: this.getAdjacent,
       onDropPhoto: this.handleDropPhoto,
       onSelect: this.handleSelect,

@@ -8,7 +8,6 @@ const { arrayOf, oneOf, shape, bool, func, number, string } = PropTypes
 
 
 class ItemIterator extends PureComponent {
-
   get size() {
     return this.constructor.ZOOM[this.props.zoom]
   }

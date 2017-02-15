@@ -51,10 +51,6 @@ class PhotoTile extends PhotoIterable {
   static propTypes = {
     ...PhotoIterable.propTypes
   }
-
-  static defaultProps = {
-    orientation: 'horizontal'
-  }
 }
 
 

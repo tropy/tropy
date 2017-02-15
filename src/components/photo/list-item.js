@@ -90,8 +90,7 @@ class PhotoListItem extends PhotoIterable {
   }
 
   static defaultProps = {
-    data: {},
-    orientation: 'vertical'
+    data: {}
   }
 }
 
