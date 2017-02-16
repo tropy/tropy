@@ -14,8 +14,29 @@
 
     &.active {
       .thumbnail {
-        box-sizing: content-box;
-        border: $space-min solid $photo-grid-active-color;
+        border-radius: $border-radius-small;
+      }
+
+      @for $i from 0 through 50 {
+        $size: $i * 2 + 26;
+        $border: $i * (12 / 50) + 4px;
+
+        .thumbnail[style*="#{$size}"] {
+          border: $border solid $photo-grid-active-color;
+          outline: ($border - 3px) solid $photo-grid-active-outline;
+          outline-offset: -$border;
+        }
+      }
+
+      @for $i from 0 through 32 {
+        $size: $i * 4 + 128;
+        $border: $i * (16 / 32) + 16px;
+
+        .thumbnail[style*="#{$size}"] {
+          border: $border solid $photo-grid-active-color;
+          outline: ($border - 3px) solid $photo-grid-active-outline;
+          outline-offset: -$border;
+        }
       }
     }
   }
