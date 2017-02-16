@@ -77,6 +77,10 @@ class PhotoIterator extends PureComponent {
     this.container = container
   }
 
+  handleFocus = () => {
+    this.handleSelect(this.getCurrentPhoto())
+  }
+
   handleSelect = (photo) => {
     if (photo && !this.isSelected(photo)) {
       this.props.onSelect({

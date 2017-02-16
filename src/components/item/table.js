@@ -5,10 +5,19 @@ const { ItemIterator } = require('./iterator')
 const { ItemTableRow } = require('./table-row')
 const { ItemTableHead } = require('./table-head')
 const { arrayOf, oneOf, func, object } = React.PropTypes
-const cn = require('classnames')
+const { on, off } = require('../../dom')
+const cx = require('classnames')
 
 
 class ItemTable extends ItemIterator {
+
+  componentDidMount() {
+    on(this.container, 'tab:focus', this.handleFocus)
+  }
+
+  componentWillUnmount() {
+    off(this.container, 'tab:focus', this.handleFocus)
+  }
 
   get classes() {
     return {
@@ -34,13 +43,14 @@ class ItemTable extends ItemIterator {
     return (
       <div
         className="item-table"
+        ref={this.setContainer}
         tabIndex={this.tabIndex}
         onKeyDown={this.handleKeyDown}>
         <ItemTableHead columns={columns} sort={sort} onSort={onSort}/>
 
         {this.connect(
           <div
-            className={cn(this.classes)}
+            className={cx(this.classes)}
             onClick={this.handleClickOutside}>
             <table>
               <tbody>

@@ -6,10 +6,18 @@ const { PhotoListItem } = require('./list-item')
 const { PhotoIterator } = require('./iterator')
 const { DC } = require('../../constants/properties')
 const { get } = require('../../common/util')
-const cn = require('classnames')
+const { on, off } = require('../../dom')
+const cx = require('classnames')
 
 
 class PhotoList extends PhotoIterator {
+  componentDidMount() {
+    on(this.container, 'tab:focus', this.handleFocus)
+  }
+
+  componentWillUnmount() {
+    off(this.container, 'tab:focus', this.handleFocus)
+  }
 
   get classes() {
     return {
@@ -27,7 +35,8 @@ class PhotoList extends PhotoIterator {
 
     return this.connect(
       <ul
-        className={cn(this.classes)}
+        className={cx(this.classes)}
+        ref={this.setContainer}
         tabIndex={this.tabIndex}
         onKeyDown={this.handleKeyDown}
         onClick={this.handleClickOutside}>

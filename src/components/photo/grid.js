@@ -41,11 +41,13 @@ class PhotoGrid extends PhotoIterator {
   }
 
   componentDidMount() {
+    on(this.container, 'tab:focus', this.handleFocus)
     on(window, 'resize', this.resize)
     this.resize()
   }
 
   componentWillUnmount() {
+    off(this.container, 'tab:focus', this.handleFocus)
     off(window, 'resize', this.resize)
   }
 

@@ -8,7 +8,7 @@ const { debug } = require('./common/log')
 const { EL_CAPITAN } = require('./common/os')
 
 const {
-  $$, append, create, on, once, toggle, stylesheet, remove
+  $$, $, append, emit, create, on, once, toggle, stylesheet, remove
 } = require('./dom')
 
 const Window = {
@@ -84,6 +84,14 @@ const Window = {
           Window.current.reload()
         })
 
+      on(document.body, 'keydown', event => {
+        if (event.key === 'Tab' && !event.defaultPrevented) {
+          // Set up timer here to detect tab 'gap'!
+          once(document.body, 'focusin', ({ target }) => {
+            if (target) emit(target, 'tab:focus')
+          })
+        }
+      })
 
       Window.unloaded = false
       let unloader = 'close'

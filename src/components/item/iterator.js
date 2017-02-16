@@ -64,6 +64,10 @@ class ItemIterator extends PureComponent {
     }
   }
 
+  handleFocus = () => {
+    this.select(this.getCurrentItem())
+  }
+
   handleContextMenu = (event, item) => {
     const {
       list,
@@ -114,7 +118,7 @@ class ItemIterator extends PureComponent {
 
 
   select(item) {
-    if (item) {
+    if (item && !this.isSelected(item)) {
       this.props.onSelect(item.id, 'replace', { throttle: true })
     }
   }
