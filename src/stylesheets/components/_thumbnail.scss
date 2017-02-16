@@ -4,7 +4,7 @@
 
 .thumbnail {
   position: relative;
-  overflow: hidden;
+  box-sizing: content-box;
 
   .icon-photo,
   img {
@@ -28,5 +28,6 @@
 
   img {
     text-indent: -99em;
+    overflow: hidden;
   }
 }

@@ -21,4 +21,42 @@
       mix-blend-mode: multiply;
     }
   }
+
+  .active {
+    .thumbnail {
+      border-radius: $border-radius-small;
+    }
+
+    @for $i from 0 through 56 {
+      $size: $i * 4 + 28;
+      $border: $i * (28 / 56) + 4px;
+
+      .thumbnail[style*="#{$size}"] {
+        border: $border solid $item-grid-active-color;
+        outline: ($border - 3px) solid $item-grid-active-outline;
+        outline-offset: -$border;
+      }
+    }
+
+    @for $i from 0 through 32 {
+      $size: $i * 8 + 256;
+      $border: $i * (48 / 32) + 16px;
+
+      .thumbnail[style*="#{$size}"] {
+        border: $border solid $item-grid-active-color;
+        outline: ($border - 3px) solid $item-grid-active-outline;
+        outline-offset: -$border;
+      }
+    }
+  }
+
+  &:focus {
+    .active {
+      .thumbnail {
+        border-color: $item-grid-focus-color;
+      }
+    }
+  }
 }
+
+

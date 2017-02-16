@@ -25,16 +25,6 @@
     top: ($row-height - $thumbnail-size) / 2;
   }
 
-  .active & {
-    .item-grid & {
-      border: $space-min solid $items-active-bg;
-    }
-
-    .item-grid:focus & {
-      border: $space-min solid $items-focus-bg;
-    }
-  }
-
   .over & {
     .item-grid & {
       border: $space-min solid $items-over-bg;
@@ -60,53 +50,51 @@
       }
     }
 
-    &::before,
-    &::after {
-      content: "";
-      position: absolute;
-      height: 1px;
-      background: $cover-image-color;
+    .thumbnail {
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        height: 1px;
+        background: $cover-image-color;
 
-      .active & {
+        .active & {
+          .item-table & {
+            background: $cover-image-active-color;
+          }
+        }
+
+        .over & {
+          .item-grid & {
+            content: none;
+          }
+        }
+      }
+
+      &::before {
+        left: 4px;
+        width: calc(100% - 8px);
+
         .item-table & {
-          background: $cover-image-active-color;
+          top: 0;
         }
 
         .item-grid & {
-          content: none;
+          top: -4px;
         }
       }
 
-      .over & {
+      &::after {
+        left: 2px;
+        width: calc(100% - 4px);
+
+        .item-table & {
+          top: 2px;
+        }
+
         .item-grid & {
-          content: none;
+          top: -2px;
         }
-      }
-    }
-
-    &::before {
-      left: 4px;
-      width: calc(100% - 8px);
-
-      .item-table & {
-        top: 0;
-      }
-
-      .item-grid & {
-        top: -4px;
-      }
-    }
-
-    &::after {
-      left: 2px;
-      width: calc(100% - 4px);
-
-      .item-table & {
-        top: 2px;
-      }
-
-      .item-grid & {
-        top: -2px;
       }
     }
   }
