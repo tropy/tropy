@@ -13,8 +13,17 @@
     position: relative;
 
     &.active {
-      color: $photo-active-color;
-      background: $photo-active-bg;
+      color: $photo-list-active-color;
+      background: $photo-list-active-bg;
+    }
+  }
+
+  &:focus {
+    .photo {
+      &.active {
+        color: $photo-list-focus-color;
+        background: $photo-list-focus-bg;
+      }
     }
   }
 

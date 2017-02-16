@@ -103,6 +103,9 @@ $badge-bg:    $red;
 // Drop target
 $drop-target-bg: $blue-light;
 
+// Sort indicator
+$photo-sort-indicator: $shade-8;
+
 
 // Components
 // --------------------------------------------------
@@ -160,7 +163,7 @@ $panel-heading-color:   #bbb; // Todo
 
 // Tabs
 $tab-bg: $shade-2;
-$tab-active-color: inherit;
+$tab-active-color: $shade-8;
 $tab-active-bg: transparent;
 $tab-inactive-color: $shade-5;
 
@@ -170,11 +173,14 @@ $value-hover-color:      $shade-0;
 $template-select-border: $shade-3;
 
 // Photo list
-$photo-active-color: $shade-0;
-$photo-active-bg: $brand-primary;
+$photo-list-focus-color: $shade-0;
+$photo-list-focus-bg: $brand-primary;
+$photo-list-active-color: $shade-8;
+$photo-list-active-bg: $shade-3;
 
 // Photo grid
-$photo-sort-indicator: $shade-8;
+$photo-grid-focus-color: $brand-primary;
+$photo-grid-active-color: $shade-3;
 
 // Note list
 $note-active-color: $shade-0;

@@ -15,7 +15,17 @@
     &.active {
       .thumbnail {
         box-sizing: content-box;
-        border: $space-min solid $brand-primary;
+        border: $space-min solid $photo-grid-active-color;
+      }
+    }
+  }
+
+  &:focus {
+    .photo {
+      &.active {
+        .thumbnail {
+          border-color: $photo-grid-focus-color;
+        }
       }
     }
   }
