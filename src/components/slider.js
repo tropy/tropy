@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent, PropTypes } = React
 const { IconButton } = require('./button')
-const cn = require('classnames')
+const cx = require('classnames')
 const { bounds, borders, on, off } = require('../dom')
 const { noop } = require('../common/util')
 const { bool, element, func, number, oneOf } = PropTypes
@@ -164,14 +164,17 @@ class Slider extends PureComponent {
 
     return (
       <div
-        className={cn(this.classes)}
+        className={cx(this.classes)}
         onMouseDown={disabled ? noop : this.handleMouseDown}>
         {this.renderMinButton()}
         <div
           ref={this.setTrack}
           className="slider-track">
           <div className="slider-range" style={{ width: percentage }}/>
-          <div className="slider-handle" style={{ left: percentage }}/>
+          <div
+            className="slider-handle"
+            tabIndex="-1"
+            style={{ left: percentage }}/>
         </div>
         {this.renderMaxButton()}
       </div>
