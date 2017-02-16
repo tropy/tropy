@@ -5,6 +5,7 @@ const { ItemIterator } = require('./iterator')
 const { ItemTile } = require('./tile')
 const { Shapes } = require('../util')
 const { bounds, on, off } = require('../../dom')
+const { refine } = require('../../common/util')
 const cx = require('classnames')
 
 
@@ -16,11 +17,7 @@ class ItemGrid extends ItemIterator {
       cols: 0
     }
 
-    const superKeyDown = this.handleKeyDown
-
-    this.handleKeyDown = (event) => {
-      superKeyDown(event)
-
+    refine(this, 'handleKeyDown', ([event]) => {
       if (!event.isPropagationStopped()) {
         switch (event.key) {
           case (this.isVertical ? 'ArrowLeft' : 'ArrowUp'):
@@ -38,7 +35,7 @@ class ItemGrid extends ItemIterator {
         event.preventDefault()
         event.stopPropagation()
       }
-    }
+    })
   }
 
   componentDidMount() {

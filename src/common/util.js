@@ -238,6 +238,13 @@ module.exports = {
           return match
       }
     })
+  },
+
+  refine(context, method, refinement) {
+    const original = context[method]
+
+    context[method] = (...args) =>
+      refinement.call(context, args, original.apply(context, args))
   }
 
 }

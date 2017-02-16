@@ -4,6 +4,7 @@ const React = require('react')
 const { PhotoIterator } = require('./iterator')
 const { PhotoTile } = require('./tile')
 const { bounds, on, off } = require('../../dom')
+const { refine } = require('../../common/util')
 const cx = require('classnames')
 
 
@@ -15,11 +16,7 @@ class PhotoGrid extends PhotoIterator {
       cols: 0
     }
 
-    const superKeyDown = this.handleKeyDown
-
-    this.handleKeyDown = (event) => {
-      superKeyDown(event)
-
+    refine(this, 'handleKeyDown', ([event]) => {
       if (!event.isPropagationStopped()) {
         switch (event.key) {
           case (this.isVertical ? 'ArrowLeft' : 'ArrowUp'):
@@ -37,7 +34,7 @@ class PhotoGrid extends PhotoIterator {
         event.preventDefault()
         event.stopPropagation()
       }
-    }
+    })
   }
 
   componentDidMount() {
