@@ -8,7 +8,7 @@ const { debug } = require('./common/log')
 const { EL_CAPITAN } = require('./common/os')
 
 const {
-  $$, $, append, emit, create, on, once, toggle, stylesheet, remove
+  $$, append, emit, create, on, once, toggle, stylesheet, remove
 } = require('./dom')
 
 const Window = {
