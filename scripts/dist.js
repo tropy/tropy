@@ -42,7 +42,7 @@ target.pack = (args = []) => {
       unpack: '**/*.node'
     },
 
-    'version': electron.version,
+    'electronVersion': electron.version,
     'build-version': build,
     'app-version': release.version,
     'app-bundle-id': 'org.tropy.tropy',
