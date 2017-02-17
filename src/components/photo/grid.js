@@ -8,7 +8,7 @@ const { refine } = require('../../common/util')
 const cx = require('classnames')
 const { TILE } = require('../../constants/style')
 
-const SMALL = TILE.FACTOR * (1 - 1 / TILE.FACTOR)
+const SMALL = Math.round(TILE.FACTOR * (1 - 1 / TILE.FACTOR) * 100) / 100
 
 
 class PhotoGrid extends PhotoIterator {
