@@ -82,7 +82,7 @@ class PhotoGrid extends PhotoIterator {
   }
 
   get isSmall() {
-    return this.size * SMALL <= TILE.PADDING
+    return this.size * SMALL < TILE.PADDING
   }
 
   get isVertical() {

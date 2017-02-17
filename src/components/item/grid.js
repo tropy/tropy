@@ -59,7 +59,7 @@ class ItemGrid extends ItemIterator {
   }
 
   get isSmall() {
-    return this.size * SMALL <= TILE.PADDING
+    return this.size * SMALL < TILE.PADDING
   }
 
   get isVertical() {
