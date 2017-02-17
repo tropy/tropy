@@ -3,7 +3,7 @@
 module.exports = {
 
   TILE: {
-    FACTOR: 1.25,
+    FACTOR: 1.2,
     PADDING: 12 // padding + selection border
   },
 
