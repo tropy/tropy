@@ -55,6 +55,10 @@ class ItemGrid extends ItemIterator {
     }
   }
 
+  get isSmall() {
+    return this.size * 0.2 <= 12
+  }
+
   get isVertical() {
     return this.state.cols === 1
   }
@@ -86,6 +90,7 @@ class ItemGrid extends ItemIterator {
 
 
   render() {
+    const { isSmall } = this
     const tile = this.placeholder
 
     return this.connect(
@@ -96,7 +101,10 @@ class ItemGrid extends ItemIterator {
         ref={this.setContainer}
         onClick={this.handleClickOutside}>
         {this.map(({ item, ...props }) =>
-          <ItemTile {...props} key={item.id} item={item}/>
+          <ItemTile {...props}
+            key={item.id}
+            item={item}
+            isSmall={isSmall}/>
         )}
 
         {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}

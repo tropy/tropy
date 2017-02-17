@@ -132,16 +132,16 @@ class PhotoIterator extends PureComponent {
 
   map(fn) {
     this.idx = {}
-    const { isSortable } = this
+    const { size, orientation, isSortable } = this
 
     return this.props.photos.map((photo, index) => {
       this.idx[photo.id] = index
 
       return fn({
         photo,
+        orientation,
+        size,
         cache: this.props.cache,
-        orientation: this.orientation,
-        size: this.size,
         isDisabled: this.props.isDisabled,
         isSelected: this.isSelected(photo),
         isSortable,

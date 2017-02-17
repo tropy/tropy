@@ -69,12 +69,7 @@ class ItemIterator extends PureComponent {
   }
 
   handleContextMenu = (event, item) => {
-    const {
-      list,
-      isDisabled,
-      selection,
-      onContextMenu
-    } = this.props
+    const { list, isDisabled, selection, onContextMenu } = this.props
 
     const context = ['item']
     const target = { id: item.id, tags: item.tags, list }
@@ -129,6 +124,7 @@ class ItemIterator extends PureComponent {
 
   map(fn) {
     this.idx = {}
+    const { orientation, size } = this
 
     return this.props.items.map((item, index) => {
       this.idx[item.id] = index
@@ -136,8 +132,8 @@ class ItemIterator extends PureComponent {
       return fn({
         item,
         cache: this.props.cache,
-        orientation: this.orientation,
-        size: this.size,
+        orientation,
+        size,
         isLast: index === this.props.items.length - 1,
         isSelected: this.isSelected(item),
         isDisabled: this.props.isDisabled,

@@ -4,7 +4,8 @@ const React = require('react')
 const { ItemIterable } = require('./iterable')
 const { CoverImage } = require('./cover-image')
 const { createClickHandler } = require('../util')
-const cn = require('classnames')
+const cx = require('classnames')
+const { bool } = React.PropTypes
 
 
 class ItemTile extends ItemIterable {
@@ -13,7 +14,8 @@ class ItemTile extends ItemIterable {
     return {
       ...super.classes,
       'tile': true,
-      'click-catcher': true
+      'click-catcher': true,
+      'small': this.props.isSmall
     }
   }
 
@@ -31,7 +33,7 @@ class ItemTile extends ItemIterable {
     return this.connect(
       <li
         ref={this.setContainer}
-        className={cn(this.classes)}
+        className={cx(this.classes)}
         style={this.style}>
         <div className="tile-state">
           <CoverImage
@@ -46,7 +48,8 @@ class ItemTile extends ItemIterable {
   }
 
   static propTypes = {
-    ...ItemIterable.propTypes
+    ...ItemIterable.propTypes,
+    isSmall: bool
   }
 }
 

@@ -3,7 +3,8 @@
 const React = require('react')
 const { PhotoIterable } = require('./iterable')
 const { createClickHandler } = require('../util')
-const cn = require('classnames')
+const cx = require('classnames')
+const { bool } = React.PropTypes
 
 
 class PhotoTile extends PhotoIterable {
@@ -12,7 +13,8 @@ class PhotoTile extends PhotoIterable {
     return {
       ...super.classes,
       'tile': true,
-      'click-catcher': true
+      'click-catcher': true,
+      'small': this.props.isSmall
     }
   }
 
@@ -37,7 +39,7 @@ class PhotoTile extends PhotoIterable {
   render() {
     return this.connect(
       <li
-        className={cn(this.classes)}
+        className={cx(this.classes)}
         ref={this.setContainer}
         style={this.style}>
         <div className="tile-state">
@@ -51,7 +53,8 @@ class PhotoTile extends PhotoIterable {
   }
 
   static propTypes = {
-    ...PhotoIterable.propTypes
+    ...PhotoIterable.propTypes,
+    isSmall: bool
   }
 }
 

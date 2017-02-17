@@ -78,12 +78,16 @@ class PhotoGrid extends PhotoIterator {
     )
   }
 
+  get isSmall() {
+    return this.size * 0.2 <= 12
+  }
+
   get isVertical() {
     return this.state.cols === 1
   }
 
-
   render() {
+    const { isSmall } = this
     const tile = this.placeholder
 
     return this.connect(
@@ -94,7 +98,10 @@ class PhotoGrid extends PhotoIterator {
         onKeyDown={this.handleKeyDown}
         onClick={this.handleClickOutside}>
         {this.map(({ photo, ...props }) =>
-          <PhotoTile {...props} key={photo.id} photo={photo}/>)}
+          <PhotoTile {...props}
+            key={photo.id}
+            photo={photo}
+            isSmall={isSmall}/>)}
 
         {tile}{tile}{tile}{tile}{tile}{tile}{tile}
         {tile}{tile}{tile}{tile}{tile}{tile}{tile}
