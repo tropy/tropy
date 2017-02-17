@@ -40,10 +40,12 @@ class PhotoTile extends PhotoIterable {
         className={cn(this.classes)}
         ref={this.setContainer}
         style={this.style}>
-        {this.renderThumbnail({
-          onClick: this.handleClick,
-          onContextMenu: this.handleContextMenu
-        })}
+        <div className="tile-state">
+          {this.renderThumbnail({
+            onClick: this.handleClick,
+            onContextMenu: this.handleContextMenu
+          })}
+        </div>
       </li>
     )
   }
