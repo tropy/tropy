@@ -23,6 +23,11 @@ class PhotoIterable extends PureComponent {
     this.props.dp(getEmptyImage())
   }
 
+  componentDidUpdate(props) {
+    if (this.props.isSelected && !props.isSelected) {
+      this.container.scrollIntoViewIfNeeded()
+    }
+  }
 
   get classes() {
     return {

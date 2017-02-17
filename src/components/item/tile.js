@@ -29,7 +29,10 @@ class ItemTile extends ItemIterable {
 
   render() {
     return this.connect(
-      <li className={cn(this.classes)} style={this.style}>
+      <li
+        ref={this.setContainer}
+        className={cn(this.classes)}
+        style={this.style}>
         <CoverImage
           cache={this.props.cache}
           size={this.props.size}

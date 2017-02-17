@@ -30,6 +30,7 @@ class ItemTableRow extends ItemIterable {
     return this.connect(
       <tr
         className={cn(this.classes)}
+        ref={this.setContainer}
         onMouseDown={this.handleMouseDown}
         onDoubleClick={this.handleOpen}
         onContextMenu={this.handleContextMenu}>{

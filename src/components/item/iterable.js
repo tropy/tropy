@@ -15,6 +15,12 @@ class ItemIterable extends PureComponent {
     this.props.dp(getEmptyImage())
   }
 
+  componentDidUpdate(props) {
+    if (this.props.isSelected && !props.isSelected) {
+      this.container.scrollIntoViewIfNeeded(false)
+    }
+  }
+
   get classes() {
     return {
       'item': true,
