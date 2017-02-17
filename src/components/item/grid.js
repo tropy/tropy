@@ -7,6 +7,9 @@ const { Shapes } = require('../util')
 const { bounds, on, off } = require('../../dom')
 const { refine } = require('../../common/util')
 const cx = require('classnames')
+const { TILE } = require('../../constants/style')
+
+const SMALL = TILE.FACTOR * (1 - 1 / TILE.FACTOR)
 
 
 class ItemGrid extends ItemIterator {
@@ -56,7 +59,7 @@ class ItemGrid extends ItemIterator {
   }
 
   get isSmall() {
-    return this.size * 0.2 <= 12
+    return this.size * SMALL <= TILE.PADDING
   }
 
   get isVertical() {
@@ -76,7 +79,7 @@ class ItemGrid extends ItemIterator {
     return (
       <li
         className="placeholder tile click-catcher"
-        style={{ flexBasis: `${this.size * 1.25}px` }}/>
+        style={{ flexBasis: `${this.size * TILE.FACTOR}px` }}/>
     )
   }
 
@@ -84,7 +87,7 @@ class ItemGrid extends ItemIterator {
     const { width } = bounds(this.container)
 
     this.setState({
-      cols: Math.floor(width / (this.size * 1.25))
+      cols: Math.floor(width / (this.size * TILE.FACTOR))
     })
   }
 
@@ -101,10 +104,7 @@ class ItemGrid extends ItemIterator {
         ref={this.setContainer}
         onClick={this.handleClickOutside}>
         {this.map(({ item, ...props }) =>
-          <ItemTile {...props}
-            key={item.id}
-            item={item}
-            isSmall={isSmall}/>
+          <ItemTile {...props} key={item.id} item={item} isSmall={isSmall}/>
         )}
 
         {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}

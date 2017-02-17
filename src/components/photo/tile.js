@@ -5,6 +5,7 @@ const { PhotoIterable } = require('./iterable')
 const { createClickHandler } = require('../util')
 const cx = require('classnames')
 const { bool } = React.PropTypes
+const { TILE } = require('../../constants/style')
 
 
 class PhotoTile extends PhotoIterable {
@@ -19,7 +20,7 @@ class PhotoTile extends PhotoIterable {
   }
 
   get style() {
-    const height = `${this.props.size * 1.25}px`
+    const height = `${this.props.size * TILE.FACTOR}px`
 
     return {
       height, flexBasis: height

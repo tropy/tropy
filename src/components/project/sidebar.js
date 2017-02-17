@@ -9,7 +9,7 @@ const { ListTree, TrashListNode } = require('../list')
 const { TagList } = require('../tag')
 const { Sidebar } = require('../sidebar')
 const { ProjectName } = require('./name')
-const { TABINDEX, LIST } = require('../../constants')
+const { STYLE, LIST } = require('../../constants')
 const { has } = require('../../common/util')
 const { bool, shape, string, object, arrayOf, func } = PropTypes
 
@@ -85,7 +85,7 @@ class ProjectSidebar extends PureComponent {
         {hasToolbar && <Toolbar onDoubleClick={onMaximize}/>}
         <div className="sidebar-body" onContextMenu={this.showSidebarMenu}>
 
-          <section tabIndex={TABINDEX.ProjectSidebar}>
+          <section tabIndex={STYLE.TABS.ProjectSidebar}>
             <nav onContextMenu={this.showProjectMenu}>
               <ol>
                 <ProjectName

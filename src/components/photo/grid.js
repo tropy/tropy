@@ -6,6 +6,9 @@ const { PhotoTile } = require('./tile')
 const { bounds, on, off } = require('../../dom')
 const { refine } = require('../../common/util')
 const cx = require('classnames')
+const { TILE } = require('../../constants/style')
+
+const SMALL = TILE.FACTOR * (1 - 1 / TILE.FACTOR)
 
 
 class PhotoGrid extends PhotoIterator {
@@ -58,7 +61,7 @@ class PhotoGrid extends PhotoIterator {
     const { width } = bounds(this.container)
 
     this.setState({
-      cols: Math.floor(width / (this.size * 1.25))
+      cols: Math.floor(width / (this.size * TILE.FACTOR))
     })
   }
 
@@ -74,12 +77,12 @@ class PhotoGrid extends PhotoIterator {
     return (
       <li
         className="placeholder tile click-catcher"
-        style={{ flexBasis: `${this.size * 1.25}px` }}/>
+        style={{ flexBasis: `${this.size * TILE.FACTOR}px` }}/>
     )
   }
 
   get isSmall() {
-    return this.size * 0.2 <= 12
+    return this.size * SMALL <= TILE.PADDING
   }
 
   get isVertical() {
@@ -98,10 +101,8 @@ class PhotoGrid extends PhotoIterator {
         onKeyDown={this.handleKeyDown}
         onClick={this.handleClickOutside}>
         {this.map(({ photo, ...props }) =>
-          <PhotoTile {...props}
-            key={photo.id}
-            photo={photo}
-            isSmall={isSmall}/>)}
+          <PhotoTile {...props} key={photo.id} photo={photo} isSmall={isSmall}/>
+        )}
 
         {tile}{tile}{tile}{tile}{tile}{tile}{tile}
         {tile}{tile}{tile}{tile}{tile}{tile}{tile}

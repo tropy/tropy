@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent, PropTypes } = React
 const { times } = require('../../common/util')
 const { has } = require('../../dom')
-const { TABINDEX } = require('../../constants')
+const { STYLE } = require('../../constants')
 const { arrayOf, oneOf, shape, bool, func, number, string } = PropTypes
 
 
@@ -26,7 +26,7 @@ class ItemIterator extends PureComponent {
   }
 
   get tabIndex() {
-    return this.isEmpty ? null : TABINDEX[this.constructor.name]
+    return this.isEmpty ? null : STYLE.TABS[this.constructor.name]
   }
 
   isSelected(item) {
@@ -132,8 +132,7 @@ class ItemIterator extends PureComponent {
       return fn({
         item,
         cache: this.props.cache,
-        orientation,
-        size,
+        orientation, size,
         isLast: index === this.props.items.length - 1,
         isSelected: this.isSelected(item),
         isDisabled: this.props.isDisabled,

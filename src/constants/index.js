@@ -10,7 +10,7 @@ module.exports = {
   PHOTO: require('./photo'),
   PROJECT: require('./project'),
   PROPERTIES: require('./properties'),
-  TABINDEX: require('./tabindex'),
+  STYLE: require('./style'),
   TAG: require('./tag'),
   UI: require('./ui'),
 }

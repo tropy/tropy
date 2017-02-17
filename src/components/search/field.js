@@ -2,13 +2,13 @@
 
 const React = require('react')
 const { IconSearch } = require('../icons')
-const { TABINDEX } = require('../../constants')
+const { STYLE } = require('../../constants')
 
 const SearchField = () => (
   <div className="search">
     <IconSearch/>
     <input
-      tabIndex={TABINDEX.SearchField}
+      tabIndex={STYLE.TABS.SearchField}
       type="text"
       className="search-input form-control"
       placeholder="Search"/>

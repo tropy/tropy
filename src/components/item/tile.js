@@ -6,6 +6,7 @@ const { CoverImage } = require('./cover-image')
 const { createClickHandler } = require('../util')
 const cx = require('classnames')
 const { bool } = React.PropTypes
+const { TILE } = require('../../constants/style')
 
 
 class ItemTile extends ItemIterable {
@@ -20,7 +21,7 @@ class ItemTile extends ItemIterable {
   }
 
   get style() {
-    const height = `${this.props.size * 1.25}px`
+    const height = `${this.props.size * TILE.FACTOR}px`
     return { height, flexBasis: height }
   }
 
