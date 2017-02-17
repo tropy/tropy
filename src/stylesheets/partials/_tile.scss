@@ -19,5 +19,12 @@
         border-color: $tile-focus-color;
       }
     }
+
+    &.small {
+      .tile-state {
+        border-width: 2px;
+        padding: 1px;
+      }
+    }
   }
 }
