@@ -16,18 +16,18 @@ class PhotoGrid extends PhotoIterator {
     super(props)
 
     this.state = {
-      cols: 0
+      colsize: 0
     }
 
     refine(this, 'handleKeyDown', ([event]) => {
       if (!event.isPropagationStopped()) {
         switch (event.key) {
           case (this.isVertical ? 'ArrowLeft' : 'ArrowUp'):
-            this.handleSelect(this.getPrevPhoto(this.state.cols))
+            this.handleSelect(this.getPrevPhoto(this.state.colsize))
             break
 
           case (this.isVertical ? 'ArrowRight' : 'ArrowDown'):
-            this.handleSelect(this.getNextPhoto(this.state.cols))
+            this.handleSelect(this.getNextPhoto(this.state.colsize))
             break
 
           default:
@@ -61,7 +61,7 @@ class PhotoGrid extends PhotoIterator {
     const { width } = bounds(this.container)
 
     this.setState({
-      cols: Math.floor(width / (this.size * TILE.FACTOR))
+      colsize: Math.floor(width / (this.size * TILE.FACTOR))
     })
   }
 
@@ -86,7 +86,7 @@ class PhotoGrid extends PhotoIterator {
   }
 
   get isVertical() {
-    return this.state.cols === 1
+    return this.state.colsize === 1
   }
 
   render() {
