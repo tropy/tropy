@@ -8,4 +8,16 @@
   flex-shrink: 0;
   justify-content: center;
   align-items: center;
+
+  &.active {
+    .tile-state {
+      border: 3px solid $tile-active-color;
+      border-radius: $border-radius-small;
+      padding: 3px;
+
+      :focus > & {
+        border-color: $tile-focus-color;
+      }
+    }
+  }
 }
