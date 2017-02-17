@@ -33,12 +33,14 @@ class ItemTile extends ItemIterable {
         ref={this.setContainer}
         className={cn(this.classes)}
         style={this.style}>
-        <CoverImage
-          cache={this.props.cache}
-          size={this.props.size}
-          item={this.props.item}
-          onMouseDown={this.handleMouseDown}
-          onContextMenu={this.handleContextMenu}/>
+        <div className="tile-state">
+          <CoverImage
+            cache={this.props.cache}
+            size={this.props.size}
+            item={this.props.item}
+            onMouseDown={this.handleMouseDown}
+            onContextMenu={this.handleContextMenu}/>
+        </div>
       </li>
     )
   }

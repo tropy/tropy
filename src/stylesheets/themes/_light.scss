@@ -106,6 +106,10 @@ $drop-target-bg: $blue-light;
 // Sort indicator
 $photo-sort-indicator: $shade-8;
 
+// Tile
+$tile-focus-color:  $brand-primary;
+$tile-active-color: $shade-4;
+
 
 // Components
 // --------------------------------------------------
@@ -152,13 +156,6 @@ $items-over-bg:                  $blue-light;
 $cover-image-color:              $icon-color;
 $cover-image-active-color:       $shade-4;
 
-// Item list
-
-// Item grid
-$item-grid-focus-color:    $brand-primary;
-$item-grid-active-color:   $shade-4;
-$item-grid-active-outline: $shade-0;
-
 // Panel group
 $panels-bg: $shade-1;
 
@@ -184,11 +181,6 @@ $photo-list-focus-color: $shade-0;
 $photo-list-focus-bg: $brand-primary;
 $photo-list-active-color: $shade-8;
 $photo-list-active-bg: $shade-3;
-
-// Photo grid
-$photo-grid-focus-color:    $brand-primary;
-$photo-grid-active-color:   $shade-4;
-$photo-grid-active-outline: $shade-1;
 
 // Note list
 $note-active-color: $shade-0;
