@@ -26,11 +26,11 @@ class ListTree extends PureComponent {
   }
 
   isEditing(id) {
-    return get(this.props, 'edit.list.id') === id
+    return get(this.props, 'edit.id') === id
   }
 
   isContext(id) {
-    return get(this.props, 'context.list') === id
+    return this.props.context === id
   }
 
   isSelected(id) {
@@ -55,7 +55,7 @@ class ListTree extends PureComponent {
 
   renderNewListNode() {
     const { parent, onEditCancel, onListSave } = this.props
-    const list = get(this.props, 'edit.list')
+    const list = this.props.edit
 
     if (!list || list.parent !== parent.id) return null
 
@@ -99,8 +99,8 @@ class ListTree extends PureComponent {
     }).isRequired,
 
     lists: PropTypes.object.isRequired,
-    context: PropTypes.object.isRequired,
-    edit: PropTypes.object.isRequired,
+    context: PropTypes.number,
+    edit: PropTypes.object,
     selection: PropTypes.number,
 
     onEdit: PropTypes.func.isRequired,

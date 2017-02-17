@@ -32,7 +32,6 @@ class ProjectSidebar extends PureComponent {
     return this.props.nav.trash
   }
 
-
   handleProjectNameChange = (name) => {
     this.props.onProjectSave({ name })
   }
@@ -55,120 +54,95 @@ class ProjectSidebar extends PureComponent {
     this.props.onContextMenu(event, 'tags')
   }
 
-
-  renderProject() {
+  render() {
     const {
-      project,
-      onItemImport,
-      onEdit,
-      onEditCancel,
-      onSelect
-    } = this.props
-
-    return (
-      <section onContextMenu={this.showProjectMenu}>
-        <nav>
-          <ol>
-            <ProjectName
-              name={project.name}
-              isSelected={this.isSelected}
-              isEditing={this.isEditing}
-              isContext={this.isContext}
-              onEdit={onEdit}
-              onEditCancel={onEditCancel}
-              onChange={this.handleProjectNameChange}
-              onDrop={onItemImport}
-              onSelect={onSelect}/>
-          </ol>
-        </nav>
-      </section>
-    )
-  }
-
-  renderLists() {
-    const {
+      context,
+      edit,
+      hasToolbar,
       lists,
       nav,
-      onItemImport,
-      onItemDelete,
-      onListSort,
-      onListItemsAdd,
-      ...props
-    } = this.props
-
-    const root = lists[LIST.ROOT]
-
-    return (
-      <section onContextMenu={this.showListsMenu}>
-        <h2><FormattedMessage id="sidebar.lists"/></h2>
-        <nav>
-          {root &&
-            <ListTree {...props}
-              parent={root}
-              lists={lists}
-              selection={nav.list}
-              onDropItems={onListItemsAdd}
-              onDropFiles={onItemImport}
-              onSort={onListSort}/>
-          }
-
-          <ol>
-            <TrashListNode {...props}
-              isSelected={this.isTrashSelected}
-              onDropItems={onItemDelete}/>
-          </ol>
-        </nav>
-      </section>
-    )
-  }
-
-  renderTags() {
-    const {
+      project,
       tags,
-      edit,
-      nav,
       onContextMenu,
+      onEdit,
       onEditCancel,
+      onItemDelete,
+      onItemImport,
+      onListItemsAdd,
+      onListSave,
+      onListSort,
+      onMaximize,
+      onSelect,
       onTagCreate,
       onTagSave,
       onTagSelect
     } = this.props
 
-    return (
-      <section onContextMenu={this.showTagsMenu}>
-        <h2><FormattedMessage id="sidebar.tags"/></h2>
-        <nav>
-          <TagList
-            tags={tags}
-            selection={nav.tags}
-            edit={edit.tag}
-            onCancel={onEditCancel}
-            onCreate={onTagCreate}
-            onSave={onTagSave}
-            onSelect={onTagSelect}
-            onContextMenu={onContextMenu}/>
-        </nav>
-      </section>
-    )
-  }
+    const root = lists[LIST.ROOT]
 
-  renderToolbar() {
-    return this.props.hasToolbar ?
-      <Toolbar onDoubleClick={this.props.onMaximize}/> :
-      null
-
-  }
-
-  render() {
     return (
       <Sidebar>
-        {this.renderToolbar()}
+        {hasToolbar && <Toolbar onDoubleClick={onMaximize}/>}
         <div className="sidebar-body" onContextMenu={this.showSidebarMenu}>
-          <div tabIndex={TABINDEX.ProjectSidebar}>
-            {this.renderProject()}
-            {this.renderLists()}
-          </div>
-          {this.renderTags()}
+
+          <section tabIndex={TABINDEX.ProjectSidebar}>
+            <nav onContextMenu={this.showProjectMenu}>
+              <ol>
+                <ProjectName
+                  name={project.name}
+                  isSelected={this.isSelected}
+                  isEditing={this.isEditing}
+                  isContext={this.isContext}
+                  onEdit={onEdit}
+                  onEditCancel={onEditCancel}
+                  onChange={this.handleProjectNameChange}
+                  onDrop={onItemImport}
+                  onSelect={onSelect}/>
+              </ol>
+            </nav>
+
+            <h3><FormattedMessage id="sidebar.lists"/></h3>
+            <nav onContextMenu={this.showListsMenu}>
+              {root &&
+                <ListTree
+                  parent={root}
+                  lists={lists}
+                  context={context.list}
+                  edit={edit.list}
+                  selection={nav.list}
+                  onContextMenu={onContextMenu}
+                  onDropFiles={onItemImport}
+                  onDropItems={onListItemsAdd}
+                  onEdit={onEdit}
+                  onEditCancel={onEditCancel}
+                  onListSave={onListSave}
+                  onSelect={onSelect}
+                  onSort={onListSort}/>}
+              <ol>
+                <TrashListNode
+                  isSelected={this.isTrashSelected}
+                  onContextMenu={onContextMenu}
+                  onDropItems={onItemDelete}
+                  onSelect={onSelect}/>
+              </ol>
+            </nav>
+          </section>
+
+          <section onContextMenu={this.showTagsMenu}>
+            <h2><FormattedMessage id="sidebar.tags"/></h2>
+            <nav>
+              <TagList
+                tags={tags}
+                selection={nav.tags}
+                edit={edit.tag}
+                onCancel={onEditCancel}
+                onCreate={onTagCreate}
+                onSave={onTagSave}
+                onSelect={onTagSelect}
+                onContextMenu={onContextMenu}/>
+            </nav>
+          </section>
+
         </div>
         <ActivityPane/>
       </Sidebar>
