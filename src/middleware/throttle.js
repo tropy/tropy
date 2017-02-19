@@ -3,7 +3,7 @@
 const throttle = require('lodash.throttle')
 
 const middleware = () => next => {
-  const tnxt = throttle(next, 75)
+  const tnxt = throttle(next, 125)
 
   return action => {
     const { meta } = action
