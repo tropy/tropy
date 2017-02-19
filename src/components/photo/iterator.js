@@ -56,9 +56,7 @@ class PhotoIterator extends PureComponent {
     if (!photos.length) return null
     if (!selected) return photos[0]
 
-    const idx = this.idx[selected] + offset
-
-    return (idx >= 0 && idx < photos.length) ? photos[idx] : null
+    return photos[this.idx[selected] + offset]
   }
 
   getPrevPhoto(offset = 1) {

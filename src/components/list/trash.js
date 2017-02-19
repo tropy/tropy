@@ -1,34 +1,35 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
-const cn = require('classnames')
+const { PureComponent, PropTypes } = React
+const cx = require('classnames')
 const { IconTrash } = require('../icons')
 const { FormattedMessage } = require('react-intl')
 const { DropTarget } = require('react-dnd')
 const { DND } = require('../../constants')
+const { bool, func } = PropTypes
 
 
-class TrashListNode extends Component {
+class TrashListNode extends PureComponent {
+  get classes() {
+    return {
+      active: this.props.isSelected,
+      over: this.props.isOver
+    }
+  }
 
   handleContextMenu = (event) => {
     this.props.onContextMenu(event, 'trash', {})
   }
 
-  handleClick = () => {
-    if (!this.props.isSelected) {
-      this.props.onSelect({ trash: true })
-    }
-  }
-
   render() {
-    const { dt, isSelected, isOver } = this.props
+    const { dt, isSelected, onClick } = this.props
 
     return dt(
       <li
-        className={cn({ active: isSelected, over: isOver })}
+        className={cx(this.classes)}
         onContextMenu={this.handleContextMenu}
-        onClick={this.handleClick}>
+        onClick={isSelected ? null : onClick}>
         <IconTrash/>
         <div className="name">
           <FormattedMessage id="sidebar.trash"/>
@@ -38,25 +39,27 @@ class TrashListNode extends Component {
   }
 
   static propTypes = {
-    isSelected: PropTypes.bool,
-    isOver: PropTypes.bool,
-
-    dt: PropTypes.func.isRequired,
-
-    onContextMenu: PropTypes.func,
-    onSelect: PropTypes.func,
-    onDropItems: PropTypes.func
+    isOver: bool,
+    isSelected: bool,
+    dt: func.isRequired,
+    onClick: func.isRequired,
+    onContextMenu: func.isRequired,
+    onDropItems: func.isRequired
   }
 }
 
+const spec = {
+  drop({ onDropItems }, monitor) {
+    onDropItems(monitor.getItem().items)
+  }
+}
+
+const collect = (connect, monitor) => ({
+  dt: connect.dropTarget(),
+  isOver: monitor.isOver()
+})
+
+
 module.exports = {
-  TrashListNode: DropTarget(DND.ITEMS, {
-    drop({ onDropItems }, monitor) {
-      onDropItems(monitor.getItem().items)
-    }
-  },
-  (connect, monitor) => ({
-    dt: connect.dropTarget(),
-    isOver: monitor.isOver()
-  }))(TrashListNode)
+  TrashListNode: DropTarget(DND.ITEMS, spec, collect)(TrashListNode)
 }

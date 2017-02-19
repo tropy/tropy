@@ -44,7 +44,10 @@ class ProjectView extends PureComponent {
           <ProjectSidebar {...pick(props, ProjectSidebar.props)}
             edit={ui.edit}
             context={ui.context}
-            nav={nav}/>
+            selectedList={nav.list}
+            selectedTags={nav.tags}
+            isSelected={!(nav.list || nav.trash)}
+            isTrashSelected={nav.trash}/>
         </Resizable>
         <main>
           <section id="items">

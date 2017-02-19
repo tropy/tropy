@@ -11,7 +11,7 @@ const { Sidebar } = require('../sidebar')
 const { ProjectName } = require('./name')
 const { STYLE, LIST } = require('../../constants')
 const { has } = require('../../common/util')
-const { bool, shape, string, object, arrayOf, func } = PropTypes
+const { bool, shape, string, object, arrayOf, func, number } = PropTypes
 
 
 class ProjectSidebar extends PureComponent {
@@ -24,17 +24,119 @@ class ProjectSidebar extends PureComponent {
     return has(this.props.edit, 'project')
   }
 
-  get isSelected() {
-    return !(this.props.nav.list || this.props.nav.trash)
+  tabIndex = STYLE.TABS.ProjectSidebar
+
+
+  getRootList() {
+    return this.props.lists[LIST.ROOT]
   }
 
-  get isTrashSelected() {
-    return this.props.nav.trash
+  getFirstList() {
+    const root = this.getRootList()
+    return root && root.children[0]
   }
 
-  handleProjectNameChange = (name) => {
+  getLastList() {
+    const root = this.getRootList()
+    return root && root.children[root.children.length - 1]
+  }
+
+  getNextList() {
+    return this.getListAt(1)
+  }
+
+  getPrevList() {
+    return this.getListAt(-1)
+  }
+
+  getListAt(offset = 1) {
+    const root = this.getRootList()
+    const list = this.props.selectedList
+
+    if (!root || !list) return
+
+    const idx = root.children.indexOf(list)
+
+    if (idx < 0) return
+
+    return root.children[idx + offset]
+  }
+
+  isListSelected(list) {
+    return list && list === this.props.selectedList
+  }
+
+
+  next() {
+    switch (true) {
+      case this.props.isTrashSelected:
+        return
+      case this.props.isSelected:
+        return this.handleListSelect(this.getFirstList())
+      case this.isListSelected(this.getLastList()):
+        return this.handleTrashSelect()
+      default:
+        return this.handleListSelect(this.getNextList())
+    }
+  }
+
+  prev() {
+    switch (true) {
+      case this.props.isSelected:
+        return
+      case this.props.isTrashSelected:
+        return this.handleListSelect(this.getLastList())
+      case this.isListSelected(this.getFirstList()):
+        return this.handleSelect()
+      default:
+        return this.handleListSelect(this.getPrevList())
+    }
+  }
+
+
+  handleEdit = () => {
+    this.props.onEdit({
+      project: { name: this.props.project.name }
+    })
+  }
+
+  handleChange = (name) => {
     this.props.onProjectSave({ name })
   }
+
+  handleSelect = () => {
+    this.props.onSelect({ list: null, trash: null }, { throttle: true })
+  }
+
+  handleTrashSelect = () => {
+    this.props.onSelect({ trash: true }, { throttle: true })
+  }
+
+  handleListSelect = (list) => {
+    if (list && !this.isListSelected(list)) {
+      this.props.onSelect({ list }, { throttle: true })
+    }
+  }
+
+
+  handleKeyDown = (event) => {
+    switch (event.key) {
+      case 'ArrowUp':
+        this.prev()
+        break
+
+      case 'ArrowDown':
+        this.next()
+        break
+
+      default:
+        return
+    }
+
+    event.preventDefault()
+    event.stopPropagation()
+  }
+
 
   showSidebarMenu = (event) => {
     this.props.onContextMenu(event, 'sidebar')
@@ -59,10 +161,13 @@ class ProjectSidebar extends PureComponent {
       context,
       edit,
       hasToolbar,
+      isSelected,
+      isTrashSelected,
       lists,
-      nav,
       project,
       tags,
+      selectedList,
+      selectedTags,
       onContextMenu,
       onEdit,
       onEditCancel,
@@ -78,26 +183,28 @@ class ProjectSidebar extends PureComponent {
       onTagSelect
     } = this.props
 
-    const root = lists[LIST.ROOT]
+    const root = this.getRootList()
 
     return (
       <Sidebar>
         {hasToolbar && <Toolbar onDoubleClick={onMaximize}/>}
         <div className="sidebar-body" onContextMenu={this.showSidebarMenu}>
 
-          <section tabIndex={STYLE.TABS.ProjectSidebar}>
+          <section
+            tabIndex={this.tabIndex}
+            onKeyDown={this.handleKeyDown}>
             <nav onContextMenu={this.showProjectMenu}>
               <ol>
                 <ProjectName
                   name={project.name}
-                  isSelected={this.isSelected}
+                  isSelected={isSelected}
                   isEditing={this.isEditing}
                   isContext={this.isContext}
-                  onEdit={onEdit}
+                  onEdit={this.handleEdit}
                   onEditCancel={onEditCancel}
-                  onChange={this.handleProjectNameChange}
+                  onChange={this.handleChange}
                   onDrop={onItemImport}
-                  onSelect={onSelect}/>
+                  onSelect={this.handleSelect}/>
               </ol>
             </nav>
 
@@ -109,7 +216,7 @@ class ProjectSidebar extends PureComponent {
                   lists={lists}
                   context={context.list}
                   edit={edit.list}
-                  selection={nav.list}
+                  selection={selectedList}
                   onContextMenu={onContextMenu}
                   onDropFiles={onItemImport}
                   onDropItems={onListItemsAdd}
@@ -120,10 +227,10 @@ class ProjectSidebar extends PureComponent {
                   onSort={onListSort}/>}
               <ol>
                 <TrashListNode
-                  isSelected={this.isTrashSelected}
+                  isSelected={isTrashSelected}
                   onContextMenu={onContextMenu}
                   onDropItems={onItemDelete}
-                  onSelect={onSelect}/>
+                  onClick={this.handleTrashSelect}/>
               </ol>
             </nav>
           </section>
@@ -133,7 +240,7 @@ class ProjectSidebar extends PureComponent {
             <nav>
               <TagList
                 tags={tags}
-                selection={nav.tags}
+                selection={selectedTags}
                 edit={edit.tag}
                 onCancel={onEditCancel}
                 onCreate={onTagCreate}
@@ -150,6 +257,8 @@ class ProjectSidebar extends PureComponent {
   }
 
   static propTypes = {
+    isSelected: bool,
+    isTrashSelected: bool,
     hasToolbar: bool,
 
     project: shape({
@@ -159,9 +268,10 @@ class ProjectSidebar extends PureComponent {
 
     context: object.isRequired,
     edit: object.isRequired,
-    nav: object.isRequired,
     lists: object.isRequired,
     tags: arrayOf(object).isRequired,
+    selectedList: number,
+    selectedTags: arrayOf(number).isRequired,
 
     onMaximize: func.isRequired,
     onEdit: func.isRequired,

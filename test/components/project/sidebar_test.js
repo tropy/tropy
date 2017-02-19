@@ -14,8 +14,9 @@ describe('ProjectSidebar', () => {
         <ProjectSidebar
           project={project}
           lists={{}}
-          nav={{}}
+          selectedTags={[]}
           edit={{}}
+          context={{}}
           hasToolbar/>
       )
     ).to.have.exactly(1).descendants('Toolbar')
@@ -24,7 +25,12 @@ describe('ProjectSidebar', () => {
   it('renders the project name', () => {
     expect(
       shallow(
-        <ProjectSidebar project={project} lists={{}} nav={{}} edit={{}}/>
+        <ProjectSidebar
+          project={project}
+          lists={{}}
+          selectedTags={[]}
+          context={{}}
+          edit={{}}/>
       ).find('DropTarget(ProjectName)')
     ).to.have.prop('name', project.name)
   })

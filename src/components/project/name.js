@@ -7,13 +7,11 @@ const { NativeTypes } = require('react-dnd-electron-backend')
 const { IconMaze } = require('../icons')
 const { Editable } = require('../editable')
 const { isValidImage } = require('../../image')
-const cn = require('classnames')
-
+const cx = require('classnames')
 const { bool, string, func } = PropTypes
 
 
 class ProjectName extends PureComponent {
-
   get classes() {
     return {
       'project-name': true,
@@ -24,20 +22,18 @@ class ProjectName extends PureComponent {
   }
 
   handleClick = () => {
-    const { isSelected, onEdit, onSelect } = this.props
-
-    isSelected ?
-      onEdit({ project: { name: true } }) :
-      onSelect({ list: null, trash: null })
+    if (this.props.isSelected) {
+      this.props.onEdit()
+    } else {
+      this.props.onSelect()
+    }
   }
 
   render() {
     const { name, dt, isEditing, onChange, onEditCancel } = this.props
 
     return dt(
-      <li
-        className={cn(this.classes)}
-        onClick={this.handleClick}>
+      <li className={cx(this.classes)} onClick={this.handleClick}>
         <IconMaze/>
         <div className="name">
           <Editable
@@ -92,5 +88,7 @@ const collect = (connect, monitor) => ({
 
 
 module.exports = {
-  ProjectName: DropTarget(NativeTypes.FILE, spec, collect)(ProjectName)
+  ProjectName: DropTarget(
+    NativeTypes.FILE, spec, collect
+  )(ProjectName)
 }
