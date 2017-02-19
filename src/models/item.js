@@ -116,7 +116,10 @@ module.exports = {
 
         db.each(`
           SELECT id AS photo, item_id AS item
-            FROM photos WHERE item IN (${ids})
+            FROM photos
+              LEFT OUTER JOIN trash USING (id)
+            WHERE item IN (${ids})
+              AND deleted IS NULL
             ORDER BY item, position`,
           ({ item, photo }) => {
             items[item].photos.push(photo)

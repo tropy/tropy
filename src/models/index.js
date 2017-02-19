@@ -3,6 +3,7 @@
 module.exports = {
   item: require('./item'),
   list: require('./list'),
+  note: require('./note'),
   photo: require('./photo'),
   project: require('./project'),
   tag: require('./tag'),
