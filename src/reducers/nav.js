@@ -1,7 +1,7 @@
 'use strict'
 
 const {
-  NAV, ITEM, LIST, TAG, PHOTO, PROJECT, PROPERTIES: { DC }
+  NAV, ITEM, LIST, TAG, NOTE, PHOTO, PROJECT, PROPERTIES: { DC }
 } = require('../constants')
 
 const { isSelected } = require('../selection')
@@ -111,6 +111,14 @@ module.exports = {
           photo: payload.photo,
           items: select(state.items, payload.item, 'replace')
         } : { ...state, photo: null }
+
+      case NOTE.SELECT:
+        return payload ? {
+          ...state,
+          note: payload.note,
+          photo: payload.photo,
+          items: select(state.items, payload.item, 'replace')
+        } : { ...state, note: null }
 
       case ITEM.PHOTO.REMOVE:
         return isSelected(state.items, payload.id) &&

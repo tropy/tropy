@@ -1,13 +1,14 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes, Children } = React
+const { PureComponent, PropTypes, Children } = React
 const { only } = require('./util')
 const { Resizable } = require('./resizable')
-const cn = require('classnames')
+const cx = require('classnames')
+const { node, arrayOf, number } = PropTypes
 
-class Panel extends Component {
 
+class Panel extends PureComponent {
   get classes() {
     return { 'panel-body': true }
   }
@@ -22,7 +23,7 @@ class Panel extends Component {
 
   renderBody(body, props) {
     return (
-      <div {...props} className={cn(this.classes)}>
+      <div {...props} className={cx(this.classes)}>
         {body}
       </div>
     )
@@ -40,7 +41,7 @@ class Panel extends Component {
   }
 
   static propTypes = {
-    children: PropTypes.node
+    children: node
   }
 }
 
@@ -67,8 +68,8 @@ const PanelGroup = ({ header, children, height }) => {
 }
 
 PanelGroup.propTypes = {
-  header: PropTypes.node,
-  height: PropTypes.arrayOf(PropTypes.number),
+  header: node,
+  height: arrayOf(number),
   children: only(Panel)
 }
 

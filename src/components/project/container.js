@@ -13,7 +13,7 @@ const { MODE } = require('../../constants/project')
 const { once } = require('../../dom')
 const { values } = Object
 const Window = require('../../window')
-const cn = require('classnames')
+const cx = require('classnames')
 const actions = require('../../actions')
 
 const { getCachePrefix } = require('../../selectors/project')
@@ -131,14 +131,13 @@ class ProjectContainer extends Component {
       photo,
       photos,
       selection,
-      onSort,
       ...props
     } = this.props
 
     return dt(
       <div
         id="project"
-        className={cn(this.classes)}
+        className={cx(this.classes)}
         ref={this.setContainer}
         onContextMenu={this.handleContextMenu}>
 
@@ -147,7 +146,6 @@ class ProjectContainer extends Component {
           items={items}
           data={data}
           columns={columns}
-          onSort={onSort}
           onMetadataSave={this.handleMetadataSave}/>
 
         <ItemView {...props}
@@ -389,6 +387,10 @@ module.exports = {
 
       onNoteRestore(...args) {
         dispatch(actions.note.delete(...args))
+      },
+
+      onNoteSelect(...args) {
+        dispatch(actions.note.select(...args))
       },
 
       onEdit(...args) {

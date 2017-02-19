@@ -3,6 +3,7 @@
 module.exports = {
   ...require('./list'),
   ...require('./list-item'),
-  ...require('./note'),
+  ...require('./notepad'),
+  ...require('./panel'),
   ...require('./toolbar')
 }

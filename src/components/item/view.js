@@ -5,7 +5,7 @@ const { PureComponent, PropTypes } = React
 const { FormattedMessage } = require('react-intl')
 const { Toolbar, ToolGroup } = require('../toolbar')
 const { Tab, Tabs } = require('../tabs')
-const { Note, NoteToolbar, NoteList } = require('../note')
+const { NotePanel, NotePad } = require('../note')
 const { PanelGroup, Panel } = require('../panel')
 const { Resizable } = require('../resizable')
 const { PhotoPanel } = require('../photo')
@@ -18,6 +18,7 @@ const { MODE } = require('../../constants/project')
 const {
   func, arrayOf, shape, number, bool, object, oneOf, string
 } = PropTypes
+
 
 class ItemView extends PureComponent {
 
@@ -163,26 +164,6 @@ class ItemView extends PureComponent {
     )
   }
 
-
-  renderNoteToolbar() {
-    return (
-      <NoteToolbar
-        hasCreateButton={false}
-        onCreate={this.handleNoteCreate}/>
-    )
-  }
-
-  renderNotePanel() {
-    //const { note } = this.props
-    const { item } = this
-
-    return item && (
-      <NoteList
-        notes={item.notes || []}
-        isDisabled={this.isDisabled}/>
-    )
-  }
-
   renderToolbar() {
     return (
       <Toolbar onDoubleClick={ARGS.frameless ? this.props.onMaximize : null}>
@@ -204,6 +185,8 @@ class ItemView extends PureComponent {
       onPhotoSelect,
       onPhotoSort,
       onPhotoZoomChange,
+      onNoteSave,
+      onNoteSelect,
       ...props
     } = this.props
 
@@ -229,16 +212,19 @@ class ItemView extends PureComponent {
               onSort={onPhotoSort}
               onCreate={this.handlePhotoCreate}/>
 
-            <Panel>
-              {this.renderNoteToolbar()}
-              {this.renderNotePanel()}
-            </Panel>
+            <NotePanel {...props}
+              selected={photo && photo.id}
+              isItemOpen={this.isItemMode}
+              isDisabled={this.isDisabled}
+              onCreate={this.handleNoteCreate}
+              onSave={onNoteSave}
+              onSelect={onNoteSelect}/>
           </PanelGroup>
         </Resizable>
 
         <div className="item-container">
           <Image isVisible photo={photo}/>
-          <Note/>
+          <NotePad/>
         </div>
       </section>
     )
@@ -283,6 +269,9 @@ class ItemView extends PureComponent {
     onMaximize: func.isRequired,
     onMetadataSave: func.isRequired,
     onModeChange: func.isRequired,
+    onNoteCreate: func.isRequired,
+    onNoteSave: func.isRequired,
+    onNoteSelect: func.isRequired,
     onPanelTabSelect: func.isRequired,
     onPhotoCreate: func.isRequired,
     onPhotoSelect: func.isRequired,
@@ -290,7 +279,6 @@ class ItemView extends PureComponent {
     onPhotoZoomChange: func.isRequired
   }
 }
-
 
 module.exports = {
   ItemView

@@ -2,10 +2,11 @@
 
 const React = require('react')
 const { PropTypes } = React
-const cn = require('classnames')
+const cx = require('classnames')
+const { bool } = PropTypes
 
 const NoteListItem = ({ isSelected }) => (
-  <li className={cn({ note: true, active: isSelected })}>
+  <li className={cx({ note: true, active: isSelected })}>
     <div className="css-multiline-truncate">
       {'note content'}
     </div>
@@ -13,7 +14,7 @@ const NoteListItem = ({ isSelected }) => (
 )
 
 NoteListItem.propTypes = {
-  isSelected: PropTypes.bool
+  isSelected: bool
 }
 
 module.exports = {
