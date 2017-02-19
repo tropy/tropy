@@ -15,6 +15,7 @@ CREATE TABLE photos (
 CREATE TABLE selections (
   id        INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
   photo_id  INTEGER  NOT NULL REFERENCES photos ON DELETE CASCADE,
+  position  INTEGER,
   quality   TEXT     NOT NULL DEFAULT 'default' REFERENCES image_qualities,
   x         NUMERIC  NOT NULL DEFAULT 0,
   y         NUMERIC  NOT NULL DEFAULT 0,

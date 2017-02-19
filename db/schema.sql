@@ -88,17 +88,16 @@ CREATE TABLE metadata_values (
 CREATE TABLE notes (
   note_id      INTEGER  PRIMARY KEY,
   id           INTEGER  REFERENCES subjects ON DELETE CASCADE,
-  position     INTEGER  NOT NULL DEFAULT 0,
+  position     INTEGER,
   text         TEXT     NOT NULL,
   language     TEXT     NOT NULL DEFAULT 'en',
   created      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  deleted      NUMERIC,
 
   CHECK (
     language != '' AND language = trim(lower(language))
-  ),
-
-  UNIQUE (id, position)
+  )
 );
 CREATE TABLE lists (
   list_id         INTEGER  PRIMARY KEY,
@@ -159,6 +158,7 @@ CREATE TABLE photos (
 CREATE TABLE selections (
   id        INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
   photo_id  INTEGER  NOT NULL REFERENCES photos ON DELETE CASCADE,
+  position  INTEGER,
   quality   TEXT     NOT NULL DEFAULT 'default' REFERENCES image_qualities,
   x         NUMERIC  NOT NULL DEFAULT 0,
   y         NUMERIC  NOT NULL DEFAULT 0,
