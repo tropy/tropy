@@ -6,7 +6,7 @@ const { assign } = Object
 const { into, map } = require('transducers.js')
 
 const skel = (id) => ({
-  id, tags: [], photos: [], lists: []
+  id, tags: [], photos: [], lists: [], notes: []
 })
 
 module.exports = {
@@ -100,8 +100,8 @@ module.exports = {
               LEFT OUTER JOIN trash USING (id)
             WHERE id IN (${ids})`,
 
-          ({ id, deleted, ...data }) => {
-            assign(items[id], data, { deleted: !!deleted })
+          (data) => {
+            assign(items[data.id], data, { deleted: !!data.deleted })
           }
         ),
 
@@ -131,6 +131,16 @@ module.exports = {
             FROM list_items WHERE id IN (${ids})`,
           ({ id, list }) => {
             items[id].lists.push(list)
+          }
+        ),
+
+        db.each(`
+          SELECT id, note_id AS note
+            FROM notes
+            WHERE id IN (${ids}) AND deleted IS NOT NULL
+            ORDER BY id, created`,
+          ({ id, note }) => {
+            items[id].notes.push(note)
           }
         )
       ])

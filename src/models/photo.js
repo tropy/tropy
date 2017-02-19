@@ -5,6 +5,12 @@ const { DC } = require('../constants/properties')
 const { all } = require('bluebird')
 const { text, datetime } = require('../value')
 const metadata = require('./metadata')
+const { into, map } = require('transducers.js')
+const { assign } = Object
+
+const skel = (id) => ({
+  id, selections: [], notes: []
+})
 
 module.exports = {
 
@@ -39,29 +45,47 @@ module.exports = {
   },
 
   async load(db, ids) {
-    const photos = {}
+    const photos = into({}, map(id => [id, skel(id)]), ids)
 
     if (ids.length) {
-      await db.each(`
-        SELECT s.id, item_id AS item, template, created, modified,
-            width, height, path, protocol, mimetype,
-            checksum, orientation, exif,
-            group_concat(selections.id) AS selections
-          FROM subjects s
-            JOIN images USING (id)
-            JOIN photos USING (id)
-            LEFT OUTER JOIN selections ON s.id = selections.photo_id
-          WHERE s.id IN (${ids.join(',')})
-          GROUP BY s.id`,
+      ids = ids.join(',')
 
-        (photo) => {
-          photos[photo.id] = {
-            ...photo,
-            selections: photo.selections ?
-              photo.selections.split(',').map(Number) : []
+      await all([
+        db.each(`
+          SELECT id, item_id AS item, template, created, modified,
+            width, height, path, protocol, mimetype, checksum, orientation, exif
+            FROM subjects
+              JOIN images USING (id)
+              JOIN photos USING (id)
+            WHERE id IN (${ids})`,
+
+          (data) => {
+            assign(photos[data.id], data)
           }
-        }
-      )
+        ),
+
+        db.each(`
+          SELECT id, photo_id AS photo
+            FROM selections
+              LEFT OUTER JOIN trash USING (id)
+            WHERE photo_id IN (${ids})
+              AND deleted IS NULL
+            ORDER BY photo_id, position`,
+          ({ id, photo }) => {
+            photos[photo].selections.push(id)
+          }
+        ),
+
+        db.each(`
+          SELECT id, note_id AS note
+            FROM notes
+            WHERE id IN (${ids}) AND deleted IS NOT NULL
+            ORDER BY id, created`,
+          ({ id, note }) => {
+            photos[id].notes.push(note)
+          }
+        )
+      ])
     }
 
     return photos
