@@ -89,7 +89,7 @@ CREATE TABLE notes (
   note_id      INTEGER  PRIMARY KEY,
   id           INTEGER  REFERENCES subjects ON DELETE CASCADE,
   position     INTEGER,
-  text         TEXT     NOT NULL,
+  text         TEXT     NOT NULL DEFAULT '',
   language     TEXT     NOT NULL DEFAULT 'en',
   created      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
