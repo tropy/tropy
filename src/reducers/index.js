@@ -8,6 +8,7 @@ module.exports = {
   ...require('./lists'),
   ...require('./metadata'),
   ...require('./nav'),
+  ...require('./notes'),
   ...require('./photos'),
   ...require('./project'),
   ...require('./properties'),

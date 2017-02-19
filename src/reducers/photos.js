@@ -1,9 +1,9 @@
 'use strict'
 
 const { PHOTO, PROJECT } = require('../constants')
-
-const { omit } = require('../common/util')
 const { into, map } = require('transducers.js')
+const { nested } = require('./util')
+
 const init = {}
 
 module.exports = {
@@ -24,9 +24,6 @@ module.exports = {
       case PHOTO.INSERT:
         return { ...state, [payload.id]: payload }
 
-      case PHOTO.REMOVE:
-        return omit(state, [payload])
-
       case PHOTO.UPDATE:
         return {
           ...state,
@@ -35,6 +32,12 @@ module.exports = {
             ...payload
           }
         }
+
+      case PHOTO.NOTE.ADD:
+        return nested.add('notes', state, payload, meta)
+      case PHOTO.NOTE.REMOVE:
+        return nested.remove('notes', state, payload, meta)
+
 
       case PHOTO.BULK.UPDATE: {
         const [ids, data] = payload

@@ -30,5 +30,10 @@ module.exports = {
   PHOTO: {
     ADD: 'item.photo.add',
     REMOVE: 'item.photo.remove'
+  },
+
+  NOTE: {
+    ADD: 'item.note.add',
+    REMOVE: 'item.note.remove'
   }
 }

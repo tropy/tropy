@@ -7,9 +7,7 @@ module.exports = {
       INSERT INTO notes (id,text) VALUES (?,?)`, data.id, data.text
     )
 
-    const note = (await module.exports.load(db, [id]))[id]
-
-    return note
+    return module.exports.load(db, [id])
   },
 
   async load(db, ids) {

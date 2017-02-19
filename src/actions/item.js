@@ -172,5 +172,23 @@ module.exports = {
         meta: { ...meta }
       }
     }
+  },
+
+  notes: {
+    add(payload, meta) {
+      return {
+        type: ITEM.NOTE.ADD,
+        payload,
+        meta: { ...meta }
+      }
+    },
+
+    remove(payload, meta) {
+      return {
+        type: ITEM.NOTE.REMOVE,
+        payload,
+        meta: { ...meta }
+      }
+    }
   }
 }

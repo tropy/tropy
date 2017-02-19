@@ -92,17 +92,16 @@ CREATE INDEX metadata_values_index ON metadata_values (value ASC);
 CREATE TABLE notes (
   note_id      INTEGER  PRIMARY KEY,
   id           INTEGER  REFERENCES subjects ON DELETE CASCADE,
-  position     INTEGER  NOT NULL DEFAULT 0,
+  position     INTEGER,
   text         TEXT     NOT NULL,
   language     TEXT     NOT NULL DEFAULT 'en',
   created      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  deleted      NUMERIC,
 
   CHECK (
     language != '' AND language = trim(lower(language))
-  ),
-
-  UNIQUE (id, position)
+  )
 );
 
 

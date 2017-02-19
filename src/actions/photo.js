@@ -63,6 +63,24 @@ module.exports = {
     }
   },
 
+  notes: {
+    add(payload, meta) {
+      return {
+        type: PHOTO.NOTE.ADD,
+        payload,
+        meta: { ...meta }
+      }
+    },
+
+    remove(payload, meta) {
+      return {
+        type: PHOTO.NOTE.REMOVE,
+        payload,
+        meta: { ...meta }
+      }
+    }
+  },
+
   bulk: {
     update(payload, meta) {
       return {

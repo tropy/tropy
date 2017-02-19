@@ -14,5 +14,10 @@ module.exports = {
     UPDATE: 'photo.bulk.update'
   },
 
+  NOTE: {
+    ADD: 'photo.note.add',
+    REMOVE: 'photo.note.remove'
+  },
+
   TEMPLATE: 'https://schema.tropy.org/v1/templates/photo'
 }

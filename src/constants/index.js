@@ -7,6 +7,7 @@ module.exports = {
   LIST: require('./list'),
   METADATA: require('./metadata'),
   NAV: require('./nav'),
+  NOTE: require('./note'),
   PHOTO: require('./photo'),
   PROJECT: require('./project'),
   PROPERTIES: require('./properties'),
