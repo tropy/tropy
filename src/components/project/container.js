@@ -9,18 +9,23 @@ const { DragLayer } = require('../drag-layer')
 const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
 const { extname } = require('path')
-const { getCachePrefix } = require('../../selectors/project')
-const { getAllVisibleTags } = require('../../selectors/tag')
-const { getTemplates } = require('../../selectors/templates')
-const { getVisibleItems } = require('../../selectors')
-const { getColumns } = require('../../selectors/ui')
 const { MODE } = require('../../constants/project')
 const { once } = require('../../dom')
 const { values } = Object
 const Window = require('../../window')
 const cn = require('classnames')
 const actions = require('../../actions')
-const { arrayOf, oneOf, shape, bool, object, func, string } = PropTypes
+
+const { getCachePrefix } = require('../../selectors/project')
+const { getAllVisibleTags } = require('../../selectors/tag')
+const { getTemplates } = require('../../selectors/templates')
+const { getVisibleItems, getSelectedItems } = require('../../selectors')
+const { getVisiblePhotos, getSelectedPhoto } = require('../../selectors/photos')
+const { getColumns } = require('../../selectors/ui')
+
+const {
+  arrayOf, oneOf, shape, bool, object, func, string, number
+} = PropTypes
 
 
 class ProjectContainer extends Component {
@@ -117,7 +122,18 @@ class ProjectContainer extends Component {
 
 
   render() {
-    const { dt, items, data, columns, onSort, ...props } = this.props
+    const {
+      dt,
+      items,
+      data,
+      columns,
+      nav,
+      photo,
+      photos,
+      selection,
+      onSort,
+      ...props
+    } = this.props
 
     return dt(
       <div
@@ -127,6 +143,7 @@ class ProjectContainer extends Component {
         onContextMenu={this.handleContextMenu}>
 
         <ProjectView {...props}
+          nav={nav}
           items={items}
           data={data}
           columns={columns}
@@ -134,6 +151,11 @@ class ProjectContainer extends Component {
           onMetadataSave={this.handleMetadataSave}/>
 
         <ItemView {...props}
+          items={selection}
+          data={data}
+          photo={photo}
+          photos={photos}
+          panel={nav.panel}
           onMetadataSave={this.handleMetadataSave}/>
 
         <DragLayer cache={props.cache}/>
@@ -147,7 +169,23 @@ class ProjectContainer extends Component {
       file: string
     }).isRequired,
 
-    items: arrayOf(object).isRequired,
+    items: arrayOf(
+      shape({ id: number.isRequired })
+    ),
+
+    selection: arrayOf(
+      shape({ id: number.isRequired })
+    ),
+
+    photos: arrayOf(
+      shape({ id: number.isRequired })
+    ),
+
+    photo: shape({
+      id: number.isRequired
+    }),
+
+    nav: object.isRequired,
     data: object.isRequired,
     columns: arrayOf(object),
     cache: string.isRequired,
@@ -204,6 +242,9 @@ module.exports = {
       tags: getAllVisibleTags(state),
       columns: getColumns(state),
       items: getVisibleItems(state),
+      selection: getSelectedItems(state),
+      photo: getSelectedPhoto(state),
+      photos: getVisiblePhotos(state),
       sort: state.nav.sort,
       data: state.metadata,
       cache: getCachePrefix(state),
@@ -276,9 +317,17 @@ module.exports = {
         dispatch(actions.item.preview(...args))
       },
 
+      onPanelTabSelect(tab) {
+        dispatch(actions.nav.panel.update({ tab }))
+      },
+
       onMetadataSave(...args) {
         dispatch(actions.metadata.save(...args))
         dispatch(actions.ui.edit.cancel())
+      },
+
+      onPhotoCreate(...args) {
+        dispatch(actions.photo.create(...args))
       },
 
       onPhotoMove(...args) {
@@ -287,6 +336,14 @@ module.exports = {
 
       onPhotoSort(...args) {
         dispatch(actions.photo.order(...args))
+      },
+
+      onPhotoSelect(...args) {
+        dispatch(actions.photo.select(...args))
+      },
+
+      onPhotoZoomChange(photoZoom) {
+        dispatch(actions.nav.panel.update({ photoZoom }))
       },
 
       onListSave(...args) {
@@ -316,6 +373,22 @@ module.exports = {
 
       onTagSelect(...args) {
         dispatch(actions.tag.select(...args))
+      },
+
+      onNoteCreate(...args) {
+        dispatch(actions.note.create(...args))
+      },
+
+      onNoteSave(...args) {
+        dispatch(actions.note.save(...args))
+      },
+
+      onNoteDelete(...args) {
+        dispatch(actions.note.delete(...args))
+      },
+
+      onNoteRestore(...args) {
+        dispatch(actions.note.delete(...args))
       },
 
       onEdit(...args) {

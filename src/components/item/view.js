@@ -1,8 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
-const { connect } = require('react-redux')
+const { PureComponent, PropTypes } = React
 const { FormattedMessage } = require('react-intl')
 const { Toolbar, ToolGroup } = require('../toolbar')
 const { Tab, Tabs } = require('../tabs')
@@ -14,13 +13,13 @@ const { IconMetadata, IconTag, IconChevron16 } = require('../icons')
 const { IconButton } = require('../button')
 const { Image } = require('../image')
 const { Fields, TemplateSelect } = require('../metadata')
-const { getSelectedItems } = require('../../selectors/items')
-const { getVisiblePhotos, getSelectedPhoto } = require('../../selectors/photos')
 const { MODE } = require('../../constants/project')
-const act = require('../../actions')
 
+const {
+  func, arrayOf, shape, number, bool, object, oneOf, string
+} = PropTypes
 
-class ItemView extends Component {
+class ItemView extends PureComponent {
 
   get item() {
     const { items } = this.props
@@ -42,14 +41,14 @@ class ItemView extends Component {
   }
 
   handleMetadataTabSelect = () => {
-    if (this.props.nav.panel.tab !== 'metadata') {
-      this.props.onTabSelect('metadata')
+    if (this.props.panel.tab !== 'metadata') {
+      this.props.onPanelTabSelect('metadata')
     }
   }
 
   handleTagsTabSelect = () => {
-    if (this.props.nav.panel.tab !== 'tags') {
-      this.props.onTabSelect('tags')
+    if (this.props.panel.tab !== 'tags') {
+      this.props.onPanelTabSelect('tags')
     }
   }
 
@@ -75,20 +74,18 @@ class ItemView extends Component {
 
 
   renderItemTabs() {
-    const { nav, selection } = this.props
+    const { panel } = this.props
 
     return (
       <Tabs justified>
         <Tab
-          active={nav.panel.tab === 'metadata'}
-          disabled={!selection.length}
+          isActive={panel.tab === 'metadata'}
           onActivate={this.handleMetadataTabSelect}>
           <IconMetadata/>
           <FormattedMessage id="panel.metadata.tab"/>
         </Tab>
         <Tab
-          active={nav.panel.tab === 'tags'}
-          disabled={!selection.length}
+          isActive={panel.tab === 'tags'}
           onActivate={this.handleTagsTabSelect}>
           <IconTag/>
           <FormattedMessage id="panel.tags"/>
@@ -98,14 +95,14 @@ class ItemView extends Component {
   }
 
   renderItemPanel() {
-    const { selection, nav } = this.props
+    const { panel } = this.props
 
-    switch (selection.length) {
+    switch (this.props.items.length) {
       case 0:
         return <span>No items selected</span>
 
       case 1:
-        switch (nav.panel.tab) {
+        switch (panel.tab) {
           case 'metadata':
             return this.renderMetadataPanel()
           case 'tags':
@@ -115,7 +112,7 @@ class ItemView extends Component {
         }
 
       default:
-        return <span>{selection.length} items selected</span>
+        // bulk editor
     }
   }
 
@@ -176,13 +173,12 @@ class ItemView extends Component {
   }
 
   renderNotePanel() {
-    const { note } = this.props
+    //const { note } = this.props
     const { item } = this
 
     return item && (
       <NoteList
         notes={item.notes || []}
-        selected={note}
         isDisabled={this.isDisabled}/>
     )
   }
@@ -203,7 +199,7 @@ class ItemView extends Component {
 
   render() {
     const {
-      nav,
+      panel,
       photo,
       onPhotoSelect,
       onPhotoSort,
@@ -224,7 +220,7 @@ class ItemView extends Component {
             </Panel>
 
             <PhotoPanel {...props}
-              zoom={nav.panel.photoZoom}
+              zoom={panel.photoZoom}
               selected={photo && photo.id}
               onZoomChange={onPhotoZoomChange}
               isItemOpen={this.isItemMode}
@@ -248,84 +244,54 @@ class ItemView extends Component {
     )
   }
 
+
   static propTypes = {
-    items: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        tags: PropTypes.arrayOf(PropTypes.number),
-        deleted: PropTypes.bool
+    items: arrayOf(
+      shape({
+        id: number.isRequired,
+        tags: arrayOf(number),
+        deleted: bool
       })
     ),
 
-    data: PropTypes.object.isRequired,
+    data: object.isRequired,
 
-    photos: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        deleted: PropTypes.bool
+    photos: arrayOf(
+      shape({
+        id: number.isRequired,
+        deleted: bool
       })
     ),
 
-    photo: PropTypes.shape({
-      id: PropTypes.number.isRequired
+    photo: shape({
+      id: number.isRequired
     }),
 
-    nav: PropTypes.shape({
-      panel: PropTypes.shape({
-        tab: PropTypes.oneOf(['metadata', 'tags']).isRequired,
-        photoZoom: PropTypes.number.isRequired
-      }).isRequired,
+    panel: shape({
+      tab: oneOf(['metadata', 'tags']).isRequired,
+      photoZoom: number.isRequired
     }).isRequired,
 
-    mode: PropTypes.string,
-    note: PropTypes.number,
-    selection: PropTypes.arrayOf(PropTypes.number),
-    properties: PropTypes.object,
-    templates: PropTypes.object,
+    mode: string.isRequired,
+    properties: object.isRequired,
+    templates: object.isRequired,
 
-    onItemSave: PropTypes.func,
-    onContextMenu: PropTypes.func,
-    onEdit: PropTypes.func,
-    onEditCancel: PropTypes.func,
-    onMaximize: PropTypes.func,
-    onMetadataSave: PropTypes.func,
-    onModeChange: PropTypes.func,
-    onTabSelect: PropTypes.func,
-    onPhotoCreate: PropTypes.func,
-    onPhotoSelect: PropTypes.func,
-    onPhotoSort: PropTypes.func,
-    onPhotoZoomChange: PropTypes.func
+    onItemSave: func.isRequired,
+    onContextMenu: func.isRequired,
+    onEdit: func.isRequired,
+    onEditCancel: func.isRequired,
+    onMaximize: func.isRequired,
+    onMetadataSave: func.isRequired,
+    onModeChange: func.isRequired,
+    onPanelTabSelect: func.isRequired,
+    onPhotoCreate: func.isRequired,
+    onPhotoSelect: func.isRequired,
+    onPhotoSort: func.isRequired,
+    onPhotoZoomChange: func.isRequired
   }
 }
 
 
 module.exports = {
-  ItemView: connect(
-    (state) => ({
-      items: getSelectedItems(state),
-      data: state.metadata,
-      photo: getSelectedPhoto(state),
-      photos: getVisiblePhotos(state),
-      note: state.nav.note,
-      selection: state.nav.items
-    }),
-
-    (dispatch) => ({
-      onTabSelect(tab) {
-        dispatch(act.nav.panel.update({ tab }))
-      },
-
-      onPhotoCreate(...args) {
-        dispatch(act.photo.create(...args))
-      },
-
-      onPhotoSelect(...args) {
-        dispatch(act.photo.select(...args))
-      },
-
-      onPhotoZoomChange(photoZoom) {
-        dispatch(act.nav.panel.update({ photoZoom }))
-      }
-    })
-  )(ItemView)
+  ItemView
 }
