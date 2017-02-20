@@ -2,5 +2,6 @@
 
 module.exports = {
   ...require('./items'),
-  ...require('./metadata')
+  ...require('./metadata'),
+  ...require('./notes')
 }

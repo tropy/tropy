@@ -1,19 +1,19 @@
 'use strict'
 
 const { createSelector: memo } = require('reselect')
-const { seq, compose, map, mapcat, keep } = require('transducers.js')
-const { get } = require('../common/util')
+const { seq, compose, map, cat, keep } = require('transducers.js')
+const { getSelectedItems } = require('./items')
 
 const getPhotos = ({ photos }) => photos
 
 const getVisiblePhotos = memo(
   getPhotos,
-  ({ items }) => (items),
-  ({ nav }) => (nav.items),
+  getSelectedItems,
 
-  (photos, items, selection) =>
-    seq(selection, compose(
-      mapcat(id => get(items, [id, 'photos']) || []),
+  (photos, items) =>
+    seq(items, compose(
+      map(item => item.photos),
+      cat,
       map(id => photos[id]),
       keep()
     ))
