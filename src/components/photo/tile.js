@@ -5,25 +5,15 @@ const { PhotoIterable } = require('./iterable')
 const { createClickHandler } = require('../util')
 const cx = require('classnames')
 const { bool } = React.PropTypes
-const { TILE } = require('../../constants/style')
 
 
 class PhotoTile extends PhotoIterable {
-
   get classes() {
     return {
       ...super.classes,
       'tile': true,
       'click-catcher': true,
       'small': this.props.isSmall
-    }
-  }
-
-  get style() {
-    const height = `${this.props.size * TILE.FACTOR}px`
-
-    return {
-      height, flexBasis: height
     }
   }
 
@@ -41,8 +31,7 @@ class PhotoTile extends PhotoIterable {
     return this.connect(
       <li
         className={cx(this.classes)}
-        ref={this.setContainer}
-        style={this.style}>
+        ref={this.setContainer}>
         <div className="tile-state">
           {this.renderThumbnail({
             onClick: this.handleClick,

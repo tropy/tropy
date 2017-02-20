@@ -7,35 +7,28 @@ const { imageURL } = require('../../common/cache')
 const { pick } = require('../../common/util')
 const { string, number, func } = PropTypes
 
+const SIZE = 512
 
 class Thumbnail extends PureComponent {
 
   get src() {
-    const { cache, id, size } = this.props
+    const { cache, id } = this.props
 
     return (id != null) ?
-      imageURL(cache, id, size > 48 ? 512 : 48) : null
-  }
-
-  get style() {
-    return {
-      width: `${this.props.size}px`,
-      height: `${this.props.size}px`
-    }
+      imageURL(cache, id, SIZE > 48 ? 512 : 48) : null
   }
 
   render() {
-    const { size } = this.props
-    const { src, style } = this
+    const { src } = this
 
     const listeners = pick(this.props, [
       'onClick', 'onDoubleClick', 'onMouseDown', 'onContextMenu'
     ])
 
     return (
-      <figure {...listeners} className="thumbnail" style={style}>
+      <figure {...listeners} className="thumbnail">
         <IconPhoto/>
-        {src && <img src={encodeURI(src)} width={size} height={size}/>}
+        {src && <img src={encodeURI(src)}/>}
       </figure>
     )
   }
@@ -43,7 +36,6 @@ class Thumbnail extends PureComponent {
   static propTypes = {
     cache: string.isRequired,
     id: number,
-    size: number.isRequired,
     onClick: func,
     onContextMenu: func,
     onDoubleClick: func,

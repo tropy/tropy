@@ -82,8 +82,7 @@ class PhotoIterable extends PureComponent {
     return (
       <Thumbnail {...props}
         id={this.props.photo.id}
-        cache={this.props.cache}
-        size={this.props.size}/>
+        cache={this.props.cache}/>
     )
   }
 
@@ -185,7 +184,6 @@ class PhotoIterable extends PureComponent {
     orientation: oneOf(['horizontal', 'vertical']).isRequired,
 
     cache: string.isRequired,
-    size: number.isRequired,
 
     ds: func.isRequired,
     dt: func.isRequired,

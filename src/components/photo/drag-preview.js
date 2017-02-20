@@ -26,7 +26,7 @@ class PhotoDragPreview extends PureComponent {
   render() {
     return (
       <div className={cn(this.classes)}>
-        <Thumbnail {...this.props} id={this.item.id}/>
+        <Thumbnail id={this.item.id} cache={this.props.cache}/>
         {this.count > 1 &&
           <div className="badge">{this.count}</div>
         }
@@ -36,15 +36,10 @@ class PhotoDragPreview extends PureComponent {
   }
 
   static propTypes = {
-    size: PropTypes.number,
     cache: PropTypes.string.isRequired,
     items: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number.isRequired
     })).isRequired
-  }
-
-  static defaultProps = {
-    size: 64
   }
 }
 

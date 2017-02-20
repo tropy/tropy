@@ -75,7 +75,7 @@ class ItemTableCell extends PureComponent {
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>
 
-        {hasCoverImage && <CoverImage item={item} size={24} cache={cache}/>}
+        {hasCoverImage && <CoverImage item={item} cache={cache}/>}
 
         <Editable
           value={this.value}

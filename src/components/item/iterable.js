@@ -149,7 +149,6 @@ class ItemIterable extends PureComponent {
       photos: arrayOf(number)
     }).isRequired,
 
-    size: number.isRequired,
     orientation: oneOf(['horizontal', 'vertical']).isRequired,
 
     ds: func.isRequired,
