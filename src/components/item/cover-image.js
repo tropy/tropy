@@ -19,6 +19,10 @@ const cover = (item) =>
 const CoverImage = ({ item, ...props }) => (
   <div className={cx({ 'cover-image': true, 'stack': card(item) > 1 })}>
     <Thumbnail {...pick(props, ThumbProps)} id={cover(item)}/>
+    <div className="stack-lines">
+      <div className="line line-2"/>
+      <div className="line line-1"/>
+    </div>
   </div>
 )
 
