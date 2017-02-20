@@ -36,7 +36,9 @@ rules:
   no-invalid-hex: 2
   no-mergeable-selectors: 2
   no-misspelled-properties: 2
-  no-qualifying-elements: 2
+  no-qualifying-elements:
+    - 2
+    - allow-element-with-attribute: true
   no-trailing-whitespace: 2
   no-trailing-zero: 2
   no-transition-all: 2
