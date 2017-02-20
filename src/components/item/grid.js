@@ -98,6 +98,7 @@ class ItemGrid extends ItemIterator {
 
     return this.connect(
       <ul
+        data-size={this.size}
         className={cx(this.classes)}
         tabIndex={this.tabIndex}
         onKeyDown={this.handleKeyDown}
