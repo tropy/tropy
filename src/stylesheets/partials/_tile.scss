@@ -9,6 +9,22 @@
   justify-content: center;
   align-items: center;
 
+  @for $i from $tile-thumbnail-size-min through $tile-thumbnail-size-max {
+    ul[data-size="#{$i}"] & {
+      $tile-size: #{$i * $tile-factor}px;
+
+      flex-basis: $tile-size;
+      height: $tile-size;
+
+      .thumbnail {
+        $size: #{$i}px;
+
+        width: $size;
+        height: $size;
+      }
+    }
+  }
+
   &.active {
     .tile-state {
       border: 3px solid $tile-active-color;

@@ -40,7 +40,15 @@ $space-xxl: 48px;
 // Thumbnails
 // --------------------------------------------------
 
-$thumbnail-size: $space-lg;
+$thumbnail-size:          $space-lg;
+
+
+// Tile
+// --------------------------------------------------
+
+$tile-factor:             1.2;
+$tile-thumbnail-size-min: 28;
+$tile-thumbnail-size-max: 512;
 
 
 // Dimensions
@@ -155,12 +163,6 @@ $tabs-compact-padding-horizontal: $space-xs;
 $metadata-line-height: $space-lg;
 $metadata-gutter: 12em / 14; // Cannot mix em with px in calculations
 $metadata-horizontal-offset: 33%;
-
-
-// Photo list
-// --------------------------------------------------
-
-
 
 
 // Note list
