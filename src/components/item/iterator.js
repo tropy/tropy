@@ -146,8 +146,8 @@ class ItemIterator extends PureComponent {
   }
 
   static ZOOM = [
-    24,
-    ...times(57, i => i * 4 + 28),
+    48,
+    ...times(51, i => i * 4 + 52),
     ...times(32, i => i * 8 + 256),
     512
   ]

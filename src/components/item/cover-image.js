@@ -4,7 +4,6 @@ const React = require('react')
 const { PropTypes } = React
 const { Thumbnail } = require('../photo')
 const { pick, get } = require('../../common/util')
-const cx = require('classnames')
 const { shape, number, arrayOf } = PropTypes
 
 const ThumbProps = Object.keys(Thumbnail.propTypes)
@@ -15,14 +14,17 @@ const card = ({ photos }) =>
 const cover = (item) =>
   item.cover || get(item, ['photos', 0])
 
+const stack = (
+  <div className="stack-lines">
+    <div className="line line-2"/>
+    <div className="line line-1"/>
+  </div>
+)
 
 const CoverImage = ({ item, ...props }) => (
-  <div className={cx({ 'cover-image': true, 'stack': card(item) > 1 })}>
+  <div className="cover-image">
     <Thumbnail {...pick(props, ThumbProps)} id={cover(item)}/>
-    <div className="stack-lines">
-      <div className="line line-2"/>
-      <div className="line line-1"/>
-    </div>
+    {(card(item) > 1) && stack }
   </div>
 )
 

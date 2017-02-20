@@ -159,8 +159,8 @@ class PhotoIterator extends PureComponent {
 
 
   static ZOOM = [
-    24,
-    ...times(51, i => i * 2 + 26),
+    48,
+    ...times(39, i => i * 2 + 50),
     ...times(32, i => i * 4 + 128),
     256
   ]

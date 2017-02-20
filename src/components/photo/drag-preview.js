@@ -40,7 +40,7 @@ class PhotoDragPreview extends PureComponent {
 
   static propTypes = {
     cache: string.isRequired,
-    size: string.isRequired,
+    size: number.isRequired,
     items: arrayOf(shape({
       id: number.isRequired
     })).isRequired
