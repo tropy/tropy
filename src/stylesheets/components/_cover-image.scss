@@ -11,38 +11,30 @@
     left: $component-padding-horizontal;
     top: ($row-height - $thumbnail-size) / 2;
 
-    &.stack {
-      .stack-lines {
-        background: transparent;
-        display: block;
+    .stack-lines {
+      background: transparent;
+      display: block;
 
-        .line {
-          height: 1px;
-        }
-
-        @for $i from 1 through $stack-size-max {
-          .line-#{$i} {
-            margin-left: $i * 2px;
-            margin-right: $i * 2px;
-          }
-        }
+      .line {
+        height: 1px;
       }
 
-      .thumbnail {
-        -webkit-clip-path: inset(4px 0 0 0);
+      @for $i from 1 through $stack-size-max {
+        .line-#{$i} {
+          margin-left: $i * 2px;
+          margin-right: $i * 2px;
+        }
       }
+    }
+
+    .thumbnail {
+      -webkit-clip-path: inset(4px 0 0 0);
     }
   }
 
   .item-grid & {
     .over & {
       border: $space-min solid $items-over-bg;
-    }
-
-    &.stack {
-      .stack-lines {
-        display: block;
-      }
     }
   }
 
@@ -58,7 +50,6 @@
   top: 0;
   left: 0;
   width: 100%;
-  display: none;
   background: $stack-bg;
 
   .line {
