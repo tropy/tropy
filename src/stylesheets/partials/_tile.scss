@@ -13,7 +13,7 @@
 
   @while $i <= $tile-thumbnail-size-max {
     ul[data-size="#{$i}"] & {
-      $tile-size: #{$i * $tile-factor}px;
+      $tile-size: #{round($i * $tile-factor)}px;
 
       flex-basis: $tile-size;
       height: $tile-size;
