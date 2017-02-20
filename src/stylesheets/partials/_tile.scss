@@ -9,9 +9,9 @@
   justify-content: center;
   align-items: center;
 
-  @for $j from 0 through (($tile-thumbnail-size-max - $tile-thumbnail-size-min) / 2) {
-    $i: $tile-thumbnail-size-min + $j * 2;
+  $i: $tile-thumbnail-size-min;
 
+  @while $i <= $tile-thumbnail-size-max {
     ul[data-size="#{$i}"] & {
       $tile-size: #{$i * $tile-factor}px;
 
@@ -25,6 +25,8 @@
         height: $size;
       }
     }
+
+    $i: $i + $tile-size-step-min;
   }
 
   &.active {

@@ -56,7 +56,9 @@
     background: $stack-color;
     margin-bottom: 1px;
 
-    @for $i from $tile-thumbnail-size-min through $tile-thumbnail-size-max {
+    $i: $tile-thumbnail-size-min;
+
+    @while $i <= $tile-thumbnail-size-max {
       ul[data-size="#{$i}"] & {
         height: #{round($i / 32)}px;
 
@@ -67,6 +69,8 @@
           }
         }
       }
+
+      $i: $i + $tile-size-step-min;
     }
   }
 }
