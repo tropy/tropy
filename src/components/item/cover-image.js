@@ -23,8 +23,8 @@ const stack = (
 
 const CoverImage = ({ item, ...props }) => (
   <div className="cover-image">
-    <Thumbnail {...pick(props, ThumbProps)} id={cover(item)}/>
     {(card(item) > 1) && stack }
+    <Thumbnail {...pick(props, ThumbProps)} id={cover(item)}/>
   </div>
 )
 

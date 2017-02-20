@@ -13,7 +13,6 @@
 
     .stack-lines {
       background: transparent;
-      display: block;
 
       .line {
         height: 1px;
@@ -25,10 +24,10 @@
           margin-right: $i * 2px;
         }
       }
-    }
 
-    .thumbnail {
-      -webkit-clip-path: inset(4px 0 0 0);
+      & + .thumbnail {
+        -webkit-clip-path: inset(4px 0 0 0);
+      }
     }
   }
 
@@ -51,6 +50,7 @@
   left: 0;
   width: 100%;
   background: $stack-bg;
+  z-index: 1;
 
   .line {
     background: $stack-color;
