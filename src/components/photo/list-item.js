@@ -90,6 +90,7 @@ class PhotoListItem extends PhotoIterable {
   }
 
   static defaultProps = {
+    ...PhotoIterable.defaultProps,
     data: {}
   }
 }

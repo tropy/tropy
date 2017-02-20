@@ -61,6 +61,7 @@ class ItemTableCell extends PureComponent {
     const {
       item,
       cache,
+      size,
       width,
       isEditing,
       isDisabled,
@@ -75,7 +76,7 @@ class ItemTableCell extends PureComponent {
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>
 
-        {hasCoverImage && <CoverImage item={item} cache={cache}/>}
+        {hasCoverImage && <CoverImage item={item} cache={cache} size={size}/>}
 
         <Editable
           value={this.value}
@@ -109,6 +110,7 @@ class ItemTableCell extends PureComponent {
 
     cache: string.isRequired,
     width: string.isRequired,
+    size: number.isRequired,
 
     onCancel: func.isRequired,
     onChange: func.isRequired,
@@ -116,7 +118,8 @@ class ItemTableCell extends PureComponent {
   }
 
   static defaultProps = {
-    data: {}
+    data: {},
+    size: 48
   }
 }
 

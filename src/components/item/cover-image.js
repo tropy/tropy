@@ -4,7 +4,7 @@ const React = require('react')
 const { PropTypes } = React
 const { Thumbnail } = require('../photo')
 const { pick, get } = require('../../common/util')
-const cn = require('classnames')
+const cx = require('classnames')
 const { shape, number, arrayOf } = PropTypes
 
 const ThumbProps = Object.keys(Thumbnail.propTypes)
@@ -17,7 +17,7 @@ const cover = (item) =>
 
 
 const CoverImage = ({ item, ...props }) => (
-  <div className={cn({ 'cover-image': true, 'stack': card(item) > 1 })}>
+  <div className={cx({ 'cover-image': true, 'stack': card(item) > 1 })}>
     <Thumbnail {...pick(props, ThumbProps)} id={cover(item)}/>
   </div>
 )

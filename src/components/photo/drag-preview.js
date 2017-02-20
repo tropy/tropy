@@ -3,7 +3,8 @@
 const React = require('react')
 const { PureComponent, PropTypes } = React
 const { Thumbnail } = require('./thumbnail')
-const cn = require('classnames')
+const cx = require('classnames')
+const { string, arrayOf, shape, number } = PropTypes
 
 class PhotoDragPreview extends PureComponent {
 
@@ -24,9 +25,11 @@ class PhotoDragPreview extends PureComponent {
   }
 
   render() {
+    const { cache, size } = this.props
+
     return (
-      <div className={cn(this.classes)}>
-        <Thumbnail id={this.item.id} cache={this.props.cache}/>
+      <div className={cx(this.classes)}>
+        <Thumbnail id={this.item.id} size={size} cache={cache}/>
         {this.count > 1 &&
           <div className="badge">{this.count}</div>
         }
@@ -36,10 +39,15 @@ class PhotoDragPreview extends PureComponent {
   }
 
   static propTypes = {
-    cache: PropTypes.string.isRequired,
-    items: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.number.isRequired
+    cache: string.isRequired,
+    size: string.isRequired,
+    items: arrayOf(shape({
+      id: number.isRequired
     })).isRequired
+  }
+
+  static defaultProps = {
+    size: 64
   }
 }
 

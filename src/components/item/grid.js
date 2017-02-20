@@ -76,11 +76,7 @@ class ItemGrid extends ItemIterator {
   }
 
   get placeholder() {
-    return (
-      <li
-        className="placeholder tile click-catcher"
-        style={{ flexBasis: `${this.size * TILE.FACTOR}px` }}/>
-    )
+    return <li className="placeholder tile click-catcher"/>
   }
 
   resize = () => {
@@ -98,11 +94,11 @@ class ItemGrid extends ItemIterator {
 
     return this.connect(
       <ul
-        data-size={this.size}
         className={cx(this.classes)}
         tabIndex={this.tabIndex}
         onKeyDown={this.handleKeyDown}
         ref={this.setContainer}
+        data-size={this.size}
         onClick={this.handleClickOutside}>
         {this.map(({ item, ...props }) =>
           <ItemTile {...props} key={item.id} item={item} isSmall={isSmall}/>

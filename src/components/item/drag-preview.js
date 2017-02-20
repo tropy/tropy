@@ -1,12 +1,12 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
+const { PureComponent, PropTypes } = React
 const { CoverImage } = require('./cover-image')
-const cn = require('classnames')
+const cx = require('classnames')
+const { arrayOf, string, shape, number } = PropTypes
 
-class ItemDragPreview extends Component {
-
+class ItemDragPreview extends PureComponent {
   get classes() {
     return {
       'item': true,
@@ -24,9 +24,11 @@ class ItemDragPreview extends Component {
   }
 
   render() {
+    const { cache, size } = this.pros
+
     return (
-      <div className={cn(this.classes)}>
-        <CoverImage cache={this.props.cache} item={this.item}/>
+      <div className={cx(this.classes)}>
+        <CoverImage cache={cache} size={size} item={this.item}/>
         {this.count > 1 &&
           <div className="badge">{this.count}</div>
         }
@@ -36,10 +38,15 @@ class ItemDragPreview extends Component {
   }
 
   static propTypes = {
-    cache: PropTypes.string.isRequired,
-    items: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.number.isRequired
+    cache: string.isRequired,
+    size: number.isRequired,
+    items: arrayOf(shape({
+      id: number.isRequired
     })).isRequired
+  }
+
+  static defaultProps = {
+    size: 64
   }
 }
 

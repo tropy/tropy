@@ -5,7 +5,7 @@ const { ItemIterable } = require('./iterable')
 const { CoverImage } = require('./cover-image')
 const { createClickHandler } = require('../util')
 const cx = require('classnames')
-const { bool } = React.PropTypes
+const { bool, number } = React.PropTypes
 
 
 class ItemTile extends ItemIterable {
@@ -24,14 +24,17 @@ class ItemTile extends ItemIterable {
   })
 
   render() {
+    const { item, cache, size } = this.props
+
     return this.connect(
       <li
         ref={this.setContainer}
         className={cx(this.classes)}>
         <div className="tile-state">
           <CoverImage
-            cache={this.props.cache}
-            item={this.props.item}
+            cache={cache}
+            item={item}
+            size={size}
             onMouseDown={this.handleMouseDown}
             onContextMenu={this.handleContextMenu}/>
         </div>
@@ -41,7 +44,13 @@ class ItemTile extends ItemIterable {
 
   static propTypes = {
     ...ItemIterable.propTypes,
-    isSmall: bool
+    isSmall: bool,
+    size: number.isRequired
+  }
+
+  static defaultProps = {
+    ...ItemIterable.defaultProps,
+    size: 512
   }
 }
 

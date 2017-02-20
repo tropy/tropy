@@ -74,11 +74,7 @@ class PhotoGrid extends PhotoIterator {
   }
 
   get placeholder() {
-    return (
-      <li
-        className="placeholder tile click-catcher"
-        style={{ flexBasis: `${this.size * TILE.FACTOR}px` }}/>
-    )
+    return <li className="placeholder tile click-catcher"/>
   }
 
   get isSmall() {
@@ -98,6 +94,7 @@ class PhotoGrid extends PhotoIterator {
         className={cx(this.classes)}
         ref={this.setContainer}
         tabIndex={this.tabIndex}
+        data-size={this.size}
         onKeyDown={this.handleKeyDown}
         onClick={this.handleClickOutside}>
         {this.map(({ photo, ...props }) =>
