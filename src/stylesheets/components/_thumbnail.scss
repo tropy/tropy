@@ -6,6 +6,12 @@
   position: relative;
   box-sizing: content-box;
 
+  .item-table &,
+  .photo-list & {
+    width: $thumbnail-size;
+    height: $thumbnail-size;
+  }
+
   .icon-photo,
   img {
     position: absolute;
