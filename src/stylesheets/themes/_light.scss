@@ -111,8 +111,9 @@ $tile-focus-color:  $brand-primary;
 $tile-active-color: $shade-4;
 
 // Stack
-$stack-color: $shade-5;
-$stack-bg:    $body-bg;
+$stack-color:        $shade-5;
+$stack-bg:           $body-bg;
+$stack-active-color: $shade-3;
 
 
 // Components
@@ -157,8 +158,6 @@ $items-focus-bg:                 $brand-primary;
 $items-active-color:             $shade-0;
 $items-active-bg:                $shade-3;
 $items-over-bg:                  $blue-light;
-$cover-image-color:              $icon-color;
-$cover-image-active-color:       $shade-4;
 
 // Panel group
 $panels-bg: $shade-1;

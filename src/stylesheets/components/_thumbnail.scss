@@ -12,11 +12,16 @@
     height: $thumbnail-size;
   }
 
-  .icon-photo,
-  img {
+  img,
+  .icon-photo {
     position: absolute;
     width: 100%;
     height: 100%;
+  }
+
+  img {
+    text-indent: -99em;
+    overflow: hidden;
   }
 
   .icon-photo {
@@ -30,10 +35,5 @@
       height: calc(100% * 2 / 3);
       color: $thumbnail-color;
     }
-  }
-
-  img {
-    text-indent: -99em;
-    overflow: hidden;
   }
 }

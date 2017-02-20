@@ -21,4 +21,9 @@
   .thumbnail {
     opacity: $drag-preview-opacity;
   }
+
+  .thumbnail {
+    width: $drag-preview-size;
+    height: $drag-preview-size;
+  }
 }

@@ -5,43 +5,6 @@
 .cover-image {
   box-sizing: content-box;
   position: relative;
-
-  .item-table & {
-    position: absolute;
-    left: $component-padding-horizontal;
-    top: ($row-height - $thumbnail-size) / 2;
-
-    .stack-lines {
-      background: transparent;
-
-      .line {
-        height: 1px;
-      }
-
-      @for $i from 1 through $stack-size-max {
-        .line-#{$i} {
-          margin-left: $i * 2px;
-          margin-right: $i * 2px;
-        }
-      }
-
-      & + .thumbnail {
-        -webkit-clip-path: inset(4px 0 0 0);
-      }
-    }
-  }
-
-  .item-grid & {
-    .over & {
-      border: $space-min solid $items-over-bg;
-    }
-  }
-
-  img,
-  .icon-item {
-    width: 100%;
-    height: 100%;
-  }
 }
 
 .stack-lines {
@@ -71,6 +34,47 @@
       }
 
       $i: $i + $tile-size-step-min;
+    }
+  }
+}
+
+.item-table {
+  .cover-image {
+    position: absolute;
+    left: $component-padding-horizontal;
+    top: ($row-height - $thumbnail-size) / 2;
+
+    .stack-lines {
+      background: transparent;
+
+      .line {
+        height: 1px;
+      }
+
+      @for $i from 1 through $stack-size-max {
+        .line-#{$i} {
+          margin-left: $i * 2px;
+          margin-right: $i * 2px;
+        }
+      }
+
+      & + .thumbnail {
+        -webkit-clip-path: inset(4px 0 0 0);
+
+        .icon-photo {
+          g {
+            transform: translateY(2px);
+          }
+        }
+      }
+    }
+  }
+
+  .active {
+    .cover-image {
+      .line {
+        background: $stack-active-color;
+      }
     }
   }
 }
