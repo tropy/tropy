@@ -27,6 +27,11 @@ class ItemView extends PureComponent {
     return items.length === 1 ? items[0] : null
   }
 
+  get photo() {
+    const { photo, photos } = this.props
+    return photo ? photos.find(({ id }) => id === photo) : null
+  }
+
   get isDisabled() {
     const { item } = this
     return !(item && !item.deleted)
@@ -118,8 +123,8 @@ class ItemView extends PureComponent {
   }
 
   renderMetadataPanel() {
-    const { photo, data, templates, ...props } = this.props
-    const { item, isDisabled } = this
+    const { data, templates, ...props } = this.props
+    const { item, photo, isDisabled } = this
 
     return (
       <div className="metadata-container">
@@ -204,7 +209,7 @@ class ItemView extends PureComponent {
 
             <PhotoPanel {...props}
               zoom={panel.photoZoom}
-              selected={photo && photo.id}
+              selected={photo}
               onZoomChange={onPhotoZoomChange}
               isItemOpen={this.isItemMode}
               isDisabled={this.isDisabled}
@@ -213,7 +218,7 @@ class ItemView extends PureComponent {
               onCreate={this.handlePhotoCreate}/>
 
             <NotePanel {...props}
-              selected={photo && photo.id}
+              selected={photo}
               isItemOpen={this.isItemMode}
               isDisabled={this.isDisabled}
               onCreate={this.handleNoteCreate}
@@ -223,7 +228,7 @@ class ItemView extends PureComponent {
         </Resizable>
 
         <div className="item-container">
-          <Image isVisible photo={photo}/>
+          <Image isVisible photo={this.photo}/>
           <NotePad/>
         </div>
       </section>
@@ -242,6 +247,12 @@ class ItemView extends PureComponent {
 
     data: object.isRequired,
 
+    notes: arrayOf(
+      shape({
+        id: number.isRequired
+      })
+    ),
+
     photos: arrayOf(
       shape({
         id: number.isRequired,
@@ -249,9 +260,8 @@ class ItemView extends PureComponent {
       })
     ),
 
-    photo: shape({
-      id: number.isRequired
-    }),
+    note: number,
+    photo: number,
 
     panel: shape({
       tab: oneOf(['metadata', 'tags']).isRequired,

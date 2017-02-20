@@ -5,13 +5,13 @@ const { PropTypes } = React
 const { NoteListItem } = require('./list-item')
 const { shape, arrayOf, number, bool, func } = PropTypes
 
-const NoteList = ({ notes, selected }) => (
+const NoteList = ({ notes, selection }) => (
   <ul className="note-list">
     {notes.map(note =>
       <NoteListItem
         key={note.id}
         note={note}
-        isSelected={note.id === selected}/>
+        isSelected={note.id === selection}/>
     )}
   </ul>
 )
@@ -21,8 +21,10 @@ NoteList.propTypes = {
     id: number.isRequired
   })).isRequired,
 
-  selected: number,
+  selection: number,
+
   isDisabled: bool,
+
   onSelect: func.isRequired,
   onContextMenu: func.isRequired
 }

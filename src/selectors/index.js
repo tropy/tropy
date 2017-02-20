@@ -3,5 +3,6 @@
 module.exports = {
   ...require('./items'),
   ...require('./metadata'),
-  ...require('./notes')
+  ...require('./notes'),
+  ...require('./photos')
 }

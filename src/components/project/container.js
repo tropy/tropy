@@ -19,9 +19,14 @@ const actions = require('../../actions')
 const { getCachePrefix } = require('../../selectors/project')
 const { getAllVisibleTags } = require('../../selectors/tag')
 const { getTemplates } = require('../../selectors/templates')
-const { getVisibleItems, getSelectedItems } = require('../../selectors')
-const { getVisiblePhotos, getSelectedPhoto } = require('../../selectors/photos')
 const { getColumns } = require('../../selectors/ui')
+
+const {
+  getSelectedItems,
+  getVisibleItems,
+  getVisibleNotes,
+  getVisiblePhotos
+} = require('../../selectors')
 
 const {
   arrayOf, oneOf, shape, bool, object, func, string, number
@@ -128,7 +133,7 @@ class ProjectContainer extends Component {
       data,
       columns,
       nav,
-      photo,
+      notes,
       photos,
       selection,
       ...props
@@ -151,7 +156,9 @@ class ProjectContainer extends Component {
         <ItemView {...props}
           items={selection}
           data={data}
-          photo={photo}
+          note={nav.note}
+          notes={notes}
+          photo={nav.photo}
           photos={photos}
           panel={nav.panel}
           onMetadataSave={this.handleMetadataSave}/>
@@ -179,9 +186,9 @@ class ProjectContainer extends Component {
       shape({ id: number.isRequired })
     ),
 
-    photo: shape({
-      id: number.isRequired
-    }),
+    notes: arrayOf(
+      shape({ id: number.isRequired })
+    ),
 
     nav: object.isRequired,
     data: object.isRequired,
@@ -241,7 +248,7 @@ module.exports = {
       columns: getColumns(state),
       items: getVisibleItems(state),
       selection: getSelectedItems(state),
-      photo: getSelectedPhoto(state),
+      notes: getVisibleNotes(state),
       photos: getVisiblePhotos(state),
       sort: state.nav.sort,
       data: state.metadata,

@@ -4,7 +4,7 @@ const React = require('react')
 const { Panel } = require('../panel')
 const { NoteToolbar } = require('./toolbar')
 const { NoteList } = require('./list')
-const { bool, func } = React.PropTypes
+const { arrayOf, shape, number, bool, func } = React.PropTypes
 
 
 class NotePanel extends Panel {
@@ -24,11 +24,12 @@ class NotePanel extends Panel {
   }
 
   renderContent() {
-    const { onContextMenu, onSave, onSelect } = this.props
+    const { notes, selection, onContextMenu, onSave, onSelect } = this.props
 
     return (
       <NoteList
-        notes={[]}
+        notes={notes}
+        selection={selection}
         onContextMenu={onContextMenu}
         onEdit={this.handleEdit}
         onChange={onSave}
@@ -52,6 +53,13 @@ class NotePanel extends Panel {
   static propTypes = {
     isDisabled: bool,
     isItemOpen: bool,
+
+    notes: arrayOf(shape({
+      id: number.isRequired
+    })),
+
+    selection: number,
+
     onContextMenu: func.isRequired,
     onCreate: func.isRequired,
     onEdit: func.isRequired,

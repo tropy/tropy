@@ -19,13 +19,6 @@ const getVisiblePhotos = memo(
     ))
 )
 
-const getSelectedPhoto = memo(
-  getPhotos,
-  ({ nav }) => nav.photo,
-  (photos, id) => photos[id]
-)
-
 module.exports = {
-  getSelectedPhoto,
   getVisiblePhotos
 }
