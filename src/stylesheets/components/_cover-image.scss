@@ -1,0 +1,81 @@
+//
+// Cover image
+// --------------------------------------------------
+
+.cover-image {
+  box-sizing: content-box;
+  position: relative;
+
+  .item-table & {
+    position: absolute;
+    left: $component-padding-horizontal;
+    top: ($row-height - $thumbnail-size) / 2;
+
+    &.stack {
+      .stack-lines {
+        background: transparent;
+        display: block;
+
+        .line {
+          height: 1px;
+        }
+
+        @for $i from 1 through $stack-size-max {
+          .line-#{$i} {
+            margin-left: $i * 2px;
+            margin-right: $i * 2px;
+          }
+        }
+      }
+
+      .thumbnail {
+        -webkit-clip-path: inset(4px 0 0 0);
+      }
+    }
+  }
+
+  .item-grid & {
+    .over & {
+      border: $space-min solid $items-over-bg;
+    }
+
+    &.stack {
+      .stack-lines {
+        display: block;
+      }
+    }
+  }
+
+  img,
+  .icon-item {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.stack-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: none;
+  background: $stack-bg;
+
+  .line {
+    background: $stack-color;
+    margin-bottom: 1px;
+
+    @for $i from $tile-thumbnail-size-min through $tile-thumbnail-size-max {
+      ul[data-size="#{$i}"] & {
+        height: #{round($i / 32)}px;
+
+        @for $j from 1 through $stack-size-max {
+          &.line-#{$j} {
+            margin-left: #{round($i * $j / 16)}px;
+            margin-right: #{round($i * $j / 16)}px;
+          }
+        }
+      }
+    }
+  }
+}
