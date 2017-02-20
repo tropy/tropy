@@ -70,10 +70,12 @@
     }
   }
 
-  .active {
-    .cover-image {
-      .line {
-        background: $stack-active-color;
+  &:focus {
+    .active {
+      .cover-image {
+        .line {
+          background: $stack-active-color;
+        }
       }
     }
   }
