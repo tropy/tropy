@@ -24,9 +24,10 @@
   }
 
   &[readonly] {
-    color: #777;
+    color: $input-color-readonly;
   }
 }
+
 
 select {
   &.form-control {
