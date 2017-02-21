@@ -16,6 +16,7 @@
       left: 0;
       z-index: $zindex-drop-zone;
       background: $drop-zone-bg;
+      mix-blend-mode: multiply;
     }
   }
 }
