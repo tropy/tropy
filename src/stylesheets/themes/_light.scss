@@ -12,6 +12,7 @@
   #{--blue}:          #5c93e5;
   #{--blue-light}:    #cedef7;
   #{--blue-30}:       rgba(#5c93e5, 0.3);
+  #{--blue-60}:       rgba(#5c93e5, 0.6);
   #{--blue-darken-4}: darken(#5c93e5, 4%);
   #{--red}:           #e62e2e;
 }
@@ -19,12 +20,14 @@
 $blue:                   var(--blue);
 $blue-light:             var(--blue-light);
 $blue-30:                var(--blue-30);
+$blue-60:                var(--blue-60);
 $blue-darken-4:          var(--blue-darken-4);
 
 $red:                    var(--red);
 
 $brand-primary:          $blue;
 $brand-primary-30:       $blue-30;
+$brand-primary-60:       $blue-60;
 $brand-primary-darken-4: $blue-darken-4;
 
 
@@ -93,7 +96,7 @@ $text-selection-color: $blue-light;
 $input-color:             $shade-8;
 $input-bg:                $shade-0; // 'Transparent causes border/box-shadow issue
 $input-border:            $shade-2;
-$input-color-focus:       $brand-primary;
+$input-color-focus:       $brand-primary-60;
 $input-color-placeholder: $shade-4;
 $input-color-readonly:    $shade-5;
 
@@ -192,7 +195,7 @@ $note-active-bg: $brand-primary;
 // Editable
 $editable-color: $text-color;
 $editable-bg: $shade-0;
-$editable-border-color: transparent;
+$editable-border-color: $brand-primary-60;
 
 // Wizard
 $wizard-heading-color: $shade-7;
