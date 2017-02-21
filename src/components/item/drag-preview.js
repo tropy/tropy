@@ -24,7 +24,7 @@ class ItemDragPreview extends PureComponent {
   }
 
   render() {
-    const { cache, size } = this.pros
+    const { cache, size } = this.props
 
     return (
       <div className={cx(this.classes)}>
