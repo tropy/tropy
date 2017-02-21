@@ -29,6 +29,12 @@
     $i: $i + $tile-size-step-min;
   }
 
+  &.placeholder {
+    ul & { // Needs specifity
+      height: 0;
+    }
+  }
+
   .tile-state {
     padding: 3px;
     border-radius: $border-radius-small;
