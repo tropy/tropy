@@ -13,8 +13,7 @@ class ItemTile extends ItemIterable {
     return {
       ...super.classes,
       'tile': true,
-      'click-catcher': true,
-      'small': this.props.isSmall
+      'click-catcher': true
     }
   }
 
@@ -44,7 +43,6 @@ class ItemTile extends ItemIterable {
 
   static propTypes = {
     ...ItemIterable.propTypes,
-    isSmall: bool,
     size: number.isRequired
   }
 

@@ -4,7 +4,7 @@ const React = require('react')
 const { PhotoIterable } = require('./iterable')
 const { createClickHandler } = require('../util')
 const cx = require('classnames')
-const { bool, number } = React.PropTypes
+const { number } = React.PropTypes
 
 
 class PhotoTile extends PhotoIterable {
@@ -12,8 +12,7 @@ class PhotoTile extends PhotoIterable {
     return {
       ...super.classes,
       'tile': true,
-      'click-catcher': true,
-      'small': this.props.isSmall
+      'click-catcher': true
     }
   }
 
@@ -44,7 +43,6 @@ class PhotoTile extends PhotoIterable {
 
   static propTypes = {
     ...PhotoIterable.propTypes,
-    isSmall: bool,
     size: number.isRequired
   }
 

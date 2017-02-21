@@ -9,8 +9,6 @@ const { refine } = require('../../common/util')
 const cx = require('classnames')
 const { TILE } = require('../../constants/style')
 
-const SMALL = Math.round(TILE.FACTOR * (1 - 1 / TILE.FACTOR) * 100) / 100
-
 
 class ItemGrid extends ItemIterator {
   constructor(props) {
@@ -58,10 +56,6 @@ class ItemGrid extends ItemIterator {
     }
   }
 
-  get isSmall() {
-    return this.size * SMALL < TILE.PADDING
-  }
-
   get isVertical() {
     return this.state.colsize === 1
   }
@@ -89,7 +83,6 @@ class ItemGrid extends ItemIterator {
 
 
   render() {
-    const { isSmall } = this
     const tile = this.placeholder
 
     return this.connect(
@@ -101,7 +94,7 @@ class ItemGrid extends ItemIterator {
         data-size={this.size}
         onClick={this.handleClickOutside}>
         {this.map(({ item, ...props }) =>
-          <ItemTile {...props} key={item.id} item={item} isSmall={isSmall}/>
+          <ItemTile {...props} key={item.id} item={item}/>
         )}
 
         {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}

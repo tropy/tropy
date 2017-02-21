@@ -8,8 +8,6 @@ const { refine } = require('../../common/util')
 const cx = require('classnames')
 const { TILE } = require('../../constants/style')
 
-const SMALL = Math.round(TILE.FACTOR * (1 - 1 / TILE.FACTOR) * 100) / 100
-
 
 class PhotoGrid extends PhotoIterator {
   constructor(props) {
@@ -77,16 +75,11 @@ class PhotoGrid extends PhotoIterator {
     return <li className="placeholder tile click-catcher"/>
   }
 
-  get isSmall() {
-    return this.size * SMALL < TILE.PADDING
-  }
-
   get isVertical() {
     return this.state.colsize === 1
   }
 
   render() {
-    const { isSmall } = this
     const tile = this.placeholder
 
     return this.connect(
@@ -98,7 +91,7 @@ class PhotoGrid extends PhotoIterator {
         onKeyDown={this.handleKeyDown}
         onClick={this.handleClickOutside}>
         {this.map(({ photo, ...props }) =>
-          <PhotoTile {...props} key={photo.id} photo={photo} isSmall={isSmall}/>
+          <PhotoTile {...props} key={photo.id} photo={photo}/>
         )}
 
         {tile}{tile}{tile}{tile}{tile}{tile}{tile}
