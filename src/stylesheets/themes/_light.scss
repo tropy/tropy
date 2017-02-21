@@ -90,11 +90,12 @@ $text-selection-color: $blue-light;
 // --------------------------------------------------
 
 // Forms
-$input-color: $shade-8;
-$input-bg:    transparent;
-$input-border: $shade-2;
-$input-border-focus: $brand-primary;
+$input-color:             $shade-8;
+$input-bg:                transparent;
+$input-border:            $shade-2;
+$input-border-focus:      $brand-primary;
 $input-color-placeholder: $shade-4;
+$input-color-readonly:    $shade-5;
 
 // Badge
 $badge-color: $shade-0;
