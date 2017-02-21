@@ -40,7 +40,7 @@ class Create extends Command {
     this.undo = act.note.delete({ item, photo, notes })
     this.redo = act.note.restore({ item, photo, notes })
 
-    return note
+    return notes
   }
 }
 
