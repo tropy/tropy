@@ -14,13 +14,19 @@ class NotePanel extends Panel {
     onCreate({ item, photo })
   }
 
-  handleEdit = (note) => {
-    this.props.onEdit({ note })
-  }
-
   handleContextMenu = (event) => {
     const { item, photo, onContextMenu } = this.props
     onContextMenu(event, 'notes', { item, photo })
+  }
+
+  handleOpen = (note) => {
+    const { item, photo, isItemOpen, onItemOpen } = this.props
+
+    if (!isItemOpen) {
+      onItemOpen({
+        id: item, photos: [photo], notes: [note.id]
+      })
+    }
   }
 
   renderToolbar() {
@@ -34,15 +40,19 @@ class NotePanel extends Panel {
   }
 
   renderContent() {
-    const { notes, selection, onContextMenu, onSave, onSelect } = this.props
+    const {
+      notes,
+      selection,
+      onContextMenu,
+      onSelect
+    } = this.props
 
     return (
       <NoteList
         notes={notes}
         selection={selection}
         onContextMenu={onContextMenu}
-        onEdit={this.handleEdit}
-        onChange={onSave}
+        onOpen={this.handleOpen}
         onSelect={onSelect}/>
     )
   }
@@ -74,10 +84,9 @@ class NotePanel extends Panel {
     photo: number,
     selection: number,
 
+    onItemOpen: func.isRequired,
     onContextMenu: func.isRequired,
     onCreate: func.isRequired,
-    onEdit: func.isRequired,
-    onSave: func.isRequired,
     onSelect: func.isRequired
   }
 }

@@ -183,13 +183,15 @@ class ItemView extends PureComponent {
   render() {
     const {
       note,
+      notes,
       panel,
       photo,
+      onContextMenu,
+      onItemOpen,
       onPhotoSelect,
       onPhotoSort,
       onPhotoZoomChange,
       onNoteCreate,
-      onNoteSave,
       onNoteSelect,
       ...props
     } = this.props
@@ -211,21 +213,25 @@ class ItemView extends PureComponent {
             <PhotoPanel {...props}
               zoom={panel.photoZoom}
               selected={photo}
-              onZoomChange={onPhotoZoomChange}
               isItemOpen={this.isItemMode}
               isDisabled={this.isDisabled}
+              onContextMenu={onContextMenu}
+              onCreate={this.handlePhotoCreate}
+              onItemOpen={onItemOpen}
               onSelect={onPhotoSelect}
               onSort={onPhotoSort}
-              onCreate={this.handlePhotoCreate}/>
+              onZoomChange={onPhotoZoomChange}/>
 
-            <NotePanel {...props}
+            <NotePanel
               item={item && item.id}
               photo={photo}
-              selected={note}
+              notes={notes}
+              selection={note}
               isItemOpen={this.isItemMode}
               isDisabled={this.isDisabled}
+              onContextMenu={onContextMenu}
               onCreate={onNoteCreate}
-              onSave={onNoteSave}
+              onItemOpen={onItemOpen}
               onSelect={onNoteSelect}/>
           </PanelGroup>
         </Resizable>
@@ -275,6 +281,7 @@ class ItemView extends PureComponent {
     properties: object.isRequired,
     templates: object.isRequired,
 
+    onItemOpen: func.isRequired,
     onItemSave: func.isRequired,
     onContextMenu: func.isRequired,
     onEdit: func.isRequired,

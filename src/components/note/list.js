@@ -1,32 +1,54 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = React
+const { PureComponent, PropTypes } = React
 const { NoteListItem } = require('./list-item')
 const { shape, arrayOf, number, bool, func } = PropTypes
 
-const NoteList = ({ notes, selection }) => (
-  <ul className="note-list">
-    {notes.map(note =>
-      <NoteListItem
-        key={note.id}
-        note={note}
-        isSelected={note.id === selection}/>
-    )}
-  </ul>
-)
+class NoteList extends PureComponent {
 
-NoteList.propTypes = {
-  notes: arrayOf(shape({
-    id: number.isRequired
-  })).isRequired,
+  isSelected(note) {
+    return note.id === this.props.selection
+  }
 
-  selection: number,
+  handleSelect = (note) => {
+    if (note && !this.isSelected(note)) {
+      this.props.onSelect({
+        note: note.id
+      })
+    }
+  }
 
-  isDisabled: bool,
+  render() {
+    const { notes, isDisabled, onContextMenu } = this.props
 
-  onSelect: func.isRequired,
-  onContextMenu: func.isRequired
+    return (
+      <ul className="note-list">
+        {notes.map(note =>
+          <NoteListItem
+            key={note.id}
+            note={note}
+            isDisabled={isDisabled}
+            isSelected={this.isSelected(note)}
+            onContextMenu={onContextMenu}
+            onSelect={this.handleSelect}/>
+        )}
+      </ul>
+    )
+  }
+
+  static propTypes = {
+    notes: arrayOf(shape({
+      id: number.isRequired
+    })).isRequired,
+
+    selection: number,
+
+    isDisabled: bool,
+
+    onSelect: func.isRequired,
+    onContextMenu: func.isRequired
+  }
 }
 
 module.exports = {

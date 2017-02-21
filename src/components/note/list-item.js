@@ -1,20 +1,45 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = React
+const { PureComponent, PropTypes } = React
 const cx = require('classnames')
-const { bool } = PropTypes
+const { bool, func, number, shape } = PropTypes
 
-const NoteListItem = ({ isSelected }) => (
-  <li className={cx({ note: true, active: isSelected })}>
-    <div className="css-multiline-truncate">
-      {'note content'}
-    </div>
-  </li>
-)
 
-NoteListItem.propTypes = {
-  isSelected: bool
+class NoteListItem extends PureComponent {
+
+  handleContextMenu = (event) => {
+    const { note, isDisabled, onContextMenu } = this.props
+
+    if (!isDisabled) {
+      onContextMenu(event, 'note', { id: note.id })
+    }
+  }
+
+  render() {
+    const { note, isSelected } = this.props
+
+    return (
+      <li
+        className={cx({ note: true, active: isSelected })}
+        onContextMenu={this.handleContextMenu}>
+        <div className="css-multiline-truncate">
+          Note {note.id}
+        </div>
+      </li>
+    )
+  }
+
+  static propTypes = {
+    note: shape({
+      id: number.isRequired
+    }).isRequired,
+
+    isDisabled: bool,
+    isSelected: bool,
+
+    onContextMenu: func.isRequired
+  }
 }
 
 module.exports = {
