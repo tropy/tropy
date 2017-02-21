@@ -36,5 +36,6 @@ ul, ol {
 // Text selection
 
 ::selection {
-  background-color: $text-selection-color;
+  color: $text-selection-color;
+  background-color: $text-selection-bg;
 }

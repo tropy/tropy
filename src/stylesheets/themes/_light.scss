@@ -11,7 +11,6 @@
 :root {
   #{--blue}:          #5c93e5;
   #{--blue-light}:    #cedef7;
-  #{--blue-30}:       rgba(#5c93e5, 0.3);
   #{--blue-60}:       rgba(#5c93e5, 0.6);
   #{--blue-darken-4}: darken(#5c93e5, 4%);
   #{--red}:           #e62e2e;
@@ -19,14 +18,12 @@
 
 $blue:                   var(--blue);
 $blue-light:             var(--blue-light);
-$blue-30:                var(--blue-30);
 $blue-60:                var(--blue-60);
 $blue-darken-4:          var(--blue-darken-4);
 
 $red:                    var(--red);
 
 $brand-primary:          $blue;
-$brand-primary-30:       $blue-30;
 $brand-primary-60:       $blue-60;
 $brand-primary-darken-4: $blue-darken-4;
 
@@ -86,7 +83,8 @@ $text-color: $shade-8;
 $link-color:       $brand-primary;
 $link-hover-color: $brand-primary;
 
-$text-selection-color: $blue-light;
+$text-selection-color: inherit;
+$text-selection-bg: $blue-light;
 
 
 // Partials
@@ -196,6 +194,7 @@ $note-active-bg: $brand-primary;
 $editable-color: $text-color;
 $editable-bg: $shade-0;
 $editable-border-color: $brand-primary-60;
+$editable-meta-field-bg: $shade-3;
 
 // Wizard
 $wizard-heading-color: $shade-7;
@@ -215,10 +214,6 @@ $slider-track-bg: $shade-4;
 $slider-range-bg: $shade-5;
 $slider-handle-bg: $shade-0;
 $slider-handle-border: $shade-9-20;
-
-// Drop zone
-$drop-zone-border: $brand-primary;
-$drop-zone-bg:     $brand-primary-30;
 
 // Image
 $image-bg: $shade-2;

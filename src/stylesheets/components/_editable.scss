@@ -14,11 +14,21 @@
   width: calc(
     100% + #{$editable-border-width + $editable-padding-horizontal}
   );
-  line-height: 1em * $line-height-base;
+  line-height: normal;
   padding: $editable-padding-vertical $editable-padding-horizontal;
   border: $editable-border-width solid $editable-border-color;
   color: $editable-color;
   background: $editable-bg;
   border-radius: $editable-border-radius;
   margin: -2em 0; // For the sake of safety
+
+  #sidebar & {
+    height: ($line-height-large - 2 * $editable-padding-vertical);
+    line-height: 2;
+  }
+
+  .item-table & {
+    height: ($row-height - 2 * $editable-padding-vertical);
+    line-height: 2;
+  }
 }
