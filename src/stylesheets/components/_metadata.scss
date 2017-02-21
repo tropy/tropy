@@ -23,6 +23,7 @@ $component-padding-horizontal: 12px !default;
     border-color: $template-select-border;
     font-size: $font-size-small;
     margin-bottom: (($metadata-line-height - 10px) / 2);
+    background-color: $template-select-bg; // 'Transparent' causes border/box-shadow issue
   }
 }
 

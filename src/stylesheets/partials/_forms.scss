@@ -15,7 +15,7 @@
   border: 1px solid $input-border;
   border-radius: $input-border-radius-small;
   box-shadow: none;
-  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition: border-color ease 0.15s, box-shadow ease 0.15s;
 
   @include form-control-focus;
 
@@ -27,7 +27,6 @@
     color: $input-color-readonly;
   }
 }
-
 
 select {
   &.form-control {

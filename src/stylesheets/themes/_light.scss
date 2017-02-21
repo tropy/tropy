@@ -91,9 +91,9 @@ $text-selection-color: $blue-light;
 
 // Forms
 $input-color:             $shade-8;
-$input-bg:                transparent;
+$input-bg:                $shade-0; // 'Transparent causes border/box-shadow issue
 $input-border:            $shade-2;
-$input-border-focus:      $brand-primary;
+$input-color-focus:       $brand-primary;
 $input-color-placeholder: $shade-4;
 $input-color-readonly:    $shade-5;
 
@@ -178,6 +178,7 @@ $tab-inactive-color: $shade-5;
 $label-color:            $shade-5;
 $value-hover-color:      $shade-0;
 $template-select-border: $shade-3;
+$template-select-bg:     $shade-1;
 
 // Photo list
 $photo-list-focus-color: $shade-0;
@@ -192,7 +193,7 @@ $note-active-bg: $brand-primary;
 // Editable
 $editable-color: $text-color;
 $editable-bg: $shade-0;
-$editable-border-color: $brand-primary;
+$editable-border-color: transparent;
 
 // Wizard
 $wizard-heading-color: $shade-7;
