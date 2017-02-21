@@ -7,7 +7,7 @@ const { DragSource, DropTarget } = require('react-dnd')
 const { getEmptyImage } = require('react-dnd-electron-backend')
 const { bounds } = require('../../dom')
 const { DND } = require('../../constants')
-const { bool, func, number, string, object, shape, oneOf } = PropTypes
+const { bool, func, number, string, object, shape } = PropTypes
 
 
 class PhotoIterable extends PureComponent {
