@@ -43,8 +43,12 @@ module.exports = {
     }
   },
 
-  select(payload, meta = {}) {
-    return { type: PHOTO.SELECT, payload, meta }
+  select(payload, meta) {
+    return {
+      type: PHOTO.SELECT,
+      payload,
+      meta: { ...meta }
+    }
   },
 
   move(payload, meta) {
