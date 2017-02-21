@@ -10,7 +10,7 @@
 
 :root {
   #{--blue}:          #5c93e5;
-  #{--blue-light}:    #dbe7fa;
+  #{--blue-light}:    #cedef7;
   #{--blue-30}:       rgba(#5c93e5, 0.3);
   #{--blue-darken-4}: darken(#5c93e5, 4%);
   #{--red}:           #e62e2e;
@@ -101,7 +101,7 @@ $badge-color: $shade-0;
 $badge-bg:    $red;
 
 // Drop target
-$drop-target-bg: $blue-light;
+$drop-target-color: $blue-light;
 
 // Sort indicator
 $photo-sort-indicator: $shade-8;
@@ -157,7 +157,6 @@ $items-focus-color:              $shade-0;
 $items-focus-bg:                 $brand-primary;
 $items-active-color:             $shade-0;
 $items-active-bg:                $shade-3;
-$items-over-bg:                  $blue-light;
 
 // Panel group
 $panels-bg: $shade-1;

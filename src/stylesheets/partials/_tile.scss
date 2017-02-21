@@ -29,11 +29,14 @@
     $i: $i + $tile-size-step-min;
   }
 
+  .tile-state {
+    padding: 3px;
+    border-radius: $border-radius-small;
+  }
+
   &.active {
     .tile-state {
       border: 3px solid $tile-active-color;
-      border-radius: $border-radius-small;
-      padding: 3px;
 
       :focus > & {
         border-color: $tile-focus-color;
@@ -46,6 +49,12 @@
         padding: 2px;
         margin: -4px;
       }
+    }
+  }
+
+  &.over {
+    .tile-state {
+      border: 3px solid $drop-target-color;
     }
   }
 }
