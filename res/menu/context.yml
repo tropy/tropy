@@ -33,6 +33,12 @@ linux:
       command: 'app:rename-tag'
     - label: 'Delete Tag'
       command: 'app:delete-tag'
+  notes: &notes
+    - label: 'New Note'
+      command: 'app:create-note'
+  note: &note
+    - label: 'Delete Note'
+      command: 'app:delete-note'
   items: &items
     - label: 'New Item'
       command: 'app:create-item'
@@ -93,6 +99,8 @@ darwin:
   list: *list
   tags: *tags
   tag: *tag
+  notes: *notes
+  note: *note
   items: *items
   item: *item
   item-bulk: *item-bulk
@@ -112,6 +120,8 @@ win32:
   list: *list
   tags: *tags
   tag: *tag
+  notes: *notes
+  note: *note
   items: *items
   item: *item
   item-bulk: *item-bulk

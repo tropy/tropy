@@ -267,6 +267,10 @@ class Tropy extends EventEmitter {
         this.dispatch(act.ui.edit.start({ tag: { id } })))
       .on('app:delete-tag', (_, { target }) =>
         this.dispatch(act.tag.hide(target)))
+      .on('app:create-note', (_, { target }) =>
+        this.dispatch(act.note.create(target)))
+      .on('app:delete-note', (_, { target }) =>
+        this.dispatch(act.note.delete(target)))
 
       .on('app:toggle-menu-bar', win => {
         if (win.isMenuBarAutoHide()) {

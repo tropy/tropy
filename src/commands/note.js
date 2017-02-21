@@ -31,16 +31,18 @@ class Create extends Command {
     const [parent, add] = (item) ?
       [item, act.item.notes.add] : [photo, act.photo.notes.add]
 
-    const notes = keys(
-      yield call(mod.note.create, db, { id: parent, text })
-    )
+    const data = yield call(mod.note.create, db, {
+      id: parent, text: text || ''
+    })
+
+    const notes = keys(data)
 
     yield put(add({ id: parent, notes }))
 
     this.undo = act.note.delete({ item, photo, notes })
     this.redo = act.note.restore({ item, photo, notes })
 
-    return notes
+    return data
   }
 }
 

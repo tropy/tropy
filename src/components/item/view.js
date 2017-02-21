@@ -67,17 +67,6 @@ class ItemView extends PureComponent {
   }
 
 
-  handleNoteCreate = () => {
-    const { item } = this
-    const { photo, onNoteCreate } = this.props
-
-    if (photo) {
-      onNoteCreate({ photo, text: '' })
-    } else {
-      onNoteCreate({ item: item.id, text: '' })
-    }
-  }
-
   handleTemplateChange = (event) => {
     this.props.onItemSave({
       id: this.item.id,
@@ -193,15 +182,19 @@ class ItemView extends PureComponent {
 
   render() {
     const {
+      note,
       panel,
       photo,
       onPhotoSelect,
       onPhotoSort,
       onPhotoZoomChange,
+      onNoteCreate,
       onNoteSave,
       onNoteSelect,
       ...props
     } = this.props
+
+    const { item } = this
 
     return (
       <section id="item-view">
@@ -226,10 +219,12 @@ class ItemView extends PureComponent {
               onCreate={this.handlePhotoCreate}/>
 
             <NotePanel {...props}
-              selected={photo}
+              item={item && item.id}
+              photo={photo}
+              selected={note}
               isItemOpen={this.isItemMode}
               isDisabled={this.isDisabled}
-              onCreate={this.handleNoteCreate}
+              onCreate={onNoteCreate}
               onSave={onNoteSave}
               onSelect={onNoteSelect}/>
           </PanelGroup>

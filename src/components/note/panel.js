@@ -9,17 +9,27 @@ const { arrayOf, shape, number, bool, func } = React.PropTypes
 
 class NotePanel extends Panel {
 
+  handleCreate = () => {
+    const { item, photo, onCreate } = this.props
+    onCreate({ item, photo })
+  }
+
   handleEdit = (note) => {
     this.props.onEdit({ note })
   }
 
+  handleContextMenu = (event) => {
+    const { item, photo, onContextMenu } = this.props
+    onContextMenu(event, 'notes', { item, photo })
+  }
+
   renderToolbar() {
-    const { isDisabled, onCreate } = this.props
+    const { isDisabled } = this.props
 
     return (
       <NoteToolbar
         hasCreateButton={!isDisabled}
-        onCreate={onCreate}/>
+        onCreate={this.handleCreate}/>
     )
   }
 
@@ -42,7 +52,9 @@ class NotePanel extends Panel {
     const content = this.renderContent()
 
     return (
-      <section className="note-panel panel">
+      <section
+        className="note-panel panel"
+        onContextMenu={this.handleContextMenu}>
         {this.renderHeader(toolbar)}
         {this.renderBody(content)}
       </section>
@@ -58,6 +70,8 @@ class NotePanel extends Panel {
       id: number.isRequired
     })),
 
+    item: number,
+    photo: number,
     selection: number,
 
     onContextMenu: func.isRequired,
