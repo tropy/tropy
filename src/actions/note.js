@@ -23,7 +23,7 @@ module.exports = {
     return {
       type: NOTE.LOAD,
       payload,
-      meta: { ...meta }
+      meta: { async: true, ...meta }
     }
   },
 

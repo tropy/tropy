@@ -14,11 +14,11 @@ class NotePanel extends Panel {
   }
 
   renderToolbar() {
-    const { onCreate } = this.props
+    const { isDisabled, onCreate } = this.props
 
     return (
       <NoteToolbar
-        hasCreateButton={false}
+        hasCreateButton={!isDisabled}
         onCreate={onCreate}/>
     )
   }

@@ -64,11 +64,11 @@ module.exports = {
   //eslint-disable-next-line complexity
   *load() {
     try {
-      const { nav, items, metadata, photos } = yield select()
+      const { nav, items, metadata, photos, notes } = yield select()
 
       // TODO ignore pending
       const missing = {
-        items: [], photos: [], metadata: []
+        items: [], photos: [], metadata: [], notes: []
       }
 
       for (let id of nav.items) {
@@ -76,8 +76,21 @@ module.exports = {
 
         if (item) {
           for (let photo of item.photos) {
-            if (!(photo in photos)) missing.photos.push(photo)
             if (!(photo in metadata)) missing.metadata.push(photo)
+
+            if (!(photo in photos)) {
+              missing.photos.push(photo)
+
+            } else {
+              for (let note of photos[photo].notes) {
+                //eslint-disable-next-line max-depth
+                if (!(note in notes)) missing.notes.push(note)
+              }
+            }
+          }
+
+          for (let note of item.notes) {
+            if (!(note in notes)) missing.notes.push(note)
           }
 
         } else {
@@ -97,6 +110,10 @@ module.exports = {
 
       if (missing.photos.length) {
         yield put(act.photo.load(missing.photos))
+      }
+
+      if (missing.notes.length) {
+        yield put(act.note.load(missing.notes))
       }
 
     } catch (error) {

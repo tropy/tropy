@@ -215,7 +215,9 @@ class ProjectSidebar extends PureComponent {
               </ol>
             </nav>
 
-            <h3><FormattedMessage id="sidebar.lists"/></h3>
+            <h3 onContextMenu={this.showListsMenu}>
+              <FormattedMessage id="sidebar.lists"/>
+            </h3>
             <nav onContextMenu={this.showListsMenu}>
               {root &&
                 <ListTree

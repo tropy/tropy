@@ -137,7 +137,7 @@ module.exports = {
         db.each(`
           SELECT id, note_id AS note
             FROM notes
-            WHERE id IN (${ids}) AND deleted IS NOT NULL
+            WHERE id IN (${ids}) AND deleted IS NULL
             ORDER BY id, created`,
           ({ id, note }) => {
             items[id].notes.push(note)

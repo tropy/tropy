@@ -4,7 +4,7 @@ module.exports = {
 
   async create(db, data) {
     const { id } = await db.run(`
-      INSERT INTO notes (id,text) VALUES (?,?)`, data.id, data.text
+      INSERT INTO notes (id, text) VALUES (?,?)`, data.id, data.text
     )
 
     return module.exports.load(db, [id])

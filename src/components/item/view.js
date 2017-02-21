@@ -68,6 +68,14 @@ class ItemView extends PureComponent {
 
 
   handleNoteCreate = () => {
+    const { item } = this
+    const { photo, onNoteCreate } = this.props
+
+    if (photo) {
+      onNoteCreate({ photo, text: '' })
+    } else {
+      onNoteCreate({ item: item.id, text: '' })
+    }
   }
 
   handleTemplateChange = (event) => {
@@ -105,7 +113,7 @@ class ItemView extends PureComponent {
 
     switch (this.props.items.length) {
       case 0:
-        return <span>No items selected</span>
+        return  null
 
       case 1:
         switch (panel.tab) {
