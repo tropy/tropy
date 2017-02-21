@@ -32,6 +32,7 @@
   .tile-state {
     padding: 3px;
     border-radius: $border-radius-small;
+    margin: -6px;
   }
 
   &.active {
@@ -40,14 +41,6 @@
 
       :focus > & {
         border-color: $tile-focus-color;
-      }
-    }
-
-    &.small {
-      .tile-state {
-        border-width: 2px;
-        padding: 2px;
-        margin: -4px;
       }
     }
   }
