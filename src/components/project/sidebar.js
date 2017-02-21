@@ -66,15 +66,21 @@ class ProjectSidebar extends PureComponent {
     return list && list === this.props.selectedList
   }
 
+  isListEmpty() {
+    const root = this.getRootList()
+    return root.children.length === 0
+  }
+
 
   next() {
     switch (true) {
       case this.props.isTrashSelected:
         return
-      case this.props.isSelected:
-        return this.handleListSelect(this.getFirstList())
+      case this.isListEmpty():
       case this.isListSelected(this.getLastList()):
         return this.handleTrashSelect()
+      case this.props.isSelected:
+        return this.handleListSelect(this.getFirstList())
       default:
         return this.handleListSelect(this.getNextList())
     }
@@ -84,10 +90,11 @@ class ProjectSidebar extends PureComponent {
     switch (true) {
       case this.props.isSelected:
         return
-      case this.props.isTrashSelected:
-        return this.handleListSelect(this.getLastList())
+      case this.isListEmpty():
       case this.isListSelected(this.getFirstList()):
         return this.handleSelect()
+      case this.props.isTrashSelected:
+        return this.handleListSelect(this.getLastList())
       default:
         return this.handleListSelect(this.getPrevList())
     }
