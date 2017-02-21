@@ -65,7 +65,8 @@ class ItemGrid extends ItemIterator {
       'item-grid': true,
       'click-catcher': true,
       'drop-target': !this.props.isDisabled,
-      'over': this.props.isOver
+      'over': this.props.isOver,
+      [this.orientation]: true
     }
   }
 

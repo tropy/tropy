@@ -34,7 +34,7 @@
     z-index: 1;
   }
 
-  &.vertical {
+  .vertical & {
     &::before,
     &::after {
       left: 0;
@@ -64,7 +64,7 @@
 
   }
 
-  &.horizontal {
+  .horizontal & {
     &::before,
     &::after {
       top: 50%;

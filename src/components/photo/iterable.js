@@ -38,17 +38,12 @@ class PhotoIterable extends PureComponent {
       'over': this.props.isOver,
       'dragging': this.props.isDragging,
       'last': this.props.isLast,
-      [this.props.orientation]: true,
       [this.direction]: this.props.isOver && this.state.offset != null
     }
   }
 
   get direction() {
     return this.state.offset ? 'after' : 'before'
-  }
-
-  get isVertical() {
-    return this.props.orientation === 'vertical'
   }
 
   get isDraggable() {
@@ -120,7 +115,7 @@ class PhotoIterable extends PureComponent {
 
 
   static DropTargetSpec = {
-    hover({ photo, onOver }, monitor, component) {
+    hover({ photo, onOver, isVertical }, monitor, component) {
       const { id, adj } = monitor.getItem()
       const { top, left, width, height } = bounds(component.container)
       const { x, y } = monitor.getClientOffset()
@@ -129,7 +124,7 @@ class PhotoIterable extends PureComponent {
 
       if (photo.id !== id) {
         offset = Math.round(
-          component.isVertical ? ((y - top) / height) : ((x - left) / width)
+          isVertical ? ((y - top) / height) : ((x - left) / width)
         )
 
         if (adj[1 - offset] === photo.id) {
@@ -176,13 +171,12 @@ class PhotoIterable extends PureComponent {
     isOver: bool,
     isSelected: bool,
     isSortable: bool,
+    isVertical: bool,
 
     photo: shape({
       id: number.isRequired,
       data: object
     }).isRequired,
-
-    orientation: oneOf(['horizontal', 'vertical']).isRequired,
 
     cache: string.isRequired,
     size: number.isRequired,

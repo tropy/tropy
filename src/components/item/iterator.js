@@ -124,7 +124,6 @@ class ItemIterator extends PureComponent {
 
   map(fn) {
     this.idx = {}
-    const { orientation } = this
 
     return this.props.items.map((item, index) => {
       this.idx[item.id] = index
@@ -132,10 +131,10 @@ class ItemIterator extends PureComponent {
       return fn({
         item,
         cache: this.props.cache,
-        orientation,
         isLast: index === this.props.items.length - 1,
         isSelected: this.isSelected(item),
         isDisabled: this.props.isDisabled,
+        isVertical: this.isVertical,
         getSelection: this.getSelection,
         onContextMenu: this.handleContextMenu,
         onDropPhotos: this.props.onPhotoMove,

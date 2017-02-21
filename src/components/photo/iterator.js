@@ -17,7 +17,8 @@ class PhotoIterator extends PureComponent {
   get classes() {
     return {
       'drop-target': this.isSortable,
-      'over': this.props.isOver
+      'over': this.props.isOver,
+      [this.orientation]: true
     }
   }
 
@@ -130,20 +131,20 @@ class PhotoIterator extends PureComponent {
 
   map(fn) {
     this.idx = {}
-    const { orientation, isSortable } = this
+    const { isSortable } = this
 
     return this.props.photos.map((photo, index) => {
       this.idx[photo.id] = index
 
       return fn({
         photo,
-        orientation,
         cache: this.props.cache,
         isDisabled: this.props.isDisabled,
         isSelected: this.isSelected(photo),
         isSortable,
         isContext: this.isContext(photo),
         isLast: index === this.props.photos.length - 1,
+        isVertical: this.isVertical,
         getAdjacent: this.getAdjacent,
         onDropPhoto: this.handleDropPhoto,
         onSelect: this.handleSelect,

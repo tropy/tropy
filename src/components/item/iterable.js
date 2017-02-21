@@ -29,12 +29,7 @@ class ItemIterable extends PureComponent {
       'over': this.props.isOver && this.props.canDrop,
       'dragging': this.props.isDragging,
       'last': this.props.isLast,
-      [this.props.orientation]: true
     }
-  }
-
-  get isVertical() {
-    return this.props.orientation === 'vertical'
   }
 
   handleOpen = () => {
@@ -141,6 +136,7 @@ class ItemIterable extends PureComponent {
     isOver: bool,
     isSelected: bool,
     isDisabled: bool,
+    isVertical: bool,
     canDrop: bool,
 
     item: shape({
@@ -148,8 +144,6 @@ class ItemIterable extends PureComponent {
       deleted: bool,
       photos: arrayOf(number)
     }).isRequired,
-
-    orientation: oneOf(['horizontal', 'vertical']).isRequired,
 
     ds: func.isRequired,
     dt: func.isRequired,
