@@ -3,7 +3,6 @@
 // --------------------------------------------------
 
 .editable-control {
-  @include form-control-focus;
   font: {
     family: inherit;
     size: inherit;
