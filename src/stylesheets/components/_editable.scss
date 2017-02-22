@@ -21,14 +21,5 @@
   background: $editable-bg;
   border-radius: $editable-border-radius;
   margin: -2em 0; // For the sake of safety
-
-  #sidebar & {
-    height: ($line-height-large - 2 * $editable-padding-vertical);
-    line-height: 2;
-  }
-
-  .item-table & {
-    height: ($row-height - 2 * $editable-padding-vertical);
-    line-height: 2;
-  }
+  background-clip: padding-box;
 }
