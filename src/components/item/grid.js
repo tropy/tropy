@@ -12,15 +12,17 @@ class ItemGrid extends ItemIterator {
   constructor(props) {
     super(props)
 
+    this.filler = this.fill(75)
+
     refine(this, 'handleKeyDown', ([event]) => {
       if (!event.isPropagationStopped()) {
         switch (event.key) {
           case (this.isVertical ? 'ArrowLeft' : 'ArrowUp'):
-            this.select(this.getPrevItem(this.state.colsize))
+            this.select(this.getPrevItem(this.state.cols))
             break
 
           case (this.isVertical ? 'ArrowRight' : 'ArrowDown'):
-            this.select(this.getNextItem(this.state.colsize))
+            this.select(this.getNextItem(this.state.cols))
             break
 
           default:
@@ -67,7 +69,7 @@ class ItemGrid extends ItemIterator {
           <ItemTile {...props} key={item.id} item={item}/>
         )}
 
-        {this.fill()}
+        {this.filler}
       </ul>
     )
   }

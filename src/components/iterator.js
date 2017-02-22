@@ -70,11 +70,8 @@ class Iterator extends PureComponent {
     this.container = container
   }
 
-  fill() {
-    const { dangling } = this
-    if (!dangling) return
-
-    return times(this.state.cols - dangling, (i) => (
+  fill(count = (this.state.cols - this.dangling)) {
+    return times(count, (i) => (
       <li key={`filler-${i}`} className="filler tile click-catcher"/>
     ))
   }
