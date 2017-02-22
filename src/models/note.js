@@ -15,8 +15,11 @@ module.exports = {
 
     if (ids.length) {
       await db.each(`
-        SELECT note_id AS note, id AS parent, text, language, modified
+        SELECT note_id AS note, photos.id AS photo, items.id AS item,
+            text, language, modified
           FROM notes
+            LEFT OUTER JOIN photos USING (id)
+            LEFT OUTER JOIN items USING (id)
           WHERE note_id IN (${ids.join(',')})
             AND deleted IS NULL
           ORDER BY created ASC`,

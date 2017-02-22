@@ -12,7 +12,9 @@ class NoteListItem extends PureComponent {
     const { note, isDisabled, onContextMenu } = this.props
 
     if (!isDisabled) {
-      onContextMenu(event, 'note', { id: note.id })
+      onContextMenu(event, 'note', {
+        notes: [note.id], item: note.item, photo: note.photo
+      })
     }
   }
 
