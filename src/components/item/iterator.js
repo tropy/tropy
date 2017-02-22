@@ -13,6 +13,10 @@ class ItemIterator extends PureComponent {
     return this.constructor.ZOOM[this.props.zoom]
   }
 
+  get count() {
+    return this.props.items.length
+  }
+
   get orientation() {
     return this.isVertical ? 'vertical' : 'horizontal'
   }
@@ -22,7 +26,7 @@ class ItemIterator extends PureComponent {
   }
 
   get isEmpty() {
-    return this.props.items.length === 0
+    return this.count === 0
   }
 
   get tabIndex() {

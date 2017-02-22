@@ -4,7 +4,7 @@ const React = require('react')
 const { PhotoIterator } = require('./iterator')
 const { PhotoTile } = require('./tile')
 const { bounds, on, off } = require('../../dom')
-const { refine } = require('../../common/util')
+const { refine, times } = require('../../common/util')
 const cx = require('classnames')
 const { TILE } = require('../../constants/style')
 
@@ -49,7 +49,7 @@ class PhotoGrid extends PhotoIterator {
     off(window, 'resize', this.resize)
   }
 
-  componentDidUpdate(props) {
+  componentWillReceiveProps(props) {
     if (this.props.zoom !== props.zoom) {
       this.resize()
     }
@@ -63,6 +63,10 @@ class PhotoGrid extends PhotoIterator {
     })
   }
 
+  get dangling() {
+    return this.count % this.state.colsize
+  }
+
   get classes() {
     return {
       ...super.classes,
@@ -71,17 +75,20 @@ class PhotoGrid extends PhotoIterator {
     }
   }
 
-  get placeholder() {
-    return <li className="placeholder tile click-catcher"/>
-  }
-
   get isVertical() {
     return this.state.colsize === 1
   }
 
-  render() {
-    const tile = this.placeholder
+  fill() {
+    const { dangling } = this
+    if (!dangling) return
 
+    return times(this.state.colsize - dangling, (i) => (
+      <li key={`filler-${i}`} className="filler tile click-catcher"/>
+    ))
+  }
+
+  render() {
     return this.connect(
       <ul
         className={cx(this.classes)}
@@ -94,8 +101,7 @@ class PhotoGrid extends PhotoIterator {
           <PhotoTile {...props} key={photo.id} photo={photo}/>
         )}
 
-        {tile}{tile}{tile}{tile}{tile}{tile}{tile}
-        {tile}{tile}{tile}{tile}{tile}{tile}{tile}
+        {this.fill()}
       </ul>
     )
   }

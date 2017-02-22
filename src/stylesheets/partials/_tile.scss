@@ -29,7 +29,7 @@
     $i: $i + $tile-size-step-min;
   }
 
-  &.placeholder {
+  &.filler {
     ul & { // Needs specifity
       height: 0;
     }
