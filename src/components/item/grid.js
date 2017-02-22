@@ -78,7 +78,7 @@ class ItemGrid extends ItemIterator {
     const { width } = bounds(this.container)
 
     this.setState({
-      colsize: Math.floor(width / (this.size * TILE.FACTOR))
+      colsize: Math.floor(width / (this.props.size * TILE.FACTOR))
     })
   }
 
@@ -98,7 +98,7 @@ class ItemGrid extends ItemIterator {
         tabIndex={this.tabIndex}
         onKeyDown={this.handleKeyDown}
         ref={this.setContainer}
-        data-size={this.size}
+        data-size={this.props.size}
         onClick={this.handleClickOutside}>
         {this.map(({ item, ...props }) =>
           <ItemTile {...props} key={item.id} item={item}/>
@@ -111,8 +111,7 @@ class ItemGrid extends ItemIterator {
 
 
   static propTypes = {
-    ...ItemIterator.propTypes,
-    zoom: Shapes.number(1, ItemIterator.ZOOM.length - 1)
+    ...ItemIterator.propTypes
   }
 }
 

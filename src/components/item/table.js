@@ -4,7 +4,7 @@ const React = require('react')
 const { ItemIterator } = require('./iterator')
 const { ItemTableRow } = require('./table-row')
 const { ItemTableHead } = require('./table-head')
-const { arrayOf, oneOf, func, object } = React.PropTypes
+const { arrayOf, func, object } = React.PropTypes
 const { on, off } = require('../../dom')
 const cx = require('classnames')
 
@@ -80,8 +80,7 @@ class ItemTable extends ItemIterator {
     data: object.isRequired,
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,
-    onMetadataSave: func.isRequired,
-    zoom: oneOf([0]).isRequired
+    onMetadataSave: func.isRequired
   }
 }
 

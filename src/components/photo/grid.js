@@ -50,7 +50,7 @@ class PhotoGrid extends PhotoIterator {
   }
 
   componentWillReceiveProps(props) {
-    if (this.props.zoom !== props.zoom) {
+    if (this.props.size !== props.size) {
       this.resize()
     }
   }
@@ -59,7 +59,7 @@ class PhotoGrid extends PhotoIterator {
     const { width } = bounds(this.container)
 
     this.setState({
-      colsize: Math.floor(width / (this.size * TILE.FACTOR))
+      colsize: Math.floor(width / (this.props.size * TILE.FACTOR))
     })
   }
 
@@ -94,7 +94,7 @@ class PhotoGrid extends PhotoIterator {
         className={cx(this.classes)}
         ref={this.setContainer}
         tabIndex={this.tabIndex}
-        data-size={this.size}
+        data-size={this.props.size}
         onKeyDown={this.handleKeyDown}
         onClick={this.handleClickOutside}>
         {this.map(({ photo, ...props }) =>

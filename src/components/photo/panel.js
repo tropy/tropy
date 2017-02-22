@@ -9,7 +9,7 @@ const { PhotoToolbar } = require('./toolbar')
 const { PhotoList } = require('./list')
 const { PhotoGrid } = require('./grid')
 const { isValidImage } = require('../../image')
-const { pick } = require('../../common/util')
+const { pick, times } = require('../../common/util')
 
 
 class PhotoPanel extends Panel {
@@ -33,6 +33,7 @@ class PhotoPanel extends Panel {
     return (
       <PhotoToolbar
         zoom={this.props.zoom}
+        maxZoom={PhotoPanel.Zoom.length - 1}
         onZoomChange={this.props.onZoomChange}
         hasCreateButton={!this.props.isDisabled}
         onCreate={this.props.onCreate}/>
@@ -40,20 +41,20 @@ class PhotoPanel extends Panel {
   }
 
   renderContent() {
-    const { onMetadataSave, ...props } = this.props
+    const { onMetadataSave, zoom } = this.props
 
-    if (props.zoom) {
-      return (
-        <PhotoGrid {...pick(props, PhotoGrid.props)}
-          onDropImages={this.handleDropFiles}/>
-      )
+    const props = {
+      ...this.props,
+      size: PhotoPanel.Zoom[zoom],
+      onChange: onMetadataSave,
+      onDropImages: this.handleDropFiles,
+      onEdit: this.handleEdit
     }
 
+    const PhotoIterator = zoom ? PhotoGrid : PhotoList
+
     return (
-      <PhotoList {...pick(props, PhotoList.props)}
-        onDropImages={this.handleDropFiles}
-        onChange={onMetadataSave}
-        onEdit={this.handleEdit}/>
+      <PhotoIterator {...pick(props, PhotoIterator.props)}/>
     )
   }
 
@@ -84,6 +85,13 @@ class PhotoPanel extends Panel {
     onMetadataSave: PropTypes.func.isRequired,
     onZoomChange: PropTypes.func.isRequired
   }
+
+  static Zoom = [
+    48,
+    ...times(39, i => i * 2 + 50),
+    ...times(32, i => i * 4 + 128),
+    256
+  ]
 }
 
 

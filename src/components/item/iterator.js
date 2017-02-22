@@ -2,17 +2,12 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const { times } = require('../../common/util')
 const { has } = require('../../dom')
 const { STYLE } = require('../../constants')
 const { arrayOf, oneOf, shape, bool, func, number, string } = PropTypes
 
 
 class ItemIterator extends PureComponent {
-  get size() {
-    return this.constructor.ZOOM[this.props.zoom]
-  }
-
   get count() {
     return this.props.items.length
   }
@@ -148,13 +143,6 @@ class ItemIterator extends PureComponent {
     })
   }
 
-  static ZOOM = [
-    44,
-    ...times(52, i => i * 4 + 48),
-    ...times(32, i => i * 8 + 256),
-    512
-  ]
-
   static get props() {
     return Object.keys(this.propTypes)
   }
@@ -176,7 +164,7 @@ class ItemIterator extends PureComponent {
     cache: string.isRequired,
     selection: arrayOf(number).isRequired,
     list: number,
-    zoom: number.isRequired,
+    size: number.isRequired,
 
     dt: func.isRequired,
     onContextMenu: func.isRequired,
@@ -190,6 +178,5 @@ class ItemIterator extends PureComponent {
 
 
 module.exports = {
-  ItemIterator,
-  ZOOM: ItemIterator.ZOOM
+  ItemIterator
 }

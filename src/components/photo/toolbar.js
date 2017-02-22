@@ -6,7 +6,6 @@ const { FormattedMessage } = require('react-intl')
 const { Toolbar, ToolGroup } = require('../toolbar')
 const { Slider } = require('../slider')
 const { IconButton } = require('../button')
-const { PhotoIterator } = require('./iterator')
 
 const {
   IconPhoto, IconPlus, IconListSmall, IconGridSmall
@@ -55,10 +54,6 @@ class PhotoToolbar extends PureComponent {
     hasCreateButton: PropTypes.bool,
     onCreate: PropTypes.func,
     onZoomChange: PropTypes.func.isRequired
-  }
-
-  static defaultProps = {
-    maxZoom: PhotoIterator.ZOOM.length - 1
   }
 }
 

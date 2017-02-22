@@ -4,16 +4,12 @@ const React = require('react')
 const { PureComponent, PropTypes } = React
 const { DropTarget } = require('react-dnd')
 const { DND, STYLE } = require('../../constants')
-const { get, move, times, adjacent } = require('../../common/util')
+const { get, move, adjacent } = require('../../common/util')
 const { has } = require('../../dom')
 const { bool, func, number, string, object, shape, arrayOf } = PropTypes
 
 
 class PhotoIterator extends PureComponent {
-  get size() {
-    return this.constructor.ZOOM[this.props.zoom]
-  }
-
   get count() {
     return this.props.photos.length
   }
@@ -163,13 +159,6 @@ class PhotoIterator extends PureComponent {
   }
 
 
-  static ZOOM = [
-    48,
-    ...times(39, i => i * 2 + 50),
-    ...times(32, i => i * 4 + 128),
-    256
-  ]
-
   static DropTargetSpec = {
     drop({ photos }, monitor) {
       if (monitor.didDrop()) return
@@ -214,7 +203,7 @@ class PhotoIterator extends PureComponent {
     cache: string.isRequired,
     selected: number,
     ui: object.isRequired,
-    zoom: number.isRequired,
+    size: number.isRequired,
 
     isItemOpen: bool,
     isDisabled: bool,

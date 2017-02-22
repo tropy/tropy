@@ -46,8 +46,7 @@ ProjectToolbar.propTypes = {
 }
 
 ProjectToolbar.defaultProps = {
-  isDraggable: ARGS.frameless,
-  maxZoom: ZOOM.length - 1
+  isDraggable: ARGS.frameless
 }
 
 module.exports = {

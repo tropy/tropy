@@ -9,15 +9,21 @@ const { ItemGrid, ItemTable } = require('../item')
 const { ProjectSidebar } = require('./sidebar')
 const { ProjectToolbar } = require('./toolbar')
 const { isValidImage } = require('../../image')
-const { pick } = require('../../common/util')
+const { pick, times } = require('../../common/util')
 const { bool, func, object } = PropTypes
 
 
-// eslint-disable-next-line react/prefer-stateless-function
 class ProjectView extends PureComponent {
+  get size() {
+    return this.constructor.Zoom[this.zoom]
+  }
 
   get zoom() {
     return this.props.nav.itemsZoom
+  }
+
+  get maxZoom() {
+    return this.constructor.Zoom.length - 1
   }
 
   get ItemIterator() {
@@ -36,7 +42,7 @@ class ProjectView extends PureComponent {
       ...props
     } = this.props
 
-    const { zoom, ItemIterator } = this
+    const { size, zoom, maxZoom, ItemIterator } = this
 
     return (
       <div id="project-view">
@@ -54,6 +60,7 @@ class ProjectView extends PureComponent {
             <header>
               <ProjectToolbar
                 zoom={zoom}
+                maxZoom={maxZoom}
                 onItemCreate={onItemCreate}
                 onDoubleClick={ARGS.frameless ? props.onMaximize : null}
                 onZoomChange={onItemZoomChange}/>
@@ -63,7 +70,7 @@ class ProjectView extends PureComponent {
               edit={ui.edit.column}
               list={nav.list}
               selection={nav.items}
-              zoom={zoom}
+              size={size}
               isDisabled={nav.trash}
               isOver={isOver && canDrop}
               onCreate={onItemCreate}
@@ -86,6 +93,13 @@ class ProjectView extends PureComponent {
     onMaximize: func.isRequired,
     onItemZoomChange: func.isRequired
   }
+
+  static Zoom = [
+    44,
+    ...times(52, i => i * 4 + 48),
+    ...times(32, i => i * 8 + 256),
+    512
+  ]
 }
 
 const spec = {
