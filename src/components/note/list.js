@@ -14,13 +14,13 @@ class NoteList extends PureComponent {
   handleSelect = (note) => {
     if (note && !this.isSelected(note)) {
       this.props.onSelect({
-        note: note.id
+        note: note.id, photo: note.photo
       })
     }
   }
 
   render() {
-    const { notes, isDisabled, onContextMenu } = this.props
+    const { notes, isDisabled, onContextMenu, onOpen } = this.props
 
     return (
       <ul className="note-list">
@@ -31,6 +31,7 @@ class NoteList extends PureComponent {
             isDisabled={isDisabled}
             isSelected={this.isSelected(note)}
             onContextMenu={onContextMenu}
+            onOpen={onOpen}
             onSelect={this.handleSelect}/>
         )}
       </ul>
@@ -47,7 +48,8 @@ class NoteList extends PureComponent {
     isDisabled: bool,
 
     onSelect: func.isRequired,
-    onContextMenu: func.isRequired
+    onContextMenu: func.isRequired,
+    onOpen: func.isRequired
   }
 }
 

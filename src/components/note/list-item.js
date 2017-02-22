@@ -4,19 +4,32 @@ const React = require('react')
 const { PureComponent, PropTypes } = React
 const cx = require('classnames')
 const { bool, func, number, shape } = PropTypes
+const { createClickHandler } = require('../util')
 
 
 class NoteListItem extends PureComponent {
 
   handleContextMenu = (event) => {
-    const { note, isDisabled, onContextMenu } = this.props
+    const { note, isDisabled, isSelected, onContextMenu, onSelect } = this.props
 
     if (!isDisabled) {
+      if (!isSelected) onSelect(note)
+
       onContextMenu(event, 'note', {
         notes: [note.id], item: note.item, photo: note.photo
       })
     }
   }
+
+  handleClick = createClickHandler({
+    onClick: () => {
+      this.props.onSelect(this.props.note)
+    },
+
+    onDoubleClick: () => {
+      this.props.onOpen(this.props.note)
+    }
+  })
 
   render() {
     const { note, isSelected } = this.props
@@ -24,6 +37,7 @@ class NoteListItem extends PureComponent {
     return (
       <li
         className={cx({ note: true, active: isSelected })}
+        onMouseDown={this.handleClick}
         onContextMenu={this.handleContextMenu}>
         <div className="css-multiline-truncate">
           Note {note.id}
@@ -40,7 +54,9 @@ class NoteListItem extends PureComponent {
     isDisabled: bool,
     isSelected: bool,
 
-    onContextMenu: func.isRequired
+    onContextMenu: func.isRequired,
+    onOpen: func.isRequired,
+    onSelect: func.isRequired
   }
 }
 
