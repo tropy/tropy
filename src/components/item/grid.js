@@ -3,19 +3,14 @@
 const React = require('react')
 const { ItemIterator } = require('./iterator')
 const { ItemTile } = require('./tile')
-const { bounds, on, off } = require('../../dom')
-const { refine, times } = require('../../common/util')
+const { on, off } = require('../../dom')
+const { refine } = require('../../common/util')
 const cx = require('classnames')
-const { TILE } = require('../../constants/style')
 
 
 class ItemGrid extends ItemIterator {
   constructor(props) {
     super(props)
-
-    this.state = {
-      colsize: 0
-    }
 
     refine(this, 'handleKeyDown', ([event]) => {
       if (!event.isPropagationStopped()) {
@@ -39,28 +34,13 @@ class ItemGrid extends ItemIterator {
   }
 
   componentDidMount() {
+    super.componentDidMount()
     on(this.container, 'tab:focus', this.handleFocus)
-    on(window, 'resize', this.resize)
-    this.resize()
   }
 
   componentWillUnmount() {
+    super.componentWillUnmount()
     off(this.container, 'tab:focus', this.handleFocus)
-    off(window, 'resize', this.resize)
-  }
-
-  componentWillReceiveProps(props) {
-    if (this.props.zoom !== props.zoom) {
-      this.resize()
-    }
-  }
-
-  get isVertical() {
-    return this.state.colsize === 1
-  }
-
-  get dangling() {
-    return this.size % this.state.colsize
   }
 
   get classes() {
@@ -73,22 +53,6 @@ class ItemGrid extends ItemIterator {
     }
   }
 
-  resize = () => {
-    const { width } = bounds(this.container)
-
-    this.setState({
-      colsize: Math.floor(width / (this.props.size * TILE.FACTOR))
-    })
-  }
-
-  fill() {
-    const { dangling } = this
-    if (!dangling) return
-
-    return times(this.state.colsize - dangling, (i) => (
-      <li key={`filler-${i}`} className="filler tile click-catcher"/>
-    ))
-  }
 
   render() {
     return this.connect(
@@ -106,6 +70,10 @@ class ItemGrid extends ItemIterator {
         {this.fill()}
       </ul>
     )
+  }
+
+  static get isGrid() {
+    return true
   }
 
   static propTypes = {

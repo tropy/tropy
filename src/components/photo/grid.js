@@ -4,7 +4,7 @@ const React = require('react')
 const { PhotoIterator } = require('./iterator')
 const { PhotoTile } = require('./tile')
 const { on, off } = require('../../dom')
-const { refine, times } = require('../../common/util')
+const { refine } = require('../../common/util')
 const cx = require('classnames')
 
 
@@ -39,7 +39,7 @@ class PhotoGrid extends PhotoIterator {
   }
 
   componentWillUnmount() {
-    super.componentWillMount()
+    super.componentWillUnmount()
     off(this.container, 'tab:focus', this.handleFocus)
   }
 
@@ -49,16 +49,6 @@ class PhotoGrid extends PhotoIterator {
       'photo-grid': true,
       'click-catcher': true
     }
-  }
-
-
-  fill() {
-    const { dangling } = this
-    if (!dangling) return
-
-    return times(this.state.cols - dangling, (i) => (
-      <li key={`filler-${i}`} className="filler tile click-catcher"/>
-    ))
   }
 
   render() {

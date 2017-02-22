@@ -4,6 +4,7 @@ const React = require('react')
 const { PureComponent, PropTypes } = React
 const { STYLE } = require('../constants')
 const { bounds, on, off } = require('../dom')
+const { times } = require('../common/util')
 const { number } = PropTypes
 
 
@@ -67,6 +68,15 @@ class Iterator extends PureComponent {
 
   setContainer = (container) => {
     this.container = container
+  }
+
+  fill() {
+    const { dangling } = this
+    if (!dangling) return
+
+    return times(this.state.cols - dangling, (i) => (
+      <li key={`filler-${i}`} className="filler tile click-catcher"/>
+    ))
   }
 
   resize = () => {
