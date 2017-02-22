@@ -184,32 +184,33 @@ INSERT INTO "image_qualities" VALUES('color');
 INSERT INTO "image_qualities" VALUES('default');
 INSERT INTO "image_qualities" VALUES('gray');
 PRAGMA writable_schema=ON;
-INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','ft_metadata','ft_metadata',0,'CREATE VIRTUAL TABLE ft_metadata USING fts5(
+INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_metadata','fts_metadata',0,'CREATE VIRTUAL TABLE fts_metadata USING fts5(
   id UNINDEXED,
   title,
   names,
   other
 )');
-CREATE TABLE IF NOT EXISTS 'ft_metadata_data'(id INTEGER PRIMARY KEY, block BLOB);
-INSERT INTO "ft_metadata_data" VALUES(1,X'');
-INSERT INTO "ft_metadata_data" VALUES(10,X'00000000000000');
-CREATE TABLE IF NOT EXISTS 'ft_metadata_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
-CREATE TABLE IF NOT EXISTS 'ft_metadata_content'(id INTEGER PRIMARY KEY, c0, c1, c2, c3);
-CREATE TABLE IF NOT EXISTS 'ft_metadata_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
-CREATE TABLE IF NOT EXISTS 'ft_metadata_config'(k PRIMARY KEY, v) WITHOUT ROWID;
-INSERT INTO "ft_metadata_config" VALUES('version',4);
-INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','ft_notes','ft_notes',0,'CREATE VIRTUAL TABLE ft_notes USING fts5(
+CREATE TABLE IF NOT EXISTS 'fts_metadata_data'(id INTEGER PRIMARY KEY, block BLOB);
+INSERT INTO "fts_metadata_data" VALUES(1,X'');
+INSERT INTO "fts_metadata_data" VALUES(10,X'00000000000000');
+CREATE TABLE IF NOT EXISTS 'fts_metadata_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
+CREATE TABLE IF NOT EXISTS 'fts_metadata_content'(id INTEGER PRIMARY KEY, c0, c1, c2, c3);
+CREATE TABLE IF NOT EXISTS 'fts_metadata_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
+CREATE TABLE IF NOT EXISTS 'fts_metadata_config'(k PRIMARY KEY, v) WITHOUT ROWID;
+INSERT INTO "fts_metadata_config" VALUES('version',4);
+INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_notes','fts_notes',0,'CREATE VIRTUAL TABLE fts_notes USING fts5(
   id UNINDEXED,
   text,
-  content=''notes''
+  content=''notes'',
+  content_rowid=''note_id''
 )');
-CREATE TABLE IF NOT EXISTS 'ft_notes_data'(id INTEGER PRIMARY KEY, block BLOB);
-INSERT INTO "ft_notes_data" VALUES(1,X'');
-INSERT INTO "ft_notes_data" VALUES(10,X'00000000000000');
-CREATE TABLE IF NOT EXISTS 'ft_notes_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
-CREATE TABLE IF NOT EXISTS 'ft_notes_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
-CREATE TABLE IF NOT EXISTS 'ft_notes_config'(k PRIMARY KEY, v) WITHOUT ROWID;
-INSERT INTO "ft_notes_config" VALUES('version',4);
+CREATE TABLE IF NOT EXISTS 'fts_notes_data'(id INTEGER PRIMARY KEY, block BLOB);
+INSERT INTO "fts_notes_data" VALUES(1,X'');
+INSERT INTO "fts_notes_data" VALUES(10,X'00000000000000');
+CREATE TABLE IF NOT EXISTS 'fts_notes_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
+CREATE TABLE IF NOT EXISTS 'fts_notes_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
+CREATE TABLE IF NOT EXISTS 'fts_notes_config'(k PRIMARY KEY, v) WITHOUT ROWID;
+INSERT INTO "fts_notes_config" VALUES('version',4);
 CREATE INDEX metadata_values_index ON metadata_values (value ASC);
 CREATE TRIGGER insert_tags_trim_name
   AFTER INSERT ON tags
@@ -256,24 +257,24 @@ CREATE TRIGGER update_lists_cycle_check
         RAISE(ABORT, 'Lists may not contain cycles')
       END;
   END;
-CREATE TRIGGER ai_notes_index
+CREATE TRIGGER notes_ai_idx
   AFTER INSERT ON notes
   BEGIN
-    INSERT INTO ft_notes (rowid, id, text)
+    INSERT INTO fts_notes (rowid, id, text)
       VALUES (NEW.note_id, NEW.id, NEW.text);
   END;
-CREATE TRIGGER ad_notes_index
+CREATE TRIGGER notes_ad_idx
   AFTER DELETE ON notes
   BEGIN
-    INSERT INTO ft_notes (ft_notes, rowid, id, text)
+    INSERT INTO fts_notes (fts_notes, rowid, id, text)
       VALUES ('delete', OLD.note_id, OLD.id, OLD.text);
   END;
-CREATE TRIGGER au_notes_index
+CREATE TRIGGER notes_au_idx
   AFTER UPDATE OF text ON notes
   BEGIN
-    INSERT INTO ft_notes (ft_notes, rowid, id, text)
+    INSERT INTO fts_notes (fts_notes, rowid, id, text)
       VALUES ('delete', OLD.note_id, OLD.id, OLD.text);
-    INSERT INTO ft_notes (rowid, id, text)
+    INSERT INTO fts_notes (rowid, id, text)
       VALUES (NEW.note_id, NEW.id, NEW.text);
   END;
 PRAGMA writable_schema=OFF;
