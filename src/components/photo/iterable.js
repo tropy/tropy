@@ -6,6 +6,7 @@ const { Thumbnail } = require('./thumbnail')
 const { DragSource, DropTarget } = require('react-dnd')
 const { getEmptyImage } = require('react-dnd-electron-backend')
 const { bounds } = require('../../dom')
+const { pure } = require('../util')
 const { DND } = require('../../constants')
 const { bool, func, number, string, object, shape } = PropTypes
 
@@ -155,11 +156,11 @@ class PhotoIterable extends PureComponent {
   })
 
   static wrap() {
-    return DragSource(
+    return pure(DragSource(
       DND.PHOTO, this.DragSourceSpec, this.DragSourceCollect
     )(DropTarget(
       DND.PHOTO, this.DropTargetSpec, this.DropTargetCollect
-    )(this))
+    )(this)))
   }
 
 

@@ -1,9 +1,27 @@
 'use strict'
 
-const { Children, PropTypes } = require('react')
+const {
+  Children, PropTypes, PureComponent, createElement: create
+} = require('react')
+
 const { diff } = require('../common/util')
 
+
 module.exports = {
+
+  pure(WrappedComponent) {
+    return class extends PureComponent {
+      static displayName = `pure(${WrappedComponent.name})`
+
+      static get WrappedComponent() {
+        return WrappedComponent
+      }
+
+      render() {
+        return create(WrappedComponent, this.props)
+      }
+    }
+  },
 
   only(type) {
     return (props, name, component) => {

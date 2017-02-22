@@ -7,6 +7,7 @@ const { getEmptyImage } = require('react-dnd-electron-backend')
 const { compose, map, filter, into } = require('transducers.js')
 const { DND } = require('../../constants')
 const { meta } = require('../../common/os')
+const { pure } = require('../util')
 const { bool, func, number, shape, arrayOf } = PropTypes
 
 class ItemIterable extends PureComponent {
@@ -122,11 +123,11 @@ class ItemIterable extends PureComponent {
   })
 
   static wrap() {
-    return DragSource(
+    return pure(DragSource(
       DND.ITEMS, this.DragSourceSpec, this.DragSourceCollect
     )(DropTarget(
       DND.PHOTO, this.DropTargetSpec, this.DropTargetCollect
-    )(this))
+    )(this)))
   }
 
 
