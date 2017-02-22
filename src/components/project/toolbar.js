@@ -3,7 +3,6 @@
 const React = require('react')
 const { Toolbar } = require('../toolbar')
 const { IconPlus, IconList, IconGrid } = require('../icons')
-const { ZOOM } = require('../item')
 const { Slider } = require('../slider')
 const { SearchField } = require('../search')
 const { IconButton } = require('../button')
