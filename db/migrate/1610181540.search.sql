@@ -28,9 +28,9 @@ CREATE TRIGGER ad_notes_index
   END;
 
 CREATE TRIGGER au_notes_index
-  AFTER UPDATE ON notes
+  AFTER UPDATE OF text ON notes
   BEGIN
-    INSERT INTO ft_notes (fts_notes, rowid, id, text)
+    INSERT INTO ft_notes (ft_notes, rowid, id, text)
       VALUES ('delete', OLD.note_id, OLD.id, OLD.text);
     INSERT INTO ft_notes (rowid, id, text)
       VALUES (NEW.note_id, NEW.id, NEW.text);
