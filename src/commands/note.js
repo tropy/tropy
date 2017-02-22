@@ -31,9 +31,8 @@ class Create extends Command {
     const [parent, add] = (item) ?
       [item, act.item.notes.add] : [photo, act.photo.notes.add]
 
-    const data = yield call(mod.note.create, db, {
-      id: parent, text: text || ''
-    })
+    const data = yield call([db, db.transaction], tx =>
+      mod.note.create(tx, { id: parent, text: text || '' }))
 
     const notes = keys(data)
 

@@ -3,8 +3,16 @@
 module.exports = {
 
   async create(db, data) {
-    const { id } = await db.run(`
-      INSERT INTO notes (id, text) VALUES (?,?)`, data.id, data.text
+
+    // Note: last_insert_rowid() not reliable because of FTS triggers,
+    // so we determine the next id ourselves. This should be always
+    // be called in a transaction!
+    const { max } = await db.get('SELECT max(note_id) AS max FROM notes')
+    const id = Number(max) + 1
+
+    await db.run(`
+      INSERT INTO notes (note_id, id, text) VALUES (?,?,?)`,
+      id, data.id, data.text
     )
 
     return module.exports.load(db, [id])
