@@ -5,7 +5,7 @@ const { ItemIterator } = require('./iterator')
 const { ItemTile } = require('./tile')
 const { Shapes } = require('../util')
 const { bounds, on, off } = require('../../dom')
-const { refine } = require('../../common/util')
+const { refine, times } = require('../../common/util')
 const cx = require('classnames')
 const { TILE } = require('../../constants/style')
 
@@ -50,7 +50,7 @@ class ItemGrid extends ItemIterator {
     off(window, 'resize', this.resize)
   }
 
-  componentDidUpdate(props) {
+  componentWillReceiveProps(props) {
     if (this.props.zoom !== props.zoom) {
       this.resize()
     }
@@ -58,6 +58,10 @@ class ItemGrid extends ItemIterator {
 
   get isVertical() {
     return this.state.colsize === 1
+  }
+
+  get dangling() {
+    return this.count % this.state.colsize
   }
 
   get classes() {
@@ -70,10 +74,6 @@ class ItemGrid extends ItemIterator {
     }
   }
 
-  get placeholder() {
-    return <li className="placeholder tile click-catcher"/>
-  }
-
   resize = () => {
     const { width } = bounds(this.container)
 
@@ -82,10 +82,16 @@ class ItemGrid extends ItemIterator {
     })
   }
 
+  fill() {
+    const { dangling } = this
+    if (!dangling) return
+
+    return times(this.state.colsize - dangling, (i) => (
+      <li key={`filler-${i}`} className="filler tile click-catcher"/>
+    ))
+  }
 
   render() {
-    const tile = this.placeholder
-
     return this.connect(
       <ul
         className={cx(this.classes)}
@@ -98,9 +104,7 @@ class ItemGrid extends ItemIterator {
           <ItemTile {...props} key={item.id} item={item}/>
         )}
 
-        {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
-        {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
-        {tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}{tile}
+        {this.fill()}
       </ul>
     )
   }

@@ -14,6 +14,10 @@ class PhotoIterator extends PureComponent {
     return this.constructor.ZOOM[this.props.zoom]
   }
 
+  get count() {
+    return this.props.photos.length
+  }
+
   get classes() {
     return {
       'drop-target': this.isSortable,
@@ -35,7 +39,7 @@ class PhotoIterator extends PureComponent {
   }
 
   get isEmpty() {
-    return this.props.photos.length === 0
+    return this.count === 0
   }
 
   get isSortable() {
