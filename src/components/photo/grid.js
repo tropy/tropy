@@ -3,29 +3,24 @@
 const React = require('react')
 const { PhotoIterator } = require('./iterator')
 const { PhotoTile } = require('./tile')
-const { bounds, on, off } = require('../../dom')
+const { on, off } = require('../../dom')
 const { refine, times } = require('../../common/util')
 const cx = require('classnames')
-const { TILE } = require('../../constants/style')
 
 
 class PhotoGrid extends PhotoIterator {
   constructor(props) {
     super(props)
 
-    this.state = {
-      colsize: 0
-    }
-
     refine(this, 'handleKeyDown', ([event]) => {
       if (!event.isPropagationStopped()) {
         switch (event.key) {
           case (this.isVertical ? 'ArrowLeft' : 'ArrowUp'):
-            this.handleSelect(this.getPrevPhoto(this.state.colsize))
+            this.handleSelect(this.getPrevPhoto(this.state.cols))
             break
 
           case (this.isVertical ? 'ArrowRight' : 'ArrowDown'):
-            this.handleSelect(this.getNextPhoto(this.state.colsize))
+            this.handleSelect(this.getNextPhoto(this.state.cols))
             break
 
           default:
@@ -39,32 +34,13 @@ class PhotoGrid extends PhotoIterator {
   }
 
   componentDidMount() {
+    super.componentDidMount()
     on(this.container, 'tab:focus', this.handleFocus)
-    on(window, 'resize', this.resize)
-    this.resize()
   }
 
   componentWillUnmount() {
+    super.componentWillMount()
     off(this.container, 'tab:focus', this.handleFocus)
-    off(window, 'resize', this.resize)
-  }
-
-  componentWillReceiveProps(props) {
-    if (this.props.size !== props.size) {
-      this.resize()
-    }
-  }
-
-  resize = () => {
-    const { width } = bounds(this.container)
-
-    this.setState({
-      colsize: Math.floor(width / (this.props.size * TILE.FACTOR))
-    })
-  }
-
-  get dangling() {
-    return this.count % this.state.colsize
   }
 
   get classes() {
@@ -75,15 +51,12 @@ class PhotoGrid extends PhotoIterator {
     }
   }
 
-  get isVertical() {
-    return this.state.colsize === 1
-  }
 
   fill() {
     const { dangling } = this
     if (!dangling) return
 
-    return times(this.state.colsize - dangling, (i) => (
+    return times(this.state.cols - dangling, (i) => (
       <li key={`filler-${i}`} className="filler tile click-catcher"/>
     ))
   }
@@ -109,6 +82,10 @@ class PhotoGrid extends PhotoIterator {
 
   static propTypes = {
     ...PhotoIterator.propTypes
+  }
+
+  static get isGrid() {
+    return true
   }
 }
 

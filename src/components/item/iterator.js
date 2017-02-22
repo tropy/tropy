@@ -1,31 +1,15 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent, PropTypes } = React
+const { PropTypes } = React
+const { Iterator } = require('../iterator')
 const { has } = require('../../dom')
-const { STYLE } = require('../../constants')
 const { arrayOf, oneOf, shape, bool, func, number, string } = PropTypes
 
 
-class ItemIterator extends PureComponent {
-  get count() {
-    return this.props.items.length
-  }
-
-  get orientation() {
-    return this.isVertical ? 'vertical' : 'horizontal'
-  }
-
-  get isVertical() {
-    return true
-  }
-
-  get isEmpty() {
-    return this.count === 0
-  }
-
-  get tabIndex() {
-    return this.isEmpty ? null : STYLE.TABS[this.constructor.name]
+class ItemIterator extends Iterator {
+  get iteration() {
+    return this.props.items
   }
 
   isSelected(item) {
@@ -52,10 +36,6 @@ class ItemIterator extends PureComponent {
   }
 
   getSelection = () => this.props.selection
-
-  setContainer = (container) => {
-    this.container = container
-  }
 
   handleClickOutside = (event) => {
     if (has(event.target, 'click-catcher')) {
@@ -141,10 +121,6 @@ class ItemIterator extends PureComponent {
         onSelect: this.props.onSelect
       })
     })
-  }
-
-  static get props() {
-    return Object.keys(this.propTypes)
   }
 
   static propTypes = {

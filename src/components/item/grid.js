@@ -3,7 +3,6 @@
 const React = require('react')
 const { ItemIterator } = require('./iterator')
 const { ItemTile } = require('./tile')
-const { Shapes } = require('../util')
 const { bounds, on, off } = require('../../dom')
 const { refine, times } = require('../../common/util')
 const cx = require('classnames')
@@ -61,7 +60,7 @@ class ItemGrid extends ItemIterator {
   }
 
   get dangling() {
-    return this.count % this.state.colsize
+    return this.size % this.state.colsize
   }
 
   get classes() {
@@ -108,7 +107,6 @@ class ItemGrid extends ItemIterator {
       </ul>
     )
   }
-
 
   static propTypes = {
     ...ItemIterator.propTypes

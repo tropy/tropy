@@ -1,17 +1,18 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent, PropTypes } = React
+const { PropTypes } = React
+const { Iterator } = require('../iterator')
 const { DropTarget } = require('react-dnd')
-const { DND, STYLE } = require('../../constants')
+const { DND } = require('../../constants')
 const { get, move, adjacent } = require('../../common/util')
 const { has } = require('../../dom')
 const { bool, func, number, string, object, shape, arrayOf } = PropTypes
 
 
-class PhotoIterator extends PureComponent {
-  get count() {
-    return this.props.photos.length
+class PhotoIterator extends Iterator {
+  get iteration() {
+    return this.props.photos
   }
 
   get classes() {
@@ -20,22 +21,6 @@ class PhotoIterator extends PureComponent {
       'over': this.props.isOver,
       [this.orientation]: true
     }
-  }
-
-  get orientation() {
-    return this.isVertical ? 'vertical' : 'horizontal'
-  }
-
-  get tabIndex() {
-    return this.isEmpty ? null : STYLE.TABS[this.constructor.name]
-  }
-
-  get isVertical() {
-    return true
-  }
-
-  get isEmpty() {
-    return this.count === 0
   }
 
   get isSortable() {
@@ -70,10 +55,6 @@ class PhotoIterator extends PureComponent {
 
   getAdjacent = (photo) => {
     return adjacent(this.props.photos, photo)
-  }
-
-  setContainer = (container) => {
-    this.container = container
   }
 
   handleFocus = () => {
