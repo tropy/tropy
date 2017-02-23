@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = React
 const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
 const { Panel } = require('../panel')
@@ -10,6 +9,7 @@ const { PhotoList } = require('./list')
 const { PhotoGrid } = require('./grid')
 const { isValidImage } = require('../../image')
 const { pick, times } = require('../../common/util')
+const { array, bool, number, func } = React.PropTypes
 
 
 class PhotoPanel extends Panel {
@@ -36,6 +36,7 @@ class PhotoPanel extends Panel {
         maxZoom={PhotoPanel.Zoom.length - 1}
         onZoomChange={this.props.onZoomChange}
         hasCreateButton={!this.props.isDisabled}
+        isDisabled={!this.props.photos.length}
         onCreate={this.props.onCreate}/>
     )
   }
@@ -72,18 +73,19 @@ class PhotoPanel extends Panel {
 
 
   static propTypes = {
-    zoom: PropTypes.number.isRequired,
+    zoom: number.isRequired,
+    photos: array.isRequired,
 
-    isDisabled: PropTypes.bool,
-    isOver: PropTypes.bool,
-    canDrop: PropTypes.bool,
+    isDisabled: bool,
+    isOver: bool,
+    canDrop: bool,
 
-    dt: PropTypes.func.isRequired,
+    dt: func.isRequired,
 
-    onCreate: PropTypes.func.isRequired,
-    onEdit: PropTypes.func.isRequired,
-    onMetadataSave: PropTypes.func.isRequired,
-    onZoomChange: PropTypes.func.isRequired
+    onCreate: func.isRequired,
+    onEdit: func.isRequired,
+    onMetadataSave: func.isRequired,
+    onZoomChange: func.isRequired
   }
 
   static Zoom = [

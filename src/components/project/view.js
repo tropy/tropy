@@ -10,7 +10,7 @@ const { ProjectSidebar } = require('./sidebar')
 const { ProjectToolbar } = require('./toolbar')
 const { isValidImage } = require('../../image')
 const { pick, times } = require('../../common/util')
-const { bool, func, object } = PropTypes
+const { array, bool, func, object } = PropTypes
 
 
 class ProjectView extends PureComponent {
@@ -32,6 +32,7 @@ class ProjectView extends PureComponent {
 
   render() {
     const {
+      items,
       isOver,
       canDrop,
       nav,
@@ -61,12 +62,14 @@ class ProjectView extends PureComponent {
               <ProjectToolbar
                 zoom={zoom}
                 maxZoom={maxZoom}
+                isDisabled={!items.length}
                 onItemCreate={onItemCreate}
                 onDoubleClick={ARGS.frameless ? props.onMaximize : null}
                 onZoomChange={onItemZoomChange}/>
             </header>
 
             <ItemIterator {...pick(props, ItemIterator.props)}
+              items={items}
               edit={ui.edit.column}
               list={nav.list}
               selection={nav.items}
@@ -82,6 +85,7 @@ class ProjectView extends PureComponent {
   }
 
   static propTypes = {
+    items: array.isRequired,
     isOver: bool,
     canDrop: bool,
     nav: object.isRequired,

@@ -6,6 +6,7 @@ const { FormattedMessage } = require('react-intl')
 const { Toolbar, ToolGroup } = require('../toolbar')
 const { Slider } = require('../slider')
 const { IconButton } = require('../button')
+const { number, bool, func } = PropTypes
 
 const {
   IconPhoto, IconPlus, IconListSmall, IconGridSmall
@@ -13,11 +14,15 @@ const {
 
 
 class PhotoToolbar extends PureComponent {
-
-  handleCreate = () => this.props.onCreate()
-
   render() {
-    const { hasCreateButton, zoom, maxZoom, onZoomChange } = this.props
+    const {
+      hasCreateButton,
+      isDisabled,
+      zoom,
+      maxZoom,
+      onCreate,
+      onZoomChange
+    } = this.props
 
     return (
       <Toolbar>
@@ -30,7 +35,7 @@ class PhotoToolbar extends PureComponent {
           {
             hasCreateButton &&
               <ToolGroup>
-                <IconButton icon={<IconPlus/>} onClick={this.handleCreate}/>
+                <IconButton icon={<IconPlus/>} onClick={onCreate}/>
               </ToolGroup>
           }
           <ToolGroup>
@@ -40,6 +45,7 @@ class PhotoToolbar extends PureComponent {
               size="sm"
               minIcon={<IconListSmall/>}
               maxIcon={<IconGridSmall/>}
+              isDisabled={isDisabled}
               onChange={onZoomChange}/>
           </ToolGroup>
         </div>
@@ -49,11 +55,12 @@ class PhotoToolbar extends PureComponent {
 
 
   static propTypes = {
-    maxZoom: PropTypes.number.isRequired,
-    zoom: PropTypes.number.isRequired,
-    hasCreateButton: PropTypes.bool,
-    onCreate: PropTypes.func,
-    onZoomChange: PropTypes.func.isRequired
+    hasCreateButton: bool,
+    isDisabled: bool,
+    maxZoom: number.isRequired,
+    zoom: number.isRequired,
+    onCreate: func.isRequired,
+    onZoomChange: func.isRequired
   }
 }
 

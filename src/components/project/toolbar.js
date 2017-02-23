@@ -9,6 +9,7 @@ const { IconButton } = require('../button')
 const { bool, func, number } = React.PropTypes
 
 const ProjectToolbar = ({
+  isDisabled,
   zoom,
   maxZoom,
   onZoomChange,
@@ -21,6 +22,7 @@ const ProjectToolbar = ({
         <Slider
           value={zoom}
           max={maxZoom}
+          isDisabled={isDisabled}
           onChange={onZoomChange}
           minIcon={<IconList/>}
           maxIcon={<IconGrid/>}/>
@@ -37,6 +39,7 @@ const ProjectToolbar = ({
 
 ProjectToolbar.propTypes = {
   isDraggable: bool,
+  isDisabled: bool,
   maxZoom: number.isRequired,
   zoom: number.isRequired,
   onDoubleClick: func,
