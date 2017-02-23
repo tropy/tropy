@@ -13,27 +13,31 @@ class Iterator extends PureComponent {
     super(props)
 
     this.state = {
-      cols: 1
+      cols: 1, maxCols: 1
     }
   }
 
   componentDidMount() {
     if (this.constructor.isGrid) {
-      on(window, 'resize', this.resize)
-      this.resize()
+      on(window, 'resize', this.handleResize)
+      this.handleResize()
     }
   }
 
   componentWillUnmount() {
     if (this.constructor.isGrid) {
-      off(window, 'resize', this.resize)
+      off(window, 'resize', this.handleResize)
     }
   }
 
   componentWillReceiveProps(props) {
     if (this.constructor.isGrid) {
       if (this.props.size !== props.size) {
-        this.resize()
+        const { width } = bounds(this.container)
+
+        this.setState({
+          cols: this.getColumns(width, props.size)
+        })
       }
     }
   }
@@ -58,30 +62,35 @@ class Iterator extends PureComponent {
     return this.isVertical ? 'vertical' : 'horizontal'
   }
 
-  get dangling() {
-    return this.size % this.state.cols
-  }
-
   get tabIndex() {
     return this.isEmpty ? null : STYLE.TABS[this.constructor.name]
+  }
+
+  getColumns(width, size = this.props.size) {
+    return Math.floor(width / (size * STYLE.TILE.FACTOR))
   }
 
   setContainer = (container) => {
     this.container = container
   }
 
-  fill(count = (this.state.cols - this.dangling)) {
+  fill(count) {
     return times(count, (i) => (
-      <li key={`filler-${i}`} className="filler tile click-catcher"/>
+      <li key={`filler-${i}`} className="filler tile"/>
     ))
   }
 
-  resize = () => {
+  handleResize = () => {
     const { width } = bounds(this.container)
+    const maxCols = this.getColumns(width, STYLE.TILE.MIN)
 
     this.setState({
-      cols: Math.floor(width / (this.props.size * STYLE.TILE.FACTOR))
+      cols: this.getColumns(width), maxCols
     })
+
+    if (this.constructor.isGrid) {
+      this.filler = this.fill(maxCols)
+    }
   }
 
 

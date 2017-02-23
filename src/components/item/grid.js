@@ -12,8 +12,6 @@ class ItemGrid extends ItemIterator {
   constructor(props) {
     super(props)
 
-    this.filler = this.fill(75)
-
     refine(this, 'handleKeyDown', ([event]) => {
       if (!event.isPropagationStopped()) {
         switch (event.key) {

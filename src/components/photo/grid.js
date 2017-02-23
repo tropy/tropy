@@ -12,8 +12,6 @@ class PhotoGrid extends PhotoIterator {
   constructor(props) {
     super(props)
 
-    this.filler = this.fill(20)
-
     refine(this, 'handleKeyDown', ([event]) => {
       if (!event.isPropagationStopped()) {
         switch (event.key) {
