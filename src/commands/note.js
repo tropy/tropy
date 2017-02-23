@@ -34,7 +34,7 @@ class Create extends Command {
     const data = yield call([db, db.transaction], tx =>
       mod.note.create(tx, { id: parent, text: text || '' }))
 
-    const notes = keys(data)
+    const notes = keys(data).map(Number)
 
     yield put(add({ id: parent, notes }))
 
