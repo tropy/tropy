@@ -171,9 +171,10 @@ class ItemView extends PureComponent {
       <Toolbar onDoubleClick={ARGS.frameless ? this.props.onMaximize : null}>
         <div className="toolbar-left">
           <ToolGroup>
-            <IconButton
-              icon={<IconChevron16/>}
-              onClick={this.handleModeChange}/>
+            {this.isItemMode &&
+              <IconButton
+                icon={<IconChevron16/>}
+                onClick={this.handleModeChange}/>}
           </ToolGroup>
         </div>
       </Toolbar>

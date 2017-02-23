@@ -307,7 +307,7 @@ module.exports = {
       },
 
       onItemZoomChange(itemsZoom) {
-        dispatch(actions.nav.update({ itemsZoom }))
+        dispatch(actions.nav.update({ itemsZoom }, { throttle: true }))
       },
 
       onItemImport(...args) {
@@ -348,7 +348,7 @@ module.exports = {
       },
 
       onPhotoZoomChange(photoZoom) {
-        dispatch(actions.nav.panel.update({ photoZoom }))
+        dispatch(actions.nav.panel.update({ photoZoom }, { throttle: true }))
       },
 
       onListSave(...args) {

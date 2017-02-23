@@ -69,7 +69,7 @@ rules:
   react/jsx-pascal-case: 2
   react/jsx-wrap-multilines: 2
   react/prefer-es6-class: 2
-  react/prefer-stateless-function: 2
+  react/prefer-stateless-function: [2, { 'ignorePureComponents': true }]
   react/require-render-return: 2
   react/self-closing-comp: 2
   semi-spacing: 0

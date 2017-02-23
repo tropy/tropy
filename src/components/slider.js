@@ -26,7 +26,7 @@ class Slider extends PureComponent {
   }
 
   componentWillUnmount() {
-    if (this.state.dragging) {
+    if (this.state.isDragging) {
       this.stopDragging()
     }
   }
@@ -97,13 +97,13 @@ class Slider extends PureComponent {
     return {
       slider: true,
       [`slider-${this.props.size}`]: true,
-      disabled: this.props.disabled,
-      dragging: this.state.dragging
+      isDisabled: this.props.isDisabled,
+      isDragging: this.state.isDragging
     }
   }
 
   startDragging() {
-    this.setState({ dragging: true })
+    this.setState({ isDragging: true })
 
     on(document, 'mousemove', this.update)
     on(document, 'mouseup', this.handleMouseUp, { capture: true })
@@ -112,7 +112,7 @@ class Slider extends PureComponent {
   }
 
   stopDragging = () => {
-    this.setState({ dragging: false })
+    this.setState({ isDragging: false })
 
     off(document, 'mousemove', this.update)
     off(document, 'mouseup', this.handleMouseUp, { capture: true })
@@ -127,37 +127,37 @@ class Slider extends PureComponent {
 
 
   renderMinButton() {
-    const { min, minIcon, disabled } = this.props
+    const { min, minIcon, isDisabled } = this.props
     const { value } = this.state
 
     if (minIcon) {
       return (
         <IconButton
           icon={this.props.minIcon}
-          classes={{ active: value === min }}
-          disabled={disabled}
+          isActive={value === min}
+          isDisabled={isDisabled}
           onMouseDown={this.min}/>
       )
     }
   }
 
   renderMaxButton() {
-    const { max, maxIcon, disabled } = this.props
+    const { max, maxIcon, isDisabled } = this.props
     const { value } = this.state
 
     if (maxIcon) {
       return (
         <IconButton
           icon={this.props.maxIcon}
-          classes={{ active: value === max }}
-          disabled={disabled}
+          isActive={value === max}
+          isDisabled={isDisabled}
           onMouseDown={this.max}/>
       )
     }
   }
 
   render() {
-    const { disabled } = this.props
+    const { isDisabled } = this.props
     const { offset, delta } = this
 
     const percentage = `${100 * offset / delta}%`
@@ -165,11 +165,9 @@ class Slider extends PureComponent {
     return (
       <div
         className={cx(this.classes)}
-        onMouseDown={disabled ? noop : this.handleMouseDown}>
+        onMouseDown={isDisabled ? null : this.handleMouseDown}>
         {this.renderMinButton()}
-        <div
-          ref={this.setTrack}
-          className="slider-track">
+        <div ref={this.setTrack} className="slider-track">
           <div className="slider-range" style={{ width: percentage }}/>
           <div
             className="slider-handle"
@@ -183,17 +181,17 @@ class Slider extends PureComponent {
 
   static propTypes = {
     value: number.isRequired,
-    disabled: bool,
+    isDisabled: bool,
 
-    min: number,
-    max: number,
+    min: number.isRequired,
+    max: number.isRequired,
 
-    size: oneOf(['sm', 'md', 'lg']),
+    size: oneOf(['sm', 'md', 'lg']).isRequired,
 
     minIcon: element,
     maxIcon: element,
 
-    onChange: func
+    onChange: func.isRequired
   }
 
   static defaultProps = {

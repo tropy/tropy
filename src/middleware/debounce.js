@@ -3,7 +3,7 @@
 const debounce = require('lodash.debounce')
 
 const middleware = () => next => {
-  const dnxt = debounce(next, 75)
+  const dnxt = debounce(next, 25)
 
   return action => {
     const { meta } = action
