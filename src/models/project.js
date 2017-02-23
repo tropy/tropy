@@ -1,7 +1,6 @@
 'use strict'
 
-const { v4: uuid } = require('node-uuid')
-
+const uuid = require('uuid/v4')
 const { resolve, join } = require('path')
 
 const ROOT = resolve(__dirname, '..', '..', 'db')
