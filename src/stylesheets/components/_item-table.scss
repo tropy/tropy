@@ -163,7 +163,7 @@
 
     &.active {
       .metadata {
-        color: inherit;
+        color: $items-active-color;
         background: $items-active-bg;
       }
     }
