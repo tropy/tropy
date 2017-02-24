@@ -20,7 +20,7 @@ class Create extends Command {
   *exec() {
     const { db } = this.options
 
-    const item = yield call([db, db.transaction], tx => mod.item.create(tx))
+    const item = yield call(db.transaction, tx => mod.item.create(tx))
     yield put(act.item.insert(item))
 
     this.undo = act.item.delete([item.id])
@@ -52,7 +52,7 @@ class Import extends Command {
         let item
         let photo
 
-        yield call([db, db.transaction], async tx => {
+        yield call(db.transaction, async tx => {
           item = await mod.item.create(tx, {
             [DC.TITLE]: text(image.title)
           })
@@ -89,7 +89,7 @@ class Import extends Command {
         metadata.push(item.id, photo.id)
 
       } catch (error) {
-        warn(`Failed to import photo: ${error.message}`)
+        warn(`Failed to import item: ${error.message}`)
         verbose(error.stack)
 
         fail(error)
@@ -159,7 +159,7 @@ class Load extends Command {
     const ids = this.action.payload
 
     const items =
-      yield call([db, db.seq], conn => mod.item.load(conn, ids))
+      yield call(db.seq, conn => mod.item.load(conn, ids))
 
     return items
   }

@@ -22,10 +22,11 @@ module.exports = {
     const { id } = await db.run(`
       INSERT INTO subjects (template) VALUES (?)`, template || TEMPLATE)
 
+    await db.run(`
+      INSERT INTO images (id, width, height) VALUES (?,?,?)`,
+      [id, width, height])
+
     await all([
-      db.run(`
-        INSERT INTO images (id, width, height)
-          VALUES (?,?,?)`, [id, width, height]),
       db.run(`
         INSERT INTO photos (id, item_id, path, checksum, mimetype, orientation)
           VALUES (?,?,?,?,?,?)`,

@@ -3,17 +3,18 @@
 require('./promisify')
 
 const sqlite = require('sqlite3')
-
+const ms = require('ms')
 const { EventEmitter } = require('events')
 const { Migration } = require('./migration')
 const { normalize } = require('path')
 const { using, resolve } = require('bluebird')
 const { readFileAsync: read } = require('fs')
 const { createPool } = require('generic-pool')
-const { debug, info, verbose } = require('./log')
+const { debug, info, verbose, warn } = require('./log')
 const { entries } = Object
 const { project } = require('../models')
 
+sqlite.verbose()
 
 const M = {
   'r': sqlite.OPEN_READONLY,
@@ -98,7 +99,21 @@ class Database extends EventEmitter {
           .then(resolve, reject)
       })
 
-      db.on('trace', query => debug(query))
+      // db.on('trace', query => debug(query))
+
+      db.on('profile', (query, time) => {
+        const message = `db query took ${ms(time)}`
+
+        if (ms > 100) {
+          return warn(`SLOW: ${message}`, { query, time })
+        }
+
+        if (ms > 25) {
+          return verbose(message, { query, time })
+        }
+
+        debug(message, { query, time })
+      })
     })
   }
 
@@ -126,13 +141,12 @@ class Database extends EventEmitter {
   }
 
 
-  seq(fn) {
-    return using(this.acquire(), fn)
-  }
+  seq = (fn) =>
+    using(this.acquire(), fn)
 
-  transaction(fn) {
-    return this.seq(conn => using(transaction(conn), fn))
-  }
+  transaction = (fn) =>
+    this.seq(conn => using(transaction(conn), fn))
+
 
   /*
    * Migrations are special transactions which can be used for schema
@@ -145,12 +159,11 @@ class Database extends EventEmitter {
    *   5. Commit or rollback transaction
    *   6. Enable foreign keys
    */
-  migration(fn) {
-    return this.seq(conn =>
-        using(nofk(conn), conn =>
-          using(transaction(conn, 'EXCLUSIVE'), tx =>
-            resolve(fn(tx)).then(() => tx.check()))))
-  }
+  migration = (fn) =>
+    this.seq(conn =>
+      using(nofk(conn), conn =>
+        using(transaction(conn, 'EXCLUSIVE'), tx =>
+          resolve(fn(tx)).then(() => tx.check()))))
 
 
   prepare(...args) {
