@@ -155,14 +155,6 @@ class ProjectSidebar extends PureComponent {
     )
   }
 
-  showListsMenu = (event) => {
-    this.props.onContextMenu(event, 'lists')
-  }
-
-  showTagsMenu = (event) => {
-    this.props.onContextMenu(event, 'tags')
-  }
-
   render() {
     const {
       activities,
@@ -216,10 +208,10 @@ class ProjectSidebar extends PureComponent {
               </ol>
             </nav>
 
-            <h3 onContextMenu={this.showListsMenu}>
+            <h3>
               <FormattedMessage id="sidebar.lists"/>
             </h3>
-            <nav onContextMenu={this.showListsMenu}>
+            <nav>
               {root &&
                 <ListTree
                   parent={root}
@@ -245,7 +237,7 @@ class ProjectSidebar extends PureComponent {
             </nav>
           </section>
 
-          <section onContextMenu={this.showTagsMenu}>
+          <section>
             <h2><FormattedMessage id="sidebar.tags"/></h2>
             <nav>
               <TagList
