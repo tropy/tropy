@@ -80,7 +80,7 @@ class ActivityPane extends PureComponent {
   renderProgress(progress, total) {
     return progress && (
       <span className="progress">
-        <FormattedNumber value={progress}/> /
+        <FormattedNumber value={progress}/>
         <FormattedNumber value={total}/>
       </span>
     )
