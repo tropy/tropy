@@ -1,26 +1,30 @@
 'use strict'
 
 const { omit } = require('../common/util')
+const { ACTIVITY } = require('../constants')
 
 module.exports = {
-  activities(state = {}, { type, meta }) {
-    if (meta) {
-      const { rel, seq, now } = meta
+  activities(state = {}, { type, payload, meta = {} }) {
+    const { rel, seq, now, done } = meta
 
-      if (rel) {
-        return omit(state, [rel])
-      }
-
-      if (meta.async) {
+    switch (true) {
+      case type === ACTIVITY.UPDATE:
         return {
           ...state,
-          [seq]: {
-            id: seq, type, init: now
-          }
+          [rel]: { ...state[rel], ...payload }
         }
-      }
-    }
 
-    return state
+      case done:
+        return omit(state, [rel])
+
+      case meta.async:
+        return {
+          ...state,
+          [seq]: { id: seq, type, init: now }
+        }
+
+      default:
+        return state
+    }
   }
 }

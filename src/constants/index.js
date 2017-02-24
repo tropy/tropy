@@ -1,6 +1,7 @@
 'use strict'
 
 module.exports = {
+  ACTIVITY: require('./activity'),
   DND: require('./dnd'),
   HISTORY: require('./history'),
   ITEM: require('./item'),
