@@ -1,16 +1,25 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = React
-const cx = require('classnames')
+const { PureComponent, PropTypes } = React
 const { object } = PropTypes
+const { Editor } = require('../editor')
+const cx = require('classnames')
 
-const NotePad = () => (
-  <section className={cx({ note: true })}/>
-)
 
-NotePad.propTypes = {
-  note: object
+//eslint-disable-next-line react/prefer-stateless-function
+class NotePad extends PureComponent {
+  render() {
+    return (
+      <section className={cx({ note: true })}>
+        <Editor/>
+      </section>
+    )
+  }
+
+  static propTypes = {
+    note: object
+  }
 }
 
 module.exports = {
