@@ -4,6 +4,8 @@
 // Light theme
 // --------------------------------------------------
 
+$theme: "light";
+
 
 // Colors
 // --------------------------------------------------
@@ -104,7 +106,8 @@ $badge-color: $shade-0;
 $badge-bg:    $red;
 
 // Drop target
-$drop-target-color: $blue-light;
+$drop-target-color:      $blue-light;
+$drop-target-blend-mode: multiply;
 
 // Sort indicator
 $photo-sort-indicator: $shade-8;
@@ -143,8 +146,6 @@ $sidebar-active-icon-color: $shade-6;
 $sidebar-active-color:      $shade-8;
 $sidebar-active-bg:         $shade-3;
 $sidebar-context-bg:        $blue-light;
-$sidebar-over-bg:           $blue-light;
-$sidebar-over-bg:           $blue-light;
 $activity-color:            $shade-5;
 $activity-border-color:     $shade-3;
 $sidebar-tag-active-color:  $shade-0;

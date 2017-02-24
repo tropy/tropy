@@ -32,7 +32,11 @@ select {
   &.form-control {
     -webkit-appearance: none;
     line-height: 1;
-    background: image-url("project/icon-chevron7.svg") no-repeat right $space-min center;
+    background-repeat: no-repeat;
+    background-position: right $space-min center;
+    background-image: if($theme == "light",
+      image-url("project/icon-chevron7-light-theme.svg"),
+      image-url("project/icon-chevron7-dark-theme.svg"));
   }
 }
 

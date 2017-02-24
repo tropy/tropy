@@ -5,17 +5,22 @@
 
 @import "light"; // dev only
 
+$theme: "dark";
+
 
 // Colors
 // --------------------------------------------------
 
 $blue:       #395bac;
 $blue-light: #cedef7;
+$blue-30:    rgba($blue, 0.3);
 $blue-60:    rgba($blue, 0.6);
 
 $brand-primary:       $blue;
 $brand-primary-light: $blue-light;
+$brand-primary-30:    $blue-30;
 $brand-primary-60:    $blue-60;
+
 
 // Grays
 // --------------------------------------------------
@@ -51,6 +56,10 @@ $input-color-focus:       $brand-primary;
 $input-color-placeholder: $shade-5;
 $input-color-readonly:    $shade-7;
 
+// Drop target
+$drop-target-color: $brand-primary-30;
+$drop-target-blend-mode: normal;
+
 // Tile
 $tile-focus-color:  $brand-primary; // Ok
 $tile-active-color: $shade-5; // Ok
@@ -74,9 +83,7 @@ $sidebar-focus-bg:          $brand-primary; // Ok
 $sidebar-active-icon-color: $shade-8; // Ok
 $sidebar-active-color:      $shade-9; // Ok
 $sidebar-active-bg:         $shade-5; // Ok
-$sidebar-context-bg:        $blue-light;
-$sidebar-over-bg:           $blue-light;
-$sidebar-over-bg:           $blue-light;
+$sidebar-context-bg:        $brand-primary-30; // Ok
 $activity-color:            $shade-7;
 $activity-border-color:     $shade-4;
 $sidebar-tag-active-color:  $shade-0;
@@ -88,7 +95,7 @@ $item-table-header-sort-color:   $shade-9;
 $item-table-header-active-bg:    $shade-1;
 $item-table-header-border-color: $shade-1;
 $items-odd-bg:                   $shade-4; // Ok
-$items-focus-color:              $blue-light    ; // Ok
+$items-focus-color:              $blue-light; // Ok
 $items-focus-bg:                 $brand-primary; // Ok
 $items-active-color:             $shade-9; // Ok
 $items-active-bg:                $shade-5; // Ok
@@ -99,7 +106,7 @@ $panels-bg: $shade-4;
 // Panel
 $panel-bg:              $shade-4; // Ok
 $panel-header-color:    $shade-8;
-$panel-separator-color: $shade-2; // Ok
+$panel-separator-color: $shade-1; // Ok
 $panel-heading-color:   $shade-6; // Ok
 
 // Tabs
@@ -110,7 +117,7 @@ $tab-inactive-color: $shade-7; // Ok
 
 // Metadata
 $label-color:            $shade-7;
-$template-select-border: $shade-2;
+$template-select-border: $shade-1;
 $template-select-bg:     $shade-4; // Ok
 
 // Photo list
