@@ -57,7 +57,7 @@ const PanelGroup = ({ header, children, height }) => {
       </header>
       <div className="panel-group-body">
         {panels.map((panel, idx) => (
-          <Resizable key={idx} relative edge="bottom" value={height[idx]}>
+          <Resizable key={idx} isRelative edge="bottom" value={height[idx]}>
             {panel}
           </Resizable>
         ))}

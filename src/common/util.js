@@ -245,6 +245,12 @@ module.exports = {
 
     context[method] = (...args) =>
       refinement.call(context, args, original.apply(context, args))
+  },
+
+  restrict(value, lower, upper) {
+    value = Math.max(value, (lower != null) ? lower : value)
+    value = Math.min(value, (upper != null) ? upper : value)
+    return value
   }
 
 }

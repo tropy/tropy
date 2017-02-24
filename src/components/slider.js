@@ -5,8 +5,9 @@ const { PureComponent, PropTypes } = React
 const { IconButton } = require('./button')
 const cx = require('classnames')
 const { bounds, borders, on, off } = require('../dom')
-const { noop } = require('../common/util')
+const { restrict } = require('../common/util')
 const { bool, element, func, number, oneOf } = PropTypes
+const { round } = Math
 
 
 class Slider extends PureComponent {
@@ -20,7 +21,7 @@ class Slider extends PureComponent {
 
   componentWillReceiveProps({ value }) {
     if (value !== this.props.value &&
-        value !== Math.round(this.state.value)) {
+        value !== round(this.state.value)) {
       this.setState({ value })
     }
   }
@@ -44,7 +45,7 @@ class Slider extends PureComponent {
     const left = box.left + border.left
     const width = box.width - border.left - border.right
 
-    this.set(min + restrict((event.pageX - left) / width) * max)
+    this.set(min + restrict((event.pageX - left) / width, 0, 1) * max)
   }
 
   handleMouseDown = ({ button, pageX }) => {
@@ -54,21 +55,10 @@ class Slider extends PureComponent {
     this.startDragging()
   }
 
-  handleMouseUp = (event) => {
-    try {
-      if (event instanceof MouseEvent) {
-        this.update(event)
-      }
-
-    } finally {
-      this.stopDragging()
-    }
-  }
-
   set = (value) => {
     this.setState({ value })
 
-    const nearest = Math.round(value)
+    const nearest = round(value)
 
     if (nearest !== this.props.value) {
       this.props.onChange(nearest)
@@ -106,18 +96,18 @@ class Slider extends PureComponent {
     this.setState({ isDragging: true })
 
     on(document, 'mousemove', this.update)
-    on(document, 'mouseup', this.handleMouseUp, { capture: true })
+    on(document, 'mouseup', this.stopDragging, { capture: true })
     on(document, 'mouseleave', this.stopDragging)
-    on(window, 'blur', this.handleMouseUp)
+    on(window, 'blur', this.stopDragging)
   }
 
   stopDragging = () => {
     this.setState({ isDragging: false })
 
     off(document, 'mousemove', this.update)
-    off(document, 'mouseup', this.handleMouseUp, { capture: true })
+    off(document, 'mouseup', this.stopDragging, { capture: true })
     off(document, 'mouseleave', this.stopDragging)
-    off(window, 'blur', this.handleMouseUp)
+    off(window, 'blur', this.stopDragging)
 
     if (this.delayed) {
       clearTimeout(this.delayed)
@@ -197,13 +187,8 @@ class Slider extends PureComponent {
   static defaultProps = {
     min: 0,
     max: 1,
-    size: 'md',
-    onChange: noop
+    size: 'md'
   }
-}
-
-function restrict(value, lower = 0, upper = 1) {
-  return Math.min(Math.max(value, lower), upper)
 }
 
 module.exports = {

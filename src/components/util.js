@@ -1,7 +1,7 @@
 'use strict'
 
 const {
-  Children, PropTypes, PureComponent, createElement: create
+  Children, PureComponent, createElement: create
 } = require('react')
 
 const { diff } = require('../common/util')
@@ -86,8 +86,6 @@ module.exports = {
   },
 
   Shapes: {
-    edge: PropTypes.oneOf(['top', 'right', 'bottom', 'left']),
-
     number(min, max, required = true) {
       return (props, name, component) => {
         const value = props[name]
