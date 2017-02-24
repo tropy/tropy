@@ -10,24 +10,80 @@ const { arrayOf, shape, string, number } = PropTypes
 
 
 class ActivityPane extends PureComponent {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      activities: props.activities.filter(this.busy)
+    }
+  }
+
+  componentDidMount() {
+    this.resume()
+  }
+
+  componentWillUnmount() {
+    this.stop()
+  }
+
+  componentWillReceiveProps(props) {
+    if (this.props.activities !== props.activities) {
+      this.setState({
+        activities: props.activities.filter(this.busy)
+      })
+
+      this.resume()
+    }
+  }
+
+  get hasPendingActivities() {
+    return this.state.activities.length < this.props.activities.length
+  }
+
   get isBusy() {
-    return this.props.activities.length > 0
+    return this.state.activities.length > 0
   }
 
   get style() {
     return {
-      height: getHeight(this.props.activities.length)
+      height: getHeight(this.state.activities.length)
     }
   }
 
-  render() {
+  resume() {
+    this.stop()
 
+    if (this.hasPendingActivities) {
+      this.timeout = setTimeout(this.update, this.props.delay / 2)
+    }
+  }
+
+  stop() {
+    clearTimeout(this.timeout)
+    this.timeout = null
+  }
+
+  update = () => {
+    const activities = this.props.activities.filter(this.busy)
+
+    if (activities.length > this.state.activities) {
+      this.setState({ activities })
+    }
+
+    this.resume()
+  }
+
+  busy = (activity) => (
+    !activity.done && (Date.now() - activity.init) > this.props.delay
+  )
+
+  render() {
     return (
       <div
         className={cx({ 'activity-pane': true, 'busy': this.isBusy })}
         style={this.style}>
         <div className="activity-container">{
-          this.props.activities.map(({ id, type }) =>
+          this.state.activities.map(({ id, type }) =>
             <div key={id} className={cx({ activity: true, type })}>
               <IconSpin/>
               <FormattedMessage id={`activity.${type}`}/>
@@ -41,8 +97,15 @@ class ActivityPane extends PureComponent {
   static propTypes = {
     activities: arrayOf(shape({
       id: number.isRequired,
-      type: string.isRequired
-    })).isRequired
+      type: string.isRequired,
+      init: number.isRequired
+    })).isRequired,
+
+    delay: number.isRequired
+  }
+
+  static defaultProps = {
+    delay: 500
   }
 }
 
