@@ -165,6 +165,7 @@ class ProjectSidebar extends PureComponent {
 
   render() {
     const {
+      activities,
       context,
       edit,
       hasToolbar,
@@ -260,7 +261,7 @@ class ProjectSidebar extends PureComponent {
           </section>
 
         </div>
-        <ActivityPane/>
+        <ActivityPane activities={activities}/>
       </Sidebar>
     )
   }
@@ -275,6 +276,7 @@ class ProjectSidebar extends PureComponent {
       name: string
     }).isRequired,
 
+    activities: arrayOf(object).isRequired,
     context: object.isRequired,
     edit: object.isRequired,
     lists: object.isRequired,

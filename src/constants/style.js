@@ -8,6 +8,11 @@ module.exports = {
     PADDING: 12 // padding + selection border
   },
 
+  ACTIVITY: {
+    HEIGHT: 26,
+    PADDING: 17 // top + bottom + border
+  },
+
   TABS: {
     SearchField: 1,
     ProjectSidebar: 2,

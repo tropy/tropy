@@ -22,6 +22,7 @@ const { getTemplates } = require('../../selectors/templates')
 const { getColumns } = require('../../selectors/ui')
 
 const {
+  getBusyActivities,
   getSelectedItems,
   getVisibleItems,
   getVisibleNotes,
@@ -128,10 +129,11 @@ class ProjectContainer extends Component {
 
   render() {
     const {
+      activities,
+      columns,
+      data,
       dt,
       items,
-      data,
-      columns,
       nav,
       notes,
       photos,
@@ -147,6 +149,7 @@ class ProjectContainer extends Component {
         onContextMenu={this.handleContextMenu}>
 
         <ProjectView {...props}
+          activities={activities}
           nav={nav}
           items={items}
           data={data}
@@ -187,6 +190,10 @@ class ProjectContainer extends Component {
     ),
 
     notes: arrayOf(
+      shape({ id: number.isRequired })
+    ),
+
+    activities: arrayOf(
       shape({ id: number.isRequired })
     ),
 
@@ -241,6 +248,7 @@ const DropTargetSpec = {
 module.exports = {
   ProjectContainer: connect(
     state => ({
+      activities: getBusyActivities(state),
       project: state.project,
       mode: state.nav.mode,
       lists: state.lists,

@@ -1,42 +1,56 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = React
-const { connect } = require('react-redux')
-const { busy } = require('../selectors/activity')
+const { PureComponent, PropTypes } = React
 const { IconSpin } = require('./icons')
 const { FormattedMessage } = require('react-intl')
-const cn = require('classnames')
+const cx = require('classnames')
+const { STYLE } = require('../constants')
+const { arrayOf, shape, string, number } = PropTypes
 
-function h(num) {
-  return num ? num * 26 + 17 : 0
+
+class ActivityPane extends PureComponent {
+  get isBusy() {
+    return this.props.activities.length > 0
+  }
+
+  get style() {
+    return {
+      height: getHeight(this.props.activities.length)
+    }
+  }
+
+  render() {
+
+    return (
+      <div
+        className={cx({ 'activity-pane': true, 'busy': this.isBusy })}
+        style={this.style}>
+        <div className="activity-container">{
+          this.props.activities.map(({ id, type }) =>
+            <div key={id} className={cx({ activity: true, type })}>
+              <IconSpin/>
+              <FormattedMessage id={`activity.${type}`}/>
+            </div>
+          )
+        }</div>
+      </div>
+    )
+  }
+
+  static propTypes = {
+    activities: arrayOf(shape({
+      id: number.isRequired,
+      type: string.isRequired
+    })).isRequired
+  }
 }
 
-const ActivityPane = ({ activities }) => (
-  <div className={cn({ 'activity-pane': true, 'busy': activities.length })}
-    style={{ height: h(activities.length) }}>
-    <div className="activity-container">
-      {
-        activities.map(({ id, type }) => (
-          <div key={id}
-            className={cn({ activity: true, type })}>
-            <IconSpin/>
-            <FormattedMessage id={`activity.${type}`}/>
-          </div>
-        ))
-      }
-    </div>
-  </div>
-)
-
-ActivityPane.propTypes = {
-  activities: PropTypes.array.isRequired
+function getHeight(count) {
+  return count ? count * STYLE.ACTIVITY.HEIGHT + STYLE.ACTIVITY.PADDING : 0
 }
+
 
 module.exports = {
-  ActivityPane: connect(
-    (state) => ({
-      activities: busy(state)
-    })
-  )(ActivityPane)
+  ActivityPane
 }
