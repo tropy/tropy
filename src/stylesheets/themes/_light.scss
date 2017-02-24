@@ -13,6 +13,7 @@ $theme: "light";
 :root {
   #{--blue}:          #5c93e5;
   #{--blue-light}:    #cedef7;
+  #{--blue-30}:       rgba(#5c93e5, 0.3);
   #{--blue-60}:       rgba(#5c93e5, 0.6);
   #{--blue-darken-4}: darken(#5c93e5, 4%);
   #{--red}:           #e62e2e;
@@ -20,6 +21,7 @@ $theme: "light";
 
 $blue:                   var(--blue);
 $blue-light:             var(--blue-light);
+$blue-30:                var(--blue-30);
 $blue-60:                var(--blue-60);
 $blue-darken-4:          var(--blue-darken-4);
 
@@ -27,6 +29,7 @@ $red:                    var(--red);
 
 $brand-primary:          $blue;
 $brand-primary-light:    $blue-light;
+$brand-primary-30:       $blue-30;
 $brand-primary-60:       $blue-60;
 $brand-primary-darken-4: $blue-darken-4;
 
@@ -106,7 +109,7 @@ $badge-color: $shade-0;
 $badge-bg:    $red;
 
 // Drop target
-$drop-target-color:      $blue-light;
+$drop-target-color:      $brand-primary-30;
 $drop-target-blend-mode: multiply;
 
 // Sort indicator

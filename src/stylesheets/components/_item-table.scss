@@ -8,6 +8,7 @@
   flex-direction: column;
   padding: 0 $space-min;
   position: relative;
+  height: 100%;
 
   .table-head {
     box-sizing: content-box;
@@ -130,22 +131,23 @@
   }
 
   .table-body {
-    background-image: repeating-linear-gradient(to bottom, $items-odd-bg 3px,
-      $items-odd-bg ($row-height + 3px), transparent ($row-height + 3px),
-      transparent (2 * $row-height + 3px));
-    background-attachment: local;
     flex: 1 1 auto;
-    overflow-y: scroll;
-    padding-top: 3px;
     position: relative;
+    height: 100%;
+
+    .scroll-container {
+      background-image: repeating-linear-gradient(to bottom, $items-odd-bg 3px,
+        $items-odd-bg ($row-height + 3px), transparent ($row-height + 3px),
+        transparent (2 * $row-height + 3px));
+      background-attachment: local;
+      padding-top: 3px;
+    }
 
     &.over {
-      overflow: hidden;
-      background-color: $drop-target-color;
-      background-blend-mode: $drop-target-blend-mode;
+      @extend %drop-target;
 
-      table {
-        mix-blend-mode: $drop-target-blend-mode;
+      .scroll-container {
+        overflow: hidden;
       }
     }
 
@@ -170,7 +172,7 @@
 
     &.over {
       .metadata {
-        background: $drop-target-color;
+        @extend %drop-target;
       }
     }
   }

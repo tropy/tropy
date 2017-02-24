@@ -52,21 +52,23 @@ class ItemTable extends ItemIterator {
           <div
             className={cx(this.classes)}
             onClick={this.handleClickOutside}>
-            <table>
-              <tbody>
-                {this.map(({ item, ...props }) =>
-                  <ItemTableRow {...props}
-                    key={item.id}
-                    item={item}
-                    data={data[item.id]}
-                    columns={columns}
-                    edit={edit}
-                    onCancel={onEditCancel}
-                    onChange={onMetadataSave}
-                    onEdit={onEdit}/>
-                )}
-              </tbody>
-            </table>
+            <div className="scroll-container">
+              <table>
+                <tbody>
+                  {this.map(({ item, ...props }) =>
+                    <ItemTableRow {...props}
+                      key={item.id}
+                      item={item}
+                      data={data[item.id]}
+                      columns={columns}
+                      edit={edit}
+                      onCancel={onEditCancel}
+                      onChange={onMetadataSave}
+                      onEdit={onEdit}/>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>
