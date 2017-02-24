@@ -142,10 +142,10 @@
     &.over {
       overflow: hidden;
       background-color: $drop-target-color;
-      background-blend-mode: multiply;
+      background-blend-mode: $drop-target-blend-mode;
 
       table {
-        mix-blend-mode: multiply;
+        mix-blend-mode: $drop-target-blend-mode;
       }
     }
 
@@ -170,7 +170,7 @@
 
     &.over {
       .metadata {
-        background: $blue-light;
+        background: $drop-target-color;
       }
     }
   }
