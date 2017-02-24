@@ -26,7 +26,8 @@ module.exports = {
       payload,
       meta: {
         ...meta,
-        rel: action.meta.seq
+        rel: action.meta.seq,
+        was: action.meta.now
       }
     }
   }

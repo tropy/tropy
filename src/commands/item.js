@@ -45,13 +45,12 @@ class Import extends Command {
 
     if (!files) return
 
-    // TODO Improve handling of multiple photos!
-    // Progress reporting, cancel import etc.
-    for (let file of files) {
+    for (let i = 0, ii = files.length; i < ii; ++i) {
       try {
+        let file = files[i]
+        let image = yield call(Image.read, file)
         let item
         let photo
-        let image = yield call(Image.read, file)
 
         yield call([db, db.transaction], async tx => {
           item = await mod.item.create(tx, {
@@ -80,8 +79,11 @@ class Import extends Command {
           verbose(error.stack)
         }
 
-        yield put(act.item.insert(item))
-        yield put(act.photo.insert(photo))
+        yield [
+          put(act.item.insert(item)),
+          put(act.photo.insert(photo)),
+          put(act.activity.update(this.action, { total: ii, progress: i + 1 }))
+        ]
 
         items.push(item.id)
         metadata.push(item.id, photo.id)

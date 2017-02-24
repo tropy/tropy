@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent, PropTypes } = React
 const { IconSpin } = require('./icons')
-const { FormattedMessage } = require('react-intl')
+const { FormattedMessage, FormattedNumber } = require('react-intl')
 const cx = require('classnames')
 const { STYLE } = require('../constants')
 const { arrayOf, shape, string, number } = PropTypes
@@ -77,16 +77,26 @@ class ActivityPane extends PureComponent {
     !activity.done && (Date.now() - activity.init) > this.props.delay
   )
 
+  renderProgress(progress, total) {
+    return progress && (
+      <span className="progress">
+        <FormattedNumber value={progress}/> /
+        <FormattedNumber value={total}/>
+      </span>
+    )
+  }
+
   render() {
     return (
       <div
         className={cx({ 'activity-pane': true, 'busy': this.isBusy })}
         style={this.style}>
         <div className="activity-container">{
-          this.state.activities.map(({ id, type }) =>
+          this.state.activities.map(({ id, type, progress, total }) =>
             <div key={id} className={cx({ activity: true, type })}>
               <IconSpin/>
               <FormattedMessage id={`activity.${type}`}/>
+              {this.renderProgress(progress, total)}
             </div>
           )
         }</div>
@@ -98,7 +108,9 @@ class ActivityPane extends PureComponent {
     activities: arrayOf(shape({
       id: number.isRequired,
       type: string.isRequired,
-      init: number.isRequired
+      init: number.isRequired,
+      progress: number,
+      total: number
     })).isRequired,
 
     delay: number.isRequired
