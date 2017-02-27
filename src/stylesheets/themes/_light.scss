@@ -119,9 +119,9 @@ $tile-focus-color:  $brand-primary;
 $tile-active-color: $shade-4;
 
 // Stack
-$stack-color:        $shade-5;
-$stack-bg:           $body-bg;
-$stack-active-color: $shade-3;
+$stack-color:       $shade-5;
+$stack-bg:          $body-bg;
+$stack-focus-color: $shade-0;
 
 
 // Components
@@ -174,9 +174,9 @@ $panel-separator-color: $shade-3;
 $panel-heading-color:   #bbb; // Todo
 
 // Tabs
-$tab-bg: $shade-2;
-$tab-active-color: $shade-8;
-$tab-active-bg: transparent;
+$tab-bg:             $shade-2;
+$tab-active-color:   $shade-8;
+$tab-active-bg:      transparent;
 $tab-inactive-color: $shade-5;
 
 // Metadata
@@ -229,4 +229,4 @@ $drag-preview-badge-opacity: 0.8;
 
 // Thumbnail
 $thumbnail-color: $shade-5-60;
-$thumbnail-bg:    $shade-3;
+$thumbnail-bg:    $shade-3; // Shading collision with active state

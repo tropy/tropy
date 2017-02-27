@@ -63,6 +63,11 @@ $drop-target-color: $brand-primary-30;
 $tile-focus-color:  $brand-primary; // Ok
 $tile-active-color: $shade-5; // Ok
 
+// Stack
+$stack-color:       $shade-7; // Ok
+$stack-bg:          $body-bg; // Ok
+$stack-focus-color: $brand-primary-light; // Ok
+
 
 // Components
 // --------------------------------------------------
@@ -109,9 +114,9 @@ $panel-separator-color: $shade-1; // Ok
 $panel-heading-color:   $shade-6; // Ok
 
 // Tabs
-$tab-bg: $shade-2; // Ok
-$tab-active-color: inherit; // Ok
-$tab-active-bg: transparent; // Ok
+$tab-bg: $shade-2;   // Ok
+$tab-active-color:   inherit; // Ok
+$tab-active-bg:      transparent; // Ok
 $tab-inactive-color: $shade-7; // Ok
 
 // Metadata
@@ -137,4 +142,4 @@ $toolbar-hover-bg: rgba($shade-10, 0);
 
 // Thumbnail
 $thumbnail-color: rgba($icon-color, 0.6); // Ok
-$thumbnail-bg:    $shade-5; // Ok
+$thumbnail-bg:    $shade-5; // Shading collision with active state
