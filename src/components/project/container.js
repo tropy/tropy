@@ -316,10 +316,6 @@ module.exports = {
         dispatch(actions.item.save(...args))
       },
 
-      onItemZoomChange(itemsZoom) {
-        dispatch(actions.nav.update({ itemsZoom }, { throttle: true }))
-      },
-
       onItemImport(...args) {
         dispatch(actions.item.import(...args))
       },

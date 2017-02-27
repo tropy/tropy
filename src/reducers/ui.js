@@ -4,7 +4,9 @@ const { UI } = require('../constants')
 const { merge } = require('../common/util')
 
 const init = {
-  sidebar: { width: 250 }
+  panel: { width: 320, zoom: 0 },
+  sidebar: { width: 250 },
+  zoom: 0
 }
 
 module.exports = {

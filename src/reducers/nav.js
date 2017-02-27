@@ -12,8 +12,7 @@ const init = {
   tags: [],
   sort: { type: 'property', column: DC.TITLE, asc: true },
   panel: { tab: 'metadata', photoZoom: 0 },
-  lists: {},
-  itemsZoom: 0
+  lists: {}
 }
 
 function select(selection, id, mod) {

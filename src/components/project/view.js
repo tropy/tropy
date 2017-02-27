@@ -19,7 +19,7 @@ class ProjectView extends PureComponent {
   }
 
   get zoom() {
-    return this.props.nav.itemsZoom
+    return this.props.ui.zoom
   }
 
   get maxZoom() {
@@ -34,6 +34,10 @@ class ProjectView extends PureComponent {
     this.props.onUiUpdate({ sidebar: { width } })
   }
 
+  handleZoomChange = (zoom) => {
+    this.props.onUiUpdate({ zoom }, { throttle: true })
+  }
+
   render() {
     const {
       canDrop,
@@ -44,7 +48,6 @@ class ProjectView extends PureComponent {
       ui,
       onItemCreate,
       onItemSelect,
-      onItemZoomChange,
       ...props
     } = this.props
 
@@ -74,7 +77,7 @@ class ProjectView extends PureComponent {
                 isDisabled={!items.length}
                 onItemCreate={onItemCreate}
                 onDoubleClick={ARGS.frameless ? props.onMaximize : null}
-                onZoomChange={onItemZoomChange}/>
+                onZoomChange={this.handleZoomChange}/>
             </header>
 
             <ItemIterator {...pick(props, ItemIterator.props)}
@@ -105,7 +108,6 @@ class ProjectView extends PureComponent {
     onItemImport: func.isRequired,
     onItemSelect: func.isRequired,
     onMaximize: func.isRequired,
-    onItemZoomChange: func.isRequired,
     onUiUpdate: func.isRequired
   }
 
