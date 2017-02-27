@@ -6,8 +6,13 @@
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  margin: $space-min $component-padding-horizontal 0;
-  min-height: calc(100% - 4px);
+  padding: $space-min $component-padding-horizontal 0;
+  height: calc(100% - #{$space-min});
+  overflow-y: scroll;
+
+  .over & {
+    overflow: hidden;
+  }
 
   .photo {
     position: relative;

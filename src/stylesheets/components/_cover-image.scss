@@ -22,7 +22,7 @@
     $i: $tile-thumbnail-size-min;
 
     @while $i <= $tile-thumbnail-size-max {
-      ul[data-size="#{$i}"] & {
+      [data-size="#{$i}"] & {
         height: #{round($i / 32)}px;
 
         @for $j from 1 through $stack-size-max {

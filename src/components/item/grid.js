@@ -56,19 +56,20 @@ class ItemGrid extends ItemIterator {
 
   render() {
     return this.connect(
-      <ul
+      <div
         className={cx(this.classes)}
         tabIndex={this.tabIndex}
         onKeyDown={this.handleKeyDown}
         ref={this.setContainer}
         data-size={this.props.size}
         onClick={this.handleClickOutside}>
-        {this.map(({ item, ...props }) =>
-          <ItemTile {...props} key={item.id} item={item}/>
-        )}
+        <ul className="scroll-container">
+          {this.map(({ item, ...props }) =>
+            <ItemTile {...props} key={item.id} item={item}/>
+          )}
 
-        {this.filler}
-      </ul>
+          {this.filler}</ul>
+      </div>
     )
   }
 

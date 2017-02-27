@@ -4,21 +4,19 @@
 
 .item-grid {
   flex: 1 1 0;
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
   border-top: 1px solid $item-table-header-border-color;
-  padding: $space-min;
   margin: 0 $space-min;
-  overflow-y: scroll;
   position: relative;
+  display: flex; // Prevent overflow
+
+  .scroll-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    padding: $space-min;
+  }
 
   &.over {
-    background: $drop-target-color;
-    overflow: hidden;
-
-    li {
-      mix-blend-mode: multiply;
-    }
+    @extend %drop-target;
   }
 }

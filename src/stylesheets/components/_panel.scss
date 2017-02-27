@@ -29,18 +29,13 @@
 
   .panel-body {
     flex: 1 1 auto;
-    overflow-y: scroll;
-    border-bottom: $space-min solid transparent;
     position: relative;
     height: 100%;
+    display: flex; // Prevent overflow
+    flex-direction: column;
 
     &.over {
-      background: $drop-target-color;
-      overflow: hidden;
-
-      > * {
-        mix-blend-mode: multiply;
-      }
+      @extend %drop-target;
     }
   }
 

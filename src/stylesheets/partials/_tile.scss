@@ -12,7 +12,7 @@
   $i: $tile-thumbnail-size-min;
 
   @while $i <= $tile-thumbnail-size-max {
-    ul[data-size="#{$i}"] & {
+    [data-size="#{$i}"] & {
       $tile-size: #{round($i * $tile-factor)}px;
 
       flex-basis: $tile-size;
@@ -45,7 +45,7 @@
     .tile-state {
       border: 3px solid $tile-active-color;
 
-      :focus > & {
+      [class*="grid"]:focus & {
         border-color: $tile-focus-color;
       }
     }

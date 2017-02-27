@@ -3,8 +3,9 @@
 // --------------------------------------------------
 
 .photo-list {
+  height: calc(100% - #{$space-min});
+  overflow-y: auto;
   line-height: $row-height;
-  min-height: 100%;
 
   .photo {
     display: flex;

@@ -145,10 +145,6 @@
 
     &.over {
       @extend %drop-target;
-
-      .scroll-container {
-        overflow: hidden;
-      }
     }
 
     table {

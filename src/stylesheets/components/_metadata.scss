@@ -4,6 +4,12 @@
 
 $component-padding-horizontal: 12px !default;
 
+.metadata-container {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
 .metadata-heading {
   font-size: $font-size-small;
   color: $panel-heading-color;
