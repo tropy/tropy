@@ -168,6 +168,40 @@ module.exports = {
       keys(src).filter(key => !props.find(prop => prop == key)), into)
   },
 
+  merge(a, b) {
+    const res = { ... a }
+
+    for (let prop in b) {
+      if (b.hasOwnProperty(prop)) {
+        let value = b[prop]
+        let type = typeof value
+
+        switch (true) {
+          case type === 'number':
+          case type === 'string':
+          case type === 'undefined':
+          case value == null:
+            res[prop] = value
+            break
+
+          case Array.isArray(value):
+            res[prop] = [...a[prop], ...value]
+            break
+
+          case value instanceof Date:
+            res[prop] = new Date(value)
+            break
+
+          default:
+            res[prop] = module.exports.merge(res[prop], value)
+            break
+        }
+      }
+    }
+
+    return res
+  },
+
   map(src, fn, into = {}) {
     //if (typeof fn !== 'function') fn = () => fn
 

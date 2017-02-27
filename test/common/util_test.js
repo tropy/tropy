@@ -199,4 +199,37 @@ describe('util', () => {
       expect(has({ a: { b: 1 } }, 'a.c')).to.be.false
     })
   })
+
+  describe('.merge', () => {
+    const { merge } = util
+
+    it('returns a new object', () => {
+      const a = {}
+      const b = {}
+
+      expect(merge(a, b)).to.eql({})
+      expect(merge(a, b)).to.not.equal(a)
+      expect(merge(a, b)).to.not.equal(b)
+    })
+
+    it('deeply merges two objects', () => {
+      expect(merge({ a: 1 }, { b: 2 })).to.eql({ a: 1, b: 2 })
+      expect(merge({ a: 1 }, { b: 2, a: 3 })).to.eql({ a: 3, b: 2 })
+      expect(merge({ a: 1 }, { a: null })).to.eql({ a: null })
+      expect(merge({ a: 1 }, { a: undefined })).to.eql({ a: undefined })
+
+      let date = new Date()
+      expect(merge({}, { date })).to.have.property('date').and.eql(date)
+      expect(merge({}, { date }).date).to.not.equal(date)
+
+      let a = { x: 1, y: 2 }
+      let b = { x: 3, z: 4 }
+
+      expect(merge({ a }, { a: b }))
+        .to.have.property('a')
+        .and.eql({ x: 3, y: 2, z: 4 })
+
+      expect(merge({ a: [1] }, { b: 2, a: [3] })).to.eql({ a: [1, 3], b: 2 })
+    })
+  })
 })
