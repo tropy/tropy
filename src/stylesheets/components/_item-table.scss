@@ -134,6 +134,7 @@
     flex: 1 1 auto;
     position: relative;
     height: 100%;
+    display: flex; // Prevent overflow
 
     .scroll-container {
       background-image: repeating-linear-gradient(to bottom, $items-odd-bg 3px,

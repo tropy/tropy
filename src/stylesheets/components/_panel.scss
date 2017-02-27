@@ -44,4 +44,16 @@
       margin-bottom: $space-min;
     }
   }
+
+  ::-webkit {
+    &-scrollbar {
+      &-track {
+        background: $panel-bg;
+      }
+
+      &-thumb {
+        border-color: $panel-bg;
+      }
+    }
+  }
 }

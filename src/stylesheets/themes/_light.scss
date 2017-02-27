@@ -98,7 +98,7 @@ $text-selection-bg: $blue-light;
 
 // Forms
 $input-color:             $shade-8;
-$input-bg:                $shade-0; // 'Transparent causes border/box-shadow issue
+$input-bg:                $shade-0; // Transparent causes border/box-shadow issue
 $input-border:            $shade-2;
 $input-color-focus:       $brand-primary-60;
 $input-color-placeholder: $shade-4;
@@ -122,6 +122,10 @@ $tile-active-color: $shade-4;
 $stack-color:       $shade-5;
 $stack-bg:          $body-bg;
 $stack-focus-color: $shade-0;
+
+// Scrollbar
+$scrollbar-bg: $body-bg;
+$scrollbar-color: $shade-4;
 
 
 // Components
@@ -224,8 +228,8 @@ $image-bg: $shade-2;
 $toolbar-hover-bg: $shade-9-60;
 
 // Drag preview
-$drag-preview-opacity:       0.8;
-$drag-preview-badge-opacity: 0.8;
+$drag-preview-opacity:           0.8;
+$drag-preview-thumbnail-opacity: 0.8;
 
 // Thumbnail
 $thumbnail-color: $shade-5-60;
