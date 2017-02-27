@@ -46,12 +46,14 @@
   }
 
   ::-webkit {
-    &-track {
-      background: $panel-bg;
-    }
+    &-scrollbar {
+      &-track {
+        background: $panel-bg;
+      }
 
-    &-thumb {
-      border-color: $panel-bg;
+      &-thumb {
+        border-color: $panel-bg;
+      }
     }
   }
 }
