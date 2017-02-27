@@ -60,8 +60,8 @@ class Resizable extends PureComponent {
     }
   }
 
-  handleMouseDown = () => {
-    this.start()
+  handleMouseDown = ({ button }) => {
+    if (button === 0) this.start()
   }
 
   setContainer = (container) => {
