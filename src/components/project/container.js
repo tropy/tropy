@@ -138,6 +138,7 @@ class ProjectContainer extends Component {
       notes,
       photos,
       selection,
+      ui,
       ...props
     } = this.props
 
@@ -154,6 +155,8 @@ class ProjectContainer extends Component {
           items={items}
           data={data}
           columns={columns}
+          sidebar={ui.sidebar}
+          zoom={ui.zoom}
           onMetadataSave={this.handleMetadataSave}/>
 
         <ItemView {...props}
@@ -163,7 +166,7 @@ class ProjectContainer extends Component {
           notes={notes}
           photo={nav.photo}
           photos={photos}
-          panel={nav.panel}
+          panel={ui.panel}
           onMetadataSave={this.handleMetadataSave}/>
 
         <DragLayer cache={props.cache}/>
@@ -198,6 +201,7 @@ class ProjectContainer extends Component {
     ),
 
     nav: object.isRequired,
+    ui: object.isRequired,
     data: object.isRequired,
     columns: arrayOf(object),
     cache: string.isRequired,
@@ -328,10 +332,6 @@ module.exports = {
         dispatch(actions.item.preview(...args))
       },
 
-      onPanelTabSelect(tab) {
-        dispatch(actions.nav.panel.update({ tab }))
-      },
-
       onMetadataSave(...args) {
         dispatch(actions.metadata.save(...args))
         dispatch(actions.edit.cancel())
@@ -351,10 +351,6 @@ module.exports = {
 
       onPhotoSelect(...args) {
         dispatch(actions.photo.select(...args))
-      },
-
-      onPhotoZoomChange(photoZoom) {
-        dispatch(actions.nav.panel.update({ photoZoom }, { throttle: true }))
       },
 
       onListSave(...args) {
@@ -416,6 +412,10 @@ module.exports = {
 
       onUiUpdate(...args) {
         dispatch(actions.ui.update(...args))
+      },
+
+      onUiPanelUpdate(...args) {
+        dispatch(actions.ui.panel.update(...args))
       }
     })
 

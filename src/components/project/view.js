@@ -10,16 +10,12 @@ const { ProjectSidebar } = require('./sidebar')
 const { ProjectToolbar } = require('./toolbar')
 const { isValidImage } = require('../../image')
 const { pick, times } = require('../../common/util')
-const { array, bool, func, object } = PropTypes
+const { array, bool, func, object, number } = PropTypes
 
 
 class ProjectView extends PureComponent {
   get size() {
-    return this.constructor.Zoom[this.zoom]
-  }
-
-  get zoom() {
-    return this.props.ui.zoom
+    return this.constructor.Zoom[this.props.zoom]
   }
 
   get maxZoom() {
@@ -27,7 +23,7 @@ class ProjectView extends PureComponent {
   }
 
   get ItemIterator() {
-    return this.zoom ? ItemGrid : ItemTable
+    return this.props.zoom ? ItemGrid : ItemTable
   }
 
   handleSidebarResize = (width) => {
@@ -35,7 +31,7 @@ class ProjectView extends PureComponent {
   }
 
   handleZoomChange = (zoom) => {
-    this.props.onUiUpdate({ zoom }, { throttle: true })
+    this.props.onUiUpdate({ zoom })
   }
 
   render() {
@@ -45,19 +41,20 @@ class ProjectView extends PureComponent {
       isOver,
       items,
       nav,
-      ui,
+      sidebar,
+      zoom,
       onItemCreate,
       onItemSelect,
       ...props
     } = this.props
 
-    const { size, zoom, maxZoom, ItemIterator } = this
+    const { size, maxZoom, ItemIterator } = this
 
     return (
       <div id="project-view">
         <Resizable
           edge="right"
-          value={ui.sidebar.width}
+          value={sidebar.width}
           min={150}
           max={750}
           onResize={this.handleSidebarResize}>
@@ -102,8 +99,9 @@ class ProjectView extends PureComponent {
     isOver: bool,
     items: array.isRequired,
     nav: object.isRequired,
-    ui: object.isRequired,
+    sidebar: object.isRequired,
     dt: func.isRequired,
+    zoom: number.isRequired,
     onItemCreate: func.isRequired,
     onItemImport: func.isRequired,
     onItemSelect: func.isRequired,

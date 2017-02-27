@@ -29,15 +29,5 @@ module.exports = {
       payload,
       meta: { search: true, ...meta }
     }
-  },
-
-  panel: {
-    update(payload, meta) {
-      return {
-        type: NAV.PANEL.UPDATE,
-        payload,
-        meta
-      }
-    }
   }
 }

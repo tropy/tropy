@@ -11,7 +11,6 @@ const init = {
   items: [],
   tags: [],
   sort: { type: 'property', column: DC.TITLE, asc: true },
-  panel: { tab: 'metadata', photoZoom: 0 },
   lists: {}
 }
 
@@ -134,11 +133,6 @@ module.exports = {
           list: null,
           photo: null,
           ...payload
-        }
-
-      case NAV.PANEL.UPDATE:
-        return {
-          ...state, panel: { ...state.panel, ...payload }
         }
 
       default:

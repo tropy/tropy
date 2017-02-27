@@ -48,14 +48,18 @@ class ItemView extends PureComponent {
 
   handleMetadataTabSelect = () => {
     if (this.props.panel.tab !== 'metadata') {
-      this.props.onPanelTabSelect('metadata')
+      this.props.onUiPanelUpdate({ tab: 'metadata' })
     }
   }
 
   handleTagsTabSelect = () => {
     if (this.props.panel.tab !== 'tags') {
-      this.props.onPanelTabSelect('tags')
+      this.props.onUiPanelUpdate({ tab: 'tags' })
     }
+  }
+
+  handlePhotoZoomChange = (zoom) => {
+    this.props.onUiPanelUpdate({ zoom })
   }
 
 
@@ -195,7 +199,6 @@ class ItemView extends PureComponent {
       onItemOpen,
       onPhotoSelect,
       onPhotoSort,
-      onPhotoZoomChange,
       onNoteCreate,
       onNoteSelect,
       ...props
@@ -205,7 +208,7 @@ class ItemView extends PureComponent {
 
     return (
       <section id="item-view">
-        <Resizable edge={'left'} value={320}>
+        <Resizable edge={'left'} value={panel.width}>
           <PanelGroup
             header={this.renderToolbar()}
             height={[33.33, 33.33, 33.33]}>
@@ -218,7 +221,7 @@ class ItemView extends PureComponent {
             <PhotoPanel {...props}
               context={context.photo}
               edit={edit.photo}
-              zoom={panel.photoZoom}
+              zoom={panel.zoom}
               selected={photo}
               isItemOpen={this.isItemMode}
               isDisabled={this.isDisabled}
@@ -227,7 +230,7 @@ class ItemView extends PureComponent {
               onItemOpen={onItemOpen}
               onSelect={onPhotoSelect}
               onSort={onPhotoSort}
-              onZoomChange={onPhotoZoomChange}/>
+              onZoomChange={this.handlePhotoZoomChange}/>
 
             <NotePanel
               item={item && item.id}
@@ -283,7 +286,8 @@ class ItemView extends PureComponent {
 
     panel: shape({
       tab: oneOf(['metadata', 'tags']).isRequired,
-      photoZoom: number.isRequired
+      width: number.isRequired,
+      zoom: number.isRequired
     }).isRequired,
 
     mode: string.isRequired,
@@ -301,11 +305,10 @@ class ItemView extends PureComponent {
     onNoteCreate: func.isRequired,
     onNoteSave: func.isRequired,
     onNoteSelect: func.isRequired,
-    onPanelTabSelect: func.isRequired,
     onPhotoCreate: func.isRequired,
     onPhotoSelect: func.isRequired,
     onPhotoSort: func.isRequired,
-    onPhotoZoomChange: func.isRequired
+    onUiPanelUpdate: func.isRequired
   }
 }
 
