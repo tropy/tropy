@@ -12,6 +12,7 @@ module.exports = {
   ...require('./photos'),
   ...require('./project'),
   ...require('./properties'),
+  ...require('./qr'),
   ...require('./tags'),
   ...require('./ui'),
   ...require('./vocab'),

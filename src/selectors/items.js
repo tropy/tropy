@@ -12,7 +12,7 @@ const getSelectedItems = memo(
 )
 
 const getVisibleItems = memo(
-  getItems, ({ ui }) => (ui.items), pluck
+  getItems, ({ qr }) => (qr.items), pluck
 )
 
 module.exports = {

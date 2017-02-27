@@ -12,6 +12,7 @@ module.exports = {
   PHOTO: require('./photo'),
   PROJECT: require('./project'),
   PROPERTIES: require('./properties'),
+  QR: require('./qr'),
   STYLE: require('./style'),
   TAG: require('./tag'),
   UI: require('./ui'),

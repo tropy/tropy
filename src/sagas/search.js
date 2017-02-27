@@ -37,7 +37,7 @@ module.exports = {
 
       verbose(`*search query took ${ms(Date.now() - START)}`)
 
-      yield put(act.ui.items.update(result))
+      yield put(act.qr.items.update(result))
 
       const missing = {
         items: [], metadata: []
