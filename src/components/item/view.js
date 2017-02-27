@@ -62,6 +62,9 @@ class ItemView extends PureComponent {
     this.props.onUiPanelUpdate({ zoom })
   }
 
+  handleResize = (width) => {
+    this.props.onUiPanelUpdate({ width })
+  }
 
   handlePhotoCreate = (options) => {
     const { onPhotoCreate } = this.props
@@ -204,11 +207,16 @@ class ItemView extends PureComponent {
       ...props
     } = this.props
 
-    const { item } = this
+    const { item, isItemMode, isDisabled } = this
 
     return (
       <section id="item-view">
-        <Resizable edge={'left'} value={panel.width}>
+        <Resizable
+          edge={isItemMode ? 'right' : 'left'}
+          value={panel.width}
+          min={225}
+          max={750}
+          onResize={this.handleResize}>
           <PanelGroup
             header={this.renderToolbar()}
             height={[33.33, 33.33, 33.33]}>
@@ -223,8 +231,8 @@ class ItemView extends PureComponent {
               edit={edit.photo}
               zoom={panel.zoom}
               selected={photo}
-              isItemOpen={this.isItemMode}
-              isDisabled={this.isDisabled}
+              isItemOpen={isItemMode}
+              isDisabled={isDisabled}
               onContextMenu={onContextMenu}
               onCreate={this.handlePhotoCreate}
               onItemOpen={onItemOpen}
