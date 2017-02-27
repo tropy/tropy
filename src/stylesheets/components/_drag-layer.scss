@@ -13,16 +13,12 @@
 }
 
 .drag-preview {
-  opacity: $drag-preview-badge-opacity;
+  opacity: $drag-preview-opacity;
   position: absolute; // Collapse width
   transform: translate(-50%, -50%);
 
-  .cover-image,
   .thumbnail {
-    opacity: $drag-preview-opacity;
-  }
-
-  .thumbnail {
+    opacity: $drag-preview-thumbnail-opacity;
     width: $drag-preview-size;
     height: $drag-preview-size;
   }

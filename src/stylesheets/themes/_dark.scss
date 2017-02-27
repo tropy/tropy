@@ -16,6 +16,8 @@ $blue-light: #cedef7;
 $blue-30:    rgba($blue, 0.3);
 $blue-60:    rgba($blue, 0.6);
 
+$red: #e62e2e;
+
 $brand-primary:       $blue;
 $brand-primary-light: $blue-light;
 $brand-primary-30:    $blue-30;
@@ -30,7 +32,7 @@ $shade-1: #212121; // 87% Border search field
 $shade-2: #292929; // 84% Inactive tab
 $shade-3: #2f2f2f; // 82% Body
 $shade-4: #333;    // 80% Sidebar bg, panel bg
-$shade-5: #404040; // 75% Active state bg/border
+$shade-5: #404040; // 75% Active state bg/border, slider track
 $shade-6: #555;    // Panel heading color, slider range
 $shade-7: #777;    // Icon color, sidebar headings
 $shade-8: #999;    // Softened text
@@ -49,15 +51,16 @@ $text-color: $shade-9; // Ok
 // --------------------------------------------------
 
 // Forms
-$input-color:             $shade-9;
-$input-bg:                $shade-3; // 'Transparent causes border/box-shadow issue
-$input-border:            $shade-1;
-$input-color-focus:       $brand-primary;
-$input-color-placeholder: $shade-5;
+$input-color:             $shade-9; // Ok
+$input-bg:                $shade-3; // Transparent causes border/box-shadow issue
+$input-border:            $shade-1; // Ok
+$input-color-focus:       $brand-primary; // Ok
+$input-color-placeholder: $shade-6; // Ok
 $input-color-readonly:    $shade-7;
 
+
 // Drop target
-$drop-target-color: $brand-primary-30;
+$drop-target-color: $brand-primary-30; // Ok
 
 // Tile
 $tile-focus-color:  $brand-primary; // Ok
@@ -139,6 +142,10 @@ $slider-handle-border: rgba($shade-5, 0);
 // Image
 $image-bg: $shade-1; // Ok
 $toolbar-hover-bg: rgba($shade-10, 0);
+
+// Drag preview
+$drag-preview-opacity:           0.64; // Ok
+$drag-preview-thumbnail-opacity: 1; // Ok
 
 // Thumbnail
 $thumbnail-color: rgba($icon-color, 0.6); // Ok
