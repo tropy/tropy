@@ -5,6 +5,8 @@ module.exports = {
   UPDATE: 'ui.update',
 
   PANEL: {
-    UPDATE: 'ui.panel.update'
+    UPDATE: 'ui.panel.update',
+    METADATA: 'metadata',
+    TAGS: 'tags'
   }
 }

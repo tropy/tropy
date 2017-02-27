@@ -2,260 +2,65 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const { FormattedMessage } = require('react-intl')
-const { Toolbar, ToolGroup } = require('../toolbar')
-const { Tab, Tabs } = require('../tabs')
-const { NotePanel, NotePad } = require('../note')
-const { PanelGroup, Panel } = require('../panel')
+const { ItemPanel } = require('./panel')
 const { Resizable } = require('../resizable')
-const { PhotoPanel } = require('../photo')
-const { IconMetadata, IconTag, IconChevron16 } = require('../icons')
-const { IconButton } = require('../button')
 const { Image } = require('../image')
-const { Fields, TemplateSelect } = require('../metadata')
+const { NotePad } = require('../note')
 const { MODE } = require('../../constants/project')
-
-const {
-  func, arrayOf, shape, number, bool, object, oneOf, string
-} = PropTypes
+const { pick } = require('../../common/util')
+const { func, arrayOf, shape, number, bool, string } = PropTypes
 
 
 class ItemView extends PureComponent {
 
-  get item() {
+  get item() { // remove?
     const { items } = this.props
     return items.length === 1 ? items[0] : null
   }
 
-  get photo() {
+  get photo() { // selector
     const { photo, photos } = this.props
     return photo ? photos.find(({ id }) => id === photo) : null
   }
 
-  get isDisabled() {
+  get isDisabled() { // keep here!
     const { item } = this
     return !(item && !item.deleted)
   }
 
-  get isItemMode() {
+  get isItemOpen() {
     return this.props.mode === MODE.ITEM
   }
 
-
-  handleModeChange = () => {
-    this.props.onModeChange(MODE.PROJECT)
-  }
-
-  handleMetadataTabSelect = () => {
-    if (this.props.panel.tab !== 'metadata') {
-      this.props.onUiPanelUpdate({ tab: 'metadata' })
-    }
-  }
-
-  handleTagsTabSelect = () => {
-    if (this.props.panel.tab !== 'tags') {
-      this.props.onUiPanelUpdate({ tab: 'tags' })
-    }
-  }
-
-  handlePhotoZoomChange = (zoom) => {
-    this.props.onUiPanelUpdate({ zoom })
-  }
-
-  handleResize = (width) => {
+  handlePanelResize = (width) => {
     this.props.onUiPanelUpdate({ width })
   }
 
-  handlePhotoCreate = (options) => {
-    const { onPhotoCreate } = this.props
-    const { item } = this
-
-    onPhotoCreate({ ...options, item: item.id })
-  }
-
-
-  handleTemplateChange = (event) => {
-    this.props.onItemSave({
-      id: this.item.id,
-      property: 'template',
-      value: event.target.value
-    })
-  }
-
-
-  renderItemTabs() {
-    const { panel } = this.props
-
-    return (
-      <Tabs justified>
-        <Tab
-          isActive={panel.tab === 'metadata'}
-          onActivate={this.handleMetadataTabSelect}>
-          <IconMetadata/>
-          <FormattedMessage id="panel.metadata.tab"/>
-        </Tab>
-        <Tab
-          isActive={panel.tab === 'tags'}
-          onActivate={this.handleTagsTabSelect}>
-          <IconTag/>
-          <FormattedMessage id="panel.tags"/>
-        </Tab>
-      </Tabs>
-    )
-  }
-
-  renderItemPanel() {
-    const { panel } = this.props
-
-    switch (this.props.items.length) {
-      case 0:
-        return  null
-
-      case 1:
-        switch (panel.tab) {
-          case 'metadata':
-            return this.renderMetadataPanel()
-          case 'tags':
-            return this.renderTagsPanel()
-          default:
-            return null
-        }
-
-      default:
-        // bulk editor
-    }
-  }
-
-  renderMetadataPanel() {
-    const { data, templates, edit, ...props } = this.props
-    const { item, photo, isDisabled } = this
-
-    return (
-      <div className="metadata-container">
-        {photo &&
-          <section>
-            <h5 className="metadata-heading separator">
-              <FormattedMessage id="panel.metadata.photo"/>
-            </h5>
-            <Fields {...props}
-              subject={photo}
-              data={data[photo.id]}
-              edit={edit.field}
-              isDisabled={isDisabled}
-              template={templates[photo.template]}/>
-          </section>}
-        {item &&
-          <section>
-            <h5 className="metadata-heading">
-              <FormattedMessage id="panel.metadata.item"/>
-            </h5>
-            <TemplateSelect
-              templates={templates}
-              selected={item.template}
-              onChange={this.handleTemplateChange}/>
-            <Fields {...props}
-              subject={item}
-              data={data[item.id]}
-              edit={edit.field}
-              isDisabled={isDisabled}
-              template={templates[item.template]}/>
-          </section>}
-      </div>
-    )
-  }
-
-  renderTagsPanel() {
-    const { item } = this
-    if (!item || !item.tags) return
-
-    return (
-      <ul>
-        {item.tags.map(tag => <li key={tag}>{tag}</li>)}
-      </ul>
-    )
-  }
-
-  renderToolbar() {
-    return (
-      <Toolbar onDoubleClick={ARGS.frameless ? this.props.onMaximize : null}>
-        <div className="toolbar-left">
-          <ToolGroup>
-            {this.isItemMode &&
-              <IconButton
-                icon={<IconChevron16/>}
-                onClick={this.handleModeChange}/>}
-          </ToolGroup>
-        </div>
-      </Toolbar>
-    )
-  }
 
   render() {
     const {
-      edit,
-      context,
-      note,
-      notes,
       panel,
-      photo,
-      onContextMenu,
-      onItemOpen,
-      onPhotoSelect,
-      onPhotoSort,
-      onNoteCreate,
-      onNoteSelect,
       ...props
     } = this.props
 
-    const { item, isItemMode, isDisabled } = this
+    const { isItemOpen, photo, isDisabled } = this
 
     return (
       <section id="item-view">
         <Resizable
-          edge={isItemMode ? 'right' : 'left'}
+          edge={isItemOpen ? 'right' : 'left'}
           value={panel.width}
           min={225}
           max={750}
-          onResize={this.handleResize}>
-          <PanelGroup
-            header={this.renderToolbar()}
-            height={[33.33, 33.33, 33.33]}>
-
-            <Panel>
-              {this.renderItemTabs()}
-              {this.renderItemPanel()}
-            </Panel>
-
-            <PhotoPanel {...props}
-              context={context.photo}
-              edit={edit.photo}
-              zoom={panel.zoom}
-              selected={photo}
-              isItemOpen={isItemMode}
-              isDisabled={isDisabled}
-              onContextMenu={onContextMenu}
-              onCreate={this.handlePhotoCreate}
-              onItemOpen={onItemOpen}
-              onSelect={onPhotoSelect}
-              onSort={onPhotoSort}
-              onZoomChange={this.handlePhotoZoomChange}/>
-
-            <NotePanel
-              item={item && item.id}
-              photo={photo}
-              notes={notes}
-              selection={note}
-              isItemOpen={this.isItemMode}
-              isDisabled={this.isDisabled}
-              onContextMenu={onContextMenu}
-              onCreate={onNoteCreate}
-              onItemOpen={onItemOpen}
-              onSelect={onNoteSelect}/>
-          </PanelGroup>
+          onResize={this.handlePanelResize}>
+          <ItemPanel {...pick(props, ItemPanel.props)}
+            panel={panel}
+            isItemOpen={isItemOpen}
+            isDisabled={isDisabled}/>
         </Resizable>
 
         <div className="item-container">
-          <Image isVisible photo={this.photo}/>
+          <Image isVisible photo={photo}/>
           <NotePad/>
         </div>
       </section>
@@ -264,6 +69,8 @@ class ItemView extends PureComponent {
 
 
   static propTypes = {
+    ...ItemPanel.propTypes,
+
     items: arrayOf(
       shape({
         id: number.isRequired,
@@ -272,53 +79,18 @@ class ItemView extends PureComponent {
       })
     ),
 
-    context: object.isRequired,
-    data: object.isRequired,
-    edit: object.isRequired,
-
-    notes: arrayOf(
-      shape({
-        id: number.isRequired
-      })
-    ),
-
-    photos: arrayOf(
-      shape({
-        id: number.isRequired,
-        deleted: bool
-      })
-    ),
-
-    note: number,
-    photo: number,
-
     panel: shape({
-      tab: oneOf(['metadata', 'tags']).isRequired,
-      width: number.isRequired,
-      zoom: number.isRequired
+      width: number.isRequired
     }).isRequired,
 
     mode: string.isRequired,
-    properties: object.isRequired,
-    templates: object.isRequired,
-
-    onItemOpen: func.isRequired,
-    onItemSave: func.isRequired,
-    onContextMenu: func.isRequired,
-    onEdit: func.isRequired,
-    onEditCancel: func.isRequired,
-    onMaximize: func.isRequired,
-    onMetadataSave: func.isRequired,
-    onModeChange: func.isRequired,
-    onNoteCreate: func.isRequired,
-    onNoteSave: func.isRequired,
-    onNoteSelect: func.isRequired,
-    onPhotoCreate: func.isRequired,
-    onPhotoSelect: func.isRequired,
-    onPhotoSort: func.isRequired,
     onUiPanelUpdate: func.isRequired
   }
 }
+
+delete ItemView.propTypes.isDisabled
+delete ItemView.propTypes.isItemOpen
+
 
 module.exports = {
   ItemView
