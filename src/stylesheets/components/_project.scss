@@ -7,17 +7,7 @@
   overflow: hidden;
 
   &.over {
-    &::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: $zindex-drop-target;
-      background: $drop-target-color;
-      mix-blend-mode: multiply;
-    }
+    @extend %drop-target;
   }
 }
 
