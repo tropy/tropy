@@ -416,6 +416,10 @@ module.exports = {
 
       onEditCancel() {
         dispatch(actions.edit.cancel())
+      },
+
+      onUiUpdate(...args) {
+        dispatch(actions.ui.update(...args))
       }
     })
 

@@ -95,8 +95,7 @@ class Resizable extends PureComponent {
     off(window, 'blur', this.stop)
 
     if (this.props.value !== this.state.value) {
-      //this.props.onResize(value)
-      //console.log('resize', this.state.value)
+      this.props.onResize(this.state.value)
     }
   }
 
@@ -134,7 +133,7 @@ class Resizable extends PureComponent {
     value: number.isRequired,
     min: number,
     max: number,
-    onResize: func //.isRequired
+    onResize: func.isRequired
   }
 
   static defaultProps = {

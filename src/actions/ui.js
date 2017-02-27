@@ -9,5 +9,13 @@ module.exports = {
       payload,
       meta
     }
+  },
+
+  update(payload, meta) {
+    return {
+      type: UI.UPDATE,
+      payload,
+      meta
+    }
   }
 }

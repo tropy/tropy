@@ -30,13 +30,18 @@ class ProjectView extends PureComponent {
     return this.zoom ? ItemGrid : ItemTable
   }
 
+  handleSidebarResize = (width) => {
+    this.props.onUiUpdate({ sidebar: { width } })
+  }
+
   render() {
     const {
-      items,
-      isOver,
       canDrop,
-      nav,
       edit,
+      isOver,
+      items,
+      nav,
+      ui,
       onItemCreate,
       onItemSelect,
       onItemZoomChange,
@@ -47,7 +52,12 @@ class ProjectView extends PureComponent {
 
     return (
       <div id="project-view">
-        <Resizable edge="right" value={250}>
+        <Resizable
+          edge="right"
+          value={ui.sidebar.width}
+          min={150}
+          max={750}
+          onResize={this.handleSidebarResize}>
           <ProjectSidebar {...pick(props, ProjectSidebar.props)}
             edit={edit}
             selectedList={nav.list}
@@ -84,17 +94,19 @@ class ProjectView extends PureComponent {
   }
 
   static propTypes = {
-    items: array.isRequired,
-    isOver: bool,
     canDrop: bool,
-    nav: object.isRequired,
     edit: object.isRequired,
+    isOver: bool,
+    items: array.isRequired,
+    nav: object.isRequired,
+    ui: object.isRequired,
     dt: func.isRequired,
     onItemCreate: func.isRequired,
     onItemImport: func.isRequired,
     onItemSelect: func.isRequired,
     onMaximize: func.isRequired,
-    onItemZoomChange: func.isRequired
+    onItemZoomChange: func.isRequired,
+    onUiUpdate: func.isRequired
   }
 
   static Zoom = [
