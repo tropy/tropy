@@ -61,8 +61,7 @@
       }
 
       &.over {
-        background: $drop-target-color;
-        mix-blend-mode: $drop-target-blend-mode;
+        @extend %drop-target;
       }
 
       &.dragging {
