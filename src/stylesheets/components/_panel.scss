@@ -44,4 +44,14 @@
       margin-bottom: $space-min;
     }
   }
+
+  ::-webkit {
+    &-track {
+      background: $panel-bg;
+    }
+
+    &-thumb {
+      border-color: $panel-bg;
+    }
+  }
 }
