@@ -18,11 +18,6 @@ class ItemView extends PureComponent {
     return items.length === 1 ? items[0] : null
   }
 
-  get photo() { // selector
-    const { photo, photos } = this.props
-    return photo ? photos.find(({ id }) => id === photo) : null
-  }
-
   get isDisabled() { // keep here!
     const { item } = this
     return !(item && !item.deleted)
@@ -40,10 +35,11 @@ class ItemView extends PureComponent {
   render() {
     const {
       panel,
+      photo,
       ...props
     } = this.props
 
-    const { isItemOpen, photo, isDisabled } = this
+    const { isItemOpen, isDisabled } = this
 
     return (
       <section id="item-view">
@@ -55,6 +51,7 @@ class ItemView extends PureComponent {
           onResize={this.handlePanelResize}>
           <ItemPanel {...pick(props, ItemPanel.props)}
             panel={panel}
+            photo={photo}
             isItemOpen={isItemOpen}
             isDisabled={isDisabled}/>
         </Resizable>

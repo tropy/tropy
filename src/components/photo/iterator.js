@@ -29,7 +29,7 @@ class PhotoIterator extends Iterator {
 
 
   isSelected(photo) {
-    return this.props.selected === photo.id
+    return this.props.selection === photo.id
   }
 
   isContext(photo) {
@@ -37,12 +37,12 @@ class PhotoIterator extends Iterator {
   }
 
   getNextPhoto(offset = 1) {
-    const { photos, selected } = this.props
+    const { photos, selection } = this.props
 
     if (!photos.length) return null
-    if (!selected) return photos[0]
+    if (!selection) return photos[0]
 
-    return photos[this.idx[selected] + offset]
+    return photos[this.idx[selection] + offset]
   }
 
   getPrevPhoto(offset = 1) {
@@ -183,7 +183,7 @@ class PhotoIterator extends Iterator {
 
     cache: string.isRequired,
     context: object,
-    selected: number,
+    selection: number,
     size: number.isRequired,
 
     isItemOpen: bool,

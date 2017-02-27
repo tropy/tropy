@@ -24,6 +24,7 @@ const {
   getBusyActivities,
   getColumns,
   getSelectedItems,
+  getSelectedPhoto,
   getVisibleItems,
   getVisibleNotes,
   getVisiblePhotos
@@ -136,6 +137,7 @@ class ProjectContainer extends Component {
       items,
       nav,
       notes,
+      photo,
       photos,
       selection,
       ui,
@@ -164,7 +166,7 @@ class ProjectContainer extends Component {
           data={data}
           note={nav.note}
           notes={notes}
-          photo={nav.photo}
+          photo={photo}
           photos={photos}
           panel={ui.panel}
           onMetadataSave={this.handleMetadataSave}/>
@@ -188,6 +190,7 @@ class ProjectContainer extends Component {
       shape({ id: number.isRequired })
     ),
 
+    photo: object,
     photos: arrayOf(
       shape({ id: number.isRequired })
     ),
@@ -261,6 +264,7 @@ module.exports = {
       items: getVisibleItems(state),
       selection: getSelectedItems(state),
       notes: getVisibleNotes(state),
+      photo: getSelectedPhoto(state),
       photos: getVisiblePhotos(state),
       sort: state.nav.sort,
       data: state.metadata,

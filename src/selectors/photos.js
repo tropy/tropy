@@ -6,6 +6,12 @@ const { getSelectedItems } = require('./items')
 
 const getPhotos = ({ photos }) => photos
 
+const getSelectedPhoto = memo(
+  getPhotos,
+  ({ nav }) => nav.photo,
+  (photos, id) => (id != null) ? photos[id] : null
+)
+
 const getVisiblePhotos = memo(
   getPhotos,
   getSelectedItems,
@@ -20,5 +26,6 @@ const getVisiblePhotos = memo(
 )
 
 module.exports = {
+  getSelectedPhoto,
   getVisiblePhotos
 }

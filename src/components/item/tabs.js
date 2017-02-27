@@ -75,7 +75,7 @@ class ItemTab extends PureComponent {
             return null
         }
       default:
-        // BulkEditor
+        return null // BulkEditor
     }
   }
 

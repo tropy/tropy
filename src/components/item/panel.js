@@ -73,6 +73,7 @@ class ItemPanel extends PureComponent {
           <ItemTabs tab={panel.tab} onChange={this.handleTabChange}/>
           <ItemTab {...props}
             isItemOpen={isItemOpen}
+            photo={photo}
             tab={panel.tab}
             edit={edit.field}/>
         </Panel>
@@ -82,7 +83,7 @@ class ItemPanel extends PureComponent {
           context={context.photo}
           edit={edit.photo}
           zoom={panel.zoom}
-          selected={photo}
+          selection={photo && photo.id}
           onCreate={this.handlePhotoCreate}
           onSelect={onPhotoSelect}
           onSort={onPhotoSort}
@@ -91,7 +92,7 @@ class ItemPanel extends PureComponent {
         <NotePanel {...props}
           isItemOpen={isItemOpen}
           item={item && item.id}
-          photo={photo}
+          photo={photo && photo.id}
           notes={notes}
           selection={note}
           onCreate={onNoteCreate}
@@ -115,7 +116,9 @@ class ItemPanel extends PureComponent {
       zoom: number.isRequired
     }).isRequired,
 
-    photo: number,
+    photo: shape({
+      id: number.isRequired
+    }),
     photos: array.isRequired,
     templates: object.isRequired,
 
