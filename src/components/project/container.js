@@ -19,10 +19,10 @@ const actions = require('../../actions')
 const { getCachePrefix } = require('../../selectors/project')
 const { getAllVisibleTags } = require('../../selectors/tag')
 const { getTemplates } = require('../../selectors/templates')
-const { getColumns } = require('../../selectors/ui')
 
 const {
   getBusyActivities,
+  getColumns,
   getSelectedItems,
   getVisibleItems,
   getVisibleNotes,

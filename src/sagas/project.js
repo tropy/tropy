@@ -39,7 +39,10 @@ module.exports = {
       yield every(action => has('search', action), search, db)
       yield every(action => has('load', action), load)
 
-      yield call(storage.restore, 'nav', id)
+      yield [
+        call(storage.restore, 'nav', id),
+        call(storage.restore, 'columns', id)
+      ]
 
       yield fork(function* () {
         yield [
@@ -64,7 +67,13 @@ module.exports = {
       debug(error.stack)
 
     } finally {
-      if (id) yield call(storage.persist, 'nav', id)
+      if (id) {
+        yield [
+          call(storage.persist, 'nav', id),
+          call(storage.persist, 'columns', id)
+        ]
+      }
+
       if (db) {
         yield [
           call(mod.list.prune, db),
@@ -112,7 +121,11 @@ module.exports = {
     try {
       yield fork(ipc)
       yield fork(history)
-      yield call(storage.restore, 'properties')
+
+      yield [
+        call(storage.restore, 'properties'),
+        call(storage.restore, 'ui')
+      ]
 
       while (true) {
         const { payload } = yield take(OPEN)
@@ -129,7 +142,10 @@ module.exports = {
       debug(error.stack)
 
     } finally {
-      yield call(storage.persist, 'properties')
+      yield [
+        call(storage.persist, 'properties'),
+        call(storage.persist, 'ui')
+      ]
     }
   }
 }

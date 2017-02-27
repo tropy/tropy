@@ -1,11 +1,11 @@
 'use strict'
 
-const { UI } = require('../constants')
+const { COLUMNS } = require('../constants')
 
 module.exports = {
   restore(payload, meta) {
     return {
-      type: UI.RESTORE,
+      type: COLUMNS.RESTORE,
       payload,
       meta
     }

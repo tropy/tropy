@@ -1,26 +1,19 @@
 'use strict'
 
-const { combineReducers } = require('redux')
-const { DC } = require('../constants/properties')
+const { UI } = require('../constants')
+const { merge } = require('../common/util')
 
-const cols = [
-  { width: '40%', property: DC.TITLE },
-  { width: '25%', property: DC.TYPE },
-  { width: '20%', property: DC.DATE },
-  { width: '15%', property: DC.RIGHTS }
-]
-
-function columns(state = cols) {
-  return state
-}
-
-function sidebar(state = {}) {
-  return state
+const init = {
+  sidebar: {}
 }
 
 module.exports = {
-  ui: combineReducers({
-    columns,
-    sidebar
-  })
+  ui(state = init, { type, payload }) {
+    switch (type) {
+      case UI.RESTORE:
+        return merge(payload, init)
+      default:
+        return state
+    }
+  }
 }

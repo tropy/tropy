@@ -2,6 +2,7 @@
 
 module.exports = {
   activity: require('./activity'),
+  columns: require('./columns'),
   context: require('./context'),
   edit: require('./edit'),
   history: require('./history'),
