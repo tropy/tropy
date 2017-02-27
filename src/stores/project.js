@@ -6,6 +6,7 @@ const {
 
 const { default: thunk } = require('redux-thunk')
 const { default: createSagaMiddleware } = require('redux-saga')
+
 const { log: logger, warn, debug } = require('../common/log')
 const { seq, debounce, throttle, log } = require('../middleware')
 
@@ -14,6 +15,8 @@ const {
   nav,
   ui,
   activities,
+  context,
+  edit,
   photos,
   project,
   properties,
@@ -34,7 +37,7 @@ module.exports = {
 
     const saga = createSagaMiddleware({
       logger,
-      onError: (error) => {
+      onError(error) {
         warn(`unhandled error in saga middleware: ${error.message}`)
         debug(error.stack)
       }
@@ -45,6 +48,8 @@ module.exports = {
       nav,
       ui,
       activities,
+      context,
+      edit,
       photos,
       project,
       properties,

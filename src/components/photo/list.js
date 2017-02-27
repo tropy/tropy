@@ -1,11 +1,10 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = React
+const { number, object, func } = React.PropTypes
 const { PhotoListItem } = require('./list-item')
 const { PhotoIterator } = require('./iterator')
 const { DC } = require('../../constants/properties')
-const { get } = require('../../common/util')
 const { on, off } = require('../../dom')
 const cx = require('classnames')
 
@@ -28,7 +27,7 @@ class PhotoList extends PhotoIterator {
   }
 
   isEditing(photo) {
-    return get(this.props.ui, 'edit.photo') === photo.id
+    return this.props.edit === photo.id
   }
 
   render() {
@@ -55,13 +54,13 @@ class PhotoList extends PhotoIterator {
     )
   }
 
-
   static propTypes = {
     ...PhotoIterator.propTypes,
-    data: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired,
-    onEdit: PropTypes.func.isRequired,
-    onEditCancel: PropTypes.func.isRequired
+    edit: number,
+    data: object.isRequired,
+    onChange: func.isRequired,
+    onEdit: func.isRequired,
+    onEditCancel: func.isRequired
   }
 }
 

@@ -2,7 +2,9 @@
 
 module.exports = {
   ACTIVITY: require('./activity'),
+  CONTEXT: require('./context'),
   DND: require('./dnd'),
+  EDIT: require('./edit'),
   HISTORY: require('./history'),
   ITEM: require('./item'),
   LIST: require('./list'),

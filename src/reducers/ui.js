@@ -1,7 +1,6 @@
 'use strict'
 
-const { combineReducers: combine } = require('redux')
-const { CONTEXT, EDIT } = require('../constants/ui')
+const { combineReducers } = require('redux')
 const { DC } = require('../constants/properties')
 
 const cols = [
@@ -15,38 +14,13 @@ function columns(state = cols) {
   return state
 }
 
-function context(state = {}, { type, payload }) {
-  switch (type) {
-    case CONTEXT.SHOW:
-      return {
-        [payload.scope]: payload.event.target
-      }
-
-    case CONTEXT.CLEAR:
-      return {}
-
-    default:
-      return state
-  }
-}
-
-function edit(state = {}, { type, payload }) {
-  switch (type) {
-    case EDIT.START:
-      return { ...payload }
-
-    case EDIT.CANCEL:
-      return {}
-
-    default:
-      return state
-  }
+function sidebar(state = {}) {
+  return state
 }
 
 module.exports = {
-  ui: combine({
+  ui: combineReducers({
     columns,
-    context,
-    edit
+    sidebar
   })
 }

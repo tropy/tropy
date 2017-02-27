@@ -33,7 +33,7 @@ class PhotoIterator extends Iterator {
   }
 
   isContext(photo) {
-    return get(this.props.ui, 'context.photo.id') === photo.id
+    return get(this.props.context, 'id') === photo.id
   }
 
   getNextPhoto(offset = 1) {
@@ -182,8 +182,8 @@ class PhotoIterator extends Iterator {
     ).isRequired,
 
     cache: string.isRequired,
+    context: object,
     selected: number,
-    ui: object.isRequired,
     size: number.isRequired,
 
     isItemOpen: bool,

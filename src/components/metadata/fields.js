@@ -9,8 +9,7 @@ const { get } = require('../../common/util')
 class Fields extends Component {
 
   isEditing(uri) {
-    return get(this.props,
-      ['ui', 'edit', 'field', this.props.subject.id]) === uri
+    return get(this.props, ['edit', this.props.subject.id]) === uri
   }
 
   isExtra(uri) {
@@ -63,7 +62,6 @@ class Fields extends Component {
   }
 
   static propTypes = {
-    ui: PropTypes.object,
     isDisabled: PropTypes.bool,
 
     template: PropTypes.shape({
@@ -72,6 +70,7 @@ class Fields extends Component {
       })).isRequired,
     }),
 
+    edit: PropTypes.object,
     properties: PropTypes.object,
     static: PropTypes.string,
 

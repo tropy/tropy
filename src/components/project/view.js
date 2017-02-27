@@ -36,7 +36,7 @@ class ProjectView extends PureComponent {
       isOver,
       canDrop,
       nav,
-      ui,
+      edit,
       onItemCreate,
       onItemSelect,
       onItemZoomChange,
@@ -49,8 +49,7 @@ class ProjectView extends PureComponent {
       <div id="project-view">
         <Resizable edge="right" value={250}>
           <ProjectSidebar {...pick(props, ProjectSidebar.props)}
-            edit={ui.edit}
-            context={ui.context}
+            edit={edit}
             selectedList={nav.list}
             selectedTags={nav.tags}
             isSelected={!(nav.list || nav.trash)}
@@ -70,7 +69,7 @@ class ProjectView extends PureComponent {
 
             <ItemIterator {...pick(props, ItemIterator.props)}
               items={items}
-              edit={ui.edit.column}
+              edit={edit.column}
               list={nav.list}
               selection={nav.items}
               size={size}
@@ -89,7 +88,7 @@ class ProjectView extends PureComponent {
     isOver: bool,
     canDrop: bool,
     nav: object.isRequired,
-    ui: object.isRequired,
+    edit: object.isRequired,
     dt: func.isRequired,
     onItemCreate: func.isRequired,
     onItemImport: func.isRequired,

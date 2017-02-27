@@ -263,6 +263,8 @@ module.exports = {
       cache: getCachePrefix(state),
       nav: state.nav,
       ui: state.ui,
+      context: state.context,
+      edit: state.edit,
       properties: state.properties,
       templates: getTemplates(state)
     }),
@@ -274,7 +276,7 @@ module.exports = {
 
       onContextMenu(event, ...args) {
         event.stopPropagation()
-        dispatch(actions.ui.context.show(event, ...args))
+        dispatch(actions.context.show(event, ...args))
       },
 
       onModeChange(mode) {
@@ -287,7 +289,7 @@ module.exports = {
 
       onProjectSave(...args) {
         dispatch(actions.project.save(...args))
-        dispatch(actions.ui.edit.cancel())
+        dispatch(actions.edit.cancel())
       },
 
       onSelect(...args) {
@@ -336,7 +338,7 @@ module.exports = {
 
       onMetadataSave(...args) {
         dispatch(actions.metadata.save(...args))
-        dispatch(actions.ui.edit.cancel())
+        dispatch(actions.edit.cancel())
       },
 
       onPhotoCreate(...args) {
@@ -361,7 +363,7 @@ module.exports = {
 
       onListSave(...args) {
         dispatch(actions.list.save(...args))
-        dispatch(actions.ui.edit.cancel())
+        dispatch(actions.edit.cancel())
       },
 
       onListSort(...args) {
@@ -376,12 +378,12 @@ module.exports = {
 
       onTagCreate(data) {
         dispatch(actions.tag.create(data))
-        dispatch(actions.ui.edit.cancel())
+        dispatch(actions.edit.cancel())
       },
 
       onTagSave(data, id) {
         dispatch(actions.tag.save({ ...data, id }))
-        dispatch(actions.ui.edit.cancel())
+        dispatch(actions.edit.cancel())
       },
 
       onTagSelect(...args) {
@@ -409,11 +411,11 @@ module.exports = {
       },
 
       onEdit(...args) {
-        dispatch(actions.ui.edit.start(...args))
+        dispatch(actions.edit.start(...args))
       },
 
       onEditCancel() {
-        dispatch(actions.ui.edit.cancel())
+        dispatch(actions.edit.cancel())
       }
     })
 

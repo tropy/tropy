@@ -2,6 +2,8 @@
 
 module.exports = {
   ...require('./activity'),
+  ...require('./context'),
+  ...require('./edit'),
   ...require('./history'),
   ...require('./intl'),
   ...require('./items'),

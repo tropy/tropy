@@ -2,6 +2,8 @@
 
 module.exports = {
   activity: require('./activity'),
+  context: require('./context'),
+  edit: require('./edit'),
   history: require('./history'),
   intl: require('./intl'),
   item: require('./item'),

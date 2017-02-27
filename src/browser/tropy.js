@@ -19,7 +19,7 @@ const release = require('../common/release')
 
 const { defineProperty: prop } = Object
 const act = require('../actions')
-const { HISTORY, TAG, PROJECT, UI, ITEM } = require('../constants')
+const { HISTORY, TAG, PROJECT, ITEM, CONTEXT } = require('../constants')
 const { darwin } = require('../common/os')
 const { version } = require('../common/release')
 
@@ -227,7 +227,7 @@ class Tropy extends EventEmitter {
       .on('app:import-photos', () =>
         this.import())
       .on('app:rename-project', () =>
-        this.dispatch(act.ui.edit.start({ project: { name: true } })))
+        this.dispatch(act.edit.start({ project: { name: true } })))
       .on('app:show-in-folder', (_, { target }) =>
         shell.showItemInFolder(target.path))
       .on('app:create-item', () =>
@@ -250,7 +250,7 @@ class Tropy extends EventEmitter {
           items: target.id
         })))
       .on('app:rename-photo', (_, { target }) =>
-        this.dispatch(act.ui.edit.start({ photo: target.id })))
+        this.dispatch(act.edit.start({ photo: target.id })))
       .on('app:delete-photo', (_, { target }) =>
         this.dispatch(act.photo.delete({
           item: target.item, photos: [target.id]
@@ -258,13 +258,13 @@ class Tropy extends EventEmitter {
       .on('app:create-list', () =>
         this.dispatch(act.list.new()))
       .on('app:rename-list', (_, { target: id }) =>
-        this.dispatch(act.ui.edit.start({ list: { id } })))
+        this.dispatch(act.edit.start({ list: { id } })))
       .on('app:delete-list', (_, { target }) =>
         this.dispatch(act.list.delete(target)))
       .on('app:create-tag', () =>
         this.dispatch(act.tag.new()))
       .on('app:rename-tag', (_, { target: id }) =>
-        this.dispatch(act.ui.edit.start({ tag: { id } })))
+        this.dispatch(act.edit.start({ tag: { id } })))
       .on('app:delete-tag', (_, { target }) =>
         this.dispatch(act.tag.hide(target)))
       .on('app:create-note', (_, { target }) =>
@@ -380,9 +380,9 @@ class Tropy extends EventEmitter {
         T.set(this.win, tags)
       })
 
-      .on(UI.CONTEXT.SHOW, (_, event) => {
+      .on(CONTEXT.SHOW, (_, event) => {
         this.ctx.show(event)
-        this.dispatch(act.ui.context.clear())
+        this.dispatch(act.context.clear())
       })
 
       .on(ITEM.PREVIEW, (_, paths) => {

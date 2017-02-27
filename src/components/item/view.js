@@ -120,7 +120,7 @@ class ItemView extends PureComponent {
   }
 
   renderMetadataPanel() {
-    const { data, templates, ...props } = this.props
+    const { data, templates, edit, ...props } = this.props
     const { item, photo, isDisabled } = this
 
     return (
@@ -133,6 +133,7 @@ class ItemView extends PureComponent {
             <Fields {...props}
               subject={photo}
               data={data[photo.id]}
+              edit={edit.field}
               isDisabled={isDisabled}
               template={templates[photo.template]}/>
           </section>}
@@ -148,6 +149,7 @@ class ItemView extends PureComponent {
             <Fields {...props}
               subject={item}
               data={data[item.id]}
+              edit={edit.field}
               isDisabled={isDisabled}
               template={templates[item.template]}/>
           </section>}
@@ -183,6 +185,8 @@ class ItemView extends PureComponent {
 
   render() {
     const {
+      edit,
+      context,
       note,
       notes,
       panel,
@@ -212,6 +216,8 @@ class ItemView extends PureComponent {
             </Panel>
 
             <PhotoPanel {...props}
+              context={context.photo}
+              edit={edit.photo}
               zoom={panel.photoZoom}
               selected={photo}
               isItemOpen={this.isItemMode}
@@ -255,7 +261,9 @@ class ItemView extends PureComponent {
       })
     ),
 
+    context: object.isRequired,
     data: object.isRequired,
+    edit: object.isRequired,
 
     notes: arrayOf(
       shape({

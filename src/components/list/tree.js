@@ -26,7 +26,7 @@ class ListTree extends PureComponent {
   }
 
   isEditing(id) {
-    return get(this.props, 'edit.id') === id
+    return get(this.props.edit, 'id') === id
   }
 
   isContext(id) {

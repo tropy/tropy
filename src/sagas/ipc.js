@@ -10,7 +10,7 @@ const { warn, debug } = require('../common/log')
 const { identity } = require('../common/util')
 const history = require('../selectors/history')
 const { getAllVisibleTags } = require('../selectors/tag')
-const { TAG, HISTORY, UI, ITEM } = require('../constants')
+const { TAG, HISTORY, CONTEXT, ITEM } = require('../constants')
 const { darwin } = require('../common/os')
 const { delay } = require('../common/util')
 
@@ -24,7 +24,7 @@ module.exports = {
 
       // Work around macOS not updating the renderer before
       // opening the context menu.
-      if (type === UI.CONTEXT.SHOW && darwin) {
+      if (type === CONTEXT.SHOW && darwin) {
         yield call(delay, 80)
       }
 
