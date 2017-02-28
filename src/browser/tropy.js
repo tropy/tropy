@@ -365,11 +365,15 @@ class Tropy extends EventEmitter {
     if (darwin) {
       app.on('activate', () => this.open())
 
-      pref.subscribeNotification(
+      const id = pref.subscribeNotification(
         'AppleShowScrollBarsSettingChanged', () => {
           this.broadcast('scrollbars', !hasOverlayScrollBars())
         }
       )
+
+      app.on('quit', () => {
+        pref.unsubscribeNotification(id)
+      })
     }
 
     ipc
