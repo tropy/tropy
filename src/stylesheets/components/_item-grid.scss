@@ -10,6 +10,21 @@
   display: flex; // Prevent overflow
   flex-direction: column; // Strech scroll-container
 
+  .scrollbar-style-old-school & {
+    margin-right: 0;
+    border-top-color: transparent;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: -1px;
+      right: $space-min;
+      left: 0;
+      height: 1px;
+      background: $item-table-header-border-color;
+    }
+  }
+
   .scroll-container {
     display: flex;
     flex-wrap: wrap;

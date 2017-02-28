@@ -10,6 +10,10 @@
   position: relative;
   height: 100%;
 
+  .scrollbar-style-old-school & {
+    padding-right: 0;
+  }
+
   .table-head {
     box-sizing: content-box;
     width: 100%;
@@ -21,6 +25,10 @@
       bottom: 1px solid $item-table-header-border-color;
     }
     color: $item-table-header-color;
+
+    .scrollbar-style-old-school & {
+      width: calc(100% - #{$component-padding-horizontal});
+    }
   }
 
   .metadata-head,
