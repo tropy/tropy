@@ -31,9 +31,13 @@ class ItemView extends PureComponent {
     this.props.onUiPanelUpdate({ width })
   }
 
+  handleEsperResize = () => {
+  }
+
 
   render() {
     const {
+      esper,
       panel,
       photo,
       ...props
@@ -57,7 +61,15 @@ class ItemView extends PureComponent {
         </Resizable>
 
         <div className="item-container">
-          <Image isVisible photo={photo}/>
+          <Resizable
+            edge="bottom"
+            value={esper.height}
+            isRelative
+            onResize={this.handleEsperResize}
+            min={20}
+            max={90}>
+            <Image isVisible photo={photo}/>
+          </Resizable>
           <NotePad/>
         </div>
       </section>
@@ -78,6 +90,10 @@ class ItemView extends PureComponent {
 
     panel: shape({
       width: number.isRequired
+    }).isRequired,
+
+    esper: shape({
+      height: number.isRequired
     }).isRequired,
 
     mode: string.isRequired,

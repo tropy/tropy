@@ -5,7 +5,7 @@ const { PureComponent, PropTypes, Children } = React
 const { only } = require('./util')
 const { Resizable } = require('./resizable')
 const cx = require('classnames')
-const { node, arrayOf, number } = PropTypes
+const { func, node, arrayOf, number } = PropTypes
 
 
 class Panel extends PureComponent {
@@ -46,31 +46,43 @@ class Panel extends PureComponent {
 }
 
 
-const PanelGroup = ({ header, children, height }) => {
-  const panels = Children.toArray(children)
-  const last = panels.pop()
+class PanelGroup extends PureComponent {
+  render() {
+    const { header, children, height, onResize } = this.props
 
-  return (
-    <div id="panel-group">
-      <header className="panel-group-header">
-        {header}
-      </header>
-      <div className="panel-group-body">
-        {panels.map((panel, idx) => (
-          <Resizable key={idx} isRelative edge="bottom" value={height[idx]}>
-            {panel}
-          </Resizable>
-        ))}
-        {last}
+    const panels = Children.toArray(children)
+    const last = panels.pop()
+
+    return (
+      <div id="panel-group">
+        <header className="panel-group-header">
+          {header}
+        </header>
+        <div className="panel-group-body">
+          {panels.map((panel, idx) => (
+            <Resizable
+              key={idx}
+              isRelative
+              edge="top"
+              value={height[idx]}
+              min={5}
+              max={45}
+              onResize={onResize}>
+              {panel}
+            </Resizable>
+          ))}
+          {last}
+        </div>
       </div>
-    </div>
-  )
-}
+    )
+  }
 
-PanelGroup.propTypes = {
-  header: node,
-  height: arrayOf(number),
-  children: only(Panel)
+  static propTypes = {
+    header: node,
+    height: arrayOf(number),
+    children: only(Panel),
+    onResize: func.isRequired
+  }
 }
 
 module.exports = {

@@ -169,6 +169,7 @@ class ProjectContainer extends Component {
           photo={photo}
           photos={photos}
           panel={ui.panel}
+          esper={ui.esper}
           onMetadataSave={this.handleMetadataSave}/>
 
         <DragLayer cache={props.cache}/>

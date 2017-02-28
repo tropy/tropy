@@ -25,8 +25,9 @@ class ItemPanel extends PureComponent {
       item: get(this.props.items, [0, 'id']) })
   }
 
-  handleResize = (heights) => {
-    this.props.onUiPanelUpdate({ heights })
+  handleResize = () => {
+    //console.log(heights)
+    //this.props.onUiPanelUpdate({ heights })
   }
 
   handleTabChange = (tab) => {
@@ -62,6 +63,7 @@ class ItemPanel extends PureComponent {
     return (
       <PanelGroup
         height={[33.33, 33.33, 33.33]}
+        onResize={this.handleResize}
         header={
           <ItemToolbar
             isItemOpen={isItemOpen}
