@@ -1,12 +1,12 @@
 'use strict'
 
-const { TAG, UI } = require('../constants')
+const { TAG, EDIT } = require('../constants')
 
 module.exports = {
 
   new(payload, meta) {
     return {
-      type: UI.EDIT.START,
+      type: EDIT.START,
       payload: {
         tag: { name: '', ...payload, }
       },

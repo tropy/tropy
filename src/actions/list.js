@@ -1,13 +1,13 @@
 'use strict'
 
-const { LIST, UI } = require('../constants')
+const { LIST, EDIT } = require('../constants')
 const { array } = require('../common/util')
 
 module.exports = {
 
   new(payload, meta) {
     return {
-      type: UI.EDIT.START,
+      type: EDIT.START,
       payload: {
         list: { name: '', parent: LIST.ROOT, ...payload, }
       },
