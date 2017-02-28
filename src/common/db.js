@@ -14,8 +14,6 @@ const { debug, info, verbose, warn } = require('./log')
 const { entries } = Object
 const { project } = require('../models')
 
-sqlite.verbose()
-
 const M = {
   'r': sqlite.OPEN_READONLY,
   'w': sqlite.OPEN_READWRITE,
@@ -134,12 +132,10 @@ class Database extends EventEmitter {
   }
 
 
-  close() {
-    return this.pool.drain()
+  close = () =>
+    this.pool.drain()
       .then(() => this.pool.clear())
       .then(() => this.emit('close'))
-  }
-
 
   seq = (fn) =>
     using(this.acquire(), fn)

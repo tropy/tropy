@@ -27,9 +27,17 @@ module.exports = {
 
   *open(file) {
     try {
-      var db = new Database(file)
+      var db = new Database(file, 'w')
+
+      db.on('error', error => {
+        warn(`unexpected database error: ${error.message}`)
+        debug(error.stack)
+
+        throw error
+      })
 
       const project = yield call(mod.project.load, db)
+
       var { id } = project
       const cache = new Cache(ARGS.cache, id)
 
@@ -83,7 +91,7 @@ module.exports = {
           call(mod.note.prune, db)
         ]
 
-        yield call([db, db.close])
+        yield call(db.close)
       }
 
       info(`closed project ${id}`)
