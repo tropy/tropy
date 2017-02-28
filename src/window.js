@@ -31,13 +31,9 @@ class Window {
   init() {
     this.style()
 
-    ipc
-      .on('win', (_, state) => this.toggle(state))
-      .on('theme', (_, theme) => this.style(theme, true))
-      .on('refresh', () => this.style(false, true))
-
     this.handleUnload()
     this.handleTabFocus()
+    this.handleIpcEvents()
 
     const { aqua, frameless, scrollbars } = this.options
 
@@ -75,6 +71,22 @@ class Window {
     ]
   }
 
+
+  handleIpcEvents() {
+    ipc
+      .on('win', (_, state) => {
+        this.toggle(state)
+      })
+      .on('theme', (_, theme) => {
+        this.style(theme, true)
+      })
+      .on('scrollbars', (_, scrollbars) => {
+        toggle(document.body, 'scrollbar-style-old-school', scrollbars)
+      })
+      .on('refresh', () => {
+        this.style(false, true)
+      })
+  }
 
   handleUnload() {
     let unloader = 'close'

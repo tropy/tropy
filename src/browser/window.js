@@ -32,6 +32,11 @@ const AQUA = {
   6: 'graphite'
 }
 
+function hasOverlayScrollBars() {
+  return 'darwin' === process.platform &&
+    'WhenScrolling' === pref.getUserDefault('AppleShowScrollBars', 'string')
+}
+
 module.exports = {
 
   open(file, data = {}, options = {}) {
@@ -48,14 +53,10 @@ module.exports = {
           pref.getUserDefault('AppleAquaColorVariant', 'integer')
         ]
 
-        data.scrollbars = 'WhenScrolling' !==
-          pref.getUserDefault('AppleShowScrollBars', 'string')
-
         break
-
-      default:
-        data.scrollbars = true
     }
+
+    data.scrollbars = !hasOverlayScrollBars()
 
     const win = new BrowserWindow(options)
       .once('ready-to-show', () => { win.show() })
@@ -86,5 +87,5 @@ module.exports = {
     return win
   },
 
-  AQUA
+  hasOverlayScrollBars
 }

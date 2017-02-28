@@ -8,7 +8,7 @@ const {
 } = require('electron')
 
 const { verbose, warn } = require('../common/log')
-const { open } = require('./window')
+const { open, hasOverlayScrollBars } = require('./window')
 const { all } = require('bluebird')
 const { existsSync: exists } = require('fs')
 const { into, compose, remove, take } = require('transducers.js')
@@ -300,11 +300,7 @@ class Tropy extends EventEmitter {
         verbose(`switching to "${theme}" theme...`)
 
         this.state.theme = theme
-
-        for (let win of BrowserWindow.getAllWindows()) {
-          win.webContents.send('theme', theme)
-        }
-
+        this.broadcast('theme', theme)
         this.emit('app:reload-menu')
       })
 
@@ -370,14 +366,8 @@ class Tropy extends EventEmitter {
       app.on('activate', () => this.open())
 
       pref.subscribeNotification(
-        'AppleAquaColorVariantChanged', (_, info) => {
-          verbose('color variant changed!', { info })
-        }
-      )
-
-      pref.subscribeLocalNotification(
-        'AppleAquaColorVariantChanged', (_, info) => {
-          verbose('local color variant changed!', { info })
+        'AppleShowScrollBarsSettingChanged', () => {
+          this.broadcast('scrollbars', !hasOverlayScrollBars())
         }
       )
     }
@@ -434,6 +424,12 @@ class Tropy extends EventEmitter {
   dispatch(action) {
     if (this.win) {
       this.win.webContents.send('dispatch', action)
+    }
+  }
+
+  broadcast(...args) {
+    for (let win of BrowserWindow.getAllWindows()) {
+      win.webContents.send(...args)
     }
   }
 
