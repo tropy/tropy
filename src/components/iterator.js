@@ -5,6 +5,8 @@ const { PureComponent, PropTypes } = React
 const { STYLE } = require('../constants')
 const { bounds, on, off } = require('../dom')
 const { times } = require('../common/util')
+const { win } = require('../window')
+const { floor } = Math
 const { number } = PropTypes
 
 
@@ -67,7 +69,11 @@ class Iterator extends PureComponent {
   }
 
   getColumns(width, size = this.props.size) {
-    return Math.floor(width / (size * STYLE.TILE.FACTOR))
+    if (win.state.scrollbars) {
+      width = width - STYLE.SCROLLBAR.WIDTH
+    }
+
+    return floor(width / (size * STYLE.TILE.FACTOR))
   }
 
   setContainer = (container) => {

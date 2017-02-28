@@ -13,6 +13,10 @@ module.exports = {
     PADDING: 17 // top + bottom + border
   },
 
+  SCROLLBAR: {
+    WIDTH: 12
+  },
+
   TABS: {
     SearchField: 1,
     ProjectSidebar: 2,

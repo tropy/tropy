@@ -2,7 +2,7 @@
 
 const { each } = require('bluebird')
 const { remote, ipcRenderer: ipc } = require('electron')
-const { basename, resolve } = require('path')
+const { basename, resolve, join } = require('path')
 const { existsSync: exists } = require('fs')
 const { debug } = require('./common/log')
 const { EL_CAPITAN } = require('./common/os')
@@ -13,16 +13,16 @@ const {
 
 
 class Window {
-  constructor(options = ARGS) {
+  constructor({ theme, frameless, scrollbars, aqua } = ARGS) {
     if (Window.instance) {
       throw Error('Singleton Window constructor called multiple times')
     }
 
     Window.instance = this
 
-    this.options = options
-
-    this.theme = options.theme
+    this.state = {
+      aqua, frameless, scrollbars, theme
+    }
 
     this.unloaders = []
     this.hasFinishedUnloading = false
@@ -35,13 +35,13 @@ class Window {
     this.handleTabFocus()
     this.handleIpcEvents()
 
-    const { aqua, frameless, scrollbars } = this.options
+    const { aqua, frameless } = this.state
 
     if (aqua) {
       toggle(document.body, aqua, true)
     }
 
-    toggle(document.body, 'scrollbar-style-old-school', scrollbars)
+    this.setScrollBarStyle()
 
     if (frameless) {
       toggle(document.body, 'frameless', true)
@@ -64,13 +64,19 @@ class Window {
   }
 
   get stylesheets() {
+    const { theme } = this.state
+
     return [
-      `../lib/stylesheets/${process.platform}/${this.type}-${this.theme}.css`,
-      `${this.options.home}/style.css`,
-      `${this.options.home}/style-${this.theme}.css`
+      `../lib/stylesheets/${process.platform}/${this.type}-${theme}.css`,
+      join(ARGS.home, 'style.css'),
+      join(ARGS.home, `style-${theme}.css`)
     ]
   }
 
+  setScrollBarStyle(scrollbars = this.state.scrollbars) {
+    this.state.scrollbars = scrollbars
+    toggle(document.body, 'scrollbar-style-old-school', scrollbars)
+  }
 
   handleIpcEvents() {
     ipc
@@ -81,7 +87,7 @@ class Window {
         this.style(theme, true)
       })
       .on('scrollbars', (_, scrollbars) => {
-        toggle(document.body, 'scrollbar-style-old-school', scrollbars)
+        this.setScrollBarStyle(scrollbars)
         this.style(false, true)
       })
       .on('refresh', () => {
@@ -170,7 +176,7 @@ class Window {
   }
 
   style(theme, prune = false) {
-    if (theme) this.theme = theme
+    if (theme) this.state.theme = theme
 
     if (prune) {
       for (let css of $$('head > link[rel="stylesheet"]')) remove(css)
