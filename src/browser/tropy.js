@@ -368,8 +368,7 @@ class Tropy extends EventEmitter {
       const id = pref.subscribeNotification(
         'AppleShowScrollBarsSettingChanged', () => {
           this.broadcast('scrollbars', !hasOverlayScrollBars())
-        }
-      )
+        })
 
       app.on('quit', () => {
         pref.unsubscribeNotification(id)
