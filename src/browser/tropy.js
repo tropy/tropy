@@ -372,7 +372,10 @@ class Tropy extends EventEmitter {
 
         pref.subscribeNotification(
           'AppleInterfaceThemeChangedNotification', () =>
-          this.emit('app:switch-theme', pref.isDarkMode() ? 'dark' : 'light'))
+          this.emit(
+            'app:switch-theme',
+            null,
+            pref.isDarkMode() ? 'dark' : 'light'))
       ]
 
       app.on('quit', () => {
