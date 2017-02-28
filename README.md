@@ -7,21 +7,19 @@
 
 ## Development
 
-Install the latest version of Node.js (or at least the version that ships
-with the current Electron release) and run:
+Install the latest version of [Node.js](https://nodejs.org) (at least the
+version that ships with the current [Electron](https://electron.atom.io)
+release) with [`node-gyp`](https://www.npmjs.com/package/node-gyp) and all
+its requirements for your platform.
 
-     $ npm install -g node-gyp
-     $ npm install
+Then clone [this repository](https://github.com/tropy/tropy.git) and run
+`npm install` to install all of Tropy's dependencies.
 
-If rebuilding native modules fails, please ensure you have a supported C/C++
-compiler installed, see [node-gyp](https://www.npmjs.com/package/node-gyp)
-for details.
-
-Run `npm test` to run all tests; `npm run test:renderer` or
-`npm run test:browser` to run only the Renderer/Browser tests, or
-`node scripts/make mocha -- <path>` to run only a given test file.
+Run `npm test` to run all tests; `npm run test:renderer` or `npm run
+test:browser` to run only the Renderer/Browser tests, or `node scripts/make
+mocha -- <path>` to run only a given test file.
 
 See `node scripts/make rules` and `node scripts/db rules` for additional
 available targets.
 
-To start the app in development mode, run `npm start`.
+Finally, to start [Tropy](https://tropy.org) in development mode, run `npm start`.
