@@ -8,6 +8,7 @@
   margin: 0 $space-min;
   position: relative;
   display: flex; // Prevent overflow
+  flex-direction: column; // Strech scroll-container
 
   .scroll-container {
     display: flex;
