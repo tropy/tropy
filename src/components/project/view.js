@@ -57,7 +57,7 @@ class ProjectView extends PureComponent {
           value={sidebar.width}
           min={150}
           max={750}
-          onResize={this.handleSidebarResize}>
+          onChange={this.handleSidebarResize}>
           <ProjectSidebar {...pick(props, ProjectSidebar.props)}
             edit={edit}
             selectedList={nav.list}

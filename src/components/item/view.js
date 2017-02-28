@@ -52,7 +52,7 @@ class ItemView extends PureComponent {
           value={panel.width}
           min={225}
           max={750}
-          onResize={this.handlePanelResize}>
+          onChange={this.handlePanelResize}>
           <ItemPanel {...pick(props, ItemPanel.props)}
             panel={panel}
             photo={photo}
@@ -65,7 +65,7 @@ class ItemView extends PureComponent {
             edge="bottom"
             value={esper.height}
             isRelative
-            onResize={this.handleEsperResize}
+            onChange={this.handleEsperResize}
             min={20}
             max={90}>
             <EsperImage isVisible photo={photo}/>

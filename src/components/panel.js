@@ -67,7 +67,7 @@ class PanelGroup extends PureComponent {
               value={height[idx]}
               min={5}
               max={45}
-              onResize={onResize}>
+              onChange={onResize}>
               {panel}
             </Resizable>
           ))}

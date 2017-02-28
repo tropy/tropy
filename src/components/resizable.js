@@ -5,7 +5,7 @@ const { PureComponent, PropTypes } = React
 const { func, node, bool, number, oneOf } = PropTypes
 const cx = require('classnames')
 const { bounds, on, off } = require('../dom')
-const { restrict } = require('../common/util')
+const { noop, restrict } = require('../common/util')
 const { keys } = Object
 
 
@@ -75,6 +75,7 @@ class Resizable extends PureComponent {
     const value = restrict(event[AXS[edge]] - origin, min, max)
 
     this.setState({ value })
+    this.props.onResize(value)
   }
 
   start() {
@@ -95,7 +96,7 @@ class Resizable extends PureComponent {
     off(window, 'blur', this.stop)
 
     if (this.props.value !== this.state.value) {
-      this.props.onResize(this.state.value)
+      this.props.onChange(this.state.value)
     }
   }
 
@@ -133,11 +134,13 @@ class Resizable extends PureComponent {
     value: number.isRequired,
     min: number,
     max: number,
-    onResize: func.isRequired
+    onChange: func.isRequired,
+    onResize: func
   }
 
   static defaultProps = {
-    min: 0
+    min: 0,
+    onResize: noop
   }
 }
 
