@@ -2,74 +2,100 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const { array, func, bool, string, object, oneOfType } = PropTypes
 const cx = require('classnames')
 const { on, off } = require('../dom')
-const { noop } = require('../common/util')
+const { noop, pick } = require('../common/util')
+
+const {
+  array, func, bool, string, number, object, oneOfType, node
+} = PropTypes
 
 
-class DraggableHandle extends PureComponent {
+class Draggable extends PureComponent {
   componentWillUnmount() {
     this.stop()
   }
 
   handleMouseDown = (event) => {
-    if (event.button === 0) {
-      this.handleDragStart(event)
-    }
-  }
+    if (this.isDragging) this.stop()
+    if (event.button !== 0) return
 
-  handleDrag = (event) => {
-    this.props.onDrag(event)
-  }
-
-  handleDragStart() {
-    if (this.isDragging) return
     this.isDragging = true
 
     on(document, 'mousemove', this.handleDrag)
-    on(document, 'mouseup', this.handleDragEnd, { capture: true })
-    on(document, 'mouseleave', this.handleDragEnd)
-    on(window, 'blur', this.handleDragEnd)
+    on(document, 'mouseup', this.handleDragStop, { capture: true })
+    on(document, 'mouseleave', this.handleDragStop)
+    on(window, 'blur', this.handleDragStop)
+
+    if (this.props.onMouseDown) {
+      return this.props.onMouseDown(event)
+    }
+
+    const { pageX, pageY } = event
+
+    this.delay = setTimeout(() =>
+      this.handleDrag({ pageX, pageY }), this.props.delay)
   }
 
-  handleDragEnd = (event) => {
+  handleDrag = (event) => {
+    this.clear()
+    this.props.onDrag(event)
+  }
+
+  handleDragStop = (event) => {
     this.stop()
 
     if (!this.isDragging) return
     this.isDragging = false
 
-    this.props.onDragEnd(event)
+    this.props.onDragStop(event)
+  }
+
+  clear() {
+    if (this.delay) clearTimeout(this.delay)
+    this.delay = null
   }
 
   stop() {
+    this.clear()
+
     off(document, 'mousemove', this.handleDrag)
-    off(document, 'mouseup', this.handleDragEnd, { capture: true })
-    off(document, 'mouseleave', this.handleDragEnd)
-    off(window, 'blur', this.handleDragEnd)
+    off(document, 'mouseup', this.handleDragStop, { capture: true })
+    off(document, 'mouseleave', this.handleDragStop)
+    off(window, 'blur', this.handleDragStop)
   }
 
   render() {
+    const { children, classes, isDisabled, ...props } = this.props
+
     return (
-      <div
-        className={cx(this.props.classes)}
-        onMouseDown={this.props.isDisabled ? null : this.handleMouseDown}/>
+      <div {...pick(props, ['tabIndex', 'style'])}
+        className={cx(classes)}
+        onMouseDown={isDisabled ? null : this.handleMouseDown}>
+        {children}
+      </div>
     )
   }
 
   static propTypes = {
+    children: node,
     classes: oneOfType([string, array, object]),
+    delay: number,
     isDisabled: bool,
+    style: object,
+    tabIndex: number,
     onDrag: func,
-    onDragEnd: func,
-    onDragStart: func
+    onDragStop: func,
+    onMouseDown: func
   }
 
   static defaultProps = {
-    onDrag: noop, onDragEnd: noop, onDragStart: noop
+    delay: 250,
+    onDrag: noop,
+    onDragStop: noop
   }
 }
 
 module.exports = {
-  DraggableHandle
+  Draggable
 }

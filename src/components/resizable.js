@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent, PropTypes } = React
 const { func, node, bool, number, oneOf } = PropTypes
-const { DraggableHandle } = require('./draggable')
+const { Draggable } = require('./draggable')
 const cx = require('classnames')
 const { bounds } = require('../dom')
 const { noop, restrict } = require('../common/util')
@@ -79,9 +79,9 @@ class Resizable extends PureComponent {
     const { edge, isDisabled } = this.props
 
     return !isDisabled && (
-      <DraggableHandle
+      <Draggable
         onDrag={this.handleDrag}
-        onDragEnd={this.handleDragEnd}
+        onDragStop={this.handleDragStop}
         classes={cx([
           `resizable-handle-${DIR[edge]}`,
           `resizable-handle-${edge}`

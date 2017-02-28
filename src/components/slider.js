@@ -3,8 +3,8 @@
 const React = require('react')
 const { PureComponent, PropTypes } = React
 const { IconButton } = require('./button')
-const cx = require('classnames')
-const { bounds, borders, on, off } = require('../dom')
+const { Draggable } = require('./draggable')
+const { bounds, borders } = require('../dom')
 const { restrict } = require('../common/util')
 const { bool, element, func, number, oneOf } = PropTypes
 const { round } = Math
@@ -26,18 +26,24 @@ class Slider extends PureComponent {
     }
   }
 
-  componentWillUnmount() {
-    if (this.state.isDragging) {
-      this.stopDragging()
+  get offset() {
+    return this.state.value - this.props.min
+  }
+
+  get delta() {
+    return this.props.max - this.props.min
+  }
+
+  get classes() {
+    return {
+      slider: true,
+      [`slider-${this.props.size}`]: true,
+      disabled: this.props.isDisabled
     }
   }
 
-  update = (event) => {
-    if (this.delayed) {
-      clearTimeout(this.delayed)
-      this.delayed = null
-    }
 
+  handleDrag = ({ pageX }) => {
     const { min, max } = this.props
     const box = bounds(this.track)
     const border = borders(this.track)
@@ -45,17 +51,10 @@ class Slider extends PureComponent {
     const left = box.left + border.left
     const width = box.width - border.left - border.right
 
-    this.set(min + restrict((event.pageX - left) / width, 0, 1) * max)
+    this.set(min + restrict((pageX - left) / width, 0, 1) * max)
   }
 
-  handleMouseDown = ({ button, pageX }) => {
-    if (button !== 0) return
-
-    this.delayed = setTimeout(() => this.update({ pageX }), 50)
-    this.startDragging()
-  }
-
-  set = (value) => {
+  set(value) {
     this.setState({ value })
 
     const nearest = round(value)
@@ -74,46 +73,6 @@ class Slider extends PureComponent {
   }
 
   setTrack = (track) => this.track = track
-
-  get offset() {
-    return this.state.value - this.props.min
-  }
-
-  get delta() {
-    return this.props.max - this.props.min
-  }
-
-  get classes() {
-    return {
-      slider: true,
-      [`slider-${this.props.size}`]: true,
-      isDisabled: this.props.isDisabled,
-      isDragging: this.state.isDragging
-    }
-  }
-
-  startDragging() {
-    this.setState({ isDragging: true })
-
-    on(document, 'mousemove', this.update)
-    on(document, 'mouseup', this.stopDragging, { capture: true })
-    on(document, 'mouseleave', this.stopDragging)
-    on(window, 'blur', this.stopDragging)
-  }
-
-  stopDragging = () => {
-    this.setState({ isDragging: false })
-
-    off(document, 'mousemove', this.update)
-    off(document, 'mouseup', this.stopDragging, { capture: true })
-    off(document, 'mouseleave', this.stopDragging)
-    off(window, 'blur', this.stopDragging)
-
-    if (this.delayed) {
-      clearTimeout(this.delayed)
-      this.delayed = null
-    }
-  }
 
 
   renderMinButton() {
@@ -153,9 +112,11 @@ class Slider extends PureComponent {
     const percentage = `${100 * offset / delta}%`
 
     return (
-      <div
-        className={cx(this.classes)}
-        onMouseDown={isDisabled ? null : this.handleMouseDown}>
+      <Draggable
+        classes={this.classes}
+        delay={15}
+        isDisabled={isDisabled}
+        onDrag={this.handleDrag}>
         {this.renderMinButton()}
         <div ref={this.setTrack} className="slider-track">
           <div className="slider-range" style={{ width: percentage }}/>
@@ -165,7 +126,7 @@ class Slider extends PureComponent {
             style={{ left: percentage }}/>
         </div>
         {this.renderMaxButton()}
-      </div>
+      </Draggable>
     )
   }
 
