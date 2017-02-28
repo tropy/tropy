@@ -2,7 +2,9 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const { arrayOf, number, shape } = PropTypes
+const { arrayOf, number, shape, string } = PropTypes
+const { connect } = require('react-redux')
+const { getVisibleTags } = require('../../selectors')
 
 
 class TagPanel extends PureComponent {
@@ -17,11 +19,16 @@ class TagPanel extends PureComponent {
 
   static propTypes = {
     tags: arrayOf(shape({
-      id: number.isRequired
+      id: number.isRequired,
+      name: string.isRequired
     })).isRequired
   }
 }
 
 module.exports = {
-  TagPanel
+  TagPanel: connect(
+    (state) => ({
+      tags: getVisibleTags(state)
+    })
+  )(TagPanel)
 }

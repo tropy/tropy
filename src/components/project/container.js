@@ -17,11 +17,11 @@ const cx = require('classnames')
 const actions = require('../../actions')
 
 const { getCachePrefix } = require('../../selectors/project')
-const { getAllVisibleTags } = require('../../selectors/tag')
 const { getTemplates } = require('../../selectors/templates')
 
 const {
-  getBusyActivities,
+  getActivities,
+  getAllTags,
   getColumns,
   getSelectedItems,
   getSelectedPhoto,
@@ -255,11 +255,11 @@ const DropTargetSpec = {
 module.exports = {
   ProjectContainer: connect(
     state => ({
-      activities: getBusyActivities(state),
+      activities: getActivities(state),
       project: state.project,
       mode: state.nav.mode,
       lists: state.lists,
-      tags: getAllVisibleTags(state),
+      tags: getAllTags(state),
       columns: getColumns(state),
       items: getVisibleItems(state),
       selection: getSelectedItems(state),

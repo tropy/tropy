@@ -6,7 +6,7 @@ const { FormattedMessage } = require('react-intl')
 const { Tab, Tabs } = require('../tabs')
 const { IconMetadata, IconTag } = require('../icons')
 const { MetadataPanel } = require('../metadata')
-const { TagPanel } = require('../metadata')
+const { TagPanel } = require('../tag')
 const { PANEL: { METADATA, TAGS } } = require('../../constants/ui')
 const { array, func, oneOf } = PropTypes
 
@@ -56,33 +56,27 @@ class ItemTabs extends PureComponent {
 
 class ItemTab extends PureComponent {
   render() {
-    const { items, tab, tags, ...props } = this.props
+    const { items, tab, ...props } = this.props
 
-    switch (items.length) {
-      case 0:
-        return  null
-      case 1:
-        switch (tab) {
-          case METADATA:
-            return (
-              <MetadataPanel {...props} item={items[0]}/>
-            )
-          case TAGS:
-            return (
-              <TagPanel {...props} tags={tags}/>
-            )
-          default:
-            return null
+    if (!items.length) return null
+
+    switch (tab) {
+      case METADATA:
+        if (items.length === 1) {
+          return <MetadataPanel {...props} item={items[0]}/>
+        } else {
+          return null // BulkEditor
         }
+      case TAGS:
+        return <TagPanel {...props}/>
       default:
-        return null // BulkEditor
+        return null
     }
   }
 
   static propTypes = {
     items: array.isRequired,
-    tab: oneOf([METADATA, TAGS]).isRequired,
-    tags: array.isRequired,
+    tab: oneOf([METADATA, TAGS]).isRequired
   }
 }
 

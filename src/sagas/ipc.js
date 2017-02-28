@@ -9,7 +9,7 @@ const { ipcRenderer: ipc } = require('electron')
 const { warn, debug } = require('../common/log')
 const { identity } = require('../common/util')
 const history = require('../selectors/history')
-const { getAllVisibleTags } = require('../selectors/tag')
+const { getAllTags } = require('../selectors')
 const { TAG, HISTORY, CONTEXT, ITEM } = require('../constants')
 const { darwin } = require('../common/os')
 const { delay } = require('../common/util')
@@ -65,7 +65,7 @@ const FILTER = {
   },
 
   *[TAG.CHANGED]() {
-    return yield select(getAllVisibleTags)
+    return yield select(getAllTags)
   },
 
   *[ITEM.PREVIEW](item) {
