@@ -3,7 +3,7 @@
 const { BrowserWindow, systemPreferences: pref } = require('electron')
 const { resolve, join } = require('path')
 const { format } = require('url')
-const { EL_CAPITAN, darwin } = require('../common/os')
+const { EL_CAPITAN } = require('../common/os')
 const { warn } = require('../common/log')
 
 const ROOT = resolve(__dirname, '..', '..', 'static')
@@ -37,15 +37,22 @@ module.exports = {
   open(file, data = {}, options = {}) {
     options = { ...DEFAULTS, ...options }
 
-    if (darwin) {
-      if (!options.frame && EL_CAPITAN) {
-        options.frame = true
-        options.titleBarStyle = 'hidden-inset'
-      }
+    switch (process.platform) {
+      case 'darwin':
+        if (!options.frame && EL_CAPITAN) {
+          options.frame = true
+          options.titleBarStyle = 'hidden-inset'
+        }
 
-      data.aqua = AQUA[
-        pref.getUserDefault('AppleAquaColorVariant', 'integer')
-      ]
+        data.aqua = AQUA[
+          pref.getUserDefault('AppleAquaColorVariant', 'integer')
+        ]
+
+        data.scrollbars = pref.getUserDefault('AppleShowScrollBars', 'string')
+        break
+
+      default:
+        data.scrollbars = 'always'
     }
 
     const win = new BrowserWindow(options)
@@ -75,5 +82,7 @@ module.exports = {
     }))
 
     return win
-  }
+  },
+
+  AQUA
 }

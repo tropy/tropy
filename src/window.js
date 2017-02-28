@@ -43,6 +43,10 @@ class Window {
       toggle(document.body, this.options.aqua, true)
     }
 
+    if (this.options.scrollbars === 'always') {
+      toggle(document.body, 'scrollbar-style-old-school', true)
+    }
+
     if (this.options.frameless) {
       toggle(document.body, 'frameless', true)
 
