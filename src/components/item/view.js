@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent, PropTypes } = React
 const { ItemPanel } = require('./panel')
 const { Resizable } = require('../resizable')
-const { Image } = require('../image')
+const { EsperImage } = require('../esper')
 const { NotePad } = require('../note')
 const { MODE } = require('../../constants/project')
 const { pick } = require('../../common/util')
@@ -68,7 +68,7 @@ class ItemView extends PureComponent {
             onResize={this.handleEsperResize}
             min={20}
             max={90}>
-            <Image isVisible photo={photo}/>
+            <EsperImage isVisible photo={photo}/>
           </Resizable>
           <NotePad/>
         </div>

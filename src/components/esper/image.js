@@ -4,8 +4,8 @@ const React = require('react')
 const { PropTypes } = React
 const { Toolbar } = require('../toolbar')
 
-const Image = ({ photo, isVisible }) => (
-  <section id="image">
+const EsperImage = ({ photo, isVisible }) => (
+  <section id="esper">
     <header>
       <Toolbar draggable={ARGS.frameless}/>
     </header>
@@ -16,15 +16,15 @@ const Image = ({ photo, isVisible }) => (
   </section>
 )
 
-Image.propTypes = {
+EsperImage.propTypes = {
   photo: PropTypes.object,
   isVisible: PropTypes.bool
 }
 
-Image.defaultProps = {
+EsperImage.defaultProps = {
   isVisible: false
 }
 
 module.exports = {
-  Image
+  EsperImage
 }
