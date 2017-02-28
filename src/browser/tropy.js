@@ -217,7 +217,11 @@ class Tropy extends EventEmitter {
   }
 
   persist() {
-    return this.store.save.sync('state.json', this.state), this
+    if (this.state != null) {
+      this.store.save.sync('state.json', this.state)
+    }
+
+    return this
   }
 
   listen() {
