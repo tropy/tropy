@@ -5,12 +5,8 @@
 .scrollbar-style-old-school {
   ::-webkit {
     &-scrollbar {
-      width: 12px;
-      height: 12px;
-
-      &:vertical {
-        margin-right: 20px;
-      }
+      width: $scrollbar-size;
+      height: $scrollbar-size;
 
       &-track {
         background: $scrollbar-bg;
@@ -22,11 +18,13 @@
         border: 4px solid $scrollbar-bg;
         background-clip: content-box;
 
-        &:vertical {
-          &:active {
-            border: 0;
-          }
+        &:active {
+          border-width: 2px;
         }
+      }
+
+      &-corner {
+        background: $scrollbar-bg;
       }
     }
   }
