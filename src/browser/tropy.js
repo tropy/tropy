@@ -2,7 +2,11 @@
 
 const { EventEmitter } = require('events')
 const { resolve } = require('path')
-const { app, shell, ipcMain: ipc, BrowserWindow } = require('electron')
+
+const {
+  app, shell, ipcMain: ipc, BrowserWindow, systemPreferences: pref
+} = require('electron')
+
 const { verbose, warn } = require('../common/log')
 const { open } = require('./window')
 const { all } = require('bluebird')
@@ -364,6 +368,18 @@ class Tropy extends EventEmitter {
 
     if (darwin) {
       app.on('activate', () => this.open())
+
+      pref.subscribeNotification(
+        'AppleAquaColorVariantChanged', (_, info) => {
+          verbose('color variant changed!', { info })
+        }
+      )
+
+      pref.subscribeLocalNotification(
+        'AppleAquaColorVariantChanged', (_, info) => {
+          verbose('local color variant changed!', { info })
+        }
+      )
     }
 
     ipc
