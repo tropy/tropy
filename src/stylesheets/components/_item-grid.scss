@@ -15,6 +15,7 @@
     flex-wrap: wrap;
     align-content: flex-start;
     padding: $space-min;
+    overflow-y: scroll;
   }
 
   &.over {
