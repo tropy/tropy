@@ -14,17 +14,17 @@ const START = performance.now()
 const { verbose } = require('./common/log')(ARGS.home, ARGS)
 const { remote } = require('electron')
 const { ready } = require('./dom')
+const { win } = require('./window')
 
 ready.then(() => {
   const READY = performance.now()
-  const Window = require('./window')
 
-  Window.setup()
+  win.init()
 
   const DONE = performance.now()
 
   verbose('%s ready after %dms (%dms)',
-      Window.type, (DONE - START).toFixed(3), (DONE - READY).toFixed(3))
+      win.type, (DONE - START).toFixed(3), (DONE - READY).toFixed(3))
 })
 
 

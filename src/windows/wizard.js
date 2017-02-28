@@ -8,7 +8,7 @@ const { create } = require('../stores/wizard')
 const { Main } = require('../components/main')
 const { Wizard } = require('../components/wizard')
 const { getMessages } = require('../actions/intl')
-const { unloaders } = require('../window')
+const { win } = require('../window')
 const dialog = require('../dialog')
 
 const store = create()
@@ -25,4 +25,4 @@ all([
   })
 
 dialog.start()
-unloaders.push(dialog.stop)
+win.unloaders.push(dialog.stop)

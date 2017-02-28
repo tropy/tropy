@@ -10,7 +10,7 @@ const { ProjectContainer } = require('../components/project')
 const { getMessages } = require('../actions/intl')
 const { open } = require('../actions/project')
 const { main } = require('../sagas/project')
-const { unloaders } = require('../window')
+const { win } = require('../window')
 const dialog = require('../dialog')
 
 const store = create()
@@ -30,8 +30,8 @@ all([
 
 dialog.start()
 
-unloaders.push(dialog.stop)
-unloaders.push(() => (tasks.cancel(), tasks.done))
+win.unloaders.push(dialog.stop)
+win.unloaders.push(() => (tasks.cancel(), tasks.done))
 
 if (ARGS.dev || ARGS.debug) {
   Object.defineProperty(window, 'store', { get: () => store })

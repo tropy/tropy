@@ -11,41 +11,160 @@ const {
   $$, append, emit, create, on, once, toggle, stylesheet, remove
 } = require('./dom')
 
-const Window = {
+
+class Window {
+  constructor(options = ARGS) {
+    if (Window.instance) {
+      throw Error('Singleton Window constructor called multiple times')
+    }
+
+    Window.instance = this
+
+    this.options = options
+
+    this.theme = options.theme
+
+    this.unloaders = []
+    this.hasFinishedUnloading = false
+  }
+
+  init() {
+    this.style()
+
+    ipc
+      .on('win', (_, state) => this.toggle(state))
+      .on('theme', (_, theme) => this.style(theme, true))
+      .on('refresh', () => this.style(false, true))
+
+    this.handleUnload()
+    this.handleTabFocus()
+
+    if (this.options.aqua) {
+      toggle(document.body, this.options.aqua, true)
+    }
+
+    if (this.options.frameless) {
+      toggle(document.body, 'frameless', true)
+
+      if (EL_CAPITAN) {
+        toggle(document.body, 'el-capitan', true)
+
+      } else {
+        this.createWindowControls()
+      }
+    }
+  }
 
   get current() {
     return remote.getCurrentWindow()
-  },
+  }
 
   get type() {
     return basename(window.location.pathname, '.html')
-  },
+  }
 
-  styles() {
-    debug(`applying ${Window.type} ${Window.theme} styles`)
-
+  get stylesheets() {
     return [
-      `../lib/stylesheets/${process.platform}/${Window.type}-${Window.theme}.css`,
-      `${ARGS.home}/style.css`,
-      `${ARGS.home}/style-${Window.theme}.css`
+      `../lib/stylesheets/${process.platform}/${this.type}-${this.theme}.css`,
+      `${this.options.home}/style.css`,
+      `${this.options.home}/style-${this.theme}.css`
     ]
-  },
+  }
 
-  style(theme, prune = false) {
-    var css
 
-    if (theme) Window.theme = theme
+  handleUnload() {
+    let unloader = 'close'
 
-    if (prune) {
-      for (css of $$('head > link[rel="stylesheet"]')) remove(css)
+    ipc.on('reload', () => {
+      unloader = 'reload'
+      this.current.reload()
+    })
+
+    once(window, 'beforeunload', event => {
+      debug(`unloading ${this.type}...`)
+
+      event.returnValue = false
+      toggle(document.body, 'closing', true)
+
+      each(this.unloaders, unload => {
+        let res = unload()
+        return res
+      })
+        .tap(res => {
+          debug(res.length)
+          debug('unloader finished', res)
+        })
+        .finally(() => {
+          debug(`ready to close ${this.type}`)
+
+          this.hasFinishedUnloading = true
+          setTimeout(() => this.current[unloader](), 15)
+        })
+    })
+
+    on(window, 'beforeunload', event => {
+      if (!this.hasFinishedUnloading) event.returnValue = false
+    })
+  }
+
+  handleTabFocus() {
+    on(document.body, 'keydown', event => {
+      if (event.key === 'Tab' && !event.defaultPrevented) {
+        // Set up timer here to detect tab 'gap'!
+        once(document.body, 'focusin', ({ target }) => {
+          if (target) emit(target, 'tab:focus')
+        })
+      }
+    })
+  }
+
+
+  createWindowControls() {
+    this.controls = {
+      close: create('button', { tabindex: '-1', class: 'close' }),
+      min: create('button', { tabindex: '-1', class: 'minimize' }),
+      max: create('button', { tabindex: '-1', class: 'maximize' })
     }
 
-    for (css of Window.styles()) {
+    on(this.controls.close, 'click', () =>
+      this.current.close())
+
+    if (this.current.isMinimizable()) {
+      on(this.controls.min, 'click', () => this.minimize())
+
+    } else {
+      toggle(document.body, 'not-minimizable', true)
+    }
+
+    if (this.current.isMaximizable()) {
+      on(this.controls.max, 'click', () => this.maximize())
+
+    } else {
+      toggle(document.body, 'not-maximizable', true)
+    }
+
+    const div = create('div', { class: 'window-controls' })
+
+    append(this.controls.close, div)
+    append(this.controls.min, div)
+    append(this.controls.max, div)
+
+    append(div, document.body)
+  }
+
+  style(theme, prune = false) {
+    if (theme) this.theme = theme
+
+    if (prune) {
+      for (let css of $$('head > link[rel="stylesheet"]')) remove(css)
+    }
+
+    for (let css of this.stylesheets) {
       if (exists(resolve(__dirname, css))) {
         append(stylesheet(css), document.head)
       }
     }
-  },
+  }
 
   toggle(state) {
     switch (state) {
@@ -68,108 +187,20 @@ const Window = {
         toggle(document.body, 'is-full-screen', false)
         break
     }
-  },
-
-  setup() {
-    if (!Window.setup.called) {
-      Window.setup.called = true
-      Window.style(ARGS.theme)
-
-      ipc
-        .on('win', (_, state) => this.toggle(state))
-        .on('theme', (_, theme) => this.style(theme, true))
-        .on('refresh', () => this.style(false, true))
-        .on('reload', () => {
-          unloader = 'reload'
-          Window.current.reload()
-        })
-
-      on(document.body, 'keydown', event => {
-        if (event.key === 'Tab' && !event.defaultPrevented) {
-          // Set up timer here to detect tab 'gap'!
-          once(document.body, 'focusin', ({ target }) => {
-            if (target) emit(target, 'tab:focus')
-          })
-        }
-      })
-
-      Window.unloaded = false
-      let unloader = 'close'
-
-      once(window, 'beforeunload', event => {
-        debug(`unloading ${Window.type}...`)
-
-        event.returnValue = false
-        toggle(document.body, 'closing', true)
-
-        each(Window.unloaders, unload => unload())
-          .finally(() => {
-            debug(`ready to close ${Window.type}`)
-
-            Window.unloaded = true
-            setTimeout(() => Window.current[unloader](), 15)
-          })
-      })
-
-      on(window, 'beforeunload', event => {
-        if (!Window.unloaded) event.returnValue = false
-      })
-
-
-      if (ARGS.aqua) toggle(document.body, ARGS.aqua, true)
-
-      if (ARGS.frameless) {
-        toggle(document.body, 'frameless', true)
-
-        if (EL_CAPITAN) {
-          toggle(document.body, 'el-capitan', true)
-
-        } else {
-          Window.controls = {
-            close: create('button', { tabindex: '-1', class: 'close' }),
-            min: create('button', { tabindex: '-1', class: 'minimize' }),
-            max: create('button', { tabindex: '-1', class: 'maximize' })
-          }
-
-          on(Window.controls.close, 'click', () =>
-              Window.current.close())
-
-          if (Window.current.isMinimizable()) {
-            on(Window.controls.min, 'click', () => Window.minimize())
-
-          } else {
-            toggle(document.body, 'not-minimizable', true)
-          }
-
-          if (Window.current.isMaximizable()) {
-            on(Window.controls.max, 'click', () => Window.maximize())
-
-          } else {
-            toggle(document.body, 'not-maximizable', true)
-          }
-
-          const div = create('div', { class: 'window-controls' })
-
-          append(Window.controls.close, div)
-          append(Window.controls.min, div)
-          append(Window.controls.max, div)
-
-          append(div, document.body)
-        }
-      }
-    }
-  },
+  }
 
   maximize() {
-    Window.current.isMaximized() ?
-      Window.current.unmaximize() : Window.current.maximize()
-  },
+    this.current.isMaximized() ?
+      this.current.unmaximize() : this.current.maximize()
+  }
 
   minimize() {
-    Window.current.minimize()
+    this.current.minimize()
   }
 }
 
-Window.unloaders = []
+module.exports = {
+  Window,
 
-module.exports = Window
+  get win() { return Window.instance || new Window() }
+}

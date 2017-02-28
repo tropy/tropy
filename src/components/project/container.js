@@ -12,7 +12,7 @@ const { extname } = require('path')
 const { MODE } = require('../../constants/project')
 const { once } = require('../../dom')
 const { values } = Object
-const Window = require('../../window')
+const { win } = require('../../window')
 const cx = require('classnames')
 const actions = require('../../actions')
 
@@ -280,7 +280,7 @@ module.exports = {
 
     dispatch => ({
       onMaximize() {
-        Window.maximize()
+        win.maximize()
       },
 
       onContextMenu(event, ...args) {
