@@ -199,14 +199,16 @@
     animation: spin 1.2s linear infinite;
   }
 
-  ::-webkit {
-    &-scrollbar {
-      &-track {
-        background: $sidebar-bg;
-      }
+  .scrollbar-style-old-school & {
+    ::-webkit {
+      &-scrollbar {
+        &-track {
+          background: $sidebar-bg;
+        }
 
-      &-thumb {
-        border-color: $sidebar-bg;
+        &-thumb {
+          border-color: $sidebar-bg;
+        }
       }
     }
   }
