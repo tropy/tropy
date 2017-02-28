@@ -48,11 +48,13 @@ module.exports = {
           pref.getUserDefault('AppleAquaColorVariant', 'integer')
         ]
 
-        data.scrollbars = pref.getUserDefault('AppleShowScrollBars', 'string')
+        data.scrollbars = 'WhenScrolling' !==
+          pref.getUserDefault('AppleShowScrollBars', 'string')
+
         break
 
       default:
-        data.scrollbars = 'always'
+        data.scrollbars = true
     }
 
     const win = new BrowserWindow(options)

@@ -39,15 +39,15 @@ class Window {
     this.handleUnload()
     this.handleTabFocus()
 
-    if (this.options.aqua) {
-      toggle(document.body, this.options.aqua, true)
+    const { aqua, frameless, scrollbars } = this.options
+
+    if (aqua) {
+      toggle(document.body, aqua, true)
     }
 
-    if (this.options.scrollbars === 'always') {
-      toggle(document.body, 'scrollbar-style-old-school', true)
-    }
+    toggle(document.body, 'scrollbar-style-old-school', scrollbars)
 
-    if (this.options.frameless) {
+    if (frameless) {
       toggle(document.body, 'frameless', true)
 
       if (EL_CAPITAN) {
