@@ -14,7 +14,7 @@
 
   .sidebar-body {
     flex: 1 1 auto;
-    overflow-y: scroll;
+    overflow-y: auto;
     padding-top: $space-xs;
 
     .frameless & {
