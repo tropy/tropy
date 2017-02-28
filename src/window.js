@@ -82,6 +82,7 @@ class Window {
       })
       .on('scrollbars', (_, scrollbars) => {
         toggle(document.body, 'scrollbar-style-old-school', scrollbars)
+        this.style(false, true)
       })
       .on('refresh', () => {
         this.style(false, true)
