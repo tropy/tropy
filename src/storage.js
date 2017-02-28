@@ -21,8 +21,10 @@ class Storage {
   }
 
   save(name, object) {
-    localStorage.setItem(this.expand(name), JSON.stringify(object))
-    verbose(`${this.expand(name)} persisted`)
+    if (object != null) {
+      localStorage.setItem(this.expand(name), JSON.stringify(object))
+      verbose(`${this.expand(name)} persisted`)
+    }
 
     return this
   }
