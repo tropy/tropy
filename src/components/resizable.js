@@ -3,8 +3,9 @@
 const React = require('react')
 const { PureComponent, PropTypes } = React
 const { func, node, bool, number, oneOf } = PropTypes
+const { DraggableHandle } = require('./draggable')
 const cx = require('classnames')
-const { bounds, on, off } = require('../dom')
+const { bounds } = require('../dom')
 const { noop, restrict } = require('../common/util')
 const { keys } = Object
 
@@ -32,13 +33,6 @@ class Resizable extends PureComponent {
 
     this.state = {
       value: props.value,
-      isDragging: false
-    }
-  }
-
-  componentWillUnmount() {
-    if (this.state.isDragging) {
-      this.stop()
     }
   }
 
@@ -60,15 +54,11 @@ class Resizable extends PureComponent {
     }
   }
 
-  handleMouseDown = ({ button }) => {
-    if (button === 0) this.start()
-  }
-
   setContainer = (container) => {
     this.container = container
   }
 
-  update = (event) => {
+  handleDrag = (event) => {
     const { edge, min, max } = this.props
 
     const origin = bounds(this.container)[OPP[edge]]
@@ -78,23 +68,7 @@ class Resizable extends PureComponent {
     this.props.onResize(value)
   }
 
-  start() {
-    this.setState({ isDragging: true })
-
-    on(document, 'mousemove', this.update)
-    on(document, 'mouseup', this.stop, { capture: true })
-    on(document, 'mouseleave', this.stop)
-    on(window, 'blur', this.stop)
-  }
-
-  stop = () => {
-    this.setState({ isDragging: false })
-
-    off(document, 'mousemove', this.update)
-    off(document, 'mouseup', this.stop, { capture: true })
-    off(document, 'mouseleave', this.stop)
-    off(window, 'blur', this.stop)
-
+  handleDragStop = () => {
     if (this.props.value !== this.state.value) {
       this.props.onChange(this.state.value)
     }
@@ -105,9 +79,10 @@ class Resizable extends PureComponent {
     const { edge, isDisabled } = this.props
 
     return !isDisabled && (
-      <div
-        onMouseDown={this.handleMouseDown}
-        className={cx([
+      <DraggableHandle
+        onDrag={this.handleDrag}
+        onDragEnd={this.handleDragEnd}
+        classes={cx([
           `resizable-handle-${DIR[edge]}`,
           `resizable-handle-${edge}`
         ])}/>
