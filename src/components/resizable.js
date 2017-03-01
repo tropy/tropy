@@ -40,6 +40,14 @@ class Resizable extends PureComponent {
     this.setState({ value: props.value })
   }
 
+  get classes() {
+    return {
+      resizable: true,
+      disabled: this.props.isDisabled,
+      flex: this.isFlex
+    }
+  }
+
   get dimension() {
     return DIM[this.props.edge]
   }
@@ -49,9 +57,13 @@ class Resizable extends PureComponent {
   }
 
   get style() {
-    return {
+    return this.isFlex ? null : {
       [this.dimension]: this.value
     }
+  }
+
+  get isFlex() {
+    return this.state.value == null
   }
 
   get isInverse() {
@@ -63,7 +75,7 @@ class Resizable extends PureComponent {
   }
 
   handleDrag = (event) => {
-    const { edge, min, max, isRelative, validate } = this.props
+    const { edge, min, max, index, isRelative, onValidate } = this.props
 
     let origin = bounds(this.container)[OPP[edge]]
     let value = event[AXS[edge]] - origin
@@ -79,15 +91,15 @@ class Resizable extends PureComponent {
       value = restrict(value, null, 100)
     }
 
-    if (validate && !validate(value, this)) return
-
-    this.setState({ value })
-    this.props.onResize(value)
+    if (onValidate(value, index)) {
+      this.setState({ value })
+      this.props.onResize(value, index)
+    }
   }
 
   handleDragStop = () => {
     if (this.props.value !== this.state.value) {
-      this.props.onChange(this.state.value)
+      this.props.onChange(this.state.value, this.props.index)
     }
   }
 
@@ -95,8 +107,9 @@ class Resizable extends PureComponent {
   renderHandle() {
     const { edge, isDisabled } = this.props
 
-    return !isDisabled && (
+    return (
       <Draggable
+        isDisabled={isDisabled || this.isFlex}
         onDrag={this.handleDrag}
         onDragStop={this.handleDragStop}
         classes={cx([
@@ -109,8 +122,8 @@ class Resizable extends PureComponent {
   render() {
     return (
       <div
+        className={cx(this.classes)}
         ref={this.setContainer}
-        className="resizable"
         style={this.style}>
         {this.props.children}
         {this.renderHandle()}
@@ -121,19 +134,21 @@ class Resizable extends PureComponent {
   static propTypes = {
     children: node,
     edge: oneOf(keys(DIM)).isRequired,
+    index: number,
     isDisabled: bool,
     isRelative: bool,
-    value: number.isRequired,
-    min: number,
+    value: number,
+    min: number.isRequired,
     max: number,
     onChange: func.isRequired,
-    onResize: func,
-    validate: func
+    onResize: func.isRequired,
+    onValidate: func.isRequired
   }
 
   static defaultProps = {
     min: 0,
-    onResize: noop
+    onResize: noop,
+    onValidate: () => true
   }
 }
 

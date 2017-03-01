@@ -62,7 +62,7 @@ class ItemPanel extends PureComponent {
 
     return (
       <PanelGroup
-        height={[33.33, 33.33, 33.33]}
+        slots={panel.slots}
         onResize={this.handleResize}
         header={
           <ItemToolbar
@@ -114,6 +114,7 @@ class ItemPanel extends PureComponent {
     notes: array.isRequired,
 
     panel: shape({
+      slots: array.isRequired,
       tab: string.isRequired,
       zoom: number.isRequired
     }).isRequired,

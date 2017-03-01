@@ -5,7 +5,7 @@ const { PureComponent, PropTypes, Children } = React
 const { only } = require('./util')
 const { Resizable } = require('./resizable')
 const cx = require('classnames')
-const { func, node, arrayOf, number } = PropTypes
+const { bool, func, node, arrayOf, number, shape } = PropTypes
 const { PANEL } = require('../constants/style')
 
 
@@ -48,39 +48,92 @@ class Panel extends PureComponent {
 
 
 class PanelGroup extends PureComponent {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      slots: this.prepare(props.slots)
+    }
+  }
+
+  componentWillReceiveProps(props) {
+    if (this.props.slots !== props.slots) {
+      this.setState = {
+        slots: this.prepare(props.slots)
+      }
+    }
+  }
+
+  prepare(slots) {
+    let flex
+
+    slots = slots.map((slot, index) => {
+      if (!slot.isClosed) flex = index
+      return { ...slot }
+    })
+
+    if (flex != null) {
+      slots[flex].isFlex = true
+    }
+
+    return slots
+  }
+
+  handleResize = (height, index) => {
+    // eslint-disable-next-line no-console
+    console.log('resize', height, index)
+  }
+
+  handleValidate = (height, index) => {
+    // eslint-disable-next-line no-console
+    console.log('validate', height, index)
+    return true
+  }
+
+  renderPanel = (panel, index) => {
+    const slot = this.state.slots[index]
+
+    const value = slot.isClosed ?
+      PANEL.MIN : (slot.isFlex ?  null : slot.height)
+
+    return (
+      <Resizable
+        key={index}
+        index={index}
+        edge="bottom"
+        min={PANEL.MIN}
+        value={value}
+        isDisabled={slot.isClosed || slot.isFlex}
+        isRelative={!slot.isClosed}
+        onChange={this.handleResize}
+        onValidate={this.handleValidate}>
+        {panel}
+      </Resizable>
+    )
+  }
+
   render() {
-    const { header, children, height, onResize } = this.props
-
-    const panels = Children.toArray(children)
-    const last = panels.pop()
-
     return (
       <div id="panel-group">
         <header className="panel-group-header">
-          {header}
+          {this.props.header}
         </header>
         <div className="panel-group-body">
-          {panels.map((panel, idx) => (
-            <Resizable
-              key={idx}
-              isRelative
-              edge="bottom"
-              value={height[idx]}
-              min={PANEL.MIN}
-              onChange={onResize}>
-              {panel}
-            </Resizable>
-          ))}
-          {last}
+          {Children.toArray(this.props.children).map(this.renderPanel)}
         </div>
       </div>
     )
   }
 
   static propTypes = {
-    header: node,
-    height: arrayOf(number),
     children: only(Panel),
+    header: node,
+
+    slots: arrayOf(shape({
+      height: number.isRequired,
+      isClosed: bool
+    })).isRequired,
+
     onResize: func.isRequired
   }
 }

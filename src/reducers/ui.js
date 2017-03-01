@@ -5,7 +5,16 @@ const { merge } = require('../common/util')
 
 const init = {
   esper: { height: 50 },
-  panel: { tab: 'metadata', width: 320, zoom: 0 },
+  panel: {
+    slots: [
+      { height: 34, isClosed: false },
+      { height: 34, isClosed: false },
+      { height: 32, isClosed: false }
+    ],
+    tab: 'metadata',
+    width: 320,
+    zoom: 0
+  },
   sidebar: { width: 250 },
   zoom: 0
 }
