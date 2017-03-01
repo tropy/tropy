@@ -5,7 +5,7 @@ const { PropTypes } = React
 const { Toolbar } = require('../toolbar')
 
 const EsperImage = ({ photo, isVisible }) => (
-  <section id="esper">
+  <section className="esper">
     <header>
       <Toolbar draggable={ARGS.frameless}/>
     </header>

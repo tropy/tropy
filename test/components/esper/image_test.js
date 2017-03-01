@@ -6,8 +6,8 @@ const { shallow } = require('enzyme')
 describe('EsperImage', () => {
   const { EsperImage } = __require('components/esper/image')
 
-  it('has id esper', () => {
-    expect(shallow(<EsperImage/>)).to.have.id('esper')
+  it('has class esper', () => {
+    expect(shallow(<EsperImage/>)).to.have.className('esper')
   })
 
 })
