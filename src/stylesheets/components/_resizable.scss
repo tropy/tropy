@@ -12,6 +12,10 @@ $resizable-threshold: 8px !default;
 
   &.disabled {
     flex: 1 1 0;
+
+    &.fixed {
+      flex: none;
+    }
   }
 }
 
