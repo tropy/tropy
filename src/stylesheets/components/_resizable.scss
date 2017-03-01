@@ -10,12 +10,8 @@ $resizable-threshold: 8px !default;
   flex-direction: column;
   position: relative;
 
-  &.disabled {
+  &.flex {
     flex: 1 1 0;
-
-    &.fixed {
-      flex: none;
-    }
   }
 }
 
