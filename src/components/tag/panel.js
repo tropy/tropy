@@ -11,9 +11,11 @@ class TagPanel extends PureComponent {
 
   render() {
     return (
-      <ul>
-        {this.props.tags.map(tag => <li key={tag.id}>{tag.name}</li>)}
-      </ul>
+      <div className="tag tab-pane">
+        <ul>
+          {this.props.tags.map(tag => <li key={tag.id}>{tag.name}</li>)}
+        </ul>
+      </div>
     )
   }
 
