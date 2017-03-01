@@ -2,6 +2,10 @@
 // Cover image
 // --------------------------------------------------
 
+$background-dark: #777;
+$background-light: #999;
+$white: #fff;
+
 .cover-image {
   box-sizing: content-box;
   position: relative;
@@ -17,19 +21,33 @@
 
   .line {
     background: $stack-color;
-    margin-bottom: 1px;
+    border-bottom: 1px solid $stack-color;
+    position: relative;
 
     $i: $tile-thumbnail-size-min;
 
     @while $i <= $tile-thumbnail-size-max {
       [data-size="#{$i}"] & {
+        $percentage: percentage(1);
+
+        @if $i < ($tile-thumbnail-size-max / 2) {
+          $percentage: percentage(($i * 2 / $tile-thumbnail-size-max));
+        }
+
         height: #{round($i / 32)}px;
 
         @for $j from 1 through $stack-size-max {
           &.line-#{$j} {
             margin-left: #{round($i * $j / 16)}px;
             margin-right: #{round($i * $j / 16)}px;
+
+            border-bottom-color: mix($background-dark, $white, $percentage);
           }
+        }
+
+        &.line-2 {
+          background: mix($background-light, $background-dark, $percentage);
+          border-bottom-color: mix($background-light, $white, $percentage);
         }
       }
 
