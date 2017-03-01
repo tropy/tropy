@@ -48,7 +48,7 @@ class ItemView extends PureComponent {
     const { isItemOpen, isDisabled } = this
 
     return (
-      <section id="item-view">
+      <section className="item view">
         <Resizable
           edge={isItemOpen ? 'right' : 'left'}
           value={panel.width}

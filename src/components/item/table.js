@@ -42,7 +42,7 @@ class ItemTable extends ItemIterator {
 
     return (
       <div
-        className="item-table"
+        className="item table"
         ref={this.setContainer}
         tabIndex={this.tabIndex}
         onKeyDown={this.handleKeyDown}>

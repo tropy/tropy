@@ -7,8 +7,8 @@ const { noop } = __require('common/util')
 describe('ItemTable', () => {
   const { ItemTable } = __require('components/item/table')
 
-  it('has class item-table', () => {
+  it('has classes item and table', () => {
     expect(shallow(<ItemTable items={[]} columns={[]} dt={noop}/>))
-      .to.have.className('item-table')
+      .to.have.className('item table')
   })
 })
