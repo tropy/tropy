@@ -58,7 +58,7 @@ class MetadataPanel extends PureComponent {
 
   render() {
     return (
-      <div className="metadata-container">
+      <div className="metadata tab-pane">
         {this.renderItemFields()}
         {this.renderPhotoFields()}
       </div>
