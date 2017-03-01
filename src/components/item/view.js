@@ -29,10 +29,11 @@ class ItemView extends PureComponent {
   }
 
   handlePanelResize = (width) => {
-    this.props.onUiPanelUpdate({ width })
+    this.props.onUiUpdate({ panel: { width } })
   }
 
-  handleEsperResize = () => {
+  handleEsperResize = (height) => {
+    this.props.onUiUpdate({ esper: { height } })
   }
 
 
@@ -97,7 +98,7 @@ class ItemView extends PureComponent {
     }).isRequired,
 
     mode: string.isRequired,
-    onUiPanelUpdate: func.isRequired
+    onUiUpdate: func.isRequired
   }
 }
 

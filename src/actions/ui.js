@@ -17,15 +17,5 @@ module.exports = {
       payload,
       meta: { throttle: true, ...meta }
     }
-  },
-
-  panel: {
-    update(payload, meta) {
-      return {
-        type: UI.PANEL.UPDATE,
-        payload,
-        meta: { throttle: true, ...meta }
-      }
-    }
   }
 }

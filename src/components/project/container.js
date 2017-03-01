@@ -417,10 +417,6 @@ module.exports = {
 
       onUiUpdate(...args) {
         dispatch(actions.ui.update(...args))
-      },
-
-      onUiPanelUpdate(...args) {
-        dispatch(actions.ui.panel.update(...args))
       }
     })
 

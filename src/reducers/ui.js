@@ -16,12 +16,7 @@ module.exports = {
       case UI.RESTORE:
         return merge(init, payload)
       case UI.UPDATE:
-        return { ...state, ...payload }
-      case UI.PANEL.UPDATE:
-        return {
-          ...state,
-          panel: { ...state.panel, ...payload  }
-        }
+        return merge(state, payload)
       default:
         return state
     }

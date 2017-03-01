@@ -27,15 +27,15 @@ class ItemPanel extends PureComponent {
 
   handleResize = () => {
     //console.log(heights)
-    //this.props.onUiPanelUpdate({ heights })
+    //this.props.onUiUpdate({ panel: { heights } })
   }
 
   handleTabChange = (tab) => {
-    this.props.onUiPanelUpdate({ tab })
+    this.props.onUiUpdate({ panel: { tab } })
   }
 
   handleZoomChange = (zoom) => {
-    this.props.onUiPanelUpdate({ zoom })
+    this.props.onUiUpdate({ panel: { zoom } })
   }
 
 
@@ -138,7 +138,7 @@ class ItemPanel extends PureComponent {
     onPhotoCreate: func.isRequired,
     onPhotoSelect: func.isRequired,
     onPhotoSort: func.isRequired,
-    onUiPanelUpdate: func.isRequired
+    onUiUpdate: func.isRequired
   }
 
   static props = keys(ItemPanel.propTypes)
