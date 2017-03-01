@@ -54,6 +54,10 @@ class Resizable extends PureComponent {
     }
   }
 
+  get isInverse() {
+    return this.props.edge === 'left' || this.props.edge === 'top'
+  }
+
   setContainer = (container) => {
     this.container = container
   }
@@ -62,11 +66,18 @@ class Resizable extends PureComponent {
     const { edge, min, max, isRelative } = this.props
 
     let origin = bounds(this.container)[OPP[edge]]
-    let value = restrict(event[AXS[edge]] - origin, min, max)
+    let value = event[AXS[edge]] - origin
+
+    if (this.isInverse) {
+      value = -value
+    }
 
     if (isRelative) {
       value = value / bounds(this.container.parentElement)[DIM[edge]] * 100
+      value = restrict(value, 0, 100)
     }
+
+    value = restrict(value, min || 0, max)
 
     this.setState({ value })
     this.props.onResize(value)
