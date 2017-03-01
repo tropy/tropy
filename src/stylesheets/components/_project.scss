@@ -2,7 +2,7 @@
 // Project
 // --------------------------------------------------
 
-#project {
+.project {
   height: 100%;
   overflow: hidden;
 
@@ -60,4 +60,17 @@
 main {
   display: flex;
   flex: 1 1 0;
+}
+
+#items {
+  flex-basis: calc(100% - #{$panels-default-width});
+  display: flex;
+  flex-direction: column;
+
+  .toolbar {
+    padding: {
+      left: $component-padding-horizontal;
+      right: ($component-padding-horizontal + $space-min);
+    }
+  }
 }

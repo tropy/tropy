@@ -27,10 +27,8 @@
 // --------------------------------------------------
 
 @import
-  "../components/project",
   "../components/toolbar",
   "../components/sidebar",
-  "../components/items",
   "../components/panel-group",
   "../components/panel",
   "../components/viewer",
@@ -46,6 +44,8 @@
   "../components/image",
   "../components/thumbnail",
   "../components/cover-image",
+
+  "../components/project",
 
   "../components/item/view",
   "../components/item/table",

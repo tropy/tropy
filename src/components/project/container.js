@@ -62,8 +62,8 @@ class ProjectContainer extends Component {
     const { willModeChange, isModeChanging } = this.state
 
     return {
-      'project-container': true,
-      'over': isOver && canDrop,
+      project: true,
+      over: isOver && canDrop,
       [`${this.state.mode}-mode`]: true,
       [`${this.state.mode}-mode-leave`]: willModeChange,
       [`${this.state.mode}-mode-leave-active`]: isModeChanging,
@@ -146,7 +146,6 @@ class ProjectContainer extends Component {
 
     return dt(
       <div
-        id="project"
         className={cx(this.classes)}
         ref={this.setContainer}
         onContextMenu={this.handleContextMenu}>
