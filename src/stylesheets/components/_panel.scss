@@ -3,16 +3,19 @@
 // --------------------------------------------------
 
 .panel {
+  flex: 1 1 0;
   background: $panel-bg;
   display: flex;
   flex-direction: column;
   position: relative;
-  height: 100%;
   padding-bottom: $space-min;
   background-clip: content-box;
 
+  .resizable > & {
+    height: 100%;
+  }
+
   &:last-child {
-    height: (100% / 3);
     padding-bottom: 0;
   }
 

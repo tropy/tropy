@@ -5,6 +5,9 @@
 $panel-separator-color: #ddd !default;
 
 .note-list {
+  flex: 1 1 0;
+  overflow-y: auto;
+
   .note {
     padding: $note-padding-vertical $component-padding-horizontal;
     position: relative;
