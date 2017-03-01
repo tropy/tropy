@@ -229,7 +229,7 @@ describe('util', () => {
         .to.have.property('a')
         .and.eql({ x: 3, y: 2, z: 4 })
 
-      expect(merge({ a: [1] }, { b: 2, a: [3] })).to.eql({ a: [1, 3], b: 2 })
+      expect(merge({ a: [1] }, { b: 2, a: [3] })).to.eql({ a: [3], b: 2 })
     })
   })
 })

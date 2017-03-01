@@ -185,7 +185,7 @@ module.exports = {
             break
 
           case Array.isArray(value):
-            res[prop] = [...a[prop], ...value]
+            res[prop] = [...value]
             break
 
           case value instanceof Date:
