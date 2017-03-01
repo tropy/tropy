@@ -6,6 +6,7 @@ const { only } = require('./util')
 const { Resizable } = require('./resizable')
 const cx = require('classnames')
 const { func, node, arrayOf, number } = PropTypes
+const { PANEL } = require('../constants/style')
 
 
 class Panel extends PureComponent {
@@ -65,8 +66,7 @@ class PanelGroup extends PureComponent {
               isRelative
               edge="bottom"
               value={height[idx]}
-              min={5}
-              max={45}
+              min={PANEL.MIN}
               onChange={onResize}>
               {panel}
             </Resizable>

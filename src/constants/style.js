@@ -9,6 +9,7 @@ module.exports = {
   },
 
   PANEL: {
+    MIN: 26 + 4, // header height + margin
     PADDING: 12
   },
 
