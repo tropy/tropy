@@ -55,6 +55,10 @@
         &-thumb {
           border-color: $panel-bg;
         }
+
+        &-corner {
+          background: $panel-bg;
+        }
       }
     }
   }
