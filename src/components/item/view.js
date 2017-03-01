@@ -3,6 +3,7 @@
 const React = require('react')
 const { PureComponent, PropTypes } = React
 const { ItemPanel } = require('./panel')
+const { PhotoPanel } = require('../photo')
 const { Resizable } = require('../resizable')
 const { EsperImage } = require('../esper')
 const { NotePad } = require('../note')
@@ -50,7 +51,7 @@ class ItemView extends PureComponent {
         <Resizable
           edge={isItemOpen ? 'right' : 'left'}
           value={panel.width}
-          min={225}
+          min={PhotoPanel.minWidth}
           max={750}
           onChange={this.handlePanelResize}>
           <ItemPanel {...pick(props, ItemPanel.props)}

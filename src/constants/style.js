@@ -8,6 +8,10 @@ module.exports = {
     PADDING: 12 // padding + selection border
   },
 
+  PANEL: {
+    PADDING: 12
+  },
+
   ACTIVITY: {
     HEIGHT: 26,
     PADDING: 17 // top + bottom + border

@@ -9,7 +9,11 @@ const { PhotoList } = require('./list')
 const { PhotoGrid } = require('./grid')
 const { isValidImage } = require('../../image')
 const { pick, times } = require('../../common/util')
+const { win } = require('../../window')
 const { array, bool, number, func } = React.PropTypes
+
+const { TILE, PANEL, SCROLLBAR } = require('../../constants/style')
+const MAX_TILE_SIZE = 256
 
 
 class PhotoPanel extends Panel {
@@ -89,11 +93,17 @@ class PhotoPanel extends Panel {
   }
 
   static Zoom = [
-    48,
-    ...times(39, i => i * 2 + 50),
-    ...times(32, i => i * 4 + 128),
-    256
+    TILE.MIN,
+    ...times(39, i => i * 2 + TILE.MIN + 2),
+    ...times(32, i => i * 4 + MAX_TILE_SIZE / 2),
+    MAX_TILE_SIZE
   ]
+
+  static get minWidth() {
+    return win.state.scrollbars ?
+      MAX_TILE_SIZE * TILE.FACTOR + PANEL.PADDING + SCROLLBAR.WIDTH :
+      MAX_TILE_SIZE * TILE.FACTOR + PANEL.PADDING
+  }
 }
 
 
