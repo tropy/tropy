@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent, PropTypes, Children } = React
+const { PureComponent, PropTypes, Children, cloneElement: clone } = React
 const { only } = require('./util')
 const { Resizable } = require('./resizable')
 const cx = require('classnames')
@@ -14,16 +14,24 @@ class Panel extends PureComponent {
     return { 'panel-body': true }
   }
 
+  handleToggle = () => {
+    this.props.onToggle(this.props.index)
+  }
+
   renderHeader(header, props) {
+    const { isClosed } = this.props
+
     return (
-      <header className="panel-header" {...props}>
-        {header}
+      <header
+        className="panel-header" {...props}
+        onDoubleClick={this.handleToggle}>
+        {clone(header, { isClosed })}
       </header>
     )
   }
 
   renderBody(body, props) {
-    return (
+    return !this.props.isClosed && (
       <div {...props} className={cx(this.classes)}>
         {body}
       </div>
@@ -42,7 +50,10 @@ class Panel extends PureComponent {
   }
 
   static propTypes = {
-    children: node
+    children: node,
+    index: number,
+    isClosed: bool,
+    onToggle: func
   }
 }
 
@@ -50,33 +61,33 @@ class Panel extends PureComponent {
 class PanelGroup extends PureComponent {
   constructor(props) {
     super(props)
-
-    this.state = {
-      slots: this.prepare(props.slots)
-    }
+    this.state = this.prepare(props.slots)
   }
 
   componentWillReceiveProps(props) {
     if (this.props.slots !== props.slots) {
-      this.setState = {
-        slots: this.prepare(props.slots)
-      }
+      this.setState = this.prepare(props.slots)
     }
   }
 
   prepare(slots) {
     let flex
+    let open = 0
 
-    slots = slots.map((slot, index) => {
-      if (!slot.isClosed) flex = index
-      return { ...slot }
+    slots = slots.map((slot, idx) => {
+      if (!slots[idx].isClosed) {
+        ++open
+        flex = idx
+      }
+
+      return slot
     })
 
-    if (flex != null) {
-      slots[flex].isFlex = true
-    }
+    return { slots, flex, canClose: open > 1  }
+  }
 
-    return slots
+  canToggle(index) {
+    return this.state.slots[index].isClosed || this.state.canClose
   }
 
   handleResize = (height, index) => {
@@ -90,11 +101,23 @@ class PanelGroup extends PureComponent {
     return true
   }
 
-  renderPanel = (panel, index) => {
-    const slot = this.state.slots[index]
+  handleToggle = (index) => {
+    if (this.canToggle(index)) {
+      const { slots } = this.state
 
-    const value = slot.isClosed ?
-      PANEL.MIN : (slot.isFlex ?  null : slot.height)
+      slots[index] = {
+        ...slots[index], isClosed: !slots[index].isClosed
+      }
+
+      this.setState(this.prepare(slots))
+    }
+  }
+
+  renderPanel = (panel, index) => {
+    const { height, isClosed } = this.state.slots[index]
+
+    const isFlex = this.state.flex === index
+    const value = isClosed ?  PANEL.MIN : (isFlex ?  null : height)
 
     return (
       <Resizable
@@ -103,11 +126,11 @@ class PanelGroup extends PureComponent {
         edge="bottom"
         min={PANEL.MIN}
         value={value}
-        isDisabled={slot.isClosed || slot.isFlex}
-        isRelative={!slot.isClosed}
+        isDisabled={isClosed || isFlex}
+        isRelative={!isClosed}
         onChange={this.handleResize}
         onValidate={this.handleValidate}>
-        {panel}
+        {clone(panel, { isClosed, index, onToggle: this.handleToggle })}
       </Resizable>
     )
   }
@@ -119,11 +142,12 @@ class PanelGroup extends PureComponent {
           {this.props.header}
         </header>
         <div className="panel-group-body">
-          {Children.toArray(this.props.children).map(this.renderPanel)}
+          {Children.map(this.props.children, this.renderPanel)}
         </div>
       </div>
     )
   }
+
 
   static propTypes = {
     children: only(Panel),

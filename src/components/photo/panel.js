@@ -39,7 +39,7 @@ class PhotoPanel extends Panel {
         maxZoom={PhotoPanel.Zoom.length - 1}
         onZoomChange={this.props.onZoomChange}
         hasCreateButton={!this.props.isDisabled}
-        isDisabled={!this.props.photos.length}
+        isDisabled={this.props.isClosed || !this.props.photos.length}
         onCreate={this.props.onCreate}/>
     )
   }
@@ -79,6 +79,7 @@ class PhotoPanel extends Panel {
     zoom: number.isRequired,
     photos: array.isRequired,
 
+    isClosed: bool,
     isDisabled: bool,
     isOver: bool,
     canDrop: bool,
