@@ -7,8 +7,8 @@
   flex-direction: column;
   height: 100%;
 
-  .resizable.disabled {
-    height: $panel-header-height;
+  .resizable.fixed {
+    height: $panel-header-height + $space-min;
   }
 
   .panel-group-header {
