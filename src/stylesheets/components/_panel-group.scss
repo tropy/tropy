@@ -7,6 +7,10 @@
   flex-direction: column;
   height: 100%;
 
+  .resizable.disabled {
+    height: $panel-header-height;
+  }
+
   .panel-group-header {
     .toolbar {
       background: $panels-bg;

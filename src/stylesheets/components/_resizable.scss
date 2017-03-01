@@ -6,7 +6,13 @@ $zindex-resizable: 1000 !default;
 $resizable-threshold: 8px !default;
 
 .resizable {
+  display: flex;
+  flex-direction: column;
   position: relative;
+
+  &.disabled {
+    flex: 1 1 0;
+  }
 }
 
 .resizable-handle {
