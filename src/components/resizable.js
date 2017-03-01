@@ -32,7 +32,7 @@ class Resizable extends PureComponent {
     super(props)
 
     this.state = {
-      value: props.value,
+      value: props.value
     }
   }
 
@@ -59,10 +59,14 @@ class Resizable extends PureComponent {
   }
 
   handleDrag = (event) => {
-    const { edge, min, max } = this.props
+    const { edge, min, max, isRelative } = this.props
 
-    const origin = bounds(this.container)[OPP[edge]]
-    const value = restrict(event[AXS[edge]] - origin, min, max)
+    let origin = bounds(this.container)[OPP[edge]]
+    let value = restrict(event[AXS[edge]] - origin, min, max)
+
+    if (isRelative) {
+      value = value / bounds(this.container.parentElement)[DIM[edge]] * 100
+    }
 
     this.setState({ value })
     this.props.onResize(value)

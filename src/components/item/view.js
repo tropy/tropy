@@ -67,8 +67,7 @@ class ItemView extends PureComponent {
             value={esper.height}
             isRelative
             onChange={this.handleEsperResize}
-            min={20}
-            max={90}>
+            min={256}>
             <EsperImage isVisible photo={photo}/>
           </Resizable>
           <NotePad/>

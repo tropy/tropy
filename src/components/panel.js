@@ -63,7 +63,7 @@ class PanelGroup extends PureComponent {
             <Resizable
               key={idx}
               isRelative
-              edge="top"
+              edge="bottom"
               value={height[idx]}
               min={5}
               max={45}
