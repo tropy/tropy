@@ -2,6 +2,8 @@
 // Note
 // --------------------------------------------------
 
-.note {
-  height: 50%;
+.item-container { // Prevent side effects in note-list
+  .note {
+    height: 50%;
+  }
 }
