@@ -23,7 +23,7 @@ class NoteList extends PureComponent {
     const { notes, isDisabled, onContextMenu, onOpen } = this.props
 
     return (
-      <ul className="note-list">
+      <ul className="note list">
         {notes.map(note =>
           <NoteListItem
             key={note.id}
