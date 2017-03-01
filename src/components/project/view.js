@@ -11,6 +11,7 @@ const { ProjectToolbar } = require('./toolbar')
 const { isValidImage } = require('../../image')
 const { pick, times } = require('../../common/util')
 const { array, bool, func, object, number } = PropTypes
+const { TILE } = require('../../constants/style')
 
 
 class ProjectView extends PureComponent {
@@ -110,9 +111,9 @@ class ProjectView extends PureComponent {
   }
 
   static Zoom = [
-    44,
-    ...times(52, i => i * 4 + 48),
-    ...times(32, i => i * 8 + 256),
+    TILE.MIN,
+    ...times((256 - 4 - TILE.MIN) / 4, i => i * 4 + TILE.MIN + 4),
+    ...times(256 / 8, i => i * 8 + 256),
     512
   ]
 }

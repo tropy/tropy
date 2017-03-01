@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const { STYLE } = require('../constants')
+const { TABS, TILE, SCROLLBAR } = require('../constants/style')
 const { bounds, on, off } = require('../dom')
 const { times } = require('../common/util')
 const { win } = require('../window')
@@ -65,15 +65,15 @@ class Iterator extends PureComponent {
   }
 
   get tabIndex() {
-    return this.isEmpty ? null : STYLE.TABS[this.constructor.name]
+    return this.isEmpty ? null : TABS[this.constructor.name]
   }
 
   getColumns(width, size = this.props.size) {
     if (win.state.scrollbars) {
-      width = width - STYLE.SCROLLBAR.WIDTH
+      width = width - SCROLLBAR.WIDTH
     }
 
-    return floor(width / (size * STYLE.TILE.FACTOR))
+    return floor(width / (size * TILE.FACTOR))
   }
 
   setContainer = (container) => {
@@ -88,7 +88,7 @@ class Iterator extends PureComponent {
 
   handleResize = () => {
     const { width } = bounds(this.container)
-    const maxCols = this.getColumns(width, STYLE.TILE.MIN)
+    const maxCols = this.getColumns(width, TILE.MIN)
 
     this.setState({
       cols: this.getColumns(width), maxCols

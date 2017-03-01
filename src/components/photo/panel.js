@@ -9,10 +9,9 @@ const { PhotoList } = require('./list')
 const { PhotoGrid } = require('./grid')
 const { isValidImage } = require('../../image')
 const { pick, times } = require('../../common/util')
-const { win } = require('../../window')
 const { array, bool, number, func } = React.PropTypes
 
-const { TILE, PANEL, SCROLLBAR } = require('../../constants/style')
+const { TILE, PANEL } = require('../../constants/style')
 const MAX_TILE_SIZE = 256
 
 
@@ -100,9 +99,7 @@ class PhotoPanel extends Panel {
   ]
 
   static get minWidth() {
-    return win.state.scrollbars ?
-      MAX_TILE_SIZE * TILE.FACTOR + PANEL.PADDING + SCROLLBAR.WIDTH :
-      MAX_TILE_SIZE * TILE.FACTOR + PANEL.PADDING
+    return MAX_TILE_SIZE * TILE.FACTOR + 2 * PANEL.PADDING
   }
 }
 
