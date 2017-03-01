@@ -1,0 +1,43 @@
+//
+// Photo list
+// --------------------------------------------------
+
+.photo.list {
+  height: calc(100% - #{$space-min});
+  overflow-y: auto;
+  line-height: $row-height;
+
+  .photo {
+    display: flex;
+    align-items: center;
+    padding: 0 $component-padding-horizontal;
+    position: relative;
+
+    &.active {
+      color: $photo-list-active-color;
+      background: $photo-list-active-bg;
+    }
+  }
+
+  &:focus {
+    .photo {
+      &.active {
+        color: $photo-list-focus-color;
+        background: $photo-list-focus-bg;
+      }
+    }
+  }
+
+  .thumbnail {
+    margin-right: $space-xs;
+  }
+
+  .title {
+    flex: 1 1 0;
+    min-width: 0; // Fix truncation
+
+    .editable {
+      @include css-truncation;
+    }
+  }
+}

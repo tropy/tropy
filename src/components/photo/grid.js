@@ -46,7 +46,8 @@ class PhotoGrid extends PhotoIterator {
   get classes() {
     return {
       ...super.classes,
-      'photo-grid': true,
+      'photo': true,
+      'grid': true,
       'click-catcher': true
     }
   }

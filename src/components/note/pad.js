@@ -11,7 +11,7 @@ const cx = require('classnames')
 class NotePad extends PureComponent {
   render() {
     return (
-      <section className={cx({ note: true })}>
+      <section className={cx({ note: true, pad: true })}>
         <Editor/>
       </section>
     )
