@@ -150,6 +150,7 @@
         transparent (2 * $row-height + 3px));
       background-attachment: local;
       padding-top: 3px;
+      overflow-y: scroll;
     }
 
     &.over {
