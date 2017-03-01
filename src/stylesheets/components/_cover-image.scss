@@ -56,7 +56,7 @@ $white: #fff;
   }
 }
 
-.item-table {
+.item.table {
   .cover-image {
     position: absolute;
     left: $component-padding-horizontal;
@@ -67,6 +67,8 @@ $white: #fff;
 
       .line {
         height: 1px;
+        border: 0;
+        margin-bottom: 1px;
       }
 
       @for $i from 1 through $stack-size-max {

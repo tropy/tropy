@@ -6,8 +6,8 @@
   position: relative;
   box-sizing: content-box;
 
-  .item-table &,
-  .photo-list & {
+  .item.table &,
+  .photo.list & {
     width: $thumbnail-size;
     height: $thumbnail-size;
   }
