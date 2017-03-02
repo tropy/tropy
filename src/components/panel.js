@@ -125,8 +125,7 @@ class PanelGroup extends PureComponent {
   }
 
   handleResize = (height, resizable) => {
-    // eslint-disable-next-line no-console
-    console.log('resize', height, resizable.props.id)
+    this.props.onResize(resizable.props.id, height)
   }
 
   renderPanel = (panel, id) => {
@@ -151,7 +150,7 @@ class PanelGroup extends PureComponent {
           isClosed,
           id,
           canToggle: isClosed || this.state.canClosePanel,
-          onToggle: this.props.onPanelToggle
+          onToggle: this.props.onToggle
         })}
       </Resizable>
     )
@@ -180,7 +179,7 @@ class PanelGroup extends PureComponent {
       isClosed: bool
     })).isRequired,
 
-    onPanelToggle: func.isRequired,
+    onToggle: func.isRequired,
     onResize: func.isRequired
   }
 }

@@ -14,7 +14,7 @@ const { keys } = Object
 
 class ItemPanel extends PureComponent {
 
-  get item() { // remove
+  get item() { // TODO remove
     const { items } = this.props
     return items.length === 1 ? items[0] : null
   }
@@ -25,18 +25,18 @@ class ItemPanel extends PureComponent {
       item: get(this.props.items, [0, 'id']) })
   }
 
-  handlePanelToggle = (id, isClosed) => {
+  handleToggle = (id, isClosed) => {
     const slots = [...this.props.panel.slots]
     slots[id] = { ...slots[id], isClosed }
 
-    this.props.onUiUpdate({
-      panel: { slots }
-    })
+    this.props.onUiUpdate({ panel: { slots } })
   }
 
-  handleResize = () => {
-    //console.log(heights)
-    //this.props.onUiUpdate({ panel: { heights } })
+  handleResize = (id, height) => {
+    const slots = [...this.props.panel.slots]
+    slots[id] = { ...slots[id], height }
+
+    this.props.onUiUpdate({ panel: { slots } })
   }
 
   handleTabChange = (tab) => {
@@ -46,7 +46,6 @@ class ItemPanel extends PureComponent {
   handleZoomChange = (zoom) => {
     this.props.onUiUpdate({ panel: { zoom } })
   }
-
 
 
   render() {
@@ -72,7 +71,7 @@ class ItemPanel extends PureComponent {
     return (
       <PanelGroup
         slots={panel.slots}
-        onPanelToggle={this.handlePanelToggle}
+        onToggle={this.handleToggle}
         onResize={this.handleResize}
         header={
           <ItemToolbar
