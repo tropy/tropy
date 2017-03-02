@@ -7,9 +7,9 @@ const init = {
   esper: { height: 50 },
   panel: {
     slots: [
-      { height: 34, isClosed: false },
-      { height: 34, isClosed: false },
-      { height: 32, isClosed: false }
+      { height: 40, isClosed: false },
+      { height: 40, isClosed: false },
+      { height: 20, isClosed: false }
     ],
     tab: 'metadata',
     width: 320,

@@ -25,6 +25,15 @@ class ItemPanel extends PureComponent {
       item: get(this.props.items, [0, 'id']) })
   }
 
+  handlePanelToggle = (id, isClosed) => {
+    const slots = [...this.props.panel.slots]
+    slots[id] = { ...slots[id], isClosed }
+
+    this.props.onUiUpdate({
+      panel: { slots }
+    })
+  }
+
   handleResize = () => {
     //console.log(heights)
     //this.props.onUiUpdate({ panel: { heights } })
@@ -63,6 +72,7 @@ class ItemPanel extends PureComponent {
     return (
       <PanelGroup
         slots={panel.slots}
+        onPanelToggle={this.handlePanelToggle}
         onResize={this.handleResize}
         header={
           <ItemToolbar

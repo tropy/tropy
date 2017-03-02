@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const { func, node, bool, number, oneOf } = PropTypes
+const { func, node, bool, number, oneOf, oneOfType } = PropTypes
 const { Draggable } = require('./draggable')
 const cx = require('classnames')
 const { bounds } = require('../dom')
@@ -44,6 +44,7 @@ class Resizable extends PureComponent {
     return {
       resizable: true,
       disabled: this.props.isDisabled,
+      fixed: this.props.isFixed,
       flex: this.isFlex
     }
   }
@@ -62,6 +63,11 @@ class Resizable extends PureComponent {
     }
   }
 
+  getMax(event) {
+    const { max } = this.props
+    return (typeof max === 'function') ? max(event, this) : max
+  }
+
   get isFlex() {
     return this.state.value == null
   }
@@ -74,8 +80,15 @@ class Resizable extends PureComponent {
     this.container = container
   }
 
+  handleDragStart = (event) => {
+    if (this.props.onResizeStart) {
+      return this.props.onResizeStart(event, this)
+    }
+  }
+
   handleDrag = (event) => {
-    const { edge, min, max, index, isRelative, onValidate } = this.props
+    const { edge, min, isFixed, isRelative, onValidate } = this.props
+    const max = this.getMax(event)
 
     let origin = bounds(this.container)[OPP[edge]]
     let value = event[AXS[edge]] - origin
@@ -91,15 +104,19 @@ class Resizable extends PureComponent {
       value = restrict(value, null, 100)
     }
 
-    if (onValidate(value, index)) {
-      this.setState({ value })
-      this.props.onResize(value, index)
+    if (onValidate(value, event, this)) {
+      if (!isFixed) this.setState({ value })
+      this.props.onResize(value, event, this)
     }
   }
 
   handleDragStop = () => {
+    if (this.props.onResizeStop) {
+      this.props.onResizeStop(this)
+    }
+
     if (this.props.value !== this.state.value) {
-      this.props.onChange(this.state.value, this.props.index)
+      this.props.onChange(this.state.value, this)
     }
   }
 
@@ -110,6 +127,7 @@ class Resizable extends PureComponent {
     return (
       <Draggable
         isDisabled={isDisabled || this.isFlex}
+        onDragStart={this.handleDragStart}
         onDrag={this.handleDrag}
         onDragStop={this.handleDragStop}
         classes={cx([
@@ -134,14 +152,17 @@ class Resizable extends PureComponent {
   static propTypes = {
     children: node,
     edge: oneOf(keys(DIM)).isRequired,
-    index: number,
+    id: number,
     isDisabled: bool,
+    isFixed: bool,
     isRelative: bool,
     value: number,
     min: number.isRequired,
-    max: number,
+    max: oneOfType([number, func]),
     onChange: func.isRequired,
     onResize: func.isRequired,
+    onResizeStart: func,
+    onResizeStop: func,
     onValidate: func.isRequired
   }
 
