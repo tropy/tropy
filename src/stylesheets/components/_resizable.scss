@@ -13,42 +13,49 @@ $resizable-threshold: 8px !default;
   &.flex {
     flex: 1 1 0;
   }
-}
 
-.resizable-handle {
-  &-col,
-  &-row {
-    position: absolute;
-    z-index: $zindex-resizable;
+  .resizable-handle {
+    &-col,
+    &-row {
+      position: absolute;
+      z-index: $zindex-resizable;
+    }
+
+    &-col {
+      top: 0;
+      bottom: 0;
+      width: $resizable-threshold;
+      cursor: ew-resize;
+    }
+
+    &-left {
+      left: -($resizable-threshold / 2);
+    }
+
+    &-right {
+      right: -($resizable-threshold / 2);
+    }
+
+    &-row {
+      left: 0;
+      right: 0;
+      height: $resizable-threshold;
+      cursor: ns-resize;
+    }
+
+    &-top {
+      top: -($resizable-threshold / 2);
+    }
+
+    &-bottom {
+      bottom: -($resizable-threshold / 2);
+    }
   }
 
-  &-col {
-    top: 0;
-    bottom: 0;
-    width: $resizable-threshold;
-    cursor: ew-resize;
-  }
-
-  &-left {
-    left: -($resizable-threshold / 2);
-  }
-
-  &-right {
-    right: -($resizable-threshold / 2);
-  }
-
-  &-row {
-    left: 0;
-    right: 0;
-    height: $resizable-threshold;
-    cursor: ns-resize;
-  }
-
-  &-top {
-    top: -($resizable-threshold / 2);
-  }
-
-  &-bottom {
-    bottom: -($resizable-threshold / 2);
+  &.disabled {
+    .resizable-handle-row,
+    .resizable-handle-col {
+      cursor: default;
+    }
   }
 }
