@@ -27,24 +27,11 @@ const AXS = {
 }
 
 
-class Resizable extends PureComponent {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      value: props.value
-    }
-  }
-
-  componentWillReceiveProps(props) {
-    this.setState({ value: props.value })
-  }
-
+class StatelessResizable extends PureComponent {
   get classes() {
     return {
       resizable: true,
       disabled: this.props.isDisabled,
-      fixed: this.props.isFixed,
       flex: this.isFlex
     }
   }
@@ -54,13 +41,21 @@ class Resizable extends PureComponent {
   }
 
   get value() {
-    return `${this.state.value}${this.props.isRelative ? '%' : 'px'}`
+    return this.props.value
   }
 
   get style() {
     return this.isFlex ? null : {
-      [this.dimension]: this.value
+      [this.dimension]: `${this.value}${this.props.isRelative ? '%' : 'px'}`
     }
+  }
+
+  get isFlex() {
+    return this.value == null
+  }
+
+  get isInverse() {
+    return this.props.edge === 'left' || this.props.edge === 'top'
   }
 
   getMax(event) {
@@ -68,12 +63,22 @@ class Resizable extends PureComponent {
     return (typeof max === 'function') ? max(event, this) : max
   }
 
-  get isFlex() {
-    return this.state.value == null
-  }
+  getNewValue(event) {
+    const { edge, min, isRelative } = this.props
+    const max = this.getMax(event)
 
-  get isInverse() {
-    return this.props.edge === 'left' || this.props.edge === 'top'
+    let origin = bounds(this.container)[OPP[edge]]
+    let value = event[AXS[edge]] - origin
+
+    if (this.isInverse) value = -value
+
+    value = restrict(value, min, max)
+
+    if (isRelative) {
+      value = restrict(value / this.scale, null, 100)
+    }
+
+    return value
   }
 
   setContainer = (container) => {
@@ -93,36 +98,18 @@ class Resizable extends PureComponent {
   }
 
   handleDrag = (event) => {
-    const { edge, min, isFixed, isRelative, onResize } = this.props
-    const max = this.getMax(event)
-
-    let origin = bounds(this.container)[OPP[edge]]
-    let value = event[AXS[edge]] - origin
-
-    if (this.isInverse) {
-      value = -value
-    }
-
-    value = restrict(value, min, max)
-
-    if (isRelative) {
-      value = restrict(value / this.scale, null, 100)
-    }
-
-    if (onResize(value, event, this) || isFixed) return
-
-    this.setState({ value })
+    this.props.onResize(this.getNewValue(), event, this)
   }
 
   handleDragStop = () => {
     const { value, onResizeStop, onChange } = this.props
 
     if (onResizeStop) {
-      onResizeStop(this.state.value, this)
+      onResizeStop(this.value, this)
     }
 
-    if (value !== this.state.value && onChange) {
-      onChange(this.state.value, this)
+    if (value !== this.value && onChange) {
+      onChange(this.value, this)
     }
   }
 
@@ -160,7 +147,6 @@ class Resizable extends PureComponent {
     edge: oneOf(keys(DIM)).isRequired,
     id: number,
     isDisabled: bool,
-    isFixed: bool,
     isRelative: bool,
     value: number,
     min: number.isRequired,
@@ -175,9 +161,38 @@ class Resizable extends PureComponent {
     min: 0,
     onResize: noop
   }
+
+}
+
+
+class Resizable extends StatelessResizable {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      value: props.value
+    }
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({ value: props.value })
+  }
+
+  get value() {
+    return this.state.value
+  }
+
+  handleDrag = (event) => {
+    const value = this.getNewValue(event)
+
+    if (!this.props.onResize(value, event, this)) {
+      this.setState({ value })
+    }
+  }
 }
 
 
 module.exports = {
-  Resizable
+  Resizable,
+  StatelessResizable
 }
