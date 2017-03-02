@@ -20,16 +20,16 @@ class Draggable extends PureComponent {
     if (this.isDragging) this.stop()
     if (event.button !== 0) return
 
+    if (this.props.onDragStart) {
+      if (this.props.onDragStart(event)) return
+    }
+
     this.isDragging = true
 
     on(document, 'mousemove', this.handleDrag)
     on(document, 'mouseup', this.handleDragStop, { capture: true })
     on(document, 'mouseleave', this.handleDragStop)
     on(window, 'blur', this.handleDragStop)
-
-    if (this.props.onMouseDown) {
-      return this.props.onMouseDown(event)
-    }
 
     const { pageX, pageY } = event
 
@@ -85,8 +85,8 @@ class Draggable extends PureComponent {
     style: object,
     tabIndex: number,
     onDrag: func,
-    onDragStop: func,
-    onMouseDown: func
+    onDragStart: func,
+    onDragStop: func
   }
 
   static defaultProps = {
