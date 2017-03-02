@@ -32,10 +32,7 @@ class ItemPanel extends PureComponent {
     this.props.onUiUpdate({ panel: { slots } })
   }
 
-  handleResize = (id, height) => {
-    const slots = [...this.props.panel.slots]
-    slots[id] = { ...slots[id], height }
-
+  handleResize = (slots) => {
     this.props.onUiUpdate({ panel: { slots } })
   }
 

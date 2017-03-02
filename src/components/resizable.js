@@ -81,13 +81,19 @@ class Resizable extends PureComponent {
   }
 
   handleDragStart = (event) => {
-    if (this.props.onResizeStart) {
-      return this.props.onResizeStart(event, this)
+    const { edge, isRelative, onResizeStart } = this.props
+
+    if (isRelative) {
+      this.scale = bounds(this.container.parentElement)[DIM[edge]] / 100
+    }
+
+    if (onResizeStart) {
+      return onResizeStart(event, this)
     }
   }
 
   handleDrag = (event) => {
-    const { edge, min, isFixed, isRelative, onValidate } = this.props
+    const { edge, min, isFixed, isRelative, onResize } = this.props
     const max = this.getMax(event)
 
     let origin = bounds(this.container)[OPP[edge]]
@@ -100,23 +106,23 @@ class Resizable extends PureComponent {
     value = restrict(value, min, max)
 
     if (isRelative) {
-      value = value / bounds(this.container.parentElement)[DIM[edge]] * 100
-      value = restrict(value, null, 100)
+      value = restrict(value / this.scale, null, 100)
     }
 
-    if (onValidate(value, event, this)) {
-      if (!isFixed) this.setState({ value })
-      this.props.onResize(value, event, this)
-    }
+    if (onResize(value, event, this) || isFixed) return
+
+    this.setState({ value })
   }
 
   handleDragStop = () => {
-    if (this.props.onResizeStop) {
-      this.props.onResizeStop(this)
+    const { value, onResizeStop, onChange } = this.props
+
+    if (onResizeStop) {
+      onResizeStop(this.state.value, this)
     }
 
-    if (this.props.value !== this.state.value) {
-      this.props.onChange(this.state.value, this)
+    if (value !== this.state.value && onChange) {
+      onChange(this.state.value, this)
     }
   }
 
@@ -159,17 +165,15 @@ class Resizable extends PureComponent {
     value: number,
     min: number.isRequired,
     max: oneOfType([number, func]),
-    onChange: func.isRequired,
+    onChange: func,
     onResize: func.isRequired,
     onResizeStart: func,
     onResizeStop: func,
-    onValidate: func.isRequired
   }
 
   static defaultProps = {
     min: 0,
-    onResize: noop,
-    onValidate: () => true
+    onResize: noop
   }
 }
 

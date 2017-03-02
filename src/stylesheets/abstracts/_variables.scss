@@ -160,6 +160,7 @@ $item-table-header-height: $space-lg - 2px; // 24px (content-box)
 // --------------------------------------------------
 
 $panel-header-height: $line-height-large;
+$panel-body-min-height: 100px - $panel-header-height - 4px;
 
 
 // Tabs
