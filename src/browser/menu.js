@@ -188,12 +188,12 @@ class ContextMenu extends Menu {
     ).slice(1)
   }
 
-  show({ scope, event }, win = this.app.win, ...args) {
+  show({ scope, event }, win = this.app.win, options) {
     try {
       this.build(
         this.prepare(this.template, ContextMenu.scopes[scope]),
         event
-      ).popup(win, ...args)
+      ).popup(win, { ...options, async: true })
 
     } catch (error) {
       warn(`failed to show context-menu: ${error.message}`)
