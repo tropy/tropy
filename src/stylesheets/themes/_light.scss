@@ -119,9 +119,12 @@ $tile-focus-color:  $brand-primary;
 $tile-active-color: $shade-4;
 
 // Stack
-$stack-color:       $shade-5;
-$stack-bg:          $body-bg;
-$stack-focus-color: $shade-0;
+$stack-color:             $shade-5;
+$stack-bg:                $body-bg;
+$stack-focus-color:       $shade-0;
+$stack-line-gap-color:    $shade-0;
+$stack-line-tint-color:   $shade-0;
+$stack-line-tint-opacity: 0.5;
 
 // Scrollbar
 $scrollbar-bg: $body-bg;

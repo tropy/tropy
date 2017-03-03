@@ -2,10 +2,6 @@
 // Cover image
 // --------------------------------------------------
 
-$background-dark: #777;
-$background-light: #999;
-$white: #fff;
-
 .cover-image {
   box-sizing: content-box;
   position: relative;
@@ -16,38 +12,95 @@ $white: #fff;
   top: 0;
   left: 0;
   width: 100%;
-  background: $stack-bg;
   z-index: 1;
 
   .line {
     background: $stack-color;
-    border-bottom: 1px solid $stack-color;
     position: relative;
+  }
+}
 
-    $i: $tile-thumbnail-size-min;
+.item.grid {
+  .stack-lines {
+    background: $stack-bg;
 
-    @while $i <= $tile-thumbnail-size-max {
-      [data-size="#{$i}"] & {
-        $percentage: percentage(1);
+    .line {
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: 100%;
+      }
 
-        @if $i < ($tile-thumbnail-size-max / 2) {
-          $percentage: percentage(($i * 2 / $tile-thumbnail-size-max));
-        }
+      &::before {
+        top: 0;
+        height: 100%;
+        background: $stack-line-tint-color;
+        opacity: 0;
+      }
 
-        height: #{round($i / 32)}px;
+      &::after {
+        top: 100%;
+        height: 1px;
+        box-shadow: 0 -1px 0 $stack-line-gap-color;
 
-        @for $j from 1 through $stack-size-max {
-          &.line-#{$j} {
-            margin-left: #{round($i * $j / 16)}px;
-            margin-right: #{round($i * $j / 16)}px;
-
-            border-bottom-color: mix($background-dark, $white, $percentage);
+        @if $theme == "light" {
+          @media (min-resolution: 2dppx) {
+            box-shadow: 0 -0.5px 0 $stack-line-gap-color;
           }
         }
+      }
+    }
+  }
 
-        &.line-2 {
-          background: mix($background-light, $background-dark, $percentage);
-          border-bottom-color: mix($background-light, $white, $percentage);
+  $range: ($tile-thumbnail-size-max - $tile-thumbnail-size-min);
+  $i: $tile-thumbnail-size-min;
+
+  @while $i <= $tile-thumbnail-size-max {
+    &[data-size="#{$i}"] {
+      .stack-lines {
+        .line {
+
+          // Stack line height
+          height: #{round($i / 32)}px;
+
+          // Stack line widths
+          @for $j from 1 through $stack-size-max {
+            &.line-#{$j} {
+              margin-left: #{round($i * $j / 16)}px;
+              margin-right: #{round($i * $j / 16)}px;
+            }
+          }
+
+          // Tinting and gap
+          $tint-opacity: $stack-line-tint-opacity;
+          $gap-opacity: 0;
+
+          @if ($i - $tile-thumbnail-size-min) < ($range / 2.25) {
+            $tint-opacity:
+              ($stack-line-tint-opacity
+                * (($i - $tile-thumbnail-size-min)
+                * 2.25 / $range));
+
+            $gap-opacity: (1 - ($i - $tile-thumbnail-size-min) * 2.25 / $range);
+          }
+
+          &.line-1 {
+            &::before {
+              opacity: $tint-opacity;
+            }
+          }
+
+          &.line-2 {
+            &::before {
+              opacity: $tint-opacity + $tint-opacity * 0.5;
+            }
+          }
+
+          &::after {
+            opacity: $gap-opacity;
+          }
         }
       }
 
@@ -63,8 +116,6 @@ $white: #fff;
     top: ($row-height - $thumbnail-size) / 2;
 
     .stack-lines {
-      background: transparent;
-
       .line {
         height: 1px;
         border: 0;
