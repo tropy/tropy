@@ -29,13 +29,12 @@ class ItemView extends PureComponent {
   }
 
   get offset() {
-    return this.isItemOpen ? 0 : `calc(100% - ${this.props.offset}px)`
+    return (this.isItemOpen ^ this.props.isModeChanging) ?
+      0 : `calc(100% - ${this.props.offset}px)`
   }
 
   get style() {
-    return {
-      transform: `translate3d(${this.offset}, 0, 0)`
-    }
+    return { transform: `translate3d(${this.offset}, 0, 0)` }
   }
 
   handleEsperResize = (height) => {
@@ -99,13 +98,14 @@ class ItemView extends PureComponent {
       })
     ),
 
-    offset: number.isRequired,
-
     esper: shape({
       height: number.isRequired
     }).isRequired,
 
+    offset: number.isRequired,
     mode: string.isRequired,
+    isModeChanging: bool.isRequired,
+
     onPanelResize: func.isRequired,
     onPanelResizeStop: func.isRequired,
     onUiUpdate: func.isRequired

@@ -186,6 +186,8 @@ class ProjectContainer extends Component {
           panel={ui.panel}
           esper={ui.esper}
           offset={this.state.offset}
+          mode={this.state.mode}
+          isModeChanging={this.state.isModeChanging}
           onPanelResize={this.handlePanelResize}
           onPanelResizeStop={this.handlePanelResizeStop}
           onMetadataSave={this.handleMetadataSave}/>
