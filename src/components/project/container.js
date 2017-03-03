@@ -122,6 +122,12 @@ class ProjectContainer extends Component {
     this.setState({ offset })
   }
 
+  handlePanelResizeStop = (offset) => {
+    this.props.onUiUpdate({
+      panel: { width: this.state.offset }
+    })
+  }
+
   handleMetadataSave = (payload, meta = {}) => {
     const { sort, onMetadataSave } = this.props
 
@@ -181,6 +187,7 @@ class ProjectContainer extends Component {
           esper={ui.esper}
           offset={this.state.offset}
           onPanelResize={this.handlePanelResize}
+          onPanelResizeStop={this.handlePanelResizeStop}
           onMetadataSave={this.handleMetadataSave}/>
 
         <DragLayer cache={props.cache}/>

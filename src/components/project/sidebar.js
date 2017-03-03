@@ -9,7 +9,7 @@ const { ListTree, TrashListNode } = require('../list')
 const { TagList } = require('../tag')
 const { Sidebar } = require('../sidebar')
 const { ProjectName } = require('./name')
-const { STYLE, LIST } = require('../../constants')
+const { TABS, LIST } = require('../../constants')
 const { has } = require('../../common/util')
 const { bool, shape, string, object, arrayOf, func, number } = PropTypes
 
@@ -24,7 +24,7 @@ class ProjectSidebar extends PureComponent {
     return has(this.props.edit, 'project')
   }
 
-  tabIndex = STYLE.TABS.ProjectSidebar
+  tabIndex = TABS.ProjectSidebar
 
 
   getRootList() {

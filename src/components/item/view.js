@@ -38,10 +38,6 @@ class ItemView extends PureComponent {
     }
   }
 
-  handlePanelResize = (width) => {
-    this.props.onUiUpdate({ panel: { width } })
-  }
-
   handleEsperResize = (height) => {
     this.props.onUiUpdate({ esper: { height } })
   }
@@ -54,6 +50,7 @@ class ItemView extends PureComponent {
       photo,
       offset,
       onPanelResize,
+      onPanelResizeStop,
       ...props
     } = this.props
 
@@ -67,7 +64,7 @@ class ItemView extends PureComponent {
           min={PhotoPanel.minWidth}
           max={750}
           onResize={onPanelResize}
-          onResizeStop={this.handlePanelResize}>
+          onResizeStop={onPanelResizeStop}>
           <ItemPanel {...pick(props, ItemPanel.props)}
             panel={panel}
             photo={photo}
@@ -110,6 +107,7 @@ class ItemView extends PureComponent {
 
     mode: string.isRequired,
     onPanelResize: func.isRequired,
+    onPanelResizeStop: func.isRequired,
     onUiUpdate: func.isRequired
   }
 }

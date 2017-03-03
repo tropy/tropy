@@ -7,7 +7,7 @@ const { Resizable } = require('./resizable')
 const cx = require('classnames')
 const { bounds } = require('../dom')
 const { bool, func, node, arrayOf, number, shape } = PropTypes
-const { PANEL } = require('../constants/style')
+const { PANEL } = require('../constants/sass')
 
 
 class Panel extends PureComponent {
@@ -91,7 +91,7 @@ class PanelGroup extends PureComponent {
         isRelative = false
 
       } else {
-        min = PANEL.MIN
+        min = PANEL.MIN_HEIGHT
         value = height
 
         ++open
@@ -109,7 +109,7 @@ class PanelGroup extends PureComponent {
   }
 
   get isFlexValid() {
-    return bounds(this.flex.container).height > PANEL.MIN
+    return bounds(this.flex.container).height > PANEL.MIN_HEIGHT
   }
 
   getMax = () => this.max
@@ -144,7 +144,7 @@ class PanelGroup extends PureComponent {
       const slots = [...this.state.slots]
 
       slots[act] = { ...slots[act], height }
-      slots[cur] = { ...slots[cur], height: PANEL.MIN, isRelative: false }
+      slots[cur] = { ...slots[cur], height: PANEL.MIN_HEIGHT, isRelative: false }
 
       this.setState({ flex: nxt, slots })
     }

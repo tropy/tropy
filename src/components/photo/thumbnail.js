@@ -6,6 +6,7 @@ const { IconPhoto } = require('../icons')
 const { imageURL } = require('../../common/cache')
 const { pick } = require('../../common/util')
 const { string, number, func } = PropTypes
+const { ICON } = require('../../constants/sass')
 
 
 class Thumbnail extends PureComponent {
@@ -14,7 +15,7 @@ class Thumbnail extends PureComponent {
     const { cache, id, size } = this.props
 
     return (id != null) ?
-      imageURL(cache, id, size > 48 ? 512 : 48) : null
+      imageURL(cache, id, size > ICON.SIZE ? ICON.MAX : ICON.SIZE) : null
   }
 
   render() {
@@ -43,7 +44,7 @@ class Thumbnail extends PureComponent {
   }
 
   static defaultProps = {
-    size: 48
+    size: ICON.SIZE
   }
 }
 

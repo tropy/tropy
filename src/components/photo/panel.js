@@ -10,9 +10,7 @@ const { PhotoGrid } = require('./grid')
 const { isValidImage } = require('../../image')
 const { pick, times } = require('../../common/util')
 const { array, bool, number, func } = React.PropTypes
-
-const { TILE, PANEL } = require('../../constants/style')
-const MAX_TILE_SIZE = 256
+const { PHOTO, TILE, PANEL } = require('../../constants/sass')
 
 
 class PhotoPanel extends Panel {
@@ -36,7 +34,7 @@ class PhotoPanel extends Panel {
     return (
       <PhotoToolbar
         zoom={this.props.zoom}
-        maxZoom={PhotoPanel.Zoom.length - 1}
+        maxZoom={PHOTO.ZOOM.length - 1}
         onZoomChange={this.props.onZoomChange}
         hasCreateButton={!this.props.isDisabled}
         isDisabled={this.props.isClosed || !this.props.photos.length}
@@ -49,7 +47,7 @@ class PhotoPanel extends Panel {
 
     const props = {
       ...this.props,
-      size: PhotoPanel.Zoom[zoom],
+      size: PHOTO.ZOOM[zoom],
       onChange: onMetadataSave,
       onDropImages: this.handleDropFiles,
       onEdit: this.handleEdit
@@ -92,15 +90,9 @@ class PhotoPanel extends Panel {
     onZoomChange: func.isRequired
   }
 
-  static Zoom = [
-    TILE.MIN,
-    ...times(39, i => i * 2 + TILE.MIN + 2),
-    ...times(32, i => i * 4 + MAX_TILE_SIZE / 2),
-    MAX_TILE_SIZE
-  ]
 
   static get minWidth() {
-    return MAX_TILE_SIZE * TILE.FACTOR + 2 * PANEL.PADDING
+    return PHOTO.TILE.MAX * PHOTO.TILE.FACTOR + 2 * PANEL.PADDING
   }
 }
 

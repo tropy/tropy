@@ -5,7 +5,7 @@ const { PureComponent, PropTypes } = React
 const { IconSpin } = require('./icons')
 const { FormattedMessage, FormattedNumber } = require('react-intl')
 const cx = require('classnames')
-const { STYLE } = require('../constants')
+const { ACTIVITY } = require('../constants/sass')
 const { arrayOf, shape, string, number } = PropTypes
 
 
@@ -122,7 +122,7 @@ class ActivityPane extends PureComponent {
 }
 
 function getHeight(count) {
-  return count ? count * STYLE.ACTIVITY.HEIGHT + STYLE.ACTIVITY.PADDING : 0
+  return count ? count * ACTIVITY.OUTER_HEIGHT : 0
 }
 
 

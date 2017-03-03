@@ -9,18 +9,18 @@ const { ItemGrid, ItemTable } = require('../item')
 const { ProjectSidebar } = require('./sidebar')
 const { ProjectToolbar } = require('./toolbar')
 const { isValidImage } = require('../../image')
-const { pick, times } = require('../../common/util')
+const { pick, } = require('../../common/util')
 const { array, bool, func, object, number } = PropTypes
-const { TILE } = require('../../constants/style')
+const { ITEM } = require('../../constants/sass')
 
 
 class ProjectView extends PureComponent {
   get size() {
-    return this.constructor.Zoom[this.props.zoom]
+    return ITEM.ZOOM[this.props.zoom]
   }
 
   get maxZoom() {
-    return this.constructor.Zoom.length - 1
+    return ITEM.ZOOM.length - 1
   }
 
   get ItemIterator() {
@@ -116,13 +116,6 @@ class ProjectView extends PureComponent {
     onMaximize: func.isRequired,
     onUiUpdate: func.isRequired
   }
-
-  static Zoom = [
-    TILE.MIN,
-    ...times((256 - 4 - TILE.MIN) / 4, i => i * 4 + TILE.MIN + 4),
-    ...times(256 / 8, i => i * 8 + 256),
-    512
-  ]
 }
 
 const spec = {
