@@ -46,7 +46,7 @@ $thumbnail-size:          $space-lg;
 // Tile
 // --------------------------------------------------
 
-$tile-factor:             1.2;
+$tile-factor:             const("TILE.FACTOR");
 $tile-thumbnail-size-min: 48; // First visible size
 $tile-thumbnail-size-max: 512;
 $tile-size-step-min:      2;

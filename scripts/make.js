@@ -230,6 +230,22 @@ function mocha(options, silent) {
 }
 
 const SassExtensions = {
+  'const($name, $unit:"")'(name, unit) {
+    const SASS = require('../lib/constants/sass')
+    const { get } = require('../lib/common/util')
+
+    const value = get(SASS, name.getValue())
+
+    if (typeof value === 'number') {
+      return new sass.types.Number(value, unit.getValue())
+    }
+
+    if (typeof value === 'number') {
+      return new sass.types.Number(value)
+    }
+
+    return sass.types.Null.NULL
+  }
 }
 
 // We need to make a copy when exposing targets to other scripts,
