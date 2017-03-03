@@ -231,8 +231,8 @@ function mocha(options, silent) {
 
 const SassExtensions = {
   'const($name, $unit:"")'(name, unit) {
-    const SASS = require('../lib/constants/sass')
-    const { get } = require('../lib/common/util')
+    const SASS = require('../src/constants/sass')
+    const { get } = require('../src/common/util')
 
     const value = get(SASS, name.getValue())
 

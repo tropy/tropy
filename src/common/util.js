@@ -169,7 +169,7 @@ module.exports = {
   },
 
   merge(a, b) {
-    const res = { ... a }
+    const res = Object.assign({}, a)
 
     for (let prop in b) {
       if (b.hasOwnProperty(prop)) {
