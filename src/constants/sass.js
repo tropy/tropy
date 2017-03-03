@@ -1,6 +1,7 @@
 'use strict'
 
 const { times } = require('../common/util')
+const { round } = Math
 
 const ICON = {
   SIZE: 48,
@@ -58,14 +59,23 @@ PHOTO.ZOOM = [
 
 const PANEL = {
   MIN_HEIGHT: 100,
+
   HEADER_HEIGHT: 26,
   HEADER_MARGIN: 4,
+
+  TOOLBAR: 46,
 
   PADDING: 12
 }
 
 PANEL.CLOSED_HEIGHT =
   PANEL.HEADER_HEIGHT + PANEL.HEADER_MARGIN
+
+PANEL.MIN_WIDTH =
+  round(PHOTO.TILE.MAX * PHOTO.TILE.FACTOR + 2 * PANEL.PADDING)
+
+PANEL.MAX_WIDTH =
+  PANEL.MIN_WIDTH * 2
 
 
 const ACTIVITY = {
@@ -82,14 +92,27 @@ const SCROLLBAR = {
   WIDTH: 12
 }
 
+const SIDEBAR = {
+  MIN_WIDTH: 150,
+  MAX_WIDTH: 500
+}
+
+const WINDOW = {
+  WIDTH: 1280,
+  HEIGHT: 720,
+  MIN_WIDTH: SIDEBAR.MIN_WIDTH + PANEL.MIN_WIDTH * 2,
+  MIN_HEIGHT: PANEL.MIN_HEIGHT * 3 + PANEL.TOOLBAR + PANEL.HEADER_MARGIN
+}
 
 module.exports =  {
-  ICON,
-  TILE,
-  ITEM,
-  PHOTO,
-  PANEL,
   ACTIVITY,
-  SCROLLBAR
+  ICON,
+  ITEM,
+  PANEL,
+  PHOTO,
+  SCROLLBAR,
+  SIDEBAR,
+  TILE,
+  WINDOW
 }
 

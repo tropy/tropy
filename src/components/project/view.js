@@ -11,7 +11,7 @@ const { ProjectToolbar } = require('./toolbar')
 const { isValidImage } = require('../../image')
 const { pick, } = require('../../common/util')
 const { array, bool, func, object, number } = PropTypes
-const { ITEM } = require('../../constants/sass')
+const { ITEM, SIDEBAR } = require('../../constants/sass')
 
 
 class ProjectView extends PureComponent {
@@ -62,8 +62,8 @@ class ProjectView extends PureComponent {
         <Resizable
           edge="right"
           value={sidebar.width}
-          min={150}
-          max={750}
+          min={SIDEBAR.MIN_WIDTH}
+          max={SIDEBAR.MAX_WIDTH}
           onChange={this.handleSidebarResize}>
           <ProjectSidebar {...pick(props, ProjectSidebar.props)}
             edit={edit}

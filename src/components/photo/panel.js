@@ -10,7 +10,7 @@ const { PhotoGrid } = require('./grid')
 const { isValidImage } = require('../../image')
 const { pick } = require('../../common/util')
 const { array, bool, number, func } = React.PropTypes
-const { PHOTO, PANEL } = require('../../constants/sass')
+const { PHOTO } = require('../../constants/sass')
 
 
 class PhotoPanel extends Panel {
@@ -88,11 +88,6 @@ class PhotoPanel extends Panel {
     onEdit: func.isRequired,
     onMetadataSave: func.isRequired,
     onZoomChange: func.isRequired
-  }
-
-
-  static get minWidth() {
-    return PHOTO.TILE.MAX * PHOTO.TILE.FACTOR + 2 * PANEL.PADDING
   }
 }
 

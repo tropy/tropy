@@ -3,11 +3,10 @@
 const React = require('react')
 const { PureComponent, PropTypes } = React
 const { ItemPanel } = require('./panel')
-const { PhotoPanel } = require('../photo')
 const { StatelessResizable, Resizable } = require('../resizable')
 const { EsperImage } = require('../esper')
 const { NotePad } = require('../note')
-const { MODE } = require('../../constants/project')
+const { PROJECT: { MODE }, SASS: { PANEL } } = require('../../constants')
 const { pick } = require('../../common/util')
 const { func, arrayOf, shape, number, bool, string } = PropTypes
 
@@ -60,8 +59,8 @@ class ItemView extends PureComponent {
         <StatelessResizable
           edge={isItemOpen ? 'right' : 'left'}
           value={offset}
-          min={PhotoPanel.minWidth}
-          max={750}
+          min={PANEL.MIN_WIDTH}
+          max={PANEL.MAX_WIDTH}
           onResize={onPanelResize}
           onResizeStop={onPanelResizeStop}>
           <ItemPanel {...pick(props, ItemPanel.props)}

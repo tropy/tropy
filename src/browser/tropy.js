@@ -23,9 +23,14 @@ const release = require('../common/release')
 
 const { defineProperty: prop } = Object
 const act = require('../actions')
-const { HISTORY, TAG, PROJECT, ITEM, CONTEXT } = require('../constants')
 const { darwin } = require('../common/os')
 const { version } = require('../common/release')
+
+const {
+  HISTORY, TAG, PROJECT, ITEM, CONTEXT, SASS
+} = require('../constants')
+
+const { WIDTH, HEIGHT, MIN_WIDTH, MIN_HEIGHT } = SASS.WINDOW
 
 const H = new WeakMap()
 const T = new WeakMap()
@@ -95,10 +100,10 @@ class Tropy extends EventEmitter {
 
 
       this.win = open('project', { file, ...this.hash }, {
-        width: 1280,
-        height: 720,
-        minWidth: 640,
-        minHeight: 480,
+        width: WIDTH,
+        height: HEIGHT,
+        minWidth: MIN_WIDTH,
+        minHeight: MIN_HEIGHT,
         darkTheme: (this.state.theme === 'dark'),
         frame: !this.hash.frameless
       })
