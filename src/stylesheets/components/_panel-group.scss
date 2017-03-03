@@ -19,4 +19,16 @@
     display: flex;
     flex-direction: column;
   }
+
+  .resizable {
+    .panel {
+      padding-bottom: $space-min;
+    }
+
+    &:last-child {
+      .panel {
+        padding-bottom: 0;
+      }
+    }
+  }
 }
