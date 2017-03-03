@@ -122,7 +122,7 @@ class ProjectContainer extends Component {
     this.setState({ offset })
   }
 
-  handlePanelResizeStop = (offset) => {
+  handlePanelResizeStop = () => {
     this.props.onUiUpdate({
       panel: { width: this.state.offset }
     })
@@ -242,7 +242,8 @@ class ProjectContainer extends Component {
     onProjectOpen: func.isRequired,
     onModeChange: func.isRequired,
     onMetadataSave: func.isRequired,
-    onSort: func.isRequired
+    onSort: func.isRequired,
+    onUiUpdate: func.isRequired
   }
 
   static defaultProps = {

@@ -8,9 +8,9 @@ const { PhotoToolbar } = require('./toolbar')
 const { PhotoList } = require('./list')
 const { PhotoGrid } = require('./grid')
 const { isValidImage } = require('../../image')
-const { pick, times } = require('../../common/util')
+const { pick } = require('../../common/util')
 const { array, bool, number, func } = React.PropTypes
-const { PHOTO, TILE, PANEL } = require('../../constants/sass')
+const { PHOTO, PANEL } = require('../../constants/sass')
 
 
 class PhotoPanel extends Panel {

@@ -144,7 +144,9 @@ class PanelGroup extends PureComponent {
       const slots = [...this.state.slots]
 
       slots[act] = { ...slots[act], height }
-      slots[cur] = { ...slots[cur], height: PANEL.MIN_HEIGHT, isRelative: false }
+      slots[cur] = {
+        ...slots[cur], height: PANEL.MIN_HEIGHT, isRelative: false
+      }
 
       this.setState({ flex: nxt, slots })
     }
