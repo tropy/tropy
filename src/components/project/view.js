@@ -27,6 +27,12 @@ class ProjectView extends PureComponent {
     return this.props.zoom ? ItemGrid : ItemTable
   }
 
+  get style() {
+    return {
+      flexBasis: `calc(100% - ${this.props.offset}px)`
+    }
+  }
+
   handleSidebarResize = (width) => {
     this.props.onUiUpdate({ sidebar: { width } })
   }
@@ -67,7 +73,7 @@ class ProjectView extends PureComponent {
             isTrashSelected={nav.trash}/>
         </Resizable>
         <main>
-          <section id="items">
+          <section id="items" style={this.style}>
             <header>
               <ProjectToolbar
                 zoom={zoom}
@@ -100,6 +106,7 @@ class ProjectView extends PureComponent {
     isOver: bool,
     items: array.isRequired,
     nav: object.isRequired,
+    offset: number.isRequired,
     sidebar: object.isRequired,
     dt: func.isRequired,
     zoom: number.isRequired,

@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent, PropTypes } = React
 const { ItemPanel } = require('./panel')
 const { PhotoPanel } = require('../photo')
-const { Resizable } = require('../resizable')
+const { StatelessResizable, Resizable } = require('../resizable')
 const { EsperImage } = require('../esper')
 const { NotePad } = require('../note')
 const { MODE } = require('../../constants/project')
@@ -28,6 +28,16 @@ class ItemView extends PureComponent {
     return this.props.mode === MODE.ITEM
   }
 
+  get offset() {
+    return this.isItemOpen ? 0 : `calc(100% - ${this.props.offset}px)`
+  }
+
+  get style() {
+    return {
+      transform: `translate3d(${this.offset}, 0, 0)`
+    }
+  }
+
   handlePanelResize = (width) => {
     this.props.onUiUpdate({ panel: { width } })
   }
@@ -42,25 +52,28 @@ class ItemView extends PureComponent {
       esper,
       panel,
       photo,
+      offset,
+      onPanelResize,
       ...props
     } = this.props
 
     const { isItemOpen, isDisabled } = this
 
     return (
-      <section className="item view">
-        <Resizable
+      <section className="item view" style={this.style}>
+        <StatelessResizable
           edge={isItemOpen ? 'right' : 'left'}
-          value={panel.width}
+          value={offset}
           min={PhotoPanel.minWidth}
           max={750}
-          onChange={this.handlePanelResize}>
+          onResize={onPanelResize}
+          onResizeStop={this.handlePanelResize}>
           <ItemPanel {...pick(props, ItemPanel.props)}
             panel={panel}
             photo={photo}
             isItemOpen={isItemOpen}
             isDisabled={isDisabled}/>
-        </Resizable>
+        </StatelessResizable>
 
         <div className="item-container">
           <Resizable
@@ -89,15 +102,14 @@ class ItemView extends PureComponent {
       })
     ),
 
-    panel: shape({
-      width: number.isRequired
-    }).isRequired,
+    offset: number.isRequired,
 
     esper: shape({
       height: number.isRequired
     }).isRequired,
 
     mode: string.isRequired,
+    onPanelResize: func.isRequired,
     onUiUpdate: func.isRequired
   }
 }

@@ -98,7 +98,7 @@ class StatelessResizable extends PureComponent {
   }
 
   handleDrag = (event) => {
-    this.props.onResize(this.getNewValue(), event, this)
+    this.props.onResize(this.getNewValue(event), event, this)
   }
 
   handleDragStop = () => {

@@ -63,7 +63,7 @@ main {
 }
 
 #items {
-  flex-basis: calc(100% - #{$panels-default-width});
+  //flex-basis: calc(100% - #{$panels-default-width});
   display: flex;
   flex-direction: column;
 

@@ -41,6 +41,7 @@ class ProjectContainer extends Component {
 
     this.state = {
       mode: props.mode,
+      offset: props.ui.panel.width,
       willModeChange: false,
       isModeChanging: false
     }
@@ -50,9 +51,13 @@ class ProjectContainer extends Component {
     this.clearTimeouts()
   }
 
-  componentWillReceiveProps({ mode }) {
+  componentWillReceiveProps({ mode, ui }) {
     if (mode !== this.props.mode) {
       this.modeWillChange()
+    }
+
+    if (this.props.ui.panel !== ui.panel) {
+      this.setState({ offset: ui.panel.width })
     }
   }
 
@@ -113,6 +118,10 @@ class ProjectContainer extends Component {
     this.props.onModeChange(mode)
   }
 
+  handlePanelResize = (offset) => {
+    this.setState({ offset })
+  }
+
   handleMetadataSave = (payload, meta = {}) => {
     const { sort, onMetadataSave } = this.props
 
@@ -157,6 +166,7 @@ class ProjectContainer extends Component {
           data={data}
           columns={columns}
           sidebar={ui.sidebar}
+          offset={this.state.offset}
           zoom={ui.zoom}
           onMetadataSave={this.handleMetadataSave}/>
 
@@ -169,6 +179,8 @@ class ProjectContainer extends Component {
           photos={photos}
           panel={ui.panel}
           esper={ui.esper}
+          offset={this.state.offset}
+          onPanelResize={this.handlePanelResize}
           onMetadataSave={this.handleMetadataSave}/>
 
         <DragLayer cache={props.cache}/>
