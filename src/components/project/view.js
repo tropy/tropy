@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent, PropTypes } = React
 const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
-const { Resizable } = require('../resizable')
+const { BufferedResizable } = require('../resizable')
 const { ItemGrid, ItemTable } = require('../item')
 const { ProjectSidebar } = require('./sidebar')
 const { ProjectToolbar } = require('./toolbar')
@@ -59,7 +59,7 @@ class ProjectView extends PureComponent {
 
     return (
       <div id="project-view">
-        <Resizable
+        <BufferedResizable
           edge="right"
           value={sidebar.width}
           min={SIDEBAR.MIN_WIDTH}
@@ -71,7 +71,7 @@ class ProjectView extends PureComponent {
             selectedTags={nav.tags}
             isSelected={!(nav.list || nav.trash)}
             isTrashSelected={nav.trash}/>
-        </Resizable>
+        </BufferedResizable>
         <main>
           <section id="items" style={this.style}>
             <header>

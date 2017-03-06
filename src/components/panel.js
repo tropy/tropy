@@ -87,7 +87,7 @@ class PanelGroup extends PureComponent {
       let isRelative = true
 
       if (isClosed) {
-        min = value = PANEL.CLOSED
+        min = value = PANEL.CLOSED_HEIGHT
         isRelative = false
 
       } else {
@@ -105,14 +105,12 @@ class PanelGroup extends PureComponent {
       offset = offset + min
     }
 
-    return { slots, flex, canClosePanel: open > 1  }
+    return { slots, flex, canClosePanel: open > 1, max: null  }
   }
 
   get isFlexValid() {
     return bounds(this.flex.container).height > PANEL.MIN_HEIGHT
   }
-
-  getMax = () => this.max
 
   setContainer = (container) => {
     this.container = container
@@ -127,56 +125,53 @@ class PanelGroup extends PureComponent {
     const { bottom } = bounds(this.container)
     const { offset } = this.state.slots[resizable.props.id]
 
-    this.max = bottom - top - offset
+    this.setState({
+      max: bottom - top - offset
+    })
   }
 
   handleResize = (height, _, resizable) => {
-    if (height <= resizable.state.value) return false
-    if (this.isFlexValid) return false
+    const slots = [...this.state.slots]
+    const { id } = resizable.props
 
-    let act = resizable.props.id
-    let cur = this.flex.props.id
+    const dir = height - slots[id].height
+
+    slots[id] = { ...slots[id], height }
+
+    let cur = this.state.flex
     let nxt = cur
 
-    do --nxt; while (nxt > act && this.state.slots[nxt].isClosed)
+    if (dir > 0 && !this.isFlexValid) {
 
-    if (nxt > act || this.state.slots[cur].isRelative) {
-      const slots = [...this.state.slots]
+      do --nxt; while (nxt > id && slots[nxt].isClosed)
 
-      slots[act] = { ...slots[act], height }
-      slots[cur] = {
-        ...slots[cur], height: PANEL.MIN_HEIGHT, isRelative: false
+      if (nxt > id || slots[cur].isRelative) {
+        slots[cur] = {
+          ...slots[cur], height: PANEL.MIN_HEIGHT, isRelative: false
+        }
       }
-
-      this.setState({ flex: nxt, slots })
     }
 
-    return true
+    this.setState({ flex: nxt, slots })
   }
 
-  handleResizeStop = (height, resizable) => {
-    this.max = null
-
-    const scale = bounds(this.container).height / 100
+  handleResizeStop = (_, resizable) => {
+    const { scale } = resizable
 
     this.props.onResize(
-      this.state.slots.map((slot, id) => {
-        if (id === resizable.props.id) {
-          return { height, isClosed: slot.isClosed }
-        }
+      this.state.slots.map((slot) => {
+        let { height, isClosed, isRelative } = slot
 
-        if (!slot.isRelative) {
-          return { height: slot.height / scale, isClosed: slot.isClosed }
-        }
+        if (!isRelative) height = height / scale
 
-        return { height: slot.height, isClosed: slot.isClosed }
+        return { height, isClosed }
       })
     )
   }
 
 
   renderPanel = (panel, id) => {
-    const { min, height, isClosed, isRelative } = this.state.slots[id]
+    const { min, max, height, isClosed, isRelative } = this.state.slots[id]
     const isFlex = (this.state.flex === id)
 
     return (
@@ -186,7 +181,7 @@ class PanelGroup extends PureComponent {
         ref={isFlex ? this.setFlex : null}
         edge="bottom"
         min={min}
-        max={this.getMax}
+        max={max}
         value={isFlex ? null : height}
         isDisabled={isClosed || isFlex}
         isRelative={isRelative}

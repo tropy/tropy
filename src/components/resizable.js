@@ -2,11 +2,11 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const { func, node, bool, number, oneOf, oneOfType } = PropTypes
+const { func, node, bool, number, oneOf } = PropTypes
 const { Draggable } = require('./draggable')
 const cx = require('classnames')
 const { bounds } = require('../dom')
-const { noop, restrict } = require('../common/util')
+const { noop, restrict, titlecase } = require('../common/util')
 const { keys } = Object
 
 
@@ -27,7 +27,7 @@ const AXS = {
 }
 
 
-class StatelessResizable extends PureComponent {
+class Resizable extends PureComponent {
   get classes() {
     return {
       resizable: true,
@@ -44,9 +44,16 @@ class StatelessResizable extends PureComponent {
     return this.props.value
   }
 
+  get cssValue() {
+    return `${this.value}${this.props.isRelative ? '%' : 'px'}`
+  }
+
   get style() {
-    return this.isFlex ? null : {
-      [this.dimension]: `${this.value}${this.props.isRelative ? '%' : 'px'}`
+    const { cssValue, dimension, isFlex } = this
+
+    return isFlex ? null : {
+      [dimension]: cssValue,
+      [`min${titlecase(dimension)}`]: `${this.props.min}px`
     }
   }
 
@@ -58,14 +65,8 @@ class StatelessResizable extends PureComponent {
     return this.props.edge === 'left' || this.props.edge === 'top'
   }
 
-  getMax(event) {
-    const { max } = this.props
-    return (typeof max === 'function') ? max(event, this) : max
-  }
-
   getNewValue(event) {
-    const { edge, min, isRelative } = this.props
-    const max = this.getMax(event)
+    const { edge, min, max, isRelative } = this.props
 
     let origin = bounds(this.container)[OPP[edge]]
     let value = event[AXS[edge]] - origin
@@ -86,11 +87,9 @@ class StatelessResizable extends PureComponent {
   }
 
   handleDragStart = (event) => {
-    const { edge, isRelative, onResizeStart } = this.props
+    const { edge, onResizeStart } = this.props
 
-    if (isRelative) {
-      this.scale = bounds(this.container.parentElement)[DIM[edge]] / 100
-    }
+    this.scale = bounds(this.container.parentElement)[DIM[edge]] / 100
 
     if (onResizeStart) {
       return onResizeStart(event, this)
@@ -150,7 +149,7 @@ class StatelessResizable extends PureComponent {
     isRelative: bool,
     value: number,
     min: number.isRequired,
-    max: oneOfType([number, func]),
+    max: number,
     onChange: func,
     onResize: func.isRequired,
     onResizeStart: func,
@@ -165,7 +164,7 @@ class StatelessResizable extends PureComponent {
 }
 
 
-class Resizable extends StatelessResizable {
+class BufferedResizable extends Resizable {
   constructor(props) {
     super(props)
 
@@ -194,5 +193,5 @@ class Resizable extends StatelessResizable {
 
 module.exports = {
   Resizable,
-  StatelessResizable
+  BufferedResizable
 }

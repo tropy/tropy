@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent, PropTypes } = React
 const { ItemPanel } = require('./panel')
-const { StatelessResizable, Resizable } = require('../resizable')
+const { Resizable, BufferedResizable } = require('../resizable')
 const { EsperImage } = require('../esper')
 const { NotePad } = require('../note')
 const { PROJECT: { MODE }, SASS: { PANEL } } = require('../../constants')
@@ -56,7 +56,7 @@ class ItemView extends PureComponent {
 
     return (
       <section className="item view" style={this.style}>
-        <StatelessResizable
+        <Resizable
           edge={isItemOpen ? 'right' : 'left'}
           value={offset}
           min={PANEL.MIN_WIDTH}
@@ -68,17 +68,17 @@ class ItemView extends PureComponent {
             photo={photo}
             isItemOpen={isItemOpen}
             isDisabled={isDisabled}/>
-        </StatelessResizable>
+        </Resizable>
 
         <div className="item-container">
-          <Resizable
+          <BufferedResizable
             edge="bottom"
             value={esper.height}
             isRelative
             onChange={this.handleEsperResize}
             min={256}>
             <EsperImage isVisible photo={photo}/>
-          </Resizable>
+          </BufferedResizable>
           <NotePad/>
         </div>
       </section>
