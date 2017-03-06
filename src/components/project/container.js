@@ -124,7 +124,7 @@ class ProjectContainer extends Component {
 
   handlePanelResizeStop = () => {
     this.props.onUiUpdate({
-      panel: { width: this.state.offset }
+      panel: { width: Math.round(this.state.offset) }
     })
   }
 

@@ -34,7 +34,7 @@ class ProjectView extends PureComponent {
   }
 
   handleSidebarResize = (width) => {
-    this.props.onUiUpdate({ sidebar: { width } })
+    this.props.onUiUpdate({ sidebar: { width: Math.round(width) } })
   }
 
   handleZoomChange = (zoom) => {
