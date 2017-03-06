@@ -46,10 +46,10 @@ $thumbnail-size:          $space-lg;
 // Tile
 // --------------------------------------------------
 
+$tile-thumbnail-sizes:    const("ITEM.ZOOM");
+$tile-thumbnail-size-min: const("ICON.SIZE");
+$tile-thumbnail-size-max: const("ICON.MAX");
 $tile-factor:             const("TILE.FACTOR");
-$tile-thumbnail-size-min: 48; // First visible size
-$tile-thumbnail-size-max: 512;
-$tile-size-step-min:      2;
 
 
 // Stack

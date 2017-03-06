@@ -54,36 +54,34 @@
     }
   }
 
-  $range: ($tile-thumbnail-size-max - $tile-thumbnail-size-min);
-  $i: $tile-thumbnail-size-min;
-
-  @while $i <= $tile-thumbnail-size-max {
-    &[data-size="#{$i}"] {
+  @each $size in $tile-thumbnail-sizes {
+    &[data-size="#{$size}"] {
       .stack-lines {
         .line {
 
           // Stack line height
-          height: #{round($i / 32)}px;
+          height: #{round($size / 32)}px;
 
           // Stack line widths
-          @for $j from 1 through $stack-size-max {
-            &.line-#{$j} {
-              margin-left: #{round($i * $j / 16)}px;
-              margin-right: #{round($i * $j / 16)}px;
+          @for $i from 1 through $stack-size-max {
+            &.line-#{$i} {
+              margin-left: #{round($size * $i / 16)}px;
+              margin-right: #{round($size * $i / 16)}px;
             }
           }
 
           // Tinting and gap
           $tint-opacity: $stack-line-tint-opacity;
           $gap-opacity: 0;
+          $range: $tile-thumbnail-size-max - $tile-thumbnail-size-min;
 
-          @if ($i - $tile-thumbnail-size-min) < ($range / 2.25) {
+          @if ($size - $tile-thumbnail-size-min) < ($range / 2.25) {
             $tint-opacity:
               ($stack-line-tint-opacity
-                * (($i - $tile-thumbnail-size-min)
+                * (($size - $tile-thumbnail-size-min)
                 * 2.25 / $range));
 
-            $gap-opacity: (1 - ($i - $tile-thumbnail-size-min) * 2.25 / $range);
+            $gap-opacity: (1 - ($size - $tile-thumbnail-size-min) * 2.25 / $range);
           }
 
           &.line-1 {
@@ -103,8 +101,6 @@
           }
         }
       }
-
-      $i: $i + $tile-size-step-min;
     }
   }
 }
