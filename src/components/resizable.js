@@ -31,8 +31,7 @@ class Resizable extends PureComponent {
   get classes() {
     return {
       resizable: true,
-      disabled: this.props.isDisabled,
-      flex: this.isFlex
+      disabled: this.props.isDisabled
     }
   }
 
@@ -48,17 +47,22 @@ class Resizable extends PureComponent {
     return `${this.value}${this.props.isRelative ? '%' : 'px'}`
   }
 
-  get style() {
-    const { cssValue, dimension, isFlex } = this
-
-    return isFlex ? null : {
-      [dimension]: cssValue,
-      [`min${titlecase(dimension)}`]: `${this.props.min}px`
-    }
+  get cssMin() {
+    return `${this.props.min}px`
   }
 
-  get isFlex() {
-    return this.value == null
+  get cssMax() {
+    return this.props.max ? `${this.props.max}px` : null
+  }
+
+  get style() {
+    const { cssValue, cssMin, cssMax, dimension } = this
+
+    return {
+      [dimension]: cssValue,
+      [`min${titlecase(dimension)}`]: cssMin,
+      [`max${titlecase(dimension)}`]: cssMax
+    }
   }
 
   get isInverse() {
@@ -112,7 +116,7 @@ class Resizable extends PureComponent {
 
     return (
       <Draggable
-        isDisabled={isDisabled || this.isFlex}
+        isDisabled={isDisabled}
         onDragStart={this.handleDragStart}
         onDrag={this.handleDrag}
         onDragStop={this.handleDragStop}
@@ -141,7 +145,7 @@ class Resizable extends PureComponent {
     id: number,
     isDisabled: bool,
     isRelative: bool,
-    value: number,
+    value: number.isRequired,
     min: number.isRequired,
     max: number,
     onResize: func.isRequired,
