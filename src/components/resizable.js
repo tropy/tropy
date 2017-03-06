@@ -6,7 +6,7 @@ const { func, node, bool, number, oneOf } = PropTypes
 const { Draggable } = require('./draggable')
 const cx = require('classnames')
 const { bounds } = require('../dom')
-const { noop, restrict, titlecase } = require('../common/util')
+const { noop, restrict, titlecase, refine } = require('../common/util')
 const { keys } = Object
 
 
@@ -100,15 +100,9 @@ class Resizable extends PureComponent {
     this.props.onResize(this.getNewValue(event), event, this)
   }
 
-  handleDragStop = () => {
-    const { value, onResizeStop, onChange } = this.props
-
-    if (onResizeStop) {
-      onResizeStop(this.value, this)
-    }
-
-    if (value !== this.value && onChange) {
-      onChange(this.value, this)
+  handleDragStop = (event) => {
+    if (this.props.onResizeStop) {
+      this.props.onResizeStop(event, this)
     }
   }
 
@@ -150,7 +144,6 @@ class Resizable extends PureComponent {
     value: number,
     min: number.isRequired,
     max: number,
-    onChange: func,
     onResize: func.isRequired,
     onResizeStart: func,
     onResizeStop: func,
@@ -171,6 +164,14 @@ class BufferedResizable extends Resizable {
     this.state = {
       value: props.value
     }
+
+    refine(this, 'handleDragStop', () => {
+      const { value, onChange } = this.props
+
+      if (value !== this.value && onChange) {
+        onChange(this.value, this)
+      }
+    })
   }
 
   componentWillReceiveProps(props) {
@@ -187,6 +188,11 @@ class BufferedResizable extends Resizable {
     if (!this.props.onResize(value, event, this)) {
       this.setState({ value })
     }
+  }
+
+  static propTypes = {
+    ...Resizable.propTypes,
+    onChange: func
   }
 }
 
