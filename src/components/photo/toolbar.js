@@ -25,7 +25,7 @@ class PhotoToolbar extends PureComponent {
     } = this.props
 
     return (
-      <Toolbar>
+      <Toolbar isDraggable={false}>
         <div className="toolbar-left">
           <IconPhoto/>
           <h4><FormattedMessage id="panel.photos"/></h4>

@@ -9,7 +9,7 @@ const { IconButton } = require('../button')
 
 
 const NoteToolbar = ({ hasCreateButton, onCreate }) => (
-  <Toolbar>
+  <Toolbar isDraggable={false}>
     <div className="toolbar-left">
       <IconNote/>
       <h4><FormattedMessage id="panel.notes"/></h4>
