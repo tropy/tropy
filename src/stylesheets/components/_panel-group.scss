@@ -16,8 +16,6 @@
   .panel-group-body {
     flex: 1 1 0;
     height: calc(100% - #{$toolbar-height + $space-min});
-    display: flex;
-    flex-direction: column;
   }
 
   .resizable {

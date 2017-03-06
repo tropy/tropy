@@ -10,10 +10,6 @@ $resizable-threshold: 8px !default;
   flex-direction: column;
   position: relative;
 
-  &.flex {
-    flex: 1 1 0;
-  }
-
   .resizable-handle {
     &-col,
     &-row {
