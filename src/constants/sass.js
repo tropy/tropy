@@ -25,7 +25,7 @@ ITEM.ZOOM = [
   ICON.SIZE / 2,
   ITEM.TILE.MIN,
   ...times(
-    ((ITEM.TILE.MAX / 2 - 4 - ITEM.TILE.MIN) / 4) - 1,
+    (ITEM.TILE.MAX / 2 - 4 - ITEM.TILE.MIN) / 4,
     i => i * 4 + ITEM.TILE.MIN + 4
   ),
   ...times(
@@ -47,7 +47,7 @@ PHOTO.ZOOM = [
   ICON.SIZE / 2,
   PHOTO.TILE.MIN,
   ...times(
-    ((PHOTO.TILE.MAX / 2 - 4 - PHOTO.TILE.MIN) / 4) - 1,
+    (PHOTO.TILE.MAX / 2 - 4 - PHOTO.TILE.MIN) / 4,
     i => i * 4 + PHOTO.TILE.MIN + 4
   ),
   ...times(
