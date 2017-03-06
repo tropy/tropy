@@ -235,13 +235,16 @@ const SassExtensions = {
     const { get } = require('../src/common/util')
 
     const value = get(SASS, name.getValue())
+    unit = unit.getValue()
 
     if (typeof value === 'number') {
-      return new sass.types.Number(value, unit.getValue())
+      return new sass.types.Number(value, unit)
     }
 
-    if (typeof value === 'number') {
-      return new sass.types.Number(value)
+    if (Array.isArray(value)) {
+      return value.reduce((list, val, i) => (
+        list.setValue(i, new sass.types.Number(val, unit)), list
+      ), new sass.types.List(value.length))
     }
 
     return sass.types.Null.NULL

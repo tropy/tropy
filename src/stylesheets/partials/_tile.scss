@@ -9,24 +9,18 @@
   justify-content: center;
   align-items: center;
 
-  $i: $tile-thumbnail-size-min;
-
-  @while $i <= $tile-thumbnail-size-max {
-    [data-size="#{$i}"] & {
-      $tile-size: #{round($i * $tile-factor)}px;
+  @each $size in const("ITEM.ZOOM") {
+    [data-size="#{$size}"] & {
+      $tile-size: #{round($size * $tile-factor)}px;
 
       flex-basis: $tile-size;
       height: $tile-size;
 
       .thumbnail {
-        $size: #{$i}px;
-
-        width: $size;
-        height: $size;
+        width: #{$size}px;
+        height: #{$size}px;
       }
     }
-
-    $i: $i + $tile-size-step-min;
   }
 
   &.filler {
