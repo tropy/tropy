@@ -6,7 +6,7 @@ const { func, node, bool, number, oneOf } = PropTypes
 const { Draggable } = require('./draggable')
 const cx = require('classnames')
 const { bounds } = require('../dom')
-const { noop, restrict, titlecase, refine } = require('../common/util')
+const { noop, restrict, titlecase, refine, round } = require('../common/util')
 const { keys } = Object
 
 
@@ -80,7 +80,7 @@ class Resizable extends PureComponent {
     value = restrict(value, min, max)
 
     if (isRelative) {
-      value = restrict(value / this.scale, null, 100)
+      value = restrict(round(value / this.scale), null, 100)
     }
 
     return value

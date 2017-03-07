@@ -6,7 +6,7 @@ const { only } = require('./util')
 const { Resizable } = require('./resizable')
 const cx = require('classnames')
 const { bounds } = require('../dom')
-const { restrict } = require('../common/util')
+const { restrict, round } = require('../common/util')
 const { bool, func, node, arrayOf, number, shape } = PropTypes
 const { PANEL } = require('../constants/sass')
 
@@ -124,7 +124,7 @@ class PanelGroup extends PureComponent {
     this.bounds = {
       upper: top + upper,
       lower: bottom - lower,
-      min: PANEL.MIN_HEIGHT / active.scale
+      min: round(PANEL.MIN_HEIGHT / active.scale)
     }
   }
 
@@ -190,11 +190,13 @@ class PanelGroup extends PureComponent {
     return slots
   }
 
-  handleDrag = (event, active) => {
+  handleDrag = ({ pageY }, active) => {
     const { upper, lower } = this.bounds
 
-    const position = restrict(event.pageY, upper, lower)
-    const delta = (position - bounds(active.container).bottom) / active.scale
+    const position = restrict(pageY, upper, lower)
+    const delta = (
+      (position - bounds(active.container).bottom) / active.scale
+    )
 
     if (delta === 0) return
 

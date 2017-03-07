@@ -229,6 +229,10 @@ module.exports = {
     }
   },
 
+  round(value, digits = 100) {
+    return Math.round(value * digits) / digits
+  },
+
   titlecase(string) {
     return string.replace(/\b[a-z]/g, (match) => match.toUpperCase())
   },
