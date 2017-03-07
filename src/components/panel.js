@@ -117,7 +117,6 @@ class PanelGroup extends PureComponent {
   }
 
   handleDragStart = (_, active) => {
-
     let { top, bottom } = bounds(this.container)
     let { upper, lower } = this.state.slots[active.props.id]
 
@@ -208,12 +207,14 @@ class PanelGroup extends PureComponent {
   }
 
   handleDragStop = () => {
-    //this.props.onResize(
-    //  this.state.slots.map(({ height, isClosed }) => { height, isClosed })
-    //)
+    this.props.onResize(
+      this.state.slots.map(({ height, isClosed }) => ({
+        height: round(height),
+        isClosed
+      }))
+    )
 
     this.bounds = null
-    //this.setState({ active: null })
   }
 
 
