@@ -122,7 +122,7 @@ class ProjectContainer extends Component {
     this.setState({ offset })
   }
 
-  handlePanelResizeStop = () => {
+  handlePanelDragStop = () => {
     this.props.onUiUpdate({
       panel: { width: Math.round(this.state.offset) }
     })
@@ -189,7 +189,7 @@ class ProjectContainer extends Component {
           mode={this.state.mode}
           isModeChanging={this.state.isModeChanging}
           onPanelResize={this.handlePanelResize}
-          onPanelResizeStop={this.handlePanelResizeStop}
+          onPanelDragStop={this.handlePanelDragStop}
           onMetadataSave={this.handleMetadataSave}/>
 
         <DragLayer cache={props.cache}/>

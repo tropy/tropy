@@ -91,22 +91,28 @@ class Resizable extends PureComponent {
   }
 
   handleDragStart = (event) => {
-    const { edge, onResizeStart } = this.props
+    const { edge, onDragStart } = this.props
 
     this.scale = bounds(this.container.parentElement)[DIM[edge]] / 100
 
-    if (onResizeStart) {
-      return onResizeStart(event, this)
+    if (onDragStart) {
+      return onDragStart(event, this)
     }
   }
 
   handleDrag = (event) => {
-    this.props.onResize(this.getNewValue(event), event, this)
+    if (this.props.onDrag) {
+      this.props.onDrag(event, this)
+    }
+
+    if (this.props.onResize) {
+      this.props.onResize(this.getNewValue(event), event, this)
+    }
   }
 
   handleDragStop = (event) => {
-    if (this.props.onResizeStop) {
-      this.props.onResizeStop(event, this)
+    if (this.props.onDragStop) {
+      this.props.onDragStop(event, this)
     }
   }
 
@@ -148,14 +154,14 @@ class Resizable extends PureComponent {
     value: number.isRequired,
     min: number.isRequired,
     max: number,
-    onResize: func.isRequired,
-    onResizeStart: func,
-    onResizeStop: func,
+    onResize: func,
+    onDrag: func,
+    onDragStart: func,
+    onDragStop: func,
   }
 
   static defaultProps = {
-    min: 0,
-    onResize: noop
+    min: 0
   }
 
 }
@@ -196,7 +202,13 @@ class BufferedResizable extends Resizable {
 
   static propTypes = {
     ...Resizable.propTypes,
-    onChange: func
+    onChange: func,
+    onResize: func.isRequired
+  }
+
+  static defaultProps = {
+    ...Resizable.defaultProps,
+    onResize: noop
   }
 }
 

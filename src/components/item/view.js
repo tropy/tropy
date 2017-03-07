@@ -48,7 +48,7 @@ class ItemView extends PureComponent {
       photo,
       offset,
       onPanelResize,
-      onPanelResizeStop,
+      onPanelDragStop,
       ...props
     } = this.props
 
@@ -62,7 +62,7 @@ class ItemView extends PureComponent {
           min={PANEL.MIN_WIDTH}
           max={PANEL.MAX_WIDTH}
           onResize={onPanelResize}
-          onResizeStop={onPanelResizeStop}>
+          onDragStop={onPanelDragStop}>
           <ItemPanel {...pick(props, ItemPanel.props)}
             panel={panel}
             photo={photo}
@@ -106,7 +106,7 @@ class ItemView extends PureComponent {
     isModeChanging: bool.isRequired,
 
     onPanelResize: func.isRequired,
-    onPanelResizeStop: func.isRequired,
+    onPanelDragStop: func.isRequired,
     onUiUpdate: func.isRequired
   }
 }
