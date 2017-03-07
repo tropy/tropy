@@ -5,9 +5,13 @@ const { once } = require('./common/util')
 
 const dom = module.exports = {
 
-  $: document.querySelector.bind(document),
+  $(selectors, node = document) {
+    return node.querySelector(selectors)
+  },
 
-  $$: document.querySelectorAll.bind(document),
+  $$(selectors, node = document) {
+    return node.querySelectorAll(selectors)
+  },
 
   ready: (document.readyState !== 'loading') ?
     Promise.resolve() :
