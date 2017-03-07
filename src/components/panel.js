@@ -6,6 +6,7 @@ const { only } = require('./util')
 const { Resizable } = require('./resizable')
 const cx = require('classnames')
 const { bounds } = require('../dom')
+const { restrict } = require('../common/util')
 const { bool, func, node, arrayOf, number, shape } = PropTypes
 const { PANEL } = require('../constants/sass')
 
@@ -74,49 +75,38 @@ class PanelGroup extends PureComponent {
 
 
   getLayout(props) {
+    const slots = []
+
     let open = 0
     let offset = 0
-    let slots = []
+    let i = 0
 
-    for (let i = props.slots.length - 1; i >= 0; --i) {
-      const { height, isClosed } = props.slots[i]
-
-      let value
+    for (; i < props.slots.length; ++i) {
+      let { height, isClosed } = props.slots[i]
       let min
-      let isRelative = true
 
       if (isClosed) {
-        min = value = PANEL.CLOSED_HEIGHT
-        isRelative = false
-
+        min = PANEL.CLOSED_HEIGHT
       } else {
         min = PANEL.MIN_HEIGHT
-        value = height
-
-        ++open
+        open++
       }
 
-      slots.unshift({
-        offset, min, height: value, isClosed, isRelative
-      })
-
       offset = offset + min
+
+      slots.push({
+        height, isClosed, min, upper: offset
+      })
+    }
+
+    for (--i, offset = 0; i >= 0; --i) {
+      slots[i].lower = offset
+      offset = offset + slots[i].min
     }
 
     return { slots, canClosePanel: open > 1 }
   }
 
-  get isFlexValid() {
-    return bounds(this.flex.container).height > PANEL.MIN_HEIGHT
-  }
-
-  isActive(id) {
-    return this.state.active === id
-  }
-
-  isFlex(id) {
-    return this.state.flex === id
-  }
 
   isLast(id) {
     return id === this.state.slots.length - 1
@@ -126,90 +116,121 @@ class PanelGroup extends PureComponent {
     this.container = container
   }
 
-  setFlex = (flex) => {
-    this.flex = flex
+  handleDragStart = (_, active) => {
+
+    let { top, bottom } = bounds(this.container)
+    let { upper, lower } = this.state.slots[active.props.id]
+
+    this.bounds = {
+      upper: top + upper,
+      lower: bottom - lower,
+      min: PANEL.MIN_HEIGHT / active.scale
+    }
   }
 
-  handleResizeStart = (_, resizable) => {
-    let active = resizable.props.id
-    let flex = active + 1
 
-    const { top } = bounds(resizable.container)
-    const { bottom } = bounds(this.container)
-    const { offset } = this.state.slots[active]
+  handleDragUp(delta, active) {
+    const slots = this.state.slots.slice(active.props.id + 2)
+    const current = this.state.slots[active.props.id + 1]
 
-    this.setState({
-      active,
-      flex,
-      max: bottom - top - offset
+    slots.unshift({
+      ...current, height: current.height + delta
     })
-  }
 
-  handleResize = (height) => {
-    const slots = [...this.state.slots]
-    const { active, flex } = this.state
+    for (let i = active.props.id; i >= 0; --i) {
+      const slot = this.state.slots[i]
 
-    const delta = height - slots[active].height
+      if (delta <= 0 || slot.height <= this.bounds.min) {
+        slots.unshift(slot)
+      } else {
+        const height = restrict(slot.height - delta, this.bounds.min)
+        const diff = slot.height - height
 
-    slots[active] = { ...slots[active], height }
-    slots[flex] = { ...slots[flex], height: slots[flex].height - delta }
+        if (diff === 0) {
+          slots.unshift(slot)
+        } else {
 
-    let nxt = flex
-
-    if (delta > 0 && !this.isFlexValid) {
-
-      do ++nxt; while (nxt > active && slots[nxt].isClosed)
-
-      if (nxt > active) {
-        slots[flex] = {
-          ...slots[flex], height: PANEL.MIN_HEIGHT, isRelative: false
+          delta = delta - diff
+          slots.unshift({ ...slot, height })
         }
       }
     }
 
-    this.setState({ flex: nxt, slots })
-
-    // console.log(`active: ${active}, flex: ${this.state.flex}`)
+    return slots
   }
 
-  handleResizeStop = (_, resizable) => {
-    const { scale } = resizable
+  handleDragDown(delta, active) {
+    const slots = this.state.slots.slice(0, active.props.id)
+    const current = this.state.slots[active.props.id]
 
-    this.props.onResize(
-      this.state.slots.map((slot) => {
-        let { height, isClosed, isRelative } = slot
+    slots.push({
+      ...current, height: current.height + delta
+    })
 
-        if (!isRelative) height = height / scale
+    for (let i = active.props.id + 1; i < this.state.slots.length; ++i) {
+      const slot = this.state.slots[i]
 
-        return { height, isClosed }
-      })
-    )
+      if (delta <= 0 || slot.height <= this.bounds.min) {
+        slots.push(slot)
+      } else {
 
-    this.setState({ active: null, flex: null, max: null })
+        const height = restrict(slot.height - delta, this.bounds.min)
+        const diff = slot.height - height
+
+        if (diff === 0) {
+          slots.push(slot)
+        } else {
+
+          delta = delta - diff
+          slots.push({ ...slot, height })
+        }
+      }
+    }
+
+    return slots
+  }
+
+  handleDrag = (event, active) => {
+    const { upper, lower } = this.bounds
+
+    const position = restrict(event.pageY, upper, lower)
+    const delta = (position - bounds(active.container).bottom) / active.scale
+
+    if (delta === 0) return
+
+    this.setState({
+      slots: (delta > 0) ?
+        this.handleDragDown(delta, active) :
+        this.handleDragUp(-delta, active)
+    })
+  }
+
+  handleDragStop = () => {
+    //this.props.onResize(
+    //  this.state.slots.map(({ height, isClosed }) => { height, isClosed })
+    //)
+
+    this.bounds = null
+    //this.setState({ active: null })
   }
 
 
   renderPanel = (panel, id) => {
-    const { min, height, isClosed, isRelative } = this.state.slots[id]
-
-    const isActive = this.isActive(id)
-    const isFlex = this.isFlex(id)
+    const { min, height, isClosed } = this.state.slots[id]
     const isLast = this.isLast(id)
 
     return (
       <Resizable
         key={id}
         id={id}
-        ref={isFlex ? this.setFlex : null}
         edge="bottom"
         min={min}
-        max={isActive ? this.state.max : null}
-        value={height}
-        isDisabled={isClosed || isFlex || isLast}
-        isRelative={isRelative}
-        onResize={this.handleResize}
-        onResizeStart={this.handleResizeStart}
-        onResizeStop={this.handleResizeStop}>
+        value={isClosed ? PANEL.CLOSED_HEIGHT : height}
+        isDisabled={isLast}
+        isRelative={!isClosed}
+        onDrag={this.handleDrag}
+        onDragStart={this.handleDragStart}
+        onDragStop={this.handleDragStop}>
 
         {clone(panel, {
           isClosed,
