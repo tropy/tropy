@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const { func, bool, object } = PropTypes
+const { func, bool, object, number } = PropTypes
 
 const { EditorState } = require('prosemirror-state')
 const { EditorView } = require('prosemirror-view')
@@ -14,6 +14,9 @@ class Editor extends PureComponent {
     this.pm = new EditorView(this.container, {
       state: EditorState.create({ schema })
     })
+
+    // TODO find out how to make ProseMirror do this
+    this.pm.dom.tabIndex = this.props.tabIndex
   }
 
   componentWillUnmount() {
@@ -33,7 +36,12 @@ class Editor extends PureComponent {
   static propTypes = {
     isDisabled: bool,
     value: object,
-    onChange: func
+    onChange: func,
+    tabIndex: number
+  }
+
+  static defaultProps = {
+    tabIndex: -1
   }
 }
 
