@@ -5,10 +5,12 @@ const { PureComponent, PropTypes, Children, cloneElement: clone } = React
 const { only } = require('./util')
 const { Resizable } = require('./resizable')
 const cx = require('classnames')
-const { bounds } = require('../dom')
-const { restrict, round } = require('../common/util')
+const { bounds, on, off } = require('../dom')
+const { restrict } = require('../common/util')
 const { bool, func, node, arrayOf, number, shape } = PropTypes
 const { PANEL } = require('../constants/sass')
+const { round } = Math
+const { verbose } = require('../common/log')
 
 
 class Panel extends PureComponent {
@@ -64,7 +66,16 @@ class Panel extends PureComponent {
 class PanelGroup extends PureComponent {
   constructor(props) {
     super(props)
-    this.state = this.getLayout(props)
+    this.state = { slots: [] }
+  }
+
+  componentDidMount() {
+    this.setState(this.getLayout())
+    on(window, 'resize', this.resize)
+  }
+
+  componentWillUnmount() {
+    off(window, 'resize', this.resize)
   }
 
   componentWillReceiveProps(props) {
@@ -73,29 +84,38 @@ class PanelGroup extends PureComponent {
     }
   }
 
+  getLayout(props = this.props) {
+    const { top, bottom, height } = bounds(this.container)
 
-  getLayout(props) {
     const slots = []
 
+    let adj = height
     let open = 0
     let offset = 0
     let i = 0
 
     for (; i < props.slots.length; ++i) {
-      let { height, isClosed } = props.slots[i]
+      let slot = props.slots[i]
       let min
+      let pix = round(height * slot.height / 100)
 
-      if (isClosed) {
+      if (slot.isClosed) {
         min = PANEL.CLOSED_HEIGHT
+        adj = adj - min
+
       } else {
         min = PANEL.MIN_HEIGHT
         open++
+        adj = adj - pix
       }
 
       offset = offset + min
 
       slots.push({
-        height, isClosed, min, upper: offset
+        height: pix,
+        isClosed: slot.isClosed,
+        min,
+        upper: offset
       })
     }
 
@@ -104,7 +124,20 @@ class PanelGroup extends PureComponent {
       offset = offset + slots[i].min
     }
 
-    return { slots, canClosePanel: open > 1 }
+    if (adj !== 0) {
+      if (adj > 2) verbose(`panel-group rounding off by ${adj}`)
+
+      for (i = 0; i < slots.length; ++i) {
+        if (!slots[i].isClosed) {
+          slots[i].height += adj
+          break
+        }
+      }
+    }
+
+    return {
+      top, bottom, height, slots, canClosePanel: open > 1
+    }
   }
 
 
@@ -112,18 +145,19 @@ class PanelGroup extends PureComponent {
     return id === this.state.slots.length - 1
   }
 
+  resize = () => this.setState(this.getLayout())
+
   setContainer = (container) => {
     this.container = container
   }
 
   handleDragStart = (_, active) => {
-    let { top, bottom } = bounds(this.container)
+    let { top, bottom } = this.state
     let { upper, lower } = this.state.slots[active.props.id]
 
     this.bounds = {
       upper: top + upper,
-      lower: bottom - lower,
-      min: round(PANEL.MIN_HEIGHT / active.scale)
+      lower: bottom - lower
     }
   }
 
@@ -139,10 +173,10 @@ class PanelGroup extends PureComponent {
     for (let i = active.props.id; i >= 0; --i) {
       const slot = this.state.slots[i]
 
-      if (delta <= 0 || slot.height <= this.bounds.min) {
+      if (delta <= 0 || slot.height <= PANEL.MIN_HEIGHT) {
         slots.unshift(slot)
       } else {
-        const height = restrict(slot.height - delta, this.bounds.min)
+        const height = restrict(slot.height - delta, PANEL.MIN_HEIGHT)
         const diff = slot.height - height
 
         if (diff === 0) {
@@ -169,11 +203,11 @@ class PanelGroup extends PureComponent {
     for (let i = active.props.id + 1; i < this.state.slots.length; ++i) {
       const slot = this.state.slots[i]
 
-      if (delta <= 0 || slot.height <= this.bounds.min) {
+      if (delta <= 0 || slot.height <= PANEL.MIN_HEIGHT) {
         slots.push(slot)
       } else {
 
-        const height = restrict(slot.height - delta, this.bounds.min)
+        const height = restrict(slot.height - delta, PANEL.MIN_HEIGHT)
         const diff = slot.height - height
 
         if (diff === 0) {
@@ -193,9 +227,7 @@ class PanelGroup extends PureComponent {
     const { upper, lower } = this.bounds
 
     const position = restrict(pageY, upper, lower)
-    const delta = (
-      (position - bounds(active.container).bottom) / active.scale
-    )
+    const delta = position - bounds(active.container).bottom
 
     if (delta === 0) return
 
@@ -209,7 +241,7 @@ class PanelGroup extends PureComponent {
   handleDragStop = () => {
     this.props.onResize(
       this.state.slots.map(({ height, isClosed }) => ({
-        height: round(height),
+        height: round(height * 100 / this.state.height),
         isClosed
       }))
     )
@@ -219,7 +251,10 @@ class PanelGroup extends PureComponent {
 
 
   renderPanel = (panel, id) => {
-    const { min, height, isClosed } = this.state.slots[id]
+    const slot = this.state.slots[id]
+    if (!slot) return
+
+    const { min, height, isClosed } = slot
     const isLast = this.isLast(id)
 
     return (
@@ -230,7 +265,6 @@ class PanelGroup extends PureComponent {
         min={min}
         value={isClosed ? PANEL.CLOSED_HEIGHT : height}
         isDisabled={isLast}
-        isRelative={!isClosed}
         onDrag={this.handleDrag}
         onDragStart={this.handleDragStart}
         onDragStop={this.handleDragStop}>
