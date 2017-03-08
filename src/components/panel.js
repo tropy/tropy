@@ -19,7 +19,7 @@ class Panel extends PureComponent {
   }
 
   handleToggle = () => {
-    this.props.onToggle(this.props.id, !this.props.isClosed)
+    this.props.onToggle(this, !this.props.isClosed)
   }
 
   renderHeader(header, props) {
@@ -239,14 +239,27 @@ class PanelGroup extends PureComponent {
   }
 
   handleDragStop = () => {
+    this.handleResize()
+    this.bounds = null
+  }
+
+
+  handleResize() {
     this.props.onResize(
       this.state.slots.map(({ height, isClosed }) => ({
         height: round(height * 100 / this.state.height),
         isClosed
       }))
     )
+  }
 
-    this.bounds = null
+  handleToggle = (panel, isClosed) => {
+    this.props.onResize(
+      this.state.slots.map((slot, id) => ({
+        height: round(slot.height * 100 / this.state.height),
+        isClosed: (id === panel.props.id) ? isClosed : slot.isClosed
+      }))
+    )
   }
 
 
@@ -273,7 +286,7 @@ class PanelGroup extends PureComponent {
           isClosed,
           id,
           canToggle: isClosed || this.state.canClosePanel,
-          onToggle: this.props.onToggle
+          onToggle: this.handleToggle
         })}
       </Resizable>
     )
