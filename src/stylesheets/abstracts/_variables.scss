@@ -146,6 +146,7 @@ $window-controls-margin: 4px;
 // Sidebar
 // --------------------------------------------------
 
+$activity-height: #{const("ACTIVITY.HEIGHT")}px;
 $activity-transition-duration:        0.125s;
 $activity-transition-timing-function: ease-out;
 
@@ -222,6 +223,13 @@ $toolbar-transition: 0.4s 0.4s ease;
 // --------------------------------------------------
 
 $scrollbar-size: $space-sm;
+
+
+// Progress bar
+// --------------------------------------------------
+
+$progress-bar-height: $space-min;
+
 
 
 // Debug

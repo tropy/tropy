@@ -1,3 +1,5 @@
+// sass-lint:disable no-important
+
 //
 // Activity
 // --------------------------------------------------
@@ -9,17 +11,11 @@
     height
     $activity-transition-duration
     $activity-transition-timing-function;
-  color: $activity-color;
   font-size: $font-size-small;
 
   &.busy {
     display: block;
   }
-}
-
-.activity-container {
-  border-top: 1px solid $activity-border-color;
-  padding: 9px $component-padding-horizontal 7px;
 }
 
 @keyframes activity-in {
@@ -35,7 +31,64 @@
 .activity {
   display: flex;
   align-items: center;
+  border-top: 1px solid $activity-border-color;
+  padding: 0 $component-padding-horizontal;
   animation: activity-in 0.125s ease both;
+  height: $activity-height;
+
+  .activity-container {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  &.progress {
+    .flex-row {
+      margin-top: -4px;
+      margin-bottom: 6px;
+    }
+
+    .progress-bar {
+      flex: 1 1 auto;
+      margin-right: $space-min;
+    }
+
+    .btn {
+      padding: 0;
+      width: 12px;
+      height: 12px;
+      background: $progress-cancel-bg;
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+      opacity: 0.5;
+
+      .icon {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+
+        svg {
+          color: $progress-cancel-color;
+        }
+      }
+
+      &:hover,
+      &:active {
+        opacity: 1;
+      }
+
+      &:active {
+        background: $icon-active-color;
+
+        .icon {
+          svg {
+            color: $progress-cancel-color;
+          }
+        }
+      }
+    }
+  }
 }
 
 @keyframes spin {
@@ -52,11 +105,18 @@
   animation: spin 1.2s linear infinite;
 }
 
-.progress {
+.progress-in-numbers {
+  margin-left: $space-min;
+
   span + span {
     &::before {
-      content: "/";
-      margin: 0 0.5px;
+      content: " of ";
+      white-space: nowrap;
     }
   }
 }
+
+.activity-text {
+  @include css-truncation;
+}
+
