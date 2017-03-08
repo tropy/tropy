@@ -2,8 +2,7 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-{ /*const { IconSpin, IconX } = require('./icons')*/ }
-const { IconX } = require('./icons')
+const { IconSpin, IconX } = require('./icons')
 const { FormattedMessage, FormattedNumber } = require('react-intl')
 const cx = require('classnames')
 const { ACTIVITY } = require('../constants/sass')
@@ -96,11 +95,10 @@ class ActivityPane extends PureComponent {
 
         {
           this.state.activities.map(({ id, type, progress, total }) =>
-            <div key={id} className={cx({ activity: true, type,
-              progress: true })}>
-
+            <div key={id} className={cx({ activity: true, type })}>
               <div className="activity-container">
-                <div className="flex-row">
+                <div className="flex-row center">
+                  <IconSpin/>
                   <div className="activity-text">
                     <FormattedMessage id={`activity.${type}`}/>
                   </div>
@@ -117,22 +115,6 @@ class ActivityPane extends PureComponent {
             </div>
           )
         }
-
-        {/*
-          this.state.activities.map(({ id, type, progress, total }) =>
-            <div key={id} className={cx({ activity: true, type })}>
-              <div className="activity-container">
-                <div className="flex-row center">
-                  <IconSpin/>
-                  <div className="activity-text">
-                    <FormattedMessage id={`activity.${type}`}/>
-                  </div>
-                  {this.renderProgress(progress, total)}
-                </div>
-              </div>
-            </div>
-          )
-        */}
       </div>
     )
   }

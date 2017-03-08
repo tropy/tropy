@@ -41,82 +41,81 @@
     min-width: 0;
   }
 
-  &.progress {
-    .flex-row:nth-child(2) {
-      margin-top: -4px;
-      margin-bottom: 6px;
+  @keyframes spin {
+    0% {
+      transform: rotate(0);
     }
 
-    .progress-bar {
-      flex: 1 1 auto;
-      margin-right: $space-min;
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .icon-spin {
+    animation: spin 1.2s linear infinite;
+  }
+
+  .progress-in-numbers {
+    margin-left: $space-min;
+
+    span + span {
+      &::before {
+        content: " of ";
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .activity-text {
+    @include css-truncation;
+  }
+
+  .flex-row:nth-child(2) {
+    margin-top: -4px;
+    margin-bottom: 6px;
+  }
+
+  .progress-bar {
+    flex: 1 1 auto;
+    margin-right: $space-min;
+  }
+
+  .btn {
+    padding: 0;
+    width: 12px;
+    height: 12px;
+    background: $progress-cancel-bg;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    opacity: 0.5;
+
+    .icon {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+
+      svg {
+        color: $progress-cancel-color;
+      }
     }
 
-    .btn {
-      padding: 0;
-      width: 12px;
-      height: 12px;
-      background: $progress-cancel-bg;
-      border-radius: 6px;
-      overflow: hidden;
-      position: relative;
-      opacity: 0.5;
+    &:hover,
+    &:active {
+      opacity: 1;
+    }
+
+    &:active {
+      background: $icon-active-color;
 
       .icon {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-
         svg {
           color: $progress-cancel-color;
         }
       }
-
-      &:hover,
-      &:active {
-        opacity: 1;
-      }
-
-      &:active {
-        background: $icon-active-color;
-
-        .icon {
-          svg {
-            color: $progress-cancel-color;
-          }
-        }
-      }
     }
   }
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.icon-spin {
-  animation: spin 1.2s linear infinite;
-}
-
-.progress-in-numbers {
-  margin-left: $space-min;
-
-  span + span {
-    &::before {
-      content: " of ";
-      white-space: nowrap;
-    }
-  }
-}
-
-.activity-text {
-  @include css-truncation;
-}
 
