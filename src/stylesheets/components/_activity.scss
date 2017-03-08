@@ -1,0 +1,62 @@
+//
+// Activity
+// --------------------------------------------------
+
+.activity-pane {
+  height: 0;
+  overflow: hidden;
+  transition:
+    height
+    $activity-transition-duration
+    $activity-transition-timing-function;
+  color: $activity-color;
+  font-size: $font-size-small;
+
+  &.busy {
+    display: block;
+  }
+}
+
+.activity-container {
+  border-top: 1px solid $activity-border-color;
+  padding: 9px $component-padding-horizontal 7px;
+}
+
+@keyframes activity-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.activity {
+  display: flex;
+  align-items: center;
+  animation: activity-in 0.125s ease both;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.icon-spin {
+  animation: spin 1.2s linear infinite;
+}
+
+.progress {
+  span + span {
+    &::before {
+      content: "/";
+      margin: 0 0.5px;
+    }
+  }
+}
