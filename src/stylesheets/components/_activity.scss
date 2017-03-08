@@ -42,7 +42,7 @@
   }
 
   &.progress {
-    .flex-row {
+    .flex-row:nth-child(2) {
       margin-top: -4px;
       margin-bottom: 6px;
     }

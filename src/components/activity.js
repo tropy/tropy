@@ -100,8 +100,10 @@ class ActivityPane extends PureComponent {
               progress: true })}>
 
               <div className="activity-container">
-                <div className="activity-text">
-                  <FormattedMessage id={`activity.${type}`}/>
+                <div className="flex-row">
+                  <div className="activity-text">
+                    <FormattedMessage id={`activity.${type}`}/>
+                  </div>
                   {this.renderProgress(progress, total)}
                 </div>
                 <div className="flex-row center">
