@@ -130,11 +130,8 @@ class ActivityPane extends PureComponent {
         style={this.style}>
 
         {this.state.activities.map(({ id, type, progress, total }) =>
-          <Activity
-            key={id}
-            type={type}
-            progress={progress}
-            total={total}/>)}
+          <Activity key={id} type={type} progress={progress} total={total}/>)}
+
       </div>
     )
   }
