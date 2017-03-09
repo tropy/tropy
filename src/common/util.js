@@ -49,6 +49,26 @@ module.exports = {
     return [...array].sort(...args)
   },
 
+  reverse(array) {
+    const rev = []
+
+    for (let i = array.length - 1; i >= 0; --i) {
+      rev.push(array[i])
+    }
+
+    return rev
+  },
+
+  remap(array, fn) {
+    const res = new Array(array.length)
+
+    for (let i = array.length - 1; i >= 0; --i) {
+      res[i] = fn(array[i], i)
+    }
+
+    return res
+  },
+
   move(array, a, b, offset = 0) {
     if (a === b) return [...array]
 
