@@ -2,11 +2,12 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const { IconSpin } = require('./icons')
+const { IconSpin, IconX } = require('./icons')
 const { FormattedMessage, FormattedNumber } = require('react-intl')
 const cx = require('classnames')
 const { ACTIVITY } = require('../constants/sass')
 const { arrayOf, shape, string, number } = PropTypes
+const { IconButton } = require('./button')
 
 
 class ActivityPane extends PureComponent {
@@ -79,7 +80,7 @@ class ActivityPane extends PureComponent {
 
   renderProgress(progress, total) {
     return progress && (
-      <span className="progress">
+      <span className="progress-in-numbers">
         <FormattedNumber value={progress}/>
         <FormattedNumber value={total}/>
       </span>
@@ -91,15 +92,29 @@ class ActivityPane extends PureComponent {
       <div
         className={cx({ 'activity-pane': true, 'busy': this.isBusy })}
         style={this.style}>
-        <div className="activity-container">{
+
+        {
           this.state.activities.map(({ id, type, progress, total }) =>
             <div key={id} className={cx({ activity: true, type })}>
-              <IconSpin/>
-              <FormattedMessage id={`activity.${type}`}/>
-              {this.renderProgress(progress, total)}
+              <div className="activity-container">
+                <div className="flex-row center">
+                  <IconSpin/>
+                  <div className="activity-text">
+                    <FormattedMessage id={`activity.${type}`}/>
+                  </div>
+                  {this.renderProgress(progress, total)}
+                </div>
+                <div className="flex-row center">
+                  <div className="progress-bar">
+                    <div className="progress-indicator"
+                      style={{ width: 80 + '%' }}/>
+                  </div>
+                  <IconButton icon={<IconX/>}/>
+                </div>
+              </div>
             </div>
           )
-        }</div>
+        }
       </div>
     )
   }
@@ -122,7 +137,7 @@ class ActivityPane extends PureComponent {
 }
 
 function getHeight(count) {
-  return count ? count * ACTIVITY.OUTER_HEIGHT : 0
+  return count ? count * ACTIVITY.HEIGHT : 0
 }
 
 

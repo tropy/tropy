@@ -3,11 +3,12 @@
 // --------------------------------------------------
 
 .photo.grid {
+  flex: 1 1 0;
+  margin-bottom: $space-min;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
   padding: $space-min $component-padding-horizontal 0;
-  height: calc(100% - #{$space-min});
   overflow-y: scroll;
 
   .over & {

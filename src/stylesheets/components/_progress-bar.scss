@@ -1,0 +1,15 @@
+//
+// Progress bar
+// --------------------------------------------------
+
+.progress-bar {
+  height: $progress-bar-height;
+  background: $progress-bar-bg;
+  border-radius: ($progress-bar-height / 2);
+  overflow: hidden;
+}
+
+.progress-indicator {
+  height: 100%;
+  background: $progress-bar-color;
+}

@@ -62,10 +62,16 @@
   }
 
   &:active {
-    &:not([disabled]) {
+    .icon {
+      svg {
+        color: $icon-active-color;
+      }
+    }
+
+    &[disabled] {
       .icon {
         svg {
-          color: $icon-active-color;
+          color: $icon-color;
         }
       }
     }
