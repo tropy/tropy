@@ -3,11 +3,56 @@
 const React = require('react')
 const { PureComponent, PropTypes } = React
 const { IconSpin, IconX } = require('./icons')
-const { FormattedMessage, FormattedNumber } = require('react-intl')
+const { FormattedMessage } = require('react-intl')
 const cx = require('classnames')
 const { ACTIVITY } = require('../constants/sass')
-const { arrayOf, shape, string, number } = PropTypes
+const { arrayOf, shape, string, number, func } = PropTypes
 const { IconButton } = require('./button')
+
+
+
+const Activity = ({ type, progress, total, onCancel }) => {
+  const hasProgressBar = (progress != null)
+  const hasCancelButton = false
+
+  if (hasCancelButton) {
+    var CancelButton = (
+      <IconButton icon={<IconX/>} onClick={onCancel}/>
+    )
+  }
+
+  if (hasProgressBar) {
+    var ProgressBar = (
+      <div className="flex-row center">
+        <progress value={progress} max={total}/>
+      </div>
+    )
+  }
+
+  return (
+    <div className={cx({ activity: true, type })}>
+      <div className="activity-container">
+        <div className="flex-row center">
+          <IconSpin/>
+          <div className="activity-text">
+            <FormattedMessage
+              id={`activity.${type}`}
+              values={{ progress, total }}/>
+          </div>
+          {CancelButton}
+        </div>
+        {ProgressBar}
+      </div>
+    </div>
+  )
+}
+
+Activity.propTypes = {
+  type: string.isRequired,
+  progress: number,
+  total: number,
+  onCancel: func
+}
 
 
 class ActivityPane extends PureComponent {
@@ -78,38 +123,18 @@ class ActivityPane extends PureComponent {
     !activity.done && (Date.now() - activity.init) > this.props.delay
   )
 
-  renderProgressBar(progress, total) {
-    return progress != null && (
-      <div className="flex-row center">
-        <progress value={progress} max={total}/>
-        <IconButton icon={<IconX/>}/>
-      </div>
-    )
-  }
-
   render() {
     return (
       <div
         className={cx({ 'activity-pane': true, 'busy': this.isBusy })}
         style={this.style}>
 
-        {
-          this.state.activities.map(({ id, type, progress, total }) =>
-            <div key={id} className={cx({ activity: true, type })}>
-              <div className="activity-container">
-                <div className="flex-row center">
-                  <IconSpin/>
-                  <div className="activity-text">
-                    <FormattedMessage
-                      id={`activity.${type}`}
-                      values={{ progress, total }}/>
-                  </div>
-                </div>
-                {this.renderProgressBar(progress, total)}
-              </div>
-            </div>
-          )
-        }
+        {this.state.activities.map(({ id, type, progress, total }) =>
+          <Activity
+            key={id}
+            type={type}
+            progress={progress}
+            total={total}/>)}
       </div>
     )
   }
@@ -137,5 +162,6 @@ function getHeight(count) {
 
 
 module.exports = {
+  Activity,
   ActivityPane
 }
