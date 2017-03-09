@@ -78,12 +78,12 @@ class ActivityPane extends PureComponent {
     !activity.done && (Date.now() - activity.init) > this.props.delay
   )
 
-  renderProgress(progress, total) {
-    return progress && (
-      <span className="progress-in-numbers">
-        <FormattedNumber value={progress}/>
-        <FormattedNumber value={total}/>
-      </span>
+  renderProgressBar(progress, total) {
+    return progress != null && (
+      <div className="flex-row center">
+        <progress value={progress} max={total}/>
+        <IconButton icon={<IconX/>}/>
+      </div>
     )
   }
 
@@ -100,17 +100,12 @@ class ActivityPane extends PureComponent {
                 <div className="flex-row center">
                   <IconSpin/>
                   <div className="activity-text">
-                    <FormattedMessage id={`activity.${type}`}/>
+                    <FormattedMessage
+                      id={`activity.${type}`}
+                      values={{ progress, total }}/>
                   </div>
-                  {this.renderProgress(progress, total)}
                 </div>
-                <div className="flex-row center">
-                  <div className="progress-bar">
-                    <div className="progress-indicator"
-                      style={{ width: 80 + '%' }}/>
-                  </div>
-                  <IconButton icon={<IconX/>}/>
-                </div>
+                {this.renderProgressBar(progress, total)}
               </div>
             </div>
           )
