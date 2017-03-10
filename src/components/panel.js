@@ -89,17 +89,16 @@ class PanelGroup extends PureComponent {
 
     const slots = []
 
-    let offset = 0
-    let cc = 0
-    let i = 0
+    let numClosed = 0
+    let numOpen = 0
 
-    for (; i < props.slots.length; ++i) {
+    for (let i = 0, offset = 0; i < props.slots.length; ++i) {
       let slot = props.slots[i]
       let min
 
       if (slot.isClosed) {
         min = PANEL.CLOSED_HEIGHT
-        cc++
+        numClosed++
 
       } else {
         min = PANEL.MIN_HEIGHT
@@ -110,45 +109,37 @@ class PanelGroup extends PureComponent {
       slots.push({
         height: slot.height,
         isClosed: slot.isClosed,
-        isDisabled: i < cc || i === props.slots.length - 1,
+        isDisabled: i < numClosed || i === props.slots.length - 1,
         min,
         upper: offset
       })
     }
 
-    let scale = height - cc * PANEL.CLOSED_HEIGHT
-    let adj = height
-    let oc = 0
+    let scale = height - numClosed * PANEL.CLOSED_HEIGHT
+    let surplus = height
 
-    for (--i, offset = 0; i >= 0; --i) {
+    for (let i = slots.length - 1, offset = 0; i >= 0; --i) {
       let slot = slots[i]
 
       if (slot.isClosed) {
         slot.height = round((scale + slot.min) * slot.height / 100, 1)
-        adj = adj - slot.min
+        surplus = surplus - slot.min
 
       } else {
         slot.height = round(scale * slot.height / 100, 1)
-        adj = adj - slot.height
-        oc++
+        surplus = surplus - slot.height
+        numOpen++
       }
 
-      slot.isDisabled = slot.isDisabled || oc <= 1
+      slot.isDisabled = slot.isDisabled || numOpen <= 1
 
       slot.lower = offset
       offset = offset + slot.min
     }
 
-    if (adj !== 0) {
-      for (i = 0; i < slots.length; ++i) {
-        if (!slots[i].isClosed) {
-          slots[i].height += adj
-          break
-        }
-      }
-    }
+    if (surplus !== 0) fix(slots, surplus)
 
-    return { top, bottom, height, slots, canClosePanel: oc > 1 }
+    return { top, bottom, height, slots, canClosePanel: numOpen > 1 }
   }
 
   getShrinkMapper(by) {
@@ -223,7 +214,6 @@ class PanelGroup extends PureComponent {
   }
 
 
-
   grow(slot, by) {
     return (slot.isClosed || by <= 0) ?  slot : {
       ...slot,
@@ -232,11 +222,13 @@ class PanelGroup extends PureComponent {
   }
 
   shrink(slot, by) {
-    return (slot.isClosed || by <= 0 || slot.height <= PANEL.MIN_HEIGHT) ?
-      slot : {
-        ...slot,
-        height: restrict(slot.height - by, PANEL.MIN_HEIGHT)
-      }
+    if (slot.isClosed || by <= 0 || slot.height <= PANEL.MIN_HEIGHT) {
+      return slot
+    }
+
+    const height = restrict(slot.height - by, PANEL.MIN_HEIGHT)
+
+    return { ...slot, height }
   }
 
   resize(delta, at) {
@@ -374,6 +366,17 @@ class PanelGroup extends PureComponent {
     onResize: func.isRequired
   }
 }
+
+
+function fix(slots, surplus) {
+  for (let i = 0; i < slots.length; ++i) {
+    if (!slots[i].isClosed) {
+      slots[i].height += surplus
+      break
+    }
+  }
+}
+
 
 module.exports = {
   Panel,
