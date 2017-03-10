@@ -142,10 +142,6 @@ class PanelGroup extends PureComponent {
   }
 
 
-  isLast(id) {
-    return id === this.state.slots.length - 1
-  }
-
   handleResize = () => this.setState(this.getLayout())
 
   setContainer = (container) => {
@@ -160,38 +156,6 @@ class PanelGroup extends PureComponent {
       upper: top + upper,
       lower: bottom - lower
     }
-  }
-
-
-  handleDragUp(delta, active) {
-
-    const slots = this.state.slots.slice(active.props.id + 2)
-    const current = this.state.slots[active.props.id + 1]
-
-    slots.unshift({
-      ...current, height: current.height + delta
-    })
-
-    for (let i = active.props.id; i >= 0; --i) {
-      const slot = this.state.slots[i]
-
-      if (delta <= 0 || slot.height <= PANEL.MIN_HEIGHT) {
-        slots.unshift(slot)
-      } else {
-        const height = restrict(slot.height - delta, PANEL.MIN_HEIGHT)
-        const diff = slot.height - height
-
-        if (diff === 0) {
-          slots.unshift(slot)
-        } else {
-
-          delta = delta - diff
-          slots.unshift({ ...slot, height })
-        }
-      }
-    }
-
-    return slots
   }
 
 
@@ -213,6 +177,22 @@ class PanelGroup extends PureComponent {
     this.bounds = null
   }
 
+  grow(slot, by) {
+    return (by <= 0) ? slot : { ...slot, height: slot.height + by }
+  }
+
+  shrink(slot, by) {
+    const { height } = slot
+
+    if (by <= 0 || height <= PANEL.MIN_HEIGHT) {
+      return slot
+    }
+
+    return {
+      ...slot,
+      height: restrict(height - by, PANEL.MIN_HEIGHT)
+    }
+  }
 
   resize(delta, at, slots = this.state.slots) {
     let by
@@ -220,30 +200,21 @@ class PanelGroup extends PureComponent {
     let head
     let tail
 
-    const grow = (slot) => ({
-      ...slot, height: slot.height + by
-    })
+    const shrink = (original) => {
+      let slot
 
-    const shrink = (slot) => {
-      if (by <= 0 || slot.height <= PANEL.MIN_HEIGHT) {
-        return slot
+      try {
+        return (slot = this.shrink(original, by)), slot
+
+      } finally {
+        by = by - (original.height - slot.height)
       }
-
-      const height = restrict(slot.height - by, PANEL.MIN_HEIGHT)
-      const diff = slot.height - height
-
-      if (diff === 0) {
-        return slot
-      }
-
-      by = by - diff
-      return { ...slot, height }
     }
 
     if (delta > 0) {
       by = delta
 
-      pivot = grow(slots[at])
+      pivot = this.grow(slots[at], by)
 
       head = slots.slice(0, at)
       tail = slots.slice(at + 1).map(shrink)
@@ -252,7 +223,7 @@ class PanelGroup extends PureComponent {
       by = -delta
       at = at + 1
 
-      pivot = grow(slots[at])
+      pivot = this.grow(slots[at], by)
 
       head = remap(slots.slice(0, at), shrink)
       tail = slots.slice(at + 1)
@@ -285,7 +256,6 @@ class PanelGroup extends PureComponent {
     if (!slot) return
 
     const { min, height, isClosed } = slot
-    const isLast = this.isLast(id)
 
     return (
       <Resizable
@@ -294,7 +264,7 @@ class PanelGroup extends PureComponent {
         edge="bottom"
         min={min}
         value={isClosed ? PANEL.CLOSED_HEIGHT : height}
-        isDisabled={isLast}
+        isDisabled={id === this.state.slots.length - 1}
         onDrag={this.handleDrag}
         onDragStart={this.handleDragStart}
         onDragStop={this.handleDragStop}>
