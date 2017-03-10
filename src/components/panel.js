@@ -137,7 +137,7 @@ class PanelGroup extends PureComponent {
       offset = offset + slot.min
     }
 
-    if (surplus !== 0) fix(slots, surplus)
+    if (surplus !== 0) fixLayout(slots, surplus)
 
     return { top, bottom, height, slots, canClosePanel: numOpen > 1 }
   }
@@ -179,12 +179,25 @@ class PanelGroup extends PureComponent {
   }
 
   handleDragStart = (_, active) => {
-    let { top, bottom, slots } = this.state
-    let { upper, lower } = slots[active.props.id]
+    const { top, bottom, slots } = this.state
+    const { upper, lower } = slots[active.props.id]
 
     this.bounds = {
       upper: top + upper,
       lower: bottom - lower
+    }
+
+    // Set-up memory effect for second slot only for now!
+    if (slots.length > 1) {
+      const slot = slots[1]
+
+      if (!slot.isClosed && slot.height > PANEL.MIN_HEIGHT) {
+        const offset = top + slots[0].height
+
+        this.bounds.memo = (active.props.id === 0) ?
+          offset + slot.height - PANEL.MIN_HEIGHT :
+          offset + PANEL.MIN_HEIGHT
+      }
     }
   }
 
@@ -197,7 +210,7 @@ class PanelGroup extends PureComponent {
     if (delta === 0) return
 
     this.setState({
-      slots: this.resize(delta, active.props.id)
+      slots: this.resize(delta, active.props.id, position)
     })
   }
 
@@ -231,12 +244,14 @@ class PanelGroup extends PureComponent {
     return { ...slot, height }
   }
 
-  resize(delta, at) {
+  resize(delta, at, position) {
     let pivot, head, tail
     const { slots } = this.state
 
     if (delta > 0) {
       while (at > 0 && slots[at].isClosed) --at
+
+      if (at === 1 && position < this.bounds.memo) --at
 
       pivot = this.grow(slots[at], delta)
 
@@ -245,6 +260,8 @@ class PanelGroup extends PureComponent {
 
     } else {
       do ++at; while (at < slots.length && slots[at].isClosed)
+
+      if (at === 1 && position > this.bounds.memo) ++at
 
       pivot = this.grow(slots[at], -delta)
 
@@ -368,7 +385,7 @@ class PanelGroup extends PureComponent {
 }
 
 
-function fix(slots, surplus) {
+function fixLayout(slots, surplus) {
   for (let i = 0; i < slots.length; ++i) {
     if (!slots[i].isClosed) {
       slots[i].height += surplus
