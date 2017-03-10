@@ -10,7 +10,6 @@ const { restrict } = require('../common/util')
 const { bool, func, node, arrayOf, number, shape } = PropTypes
 const { PANEL } = require('../constants/sass')
 const { round, remap } = require('../common/util')
-const { verbose } = require('../common/log')
 
 
 class Panel extends PureComponent {
@@ -85,16 +84,6 @@ class PanelGroup extends PureComponent {
   }
 
 
-  get canClosePanel() {
-    let open = 0
-
-    for (let slot of this.state.slots) {
-      if (!slot.isClosed && ++open > 1) break
-    }
-
-    return open > 1
-  }
-
   getLayout(props = this.props) {
     const { top, bottom, height } = bounds(this.container)
 
@@ -121,6 +110,7 @@ class PanelGroup extends PureComponent {
       slots.push({
         height: slot.height,
         isClosed: slot.isClosed,
+        isDisabled: i < cc || i === props.slots.length - 1,
         min,
         upper: offset
       })
@@ -128,6 +118,7 @@ class PanelGroup extends PureComponent {
 
     let scale = height - cc * PANEL.CLOSED_HEIGHT
     let adj = height
+    let oc = 0
 
     for (--i, offset = 0; i >= 0; --i) {
       let slot = slots[i]
@@ -139,7 +130,10 @@ class PanelGroup extends PureComponent {
       } else {
         slot.height = round(scale * slot.height / 100, 1)
         adj = adj - slot.height
+        oc++
       }
+
+      slot.isDisabled = slot.isDisabled || oc <= 1
 
       slot.lower = offset
       offset = offset + slot.min
@@ -154,9 +148,7 @@ class PanelGroup extends PureComponent {
       }
     }
 
-    return {
-      top, bottom, height, slots
-    }
+    return { top, bottom, height, slots, canClosePanel: oc > 1 }
   }
 
   getShrinkMapper(by) {
@@ -248,24 +240,23 @@ class PanelGroup extends PureComponent {
   }
 
   resize(delta, at) {
-    let by, pivot, head, tail
+    let pivot, head, tail
     const { slots } = this.state
 
     if (delta > 0) {
-      by = delta
+      while (at > 0 && slots[at].isClosed) --at
 
-      pivot = this.grow(slots[at], by)
+      pivot = this.grow(slots[at], delta)
 
       head = slots.slice(0, at)
-      tail = slots.slice(at + 1).map(this.getShrinkMapper(by))
+      tail = slots.slice(at + 1).map(this.getShrinkMapper(delta))
 
     } else {
-      by = -delta
-      at = at + 1
+      do ++at; while (at < slots.length && slots[at].isClosed)
 
-      pivot = this.grow(slots[at], by)
+      pivot = this.grow(slots[at], -delta)
 
-      head = remap(slots.slice(0, at), this.getShrinkMapper(by))
+      head = remap(slots.slice(0, at), this.getShrinkMapper(-delta))
       tail = slots.slice(at + 1)
     }
 
@@ -295,8 +286,6 @@ class PanelGroup extends PureComponent {
 
   close(at) {
     const { slots } = this.state
-
-    if (!this.canClosePanel) return slots
 
     const pivot = { ...slots[at], isClosed: true }
     const grow = this.getGrowMapper(pivot.height - PANEL.CLOSED_HEIGHT)
@@ -328,10 +317,10 @@ class PanelGroup extends PureComponent {
 
 
   renderPanel = (panel, id) => {
-    const { slots } = this.state
+    const { slots, canClosePanel } = this.state
     if (id >= slots.length) return
 
-    let { min, height, isClosed } = slots[id]
+    let { min, height, isClosed, isDisabled } = slots[id]
 
     if (isClosed) {
       min = height = PANEL.CLOSED_HEIGHT
@@ -344,7 +333,7 @@ class PanelGroup extends PureComponent {
         edge="bottom"
         min={min}
         value={height}
-        isDisabled={id === slots.length - 1}
+        isDisabled={isDisabled}
         onDrag={this.handleDrag}
         onDragStart={this.handleDragStart}
         onDragStop={this.handleDragStop}>
@@ -352,7 +341,7 @@ class PanelGroup extends PureComponent {
         {clone(panel, {
           isClosed,
           id,
-          canToggle: isClosed || this.canClosePanel,
+          canToggle: isClosed || canClosePanel,
           onToggle: this.handleToggle
         })}
       </Resizable>
