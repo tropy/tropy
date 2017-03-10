@@ -9,8 +9,7 @@ const { bounds, on, off } = require('../dom')
 const { restrict } = require('../common/util')
 const { bool, func, node, arrayOf, number, shape } = PropTypes
 const { PANEL } = require('../constants/sass')
-const { round } = Math
-const { remap } = require('../common/util')
+const { round, remap } = require('../common/util')
 const { verbose } = require('../common/log')
 
 
@@ -101,42 +100,52 @@ class PanelGroup extends PureComponent {
 
     const slots = []
 
-    let adj = height
     let offset = 0
+    let cc = 0
     let i = 0
 
     for (; i < props.slots.length; ++i) {
       let slot = props.slots[i]
       let min
-      let pix = round(height * slot.height / 100)
 
       if (slot.isClosed) {
         min = PANEL.CLOSED_HEIGHT
-        adj = adj - min
+        cc++
 
       } else {
         min = PANEL.MIN_HEIGHT
-        adj = adj - pix
       }
 
       offset = offset + min
 
       slots.push({
-        height: pix,
+        height: slot.height,
         isClosed: slot.isClosed,
         min,
         upper: offset
       })
     }
 
+    let scale = height - cc * PANEL.CLOSED_HEIGHT
+    let adj = height
+
     for (--i, offset = 0; i >= 0; --i) {
-      slots[i].lower = offset
-      offset = offset + slots[i].min
+      let slot = slots[i]
+
+      if (slot.isClosed) {
+        slot.height = round((scale + slot.min) * slot.height / 100, 1)
+        adj = adj - slot.min
+
+      } else {
+        slot.height = round(scale * slot.height / 100, 1)
+        adj = adj - slot.height
+      }
+
+      slot.lower = offset
+      offset = offset + slot.min
     }
 
     if (adj !== 0) {
-      if (adj > 2) verbose(`panel-group rounding off by ${adj}`)
-
       for (i = 0; i < slots.length; ++i) {
         if (!slots[i].isClosed) {
           slots[i].height += adj
