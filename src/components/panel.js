@@ -85,6 +85,17 @@ class PanelGroup extends PureComponent {
     }
   }
 
+
+  get canClosePanel() {
+    let open = 0
+
+    for (let slot of this.state.slots) {
+      if (!slot.isClosed && ++open > 1) break
+    }
+
+    return open > 1
+  }
+
   getLayout(props = this.props) {
     const { top, bottom, height } = bounds(this.container)
 
@@ -139,21 +150,41 @@ class PanelGroup extends PureComponent {
     }
   }
 
-  get canClosePanel() {
-    let open = 0
+  getShrinkMapper(by) {
+    return (original) => {
+      let slot
 
-    for (let slot of this.state.slots) {
-      if (!slot.isClosed) ++open
+      try {
+        return slot = this.shrink(original, by)
+
+      } finally {
+        by = by - (original.height - slot.height)
+      }
     }
-
-    return open > 1
   }
+
+  getGrowMapper(by) {
+    return (original) => {
+      let slot
+
+      try {
+        return slot = this.grow(original, by)
+
+      } finally {
+        by = by - (slot.height - original.height)
+      }
+    }
+  }
+
 
   setContainer = (container) => {
     this.container = container
   }
 
-  handleResizeWindow = () => this.setState(this.getLayout())
+
+  handleResizeWindow = () => {
+    this.setState(this.getLayout())
+  }
 
   handleDragStart = (_, active) => {
     let { top, bottom, slots } = this.state
@@ -184,40 +215,13 @@ class PanelGroup extends PureComponent {
   }
 
   handleToggle = (panel, close) => {
-    this.setState({
-      slots: close ?
-        this.close(panel.props.id) : this.open(panel.props.id)
-    })
+    const at = panel.props.id
+    const slots = close ? this.close(at) : this.open(at)
 
-    //this.commit()
+    this.commit(slots)
   }
 
 
-  getShrinkMapper(by) {
-    return (original) => {
-      let slot
-
-      try {
-        return slot = this.shrink(original, by)
-
-      } finally {
-        by = by - (original.height - slot.height)
-      }
-    }
-  }
-
-  getGrowMapper(by) {
-    return (original) => {
-      let slot
-
-      try {
-        return slot = this.grow(original, by)
-
-      } finally {
-        by = by - (slot.height - original.height)
-      }
-    }
-  }
 
   grow(slot, by) {
     return (slot.isClosed || by <= 0) ?  slot : {
@@ -299,28 +303,38 @@ class PanelGroup extends PureComponent {
     ]
   }
 
-  commit() {
+  commit(slots = this.state.slots) {
+    const cc = slots.filter(slot => slot.isClosed).length
+    const scale = this.state.height - cc * PANEL.CLOSED_HEIGHT
+
     this.props.onResize(
-      this.state.slots.map(({ height, isClosed }) => ({
-        height: round(height * 100 / this.state.height),
-        isClosed
+      slots.map(({ height, isClosed }) => ({
+        isClosed,
+        height: round(
+          height * 100 / (isClosed ? scale + PANEL.CLOSED_HEIGHT : scale)
+        )
       }))
     )
   }
+
 
   renderPanel = (panel, id) => {
     const { slots } = this.state
     if (id >= slots.length) return
 
-    const { min, height, isClosed } = slots[id]
+    let { min, height, isClosed } = slots[id]
+
+    if (isClosed) {
+      min = height = PANEL.CLOSED_HEIGHT
+    }
 
     return (
       <Resizable
         key={id}
         id={id}
         edge="bottom"
-        min={isClosed ? PANEL.CLOSED_HEIGHT : min}
-        value={isClosed ? PANEL.CLOSED_HEIGHT : height}
+        min={min}
+        value={height}
         isDisabled={id === slots.length - 1}
         onDrag={this.handleDrag}
         onDragStart={this.handleDragStart}
