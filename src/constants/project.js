@@ -4,6 +4,8 @@ module.exports = {
 
   OPEN: 'project.open',
   OPENED: 'project.opened',
+  CLOSE: 'project.close',
+  CLOSED: 'project.closed',
 
   CREATED: 'project.created',
 

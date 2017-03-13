@@ -1,6 +1,6 @@
 'use strict'
 
-const { OPEN } = require('../constants/project')
+const { OPEN, CLOSE, CLOSED } = require('../constants/project')
 const { Database } = require('../common/db')
 const { Cache } = require('../common/cache')
 const { warn, info, debug, verbose } = require('../common/log')
@@ -14,7 +14,7 @@ const act = require('../actions')
 const storage = require('./storage')
 
 const {
-  fork, cancel, call, put, take, takeEvery: every
+  fork, cancel, cancelled, call, put, take, takeEvery: every
 } = require('redux-saga/effects')
 
 const TOO_LONG = ARGS.dev ? 500 : 1500
@@ -94,7 +94,7 @@ module.exports = {
         yield call(db.close)
       }
 
-      info(`closed project ${id}`)
+      yield put(act.project.closed(id))
     }
   },
 
@@ -124,11 +124,13 @@ module.exports = {
   },
 
   *main() {
-    let task
+    let task, aux
 
     try {
-      yield fork(ipc)
-      yield fork(history)
+      aux = yield [
+        fork(ipc),
+        fork(history)
+      ]
 
       yield [
         call(storage.restore, 'properties'),
@@ -136,17 +138,20 @@ module.exports = {
       ]
 
       while (true) {
-        const { payload } = yield take(OPEN)
+        const { type, payload } = yield take([OPEN, CLOSE])
 
         if (task) {
           yield cancel(task)
+          yield take(CLOSED)
         }
+
+        if (type === CLOSE) return
 
         task = yield fork(module.exports.open, payload)
       }
 
     } catch (error) {
-      warn(`unexpected error in main: ${error.message}`)
+      warn(`unexpected error in *main: ${error.message}`)
       debug(error.stack)
 
     } finally {
@@ -154,6 +159,12 @@ module.exports = {
         call(storage.persist, 'properties'),
         call(storage.persist, 'ui')
       ]
+
+      if (!(yield cancelled())) {
+        yield aux.map(cancel)
+      }
+
+      verbose('*main terminated')
     }
   }
 }

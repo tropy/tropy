@@ -7,8 +7,7 @@ const { ready, $ } = require('../dom')
 const { create } = require('../stores/project')
 const { Main } = require('../components/main')
 const { ProjectContainer } = require('../components/project')
-const { getMessages } = require('../actions/intl')
-const { open } = require('../actions/project')
+const { intl, project } = require('../actions')
 const { main } = require('../sagas/project')
 const { win } = require('../window')
 const dialog = require('../dialog')
@@ -17,8 +16,8 @@ const store = create()
 const tasks = store.saga.run(main)
 
 all([
-  store.dispatch(getMessages()),
-  store.dispatch(open(ARGS.file)),
+  store.dispatch(intl.getMessages()),
+  store.dispatch(project.open(ARGS.file)),
   ready
 ])
   .then(() => {
@@ -31,7 +30,10 @@ all([
 dialog.start()
 
 win.unloaders.push(dialog.stop)
-win.unloaders.push(() => (tasks.cancel(), tasks.done))
+
+win.unloaders.push(() => (
+  store.dispatch(project.close()), tasks.done
+))
 
 if (ARGS.dev || ARGS.debug) {
   Object.defineProperty(window, 'store', { get: () => store })
