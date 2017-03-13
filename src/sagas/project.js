@@ -3,7 +3,7 @@
 const { OPEN, CLOSE, CLOSED } = require('../constants/project')
 const { Database } = require('../common/db')
 const { Cache } = require('../common/cache')
-const { warn, info, debug, verbose } = require('../common/log')
+const { warn, debug, verbose } = require('../common/log')
 const { exec } = require('../commands')
 const { fail } = require('../dialog')
 const { ipc } = require('./ipc')
