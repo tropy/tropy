@@ -75,6 +75,7 @@ class PanelGroup extends PureComponent {
 
   componentWillUnmount() {
     off(window, 'resize', this.handleResizeWindow)
+    clearTimeout(this.willResizeWindow)
   }
 
   componentWillReceiveProps(props) {
@@ -86,6 +87,13 @@ class PanelGroup extends PureComponent {
 
   getLayout(props = this.props) {
     const { top, bottom, height } = bounds(this.container)
+
+    clearTimeout(this.willResizeWindow)
+
+    if (height === 0) {
+      this.willResizeWindow = setTimeout(this.handleResizeWindow, 15)
+      return
+    }
 
     const slots = []
 
