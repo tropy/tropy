@@ -24,6 +24,7 @@ class Window {
       aqua, frameless, scrollbars, theme
     }
 
+    this.unloader = 'close'
     this.unloaders = []
     this.hasFinishedUnloading = false
   }
@@ -93,40 +94,37 @@ class Window {
       .on('refresh', () => {
         this.style(false, true)
       })
+      .on('reload', () => {
+        this.reload()
+      })
   }
 
   handleUnload() {
-    let unloader = 'close'
-
-    ipc.on('reload', () => {
-      unloader = 'reload'
-      this.current.reload()
-    })
-
-    once(window, 'beforeunload', event => {
-      debug(`unloading ${this.type}...`)
+    on(window, 'beforeunload', event => {
+      if (this.hasFinishedUnloading) return
 
       event.returnValue = false
+
+      if (this.isUnloading) return
+
+      debug(`unloading ${this.type}...`)
+      this.isUnloading = true
+
       toggle(document.body, 'closing', true)
 
       each(this.unloaders, unload => {
         let res = unload()
         return res
       })
-        .tap(res => {
-          debug(res.length)
-          debug('unloader finished', res)
-        })
         .finally(() => {
-          debug(`ready to close ${this.type}`)
+          debug(`ready to close ${this.type} (${this.unloader})`)
 
           this.hasFinishedUnloading = true
-          setTimeout(() => this.current[unloader](), 15)
-        })
-    })
 
-    on(window, 'beforeunload', event => {
-      if (!this.hasFinishedUnloading) event.returnValue = false
+          // Calling reload/close immediately does not work reliably.
+          // See Electron #7977
+          setTimeout(() => this.current[this.unloader](), 25)
+        })
     })
   }
 
@@ -173,6 +171,11 @@ class Window {
     append(this.controls.max, div)
 
     append(div, document.body)
+  }
+
+  reload() {
+    this.unloader = 'reload'
+    this.current.reload()
   }
 
   style(theme, prune = false) {
