@@ -75,7 +75,22 @@ class Strings extends Resource {
   }
 }
 
+class KeyMap extends Resource {
+  static get base() {
+    return join(super.base, 'keymaps')
+  }
+
+  static open(locale, name, ...args) {
+    return super.open(`${name}.${locale}`, locale, ...args)
+  }
+
+  constructor(data = {}, locale = 'en') {
+    super()
+    this.map = data[process.platform]
+    this.locale = locale
+  }
+}
 
 module.exports = {
-  Resource, Menu, Strings
+  Resource, Menu, Strings, KeyMap
 }
