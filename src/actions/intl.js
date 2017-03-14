@@ -3,11 +3,9 @@
 const { Strings } = require('../common/res')
 const { UPDATE } = require('../constants/intl')
 
-function getMessages() {
-  return async (dispatch, getState) => {
-    const { intl: { locale, defaultLocale } } = getState()
-
-    const strings = await Strings.openWithFallback(defaultLocale, locale)
+function load({ locale }) {
+  return async function (dispatch) {
+    const strings = await Strings.openWithFallback('en', locale)
     const messages = strings.flatten()
 
     dispatch(update({ locale, messages }))
@@ -16,11 +14,15 @@ function getMessages() {
   }
 }
 
-function update(payload) {
-  return { type: UPDATE, payload }
+function update(payload, meta) {
+  return {
+    type: UPDATE,
+    payload,
+    meta
+  }
 }
 
 module.exports = {
-  getMessages,
+  load,
   update
 }
