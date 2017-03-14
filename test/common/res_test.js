@@ -57,7 +57,7 @@ describe('Strings', () => {
 
   describe('.openWithFallback', () => {
     it('fallsback to the default locale', () =>
-      expect(Strings.openWithFallback('yz'))
+      expect(Strings.openWithFallback('en', 'yz'))
         .eventually.to.have.property('locale', 'en'))
   })
 })

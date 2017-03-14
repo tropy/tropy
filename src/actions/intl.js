@@ -7,7 +7,7 @@ function getMessages() {
   return async (dispatch, getState) => {
     const { intl: { locale, defaultLocale } } = getState()
 
-    const strings = await Strings.openWithFallback(locale, defaultLocale)
+    const strings = await Strings.openWithFallback(defaultLocale, locale)
     const messages = strings.flatten()
 
     dispatch(update({ locale, messages }))

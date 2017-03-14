@@ -26,6 +26,12 @@ class Resource {
     return new this(this.parse(await read(this.expand(name))), ...args)
   }
 
+  static openWithFallback(fallback, name, ...args) {
+    return B
+      .resolve(this.open(name, ...args))
+      .catch({ code: 'ENOENT' }, () => this.open(fallback, ...args))
+  }
+
   static expand(name) {
     return join(this.base, `${name}${this.ext}`)
   }
@@ -54,12 +60,6 @@ class Strings extends Resource {
     return super.open(locale, locale, ...args)
   }
 
-  static openWithFallback(locale, fallback = 'en', ...args) {
-    return B
-      .resolve(this.open(locale, ...args))
-      .catch({ code: 'ENOENT' }, () => this.open(fallback, ...args))
-  }
-
   static expand(locale) {
     return super.expand(`${process.type}.${String(locale).slice(0, 2)}`)
   }
@@ -74,6 +74,7 @@ class Strings extends Resource {
     return flatten(this.dict)
   }
 }
+
 
 module.exports = {
   Resource, Menu, Strings

@@ -217,7 +217,7 @@ class Tropy extends EventEmitter {
         this.ctx.load(),
         this.cache.init(),
         Strings
-          .openWithFallback(state.locale, Tropy.defaults.locale)
+          .openWithFallback(Tropy.defaults.locale, state.locale)
           .then(strings => this.strings = strings)
       ]))
 
