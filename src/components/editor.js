@@ -8,12 +8,16 @@ const { func, bool, object, number } = PropTypes
 const { EditorState } = require('prosemirror-state')
 const { EditorView } = require('prosemirror-view')
 const { schema } = require('prosemirror-schema-basic')
+const { history } = require('prosemirror-history')
 
 
 class Editor extends Component {
   componentDidMount() {
     this.pm = new EditorView(this.container, {
       state: EditorState.create({ schema }),
+      plugins: [
+        history()
+      ],
       ...this.getEditorProps()
     })
   }

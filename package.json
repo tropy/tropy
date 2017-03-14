@@ -89,6 +89,7 @@
     "lodash.debounce": "^4.0.7",
     "lodash.throttle": "^4.1.1",
     "ms": "^0.7.1",
+    "prosemirror-history": "^0.18.0",
     "prosemirror-model": "^0.18.0",
     "prosemirror-schema-basic": "^0.18.0",
     "prosemirror-state": "^0.18.0",
