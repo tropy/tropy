@@ -6,7 +6,7 @@ const { ItemPanel } = require('./panel')
 const { Resizable, BufferedResizable } = require('../resizable')
 const { EsperImage } = require('../esper')
 const { NotePad } = require('../note')
-const { PROJECT: { MODE }, SASS: { PANEL } } = require('../../constants')
+const { PROJECT: { MODE }, SASS: { PANEL }, TABS } = require('../../constants')
 const { pick } = require('../../common/util')
 const { func, arrayOf, shape, number, bool, string } = PropTypes
 
@@ -79,7 +79,9 @@ class ItemView extends PureComponent {
             min={256}>
             <EsperImage isVisible photo={photo}/>
           </BufferedResizable>
-          <NotePad/>
+          <NotePad
+            tabIndex={isItemOpen ? TABS.NotePad : -1}
+            isDisabled={isDisabled}/>
         </div>
       </section>
     )

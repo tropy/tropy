@@ -1,7 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent, PropTypes } = React
+const shallow = require('react/lib/shallowCompare')
+const { Component, PropTypes } = React
 const { func, bool, object, number } = PropTypes
 
 const { EditorState } = require('prosemirror-state')
@@ -9,22 +10,38 @@ const { EditorView } = require('prosemirror-view')
 const { schema } = require('prosemirror-schema-basic')
 
 
-class Editor extends PureComponent {
+class Editor extends Component {
   componentDidMount() {
     this.pm = new EditorView(this.container, {
-      state: EditorState.create({ schema })
+      state: EditorState.create({ schema }),
+      editable: this.isEditable
     })
 
-    // TODO find out how to make ProseMirror do this
-    this.pm.dom.tabIndex = this.props.tabIndex
+    this.update()
   }
 
   componentWillUnmount() {
     this.pm.destroy()
   }
 
+  shouldComponentUpdate(props) {
+    if (shallow(this, props)) {
+      this.update(props)
+    }
+
+    return false
+  }
+
+  isEditable = () => {
+    !this.props.isDisabled
+  }
+
   setContainer = (container) => {
     this.container = container
+  }
+
+  update(props = this.props) {
+    this.pm.dom.tabIndex = props.tabIndex
   }
 
   render() {
