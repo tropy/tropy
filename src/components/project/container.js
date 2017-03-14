@@ -290,6 +290,7 @@ module.exports = {
       photos: getVisiblePhotos(state),
       sort: state.nav.sort,
       data: state.metadata,
+      keymap: state.keymap,
       cache: getCachePrefix(state),
       nav: state.nav,
       ui: state.ui,

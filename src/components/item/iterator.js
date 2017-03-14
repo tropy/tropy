@@ -4,7 +4,11 @@ const React = require('react')
 const { PropTypes } = React
 const { Iterator } = require('../iterator')
 const { has } = require('../../dom')
-const { arrayOf, oneOf, shape, bool, func, number, string } = PropTypes
+const { match } = require('../../keymap')
+
+const {
+  arrayOf, oneOf, shape, bool, func, number, object, string
+} = PropTypes
 
 
 class ItemIterator extends Iterator {
@@ -69,16 +73,16 @@ class ItemIterator extends Iterator {
   }
 
   handleKeyDown = (event) => {
-    switch (event.key) {
-      case (this.isVertical ? 'ArrowUp' : 'ArrowLeft'):
+    switch (match(this.props.keymap, event)) {
+      case (this.isVertical ? 'up' : 'left'):
         this.select(this.getPrevItem())
         break
 
-      case (this.isVertical ? 'ArrowDown' : 'ArrowRight'):
+      case (this.isVertical ? 'down' : 'right'):
         this.select(this.getNextItem())
         break
 
-      case ' ':
+      case 'open':
         this.props.onItemPreview(this.getCurrentItem())
         break
 
@@ -139,6 +143,7 @@ class ItemIterator extends Iterator {
 
     cache: string.isRequired,
     selection: arrayOf(number).isRequired,
+    keymap: object.isRequired,
     list: number,
     size: number.isRequired,
 

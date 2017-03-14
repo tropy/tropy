@@ -1,9 +1,10 @@
 linux: &linux
-  ItemGrid:
+  ItemIterator:
     up: ArrowUp
     down: ArrowDown
     left: ArrowLeft
     right: ArrowRight
+    open: Space
 
 darwin: *linux
 win32: *linux
