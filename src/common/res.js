@@ -1,13 +1,12 @@
 'use strict'
 
-const B = require('./promisify')
-
-const { resolve, join } = require('path')
+const { resolve } = require('./promisify')
+const { resolve: cd, join } = require('path')
 const { readFileAsync: read } = require('fs')
 const { flatten } = require('./util')
 
 const yaml = require('js-yaml')
-const root = resolve(__dirname, '..', '..', 'res')
+const root = cd(__dirname, '..', '..', 'res')
 
 class Resource {
   static get base() {
@@ -27,16 +26,12 @@ class Resource {
   }
 
   static openWithFallback(fallback, name, ...args) {
-    return B
-      .resolve(this.open(name, ...args))
+    return resolve(this.open(name, ...args))
       .catch({ code: 'ENOENT' }, () => this.open(fallback, ...args))
   }
 
   static expand(name) {
     return join(this.base, `${name}${this.ext}`)
-  }
-
-  constructor() {
   }
 }
 
