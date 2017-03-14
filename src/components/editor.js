@@ -32,16 +32,16 @@ class Editor extends Component {
     return false
   }
 
-  isEditable = () => {
-    !this.props.isDisabled
-  }
-
   setContainer = (container) => {
     this.container = container
   }
 
   update(props = this.props) {
     this.pm.dom.tabIndex = props.tabIndex
+
+    this.pm.setProps({
+      editable: () => !this.props.isDisabled
+    })
   }
 
   render() {
