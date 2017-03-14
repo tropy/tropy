@@ -199,7 +199,7 @@ class PanelGroup extends PureComponent {
     if (slots.length > 1) {
       const slot = slots[1]
 
-      if (!slot.isClosed && slot.height > PANEL.MIN_HEIGHT) {
+      if (!slot.isClosed && slot.height >= PANEL.MIN_HEIGHT) {
         const offset = top + slots[0].height
 
         this.bounds.memo = (active.props.id === 0) ?
