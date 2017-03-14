@@ -10,17 +10,22 @@ const { EditorView } = require('prosemirror-view')
 const { schema } = require('prosemirror-schema-basic')
 const { history, undo, redo } = require('prosemirror-history')
 
+const cmd = require('../editor/commands')
 const { match } = require('../keymap')
+
 
 
 class Editor extends Component {
   componentDidMount() {
     this.pm = new EditorView(this.container, {
       state: EditorState.create({ schema }),
+
       plugins: [
         history()
       ],
+
       handleKeyDown: this.handleKeyDown,
+
       ...this.getEditorProps()
     })
   }
@@ -51,18 +56,20 @@ class Editor extends Component {
   }
 
   handleKeyDown = (view, event) => {
-    switch (match(this.props.keymap, event)) {
+    const action = match(this.props.keymap, event)
+
+    if (cmd[action]) {
+      return cmd[action](view.state, view.dispatch)
+    }
+
+    switch (action) {
       case 'undo':
-        undo(view.state, view.dispatch)
-        break
+        return undo(view.state, view.dispatch)
       case 'redo':
-        redo(view.state, view.dispatch)
-        break
+        return redo(view.state, view.dispatch)
       default:
         return false
     }
-
-    return true
   }
 
   update(props = this.props) {
