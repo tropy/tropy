@@ -1,0 +1,9 @@
+linux: &linux
+  ItemGrid:
+    up: ArrowUp
+    down: ArrowDown
+    left: ArrowLeft
+    right: ArrowRight
+
+darwin: *linux
+win32: *linux
