@@ -10,11 +10,12 @@ const cx = require('classnames')
 //eslint-disable-next-line react/prefer-stateless-function
 class NotePad extends PureComponent {
   render() {
-    const { isDisabled, tabIndex } = this.props
+    const { isDisabled, keymap, tabIndex } = this.props
 
     return (
       <section className={cx({ note: true, pad: true })}>
         <Editor
+          keymap={keymap}
           isDisabled={isDisabled}
           tabIndex={tabIndex}/>
       </section>
@@ -23,6 +24,7 @@ class NotePad extends PureComponent {
 
   static propTypes = {
     isDisabled: bool,
+    keymap: object.isRequired,
     note: object,
     tabIndex: number.isRequired
   }

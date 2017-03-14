@@ -10,6 +10,8 @@ const { EditorView } = require('prosemirror-view')
 const { schema } = require('prosemirror-schema-basic')
 const { history, undo, redo } = require('prosemirror-history')
 
+const { match } = require('../keymap')
+
 
 class Editor extends Component {
   componentDidMount() {
@@ -18,6 +20,7 @@ class Editor extends Component {
       plugins: [
         history()
       ],
+      handleKeyDown: this.handleKeyDown,
       ...this.getEditorProps()
     })
   }
@@ -34,10 +37,6 @@ class Editor extends Component {
     return false
   }
 
-  setContainer = (container) => {
-    this.container = container
-  }
-
   getEditorProps(props = this.props) {
     return {
       editable: () => !props.isDisabled,
@@ -45,6 +44,25 @@ class Editor extends Component {
         tabIndex: props.tabIndex
       }
     }
+  }
+
+  setContainer = (container) => {
+    this.container = container
+  }
+
+  handleKeyDown = (view, event) => {
+    switch (match(this.props.keymap, event)) {
+      case 'undo':
+        undo(view.state, view.dispatch)
+        break
+      case 'redo':
+        redo(view.state, view.dispatch)
+        break
+      default:
+        return false
+    }
+
+    return true
   }
 
   update(props = this.props) {
@@ -59,6 +77,7 @@ class Editor extends Component {
 
   static propTypes = {
     isDisabled: bool,
+    keymap: object.isRequired,
     value: object,
     onChange: func,
     tabIndex: number

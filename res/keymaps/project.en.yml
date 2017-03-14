@@ -6,5 +6,9 @@ linux: &linux
     right: ArrowRight
     open: Space
 
+  NotePad:
+    undo: CmdOrCtrl+z
+    redo: CmdOrCtrl+y
+
 darwin: *linux
 win32: *linux

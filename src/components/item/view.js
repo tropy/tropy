@@ -8,7 +8,10 @@ const { EsperImage } = require('../esper')
 const { NotePad } = require('../note')
 const { PROJECT: { MODE }, SASS: { PANEL }, TABS } = require('../../constants')
 const { pick } = require('../../common/util')
-const { func, arrayOf, shape, number, bool, string } = PropTypes
+
+const {
+  arrayOf, bool, func, object, number, shape, string
+} = PropTypes
 
 
 class ItemView extends PureComponent {
@@ -46,6 +49,7 @@ class ItemView extends PureComponent {
       esper,
       panel,
       photo,
+      keymap,
       offset,
       onPanelResize,
       onPanelDragStop,
@@ -80,8 +84,9 @@ class ItemView extends PureComponent {
             <EsperImage isVisible photo={photo}/>
           </BufferedResizable>
           <NotePad
-            tabIndex={isItemOpen ? TABS.NotePad : -1}
-            isDisabled={isDisabled}/>
+            isDisabled={isDisabled}
+            keymap={keymap.NotePad}
+            tabIndex={isItemOpen ? TABS.NotePad : -1}/>
         </div>
       </section>
     )
@@ -103,6 +108,7 @@ class ItemView extends PureComponent {
       height: number.isRequired
     }).isRequired,
 
+    keymap: object.isRequired,
     offset: number.isRequired,
     mode: string.isRequired,
     isModeChanging: bool.isRequired,
