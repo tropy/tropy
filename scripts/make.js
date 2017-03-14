@@ -115,6 +115,7 @@ target['compile:css'] = (pattern) => {
       let options = {
         file: src,
         functions: SassExtensions,
+        includePaths: SassIncludePath,
         outFile: dst,
         outputStyle: 'compressed',
         sourceMap: true
@@ -228,6 +229,10 @@ function swap(filename, src, dst, ext) {
 function mocha(options, silent) {
   return exec(`${emocha} ${options.join(' ')}`, { silent })
 }
+
+const SassIncludePath = [
+  join(home, 'node_modules')
+]
 
 const SassExtensions = {
   'const($name, $unit:"")'(name, unit) {
