@@ -14,10 +14,8 @@ class Editor extends Component {
   componentDidMount() {
     this.pm = new EditorView(this.container, {
       state: EditorState.create({ schema }),
-      editable: this.isEditable
+      ...this.getEditorProps()
     })
-
-    this.update()
   }
 
   componentWillUnmount() {
@@ -36,12 +34,17 @@ class Editor extends Component {
     this.container = container
   }
 
-  update(props = this.props) {
-    this.pm.dom.tabIndex = props.tabIndex
+  getEditorProps(props = this.props) {
+    return {
+      editable: () => !props.isDisabled,
+      attributes: {
+        tabIndex: props.tabIndex
+      }
+    }
+  }
 
-    this.pm.setProps({
-      editable: () => !this.props.isDisabled
-    })
+  update(props = this.props) {
+    this.pm.setProps(this.getEditorProps(props))
   }
 
   render() {
