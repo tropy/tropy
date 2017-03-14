@@ -8,6 +8,7 @@ module.exports = {
   ...require('./history'),
   ...require('./intl'),
   ...require('./items'),
+  ...require('./keymap'),
   ...require('./lists'),
   ...require('./metadata'),
   ...require('./nav'),

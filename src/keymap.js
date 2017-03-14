@@ -15,7 +15,7 @@ function compile(data) {
     map[component] = {}
 
     for (let action in data[component]) {
-      map[component][action] = this.parse(data[component][action])
+      map[component][action] = parse(data[component][action])
     }
   }
 
@@ -28,7 +28,7 @@ function parse(shortcut) {
 
   if (key === 'Space') key = ' '
 
-  let alt, ctrl, meta, shift
+  let alt = false, ctrl = false, meta = false, shift = false
 
   for (let mod of parts) {
     switch (true) {

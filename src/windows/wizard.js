@@ -7,14 +7,16 @@ const { ready, $ } = require('../dom')
 const { create } = require('../stores/wizard')
 const { Main } = require('../components/main')
 const { Wizard } = require('../components/wizard')
-const { getMessages } = require('../actions/intl')
+const { intl } = require('../actions')
 const { win } = require('../window')
 const dialog = require('../dialog')
 
 const store = create()
 
+const { locale } = ARGS
+
 all([
-  store.dispatch(getMessages()),
+  store.dispatch(intl.load({ locale })),
   ready
 ])
   .then(() => {

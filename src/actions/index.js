@@ -8,6 +8,7 @@ module.exports = {
   history: require('./history'),
   intl: require('./intl'),
   item: require('./item'),
+  keymap: require('./keymap'),
   list: require('./list'),
   metadata: require('./metadata'),
   nav: require('./nav'),

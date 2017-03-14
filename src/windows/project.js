@@ -7,7 +7,7 @@ const { ready, $ } = require('../dom')
 const { create } = require('../stores/project')
 const { Main } = require('../components/main')
 const { ProjectContainer } = require('../components/project')
-const { intl, project } = require('../actions')
+const { intl, keymap, project } = require('../actions')
 const { main } = require('../sagas/project')
 const { win } = require('../window')
 const dialog = require('../dialog')
@@ -15,9 +15,12 @@ const dialog = require('../dialog')
 const store = create()
 const tasks = store.saga.run(main)
 
+const { locale, file } = ARGS
+
 all([
-  store.dispatch(intl.getMessages()),
-  store.dispatch(project.open(ARGS.file)),
+  store.dispatch(intl.load({ locale })),
+  store.dispatch(keymap.load({ name: 'project', locale })),
+  store.dispatch(project.open(file)),
   ready
 ])
   .then(() => {
