@@ -1,6 +1,7 @@
 'use strict'
 
 const { darwin } = require('./common/os')
+const { isArray } = Array
 
 const ALT = /^a(lt)?$/i
 const CTRL = /^c(trl|ontrol)?$/i
@@ -15,7 +16,10 @@ function compile(data) {
     map[component] = {}
 
     for (let action in data[component]) {
-      map[component][action] = parse(data[component][action])
+      let shortcut = data[component][action]
+
+      map[component][action] =
+        isArray(shortcut) ? shortcut.map(parse) : [parse(shortcut)]
     }
   }
 
@@ -52,15 +56,15 @@ function parse(shortcut) {
 
 function match(map, event) {
   for (let action in map) {
-    let shortcut = map[action]
+    for (let shortcut of map[action]) {
+      if (shortcut.key !== event.key) continue
+      if (shortcut.alt !== event.altKey) continue
+      if (shortcut.ctrl !== event.ctrlKey) continue
+      if (shortcut.meta !== event.metaKey) continue
+      if (shortcut.shift !== event.shiftKey) continue
 
-    if (shortcut.key !== event.key) continue
-    if (shortcut.alt !== event.altKey) continue
-    if (shortcut.ctrl !== event.ctrlKey) continue
-    if (shortcut.meta !== event.metaKey) continue
-    if (shortcut.shift !== event.shiftKey) continue
-
-    return action
+      return action
+    }
   }
 
   return null

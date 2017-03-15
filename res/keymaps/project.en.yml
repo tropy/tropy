@@ -7,9 +7,13 @@ linux: &linux
     open: Space
 
   NotePad:
-    backspace: Backspace
+    backspace:
+      - Backspace
+      - CmdOrCtrl+Backspace
     enter: Enter
-    del: Delete
+    del:
+      - Delete
+      - CmdOrCtrl+Delete
     undo: CmdOrCtrl+z
     redo: CmdOrCtrl+y
 
