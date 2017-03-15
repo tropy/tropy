@@ -38,7 +38,7 @@ const marks = {
   }
 }
 
-const schema = new Schema({
+const note = new Schema({
   nodes: {
     doc,
     paragraph,
@@ -73,6 +73,8 @@ const schema = new Schema({
 })
 
 module.exports = {
-  marks,
-  schema
+  schema: {
+    marks,
+    note
+  }
 }

@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent, PropTypes } = React
 const { bool, number, object } = PropTypes
-const { Editor } = require('../editor')
+const { Editor, schema } = require('../editor')
 const cx = require('classnames')
 
 
@@ -15,6 +15,7 @@ class NotePad extends PureComponent {
     return (
       <section className={cx({ note: true, pad: true })}>
         <Editor
+          schema={schema.note}
           keymap={keymap}
           isDisabled={isDisabled}
           tabIndex={tabIndex}/>
