@@ -59,7 +59,7 @@ class Editor extends Component {
     const action = match(this.props.keymap, event)
 
     if (cmd[action]) {
-      return cmd[action](view.state, view.dispatch)
+      return cmd[action](view.state, view.dispatch, view)
     }
 
     switch (action) {

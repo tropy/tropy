@@ -14,8 +14,12 @@ linux: &linux
     del:
       - Delete
       - CmdOrCtrl+Delete
+    joinUp: Alt+ArrowUp
+    joinDown: Alt+ArrowDown
+    lift: CmdOrCtrl+ArrowLeft
+    selectParentNode: Escape
     undo: CmdOrCtrl+z
-    redo: CmdOrCtrl+y
+    redo: CmdOrCtrl+Shift+z
 
 darwin: *linux
 win32: *linux
