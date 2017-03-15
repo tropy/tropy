@@ -72,8 +72,13 @@ const dom = module.exports = {
     return node.addEventListener(...args)
   },
 
-  once(node, type, fn, capture = false) {
-    return node.addEventListener(type, fn, { capture, once: true })
+  once(node, type, fn, capture) {
+    function delegate(...args) {
+      dom.off(node, type, delegate, capture)
+      fn(...args)
+    }
+
+    return dom.on(node, type, delegate, capture)
   },
 
   off(node, ...args) {

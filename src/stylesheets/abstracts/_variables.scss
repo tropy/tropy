@@ -231,6 +231,11 @@ $scrollbar-size: $space-sm;
 $progress-bar-height: $space-min;
 
 
+// Notepad
+// --------------------------------------------------
+
+$notepad-min-height: #{const("NOTEPAD.MIN_HEIGHT")}px;
+
 
 // Debug
 // --------------------------------------------------

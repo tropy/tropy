@@ -11,8 +11,9 @@ const { using, resolve } = require('bluebird')
 const { readFileAsync: read } = require('fs')
 const { createPool } = require('generic-pool')
 const { debug, info, verbose, warn } = require('./log')
-const { entries } = Object
+const entries = require('object.entries')
 const { project } = require('../models')
+
 
 const M = {
   'r': sqlite.OPEN_READONLY,
