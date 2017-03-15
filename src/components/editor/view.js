@@ -7,23 +7,19 @@ const { func, bool, object, number } = PropTypes
 
 const { EditorState } = require('prosemirror-state')
 const { EditorView } = require('prosemirror-view')
-const { schema } = require('prosemirror-schema-basic')
+
+const { schema } = require('./schema')
 const { plugins } = require('./plugins')
-
-const cmd = require('./commands')
+const { commands } = require('./commands')
 const { match } = require('../../keymap')
-
 
 
 class Editor extends Component {
   componentDidMount() {
     this.view = new EditorView(this.container, {
       state: EditorState.create({ schema }),
-
       plugins,
-
       handleKeyDown: this.handleKeyDown,
-
       ...this.getEditorProps()
     })
   }
@@ -57,8 +53,8 @@ class Editor extends Component {
   handleKeyDown = (view, event) => {
     const action = match(this.props.keymap, event)
 
-    if (cmd[action]) {
-      return cmd[action](view.state, view.dispatch, view)
+    if (commands[action]) {
+      return commands[action](view.state, view.dispatch, view)
     }
 
     return false

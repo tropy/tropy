@@ -2,26 +2,37 @@
 
 const cmd  = require('prosemirror-commands')
 const { undo, redo } = require('prosemirror-history')
+const {
+  wrapInList, splitListItem, liftListItem, sinkListItem
+} = require('prosemirror-schema-list')
+
 
 module.exports = {
-  ...cmd,
+  commands: {
+    ...cmd,
 
-  undo,
-  redo,
+    undo,
+    redo,
 
-  break: cmd.chainCommands(
-    cmd.createParagraphNear,
-    cmd.liftEmptyBlock,
-    cmd.splitBlock
-  ),
+    wrapInList,
+    splitListItem,
+    liftListItem,
+    sinkListItem,
 
-  backspace: cmd.chainCommands(
-    cmd.deleteSelection,
-    cmd.joinBackward
-  ),
+    break: cmd.chainCommands(
+      cmd.createParagraphNear,
+      cmd.liftEmptyBlock,
+      cmd.splitBlock
+    ),
 
-  del: cmd.chainCommands(
-    cmd.deleteSelection,
-    cmd.joinForward
-  )
+    backspace: cmd.chainCommands(
+      cmd.deleteSelection,
+      cmd.joinBackward
+    ),
+
+    del: cmd.chainCommands(
+      cmd.deleteSelection,
+      cmd.joinForward
+    )
+  }
 }
