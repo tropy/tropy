@@ -8,16 +8,16 @@ const { func, bool, object, number } = PropTypes
 const { EditorState } = require('prosemirror-state')
 const { EditorView } = require('prosemirror-view')
 const { schema } = require('prosemirror-schema-basic')
-const { history, undo, redo } = require('prosemirror-history')
+const { history } = require('prosemirror-history')
 
-const cmd = require('../editor/commands')
+const cmd = require('./commands')
 const { match } = require('../keymap')
 
 
 
 class Editor extends Component {
   componentDidMount() {
-    this.pm = new EditorView(this.container, {
+    this.view = new EditorView(this.container, {
       state: EditorState.create({ schema }),
 
       plugins: [
@@ -31,7 +31,8 @@ class Editor extends Component {
   }
 
   componentWillUnmount() {
-    this.pm.destroy()
+    this.view.destroy()
+    delete this.view
   }
 
   shouldComponentUpdate(props) {
@@ -62,18 +63,11 @@ class Editor extends Component {
       return cmd[action](view.state, view.dispatch, view)
     }
 
-    switch (action) {
-      case 'undo':
-        return undo(view.state, view.dispatch)
-      case 'redo':
-        return redo(view.state, view.dispatch)
-      default:
-        return false
-    }
+    return false
   }
 
   update(props = this.props) {
-    this.pm.setProps(this.getEditorProps(props))
+    this.view.setProps(this.getEditorProps(props))
   }
 
   render() {

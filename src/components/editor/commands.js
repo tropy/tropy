@@ -1,9 +1,13 @@
 'use strict'
 
 const cmd  = require('prosemirror-commands')
+const { undo, redo } = require('prosemirror-history')
 
 module.exports = {
   ...cmd,
+
+  undo,
+  redo,
 
   enter: cmd.chainCommands(
     cmd.newlineInCode,
