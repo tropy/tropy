@@ -16,8 +16,10 @@ const { match } = require('../../keymap')
 class Editor extends Component {
   componentDidMount() {
     this.view = new EditorView(this.container, {
-      state: EditorState.create({ schema: this.props.schema }),
-      plugins,
+      state: EditorState.create({
+        schema: this.props.schema,
+        plugins
+      }),
       handleKeyDown: this.handleKeyDown,
       ...this.getEditorProps()
     })
