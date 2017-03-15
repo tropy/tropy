@@ -7,19 +7,36 @@ linux: &linux
     open: Space
 
   NotePad:
+    break: Enter
+    hardBreak:
+      - Shift+Enter
+      - Ctrl+Enter
+
     backspace:
       - Backspace
       - CmdOrCtrl+Backspace
-    break: Enter
     del:
       - Delete
       - CmdOrCtrl+Delete
+
+    bold: CmdOrCtrl+b
+    italic: CmdOrCtrl+i
+    underline: CmdOrCtrl+u
+    strike: CmdOrCtrl+s
+
+    liftListItem: CmdOrCtrl+[
+    sinkListItem: CmdOrCtrl+]
+
     joinUp: Alt+ArrowUp
     joinDown: Alt+ArrowDown
     lift: CmdOrCtrl+ArrowLeft
+
     selectParentNode: Escape
+
+    wrapInBlockQuote: CmdOrCtrl+Shift+>
+
     undo: CmdOrCtrl+z
-    redo: CmdOrCtrl+Shift+z
+    redo: CmdOrCtrl+Shift+Z
 
 darwin: *linux
 win32: *linux
