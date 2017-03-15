@@ -9,8 +9,7 @@ module.exports = {
   undo,
   redo,
 
-  enter: cmd.chainCommands(
-    cmd.newlineInCode,
+  break: cmd.chainCommands(
     cmd.createParagraphNear,
     cmd.liftEmptyBlock,
     cmd.splitBlock

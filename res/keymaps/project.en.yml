@@ -10,7 +10,7 @@ linux: &linux
     backspace:
       - Backspace
       - CmdOrCtrl+Backspace
-    enter: Enter
+    break: Enter
     del:
       - Delete
       - CmdOrCtrl+Delete

@@ -8,10 +8,10 @@ const { func, bool, object, number } = PropTypes
 const { EditorState } = require('prosemirror-state')
 const { EditorView } = require('prosemirror-view')
 const { schema } = require('prosemirror-schema-basic')
-const { history } = require('prosemirror-history')
+const { plugins } = require('./plugins')
 
 const cmd = require('./commands')
-const { match } = require('../keymap')
+const { match } = require('../../keymap')
 
 
 
@@ -20,9 +20,7 @@ class Editor extends Component {
     this.view = new EditorView(this.container, {
       state: EditorState.create({ schema }),
 
-      plugins: [
-        history()
-      ],
+      plugins,
 
       handleKeyDown: this.handleKeyDown,
 
