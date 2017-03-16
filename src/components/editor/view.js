@@ -87,19 +87,16 @@ class ProseMirrorContainer extends Component {
   }
 
   handleKeyDown = (view, event) => {
-    const { isDisabled, keymap } = this.props
-
-    if (!isDisabled) {
-      const action = match(keymap, event)
-
-      if (commands[action]) {
-        return commands[action](view.state, view.dispatch, view)
-      }
-    }
-
-    return false
+    return (this.props.isDisabled) ?
+      false :
+      this.send(match(this.props.keymap, event))
   }
 
+  send(action, view = this.pm) {
+    return (commands[action]) ?
+      commands[action](view.state, view.dispatch, view) :
+      false
+  }
 
   update(props = this.props) {
     this.pm.setProps(this.getEditorProps(props))

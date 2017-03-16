@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const { bool } = PropTypes
+const { bool, func } = PropTypes
 const { Toolbar, ToolGroup } = require('../toolbar')
 const { IconButton } = require('../button')
 
@@ -22,6 +22,8 @@ const {
 
 class EditorToolbar extends PureComponent {
 
+  handleBold = () => this.props.onCommand('bold')
+  handleItalics = () => this.props.onCommand('italics')
 
   render() {
     return (
@@ -29,7 +31,7 @@ class EditorToolbar extends PureComponent {
         <div className="toolbar-left">
           {this.props.hasMarkTools &&
             <ToolGroup>
-              <IconButton icon={<IconB/>}/>
+              <IconButton icon={<IconB/>} onClick={this.handleBold}/>
               <IconButton icon={<IconI/>}/>
               <IconButton icon={<IconU/>}/>
               <IconButton icon={<IconS/>}/>
@@ -57,7 +59,8 @@ class EditorToolbar extends PureComponent {
   static propTypes = {
     hasMarkTools: bool,
     hasListTools: bool,
-    hasLinkTools: bool
+    hasLinkTools: bool,
+    onCommand: func.isRequired
   }
 
   static defaultProps = {

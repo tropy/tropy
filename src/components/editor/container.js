@@ -24,6 +24,10 @@ class Editor extends PureComponent {
     this.view.focus()
   }
 
+  handleCommand = (command) => {
+    this.view.send(command)
+  }
+
   handleChange = () => {
   }
 
@@ -36,7 +40,8 @@ class Editor extends PureComponent {
           isDisabled={isDisabled}
           hasMarkTools
           hasListTools
-          hasLinkTools/>
+          hasLinkTools
+          onCommand={this.handleCommand}/>
 
         <div className="scroll-container">
           <EditorView
