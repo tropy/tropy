@@ -13,7 +13,7 @@ const { MODE } = require('../../constants/project')
 const { once } = require('../../dom')
 const { win } = require('../../window')
 const cx = require('classnames')
-const values = require('object.values')
+const { values } = Object
 const actions = require('../../actions')
 
 const { getCachePrefix } = require('../../selectors/project')

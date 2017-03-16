@@ -1,7 +1,7 @@
 'use strict'
 
 const { createSelector: memo } = require('reselect')
-const values = require('object.values')
+const { values } = Object
 const { seq, compose, map, cat, keep } = require('transducers.js')
 const { getSelectedItems } = require('./items')
 

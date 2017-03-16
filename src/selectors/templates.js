@@ -4,7 +4,7 @@ const {
   createSelector: memo
 } = require('reselect')
 
-const entries = require('object.entries')
+const { entries } = Object
 const { DC } = require('../constants/properties')
 
 const CORE = 'https://schema.tropy.org/v1/templates/core'
