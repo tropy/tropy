@@ -15,7 +15,7 @@
   padding-top: 0;
 
   &:hover {
-    padding-top: 39px;
+    padding-top: $toolbar-height + 1px;
   }
 }
 
@@ -26,11 +26,10 @@
   font-size: $editor-font-size;
   line-height: $editor-line-height;
   max-width: 800px;
-  //padding-top: $prose-mirror-padding-top;
-  padding-top: 39px;
+  padding-top: $toolbar-height + 1px + $prose-mirror-padding-top;
 
   .editor:hover & {
-    padding-top: 0;
+    padding-top: $prose-mirror-padding-top;
   }
 
   * {
