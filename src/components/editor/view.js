@@ -69,13 +69,17 @@ class Editor extends Component {
     return false
   }
 
+  focus = () => {
+    this.view.dom.focus()
+  }
+
   update(props = this.props) {
     this.view.setProps(this.getEditorProps(props))
   }
 
   render() {
     return (
-      <div className="editor">
+      <div className="editor" onClick={this.focus}>
         <div className="toolbar">
           <div className="toolbar-left">
             <div className="toolgroup">
