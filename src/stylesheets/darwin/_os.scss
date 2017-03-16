@@ -2,6 +2,11 @@
 // Operating system specific styles
 // --------------------------------------------------
 
+// Lighter font rendering
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
 .el-capitan {
   font-family: BlinkMacSystemFont, $font-family-base;
 
