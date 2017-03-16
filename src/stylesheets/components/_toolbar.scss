@@ -36,6 +36,16 @@
     align-items: center;
   }
 
+  .tool-group {
+    & + .tool-group {
+      margin-left: $space-xs;
+
+      .panel & {
+        margin-left: $space-min;
+      }
+    }
+  }
+
   .icon + h4 {
     margin-left: $space-xs;
   }
