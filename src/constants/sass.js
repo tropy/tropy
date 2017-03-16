@@ -98,6 +98,10 @@ const WINDOW = {
   MIN_HEIGHT: PANEL.MIN_HEIGHT * 3 + PANEL.TOOLBAR + PANEL.HEADER_MARGIN
 }
 
+const NOTEPAD = {
+  MIN_HEIGHT: 100
+}
+
 module.exports =  {
   ACTIVITY,
   ICON,
@@ -107,6 +111,7 @@ module.exports =  {
   SCROLLBAR,
   SIDEBAR,
   TILE,
-  WINDOW
+  WINDOW,
+  NOTEPAD
 }
 

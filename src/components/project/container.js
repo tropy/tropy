@@ -11,9 +11,9 @@ const { NativeTypes } = require('react-dnd-electron-backend')
 const { extname } = require('path')
 const { MODE } = require('../../constants/project')
 const { once } = require('../../dom')
-const { values } = Object
 const { win } = require('../../window')
 const cx = require('classnames')
+const { values } = Object
 const actions = require('../../actions')
 
 const { getCachePrefix } = require('../../selectors/project')

@@ -1,0 +1,28 @@
+// sass-lint:disable class-name-format
+
+//
+// Editor
+// --------------------------------------------------
+
+@import "prosemirror-view/style/prosemirror";
+
+.editor {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  cursor: text;
+}
+
+.ProseMirror {
+  flex: 1 1 0;
+  width: 80%;
+  margin: auto;
+  font-size: $editor-font-size;
+  line-height: $editor-line-height;
+  max-width: 800px;
+  padding-top: $prose-mirror-padding-top;
+
+  * {
+    margin: 0;
+  }
+}
