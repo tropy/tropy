@@ -17,7 +17,12 @@
   flex: 1 1 0;
   width: 80%;
   margin: auto;
-  font-size: 18px;
-  line-height: 1.6;
+  font-size: $editor-font-size;
+  line-height: $editor-line-height;
   max-width: 800px;
+  padding-top: $prose-mirror-padding-top;
+
+  * {
+    margin: 0;
+  }
 }

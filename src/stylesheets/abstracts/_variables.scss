@@ -237,6 +237,14 @@ $progress-bar-height: $space-min;
 $notepad-min-height: #{const("NOTEPAD.MIN_HEIGHT")}px;
 
 
+// Editor
+// --------------------------------------------------
+
+$editor-font-size:         22px;
+$editor-line-height:       1.6;
+$prose-mirror-padding-top: $editor-font-size / 2;
+
+
 // Debug
 // --------------------------------------------------
 
