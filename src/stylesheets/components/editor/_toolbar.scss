@@ -9,5 +9,27 @@
     border-bottom: 1px solid $editor-toolbar-border;
     margin-bottom: 0; // Dev
     cursor: default;
+
+    .tool-group {
+      position: relative;
+
+      & + .tool-group {
+        margin-left: $space-md + $space-min;
+      }
+    }
+
+    .btn {
+      &:hover {
+        background: $editor-btn-hover-bg;
+      }
+
+      &.active {
+        background: $editor-btn-active-bg;
+      }
+
+      & + .btn {
+        margin-left: $space-min / 2;
+      }
+    }
   }
 }
