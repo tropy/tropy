@@ -11,6 +11,12 @@
   display: flex;
   flex-direction: column;
   cursor: text;
+  position: relative;
+  padding-top: 0;
+
+  &:hover {
+    padding-top: 39px;
+  }
 }
 
 .ProseMirror {
@@ -20,7 +26,12 @@
   font-size: $editor-font-size;
   line-height: $editor-line-height;
   max-width: 800px;
-  padding-top: $prose-mirror-padding-top;
+  //padding-top: $prose-mirror-padding-top;
+  padding-top: 39px;
+
+  .editor:hover & {
+    padding-top: 0;
+  }
 
   * {
     margin: 0;

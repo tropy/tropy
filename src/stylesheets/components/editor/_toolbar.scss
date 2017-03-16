@@ -9,6 +9,11 @@
     border-bottom: 1px solid $editor-toolbar-border;
     margin-bottom: 0; // Dev
     cursor: default;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    display: none;
 
     .tool-group {
       position: relative;
@@ -30,6 +35,12 @@
       & + .btn {
         margin-left: $space-min / 2;
       }
+    }
+  }
+
+  &:hover {
+    .toolbar {
+      display: flex;
     }
   }
 }
