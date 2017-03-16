@@ -25,6 +25,7 @@ const {
   getColumns,
   getSelectedItems,
   getSelectedPhoto,
+  getSelectedNote,
   getVisibleItems,
   getVisibleNotes,
   getVisiblePhotos
@@ -151,6 +152,7 @@ class ProjectContainer extends Component {
       dt,
       items,
       nav,
+      note,
       notes,
       photo,
       photos,
@@ -179,7 +181,7 @@ class ProjectContainer extends Component {
         <ItemView {...props}
           items={selection}
           data={data}
-          note={nav.note}
+          note={note}
           notes={notes}
           photo={photo}
           photos={photos}
@@ -216,6 +218,7 @@ class ProjectContainer extends Component {
       shape({ id: number.isRequired })
     ),
 
+    note: shape({ id: number.isRequired }),
     notes: arrayOf(
       shape({ id: number.isRequired })
     ),
@@ -285,6 +288,7 @@ module.exports = {
       columns: getColumns(state),
       items: getVisibleItems(state),
       selection: getSelectedItems(state),
+      note: getSelectedNote(state),
       notes: getVisibleNotes(state),
       photo: getSelectedPhoto(state),
       photos: getVisiblePhotos(state),

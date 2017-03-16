@@ -7,6 +7,10 @@ const { getVisiblePhotos } = require('./photos')
 
 const getNotes = ({ notes }) => notes
 
+const getSelectedNote = memo(
+  getNotes, ({ nav }) => nav.note, (notes, id) => notes[id]
+)
+
 const getVisibleNotes = memo(
   getNotes,
   getSelectedItems,
@@ -24,5 +28,6 @@ const getVisibleNotes = memo(
 
 
 module.exports = {
+  getSelectedNote,
   getVisibleNotes
 }

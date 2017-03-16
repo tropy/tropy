@@ -94,7 +94,7 @@ class ItemPanel extends PureComponent {
           item={item && item.id}
           photo={photo && photo.id}
           notes={notes}
-          selection={note}
+          selection={note && note.id}
           onCreate={onNoteCreate}
           onSelect={onNoteSelect}/>
       </PanelGroup>
@@ -108,7 +108,10 @@ class ItemPanel extends PureComponent {
     edit: object.isRequired,
     isItemOpen: bool.isRequired,
     items: array.isRequired,
-    note: number,
+
+    note: shape({
+      id: number.isRequired
+    }),
     notes: array.isRequired,
 
     panel: shape({
