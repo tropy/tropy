@@ -120,9 +120,8 @@ class Resizable extends PureComponent {
   renderHandle() {
     const { edge, isDisabled } = this.props
 
-    return (
+    return isDisabled ? null : (
       <Draggable
-        isDisabled={isDisabled}
         onDragStart={this.handleDragStart}
         onDrag={this.handleDrag}
         onDragStop={this.handleDragStop}
