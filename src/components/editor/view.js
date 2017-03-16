@@ -113,7 +113,7 @@ class Editor extends Component {
           </div>
         </div>
         <div className="scroll-container">
-          <div ref={this.setContainer}/>
+          <div ref={this.setContainer} className="prose-mirror-container"/>
         </div>
       </div>
     )

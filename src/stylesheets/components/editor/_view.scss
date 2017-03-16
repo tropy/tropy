@@ -10,14 +10,27 @@
   flex: 1 1 0;
   display: flex;
   flex-direction: column;
-  cursor: text;
   position: relative;
   padding-top: 0;
 
   &:hover {
     padding-top: $toolbar-height + 1px;
   }
+
+  .scroll-container {
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+  }
 }
+
+// TODO: Remove this styles when Chromium issue 290466 has been fixed,
+// move 'cursor: text' to .editor then.
+.prose-mirror-container {
+  flex: 1 1 0;
+  cursor: text;
+}
+// ---
 
 .ProseMirror {
   flex: 1 1 0;
