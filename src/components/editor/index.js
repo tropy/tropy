@@ -1,6 +1,7 @@
 'use strict'
 
 module.exports = {
-  schema: require('./schema'),
+  ...require('./container'),
+  ...require('./toolbar'),
   ...require('./view')
 }

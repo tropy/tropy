@@ -1,43 +1,50 @@
 'use strict'
 
 const React = require('react')
-const shallow = require('react/lib/shallowCompare')
 const { Component, PropTypes } = React
 const { func, bool, object, number } = PropTypes
 
-const { EditorState } = require('prosemirror-state')
 const { EditorView } = require('prosemirror-view')
-
-const { EditorToolbar } = require('./toolbar')
+const { EditorState } = require('prosemirror-state')
 
 const { schema } = require('./schema')
-const plugins = require('./plugins')(schema)
 const commands = require('./commands')(schema)
+const plugins = require('./plugins')(schema)
 
-const { noop } = require('../../common/util')
 const { match } = require('../../keymap')
+const { noop } = require('../../common/util')
 
 
-class Editor extends Component {
+class ProseMirrorContainer extends Component {
   componentDidMount() {
-    this.view = new EditorView(this.container, {
+
+    this.pm = new EditorView(this.container, {
       state: EditorState.create({
-        schema,
-        plugins
+        schema, plugins, doc: this.props.doc
       }),
-      ...this.getEditorProps()
+
+      ...this.getEditorProps(),
+
+      dispatchTransaction: this.handleChange,
+      handleKeyDown: this.handleKeyDown
     })
   }
 
   componentWillUnmount() {
-    this.view.destroy()
-    delete this.view
+    this.pm.destroy()
   }
 
   shouldComponentUpdate(props) {
-    if (shallow(this, props)) {
+    if (
+      props.isDisabled !== this.props.isDisabled ||
+      props.tabIndex !== this.props.tabIndex
+    ) {
       this.update(props)
     }
+
+    // if (props.doc !== this.doc) {
+    //   this.replace(props)
+    // }
 
     return false
   }
@@ -49,62 +56,78 @@ class Editor extends Component {
       editable: () => !isDisabled,
       attributes: {
         tabIndex: isDisabled ? -1 : tabIndex
-      },
-
-      handleKeyDown: isDisabled ? noop : this.handleKeyDown
+      }
     }
   }
+
+  get doc() {
+    return this.pm.state.doc
+  }
+
+  get text() {
+    return this.pm.dom.innerText.replace(/\s\s+/g, ' ')
+  }
+
+  get html() {
+    return this.pm.dom.innerHtml
+  }
+
 
   setContainer = (container) => {
     this.container = container
   }
 
-  handleKeyDown = (view, event) => {
-    const action = match(this.props.keymap, event)
+  focus = () => {
+    this.pm.focus()
+  }
 
-    if (commands[action]) {
-      return commands[action](view.state, view.dispatch, view)
+  handleChange = (tr) => {
+    this.pm.updateState(this.pm.state.apply(tr))
+    this.props.onChange(this)
+  }
+
+  handleKeyDown = (view, event) => {
+    const { isDisabled, keymap } = this.props
+
+    if (!isDisabled) {
+      const action = match(keymap, event)
+
+      if (commands[action]) {
+        return commands[action](view.state, view.dispatch, view)
+      }
     }
 
     return false
   }
 
-  focus = () => {
-    this.view.dom.focus()
-  }
 
   update(props = this.props) {
-    this.view.setProps(this.getEditorProps(props))
+    this.pm.setProps(this.getEditorProps(props))
+  }
+
+  replace(props = this.props) {
+    this.pm.updateState(EditorState.create({
+      schema: this.pm.state.schema,
+      plugins: this.pm.state.plugins,
+      doc: props.doc
+    }))
   }
 
   render() {
     return (
-      <div className="editor" onClick={this.focus}>
-        <EditorToolbar
-          hasMarkTools
-          hasListTools
-          hasLinkTools />
-
-        <div className="scroll-container">
-          <div ref={this.setContainer} className="prose-mirror-container"/>
-        </div>
-      </div>
+      <div ref={this.setContainer} className="prose-mirror-container"/>
     )
   }
 
   static propTypes = {
+    doc: object,
     isDisabled: bool,
     keymap: object.isRequired,
-    value: object,
-    onChange: func,
-    tabIndex: number
-  }
-
-  static defaultProps = {
-    tabIndex: -1
+    tabIndex: number.isRequired,
+    onChange: func.isRequired
   }
 }
 
 module.exports = {
-  Editor
+  EditorView: ProseMirrorContainer
 }
