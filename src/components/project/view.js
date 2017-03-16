@@ -41,6 +41,10 @@ class ProjectView extends PureComponent {
     this.props.onUiUpdate({ zoom })
   }
 
+  handleItemImport = () => {
+    return this.props.onItemImport({ list: this.props.nav.list })
+  }
+
   render() {
     const {
       canDrop,
@@ -80,7 +84,7 @@ class ProjectView extends PureComponent {
                 zoom={zoom}
                 maxZoom={maxZoom}
                 isDisabled={!items.length}
-                onItemCreate={onItemCreate}
+                onItemCreate={this.handleItemImport}
                 onDoubleClick={ARGS.frameless ? props.onMaximize : null}
                 onZoomChange={this.handleZoomChange}/>
             </header>
@@ -129,7 +133,8 @@ const spec = {
       .filter(isValidImage)
       .map(file => file.path)
 
-    return onItemImport({ files, list: nav.list })
+    onItemImport({ files, list: nav.list })
+    return { files }
   },
 
   canDrop(_, monitor) {
