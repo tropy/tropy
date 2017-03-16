@@ -5,8 +5,19 @@ const shallow = require('react/lib/shallowCompare')
 const { Component, PropTypes } = React
 const { func, bool, object, number } = PropTypes
 
-const { IconB, IconI, IconU, IconQ, IconLink, IconBulletList, IconNumberedList,
-  IconSink, IconLift } = require('../icons')
+const {
+  IconB,
+  IconI,
+  IconU,
+  IconS,
+  IconQ,
+  IconLink,
+  IconBulletList,
+  IconNumberedList,
+  IconSink,
+  IconLift
+} = require('../icons')
+
 const { IconButton } = require('../button')
 const { EditorState } = require('prosemirror-state')
 const { EditorView } = require('prosemirror-view')
@@ -87,6 +98,7 @@ class Editor extends Component {
               <IconButton icon={<IconB/>}/>
               <IconButton icon={<IconI/>}/>
               <IconButton icon={<IconU/>}/>
+              <IconButton icon={<IconS/>}/>
               <IconButton icon={<IconQ/>}/>
             </div>
             <div className="tool-group">
