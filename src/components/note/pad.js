@@ -5,18 +5,22 @@ const { PureComponent, PropTypes } = React
 const { bool, number, object } = PropTypes
 const { Editor } = require('../editor')
 const cx = require('classnames')
+const { TABS } = require('../../constants')
 
 
-//eslint-disable-next-line react/prefer-stateless-function
 class NotePad extends PureComponent {
+  get isDisabled() {
+    return !this.props.isItemOpen || this.props.isDisabled
+  }
+
   render() {
-    const { isDisabled, keymap, tabIndex } = this.props
+    const { keymap, tabIndex } = this.props
 
     return (
       <section className={cx({ note: true, pad: true })}>
         <Editor
           keymap={keymap}
-          isDisabled={isDisabled}
+          isDisabled={this.isDisabled}
           tabIndex={tabIndex}/>
       </section>
     )
@@ -24,9 +28,14 @@ class NotePad extends PureComponent {
 
   static propTypes = {
     isDisabled: bool,
+    isItemOpen: bool,
     keymap: object.isRequired,
     note: object,
     tabIndex: number.isRequired
+  }
+
+  static defaultProps = {
+    tabIndex: TABS.NotePad
   }
 }
 

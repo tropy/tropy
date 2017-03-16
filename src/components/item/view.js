@@ -6,7 +6,7 @@ const { ItemPanel } = require('./panel')
 const { Resizable, BufferedResizable } = require('../resizable')
 const { EsperImage } = require('../esper')
 const { NotePad } = require('../note')
-const { PROJECT: { MODE }, SASS: { PANEL }, TABS } = require('../../constants')
+const { PROJECT: { MODE }, SASS: { PANEL } } = require('../../constants')
 const { pick } = require('../../common/util')
 
 const {
@@ -85,8 +85,8 @@ class ItemView extends PureComponent {
           </BufferedResizable>
           <NotePad
             isDisabled={isDisabled}
-            keymap={keymap.NotePad}
-            tabIndex={isItemOpen ? TABS.NotePad : -1}/>
+            isItemOpen={isItemOpen}
+            keymap={keymap.NotePad}/>
         </div>
       </section>
     )

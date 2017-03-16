@@ -14,6 +14,7 @@ const { schema } = require('./schema')
 const plugins = require('./plugins')(schema)
 const commands = require('./commands')(schema)
 
+const { noop } = require('../../common/util')
 const { match } = require('../../keymap')
 
 
@@ -24,7 +25,6 @@ class Editor extends Component {
         schema,
         plugins
       }),
-      handleKeyDown: this.handleKeyDown,
       ...this.getEditorProps()
     })
   }
@@ -43,11 +43,15 @@ class Editor extends Component {
   }
 
   getEditorProps(props = this.props) {
+    const { isDisabled, tabIndex } = props
+
     return {
-      editable: () => !props.isDisabled,
+      editable: () => !isDisabled,
       attributes: {
-        tabIndex: props.tabIndex
-      }
+        tabIndex: isDisabled ? -1 : tabIndex
+      },
+
+      handleKeyDown: isDisabled ? noop : this.handleKeyDown
     }
   }
 
