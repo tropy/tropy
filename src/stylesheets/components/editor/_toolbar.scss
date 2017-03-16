@@ -14,17 +14,7 @@
       position: relative;
 
       & + .tool-group {
-        margin-left: $space-md + 1px;
-
-        &::before {
-          content: "";
-          position: absolute;
-          left: -$space-xs - 1px;
-          top: 2px;
-          width: 1px;
-          bottom: 2px;
-          background: $editor-separator-color;
-        }
+        margin-left: $space-md + $space-min;
       }
     }
 
