@@ -29,7 +29,7 @@ class Toolbar extends PureComponent {
     return (
       <div
         className={cn({ toolbar: true,  draggable: this.props.isDraggable })}
-        ref={this.setContainer}
+        ref={this.props.onDoubleClick ? this.setContainer : null}
         onDoubleClick={this.handleDoubleClick}>
         {this.props.children}
       </div>

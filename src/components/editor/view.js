@@ -5,22 +5,10 @@ const shallow = require('react/lib/shallowCompare')
 const { Component, PropTypes } = React
 const { func, bool, object, number } = PropTypes
 
-const {
-  IconB,
-  IconI,
-  IconU,
-  IconS,
-  IconQ,
-  IconLink,
-  IconBulletList,
-  IconNumberedList,
-  IconSink,
-  IconLift
-} = require('../icons')
-
-const { IconButton } = require('../button')
 const { EditorState } = require('prosemirror-state')
 const { EditorView } = require('prosemirror-view')
+
+const { EditorToolbar } = require('./toolbar')
 
 const { schema } = require('./schema')
 const plugins = require('./plugins')(schema)
@@ -92,26 +80,11 @@ class Editor extends Component {
   render() {
     return (
       <div className="editor" onClick={this.focus}>
-        <div className="toolbar">
-          <div className="toolbar-left">
-            <div className="tool-group">
-              <IconButton icon={<IconB/>}/>
-              <IconButton icon={<IconI/>}/>
-              <IconButton icon={<IconU/>}/>
-              <IconButton icon={<IconS/>}/>
-              <IconButton icon={<IconQ/>}/>
-            </div>
-            <div className="tool-group">
-              <IconButton icon={<IconBulletList/>}/>
-              <IconButton icon={<IconNumberedList/>}/>
-              <IconButton icon={<IconSink/>}/>
-              <IconButton icon={<IconLift/>}/>
-            </div>
-            <div className="tool-group">
-              <IconButton icon={<IconLink/>}/>
-            </div>
-          </div>
-        </div>
+        <EditorToolbar
+          hasMarkTools
+          hasListTools
+          hasLinkTools />
+
         <div className="scroll-container">
           <div ref={this.setContainer} className="prose-mirror-container"/>
         </div>
