@@ -139,7 +139,7 @@ class PanelGroup extends PureComponent {
         numOpen++
       }
 
-      slot.isDisabled = slot.isDisabled || numOpen <= 1
+      slot.isDisabled = slot.isDisabled || numOpen < 1
 
       slot.lower = offset
       offset = offset + slot.min
