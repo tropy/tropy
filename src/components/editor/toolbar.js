@@ -54,21 +54,21 @@ class EditorToolbar extends PureComponent {
                 canHaveFocus={false}
                 icon={<IconI/>}
                 isActive={this.props.isItalicActive}
-                onClick={this.italic}/>
+                onMouseDown={this.italic}/>
               <IconButton
                 canHaveFocus={false}
                 icon={<IconU/>}
                 isActive={this.props.isUnderlineActive}
-                onClick={this.underline}/>
+                onMouseDown={this.underline}/>
               <IconButton
                 canHaveFocus={false}
                 icon={<IconS/>}
                 isActive={this.props.isStrikeThroughActive}
-                onClick={this.strikethrough}/>
+                onMouseDown={this.strikethrough}/>
               <IconButton
                 canHaveFocus={false}
                 icon={<IconQ/>}
-                onClick={this.blockquote}/>
+                onMouseDown={this.blockquote}/>
             </ToolGroup>
           }
           {this.props.hasListTools &&
@@ -76,24 +76,25 @@ class EditorToolbar extends PureComponent {
               <IconButton
                 canHaveFocus={false}
                 icon={<IconBulletList/>}
-                onClick={this.ul}/>
+                onMouseDown={this.ul}/>
               <IconButton
                 canHaveFocus={false}
                 icon={<IconNumberedList/>}
-                onClick={this.ol}/>
-              <IconButton
-                canHaveFocus={false}
-                icon={<IconSink/>}
-                onClick={this.sinkListItem}/>
+                onMouseDown={this.ol}/>
               <IconButton
                 canHaveFocus={false}
                 icon={<IconLift/>}
-                onClick={this.liftListItem}/>
+                onMouseDown={this.liftListItem}/>
+              <IconButton
+                canHaveFocus={false}
+                icon={<IconSink/>}
+                onMouseDown={this.sinkListItem}/>
             </ToolGroup>
           }
           {this.props.hasLinkTools &&
             <ToolGroup>
               <IconButton
+                isDisabled
                 canHaveFocus={false}
                 icon={<IconLink/>}/>
             </ToolGroup>
