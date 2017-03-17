@@ -42,9 +42,6 @@ class Editor extends PureComponent {
         <EditorToolbar
           isBoldActive={this.state.isBoldActive}
           isDisabled={isDisabled}
-          hasMarkTools
-          hasListTools
-          hasLinkTools
           onCommand={this.handleCommand}/>
 
         <div className="scroll-container">

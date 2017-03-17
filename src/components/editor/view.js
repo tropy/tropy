@@ -12,7 +12,6 @@ const commands = require('./commands')(schema)
 const plugins = require('./plugins')(schema)
 
 const { match } = require('../../keymap')
-const { noop } = require('../../common/util')
 
 
 class ProseMirrorContainer extends Component {
