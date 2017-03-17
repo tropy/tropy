@@ -75,7 +75,7 @@
     "react-dnd-test-backend": "^2.2.3",
     "sass-lint": "^1.9.1",
     "shelljs": "^0.7.0",
-    "sinon": "^2.0.0",
+    "sinon": "^1.17.7",
     "sinon-chai": "^2.8.0",
     "sqleton": "^1.0.0"
   },
@@ -94,6 +94,7 @@
     "prosemirror-inputrules": "^0.19.0",
     "prosemirror-model": "^0.19.0",
     "prosemirror-schema-basic": "^0.19.0",
+    "prosemirror-schema-list": "^0.19.0",
     "prosemirror-state": "^0.19.1",
     "prosemirror-view": "^0.19.0",
     "react": "^15.0.0",
