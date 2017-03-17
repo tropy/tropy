@@ -20,18 +20,24 @@ const {
 } = require('../icons')
 
 
-
 class EditorToolbar extends PureComponent {
+  constructor(props) {
+    super(props)
 
-  bold = () => this.props.onCommand('bold')
-  italic = () => this.props.onCommand('italic')
-  underline = () => this.props.onCommand('underline')
-  strikethrough = () => this.props.onCommand('strikethrough')
-  blockquote = () => this.props.onCommand('blockquote')
-  ol = () => this.props.onCommand('ol')
-  ul = () => this.props.onCommand('ul')
-  liftListItem = () => this.props.onCommand('liftListItem')
-  sinkListItem = () => this.props.onCommand('sinkListItem')
+    for (let action of [
+      'bold',
+      'italic',
+      'underline',
+      'strikethrough',
+      'blockquote',
+      'ol',
+      'ul',
+      'liftListItem',
+      'sinkListItem'
+    ]) {
+      this[action] = () => this.props.onCommand(action)
+    }
+  }
 
   render() {
     return (
@@ -43,7 +49,7 @@ class EditorToolbar extends PureComponent {
                 canHaveFocus={false}
                 icon={<IconB/>}
                 isActive={this.props.isBoldActive}
-                onClick={this.bold}/>
+                onMouseDown={this.bold}/>
               <IconButton
                 canHaveFocus={false}
                 icon={<IconI/>}
