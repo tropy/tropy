@@ -18,6 +18,10 @@ class Editor extends PureComponent {
     }
   }
 
+  setContainer = (container) => {
+    this.container = container
+  }
+
   setView = (view) => {
     this.view = view
   }
@@ -31,8 +35,10 @@ class Editor extends PureComponent {
     ])
   }
 
-  handleFocus = () => {
-    this.view.focus()
+  handleFocus = (event) => {
+    if (event.target === this.container) {
+      setTimeout(this.view.focus, 0)
+    }
   }
 
   handleCommand = (command) => {
@@ -48,6 +54,7 @@ class Editor extends PureComponent {
 
     return (
       <div
+        ref={this.setContainer}
         className="editor"
         tabIndex={-1}
         onFocus={this.handleFocus}>
@@ -87,4 +94,3 @@ class Editor extends PureComponent {
 module.exports = {
   Editor
 }
-

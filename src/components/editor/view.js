@@ -115,6 +115,7 @@ class ProseMirrorContainer extends Component {
       this.send(match(this.props.keymap, event))
   }
 
+
   send(action, view = this.pm) {
     return (commands[action]) ?
       commands[action](view.state, view.dispatch, view) :
