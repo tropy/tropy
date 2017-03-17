@@ -7,6 +7,7 @@ const { func, bool, object, number } = PropTypes
 const { EditorToolbar } = require('./toolbar')
 const { EditorView } = require('./view')
 
+const cx = require('classnames')
 const { pick } = require('../../common/util')
 
 
@@ -24,6 +25,13 @@ class Editor extends PureComponent {
 
   setView = (view) => {
     this.view = view
+  }
+
+  get classes() {
+    return {
+      'editor': true,
+      'is-blurred': !this.state.hasEditorFocus
+    }
   }
 
   getActiveMarks(from = this.state) {
@@ -45,6 +53,14 @@ class Editor extends PureComponent {
     this.view.send(command)
   }
 
+  handleViewFocus = () => {
+    this.setState({ hasEditorFocus: true })
+  }
+
+  handleViewBlur = () => {
+    this.setState({ hasEditorFocus: false })
+  }
+
   handleChange = (view) => {
     this.setState(this.getActiveMarks(view))
   }
@@ -55,7 +71,7 @@ class Editor extends PureComponent {
     return (
       <div
         ref={this.setContainer}
-        className="editor"
+        className={cx(this.classes)}
         tabIndex={-1}
         onFocus={this.handleFocus}>
         {!isDisabled &&
@@ -71,6 +87,8 @@ class Editor extends PureComponent {
             isDisabled={isDisabled}
             tabIndex={tabIndex}
             keymap={keymap}
+            onFocus={this.handleViewFocus}
+            onBlur={this.handleViewBlur}
             onChange={this.handleChange}/>
         </div>
       </div>

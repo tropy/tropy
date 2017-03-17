@@ -14,9 +14,10 @@ const plugins = require('./plugins')(schema)
 const { match } = require('../../keymap')
 
 
-class ProseMirrorContainer extends Component {
-  componentDidMount() {
+class ProseMirror extends Component {
+  static displayName = 'EditorView'
 
+  componentDidMount() {
     this.pm = new EditorView(this.container, {
       state: EditorState.create({
         schema, plugins, doc: this.props.doc
@@ -25,7 +26,9 @@ class ProseMirrorContainer extends Component {
       ...this.getEditorProps(),
 
       dispatchTransaction: this.handleChange,
-      handleKeyDown: this.handleKeyDown
+      handleKeyDown: this.handleKeyDown,
+      onFocus: this.handleFocus,
+      onBlur: this.handleBlur
     })
   }
 
@@ -115,6 +118,14 @@ class ProseMirrorContainer extends Component {
       this.send(match(this.props.keymap, event))
   }
 
+  handleFocus = (...args) => {
+    this.props.onFocus(...args)
+  }
+
+  handleBlur = (...args) => {
+    this.props.onBlur(...args)
+  }
+
 
   send(action, view = this.pm) {
     return (commands[action]) ?
@@ -145,10 +156,12 @@ class ProseMirrorContainer extends Component {
     isDisabled: bool,
     keymap: object.isRequired,
     tabIndex: number.isRequired,
-    onChange: func.isRequired
+    onBlur: func.isRequired,
+    onChange: func.isRequired,
+    onFocus: func.isRequired
   }
 }
 
 module.exports = {
-  EditorView: ProseMirrorContainer
+  EditorView: ProseMirror
 }
