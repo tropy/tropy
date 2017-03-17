@@ -3,6 +3,7 @@
 const React = require('react')
 const { PureComponent, PropTypes, createElement: create } = React
 const { bool, element, func, number, string } = PropTypes
+const { injectIntl, intlShape } = require('react-intl')
 const cx = require('classnames')
 
 
@@ -19,6 +20,14 @@ class IconButton extends PureComponent {
     return this.props.canHaveFocus ? 'button' : 'span'
   }
 
+  get title() {
+    const { intl, title } = this.props
+
+    return title ?
+      intl.formatMessage({ id: title }) :
+      null
+  }
+
   get attributes() {
     const {
       canHaveFocus,
@@ -31,7 +40,8 @@ class IconButton extends PureComponent {
 
     const attr = {
       className: cx(this.classes),
-      disabled: isDisabled
+      disabled: isDisabled,
+      title: this.title
     }
 
     if (!isDisabled) {
@@ -60,7 +70,8 @@ class IconButton extends PureComponent {
   static propTypes = {
     canHaveFocus: bool,
     icon: element.isRequired,
-    id: string,
+    intl: intlShape.isRequired,
+    title: string,
     isActive: bool,
     isDisabled: bool,
     tabIndex: number,
@@ -76,5 +87,5 @@ class IconButton extends PureComponent {
 
 
 module.exports = {
-  IconButton
+  IconButton: injectIntl(IconButton)
 }

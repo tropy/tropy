@@ -49,25 +49,30 @@ class EditorToolbar extends PureComponent {
                 canHaveFocus={false}
                 icon={<IconB/>}
                 isActive={this.props.isBoldActive}
+                title="editor.commands.bold"
                 onMouseDown={this.bold}/>
               <IconButton
                 canHaveFocus={false}
                 icon={<IconI/>}
                 isActive={this.props.isItalicActive}
+                title="editor.commands.italic"
                 onMouseDown={this.italic}/>
               <IconButton
                 canHaveFocus={false}
                 icon={<IconU/>}
                 isActive={this.props.isUnderlineActive}
+                title="editor.commands.underline"
                 onMouseDown={this.underline}/>
               <IconButton
                 canHaveFocus={false}
                 icon={<IconS/>}
                 isActive={this.props.isStrikeThroughActive}
+                title="editor.commands.strikethrough"
                 onMouseDown={this.strikethrough}/>
               <IconButton
                 canHaveFocus={false}
                 icon={<IconQ/>}
+                title="editor.commands.blockquote"
                 onMouseDown={this.blockquote}/>
             </ToolGroup>
           }
@@ -76,10 +81,12 @@ class EditorToolbar extends PureComponent {
               <IconButton
                 canHaveFocus={false}
                 icon={<IconBulletList/>}
+                title="editor.commands.ul"
                 onMouseDown={this.ul}/>
               <IconButton
                 canHaveFocus={false}
                 icon={<IconNumberedList/>}
+                title="editor.commands.ol"
                 onMouseDown={this.ol}/>
               <IconButton
                 canHaveFocus={false}
@@ -96,6 +103,7 @@ class EditorToolbar extends PureComponent {
               <IconButton
                 isDisabled
                 canHaveFocus={false}
+                title="editor.commands.link"
                 icon={<IconLink/>}/>
             </ToolGroup>
           }

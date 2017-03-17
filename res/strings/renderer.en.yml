@@ -81,3 +81,14 @@ activity:
     load: Loading notes…
     restore: Restoring notes…
     order: Sorting notes…
+
+editor:
+  commands:
+    bold: Bold
+    italic: Italic
+    underline: Underline
+    strikethrough: Strikethrough
+    blockquote: Toggle Quote
+    ol: Toggle Numbered List
+    ul: Toggle Bulleted List
+    link: Insert Link
