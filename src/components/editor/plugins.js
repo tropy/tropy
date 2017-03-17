@@ -5,15 +5,16 @@ const { history } = require('prosemirror-history')
 const {
   InputRule,
   inputRules,
-  allInputRules,
+  smartQuotes,
+  ellipsis,
   orderedListRule,
   bulletListRule,
   blockQuoteRule
 } = require('prosemirror-inputrules')
 
-// space + hyphen => en dash
-// en dash + hyphen => em dash
-const enDash = new InputRule(/ -$/, ' –')
+const enDash = new InputRule(/--$/, '–')
+const enDashAuto = new InputRule(/ - $/, ' – ')
+
 const emDash = new InputRule(/–-$/, '—')
 
 const hrRule = (hr, p) =>
@@ -23,7 +24,7 @@ const hrRule = (hr, p) =>
 
 module.exports = (schema) => {
   const rules = [
-    ...allInputRules, enDash, emDash
+    enDash, enDashAuto, emDash, ellipsis, ...smartQuotes
   ]
 
   if (schema.nodes.blockquote) {
