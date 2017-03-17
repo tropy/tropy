@@ -30,7 +30,10 @@ class Editor extends PureComponent {
 
   handleChange = (view) => {
     this.setState({
-      isBoldActive: view.isBoldActive
+      isBoldActive: view.isBoldActive,
+      isItalicActive: view.isItalicActive,
+      isUnderlineActive: view.isUnderlineActive,
+      isStrikeThroughActive: view.isStrikeThroughActive
     })
   }
 
@@ -41,6 +44,9 @@ class Editor extends PureComponent {
       <div className="editor" onClick={this.handleClick}>
         <EditorToolbar
           isBoldActive={this.state.isBoldActive}
+          isItalicActive={this.state.isItalicActive}
+          isUnderlineActive={this.state.isUnderlineActive}
+          isStrikeThroughActive={this.state.isStrikeThroughActive}
           isDisabled={isDisabled}
           onCommand={this.handleCommand}/>
 

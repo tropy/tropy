@@ -8,7 +8,7 @@ linux: &linux
 
   NotePad:
     break: Enter
-    hardBreak:
+    br:
       - Shift+Enter
       - Ctrl+Enter
 
@@ -22,7 +22,7 @@ linux: &linux
     bold: CmdOrCtrl+b
     italic: CmdOrCtrl+i
     underline: CmdOrCtrl+u
-    strike: CmdOrCtrl+s
+    strikethrough: CmdOrCtrl+s
 
     liftListItem: CmdOrCtrl+[
     sinkListItem: CmdOrCtrl+]
@@ -33,7 +33,7 @@ linux: &linux
 
     selectParentNode: Escape
 
-    wrapInBlockQuote: CmdOrCtrl+Shift+>
+    blockquote: CmdOrCtrl+Shift+>
 
     undo: CmdOrCtrl+z
     redo: CmdOrCtrl+Shift+Z

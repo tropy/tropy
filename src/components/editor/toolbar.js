@@ -41,6 +41,12 @@ class EditorToolbar extends PureComponent {
   bold = () => this.props.onCommand('bold')
   italic = () => this.props.onCommand('italic')
   underline = () => this.props.onCommand('underline')
+  strikethrough = () => this.props.onCommand('strikethrough')
+  blockquote = () => this.props.onCommand('blockquote')
+  ol = () => this.props.onCommand('ol')
+  ul = () => this.props.onCommand('ul')
+  liftListItem = () => this.props.onCommand('liftListItem')
+  sinkListItem = () => this.props.onCommand('sinkListItem')
 
   render() {
     return (
@@ -52,28 +58,43 @@ class EditorToolbar extends PureComponent {
                 icon={<IconB/>}
                 isActive={this.props.isBoldActive}
                 onClick={this.bold}/>
-
               <EditorButton
                 icon={<IconI/>}
                 isActive={this.props.isItalicActive}
                 onClick={this.italic}/>
-
-              <EditorButton icon={<IconU/>} onClick={this.underline}/>
-              <EditorButton icon={<IconS/>}/>
-              <EditorButton icon={<IconQ/>}/>
+              <EditorButton
+                icon={<IconU/>}
+                isActive={this.props.isUnderlineActive}
+                onClick={this.underline}/>
+              <EditorButton
+                icon={<IconS/>}
+                isActive={this.props.isStrikeThroughActive}
+                onClick={this.strikethrough}/>
+              <EditorButton
+                icon={<IconQ/>}
+                onClick={this.blockquote}/>
             </ToolGroup>
           }
           {this.props.hasListTools &&
             <ToolGroup>
-              <EditorButton icon={<IconBulletList/>}/>
-              <EditorButton icon={<IconNumberedList/>}/>
-              <EditorButton icon={<IconSink/>}/>
-              <EditorButton icon={<IconLift/>}/>
+              <EditorButton
+                icon={<IconBulletList/>}
+                onClick={this.ul}/>
+              <EditorButton
+                icon={<IconNumberedList/>}
+                onClick={this.ol}/>
+              <EditorButton
+                icon={<IconSink/>}
+                onClick={this.sinkListItem}/>
+              <EditorButton
+                icon={<IconLift/>}
+                onClick={this.liftListItem}/>
             </ToolGroup>
           }
           {this.props.hasLinkTools &&
             <ToolGroup>
-              <EditorButton icon={<IconLink/>}/>
+              <EditorButton
+                icon={<IconLink/>}/>
             </ToolGroup>
           }
         </div>
@@ -88,6 +109,8 @@ class EditorToolbar extends PureComponent {
 
     isBoldActive: bool,
     isItalicActive: bool,
+    isUnderlineActive: bool,
+    isStrikeThroughActive: bool,
 
     onCommand: func.isRequired
   }

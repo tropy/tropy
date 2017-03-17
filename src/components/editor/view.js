@@ -71,6 +71,18 @@ class ProseMirrorContainer extends Component {
     return this.isMarkActive(schema.marks.strong)
   }
 
+  get isItalicActive() {
+    return this.isMarkActive(schema.marks.em)
+  }
+
+  get isUnderlineActive() {
+    return this.isMarkActive(schema.marks.underline)
+  }
+
+  get isStrikeThroughActive() {
+    return this.isMarkActive(schema.marks.strikethrough)
+  }
+
   get doc() {
     return this.pm.state.doc
   }

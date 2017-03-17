@@ -9,8 +9,8 @@ const {
 
 module.exports = (schema) => {
   const list = {
-    wrapInOrderedList: wrapInList(schema.nodes.ordered_list),
-    wrapInBulletList: wrapInList(schema.nodes.bullet_list),
+    ol: wrapInList(schema.nodes.ordered_list),
+    ul: wrapInList(schema.nodes.bullet_list),
     splitListItem: splitListItem(schema.nodes.list_item),
     liftListItem: liftListItem(schema.nodes.list_item),
     sinkListItem: sinkListItem(schema.nodes.list_item),
@@ -26,9 +26,9 @@ module.exports = (schema) => {
     bold: cmd.toggleMark(schema.marks.strong),
     italic: cmd.toggleMark(schema.marks.em),
     underline: cmd.toggleMark(schema.marks.underline),
-    strike: cmd.toggleMark(schema.marks.strikethrough),
+    strikethrough: cmd.toggleMark(schema.marks.strikethrough),
 
-    wrapInBlockQuote: cmd.wrapIn(schema.nodes.blockquote),
+    blockquote: cmd.wrapIn(schema.nodes.blockquote),
 
     break: cmd.chainCommands(
       list.splitListItem,
@@ -37,7 +37,7 @@ module.exports = (schema) => {
       cmd.splitBlock
     ),
 
-    hardBreak: (state, dispatch) => (
+    br: (state, dispatch) => (
       dispatch(
         state
           .tr
