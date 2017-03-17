@@ -30,7 +30,7 @@ class Editor extends PureComponent {
   get classes() {
     return {
       'editor': true,
-      'is-blurred': !this.state.hasEditorFocus
+      'is-blurred': !this.state.hasViewFocus
     }
   }
 
@@ -51,14 +51,15 @@ class Editor extends PureComponent {
 
   handleCommand = (command) => {
     this.view.send(command)
+    if (!this.state.hasViewFocus) this.view.focus()
   }
 
   handleViewFocus = () => {
-    this.setState({ hasEditorFocus: true })
+    this.setState({ hasViewFocus: true })
   }
 
   handleViewBlur = () => {
-    this.setState({ hasEditorFocus: false })
+    this.setState({ hasViewFocus: false })
   }
 
   handleChange = (view) => {
