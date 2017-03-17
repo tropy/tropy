@@ -28,7 +28,10 @@ class Editor extends PureComponent {
     this.view.send(command)
   }
 
-  handleChange = () => {
+  handleChange = (view) => {
+    this.setState({
+      isBoldActive: view.isBoldActive
+    })
   }
 
   render() {
@@ -37,6 +40,7 @@ class Editor extends PureComponent {
     return (
       <div className="editor" onClick={this.handleClick}>
         <EditorToolbar
+          isBoldActive={this.state.isBoldActive}
           isDisabled={isDisabled}
           hasMarkTools
           hasListTools

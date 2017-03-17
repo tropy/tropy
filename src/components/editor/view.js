@@ -60,6 +60,18 @@ class ProseMirrorContainer extends Component {
     }
   }
 
+  isMarkActive(type) {
+    const { from, $from, to, empty } = this.pm.state.selection
+
+    return (empty) ?
+      !!type.isInSet(this.pm.state.storedMarks || $from.marks()) :
+      this.doc.rangeHasMark(from, to, type)
+  }
+
+  get isBoldActive() {
+    return this.isMarkActive(schema.marks.strong)
+  }
+
   get doc() {
     return this.pm.state.doc
   }
