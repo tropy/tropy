@@ -2,9 +2,9 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const { bool, element, func } = PropTypes
+const { bool, func } = PropTypes
 const { Toolbar, ToolGroup } = require('../toolbar')
-const cx = require('classnames')
+const { IconButton } = require('../button')
 
 const {
   IconB,
@@ -19,21 +19,6 @@ const {
   IconLift
 } = require('../icons')
 
-
-const EditorButton = ({ icon, isActive, isDisabled, ...props }) => (
-  <span {...props}
-    className={cx({ 'btn': true, 'btn-icon': true, 'active': isActive })}
-    disabled={isDisabled}>
-    {icon}
-  </span>
-)
-
-EditorButton.propTypes = {
-  icon: element.isRequired,
-  isActive: bool,
-  isDisabled: bool,
-  onClick: func
-}
 
 
 class EditorToolbar extends PureComponent {
@@ -54,46 +39,56 @@ class EditorToolbar extends PureComponent {
         <div className="toolbar-left">
           {this.props.hasMarkTools &&
             <ToolGroup>
-              <EditorButton
+              <IconButton
+                canHaveFocus={false}
                 icon={<IconB/>}
                 isActive={this.props.isBoldActive}
                 onClick={this.bold}/>
-              <EditorButton
+              <IconButton
+                canHaveFocus={false}
                 icon={<IconI/>}
                 isActive={this.props.isItalicActive}
                 onClick={this.italic}/>
-              <EditorButton
+              <IconButton
+                canHaveFocus={false}
                 icon={<IconU/>}
                 isActive={this.props.isUnderlineActive}
                 onClick={this.underline}/>
-              <EditorButton
+              <IconButton
+                canHaveFocus={false}
                 icon={<IconS/>}
                 isActive={this.props.isStrikeThroughActive}
                 onClick={this.strikethrough}/>
-              <EditorButton
+              <IconButton
+                canHaveFocus={false}
                 icon={<IconQ/>}
                 onClick={this.blockquote}/>
             </ToolGroup>
           }
           {this.props.hasListTools &&
             <ToolGroup>
-              <EditorButton
+              <IconButton
+                canHaveFocus={false}
                 icon={<IconBulletList/>}
                 onClick={this.ul}/>
-              <EditorButton
+              <IconButton
+                canHaveFocus={false}
                 icon={<IconNumberedList/>}
                 onClick={this.ol}/>
-              <EditorButton
+              <IconButton
+                canHaveFocus={false}
                 icon={<IconSink/>}
                 onClick={this.sinkListItem}/>
-              <EditorButton
+              <IconButton
+                canHaveFocus={false}
                 icon={<IconLift/>}
                 onClick={this.liftListItem}/>
             </ToolGroup>
           }
           {this.props.hasLinkTools &&
             <ToolGroup>
-              <EditorButton
+              <IconButton
+                canHaveFocus={false}
                 icon={<IconLink/>}/>
             </ToolGroup>
           }
@@ -106,12 +101,10 @@ class EditorToolbar extends PureComponent {
     hasMarkTools: bool,
     hasListTools: bool,
     hasLinkTools: bool,
-
     isBoldActive: bool,
     isItalicActive: bool,
     isUnderlineActive: bool,
     isStrikeThroughActive: bool,
-
     onCommand: func.isRequired
   }
 
