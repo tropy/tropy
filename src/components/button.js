@@ -41,9 +41,16 @@ class IconButton extends PureComponent {
 
     if (canHaveFocus) {
       attr.tabIndex = tabIndex
+    } else {
+      attr.onMouseDown = this.handleMouseDown
     }
 
     return attr
+  }
+
+  handleMouseDown = (event) => {
+    event.preventDefault()
+    if (this.props.onMouseDown) this.props.onMouseDown(event)
   }
 
   render() {
