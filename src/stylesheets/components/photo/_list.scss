@@ -17,12 +17,8 @@
     &.active {
       color: $photo-list-active-color;
       background: $photo-list-active-bg;
-    }
-  }
 
-  &:focus {
-    .photo {
-      &.active {
+      @at-root #{selector-replace(&, ".photo.list", ".photo.list:focus")} {
         color: $photo-list-focus-color;
         background: $photo-list-focus-bg;
       }

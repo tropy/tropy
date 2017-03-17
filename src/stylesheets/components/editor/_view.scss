@@ -4,8 +4,6 @@
 // Editor
 // --------------------------------------------------
 
-@import "prosemirror-view/style/prosemirror";
-
 .editor {
   flex: 1 1 0;
   display: flex;
@@ -36,16 +34,10 @@
   flex: 1 1 0;
   width: 80%;
   margin: auto;
-  font-size: $editor-font-size;
-  line-height: $editor-line-height;
-  max-width: 800px;
+  max-width: 700px;
   padding-top: $toolbar-height + 1px + $prose-mirror-padding-top;
 
   .editor:hover & {
     padding-top: $prose-mirror-padding-top;
-  }
-
-  * {
-    margin: 0;
   }
 }
