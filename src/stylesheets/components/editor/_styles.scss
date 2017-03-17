@@ -1,0 +1,55 @@
+// sass-lint:disable class-name-format
+
+//
+// Editor styles
+// --------------------------------------------------
+
+@import "prosemirror-view/style/prosemirror";
+
+.ProseMirror {
+  font-size: $editor-font-size;
+  line-height: $editor-line-height;
+
+  * {
+    margin: 0;
+  }
+
+  strong {
+    font-weight: bold;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  blockquote {
+    padding-left: $blockquote-padding;
+    border-left: $blockquote-border solid $blockquote-border-color;
+  }
+
+  ul,
+  ol {
+    padding-left: $editor-list-padding;
+  }
+
+  ul {
+    list-style: disc;
+  }
+
+  ol {
+    list-style: decimal;
+  }
+
+  &-selectednode {
+    outline: $editor-outline-width solid $selected-node-color;
+
+    @at-root li#{&} {
+      outline: none;
+
+      &::after {
+        left: -$editor-list-padding - $editor-outline-width;
+        border: $editor-outline-width solid $selected-node-color;
+      }
+    }
+  }
+}
