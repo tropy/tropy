@@ -54,6 +54,17 @@
 
       &.active {
         background: $sidebar-active-bg;
+
+        @at-root #{selector-replace(&, "#sidebar", "#sidebar :focus")} {
+          color: $sidebar-focus-color;
+          background: $sidebar-focus-bg;
+
+          .icon {
+            svg {
+              color: $sidebar-focus-icon-color;
+            }
+          }
+        }
       }
 
       &.context {
@@ -66,6 +77,10 @@
 
       &.dragging {
         background: transparent;
+
+        @at-root #{selector-replace(&, "#sidebar", "#sidebar :focus")} {
+          background: transparent;
+        }
 
         .icon,
         .name {
@@ -119,27 +134,6 @@
           svg {
             color: $sidebar-tag-active-color;
           }
-        }
-      }
-    }
-  }
-
-  :focus {
-    nav {
-      li {
-        &.active {
-          color: $sidebar-focus-color;
-          background: $sidebar-focus-bg;
-
-          .icon {
-            svg {
-              color: $sidebar-focus-icon-color;
-            }
-          }
-        }
-
-        &.dragging {
-          background: transparent;
         }
       }
     }

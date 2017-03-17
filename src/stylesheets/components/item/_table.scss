@@ -173,23 +173,17 @@
       .metadata {
         color: $items-active-color;
         background: $items-active-bg;
+
+        @at-root #{selector-replace(&, ".item.table", ".item.table:focus")} {
+          color: $items-focus-color;
+          background: $items-focus-bg;
+        }
       }
     }
 
     &.over {
       .metadata {
         @extend %drop-target;
-      }
-    }
-  }
-
-  &:focus {
-    .item {
-      &.active {
-        .metadata {
-          color: $items-focus-color;
-          background: $items-focus-bg;
-        }
       }
     }
   }
