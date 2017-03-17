@@ -20,7 +20,7 @@ class Editor extends PureComponent {
     this.view = view
   }
 
-  handleClick = () => {
+  handleFocus = () => {
     this.view.focus()
   }
 
@@ -41,14 +41,18 @@ class Editor extends PureComponent {
     const { doc, isDisabled, keymap, tabIndex } = this.props
 
     return (
-      <div className="editor" onClick={this.handleClick}>
-        <EditorToolbar
-          isBoldActive={this.state.isBoldActive}
-          isItalicActive={this.state.isItalicActive}
-          isUnderlineActive={this.state.isUnderlineActive}
-          isStrikeThroughActive={this.state.isStrikeThroughActive}
-          isDisabled={isDisabled}
-          onCommand={this.handleCommand}/>
+      <div
+        className="editor"
+        tabIndex={-1}
+        onFocus={this.handleFocus}>
+        {!isDisabled &&
+          <EditorToolbar
+            isBoldActive={this.state.isBoldActive}
+            isItalicActive={this.state.isItalicActive}
+            isUnderlineActive={this.state.isUnderlineActive}
+            isStrikeThroughActive={this.state.isStrikeThroughActive}
+            onCommand={this.handleCommand}/>
+        }
 
         <div className="scroll-container">
           <EditorView
