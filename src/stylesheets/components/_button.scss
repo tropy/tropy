@@ -11,6 +11,7 @@
   border: 0;
   border-radius: $border-radius-small;
   padding: 0 $padding-base-horizontal;
+  display: inline-block; // For span as btn
 
   &[disabled] {
     opacity: $btn-disabled-opacity;
