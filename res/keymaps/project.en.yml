@@ -22,7 +22,6 @@ linux: &linux
     bold: CmdOrCtrl+b
     italic: CmdOrCtrl+i
     underline: CmdOrCtrl+u
-    strikethrough: CmdOrCtrl+s
 
     liftListItem: CmdOrCtrl+[
     sinkListItem: CmdOrCtrl+]
