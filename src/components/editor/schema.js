@@ -1,14 +1,24 @@
 'use strict'
 
 const { Schema } = require('prosemirror-model')
+
 const basic = require('prosemirror-schema-basic')
 const list = require('prosemirror-schema-list')
 
 const {
-  doc, paragraph, blockquote, text, hard_break
+  doc,
+  paragraph,
+  blockquote,
+  text,
+  hard_break,
+  horizontal_rule
 } = basic.nodes
 
-const { link, em, strong } = basic.marks
+const {
+  link,
+  em,
+  strong
+} = basic.marks
 
 const nodes = {
   doc,
@@ -16,6 +26,7 @@ const nodes = {
   blockquote,
   text,
   hard_break,
+  horizontal_rule,
 
   ordered_list: {
     ...list.orderedList,

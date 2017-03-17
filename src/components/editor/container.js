@@ -7,6 +7,8 @@ const { func, bool, object, number } = PropTypes
 const { EditorToolbar } = require('./toolbar')
 const { EditorView } = require('./view')
 
+const { pick } = require('../../common/util')
+
 
 class Editor extends PureComponent {
   constructor(props) {
@@ -20,6 +22,15 @@ class Editor extends PureComponent {
     this.view = view
   }
 
+  getActiveMarks(from = this.state) {
+    return pick(from, [
+      'isBoldActive',
+      'isItalicActive',
+      'isUnderlineActive',
+      'isStrikeThroughActive'
+    ])
+  }
+
   handleFocus = () => {
     this.view.focus()
   }
@@ -29,12 +40,7 @@ class Editor extends PureComponent {
   }
 
   handleChange = (view) => {
-    this.setState({
-      isBoldActive: view.isBoldActive,
-      isItalicActive: view.isItalicActive,
-      isUnderlineActive: view.isUnderlineActive,
-      isStrikeThroughActive: view.isStrikeThroughActive
-    })
+    this.setState(this.getActiveMarks(view))
   }
 
   render() {
@@ -47,10 +53,7 @@ class Editor extends PureComponent {
         onFocus={this.handleFocus}>
         {!isDisabled &&
           <EditorToolbar
-            isBoldActive={this.state.isBoldActive}
-            isItalicActive={this.state.isItalicActive}
-            isUnderlineActive={this.state.isUnderlineActive}
-            isStrikeThroughActive={this.state.isStrikeThroughActive}
+            {...this.getActiveMarks()}
             onCommand={this.handleCommand}/>
         }
 
