@@ -162,7 +162,9 @@ module.exports = {
 
   pluck(src, props = [], into = []) {
     return props.reduce((res, key) => {
-      if (src.hasOwnProperty(key)) {
+      const value = src[key]
+
+      if (typeof value !== 'undefined' || src.hasOwnProperty(key)) {
         res.push(src[key])
       }
 
@@ -173,8 +175,10 @@ module.exports = {
 
   pick(src, props = [], into = {}) {
     return props.reduce((res, key) => {
-      if (src.hasOwnProperty(key)) {
-        res[key] = src[key]
+      const value = src[key]
+
+      if (typeof value !== 'undefined' || src.hasOwnProperty(key)) {
+        res[key] = value
       }
 
       return res
