@@ -18,7 +18,8 @@ const enDashAuto = new InputRule(/ - $/, ' – ')
 const emDash = new InputRule(/–-$/, '—')
 
 const hrRule = (hr, p) =>
-  new InputRule(/^\s*—-$/, (state, match, start, end) =>
+  // hrRule must come before the emDash because the patterns match!
+  new InputRule(/^\s*–-$/, (state, match, start, end) =>
     state.tr.replaceRangeWith(start, end, [hr.create(), p.create()])
   )
 
@@ -40,7 +41,9 @@ module.exports = (schema) => {
   }
 
   if (schema.nodes.horizontal_rule) {
-    rules.push(hrRule(schema.nodes.horizontal_rule, schema.nodes.paragraph))
+    rules.unshift(
+      hrRule(schema.nodes.horizontal_rule, schema.nodes.paragraph)
+    )
   }
 
   return [
