@@ -31,12 +31,13 @@
 // ---
 
 .ProseMirror {
-  width: 80%;
+  width: $editor-width;
   margin: auto;
-  max-width: 700px;
-  padding-top: $toolbar-height + 1px + $prose-mirror-padding-top;
+  max-width: $editor-max-width;
+  padding-top: $toolbar-height + 1px + $prose-mirror-padding;
+  padding-bottom: $prose-mirror-padding;
 
   .editor:hover & {
-    padding-top: $prose-mirror-padding-top;
+    padding-top: $prose-mirror-padding;
   }
 }

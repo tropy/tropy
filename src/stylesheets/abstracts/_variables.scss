@@ -240,6 +240,8 @@ $notepad-min-height: #{const("NOTEPAD.MIN_HEIGHT")}px;
 // Editor
 // --------------------------------------------------
 
+$editor-width:                80%;
+$editor-max-width:            700px;
 $editor-font-size:            18px;
 $editor-line-height:          1.66667;
 $editor-line-height-computed: floor($editor-font-size * $editor-line-height);
@@ -248,8 +250,7 @@ $editor-outline-width:        2px;
 $blockquote-border:           3px;
 $blockquote-padding:          1em;
 $editor-hr-border:            2px;
-$prose-mirror-padding-top:    $editor-font-size / 2;
-
+$prose-mirror-padding:        40px; // ~ blank line
 
 // Debug
 // --------------------------------------------------
