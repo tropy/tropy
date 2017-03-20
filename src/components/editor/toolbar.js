@@ -102,23 +102,26 @@ class EditorToolbar extends PureComponent {
             </ToolGroup>
             <ToolGroup>
               <IconButton
+                isDisabled
                 canHaveFocus={false}
                 icon={<IconAlignLeft/>}
                 isActive={false}
                 title="editor.commands.left"
-                onMouseDown={this.superscript}/>
+                onMouseDown={this.left}/>
               <IconButton
+                isDisabled
                 canHaveFocus={false}
                 icon={<IconAlignCenter/>}
                 isActive={false}
                 title="editor.commands.center"
-                onMouseDown={this.superscript}/>
+                onMouseDown={this.center}/>
               <IconButton
+                isDisabled
                 canHaveFocus={false}
                 icon={<IconAlignRight/>}
                 isActive={false}
                 title="editor.commands.right"
-                onMouseDown={this.superscript}/>
+                onMouseDown={this.right}/>
             </ToolGroup>
             <ToolGroup>
               <IconButton
