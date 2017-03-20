@@ -82,15 +82,15 @@ class ProseMirror extends Component {
     return this.isMarkActive(schema.marks.underline)
   }
 
-  get isStrikeThroughActive() {
+  get isStrikethroughActive() {
     return this.isMarkActive(schema.marks.strikethrough)
   }
 
-  get isSubScriptActive() {
+  get isSubscriptActive() {
     return this.isMarkActive(schema.marks.subscript)
   }
 
-  get isSuperScriptActive() {
+  get isSuperscriptActive() {
     return this.isMarkActive(schema.marks.superscript)
   }
 

@@ -89,6 +89,7 @@ editor:
     underline: Underline
     strikethrough: Strikethrough
     subscript: Subscript
+    superscript: Superscript
     blockquote: Toggle Quote
     ol: Toggle Numbered List
     ul: Toggle Bulleted List
