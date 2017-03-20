@@ -54,6 +54,8 @@
   }
 
   .tool-group {
+    white-space: nowrap;
+
     & + .tool-group {
       margin-left: $space-xs;
 
