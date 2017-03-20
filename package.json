@@ -88,7 +88,7 @@
     "js-yaml": "^3.4.6",
     "lodash.debounce": "^4.0.7",
     "lodash.throttle": "^4.1.1",
-    "ms": "^0.7.1",
+    "ms": "^1.0.0",
     "prosemirror-commands": "^0.19.0",
     "prosemirror-history": "^0.19.0",
     "prosemirror-inputrules": "^0.19.0",
