@@ -7,7 +7,7 @@ const { ItemTableCell } = require('./table-cell')
 const { meta } = require('../../common/os')
 const { get, pick } = require('../../common/util')
 const { DC } = require('../../constants/properties')
-const cn = require('classnames')
+const cx = require('classnames')
 const { arrayOf, object } = PropTypes
 
 const CellProps = Object.keys(ItemTableCell.propTypes)
@@ -29,7 +29,7 @@ class ItemTableRow extends ItemIterable {
 
     return this.connect(
       <tr
-        className={cn(this.classes)}
+        className={cx(this.classes)}
         ref={this.setContainer}
         onMouseDown={this.handleMouseDown}
         onDoubleClick={this.handleOpen}

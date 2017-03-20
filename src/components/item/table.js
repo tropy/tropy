@@ -28,6 +28,11 @@ class ItemTable extends ItemIterator {
     }
   }
 
+  handleEditCancel = (...args) => {
+    this.props.onEditCancel(...args)
+    this.container.focus()
+  }
+
   render() {
     const {
       columns,
@@ -35,7 +40,6 @@ class ItemTable extends ItemIterator {
       edit,
       sort,
       onEdit,
-      onEditCancel,
       onMetadataSave,
       onSort
     } = this.props
@@ -62,7 +66,7 @@ class ItemTable extends ItemIterator {
                       data={data[item.id]}
                       columns={columns}
                       edit={edit}
-                      onCancel={onEditCancel}
+                      onCancel={this.handleEditCancel}
                       onChange={onMetadataSave}
                       onEdit={onEdit}/>
                   )}

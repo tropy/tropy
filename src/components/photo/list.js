@@ -31,8 +31,14 @@ class PhotoList extends PhotoIterator {
     return this.props.edit === photo.id
   }
 
+  handleEditCancel = (...args) => {
+    this.props.onEditCancel(...args)
+    this.container.focus()
+  }
+
+
   render() {
-    const { data, onChange, onEdit, onEditCancel } = this.props
+    const { data, onChange, onEdit } = this.props
 
     return this.connect(
       <ul
@@ -50,7 +56,7 @@ class PhotoList extends PhotoIterator {
             isEditing={this.isEditing(photo)}
             onChange={onChange}
             onEdit={onEdit}
-            onEditCancel={onEditCancel}/>)}
+            onEditCancel={this.handleEditCancel}/>)}
       </ul>
     )
   }

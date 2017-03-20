@@ -3,7 +3,8 @@
 const React = require('react')
 const { PureComponent } = React
 const { bool, func, string, oneOf } = React.PropTypes
-const cn = require('classnames')
+const cx = require('classnames')
+const { noop } = require('../common/util')
 
 
 class Editable extends PureComponent {
@@ -27,6 +28,12 @@ class Editable extends PureComponent {
     this.setState({ value: event.target.value })
   }
 
+  handleBlur = (event) => {
+    if (!this.props.onBlur(event)) {
+      this.stop()
+    }
+  }
+
   stop = () => {
     const { onCancel, onChange } = this.props
 
@@ -44,17 +51,17 @@ class Editable extends PureComponent {
     onCancel()
   }
 
-  handleKeyUp = (event) => {
-    switch (event.which) {
-      case 27:
-        event.stopPropagation()
+  handleKeyDown = (event) => {
+    switch (event.key) {
+      case 'Escape':
         this.cancel()
         break
-      case 13:
-        event.stopPropagation()
+      case 'Enter':
         this.stop()
         break
     }
+
+    event.stopPropagation()
   }
 
   focus(input) {
@@ -81,13 +88,13 @@ class Editable extends PureComponent {
           required={isRequired}
           ref={this.focus}
           onChange={this.handleChange}
-          onKeyUp={this.handleKeyUp}
-          onBlur={this.stop}/>
+          onKeyDown={this.handleKeyDown}
+          onBlur={this.handleBlur}/>
       )
     }
 
     return (
-      <div className={cn({
+      <div className={cx({
         editable: true,
         disabled: isDisabled
       })}>
@@ -103,12 +110,14 @@ class Editable extends PureComponent {
     isRequired: bool,
     value: string,
     type: oneOf(['text', 'number']),
+    onBlur: func.isRequired,
     onChange: func.isRequired,
     onCancel: func.isRequired
   }
 
   static defaultProps = {
-    type: 'text'
+    type: 'text',
+    onBlur: noop
   }
 }
 
