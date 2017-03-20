@@ -40,6 +40,12 @@
     list-style: decimal;
   }
 
+  hr {
+    border: 0;
+    border-top: $editor-hr-border solid $editor-hr-border-color;
+    margin: ($editor-line-height-computed / 2 - $editor-hr-border) 0;
+  }
+
   &-selectednode {
     outline: $editor-outline-width solid $selected-node-color;
 
