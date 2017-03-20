@@ -3,8 +3,6 @@
 // --------------------------------------------------
 
 .form-inline {
-  overflow: visible; // Fix cropped box-shadow in editor toolbar
-
   > * + * {
     margin-left: $space-min;
   }
