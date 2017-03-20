@@ -47,10 +47,11 @@ class ItemView extends PureComponent {
   render() {
     const {
       esper,
+      keymap,
+      note,
+      offset,
       panel,
       photo,
-      keymap,
-      offset,
       onPanelResize,
       onPanelDragStop,
       ...props
@@ -70,6 +71,7 @@ class ItemView extends PureComponent {
           <ItemPanel {...pick(props, ItemPanel.props)}
             panel={panel}
             photo={photo}
+            note={note}
             isItemOpen={isItemOpen}
             isDisabled={isDisabled}/>
         </Resizable>
@@ -84,6 +86,7 @@ class ItemView extends PureComponent {
             <EsperImage isVisible photo={photo}/>
           </BufferedResizable>
           <NotePad
+            note={note}
             isDisabled={isDisabled}
             isItemOpen={isItemOpen}
             keymap={keymap.NotePad}/>

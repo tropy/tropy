@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const { bool, number, object } = PropTypes
+const { bool, number, object, shape, string } = PropTypes
 const { Editor } = require('../editor')
 const cx = require('classnames')
 const { TABS } = require('../../constants')
@@ -30,7 +30,11 @@ class NotePad extends PureComponent {
     isDisabled: bool,
     isItemOpen: bool,
     keymap: object.isRequired,
-    note: object,
+    note: shape({
+      id: number.isRequired,
+      doc: object,
+      text: string.isRequired
+    }),
     tabIndex: number.isRequired
   }
 
