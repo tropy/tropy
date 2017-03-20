@@ -103,13 +103,12 @@ class ListTree extends PureComponent {
     edit: PropTypes.object,
     selection: PropTypes.number,
 
-    onEdit: PropTypes.func.isRequired,
+    onClick: PropTypes.func.isRequired,
     onEditCancel: PropTypes.func.isRequired,
     onDropFiles: PropTypes.func.isRequired,
     onDropItems: PropTypes.func.isRequired,
     onListSave: PropTypes.func.isRequired,
     onSort: PropTypes.func.isRequired,
-    onSelect: PropTypes.func.isRequired,
     onContextMenu: PropTypes.func.isRequired
   }
 }

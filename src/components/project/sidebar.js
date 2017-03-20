@@ -24,6 +24,10 @@ class ProjectSidebar extends PureComponent {
     return has(this.props.edit, 'project')
   }
 
+  get hasActiveFilters() {
+    return this.props.selectedTags.length > 0
+  }
+
   tabIndex = TABS.ProjectSidebar
 
 
@@ -92,7 +96,7 @@ class ProjectSidebar extends PureComponent {
         return
       case this.isListEmpty():
       case this.isListSelected(this.getFirstList()):
-        return this.handleSelect()
+        return this.select()
       case this.props.isTrashSelected:
         return this.handleListSelect(this.getLastList())
       default:
@@ -100,8 +104,16 @@ class ProjectSidebar extends PureComponent {
     }
   }
 
+  handleSelect() {
+    this.props.onSelect({ list: null, trash: null }, { throttle: true })
+  }
 
-  handleEdit = () => {
+
+  handleClick = () => {
+    if (!this.props.isSelected || this.hasActiveFilters) {
+      return this.handleSelect()
+    }
+
     this.props.onEdit({
       project: { name: this.props.project.name }
     })
@@ -111,17 +123,20 @@ class ProjectSidebar extends PureComponent {
     this.props.onProjectSave({ name })
   }
 
-  handleSelect = () => {
-    this.props.onSelect({ list: null, trash: null }, { throttle: true })
-  }
-
   handleTrashSelect = () => {
     this.props.onSelect({ trash: true }, { throttle: true })
   }
 
+  handleListClick = (list) => {
+    if (!this.handleListSelect(list.id)) {
+      this.props.onEdit({ list: { id: list.id } })
+    }
+  }
+
   handleListSelect = (list) => {
-    if (list && !this.isListSelected(list)) {
+    if (list && (!this.isListSelected(list) || this.hasActiveFilters)) {
       this.props.onSelect({ list }, { throttle: true })
+      return true
     }
   }
 
@@ -169,7 +184,6 @@ class ProjectSidebar extends PureComponent {
       selectedList,
       selectedTags,
       onContextMenu,
-      onEdit,
       onEditCancel,
       onItemDelete,
       onItemImport,
@@ -200,11 +214,10 @@ class ProjectSidebar extends PureComponent {
                   isSelected={isSelected}
                   isEditing={this.isEditing}
                   isContext={this.isContext}
-                  onEdit={this.handleEdit}
-                  onEditCancel={onEditCancel}
                   onChange={this.handleChange}
-                  onDrop={onItemImport}
-                  onSelect={this.handleSelect}/>
+                  onClick={this.handleClick}
+                  onEditCancel={onEditCancel}
+                  onDrop={onItemImport}/>
               </ol>
             </nav>
 
@@ -222,10 +235,9 @@ class ProjectSidebar extends PureComponent {
                   onContextMenu={onContextMenu}
                   onDropFiles={onItemImport}
                   onDropItems={onListItemsAdd}
-                  onEdit={onEdit}
+                  onClick={this.handleListClick}
                   onEditCancel={onEditCancel}
                   onListSave={onListSave}
-                  onSelect={onSelect}
                   onSort={onListSort}/>}
               <ol>
                 <TrashListNode

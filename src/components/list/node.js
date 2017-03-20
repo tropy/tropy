@@ -40,13 +40,7 @@ class ListNode extends PureComponent {
   }
 
   handleClick = () => {
-    const { list, isSelected, onEdit, onSelect } = this.props
-
-    if (isSelected) {
-      onEdit({ list: { id: list.id } })
-    } else {
-      onSelect({ list: list.id })
-    }
+    this.props.onClick(this.props.list)
   }
 
   handleContextMenu = (event) => {
@@ -108,12 +102,11 @@ class ListNode extends PureComponent {
     dt: PropTypes.func.isRequired,
     dtType: PropTypes.string,
 
-    onEdit: PropTypes.func,
+    onClick: PropTypes.func.isRequired,
     onEditCancel: PropTypes.func,
     onContextMenu: PropTypes.func,
     onDropItems: PropTypes.func,
     onDropFiles: PropTypes.func,
-    onSelect: PropTypes.func,
     onSave: PropTypes.func,
     onSort: PropTypes.func,
     onSortPreview: PropTypes.func,

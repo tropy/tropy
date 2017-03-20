@@ -21,19 +21,11 @@ class ProjectName extends PureComponent {
     }
   }
 
-  handleClick = () => {
-    if (this.props.isSelected) {
-      this.props.onEdit()
-    } else {
-      this.props.onSelect()
-    }
-  }
-
   render() {
-    const { name, dt, isEditing, onChange, onEditCancel } = this.props
+    const { name, dt, isEditing, onChange, onEditCancel, onClick } = this.props
 
     return dt(
-      <li className={cx(this.classes)} onClick={this.handleClick}>
+      <li className={cx(this.classes)} onClick={onClick}>
         <IconMaze/>
         <div className="name">
           <Editable
@@ -56,11 +48,10 @@ class ProjectName extends PureComponent {
     isOver: bool,
     canDrop: bool,
     dt: func.isRequired,
-    onEdit: func.isRequired,
+    onClick: func.isRequired,
     onEditCancel: func.isRequired,
     onChange: func.isRequired,
-    onDrop: func.isRequired,
-    onSelect: func.isRequired
+    onDrop: func.isRequired
   }
 }
 
