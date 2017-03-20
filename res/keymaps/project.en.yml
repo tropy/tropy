@@ -4,7 +4,8 @@ linux: &linux
     down: ArrowDown
     left: ArrowLeft
     right: ArrowRight
-    open: Space
+    preview: Space
+    open: Enter
 
   NotePad:
     break: Enter

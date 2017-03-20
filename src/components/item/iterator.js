@@ -83,6 +83,10 @@ class ItemIterator extends Iterator {
         break
 
       case 'open':
+        this.props.onItemOpen(this.getCurrentItem())
+        break
+
+      case 'preview':
         this.props.onItemPreview(this.getCurrentItem())
         break
 
