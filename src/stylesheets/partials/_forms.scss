@@ -2,6 +2,14 @@
 // Forms
 // --------------------------------------------------
 
+.form-inline {
+  overflow: visible; // Fix cropped box-shadow in editor toolbar
+
+  > * + * {
+    margin-left: $space-min;
+  }
+}
+
 .form-control {
   display: block;
   width: 100%;

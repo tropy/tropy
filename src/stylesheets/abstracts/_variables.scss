@@ -91,6 +91,8 @@ $search-width: 200px;
 // Common Dimensions
 // --------------------------------------------------
 
+$padding-base-vertical: 2px;
+
 $padding-base-horizontal: $space-xs;
 $padding-large-horizontal: $space-sm;
 
@@ -111,6 +113,7 @@ $mode-transition: 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 
 // Buttons
 // --------------------------------------------------
+
 
 $btn-disabled-opacity: 0.64;
 
@@ -251,6 +254,12 @@ $blockquote-border:           3px;
 $blockquote-padding:          1em;
 $editor-hr-border:            2px;
 $prose-mirror-padding:        40px; // ~ blank line
+
+
+// Toolbar
+// --------------------------------------------------
+
+$toolbar-context-transition: 0.24s ease;
 
 // Debug
 // --------------------------------------------------
