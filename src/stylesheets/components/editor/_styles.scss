@@ -46,6 +46,12 @@
     margin: ($editor-line-height-computed / 2 - $editor-hr-border) 0;
   }
 
+  sup,
+  sub {
+    line-height: 1;
+    font-size: $sup-and-sub-font-size;
+  }
+
   &-selectednode {
     outline: $editor-outline-width solid $selected-node-color;
 
