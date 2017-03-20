@@ -52,6 +52,18 @@
     font-size: $sup-and-sub-font-size;
   }
 
+  .align-left {
+    text-align: left;
+  }
+
+  .align-center {
+    text-align: center;
+  }
+
+  .align-right {
+    text-align: right;
+  }
+
   &-selectednode {
     outline: $editor-outline-width solid $selected-node-color;
 
