@@ -39,7 +39,9 @@ class Editor extends PureComponent {
       'isBoldActive',
       'isItalicActive',
       'isUnderlineActive',
-      'isStrikeThroughActive'
+      'isStrikeThroughActive',
+      'isSubScripAtctive',
+      'isSuperScriptActive'
     ])
   }
 

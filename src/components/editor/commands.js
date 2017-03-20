@@ -27,6 +27,8 @@ module.exports = (schema) => {
     italic: cmd.toggleMark(schema.marks.em),
     underline: cmd.toggleMark(schema.marks.underline),
     strikethrough: cmd.toggleMark(schema.marks.strikethrough),
+    subscript: cmd.toggleMark(schema.marks.subscript),
+    superscript: cmd.toggleMark(schema.marks.superscript),
 
     blockquote: cmd.wrapIn(schema.nodes.blockquote),
 

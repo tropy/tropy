@@ -77,11 +77,39 @@ const marks = {
 
     parseDOM: [{
       style: 'text-decoration',
-      getAttrs(value) { return value === 'line-through' }
+      getAttrs(value) { return value === 'line-through' && null }
     }],
 
     toDOM(node) {
       return ['span', node.attrs]
+    }
+  },
+
+  superscript: {
+    parseDOM: [
+      { tag: 'sup' },
+      {
+        tag: 'span',
+        getAttrs(node) { return node.style.verticalAlign === 'super' && null }
+      }
+    ],
+
+    toDOM() {
+      return ['sup']
+    }
+  },
+
+  subscript: {
+    parseDOM: [
+      { tag: 'sup' },
+      {
+        tag: 'span',
+        getAttrs(node) { return node.style.verticalAlign === 'sub' && null }
+      }
+    ],
+
+    toDOM() {
+      return ['sub']
     }
   }
 }

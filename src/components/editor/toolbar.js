@@ -29,6 +29,8 @@ class EditorToolbar extends PureComponent {
       'italic',
       'underline',
       'strikethrough',
+      'subscript',
+      'superscript',
       'blockquote',
       'ol',
       'ul',
@@ -69,6 +71,18 @@ class EditorToolbar extends PureComponent {
                 isActive={this.props.isStrikeThroughActive}
                 title="editor.commands.strikethrough"
                 onMouseDown={this.strikethrough}/>
+              <IconButton
+                canHaveFocus={false}
+                icon={<IconS/>}
+                isActive={this.props.isSuperScriptActive}
+                title="editor.commands.superscript"
+                onMouseDown={this.superscript}/>
+              <IconButton
+                canHaveFocus={false}
+                icon={<IconS/>}
+                isActive={this.props.isSubScriptActive}
+                title="editor.commands.subscript"
+                onMouseDown={this.subscript}/>
               <IconButton
                 canHaveFocus={false}
                 icon={<IconQ/>}
@@ -120,6 +134,8 @@ class EditorToolbar extends PureComponent {
     isItalicActive: bool,
     isUnderlineActive: bool,
     isStrikeThroughActive: bool,
+    isSubScriptActive: bool,
+    isSuperScriptActive: bool,
     onCommand: func.isRequired
   }
 
