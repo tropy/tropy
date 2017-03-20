@@ -23,7 +23,7 @@
       }
     }
 
-    .btn {
+    .btn-icon {
       &:hover {
         background: $editor-btn-hover-bg;
       }
@@ -32,7 +32,7 @@
         background: $editor-btn-active-bg;
       }
 
-      & + .btn {
+      & + .btn-icon {
         margin-left: $space-min / 2;
       }
     }

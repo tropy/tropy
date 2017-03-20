@@ -5,11 +5,11 @@
 .toolbar {
   display: flex;
   justify-content: space-between;
-  align-items: stretch;
   height: $toolbar-height;
   flex: 0 0 auto;
   padding: $space-min $component-padding-horizontal 0;
   margin-bottom: $space-min;
+  overflow: hidden;
 
   .panel-group-header & {
     padding-top: 0;
@@ -26,6 +26,23 @@
       -webkit-app-region: drag;
       position: relative;
       z-index: $zindex-draggable;
+    }
+  }
+
+  .toolbar-context {
+    position: absolute;
+    height: $toolbar-height;
+    display: flex;
+    justify-content: space-between;
+    transform: translate3d(0, 100%, 0);
+    transition: transform $toolbar-context-transition;
+
+    &.active {
+      transform: translate3d(0, 0, 0);
+    }
+
+    &.has-active {
+      transform: translate3d(0, -100%, 0);
     }
   }
 
