@@ -77,7 +77,7 @@ class EditorToolbar extends PureComponent {
               <IconButton
                 canHaveFocus={false}
                 icon={<IconS/>}
-                isActive={this.props.isStrikeThroughActive}
+                isActive={this.props.isStrikethroughActive}
                 title="editor.commands.strikethrough"
                 onMouseDown={this.strikethrough}/>
               <IconButton
@@ -90,13 +90,13 @@ class EditorToolbar extends PureComponent {
               <IconButton
                 canHaveFocus={false}
                 icon={<IconSup/>}
-                isActive={this.props.isSuperScriptActive}
+                isActive={this.props.isSuperscriptActive}
                 title="editor.commands.superscript"
                 onMouseDown={this.superscript}/>
               <IconButton
                 canHaveFocus={false}
                 icon={<IconSub/>}
-                isActive={this.props.isSubScriptActive}
+                isActive={this.props.isSubscriptActive}
                 title="editor.commands.subscript"
                 onMouseDown={this.subscript}/>
             </ToolGroup>
