@@ -191,7 +191,6 @@ class ProjectSidebar extends PureComponent {
       onListSave,
       onListSort,
       onMaximize,
-      onSelect,
       onTagCreate,
       onTagSave,
       onTagSelect
