@@ -16,8 +16,6 @@
     display: none;
 
     .tool-group {
-      position: relative;
-
       & + .tool-group {
         margin-left: $space-md + $space-min;
       }
