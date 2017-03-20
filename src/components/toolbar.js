@@ -3,7 +3,18 @@
 const React = require('react')
 const { PureComponent } = React
 const { node, bool, func } = React.PropTypes
-const cn = require('classnames')
+const cx = require('classnames')
+
+
+const ToolbarContext = ({ children, isActive: active }) => (
+  <div className={cx({ 'toolbar-context': true, active })}>{children}</div>
+)
+
+ToolbarContext.propTypes = {
+  children: node,
+  isActive: bool
+}
+
 
 const ToolGroup = ({ children }) => (
   <div className="tool-group">{children}</div>
@@ -14,7 +25,6 @@ ToolGroup.propTypes = {
 }
 
 class Toolbar extends PureComponent {
-
   handleDoubleClick = (event) => {
     if (this.props.onDoubleClick && event.target === this.container) {
       this.props.onDoubleClick()
@@ -28,7 +38,7 @@ class Toolbar extends PureComponent {
   render() {
     return (
       <div
-        className={cn({ toolbar: true,  draggable: this.props.isDraggable })}
+        className={cx({ toolbar: true,  draggable: this.props.isDraggable })}
         ref={this.props.onDoubleClick ? this.setContainer : null}
         onDoubleClick={this.handleDoubleClick}>
         {this.props.children}
@@ -50,5 +60,6 @@ class Toolbar extends PureComponent {
 
 module.exports = {
   Toolbar,
+  ToolbarContext,
   ToolGroup
 }
