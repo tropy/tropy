@@ -94,3 +94,6 @@ editor:
     ol: Toggle Numbered List
     ul: Toggle Bulleted List
     link: Insert Link
+    left: Align Left
+    center: Center
+    right: Align Right

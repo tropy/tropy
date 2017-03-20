@@ -12,6 +12,11 @@ const {
   IconU,
   IconS,
   IconQ,
+  IconSup,
+  IconSub,
+  IconAlignLeft,
+  IconAlignCenter,
+  IconAlignRight,
   IconLink,
   IconBulletList,
   IconNumberedList,
@@ -72,26 +77,48 @@ class EditorToolbar extends PureComponent {
               <IconButton
                 canHaveFocus={false}
                 icon={<IconS/>}
-                isActive={this.props.isStrikethroughActive}
+                isActive={this.props.isStrikeThroughActive}
                 title="editor.commands.strikethrough"
                 onMouseDown={this.strikethrough}/>
-              <IconButton
-                canHaveFocus={false}
-                icon={<IconS/>}
-                isActive={this.props.isSuperscriptActive}
-                title="editor.commands.superscript"
-                onMouseDown={this.superscript}/>
-              <IconButton
-                canHaveFocus={false}
-                icon={<IconS/>}
-                isActive={this.props.isSubscriptActive}
-                title="editor.commands.subscript"
-                onMouseDown={this.subscript}/>
               <IconButton
                 canHaveFocus={false}
                 icon={<IconQ/>}
                 title="editor.commands.blockquote"
                 onMouseDown={this.blockquote}/>
+            </ToolGroup>
+            <ToolGroup>
+              <IconButton
+                canHaveFocus={false}
+                icon={<IconSup/>}
+                isActive={this.props.isSuperScriptActive}
+                title="editor.commands.superscript"
+                onMouseDown={this.superscript}/>
+              <IconButton
+                canHaveFocus={false}
+                icon={<IconSub/>}
+                isActive={this.props.isSubScriptActive}
+                title="editor.commands.subscript"
+                onMouseDown={this.subscript}/>
+            </ToolGroup>
+            <ToolGroup>
+              <IconButton
+                canHaveFocus={false}
+                icon={<IconAlignLeft/>}
+                isActive={false}
+                title="editor.commands.left"
+                onMouseDown={this.superscript}/>
+              <IconButton
+                canHaveFocus={false}
+                icon={<IconAlignCenter/>}
+                isActive={false}
+                title="editor.commands.center"
+                onMouseDown={this.superscript}/>
+              <IconButton
+                canHaveFocus={false}
+                icon={<IconAlignRight/>}
+                isActive={false}
+                title="editor.commands.right"
+                onMouseDown={this.superscript}/>
             </ToolGroup>
             <ToolGroup>
               <IconButton
