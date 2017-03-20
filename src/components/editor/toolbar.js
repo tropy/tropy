@@ -126,7 +126,7 @@ class EditorToolbar extends PureComponent {
         </div>
         <div className="toolbar-context">
           <span className="toolbar-left form-inline">
-            <input type="text" className="form-control"
+            <input type="text" className="form-control link-target"
               placeholder="Link target"/>
 
             <span className="btn btn-primary">OK</span>
