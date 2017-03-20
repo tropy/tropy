@@ -26,10 +26,8 @@
   &[readonly] {
     color: $input-color-readonly;
   }
-}
 
-select {
-  &.form-control {
+  @at-root select#{&} {
     -webkit-appearance: none;
     line-height: 1;
     background-repeat: no-repeat;
