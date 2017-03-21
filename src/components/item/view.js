@@ -2,16 +2,19 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
+const {
+  arrayOf, bool, func, object, number, shape, string
+} = PropTypes
 const { ItemPanel } = require('./panel')
 const { Resizable, BufferedResizable } = require('../resizable')
 const { EsperImage } = require('../esper')
 const { NotePad } = require('../note')
 const { PROJECT: { MODE }, SASS: { PANEL } } = require('../../constants')
-const { get, pick } = require('../../common/util')
+const { pick } = require('../../common/util')
 
-const {
-  arrayOf, bool, func, object, number, shape, string
-} = PropTypes
+function getNoteTemplate() {
+  return { id: -Date.now(), text: '' }
+}
 
 
 class ItemView extends PureComponent {
@@ -19,14 +22,14 @@ class ItemView extends PureComponent {
     super(props)
 
     this.state = {
-      note: props.note || this.getNoteTemplate()
+      note: props.note || getNoteTemplate()
     }
   }
 
   componentWillReceiveProps(props) {
     if (props.note !== this.props.note) {
       this.setState({
-        note: props.note || this.getNoteTemplate()
+        note: props.note || getNoteTemplate()
       })
     }
   }
@@ -54,9 +57,6 @@ class ItemView extends PureComponent {
     return { transform: `translate3d(${this.offset}, 0, 0)` }
   }
 
-  getNoteTemplate() {
-    return { id: -1, photo: -1, text: '' }
-  }
 
   setNotePad = (notepad) => {
     this.notepad = notepad
@@ -67,21 +67,34 @@ class ItemView extends PureComponent {
   }
 
   handleNoteCreate = () => {
-    if (this.isItemOpen) {
-      return this.notepad.focus()
+    let delay = 50
+
+    if (!this.isItemOpen) {
+      delay = 1000
+      this.props.onItemOpen({
+        id: this.item.id, photos: [this.props.photo.id]
+      })
     }
 
-    this.props.onItemOpen({
-      id: this.item.id, photos: [this.props.photo.id]
-    })
+    this.setState({ note: getNoteTemplate() })
 
-    setTimeout(this.notepad.focus, 1000)
+    setTimeout(this.notepad.focus, delay)
   }
 
   handleNoteChange = (note) => {
+    if (this.state.note.id < 0 && !this.state.note.pending) {
+      this.props.onNoteCreate({
+        ...note,
+        photo: this.props.photo.id
+      })
+
+      note.pending = true
+    }
+
     this.setState({
       note: { ...this.state.note, ...note }
     })
+
   }
 
 
