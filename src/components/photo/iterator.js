@@ -86,10 +86,10 @@ class PhotoIterator extends Iterator {
     onSort({ item, photos: order })
   }
 
-  handleClickOutside = (event) => {
-    if (has(event.target, 'click-catcher')) {
-      this.props.onSelect()
-    }
+  handleClickOutside = () => {
+    // if (has(event.target, 'click-catcher')) {
+    //   this.props.onSelect()
+    // }
   }
 
   handleKeyDown = (event) => {
