@@ -4,7 +4,7 @@ const { json, stringify } = require('../common/util')
 
 module.exports = {
 
-  async create(db, data) {
+  async create(db, { doc, text, parent }) {
 
     // Note: last_insert_rowid() not reliable because of FTS triggers,
     // so we determine the next id ourselves. This should be always
@@ -13,8 +13,8 @@ module.exports = {
     const id = Number(max) + 1
 
     await db.run(`
-      INSERT INTO notes (note_id, id, text) VALUES (?,?,?)`,
-      id, data.id, data.text
+      INSERT INTO notes (note_id, id, doc, text) VALUES (?,?,?,?)`,
+      id, parent, stringify(doc), text
     )
 
     return module.exports.load(db, [id])

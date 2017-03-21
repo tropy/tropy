@@ -117,7 +117,7 @@ class ProseMirror extends Component {
 
   handleChange = (tr) => {
     this.pm.updateState(this.pm.state.apply(tr))
-    this.props.onChange(this)
+    this.props.onChange(this, tr.docChanged)
   }
 
   handleKeyDown = (view, event) => {

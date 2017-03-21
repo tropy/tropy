@@ -40,7 +40,7 @@ class NoteListItem extends PureComponent {
         onMouseDown={this.handleClick}
         onContextMenu={this.handleContextMenu}>
         <div className="css-multiline-truncate">
-          Note {note.id}
+          {note.text || note.id}
         </div>
       </li>
     )

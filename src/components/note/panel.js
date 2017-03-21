@@ -4,15 +4,10 @@ const React = require('react')
 const { Panel } = require('../panel')
 const { NoteToolbar } = require('./toolbar')
 const { NoteList } = require('./list')
-const { arrayOf, shape, number, bool, func } = React.PropTypes
+const { arrayOf, bool, func, number, shape, string } = React.PropTypes
 
 
 class NotePanel extends Panel {
-
-  handleCreate = () => {
-    const { item, photo, onCreate } = this.props
-    onCreate({ item, photo })
-  }
 
   handleContextMenu = (event) => {
     const { item, photo, onContextMenu } = this.props
@@ -30,12 +25,12 @@ class NotePanel extends Panel {
   }
 
   renderToolbar() {
-    const { isDisabled } = this.props
+    const { isDisabled, onCreate } = this.props
 
     return (
       <NoteToolbar
         hasCreateButton={!isDisabled}
-        onCreate={this.handleCreate}/>
+        onCreate={onCreate}/>
     )
   }
 
@@ -82,7 +77,10 @@ class NotePanel extends Panel {
 
     item: number,
     photo: number,
-    selection: number,
+    selection: shape({
+      id: number.isRequired,
+      text: string.isRequired
+    }),
 
     onItemOpen: func.isRequired,
     onContextMenu: func.isRequired,

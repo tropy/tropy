@@ -94,7 +94,7 @@ class ItemPanel extends PureComponent {
           item={item && item.id}
           photo={photo && photo.id}
           notes={notes}
-          selection={note && note.id}
+          selection={note}
           onCreate={onNoteCreate}
           onSelect={onNoteSelect}/>
       </PanelGroup>

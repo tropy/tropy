@@ -7,7 +7,7 @@ const { Resizable, BufferedResizable } = require('../resizable')
 const { EsperImage } = require('../esper')
 const { NotePad } = require('../note')
 const { PROJECT: { MODE }, SASS: { PANEL } } = require('../../constants')
-const { pick } = require('../../common/util')
+const { get, pick } = require('../../common/util')
 
 const {
   arrayOf, bool, func, object, number, shape, string
@@ -15,6 +15,21 @@ const {
 
 
 class ItemView extends PureComponent {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      note: props.note
+    }
+  }
+
+  componentWillReceiveProps(props) {
+    if (props.note !== this.props.note) {
+      this.setState({
+        note: props.note
+      })
+    }
+  }
 
   get item() { // remove?
     const { items } = this.props
@@ -43,12 +58,25 @@ class ItemView extends PureComponent {
     this.props.onUiUpdate({ esper: { height } })
   }
 
+  handleNoteCreate = (note) => {
+    this.props.onNoteCreate({
+      ...note,
+      item: get(this.item, 'id'),
+      photo: get(this.props, ['photo', 'id'])
+    })
+  }
+
+  handleNoteChange = (note) => {
+    this.setState({
+      note: { ...this.state.note, ...note }
+    })
+  }
+
 
   render() {
     const {
       esper,
       keymap,
-      note,
       offset,
       panel,
       photo,
@@ -71,9 +99,10 @@ class ItemView extends PureComponent {
           <ItemPanel {...pick(props, ItemPanel.props)}
             panel={panel}
             photo={photo}
-            note={note}
+            note={this.state.note}
             isItemOpen={isItemOpen}
-            isDisabled={isDisabled}/>
+            isDisabled={isDisabled}
+            onNoteCreate={this.handleNoteCreate}/>
         </Resizable>
 
         <div className="item-container">
@@ -86,10 +115,12 @@ class ItemView extends PureComponent {
             <EsperImage isVisible photo={photo}/>
           </BufferedResizable>
           <NotePad
-            note={note}
+            note={this.state.note}
             isDisabled={isDisabled}
             isItemOpen={isItemOpen}
-            keymap={keymap.NotePad}/>
+            keymap={keymap.NotePad}
+            onCreate={this.handleNoteCreate}
+            onChange={this.handleNoteChange}/>
         </div>
       </section>
     )
@@ -116,6 +147,8 @@ class ItemView extends PureComponent {
     mode: string.isRequired,
     isModeChanging: bool.isRequired,
 
+    onNoteCreate: func.isRequired,
+    onNoteSave: func.isRequired,
     onPanelResize: func.isRequired,
     onPanelDragStop: func.isRequired,
     onUiUpdate: func.isRequired

@@ -3,12 +3,12 @@
 const React = require('react')
 const { PureComponent, PropTypes } = React
 const { NoteListItem } = require('./list-item')
-const { shape, arrayOf, number, bool, func } = PropTypes
+const { arrayOf, bool, func, number, shape } = PropTypes
 
 class NoteList extends PureComponent {
 
   isSelected(note) {
-    return note.id === this.props.selection
+    return this.props.selection && note.id === this.props.selection.id
   }
 
   handleSelect = (note) => {
@@ -19,21 +19,25 @@ class NoteList extends PureComponent {
     }
   }
 
-  render() {
-    const { notes, isDisabled, onContextMenu, onOpen } = this.props
+  renderNoteListItem = (note) => {
+    const { selection, isDisabled, onContextMenu, onOpen } = this.props
+    const isSelected = this.isSelected(note)
 
     return (
+      <NoteListItem
+        key={note.id}
+        note={isSelected ? selection : note}
+        isDisabled={isDisabled}
+        isSelected={isSelected}
+        onContextMenu={onContextMenu}
+        onOpen={onOpen}
+        onSelect={this.handleSelect}/>
+    )
+  }
+  render() {
+    return (
       <ul className="note list">
-        {notes.map(note =>
-          <NoteListItem
-            key={note.id}
-            note={note}
-            isDisabled={isDisabled}
-            isSelected={this.isSelected(note)}
-            onContextMenu={onContextMenu}
-            onOpen={onOpen}
-            onSelect={this.handleSelect}/>
-        )}
+        {this.props.notes.map(this.renderNoteListItem)}
       </ul>
     )
   }
@@ -43,7 +47,9 @@ class NoteList extends PureComponent {
       id: number.isRequired
     })).isRequired,
 
-    selection: number,
+    selection: shape({
+      id: number.isRequired
+    }),
 
     isDisabled: bool,
 

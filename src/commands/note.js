@@ -32,7 +32,7 @@ class Create extends Command {
       [photo, act.photo.notes.add] : [item, act.item.notes.add]
 
     const data = yield call([db, db.transaction], tx =>
-      mod.note.create(tx, { id: parent, text: text || '' }))
+      mod.note.create(tx, { parent, text: text || '' }))
 
     const notes = keys(data).map(Number)
 

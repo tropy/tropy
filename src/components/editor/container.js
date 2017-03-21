@@ -64,8 +64,12 @@ class Editor extends PureComponent {
     this.setState({ hasViewFocus: false })
   }
 
-  handleChange = (view) => {
+  handleChange = (view, hasDocChanged) => {
     this.setState(this.getActiveMarks(view))
+
+    if (hasDocChanged) {
+      this.props.onChange(view.doc, view.text)
+    }
   }
 
   render() {
@@ -102,8 +106,7 @@ class Editor extends PureComponent {
     doc: object,
     isDisabled: bool,
     keymap: object.isRequired,
-    value: object,
-    onChange: func,
+    onChange: func.isRequired,
     tabIndex: number.isRequired
   }
 
