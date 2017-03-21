@@ -14,22 +14,20 @@ class NotePad extends PureComponent {
     return !this.props.isItemOpen || this.props.isDisabled
   }
 
-  get isNewNote() {
-    return !this.props.note
-  }
-
   get doc() {
     return get(this.props.note, 'doc')
   }
 
+  setEditor = (editor) => {
+    this.editor = editor
+  }
+
+  focus() {
+    this.editor.view.focus()
+  }
+
   handleChange = (doc, text) => {
-    const { note, onCreate, onChange } = this.props
-
-    if (this.isNewNote) {
-      return onCreate({ doc, text })
-    }
-
-    onChange({ id: note.id, doc, text })
+    this.props.onChange({ id: this.props.note.id, doc, text })
   }
 
   render() {
@@ -38,6 +36,7 @@ class NotePad extends PureComponent {
     return (
       <section className={cx({ note: true, pad: true })}>
         <Editor
+          ref={this.setEditor}
           doc={this.doc}
           keymap={keymap}
           isDisabled={this.isDisabled}
@@ -52,12 +51,11 @@ class NotePad extends PureComponent {
     isItemOpen: bool,
     keymap: object.isRequired,
     note: shape({
-      id: number.isRequired,
+      id: number,
       doc: object,
-      text: string.isRequired
-    }),
+      text: string
+    }).isRequired,
     tabIndex: number.isRequired,
-    onCreate: func.isRequired,
     onChange: func.isRequired
   }
 

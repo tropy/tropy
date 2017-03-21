@@ -54,6 +54,10 @@ class ItemView extends PureComponent {
     return { transform: `translate3d(${this.offset}, 0, 0)` }
   }
 
+  setNotePad = (notepad) => {
+    this.notepad = notepad
+  }
+
   handleEsperResize = (height) => {
     this.props.onUiUpdate({ esper: { height } })
   }
@@ -115,11 +119,11 @@ class ItemView extends PureComponent {
             <EsperImage isVisible photo={photo}/>
           </BufferedResizable>
           <NotePad
+            ref={this.setNotePad}
             note={this.state.note}
             isDisabled={isDisabled}
             isItemOpen={isItemOpen}
             keymap={keymap.NotePad}
-            onCreate={this.handleNoteCreate}
             onChange={this.handleNoteChange}/>
         </div>
       </section>
