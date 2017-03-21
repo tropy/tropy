@@ -6,7 +6,7 @@ const { assign } = Object
 const { into, map } = require('transducers.js')
 
 const skel = (id) => ({
-  id, tags: [], photos: [], lists: [], notes: []
+  id, tags: [], photos: [], lists: []
 })
 
 module.exports = {
@@ -131,16 +131,6 @@ module.exports = {
             FROM list_items WHERE id IN (${ids})`,
           ({ id, list }) => {
             items[id].lists.push(list)
-          }
-        ),
-
-        db.each(`
-          SELECT id, note_id AS note
-            FROM notes
-            WHERE id IN (${ids}) AND deleted IS NULL
-            ORDER BY id, created`,
-          ({ id, note }) => {
-            items[id].notes.push(note)
           }
         )
       ])

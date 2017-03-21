@@ -26,20 +26,17 @@ class Create extends Command {
 
   *exec() {
     const { db } = this.options
-    const { text, item, photo } = this.action.payload
-
-    const [parent, add] = (photo) ?
-      [photo, act.photo.notes.add] : [item, act.item.notes.add]
+    const { text, photo } = this.action.payload
 
     const data = yield call([db, db.transaction], tx =>
-      mod.note.create(tx, { parent, text: text || '' }))
+      mod.note.create(tx, { photo, text: text || '' }))
 
     const notes = keys(data).map(Number)
 
-    yield put(add({ id: parent, notes }))
+    yield put(act.photo.notes.add({ id: photo, notes }))
 
-    this.undo = act.note.delete({ item, photo, notes })
-    this.redo = act.note.restore({ item, photo, notes })
+    this.undo = act.note.delete({ photo, notes })
+    this.redo = act.note.restore({ photo, notes })
 
     return data
   }
@@ -69,16 +66,13 @@ class Delete extends Command {
 
   *exec() {
     const { db } = this.options
-    const { item, photo, notes } = this.action.payload
-
-    const [parent, remove] = (photo) ?
-      [photo, act.photo.notes.remove] : [item, act.item.notes.remove]
+    const { photo, notes } = this.action.payload
 
     yield call([db, db.transaction], async tx => {
       await mod.note.delete(tx, notes)
     })
 
-    yield put(remove({ id: parent, notes }))
+    yield put(act.photo.notes.remove({ id: photo, notes }))
 
     this.undo = act.note.restore(this.action.payload)
 
@@ -91,13 +85,10 @@ class Restore extends Command {
 
   *exec() {
     const { db } = this.options
-    const { item, photo, notes } = this.action.payload
-
-    const [parent, add] = (item) ?
-      [photo, act.photo.notes.add] : [item, act.item.notes.add]
+    const { photo, notes } = this.action.payload
 
     yield call(mod.note.restore, db, notes)
-    yield put(add({ id: parent, notes }))
+    yield put(act.photo.notes.add({ id: photo, notes }))
 
     this.undo = act.note.delete(this.action.payload)
 

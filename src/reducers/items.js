@@ -56,11 +56,6 @@ module.exports = {
       case ITEM.PHOTO.REMOVE:
         return nested.remove('photos', state, payload, meta)
 
-      case ITEM.NOTE.ADD:
-        return nested.add('notes', state, payload, meta)
-      case ITEM.NOTE.REMOVE:
-        return nested.remove('notes', state, payload, meta)
-
       case LIST.ITEM.ADD:
       case LIST.ITEM.RESTORE: {
         if (error || !meta.done) return state

@@ -65,7 +65,6 @@ class ItemView extends PureComponent {
   handleNoteCreate = (note) => {
     this.props.onNoteCreate({
       ...note,
-      item: get(this.item, 'id'),
       photo: get(this.props, ['photo', 'id'])
     })
   }

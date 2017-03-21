@@ -2,7 +2,6 @@
 
 const { seq, compose, cat, map, keep } = require('transducers.js')
 const { createSelector: memo } = require('reselect')
-const { getSelectedItems } = require('./items')
 const { getVisiblePhotos } = require('./photos')
 
 const getNotes = ({ notes }) => notes
@@ -13,7 +12,6 @@ const getSelectedNote = memo(
 
 const getVisibleNotes = memo(
   getNotes,
-  getSelectedItems,
   getVisiblePhotos,
 
   (notes, ...parents) =>

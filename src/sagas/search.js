@@ -89,10 +89,6 @@ module.exports = {
             }
           }
 
-          for (let note of item.notes) {
-            if (!(note in notes)) missing.notes.push(note)
-          }
-
         } else {
           missing.items.push(id)
         }

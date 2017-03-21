@@ -4,7 +4,7 @@ const { json, stringify } = require('../common/util')
 
 module.exports = {
 
-  async create(db, { doc, text, parent }) {
+  async create(db, { doc, text, photo }) {
 
     // Note: last_insert_rowid() not reliable because of FTS triggers,
     // so we determine the next id ourselves. This should be always
@@ -14,7 +14,7 @@ module.exports = {
 
     await db.run(`
       INSERT INTO notes (note_id, id, doc, text) VALUES (?,?,?,?)`,
-      id, parent, stringify(doc), text
+      id, photo, stringify(doc), text
     )
 
     return module.exports.load(db, [id])
@@ -25,11 +25,10 @@ module.exports = {
 
     if (ids.length) {
       await db.each(`
-        SELECT note_id AS note, photos.id AS photo, items.id AS item,
+        SELECT note_id AS note, photos.id AS photo,
             doc, text, language, modified
           FROM notes
             LEFT OUTER JOIN photos USING (id)
-            LEFT OUTER JOIN items USING (id)
           WHERE note_id IN (${ids.join(',')})
             AND deleted IS NULL
           ORDER BY created ASC`,
