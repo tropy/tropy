@@ -1,22 +1,27 @@
 'use strict'
 
-const { pluck } = require('../common/util')
 const { createSelector: memo } = require('reselect')
+const { seq, keep, compose, map, filter } = require('transducers.js')
 
-const getItem = ({ items }, { id }) => items[id]
-
+const isNotPending = (item) => !item.pending
 const getItems = ({ items }) => items
 
+const pluck = (items, ids) =>
+  seq(ids, compose(
+    map(id => items[id]),
+    keep(),
+    filter(isNotPending)
+  ))
+
 const getSelectedItems = memo(
-  getItems, ({ nav }) => (nav.items), pluck
+  ({ items }) => items, ({ nav }) => (nav.items), pluck
 )
 
 const getVisibleItems = memo(
-  getItems, ({ qr }) => (qr.items), pluck
+  ({ items }) => items, ({ qr }) => (qr.items), pluck
 )
 
 module.exports = {
-  getItem,
   getItems,
   getSelectedItems,
   getVisibleItems

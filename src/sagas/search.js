@@ -9,6 +9,7 @@ const ms = require('ms')
 
 module.exports = {
 
+  // eslint-disable-next-line complexity
   *search(db) {
     try {
       const { nav, metadata, items } = yield select()
@@ -69,7 +70,6 @@ module.exports = {
     try {
       const { nav, items, metadata, photos, notes } = yield select()
 
-      // TODO ignore pending
       const missing = {
         items: [], photos: [], metadata: [], notes: []
       }
@@ -78,6 +78,8 @@ module.exports = {
         const item = items[id]
 
         if (item) {
+          if (item.pending) continue
+
           for (let photo of item.photos) {
             if (!(photo in metadata)) missing.metadata.push(photo)
 

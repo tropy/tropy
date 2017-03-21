@@ -3,9 +3,9 @@
 const { omit } = require('../common/util')
 const { ITEM, PROJECT, LIST } = require('../constants')
 const { into, map } = require('transducers.js')
-const { nested } = require('./util')
-
+const { nested, pending } = require('./util')
 const init = {}
+
 
 module.exports = {
   //eslint-disable-next-line complexity
@@ -16,7 +16,7 @@ module.exports = {
 
       case ITEM.LOAD:
         return (meta.done && !error) ?
-          { ...state, ...payload } : state
+          { ...state, ...payload } : pending(state, payload)
 
       case ITEM.INSERT:
         return {

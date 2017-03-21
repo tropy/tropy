@@ -1,6 +1,7 @@
 'use strict'
 
 const { splice } = require('../common/util')
+const { into, map } = require('transducers.js')
 
 module.exports = {
   nested: {
@@ -29,5 +30,13 @@ module.exports = {
         }
       }
     }
+  },
+
+  pending(state, payload) {
+    return into(
+      { ...state },
+      map(id => ({ [id]: { id, pending: true } })),
+      payload
+    )
   }
 }
