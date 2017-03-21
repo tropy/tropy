@@ -11,8 +11,9 @@ const { text } = require('../value')
 const intl = require('../selectors/intl')
 const act = require('../actions')
 const mod = require('../models')
-
+const { map, cat, filter, into, compose } = require('transducers.js')
 const { ITEM } = require('../constants')
+
 
 class Create extends Command {
   static get action() { return ITEM.CREATE }
@@ -160,6 +161,17 @@ class Load extends Command {
 
     const items =
       yield call(db.seq, conn => mod.item.load(conn, ids))
+
+    const { photos } = yield select()
+    const missing = into([], compose(
+      map(([, i]) => i.photos),
+      cat,
+      filter(id => !photos[id])
+    ), items)
+
+    if (missing.length) {
+      yield put(act.photo.load(missing))
+    }
 
     return items
   }

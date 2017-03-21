@@ -10,6 +10,7 @@ const { Image } = require('../image')
 const { imagePath } = require('../common/cache')
 const { warn, verbose } = require('../common/log')
 const { splice } = require('../common/util')
+const { map, cat, filter, into, compose } = require('transducers.js')
 
 
 class Create extends Command {
@@ -126,6 +127,17 @@ class Load extends Command {
     const ids = this.action.payload
 
     const photos = yield call(mod.photo.load, db, ids)
+
+    const { notes } = yield select()
+    const missing = into([], compose(
+      map(([, p]) => p.notes),
+      cat,
+      filter(id => !notes[id])
+    ), photos)
+
+    if (missing.length) {
+      yield put(act.note.load(missing))
+    }
 
     return photos
   }

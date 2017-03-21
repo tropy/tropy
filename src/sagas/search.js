@@ -48,10 +48,13 @@ module.exports = {
         if (!(id in metadata)) missing.metadata.push(id)
       }
 
-      yield [
-        put(act.item.load(missing.items)),
-        put(act.metadata.load(missing.metadata)),
-      ]
+      if (missing.items) {
+        yield put(act.item.load(missing.items))
+      }
+
+      if (missing.metadata) {
+        yield put(act.metadata.load(missing.metadata))
+      }
 
 
     } catch (error) {
