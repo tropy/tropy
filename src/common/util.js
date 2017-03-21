@@ -313,6 +313,14 @@ module.exports = {
     value = Math.max(value, (lower != null) ? lower : value)
     value = Math.min(value, (upper != null) ? upper : value)
     return value
+  },
+
+  stringify(obj) {
+    return obj == null ? null : JSON.stringify(obj)
+  },
+
+  json(string) {
+    return (string == null || string === '') ? null : JSON.parse(string)
   }
 
 }

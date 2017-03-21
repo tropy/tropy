@@ -1,5 +1,7 @@
 'use strict'
 
+const { json, stringify } = require('../common/util')
+
 module.exports = {
 
   async create(db, data) {
@@ -24,7 +26,7 @@ module.exports = {
     if (ids.length) {
       await db.each(`
         SELECT note_id AS note, photos.id AS photo, items.id AS item,
-            text, language, modified
+            doc, text, language, modified
           FROM notes
             LEFT OUTER JOIN photos USING (id)
             LEFT OUTER JOIN items USING (id)
@@ -32,9 +34,9 @@ module.exports = {
             AND deleted IS NULL
           ORDER BY created ASC`,
 
-        ({ note, ...data }) => {
+        ({ note, doc, ...data }) => {
           notes[note] = {
-            ...data, id: note, deleted: false
+            ...data, id: note, doc: json(doc), deleted: false
           }
         }
       )
@@ -43,11 +45,11 @@ module.exports = {
     return notes
   },
 
-  async save(db, { id, text }) {
+  async save(db, { id, doc, text }) {
     return db.run(`
       UPDATE notes
-        SET text = ?, modified = datetime("now")
-        WHERE note_id = ?`, text, id
+        SET doc = ?, text = ?, modified = datetime("now")
+        WHERE note_id = ?`, stringify(doc), text, id
     )
   },
 
