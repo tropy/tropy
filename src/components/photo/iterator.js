@@ -6,7 +6,6 @@ const { Iterator } = require('../iterator')
 const { DropTarget } = require('react-dnd')
 const { DND } = require('../../constants')
 const { get, move, adjacent } = require('../../common/util')
-const { has } = require('../../dom')
 const { bool, func, number, string, object, shape, arrayOf } = PropTypes
 
 
