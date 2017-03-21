@@ -43,7 +43,7 @@ class ItemIterator extends Iterator {
 
   handleClickOutside = (event) => {
     if (has(event.target, 'click-catcher')) {
-      this.props.onSelect()
+      this.props.onSelect({ items: [] })
     }
   }
 
@@ -101,7 +101,7 @@ class ItemIterator extends Iterator {
 
   select(item) {
     if (item && !this.isSelected(item)) {
-      this.props.onSelect(item.id, 'replace', { throttle: true })
+      this.props.onSelect({ items: [item.id] }, 'replace', { throttle: true })
     }
   }
 

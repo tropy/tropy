@@ -1,7 +1,7 @@
 'use strict'
 
 const { ITEM } = require('../constants')
-const { array } = require('../common/util')
+const { array, get } = require('../common/util')
 
 module.exports = {
   create(payload, meta) {
@@ -89,10 +89,26 @@ module.exports = {
   },
 
   select(payload, meta) {
-    return {
-      type: ITEM.SELECT,
-      payload,
-      meta: { load: true, ...meta }
+    return (dispatch, getState) => {
+      let { items, photo, note } = payload
+
+      if (items.length) {
+        const state = getState()
+
+        if (photo === undefined) {
+          photo = get(state.items[items[0]], ['photos', 0])
+        }
+
+        if (note === undefined && photo) {
+          note = get(state.photos[photo], ['notes', 0])
+        }
+      }
+
+      dispatch({
+        type: ITEM.SELECT,
+        payload: { items, photo, note },
+        meta: { load: true, ...meta }
+      })
     }
   },
 

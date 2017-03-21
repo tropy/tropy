@@ -71,9 +71,9 @@ module.exports = {
       case ITEM.SELECT:
         return {
           ...state,
-          photo: null,
-          note: null,
-          items: select(state.items, payload, meta.mod)
+          photo: payload.photo,
+          note: payload.note,
+          items: select(state.items, payload.items[0], meta.mod)
         }
 
       case ITEM.OPEN: {

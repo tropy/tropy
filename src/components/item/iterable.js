@@ -45,11 +45,11 @@ class ItemIterable extends PureComponent {
     const { item, isSelected, onSelect } = this.props
 
     if (meta(event)) {
-      onSelect(item.id, isSelected ? 'remove' : 'merge')
+      onSelect({ items: [item.id] }, isSelected ? 'remove' : 'merge')
 
     } else {
       if (!isSelected) {
-        onSelect(item.id, 'replace')
+        onSelect({ items: [item.id] }, 'replace')
       }
     }
   }
