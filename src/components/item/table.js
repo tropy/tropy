@@ -22,7 +22,6 @@ class ItemTable extends ItemIterator {
   get classes() {
     return {
       'table-body': true,
-      'click-catcher': true,
       'drop-target': !this.props.isDisabled,
       'over': this.props.isOver
     }
@@ -56,7 +55,7 @@ class ItemTable extends ItemIterator {
           <div
             className={cx(this.classes)}
             onClick={this.handleClickOutside}>
-            <div className="scroll-container">
+            <div className="scroll-container click-catcher">
               <table>
                 <tbody>
                   {this.map(({ item, ...props }) =>

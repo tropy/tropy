@@ -47,7 +47,6 @@ class ItemGrid extends ItemIterator {
     return {
       'item': true,
       'grid': true,
-      'click-catcher': true,
       'drop-target': !this.props.isDisabled,
       'over': this.props.isOver,
       [this.orientation]: true
@@ -64,7 +63,7 @@ class ItemGrid extends ItemIterator {
         ref={this.setContainer}
         data-size={this.props.size}
         onClick={this.handleClickOutside}>
-        <ul className="scroll-container">
+        <ul className="scroll-container click-catcher">
           {this.map(({ item, ...props }) =>
             <ItemTile {...props} key={item.id} item={item}/>
           )}
