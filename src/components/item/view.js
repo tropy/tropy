@@ -120,7 +120,7 @@ class ItemView extends PureComponent {
           <NotePad
             ref={this.setNotePad}
             note={this.state.note}
-            isDisabled={isDisabled}
+            isDisabled={isDisabled || !photo}
             isItemOpen={isItemOpen}
             keymap={keymap.NotePad}
             onChange={this.handleNoteChange}/>

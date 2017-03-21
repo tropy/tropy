@@ -46,6 +46,7 @@ class ItemPanel extends PureComponent {
       notes,
       panel,
       photo,
+      isDisabled,
       isItemOpen,
       onMaximize,
       onModeChange,
@@ -72,6 +73,7 @@ class ItemPanel extends PureComponent {
         <Panel>
           <ItemTabs tab={panel.tab} onChange={this.handleTabChange}/>
           <ItemTab {...props}
+            isDisabled={isDisabled}
             isItemOpen={isItemOpen}
             photo={photo}
             tab={panel.tab}
@@ -79,6 +81,7 @@ class ItemPanel extends PureComponent {
         </Panel>
 
         <PhotoPanel {...props}
+          isDisabled={isDisabled}
           isItemOpen={isItemOpen}
           context={context.photo}
           edit={edit.photo}
@@ -90,6 +93,7 @@ class ItemPanel extends PureComponent {
           onZoomChange={this.handleZoomChange}/>
 
         <NotePanel {...props}
+          isDisabled={isDisabled || !photo}
           isItemOpen={isItemOpen}
           item={item && item.id}
           photo={photo && photo.id}
