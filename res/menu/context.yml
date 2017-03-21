@@ -34,8 +34,7 @@ linux:
     - label: 'Delete Tag'
       command: 'app:delete-tag'
   notes: &notes
-    - label: 'New Note'
-      command: 'app:create-note'
+    []
   note: &note
     - label: 'Delete Note'
       command: 'app:delete-note'
