@@ -19,14 +19,14 @@ class ItemView extends PureComponent {
     super(props)
 
     this.state = {
-      note: props.note
+      note: props.note || this.getNoteTemplate()
     }
   }
 
   componentWillReceiveProps(props) {
     if (props.note !== this.props.note) {
       this.setState({
-        note: props.note
+        note: props.note || this.getNoteTemplate()
       })
     }
   }
@@ -54,6 +54,10 @@ class ItemView extends PureComponent {
     return { transform: `translate3d(${this.offset}, 0, 0)` }
   }
 
+  getNoteTemplate() {
+    return { id: -1, photo: -1, text: '' }
+  }
+
   setNotePad = (notepad) => {
     this.notepad = notepad
   }
@@ -62,11 +66,16 @@ class ItemView extends PureComponent {
     this.props.onUiUpdate({ esper: { height } })
   }
 
-  handleNoteCreate = (note) => {
-    this.props.onNoteCreate({
-      ...note,
-      photo: get(this.props, ['photo', 'id'])
+  handleNoteCreate = () => {
+    if (this.isItemOpen) {
+      return this.notepad.focus()
+    }
+
+    this.props.onItemOpen({
+      id: this.item.id, photos: [this.props.photo.id]
     })
+
+    setTimeout(this.notepad.focus, 1000)
   }
 
   handleNoteChange = (note) => {

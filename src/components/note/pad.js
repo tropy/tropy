@@ -22,7 +22,7 @@ class NotePad extends PureComponent {
     this.editor = editor
   }
 
-  focus() {
+  focus = () => {
     this.editor.view.focus()
   }
 
