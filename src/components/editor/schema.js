@@ -86,6 +86,7 @@ const marks = {
   },
 
   superscript: {
+    excludes: 'subscript',
     parseDOM: [
       { tag: 'sup' },
       {
@@ -100,6 +101,7 @@ const marks = {
   },
 
   subscript: {
+    excludes: 'superscript',
     parseDOM: [
       { tag: 'sup' },
       {
