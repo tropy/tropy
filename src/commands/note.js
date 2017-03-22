@@ -34,6 +34,7 @@ class Create extends Command {
     const notes = keys(data).map(Number)
 
     yield put(act.photo.notes.add({ id: photo, notes }))
+    yield put(act.note.select({ note: notes[0], photo }))
 
     this.undo = act.note.delete({ photo, notes })
     this.redo = act.note.restore({ photo, notes })

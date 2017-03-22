@@ -114,8 +114,7 @@ module.exports = {
         return payload ? {
           ...state,
           note: payload.note,
-          photo: payload.photo,
-          //items: select(state.items, payload.item, 'replace')
+          photo: payload.photo
         } : { ...state, note: null }
 
       case ITEM.PHOTO.REMOVE:
