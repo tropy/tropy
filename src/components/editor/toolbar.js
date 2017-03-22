@@ -2,9 +2,11 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const { bool, func, shape, string } = PropTypes
+const { func, instanceOf } = PropTypes
 const { Toolbar, ToolbarContext, ToolGroup } = require('../toolbar')
 const { IconButton } = require('../button')
+const { EditorState } = require('prosemirror-state')
+const { titlecase } = require('../../common/util')
 
 const {
   IconB,
@@ -44,10 +46,37 @@ class EditorToolbar extends PureComponent {
     ]) {
       this[action] = () => this.props.onCommand(action)
     }
+
+    this.state = this.getActiveMarks(props.state)
+  }
+
+  componentWillReceiveProps(props) {
+    if (props.state !== this.props.state) {
+      this.setState(this.getActiveMarks(props.state))
+    }
+  }
+
+  getActiveMarks(state = this.props.state) {
+    let res = {}, mark
+
+    for (mark in state.schema.marks) {
+      res[`is${titlecase(mark)}Active`] =
+        this.isMarkActive(state.schema.marks[mark], state)
+    }
+
+    return res
+  }
+
+  isMarkActive(type, state = this.props.state) {
+    const { from, $from, to, empty } = state.selection
+
+    return (empty) ?
+      !!type.isInSet(state.storedMarks || $from.marks()) :
+      state.doc.rangeHasMark(from, to, type)
   }
 
   get isLinkActive() {
-    return !!this.props.link
+    return false
   }
 
   render() {
@@ -59,25 +88,25 @@ class EditorToolbar extends PureComponent {
               <IconButton
                 canHaveFocus={false}
                 icon={<IconB/>}
-                isActive={this.props.isBoldActive}
+                isActive={this.state.isBoldActive}
                 title="editor.commands.bold"
                 onMouseDown={this.bold}/>
               <IconButton
                 canHaveFocus={false}
                 icon={<IconI/>}
-                isActive={this.props.isItalicActive}
+                isActive={this.state.isItalicActive}
                 title="editor.commands.italic"
                 onMouseDown={this.italic}/>
               <IconButton
                 canHaveFocus={false}
                 icon={<IconU/>}
-                isActive={this.props.isUnderlineActive}
+                isActive={this.state.isUnderlineActive}
                 title="editor.commands.underline"
                 onMouseDown={this.underline}/>
               <IconButton
                 canHaveFocus={false}
                 icon={<IconS/>}
-                isActive={this.props.isStrikethroughActive}
+                isActive={this.state.isStrikethroughActive}
                 title="editor.commands.strikethrough"
                 onMouseDown={this.strikethrough}/>
               <IconButton
@@ -90,13 +119,13 @@ class EditorToolbar extends PureComponent {
               <IconButton
                 canHaveFocus={false}
                 icon={<IconSup/>}
-                isActive={this.props.isSuperscriptActive}
+                isActive={this.state.isSuperscriptActive}
                 title="editor.commands.superscript"
                 onMouseDown={this.superscript}/>
               <IconButton
                 canHaveFocus={false}
                 icon={<IconSub/>}
-                isActive={this.props.isSubscriptActive}
+                isActive={this.state.isSubscriptActive}
                 title="editor.commands.subscript"
                 onMouseDown={this.subscript}/>
             </ToolGroup>
@@ -158,7 +187,7 @@ class EditorToolbar extends PureComponent {
               className="form-control link-target"
               type="text"
               tabIndex={-1}
-              value={this.props.link}
+              value={''}
               placeholder="Link target"/>
 
             <span className="btn btn-primary">OK</span>
@@ -169,17 +198,7 @@ class EditorToolbar extends PureComponent {
   }
 
   static propTypes = {
-    isBoldActive: bool,
-    isItalicActive: bool,
-    isUnderlineActive: bool,
-    isStrikethroughActive: bool,
-    isSubscriptActive: bool,
-    isSuperscriptActive: bool,
-
-    link: shape({
-      target: string.isRequired
-    }),
-
+    state: instanceOf(EditorState),
     onCommand: func.isRequired
   }
 

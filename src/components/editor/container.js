@@ -20,10 +20,6 @@ class Editor extends PureComponent {
     this.state = {}
   }
 
-  componentDidMount() {
-    //this.setState(this.getActiveMarks(this.view))
-  }
-
   setContainer = (container) => {
     this.container = container
   }
@@ -47,7 +43,6 @@ class Editor extends PureComponent {
     return this.view.dom.innerHtml
   }
 
-
   getEditorState({ content } = this.props) {
     if (content == null) {
       return EditorState.create({ schema, plugins })
@@ -59,49 +54,6 @@ class Editor extends PureComponent {
 
     return EditorState.fromJSON({ schema, plugins }, content)
   }
-
-  getActiveMarks(from = this.state) {
-    return pick(from, [
-      'isBoldActive',
-      'isItalicActive',
-      'isUnderlineActive',
-      'isStrikethroughActive',
-      'isSubscriptActive',
-      'isSuperscriptActive'
-    ])
-  }
-
-  //isMarkActive(type, state = this.pm.state) {
-  //  const { from, $from, to, empty } = state.selection
-
-  //  return (empty) ?
-  //    !!type.isInSet(state.storedMarks || $from.marks()) :
-  //    state.doc.rangeHasMark(from, to, type)
-  //}
-
-  //get isBoldActive() {
-  //  return this.isMarkActive(schema.marks.strong)
-  //}
-
-  //get isItalicActive() {
-  //  return this.isMarkActive(schema.marks.em)
-  //}
-
-  //get isUnderlineActive() {
-  //  return this.isMarkActive(schema.marks.underline)
-  //}
-
-  //get isStrikethroughActive() {
-  //  return this.isMarkActive(schema.marks.strikethrough)
-  //}
-
-  //get isSubscriptActive() {
-  //  return this.isMarkActive(schema.marks.subscript)
-  //}
-
-  //get isSuperscriptActive() {
-  //  return this.isMarkActive(schema.marks.superscript)
-  //}
 
   focus = () => {
     this.view.focus()
@@ -143,6 +95,7 @@ class Editor extends PureComponent {
 
   render() {
     const { isDisabled, tabIndex } = this.props
+    const state = this.getEditorState()
 
     return (
       <div
@@ -152,14 +105,14 @@ class Editor extends PureComponent {
         onFocus={this.handleFocus}>
         {!isDisabled &&
           <EditorToolbar
-            {...this.getActiveMarks()}
+            state={state}
             onCommand={this.handleCommand}/>
         }
 
         <div className="scroll-container">
           <EditorView
             ref={this.setView}
-            state={this.getEditorState()}
+            state={state}
             isDisabled={isDisabled}
             tabIndex={tabIndex}
             onFocus={this.handleViewFocus}

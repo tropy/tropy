@@ -48,8 +48,8 @@ const nodes = {
 
 const marks = {
   link,
-  em,
-  strong,
+  italic: em,
+  bold: strong,
 
   underline: {
     attrs: {
