@@ -11,8 +11,6 @@ const {
 
 } = require('electron-devtools-installer')
 
-const { all } = require('bluebird')
-
 function install(ext) {
   return dti(ext)
     .then(name => console.log(`Added Extension "${name}"`))
@@ -23,7 +21,7 @@ module.exports = {
   install,
 
   react() {
-    return all([
+    return Promise.all([
       install(REACT_DEVELOPER_TOOLS),
       install(REACT_PERF)
     ])
