@@ -10,7 +10,8 @@
   align-items: center;
   position: relative;
 
-  .toolbar {
+  .toolbar,
+  .toolbar.draggable {
     position: absolute;
     left: 0;
     top: 0;
