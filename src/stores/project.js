@@ -76,8 +76,8 @@ module.exports = {
       saga
     )
 
-    const enhancer = (dev && window.devToolsExtension) ?
-      compose(middleware, window.devToolsExtension()) :
+    const enhancer = (dev && window.__REDUX_DEVTOOLS_EXTENSION__) ?
+      compose(middleware, window.__REDUX_DEVTOOLS_EXTENSION__()) :
       middleware
 
     const store = createStore(reducer, init, enhancer)
