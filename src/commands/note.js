@@ -26,10 +26,10 @@ class Create extends Command {
 
   *exec() {
     const { db } = this.options
-    const { text, photo } = this.action.payload
+    const { content, text, photo } = this.action.payload
 
     const data = yield call([db, db.transaction], tx =>
-      mod.note.create(tx, { photo, text: text || '' }))
+      mod.note.create(tx, { photo, content, text }))
 
     const notes = keys(data).map(Number)
 

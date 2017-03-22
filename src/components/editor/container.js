@@ -14,9 +14,11 @@ const { pick } = require('../../common/util')
 class Editor extends PureComponent {
   constructor(props) {
     super(props)
+    this.state = {}
+  }
 
-    this.state = {
-    }
+  componentDidMount() {
+    this.setState(this.getActiveMarks(this.view))
   }
 
   setContainer = (container) => {
@@ -64,16 +66,8 @@ class Editor extends PureComponent {
     this.setState({ hasViewFocus: false })
   }
 
-  handleChange = (view, hasDocChanged) => {
-    this.setState(this.getActiveMarks(view))
-
-    if (hasDocChanged) {
-      this.props.onChange(view.doc, view.text)
-    }
-  }
-
   render() {
-    const { doc, isDisabled, keymap, tabIndex } = this.props
+    const { content, isDisabled, keymap, tabIndex, onChange } = this.props
 
     return (
       <div
@@ -90,20 +84,20 @@ class Editor extends PureComponent {
         <div className="scroll-container">
           <EditorView
             ref={this.setView}
-            doc={doc}
+            content={content}
             isDisabled={isDisabled}
             tabIndex={tabIndex}
             keymap={keymap}
             onFocus={this.handleViewFocus}
             onBlur={this.handleViewBlur}
-            onChange={this.handleChange}/>
+            onChange={onChange}/>
         </div>
       </div>
     )
   }
 
   static propTypes = {
-    doc: object,
+    content: object,
     isDisabled: bool,
     keymap: object.isRequired,
     onChange: func.isRequired,

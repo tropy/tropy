@@ -89,8 +89,8 @@ CREATE TABLE notes (
   note_id      INTEGER  PRIMARY KEY,
   id           INTEGER  REFERENCES subjects ON DELETE CASCADE,
   position     INTEGER,
-  text         TEXT     NOT NULL DEFAULT '',
-  doc,
+  text         TEXT     NOT NULL,
+  content,
   language     TEXT     NOT NULL DEFAULT 'en',
   created      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -98,7 +98,8 @@ CREATE TABLE notes (
 
   CHECK (
     language != '' AND language = trim(lower(language))
-  )
+  ),
+  CHECK (text != '')
 );
 CREATE TABLE lists (
   list_id         INTEGER  PRIMARY KEY,

@@ -19,12 +19,8 @@ class ProseMirror extends Component {
 
   componentDidMount() {
     this.pm = new EditorView(this.container, {
-      state: EditorState.create({
-        schema, plugins, doc: this.props.doc
-      }),
-
+      state: this.getEditorState(),
       ...this.getEditorProps(),
-
       dispatchTransaction: this.handleChange,
       handleKeyDown: this.handleKeyDown,
       onFocus: this.handleFocus,
@@ -44,9 +40,9 @@ class ProseMirror extends Component {
       this.update(props)
     }
 
-    // if (props.doc !== this.doc) {
-    //   this.replace(props)
-    // }
+    if (props.content !== this.content) {
+      this.replace(props)
+    }
 
     return false
   }
@@ -62,12 +58,12 @@ class ProseMirror extends Component {
     }
   }
 
-  isMarkActive(type) {
-    const { from, $from, to, empty } = this.pm.state.selection
+  isMarkActive(type, state = this.pm.state) {
+    const { from, $from, to, empty } = state.selection
 
     return (empty) ?
-      !!type.isInSet(this.pm.state.storedMarks || $from.marks()) :
-      this.doc.rangeHasMark(from, to, type)
+      !!type.isInSet(state.storedMarks || $from.marks()) :
+      state.doc.rangeHasMark(from, to, type)
   }
 
   get isBoldActive() {
@@ -94,8 +90,8 @@ class ProseMirror extends Component {
     return this.isMarkActive(schema.marks.superscript)
   }
 
-  get doc() {
-    return this.pm.state.doc
+  get content() {
+    return this.pm.state
   }
 
   get text() {
@@ -116,8 +112,7 @@ class ProseMirror extends Component {
   }
 
   handleChange = (tr) => {
-    this.pm.updateState(this.pm.state.apply(tr))
-    this.props.onChange(this, tr.docChanged)
+    this.props.onChange(this.pm.state.apply(tr), tr.docChanged, this.pm)
   }
 
   handleKeyDown = (view, event) => {
@@ -135,6 +130,18 @@ class ProseMirror extends Component {
   }
 
 
+  getEditorState(props = this.props) {
+    if (props.content == null) {
+      return EditorState.create({ schema, plugins })
+    }
+
+    if (props.content instanceof EditorState) {
+      return props.content
+    }
+
+    return EditorState.fromJSON({ schema, plugins }, props.content)
+  }
+
   send(action, view = this.pm) {
     return (commands[action]) ?
       commands[action](view.state, view.dispatch, view) :
@@ -146,11 +153,7 @@ class ProseMirror extends Component {
   }
 
   replace(props = this.props) {
-    this.pm.updateState(EditorState.create({
-      schema: this.pm.state.schema,
-      plugins: this.pm.state.plugins,
-      doc: props.doc
-    }))
+    this.pm.updateState(this.getEditorState(props))
   }
 
   render() {
@@ -160,7 +163,7 @@ class ProseMirror extends Component {
   }
 
   static propTypes = {
-    doc: object,
+    content: object,
     isDisabled: bool,
     keymap: object.isRequired,
     tabIndex: number.isRequired,

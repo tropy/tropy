@@ -6,16 +6,11 @@ const { bool, func, number, object, shape, string } = PropTypes
 const { Editor } = require('../editor')
 const cx = require('classnames')
 const { TABS } = require('../../constants')
-const { get } = require('../../common/util')
 
 
 class NotePad extends PureComponent {
   get isDisabled() {
     return !this.props.isItemOpen || this.props.isDisabled
-  }
-
-  get doc() {
-    return get(this.props.note, 'doc')
   }
 
   setEditor = (editor) => {
@@ -26,22 +21,18 @@ class NotePad extends PureComponent {
     this.editor.view.focus()
   }
 
-  handleChange = (doc, text) => {
-    this.props.onChange({ id: this.props.note.id, doc, text })
-  }
-
   render() {
-    const { keymap, tabIndex } = this.props
+    const { note, keymap, tabIndex, onChange } = this.props
 
     return (
       <section className={cx({ note: true, pad: true })}>
         <Editor
           ref={this.setEditor}
-          doc={this.doc}
+          content={note.content}
           keymap={keymap}
           isDisabled={this.isDisabled}
           tabIndex={tabIndex}
-          onChange={this.handleChange}/>
+          onChange={onChange}/>
       </section>
     )
   }
@@ -52,7 +43,7 @@ class NotePad extends PureComponent {
     keymap: object.isRequired,
     note: shape({
       id: number,
-      doc: object,
+      content: object,
       text: string
     }).isRequired,
     tabIndex: number.isRequired,
