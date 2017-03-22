@@ -11,10 +11,11 @@ $theme: "dark";
 // Colors
 // --------------------------------------------------
 
-$blue:       #395bac;
-$blue-light: #cedef7;
-$blue-30:    rgba($blue, 0.3);
-$blue-60:    rgba($blue, 0.6);
+$blue:           #395bac;
+$blue-light:     #cedef7;
+$blue-light-125: rgba($blue-light, 0.125);
+$blue-30:        rgba($blue, 0.3);
+$blue-60:        rgba($blue, 0.6);
 
 $red: #e62e2e;
 
@@ -45,6 +46,16 @@ $shade-10: #fff;
 
 $body-bg:    $shade-3; // Ok
 $text-color: $shade-9; // Ok
+
+
+// Typography
+// --------------------------------------------------
+
+$link-color:       $brand-primary;
+$link-hover-color: $brand-primary;
+
+$text-selection-color: inherit;
+$text-selection-bg: $blue-light-125;
 
 
 // Partials
@@ -93,6 +104,8 @@ $icon-style:        "line"; // Ok
 $icon-color:        $shade-7; // Ok
 $icon-active-color: $shade-9; // Ok
 
+$icon-spin-color:   $brand-primary; // Ok
+
 // Sidebar
 $sidebar-bg:                $shade-4; // Ok
 $sidebar-text-color:        $shade-8; // Ok
@@ -105,7 +118,7 @@ $sidebar-active-color:      $shade-9; // Ok
 $sidebar-active-bg:         $shade-5; // Ok
 $sidebar-context-bg:        $brand-primary-30; // Ok
 $activity-color:            $shade-7;
-$activity-border-color:     $shade-4;
+$activity-border-color:     $shade-1;
 $sidebar-tag-active-color:  $brand-primary-light; // Ok
 $sidebar-tag-active-bg:     $brand-primary; // Ok
 
@@ -146,6 +159,10 @@ $photo-list-focus-bg: $brand-primary; // Ok
 $photo-list-active-color: $shade-9; // Ok
 $photo-list-active-bg: $shade-5; // Ok
 
+// Note list
+$note-active-color: $brand-primary-light; // Ok
+$note-active-bg: $brand-primary; // Ok
+
 // Slider
 $slider-track-bg: $shade-5; // Ok
 $slider-range-bg: $shade-6; // Ok
@@ -163,3 +180,18 @@ $drag-preview-thumbnail-opacity: 1; // Ok
 // Thumbnail
 $thumbnail-color: rgba($icon-color, 0.6); // Ok
 $thumbnail-bg:    $shade-5; // Shading collision with active state
+
+// Progress bar
+$progress-bar-bg:       $shade-2; // Ok
+$progress-bar-color:    $brand-primary; // Ok
+$progress-cancel-color: $shade-4; // Ok
+$progress-cancel-bg:    $shade-7; // Ok
+
+// Editor
+$editor-toolbar-border:  $shade-1; // Ok
+$editor-btn-hover-bg:    $shade-2; // Ok
+$editor-btn-active-bg:   $shade-1; // Ok
+
+$blockquote-border-color: $shade-8; // OK
+$selected-node-color:     $brand-primary; // Ok
+$editor-hr-border-color:  $shade-8; // OK
