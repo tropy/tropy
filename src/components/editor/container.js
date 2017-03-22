@@ -35,14 +35,6 @@ class Editor extends PureComponent {
     }
   }
 
-  get text() {
-    return this.view.dom.innerText.replace(/\s\s+/g, ' ')
-  }
-
-  get html() {
-    return this.view.dom.innerHtml
-  }
-
   getEditorState({ state } = this.props) {
     if (state == null) {
       return EditorState.create({ schema, plugins })

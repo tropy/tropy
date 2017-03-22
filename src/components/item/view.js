@@ -85,7 +85,7 @@ class ItemView extends PureComponent {
     const note = { ...this.state.note, state }
 
     if (hasDocChanged) {
-      note.text = this.notepad.editor.text
+      note.text = state.doc.textBetween(0, state.doc.content.size, ' ')
     }
 
     if (note.id < 0 && !note.pending) {
