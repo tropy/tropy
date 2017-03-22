@@ -5,7 +5,13 @@ const { PureComponent, PropTypes } = React
 const { func, bool, object, number } = PropTypes
 
 const { EditorToolbar } = require('./toolbar')
+const { EditorState } = require('prosemirror-state')
 const { EditorView } = require('./view')
+const { schema } = require('./schema')
+const commands = require('./commands')(schema)
+const plugins = require('./plugins')(schema)
+
+const { match } = require('../../keymap')
 
 const cx = require('classnames')
 const { pick } = require('../../common/util')
@@ -18,7 +24,7 @@ class Editor extends PureComponent {
   }
 
   componentDidMount() {
-    this.setState(this.getActiveMarks(this.view))
+    //this.setState(this.getActiveMarks(this.view))
   }
 
   setContainer = (container) => {
@@ -26,7 +32,7 @@ class Editor extends PureComponent {
   }
 
   setView = (view) => {
-    this.view = view
+    this.view = view.pm
   }
 
   get classes() {
@@ -34,6 +40,27 @@ class Editor extends PureComponent {
       'editor': true,
       'is-blurred': !this.state.hasViewFocus
     }
+  }
+
+  get text() {
+    return this.view.dom.innerText.replace(/\s\s+/g, ' ')
+  }
+
+  get html() {
+    return this.view.dom.innerHtml
+  }
+
+
+  getEditorState({ content } = this.props) {
+    if (content == null) {
+      return EditorState.create({ schema, plugins })
+    }
+
+    if (content instanceof EditorState) {
+      return content
+    }
+
+    return EditorState.fromJSON({ schema, plugins }, content)
   }
 
   getActiveMarks(from = this.state) {
@@ -47,15 +74,65 @@ class Editor extends PureComponent {
     ])
   }
 
+  //isMarkActive(type, state = this.pm.state) {
+  //  const { from, $from, to, empty } = state.selection
+
+  //  return (empty) ?
+  //    !!type.isInSet(state.storedMarks || $from.marks()) :
+  //    state.doc.rangeHasMark(from, to, type)
+  //}
+
+  //get isBoldActive() {
+  //  return this.isMarkActive(schema.marks.strong)
+  //}
+
+  //get isItalicActive() {
+  //  return this.isMarkActive(schema.marks.em)
+  //}
+
+  //get isUnderlineActive() {
+  //  return this.isMarkActive(schema.marks.underline)
+  //}
+
+  //get isStrikethroughActive() {
+  //  return this.isMarkActive(schema.marks.strikethrough)
+  //}
+
+  //get isSubscriptActive() {
+  //  return this.isMarkActive(schema.marks.subscript)
+  //}
+
+  //get isSuperscriptActive() {
+  //  return this.isMarkActive(schema.marks.superscript)
+  //}
+
+  focus = () => {
+    this.view.focus()
+  }
+
+  handleChange = (tr) => {
+    this.props.onChange(this.view.state.apply(tr), tr.docChanged)
+  }
+
+  handleKeyDown = (_, event) => {
+    return this.handleCommand(match(this.props.keymap, event))
+  }
+
   handleFocus = (event) => {
     if (event.target === this.container) {
-      setTimeout(this.view.focus, 0)
+      setTimeout(this.focus, 0)
     }
   }
 
   handleCommand = (command) => {
-    this.view.send(command)
-    if (!this.state.hasViewFocus) this.view.focus()
+    const action = commands[command]
+
+    if (action) {
+      action(this.view.state, this.view.dispatch, this.view)
+      if (!this.state.hasViewFocus) this.focus()
+
+      return true
+    }
   }
 
   handleViewFocus = () => {
@@ -67,7 +144,7 @@ class Editor extends PureComponent {
   }
 
   render() {
-    const { content, isDisabled, keymap, tabIndex, onChange } = this.props
+    const { isDisabled, tabIndex } = this.props
 
     return (
       <div
@@ -84,13 +161,13 @@ class Editor extends PureComponent {
         <div className="scroll-container">
           <EditorView
             ref={this.setView}
-            content={content}
+            state={this.getEditorState()}
             isDisabled={isDisabled}
             tabIndex={tabIndex}
-            keymap={keymap}
             onFocus={this.handleViewFocus}
             onBlur={this.handleViewBlur}
-            onChange={onChange}/>
+            onChange={this.handleChange}
+            onKeyDown={this.handleKeyDown}/>
         </div>
       </div>
     )

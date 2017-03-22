@@ -2,24 +2,15 @@
 
 const React = require('react')
 const { Component, PropTypes } = React
-const { func, bool, object, number } = PropTypes
-
+const { func, bool, instanceOf, number } = PropTypes
 const { EditorView } = require('prosemirror-view')
 const { EditorState } = require('prosemirror-state')
 
-const { schema } = require('./schema')
-const commands = require('./commands')(schema)
-const plugins = require('./plugins')(schema)
-
-const { match } = require('../../keymap')
-
 
 class ProseMirror extends Component {
-  static displayName = 'EditorView'
-
   componentDidMount() {
     this.pm = new EditorView(this.container, {
-      state: this.getEditorState(),
+      state: this.props.state,
       ...this.getEditorProps(),
       dispatchTransaction: this.handleChange,
       handleKeyDown: this.handleKeyDown,
@@ -37,11 +28,11 @@ class ProseMirror extends Component {
       props.isDisabled !== this.props.isDisabled ||
       props.tabIndex !== this.props.tabIndex
     ) {
-      this.update(props)
+      this.pm.setProps(this.getEditorProps(props))
     }
 
-    if (props.content !== this.content) {
-      this.replace(props)
+    if (props.state !== this.pm.state) {
+      this.pm.updateState(props.state)
     }
 
     return false
@@ -58,67 +49,16 @@ class ProseMirror extends Component {
     }
   }
 
-  isMarkActive(type, state = this.pm.state) {
-    const { from, $from, to, empty } = state.selection
-
-    return (empty) ?
-      !!type.isInSet(state.storedMarks || $from.marks()) :
-      state.doc.rangeHasMark(from, to, type)
-  }
-
-  get isBoldActive() {
-    return this.isMarkActive(schema.marks.strong)
-  }
-
-  get isItalicActive() {
-    return this.isMarkActive(schema.marks.em)
-  }
-
-  get isUnderlineActive() {
-    return this.isMarkActive(schema.marks.underline)
-  }
-
-  get isStrikethroughActive() {
-    return this.isMarkActive(schema.marks.strikethrough)
-  }
-
-  get isSubscriptActive() {
-    return this.isMarkActive(schema.marks.subscript)
-  }
-
-  get isSuperscriptActive() {
-    return this.isMarkActive(schema.marks.superscript)
-  }
-
-  get content() {
-    return this.pm.state
-  }
-
-  get text() {
-    return this.pm.dom.innerText.replace(/\s\s+/g, ' ')
-  }
-
-  get html() {
-    return this.pm.dom.innerHtml
-  }
-
-
   setContainer = (container) => {
     this.container = container
   }
 
-  focus = () => {
-    this.pm.focus()
+  handleChange = (...args) => {
+    this.props.onChange(...args)
   }
 
-  handleChange = (tr) => {
-    this.props.onChange(this.pm.state.apply(tr), tr.docChanged, this.pm)
-  }
-
-  handleKeyDown = (view, event) => {
-    return (this.props.isDisabled) ?
-      false :
-      this.send(match(this.props.keymap, event))
+  handleKeyDown = (...args) => {
+    return (this.props.isDisabled) ? false : this.props.onKeyDown(...args)
   }
 
   handleFocus = (...args) => {
@@ -129,47 +69,22 @@ class ProseMirror extends Component {
     this.props.onBlur(...args)
   }
 
-
-  getEditorState(props = this.props) {
-    if (props.content == null) {
-      return EditorState.create({ schema, plugins })
-    }
-
-    if (props.content instanceof EditorState) {
-      return props.content
-    }
-
-    return EditorState.fromJSON({ schema, plugins }, props.content)
-  }
-
-  send(action, view = this.pm) {
-    return (commands[action]) ?
-      commands[action](view.state, view.dispatch, view) :
-      false
-  }
-
-  update(props = this.props) {
-    this.pm.setProps(this.getEditorProps(props))
-  }
-
-  replace(props = this.props) {
-    this.pm.updateState(this.getEditorState(props))
-  }
-
   render() {
     return (
       <div ref={this.setContainer} className="prose-mirror-container"/>
     )
   }
 
+  static displayName = 'EditorView'
+
   static propTypes = {
-    content: object,
+    state: instanceOf(EditorState),
     isDisabled: bool,
-    keymap: object.isRequired,
     tabIndex: number.isRequired,
     onBlur: func.isRequired,
     onChange: func.isRequired,
-    onFocus: func.isRequired
+    onFocus: func.isRequired,
+    onKeyDown: func.isRequired
   }
 }
 
