@@ -4,7 +4,7 @@ const { json, stringify } = require('../common/util')
 
 module.exports = {
 
-  async create(db, { content, text, photo }) {
+  async create(db, { state, text, photo }) {
 
     // Note: last_insert_rowid() not reliable because of FTS triggers,
     // so we determine the next id ourselves. This should be always
@@ -13,8 +13,8 @@ module.exports = {
     const id = Number(max) + 1
 
     await db.run(`
-      INSERT INTO notes (note_id, id, content, text) VALUES (?,?,?,?)`,
-      id, photo, stringify(content), text
+      INSERT INTO notes (note_id, id, state, text) VALUES (?,?,?,?)`,
+      id, photo, stringify(state), text
     )
 
     return module.exports.load(db, [id])
@@ -26,16 +26,16 @@ module.exports = {
     if (ids.length) {
       await db.each(`
         SELECT note_id AS note, photos.id AS photo,
-            content, text, language, modified
+            state, text, language, modified
           FROM notes
             LEFT OUTER JOIN photos USING (id)
           WHERE note_id IN (${ids.join(',')})
             AND deleted IS NULL
           ORDER BY created ASC`,
 
-        ({ note, content, ...data }) => {
+        ({ note, state, ...data }) => {
           notes[note] = {
-            ...data, id: note, content: json(content), deleted: false
+            ...data, id: note, state: json(state), deleted: false
           }
         }
       )
@@ -44,11 +44,11 @@ module.exports = {
     return notes
   },
 
-  async save(db, { id, content, text }) {
+  async save(db, { id, state, text }) {
     return db.run(`
       UPDATE notes
-        SET content = ?, text = ?, modified = datetime("now")
-        WHERE note_id = ?`, stringify(content), text, id
+        SET state = ?, text = ?, modified = datetime("now")
+        WHERE note_id = ?`, stringify(state), text, id
     )
   },
 

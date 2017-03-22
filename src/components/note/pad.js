@@ -28,7 +28,7 @@ class NotePad extends PureComponent {
       <section className={cx({ note: true, pad: true })}>
         <Editor
           ref={this.setEditor}
-          content={note.content}
+          state={note.state}
           keymap={keymap}
           isDisabled={this.isDisabled}
           tabIndex={tabIndex}
@@ -43,7 +43,7 @@ class NotePad extends PureComponent {
     keymap: object.isRequired,
     note: shape({
       id: number,
-      content: object,
+      state: object,
       text: string
     }).isRequired,
     tabIndex: number.isRequired,

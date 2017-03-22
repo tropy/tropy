@@ -43,16 +43,16 @@ class Editor extends PureComponent {
     return this.view.dom.innerHtml
   }
 
-  getEditorState({ content } = this.props) {
-    if (content == null) {
+  getEditorState({ state } = this.props) {
+    if (state == null) {
       return EditorState.create({ schema, plugins })
     }
 
-    if (content instanceof EditorState) {
-      return content
+    if (state instanceof EditorState) {
+      return state
     }
 
-    return EditorState.fromJSON({ schema, plugins }, content)
+    return EditorState.fromJSON({ schema, plugins }, state)
   }
 
   focus = () => {
@@ -125,7 +125,7 @@ class Editor extends PureComponent {
   }
 
   static propTypes = {
-    content: object,
+    state: object,
     isDisabled: bool,
     keymap: object.isRequired,
     onChange: func.isRequired,
