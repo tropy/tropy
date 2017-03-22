@@ -16,19 +16,19 @@ module.exports = (schema) => {
     sinkListItem: sinkListItem(schema.nodes.list_item),
   }
 
+  const marks = {}
+
+  for (let name in schema.marks) {
+    marks[name] = cmd.toggleMark(schema.marks[name])
+  }
+
   return {
     ...cmd,
     ...list,
+    ...marks,
 
     undo,
     redo,
-
-    bold: cmd.toggleMark(schema.marks.strong),
-    italic: cmd.toggleMark(schema.marks.em),
-    underline: cmd.toggleMark(schema.marks.underline),
-    strikethrough: cmd.toggleMark(schema.marks.strikethrough),
-    subscript: cmd.toggleMark(schema.marks.subscript),
-    superscript: cmd.toggleMark(schema.marks.superscript),
 
     blockquote: cmd.wrapIn(schema.nodes.blockquote),
 
