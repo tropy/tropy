@@ -6,7 +6,6 @@ const { func, instanceOf } = PropTypes
 const { Toolbar, ToolbarContext, ToolGroup } = require('../toolbar')
 const { IconButton } = require('../button')
 const { EditorState } = require('prosemirror-state')
-const { titlecase } = require('../../common/util')
 
 const {
   IconB,
@@ -47,12 +46,16 @@ class EditorToolbar extends PureComponent {
       this[action] = () => this.props.onCommand(action)
     }
 
-    this.state = this.getActiveMarks(props.state)
+    this.state = {
+      marks: this.getActiveMarks(props.state)
+    }
   }
 
   componentWillReceiveProps(props) {
     if (props.state !== this.props.state) {
-      this.setState(this.getActiveMarks(props.state))
+      this.setState({
+        marks: this.getActiveMarks(props.state)
+      })
     }
   }
 
@@ -60,8 +63,7 @@ class EditorToolbar extends PureComponent {
     let res = {}, mark
 
     for (mark in state.schema.marks) {
-      res[`is${titlecase(mark)}Active`] =
-        this.isMarkActive(state.schema.marks[mark], state)
+      res[mark] = this.isMarkActive(state.schema.marks[mark], state)
     }
 
     return res
@@ -79,36 +81,27 @@ class EditorToolbar extends PureComponent {
     return false
   }
 
+  renderMarkButton(name, icon) {
+    return (
+      <IconButton
+        canHaveFocus={false}
+        icon={icon}
+        isActive={this.state.marks[name]}
+        title={`editor.commands.${name}`}
+        onMouseDown={this[name]}/>
+    )
+  }
+
   render() {
     return (
       <Toolbar isDraggable={false}>
         <ToolbarContext isActive={!this.isLinkActive}>
           <div className="toolbar-left">
             <ToolGroup>
-              <IconButton
-                canHaveFocus={false}
-                icon={<IconB/>}
-                isActive={this.state.isBoldActive}
-                title="editor.commands.bold"
-                onMouseDown={this.bold}/>
-              <IconButton
-                canHaveFocus={false}
-                icon={<IconI/>}
-                isActive={this.state.isItalicActive}
-                title="editor.commands.italic"
-                onMouseDown={this.italic}/>
-              <IconButton
-                canHaveFocus={false}
-                icon={<IconU/>}
-                isActive={this.state.isUnderlineActive}
-                title="editor.commands.underline"
-                onMouseDown={this.underline}/>
-              <IconButton
-                canHaveFocus={false}
-                icon={<IconS/>}
-                isActive={this.state.isStrikethroughActive}
-                title="editor.commands.strikethrough"
-                onMouseDown={this.strikethrough}/>
+              {this.renderMarkButton('bold', <IconB/>)}
+              {this.renderMarkButton('italic', <IconI/>)}
+              {this.renderMarkButton('underline', <IconU/>)}
+              {this.renderMarkButton('strikethrough', <IconS/>)}
               <IconButton
                 canHaveFocus={false}
                 icon={<IconQ/>}
@@ -116,18 +109,8 @@ class EditorToolbar extends PureComponent {
                 onMouseDown={this.blockquote}/>
             </ToolGroup>
             <ToolGroup>
-              <IconButton
-                canHaveFocus={false}
-                icon={<IconSup/>}
-                isActive={this.state.isSuperscriptActive}
-                title="editor.commands.superscript"
-                onMouseDown={this.superscript}/>
-              <IconButton
-                canHaveFocus={false}
-                icon={<IconSub/>}
-                isActive={this.state.isSubscriptActive}
-                title="editor.commands.subscript"
-                onMouseDown={this.subscript}/>
+              {this.renderMarkButton('superscript', <IconSup/>)}
+              {this.renderMarkButton('subscript', <IconSub/>)}
             </ToolGroup>
             <ToolGroup>
               <IconButton

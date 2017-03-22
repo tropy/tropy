@@ -11,7 +11,7 @@ const commands = require('./commands')(schema)
 const plugins = require('./plugins')(schema)
 const { match } = require('../../keymap')
 const cx = require('classnames')
-const { pick, noop } = require('../../common/util')
+const { noop } = require('../../common/util')
 
 
 class Editor extends PureComponent {
