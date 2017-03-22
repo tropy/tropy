@@ -170,7 +170,10 @@ class Load extends Command {
     ), items)
 
     if (missing.length) {
-      yield put(act.photo.load(missing))
+      yield [
+        put(act.photo.load(missing)),
+        put(act.metadata.load(missing))
+      ]
     }
 
     return items
