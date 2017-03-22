@@ -107,6 +107,7 @@ module.exports = {
         return payload ? {
           ...state,
           photo: payload.photo,
+          note: payload.note,
           items: select(state.items, payload.item, 'replace')
         } : { ...state, photo: null }
 
