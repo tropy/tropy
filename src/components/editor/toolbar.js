@@ -136,12 +136,12 @@ class EditorToolbar extends PureComponent {
                 onMouseDown={this.ol}/>
               <IconButton
                 canHaveFocus={false}
-                icon={<IconLift/>}
-                onMouseDown={this.liftListItem}/>
-              <IconButton
-                canHaveFocus={false}
                 icon={<IconSink/>}
                 onMouseDown={this.sinkListItem}/>
+              <IconButton
+                canHaveFocus={false}
+                icon={<IconLift/>}
+                onMouseDown={this.liftListItem}/>
             </ToolGroup>
             <ToolGroup>
               <IconButton

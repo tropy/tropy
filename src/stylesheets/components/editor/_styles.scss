@@ -36,8 +36,33 @@
     list-style: disc;
   }
 
+  ul ul,
+  ol ul {
+    list-style: circle;
+  }
+
+  ul ul ul,
+  ol ul ul,
+  ul ol ul,
+  ol ol ul {
+    list-style: square;
+  }
+
   ol {
     list-style: decimal;
+  }
+
+  li {
+    @each $alignment in center, right {
+      &[style*="#{$alignment}"] {
+        text-align: $alignment;
+        list-style-position: inside;
+      }
+    }
+
+    p {
+      display: inline;
+    }
   }
 
   hr {

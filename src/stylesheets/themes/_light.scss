@@ -11,6 +11,7 @@ $theme: "light";
 // --------------------------------------------------
 
 :root {
+  #{--transparent}:   transparent;
   #{--blue}:          #5c93e5;
   #{--blue-light}:    #cedef7;
   #{--blue-30}:       rgba(#5c93e5, 0.3);
@@ -57,23 +58,25 @@ $brand-primary-darken-4: $blue-darken-4;
   #{--shade-9-60}: rgba(#000, 0.6);
 }
 
-$shade-0:    var(--shade-0);
-$shade-1:    var(--shade-1);
-$shade-2:    var(--shade-2);
-$shade-3:    var(--shade-3);
-$shade-4:    var(--shade-4);
+$transparent: var(--transparent);
 
-$shade-5:    var(--shade-5);
-$shade-5-60: var(--shade-5-60);
+$shade-0:     var(--shade-0);
+$shade-1:     var(--shade-1);
+$shade-2:     var(--shade-2);
+$shade-3:     var(--shade-3);
+$shade-4:     var(--shade-4);
 
-$shade-6:    var(--shade-6);
-$shade-7:    var(--shade-7);
-$shade-8:    var(--shade-8);
+$shade-5:     var(--shade-5);
+$shade-5-60:  var(--shade-5-60);
 
-$shade-9:    var(--shade-9);
-$shade-9-10: var(--shade-9-10);
-$shade-9-20: var(--shade-9-20);
-$shade-9-60: var(--shade-9-60);
+$shade-6:     var(--shade-6);
+$shade-7:     var(--shade-7);
+$shade-8:     var(--shade-8);
+
+$shade-9:     var(--shade-9);
+$shade-9-10:  var(--shade-9-10);
+$shade-9-20:  var(--shade-9-20);
+$shade-9-60:  var(--shade-9-60);
 
 
 // Scaffolding
@@ -183,7 +186,7 @@ $panel-heading-color:   #bbb; // Todo
 // Tabs
 $tab-bg:             $shade-2;
 $tab-active-color:   $shade-8;
-$tab-active-bg:      transparent;
+$tab-active-bg:      $transparent;
 $tab-inactive-color: $shade-5;
 
 // Metadata
@@ -219,6 +222,7 @@ $btn-default-active-bg: $shade-1;
 $btn-primary-color:     $shade-0;
 $btn-primary-bg:        $brand-primary;
 $btn-primary-active-bg: $brand-primary-darken-4;
+$btn-icon-bg:           $transparent;
 
 // Slider
 $slider-track-bg: $shade-4;

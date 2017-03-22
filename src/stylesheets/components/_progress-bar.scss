@@ -2,14 +2,19 @@
 // Progress bar
 // --------------------------------------------------
 
-.progress-bar {
+progress {
+  flex: 1 1 0;
+  -webkit-appearance: none;
   height: $progress-bar-height;
-  background: $progress-bar-bg;
-  border-radius: ($progress-bar-height / 2);
-  overflow: hidden;
-}
 
-.progress-indicator {
-  height: 100%;
-  background: $progress-bar-color;
+  &::-webkit-progress-bar {
+    background: $progress-bar-bg;
+    border-radius: ($progress-bar-height / 2);
+  }
+
+  &::-webkit-progress-value {
+    background: $progress-bar-color;
+    border-top-left-radius: ($progress-bar-height / 2);
+    border-bottom-left-radius: ($progress-bar-height / 2);
+  }
 }
