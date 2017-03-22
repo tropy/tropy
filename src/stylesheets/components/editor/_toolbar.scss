@@ -24,6 +24,10 @@
     .btn-icon {
       &:hover {
         background: $editor-btn-hover-bg;
+
+        &[disabled] {
+          background: $btn-icon-bg;
+        }
       }
 
       &.active {
