@@ -31,7 +31,7 @@ class ProseMirror extends Component {
       this.pm.setProps(this.getEditorProps(props))
     }
 
-    if (props.state !== this.pm.state) {
+    if (!props.isDisabled && props.state !== this.pm.state) {
       this.pm.updateState(props.state)
     }
 
