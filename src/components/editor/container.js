@@ -3,18 +3,15 @@
 const React = require('react')
 const { PureComponent, PropTypes } = React
 const { func, bool, object, number } = PropTypes
-
 const { EditorToolbar } = require('./toolbar')
 const { EditorState } = require('prosemirror-state')
 const { EditorView } = require('./view')
 const { schema } = require('./schema')
 const commands = require('./commands')(schema)
 const plugins = require('./plugins')(schema)
-
 const { match } = require('../../keymap')
-
 const cx = require('classnames')
-const { pick } = require('../../common/util')
+const { pick, noop } = require('../../common/util')
 
 
 class Editor extends PureComponent {
@@ -110,12 +107,18 @@ class Editor extends PureComponent {
     this.view.focus()
   }
 
+  exec(command) {
+    return (commands[command] || noop)(
+      this.view.state, this.view.dispatch, this.view
+    )
+  }
+
   handleChange = (tr) => {
     this.props.onChange(this.view.state.apply(tr), tr.docChanged)
   }
 
   handleKeyDown = (_, event) => {
-    return this.handleCommand(match(this.props.keymap, event))
+    return this.exec(match(this.props.keymap, event))
   }
 
   handleFocus = (event) => {
@@ -125,13 +128,8 @@ class Editor extends PureComponent {
   }
 
   handleCommand = (command) => {
-    const action = commands[command]
-
-    if (action) {
-      action(this.view.state, this.view.dispatch, this.view)
+    if (this.exec(command)) {
       if (!this.state.hasViewFocus) this.focus()
-
-      return true
     }
   }
 
