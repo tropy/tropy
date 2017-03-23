@@ -13,7 +13,7 @@ const { PROJECT: { MODE }, SASS: { PANEL } } = require('../../constants')
 const { pick } = require('../../common/util')
 
 function getNoteTemplate() {
-  return { id: -Date.now(), text: '' }
+  return { text: '' }
 }
 
 
@@ -22,15 +22,25 @@ class ItemView extends PureComponent {
     super(props)
 
     this.state = {
+      isCreationPending: false,
       note: props.note || getNoteTemplate()
     }
   }
 
   componentWillReceiveProps(props) {
     if (props.note !== this.props.note) {
-      this.setState({
-        note: props.note || getNoteTemplate()
-      })
+
+      if (!props.note) {
+        return this.setState({ note: getNoteTemplate() })
+      }
+
+      const { note } = this.state
+
+      if (note.created && note.created === props.note.created) {
+        return this.setState({ note: { ...note, id: props.note.id } })
+      }
+
+      this.setState({ note })
     }
   }
 
@@ -66,6 +76,7 @@ class ItemView extends PureComponent {
     this.props.onUiUpdate({ esper: { height } })
   }
 
+
   handleNoteCreate = () => {
     let delay = 50
 
@@ -76,20 +87,29 @@ class ItemView extends PureComponent {
       })
     }
 
-    this.setState({ note: getNoteTemplate() })
+    // Deselect / reset current note
+    if (this.props.note) {
+      this.props.onNoteSelect({ photo: this.props.photo.id, note: null })
+    } else {
+      if (this.state.note.text) {
+        this.setState({ note: getNoteTemplate() })
+      }
+    }
 
     setTimeout(this.notepad.focus, delay)
   }
 
   handleNoteChange = (note) => {
-    if (note.id < 0 && !note.pending) {
-      this.props.onNoteCreate({
-        state: note.state,
-        text: note.text,
-        photo: this.props.photo.id
-      })
+    if (note.id) {
+      // persist
 
-      note.pending = true
+    } else {
+      if (!note.created) {
+        note.created = Date.now()
+        note.photo = this.props.photo.id
+
+        this.props.onNoteCreate(note)
+      }
     }
 
     this.setState({ note })
@@ -172,6 +192,7 @@ class ItemView extends PureComponent {
 
     onNoteCreate: func.isRequired,
     onNoteSave: func.isRequired,
+    onNoteSelect: func.isRequired,
     onPanelResize: func.isRequired,
     onPanelDragStop: func.isRequired,
     onUiUpdate: func.isRequired

@@ -17,7 +17,7 @@ module.exports = {
       id, photo, stringify(state), text
     )
 
-    return module.exports.load(db, [id])
+    return (await module.exports.load(db, [id]))[id]
   },
 
   async load(db, ids) {

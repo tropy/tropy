@@ -26,20 +26,20 @@ class Create extends Command {
 
   *exec() {
     const { db } = this.options
-    const { state, text, photo } = this.action.payload
+    const { state, text, photo, created } = this.action.payload
 
-    const data = yield call([db, db.transaction], tx =>
+    const note = yield call([db, db.transaction], tx =>
       mod.note.create(tx, { photo, state, text }))
 
-    const notes = keys(data).map(Number)
+    note.created = created
 
-    yield put(act.photo.notes.add({ id: photo, notes }))
-    yield put(act.note.select({ note: notes[0], photo }))
+    yield put(act.photo.notes.add({ id: photo, notes: [note.id] }))
+    yield put(act.note.select({ note: note.id, photo }))
 
-    this.undo = act.note.delete({ photo, notes })
-    this.redo = act.note.restore({ photo, notes })
+    this.undo = act.note.delete({ photo, notes: [note.id] })
+    this.redo = act.note.restore({ photo, notes: [note.id] })
 
-    return data
+    return { [note.id]: note }
   }
 }
 
@@ -48,10 +48,10 @@ class Save extends Command {
 
   *exec() {
     const { db } = this.options
-    const { id, text } = this.action.payload
+    const { id, state, text } = this.action.payload
 
     const original = yield select(({ notes }) => notes[id])
-    const data = { id, text }
+    const data = { id, state, text }
 
     yield call(mod.save, db, data)
     yield put(act.note.update(data))
@@ -69,6 +69,7 @@ class Delete extends Command {
     const { db } = this.options
     const { photo, notes } = this.action.payload
 
+    // Check if currently selected and pick another note!
     yield call([db, db.transaction], async tx => {
       await mod.note.delete(tx, notes)
     })

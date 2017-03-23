@@ -24,14 +24,17 @@ class ProseMirror extends Component {
   }
 
   shouldComponentUpdate(props) {
+    const { state, isDisabled, tabIndex } = props
+    const wasDisabled = this.props
+
     if (
-      props.isDisabled !== this.props.isDisabled ||
-      props.tabIndex !== this.props.tabIndex
+      isDisabled !== wasDisabled ||
+      tabIndex !== this.props.tabIndex
     ) {
       this.pm.setProps(this.getEditorProps(props))
     }
 
-    if (!props.isDisabled && props.state !== this.pm.state) {
+    if (!isDisabled && state !== this.pm.state) {
       this.pm.updateState(props.state)
     }
 
