@@ -4,7 +4,7 @@ const React = require('react')
 const { Panel } = require('../panel')
 const { NoteToolbar } = require('./toolbar')
 const { NoteList } = require('./list')
-const { arrayOf, bool, func, number, shape, string } = React.PropTypes
+const { arrayOf, bool, func, number, object, shape } = React.PropTypes
 
 
 class NotePanel extends Panel {
@@ -77,10 +77,7 @@ class NotePanel extends Panel {
 
     item: number,
     photo: number,
-    selection: shape({
-      id: number.isRequired,
-      text: string.isRequired
-    }),
+    selection: object,
 
     onItemOpen: func.isRequired,
     onContextMenu: func.isRequired,

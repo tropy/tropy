@@ -48,7 +48,7 @@ class NoteList extends PureComponent {
     })).isRequired,
 
     selection: shape({
-      id: number.isRequired
+      id: number
     }),
 
     isDisabled: bool,

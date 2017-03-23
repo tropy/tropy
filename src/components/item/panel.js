@@ -110,9 +110,7 @@ class ItemPanel extends PureComponent {
     isItemOpen: bool.isRequired,
     items: array.isRequired,
 
-    note: shape({
-      id: number.isRequired
-    }),
+    note: object,
     notes: array.isRequired,
 
     panel: shape({

@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent, PropTypes } = React
 const cx = require('classnames')
-const { bool, func, number, shape } = PropTypes
+const { bool, func, number, shape, string } = PropTypes
 const { createClickHandler } = require('../util')
 
 
@@ -40,7 +40,7 @@ class NoteListItem extends PureComponent {
         onMouseDown={this.handleClick}
         onContextMenu={this.handleContextMenu}>
         <div className="css-multiline-truncate">
-          {note.text.slice(0, 250) || note.id}
+          {note.text.slice(0, 280)}
         </div>
       </li>
     )
@@ -48,7 +48,8 @@ class NoteListItem extends PureComponent {
 
   static propTypes = {
     note: shape({
-      id: number.isRequired
+      id: number.isRequired,
+      text: string.isRequired
     }).isRequired,
 
     isDisabled: bool,
