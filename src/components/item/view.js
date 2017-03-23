@@ -81,16 +81,10 @@ class ItemView extends PureComponent {
     setTimeout(this.notepad.focus, delay)
   }
 
-  handleNoteChange = (state, hasDocChanged) => {
-    const note = { ...this.state.note, state }
-
-    if (hasDocChanged) {
-      note.text = state.doc.textBetween(0, state.doc.content.size, ' ')
-    }
-
+  handleNoteChange = (note) => {
     if (note.id < 0 && !note.pending) {
       this.props.onNoteCreate({
-        state,
+        state: note.state,
         text: note.text,
         photo: this.props.photo.id
       })

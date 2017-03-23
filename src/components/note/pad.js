@@ -21,8 +21,18 @@ class NotePad extends PureComponent {
     this.editor.view.focus()
   }
 
+  handleChange = (state, hasDocChanged) => {
+    const note = { ...this.props.note, state }
+
+    if (hasDocChanged) {
+      note.text = state.doc.textBetween(0, state.doc.content.size, ' ')
+    }
+
+    this.props.onChange(note, hasDocChanged)
+  }
+
   render() {
-    const { note, keymap, tabIndex, onChange } = this.props
+    const { note, keymap, tabIndex } = this.props
 
     return (
       <section className={cx({ note: true, pad: true })}>
@@ -32,7 +42,7 @@ class NotePad extends PureComponent {
           keymap={keymap}
           isDisabled={this.isDisabled}
           tabIndex={tabIndex}
-          onChange={onChange}/>
+          onChange={this.handleChange}/>
       </section>
     )
   }
