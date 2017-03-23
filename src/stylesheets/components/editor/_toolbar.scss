@@ -30,8 +30,22 @@
         }
       }
 
+      &:active {
+        .icon {
+          svg {
+            color: $icon-color;
+          }
+        }
+      }
+
       &.active {
         background: $editor-btn-active-bg;
+
+        .icon {
+          svg {
+            color: $editor-btn-active-color;
+          }
+        }
       }
 
       & + .btn-icon {
