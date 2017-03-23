@@ -53,10 +53,10 @@ class Save extends Command {
     const original = yield select(({ notes }) => notes[id])
     const data = { id, state, text }
 
-    yield call(mod.save, db, data)
+    yield call(mod.note.save, db, data)
     yield put(act.note.update(data))
 
-    this.undo(act.note.save({ id, text: original.text }))
+    this.undo = act.note.save({ id, text: original.text })
 
     return data
   }

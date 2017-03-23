@@ -2,15 +2,14 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const {
-  arrayOf, bool, func, object, number, shape, string
-} = PropTypes
+const { arrayOf, bool, func, object, number, shape, string } = PropTypes
 const { ItemPanel } = require('./panel')
 const { Resizable, BufferedResizable } = require('../resizable')
 const { EsperImage } = require('../esper')
 const { NotePad } = require('../note')
 const { PROJECT: { MODE }, SASS: { PANEL } } = require('../../constants')
 const { pick } = require('../../common/util')
+const debounce = require('lodash.debounce')
 
 function getNoteTemplate() {
   return { text: '' }
@@ -22,7 +21,6 @@ class ItemView extends PureComponent {
     super(props)
 
     this.state = {
-      isCreationPending: false,
       note: props.note || getNoteTemplate()
     }
   }
@@ -31,6 +29,7 @@ class ItemView extends PureComponent {
     if (props.note !== this.props.note) {
 
       if (!props.note) {
+        this.handleNoteUpdate.flush()
         return this.setState({ note: getNoteTemplate() })
       }
 
@@ -40,7 +39,8 @@ class ItemView extends PureComponent {
         return this.setState({ note: { ...note, id: props.note.id } })
       }
 
-      this.setState({ note })
+      this.handleNoteUpdate.flush()
+      this.setState({ note: props.note })
     }
   }
 
@@ -87,7 +87,6 @@ class ItemView extends PureComponent {
       })
     }
 
-    // Deselect / reset current note
     if (this.props.note) {
       this.props.onNoteSelect({ photo: this.props.photo.id, note: null })
     } else {
@@ -99,16 +98,24 @@ class ItemView extends PureComponent {
     setTimeout(this.notepad.focus, delay)
   }
 
-  handleNoteChange = (note) => {
-    if (note.id) {
-      // persist
+  handleNoteUpdate = debounce(note => {
+    if (note.text.length) {
+      this.props.onNoteSave(note)
+    }
+  }, 1000)
 
-    } else {
-      if (!note.created) {
-        note.created = Date.now()
-        note.photo = this.props.photo.id
+  handleNoteChange = (note, hasDocChanged) => {
+    if (hasDocChanged && note.text.length) {
+      if (note.id) {
+        this.handleNoteUpdate(note)
 
-        this.props.onNoteCreate(note)
+      } else {
+        if (!note.created) {
+          note.created = Date.now()
+          note.photo = this.props.photo.id
+
+          this.props.onNoteCreate(note)
+        }
       }
     }
 
