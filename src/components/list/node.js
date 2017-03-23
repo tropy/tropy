@@ -9,7 +9,8 @@ const { NativeTypes } = require('react-dnd-electron-backend')
 const { DND } = require('../../constants')
 const { bounds } = require('../../dom')
 const { isValidImage } = require('../../image')
-const cn = require('classnames')
+const cx = require('classnames')
+const { noop } = require('../../common/util')
 
 
 class ListNode extends PureComponent {
@@ -64,7 +65,7 @@ class ListNode extends PureComponent {
 
     return this.connect(
       <li
-        className={cn(this.classes)}
+        className={cx(this.classes)}
         ref={this.setContainer}
         onContextMenu={isEditing ? null : this.handleContextMenu}
         onClick={isEditing ? null : this.handleClick}>
@@ -111,6 +112,10 @@ class ListNode extends PureComponent {
     onSort: PropTypes.func,
     onSortPreview: PropTypes.func,
     onSortReset: PropTypes.func
+  }
+
+  static defaultProps = {
+    onClick: noop
   }
 
 }
