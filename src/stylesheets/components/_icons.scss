@@ -4,10 +4,10 @@
 
 .icon {
   display: inline-block;
+  color: $icon-color;
 
   svg {
     display: block;
-    color: $icon-color;
 
     @if $icon-style == "line" {
       .block {
@@ -24,15 +24,10 @@
 .icon-item {
   width: $thumbnail-size;
   height: $thumbnail-size;
-
-  svg {
-    color: $thumbnail-color;
-    background: $thumbnail-bg;
-  }
+  color: $thumbnail-color;
+  background: $thumbnail-bg;
 }
 
 .icon-spin {
-  svg {
-    color: $icon-spin-color;
-  }
+  color: $icon-spin-color;
 }

@@ -46,9 +46,7 @@
         color: $sidebar-active-color;
 
         .icon {
-          svg {
-            color: $sidebar-active-icon-color;
-          }
+          color: $sidebar-active-icon-color;
         }
       }
 
@@ -60,9 +58,7 @@
           background: $sidebar-focus-bg;
 
           .icon {
-            svg {
-              color: $sidebar-focus-icon-color;
-            }
+            color: $sidebar-focus-icon-color;
           }
         }
       }
@@ -131,9 +127,7 @@
         color: $sidebar-tag-active-color;
 
         .icon {
-          svg {
-            color: $sidebar-tag-active-color;
-          }
+          color: $sidebar-tag-active-color;
         }
       }
     }

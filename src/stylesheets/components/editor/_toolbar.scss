@@ -17,7 +17,7 @@
 
     .tool-group {
       & + .tool-group {
-        margin-left: $space-md + $space-min;
+        margin-left: $space-lg;
       }
     }
 
@@ -30,8 +30,18 @@
         }
       }
 
+      &:active {
+        .icon {
+          color: $icon-color;
+        }
+      }
+
       &.active {
         background: $editor-btn-active-bg;
+
+        .icon {
+          color: $editor-btn-active-color;
+        }
       }
 
       & + .btn-icon {

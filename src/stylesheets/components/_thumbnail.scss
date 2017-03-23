@@ -28,12 +28,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    color: $thumbnail-color;
     background: $thumbnail-bg;
 
     svg {
       width: calc(100% * 2 / 3);
       height: calc(100% * 2 / 3);
-      color: $thumbnail-color;
     }
   }
 }

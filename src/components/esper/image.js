@@ -6,7 +6,7 @@ const { Toolbar } = require('../toolbar')
 
 const EsperImage = ({ photo, isVisible }) => (
   <section className="esper">
-    <header>
+    <header className="esper-header">
       <Toolbar draggable={ARGS.frameless}/>
     </header>
 
