@@ -2,12 +2,28 @@
 
 const { seq, compose, cat, map, keep } = require('transducers.js')
 const { createSelector: memo } = require('reselect')
-const { getVisiblePhotos } = require('./photos')
+const { getVisiblePhotos, getSelectedPhoto } = require('./photos')
 
 const getNotes = ({ notes }) => notes
+const getSelectedNoteId = ({ nav }) => nav.note
 
 const getSelectedNote = memo(
-  getNotes, ({ nav }) => nav.note, (notes, id) => notes[id]
+  getNotes, getSelectedNoteId, (notes, id) => notes[id]
+)
+
+const getSelectableNoteId = memo(
+  getSelectedPhoto, getSelectedNoteId, (photo, id) => {
+    if (!photo) return null
+    if (!photo.notes.length) return null
+    if (!id) return photo.notes[0]
+
+    const idx = photo.notes.indexOf(id)
+
+    if (idx < 0) return photo.notes[0]
+    if (idx > 0) return photo.notes[idx - 1]
+
+    return photo.notes[idx + 1]
+  }
 )
 
 const getVisibleNotes = memo(
@@ -26,6 +42,7 @@ const getVisibleNotes = memo(
 
 
 module.exports = {
+  getSelectableNoteId,
   getSelectedNote,
   getVisibleNotes
 }

@@ -5,7 +5,7 @@ const { Command } = require('./command')
 const mod = require('../models')
 const act = require('../actions')
 const { NOTE } = require('../constants')
-const { keys } = Object
+const { getSelectableNoteId } = require('../selectors')
 
 
 class Load extends Command {
@@ -69,10 +69,17 @@ class Delete extends Command {
     const { db } = this.options
     const { photo, notes } = this.action.payload
 
-    // Check if currently selected and pick another note!
+    const [isSelected, nextId] = yield select(state => [
+      state.nav.note === notes[0], getSelectableNoteId(state)
+    ])
+
     yield call([db, db.transaction], async tx => {
       await mod.note.delete(tx, notes)
     })
+
+    if (isSelected) {
+      yield put(act.note.select({ photo, note: nextId }))
+    }
 
     yield put(act.photo.notes.remove({ id: photo, notes }))
 
