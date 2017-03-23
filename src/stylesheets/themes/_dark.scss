@@ -13,16 +13,17 @@ $theme: "dark";
 
 $blue:           #395bac;
 $blue-light:     #cedef7;
-$blue-light-125: rgba($blue-light, 0.125);
-$blue-30:        rgba($blue, 0.3);
+$blue-light-10: rgba($blue-light, 0.1);
+$blue-35:        rgba($blue, 0.35);
 $blue-60:        rgba($blue, 0.6);
 
 $red: #e62e2e;
 
-$brand-primary:       $blue;
-$brand-primary-light: $blue-light;
-$brand-primary-30:    $blue-30;
-$brand-primary-60:    $blue-60;
+$brand-primary:          $blue;
+$brand-primary-light:    $blue-light;
+$brand-primary-light-10: $blue-light-10;
+$brand-primary-35:       $blue-35;
+$brand-primary-60:       $blue-60;
 
 
 // Grays
@@ -55,7 +56,7 @@ $link-color:       $brand-primary;
 $link-hover-color: $brand-primary;
 
 $text-selection-color: inherit;
-$text-selection-bg: $blue-light-125;
+$text-selection-bg: $brand-primary-light-10;
 
 
 // Partials
@@ -74,7 +75,7 @@ $badge-color: $shade-10; // Ok
 $badge-bg:    $red; // Ok
 
 // Drop target
-$drop-target-color: $brand-primary-30; // Ok
+$drop-target-color: $brand-primary-35; // Ok
 
 // Sort indicator
 $photo-sort-indicator: $shade-9; // Ok
@@ -116,7 +117,7 @@ $sidebar-focus-bg:          $brand-primary; // Ok
 $sidebar-active-icon-color: $shade-8; // Ok
 $sidebar-active-color:      $shade-9; // Ok
 $sidebar-active-bg:         $shade-5; // Ok
-$sidebar-context-bg:        $brand-primary-30; // Ok
+$sidebar-context-bg:        $brand-primary-35; // Ok
 $activity-color:            $shade-7;
 $activity-border-color:     $shade-1;
 $sidebar-tag-active-color:  $brand-primary-light; // Ok
@@ -188,9 +189,10 @@ $progress-cancel-color: $shade-4; // Ok
 $progress-cancel-bg:    $shade-7; // Ok
 
 // Editor
-$editor-toolbar-border:  $shade-1; // Ok
-$editor-btn-hover-bg:    $shade-2; // Ok
-$editor-btn-active-bg:   $shade-1; // Ok
+$editor-toolbar-border:   $shade-1; // Ok
+$editor-btn-hover-bg:     $shade-2; // Ok
+$editor-btn-active-color: $shade-8; // Ok
+$editor-btn-active-bg:    $shade-1; // Ok
 
 $blockquote-border-color: $shade-8; // OK
 $selected-node-color:     $brand-primary; // Ok
