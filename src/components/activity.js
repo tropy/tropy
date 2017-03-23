@@ -33,7 +33,7 @@ const Activity = ({ type, progress, total, onCancel }) => {
     <div className={cx({ activity: true, type })}>
       <div className="activity-container">
         <div className="flex-row center">
-          <IconSpin/>
+          {!hasProgressBar && <IconSpin/>}
           <div className="activity-text">
             <FormattedMessage
               id={`activity.${type}`}
