@@ -52,9 +52,13 @@ class PhotoIterable extends PureComponent {
 
 
   handleContextMenu = (event) => {
-    const { photo, isDisabled, onContextMenu } = this.props
+    const {
+      photo, isDisabled, isSelected, onContextMenu, onSelect
+    } = this.props
 
     if (!isDisabled) {
+      if (!isSelected) onSelect(photo, event)
+
       onContextMenu(event, 'photo', {
         id: photo.id, item: photo.item, path: photo.path
       })

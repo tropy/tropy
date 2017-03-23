@@ -20,15 +20,10 @@ module.exports = {
   },
 
   remove(payload, meta) {
-    return (dispatch, getState) => {
-      const { nav } = getState()
-      const search = (nav.list === payload)
-
-      dispatch({
-        type: LIST.REMOVE,
-        payload,
-        meta: { search, ...meta }
-      })
+    return {
+      type: LIST.REMOVE,
+      payload,
+      meta: { search: true, ...meta }
     }
   },
 

@@ -44,6 +44,10 @@ class ListNode extends PureComponent {
   }
 
   handleContextMenu = (event) => {
+    if (!this.props.isSelected) {
+      this.props.onClick(this.props.list)
+    }
+
     this.props.onContextMenu(event, 'list', this.props.list.id)
   }
 
