@@ -36,7 +36,7 @@ module.exports = (schema) => {
       list.splitListItem,
       cmd.createParagraphNear,
       cmd.liftEmptyBlock,
-      cmd.splitBlock
+      cmd.splitBlockKeepMarks
     ),
 
     br: (state, dispatch) => (
