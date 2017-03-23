@@ -11,6 +11,12 @@
   .btn {
     flex: 0 0 auto;
 
+    &:active {
+      .icon {
+        color: $icon-color;
+      }
+    }
+
     &.active {
       opacity: $btn-disabled-opacity;
     }
