@@ -16,10 +16,6 @@ const { bool, shape, string, object, arrayOf, func, number } = PropTypes
 
 class ProjectSidebar extends PureComponent {
 
-  get isContext() {
-    return has(this.props.context, 'project')
-  }
-
   get isEditing() {
     return has(this.props.edit, 'project')
   }
@@ -173,7 +169,6 @@ class ProjectSidebar extends PureComponent {
   render() {
     const {
       activities,
-      context,
       edit,
       hasToolbar,
       isSelected,
@@ -212,7 +207,6 @@ class ProjectSidebar extends PureComponent {
                   name={project.name}
                   isSelected={isSelected}
                   isEditing={this.isEditing}
-                  isContext={this.isContext}
                   onChange={this.handleChange}
                   onClick={this.handleClick}
                   onEditCancel={onEditCancel}
@@ -228,7 +222,6 @@ class ProjectSidebar extends PureComponent {
                 <ListTree
                   parent={root}
                   lists={lists}
-                  context={context.list}
                   edit={edit.list}
                   selection={selectedList}
                   onContextMenu={onContextMenu}
@@ -280,7 +273,6 @@ class ProjectSidebar extends PureComponent {
     }).isRequired,
 
     activities: arrayOf(object).isRequired,
-    context: object.isRequired,
     edit: object.isRequired,
     lists: object.isRequired,
     tags: arrayOf(object).isRequired,

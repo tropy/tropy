@@ -408,7 +408,6 @@ class Tropy extends EventEmitter {
 
       .on(CONTEXT.SHOW, (_, event) => {
         this.ctx.show(event)
-        this.dispatch(act.context.clear())
       })
 
       .on(ITEM.PREVIEW, (_, paths) => {

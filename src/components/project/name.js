@@ -16,7 +16,6 @@ class ProjectName extends PureComponent {
     return {
       'project-name': true,
       'active': this.props.isSelected,
-      'context': this.props.isContext,
       'over': this.props.isOver && this.props.canDrop
     }
   }
@@ -42,7 +41,6 @@ class ProjectName extends PureComponent {
 
   static propTypes = {
     name: string.isRequired,
-    isContext: bool,
     isEditing: bool,
     isSelected: bool,
     isOver: bool,

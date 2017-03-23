@@ -298,7 +298,6 @@ module.exports = {
       cache: getCachePrefix(state),
       nav: state.nav,
       ui: state.ui,
-      context: state.context,
       edit: state.edit,
       properties: state.properties,
       templates: getTemplates(state)

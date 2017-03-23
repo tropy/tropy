@@ -40,7 +40,6 @@ class ItemPanel extends PureComponent {
 
   render() {
     const {
-      context,
       edit,
       note,
       notes,
@@ -83,7 +82,6 @@ class ItemPanel extends PureComponent {
         <PhotoPanel {...props}
           isDisabled={isDisabled}
           isItemOpen={isItemOpen}
-          context={context.photo}
           edit={edit.photo}
           zoom={panel.zoom}
           selection={photo && photo.id}
@@ -107,7 +105,6 @@ class ItemPanel extends PureComponent {
 
   static propTypes = {
     cache: string.isRequired,
-    context: object.isRequired,
     data: object.isRequired,
     edit: object.isRequired,
     isItemOpen: bool.isRequired,

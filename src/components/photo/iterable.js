@@ -35,7 +35,6 @@ class PhotoIterable extends PureComponent {
       'photo': true,
       'drop-target': this.props.isSortable,
       'active': this.props.isSelected,
-      'context': this.props.isContext,
       'over': this.props.isOver,
       'dragging': this.props.isDragging,
       'last': this.props.isLast,
@@ -165,7 +164,6 @@ class PhotoIterable extends PureComponent {
 
 
   static propTypes = {
-    isContext: bool,
     isDisabled: bool,
     isDragging: bool,
     isLast: bool,

@@ -29,10 +29,6 @@ class ListTree extends PureComponent {
     return get(this.props.edit, 'id') === id
   }
 
-  isContext(id) {
-    return this.props.context === id
-  }
-
   isSelected(id) {
     return this.props.selection === id
   }
@@ -80,7 +76,6 @@ class ListTree extends PureComponent {
               list={lists[id] || { id }}
               isSelected={this.isSelected(id)}
               isEditing={this.isEditing(id)}
-              isContext={this.isContext(id)}
               isSortable
               onSave={onListSave}
               onSortPreview={this.handleSortPreview}
@@ -99,7 +94,6 @@ class ListTree extends PureComponent {
     }).isRequired,
 
     lists: PropTypes.object.isRequired,
-    context: PropTypes.number,
     edit: PropTypes.object,
     selection: PropTypes.number,
 

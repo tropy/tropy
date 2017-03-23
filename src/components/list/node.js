@@ -20,7 +20,6 @@ class ListNode extends PureComponent {
       'list': true,
       'drop-target': this.props.isSortable,
       'active': this.props.isSelected,
-      'context': this.props.isContext,
       'dragging': this.props.isDragging,
       'over': this.isOver
     }
@@ -90,7 +89,6 @@ class ListNode extends PureComponent {
       name: PropTypes.string
     }),
 
-    isContext: PropTypes.bool,
     isSelected: PropTypes.bool,
     isEditing: PropTypes.bool,
     isSortable: PropTypes.bool,
