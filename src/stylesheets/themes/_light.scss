@@ -39,44 +39,46 @@ $brand-primary-darken-4: $blue-darken-4;
 // --------------------------------------------------
 
 :root {
-  #{--shade-0}:    #fff;            // Body
-  #{--shade-1}:    #f6f6f6;         // Sidbar bg, panel bg
-  #{--shade-2}:    #e6e6e6;         // Inactive tab
-  #{--shade-3}:    #ddd;            // Active state bg/border
-  #{--shade-4}:    #ccc;            // Slider track
+  #{--shade-0}:          #fff;             // Body
+  #{--shade-1}:          #f6f6f6;          // Sidbar bg, panel bg
+  #{--shade-2}:          #e6e6e6;          // Inactive tab
+  #{--shade-3}:          #ddd;             // Active state bg/border
+  #{--shade-3-darken-5}: darken(#ddd, 5%); // Thumbnail bg
+  #{--shade-4}:          #ccc;             // Slider track
 
-  #{--shade-5}:    #777;            // Icon color
-  #{--shade-5-60}: rgba(#777, 0.6);
+  #{--shade-5}:          #777;             // Icon color
+  #{--shade-5-50}:       rgba(#777, 0.5);
 
-  #{--shade-6}:    #555;            // Sidebar active icon
-  #{--shade-7}:    #444;            // Softened text
-  #{--shade-8}:    #222;            // Text color, active icon
+  #{--shade-6}:          #555;             // Sidebar active icon
+  #{--shade-7}:          #444;             // Softened text
+  #{--shade-8}:          #222;             // Text color, active icon
 
-  #{--shade-9}:    #000;            // Black
-  #{--shade-9-10}: rgba(#000, 0.1);
-  #{--shade-9-20}: rgba(#000, 0.2);
-  #{--shade-9-60}: rgba(#000, 0.6);
+  #{--shade-9}:          #000;             // Black
+  #{--shade-9-10}:       rgba(#000, 0.1);
+  #{--shade-9-20}:       rgba(#000, 0.2);
+  #{--shade-9-60}:       rgba(#000, 0.6);
 }
 
 $transparent: var(--transparent);
 
-$shade-0:     var(--shade-0);
-$shade-1:     var(--shade-1);
-$shade-2:     var(--shade-2);
-$shade-3:     var(--shade-3);
-$shade-4:     var(--shade-4);
+$shade-0:           var(--shade-0);
+$shade-1:           var(--shade-1);
+$shade-2:           var(--shade-2);
+$shade-3:           var(--shade-3);
+$shade-3-lighten-5: var(--shade-3-darken-5);
+$shade-4:           var(--shade-4);
 
-$shade-5:     var(--shade-5);
-$shade-5-60:  var(--shade-5-60);
+$shade-5:           var(--shade-5);
+$shade-5-50:        var(--shade-5-50);
 
-$shade-6:     var(--shade-6);
-$shade-7:     var(--shade-7);
-$shade-8:     var(--shade-8);
+$shade-6:           var(--shade-6);
+$shade-7:           var(--shade-7);
+$shade-8:           var(--shade-8);
 
-$shade-9:     var(--shade-9);
-$shade-9-10:  var(--shade-9-10);
-$shade-9-20:  var(--shade-9-20);
-$shade-9-60:  var(--shade-9-60);
+$shade-9:           var(--shade-9);
+$shade-9-10:        var(--shade-9-10);
+$shade-9-20:        var(--shade-9-20);
+$shade-9-60:        var(--shade-9-60);
 
 
 // Scaffolding
@@ -239,8 +241,8 @@ $drag-preview-opacity:           0.8;
 $drag-preview-thumbnail-opacity: 0.8;
 
 // Thumbnail
-$thumbnail-color: $shade-5-60;
-$thumbnail-bg:    $shade-3; // Shading collision with active state
+$thumbnail-color: $shade-5-50;
+$thumbnail-bg:    $shade-3-lighten-5;
 
 // Progress bar
 $progress-bar-bg:       $shade-3;

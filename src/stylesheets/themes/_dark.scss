@@ -1,7 +1,9 @@
+// sass-lint:disable no-color-literals
+
+
 //
 // Dark theme
 // --------------------------------------------------
-
 
 @import "light"; // dev only
 
@@ -29,17 +31,18 @@ $brand-primary-60:       $blue-60;
 // Grays
 // --------------------------------------------------
 
-$shade-0: #000;
-$shade-1: #212121; // 87% Border search field
-$shade-2: #292929; // 84% Inactive tab
-$shade-3: #2f2f2f; // 82% Body
-$shade-4: #333;    // 80% Sidebar bg, panel bg
-$shade-5: #404040; // 75% Active state bg/border, slider track
-$shade-6: #555;    // Panel heading color, slider range
-$shade-7: #777;    // Icon color, sidebar headings
-$shade-8: #999;    // Softened text
-$shade-9: #bbb;    // Text color, active icon
-$shade-10: #fff;
+$shade-0:           #000;
+$shade-1:           #212121;              // 87% Border search field
+$shade-2:           #292929;              // 84% Inactive tab
+$shade-3:           #2f2f2f;              // 82% Body
+$shade-4:           #333;                 // 80% Sidebar bg, panel bg
+$shade-5:           #404040;              // 75% Active state bg/border, slider track
+$shade-5-lighten-5: lighten(#404040, 5%); // 70% Thumbnail bg
+$shade-6:           #555;                 // Panel heading color, slider range
+$shade-7:           #777;                 // Icon color, sidebar headings
+$shade-8:           #999;                 // Softened text
+$shade-9:           #bbb;                 // Text color, active icon
+$shade-10:          #fff;
 
 
 // Scaffolding
@@ -179,8 +182,8 @@ $drag-preview-opacity:           0.64; // Ok
 $drag-preview-thumbnail-opacity: 1; // Ok
 
 // Thumbnail
-$thumbnail-color: rgba($icon-color, 0.6); // Ok
-$thumbnail-bg:    $shade-5; // Shading collision with active state
+$thumbnail-color: rgba($icon-color, 0.5); // Ok
+$thumbnail-bg:    $shade-5-lighten-5; // Ok
 
 // Progress bar
 $progress-bar-bg:       $shade-2; // Ok
