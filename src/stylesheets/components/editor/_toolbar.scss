@@ -17,7 +17,7 @@
 
     .tool-group {
       & + .tool-group {
-        margin-left: $space-md + $space-min;
+        margin-left: $space-lg;
       }
     }
 
