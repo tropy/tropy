@@ -35,8 +35,12 @@ class ItemView extends PureComponent {
 
       const { note } = this.state
 
-      if (note.created && note.created === props.note.created) {
+      if (!note.id && note.created && note.created === props.note.created) {
         return this.setState({ note: { ...note, id: props.note.id } })
+      }
+
+      if (note.id && note.id === props.note.id) {
+        return
       }
 
       this.handleNoteUpdate.flush()
