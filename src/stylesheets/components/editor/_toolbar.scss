@@ -32,9 +32,7 @@
 
       &:active {
         .icon {
-          svg {
-            color: $icon-color;
-          }
+          color: $icon-color;
         }
       }
 
@@ -42,9 +40,7 @@
         background: $editor-btn-active-bg;
 
         .icon {
-          svg {
-            color: $editor-btn-active-color;
-          }
+          color: $editor-btn-active-color;
         }
       }
 

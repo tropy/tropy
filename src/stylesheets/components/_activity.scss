@@ -90,10 +90,7 @@
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-
-      svg {
-        color: $progress-cancel-color;
-      }
+      color: $progress-cancel-color;
     }
 
     &:hover,
@@ -105,9 +102,7 @@
       background: $icon-active-color;
 
       .icon {
-        svg {
-          color: $progress-cancel-color;
-        }
+        color: $progress-cancel-color;
       }
     }
   }
