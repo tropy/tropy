@@ -10,13 +10,15 @@
   align-items: center;
   position: relative;
 
-  .toolbar,
-  .toolbar.draggable {
+  .esper-header {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
-    transition: background-color $toolbar-transition;
+
+    .toolbar {
+      transition: background-color $toolbar-transition;
+    }
   }
 
   &:hover {
