@@ -92,7 +92,7 @@ class ProjectSidebar extends PureComponent {
         return
       case this.isListEmpty():
       case this.isListSelected(this.getFirstList()):
-        return this.select()
+        return this.handleSelect()
       case this.props.isTrashSelected:
         return this.handleListSelect(this.getLastList())
       default:
