@@ -10,8 +10,8 @@ const { meta } = require('../../common/os')
 const { pure } = require('../util')
 const { bool, func, number, shape, arrayOf } = PropTypes
 
-class ItemIterable extends PureComponent {
 
+class ItemIterable extends PureComponent {
   componentDidMount() {
     this.props.dp(getEmptyImage())
   }
@@ -98,19 +98,34 @@ class ItemIterable extends PureComponent {
 
 
   static DropTargetSpec = {
-    drop({ item, onDropPhotos }, monitor) {
-      const photo = monitor.getItem()
-
-      onDropPhotos({
-        item: item.id, photos: [photo]
-      })
+    drop({ item, onDropPhotos, onDropItems }, monitor) {
+      switch (monitor.getItemType()) {
+        case DND.PHOTO:
+          return onDropPhotos({
+            item: item.id, photos: [monitor.getItem()]
+          })
+        case DND.ITEMS:
+          return onDropItems([
+            item.id, ...monitor.getItem().items.map(({ id }) => id)
+          ])
+      }
     },
 
     canDrop({ item }, monitor) {
-      const photo = monitor.getItem()
-
       if (item.deleted) return false
-      if (item.id === photo.item) return false
+
+      switch (monitor.getItemType()) {
+        case DND.PHOTO: {
+          const photo = monitor.getItem()
+          if (item.id === photo.item) return false
+          break
+        }
+        case DND.ITEMS: {
+          const { items } = monitor.getItem()
+          if (items.find(({ id }) => item.id === id)) return false
+          break
+        }
+      }
 
       return true
     }
@@ -126,7 +141,7 @@ class ItemIterable extends PureComponent {
     return pure(DragSource(
       DND.ITEMS, this.DragSourceSpec, this.DragSourceCollect
     )(DropTarget(
-      DND.PHOTO, this.DropTargetSpec, this.DropTargetCollect
+      [DND.ITEMS, DND.PHOTO], this.DropTargetSpec, this.DropTargetCollect
     )(this)))
   }
 
@@ -153,6 +168,7 @@ class ItemIterable extends PureComponent {
     getSelection: func.isRequired,
 
     onContextMenu: func.isRequired,
+    onDropItems: func.isRequired,
     onDropPhotos: func.isRequired,
     onItemOpen: func.isRequired,
     onSelect: func.isRequired

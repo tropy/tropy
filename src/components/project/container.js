@@ -358,6 +358,10 @@ module.exports = {
         dispatch(actions.item.delete(items.map(item => item.id)))
       },
 
+      onItemMerge(...args) {
+        dispatch(actions.item.merge(...args))
+      },
+
       onItemPreview(...args) {
         dispatch(actions.item.preview(...args))
       },

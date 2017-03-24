@@ -124,6 +124,7 @@ class ItemIterator extends Iterator {
         isVertical: this.isVertical,
         getSelection: this.getSelection,
         onContextMenu: this.handleContextMenu,
+        onDropItems: this.props.onItemMerge,
         onDropPhotos: this.props.onPhotoMove,
         onItemOpen: this.props.onItemOpen,
         onSelect: this.props.onSelect
@@ -153,6 +154,7 @@ class ItemIterator extends Iterator {
 
     dt: func.isRequired,
     onContextMenu: func.isRequired,
+    onItemMerge: func.isRequired,
     onItemOpen: func.isRequired,
     onItemPreview: func.isRequired,
     onPhotoMove: func.isRequired,
