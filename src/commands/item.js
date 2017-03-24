@@ -245,14 +245,14 @@ class Merge extends Command {
 
       return {
         ...item,
-        photos: [...item.photos, ...m.photos]
+        photos: [...item.photos, ...m.photos],
+        tags: [...item.tags, ...m.tags]
       }
 
     } finally {
       yield put(act.history.drop(null, { search: true }))
     }
   }
-
 }
 
 class ToggleTags extends Command {

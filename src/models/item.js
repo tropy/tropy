@@ -14,8 +14,7 @@ const skel = (id) => ({
   id, tags: [], photos: [], lists: []
 })
 
-module.exports = {
-
+module.exports = mod.item = {
   async all(db, { trash, tags, sort }) {
     const items = []
     const dir = sort.asc ? 'ASC' : 'DESC'
@@ -154,7 +153,7 @@ module.exports = {
       await metadata.update(db, { id, data })
     }
 
-    const { [id]: item } = await module.exports.load(db, [id])
+    const { [id]: item } = await mod.item.load(db, [id])
     return item
 
   },
@@ -177,11 +176,14 @@ module.exports = {
 
     for (let it of items) {
       photos = photos.concat(it.photos)
+
       uniq(it.tags, tags, tmem)
       uniq(it.lists, lists, lmem)
     }
 
-    await mod.photo.merge(db, item.id, photos, item.photos.length)
+    await all([
+      mod.photo.merge(db, item.id, photos, item.photos.length),
+    ])
 
     return {
       photos, tags, lists
