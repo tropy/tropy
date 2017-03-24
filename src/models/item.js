@@ -5,7 +5,10 @@ const { all } = require('bluebird')
 const { assign } = Object
 const { into, map } = require('transducers.js')
 const { uniq } = require('../common/util')
-const photo = require('./photo')
+
+const mod = {
+  photo: require('./photo')
+}
 
 const skel = (id) => ({
   id, tags: [], photos: [], lists: []
@@ -178,7 +181,11 @@ module.exports = {
       uniq(it.lists, lists, lmem)
     }
 
-    await photo.merge(db, item.id, photos, item.photos.length)
+    await mod.photo.merge(db, item.id, photos, item.photos.length)
+
+    return {
+      photos, tags, lists
+    }
   },
 
   async delete(db, ids) {

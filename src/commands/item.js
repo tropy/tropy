@@ -231,11 +231,22 @@ class Merge extends Command {
     }
 
     try {
-      const [target, ...items] = yield select(state =>
+      let [item, ...items] = yield select(state =>
         pluck(state.items, payload)
       )
 
-      yield call(db.transaction, tx => mod.item.merge(tx, target, items))
+      let m = yield call(db.transaction, tx =>
+        mod.item.merge(tx, item, items)
+      )
+
+      yield [
+        put(act.photo.bulk.update([m.photos, { item: item.id }]))
+      ]
+
+      return {
+        ...item,
+        photos: [...item.photos, ...m.photos]
+      }
 
     } finally {
       yield put(act.history.drop(null, { search: true }))
