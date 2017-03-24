@@ -98,15 +98,29 @@ module.exports = {
       item)
   },
 
-  async order(db, item, order) {
-    if (order.length) {
+  async order(db, item, photos, offset = 0) {
+    if (photos.length) {
       return db.run(`
         UPDATE photos
-        SET position = CASE id
-          ${order.map((_, idx) => (`WHEN ? THEN ${idx + 1}`)).join(' ')}
-          END
-        WHERE item_id = ?`,
-        ...order, item)
+          SET position = CASE id
+            ${photos.map((_, idx) =>
+              (`WHEN ? THEN ${offset + idx + 1}`)).join(' ')}
+            END
+          WHERE item_id = ?`,
+        ...photos, item)
+    }
+  },
+
+  async merge(db, item, photos, offset = 0) {
+    if (photos.length) {
+      return db.run(`
+        UPDATE photos
+          SET item_id = ?, position = CASE id
+            ${photos.map((_, idx) =>
+              (`WHEN ? THEN ${offset + idx + 1}`)).join(' ')}
+            END
+          WHERE id IN (${photos.join(',')})`,
+        item, ...photos)
     }
   },
 

@@ -4,6 +4,8 @@ const metadata = require('./metadata')
 const { all } = require('bluebird')
 const { assign } = Object
 const { into, map } = require('transducers.js')
+const { uniq } = require('../common/util')
+const photo = require('./photo')
 
 const skel = (id) => ({
   id, tags: [], photos: [], lists: []
@@ -161,6 +163,23 @@ module.exports = {
       UPDATE subjects SET template = ? WHERE id = ?`, value, id)
   },
 
+  async merge(db, item, items) {
+    let photos = [], tags = [], lists = []
+
+    let tmem = new Set()
+    let lmem = new Set()
+
+    uniq(item.tags, [], tmem)
+    uniq(item.lists, [], lmem)
+
+    for (let it of items) {
+      photos = photos.concat(it.photos)
+      uniq(it.tags, tags, tmem)
+      uniq(it.lists, lists, lmem)
+    }
+
+    await photo.merge(db, item.id, photos, item.photos.length)
+  },
 
   async delete(db, ids) {
     return db.run(`

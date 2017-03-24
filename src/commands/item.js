@@ -11,6 +11,7 @@ const { text } = require('../value')
 const intl = require('../selectors/intl')
 const act = require('../actions')
 const mod = require('../models')
+const { pluck } = require('../common/util')
 const { map, cat, filter, into, compose } = require('transducers.js')
 const { ITEM } = require('../constants')
 
@@ -217,7 +218,7 @@ class Merge extends Command {
   static get action() { return ITEM.MERGE }
 
   *exec() {
-    // const { db } = this.options
+    const { db } = this.options
     const { payload, meta } = this.action
 
     if (meta.prompt) {
@@ -230,12 +231,17 @@ class Merge extends Command {
     }
 
     try {
-      const [target, ...ids] = payload
+      const [target, ...items] = yield select(state =>
+        pluck(state.items, payload)
+      )
+
+      yield call(db.transaction, tx => mod.item.merge(tx, target, items))
 
     } finally {
       yield put(act.history.drop(null, { search: true }))
     }
   }
+
 }
 
 class ToggleTags extends Command {
