@@ -58,6 +58,7 @@ module.exports = mod.item = {
           FROM items
             JOIN trash USING (id)
             LEFT OUTER JOIN sort USING (id)
+          WHERE reason = 'user'
           ORDER BY sort.value ${dir}, id ${dir}`, {
 
             $sort: sort.column
@@ -183,6 +184,7 @@ module.exports = mod.item = {
 
     await all([
       mod.photo.merge(db, item.id, photos, item.photos.length),
+      mod.item.tag.add(db, item.id, tags),
     ])
 
     return {
@@ -190,10 +192,10 @@ module.exports = mod.item = {
     }
   },
 
-  async delete(db, ids) {
+  async delete(db, ids, $reason = 'user') {
     return db.run(`
-      INSERT INTO trash (id)
-        VALUES ${ids.map(id => `(${id})`).join(',')}`
+      INSERT INTO trash (id, reason)
+        VALUES ${ids.map(id => `(${id}, $reason)`).join(',')}`, { $reason }
     )
   },
 
@@ -211,12 +213,14 @@ module.exports = mod.item = {
 
   async prune(db, since = '-1 month') {
     const condition = since ?
-      ` WHERE deleted < datetime("now", "${since}"))` : ''
+      ` OR deleted < datetime("now", "${since}"))` : ''
 
     return db.run(`
       DELETE FROM subjects
         WHERE id IN (
-          SELECT id FROM trash JOIN items USING (id)${condition})`
+          SELECT id
+            FROM trash JOIN items USING (id)
+            WHERE reason != 'user'${condition})`
     )
   },
 

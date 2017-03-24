@@ -155,8 +155,10 @@ CREATE TABLE taggings (
   PRIMARY KEY (id, tag_id)
 ) WITHOUT ROWID;
 
-
 CREATE TABLE trash (
   id          INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
-  deleted     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
+  deleted     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  reason      TEXT     NOT NULL DEFAULT 'user',
+
+  CHECK (reason IN ('user', 'auto', 'merge'))
 ) WITHOUT ROWID;
