@@ -40,6 +40,14 @@ module.exports = {
     }
   },
 
+  merge(payload, meta) {
+    return {
+      type: ITEM.MERGE,
+      payload: array(payload),
+      meta: { async: true, prompt: true, ...meta }
+    }
+  },
+
   insert(payload, meta) {
     return {
       type: ITEM.INSERT,

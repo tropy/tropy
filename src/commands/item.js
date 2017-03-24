@@ -215,6 +215,27 @@ class Save extends Command {
 
 class Merge extends Command {
   static get action() { return ITEM.MERGE }
+
+  *exec() {
+    // const { db } = this.options
+    const { payload, meta } = this.action
+
+    if (meta.prompt) {
+      const confirmed = yield call(prompt,
+        yield select(intl.message, { id: 'prompt.item.merge' })
+      )
+
+      this.init = performance.now()
+      if (!confirmed) return
+    }
+
+    try {
+      const [target, ...ids] = payload
+
+    } finally {
+      yield put(act.history.drop(null, { search: true }))
+    }
+  }
 }
 
 class ToggleTags extends Command {

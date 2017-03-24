@@ -55,6 +55,8 @@ linux:
           enabled: false
         - type: separator
   item-bulk: &item-bulk
+    - label: 'Merge Selected Items'
+      command: 'app:merge-item'
     - label: 'Delete Selected Items'
       command: 'app:delete-item'
   item-list: &item-list
