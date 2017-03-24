@@ -232,4 +232,14 @@ describe('util', () => {
       expect(merge({ a: [1] }, { b: 2, a: [3] })).to.eql({ a: [3], b: 2 })
     })
   })
+
+  describe('.uniq', () => {
+    const { uniq } = util
+
+    it('returns array of unique values', () => {
+      expect(uniq([])).to.eql([])
+      expect(uniq([1])).to.eql([1])
+      expect(uniq([1, 2, 3, 1, 3, 4])).to.eql([1, 2, 3, 4])
+    })
+  })
 })

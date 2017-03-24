@@ -49,6 +49,17 @@ module.exports = {
     return [...array].sort(...args)
   },
 
+  uniq(array, into = [], memo = new Set()) {
+    for (let item of array) {
+      if (!memo.has(item)) {
+        memo.add(item)
+        into.push(item)
+      }
+    }
+
+    return into
+  },
+
   reverse(array) {
     const rev = []
 
