@@ -184,7 +184,7 @@ module.exports = mod.item = {
 
     await all([
       mod.photo.merge(db, item.id, photos, item.photos.length),
-      mod.item.tag.add(db, item.id, tags),
+      mod.item.tags.add(db, tags.map(tag => ({ id: item.id, tag }))),
     ])
 
     return {
@@ -226,11 +226,13 @@ module.exports = mod.item = {
 
   tags: {
     async add(db, values) {
-      return db.run(`
-        INSERT INTO taggings (tag_id, id) VALUES ${
-          values.map(({ id, tag }) =>
-            `(${Number(tag)}, ${Number(id)})`).join(',')
-          }`)
+      if (values.length) {
+        return db.run(`
+          INSERT INTO taggings (tag_id, id) VALUES ${
+            values.map(({ id, tag }) =>
+              `(${Number(tag)}, ${Number(id)})`).join(',')
+            }`)
+      }
     },
 
     async clear(db, id) {
