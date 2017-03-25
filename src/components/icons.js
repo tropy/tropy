@@ -35,7 +35,7 @@ function i(name, svg) {
 i('AlignCenter', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
-      <path d="M15,2V3H1V2ZM3,4V5H13V4ZM1,7H15V6H1ZM1,9H15V8H1Zm2,1v1H13V10Zm0,5H13V14H3ZM1,13H15V12H1Z"/>
+      <path d="M13,3H3V2H13Zm2,2H1V6H15ZM13,8H3V9H13Zm2,3H1v1H15Zm-2,3H3v1H13Z"/>
     </g>
   </svg>
 ))
@@ -43,7 +43,7 @@ i('AlignCenter', (
 i('AlignLeft', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
-      <path d="M15,2V3H1V2ZM13,4H1V5H13ZM1,7H15V6H1ZM1,9H15V8H1Zm12,1H1v1H13ZM1,15H13V14H1Zm0-2H15V12H1Z"/>
+      <path d="M13,3H1V2H13Zm2,2H1V6H15ZM13,8H1V9H13Zm2,3H1v1H15Zm-2,3H1v1H13Z"/>
     </g>
   </svg>
 ))
@@ -51,7 +51,7 @@ i('AlignLeft', (
 i('AlignRight', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
-      <path d="M15,2V3H1V2ZM3,5H15V4H3ZM1,7H15V6H1ZM1,9H15V8H1Zm2,2H15V10H3Zm0,4H15V14H3ZM1,13H15V12H1Z"/>
+      <path d="M3,14H15v1H3ZM1,12H15V11H1ZM3,9H15V8H3ZM1,6H15V5H1ZM3,3H15V2H3Z"/>
     </g>
   </svg>
 ))
@@ -67,7 +67,7 @@ i('B', (
 i('BulletList', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
-      <path d="M4,3.5A1.5,1.5,0,1,1,2.5,2,1.5,1.5,0,0,1,4,3.5ZM2.5,10A1.5,1.5,0,1,0,4,11.5,1.5,1.5,0,0,0,2.5,10ZM15,2H6V3h9Zm0,2H6V5h9ZM13,6H6V7h7Zm2,4H6v1h9Zm0,2H6v1h9Zm-2,2H6v1h7Z"/>
+      <path d="M4,3.5A1.5,1.5,0,1,1,2.5,2,1.5,1.5,0,0,1,4,3.5ZM2.5,10A1.5,1.5,0,1,0,4,11.5,1.5,1.5,0,0,0,2.5,10ZM6,2V3H16V2Zm8,3H6V6h8ZM6,11H16V10H6Zm0,3h8V13H6Z"/>
     </g>
   </svg>
 ))
@@ -132,7 +132,7 @@ i('I', (
 i('Lift', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
-      <path d="M7,2H8V15H7ZM9,3V4h7V3ZM9,8h7V7H9Zm0,4h7V11H9Zm5-7H9V6h5Zm0,4H9v1h5ZM9,14h5V13H9ZM3,6.707,2.293,6l-2.5,2.5,2.5,2.5L3,10.293,1.707,9H6V8H1.707Z"/>
+      <path d="M7,1H8V16H7Zm7,1H9V3h5ZM9,12h7V11H9ZM9,5V6h7V5Zm5,3H9V9h5ZM9,15h5V14H9ZM3,10.293,1.707,9H6V8H1.707L3,6.707,2.293,6l-2.5,2.5,2.5,2.5Z"/>
     </g>
   </svg>
 ))
@@ -205,7 +205,7 @@ i('Note', (
 i('NumberedList', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
-      <path d="M.97,10.828v-.052a.925.925,0,0,1,.983-.935.888.888,0,0,1,.965.884,1.93,1.93,0,0,1-.664,1.241L.069,14.358V15H4v-.853H1.427v-.052L2.879,12.5A2.764,2.764,0,0,0,3.9,10.634,1.717,1.717,0,0,0,1.974,9a1.783,1.783,0,0,0-1.94,1.78v.047ZM15,3H6V2h9Zm0,2H6V4h9ZM13,7H6V6h7Zm2,4H6V10h9Zm0,2H6V12h9Zm-2,2H6V14h7ZM3,7V1H2L0,2.717v1L1.96,2H2V7Z"/>
+      <path d="M1.427,14.147H4V15H.069v-.642l2.185-2.392a1.93,1.93,0,0,0,.664-1.241.888.888,0,0,0-.965-.884.925.925,0,0,0-.983.935v.052H.034V10.78A1.783,1.783,0,0,1,1.974,9,1.717,1.717,0,0,1,3.9,10.634,2.764,2.764,0,0,1,2.879,12.5L1.427,14.095ZM6,2V3H16V2Zm8,3H6V6h8ZM6,11H16V10H6Zm0,3h8V13H6ZM2,2V7H3V1H2L0,2.717v1L1.96,2Z"/>
     </g>
   </svg>
 ))
@@ -255,7 +255,7 @@ i('Search', (
 i('Sink', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
-      <path d="M7,2H8V15H7ZM9,3V4h7V3ZM9,8h7V7H9Zm0,4h7V11H9Zm6-7H9V6h6Zm0,4H9v1h6ZM9,14h6V13H9ZM3,6.707,4.293,8H0V9H4.293L3,10.293,3.707,11l2.5-2.5L3.707,6Z"/>
+      <path d="M7,1H8V16H7Zm7,1H9V3h5ZM9,12h7V11H9ZM9,5V6h7V5Zm5,3H9V9h5ZM9,15h5V14H9ZM3,6.707,4.293,8H0V9H4.293L3,10.293,3.707,11l2.5-2.5L3.707,6Z"/>
     </g>
   </svg>
 ))
