@@ -8,7 +8,9 @@ panel:
     tab: Metadata
     photo: Photo
     item: Item
-  tags: Tags
+  tags:
+    tags: Tags
+    add: Add Tag …
   photos: Photos
   notes: Notes
 
