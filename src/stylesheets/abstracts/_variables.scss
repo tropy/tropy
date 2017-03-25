@@ -183,6 +183,12 @@ $metadata-gutter: $space-sm;
 $metadata-horizontal-offset: 33%;
 
 
+// Tag list
+// --------------------------------------------------
+
+$tag-list-btn-transition: 0.2s ease;
+
+
 // Note list
 // --------------------------------------------------
 
@@ -262,6 +268,7 @@ $prose-mirror-padding:        40px; // ~ blank line
 // --------------------------------------------------
 
 $toolbar-context-transition: 0.24s ease;
+
 
 // Debug
 // --------------------------------------------------

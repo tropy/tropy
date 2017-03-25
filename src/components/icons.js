@@ -183,6 +183,14 @@ i('Metadata', (
   </svg>
 ))
 
+i('MinusCircle', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M8.5,1A6.5,6.5,0,1,0,15,7.5,6.5,6.5,0,0,0,8.5,1Zm0,12A5.5,5.5,0,1,1,14,7.5,5.506,5.506,0,0,1,8.5,13ZM5,7h7V8H5Z"/>
+    </g>
+  </svg>
+))
+
 i('Note', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">

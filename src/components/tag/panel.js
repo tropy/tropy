@@ -5,15 +5,25 @@ const { PureComponent, PropTypes } = React
 const { arrayOf, number, shape, string } = PropTypes
 const { connect } = require('react-redux')
 const { getVisibleTags } = require('../../selectors')
-
+const { IconTag, IconPlus, IconMinusCircle } = require('../icons')
+const { IconButton } = require('../button')
 
 class TagPanel extends PureComponent {
 
   render() {
     return (
-      <div className="tag tab-pane">
+      <div className="tag list tab-pane">
         <ul>
-          {this.props.tags.map(tag => <li key={tag.id}>{tag.name}</li>)}
+          {this.props.tags.map(tag =>
+            <li key={tag.id}>
+              <IconTag/>
+              <div className="name">{tag.name}</div>
+              <IconButton icon={<IconMinusCircle/>}/>
+            </li>
+          )}
+          <li>
+            <div className="flex-row center add-tag"><IconPlus/>Add Tag …</div>
+          </li>
         </ul>
       </div>
     )

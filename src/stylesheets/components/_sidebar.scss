@@ -120,17 +120,6 @@
         @include css-truncation;
       }
     }
-
-    .tags {
-      .active {
-        background: $sidebar-tag-active-bg;
-        color: $sidebar-tag-active-color;
-
-        .icon {
-          color: $sidebar-tag-active-color;
-        }
-      }
-    }
   }
 
   .scrollbar-style-old-school & {

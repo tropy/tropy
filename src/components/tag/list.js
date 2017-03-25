@@ -44,7 +44,7 @@ class TagList extends PureComponent {
     const { tags, onCancel, onSelect, onSave } = this.props
 
     return (
-      <ol className="tags">
+      <ol className="tag list">
         {tags.map(tag =>
           <Tag
             key={tag.id}

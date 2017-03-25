@@ -1,0 +1,52 @@
+//
+// Tag list
+// --------------------------------------------------
+
+.tag.list {
+  #sidebar & {
+    .active {
+      background: $sidebar-tag-active-bg;
+      color: $sidebar-tag-active-color;
+
+      .icon {
+        color: $sidebar-tag-active-color;
+      }
+    }
+  }
+
+  .panel & {
+    padding: $space-min $component-padding-horizontal 0;
+
+    li {
+      display: flex;
+      align-items: center;
+      height: $line-height-large;
+    }
+
+    .icon {
+      margin-right: $space-xs;
+    }
+
+    .name {
+      margin-right: auto;
+    }
+
+    .btn-icon {
+      margin-left: $space-min;
+      opacity: 0;
+      transition: opacity $tag-list-btn-transition;
+
+      @at-root #{selector-replace(&, ".tag.list", ".tag.list:hover")} {
+        opacity: 1;
+      }
+
+      .icon {
+        margin: 0;
+      }
+    }
+
+    .add-tag {
+      color: $add-tag-color;
+    }
+  }
+}
