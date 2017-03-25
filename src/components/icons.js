@@ -214,7 +214,7 @@ i('Photo', (
 i('Plus', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
-      <polygon points="16,7 9,7 9,0 8,0 8,7 1,7 1,8 8,8 8,15 9,15 9,8 16,8 "/>
+      <polygon points="15 7 9 7 9 1 8 1 8 7 2 7 2 8 8 8 8 14 9 14 9 8 15 8 15 7"/>
     </g>
   </svg>
 ))
