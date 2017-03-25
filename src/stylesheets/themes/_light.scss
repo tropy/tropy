@@ -56,7 +56,6 @@ $brand-primary-darken-4: $blue-darken-4;
   #{--shade-9}:          #000;             // Black
   #{--shade-9-10}:       rgba(#000, 0.1);
   #{--shade-9-20}:       rgba(#000, 0.2);
-  #{--shade-9-60}:       rgba(#000, 0.6);
 }
 
 $transparent: var(--transparent);
@@ -78,7 +77,6 @@ $shade-8:           var(--shade-8);
 $shade-9:           var(--shade-9);
 $shade-9-10:        var(--shade-9-10);
 $shade-9-20:        var(--shade-9-20);
-$shade-9-60:        var(--shade-9-60);
 
 
 // Scaffolding
@@ -232,9 +230,10 @@ $slider-range-bg: $shade-5;
 $slider-handle-bg: $shade-0;
 $slider-handle-border: $shade-9-20;
 
-// Image
-$image-bg: $shade-2;
-$toolbar-hover-bg: $shade-9-60;
+// Esper
+$esper-bg:         $shade-0;
+$esper-border:     $shade-2;
+$esper-toolbar-bg: $shade-0;
 
 // Drag preview
 $drag-preview-opacity:           0.8;

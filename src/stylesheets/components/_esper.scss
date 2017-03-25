@@ -4,11 +4,12 @@
 
 .esper {
   height: 100%;
-  background: $image-bg;
+  background: $esper-bg;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
+  border-bottom: 1px solid $esper-border;
 
   .esper-header {
     position: absolute;
@@ -17,13 +18,17 @@
     width: 100%;
 
     .toolbar {
-      transition: background-color $toolbar-transition;
+      box-sizing: content-box;
+      background: $esper-toolbar-bg;
+      border-bottom: 1px solid $esper-border;
+      opacity: 0;
+      transition: opacity $toolbar-transition;
     }
   }
 
   &:hover {
     .toolbar {
-      background: $toolbar-hover-bg;
+      opacity: 1;
     }
   }
 
