@@ -204,8 +204,10 @@ $photo-list-active-color: $shade-8;
 $photo-list-active-bg: $shade-3;
 
 // Note list
-$note-active-color: $shade-0;
-$note-active-bg: $brand-primary;
+$note-list-focus-color:  $shade-0;
+$note-list-focus-bg:     $brand-primary;
+$note-list-active-color: $shade-8;
+$note-list-active-bg:    $shade-3;
 
 // Editable
 $editable-color: $text-color;

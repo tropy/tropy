@@ -29,16 +29,25 @@ $panel-separator-color: #ddd !default;
     }
 
     &.active {
-      color: $note-active-color;
-      background: $note-active-bg;
+      color: $note-list-active-color;
+      background: $note-list-active-bg;
+
+      @at-root #{selector-replace(&, ".note.list", ".note.list:focus")} {
+        color: $note-list-focus-color;
+        background: $note-list-focus-bg;
+      }
 
       &::before {
         content: none;
       }
 
       & + .note {
-        border-top: 1px solid $note-active-bg;
+        border-top: 1px solid $note-list-active-bg;
         padding-top: ($note-padding-vertical - 1px);
+
+        @at-root #{selector-replace(&, ".note.list", ".note.list:focus")} {
+          border-top-color: $note-list-focus-bg;
+        }
 
         &::before {
           content: none;
