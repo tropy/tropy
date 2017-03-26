@@ -9,8 +9,8 @@
 $font-family-sans-serif: "Helvetica Neue", Helvetica, sans-serif;
 $font-family-base:       $font-family-sans-serif;
 
-$font-size-small: 13px;
-$font-size-base:  14px;
+$font-size-small: 12px;
+$font-size-base:  13px;
 $font-size-large: 16px;
 
 $line-height-base:     1.429;
@@ -163,14 +163,14 @@ $item-table-header-height: $space-lg - 2px; // 24px (content-box)
 // Panel
 // --------------------------------------------------
 
-$panel-header-height: $line-height-large;
-$panel-body-min-height: 100px - $panel-header-height - 4px;
+$panel-header-height: #{const("PANEL.HEADER_HEIGHT")}px;
+$panel-body-min-height: 100px - #{const("PANEL.HEADER_HEIGHT")}px - 4px;
 
 
 // Tabs
 // --------------------------------------------------
 
-$tabs-height: $panel-header-height;
+$tabs-height: #{const("PANEL.HEADER_HEIGHT")}px;
 $tabs-padding-horizontal: $space-md;
 $tabs-compact-padding-horizontal: $space-xs;
 
