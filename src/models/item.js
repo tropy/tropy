@@ -167,7 +167,7 @@ module.exports = mod.item = {
   },
 
   async merge(db, item, items) {
-    let photos = [], tags = [], lists = []
+    let photos = [], tags = [], lists = [], ids = []
 
     let tmem = new Set()
     let lmem = new Set()
@@ -176,6 +176,7 @@ module.exports = mod.item = {
     uniq(item.lists, [], lmem)
 
     for (let it of items) {
+      ids.push(it.id)
       photos = photos.concat(it.photos)
 
       uniq(it.tags, tags, tmem)
@@ -185,6 +186,7 @@ module.exports = mod.item = {
     await all([
       mod.photo.merge(db, item.id, photos, item.photos.length),
       mod.item.tags.add(db, tags.map(tag => ({ id: item.id, tag }))),
+      mod.item.lists.merge(db, item.id, ids, lists)
     ])
 
     return {
@@ -243,6 +245,25 @@ module.exports = mod.item = {
       return db.run(`
         DELETE FROM taggings
           WHERE id = ? AND tag_id IN (${tags.map(Number).join(',')})`, id)
+    }
+  },
+
+  lists: {
+    async merge(db, id, items, lists) {
+      return db.run(`
+        INSERT INTO list_items (list_id, id, position, added)
+          SELECT list_id, ${Number(id)} AS id, position, added
+            FROM list_items li
+            WHERE list_id IN (${lists.map(Number).join(',')})
+              AND li.id IN (${items.map(Number).join(',')})
+              AND deleted IS NULL
+            GROUP BY list_id`)
+    },
+
+    async remove(db, id, lists) {
+      return db.run(`
+        DELETE FROM list_items
+          WHERE id = ? AND list_id IN (${lists.map(Number).join(',')})`)
     }
   }
 }
