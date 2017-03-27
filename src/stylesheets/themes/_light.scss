@@ -54,6 +54,7 @@ $brand-primary-darken-4: $blue-darken-4;
   #{--shade-8}:          #222;             // Text color, active icon
 
   #{--shade-9}:          #000;             // Black
+  #{--shade-9-4}:        rgba(#000, 0.04);
   #{--shade-9-10}:       rgba(#000, 0.1);
   #{--shade-9-20}:       rgba(#000, 0.2);
 }
@@ -75,6 +76,7 @@ $shade-7:           var(--shade-7);
 $shade-8:           var(--shade-8);
 
 $shade-9:           var(--shade-9);
+$shade-9-4:         var(--shade-9-4);
 $shade-9-10:        var(--shade-9-10);
 $shade-9-20:        var(--shade-9-20);
 
@@ -195,7 +197,9 @@ $template-select-border: $shade-3;
 $template-select-bg:     $shade-1;
 
 // Tag list
-$add-tag-color: $shade-5;
+$tag-list-hover-color: $shade-9-4;
+$incomplete-color:     #bbb; // Todo
+$add-tag-color:        $shade-5;
 
 // Photo list
 $photo-list-focus-color: $shade-0;

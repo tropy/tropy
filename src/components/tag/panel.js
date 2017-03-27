@@ -6,8 +6,15 @@ const { FormattedMessage } = require('react-intl')
 const { arrayOf, number, shape, string } = PropTypes
 const { connect } = require('react-redux')
 const { getVisibleTags } = require('../../selectors')
-const { IconTag, IconPlus, IconMinusCircle } = require('../icons')
 const { IconButton } = require('../button')
+
+const {
+  IconTag,
+  IconPlus,
+  IconPlusCircles,
+  IconMinusCircle,
+  IconMinusCircles
+} = require('../icons')
 
 class TagPanel extends PureComponent {
 
@@ -19,6 +26,8 @@ class TagPanel extends PureComponent {
             <li key={tag.id}>
               <IconTag/>
               <div className="name">{tag.name}</div>
+              <IconButton icon={<IconPlusCircles/>}/>
+              <IconButton icon={<IconMinusCircles/>}/>
               <IconButton icon={<IconMinusCircle/>}/>
             </li>
           )}

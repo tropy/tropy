@@ -15,12 +15,28 @@
   }
 
   .panel & {
-    padding: $space-min $component-padding-horizontal 0;
+    padding: $space-min 0 0;
 
     li {
       display: flex;
       align-items: center;
       height: $line-height-large;
+      padding: 0 $component-padding-horizontal;
+
+      &:hover:not(:last-child) {
+        background-color: $tag-list-hover-color;
+
+        .btn-icon {
+          opacity: 1;
+        }
+      }
+
+      &.incomplete {
+        &,
+        .icon-tag {
+          color: $incomplete-color;
+        }
+      }
     }
 
     .icon {
@@ -29,16 +45,15 @@
 
     .name {
       margin-right: auto;
+
+      & + .btn-icon {
+        margin-left: $space-min;
+      }
     }
 
     .btn-icon {
-      margin-left: $space-min;
+      padding: $btn-icon-padding 2px;
       opacity: 0;
-      transition: opacity $tag-list-btn-transition;
-
-      @at-root #{selector-replace(&, ".tag.list", ".tag.list:hover")} {
-        opacity: 1;
-      }
 
       .icon {
         margin: 0;

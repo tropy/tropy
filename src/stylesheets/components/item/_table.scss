@@ -143,8 +143,9 @@
     display: flex; // Prevent overflow
 
     .scroll-container {
-      background-image: repeating-linear-gradient(to bottom, $items-odd-bg $space-min,
-        $items-odd-bg ($row-height + $space-min), transparent ($row-height + $space-min),
+      background-image: repeating-linear-gradient(to bottom,
+        $items-odd-bg $space-min, $items-odd-bg ($row-height + $space-min),
+        transparent ($row-height + $space-min),
         transparent (2 * $row-height + $space-min));
       background-attachment: local;
       padding-top: $space-min;
