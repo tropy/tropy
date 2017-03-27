@@ -15,16 +15,13 @@
   }
 
   .table-head {
-    box-sizing: content-box;
     width: 100%;
     table-layout: fixed;
     border-collapse: separate;
     border-spacing: 0;
-    border: {
-      top: 1px solid $item-table-header-border-color;
-      bottom: 1px solid $item-table-header-border-color;
-    }
     color: $item-table-header-color;
+
+
 
     .scrollbar-style-old-school & {
       width: calc(100% - #{$component-padding-horizontal});
@@ -53,7 +50,12 @@
     text-align: justify;
     font-weight: 400;
     height: $item-table-header-height;
+     border: {
+      top: 1px solid $item-table-header-border-color;
+      bottom: 1px solid $item-table-header-border-color;
+    }
     position: relative;
+
 
     &:first-child {
       padding-left: $space-sm;

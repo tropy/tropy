@@ -114,14 +114,14 @@ $mode-transition: 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 // Buttons
 // --------------------------------------------------
 
-
+$btn-icon-padding: 5px; // 26px size
 $btn-disabled-opacity: 0.5;
 
 
 // Forms
 // --------------------------------------------------
 
-$input-height-base: $space-lg;
+$input-height-base: $line-height-large;
 $input-height-large: ($space-xl + $space-xs);
 $input-border-radius-small: $border-radius-small;
 
@@ -157,7 +157,7 @@ $activity-transition-timing-function: ease-out;
 // Table view
 // --------------------------------------------------
 
-$item-table-header-height: $space-lg - 2px; // 24px (content-box)
+$item-table-header-height: $line-height-large;
 
 
 // Panel
