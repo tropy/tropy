@@ -84,6 +84,7 @@ module.exports = {
 
       if (db) {
         yield [
+          call(mod.item.prune, db),
           call(mod.list.prune, db),
           call(mod.tag.prune, db),
           call(mod.value.prune, db),

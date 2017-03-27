@@ -199,6 +199,8 @@ module.exports = mod.item = {
       mod.metadata.update(db, { id: item.id, data })
     ])
 
+    await mod.item.delete(db, ids, 'merge')
+
     return {
       photos, tags, lists, data
     }
@@ -225,7 +227,7 @@ module.exports = mod.item = {
 
   async prune(db, since = '-1 month') {
     const condition = since ?
-      ` OR deleted < datetime("now", "${since}"))` : ''
+      ` OR deleted < datetime("now", "${since}")` : ''
 
     return db.run(`
       DELETE FROM subjects
