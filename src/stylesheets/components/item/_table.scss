@@ -143,11 +143,11 @@
     display: flex; // Prevent overflow
 
     .scroll-container {
-      background-image: repeating-linear-gradient(to bottom, $items-odd-bg 3px,
-        $items-odd-bg ($row-height + 3px), transparent ($row-height + 3px),
-        transparent (2 * $row-height + 3px));
+      background-image: repeating-linear-gradient(to bottom, $items-odd-bg $space-min,
+        $items-odd-bg ($row-height + $space-min), transparent ($row-height + $space-min),
+        transparent (2 * $row-height + $space-min));
       background-attachment: local;
-      padding-top: 3px;
+      padding-top: $space-min;
       overflow-y: scroll;
     }
 
