@@ -41,7 +41,7 @@ class ItemTabs extends PureComponent {
           isActive={this.isActive(TAGS)}
           onActivate={this.handleSelectTags}>
           <IconTag/>
-          <FormattedMessage id="panel.tags.tags"/>
+          <FormattedMessage id="panel.tags.tab"/>
         </Tab>
       </Tabs>
     )
