@@ -106,7 +106,7 @@
     "redux": "^3.5.2",
     "redux-saga": "^0.14.2",
     "redux-thunk": "^2.1.0",
-    "reselect": "^2.5.3",
+    "reselect": "^3.0.0",
     "rimraf": "^2.5.2",
     "sqlite3": "^3.1.1",
     "string.prototype.padstart": "^3.0.0",
