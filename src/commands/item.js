@@ -231,22 +231,23 @@ class Merge extends Command {
     }
 
     try {
-      let [item, ...items] = yield select(state =>
-        pluck(state.items, payload)
-      )
+      let [[item, ...items], data] = yield select(state => [
+        pluck(state.items, payload), state.metadata
+      ])
 
       let m = yield call(db.transaction, tx =>
-        mod.item.merge(tx, item, items)
+        mod.item.merge(tx, item, items, data)
       )
 
       yield [
-        put(act.photo.bulk.update([m.photos, { item: item.id }]))
+        put(act.photo.bulk.update([m.photos, { item: item.id }])),
+        put(act.metadata.load([item.id]))
       ]
 
       return {
         ...item,
         photos: [...item.photos, ...m.photos],
-        tags: [...item.tags, ...m.tags]
+        tags: [...item.tags, ...m.tags],
       }
 
     } finally {

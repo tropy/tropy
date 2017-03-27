@@ -1,12 +1,12 @@
 'use strict'
 
-const metadata = require('./metadata')
 const { all } = require('bluebird')
 const { assign } = Object
 const { into, map } = require('transducers.js')
 const { uniq } = require('../common/util')
 
 const mod = {
+  metadata: require('./metadata'),
   photo: require('./photo')
 }
 
@@ -151,7 +151,7 @@ module.exports = mod.item = {
       INSERT INTO items (id) VALUES (?)`, id)
 
     if (data) {
-      await metadata.update(db, { id, data })
+      await mod.metadata.update(db, { id, data })
     }
 
     const { [id]: item } = await mod.item.load(db, [id])
@@ -166,8 +166,11 @@ module.exports = mod.item = {
       UPDATE subjects SET template = ? WHERE id = ?`, value, id)
   },
 
-  async merge(db, item, items) {
+  async merge(db, item, items, metadata) {
     let photos = [], tags = [], lists = [], ids = []
+
+    let data = { ...metadata[item.id] }
+    delete data.id
 
     let tmem = new Set()
     let lmem = new Set()
@@ -181,16 +184,23 @@ module.exports = mod.item = {
 
       uniq(it.tags, tags, tmem)
       uniq(it.lists, lists, lmem)
+
+      for (let prop in metadata[it.id]) {
+        if (prop !== 'id' && !(prop in data)) {
+          data[prop] = { ...metadata[it.id][prop] }
+        }
+      }
     }
 
     await all([
       mod.photo.merge(db, item.id, photos, item.photos.length),
       mod.item.tags.add(db, tags.map(tag => ({ id: item.id, tag }))),
-      mod.item.lists.merge(db, item.id, ids, lists)
+      mod.item.lists.merge(db, item.id, ids, lists),
+      mod.metadata.update(db, { id: item.id, data })
     ])
 
     return {
-      photos, tags, lists
+      photos, tags, lists, data
     }
   },
 
