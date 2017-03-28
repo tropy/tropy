@@ -4,6 +4,11 @@ module.exports = {
   RESTORE: 'properties.restore',
   UPDATE: 'properties.update',
 
+  TR: {
+    BOX: 'https:/schema.tropy.org/v1/properties/box',
+    FOLDER: 'https:/schema.tropy.org/v1/properties/folder',
+  },
+
   DC: {
     CONTRIBUTOR: 'http://purl.org/dc/elements/1.1/contributor',
     COVERAGE: 'http://purl.org/dc/elements/1.1/coverage',
@@ -20,5 +25,9 @@ module.exports = {
     SUBJECT: 'http://purl.org/dc/elements/1.1/subject',
     TITLE: 'http://purl.org/dc/elements/1.1/title',
     TYPE: 'http://purl.org/dc/elements/1.1/type'
+  },
+
+  S: {
+    RECIPIENT: 'http://schema.org/recipient'
   }
 }

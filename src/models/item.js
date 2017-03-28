@@ -26,7 +26,7 @@ module.exports = mod.item = {
           FROM metadata JOIN metadata_values USING (value_id)
           WHERE property = $sort
         )
-        SELECT id, sort.value
+        SELECT DISTINCT id, sort.value
           FROM items
             ${tags.length ? 'JOIN taggings USING (id)' : ''}
             LEFT OUTER JOIN sort USING (id)
@@ -54,7 +54,7 @@ module.exports = mod.item = {
           FROM metadata JOIN metadata_values USING (value_id)
           WHERE property = $sort
         )
-        SELECT id, sort.value
+        SELECT DISTINCT id, sort.value
           FROM items
             JOIN trash USING (id)
             LEFT OUTER JOIN sort USING (id)
@@ -73,7 +73,7 @@ module.exports = mod.item = {
     const dir = sort.asc ? 'ASC' : 'DESC'
 
     await db.each(`
-      SELECT id, added
+      SELECT DISTINCT id, added
         FROM list_items
           ${tags.length ? 'JOIN taggings USING (id)' : ''}
           LEFT OUTER JOIN items USING (id)

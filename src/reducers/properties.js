@@ -1,9 +1,22 @@
 'use strict'
 
 const { PROPERTIES } = require('../constants')
-const { DC } = PROPERTIES
+const { DC, TR, S } = PROPERTIES
 
 const init = {
+  [TR.BOX]: {
+    uri: TR.BOX,
+    label: 'Box',
+    definition: 'A Box.',
+    comment: ''
+  },
+  [TR.FOLDER]: {
+    uri: TR.FOLDER,
+    label: 'Folder',
+    definition: 'A Folder.',
+    comment: ''
+  },
+
   [DC.CONTRIBUTOR]: {
     uri: DC.CONTRIBUTOR,
     label: 'Contributor',
@@ -94,7 +107,15 @@ const init = {
     label: 'Type',
     definition: 'The nature or genre of the resource.',
     comment: 'Recommended best practice is to use a controlled vocabulary such as the DCMI Type Vocabulary [DCMITYPE]. To describe the file format, physical medium, or dimensions of the resource, use the Format element.'
-  }
+  },
+
+  [S.RECIPIENT]: {
+    uri: S.RECIPIENT,
+    label: 'Recipient',
+    definition: 'A sub property of participant. The participant who is at the receiving end of the action.',
+    comment: ''
+  },
+
 }
 
 module.exports = {
