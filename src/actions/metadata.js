@@ -1,13 +1,19 @@
 'use strict'
 
-const {
-  LOAD, SAVE, UPDATE
-} = require('../constants/metadata')
+const { METADATA } = require('../constants')
 
 module.exports = {
+  insert(payload, meta = {}) {
+    return {
+      type: METADATA.INSERT,
+      payload,
+      meta
+    }
+  },
+
   load(payload, meta) {
     return {
-      type: LOAD,
+      type: METADATA.LOAD,
       payload,
       meta: { async: true, ...meta }
     }
@@ -15,15 +21,15 @@ module.exports = {
 
   save(payload, meta) {
     return {
-      type: SAVE,
+      type: METADATA.SAVE,
       payload,
       meta: { async: true, record: true, ...meta }
     }
   },
 
-  update(payload, meta) {
+  update(payload, meta = {}) {
     return {
-      type: UPDATE,
+      type: METADATA.UPDATE,
       payload,
       meta
     }
