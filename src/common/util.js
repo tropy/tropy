@@ -276,6 +276,10 @@ module.exports = {
     return string.toLowerCase().replace(/\s+/g, '-')
   },
 
+  quote(string, quotes = '""') {
+    return `${quotes[0]}${string}${quotes[1]}`
+  },
+
   diff(a, b) {
     const delta = []
 

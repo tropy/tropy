@@ -2,8 +2,11 @@
 
 const { save } = require('./value')
 const { into, map } = require('transducers.js')
+const { keys } = Object
+const { quote } = require('../common/util')
+const mod = {}
 
-module.exports = {
+module.exports = mod.metadata = {
   async load(db, ids) {
     const data = into({}, map(id => [id, { id }]), ids)
 
@@ -50,6 +53,16 @@ module.exports = {
         )
       }
     }
+  },
+
+  async replace(db, { id, data }) {
+    await db.run(`
+      DELETE FROM metadata
+        WHERE id = ? AND property NOT IN (${
+          keys(data).map(prop => quote(prop)).join(',')
+        })`, id)
+
+    return mod.metadata.update(db, { id, data })
   }
 
 }

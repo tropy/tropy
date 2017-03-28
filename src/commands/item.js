@@ -233,9 +233,8 @@ class Merge extends Command {
       put(act.metadata.insert({ id: item.id, ...m.data }, { search: true }))
     ]
 
-    this.undo = act.item.split({
-      ...m, item, items, data: metadata[item.id]
-    })
+    let { id, ...data } = metadata[item.id]
+    this.undo = act.item.split({ ...m, id, items, data })
 
     return {
       ...item,
@@ -250,12 +249,12 @@ class Split extends Command {
 
   *exec() {
     const { db } = this.options
-    const { item, items, data, lists } = this.action
+    const { id, items, data, lists, tags } = this.action.payload
 
     yield call(db.transaction, tx =>
-      mod.item.split(tx, item.id, items, data, lists))
+      mod.item.split(tx, id, items, data, lists, tags))
 
-    this.undo = act.item.merge([item.id, ...items.map(i => i.id)])
+    this.undo = act.item.merge([id, ...items.map(i => i.id)])
   }
 }
 
