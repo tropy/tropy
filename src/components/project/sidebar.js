@@ -24,8 +24,9 @@ class ProjectSidebar extends PureComponent {
     return this.props.selectedTags.length > 0
   }
 
-  tabIndex = TABS.ProjectSidebar
-
+  get tabIndex() {
+    return (this.props.isActive) ? TABS.ProjectSidebar : null
+  }
 
   getRootList() {
     return this.props.lists[LIST.ROOT]
@@ -263,6 +264,7 @@ class ProjectSidebar extends PureComponent {
   }
 
   static propTypes = {
+    isActive: bool,
     isSelected: bool,
     isTrashSelected: bool,
     hasToolbar: bool,

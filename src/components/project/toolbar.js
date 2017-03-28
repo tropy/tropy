@@ -9,7 +9,9 @@ const { IconButton } = require('../button')
 const { bool, func, number } = React.PropTypes
 
 const ProjectToolbar = ({
+  canCreateItems,
   isDisabled,
+  isEmpty,
   zoom,
   maxZoom,
   onZoomChange,
@@ -22,24 +24,27 @@ const ProjectToolbar = ({
         <Slider
           value={zoom}
           max={maxZoom}
-          isDisabled={isDisabled}
+          isDisabled={isEmpty || isDisabled}
           onChange={onZoomChange}
           minIcon={<IconList/>}
           maxIcon={<IconGrid/>}/>
       </div>
       <div className="tool-group">
-        <IconButton icon={<IconPlus/>} onClick={onItemCreate}/>
+        {canCreateItems && !isDisabled &&
+          <IconButton icon={<IconPlus/>} onClick={onItemCreate}/>}
       </div>
     </div>
     <div className="toolbar-right">
-      <SearchField/>
+      <SearchField isDisabled={isDisabled}/>
     </div>
   </Toolbar>
 )
 
 ProjectToolbar.propTypes = {
+  canCreateItems: bool,
   isDraggable: bool,
   isDisabled: bool,
+  isEmpty: bool,
   maxZoom: number.isRequired,
   zoom: number.isRequired,
   onDoubleClick: func,

@@ -172,6 +172,7 @@ class ProjectContainer extends Component {
           nav={nav}
           items={items}
           data={data}
+          isActive={this.state.mode === MODE.PROJECT}
           columns={columns}
           sidebar={ui.sidebar}
           offset={this.state.offset}

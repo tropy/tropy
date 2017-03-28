@@ -83,7 +83,9 @@ class ProjectView extends PureComponent {
               <ProjectToolbar
                 zoom={zoom}
                 maxZoom={maxZoom}
-                isDisabled={!items.length}
+                canCreateItems
+                isEmpty={!items.length}
+                isDisabled={!props.isActive}
                 onItemCreate={this.handleItemImport}
                 onDoubleClick={ARGS.frameless ? props.onMaximize : null}
                 onZoomChange={this.handleZoomChange}/>
@@ -110,6 +112,7 @@ class ProjectView extends PureComponent {
     canDrop: bool,
     edit: object.isRequired,
     isOver: bool,
+    isActive: bool,
     items: array.isRequired,
     keymap: object.isRequired,
     nav: object.isRequired,

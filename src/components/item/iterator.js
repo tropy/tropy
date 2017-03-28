@@ -16,6 +16,10 @@ class ItemIterator extends Iterator {
     return this.props.items
   }
 
+  get tabIndex() {
+    return this.props.isActive ? super.tabIndex : null
+  }
+
   isSelected(item) {
     return this.props.selection.includes(item.id)
   }
@@ -106,7 +110,7 @@ class ItemIterator extends Iterator {
   }
 
   connect(element) {
-    return (this.props.isDisabled) ? element : this.props.dt(element)
+    return (this.isDisabled) ? element : this.props.dt(element)
   }
 
   map(fn) {
@@ -120,7 +124,7 @@ class ItemIterator extends Iterator {
         cache: this.props.cache,
         isLast: index === this.props.items.length - 1,
         isSelected: this.isSelected(item),
-        isDisabled: this.props.isDisabled,
+        isDisabled: this.isDisabled,
         isVertical: this.isVertical,
         getSelection: this.getSelection,
         onContextMenu: this.handleContextMenu,
@@ -143,6 +147,7 @@ class ItemIterator extends Iterator {
       type: oneOf(['property']).isRequired
     }).isRequired,
 
+    isActive: bool,
     isOver: bool,
     isDisabled: bool,
 

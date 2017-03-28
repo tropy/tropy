@@ -7,7 +7,7 @@ const { bounds, on, off } = require('../dom')
 const { times } = require('../common/util')
 const { win } = require('../window')
 const { floor } = Math
-const { number } = PropTypes
+const { bool, number } = PropTypes
 
 
 class Iterator extends PureComponent {
@@ -54,6 +54,10 @@ class Iterator extends PureComponent {
 
   get isEmpty() {
     return this.size === 0
+  }
+
+  get isDisabled() {
+    return this.props.isDisabled
   }
 
   get size() {
@@ -109,6 +113,7 @@ class Iterator extends PureComponent {
   }
 
   static propTypes = {
+    isDisabled: bool,
     size: number.isRequired
   }
 }
