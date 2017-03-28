@@ -207,7 +207,7 @@ module.exports = mod.item = {
 
   async split(db, id, items, data, lists, tags) {
     await all([
-      mod.photo.split(db, items),
+      mod.photo.split(db, id, items),
       mod.item.tags.remove(db, id, tags),
       mod.item.lists.remove(db, id, lists),
       mod.metadata.replace(db, { id, data }),

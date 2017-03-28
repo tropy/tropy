@@ -7,6 +7,7 @@ const { text, datetime } = require('../value')
 const metadata = require('./metadata')
 const { into, map } = require('transducers.js')
 const { assign } = Object
+const bb = require('bluebird')
 
 const skel = (id) => ({
   id, selections: [], notes: []
@@ -122,6 +123,18 @@ module.exports = {
           WHERE id IN (${photos.join(',')})`,
         item, ...photos)
     }
+  },
+
+  async split(db, item, items, concurrency = 4) {
+    return bb.map(items, ({ id, photos }) =>
+      db.run(`
+        UPDATE photos
+          SET item_id = ?, position = CASE id
+            ${photos.map((_, idx) =>
+              (`WHEN ? THEN ${idx + 1}`)).join(',')}
+            END
+          WHERE id IN (${photos.join(',')})`,
+        id, ...photos), { concurrency })
   },
 
   async delete(db, ids) {
