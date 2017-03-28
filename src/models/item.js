@@ -196,14 +196,23 @@ module.exports = mod.item = {
       mod.photo.merge(db, item.id, photos, item.photos.length),
       mod.item.tags.add(db, tags.map(tag => ({ id: item.id, tag }))),
       mod.item.lists.merge(db, item.id, ids, lists),
-      mod.metadata.update(db, { id: item.id, data })
+      mod.metadata.update(db, { id: item.id, data }),
+      mod.item.delete(db, ids, 'merge')
     ])
-
-    await mod.item.delete(db, ids, 'merge')
 
     return {
       photos, tags, lists, data
     }
+  },
+
+  async split(db, id, items, data, lists, tags) {
+    await all([
+      mod.photo.split(db, items),
+      mod.item.tags.remove(db, id, tags),
+      mod.item.lists.remove(db, id, lists),
+      mod.metadata.replace(db, { id, data }),
+      mod.item.restore(db, items.map(i => i.id))
+    ])
   },
 
   async delete(db, ids, $reason = 'user') {
@@ -275,7 +284,7 @@ module.exports = mod.item = {
     async remove(db, id, lists) {
       return db.run(`
         DELETE FROM list_items
-          WHERE id = ? AND list_id IN (${lists.map(Number).join(',')})`)
+          WHERE id = ? AND list_id IN (${lists.map(Number).join(',')})`, id)
     }
   }
 }

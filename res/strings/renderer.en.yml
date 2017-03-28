@@ -27,9 +27,6 @@ prompt:
     destroy: >
       Are your sure you want to permanently delete items?
       This action cannot be undone.
-    merge: >
-      Are you sure you want to merge these items?
-      This action cannot be undone.
 
 activity:
   project:

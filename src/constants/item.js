@@ -13,6 +13,7 @@ module.exports = {
   RESTORE: 'item.restore',
   SAVE: 'item.save',
   SELECT: 'item.select',
+  SPLIT: 'item.split',
   UPDATE: 'item.update',
   PREVIEW: 'item.preview',
 

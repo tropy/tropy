@@ -44,7 +44,15 @@ module.exports = {
     return {
       type: ITEM.MERGE,
       payload: array(payload),
-      meta: { async: true, prompt: true, ...meta }
+      meta: { async: true, record: true, ...meta }
+    }
+  },
+
+  split(payload, meta) {
+    return {
+      type: ITEM.SPLIT,
+      payload,
+      meta: { async: true, record: true, ...meta }
     }
   },
 

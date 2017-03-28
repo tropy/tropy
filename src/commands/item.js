@@ -219,42 +219,46 @@ class Merge extends Command {
 
   *exec() {
     const { db } = this.options
-    const { payload, meta } = this.action
+    const { payload } = this.action
 
-    if (meta.prompt) {
-      const confirmed = yield call(prompt,
-        yield select(intl.message, { id: 'prompt.item.merge' })
-      )
+    let [[item, ...items], metadata] = yield select(state => [
+      pluck(state.items, payload), state.metadata
+    ])
 
-      this.init = performance.now()
-      if (!confirmed) return
-    }
+    let m = yield call(db.transaction, tx =>
+      mod.item.merge(tx, item, items, metadata))
 
-    try {
-      let [[item, ...items], data] = yield select(state => [
-        pluck(state.items, payload), state.metadata
-      ])
+    yield [
+      put(act.photo.bulk.update([m.photos, { item: item.id }])),
+      put(act.metadata.insert({ id: item.id, ...m.data }, { search: true }))
+    ]
 
-      let m = yield call(db.transaction, tx =>
-        mod.item.merge(tx, item, items, data)
-      )
+    this.undo = act.item.split({
+      ...m, item, items, data: metadata[item.id]
+    })
 
-      yield [
-        put(act.photo.bulk.update([m.photos, { item: item.id }])),
-        put(act.metadata.load([item.id]))
-      ]
-
-      return {
-        ...item,
-        photos: [...item.photos, ...m.photos],
-        tags: [...item.tags, ...m.tags],
-      }
-
-    } finally {
-      yield put(act.history.drop(null, { search: true }))
+    return {
+      ...item,
+      photos: [...item.photos, ...m.photos],
+      tags: [...item.tags, ...m.tags],
     }
   }
 }
+
+class Split extends Command {
+  static get action() { return ITEM.SPLIT }
+
+  *exec() {
+    const { db } = this.options
+    const { item, items, data, lists } = this.action
+
+    yield call(db.transaction, tx =>
+      mod.item.split(tx, item.id, items, data, lists))
+
+    this.undo = act.item.merge([item.id, ...items.map(i => i.id)])
+  }
+}
+
 
 class ToggleTags extends Command {
   static get action() { return ITEM.TAG.TOGGLE }
@@ -310,6 +314,7 @@ module.exports = {
   Import,
   Load,
   Merge,
+  Split,
   Restore,
   Save,
   ToggleTags,
