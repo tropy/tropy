@@ -225,16 +225,17 @@ class Merge extends Command {
       pluck(state.items, payload), state.metadata
     ])
 
+    let { id, ...data } = metadata[item.id]
+
     let m = yield call(db.transaction, tx =>
       mod.item.merge(tx, item, items, metadata))
 
     yield [
-      put(act.photo.bulk.update([m.photos, { item: item.id }])),
-      put(act.metadata.insert({ id: item.id, ...m.data }, { search: true }))
+      put(act.photo.bulk.update([m.photos, { item: id }])),
+      put(act.metadata.insert({ id, ...m.data }))
     ]
 
-    let { id, ...data } = metadata[item.id]
-    this.undo = act.item.split({ ...m, id, items, data })
+    this.undo = act.item.split({ ...m, item, items, data })
 
     return {
       ...item,
@@ -249,12 +250,14 @@ class Split extends Command {
 
   *exec() {
     const { db } = this.options
-    const { id, items, data, lists, tags } = this.action.payload
+    const { item, items, data, lists, tags } = this.action.payload
 
     yield call(db.transaction, tx =>
-      mod.item.split(tx, id, items, data, lists, tags))
+      mod.item.split(tx, item.id, items, data, lists, tags))
 
-    this.undo = act.item.merge([id, ...items.map(i => i.id)])
+    this.undo = act.item.merge([item.id, ...items.map(i => i.id)])
+
+    return item
   }
 }
 

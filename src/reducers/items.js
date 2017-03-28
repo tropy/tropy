@@ -18,6 +18,7 @@ module.exports = {
         return (meta.done && !error) ?
           { ...state, ...payload } : pending(state, payload)
 
+      case ITEM.SPLIT:
       case ITEM.MERGE:
         if (!meta.done || error) return state
         // eslint-disable-line no-fallthrough

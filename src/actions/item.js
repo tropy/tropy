@@ -44,7 +44,7 @@ module.exports = {
     return {
       type: ITEM.MERGE,
       payload: array(payload),
-      meta: { async: true, record: true, ...meta }
+      meta: { async: true, record: true, search: true, ...meta }
     }
   },
 
@@ -52,7 +52,7 @@ module.exports = {
     return {
       type: ITEM.SPLIT,
       payload,
-      meta: { async: true, record: true, ...meta }
+      meta: { async: true, record: true, search: true, ...meta }
     }
   },
 
