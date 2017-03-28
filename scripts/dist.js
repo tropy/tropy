@@ -34,31 +34,31 @@ target.pack = (args = []) => {
   packager({
     platform, arch, icon, out, dir,
 
-    'name': release.product,
-    'prune': true,
-    'overwrite': true,
+    name: release.product,
+    prune: true,
+    overwrite: true,
 
-    'asar': {
+    asar: {
       unpack: '**/*.node'
     },
 
-    'electronVersion': electron.version,
-    'build-version': build,
-    'app-version': release.version,
-    'app-bundle-id': 'org.tropy.tropy',
-    'helper-bundle-id': 'org.tropy.tropy-helper',
-    'app-category-type': 'public.app-category.productivity',
-    'app-copyright':
+    electronVersion: electron.version,
+    buildVersion: build,
+    appVersion: release.version,
+    appBundleId: 'org.tropy.tropy',
+    helperBundleId: 'org.tropy.tropy-helper',
+    appCategoryType: 'public.app-category.productivity',
+    appCopyright:
       `Copyright (c) 2015-${new Date().getFullYear()} ` +
       `${release.author.name}. All rights not expressly granted are reserved.`,
 
-    'extend-info': join(res, 'ext.plist'),
+    extendInfo: join(res, 'ext.plist'),
 
-    'extra-resource': [
+    extraResource: [
       join(res, 'icons', 'mime', 'tpy.icns')
     ],
 
-    'ignore': [
+    ignore: [
       /.DS_Store/,
       /.babelrc/,
       /.eslintrc/,
