@@ -131,7 +131,7 @@ module.exports = {
         UPDATE photos
           SET item_id = ?, position = CASE id
             ${photos.map((_, idx) =>
-              (`WHEN ? THEN ${idx + 1}`)).join(',')}
+              (`WHEN ? THEN ${idx + 1}`)).join(' ')}
             END
           WHERE id IN (${photos.join(',')})`,
         id, ...photos), { concurrency })
