@@ -6,23 +6,15 @@
   height: 100%;
   background: $esper-bg;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
   position: relative;
-  border-bottom: 1px solid $esper-border;
 
   .esper-header {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
+    flex: 0 0 auto;
+    background: $esper-toolbar-bg;
 
     .toolbar {
-      box-sizing: content-box;
       background: $esper-toolbar-bg;
-      border-bottom: 1px solid $esper-border;
-      opacity: 0;
-      transition: opacity $toolbar-transition;
     }
   }
 
@@ -34,7 +26,8 @@
 
   img {
     flex: 0 0 0;
+    align-self: center;
     max-width: 100%;
-    max-height: 100%;
+    max-height: calc(100% - #{$toolbar-height + $space-min});
   }
 }
