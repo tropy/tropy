@@ -71,7 +71,7 @@ class Fields extends Component {
     }),
 
     edit: PropTypes.object,
-    properties: PropTypes.object,
+    properties: PropTypes.object.isRequired,
     static: PropTypes.string,
 
     subject: PropTypes.shape({

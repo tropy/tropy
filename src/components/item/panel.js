@@ -123,6 +123,7 @@ class ItemPanel extends PureComponent {
       id: number.isRequired
     }),
     photos: array.isRequired,
+    properties: object.isRequired,
     templates: object.isRequired,
 
 
