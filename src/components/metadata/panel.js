@@ -2,26 +2,36 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const { bool, func, number, object, shape, string } = PropTypes
+const { arrayOf, bool, func, number, object, shape, string } = PropTypes
 const { FormattedMessage } = require('react-intl')
 const { Fields } = require('./fields')
 const { TemplateSelect } = require('./select')
 
 
 class MetadataPanel extends PureComponent {
+  get isEmpty() {
+    return this.props.items.length === 0
+  }
+
+  get isBulk() {
+    return this.props.items.length > 1
+  }
 
   handleTemplateChange = (event) => {
     this.props.onItemSave({
-      id: this.props.item.id,
+      id: this.props.items[0].id,
       property: 'template',
       value: event.target.value
     })
   }
 
   renderItemFields() {
-    const { item, data, templates, isDisabled, ...props } = this.props
+    if (this.isEmpty) return null
 
-    return item && (
+    const { items, data, templates, isDisabled, ...props } = this.props
+    const item = items[0]
+
+    return (
       <section>
         <h5 className="metadata-heading">
           <FormattedMessage id="panel.metadata.item"/>
@@ -41,6 +51,8 @@ class MetadataPanel extends PureComponent {
   }
 
   renderPhotoFields() {
+    if (this.isEmpty || this.isBulk) return null
+
     const { photo, data, templates, ...props } = this.props
 
     return photo && (
@@ -71,10 +83,10 @@ class MetadataPanel extends PureComponent {
     data: object.isRequired,
     templates: object.isRequired,
 
-    item: shape({
+    items: arrayOf(shape({
       id: number.isRequired,
       template: string.isRequired
-    }),
+    })),
 
     photo: shape({
       id: number.isRequired,

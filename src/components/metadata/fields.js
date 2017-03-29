@@ -1,12 +1,12 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
+const { PureComponent, PropTypes } = React
 const { Field } = require('./field')
 const { get } = require('../../common/util')
 
 
-class Fields extends Component {
+class Fields extends PureComponent {
 
   isEditing(uri) {
     return get(this.props, ['edit', this.props.subject.id]) === uri

@@ -3,7 +3,7 @@
 const { createSelector: memo } = require('reselect')
 const { pluck } = require('./util')
 const {
-  cat, compose, filter, map, transduce, transformer
+  cat, compose, filter, keep, map, transduce, transformer
 } = require('transducers.js')
 
 
@@ -32,7 +32,7 @@ const getSelectedMetadata = memo(
   (metadata, ids) =>
     transduce(
       ids,
-      compose(map(id => metadata[id]), cat, skipId),
+      compose(map(id => metadata[id]), keep(), cat, skipId),
       collect,
       { data: {}, stats: {} })
 )

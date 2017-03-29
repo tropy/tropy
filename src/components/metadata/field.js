@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
+const { PureComponent, PropTypes } = React
 const { Editable } = require('../editable')
 const { FormattedMessage } = require('react-intl')
 const { parse } = require('url')
@@ -10,7 +10,7 @@ const { pluck } = require('../../common/util')
 const cn = require('classnames')
 
 
-class Field extends Component {
+class Field extends PureComponent {
   get defaultLabel() {
     const parts = parse(this.name)
 

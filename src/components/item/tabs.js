@@ -55,18 +55,18 @@ class ItemTabs extends PureComponent {
 
 
 class ItemTab extends PureComponent {
-  render() {
-    const { items, tab, ...props } = this.props
+  get isEmpty() {
+    return this.props.items.length === 0
+  }
 
-    if (!items.length) return null
+  render() {
+    if (this.isEmpty) return null
+
+    const { tab, ...props } = this.props
 
     switch (tab) {
       case METADATA:
-        if (items.length === 1) {
-          return <MetadataPanel {...props} item={items[0]}/>
-        } else {
-          return null // BulkEditor
-        }
+        return <MetadataPanel {...props}/>
       case TAGS:
         return <TagPanel {...props}/>
       default:
