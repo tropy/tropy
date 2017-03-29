@@ -49,10 +49,10 @@
     white-space: nowrap;
 
     & + .tool-group {
-      margin-left: $space-xs;
+      margin-left: $space-xs - 2 * $shim;
 
       .panel & {
-        margin-left: $space-min;
+        margin-left: $space-min - 2 * $shim;
       }
     }
   }

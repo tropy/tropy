@@ -36,6 +36,8 @@ $space-lg:  24px;
 $space-xl:  32px;
 $space-xxl: 48px;
 
+$shim: 1px;
+
 
 // Thumbnails
 // --------------------------------------------------
@@ -114,14 +116,14 @@ $mode-transition: 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 // Buttons
 // --------------------------------------------------
 
-$btn-icon-padding: 5px; // 26px size
+$btn-icon-padding: $space-min + $shim; // 26px size
 $btn-disabled-opacity: 0.5;
 
 
 // Forms
 // --------------------------------------------------
 
-$input-height-base: $line-height-large;
+$input-height-base: $space-lg + 2 * $shim;
 $input-height-large: ($space-xl + $space-xs);
 $input-border-radius-small: $border-radius-small;
 
@@ -208,7 +210,7 @@ $resizable-threshold: $space-xs;
 // Slider
 // --------------------------------------------------
 
-$slider-width: 152px;
+$slider-width: 154px;
 $slider-track-height: 4px;
 $slider-handle-size: $space-sm;
 

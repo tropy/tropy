@@ -47,12 +47,11 @@
       margin-right: auto;
 
       & + .btn-icon {
-        margin-left: $space-min;
+        margin-left: $space-min - $shim;
       }
     }
 
     .btn-icon {
-      padding: $btn-icon-padding 2px;
       opacity: 0;
 
       .icon {
