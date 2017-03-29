@@ -75,7 +75,6 @@ class NotePanel extends Panel {
       id: number.isRequired
     })),
 
-    item: number,
     photo: number,
     selection: object,
 

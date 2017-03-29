@@ -28,10 +28,19 @@ module.exports = {
   },
 
   select(payload, meta) {
-    return {
-      type: NOTE.SELECT,
-      payload,
-      meta: { ...meta }
+    return (dispatch, getState) => {
+      let { note, photo, item } = payload
+
+      if (item == null) {
+        const { photos } = getState()
+        item = photos[photo].item
+      }
+
+      dispatch({
+        type: NOTE.SELECT,
+        payload: { note, photo, item },
+        meta: { ...meta }
+      })
     }
   },
 

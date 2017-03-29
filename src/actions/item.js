@@ -108,7 +108,7 @@ module.exports = {
     return (dispatch, getState) => {
       let { items, photo, note } = payload
 
-      if (items.length) {
+      if (items.length === 1 && meta.mod === 'replace') {
         const state = getState()
 
         if (photo === undefined) {
