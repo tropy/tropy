@@ -7,13 +7,13 @@ const init = {
   [TR.BOX]: {
     uri: TR.BOX,
     label: 'Box',
-    definition: 'A Box.',
+    definition: 'A unit of archival organization.',
     comment: ''
   },
   [TR.FOLDER]: {
     uri: TR.FOLDER,
     label: 'Folder',
-    definition: 'A Folder.',
+    definition: 'A unit of archival organization, usually within a box.',
     comment: ''
   },
 
