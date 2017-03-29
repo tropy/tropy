@@ -240,8 +240,10 @@ $slider-handle-bg: $shade-0;
 $slider-handle-border: $shade-9-20;
 
 // Esper
-$esper-bg:         $shade-2;
-$esper-toolbar-bg: $shade-0;
+$esper-bg:             $shade-2;
+$esper-toolbar-bg:     $shade-2;
+$esper-toolbar-border: #d4d4d4; // ToDo
+$esper-icon-color:     $shade-6;
 
 // Drag preview
 $drag-preview-opacity:           0.8;

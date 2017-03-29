@@ -21,14 +21,6 @@
     padding-top: 0;
   }
 
-  &.draggable {
-    .frameless & {
-      -webkit-app-region: drag;
-      position: relative;
-      z-index: $zindex-draggable;
-    }
-  }
-
   .toolbar-context {
     position: absolute;
     height: $toolbar-height;
