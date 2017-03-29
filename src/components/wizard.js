@@ -75,7 +75,7 @@ class Wizard extends Component {
             <div className="form-group compact">
               <input
                 className="form-control input-lg"
-                value={this.state.name}
+                value={this.state.name || ''}
                 type="text"
                 placeholder={
                   intl.formatMessage({ id: 'wizard.project.name' })
@@ -98,7 +98,7 @@ class Wizard extends Component {
               </div>
               <div className="save-as-controls">
                 <input
-                  value={this.state.file}
+                  value={this.state.file || ''}
                   type="text"
                   className="form-control input-lg"
                   readOnly/>
