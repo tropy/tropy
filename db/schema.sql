@@ -66,24 +66,22 @@ CREATE TABLE metadata (
   property    TEXT     NOT NULL,
   value_id    INTEGER  NOT NULL REFERENCES metadata_values,
   language    TEXT,
-  --position    INTEGER  NOT NULL DEFAULT 0,
   created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CHECK (
     language IS NULL OR language != '' AND language = trim(lower(language))
   ),
 
-  --UNIQUE (id, position),
   --UNIQUE (item_id, id, property),
   PRIMARY KEY (id, property)
 ) WITHOUT ROWID;
 CREATE TABLE metadata_values (
   value_id   INTEGER  PRIMARY KEY,
   type_name  TEXT     NOT NULL REFERENCES metadata_types ON UPDATE CASCADE,
-  value      TEXT     NOT NULL,
-  struct              NOT NULL DEFAULT '{}',
+  text       TEXT     NOT NULL,
+  data                NOT NULL DEFAULT '{}',
 
-  UNIQUE (type_name, value)
+  UNIQUE (type_name, text)
 );
 CREATE TABLE notes (
   note_id      INTEGER  PRIMARY KEY,
@@ -216,7 +214,7 @@ CREATE TABLE IF NOT EXISTS 'fts_notes_idx'(segid, term, pgno, PRIMARY KEY(segid,
 CREATE TABLE IF NOT EXISTS 'fts_notes_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
 CREATE TABLE IF NOT EXISTS 'fts_notes_config'(k PRIMARY KEY, v) WITHOUT ROWID;
 INSERT INTO "fts_notes_config" VALUES('version',4);
-CREATE INDEX metadata_values_index ON metadata_values (value ASC);
+CREATE INDEX metadata_values_index ON metadata_values (text ASC);
 CREATE TRIGGER insert_tags_trim_name
   AFTER INSERT ON tags
   BEGIN
