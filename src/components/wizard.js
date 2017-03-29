@@ -64,11 +64,7 @@ class Wizard extends Component {
 
         <Steps>
           <Step>
-            <img
-              className="tropy-icon"
-              src="images/wizard/tropy-icon.svg"
-              width={202}
-              height={174}/>
+            <div className="tropy-icon"/>
 
             <h1><FormattedMessage id="wizard.project.title"/></h1>
 
