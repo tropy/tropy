@@ -10,10 +10,24 @@ main,
 #wizard {
   text-align: center;
   padding: 0 $space-xxl;
-  background: image-url("wizard/key-visual.svg") no-repeat center bottom / auto 131px;
+  background:
+    if(
+      $theme == "dark",
+      image-url("wizard/key-visual-dark.svg") no-repeat center bottom / auto 131px,
+      image-url("wizard/key-visual-light.svg") no-repeat center bottom / auto 131px
+    );
 
   .tropy-icon {
+    display: inline-block;
+    width: 202px;
+    height: 174px;
     margin: $wizard-spacing-top 0 22px;
+    background:
+      if(
+        $theme == "dark",
+        image-url("wizard/tropy-icon-dark.svg") no-repeat 0 0,
+        image-url("wizard/tropy-icon-light.svg") no-repeat 0 0
+      );
   }
 
   h1 {

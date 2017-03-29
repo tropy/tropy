@@ -2,7 +2,7 @@
 // Dark wizard window
 // --------------------------------------------------
 
-$platform: "darwin";
+$platform: "win32";
 $theme: "dark";
 
 
@@ -10,7 +10,7 @@ $theme: "dark";
 // --------------------------------------------------
 
 @import
-  "../themes/light";
+  "../themes/dark";
 
 
 // Window

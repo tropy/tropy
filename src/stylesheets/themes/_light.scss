@@ -11,7 +11,6 @@ $theme: "light";
 // --------------------------------------------------
 
 :root {
-  #{--transparent}:   transparent;
   #{--blue}:          #5c93e5;
   #{--blue-light}:    #cedef7;
   #{--blue-30}:       rgba(#5c93e5, 0.3);
@@ -39,6 +38,8 @@ $brand-primary-darken-4: $blue-darken-4;
 // --------------------------------------------------
 
 :root {
+  #{--transparent}:   transparent;
+
   #{--shade-0}:          #fff;             // Body
   #{--shade-1}:          #f6f6f6;          // Sidbar bg, panel bg
   #{--shade-2}:          #e6e6e6;          // Inactive tab
