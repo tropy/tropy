@@ -65,7 +65,7 @@ $shade-0:           var(--shade-0);
 $shade-1:           var(--shade-1);
 $shade-2:           var(--shade-2);
 $shade-3:           var(--shade-3);
-$shade-3-lighten-5: var(--shade-3-darken-5);
+$shade-3-darken-5:  var(--shade-3-darken-5);
 $shade-4:           var(--shade-4);
 
 $shade-5:           var(--shade-5);
@@ -217,7 +217,6 @@ $note-list-active-bg:    $shade-3;
 $editable-color: $text-color;
 $editable-bg: $shade-0;
 $editable-border-color: $shade-9-10;
-$editable-meta-field-bg: $shade-3;
 
 // Wizard
 $wizard-heading-color: $shade-7;
@@ -240,8 +239,10 @@ $slider-handle-bg: $shade-0;
 $slider-handle-border: $shade-9-20;
 
 // Esper
-$esper-bg:         $shade-2;
-$esper-toolbar-bg: $shade-0;
+$esper-bg:             $shade-2;
+$esper-toolbar-bg:     $shade-2;
+$esper-toolbar-border: #d4d4d4; // ToDo
+$esper-icon-color:     $shade-6;
 
 // Drag preview
 $drag-preview-opacity:           0.8;
@@ -249,7 +250,7 @@ $drag-preview-thumbnail-opacity: 0.8;
 
 // Thumbnail
 $thumbnail-color: $shade-5-50;
-$thumbnail-bg:    $shade-3-lighten-5;
+$thumbnail-bg:    $shade-3-darken-5;
 
 // Progress bar
 $progress-bar-bg:       $shade-3;
@@ -262,6 +263,7 @@ $editor-toolbar-border:        $shade-2;
 $editor-btn-hover-bg:          $shade-1;
 $editor-btn-active-color:      $shade-6;
 $editor-btn-active-bg:         $shade-2;
+$editor-text-selection-bg:     $text-selection-bg;
 
 $blockquote-border-color: $shade-2;
 $selected-node-color:     $brand-primary-60;

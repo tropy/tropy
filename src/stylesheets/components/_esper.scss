@@ -6,28 +6,51 @@
   height: 100%;
   background: $esper-bg;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   position: relative;
 
-  .esper-header {
-    flex: 0 0 auto;
-    background: $esper-toolbar-bg;
+  .esper-header.draggable {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
 
     .toolbar {
+      box-sizing: content-box;
       background: $esper-toolbar-bg;
-    }
-  }
+      transform: translate3d(0, -100%, 0);
+      transition: transform $esper-toolbar-transition-out;
+      padding-top: 0;
+      border-bottom: 1px solid $esper-toolbar-border;
+      height: $toolbar-height + $space-min;
 
-  &:hover {
-    .toolbar {
-      opacity: 1;
+      @at-root #{selector-replace(&, ".esper", ".esper:hover")} {
+        transform: translate3d(0, 0, 0);
+        transition: transform $esper-toolbar-transition-in;
+      }
+
+      .tool-group {
+        & + .tool-group {
+          margin-left: $space-lg;
+        }
+      }
+
+      .btn-icon {
+        & + .btn-icon {
+          margin-left: $space-min / 2;
+        }
+      }
+
+      .icon:not(:active) {
+        color: $esper-icon-color;
+      }
     }
   }
 
   img {
     flex: 0 0 0;
-    align-self: center;
     max-width: 100%;
-    max-height: calc(100% - #{$toolbar-height + $space-min});
+    max-height: 100%;
   }
 }

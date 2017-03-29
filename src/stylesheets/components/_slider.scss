@@ -36,7 +36,7 @@
   height: $slider-track-height;
   background: $slider-track-bg;
   border-radius: $slider-track-height / 2;
-  margin: 0 $space-min;
+  margin: 0 ($space-min - $shim);
   position: relative;
   border-left: ($slider-handle-size / 2) solid $slider-track-bg;
   border-right: ($slider-handle-size / 2) solid $slider-track-bg;
