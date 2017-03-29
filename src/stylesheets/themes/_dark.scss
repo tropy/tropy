@@ -14,24 +14,32 @@ $theme: "dark";
 // --------------------------------------------------
 
 $blue:           #395bac;
-$blue-light:     #cedef7;
-$blue-light-10: rgba($blue-light, 0.1);
 $blue-35:        rgba($blue, 0.35);
 $blue-60:        rgba($blue, 0.6);
+$blue-darken-2: darken(#395bac, 2%);
+
+$blue-light:     #cedef7;
+$blue-light-10: rgba($blue-light, 0.1);
 
 $red: #e62e2e;
 
-$brand-primary:          $blue;
-$brand-primary-light:    $blue-light;
-$brand-primary-light-10: $blue-light-10;
-$brand-primary-35:       $blue-35;
-$brand-primary-60:       $blue-60;
+$brand-primary:           $blue;
+$brand-primary-darken-2: $blue-darken-2;
+
+$brand-primary-light:     $blue-light;
+$brand-primary-light-10:  $blue-light-10;
+$brand-primary-35:        $blue-35;
+$brand-primary-60:        $blue-60;
 
 
 // Grays
 // --------------------------------------------------
 
+$transparent:       transparent;
+
 $shade-0:           #000;
+$shade-0-5:         rgba(#000, 0.05);
+
 $shade-1:           #212121;              // 87% Border search field
 $shade-2:           #292929;              // 84% Inactive tab
 $shade-3:           #2f2f2f;              // 82% Body
@@ -43,7 +51,7 @@ $shade-7:           #777;                 // Icon color, sidebar headings
 $shade-8:           #999;                 // Softened text, active icon
 $shade-9:           #bbb;                 // Text color
 $shade-10:          #fff;
-$shade-10-5:       rgba(#fff, 0.05);
+$shade-10-5:        rgba(#fff, 0.05);
 
 
 // Scaffolding
@@ -111,6 +119,9 @@ $icon-active-color: $shade-9; // Ok
 
 $icon-spin-color:   $brand-primary; // Ok
 
+// Project
+$project-darken-color: $shade-0-5; // Ok
+
 // Sidebar
 $sidebar-bg:                $shade-4; // Ok
 $sidebar-text-color:        $shade-8; // Ok
@@ -139,11 +150,11 @@ $items-active-color:             $shade-9; // Ok
 $items-active-bg:                $shade-5; // Ok
 
 // Panel group
-$panels-bg: $shade-4;
+$panels-bg: $shade-4; // Ok
 
 // Panel
 $panel-bg:              $shade-4; // Ok
-$panel-header-color:    $shade-8;
+$panel-header-color:    $shade-8; // Ok
 $panel-separator-color: $shade-1; // Ok
 $panel-heading-color:   $shade-6; // Ok
 
@@ -175,6 +186,20 @@ $editable-color: $text-color; // Ok
 $editable-bg: $shade-3; // Ok
 $editable-border-color: $shade-10-5;
 
+// Wizard
+$wizard-heading-color: $shade-8; // Ok
+$wizard-link-color:    $brand-primary; // Ok
+
+// Button
+$btn-default-color:     $shade-9; // Ok
+$btn-default-bg:        $shade-3; // Ok
+$btn-default-border:    $shade-1; // Ok
+$btn-default-active-bg: $shade-2; // Ok
+$btn-primary-color:     $brand-primary-light; // Ok
+$btn-primary-bg:        $brand-primary; // Ok
+$btn-primary-active-bg: $brand-primary-darken-2; // Ok
+$btn-icon-bg:           $transparent; // Ok
+
 // Slider
 $slider-track-bg: $shade-5; // Ok
 $slider-range-bg: $shade-6; // Ok
@@ -186,7 +211,6 @@ $esper-bg:     $shade-1; // Ok
 $esper-toolbar-bg: $shade-1; // Ok
 $esper-toolbar-border: $shade-3; // Ok
 $esper-icon-color:     $shade-7; // Ok
-
 
 // Drag preview
 $drag-preview-opacity:           0.64; // Ok
