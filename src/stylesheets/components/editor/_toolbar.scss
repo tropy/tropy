@@ -13,7 +13,7 @@
     left: 0;
     top: 0;
     width: 100%;
-    display: none;
+    //display: none;
 
     .tool-group {
       & + .tool-group {
@@ -52,7 +52,7 @@
 
   &:hover {
     .toolbar {
-      display: flex;
+      //display: flex;
     }
   }
 

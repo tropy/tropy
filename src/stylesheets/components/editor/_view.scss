@@ -9,10 +9,11 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  padding-top: 0;
+  //padding-top: 0;
+  padding-top: $toolbar-height + 1px;
 
   &:hover {
-    padding-top: $toolbar-height + 1px;
+    //padding-top: $toolbar-height + 1px;
   }
 
   .scroll-container {
@@ -34,10 +35,11 @@
   width: $editor-width;
   margin: auto;
   max-width: $editor-max-width;
-  padding-top: $toolbar-height + 1px + $prose-mirror-padding;
+  //padding-top: $toolbar-height + 1px + $prose-mirror-padding;
   padding-bottom: $prose-mirror-padding;
+  padding-top: $prose-mirror-padding;
 
   .editor:hover & {
-    padding-top: $prose-mirror-padding;
+    //padding-top: $prose-mirror-padding;
   }
 }
