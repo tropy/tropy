@@ -23,6 +23,7 @@
       transition: transform $esper-toolbar-transition-out;
       padding-top: 0;
       border-bottom: 1px solid $esper-toolbar-border;
+      height: $toolbar-height + $space-min;
 
       @at-root #{selector-replace(&, ".esper", ".esper:hover")} {
         transform: translate3d(0, 0, 0);
