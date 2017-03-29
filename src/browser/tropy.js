@@ -375,14 +375,7 @@ class Tropy extends EventEmitter {
       const ids = [
         pref.subscribeNotification(
           'AppleShowScrollBarsSettingChanged', () =>
-            this.broadcast('scrollbars', !hasOverlayScrollBars())),
-
-        pref.subscribeNotification(
-          'AppleInterfaceThemeChangedNotification', () =>
-          this.emit(
-            'app:switch-theme',
-            null,
-            pref.isDarkMode() ? 'dark' : 'light'))
+            this.broadcast('scrollbars', !hasOverlayScrollBars()))
       ]
 
       app.on('quit', () => {

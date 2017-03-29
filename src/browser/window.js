@@ -53,8 +53,6 @@ module.exports = {
           pref.getUserDefault('AppleAquaColorVariant', 'integer')
         ]
 
-        data.theme = pref.isDarkMode() ? 'dark' : 'light'
-
         break
     }
 
