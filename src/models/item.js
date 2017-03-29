@@ -21,12 +21,12 @@ module.exports = mod.item = {
 
     await db.each(`
       WITH
-        sort(id, value) AS (
-          SELECT id, value
+        sort(id, text) AS (
+          SELECT id, text
           FROM metadata JOIN metadata_values USING (value_id)
           WHERE property = $sort
         )
-        SELECT DISTINCT id, sort.value
+        SELECT DISTINCT id, sort.text
           FROM items
             ${tags.length ? 'JOIN taggings USING (id)' : ''}
             LEFT OUTER JOIN sort USING (id)
@@ -34,7 +34,7 @@ module.exports = mod.item = {
           WHERE
             ${tags.length ? `tag_id IN (${tags.join(',')}) AND` : ''}
             deleted ${trash ? 'NOT' : 'IS'} NULL
-          ORDER BY sort.value ${dir}, id ${dir}`, {
+          ORDER BY sort.text ${dir}, id ${dir}`, {
 
             $sort: sort.column
 
@@ -49,17 +49,17 @@ module.exports = mod.item = {
 
     await db.each(`
       WITH
-        sort(id, value) AS (
-          SELECT id, value
+        sort(id, text) AS (
+          SELECT id, text
           FROM metadata JOIN metadata_values USING (value_id)
           WHERE property = $sort
         )
-        SELECT DISTINCT id, sort.value
+        SELECT DISTINCT id, sort.text
           FROM items
             JOIN trash USING (id)
             LEFT OUTER JOIN sort USING (id)
           WHERE reason = 'user'
-          ORDER BY sort.value ${dir}, id ${dir}`, {
+          ORDER BY sort.text ${dir}, id ${dir}`, {
 
             $sort: sort.column
 

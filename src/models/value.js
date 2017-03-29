@@ -1,16 +1,16 @@
 'use strict'
 
 module.exports = {
-  async save(db, { value, type }) {
+  async save(db, { text, type }) {
     let v = await db.get(`
       SELECT value_id AS id
         FROM metadata_values
-        WHERE type_name = ? AND value = ?`, type, value)
+        WHERE type_name = ? AND text = ?`, type, text)
 
     if (!v) {
       v = await db.run(`
-        INSERT INTO metadata_values (type_name, value)
-          VALUES (?, ?)`, type, value)
+        INSERT INTO metadata_values (type_name, text)
+          VALUES (?, ?)`, type, text)
     }
 
     return v.id

@@ -12,7 +12,7 @@ const cn = require('classnames')
 class PhotoListItem extends PhotoIterable {
 
   get title() {
-    return get(this.props, ['data', this.props.title, 'value'])
+    return get(this.props, ['data', this.props.title, 'text'])
   }
 
   get isDraggable() {
@@ -40,13 +40,13 @@ class PhotoListItem extends PhotoIterable {
   })
 
 
-  handleChange = (value) => {
+  handleChange = (text) => {
     const { photo, title, onChange } = this.props
 
     onChange({
       id: photo.id,
       data: {
-        [title]: { value, type: 'text' }
+        [title]: { text, type: 'text' }
       }
     })
   }

@@ -53,11 +53,11 @@ class Field extends Component {
     })
   }
 
-  handleChange = (value) => {
+  handleChange = (text) => {
     this.props.onMetadataSave({
       id: this.props.data.id,
       data: {
-        [this.name]: { value, type: this.type }
+        [this.name]: { text, type: this.type }
       }
     })
   }
@@ -71,7 +71,7 @@ class Field extends Component {
         <label title={details.join('\n\n')}>{label}</label>
         <div className="value" onClick={this.handleClick}>
           <Editable
-            value={value ? value.value : null}
+            value={value ? value.text : null}
             isDisabled={isDisabled}
             isEditing={isEditing}
             onCancel={onEditCancel}

@@ -16,7 +16,7 @@ class ItemTableCell extends PureComponent {
     const { data, property } = this.props
 
     return data[property.uri] ?
-      data[property.uri].value : null
+      data[property.uri].text : null
   }
 
   get type() {
@@ -27,11 +27,11 @@ class ItemTableCell extends PureComponent {
   }
 
 
-  handleChange = (value) => {
+  handleChange = (text) => {
     this.props.onChange({
       id: this.props.item.id,
       data: {
-        [this.props.property.uri]: { value, type: this.type }
+        [this.props.property.uri]: { text, type: this.type }
       }
     })
   }

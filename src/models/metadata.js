@@ -12,15 +12,15 @@ module.exports = mod.metadata = {
 
     if (ids.length) {
       await db.each(`
-        SELECT id, property, value, type_name AS type, metadata.created
+        SELECT id, property, text, type_name AS type, metadata.created
           FROM subjects
             JOIN metadata USING (id)
             JOIN metadata_values USING (value_id)
           WHERE id IN (${ids.join(',')})
           ORDER BY id, metadata.created ASC`,
 
-        ({ id, property, type, value }) => {
-          data[id][property] = { type, value }
+        ({ id, property, type, text }) => {
+          data[id][property] = { type, text }
         }
       )
     }
