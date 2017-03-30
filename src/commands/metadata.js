@@ -2,22 +2,48 @@
 
 const { Command } = require('./command')
 const { call, put, select } = require('redux-saga/effects')
-const { map } = require('../common/util')
+const { pick } = require('../common/util')
 const mod = require('../models/metadata')
 const act = require('../actions/metadata')
-const { LOAD, SAVE } = require('../constants/metadata')
+const { LOAD, RESTORE, SAVE } = require('../constants/metadata')
+const { keys, values } = Object
 
 
 class Load extends Command {
   static get action() { return LOAD }
 
   *exec() {
+    return (
+      yield call(mod.load, this.options.db, this.action.payload)
+    )
+  }
+}
+
+class Restore extends Command {
+  static get action() { return RESTORE }
+
+  *exec() {
     const { db } = this.options
-    const { payload } = this.action
+    const payload = this.action.payload
 
-    const data = yield call(mod.load, db, payload)
+    this.original = yield select(({ metadata }) =>
+      pick(metadata, keys(payload)))
 
-    return data
+    yield put(act.replace(payload))
+
+    yield call(db.transaction, async tx => {
+      for (let { id, ...data } of values(payload)) {
+        await mod.replace(tx, { ids: [id], data })
+      }
+    })
+
+    this.undo = act.restore(this.original)
+  }
+
+  *abort() {
+    if (this.original) {
+      yield put(act.replace(this.original))
+    }
   }
 }
 
@@ -26,23 +52,30 @@ class Save extends Command {
 
   *exec() {
     const { db } = this.options
-    const { id, data } = this.action.payload
+    const { payload, meta } = this.action
+    const { ids, data } = payload
 
-    const current = (yield select(({ metadata }) => metadata[id])) || {}
-    this.original = map(data, key => current[key])
+    this.original = yield select(({ metadata }) =>
+      pick(metadata, ids))
 
-    yield put(act.update([id, data]))
-    yield call([db, db.transaction], tx => mod.update(tx, { ids: [id], data }))
+    yield put(act.update({ ids, data }, { replace: meta.replace }))
 
-    this.undo = act.save({ id, data: this.original })
+    yield call(db.transaction, tx =>
+      mod.update(tx, { ids, data }, meta.replace))
+
+    this.undo = act.restore(this.original)
   }
 
   *abort() {
-    yield put(act.update([this.action.payload.id, this.original]))
+    if (this.original) {
+      yield put(act.replace(this.original))
+    }
   }
 }
 
+
 module.exports = {
   Load,
+  Restore,
   Save
 }

@@ -1,5 +1,6 @@
 'use strict'
 
+const { array } = require('../common/util')
 const { METADATA } = require('../constants')
 
 module.exports = {
@@ -19,18 +20,34 @@ module.exports = {
     }
   },
 
-  save(payload, meta) {
+  replace(payload, meta) {
     return {
-      type: METADATA.SAVE,
+      type: METADATA.REPLACE,
+      payload,
+      meta
+    }
+  },
+
+  restore(payload, meta) {
+    return {
+      type: METADATA.RESTORE,
       payload,
       meta: { async: true, record: true, ...meta }
     }
   },
 
-  update(payload, meta = {}) {
+  save({ id, ids, data }, meta) {
+    return {
+      type: METADATA.SAVE,
+      payload: { ids: array(ids || id), data },
+      meta: { async: true, record: true, ...meta }
+    }
+  },
+
+  update({ id, ids, data }, meta = {}) {
     return {
       type: METADATA.UPDATE,
-      payload,
+      payload: { ids: array(ids || id), data },
       meta
     }
   }

@@ -7,7 +7,12 @@ const util = {
 
   load(state, payload, meta, error) {
     return (meta.done && !error) ?
-      { ...state, ...payload } : util.pending(state, payload)
+      util.replace(state, payload) :
+      util.pending(state, payload)
+  },
+
+  replace(state, payload) {
+    return { ...state, ...payload }
   },
 
   insert(state, payload) {
@@ -18,9 +23,11 @@ const util = {
     return omit(state, payload)
   },
 
-  update(state, { id, ...data }) {
+  update(state, payload, meta) {
     return {
-      ...state, [id]: { ...state[id], ...data }
+      ...state,
+      [payload.id]: meta.replace ?
+        payload : { ...state[payload.id], ...payload }
     }
   },
 
@@ -53,10 +60,10 @@ const util = {
   },
 
   bulk: {
-    update(state, [ids, data]) {
-      return into(
-        { ...state }, map(id => ({ [id]: { ...state[id], ...data } })), ids
-      )
+    update(state, [ids, data], meta) {
+      return into({ ...state }, map(id => ({
+        [id]: meta.replace ? data : { ...state[id], ...data }
+      })), ids)
     }
   },
 
