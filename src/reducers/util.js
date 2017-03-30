@@ -1,9 +1,29 @@
 'use strict'
 
-const { splice } = require('../common/util')
+const { omit, splice } = require('../common/util')
 const { into, map } = require('transducers.js')
 
-module.exports = {
+const util = {
+
+  load(state, payload, meta, error) {
+    return (meta.done && !error) ?
+      { ...state, ...payload } : util.pending(state, payload)
+  },
+
+  insert(state, payload) {
+    return { ...state, [payload.id]: payload }
+  },
+
+  remove(state, payload) {
+    return omit(state, payload)
+  },
+
+  update(state, payload) {
+    return {
+      ...state, [payload.id]: { ...state[payload.id], ...payload }
+    }
+  },
+
   nested: {
     add(name, state = {}, payload, { idx }) {
       const { id, [name]: added } = payload
@@ -32,6 +52,14 @@ module.exports = {
     }
   },
 
+  bulk: {
+    update(state, [ids, data]) {
+      return into(
+        { ...state }, map(id => ({ [id]: { ...state[id], ...data } })), ids
+      )
+    }
+  },
+
   pending(state, payload) {
     return into(
       { ...state },
@@ -40,3 +68,5 @@ module.exports = {
     )
   }
 }
+
+module.exports = util
