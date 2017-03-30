@@ -23,7 +23,7 @@ const util = {
     return omit(state, payload)
   },
 
-  update(state, payload, meta) {
+  update(state, payload, meta = {}) {
     return {
       ...state,
       [payload.id]: meta.replace ?
@@ -60,7 +60,7 @@ const util = {
   },
 
   bulk: {
-    update(state, [ids, data], meta) {
+    update(state, [ids, data], meta = {}) {
       return into({ ...state }, map(id => ({
         [id]: meta.replace ? data : { ...state[id], ...data }
       })), ids)
