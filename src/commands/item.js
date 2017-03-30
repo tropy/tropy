@@ -232,8 +232,10 @@ class Merge extends Command {
 
     yield [
       put(act.photo.bulk.update([m.photos, { item: id }])),
-      put(act.metadata.insert({ id, ...m.data }))
+      put(act.metadata.insert({ id, ...m.data })),
+      put(act.item.select({ items: [id] }, { mod: 'replace' }))
     ]
+
 
     this.undo = act.item.split({ ...m, item, items, data })
 

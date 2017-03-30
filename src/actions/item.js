@@ -104,7 +104,7 @@ module.exports = {
     }
   },
 
-  select(payload, meta) {
+  select(payload, meta = {}) {
     return (dispatch, getState) => {
       let { items, photo, note } = payload
 
