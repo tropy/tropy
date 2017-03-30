@@ -2,7 +2,7 @@
 
 const { Command } = require('./command')
 const { call, put, select } = require('redux-saga/effects')
-const { array, map, pluck } = require('../common/util')
+const { map } = require('../common/util')
 const mod = require('../models/metadata')
 const act = require('../actions/metadata')
 const { LOAD, SAVE } = require('../constants/metadata')
