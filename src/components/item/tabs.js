@@ -8,7 +8,7 @@ const { IconMetadata, IconTag } = require('../icons')
 const { MetadataPanel } = require('../metadata')
 const { TagPanel } = require('../tag')
 const { PANEL: { METADATA, TAGS } } = require('../../constants/ui')
-const { array, func, oneOf } = PropTypes
+const { array, func, object, oneOf } = PropTypes
 
 
 class ItemTabs extends PureComponent {
@@ -62,11 +62,15 @@ class ItemTab extends PureComponent {
   render() {
     if (this.isEmpty) return null
 
-    const { tab, ...props } = this.props
+    const { bulk, data, tab, ...props } = this.props
 
     switch (tab) {
       case METADATA:
-        return <MetadataPanel {...props}/>
+        return (
+          <MetadataPanel {...props}
+            bulk={bulk}
+            data={data}/>
+        )
       case TAGS:
         return <TagPanel {...props}/>
       default:
@@ -75,6 +79,8 @@ class ItemTab extends PureComponent {
   }
 
   static propTypes = {
+    data: object.isRequired,
+    bulk: object.isRequired,
     items: array.isRequired,
     tab: oneOf([METADATA, TAGS]).isRequired
   }

@@ -104,6 +104,7 @@ class ItemPanel extends PureComponent {
   }
 
   static propTypes = {
+    bulk: object.isRequired,
     cache: string.isRequired,
     data: object.isRequired,
     edit: object.isRequired,

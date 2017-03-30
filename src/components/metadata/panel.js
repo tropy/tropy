@@ -28,7 +28,7 @@ class MetadataPanel extends PureComponent {
   renderItemFields() {
     if (this.isEmpty) return null
 
-    const { items, data, templates, isDisabled, ...props } = this.props
+    const { items, bulk, templates, isDisabled, ...props } = this.props
     const item = items[0]
 
     return (
@@ -43,7 +43,7 @@ class MetadataPanel extends PureComponent {
           onChange={this.handleTemplateChange}/>
         <Fields {...props}
           subject={item}
-          data={data[item.id]}
+          data={bulk.data}
           template={templates[item.template]}
           isDisabled={isDisabled}/>
       </section>
@@ -81,6 +81,12 @@ class MetadataPanel extends PureComponent {
     isDisabled: bool,
 
     data: object.isRequired,
+
+    bulk: shape({
+      data: object.isRequired,
+      stats: object.isRequired
+    }).isRequired,
+
     templates: object.isRequired,
 
     items: arrayOf(shape({
