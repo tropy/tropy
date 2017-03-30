@@ -7,6 +7,7 @@ const { ItemTableHead } = require('./table-head')
 const { arrayOf, func, object } = React.PropTypes
 const { on, off } = require('../../dom')
 const cx = require('classnames')
+const { noop } = require('../../common/util')
 
 
 class ItemTable extends ItemIterator {
@@ -38,10 +39,11 @@ class ItemTable extends ItemIterator {
       data,
       edit,
       sort,
-      onEdit,
       onMetadataSave,
       onSort
     } = this.props
+
+    const onEdit = this.props.selection.length === 1 ? this.props.onEdit : noop
 
     return (
       <div
