@@ -18,9 +18,9 @@ const util = {
     return omit(state, payload)
   },
 
-  update(state, payload) {
+  update(state, { id, ...data }) {
     return {
-      ...state, [payload.id]: { ...state[payload.id], ...payload }
+      ...state, [id]: { ...state[id], ...data }
     }
   },
 

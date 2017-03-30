@@ -1,36 +1,30 @@
 'use strict'
 
 const { METADATA, ITEM, PHOTO, PROJECT } = require('../constants')
-const { omit } = require('../common/util')
-
-const init = {}
+const { bulk, load, remove, insert, update } = require('./util')
+const { isArray } = Array
 
 module.exports = {
-  metadata(state = init, { type, payload, meta, error }) {
+  metadata(state = {}, { type, payload, meta, error }) {
     switch (type) {
       case PROJECT.OPEN:
-        return { ...init }
+        return {}
 
       case METADATA.LOAD:
-        return (meta.done && !error) ? { ...state, ...payload } : state
+        return load(state, payload, meta, error)
 
       case ITEM.REMOVE:
       case PHOTO.REMOVE:
-        return omit(state, payload)
+        return remove(state, payload)
 
       case METADATA.INSERT:
-        return { ...state, [payload.id]: payload }
+        return insert(state, payload)
 
       case METADATA.UPDATE: {
         const [id, data] = payload
 
-        return {
-          ...state,
-          [id]: {
-            ...state[id],
-            ...data
-          }
-        }
+        return (isArray(id)) ?
+          bulk.update(state, payload) : update(state, { ...data, id })
       }
 
       default:
