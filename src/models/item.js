@@ -236,14 +236,13 @@ module.exports = mod.item = {
 
   async prune(db, since = '-1 month') {
     const condition = since ?
-      ` OR deleted < datetime("now", "${since}")` : ''
+      ` WHERE reason != 'user' OR
+          (reason = 'user' AND deleted < datetime("now", "${since}"))` : ''
 
     return db.run(`
       DELETE FROM subjects
         WHERE id IN (
-          SELECT id
-            FROM trash JOIN items USING (id)
-            WHERE reason != 'user'${condition})`
+          SELECT id FROM trash JOIN items USING (id)${condition})`
     )
   },
 
