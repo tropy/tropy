@@ -255,6 +255,8 @@ class Split extends Command {
     yield call(db.transaction, tx =>
       mod.item.split(tx, item.id, items, data, lists, tags))
 
+    yield put(act.metadata.insert({ id: item.id, ...data }))
+
     this.undo = act.item.merge([item.id, ...items.map(i => i.id)])
 
     return item
