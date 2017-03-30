@@ -73,11 +73,7 @@ $drag-preview-size: 64px;
   $toolbar-height: 46px !global;
   $wizard-spacing-top: 29px !global;
 
-} @else if $platform == win32 {
-  $toolbar-height: 30px !global;
-  $wizard-spacing-top: 45px !global;
-
-} @else { // Darwin
+} @else { // Darwin, Win32
   $toolbar-height: 38px !global;
   $wizard-spacing-top: 37px !global;
 }
