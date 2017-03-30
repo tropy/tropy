@@ -8,7 +8,11 @@ describe('ItemTable', () => {
   const { ItemTable } = __require('components/item/table')
 
   it('has classes item and table', () => {
-    expect(shallow(<ItemTable items={[]} columns={[]} dt={noop}/>))
-      .to.have.className('item table')
+    expect(shallow(
+      <ItemTable
+        items={[]}
+        selection={[]}
+        columns={[]}
+        dt={noop}/>)).to.have.className('item table')
   })
 })
