@@ -34,7 +34,7 @@ const getSelectedMetadata = memo(
       ids,
       compose(map(id => metadata[id]), keep(), cat, skipId),
       collect,
-      { data: {}, stats: {} })
+      { data: { id: ids }, stats: {} })
 )
 
 const getVisibleMetadata = memo(

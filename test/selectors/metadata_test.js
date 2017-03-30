@@ -21,10 +21,10 @@ describe('selectors', () => {
           .and.have.deep.property('title.text', 'foo')
 
       expect(getSelectedMetadata(state([])))
-        .to.have.property('data').and.be.empty
+        .to.have.property('data').and.eql({ id: [] })
 
       expect(getSelectedMetadata(state([23])))
-        .to.have.property('data').and.be.empty
+        .to.have.property('data').and.eql({ id: [23] })
     })
 
     it('collects stats', () => {

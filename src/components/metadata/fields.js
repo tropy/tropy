@@ -4,12 +4,17 @@ const React = require('react')
 const { PureComponent, PropTypes } = React
 const { Field } = require('./field')
 const { get } = require('../../common/util')
+const { isArray } = Array
 
 
 class Fields extends PureComponent {
 
+  get editKey() {
+    return isArray(this.props.data.id) ? 'bulk' : this.props.data.id
+  }
+
   isEditing(uri) {
-    return get(this.props, ['edit', this.props.subject.id]) === uri
+    return get(this.props.edit, [uri]) === this.editKey
   }
 
   isExtra(uri) {
@@ -82,7 +87,7 @@ class Fields extends PureComponent {
 
     onEdit: PropTypes.func,
     onEditCancel: PropTypes.func,
-    onMetadataSave: PropTypes.func,
+    onChange: PropTypes.func.isRequired,
     onContextMenu: PropTypes.func
   }
 

@@ -7,7 +7,9 @@ const { FormattedMessage } = require('react-intl')
 const { parse } = require('url')
 const { basename } = require('path')
 const { pluck } = require('../../common/util')
-const cn = require('classnames')
+const cx = require('classnames')
+const { arrayOf, bool, func, number, oneOfType, shape, string } = PropTypes
+const { isArray } = Array
 
 
 class Field extends PureComponent {
@@ -47,14 +49,20 @@ class Field extends PureComponent {
     }
   }
 
+  get editKey() {
+    return isArray(this.props.data.id) ? 'bulk' : this.props.data.id
+  }
+
   handleClick = () => {
     this.props.onEdit({
-      field: { [this.props.data.id]: this.name }
+      field: {
+        [this.props.property.uri]: this.editKey
+      }
     })
   }
 
   handleChange = (text) => {
-    this.props.onMetadataSave({
+    this.props.onChange({
       id: this.props.data.id,
       data: {
         [this.name]: { text, type: this.type }
@@ -67,7 +75,7 @@ class Field extends PureComponent {
     const { value, label, classes,  details } = this
 
     return (
-      <li className={cn(classes)}>
+      <li className={cx(classes)}>
         <label title={details.join('\n\n')}>{label}</label>
         <div className="value" onClick={this.handleClick}>
           <Editable
@@ -82,27 +90,28 @@ class Field extends PureComponent {
   }
 
 
+
   static propTypes = {
-    data: PropTypes.shape({
-      id: PropTypes.number
+    data: shape({
+      id: oneOfType([number, arrayOf(number)])
     }).isRequired,
 
-    property: PropTypes.shape({
-      uri: PropTypes.string.isRequired,
-      label: PropTypes.string,
-      type: PropTypes.string,
-      definition: PropTypes.string,
-      comment: PropTypes.string
+    property: shape({
+      uri: string.isRequired,
+      label: string,
+      type: string,
+      definition: string,
+      comment: string
     }),
 
-    isEditing: PropTypes.bool,
-    isDisabled: PropTypes.bool,
-    isExtra: PropTypes.bool,
+    isEditing: bool,
+    isDisabled: bool,
+    isExtra: bool,
 
-    onEdit: PropTypes.func,
-    onEditCancel: PropTypes.func,
-    onMetadataSave: PropTypes.func,
-    onContextMenu: PropTypes.func
+    onEdit: func,
+    onEditCancel: func,
+    onChange: func.isRequired,
+    onContextMenu: func
   }
 
   static defaultProps = {
@@ -112,19 +121,16 @@ class Field extends PureComponent {
 
 
 const StaticField = ({ type, label, value }) => (
-  <li className={cn({ 'metadata-field': true, 'static': true, [type]: true })}>
+  <li className={cx({ 'metadata-field': true, 'static': true, [type]: true })}>
     <label><FormattedMessage id={label}/></label>
     <div className="value static">{value}</div>
   </li>
 )
 
 StaticField.propTypes = {
-  label: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
-  value: PropTypes.oneOf([
-    PropTypes.string,
-    PropTypes.number
-  ]).isRequired
+  label: string.isRequired,
+  type: string.isRequired,
+  value: oneOfType([string, number]).isRequired
 }
 
 module.exports = {

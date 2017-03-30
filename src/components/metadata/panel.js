@@ -28,7 +28,15 @@ class MetadataPanel extends PureComponent {
   renderItemFields() {
     if (this.isEmpty) return null
 
-    const { items, bulk, templates, isDisabled, ...props } = this.props
+    const {
+      items,
+      bulk,
+      templates,
+      isDisabled,
+      onMetadataSave,
+      ...props
+    } = this.props
+
     const item = items[0]
 
     return (
@@ -45,7 +53,8 @@ class MetadataPanel extends PureComponent {
           subject={item}
           data={bulk.data}
           template={templates[item.template]}
-          isDisabled={isDisabled}/>
+          isDisabled={isDisabled}
+          onChange={onMetadataSave}/>
       </section>
     )
   }
@@ -53,7 +62,7 @@ class MetadataPanel extends PureComponent {
   renderPhotoFields() {
     if (this.isEmpty || this.isBulk) return null
 
-    const { photo, data, templates, ...props } = this.props
+    const { photo, data, templates, onMetadataSave, ...props } = this.props
 
     return photo && (
       <section>
@@ -63,7 +72,8 @@ class MetadataPanel extends PureComponent {
         <Fields {...props}
           subject={photo}
           data={data[photo.id]}
-          template={templates[photo.template]}/>
+          template={templates[photo.template]}
+          onChange={onMetadataSave}/>
       </section>
     )
   }
@@ -99,7 +109,8 @@ class MetadataPanel extends PureComponent {
       template: string.isRequired
     }),
 
-    onItemSave: func.isRequired
+    onItemSave: func.isRequired,
+    onMetadataSave: func.isRequired
   }
 }
 
