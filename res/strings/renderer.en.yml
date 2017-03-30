@@ -10,7 +10,7 @@ panel:
     item: Item
   tags:
     tab: Tags
-    add: Add Tag …
+    add: Add Tag
   photos: Photos
   notes: Notes
 

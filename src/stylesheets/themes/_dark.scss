@@ -135,8 +135,6 @@ $sidebar-active-bg:         $shade-5; // Ok
 $sidebar-context-bg:        $brand-primary-35; // Ok
 $activity-color:            $shade-7;
 $activity-border-color:     $shade-1;
-$sidebar-tag-active-color:  $brand-primary-light; // Ok
-$sidebar-tag-active-bg:     $brand-primary; // Ok
 
 // Items
 $item-table-header-color:        $shade-8;
@@ -168,6 +166,16 @@ $tab-inactive-color: $shade-7; // Ok
 $label-color:            $shade-7;
 $template-select-border: $shade-1;
 $template-select-bg:     $shade-4; // Ok
+
+// Tag list
+$tag-list-focus-color: $brand-primary-light; // Ok
+$tag-list-focus-bg:    $brand-primary; // Ok
+$tag-list-active-bg:                $brand-primary-light;
+$incomplete-color:                  #bbb; // Todo
+$add-tag-color:                     $shade-5;
+$add-tag-default-bg:                $panel-bg;
+$add-tag-focus-bg:                  $shade-0;
+$add-tag-placeholder-color-default: $text-color;
 
 // Photo list
 $photo-list-focus-color: $brand-primary-light; // Ok
