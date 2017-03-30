@@ -165,7 +165,7 @@ target.window = ([name]) => {
 <head>
   <script>require("../lib/windows/${name}.js")</script>
 </head>
-<body tabindex="-1">
+<body tabindex="-1" class="${name}">
   <main></main>
 </body>
 </html>`)
