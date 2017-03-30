@@ -36,7 +36,7 @@
       height: $line-height-large;
       padding: 0 $component-padding-horizontal;
 
-      &.incomplete {
+      &.mixed {
         &,
         .icon-tag {
           color: $incomplete-color;
