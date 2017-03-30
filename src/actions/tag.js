@@ -34,14 +34,6 @@ module.exports = {
     }
   },
 
-  remove(payload, meta) {
-    return {
-      type: TAG.REMOVE,
-      payload,
-      meta: { ipc: TAG.CHANGED, ...meta }
-    }
-  },
-
   save(payload, meta) {
     return {
       type: TAG.SAVE,

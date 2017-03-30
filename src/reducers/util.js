@@ -61,10 +61,10 @@ const util = {
   },
 
   pending(state, payload) {
+    if (payload == null || payload.length === 0) return state
+
     return into(
-      { ...state },
-      map(id => ({ [id]: { id, pending: true } })),
-      payload
+      { ...state }, map(id => ({ [id]: { id, pending: true } })), payload
     )
   }
 }

@@ -1,10 +1,15 @@
 'use strict'
 
 module.exports = {
-  async all(db) {
-    return db.all(
-      'SELECT tag_id AS id, name, visible FROM tags'
+  async load(db) {
+    const tags = {}
+
+    await db.each(
+      'SELECT tag_id AS id, name, visible FROM tags',
+      (data) => { tags[data.id] = data }
     )
+
+    return tags
   },
 
   async create(db, { name }) {

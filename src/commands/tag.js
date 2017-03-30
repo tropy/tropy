@@ -2,25 +2,16 @@
 
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-
-const {
-  CREATE, HIDE, LOAD, SAVE, SHOW
-} = require('../constants/tag')
-
+const { CREATE, HIDE, LOAD, SAVE, SHOW } = require('../constants/tag')
+const { create, hide, load, save, show } = require('../models/tag')
 const act = require('../actions/tag')
-
-const {
-  all, create, hide, save, show
-} = require('../models/tag')
-
 
 
 class Load extends Command {
   static get action() { return LOAD }
 
   *exec() {
-    const { db } = this.options
-    return (yield call(all, db))
+    return (yield call(load, this.options.db))
   }
 }
 
