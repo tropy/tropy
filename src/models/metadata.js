@@ -41,9 +41,8 @@ module.exports = mod.metadata = {
 
       await db.run(`
         INSERT INTO metadata (id, property, value_id, language)
-          ${ids.map(id =>
-            `VALUES (${[id, quote(prop), value, 'NULL'].join(',')})`
-          ).join(' ')}`)
+          VALUES ${ids.map(id =>
+            `(${[id, quote(prop), value, 'NULL'].join(',')})`).join(', ')}`)
     }
   },
 

@@ -192,6 +192,7 @@ class ProjectContainer extends Component {
           offset={this.state.offset}
           mode={this.state.mode}
           isModeChanging={this.state.isModeChanging}
+          isTrashSelected={!!nav.trash}
           onPanelResize={this.handlePanelResize}
           onPanelDragStop={this.handlePanelDragStop}
           onMetadataSave={this.handleMetadataSave}/>

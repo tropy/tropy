@@ -48,16 +48,6 @@ class ItemView extends PureComponent {
     }
   }
 
-  get item() { // remove?
-    const { items } = this.props
-    return items.length === 1 ? items[0] : null
-  }
-
-  get isDisabled() { // keep here!
-    const { item } = this
-    return !(item && !item.deleted)
-  }
-
   get isItemOpen() {
     return this.props.mode === MODE.ITEM
   }
@@ -87,7 +77,7 @@ class ItemView extends PureComponent {
     if (!this.isItemOpen) {
       delay = 1000
       this.props.onItemOpen({
-        id: this.item.id, photos: [this.props.photo.id]
+        id: this.props.items[0].id, photos: [this.props.photo.id]
       })
     }
 
@@ -136,10 +126,11 @@ class ItemView extends PureComponent {
       photo,
       onPanelResize,
       onPanelDragStop,
+      isTrashSelected,
       ...props
     } = this.props
 
-    const { isItemOpen, isDisabled } = this
+    const { isItemOpen } = this
 
     return (
       <section className="item view" style={this.style}>
@@ -155,7 +146,7 @@ class ItemView extends PureComponent {
             photo={photo}
             note={this.state.note}
             isItemOpen={isItemOpen}
-            isDisabled={isDisabled}
+            isDisabled={isTrashSelected}
             onNoteCreate={this.handleNoteCreate}/>
         </Resizable>
 
@@ -171,7 +162,7 @@ class ItemView extends PureComponent {
           <NotePad
             ref={this.setNotePad}
             note={this.state.note}
-            isDisabled={isDisabled || !photo}
+            isDisabled={isTrashSelected || !photo}
             isItemOpen={isItemOpen}
             keymap={keymap.NotePad}
             onChange={this.handleNoteChange}/>
@@ -200,6 +191,7 @@ class ItemView extends PureComponent {
     offset: number.isRequired,
     mode: string.isRequired,
     isModeChanging: bool.isRequired,
+    isTrashSelected: bool.isRequired,
 
     onNoteCreate: func.isRequired,
     onNoteSave: func.isRequired,
