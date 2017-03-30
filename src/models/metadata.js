@@ -3,7 +3,7 @@
 const { save } = require('./value')
 const { into, map } = require('transducers.js')
 const { keys } = Object
-const { quote } = require('../common/util')
+const { list, quote } = require('../common/util')
 const mod = {}
 
 module.exports = mod.metadata = {
@@ -28,41 +28,27 @@ module.exports = mod.metadata = {
     return data
   },
 
-  async update(db, { id, data }) {
-    for (let property in data) {
+  async update(db, { ids, data }, replace = false) {
+    await db.run(`
+      DELETE FROM metadata WHERE id IN (${list(ids)})${
+        replace ? '' : ` AND property IN (${list(keys(data), quote)})`
+      }`)
 
-      if (data[property] == null) continue
+    for (let prop in data) {
+      if (data[prop] == null) continue
 
-      const value = await save(db, data[property])
+      const value = await save(db, data[prop])
 
-      const params = {
-        $id: id, $property: property, $value: value, $language: null
-      }
-
-      // To speed this up, we could use db.exec using
-      // changes() and sanitize the params ourselves.
-      const { changes } = await db.run(`
-        UPDATE metadata
-          SET value_id = $value, language = $language
-          WHERE id = $id AND property = $property`, params)
-
-      if (!changes) {
-        await db.run(`
-          INSERT INTO metadata (id, property, value_id, language)
-            VALUES ($id, $property, $value, $language)`, params
-        )
-      }
+      await db.run(`
+        INSERT INTO metadata (id, property, value_id, language)
+          ${ids.map(id =>
+            `VALUES (${[id, quote(prop), value, 'NULL'].join(',')})`
+          ).join(' ')}`)
     }
   },
 
-  async replace(db, { id, data }) {
-    await db.run(`
-      DELETE FROM metadata
-        WHERE id = ? AND property NOT IN (${
-          keys(data).map(prop => quote(prop)).join(',')
-        })`, id)
-
-    return mod.metadata.update(db, { id, data })
+  async replace(db, data) {
+    return mod.metadata.update(db, data, true)
   }
 
 }

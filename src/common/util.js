@@ -276,8 +276,12 @@ module.exports = {
     return string.toLowerCase().replace(/\s+/g, '-')
   },
 
-  quote(string, quotes = '""') {
-    return `${quotes[0]}${string}${quotes[1]}`
+  quote(string) {
+    return `"${string.replace(/\\"/, 'g')}"`
+  },
+
+  list(params, fn = Number, comma = ',') {
+    return params.map(fn).join(comma)
   },
 
   diff(a, b) {

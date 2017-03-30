@@ -34,7 +34,7 @@ module.exports = {
         [id, item, path, checksum, mimetype, orientation]),
 
       metadata.update(db, {
-        id,
+        ids: [id],
         data: {
           [DC.TITLE]: text(image.title),
           [DC.DATE]: datetime(image.date)

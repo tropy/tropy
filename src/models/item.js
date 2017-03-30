@@ -151,7 +151,7 @@ module.exports = mod.item = {
       INSERT INTO items (id) VALUES (?)`, id)
 
     if (data) {
-      await mod.metadata.update(db, { id, data })
+      await mod.metadata.update(db, { ids: [id], data })
     }
 
     const { [id]: item } = await mod.item.load(db, [id])
@@ -196,7 +196,7 @@ module.exports = mod.item = {
       mod.photo.merge(db, item.id, photos, item.photos.length),
       mod.item.tags.add(db, tags.map(tag => ({ id: item.id, tag }))),
       mod.item.lists.merge(db, item.id, ids, lists),
-      mod.metadata.update(db, { id: item.id, data }),
+      mod.metadata.update(db, { ids: [item.id], data }),
       mod.item.delete(db, ids, 'merge')
     ])
 
@@ -210,7 +210,7 @@ module.exports = mod.item = {
       mod.photo.split(db, id, items),
       mod.item.tags.remove(db, { id, tags }),
       mod.item.lists.remove(db, id, lists),
-      mod.metadata.replace(db, { id, data }),
+      mod.metadata.replace(db, { ids: [id], data }),
       mod.item.restore(db, items.map(i => i.id))
     ])
   },

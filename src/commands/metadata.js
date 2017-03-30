@@ -2,15 +2,11 @@
 
 const { Command } = require('./command')
 const { call, put, select } = require('redux-saga/effects')
-const { map } = require('../common/util')
-
+const { array, map, pluck } = require('../common/util')
 const mod = require('../models/metadata')
 const act = require('../actions/metadata')
+const { LOAD, SAVE } = require('../constants/metadata')
 
-
-const {
-  LOAD, SAVE
-} = require('../constants/metadata')
 
 class Load extends Command {
   static get action() { return LOAD }
@@ -36,7 +32,7 @@ class Save extends Command {
     this.original = map(data, key => current[key])
 
     yield put(act.update([id, data]))
-    yield call([db, db.transaction], tx => mod.update(tx, { id, data }))
+    yield call([db, db.transaction], tx => mod.update(tx, { ids: [id], data }))
 
     this.undo = act.save({ id, data: this.original })
   }
