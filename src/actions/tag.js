@@ -57,6 +57,7 @@ module.exports = {
       meta: {
         async: true,
         record: true,
+        search: true,
         ...meta
       }
     }

@@ -89,7 +89,7 @@ module.exports = {
         }
       }
 
-      case TAG.REMOVE:
+      case TAG.HIDE:
         return isSelected(state.tags, payload) ?
           { ...state, tags: select(state.tags) } :
           state
