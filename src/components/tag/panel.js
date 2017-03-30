@@ -2,7 +2,6 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const { FormattedMessage } = require('react-intl')
 const { arrayOf, number, shape, string } = PropTypes
 const { connect } = require('react-redux')
 const { getVisibleTags } = require('../../selectors')
@@ -23,12 +22,14 @@ class TagPanel extends PureComponent {
               <IconButton icon={<IconPlusCircles/>}/>
             </li>
           )}
-          <li>
-            <div className="flex-row center add-tag">
-              <FormattedMessage id="panel.tags.add"/>
-            </div>
-          </li>
         </ul>
+        <div className="add-tag-container">
+          <input
+            type="text"
+            className="form-control add-tag"
+            tabIndex={-1}
+            placeholder="Add tags"/>
+        </div>
       </div>
     )
   }

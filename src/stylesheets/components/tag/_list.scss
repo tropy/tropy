@@ -5,17 +5,30 @@
 .tag.list {
   #sidebar & {
     .active {
-      background: $sidebar-tag-active-bg;
-      color: $sidebar-tag-active-color;
+      background: $tag-list-active-bg;
 
-      .icon {
-        color: $sidebar-tag-active-color;
+      @at-root #{selector-replace(&, ".tag.list", ".tag.list:focus")} {
+        background: $tag-list-focus-bg;
+
+        &,
+        .icon-tag {
+          color: $tag-list-focus-color;
+        }
       }
     }
   }
 
   .panel & {
     padding: $space-min 0 0;
+    position: relative;
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+
+    ul {
+      flex: 1 1 0;
+      overflow-y: scroll;
+    }
 
     li {
       display: flex;
@@ -23,23 +36,32 @@
       height: $line-height-large;
       padding: 0 $component-padding-horizontal;
 
-      &:hover:not(:last-child) {
-        background-color: $tag-list-hover-color;
-
-        .btn-icon {
-          opacity: 1;
-        }
-      }
-
       &.incomplete {
         &,
         .icon-tag {
           color: $incomplete-color;
         }
       }
+
+      &.active {
+        background: $tag-list-focus-bg;
+
+        &,
+        .icon {
+          color: $tag-list-focus-color;
+        }
+
+        .icon-pluscircles {
+          display: block;
+        }
+      }
+
+      .icon-pluscircles {
+        display: none;
+      }
     }
 
-    .icon {
+    .icon-tag {
       margin-right: $space-xs;
     }
 
@@ -51,16 +73,41 @@
       }
     }
 
-    .btn-icon {
-      opacity: 0;
-
-      .icon {
-        margin: 0;
-      }
+    .add-tag-container {
+      flex: 0 0 auto;
+      padding-bottom: 2px;
     }
 
     .add-tag {
-      color: $add-tag-color;
+      left: $component-padding-horizontal;
+      width: calc(100% - 2 * #{$component-padding-horizontal});
+      background: $add-tag-default-bg;
+      position: relative;
+      cursor: default;
+
+      &::-webkit-input-placeholder {
+        color: $add-tag-placeholder-color-default;
+        position: relative;
+        left: 50%;
+        transform: translateX(-27px);
+        transition:
+          left $add-tag-transition,
+          transform $add-tag-transition,
+          color $add-tag-transition;
+      }
+
+      &:focus {
+        cursor: auto;
+        background: $add-tag-focus-bg;
+        box-shadow: 0 0 0 2px $input-color-focus, 0 0 0 2px $panel-bg;
+
+
+        &::-webkit-input-placeholder {
+          left: 0;
+          transform: translateX(0);
+          color: $input-color-placeholder;
+        }
+      }
     }
   }
 }
