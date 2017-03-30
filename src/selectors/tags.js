@@ -2,7 +2,7 @@
 
 const { createSelector: memo } = require('reselect')
 const { values } = Object
-const { seq, compose, map, cat, keep } = require('transducers.js')
+const { seq, compose, filter, map, cat, keep } = require('transducers.js')
 const { getSelectedItems } = require('./items')
 
 const getTags = ({ tags }) => tags
@@ -26,8 +26,9 @@ const getVisibleTags = memo(
       map(item => item.tags),
       cat,
       map(id => tags[id]),
-      keep()
-    ))
+      keep(),
+      filter(visible)
+    )).sort(byName)
 )
 
 
