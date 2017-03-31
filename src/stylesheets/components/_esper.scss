@@ -27,6 +27,7 @@
       padding-top: 0;
       border-bottom: 1px solid rgba(#ccc, 0.5);
       height: $toolbar-height + $space-min;
+      background-clip: padding-box;
 
       @at-root #{selector-replace(&, ".esper", ".esper:hover")} {
         transform: translate3d(0, 0, 0);
