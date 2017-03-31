@@ -1,23 +1,18 @@
 'use strict'
 
-const {
-  INSERT, LOAD, REMOVE, UPDATE
-} = require('../constants/list')
-
+const { LIST, PROJECT } = require('../constants')
 const { omit, splice } = require('../common/util')
-const { into, map } = require('transducers.js')
-
-const init = {}
+const { load, update } = require('./util')
 
 module.exports = {
-  lists(state = init, { type, payload, error, meta }) {
+  lists(state = {}, { type, payload, error, meta }) {
     switch (type) {
-      case LOAD:
-        return (meta.done && !error) ?
-          into({ ...init }, map(list => [list.id, list]), payload) :
-          {}
+      case PROJECT.OPEN:
+        return {}
+      case LIST.LOAD:
+        return load(state, payload, meta, error)
 
-      case INSERT: {
+      case LIST.INSERT: {
         const parent = state[payload.parent]
 
         return {
@@ -32,7 +27,7 @@ module.exports = {
         }
       }
 
-      case REMOVE: {
+      case LIST.REMOVE: {
         const original = state[payload]
         const parent = state[original.parent]
 
@@ -46,15 +41,8 @@ module.exports = {
         }
       }
 
-      case UPDATE:
-        return {
-          ...state,
-          [payload.id]: {
-            ...state[payload.id],
-            ...payload
-          }
-        }
-
+      case LIST.UPDATE:
+        return update(state, payload)
       default:
         return state
     }
