@@ -214,20 +214,24 @@ class Save extends Command {
 
     if (isArray(value)) {
       assert.equal(ids.length, value.length)
-      const data = into({}, map(id => ({ [id]: { [property]: value } })), ids)
 
-      yield put(act.item.bulk.update(data))
+      const data = {}
+
       yield call(db.transaction, async tx => {
         for (let i = 0; i < ids.length; ++i) {
-          await mod.item.update(tx, ids.slice(0, 1), { [property]: value[i] })
+          let id = ids[i]
+          data[id] = { [property]: value[i] }
+          await mod.item.update(tx, [id], data[id])
         }
       })
+
+      yield put(act.item.bulk.update(data))
 
     } else {
       let data = { [property]: value }
 
-      yield put(act.item.bulk.update([ids, data]))
       yield call(mod.item.update, db, ids, data)
+      yield put(act.item.bulk.update([ids, data]))
     }
 
     this.undo = act.item.save({ id: ids, property, value: original })

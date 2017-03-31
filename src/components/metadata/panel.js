@@ -19,7 +19,7 @@ class MetadataPanel extends PureComponent {
 
   handleTemplateChange = (event) => {
     this.props.onItemSave({
-      id: this.props.items[0].id,
+      id: this.props.items.map(it => it.id),
       property: 'template',
       value: event.target.value
     })
