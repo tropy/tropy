@@ -2,9 +2,9 @@
 
 const { omit, splice } = require('../common/util')
 const { into, map } = require('transducers.js')
+const { isArray } = Array
 
 const util = {
-
   load(state, payload, meta, error) {
     return (meta.done && !error) ?
       util.replace(state, payload) :
@@ -21,6 +21,12 @@ const util = {
 
   remove(state, payload) {
     return omit(state, payload)
+  },
+
+  merge(state, payload) {
+    return into({ ...state }, map(([id, data]) => ({
+      [id]: { ...state[id], ...data }
+    })), payload)
   },
 
   update(state, payload, meta = {}) {
@@ -60,7 +66,11 @@ const util = {
   },
 
   bulk: {
-    update(state, [ids, data], meta = {}) {
+    update(state, payload, meta = {}) {
+      if (!isArray(payload)) return util.merge(state, payload)
+
+      const [ids, data] = payload
+
       return into({ ...state }, map(id => ({
         [id]: meta.replace ? data : { ...state[id], ...data }
       })), ids)

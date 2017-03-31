@@ -60,6 +60,14 @@ module.exports = {
     return into
   },
 
+  mixed(array) {
+    for (let i = 1; i < array.length; ++i) {
+      if (array[i] !== array[-1]) return true
+    }
+
+    return false
+  },
+
   reverse(array) {
     const rev = []
 

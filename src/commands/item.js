@@ -1,5 +1,6 @@
 'use strict'
 
+const assert = require('assert')
 const { warn, verbose } = require('../common/log')
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
@@ -11,9 +12,10 @@ const { text } = require('../value')
 const intl = require('../selectors/intl')
 const act = require('../actions')
 const mod = require('../models')
-const { pluck } = require('../common/util')
+const { mixed, pluck } = require('../common/util')
 const { map, cat, filter, into, compose } = require('transducers.js')
 const { ITEM } = require('../constants')
+const { isArray } = Array
 
 
 class Create extends Command {
@@ -201,15 +203,34 @@ class Save extends Command {
 
   *exec() {
     const { db } = this.options
-    const { id, property, value } = this.action.payload
+    const { id: ids, property, value } = this.action.payload
 
-    const original = yield select(({ items }) =>
-      pluck(items, id).map(item => item[property]))
+    let original = yield select(({ items }) =>
+      pluck(items, ids).map(item => item[property]))
 
-    yield put(act.item.bulk.update([id, { [property]: value }]))
-    yield call(mod.item.update, db, id, { [property]: value })
+    if (!mixed(original)) {
+      original = original[0]
+    }
 
-    this.undo = act.item.save({ id, property, value: original[0] })
+    if (isArray(value)) {
+      assert.equal(ids.length, value.length)
+      const data = into({}, map(id => ({ [id]: { [property]: value } })), ids)
+
+      yield put(act.item.bulk.update(data))
+      yield call(db.transaction, async tx => {
+        for (let i = 0; i < ids.length; ++i) {
+          await mod.item.update(tx, ids.slice(0, 1), { [property]: value[i] })
+        }
+      })
+
+    } else {
+      let data = { [property]: value }
+
+      yield put(act.item.bulk.update([ids, data]))
+      yield call(mod.item.update, db, ids, data)
+    }
+
+    this.undo = act.item.save({ id: ids, property, value: original })
   }
 }
 
