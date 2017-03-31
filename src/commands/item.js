@@ -203,14 +203,13 @@ class Save extends Command {
     const { db } = this.options
     const { id, property, value } = this.action.payload
 
-    const cur = yield select(({ items }) => items[id])
-    this.original = { id, property, value: cur[property] }
+    const original = yield select(({ items }) =>
+      pluck(items, id).map(item => item[property]))
 
-    yield put(act.item.update({ id, [property]: value }))
-    yield call(mod.item.update, db, { id, property, value })
+    yield put(act.item.bulk.update([id, { [property]: value }]))
+    yield call(mod.item.update, db, id, { [property]: value })
 
-    this.undo = act.item.save(this.original)
-    this.redo = this.action
+    this.undo = act.item.save({ id, property, value: original[0] })
   }
 }
 

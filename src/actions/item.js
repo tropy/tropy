@@ -88,10 +88,10 @@ module.exports = {
     }
   },
 
-  save(payload, meta) {
+  save({ id, property, value }, meta) {
     return {
       type: ITEM.SAVE,
-      payload,
+      payload: { id: array(id), property, value },
       meta: { async: true, record: true, ...meta }
     }
   },

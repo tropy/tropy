@@ -26,7 +26,8 @@ class Panel extends PureComponent {
 
     return (
       <header
-        className="panel-header" {...props}
+        className="panel-header"
+        {...props}
         onDoubleClick={canToggle ? this.handleToggle : null}>
         {clone(header, { isClosed })}
       </header>
