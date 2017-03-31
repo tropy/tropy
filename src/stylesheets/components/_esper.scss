@@ -58,49 +58,53 @@
     max-height: 100%;
   }
 
-  .mask-original {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-    transition: -webkit-clip-path $esper-toolbar-transition-out;
-
-    @at-root #{selector-replace(&, ".esper", ".esper:hover")} {
-      -webkit-clip-path: polygon(0 42px, 100% 42px, 100% 100%, 0 100%);
-      transition: -webkit-clip-path $esper-toolbar-transition-in;
-    }
-  }
-
-  .original {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, calc(-50%));
-
-  }
-
+  .mask-original,
   .mask-blur {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    -webkit-clip-path: polygon(0 0, 100% 0%, 100% 0, 0 0);
     transition: -webkit-clip-path $esper-toolbar-transition-out;
 
     @at-root #{selector-replace(&, ".esper", ".esper:hover")} {
-      -webkit-clip-path: polygon(0 0, 100% 0%, 100% 42px, 0 42px);
       transition: -webkit-clip-path $esper-toolbar-transition-in;
     }
   }
 
+  .mask-original {
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+
+    @at-root #{selector-replace(&, ".esper", ".esper:hover")} {
+      -webkit-clip-path: polygon(
+        0 #{$toolbar-height + $space-min},
+        100% #{$toolbar-height + $space-min},
+        100% 100%,
+        0 100%);
+    }
+  }
+
+  .mask-blur {
+    -webkit-clip-path: polygon(0 0, 100% 0%, 100% 0, 0 0);
+
+    @at-root #{selector-replace(&, ".esper", ".esper:hover")} {
+      -webkit-clip-path: polygon(
+        0 0,
+        100% 0%,
+        100% #{$toolbar-height + $space-min},
+        0 #{$toolbar-height + $space-min});
+    }
+  }
+
+  .original,
   .blur {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, calc(-50%));
+  }
+
+  .blur {
     filter: blur(20px);
   }
 }
