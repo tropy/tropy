@@ -3,7 +3,7 @@
 const { all } = require('bluebird')
 const { assign } = Object
 const { into, map } = require('transducers.js')
-const { list, uniq } = require('../common/util')
+const { list: lst, uniq } = require('../common/util')
 
 const mod = {
   metadata: require('./metadata'),
@@ -134,8 +134,8 @@ module.exports = mod.item = {
         db.each(`
           SELECT id, list_id AS list
             FROM list_items WHERE id IN (${ids})`,
-          ({ id, lst }) => {
-            items[id].lists.push(lst)
+          ({ id, list }) => {
+            items[id].lists.push(list)
           }
         )
       ])
@@ -166,7 +166,7 @@ module.exports = mod.item = {
       await db.run(`
         UPDATE subjects
           SET template = ?, modified = datetime("now")
-          WHERE id IN (${list(ids)})`,
+          WHERE id IN (${lst(ids)})`,
         data[prop])
     }
   },
