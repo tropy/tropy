@@ -62,7 +62,7 @@ module.exports = {
 
   mixed(array) {
     for (let i = 1; i < array.length; ++i) {
-      if (array[i] !== array[-1]) return true
+      if (array[i] !== array[i - 1]) return true
     }
 
     return false

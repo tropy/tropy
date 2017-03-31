@@ -242,4 +242,18 @@ describe('util', () => {
       expect(uniq([1, 2, 3, 1, 3, 4])).to.eql([1, 2, 3, 4])
     })
   })
+
+  describe('.mixed', () => {
+    const { mixed } = util
+
+    it('returns true for mixed contents', () => {
+      expect(mixed([])).to.be.false
+      expect(mixed([1])).to.be.false
+      expect(mixed([1, 1])).to.be.false
+      expect(mixed([1, 1, 1])).to.be.false
+      expect(mixed([2, 1, 1])).to.be.true
+      expect(mixed([2, 2, 1])).to.be.true
+      expect(mixed([1, 2])).to.be.true
+    })
+  })
 })
