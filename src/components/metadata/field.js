@@ -8,23 +8,26 @@ const { parse } = require('url')
 const { basename } = require('path')
 const { pluck } = require('../../common/util')
 const cx = require('classnames')
-const { arrayOf, bool, func, number, oneOfType, shape, string } = PropTypes
-const { isArray } = Array
+const {
+  arrayOf, bool, func, number, object, oneOfType, shape, string
+} = PropTypes
 
 
-class Field extends PureComponent {
-  get defaultLabel() {
-    const parts = parse(this.name)
-
-    return parts.hash ?
-      parts.hash.slice(1) : basename(parts.pathname)
+class MetadataField extends PureComponent {
+  get classes() {
+    return {
+      'metadata-field': true,
+      'extra': this.props.isExtra,
+      'mixed': this.props.isMixed,
+      [this.props.type]: true
+    }
   }
 
   get label() {
-    return this.props.property.label || this.defaultLabel
+    return this.props.property.label || this.basename()
   }
 
-  get name() {
+  get uri() {
     return this.props.property.uri
   }
 
@@ -32,54 +35,36 @@ class Field extends PureComponent {
     return pluck(this.props.property, ['uri', 'definition', 'comment'])
   }
 
-  get value() {
-    return this.props.data[this.name]
-  }
+  basename(uri = this.uri) {
+    const parts = parse(uri)
 
-  get type() {
-    return this.value ?
-      this.value.type : this.props.property.type || 'text'
-  }
-
-  get classes() {
-    return {
-      'metadata-field': true,
-      'extra': this.props.isExtra,
-      [this.type]: true
-    }
-  }
-
-  get editKey() {
-    return isArray(this.props.data.id) ? 'bulk' : this.props.data.id
+    return parts.hash ?
+      parts.hash.slice(1) : basename(parts.pathname)
   }
 
   handleClick = () => {
-    this.props.onEdit({
-      field: {
-        [this.props.property.uri]: this.editKey
-      }
-    })
+    this.props.onEdit(this.props.id, this.uri)
   }
 
   handleChange = (text) => {
     this.props.onChange({
-      id: this.props.data.id,
+      id: this.props.id,
       data: {
-        [this.name]: { text, type: this.type }
+        [this.uri]: { text, type: this.props.type }
       }
     })
   }
 
   render() {
-    const { isEditing, isDisabled, onEditCancel } = this.props
-    const { value, label, classes,  details } = this
+    const { classes,  details, label } = this
+    const { text, isEditing, isDisabled, onEditCancel } = this.props
 
     return (
       <li className={cx(classes)}>
         <label title={details.join('\n\n')}>{label}</label>
         <div className="value" onClick={this.handleClick}>
           <Editable
-            value={value ? value.text : null}
+            value={text}
             isDisabled={isDisabled}
             isEditing={isEditing}
             onCancel={onEditCancel}
@@ -90,11 +75,13 @@ class Field extends PureComponent {
   }
 
 
-
   static propTypes = {
-    data: shape({
-      id: oneOfType([number, arrayOf(number)])
-    }).isRequired,
+    id: oneOfType([number, arrayOf(number)]),
+
+    isEditing: bool,
+    isDisabled: bool,
+    isExtra: bool,
+    isMixed: bool,
 
     property: shape({
       uri: string.isRequired,
@@ -104,18 +91,16 @@ class Field extends PureComponent {
       comment: string
     }),
 
-    isEditing: bool,
-    isDisabled: bool,
-    isExtra: bool,
+    text: string,
+    type: string.isRequired,
 
-    onEdit: func,
-    onEditCancel: func,
-    onChange: func.isRequired,
-    onContextMenu: func
+    onEdit: func.isRequired,
+    onEditCancel: func.isRequired,
+    onChange: func.isRequired
   }
 
   static defaultProps = {
-    data: {}
+    type: 'text'
   }
 }
 
@@ -134,6 +119,6 @@ StaticField.propTypes = {
 }
 
 module.exports = {
-  Field,
+  MetadataField,
   StaticField
 }

@@ -2,19 +2,16 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const { Field } = require('./field')
+const { arrayOf, bool, func, object, shape, string } = PropTypes
+const { MetadataField } = require('./field')
 const { get } = require('../../common/util')
 const { isArray } = Array
 
 
-class Fields extends PureComponent {
-
-  get editKey() {
-    return isArray(this.props.data.id) ? 'bulk' : this.props.data.id
-  }
+class MetadataFields extends PureComponent {
 
   isEditing(uri) {
-    return get(this.props.edit, [uri]) === this.editKey
+    return get(this.props.edit, [uri]) === this.getEditKey()
   }
 
   isExtra(uri) {
@@ -26,73 +23,85 @@ class Fields extends PureComponent {
     return !template.fields.find(({ property }) => property.uri === uri)
   }
 
+  getEditKey(id = this.props.data.id) {
+    return isArray(id) ? 'bulk' : id
+  }
+
+
   *extras() {
     for (let uri in this.props.data) {
       if (this.isExtra(uri)) yield uri
     }
   }
 
-  renderTemplateFields() {
-    const { template, ...props } = this.props
+  handleEdit = (id, uri) => {
+    this.props.onEdit({
+      field: { [uri]: this.getEditKey(id) }
+    })
+  }
 
-    if (!template) return
+  renderField = (property, props) => {
+    const { data, onChange, onEditCancel } = this.props
+    const value = data[property.uri] || {}
 
-    return template.fields.map(({ property }) =>
-      <Field {...props}
+    return (
+      <MetadataField
         key={property.uri}
+        id={data.id}
         property={property}
-        isEditing={this.isEditing(property.uri)}/>
+        type={value.type || property.type}
+        text={value.text}
+        isEditing={this.isEditing(property.uri)}
+        isMixed={!!value.mixed}
+        onChange={onChange}
+        onEdit={this.handleEdit}
+        onEditCancel={onEditCancel}
+        {...props}/>
     )
   }
 
-  renderExtraFields() {
-    const { properties, ...props } = this.props
+  renderTemplate() {
+    return this.props.template.fields.map(f => this.renderField(f.property))
+  }
 
+  renderExtraFields() {
+    const { properties } = this.props
     return [...this.extras()].map(uri =>
-      <Field {...props}
-        key={uri}
-        property={properties[uri] || { uri }}
-        isExtra
-        isEditing={this.isEditing(uri)}/>
+      this.renderField(properties[uri] || { uri }, { isExtra: true })
     )
   }
 
   render() {
     return (
       <ol className="metadata-fields">
-        {this.renderTemplateFields()}
+        {this.renderTemplate()}
         {this.renderExtraFields()}
       </ol>
     )
   }
 
   static propTypes = {
-    isDisabled: PropTypes.bool,
+    isDisabled: bool,
 
-    template: PropTypes.shape({
-      fields: PropTypes.arrayOf(PropTypes.shape({
-        property: PropTypes.object.isRequired
-      })).isRequired,
-    }),
+    template: shape({
+      fields: arrayOf(shape({
+        property: object.isRequired
+      })).isRequired
+    }).isRequired,
 
-    edit: PropTypes.object,
-    properties: PropTypes.object.isRequired,
-    static: PropTypes.string,
+    edit: object,
+    properties: object.isRequired,
+    static: string,
 
-    data: PropTypes.object.isRequired,
+    data: object.isRequired,
 
-    onEdit: PropTypes.func,
-    onEditCancel: PropTypes.func,
-    onChange: PropTypes.func.isRequired,
-    onContextMenu: PropTypes.func
-  }
-
-  static defaultProps = {
-    data: {}
+    onEdit: func,
+    onEditCancel: func,
+    onChange: func.isRequired
   }
 }
 
 
 module.exports = {
-  Fields
+  MetadataFields
 }

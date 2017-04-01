@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent, PropTypes } = React
 const { arrayOf, bool, func, number, object, shape, string } = PropTypes
 const { FormattedMessage } = require('react-intl')
-const { Fields } = require('./fields')
+const { MetadataFields } = require('./fields')
 const { TemplateSelect } = require('./select')
 
 
@@ -49,8 +49,8 @@ class MetadataPanel extends PureComponent {
           selected={item.template}
           isDisabled={isDisabled}
           onChange={this.handleTemplateChange}/>
-        <Fields {...props}
-          data={bulk.data}
+        <MetadataFields {...props}
+          data={bulk}
           template={templates[item.template]}
           isDisabled={isDisabled}
           onChange={onMetadataSave}/>
@@ -68,7 +68,7 @@ class MetadataPanel extends PureComponent {
         <h5 className="metadata-heading separator">
           <FormattedMessage id="panel.metadata.photo"/>
         </h5>
-        <Fields {...props}
+        <MetadataFields {...props}
           data={data[photo.id]}
           template={templates[photo.template]}
           onChange={onMetadataSave}/>
@@ -89,11 +89,7 @@ class MetadataPanel extends PureComponent {
     isDisabled: bool,
 
     data: object.isRequired,
-
-    bulk: shape({
-      data: object.isRequired,
-      stats: object.isRequired
-    }).isRequired,
+    bulk: object.isRequired,
 
     templates: object.isRequired,
 
