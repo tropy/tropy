@@ -53,9 +53,17 @@ class MetadataField extends PureComponent {
     })
   }
 
+  handleCancel = (isCommitUnchanged) => {
+    if (isCommitUnchanged) {
+      return this.handleChange(this.props.text)
+    }
+
+    this.props.onEditCancel()
+  }
+
   render() {
     const { classes,  details, label } = this
-    const { text, isEditing, isDisabled, onEditCancel } = this.props
+    const { text, isEditing, isDisabled } = this.props
 
     return (
       <li className={cx(classes)}>
@@ -65,7 +73,7 @@ class MetadataField extends PureComponent {
             value={text}
             isDisabled={isDisabled}
             isEditing={isEditing}
-            onCancel={onEditCancel}
+            onCancel={this.handleCancel}
             onChange={this.handleChange}/>
         </div>
       </li>

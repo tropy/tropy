@@ -34,13 +34,13 @@ class Editable extends PureComponent {
     }
   }
 
-  stop = () => {
+  stop = (isCommit) => {
     const { onCancel, onChange } = this.props
 
     if (this.changed) {
       onChange(this.state.value)
     } else {
-      onCancel()
+      onCancel(isCommit)
     }
   }
 
@@ -57,7 +57,7 @@ class Editable extends PureComponent {
         this.cancel()
         break
       case 'Enter':
-        this.stop()
+        this.stop(true)
         break
     }
 
