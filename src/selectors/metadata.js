@@ -2,23 +2,23 @@
 
 const { createSelector: memo } = require('reselect')
 const { pluck } = require('./util')
+const { equal } = require('../value')
 const {
-  cat, compose, filter, keep, map, transduce, transformer
+  cat, compose, filter, keep, map, seq, transduce, transformer
 } = require('transducers.js')
 
 
-const collect = transformer((acc, [uri, value]) => {
-  if (acc.data.hasOwnProperty(uri)) {
-    if (acc.data[uri].text === value.text) {
-      acc.stats[uri]++
-    }
+const collect = transformer((data, [uri, value]) => {
+  if (value != null) {
+    if (data.hasOwnProperty(uri)) {
+      if (equal(data[uri], value)) data[uri].count++
 
-  } else {
-    acc.data[uri] = value
-    acc.stats[uri] = 1
+    } else {
+      data[uri] = { ...value, count: 1 }
+    }
   }
 
-  return acc
+  return data
 })
 
 const skipId = filter(kv => kv[0] !== 'id')
@@ -30,11 +30,19 @@ const getSelectedMetadata = memo(
   ({ nav }) => (nav.items),
 
   (metadata, ids) =>
-    transduce(
-      ids,
-      compose(map(id => metadata[id]), keep(), cat, skipId),
-      collect,
-      { data: { id: ids }, stats: {} })
+    seq(
+      transduce(
+        ids,
+        compose(map(id => metadata[id]), keep(), cat, skipId),
+        collect,
+        { id: ids }),
+      map(([uri, value]) => {
+        if (uri !== 'id') {
+          value.mixed = value.count !== ids.length
+        }
+
+        return [uri, value]
+      }))
 )
 
 const getVisibleMetadata = memo(

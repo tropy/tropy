@@ -17,20 +17,20 @@ describe('selectors', () => {
 
     it('returns combined metadata in bulk', () => {
       expect(getSelectedMetadata(state([1, 2])))
-        .to.have.property('data')
-          .and.have.deep.property('title.text', 'foo')
+        .to.have.deep.property('title.text', 'foo')
 
       expect(getSelectedMetadata(state([])))
-        .to.have.property('data').and.eql({ id: [] })
+        .to.eql({ id: [] })
 
       expect(getSelectedMetadata(state([23])))
-        .to.have.property('data').and.eql({ id: [23] })
+        .to.eql({ id: [23] })
     })
 
     it('collects stats', () => {
       expect(getSelectedMetadata(state([1, 2])))
-        .to.have.property('stats')
-          .and.eql({ title: 1, type: 2 })
+        .to.have.deep.property('title.mixed', true)
+      expect(getSelectedMetadata(state([1, 2])))
+        .to.have.deep.property('type.mixed', false)
     })
   })
 

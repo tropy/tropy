@@ -79,10 +79,6 @@ class Fields extends PureComponent {
     properties: PropTypes.object.isRequired,
     static: PropTypes.string,
 
-    subject: PropTypes.shape({
-      id: PropTypes.number.isRequired
-    }).isRequired,
-
     data: PropTypes.object.isRequired,
 
     onEdit: PropTypes.func,

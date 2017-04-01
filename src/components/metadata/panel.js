@@ -50,7 +50,6 @@ class MetadataPanel extends PureComponent {
           isDisabled={isDisabled}
           onChange={this.handleTemplateChange}/>
         <Fields {...props}
-          subject={item}
           data={bulk.data}
           template={templates[item.template]}
           isDisabled={isDisabled}
@@ -70,7 +69,6 @@ class MetadataPanel extends PureComponent {
           <FormattedMessage id="panel.metadata.photo"/>
         </h5>
         <Fields {...props}
-          subject={photo}
           data={data[photo.id]}
           template={templates[photo.template]}
           onChange={onMetadataSave}/>
