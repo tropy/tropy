@@ -6,6 +6,7 @@ linux: &linux
     right: ArrowRight
     preview: Space
     open: Enter
+    clear: Escape
 
   NotePad:
     break: Enter

@@ -81,19 +81,18 @@ class ItemIterator extends Iterator {
       case (this.isVertical ? 'up' : 'left'):
         this.select(this.getPrevItem())
         break
-
       case (this.isVertical ? 'down' : 'right'):
         this.select(this.getNextItem())
         break
-
       case 'open':
         this.props.onItemOpen(this.getCurrentItem())
         break
-
       case 'preview':
         this.props.onItemPreview(this.getCurrentItem())
         break
-
+      case 'clear':
+        this.props.onSelect({ items: [] })
+        break
       default:
         return
     }
