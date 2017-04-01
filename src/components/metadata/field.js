@@ -2,15 +2,13 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
+const { arrayOf, bool, func, number, oneOfType, shape, string } = PropTypes
 const { Editable } = require('../editable')
 const { FormattedMessage } = require('react-intl')
 const { parse } = require('url')
 const { basename } = require('path')
 const { pluck } = require('../../common/util')
 const cx = require('classnames')
-const {
-  arrayOf, bool, func, number, object, oneOfType, shape, string
-} = PropTypes
 
 
 class MetadataField extends PureComponent {
