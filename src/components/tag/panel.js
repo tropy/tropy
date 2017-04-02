@@ -17,8 +17,6 @@ class TagPanel extends PureComponent {
         <TagList
           tags={this.props.tags}
           onEditCancel={noop}
-          onEdit={noop}
-          onCreate={noop}
           onSave={noop}
           onContextMenu={noop}/>
 

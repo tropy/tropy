@@ -9,10 +9,6 @@ const { arrayOf, number, string, shape, object, func } = PropTypes
 
 class TagList extends PureComponent {
 
-  get hasNewTag() {
-    return this.props.edit && !this.props.edit.id
-  }
-
   isEditing(tag) {
     return get(this.props.edit, ['id']) === tag.id
   }
@@ -21,14 +17,6 @@ class TagList extends PureComponent {
     return this.props.selection.includes(tag.id)
   }
 
-
-  renderNewTag() {
-    const { edit, onCreate, onEditCancel } = this.props
-
-    return this.hasNewTag && (
-      <Tag tag={edit} isEditing onChange={onCreate} onEditCancel={onEditCancel}/>
-    )
-  }
 
   handleContextMenu = (event, tag) => {
     const { selection, onSelect, onContextMenu } = this.props
@@ -55,7 +43,6 @@ class TagList extends PureComponent {
             onEditCancel={onEditCancel}
             onSelect={onSelect}
             onContextMenu={this.handleContextMenu}/>)}
-        {this.renderNewTag()}
       </ol>
     )
   }
@@ -81,8 +68,6 @@ class TagList extends PureComponent {
     onSelect: noop
   }
 }
-
-
 
 module.exports = {
   TagList

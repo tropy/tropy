@@ -3,13 +3,28 @@
 const React = require('react')
 const { PureComponent, PropTypes } = React
 const { arrayOf, func, number, object } = PropTypes
-const { TagList } = require('../tag')
+const { TagList, Tag } = require('../tag')
 
 
 class ProjectTags extends PureComponent {
 
   handleContextMenu = (event, tag) => {
     this.props.onContextMenu(event, 'tag', tag.id)
+  }
+
+  renderNewTag() {
+    const { edit, onCreate, onEditCancel } = this.props
+    const hasNewTag = (edit != null && edit.id == null)
+
+    return hasNewTag && (
+      <ol>
+        <Tag
+          tag={edit}
+          isEditing
+          onChange={onCreate}
+          onEditCancel={onEditCancel}/>
+      </ol>
+    )
   }
 
   render() {
@@ -24,6 +39,7 @@ class ProjectTags extends PureComponent {
           onSave={this.props.onSave}
           onSelect={this.props.onSelect}
           onContextMenu={this.handleContextMenu}/>
+        {this.renderNewTag()}
       </nav>
     )
   }
