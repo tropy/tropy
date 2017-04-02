@@ -50,6 +50,10 @@ $component-padding-horizontal: 12px !default;
         font-style: italic;
       }
     }
+
+    &.mixed {
+      color: $metadata-field-mixed-color;
+    }
   }
 
   label,
