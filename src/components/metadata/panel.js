@@ -88,9 +88,8 @@ class MetadataPanel extends PureComponent {
   static propTypes = {
     isDisabled: bool,
 
-    data: object.isRequired,
     bulk: object.isRequired,
-
+    data: object.isRequired,
     templates: object.isRequired,
 
     items: arrayOf(shape({

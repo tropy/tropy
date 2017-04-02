@@ -4,25 +4,27 @@ const React = require('react')
 const { PureComponent, PropTypes } = React
 const { arrayOf, number, shape, string } = PropTypes
 const { connect } = require('react-redux')
-const { getVisibleTags } = require('../../selectors')
-const { IconTag, IconPlusCircles } = require('../icons')
-const { IconButton } = require('../button')
+const { getItemTags } = require('../../selectors')
+const { TagList } = require('./list')
 
+const empty = []
+const noop = () => {}
 
 class TagPanel extends PureComponent {
 
   render() {
     return (
       <div className="tag list tab-pane">
-        <ul>
-          {this.props.tags.map(tag =>
-            <li key={tag.id}>
-              <IconTag/>
-              <div className="name">{tag.name}</div>
-              <IconButton icon={<IconPlusCircles/>}/>
-            </li>
-          )}
-        </ul>
+        <TagList
+          tags={this.props.tags}
+          selection={empty}
+          onCancel={noop}
+          onEdit={noop}
+          onSelect={noop}
+          onCreate={noop}
+          onSave={noop}
+          onContextMenu={noop}/>
+
         <div className="add-tag-container">
           <input
             type="text"
@@ -45,7 +47,7 @@ class TagPanel extends PureComponent {
 module.exports = {
   TagPanel: connect(
     (state) => ({
-      tags: getVisibleTags(state)
+      tags: getItemTags(state)
     })
   )(TagPanel)
 }
