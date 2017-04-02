@@ -40,7 +40,7 @@ const EsperImage = ({ photo, isVisible }) => (
     </header>
 
     {isVisible && photo && photo.path &&
-        <img src={`${photo.protocol}://${photo.path}`}/>}
+      <img src={`${photo.protocol}://${photo.path}`}/>}
 
   </section>
 )
