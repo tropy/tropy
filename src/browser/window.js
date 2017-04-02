@@ -14,7 +14,8 @@ const DEFAULTS = {
   useContentSize: true,
   webPreferences: {
     zoomFactor: global.ARGS.zoom || 1,
-    preload: resolve(__dirname, '..', 'bootstrap.js')
+    preload: resolve(__dirname, '..', 'bootstrap.js'),
+    experimentalFeatures: true
   }
 }
 

@@ -40,14 +40,7 @@ const EsperImage = ({ photo, isVisible }) => (
     </header>
 
     {isVisible && photo && photo.path &&
-      <div className="mask-blur">
-        <img className="blur" src={`${photo.protocol}://${photo.path}`}/>
-      </div>}
-
-    {isVisible && photo && photo.path &&
-      <div className="mask-original">
-        <img className="original" src={`${photo.protocol}://${photo.path}`}/>
-      </div>}
+        <img src={`${photo.protocol}://${photo.path}`}/>}
 
   </section>
 )
