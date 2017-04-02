@@ -5,7 +5,6 @@ const { PureComponent, PropTypes } = React
 const { arrayOf, func, number, object, shape, string } = PropTypes
 const { TagList } = require('./list')
 
-const noop = () => {}
 
 class TagPanel extends PureComponent {
 
@@ -24,7 +23,7 @@ class TagPanel extends PureComponent {
           edit={this.props.edit}
           tags={this.props.tags}
           onEditCancel={this.props.onEditCancel}
-          onSave={noop}
+          onSave={this.props.onSave}
           onContextMenu={this.handleContextMenu}/>
 
         <div className="add-tag-container">
@@ -51,7 +50,8 @@ class TagPanel extends PureComponent {
     })).isRequired,
 
     onContextMenu: func.isRequired,
-    onEditCancel: func.isRequired
+    onEditCancel: func.isRequired,
+    onSave: func.isRequired
   }
 }
 

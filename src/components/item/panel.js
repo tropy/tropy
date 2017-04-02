@@ -54,6 +54,7 @@ class ItemPanel extends PureComponent {
       onNoteSelect,
       onPhotoSelect,
       onPhotoSort,
+      onTagSave,
       ...props
     } = this.props
 
@@ -78,7 +79,8 @@ class ItemPanel extends PureComponent {
             photo={photo}
             tab={panel.tab}
             tags={tags}
-            edit={edit.field || edit.tabTag}/>
+            edit={edit.field || edit.tabTag}
+            onTagSave={onTagSave}/>
         </Panel>
 
         <PhotoPanel {...props}
@@ -144,6 +146,7 @@ class ItemPanel extends PureComponent {
     onPhotoCreate: func.isRequired,
     onPhotoSelect: func.isRequired,
     onPhotoSort: func.isRequired,
+    onTagSave: func.isRequired,
     onUiUpdate: func.isRequired
   }
 

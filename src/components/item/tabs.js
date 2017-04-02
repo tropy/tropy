@@ -62,7 +62,7 @@ class ItemTab extends PureComponent {
   render() {
     if (this.isEmpty) return null
 
-    const { bulk, data, tab, tags, ...props } = this.props
+    const { bulk, data, tab, tags, onTagSave, ...props } = this.props
 
     switch (tab) {
       case METADATA:
@@ -73,7 +73,9 @@ class ItemTab extends PureComponent {
         )
       case TAGS:
         return (
-          <TagPanel {...props} tags={tags}/>
+          <TagPanel {...props}
+            tags={tags}
+            onSave={onTagSave}/>
         )
       default:
         return null
@@ -85,7 +87,10 @@ class ItemTab extends PureComponent {
     bulk: object.isRequired,
     items: array.isRequired,
     tags: array.isRequired,
-    tab: oneOf([METADATA, TAGS]).isRequired
+    tab: oneOf([METADATA, TAGS]).isRequired,
+    onContextMenu: func.isRequired,
+    onEditCancel: func.isRequired,
+    onTagSave: func.isRequired
   }
 }
 
