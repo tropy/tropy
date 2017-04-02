@@ -193,9 +193,10 @@ $tab-active-bg:      $transparent;
 $tab-inactive-color: $shade-5;
 
 // Metadata
-$label-color:            $shade-5;
-$template-select-border: $shade-3;
-$template-select-bg:     $shade-1;
+$label-color:                $shade-5;
+$template-select-border:     $shade-3;
+$template-select-bg:         $shade-1;
+$metadata-field-mixed-color: #bbb; // Todo
 
 // Tag list
 $tag-list-focus-color:              $shade-0;
@@ -248,7 +249,7 @@ $slider-handle-border: $shade-9-20;
 $esper-bg:             $shade-2;
 $esper-toolbar-bg:     $shade-2;
 $esper-toolbar-border: #d4d4d4; // ToDo
-$esper-icon-color:     $shade-7;
+$esper-icon-color:     $shade-6;
 
 // Drag preview
 $drag-preview-opacity:           0.8;
