@@ -5,7 +5,7 @@ const { PropTypes, PureComponent } = React
 const { Editable } = require('../editable')
 const { IconTag } = require('../icons')
 const { meta } = require('../../common/os')
-const cn = require('classnames')
+const cx = require('classnames')
 const { shape, number, string, bool, func } = PropTypes
 
 
@@ -41,7 +41,7 @@ class Tag extends PureComponent {
 
     return (
       <li
-        className={cn(this.classes)}
+        className={cx(this.classes)}
         onContextMenu={isEditing ? null : this.handleContextMenu}
         onClick={isEditing ? null : this.handleClick}>
         <IconTag/>
