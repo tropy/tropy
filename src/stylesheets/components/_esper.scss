@@ -12,6 +12,7 @@
   justify-content: center;
   align-items: center;
   position: relative;
+  overflow: hidden;
 
   .esper-header.draggable {
     position: absolute;
@@ -21,13 +22,13 @@
 
     .toolbar {
       box-sizing: content-box;
-      background: rgba(#e6e6e6, 0.5);
+      background: rgba(#fff, 0.6);
       transform: translate3d(0, -100%, 0);
-      transition: transform $esper-toolbar-transition-out;
       padding-top: 0;
-      border-bottom: 1px solid rgba(#ccc, 0.5);
-      height: $toolbar-height + $space-min;
+      //border-bottom: 1px solid rgba(#ccc, 0.5);
+      height: $toolbar-height;
       background-clip: padding-box;
+      transition: transform $esper-toolbar-transition-out;
 
       @at-root #{selector-replace(&, ".esper", ".esper:hover")} {
         transform: translate3d(0, 0, 0);
@@ -65,34 +66,16 @@
     top: 0;
     width: 100%;
     height: 100%;
-    transition: -webkit-clip-path $esper-toolbar-transition-out;
-
-    @at-root #{selector-replace(&, ".esper", ".esper:hover")} {
-      transition: -webkit-clip-path $esper-toolbar-transition-in;
-    }
   }
 
   .mask-original {
-    -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    background: $esper-bg;
+    overflow: hidden;
+    transition: margin-top $esper-toolbar-transition-out;
 
     @at-root #{selector-replace(&, ".esper", ".esper:hover")} {
-      -webkit-clip-path: polygon(
-        0 #{$toolbar-height + $space-min},
-        100% #{$toolbar-height + $space-min},
-        100% 100%,
-        0 100%);
-    }
-  }
-
-  .mask-blur {
-    -webkit-clip-path: polygon(0 0, 100% 0%, 100% 0, 0 0);
-
-    @at-root #{selector-replace(&, ".esper", ".esper:hover")} {
-      -webkit-clip-path: polygon(
-        0 0,
-        100% 0%,
-        100% #{$toolbar-height + $space-min},
-        0 #{$toolbar-height + $space-min});
+      margin-top: #{$toolbar-height};
+      transition: margin-top $esper-toolbar-transition-in;
     }
   }
 
@@ -101,10 +84,21 @@
     position: absolute;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, calc(-50%));
+  }
+
+  .original {
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: margin-top $esper-toolbar-transition-out;
+
+    @at-root #{selector-replace(&, ".esper", ".esper:hover")} {
+      margin-top: -#{$toolbar-height};
+      transition: margin-top $esper-toolbar-transition-in;
+    }
   }
 
   .blur {
-    filter: blur(20px);
+    transform: translate(-50%, -50%);
+    filter: blur(30px);
   }
 }
