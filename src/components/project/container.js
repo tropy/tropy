@@ -22,6 +22,7 @@ const {
   getCachePrefix,
   getColumns,
   getItemMetadata,
+  getItemTags,
   getSelectedItems,
   getSelectedPhoto,
   getSelectedNote,
@@ -151,6 +152,7 @@ class ProjectContainer extends Component {
       data,
       dt,
       items,
+      itemTags,
       nav,
       note,
       notes,
@@ -186,6 +188,7 @@ class ProjectContainer extends Component {
           notes={notes}
           photo={photo}
           photos={photos}
+          tags={itemTags}
           panel={ui.panel}
           esper={ui.esper}
           offset={this.state.offset}
@@ -243,6 +246,10 @@ class ProjectContainer extends Component {
       type: oneOf(['property']).isRequired
     }).isRequired,
 
+    itemTags: arrayOf(shape({
+      id: number.isRequired
+    })).isRequired,
+
     isOver: bool,
     canDrop: bool,
     dt: func.isRequired,
@@ -287,6 +294,7 @@ module.exports = {
       data: state.metadata,
       edit: state.edit,
       items: getVisibleItems(state),
+      itemTags: getItemTags(state),
       keymap: state.keymap,
       lists: state.lists,
       nav: state.nav,

@@ -3,12 +3,23 @@
 const { TAG, EDIT } = require('../constants')
 
 module.exports = {
-
   new(payload, meta) {
     return {
       type: EDIT.START,
       payload: {
         tag: { name: '', ...payload, }
+      },
+      meta
+    }
+  },
+
+  edit(payload, meta) {
+    const context = (payload.items != null) ? 'tabTag' : 'tag'
+
+    return {
+      type: EDIT.START,
+      payload: {
+        [context]: payload
       },
       meta
     }

@@ -45,6 +45,7 @@ class ItemPanel extends PureComponent {
       notes,
       panel,
       photo,
+      tags,
       isDisabled,
       isItemOpen,
       onMaximize,
@@ -76,7 +77,8 @@ class ItemPanel extends PureComponent {
             isItemOpen={isItemOpen}
             photo={photo}
             tab={panel.tab}
-            edit={edit.field}/>
+            tags={tags}
+            edit={edit.field || edit.tabTag}/>
         </Panel>
 
         <PhotoPanel {...props}
@@ -125,6 +127,7 @@ class ItemPanel extends PureComponent {
     }),
     photos: array.isRequired,
     properties: object.isRequired,
+    tags: array.isRequired,
     templates: object.isRequired,
 
 
