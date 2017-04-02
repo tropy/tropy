@@ -58,7 +58,6 @@ class TagList extends PureComponent {
 
     onEditCancel: func.isRequired,
     onSelect: func.isRequired,
-    onCreate: func.isRequired,
     onSave: func.isRequired,
     onContextMenu: func.isRequired
   }

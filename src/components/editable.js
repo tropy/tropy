@@ -85,6 +85,7 @@ class Editable extends PureComponent {
           className="editable editable-control"
           type={type}
           value={this.state.value}
+          tabIndex={-1}
           required={isRequired}
           ref={this.focus}
           onChange={this.handleChange}

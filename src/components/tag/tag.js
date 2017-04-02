@@ -14,7 +14,8 @@ class Tag extends PureComponent {
   get classes() {
     return {
       tag: true,
-      active: this.props.isSelected
+      active: this.props.isSelected,
+      mixed: !!this.props.tag.mixed
     }
   }
 
