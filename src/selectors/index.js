@@ -7,5 +7,7 @@ module.exports = {
   ...require('./metadata'),
   ...require('./notes'),
   ...require('./photos'),
+  ...require('./project'),
+  ...require('./templates'),
   ...require('./tags')
 }

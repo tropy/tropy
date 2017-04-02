@@ -16,17 +16,16 @@ const cx = require('classnames')
 const { values } = Object
 const actions = require('../../actions')
 
-const { getCachePrefix } = require('../../selectors/project')
-const { getTemplates } = require('../../selectors/templates')
-
 const {
   getActivities,
   getAllTags,
+  getCachePrefix,
   getColumns,
+  getItemMetadata,
   getSelectedItems,
   getSelectedPhoto,
-  getSelectedMetadata,
   getSelectedNote,
+  getTemplates,
   getVisibleItems,
   getVisibleNotes,
   getVisiblePhotos
@@ -42,7 +41,7 @@ class ProjectContainer extends Component {
     super(props)
 
     this.state = {
-      mode: props.mode,
+      mode: props.nav.mode,
       offset: props.ui.panel.width,
       willModeChange: false,
       isModeChanging: false
@@ -53,8 +52,8 @@ class ProjectContainer extends Component {
     this.clearTimeouts()
   }
 
-  componentWillReceiveProps({ mode, ui }) {
-    if (mode !== this.props.mode) {
+  componentWillReceiveProps({ nav, ui }) {
+    if (nav.mode !== this.props.nav.mode) {
       this.modeWillChange()
     }
 
@@ -74,8 +73,8 @@ class ProjectContainer extends Component {
       [`${this.state.mode}-mode`]: true,
       [`${this.state.mode}-mode-leave`]: willModeChange,
       [`${this.state.mode}-mode-leave-active`]: isModeChanging,
-      [`${this.props.mode}-mode-enter`]: willModeChange,
-      [`${this.props.mode}-mode-enter-active`]: isModeChanging
+      [`${this.props.nav.mode}-mode-enter`]: willModeChange,
+      [`${this.props.nav.mode}-mode-enter-active`]: isModeChanging
     }
   }
 
@@ -96,7 +95,7 @@ class ProjectContainer extends Component {
   modeDidChange = () => {
     try {
       this.setState({
-        mode: this.props.mode,
+        mode: this.props.nav.mode,
         willModeChange: false,
         isModeChanging: false
       })
@@ -230,12 +229,14 @@ class ProjectContainer extends Component {
       shape({ id: number.isRequired })
     ),
 
-    nav: object.isRequired,
+    nav: shape({
+      mode: oneOf(values(MODE)).isRequired
+    }).isRequired,
+
     ui: object.isRequired,
     data: object.isRequired,
     columns: arrayOf(object),
     cache: string.isRequired,
-    mode: oneOf(values(MODE)).isRequired,
     sort: shape({
       asc: bool,
       column: string.isRequired,
@@ -252,10 +253,6 @@ class ProjectContainer extends Component {
     onMetadataSave: func.isRequired,
     onSort: func.isRequired,
     onUiUpdate: func.isRequired
-  }
-
-  static defaultProps = {
-    mode: MODE.PROJECT
   }
 }
 
@@ -284,27 +281,26 @@ module.exports = {
   ProjectContainer: connect(
     state => ({
       activities: getActivities(state),
-      project: state.project,
-      mode: state.nav.mode,
-      lists: state.lists,
-      tags: getAllTags(state),
+      bulk: getItemMetadata(state),
+      cache: getCachePrefix(state),
       columns: getColumns(state),
+      data: state.metadata,
+      edit: state.edit,
       items: getVisibleItems(state),
-      selection: getSelectedItems(state),
+      keymap: state.keymap,
+      lists: state.lists,
+      nav: state.nav,
       note: getSelectedNote(state),
       notes: getVisibleNotes(state),
       photo: getSelectedPhoto(state),
       photos: getVisiblePhotos(state),
-      sort: state.nav.sort,
-      bulk: getSelectedMetadata(state),
-      data: state.metadata,
-      keymap: state.keymap,
-      cache: getCachePrefix(state),
-      nav: state.nav,
-      ui: state.ui,
-      edit: state.edit,
+      project: state.project,
       properties: state.properties,
-      templates: getTemplates(state)
+      selection: getSelectedItems(state),
+      sort: state.nav.sort,
+      tags: getAllTags(state),
+      templates: getTemplates(state),
+      ui: state.ui
     }),
 
     dispatch => ({

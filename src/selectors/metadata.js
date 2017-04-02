@@ -25,7 +25,7 @@ const skipId = filter(kv => kv[0] !== 'id')
 
 const getMetadata = ({ metadata }) => metadata
 
-const getSelectedMetadata = memo(
+const getItemMetadata = memo(
   getMetadata,
   ({ nav }) => (nav.items),
 
@@ -49,7 +49,8 @@ const getVisibleMetadata = memo(
   ({ items }) => items, ({ qr }) => (qr.items), pluck
 )
 
+
 module.exports = {
-  getSelectedMetadata,
+  getItemMetadata,
   getVisibleMetadata
 }
