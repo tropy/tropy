@@ -2,7 +2,7 @@
 
 const { text } = __require('value')
 
-describe('selectors', () => {
+describe('Metadata Selectors', () => {
   const selectors = __require('selectors/metadata')
 
   const metadata = {
@@ -12,24 +12,24 @@ describe('selectors', () => {
 
   const state = (items = []) => ({ nav: { items }, metadata })
 
-  describe('getSelectedMetadata', () => {
-    const { getSelectedMetadata } = selectors
+  describe('getItemMetadata', () => {
+    const { getItemMetadata } = selectors
 
     it('returns combined metadata in bulk', () => {
-      expect(getSelectedMetadata(state([1, 2])))
+      expect(getItemMetadata(state([1, 2])))
         .to.have.deep.property('title.text', 'foo')
 
-      expect(getSelectedMetadata(state([])))
+      expect(getItemMetadata(state([])))
         .to.eql({ id: [] })
 
-      expect(getSelectedMetadata(state([23])))
+      expect(getItemMetadata(state([23])))
         .to.eql({ id: [23] })
     })
 
     it('collects stats', () => {
-      expect(getSelectedMetadata(state([1, 2])))
+      expect(getItemMetadata(state([1, 2])))
         .to.have.deep.property('title.mixed', true)
-      expect(getSelectedMetadata(state([1, 2])))
+      expect(getItemMetadata(state([1, 2])))
         .to.have.deep.property('type.mixed', false)
     })
   })

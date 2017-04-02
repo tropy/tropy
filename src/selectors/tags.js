@@ -2,8 +2,8 @@
 
 const { createSelector: memo } = require('reselect')
 const { values } = Object
-const { seq, compose, filter, map, cat, keep } = require('transducers.js')
 const { getSelectedItems } = require('./items')
+const { seq, compose, filter, map, cat, keep } = require('transducers.js')
 
 const getTags = ({ tags }) => tags
 
@@ -16,23 +16,32 @@ const getAllTags = memo(
   (tags) => values(tags).filter(visible).sort(byName)
 )
 
-const getVisibleTags = memo(
+const getItemTags = memo(
   getTags,
   getSelectedItems,
 
-  (tags, items) => seq(
-    items,
-    compose(
-      map(item => item.tags),
-      cat,
-      map(id => tags[id]),
-      keep(),
-      filter(visible)
-    )).sort(byName)
+  (tags, items) => {
+    const counts = {}
+
+    return seq(items, compose(
+        map(item => item.tags),
+        cat,
+        map(id => ((counts[id] = (counts[id] || 0) + 1), tags[id])),
+        keep(),
+        filter(visible),
+        filter(tag => counts[tag.id] === 1)
+      ))
+      .map(tag => ({
+        ...tag,
+        count: counts[tag.id],
+        mixed: counts[tag.id] < items.length
+      }))
+      .sort(byName)
+  }
 )
 
 
 module.exports = {
   getAllTags,
-  getVisibleTags
+  getItemTags
 }
