@@ -28,7 +28,7 @@
       //border-bottom: 1px solid rgba(#ccc, 0.5);
       height: $toolbar-height;
       background-clip: padding-box;
-      backdrop-filter: blur(30px);
+      backdrop-filter: blur(30px); // sass-lint:disable-line no-misspelled-properties
       transition: transform $esper-toolbar-transition-out;
 
       @at-root #{selector-replace(&, ".esper", ".esper:hover")} {
