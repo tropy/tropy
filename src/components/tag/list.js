@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent, PropTypes } = React
 const { Tag } = require('./tag')
-const { get } = require('../../common/util')
+const { get, noop } = require('../../common/util')
 const { arrayOf, number, string, shape, object, func } = PropTypes
 
 
@@ -23,10 +23,10 @@ class TagList extends PureComponent {
 
 
   renderNewTag() {
-    const { edit, onCreate, onCancel } = this.props
+    const { edit, onCreate, onEditCancel } = this.props
 
     return this.hasNewTag && (
-      <Tag tag={edit} isEditing onChange={onCreate} onCancel={onCancel}/>
+      <Tag tag={edit} isEditing onChange={onCreate} onEditCancel={onEditCancel}/>
     )
   }
 
@@ -37,11 +37,11 @@ class TagList extends PureComponent {
       onSelect(tag.id, { mod: 'replace' })
     }
 
-    onContextMenu(event, 'tag', tag.id)
+    onContextMenu(event, tag)
   }
 
   render() {
-    const { tags, onCancel, onSelect, onSave } = this.props
+    const { tags, onEditCancel, onSelect, onSave } = this.props
 
     return (
       <ol className="tag list">
@@ -52,32 +52,36 @@ class TagList extends PureComponent {
             isEditing={this.isEditing(tag)}
             isSelected={this.isSelected(tag)}
             onChange={onSave}
-            onCancel={onCancel}
+            onEditCancel={onEditCancel}
             onSelect={onSelect}
             onContextMenu={this.handleContextMenu}/>)}
         {this.renderNewTag()}
       </ol>
     )
   }
-}
 
-TagList.propTypes = {
-  tags: arrayOf(
-    shape({
+  static propTypes = {
+    tags: arrayOf(shape({
       id: number.isRequired,
       name: string.isRequired
-    })
-  ).isRequired,
+    })).isRequired,
 
-  selection: arrayOf(number).isRequired,
-  edit: object,
+    selection: arrayOf(number).isRequired,
+    edit: object,
 
-  onCancel: func.isRequired,
-  onSelect: func.isRequired,
-  onCreate: func.isRequired,
-  onSave: func.isRequired,
-  onContextMenu: func.isRequired
+    onEditCancel: func.isRequired,
+    onSelect: func.isRequired,
+    onCreate: func.isRequired,
+    onSave: func.isRequired,
+    onContextMenu: func.isRequired
+  }
+
+  static defaultProps = {
+    selection: [],
+    onSelect: noop
+  }
 }
+
 
 
 module.exports = {

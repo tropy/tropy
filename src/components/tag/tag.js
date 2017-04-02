@@ -37,7 +37,7 @@ class Tag extends PureComponent {
   }
 
   render() {
-    const { tag, isEditing, onCancel } = this.props
+    const { tag, isEditing, onEditCancel } = this.props
 
     return (
       <li
@@ -50,7 +50,7 @@ class Tag extends PureComponent {
             value={tag.name}
             isRequired
             isEditing={isEditing}
-            onCancel={onCancel}
+            onCancel={onEditCancel}
             onChange={this.handleChange}/>
         </div>
       </li>
@@ -69,7 +69,7 @@ class Tag extends PureComponent {
 
     onSelect: func,
     onContextMenu: func,
-    onCancel: func.isRequired,
+    onEditCancel: func.isRequired,
     onChange: func.isRequired
   }
 }

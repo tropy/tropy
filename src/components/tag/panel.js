@@ -7,7 +7,6 @@ const { connect } = require('react-redux')
 const { getItemTags } = require('../../selectors')
 const { TagList } = require('./list')
 
-const empty = []
 const noop = () => {}
 
 class TagPanel extends PureComponent {
@@ -17,10 +16,8 @@ class TagPanel extends PureComponent {
       <div className="tag list tab-pane">
         <TagList
           tags={this.props.tags}
-          selection={empty}
-          onCancel={noop}
+          onEditCancel={noop}
           onEdit={noop}
-          onSelect={noop}
           onCreate={noop}
           onSave={noop}
           onContextMenu={noop}/>

@@ -6,7 +6,7 @@ const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')
 const { ActivityPane } = require('../activity')
 const { ListTree, TrashListNode } = require('../list')
-const { TagList } = require('../tag')
+const { ProjectTags } = require('./tags')
 const { Sidebar } = require('../sidebar')
 const { ProjectName } = require('./name')
 const { TABS, LIST } = require('../../constants')
@@ -97,6 +97,7 @@ class ProjectSidebar extends PureComponent {
       case this.props.isTrashSelected:
         return this.handleListSelect(this.getLastList())
       default:
+
         return this.handleListSelect(this.getPrevList())
     }
   }
@@ -244,17 +245,15 @@ class ProjectSidebar extends PureComponent {
 
           <section>
             <h2><FormattedMessage id="sidebar.tags"/></h2>
-            <nav>
-              <TagList
-                tags={tags}
-                selection={selectedTags}
-                edit={edit.tag}
-                onCancel={onEditCancel}
-                onCreate={onTagCreate}
-                onSave={onTagSave}
-                onSelect={onTagSelect}
-                onContextMenu={onContextMenu}/>
-            </nav>
+            <ProjectTags
+              tags={tags}
+              selection={selectedTags}
+              edit={edit.tag}
+              onEditCancel={onEditCancel}
+              onCreate={onTagCreate}
+              onSave={onTagSave}
+              onSelect={onTagSelect}
+              onContextMenu={onContextMenu}/>
           </section>
 
         </div>
