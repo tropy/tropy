@@ -3,7 +3,7 @@
 const { all } = require('bluebird')
 const { assign } = Object
 const { into, map } = require('transducers.js')
-const { list: lst, uniq } = require('../common/util')
+const { array, list: lst, uniq } = require('../common/util')
 
 const mod = {
   metadata: require('./metadata'),
@@ -269,7 +269,7 @@ module.exports = mod.item = {
     async remove(db, { id, tags }) {
       return db.run(`
         DELETE FROM taggings
-          WHERE id = ? AND tag_id IN (${tags.map(Number).join(',')})`, id)
+          WHERE id IN (${lst(array(id))}) AND tag_id IN (${lst(tags)})`)
     }
   },
 

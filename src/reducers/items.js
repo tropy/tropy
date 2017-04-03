@@ -30,9 +30,14 @@ module.exports = {
         return bulk.update(state, payload, meta)
 
       case ITEM.TAG.ADD:
-        return nested.add('tags', state, payload, meta)
+        return (error || meta.async && !meta.done) ?
+          state :
+          nested.add('tags', state, payload, meta)
       case ITEM.TAG.REMOVE:
-        return nested.remove('tags', state, payload, meta)
+        return (error || meta.async && !meta.done) ?
+          state :
+          nested.remove('tags', state, payload, meta)
+
       case ITEM.PHOTO.ADD:
         return nested.add('photos', state, payload, meta)
       case ITEM.PHOTO.REMOVE:
