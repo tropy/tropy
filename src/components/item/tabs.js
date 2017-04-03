@@ -8,7 +8,7 @@ const { IconMetadata, IconTag } = require('../icons')
 const { MetadataPanel } = require('../metadata')
 const { TagPanel } = require('../tag')
 const { PANEL: { METADATA, TAGS } } = require('../../constants/ui')
-const { array, func, object, oneOf } = PropTypes
+const { bool, func, oneOf } = PropTypes
 
 
 class ItemTabs extends PureComponent {
@@ -55,42 +55,24 @@ class ItemTabs extends PureComponent {
 
 
 class ItemTab extends PureComponent {
-  get isEmpty() {
-    return this.props.items.length === 0
-  }
-
   render() {
-    if (this.isEmpty) return null
+    const { isEmpty, tab, ...props } = this.props
 
-    const { bulk, data, tab, tags, onTagSave, ...props } = this.props
-
-    switch (tab) {
-      case METADATA:
-        return (
-          <MetadataPanel {...props}
-            bulk={bulk}
-            data={data}/>
-        )
-      case TAGS:
-        return (
-          <TagPanel {...props}
-            tags={tags}
-            onSave={onTagSave}/>
-        )
+    switch (true) {
+      case (isEmpty):
+        return null
+      case (tab === METADATA):
+        return <MetadataPanel {...props}/>
+      case (tab === TAGS):
+        return <TagPanel {...props}/>
       default:
         return null
     }
   }
 
   static propTypes = {
-    data: object.isRequired,
-    bulk: object.isRequired,
-    items: array.isRequired,
-    tags: array.isRequired,
-    tab: oneOf([METADATA, TAGS]).isRequired,
-    onContextMenu: func.isRequired,
-    onEditCancel: func.isRequired,
-    onTagSave: func.isRequired
+    isEmpty: bool.isRequired,
+    tab: oneOf([METADATA, TAGS]).isRequired
   }
 }
 

@@ -21,12 +21,9 @@ const {
   getAllTags,
   getCachePrefix,
   getColumns,
-  getItemMetadata,
-  getItemTags,
   getSelectedItems,
   getSelectedPhoto,
   getSelectedNote,
-  getTemplates,
   getVisibleItems,
   getVisibleNotes,
   getVisiblePhotos
@@ -152,7 +149,6 @@ class ProjectContainer extends Component {
       data,
       dt,
       items,
-      itemTags,
       nav,
       note,
       notes,
@@ -190,7 +186,6 @@ class ProjectContainer extends Component {
           notes={notes}
           photo={photo}
           photos={visiblePhotos}
-          tags={itemTags}
           panel={ui.panel}
           esper={ui.esper}
           offset={this.state.offset}
@@ -249,10 +244,6 @@ class ProjectContainer extends Component {
       type: oneOf(['property']).isRequired
     }).isRequired,
 
-    itemTags: arrayOf(shape({
-      id: number.isRequired
-    })).isRequired,
-
     isOver: bool,
     canDrop: bool,
     dt: func.isRequired,
@@ -291,13 +282,11 @@ module.exports = {
   ProjectContainer: connect(
     state => ({
       activities: getActivities(state),
-      bulk: getItemMetadata(state),
       cache: getCachePrefix(state),
       columns: getColumns(state),
       data: state.metadata,
       edit: state.edit,
       items: getVisibleItems(state),
-      itemTags: getItemTags(state),
       keymap: state.keymap,
       lists: state.lists,
       nav: state.nav,
@@ -311,7 +300,6 @@ module.exports = {
       selection: getSelectedItems(state),
       sort: state.nav.sort,
       tags: getAllTags(state),
-      templates: getTemplates(state),
       ui: state.ui
     }),
 

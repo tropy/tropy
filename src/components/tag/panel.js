@@ -3,6 +3,8 @@
 const React = require('react')
 const { PureComponent, PropTypes } = React
 const { arrayOf, func, number, object, shape, string } = PropTypes
+const { connect } = require('react-redux')
+const { getItemTags } = require('../../selectors')
 const { TagList } = require('./list')
 
 
@@ -12,7 +14,7 @@ class TagPanel extends PureComponent {
     this.props.onContextMenu(event, 'item-tag', {
       id: tag.id,
       mixed: tag.mixed,
-      items: this.props.items.map(it => it.id)
+      items: this.props.items
     })
   }
 
@@ -23,7 +25,7 @@ class TagPanel extends PureComponent {
           edit={this.props.edit}
           tags={this.props.tags}
           onEditCancel={this.props.onEditCancel}
-          onSave={this.props.onSave}
+          onSave={this.props.onTagSave}
           onContextMenu={this.handleContextMenu}/>
 
         <div className="add-tag-container">
@@ -39,10 +41,7 @@ class TagPanel extends PureComponent {
 
   static propTypes = {
     edit: object,
-
-    items: arrayOf(shape({
-      id: number.isRequired,
-    })).isRequired,
+    items: arrayOf(number).isRequired,
 
     tags: arrayOf(shape({
       id: number.isRequired,
@@ -51,10 +50,16 @@ class TagPanel extends PureComponent {
 
     onContextMenu: func.isRequired,
     onEditCancel: func.isRequired,
-    onSave: func.isRequired
+    onTagSave: func.isRequired
   }
 }
 
 module.exports = {
-  TagPanel
+  TagPanel: connect(
+    (state) => ({
+      edit: state.edit.tabTag,
+      items: state.nav.items,
+      tags: getItemTags(state)
+    })
+  )(TagPanel)
 }

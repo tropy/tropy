@@ -3,9 +3,14 @@
 const React = require('react')
 const { PureComponent, PropTypes } = React
 const { arrayOf, bool, func, number, object, shape, string } = PropTypes
+const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
 const { MetadataFields } = require('./fields')
 const { TemplateSelect } = require('./select')
+
+const {
+  getSelectedItems, getItemMetadata, getSelectedPhoto, getTemplates
+} = require('../../selectors')
 
 
 class MetadataPanel extends PureComponent {
@@ -30,7 +35,7 @@ class MetadataPanel extends PureComponent {
 
     const {
       items,
-      bulk,
+      itemsData,
       templates,
       isDisabled,
       onMetadataSave,
@@ -50,7 +55,7 @@ class MetadataPanel extends PureComponent {
           isDisabled={isDisabled}
           onChange={this.handleTemplateChange}/>
         <MetadataFields {...props}
-          data={bulk}
+          data={itemsData}
           template={templates[item.template]}
           isDisabled={isDisabled}
           onChange={onMetadataSave}/>
@@ -61,7 +66,7 @@ class MetadataPanel extends PureComponent {
   renderPhotoFields() {
     if (this.isEmpty || this.isBulk) return null
 
-    const { photo, data, templates, onMetadataSave, ...props } = this.props
+    const { photo, photoData, templates, onMetadataSave, ...props } = this.props
 
     return photo && (
       <section>
@@ -69,7 +74,7 @@ class MetadataPanel extends PureComponent {
           <FormattedMessage id="panel.metadata.photo"/>
         </h5>
         <MetadataFields {...props}
-          data={data[photo.id]}
+          data={photoData}
           template={templates[photo.template]}
           onChange={onMetadataSave}/>
       </section>
@@ -90,19 +95,19 @@ class MetadataPanel extends PureComponent {
   static propTypes = {
     isDisabled: bool,
 
-    bulk: object.isRequired,
-    data: object.isRequired,
-    templates: object.isRequired,
-
     items: arrayOf(shape({
       id: number.isRequired,
       template: string.isRequired
     })),
+    itemsData: object.isRequired,
 
     photo: shape({
       id: number.isRequired,
       template: string.isRequired
     }),
+    photoData: object,
+
+    templates: object.isRequired,
 
     onItemSave: func.isRequired,
     onMetadataSave: func.isRequired
@@ -110,6 +115,14 @@ class MetadataPanel extends PureComponent {
 }
 
 module.exports = {
-  MetadataPanel
+  MetadataPanel: connect(
+    (state) => ({
+      items: getSelectedItems(state),
+      itemsData: getItemMetadata(state),
+      photo: getSelectedPhoto(state),
+      photoData: state.metadata[state.nav.photo],
+      templates: getTemplates(state)
+    })
+  )(MetadataPanel)
 }
 

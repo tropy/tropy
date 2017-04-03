@@ -19,6 +19,10 @@ class ItemPanel extends PureComponent {
     return items.length === 1 ? items[0] : null
   }
 
+  get isEmpty() {
+    return this.props.items.length === 0
+  }
+
   handlePhotoCreate = (options) => {
     this.props.onPhotoCreate({
       ...options,
@@ -74,12 +78,10 @@ class ItemPanel extends PureComponent {
         <Panel>
           <ItemTabs tab={panel.tab} onChange={this.handleTabChange}/>
           <ItemTab {...props}
+            tab={panel.tab}
+            isEmpty={this.isEmpty}
             isDisabled={isDisabled}
             isItemOpen={isItemOpen}
-            photo={photo}
-            tab={panel.tab}
-            tags={tags}
-            edit={edit.field || edit.tabTag}
             onTagSave={onTagSave}/>
         </Panel>
 
@@ -108,7 +110,6 @@ class ItemPanel extends PureComponent {
   }
 
   static propTypes = {
-    bulk: object.isRequired,
     cache: string.isRequired,
     data: object.isRequired,
     edit: object.isRequired,
@@ -129,9 +130,6 @@ class ItemPanel extends PureComponent {
     }),
     photos: array.isRequired,
     properties: object.isRequired,
-    tags: array.isRequired,
-    templates: object.isRequired,
-
 
     onContextMenu: func.isRequired,
     onEdit: func.isRequired,
