@@ -280,6 +280,10 @@ class Tropy extends EventEmitter {
         this.dispatch(act.tag.new()))
       .on('app:rename-tag', (_, { target }) =>
         this.dispatch(act.tag.edit(target)))
+      .on('app:remove-tag', (_, { target }) =>
+        this.dispatch(act.item.tags.remove({
+          id: target.items, tags: [target.id]
+        })))
       .on('app:delete-tag', (_, { target }) =>
         this.dispatch(act.tag.hide(target)))
       .on('app:create-note', (_, { target }) =>
