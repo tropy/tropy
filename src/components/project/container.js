@@ -366,6 +366,14 @@ module.exports = {
         dispatch(actions.item.preview(...args))
       },
 
+      onItemTagAdd(payload, meta) {
+        dispatch(actions.item.tags.add(payload, { ...meta, async: true }))
+      },
+
+      onItemTagRemove(payload, meta) {
+        dispatch(actions.item.tags.remove(payload, { ...meta, async: true }))
+      },
+
       onMetadataSave(...args) {
         dispatch(actions.metadata.save(...args))
         dispatch(actions.edit.cancel())
@@ -405,6 +413,10 @@ module.exports = {
       onTagCreate(data) {
         dispatch(actions.tag.create(data))
         dispatch(actions.edit.cancel())
+      },
+
+      onTagDelete(...args) {
+        dispatch(actions.tag.hide(...args))
       },
 
       onTagSave(data, id) {

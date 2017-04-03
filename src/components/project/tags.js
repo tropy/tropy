@@ -32,10 +32,12 @@ class ProjectTags extends PureComponent {
       <nav className="project-tags">
         <TagList
           tags={this.props.tags}
+          keymap={this.props.keymap}
           selection={this.props.selection}
           edit={this.props.edit}
           onEditCancel={this.props.onEditCancel}
           onCreate={this.props.onCreate}
+          onRemove={this.props.onDelete}
           onSave={this.props.onSave}
           onSelect={this.props.onSelect}
           onContextMenu={this.handleContextMenu}/>
@@ -46,10 +48,12 @@ class ProjectTags extends PureComponent {
 
   static propTypes = {
     edit: object,
+    keymap: object.isRequired,
     selection: arrayOf(number).isRequired,
     tags: arrayOf(object).isRequired,
     onContextMenu: func.isRequired,
     onCreate: func.isRequired,
+    onDelete: func.isRequired,
     onEditCancel: func.isRequired,
     onSave: func.isRequired,
     onSelect: func.isRequired,

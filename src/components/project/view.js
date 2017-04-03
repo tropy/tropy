@@ -73,6 +73,7 @@ class ProjectView extends PureComponent {
           onChange={this.handleSidebarResize}>
           <ProjectSidebar {...pick(props, ProjectSidebar.props)}
             edit={edit}
+            keymap={keymap}
             selectedList={nav.list}
             selectedTags={nav.tags}
             isSelected={!(nav.list || nav.trash)}

@@ -23,8 +23,10 @@ class TagPanel extends PureComponent {
       <div className="tab-pane">
         <TagList
           edit={this.props.edit}
+          keymap={this.props.keymap}
           tags={this.props.tags}
           onEditCancel={this.props.onEditCancel}
+          onRemove={this.props.onItemTagRemove}
           onSave={this.props.onTagSave}
           onContextMenu={this.handleContextMenu}/>
 
@@ -42,6 +44,7 @@ class TagPanel extends PureComponent {
   static propTypes = {
     edit: object,
     items: arrayOf(number).isRequired,
+    keymap: object.isRequired,
 
     tags: arrayOf(shape({
       id: number.isRequired,
@@ -50,6 +53,8 @@ class TagPanel extends PureComponent {
 
     onContextMenu: func.isRequired,
     onEditCancel: func.isRequired,
+    onItemTagAdd: func.isRequired,
+    onItemTagRemove: func.isRequired,
     onTagSave: func.isRequired
   }
 }
@@ -59,6 +64,7 @@ module.exports = {
     (state) => ({
       edit: state.edit.tabTag,
       items: state.nav.items,
+      keymap: state.keymap,
       tags: getItemTags(state)
     })
   )(TagPanel)

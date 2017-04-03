@@ -13,6 +13,7 @@ describe('ProjectSidebar', () => {
       shallow(
         <ProjectSidebar
           project={project}
+          keymap={{}}
           lists={{}}
           selectedTags={[]}
           edit={{}}
@@ -27,6 +28,7 @@ describe('ProjectSidebar', () => {
       shallow(
         <ProjectSidebar
           project={project}
+          keymap={{}}
           lists={{}}
           selectedTags={[]}
           context={{}}

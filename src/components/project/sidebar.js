@@ -2,6 +2,7 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
+const { bool, shape, string, object, arrayOf, func, number } = PropTypes
 const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')
 const { ActivityPane } = require('../activity')
@@ -11,7 +12,7 @@ const { Sidebar } = require('../sidebar')
 const { ProjectName } = require('./name')
 const { TABS, LIST } = require('../../constants')
 const { has } = require('../../common/util')
-const { bool, shape, string, object, arrayOf, func, number } = PropTypes
+const { match } = require('../../keymap')
 
 
 class ProjectSidebar extends PureComponent {
@@ -138,17 +139,14 @@ class ProjectSidebar extends PureComponent {
     }
   }
 
-
   handleKeyDown = (event) => {
-    switch (event.key) {
-      case 'ArrowUp':
+    switch (match(this.props.keymap.Sidebar, event)) {
+      case 'prev':
         this.prev()
         break
-
-      case 'ArrowDown':
+      case 'next':
         this.next()
         break
-
       default:
         return
     }
@@ -175,6 +173,7 @@ class ProjectSidebar extends PureComponent {
       hasToolbar,
       isSelected,
       isTrashSelected,
+      keymap,
       lists,
       project,
       tags,
@@ -189,6 +188,7 @@ class ProjectSidebar extends PureComponent {
       onListSort,
       onMaximize,
       onTagCreate,
+      onTagDelete,
       onTagSave,
       onTagSelect
     } = this.props
@@ -247,10 +247,12 @@ class ProjectSidebar extends PureComponent {
             <h2><FormattedMessage id="sidebar.tags"/></h2>
             <ProjectTags
               tags={tags}
+              keymap={keymap.TagList}
               selection={selectedTags}
               edit={edit.tag}
               onEditCancel={onEditCancel}
               onCreate={onTagCreate}
+              onDelete={onTagDelete}
               onSave={onTagSave}
               onSelect={onTagSelect}
               onContextMenu={onContextMenu}/>
@@ -273,6 +275,7 @@ class ProjectSidebar extends PureComponent {
       name: string
     }).isRequired,
 
+    keymap: object.isRequired,
     activities: arrayOf(object).isRequired,
     edit: object.isRequired,
     lists: object.isRequired,
@@ -290,6 +293,7 @@ class ProjectSidebar extends PureComponent {
     onListSave: func.isRequired,
     onListSort: func.isRequired,
     onTagCreate: func.isRequired,
+    onTagDelete: func.isRequired,
     onTagSave: func.isRequired,
     onTagSelect: func.isRequired,
     onProjectSave: func.isRequired,

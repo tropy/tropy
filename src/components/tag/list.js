@@ -2,9 +2,10 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
+const { arrayOf, number, string, shape, object, func } = PropTypes
 const { Tag } = require('./tag')
 const { get, noop } = require('../../common/util')
-const { arrayOf, number, string, shape, object, func } = PropTypes
+const { match } = require('../../keymap')
 
 
 class TagList extends PureComponent {
@@ -28,6 +29,19 @@ class TagList extends PureComponent {
     onContextMenu(event, tag)
   }
 
+  handleKeyDown = (event, tag) => {
+    switch (match(this.props.keymap, event)) {
+      case 'remove':
+        this.props.onRemove(tag)
+        break
+      default:
+        return
+    }
+
+    event.preventDefault()
+    event.stopPropagation()
+  }
+
   render() {
     const { tags, onEditCancel, onSelect, onSave } = this.props
 
@@ -41,6 +55,7 @@ class TagList extends PureComponent {
             isSelected={this.isSelected(tag)}
             onChange={onSave}
             onEditCancel={onEditCancel}
+            onKeyDown={this.handleKeyDown}
             onSelect={onSelect}
             onContextMenu={this.handleContextMenu}/>)}
       </ol>
@@ -54,9 +69,11 @@ class TagList extends PureComponent {
     })).isRequired,
 
     selection: arrayOf(number).isRequired,
+    keymap: object.isRequired,
     edit: object,
 
     onEditCancel: func.isRequired,
+    onRemove: func.isRequired,
     onSelect: func.isRequired,
     onSave: func.isRequired,
     onContextMenu: func.isRequired

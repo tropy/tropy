@@ -136,6 +136,8 @@ class ItemPanel extends PureComponent {
     onEditCancel: PropTypes.func,
     onItemOpen: func.isRequired,
     onItemSave: func.isRequired,
+    onItemTagAdd: func.isRequired,
+    onItemTagRemove: func.isRequired,
     onMaximize: func.isRequired,
     onMetadataSave: func.isRequired,
     onModeChange: func.isRequired,

@@ -1,4 +1,8 @@
 linux: &linux
+  Sidebar:
+    next: ArrowDown
+    prev: ArrowUp
+
   ItemIterator:
     up: ArrowUp
     down: ArrowDown
@@ -38,6 +42,11 @@ linux: &linux
 
     undo: CmdOrCtrl+z
     redo: CmdOrCtrl+Shift+Z
+
+  TagList:
+    remove:
+      - Backspace
+      - Delete
 
 darwin: *linux
 win32: *linux
