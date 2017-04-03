@@ -16,5 +16,7 @@ progress {
     background: $progress-bar-color;
     border-top-left-radius: ($progress-bar-height / 2);
     border-bottom-left-radius: ($progress-bar-height / 2);
+    border-top-right-radius: $progress-value-border-radius;
+    border-bottom-right-radius: $progress-value-border-radius;
   }
 }

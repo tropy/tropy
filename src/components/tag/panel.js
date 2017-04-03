@@ -18,7 +18,7 @@ class TagPanel extends PureComponent {
 
   render() {
     return (
-      <div className="tag list tab-pane">
+      <div className="tab-pane">
         <TagList
           edit={this.props.edit}
           tags={this.props.tags}
