@@ -19,6 +19,7 @@
     left: 0;
     top: 0;
     width: 100%;
+    z-index: $zindex-esper-header;
 
     .toolbar {
       box-sizing: content-box;
