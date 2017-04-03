@@ -1,6 +1,5 @@
 // sass-lint:disable no-color-literals
 
-
 //
 // Esper
 // --------------------------------------------------
@@ -26,9 +25,7 @@
       background: if($theme=="dark", rgba(#444, 0.5), rgba(#fff, 0.6));
       transform: translate3d(0, -100%, 0);
       padding-top: 0;
-      //border-bottom: 1px solid rgba(#ccc, 0.5);
       height: $toolbar-height;
-      background-clip: padding-box;
       transition: transform $esper-toolbar-transition-out;
 
       @at-root #{selector-replace(&, ".esper", ".esper:hover")} {
