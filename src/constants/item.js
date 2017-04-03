@@ -25,7 +25,7 @@ module.exports = {
     ADD: 'item.tag.add',
     REMOVE: 'item.tag.remove',
     CLEAR: 'item.tag.clear',
-    TOGGLE: 'item.tag.toggle'
+    TOGGLE: 'item.tag.toggle',
   },
 
   PHOTO: {

@@ -42,7 +42,11 @@ module.exports = {
   },
 
   splice(array, at, count = 0, ...items) {
-    return [...array.slice(0, at), ...items, ...array.slice(at + count)]
+    return [
+      ...array.slice(0, (at == null) ? array.length : at),
+      ...items,
+      ...array.slice(at + count)
+    ]
   },
 
   sort(array, ...args) {

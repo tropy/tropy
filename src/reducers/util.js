@@ -1,6 +1,6 @@
 'use strict'
 
-const { omit, splice } = require('../common/util')
+const { array, omit, splice } = require('../common/util')
 const { into, map } = require('transducers.js')
 const { isArray } = Array
 
@@ -39,29 +39,22 @@ const util = {
 
   nested: {
     add(name, state = {}, payload, { idx }) {
-      const { id, [name]: added } = payload
-
-      if (idx == null || idx < 0) idx = state[id][name].length
-
-      return {
-        ...state,
+      return into({ ...state }, map(id => ({
         [id]: {
           ...state[id],
-          [name]: splice(state[id][name], idx, 0, ...added)
+          [name]: splice(state[id][name], idx, 0, ...payload[name])
         }
-      }
+      })), array(payload.id))
     },
 
     remove(name, state = {}, payload) {
-      const { id, [name]: removed } = payload
-
-      return {
-        ...state,
+      return into({ ...state }, map(id => ({
         [id]: {
           ...state[id],
-          [name]: state[id][name].filter(x => !removed.includes(x))
+          [name]: state[id][name].filter(x =>
+            !payload[name].includes(x))
         }
-      }
+      })), array(payload.id))
     }
   },
 
