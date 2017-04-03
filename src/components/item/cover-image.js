@@ -1,18 +1,12 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = React
+const { PureComponent, PropTypes } = React
 const { Thumbnail } = require('../photo')
 const { pick, get } = require('../../common/util')
 const { shape, number, arrayOf } = PropTypes
 
 const ThumbProps = Object.keys(Thumbnail.propTypes)
-
-const card = ({ photos }) =>
-  photos && photos.length || 0
-
-const cover = (item) =>
-  item.cover || get(item, ['photos', 0])
 
 const stack = (
   <div className="stack-lines">
@@ -21,19 +15,39 @@ const stack = (
   </div>
 )
 
-const CoverImage = ({ item, ...props }) => (
-  <div className="cover-image">
-    {(card(item) > 1) && stack }
-    <Thumbnail {...pick(props, ThumbProps)} id={cover(item)}/>
-  </div>
-)
+class CoverImage extends PureComponent {
 
-CoverImage.propTypes = {
-  ...Thumbnail.propTypes,
-  item: shape({
-    photos: arrayOf(number),
-    cover: number
-  }).isRequired,
+  get isStack() {
+    const { photos } = this.props.item
+    return photos && photos.length > 1
+  }
+
+  get cover() {
+    return this.props.item.cover || get(this.props.item.photos, [0])
+  }
+
+  get orientation() {
+    return get(this.props.photos, [this.cover, 'orientation']) || 1
+  }
+
+  render() {
+    return (
+      <div className="cover-image">
+        {this.isStack && stack }
+        <Thumbnail {...pick(this.props, ThumbProps)}
+          id={this.cover}
+          orientation={this.orientation}/>
+      </div>
+    )
+  }
+
+  static propTypes = {
+    ...Thumbnail.propTypes,
+    item: shape({
+      photos: arrayOf(number),
+      cover: number
+    }).isRequired,
+  }
 }
 
 module.exports = {
