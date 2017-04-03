@@ -320,6 +320,39 @@ class ToggleTags extends Command {
   }
 }
 
+class AddTag extends Command {
+  static get action() { return ITEM.TAG.ADD }
+
+  *exec() {
+    const { db } = this.options
+    const { payload } = this.action
+
+    const [tag] = payload.tags
+    const values = payload.id.map(id => ({ id, tag }))
+
+    yield call(mod.item.tags.add, db, values)
+
+    this.undo = act.item.tags.remove(payload, { async: true })
+
+    return payload
+  }
+}
+
+class RemoveTag extends Command {
+  static get action() { return ITEM.TAG.ADD }
+
+  *exec() {
+    const { db } = this.options
+    const { payload } = this.action
+
+    yield call(mod.item.tags.remove, db, payload)
+
+    this.undo = act.item.tags.add(payload, { async: true })
+
+    return payload
+  }
+}
+
 
 class ClearTags extends Command {
   static get action() { return ITEM.TAG.CLEAR }
@@ -347,6 +380,8 @@ module.exports = {
   Split,
   Restore,
   Save,
+  AddTag,
+  RemoveTag,
   ToggleTags,
   ClearTags
 }
