@@ -23,7 +23,7 @@ class ItemTile extends ItemIterable {
   })
 
   render() {
-    const { item, cache, size } = this.props
+    const { item, cache, photos, size } = this.props
 
     return this.connect(
       <li
@@ -33,6 +33,7 @@ class ItemTile extends ItemIterable {
           <CoverImage
             cache={cache}
             item={item}
+            photos={photos}
             size={size}
             onMouseDown={this.handleMouseDown}
             onContextMenu={this.handleContextMenu}/>

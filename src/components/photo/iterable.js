@@ -81,6 +81,7 @@ class PhotoIterable extends PureComponent {
     return (
       <Thumbnail {...props}
         id={this.props.photo.id}
+        orientation={this.props.photo.orientation}
         cache={this.props.cache}
         size={this.props.size}/>
     )

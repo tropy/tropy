@@ -61,6 +61,7 @@ class ItemTableCell extends PureComponent {
     const {
       item,
       cache,
+      photos,
       size,
       width,
       isEditing,
@@ -76,7 +77,12 @@ class ItemTableCell extends PureComponent {
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>
 
-        {hasCoverImage && <CoverImage item={item} cache={cache} size={size}/>}
+        {hasCoverImage &&
+          <CoverImage
+            item={item}
+            cache={cache}
+            photos={photos}
+            size={size}/>}
 
         <Editable
           value={this.value}
@@ -107,6 +113,7 @@ class ItemTableCell extends PureComponent {
     }).isRequired,
 
     data: object.isRequired,
+    photos: object.isRequired,
 
     cache: string.isRequired,
     width: string.isRequired,

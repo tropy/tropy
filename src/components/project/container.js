@@ -158,6 +158,7 @@ class ProjectContainer extends Component {
       notes,
       photo,
       photos,
+      visiblePhotos,
       selection,
       ui,
       ...props
@@ -178,6 +179,7 @@ class ProjectContainer extends Component {
           columns={columns}
           sidebar={ui.sidebar}
           offset={this.state.offset}
+          photos={photos}
           zoom={ui.zoom}
           onMetadataSave={this.handleMetadataSave}/>
 
@@ -187,7 +189,7 @@ class ProjectContainer extends Component {
           note={note}
           notes={notes}
           photo={photo}
-          photos={photos}
+          photos={visiblePhotos}
           tags={itemTags}
           panel={ui.panel}
           esper={ui.esper}
@@ -219,7 +221,8 @@ class ProjectContainer extends Component {
     ),
 
     photo: object,
-    photos: arrayOf(
+    photos: object.isRequired,
+    visiblePhotos: arrayOf(
       shape({ id: number.isRequired })
     ),
 
@@ -301,7 +304,8 @@ module.exports = {
       note: getSelectedNote(state),
       notes: getVisibleNotes(state),
       photo: getSelectedPhoto(state),
-      photos: getVisiblePhotos(state),
+      photos: state.photos,
+      visiblePhotos: getVisiblePhotos(state),
       project: state.project,
       properties: state.properties,
       selection: getSelectedItems(state),

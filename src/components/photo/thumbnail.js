@@ -10,7 +10,6 @@ const { ICON } = require('../../constants/sass')
 
 
 class Thumbnail extends PureComponent {
-
   get src() {
     const { cache, id, size } = this.props
 
@@ -20,6 +19,7 @@ class Thumbnail extends PureComponent {
 
   render() {
     const { src } = this
+    const { orientation } = this.props
 
     const listeners = pick(this.props, [
       'onClick', 'onDoubleClick', 'onMouseDown', 'onContextMenu'
@@ -28,7 +28,8 @@ class Thumbnail extends PureComponent {
     return (
       <figure {...listeners} className="thumbnail">
         <IconPhoto/>
-        {src && <img src={src}/>}
+        {src &&
+          <img className={`exif orientation-${orientation}`} src={src}/>}
       </figure>
     )
   }
@@ -36,6 +37,7 @@ class Thumbnail extends PureComponent {
   static propTypes = {
     cache: string.isRequired,
     id: number,
+    orientation: number,
     size: number.isRequired,
     onClick: func,
     onContextMenu: func,

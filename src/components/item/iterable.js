@@ -8,7 +8,7 @@ const { compose, map, filter, into } = require('transducers.js')
 const { DND } = require('../../constants')
 const { meta } = require('../../common/os')
 const { pure } = require('../util')
-const { bool, func, number, shape, arrayOf } = PropTypes
+const { bool, func, number, object, shape, arrayOf } = PropTypes
 
 
 class ItemIterable extends PureComponent {
@@ -154,6 +154,7 @@ class ItemIterable extends PureComponent {
     isDisabled: bool,
     isVertical: bool,
     canDrop: bool,
+    photos: object.isRequired,
 
     item: shape({
       id: number.isRequired,

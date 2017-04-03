@@ -53,6 +53,7 @@ class ProjectView extends PureComponent {
       items,
       keymap,
       nav,
+      photos,
       sidebar,
       zoom,
       onItemCreate,
@@ -93,6 +94,7 @@ class ProjectView extends PureComponent {
 
             <ItemIterator {...pick(props, ItemIterator.props)}
               items={items}
+              photos={photos}
               edit={edit.column}
               keymap={keymap.ItemIterator}
               list={nav.list}
@@ -117,6 +119,7 @@ class ProjectView extends PureComponent {
     keymap: object.isRequired,
     nav: object.isRequired,
     offset: number.isRequired,
+    photos: object.isRequired,
     sidebar: object.isRequired,
     dt: func.isRequired,
     zoom: number.isRequired,

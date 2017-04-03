@@ -40,7 +40,9 @@ const EsperImage = ({ photo, isVisible }) => (
     </header>
 
     {isVisible && photo && photo.path &&
-      <img src={`${photo.protocol}://${photo.path}`}/>}
+      <img
+        className={`exif orientation-${photo.orientation}`}
+        src={`${photo.protocol}://${photo.path}`}/>}
 
   </section>
 )

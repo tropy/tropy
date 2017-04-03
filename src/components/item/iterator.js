@@ -121,6 +121,7 @@ class ItemIterator extends Iterator {
       return fn({
         item,
         cache: this.props.cache,
+        photos: this.props.photos,
         isLast: index === this.props.items.length - 1,
         isSelected: this.isSelected(item),
         isDisabled: this.isDisabled,
@@ -155,6 +156,7 @@ class ItemIterator extends Iterator {
     keymap: object.isRequired,
     list: number,
     size: number.isRequired,
+    photos: object.isRequired,
 
     dt: func.isRequired,
     onContextMenu: func.isRequired,
