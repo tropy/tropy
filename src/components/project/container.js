@@ -366,12 +366,12 @@ module.exports = {
         dispatch(actions.item.preview(...args))
       },
 
-      onItemTagAdd(payload, meta) {
-        dispatch(actions.item.tags.add(payload, { ...meta, async: true }))
+      onItemTagAdd(data) {
+        dispatch(actions.item.tags.add(data, { async: true, record: true }))
       },
 
-      onItemTagRemove(payload, meta) {
-        dispatch(actions.item.tags.remove(payload, { ...meta, async: true }))
+      onItemTagRemove(data) {
+        dispatch(actions.item.tags.remove(data, { async: true, record: true }))
       },
 
       onMetadataSave(...args) {

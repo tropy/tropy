@@ -339,7 +339,7 @@ class AddTag extends Command {
 }
 
 class RemoveTag extends Command {
-  static get action() { return ITEM.TAG.ADD }
+  static get action() { return ITEM.TAG.REMOVE }
 
   *exec() {
     const { db } = this.options

@@ -32,7 +32,7 @@ class TagList extends PureComponent {
   handleKeyDown = (event, tag) => {
     switch (match(this.props.keymap, event)) {
       case 'remove':
-        this.props.onRemove(tag)
+        this.props.onRemove(tag.id)
         break
       default:
         return

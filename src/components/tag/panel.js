@@ -10,6 +10,12 @@ const { TagList } = require('./list')
 
 class TagPanel extends PureComponent {
 
+  handleTagRemove = (tag) => {
+    this.props.onItemTagRemove({
+      id: this.props.items, tags: [tag]
+    })
+  }
+
   handleContextMenu = (event, tag) => {
     this.props.onContextMenu(event, 'item-tag', {
       id: tag.id,
@@ -26,7 +32,7 @@ class TagPanel extends PureComponent {
           keymap={this.props.keymap}
           tags={this.props.tags}
           onEditCancel={this.props.onEditCancel}
-          onRemove={this.props.onItemTagRemove}
+          onRemove={this.handleTagRemove}
           onSave={this.props.onTagSave}
           onContextMenu={this.handleContextMenu}/>
 
@@ -64,7 +70,7 @@ module.exports = {
     (state) => ({
       edit: state.edit.tabTag,
       items: state.nav.items,
-      keymap: state.keymap,
+      keymap: state.keymap.TagList,
       tags: getItemTags(state)
     })
   )(TagPanel)

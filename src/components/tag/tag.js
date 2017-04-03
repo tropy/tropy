@@ -37,14 +37,20 @@ class Tag extends PureComponent {
     this.props.onContextMenu(event, this.props.tag)
   }
 
+  handleKeyDown = (event) => {
+    this.props.onKeyDown(event, this.props.tag)
+  }
+
   render() {
     const { tag, isEditing, onEditCancel } = this.props
 
     return (
       <li
         className={cx(this.classes)}
+        tabIndex={-1}
         onContextMenu={isEditing ? null : this.handleContextMenu}
-        onClick={isEditing ? null : this.handleClick}>
+        onClick={isEditing ? null : this.handleClick}
+        onKeyDown={isEditing ? null : this.handleKeyDown}>
         <IconTag/>
         <div className="name">
           <Editable
@@ -68,10 +74,11 @@ class Tag extends PureComponent {
     isEditing: bool,
     isSelected: bool,
 
-    onSelect: func,
+    onChange: func.isRequired,
     onContextMenu: func,
     onEditCancel: func.isRequired,
-    onChange: func.isRequired
+    onKeyDown: func.isRequired,
+    onSelect: func
   }
 }
 
