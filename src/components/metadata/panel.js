@@ -95,6 +95,7 @@ class MetadataPanel extends PureComponent {
   static propTypes = {
     isDisabled: bool,
 
+    edit: object,
     items: arrayOf(shape({
       id: number.isRequired,
       template: string.isRequired
@@ -117,6 +118,7 @@ class MetadataPanel extends PureComponent {
 module.exports = {
   MetadataPanel: connect(
     (state) => ({
+      edit: state.edit.field,
       items: getSelectedItems(state),
       itemsData: getItemMetadata(state),
       photo: getSelectedPhoto(state),
