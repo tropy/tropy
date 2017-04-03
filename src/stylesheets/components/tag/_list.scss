@@ -19,16 +19,10 @@
   }
 
   .panel & {
+    flex: 1 1 0;
+    overflow-y: scroll;
     padding: $space-min 0 0;
     position: relative;
-    overflow-y: hidden;
-    display: flex;
-    flex-direction: column;
-
-    ol {
-      flex: 1 1 0;
-      overflow-y: scroll;
-    }
 
     li {
       display: flex;
@@ -72,41 +66,41 @@
         margin-left: $space-min - $shim;
       }
     }
+  }
+}
 
-    .add-tag-container {
-      flex: 0 0 auto;
-      padding-bottom: 2px;
+.add-tag-container {
+  flex: 0 0 auto;
+  padding-bottom: 2px;
+
+  .add-tag {
+    left: $component-padding-horizontal;
+    width: calc(100% - 2 * #{$component-padding-horizontal});
+    background: $add-tag-default-bg;
+    position: relative;
+    cursor: default;
+
+    &::-webkit-input-placeholder {
+      color: $add-tag-placeholder-color-default;
+      position: relative;
+      left: 50%;
+      transform: translateX(-27px);
+      transition:
+        left $add-tag-transition,
+        transform $add-tag-transition,
+        color $add-tag-transition;
     }
 
-    .add-tag {
-      left: $component-padding-horizontal;
-      width: calc(100% - 2 * #{$component-padding-horizontal});
-      background: $add-tag-default-bg;
-      position: relative;
-      cursor: default;
+    &:focus {
+      cursor: auto;
+      background: $add-tag-focus-bg;
+      box-shadow: 0 0 0 2px $input-color-focus, 0 0 0 2px $panel-bg;
+
 
       &::-webkit-input-placeholder {
-        color: $add-tag-placeholder-color-default;
-        position: relative;
-        left: 50%;
-        transform: translateX(-27px);
-        transition:
-          left $add-tag-transition,
-          transform $add-tag-transition,
-          color $add-tag-transition;
-      }
-
-      &:focus {
-        cursor: auto;
-        background: $add-tag-focus-bg;
-        box-shadow: 0 0 0 2px $input-color-focus, 0 0 0 2px $panel-bg;
-
-
-        &::-webkit-input-placeholder {
-          left: 0;
-          transform: translateX(0);
-          color: $input-color-placeholder;
-        }
+        left: 0;
+        transform: translateX(0);
+        color: $input-color-placeholder;
       }
     }
   }
