@@ -49,7 +49,6 @@ class ItemPanel extends PureComponent {
       notes,
       panel,
       photo,
-      tags,
       isDisabled,
       isItemOpen,
       onMaximize,
@@ -58,7 +57,6 @@ class ItemPanel extends PureComponent {
       onNoteSelect,
       onPhotoSelect,
       onPhotoSort,
-      onTagSave,
       ...props
     } = this.props
 
@@ -81,8 +79,7 @@ class ItemPanel extends PureComponent {
             tab={panel.tab}
             isEmpty={this.isEmpty}
             isDisabled={isDisabled}
-            isItemOpen={isItemOpen}
-            onTagSave={onTagSave}/>
+            isItemOpen={isItemOpen}/>
         </Panel>
 
         <PhotoPanel {...props}
