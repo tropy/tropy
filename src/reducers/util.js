@@ -38,7 +38,7 @@ const util = {
   },
 
   nested: {
-    add(name, state = {}, payload, { idx }) {
+    add(name, state = {}, payload, { idx } = {}) {
       return into({ ...state }, map(id => ({
         [id]: {
           ...state[id],

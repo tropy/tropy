@@ -42,8 +42,10 @@ module.exports = {
   },
 
   splice(array, at, count = 0, ...items) {
+    if (at == null) at = array.length
+
     return [
-      ...array.slice(0, (at == null) ? array.length : at),
+      ...array.slice(0, at),
       ...items,
       ...array.slice(at + count)
     ]
