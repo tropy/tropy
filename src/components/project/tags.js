@@ -12,6 +12,10 @@ class ProjectTags extends PureComponent {
     this.props.onContextMenu(event, 'tag', { id: tag.id })
   }
 
+  handleDelete = (tag) => {
+    this.props.onDelete(tag.id)
+  }
+
   renderNewTag() {
     const { edit, onCreate, onEditCancel } = this.props
     const hasNewTag = (edit != null && edit.id == null)
@@ -37,7 +41,7 @@ class ProjectTags extends PureComponent {
           edit={this.props.edit}
           onEditCancel={this.props.onEditCancel}
           onCreate={this.props.onCreate}
-          onRemove={this.props.onDelete}
+          onRemove={this.handleDelete}
           onSave={this.props.onSave}
           onSelect={this.props.onSelect}
           onContextMenu={this.handleContextMenu}/>
