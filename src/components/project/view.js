@@ -127,6 +127,7 @@ class ProjectView extends PureComponent {
     onItemCreate: func.isRequired,
     onItemImport: func.isRequired,
     onItemSelect: func.isRequired,
+    onItemTagAdd: func.isRequired,
     onMaximize: func.isRequired,
     onUiUpdate: func.isRequired
   }

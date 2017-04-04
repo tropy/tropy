@@ -50,6 +50,7 @@ class TagList extends PureComponent {
       tags,
       hasFocusIcon,
       onCommit,
+      onDropItems,
       onEditCancel,
       onSelect,
       onSave
@@ -65,6 +66,7 @@ class TagList extends PureComponent {
             isEditing={this.isEditing(tag)}
             isSelected={this.isSelected(tag)}
             onChange={onSave}
+            onDropItems={onDropItems}
             onEditCancel={onEditCancel}
             onFocusClick={onCommit}
             onKeyDown={this.handleKeyDown}
@@ -86,6 +88,7 @@ class TagList extends PureComponent {
     edit: object,
 
     onCommit: func.isRequired,
+    onDropItems: func,
     onEditCancel: func.isRequired,
     onRemove: func.isRequired,
     onSelect: func.isRequired,

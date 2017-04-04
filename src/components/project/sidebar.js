@@ -183,6 +183,7 @@ class ProjectSidebar extends PureComponent {
       onEditCancel,
       onItemDelete,
       onItemImport,
+      onItemTagAdd,
       onListItemsAdd,
       onListSave,
       onListSort,
@@ -253,6 +254,7 @@ class ProjectSidebar extends PureComponent {
               onEditCancel={onEditCancel}
               onCreate={onTagCreate}
               onDelete={onTagDelete}
+              onDropItems={onItemTagAdd}
               onSave={onTagSave}
               onSelect={onTagSelect}
               onContextMenu={onContextMenu}/>
@@ -289,6 +291,7 @@ class ProjectSidebar extends PureComponent {
     onContextMenu: func.isRequired,
     onItemDelete: func.isRequired,
     onItemImport: func.isRequired,
+    onItemTagAdd: func.isRequired,
     onListItemsAdd: func.isRequired,
     onListSave: func.isRequired,
     onListSort: func.isRequired,

@@ -6,8 +6,12 @@ const { shape, number, string, bool, func } = PropTypes
 const { Editable } = require('../editable')
 const { IconTag, IconPlusCircles } = require('../icons')
 const { meta } = require('../../common/os')
+const { toId } = require('../../common/util')
 const { hasFocus } = require('../../dom')
 const cx = require('classnames')
+const { DropTarget } = require('react-dnd')
+const { DND } = require('../../constants')
+const { pure } = require('../util')
 
 
 class Tag extends PureComponent {
@@ -15,8 +19,13 @@ class Tag extends PureComponent {
     return {
       tag: true,
       active: this.props.isSelected,
-      mixed: !!this.props.tag.mixed
+      mixed: !!this.props.tag.mixed,
+      over: this.props.isOver
     }
+  }
+
+  get isDropTarget() {
+    return this.props.onDropItems != null
   }
 
   setContainer = (container) => {
@@ -49,10 +58,14 @@ class Tag extends PureComponent {
     this.props.onKeyDown(event, this.props.tag)
   }
 
+  connect(element) {
+    return (this.isDropTarget) ? this.props.dt(element) : element
+  }
+
   render() {
     const { tag, isEditing, hasFocusIcon, onEditCancel } = this.props
 
-    return (
+    return this.connect(
       <li
         className={cx(this.classes)}
         tabIndex={-1}
@@ -79,17 +92,19 @@ class Tag extends PureComponent {
 
 
   static propTypes = {
+    dt: func.isRequired,
+    hasFocusIcon: bool,
+    isEditing: bool,
+    isOver: bool,
+    isSelected: bool,
     tag: shape({
       id: number,
       name: string.isRequired
     }).isRequired,
 
-    isEditing: bool,
-    isSelected: bool,
-    hasFocusIcon: bool,
-
     onChange: func.isRequired,
     onContextMenu: func,
+    onDropItems: func,
     onEditCancel: func.isRequired,
     onFocusClick: func,
     onKeyDown: func,
@@ -97,6 +112,21 @@ class Tag extends PureComponent {
   }
 }
 
+const DropTargetSpec = {
+  drop({ tag, onDropItems }, monitor) {
+    const it = monitor.getItem()
+    onDropItems({ id: it.items.map(toId), tags: [tag.id] })
+  }
+}
+
+const DropTargetCollect = (connect, monitor) => ({
+  dt: connect.dropTarget(),
+  isOver: monitor.isOver()
+})
+
+
 module.exports = {
-  Tag
+  Tag: pure(
+    DropTarget(DND.ITEMS, DropTargetSpec, DropTargetCollect)(Tag)
+  )
 }

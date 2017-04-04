@@ -39,8 +39,9 @@ class ProjectTags extends PureComponent {
           keymap={this.props.keymap}
           selection={this.props.selection}
           edit={this.props.edit}
-          onEditCancel={this.props.onEditCancel}
           onCreate={this.props.onCreate}
+          onDropItems={this.props.onDropItems}
+          onEditCancel={this.props.onEditCancel}
           onRemove={this.handleDelete}
           onSave={this.props.onSave}
           onSelect={this.props.onSelect}
@@ -58,6 +59,7 @@ class ProjectTags extends PureComponent {
     onContextMenu: func.isRequired,
     onCreate: func.isRequired,
     onDelete: func.isRequired,
+    onDropItems: func.isRequired,
     onEditCancel: func.isRequired,
     onSave: func.isRequired,
     onSelect: func.isRequired,
