@@ -29,7 +29,7 @@ class Editable extends PureComponent {
     return this.state.value !== (this.props.value || '') && this.isValid
   }
 
-  focus = (input) => {
+  autofocus = (input) => {
     if (input && this.props.autofocus) {
       input.focus()
       input.select()
@@ -91,7 +91,7 @@ class Editable extends PureComponent {
           placeholder={placeholder}
           tabIndex={-1}
           required={isRequired}
-          ref={this.focus}
+          ref={this.autofocus}
           onChange={this.handleChange}
           onKeyDown={this.handleKeyDown}
           onBlur={this.handleBlur}/>

@@ -23,13 +23,20 @@ class Create extends Command {
     const { db } = this.options
     const { name, items } = this.action.payload
 
-    const tag = yield call(mod.tag.create, db, { name })
+    const tag = yield call(db.transaction, async tx => {
+      const tg = await mod.tag.create(tx, { name })
+
+      if (items) {
+        await mod.item.tags.add(tx, items.map(id => ({ id, tag: tg.id })))
+      }
+
+      return tg
+    })
+
     yield put(act.tag.insert(tag))
 
     if (items) {
-      const values = { id: items, tags: [tag.id] }
-      yield call(mod.item.tags.add, db, values)
-      yield call(act.item.tags.add, db, values)
+      yield put(act.item.tags.insert({ id: items, tags: [tag.id] }))
     }
 
     this.undo = act.tag.hide(tag.id)

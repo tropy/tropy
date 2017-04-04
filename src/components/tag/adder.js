@@ -6,12 +6,29 @@ const { arrayOf, func, number, shape, string } = PropTypes
 const { injectIntl, intlShape } = require('react-intl')
 const { Editable } = require('../editable')
 
-class TagAdder extends PureComponent {
 
+class TagAdder extends PureComponent {
   handleCancel = () => {
+    document.body.focus()
   }
 
-  handleChange = () => {
+  handleChange = (name) => {
+    const pat = new RegExp(`^${name}$`, 'i')
+    const tag = this.props.tags.find(t => pat.test(t.name))
+
+    if (tag) {
+      this.props.onAdd(tag)
+    } else {
+      this.props.onCreate({ name })
+    }
+
+    this.editable.cancel()
+  }
+
+  handleBlur = () => true
+
+  setEditable = (editable) => {
+    this.editable = editable
   }
 
   render() {
@@ -20,11 +37,15 @@ class TagAdder extends PureComponent {
     return (
       <div className="add-tag-container">
         <Editable
+          ref={this.setEditable}
           isEditing
+          isRequired
           autofocus={false}
-          type="text"
           tabIndex={-1}
+          type="text"
+          value={''}
           placeholder={intl.formatMessage({ id: 'panel.tags.add' })}
+          onBlur={this.handleBlur}
           onCancel={this.handleCancel}
           onChange={this.handleChange}/>
       </div>

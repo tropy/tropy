@@ -16,8 +16,6 @@ const {
 } = require('../../selectors')
 
 
-const noop = () => {}
-
 class TagPanel extends PureComponent {
 
   handleTagRemove = (tag) => {
@@ -28,12 +26,16 @@ class TagPanel extends PureComponent {
   }
 
   handleTagAdd = (tag) => {
-    if (tag.mixed) {
+    if (tag.mixed !== false) {
       const missing = seq(this.props.items,
         compose(filter(it => !it.tags.includes(tag.id)), map(toId)))
 
       this.props.onItemTagAdd({ id: missing, tags: [tag.id] })
     }
+  }
+
+  handleTagCreate = (tag) => {
+    this.props.onTagCreate({ ...tag, items: this.props.items.map(toId) })
   }
 
   handleContextMenu = (event, tag) => {
@@ -59,8 +61,8 @@ class TagPanel extends PureComponent {
           onContextMenu={this.handleContextMenu}/>
         <TagAdder
           tags={this.props.allTags}
-          onAdd={noop}
-          onCreate={noop}/>
+          onAdd={this.handleTagAdd}
+          onCreate={this.handleTagCreate}/>
       </div>
     )
   }
@@ -79,6 +81,7 @@ class TagPanel extends PureComponent {
     onEditCancel: func.isRequired,
     onItemTagAdd: func.isRequired,
     onItemTagRemove: func.isRequired,
+    onTagCreate: func.isRequired,
     onTagSave: func.isRequired
   }
 }

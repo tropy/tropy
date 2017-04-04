@@ -179,6 +179,12 @@ module.exports = {
       }
     },
 
+    insert(payload, meta) {
+      return module.exports.tags.add(payload, {
+        ...meta, async: false, record: false
+      })
+    },
+
     remove(payload, meta) {
       return {
         type: ITEM.TAG.REMOVE,
