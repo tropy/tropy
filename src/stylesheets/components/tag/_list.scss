@@ -83,6 +83,7 @@
     cursor: default;
     border-width: 1px; // Reset to form-control
     margin: 0; // Reset to form-control
+    padding: 0 $padding-base-horizontal; // Reset to form-control
 
     &::-webkit-input-placeholder {
       color: $add-tag-placeholder-color-default;
