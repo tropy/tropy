@@ -171,12 +171,11 @@ $metadata-field-mixed-color: $shade-6; // Ok
 // Tag list
 $tag-list-focus-color: $brand-primary-light; // Ok
 $tag-list-focus-bg:    $brand-primary; // Ok
-$tag-list-active-bg:                $brand-primary-light;
+$tag-list-active-bg:                $brand-primary-35; // Ok
 $incomplete-color:                  #bbb; // Todo
-$add-tag-color:                     $shade-5;
-$add-tag-default-bg:                $panel-bg;
-$add-tag-focus-bg:                  $shade-0;
-$add-tag-placeholder-color-default: $text-color;
+$add-tag-default-bg:                $panel-bg; // Ok
+$add-tag-focus-bg:                  $shade-3; // Ok
+$add-tag-placeholder-color-default: $text-color; // Ok
 
 // Photo list
 $photo-list-focus-color: $brand-primary-light; // Ok
