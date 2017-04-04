@@ -36,7 +36,7 @@ linux: &linux
     joinDown: Alt+ArrowDown
     lift: CmdOrCtrl+ArrowLeft
 
-    selectParentNode: Escape
+    selectAll: CmdOrCtrl+a
 
     blockquote: CmdOrCtrl+Shift+>
 
