@@ -7,7 +7,7 @@
     .active {
       background: $tag-list-active-bg;
 
-      @at-root #{selector-replace(&, ".tag.list", ".tag.list:focus")} {
+      &:focus {
         background: $tag-list-focus-bg;
 
         &,
