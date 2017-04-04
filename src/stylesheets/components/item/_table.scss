@@ -24,7 +24,7 @@
 
 
     .scrollbar-style-old-school & {
-      width: calc(100% - #{$component-padding-horizontal});
+      width: calc(100% - #{$default-padding-horizontal});
     }
   }
 
@@ -190,7 +190,7 @@
   .metadata {
     &:first-child {
       padding-left:
-        $component-padding-horizontal
+        $default-padding-horizontal
         + $thumbnail-size
         + $padding-base-horizontal;
     }

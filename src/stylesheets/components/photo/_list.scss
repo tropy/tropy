@@ -11,7 +11,7 @@
   .photo {
     display: flex;
     align-items: center;
-    padding: 0 $component-padding-horizontal;
+    padding: 0 $default-padding-horizontal;
     position: relative;
 
     &.active {

@@ -9,15 +9,15 @@ $panel-separator-color: #ddd !default;
   overflow-y: auto;
 
   .note {
-    padding: $note-padding-vertical $component-padding-horizontal;
+    padding: $note-padding-vertical $default-padding-horizontal;
     position: relative;
 
     &::before {
       content: " ";
       position: absolute;
       top: 0;
-      right: $component-padding-horizontal;
-      left: $component-padding-horizontal;
+      right: $default-padding-horizontal;
+      left: $default-padding-horizontal;
       height: 1px;
       background: $panel-separator-color;
     }

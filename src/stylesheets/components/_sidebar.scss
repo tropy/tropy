@@ -25,7 +25,7 @@
   h2,
   h3 {
     color: $sidebar-headings-color;
-    padding: 0 $component-padding-horizontal;
+    padding: 0 $default-padding-horizontal;
   }
 
   .icon {
@@ -37,7 +37,7 @@
       display: flex;
       align-items: center;
       height: $line-height-large;
-      padding: 0 $component-padding-horizontal;
+      padding: 0 $default-padding-horizontal;
       position: relative;
 
       &.active,

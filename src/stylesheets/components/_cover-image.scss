@@ -108,7 +108,7 @@
 .item.table {
   .cover-image {
     position: absolute;
-    left: $component-padding-horizontal;
+    left: $default-padding-horizontal;
     top: ($row-height - $thumbnail-size) / 2;
 
     .stack-lines {

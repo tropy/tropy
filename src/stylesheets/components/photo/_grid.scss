@@ -8,7 +8,7 @@
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  padding: $space-min $component-padding-horizontal 0;
+  padding: $space-min $default-padding-horizontal 0;
   overflow-y: scroll;
 
   .over & {

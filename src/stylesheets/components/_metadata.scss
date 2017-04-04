@@ -2,16 +2,16 @@
 // Metadata
 // --------------------------------------------------
 
-$component-padding-horizontal: 12px !default;
+$default-padding-horizontal: 12px !default;
 
 .metadata-heading {
   font-size: $font-size-small;
   color: $panel-heading-color;
   line-height: $metadata-line-height;
-  margin: ($font-size-base / 2) $component-padding-horizontal 0;
+  margin: ($font-size-base / 2) $default-padding-horizontal 0;
 
   .scrollbar-style-old-school & {
-    margin-right: ($component-padding-horizontal - $scrollbar-size / 3);
+    margin-right: ($default-padding-horizontal - $scrollbar-size / 3);
   }
 
   &.separator {
@@ -22,16 +22,16 @@ $component-padding-horizontal: 12px !default;
 
 .form-control {
   &.template-select {
-    width: calc(100% - 2 * #{$component-padding-horizontal});
+    width: calc(100% - 2 * #{$default-padding-horizontal});
     margin: auto;
     border-color: $template-select-border;
     margin-bottom: (($metadata-line-height - 10px) / 2);
     background-color: $template-select-bg; // 'Transparent' causes border/box-shadow issue
 
     .scrollbar-style-old-school & {
-      width: calc(100% - 2 * #{$component-padding-horizontal}
+      width: calc(100% - 2 * #{$default-padding-horizontal}
         + #{$scrollbar-size} / 3);
-      margin-left: $component-padding-horizontal;
+      margin-left: $default-padding-horizontal;
     }
   }
 }
@@ -60,7 +60,7 @@ $component-padding-horizontal: 12px !default;
   label {
     flex: 0 0 $metadata-horizontal-offset;
     text-align: right;
-    padding-left: $component-padding-horizontal;
+    padding-left: $default-padding-horizontal;
     padding-right: ($metadata-gutter / 2);
     color: $label-color;
   }
@@ -69,11 +69,11 @@ $component-padding-horizontal: 12px !default;
     flex: 0 0 calc(100% - #{$metadata-horizontal-offset});
     padding-left: $metadata-gutter / 2
       - ($editable-border-width + $editable-padding-horizontal);
-    padding-right: $component-padding-horizontal;
+    padding-right: $default-padding-horizontal;
     min-width: 0; // Fix truncation
 
     .scrollbar-style-old-school & {
-      padding-right: ($component-padding-horizontal - $scrollbar-size / 3);
+      padding-right: ($default-padding-horizontal - $scrollbar-size / 3);
     }
   }
 

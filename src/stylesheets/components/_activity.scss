@@ -32,7 +32,7 @@
   display: flex;
   align-items: center;
   border-top: 1px solid $activity-border-color;
-  padding: 0 $component-padding-horizontal;
+  padding: 0 $default-padding-horizontal;
   animation: activity-in 0.125s ease both;
   height: $activity-height;
 

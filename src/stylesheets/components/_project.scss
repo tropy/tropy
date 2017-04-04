@@ -68,8 +68,8 @@ main {
 
   .toolbar {
     padding: {
-      left: $component-padding-horizontal;
-      right: ($component-padding-horizontal + $space-min);
+      left: $default-padding-horizontal;
+      right: ($default-padding-horizontal + $space-min);
     }
   }
 }
