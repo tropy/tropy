@@ -2,39 +2,45 @@
 
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-const { CREATE, HIDE, LOAD, SAVE, SHOW } = require('../constants/tag')
-const { create, hide, load, save, show } = require('../models/tag')
-const act = require('../actions/tag')
+const { TAG } = require('../constants')
+const mod = require('../models')
+const act = require('../actions')
 
 
 class Load extends Command {
-  static get action() { return LOAD }
+  static get action() { return TAG.LOAD }
 
   *exec() {
-    return (yield call(load, this.options.db))
+    return (yield call(mod.tag.load, this.options.db))
   }
 }
 
 
 class Create extends Command {
-  static get action() { return CREATE }
+  static get action() { return TAG.CREATE }
 
   *exec() {
-    const { payload } = this.action
     const { db } = this.options
+    const { name, items } = this.action.payload
 
-    const tag = yield call(create, db, payload)
-    yield put(act.insert(tag))
+    const tag = yield call(mod.tag.create, db, { name })
+    yield put(act.tag.insert(tag))
 
-    this.undo = act.hide(tag.id)
-    this.redo = act.show(tag.id)
+    if (items) {
+      const values = { id: items, tags: [tag.id] }
+      yield call(mod.item.tags.add, db, values)
+      yield call(act.item.tags.add, db, values)
+    }
+
+    this.undo = act.tag.hide(tag.id)
+    this.redo = act.tag.show(tag.id)
 
     return tag
   }
 }
 
 class Save extends Command {
-  static get action() { return SAVE }
+  static get action() { return TAG.SAVE }
 
   *exec() {
     const { db } = this.options
@@ -42,46 +48,46 @@ class Save extends Command {
 
     this.original = yield select(({ tags }) => tags[id])
 
-    yield put(act.update({ id, name }))
-    yield call(save, db, { id, name })
+    yield put(act.tag.update({ id, name }))
+    yield call(mod.tag.save, db, { id, name })
 
-    this.undo = act.save(this.original)
+    this.undo = act.tag.save(this.original)
   }
 
   *abort() {
     if (this.original) {
-      yield put(act.update(this.original))
+      yield put(act.tag.update(this.original))
     }
   }
 }
 
 
 class Hide extends Command {
-  static get action() { return HIDE }
+  static get action() { return TAG.HIDE }
 
   *exec() {
     const { payload: id } = this.action
     const { db } = this.options
 
-    yield call(hide, db, id)
-    yield put(act.update({ id, visible: false }))
+    yield call(mod.tag.hide, db, id)
+    yield put(act.tag.update({ id, visible: false }))
 
-    this.undo = act.show(id)
+    this.undo = act.tag.show(id)
   }
 }
 
 
 class Show extends Command {
-  static get action() { return SHOW }
+  static get action() { return TAG.SHOW }
 
   *exec() {
     const { payload: id } = this.action
     const { db } = this.options
 
-    yield call(show, db, id)
-    yield put(act.update({ id, visible: true }))
+    yield call(mod.tag.show, db, id)
+    yield put(act.tag.update({ id, visible: true }))
 
-    this.undo = act.hide(id)
+    this.undo = act.tag.hide(id)
   }
 }
 

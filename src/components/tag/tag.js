@@ -36,7 +36,7 @@ class Tag extends PureComponent {
 
     onSelect(tag.id, { mod })
 
-    if (hasFocus(this.container)) {
+    if (hasFocus(this.container) && onFocusClick) {
       onFocusClick(tag)
     }
   }
@@ -88,8 +88,8 @@ class Tag extends PureComponent {
     onChange: func.isRequired,
     onContextMenu: func,
     onEditCancel: func.isRequired,
-    onFocusClick: func.isRequired,
-    onKeyDown: func.isRequired,
+    onFocusClick: func,
+    onKeyDown: func,
     onSelect: func
   }
 }
