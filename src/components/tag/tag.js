@@ -69,7 +69,10 @@ class Tag extends PureComponent {
             onCancel={onEditCancel}
             onChange={this.handleChange}/>
         </div>
-        {hasFocusIcon && !isEditing && <IconPlusCircles/>}
+        {hasFocusIcon && !isEditing &&
+          <span className="btn btn-icon">
+            <IconPlusCircles/>
+          </span>}
       </li>
     )
   }
