@@ -37,6 +37,7 @@ linux: &linux
     lift: CmdOrCtrl+ArrowLeft
 
     selectAll: CmdOrCtrl+a
+    clearSelection: Escape
 
     blockquote: CmdOrCtrl+Shift+>
 

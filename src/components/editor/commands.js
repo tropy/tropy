@@ -56,6 +56,13 @@ module.exports = (schema) => {
     del: cmd.chainCommands(
       cmd.deleteSelection,
       cmd.joinForward
-    )
+    ),
+
+    clearSelection: () => {
+      const sel = getSelection()
+      if (!sel.isCollapsed) sel.collapseToStart()
+
+      return true
+    }
   }
 }
