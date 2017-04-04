@@ -25,7 +25,7 @@ class Tag extends PureComponent {
   }
 
   get isDropTarget() {
-    return this.props.onDropItems != null
+    return !this.props.isSelected && this.props.onDropItems != null
   }
 
   setContainer = (container) => {
