@@ -4,11 +4,19 @@ const React = require('react')
 const { PureComponent, PropTypes } = React
 const { arrayOf, func, number, object, shape, string } = PropTypes
 const { connect } = require('react-redux')
-const { getItemTags, getSelectedItems } = require('../../selectors')
 const { TagList } = require('./list')
+const { TagAdder } = require('./adder')
 const { toId } = require('../../common/util')
 const { seq, map, filter, compose } = require('transducers.js')
 
+const {
+  getAllTags,
+  getItemTags,
+  getSelectedItems
+} = require('../../selectors')
+
+
+const noop = () => {}
 
 class TagPanel extends PureComponent {
 
@@ -49,23 +57,19 @@ class TagPanel extends PureComponent {
           onRemove={this.handleTagRemove}
           onSave={this.props.onTagSave}
           onContextMenu={this.handleContextMenu}/>
-
-        <div className="add-tag-container">
-          <input
-            type="text"
-            className="form-control add-tag"
-            tabIndex={-1}
-            placeholder="Add tags"/>
-        </div>
+        <TagAdder
+          tags={this.props.allTags}
+          onAdd={noop}
+          onCreate={noop}/>
       </div>
     )
   }
 
   static propTypes = {
+    allTags: arrayOf(object).isRequired,
     edit: object,
     items: arrayOf(object).isRequired,
     keymap: object.isRequired,
-
     tags: arrayOf(shape({
       id: number.isRequired,
       name: string.isRequired
@@ -82,6 +86,7 @@ class TagPanel extends PureComponent {
 module.exports = {
   TagPanel: connect(
     (state) => ({
+      allTags: getAllTags(state),
       edit: state.edit.tabTag,
       items: getSelectedItems(state),
       keymap: state.keymap.TagList,

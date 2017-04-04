@@ -16,12 +16,37 @@ class Editable extends PureComponent {
     }
   }
 
-  get valid() {
-    return !(this.props.isRequired && !this.state.value)
+  componentWillReceiveProps({ value }) {
+    this.setState({ value: value || '' })
   }
 
-  get changed() {
-    return this.state.value !== (this.props.value || '') && this.valid
+
+  get isValid() {
+    return this.state.value !== '' || !this.props.isRequired
+  }
+
+  get hasChanged() {
+    return this.state.value !== (this.props.value || '') && this.isValid
+  }
+
+  focus = (input) => {
+    if (input && this.props.autofocus) {
+      input.focus()
+      input.select()
+    }
+  }
+
+  stop = (isCommit) => {
+    if (this.hasChanged) {
+      this.props.onChange(this.state.value)
+    } else {
+      this.props.onCancel(isCommit)
+    }
+  }
+
+  cancel() {
+    this.setState({ value: this.props.value || '' })
+    this.props.onCancel()
   }
 
   handleChange = (event) => {
@@ -32,23 +57,6 @@ class Editable extends PureComponent {
     if (!this.props.onBlur(event)) {
       this.stop()
     }
-  }
-
-  stop = (isCommit) => {
-    const { onCancel, onChange } = this.props
-
-    if (this.changed) {
-      onChange(this.state.value)
-    } else {
-      onCancel(isCommit)
-    }
-  }
-
-  cancel() {
-    const { value, onCancel } = this.props
-
-    this.setState({ value: value || '' })
-    onCancel()
   }
 
   handleKeyDown = (event) => {
@@ -64,20 +72,15 @@ class Editable extends PureComponent {
     event.stopPropagation()
   }
 
-  focus(input) {
-    if (input) {
-      input.focus()
-      input.select()
-    }
-  }
-
-
-  componentWillReceiveProps({ value }) {
-    this.setState({ value: value || '' })
-  }
-
   render() {
-    const { value, type, isEditing, isDisabled, isRequired } = this.props
+    const {
+      type,
+      placeholder,
+      value,
+      isEditing,
+      isDisabled,
+      isRequired
+    } = this.props
 
     if (isEditing && !isDisabled) {
       return (
@@ -85,6 +88,7 @@ class Editable extends PureComponent {
           className="editable editable-control"
           type={type}
           value={this.state.value}
+          placeholder={placeholder}
           tabIndex={-1}
           required={isRequired}
           ref={this.focus}
@@ -106,17 +110,20 @@ class Editable extends PureComponent {
 
 
   static propTypes = {
+    autofocus: bool,
     isEditing: bool,
     isDisabled: bool,
     isRequired: bool,
-    value: string,
+    placeholder: string,
     type: oneOf(['text', 'number']),
+    value: string,
     onBlur: func.isRequired,
     onChange: func.isRequired,
     onCancel: func.isRequired
   }
 
   static defaultProps = {
+    autofocus: true,
     type: 'text',
     onBlur: noop
   }
