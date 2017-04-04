@@ -35,18 +35,20 @@
         .icon-tag {
           color: $incomplete-color;
         }
+
+        &:focus {
+          .icon-pluscircles {
+            display: block;
+          }
+        }
       }
 
-      &.active {
+      &:focus {
         background: $tag-list-focus-bg;
 
         &,
         .icon {
           color: $tag-list-focus-color;
-        }
-
-        .icon-pluscircles {
-          display: block;
         }
       }
 

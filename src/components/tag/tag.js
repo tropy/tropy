@@ -2,15 +2,15 @@
 
 const React = require('react')
 const { PropTypes, PureComponent } = React
+const { shape, number, string, bool, func } = PropTypes
 const { Editable } = require('../editable')
-const { IconTag } = require('../icons')
+const { IconTag, IconPlusCircles } = require('../icons')
+const { IconButton } = require('../button')
 const { meta } = require('../../common/os')
 const cx = require('classnames')
-const { shape, number, string, bool, func } = PropTypes
 
 
 class Tag extends PureComponent {
-
   get classes() {
     return {
       tag: true,
@@ -42,7 +42,7 @@ class Tag extends PureComponent {
   }
 
   render() {
-    const { tag, isEditing, onEditCancel } = this.props
+    const { tag, isEditing, hasFocusIcon, onEditCancel } = this.props
 
     return (
       <li
@@ -60,6 +60,8 @@ class Tag extends PureComponent {
             onCancel={onEditCancel}
             onChange={this.handleChange}/>
         </div>
+        {hasFocusIcon && !isEditing &&
+          <IconButton canHaveFocus={false} icon={<IconPlusCircles/>}/>}
       </li>
     )
   }
@@ -73,6 +75,7 @@ class Tag extends PureComponent {
 
     isEditing: bool,
     isSelected: bool,
+    hasFocusIcon: bool,
 
     onChange: func.isRequired,
     onContextMenu: func,

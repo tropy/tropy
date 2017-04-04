@@ -31,6 +31,7 @@ class TagPanel extends PureComponent {
           edit={this.props.edit}
           keymap={this.props.keymap}
           tags={this.props.tags}
+          hasFocusIcon
           onEditCancel={this.props.onEditCancel}
           onRemove={this.handleTagRemove}
           onSave={this.props.onTagSave}

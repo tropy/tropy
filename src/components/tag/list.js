@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent, PropTypes } = React
-const { arrayOf, number, string, shape, object, func } = PropTypes
+const { arrayOf, bool, number, string, shape, object, func } = PropTypes
 const { Tag } = require('./tag')
 const { get, noop } = require('../../common/util')
 const { match } = require('../../keymap')
@@ -43,7 +43,7 @@ class TagList extends PureComponent {
   }
 
   render() {
-    const { tags, onEditCancel, onSelect, onSave } = this.props
+    const { tags, hasFocusIcon, onEditCancel, onSelect, onSave } = this.props
 
     return (
       <ol className="tag list">
@@ -51,6 +51,7 @@ class TagList extends PureComponent {
           <Tag
             key={tag.id}
             tag={tag}
+            hasFocusIcon={hasFocusIcon}
             isEditing={this.isEditing(tag)}
             isSelected={this.isSelected(tag)}
             onChange={onSave}
@@ -68,6 +69,7 @@ class TagList extends PureComponent {
       name: string.isRequired
     })).isRequired,
 
+    hasFocusIcon: bool,
     selection: arrayOf(number).isRequired,
     keymap: object.isRequired,
     edit: object,
