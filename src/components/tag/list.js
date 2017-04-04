@@ -34,6 +34,9 @@ class TagList extends PureComponent {
       case 'remove':
         this.props.onRemove(tag.id)
         break
+      case 'commit':
+        this.props.onCommit(tag)
+        break
       default:
         return
     }
@@ -43,7 +46,14 @@ class TagList extends PureComponent {
   }
 
   render() {
-    const { tags, hasFocusIcon, onEditCancel, onSelect, onSave } = this.props
+    const {
+      tags,
+      hasFocusIcon,
+      onCommit,
+      onEditCancel,
+      onSelect,
+      onSave
+    } = this.props
 
     return (
       <ol className="tag list">
@@ -56,6 +66,7 @@ class TagList extends PureComponent {
             isSelected={this.isSelected(tag)}
             onChange={onSave}
             onEditCancel={onEditCancel}
+            onFocusClick={onCommit}
             onKeyDown={this.handleKeyDown}
             onSelect={onSelect}
             onContextMenu={this.handleContextMenu}/>)}
@@ -74,6 +85,7 @@ class TagList extends PureComponent {
     keymap: object.isRequired,
     edit: object,
 
+    onCommit: func.isRequired,
     onEditCancel: func.isRequired,
     onRemove: func.isRequired,
     onSelect: func.isRequired,
@@ -83,6 +95,7 @@ class TagList extends PureComponent {
 
   static defaultProps = {
     selection: [],
+    onCommit: noop,
     onSelect: noop
   }
 }

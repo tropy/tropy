@@ -48,6 +48,7 @@ linux: &linux
     remove:
       - Backspace
       - Delete
+    commit: Enter
 
 darwin: *linux
 win32: *linux

@@ -354,6 +354,9 @@ module.exports = {
 
   json(string) {
     return (string == null || string === '') ? null : JSON.parse(string)
-  }
+  },
 
+  toId(obj) {
+    return obj.id
+  }
 }

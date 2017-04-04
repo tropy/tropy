@@ -4,23 +4,34 @@ const React = require('react')
 const { PureComponent, PropTypes } = React
 const { arrayOf, func, number, object, shape, string } = PropTypes
 const { connect } = require('react-redux')
-const { getItemTags } = require('../../selectors')
+const { getItemTags, getSelectedItems } = require('../../selectors')
 const { TagList } = require('./list')
+const { toId } = require('../../common/util')
+const { seq, map, filter, compose } = require('transducers.js')
 
 
 class TagPanel extends PureComponent {
 
   handleTagRemove = (tag) => {
     this.props.onItemTagRemove({
-      id: this.props.items, tags: [tag]
+      id: this.props.items.map(toId), tags: [tag]
     })
+  }
+
+  handleTagCommit = (tag) => {
+    if (tag.mixed) {
+      const missing = seq(this.props.items,
+        compose(filter(i => !i.tags.includes(tag.id)), map(toId)))
+
+      this.props.onItemTagAdd({ id: missing, tags: [tag.id] })
+    }
   }
 
   handleContextMenu = (event, tag) => {
     this.props.onContextMenu(event, 'item-tag', {
       id: tag.id,
       mixed: tag.mixed,
-      items: this.props.items
+      items: this.props.items.map(toId)
     })
   }
 
@@ -32,6 +43,7 @@ class TagPanel extends PureComponent {
           keymap={this.props.keymap}
           tags={this.props.tags}
           hasFocusIcon
+          onCommit={this.handleTagCommit}
           onEditCancel={this.props.onEditCancel}
           onRemove={this.handleTagRemove}
           onSave={this.props.onTagSave}
@@ -50,7 +62,7 @@ class TagPanel extends PureComponent {
 
   static propTypes = {
     edit: object,
-    items: arrayOf(number).isRequired,
+    items: arrayOf(object).isRequired,
     keymap: object.isRequired,
 
     tags: arrayOf(shape({
@@ -70,7 +82,7 @@ module.exports = {
   TagPanel: connect(
     (state) => ({
       edit: state.edit.tabTag,
-      items: state.nav.items,
+      items: getSelectedItems(state),
       keymap: state.keymap.TagList,
       tags: getItemTags(state)
     })

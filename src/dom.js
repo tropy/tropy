@@ -109,5 +109,9 @@ const dom = module.exports = {
       bottom: parseInt(style.borderBottomWidth, 10),
       left: parseInt(style.borderLeftWidth, 10)
     }
+  },
+
+  hasFocus(node) {
+    return document.activeElement === node
   }
 }

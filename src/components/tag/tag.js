@@ -6,6 +6,7 @@ const { shape, number, string, bool, func } = PropTypes
 const { Editable } = require('../editable')
 const { IconTag, IconPlusCircles } = require('../icons')
 const { meta } = require('../../common/os')
+const { hasFocus } = require('../../dom')
 const cx = require('classnames')
 
 
@@ -18,18 +19,26 @@ class Tag extends PureComponent {
     }
   }
 
+  setContainer = (container) => {
+    this.container = container
+  }
+
   handleChange = (name) => {
     this.props.onChange({ name }, this.props.tag.id)
   }
 
   handleClick = (event) => {
-    const { tag, isSelected, onSelect } = this.props
+    const { tag, isSelected, onSelect, onFocusClick } = this.props
 
     const mod = isSelected ?
       (meta(event) ? 'remove' : 'clear') :
       (meta(event) ? 'merge' : 'replace')
 
     onSelect(tag.id, { mod })
+
+    if (hasFocus(this.container)) {
+      onFocusClick(tag)
+    }
   }
 
   handleContextMenu = (event) => {
@@ -47,8 +56,9 @@ class Tag extends PureComponent {
       <li
         className={cx(this.classes)}
         tabIndex={-1}
+        ref={this.setContainer}
         onContextMenu={isEditing ? null : this.handleContextMenu}
-        onClick={isEditing ? null : this.handleClick}
+        onMouseDown={isEditing ? null : this.handleClick}
         onKeyDown={isEditing ? null : this.handleKeyDown}>
         <IconTag/>
         <div className="name">
@@ -78,6 +88,7 @@ class Tag extends PureComponent {
     onChange: func.isRequired,
     onContextMenu: func,
     onEditCancel: func.isRequired,
+    onFocusClick: func.isRequired,
     onKeyDown: func.isRequired,
     onSelect: func
   }
