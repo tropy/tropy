@@ -13,15 +13,16 @@ const { seq, map, filter, compose } = require('transducers.js')
 class TagPanel extends PureComponent {
 
   handleTagRemove = (tag) => {
-    this.props.onItemTagRemove({
-      id: this.props.items.map(toId), tags: [tag]
-    })
+    const present = seq(this.props.items,
+      compose(filter(it => it.tags.includes(tag)), map(toId)))
+
+    this.props.onItemTagRemove({ id: present, tags: [tag] })
   }
 
-  handleTagCommit = (tag) => {
+  handleTagAdd = (tag) => {
     if (tag.mixed) {
       const missing = seq(this.props.items,
-        compose(filter(i => !i.tags.includes(tag.id)), map(toId)))
+        compose(filter(it => !it.tags.includes(tag.id)), map(toId)))
 
       this.props.onItemTagAdd({ id: missing, tags: [tag.id] })
     }
@@ -43,7 +44,7 @@ class TagPanel extends PureComponent {
           keymap={this.props.keymap}
           tags={this.props.tags}
           hasFocusIcon
-          onCommit={this.handleTagCommit}
+          onCommit={this.handleTagAdd}
           onEditCancel={this.props.onEditCancel}
           onRemove={this.handleTagRemove}
           onSave={this.props.onTagSave}
