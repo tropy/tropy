@@ -81,7 +81,7 @@
     height: $input-height-base;
     background: $add-tag-default-bg;
     cursor: default;
-    border-width: 1px; // Reset to form-control
+    border: 1px solid $add-tag-border-color; // Reset to form-control, tweak border color for panel bg
     margin: 0; // Reset to form-control
     padding: 0 $padding-base-horizontal; // Reset to form-control
 
