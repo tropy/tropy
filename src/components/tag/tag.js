@@ -5,7 +5,6 @@ const { PropTypes, PureComponent } = React
 const { shape, number, string, bool, func } = PropTypes
 const { Editable } = require('../editable')
 const { IconTag, IconPlusCircles } = require('../icons')
-const { IconButton } = require('../button')
 const { meta } = require('../../common/os')
 const cx = require('classnames')
 
@@ -60,8 +59,7 @@ class Tag extends PureComponent {
             onCancel={onEditCancel}
             onChange={this.handleChange}/>
         </div>
-        {hasFocusIcon && !isEditing &&
-          <IconButton canHaveFocus={false} icon={<IconPlusCircles/>}/>}
+        {hasFocusIcon && !isEditing && <IconPlusCircles/>}
       </li>
     )
   }
