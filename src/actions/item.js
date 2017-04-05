@@ -171,33 +171,37 @@ module.exports = {
       }
     },
 
-    add(payload, meta) {
+    create(payload, meta) {
       return {
-        type: ITEM.TAG.ADD,
+        type: ITEM.TAG.CREATE,
         payload,
         meta: { async: true, record: true, ...meta }
       }
     },
 
     insert(payload, meta) {
-      return module.exports.tags.add(payload, {
-        ...meta, async: false, record: false
-      })
+      return {
+        type: ITEM.TAG.INSERT,
+        payload,
+        meta: { ...meta }
+      }
     },
 
     delete(payload, meta) {
       return {
-        type: ITEM.TAG.REMOVE,
+        type: ITEM.TAG.DELETE,
         payload,
         meta: { async: true, record: true, ...meta }
       }
     },
 
     remove(payload, meta) {
-      return module.exports.tags.delete(payload, {
-        ...meta, async: false, record: false
-      })
-    },
+      return {
+        type: ITEM.TAG.REMOVE,
+        payload,
+        meta: { ...meta }
+      }
+    }
   },
 
   photos: {

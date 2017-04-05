@@ -308,7 +308,7 @@ class ToggleTags extends Command {
 
     if (add.length) {
       yield call(mod.item.tags.add, db, add.map(tag => ({ id, tag })))
-      yield put(act.item.tags.insert({ id, tags: add }, meta))
+      yield put(act.item.tags.insert({ id, tags: add }))
     }
 
     if (remove.length) {
@@ -347,7 +347,7 @@ class RemoveTag extends Command {
 
     yield call(mod.item.tags.remove, db, payload)
 
-    this.undo = act.item.tags.add(payload)
+    this.undo = act.item.tags.create(payload)
 
     return payload
   }

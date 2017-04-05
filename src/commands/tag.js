@@ -74,8 +74,10 @@ class Delete extends Command {
     const { db } = this.options
     const ids = this.action.payload
 
+    //const items = yield(mod.tag.items, db, ids)
     yield call(mod.tag.delete, db, ids)
 
+    //yield ids.map(id =>
     //this.undo = act.tag.show(id)
     return ids
   }

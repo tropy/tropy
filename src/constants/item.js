@@ -22,7 +22,9 @@ module.exports = {
   },
 
   TAG: {
-    ADD: 'item.tag.add',
+    CREATE: 'item.tag.create',
+    DELETE: 'item.tag.delete',
+    INSERT: 'item.tag.insert',
     REMOVE: 'item.tag.remove',
     CLEAR: 'item.tag.clear',
     TOGGLE: 'item.tag.toggle',

@@ -367,7 +367,7 @@ module.exports = {
       },
 
       onItemTagAdd(...args) {
-        dispatch(actions.item.tags.add(...args))
+        dispatch(actions.item.tags.create(...args))
       },
 
       onItemTagRemove(...args) {
