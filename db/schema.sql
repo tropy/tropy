@@ -52,14 +52,14 @@ CREATE TABLE metadata_types (
   CHECK (type_name != '')
 
 ) WITHOUT ROWID;
-INSERT INTO "metadata_types" VALUES('boolean','https://schema.org/Boolean');
-INSERT INTO "metadata_types" VALUES('datetime','https://schema.org/DateTime');
-INSERT INTO "metadata_types" VALUES('location','https://schema.org/GeoCoordinates');
-INSERT INTO "metadata_types" VALUES('number','https://schema.org/Number');
-INSERT INTO "metadata_types" VALUES('text','https://schema.org/Text');
-INSERT INTO "metadata_types" VALUES('url','https://schema.org/URL');
-INSERT INTO "metadata_types" VALUES('date','https://schema.tropy.org/v1/types/date');
-INSERT INTO "metadata_types" VALUES('name','https://schema.tropy.org/v1/types/name');
+INSERT INTO metadata_types(type_name,type_schema) VALUES('boolean','https://schema.org/Boolean');
+INSERT INTO metadata_types(type_name,type_schema) VALUES('datetime','https://schema.org/DateTime');
+INSERT INTO metadata_types(type_name,type_schema) VALUES('location','https://schema.org/GeoCoordinates');
+INSERT INTO metadata_types(type_name,type_schema) VALUES('number','https://schema.org/Number');
+INSERT INTO metadata_types(type_name,type_schema) VALUES('text','https://schema.org/Text');
+INSERT INTO metadata_types(type_name,type_schema) VALUES('url','https://schema.org/URL');
+INSERT INTO metadata_types(type_name,type_schema) VALUES('date','https://schema.tropy.org/v1/types/date');
+INSERT INTO metadata_types(type_name,type_schema) VALUES('name','https://schema.tropy.org/v1/types/name');
 CREATE TABLE metadata (
   id          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   --item_id     INTEGER  NOT NULL REFERENCES items ON DELETE CASCADE,
@@ -112,7 +112,7 @@ CREATE TABLE lists (
 
   UNIQUE (parent_list_id, name)
 );
-INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2017-01-31 12:00:00','2017-01-31 12:00:00');
+INSERT INTO lists(list_id,name,parent_list_id,position,created,modified) VALUES(0,'ROOT',NULL,NULL,'2017-01-31 12:00:00','2017-01-31 12:00:00');
 CREATE TABLE list_items (
   list_id  INTEGER  REFERENCES lists ON DELETE CASCADE,
   id       INTEGER  REFERENCES items ON DELETE CASCADE,
@@ -126,12 +126,11 @@ CREATE TABLE tags (
   tag_id      INTEGER  PRIMARY KEY,
   name        TEXT     NOT NULL COLLATE NOCASE,
   color,
-  visible     BOOLEAN  NOT NULL DEFAULT 1,
   created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified    NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CHECK (name != ''),
-  UNIQUE (visible, name)
+  UNIQUE (name)
 );
 CREATE TABLE taggings (
   tag_id     INTEGER  NOT NULL REFERENCES tags ON DELETE CASCADE,
@@ -182,10 +181,10 @@ CREATE TABLE image_rotations (
 CREATE TABLE image_qualities (
   quality  TEXT  NOT NULL PRIMARY KEY
 ) WITHOUT ROWID;
-INSERT INTO "image_qualities" VALUES('bitonal');
-INSERT INTO "image_qualities" VALUES('color');
-INSERT INTO "image_qualities" VALUES('default');
-INSERT INTO "image_qualities" VALUES('gray');
+INSERT INTO image_qualities(quality) VALUES('bitonal');
+INSERT INTO image_qualities(quality) VALUES('color');
+INSERT INTO image_qualities(quality) VALUES('default');
+INSERT INTO image_qualities(quality) VALUES('gray');
 PRAGMA writable_schema=ON;
 INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_metadata','fts_metadata',0,'CREATE VIRTUAL TABLE fts_metadata USING fts5(
   id UNINDEXED,
@@ -194,13 +193,13 @@ INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_me
   other
 )');
 CREATE TABLE IF NOT EXISTS 'fts_metadata_data'(id INTEGER PRIMARY KEY, block BLOB);
-INSERT INTO "fts_metadata_data" VALUES(1,X'');
-INSERT INTO "fts_metadata_data" VALUES(10,X'00000000000000');
+INSERT INTO fts_metadata_data(id,block) VALUES(1,X'');
+INSERT INTO fts_metadata_data(id,block) VALUES(10,X'00000000000000');
 CREATE TABLE IF NOT EXISTS 'fts_metadata_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
 CREATE TABLE IF NOT EXISTS 'fts_metadata_content'(id INTEGER PRIMARY KEY, c0, c1, c2, c3);
 CREATE TABLE IF NOT EXISTS 'fts_metadata_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
 CREATE TABLE IF NOT EXISTS 'fts_metadata_config'(k PRIMARY KEY, v) WITHOUT ROWID;
-INSERT INTO "fts_metadata_config" VALUES('version',4);
+INSERT INTO fts_metadata_config(k,v) VALUES('version',4);
 INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_notes','fts_notes',0,'CREATE VIRTUAL TABLE fts_notes USING fts5(
   id UNINDEXED,
   text,
@@ -208,12 +207,12 @@ INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_no
   content_rowid=''note_id''
 )');
 CREATE TABLE IF NOT EXISTS 'fts_notes_data'(id INTEGER PRIMARY KEY, block BLOB);
-INSERT INTO "fts_notes_data" VALUES(1,X'');
-INSERT INTO "fts_notes_data" VALUES(10,X'00000000000000');
+INSERT INTO fts_notes_data(id,block) VALUES(1,X'');
+INSERT INTO fts_notes_data(id,block) VALUES(10,X'00000000000000');
 CREATE TABLE IF NOT EXISTS 'fts_notes_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
 CREATE TABLE IF NOT EXISTS 'fts_notes_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
 CREATE TABLE IF NOT EXISTS 'fts_notes_config'(k PRIMARY KEY, v) WITHOUT ROWID;
-INSERT INTO "fts_notes_config" VALUES('version',4);
+INSERT INTO fts_notes_config(k,v) VALUES('version',4);
 CREATE INDEX metadata_values_index ON metadata_values (text ASC);
 CREATE TRIGGER insert_tags_trim_name
   AFTER INSERT ON tags

@@ -18,12 +18,5 @@ INSERT OR IGNORE
 UPDATE OR IGNORE tags
   SET name = "" WHERE tag_id = 3;
 
--- Soft-delete
-UPDATE tags SET visible = 0 WHERE tag_id = 3;
-
-SELECT tag_id AS deleted_tag_id
-  FROM tags
-  WHERE visible = 0;
-
 -- All tags
-SELECT tag_id, name, color, visible FROM tags;
+SELECT tag_id, name, color FROM tags;

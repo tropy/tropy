@@ -137,12 +137,11 @@ CREATE TABLE tags (
   tag_id      INTEGER  PRIMARY KEY,
   name        TEXT     NOT NULL COLLATE NOCASE,
   color,
-  visible     BOOLEAN  NOT NULL DEFAULT 1,
   created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified    NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CHECK (name != ''),
-  UNIQUE (visible, name)
+  UNIQUE (name)
 );
 
 CREATE TABLE taggings (
