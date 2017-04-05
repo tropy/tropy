@@ -2,6 +2,7 @@
 
 const { list, pick } = require('../common/util')
 const { keys, values } = Object
+const { into, map } = require('transducers.js')
 const mod = {}
 
 module.exports = mod.tag = {
@@ -42,5 +43,17 @@ module.exports = mod.tag = {
   async delete(db, ids) {
     return db.run(`
       DELETE FROM tags WHERE tag_id IN (${list(ids)})`)
+  },
+
+  async items(db, ids) {
+    const items = into({}, map(id => ({ [id]: [] })))
+
+    await db.each(`
+      SELECT tag_id AS tag, id AS item
+        FROM taggings
+        WHERE tag_id IN (${list(ids)})`,
+      ({ tag, item }) => { items[tag].push(item) })
+
+    return items
   }
 }
