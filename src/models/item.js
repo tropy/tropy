@@ -112,8 +112,7 @@ module.exports = mod.item = {
 
         db.each(`
           SELECT id, tag_id AS tag
-            FROM taggings WHERE id IN (${ids})
-            ORDER BY id, tagged`,
+            FROM taggings WHERE id IN (${ids})`,
           ({ id, tag }) => {
             items[id].tags.push(tag)
           }
