@@ -9,7 +9,7 @@ $panel-separator-color: #ddd !default;
   overflow-y: auto;
 
   .note {
-    padding: $note-padding-vertical $default-padding-horizontal;
+    padding: $note-padding-top $default-padding-horizontal $note-padding-bottom;
     position: relative;
 
     &::before {
@@ -43,7 +43,7 @@ $panel-separator-color: #ddd !default;
 
       & + .note {
         border-top: 1px solid $note-list-active-bg;
-        padding-top: ($note-padding-vertical - 1px);
+        padding-top: ($note-padding-top - 1px);
 
         @at-root #{selector-replace(&, ".note.list", ".note.list:focus")} {
           border-top-color: $note-list-focus-bg;

@@ -13,8 +13,8 @@ $font-size-small: 12px;
 $font-size-base:  13px;
 $font-size-large: 16px;
 
-$line-height-base:     1.429;
-$line-height-computed: floor(($font-size-base * $line-height-base));
+$line-height-base:     1.53846;
+$line-height-computed: ceil(($font-size-base * $line-height-base));
 $line-height-large:    26px;
 
 $link-hover-decoration: underline;
@@ -185,7 +185,8 @@ $metadata-horizontal-offset: 33%;
 // Note list
 // --------------------------------------------------
 
-$note-padding-vertical: 11px; // 16px
+$note-padding-top: 11px; // 16px
+$note-padding-bottom: 9px; // 16px
 $note-lines: 2;
 
 
