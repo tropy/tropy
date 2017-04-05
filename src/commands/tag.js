@@ -11,7 +11,7 @@ class Load extends Command {
   static get action() { return TAG.LOAD }
 
   *exec() {
-    return (yield call(mod.tag.load, this.options.db))
+    return (yield call(mod.tag.load, this.options.db, this.action.payload))
   }
 }
 
@@ -33,14 +33,12 @@ class Create extends Command {
       return tg
     })
 
-    yield put(act.tag.insert(tag))
-
     if (items) {
       yield put(act.item.tags.insert({ id: items, tags: [tag.id] }))
     }
 
-    this.undo = act.tag.hide(tag.id)
-    this.redo = act.tag.show(tag.id)
+    //this.undo = act.tag.hide(tag.id)
+    //this.redo = act.tag.show(tag.id)
 
     return tag
   }
@@ -69,40 +67,24 @@ class Save extends Command {
 }
 
 
-class Hide extends Command {
-  static get action() { return TAG.HIDE }
+class Delete extends Command {
+  static get action() { return TAG.DELETE }
 
   *exec() {
-    const { payload: id } = this.action
     const { db } = this.options
+    const ids = this.action.payload
 
-    yield call(mod.tag.hide, db, id)
-    yield put(act.tag.update({ id, visible: false }))
+    yield call(mod.tag.delete, db, ids)
 
-    this.undo = act.tag.show(id)
-  }
-}
-
-
-class Show extends Command {
-  static get action() { return TAG.SHOW }
-
-  *exec() {
-    const { payload: id } = this.action
-    const { db } = this.options
-
-    yield call(mod.tag.show, db, id)
-    yield put(act.tag.update({ id, visible: true }))
-
-    this.undo = act.tag.hide(id)
+    //this.undo = act.tag.show(id)
+    return ids
   }
 }
 
 
 module.exports = {
   Create,
-  Hide,
+  Delete,
   Load,
-  Save,
-  Show
+  Save
 }

@@ -36,6 +36,7 @@ module.exports = {
           result = yield call(mod.all, db, { tags, sort })
       }
 
+      verbose(`tags used ${tags}`)
       verbose(`*search query took ${ms(Date.now() - START)}`)
 
       yield put(act.qr.items.update(result))
@@ -49,11 +50,11 @@ module.exports = {
         if (!(id in metadata)) missing.metadata.push(id)
       }
 
-      if (missing.items) {
+      if (missing.items.length > 0) {
         yield put(act.item.load(missing.items))
       }
 
-      if (missing.metadata) {
+      if (missing.metadata.length > 0) {
         yield put(act.metadata.load(missing.metadata))
       }
 

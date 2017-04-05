@@ -1,7 +1,7 @@
 'use strict'
 
 const { TAG, PROJECT } = require('../constants')
-const { insert, load, update } = require('./util')
+const { insert, load, remove, update } = require('./util')
 
 module.exports = {
   tags(state = {}, { type, payload, error, meta }) {
@@ -10,8 +10,11 @@ module.exports = {
         return {}
       case TAG.LOAD:
         return load(state, payload, meta, error)
-      case TAG.INSERT:
-        return insert(state, payload)
+      case TAG.CREATE:
+        return (!meta.done || error) ?
+          state : insert(state, payload)
+      case TAG.DELETE:
+        return remove(state, payload, meta, error)
       case TAG.UPDATE:
         return update(state, payload)
       default:

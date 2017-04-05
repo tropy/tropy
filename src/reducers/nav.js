@@ -29,7 +29,7 @@ function select(selection, id, mod) {
 
 module.exports = {
   // eslint-disable-next-line complexity
-  nav(state = init, { type, payload, meta }) {
+  nav(state = init, { type, payload, meta, error }) {
     switch (type) {
 
       case NAV.RESTORE:
@@ -89,10 +89,12 @@ module.exports = {
         }
       }
 
-      case TAG.HIDE:
-        return isSelected(state.tags, payload) ?
-          { ...state, tags: select(state.tags) } :
-          state
+      case TAG.DELETE:
+        return (!meta.done || error || !isSelected(state.tags, ...payload)) ?
+          state : {
+            ...state,
+            tags: select(state.tags, payload[0], 'remove')
+          }
 
       case TAG.SELECT:
         return {

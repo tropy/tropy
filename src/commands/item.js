@@ -172,7 +172,7 @@ class Load extends Command {
       filter(id => !photos[id])
     ), items)
 
-    if (missing.length) {
+    if (missing.length > 0) {
       yield [
         put(act.photo.load(missing)),
         put(act.metadata.load(missing))

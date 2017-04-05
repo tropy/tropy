@@ -416,7 +416,7 @@ module.exports = {
       },
 
       onTagDelete(...args) {
-        dispatch(actions.tag.hide(...args))
+        dispatch(actions.tag.delete(...args))
       },
 
       onTagSave(data, id) {
