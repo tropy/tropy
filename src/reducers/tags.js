@@ -4,6 +4,7 @@ const { TAG, PROJECT } = require('../constants')
 const { insert, load, remove, update } = require('./util')
 
 module.exports = {
+  // eslint-disable-next-line complexity
   tags(state = {}, { type, payload, error, meta }) {
     switch (type) {
       case PROJECT.OPEN:
@@ -14,7 +15,8 @@ module.exports = {
         return (!meta.done || error) ?
           state : insert(state, payload)
       case TAG.DELETE:
-        return remove(state, payload, meta, error)
+        return (!meta.done || error) ?
+          state : remove(state, [payload], meta, error)
       case TAG.UPDATE:
         return update(state, payload)
       default:

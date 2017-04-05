@@ -21,24 +21,26 @@ class Create extends Command {
 
   *exec() {
     const { db } = this.options
-    const { name, items } = this.action.payload
+    const { items, ...data } = this.action.payload
+
+    const hasItems = (items && items.length > 0)
+    if (data.id != null) data['tag_id'] = data.id
 
     const tag = yield call(db.transaction, async tx => {
-      const tg = await mod.tag.create(tx, { name })
+      const tg = await mod.tag.create(tx, data)
 
-      if (items) {
+      if (hasItems) {
         await mod.item.tags.add(tx, items.map(id => ({ id, tag: tg.id })))
       }
 
       return tg
     })
 
-    if (items) {
+    if (hasItems) {
       yield put(act.item.tags.insert({ id: items, tags: [tag.id] }))
     }
 
-    //this.undo = act.tag.hide(tag.id)
-    //this.redo = act.tag.show(tag.id)
+    this.undo = act.tag.delete(tag.id)
 
     return tag
   }
@@ -72,14 +74,20 @@ class Delete extends Command {
 
   *exec() {
     const { db } = this.options
-    const ids = this.action.payload
+    const id = this.action.payload
 
-    //const items = yield(mod.tag.items, db, ids)
-    yield call(mod.tag.delete, db, ids)
+    const items = yield call(mod.tag.items, db, id)
+    const tag = yield select(({ tags }) => tags[id])
 
-    //yield ids.map(id =>
-    //this.undo = act.tag.show(id)
-    return ids
+    yield call(mod.tag.delete, db, [id])
+
+    if (items.length > 0) {
+      yield put(act.item.tags.remove({ id: items, tags: [id] }))
+    }
+
+    this.undo = act.tag.create({ ...tag, items })
+
+    return id
   }
 }
 

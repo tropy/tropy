@@ -1,7 +1,6 @@
 'use strict'
 
 const { TAG, EDIT } = require('../constants')
-const { array } = require('../common/util')
 
 module.exports = {
   new(payload, meta) {
@@ -50,7 +49,7 @@ module.exports = {
   delete(payload, meta) {
     return {
       type: TAG.DELETE,
-      payload: array(payload),
+      payload,
       meta: {
         async: true,
         record: true,

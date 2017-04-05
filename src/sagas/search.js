@@ -36,7 +36,6 @@ module.exports = {
           result = yield call(mod.all, db, { tags, sort })
       }
 
-      verbose(`tags used ${tags}`)
       verbose(`*search query took ${ms(Date.now() - START)}`)
 
       yield put(act.qr.items.update(result))

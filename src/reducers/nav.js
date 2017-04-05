@@ -90,10 +90,10 @@ module.exports = {
       }
 
       case TAG.DELETE:
-        return (!meta.done || error || !isSelected(state.tags, ...payload)) ?
+        return (!meta.done || error || !isSelected(state.tags, payload)) ?
           state : {
             ...state,
-            tags: select(state.tags, payload[0], 'remove')
+            tags: select(state.tags, payload, 'remove')
           }
 
       case TAG.SELECT:

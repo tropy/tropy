@@ -321,7 +321,7 @@ class ToggleTags extends Command {
 }
 
 class AddTag extends Command {
-  static get action() { return ITEM.TAG.ADD }
+  static get action() { return ITEM.TAG.CREATE }
 
   *exec() {
     const { db } = this.options
@@ -339,7 +339,7 @@ class AddTag extends Command {
 }
 
 class RemoveTag extends Command {
-  static get action() { return ITEM.TAG.REMOVE }
+  static get action() { return ITEM.TAG.DELETE }
 
   *exec() {
     const { db } = this.options
