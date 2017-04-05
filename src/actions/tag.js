@@ -53,9 +53,9 @@ module.exports = {
     }
   },
 
-  hide(payload, meta) {
+  delete(payload, meta) {
     return {
-      type: TAG.HIDE,
+      type: TAG.DELETE,
       payload,
       meta: {
         async: true,
@@ -63,22 +63,6 @@ module.exports = {
         search: true,
         ...meta
       }
-    }
-  },
-
-  prune(payload, meta) {
-    return {
-      type: TAG.PRUNE,
-      payload,
-      meta: { async: true, ...meta }
-    }
-  },
-
-  show(payload, meta) {
-    return {
-      type: TAG.SHOW,
-      payload,
-      meta: { async: true, ...meta }
     }
   },
 

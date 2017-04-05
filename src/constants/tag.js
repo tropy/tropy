@@ -2,9 +2,7 @@
 
 module.exports = {
   CREATE: 'tag.create',
-  HIDE: 'tag.hide',
-  SHOW: 'tag.show',
-  PRUNE: 'tag.prune',
+  DELETE: 'tag.delete',
   INSERT: 'tag.insert',
   SAVE: 'tag.save',
   SELECT: 'tag.select',
