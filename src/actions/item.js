@@ -185,13 +185,19 @@ module.exports = {
       })
     },
 
-    remove(payload, meta) {
+    delete(payload, meta) {
       return {
         type: ITEM.TAG.REMOVE,
         payload,
         meta: { async: true, record: true, ...meta }
       }
-    }
+    },
+
+    remove(payload, meta) {
+      return module.exports.tags.delete(payload, {
+        ...meta, async: false, record: false
+      })
+    },
   },
 
   photos: {

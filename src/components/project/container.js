@@ -371,7 +371,7 @@ module.exports = {
       },
 
       onItemTagRemove(...args) {
-        dispatch(actions.item.tags.remove(...args))
+        dispatch(actions.item.tags.delete(...args))
       },
 
       onMetadataSave(...args) {

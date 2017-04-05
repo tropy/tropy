@@ -299,7 +299,6 @@ class ToggleTags extends Command {
 
     const current = yield select(({ items }) => items[id].tags)
 
-    const meta = { async: false, record: false }
     const add = []
     const remove = []
 
@@ -309,12 +308,12 @@ class ToggleTags extends Command {
 
     if (add.length) {
       yield call(mod.item.tags.add, db, add.map(tag => ({ id, tag })))
-      yield put(act.item.tags.add({ id, tags: add }, meta))
+      yield put(act.item.tags.insert({ id, tags: add }, meta))
     }
 
     if (remove.length) {
       yield call(mod.item.tags.remove, db, { id, tags: remove })
-      yield put(act.item.tags.remove({ id, tags: remove }, meta))
+      yield put(act.item.tags.remove({ id, tags: remove }))
     }
 
     this.undo = this.action
@@ -333,7 +332,7 @@ class AddTag extends Command {
 
     yield call(mod.item.tags.add, db, values)
 
-    this.undo = act.item.tags.remove(payload)
+    this.undo = act.item.tags.delete(payload)
 
     return payload
   }
@@ -365,9 +364,7 @@ class ClearTags extends Command {
     const tags = yield select(({ items }) => items[id].tags)
 
     yield call(mod.item.tags.clear, db, id)
-    yield put(
-      act.item.tags.remove({ id, tags }, { async: false, record: false })
-    )
+    yield put(act.item.tags.remove({ id, tags }))
 
     this.undo = act.item.tags.toggle({ id, tags })
   }
