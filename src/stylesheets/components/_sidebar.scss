@@ -41,7 +41,6 @@
       position: relative;
 
       &.active,
-      &.context,
       &.over {
         color: $sidebar-active-color;
 
@@ -61,10 +60,6 @@
             color: $sidebar-focus-icon-color;
           }
         }
-      }
-
-      &.context {
-        background: $sidebar-context-bg;
       }
 
       &.over {
