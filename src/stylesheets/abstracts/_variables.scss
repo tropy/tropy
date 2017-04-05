@@ -256,7 +256,8 @@ $blockquote-padding:          1em;
 $editor-hr-border:            2px;
 $sup-and-sub-font-size:       1em * 2 / 3;
 $link-target-width:           200px;
-$prose-mirror-padding:        40px; // ~ blank line
+$prose-mirror-padding-top:    70px; // ~ 2 blank lines
+$prose-mirror-padding-bottom: 40px; // ~ blank line
 
 
 // Toolbar

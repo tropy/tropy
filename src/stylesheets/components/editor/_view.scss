@@ -35,9 +35,9 @@
   width: $editor-width;
   margin: auto;
   max-width: $editor-max-width;
-  //padding-top: $toolbar-height + 1px + $prose-mirror-padding;
-  padding-bottom: $prose-mirror-padding;
-  padding-top: $prose-mirror-padding;
+  //padding-top: $toolbar-height + 1px + $prose-mirror-padding-top;
+  padding-bottom: $prose-mirror-padding-bottom;
+  padding-top: $prose-mirror-padding-top;
 
   .editor:hover & {
     //padding-top: $prose-mirror-padding;
