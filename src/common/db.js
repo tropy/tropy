@@ -115,10 +115,13 @@ class Database extends EventEmitter {
     })
   }
 
-  destroy(conn) {
+  async destroy(conn) {
     info(`closing db ${this.path}`)
-    return conn.close()
-      .then(() => this.emit('destroy'))
+
+    await conn.optimize()
+    await conn.close()
+
+    this.emit('destroy')
   }
 
   acquire() {
@@ -132,10 +135,12 @@ class Database extends EventEmitter {
   }
 
 
-  close = () =>
-    this.pool.drain()
-      .then(() => this.pool.clear())
-      .then(() => this.emit('close'))
+  close = async () => {
+    await this.pool.drain()
+    await this.pool.clear()
+
+    this.emit('close')
+  }
 
   seq = (fn) =>
     using(this.acquire(), fn)
@@ -216,6 +221,10 @@ class Connection {
     return this.exec(entries(pragma)
       .map(nv => `PRAGMA ${nv.join(' = ')};`)
       .join('\n'))
+  }
+
+  optimize() {
+    return this.exec('PRAGMA optimize;')
   }
 
   close() {
