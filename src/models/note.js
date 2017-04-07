@@ -5,16 +5,9 @@ const { json, stringify } = require('../common/util')
 module.exports = {
 
   async create(db, { state, text, photo }) {
-
-    // Note: last_insert_rowid() not reliable because of FTS triggers,
-    // so we determine the next id ourselves. This should be always
-    // be called in a transaction!
-    const { max } = await db.get('SELECT max(note_id) AS max FROM notes')
-    const id = Number(max) + 1
-
-    await db.run(`
-      INSERT INTO notes (note_id, id, state, text) VALUES (?,?,?,?)`,
-      id, photo, stringify(state), text
+    const { id } = await db.run(`
+      INSERT INTO notes (id, state, text) VALUES (?,?,?)`,
+      photo, stringify(state), text
     )
 
     return (await module.exports.load(db, [id]))[id]
