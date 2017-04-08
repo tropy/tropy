@@ -1,7 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent, PropTypes } = React
+const { PureComponent } = React
+const { PropTypes } = require('prop-types')
 const { Thumbnail } = require('../photo')
 const { pick, get } = require('../../common/util')
 const { shape, number, arrayOf } = PropTypes

@@ -1,7 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent, PropTypes } = React
+const { PureComponent } = React
+const { PropTypes } = require('prop-types')
 const cx = require('classnames')
 const { bool, func, number, shape, string } = PropTypes
 const { createClickHandler } = require('../util')

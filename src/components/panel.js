@@ -1,7 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent, PropTypes, Children, cloneElement: clone } = React
+const { PureComponent, Children, cloneElement: clone } = React
+const { PropTypes } = require('prop-types')
 const { only } = require('./util')
 const { Resizable } = require('./resizable')
 const cx = require('classnames')

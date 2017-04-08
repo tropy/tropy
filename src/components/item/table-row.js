@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = React
+const { PropTypes } = require('prop-types')
 const { ItemIterable } = require('./iterable')
 const { ItemTableCell } = require('./table-cell')
 const { meta } = require('../../common/os')

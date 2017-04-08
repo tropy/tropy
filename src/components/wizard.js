@@ -1,7 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { Component, PropTypes } = React
+const { Component } = React
+const { PropTypes } = require('prop-types')
 const { FormattedMessage, intlShape } = require('react-intl')
 const { Steps, Step } = require('./steps')
 const { connect } = require('react-redux')

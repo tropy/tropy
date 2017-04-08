@@ -1,7 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent, PropTypes } = React
+const { PureComponent } = React
+const { PropTypes } = require('prop-types')
 const { func, node, bool, number, oneOf } = PropTypes
 const { Draggable } = require('./draggable')
 const cx = require('classnames')

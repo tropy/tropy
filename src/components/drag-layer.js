@@ -2,7 +2,8 @@
 
 const React = require('react')
 const ReactDnD = require('react-dnd')
-const { Component, PropTypes } = React
+const { Component } = React
+const { PropTypes } = require('prop-types')
 const { ItemDragPreview } = require('./item')
 const { PhotoDragPreview } = require('./photo')
 const { DND } = require('../constants')

@@ -1,7 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes, PureComponent } = React
+const { PureComponent } = React
+const { PropTypes } = require('prop-types')
 const { Thumbnail } = require('./thumbnail')
 const { DragSource, DropTarget } = require('react-dnd')
 const { getEmptyImage } = require('react-dnd-electron-backend')

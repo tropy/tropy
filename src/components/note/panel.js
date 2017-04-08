@@ -1,10 +1,11 @@
 'use strict'
 
 const React = require('react')
+const { PropTypes } = require('prop-types')
+const { arrayOf, bool, func, number, object, shape } = PropTypes
 const { Panel } = require('../panel')
 const { NoteToolbar } = require('./toolbar')
 const { NoteList } = require('./list')
-const { arrayOf, bool, func, number, object, shape } = React.PropTypes
 
 
 class NotePanel extends Panel {

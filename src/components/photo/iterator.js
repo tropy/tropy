@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = React
+const { PropTypes } = require('prop-types')
 const { Iterator } = require('../iterator')
 const { DropTarget } = require('react-dnd')
 const { DND } = require('../../constants')

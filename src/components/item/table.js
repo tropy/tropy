@@ -1,10 +1,11 @@
 'use strict'
 
 const React = require('react')
+const { PropTypes } = require('prop-types')
+const { arrayOf, func, object } = PropTypes
 const { ItemIterator } = require('./iterator')
 const { ItemTableRow } = require('./table-row')
 const { ItemTableHead } = require('./table-head')
-const { arrayOf, func, object } = React.PropTypes
 const { on, off } = require('../../dom')
 const cx = require('classnames')
 const { noop } = require('../../common/util')

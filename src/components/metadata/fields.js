@@ -1,7 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent, PropTypes } = React
+const { PureComponent } = React
+const { PropTypes } = require('prop-types')
 const { arrayOf, bool, func, object, shape, string } = PropTypes
 const { MetadataField } = require('./field')
 const { get } = require('../../common/util')

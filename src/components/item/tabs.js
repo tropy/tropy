@@ -1,7 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent, PropTypes } = React
+const { PureComponent } = React
+const { PropTypes } = require('prop-types')
 const { FormattedMessage } = require('react-intl')
 const { Tab, Tabs } = require('../tabs')
 const { IconMetadata, IconTag } = require('../icons')

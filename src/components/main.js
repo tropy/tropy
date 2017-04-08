@@ -3,7 +3,8 @@
 const { Provider, connect } = require('react-redux')
 const ReactIntl = require('react-intl')
 const React = require('react')
-const { Component, PropTypes } = React
+const { Component } = React
+const { PropTypes } = require('prop-types')
 const { DragDropContext } = require('react-dnd')
 const ElectronBackend = require('react-dnd-electron-backend')
 

@@ -1,7 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes, Children } = React
+const { Children } = React
+const { PropTypes } = require('prop-types')
 
 const Steps = ({ children }) => (
   <div className="steps">

@@ -1,7 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { bool } = React.PropTypes
+const { PropTypes } = require('prop-types')
+const { bool } = PropTypes
 const { IconSearch } = require('../icons')
 const { TABS } = require('../../constants')
 

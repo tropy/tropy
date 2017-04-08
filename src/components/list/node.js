@@ -1,7 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes, PureComponent } = React
+const { PureComponent } = React
+const { PropTypes } = require('prop-types')
 const { Editable } = require('../editable')
 const { IconFolder } = require('../icons')
 const { DragSource, DropTarget } = require('react-dnd')

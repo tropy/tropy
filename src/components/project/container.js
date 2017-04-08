@@ -1,7 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes, Component } = React
+const { PureComponent } = React
+const { PropTypes } = require('prop-types')
 const { connect } = require('react-redux')
 const { ProjectView } = require('./view')
 const { ItemView } = require('../item')
@@ -34,7 +35,7 @@ const {
 } = PropTypes
 
 
-class ProjectContainer extends Component {
+class ProjectContainer extends PureComponent {
   constructor(props) {
     super(props)
 

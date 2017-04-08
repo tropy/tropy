@@ -1,14 +1,15 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes, PureComponent } = React
+const { PureComponent } = React
+const { PropTypes } = require('prop-types')
+const { bool, func, number, object, shape, arrayOf } = PropTypes
 const { DragSource, DropTarget } = require('react-dnd')
 const { getEmptyImage } = require('react-dnd-electron-backend')
 const { compose, map, filter, into } = require('transducers.js')
 const { DND } = require('../../constants')
 const { meta } = require('../../common/os')
 const { pure } = require('../util')
-const { bool, func, number, object, shape, arrayOf } = PropTypes
 
 
 class ItemIterable extends PureComponent {

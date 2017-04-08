@@ -1,7 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent, PropTypes } = React
+const { PureComponent } = React
+const { PropTypes } = require('prop-types')
 const { func, bool, object, number } = PropTypes
 const { EditorToolbar } = require('./toolbar')
 const { EditorState } = require('prosemirror-state')

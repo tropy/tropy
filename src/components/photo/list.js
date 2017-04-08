@@ -1,7 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { number, object, func } = React.PropTypes
+const { PropTypes } = require('prop-types')
+const { number, object, func } = PropTypes
 const { PhotoListItem } = require('./list-item')
 const { PhotoIterator } = require('./iterator')
 const { DC } = require('../../constants/properties')

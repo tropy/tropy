@@ -1,7 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent, PropTypes } = React
+const { PureComponent } = React
+const { PropTypes } = require('prop-types')
 const { bool, shape, string, object, arrayOf, func, number } = PropTypes
 const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')

@@ -1,7 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent, PropTypes } = React
+const { PureComponent } = React
+const { PropTypes } = require('prop-types')
 const { bool, func, number, object, shape } = PropTypes
 const { Editor } = require('../editor')
 const cx = require('classnames')

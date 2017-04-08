@@ -2,7 +2,8 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { node, bool, func } = React.PropTypes
+const { PropTypes } = require('prop-types')
+const { node, bool, func } = PropTypes
 const cx = require('classnames')
 
 

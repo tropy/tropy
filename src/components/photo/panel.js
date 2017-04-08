@@ -1,6 +1,8 @@
 'use strict'
 
 const React = require('react')
+const { PropTypes } = require('prop-types')
+const { array, bool, number, func } = PropTypes
 const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
 const { Panel } = require('../panel')
@@ -9,7 +11,6 @@ const { PhotoList } = require('./list')
 const { PhotoGrid } = require('./grid')
 const { isValidImage } = require('../../image')
 const { pick } = require('../../common/util')
-const { array, bool, number, func } = React.PropTypes
 const { PHOTO } = require('../../constants/sass')
 
 

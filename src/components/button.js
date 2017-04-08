@@ -1,7 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent, PropTypes, createElement: create } = React
+const { PureComponent, createElement: create } = React
+const { PropTypes } = require('prop-types')
 const { bool, element, func, number, string } = PropTypes
 const { injectIntl, intlShape } = require('react-intl')
 const cx = require('classnames')
