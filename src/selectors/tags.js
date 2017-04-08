@@ -5,8 +5,10 @@ const { values } = Object
 const { getSelectedItems } = require('./items')
 const { seq, compose, filter, map, cat, keep } = require('transducers.js')
 
+const coll = new Intl.Collator(ARGS.locale, { numeric: true })
+
 const getTags = ({ tags }) => tags
-const byName = (a, b) => a.name < b.name ? -1 : 1
+const byName = (a, b) => coll.compare(a.name, b.name)
 
 const getAllTags = memo(
   getTags,
