@@ -50,17 +50,18 @@ $brand-primary-darken-4: $blue-darken-4;
   #{--shade-3}:          #ddd;             // Active state bg/border
   #{--shade-3-darken-5}: darken(#ddd, 5%); // Thumbnail bg
   #{--shade-4}:          #ccc;             // Slider track
+  #{--shade-5}:          #bbb;             // Panel heading, mixed color
 
-  #{--shade-5}:          #777;             // Icon color
-  #{--shade-5-50}:       rgba(#777, 0.5);
+  #{--shade-6}:          #777;             // Icon color
+  #{--shade-6-50}:       rgba(#777, 0.5);
 
-  #{--shade-6}:          #555;             // Sidebar active icon
-  #{--shade-7}:          #444;             // Softened text
-  #{--shade-8}:          #222;             // Text color, active icon
+  #{--shade-7}:          #555;             // Sidebar active icon
+  #{--shade-8}:          #444;             // Softened text
+  #{--shade-9}:          #222;             // Text color, active icon
 
-  #{--shade-9}:          #000;             // Black
-  #{--shade-9-10}:       rgba(#000, 0.1);
-  #{--shade-9-20}:       rgba(#000, 0.2);
+  #{--shade-10}:          #000;             // Black
+  #{--shade-10-10}:       rgba(#000, 0.1);
+  #{--shade-10-20}:       rgba(#000, 0.2);
 }
 
 $transparent: var(--transparent);
@@ -71,24 +72,25 @@ $shade-2:           var(--shade-2);
 $shade-3:           var(--shade-3);
 $shade-3-darken-5:  var(--shade-3-darken-5);
 $shade-4:           var(--shade-4);
-
 $shade-5:           var(--shade-5);
-$shade-5-50:        var(--shade-5-50);
 
 $shade-6:           var(--shade-6);
+$shade-6-50:        var(--shade-6-50);
+
 $shade-7:           var(--shade-7);
 $shade-8:           var(--shade-8);
-
 $shade-9:           var(--shade-9);
-$shade-9-10:        var(--shade-9-10);
-$shade-9-20:        var(--shade-9-20);
+
+$shade-10:           var(--shade-10);
+$shade-10-10:        var(--shade-10-10);
+$shade-10-20:        var(--shade-10-20);
 
 
 // Scaffolding
 // --------------------------------------------------
 
 $body-bg:    $shade-0;
-$text-color: $shade-8;
+$text-color: $shade-9;
 
 
 // Typography
@@ -105,12 +107,12 @@ $text-selection-bg: $brand-primary-light;
 // --------------------------------------------------
 
 // Forms
-$input-color:             $shade-8;
+$input-color:             $shade-9;
 $input-bg:                $shade-0; // Transparent causes border/box-shadow issue
 $input-border:            $shade-2;
 $input-color-focus:       $brand-primary-60;
 $input-color-placeholder: $shade-4;
-$input-color-readonly:    $shade-5;
+$input-color-readonly:    $shade-6;
 
 // Badge
 $badge-color: $shade-0;
@@ -120,14 +122,14 @@ $badge-bg:    $red;
 $drop-target-color:      $brand-primary-30;
 
 // Sort indicator
-$photo-sort-indicator: $shade-8;
+$photo-sort-indicator: $shade-9;
 
 // Tile
 $tile-focus-color:  $brand-primary;
 $tile-active-color: $shade-4;
 
 // Stack
-$stack-color:             $shade-5;
+$stack-color:             $shade-6;
 $stack-bg:                $body-bg;
 $stack-focus-color:       $shade-0;
 $stack-line-gap-color:    $shade-0;
@@ -144,35 +146,35 @@ $scrollbar-color: $shade-4;
 
 // Icons
 $icon-style:        "line";
-$icon-color:        $shade-5;
-$icon-active-color: $shade-8;
+$icon-color:        $shade-6;
+$icon-active-color: $shade-9;
 
 $icon-spin-color:   $brand-primary;
 
 // Project
-$project-darken-color: $shade-9-10;
+$project-darken-color: $shade-10-10;
 
 // Sidebar
 $sidebar-bg:                $shade-1;
-$sidebar-text-color:        $shade-7;
-$sidebar-headings-color:    $shade-5;
+$sidebar-text-color:        $shade-8;
+$sidebar-headings-color:    $shade-6;
 $sidebar-focus-icon-color:  $shade-0;
 $sidebar-focus-color:       $shade-0;
 $sidebar-focus-bg:          $brand-primary;
-$sidebar-active-icon-color: $shade-6;
-$sidebar-active-color:      $shade-8;
+$sidebar-active-icon-color: $shade-7;
+$sidebar-active-color:      $shade-9;
 $sidebar-active-bg:         $shade-3;
 $activity-border-color:     $shade-3;
 
 // Items
-$item-table-header-color:        $shade-7;
-$item-table-header-sort-color:   $shade-8;
+$item-table-header-color:        $shade-8;
+$item-table-header-sort-color:   $shade-9;
 $item-table-header-active-bg:    $shade-1;
 $item-table-header-border-color: $shade-2;
 $items-odd-bg:                   $shade-1;
 $items-focus-color:              $shade-0;
 $items-focus-bg:                 $brand-primary;
-$items-active-color:             $shade-8;
+$items-active-color:             $shade-9;
 $items-active-bg:                $shade-3;
 
 // Panel group
@@ -180,27 +182,27 @@ $panels-bg: $shade-1;
 
 // Panel
 $panel-bg:              $shade-1;
-$panel-header-color:    $shade-7;
+$panel-header-color:    $shade-8;
 $panel-separator-color: $shade-3;
-$panel-heading-color:   #bbb; // Todo
+$panel-heading-color:   $shade-5;
 
 // Tabs
 $tab-bg:             $shade-2;
-$tab-active-color:   $shade-8;
+$tab-active-color:   $shade-9;
 $tab-active-bg:      $transparent;
-$tab-inactive-color: $shade-5;
+$tab-inactive-color: $shade-6;
 
 // Metadata
-$label-color:                $shade-5;
+$label-color:                $shade-6;
 $template-select-border:     $shade-3;
 $template-select-bg:         $shade-1;
-$metadata-field-mixed-color: #bbb; // Todo
+$metadata-field-mixed-color: $shade-5;
 
 // Tag list
 $tag-list-focus-color:              $shade-0;
 $tag-list-focus-bg:                 $brand-primary;
 $tag-list-active-bg:                $shade-3;
-$mixed-color:                       #bbb; // Todo
+$mixed-color:                       $shade-5;
 $add-tag-default-bg:                $panel-bg;
 $add-tag-focus-bg:                  $shade-0;
 $add-tag-placeholder-color-default: $text-color;
@@ -209,26 +211,26 @@ $add-tag-border-color:              $shade-3;
 // Photo list
 $photo-list-focus-color: $shade-0;
 $photo-list-focus-bg: $brand-primary;
-$photo-list-active-color: $shade-8;
+$photo-list-active-color: $shade-9;
 $photo-list-active-bg: $shade-3;
 
 // Note list
 $note-list-focus-color:  $shade-0;
 $note-list-focus-bg:     $brand-primary;
-$note-list-active-color: $shade-8;
+$note-list-active-color: $shade-9;
 $note-list-active-bg:    $shade-3;
 
 // Editable
 $editable-color: $text-color;
 $editable-bg: $shade-0;
-$editable-border-color: $shade-9-10;
+$editable-border-color: $shade-10-10;
 
 // Wizard
-$wizard-heading-color: $shade-7;
+$wizard-heading-color: $shade-8;
 $wizard-link-color:    $brand-primary;
 
 // Button
-$btn-default-color:     $shade-8;
+$btn-default-color:     $shade-9;
 $btn-default-bg:        $shade-0;
 $btn-default-border:    $shade-2;
 $btn-default-active-bg: $shade-1;
@@ -239,34 +241,33 @@ $btn-icon-bg:           $transparent;
 
 // Slider
 $slider-track-bg: $shade-4;
-$slider-range-bg: $shade-5;
+$slider-range-bg: $shade-6;
 $slider-handle-bg: $shade-0;
-$slider-handle-border: $shade-9-20;
+$slider-handle-border: $shade-10-20;
 
 // Esper
 $esper-bg:             $shade-2;
 $esper-toolbar-bg:     $shade-0;
-$esper-toolbar-border: #d4d4d4; // ToDo
-$esper-icon-color:     $shade-6;
+$esper-icon-color:     $shade-7;
 
 // Drag preview
 $drag-preview-opacity:           0.8;
 $drag-preview-thumbnail-opacity: 0.8;
 
 // Thumbnail
-$thumbnail-color: $shade-5-50;
+$thumbnail-color: $shade-6-50;
 $thumbnail-bg:    $shade-3-darken-5;
 
 // Progress bar
 $progress-bar-bg:       $shade-3;
 $progress-bar-color:    $brand-primary;
 $progress-cancel-color: $shade-1;
-$progress-cancel-bg:    $shade-5;
+$progress-cancel-bg:    $shade-6;
 
 // Editor
 $editor-toolbar-border:        $shade-2;
 $editor-btn-hover-bg:          $shade-1;
-$editor-btn-active-color:      $shade-6;
+$editor-btn-active-color:      $shade-7;
 $editor-btn-active-bg:         $shade-2;
 $editor-text-selection-bg:     $text-selection-bg;
 
