@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { number } = PropTypes
 const { PhotoIterable } = require('./iterable')
 const { createClickHandler } = require('../util')

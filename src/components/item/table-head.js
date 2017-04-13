@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { shape, func, string, bool, object, arrayOf, oneOf } = PropTypes
 const cn = require('classnames')
 const { IconChevron7 } = require('../icons')

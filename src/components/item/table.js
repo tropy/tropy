@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { arrayOf, func, object } = PropTypes
 const { ItemIterator } = require('./iterator')
 const { ItemTableRow } = require('./table-row')

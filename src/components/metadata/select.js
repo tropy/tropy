@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { into, map, filter, compose } = require('transducers.js')
 
 const templates = (props) => {

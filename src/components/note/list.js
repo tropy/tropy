@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { NoteListItem } = require('./list-item')
 const { arrayOf, bool, func, number, shape } = PropTypes
 

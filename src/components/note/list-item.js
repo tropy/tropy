@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const cx = require('classnames')
 const { bool, func, number, shape, string } = PropTypes
 const { createClickHandler } = require('../util')

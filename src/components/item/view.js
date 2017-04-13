@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { arrayOf, bool, func, object, number, shape, string } = PropTypes
 const { ItemPanel } = require('./panel')
 const { Resizable, BufferedResizable } = require('../resizable')

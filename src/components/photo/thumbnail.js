@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { IconPhoto } = require('../icons')
 const { imageURL } = require('../../common/cache')
 const { pick } = require('../../common/util')

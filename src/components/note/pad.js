@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { bool, func, number, object, shape } = PropTypes
 const { Editor } = require('../editor')
 const cx = require('classnames')

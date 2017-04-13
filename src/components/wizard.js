@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { Component } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { FormattedMessage, intlShape } = require('react-intl')
 const { Steps, Step } = require('./steps')
 const { connect } = require('react-redux')

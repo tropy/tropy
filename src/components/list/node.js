@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { Editable } = require('../editable')
 const { IconFolder } = require('../icons')
 const { DragSource, DropTarget } = require('react-dnd')

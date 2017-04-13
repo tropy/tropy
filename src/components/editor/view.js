@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { Component } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { func, bool, instanceOf, number } = PropTypes
 const { EditorView } = require('prosemirror-view')
 const { EditorState } = require('prosemirror-state')

@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { bool, func, number } = PropTypes
 const { Toolbar } = require('../toolbar')
 const { IconPlus, IconList, IconGrid } = require('../icons')

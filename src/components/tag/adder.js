@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { arrayOf, func, number, shape, string } = PropTypes
 const { injectIntl, intlShape } = require('react-intl')
 const { Editable } = require('../editable')

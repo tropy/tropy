@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { IconButton } = require('./button')
 const { Draggable } = require('./draggable')
 const { bounds, borders } = require('../dom')

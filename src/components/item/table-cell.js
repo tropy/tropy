@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { CoverImage } = require('./cover-image')
 const { Editable } = require('../editable')
 const { createClickHandler } = require('../util')

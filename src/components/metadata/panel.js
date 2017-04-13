@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { arrayOf, bool, func, number, object, shape, string } = PropTypes
 const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')

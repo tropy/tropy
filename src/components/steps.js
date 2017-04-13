@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { Children } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 
 const Steps = ({ children }) => (
   <div className="steps">

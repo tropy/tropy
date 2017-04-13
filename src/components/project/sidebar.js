@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { bool, shape, string, object, arrayOf, func, number } = PropTypes
 const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')

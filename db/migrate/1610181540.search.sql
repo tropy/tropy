@@ -1,11 +1,6 @@
 
-CREATE VIRTUAL TABLE fts_metadata USING fts5(
-  id UNINDEXED,
-  title,
-  names,
-  other
-);
-
+-- Notes Index
+-- ------------------------------------------------------------
 
 CREATE VIRTUAL TABLE fts_notes USING fts5(
   id UNINDEXED,
@@ -36,3 +31,16 @@ CREATE TRIGGER notes_au_idx
     INSERT INTO fts_notes (rowid, id, text)
       VALUES (NEW.note_id, NEW.id, NEW.text);
   END;
+
+
+-- Metadata Index
+-- ------------------------------------------------------------
+
+CREATE VIRTUAL TABLE fts_metadata USING fts5(
+  id UNINDEXED,
+  title,
+  names,
+  other
+);
+
+

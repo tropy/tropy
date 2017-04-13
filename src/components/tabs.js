@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { bool, node, func } = PropTypes
 const { only } = require('./util')
 const cx = require('classnames')

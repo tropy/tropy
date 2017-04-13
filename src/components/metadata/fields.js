@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { arrayOf, bool, func, object, shape, string } = PropTypes
 const { MetadataField } = require('./field')
 const { get } = require('../../common/util')

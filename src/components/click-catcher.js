@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent, createElement: create } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { arrayOf, oneOfType, bool, func, string } = PropTypes
 const { DropTarget } = require('react-dnd')
 const cx = require('classnames')

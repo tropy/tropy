@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { Iterator } = require('../iterator')
 const { has } = require('../../dom')
 const { match } = require('../../keymap')

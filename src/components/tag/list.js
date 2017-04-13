@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { arrayOf, bool, number, string, shape, object, func } = PropTypes
 const { Tag } = require('./tag')
 const { get, noop } = require('../../common/util')

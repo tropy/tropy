@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { func, node, bool, number, oneOf } = PropTypes
 const { Draggable } = require('./draggable')
 const cx = require('classnames')

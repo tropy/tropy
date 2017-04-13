@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { TABS, SASS: { TILE, SCROLLBAR } } = require('../constants')
 const { bounds, on, off } = require('../dom')
 const { times } = require('../common/util')

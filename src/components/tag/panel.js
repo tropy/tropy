@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { PropTypes } = require('prop-types')
+const PropTypes = require('prop-types')
 const { arrayOf, func, number, object, shape, string } = PropTypes
 const { connect } = require('react-redux')
 const { TagList } = require('./list')
