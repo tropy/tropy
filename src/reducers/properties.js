@@ -16,6 +16,12 @@ const init = {
     definition: 'A unit of archival organization, usually within a box.',
     comment: ''
   },
+  [TR.CLASSIFICATION]: {
+    uri: TR.CLASSIFICATION,
+    label: 'Classification',
+    definition: 'A systematic arrangement in groups according to established criteria.',
+    comment: ''
+  },
 
   [DC.CONTRIBUTOR]: {
     uri: DC.CONTRIBUTOR,

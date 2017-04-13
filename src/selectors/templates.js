@@ -11,6 +11,7 @@ const CORE = 'https://schema.tropy.org/v1/templates/core'
 const CORNELL = 'https://schema.tropy.org/v1/templates/cornell-obama'
 const PHOTO = 'https://schema.tropy.org/v1/templates/photo'
 const PINKERTON = 'https://schema.tropy.org/v1/templates/pinkerton'
+const TYPOGRAPHY = 'https://schema.tropy.org/v1/templates/typography'
 
 const T = {
   [CORE]: {
@@ -73,6 +74,27 @@ const T = {
       { property: DC.CREATOR },
       { property: S.RECIPIENT },
       { property: DC.DESCRIPTION }
+    ],
+  },
+
+  [TYPOGRAPHY]: {
+    uri: TYPOGRAPHY,
+    name: 'Typography',
+    type: 'item',
+    fields: [
+      { property: DC.TITLE },
+      { property: DC.TYPE },
+      { property: TR.CLASSIFICATION },
+      { property: DC.CREATOR },
+      { property: DC.CONTRIBUTOR },
+      { property: DC.DESCRIPTION },
+      { property: DC.FORMAT },
+      { property: DC.SOURCE },
+      { property: DC.DATE },
+      { property: DC.COVERAGE },
+      { property: DC.RIGHTS },
+      { property: DC.LANGUAGE },
+      { property: DC.RELATION }
     ],
   },
 
