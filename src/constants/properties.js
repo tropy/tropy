@@ -5,8 +5,8 @@ module.exports = {
   UPDATE: 'properties.update',
 
   TR: {
-    BOX: 'https:/schema.tropy.org/v1/properties/box',
-    FOLDER: 'https:/schema.tropy.org/v1/properties/folder',
+    BOX: 'https://schema.tropy.org/v1/properties/box',
+    FOLDER: 'https://schema.tropy.org/v1/properties/folder'
   },
 
   DC: {

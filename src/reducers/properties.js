@@ -63,7 +63,7 @@ const init = {
   },
   [DC.LANGUAGE]: {
     uri: DC.LANGUAGE,
-    label: 'language',
+    label: 'Language',
     definition: 'A language of the resource.',
     comment: 'Recommended best practice is to use a controlled vocabulary such as RFC 4646 [RFC4646].'
   },
