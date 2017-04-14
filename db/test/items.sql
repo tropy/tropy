@@ -105,4 +105,3 @@ SELECT id, property AS property, text, type_name
 -- Query by first/last name
 -- Query using time functions
 -- Query using indices
--- Full-text search

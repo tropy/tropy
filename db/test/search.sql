@@ -19,7 +19,7 @@ SELECT item_id AS id
   FROM fts_notes JOIN photos USING (id)
   WHERE fts_notes MATCH 'query'
 
-INTERSECT
+UNION
 
 SELECT coalesce(items.id, item_id) AS id
   FROM metadata

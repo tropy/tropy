@@ -15,9 +15,25 @@ const skel = (id) => ({
 })
 
 module.exports = mod.item = {
-  async all(db, { trash, tags, sort }) {
+
+  async all(db, { trash, tags, sort, query }) {
     const items = []
     const dir = sort.asc ? 'ASC' : 'DESC'
+
+    const search = `
+      SELECT item_id AS id
+        FROM fts_notes JOIN photos USING (id)
+        WHERE fts_notes MATCH $query
+      UNION
+      SELECT coalesce(items.id, item_id) AS id
+        FROM metadata
+          JOIN fts_metadata ON (value_id = fts_metadata.rowid)
+          LEFT OUTER JOIN items USING (id)
+          LEFT OUTER JOIN photos USING (id)
+        WHERE fts_metadata MATCH $query`
+
+    const params = { $sort: sort.column }
+    if (query.length) params.$query = query
 
     await db.each(`
       WITH
@@ -26,19 +42,18 @@ module.exports = mod.item = {
           FROM metadata JOIN metadata_values USING (value_id)
           WHERE property = $sort
         )
-        SELECT DISTINCT id, sort.text
+        SELECT DISTINCT id
           FROM items
             ${tags.length ? 'JOIN taggings USING (id)' : ''}
             LEFT OUTER JOIN sort USING (id)
             LEFT OUTER JOIN trash USING (id)
           WHERE
-            ${tags.length ? `tag_id IN (${tags.join(',')}) AND` : ''}
+            ${(tags.length > 0) ? `tag_id IN (${lst(tags)}) AND` : ''}
+            ${(query.length > 0) ? `id IN (${search}) AND` : ''}
             deleted ${trash ? 'NOT' : 'IS'} NULL
-          ORDER BY sort.text ${dir}, id ${dir}`, {
-
-            $sort: sort.column
-
-          }, ({ id }) => { items.push(id) })
+          ORDER BY sort.text ${dir}, id ${dir}`,
+          params,
+          ({ id }) => { items.push(id) })
 
     return items
   },
@@ -54,7 +69,7 @@ module.exports = mod.item = {
           FROM metadata JOIN metadata_values USING (value_id)
           WHERE property = $sort
         )
-        SELECT DISTINCT id, sort.text
+        SELECT DISTINCT id
           FROM items
             JOIN trash USING (id)
             LEFT OUTER JOIN sort USING (id)

@@ -9,6 +9,7 @@ const { isSelected } = require('../selection')
 const init = {
   mode: PROJECT.MODE.PROJECT,
   items: [],
+  query: '',
   tags: [],
   sort: { type: 'property', column: DC.TITLE, asc: true },
   lists: {}
