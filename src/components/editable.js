@@ -128,7 +128,8 @@ class Editable extends PureComponent {
     autofocus: true,
     tabIndex: -1,
     type: 'text',
-    onBlur: noop
+    onBlur: noop,
+    onCancel: noop
   }
 }
 

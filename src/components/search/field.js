@@ -1,25 +1,40 @@
 'use strict'
 
 const React = require('react')
-const PropTypes = require('prop-types')
-const { bool } = PropTypes
+const { PureComponent } = React
+const { bool, func, string } = require('prop-types')
 const { IconSearch } = require('../icons')
+const { Editable } = require('../editable')
 const { TABS } = require('../../constants')
 
-const SearchField = ({ isDisabled }) => (
-  <div className="search">
-    <IconSearch/>
-    <input
-      type="text"
-      className="search-input form-control"
-      tabIndex={isDisabled ? null : TABS.SearchField}
-      disabled={isDisabled}
-      placeholder="Search"/>
-  </div>
-)
+class SearchField extends PureComponent {
 
-SearchField.propTypes = {
-  isDisabled: bool
+  handleChange = (query) => {
+    this.props.onSearch(query)
+  }
+
+  render() {
+    const { query, isDisabled } = this.props
+
+    return (
+      <div className="search">
+        <IconSearch/>
+        <Editable
+          isEditing
+          isDisabled={isDisabled}
+          tabIndex={TABS.SearchField}
+          value={query}
+          placeholder="Search"
+          onChange={this.handleChange}/>
+      </div>
+    )
+  }
+
+  static propTypes = {
+    isDisabled: bool,
+    query: string.isRequired,
+    onSearch: func.isRequired
+  }
 }
 
 module.exports = {

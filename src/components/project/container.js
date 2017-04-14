@@ -331,6 +331,10 @@ module.exports = {
         dispatch(actions.nav.select(...args))
       },
 
+      onSearch(query) {
+        dispatch(actions.nav.update({ query }, { search: true }))
+      },
+
       onSort(...args) {
         dispatch(actions.nav.sort(...args))
       },

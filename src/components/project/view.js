@@ -2,7 +2,6 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
 const { BufferedResizable } = require('../resizable')
@@ -11,7 +10,7 @@ const { ProjectSidebar } = require('./sidebar')
 const { ProjectToolbar } = require('./toolbar')
 const { isValidImage } = require('../../image')
 const { pick, } = require('../../common/util')
-const { array, bool, func, object, number } = PropTypes
+const { array, bool, func, object, number } = require('prop-types')
 const { ITEM, SIDEBAR } = require('../../constants/sass')
 
 
@@ -59,6 +58,7 @@ class ProjectView extends PureComponent {
       zoom,
       onItemCreate,
       onItemSelect,
+      onSearch,
       ...props
     } = this.props
 
@@ -84,6 +84,7 @@ class ProjectView extends PureComponent {
           <section id="items" style={this.style}>
             <header>
               <ProjectToolbar
+                query={nav.query}
                 zoom={zoom}
                 maxZoom={maxZoom}
                 canCreateItems
@@ -91,6 +92,7 @@ class ProjectView extends PureComponent {
                 isDisabled={!props.isActive}
                 onItemCreate={this.handleItemImport}
                 onDoubleClick={ARGS.frameless ? props.onMaximize : null}
+                onSearch={onSearch}
                 onZoomChange={this.handleZoomChange}/>
             </header>
 
@@ -130,6 +132,7 @@ class ProjectView extends PureComponent {
     onItemSelect: func.isRequired,
     onItemTagAdd: func.isRequired,
     onMaximize: func.isRequired,
+    onSearch: func.isRequired,
     onUiUpdate: func.isRequired
   }
 }

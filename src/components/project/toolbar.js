@@ -2,8 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { bool, func, number } = PropTypes
+const { bool, func, number, string } = require('prop-types')
 const { Toolbar } = require('../toolbar')
 const { IconPlus, IconList, IconGrid } = require('../icons')
 const { Slider } = require('../slider')
@@ -27,9 +26,11 @@ class ProjectToolbar extends PureComponent {
       isDisabled,
       isDraggable,
       isEmpty,
+      query,
       zoom,
       maxZoom,
       onDoubleClick,
+      onSearch,
       onZoomChange,
     } = this.props
 
@@ -50,7 +51,10 @@ class ProjectToolbar extends PureComponent {
           </div>
         </div>
         <div className="toolbar-right">
-          <SearchField isDisabled={isDisabled}/>
+          <SearchField
+            query={query}
+            isDisabled={isDisabled}
+            onSearch={onSearch}/>
         </div>
       </Toolbar>
     )
@@ -61,10 +65,12 @@ class ProjectToolbar extends PureComponent {
     isDraggable: bool,
     isDisabled: bool,
     isEmpty: bool,
+    query: string.isRequired,
     maxZoom: number.isRequired,
     zoom: number.isRequired,
     onDoubleClick: func,
     onItemCreate: func.isRequired,
+    onSearch: func.isRequired,
     onZoomChange: func.isRequired
   }
 
