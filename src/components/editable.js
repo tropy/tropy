@@ -2,8 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { bool, func, string, oneOf } = PropTypes
+const { bool, func, number, oneOf, string } = require('prop-types')
 const cx = require('classnames')
 const { noop } = require('../common/util')
 
@@ -77,6 +76,7 @@ class Editable extends PureComponent {
     const {
       type,
       placeholder,
+      tabIndex,
       value,
       isEditing,
       isDisabled,
@@ -90,7 +90,7 @@ class Editable extends PureComponent {
           type={type}
           value={this.state.value}
           placeholder={placeholder}
-          tabIndex={-1}
+          tabIndex={tabIndex}
           required={isRequired}
           ref={this.autofocus}
           onChange={this.handleChange}
@@ -116,6 +116,7 @@ class Editable extends PureComponent {
     isDisabled: bool,
     isRequired: bool,
     placeholder: string,
+    tabIndex: number.isRequired,
     type: oneOf(['text', 'number']),
     value: string,
     onBlur: func.isRequired,
@@ -125,6 +126,7 @@ class Editable extends PureComponent {
 
   static defaultProps = {
     autofocus: true,
+    tabIndex: -1,
     type: 'text',
     onBlur: noop
   }
