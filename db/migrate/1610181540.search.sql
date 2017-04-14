@@ -38,7 +38,7 @@ CREATE TRIGGER notes_au_fts
 -- Metadata Value Index
 -- ------------------------------------------------------------
 
-CREATE VIRTUAL TABLE fts_metadata_values USING fts5(
+CREATE VIRTUAL TABLE fts_metadata USING fts5(
   type_name UNINDEXED,
   text,
   content = 'metadata_values',
@@ -50,7 +50,7 @@ CREATE TRIGGER metadata_values_ai_fts
   AFTER INSERT ON metadata_values
   FOR EACH ROW WHEN NEW.type_name NOT IN ('boolean', 'location')
   BEGIN
-    INSERT INTO fts_metadata_values (rowid, type_name, text)
+    INSERT INTO fts_metadata (rowid, type_name, text)
       VALUES (NEW.value_id, NEW.type_name, NEW.text);
   END;
 
@@ -58,6 +58,6 @@ CREATE TRIGGER metadata_values_ad_fts
   AFTER DELETE ON metadata_values
   FOR EACH ROW WHEN OLD.type_name NOT IN ('boolean', 'location')
   BEGIN
-    INSERT INTO fts_metadata_values (fts_metadata_values, rowid, type_name, text)
+    INSERT INTO fts_metadata (fts_metadata, rowid, type_name, text)
       VALUES ('delete', OLD.value_id, OLD.type_name, OLD.text);
   END;

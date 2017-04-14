@@ -194,20 +194,20 @@ CREATE TABLE IF NOT EXISTS 'fts_notes_idx'(segid, term, pgno, PRIMARY KEY(segid,
 CREATE TABLE IF NOT EXISTS 'fts_notes_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
 CREATE TABLE IF NOT EXISTS 'fts_notes_config'(k PRIMARY KEY, v) WITHOUT ROWID;
 INSERT INTO fts_notes_config(k,v) VALUES('version',4);
-INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_metadata_values','fts_metadata_values',0,'CREATE VIRTUAL TABLE fts_metadata_values USING fts5(
+INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_metadata','fts_metadata',0,'CREATE VIRTUAL TABLE fts_metadata USING fts5(
   type_name UNINDEXED,
   text,
   content = ''metadata_values'',
   content_rowid = ''value_id'',
   tokenize = ''porter unicode61''
 )');
-CREATE TABLE IF NOT EXISTS 'fts_metadata_values_data'(id INTEGER PRIMARY KEY, block BLOB);
-INSERT INTO fts_metadata_values_data(id,block) VALUES(1,X'');
-INSERT INTO fts_metadata_values_data(id,block) VALUES(10,X'00000000000000');
-CREATE TABLE IF NOT EXISTS 'fts_metadata_values_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
-CREATE TABLE IF NOT EXISTS 'fts_metadata_values_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
-CREATE TABLE IF NOT EXISTS 'fts_metadata_values_config'(k PRIMARY KEY, v) WITHOUT ROWID;
-INSERT INTO fts_metadata_values_config(k,v) VALUES('version',4);
+CREATE TABLE IF NOT EXISTS 'fts_metadata_data'(id INTEGER PRIMARY KEY, block BLOB);
+INSERT INTO fts_metadata_data(id,block) VALUES(1,X'');
+INSERT INTO fts_metadata_data(id,block) VALUES(10,X'00000000000000');
+CREATE TABLE IF NOT EXISTS 'fts_metadata_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
+CREATE TABLE IF NOT EXISTS 'fts_metadata_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
+CREATE TABLE IF NOT EXISTS 'fts_metadata_config'(k PRIMARY KEY, v) WITHOUT ROWID;
+INSERT INTO fts_metadata_config(k,v) VALUES('version',4);
 CREATE TRIGGER insert_tags_trim_name
   AFTER INSERT ON tags
   BEGIN
@@ -282,14 +282,14 @@ CREATE TRIGGER metadata_values_ai_fts
   AFTER INSERT ON metadata_values
   FOR EACH ROW WHEN NEW.type_name NOT IN ('boolean', 'location')
   BEGIN
-    INSERT INTO fts_metadata_values (rowid, type_name, text)
+    INSERT INTO fts_metadata (rowid, type_name, text)
       VALUES (NEW.value_id, NEW.type_name, NEW.text);
   END;
 CREATE TRIGGER metadata_values_ad_fts
   AFTER DELETE ON metadata_values
   FOR EACH ROW WHEN OLD.type_name NOT IN ('boolean', 'location')
   BEGIN
-    INSERT INTO fts_metadata_values (fts_metadata_values, rowid, type_name, text)
+    INSERT INTO fts_metadata (fts_metadata, rowid, type_name, text)
       VALUES ('delete', OLD.value_id, OLD.type_name, OLD.text);
   END;
 PRAGMA writable_schema=OFF;
