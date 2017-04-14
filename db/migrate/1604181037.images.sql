@@ -8,7 +8,7 @@ CREATE TABLE photos (
   mimetype     TEXT     NOT NULL,
   checksum     TEXT     NOT NULL,
   orientation  INTEGER  NOT NULL DEFAULT 1,
-  exif                  NOT NULL DEFAULT '{}'
+  metadata     TEXT     NOT NULL DEFAULT '{}'
 ) WITHOUT ROWID;
 
 
