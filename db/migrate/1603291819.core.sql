@@ -51,7 +51,6 @@ CREATE TABLE metadata_types (
 INSERT INTO metadata_types (type_name, type_schema) VALUES
   ('text', 'https://schema.org/Text'),
   ('date', 'https://schema.tropy.org/v1/types/date'),
-  ('datetime', 'https://schema.org/DateTime'),
   ('name', 'https://schema.tropy.org/v1/types/name'),
   ('boolean', 'https://schema.org/Boolean'),
   ('number', 'https://schema.org/Number'),
@@ -77,18 +76,15 @@ CREATE TABLE metadata_values (
   value_id   INTEGER  PRIMARY KEY,
   type_name  TEXT     NOT NULL REFERENCES metadata_types ON UPDATE CASCADE,
   text                NOT NULL,
-  data                NOT NULL DEFAULT '{}',
+  data       TEXT,
 
   UNIQUE (type_name, text)
 );
-
-CREATE INDEX metadata_values_index ON metadata_values (text ASC);
 
 
 CREATE TABLE notes (
   note_id      INTEGER  PRIMARY KEY,
   id           INTEGER  REFERENCES subjects ON DELETE CASCADE,
-  position     INTEGER,
   text         TEXT     NOT NULL,
   state        TEXT     NOT NULL,
   language     TEXT     NOT NULL DEFAULT 'en',

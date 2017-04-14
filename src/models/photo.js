@@ -3,7 +3,7 @@
 const { TEMPLATE } = require('../constants/photo')
 const { DC } = require('../constants/properties')
 const { all } = require('bluebird')
-const { text, datetime } = require('../value')
+const { text, date } = require('../value')
 const metadata = require('./metadata')
 const { into, map } = require('transducers.js')
 const { assign } = Object
@@ -37,7 +37,7 @@ module.exports = {
         ids: [id],
         data: {
           [DC.TITLE]: text(image.title),
-          [DC.DATE]: datetime(image.date)
+          [DC.DATE]: date(image.date)
         }
       })
     ])

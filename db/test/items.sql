@@ -15,15 +15,15 @@ INSERT INTO items (id) VALUES (last_insert_rowid());
 
 
 -- Add values
-INSERT INTO metadata_values (type_name, value)
+INSERT INTO metadata_values (type_name, text)
   VALUES ('text', 'Foo');
-INSERT INTO metadata_values (type_name, value)
+INSERT INTO metadata_values (type_name, text)
   VALUES ('text', 'Bar');
-INSERT INTO metadata_values (type_name, value)
+INSERT INTO metadata_values (type_name, text)
   VALUES ('date', '2016');
-INSERT INTO metadata_values (type_name, value)
+INSERT INTO metadata_values (type_name, text)
   VALUES ('date', '2017');
-INSERT INTO metadata_values (type_name, value)
+INSERT INTO metadata_values (type_name, text)
   VALUES ('date', '2018');
 
 -- Add metadata
@@ -83,7 +83,7 @@ SELECT v.value_id AS dangling_value
 -- All items sorted by title
 WITH
   titles(id, value) AS (
-    SELECT id, value AS title
+    SELECT id, text AS title
     FROM metadata JOIN metadata_values USING (value_id)
     WHERE property = 'title'
   )
@@ -95,7 +95,7 @@ WITH
     ORDER BY t.value ASC, id ASC;
 
 -- Metadata for specific items
-SELECT id, property AS property, value, type_name
+SELECT id, property AS property, text, type_name
   FROM items
     JOIN metadata USING (id)
     JOIN metadata_values USING (value_id)

@@ -53,7 +53,6 @@ CREATE TABLE metadata_types (
 
 ) WITHOUT ROWID;
 INSERT INTO metadata_types(type_name,type_schema) VALUES('boolean','https://schema.org/Boolean');
-INSERT INTO metadata_types(type_name,type_schema) VALUES('datetime','https://schema.org/DateTime');
 INSERT INTO metadata_types(type_name,type_schema) VALUES('location','https://schema.org/GeoCoordinates');
 INSERT INTO metadata_types(type_name,type_schema) VALUES('number','https://schema.org/Number');
 INSERT INTO metadata_types(type_name,type_schema) VALUES('text','https://schema.org/Text');
@@ -62,7 +61,6 @@ INSERT INTO metadata_types(type_name,type_schema) VALUES('date','https://schema.
 INSERT INTO metadata_types(type_name,type_schema) VALUES('name','https://schema.tropy.org/v1/types/name');
 CREATE TABLE metadata (
   id          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
-  --item_id     INTEGER  NOT NULL REFERENCES items ON DELETE CASCADE,
   property    TEXT     NOT NULL,
   value_id    INTEGER  NOT NULL REFERENCES metadata_values,
   language    TEXT,
@@ -72,21 +70,19 @@ CREATE TABLE metadata (
     language IS NULL OR language != '' AND language = trim(lower(language))
   ),
 
-  --UNIQUE (item_id, id, property),
   PRIMARY KEY (id, property)
 ) WITHOUT ROWID;
 CREATE TABLE metadata_values (
   value_id   INTEGER  PRIMARY KEY,
   type_name  TEXT     NOT NULL REFERENCES metadata_types ON UPDATE CASCADE,
-  text       TEXT     NOT NULL,
-  data                NOT NULL DEFAULT '{}',
+  text                NOT NULL,
+  data       TEXT,
 
   UNIQUE (type_name, text)
 );
 CREATE TABLE notes (
   note_id      INTEGER  PRIMARY KEY,
   id           INTEGER  REFERENCES subjects ON DELETE CASCADE,
-  position     INTEGER,
   text         TEXT     NOT NULL,
   state        TEXT     NOT NULL,
   language     TEXT     NOT NULL DEFAULT 'en',
@@ -184,23 +180,10 @@ INSERT INTO image_qualities(quality) VALUES('color');
 INSERT INTO image_qualities(quality) VALUES('default');
 INSERT INTO image_qualities(quality) VALUES('gray');
 PRAGMA writable_schema=ON;
-INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_metadata','fts_metadata',0,'CREATE VIRTUAL TABLE fts_metadata USING fts5(
-  id UNINDEXED,
-  title,
-  names,
-  other
-)');
-CREATE TABLE IF NOT EXISTS 'fts_metadata_data'(id INTEGER PRIMARY KEY, block BLOB);
-INSERT INTO fts_metadata_data(id,block) VALUES(1,X'');
-INSERT INTO fts_metadata_data(id,block) VALUES(10,X'00000000000000');
-CREATE TABLE IF NOT EXISTS 'fts_metadata_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
-CREATE TABLE IF NOT EXISTS 'fts_metadata_content'(id INTEGER PRIMARY KEY, c0, c1, c2, c3);
-CREATE TABLE IF NOT EXISTS 'fts_metadata_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
-CREATE TABLE IF NOT EXISTS 'fts_metadata_config'(k PRIMARY KEY, v) WITHOUT ROWID;
-INSERT INTO fts_metadata_config(k,v) VALUES('version',4);
 INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_notes','fts_notes',0,'CREATE VIRTUAL TABLE fts_notes USING fts5(
   id UNINDEXED,
   text,
+  language UNINDEXED,
   content=''notes'',
   content_rowid=''note_id''
 )');
@@ -211,7 +194,19 @@ CREATE TABLE IF NOT EXISTS 'fts_notes_idx'(segid, term, pgno, PRIMARY KEY(segid,
 CREATE TABLE IF NOT EXISTS 'fts_notes_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
 CREATE TABLE IF NOT EXISTS 'fts_notes_config'(k PRIMARY KEY, v) WITHOUT ROWID;
 INSERT INTO fts_notes_config(k,v) VALUES('version',4);
-CREATE INDEX metadata_values_index ON metadata_values (text ASC);
+INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_metadata_values','fts_metadata_values',0,'CREATE VIRTUAL TABLE fts_metadata_values USING fts5(
+  type_name UNINDEXED,
+  text,
+  content=''metadata_values'',
+  content_rowid=''value_id''
+)');
+CREATE TABLE IF NOT EXISTS 'fts_metadata_values_data'(id INTEGER PRIMARY KEY, block BLOB);
+INSERT INTO fts_metadata_values_data(id,block) VALUES(1,X'');
+INSERT INTO fts_metadata_values_data(id,block) VALUES(10,X'00000000000000');
+CREATE TABLE IF NOT EXISTS 'fts_metadata_values_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
+CREATE TABLE IF NOT EXISTS 'fts_metadata_values_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
+CREATE TABLE IF NOT EXISTS 'fts_metadata_values_config'(k PRIMARY KEY, v) WITHOUT ROWID;
+INSERT INTO fts_metadata_values_config(k,v) VALUES('version',4);
 CREATE TRIGGER insert_tags_trim_name
   AFTER INSERT ON tags
   BEGIN
@@ -257,25 +252,44 @@ CREATE TRIGGER update_lists_cycle_check
         RAISE(ABORT, 'Lists may not contain cycles')
       END;
   END;
-CREATE TRIGGER notes_ai_idx
+CREATE TRIGGER update_metadata_values_abort
+  BEFORE UPDATE ON metadata_values
+  BEGIN
+    SELECT RAISE(ABORT, 'Metadata values should never be updated');
+  END;
+CREATE TRIGGER notes_ai_fts
   AFTER INSERT ON notes
   BEGIN
-    INSERT INTO fts_notes (rowid, id, text)
-      VALUES (NEW.note_id, NEW.id, NEW.text);
+    INSERT INTO fts_notes (rowid, id, text, language)
+      VALUES (NEW.note_id, NEW.id, NEW.text, NEW.language);
   END;
-CREATE TRIGGER notes_ad_idx
+CREATE TRIGGER notes_ad_fts
   AFTER DELETE ON notes
   BEGIN
-    INSERT INTO fts_notes (fts_notes, rowid, id, text)
-      VALUES ('delete', OLD.note_id, OLD.id, OLD.text);
+    INSERT INTO fts_notes (fts_notes, rowid, id, text, language)
+      VALUES ('delete', OLD.note_id, OLD.id, OLD.text, OLD.language);
   END;
-CREATE TRIGGER notes_au_idx
+CREATE TRIGGER notes_au_fts
   AFTER UPDATE OF text ON notes
   BEGIN
-    INSERT INTO fts_notes (fts_notes, rowid, id, text)
-      VALUES ('delete', OLD.note_id, OLD.id, OLD.text);
-    INSERT INTO fts_notes (rowid, id, text)
-      VALUES (NEW.note_id, NEW.id, NEW.text);
+    INSERT INTO fts_notes (fts_notes, rowid, id, text, language)
+      VALUES ('delete', OLD.note_id, OLD.id, OLD.text, OLD.language);
+    INSERT INTO fts_notes (rowid, id, text, language)
+      VALUES (NEW.note_id, NEW.id, NEW.text, NEW.language);
+  END;
+CREATE TRIGGER metadata_values_ai_fts
+  AFTER INSERT ON metadata_values
+  FOR EACH ROW WHEN NEW.type_name NOT IN ('boolean', 'location')
+  BEGIN
+    INSERT INTO fts_metadata_values (rowid, type_name, text)
+      VALUES (NEW.value_id, NEW.type_name, NEW.text);
+  END;
+CREATE TRIGGER metadata_values_ad_fts
+  AFTER DELETE ON metadata_values
+  FOR EACH ROW WHEN OLD.type_name NOT IN ('boolean', 'location')
+  BEGIN
+    INSERT INTO fts_metadata_values (fts_metadata_values, rowid, type_name, text)
+      VALUES ('delete', OLD.value_id, OLD.type_name, OLD.text);
   END;
 PRAGMA writable_schema=OFF;
 COMMIT;

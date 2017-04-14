@@ -56,3 +56,12 @@ CREATE TRIGGER update_lists_cycle_check
       END;
   END;
 
+
+-- Metadata Values Triggers
+-- ------------------------------------------------------------
+
+CREATE TRIGGER update_metadata_values_abort
+  BEFORE UPDATE ON metadata_values
+  BEGIN
+    SELECT RAISE(ABORT, 'Metadata values should never be updated');
+  END;
