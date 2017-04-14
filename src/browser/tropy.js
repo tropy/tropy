@@ -30,7 +30,10 @@ const {
   HISTORY, TAG, PROJECT, ITEM, CONTEXT, SASS
 } = require('../constants')
 
-const { WIDTH, HEIGHT, MIN_WIDTH, MIN_HEIGHT } = SASS.WINDOW
+const WIN = SASS.WINDOW
+const WIZ = SASS.WIZARD
+
+const ZOOM = ARGS.zoom || 1
 
 const H = new WeakMap()
 const T = new WeakMap()
@@ -89,7 +92,6 @@ class Tropy extends EventEmitter {
       file = resolve(file)
       verbose(`opening ${file}...`)
 
-
       if (this.win) {
         if (file) {
           this.dispatch(act.project.open(file))
@@ -98,12 +100,11 @@ class Tropy extends EventEmitter {
         return this.win.show(), this
       }
 
-
       this.win = open('project', { file, ...this.hash }, {
-        width: WIDTH,
-        height: HEIGHT,
-        minWidth: MIN_WIDTH,
-        minHeight: MIN_HEIGHT,
+        width: WIN.WIDTH,
+        height: WIN.HEIGHT,
+        minWidth: WIN.MIN_WIDTH * ZOOM,
+        minHeight: WIN.MIN_HEIGHT * ZOOM,
         darkTheme: (this.state.theme === 'dark'),
         frame: !this.hash.frameless
       })
@@ -186,8 +187,8 @@ class Tropy extends EventEmitter {
     if (this.wiz) return this.wiz.show(), this
 
     this.wiz = open('wizard', this.hash, {
-      width: 456,
-      height: 580,
+      width: WIZ.WIDTH * ZOOM,
+      height: WIZ.HEIGHT * ZOOM,
       parent: this.win,
       modal: !darwin && !!this.win,
       autoHideMenuBar: true,

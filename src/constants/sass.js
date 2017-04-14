@@ -102,6 +102,11 @@ const NOTEPAD = {
   MIN_HEIGHT: 100
 }
 
+const WIZARD = {
+  WIDTH: 456,
+  HEIGHT: 580
+}
+
 module.exports =  {
   ACTIVITY,
   ICON,
@@ -112,6 +117,7 @@ module.exports =  {
   SIDEBAR,
   TILE,
   WINDOW,
+  WIZARD,
   NOTEPAD
 }
 
