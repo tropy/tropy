@@ -6,8 +6,9 @@ CREATE VIRTUAL TABLE fts_notes USING fts5(
   id UNINDEXED,
   text,
   language UNINDEXED,
-  content='notes',
-  content_rowid='note_id'
+  content = 'notes',
+  content_rowid = 'note_id',
+  tokenize = 'porter unicode61'
 );
 
 CREATE TRIGGER notes_ai_fts
@@ -40,8 +41,9 @@ CREATE TRIGGER notes_au_fts
 CREATE VIRTUAL TABLE fts_metadata_values USING fts5(
   type_name UNINDEXED,
   text,
-  content='metadata_values',
-  content_rowid='value_id'
+  content = 'metadata_values',
+  content_rowid = 'value_id',
+  tokenize = 'porter unicode61'
 );
 
 CREATE TRIGGER metadata_values_ai_fts

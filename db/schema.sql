@@ -183,8 +183,9 @@ INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_no
   id UNINDEXED,
   text,
   language UNINDEXED,
-  content=''notes'',
-  content_rowid=''note_id''
+  content = ''notes'',
+  content_rowid = ''note_id'',
+  tokenize = ''porter unicode61''
 )');
 CREATE TABLE IF NOT EXISTS 'fts_notes_data'(id INTEGER PRIMARY KEY, block BLOB);
 INSERT INTO fts_notes_data(id,block) VALUES(1,X'');
@@ -196,8 +197,9 @@ INSERT INTO fts_notes_config(k,v) VALUES('version',4);
 INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_metadata_values','fts_metadata_values',0,'CREATE VIRTUAL TABLE fts_metadata_values USING fts5(
   type_name UNINDEXED,
   text,
-  content=''metadata_values'',
-  content_rowid=''value_id''
+  content = ''metadata_values'',
+  content_rowid = ''value_id'',
+  tokenize = ''porter unicode61''
 )');
 CREATE TABLE IF NOT EXISTS 'fts_metadata_values_data'(id INTEGER PRIMARY KEY, block BLOB);
 INSERT INTO fts_metadata_values_data(id,block) VALUES(1,X'');
