@@ -64,6 +64,7 @@ target.pack = (args = []) => {
       /.eslintrc/,
       /.gitignore/,
       /.nvmrc/,
+      /.nyc_output/,
       /.sass-lint\.yml/,
       /.travis\.yml/,
       /.vimrc/,

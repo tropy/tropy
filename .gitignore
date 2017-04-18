@@ -1,9 +1,8 @@
 node_modules
 dist
 lib
-lib-cov
-src-cov
 coverage
+.nyc_output
 doc
 tmp
 npm-debug.log

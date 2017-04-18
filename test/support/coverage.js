@@ -1,11 +1,10 @@
 'use strict'
 
 const glob = require('glob')
-
-const { resolve } = require('path')
-const { readFileSync: read } = require('fs')
-const { Reporter, Instrumenter, Collector, hook } = require('istanbul')
-const { keys } = Object
+const { resolve, join } = require('path')
+const { readFileSync: read, writeFileSync: write } = require('fs')
+const { hookRequire } = require('istanbul-lib-hook')
+const { createInstrumenter } = require('istanbul-lib-instrument')
 
 
 function match() {
@@ -24,40 +23,27 @@ function report() {
       // Files that are not touched by code ran by the test runner is
       // manually instrumented, to illustrate the missing coverage.
       transformer(read(file, 'utf-8'), file)
-
-      // When instrumenting the code, istanbul will give each
-      // FunctionDeclaration a value of 1 in coverState.s,
-      // presumably to compensate for function hoisting.
-      // We need to reset this, as the function was not hoisted,
-      // as it was never loaded.
-      for (let key of keys(instrumenter.coverState.s)) {
-        instrumenter.coverState.s[key] = 0
-      }
-
-      cov[file] = instrumenter.coverState
+      cov[file] = instrumenter.lastFileCoverage()
     }
   }
 
-  const collector = new Collector()
-  collector.add(cov)
-
-  const reporter = new Reporter()
-  reporter.addAll(['text-summary', 'json'])
-  reporter.write(collector, true, () => {})
+  write(join(tmpd, `${process.type}.json`), JSON.stringify(cov), 'utf-8')
 }
 
 
-const instrumenter = new Instrumenter()
+const instrumenter = createInstrumenter()
 const transformer = instrumenter.instrumentSync.bind(instrumenter)
 const cov = global.__coverage__ = {}
 
 const root = resolve(__dirname, '..', '..')
+const tmpd = resolve(root, '.nyc_output')
+
 const pattern = (process.type === 'browser') ?
   'lib/{browser,common}/**/*.js' :
   '{lib/!(browser)/**,lib}/*.js'
 
 const matched = match()
-hook.hookRequire(matched, transformer, {})
+hookRequire(matched, transformer, {})
 
 if (process.type === 'browser') {
   process.on('exit', report)

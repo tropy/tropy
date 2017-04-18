@@ -15,12 +15,12 @@ const home = resolve(__dirname, '..')
 const nbin = join(home, 'node_modules', '.bin')
 const doc = join(home, 'doc')
 const cov = join(home, 'coverage')
-const scov = join(home, 'src-cov')
+const covtmp = join(home, '.nyc_output')
 
 const emocha = join(nbin, 'electron-mocha')
 const eslint = join(nbin, 'eslint')
 const sasslint = join(nbin, 'sass-lint')
-const istanbul = join(nbin, 'istanbul')
+const nyc = join(nbin, 'nyc')
 
 Object.assign(target, require('./electron'))
 
@@ -133,28 +133,22 @@ target['compile:css'] = (pattern) => {
 
 
 target.cover = (args) => {
-  const tag = 'cover'
-  args = args || ['html', 'lcov']
-
   rm('-rf', cov)
-  rm('-rf', scov)
+
+  rm('-rf', covtmp)
+  mkdir(covtmp)
+
+  args = args || ['text-summary', 'html', 'lcov']
+  args = args.map(reporter => `-r ${reporter}`)
 
   process.env.COVERAGE = true
 
-  let code
+  const bc = target['test:browser'](['--require test/support/coverage'])
+  const rc = target['test:renderer'](['--require test/support/coverage'])
 
-  code = target['test:browser'](['--require test/support/coverage'])
-  mv(`${cov}/coverage-final.json`, `${cov}/coverage-browser.json`)
+  exec(`${nyc} report ${args.join(' ')}`, { silent: false })
 
-  code = target['test:renderer'](['--require test/support/coverage']) || code
-  mv(`${cov}/coverage-final.json`, `${cov}/coverage-renderer.json`)
-
-  log.info('writing coverage report...', { tag })
-  exec(`${istanbul} report --root ${cov} ${args.join(' ')}`, { silent: true })
-
-  rm('-rf', scov)
-
-  if (code) process.exit(1)
+  if (bc || rc) process.exit(1)
 }
 
 
@@ -205,7 +199,7 @@ target.clean = () => {
   rm('-rf', join(home, 'dist'))
   rm('-rf', doc)
   rm('-rf', cov)
-  rm('-rf', scov)
+  rm('-rf', covtmp)
 
   rm('-f', join(home, 'npm-debug.log'))
 }
