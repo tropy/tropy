@@ -13,7 +13,10 @@ class SearchField extends PureComponent {
 
   handleCancel = () => {
     this.handleChange.cancel()
-    this.props.onSearch('')
+
+    if (this.props.query !== '') {
+      this.props.onSearch('')
+    }
   }
 
   handleChange = debounce(query => {
