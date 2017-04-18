@@ -21,7 +21,7 @@ class SearchField extends PureComponent {
 
   handleChange = debounce(query => {
     this.props.onSearch(query)
-  }, 650)
+  }, 150)
 
   handleCommit = () => {
     this.handleChange.flush()
