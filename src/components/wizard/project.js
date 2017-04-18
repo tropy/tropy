@@ -10,6 +10,18 @@ const cx = require('classnames')
 
 class ProjectStep extends PureComponent {
 
+  handleNameKeyDown = (event) => {
+    switch (event.key) {
+      case 'Enter':
+        this.props.onComplete()
+        break
+      default:
+        return
+    }
+
+    event.stopPropagation()
+  }
+
   handleNameChange = (event) => {
     this.props.onNameChange(event.target.value)
   }
@@ -21,11 +33,12 @@ class ProjectStep extends PureComponent {
           className="form-control input-lg"
           value={this.props.name}
           type="text"
+          autoFocus
           placeholder={
             this.props.intl.formatMessage({ id: 'wizard.project.name' })
           }
           onChange={this.handleNameChange}
-          autoFocus/>
+          onKeyDown={this.handleNameKeyDown}/>
       </div>
     )
   }
