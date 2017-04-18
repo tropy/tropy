@@ -3,7 +3,6 @@
 const React = require('react')
 const { PureComponent } = React
 const { func, shape, string } = require('prop-types')
-const { intlShape, injectIntl } = require('react-intl')
 const { connect } = require('react-redux')
 const { Steps } = require('../steps')
 const { Toolbar } = require('../toolbar')
@@ -44,7 +43,6 @@ class WizardContainer extends PureComponent {
         <Toolbar/>
         <Steps>
           <ProjectStep {...this.props.project}
-            intl={this.props.intl}
             hasDefaultFilename={this.hasDefaultFilename}
             onNameChange={this.handleProjectChange}
             onFileChange={this.handleProjectSave}
@@ -55,7 +53,6 @@ class WizardContainer extends PureComponent {
   }
 
   static propTypes = {
-    intl: intlShape.isRequired,
     project: shape({
       name: string.isRequired,
       file: string.isRequired
@@ -69,26 +66,24 @@ class WizardContainer extends PureComponent {
 
 
 module.exports = {
-  WizardContainer: injectIntl(
-    connect(
-      ({ wizard }) => ({
-        project: wizard.project,
-        userData: wizard.userData
-      }),
+  WizardContainer: connect(
+    ({ wizard }) => ({
+      project: wizard.project,
+      userData: wizard.userData
+    }),
 
-      (dispatch) => ({
-        onProjectUpdate(...args) {
-          dispatch(actions.wizard.project.update(...args))
-        },
+    (dispatch) => ({
+      onProjectUpdate(...args) {
+        dispatch(actions.wizard.project.update(...args))
+      },
 
-        onProjectSave(...args) {
-          dispatch(actions.wizard.project.save(...args))
-        },
+      onProjectSave(...args) {
+        dispatch(actions.wizard.project.save(...args))
+      },
 
-        onComplete(...args) {
-          dispatch(actions.wizard.complete(...args))
-        }
-      })
-    )(WizardContainer)
-  )
+      onComplete(...args) {
+        dispatch(actions.wizard.complete(...args))
+      }
+    })
+  )(WizardContainer)
 }

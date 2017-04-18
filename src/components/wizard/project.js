@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { bool, func, string } = require('prop-types')
-const { FormattedMessage, intlShape } = require('react-intl')
+const { FormattedMessage, intlShape, injectIntl } = require('react-intl')
 const { Step } = require('../steps')
 const cx = require('classnames')
 
@@ -12,6 +12,9 @@ class ProjectStep extends PureComponent {
 
   handleNameKeyDown = (event) => {
     switch (event.key) {
+      case 'Escape':
+        if (this.name !== '') this.props.onNameChange('')
+        break
       case 'Enter':
         this.props.onComplete()
         break
@@ -102,5 +105,5 @@ class ProjectStep extends PureComponent {
 }
 
 module.exports = {
-  ProjectStep
+  ProjectStep: injectIntl(ProjectStep)
 }
