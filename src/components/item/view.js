@@ -97,7 +97,7 @@ class ItemView extends PureComponent {
     if (note.text.length) {
       this.props.onNoteSave(note)
     }
-  }, 1000)
+  }, 5000)
 
   handleNoteChange = (note, hasDocChanged) => {
     if (hasDocChanged && note.text.length) {

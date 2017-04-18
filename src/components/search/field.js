@@ -6,14 +6,22 @@ const { bool, func, string } = require('prop-types')
 const { IconSearch } = require('../icons')
 const { BufferedInput } = require('../input')
 const { TABS } = require('../../constants')
+const debounce = require('lodash.debounce')
+
 
 class SearchField extends PureComponent {
 
   handleCancel = () => {
+    this.handleChange.cancel()
+    this.props.onSearch('')
   }
 
-  handleChange = (query) => {
+  handleChange = debounce(query => {
     this.props.onSearch(query)
+  }, 650)
+
+  handleCommit = () => {
+    this.handleChange.flush()
   }
 
   render() {
@@ -29,7 +37,8 @@ class SearchField extends PureComponent {
           value={query}
           placeholder="Search"
           onCancel={this.handleCancel}
-          onCommit={this.handleChange}/>
+          onChange={this.handleChange}
+          onCommit={this.handleCommit}/>
       </div>
     )
   }

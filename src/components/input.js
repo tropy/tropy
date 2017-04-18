@@ -58,7 +58,7 @@ class BufferedInput extends PureComponent {
 
   handleChange = (event) => {
     this.setState({ value: event.target.value })
-    this.props.onChange(this.state.value, this.hasChanged)
+    this.props.onChange(event.target.value)
   }
 
   handleBlur = (event) => {
