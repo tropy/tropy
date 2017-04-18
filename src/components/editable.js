@@ -2,134 +2,60 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { bool, func, number, oneOf, string } = require('prop-types')
+const { bool, func, number, oneOfType, string } = require('prop-types')
+const { BufferedInput } = require('./input')
 const cx = require('classnames')
-const { noop } = require('../common/util')
 
 
 class Editable extends PureComponent {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      value: props.value || ''
+  get classes() {
+    return {
+      editable: true,
+      disabled: this.props.isDisabled
     }
   }
 
-  componentWillReceiveProps({ value }) {
-    this.setState({ value: value || '' })
+  setInput = (input) => {
+    this.input = input
   }
 
-
-  get isValid() {
-    return this.state.value !== '' || !this.props.isRequired
-  }
-
-  get hasChanged() {
-    return this.state.value !== (this.props.value || '') && this.isValid
-  }
-
-  autofocus = (input) => {
-    if (input && this.props.autofocus) {
-      input.focus()
-      input.select()
-    }
-  }
-
-  stop = (isCommit) => {
-    if (this.hasChanged) {
-      this.props.onChange(this.state.value)
+  handleCommit = (value, hasChanged) => {
+    if (hasChanged) {
+      this.props.onChange(value)
     } else {
-      this.props.onCancel(isCommit)
+      this.props.onCancel(true)
     }
-  }
-
-  cancel() {
-    this.setState({ value: this.props.value || '' })
-    this.props.onCancel()
-  }
-
-  handleChange = (event) => {
-    this.setState({ value: event.target.value })
-  }
-
-  handleBlur = (event) => {
-    if (!this.props.onBlur(event)) {
-      this.stop()
-    }
-  }
-
-  handleKeyDown = (event) => {
-    switch (event.key) {
-      case 'Escape':
-        this.cancel()
-        break
-      case 'Enter':
-        this.stop(true)
-        break
-    }
-
-    event.stopPropagation()
   }
 
   render() {
-    const {
-      type,
-      placeholder,
-      tabIndex,
-      value,
-      isEditing,
-      isDisabled,
-      isRequired
-    } = this.props
+    const { isEditing, isDisabled, value, ...props } = this.props
 
-    if (isEditing && !isDisabled) {
-      return (
-        <input
-          className="editable editable-control"
-          type={type}
-          value={this.state.value}
-          placeholder={placeholder}
-          tabIndex={tabIndex}
-          required={isRequired}
-          ref={this.autofocus}
-          onChange={this.handleChange}
-          onKeyDown={this.handleKeyDown}
-          onBlur={this.handleBlur}/>
-      )
+    if (!isEditing || isDisabled) {
+      return (<div className={cx(this.classes)}>{value}</div>)
     }
 
+    delete props.onChange
+
     return (
-      <div className={cx({
-        editable: true,
-        disabled: isDisabled
-      })}>
-        {value}
-      </div>
+      <BufferedInput {...props}
+        ref={this.setInput}
+        className={cx({ ...this.classes, 'editable-control': true })}
+        value={value || ''}
+        onCommit={this.handleCommit}/>
     )
   }
 
-
   static propTypes = {
     autofocus: bool,
-    isEditing: bool,
     isDisabled: bool,
-    isRequired: bool,
-    placeholder: string,
-    tabIndex: number.isRequired,
-    type: oneOf(['text', 'number']),
-    value: string,
-    onBlur: func.isRequired,
-    onChange: func.isRequired,
-    onCancel: func.isRequired
+    isEditing: bool,
+    value: oneOfType([string, number]),
+    onCancel: func.isRequired,
+    onChange: func.isRequired
   }
 
   static defaultProps = {
-    autofocus: true,
-    tabIndex: -1,
-    type: 'text',
-    onBlur: noop,
-    onCancel: noop
+    autofocus: true
   }
 }
 

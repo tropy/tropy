@@ -52,9 +52,11 @@ class ItemTableCell extends PureComponent {
     },
 
     onSingleClick: () => {
-      this.props.onEdit({
-        column: { [this.props.item.id]: this.props.property.uri }
-      })
+      if (!this.props.isEditing) {
+        this.props.onEdit({
+          column: { [this.props.item.id]: this.props.property.uri }
+        })
+      }
     }
   })
 

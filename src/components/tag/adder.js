@@ -23,7 +23,7 @@ class TagAdder extends PureComponent {
       this.props.onCreate({ name })
     }
 
-    this.editable.cancel()
+    this.editable.input.reset()
   }
 
   handleBlur = () => true

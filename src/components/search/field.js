@@ -9,6 +9,9 @@ const { TABS } = require('../../constants')
 
 class SearchField extends PureComponent {
 
+  handleCancel = () => {
+  }
+
   handleChange = (query) => {
     this.props.onSearch(query)
   }
@@ -25,6 +28,7 @@ class SearchField extends PureComponent {
           tabIndex={TABS.SearchField}
           value={query}
           placeholder="Search"
+          onCancel={this.handleCancel}
           onChange={this.handleChange}/>
       </div>
     )
