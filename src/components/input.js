@@ -42,16 +42,16 @@ class BufferedInput extends PureComponent {
     this.setState({ value: this.props.value })
   }
 
-  commit() {
-    if (this.isValid) {
-      this.props.onCommit(this.state.value, this.hasChanged)
+  commit(force) {
+    if (force || this.isValid) {
+      this.props.onCommit(this.state.value, this.hasChanged, force)
     } else {
       this.cancel()
     }
   }
 
   cancel() {
-    this.wasCancelled = true
+    this.hasBeenCancelled = true
     this.reset()
     this.props.onCancel()
   }
@@ -63,7 +63,7 @@ class BufferedInput extends PureComponent {
 
   handleBlur = (event) => {
     const cancel = this.props.onBlur(event)
-    if (this.wasCancelled) return
+    if (this.hasBeenCancelled) return
 
     if (cancel) {
       this.cancel()
@@ -73,7 +73,7 @@ class BufferedInput extends PureComponent {
   }
 
   handleFocus = (event) => {
-    this.wasCancelled = false
+    this.hasBeenCancelled = false
     this.props.onFocus(event)
   }
 
@@ -83,7 +83,7 @@ class BufferedInput extends PureComponent {
         this.cancel()
         break
       case 'Enter':
-        this.commit()
+        this.commit(true)
         break
     }
 

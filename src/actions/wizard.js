@@ -2,18 +2,39 @@
 
 const { Database } = require('../common/db')
 const { ipcRenderer: ipc } = require('electron')
-const { fail } = require('../dialog')
-
-const { CREATED } = require('../constants/project')
+const { fail, saveProject } = require('../dialog')
+const { PROJECT, WIZARD } = require('../constants')
 
 module.exports = {
-  submit(payload) {
+  complete(payload) {
     return async () => {
       try {
         const file = await Database.create(payload.file, payload)
-        ipc.send(CREATED, { file })
+        ipc.send(PROJECT.CREATED, { file })
+
       } catch (error) {
         fail(error)
+      }
+    }
+  },
+
+  project: {
+    update(payload) {
+      return {
+        type: WIZARD.PROJECT.UPDATE,
+        payload
+      }
+    },
+
+    save(payload) {
+      return async (dispatch) => {
+        try {
+          const file = await saveProject({ defaultPath: payload })
+          dispatch(module.exports.project.update({ file }))
+
+        } catch (error) {
+          fail(error)
+        }
       }
     }
   }

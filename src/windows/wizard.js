@@ -6,7 +6,7 @@ const { all } = require('bluebird')
 const { ready, $ } = require('../dom')
 const { create } = require('../stores/wizard')
 const { Main } = require('../components/main')
-const { Wizard } = require('../components/wizard')
+const { WizardContainer } = require('../components/wizard')
 const { intl } = require('../actions')
 const { win } = require('../window')
 const dialog = require('../dialog')
@@ -21,10 +21,15 @@ all([
 ])
   .then(() => {
     render(
-      <Main store={store}><Wizard/></Main>,
+      <Main store={store}><WizardContainer/></Main>,
       $('main')
     )
   })
 
 dialog.start()
 win.unloaders.push(dialog.stop)
+
+if (ARGS.dev || ARGS.debug) {
+  Object.defineProperty(window, 'store', { get: () => store })
+  Object.defineProperty(window, 'state', { get: () => store.getState() })
+}

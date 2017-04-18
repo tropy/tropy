@@ -21,4 +21,5 @@ module.exports = {
   TABS: require('./tabs'),
   TAG: require('./tag'),
   UI: require('./ui'),
+  WIZARD: require('./wizard')
 }
