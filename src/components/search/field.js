@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { bool, func, string } = require('prop-types')
 const { IconSearch } = require('../icons')
-const { Editable } = require('../editable')
+const { BufferedInput } = require('../input')
 const { TABS } = require('../../constants')
 
 class SearchField extends PureComponent {
@@ -22,14 +22,14 @@ class SearchField extends PureComponent {
     return (
       <div className="search">
         <IconSearch/>
-        <Editable
-          isEditing
+        <BufferedInput
+          className="search-input form-control"
           isDisabled={isDisabled}
           tabIndex={TABS.SearchField}
           value={query}
           placeholder="Search"
           onCancel={this.handleCancel}
-          onChange={this.handleChange}/>
+          onCommit={this.handleChange}/>
       </div>
     )
   }
