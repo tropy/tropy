@@ -33,7 +33,13 @@ module.exports = mod.item = {
         WHERE fts_metadata MATCH $query`
 
     const params = { $sort: sort.column }
-    if (query.length) params.$query = query
+
+    query = query.trim()
+
+    if (query.length) {
+      if (!(/\*\+\'\"/).test(query)) query = query + '*'
+      params.$query = query
+    }
 
     await db.each(`
       WITH
