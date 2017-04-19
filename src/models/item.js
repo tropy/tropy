@@ -61,8 +61,8 @@ module.exports = mod.item = {
             ${(query.length > 0) ? `id IN (${SEARCH}) AND` : ''}
             deleted ${trash ? 'NOT' : 'IS'} NULL
           ORDER BY sort.text ${dir}, id ${dir}`,
-          params,
-          ({ id }) => { items.push(id) })
+      params,
+      ({ id }) => { items.push(id) })
 
     return items
   },
@@ -94,15 +94,22 @@ module.exports = mod.item = {
             ${(query.length > 0) ? `id IN (${SEARCH}) AND` : ''}
             reason = 'user'
           ORDER BY sort.text ${dir}, id ${dir}`,
-          params,
-          ({ id }) => { items.push(id) })
+      params,
+      ({ id }) => { items.push(id) })
 
     return items
   },
 
-  async list(db, list, { tags, sort }) {
+  async list(db, list, { tags, sort, query }) {
     const items = []
     const dir = sort.asc ? 'ASC' : 'DESC'
+    const params = { $list: list }
+
+    query = query.trim()
+
+    if (query.length) {
+      params.$query = prefix(query)
+    }
 
     await db.each(`
       SELECT DISTINCT id, added
@@ -112,13 +119,12 @@ module.exports = mod.item = {
           LEFT OUTER JOIN trash USING (id)
           WHERE
             list_id = $list AND list_items.deleted IS NULL AND
+            ${(query.length > 0) ? `id IN (${SEARCH}) AND` : ''}
             ${tags.length ? `tag_id IN (${tags.join(',')}) AND` : ''}
             trash.deleted IS NULL
-          ORDER BY added ${dir}, id ${dir}`, {
-
-            $list: list
-
-          }, ({ id }) => { items.push(id) })
+          ORDER BY added ${dir}, id ${dir}`,
+      params,
+      ({ id }) => { items.push(id) })
 
     return items
   },
