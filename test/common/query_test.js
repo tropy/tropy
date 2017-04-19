@@ -17,16 +17,16 @@ describe('Query Builder', () => {
 
     it('alias', () => {
       expect(select({ a: 'a', foo: 'b' }).query)
-        .to.match(/SELECT a, foo AS b/)
+        .to.match(/SELECT a, b AS foo/)
       expect(select('a', { b: 'c' }, 'd').query)
-        .to.match(/SELECT a, b AS c, d/)
+        .to.match(/SELECT a, c AS b, d/)
     })
 
     it('distinct', () =>
       expect(select('a').distinct.query).to.match(/SELECT DISTINCT a/))
 
     it('scoped', () => {
-      expect(select('t.a', { 't.b': 'c' }, 't.*').query)
+      expect(select('t.a', { c: 't.b' }, 't.*').query)
         .to.match(/^SELECT t\.a, t\.b AS c, t\.\*/)
     })
 
@@ -43,14 +43,29 @@ describe('Query Builder', () => {
       ).to.match(/SELECT a, b FROM b ORDER BY b, a DESC/)
     })
 
-    it('params', () => {
+    it('null', () => {
       let q = select()
 
       q.where({ a: null })
-      expect(select().where({ a: null }).WHERE).to.eql('WHERE a IS NULL')
+      expect(q.WHERE).to.eql('WHERE a IS NULL')
 
       q.not.where({ a: null })
       expect(q.WHERE).to.eql('WHERE a IS NULL AND a IS NOT NULL')
+    })
+
+    it('lists', () => {
+      expect(select().where({ a: [1, 2, 3] }).WHERE)
+        .to.eql('WHERE a IN (1, 2, 3)')
+
+      expect(select().unless({ a: [1, 2, 3] }).WHERE)
+        .to.eql('WHERE a NOT IN (1, 2, 3)')
+    })
+
+    it('params', () => {
+      let q = select().where({ a: 1, b: null, c: 'foo' })
+
+      expect(q.WHERE).to.eql('WHERE a = $a AND b IS NULL AND c = $c')
+      expect(q.params).to.eql({ $a: 1, $c: 'foo' })
     })
 
   })

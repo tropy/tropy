@@ -2,7 +2,7 @@
 
 const { entries } = Object
 const { isArray } = Array
-const { pluck, list } = require('./util')
+const { pluck } = require('./util')
 
 class Query {
   get hasParams() {
@@ -32,6 +32,7 @@ class Select extends Query {
 
     this.isNegated = false
     this.isDistinct = false
+    this.params = {}
 
     this.col = {}
     this.src = []
@@ -139,14 +140,14 @@ class Select extends Query {
     return (
       `SELECT${this.isDistinct ? ' DISTINCT' : ''} ${
         entries(this.col)
-          .map(([n, a]) => n === a ? n : `${n} AS ${a}`)
+          .map(([a, n]) => n === a ? n : `${n} AS ${a}`)
           .join(', ') || '*'
       }`
     )
   }
 
   get FROM() {
-    return `FROM ${this.src.join(', ')}`
+    return `FROM ${this.src.join(' ')}`
   }
 
   get WHERE() {
@@ -164,5 +165,6 @@ module.exports = {
   Query,
   Select,
 
-  select(...args) { return new Select(...args) }
+  select(...args) { return new Select(...args) },
+  union(...args) { return args.join(' UNION ') }
 }
