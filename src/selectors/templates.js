@@ -12,6 +12,7 @@ const CORNELL = 'https://schema.tropy.org/v1/templates/cornell-obama'
 const PHOTO = 'https://schema.tropy.org/v1/templates/photo'
 const PINKERTON = 'https://schema.tropy.org/v1/templates/pinkerton'
 const TYPOGRAPHY = 'https://schema.tropy.org/v1/templates/typography'
+const SRM = 'https://schema.tropy.org/v1/templates/srm'
 
 const T = {
   [CORE]: {
@@ -74,6 +75,34 @@ const T = {
       { property: DC.CREATOR },
       { property: S.RECIPIENT },
       { property: DC.DESCRIPTION }
+    ],
+  },
+
+  [SRM]: {
+    uri: SRM,
+    name: 'Société royale de médecine',
+    type: 'item',
+    fields: [
+      { property: DC.TITLE },
+      { property: DC.TYPE },
+      { property: DC.CREATOR },
+      { property: DC.DATE },
+      { property: DC.DESCRIPTION },
+      { property: TR.BOX },
+      { property: TR.FOLDER },
+      { property: TR.PIECE },        
+      {
+        property: DC.SOURCE,
+        constant: "Archives de la Société royale de médecine"
+      },
+      {
+        property: DC.PUBLISHER,
+        constant: 'Académie nationale de médecine. Bibliothèque'
+      },
+      {
+        property: DC.RIGHTS,
+        constant: 'http://bibliotheque.academie-medecine.fr/static/SRM/'
+      }
     ],
   },
 

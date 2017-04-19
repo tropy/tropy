@@ -7,6 +7,7 @@ module.exports = {
   TR: {
     BOX: 'https://schema.tropy.org/v1/properties/box',
     FOLDER: 'https://schema.tropy.org/v1/properties/folder',
+    PIECE: 'https:/schema.tropy.org/v1/properties/piece',
     CLASSIFICATION: 'https://schema.tropy.org/v1/properties/classification'
   },
 

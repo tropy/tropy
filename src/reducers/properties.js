@@ -16,6 +16,12 @@ const init = {
     definition: 'A unit of archival organization, usually within a box.',
     comment: ''
   },
+    [TR.PIECE]: {
+    uri: TR.PIECE,
+    label: 'Piece',
+    definition: 'A unit of archival organization, usually within a folder.',
+    comment: ''
+  },
   [TR.CLASSIFICATION]: {
     uri: TR.CLASSIFICATION,
     label: 'Classification',
