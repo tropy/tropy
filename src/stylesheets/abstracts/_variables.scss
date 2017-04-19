@@ -13,7 +13,11 @@ $font-size-small: 12px;
 $font-size-base:  13px;
 $font-size-large: 16px;
 
-$line-height-base:     1.53846;
+// Heads up: Do not trust the computed value in the dev tools,
+// check the actual height of the rendered element.
+// Must result in an even value (20px) for proper alignment of editables.
+$line-height-base:     1.539;
+
 $line-height-computed: ceil(($font-size-base * $line-height-base));
 $line-height-large:    26px;
 
