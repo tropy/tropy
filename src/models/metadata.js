@@ -3,7 +3,7 @@
 const { save } = require('./value')
 const { into, map } = require('transducers.js')
 const { keys } = Object
-const { list, quote } = require('../common/util')
+const { get, list, quote } = require('../common/util')
 const mod = {}
 
 module.exports = mod.metadata = {
@@ -35,7 +35,7 @@ module.exports = mod.metadata = {
       }`)
 
     for (let prop in data) {
-      if (data[prop] == null) continue
+      if (get(data, [prop, 'text']) == null) continue
 
       const value = await save(db, data[prop])
 
