@@ -3,12 +3,8 @@
 const { entries } = Object
 
 class Query {
-  constructor(params = {}) {
-    this.params = params
-  }
-
   get hasParams() {
-    return Reflect.ownKeys(this.params).length > 0
+    return this.params != null && Reflect.ownKeys(this.params).length > 0
   }
 
   *[Symbol.iterator]() {
@@ -31,6 +27,7 @@ class Query {
 class Select extends Query {
   constructor(...args) {
     super()
+
     this.src = []
     this.select(...args)
   }

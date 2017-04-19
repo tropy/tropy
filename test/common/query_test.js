@@ -16,6 +16,7 @@ describe('Query Generator', () => {
 
     it('alias', () => {
       expect(select({ a: 'a', foo: 'b' }).query).to.eql('SELECT a, foo AS b')
+      expect(select('a', { b: 'c' }, 'd').query).to.eql('SELECT a, b AS c, d')
     })
 
     it('distinct', () => {
