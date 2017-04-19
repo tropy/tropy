@@ -90,10 +90,10 @@ const T = {
       { property: DC.DESCRIPTION },
       { property: TR.BOX },
       { property: TR.FOLDER },
-      { property: TR.PIECE },        
+      { property: TR.PIECE },
       {
         property: DC.SOURCE,
-        constant: "Archives de la Société royale de médecine"
+        constant: 'Archives de la Société royale de médecine'
       },
       {
         property: DC.PUBLISHER,
