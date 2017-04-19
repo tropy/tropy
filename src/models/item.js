@@ -14,31 +14,34 @@ const skel = (id) => ({
   id, tags: [], photos: [], lists: []
 })
 
+const SEARCH = `
+  SELECT item_id AS id
+    FROM fts_notes JOIN photos USING (id)
+    WHERE fts_notes MATCH $query
+  UNION
+  SELECT coalesce(items.id, item_id) AS id
+    FROM metadata
+      JOIN fts_metadata ON (value_id = fts_metadata.rowid)
+      LEFT OUTER JOIN items USING (id)
+      LEFT OUTER JOIN photos USING (id)
+    WHERE fts_metadata MATCH $query`
+
+const prefix = (query) =>
+  (!(/\*\+\'\"/).test(query)) ? query + '*' : query
+
+
 module.exports = mod.item = {
 
   async all(db, { trash, tags, sort, query }) {
     const items = []
     const dir = sort.asc ? 'ASC' : 'DESC'
 
-    const search = `
-      SELECT item_id AS id
-        FROM fts_notes JOIN photos USING (id)
-        WHERE fts_notes MATCH $query
-      UNION
-      SELECT coalesce(items.id, item_id) AS id
-        FROM metadata
-          JOIN fts_metadata ON (value_id = fts_metadata.rowid)
-          LEFT OUTER JOIN items USING (id)
-          LEFT OUTER JOIN photos USING (id)
-        WHERE fts_metadata MATCH $query`
-
     const params = { $sort: sort.column }
 
     query = query.trim()
 
     if (query.length) {
-      if (!(/\*\+\'\"/).test(query)) query = query + '*'
-      params.$query = query
+      params.$query = prefix(query)
     }
 
     await db.each(`
@@ -55,7 +58,7 @@ module.exports = mod.item = {
             LEFT OUTER JOIN trash USING (id)
           WHERE
             ${(tags.length > 0) ? `tag_id IN (${lst(tags)}) AND` : ''}
-            ${(query.length > 0) ? `id IN (${search}) AND` : ''}
+            ${(query.length > 0) ? `id IN (${SEARCH}) AND` : ''}
             deleted ${trash ? 'NOT' : 'IS'} NULL
           ORDER BY sort.text ${dir}, id ${dir}`,
           params,
@@ -64,9 +67,17 @@ module.exports = mod.item = {
     return items
   },
 
-  async trash(db, { sort }) {
+  async trash(db, { sort, query }) {
     const items = []
     const dir = sort.asc ? 'ASC' : 'DESC'
+
+    const params = { $sort: sort.column }
+
+    query = query.trim()
+
+    if (query.length) {
+      params.$query = prefix(query)
+    }
 
     await db.each(`
       WITH
@@ -79,12 +90,12 @@ module.exports = mod.item = {
           FROM items
             JOIN trash USING (id)
             LEFT OUTER JOIN sort USING (id)
-          WHERE reason = 'user'
-          ORDER BY sort.text ${dir}, id ${dir}`, {
-
-            $sort: sort.column
-
-          }, ({ id }) => { items.push(id) })
+          WHERE
+            ${(query.length > 0) ? `id IN (${SEARCH}) AND` : ''}
+            reason = 'user'
+          ORDER BY sort.text ${dir}, id ${dir}`,
+          params,
+          ({ id }) => { items.push(id) })
 
     return items
   },

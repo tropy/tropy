@@ -21,12 +21,13 @@ module.exports = {
 
       switch (true) {
         case (trash):
-          result = yield call(mod.trash, db, { sort })
+          result = yield call(mod.trash, db, { sort, query })
           break
 
         case (list != null):
           result = yield call(mod.list, db, list, {
             tags,
+            query,
             sort: get(lists, [list, 'sort']) || sort
           })
 
