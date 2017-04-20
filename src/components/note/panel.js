@@ -17,7 +17,7 @@ class NotePanel extends Panel {
   handleOpen = (note) => {
     const { item, photo, isItemOpen, onItemOpen } = this.props
 
-    if (!isItemOpen) {
+    if (note && !isItemOpen) {
       onItemOpen({
         id: item, photos: [photo], notes: [note.id]
       })

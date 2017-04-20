@@ -5,6 +5,7 @@ const { PureComponent } = React
 const { NoteListItem } = require('./list-item')
 const { TABS } = require('../../constants')
 const { match } = require('../../keymap')
+const { has } = require('../../common/util')
 const { arrayOf, bool, func, number, object, shape } = require('prop-types')
 
 
@@ -15,7 +16,7 @@ class NoteList extends PureComponent {
   }
 
   get hasSelection() {
-    return this.props.selection != null
+    return has(this.props.selection, ['id'])
   }
 
   get tabIndex() {
@@ -23,17 +24,13 @@ class NoteList extends PureComponent {
   }
 
   isSelected(note) {
-    return this.props.selection && note.id === this.props.selection.id
+    return this.hasSelection && note.id === this.props.selection.id
   }
 
-
   next(offset = 1) {
-    const { notes, selection } = this.props
-
-    if (notes.length === 0) return null
-    if (selection == null) return notes[0]
-
-    return notes[this.idx[selection.id] + offset]
+    if (this.isEmpty) return null
+    if (!this.hasSelection) return this.props.notes[0]
+    return this.props.notes[this.idx[this.props.selection.id] + offset]
   }
 
   prev(offset = 1) {
