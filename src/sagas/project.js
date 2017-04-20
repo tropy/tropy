@@ -124,7 +124,8 @@ module.exports = {
   },
 
   *main() {
-    let task, aux
+    let task
+    let aux
 
     try {
       aux = yield [
@@ -161,7 +162,7 @@ module.exports = {
       ]
 
       if (!(yield cancelled())) {
-        yield aux.map(cancel)
+        yield aux.map(t => cancel(t))
       }
 
       verbose('*main terminated')
