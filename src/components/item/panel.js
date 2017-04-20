@@ -2,8 +2,6 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { array, bool, func, number, object, shape, string } = PropTypes
 const { ItemToolbar } = require('./toolbar')
 const { ItemTabs, ItemTab } = require('./tabs')
 const { NotePanel } = require('../note')
@@ -11,6 +9,10 @@ const { PanelGroup, Panel } = require('../panel')
 const { PhotoPanel } = require('../photo')
 const { get } = require('../../common/util')
 const { keys } = Object
+
+const {
+  array, bool, func, number, object, shape, string
+} = require('prop-types')
 
 
 class ItemPanel extends PureComponent {
@@ -46,6 +48,7 @@ class ItemPanel extends PureComponent {
   render() {
     const {
       edit,
+      keymap,
       note,
       notes,
       panel,
@@ -87,6 +90,7 @@ class ItemPanel extends PureComponent {
           isDisabled={isDisabled}
           isItemOpen={isItemOpen}
           edit={edit.photo}
+          keymap={keymap.PhotoIterator}
           zoom={panel.zoom}
           selection={photo && photo.id}
           onCreate={this.handlePhotoCreate}
@@ -111,6 +115,7 @@ class ItemPanel extends PureComponent {
     cache: string.isRequired,
     data: object.isRequired,
     edit: object.isRequired,
+    keymap: object.isRequired,
     isItemOpen: bool.isRequired,
     items: array.isRequired,
 
@@ -131,7 +136,7 @@ class ItemPanel extends PureComponent {
 
     onContextMenu: func.isRequired,
     onEdit: func.isRequired,
-    onEditCancel: PropTypes.func,
+    onEditCancel: func,
     onItemOpen: func.isRequired,
     onItemSave: func.isRequired,
     onItemTagAdd: func.isRequired,

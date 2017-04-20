@@ -1,14 +1,13 @@
 'use strict'
 
 const React = require('react')
-const PropTypes = require('prop-types')
 const { Iterator } = require('../iterator')
 const { has } = require('../../dom')
 const { match } = require('../../keymap')
 
 const {
   arrayOf, oneOf, shape, bool, func, number, object, string
-} = PropTypes
+} = require('prop-types')
 
 
 class ItemIterator extends Iterator {

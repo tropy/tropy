@@ -12,6 +12,13 @@ linux: &linux
     open: Enter
     clear: Escape
 
+  PhotoIterator:
+    up: ArrowUp
+    down: ArrowDown
+    left: ArrowLeft
+    right: ArrowRight
+    open: Enter
+
   NotePad:
     break: Enter
     br:

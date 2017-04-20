@@ -1,8 +1,7 @@
 'use strict'
 
 const React = require('react')
-const PropTypes = require('prop-types')
-const { array, bool, number, func } = PropTypes
+const { array, bool, number, func } = require('prop-types')
 const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
 const { Panel } = require('../panel')

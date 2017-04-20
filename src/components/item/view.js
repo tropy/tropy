@@ -2,8 +2,6 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { arrayOf, bool, func, object, number, shape, string } = PropTypes
 const { ItemPanel } = require('./panel')
 const { Resizable, BufferedResizable } = require('../resizable')
 const { EsperImage } = require('../esper')
@@ -11,6 +9,11 @@ const { NotePad } = require('../note')
 const { PROJECT: { MODE }, SASS: { PANEL } } = require('../../constants')
 const { pick } = require('../../common/util')
 const debounce = require('lodash.debounce')
+
+const {
+  arrayOf, bool, func, object, number, shape, string
+} = require('prop-types')
+
 
 function getNoteTemplate() {
   return { text: '' }
@@ -146,6 +149,7 @@ class ItemView extends PureComponent {
             panel={panel}
             photo={photo}
             note={this.state.note}
+            keymap={keymap}
             isItemOpen={isItemOpen}
             isDisabled={isTrashSelected}
             onNoteCreate={this.handleNoteCreate}/>
