@@ -2,7 +2,6 @@ linux: &linux
   Sidebar:
     next: ArrowDown
     prev: ArrowUp
-
   ItemIterator:
     up: ArrowUp
     down: ArrowDown
@@ -11,46 +10,40 @@ linux: &linux
     preview: Space
     open: Enter
     clear: Escape
-
   PhotoIterator:
     up: ArrowUp
     down: ArrowDown
     left: ArrowLeft
     right: ArrowRight
     open: Enter
-
+  NoteList:
+    up: ArrowUp
+    down: ArrowDown
+    open: Enter
   NotePad:
     break: Enter
     br:
       - Shift+Enter
       - Ctrl+Enter
-
     backspace:
       - Backspace
       - CmdOrCtrl+Backspace
     del:
       - Delete
       - CmdOrCtrl+Delete
-
     bold: CmdOrCtrl+b
     italic: CmdOrCtrl+i
     underline: CmdOrCtrl+u
-
     liftListItem: CmdOrCtrl+[
     sinkListItem: CmdOrCtrl+]
-
     joinUp: Alt+ArrowUp
     joinDown: Alt+ArrowDown
     lift: CmdOrCtrl+ArrowLeft
-
     selectAll: CmdOrCtrl+a
     clearSelection: Escape
-
     blockquote: CmdOrCtrl+Shift+>
-
     undo: CmdOrCtrl+z
     redo: CmdOrCtrl+Shift+Z
-
   TagList:
     remove:
       - Backspace

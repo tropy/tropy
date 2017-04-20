@@ -2,17 +2,49 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const { NoteListItem } = require('./list-item')
-const { arrayOf, bool, func, number, shape } = PropTypes
+const { TABS } = require('../../constants')
+const { match } = require('../../keymap')
+const { arrayOf, bool, func, number, object, shape } = require('prop-types')
+
 
 class NoteList extends PureComponent {
+
+  get isEmpty() {
+    return this.props.notes.length === 0
+  }
+
+  get hasSelection() {
+    return this.props.selection != null
+  }
+
+  get tabIndex() {
+    return this.isEmpty ? null : TABS.NoteList
+  }
 
   isSelected(note) {
     return this.props.selection && note.id === this.props.selection.id
   }
 
-  handleSelect = (note) => {
+
+  next(offset = 1) {
+    const { notes, selection } = this.props
+
+    if (notes.length === 0) return null
+    if (selection == null) return notes[0]
+
+    return notes[this.idx[selection.id] + offset]
+  }
+
+  prev(offset = 1) {
+    return this.next(-offset)
+  }
+
+  current() {
+    return this.next(0)
+  }
+
+  select = (note) => {
     if (note && !this.isSelected(note)) {
       this.props.onSelect({
         note: note.id, photo: note.photo
@@ -20,9 +52,30 @@ class NoteList extends PureComponent {
     }
   }
 
-  renderNoteListItem = (note) => {
+  handleKeyDown = (event) => {
+    switch (match(this.props.keymap, event)) {
+      case 'up':
+        this.select(this.prev())
+        break
+      case 'down':
+        this.select(this.next())
+        break
+      case 'open':
+        this.props.onOpen(this.current())
+        break
+      default:
+        return
+    }
+
+    event.preventDefault()
+    event.stopPropagation()
+  }
+
+  renderNoteListItem = (note, index) => {
     const { selection, isDisabled, onContextMenu, onOpen } = this.props
     const isSelected = this.isSelected(note)
+
+    this.idx[note.id] = index
 
     return (
       <NoteListItem
@@ -32,28 +85,31 @@ class NoteList extends PureComponent {
         isSelected={isSelected}
         onContextMenu={onContextMenu}
         onOpen={onOpen}
-        onSelect={this.handleSelect}/>
+        onSelect={this.select}/>
     )
   }
   render() {
+    this.idx = {}
+
     return (
-      <ul className="note list">
+      <ul
+        className="note list"
+        tabIndex={this.tabIndex}
+        onKeyDown={this.handleKeyDown}>
         {this.props.notes.map(this.renderNoteListItem)}
       </ul>
     )
   }
 
   static propTypes = {
+    keymap: object.isRequired,
     notes: arrayOf(shape({
       id: number.isRequired
     })).isRequired,
-
     selection: shape({
       id: number
     }),
-
     isDisabled: bool,
-
     onSelect: func.isRequired,
     onContextMenu: func.isRequired,
     onOpen: func.isRequired

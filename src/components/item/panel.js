@@ -102,6 +102,7 @@ class ItemPanel extends PureComponent {
           isDisabled={isDisabled || !photo}
           isItemOpen={isItemOpen}
           item={item && item.id}
+          keymap={keymap.NoteList}
           photo={photo && photo.id}
           notes={notes}
           selection={note}

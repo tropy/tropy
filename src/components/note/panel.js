@@ -1,11 +1,10 @@
 'use strict'
 
 const React = require('react')
-const PropTypes = require('prop-types')
-const { arrayOf, bool, func, number, object, shape } = PropTypes
 const { Panel } = require('../panel')
 const { NoteToolbar } = require('./toolbar')
 const { NoteList } = require('./list')
+const { arrayOf, bool, func, number, object, shape } = require('prop-types')
 
 
 class NotePanel extends Panel {
@@ -36,20 +35,14 @@ class NotePanel extends Panel {
   }
 
   renderContent() {
-    const {
-      notes,
-      selection,
-      onContextMenu,
-      onSelect
-    } = this.props
-
     return (
       <NoteList
-        notes={notes}
-        selection={selection}
-        onContextMenu={onContextMenu}
+        keymap={this.props.keymap}
+        notes={this.props.notes}
+        selection={this.props.selection}
+        onContextMenu={this.props.onContextMenu}
         onOpen={this.handleOpen}
-        onSelect={onSelect}/>
+        onSelect={this.props.onSelect}/>
     )
   }
 
@@ -71,14 +64,12 @@ class NotePanel extends Panel {
   static propTypes = {
     isDisabled: bool,
     isItemOpen: bool,
-
+    keymap: object.isRequired,
     notes: arrayOf(shape({
       id: number.isRequired
     })),
-
     photo: number,
     selection: object,
-
     onItemOpen: func.isRequired,
     onContextMenu: func.isRequired,
     onCreate: func.isRequired,
