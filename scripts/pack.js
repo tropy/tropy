@@ -6,6 +6,7 @@ const { join, resolve } = require('path')
 const release = require('../lib/common/release')
 const { platform } = process
 
+const res = resolve(__dirname, '..', 'res')
 const dist = resolve(__dirname, '..', 'dist', release.channel)
 
 target.all = () => {
@@ -30,9 +31,10 @@ target.win32 = async () => {
 
     await createWindowsInstaller({
       appDirectory: target,
-      outputDirectory: join(dist, `${release.product}-Installer-win32-x64`),
-      authors: release.author,
-      exe: `${release.product}.exe`
+      outputDirectory: join(dist, 'Installer-win32-x64'),
+      authors: release.author.name,
+      exe: `${release.product}.exe`,
+      setupIcon: join(res, 'icons', release.channel, `${release.name}.ico`)
     })
   }
 }
