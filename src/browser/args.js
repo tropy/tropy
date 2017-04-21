@@ -6,7 +6,6 @@ const exe = basename(process.argv[0])
 
 module.exports = require('yargs')
   .usage(`Usage: ${exe} [options]`)
-  .strict()
   .wrap(78)
   .env(pkg.name.toUpperCase())
 
@@ -43,12 +42,6 @@ module.exports = require('yargs')
     type: 'boolean',
     describe: 'Set debug flag',
     default: false
-  })
-
-  .option('app', {
-    type: 'string',
-    normalize: true,
-    describe: 'Set Electron app directory'
   })
 
   .help('help')
