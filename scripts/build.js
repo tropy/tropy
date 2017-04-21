@@ -5,20 +5,13 @@ require('shelljs/make')
 const packager = require('electron-packager')
 const log = require('./log')
 const release = require('../lib/common/release')
-
 const { join, resolve } = require('path')
-
 const dir = resolve(__dirname, '..')
 const res = join(dir, 'res')
-
 const electron = require('electron/package')
 
-target.all = () => {
-  target.pack()
-}
-
-target.pack = (args = []) => {
-  const tag = 'pack'
+target.build = (args = []) => {
+  const tag = 'build'
 
   const platform = args[0] || process.platform
   const arch = args[1] || process.arch
@@ -96,9 +89,8 @@ target.pack = (args = []) => {
   })
 }
 
-
 function rename(ctx, from, to) {
   mv(join(ctx, from), join(ctx, to))
 }
 
-exports.package = Object.assign({}, target)
+exports.build = Object.assign({}, target)

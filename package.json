@@ -31,8 +31,6 @@
     "compile": "npm run make compile",
     "console": "electron --interactive",
     "debug": "node scripts/make test -- --debug",
-    "dist": "node scripts/dist",
-    "pack": "node scripts/dist pack --",
     "lint": "npm run make lint || true",
     "make": "node scripts/make",
     "db": "node scripts/db",
