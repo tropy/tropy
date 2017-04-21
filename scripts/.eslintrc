@@ -1,3 +1,5 @@
 # vi: set ft=yaml :
 env:
   shelljs: true
+rules:
+  no-console: 0

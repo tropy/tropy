@@ -10,8 +10,6 @@ const res = join(dir, 'res')
 const electron = require('electron/package')
 
 target.all = (args = []) => {
-  const tag = 'build'
-
   const platform = args[0] || process.platform
   const arch = args[1] || process.arch
 

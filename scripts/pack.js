@@ -2,7 +2,7 @@
 
 require('shelljs/make')
 
-const { join, resolve, relative } = require('path')
+const { join, resolve } = require('path')
 const release = require('../lib/common/release')
 const { platform } = process
 
@@ -13,11 +13,11 @@ target.all = () => {
 }
 
 
-target.darwin = (args = []) => {
+target.darwin = () => {
   assert(platform === 'darwin', 'must be run on macOS')
 }
 
-target.win32 = async (args = []) => {
+target.win32 = async () => {
   assert(platform === 'win32', 'must be run on Windows')
 
   const { createWindowsInstaller } = require('electron-winstaller')
@@ -44,10 +44,5 @@ function assert(predicate, msg, tag = 'pack') {
     exit(1)
   }
 }
-
-function find(args) {
-  return exec(`find ${args}`, { silent: true }).stdout.trim().split('\n')
-}
-
 
 module.exports = Object.assign({}, target)
