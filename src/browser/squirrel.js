@@ -6,6 +6,7 @@ function handleSquirrelEvent() {
 
   const ChildProcess = require('child_process')
   const { basename, resolve, join } = require('path')
+  const { app } = require('electron')
 
   const root = resolve(process.execPath, '..', '..')
   const update = join(root, 'Update.exe')
