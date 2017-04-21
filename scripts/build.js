@@ -3,14 +3,13 @@
 require('shelljs/make')
 
 const packager = require('electron-packager')
-const log = require('./log')
 const release = require('../lib/common/release')
 const { join, resolve } = require('path')
 const dir = resolve(__dirname, '..')
 const res = join(dir, 'res')
 const electron = require('electron/package')
 
-target.build = (args = []) => {
+target.all = (args = []) => {
   const tag = 'build'
 
   const platform = args[0] || process.platform
@@ -21,8 +20,6 @@ target.build = (args = []) => {
     join(res, 'icons', release.channel, `${release.name}.icns`)
 
   const out = join(dir, 'dist', release.channel)
-  const build =
-    exec('git describe --tags --long', { silent: true }).stdout.trim()
 
   packager({
     platform, arch, icon, out, dir,
@@ -36,7 +33,6 @@ target.build = (args = []) => {
     },
 
     electronVersion: electron.version,
-    buildVersion: build,
     appVersion: release.version,
     appBundleId: 'org.tropy.tropy',
     helperBundleId: 'org.tropy.tropy-helper',
@@ -46,6 +42,11 @@ target.build = (args = []) => {
       `${release.author.name}. All rights not expressly granted are reserved.`,
 
     extendInfo: join(res, 'ext.plist'),
+
+    win32metadata: {
+      CompanyName: release.author.name,
+      ProductName: release.product
+    },
 
     extraResource: [
       join(res, 'icons', 'mime', 'tpy.icns')
@@ -77,13 +78,13 @@ target.build = (args = []) => {
     ]
 
   }, (err, dst) => {
-    if (err) return log.error(err)
-    log.info(`saved to ${dst}`, { tag })
+    if (err) return console.error(err)
+    console.log(`Saved to ${dst}`)
 
     switch (platform) {
       case 'linux':
         rename(String(dst), release.product, release.name)
-        log.info('renamed executable', { tag })
+        console.log('Renamed executable')
         break
     }
   })
@@ -92,5 +93,3 @@ target.build = (args = []) => {
 function rename(ctx, from, to) {
   mv(join(ctx, from), join(ctx, to))
 }
-
-exports.build = Object.assign({}, target)
