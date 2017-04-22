@@ -7,7 +7,7 @@ module.exports = {
     return {
       type: PHOTO.CREATE,
       payload,
-      meta: { async: true, record: true, ...meta }
+      meta: { async: true, history: true, ...meta }
     }
   },
 
@@ -15,7 +15,7 @@ module.exports = {
     return {
       type: PHOTO.DELETE,
       payload,
-      meta: { async: true, record: true, ...meta }
+      meta: { async: true, history: true, ...meta }
     }
   },
 
@@ -23,7 +23,7 @@ module.exports = {
     return {
       type: PHOTO.RESTORE,
       payload,
-      meta: { async: true, record: true, ...meta }
+      meta: { async: true, history: true, ...meta }
     }
   },
 
@@ -55,7 +55,7 @@ module.exports = {
     return {
       type: PHOTO.MOVE,
       payload,
-      meta: { async: true, record: true, ...meta }
+      meta: { async: true, history: true, ...meta }
     }
   },
 
@@ -63,7 +63,7 @@ module.exports = {
     return {
       type: PHOTO.ORDER,
       payload,
-      meta: { async: true, record: true, ...meta }
+      meta: { async: true, history: true, ...meta }
     }
   },
 

@@ -7,7 +7,7 @@ module.exports = {
     return {
       type: NOTE.CREATE,
       payload,
-      meta: { async: true, record: true, ...meta }
+      meta: { async: true, history: true, ...meta }
     }
   },
 
@@ -15,7 +15,7 @@ module.exports = {
     return {
       type: NOTE.SAVE,
       payload,
-      meta: { async: true, record: true, ...meta }
+      meta: { async: true, history: true, ...meta }
     }
   },
 
@@ -56,7 +56,7 @@ module.exports = {
     return {
       type: NOTE.DELETE,
       payload,
-      meta: { async: true, record: true, ...meta }
+      meta: { async: true, history: true, ...meta }
     }
   },
 
@@ -64,7 +64,7 @@ module.exports = {
     return {
       type: NOTE.RESTORE,
       payload,
-      meta: { async: true, record: true, ...meta }
+      meta: { async: true, history: true, ...meta }
     }
   }
 }

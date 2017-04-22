@@ -105,7 +105,7 @@ module.exports = {
 
       yield put(act.activity.done(action, cmd.error || cmd.result))
 
-      if (action.meta.record && cmd.isomorph) {
+      if (action.meta.history && cmd.isomorph) {
         yield put(act.history.tick(cmd.history()))
       }
 

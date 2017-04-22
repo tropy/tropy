@@ -31,7 +31,7 @@ module.exports = {
       payload,
       meta: {
         async: true,
-        record: true,
+        history: true,
         ipc: TAG.CHANGED,
         ...meta
       }
@@ -42,7 +42,7 @@ module.exports = {
     return {
       type: TAG.SAVE,
       payload,
-      meta: { async: true, record: true, ...meta }
+      meta: { async: true, history: true, ...meta }
     }
   },
 
@@ -52,7 +52,7 @@ module.exports = {
       payload,
       meta: {
         async: true,
-        record: true,
+        history: true,
         search: true,
         ipc: TAG.CHANGED,
         ...meta

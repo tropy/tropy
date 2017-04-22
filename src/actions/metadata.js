@@ -32,7 +32,7 @@ module.exports = {
     return {
       type: METADATA.RESTORE,
       payload,
-      meta: { async: true, record: true, ...meta }
+      meta: { async: true, history: true, ...meta }
     }
   },
 
@@ -40,7 +40,7 @@ module.exports = {
     return {
       type: METADATA.SAVE,
       payload: { ids: array(ids || id), data },
-      meta: { async: true, record: true, ...meta }
+      meta: { async: true, history: true, ...meta }
     }
   },
 

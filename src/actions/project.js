@@ -35,7 +35,7 @@ module.exports = {
       payload,
       meta: {
         async: true,
-        record: true,
+        history: true,
         ...meta
       }
     }

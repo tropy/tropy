@@ -17,8 +17,8 @@ module.exports = {
   },
 
   tick({ undo, redo }, meta) {
-    undo.meta = omit(undo.meta, ['record'])
-    redo.meta = omit(redo.meta, ['record'])
+    undo.meta = omit(undo.meta, ['history'])
+    redo.meta = omit(redo.meta, ['history'])
 
     return {
       type: TICK,

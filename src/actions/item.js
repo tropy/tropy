@@ -10,7 +10,7 @@ module.exports = {
       payload,
       meta: {
         async: true,
-        record: true,
+        history: true,
         ...meta
       }
     }
@@ -20,7 +20,7 @@ module.exports = {
     return {
       type: ITEM.IMPORT,
       payload,
-      meta: { async: true, record: true, ...meta }
+      meta: { async: true, history: true, ...meta }
     }
   },
 
@@ -28,7 +28,7 @@ module.exports = {
     return {
       type: ITEM.DELETE,
       payload: array(payload),
-      meta: { async: true, record: true, ...meta }
+      meta: { async: true, history: true, ...meta }
     }
   },
 
@@ -44,7 +44,7 @@ module.exports = {
     return {
       type: ITEM.MERGE,
       payload: array(payload),
-      meta: { async: true, record: true, search: true, ...meta }
+      meta: { async: true, history: true, search: true, ...meta }
     }
   },
 
@@ -52,7 +52,7 @@ module.exports = {
     return {
       type: ITEM.SPLIT,
       payload,
-      meta: { async: true, record: true, search: true, ...meta }
+      meta: { async: true, history: true, search: true, ...meta }
     }
   },
 
@@ -84,7 +84,7 @@ module.exports = {
     return {
       type: ITEM.RESTORE,
       payload: array(payload),
-      meta: { async: true, record: true, ...meta }
+      meta: { async: true, history: true, ...meta }
     }
   },
 
@@ -92,7 +92,7 @@ module.exports = {
     return {
       type: ITEM.SAVE,
       payload: { id: array(id), property, value },
-      meta: { async: true, record: true, ...meta }
+      meta: { async: true, history: true, ...meta }
     }
   },
 
@@ -159,7 +159,7 @@ module.exports = {
       return {
         type: ITEM.TAG.TOGGLE,
         payload,
-        meta: { async: true, record: true, ...meta }
+        meta: { async: true, history: true, ...meta }
       }
     },
 
@@ -167,7 +167,7 @@ module.exports = {
       return {
         type: ITEM.TAG.CLEAR,
         payload,
-        meta: { async: true, record: true, ...meta }
+        meta: { async: true, history: true, ...meta }
       }
     },
 
@@ -175,7 +175,7 @@ module.exports = {
       return {
         type: ITEM.TAG.CREATE,
         payload,
-        meta: { async: true, record: true, ...meta }
+        meta: { async: true, history: true, ...meta }
       }
     },
 
@@ -191,7 +191,7 @@ module.exports = {
       return {
         type: ITEM.TAG.DELETE,
         payload,
-        meta: { async: true, record: true, ...meta }
+        meta: { async: true, history: true, ...meta }
       }
     },
 
