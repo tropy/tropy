@@ -1,6 +1,6 @@
 'use strict'
 
-const { TAG, EDIT } = require('../constants')
+const { TAG, EDIT, HISTORY } = require('../constants')
 
 module.exports = {
   new(payload, meta) {
@@ -31,7 +31,7 @@ module.exports = {
       payload,
       meta: {
         async: true,
-        history: true,
+        history: HISTORY.TICK,
         ipc: TAG.CHANGED,
         ...meta
       }
@@ -42,7 +42,7 @@ module.exports = {
     return {
       type: TAG.SAVE,
       payload,
-      meta: { async: true, history: true, ...meta }
+      meta: { async: true, history: HISTORY.TICK, ...meta }
     }
   },
 
@@ -52,7 +52,7 @@ module.exports = {
       payload,
       meta: {
         async: true,
-        history: true,
+        history: HISTORY.TICK,
         search: true,
         ipc: TAG.CHANGED,
         ...meta

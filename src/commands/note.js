@@ -56,7 +56,11 @@ class Save extends Command {
     yield call(mod.note.save, db, data)
     yield put(act.note.update(data))
 
-    this.undo = act.note.save({ id, text: original.text })
+    this.undo = act.note.save({
+      id,
+      text: original.text,
+      state: original.state
+    })
 
     return data
   }

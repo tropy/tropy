@@ -7,7 +7,6 @@ const {
 const { omit } = require('../common/util')
 
 module.exports = {
-
   undo(payload, meta) {
     return { type: UNDO, payload, meta: { ipc: CHANGED, ...meta } }
   },
@@ -16,25 +15,18 @@ module.exports = {
     return { type: REDO, payload, meta: { ipc: CHANGED, ...meta } }
   },
 
-  tick({ undo, redo }, meta) {
+  tick({ undo, redo }, type = TICK, meta) {
     undo.meta = omit(undo.meta, ['history'])
     redo.meta = omit(redo.meta, ['history'])
 
     return {
-      type: TICK,
-      payload: {
-        undo,
-        redo
-      },
-      meta: {
-        ipc: CHANGED,
-        ...meta
-      }
+      type,
+      payload: { undo, redo },
+      meta: { ipc: CHANGED, ...meta }
     }
   },
 
   drop(payload, meta) {
     return { type: DROP, payload, meta: { ipc: CHANGED, ...meta } }
   }
-
 }

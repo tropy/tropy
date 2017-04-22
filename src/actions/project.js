@@ -1,8 +1,10 @@
 'use strict'
 
+const { PROJECT, HISTORY } = require('../constants')
+
 const {
   OPEN, OPENED, CLOSE, CLOSED, SAVE, UPDATE
-} = require('../constants/project')
+} =  PROJECT
 
 
 module.exports = {
@@ -35,7 +37,7 @@ module.exports = {
       payload,
       meta: {
         async: true,
-        history: true,
+        history: HISTORY.TICK,
         ...meta
       }
     }

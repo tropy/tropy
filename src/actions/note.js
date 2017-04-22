@@ -1,13 +1,13 @@
 'use strict'
 
-const { NOTE } = require('../constants')
+const { NOTE, HISTORY } = require('../constants')
 
 module.exports = {
   create(payload, meta) {
     return {
       type: NOTE.CREATE,
       payload,
-      meta: { async: true, history: true, ...meta }
+      meta: { async: true, history: HISTORY.TICK, ...meta }
     }
   },
 
@@ -15,7 +15,7 @@ module.exports = {
     return {
       type: NOTE.SAVE,
       payload,
-      meta: { async: true, history: true, ...meta }
+      meta: { async: true, history: HISTORY.MERGE, ...meta }
     }
   },
 
@@ -56,7 +56,7 @@ module.exports = {
     return {
       type: NOTE.DELETE,
       payload,
-      meta: { async: true, history: true, ...meta }
+      meta: { async: true, history: HISTORY.TICK, ...meta }
     }
   },
 
@@ -64,7 +64,7 @@ module.exports = {
     return {
       type: NOTE.RESTORE,
       payload,
-      meta: { async: true, history: true, ...meta }
+      meta: { async: true, history: HISTORY.TICK, ...meta }
     }
   }
 }

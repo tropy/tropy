@@ -1,6 +1,6 @@
 'use strict'
 
-const { LIST, EDIT } = require('../constants')
+const { LIST, EDIT, HISTORY } = require('../constants')
 const { array } = require('../common/util')
 
 module.exports = {
@@ -31,7 +31,7 @@ module.exports = {
     return {
       type: ('id' in payload) ? LIST.SAVE : LIST.CREATE,
       payload,
-      meta: { async: true, history: true, ...meta }
+      meta: { async: true, history: HISTORY.TICK, ...meta }
     }
   },
 
@@ -41,7 +41,7 @@ module.exports = {
       payload,
       meta: {
         async: true,
-        history: true,
+        history: HISTORY.TICK,
         ...meta
       }
     }
@@ -59,7 +59,7 @@ module.exports = {
     return {
       type: LIST.ORDER,
       payload,
-      meta: { async: true, history: true, ...meta }
+      meta: { async: true, history: HISTORY.TICK, ...meta }
     }
   },
 
@@ -76,7 +76,7 @@ module.exports = {
       return {
         type: LIST.ITEM.ADD,
         payload: { id, items: array(items) },
-        meta: { async: true, history: true, search: true, ...meta }
+        meta: { async: true, history: HISTORY.TICK, search: true, ...meta }
       }
     },
 
@@ -84,7 +84,7 @@ module.exports = {
       return {
         type: LIST.ITEM.REMOVE,
         payload: { id, items: array(items) },
-        meta: { async: true, history: true, search: true, ...meta }
+        meta: { async: true, history: HISTORY.TICK, search: true, ...meta }
       }
     },
 

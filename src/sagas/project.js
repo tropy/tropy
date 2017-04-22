@@ -102,20 +102,16 @@ module.exports = {
   *command({ db, id, cache }, action) {
     try {
       const cmd = yield exec(action, { db, id, cache })
+      const { type, meta } = action
 
       yield put(act.activity.done(action, cmd.error || cmd.result))
 
-      if (action.meta.history && cmd.isomorph) {
-        yield put(act.history.tick(cmd.history()))
+      if (meta.history && cmd.isomorph) {
+        yield put(act.history.tick(cmd.history(), meta.history))
       }
 
-      if (cmd.error) {
-        fail(cmd.error, action.type)
-      }
-
-      if (cmd.duration > TOO_LONG) {
-        warn(`SLOW: ${action.type}`)
-      }
+      if (cmd.error) fail(cmd.error, type)
+      if (cmd.duration > TOO_LONG) warn(`SLOW: ${type}`)
 
     } catch (error) {
       warn(`${action.type} unexpectedly failed in *command: ${error.message}`)

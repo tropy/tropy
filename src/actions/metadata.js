@@ -1,7 +1,7 @@
 'use strict'
 
 const { array } = require('../common/util')
-const { METADATA } = require('../constants')
+const { METADATA, HISTORY } = require('../constants')
 
 module.exports = {
   insert(payload, meta = {}) {
@@ -32,7 +32,7 @@ module.exports = {
     return {
       type: METADATA.RESTORE,
       payload,
-      meta: { async: true, history: true, ...meta }
+      meta: { async: true, history: HISTORY.TICK, ...meta }
     }
   },
 
@@ -40,7 +40,7 @@ module.exports = {
     return {
       type: METADATA.SAVE,
       payload: { ids: array(ids || id), data },
-      meta: { async: true, history: true, ...meta }
+      meta: { async: true, history: HISTORY.TICK, ...meta }
     }
   },
 
