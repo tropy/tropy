@@ -43,10 +43,6 @@ class ItemView extends PureComponent {
         return this.setState({ note: { ...note, id: props.note.id } })
       }
 
-      if (note.id && note.id === props.note.id) {
-        return
-      }
-
       this.handleNoteUpdate.flush()
       this.setState({ note: props.note })
     }
