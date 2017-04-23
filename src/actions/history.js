@@ -15,14 +15,16 @@ module.exports = {
     return { type: REDO, payload, meta: { ipc: CHANGED, ...meta } }
   },
 
-  tick({ undo, redo }, type = TICK, meta) {
+  tick({ undo, redo }, mode = 'add', meta) {
     undo.meta = omit(undo.meta, ['history'])
     redo.meta = omit(redo.meta, ['history'])
 
     return {
-      type,
+      type: TICK,
       payload: { undo, redo },
-      meta: { ipc: CHANGED, ...meta }
+      meta: {
+        ipc: CHANGED, mode, ...meta
+      }
     }
   },
 

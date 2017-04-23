@@ -1,13 +1,13 @@
 'use strict'
 
-const { PHOTO, HISTORY } = require('../constants')
+const { PHOTO } = require('../constants')
 
 module.exports = {
   create(payload, meta) {
     return {
       type: PHOTO.CREATE,
       payload,
-      meta: { async: true, history: HISTORY.TICK, ...meta }
+      meta: { async: true, history: 'add', ...meta }
     }
   },
 
@@ -15,7 +15,7 @@ module.exports = {
     return {
       type: PHOTO.DELETE,
       payload,
-      meta: { async: true, history: HISTORY.TICK, ...meta }
+      meta: { async: true, history: 'add', ...meta }
     }
   },
 
@@ -23,7 +23,7 @@ module.exports = {
     return {
       type: PHOTO.RESTORE,
       payload,
-      meta: { async: true, history: HISTORY.TICK, ...meta }
+      meta: { async: true, history: 'add', ...meta }
     }
   },
 
@@ -55,7 +55,7 @@ module.exports = {
     return {
       type: PHOTO.MOVE,
       payload,
-      meta: { async: true, history: HISTORY.TICK, ...meta }
+      meta: { async: true, history: 'add', ...meta }
     }
   },
 
@@ -63,7 +63,7 @@ module.exports = {
     return {
       type: PHOTO.ORDER,
       payload,
-      meta: { async: true, history: HISTORY.TICK, ...meta }
+      meta: { async: true, history: 'add', ...meta }
     }
   },
 

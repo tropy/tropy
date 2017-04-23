@@ -1,12 +1,16 @@
 'use strict'
 
 const {
-  UNDO, REDO, DROP, TICK, MERGE
+  UNDO, REDO, DROP, TICK
 } = require('../constants/history')
 
 
+function canMerge(a, b) {
+  return a.type === b.type && a.payload.id === b.payload.id
+}
+
 module.exports = {
-  history(state = { past: [], future: [] }, { type, payload }) {
+  history(state = { past: [], future: [] }, { type, payload, meta }) {
     switch (type) {
       case UNDO:
         return {
@@ -18,23 +22,23 @@ module.exports = {
           past: [state.future[0], ...state.past],
           future: state.future.slice(1)
         }
-      case MERGE:
-        if (state.past.length) {
+      case TICK:
+        if (meta.mode === 'merge' && state.past.length) {
           const { undo } = state.past[0]
 
-          if (undo.type === payload.undo.type) {
+          if (canMerge(undo, payload.undo)) {
             return {
               past: [{ ...payload, undo }, ...state.past.slice(1)],
               future: []
             }
           }
         }
-        // eslint-disable-line no-fallthrough
-      case TICK:
+
         return {
           past: [payload, ...state.past],
           future: []
         }
+
       case DROP:
         return {
           past: [],

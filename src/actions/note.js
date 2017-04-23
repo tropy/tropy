@@ -1,21 +1,27 @@
 'use strict'
 
-const { NOTE, HISTORY } = require('../constants')
+const { NOTE } = require('../constants')
+
+function json(note) {
+  return (note.state != null && typeof note.state.toJSON === 'function') ?
+    { ...note, state: note.state.toJSON() } :
+    note
+}
 
 module.exports = {
   create(payload, meta) {
     return {
       type: NOTE.CREATE,
-      payload,
-      meta: { async: true, history: HISTORY.TICK, ...meta }
+      payload: json(payload),
+      meta: { async: true, history: 'add', ...meta }
     }
   },
 
   save(payload, meta) {
     return {
       type: NOTE.SAVE,
-      payload,
-      meta: { async: true, history: HISTORY.MERGE, ...meta }
+      payload: json(payload),
+      meta: { async: true, history: 'merge', ...meta }
     }
   },
 
@@ -56,7 +62,7 @@ module.exports = {
     return {
       type: NOTE.DELETE,
       payload,
-      meta: { async: true, history: HISTORY.TICK, ...meta }
+      meta: { async: true, history: 'add', ...meta }
     }
   },
 
@@ -64,7 +70,7 @@ module.exports = {
     return {
       type: NOTE.RESTORE,
       payload,
-      meta: { async: true, history: HISTORY.TICK, ...meta }
+      meta: { async: true, history: 'add', ...meta }
     }
   }
 }

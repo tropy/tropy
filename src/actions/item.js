@@ -1,6 +1,6 @@
 'use strict'
 
-const { ITEM, HISTORY } = require('../constants')
+const { ITEM } = require('../constants')
 const { array, get } = require('../common/util')
 
 module.exports = {
@@ -10,7 +10,7 @@ module.exports = {
       payload,
       meta: {
         async: true,
-        history: HISTORY.TICK,
+        history: 'add',
         ...meta
       }
     }
@@ -20,7 +20,7 @@ module.exports = {
     return {
       type: ITEM.IMPORT,
       payload,
-      meta: { async: true, history: HISTORY.TICK, ...meta }
+      meta: { async: true, history: 'add', ...meta }
     }
   },
 
@@ -28,7 +28,7 @@ module.exports = {
     return {
       type: ITEM.DELETE,
       payload: array(payload),
-      meta: { async: true, history: HISTORY.TICK, ...meta }
+      meta: { async: true, history: 'add', ...meta }
     }
   },
 
@@ -44,7 +44,7 @@ module.exports = {
     return {
       type: ITEM.MERGE,
       payload: array(payload),
-      meta: { async: true, history: HISTORY.TICK, search: true, ...meta }
+      meta: { async: true, history: 'add', search: true, ...meta }
     }
   },
 
@@ -52,7 +52,7 @@ module.exports = {
     return {
       type: ITEM.SPLIT,
       payload,
-      meta: { async: true, history: HISTORY.TICK, search: true, ...meta }
+      meta: { async: true, history: 'add', search: true, ...meta }
     }
   },
 
@@ -84,7 +84,7 @@ module.exports = {
     return {
       type: ITEM.RESTORE,
       payload: array(payload),
-      meta: { async: true, history: HISTORY.TICK, ...meta }
+      meta: { async: true, history: 'add', ...meta }
     }
   },
 
@@ -92,7 +92,7 @@ module.exports = {
     return {
       type: ITEM.SAVE,
       payload: { id: array(id), property, value },
-      meta: { async: true, history: HISTORY.TICK, ...meta }
+      meta: { async: true, history: 'add', ...meta }
     }
   },
 
@@ -159,7 +159,7 @@ module.exports = {
       return {
         type: ITEM.TAG.TOGGLE,
         payload,
-        meta: { async: true, history: HISTORY.TICK, ...meta }
+        meta: { async: true, history: 'add', ...meta }
       }
     },
 
@@ -167,7 +167,7 @@ module.exports = {
       return {
         type: ITEM.TAG.CLEAR,
         payload,
-        meta: { async: true, history: HISTORY.TICK, ...meta }
+        meta: { async: true, history: 'add', ...meta }
       }
     },
 
@@ -175,7 +175,7 @@ module.exports = {
       return {
         type: ITEM.TAG.CREATE,
         payload,
-        meta: { async: true, history: HISTORY.TICK, ...meta }
+        meta: { async: true, history: 'add', ...meta }
       }
     },
 
@@ -191,7 +191,7 @@ module.exports = {
       return {
         type: ITEM.TAG.DELETE,
         payload,
-        meta: { async: true, history: HISTORY.TICK, ...meta }
+        meta: { async: true, history: 'add', ...meta }
       }
     },
 

@@ -5,6 +5,5 @@ module.exports = {
   REDO: 'history.redo',
   TICK: 'history.tick',
   DROP: 'history.drop',
-  MERGE: 'history.merge',
   CHANGED: 'history.changed'
 }
