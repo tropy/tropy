@@ -14,6 +14,21 @@ target.all = () => {
 }
 
 
+target.linux = () => {
+  assert(platform === 'linux', 'must be run on Linux')
+
+  const targets = ls('-d', join(dist, '*-linux-*'))
+  assert(targets.length, 'no targets found')
+
+  const appimage = join(__dirname, 'appimage.sh')
+  const name = (release.channel === 'stable') ?
+    release.name : `${release.name}-${release.channel}`
+
+  for (let target of targets) {
+    exec(`${appimage} ${name} ${target}`)
+  }
+}
+
 target.darwin = () => {
   assert(platform === 'darwin', 'must be run on macOS')
 }
@@ -22,8 +37,8 @@ target.win32 = async () => {
   assert(platform === 'win32', 'must be run on Windows')
 
   const { createWindowsInstaller } = require('electron-winstaller')
-  const targets = ls('-d', join(dist, '*-win32-*'))
 
+  const targets = ls('-d', join(dist, '*-win32-*'))
   assert(targets.length, 'no targets found')
 
   for (let target of targets) {
