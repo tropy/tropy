@@ -100,11 +100,9 @@ target.all = (args = []) => {
         console.log('Copying icons...')
         copyIcons(dst, name)
 
-        console.log('Linking executable...')
-        const bin = join(dst, 'usr', 'bin')
-        mkdir('-p', bin)
-        cd(bin)
-        ln('-s', `../../${name}`, name)
+        console.log('Linking AppRun...')
+        cd(dst)
+        ln('-s', `./${name}`, 'AppRun')
         cd('-')
 
         break
@@ -148,5 +146,6 @@ function copyIcons(dst, name) {
     mkdir('-p', target)
     cp(join(icons, icon), join(target, file))
   }
-}
 
+  cp(join(icons, 'scalable.svg'), join(dst, `${name}.svg`))
+}

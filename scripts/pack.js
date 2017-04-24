@@ -9,6 +9,8 @@ const { platform } = process
 const res = resolve(__dirname, '..', 'res')
 const dist = resolve(__dirname, '..', 'dist', release.channel)
 
+const APPIMAGETOOL = 'https://github.com/probonopd/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage'
+
 target.all = () => {
   target[platform]()
 }
@@ -20,12 +22,17 @@ target.linux = () => {
   const targets = ls('-d', join(dist, '*-linux-*'))
   assert(targets.length, 'no targets found')
 
-  const appimage = join(__dirname, 'appimage.sh')
-  const name = (release.channel === 'stable') ?
-    release.name : `${release.name}-${release.channel}`
+  const appimagetool = join(__dirname, 'appimagetool')
+
+  if (!test('-f', appimagetool)) {
+    exec(`curl -L -o ${appimagetool} ${APPIMAGETOOL}`)
+    chmod('a+x', appimagetool)
+  }
 
   for (let target of targets) {
-    exec(`${appimage} ${name} ${target}`)
+    cd(dist)
+    exec(`${appimagetool} -n ${target}`)
+    cd('-')
   }
 }
 

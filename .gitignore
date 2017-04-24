@@ -9,3 +9,4 @@ npm-debug.log
 db/db.sqlite
 *.tpy
 .vimrc
+scripts/appimagetool
