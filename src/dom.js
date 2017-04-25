@@ -3,8 +3,7 @@
 const { assign } = Object
 const { once } = require('./common/util')
 
-const dom = module.exports = {
-
+const dom = {
   $(selectors, node = document) {
     return node.querySelector(selectors)
   },
@@ -80,6 +79,20 @@ const dom = module.exports = {
     return node.removeEventListener(...args)
   },
 
+  ensure(node, type, fn, maxWait = 5000, capture = false) {
+    const cancel = () => {
+      clearTimeout(timeout)
+      node.removeEventListener(type, done, { capture })
+    }
+
+    const done = (...args) => (cancel(), fn(...args))
+
+    const timeout = setTimeout(done, maxWait)
+    node.addEventListener(type, done, { capture })
+
+    return cancel
+  },
+
   emit(node, ...args) {
     return node.dispatchEvent(new Event(...args))
   },
@@ -115,3 +128,5 @@ const dom = module.exports = {
     return document.activeElement === node
   }
 }
+
+module.exports = dom

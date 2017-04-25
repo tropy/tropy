@@ -11,7 +11,7 @@ const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
 const { extname } = require('path')
 const { MODE } = require('../../constants/project')
-const { once } = require('../../dom')
+const { ensure } = require('../../dom')
 const { win } = require('../../window')
 const cx = require('classnames')
 const { values } = Object
@@ -47,10 +47,6 @@ class ProjectContainer extends PureComponent {
     }
   }
 
-  componentWillUnmount() {
-    this.clearTimeouts()
-  }
-
   componentWillReceiveProps({ nav, ui }) {
     if (nav.mode !== this.props.nav.mode) {
       this.modeWillChange()
@@ -60,7 +56,6 @@ class ProjectContainer extends PureComponent {
       this.setState({ offset: ui.panel.width })
     }
   }
-
 
   get classes() {
     const { isOver, canDrop } = this.props
@@ -77,37 +72,21 @@ class ProjectContainer extends PureComponent {
     }
   }
 
-
   modeWillChange() {
     if (this.state.willModeChange) return
 
-    once(this.container, 'transitionend', this.modeDidChange)
-    this.modeDidChange.timeout = setTimeout(this.modeDidChange, 5000)
-
-    this.setState({ willModeChange: true, isModeChanging: false })
-
-    setTimeout(() => {
+    this.setState({ willModeChange: true, isModeChanging: false }, () => {
       this.setState({ isModeChanging: true })
-    }, 0)
+      ensure(this.container, 'transitionend', this.modeDidChange, 1200)
+    })
   }
 
   modeDidChange = () => {
-    try {
-      this.setState({
-        mode: this.props.nav.mode,
-        willModeChange: false,
-        isModeChanging: false
-      })
-    } finally {
-      this.clearTimeouts()
-    }
-  }
-
-  clearTimeouts() {
-    if (this.modeDidChange.timeout) {
-      clearTimeout(this.modeDidChange.timeout)
-      this.modeDidChange.timeout = undefined
-    }
+    this.setState({
+      mode: this.props.nav.mode,
+      willModeChange: false,
+      isModeChanging: false
+    })
   }
 
   handleContextMenu = (event) => {
