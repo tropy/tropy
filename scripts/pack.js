@@ -11,8 +11,8 @@ const dist = resolve(__dirname, '..', 'dist', release.channel)
 
 const APPIMAGETOOL = 'https://github.com/probonopd/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage'
 
-target.all = () => {
-  target[platform]()
+target.all = (...args) => {
+  target[platform](...args)
 }
 
 
@@ -40,7 +40,7 @@ target.darwin = () => {
   assert(platform === 'darwin', 'must be run on macOS')
 }
 
-target.win32 = async () => {
+target.win32 = async (args = []) => {
   assert(platform === 'win32', 'must be run on Windows')
 
   const { createWindowsInstaller } = require('electron-winstaller')
@@ -48,13 +48,21 @@ target.win32 = async () => {
   const targets = ls('-d', join(dist, '*-win32-*'))
   assert(targets.length, 'no targets found')
 
+  const [cert, pwd] = args
+  assert(cert, 'missing certificate')
+  assert(test('-f', cert), `certificate not found: ${cert}`)
+  assert(pwd, 'missing password')
+
+  const params = getSignToolParams(cert, pwd)
+
   for (let target of targets) {
     assert(target.endsWith('-x64'), 'only x64 installers supported')
 
     await createWindowsInstaller({
       appDirectory: target,
-      outputDirectory: join(dist, 'Installer-win32-x64'),
+      outputDirectory: join(dist, 'installer'),
       authors: release.author.name,
+      signWithParams: params,
       exe: `${release.product}.exe`,
       setupIcon: join(res, 'icons', release.channel, `${release.name}.ico`)
     })
