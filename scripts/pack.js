@@ -5,6 +5,7 @@ require('shelljs/make')
 const { join, resolve } = require('path')
 const release = require('../lib/common/release')
 const { platform } = process
+const { getSignToolParams } = require('./sign')
 
 const res = resolve(__dirname, '..', 'res')
 const dist = resolve(__dirname, '..', 'dist', release.channel)
