@@ -3,12 +3,14 @@
 require('shelljs/make')
 
 const { join, resolve } = require('path')
-const release = require('../lib/common/release')
 const { platform } = process
 const { getSignToolParams } = require('./sign')
+const {
+  author, channel, qualified, name, product
+} = require('../lib/common/release')
 
 const res = resolve(__dirname, '..', 'res')
-const dist = resolve(__dirname, '..', 'dist', release.channel)
+const dist = resolve(__dirname, '..', 'dist', channel)
 
 const APPIMAGETOOL = 'https://github.com/probonopd/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage'
 
@@ -61,11 +63,12 @@ target.win32 = async (args = []) => {
 
     await createWindowsInstaller({
       appDirectory: target,
-      outputDirectory: join(dist, 'installer'),
-      authors: release.author.name,
+      outputDirectory: dist,
+      authors: author.name,
       signWithParams: params,
-      exe: `${release.product}.exe`,
-      setupIcon: join(res, 'icons', release.channel, `${release.name}.ico`),
+      exe: `${product}.exe`,
+      setupExe: `setup-${qualified.name}.exe`,
+      setupIcon: join(res, 'icons', channel, `${name}.ico`),
       noMsi: true
     })
   }

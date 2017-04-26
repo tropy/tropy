@@ -13,7 +13,7 @@ target.all = (args = []) => {
   const platform = args[0] || process.platform
   const arch = args[1] || process.arch
 
-  const { author, channel, version, product } = release
+  const { author, channel, version, qualified, product } = release
 
   const icon = platform === 'win32' ?
     join(res, 'icons', channel, `${release.name}.ico`) :
@@ -48,7 +48,7 @@ target.all = (args = []) => {
 
     win32metadata: {
       CompanyName: author.name,
-      ProductName: product
+      ProductName: qualified.product
     },
 
     extraResource: [
@@ -87,22 +87,19 @@ target.all = (args = []) => {
 
     switch (platform) {
       case 'linux': {
-        const name = (channel === 'stable') ?
-          release.name : `${release.name}-${channel}`
-
-        console.log(`Renaming executable to ${name}...`)
-        rename(dst, product, name)
+        console.log(`Renaming executable to ${release.name}...`)
+        rename(dst, product, release.name)
 
         console.log('Creating .desktop file...')
-        desktop(name, release.product, name)
-          .to(join(dst, `${name}.desktop`))
+        desktop(release.name, product, qualified.name)
+          .to(join(dst, `${qualified.name}.desktop`))
 
         console.log('Copying icons...')
-        copyIcons(dst, name)
+        copyIcons(dst, qualified.name, release.name)
 
         console.log('Linking AppRun...')
         cd(dst)
-        ln('-s', `./${name}`, 'AppRun')
+        ln('-s', `./${release.name}`, 'AppRun')
         cd('-')
 
         break
@@ -131,9 +128,9 @@ MimeType=image/jpeg;application/x-tpy;
 StartupWMClass=${name}`
 }
 
-function copyIcons(dst, name) {
+function copyIcons(dst, channel, name, bin) {
   const theme = resolve(dst, 'usr', 'share', 'icons', 'hicolor')
-  const icons = resolve(res, 'icons', release.channel, 'tropy')
+  const icons = resolve(res, 'icons', channel, 'tropy')
 
   for (let icon of ls(icons)) {
     let ext = extname(icon)
@@ -147,5 +144,5 @@ function copyIcons(dst, name) {
     cp(join(icons, icon), join(target, file))
   }
 
-  cp(join(icons, 'scalable.svg'), join(dst, `${name}.svg`))
+  cp(join(icons, 'scalable.svg'), join(dst, `${bin}.svg`))
 }
