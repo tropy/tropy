@@ -7,6 +7,7 @@ function handleSquirrelEvent() {
   const ChildProcess = require('child_process')
   const { basename, resolve, join } = require('path')
   const { app } = require('electron')
+  const { sync: rm } = require('rimraf')
 
   const root = resolve(process.execPath, '..', '..')
   const update = join(root, 'Update.exe')
@@ -34,6 +35,14 @@ function handleSquirrelEvent() {
     case '--squirrel-uninstall':
       spawn(update, '--removeShortcut', exe)
       delay(app.quit)
+
+      try {
+        rm(app.getPath('userData'))
+      } catch (error) {
+        // ignore
+      }
+
+
       break
     case '--squirrel-obsolete':
       app.quit()

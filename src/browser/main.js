@@ -6,17 +6,17 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
   require('electron-mocha')
 
 } else {
+  let READY = undefined
+
+  const args = require('./args')
+  const opts = args.parse(process.argv.slice(1))
+
+  process.env.NODE_ENV = opts.environment
+  global.ARGS = opts
+
+  require('./path')(opts.dir)
+
   if (!require('./squirrel')()) {
-    let READY = undefined
-
-    const args = require('./args')
-    const opts = args.parse(process.argv.slice(1))
-
-    process.env.NODE_ENV = opts.environment
-    global.ARGS = opts
-
-    require('./path')(opts.dir)
-
     const { app }  = require('electron')
     const { all }  = require('bluebird')
     const { once } = require('../common/util')
