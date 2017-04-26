@@ -65,7 +65,8 @@ target.win32 = async (args = []) => {
       authors: release.author.name,
       signWithParams: params,
       exe: `${release.product}.exe`,
-      setupIcon: join(res, 'icons', release.channel, `${release.name}.ico`)
+      setupIcon: join(res, 'icons', release.channel, `${release.name}.ico`),
+      noMsi: true
     })
   }
 }
