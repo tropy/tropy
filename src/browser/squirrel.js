@@ -8,14 +8,22 @@ const { existsSync: exists } = require('fs')
 const { sync: mkdir } = require('mkdirp')
 const { product, qualified } = require('../common/release')
 
-const BASE = resolve(
-  app.getPath('appData'), '..', 'Roaming', 'Microsoft'
-)
 const START_MENU = resolve(
-  BASE, 'Start Menu', 'Programs', product, `${qualified.product}.lnk`
+  app.getPath('appData'),
+  '..',
+  'Roaming',
+  'Microsoft',
+  'Windows',
+  'Start Menu',
+  'Programs',
+  product,
+  `${qualified.product}.lnk`
 )
+
 const DESKTOP = resolve(
-  BASE, 'Desktop', `${qualified.product}.lnk`
+  app.getPath('home'),
+  'Desktop',
+  `${qualified.product}.lnk`
 )
 
 const root = resolve(process.execPath, '..', '..')
@@ -35,7 +43,7 @@ function link(path, force = false) {
   })
 }
 
-// eslint-disable-next-line no-unused
+// eslint-disable-next-line no-unused-vars
 function spawn(cmd, ...args) {
   try {
     return ChildProcess.spawn(cmd, args, { detached: true })
@@ -50,36 +58,35 @@ function handleSquirrelEvent() {
   if (global.ARGS.environment === 'development') return false
   if (process.argv.length === 1) return false
 
-  switch (process.argv[1]) {
-    case '--squirrel-install':
-      link(DESKTOP, true)
-      link(START_MENU, true)
-      app.quit
-      break
-    case '--squirrel-updated':
-      link(DESKTOP)
-      link(START_MENU)
-      app.quit
-      break
-    case '--squirrel-uninstall':
-      try {
-        rm(DESKTOP)
-        rm(START_MENU)
-        rm(app.getPath('userData'))
-
-      } finally {
+  for (let arg of process.argv) {
+    switch (arg) {
+      case '--squirrel-install':
+        link(DESKTOP, true)
+        link(START_MENU, true)
         app.quit()
-      }
-      break
-    case '--squirrel-obsolete':
-      app.quit()
-      break
+        return true
+      case '--squirrel-updated':
+        link(DESKTOP)
+        link(START_MENU)
+        app.quit()
+        return true
+      case '--squirrel-uninstall':
+        try {
+          rm(DESKTOP)
+          rm(START_MENU)
+          rm(app.getPath('userData'))
 
-    default:
-      return false
+        } finally {
+          app.quit()
+        }
+        return true
+      case '--squirrel-obsolete':
+        app.quit()
+        return true
+    }
   }
 
-  return true
+  return false
 }
 
 module.exports = handleSquirrelEvent
