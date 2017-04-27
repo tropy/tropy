@@ -43,30 +43,40 @@ linux:
   - &edit
     label: '&Edit'
     submenu:
-      - id: 'undo'
-        label: 'Undo'
+      - &undo
+        id: 'undo'
+        label: '&Undo'
         accelerator: 'CmdOrCtrl+Z'
         command: 'app:undo'
         enabled: false
-      - id: 'redo'
-        label: 'Redo'
+      - &redo
+        id: 'redo'
+        label: '&Redo'
         accelerator: 'Shift+CmdOrCtrl+Z'
         command: 'app:redo'
         enabled: false
       - type: 'separator'
-      - label: 'Cut'
+      - &cut
+        label: 'Cu&t'
         accelerator: 'CmdOrCtrl+X'
         role: 'cut'
-      - label: 'Copy'
+      - &copy
+        label: '&Copy'
         accelerator: 'CmdOrCtrl+C'
         role: 'copy'
-      - label: 'Paste'
+      - &paste
+        label: '&Paste'
         accelerator: 'CmdOrCtrl+V'
         role: 'paste'
       - type: 'separator'
-      - label: 'Select All'
+      - &select-all
+        label: 'Select &All'
         accelerator: 'CmdOrCtrl+A'
         role: 'selectall'
+      - type: 'separator'
+      - label: 'Prefere&nces …'
+        accelerator: 'Shift+Control+S'
+        command: 'app:open-preferences'
   - &view
     label: '&View'
     submenu:
@@ -124,6 +134,10 @@ darwin:
       - label: 'About %name'
         role: 'about'
       - type: 'separator'
+      - label: 'Preferences …'
+        accelerator: 'Command+,'
+        command: 'app:open-preferences'
+      - type: 'separator'
       - label: 'Hide %name'
         accelerator: 'Command+H'
         role: 'hide'
@@ -149,7 +163,15 @@ darwin:
       - label: 'Close'
         accelerator: 'Command+W'
         role: 'close'
-  - *edit
+  - label: '&Edit'
+    submenu:
+      - *undo
+      - *redo
+      - type: 'separator'
+      - *cut
+      - *copy
+      - *paste
+      - *select-all
   - *view
   - label: 'Window'
     role: 'window'

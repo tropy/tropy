@@ -32,14 +32,14 @@ const {
 
 const WIN = SASS.WINDOW
 const WIZ = SASS.WIZARD
-
+const PREFS = SASS.PREFS
 const ZOOM = ARGS.zoom || 1
 
 const H = new WeakMap()
 const T = new WeakMap()
 
-class Tropy extends EventEmitter {
 
+class Tropy extends EventEmitter {
   static defaults = {
     frameless: darwin,
     locale: app.getLocale() || 'en',
@@ -49,11 +49,10 @@ class Tropy extends EventEmitter {
     version
   }
 
-  // eslint-disable-next-line constructor-super
   constructor() {
-    if (Tropy.instance) return Tropy.instance
-
     super()
+
+    if (Tropy.instance) return Tropy.instance
     Tropy.instance = this
 
     this.menu = new AppMenu(this)
@@ -122,13 +121,11 @@ class Tropy extends EventEmitter {
             case 0: return this.win.destroy()
           }
         })
-
         .on('close', () => {
           if (!this.win.isFullScreen()) {
             this.state.win.bounds = this.win.getBounds()
           }
         })
-
         .on('closed', () => { this.win = undefined })
 
       this.win.webContents
@@ -200,6 +197,27 @@ class Tropy extends EventEmitter {
       frame: !this.hash.frameless
     })
       .once('closed', () => { this.wiz = undefined })
+
+    return this
+  }
+
+  configure() {
+    if (this.prefs) return this.prefs.show(), this
+
+    this.prefs = open('preferences', this.hash, {
+      width: PREFS.WIDTH * ZOOM,
+      height: PREFS.HEIGHT * ZOOM,
+      parent: this.win,
+      modal: !darwin && !!this.win,
+      autoHideMenuBar: true,
+      resizable: false,
+      minimizable: false,
+      maximizable: false,
+      fullscreenable: false,
+      darkTheme: (this.state.theme === 'dark'),
+      frame: !this.hash.frameless
+    })
+      .once('closed', () => { this.prefs = undefined })
 
     return this
   }
@@ -315,33 +333,27 @@ class Tropy extends EventEmitter {
         this.broadcast('theme', theme)
         this.emit('app:reload-menu')
       })
-
-
       .on('app:reload-menu', () => {
         // Note: there may be Electron issues when reloading
         // the main menu. But since we cannot remove items
         // dynamically (#527) this is our only option.
         this.menu.reload()
       })
-
       .on('app:undo', () => {
         if (this.history.past) this.dispatch(act.history.undo())
       })
       .on('app:redo', () => {
         if (this.history.future) this.dispatch(act.history.redo())
       })
-
       .on('app:inspect', (win, { x, y }) => {
-        if (win) {
-          win.webContents.inspectElement(x, y)
-        }
+        win.webContents.inspectElement(x, y)
       })
-
-
+      .on('app:open-preferences', () => {
+        this.configure()
+      })
       .on('app:open-license', () => {
         shell.openExternal('https://github.com/tropy/tropy/blob/master/LICENSE')
       })
-
       .on('app:search-issues', () => {
         shell.openExternal('https://github.com/tropy/tropy/issues')
       })

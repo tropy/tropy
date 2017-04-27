@@ -107,12 +107,18 @@ const WIZARD = {
   HEIGHT: 580
 }
 
+const PREFS = {
+  WIDTH: 960,
+  HEIGHT: 580
+}
+
 module.exports =  {
   ACTIVITY,
   ICON,
   ITEM,
   PANEL,
   PHOTO,
+  PREFS,
   SCROLLBAR,
   SIDEBAR,
   TILE,
