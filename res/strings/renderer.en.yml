@@ -24,6 +24,14 @@ wizard:
 
 preferences:
   title: Preferences
+  app:
+    label: 'Global'
+  project:
+    label: 'Project'
+  template:
+    label: 'Templates'
+  vocab:
+    label: 'Vocabularies'
 
 prompt:
   item:
