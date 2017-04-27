@@ -78,7 +78,6 @@ target.darwin = (args = []) => {
     verify(app)
   }
 
-
   function sign(file) {
     console.log(`${relative(app, file)}`)
     exec(`codesign --sign ${identity} -fv "${file}"`, { silent: true })

@@ -5,8 +5,9 @@ require('shelljs/make')
 const { join, resolve } = require('path')
 const { platform } = process
 const { getSignToolParams } = require('./sign')
+
 const {
-  author, channel, qualified, name, product
+  author, channel, qualified, name, product, version
 } = require('../lib/common/release')
 
 const res = resolve(__dirname, '..', 'res')
@@ -20,10 +21,10 @@ target.all = (...args) => {
 
 
 target.linux = () => {
-  assert(platform === 'linux', 'must be run on Linux')
+  check(platform === 'linux', 'must be run on Linux')
 
   const targets = ls('-d', join(dist, '*-linux-*'))
-  assert(targets.length, 'no targets found')
+  check(targets.length, 'no targets found')
 
   const appimagetool = join(__dirname, 'appimagetool')
 
@@ -40,27 +41,41 @@ target.linux = () => {
 }
 
 target.darwin = () => {
-  assert(platform === 'darwin', 'must be run on macOS')
+  check(platform === 'darwin', 'must be run on macOS')
+  check(which('appdmg'), 'missing dependency: appdmg')
+
+  const targets = ls('-d', join(dist, '*-darwin-*'))
+  check(targets.length, 'no targets found')
+
+  for (let target of targets) {
+    let app = join(target, `${product}.app`)
+    let dmg = join(dist, `${name}-${version}.dmg`)
+
+    let config = join(res, 'dmg', channel, 'appdmg.json')
+
+    check(test('-d', app), `missing app: ${app}`)
+    check(test('-f', config), `missing config: ${config}`)
+
+    exec(`appdmg ${config} ${dmg}`)
+  }
 }
 
 target.win32 = async (args = []) => {
-  assert(platform === 'win32', 'must be run on Windows')
+  check(platform === 'win32', 'must be run on Windows')
 
   const { createWindowsInstaller } = require('electron-winstaller')
 
   const targets = ls('-d', join(dist, '*-win32-*'))
-  assert(targets.length, 'no targets found')
+  check(targets.length, 'no targets found')
 
   const [cert, pwd] = args
-  assert(cert, 'missing certificate')
-  assert(test('-f', cert), `certificate not found: ${cert}`)
-  assert(pwd, 'missing password')
+  check(cert, 'missing certificate')
+  check(test('-f', cert), `certificate not found: ${cert}`)
+  check(pwd, 'missing password')
 
   const params = getSignToolParams(cert, pwd)
 
   for (let target of targets) {
-    assert(target.endsWith('-x64'), 'only x64 installers supported')
-
     await createWindowsInstaller({
       appDirectory: target,
       outputDirectory: dist,
@@ -75,9 +90,9 @@ target.win32 = async (args = []) => {
 }
 
 
-function assert(predicate, msg, tag = 'pack') {
+function check(predicate, msg) {
   if (!predicate) {
-    console.error(msg, { tag })
+    console.error(msg)
     exit(1)
   }
 }
