@@ -95,7 +95,7 @@ target.all = (args = []) => {
           .to(join(dst, `${qualified.name}.desktop`))
 
         console.log('Copying icons...')
-        copyIcons(dst, qualified.name, release.name)
+        copyIcons(dst, channel, qualified.name)
 
         console.log('Linking AppRun...')
         cd(dst)
@@ -128,7 +128,7 @@ MimeType=image/jpeg;application/x-tpy;
 StartupWMClass=${name}`
 }
 
-function copyIcons(dst, channel, name, bin) {
+function copyIcons(dst, channel, name) {
   const theme = resolve(dst, 'usr', 'share', 'icons', 'hicolor')
   const icons = resolve(res, 'icons', channel, 'tropy')
 
@@ -144,5 +144,5 @@ function copyIcons(dst, channel, name, bin) {
     cp(join(icons, icon), join(target, file))
   }
 
-  cp(join(icons, 'scalable.svg'), join(dst, `${bin}.svg`))
+  cp(join(icons, 'scalable.svg'), join(dst, `${name}.svg`))
 }
