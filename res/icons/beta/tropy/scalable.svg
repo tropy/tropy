@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="a" data-name="Unbenannter Verlauf 11" x1="64" y1="-128.164" x2="64" y2="256.029" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#aee9e9"/>
+      <stop offset="0.5" stop-color="#68c1e8"/>
+      <stop offset="1" stop-color="#5c93e5"/>
+    </linearGradient>
+    <linearGradient id="b" data-name="Unbenannter Verlauf 36" x1="64" y1="40.25" x2="64" y2="104.455" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f6fbfe"/>
+      <stop offset="0.5" stop-color="#e8f6fc"/>
+      <stop offset="1" stop-color="#e1f3fa"/>
+    </linearGradient>
+  </defs>
+  <g>
+    <rect width="128" height="128" fill="none"/>
+    <circle cx="64" cy="64" r="58" fill="url(#a)"/>
+    <polygon points="101.267 40 26.733 40 39.435 62 45.208 62 35.393 45 92.607 45 85.679 57 53 57 53 104.704 75 92.002 75 69.792 70 72.679 70 89.115 58 96.044 58 62 88.565 62 101.267 40" fill="url(#b)"/>
+  </g>
+</svg>
