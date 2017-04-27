@@ -173,7 +173,7 @@ target.window = ([name]) => {
     for (let theme of THEMES) {
       template(
         join(home, 'src', 'stylesheets', platform, `${name}-${theme}.scss`),
-        `$platform: "${platform}";\n$theme: "${theme}";`
+        `$platform: "${platform}";\n$theme: "${theme}\n";`
       )
     }
   }
