@@ -31,12 +31,13 @@ const {
   vocab
 } = require('../reducers')
 
-const dev = (ARGS.dev || ARGS.debug)
+const devtools = (ARGS.dev || ARGS.debug) &&
+  window.__REDUX_DEVTOOLS_EXTENSION__
 
 module.exports = {
   create(init = {}) {
 
-    const saga = createSagaMiddleware({
+    let saga = createSagaMiddleware({
       logger,
       onError(error) {
         warn(`unhandled error in saga middleware: ${error.message}`)
@@ -44,7 +45,7 @@ module.exports = {
       }
     })
 
-    const reducer = combineReducers({
+    let reducer = combineReducers({
       intl,
       nav,
       ui,
@@ -65,7 +66,7 @@ module.exports = {
       vocab
     })
 
-    const middleware = applyMiddleware(
+    let middleware = applyMiddleware(
       debounce,
       throttle,
       thunk,
@@ -74,12 +75,12 @@ module.exports = {
       saga
     )
 
-    const enhancer = (dev && window.__REDUX_DEVTOOLS_EXTENSION__) ?
-      compose(middleware, window.__REDUX_DEVTOOLS_EXTENSION__()) :
-      middleware
+    if (typeof devtools === 'function') {
+      middleware = compose(middleware, devtools())
+    }
 
-    const store = createStore(reducer, init, enhancer)
-
-    return { ...store, saga }
+    return {
+      ...createStore(reducer, init, middleware), saga
+    }
   }
 }

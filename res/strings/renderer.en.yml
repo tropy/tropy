@@ -22,6 +22,9 @@ wizard:
     save_as: Change file name and location
     change: Change
 
+preferences:
+  title: Preferences
+
 prompt:
   item:
     destroy: >

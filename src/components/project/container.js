@@ -2,7 +2,6 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const { connect } = require('react-redux')
 const { ProjectView } = require('./view')
 const { ItemView } = require('../item')
@@ -32,7 +31,7 @@ const {
 
 const {
   arrayOf, oneOf, shape, bool, object, func, string, number
-} = PropTypes
+} = require('prop-types')
 
 
 class ProjectContainer extends PureComponent {
