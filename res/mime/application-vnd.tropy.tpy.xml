@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/vnd.tropy.tpy">
+    <comment>Tropy Project Database</comment>
+    <icon name="application-vnd.tropy.tpy"/>
+    <glob-deleteall/>
+    <glob pattern="*.tpy"/>
+  </mime-type>
+</mime-info>

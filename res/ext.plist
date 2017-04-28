@@ -63,7 +63,7 @@
         <key>public.filename-extension</key>
         <string>tpy</string>
         <key>public.mime-type</key>
-        <string>application/vnd.tpy</string>
+        <string>application/vnd.tropy.tpy</string>
       </dict>
     </dict>
 	</array>
