@@ -1,18 +1,28 @@
 'use strict'
 
 const { release } = require('os')
+const { platform } = process
 
 module.exports = {
 
   get EL_CAPITAN() {
-    return process.platform === 'darwin' && release() > '15'
+    return platform === 'darwin' && release() > '15'
   },
 
   get darwin() {
-    return process.platform === 'darwin'
+    return platform === 'darwin'
   },
 
-  meta: process.platform === 'darwin' ?
+  get linux() {
+    return platform === 'linux'
+  },
+
+  get win32() {
+    return platform === 'win32'
+  },
+
+
+  meta: platform === 'darwin' ?
     (event) => event.metaKey :
     (event) => event.ctrlKey
 }

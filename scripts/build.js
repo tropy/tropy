@@ -2,22 +2,27 @@
 
 require('shelljs/make')
 
+const electron = require('electron/package')
 const packager = require('electron-packager')
-const release = require('../lib/common/release')
 const { basename, extname, join, resolve, relative } = require('path')
+
+const {
+  author, channel, name, version, qualified, product
+} = require('../lib/common/release')
+
 const dir = resolve(__dirname, '..')
 const res = join(dir, 'res')
-const electron = require('electron/package')
+const icons = resolve(res, 'icons', channel, 'tropy')
+const mime = resolve(res, 'icons', 'mime', 'tpy')
+
 
 target.all = (args = []) => {
   const platform = args[0] || process.platform
   const arch = args[1] || process.arch
 
-  const { author, channel, version, qualified, product } = release
-
   const icon = platform === 'win32' ?
-    join(res, 'icons', channel, `${release.name}.ico`) :
-    join(res, 'icons', channel, `${release.name}.icns`)
+    join(res, 'icons', channel, `${name}.ico`) :
+    join(res, 'icons', channel, `${name}.icns`)
 
   const out = join(dir, 'dist', channel)
 
@@ -87,20 +92,29 @@ target.all = (args = []) => {
 
     switch (platform) {
       case 'linux': {
-        console.log(`Renaming executable to ${release.name}...`)
-        rename(dst, product, release.name)
+        const bin = join(dst, 'usr', 'bin')
+
+        console.log(`Renaming executable to ${qualified.name}...`)
+        rename(dst, product, qualified.name)
 
         console.log('Creating .desktop file...')
-        desktop(release.name, product, qualified.name)
-          .to(join(dst, `${qualified.name}.desktop`))
+        desktop().to(join(dst, `${qualified.name}.desktop`))
 
         console.log('Copying icons...')
-        copyIcons(dst, channel, qualified.name)
+        copyIcons(dst)
 
-        console.log('Linking AppRun...')
-        cd(dst)
-        ln('-s', `./${release.name}`, 'AppRun')
+        console.log('Linking usr/bin...')
+        mkdir('-p', bin)
+        cd(bin)
+        ln('-s', `../../${qualified.name}`, qualified.name)
         cd('-')
+
+        console.log('Copying desktop integration wrapper...')
+        const di = join(__dirname, './desktopintegration')
+        const wrapper = join(bin, `${qualified.name}.wrapper`)
+
+        cp(di, wrapper)
+        chmod('a+x', wrapper)
 
         break
       }
@@ -114,23 +128,22 @@ function rename(ctx, from, to) {
   mv(join(ctx, from), join(ctx, to))
 }
 
-function desktop(exec, name, icon) {
+function desktop() {
   return `#!/usr/bin/env xdg-open
 [Desktop Entry]
 Version=1.0
 Terminal=false
 Type=Application
-Name=${name}
-Exec=${exec} %f
-Icon=${icon}
+Name=${qualified.product}
+Exec=${qualified.name}.wrapper %f
+Icon=${qualified.name}
 Categories=GTK;Graphics;2DGraphics;Viewer;Development;
-MimeType=image/jpeg;application/x-tpy;
-StartupWMClass=${name}`
+MimeType=image/jpeg;application/vnd.tropy;
+StartupWMClass=${qualified.product}`
 }
 
-function copyIcons(dst, channel, name) {
+function copyIcons(dst) {
   const theme = resolve(dst, 'usr', 'share', 'icons', 'hicolor')
-  const icons = resolve(res, 'icons', channel, 'tropy')
 
   for (let icon of ls(icons)) {
     let ext = extname(icon)
@@ -138,11 +151,24 @@ function copyIcons(dst, channel, name) {
     let target = join(theme, variant, 'apps')
 
     let file = (variant === 'symbolic') ?
-      `${name}-symbolic${ext}` : `${name}${ext}`
+      `${qualified.name}-symbolic${ext}` : `${qualified.name}${ext}`
 
     mkdir('-p', target)
     cp(join(icons, icon), join(target, file))
   }
 
-  cp(join(icons, 'scalable.svg'), join(dst, `${name}.svg`))
+  for (let icon of ls(mime)) {
+    let ext = extname(icon)
+    let variant = basename(icon, ext)
+
+    if ((/@/).test(variant)) continue
+
+    let target = join(theme, variant, 'mimetypes')
+    let file = `application-vnd.tropy${ext}`
+
+    mkdir('-p', target)
+    cp(join(mime, icon), join(target, file))
+  }
+
+  cp(join(icons, 'scalable.svg'), join(dst, `${qualified.name}.svg`))
 }
