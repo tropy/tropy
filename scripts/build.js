@@ -32,7 +32,7 @@ target.all = (args = []) => {
     icon,
     out,
     dir,
-    name: product,
+    name: qualified.product,
     prune: true,
     overwrite: true,
 
