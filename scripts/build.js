@@ -13,6 +13,7 @@ const {
 const dir = resolve(__dirname, '..')
 const res = join(dir, 'res')
 const icons = resolve(res, 'icons', channel, 'tropy')
+const mime = resolve(res, 'icons', 'mime', 'tpy')
 
 
 target.all = (args = []) => {
@@ -91,8 +92,10 @@ target.all = (args = []) => {
 
     switch (platform) {
       case 'linux': {
-        console.log(`Renaming executable to ${name}...`)
-        rename(dst, product, name)
+        const bin = join(dst, 'usr', 'bin')
+
+        console.log(`Renaming executable to ${qualified.name}...`)
+        rename(dst, product, qualified.name)
 
         console.log('Creating .desktop file...')
         desktop().to(join(dst, `${qualified.name}.desktop`))
@@ -100,10 +103,18 @@ target.all = (args = []) => {
         console.log('Copying icons...')
         copyIcons(dst)
 
-        console.log('Linking AppRun...')
-        cd(dst)
-        ln('-s', `./${name}`, 'AppRun')
+        console.log('Linking usr/bin...')
+        mkdir('-p', bin)
+        cd(bin)
+        ln('-s', `../../${qualified.name}`, qualified.name)
         cd('-')
+
+        console.log('Copying desktop integration wrapper...')
+        const di = join(__dirname, './desktopintegration')
+        const wrapper = join(bin, `${qualified.name}.wrapper`)
+
+        cp(di, wrapper)
+        chmod('a+x', wrapper)
 
         break
       }
@@ -124,11 +135,11 @@ Version=1.0
 Terminal=false
 Type=Application
 Name=${qualified.product}
-Exec=${name} %f
+Exec=${qualified.name}.wrapper %f
 Icon=${qualified.name}
 Categories=GTK;Graphics;2DGraphics;Viewer;Development;
-MimeType=image/jpeg;application/x-tpy;
-StartupWMClass=${product}`
+MimeType=image/jpeg;application/vnd.tropy;
+StartupWMClass=${qualified.product}`
 }
 
 function copyIcons(dst) {
@@ -144,6 +155,19 @@ function copyIcons(dst) {
 
     mkdir('-p', target)
     cp(join(icons, icon), join(target, file))
+  }
+
+  for (let icon of ls(mime)) {
+    let ext = extname(icon)
+    let variant = basename(icon, ext)
+
+    if ((/@/).test(variant)) continue
+
+    let target = join(theme, variant, 'mimetypes')
+    let file = `application-vnd.tropy${ext}`
+
+    mkdir('-p', target)
+    cp(join(mime, icon), join(target, file))
   }
 
   cp(join(icons, 'scalable.svg'), join(dst, `${qualified.name}.svg`))

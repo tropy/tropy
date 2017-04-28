@@ -17,7 +17,7 @@ module.exports = {
 
   qualified: {
     product: (channel === 'stable') ?
-      productName : `${productName} (${titlecase(channel)})`,
+      productName : `${productName} ${titlecase(channel)}`,
 
     name: (channel === 'stable') ? name : `${name}-${channel}`
   }

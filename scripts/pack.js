@@ -3,7 +3,7 @@
 require('shelljs/make')
 
 const { join, resolve } = require('path')
-const { platform } = process
+const { arch, platform } = process
 const { getSignToolParams } = require('./sign')
 
 const {
@@ -14,6 +14,7 @@ const res = resolve(__dirname, '..', 'res')
 const dist = resolve(__dirname, '..', 'dist', channel)
 
 const APPIMAGETOOL = 'https://github.com/probonopd/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage'
+const APPRUN = 'https://github.com/probonopd/AppImageKit/releases/download/continuous/AppRun-x86_64'
 
 target.all = (...args) => {
   target[platform](...args)
@@ -23,21 +24,26 @@ target.all = (...args) => {
 target.linux = () => {
   check(platform === 'linux', 'must be run on Linux')
 
-  const targets = ls('-d', join(dist, '*-linux-*'))
-  check(targets.length, 'no targets found')
+  const src = join(dist, `${product}-linux-${arch}`)
+  check(test('-d', src), 'no target found')
 
   const appimagetool = join(__dirname, 'appimagetool')
+  const apprun = join(__dirname, 'AppRun')
 
   if (!test('-f', appimagetool)) {
     exec(`curl -L -o ${appimagetool} ${APPIMAGETOOL}`)
     chmod('a+x', appimagetool)
   }
 
-  for (let target of targets) {
-    cd(dist)
-    exec(`${appimagetool} -n ${target}`)
-    cd('-')
+  if (!test('-f', apprun)) {
+    exec(`curl -L -o ${apprun} ${APPRUN}`)
+    chmod('a+x', apprun)
   }
+
+  cp(apprun, join(src, 'AppRun'))
+
+  const dst = join(dist, `${product}-${version}-x86_${arch.slice(1)}.AppImage`)
+  exec(`${appimagetool} -n -v ${src} ${dst}`)
 }
 
 target.darwin = () => {
