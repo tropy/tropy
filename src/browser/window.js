@@ -3,7 +3,7 @@
 const { BrowserWindow, systemPreferences: pref } = require('electron')
 const { resolve, join } = require('path')
 const { format } = require('url')
-const { EL_CAPITAN } = require('../common/os')
+const { darwin, EL_CAPITAN } = require('../common/os')
 const { warn } = require('../common/log')
 
 const ROOT = resolve(__dirname, '..', '..', 'static')
@@ -34,7 +34,7 @@ const AQUA = {
 }
 
 function hasOverlayScrollBars() {
-  return 'darwin' === process.platform &&
+  return darwin &&
     'WhenScrolling' === pref.getUserDefault('AppleShowScrollBars', 'string')
 }
 
