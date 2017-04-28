@@ -14,10 +14,13 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
   process.env.NODE_ENV = opts.environment
   global.ARGS = opts
 
+  const { app }  = require('electron')
+  const { qualified }  = require('../common/release')
+
+  app.setName(qualified.product)
   require('./path')(opts.dir)
 
   if (!require('./squirrel')()) {
-    const { app }  = require('electron')
     const { all }  = require('bluebird')
     const { once } = require('../common/util')
     const { extname } = require('path')
