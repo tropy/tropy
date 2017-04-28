@@ -47,7 +47,7 @@ module.exports = {
       case 'darwin':
         if (!options.frame && EL_CAPITAN) {
           options.frame = true
-          options.titleBarStyle = 'hidden-inset'
+          options.titleBarStyle = options.titleBarStyle || 'hidden-inset'
         }
 
         data.aqua = AQUA[
