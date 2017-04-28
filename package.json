@@ -113,7 +113,7 @@
     "transducers.js": "^0.3.2",
     "uuid": "^3.0.1",
     "winston": "^2.1.1",
-    "write-file-atomic": "^1.1.4",
+    "write-file-atomic": "^2.0.0",
     "yargs": "^7.0.0"
   }
 }

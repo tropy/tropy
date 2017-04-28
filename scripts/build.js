@@ -5,9 +5,9 @@ require('shelljs/make')
 const electron = require('electron/package')
 const packager = require('electron-packager')
 const { basename, extname, join, resolve, relative } = require('path')
-
+const { desktop } = require('../lib/common/os')
 const {
-  author, channel, name, version, qualified, product
+  author, channel, name, version, qualified
 } = require('../lib/common/release')
 
 const dir = resolve(__dirname, '..')
@@ -24,22 +24,15 @@ target.all = (args = []) => {
     join(res, 'icons', channel, `${name}.ico`) :
     join(res, 'icons', channel, `${name}.icns`)
 
-  const out = join(dir, 'dist', channel)
-
   packager({
     platform,
     arch,
     icon,
-    out,
     dir,
-    name: product,
+    out: join(dir, 'dist'),
+    name: qualified.product,
     prune: true,
     overwrite: true,
-
-    asar: {
-      unpack: '**/*.node'
-    },
-
     electronVersion: electron.version,
     appVersion: version,
     appBundleId: 'org.tropy.tropy',
@@ -48,18 +41,17 @@ target.all = (args = []) => {
     appCopyright:
       `Copyright (c) 2015-${new Date().getFullYear()} ` +
       `${author.name}. All rights not expressly granted are reserved.`,
-
     extendInfo: join(res, 'ext.plist'),
-
+    extraResource: [
+      join(res, 'icons', 'mime', 'tpy.icns')
+    ],
     win32metadata: {
       CompanyName: author.name,
       ProductName: qualified.product
     },
-
-    extraResource: [
-      join(res, 'icons', 'mime', 'tpy.icns')
-    ],
-
+    asar: {
+      unpack: '**/{*.node,lib/stylesheets/**/*}',
+    },
     ignore: [
       /.DS_Store/,
       /.babelrc/,
@@ -92,10 +84,8 @@ target.all = (args = []) => {
 
     switch (platform) {
       case 'linux': {
-        const bin = join(dst, 'usr', 'bin')
-
         console.log(`Renaming executable to ${qualified.name}...`)
-        rename(dst, product, qualified.name)
+        rename(dst, qualified.product, qualified.name)
 
         console.log('Creating .desktop file...')
         desktop().to(join(dst, `${qualified.name}.desktop`))
@@ -103,24 +93,11 @@ target.all = (args = []) => {
         console.log('Copying icons...')
         copyIcons(dst)
 
-        console.log('Linking usr/bin...')
-        mkdir('-p', bin)
-        cd(bin)
-        ln('-s', `../../${qualified.name}`, qualified.name)
-        cd('-')
-
-        console.log('Copying desktop integration wrapper...')
-        const di = join(__dirname, './desktopintegration')
-        const wrapper = join(bin, `${qualified.name}.wrapper`)
-
-        cp(di, wrapper)
-        chmod('a+x', wrapper)
-
         break
       }
     }
 
-    console.log(`Saved package in ${relative(dir, dst)}`)
+    console.log(`Saved app to ${relative(dir, dst)}`)
   })
 }
 
@@ -128,22 +105,8 @@ function rename(ctx, from, to) {
   mv(join(ctx, from), join(ctx, to))
 }
 
-function desktop() {
-  return `#!/usr/bin/env xdg-open
-[Desktop Entry]
-Version=1.0
-Terminal=false
-Type=Application
-Name=${qualified.product}
-Exec=${qualified.name}.wrapper %f
-Icon=${qualified.name}
-Categories=GTK;Graphics;2DGraphics;Viewer;Development;
-MimeType=image/jpeg;application/vnd.tropy;
-StartupWMClass=${qualified.product}`
-}
-
 function copyIcons(dst) {
-  const theme = resolve(dst, 'usr', 'share', 'icons', 'hicolor')
+  const theme = resolve(dst, 'icons')
 
   for (let icon of ls(icons)) {
     let ext = extname(icon)
@@ -169,6 +132,4 @@ function copyIcons(dst) {
     mkdir('-p', target)
     cp(join(mime, icon), join(target, file))
   }
-
-  cp(join(icons, 'scalable.svg'), join(dst, `${qualified.name}.svg`))
 }

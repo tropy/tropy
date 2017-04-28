@@ -3,36 +3,34 @@
 require('shelljs/make')
 
 const { join, resolve, relative } = require('path')
-const { product, channel } = require('../lib/common/release')
+const { qualified } = require('../lib/common/release')
 const { arch, platform } = process
 const dir = resolve(__dirname, '..')
 
+const KITS = 'C:\\Program Files (x86)\\Windows Kits\\'
 
 target.all = (...args) => {
   target[platform](...args)
 }
 
+
 target.win32 = (args = []) => {
   check(platform === 'win32', 'must be run on Windows')
 
-  const [cert, pwd] = args
+  let [cert, pass] = args
+  cert = cert || env.SIGN_WIN32_CERT
+  pass = pass || env.SIGN_WIN32_PASS
 
-  check(pwd, 'missing password')
+  check(pass, 'missing password')
   check(cert, 'missing certificate')
-
   check(test('-f', cert), `certificate not found: ${cert}`)
 
-  const KITS = 'C:\\Program Files (x86)\\Windows Kits\\'
-  const PATH = join(KITS, '8.1', 'bin', arch)
+  const signtool = getSignTool()
+  const params = getSignToolParams(cert, pass)
+  check(signtool, `missing dependency: ${signtool}`)
 
-  const signtool = join(PATH, 'signtool.exe')
-  const params = getSignToolParams(cert, pwd)
-
-  const targets = ls('-d', join(dir, 'dist', channel, '*-win32-*'))
-
-  check(test('-f', signtool), `missing dependency: ${signtool}`)
+  const targets = ls('-d', join(dir, 'dist', '*-win32-*'))
   check(targets.length, 'no targets found')
-
 
   for (let target of targets) {
     for (let file of ls(join(target, '*.exe'))) {
@@ -42,13 +40,14 @@ target.win32 = (args = []) => {
   }
 }
 
+
 target.darwin = (args = []) => {
   check(platform === 'darwin', 'must be run on macOS')
 
   check(which('codesign'), 'missing dependency: codesign')
   check(which('spctl'), 'missing dependency: spctl')
 
-  const targets = ls('-d', join(dir, 'dist', channel, '*-darwin-*'))
+  const targets = ls('-d', join(dir, 'dist', '*-darwin-*'))
   const identity = args[0] || env.SIGN_DARWIN_IDENTITY
 
   check(targets.length, 'no targets found')
@@ -57,8 +56,8 @@ target.darwin = (args = []) => {
   let app
 
   for (let target of targets) {
-    app = join(target, `${product}.app`)
-    check(app, `app not found: ${app}`)
+    app = join(target, `${qualified.product}.app`)
+    check(test('-d', app), `app not found: ${app}`)
 
     console.log(`signing ${relative(dir, app)} with ${identity}...`)
 
@@ -90,6 +89,7 @@ target.darwin = (args = []) => {
   }
 }
 
+
 function check(predicate, msg) {
   if (!predicate) {
     console.error(msg)
@@ -101,12 +101,21 @@ function find(args) {
   return exec(`find ${args}`, { silent: true }).stdout.trim().split('\n')
 }
 
-function getSignToolParams(cert, pwd, ts = 'http://timestamp.comodoca.com') {
+
+function getSignTool() {
   return [
-    `/t ${ts}`, '/fd SHA256', `/f ${cert}`, `/p ${pwd}`
+    join(KITS, '8.1', 'bin', arch, 'signtool.exe'),
+    join(KITS, '10', 'bin', arch, 'signtool.exe')
+  ].find(signtool => test('-f', signtool))
+}
+
+function getSignToolParams(cert, pass, ts = 'http://timestamp.comodoca.com') {
+  return [
+    `/t ${ts}`, '/fd SHA256', `/f ${cert}`, `/p ${pass}`
   ].join(' ')
 }
 
 module.exports = {
+  getSignTool,
   getSignToolParams
 }

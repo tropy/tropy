@@ -3,7 +3,7 @@
 require('shelljs/make')
 
 const { join, resolve } = require('path')
-const { arch, platform } = process
+const { platform } = process
 const { getSignToolParams } = require('./sign')
 
 const {
@@ -11,50 +11,67 @@ const {
 } = require('../lib/common/release')
 
 const res = resolve(__dirname, '..', 'res')
-const dist = resolve(__dirname, '..', 'dist', channel)
+const dist = resolve(__dirname, '..', 'dist')
 
 const APPIMAGETOOL = 'https://github.com/probonopd/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage'
-const APPRUN = 'https://github.com/probonopd/AppImageKit/releases/download/continuous/AppRun-x86_64'
 
 target.all = (...args) => {
   target[platform](...args)
 }
 
 
-target.linux = () => {
+target.linux = (args = ['bz2', 'AppImage']) => {
   check(platform === 'linux', 'must be run on Linux')
 
-  const src = join(dist, `${product}-linux-${arch}`)
-  check(test('-d', src), 'no target found')
+  const src = join(dist, `${qualified.product}-linux-x64`)
+  check(test('-d', src), 'no sources found')
 
-  const appimagetool = join(__dirname, 'appimagetool')
-  const apprun = join(__dirname, 'AppRun')
+  for (let arg of args) {
+    switch (arg) {
+      case 'bz2':
+        exec(
+          `tar cjf ${join(dist, `${name}-${version}.tar.bz2`)} -C "${src}" .`
+        )
+        break
 
-  if (!test('-f', appimagetool)) {
-    exec(`curl -L -o ${appimagetool} ${APPIMAGETOOL}`)
-    chmod('a+x', appimagetool)
+      case 'AppImage': {
+        const appdir = join(dist, `${product}-${version}.AppDir`)
+        const appimagetool = join(__dirname, 'appimagetool')
+
+        if (!test('-f', appimagetool)) {
+          exec(`curl -L -o ${appimagetool} ${APPIMAGETOOL}`)
+          chmod('a+x', appimagetool)
+        }
+
+        rm('-rf', appdir)
+        cp('-r', src, appdir)
+        cd(appdir)
+        ln('-s', qualified.name, 'AppRun')
+        cp(`./icons/512x512/apps/${qualified.name}.png`, '.')
+        cd('-')
+
+        const dst = join(dist, `${product}-${version}-x86_64.AppImage`)
+        exec(`${appimagetool} -n -v ${appdir} ${dst}`)
+        break
+      }
+
+      default:
+        console.error(`unknown linux target: ${arg}`)
+    }
   }
 
-  if (!test('-f', apprun)) {
-    exec(`curl -L -o ${apprun} ${APPRUN}`)
-    chmod('a+x', apprun)
-  }
-
-  cp(apprun, join(src, 'AppRun'))
-
-  const dst = join(dist, `${product}-${version}-x86_${arch.slice(1)}.AppImage`)
-  exec(`${appimagetool} -n -v ${src} ${dst}`)
 }
+
 
 target.darwin = () => {
   check(platform === 'darwin', 'must be run on macOS')
   check(which('appdmg'), 'missing dependency: appdmg')
 
-  const targets = ls('-d', join(dist, '*-darwin-*'))
-  check(targets.length, 'no targets found')
+  const sources = ls('-d', join(dist, '*-darwin-*'))
+  check(sources.length, 'no sources found')
 
-  for (let target of targets) {
-    let app = join(target, `${product}.app`)
+  for (let src of sources) {
+    let app = join(src, `${product}.app`)
     let dmg = join(dist, `${name}-${version}.dmg`)
 
     let config = join(res, 'dmg', channel, 'appdmg.json')
@@ -66,33 +83,35 @@ target.darwin = () => {
   }
 }
 
+
 target.win32 = async (args = []) => {
   check(platform === 'win32', 'must be run on Windows')
 
   const { createWindowsInstaller } = require('electron-winstaller')
 
-  const targets = ls('-d', join(dist, '*-win32-*'))
-  check(targets.length, 'no targets found')
+  const sources = ls('-d', join(dist, '*-win32-*'))
+  check(sources.length === 1, 'multiple sources found')
 
-  const [cert, pwd] = args
+  let [cert, pass] = args
+  cert = cert || env.SIGN_WIN32_CERT
+  pass = pass || env.SIGN_WIN32_PASS
+
   check(cert, 'missing certificate')
+  check(pass, 'missing password')
   check(test('-f', cert), `certificate not found: ${cert}`)
-  check(pwd, 'missing password')
 
-  const params = getSignToolParams(cert, pwd)
+  const params = getSignToolParams(cert, pass)
 
-  for (let target of targets) {
-    await createWindowsInstaller({
-      appDirectory: target,
-      outputDirectory: dist,
-      authors: author.name,
-      signWithParams: params,
-      exe: `${product}.exe`,
-      setupExe: `setup-${qualified.name}.exe`,
-      setupIcon: join(res, 'icons', channel, `${name}.ico`),
-      noMsi: true
-    })
-  }
+  await createWindowsInstaller({
+    appDirectory: sources[0],
+    outputDirectory: dist,
+    authors: author.name,
+    signWithParams: params,
+    exe: `${qualified.product}.exe`,
+    setupExe: `setup-${name}-${version}.exe`,
+    setupIcon: join(res, 'icons', channel, `${name}.ico`),
+    noMsi: true
+  })
 }
 
 
@@ -102,5 +121,3 @@ function check(predicate, msg) {
     exit(1)
   }
 }
-
-module.exports = Object.assign({}, target)
