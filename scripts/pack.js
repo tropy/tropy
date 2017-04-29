@@ -28,12 +28,33 @@ target.linux = (args = ['bz2', 'AppImage']) => {
 
   for (let arg of args) {
     switch (arg) {
-      case 'bz2':
+      case 'flatpak': {
+        const installer = require('electron-installer-flatpak')
+        const options = {
+          src,
+          dest: dist,
+          productName: qualified.product,
+          name: qualified.name,
+          bin: qualified.name,
+          icon: join(res, 'icons', channel, 'tropy', '512x512.png'),
+          mimeType: ['application/vnd.tropy.tpy', 'image/jpeg'],
+          categories: ['Graphics', 'Viewer', 'Science']
+        }
+
+        installer(options, error => {
+          if (error) return console.log(error)
+          console.log(`created flatpak at ${options.dest}`)
+
+        })
+
+        break
+      }
+      case 'bz2': {
         exec(
           `tar cjf ${join(dist, `${name}-${version}.tar.bz2`)} -C "${src}" .`
         )
         break
-
+      }
       case 'AppImage': {
         const appdir = join(dist, `${product}-${version}.AppDir`)
         const appimagetool = join(__dirname, 'appimagetool')

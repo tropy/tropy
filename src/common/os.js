@@ -34,7 +34,8 @@ Type=Application
 Name=${qualified.product}
 Exec=${exec} %f
 Icon=${qualified.name}
-Categories=Graphics;Viewer;Science;
-MimeType=application/vnd.tropy.tpy;image/jpeg;`
+StartUpNotify=true
+MimeType=application/vnd.tropy.tpy;image/jpeg;
+Categories=Graphics;Viewer;Science;`
   }
 }
