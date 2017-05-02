@@ -26,7 +26,7 @@ all([
   .then(() => {
     render(
       <Main store={store}><ProjectContainer/></Main>,
-      $('#view')
+      $('.view')
     )
   })
 

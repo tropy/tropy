@@ -20,7 +20,7 @@ all([
   ready
 ])
   .then(() => {
-    render(<Main store={store}><PrefsContainer/></Main>, $('body'))
+    render(<Main store={store}><PrefsContainer/></Main>, $('.view'))
   })
 
 dialog.start()
