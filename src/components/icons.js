@@ -404,3 +404,17 @@ i('Item', (
     </g>
   </svg>
 ))
+
+
+/* 32 x 32 */
+
+i('Template', (
+  <svg width="32" height="32">
+    <g className="line" fill="currentColor">
+      <path d="M21.707,0H2V32H30V8.293Zm6.586,8H22V1.707ZM29,31H3V1H21V9h8ZM8,27H24V24H8Zm1-2H23v1H9ZM8,21H24V18H8Zm1-2H23v1H9ZM8,15H24V12H8Zm1-2H23v1H9Zm9-7H8V9H18ZM17,8H9V7h8Z"/>
+    </g>
+    <g className="block" fill="currentColor">
+      <path d="M23,20H9V19H23Zm0,5H9v1H23ZM9,8h8V7H9ZM22,.293V8h7.707ZM23,13H9v1H23Zm7-4V32H2V0H21V9ZM8,9H18V6H8ZM24,24H8v3H24Zm0-6H8v3H24Zm0-6H8v3H24Z"/>
+    </g>
+  </svg>
+))

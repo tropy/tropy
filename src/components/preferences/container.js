@@ -26,46 +26,50 @@ class PrefsContainer extends PureComponent {
   render() {
     return (
       <div className="preferences">
-        {this.renderTitleBar()}
-        <nav>
-          <PrefPaneToggle
+        <header>
+          {this.renderTitleBar()}
+          <nav>
+            <PrefPaneToggle
+              name="app"
+              isActive={this.isActive('app')}
+              isDisabled
+              onClick={this.toggle}/>
+            <PrefPaneToggle
+              name="project"
+              isActive={this.isActive('project')}
+              isDisabled
+              onClick={this.toggle}/>
+            <PrefPaneToggle
+              name="template"
+              icon="IconTemplate"
+              isActive={this.isActive('template')}
+              onClick={this.toggle}/>
+            <PrefPaneToggle
+              name="vocab"
+              isActive={this.isActive('vocab')}
+              isDisabled
+              onClick={this.toggle}/>
+          </nav>
+        </header>
+        <main>
+          <PrefPane
             name="app"
-            isActive={this.isActive('app')}
-            isDisabled
-            onClick={this.toggle}/>
-          <PrefPaneToggle
+            isActive={this.isActive('app')}/>
+
+          <PrefPane
             name="project"
-            isActive={this.isActive('project')}
-            isDisabled
-            onClick={this.toggle}/>
-          <PrefPaneToggle
+            isActive={this.isActive('project')}/>
+
+          <PrefPane
             name="template"
-            isActive={this.isActive('template')}
-            onClick={this.toggle}/>
-          <PrefPaneToggle
+            isActive={this.isActive('template')}>
+            <TemplateEditor/>
+          </PrefPane>
+
+          <PrefPane
             name="vocab"
-            isActive={this.isActive('vocab')}
-            isDisabled
-            onClick={this.toggle}/>
-        </nav>
-
-        <PrefPane
-          name="app"
-          isActive={this.isActive('app')}/>
-
-        <PrefPane
-          name="project"
-          isActive={this.isActive('project')}/>
-
-        <PrefPane
-          name="template"
-          isActive={this.isActive('template')}>
-          <TemplateEditor/>
-        </PrefPane>
-
-        <PrefPane
-          name="vocab"
-          isActive={this.isActive('vocab')}/>
+            isActive={this.isActive('vocab')}/>
+        </main>
       </div>
     )
   }
