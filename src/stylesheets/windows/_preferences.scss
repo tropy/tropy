@@ -29,7 +29,8 @@
   "../components/titlebar",
   "../components/icons",
   "../components/button",
-  "../components/preferences";
+  "../components/preferences",
+  "../components/template-editor";
 
 
 // Partials
@@ -37,4 +38,6 @@
 
 @import
   "../partials/window-controls",
-  "../partials/draggable";
+  "../partials/draggable",
+  "../partials/grid",
+  "../partials/forms";

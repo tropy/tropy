@@ -1,0 +1,28 @@
+//
+// Template editor
+// --------------------------------------------------
+
+.template.editor {
+  margin-top: $space-lg;
+
+  .property {
+    background: $property-bg;
+    padding: 5px 0;
+    border-radius: $border-radius-small;
+    margin-bottom: $space-min;
+  }
+
+  .form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: $space-min;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      text-align: right;
+    }
+  }
+}
