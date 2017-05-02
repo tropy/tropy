@@ -1,6 +1,6 @@
 'use strict'
 
-const { call, put, select } = require('redux-saga/effects')
+const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { openImages } = require('../dialog')
 const mod = require('../models')
@@ -168,11 +168,11 @@ class Move extends Command {
       await mod.photo.order(tx, item, order)
     })
 
-    yield [
+    yield all([
       put(act.photo.bulk.update([ids, { item }])),
       put(act.item.photos.remove({ id: original.id, photos: ids })),
       put(act.item.photos.add({ id: item, photos: ids }, { idx }))
-    ]
+    ])
 
     this.undo = act.photo.move({
       photos: photos.map(({ id }) => ({ id, item })),
