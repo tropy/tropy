@@ -63,7 +63,6 @@
     "enzyme": "^2.8.1",
     "eslint": "^3.0.0",
     "eslint-plugin-react": "^6.0.0",
-    "gitbook-cli": "^2.3.0",
     "glob": "^7.0.0",
     "istanbul-lib-hook": "^1.0.5",
     "istanbul-lib-instrument": "^1.7.0",

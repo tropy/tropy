@@ -10,3 +10,4 @@ db/db.sqlite
 *.tpy
 .vimrc
 scripts/appimagetool
+_book
