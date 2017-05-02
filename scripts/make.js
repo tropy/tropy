@@ -13,7 +13,6 @@ const { join, resolve, relative, dirname } = require('path')
 
 const home = resolve(__dirname, '..')
 const nbin = join(home, 'node_modules', '.bin')
-const doc = join(home, 'doc')
 const cov = join(home, 'coverage')
 const covtmp = join(home, '.nyc_output')
 
@@ -197,7 +196,6 @@ target.rules = () => {
 target.clean = () => {
   rm('-rf', join(home, 'lib'))
   rm('-rf', join(home, 'dist'))
-  rm('-rf', doc)
   rm('-rf', cov)
   rm('-rf', covtmp)
 
