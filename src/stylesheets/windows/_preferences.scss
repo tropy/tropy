@@ -1,0 +1,37 @@
+//
+// Preferences window
+// --------------------------------------------------
+
+
+// Abstracts
+// --------------------------------------------------
+
+@import
+  "../abstracts/variables",
+  "../abstracts/mixins",
+  "../abstracts/functions",
+  "../abstracts/placeholders";
+
+
+// Scaffolding
+// --------------------------------------------------
+
+@import
+  "../base/reset",
+  "../base/base",
+  "../base/type";
+
+
+// Components
+// --------------------------------------------------
+
+@import
+  "../components/preferences";
+
+
+// Partials
+// --------------------------------------------------
+
+@import
+  "../partials/window-controls",
+  "../partials/draggable";

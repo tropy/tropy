@@ -1,2 +1,27 @@
+//
+// Light preferences window
+// --------------------------------------------------
+
 $platform: "linux";
 $theme: "light";
+
+
+// Theme
+// --------------------------------------------------
+
+@import
+  "../themes/light";
+
+
+// Window
+// --------------------------------------------------
+
+@import
+  "../windows/preferences";
+
+
+// Operating system specific styles
+// --------------------------------------------------
+
+@import
+  "os";
