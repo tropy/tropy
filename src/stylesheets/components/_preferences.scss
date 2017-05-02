@@ -3,9 +3,13 @@
 // --------------------------------------------------
 
 .preferences {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   background: $preferences-bg;
 
   .preferences-header {
+    flex: 0 0 auto;
     border-bottom: 1px solid $preferences-header-border;
   }
 
@@ -39,5 +43,11 @@
         display: block;
       }
     }
+  }
+
+  main {
+    flex: 1 1 auto;
+    overflow-y: scroll;
+    padding: 0 $space-lg;
   }
 }

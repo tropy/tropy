@@ -109,7 +109,7 @@ $text-selection-bg: $brand-primary-light;
 // Forms
 $input-color:             $shade-9;
 $input-bg:                $shade-0; // Transparent causes border/box-shadow issue
-$input-border:            $shade-2;
+$input-border:            $shade-3;
 $input-color-focus:       $brand-primary-60;
 $input-color-placeholder: $shade-4;
 $input-color-readonly:    $shade-6;
@@ -278,3 +278,6 @@ $editor-hr-border-color:  $shade-2;
 // Preferences
 $preferences-bg:            $shade-1;
 $preferences-header-border: $shade-3;
+
+// Template editor
+$property-bg: $shade-2;
