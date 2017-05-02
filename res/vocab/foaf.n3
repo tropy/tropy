@@ -1,0 +1,715 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix wot: <http://xmlns.com/wot/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix vs: <http://www.w3.org/2003/06/sw-vocab-status/ns#> .
+
+<http://xmlns.com/foaf/0.1/> a owl:Ontology ;
+	dc:title "Friend of a Friend (FOAF) vocabulary" ;
+	dc:description "The Friend of a Friend (FOAF) RDF vocabulary, described using W3C RDF Schema and the Web Ontology Language." .
+
+wot:assurance a owl:AnnotationProperty .
+
+wot:src_assurance a owl:AnnotationProperty .
+
+vs:term_status a owl:AnnotationProperty .
+
+dc:description a owl:AnnotationProperty .
+
+dc:title a owl:AnnotationProperty .
+
+dc:date a owl:AnnotationProperty .
+
+rdfs:Class a owl:Class .
+
+foaf:LabelProperty a rdfs:Class ;
+	vs:term_status "unstable" ;
+	rdfs:label "Label Property" ;
+	rdfs:comment "A foaf:LabelProperty is any RDF property with texual values that serve as labels." ;
+	a owl:Class ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:Person a rdfs:Class ;
+	rdfs:label "Person" ;
+	rdfs:comment "A person." ;
+	vs:term_status "stable" ;
+	a owl:Class ;
+	owl:equivalentClass <http://schema.org/Person> , <http://www.w3.org/2000/10/swap/pim/contact#Person> ;
+	rdfs:subClassOf foaf:Agent .
+
+foaf:Agent a owl:Class .
+
+foaf:Person rdfs:subClassOf <http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing> .
+
+<http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing> a owl:Class ;
+	rdfs:label "Spatial Thing" .
+
+foaf:Person rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+	owl:disjointWith foaf:Organization , foaf:Project .
+
+foaf:Document a rdfs:Class ;
+	rdfs:label "Document" ;
+	rdfs:comment "A document." ;
+	vs:term_status "stable" ;
+	a owl:Class ;
+	owl:equivalentClass <http://schema.org/CreativeWork> ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+	owl:disjointWith foaf:Organization , foaf:Project .
+
+foaf:Organization a rdfs:Class ;
+	rdfs:label "Organization" ;
+	rdfs:comment "An organization." ;
+	vs:term_status "stable" ;
+	a owl:Class ;
+	rdfs:subClassOf foaf:Agent ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+	owl:disjointWith foaf:Person , foaf:Document .
+
+foaf:Group a rdfs:Class ;
+	vs:term_status "stable" ;
+	rdfs:label "Group" ;
+	rdfs:comment "A class of Agents." ;
+	a owl:Class ;
+	rdfs:subClassOf foaf:Agent .
+
+foaf:Agent a rdfs:Class ;
+	vs:term_status "stable" ;
+	rdfs:label "Agent" ;
+	rdfs:comment "An agent (eg. person, group, software or physical artifact)." ;
+	owl:equivalentClass <http://purl.org/dc/terms/Agent> .
+
+foaf:Project a rdfs:Class ;
+	vs:term_status "testing" ;
+	rdfs:label "Project" ;
+	rdfs:comment "A project (a collective endeavour of some kind)." ;
+	a owl:Class ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+	owl:disjointWith foaf:Person , foaf:Document .
+
+foaf:Image a rdfs:Class ;
+	vs:term_status "stable" ;
+	rdfs:label "Image" ;
+	rdfs:comment "An image." ;
+	a owl:Class ;
+	owl:equivalentClass <http://schema.org/ImageObject> ;
+	rdfs:subClassOf foaf:Document ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:PersonalProfileDocument a rdfs:Class ;
+	rdfs:label "PersonalProfileDocument" ;
+	rdfs:comment "A personal profile RDF document." ;
+	vs:term_status "testing" ;
+	a owl:Class ;
+	rdfs:subClassOf foaf:Document .
+
+foaf:OnlineAccount a rdfs:Class ;
+	vs:term_status "testing" ;
+	rdfs:label "Online Account" ;
+	rdfs:comment "An online account." ;
+	a owl:Class ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+	rdfs:subClassOf owl:Thing .
+
+owl:Thing rdfs:label "Thing" .
+
+foaf:OnlineGamingAccount a rdfs:Class ;
+	vs:term_status "unstable" ;
+	rdfs:label "Online Gaming Account" ;
+	rdfs:comment "An online gaming account." ;
+	a owl:Class ;
+	rdfs:subClassOf foaf:OnlineAccount ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:OnlineEcommerceAccount a rdfs:Class ;
+	vs:term_status "unstable" ;
+	rdfs:label "Online E-commerce Account" ;
+	rdfs:comment "An online e-commerce account." ;
+	a owl:Class ;
+	rdfs:subClassOf foaf:OnlineAccount ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:OnlineChatAccount a rdfs:Class ;
+	vs:term_status "unstable" ;
+	rdfs:label "Online Chat Account" ;
+	rdfs:comment "An online chat account." ;
+	a owl:Class ;
+	rdfs:subClassOf foaf:OnlineAccount ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:mbox a rdf:Property ;
+	vs:term_status "stable" ;
+	rdfs:label "personal mailbox" ;
+	rdfs:comment "A  personal mailbox, ie. an Internet mailbox associated with exactly one owner, the first owner of this mailbox. This is a 'static inverse functional property', in that  there is (across time and change) at most one individual that ever has any particular value for foaf:mbox." ;
+	a owl:InverseFunctionalProperty , owl:ObjectProperty ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range owl:Thing ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:mbox_sha1sum a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "sha1sum of a personal mailbox URI name" ;
+	rdfs:comment "The sha1sum of the URI of an Internet mailbox associated with exactly one owner, the  first owner of the mailbox." ;
+	a owl:InverseFunctionalProperty , owl:DatatypeProperty ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range rdfs:Literal ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:gender a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "gender" ;
+	rdfs:comment "The gender of this Agent (typically but not necessarily 'male' or 'female')." ;
+	a owl:FunctionalProperty , owl:DatatypeProperty ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range rdfs:Literal ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:geekcode a rdf:Property ;
+	vs:term_status "archaic" ;
+	rdfs:label "geekcode" ;
+	rdfs:comment "A textual geekcode for this person, see http://www.geekcode.com/geek.html" ;
+	a owl:DatatypeProperty ;
+	rdfs:domain foaf:Person ;
+	rdfs:range rdfs:Literal ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:dnaChecksum a rdf:Property ;
+	vs:term_status "archaic" ;
+	rdfs:label "DNA checksum" ;
+	rdfs:comment "A checksum for the DNA of some thing. Joke." ;
+	a owl:DatatypeProperty ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+	rdfs:range rdfs:Literal .
+
+foaf:sha1 a rdf:Property ;
+	vs:term_status "unstable" ;
+	rdfs:label "sha1sum (hex)" ;
+	rdfs:comment "A sha1sum hash, in hex." ;
+	a owl:DatatypeProperty ;
+	rdfs:domain foaf:Document ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:based_near a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "based near" ;
+	rdfs:comment "A location that something is based near, for some broadly human notion of near." ;
+	a owl:ObjectProperty ;
+	rdfs:domain <http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing> ;
+	rdfs:range <http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing> ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:title a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "title" ;
+	rdfs:comment "Title (Mr, Mrs, Ms, Dr. etc)" ;
+	a owl:DatatypeProperty ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:nick a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "nickname" ;
+	rdfs:comment "A short informal nickname characterising an agent (includes login identifiers, IRC and other chat nicknames)." ;
+	a owl:DatatypeProperty ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:jabberID a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "jabber ID" ;
+	rdfs:comment "A jabber ID for something." ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range rdfs:Literal ;
+	a owl:DatatypeProperty , owl:InverseFunctionalProperty .
+
+foaf:aimChatID a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "AIM chat ID" ;
+	rdfs:comment "An AIM chat ID" ;
+	a owl:DatatypeProperty ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+	rdfs:subPropertyOf foaf:nick ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range rdfs:Literal ;
+	a owl:InverseFunctionalProperty .
+
+foaf:skypeID a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "Skype ID" ;
+	rdfs:comment "A Skype ID" ;
+	a owl:DatatypeProperty ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+	rdfs:subPropertyOf foaf:nick ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range rdfs:Literal .
+
+foaf:icqChatID a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "ICQ chat ID" ;
+	rdfs:comment "An ICQ chat ID" ;
+	a owl:DatatypeProperty ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+	rdfs:subPropertyOf foaf:nick ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range rdfs:Literal ;
+	a owl:InverseFunctionalProperty .
+
+foaf:yahooChatID a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "Yahoo chat ID" ;
+	rdfs:comment "A Yahoo chat ID" ;
+	a owl:DatatypeProperty ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+	rdfs:subPropertyOf foaf:nick ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range rdfs:Literal ;
+	a owl:InverseFunctionalProperty .
+
+foaf:msnChatID a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "MSN chat ID" ;
+	rdfs:comment "An MSN chat ID" ;
+	a owl:DatatypeProperty ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+	rdfs:subPropertyOf foaf:nick ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range rdfs:Literal ;
+	a owl:InverseFunctionalProperty .
+
+foaf:name a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "name" ;
+	rdfs:comment "A name for some thing." ;
+	a owl:DatatypeProperty ;
+	rdfs:domain owl:Thing ;
+	rdfs:range rdfs:Literal ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+	rdfs:subPropertyOf rdfs:label .
+
+foaf:firstName a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "firstName" ;
+	rdfs:comment "The first name of a person." ;
+	a owl:DatatypeProperty ;
+	rdfs:domain foaf:Person ;
+	rdfs:range rdfs:Literal ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:lastName a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "lastName" ;
+	rdfs:comment "The last name of a person." ;
+	a owl:DatatypeProperty ;
+	rdfs:domain foaf:Person ;
+	rdfs:range rdfs:Literal ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:givenName a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "Given name" ;
+	rdfs:comment "The given name of some person." ;
+	a owl:DatatypeProperty ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:givenname a rdf:Property ;
+	vs:term_status "archaic" ;
+	rdfs:label "Given name" ;
+	rdfs:comment "The given name of some person." ;
+	a owl:DatatypeProperty ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:surname a rdf:Property ;
+	vs:term_status "archaic" ;
+	rdfs:label "Surname" ;
+	rdfs:comment "The surname of some person." ;
+	a owl:DatatypeProperty ;
+	rdfs:domain foaf:Person ;
+	rdfs:range rdfs:Literal ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:family_name a rdf:Property ;
+	vs:term_status "archaic" ;
+	rdfs:label "family_name" ;
+	rdfs:comment "The family name of some person." ;
+	a owl:DatatypeProperty ;
+	rdfs:domain foaf:Person ;
+	rdfs:range rdfs:Literal ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:familyName a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "familyName" ;
+	rdfs:comment "The family name of some person." ;
+	a owl:DatatypeProperty ;
+	rdfs:domain foaf:Person ;
+	rdfs:range rdfs:Literal ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:phone a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "phone" ;
+	rdfs:comment "A phone,  specified using fully qualified tel: URI scheme (refs: http://www.w3.org/Addressing/schemes.html#tel)." ;
+	a owl:ObjectProperty ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:homepage a rdf:Property ;
+	vs:term_status "stable" ;
+	rdfs:label "homepage" ;
+	rdfs:comment "A homepage for some thing." ;
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf foaf:page , foaf:isPrimaryTopicOf ;
+	a owl:InverseFunctionalProperty ;
+	rdfs:domain owl:Thing ;
+	rdfs:range foaf:Document ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:weblog a rdf:Property ;
+	vs:term_status "stable" ;
+	rdfs:label "weblog" ;
+	rdfs:comment "A weblog of some thing (whether person, group, company etc.)." ;
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf foaf:page ;
+	a owl:InverseFunctionalProperty ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range foaf:Document ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:openid a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "openid" ;
+	rdfs:comment "An OpenID for an Agent." ;
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf foaf:isPrimaryTopicOf ;
+	a owl:InverseFunctionalProperty ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range foaf:Document ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:tipjar a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "tipjar" ;
+	rdfs:comment "A tipjar document for this agent, describing means for payment and reward." ;
+	a owl:ObjectProperty ;
+	rdfs:subPropertyOf foaf:page ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range foaf:Document ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:plan a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "plan" ;
+	rdfs:comment "A .plan comment, in the tradition of finger and '.plan' files." ;
+	a owl:DatatypeProperty ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+	rdfs:domain foaf:Person ;
+	rdfs:range rdfs:Literal .
+
+foaf:made a rdf:Property ;
+	vs:term_status "stable" ;
+	rdfs:label "made" ;
+	rdfs:comment "Something that was made by this agent." ;
+	a owl:ObjectProperty ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range owl:Thing ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+	owl:inverseOf foaf:maker .
+
+foaf:maker a rdf:Property ;
+	vs:term_status "stable" ;
+	rdfs:label "maker" ;
+	rdfs:comment "An agent that  made this thing." ;
+	owl:equivalentProperty <http://purl.org/dc/terms/creator> ;
+	a owl:ObjectProperty ;
+	rdfs:domain owl:Thing ;
+	rdfs:range foaf:Agent ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+	owl:inverseOf foaf:made .
+
+foaf:img a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "image" ;
+	rdfs:comment "An image that can be used to represent some thing (ie. those depictions which are particularly representative of something, eg. one's photo on a homepage)." ;
+	a owl:ObjectProperty ;
+	rdfs:domain foaf:Person ;
+	rdfs:range foaf:Image ;
+	rdfs:subPropertyOf foaf:depiction ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:depiction a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "depiction" ;
+	rdfs:comment "A depiction of some thing." ;
+	a owl:ObjectProperty ;
+	rdfs:domain owl:Thing ;
+	rdfs:range foaf:Image ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+	owl:inverseOf foaf:depicts .
+
+foaf:depicts a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "depicts" ;
+	rdfs:comment "A thing depicted in this representation." ;
+	a owl:ObjectProperty ;
+	rdfs:range owl:Thing ;
+	rdfs:domain foaf:Image ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+	owl:inverseOf foaf:depiction .
+
+foaf:thumbnail a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "thumbnail" ;
+	rdfs:comment "A derived thumbnail image." ;
+	a owl:ObjectProperty ;
+	rdfs:domain foaf:Image ;
+	rdfs:range foaf:Image ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:myersBriggs a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "myersBriggs" ;
+	rdfs:comment "A Myers Briggs (MBTI) personality classification." ;
+	a owl:DatatypeProperty ;
+	rdfs:domain foaf:Person ;
+	rdfs:range rdfs:Literal ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:workplaceHomepage a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "workplace homepage" ;
+	rdfs:comment "A workplace homepage of some person; the homepage of an organization they work for." ;
+	a owl:ObjectProperty ;
+	rdfs:domain foaf:Person ;
+	rdfs:range foaf:Document ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:workInfoHomepage a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "work info homepage" ;
+	rdfs:comment "A work info homepage of some person; a page about their work for some organization." ;
+	a owl:ObjectProperty ;
+	rdfs:domain foaf:Person ;
+	rdfs:range foaf:Document ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:schoolHomepage a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "schoolHomepage" ;
+	rdfs:comment "A homepage of a school attended by the person." ;
+	a owl:ObjectProperty ;
+	rdfs:domain foaf:Person ;
+	rdfs:range foaf:Document ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:knows a rdf:Property ;
+	vs:term_status "stable" ;
+	rdfs:label "knows" ;
+	rdfs:comment "A person known by this person (indicating some level of reciprocated interaction between the parties)." ;
+	a owl:ObjectProperty ;
+	rdfs:domain foaf:Person ;
+	rdfs:range foaf:Person ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:interest a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "interest" ;
+	rdfs:comment "A page about a topic of interest to this person." ;
+	a owl:ObjectProperty ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range foaf:Document ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:topic_interest a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "topic_interest" ;
+	rdfs:comment "A thing of interest to this person." ;
+	a owl:ObjectProperty ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range owl:Thing ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:publications a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "publications" ;
+	rdfs:comment "A link to the publications of this person." ;
+	a owl:ObjectProperty ;
+	rdfs:domain foaf:Person ;
+	rdfs:range foaf:Document ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:currentProject a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "current project" ;
+	rdfs:comment "A current project this person works on." ;
+	a owl:ObjectProperty ;
+	rdfs:domain foaf:Person ;
+	rdfs:range owl:Thing ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:pastProject a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "past project" ;
+	rdfs:comment "A project this person has previously worked on." ;
+	a owl:ObjectProperty ;
+	rdfs:domain foaf:Person ;
+	rdfs:range owl:Thing ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:fundedBy a rdf:Property ;
+	vs:term_status "archaic" ;
+	rdfs:label "funded by" ;
+	rdfs:comment "An organization funding a project or person." ;
+	a owl:ObjectProperty ;
+	rdfs:domain owl:Thing ;
+	rdfs:range owl:Thing ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:logo a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "logo" ;
+	rdfs:comment "A logo representing some thing." ;
+	a owl:ObjectProperty ;
+	rdfs:domain owl:Thing ;
+	rdfs:range owl:Thing ;
+	a owl:InverseFunctionalProperty ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:topic a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "topic" ;
+	rdfs:comment "A topic of some page or document." ;
+	a owl:ObjectProperty ;
+	rdfs:domain foaf:Document ;
+	rdfs:range owl:Thing ;
+	owl:inverseOf foaf:page ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:primaryTopic a rdf:Property ;
+	vs:term_status "stable" ;
+	rdfs:label "primary topic" ;
+	rdfs:comment "The primary topic of some page or document." ;
+	a owl:FunctionalProperty , owl:ObjectProperty ;
+	rdfs:domain foaf:Document ;
+	rdfs:range owl:Thing ;
+	owl:inverseOf foaf:isPrimaryTopicOf ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:focus a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "focus" ;
+	rdfs:comment "The underlying or 'focal' entity associated with some SKOS-described concept." ;
+	a owl:ObjectProperty ;
+	rdfs:domain <http://www.w3.org/2004/02/skos/core#Concept> .
+
+<http://www.w3.org/2004/02/skos/core#Concept> rdfs:label "Concept" .
+
+foaf:focus rdfs:range owl:Thing ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:isPrimaryTopicOf a rdf:Property ;
+	vs:term_status "stable" ;
+	rdfs:label "is primary topic of" ;
+	rdfs:comment "A document that this thing is the primary topic of." ;
+	a owl:InverseFunctionalProperty ;
+	rdfs:subPropertyOf foaf:page ;
+	owl:inverseOf foaf:primaryTopic ;
+	rdfs:domain owl:Thing ;
+	rdfs:range foaf:Document ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:page a rdf:Property ;
+	vs:term_status "stable" ;
+	rdfs:label "page" ;
+	rdfs:comment "A page or document about this thing." ;
+	a owl:ObjectProperty ;
+	rdfs:domain owl:Thing ;
+	rdfs:range foaf:Document ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> ;
+	owl:inverseOf foaf:topic .
+
+foaf:theme a rdf:Property ;
+	vs:term_status "archaic" ;
+	rdfs:label "theme" ;
+	rdfs:comment "A theme." ;
+	a owl:ObjectProperty ;
+	rdfs:domain owl:Thing ;
+	rdfs:range owl:Thing ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:account a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "account" ;
+	rdfs:comment "Indicates an account held by this agent." ;
+	a owl:ObjectProperty ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range foaf:OnlineAccount ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:holdsAccount a rdf:Property ;
+	vs:term_status "archaic" ;
+	rdfs:label "account" ;
+	rdfs:comment "Indicates an account held by this agent." ;
+	a owl:ObjectProperty ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range foaf:OnlineAccount ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:accountServiceHomepage a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "account service homepage" ;
+	rdfs:comment "Indicates a homepage of the service provide for this online account." ;
+	a owl:ObjectProperty ;
+	rdfs:domain foaf:OnlineAccount ;
+	rdfs:range foaf:Document ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:accountName a rdf:Property ;
+	vs:term_status "testing" ;
+	rdfs:label "account name" ;
+	rdfs:comment "Indicates the name (identifier) associated with this online account." ;
+	a owl:DatatypeProperty ;
+	rdfs:domain foaf:OnlineAccount ;
+	rdfs:range rdfs:Literal ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:member a rdf:Property ;
+	vs:term_status "stable" ;
+	rdfs:label "member" ;
+	rdfs:comment "Indicates a member of a Group" ;
+	a owl:ObjectProperty ;
+	rdfs:domain foaf:Group ;
+	rdfs:range foaf:Agent ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:membershipClass a rdf:Property ;
+	vs:term_status "unstable" ;
+	rdfs:label "membershipClass" ;
+	rdfs:comment "Indicates the class of individuals that are a member of a Group" ;
+	a owl:AnnotationProperty ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:birthday a rdf:Property ;
+	vs:term_status "unstable" ;
+	rdfs:label "birthday" ;
+	rdfs:comment "The birthday of this Agent, represented in mm-dd string form, eg. '12-31'." ;
+	a owl:FunctionalProperty , owl:DatatypeProperty ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range rdfs:Literal ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:age a rdf:Property ;
+	vs:term_status "unstable" ;
+	rdfs:label "age" ;
+	rdfs:comment "The age in years of some agent." ;
+	a owl:FunctionalProperty , owl:DatatypeProperty ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range rdfs:Literal ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
+
+foaf:status a rdf:Property ;
+	vs:term_status "unstable" ;
+	rdfs:label "status" ;
+	rdfs:comment "A string expressing what the user is happy for the general public (normally) to know about their current activity." ;
+	a owl:DatatypeProperty ;
+	rdfs:domain foaf:Agent ;
+	rdfs:range rdfs:Literal ;
+	rdfs:isDefinedBy <http://xmlns.com/foaf/0.1/> .
