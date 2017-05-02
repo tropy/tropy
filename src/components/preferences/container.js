@@ -90,7 +90,7 @@ class PrefsContainer extends PureComponent {
   }
 
   static defaultProps = {
-    pane: 'templates',
+    pane: 'template',
     isFrameless: ARGS.frameless
   }
 }
