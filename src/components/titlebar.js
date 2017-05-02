@@ -8,7 +8,7 @@ const { string } = require('prop-types')
 class TitleBar extends PureComponent {
   render() {
     return (
-      <div className="titlebar draggable">
+      <div className="titlebar">
         <FormattedMessage id={this.props.title}/>
       </div>
     )

@@ -26,29 +26,39 @@ class PrefsContainer extends PureComponent {
   render() {
     return (
       <div className="preferences">
-        <header>
+        <header className="preferences-header draggable">
           {this.renderTitleBar()}
-          <nav>
-            <PrefPaneToggle
-              name="app"
-              isActive={this.isActive('app')}
-              isDisabled
-              onClick={this.toggle}/>
-            <PrefPaneToggle
-              name="project"
-              isActive={this.isActive('project')}
-              isDisabled
-              onClick={this.toggle}/>
-            <PrefPaneToggle
-              name="template"
-              icon="IconTemplate"
-              isActive={this.isActive('template')}
-              onClick={this.toggle}/>
-            <PrefPaneToggle
-              name="vocab"
-              isActive={this.isActive('vocab')}
-              isDisabled
-              onClick={this.toggle}/>
+          <nav className="preference-nav">
+            <ul>
+              <li>
+                <PrefPaneToggle
+                  name="app"
+                  isActive={this.isActive('app')}
+                  isDisabled
+                  onClick={this.toggle}/>
+              </li>
+              <li>
+                <PrefPaneToggle
+                  name="project"
+                  isActive={this.isActive('project')}
+                  isDisabled
+                  onClick={this.toggle}/>
+              </li>
+              <li>
+                <PrefPaneToggle
+                  name="template"
+                  icon="IconTemplate"
+                  isActive={this.isActive('template')}
+                  onClick={this.toggle}/>
+              </li>
+              <li>
+                <PrefPaneToggle
+                  name="vocab"
+                  isActive={this.isActive('vocab')}
+                  isDisabled
+                  onClick={this.toggle}/>
+              </li>
+            </ul>
           </nav>
         </header>
         <main>

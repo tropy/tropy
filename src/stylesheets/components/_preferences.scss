@@ -4,4 +4,40 @@
 
 .preferences {
   background: $preferences-bg;
+
+  .preferences-header {
+    border-bottom: 1px solid $preferences-header-border;
+  }
+
+  .preference-nav {
+    ul {
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  .pane-toggle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 0;
+    background: transparent;
+    font-size: 11px;
+    line-height: 22px;
+    padding: 7px $space-xs 0;
+
+    .frameless & {
+      padding-top: 1px;
+    }
+
+    &.active {
+      .line {
+        display: none;
+      }
+
+      .block {
+        display: block;
+      }
+    }
+  }
 }

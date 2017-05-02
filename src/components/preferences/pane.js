@@ -10,7 +10,7 @@ const { bool, element, func, object, string } = require('prop-types')
 class PrefPaneToggle extends PureComponent {
   get classes() {
     return {
-      'pane-toggle': true,
+      'pane-toggle btn': true,
       'active': this.props.isActive,
       [this.props.name]: true
     }
@@ -46,7 +46,7 @@ class PrefPaneToggle extends PureComponent {
   }
 
   static defaultProps = {
-    icon: 'IconMaze'
+    icon: 'IconTemplate'
   }
 }
 
