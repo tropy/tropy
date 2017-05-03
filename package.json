@@ -88,6 +88,7 @@
     "lodash.throttle": "^4.1.1",
     "mkdirp": "^0.5.1",
     "ms": "^1.0.0",
+    "n3": "^0.10.0",
     "prop-types": "^15.5.4",
     "prosemirror-commands": "^0.20.0",
     "prosemirror-history": "^0.20.0",
