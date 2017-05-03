@@ -53,7 +53,7 @@ class TemplateEditor extends PureComponent {
           </div>
         </div>
         <div className="form-group align-right">
-          <button className="btn btn-primary">Save</button>
+          <button className="btn btn-primary min-width">Save</button>
         </div>
 
         <ul className="properties">
