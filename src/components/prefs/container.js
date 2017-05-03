@@ -28,10 +28,10 @@ class PrefsContainer extends PureComponent {
 
   render() {
     return (
-      <div className="preferences">
-        <header className="preferences-header draggable">
+      <div className="prefs">
+        <header className="prefs-header draggable">
           {this.renderTitleBar()}
-          <nav className="preference-nav">
+          <nav className="prefs-nav">
             <ul>
               <li>
                 <PrefPaneToggle

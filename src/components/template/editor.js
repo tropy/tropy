@@ -30,11 +30,13 @@ class TemplateEditor extends PureComponent {
               templates={this.props.templates}
               selected={get(this.props.template, ['id'])}
               onChange={this.onTemplateChange}/>
-            <IconButton icon={<IconNew/>}/>
-            <IconButton icon={<IconCopy/>}/>
-            <IconButton icon={<IconTrash/>}/>
-            <IconButton icon={<IconImport/>}/>
-            <IconButton icon={<IconExport/>}/>
+            <div className="btn-group">
+              <IconButton icon={<IconNew/>}/>
+              <IconButton icon={<IconCopy/>}/>
+              <IconButton icon={<IconTrash/>}/>
+              <IconButton icon={<IconImport/>}/>
+              <IconButton icon={<IconExport/>}/>
+            </div>
           </div>
         </div>
         <div className="form-group compact">
