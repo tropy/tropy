@@ -20,7 +20,7 @@ class PrefPaneToggle extends PureComponent {
     return `preferences.${this.props.name}.label`
   }
 
-  handleClick() {
+  handleClick = () => {
     this.props.onClick(this.props.name)
   }
 

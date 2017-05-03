@@ -3,10 +3,11 @@
 const React = require('react')
 const { PureComponent } = React
 const { connect } = require('react-redux')
-const { bool, string } = require('prop-types')
+const { bool, func, string } = require('prop-types')
 const { TitleBar } = require('../titlebar')
 const { TemplateEditor } = require('../template/editor')
 const { PrefPane, PrefPaneToggle } = require('./pane')
+const actions = require('../../actions')
 
 
 class PrefsContainer extends PureComponent {
@@ -20,7 +21,8 @@ class PrefsContainer extends PureComponent {
     )
   }
 
-  toggle = () => {
+  toggle = (pane) => {
+    this.props.onPrefsUpdate({ pane })
   }
 
   render() {
@@ -55,7 +57,6 @@ class PrefsContainer extends PureComponent {
                 <PrefPaneToggle
                   name="vocab"
                   isActive={this.isActive('vocab')}
-                  isDisabled
                   onClick={this.toggle}/>
               </li>
             </ul>
@@ -86,7 +87,8 @@ class PrefsContainer extends PureComponent {
 
   static propTypes = {
     isFrameless: bool,
-    pane: string.isRequired
+    pane: string.isRequired,
+    onPrefsUpdate: func.isRequired
   }
 
   static defaultProps = {
@@ -102,6 +104,12 @@ module.exports = {
       pane: state.prefs.pane,
       properties: state.properties,
       templates: state.templates
+    }),
+
+    dispatch => ({
+      onPrefsUpdate(...args) {
+        dispatch(actions.prefs.update(...args))
+      }
     })
   )(PrefsContainer)
 }
