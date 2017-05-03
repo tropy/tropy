@@ -33,6 +33,12 @@ preferences:
   vocab:
     label: 'Vocabularies'
 
+template:
+  label: Template
+  uri: URI
+  name: Name
+  new: New Template
+
 prompt:
   item:
     destroy: >
