@@ -19,26 +19,59 @@ const {
 } = require('../icons')
 
 
+function TemplateEditorHead(props) {
+  return (
+    <div className="form-group select-template">
+      <label className="control-label col-3" htmlFor="">Template</label>
+      <div className="col-9 flex-row center">
+        <TemplateSelect
+          templates={props.templates}
+          selected={props.selected}
+          isRequired={false}
+          onChange={props.onChange}/>
+        <div className="btn-group">
+          <IconButton icon={<IconNew/>}/>
+          <IconButton icon={<IconCopy/>}/>
+          <IconButton icon={<IconTrash/>}/>
+          <IconButton icon={<IconImport/>}/>
+          <IconButton icon={<IconExport/>}/>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+TemplateEditorHead.propTypes = {
+  templates: arrayOf(shape({
+    uri: string.isRequired,
+    name: string
+  })).isRequired,
+  selected: string,
+  onChange: func.isRequired
+}
+
+
 class TemplateEditor extends PureComponent {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      template: {}
+    }
+  }
+
+  handleTemplateChange = (template) => {
+    this.setState({ template: { ...template } })
+  }
+
   render() {
     return (
       <div className="template editor form-horizontal">
-        <div className="form-group select-template">
-          <label className="control-label col-3" htmlFor="">Template</label>
-          <div className="col-9 flex-row center">
-            <TemplateSelect
-              templates={this.props.templates}
-              selected={get(this.props.template, ['id'])}
-              onChange={this.onTemplateChange}/>
-            <div className="btn-group">
-              <IconButton icon={<IconNew/>}/>
-              <IconButton icon={<IconCopy/>}/>
-              <IconButton icon={<IconTrash/>}/>
-              <IconButton icon={<IconImport/>}/>
-              <IconButton icon={<IconExport/>}/>
-            </div>
-          </div>
-        </div>
+        <TemplateEditorHead
+          selected={this.state.template.uri}
+          templates={this.props.templates}
+          onChange={this.handleTemplateChange}/>
+
         <div className="form-group compact">
           <label className="control-label col-3" htmlFor="">Name</label>
           <div className="col-9">
@@ -90,11 +123,8 @@ class TemplateEditor extends PureComponent {
       uri: string.isRequired,
       name: string
     })).isRequired,
-    template: shape({
-      uri: string.isRequired,
-      name: string
-    }),
-    onTemplateChange: func.isRequired
+    onCreate: func.isRequired,
+    onSave: func.isRequired
   }
 }
 

@@ -1,35 +1,50 @@
 'use strict'
 
 const React = require('react')
-const { array, func, oneOf, string } = require('prop-types')
+const { PureComponent } = React
+const { bool, array, func, number, string } = require('prop-types')
 
-const TemplateSelect = (props) => {
-  const { selected, onChange, templates } = props
+class TemplateSelect extends PureComponent {
+  get placeholder() {
+    return !this.props.isRequired &&
+      <option key="placeholder">Select a template</option>
+  }
 
-  return (
-    <select
-      tabIndex="-1"
-      name="template-select"
-      className="template-select form-control"
-      required
-      value={selected}
-      onChange={onChange}>
-      {templates.map(({ uri, name }) =>
-        <option key={uri} value={uri}>{name}</option>)
-      }
-    </select>
-  )
-}
+  handleChange = ({ target }) => {
+    this.props.onChange(
+      this.props.templates.find(t => t.uri === target.value)
+    )
+  }
 
-TemplateSelect.propTypes = {
-  templates: array.isRequired,
-  type: oneOf(['item', 'photo']),
-  selected: string,
-  onChange: func
-}
+  render() {
+    return (
+      <select
+        tabIndex={this.props.tabIndex}
+        name="template-select"
+        className="template-select form-control"
+        required={this.props.isRequired}
+        value={this.props.selected}
+        onChange={this.handleChange}>
+        {this.placeholder}
+        {this.props.templates.map(({ uri, name }) =>
+          <option key={uri} value={uri}>{name}</option>)
+        }
+      </select>
+    )
+  }
 
-TemplateSelect.defaultProps = {
-  type: 'item'
+  static propTypes = {
+    isRequired: bool,
+    tabIndex: number.isRequired,
+    templates: array.isRequired,
+    selected: string,
+    onChange: func.isRequired
+  }
+
+  static defaultProps = {
+    isRequired: true,
+    tabIndex: -1
+  }
 }
 
 module.exports = {
