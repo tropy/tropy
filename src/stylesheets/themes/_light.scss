@@ -46,8 +46,9 @@ $brand-primary-darken-4: $blue-darken-4;
                          #f0f0f0,
                          #f6f6f6);         // Sidbar bg, panel bg
 
-  #{--shade-2}:          #e6e6e6;          // Inactive tab
-  #{--shade-3}:          #ddd;             // Active state bg/border
+  #{--shade-1-2}:        #ebebeb;
+  #{--shade-2}:          #e6e6e6;          // Inactive tab, Esper bg
+  #{--shade-3}:          #e0e0e0;             // Active state bg/border
   #{--shade-3-darken-5}: darken(#ddd, 5%); // Thumbnail bg
   #{--shade-4}:          #ccc;             // Slider track
   #{--shade-5}:          #bbb;             // Panel heading, mixed color
@@ -68,6 +69,7 @@ $transparent: var(--transparent);
 
 $shade-0:           var(--shade-0);
 $shade-1:           var(--shade-1);
+$shade-1-2:          var(--shade-1-2);
 $shade-2:           var(--shade-2);
 $shade-3:           var(--shade-3);
 $shade-3-darken-5:  var(--shade-3-darken-5);
@@ -277,8 +279,9 @@ $editor-hr-border-color:  $shade-2;
 
 // Preferences
 $preferences-bg:            $shade-1;
-$preferences-active-color:  $brand-primary;
+$pane-toggle-color:         $shade-8;
+$preferences-active-color:  $icon-color;
 $preferences-header-border: $shade-3;
 
 // Template editor
-$property-bg: $shade-2;
+$property-bg: $shade-1-2;
