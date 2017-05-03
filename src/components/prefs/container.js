@@ -18,7 +18,7 @@ class PrefsContainer extends PureComponent {
 
   renderTitleBar() {
     return (!this.props.isFrameless) ? null : (
-      <TitleBar title="preferences.title"/>
+      <TitleBar title="prefs.title"/>
     )
   }
 

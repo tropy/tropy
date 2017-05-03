@@ -2,18 +2,26 @@
 
 const React = require('react')
 const { PureComponent } = React
+const { injectIntl, intlShape } = require('react-intl')
 const { bool, array, func, number, string } = require('prop-types')
 
 class TemplateSelect extends PureComponent {
+  get hasPlaceholder() {
+    return !this.props.isRequired && this.props.placeholder != null
+  }
+
   get placeholder() {
-    return !this.props.isRequired &&
-      <option key="placeholder">Select a template</option>
+    return this.props.intl.formatMessage({ id: this.props.placeholder })
   }
 
   handleChange = ({ target }) => {
     this.props.onChange(
       this.props.templates.find(t => t.uri === target.value)
     )
+  }
+
+  renderPlaceholder() {
+    return this.hasPlaceholder && <option>{this.placeholder}</option>
   }
 
   render() {
@@ -25,16 +33,17 @@ class TemplateSelect extends PureComponent {
         required={this.props.isRequired}
         value={this.props.selected}
         onChange={this.handleChange}>
-        {this.placeholder}
+        {this.renderPlaceholder()}
         {this.props.templates.map(({ uri, name }) =>
-          <option key={uri} value={uri}>{name}</option>)
-        }
+          <option key={uri} value={uri}>{name}</option>)}
       </select>
     )
   }
 
   static propTypes = {
+    intl: intlShape,
     isRequired: bool,
+    placeholder: string,
     tabIndex: number.isRequired,
     templates: array.isRequired,
     selected: string,
@@ -48,5 +57,5 @@ class TemplateSelect extends PureComponent {
 }
 
 module.exports = {
-  TemplateSelect
+  TemplateSelect: injectIntl(TemplateSelect)
 }

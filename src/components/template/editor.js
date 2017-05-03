@@ -5,6 +5,7 @@ const { PureComponent } = React
 const { TemplateSelect } = require('./select')
 const { IconButton } = require('../button')
 const { FormattedMessage } = require('react-intl')
+const { FormControl, FormGroup, Label } = require('../form')
 const { arrayOf, func, shape, string } = require('prop-types')
 
 const {
@@ -19,17 +20,16 @@ const {
 } = require('../icons')
 
 
-function TemplateControls(props) {
+function TemplateControl(props) {
   return (
-    <div className="form-group select-template">
-      <label className="control-label col-3" htmlFor="">
-        <FormattedMessage id="template.label"/>
-      </label>
+    <FormGroup className="select-template">
+      <Label id="prefs.template.select"/>
       <div className="col-9 flex-row center">
         <TemplateSelect
           templates={props.templates}
           selected={props.selected}
           isRequired={false}
+          placeholder="prefs.template.new"
           onChange={props.onChange}/>
         <div className="btn-group">
           <IconButton icon={<IconNew/>}/>
@@ -39,11 +39,11 @@ function TemplateControls(props) {
           <IconButton icon={<IconExport/>}/>
         </div>
       </div>
-    </div>
+    </FormGroup>
   )
 }
 
-TemplateControls.propTypes = {
+TemplateControl.propTypes = {
   templates: arrayOf(shape({
     uri: string.isRequired,
     name: string
@@ -53,39 +53,6 @@ TemplateControls.propTypes = {
 }
 
 
-class FormField extends PureComponent {
-  handleChange = (event) => {
-    this.props.onChange({
-      [this.props.name]: event.target.value
-    })
-  }
-
-  render() {
-    return (
-      <div className="form-group compact">
-        <label className="control-label col-3" htmlFor={this.props.id}>
-          <FormattedMessage id={this.props.id}/>
-        </label>
-        <div className="col-9">
-          <input
-            id={this.props.id}
-            className="form-control"
-            name={this.props.name}
-            type="text"
-            value={this.props.value}
-            onChange={this.handleChange}/>
-        </div>
-      </div>
-    )
-  }
-
-  static propTypes = {
-    id: string.isRequired,
-    value: string.isRequired,
-    name: string.isRequired,
-    onChange: func.isRequired
-  }
-}
 
 
 class TemplateEditor extends PureComponent {
@@ -109,26 +76,29 @@ class TemplateEditor extends PureComponent {
     return (
       <div className="template editor form-horizontal">
         <header className="template-header">
-          <TemplateControls
+          <TemplateControl
             selected={this.state.uri}
             templates={this.props.templates}
             onChange={this.handleTemplateChange}/>
-          <FormField
+          <FormControl
             id="template.name"
             name="name"
             value={this.state.name}
+            isCompact
             onChange={this.handleTemplateUpdate}/>
-          <FormField
+          <FormControl
             id="template.uri"
             name="uri"
             value={this.state.uri}
+            isCompact
             onChange={this.handleTemplateUpdate}/>
-
-          <div className="form-group">
+          <FormGroup>
             <div className="col-12 text-right">
-              <button className="btn btn-primary min-width">Save</button>
+              <button className="btn btn-primary min-width">
+                <FormattedMessage id="prefs.template.save"/>
+              </button>
             </div>
-          </div>
+          </FormGroup>
         </header>
 
         <ul className="properties">

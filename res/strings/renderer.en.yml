@@ -22,22 +22,27 @@ wizard:
     save_as: Change file name and location
     change: Change
 
-preferences:
+prefs:
   title: Tropy Preferences
   app:
-    label: 'Global'
+    label: Global
   project:
-    label: 'Project'
+    label: Project
   template:
-    label: 'Templates'
+    label: Templates
+    new: New Template …
+    save: Save
+    select: Template
   vocab:
-    label: 'Vocabularies'
+    label: Vocabularies
 
 template:
-  label: Template
   uri: URI
   name: Name
-  new: New Template
+  property: Property
+
+property:
+  label: Label
 
 prompt:
   item:
