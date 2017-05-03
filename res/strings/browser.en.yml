@@ -17,7 +17,7 @@ dialogs:
       Would you like to force close it or just keep waiting?
 
 windows:
-  preferences:
+  prefs:
     title: Tropy Preferences
   wizard:
     title: Welcome to Tropy

@@ -1,23 +1,23 @@
 //
-// Light preferences window
+// Dark preferences window
 // --------------------------------------------------
 
 $platform: "linux";
-$theme: "light";
+$theme: "dark";
 
 
 // Theme
 // --------------------------------------------------
 
 @import
-  "../themes/light";
+  "../themes/dark";
 
 
 // Window
 // --------------------------------------------------
 
 @import
-  "../windows/preferences";
+  "../windows/prefs";
 
 
 // Operating system specific styles

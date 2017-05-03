@@ -2,7 +2,7 @@
 // Dark preferences window
 // --------------------------------------------------
 
-$platform: "linux";
+$platform: "win32";
 $theme: "dark";
 
 
@@ -17,7 +17,7 @@ $theme: "dark";
 // --------------------------------------------------
 
 @import
-  "../windows/preferences";
+  "../windows/prefs";
 
 
 // Operating system specific styles
