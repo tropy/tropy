@@ -5,24 +5,49 @@
 .template.editor {
   margin-top: $space-lg;
 
-  .property {
-    background: $property-bg;
-    padding: 5px 0;
-    border-radius: $border-radius-small;
-    margin-bottom: $space-min;
+  .select-template {
+    .form-control {
+      flex: 1 1 auto;
+    }
+
+    .btn-icon {
+      flex: 0 0 auto;
+    }
+
+    .icon-new {
+      margin: -1px 0;
+    }
   }
 
-  .form-group {
-    display: flex;
-    align-items: center;
-    margin-bottom: $space-min;
+  .properties {
+    margin-top: $space-lg;
+  }
 
-    &:last-child {
+  .property {
+    display: flex;
+    border-radius: $border-radius-small;
+    margin-bottom: $space-min;
+    position: relative;
+
+    .property-container {
+      flex: 1 1 auto;
+      background: $property-bg;
+      padding: 5px 0;
+    }
+
+    .btn-icon {
+      flex: 0 0 auto;
+    }
+
+    .form-group:last-child {
       margin-bottom: 0;
     }
+  }
 
-    label {
-      text-align: right;
-    }
+  .icon-grip {
+    position: absolute;
+    left: 7px;
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
