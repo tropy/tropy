@@ -6,6 +6,14 @@ const { warn, verbose } = require('../common/log')
 const { transduce, map, transformer } = require('transducers.js')
 const electron = require('electron')
 
+function withWindow(cmd, fn) {
+  return (_, win) => {
+    if (!win) warn(`${cmd} called without window`)
+    else fn(win)
+  }
+}
+
+
 class Menu {
   constructor(app) {
     this.app = app
@@ -21,20 +29,20 @@ class Menu {
     return this.find(tail, item.submenu)
   }
 
-  responder(command, ...params) {
-    let [prefix, ...action] = command.split(':')
+  responder(cmd, ...params) {
+    let [prefix, ...action] = cmd.split(':')
 
     switch (prefix) {
       case 'app':
-        return (_, win) => this.app.emit(command, win, ...params)
+        return (_, win) => this.app.emit(cmd, win, ...params)
       case 'win':
-        return (_, win) => win.webContents.send(...action)
+        return withWindow(cmd, win => win.webContents.send(...action))
       case 'dispatch':
-        return (_, win) => win.webContents.send('dispatch', {
+        return withWindow(cmd, win => win.webContents.send('dispatch', {
           type: action.join(':'), payload: params
-        })
+        }))
       default:
-        warn(`no responder for menu command ${command}`)
+        warn(`no responder for menu command ${cmd}`)
     }
   }
 

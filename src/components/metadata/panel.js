@@ -7,10 +7,14 @@ const { arrayOf, bool, func, number, object, shape, string } = PropTypes
 const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
 const { MetadataFields } = require('./fields')
-const { TemplateSelect } = require('./select')
+const { TemplateSelect } = require('../template/select')
 
 const {
-  getSelectedItems, getItemMetadata, getSelectedPhoto, getTemplates
+  getAllTemplates,
+  getItemMetadata,
+  getItemTemplates,
+  getSelectedItems,
+  getSelectedPhoto
 } = require('../../selectors')
 
 
@@ -23,11 +27,11 @@ class MetadataPanel extends PureComponent {
     return this.props.items.length > 1
   }
 
-  handleTemplateChange = (event) => {
+  handleTemplateChange = (template) => {
     this.props.onItemSave({
       id: this.props.items.map(it => it.id),
       property: 'template',
-      value: event.target.value
+      value: template.uri
     })
   }
 
@@ -37,6 +41,7 @@ class MetadataPanel extends PureComponent {
     const {
       items,
       itemsData,
+      itemTemplates,
       templates,
       isDisabled,
       onMetadataSave,
@@ -51,7 +56,7 @@ class MetadataPanel extends PureComponent {
           <FormattedMessage id="panel.metadata.item"/>
         </h5>
         <TemplateSelect
-          templates={templates}
+          templates={itemTemplates}
           selected={item.template}
           isDisabled={isDisabled}
           onChange={this.handleTemplateChange}/>
@@ -110,6 +115,7 @@ class MetadataPanel extends PureComponent {
     photoData: object,
 
     templates: object.isRequired,
+    itemTemplates: arrayOf(object).isRequired,
 
     onItemSave: func.isRequired,
     onMetadataSave: func.isRequired
@@ -124,7 +130,8 @@ module.exports = {
       itemsData: getItemMetadata(state),
       photo: getSelectedPhoto(state),
       photoData: state.metadata[state.nav.photo],
-      templates: getTemplates(state)
+      templates: getAllTemplates(state),
+      itemTemplates: getItemTemplates(state)
     })
   )(MetadataPanel)
 }

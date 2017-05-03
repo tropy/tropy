@@ -7,10 +7,11 @@
     family: inherit;
     size: inherit;
   }
+  line-height: inherit;
   color: inherit;
   border: 0;
   border-radius: $border-radius-small;
-  padding: $padding-base-vertical $padding-base-horizontal;
+  padding: ($padding-base-vertical + 1px) $padding-base-horizontal;
   display: inline-block; // For span as btn
 
   &[disabled] {
@@ -21,6 +22,10 @@
     .frameless & {
       -webkit-app-region: no-drag;
     }
+  }
+
+  &.min-width {
+    min-width: 80px;
   }
 }
 

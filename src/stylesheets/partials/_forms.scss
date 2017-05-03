@@ -8,6 +8,33 @@
   }
 }
 
+.form-group {
+  margin-bottom: $space-sm;
+
+  &.compact {
+    margin-bottom: $space-min;
+  }
+
+  .form-horizontal & {
+    display: flex;
+    align-items: center;
+    margin: {
+      left: (-$grid-gutter-width / 2);
+      right: (-$grid-gutter-width / 2);
+    }
+  }
+
+  &.align-right {
+    justify-content: flex-end;
+  }
+}
+
+label {
+  .form-horizontal & {
+    text-align: right;
+  }
+}
+
 .form-control {
   display: block;
   width: 100%;
@@ -48,12 +75,4 @@
   font-size: $font-size-large;
   height: $input-height-large;
   padding: 0 $padding-large-horizontal;
-}
-
-.form-group {
-  margin-bottom: $space-md;
-
-  &.compact {
-    margin-bottom: $space-xs;
-  }
 }

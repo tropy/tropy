@@ -184,6 +184,7 @@ class Tropy extends EventEmitter {
     if (this.wiz) return this.wiz.show(), this
 
     this.wiz = open('wizard', this.hash, {
+      title: this.strings.dict.windows.wizard.title,
       width: WIZ.WIDTH * ZOOM,
       height: WIZ.HEIGHT * ZOOM,
       parent: this.win,
@@ -204,7 +205,8 @@ class Tropy extends EventEmitter {
   configure() {
     if (this.prefs) return this.prefs.show(), this
 
-    this.prefs = open('preferences', this.hash, {
+    this.prefs = open('prefs', this.hash, {
+      title: this.strings.dict.windows.prefs.title,
       width: PREFS.WIDTH * ZOOM,
       height: PREFS.HEIGHT * ZOOM,
       parent: this.win,

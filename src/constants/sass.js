@@ -108,7 +108,7 @@ const WIZARD = {
 }
 
 const PREFS = {
-  WIDTH: 960,
+  WIDTH: 600,
   HEIGHT: 580
 }
 

@@ -34,7 +34,8 @@ Type=Application
 Name=${qualified.product}
 Exec=${exec} %f
 Icon=${qualified.name}
-Categories=GTK;Graphics;2DGraphics;Viewer;Development;
-MimeType=image/jpeg;application/vnd.tpy;`
+StartUpNotify=true
+MimeType=application/vnd.tropy.tpy;image/jpeg;
+Categories=Graphics;Viewer;Science;`
   }
 }

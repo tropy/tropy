@@ -2,7 +2,7 @@
 
 const assert = require('assert')
 const { warn, verbose } = require('../common/log')
-const { call, put, select } = require('redux-saga/effects')
+const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { prompt, openImages, fail  } = require('../dialog')
 const { Image } = require('../image')
@@ -50,11 +50,11 @@ class Import extends Command {
     if (!files) return
 
     for (let i = 0, ii = files.length; i < ii; ++i) {
+      let file, image, item, photo
+
       try {
-        let file = files[i]
-        let image = yield call(Image.read, file)
-        let item
-        let photo
+        file = files[i]
+        image = yield call(Image.read, file)
 
         yield call(db.transaction, async tx => {
           item = await mod.item.create(tx, {
@@ -83,17 +83,17 @@ class Import extends Command {
           verbose(error.stack)
         }
 
-        yield [
+        yield all([
           put(act.item.insert(item)),
           put(act.photo.insert(photo)),
           put(act.activity.update(this.action, { total: ii, progress: i + 1 }))
-        ]
+        ])
 
         items.push(item.id)
         metadata.push(item.id, photo.id)
 
       } catch (error) {
-        warn(`Failed to import item: ${error.message}`)
+        warn(`Failed to import "${file}": ${error.message}`)
         verbose(error.stack)
 
         fail(error)
@@ -173,10 +173,10 @@ class Load extends Command {
     ), items)
 
     if (missing.length > 0) {
-      yield [
+      yield all([
         put(act.photo.load(missing)),
         put(act.metadata.load(missing))
-      ]
+      ])
     }
 
     return items
@@ -254,11 +254,11 @@ class Merge extends Command {
     let m = yield call(db.transaction, tx =>
       mod.item.merge(tx, item, items, metadata))
 
-    yield [
+    yield all([
       put(act.photo.bulk.update([m.photos, { item: id }])),
       put(act.metadata.insert({ id, ...m.data })),
       put(act.item.select({ items: [id] }, { mod: 'replace' }))
-    ]
+    ])
 
 
     this.undo = act.item.split({ ...m, item, items, data })

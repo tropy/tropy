@@ -14,6 +14,7 @@ module.exports = {
   nav: require('./nav'),
   note: require('./note'),
   photo: require('./photo'),
+  prefs: require('./prefs'),
   project: require('./project'),
   properties: require('./properties'),
   qr: require('./qr'),

@@ -96,6 +96,22 @@ i('Chevron16', (
   </svg>
 ))
 
+i('Copy', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M12,3V0H1V13H4v3H15V3ZM2,1h9V12H2ZM14,15H5V13h7V4h2Z"/>
+    </g>
+  </svg>
+))
+
+i('Export', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M12,14h1v1H1V0H13V1H2V14H12Zm-.293-3,3.5-3.5L11.707,4,11,4.707,13.293,7H6V8h7.293L11,10.293Z"/>
+    </g>
+  </svg>
+))
+
 i('Fit', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
@@ -137,6 +153,14 @@ i('GridSmall', (
   </svg>
 ))
 
+i('Grip', (
+  <svg width="16" height="18">
+    <g className="line" fill="currentColor">
+      <path d="M7,2H5V0H7Zm4-2H9V2h2ZM7,4H5V6H7Zm4,0H9V6h2ZM7,8H5v2H7Zm4,0H9v2h2ZM7,12H5v2H7Zm4,0H9v2h2ZM7,16H5v2H7Zm4,0H9v2h2Z"/>
+    </g>
+  </svg>
+))
+
 i('Hand', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
@@ -149,6 +173,14 @@ i('I', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
       <polygon points="6 1 6 3 8 3 6 13 4 13 4 15 10 15 10 13 8 13 10 3 12 3 12 1 6 1"/>
+    </g>
+  </svg>
+))
+
+i('Import', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M15,0V15H3V14H14V1H3V0ZM6,10.293,6.707,11l3.5-3.5L6.707,4,6,4.707,8.293,7H1V8H8.293Z"/>
     </g>
   </svg>
 ))
@@ -219,6 +251,14 @@ i('MinusCircles', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
       <path d="M3,4H8V5H3ZM2,4.5a3.5,3.5,0,1,1,6.92.733,5.465,5.465,0,0,1,1.027-.205A4.428,4.428,0,0,0,10,4.5,4.5,4.5,0,1,0,5.22,8.972a5.455,5.455,0,0,1,.391-.983C5.573,7.99,5.538,8,5.5,8A3.5,3.5,0,0,1,2,4.5Zm13,6A4.5,4.5,0,1,1,10.5,6,4.5,4.5,0,0,1,15,10.5Zm-1,0A3.5,3.5,0,1,0,10.5,14,3.5,3.5,0,0,0,14,10.5ZM8,10v1h5V10Z"/>
+    </g>
+  </svg>
+))
+
+i('New', (
+  <svg width="16" height="18">
+    <g className="line" fill="currentColor">
+      <path d="M13,9.276V5.293L8.707,1H0V16H7.76A4.495,4.495,0,1,0,13,9.276ZM9,2.707,11.293,5H9ZM7.276,15H1V2H8V6h4V9.05A4.43,4.43,0,0,0,11.5,9a4.457,4.457,0,0,0-4.224,6ZM11.5,17A3.5,3.5,0,1,1,15,13.5,3.5,3.5,0,0,1,11.5,17ZM14,13v1H12v2H11V14H9V13h2V11h1v2Z"/>
     </g>
   </svg>
 ))
@@ -401,6 +441,20 @@ i('Item', (
     <g className="line" fill="currentColor">
       <path d="M16.5,10c1.381,0,2.5-1.119,2.5-2.5C19,6.119,17.881,5,16.5,5S14,6.119,14,7.5C14,8.881,15.119,10,16.5,10z M16.5,6C17.327,6,18,6.673,18,7.5S17.327,9,16.5,9S15,8.327,15,7.5S15.673,6,16.5,6z"/>
       <path d="M14.667,11.667l-1.952,1.952L9.333,7.762L4,17h5.333h5.333H20L14.667,11.667z M9.333,16H5.732l3.601-6.238l2.515,4.356l0.652,1.129l0.922-0.922l1.245-1.245L17.586,16h-2.919H9.333z"/>
+    </g>
+  </svg>
+))
+
+
+/* 32 x 32 */
+
+i('Template', (
+  <svg width="32" height="32">
+    <g className="line" fill="currentColor">
+      <path d="M21.707,0H2V32H30V8.293Zm6.586,8H22V1.707ZM29,31H3V1H21V9h8ZM8,27H24V24H8Zm1-2H23v1H9ZM8,21H24V18H8Zm1-2H23v1H9ZM8,15H24V12H8Zm1-2H23v1H9Zm9-7H8V9H18ZM17,8H9V7h8Z"/>
+    </g>
+    <g className="block" fill="currentColor">
+      <path d="M23,20H9V19H23Zm0,5H9v1H23ZM9,8h8V7H9ZM22,.293V8h7.707ZM23,13H9v1H23Zm7-4V32H2V0H21V9ZM8,9H18V6H8ZM24,24H8v3H24Zm0-6H8v3H24Zm0-6H8v3H24Z"/>
     </g>
   </svg>
 ))

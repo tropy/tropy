@@ -14,7 +14,7 @@ const act = require('../actions')
 const storage = require('./storage')
 
 const {
-  fork, cancel, cancelled, call, put, take, takeEvery: every
+  all, fork, cancel, cancelled, call, put, take, takeEvery: every
 } = require('redux-saga/effects')
 
 const TOO_LONG = ARGS.dev ? 500 : 1500
@@ -47,18 +47,18 @@ module.exports = {
       yield every(action => has('search', action), search, db)
       yield every(action => has('load', action), load)
 
-      yield [
+      yield all([
         call(storage.restore, 'nav', id),
         call(storage.restore, 'columns', id)
-      ]
+      ])
 
       yield fork(function* () {
-        yield [
+        yield all([
           call(mod.project.touch, db, { id }),
           put(act.history.drop()),
           put(act.list.load()),
           put(act.tag.load())
-        ]
+        ])
 
         yield call(search, db)
         yield call(load, db)
@@ -76,20 +76,20 @@ module.exports = {
 
     } finally {
       if (id) {
-        yield [
+        yield all([
           call(storage.persist, 'nav', id),
           call(storage.persist, 'columns', id)
-        ]
+        ])
       }
 
       if (db) {
-        yield [
+        yield all([
           call(mod.item.prune, db),
           call(mod.list.prune, db),
           call(mod.value.prune, db),
           call(mod.photo.prune, db),
           call(mod.note.prune, db)
-        ]
+        ])
 
         yield call(db.close)
       }
@@ -124,15 +124,15 @@ module.exports = {
     let aux
 
     try {
-      aux = yield [
+      aux = yield all([
         fork(ipc),
         fork(history)
-      ]
+      ])
 
-      yield [
+      yield all([
         call(storage.restore, 'properties'),
         call(storage.restore, 'ui')
-      ]
+      ])
 
       while (true) {
         const { type, payload } = yield take([OPEN, CLOSE])
@@ -152,10 +152,10 @@ module.exports = {
       debug(error.stack)
 
     } finally {
-      yield [
+      yield all([
         call(storage.persist, 'properties'),
         call(storage.persist, 'ui')
-      ]
+      ])
 
       if (!(yield cancelled())) {
         yield aux.map(t => cancel(t))

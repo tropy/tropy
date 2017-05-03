@@ -3,10 +3,11 @@ dist
 lib
 coverage
 .nyc_output
-doc
+doc/db.pdf
 tmp
 npm-debug.log
 db/db.sqlite
 *.tpy
 .vimrc
 scripts/appimagetool
+_book

@@ -4,9 +4,9 @@ const React = require('react')
 const { render } = require('react-dom')
 const { all } = require('bluebird')
 const { ready, $ } = require('../dom')
-const { create } = require('../stores/project')
+const { create } = require('../stores/prefs')
 const { Main } = require('../components/main')
-const { PrefsContainer } = require('../components/preferences')
+const { PrefsContainer } = require('../components/prefs')
 const { intl, keymap } = require('../actions')
 const { win } = require('../window')
 const dialog = require('../dialog')
@@ -20,7 +20,7 @@ all([
   ready
 ])
   .then(() => {
-    render(<Main store={store}><PrefsContainer/></Main>, $('main'))
+    render(<Main store={store}><PrefsContainer/></Main>, $('.view'))
   })
 
 dialog.start()

@@ -76,7 +76,7 @@ class Image {
           const buffer = Buffer.concat(chunks)
 
           Promise
-            .all([exif(buffer), ni(buffer), stat(this.path)])
+            .all([exif(buffer), NI(buffer), stat(this.path)])
 
             .then(([data, original, file]) =>
               assign(this, original.getSize(), { exif: data, original, file }))
@@ -88,7 +88,7 @@ class Image {
   }
 
   async resize(...args) {
-    return resize(this.original || await ni(this.path), ...args)
+    return resize(this.original || await NI(this.path), ...args)
   }
 }
 
@@ -97,7 +97,7 @@ function resize(image, size) {
   let delta = current.width - current.height
   let target = delta > 0 ? 'height' : 'width'
 
-  if (size >= current[target]) return image
+  if (size >= current[target]) size = current[target]
 
   image = image.resize({ [target]: size, quality: 'best' })
 
@@ -106,11 +106,12 @@ function resize(image, size) {
 
   if (delta === 0) return image
 
-  const position = { x: 0, y: 0, width: size, height: size }
-
+  let position = { x: 0, y: 0, width: size, height: size }
   position[delta > 0 ? 'x' : 'y'] = ~~Math.abs(delta / 2)
 
-  return image.crop(position)
+  image = image.crop(position)
+
+  return image
 }
 
 function isValidImage(file) {
@@ -118,7 +119,7 @@ function isValidImage(file) {
 }
 
 
-function ni(src) {
+function NI(src) {
   return new Promise((resolve) => {
     resolve(typeof src === 'string' ?
       nativeImage.createFromPath(src) :

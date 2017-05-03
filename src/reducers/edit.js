@@ -7,10 +7,8 @@ module.exports = {
     switch (type) {
       case EDIT.START:
         return { ...payload }
-
       case EDIT.CANCEL:
         return {}
-
       default:
         return state
     }

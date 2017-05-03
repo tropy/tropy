@@ -15,3 +15,9 @@ dialogs:
     detail: >
       Tropy is not responding.
       Would you like to force close it or just keep waiting?
+
+windows:
+  prefs:
+    title: Tropy Preferences
+  wizard:
+    title: Welcome to Tropy

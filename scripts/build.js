@@ -13,7 +13,7 @@ const {
 const dir = resolve(__dirname, '..')
 const res = join(dir, 'res')
 const icons = resolve(res, 'icons', channel, 'tropy')
-const mime = resolve(res, 'icons', 'mime', 'tpy')
+const mime = resolve(res, 'icons', 'mime')
 
 
 target.all = (args = []) => {
@@ -67,6 +67,8 @@ target.all = (args = []) => {
       /^\/dist/,
       /^\/doc/,
       /^\/ext/,
+      /^\/res.ext/,
+      /^\/res.mime/,
       /^\/res.icons/,
       /^\/res.dmg/,
       /^\/res.linux/,
@@ -75,7 +77,8 @@ target.all = (args = []) => {
       /^\/src/,
       /^\/test/,
       /^\/tmp/,
-      /appveyor\.yml/
+      /appveyor\.yml/,
+      /book\.json/
     ]
 
   }, (err, dst) => {
@@ -93,6 +96,10 @@ target.all = (args = []) => {
         console.log('Copying icons...')
         copyIcons(dst)
 
+        console.log('Copying mime types...')
+        mkdir('-p', join(dst, 'mime', 'packages'))
+        cp(join(res, 'mime', '*.xml'), join(dst, 'mime', 'packages'))
+
         break
       }
     }
@@ -106,7 +113,7 @@ function rename(ctx, from, to) {
 }
 
 function copyIcons(dst) {
-  const theme = resolve(dst, 'icons')
+  const theme = resolve(dst, 'icons', 'hicolor')
 
   for (let icon of ls(icons)) {
     let ext = extname(icon)
@@ -120,16 +127,18 @@ function copyIcons(dst) {
     cp(join(icons, icon), join(target, file))
   }
 
-  for (let icon of ls(mime)) {
-    let ext = extname(icon)
-    let variant = basename(icon, ext)
+  for (let type of ['tpy']) {
+    for (let icon of ls(join(mime, type))) {
+      let ext = extname(icon)
+      let variant = basename(icon, ext)
 
-    if ((/@/).test(variant)) continue
+      if ((/@/).test(variant)) continue
 
-    let target = join(theme, variant, 'mimetypes')
-    let file = `application-vnd.tropy${ext}`
+      let target = join(theme, variant, 'mimetypes')
+      let file = `application-vnd.tropy.${type}{ext}`
 
-    mkdir('-p', target)
-    cp(join(mime, icon), join(target, file))
+      mkdir('-p', target)
+      cp(join(mime, type, icon), join(target, file))
+    }
   }
 }

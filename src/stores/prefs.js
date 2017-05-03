@@ -9,6 +9,8 @@ const { seq, debounce, throttle, log } = require('../middleware')
 
 const {
   intl,
+  edit,
+  prefs,
   properties,
   project,
   keymap,
@@ -23,6 +25,8 @@ module.exports = {
   create(init = {}) {
     let reducer = combineReducers({
       intl,
+      edit,
+      prefs,
       properties,
       project,
       keymap,

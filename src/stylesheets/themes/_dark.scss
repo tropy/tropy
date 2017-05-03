@@ -42,6 +42,7 @@ $shade-1:           #212121;              // 87% Border search field, Esper bg
 $shade-2:           #292929;              // 84% Inactive tab
 $shade-3:           #2f2f2f;              // 82% Body
 $shade-4:           #333;                 // 80% Sidebar bg, panel bg
+$shade-4-5:         #383838;              // 78% Property container
 
 $shade-5:           #404040;              // 75% Active state bg/border, slider track
 $shade-5-lighten-5: lighten(#404040, 5%); // 70% Thumbnail bg
@@ -243,3 +244,12 @@ $editor-text-selection-bg: $brand-primary-light-10;
 $blockquote-border-color: $shade-8;
 $selected-node-color:     $brand-primary;
 $editor-hr-border-color:  $shade-8;
+
+// Preferences
+$preferences-bg:            $shade-4;
+$pane-toggle-color:         $shade-8;
+$preferences-active-color:  $shade-9;
+$preferences-header-border: $shade-1;
+
+// Template editor
+$property-bg: $shade-4-5;

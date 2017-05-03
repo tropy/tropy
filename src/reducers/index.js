@@ -13,6 +13,7 @@ module.exports = {
   ...require('./nav'),
   ...require('./notes'),
   ...require('./photos'),
+  ...require('./prefs'),
   ...require('./project'),
   ...require('./properties'),
   ...require('./qr'),
