@@ -18,6 +18,10 @@
   .form-horizontal & {
     display: flex;
     align-items: center;
+    margin: {
+      left: (-$grid-gutter-width / 2);
+      right: (-$grid-gutter-width / 2);
+    }
   }
 
   &.align-right {

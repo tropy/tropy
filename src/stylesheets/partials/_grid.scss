@@ -5,6 +5,6 @@
 @for $i from 1 through 12 {
   .col-#{$i} {
     flex-basis: 100% / (12 / $i);
-    padding: 0 $space-min;
+    padding: 0 ($grid-gutter-width / 2);
   }
 }

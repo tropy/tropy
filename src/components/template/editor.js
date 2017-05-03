@@ -67,27 +67,31 @@ class TemplateEditor extends PureComponent {
   render() {
     return (
       <div className="template editor form-horizontal">
-        <TemplateEditorHead
-          selected={this.state.template.uri}
-          templates={this.props.templates}
-          onChange={this.handleTemplateChange}/>
+        <header className="template-header">
+          <TemplateEditorHead
+            selected={this.state.template.uri}
+            templates={this.props.templates}
+            onChange={this.handleTemplateChange}/>
 
-        <div className="form-group compact">
-          <label className="control-label col-3" htmlFor="">Name</label>
-          <div className="col-9">
-            <input className="form-control" type="text" value="Core Item"/>
+          <div className="form-group compact">
+            <label className="control-label col-3" htmlFor="">Name</label>
+            <div className="col-9">
+              <input className="form-control" type="text" value="Core Item"/>
+            </div>
           </div>
-        </div>
-        <div className="form-group">
-          <label className="control-label col-3" htmlFor="">ID</label>
-          <div className="col-9">
-            <input className="form-control" type="text"
-              value="https://schema.tropy.org/core-item"/>
+          <div className="form-group">
+            <label className="control-label col-3" htmlFor="">ID</label>
+            <div className="col-9">
+              <input className="form-control" type="text"
+                value="https://schema.tropy.org/core-item"/>
+            </div>
           </div>
-        </div>
-        <div className="form-group align-right">
-          <button className="btn btn-primary">Save</button>
-        </div>
+          <div className="form-group">
+            <div className="col-12 text-right">
+              <button className="btn btn-primary min-width">Save</button>
+            </div>
+          </div>
+        </header>
 
         <ul className="properties">
           <li className="property">

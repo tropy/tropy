@@ -5,6 +5,10 @@
 .template.editor {
   margin-top: $space-lg;
 
+  .template-header {
+    padding: 0 54px 0 $space-xs;
+  }
+
   .select-template {
     .form-control {
       flex: 1 1 auto;
@@ -12,6 +16,14 @@
 
     .btn-group {
       flex: 0 0 auto;
+      margin-left: $space-xs;
+    }
+
+    .btn-icon {
+      padding: {
+        left: $space-min;
+        right: $space-min;
+      }
     }
 
     .icon-new {
@@ -25,22 +37,28 @@
 
   .property {
     display: flex;
+    align-items: center;
     margin-bottom: $space-min;
     position: relative;
 
     .property-container {
       flex: 1 1 auto;
       background: $property-bg;
-      padding: 5px 0;
+      padding: 5px $space-xs;
       border-radius: $border-radius-small;
-    }
-
-    .btn-icon {
-      flex: 0 0 auto;
+      margin-right: 6px;
     }
 
     .form-group:last-child {
       margin-bottom: 0;
+    }
+
+    .btn-icon {
+      flex: 0 0 auto;
+      padding: {
+        left: 2px;
+        right: 2px;
+      }
     }
   }
 
