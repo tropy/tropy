@@ -30,6 +30,7 @@
     line-height: 22px;
     padding: 7px $space-sm 0;
     -webkit-font-smoothing: subpixel-antialiased;
+    color: $pane-toggle-color;
 
     .frameless & {
       padding-top: 1px;
