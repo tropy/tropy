@@ -5,7 +5,6 @@ const { PureComponent } = React
 const { TemplateSelect } = require('./select')
 const { IconButton } = require('../button')
 const { arrayOf, func, shape, string } = require('prop-types')
-const { get } = require('../../common/util')
 
 const {
   IconNew,
@@ -56,12 +55,12 @@ class TemplateEditor extends PureComponent {
     super(props)
 
     this.state = {
-      template: {}
+      template: { name: '', uri: '' }
     }
   }
 
   handleTemplateChange = (template) => {
-    this.setState({ template: { ...template } })
+    this.setState({ template: { name: '', uri: '', ...template } })
   }
 
   render() {
@@ -89,6 +88,7 @@ class TemplateEditor extends PureComponent {
                 className="form-control"
                 type="text"
                 required
+                readOnly
                 value={this.state.template.uri}/>
             </div>
           </div>
