@@ -76,14 +76,20 @@ class TemplateEditor extends PureComponent {
           <div className="form-group compact">
             <label className="control-label col-3" htmlFor="">Name</label>
             <div className="col-9">
-              <input className="form-control" type="text" value="Core Item"/>
+              <input
+                className="form-control"
+                type="text"
+                value={this.state.template.name}/>
             </div>
           </div>
           <div className="form-group">
-            <label className="control-label col-3" htmlFor="">ID</label>
+            <label className="control-label col-3" htmlFor="">URI</label>
             <div className="col-9">
-              <input className="form-control" type="text"
-                value="https://schema.tropy.org/core-item"/>
+              <input
+                className="form-control"
+                type="text"
+                required
+                value={this.state.template.uri}/>
             </div>
           </div>
           <div className="form-group">
