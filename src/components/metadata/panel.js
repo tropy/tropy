@@ -7,7 +7,7 @@ const { arrayOf, bool, func, number, object, shape, string } = PropTypes
 const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
 const { MetadataFields } = require('./fields')
-const { TemplateSelect } = require('./select')
+const { TemplateSelect } = require('../template/select')
 
 const {
   getSelectedItems, getItemMetadata, getSelectedPhoto, getTemplates
