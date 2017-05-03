@@ -26,11 +26,13 @@ class TemplateEditor extends PureComponent {
             <select className="form-control">
               <option>Core Item</option>
             </select>
-            <IconButton icon={<IconNew/>}/>
-            <IconButton icon={<IconCopy/>}/>
-            <IconButton icon={<IconTrash/>}/>
-            <IconButton icon={<IconImport/>}/>
-            <IconButton icon={<IconExport/>}/>
+            <div className="btn-group">
+              <IconButton icon={<IconNew/>}/>
+              <IconButton icon={<IconCopy/>}/>
+              <IconButton icon={<IconTrash/>}/>
+              <IconButton icon={<IconImport/>}/>
+              <IconButton icon={<IconExport/>}/>
+            </div>
           </div>
         </div>
         <div className="form-group compact">
