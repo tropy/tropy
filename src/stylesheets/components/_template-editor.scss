@@ -25,7 +25,6 @@
 
   .property {
     display: flex;
-    border-radius: $border-radius-small;
     margin-bottom: $space-min;
     position: relative;
 
@@ -33,6 +32,7 @@
       flex: 1 1 auto;
       background: $property-bg;
       padding: 5px 0;
+      border-radius: $border-radius-small;
     }
 
     .btn-icon {
