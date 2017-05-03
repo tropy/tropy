@@ -16,6 +16,14 @@
 
     .btn-group {
       flex: 0 0 auto;
+      margin-left: $space-xs;
+    }
+
+    .btn-icon {
+      padding: {
+        left: $space-min;
+        right: $space-min;
+      }
     }
 
     .icon-new {
