@@ -23,7 +23,7 @@ wizard:
     change: Change
 
 preferences:
-  title: Preferences
+  title: Tropy Preferences
   app:
     label: 'Global'
   project:
