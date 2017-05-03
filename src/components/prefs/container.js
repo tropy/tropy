@@ -90,7 +90,6 @@ class PrefsContainer extends PureComponent {
   }
 
   static defaultProps = {
-    pane: 'template',
     isFrameless: ARGS.frameless
   }
 }
@@ -100,6 +99,7 @@ module.exports = {
     state => ({
       project: state.project,
       keymap: state.keymap,
+      pane: state.prefs.pane,
       properties: state.properties,
       templates: state.templates
     })
