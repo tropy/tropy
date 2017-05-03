@@ -5,6 +5,10 @@
 .template.editor {
   margin-top: $space-lg;
 
+  .template-header {
+    padding: 0 60px 0 $space-xs;
+  }
+
   .select-template {
     .form-control {
       flex: 1 1 auto;
@@ -31,7 +35,7 @@
     .property-container {
       flex: 1 1 auto;
       background: $property-bg;
-      padding: 5px 0;
+      padding: 5px $space-xs;
       border-radius: $border-radius-small;
     }
 
