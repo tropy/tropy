@@ -29,18 +29,22 @@
     font-size: 11px;
     line-height: 22px;
     padding: 7px $space-sm 0;
+    -webkit-font-smoothing: subpixel-antialiased;
 
     .frameless & {
       padding-top: 1px;
     }
 
     &.active {
+      color: $preferences-active-color;
+
       .line {
         display: none;
       }
 
       .block {
         display: block;
+        color: $preferences-active-color;
       }
     }
   }
