@@ -2,18 +2,18 @@
 // Preferences
 // --------------------------------------------------
 
-.preferences {
+.prefs {
   display: flex;
   flex-direction: column;
   height: 100%;
   background: $preferences-bg;
 
-  .preferences-header {
+  .prefs-header {
     flex: 0 0 auto;
     border-bottom: 1px solid $preferences-header-border;
   }
 
-  .preference-nav {
+  .prefs-nav {
     ul {
       display: flex;
       justify-content: center;
