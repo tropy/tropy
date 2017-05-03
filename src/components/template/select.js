@@ -1,24 +1,10 @@
 'use strict'
 
 const React = require('react')
-const PropTypes = require('prop-types')
-const { into, map, filter, compose } = require('transducers.js')
-
-const templates = (props) => {
-  return into(
-    [],
-    compose(
-      map(kv => kv[1]),
-      filter(t => t.type === props.type),
-      map(({ uri, name }) =>
-        <option key={uri} value={uri}>{name}</option>
-      )
-    ),
-    props.templates)
-}
+const { array, func, oneOf, string } = require('prop-types')
 
 const TemplateSelect = (props) => {
-  const { selected, onChange } = props
+  const { selected, onChange, templates } = props
 
   return (
     <select
@@ -28,16 +14,18 @@ const TemplateSelect = (props) => {
       required
       value={selected}
       onChange={onChange}>
-      {templates(props)}
+      {templates.map(({ uri, name }) =>
+        <option key={uri} value={uri}>{name}</option>)
+      }
     </select>
   )
 }
 
 TemplateSelect.propTypes = {
-  templates: PropTypes.object.isRequired,
-  type: PropTypes.oneOf(['item', 'photo']),
-  selected: PropTypes.string,
-  onChange: PropTypes.func
+  templates: array.isRequired,
+  type: oneOf(['item', 'photo']),
+  selected: string,
+  onChange: func
 }
 
 TemplateSelect.defaultProps = {

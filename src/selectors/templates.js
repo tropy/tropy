@@ -1,10 +1,8 @@
 'use strict'
 
-const {
-  createSelector: memo
-} = require('reselect')
-
-const { entries } = Object
+const { createSelector: memo } = require('reselect')
+const { into, compose, map, filter } = require('transducers.js')
+const { entries, values } = Object
 const { DC, TR, S } = require('../constants/properties')
 
 const CORE = 'https://schema.tropy.org/v1/templates/core'
@@ -138,7 +136,7 @@ const T = {
   }
 }
 
-const getTemplates = memo(
+const getAllTemplates = memo(
   () => T,
   ({ properties }) => properties,
 
@@ -158,6 +156,25 @@ const getTemplates = memo(
       }, {}))
 
 
+const getTemplatesByType = (type) => memo(
+  getAllTemplates,
+  (templates) => into(
+    [],
+    compose(
+      map(kv => kv[1]),
+      filter(t => t.type === type)),
+    templates
+  )
+)
+
+const getTemplates = memo(
+  getAllTemplates, (templates) => values(templates)
+)
+
+
 module.exports = {
+  getAllTemplates,
+  getItemTemplates: getTemplatesByType('item'),
+  getPhotoTemplates: getTemplatesByType('photo'),
   getTemplates
 }

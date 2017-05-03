@@ -2,7 +2,11 @@
 
 const React = require('react')
 const { PureComponent } = React
+const { TemplateSelect } = require('./select')
 const { IconButton } = require('../button')
+const { arrayOf, func, shape, string } = require('prop-types')
+const { get } = require('../../common/util')
+
 const {
   IconNew,
   IconCopy,
@@ -15,7 +19,6 @@ const {
 } = require('../icons')
 
 
-//eslint-disable-next-line
 class TemplateEditor extends PureComponent {
   render() {
     return (
@@ -23,9 +26,10 @@ class TemplateEditor extends PureComponent {
         <div className="form-group select-template">
           <label className="control-label col-3" htmlFor="">Template</label>
           <div className="col-9 flex-row center">
-            <select className="form-control">
-              <option>Core Item</option>
-            </select>
+            <TemplateSelect
+              templates={this.props.templates}
+              selected={get(this.props.template, ['id'])}
+              onChange={this.onTemplateChange}/>
             <IconButton icon={<IconNew/>}/>
             <IconButton icon={<IconCopy/>}/>
             <IconButton icon={<IconTrash/>}/>
@@ -77,6 +81,18 @@ class TemplateEditor extends PureComponent {
         </ul>
       </div>
     )
+  }
+
+  static propTypes = {
+    templates: arrayOf(shape({
+      uri: string.isRequired,
+      name: string
+    })).isRequired,
+    template: shape({
+      uri: string.isRequired,
+      name: string
+    }),
+    onTemplateChange: func.isRequired
   }
 }
 

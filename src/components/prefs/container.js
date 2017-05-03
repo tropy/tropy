@@ -3,11 +3,12 @@
 const React = require('react')
 const { PureComponent } = React
 const { connect } = require('react-redux')
-const { bool, func, string } = require('prop-types')
+const { array, bool, func, string } = require('prop-types')
 const { TitleBar } = require('../titlebar')
 const { TemplateEditor } = require('../template/editor')
 const { PrefPane, PrefPaneToggle } = require('./pane')
 const actions = require('../../actions')
+const { getItemTemplates } = require('../../selectors')
 
 
 class PrefsContainer extends PureComponent {
@@ -74,7 +75,9 @@ class PrefsContainer extends PureComponent {
           <PrefPane
             name="template"
             isActive={this.isActive('template')}>
-            <TemplateEditor/>
+            <TemplateEditor
+              templates={this.props.templates}
+              onTemplateChange={this.props.onTemplateChange}/>
           </PrefPane>
 
           <PrefPane
@@ -88,7 +91,9 @@ class PrefsContainer extends PureComponent {
   static propTypes = {
     isFrameless: bool,
     pane: string.isRequired,
-    onPrefsUpdate: func.isRequired
+    templates: array.isRequired,
+    onPrefsUpdate: func.isRequired,
+    onTemplateChange: func.isRequired
   }
 
   static defaultProps = {
@@ -103,12 +108,15 @@ module.exports = {
       keymap: state.keymap,
       pane: state.prefs.pane,
       properties: state.properties,
-      templates: state.templates
+      templates: getItemTemplates(state)
     }),
 
     dispatch => ({
       onPrefsUpdate(...args) {
         dispatch(actions.prefs.update(...args))
+      },
+
+      onTemplateChange() {
       }
     })
   )(PrefsContainer)
