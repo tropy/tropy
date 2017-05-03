@@ -6,7 +6,7 @@
   margin-top: $space-lg;
 
   .template-header {
-    padding: 0 60px 0 $space-xs;
+    padding: 0 54px 0 $space-xs;
   }
 
   .select-template {
@@ -29,6 +29,7 @@
 
   .property {
     display: flex;
+    align-items: center;
     margin-bottom: $space-min;
     position: relative;
 
@@ -37,14 +38,19 @@
       background: $property-bg;
       padding: 5px $space-xs;
       border-radius: $border-radius-small;
-    }
-
-    .btn-icon {
-      flex: 0 0 auto;
+      margin-right: 6px;
     }
 
     .form-group:last-child {
       margin-bottom: 0;
+    }
+
+    .btn-icon {
+      flex: 0 0 auto;
+      padding: {
+        left: 2px;
+        right: 2px;
+      }
     }
   }
 
