@@ -107,7 +107,7 @@ i('Copy', (
 i('Export', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
-      <path d="M12,14h1v1H1V0H13V1H2V14H12Zm-.293-3,3.5-3.5L11.707,4,11,4.707,13.293,7H6V8h7.293L11,10.293Z"/>
+      <path d="M16,10v5H1V10H2v4H15V10ZM8,2.707V11H9V2.707L11.293,5,12,4.293,8.5.793,5,4.293,5.707,5Z"/>
     </g>
   </svg>
 ))
@@ -180,7 +180,7 @@ i('I', (
 i('Import', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
-      <path d="M15,0V15H3V14H14V1H3V0ZM6,10.293,6.707,11l3.5-3.5L6.707,4,6,4.707,8.293,7H1V8H8.293Z"/>
+      <path d="M16,10v5H1V10H2v4H15V10ZM12,6.707,11.293,6,9,8.293V0H8V8.293L5.707,6,5,6.707l3.5,3.5Z"/>
     </g>
   </svg>
 ))
