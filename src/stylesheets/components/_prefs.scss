@@ -6,11 +6,11 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: $preferences-bg;
+  background: $prefs-bg;
 
   .prefs-header {
     flex: 0 0 auto;
-    border-bottom: 1px solid $preferences-header-border;
+    border-bottom: 1px solid $prefs-header-border;
   }
 
   .prefs-nav {
@@ -37,7 +37,7 @@
     }
 
     &.active {
-      color: $preferences-active-color;
+      color: $prefs-active-color;
 
       .line {
         display: none;
@@ -45,7 +45,7 @@
 
       .block {
         display: block;
-        color: $preferences-active-color;
+        color: $prefs-active-color;
       }
     }
   }
