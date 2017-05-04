@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { TemplateSelect } = require('./select')
 const { PropertySelect } = require('../property/select')
-const { IconButton } = require('../button')
+const { ButtonGroup, IconButton } = require('../button')
 const { FormattedMessage } = require('react-intl')
 const { FormField, FormGroup, Label } = require('../form')
 const { arrayOf, func, shape, string } = require('prop-types')
@@ -32,13 +32,13 @@ function TemplateControl(props) {
           isRequired={false}
           placeholder="prefs.template.new"
           onChange={props.onChange}/>
-        <div className="btn-group">
+        <ButtonGroup>
           <IconButton icon={<IconNew/>}/>
           <IconButton icon={<IconCopy/>}/>
           <IconButton icon={<IconTrash/>}/>
           <IconButton icon={<IconImport/>}/>
           <IconButton icon={<IconExport/>}/>
-        </div>
+        </ButtonGroup>
       </div>
     </FormGroup>
   )
