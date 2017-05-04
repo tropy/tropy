@@ -2,6 +2,7 @@
 
 const { assign } = Object
 const { once } = require('./common/util')
+const everything = () => true
 
 const dom = {
   $(selectors, node = document) {
@@ -79,16 +80,17 @@ const dom = {
     return node.removeEventListener(...args)
   },
 
-  ensure(node, type, fn, maxWait = 5000, capture = false) {
+  ensure(node, type, fn, maxWait = 5000, match = everything) {
     const cancel = () => {
       clearTimeout(timeout)
-      node.removeEventListener(type, done, { capture })
+      node.removeEventListener(type, check)
     }
 
     const done = (...args) => (cancel(), fn(...args))
+    const check = (event) => match(event) && done(event)
 
     const timeout = setTimeout(done, maxWait)
-    node.addEventListener(type, done, { capture })
+    node.addEventListener(type, check)
 
     return cancel
   },

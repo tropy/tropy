@@ -76,7 +76,12 @@ class ProjectContainer extends PureComponent {
 
     this.setState({ willModeChange: true, isModeChanging: false }, () => {
       this.setState({ isModeChanging: true })
-      ensure(this.container, 'transitionend', this.modeDidChange, 1200)
+      ensure(
+        this.container,
+        'transitionend',
+        this.modeDidChange,
+        5000,
+        this.isMainView)
     })
   }
 
@@ -86,6 +91,10 @@ class ProjectContainer extends PureComponent {
       willModeChange: false,
       isModeChanging: false
     })
+  }
+
+  isMainView = (event) => {
+    return event.target.parentNode === this.container
   }
 
   handleContextMenu = (event) => {
