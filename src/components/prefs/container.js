@@ -76,6 +76,7 @@ class PrefsContainer extends PureComponent {
             name="template"
             isActive={this.isActive('template')}>
             <TemplateEditor
+              properties={this.props.properties}
               templates={this.props.templates}
               onSave={this.props.onTemplateSave}
               onCreate={this.props.onTemplateCreate}/>
@@ -93,6 +94,7 @@ class PrefsContainer extends PureComponent {
     isFrameless: bool,
     edit: object.isRequired,
     pane: string.isRequired,
+    properties: object.isRequired,
     templates: array.isRequired,
     onPrefsUpdate: func.isRequired,
     onTemplateCreate: func.isRequired,

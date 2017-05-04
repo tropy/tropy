@@ -6,7 +6,7 @@ const { TemplateSelect } = require('./select')
 const { IconButton } = require('../button')
 const { FormattedMessage } = require('react-intl')
 const { FormControl, FormGroup, Label } = require('../form')
-const { arrayOf, func, shape, string } = require('prop-types')
+const { arrayOf, func, object, shape, string } = require('prop-types')
 
 const {
   IconNew,
@@ -131,6 +131,7 @@ class TemplateEditor extends PureComponent {
   }
 
   static propTypes = {
+    properties: object.isRequired,
     templates: arrayOf(shape({
       uri: string.isRequired,
       name: string
