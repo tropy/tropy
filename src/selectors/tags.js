@@ -4,11 +4,10 @@ const { createSelector: memo } = require('reselect')
 const { values } = Object
 const { getSelectedItems } = require('./items')
 const { seq, compose, filter, map, cat, keep } = require('transducers.js')
+const { by } = require('../collate')
 
-const coll = new Intl.Collator(ARGS.locale, { numeric: true })
-
+const byName = by('name')
 const getTags = ({ tags }) => tags
-const byName = (a, b) => coll.compare(a.name, b.name)
 
 const getAllTags = memo(
   getTags,

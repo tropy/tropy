@@ -42,6 +42,8 @@ template:
   property: Property
 
 property:
+  select: Select a Property …
+  uri: URI
   label: Label
 
 prompt:

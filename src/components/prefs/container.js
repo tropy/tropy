@@ -8,7 +8,7 @@ const { TitleBar } = require('../titlebar')
 const { TemplateEditor } = require('../template/editor')
 const { PrefPane, PrefPaneToggle } = require('./pane')
 const actions = require('../../actions')
-const { getItemTemplates } = require('../../selectors')
+const { getItemTemplates, getAllProperties } = require('../../selectors')
 
 
 class PrefsContainer extends PureComponent {
@@ -94,7 +94,7 @@ class PrefsContainer extends PureComponent {
     isFrameless: bool,
     edit: object.isRequired,
     pane: string.isRequired,
-    properties: object.isRequired,
+    properties: array.isRequired,
     templates: array.isRequired,
     onPrefsUpdate: func.isRequired,
     onTemplateCreate: func.isRequired,
@@ -113,7 +113,7 @@ module.exports = {
       project: state.project,
       keymap: state.keymap,
       pane: state.prefs.pane,
-      properties: state.properties,
+      properties: getAllProperties(state),
       templates: getItemTemplates(state)
     }),
 

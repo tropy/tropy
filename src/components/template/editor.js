@@ -3,10 +3,11 @@
 const React = require('react')
 const { PureComponent } = React
 const { TemplateSelect } = require('./select')
+const { PropertySelect } = require('../property/select')
 const { IconButton } = require('../button')
 const { FormattedMessage } = require('react-intl')
 const { FormField, FormGroup, Label } = require('../form')
-const { arrayOf, func, object, shape, string } = require('prop-types')
+const { arrayOf, func, shape, string } = require('prop-types')
 
 const {
   IconNew,
@@ -72,6 +73,9 @@ class TemplateEditor extends PureComponent {
     this.setState(template)
   }
 
+  handlePropertyChange = () => {
+  }
+
   render() {
     return (
       <div className="template editor form-horizontal">
@@ -105,22 +109,22 @@ class TemplateEditor extends PureComponent {
           <li className="property">
             <div className="property-container">
               <IconGrip/>
-              <div className="form-group compact">
-                <label className="control-label col-3" htmlFor="">
-                  Property
-                </label>
+              <FormGroup isCompact>
+                <Label id="template.property"/>
                 <div className="col-9">
-                  <select className="form-control">
-                    <option>http://purl.org/dc/elements/1.1/title</option>
-                  </select>
+                  <PropertySelect
+                    properties={this.props.properties}
+                    selected={''}
+                    isRequired={false}
+                    placeholder="property.select"
+                    onChange={this.handlePropertyChange}/>
                 </div>
-              </div>
-              <div className="form-group">
-                <label className="control-label col-3" htmlFor="">Label</label>
-                <div className="col-9">
-                  <input className="form-control" type="text" value="Title"/>
-                </div>
-              </div>
+              </FormGroup>
+              <FormField
+                id="property.label"
+                name="label"
+                value="Title"
+                onChange={this.handlePropertyChange}/>
             </div>
             <IconButton icon={<IconPlusCircle/>}/>
             <IconButton icon={<IconMinusCircle/>}/>
@@ -131,7 +135,9 @@ class TemplateEditor extends PureComponent {
   }
 
   static propTypes = {
-    properties: object.isRequired,
+    properties: arrayOf({
+      uri: string.isRequired
+    }).isRequired,
     templates: arrayOf(shape({
       uri: string.isRequired,
       name: string

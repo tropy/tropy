@@ -1,14 +1,15 @@
 'use strict'
 
 const { createSelector: memo } = require('reselect')
-const { keys } = Object
+const { values } = Object
+const { by } = require('../collate')
+const byURI  = by('uri')
 
-const getPropertyURIs = memo(
+const getAllProperties = memo(
   ({ properties }) => properties,
-  (properties) => keys(properties).sort()
+  (properties) => values(properties).sort(byURI)
 )
 
-
 module.exports = {
-  getPropertyURIs
+  getAllProperties
 }
