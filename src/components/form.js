@@ -54,7 +54,7 @@ class Label extends PureComponent {
 }
 
 
-class FormControl extends PureComponent {
+class FormField extends PureComponent {
   handleBlur = (event) => {
     this.props.onBlur(this.props.id, event)
   }
@@ -109,5 +109,5 @@ class FormControl extends PureComponent {
 module.exports = {
   Label,
   FormGroup,
-  FormControl
+  FormField
 }

@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { TemplateSelect } = require('./select')
 const { IconButton } = require('../button')
 const { FormattedMessage } = require('react-intl')
-const { FormControl, FormGroup, Label } = require('../form')
+const { FormField, FormGroup, Label } = require('../form')
 const { arrayOf, func, object, shape, string } = require('prop-types')
 
 const {
@@ -80,13 +80,13 @@ class TemplateEditor extends PureComponent {
             selected={this.state.uri}
             templates={this.props.templates}
             onChange={this.handleTemplateChange}/>
-          <FormControl
+          <FormField
             id="template.name"
             name="name"
             value={this.state.name}
             isCompact
             onChange={this.handleTemplateUpdate}/>
-          <FormControl
+          <FormField
             id="template.uri"
             name="uri"
             value={this.state.uri}
