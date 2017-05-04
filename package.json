@@ -90,14 +90,14 @@
     "ms": "^1.0.0",
     "n3": "^0.10.0",
     "prop-types": "^15.5.4",
-    "prosemirror-commands": "^0.20.0",
-    "prosemirror-history": "^0.20.0",
-    "prosemirror-inputrules": "^0.20.0",
-    "prosemirror-model": "^0.20.0",
-    "prosemirror-schema-basic": "^0.20.0",
-    "prosemirror-schema-list": "^0.20.0",
-    "prosemirror-state": "^0.20.0",
-    "prosemirror-view": "^0.20.1",
+    "prosemirror-commands": "^0.21.0",
+    "prosemirror-history": "^0.21.0",
+    "prosemirror-inputrules": "^0.21.0",
+    "prosemirror-model": "^0.21.0",
+    "prosemirror-schema-basic": "^0.21.0",
+    "prosemirror-schema-list": "^0.21.0",
+    "prosemirror-state": "^0.21.0",
+    "prosemirror-view": "^0.21.0",
     "react": "^15.5.4",
     "react-dnd": "^2.2.3",
     "react-dnd-electron-backend": "^1.1.3",
@@ -115,6 +115,6 @@
     "uuid": "^3.0.1",
     "winston": "^2.1.1",
     "write-file-atomic": "^2.0.0",
-    "yargs": "^7.0.0"
+    "yargs": "^8.0.0"
   }
 }
