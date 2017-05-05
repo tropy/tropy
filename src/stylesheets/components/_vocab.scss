@@ -1,0 +1,24 @@
+//
+// Vocab
+// --------------------------------------------------
+
+.vocab {
+  padding-top: $space-lg;
+
+  .panel {
+    background: $vocab-panel-bg;
+  }
+
+  .panel-body {
+    padding: 0 $default-padding-horizontal;
+  }
+
+  .property {
+    margin-bottom: $space-min;
+
+    fieldset {
+      background: $property-fieldset-bg;
+      padding: 5px $space-xs;
+    }
+  }
+}

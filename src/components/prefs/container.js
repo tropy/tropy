@@ -9,7 +9,7 @@ const { TemplateEditor } = require('../template/editor')
 const { PrefPane, PrefPaneToggle } = require('./pane')
 const actions = require('../../actions')
 const { getItemTemplates, getAllProperties } = require('../../selectors')
-
+const { FormField, FormGroup } = require('../form')
 
 class PrefsContainer extends PureComponent {
   isActive(pane) {
@@ -87,7 +87,75 @@ class PrefsContainer extends PureComponent {
 
           <PrefPane
             name="vocab"
-            isActive={this.isActive('vocab')}/>
+            isActive={this.isActive('vocab')}>
+            <div className="panel-group form-horizontal">
+              <section className="panel">
+                <div className="panel-header">
+                  <h1 className="panel-heading">
+                    <input type="checkbox"/>DCMI Metadata Terms
+                  </h1>
+                </div>
+                <div className="panel-body">
+                  <FormGroup className="compact">
+                    <label className="control-label col-4">URI</label>
+                    <div className="col-8">
+                      <div className="form-text">http://purl.org/dc/terms/</div>
+                    </div>
+                  </FormGroup>
+                  <FormField
+                    id="vocab.prefix"
+                    name="prefix"
+                    value="dc:"
+                    isCompact
+                    size={8}
+                    onChange={function () {}}/>
+                  <FormGroup className="compact">
+                    <label className="control-label col-4">Publisher</label>
+                    <div className="col-8">
+                      <div className="form-text">
+                        Dublin Core Metadata Initiative
+                      </div>
+                      <div className="help-text">
+                        http://purl.org/dc/aboutdcmi#DCMI
+                      </div>
+                    </div>
+                  </FormGroup>
+                  <ul className="property-list">
+                    <li className="property">
+                      <fieldset>
+                        <FormField
+                          id="property.label"
+                          name="prefix"
+                          value="Title"
+                          isCompact
+                          size={8}
+                          onChange={function () {}}/>
+                        <FormGroup className="compact">
+                          <label className="control-label col-4">ID</label>
+                          <div className="col-8">
+                            <div className="form-text">
+                              http://purl.org/dc/elements/1.1/title
+                            </div>
+                          </div>
+                        </FormGroup>
+                        <FormGroup className="compact">
+                          <label className="control-label col-4">
+                            Definition
+                          </label>
+                          <div className="col-8">
+                            <div className="form-text">
+                              A name given to the resource.
+                            </div>
+                          </div>
+                        </FormGroup>
+                      </fieldset>
+                    </li>
+                  </ul>
+                </div>
+              </section>
+            </div>
+
+          </PrefPane>
         </main>
       </div>
     )

@@ -44,6 +44,9 @@ template:
     label: Label
     hint: Hint
 
+vocab:
+  prefix: Prefix
+
 property:
   select: Select a Property …
   uri: URI
