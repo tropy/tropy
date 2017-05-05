@@ -10,12 +10,19 @@ const { IconGrip, IconPlusCircle, IconMinusCircle } = require('../icons')
 const { get, titlecase } = require('../../common/util')
 const { basename } = require('path')
 const { DND } = require('../../constants')
+const cx = require('classnames')
 const { array, bool, func, object } = require('prop-types')
 const { bounds } = require('../../dom')
 const { round } = Math
 
 
 class TemplateField extends PureComponent {
+  get classes() {
+    return {
+      'template-field': true,
+      'dragging': this.props.isDragging
+    }
+  }
 
   get uri() {
     return get(this.props.field, ['property', 'uri']) || ''
@@ -44,7 +51,7 @@ class TemplateField extends PureComponent {
   render() {
     return this.props.dt(
       <li
-        className="template-field"
+        className={cx(this.classes)}
         ref={this.setContainer}>
         <IconGrip/>
         {this.props.ds(
@@ -86,7 +93,6 @@ class TemplateField extends PureComponent {
   static propTypes = {
     field: object.isRequired,
     isDragging: bool,
-    isOver: bool,
     properties: array.isRequired,
     ds: func.isRequired,
     dt: func.isRequired,
@@ -121,19 +127,17 @@ const DragSourceCollect = (connect, monitor) => ({
 
 const DropTargetSpec = {
   hover({ field, onSortPreview }, monitor, { container }) {
-    const type = monitor.getItemType()
     const item = monitor.getItem()
+    if (item === field) return
 
-    switch (type) {
-      case DND.TEMPLATE.FIELD:
-        if (item === field) break
+    const { top, height } = bounds(container)
+    const offset = round((monitor.getClientOffset().y - top) / height)
 
-        var { top, height } = bounds(container)
-        var offset = round((monitor.getClientOffset().y - top) / height)
+    onSortPreview(item, field, offset)
+  },
 
-        onSortPreview(item, field, offset)
-        break
-    }
+  drop({ field }) {
+    return field
   }
 }
 

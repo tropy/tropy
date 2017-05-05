@@ -102,7 +102,7 @@ const util = {
   },
 
   move(array, a, b, offset = 0) {
-    if (a === b) return [...array]
+    if (a === b) return array
 
     const res = []
 

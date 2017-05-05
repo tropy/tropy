@@ -47,6 +47,10 @@
       margin-right: 6px;
     }
 
+    &.dragging {
+      opacity: 0;
+    }
+
     .btn-icon {
       flex: 0 0 auto;
       padding: {
