@@ -105,10 +105,10 @@ class TemplateEditor extends PureComponent {
           </FormGroup>
         </header>
 
-        <ul className="properties">
-          <li className="property">
-            <div className="property-container">
-              <IconGrip/>
+        <ul className="sortable">
+          <li className="sortable-item">
+            <IconGrip/>
+            <div className="field-set">
               <FormGroup isCompact>
                 <Label id="template.property"/>
                 <div className="col-9">
