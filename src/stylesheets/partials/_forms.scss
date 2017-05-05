@@ -8,6 +8,14 @@
   }
 }
 
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background: $fieldset-bg;
+  border-radius: $border-radius-small;
+}
+
 .form-group {
   margin-bottom: $space-sm;
 
