@@ -31,7 +31,7 @@ class TemplateField extends PureComponent {
         <IconGrip/>
         <fieldset>
           <FormGroup isCompact>
-            <Label id="template.property"/>
+            <Label id="template.field.property"/>
             <div className="col-9">
               <PropertySelect
                 properties={this.props.properties}
@@ -42,10 +42,15 @@ class TemplateField extends PureComponent {
             </div>
           </FormGroup>
           <FormField
-            id="property.label"
+            id="template.field.label"
             name="label"
             value={this.props.field.label || ''}
             placeholder={this.defaultLabel}
+            onChange={this.handlePropertyChange}/>
+          <FormField
+            id="template.field.hint"
+            name="hint"
+            value={this.props.field.hint || ''}
             onChange={this.handlePropertyChange}/>
         </fieldset>
         <IconButton icon={<IconPlusCircle/>}/>
