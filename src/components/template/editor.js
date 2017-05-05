@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { TemplateSelect } = require('./select')
-const { PropertySelect } = require('../property/select')
+const { TemplateField } = require('./field')
 const { ButtonGroup, IconButton } = require('../button')
 const { FormattedMessage } = require('react-intl')
 const { FormField, FormGroup, Label } = require('../form')
@@ -15,9 +15,6 @@ const {
   IconTrash,
   IconImport,
   IconExport,
-  IconGrip,
-  IconPlusCircle,
-  IconMinusCircle
 } = require('../icons')
 
 
@@ -105,39 +102,19 @@ class TemplateEditor extends PureComponent {
           </FormGroup>
         </header>
 
-        <ul className="sortable">
-          <li className="sortable-item">
-            <IconGrip/>
-            <fieldset>
-              <FormGroup isCompact>
-                <Label id="template.property"/>
-                <div className="col-9">
-                  <PropertySelect
-                    properties={this.props.properties}
-                    selected={''}
-                    isRequired={false}
-                    placeholder="property.select"
-                    onChange={this.handlePropertyChange}/>
-                </div>
-              </FormGroup>
-              <FormField
-                id="property.label"
-                name="label"
-                value="Title"
-                onChange={this.handlePropertyChange}/>
-            </fieldset>
-            <IconButton icon={<IconPlusCircle/>}/>
-            <IconButton icon={<IconMinusCircle/>}/>
-          </li>
+        <ul className="template-field-list">
+          <TemplateField
+            field={{}}
+            properties={this.props.properties}/>
         </ul>
       </div>
     )
   }
 
   static propTypes = {
-    properties: arrayOf({
+    properties: arrayOf(shape({
       uri: string.isRequired
-    }).isRequired,
+    })).isRequired,
     templates: arrayOf(shape({
       uri: string.isRequired,
       name: string
