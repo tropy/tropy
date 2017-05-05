@@ -154,7 +154,6 @@ class PrefsContainer extends PureComponent {
                 </div>
               </section>
             </div>
-
           </PrefPane>
         </main>
       </div>
