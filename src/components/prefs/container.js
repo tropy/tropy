@@ -36,6 +36,7 @@ class PrefsContainer extends PureComponent {
               <li>
                 <PrefPaneToggle
                   name="app"
+                  icon="IconTropy"
                   isActive={this.isActive('app')}
                   isDisabled
                   onClick={this.toggle}/>
@@ -43,6 +44,7 @@ class PrefsContainer extends PureComponent {
               <li>
                 <PrefPaneToggle
                   name="project"
+                  icon="IconProject"
                   isActive={this.isActive('project')}
                   isDisabled
                   onClick={this.toggle}/>
@@ -57,6 +59,7 @@ class PrefsContainer extends PureComponent {
               <li>
                 <PrefPaneToggle
                   name="vocab"
+                  icon="IconBook"
                   isActive={this.isActive('vocab')}
                   onClick={this.toggle}/>
               </li>
