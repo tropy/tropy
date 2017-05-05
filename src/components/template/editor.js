@@ -108,7 +108,7 @@ class TemplateEditor extends PureComponent {
         <ul className="sortable">
           <li className="sortable-item">
             <IconGrip/>
-            <div className="field-set">
+            <fieldset>
               <FormGroup isCompact>
                 <Label id="template.property"/>
                 <div className="col-9">
@@ -125,7 +125,7 @@ class TemplateEditor extends PureComponent {
                 name="label"
                 value="Title"
                 onChange={this.handlePropertyChange}/>
-            </div>
+            </fieldset>
             <IconButton icon={<IconPlusCircle/>}/>
             <IconButton icon={<IconMinusCircle/>}/>
           </li>
