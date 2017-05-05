@@ -76,6 +76,7 @@ class FormField extends PureComponent {
             id={this.props.id}
             className="form-control"
             name={this.props.name}
+            placeholder={this.props.placeholder}
             tabIndex={this.props.tabIndex}
             type="text"
             value={this.props.value}
@@ -91,6 +92,7 @@ class FormField extends PureComponent {
     id: string.isRequired,
     isCompact: bool,
     name: string.isRequired,
+    placeholder: string,
     size: number.isRequired,
     tabIndex: number,
     value: string.isRequired,

@@ -7,9 +7,20 @@ const { IconButton } = require('../button')
 const { FormField, FormGroup, Label } = require('../form')
 const { array, object } = require('prop-types')
 const { IconGrip, IconPlusCircle, IconMinusCircle } = require('../icons')
+const { get, titlecase } = require('../../common/util')
+const { basename } = require('path')
 
 
 class TemplateField extends PureComponent {
+
+  get uri() {
+    return get(this.props.field, ['property', 'uri']) || ''
+  }
+
+  get defaultLabel() {
+    return get(this.props.field, ['property', 'label'])
+      || titlecase(basename(this.uri))
+  }
 
   handlePropertyChange = () => {
   }
@@ -24,7 +35,7 @@ class TemplateField extends PureComponent {
             <div className="col-9">
               <PropertySelect
                 properties={this.props.properties}
-                selected={''}
+                selected={this.uri}
                 isRequired={false}
                 placeholder="property.select"
                 onChange={this.handlePropertyChange}/>
@@ -33,7 +44,8 @@ class TemplateField extends PureComponent {
           <FormField
             id="property.label"
             name="label"
-            value="Title"
+            value={this.props.field.label || ''}
+            placeholder={this.defaultLabel}
             onChange={this.handlePropertyChange}/>
         </fieldset>
         <IconButton icon={<IconPlusCircle/>}/>

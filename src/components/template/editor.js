@@ -51,26 +51,28 @@ TemplateControl.propTypes = {
 }
 
 
-
+function dup(template) {
+  template = template || { name: '', uri: '', fields: [] }
+  return {
+    ...template, fields: [...template.fields]
+  }
+}
 
 class TemplateEditor extends PureComponent {
   constructor(props) {
     super(props)
-
-    this.state = {
-      name: '', uri: ''
-    }
+    this.state = dup()
   }
 
   handleTemplateChange = (template) => {
-    this.setState({ name: '', uri: '', ...template })
+    this.setState(dup(template))
   }
 
   handleTemplateUpdate = (template) => {
     this.setState(template)
   }
 
-  handlePropertyChange = () => {
+  handleFieldSort = () => {
   }
 
   render() {
@@ -103,9 +105,11 @@ class TemplateEditor extends PureComponent {
         </header>
 
         <ul className="template-field-list">
-          <TemplateField
-            field={{}}
-            properties={this.props.properties}/>
+          {this.state.fields.map((field, idx) =>
+            <TemplateField
+              key={idx}
+              field={field}
+              properties={this.props.properties}/>)}
         </ul>
       </div>
     )
