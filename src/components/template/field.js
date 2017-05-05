@@ -5,10 +5,10 @@ const { PureComponent } = React
 const { PropertySelect } = require('../property/select')
 const { IconButton } = require('../button')
 const { FormField, FormGroup, Label } = require('../form')
-const { array, object } = require('prop-types')
 const { IconGrip, IconPlusCircle, IconMinusCircle } = require('../icons')
 const { get, titlecase } = require('../../common/util')
 const { basename } = require('path')
+const { array, func, object } = require('prop-types')
 
 
 class TemplateField extends PureComponent {
@@ -23,6 +23,14 @@ class TemplateField extends PureComponent {
   }
 
   handlePropertyChange = () => {
+  }
+
+  handleInsert = () => {
+    this.props.onInsert(this.props.field)
+  }
+
+  handleRemove = () => {
+    this.props.onRemove(this.props.field)
   }
 
   render() {
@@ -53,15 +61,21 @@ class TemplateField extends PureComponent {
             value={this.props.field.hint || ''}
             onChange={this.handlePropertyChange}/>
         </fieldset>
-        <IconButton icon={<IconPlusCircle/>}/>
-        <IconButton icon={<IconMinusCircle/>}/>
+        <IconButton
+          icon={<IconPlusCircle/>}
+          onClick={this.handleInsert}/>
+        <IconButton
+          icon={<IconMinusCircle/>}
+          onClick={this.handleRemove}/>
       </li>
     )
   }
 
   static propTypes = {
     field: object.isRequired,
-    properties: array.isRequired
+    properties: array.isRequired,
+    onInsert: func.isRequired,
+    onRemove: func.isRequired
   }
 }
 

@@ -7,6 +7,7 @@ const { TemplateField } = require('./field')
 const { ButtonGroup, IconButton } = require('../button')
 const { FormattedMessage } = require('react-intl')
 const { FormField, FormGroup, Label } = require('../form')
+const { insert, remove } = require('../../common/util')
 const { arrayOf, func, shape, string } = require('prop-types')
 
 const {
@@ -72,6 +73,20 @@ class TemplateEditor extends PureComponent {
     this.setState(template)
   }
 
+  handleFieldInsert = (field) => {
+    const at = this.state.fields.indexOf(field)
+
+    this.setState({
+      fields: insert(this.state.fields, at + 1, dup())
+    })
+  }
+
+  handleFieldRemove = (field) => {
+    this.setState({
+      fields: remove(this.state.fields, field)
+    })
+  }
+
   handleFieldSort = () => {
   }
 
@@ -109,7 +124,9 @@ class TemplateEditor extends PureComponent {
             <TemplateField
               key={idx}
               field={field}
-              properties={this.props.properties}/>)}
+              properties={this.props.properties}
+              onInsert={this.handleFieldInsert}
+              onRemove={this.handleFieldRemove}/>)}
         </ul>
       </div>
     )
