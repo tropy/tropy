@@ -369,7 +369,7 @@ class PanelGroup extends PureComponent {
 
   render() {
     return (
-      <div id="panel-group">
+      <div className="panel-group">
         <header className="panel-group-header">
           {this.props.header}
         </header>
