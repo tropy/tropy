@@ -148,6 +148,23 @@ describe('util', () => {
     })
   })
 
+  describe('.swap', () => {
+    const { swap } = util
+
+    it('swapes the items at the given positions', () => {
+      expect(swap([1, 2, 3], 0, 0)).to.eql([1, 2, 3])
+      expect(swap([1, 2, 3], 1, 1)).to.eql([1, 2, 3])
+      expect(swap([1, 2, 3], 2, 2)).to.eql([1, 2, 3])
+
+      expect(swap([1, 2, 3], 0, 1)).to.eql([2, 1, 3])
+      expect(swap([1, 2, 3], 0, 2)).to.eql([3, 2, 1])
+      expect(swap([1, 2, 3], 2, 0)).to.eql([3, 2, 1])
+
+      expect(swap([1, 2, 3], 0, 4)).to.eql([3, 2, 1])
+      expect(swap([1, 2, 3], 0, -1)).to.eql([1, 2, 3])
+    })
+  })
+
   describe('.adjacent', () => {
     const { adjacent } = util
 

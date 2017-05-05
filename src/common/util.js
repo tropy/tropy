@@ -127,6 +127,21 @@ const util = {
     return res
   },
 
+  swap(array, from, to) {
+    to = util.restrict(to, 0, array.length - 1)
+
+    if (from === to) return array
+    if (from > to) return util.swap(array, to, from)
+
+    let head = array.slice(0, from)
+    let between = array.slice(from + 1, to)
+    let tail = array.slice(to + 1)
+
+    return [
+      ...head, array[to], ...between, array[from], ...tail
+    ]
+  },
+
   adjacent(array, item) {
     const i = array.indexOf(item)
     const n = array.length - 1
