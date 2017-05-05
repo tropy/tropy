@@ -87,7 +87,13 @@ class TemplateEditor extends PureComponent {
     })
   }
 
-  handleFieldSort = () => {
+  handleSort = () => {
+  }
+
+  handleSortPreview = () => {
+  }
+
+  handleSortReset = () => {
   }
 
   render() {
@@ -126,7 +132,10 @@ class TemplateEditor extends PureComponent {
               field={field}
               properties={this.props.properties}
               onInsert={this.handleFieldInsert}
-              onRemove={this.handleFieldRemove}/>)}
+              onRemove={this.handleFieldRemove}
+              onSort={this.handleSort}
+              onSortPreview={this.handleSortPreview}
+              onSortReset={this.handleSortReset}/>)}
         </ul>
       </div>
     )
