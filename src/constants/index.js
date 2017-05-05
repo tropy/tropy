@@ -26,7 +26,7 @@ module.exports = {
   WIZARD: require('./wizard'),
 
 
-  RDFS: {
+  RDF: {
     TYPE: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
     PROPERTY: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property'
   }

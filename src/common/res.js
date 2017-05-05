@@ -7,7 +7,7 @@ const { flatten } = require('./util')
 const yaml = require('js-yaml')
 const N3 = require('n3')
 
-const { RDFS } = require('../constants')
+const { RDF } = require('../constants')
 const ROOT = cd(__dirname, '..', '..', 'res')
 
 
@@ -123,7 +123,7 @@ class Vocab extends Resource {
   }
 
   get properties() {
-    return this.store.getSubjects(RDFS.TYPE, RDFS.PROPERTY)
+    return this.store.getSubjects(RDF.TYPE, RDF.PROPERTY)
   }
 }
 
