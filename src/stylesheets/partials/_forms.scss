@@ -8,6 +8,14 @@
   }
 }
 
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background: $fieldset-bg;
+  border-radius: $border-radius-small;
+}
+
 .form-group {
   margin-bottom: $space-sm;
 
@@ -17,7 +25,6 @@
 
   .form-horizontal & {
     display: flex;
-    align-items: center;
     margin: {
       left: (-$grid-gutter-width / 2);
       right: (-$grid-gutter-width / 2);
@@ -27,11 +34,16 @@
   &.align-right {
     justify-content: flex-end;
   }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 label {
   .form-horizontal & {
     text-align: right;
+    padding-top: 3px;
   }
 }
 
@@ -75,4 +87,21 @@ label {
   font-size: $font-size-large;
   height: $input-height-large;
   padding: 0 $padding-large-horizontal;
+}
+
+.form-text {
+  display: flex;
+  align-items: center;
+  min-height: $input-height-base;
+  padding: 0 $padding-base-horizontal;
+}
+
+.help-text {
+  font-size: 11px;
+  line-height: 16px;
+
+  .form-text + & {
+    padding: 0 $padding-base-horizontal;
+    margin-top: -2px;
+  }
 }

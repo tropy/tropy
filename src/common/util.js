@@ -4,8 +4,7 @@ const B = require('bluebird')
 const pad = require('string.prototype.padstart')
 const { keys } = Object
 
-module.exports = {
-
+const util = {
   once(emitter, event) {
     return new B((resolve, reject) => {
       const on =
@@ -49,6 +48,14 @@ module.exports = {
       ...items,
       ...array.slice(at + count)
     ]
+  },
+
+  insert(array, at, ...items) {
+    return util.splice(array, at, 0, ...items)
+  },
+
+  remove(array, item) {
+    return array.filter(it => it !== item)
   },
 
   sort(array, ...args) {
@@ -95,7 +102,7 @@ module.exports = {
   },
 
   move(array, a, b, offset = 0) {
-    if (a === b) return [...array]
+    if (a === b) return array
 
     const res = []
 
@@ -118,6 +125,21 @@ module.exports = {
     }
 
     return res
+  },
+
+  swap(array, from, to) {
+    to = util.restrict(to, 0, array.length - 1)
+
+    if (from === to) return array
+    if (from > to) return util.swap(array, to, from)
+
+    let head = array.slice(0, from)
+    let between = array.slice(from + 1, to)
+    let tail = array.slice(to + 1)
+
+    return [
+      ...head, array[to], ...between, array[from], ...tail
+    ]
   },
 
   adjacent(array, item) {
@@ -360,3 +382,5 @@ module.exports = {
     return obj.id
   }
 }
+
+module.exports = util

@@ -22,5 +22,12 @@ module.exports = {
   TABS: require('./tabs'),
   TAG: require('./tag'),
   UI: require('./ui'),
-  WIZARD: require('./wizard')
+  VOCAB: require('./vocab'),
+  WIZARD: require('./wizard'),
+
+
+  RDF: {
+    TYPE: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+    PROPERTY: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property'
+  }
 }

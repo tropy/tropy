@@ -3,7 +3,7 @@
 // --------------------------------------------------
 
 .panel {
-  flex: 1 1 0;
+  flex: 1 1 auto;
   background: $panel-bg;
   display: flex;
   flex-direction: column;

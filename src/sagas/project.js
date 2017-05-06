@@ -44,6 +44,11 @@ module.exports = {
       yield call([cache, cache.init])
       yield put(act.project.opened({ file: db.path, ...project }))
 
+      if (db.path !== ARGS.file) {
+        ARGS.file = db.path
+        window.location.hash = encodeURIComponent(JSON.stringify(ARGS))
+      }
+
       yield every(action => has('search', action), search, db)
       yield every(action => has('load', action), load)
 

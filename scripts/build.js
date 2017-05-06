@@ -102,6 +102,10 @@ target.all = (args = []) => {
 
         break
       }
+      case 'win32': {
+        console.log(`Renaming executable to ${qualified.name}.exe...`)
+        rename(dst, `${qualified.product}.exe`, `${qualified.name}.exe`)
+      }
     }
 
     console.log(`Saved app to ${relative(dir, dst)}`)

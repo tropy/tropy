@@ -3,5 +3,8 @@
 module.exports = {
   ITEMS: 'items',
   LIST: 'list',
-  PHOTO: 'photo'
+  PHOTO: 'photo',
+  TEMPLATE: {
+    FIELD: 'template.field'
+  }
 }

@@ -8,6 +8,7 @@ module.exports = {
   ...require('./notes'),
   ...require('./photos'),
   ...require('./project'),
+  ...require('./properties'),
   ...require('./templates'),
   ...require('./tags')
 }

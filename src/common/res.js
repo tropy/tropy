@@ -2,15 +2,19 @@
 
 const { resolve } = require('./promisify')
 const { resolve: cd, join } = require('path')
-const { readFileAsync: read } = require('fs')
+const { readFileAsync: read, createReadStream: stream } = require('fs')
 const { flatten } = require('./util')
-
 const yaml = require('js-yaml')
-const root = cd(__dirname, '..', '..', 'res')
+const N3 = require('n3')
+
+const { RDF } = require('../constants')
+const ROOT = cd(__dirname, '..', '..', 'res')
+
+
 
 class Resource {
   static get base() {
-    return root
+    return ROOT
   }
 
   static get ext() {
@@ -86,6 +90,47 @@ class KeyMap extends Resource {
   }
 }
 
+class Vocab extends Resource {
+  static get base() {
+    return join(super.base, 'vocab')
+  }
+
+  static get ext() {
+    return '.n3'
+  }
+
+  static parse(is) {
+    return new Promise((resolve, reject) => {
+      const store = N3.Store()
+
+      N3.Parser({ format: 'N3' })
+        .parse(is, (error, triple, prefixes) => {
+          if (error) return reject(error)
+          if (triple) return store.addTriple(triple)
+          store.addPrefixes(prefixes)
+          resolve(store)
+        })
+    })
+  }
+
+  static async open(name) {
+    return new this(await this.parse(stream(this.expand(name))))
+  }
+
+  constructor(store) {
+    super()
+    this.store = store
+  }
+
+  get properties() {
+    return this.store.getSubjects(RDF.TYPE, RDF.PROPERTY)
+  }
+}
+
 module.exports = {
-  Resource, Menu, Strings, KeyMap
+  Resource,
+  Menu,
+  Strings,
+  KeyMap,
+  Vocab
 }

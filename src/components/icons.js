@@ -107,7 +107,7 @@ i('Copy', (
 i('Export', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
-      <path d="M12,14h1v1H1V0H13V1H2V14H12Zm-.293-3,3.5-3.5L11.707,4,11,4.707,13.293,7H6V8h7.293L11,10.293Z"/>
+      <path d="M16,10v5H1V10H2v4H15V10ZM8,2.707V11H9V2.707L11.293,5,12,4.293,8.5.793,5,4.293,5.707,5Z"/>
     </g>
   </svg>
 ))
@@ -180,7 +180,7 @@ i('I', (
 i('Import', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
-      <path d="M15,0V15H3V14H14V1H3V0ZM6,10.293,6.707,11l3.5-3.5L6.707,4,6,4.707,8.293,7H1V8H8.293Z"/>
+      <path d="M16,10v5H1V10H2v4H15V10ZM12,6.707,11.293,6,9,8.293V0H8V8.293L5.707,6,5,6.707l3.5,3.5Z"/>
     </g>
   </svg>
 ))
@@ -448,6 +448,28 @@ i('Item', (
 
 /* 32 x 32 */
 
+i('Book', (
+  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+    <g className="line" fill="currentColor">
+      <path d="M28,0H8A2,2,0,0,0,6.583.59h0l-4,4h0A1.993,1.993,0,0,0,2,6V30a2,2,0,0,0,2,2H24a2,2,0,0,0,2-2V6a2,2,0,0,0-2-2H4.584l3-3H28a1,1,0,0,1,1,1V27.722A1.992,1.992,0,0,0,30,26V2A2,2,0,0,0,28,0ZM25,6V30a1,1,0,0,1-1,1H4a1,1,0,0,1-1-1V6A1,1,0,0,1,4,5H24A1,1,0,0,1,25,6Z"/>
+    </g>
+    <g className="block" fill="currentColor">
+      <path d="M28,0H8A2,2,0,0,0,6.583.59h0l-4,4h0A1.993,1.993,0,0,0,2,6V30a2,2,0,0,0,2,2H24a2,2,0,0,0,2-2V6a2,2,0,0,0-2-2H4.584l3-3H28a1,1,0,0,1,1,1V27.722A1.992,1.992,0,0,0,30,26V2A2,2,0,0,0,28,0Z"/>
+    </g>
+  </svg>
+))
+
+i('Project', (
+  <svg width="32" height="32">
+    <g className="line" fill="currentColor">
+      <path d="M19,13h7V28H19V27h4V25h1v2h1V24H22v2H21V21h1v2h3V18H21V17h4V14H20v1h4v1H19ZM14,25H13v2H12V14h5v3H16V15H15v3h4v1H14V15H13v9h2v2h5V21H15v1h4v3H16V24h2V23H14V20h9v2h1V19H20V17H18V13H11V28h7V27H14ZM30,6.293V32H7V10H0V3H7V0H23.707ZM24,1.707V6h4.293ZM1,9H19V4H1ZM29,7H23V1H8V3H20v7H8V31H29Z"/>
+    </g>
+    <g className="block" fill="currentColor">
+      <path d="M19,4V9H1V4ZM24,.293V6h5.707ZM30,7V32H7V10H20V3H7V0H23V7ZM18,27H14V25H13v2H12V14h5v3H16V15H15v3h4v1H14V15H13v9h2v2h5V21H15v1h4v3H16V24h2V23H14V20h9v2h1V19H20V17H18V13H11V28h7Zm8-14H19v3h5V15H20V14h5v3H21v1h4v5H22V21H21v5h1V24h3v3H24V25H23v2H19v1h7Z"/>
+    </g>
+  </svg>
+))
+
 i('Template', (
   <svg width="32" height="32">
     <g className="line" fill="currentColor">
@@ -455,6 +477,17 @@ i('Template', (
     </g>
     <g className="block" fill="currentColor">
       <path d="M23,20H9V19H23Zm0,5H9v1H23ZM9,8h8V7H9ZM22,.293V8h7.707ZM23,13H9v1H23Zm7-4V32H2V0H21V9ZM8,9H18V6H8ZM24,24H8v3H24Zm0-6H8v3H24Zm0-6H8v3H24Z"/>
+    </g>
+  </svg>
+))
+
+i('Tropy', (
+  <svg width="32" height="32">
+    <g className="line" fill="currentColor">
+      <path d="M16,1A15,15,0,1,1,1,16,15.017,15.017,0,0,1,16,1m0-1A16,16,0,1,0,32,16,16,16,0,0,0,16,0Zm7.9,15,3.464-6H4.634L8.1,15H9.253L6.366,10H25.634l-2.309,4H13V28.366L19,24.9V18.747l-1,.577v5l-4,2.31V15Z"/>
+    </g>
+    <g className="block" fill="currentColor">
+      <path d="M16,0A16,16,0,1,0,32,16,16,16,0,0,0,16,0Zm7.9,15H14V26.634l4-2.31v-5l1-.577V24.9l-6,3.465V14H23.325l2.309-4H6.366l2.886,5H8.1L4.634,9H27.366Z"/>
     </g>
   </svg>
 ))

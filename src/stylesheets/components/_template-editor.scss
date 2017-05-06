@@ -31,26 +31,24 @@
     }
   }
 
-  .properties {
+  .template-field-list {
     margin-top: $space-lg;
   }
 
-  .property {
+  .template-field {
     display: flex;
     align-items: center;
     margin-bottom: $space-min;
     position: relative;
 
-    .property-container {
+    fieldset {
       flex: 1 1 auto;
-      background: $property-bg;
       padding: 5px $space-xs;
-      border-radius: $border-radius-small;
       margin-right: 6px;
     }
 
-    .form-group:last-child {
-      margin-bottom: 0;
+    &.dragging {
+      opacity: 0;
     }
 
     .btn-icon {

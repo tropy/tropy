@@ -3,10 +3,18 @@
 const React = require('react')
 const { PureComponent, createElement: create } = React
 const PropTypes = require('prop-types')
-const { bool, element, func, number, string } = PropTypes
+const { bool, element, func, node, number, string } = PropTypes
 const { injectIntl, intlShape } = require('react-intl')
 const cx = require('classnames')
 
+
+const ButtonGroup = ({ children }) => (
+  <div className="btn-group">{children}</div>
+)
+
+ButtonGroup.propTypes = {
+  children: node
+}
 
 class IconButton extends PureComponent {
   get classes() {
@@ -88,5 +96,6 @@ class IconButton extends PureComponent {
 
 
 module.exports = {
+  ButtonGroup,
   IconButton: injectIntl(IconButton)
 }

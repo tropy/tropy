@@ -3,9 +3,11 @@
 const React = require('react')
 const { PureComponent } = React
 const { TemplateSelect } = require('./select')
-const { IconButton } = require('../button')
+const { TemplateField } = require('./field')
+const { ButtonGroup, IconButton } = require('../button')
 const { FormattedMessage } = require('react-intl')
-const { FormControl, FormGroup, Label } = require('../form')
+const { FormField, FormGroup, Label } = require('../form')
+const { insert, remove, move } = require('../../common/util')
 const { arrayOf, func, shape, string } = require('prop-types')
 
 const {
@@ -14,9 +16,6 @@ const {
   IconTrash,
   IconImport,
   IconExport,
-  IconGrip,
-  IconPlusCircle,
-  IconMinusCircle
 } = require('../icons')
 
 
@@ -31,13 +30,13 @@ function TemplateControl(props) {
           isRequired={false}
           placeholder="prefs.template.new"
           onChange={props.onChange}/>
-        <div className="btn-group">
+        <ButtonGroup>
           <IconButton icon={<IconNew/>}/>
           <IconButton icon={<IconCopy/>}/>
           <IconButton icon={<IconTrash/>}/>
           <IconButton icon={<IconImport/>}/>
           <IconButton icon={<IconExport/>}/>
-        </div>
+        </ButtonGroup>
       </div>
     </FormGroup>
   )
@@ -53,23 +52,53 @@ TemplateControl.propTypes = {
 }
 
 
-
+function dup(template) {
+  template = template || { name: '', uri: '', fields: [] }
+  return {
+    ...template, fields: [...template.fields]
+  }
+}
 
 class TemplateEditor extends PureComponent {
   constructor(props) {
     super(props)
-
-    this.state = {
-      name: '', uri: ''
-    }
+    this.state = dup()
   }
 
   handleTemplateChange = (template) => {
-    this.setState({ name: '', uri: '', ...template })
+    this.setState(dup(template))
   }
 
   handleTemplateUpdate = (template) => {
     this.setState(template)
+  }
+
+  handleFieldInsert = (field) => {
+    const at = this.state.fields.indexOf(field)
+
+    this.setState({
+      fields: insert(this.state.fields, at + 1, {
+        property: { uri: '' }
+      })
+    })
+  }
+
+  handleFieldRemove = (field) => {
+    this.setState({
+      fields: remove(this.state.fields, field)
+    })
+  }
+
+  handleSort = () => {
+  }
+
+  handleSortPreview = (from, to, offset) => {
+    this.setState({
+      fields: move(this.state.fields, from, to, offset)
+    })
+  }
+
+  handleSortReset = () => {
   }
 
   render() {
@@ -80,13 +109,13 @@ class TemplateEditor extends PureComponent {
             selected={this.state.uri}
             templates={this.props.templates}
             onChange={this.handleTemplateChange}/>
-          <FormControl
+          <FormField
             id="template.name"
             name="name"
             value={this.state.name}
             isCompact
             onChange={this.handleTemplateUpdate}/>
-          <FormControl
+          <FormField
             id="template.uri"
             name="uri"
             value={this.state.uri}
@@ -101,36 +130,26 @@ class TemplateEditor extends PureComponent {
           </FormGroup>
         </header>
 
-        <ul className="properties">
-          <li className="property">
-            <div className="property-container">
-              <IconGrip/>
-              <div className="form-group compact">
-                <label className="control-label col-3" htmlFor="">
-                  Property
-                </label>
-                <div className="col-9">
-                  <select className="form-control">
-                    <option>http://purl.org/dc/elements/1.1/title</option>
-                  </select>
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="control-label col-3" htmlFor="">Label</label>
-                <div className="col-9">
-                  <input className="form-control" type="text" value="Title"/>
-                </div>
-              </div>
-            </div>
-            <IconButton icon={<IconPlusCircle/>}/>
-            <IconButton icon={<IconMinusCircle/>}/>
-          </li>
+        <ul className="template-field-list">
+          {this.state.fields.map((field) =>
+            <TemplateField
+              key={field.property.uri}
+              field={field}
+              properties={this.props.properties}
+              onInsert={this.handleFieldInsert}
+              onRemove={this.handleFieldRemove}
+              onSort={this.handleSort}
+              onSortPreview={this.handleSortPreview}
+              onSortReset={this.handleSortReset}/>)}
         </ul>
       </div>
     )
   }
 
   static propTypes = {
+    properties: arrayOf(shape({
+      uri: string.isRequired
+    })).isRequired,
     templates: arrayOf(shape({
       uri: string.isRequired,
       name: string

@@ -39,9 +39,17 @@ prefs:
 template:
   uri: URI
   name: Name
-  property: Property
+  field:
+    property: Property
+    label: Label
+    hint: Hint
+
+vocab:
+  prefix: Prefix
 
 property:
+  select: Select a Property …
+  uri: URI
   label: Label
 
 prompt:
