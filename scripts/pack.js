@@ -128,9 +128,12 @@ target.win32 = async (args = []) => {
     outputDirectory: dist,
     authors: author.name,
     signWithParams: params,
-    exe: `${qualified.product}.exe`,
+    title: qualified.product,
+    name: qualified.name,
+    exe: `${qualified.name}.exe`,
     setupExe: `setup-${name}-${version}.exe`,
     setupIcon: join(res, 'icons', channel, `${name}.ico`),
+    iconUrl: join(res, 'icons', channel, `${name}.ico`),
     noMsi: true
   })
 }
