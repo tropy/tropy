@@ -163,7 +163,7 @@ module.exports = {
       ])
 
       if (!(yield cancelled())) {
-        yield aux.map(t => cancel(t))
+        yield all(aux.map(t => cancel(t)))
       }
 
       verbose('*main terminated')
