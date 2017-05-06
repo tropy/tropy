@@ -5,11 +5,11 @@ const { PureComponent } = React
 const { connect } = require('react-redux')
 const { array, bool, func, object, string } = require('prop-types')
 const { TitleBar } = require('../titlebar')
-const { TemplateEditor } = require('../template/editor')
+const { TemplateEditor } = require('../template')
+const { VocabList } = require('../vocab')
 const { PrefPane, PrefPaneToggle } = require('./pane')
 const actions = require('../../actions')
 const { getItemTemplates, getAllProperties } = require('../../selectors')
-const { FormField, FormGroup } = require('../form')
 
 class PrefsContainer extends PureComponent {
   isActive(pane) {
@@ -88,72 +88,8 @@ class PrefsContainer extends PureComponent {
           <PrefPane
             name="vocab"
             isActive={this.isActive('vocab')}>
-            <div className="panel-group form-horizontal">
-              <section className="panel">
-                <div className="panel-header">
-                  <h1 className="panel-heading">
-                    <input type="checkbox"/>DCMI Metadata Terms
-                  </h1>
-                </div>
-                <div className="panel-body">
-                  <FormGroup className="compact">
-                    <label className="control-label col-4">URI</label>
-                    <div className="col-8">
-                      <div className="form-text">http://purl.org/dc/terms/</div>
-                    </div>
-                  </FormGroup>
-                  <FormField
-                    id="vocab.prefix"
-                    name="prefix"
-                    value="dc:"
-                    isCompact
-                    size={8}
-                    onChange={function () {}}/>
-                  <FormGroup className="compact">
-                    <label className="control-label col-4">Publisher</label>
-                    <div className="col-8">
-                      <div className="form-text">
-                        Dublin Core Metadata Initiative
-                      </div>
-                      <div className="help-text">
-                        http://purl.org/dc/aboutdcmi#DCMI
-                      </div>
-                    </div>
-                  </FormGroup>
-                  <ul className="property-list">
-                    <li className="property">
-                      <fieldset>
-                        <FormField
-                          id="property.label"
-                          name="prefix"
-                          value="Title"
-                          isCompact
-                          size={8}
-                          onChange={function () {}}/>
-                        <FormGroup className="compact">
-                          <label className="control-label col-4">ID</label>
-                          <div className="col-8">
-                            <div className="form-text">
-                              http://purl.org/dc/elements/1.1/title
-                            </div>
-                          </div>
-                        </FormGroup>
-                        <FormGroup className="compact">
-                          <label className="control-label col-4">
-                            Definition
-                          </label>
-                          <div className="col-8">
-                            <div className="form-text">
-                              A name given to the resource.
-                            </div>
-                          </div>
-                        </FormGroup>
-                      </fieldset>
-                    </li>
-                  </ul>
-                </div>
-              </section>
-            </div>
+            <VocabList
+              vocab={this.props.vocab}/>
           </PrefPane>
         </main>
       </div>
@@ -166,6 +102,7 @@ class PrefsContainer extends PureComponent {
     pane: string.isRequired,
     properties: array.isRequired,
     templates: array.isRequired,
+    vocab: object.isRequired,
     onPrefsUpdate: func.isRequired,
     onTemplateCreate: func.isRequired,
     onTemplateSave: func.isRequired
@@ -184,7 +121,8 @@ module.exports = {
       keymap: state.keymap,
       pane: state.prefs.pane,
       properties: getAllProperties(state),
-      templates: getItemTemplates(state)
+      templates: getItemTemplates(state),
+      vocab: state.vocab
     }),
 
     dispatch => ({
