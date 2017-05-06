@@ -220,6 +220,13 @@ const util = {
     }, into)
   },
 
+  any(src, ...props) {
+    for (let prop of props) {
+      if (src.hasOwnProperty(prop)) return src[prop]
+      if (typeof src[prop] !== 'undefined') return src[prop]
+    }
+  },
+
   pick(src, props = [], into = {}) {
     return props.reduce((res, key) => {
       const value = src[key]

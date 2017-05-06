@@ -3,7 +3,6 @@
 const { PROPERTIES } = require('../constants')
 
 module.exports = {
-
   restore(payload, meta) {
     return {
       type: PROPERTIES.RESTORE,
@@ -19,5 +18,4 @@ module.exports = {
       meta: { ...meta }
     }
   }
-
 }
