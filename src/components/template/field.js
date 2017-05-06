@@ -53,9 +53,9 @@ class TemplateField extends PureComponent {
       <li
         className={cx(this.classes)}
         ref={this.setContainer}>
-        <IconGrip/>
         {this.props.ds(
           <fieldset>
+            <IconGrip/>
             <FormGroup isCompact>
               <Label id="template.field.property"/>
               <div className="col-9">
