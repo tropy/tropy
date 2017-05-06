@@ -123,7 +123,7 @@ class Vocab extends Resource {
   }
 
   get properties() {
-    return this.store.getSubjects(RDF.TYPE, RDF.PROPERTY)
+    return this.store.getSubjects(RDF.type, RDF.Property)
   }
 }
 
