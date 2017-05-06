@@ -14,7 +14,8 @@ const {
   properties,
   project,
   keymap,
-  history
+  history,
+  vocab
 } = require('../reducers')
 
 
@@ -30,7 +31,8 @@ module.exports = {
       properties,
       project,
       keymap,
-      history
+      history,
+      vocab
     })
 
     let middleware = applyMiddleware(

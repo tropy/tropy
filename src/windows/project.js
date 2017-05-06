@@ -19,7 +19,6 @@ const { locale, file } = ARGS
 
 all([
   store.dispatch(act.vocab.load('dc')),
-  store.dispatch(act.vocab.load('dcterms')),
   store.dispatch(act.intl.load({ locale })),
   store.dispatch(act.keymap.load({ name: 'project', locale })),
   store.dispatch(act.project.open(file)),
@@ -37,7 +36,7 @@ dialog.start()
 win.unloaders.push(dialog.stop)
 
 win.unloaders.push(() => (
-  store.dispatch(project.close()), tasks.done
+  store.dispatch(act.project.close()), tasks.done
 ))
 
 if (ARGS.dev || ARGS.debug) {
