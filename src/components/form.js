@@ -126,7 +126,7 @@ class FormText extends PureComponent {
     id: string.isRequired,
     isCompact: bool,
     size: number.isRequired,
-    value: string.isRequired
+    value: string
   }
 
   static defaultProps = {

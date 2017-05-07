@@ -2,10 +2,11 @@
 
 const React = require('react')
 const { PureComponent } = React
+const { PrefPane } = require('../prefs/pane')
 const { Accordion, AccordionGroup } = require('../accordion')
 const { FormField, FormText } = require('../form')
-const { object } = require('prop-types')
 const { noop } = require('../../common/util')
+const { bool, object, string } = require('prop-types')
 
 const PropertyList = () => (
   <ul className="property-list">
@@ -36,10 +37,9 @@ const PropertyList = () => (
 )
 
 class VocabPane extends PureComponent {
-
   renderVocabulary(vocab, idx) {
     return (
-      <Accordion id={idx}>
+      <Accordion id={idx} key={vocab.uri}>
         <h1 className="panel-heading">
           <input type="checkbox"/>
           {vocab.title}
@@ -68,15 +68,24 @@ class VocabPane extends PureComponent {
     const vocabs = Object.values(this.props.vocab)
 
     return (
-      <AccordionGroup className="form-horizontal">
-        {vocabs.map(this.renderVocabulary)}
-      </AccordionGroup>
+      <PrefPane
+        name={this.props.name}
+        isActive={this.props.isActive}>
+        <AccordionGroup className="form-horizontal">
+          {vocabs.map(this.renderVocabulary)}
+        </AccordionGroup>
+      </PrefPane>
     )
   }
 
   static propTypes = {
-    properties: object.isRequired,
+    isActive: bool,
+    name: string.isRequired,
     vocab: object.isRequired
+  }
+
+  static defaultProps = {
+    name: 'vocab'
   }
 }
 

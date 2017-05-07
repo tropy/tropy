@@ -85,12 +85,9 @@ class PrefsContainer extends PureComponent {
               onCreate={this.props.onTemplateCreate}/>
           </PrefPane>
 
-          <PrefPane
-            name="vocab"
-            isActive={this.isActive('vocab')}>
-            <VocabPane
-              vocab={this.props.vocab}/>
-          </PrefPane>
+          <VocabPane
+            isActive={this.isActive('vocab')}
+            vocab={this.props.vocab}/>
         </main>
       </div>
     )
