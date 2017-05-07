@@ -23,15 +23,17 @@ const PropertyListItem = ({ property }) => (
         size={8}
         value={property.uri}/>
       <FormText
-        id="property.description"
-        isCompact
-        size={8}
-        value={property.definition}/>
-      <FormText
         id="property.comment"
         isCompact
+        isOptional
         size={8}
         value={property.comment}/>
+      <FormText
+        id="property.description"
+        isCompact
+        isOptional
+        size={8}
+        value={property.definition}/>
     </fieldset>
   </li>
 )

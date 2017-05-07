@@ -107,8 +107,12 @@ class FormField extends PureComponent {
 }
 
 class FormText extends PureComponent {
+  get isVisible() {
+    return this.props.value || !this.props.isOptional
+  }
+
   render() {
-    return (
+    return this.isVisible && (
       <FormGroup isCompact={this.props.isCompact}>
         <Label
           id={this.props.id}
@@ -125,6 +129,7 @@ class FormText extends PureComponent {
   static propTypes = {
     id: string.isRequired,
     isCompact: bool,
+    isOptional: bool,
     size: number.isRequired,
     value: string
   }
