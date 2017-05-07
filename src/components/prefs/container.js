@@ -9,7 +9,12 @@ const { TemplateEditor } = require('../template')
 const { VocabPane } = require('../vocab')
 const { PrefPane, PrefPaneToggle } = require('./pane')
 const actions = require('../../actions')
-const { getItemTemplates, getAllProperties } = require('../../selectors')
+
+const {
+  getItemTemplates,
+  getAllProperties,
+  getVocabs
+} = require('../../selectors')
 
 class PrefsContainer extends PureComponent {
   isActive(pane) {
@@ -99,7 +104,7 @@ class PrefsContainer extends PureComponent {
     pane: string.isRequired,
     properties: array.isRequired,
     templates: array.isRequired,
-    vocab: object.isRequired,
+    vocab: array.isRequired,
     onPrefsUpdate: func.isRequired,
     onTemplateCreate: func.isRequired,
     onTemplateSave: func.isRequired
@@ -119,7 +124,7 @@ module.exports = {
       pane: state.prefs.pane,
       properties: getAllProperties(state),
       templates: getItemTemplates(state),
-      vocab: state.vocab
+      vocab: getVocabs(state)
     }),
 
     dispatch => ({
