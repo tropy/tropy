@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent, Children } = React
+const { PureComponent, Children, cloneElement: clone } = React
 const { only } = require('./util')
 const cx = require('classnames')
 const { bool, func, node, number, string } = require('prop-types')
@@ -11,12 +11,12 @@ class Accordion extends PureComponent {
   get classes() {
     return {
       panel: true,
-      closed: this.props.isClosed
+      closed: !this.props.isOpen
     }
   }
 
   handleToggle = () => {
-    this.props.onToggle(this, !this.props.isClosed)
+    this.props.onToggle(this, !this.props.isOpen)
   }
 
   renderHeader(header) {
@@ -30,7 +30,7 @@ class Accordion extends PureComponent {
   }
 
   renderBody(body) {
-    return !this.props.isClosed && (
+    return this.props.isOpen && (
       <div className="panel-body">{body}</div>
     )
   }
@@ -50,9 +50,9 @@ class Accordion extends PureComponent {
     canToggle: bool,
     children: node,
     className: string,
-    id: number.isRequired,
-    isClosed: bool,
-    onToggle: func.isRequired
+    id: number,
+    isOpen: bool,
+    onToggle: func
   }
 
   static defaultProps = {
@@ -70,10 +70,25 @@ class AccordionGroup extends PureComponent {
     }
   }
 
+  isOpen(id) {
+    return this.state.open === id
+  }
+
+  handleToggle = (accordion, isOpen) => {
+    this.setState({
+      open: isOpen ? accordion.props.id : null
+    })
+  }
+
   render() {
     return (
       <div className={cx('panel-group', this.props.className)}>
-        {this.props.children}
+        {Children.map(this.props.children, (acc, id) =>
+          clone(acc, {
+            id,
+            isOpen: this.isOpen(id),
+            onToggle: this.handleToggle
+          }))}
       </div>
     )
   }

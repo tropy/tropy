@@ -10,9 +10,9 @@ const { noop } = require('../../common/util')
 const { array, bool, string } = require('prop-types')
 
 class VocabPane extends PureComponent {
-  renderVocabulary(vocab, idx) {
+  renderVocabulary(vocab) {
     return (
-      <Accordion id={idx} key={vocab.uri} onToggle={noop}>
+      <Accordion key={vocab.uri}>
         <h1 className="panel-heading">
           <input type="checkbox"/>
           {vocab.title}
