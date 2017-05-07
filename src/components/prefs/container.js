@@ -6,7 +6,7 @@ const { connect } = require('react-redux')
 const { array, bool, func, object, string } = require('prop-types')
 const { TitleBar } = require('../titlebar')
 const { TemplateEditor } = require('../template')
-const { VocabList } = require('../vocab')
+const { VocabPane } = require('../vocab')
 const { PrefPane, PrefPaneToggle } = require('./pane')
 const actions = require('../../actions')
 const { getItemTemplates, getAllProperties } = require('../../selectors')
@@ -88,7 +88,7 @@ class PrefsContainer extends PureComponent {
           <PrefPane
             name="vocab"
             isActive={this.isActive('vocab')}>
-            <VocabList
+            <VocabPane
               vocab={this.props.vocab}/>
           </PrefPane>
         </main>

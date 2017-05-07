@@ -45,12 +45,18 @@ template:
     hint: Hint
 
 vocab:
+  uri: URI
   prefix: Prefix
+  title: Name
+  description: Description
+  properties: Properties
 
 property:
   select: Select a Property …
   uri: URI
   label: Label
+  description: Description
+  comment: Comment
 
 prompt:
   item:
