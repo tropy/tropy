@@ -20,6 +20,7 @@ class VocabPane extends PureComponent {
         <FormText
           id="vocab.uri"
           isCompact
+          size={8}
           value={vocab.uri}/>
         <FormField
           id="vocab.prefix"
