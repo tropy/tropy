@@ -5,36 +5,9 @@ const { PureComponent } = React
 const { PrefPane } = require('../prefs/pane')
 const { Accordion, AccordionGroup } = require('../accordion')
 const { FormField, FormText } = require('../form')
+const { PropertyList } = require('../property')
 const { noop } = require('../../common/util')
 const { array, bool, string } = require('prop-types')
-
-const PropertyList = () => (
-  <ul className="property-list">
-    <li className="property">
-      <fieldset>
-        <FormField
-          id="property.label"
-          name="label"
-          value="Title"
-          isCompact
-          size={8}
-          onChange={function () {}}/>
-        <FormText
-          id="property.uri"
-          isCompact
-          value="http://..."/>
-        <FormText
-          id="property.description"
-          isCompact
-          value=""/>
-        <FormText
-          id="property.comment"
-          isCompact
-          value=""/>
-      </fieldset>
-    </li>
-  </ul>
-)
 
 class VocabPane extends PureComponent {
   renderVocabulary(vocab, idx) {
@@ -59,7 +32,7 @@ class VocabPane extends PureComponent {
           id="vocab.description"
           isCompact
           value={vocab.description}/>
-        <PropertyList/>
+        <PropertyList properties={vocab.properties}/>
       </Accordion>
     )
   }
