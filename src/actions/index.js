@@ -20,5 +20,6 @@ module.exports = {
   qr: require('./qr'),
   tag: require('./tag'),
   ui: require('./ui'),
+  vocab: require('./vocab'),
   wizard: require('./wizard')
 }

@@ -1,6 +1,7 @@
 'use strict'
 
 module.exports = {
+  LOAD: 'properties.load',
   RESTORE: 'properties.restore',
   UPDATE: 'properties.update',
 

@@ -1,12 +1,14 @@
 'use strict'
 
 const { BrowserWindow, systemPreferences: pref } = require('electron')
-const { resolve, join } = require('path')
+const { join } = require('path')
 const { format } = require('url')
 const { darwin, EL_CAPITAN } = require('../common/os')
+const { channel } = require('../common/release')
 const { warn } = require('../common/log')
 
-const ROOT = resolve(__dirname, '..', '..', 'static')
+const ROOT = join(__dirname, '..', '..', 'static')
+const ICON = join(__dirname, '..', '..', 'res', 'icons', channel, 'tropy')
 
 const DEFAULTS = {
   show: false,
@@ -14,7 +16,7 @@ const DEFAULTS = {
   useContentSize: true,
   webPreferences: {
     zoomFactor: global.ARGS.zoom || 1,
-    preload: resolve(__dirname, '..', 'bootstrap.js'),
+    preload: join(__dirname, '..', 'bootstrap.js'),
     experimentalFeatures: true
   }
 }
@@ -44,6 +46,10 @@ module.exports = {
     options = { ...DEFAULTS, ...options }
 
     switch (process.platform) {
+      case 'linux':
+        options.icon = join(ICON, '512x512.png')
+        break
+
       case 'darwin':
         if (!options.frame && EL_CAPITAN) {
           options.frame = true

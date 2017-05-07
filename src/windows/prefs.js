@@ -7,16 +7,18 @@ const { ready, $ } = require('../dom')
 const { create } = require('../stores/prefs')
 const { Main } = require('../components/main')
 const { PrefsContainer } = require('../components/prefs')
-const { intl, keymap } = require('../actions')
 const { win } = require('../window')
+const act = require('../actions')
 const dialog = require('../dialog')
 
 const store = create()
 const { locale } = ARGS
 
 all([
-  store.dispatch(intl.load({ locale })),
-  store.dispatch(keymap.load({ name: 'project', locale })),
+  store.dispatch(act.vocab.load('dc')),
+  store.dispatch(act.vocab.load('dcterms')),
+  store.dispatch(act.intl.load({ locale })),
+  store.dispatch(act.keymap.load({ name: 'project', locale })),
   ready
 ])
   .then(() => {

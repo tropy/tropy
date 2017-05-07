@@ -1,16 +1,12 @@
 'use strict'
 
-const init = {
-  title: { name: 'title', type: 'text' },
-  type: { name: 'type', type: 'text' },
-  date: { name: 'date', type: 'text' },
-  box: { name: 'box', type: 'number' },
-  photos: { name: 'photos', type: 'number' }
-}
+const { VOCAB } = require('../constants')
 
 module.exports = {
-  vocab(state = init, action) {
-    switch (action.type) {
+  vocab(state = {}, { payload, type }) {
+    switch (type) {
+      case VOCAB.UPDATE:
+        return { ...state, ...payload }
       default:
         return state
     }

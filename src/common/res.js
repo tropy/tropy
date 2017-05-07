@@ -6,8 +6,7 @@ const { readFileAsync: read, createReadStream: stream } = require('fs')
 const { flatten } = require('./util')
 const yaml = require('js-yaml')
 const N3 = require('n3')
-
-const { RDF } = require('../constants')
+const { RDF, RDFS } = require('../constants')
 const ROOT = cd(__dirname, '..', '..', 'res')
 
 
@@ -123,8 +122,27 @@ class Vocab extends Resource {
   }
 
   get properties() {
-    return this.store.getSubjects(RDF.TYPE, RDF.PROPERTY)
+    return this.store.getSubjects(RDF.type, RDF.Property)
   }
+
+  get vocabularies() {
+    return this.store.getObjects(this.properties, RDFS.isDefinedBy)
+  }
+
+  collect(subject, into = {}) {
+    return this.store.getTriples(subject)
+      .reduce((obj, { predicate, object }) =>
+        ((obj[predicate] = this.literal(object)), obj), into)
+  }
+
+  literal(value) {
+    return N3.Util.isLiteral(value) ? {
+      value: N3.Util.getLiteralValue(value),
+      type: N3.Util.getLiteralType(value),
+      language: N3.Util.getLiteralLanguage(value)
+    } : { value, type: 'IRI' }
+  }
+
 }
 
 module.exports = {
