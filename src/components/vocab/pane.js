@@ -33,6 +33,7 @@ class VocabPane extends PureComponent {
           id="vocab.description"
           isCompact
           isOptional
+          size={8}
           value={vocab.description}/>
         <PropertyList properties={vocab.properties}/>
       </Accordion>

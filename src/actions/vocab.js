@@ -1,6 +1,6 @@
 'use strict'
 
-const { VOCAB, RDFS, DC, DCT } = require('../constants')
+const { VOCAB, RDFS, DC, DCT, SKOS } = require('../constants')
 const { Vocab } = require('../common/res')
 const properties = require('./properties')
 const { any, get } = require('../common/util')
@@ -33,8 +33,10 @@ module.exports = {
           acc[uri] = {
             uri,
             label: get(data[RDFS.label], ['value']),
-            definition:
-              get(any(data, DC.description, DCT.description), ['value']),
+            definition: get(
+              any(data, DC.description, DCT.description, SKOS.definition),
+              ['value']
+            ),
             comment: get(data[RDFS.comment], ['value'])
           }
           return acc
