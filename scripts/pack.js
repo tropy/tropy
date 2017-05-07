@@ -68,7 +68,7 @@ target.linux = (args = ['bz2', 'AppImage']) => {
         cp('-r', src, appdir)
         cd(appdir)
         ln('-s', qualified.name, 'AppRun')
-        cp(`./icons/512x512/apps/${qualified.name}.png`, '.')
+        cp(`./icons/hicolor/512x512/apps/${qualified.name}.png`, '.')
         cd('-')
 
         const dst = join(dist, `${product}-${version}-x86_64.AppImage`)
