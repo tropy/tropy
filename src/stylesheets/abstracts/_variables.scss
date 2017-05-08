@@ -18,7 +18,7 @@ $font-size-large: 16px;
 // Must result in an even value (20px) for proper alignment of editables.
 $line-height-base:     1.539;
 
-$line-height-computed: ceil(($font-size-base * $line-height-base));
+$line-height-computed: floor(($font-size-base * $line-height-base));
 $line-height-large:    26px;
 
 $link-hover-decoration: underline;
