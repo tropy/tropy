@@ -132,7 +132,7 @@ class Vocab extends Resource {
   get vocabularies() {
     return uniq([
       ...this.store.getSubjects(RDF.type, OWL.Ontology),
-      ...this.store.getObjects(this.properties, RDFS.isDefinedBy),
+      ...this.store.getObjects(null, RDFS.isDefinedBy),
     ])
   }
 
