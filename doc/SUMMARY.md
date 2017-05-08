@@ -6,7 +6,7 @@
 
 ## Using Tropy
 
-Create a new project.
+[Create a new project](/doc/Create_project.md).
 
 Add photos to Tropy.
 
@@ -31,8 +31,6 @@ Search for items, metadata, notes, or tags.
 Edit photos in an item.
 
 Take notes on or transcribe the content of an item.
-
-
 
 ### Using templates
 
