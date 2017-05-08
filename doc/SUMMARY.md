@@ -4,15 +4,11 @@
 
 ## Before you begin
 
-
-
 ## Using Tropy
 
 Create a new project.
 
 Add photos to Tropy.
-
-
 
 ### Project view
 
@@ -26,19 +22,21 @@ Combine photos into items.
 
 Add metadata to items.
 
+Add tags to items.
+
+Search for items, metadata, notes, or tags.
+
 ### Item view
 
+Edit photos in an item.
+
+Take notes on or transcribe the content of an item.
 
 
 
+### Using templates
 
-
-
-
-
-
-
-
+### Export from Tropy
 
 
 
