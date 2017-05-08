@@ -16,7 +16,7 @@
   }
 
   .panel-header & {
-    height: 100%;
+    height: $panel-header-height;
     margin: 0;
     padding-top: 0;
   }
