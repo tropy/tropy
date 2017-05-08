@@ -12,6 +12,12 @@ module.exports = {
     label: 'http://www.w3.org/2000/01/rdf-schema#label'
   },
 
+  OWL: {
+    DatatypeProperty: 'http://www.w3.org/2002/07/owl#DatatypeProerty',
+    Ontology: 'http://www.w3.org/2002/07/owl#Ontology',
+    ObjectProperty: 'http://www.w3.org/2002/07/owl#ObjectProerty'
+  },
+
   DC: {
     description: 'http://purl.org/dc/elements/1.1/description',
     title: 'http://purl.org/dc/elements/1.1/title'
