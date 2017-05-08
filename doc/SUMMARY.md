@@ -8,7 +8,7 @@
 
 [Create a new project](/doc/Create_project.md).
 
-Add photos to Tropy.
+[Add photos to Tropy.](/doc/Add_files.md)
 
 ### Project view
 
@@ -25,6 +25,8 @@ Add metadata to items.
 Add tags to items.
 
 Search for items, metadata, notes, or tags.
+
+[Delete items.](/doc/Delete_photos.md)
 
 ### Item view
 
