@@ -32,10 +32,4 @@
       @extend %drop-target;
     }
   }
-
-  &.item-panel {
-    .panel-header {
-      margin-bottom: $space-min;
-    }
-  }
 }
