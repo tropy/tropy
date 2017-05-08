@@ -5,8 +5,8 @@
 * What do you need to use Tropy?
 
 ## Using Tropy
-* [Create a new project](/doc/Create_project.md).
-* [Add photos to Tropy.](/doc/Add_files.md)
+* [Create a new project](/doc/using_tropy/create_project.md).
+* [Add photos to Tropy.](/doc/using_tropy/add_files.md)
 
 ### Project view
     * View photos in project view.
