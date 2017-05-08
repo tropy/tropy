@@ -16,7 +16,7 @@
 * Add metadata to items.
 * Add tags to items.
 * Search for items, metadata, notes, or tags.
-* [Delete items.](/project_view/delete_photos.md)
+* [Delete items.](/using_tropy/project_view/delete_photos.md)
 
 ## Item view
 * Edit photos in an item.
