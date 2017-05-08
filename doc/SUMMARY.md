@@ -1,7 +1,7 @@
 # Summary
 
 ## Before you begin
-* [What is Tropy?](/doc/Tropy_intro.md)
+* [What is Tropy?](/doc/beginning/README.md)
 * What do you need to use Tropy?
 
 ## Using Tropy
