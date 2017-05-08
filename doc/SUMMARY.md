@@ -9,7 +9,7 @@
 * [Add photos to Tropy.](/using_tropy/add_files.md)
 
 ## Project view
-    * View photos in project view.
+    * [View photos in project view](/using_tropy/project_view/view_photos.md).
     * Add items to a project.
     * Organize items into lists.
     * Combine photos into items.
