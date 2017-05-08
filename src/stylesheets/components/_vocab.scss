@@ -29,7 +29,8 @@
   }
 
   .form-control {
-    border-color: $vocab-form-control-border;
+    background: $vocab-input-bg;
+    border-color: $vocab-input-border;
 
     @include form-control-focus; // sass-lint:disable-line mixins-before-declarations
   }
@@ -47,6 +48,7 @@
     }
 
     .form-control {
+      background: $property-input-bg;
       border-color: $property-input-border;
 
       @include form-control-focus; // sass-lint:disable-line mixins-before-declarations

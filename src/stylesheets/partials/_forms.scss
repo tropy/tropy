@@ -16,6 +16,7 @@ fieldset {
   border-radius: $border-radius-small;
 
   .form-control {
+    background: $fieldset-input-bg;
     border-color: $fieldset-form-control-border;
 
     @include form-control-focus; // sass-lint:disable-line mixins-before-declarations

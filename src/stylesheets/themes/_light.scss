@@ -138,6 +138,7 @@ $input-color-placeholder:      $shade-4;
 $input-color-readonly:         $shade-6;
 $fieldset-bg:                  $shade-1-darken-4;
 $fieldset-form-control-border: $shade-1-darken-14;
+$fieldset-input-bg:            $shade-0;
 
 // Badge
 $badge-color: $shade-0;
@@ -305,8 +306,10 @@ $prefs-bg:            $shade-1;
 $prefs-header-border: $shade-3;
 
 // Vocab
-$vocab-panel-bg:            $shade-1-darken-4;
-$vocab-label-color:         $shade-6;
-$vocab-form-control-border: $shade-1-darken-14;
-$property-bg:               $shade-1-darken-8;
-$property-input-border:     $shade-1-darken-18;
+$vocab-panel-bg:        $shade-1-darken-4;
+$vocab-label-color:     $shade-6;
+$vocab-input-bg:        $shade-0;
+$vocab-input-border:    $shade-1-darken-14;
+$property-bg:           $shade-1-darken-8;
+$property-input-bg:     $shade-0;
+$property-input-border: $shade-1-darken-18;
