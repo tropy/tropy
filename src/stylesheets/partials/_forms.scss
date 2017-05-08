@@ -76,7 +76,7 @@ label {
   }
 
   &[readonly] {
-    color: $input-color-readonly;
+    background: $input-bg-readonly;
   }
 
   @at-root select#{&} {

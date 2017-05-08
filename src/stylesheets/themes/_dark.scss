@@ -84,10 +84,10 @@ $text-selection-bg:    $brand-primary-35;
 // Forms
 $input-color:                  $shade-9;
 $input-bg:                     $shade-3; // Transparent causes border/box-shadow issue
+$input-bg-readonly:            $shade-4-lighten-2;
 $input-border:                 $shade-1;
 $input-color-focus:            $brand-primary;
 $input-color-placeholder:      $shade-6;
-$input-color-readonly:         $shade-7;
 $fieldset-bg:                  $shade-4-lighten-2;
 $fieldset-form-control-border: $shade-1-lighten-2; // todo
 $fieldset-input-bg:            $shade-4;
