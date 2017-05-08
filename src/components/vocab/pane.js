@@ -14,7 +14,6 @@ class VocabPane extends PureComponent {
     return (
       <Accordion key={vocab.uri}>
         <h1 className="panel-heading">
-          <input type="checkbox"/>
           {vocab.title}
         </h1>
         <FormText
