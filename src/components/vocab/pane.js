@@ -14,10 +14,12 @@ class VocabPane extends PureComponent {
   renderVocabulary(vocab) {
     return (
       <Accordion key={vocab.uri}>
-        <h1 className="panel-heading">
+        <div className="flex-row center panel-header-container">
           <IconBook16/>
-          {vocab.title}
-        </h1>
+          <h1 className="panel-heading">
+            {vocab.title}
+          </h1>
+        </div>
         <header className="vocab-header">
           <FormText
             id="vocab.uri"

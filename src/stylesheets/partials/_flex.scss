@@ -3,6 +3,7 @@
 // --------------------------------------------------
 
 .flex-row {
+  flex: 1 1 auto; // Default for nested row
   display: flex;
 
   &.center {

@@ -22,15 +22,18 @@
     }
   }
 
-  .panel-heading {
-    flex: 1 1 auto;
-    display: flex;
-    align-items: center;
+  .panel-header-container {
     padding: 0 $default-padding-horizontal;
+    min-width: 0;
 
     .icon {
       margin-right: $space-xs;
     }
+  }
+
+  .panel-heading {
+    @include css-truncation;
+    flex: 1 1 auto;
   }
 
   .panel-body {
