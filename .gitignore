@@ -6,7 +6,7 @@ coverage
 doc/db.pdf
 tmp
 npm-debug.log
-db/db.sqlite
+db/*.db
 *.tpy
 .vimrc
 scripts/appimagetool

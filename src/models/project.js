@@ -1,10 +1,11 @@
 'use strict'
 
 const uuid = require('uuid/v4')
-const { resolve, join } = require('path')
+const { join } = require('path')
 
-const ROOT = resolve(__dirname, '..', '..', 'db')
-const SCHEMA = join(ROOT, 'schema.sql')
+const SCHEMA = join(
+  __dirname, '..', '..', 'db', 'schema', 'project.sql'
+)
 
 module.exports = {
   async create(db, { name, id }) {
