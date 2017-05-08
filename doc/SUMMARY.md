@@ -1,6 +1,6 @@
 # Summary
 
-* [What is Tropy?](/doc/Tropy_intro.md)
+* [What is Tropy?](doc/Tropy_intro.md)
 
 * Before you begin
 
