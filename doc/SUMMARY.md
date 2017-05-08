@@ -10,7 +10,7 @@
 
 ## Project view
 * [View photos in project view](/using_tropy/project_view/view_photos.md).
-* Add items to a project.
+* Add items to a project.(/using_tropy/project_view/
 * Organize items into lists.
 * Combine photos into items.
 * Add metadata to items.
