@@ -15,6 +15,7 @@
 
   .vocab-header {
     margin-bottom: $space-sm;
+    padding: 0 $space-xs;
   }
 
   .vocab-heading {
@@ -28,6 +29,13 @@
     color: $vocab-label-color;
   }
 
+  .form-control {
+    background: $vocab-input-bg;
+    border-color: $vocab-input-border;
+
+    @include form-control-focus; // sass-lint:disable-line mixins-before-declarations
+  }
+
   .property {
     margin-bottom: $space-min;
 
@@ -36,8 +44,15 @@
     }
 
     fieldset {
-      background: $property-fieldset-bg;
+      background: $property-bg;
       padding: 5px $space-xs;
+    }
+
+    .form-control {
+      background: $property-input-bg;
+      border-color: $property-input-border;
+
+      @include form-control-focus; // sass-lint:disable-line mixins-before-declarations
     }
   }
 }
