@@ -92,8 +92,7 @@ label {
 .form-text {
   display: flex;
   align-items: center;
-  min-height: $input-height-base;
-  padding: 0 $padding-base-horizontal;
+  padding: (($input-height-base - $line-height-computed) / 2) $padding-base-horizontal;
 }
 
 .help-text {

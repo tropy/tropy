@@ -25,11 +25,15 @@ module.exports = {
           }
           return acc
         }, {})
+      const main = store.vocabularies[0]
 
       const props = store.properties
         .reduce((acc, uri) => {
           let data = store.collect(uri)
-          vocabs[data[RDFS.isDefinedBy].value].properties.push(uri)
+          let vocab = vocabs[get(data, [RDFS.isDefinedBy, 'value'], main)]
+
+          if (vocab) vocab.properties.push(uri)
+
           acc[uri] = {
             uri,
             label: get(data[RDFS.label], ['value']),

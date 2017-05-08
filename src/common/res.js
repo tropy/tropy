@@ -3,10 +3,10 @@
 const { resolve } = require('./promisify')
 const { resolve: cd, join } = require('path')
 const { readFileAsync: read, createReadStream: stream } = require('fs')
-const { flatten } = require('./util')
+const { flatten, uniq } = require('./util')
 const yaml = require('js-yaml')
 const N3 = require('n3')
-const { RDF, RDFS } = require('../constants')
+const { RDF, RDFS, OWL } = require('../constants')
 const ROOT = cd(__dirname, '..', '..', 'res')
 
 
@@ -122,11 +122,18 @@ class Vocab extends Resource {
   }
 
   get properties() {
-    return this.store.getSubjects(RDF.type, RDF.Property)
+    return uniq([
+      ...this.store.getSubjects(RDF.type, RDF.Property),
+      ...this.store.getSubjects(RDF.type, OWL.ObjectProperty),
+      ...this.store.getSubjects(RDF.type, OWL.DatatypeProperty)
+    ]).filter(uri => !N3.Util.isBlank(uri))
   }
 
   get vocabularies() {
-    return this.store.getObjects(this.properties, RDFS.isDefinedBy)
+    return uniq([
+      ...this.store.getSubjects(RDF.type, OWL.Ontology),
+      ...this.store.getObjects(this.properties, RDFS.isDefinedBy),
+    ])
   }
 
   collect(subject, into = {}) {

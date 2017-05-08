@@ -92,7 +92,7 @@ target.darwin = () => {
   check(sources.length, 'no sources found')
 
   for (let src of sources) {
-    let app = join(src, `${product}.app`)
+    let app = join(src, `${qualified.product}.app`)
     let dmg = join(dist, `${name}-${version}.dmg`)
 
     let config = join(res, 'dmg', channel, 'appdmg.json')

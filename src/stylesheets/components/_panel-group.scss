@@ -18,15 +18,12 @@
     height: calc(100% - #{$toolbar-height + $space-min});
   }
 
-  .resizable {
-    .panel {
-      padding-bottom: $space-min;
-    }
+  .panel {
+    padding-bottom: $space-min;
+  }
 
-    &:last-child {
-      .panel {
-        padding-bottom: 0;
-      }
-    }
+  > .panel:last-child,
+  .resizable:last-child .panel {
+    padding-bottom: 0;
   }
 }

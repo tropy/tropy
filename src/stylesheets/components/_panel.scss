@@ -12,6 +12,7 @@
 
   .panel-header {
     flex: 0 0 $panel-header-height;
+    display: flex;
     color: $panel-header-color;
     position: relative;
     z-index: 1;
@@ -19,6 +20,20 @@
     nav {
       width: 100%;
     }
+  }
+
+  .panel-header-container {
+    padding: 0 $default-padding-horizontal;
+    min-width: 0;
+
+    .icon {
+      margin-right: $space-xs;
+    }
+  }
+
+  .panel-heading {
+    @include css-truncation;
+    flex: 1 1 auto;
   }
 
   .panel-body {
@@ -30,12 +45,6 @@
 
     &.over {
       @extend %drop-target;
-    }
-  }
-
-  &.item-panel {
-    .panel-header {
-      margin-bottom: $space-min;
     }
   }
 }

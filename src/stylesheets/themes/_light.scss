@@ -48,7 +48,7 @@ $brand-primary-darken-4: $blue-darken-4;
 
   #{--shade-1-2}:        #ebebeb;
   #{--shade-2}:          #e6e6e6;          // Inactive tab, Esper bg
-  #{--shade-3}:          #e0e0e0;             // Active state bg/border
+  #{--shade-3}:          #ddd;             // Active state bg/border
   #{--shade-3-darken-5}: darken(#ddd, 5%); // Thumbnail bg
   #{--shade-4}:          #ccc;             // Slider track
   #{--shade-5}:          #bbb;             // Panel heading, mixed color
@@ -285,3 +285,4 @@ $prefs-header-border: $shade-3;
 // Vocab
 $vocab-panel-bg:       $shade-1-2;
 $property-fieldset-bg: $shade-3;
+$vocab-label-color:    $shade-6;
