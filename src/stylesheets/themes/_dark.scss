@@ -77,13 +77,14 @@ $text-selection-bg:    $brand-primary-35;
 // --------------------------------------------------
 
 // Forms
-$input-color:             $shade-9;
-$input-bg:                $shade-3; // Transparent causes border/box-shadow issue
-$input-border:            $shade-1;
-$input-color-focus:       $brand-primary;
-$input-color-placeholder: $shade-6;
-$input-color-readonly:    $shade-7;
-$fieldset-bg:             $shade-4-5;
+$input-color:                  $shade-9;
+$input-bg:                     $shade-3; // Transparent causes border/box-shadow issue
+$input-border:                 $shade-1;
+$input-color-focus:            $brand-primary;
+$input-color-placeholder:      $shade-6;
+$input-color-readonly:         $shade-7;
+$fieldset-bg:                  $shade-4-5;
+$fieldset-form-control-border: $shade-1; // todo
 
 // Badge
 $badge-color: $shade-10;
@@ -252,6 +253,8 @@ $prefs-header-border: $shade-1;
 
 
 // Vocab
-$vocab-panel-bg:       $shade-4-5;
-$property-fieldset-bg: $shade-5;
-$vocab-label-color:    $shade-7;
+$vocab-panel-bg:            $shade-4-5;
+$vocab-label-color:         $shade-7;
+$vocab-form-control-border: $shade-1; // Todo
+$property-bg:               $shade-5; // Todo
+$property-input-border:     $shade-1; // Todo

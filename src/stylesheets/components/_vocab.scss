@@ -28,6 +28,12 @@
     color: $vocab-label-color;
   }
 
+  .form-control {
+    border-color: $vocab-form-control-border;
+
+    @include form-control-focus; // sass-lint:disable-line mixins-before-declarations
+  }
+
   .property {
     margin-bottom: $space-min;
 
@@ -36,8 +42,14 @@
     }
 
     fieldset {
-      background: $property-fieldset-bg;
+      background: $property-bg;
       padding: 5px $space-xs;
+    }
+
+    .form-control {
+      border-color: $property-input-border;
+
+      @include form-control-focus; // sass-lint:disable-line mixins-before-declarations
     }
   }
 }
