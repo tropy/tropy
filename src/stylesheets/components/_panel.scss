@@ -12,12 +12,24 @@
 
   .panel-header {
     flex: 0 0 $panel-header-height;
+    display: flex;
     color: $panel-header-color;
     position: relative;
     z-index: 1;
 
     nav {
       width: 100%;
+    }
+  }
+
+  .panel-heading {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    padding: 0 $default-padding-horizontal;
+
+    .icon {
+      margin-right: $space-xs;
     }
   }
 

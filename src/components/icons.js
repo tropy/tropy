@@ -72,6 +72,14 @@ i('B', (
   </svg>
 ))
 
+i('Book16', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M14,0H4a.994.994,0,0,0-.716.306L1.305,2.284A.994.994,0,0,0,1,3V15a1,1,0,0,0,1,1H12a1,1,0,0,0,1-1V3a1,1,0,0,0-1-1H3L4,1H14V14a1,1,0,0,0,1-1V1A1,1,0,0,0,14,0ZM12,15H2V3H12Z"/>
+    </g>
+  </svg>
+))
+
 i('BulletList', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">

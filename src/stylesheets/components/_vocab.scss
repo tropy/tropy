@@ -10,11 +10,30 @@
   }
 
   .panel-body {
-    padding: 0 $default-padding-horizontal;
+    padding: $space-sm $default-padding-horizontal;
+  }
+
+  .vocab-header {
+    margin-bottom: $space-sm;
+  }
+
+  .vocab-heading {
+    font-size: $font-size-small;
+    color: $panel-heading-color;
+    line-height: $line-height-large;
+    padding-left: $space-xs;
+  }
+
+  .control-label {
+    color: $vocab-label-color;
   }
 
   .property {
     margin-bottom: $space-min;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
 
     fieldset {
       background: $property-fieldset-bg;
