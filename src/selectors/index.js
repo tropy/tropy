@@ -10,5 +10,6 @@ module.exports = {
   ...require('./project'),
   ...require('./properties'),
   ...require('./templates'),
-  ...require('./tags')
+  ...require('./tags'),
+  ...require('./vocab')
 }

@@ -6,6 +6,7 @@ const { FormattedMessage } = require('react-intl')
 const cx = require('classnames')
 const { bool, func, node, number, string } = require('prop-types')
 const { noop } = require('../common/util')
+const { GRID } = require('../constants/sass')
 
 
 class FormGroup extends PureComponent {
@@ -70,7 +71,7 @@ class FormField extends PureComponent {
       <FormGroup isCompact={this.props.isCompact}>
         <Label
           id={this.props.id}
-          size={this.props.gridSize - this.props.size}/>
+          size={GRID.SIZE - this.props.size}/>
         <div className={`col-${this.props.size}`}>
           <input
             id={this.props.id}
@@ -88,7 +89,6 @@ class FormField extends PureComponent {
   }
 
   static propTypes = {
-    gridSize: number.isRequired,
     id: string.isRequired,
     isCompact: bool,
     name: string.isRequired,
@@ -102,8 +102,40 @@ class FormField extends PureComponent {
 
   static defaultProps = {
     size: 9,
-    gridSize: 12,
     onBlur: noop
+  }
+}
+
+class FormText extends PureComponent {
+  get isVisible() {
+    return this.props.value || !this.props.isOptional
+  }
+
+  render() {
+    return this.isVisible && (
+      <FormGroup isCompact={this.props.isCompact}>
+        <Label
+          id={this.props.id}
+          size={GRID.SIZE - this.props.size}/>
+        <div className={`col-${this.props.size}`}>
+          <div className="form-text">
+            {this.props.value}
+          </div>
+        </div>
+      </FormGroup>
+    )
+  }
+
+  static propTypes = {
+    id: string.isRequired,
+    isCompact: bool,
+    isOptional: bool,
+    size: number.isRequired,
+    value: string
+  }
+
+  static defaultProps = {
+    size: 9
   }
 }
 
@@ -111,5 +143,6 @@ class FormField extends PureComponent {
 module.exports = {
   Label,
   FormGroup,
-  FormField
+  FormField,
+  FormText
 }

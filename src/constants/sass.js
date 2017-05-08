@@ -112,8 +112,13 @@ const PREFS = {
   HEIGHT: 580
 }
 
+const GRID = {
+  SIZE: 12
+}
+
 module.exports =  {
   ACTIVITY,
+  GRID,
   ICON,
   ITEM,
   PANEL,

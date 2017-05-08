@@ -22,5 +22,9 @@ module.exports = {
     publisher: 'http://purl.org/dc/terms/publisher',
     comment: 'http://purl.org/dc/terms/publisher',
     title: 'http://purl.org/dc/terms/title'
+  },
+
+  SKOS: {
+    definition: 'http://www.w3.org/2004/02/skos/core#definition'
   }
 }

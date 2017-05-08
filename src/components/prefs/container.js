@@ -6,10 +6,15 @@ const { connect } = require('react-redux')
 const { array, bool, func, object, string } = require('prop-types')
 const { TitleBar } = require('../titlebar')
 const { TemplateEditor } = require('../template')
-const { VocabList } = require('../vocab')
+const { VocabPane } = require('../vocab')
 const { PrefPane, PrefPaneToggle } = require('./pane')
 const actions = require('../../actions')
-const { getItemTemplates, getAllProperties } = require('../../selectors')
+
+const {
+  getItemTemplates,
+  getAllProperties,
+  getVocabs
+} = require('../../selectors')
 
 class PrefsContainer extends PureComponent {
   isActive(pane) {
@@ -85,12 +90,9 @@ class PrefsContainer extends PureComponent {
               onCreate={this.props.onTemplateCreate}/>
           </PrefPane>
 
-          <PrefPane
-            name="vocab"
-            isActive={this.isActive('vocab')}>
-            <VocabList
-              vocab={this.props.vocab}/>
-          </PrefPane>
+          <VocabPane
+            isActive={this.isActive('vocab')}
+            vocab={this.props.vocab}/>
         </main>
       </div>
     )
@@ -102,7 +104,7 @@ class PrefsContainer extends PureComponent {
     pane: string.isRequired,
     properties: array.isRequired,
     templates: array.isRequired,
-    vocab: object.isRequired,
+    vocab: array.isRequired,
     onPrefsUpdate: func.isRequired,
     onTemplateCreate: func.isRequired,
     onTemplateSave: func.isRequired
@@ -122,7 +124,7 @@ module.exports = {
       pane: state.prefs.pane,
       properties: getAllProperties(state),
       templates: getItemTemplates(state),
-      vocab: state.vocab
+      vocab: getVocabs(state)
     }),
 
     dispatch => ({
