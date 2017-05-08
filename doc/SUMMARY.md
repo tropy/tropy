@@ -8,7 +8,7 @@
 * [Create a new project](/doc/Create_project.md).
 * [Add photos to Tropy.](/doc/Add_files.md)
 
-* Project view
+### Project view
     * View photos in project view.
     * Add items to a project.
     * Organize items into lists.
@@ -18,7 +18,7 @@
     * Search for items, metadata, notes, or tags.
     * [Delete items.](/doc/Delete_photos.md)
 
-* Item view
+### Item view
     * Edit photos in an item.
     * Take notes on or transcribe the content of an item.
 
