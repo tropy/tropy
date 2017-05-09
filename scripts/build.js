@@ -77,8 +77,7 @@ target.all = (args = []) => {
       /^\/src/,
       /^\/test/,
       /^\/tmp/,
-      /appveyor\.yml/,
-      /book\.json/
+      /appveyor\.yml/
     ]
 
   }, (err, dst) => {
