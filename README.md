@@ -1,9 +1,15 @@
 # Tropy
-
 [![Build Status](https://travis-ci.org/tropy/tropy.svg?branch=master)](https://travis-ci.org/tropy/tropy)
 [![Windows Build Status](https://ci.appveyor.com/api/projects/status/github/tropy/tropy?branch=master&svg=true)](https://ci.appveyor.com/project/inukshuk/tropy)
 [![Coverage Status](https://coveralls.io/repos/tropy/tropy/badge.svg?branch=master&service=github)](https://coveralls.io/github/tropy/tropy?branch=master)
 [![License AGPL-3.0](https://img.shields.io/badge/license-AGPL--3.0-blue.svg)](https://opensource.org/licenses/AGPL-3.0)
+
+Bring order to your research — use the power of Tropy to organize and describe
+your research photos so you can quickly find your sources whenever you need them.
+
+Visit [tropy.org](https://tropy.og) to learn more or follow
+[@tropy](https://twitter.com/tropy) on Twitter for important announcements.
+
 
 ## Development
 
