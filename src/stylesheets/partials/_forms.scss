@@ -17,9 +17,13 @@ fieldset {
 
   .form-control {
     background: $fieldset-input-bg;
-    border-color: $fieldset-form-control-border;
+    border-color: $fieldset-input-border;
 
     @include form-control-focus; // sass-lint:disable-line mixins-before-declarations
+
+    &[readonly] {
+      background: $fieldset-input-bg-readonly;
+    }
   }
 }
 

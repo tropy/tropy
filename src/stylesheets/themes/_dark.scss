@@ -82,15 +82,16 @@ $text-selection-bg:    $brand-primary-35;
 // --------------------------------------------------
 
 // Forms
-$input-color:                  $shade-9;
-$input-bg:                     $shade-3; // Transparent causes border/box-shadow issue
-$input-bg-readonly:            $shade-4-lighten-2;
-$input-border:                 $shade-1;
-$input-color-focus:            $brand-primary;
-$input-color-placeholder:      $shade-6;
-$fieldset-bg:                  $shade-4-lighten-2;
-$fieldset-form-control-border: $shade-1-lighten-2; // todo
-$fieldset-input-bg:            $shade-4;
+$input-color:                $shade-9;
+$input-bg:                   $shade-3; // Transparent causes border/box-shadow issue
+$input-bg-readonly:          $shade-4-lighten-2;
+$input-border:               $shade-1;
+$input-color-focus:          $brand-primary;
+$input-color-placeholder:    $shade-6;
+$fieldset-bg:                $shade-4-lighten-2;
+$fieldset-input-border:      $shade-1-lighten-2;
+$fieldset-input-bg:          $shade-4;
+$fieldset-input-bg-readonly: $shade-4-lighten-4;
 
 // Badge
 $badge-color: $shade-10;
@@ -256,7 +257,6 @@ $editor-hr-border-color:  $shade-8;
 // Preferences
 $prefs-bg:            $shade-4;
 $prefs-header-border: $shade-1;
-
 
 // Vocab
 $vocab-panel-bg:        $shade-4-lighten-2;
