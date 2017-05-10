@@ -43,9 +43,7 @@ module.exports = {
 
       if (db.path !== ARGS.file) {
         ARGS.file = db.path
-        window.history.pushState(
-          null, null, `#${encodeURIComponent(JSON.stringify(ARGS))}`
-        )
+        window.location.hash = encodeURIComponent(JSON.stringify(ARGS))
       }
 
       yield call([cache, cache.init])
