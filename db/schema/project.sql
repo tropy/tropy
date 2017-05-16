@@ -32,6 +32,7 @@ CREATE TABLE project (
 CREATE TABLE subjects (
   id           INTEGER  PRIMARY KEY,
   template     TEXT     NOT NULL DEFAULT 'https://schema.tropy.org/v1/templates/core',
+  type         TEXT,
   created      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
