@@ -2,7 +2,7 @@
 
 const { VOCAB, RDFS, DC, DCT, SKOS } = require('../constants')
 const { Vocab } = require('../common/res')
-const { any, get } = require('../common/util')
+const { any, empty, get } = require('../common/util')
 
 const act = {
   classes: require('./classes'),
@@ -20,6 +20,7 @@ module.exports = act.vocab = {
 
         if (!vocabs[ns]) {
           let data = store.collect(ns)
+          if (empty(data)) return null
 
           vocabs[ns] = {
             uri: ns,
@@ -39,7 +40,9 @@ module.exports = act.vocab = {
         let data = store.collect(uri)
 
         let vocab = getVocabulary(uri, data)
+
         if (vocab) vocab.properties.push(uri)
+        else return acc
 
         acc[uri] = {
           uri,
