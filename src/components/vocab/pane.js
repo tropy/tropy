@@ -2,6 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
+const { FormattedMessage } = require('react-intl')
 const { PrefPane } = require('../prefs/pane')
 const { Accordion, AccordionGroup } = require('../accordion')
 const { FormField, FormText } = require('../form')
@@ -39,7 +40,17 @@ class VocabPane extends PureComponent {
             size={8}
             value={vocab.description}/>
         </header>
-        <h2 className="vocab-heading">Properties</h2>
+        <h2 className="vocab-heading">
+          <FormattedMessage
+            id="prefs.vocab.classes"
+            values={{ count: vocab.classes.length }}/>
+        </h2>
+        <PropertyList properties={vocab.classes}/>
+        <h2 className="vocab-heading">
+          <FormattedMessage
+            id="prefs.vocab.properties"
+            values={{ count: vocab.properties.length }}/>
+        </h2>
         <PropertyList properties={vocab.properties}/>
       </Accordion>
     )
