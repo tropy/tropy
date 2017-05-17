@@ -1,6 +1,6 @@
 'use strict'
 
-const { VOCAB, RDFS, DC, DCT, SKOS } = require('../constants')
+const { VOCAB, RDFS, DC, DCT, SKOS, VANN } = require('../constants')
 const { Vocab } = require('../common/res')
 const { any, empty, get } = require('../common/util')
 
@@ -24,6 +24,7 @@ module.exports = act.vocab = {
 
           vocabs[ns] = {
             uri: ns,
+            prefix: get(data, [VANN.preferredNamespacePrefix, 'value'], ''),
             data,
             classes: [],
             properties: [],

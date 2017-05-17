@@ -34,5 +34,9 @@ module.exports = {
 
   SKOS: {
     definition: 'http://www.w3.org/2004/02/skos/core#definition'
+  },
+
+  VANN: {
+    preferredNamespacePrefix: 'http://purl.org/vocab/vann/preferredNamespacePrefix'
   }
 }

@@ -31,7 +31,7 @@ class VocabPane extends PureComponent {
             id="vocab.prefix"
             isCompact
             name="prefix"
-            value=""
+            value={vocab.prefix}
             size={8}
             onChange={noop}/>
           <FormText
