@@ -113,12 +113,13 @@ class Vocab extends Resource {
   }
 
   static async open(name) {
-    return new this(await this.parse(stream(this.expand(name))))
+    return new this(await this.parse(stream(this.expand(name))), name)
   }
 
-  constructor(store) {
+  constructor(store, name) {
     super()
     this.store = store
+    this.name = name
   }
 
   getProperties() {
