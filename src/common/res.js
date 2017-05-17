@@ -40,7 +40,10 @@ class Resource {
 
 class Menu extends Resource {
   static get base() {
-    return join(super.base, 'menu') } constructor(data = {}) {
+    return join(super.base, 'menu')
+  }
+
+  constructor(data = {}) {
     super()
     this.template = data[process.platform]
   }
@@ -128,7 +131,8 @@ class Vocab extends Resource {
 
   getClasses() {
     return uniq([
-      ...this.store.getSubjects(RDF.type, RDF.Class)
+      ...this.store.getSubjects(RDF.type, RDFS.Class),
+      ...this.store.getSubjects(RDF.type, OWL.Class)
     ]).filter(uri => !N3.Util.isBlank(uri))
   }
 

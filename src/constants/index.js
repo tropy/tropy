@@ -2,6 +2,7 @@
 
 module.exports = {
   ACTIVITY: require('./activity'),
+  CLASSES: require('./classes'),
   CONTEXT: require('./context'),
   COLUMNS: require('./columns'),
   DND: require('./dnd'),

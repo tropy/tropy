@@ -2,10 +2,14 @@
 
 const { VOCAB, RDFS, DC, DCT, SKOS } = require('../constants')
 const { Vocab } = require('../common/res')
-const { update } = require('./properties')
 const { any, get } = require('../common/util')
 
-module.exports = {
+const act = {
+  classes: require('./classes'),
+  properties: require('./properties')
+}
+
+module.exports = act.vocab = {
   load(payload) {
     return async (dispatch) => {
       const store = await Vocab.open(payload)
@@ -20,6 +24,7 @@ module.exports = {
           vocabs[ns] = {
             uri: ns,
             data,
+            classes: [],
             properties: [],
             title: get(any(data, DC.title, DCT.title), ['value']),
             description:
@@ -48,8 +53,27 @@ module.exports = {
         return acc
       }, {})
 
-      dispatch(update(props))
-      dispatch(module.exports.update(vocabs))
+      const classes = store.getClasses().reduce((acc, uri) => {
+        let data = store.collect(uri)
+
+        let vocab = getVocabulary(uri, data)
+        if (vocab) vocab.classes.push(uri)
+
+        acc[uri] = {
+          uri,
+          label: get(data[RDFS.label], ['value']),
+          definition: get(
+            any(data, DC.description, DCT.description, SKOS.definition),
+            ['value']
+          ),
+          comment: get(data[RDFS.comment], ['value'])
+        }
+        return acc
+      }, {})
+
+      dispatch(act.properties.update(props))
+      dispatch(act.classes.update(classes))
+      dispatch(act.vocab.update(vocabs))
     }
 
   },
