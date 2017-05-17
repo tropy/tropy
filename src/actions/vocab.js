@@ -24,7 +24,8 @@ module.exports = act.vocab = {
 
           vocabs[ns] = {
             uri: ns,
-            prefix: get(data, [VANN.preferredNamespacePrefix, 'value'], store.name),
+            prefix:
+              get(data, [VANN.preferredNamespacePrefix, 'value'], store.name),
             data,
             classes: [],
             properties: [],
