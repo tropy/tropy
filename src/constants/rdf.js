@@ -3,7 +3,8 @@
 module.exports = {
   RDF: {
     type: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-    Property: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property'
+    Property: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property',
+    Class: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Class'
   },
 
   RDFS: {

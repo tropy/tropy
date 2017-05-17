@@ -3,7 +3,7 @@
 const { resolve } = require('./promisify')
 const { resolve: cd, join } = require('path')
 const { readFileAsync: read, createReadStream: stream } = require('fs')
-const { flatten, uniq } = require('./util')
+const { flatten, get, uniq } = require('./util')
 const yaml = require('js-yaml')
 const N3 = require('n3')
 const { RDF, RDFS, OWL } = require('../constants')
@@ -40,10 +40,7 @@ class Resource {
 
 class Menu extends Resource {
   static get base() {
-    return join(super.base, 'menu')
-  }
-
-  constructor(data = {}) {
+    return join(super.base, 'menu') } constructor(data = {}) {
     super()
     this.template = data[process.platform]
   }
@@ -121,7 +118,7 @@ class Vocab extends Resource {
     this.store = store
   }
 
-  get properties() {
+  getProperties() {
     return uniq([
       ...this.store.getSubjects(RDF.type, RDF.Property),
       ...this.store.getSubjects(RDF.type, OWL.ObjectProperty),
@@ -129,20 +126,22 @@ class Vocab extends Resource {
     ]).filter(uri => !N3.Util.isBlank(uri))
   }
 
-  get vocabularies() {
+  getClasses() {
     return uniq([
-      ...this.store.getSubjects(RDF.type, OWL.Ontology),
-      ...this.store.getObjects(null, RDFS.isDefinedBy),
-      ...this.properties.map(prop => this.split(prop)[0])
-    ])
+      ...this.store.getSubjects(RDF.type, RDF.Class)
+    ]).filter(uri => !N3.Util.isBlank(uri))
   }
 
   collect = (subject, into = {}) =>
     this.store.getTriples(subject)
       .reduce((obj, { predicate, object }) =>
-        ((obj[predicate] = this.literal(object)), obj), into)
+        ((obj[predicate] = Vocab.literal(object)), obj), into)
 
-  literal(value) {
+  static isDefinedBy(iri, triples) {
+    return get(triples, [RDFS.isDefinedBy, 'value']) || Vocab.split(iri)[0]
+  }
+
+  static literal(value) {
     return N3.Util.isLiteral(value) ? {
       value: N3.Util.getLiteralValue(value),
       type: N3.Util.getLiteralType(value),
@@ -150,7 +149,7 @@ class Vocab extends Resource {
     } : { value, type: 'IRI' }
   }
 
-  split(uri) {
+  static split(uri) {
     let ns = uri.split(/(#|\/)/)
     let nm = ns.pop()
     return [ns.join(''), nm]
