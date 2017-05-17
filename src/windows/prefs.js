@@ -18,6 +18,7 @@ all([
   store.dispatch(act.vocab.load('dc')),
   store.dispatch(act.vocab.load('dcterms')),
   store.dispatch(act.vocab.load('edm')),
+  store.dispatch(act.vocab.load('ore')),
   store.dispatch(act.vocab.load('skos')),
   store.dispatch(act.vocab.load('foaf')),
   store.dispatch(act.vocab.load('geo')),

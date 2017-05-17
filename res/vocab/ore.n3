@@ -1,0 +1,101 @@
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dctype: <http://purl.org/dc/dcmitype/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ore: <http://www.openarchives.org/ore/terms/> .
+@prefix rdfg: <http://www.w3.org/2004/03/trix/rdfg-1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://www.openarchives.org/ore/terms/> dcterms:title "The OAI ORE terms vocabulary" ;
+	rdfs:label "The OAI ORE terms vocabulary" ;
+	rdfs:comment "The set of terms provided by the OAI ORE initiative" ;
+	dcterms:publisher _:node17168luiux2 .
+
+_:node17168luiux2 rdfs:label "The Open Archives Initiative ORE Project" .
+
+<http://www.openarchives.org/ore/terms/> rdfs:seeAlso <http://www.openarchives.org/ore/toc> .
+
+ore:Aggregation a rdfs:Class ;
+	rdfs:label "Aggregation" ;
+	rdfs:comment "A set of related resources (Aggregated Resources), grouped together such that the set can be treated as a single resource. This is the entity described within the ORE interoperability framework by a Resource Map." ;
+	rdfs:subClassOf dctype:Collection ;
+	rdfs:isDefinedBy <http://www.openarchives.org/ore/terms/> .
+
+ore:AggregatedResource a rdfs:Class ;
+	rdfs:label "Aggregated Resource" ;
+	rdfs:comment "A resource which is included in an Aggregation. Note that asserting that a resource is a member of the class of Aggregated Resources does not imply anything other than that it is aggregated by at least one Aggregation." ;
+	rdfs:isDefinedBy <http://www.openarchives.org/ore/terms/> .
+
+ore:Proxy a rdfs:Class ;
+	rdfs:label "Proxy" ;
+	rdfs:comment "A Proxy represents an Aggregated Resource as it exists in a specific Aggregation. All assertions made about an entity are globally true, not only within the context of the Aggregation. As such, in order to make assertions which are only true of a resource as it exists in an Aggregation, a Proxy object is required. For example, one might want to cite an article as it appears in a specific journal, or assign aggregation-specific metadata to a Resource." ;
+	rdfs:isDefinedBy <http://www.openarchives.org/ore/terms/> .
+
+ore:ResourceMap a rdfs:Class ;
+	rdfs:label "Resource Map" ;
+	rdfs:comment "A description of an Aggregation according to the OAI-ORE data model. Resource Maps are serialised to a machine readable format according to the implementation guidelines." ;
+	rdfs:subClassOf rdfg:Graph ;
+	rdfs:isDefinedBy <http://www.openarchives.org/ore/terms/> .
+
+ore:aggregates a rdf:Property ;
+	rdfs:label "Aggregates" ;
+	rdfs:comment "Aggregations, by definition, aggregate resources. The ore:aggregates relationship expresses that the object resource is a member of the set of Aggregated Resources of the subject (the Aggregation). This relationship between the Aggregation and its Aggregated Resources is thus more specific than a simple part/whole relationship, as expressed by dcterms:hasPart for example." ;
+	rdfs:subPropertyOf dcterms:hasPart ;
+	rdfs:domain ore:Aggregation ;
+	rdfs:range ore:AggregatedResource ;
+	owl:inverseOf ore:isAggregatedBy ;
+	rdfs:isDefinedBy <http://www.openarchives.org/ore/terms/> .
+
+ore:isAggregatedBy a rdf:Property ;
+	rdfs:label "Is Aggregated By" ;
+	rdfs:comment "The inverse relationship of ore:aggregates, ore:isAggregatedBy asserts that an Aggregated Resource is aggregated by an Aggregation." ;
+	rdfs:subPropertyOf dcterms:isPartOf ;
+	rdfs:domain ore:AggregatedResource ;
+	rdfs:range ore:Aggregation ;
+	owl:inverseOf ore:aggregates ;
+	rdfs:isDefinedBy <http://www.openarchives.org/ore/terms/> .
+
+ore:describes a rdf:Property ;
+	rdfs:label "Describes" ;
+	rdfs:comment "This relationship asserts that the subject (a Resource Map) describes the object (an Aggregation)." ;
+	rdfs:domain ore:ResourceMap ;
+	rdfs:range ore:Aggregation ;
+	owl:inverseOf ore:isDescribedBy ;
+	rdfs:isDefinedBy <http://www.openarchives.org/ore/terms/> .
+
+ore:isDescribedBy a rdf:Property ;
+	rdfs:label "Is Described By" ;
+	rdfs:comment "The inverse relationship of ore:describes, in this case the object of the relationship is the Resource Map and the subject is the Aggregation which it describes." ;
+	rdfs:domain ore:Aggregation ;
+	rdfs:range ore:ResourceMap ;
+	owl:inverseOf ore:describes ;
+	rdfs:isDefinedBy <http://www.openarchives.org/ore/terms/> .
+
+ore:lineage a rdf:Property ;
+	rdfs:label "Lineage" ;
+	rdfs:comment "ore:lineage is a relationship between two Proxy objects, both of which MUST have the same Resource for which they are proxies. The meaning is that the Resource for which the subject of the relationship is a Proxy was discovered in the Aggregation in which the object Proxy's resource is aggregated." ;
+	rdfs:domain ore:Proxy ;
+	rdfs:range ore:Proxy ;
+	rdfs:isDefinedBy <http://www.openarchives.org/ore/terms/> .
+
+ore:proxyFor a rdf:Property ;
+	rdfs:label "Proxy For" ;
+	rdfs:comment "Proxy objects are used to represent a Resource as it is aggregated in a particular Aggregation. The ore:proxyFor relationship is used to link the proxy to the Aggregated Resource it is a proxy for. The subject of the relationship is a Proxy object, and the object of the relationship is the Aggregated Resource." ;
+	rdfs:domain ore:Proxy ;
+	rdfs:range ore:AggregatedResource ;
+	rdfs:isDefinedBy <http://www.openarchives.org/ore/terms/> .
+
+ore:proxyIn a rdf:Property ;
+	rdfs:label "Proxy In" ;
+	rdfs:comment "Proxy objects must link to the Aggregation in which the resource being proxied is aggregated. The ore:proxyIn relationship is used for this purpose. The subject of the relationship is a Proxy object, and the object of the relationship is the Aggregation." ;
+	rdfs:domain ore:Proxy ;
+	rdfs:range ore:Aggregation ;
+	rdfs:isDefinedBy <http://www.openarchives.org/ore/terms/> .
+
+ore:similarTo a rdf:Property ;
+	rdfs:label "Similar To" ;
+	rdfs:comment "The subject of this relationship MUST be an Aggregation.  This Aggregation should be considered an expression within the ORE context of the object of the relationship, as it is broadly equivalent to the resource. For example, the Aggregation may consist of the resources which, together, make up a journal article which has a DOI assigned to it. The Aggregation is not the article to which the DOI was assigned, but is a representation of it in some manner." ;
+	rdfs:domain ore:Aggregation ;
+	rdfs:isDefinedBy <http://www.openarchives.org/ore/terms/> .
