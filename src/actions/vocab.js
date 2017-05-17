@@ -2,7 +2,7 @@
 
 const { VOCAB, RDFS, DC, DCT, SKOS } = require('../constants')
 const { Vocab } = require('../common/res')
-const properties = require('./properties')
+const { update } = require('./properties')
 const { any, get } = require('../common/util')
 
 
@@ -10,9 +10,10 @@ module.exports = {
   load(payload) {
     return async (dispatch) => {
       const store = await Vocab.open(payload)
+      const { vocabularies, properties, collect } = store
+      const [main] = vocabularies
 
-
-      const vocabs = store.vocabularies
+      const vocabs = vocabularies
         .reduce((acc, uri) => {
           let data = store.collect(uri)
           acc[uri] = {
@@ -25,11 +26,11 @@ module.exports = {
           }
           return acc
         }, {})
-      const main = store.vocabularies[0]
 
-      const props = store.properties
+
+      const props = properties
         .reduce((acc, uri) => {
-          let data = store.collect(uri)
+          let data = collect(uri)
           let vocab = vocabs[get(data, [RDFS.isDefinedBy, 'value'], main)]
 
           if (vocab) vocab.properties.push(uri)
@@ -46,7 +47,7 @@ module.exports = {
           return acc
         }, {})
 
-      dispatch(properties.update(props))
+      dispatch(update(props))
       dispatch(module.exports.update(vocabs))
     }
 

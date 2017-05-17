@@ -133,14 +133,14 @@ class Vocab extends Resource {
     return uniq([
       ...this.store.getSubjects(RDF.type, OWL.Ontology),
       ...this.store.getObjects(null, RDFS.isDefinedBy),
+      ...this.properties.map(prop => this.split(prop)[0])
     ])
   }
 
-  collect(subject, into = {}) {
-    return this.store.getTriples(subject)
+  collect = (subject, into = {}) =>
+    this.store.getTriples(subject)
       .reduce((obj, { predicate, object }) =>
         ((obj[predicate] = this.literal(object)), obj), into)
-  }
 
   literal(value) {
     return N3.Util.isLiteral(value) ? {
@@ -148,6 +148,12 @@ class Vocab extends Resource {
       type: N3.Util.getLiteralType(value),
       language: N3.Util.getLiteralLanguage(value)
     } : { value, type: 'IRI' }
+  }
+
+  split(uri) {
+    let ns = uri.split(/(#|\/)/)
+    let nm = ns.pop()
+    return [ns.join(''), nm]
   }
 
 }

@@ -20,6 +20,7 @@ all([
   store.dispatch(act.vocab.load('edm')),
   store.dispatch(act.vocab.load('skos')),
   store.dispatch(act.vocab.load('foaf')),
+  store.dispatch(act.vocab.load('geo')),
   store.dispatch(act.vocab.load('rdf')),
   store.dispatch(act.vocab.load('rdfs')),
   store.dispatch(act.intl.load({ locale })),
