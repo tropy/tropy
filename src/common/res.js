@@ -1,19 +1,15 @@
 'use strict'
 
 const { resolve } = require('./promisify')
-const { resolve: cd, join } = require('path')
-const { readFileAsync: read, createReadStream: stream } = require('fs')
-const { flatten, get, uniq } = require('./util')
+const { join } = require('path')
+const { readFileAsync: read } = require('fs')
+const { flatten } = require('./util')
 const yaml = require('js-yaml')
-const N3 = require('n3')
-const { RDF, RDFS, OWL } = require('../constants')
-const ROOT = cd(__dirname, '..', '..', 'res')
-
 
 
 class Resource {
   static get base() {
-    return ROOT
+    return join(__dirname, '..', '..', 'res')
   }
 
   static get ext() {
@@ -38,6 +34,7 @@ class Resource {
   }
 }
 
+
 class Menu extends Resource {
   static get base() {
     return join(super.base, 'menu')
@@ -48,6 +45,7 @@ class Menu extends Resource {
     this.template = data[process.platform]
   }
 }
+
 
 class Strings extends Resource {
   static get base() {
@@ -73,6 +71,7 @@ class Strings extends Resource {
   }
 }
 
+
 class KeyMap extends Resource {
   static get base() {
     return join(super.base, 'keymaps')
@@ -89,83 +88,9 @@ class KeyMap extends Resource {
   }
 }
 
-class Vocab extends Resource {
-  static get base() {
-    return join(super.base, 'vocab')
-  }
-
-  static get ext() {
-    return '.n3'
-  }
-
-  static parse(is) {
-    return new Promise((resolve, reject) => {
-      const store = N3.Store()
-
-      N3.Parser({ format: 'N3' })
-        .parse(is, (error, triple, prefixes) => {
-          if (error) return reject(error)
-          if (triple) return store.addTriple(triple)
-          store.addPrefixes(prefixes)
-          resolve(store)
-        })
-    })
-  }
-
-  static async open(name) {
-    return new this(await this.parse(stream(this.expand(name))), name)
-  }
-
-  constructor(store, name) {
-    super()
-    this.store = store
-    this.name = name
-  }
-
-  getProperties() {
-    return uniq([
-      ...this.store.getSubjects(RDF.type, RDF.Property),
-      ...this.store.getSubjects(RDF.type, OWL.ObjectProperty),
-      ...this.store.getSubjects(RDF.type, OWL.DatatypeProperty)
-    ]).filter(uri => !N3.Util.isBlank(uri))
-  }
-
-  getClasses() {
-    return uniq([
-      ...this.store.getSubjects(RDF.type, RDFS.Class),
-      ...this.store.getSubjects(RDF.type, OWL.Class)
-    ]).filter(uri => !N3.Util.isBlank(uri))
-  }
-
-  collect = (subject, into = {}) =>
-    this.store.getTriples(subject)
-      .reduce((obj, { predicate, object }) =>
-        ((obj[predicate] = Vocab.literal(object)), obj), into)
-
-  static isDefinedBy(iri, triples) {
-    return get(triples, [RDFS.isDefinedBy, 'value']) || Vocab.split(iri)[0]
-  }
-
-  static literal(value) {
-    return N3.Util.isLiteral(value) ? {
-      value: N3.Util.getLiteralValue(value),
-      type: N3.Util.getLiteralType(value),
-      language: N3.Util.getLiteralLanguage(value)
-    } : { value, type: 'IRI' }
-  }
-
-  static split(uri) {
-    let ns = uri.split(/(#|\/)/)
-    let nm = ns.pop()
-    return [ns.join(''), nm]
-  }
-
-}
-
 module.exports = {
   Resource,
   Menu,
   Strings,
-  KeyMap,
-  Vocab
+  KeyMap
 }

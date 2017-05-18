@@ -1,8 +1,7 @@
 'use strict'
 
-const { VOCAB, RDFS, DC, DCT, SKOS, VANN } = require('../constants')
-const { Vocab } = require('../common/res')
-const { any, empty, get } = require('../common/util')
+const { VOCAB } = require('../constants')
+const { Vocab } = require('../common/vocab')
 
 const act = {
   classes: require('./classes'),
@@ -12,75 +11,28 @@ const act = {
 module.exports = act.vocab = {
   load(payload) {
     return async (dispatch) => {
-      const store = await Vocab.open(payload)
-      const vocabs = {}
+      let store = await Vocab.open(payload)
+      let data = store.toJSON()
 
-      function getVocabulary(uri, triples) {
-        let ns = Vocab.isDefinedBy(uri, triples)
+      let vocabs = {}
+      let classes = {}
+      let properties = {}
 
-        if (!vocabs[ns]) {
-          let data = store.collect(ns)
-          if (empty(data)) return null
+      for (let uri in data) {
+        for (let cls of data[uri].classes) classes[cls.uri] = cls
+        for (let prp of data[uri].properties) properties[prp.uri] = prp
 
-          vocabs[ns] = {
-            uri: ns,
-            prefix:
-              get(data, [VANN.preferredNamespacePrefix, 'value'], store.name),
-            data,
-            classes: [],
-            properties: [],
-            title: get(any(data, DC.title, DCT.title), ['value']),
-            description:
-              get(any(data, DC.description, DCT.description), ['value']),
-          }
+        vocabs[uri] = {
+          ...data[uri],
+          classes: data[uri].classes.map(p => p.uri),
+          properties: data[uri].properties.map(p => p.uri)
         }
-
-        return vocabs[ns]
       }
 
-      const props = store.getProperties().reduce((acc, uri) => {
-        let data = store.collect(uri)
-
-        let vocab = getVocabulary(uri, data)
-
-        if (vocab) vocab.properties.push(uri)
-        else return acc
-
-        acc[uri] = {
-          uri,
-          label: get(data[RDFS.label], ['value']),
-          definition: get(
-            any(data, DC.description, DCT.description, SKOS.definition),
-            ['value']
-          ),
-          comment: get(data[RDFS.comment], ['value'])
-        }
-        return acc
-      }, {})
-
-      const classes = store.getClasses().reduce((acc, uri) => {
-        let data = store.collect(uri)
-
-        let vocab = getVocabulary(uri, data)
-        if (vocab) vocab.classes.push(uri)
-
-        acc[uri] = {
-          uri,
-          label: get(data[RDFS.label], ['value']),
-          definition: get(
-            any(data, DC.description, DCT.description, SKOS.definition),
-            ['value']
-          ),
-          comment: get(data[RDFS.comment], ['value'])
-        }
-        return acc
-      }, {})
-
-      dispatch(act.properties.update(props))
+      dispatch(act.properties.update(properties))
       dispatch(act.classes.update(classes))
       dispatch(act.vocab.update(vocabs))
     }
-
   },
 
   update(payload) {
