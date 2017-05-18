@@ -147,7 +147,7 @@ const getAllTemplates = memo(
           ...v,
           fields: v.fields.map(field => ({
             ...field,
-            property: properties[field.property]
+            property: properties[field.property] || { uri: field.property }
           }))
         }
 

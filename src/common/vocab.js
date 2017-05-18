@@ -2,7 +2,7 @@
 
 const { join } = require('path')
 const { createReadStream: stream } = require('fs')
-const { any, empty, get, uniq } = require('./util')
+const { any, empty, get, titlecase, uniq } = require('./util')
 const { Resource } = require('./res')
 const N3 = require('n3')
 const { RDF, RDFS, DC, DCT, SKOS, OWL, VANN } = require('../constants')
@@ -137,6 +137,9 @@ function namespace(uri) {
   return split(uri)[0]
 }
 
+function getLabel(uri) {
+  return titlecase(split(uri)[1])
+}
 
 function split(uri) {
   let ns = uri.split(/(#|\/)/)
@@ -146,9 +149,10 @@ function split(uri) {
 
 
 module.exports = {
-  Vocab,
+  getLabel,
   info,
   isDefinedBy,
   literal,
-  namespace
+  namespace,
+  Vocab,
 }
