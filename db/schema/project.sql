@@ -32,7 +32,7 @@ CREATE TABLE project (
 ) WITHOUT ROWID;
 CREATE TABLE subjects (
   id           INTEGER  PRIMARY KEY,
-  template     TEXT     NOT NULL DEFAULT 'https://schema.tropy.org/v1/templates/core',
+  template     TEXT     NOT NULL DEFAULT 'https://tropy.org/schema/v1/templates/item',
   type         TEXT,
   created      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -63,8 +63,8 @@ INSERT INTO metadata_types(type_name,type_schema) VALUES('location','https://sch
 INSERT INTO metadata_types(type_name,type_schema) VALUES('number','https://schema.org/Number');
 INSERT INTO metadata_types(type_name,type_schema) VALUES('text','https://schema.org/Text');
 INSERT INTO metadata_types(type_name,type_schema) VALUES('url','https://schema.org/URL');
-INSERT INTO metadata_types(type_name,type_schema) VALUES('date','https://schema.tropy.org/v1/types/date');
-INSERT INTO metadata_types(type_name,type_schema) VALUES('name','https://schema.tropy.org/v1/types/name');
+INSERT INTO metadata_types(type_name,type_schema) VALUES('date','https://tropy.org/schema/v1/core#date');
+INSERT INTO metadata_types(type_name,type_schema) VALUES('name','https://tropy.org/schema/v1/core#name');
 CREATE TABLE metadata (
   id          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   property    TEXT     NOT NULL,

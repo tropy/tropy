@@ -6,10 +6,9 @@ module.exports = {
   UPDATE: 'properties.update',
 
   TR: {
-    BOX: 'https://schema.tropy.org/v1/properties/box',
-    FOLDER: 'https://schema.tropy.org/v1/properties/folder',
-    PIECE: 'https:/schema.tropy.org/v1/properties/piece',
-    CLASSIFICATION: 'https://schema.tropy.org/v1/properties/classification'
+    BOX: 'https://tropy.org/schema/v1/core#box',
+    FOLDER: 'https://tropy.org/schema/v1/core#folder',
+    PIECE: 'https:/tropy.org/schema/v1/core#piece'
   },
 
   DC: {
