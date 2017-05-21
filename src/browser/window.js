@@ -66,7 +66,6 @@ module.exports = {
     data.scrollbars = !hasOverlayScrollBars()
 
     const win = new BrowserWindow(options)
-      .once('ready-to-show', () => { win.show() })
 
     win.webContents
       .on('devtools-reload-page', () => {
