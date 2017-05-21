@@ -36,7 +36,7 @@
     "make": "node scripts/make",
     "db": "node scripts/db",
     "prestart": "npm run make compile",
-    "start": "electron --app . -e development",
+    "start": "electron --app . --env development",
     "rebuild": "node scripts/rebuild",
     "postinstall": "npm run rebuild",
     "test": "node scripts/make test",
