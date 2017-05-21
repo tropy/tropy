@@ -21,12 +21,12 @@ describe('args', () => {
     })
 
     it('sets environment', () => {
-      expect(args.parse(['-e', 'development']))
+      expect(args.parse(['--env', 'development']))
         .to.have.property('environment', 'development')
     })
 
     it('rejects invalid environment', () => {
-      args.parse(['-e', 'foo'])
+      args.parse(['--env', 'foo'])
       expect(process.exit).to.have.been.calledWith(1)
       expect(console.error).to.have.been.called
     })
