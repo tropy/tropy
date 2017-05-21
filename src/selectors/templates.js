@@ -6,7 +6,7 @@ const { entries, values } = Object
 const { DC, TR, S } = require('../constants/properties')
 
 const CORE = 'https://tropy.org/schema/v1/templates/item'
-const PHOTO = 'https://tropy.org/schmea/v1/templates/photo'
+const PHOTO = 'https://tropy.org/schema/v1/templates/photo'
 
 const CORNELL = 'https://schema.tropy.org/v1/templates/cornell-obama'
 const PINKERTON = 'https://schema.tropy.org/v1/templates/pinkerton'
@@ -112,7 +112,6 @@ const T = {
     fields: [
       { property: DC.TITLE },
       { property: DC.TYPE },
-      { property: TR.CLASSIFICATION },
       { property: DC.CREATOR },
       { property: DC.CONTRIBUTOR },
       { property: DC.DESCRIPTION },
