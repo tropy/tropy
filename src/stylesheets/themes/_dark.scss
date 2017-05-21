@@ -38,19 +38,24 @@ $transparent:       transparent;
 $shade-0:           #000;
 $shade-0-5:         rgba(#000, 0.05);
 
-$shade-1:           #212121;              // 87% Border search field, Esper bg
-$shade-2:           #292929;              // 84% Inactive tab
-$shade-3:           #2f2f2f;              // 82% Body
-$shade-4:           #333;                 // 80% Sidebar bg, panel bg
-$shade-4-5:         #383838;              // 78% Property container
+$shade-1:           #212121;               // 87% Border search field, Esper bg
+$shade-1-lighten-2: lighten($shade-1, 2%); // Input border in fieldset
+$shade-1-lighten-4: lighten($shade-1, 4%); // Input border in property
 
-$shade-5:           #404040;              // 75% Active state bg/border, slider track
-$shade-5-lighten-5: lighten(#404040, 5%); // 70% Thumbnail bg
+$shade-2:           #292929;               // 84% Inactive tab
 
-$shade-6:           #555;                 // Panel heading color, slider range
-$shade-7:           #777;                 // Icon color, sidebar headings
-$shade-8:           #999;                 // Softened text, active icon
-$shade-9:           #bbb;                 // Text color
+$shade-3:           #2f2f2f;               // 82% Body
+$shade-4:           #333;                  // 80% Sidebar bg, panel bg
+$shade-4-lighten-2: lighten($shade-4, 2%); // 78% Fieldset bg
+$shade-4-lighten-4: lighten($shade-4, 4%); // 76% Property bg
+
+$shade-5:           #404040;               // 75% Active state bg/border, slider track
+$shade-5-lighten-5: lighten(#404040, 5%);  // 70% Thumbnail bg
+
+$shade-6:           #555;                  // Panel heading color, slider range
+$shade-7:           #777;                  // Icon color, sidebar headings
+$shade-8:           #999;                  // Softened text, active icon
+$shade-9:           #bbb;                  // Text color
 
 $shade-10:          #fff;
 $shade-10-5:        rgba(#fff, 0.05);
@@ -77,13 +82,16 @@ $text-selection-bg:    $brand-primary-35;
 // --------------------------------------------------
 
 // Forms
-$input-color:             $shade-9;
-$input-bg:                $shade-3; // Transparent causes border/box-shadow issue
-$input-border:            $shade-1;
-$input-color-focus:       $brand-primary;
-$input-color-placeholder: $shade-6;
-$input-color-readonly:    $shade-7;
-$fieldset-bg:             $shade-4-5;
+$input-color:                $shade-9;
+$input-bg:                   $shade-3; // Transparent causes border/box-shadow issue
+$input-bg-readonly:          $shade-4-lighten-2;
+$input-border:               $shade-1;
+$input-color-focus:          $brand-primary;
+$input-color-placeholder:    $shade-6;
+$fieldset-bg:                $shade-4-lighten-2;
+$fieldset-input-border:      $shade-1-lighten-2;
+$fieldset-input-bg:          $shade-4;
+$fieldset-input-bg-readonly: $shade-4-lighten-4;
 
 // Badge
 $badge-color: $shade-10;
@@ -250,8 +258,11 @@ $editor-hr-border-color:  $shade-8;
 $prefs-bg:            $shade-4;
 $prefs-header-border: $shade-1;
 
-
 // Vocab
-$vocab-panel-bg:       $shade-4-5;
-$property-fieldset-bg: $shade-5;
-$vocab-label-color:    $shade-7;
+$vocab-panel-bg:        $shade-4-lighten-2;
+$vocab-label-color:     $shade-7;
+$vocab-input-bg:        $shade-4;
+$vocab-input-border:    $shade-1-lighten-2;
+$property-bg:           $shade-4-lighten-4;
+$property-input-bg:     $shade-4-lighten-2;
+$property-input-border: $shade-1-lighten-4;

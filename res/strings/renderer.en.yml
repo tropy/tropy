@@ -35,6 +35,18 @@ prefs:
     select: Template
   vocab:
     label: Vocabularies
+    classes: >
+      {count, plural,
+        =0 {No Classes}
+        one {# Class}
+        other {# Classes}
+      }
+    properties: >
+      {count, plural,
+        =0 {No Properties}
+        one {# Property}
+        other {# Properties}
+      }
 
 template:
   uri: URI

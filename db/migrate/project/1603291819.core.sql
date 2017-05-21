@@ -7,6 +7,7 @@ CREATE TABLE project (
   created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified    NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   opened      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  locked      BOOLEAN  NOT NULL DEFAULT FALSE,
 
   CHECK (project_id != ''),
   CHECK (name != '')
@@ -19,7 +20,8 @@ CREATE TABLE project (
 -- a row in the subjects table.
 CREATE TABLE subjects (
   id           INTEGER  PRIMARY KEY,
-  template     TEXT     NOT NULL DEFAULT 'https://schema.tropy.org/v1/templates/core',
+  template     TEXT     NOT NULL DEFAULT 'https://tropy.org/schema/v1/templates/item',
+  type         TEXT,
   created      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -54,8 +56,8 @@ CREATE TABLE metadata_types (
 
 INSERT INTO metadata_types (type_name, type_schema) VALUES
   ('text', 'https://schema.org/Text'),
-  ('date', 'https://schema.tropy.org/v1/types/date'),
-  ('name', 'https://schema.tropy.org/v1/types/name'),
+  ('date', 'https://tropy.org/schema/v1/core#date'),
+  ('name', 'https://tropy.org/schema/v1/core#name'),
   ('boolean', 'https://schema.org/Boolean'),
   ('number', 'https://schema.org/Number'),
   ('location', 'https://schema.org/GeoCoordinates'),

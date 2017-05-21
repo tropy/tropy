@@ -4,7 +4,10 @@
 
 .tab-pane {
   flex: 1 1 auto;
-  margin-bottom: $space-min;
   display: flex;
   flex-direction: column;
+  margin: {
+    top: $space-min;
+    bottom: $space-min;
+  }
 }

@@ -56,6 +56,10 @@ class Window {
     }
   }
 
+  show() {
+    this.current.show()
+  }
+
   get current() {
     return remote.getCurrentWindow()
   }

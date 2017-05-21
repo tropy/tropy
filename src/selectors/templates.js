@@ -5,9 +5,10 @@ const { into, compose, map, filter } = require('transducers.js')
 const { entries, values } = Object
 const { DC, TR, S } = require('../constants/properties')
 
-const CORE = 'https://schema.tropy.org/v1/templates/core'
+const CORE = 'https://tropy.org/schema/v1/templates/item'
+const PHOTO = 'https://tropy.org/schmea/v1/templates/photo'
+
 const CORNELL = 'https://schema.tropy.org/v1/templates/cornell-obama'
-const PHOTO = 'https://schema.tropy.org/v1/templates/photo'
 const PINKERTON = 'https://schema.tropy.org/v1/templates/pinkerton'
 const TYPOGRAPHY = 'https://schema.tropy.org/v1/templates/typography'
 const SRM = 'https://schema.tropy.org/v1/templates/srm'
@@ -147,7 +148,7 @@ const getAllTemplates = memo(
           ...v,
           fields: v.fields.map(field => ({
             ...field,
-            property: properties[field.property]
+            property: properties[field.property] || { uri: field.property }
           }))
         }
 

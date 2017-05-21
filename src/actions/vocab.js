@@ -1,55 +1,38 @@
 'use strict'
 
-const { VOCAB, RDFS, DC, DCT, SKOS } = require('../constants')
-const { Vocab } = require('../common/res')
-const properties = require('./properties')
-const { any, get } = require('../common/util')
+const { VOCAB } = require('../constants')
+const { Vocab } = require('../common/vocab')
 
+const act = {
+  classes: require('./classes'),
+  properties: require('./properties')
+}
 
-module.exports = {
+module.exports = act.vocab = {
   load(payload) {
     return async (dispatch) => {
-      const store = await Vocab.open(payload)
+      let store = await Vocab.open(payload)
+      let data = store.toJSON()
 
+      let vocabs = {}
+      let classes = {}
+      let properties = {}
 
-      const vocabs = store.vocabularies
-        .reduce((acc, uri) => {
-          let data = store.collect(uri)
-          acc[uri] = {
-            uri,
-            data,
-            properties: [],
-            title: get(any(data, DC.title, DCT.title), ['value']),
-            description:
-              get(any(data, DC.description, DCT.description), ['value']),
-          }
-          return acc
-        }, {})
-      const main = store.vocabularies[0]
+      for (let uri in data) {
+        for (let cls of data[uri].classes) classes[cls.uri] = cls
+        for (let prp of data[uri].properties) properties[prp.uri] = prp
 
-      const props = store.properties
-        .reduce((acc, uri) => {
-          let data = store.collect(uri)
-          let vocab = vocabs[get(data, [RDFS.isDefinedBy, 'value'], main)]
+        vocabs[uri] = {
+          ...data[uri],
+          classes: data[uri].classes.map(p => p.uri),
+          properties: data[uri].properties.map(p => p.uri)
+        }
+      }
 
-          if (vocab) vocab.properties.push(uri)
-
-          acc[uri] = {
-            uri,
-            label: get(data[RDFS.label], ['value']),
-            definition: get(
-              any(data, DC.description, DCT.description, SKOS.definition),
-              ['value']
-            ),
-            comment: get(data[RDFS.comment], ['value'])
-          }
-          return acc
-        }, {})
-
-      dispatch(properties.update(props))
-      dispatch(module.exports.update(vocabs))
+      dispatch(act.properties.update(properties))
+      dispatch(act.classes.update(classes))
+      dispatch(act.vocab.update(vocabs))
     }
-
   },
 
   update(payload) {

@@ -1,0 +1,41 @@
+@prefix tropy: <https://tropy.org/schema/v1/core#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<https://tropy.org/schema/v1/core#> a owl:Ontology ;
+	vann:preferredNamespacePrefix "tropy" ;
+	vann:preferredNamespaceUri "https://tropy.org/schema/v1/core#" ;
+	dc:title "Tropy Core Vocabulary"@en ;
+	dc:description "The RDF vocabulary for https://tropy.org/schema/v1/core defines the core elements used by Tropy."@en ;
+	dc:issued "2017-05-09"^^xsd:date ;
+	dc:publisher "Roy Rosenzweig Center for History and New Media, George Mason University" ;
+
+tropy:date a rdf:DataType ;
+	rdfs:label "Date"@en ;
+	rdfs:isDefinedBy <https://tropy.org/schema/v1/core#> ;
+
+tropy:name a rdf:DataType ;
+	rdfs:label "Name"@en ;
+	rdfs:isDefinedBy <https://tropy.org/schema/v1/core#> ;
+
+tropy:box a rdf:Property ;
+	rdfs:label "Box"@en ;
+	rdfs:isDefinedBy <https://tropy.org/schema/v1/core#> ;
+	dc:description "A unit of archival organization."@en ;
+
+tropy:folder a rdf:Property ;
+	rdfs:label "Folder"@en ;
+	rdfs:isDefinedBy <https://tropy.org/schema/v1/core#> ;
+  rdfs:subPropertyOf tropy:box ;
+	dc:description "A unit of archival organization, usually within a box."@en ;
+
+tropy:piece a rdf:Property ;
+	rdfs:label "Piece"@en ;
+	rdfs:isDefinedBy <https://tropy.org/schema/v1/core#> ;
+  rdfs:subPropertyOf tropy:folder ;
+	dc:description "A unit of archival organization, usually within a folder."@en ;

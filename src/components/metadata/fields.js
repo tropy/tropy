@@ -19,7 +19,7 @@ class MetadataFields extends PureComponent {
     const { template } = this.props
 
     if (uri === 'id') return false
-    if (!template) return true
+    if (template == null) return true
 
     return !template.fields.find(({ property }) => property.uri === uri)
   }
@@ -62,7 +62,8 @@ class MetadataFields extends PureComponent {
   }
 
   renderTemplate() {
-    return this.props.template.fields.map(f => this.renderField(f.property))
+    const { template } = this.props
+    return template && template.fields.map(f => this.renderField(f.property))
   }
 
   renderExtraFields() {
@@ -88,7 +89,7 @@ class MetadataFields extends PureComponent {
       fields: arrayOf(shape({
         property: object.isRequired
       })).isRequired
-    }).isRequired,
+    }),
 
     edit: object,
     properties: object.isRequired,

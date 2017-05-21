@@ -119,7 +119,6 @@ class TemplateEditor extends PureComponent {
             id="template.uri"
             name="uri"
             value={this.state.uri}
-            isCompact
             onChange={this.handleTemplateUpdate}/>
           <FormGroup>
             <div className="col-12 text-right">

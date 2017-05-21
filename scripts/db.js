@@ -6,15 +6,16 @@ const assert = require('assert')
 const pkg = require('../package')
 const log = require('./log')
 
-const { resolve, join, dirname } = require('path')
+const { join, dirname } = require('path')
 const { assign } = Object
 const { Database } = require('../lib/common/db')
 const { Migration } = require('../lib/common/migration')
 const { strftime } = require('../lib/common/util')
 
-const home = resolve(__dirname, '..')
-const DB = join(home, 'db', 'db.sqlite')
-const SCHEMA = join(home, 'db', 'schema.sql')
+const home = join(__dirname, '..')
+const DB = join(home, 'db', 'project.db')
+const SCHEMA = join(home, 'db', 'schema', 'project.sql')
+const MIGRATIONS = join(home, 'db', 'migrate', 'project')
 
 
 target.create = async (args = []) => {
@@ -36,7 +37,7 @@ target.migrate = async () => {
   const db = new Database(tmp)
 
   try {
-    await db.migrate()
+    await db.migrate(MIGRATIONS)
     const version = await db.version()
 
     ;(`--

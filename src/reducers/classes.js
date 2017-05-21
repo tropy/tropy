@@ -1,13 +1,13 @@
 'use strict'
 
-const { PROPERTIES } = require('../constants')
+const { CLASSES } = require('../constants')
 
 module.exports = {
-  properties(state = {}, { type, payload }) {
+  classes(state = {}, { type, payload }) {
     switch (type) {
-      case PROPERTIES.RESTORE:
+      case CLASSES.RESTORE:
         return {}
-      case PROPERTIES.UPDATE:
+      case CLASSES.UPDATE:
         return { ...state, ...payload }
       default:
         return state

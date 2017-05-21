@@ -8,6 +8,7 @@ const { default: thunk } = require('redux-thunk')
 const { seq, debounce, throttle, log } = require('../middleware')
 
 const {
+  classes,
   intl,
   edit,
   prefs,
@@ -25,6 +26,7 @@ const devtools = (ARGS.dev || ARGS.debug) &&
 module.exports = {
   create(init = {}) {
     let reducer = combineReducers({
+      classes,
       intl,
       edit,
       prefs,

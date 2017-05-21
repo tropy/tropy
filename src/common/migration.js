@@ -3,7 +3,7 @@
 require('./promisify')
 
 const { readdirAsync: ls, readFileAsync: read } = require('fs')
-const { basename, extname, resolve, join } = require('path')
+const { basename, extname, join } = require('path')
 const { debug } = require('./log')
 
 
@@ -15,14 +15,14 @@ class Migration {
     this.number = Number(basename(path).split('.', 2)[0])
   }
 
-  static async all(dir = Migration.root) {
+  static async all(dir) {
     return (await ls(dir))
       .filter(migration => (/^\d+[\w\.]*\.(js|sql)$/).test(migration))
       .sort()
       .map(migration => new this(join(dir, migration)))
   }
 
-  static async since(number = 0, dir = Migration.root) {
+  static async since(number = 0, dir) {
     return (await this.all(dir)).filter(m => m.fresh(number))
   }
 
@@ -49,7 +49,5 @@ class Migration {
     return !number || this.number > number
   }
 }
-
-Migration.root = resolve(__dirname, '..', '..', 'db', 'migrate')
 
 module.exports =  { Migration }

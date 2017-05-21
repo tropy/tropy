@@ -2,14 +2,14 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { arrayOf, bool, func, number, oneOfType, shape, string } = PropTypes
 const { Editable } = require('../editable')
 const { FormattedMessage } = require('react-intl')
-const { parse } = require('url')
-const { basename } = require('path')
 const { pluck } = require('../../common/util')
+const { getLabel } = require('../../common/vocab')
 const cx = require('classnames')
+const {
+  arrayOf, bool, func, number, oneOfType, shape, string
+} = require('prop-types')
 
 
 class MetadataField extends PureComponent {
@@ -23,7 +23,7 @@ class MetadataField extends PureComponent {
   }
 
   get label() {
-    return this.props.property.label || this.basename()
+    return this.props.property.label || getLabel(this.props.property.uri)
   }
 
   get uri() {
@@ -32,13 +32,6 @@ class MetadataField extends PureComponent {
 
   get details() {
     return pluck(this.props.property, ['uri', 'definition', 'comment'])
-  }
-
-  basename(uri = this.uri) {
-    const parts = parse(uri)
-
-    return parts.hash ?
-      parts.hash.slice(1) : basename(parts.pathname)
   }
 
   handleClick = () => {

@@ -23,7 +23,8 @@
     "Johannes Krtek <johannes.krtek@flachware.com>"
   ],
   "engines": {
-    "node": ">=7"
+    "node": ">=7",
+    "npm": ">=4"
   },
   "main": "lib/browser/main.js",
   "scripts": {
@@ -35,7 +36,7 @@
     "make": "node scripts/make",
     "db": "node scripts/db",
     "prestart": "npm run make compile",
-    "start": "electron --app . -e development",
+    "start": "electron --app . --env development",
     "rebuild": "node scripts/rebuild",
     "postinstall": "npm run rebuild",
     "test": "node scripts/make test",
@@ -56,7 +57,7 @@
     "chai-enzyme": "^0.6.0",
     "chokidar": "^1.6.0",
     "devtron": "^1.0.0",
-    "electron": "1.6.2",
+    "electron": "^1.7.0",
     "electron-devtools-installer": "^2.0.0",
     "electron-mocha": "^3.0.0",
     "electron-packager": "^8.0.0",
@@ -87,7 +88,7 @@
     "lodash.debounce": "^4.0.7",
     "lodash.throttle": "^4.1.1",
     "mkdirp": "^0.5.1",
-    "ms": "^1.0.0",
+    "ms": "^2.0.0",
     "n3": "^0.10.0",
     "prop-types": "^15.5.4",
     "prosemirror-commands": "^0.21.0",

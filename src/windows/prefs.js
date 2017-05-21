@@ -18,8 +18,10 @@ all([
   store.dispatch(act.vocab.load('dc')),
   store.dispatch(act.vocab.load('dcterms')),
   store.dispatch(act.vocab.load('edm')),
+  store.dispatch(act.vocab.load('ore')),
   store.dispatch(act.vocab.load('skos')),
   store.dispatch(act.vocab.load('foaf')),
+  store.dispatch(act.vocab.load('geo')),
   store.dispatch(act.vocab.load('rdf')),
   store.dispatch(act.vocab.load('rdfs')),
   store.dispatch(act.intl.load({ locale })),
@@ -28,6 +30,7 @@ all([
 ])
   .then(() => {
     render(<Main store={store}><PrefsContainer/></Main>, $('.view'))
+    win.show()
   })
 
 dialog.start()

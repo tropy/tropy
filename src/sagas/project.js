@@ -41,13 +41,13 @@ module.exports = {
       var { id } = project
       const cache = new Cache(ARGS.cache, id)
 
-      yield call([cache, cache.init])
-      yield put(act.project.opened({ file: db.path, ...project }))
-
       if (db.path !== ARGS.file) {
         ARGS.file = db.path
         window.location.hash = encodeURIComponent(JSON.stringify(ARGS))
       }
+
+      yield call([cache, cache.init])
+      yield put(act.project.opened({ file: db.path, ...project }))
 
       yield every(action => has('search', action), search, db)
       yield every(action => has('load', action), load)

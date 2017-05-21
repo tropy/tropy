@@ -14,6 +14,17 @@ fieldset {
   padding: 0;
   background: $fieldset-bg;
   border-radius: $border-radius-small;
+
+  .form-control {
+    background: $fieldset-input-bg;
+    border-color: $fieldset-input-border;
+
+    @include form-control-focus; // sass-lint:disable-line mixins-before-declarations
+
+    &[readonly] {
+      background: $fieldset-input-bg-readonly;
+    }
+  }
 }
 
 .form-group {
@@ -69,7 +80,7 @@ label {
   }
 
   &[readonly] {
-    color: $input-color-readonly;
+    background: $input-bg-readonly;
   }
 
   @at-root select#{&} {

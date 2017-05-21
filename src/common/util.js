@@ -31,6 +31,10 @@ const util = {
     })
   },
 
+  empty(obj) {
+    return keys(obj).length === 0
+  },
+
   times(n, fn) {
     for (var i = 0, res = []; i < n; ++i) res.push(fn(i))
     return res

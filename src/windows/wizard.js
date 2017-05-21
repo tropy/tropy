@@ -24,6 +24,8 @@ all([
       <Main store={store}><WizardContainer/></Main>,
       $('main')
     )
+
+    win.show()
   })
 
 dialog.start()
