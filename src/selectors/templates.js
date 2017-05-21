@@ -112,7 +112,6 @@ const T = {
     fields: [
       { property: DC.TITLE },
       { property: DC.TYPE },
-      { property: TR.CLASSIFICATION },
       { property: DC.CREATOR },
       { property: DC.CONTRIBUTOR },
       { property: DC.DESCRIPTION },
