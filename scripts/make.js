@@ -4,12 +4,13 @@ require('shelljs/make')
 
 const babel = require('babel-core')
 const glob = require('glob')
-const sass = require('node-sass')
 const { check, error, rules, say, warn } = require('./util')('make')
+const { swap } = require('./util')
 
 const { statSync: stat, existsSync: exists } = require('fs')
 const { join, resolve, relative, dirname } = require('path')
 
+const sass = require('./sass')
 const home = resolve(__dirname, '..')
 const nbin = join(home, 'node_modules', '.bin')
 const cov = join(home, 'coverage')
@@ -65,8 +66,10 @@ target.mocha = (args = []) => mocha([...args], false)
 
 
 target.compile = () => {
-  target['compile:js']()
-  target['compile:css']()
+  return Promise.all([
+    target['compile:js'](),
+    target['compile:css']()
+  ])
 }
 
 target['compile:js'] = (pattern) => {
@@ -92,35 +95,8 @@ target['compile:js'] = (pattern) => {
     })
 }
 
-target['compile:css'] = (pattern) => {
-  new glob
-    .Glob(pattern || 'src/stylesheets/**/!(_*).{sass,scss}')
-    .on('error', (err) => error(err))
-
-    .on('match', (file) => {
-      let src = relative(home, file)
-      let dst = swap(src, 'src', 'lib', '.css')
-
-      check(src.startsWith(join('src', 'stylesheets')))
-      say(dst)
-
-      let options = {
-        file: src,
-        functions: SassExtensions,
-        includePaths: SassIncludePath,
-        outFile: dst,
-        outputStyle: 'compressed',
-        sourceMap: true
-      }
-
-      sass.render(options, (err, result) => {
-        if (err) return error(`${err.line}: ${err.message}`)
-
-        mkdir('-p', dirname(dst))
-        String(result.css).to(dst)
-        String(result.map).to(`${dst}.map`)
-      })
-    })
+target['compile:css'] = async (args = []) => {
+  await sass.compile(...args)
 }
 
 
@@ -204,40 +180,9 @@ function fresh(src, dst) {
   }
 }
 
-function swap(filename, src, dst, ext) {
-  return filename
-    .replace(src, dst)
-    .replace(/(\..+)$/, m => ext || m[1])
-}
 
 function mocha(options, silent) {
   return exec(`${emocha} ${options.join(' ')}`, { silent })
-}
-
-const SassIncludePath = [
-  join(home, 'node_modules')
-]
-
-const SassExtensions = {
-  'const($name, $unit:"")'(name, unit) {
-    const SASS = require('../src/constants/sass')
-    const { get } = require('../src/common/util')
-
-    const value = get(SASS, name.getValue())
-    unit = unit.getValue()
-
-    if (typeof value === 'number') {
-      return new sass.types.Number(value, unit)
-    }
-
-    if (Array.isArray(value)) {
-      return value.reduce((list, val, i) => (
-        list.setValue(i, new sass.types.Number(val, unit)), list
-      ), new sass.types.List(value.length))
-    }
-
-    return sass.types.Null.NULL
-  }
 }
 
 // We need to make a copy when exposing targets to other scripts,
