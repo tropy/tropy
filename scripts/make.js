@@ -2,15 +2,15 @@
 
 require('shelljs/make')
 
-const babel = require('babel-core')
 const glob = require('glob')
-const { check, error, rules, say, warn } = require('./util')('make')
-const { swap } = require('./util')
+const { rules, say, warn } = require('./util')('make')
 
-const { statSync: stat, existsSync: exists } = require('fs')
-const { join, resolve, relative, dirname } = require('path')
+const { existsSync: exists } = require('fs')
+const { join, resolve } = require('path')
 
+const babel = require('./babel')
 const sass = require('./sass')
+
 const home = resolve(__dirname, '..')
 const nbin = join(home, 'node_modules', '.bin')
 const cov = join(home, 'coverage')
@@ -71,30 +71,9 @@ target.compile = () => {
     target['compile:css']()
   ])
 }
-
-target['compile:js'] = (pattern) => {
-  new glob
-    .Glob(pattern || 'src/**/*.{js,jsx}')
-    .on('error', (err) => error(err))
-
-    .on('match', (file) => {
-      let src = relative(home, file)
-      let dst = swap(src, 'src', 'lib', '.js')
-
-      check(src.startsWith('src'))
-      if (fresh(src, dst)) return
-
-      say(dst)
-
-      babel.transformFile(src, (err, result) => {
-        if (err) return error(err)
-
-        mkdir('-p', dirname(dst))
-        result.code.to(dst)
-      })
-    })
+target['compile:js'] = async (args = []) => {
+  await babel.transform(...args)
 }
-
 target['compile:css'] = async (args = []) => {
   await sass.compile(...args)
 }
@@ -161,7 +140,6 @@ target.rules = () => {
   rules(target)
 }
 
-
 target.clean = () => {
   rm('-rf', join(home, 'lib'))
   rm('-rf', join(home, 'dist'))
@@ -170,15 +148,6 @@ target.clean = () => {
   rm('-f', join(home, 'npm-debug.log'))
 }
 
-
-function fresh(src, dst) {
-  try {
-    return stat(dst).mtime > stat(src).mtime
-
-  } catch (_) {
-    return false
-  }
-}
 
 
 function mocha(options, silent) {

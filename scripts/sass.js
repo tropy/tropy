@@ -3,7 +3,7 @@
 require('shelljs/make')
 
 const sass = require('node-sass')
-const glob = require('glob')
+const { Glob } = require('glob')
 const { join, resolve, relative, dirname } = require('path')
 const { check, error, say } = require('./util')('sass')
 const { swap } = require('./util')
@@ -16,7 +16,7 @@ target.all = async (args = []) => {
 
 function compile(pattern = 'src/stylesheets/**/!(_*).{sass,scss}') {
   return new Promise((resolve, reject) => {
-    new glob.Glob(pattern)
+    new Glob(pattern)
       .on('end', resolve)
       .on('error', reject)
 
