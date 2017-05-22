@@ -10,22 +10,22 @@
   }
 
   &.orientation-8 {
-    transform: scaleY(-1) rotate(90deg);
+    transform: scale(-1, -1) rotate(90deg);
   }
 
   &.orientation-2 {
-    transform: scaleX(-1);
+    transform: scale(-1, 1);
   }
 
   &.orientation-5 {
-    transform: scaleX(-1) rotate(90deg);
+    transform: scale(-1, 1) rotate(90deg);
   }
 
   &.orientation-4 {
-    transform: scaleX(-1) rotate(180deg);
+    transform: scale(1, -1);
   }
 
   &.orientation-7 {
-    transform: scaleY(-1) rotate(90deg);
+    transform: scale(1, -1) rotate(90deg);
   }
 }
