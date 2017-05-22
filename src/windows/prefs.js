@@ -30,7 +30,6 @@ all([
 ])
   .then(() => {
     render(<Main store={store}><PrefsContainer/></Main>, $('.view'))
-    win.show()
   })
 
 dialog.start()

@@ -2,7 +2,7 @@
 
 const { each } = require('bluebird')
 const { remote, ipcRenderer: ipc } = require('electron')
-const { basename, resolve, join } = require('path')
+const { basename, join, resolve } = require('path')
 const { existsSync: exists } = require('fs')
 const { debug } = require('./common/log')
 const { EL_CAPITAN } = require('./common/os')
@@ -29,9 +29,7 @@ class Window {
     this.hasFinishedUnloading = false
   }
 
-  init() {
-    this.style()
-
+  init(done) {
     this.handleUnload()
     this.handleTabFocus()
     this.handleIpcEvents()
@@ -54,6 +52,8 @@ class Window {
         this.createWindowControls()
       }
     }
+
+    this.style(this.state.theme, false, done)
   }
 
   show() {
@@ -182,18 +182,32 @@ class Window {
     this.current.reload()
   }
 
-  style(theme, prune = false) {
+  style(theme, prune = false, done) {
     if (theme) this.state.theme = theme
 
     if (prune) {
       for (let css of $$('head > link[rel="stylesheet"]')) remove(css)
     }
 
+    let count = document.styleSheets.length
+
     for (let css of this.stylesheets) {
       if (exists(resolve(__dirname, css))) {
+        ++count
         append(stylesheet(css), document.head)
       }
     }
+
+    if (done == null) return
+
+    let limit = Date.now() + 2000
+    let ti = setInterval(() => {
+      if (document.styleSheets.length === count || Date.now() > limit) {
+        clearInterval(ti)
+        done()
+      }
+    }, 10)
+
   }
 
   toggle(state) {

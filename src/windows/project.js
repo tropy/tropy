@@ -29,8 +29,6 @@ all([
       <Main store={store}><ProjectContainer/></Main>,
       $('.view')
     )
-
-    win.show()
   })
 
 dialog.start()

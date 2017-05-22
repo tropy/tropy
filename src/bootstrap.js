@@ -19,12 +19,14 @@ const { win } = require('./window')
 ready.then(() => {
   const READY = performance.now()
 
-  win.init()
+  win.init(() => {
+    win.show()
+    const DONE = performance.now()
 
-  const DONE = performance.now()
-
-  verbose('%s ready after %dms (%dms)',
-      win.type, (DONE - START).toFixed(3), (DONE - READY).toFixed(3))
+    verbose('%s ready after %dms (%dms)', win.type,
+      (DONE - START).toFixed(3),
+      (DONE - READY).toFixed(3))
+  })
 })
 
 
