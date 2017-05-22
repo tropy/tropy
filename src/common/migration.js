@@ -7,7 +7,6 @@ const { basename, extname, join } = require('path')
 const { debug } = require('./log')
 
 
-
 class Migration {
   constructor(path) {
     this.path = path

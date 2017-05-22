@@ -5,39 +5,37 @@ require('shelljs/make')
 const assert = require('assert')
 const pkg = require('../package')
 const log = require('./log')
-
-const { join, dirname } = require('path')
-const { assign } = Object
+const { join, dirname, relative } = require('path')
 const { Database } = require('../lib/common/db')
-const { Migration } = require('../lib/common/migration')
-const { strftime } = require('../lib/common/util')
-
+const { compact, strftime } = require('../lib/common/util')
 const home = join(__dirname, '..')
-const DB = join(home, 'db', 'project.db')
-const SCHEMA = join(home, 'db', 'schema', 'project.sql')
-const MIGRATIONS = join(home, 'db', 'migrate', 'project')
-
+const cwd = process.cwd()
+const SCHEMA = join(home, 'db', 'schema')
+const MIGRATE = join(home, 'db', 'migrate')
 
 target.create = async (args = []) => {
-  const file = args[0] || DB
-  const name = args[1] || 'Tropy'
+  const domain = args[0] || 'project'
+  const file = args[1] || join(home, 'db', `${domain}.db`)
+  const name = args[2] || 'Minos'
 
   rm('-f', file)
 
   const path = await Database.create(file, { name })
-  info(`created project "${name}" at ${path}`)
+  info(`created "${name}" as ${relative(cwd, path)}`)
 }
 
-target.migrate = async () => {
+target.migrate = async (args = []) => {
+  const domain = args[0] || 'project'
+  const schema = join(SCHEMA, `${domain}.sql`)
   const tmp = join(home, 'tmp.db')
 
   rm('-f', tmp)
-  rm('-f', SCHEMA)
+  rm('-f', schema)
 
   const db = new Database(tmp)
 
   try {
-    await db.migrate(MIGRATIONS)
+    await db.migrate(join(MIGRATE, domain))
     const version = await db.version()
 
     ;(`--
@@ -47,10 +45,10 @@ target.migrate = async () => {
 -- then regenerate this schema file.
 --
 -- To create a new empty migration, run:
---   npm run db -- migration -- [name] [sql|js]
+--   node scripts/db migration -- ${domain} [name] [sql|js]
 --
 -- To re-generate this file, run:
---   npm run db -- migrate
+--   node scripts/db migrate
 --
 
 -- Save the current migration number
@@ -58,13 +56,13 @@ PRAGMA user_version=${version};
 
 -- Load sqlite3 .dump
 `
-    ).to(SCHEMA)
+    ).to(schema)
 
-    exec(`sqlite3 ${tmp} .dump >> ${SCHEMA}`)
-    'PRAGMA foreign_keys=ON;'.toEnd(SCHEMA)
+    exec(`sqlite3 ${tmp} .dump >> ${schema}`)
+    'PRAGMA foreign_keys=ON;'.toEnd(schema)
 
-    info(`schema migrated to #${version}`)
-    info(`schema written to ${SCHEMA}`)
+    info(`migrated ${domain} to #${version}`)
+    info(`schema saved as ${relative(cwd, schema)}`)
 
   } finally {
     await db.close()
@@ -73,14 +71,15 @@ PRAGMA user_version=${version};
 }
 
 target.viz = async (args = []) => {
-  const sql = args[0] || DB
-  const pdf = args[1] || join(home, 'doc', 'db.pdf')
+  const domain = args[0] || 'project'
+  const file = args[1] || join(home, 'db', `${domain}.db`)
+  const pdf = args[2] || join(home, 'doc', `${domain}.db.pdf`)
   const viz = join(home, 'node_modules', '.bin', 'sqleton')
 
-  assert(test('-f', sql), `${sql} not found: run \`npm run db -- create\``)
+  assert(test('-f', file), `${file} not found`)
   mkdir('-p', dirname(pdf))
 
-  const db = new Database(sql)
+  const db = new Database(file)
 
   try {
     const version = await db.version()
@@ -90,10 +89,10 @@ target.viz = async (args = []) => {
       `-t "${pkg.productName} #${version}"`,
       '-f "Helvetica Neue"',
       `-o ${pdf}`,
-      sql
+      file
     ].join(' '))
 
-    info(`visual written to ${pdf}`)
+    info(`${domain} visual saved as ${relative(cwd, pdf)}`)
 
     return [pdf, version]
 
@@ -103,26 +102,29 @@ target.viz = async (args = []) => {
 }
 
 target.migration = (args = []) => {
-  if (args.length < 2) args.push('sql')
-
-  const [type, name] = args.reverse()
+  const domain = args[0] || 'project'
+  const name = args[1]
+  const type = args[2] || 'sql'
   const file = migration(name, type)
+  const path = join(MIGRATE, domain, file)
 
-  const content = (type === 'sql') ?  '' : `'use strict'
+  if (type === 'js') {
+    (`'use strict'
 exports.up = function ${name}$up(tx) {
   // Return a promise here!
-}`
+}`).to(path)
+  } else {
+    ('').to(path)
+  }
 
-  content.to(join(Migration.root, file))
-  info(`migration ${file} created...`)
+  info(`migration saved as ${relative(cwd, path)}`)
 }
 
-target.all = async () => {
-  await target.migrate()
-  await target.create()
-  await target.viz()
+target.all = async (...args) => {
+  await target.migrate(...args)
+  await target.create(...args)
+  await target.viz(...args)
 }
-
 
 target.rules = () => {
   for (let rule in target) info(rule)
@@ -135,12 +137,6 @@ function info(msg) {
 
 function migration(name, type) {
   assert(type === 'sql' || type === 'js',
-      `migration type '${type}' not supported`)
-
-  return [strftime('%y%m%d%H%M'), name, type]
-    .filter(x => x)
-    .join('.')
+    `migration type '${type}' not supported`)
+  return compact([strftime('%y%m%d%H%M'), name, type]).join('.')
 }
-
-
-module.exports = assign({}, target)

@@ -77,6 +77,14 @@ const util = {
     return into
   },
 
+  compact(array) {
+    return array.filter(util.exist)
+  },
+
+  exist(obj) {
+    return obj != null
+  },
+
   mixed(array) {
     for (let i = 1; i < array.length; ++i) {
       if (array[i] !== array[i - 1]) return true

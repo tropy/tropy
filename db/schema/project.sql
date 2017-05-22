@@ -5,10 +5,10 @@
 -- then regenerate this schema file.
 --
 -- To create a new empty migration, run:
---   npm run db -- migration -- [name] [sql|js]
+--   node scripts/db migration -- project [name] [sql|js]
 --
 -- To re-generate this file, run:
---   npm run db -- migrate
+--   node scripts/db migrate
 --
 
 -- Save the current migration number
