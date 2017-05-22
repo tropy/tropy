@@ -2,6 +2,7 @@
 
 require('shelljs/make')
 
+const { check, say } = require('./util')('sign')
 const { join, resolve, relative } = require('path')
 const { qualified } = require('../lib/common/release')
 const { arch, platform } = process
@@ -59,7 +60,7 @@ target.darwin = (args = []) => {
     app = join(target, `${qualified.product}.app`)
     check(test('-d', app), `app not found: ${app}`)
 
-    console.log(`signing ${relative(dir, app)} with ${identity}...`)
+    say(`signing ${relative(dir, app)} with ${identity}...`)
 
     for (let file of find(`"${app}" -perm +111 -type f`)) {
       sign(file)
@@ -78,22 +79,14 @@ target.darwin = (args = []) => {
   }
 
   function sign(file) {
-    console.log(`${relative(app, file)}`)
+    say(`${relative(app, file)}`)
     exec(`codesign --sign ${identity} -fv "${file}"`, { silent: true })
   }
 
   function verify(file) {
-    console.log(`verify ${relative(app, file)}`)
+    say(`verify ${relative(app, file)}`)
     exec(`codesign --verify --deep --display --verbose=2 "${file}"`)
     exec(`spctl --ignore-cache --no-cache --assess -t execute --v "${file}"`)
-  }
-}
-
-
-function check(predicate, msg) {
-  if (!predicate) {
-    console.error(msg)
-    exit(1)
   }
 }
 

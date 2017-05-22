@@ -4,7 +4,7 @@ require('shelljs/make')
 
 const assert = require('assert')
 const pkg = require('../package')
-const log = require('./log')
+const { say, rules } = require('./util')('db')
 const { join, dirname, relative } = require('path')
 const { Database } = require('../lib/common/db')
 const { compact, strftime } = require('../lib/common/util')
@@ -21,7 +21,7 @@ target.create = async (args = []) => {
   rm('-f', file)
 
   const path = await Database.create(file, { name })
-  info(`created "${name}" as ${relative(cwd, path)}`)
+  say(`created "${name}" as ${relative(cwd, path)}`)
 }
 
 target.migrate = async (args = []) => {
@@ -61,8 +61,8 @@ PRAGMA user_version=${version};
     exec(`sqlite3 ${tmp} .dump >> ${schema}`)
     'PRAGMA foreign_keys=ON;'.toEnd(schema)
 
-    info(`migrated ${domain} to #${version}`)
-    info(`schema saved as ${relative(cwd, schema)}`)
+    say(`migrated ${domain} to #${version}`)
+    say(`schema saved as ${relative(cwd, schema)}`)
 
   } finally {
     await db.close()
@@ -92,7 +92,7 @@ target.viz = async (args = []) => {
       file
     ].join(' '))
 
-    info(`${domain} visual saved as ${relative(cwd, pdf)}`)
+    say(`${domain} visual saved as ${relative(cwd, pdf)}`)
 
     return [pdf, version]
 
@@ -117,7 +117,7 @@ exports.up = function ${name}$up(tx) {
     ('').to(path)
   }
 
-  info(`migration saved as ${relative(cwd, path)}`)
+  say(`migration saved as ${relative(cwd, path)}`)
 }
 
 target.all = async (...args) => {
@@ -127,13 +127,9 @@ target.all = async (...args) => {
 }
 
 target.rules = () => {
-  for (let rule in target) info(rule)
+  rules(target)
 }
 
-
-function info(msg) {
-  log.info(msg, { tag: 'db' })
-}
 
 function migration(name, type) {
   assert(type === 'sql' || type === 'js',

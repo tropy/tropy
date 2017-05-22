@@ -2,11 +2,10 @@
 
 require('shelljs/make')
 
-const assert = require('assert')
 const babel = require('babel-core')
 const glob = require('glob')
 const sass = require('node-sass')
-const log = require('./log')
+const { check, error, rules, say, warn } = require('./util')('make')
 
 const { statSync: stat, existsSync: exists } = require('fs')
 const { join, resolve, relative, dirname } = require('path')
@@ -20,8 +19,6 @@ const emocha = join(nbin, 'electron-mocha')
 const eslint = join(nbin, 'eslint')
 const sasslint = join(nbin, 'sass-lint')
 const nyc = join(nbin, 'nyc')
-
-Object.assign(target, require('./electron'))
 
 config.fatal = false
 config.silent = false
@@ -73,23 +70,21 @@ target.compile = () => {
 }
 
 target['compile:js'] = (pattern) => {
-  const tag = 'compile:js'
-
   new glob
     .Glob(pattern || 'src/**/*.{js,jsx}')
-    .on('error', (err) => log.error(err, { tag }))
+    .on('error', (err) => error(err))
 
     .on('match', (file) => {
       let src = relative(home, file)
       let dst = swap(src, 'src', 'lib', '.js')
 
-      assert(src.startsWith('src'))
+      check(src.startsWith('src'))
       if (fresh(src, dst)) return
 
-      log.info(dst, { tag })
+      say(dst)
 
       babel.transformFile(src, (err, result) => {
-        if (err) return log.error(err, { tag })
+        if (err) return error(err)
 
         mkdir('-p', dirname(dst))
         result.code.to(dst)
@@ -98,18 +93,16 @@ target['compile:js'] = (pattern) => {
 }
 
 target['compile:css'] = (pattern) => {
-  const tag = 'compile:css'
-
   new glob
     .Glob(pattern || 'src/stylesheets/**/!(_*).{sass,scss}')
-    .on('error', (err) => log.error(err, { tag }))
+    .on('error', (err) => error(err))
 
     .on('match', (file) => {
       let src = relative(home, file)
       let dst = swap(src, 'src', 'lib', '.css')
 
-      assert(src.startsWith(join('src', 'stylesheets')))
-      log.info(dst, { tag })
+      check(src.startsWith(join('src', 'stylesheets')))
+      say(dst)
 
       let options = {
         file: src,
@@ -121,7 +114,7 @@ target['compile:css'] = (pattern) => {
       }
 
       sass.render(options, (err, result) => {
-        if (err) return log.error(`${err.line}: ${err.message}`, { tag })
+        if (err) return error(`${err.line}: ${err.message}`)
 
         mkdir('-p', dirname(dst))
         String(result.css).to(dst)
@@ -181,15 +174,15 @@ target.window = ([name]) => {
 function template(path, content) {
   if (!exists(path)) {
     content.to(path)
-    log.info(path, { tag: 'created' })
+    say(path)
   } else {
-    log.warn(path, { tag: 'skipped' })
+    warn(path)
   }
 }
 
 
 target.rules = () => {
-  for (let rule in target) log.info(rule, { tag: 'make' })
+  rules(target)
 }
 
 
@@ -198,7 +191,6 @@ target.clean = () => {
   rm('-rf', join(home, 'dist'))
   rm('-rf', cov)
   rm('-rf', covtmp)
-
   rm('-f', join(home, 'npm-debug.log'))
 }
 
