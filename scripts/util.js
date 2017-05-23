@@ -73,17 +73,8 @@ function green(pre, msg, ...args) {
   console.log(format(msg, 'green', pre), ...args)
 }
 
-function swap(filename, src, dst, ext) {
-  return filename
-    .replace(src, dst)
-    .replace(/(\..+)$/, m => ext || m[1])
-}
-
-
 module.exports = function (name) {
   return {
-    swap,
-
     check(predicate, ...args) {
       check(predicate, name, ...args)
     },

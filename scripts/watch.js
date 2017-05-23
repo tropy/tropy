@@ -5,8 +5,7 @@ require('shelljs/make')
 const chokidar = require('chokidar')
 const { relative, extname, basename } = require('path')
 const { mocha: runMocha } = require('./test')
-const sass = require('./sass')
-const babel = require('./babel')
+const compile = require('./compile')
 const { error, green, red, say } = require('./util')('watch')
 const cwd = process.cwd()
 
@@ -42,7 +41,7 @@ target.src = () => {
       }
 
       if ((/^\.jsx?$/).test(extname(file))) {
-        babel.transform(file)
+        compile.js(file)
 
         if (event === 'change') {
           const spec = file
@@ -53,8 +52,8 @@ target.src = () => {
         }
 
       } else {
-        if ((basename(file)[0] === '_')) sass.compile()
-        else sass.compile(file)
+        if ((basename(file)[0] === '_')) compile.css()
+        else compile.css(file)
       }
     })
 }

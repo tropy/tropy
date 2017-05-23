@@ -2,18 +2,42 @@
 
 require('shelljs/make')
 
+const babel = require('babel-core')
 const sass = require('node-sass')
 const { Glob } = require('glob')
 const { join, resolve, relative, dirname } = require('path')
-const { check, error, say, swap } = require('./util')('sass')
+const { statSync: stat } = require('fs')
+const { check, error, say } = require('./util')('compile')
 const home = resolve(__dirname, '..')
 
-target.all = async (args = []) => {
-  await compile(...args)
+target.all = () =>
+  Promise.all([js(), css()])
+
+function js(pattern = 'src/**/*.{js,jsx}') {
+  return new Promise((resolve, reject) => {
+    new Glob(pattern)
+      .on('end', resolve)
+      .on('error', reject)
+
+      .on('match', (file) => {
+        let src = relative(home, file)
+        let dst = swap(src, 'src', 'lib', '.js')
+
+        check(src.startsWith('src'), 'not a src path')
+        if (fresh(src, dst)) return
+
+        say(dst)
+
+        babel.transformFile(src, (err, result) => {
+          if (err) return error(err)
+          mkdir('-p', dirname(dst))
+          result.code.to(dst)
+        })
+      })
+  })
 }
 
-
-function compile(pattern = 'src/stylesheets/**/!(_*).{sass,scss}') {
+function css(pattern = 'src/stylesheets/**/!(_*).{sass,scss}') {
   return new Promise((resolve, reject) => {
     new Glob(pattern)
       .on('end', resolve)
@@ -72,6 +96,20 @@ const SassExtensions = {
   }
 }
 
+function fresh(src, dst) {
+  try {
+    return stat(dst).mtime > stat(src).mtime
+  } catch (_) {
+    return false
+  }
+}
+
+function swap(filename, src, dst, ext) {
+  return filename
+    .replace(src, dst)
+    .replace(/(\..+)$/, m => ext || m[1])
+}
+
 module.exports = {
-  compile
+  js, css
 }

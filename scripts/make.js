@@ -7,13 +7,12 @@ const { rules, say, warn } = require('./util')('make')
 const { existsSync: exists } = require('fs')
 const { join, resolve } = require('path')
 
-const babel = require('./babel')
-const sass = require('./sass')
+const compile = require('./compile')
+const test = require('./test')
 
 const home = resolve(__dirname, '..')
 const nbin = join(home, 'node_modules', '.bin')
 
-const test = require('./test')
 const eslint = join(nbin, 'eslint')
 const sasslint = join(nbin, 'sass-lint')
 
@@ -53,22 +52,17 @@ target['test:renderer'] = (args = []) =>
 target['test:browser'] = (args = []) =>
   test.browser(...args) && process.exit(1)
 
-
-target.compile = () => {
-  return Promise.all([
-    babel.transform(),
-    sass.compile()
-  ])
-}
-
-target['compile:js'] = async (args = []) =>
-  babel.transform(...args)
-
-target['compile:css'] = async (args = []) =>
-  sass.compile(...args)
-
 target.cover = (args) =>
   test.cover(args) && process.exit(1)
+
+target.compile = () =>
+  Promise.all([compile.js(), compile.css()])
+
+target['compile:js'] = () =>
+  compile.js()
+
+target['compile:css'] = () =>
+  compile.css()
 
 
 target.window = ([name]) => {
@@ -108,13 +102,13 @@ function template(path, content) {
 }
 
 
-target.rules = () => {
-  rules(target)
-}
-
 target.clean = () => {
   test.clean()
   rm('-rf', join(home, 'lib'))
   rm('-rf', join(home, 'dist'))
   rm('-f', join(home, 'npm-debug.log'))
 }
+
+target.rules = () =>
+  rules(target)
+
