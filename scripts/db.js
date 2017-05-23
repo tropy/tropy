@@ -2,9 +2,8 @@
 
 require('shelljs/make')
 
-const assert = require('assert')
 const pkg = require('../package')
-const { say, rules } = require('./util')('db')
+const { check, say, rules } = require('./util')('db')
 const { join, dirname, relative } = require('path')
 const { Database } = require('../lib/common/db')
 const { compact, strftime } = require('../lib/common/util')
@@ -76,7 +75,7 @@ target.viz = async (args = []) => {
   const pdf = args[2] || join(home, 'doc', `${domain}.db.pdf`)
   const viz = join(home, 'node_modules', '.bin', 'sqleton')
 
-  assert(test('-f', file), `${file} not found`)
+  check(test('-f', file), `${file} not found`)
   mkdir('-p', dirname(pdf))
 
   const db = new Database(file)
@@ -126,13 +125,14 @@ target.all = async (...args) => {
   await target.viz(...args)
 }
 
-target.rules = () => {
+target.rules = () =>
   rules(target)
-}
 
 
 function migration(name, type) {
-  assert(type === 'sql' || type === 'js',
+  check(type === 'sql' || type === 'js',
     `migration type '${type}' not supported`)
   return compact([strftime('%y%m%d%H%M'), name, type]).join('.')
 }
+
+module.exports = Object.assign({}, target)

@@ -33,7 +33,6 @@
     "debug": "node scripts/make test -- --debug",
     "lint": "npm run make lint || true",
     "make": "node scripts/make",
-    "db": "node scripts/db",
     "prestart": "npm run make compile",
     "start": "electron --app . --env development",
     "rebuild": "node scripts/rebuild",

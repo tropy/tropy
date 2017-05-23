@@ -9,6 +9,7 @@ const { join, resolve } = require('path')
 
 const compile = require('./compile')
 const test = require('./test')
+const db = require('./db')
 
 const home = resolve(__dirname, '..')
 const nbin = join(home, 'node_modules', '.bin')
@@ -64,6 +65,10 @@ target['compile:js'] = () =>
 target['compile:css'] = () =>
   compile.css()
 
+target['db:create'] = db.create
+target['db:migrate'] = db.migrate
+target['db:migration'] = db.migration
+target['db:viz'] = db.migration
 
 target.window = ([name]) => {
   template(join(home, 'static', `${name}.html`),
