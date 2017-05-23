@@ -28,7 +28,6 @@
   },
   "main": "lib/browser/main.js",
   "scripts": {
-    "branding": "node scripts/electron branding --",
     "compile": "npm run make compile",
     "console": "electron --interactive",
     "debug": "node scripts/make test -- --debug",
@@ -40,7 +39,6 @@
     "rebuild": "node scripts/rebuild",
     "postinstall": "npm run rebuild",
     "test": "node scripts/make test",
-    "prewatch": "npm run make compile",
     "watch": "node scripts/watch"
   },
   "devDependencies": {
