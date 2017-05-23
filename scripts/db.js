@@ -139,10 +139,10 @@ exports.up = function ${name}$up(tx) {
   say(`migration saved as ${relative(cwd, path)}`)
 }
 
-target.all = async (...args) => {
-  await target.migrate(...args)
-  await target.create(...args)
-  await target.viz(...args)
+target.all = async (args = []) => {
+  await target.migrate(args)
+  await target.create(args)
+  await target.viz(args)
 }
 
 target.rules = () =>
