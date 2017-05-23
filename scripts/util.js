@@ -82,6 +82,8 @@ function swap(filename, src, dst, ext) {
 
 module.exports = function (name) {
   return {
+    swap,
+
     check(predicate, ...args) {
       check(predicate, name, ...args)
     },
@@ -98,4 +100,3 @@ module.exports = function (name) {
   }
 }
 
-module.exports.swap = swap

@@ -2,7 +2,6 @@
 
 require('shelljs/make')
 
-const glob = require('glob')
 const { rules, say, warn } = require('./util')('make')
 
 const { existsSync: exists } = require('fs')
@@ -13,13 +12,10 @@ const sass = require('./sass')
 
 const home = resolve(__dirname, '..')
 const nbin = join(home, 'node_modules', '.bin')
-const cov = join(home, 'coverage')
-const covtmp = join(home, '.nyc_output')
 
-const emocha = join(nbin, 'electron-mocha')
+const test = require('./test')
 const eslint = join(nbin, 'eslint')
 const sasslint = join(nbin, 'sass-lint')
-const nyc = join(nbin, 'nyc')
 
 config.fatal = false
 config.silent = false
@@ -42,61 +38,37 @@ target['lint:css'] = (bail) => {
 }
 
 
-target.test = (...args) => {
-  let code
+target.test = (args = []) => {
+  let code = 0
 
-  code = target['lint']()
-  code = target['test:browser'](...args) || code
-  code = target['test:renderer'](...args) || code
+  code += target.lint()
+  code += test.all(...args)
 
-  if (code) process.exit(1)
+  if (code > 0) process.exit(1)
 }
 
-target['test:renderer'] = (args = []) => {
-  return mocha(['--renderer', ...args].concat(
-    glob.sync('test/**/*_test.js', { ignore: 'test/browser/*' }))).code
-}
+target['test:renderer'] = (args = []) =>
+  test.renderer(...args) && process.exit(1)
 
-target['test:browser'] = (args = []) => {
-  return mocha([...args].concat(
-    glob.sync('test/{browser,common}/**/*_test.js'))).code
-}
-
-target.mocha = (args = []) => mocha([...args], false)
+target['test:browser'] = (args = []) =>
+  test.browser(...args) && process.exit(1)
 
 
 target.compile = () => {
   return Promise.all([
-    target['compile:js'](),
-    target['compile:css']()
+    babel.transform(),
+    sass.compile()
   ])
 }
-target['compile:js'] = async (args = []) => {
-  await babel.transform(...args)
-}
-target['compile:css'] = async (args = []) => {
-  await sass.compile(...args)
-}
 
+target['compile:js'] = async (args = []) =>
+  babel.transform(...args)
 
-target.cover = (args) => {
-  rm('-rf', cov)
+target['compile:css'] = async (args = []) =>
+  sass.compile(...args)
 
-  rm('-rf', covtmp)
-  mkdir(covtmp)
-
-  args = args || ['text-summary', 'html', 'lcov']
-  args = args.map(reporter => `-r ${reporter}`)
-
-  process.env.COVERAGE = true
-
-  const bc = target['test:browser'](['--require test/support/coverage'])
-  const rc = target['test:renderer'](['--require test/support/coverage'])
-
-  exec(`${nyc} report ${args.join(' ')}`, { silent: false })
-
-  if (bc || rc) process.exit(1)
-}
+target.cover = (args) =>
+  test.cover(args) && process.exit(1)
 
 
 target.window = ([name]) => {
@@ -141,19 +113,8 @@ target.rules = () => {
 }
 
 target.clean = () => {
+  test.clean()
   rm('-rf', join(home, 'lib'))
   rm('-rf', join(home, 'dist'))
-  rm('-rf', cov)
-  rm('-rf', covtmp)
   rm('-f', join(home, 'npm-debug.log'))
 }
-
-
-
-function mocha(options, silent) {
-  return exec(`${emocha} ${options.join(' ')}`, { silent })
-}
-
-// We need to make a copy when exposing targets to other scripts,
-// because any method on target can be called just once per execution!
-module.exports = Object.assign({}, target)

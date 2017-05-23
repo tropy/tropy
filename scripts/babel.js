@@ -6,8 +6,7 @@ const babel = require('babel-core')
 const { Glob } = require('glob')
 const { resolve, relative, dirname } = require('path')
 const { statSync: stat } = require('fs')
-const { check, error, say } = require('./util')('babel')
-const { swap } = require('./util')
+const { check, error, say, swap } = require('./util')('babel')
 const home = resolve(__dirname, '..')
 
 target.all = async (args = []) => {

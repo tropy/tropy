@@ -5,8 +5,7 @@ require('shelljs/make')
 const sass = require('node-sass')
 const { Glob } = require('glob')
 const { join, resolve, relative, dirname } = require('path')
-const { check, error, say } = require('./util')('sass')
-const { swap } = require('./util')
+const { check, error, say, swap } = require('./util')('sass')
 const home = resolve(__dirname, '..')
 
 target.all = async (args = []) => {
