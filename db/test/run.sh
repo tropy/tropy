@@ -1,12 +1,12 @@
 #!/bin/bash
 
 setup() {
-  rm -f ./db/test/test.tpy
-  node scripts/db create -- ./db/test/test.tpy
+  rm -f ./db/test/project.tpy
+  node scripts/db create -- project ./db/test/project.tpy "Test Project"
 }
 
 run() {
-  sqlite3 ./db/test/test.tpy < ./db/test/$1.sql
+  sqlite3 ./db/test/project.tpy < ./db/test/$1.sql
 }
 
 if [ $1 ]
