@@ -4,27 +4,11 @@ require('shelljs/make')
 
 const chokidar = require('chokidar')
 const { relative, extname, basename } = require('path')
-
-const make = require('./make')
+const { mocha: runMocha } = require('./test')
 const sass = require('./sass')
 const babel = require('./babel')
 const { error, green, red, say } = require('./util')('watch')
 const cwd = process.cwd()
-
-function mocha(spec) {
-  const args = (/browser|common/).test(spec) ?
-    [spec] : ['--renderer', spec]
-
-  make.mocha(args, true, (code, stdout) => {
-    if (code === 0) {
-      green(spec)
-    } else {
-      error(spec)
-      process.stderr.write(stdout)
-    }
-  })
-}
-
 
 target.all = () => {
   target.src()
@@ -83,4 +67,12 @@ target.test = () => {
     .on('change', (file) => {
       mocha(relative(cwd, file))
     })
+}
+
+function mocha(file) {
+  const args = (/browser|common/).test(file) ?
+    [file] : ['--renderer', file]
+
+  if (runMocha(args) === 0) green(file)
+  else red(file)
 }
