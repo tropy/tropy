@@ -30,10 +30,10 @@ target.create = async (args = []) => {
       break
     }
 
-    case 'metadata': {
+    case 'ontology': {
       const path = await Database.create(file, db =>
-        db.read(join(SCHEMA, 'metadata.sql')))
-      say(`created metadata as ${relative(cwd, path)}`)
+        db.read(join(SCHEMA, 'ontology.sql')))
+      say(`created ontology as ${relative(cwd, path)}`)
       break
     }
   }
