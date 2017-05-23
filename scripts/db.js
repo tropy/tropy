@@ -5,22 +5,37 @@ require('shelljs/make')
 const pkg = require('../package')
 const { check, say, rules } = require('./util')('db')
 const { join, dirname, relative } = require('path')
-const { Database } = require('../lib/common/db')
-const { compact, strftime } = require('../lib/common/util')
+const { compact, strftime } = require('../src/common/util')
 const home = join(__dirname, '..')
 const cwd = process.cwd()
 const SCHEMA = join(home, 'db', 'schema')
 const MIGRATE = join(home, 'db', 'migrate')
 
+const { Database } = require('../lib/common/db')
+const project = require('../lib/models/project')
+
+
 target.create = async (args = []) => {
   const domain = args[0] || 'project'
   const file = args[1] || join(home, 'db', `${domain}.db`)
-  const name = args[2] || 'Minos'
 
   rm('-f', file)
 
-  const path = await Database.create(file, { name })
-  say(`created "${name}" as ${relative(cwd, path)}`)
+  switch (domain) {
+    case 'project': {
+      const name = args[2] || 'Minos'
+      const path = await Database.create(file, project.create, { name })
+      say(`created project "${name}" as ${relative(cwd, path)}`)
+      break
+    }
+
+    case 'metadata': {
+      const path = await Database.create(file, db =>
+        db.read(join(SCHEMA, 'metadata.sql')))
+      say(`created metadata as ${relative(cwd, path)}`)
+      break
+    }
+  }
 }
 
 target.migrate = async (args = []) => {
@@ -85,7 +100,7 @@ target.viz = async (args = []) => {
 
     exec([
       viz,
-      `-t "${pkg.productName} #${version}"`,
+      `-t "${pkg.productName} ${domain}#${version}"`,
       '-f "Helvetica Neue"',
       `-o ${pdf}`,
       file

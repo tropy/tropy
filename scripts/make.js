@@ -68,7 +68,7 @@ target['compile:css'] = () =>
 target['db:create'] = db.create
 target['db:migrate'] = db.migrate
 target['db:migration'] = db.migration
-target['db:viz'] = db.migration
+target['db:viz'] = db.viz
 
 target.window = ([name]) => {
   template(join(home, 'static', `${name}.html`),

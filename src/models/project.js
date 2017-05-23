@@ -9,17 +9,12 @@ const SCHEMA = join(
 
 module.exports = {
   async create(db, { name, id }) {
-    try {
-      id = id || uuid()
+    id = id || uuid()
 
-      await db.read(SCHEMA)
-      await db.run(
-        'INSERT INTO project (project_id, name) VALUES (?,?)', id, name
-      )
-
-    } finally {
-      if (db) await db.close()
-    }
+    await db.read(SCHEMA)
+    await db.run(
+      'INSERT INTO project (project_id, name) VALUES (?,?)', id, name
+    )
   },
 
   async load(db) {

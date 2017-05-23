@@ -12,7 +12,6 @@ const { readFileAsync: read } = require('fs')
 const { createPool } = require('generic-pool')
 const { debug, info, verbose, warn } = require('./log')
 const { entries } = Object
-const { project } = require('../models')
 
 const M = {
   'r': sqlite.OPEN_READONLY,
@@ -25,13 +24,10 @@ const cache = {}
 
 class Database extends EventEmitter {
 
-  static async create(path, options = {}) {
+  static async create(path, script, ...args) {
     try {
       var db = new Database(path, 'w+', { max: 1 })
-      await project.create(db, options)
-
-      verbose(`created project db at ${db.path}`)
-
+      if (script) await script(db, ...args)
       return db.path
 
     } finally {
