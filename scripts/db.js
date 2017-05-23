@@ -11,11 +11,12 @@ const cwd = process.cwd()
 const SCHEMA = join(home, 'db', 'schema')
 const MIGRATE = join(home, 'db', 'migrate')
 
-const { Database } = require('../lib/common/db')
-const project = require('../lib/models/project')
 
 
 target.create = async (args = []) => {
+  const { Database } = require('../lib/common/db')
+  const project = require('../lib/models/project')
+
   const domain = args[0] || 'project'
   const file = args[1] || join(home, 'db', `${domain}.db`)
 
@@ -39,6 +40,8 @@ target.create = async (args = []) => {
 }
 
 target.migrate = async (args = []) => {
+  const { Database } = require('../lib/common/db')
+
   const domain = args[0] || 'project'
   const schema = join(SCHEMA, `${domain}.sql`)
   const tmp = join(home, 'tmp.db')
@@ -85,6 +88,8 @@ PRAGMA user_version=${version};
 }
 
 target.viz = async (args = []) => {
+  const { Database } = require('../lib/common/db')
+
   const domain = args[0] || 'project'
   const file = args[1] || join(home, 'db', `${domain}.db`)
   const pdf = args[2] || join(home, 'doc', `${domain}.db.pdf`)
