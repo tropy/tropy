@@ -23,26 +23,26 @@ class MetadataField extends PureComponent {
   }
 
   get label() {
-    return this.props.property.label || getLabel(this.props.property.uri)
+    return this.props.property.label || getLabel(this.props.property.id)
   }
 
-  get uri() {
-    return this.props.property.uri
+  get property() {
+    return this.props.property.id
   }
 
   get details() {
-    return pluck(this.props.property, ['uri', 'definition', 'comment'])
+    return pluck(this.props.property, ['id', 'definition', 'comment'])
   }
 
   handleClick = () => {
-    this.props.onEdit(this.props.id, this.uri)
+    this.props.onEdit(this.props.id, this.property)
   }
 
   handleChange = (text) => {
     this.props.onChange({
       id: this.props.id,
       data: {
-        [this.uri]: { text, type: this.props.type }
+        [this.property]: { text, type: this.props.type }
       }
     })
   }
@@ -84,7 +84,7 @@ class MetadataField extends PureComponent {
     isMixed: bool,
 
     property: shape({
-      uri: string.isRequired,
+      id: string.isRequired,
       label: string,
       type: string,
       definition: string,

@@ -14,7 +14,7 @@ const { IconBook16 } = require('../icons')
 class VocabPane extends PureComponent {
   renderVocabulary(vocab) {
     return (
-      <Accordion key={vocab.uri}>
+      <Accordion key={vocab.id}>
         <div className="flex-row center panel-header-container">
           <IconBook16/>
           <h1 className="panel-heading">
@@ -23,10 +23,10 @@ class VocabPane extends PureComponent {
         </div>
         <header className="vocab-header">
           <FormText
-            id="vocab.uri"
+            id="vocab.id"
             isCompact
             size={8}
-            value={vocab.uri}/>
+            value={vocab.id}/>
           <FormField
             id="vocab.prefix"
             isCompact

@@ -14,8 +14,8 @@ const CellProps = Object.keys(ItemTableCell.propTypes)
 
 class ItemTableRow extends ItemIterable {
 
-  isEditing = (uri) => {
-    return get(this.props.edit, [this.props.item.id]) === uri
+  isEditing = (id) => {
+    return get(this.props.edit, [this.props.item.id]) === id
   }
 
   handleMouseDown = (event) => {
@@ -36,12 +36,12 @@ class ItemTableRow extends ItemIterable {
         onContextMenu={this.handleContextMenu}>{
           columns.map(({ property, width }) =>
             <ItemTableCell {...pick(props, CellProps)}
-              key={property.uri}
+              key={property.id}
               property={property}
               data={data}
               width={width}
-              isEditing={this.isEditing(property.uri)}
-              hasCoverImage={property.uri === DC.TITLE}/>)
+              isEditing={this.isEditing(property.id)}
+              hasCoverImage={property.id === DC.TITLE}/>)
       }</tr>
     )
   }

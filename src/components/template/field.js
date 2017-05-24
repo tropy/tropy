@@ -24,13 +24,13 @@ class TemplateField extends PureComponent {
     }
   }
 
-  get uri() {
-    return get(this.props.field, ['property', 'uri']) || ''
+  get property() {
+    return get(this.props.field, ['property', 'id']) || ''
   }
 
   get defaultLabel() {
     return get(this.props.field, ['property', 'label'])
-      || titlecase(basename(this.uri))
+      || titlecase(basename(this.property))
   }
 
   setContainer = (container) => {
@@ -61,7 +61,7 @@ class TemplateField extends PureComponent {
               <div className="col-9">
                 <PropertySelect
                   properties={this.props.properties}
-                  selected={this.uri}
+                  selected={this.property}
                   isRequired={false}
                   placeholder="property.select"
                   onChange={this.handlePropertyChange}/>

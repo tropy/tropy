@@ -15,7 +15,7 @@ const SRM = 'https://schema.tropy.org/v1/templates/srm'
 
 const T = {
   [CORE]: {
-    uri: CORE,
+    id: CORE,
     name: 'Core Item',
     type: 'item',
     fields: [
@@ -28,7 +28,7 @@ const T = {
   },
 
   [CORNELL]: {
-    uri: CORNELL,
+    id: CORNELL,
     name: 'Cornell Obama',
     type: 'item',
     fields: [
@@ -50,7 +50,7 @@ const T = {
   },
 
   [PINKERTON]: {
-    uri: PINKERTON,
+    id: PINKERTON,
     name: 'Pinkerton File',
     type: 'item',
     fields: [
@@ -78,7 +78,7 @@ const T = {
   },
 
   [SRM]: {
-    uri: SRM,
+    id: SRM,
     name: 'Société royale de médecine',
     type: 'item',
     fields: [
@@ -106,7 +106,7 @@ const T = {
   },
 
   [TYPOGRAPHY]: {
-    uri: TYPOGRAPHY,
+    id: TYPOGRAPHY,
     name: 'Typography',
     type: 'item',
     fields: [
@@ -126,7 +126,7 @@ const T = {
   },
 
   [PHOTO]: {
-    uri: PHOTO,
+    id: PHOTO,
     name: 'Tropy Photo',
     type: 'photo',
     fields: [
@@ -147,7 +147,7 @@ const getAllTemplates = memo(
           ...v,
           fields: v.fields.map(field => ({
             ...field,
-            property: properties[field.property] || { uri: field.property }
+            property: properties[field.property] || { id: field.property }
           }))
         }
 

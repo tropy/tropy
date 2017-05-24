@@ -18,10 +18,10 @@ const PropertyListItem = ({ property }) => (
         size={8}
         onChange={noop}/>
       <FormText
-        id="property.uri"
+        id="property.id"
         isCompact
         size={8}
-        value={property.uri}/>
+        value={property.id}/>
       <FormText
         id="property.comment"
         isCompact
@@ -49,7 +49,7 @@ class PropertyList extends PureComponent {
     return (
       <ul className="property-list">
         {this.props.properties.map(property =>
-          <PropertyListItem key={property.uri} property={property}/>)}
+          <PropertyListItem key={property.id} property={property}/>)}
       </ul>
     )
   }

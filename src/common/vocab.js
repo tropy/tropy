@@ -44,11 +44,11 @@ class Vocab extends Resource {
   toJSON() {
     let json = {}
 
-    let collect = (uri) => {
-      let data = this.getData(uri)
+    let collect = (id) => {
+      let data = this.getData(id)
       if (empty(data)) return []
 
-      let ns = isDefinedBy(uri, data)
+      let ns = isDefinedBy(id, data)
       let vocab = json[ns] || this.getVocabulary(ns)
 
       if (vocab == null) return []
@@ -57,23 +57,23 @@ class Vocab extends Resource {
       return [vocab, data]
     }
 
-    for (let uri of this.getProperties()) {
-      let [vocab, data] = collect(uri)
+    for (let id of this.getProperties()) {
+      let [vocab, data] = collect(id)
       if (vocab == null) continue
-      vocab.properties.push({ uri, data, ...info(data) })
+      vocab.properties.push({ id, data, ...info(data) })
     }
 
-    for (let uri of this.getClasses()) {
-      let [vocab, data] = collect(uri)
+    for (let id of this.getClasses()) {
+      let [vocab, data] = collect(id)
       if (vocab == null) continue
-      vocab.classes.push({ uri, data, ...info(data) })
+      vocab.classes.push({ id, data, ...info(data) })
     }
 
     return json
   }
 
-  getVocabulary(uri, title = this.name, prefix = this.name) {
-    const data = this.getData(uri)
+  getVocabulary(id, title = this.name, prefix = this.name) {
+    const data = this.getData(id)
     if (empty(data)) return null
 
     title = get(any(data, DC.title, DCT.title), ['value'], title)
@@ -84,7 +84,7 @@ class Vocab extends Resource {
     )
 
     return {
-      uri, title, prefix, description, classes: [], properties: []
+      id, title, prefix, description, classes: [], properties: []
     }
   }
 
@@ -93,14 +93,14 @@ class Vocab extends Resource {
       ...this.store.getSubjects(RDF.type, RDF.Property),
       ...this.store.getSubjects(RDF.type, OWL.ObjectProperty),
       ...this.store.getSubjects(RDF.type, OWL.DatatypeProperty)
-    ]).filter(uri => !N3.Util.isBlank(uri))
+    ]).filter(id => !N3.Util.isBlank(id))
   }
 
   getClasses() {
     return uniq([
       ...this.store.getSubjects(RDF.type, RDFS.Class),
       ...this.store.getSubjects(RDF.type, OWL.Class)
-    ]).filter(uri => !N3.Util.isBlank(uri))
+    ]).filter(id => !N3.Util.isBlank(id))
   }
 
   getData(subject, into = {}) {
@@ -129,8 +129,8 @@ function literal(value) {
   } : { value, type: 'IRI' }
 }
 
-function isDefinedBy(uri, data) {
-  return get(data, [RDFS.isDefinedBy, 'value'], namespace(uri))
+function isDefinedBy(id, data) {
+  return get(data, [RDFS.isDefinedBy, 'value'], namespace(id))
 }
 
 function namespace(uri) {

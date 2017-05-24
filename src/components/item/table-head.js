@@ -28,11 +28,11 @@ class ItemTableHeadCell extends PureComponent {
   }
 
   handleClick = () => {
-    const { uri, isActive, isAscending, onClick } = this.props
+    const { id, isActive, isAscending, onClick } = this.props
 
     onClick({
       type: 'property',
-      column: uri,
+      column: id,
       asc: !isActive || !isAscending
     })
   }
@@ -59,7 +59,7 @@ class ItemTableHeadCell extends PureComponent {
     isAscending: bool.isRequired,
     label: string.isRequired,
     type: string.isRequired,
-    uri: string.isRequired,
+    id: string.isRequired,
     width: string.isRequired,
     onClick: func.isRequired
   }
@@ -75,8 +75,8 @@ class ItemTableHead extends PureComponent {
     return this.props.sort.asc
   }
 
-  isActive(uri) {
-    return (uri === this.props.sort.column)
+  isActive(id) {
+    return (id === this.props.sort.column)
   }
 
   render() {
@@ -88,9 +88,9 @@ class ItemTableHead extends PureComponent {
           <tr>
             {columns.map(({ width, property }) =>
               <ItemTableHeadCell {...property}
-                key={property.uri}
+                key={property.id}
                 width={width}
-                isActive={this.isActive(property.uri)}
+                isActive={this.isActive(property.id)}
                 isAscending={this.isAscending}
                 onClick={onSort}/>)}
           </tr>

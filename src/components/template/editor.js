@@ -44,7 +44,7 @@ function TemplateControl(props) {
 
 TemplateControl.propTypes = {
   templates: arrayOf(shape({
-    uri: string.isRequired,
+    id: string.isRequired,
     name: string
   })).isRequired,
   selected: string,
@@ -53,7 +53,7 @@ TemplateControl.propTypes = {
 
 
 function dup(template) {
-  template = template || { name: '', uri: '', fields: [] }
+  template = template || { name: '', id: '', fields: [] }
   return {
     ...template, fields: [...template.fields]
   }
@@ -78,7 +78,7 @@ class TemplateEditor extends PureComponent {
 
     this.setState({
       fields: insert(this.state.fields, at + 1, {
-        property: { uri: '' }
+        property: { id: '' }
       })
     })
   }
@@ -106,7 +106,7 @@ class TemplateEditor extends PureComponent {
       <div className="template editor form-horizontal">
         <header className="template-header">
           <TemplateControl
-            selected={this.state.uri}
+            selected={this.state.id}
             templates={this.props.templates}
             onChange={this.handleTemplateChange}/>
           <FormField
@@ -116,9 +116,9 @@ class TemplateEditor extends PureComponent {
             isCompact
             onChange={this.handleTemplateUpdate}/>
           <FormField
-            id="template.uri"
-            name="uri"
-            value={this.state.uri}
+            id="template.id"
+            name="id"
+            value={this.state.id}
             onChange={this.handleTemplateUpdate}/>
           <FormGroup>
             <div className="col-12 text-right">
@@ -132,7 +132,7 @@ class TemplateEditor extends PureComponent {
         <ul className="template-field-list">
           {this.state.fields.map((field) =>
             <TemplateField
-              key={field.property.uri}
+              key={field.property.id}
               field={field}
               properties={this.props.properties}
               onInsert={this.handleFieldInsert}
@@ -147,10 +147,10 @@ class TemplateEditor extends PureComponent {
 
   static propTypes = {
     properties: arrayOf(shape({
-      uri: string.isRequired
+      id: string.isRequired
     })).isRequired,
     templates: arrayOf(shape({
-      uri: string.isRequired,
+      id: string.isRequired,
       name: string
     })).isRequired,
     onCreate: func.isRequired,

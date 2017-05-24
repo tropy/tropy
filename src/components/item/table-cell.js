@@ -16,15 +16,15 @@ class ItemTableCell extends PureComponent {
   get value() {
     const { data, property } = this.props
 
-    return data[property.uri] ?
-      data[property.uri].text : null
+    return data[property.id] ?
+      data[property.id].text : null
   }
 
   get type() {
     const { data, property } = this.props
 
-    return data[property.uri] ?
-      data[property.uri].type : (property.type || 'text')
+    return data[property.id] ?
+      data[property.id].type : (property.type || 'text')
   }
 
 
@@ -32,7 +32,7 @@ class ItemTableCell extends PureComponent {
     this.props.onChange({
       id: this.props.item.id,
       data: {
-        [this.props.property.uri]: { text, type: this.type }
+        [this.props.property.id]: { text, type: this.type }
       }
     })
   }
@@ -54,7 +54,7 @@ class ItemTableCell extends PureComponent {
     onSingleClick: () => {
       if (!this.props.isEditing) {
         this.props.onEdit({
-          column: { [this.props.item.id]: this.props.property.uri }
+          column: { [this.props.item.id]: this.props.property.id }
         })
       }
     }
@@ -105,7 +105,7 @@ class ItemTableCell extends PureComponent {
     hasCoverImage: bool,
 
     property: shape({
-      uri: string.isRequired,
+      id: string.isRequired,
       type: string,
     }),
 

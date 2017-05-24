@@ -18,14 +18,14 @@ module.exports = act.vocab = {
       let classes = {}
       let properties = {}
 
-      for (let uri in data) {
-        for (let cls of data[uri].classes) classes[cls.uri] = cls
-        for (let prp of data[uri].properties) properties[prp.uri] = prp
+      for (let id in data) {
+        for (let cls of data[id].classes) classes[cls.id] = cls
+        for (let prp of data[id].properties) properties[prp.id] = prp
 
-        vocabs[uri] = {
-          ...data[uri],
-          classes: data[uri].classes.map(p => p.uri),
-          properties: data[uri].properties.map(p => p.uri)
+        vocabs[id] = {
+          ...data[id],
+          classes: data[id].classes.map(p => p.id),
+          properties: data[id].properties.map(p => p.id)
         }
       }
 

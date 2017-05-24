@@ -11,8 +11,8 @@ const getVocabs = memo(
     [],
     map(kv => ({
       ...kv[1],
-      classes: kv[1].classes.map(uri => classes[uri]),
-      properties: kv[1].properties.map(uri => properties[uri])
+      classes: kv[1].classes.map(id => classes[id]),
+      properties: kv[1].properties.map(id => properties[id])
     })),
     vocab
   )

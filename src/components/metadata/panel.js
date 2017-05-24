@@ -31,7 +31,7 @@ class MetadataPanel extends PureComponent {
     this.props.onItemSave({
       id: this.props.items.map(it => it.id),
       property: 'template',
-      value: template.uri
+      value: template.id
     })
   }
 

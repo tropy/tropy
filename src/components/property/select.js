@@ -16,7 +16,7 @@ class PropertySelect extends PureComponent {
 
   handleChange = ({ target }) => {
     this.props.onChange(
-      this.props.properties.find(p => p.uri === target.value)
+      this.props.properties.find(p => p.id === target.value)
     )
   }
 
@@ -34,8 +34,8 @@ class PropertySelect extends PureComponent {
         value={this.props.selected}
         onChange={this.handleChange}>
         {this.renderPlaceholder()}
-        {this.props.properties.map(({ uri }) =>
-          <option key={uri} value={uri}>{uri}</option>)}
+        {this.props.properties.map(({ id }) =>
+          <option key={id} value={id}>{id}</option>)}
       </select>
     )
   }
