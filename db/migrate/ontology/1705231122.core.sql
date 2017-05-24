@@ -1,47 +1,51 @@
 CREATE TABLE vocabularies (
-  vocabulary_uri  TEXT     NOT NULL PRIMARY KEY,
-  created         NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  vocabulary_id   TEXT     NOT NULL PRIMARY KEY,
   prefix          TEXT,
-  description     TEXT,
+  created         NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  deleted         NUMERIC,
 
-  CHECK (vocabulary_uri != ''),
-  CHECK (prefix != ''),
+  title           TEXT,
+  description     TEXT,
+  comment         TEXT,
+  see_also        TEXT,
+
+  CHECK (vocabulary_id != '' AND prefix != ''),
   UNIQUE (prefix)
 );
 
 CREATE TABLE properties (
-  property_uri    TEXT NOT NULL PRIMARY KEY,
-  vocabulary_uri  TEXT NOT NULL REFERENCES vocabularies ON DELETE CASCADE,
-  domain          TEXT REFERENCES classes (class_uri),
-  range           TEXT REFERENCES classes (class_uri),
-  parent          TEXT REFERENCES properties (property_uri),
-  definition      TEXT,
+  property_id     TEXT NOT NULL PRIMARY KEY,
+  vocabulary_id   TEXT NOT NULL REFERENCES vocabularies ON DELETE CASCADE,
+  domain          TEXT,
+  range           TEXT,
+  parent          TEXT,
+
+  description     TEXT,
   comment         TEXT,
 
-  CHECK (property_uri != ''),
-  CHECK (parent != ''),
-  CHECK (domain != ''),
-  CHECK (range != '')
+  CHECK (property_id != '')
 );
 
 CREATE TABLE classes (
-  class_uri       TEXT NOT NULL PRIMARY KEY,
-  vocabulary_uri  TEXT NOT NULL REFERENCES vocabularies ON DELETE CASCADE,
-  definition      TEXT,
-  comment         TEXT,
-  parent          TEXT REFERENCES classes (class_uri),
+  class_id        TEXT NOT NULL PRIMARY KEY,
+  vocabulary_id   TEXT NOT NULL REFERENCES vocabularies ON DELETE CASCADE,
+  parent          TEXT,
 
-  CHECK (class_uri != ''),
-  CHECK (parent != '')
+  description     TEXT,
+  comment         TEXT,
+
+  CHECK (class_id != '')
 );
 
 CREATE TABLE labels (
-  uri       TEXT NOT NULL,
-  language  TEXT NOT NULL COLLATE NOCASE,
+  id        TEXT NOT NULL,
+  language  TEXT COLLATE NOCASE,
   label     TEXT NOT NULL,
 
-  PRIMARY KEY (uri, language),
-  CHECK (uri != ''),
-  CHECK (language != '' AND language = trim(lower(language))),
-  CHECK (label != '')
+  PRIMARY KEY (id, language),
+
+  CHECK (id != '' AND label != ''),
+  CHECK (
+    language IS NULL OR (language != '' AND language = trim(lower(language)))
+  )
 ) WITHOUT ROWID;
