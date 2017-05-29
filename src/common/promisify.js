@@ -1,11 +1,18 @@
 'use strict'
 
 const bb = require('bluebird')
+const fs = require('fs')
 
 const { Database, Statement } = require('sqlite3')
 
-bb.promisifyAll(require('fs'))
+bb.promisifyAll(fs)
 bb.promisifyAll([Database, Statement])
+
+fs.existsAsync = function (...args) {
+  return fs.statAsync(...args)
+    .then(() => true)
+    .catch({ code: 'ENOENT' }, () => false)
+}
 
 Database.prototype.prepareAsync = function (...args) {
   return new bb((resolve, reject) => {
