@@ -9,7 +9,7 @@ const { fail } = require('../dialog')
 const { ipc } = require('./ipc')
 const { history } = require('./history')
 const { search, load } = require('./search')
-const ontology = require('./ontology')
+const { ontology } = require('./ontology')
 const mod = require('../models')
 const act = require('../actions')
 const storage = require('./storage')
@@ -25,7 +25,7 @@ const has = (condition, { error, meta }) => (
 )
 
 
-function *open(file, odb) {
+function *open(file) {
   try {
     var db = new Database(file, 'w')
 
@@ -71,7 +71,7 @@ function *open(file, odb) {
 
     while (true) {
       const action = yield take(a => (!a.error && a.meta && a.meta.async))
-      yield fork(command, { db, odb, id, cache }, action)
+      yield fork(command, { db, id, cache }, action)
     }
 
 
@@ -127,15 +127,13 @@ function *command(options, action) {
 function *main() {
   let task
   let aux
-  let odb
 
   try {
     aux = yield all([
+      fork(ontology),
       fork(ipc),
       fork(history)
     ])
-
-    odb = yield call(ontology.open)
 
     yield all([
       call(storage.restore, 'ui')
@@ -151,7 +149,7 @@ function *main() {
 
       if (type === CLOSE) return
 
-      task = yield fork(open, payload, odb)
+      task = yield fork(open, payload)
     }
 
   } catch (error) {
@@ -160,8 +158,7 @@ function *main() {
 
   } finally {
     yield all([
-      call(storage.persist, 'ui'),
-      call(ontology.close, odb)
+      call(storage.persist, 'ui')
     ])
 
     if (!(yield cancelled())) {

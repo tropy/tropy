@@ -12,7 +12,6 @@ const SCHEMA = join(home, 'db', 'schema')
 const MIGRATE = join(home, 'db', 'migrate')
 
 
-
 target.create = async (args = []) => {
   const { Database } = require('../lib/common/db')
   const project = require('../lib/models/project')

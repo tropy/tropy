@@ -1,17 +1,13 @@
 'use strict'
 
 const uuid = require('uuid/v4')
-const { join } = require('path')
-
-const SCHEMA = join(
-  __dirname, '..', '..', 'db', 'schema', 'project.sql'
-)
+const { PROJECT } = require('../constants')
 
 module.exports = {
   async create(db, { name, id }) {
     id = id || uuid()
 
-    await db.read(SCHEMA)
+    await db.read(PROJECT.SCHEMA)
     await db.run(
       'INSERT INTO project (project_id, name) VALUES (?,?)', id, name
     )
