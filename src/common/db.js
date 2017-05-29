@@ -141,6 +141,13 @@ class Database extends EventEmitter {
     this.emit('close')
   }
 
+  empty = async () => {
+    const { count } = await this.get(`
+      SELECT count(*) AS count FROM sqlite_master`)
+
+    return count === 0
+  }
+
   seq = (fn) =>
     using(this.acquire(), fn)
 
@@ -197,13 +204,6 @@ class Database extends EventEmitter {
 
   version(...args) {
     return this.seq(conn => conn.version(...args))
-  }
-
-  async empty() {
-    const { count } = await this.get(`
-      SELECT count(*) AS count FROM sqlite_master`)
-
-    return count === 0
   }
 
   async read(file) {

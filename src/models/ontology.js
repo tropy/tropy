@@ -1,9 +1,6 @@
 'use strict'
 
-const { join } = require('path')
-const SCHEMA = join(
-  __dirname, '..', '..', 'db', 'schema', 'ontology.sql'
-)
+const { SCHEMA } = require('../constants/ontology')
 
 module.exports = {
   create(db) {
