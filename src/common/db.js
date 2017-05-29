@@ -27,7 +27,10 @@ class Database extends EventEmitter {
   static async create(path, script, ...args) {
     try {
       var db = new Database(path, 'w+', { max: 1 })
-      if (script) await script(db, ...args)
+
+      const isEmpty = await db.empty()
+      if (isEmpty && script) await script(db, ...args)
+
       return db.path
 
     } finally {
@@ -194,6 +197,13 @@ class Database extends EventEmitter {
 
   version(...args) {
     return this.seq(conn => conn.version(...args))
+  }
+
+  async empty() {
+    const { count } = await this.get(`
+      SELECT count(*) AS count FROM sqlite_master`)
+
+    return count === 0
   }
 
   async read(file) {
