@@ -16,6 +16,7 @@ const MIGRATE = join(home, 'db', 'migrate')
 target.create = async (args = []) => {
   const { Database } = require('../lib/common/db')
   const project = require('../lib/models/project')
+  const ontology = require('../lib/models/ontology')
 
   const domain = args[0] || 'project'
   const file = args[1] || join(home, 'db', `${domain}.db`)
@@ -31,8 +32,7 @@ target.create = async (args = []) => {
     }
 
     case 'ontology': {
-      const path = await Database.create(file, db =>
-        db.read(join(SCHEMA, 'ontology.sql')))
+      const path = await Database.create(file, ontology.create)
       say(`created ontology as ${relative(cwd, path)}`)
       break
     }
