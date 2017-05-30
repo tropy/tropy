@@ -46,56 +46,64 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
     const { once } = require('../common/util')
     const { info, verbose } = require('../common/log')(userdata)
 
+    let quit = false
+
     if (opts.environment !== 'test') {
-      if (app.makeSingleInstance(() => tropy.open(...opts._))) {
-        verbose('other instance detected, exiting...')
-        app.exit(0)
-      }
-    }
-
-    if (opts.scale) {
-      app.commandLine.appendSwitch('force-device-scale-factor', opts.scale)
-    }
-
-    verbose(`started in ${opts.e} mode`)
-    verbose(`using ${app.getPath('userData')}`)
-
-    const tropy = new (require('./tropy'))()
-
-    tropy.listen()
-    tropy.restore()
-
-    if (darwin) {
-      app.on('open-file', (event, file) => {
-        switch (extname(file)) {
-          case '.tpy':
-            event.preventDefault()
-            if (!READY) opts._ = [file]
-            else tropy.open(file)
-            break
-          case '.jpg':
-          case '.jpeg':
-            if (READY && tropy.win) {
-              event.preventDefault()
-              tropy.import([file])
-            }
-            break
-        }
+      quit = app.makeSingleInstance(argv => {
+        tropy.open(args.parse(argv.slice(1)._))
       })
     }
 
-    all([
-      once(app, 'ready'),
-      once(tropy, 'app:restored')
+    if (quit) {
+      verbose('other instance detected, exiting...')
+      app.exit(0)
 
-    ]).then(() => {
-      READY = Date.now()
-      info('ready after %sms', READY - START)
-      tropy.open(...opts._)
-    })
+    } else {
 
-    app.on('quit', (_, code) => {
-      verbose(`quit with exit code ${code}`)
-    })
+      if (opts.scale) {
+        app.commandLine.appendSwitch('force-device-scale-factor', opts.scale)
+      }
+
+      verbose(`started in ${opts.e} mode`)
+      verbose(`using ${app.getPath('userData')}`)
+
+      var tropy = new (require('./tropy'))()
+
+      tropy.listen()
+      tropy.restore()
+
+      if (darwin) {
+        app.on('open-file', (event, file) => {
+          switch (extname(file)) {
+            case '.tpy':
+              event.preventDefault()
+              if (!READY) opts._ = [file]
+              else tropy.open(file)
+              break
+            case '.jpg':
+            case '.jpeg':
+              if (READY && tropy.win) {
+                event.preventDefault()
+                tropy.import([file])
+              }
+              break
+          }
+        })
+      }
+
+      all([
+        once(app, 'ready'),
+        once(tropy, 'app:restored')
+
+      ]).then(() => {
+        READY = Date.now()
+        info('ready after %sms', READY - START)
+        tropy.open(...opts._)
+      })
+
+      app.on('quit', (_, code) => {
+        verbose(`quit with exit code ${code}`)
+      })
+    }
   }
 }
