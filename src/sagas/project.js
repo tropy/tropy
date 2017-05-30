@@ -21,7 +21,7 @@ const {
 const TOO_LONG = ARGS.dev ? 500 : 1500
 
 const has = (condition, { error, meta }) => (
-  !error && meta && (!meta.async || meta.done) && meta[condition]
+  !error && meta && (!meta.cmd || meta.done) && meta[condition]
 )
 
 
@@ -70,7 +70,7 @@ function *open(file) {
     })
 
     while (true) {
-      const action = yield take(a => (!a.error && a.meta && a.meta.async))
+      const action = yield take(a => (!a.error && a.meta && a.meta.cmd))
       yield fork(command, { db, id, cache }, action)
     }
 

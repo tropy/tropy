@@ -31,7 +31,7 @@ module.exports = {
     return {
       type: ('id' in payload) ? LIST.SAVE : LIST.CREATE,
       payload,
-      meta: { async: true, history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'add', ...meta }
     }
   },
 
@@ -40,7 +40,7 @@ module.exports = {
       type: LIST.DELETE,
       payload,
       meta: {
-        async: true,
+        cmd: 'project',
         history: 'add',
         ...meta
       }
@@ -48,23 +48,23 @@ module.exports = {
   },
 
   prune(payload, meta) {
-    return { type: LIST.PRUNE, payload, meta: { async: true, ...meta } }
+    return { type: LIST.PRUNE, payload, meta: { cmd: 'project', ...meta } }
   },
 
   restore(payload, meta) {
-    return { type: LIST.RESTORE, payload, meta: { async: true, ...meta } }
+    return { type: LIST.RESTORE, payload, meta: { cmd: 'project', ...meta } }
   },
 
   order(payload, meta) {
     return {
       type: LIST.ORDER,
       payload,
-      meta: { async: true, history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'add', ...meta }
     }
   },
 
   load(payload, meta) {
-    return { type: LIST.LOAD, payload, meta: { async: true, ...meta } }
+    return { type: LIST.LOAD, payload, meta: { cmd: 'project', ...meta } }
   },
 
   update(payload, meta) {
@@ -76,7 +76,7 @@ module.exports = {
       return {
         type: LIST.ITEM.ADD,
         payload: { id, items: array(items) },
-        meta: { async: true, history: 'add', search: true, ...meta }
+        meta: { cmd: 'project', history: 'add', search: true, ...meta }
       }
     },
 
@@ -84,7 +84,7 @@ module.exports = {
       return {
         type: LIST.ITEM.REMOVE,
         payload: { id, items: array(items) },
-        meta: { async: true, history: 'add', search: true, ...meta }
+        meta: { cmd: 'project', history: 'add', search: true, ...meta }
       }
     },
 
@@ -92,7 +92,7 @@ module.exports = {
       return {
         type: LIST.ITEM.RESTORE,
         payload: { id, items: array(items) },
-        meta: { async: true, search: true, ...meta }
+        meta: { cmd: 'project', search: true, ...meta }
       }
     }
   }

@@ -30,7 +30,7 @@ module.exports = {
       type: TAG.CREATE,
       payload,
       meta: {
-        async: true,
+        cmd: 'project',
         history: 'add',
         ipc: TAG.CHANGED,
         ...meta
@@ -42,7 +42,7 @@ module.exports = {
     return {
       type: TAG.SAVE,
       payload,
-      meta: { async: true, history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'add', ...meta }
     }
   },
 
@@ -51,7 +51,7 @@ module.exports = {
       type: TAG.DELETE,
       payload,
       meta: {
-        async: true,
+        cmd: 'project',
         history: 'add',
         search: true,
         ipc: TAG.CHANGED,
@@ -64,7 +64,7 @@ module.exports = {
     return {
       type: TAG.LOAD,
       payload,
-      meta: { async: true, ipc: TAG.CHANGED, ...meta }
+      meta: { cmd: 'project', ipc: TAG.CHANGED, ...meta }
     }
   },
 

@@ -9,7 +9,7 @@ module.exports = {
       type: ITEM.CREATE,
       payload,
       meta: {
-        async: true,
+        cmd: 'project',
         history: 'add',
         ...meta
       }
@@ -20,7 +20,7 @@ module.exports = {
     return {
       type: ITEM.IMPORT,
       payload,
-      meta: { async: true, history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'add', ...meta }
     }
   },
 
@@ -28,7 +28,7 @@ module.exports = {
     return {
       type: ITEM.DELETE,
       payload: array(payload),
-      meta: { async: true, history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'add', ...meta }
     }
   },
 
@@ -36,7 +36,7 @@ module.exports = {
     return {
       type: ITEM.DESTROY,
       payload: array(payload),
-      meta: { async: true, prompt: true, ...meta }
+      meta: { cmd: 'project', prompt: true, ...meta }
     }
   },
 
@@ -44,7 +44,7 @@ module.exports = {
     return {
       type: ITEM.MERGE,
       payload: array(payload),
-      meta: { async: true, history: 'add', search: true, ...meta }
+      meta: { cmd: 'project', history: 'add', search: true, ...meta }
     }
   },
 
@@ -52,7 +52,7 @@ module.exports = {
     return {
       type: ITEM.SPLIT,
       payload,
-      meta: { async: true, history: 'add', search: true, ...meta }
+      meta: { cmd: 'project', history: 'add', search: true, ...meta }
     }
   },
 
@@ -68,7 +68,7 @@ module.exports = {
     return {
       type: ITEM.LOAD,
       payload,
-      meta: { async: true, ...meta }
+      meta: { cmd: 'project', ...meta }
     }
   },
 
@@ -84,7 +84,7 @@ module.exports = {
     return {
       type: ITEM.RESTORE,
       payload: array(payload),
-      meta: { async: true, history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'add', ...meta }
     }
   },
 
@@ -92,7 +92,7 @@ module.exports = {
     return {
       type: ITEM.SAVE,
       payload: { id: array(id), property, value },
-      meta: { async: true, history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'add', ...meta }
     }
   },
 
@@ -159,7 +159,7 @@ module.exports = {
       return {
         type: ITEM.TAG.TOGGLE,
         payload,
-        meta: { async: true, history: 'add', ...meta }
+        meta: { cmd: 'project', history: 'add', ...meta }
       }
     },
 
@@ -167,7 +167,7 @@ module.exports = {
       return {
         type: ITEM.TAG.CLEAR,
         payload,
-        meta: { async: true, history: 'add', ...meta }
+        meta: { cmd: 'project', history: 'add', ...meta }
       }
     },
 
@@ -175,7 +175,7 @@ module.exports = {
       return {
         type: ITEM.TAG.CREATE,
         payload,
-        meta: { async: true, history: 'add', ...meta }
+        meta: { cmd: 'project', history: 'add', ...meta }
       }
     },
 
@@ -191,7 +191,7 @@ module.exports = {
       return {
         type: ITEM.TAG.DELETE,
         payload,
-        meta: { async: true, history: 'add', ...meta }
+        meta: { cmd: 'project', history: 'add', ...meta }
       }
     },
 

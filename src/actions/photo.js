@@ -7,7 +7,7 @@ module.exports = {
     return {
       type: PHOTO.CREATE,
       payload,
-      meta: { async: true, history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'add', ...meta }
     }
   },
 
@@ -15,7 +15,7 @@ module.exports = {
     return {
       type: PHOTO.DELETE,
       payload,
-      meta: { async: true, history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'add', ...meta }
     }
   },
 
@@ -23,7 +23,7 @@ module.exports = {
     return {
       type: PHOTO.RESTORE,
       payload,
-      meta: { async: true, history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'add', ...meta }
     }
   },
 
@@ -31,7 +31,7 @@ module.exports = {
     return {
       type: PHOTO.LOAD,
       payload,
-      meta: { async: true, ...meta }
+      meta: { cmd: 'project', ...meta }
     }
   },
 
@@ -55,7 +55,7 @@ module.exports = {
     return {
       type: PHOTO.MOVE,
       payload,
-      meta: { async: true, history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'add', ...meta }
     }
   },
 
@@ -63,7 +63,7 @@ module.exports = {
     return {
       type: PHOTO.ORDER,
       payload,
-      meta: { async: true, history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'add', ...meta }
     }
   },
 
