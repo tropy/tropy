@@ -4,12 +4,11 @@ const { OPEN, CLOSE, CLOSED } = require('../constants/project')
 const { Database } = require('../common/db')
 const { Cache } = require('../common/cache')
 const { warn, debug, verbose } = require('../common/log')
-const { exec } = require('../commands')
-const { fail } = require('../dialog')
 const { ipc } = require('./ipc')
 const { history } = require('./history')
 const { search, load } = require('./search')
 const { ontology } = require('./ontology')
+const { exec } = require('./cmd')
 const mod = require('../models')
 const act = require('../actions')
 const storage = require('./storage')
@@ -18,11 +17,12 @@ const {
   all, fork, cancel, cancelled, call, put, take, takeEvery: every
 } = require('redux-saga/effects')
 
-const TOO_LONG = ARGS.dev ? 500 : 1500
 
-const has = (condition, { error, meta }) => (
-  !error && meta && (!meta.cmd || meta.done) && meta[condition]
-)
+const has = (condition) => (({ error, meta }) =>
+  (!error && meta && (!meta.cmd || meta.done) && meta[condition]))
+
+const command = ({ error, meta }) =>
+  (!error && meta && meta.cmd === 'project')
 
 
 function *open(file) {
@@ -49,8 +49,8 @@ function *open(file) {
     yield call([cache, cache.init])
     yield put(act.project.opened({ file: db.path, ...project }))
 
-    yield every(action => has('search', action), search, db)
-    yield every(action => has('load', action), load)
+    yield every(has('search'), search, db)
+    yield every(has('load'), load)
 
     yield all([
       call(storage.restore, 'nav', id),
@@ -70,8 +70,8 @@ function *open(file) {
     })
 
     while (true) {
-      const action = yield take(a => (!a.error && a.meta && a.meta.cmd))
-      yield fork(command, { db, id, cache }, action)
+      const action = yield take(command)
+      yield fork(exec, { db, id, cache }, action)
     }
 
 
@@ -103,26 +103,6 @@ function *open(file) {
   }
 }
 
-
-function *command(options, action) {
-  try {
-    const cmd = yield exec(action, options)
-    const { type, meta } = action
-
-    yield put(act.activity.done(action, cmd.error || cmd.result))
-
-    if (meta.history && cmd.isomorph) {
-      yield put(act.history.tick(cmd.history(), meta.history))
-    }
-
-    if (cmd.error) fail(cmd.error, type)
-    if (cmd.duration > TOO_LONG) warn(`SLOW: ${type}`)
-
-  } catch (error) {
-    warn(`${action.type} unexpectedly failed in *command: ${error.message}`)
-    verbose(error.stack)
-  }
-}
 
 function *main() {
   let task
