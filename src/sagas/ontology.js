@@ -6,17 +6,19 @@ const { join } = require('path')
 const { Database } = require('../common/db')
 const { verbose, warn } = require('../common/log')
 const { ONTOLOGY } = require('../constants')
-const { create } = require('../models/ontology')
-const { call, take } = require('redux-saga/effects')
+const mod = require('../models/ontology')
+const act = require('../actions')
+const { call, put, take } = require('redux-saga/effects')
 
 function *ontology(file = join(ARGS.home, ONTOLOGY.DB)) {
   try {
     var db = new Database(file)
 
     if (yield call(db.empty)) {
-      yield call(create, db)
+      yield call(mod.ontology.create, db)
       verbose('*ontology created db...')
-      // dispatch initial import
+
+      yield put(act.ontology.import(null, { history: false }))
 
     } else {
       // migrate
