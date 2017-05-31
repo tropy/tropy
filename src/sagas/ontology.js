@@ -6,9 +6,13 @@ const { join } = require('path')
 const { Database } = require('../common/db')
 const { verbose, warn } = require('../common/log')
 const { ONTOLOGY } = require('../constants')
-const mod = require('../models/ontology')
+const { exec } = require('./cmd')
+const mod = require('../models')
 const act = require('../actions')
-const { call, put, take } = require('redux-saga/effects')
+const { call, fork, take } = require('redux-saga/effects')
+
+const command = ({ error, meta }) =>
+  (!error && meta && meta.cmd === 'ontology')
 
 function *ontology(file = join(ARGS.home, ONTOLOGY.DB)) {
   try {
@@ -18,14 +22,15 @@ function *ontology(file = join(ARGS.home, ONTOLOGY.DB)) {
       yield call(mod.ontology.create, db)
       verbose('*ontology created db...')
 
-      yield put(act.ontology.import(null, { history: false }))
+      yield fork(exec, { db }, act.ontology.import(null, { history: false }))
 
     } else {
       // migrate
     }
 
     while (true) {
-      yield take(({ meta }) => meta && meta.ontology)
+      const action = yield take(command)
+      yield fork(exec, { db }, action)
     }
 
   } catch (error) {
