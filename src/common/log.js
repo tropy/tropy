@@ -38,8 +38,7 @@ function init(dir) {
         humanReadableUnhandledException: true,
         formatter
       })
-      // eslint-disable-line no-fallthrough
-
+      // eslint-disable-next-line no-fallthrough
     case 'production':
       if (dir) {
         logger.add(transports.File, {
@@ -47,6 +46,7 @@ function init(dir) {
           maxsize: 1024 * 1024,
           maxFiles: 1,
           tailable: true,
+
           handleExceptions: true,
           humanReadableUnhandledException: true
         })
