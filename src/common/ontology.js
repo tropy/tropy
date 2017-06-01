@@ -76,11 +76,11 @@ class Ontology extends Resource {
     const data = this.getData(id)
     if (empty(data)) return null
 
-    title = get(any(data, DC.title, DCT.title), ['value'], title)
-    prefix = get(data, [VANN.preferredNamespacePrefix, 'value'], prefix)
+    title = get(any(data, DC.title, DCT.title), [0, '@value'], title)
+    prefix = get(data, [VANN.preferredNamespacePrefix, 0, '@value'], prefix)
 
-    const description = get(
-      any(data, DC.description, DCT.description), ['value']
+    const description = getValue(
+      any(data, DC.description, DCT.description, RDFS.comment)
     )
 
     return {
@@ -105,44 +105,51 @@ class Ontology extends Resource {
 
   getData(subject, into = {}) {
     return this.store.getTriples(subject)
-      .reduce((obj, { predicate, object }) =>
-        ((obj[predicate] = literal(object)), obj), into)
+      .reduce((o, { predicate, object }) =>
+        ((o[predicate] = [...(o[predicate] || []), literal(object)]), o), into)
   }
 }
 
 
 function info(data) {
   return {
-    label: get(data, [RDFS.label, 'value']),
-    comment: get(data, [RDFS.comment, 'value']),
-    definition: get(
-      any(data, SKOS.defintion, DC.description, DCT.description), ['value']
+    label: getValue(data, RDFS.label),
+    comment: getValue(data, RDFS.comment),
+    definition: getValue(
+      any(data, SKOS.defintion, DC.description, DCT.description)
     )
   }
 }
 
+function getValue(data, ...path) {
+  return get(data, [...path, 0, '@value'])
+}
+
 function literal(value) {
   return N3.Util.isLiteral(value) ? {
-    value: N3.Util.getLiteralValue(value),
-    type: N3.Util.getLiteralType(value),
-    language: N3.Util.getLiteralLanguage(value)
-  } : { value, type: 'IRI' }
+    '@value': N3.Util.getLiteralValue(value),
+    '@type': N3.Util.getLiteralType(value),
+    '@language': N3.Util.getLiteralLanguage(value)
+  } : {
+    '@id': value,
+    '@type': '@id'
+  }
 }
 
 function isDefinedBy(id, data) {
-  return get(data, [RDFS.isDefinedBy, 'value'], namespace(id))
+  return get(data, [RDFS.isDefinedBy, '@id'], namespace(id))
 }
 
-function namespace(uri) {
-  return split(uri)[0]
+function namespace(id) {
+  return split(id)[0]
 }
 
-function getLabel(uri) {
-  return titlecase(split(uri)[1])
+function getLabel(id) {
+  return titlecase(split(id)[1])
 }
 
-function split(uri) {
-  let ns = uri.split(/(#|\/)/)
+function split(id) {
+  let ns = id.split(/(#|\/)/)
   let nm = ns.pop()
   return [ns.join(''), nm]
 }
