@@ -11,9 +11,6 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
   const args = require('./args')
   const opts = args.parse(process.argv.slice(1))
 
-  // See https://github.com/yargs/yargs/issues/878
-  if (opts._.length > 0) opts._ = opts._.filter(f => f !== true)
-
   process.env.NODE_ENV = opts.environment
   global.ARGS = opts
 
