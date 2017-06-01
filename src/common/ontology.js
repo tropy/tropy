@@ -8,7 +8,7 @@ const N3 = require('n3')
 const { RDF, RDFS, DC, DCT, SKOS, OWL, VANN } = require('../constants')
 
 
-class Vocab extends Resource {
+class Ontology extends Resource {
   static get base() {
     return join(super.base, 'vocab')
   }
@@ -154,5 +154,5 @@ module.exports = {
   isDefinedBy,
   literal,
   namespace,
-  Vocab,
+  Ontology
 }

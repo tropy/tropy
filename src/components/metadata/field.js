@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { Editable } = require('../editable')
 const { FormattedMessage } = require('react-intl')
 const { pluck } = require('../../common/util')
-const { getLabel } = require('../../common/vocab')
+const { getLabel } = require('../../common/ontology')
 const cx = require('classnames')
 const {
   arrayOf, bool, func, number, oneOfType, shape, string

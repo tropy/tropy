@@ -1,7 +1,7 @@
 'use strict'
 
 const { VOCAB } = require('../constants')
-const { Vocab } = require('../common/vocab')
+const { Ontology } = require('../common/ontology')
 
 const act = {
   classes: require('./classes'),
@@ -11,7 +11,7 @@ const act = {
 module.exports = act.vocab = {
   load(payload) {
     return async (dispatch) => {
-      let store = await Vocab.open(payload)
+      let store = await Ontology.open(payload)
       let data = store.toJSON()
 
       let vocabs = {}
