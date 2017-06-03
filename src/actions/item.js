@@ -56,6 +56,22 @@ module.exports = {
     }
   },
 
+  explode(payload, meta) {
+    return {
+      type: ITEM.EXPLODE,
+      payload: array(payload),
+      meta: { cmd: 'project', history: 'add', search: true, ...meta }
+    }
+  },
+
+  implode(payload, meta) {
+    return {
+      type: ITEM.IMPLODE,
+      payload,
+      meta: { cmd: 'project', history: 'add', search: true, ...meta }
+    }
+  },
+
   insert(payload, meta) {
     return {
       type: ITEM.INSERT,

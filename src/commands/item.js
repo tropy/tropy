@@ -289,6 +289,20 @@ class Split extends Command {
   }
 }
 
+class Explode extends Command {
+  static get action() { return ITEM.EXPLODE }
+
+  *exec() {
+  }
+}
+
+class Implode extends Command {
+  static get action() { return ITEM.IMPLODE }
+
+  *exec() {
+  }
+}
+
 
 class ToggleTags extends Command {
   static get action() { return ITEM.TAG.TOGGLE }
@@ -374,7 +388,9 @@ module.exports = {
   Create,
   Delete,
   Destroy,
+  Explode,
   Import,
+  Implode,
   Load,
   Merge,
   Split,
