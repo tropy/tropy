@@ -58,7 +58,9 @@ class ItemIterator extends Iterator {
     const { list, isDisabled, selection, onContextMenu } = this.props
 
     const context = ['item']
-    const target = { id: item.id, tags: item.tags, list }
+    const target = {
+      id: item.id, photos: item.photos, tags: item.tags, list
+    }
 
     if (selection.length > 1) {
       context.push('bulk')

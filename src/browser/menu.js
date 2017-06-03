@@ -13,6 +13,16 @@ function withWindow(cmd, fn) {
   }
 }
 
+const CHECK = {
+  hasMultiplePhotos(_, e) {
+    return e && e.target && e.target.photos && e.target.photos.length > 1
+  }
+}
+
+function check(item, event) {
+  return CHECK[item.condition] && CHECK[item.condition](item, event)
+}
+
 
 class Menu {
   constructor(app) {
@@ -67,6 +77,10 @@ class Menu {
       if (item.label) {
         item.label = item.label
           .replace(/%(\w+)/g, (_, prop) => this.app[prop])
+      }
+
+      if (item.condition) {
+        item.enabled = check(item, ...params)
       }
 
       switch (item.id) {

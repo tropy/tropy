@@ -51,6 +51,7 @@ linux:
       command: 'app:delete-item'
     - label: 'Explode Item'
       command: 'app:explode-item'
+      condition: 'hasMultiplePhotos'
     - label: 'Add Photo…'
       command: 'app:create-item-photo'
     - label: 'Tags'
