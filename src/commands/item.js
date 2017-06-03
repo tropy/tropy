@@ -293,6 +293,24 @@ class Explode extends Command {
   static get action() { return ITEM.EXPLODE }
 
   *exec() {
+    const { db } = this.options
+    const { payload } = this.action
+
+    let item = yield select(state =>
+      state.items[payload.id]
+    )
+
+    let photos = payload.photos || item.photos.slice(1)
+
+    let dups = []
+
+    yield call(db.transaction, async tx => {
+      for (let photo of photos) {
+        let dup = await mod.item.dup(tx, item.id)
+        await mod.photo.move(tx, { ids: [photo], item: dup.id })
+        dups.push(dup)
+      }
+    })
   }
 }
 

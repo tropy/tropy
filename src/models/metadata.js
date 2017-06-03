@@ -4,9 +4,8 @@ const { save } = require('./value')
 const { into, map } = require('transducers.js')
 const { keys } = Object
 const { get, list, quote } = require('../common/util')
-const mod = {}
 
-module.exports = mod.metadata = {
+const metadata = {
   async load(db, ids) {
     const data = into({}, map(id => [id, { id }]), ids)
 
@@ -47,7 +46,16 @@ module.exports = mod.metadata = {
   },
 
   async replace(db, data) {
-    return mod.metadata.update(db, data, true)
-  }
+    return metadata.update(db, data, true)
+  },
 
+  async copy(db, { source, target }) {
+    return db.run(`
+      INSERT INTO metadata (id, property, value_id, language)
+        SELECT ${Number(target)} AS id, property, value_id, language
+          FROM metadata
+          WHERE id = ?`, source)
+  }
 }
+
+module.exports = metadata

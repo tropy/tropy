@@ -59,7 +59,7 @@ module.exports = {
   explode(payload, meta) {
     return {
       type: ITEM.EXPLODE,
-      payload: array(payload),
+      payload: payload,
       meta: { cmd: 'project', history: 'add', search: true, ...meta }
     }
   },
