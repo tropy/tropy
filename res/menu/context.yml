@@ -49,6 +49,8 @@ linux:
   item: &item
     - label: 'Delete Item'
       command: 'app:delete-item'
+    - label: 'Explode Item'
+      command: 'app:explode-item'
     - label: 'Add Photo…'
       command: 'app:create-item-photo'
     - label: 'Tags'
@@ -73,6 +75,8 @@ linux:
   photo: &photo
     - label: 'Delete Photo'
       command: 'app:delete-photo'
+    - label: 'Break-out Photo'
+      command: 'app:explode-photo'
     - label: 'Show Photo in Folder…'
       command: 'app:show-in-folder'
   item-deleted: &item-deleted

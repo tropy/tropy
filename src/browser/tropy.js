@@ -271,6 +271,10 @@ class Tropy extends EventEmitter {
         this.dispatch(act.item.delete(target.id)))
       .on('app:merge-item', (_, { target }) =>
         this.dispatch(act.item.merge(target.id)))
+      .on('app:explode-item', (_, { target }) =>
+        this.dispatch(act.item.explode(target)))
+      .on('app:explode-photo', (_, { target }) =>
+        this.dispatch(act.item.explode({ id: target.item, photo: target.id })))
       .on('app:restore-item', (_, { target }) =>
         this.dispatch(act.item.restore(target.id)))
       .on('app:destroy-item', (_, { target }) =>
