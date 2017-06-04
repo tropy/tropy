@@ -336,21 +336,21 @@ class ToggleTags extends Command {
 
     const current = yield select(({ items }) => items[id].tags)
 
-    const add = []
-    const remove = []
+    const added = []
+    const removed = []
 
     for (let tag of tags) {
-      (current.includes(tag) ? remove : add).push(tag)
+      (current.includes(tag) ? removed : added).push(tag)
     }
 
-    if (add.length) {
-      yield call(mod.item.tags.add, db, add.map(tag => ({ id, tag })))
-      yield put(act.item.tags.insert({ id, tags: add }))
+    if (added.length) {
+      yield call(mod.item.tags.add, db, added.map(tag => ({ id, tag })))
+      yield put(act.item.tags.insert({ id, tags: added }))
     }
 
-    if (remove.length) {
-      yield call(mod.item.tags.remove, db, { id, tags: remove })
-      yield put(act.item.tags.remove({ id, tags: remove }))
+    if (removed.length) {
+      yield call(mod.item.tags.remove, db, { id, tags: removed })
+      yield put(act.item.tags.remove({ id, tags: removed }))
     }
 
     this.undo = this.action

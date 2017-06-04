@@ -2,7 +2,10 @@
 
 const { ITEM, PROJECT, LIST } = require('../constants')
 const { into, map } = require('transducers.js')
-const { load, insert, remove, replace, update, nested, bulk } = require('./util')
+
+const {
+  load, insert, remove, replace, update, nested, bulk
+} = require('./util')
 
 
 module.exports = {
