@@ -273,4 +273,23 @@ describe('util', () => {
       expect(mixed([1, 2])).to.be.true
     })
   })
+
+  describe('.remove', () => {
+    const { remove } = util
+
+    it('returns new array', () => {
+      const a = [1, 2, 3]
+      expect(remove(a)).not.to.equal(a)
+      expect(remove(a, 1)).not.to.equal(a)
+    })
+
+    it('removes given items', () => {
+      expect(remove([])).to.eql([])
+      expect(remove([], 1)).to.eql([])
+      expect(remove([1], 1)).to.eql([])
+      expect(remove([1, 2], 1)).to.eql([2])
+      expect(remove([1, 2], 1, 3)).to.eql([2])
+      expect(remove([1, 2, 3], 1, 3)).to.eql([2])
+    })
+  })
 })

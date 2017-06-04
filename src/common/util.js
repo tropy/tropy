@@ -58,8 +58,8 @@ const util = {
     return util.splice(array, at, 0, ...items)
   },
 
-  remove(array, item) {
-    return array.filter(it => it !== item)
+  remove(array, ...items) {
+    return array.filter(it => items.indexOf(it) < 0)
   },
 
   sort(array, ...args) {
