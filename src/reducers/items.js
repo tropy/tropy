@@ -2,7 +2,7 @@
 
 const { ITEM, PROJECT, LIST } = require('../constants')
 const { into, map } = require('transducers.js')
-const { load, insert, remove, update, nested, bulk } = require('./util')
+const { load, insert, remove, replace, update, nested, bulk } = require('./util')
 
 
 module.exports = {
@@ -25,6 +25,11 @@ module.exports = {
         return remove(state, payload)
       case ITEM.UPDATE:
         return update(state, payload)
+
+      case ITEM.EXPLODE:
+        return (!meta.done || error) ?
+          state :
+          replace(state, payload)
 
       case ITEM.BULK.UPDATE:
         return bulk.update(state, payload, meta)

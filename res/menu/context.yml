@@ -78,6 +78,7 @@ linux:
       command: 'app:delete-photo'
     - label: 'Break-out Photo'
       command: 'app:explode-photo'
+      condition: 'hasMultiplePhotos'
     - label: 'Show Photo in Folder…'
       command: 'app:show-in-folder'
   item-deleted: &item-deleted

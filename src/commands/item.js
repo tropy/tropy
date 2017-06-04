@@ -12,7 +12,7 @@ const { text } = require('../value')
 const intl = require('../selectors/intl')
 const act = require('../actions')
 const mod = require('../models')
-const { mixed, pluck } = require('../common/util')
+const { mixed, pluck, remove } = require('../common/util')
 const { map, cat, filter, into, compose } = require('transducers.js')
 const { ITEM } = require('../constants')
 const { isArray } = Array
@@ -296,21 +296,26 @@ class Explode extends Command {
     const { db } = this.options
     const { payload } = this.action
 
-    let item = yield select(state =>
-      state.items[payload.id]
-    )
+    let item = yield select(state => ({
+      ...state.items[payload.id]
+    }))
 
     let photos = payload.photos || item.photos.slice(1)
 
-    let dups = []
+    let items = {}
 
     yield call(db.transaction, async tx => {
       for (let photo of photos) {
-        let dup = await mod.item.dup(tx, item.id)
-        await mod.photo.move(tx, { ids: [photo], item: dup.id })
-        dups.push(dup)
+        let dup = await mod.item.dup(tx, item.id, [photo])
+        items[dup.id] = dup
       }
     })
+
+    item.photos = remove(item.photos, ...photos)
+
+    return {
+      ...items, [item.id]: item
+    }
   }
 }
 
