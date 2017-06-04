@@ -194,7 +194,7 @@ module.exports = mod.item = {
     return (await mod.item.load(db, [id]))[id]
   },
 
-  async dup(db, source, photos) {
+  async dup(db, source) {
     const { id } = await db.run(`
       INSERT INTO subjects DEFAULT VALUES`)
     await db.run(`
@@ -205,10 +205,6 @@ module.exports = mod.item = {
       mod.item.tags.copy(db, { source, target: id }),
       mod.item.lists.copy(db, { source, target: id })
     ])
-
-    if (photos != null) {
-      await mod.photo.move(db, { ids: photos, item: id })
-    }
 
     return (await mod.item.load(db, [id]))[id]
   },

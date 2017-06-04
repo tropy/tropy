@@ -302,19 +302,41 @@ class Explode extends Command {
     }))
 
     let photos = payload.photos || item.photos.slice(1)
-
     let items = {}
 
-    yield call(db.transaction, async tx => {
-      for (let photo of photos) {
-        let dup = await mod.item.dup(tx, item.id, [photo])
-        items[dup.id] = dup
-      }
-    })
+    if (payload.items == null) {
+      yield call(db.transaction, async tx => {
+        for (let photo of photos) {
+          let dup = await mod.item.dup(tx, item.id)
+
+          await mod.photo.move(tx, { ids: [photo], item: dup.id })
+          dup.photos.push(photo)
+
+          items[dup.id] = dup
+        }
+      })
+
+    } else {
+      items = payload.items
+      let ids = keys(items)
+
+      assert(ids.length === photos.length)
+
+      yield call(db.transaction, async tx => {
+        await mod.item.restore(tx, ids)
+
+        for (let i = 0, ii = photos.length; i < ii; ++i) {
+          await mod.photo.move(tx, { ids: [photos[i]], item: ids[i] })
+        }
+      })
+    }
 
     this.undo = act.item.implode({
-      item,
-      items: keys(items)
+      item, items: keys(items)
+    })
+
+    this.redo = act.item.explode({
+      id: item.id, photos, items
     })
 
     return {
