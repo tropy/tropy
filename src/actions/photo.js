@@ -19,6 +19,14 @@ module.exports = {
     }
   },
 
+  update(payload, meta) {
+    return {
+      type: PHOTO.UPDATE,
+      payload,
+      meta: { ...meta }
+    }
+  },
+
   restore(payload, meta) {
     return {
       type: PHOTO.RESTORE,

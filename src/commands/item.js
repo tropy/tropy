@@ -303,6 +303,7 @@ class Explode extends Command {
 
     let photos = payload.photos || item.photos.slice(1)
     let items = {}
+    let moves = {}
 
     if (payload.items == null) {
       yield call(db.transaction, async tx => {
@@ -310,6 +311,7 @@ class Explode extends Command {
           let dup = await mod.item.dup(tx, item.id)
 
           await mod.photo.move(tx, { ids: [photo], item: dup.id })
+          moves[photo] = { item: dup.id }
           dup.photos.push(photo)
 
           items[dup.id] = dup
@@ -326,10 +328,16 @@ class Explode extends Command {
         await mod.item.restore(tx, ids)
 
         for (let i = 0, ii = photos.length; i < ii; ++i) {
-          await mod.photo.move(tx, { ids: [photos[i]], item: ids[i] })
+          let pid = photos[i]
+          let iid = ids[i]
+
+          await mod.photo.move(tx, { ids: [pid], item: iid })
+          moves[pid] = { item: iid }
         }
       })
     }
+
+    yield put(act.photo.bulk.update(moves))
 
     this.undo = act.item.implode({
       item, items: keys(items)
@@ -359,7 +367,9 @@ class Implode extends Command {
     yield call(db.transaction, async tx =>
       mod.item.implode(tx, { id, photos, items }))
 
+    yield put(act.photo.bulk.update([photos, { item: id }]))
     yield put(act.item.remove(items))
+    yield put(act.item.select({ items: [id] }, { mod: 'replace' }))
 
     return item
   }
