@@ -256,7 +256,7 @@ module.exports = mod.item = {
       mod.item.tags.add(db, tags.map(tag => ({ id: item.id, tag }))),
       mod.item.lists.merge(db, item.id, ids, lists),
       mod.metadata.update(db, { ids: [item.id], data }),
-      mod.item.delete(db, ids, 'merge')
+      mod.item.delete(db, ids, 'auto')
     ])
 
     return {
@@ -271,6 +271,13 @@ module.exports = mod.item = {
       mod.item.lists.remove(db, id, lists),
       mod.metadata.replace(db, { ids: [id], data }),
       mod.item.restore(db, items.map(i => i.id))
+    ])
+  },
+
+  async implode(db, { id, photos, items }) {
+    await all([
+      mod.photo.move(db, { ids: photos, item: id }),
+      mod.item.delete(db, items, 'auto')
     ])
   },
 

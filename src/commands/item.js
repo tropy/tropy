@@ -16,6 +16,7 @@ const { mixed, pluck, remove } = require('../common/util')
 const { map, cat, filter, into, compose } = require('transducers.js')
 const { ITEM } = require('../constants')
 const { isArray } = Array
+const { keys } = Object
 
 
 class Create extends Command {
@@ -311,10 +312,16 @@ class Explode extends Command {
       }
     })
 
-    item.photos = remove(item.photos, ...photos)
+    this.undo = act.item.implode({
+      item,
+      items: keys(items)
+    })
 
     return {
-      ...items, [item.id]: item
+      ...items,
+      [item.id]: {
+        ...item, photos: remove(item.photos, ...photos)
+      }
     }
   }
 }
@@ -323,6 +330,16 @@ class Implode extends Command {
   static get action() { return ITEM.IMPLODE }
 
   *exec() {
+    const { db } = this.options
+    const { item, items } = this.action.payload
+    const { id, photos } = item
+
+    yield call(db.transaction, async tx =>
+      mod.item.implode(tx, { id, photos, items }))
+
+    yield put(act.item.remove(items))
+
+    return item
   }
 }
 

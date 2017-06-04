@@ -34,6 +34,11 @@ module.exports = {
           state :
           replace(state, payload)
 
+      case ITEM.IMPLODE:
+        return (!meta.done || error) ?
+          state :
+          insert(state, payload)
+
       case ITEM.BULK.UPDATE:
         return bulk.update(state, payload, meta)
 
