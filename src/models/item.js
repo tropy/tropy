@@ -273,6 +273,7 @@ module.exports = mod.item = {
   async implode(db, { id, photos, items }) {
     await all([
       mod.photo.move(db, { ids: photos, item: id }),
+      mod.photo.order(db, id, photos),
       mod.item.delete(db, items, 'auto')
     ])
   },
