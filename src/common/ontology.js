@@ -54,6 +54,10 @@ class Ontology extends Resource {
       if (vocab == null) return []
       json[ns] = vocab
 
+      if (data[RDFS.label]) {
+        vocab.labels.push(...data[RDFS.label])
+      }
+
       return [vocab, data]
     }
 
@@ -79,41 +83,50 @@ class Ontology extends Resource {
     title = get(any(data, DC.title, DCT.title), [0, '@value'], title)
     prefix = get(data, [VANN.preferredNamespacePrefix, 0, '@value'], prefix)
 
+    const seeAlso = get(data, [RDFS.seeAlso, 0, '@id'])
+
     const description = getValue(
       any(data, DC.description, DCT.description, RDFS.comment)
     )
 
     return {
-      id, title, prefix, description, classes: [], properties: []
+      id,
+      title,
+      prefix,
+      description,
+      seeAlso,
+      classes: [],
+      labels: [],
+      properties: []
     }
   }
 
   getProperties() {
     return uniq([
-      ...this.store.getSubjects(RDF.type, RDF.Property),
-      ...this.store.getSubjects(RDF.type, OWL.ObjectProperty),
-      ...this.store.getSubjects(RDF.type, OWL.DatatypeProperty)
+      ...this.store.getSubjectsByIRI(RDF.type, RDF.Property),
+      ...this.store.getSubjectsByIRI(RDF.type, OWL.ObjectProperty),
+      ...this.store.getSubjectsByIRI(RDF.type, OWL.DatatypeProperty)
     ]).filter(id => !N3.Util.isBlank(id))
   }
 
   getClasses() {
     return uniq([
-      ...this.store.getSubjects(RDF.type, RDFS.Class),
-      ...this.store.getSubjects(RDF.type, OWL.Class)
+      ...this.store.getSubjectsByIRI(RDF.type, RDFS.Class),
+      ...this.store.getSubjectsByIRI(RDF.type, OWL.Class)
     ]).filter(id => !N3.Util.isBlank(id))
   }
 
   getData(subject, into = {}) {
-    return this.store.getTriples(subject)
+    return this.store.getTriplesByIRI(subject)
       .reduce((o, { predicate, object }) =>
         ((o[predicate] = [...(o[predicate] || []), literal(object)]), o), into)
   }
+
 }
 
 
 function info(data) {
   return {
-    label: getValue(data, RDFS.label),
     comment: getValue(data, RDFS.comment),
     definition: getValue(
       any(data, SKOS.defintion, DC.description, DCT.description)
