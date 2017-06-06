@@ -39,13 +39,11 @@ CREATE TABLE classes (
 
 CREATE TABLE labels (
   id        TEXT NOT NULL,
-  language  TEXT COLLATE NOCASE,
+  language  TEXT NOT NULL COLLATE NOCASE,
   label     TEXT NOT NULL,
 
   PRIMARY KEY (id, language),
 
   CHECK (id != '' AND label != ''),
-  CHECK (
-    language IS NULL OR (language != '' AND language = trim(lower(language)))
-  )
+  CHECK (language != '' AND language = trim(lower(language)))
 ) WITHOUT ROWID;
