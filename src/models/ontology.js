@@ -1,7 +1,6 @@
 'use strict'
 
 const { SCHEMA } = require('../constants/ontology')
-const { compose, into, map, cat, filter } = require('transducers.js')
 const { all } = Promise
 
 const ontology = {
