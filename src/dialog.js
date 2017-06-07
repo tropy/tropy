@@ -88,6 +88,16 @@ function openImages(options) {
   })
 }
 
+function openVocabs(options) {
+  return open('file', {
+    filters: [
+      { name: 'Vocabularies', extensions: ['n3'] }
+    ],
+    properties: ['openFile', 'multiSelections'],
+    ...options
+  })
+}
+
 function saveProject(options) {
   return open('save', {
     filters: [
@@ -105,6 +115,7 @@ module.exports = {
   fail,
   file,
   openImages,
+  openVocabs,
   save,
   saveProject,
   prompt
