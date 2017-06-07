@@ -33,9 +33,9 @@ class Ontology extends Resource {
 
   static async open(input, expand = true) {
     const [path, name] = expand ?
-      [this.expand(input), name] : [input, basename(input, extname(input))]
+      [Ontology.expand(input), input] : [input, basename(input, extname(input))]
 
-    return new this(await this.parse(stream(path)), name)
+    return new Ontology(await Ontology.parse(stream(path)), name)
   }
 
   constructor(store, name) {
