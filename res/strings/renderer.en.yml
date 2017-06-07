@@ -40,7 +40,8 @@ prefs:
         =0 {No Classes}
         one {# Class}
         other {# Classes}
-      } properties: >
+      }
+    properties: >
       {count, plural,
         =0 {No Properties}
         one {# Property}
