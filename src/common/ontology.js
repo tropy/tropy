@@ -58,7 +58,12 @@ class Ontology extends Resource {
       json[ns] = vocab
 
       if (data[RDFS.label]) {
-        vocab.labels.push(...data[RDFS.label])
+        for (let lbl of data[RDFS.label]) {
+          if (lbl['@value'] == null) continue
+          vocab.labels.push({
+            id, label: lbl['@value'], language: lbl['@language']
+          })
+        }
       }
 
       return [vocab, data]
