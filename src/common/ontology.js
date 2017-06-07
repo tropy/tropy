@@ -1,6 +1,6 @@
 'use strict'
 
-const { join } = require('path')
+const { join, basename, extname } = require('path')
 const { createReadStream: stream } = require('fs')
 const { any, empty, get, titlecase, uniq } = require('./util')
 const { Resource } = require('./res')
@@ -31,8 +31,11 @@ class Ontology extends Resource {
     })
   }
 
-  static async open(name) {
-    return new this(await this.parse(stream(this.expand(name))), name)
+  static async open(input, expand = true) {
+    const [path, name] = expand ?
+      [this.expand(input), name] : [input, basename(input, extname(input))]
+
+    return new this(await this.parse(stream(path)), name)
   }
 
   constructor(store, name) {
