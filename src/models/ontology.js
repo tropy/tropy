@@ -19,7 +19,7 @@ const ontology = {
       seeAlso
     }) {
       return db.run(`
-        INSERT INTO vocabularies (
+        REPLACE INTO vocabularies (
           vocabulary_id,
           prefix,
           title,
@@ -32,8 +32,8 @@ const ontology = {
     }
   },
 
-  properties: {
-    create(db, properties) {
+  props: {
+    create(db, ...properties) {
       return db.prepare(`
         REPLACE INTO properties (
           property_id,
@@ -57,8 +57,8 @@ const ontology = {
     }
   },
 
-  classes: {
-    create(db, classes) {
+  class: {
+    create(db, ...classes) {
       return db.prepare(`
         REPLACE INTO classes (
           class_id,
@@ -79,23 +79,18 @@ const ontology = {
   },
 
 
-  labels: {
-    flatten: compose(
-      filter(lbl => lbl['@value'] != null),
-      map(lbl => [lbl['@language'] || 'en', lbl['@value']]),
-      cat
-    ),
-
-    create(db, id, labels) {
-      if (labels.length > 0) {
-        return db.run(`
-          REPLACE INTO labels (id, language, label) VAlUES ${
-            labels.map(
-              (_, k) => `(?0, ?${2 * k + 1}, ?${2 * k + 2})`
-            ).join(', ')
-          }`, into([id], ontology.labels.flatten, labels)
-        )
-      }
+  label: {
+    create(db, ...labels) {
+      return db.prepare(`
+        INSERT OR IGNORE INTO labels (id, language, label)
+          VALUES (?, ?, ?)`, stmt =>
+            all(labels.map(lbl => stmt.run([
+              lbl.id,
+              lbl.language || 'en',
+              lbl.label
+            ])
+          ))
+      )
     }
   }
 }
