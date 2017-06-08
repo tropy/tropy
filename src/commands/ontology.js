@@ -24,10 +24,6 @@ class Import extends Command {
 
     if (!files) return
 
-    let vocabs = {}
-    let classes = {}
-    let properties = {}
-
     for (let i = 0, ii = files.length; i < ii; ++i) {
       let file = files[i]
 
@@ -36,16 +32,14 @@ class Import extends Command {
 
         yield call(db.transaction, async tx => {
           for (let id in data) {
-            for (let cls of data[id].classes) classes[cls.id] = cls
-            for (let prp of data[id].properties) properties[prp.id] = prp
+            await mod.ontology.vocab.create(tx, data[id])
 
-            vocabs[id] = {
-              ...data[id],
-              classes: data[id].classes.map(p => p.id),
-              properties: data[id].properties.map(p => p.id)
-            }
+            await Promise.all([
+              mod.ontology.props.create(tx, ...data[id].properties),
+              mod.ontology.class.create(tx, ...data[id].classes),
+              mod.ontology.label.create(tx, ...data[id].labels)
+            ])
           }
-
         })
 
       } catch (error) {

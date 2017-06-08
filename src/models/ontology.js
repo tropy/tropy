@@ -1,7 +1,6 @@
 'use strict'
 
 const { SCHEMA } = require('../constants/ontology')
-const { all } = Promise
 
 const ontology = {
   create(db) {
@@ -42,7 +41,7 @@ const ontology = {
           parent,
           description,
           comment) VALUES (?, ?, ?, ?, ?, ?, ?)`, stmt =>
-            all(properties.map(p => stmt.run([
+            Promise.all(properties.map(p => stmt.run([
               p.id,
               p.vocabulary,
               p.domain,
@@ -64,8 +63,8 @@ const ontology = {
           vocabulary_id,
           parent,
           description,
-          comment) VALUES (?, ?, ?, ?, ?, ?, ?)`, stmt =>
-            all(classes.map(c => stmt.run([
+          comment) VALUES (?, ?, ?, ?, ?)`, stmt =>
+            Promise.all(classes.map(c => stmt.run([
               c.id,
               c.vocabulary,
               c.parent,
@@ -83,7 +82,7 @@ const ontology = {
       return db.prepare(`
         INSERT OR IGNORE INTO labels (id, language, label)
           VALUES (?, ?, ?)`, stmt =>
-            all(labels.map(lbl => stmt.run([
+            Promise.all(labels.map(lbl => stmt.run([
               lbl.id,
               lbl.language || ARGS.locale,
               lbl.label

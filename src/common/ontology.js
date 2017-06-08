@@ -88,13 +88,17 @@ class Ontology extends Resource {
     for (let id of this.getByType(...Ontology.PROPERTIES)) {
       let [vocab, data] = collect(id)
       if (vocab == null) continue
-      vocab.properties.push({ id, data, ...info(data) })
+      vocab.properties.push({
+        id, data, vocabulary: vocab.id, ...info(data)
+      })
     }
 
     for (let id of this.getByType(...Ontology.CLASSES)) {
       let [vocab, data] = collect(id)
       if (vocab == null) continue
-      vocab.classes.push({ id, data, ...info(data) })
+      vocab.classes.push({
+        id, data, vocabulary: vocab.id, ...info(data)
+      })
     }
 
     return json

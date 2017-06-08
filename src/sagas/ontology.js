@@ -4,6 +4,7 @@ require('../common/promisify')
 
 const { join } = require('path')
 const { Database } = require('../common/db')
+const { Ontology } = require('../common/ontology')
 const { verbose, warn } = require('../common/log')
 const { ONTOLOGY } = require('../constants')
 const { exec } = require('./cmd')
@@ -22,7 +23,11 @@ function *ontology(file = join(ARGS.home, ONTOLOGY.DB)) {
       yield call(mod.ontology.create, db)
       verbose('*ontology created db...')
 
-      yield fork(exec, { db }, act.ontology.import(null, { history: false }))
+      yield fork(exec, { db }, act.ontology.import({
+        files: [
+          Ontology.expand('dc')
+        ]
+      }, { history: false }))
 
     } else {
       // migrate
