@@ -2,7 +2,7 @@
 
 const { join, basename, extname } = require('path')
 const { createReadStream: stream } = require('fs')
-const { any, empty, get, titlecase, uniq } = require('./util')
+const { any, empty, get, titlecase } = require('./util')
 const { Resource } = require('./res')
 const N3 = require('n3')
 const { RDF, RDFS, DC, DCT, SKOS, OWL, VANN } = require('../constants')
@@ -38,6 +38,22 @@ class Ontology extends Resource {
     return new Ontology(await Ontology.parse(stream(path)), name)
   }
 
+  static CLASSES = [
+    RDFS.Class,
+    OWL.Class
+  ]
+
+  static PROPERTIES = [
+    RDF.Property,
+    OWL.ObjectProperty,
+    OWL.DatatypeProperty,
+    OWL.SymmetricProperty,
+    OWL.FunctionalProperty,
+    OWL.TransitiveProperty,
+    OWL.InverseFunctionalProperty
+  ]
+
+
   constructor(store, name) {
     super()
     this.store = store
@@ -69,13 +85,13 @@ class Ontology extends Resource {
       return [vocab, data]
     }
 
-    for (let id of this.getProperties()) {
+    for (let id of this.getByType(...Ontology.PROPERTIES)) {
       let [vocab, data] = collect(id)
       if (vocab == null) continue
       vocab.properties.push({ id, data, ...info(data) })
     }
 
-    for (let id of this.getClasses()) {
+    for (let id of this.getByType(...Ontology.CLASSES)) {
       let [vocab, data] = collect(id)
       if (vocab == null) continue
       vocab.classes.push({ id, data, ...info(data) })
@@ -109,19 +125,14 @@ class Ontology extends Resource {
     }
   }
 
-  getProperties() {
-    return uniq([
-      ...this.store.getSubjectsByIRI(RDF.type, RDF.Property),
-      ...this.store.getSubjectsByIRI(RDF.type, OWL.ObjectProperty),
-      ...this.store.getSubjectsByIRI(RDF.type, OWL.DatatypeProperty)
-    ]).filter(id => !N3.Util.isBlank(id))
-  }
+  getByType(...types) {
+    const ids = []
 
-  getClasses() {
-    return uniq([
-      ...this.store.getSubjectsByIRI(RDF.type, RDFS.Class),
-      ...this.store.getSubjectsByIRI(RDF.type, OWL.Class)
-    ]).filter(id => !N3.Util.isBlank(id))
+    this.store.forEachByIRI(({ subject, object }) => {
+      if (!N3.Util.isBlank(subject) && types.includes(object)) ids.push(subject)
+    }, null, RDF.type)
+
+    return ids
   }
 
   getData(subject, into = {}) {

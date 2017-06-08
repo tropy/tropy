@@ -17,8 +17,12 @@ module.exports = {
   OWL: {
     Class: 'http://www.w3.org/2002/07/owl#Class',
     DatatypeProperty: 'http://www.w3.org/2002/07/owl#DatatypeProerty',
+    FunctionalProperty: 'http://www.w3.org/2002/07/owl#FunctionalProperty',
+    InverseFunctionalProperty: 'http://www.w3.org/2002/07/owl#InverseFunctionalProperty',
+    ObjectProperty: 'http://www.w3.org/2002/07/owl#ObjectProerty',
     Ontology: 'http://www.w3.org/2002/07/owl#Ontology',
-    ObjectProperty: 'http://www.w3.org/2002/07/owl#ObjectProerty'
+    SymmetricProperty: 'http://www.w3.org/2002/07/owl#SymmetricProperty',
+    TransitiveProperty: 'http://www.w3.org/2002/07/owl#TransitiveProperty'
   },
 
   DC: {
