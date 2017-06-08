@@ -85,7 +85,7 @@ const ontology = {
           VALUES (?, ?, ?)`, stmt =>
             all(labels.map(lbl => stmt.run([
               lbl.id,
-              lbl.language || 'en',
+              lbl.language || ARGS.locale,
               lbl.label
             ])
           ))

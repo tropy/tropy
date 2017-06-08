@@ -42,7 +42,7 @@ const T = new WeakMap()
 class Tropy extends EventEmitter {
   static defaults = {
     frameless: darwin,
-    locale: app.getLocale() || 'en',
+    locale: 'en', // app.getLocale() || 'en',
     theme: 'light',
     recent: [],
     win: {},
