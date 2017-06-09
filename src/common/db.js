@@ -245,10 +245,9 @@ class Connection {
     return this.db.serialize(...args), this
   }
 
-
-  prepare(sql, ...params) {
-    return this.db.prepareAsync(sql, flatten(params))
-      .then(stmt => new Statement(stmt))
+  prepare(...args) {
+    const fn = args.pop()
+    return using(Statement.disposable(this, ...args), stmt => fn(stmt, this))
   }
 
   all(sql, ...params) {
@@ -313,9 +312,9 @@ Connection.defaults = {
 
 class Statement {
 
-  static disposable(conn, ...args) {
-    return conn
-      .prepare(...args)
+  static disposable(conn, sql, ...params) {
+    return conn.db.prepareAsync(sql, flatten(params))
+      .then(stmt => new Statement(stmt))
       .disposer(stmt => stmt.finalize())
   }
 

@@ -1,6 +1,7 @@
 'use strict'
 
 const { SCHEMA } = require('../constants/ontology')
+const { all } = require('bluebird')
 
 const ontology = {
   create(db) {
@@ -41,7 +42,7 @@ const ontology = {
           parent,
           description,
           comment) VALUES (?, ?, ?, ?, ?, ?, ?)`, stmt =>
-            Promise.all(properties.map(p => stmt.run([
+            all(properties.map(p => stmt.run([
               p.id,
               p.vocabulary,
               p.domain,
@@ -64,7 +65,7 @@ const ontology = {
           parent,
           description,
           comment) VALUES (?, ?, ?, ?, ?)`, stmt =>
-            Promise.all(classes.map(c => stmt.run([
+            all(classes.map(c => stmt.run([
               c.id,
               c.vocabulary,
               c.parent,
@@ -82,7 +83,7 @@ const ontology = {
       return db.prepare(`
         INSERT OR IGNORE INTO labels (id, language, label)
           VALUES (?, ?, ?)`, stmt =>
-            Promise.all(labels.map(lbl => stmt.run([
+            all(labels.map(lbl => stmt.run([
               lbl.id,
               lbl.language || ARGS.locale,
               lbl.label
