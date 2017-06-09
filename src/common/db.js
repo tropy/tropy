@@ -60,7 +60,7 @@ class Database extends EventEmitter {
     }, {
       min: 0,
       max: 4,
-      idleTimeoutMillis: 60000,
+      idleTimeoutMillis: 60000 * 5,
       ...options,
       validate: (conn) => resolve(conn.db.open)
     })
