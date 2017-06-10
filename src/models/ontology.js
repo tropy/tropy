@@ -101,6 +101,23 @@ const ontology = {
   },
 
   props: {
+    async load(db) {
+      const props = {}
+
+      await db.each(`
+        SELECT
+          property_id AS id,
+          vocabulary_id AS vocabulary,
+          description,
+          comment,
+          FROM properties JOIN vocabularies v USING (vocabulary_id)
+          WHERE v.deleted IS NULL`, (data) => {
+        props[data.id] = data
+      })
+
+      return props
+    },
+
     create(db, ...properties) {
       return db.prepare(`
         REPLACE INTO properties (
@@ -126,6 +143,23 @@ const ontology = {
   },
 
   class: {
+    async load(db) {
+      const classes = {}
+
+      await db.each(`
+        SELECT
+          class_id AS id,
+          vocabulary_id AS vocabulary,
+          description,
+          comment,
+          FROM classes JOIN vocabularies v USING (vocabulary_id)
+          WHERE v.deleted IS NULL`, (data) => {
+        classes[data.id] = data
+      })
+
+      return classes
+    },
+
     create(db, ...classes) {
       return db.prepare(`
         REPLACE INTO classes (
