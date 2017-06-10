@@ -88,8 +88,12 @@ class Ontology extends Resource {
     for (let id of this.getByType(...Ontology.PROPERTIES)) {
       let [vocab, data] = collect(id)
       if (vocab == null) continue
+
+      let domain = get(data, [RDFS.domain, 0, '@id'])
+      let range = get(data, [RDFS.range, 0, '@id'])
+
       vocab.properties.push({
-        id, data, vocabulary: vocab.id, ...info(data)
+        id, data, vocabulary: vocab.id, domain, range, ...info(data)
       })
     }
 
