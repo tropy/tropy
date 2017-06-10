@@ -60,7 +60,7 @@ const ontology = {
           title,
           description,
           comment,
-          see_also
+          see_also,
           deleted) VALUES (?, ?, ?, ?, ?, ?, NULL)`, [
             id, prefix, title, description, comment, seeAlso
           ]
