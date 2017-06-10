@@ -30,13 +30,13 @@ const ontology = {
       await all([
         db.each(`
           SELECT vocabulary_id AS id, property_id AS prop
-            FROM properties JOIN voabularies USING (vocabulary_id)
+            FROM properties JOIN vocabularies USING (vocabulary_id)
             WHERE deleted IS NULL`, ({ id, prop }) => {
           vocabs[id].properties.push(prop)
         }),
         db.each(`
-          SELECT ocabulary_id AS id, class_id AS klass
-            FROM properties JOIN voabularies USING (vocabulary_id)
+          SELECT vocabulary_id AS id, class_id AS klass
+            FROM classes JOIN vocabularies USING (vocabulary_id)
             WHERE deleted IS NULL`, ({ id, klass }) => {
           vocabs[id].classes.push(klass)
         }),

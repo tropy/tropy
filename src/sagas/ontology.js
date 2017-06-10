@@ -10,10 +10,14 @@ const { ONTOLOGY } = require('../constants')
 const { exec } = require('./cmd')
 const mod = require('../models')
 const act = require('../actions')
-const { call, fork, take } = require('redux-saga/effects')
+const { call, fork, put, take } = require('redux-saga/effects')
 
 const command = ({ error, meta }) =>
   (!error && meta && meta.cmd === 'ontology')
+
+function *load() {
+  yield put(act.ontology.vocab.load())
+}
 
 function *ontology(file = join(ARGS.home, ONTOLOGY.DB)) {
   try {
@@ -31,6 +35,8 @@ function *ontology(file = join(ARGS.home, ONTOLOGY.DB)) {
 
     } else {
       // migrate
+      //
+      yield fork(load)
     }
 
     while (true) {
