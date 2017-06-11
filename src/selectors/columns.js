@@ -4,15 +4,16 @@ const { createSelector: memo } = require('reselect')
 
 const getColumns = memo(
   ({ columns }) => columns,
-  ({ properties }) => properties,
+  ({ ontology }) => ontology.props,
 
-  (columns, properties) =>
-    columns.map(column => ({
+  (cols, props) =>
+    cols.map(column => ({
       ...column,
-      property: properties[column.property]
+      property: props[column.property] || {
+        id: column.property
+      }
     }))
 )
-
 
 module.exports = {
   getColumns

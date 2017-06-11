@@ -18,7 +18,6 @@ const tasks = store.saga.run(main)
 const { locale, file } = ARGS
 
 all([
-  store.dispatch(act.vocab.load('dc')),
   store.dispatch(act.intl.load({ locale })),
   store.dispatch(act.keymap.load({ name: 'project', locale })),
   store.dispatch(act.project.open(file)),

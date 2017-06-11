@@ -2,16 +2,23 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const { CoverImage } = require('./cover-image')
 const { Editable } = require('../editable')
 const { createClickHandler } = require('../util')
 const { meta } = require('../../common/os')
 const cn = require('classnames')
-const { bool, shape, string, number, object, arrayOf, func } = PropTypes
+const {
+  arrayOf, bool, func, number, object, shape, string
+} = require('prop-types')
 
 
 class ItemTableCell extends PureComponent {
+
+  get style() {
+    return {
+      width: `${this.props.width}%`
+    }
+  }
 
   get value() {
     const { data, property } = this.props
@@ -66,7 +73,6 @@ class ItemTableCell extends PureComponent {
       cache,
       photos,
       size,
-      width,
       isEditing,
       isDisabled,
       hasCoverImage,
@@ -76,7 +82,7 @@ class ItemTableCell extends PureComponent {
     return (
       <td
         className={cn({ metadata: true, [this.type]: true })}
-        style={{ width }}
+        style={this.style}
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>
 
@@ -119,7 +125,7 @@ class ItemTableCell extends PureComponent {
     photos: object.isRequired,
 
     cache: string.isRequired,
-    width: string.isRequired,
+    width: number.isRequired,
     size: number.isRequired,
 
     onCancel: func.isRequired,

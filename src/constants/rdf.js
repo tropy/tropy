@@ -28,8 +28,11 @@ module.exports = {
   },
 
   DC: {
+    creator: 'http://purl.org/dc/elements/1.1/creator',
+    date: 'http://purl.org/dc/elements/1.1/date',
     description: 'http://purl.org/dc/elements/1.1/description',
-    title: 'http://purl.org/dc/elements/1.1/title'
+    title: 'http://purl.org/dc/elements/1.1/title',
+    type: 'http://purl.org/dc/elements/1.1/type'
   },
 
   DCT: {

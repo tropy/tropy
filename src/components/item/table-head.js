@@ -2,10 +2,11 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { shape, func, string, bool, object, arrayOf, oneOf } = PropTypes
 const cn = require('classnames')
 const { IconChevron7 } = require('../icons')
+const {
+  arrayOf, bool, func, number, object, oneOf, shape, string
+} = require('prop-types')
 
 
 class ItemTableHeadCell extends PureComponent {
@@ -19,7 +20,7 @@ class ItemTableHeadCell extends PureComponent {
 
   get style() {
     return {
-      width: this.props.width
+      width: `${this.props.width}%`
     }
   }
 
@@ -60,7 +61,7 @@ class ItemTableHeadCell extends PureComponent {
     label: string.isRequired,
     type: string.isRequired,
     id: string.isRequired,
-    width: string.isRequired,
+    width: number.isRequired,
     onClick: func.isRequired
   }
 
@@ -102,7 +103,7 @@ class ItemTableHead extends PureComponent {
   static propTypes = {
     columns: arrayOf(shape({
       property: object.isRequired,
-      width: string.isRequired
+      width: number.isRequired
     })).isRequired,
 
     sort: shape({

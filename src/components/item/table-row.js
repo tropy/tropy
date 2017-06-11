@@ -1,14 +1,13 @@
 'use strict'
 
 const React = require('react')
-const PropTypes = require('prop-types')
 const { ItemIterable } = require('./iterable')
 const { ItemTableCell } = require('./table-cell')
 const { meta } = require('../../common/os')
 const { get, pick } = require('../../common/util')
 const { DC } = require('../../constants/properties')
 const cx = require('classnames')
-const { arrayOf, object } = PropTypes
+const { arrayOf, object } = require('prop-types')
 
 const CellProps = Object.keys(ItemTableCell.propTypes)
 
