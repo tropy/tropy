@@ -6,6 +6,8 @@ const { PrefPane } = require('../prefs/pane')
 const { AccordionGroup } = require('../accordion')
 const { VocabAccordion } = require('./accordion')
 const { array, bool, func, string } = require('prop-types')
+const { IconButton } = require('../button')
+const { IconPlus } = require('../icons')
 
 
 class VocabPane extends PureComponent {
@@ -14,13 +16,18 @@ class VocabPane extends PureComponent {
       <PrefPane
         name={this.props.name}
         isActive={this.props.isActive}>
-        <AccordionGroup className="form-horizontal">
-          {this.props.vocab.map(vocab =>
-            <VocabAccordion
-              key={vocab.id}
-              vocab={vocab}
-              onDelete={this.props.onDelete}/>)}
-        </AccordionGroup>
+        <div>
+          <IconButton
+            icon={<IconPlus/>}
+            onClick={this.props.onImport}/>
+          <AccordionGroup className="form-horizontal">
+            {this.props.vocab.map(vocab =>
+              <VocabAccordion
+                key={vocab.id}
+                vocab={vocab}
+                onDelete={this.props.onDelete}/>)}
+          </AccordionGroup>
+        </div>
       </PrefPane>
     )
   }

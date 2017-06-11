@@ -147,7 +147,7 @@ const ontology = {
     }
   },
 
-  types: {
+  class: {
     async load(db) {
       const classes = {}
 

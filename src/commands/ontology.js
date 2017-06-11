@@ -2,12 +2,11 @@
 
 const { Command } = require('./command')
 const { ONTOLOGY } = require('../constants')
-const { VOCAB, PROPS, TYPES } = ONTOLOGY
+const { VOCAB, PROPS, CLASS } = ONTOLOGY
 const { Ontology } = require('../common/ontology')
 const { openVocabs, fail  } = require('../dialog')
 const { verbose, warn } = require('../common/log')
 const { call } = require('redux-saga/effects')
-// const act = require('../actions')
 const mod = require('../models')
 
 
@@ -74,11 +73,11 @@ class PropsLoad extends Command {
   }
 }
 
-class TypesLoad extends Command {
-  static get action() { return TYPES.LOAD }
+class ClassLoad extends Command {
+  static get action() { return CLASS.LOAD }
 
   *exec() {
-    return yield call(mod.ontology.types.load, this.options.db)
+    return yield call(mod.ontology.class.load, this.options.db)
   }
 }
 
@@ -86,6 +85,6 @@ class TypesLoad extends Command {
 module.exports = {
   Import,
   PropsLoad,
-  TypesLoad,
+  ClassLoad,
   VocabLoad
 }

@@ -2,7 +2,7 @@
 
 const { combineReducers } = require('redux')
 const { ONTOLOGY } = require('../constants')
-const { PROPS, TYPES, VOCAB } = ONTOLOGY
+const { PROPS, CLASS, VOCAB } = ONTOLOGY
 const { load } = require('./util')
 
 function props(state = {}, { type, payload, error, meta }) {
@@ -14,9 +14,9 @@ function props(state = {}, { type, payload, error, meta }) {
   }
 }
 
-function types(state = {}, { type, payload, error, meta }) {
+function klass(state = {}, { type, payload, error, meta }) {
   switch (type) {
-    case TYPES.LOAD:
+    case CLASS.LOAD:
       return load(state, payload, meta, error)
     default:
       return state
@@ -35,7 +35,7 @@ function vocab(state = {}, { type, payload, error, meta }) {
 module.exports = {
   ontology: combineReducers({
     props,
-    types,
+    class: klass,
     vocab
   })
 }

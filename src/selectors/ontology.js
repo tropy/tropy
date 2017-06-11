@@ -13,12 +13,12 @@ const getAllProperties = memo(
 const getVocabs = memo(
   ({ ontology }) => ontology.vocab,
   ({ ontology }) => ontology.props,
-  ({ ontology }) => ontology.types,
-  (vocab, props, types) => into(
+  ({ ontology }) => ontology.class,
+  (vocab, props, klass) => into(
     [],
     map(kv => ({
       ...kv[1],
-      classes: kv[1].classes.map(id => types[id]),
+      classes: kv[1].classes.map(id => klass[id]),
       properties: kv[1].properties.map(id => props[id])
     })),
     vocab

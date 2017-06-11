@@ -1,10 +1,10 @@
 'use strict'
 
 const { ONTOLOGY } = require('../constants')
-const { PROPS, TYPES, VOCAB } = ONTOLOGY
+const { PROPS, CLASS, VOCAB } = ONTOLOGY
 
 module.exports = {
-  import(payload, meta) {
+  import(payload = {}, meta) {
     return {
       type: ONTOLOGY.IMPORT,
       payload,
@@ -54,10 +54,10 @@ module.exports = {
     }
   },
 
-  types: {
+  class: {
     load(payload, meta = {}) {
       return {
-        type: TYPES.LOAD,
+        type: CLASS.LOAD,
         payload,
         meta: {
           cmd: 'ontology',

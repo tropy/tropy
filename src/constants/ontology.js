@@ -12,8 +12,8 @@ module.exports = {
     LOAD: 'ontology.props.load'
   },
 
-  TYPES: {
-    LOAD: 'ontology.types.load'
+  CLASS: {
+    LOAD: 'ontology.class.load'
   },
 
   VOCAB: {
