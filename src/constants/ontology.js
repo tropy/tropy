@@ -17,6 +17,7 @@ module.exports = {
   },
 
   VOCAB: {
+    DELETE: 'ontology.vocab.delete',
     LOAD: 'ontology.vocab.load'
   }
 }

@@ -92,7 +92,9 @@ class PrefsContainer extends PureComponent {
 
           <VocabPane
             isActive={this.isActive('vocab')}
-            vocab={this.props.vocab}/>
+            vocab={this.props.vocab}
+            onDelete={this.props.onVocabDelete}
+            onImport={this.props.onOntologyImport}/>
         </main>
       </div>
     )
@@ -107,7 +109,9 @@ class PrefsContainer extends PureComponent {
     vocab: array.isRequired,
     onPrefsUpdate: func.isRequired,
     onTemplateCreate: func.isRequired,
-    onTemplateSave: func.isRequired
+    onTemplateSave: func.isRequired,
+    onVocabDelete: func.isRequired,
+    onOntologyImport: func.isRequired
   }
 
   static defaultProps = {
@@ -136,6 +140,14 @@ module.exports = {
       },
 
       onTemplateSave() {
+      },
+
+      onVocabDelete(...args) {
+        dispatch(actions.ontology.vocab.delete(...args))
+      },
+
+      onOntologyImport() {
+        dispatch(actions.ontology.import())
       }
     })
   )(PrefsContainer)

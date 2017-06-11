@@ -26,6 +26,18 @@ module.exports = {
           ...meta
         }
       }
+    },
+
+    delete(payload, meta = {}) {
+      return {
+        type: VOCAB.DELETE,
+        payload,
+        meta: {
+          cmd: false, // 'ontology',
+          history: false, // 'add',
+          ...meta
+        }
+      }
     }
   },
 
