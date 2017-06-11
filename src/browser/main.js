@@ -61,7 +61,7 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
         app.commandLine.appendSwitch('force-device-scale-factor', opts.scale)
       }
 
-      verbose(`started in ${opts.e} mode`)
+      verbose(`started in ${opts.env} mode`)
       verbose(`using ${app.getPath('userData')}`)
 
       var tropy = new (require('./tropy'))()

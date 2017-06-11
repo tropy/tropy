@@ -5,6 +5,8 @@ const {
 } = require('redux')
 
 const { default: thunk } = require('redux-thunk')
+const { default: createSagaMiddleware } = require('redux-saga')
+const { log: logger, warn, debug } = require('../common/log')
 const { seq, debounce, throttle, log } = require('../middleware')
 
 const {
@@ -23,6 +25,14 @@ const devtools = (ARGS.dev || ARGS.debug) &&
 
 module.exports = {
   create(init = {}) {
+    let saga = createSagaMiddleware({
+      logger,
+      onError(error) {
+        warn(`unhandled error in saga middleware: ${error.message}`)
+        debug(error.stack)
+      }
+    })
+
     let reducer = combineReducers({
       intl,
       edit,
@@ -38,7 +48,8 @@ module.exports = {
       throttle,
       thunk,
       seq,
-      log
+      log,
+      saga
     )
 
     if (typeof devtools === 'function') {
@@ -46,7 +57,7 @@ module.exports = {
     }
 
     return {
-      ...createStore(reducer, init, middleware)
+      ...createStore(reducer, init, middleware), saga
     }
   }
 }

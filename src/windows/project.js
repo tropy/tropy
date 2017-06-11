@@ -20,10 +20,11 @@ const { locale, file } = ARGS
 all([
   store.dispatch(act.intl.load({ locale })),
   store.dispatch(act.keymap.load({ name: 'project', locale })),
-  store.dispatch(act.project.open(file)),
   ready
 ])
   .then(() => {
+    store.dispatch(act.project.open(file))
+
     render(
       <Main store={store}><ProjectContainer/></Main>,
       $('.view')
@@ -33,7 +34,6 @@ all([
 dialog.start()
 
 win.unloaders.push(dialog.stop)
-
 win.unloaders.push(() => (
   store.dispatch(act.project.close()), tasks.done
 ))

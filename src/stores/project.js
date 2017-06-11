@@ -6,7 +6,6 @@ const {
 
 const { default: thunk } = require('redux-thunk')
 const { default: createSagaMiddleware } = require('redux-saga')
-
 const { log: logger, warn, debug } = require('../common/log')
 const { seq, debounce, throttle, log } = require('../middleware')
 
