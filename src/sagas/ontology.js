@@ -17,6 +17,8 @@ const command = ({ error, meta }) =>
 
 function *load() {
   yield put(act.ontology.vocab.load())
+  yield put(act.ontology.props.load())
+  yield put(act.ontology.types.load())
 }
 
 function *ontology(file = join(ARGS.home, ONTOLOGY.DB)) {

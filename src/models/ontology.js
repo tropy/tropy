@@ -108,12 +108,17 @@ const ontology = {
         SELECT
           property_id AS id,
           vocabulary_id AS vocabulary,
-          description,
-          comment,
-          FROM properties JOIN vocabularies v USING (vocabulary_id)
-          WHERE v.deleted IS NULL`, (data) => {
-        props[data.id] = data
-      })
+          p.description,
+          p.comment,
+          label
+          FROM properties p
+            JOIN vocabularies v USING (vocabulary_id)
+            JOIN labels ON (property_id = id)
+          WHERE language = ? AND v.deleted IS NULL`, [ARGS.locale],
+        (data) => {
+          props[data.id] = data
+        }
+      )
 
       return props
     },
@@ -142,7 +147,7 @@ const ontology = {
     }
   },
 
-  class: {
+  types: {
     async load(db) {
       const classes = {}
 
@@ -150,12 +155,17 @@ const ontology = {
         SELECT
           class_id AS id,
           vocabulary_id AS vocabulary,
-          description,
-          comment,
-          FROM classes JOIN vocabularies v USING (vocabulary_id)
-          WHERE v.deleted IS NULL`, (data) => {
-        classes[data.id] = data
-      })
+          c.description,
+          c.comment,
+          label
+          FROM classes c
+            JOIN vocabularies v USING (vocabulary_id)
+            JOIN labels ON (class_id = id)
+          WHERE language = ? AND v.deleted IS NULL`, [ARGS.locale],
+        (data) => {
+          classes[data.id] = data
+        }
+      )
 
       return classes
     },

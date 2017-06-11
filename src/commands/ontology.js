@@ -2,7 +2,7 @@
 
 const { Command } = require('./command')
 const { ONTOLOGY } = require('../constants')
-const { VOCAB } = ONTOLOGY
+const { VOCAB, PROPS, TYPES } = ONTOLOGY
 const { Ontology } = require('../common/ontology')
 const { openVocabs, fail  } = require('../dialog')
 const { verbose, warn } = require('../common/log')
@@ -66,7 +66,26 @@ class VocabLoad extends Command {
   }
 }
 
+class PropsLoad extends Command {
+  static get action() { return PROPS.LOAD }
+
+  *exec() {
+    return yield call(mod.ontology.props.load, this.options.db)
+  }
+}
+
+class TypesLoad extends Command {
+  static get action() { return TYPES.LOAD }
+
+  *exec() {
+    return yield call(mod.ontology.types.load, this.options.db)
+  }
+}
+
+
 module.exports = {
   Import,
+  PropsLoad,
+  TypesLoad,
   VocabLoad
 }
