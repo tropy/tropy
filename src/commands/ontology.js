@@ -6,7 +6,8 @@ const { VOCAB, PROPS, CLASS } = ONTOLOGY
 const { Ontology } = require('../common/ontology')
 const { openVocabs, fail  } = require('../dialog')
 const { verbose, warn } = require('../common/log')
-const { call } = require('redux-saga/effects')
+const { all, call } = require('redux-saga/effects')
+const act = require('../actions')
 const mod = require('../models')
 
 
@@ -24,6 +25,8 @@ class Import extends Command {
 
     if (!files) return
 
+    let vocabs = []
+
     for (let i = 0, ii = files.length; i < ii; ++i) {
       let file = files[i]
 
@@ -39,8 +42,11 @@ class Import extends Command {
               mod.ontology.class.create(tx, ...data[id].classes),
               mod.ontology.label.create(tx, ...data[id].labels)
             ])
+
+            vocabs.push(id)
           }
         })
+
 
       } catch (error) {
         warn(`Failed to import "${file}": ${error.message}`)
@@ -50,10 +56,18 @@ class Import extends Command {
       }
     }
 
-    // if (vocabs.length) {
-    //   this.undo = act.vocab.delete(vocabs)
-    //   this.redo = act.vocab.restore(vocabs)
-    // }
+    if (vocabs.length) {
+      this.undo = act.ontology.vocab.delete(vocabs)
+      this.redo = act.ontology.vocab.restore(vocabs)
+
+      const [vocab, klass, props] = yield all([
+        mod.ontology.vocab.load(db, ...vocabs),
+        mod.ontology.class.load(db, ...vocabs),
+        mod.ontology.props.load(db, ...vocabs)
+      ])
+
+      return { vocab, class: klass, props }
+    }
   }
 }
 

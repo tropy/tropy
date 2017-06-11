@@ -2,6 +2,7 @@
 
 const { SCHEMA } = require('../constants/ontology')
 const { all } = require('bluebird')
+const { list, quote } = require('../common/util')
 
 const ontology = {
   create(db) {
@@ -9,8 +10,13 @@ const ontology = {
   },
 
   vocab: {
-    async load(db) {
+    async load(db, ...args) {
       const vocabs = {}
+      const cond = ['deleted is NULL']
+
+      if (args.length > 0) {
+        cond.push(`vocabulary_id IN (${list(args, quote)})`)
+      }
 
       await db.each(`
         SELECT
@@ -21,7 +27,7 @@ const ontology = {
           comment,
           see_also AS seeAlso
           FROM vocabularies
-          WHERE deleted IS NULL`, (data) => {
+          WHERE ${cond.join(' AND ')}`, (data) => {
         vocabs[data.id] = {
           ...data, classes: [], properties: []
         }
@@ -31,13 +37,13 @@ const ontology = {
         db.each(`
           SELECT vocabulary_id AS id, property_id AS prop
             FROM properties JOIN vocabularies USING (vocabulary_id)
-            WHERE deleted IS NULL`, ({ id, prop }) => {
+            WHERE ${cond.join(' AND ')}`, ({ id, prop }) => {
           vocabs[id].properties.push(prop)
         }),
         db.each(`
           SELECT vocabulary_id AS id, class_id AS klass
             FROM classes JOIN vocabularies USING (vocabulary_id)
-            WHERE deleted IS NULL`, ({ id, klass }) => {
+            WHERE ${cond.join(' AND ')}`, ({ id, klass }) => {
           vocabs[id].classes.push(klass)
         }),
       ])
@@ -101,8 +107,15 @@ const ontology = {
   },
 
   props: {
-    async load(db) {
+    async load(db, ...args) {
       const props = {}
+      const cond = [
+        'language = ?', 'deleted is NULL'
+      ]
+
+      if (args.length > 0) {
+        cond.push(`vocabulary_id IN (${list(args, quote)})`)
+      }
 
       await db.each(`
         SELECT
@@ -114,7 +127,7 @@ const ontology = {
           FROM properties p
             JOIN vocabularies v USING (vocabulary_id)
             JOIN labels ON (property_id = id)
-          WHERE language = ? AND v.deleted IS NULL`, [ARGS.locale],
+          WHERE ${cond.join(' AND ')}`, [ARGS.locale],
         (data) => {
           props[data.id] = data
         }
@@ -148,8 +161,15 @@ const ontology = {
   },
 
   class: {
-    async load(db) {
+    async load(db, ...args) {
       const classes = {}
+      const cond = [
+        'language = ?', 'deleted is NULL'
+      ]
+
+      if (args.length > 0) {
+        cond.push(`vocabulary_id IN (${list(args, quote)})`)
+      }
 
       await db.each(`
         SELECT
@@ -161,7 +181,7 @@ const ontology = {
           FROM classes c
             JOIN vocabularies v USING (vocabulary_id)
             JOIN labels ON (class_id = id)
-          WHERE language = ? AND v.deleted IS NULL`, [ARGS.locale],
+          WHERE ${cond.join(' AND ')}`, [ARGS.locale],
         (data) => {
           classes[data.id] = data
         }

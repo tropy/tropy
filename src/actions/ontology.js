@@ -2,6 +2,7 @@
 
 const { ONTOLOGY } = require('../constants')
 const { PROPS, CLASS, VOCAB } = ONTOLOGY
+const { array } = require('../common/util')
 
 module.exports = {
   import(payload = {}, meta) {
@@ -31,7 +32,19 @@ module.exports = {
     delete(payload, meta = {}) {
       return {
         type: VOCAB.DELETE,
-        payload,
+        payload: array(payload),
+        meta: {
+          cmd: false, // 'ontology',
+          history: false, // 'add',
+          ...meta
+        }
+      }
+    },
+
+    restore(payload, meta = {}) {
+      return {
+        type: VOCAB.RESTORE,
+        payload: array(payload),
         meta: {
           cmd: false, // 'ontology',
           history: false, // 'add',
