@@ -13,8 +13,8 @@ describe('ItemTableHead', () => {
 
   it('renders head columns', () => {
     const columns = [
-      { width: '40%', property: { uri: 'x', type: 'string' } },
-      { width: '60%', property: { uri: 'y', type: 'number' } },
+      { width: '40%', property: { id: 'x', type: 'string' } },
+      { width: '60%', property: { id: 'y', type: 'number' } },
     ]
 
     const sort = {

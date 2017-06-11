@@ -2,7 +2,8 @@
 
 const React = require('react')
 const { PureComponent } = React
-const cn = require('classnames')
+const cx = require('classnames')
+const { getLabel } = require('../../common/ontology')
 const { IconChevron7 } = require('../icons')
 const {
   arrayOf, bool, func, number, object, oneOf, shape, string
@@ -44,7 +45,7 @@ class ItemTableHeadCell extends PureComponent {
     return (
       <th
         style={this.style}
-        className={cn(this.classes)}
+        className={cx(this.classes)}
         onClick={this.handleClick}>
         <div className="metadata-head-container">
           <div className="label">{label}</div>
@@ -80,6 +81,10 @@ class ItemTableHead extends PureComponent {
     return (id === this.props.sort.column)
   }
 
+  getLabel(property) {
+    return property.label || getLabel(property.id)
+  }
+
   render() {
     const { columns, onSort } = this.props
 
@@ -88,8 +93,10 @@ class ItemTableHead extends PureComponent {
         <thead>
           <tr>
             {columns.map(({ width, property }) =>
-              <ItemTableHeadCell {...property}
+              <ItemTableHeadCell
                 key={property.id}
+                id={property.id}
+                label={this.getLabel(property)}
                 width={width}
                 isActive={this.isActive(property.id)}
                 isAscending={this.isAscending}
