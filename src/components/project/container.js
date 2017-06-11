@@ -284,7 +284,7 @@ module.exports = {
       photos: state.photos,
       visiblePhotos: getVisiblePhotos(state),
       project: state.project,
-      properties: state.properties,
+      properties: state.ontology.props,
       selection: getSelectedItems(state),
       sort: state.nav.sort,
       tags: getAllTags(state),

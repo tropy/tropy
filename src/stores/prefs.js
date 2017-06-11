@@ -8,15 +8,13 @@ const { default: thunk } = require('redux-thunk')
 const { seq, debounce, throttle, log } = require('../middleware')
 
 const {
-  classes,
   intl,
   edit,
+  ontology,
   prefs,
-  properties,
   project,
   keymap,
-  history,
-  vocab
+  history
 } = require('../reducers')
 
 
@@ -26,15 +24,13 @@ const devtools = (ARGS.dev || ARGS.debug) &&
 module.exports = {
   create(init = {}) {
     let reducer = combineReducers({
-      classes,
       intl,
       edit,
+      ontology,
       prefs,
-      properties,
       project,
       keymap,
-      history,
-      vocab
+      history
     })
 
     let middleware = applyMiddleware(

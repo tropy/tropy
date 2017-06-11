@@ -138,16 +138,16 @@ const T = {
 
 const getAllTemplates = memo(
   () => T,
-  ({ properties }) => properties,
+  ({ ontology }) => ontology.props,
 
-  (templates, properties) =>
+  (templates, props) =>
     entries(templates)
       .reduce((tpl, [k, v]) => {
         tpl[k] = {
           ...v,
           fields: v.fields.map(field => ({
             ...field,
-            property: properties[field.property] || { id: field.property }
+            property: props[field.property] || { id: field.property }
           }))
         }
 

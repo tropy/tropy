@@ -19,7 +19,6 @@ const {
   edit,
   photos,
   project,
-  properties,
   qr,
   keymap,
   lists,
@@ -28,8 +27,7 @@ const {
   items,
   metadata,
   tags,
-  history,
-  vocab
+  history
 } = require('../reducers')
 
 const devtools = (ARGS.dev || ARGS.debug) &&
@@ -55,7 +53,6 @@ module.exports = {
       edit,
       photos,
       project,
-      properties,
       qr,
       keymap,
       lists,
@@ -64,8 +61,7 @@ module.exports = {
       items,
       metadata,
       tags,
-      history,
-      vocab
+      history
     })
 
     let middleware = applyMiddleware(

@@ -6,10 +6,9 @@ module.exports = {
   ...require('./items'),
   ...require('./metadata'),
   ...require('./notes'),
+  ...require('./ontology'),
   ...require('./photos'),
   ...require('./project'),
-  ...require('./properties'),
   ...require('./templates'),
-  ...require('./tags'),
-  ...require('./vocab')
+  ...require('./tags')
 }
