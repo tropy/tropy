@@ -59,7 +59,7 @@
     "electron-mocha": "^3.0.0",
     "electron-packager": "^8.7.1",
     "enzyme": "^2.8.1",
-    "eslint": "^3.0.0",
+    "eslint": "^4.0.0",
     "eslint-plugin-react": "^7.0.0",
     "glob": "^7.0.0",
     "istanbul-lib-hook": "^1.0.5",

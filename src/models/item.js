@@ -27,7 +27,7 @@ const SEARCH = `
     WHERE fts_metadata MATCH $query`
 
 const prefix = (query) =>
-  (!(/\*\+\'\"/).test(query)) ? query + '*' : query
+  (!(/[*+'"]/).test(query)) ? query + '*' : query
 
 
 module.exports = mod.item = {
