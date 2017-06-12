@@ -443,12 +443,13 @@ class Tropy extends EventEmitter {
       if (name) this.win.setTitle(name)
     })
 
-    ipc.on(HISTORY.CHANGED, (_, history) => {
-      H.set(this.win, history)
+    ipc.on(HISTORY.CHANGED, (event, history) => {
+      H.set(BrowserWindow.fromWebContents(event.sender), history)
       this.emit('app:reload-menu')
     })
-    ipc.on(TAG.CHANGED, (_, tags) => {
-      T.set(this.win, tags)
+
+    ipc.on(TAG.CHANGED, (event, tags) => {
+      T.set(BrowserWindow.fromWebContents(event.sender), tags)
     })
 
     ipc.on(CONTEXT.SHOW, (_, event) => {
@@ -494,11 +495,11 @@ class Tropy extends EventEmitter {
   }
 
   get history() {
-    return H.get(this.win) || {}
+    return H.get(BrowserWindow.getFocusedWindow()) || {}
   }
 
   get tags() {
-    return T.get(this.win) || []
+    return T.get(BrowserWindow.getFocusedWindow()) || []
   }
 
   get name() {
