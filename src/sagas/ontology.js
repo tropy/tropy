@@ -15,7 +15,21 @@ const { call, fork, put, take } = require('redux-saga/effects')
 const command = ({ error, meta }) =>
   (!error && meta && meta.cmd === 'ontology')
 
-function *load() {
+
+function *create(db) {
+  yield call(mod.ontology.create, db)
+  verbose('*ontology created db...')
+
+  yield call(exec, { db }, act.ontology.import({
+    files: [
+      Ontology.expand('dc')
+    ]
+  }, { history: false }))
+}
+
+function *migrate() {
+  // TODO actually migrate
+
   yield put(act.ontology.vocab.load())
   yield put(act.ontology.props.load())
   yield put(act.ontology.class.load())
@@ -26,19 +40,9 @@ function *ontology(file = join(ARGS.home, ONTOLOGY.DB)) {
     var db = new Database(file)
 
     if (yield call(db.empty)) {
-      yield call(mod.ontology.create, db)
-      verbose('*ontology created db...')
-
-      yield fork(exec, { db }, act.ontology.import({
-        files: [
-          Ontology.expand('dc')
-        ]
-      }, { history: false }))
-
+      yield fork(create, db)
     } else {
-      // migrate
-      //
-      yield fork(load)
+      yield fork(migrate, db)
     }
 
     while (true) {
@@ -51,7 +55,12 @@ function *ontology(file = join(ARGS.home, ONTOLOGY.DB)) {
     verbose(error.stack)
 
   } finally {
-    if (db) yield call(db.close)
+    if (db) {
+      yield call(mod.ontology.vocab.prune, db)
+      yield call(db.close)
+    }
+
+    verbose('*ontology terminated')
   }
 }
 
