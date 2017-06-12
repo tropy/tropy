@@ -43,7 +43,6 @@ class PrefsContainer extends PureComponent {
                   name="app"
                   icon="IconTropy"
                   isActive={this.isActive('app')}
-                  isDisabled
                   onClick={this.toggle}/>
               </li>
               <li>
