@@ -3,7 +3,7 @@
 const { combineReducers } = require('redux')
 const { ONTOLOGY } = require('../constants')
 const { PROPS, CLASS, VOCAB } = ONTOLOGY
-const { load, insert, replace, remove } = require('./util')
+const { load, merge, replace, remove } = require('./util')
 
 function props(state = {}, { type, payload, error, meta }) {
   switch (type) {
@@ -36,7 +36,7 @@ function vocab(state = {}, { type, payload, error, meta }) {
     case VOCAB.DELETE:
       return (meta.done && !error) ? remove(state, payload) : state
     case VOCAB.RESTORE:
-      return (meta.done && !error) ? insert(state, payload) : state
+      return (meta.done && !error) ? merge(state, payload) : state
     default:
       return state
   }
