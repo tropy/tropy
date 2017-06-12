@@ -34,7 +34,7 @@ function vocab(state = {}, { type, payload, error, meta }) {
     case VOCAB.LOAD:
       return load(state, payload, meta, error)
     case VOCAB.DELETE:
-      return remove(state, payload)
+      return (meta.done && !error) ? remove(state, payload) : state
     case VOCAB.RESTORE:
       return (meta.done && !error) ? insert(state, payload) : state
     default:

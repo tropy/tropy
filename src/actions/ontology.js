@@ -44,7 +44,7 @@ module.exports = {
     restore(payload, meta = {}) {
       return {
         type: VOCAB.RESTORE,
-        payload: array(payload),
+        payload,
         meta: {
           cmd: 'ontology',
           history: 'add',

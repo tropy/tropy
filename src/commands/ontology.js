@@ -59,14 +59,14 @@ class Import extends Command {
     }
 
     if (vocabs.length) {
-      this.undo = act.ontology.vocab.delete(vocabs)
-      this.redo = act.ontology.vocab.restore(vocabs)
-
       const [vocab, klass, props] = yield all([
         mod.ontology.vocab.load(db, ...vocabs),
         mod.ontology.class.load(db, ...vocabs),
         mod.ontology.props.load(db, ...vocabs)
       ])
+
+      this.undo = act.ontology.vocab.delete(vocabs)
+      this.redo = act.ontology.vocab.restore(vocab)
 
       return { vocab, class: klass, props }
     }
@@ -88,8 +88,8 @@ class VocabDelete extends Command {
     const { db } = this.options
     const { payload } = this.action
 
-    const originals = yield select(({ ontology }) =>
-      pick(ontology.vocab, payload))
+    const originals = yield select(state =>
+      pick(state.ontology.vocab, payload))
 
     yield call(mod.ontology.vocab.delete, db, ...payload)
     this.undo = act.ontology.vocab.restore(originals)
