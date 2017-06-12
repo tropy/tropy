@@ -93,7 +93,7 @@ class Tropy extends EventEmitter {
 
       if (this.win) {
         if (file) {
-          this.dispatch(act.project.open(file))
+          this.dispatch(act.project.open(file), this.win)
         }
 
         return this.win.show(), this
@@ -175,9 +175,7 @@ class Tropy extends EventEmitter {
   }
 
   import() {
-    if (this.win) {
-      this.dispatch(act.item.import())
-    }
+    this.dispatch(act.item.import(), this.win)
   }
 
   create() {
@@ -487,9 +485,9 @@ class Tropy extends EventEmitter {
   }
 
 
-  dispatch(action) {
-    if (this.win) {
-      this.win.webContents.send('dispatch', action)
+  dispatch(action, win = BrowserWindow.getFocusedWindow()) {
+    if (win != null) {
+      win.webContents.send('dispatch', action)
     }
   }
 
