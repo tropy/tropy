@@ -1,5 +1,6 @@
 'use strict'
 
+const assert = require('assert')
 const { Command } = require('./command')
 const { ONTOLOGY } = require('../constants')
 const { VOCAB, PROPS, CLASS } = ONTOLOGY
@@ -81,6 +82,26 @@ class VocabLoad extends Command {
   }
 }
 
+class VocabSave extends Command {
+  static get action() { return VOCAB.SAVE }
+
+  *exec() {
+    const { db } = this.options
+    const { payload } = this.action
+
+    assert(payload.id != null)
+    assert(payload.prefix != null)
+
+    const original = yield select(state =>
+      pick(state.ontology.vocab[payload.id], keys(payload)))
+
+    yield call(mod.ontology.vocab.update, db, payload)
+    this.undo = act.ontology.vocab.update(original)
+
+    return payload
+  }
+}
+
 class VocabDelete extends Command {
   static get action() { return VOCAB.DELETE }
 
@@ -137,5 +158,6 @@ module.exports = {
   PropsLoad,
   VocabDelete,
   VocabLoad,
-  VocabRestore
+  VocabRestore,
+  VocabSave
 }

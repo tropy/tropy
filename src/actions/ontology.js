@@ -51,6 +51,18 @@ module.exports = {
           ...meta
         }
       }
+    },
+
+    save(payload, meta = {}) {
+      return {
+        type: VOCAB.SAVE,
+        payload,
+        meta: {
+          cmd: 'ontology',
+          history: 'add',
+          ...meta
+        }
+      }
     }
   },
 

@@ -3,12 +3,14 @@
 const { combineReducers } = require('redux')
 const { ONTOLOGY } = require('../constants')
 const { PROPS, CLASS, VOCAB } = ONTOLOGY
-const { load, merge, replace, remove } = require('./util')
+const { load, merge, replace, remove, update } = require('./util')
 
 function props(state = {}, { type, payload, error, meta }) {
   switch (type) {
     case ONTOLOGY.IMPORT:
-      return (meta.done && !error) ? replace(state, payload.props) : state
+      return (meta.done && !error) ?
+        replace(state, payload.props) :
+        state
     case PROPS.LOAD:
       return load(state, payload, meta, error)
     default:
@@ -19,7 +21,9 @@ function props(state = {}, { type, payload, error, meta }) {
 function klass(state = {}, { type, payload, error, meta }) {
   switch (type) {
     case ONTOLOGY.IMPORT:
-      return (meta.done && !error) ? replace(state, payload.class) : state
+      return (meta.done && !error) ?
+        replace(state, payload.class) :
+        state
     case CLASS.LOAD:
       return load(state, payload, meta, error)
     default:
@@ -27,16 +31,27 @@ function klass(state = {}, { type, payload, error, meta }) {
   }
 }
 
+// eslint-disable-next-line complexity
 function vocab(state = {}, { type, payload, error, meta }) {
   switch (type) {
     case ONTOLOGY.IMPORT:
-      return (meta.done && !error) ? replace(state, payload.vocab) : state
+      return (meta.done && !error) ?
+        replace(state, payload.vocab) :
+        state
     case VOCAB.LOAD:
       return load(state, payload, meta, error)
     case VOCAB.DELETE:
-      return (meta.done && !error) ? remove(state, payload) : state
+      return (meta.done && !error) ?
+        remove(state, payload) :
+        state
     case VOCAB.RESTORE:
-      return (meta.done && !error) ? merge(state, payload) : state
+      return (meta.done && !error) ?
+        merge(state, payload) :
+        state
+    case VOCAB.SAVE:
+      return (meta.done && !error) ?
+        update(state, payload) :
+        state
     default:
       return state
   }

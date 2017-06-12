@@ -93,7 +93,8 @@ class PrefsContainer extends PureComponent {
             isActive={this.isActive('vocab')}
             vocab={this.props.vocab}
             onDelete={this.props.onVocabDelete}
-            onImport={this.props.onOntologyImport}/>
+            onImport={this.props.onOntologyImport}
+            onSave={this.props.onVocabSave}/>
         </main>
       </div>
     )
@@ -110,6 +111,7 @@ class PrefsContainer extends PureComponent {
     onTemplateCreate: func.isRequired,
     onTemplateSave: func.isRequired,
     onVocabDelete: func.isRequired,
+    onVocabSave: func.isRequired,
     onOntologyImport: func.isRequired
   }
 
@@ -143,6 +145,10 @@ module.exports = {
 
       onVocabDelete(...args) {
         dispatch(actions.ontology.vocab.delete(...args))
+      },
+
+      onVocabSave(...args) {
+        dispatch(actions.ontology.vocab.save(...args))
       },
 
       onOntologyImport() {
