@@ -34,8 +34,8 @@ module.exports = {
         type: VOCAB.DELETE,
         payload: array(payload),
         meta: {
-          cmd: false, // 'ontology',
-          history: false, // 'add',
+          cmd: 'ontology',
+          history: 'add',
           ...meta
         }
       }
@@ -46,8 +46,8 @@ module.exports = {
         type: VOCAB.RESTORE,
         payload: array(payload),
         meta: {
-          cmd: false, // 'ontology',
-          history: false, // 'add',
+          cmd: 'ontology',
+          history: 'add',
           ...meta
         }
       }

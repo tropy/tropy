@@ -6,9 +6,11 @@ const { VOCAB, PROPS, CLASS } = ONTOLOGY
 const { Ontology } = require('../common/ontology')
 const { openVocabs, fail  } = require('../dialog')
 const { verbose, warn } = require('../common/log')
-const { all, call } = require('redux-saga/effects')
+const { pick } = require('../common/util')
+const { all, call, select } = require('redux-saga/effects')
 const act = require('../actions')
 const mod = require('../models')
+const { keys } = Object
 
 
 class Import extends Command {
@@ -79,6 +81,39 @@ class VocabLoad extends Command {
   }
 }
 
+class VocabDelete extends Command {
+  static get action() { return VOCAB.DELETE }
+
+  *exec() {
+    const { db } = this.options
+    const { payload } = this.action
+
+    const originals = yield select(({ ontology }) =>
+      pick(ontology.vocab, payload))
+
+    yield call(mod.ontology.vocab.delete, db, ...payload)
+    this.undo = act.ontology.vocab.restore(originals)
+
+    return payload
+  }
+}
+
+class VocabRestore extends Command {
+  static get action() { return VOCAB.RESTORE }
+
+  *exec() {
+    const { db } = this.options
+    const { payload } = this.action
+
+    const vocabs = keys(payload)
+
+    yield call(mod.ontology.vocab.restore, db, ...vocabs)
+    this.undo = act.ontology.vocab.delete(vocabs)
+
+    return payload
+  }
+}
+
 class PropsLoad extends Command {
   static get action() { return PROPS.LOAD }
 
@@ -97,8 +132,10 @@ class ClassLoad extends Command {
 
 
 module.exports = {
+  ClassLoad,
   Import,
   PropsLoad,
-  ClassLoad,
-  VocabLoad
+  VocabDelete,
+  VocabLoad,
+  VocabRestore
 }
