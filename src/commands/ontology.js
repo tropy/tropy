@@ -96,7 +96,7 @@ class VocabSave extends Command {
       pick(state.ontology.vocab[payload.id], keys(payload)))
 
     yield call(mod.ontology.vocab.update, db, payload)
-    this.undo = act.ontology.vocab.update(original)
+    this.undo = act.ontology.vocab.save(original)
 
     return payload
   }

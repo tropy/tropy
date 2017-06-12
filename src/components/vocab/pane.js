@@ -25,7 +25,8 @@ class VocabPane extends PureComponent {
               <VocabAccordion
                 key={vocab.id}
                 vocab={vocab}
-                onDelete={this.props.onDelete}/>)}
+                onDelete={this.props.onDelete}
+                onSave={this.props.onSave}/>)}
           </AccordionGroup>
         </div>
       </PrefPane>
@@ -37,7 +38,8 @@ class VocabPane extends PureComponent {
     name: string.isRequired,
     vocab: array.isRequired,
     onDelete: func.isRequired,
-    onImport: func.isRequired
+    onImport: func.isRequired,
+    onSave: func.isRequired
   }
 
   static defaultProps = {

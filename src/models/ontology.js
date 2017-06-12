@@ -73,7 +73,7 @@ const ontology = {
       )
     },
 
-    update(db, id, { prefix }) {
+    update(db, { id, prefix }) {
       return db.run(`
         UPDATE vocabularies
           SET prefix = ?

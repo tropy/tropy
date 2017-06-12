@@ -3,6 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { FormattedMessage } = require('react-intl')
+const { BufferedInput } = require('./input')
 const cx = require('classnames')
 const { bool, func, node, number, string } = require('prop-types')
 const { noop } = require('../common/util')
@@ -60,10 +61,12 @@ class FormField extends PureComponent {
     this.props.onBlur(this.props.id, event)
   }
 
-  handleChange = (event) => {
-    this.props.onChange({
-      [this.props.name]: event.target.value
-    })
+  handleChange = (value, hasChanged) => {
+    if (hasChanged) {
+      this.props.onChange({
+        [this.props.name]: value
+      })
+    }
   }
 
   render() {
@@ -73,7 +76,7 @@ class FormField extends PureComponent {
           id={this.props.id}
           size={GRID.SIZE - this.props.size}/>
         <div className={`col-${this.props.size}`}>
-          <input
+          <BufferedInput
             id={this.props.id}
             className="form-control"
             name={this.props.name}
@@ -83,7 +86,7 @@ class FormField extends PureComponent {
             value={this.props.value}
             readOnly={this.props.isReadOnly}
             onBlur={this.handleBlur}
-            onChange={this.handleChange}/>
+            onCommit={this.handleChange}/>
         </div>
       </FormGroup>
     )

@@ -5,7 +5,6 @@ const { FormattedMessage } = require('react-intl')
 const { Accordion } = require('../accordion')
 const { FormField, FormText } = require('../form')
 const { PropertyList } = require('../property')
-const { noop } = require('../../common/util')
 const { IconButton } = require('../button')
 const { IconBook16, IconTrash } = require('../icons')
 const { arrayOf, func, object, shape, string } = require('prop-types')
@@ -14,6 +13,10 @@ const { arrayOf, func, object, shape, string } = require('prop-types')
 class VocabAccordion extends Accordion {
   handleDelete = () => {
     this.props.onDelete(this.props.vocab.id)
+  }
+
+  handleChange = (data) => {
+    this.props.onSave({ id: this.props.vocab.id, ...data })
   }
 
   renderHeader() {
@@ -47,7 +50,7 @@ class VocabAccordion extends Accordion {
             name="prefix"
             value={vocab.prefix}
             size={8}
-            onChange={noop}/>
+            onChange={this.handleChange}/>
           <FormText
             id="vocab.description"
             isOptional
@@ -80,7 +83,8 @@ class VocabAccordion extends Accordion {
       classes: arrayOf(object).isRequired,
       properties: arrayOf(object).isRequired
     }).isRequired,
-    onDelete: func.isRequired
+    onDelete: func.isRequired,
+    onSave: func.isRequired
   }
 }
 

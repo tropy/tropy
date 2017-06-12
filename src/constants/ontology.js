@@ -20,6 +20,6 @@ module.exports = {
     DELETE: 'ontology.vocab.delete',
     LOAD: 'ontology.vocab.load',
     RESTORE: 'ontology.vocab.restore',
-    SAVE: 'ontology.vocab.restore'
+    SAVE: 'ontology.vocab.save'
   }
 }

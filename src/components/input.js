@@ -92,24 +92,16 @@ class BufferedInput extends PureComponent {
 
 
   render() {
-    const {
-      className,
-      isDisabled,
-      isRequired,
-      placeholder,
-      tabIndex,
-      type
-    } = this.props
-
     return (
       <input
-        className={className}
-        disabled={isDisabled}
-        placeholder={placeholder}
+        id={this.props.id}
+        className={this.props.className}
+        disabled={this.props.isDisabled}
+        placeholder={this.props.placeholder}
         ref={this.autofocus}
-        required={isRequired}
-        tabIndex={tabIndex}
-        type={type}
+        required={this.props.isRequired}
+        tabIndex={this.props.tabIndex}
+        type={this.props.type}
         value={this.state.value}
         onBlur={this.handleBlur}
         onChange={this.handleChange}
@@ -121,6 +113,7 @@ class BufferedInput extends PureComponent {
   static propTypes = {
     autofocus: bool,
     className: string,
+    id: string,
     isDisabled: bool,
     isRequired: bool,
     placeholder: string,
