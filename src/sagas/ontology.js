@@ -57,6 +57,7 @@ function *ontology(file = join(ARGS.home, ONTOLOGY.DB)) {
   } finally {
     if (db) {
       yield call(mod.ontology.vocab.prune, db)
+      yield call(mod.ontology.label.prune, db)
       yield call(db.close)
     }
 

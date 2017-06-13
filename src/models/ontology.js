@@ -212,9 +212,9 @@ const ontology = {
 
 
   label: {
-    create(db, ...labels) {
+    save(db, ...labels) {
       return db.prepare(`
-        INSERT OR IGNORE INTO labels (id, language, label)
+        REPLACE INTO labels (id, language, label)
           VALUES (?, ?, ?)`, stmt =>
             all(labels.map(lbl => stmt.run([
               lbl.id,
@@ -222,6 +222,15 @@ const ontology = {
               lbl.label
             ])
           ))
+      )
+    },
+
+    prune(db) {
+      return db.run(`
+        DELETE
+          FROM labels
+          WHERE id NOT IN (SELECT class_id FROM classes)
+            AND id NOT IN (SELECT property_id FROM properties)`
       )
     }
   }

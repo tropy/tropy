@@ -43,7 +43,7 @@ class Import extends Command {
             await Promise.all([
               mod.ontology.props.create(tx, ...data[id].properties),
               mod.ontology.class.create(tx, ...data[id].classes),
-              mod.ontology.label.create(tx, ...data[id].labels)
+              mod.ontology.label.save(tx, ...data[id].labels)
             ])
 
             vocabs.push(id)
