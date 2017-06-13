@@ -10,9 +10,10 @@ const START = performance.now()
   process.env.NODE_ENV = ARGS.environment
 }
 
+const { join } = require('path')
+const LOGDIR = join(ARGS.home, 'log')
 
-const { verbose } = require('./common/log')(ARGS.home, ARGS)
-const { remote } = require('electron')
+const { verbose } = require('./common/log')(LOGDIR)
 const { ready } = require('./dom')
 const { win } = require('./window')
 
@@ -32,9 +33,9 @@ ready.then(() => {
 
 if (ARGS.dev) {
   if (process.platform !== 'linux') {
-    const props = Object.defineProperties
+    const { remote } = require('electron')
 
-    props(process, {
+    Object.defineProperties(process, {
       stdout: { value: remote.process.stdout },
       stderr: { value: remote.process.stderr }
     })

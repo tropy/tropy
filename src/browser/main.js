@@ -19,14 +19,16 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
   const { qualified }  = require('../common/release')
   const { linux, darwin } = require('../common/os')
 
-  let userdata = opts.dir
-  if (!userdata) {
+  let USERDATA = opts.dir
+  let LOGDIR
+
+  if (!USERDATA) {
     switch (opts.environment) {
       case 'development':
-        userdata = join(process.cwd(), 'tmp')
+        USERDATA = join(process.cwd(), 'tmp')
         break
       case 'production':
-        userdata = join(
+        USERDATA = join(
           app.getPath('appData'),
           qualified[linux ? 'name' : 'product'])
         break
@@ -35,13 +37,16 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
 
   // Set app name and data location as soon as possible!
   app.setName(qualified.product)
-  if (userdata) app.setPath('userData', userdata)
+  if (USERDATA) {
+    app.setPath('userData', USERDATA)
+    LOGDIR = join(USERDATA, 'log')
+  }
 
 
   if (!require('./squirrel')()) {
     const { all }  = require('bluebird')
     const { once } = require('../common/util')
-    const { info, verbose } = require('../common/log')(userdata)
+    const { info, verbose } = require('../common/log')(LOGDIR)
 
     let quit = false
 

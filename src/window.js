@@ -4,7 +4,6 @@ const { each } = require('bluebird')
 const { remote, ipcRenderer: ipc } = require('electron')
 const { basename, join, resolve } = require('path')
 const { existsSync: exists } = require('fs')
-const { debug } = require('./common/log')
 const { EL_CAPITAN } = require('./common/os')
 
 const {
@@ -111,7 +110,6 @@ class Window {
 
       if (this.isUnloading) return
 
-      debug(`unloading ${this.type}...`)
       this.isUnloading = true
 
       toggle(document.body, 'closing', true)
@@ -121,8 +119,6 @@ class Window {
         return res
       })
         .finally(() => {
-          debug(`ready to close ${this.type} (${this.unloader})`)
-
           this.hasFinishedUnloading = true
 
           // Calling reload/close immediately does not work reliably.

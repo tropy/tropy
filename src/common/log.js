@@ -1,13 +1,17 @@
 'use strict'
 
 const { Logger, transports } = require('winston')
-const { join } = require('path')
+const { basename, join } = require('path')
 const { assign } = Object
+const { sync: mkdir } = require('mkdirp')
 
 const ms = require('ms')
 const pad = require('string.prototype.padstart')
 const colors = require('colors/safe')
-const symbol = (process.type === 'renderer') ? 'ρ' : 'β'
+
+const [SYMBOL, LABEL] = (process.type === 'renderer') ?
+  ['ρ', `${basename(window.location.pathname, '.html')}`] :
+  ['β', 'main']
 
 const PADDING = 8
 
@@ -41,31 +45,18 @@ function init(dir) {
       // eslint-disable-next-line no-fallthrough
     case 'production':
       if (dir) {
+        mkdir(dir)
         logger.add(transports.File, {
-          filename: join(dir, `${process.type}.log`),
-          maxsize: 1024 * 1024,
-          maxFiles: 1,
+          label: LABEL,
+          filename: join(dir, `${LABEL}.log`),
+          maxsize: 1024 * 256,
+          maxFiles: 0,
           tailable: true,
-
           handleExceptions: true,
           humanReadableUnhandledException: true
         })
       }
 
-      break
-
-    case 'test':
-      if (!process.env.CI) {
-        logger.level = 'verbose'
-        logger.add(transports.File, {
-          filename: join(__dirname, '..', '..', 'tmp', 'test.log'),
-          maxsize: 1024 * 1024,
-          maxFiles: 1,
-          tailable: true,
-          handleExceptions: true,
-          humanReadableUnhandledException: true,
-        })
-      }
       break
   }
 
@@ -102,7 +93,7 @@ function text(options) {
 }
 
 function formatter(options) {
-  return `${time()} ${colorize(options.level, symbol)} ${text(options)}`
+  return `${time()} ${colorize(options.level, SYMBOL)} ${text(options)}`
 }
 
 
