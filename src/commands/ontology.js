@@ -164,7 +164,7 @@ class LabelSave extends Command {
     yield call(mod.ontology.label.save, db, payload)
 
     this.undo = {
-      type: LABEL.SAVE,
+      ...this.action,
       payload: { ...payload, label: original }
     }
 

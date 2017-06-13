@@ -66,7 +66,8 @@ class VocabAccordion extends Accordion {
         </h2>
         <PropertyList
           properties={vocab.classes}
-          onOpenLink={this.props.onOpenLink}/>
+          onOpenLink={this.props.onOpenLink}
+          onSave={this.props.onClassSave}/>
         <h2 className="vocab-heading">
           <FormattedMessage
             id="prefs.vocab.properties"
@@ -74,7 +75,8 @@ class VocabAccordion extends Accordion {
         </h2>
         <PropertyList
           properties={vocab.properties}
-          onOpenLink={this.props.onOpenLink}/>
+          onOpenLink={this.props.onOpenLink}
+          onSave={this.props.onPropsSave}/>
       </div>
     )
   }
@@ -89,8 +91,10 @@ class VocabAccordion extends Accordion {
       classes: arrayOf(object).isRequired,
       properties: arrayOf(object).isRequired
     }).isRequired,
+    onClassSave: func.isRequired,
     onDelete: func.isRequired,
     onOpenLink: func.isRequired,
+    onPropsSave: func.isRequired,
     onSave: func.isRequired
   }
 }

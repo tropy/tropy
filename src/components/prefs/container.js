@@ -92,9 +92,11 @@ class PrefsContainer extends PureComponent {
           <VocabPane
             isActive={this.isActive('vocab')}
             vocab={this.props.vocab}
+            onClassSave={this.props.onClassSave}
             onDelete={this.props.onVocabDelete}
             onImport={this.props.onOntologyImport}
             onOpenLink={this.props.onOpenLink}
+            onPropsSave={this.props.onPropsSave}
             onSave={this.props.onVocabSave}/>
         </main>
       </div>
@@ -108,8 +110,10 @@ class PrefsContainer extends PureComponent {
     properties: array.isRequired,
     templates: array.isRequired,
     vocab: array.isRequired,
+    onClassSave: func.isRequired,
     onOpenLink: func.isRequired,
     onPrefsUpdate: func.isRequired,
+    onPropsSave: func.isRequired,
     onTemplateCreate: func.isRequired,
     onTemplateSave: func.isRequired,
     onVocabDelete: func.isRequired,
@@ -135,12 +139,20 @@ module.exports = {
     }),
 
     dispatch => ({
+      onClassSave(...args) {
+        dispatch(actions.ontology.class.save(...args))
+      },
+
       onOpenLink(...args) {
         dispatch(actions.shell.openLink(args))
       },
 
       onPrefsUpdate(...args) {
         dispatch(actions.prefs.update(...args))
+      },
+
+      onPropsSave(...args) {
+        dispatch(actions.ontology.props.save(...args))
       },
 
       onTemplateCreate() {
