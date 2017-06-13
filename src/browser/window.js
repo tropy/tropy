@@ -35,8 +35,6 @@ const AQUA = {
   6: 'graphite'
 }
 
-let lastFocus
-
 function hasOverlayScrollBars() {
   return darwin &&
     'WhenScrolling' === pref.getUserDefault('AppleShowScrollBars', 'string')
@@ -44,7 +42,7 @@ function hasOverlayScrollBars() {
 
 module.exports = {
 
-  open(file, data = {}, options = {}, app) {
+  open(file, data = {}, options = {}) {
     options = { ...DEFAULTS, ...options }
 
     switch (process.platform) {
@@ -80,19 +78,6 @@ module.exports = {
           event.preventDefault()
         }
       })
-
-
-    if (app) {
-      win.on('focus', () => {
-        try {
-          if (lastFocus !== win.id) {
-            app.emit('app:window-changed')
-          }
-        } finally {
-          lastFocus = win.id
-        }
-      })
-    }
 
     for (let event of EVENTS) {
       win.on(event, () => { win.webContents.send('win', event) })

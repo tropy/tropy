@@ -106,7 +106,7 @@ class Tropy extends EventEmitter {
         minHeight: WIN.MIN_HEIGHT * ZOOM,
         darkTheme: (this.state.theme === 'dark'),
         frame: !this.hash.frameless
-      }, this)
+      })
 
       this.win
         .on('unresponsive', async () => {
@@ -194,7 +194,7 @@ class Tropy extends EventEmitter {
       fullscreenable: false,
       darkTheme: (this.state.theme === 'dark'),
       frame: !this.hash.frameless
-    }, this)
+    })
       .once('closed', () => { this.wiz = undefined })
 
     return this
@@ -217,7 +217,7 @@ class Tropy extends EventEmitter {
       darkTheme: (this.state.theme === 'dark'),
       frame: !this.hash.frameless,
       titleBarStyle: 'hidden'
-    }, this)
+    })
       .once('closed', () => { this.prefs = undefined })
 
     return this
@@ -361,10 +361,6 @@ class Tropy extends EventEmitter {
       this.emit('app:reload-menu')
     })
 
-    this.on('app:window-changed', () => {
-      this.emit('app:reload-menu')
-    })
-
     this.on('app:reload-menu', () => {
       // Note: there may be Electron issues when reloading
       // the main menu. But since we cannot remove items
@@ -410,6 +406,15 @@ class Tropy extends EventEmitter {
     })
 
     let quit = false
+    let winId
+
+    app.on('browser-window-focus', (_, win) => {
+      try {
+        if (winId !== win.id) this.emit('app:reload-menu')
+      } finally {
+        winId = win.id
+      }
+    })
 
     app.once('before-quit', () => { quit = true })
 
