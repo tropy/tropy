@@ -2,7 +2,7 @@
 
 const { combineReducers } = require('redux')
 const { ONTOLOGY } = require('../constants')
-const { PROPS, CLASS, VOCAB } = ONTOLOGY
+const { PROPS, CLASS, VOCAB, LABEL } = ONTOLOGY
 const { load, merge, replace, remove, update } = require('./util')
 
 function props(state = {}, { type, payload, error, meta }) {
@@ -13,6 +13,10 @@ function props(state = {}, { type, payload, error, meta }) {
         state
     case PROPS.LOAD:
       return load(state, payload, meta, error)
+    case LABEL.SAVE:
+      return (payload.type === 'props' && meta.done && !error) ?
+        update(state, { id: payload.id, label: payload.label }) :
+        state
     default:
       return state
   }
@@ -26,6 +30,10 @@ function klass(state = {}, { type, payload, error, meta }) {
         state
     case CLASS.LOAD:
       return load(state, payload, meta, error)
+    case LABEL.SAVE:
+      return (payload.type === 'class' && meta.done && !error) ?
+        update(state, { id: payload.id, label: payload.label }) :
+        state
     default:
       return state
   }

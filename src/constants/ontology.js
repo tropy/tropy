@@ -16,6 +16,11 @@ module.exports = {
     LOAD: 'ontology.class.load'
   },
 
+  LABEL: {
+    SAVE: 'ontology.label.save'
+  },
+
+
   VOCAB: {
     DELETE: 'ontology.vocab.delete',
     LOAD: 'ontology.vocab.load',

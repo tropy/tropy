@@ -3,11 +3,11 @@
 const assert = require('assert')
 const { Command } = require('./command')
 const { ONTOLOGY } = require('../constants')
-const { VOCAB, PROPS, CLASS } = ONTOLOGY
+const { VOCAB, PROPS, CLASS, LABEL } = ONTOLOGY
 const { Ontology } = require('../common/ontology')
 const { openVocabs, fail  } = require('../dialog')
 const { verbose, warn } = require('../common/log')
-const { pick } = require('../common/util')
+const { get, pick } = require('../common/util')
 const { all, call, select } = require('redux-saga/effects')
 const act = require('../actions')
 const mod = require('../models')
@@ -151,10 +151,32 @@ class ClassLoad extends Command {
   }
 }
 
+class LabelSave extends Command {
+  static get action() { return LABEL.SAVE }
+
+  *exec() {
+    const { db } = this.options
+    const { payload } = this.action
+
+    const original = yield select(({ ontology }) =>
+      get(ontology, [payload.type, payload.id, 'label']))
+
+    yield call(mod.ontology.label.save, db, payload)
+
+    this.undo = {
+      type: LABEL.SAVE,
+      payload: { ...payload, label: original }
+    }
+
+    return payload
+  }
+}
+
 
 module.exports = {
   ClassLoad,
   Import,
+  LabelSave,
   PropsLoad,
   VocabDelete,
   VocabLoad,
