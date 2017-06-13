@@ -113,7 +113,7 @@
     "uuid": "^3.0.1",
     "winston": "^2.1.1",
     "write-file-atomic": "^2.0.0",
-    "yargs": "^8.0.0"
+    "yargs": "^8.0.2"
   },
   "yargs": {
     "short-option-groups": false
