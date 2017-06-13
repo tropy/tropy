@@ -21,7 +21,7 @@ module.exports = {
     DatatypeProperty: 'http://www.w3.org/2002/07/owl#DatatypeProerty',
     FunctionalProperty: 'http://www.w3.org/2002/07/owl#FunctionalProperty',
     InverseFunctionalProperty: 'http://www.w3.org/2002/07/owl#InverseFunctionalProperty',
-    ObjectProperty: 'http://www.w3.org/2002/07/owl#ObjectProerty',
+    ObjectProperty: 'http://www.w3.org/2002/07/owl#ObjectProperty',
     Ontology: 'http://www.w3.org/2002/07/owl#Ontology',
     SymmetricProperty: 'http://www.w3.org/2002/07/owl#SymmetricProperty',
     TransitiveProperty: 'http://www.w3.org/2002/07/owl#TransitiveProperty'
