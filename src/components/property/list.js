@@ -2,12 +2,12 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { FormField, FormText } = require('../form')
-const { array, object } = require('prop-types')
+const { FormField, FormLink, FormText } = require('../form')
+const { array, func, object } = require('prop-types')
 const { noop } = require('../../common/util')
 
 
-const PropertyListItem = ({ property }) => (
+const PropertyListItem = ({ property, onOpenLink }) => (
   <li className="property">
     <fieldset>
       <FormField
@@ -17,11 +17,12 @@ const PropertyListItem = ({ property }) => (
         isCompact
         size={8}
         onChange={noop}/>
-      <FormText
+      <FormLink
         id="property.id"
         isCompact
         size={8}
-        value={property.id}/>
+        value={property.id}
+        onClick={onOpenLink}/>
       <FormText
         id="property.comment"
         isCompact
@@ -39,7 +40,8 @@ const PropertyListItem = ({ property }) => (
 )
 
 PropertyListItem.propTypes = {
-  property: object.isRequired
+  property: object.isRequired,
+  onOpenLink: func.isRequired
 }
 
 
@@ -49,13 +51,17 @@ class PropertyList extends PureComponent {
     return (
       <ul className="property-list">
         {this.props.properties.map(property =>
-          <PropertyListItem key={property.id} property={property}/>)}
+          <PropertyListItem
+            key={property.id}
+            property={property}
+            onOpenLink={this.props.onOpenLink}/>)}
       </ul>
     )
   }
 
   static propTypes = {
-    properties: array.isRequired
+    properties: array.isRequired,
+    onOpenLink: func.isRequired
   }
 }
 

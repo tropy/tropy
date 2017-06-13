@@ -3,7 +3,7 @@
 const React = require('react')
 const { FormattedMessage } = require('react-intl')
 const { Accordion } = require('../accordion')
-const { FormElement, FormField, FormText } = require('../form')
+const { FormField, FormLink, FormText } = require('../form')
 const { PropertyList } = require('../property')
 const { IconButton } = require('../button')
 const { IconBook16, IconTrash } = require('../icons')
@@ -19,9 +19,6 @@ class VocabAccordion extends Accordion {
     this.props.onSave({ id: this.props.vocab.id, ...data })
   }
 
-  handleOpen = () => {
-    this.props.onOpenLink(this.props.vocab.id)
-  }
 
   renderHeader() {
     return super.renderHeader(
@@ -43,9 +40,12 @@ class VocabAccordion extends Accordion {
     return super.renderBody(
       <div>
         <header className="vocab-header">
-          <FormElement id="vocab.id" isCompact size={8}>
-            <a tabIndex={-1} onClick={this.handleOpen}>{vocab.id}</a>
-          </FormElement>
+          <FormLink
+            id="vocab.id"
+            isCompact
+            size={8}
+            value={vocab.id}
+            onClick={this.props.onOpenLink}/>
           <FormField
             id="vocab.prefix"
             isCompact
@@ -64,13 +64,17 @@ class VocabAccordion extends Accordion {
             id="prefs.vocab.classes"
             values={{ count: vocab.classes.length }}/>
         </h2>
-        <PropertyList properties={vocab.classes}/>
+        <PropertyList
+          properties={vocab.classes}
+          onOpenLink={this.props.onOpenLink}/>
         <h2 className="vocab-heading">
           <FormattedMessage
             id="prefs.vocab.properties"
             values={{ count: vocab.properties.length }}/>
         </h2>
-        <PropertyList properties={vocab.properties}/>
+        <PropertyList
+          properties={vocab.properties}
+          onOpenLink={this.props.onOpenLink}/>
       </div>
     )
   }

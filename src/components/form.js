@@ -167,11 +167,51 @@ class FormText extends PureComponent {
   }
 }
 
+class FormLink extends PureComponent {
+  get isVisible() {
+    return this.props.value || !this.props.isOptional
+  }
+
+  handleClick = () => {
+    this.props.onClick(this.props.value)
+  }
+
+  render() {
+    return this.isVisible && (
+      <FormElement
+        id={this.props.id}
+        isCompact={this.props.isCompact}
+        size={this.props.size}>
+        <a
+          tabIndex={-1}
+          className="form-link"
+          onClick={this.handleClick}>
+          {this.props.value}
+        </a>
+      </FormElement>
+    )
+  }
+
+  static propTypes = {
+    id: string.isRequired,
+    isCompact: bool,
+    isOptional: bool,
+    size: number.isRequired,
+    value: string,
+    onClick: func.isRequired
+  }
+
+  static defaultProps = {
+    size: 9
+  }
+}
+
 
 module.exports = {
-  Label,
-  FormGroup,
-  FormField,
   FormElement,
-  FormText
+  FormField,
+  FormGroup,
+  FormLink,
+  FormText,
+  Label
 }
