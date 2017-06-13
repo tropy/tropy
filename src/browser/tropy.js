@@ -157,6 +157,7 @@ class Tropy extends EventEmitter {
 
   opened({ file, name }) {
     if (this.wiz) this.wiz.close()
+    if (this.prefs) this.prefs.close()
 
     this.state.recent = into([file],
         compose(remove(f => f === file), take(9)), this.state.recent)
@@ -179,6 +180,7 @@ class Tropy extends EventEmitter {
   }
 
   create() {
+    if (this.prefs) this.prefs.close()
     if (this.wiz) return this.wiz.show(), this
 
     this.wiz = open('wizard', this.hash, {
