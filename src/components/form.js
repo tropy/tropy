@@ -55,6 +55,32 @@ class Label extends PureComponent {
   }
 }
 
+class FormElement extends PureComponent {
+  render() {
+    return (
+      <FormGroup isCompact={this.props.isCompact}>
+        <Label
+          id={this.props.id}
+          size={GRID.SIZE - this.props.size}/>
+        <div className={`col-${this.props.size}`}>
+          {this.props.children}
+        </div>
+      </FormGroup>
+    )
+  }
+
+  static propTypes = {
+    children: node,
+    id: string.isRequired,
+    isCompact: bool,
+    size: number.isRequired
+  }
+
+  static defaultProps = {
+    size: 9
+  }
+}
+
 
 class FormField extends PureComponent {
   handleBlur = (event) => {
@@ -71,24 +97,22 @@ class FormField extends PureComponent {
 
   render() {
     return (
-      <FormGroup isCompact={this.props.isCompact}>
-        <Label
+      <FormElement
+        id={this.props.id}
+        size={this.props.size}
+        isCompact={this.props.isCompact}>
+        <BufferedInput
           id={this.props.id}
-          size={GRID.SIZE - this.props.size}/>
-        <div className={`col-${this.props.size}`}>
-          <BufferedInput
-            id={this.props.id}
-            className="form-control"
-            name={this.props.name}
-            placeholder={this.props.placeholder}
-            tabIndex={this.props.tabIndex}
-            type="text"
-            value={this.props.value}
-            readOnly={this.props.isReadOnly}
-            onBlur={this.handleBlur}
-            onCommit={this.handleChange}/>
-        </div>
-      </FormGroup>
+          className="form-control"
+          name={this.props.name}
+          placeholder={this.props.placeholder}
+          tabIndex={this.props.tabIndex}
+          type="text"
+          value={this.props.value}
+          readOnly={this.props.isReadOnly}
+          onBlur={this.handleBlur}
+          onCommit={this.handleChange}/>
+      </FormElement>
     )
   }
 
@@ -119,16 +143,14 @@ class FormText extends PureComponent {
 
   render() {
     return this.isVisible && (
-      <FormGroup isCompact={this.props.isCompact}>
-        <Label
-          id={this.props.id}
-          size={GRID.SIZE - this.props.size}/>
-        <div className={`col-${this.props.size}`}>
-          <div className="form-text">
-            {this.props.value}
-          </div>
+      <FormElement
+        id={this.props.id}
+        isCompact={this.props.isCompact}
+        size={this.props.size}>
+        <div className="form-text">
+          {this.props.value}
         </div>
-      </FormGroup>
+      </FormElement>
     )
   }
 
@@ -150,5 +172,6 @@ module.exports = {
   Label,
   FormGroup,
   FormField,
+  FormElement,
   FormText
 }
