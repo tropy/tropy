@@ -20,6 +20,7 @@ module.exports = {
   project: require('./project'),
   properties: require('./properties'),
   qr: require('./qr'),
+  shell: require('./shell'),
   tag: require('./tag'),
   ui: require('./ui'),
   vocab: require('./vocab'),

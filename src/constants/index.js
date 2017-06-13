@@ -19,6 +19,7 @@ module.exports = {
   PROJECT: require('./project'),
   QR: require('./qr'),
   SASS: require('./sass'),
+  SHELL: require('./shell'),
   TABS: require('./tabs'),
   TAG: require('./tag'),
   UI: require('./ui'),

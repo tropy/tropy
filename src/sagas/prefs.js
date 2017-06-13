@@ -4,6 +4,7 @@ const { CLOSE } = require('../constants/prefs')
 const { ontology } = require('./ontology')
 const { history } = require('./history')
 const { ipc } = require('./ipc')
+const { shell } = require('./shell')
 const { warn, debug, verbose } = require('../common/log')
 const { all, cancel, cancelled, fork, take } = require('redux-saga/effects')
 
@@ -15,7 +16,8 @@ module.exports = {
       aux = yield all([
         fork(ontology),
         fork(history),
-        fork(ipc)
+        fork(ipc),
+        fork(shell)
       ])
 
       yield take(CLOSE)
