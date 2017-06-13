@@ -40,7 +40,7 @@ class ItemTableRow extends ItemIterable {
               data={data}
               width={width}
               isEditing={this.isEditing(property.id)}
-              hasCoverImage={property.id === DC.TITLE}/>)
+              hasCoverImage={property.id === DC.title}/>)
       }</tr>
     )
   }

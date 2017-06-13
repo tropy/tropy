@@ -58,7 +58,7 @@ class Import extends Command {
 
         yield call(db.transaction, async tx => {
           item = await mod.item.create(tx, {
-            [DC.TITLE]: text(image.title)
+            [DC.title]: text(image.title)
           })
 
           photo = await mod.photo.create(tx, { item: item.id, image })

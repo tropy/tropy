@@ -36,8 +36,8 @@ module.exports = {
       metadata.update(db, {
         ids: [id],
         data: {
-          [DC.TITLE]: text(image.title),
-          [DC.DATE]: date(image.date)
+          [DC.title]: text(image.title),
+          [DC.date]: date(image.date)
         }
       })
     ])

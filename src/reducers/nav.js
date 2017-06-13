@@ -11,7 +11,7 @@ const init = {
   items: [],
   query: '',
   tags: [],
-  sort: { type: 'property', column: DC.TITLE, asc: true },
+  sort: { type: 'property', column: DC.title, asc: true },
   lists: {}
 }
 
