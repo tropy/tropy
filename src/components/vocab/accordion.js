@@ -3,7 +3,7 @@
 const React = require('react')
 const { FormattedMessage } = require('react-intl')
 const { Accordion } = require('../accordion')
-const { FormField, FormText } = require('../form')
+const { FormElement, FormField, FormText } = require('../form')
 const { PropertyList } = require('../property')
 const { IconButton } = require('../button')
 const { IconBook16, IconTrash } = require('../icons')
@@ -17,6 +17,10 @@ class VocabAccordion extends Accordion {
 
   handleChange = (data) => {
     this.props.onSave({ id: this.props.vocab.id, ...data })
+  }
+
+  handleOpen = () => {
+    this.props.onOpenLink(this.props.vocab.id)
   }
 
   renderHeader() {
@@ -39,11 +43,9 @@ class VocabAccordion extends Accordion {
     return super.renderBody(
       <div>
         <header className="vocab-header">
-          <FormText
-            id="vocab.id"
-            isCompact
-            size={8}
-            value={vocab.id}/>
+          <FormElement id="vocab.id" isCompact size={8}>
+            <a tabIndex={-1} onClick={this.handleOpen}>{vocab.id}</a>
+          </FormElement>
           <FormField
             id="vocab.prefix"
             isCompact
@@ -84,6 +86,7 @@ class VocabAccordion extends Accordion {
       properties: arrayOf(object).isRequired
     }).isRequired,
     onDelete: func.isRequired,
+    onOpenLink: func.isRequired,
     onSave: func.isRequired
   }
 }
