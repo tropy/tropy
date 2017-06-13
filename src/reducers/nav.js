@@ -1,7 +1,7 @@
 'use strict'
 
 const {
-  NAV, ITEM, LIST, TAG, NOTE, PHOTO, PROJECT, PROPERTIES: { DC }
+  NAV, ITEM, LIST, TAG, NOTE, PHOTO, PROJECT, DC
 } = require('../constants')
 
 const { isSelected } = require('../selection')

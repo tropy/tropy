@@ -5,7 +5,7 @@ const { ItemIterable } = require('./iterable')
 const { ItemTableCell } = require('./table-cell')
 const { meta } = require('../../common/os')
 const { get, pick } = require('../../common/util')
-const { DC } = require('../../constants/properties')
+const { DC } = require('../../constants')
 const cx = require('classnames')
 const { arrayOf, object } = require('prop-types')
 

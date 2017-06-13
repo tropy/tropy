@@ -1,7 +1,7 @@
 'use strict'
 
 const { TEMPLATE } = require('../constants/photo')
-const { DC } = require('../constants/properties')
+const { DC } = require('../constants')
 const { all } = require('bluebird')
 const { text, date } = require('../value')
 const metadata = require('./metadata')

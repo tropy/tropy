@@ -5,7 +5,7 @@ const PropTypes = require('prop-types')
 const { number, object, func } = PropTypes
 const { PhotoListItem } = require('./list-item')
 const { PhotoIterator } = require('./iterator')
-const { DC } = require('../../constants/properties')
+const { DC } = require('../../constants')
 const { on, off } = require('../../dom')
 const cx = require('classnames')
 

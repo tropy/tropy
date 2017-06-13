@@ -3,7 +3,7 @@
 const { createSelector: memo } = require('reselect')
 const { into, compose, map, filter } = require('transducers.js')
 const { entries, values } = Object
-const { DC, TR, S } = require('../constants/properties')
+const { DC } = require('../constants')
 
 const CORE = 'https://tropy.org/schema/v1/templates/item'
 const PHOTO = 'https://tropy.org/schema/v1/templates/photo'
@@ -12,6 +12,16 @@ const CORNELL = 'https://schema.tropy.org/v1/templates/cornell-obama'
 const PINKERTON = 'https://schema.tropy.org/v1/templates/pinkerton'
 const TYPOGRAPHY = 'https://schema.tropy.org/v1/templates/typography'
 const SRM = 'https://schema.tropy.org/v1/templates/srm'
+
+const TR = {
+  BOX: 'https://tropy.org/schema/v1/core#box',
+  FOLDER: 'https://tropy.org/schema/v1/core#folder',
+  PIECE: 'https:/tropy.org/schema/v1/core#piece'
+}
+
+const S = {
+  RECIPIENT: 'http://schema.org/recipient'
+}
 
 const T = {
   [CORE]: {

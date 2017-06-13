@@ -7,14 +7,13 @@ const { Command } = require('./command')
 const { prompt, openImages, fail  } = require('../dialog')
 const { Image } = require('../image')
 const { imagePath } = require('../common/cache')
-const { DC } = require('../constants/properties')
 const { text } = require('../value')
 const intl = require('../selectors/intl')
 const act = require('../actions')
 const mod = require('../models')
 const { mixed, pluck, remove } = require('../common/util')
 const { map, cat, filter, into, compose } = require('transducers.js')
-const { ITEM } = require('../constants')
+const { ITEM, DC } = require('../constants')
 const { isArray } = Array
 const { keys } = Object
 
