@@ -23,6 +23,7 @@ class PropertyListItem extends PureComponent {
             value={property.label}
             isCompact
             size={8}
+            tabIndex={null}
             onChange={this.handleChange}/>
           <FormLink
             id="property.id"

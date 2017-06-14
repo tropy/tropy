@@ -141,7 +141,7 @@ class BufferedInput extends PureComponent {
     isDisabled: bool,
     isRequired: bool,
     placeholder: string,
-    tabIndex: number.isRequired,
+    tabIndex: number,
     type: oneOf(['text', 'number']).isRequired,
     value: oneOfType([string, number]).isRequired,
     onBlur: func.isRequired,

@@ -51,6 +51,7 @@ class VocabAccordion extends Accordion {
             name="prefix"
             value={vocab.prefix}
             size={8}
+            tabIndex={null}
             onChange={this.handleChange}/>
           <FormText
             id="vocab.description"
