@@ -90,7 +90,6 @@ class VocabSave extends Command {
     const { payload } = this.action
 
     assert(payload.id != null)
-    assert(payload.prefix != null)
 
     const original = yield select(state =>
       pick(state.ontology.vocab[payload.id], keys(payload)))

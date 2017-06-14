@@ -59,6 +59,8 @@ const ontology = {
       comment,
       seeAlso
     }) {
+      if (prefix === '') prefix = null
+
       return db.run(`
         REPLACE INTO vocabularies (
           vocabulary_id,
@@ -74,6 +76,8 @@ const ontology = {
     },
 
     update(db, { id, prefix }) {
+      if (prefix === '') prefix = null
+
       return db.run(`
         UPDATE vocabularies
           SET prefix = ?
