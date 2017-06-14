@@ -75,13 +75,15 @@ class ProjectContainer extends PureComponent {
     if (this.state.willModeChange) return
 
     this.setState({ willModeChange: true, isModeChanging: false }, () => {
-      this.setState({ isModeChanging: true })
-      ensure(
-        this.container,
-        'transitionend',
-        this.modeDidChange,
-        5000,
-        this.isMainView)
+      requestAnimationFrame(() => {
+        this.setState({ isModeChanging: true })
+        ensure(
+          this.container,
+          'transitionend',
+          this.modeDidChange,
+          3000,
+          this.isMainView)
+      })
     })
   }
 
