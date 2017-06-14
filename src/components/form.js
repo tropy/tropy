@@ -118,7 +118,8 @@ class FormField extends PureComponent {
           tabIndex={this.props.tabIndex}
           type="text"
           value={this.props.value}
-          readOnly={this.props.isReadOnly}
+          isReadOnly={this.props.isReadOnly}
+          isRequired={this.props.isRequired}
           onBlur={this.handleBlur}
           onCommit={this.handleChange}/>
       </FormElement>
@@ -129,6 +130,7 @@ class FormField extends PureComponent {
     id: string.isRequired,
     isCompact: bool,
     isReadOnly: bool,
+    isRequired: bool,
     name: string.isRequired,
     placeholder: string,
     size: number.isRequired,

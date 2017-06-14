@@ -122,6 +122,7 @@ class BufferedInput extends PureComponent {
         disabled={this.props.isDisabled}
         placeholder={this.props.placeholder}
         ref={this.autofocus}
+        readOnly={this.props.isReadOnly}
         required={this.props.isRequired}
         tabIndex={this.props.tabIndex}
         type={this.props.type}
@@ -139,6 +140,7 @@ class BufferedInput extends PureComponent {
     delay: number.isRequired,
     id: string,
     isDisabled: bool,
+    isReadOnly: bool,
     isRequired: bool,
     placeholder: string,
     tabIndex: number,
