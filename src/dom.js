@@ -128,6 +128,10 @@ const dom = {
 
   hasFocus(node) {
     return document.activeElement === node
+  },
+
+  reflow(node) {
+    node.scrollTop
   }
 }
 

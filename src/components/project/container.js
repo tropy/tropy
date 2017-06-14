@@ -10,7 +10,7 @@ const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
 const { extname } = require('path')
 const { MODE } = require('../../constants/project')
-const { ensure } = require('../../dom')
+const { ensure, reflow } = require('../../dom')
 const { win } = require('../../window')
 const cx = require('classnames')
 const { values } = Object
@@ -75,16 +75,17 @@ class ProjectContainer extends PureComponent {
     if (this.state.willModeChange) return
 
     this.setState({ willModeChange: true, isModeChanging: false }, () => {
-      // Force repaint to ensure the transition is not skipped!
-      this.container.style.scrollTop
+      reflow(this.container)
 
-      this.setState({ isModeChanging: true })
-      ensure(
-        this.container,
-        'transitionend',
-        this.modeDidChange,
-        3000,
-        this.isMainView)
+      requestAnimationFrame(() => {
+        this.setState({ isModeChanging: true })
+        ensure(
+          this.container,
+          'transitionend',
+          this.modeDidChange,
+          3000,
+          this.isMainView)
+      })
     })
   }
 
