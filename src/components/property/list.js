@@ -24,6 +24,7 @@ class PropertyListItem extends PureComponent {
             isCompact
             size={8}
             tabIndex={null}
+            isRequired
             onChange={this.handleChange}/>
           <FormLink
             id="property.id"
