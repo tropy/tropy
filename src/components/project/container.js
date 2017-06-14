@@ -75,15 +75,16 @@ class ProjectContainer extends PureComponent {
     if (this.state.willModeChange) return
 
     this.setState({ willModeChange: true, isModeChanging: false }, () => {
-      requestAnimationFrame(() => {
-        this.setState({ isModeChanging: true })
-        ensure(
-          this.container,
-          'transitionend',
-          this.modeDidChange,
-          3000,
-          this.isMainView)
-      })
+      // Force repaint to ensure the transition is not skipped!
+      this.container.style.scrollTop
+
+      this.setState({ isModeChanging: true })
+      ensure(
+        this.container,
+        'transitionend',
+        this.modeDidChange,
+        3000,
+        this.isMainView)
     })
   }
 
