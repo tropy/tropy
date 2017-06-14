@@ -14,7 +14,7 @@ module.exports = {
         ipc.send(PROJECT.CREATED, { file })
 
       } catch (error) {
-        fail(error)
+        fail(error, PROJECT.CREATED)
       }
     }
   },

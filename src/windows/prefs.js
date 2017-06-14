@@ -26,7 +26,7 @@ all([
     render(<Main store={store}><PrefsContainer/></Main>, $('.view'))
   })
 
-dialog.start()
+dialog.start(store)
 
 win.unloaders.push(dialog.stop)
 win.unloaders.push(() => (

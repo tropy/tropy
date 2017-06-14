@@ -96,7 +96,7 @@ class Import extends Command {
         warn(`Failed to import "${file}": ${error.message}`)
         verbose(error.stack)
 
-        fail(error)
+        fail(error, this.action.type)
       }
     }
 

@@ -31,7 +31,7 @@ all([
     )
   })
 
-dialog.start()
+dialog.start(store)
 
 win.unloaders.push(dialog.stop)
 win.unloaders.push(() => (

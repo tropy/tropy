@@ -113,6 +113,12 @@ activity:
   metadata:
     load: Loading metadata …
     save: Saving metadata …
+  ontology:
+    import: Importing vocabularies …
+    vocab:
+      save: Saving vocabulary …
+    label:
+      save: Saving label …
   photo:
     create: Importing photos …
     delete: Deleting photo …
@@ -141,3 +147,12 @@ editor:
     left: Align Left
     center: Center
     right: Align Right
+
+error:
+  project:
+    created: Project creation failed.
+  item:
+    import: Failed to import item.
+  ontology:
+    vocab:
+      save: Failed to save vocabulary. Prefix must be unique.
