@@ -8,16 +8,16 @@ module.exports = {
     const { cmd, rel, seq, now, done, progress, total } = meta
 
     switch (true) {
-      case type === ACTIVITY.UPDATE:
+      case (type === ACTIVITY.UPDATE):
         return {
           ...state,
           [rel]: { ...state[rel], ...payload }
         }
 
-      case done:
+      case (done):
         return omit(state, [rel])
 
-      case cmd:
+      case (cmd != null):
         return {
           ...state,
           [seq]: {
