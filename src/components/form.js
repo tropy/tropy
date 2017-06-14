@@ -83,6 +83,14 @@ class FormElement extends PureComponent {
 
 
 class FormField extends PureComponent {
+  reset() {
+    if (this.input != null) this.input.reset()
+  }
+
+  setInput = (input) => {
+    this.input = input
+  }
+
   handleBlur = (event) => {
     this.props.onBlur(this.props.id, event)
   }
@@ -102,6 +110,7 @@ class FormField extends PureComponent {
         size={this.props.size}
         isCompact={this.props.isCompact}>
         <BufferedInput
+          ref={this.setInput}
           id={this.props.id}
           className="form-control"
           name={this.props.name}

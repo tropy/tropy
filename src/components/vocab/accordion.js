@@ -19,7 +19,6 @@ class VocabAccordion extends Accordion {
     this.props.onSave({ id: this.props.vocab.id, ...data })
   }
 
-
   renderHeader() {
     return super.renderHeader(
       <div className="flex-row center panel-header-container">
