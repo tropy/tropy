@@ -74,6 +74,22 @@ class Import extends Command {
   }
 }
 
+class Load extends Command {
+  static get action() { return ONTOLOGY.LOAD }
+
+  *exec() {
+    const { db } = this.options
+
+    const [vocab, klass, props] = yield all([
+      mod.ontology.vocab.load(db),
+      mod.ontology.class.load(db),
+      mod.ontology.props.load(db)
+    ])
+
+    return { vocab, class: klass, props }
+  }
+}
+
 class VocabLoad extends Command {
   static get action() { return VOCAB.LOAD }
 
@@ -176,6 +192,7 @@ module.exports = {
   ClassLoad,
   Import,
   LabelSave,
+  Load,
   PropsLoad,
   VocabDelete,
   VocabLoad,

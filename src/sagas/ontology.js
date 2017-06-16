@@ -29,10 +29,7 @@ function *create(db) {
 
 function *migrate() {
   // TODO actually migrate
-
-  yield put(act.ontology.vocab.load())
-  yield put(act.ontology.props.load())
-  yield put(act.ontology.class.load())
+  yield put(act.ontology.load())
 }
 
 function *ontology(file = join(ARGS.home, ONTOLOGY.DB)) {

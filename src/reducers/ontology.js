@@ -7,6 +7,7 @@ const { load, merge, replace, remove, update } = require('./util')
 
 function props(state = {}, { type, payload, error, meta }) {
   switch (type) {
+    case ONTOLOGY.LOAD:
     case ONTOLOGY.IMPORT:
       return (meta.done && !error) ?
         replace(state, payload.props) :
@@ -24,6 +25,7 @@ function props(state = {}, { type, payload, error, meta }) {
 
 function klass(state = {}, { type, payload, error, meta }) {
   switch (type) {
+    case ONTOLOGY.LOAD:
     case ONTOLOGY.IMPORT:
       return (meta.done && !error) ?
         replace(state, payload.class) :
@@ -42,6 +44,7 @@ function klass(state = {}, { type, payload, error, meta }) {
 // eslint-disable-next-line complexity
 function vocab(state = {}, { type, payload, error, meta }) {
   switch (type) {
+    case ONTOLOGY.LOAD:
     case ONTOLOGY.IMPORT:
       return (meta.done && !error) ?
         replace(state, payload.vocab) :

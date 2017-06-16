@@ -17,6 +17,17 @@ module.exports = {
     }
   },
 
+  load(payload = {}, meta) {
+    return {
+      type: ONTOLOGY.LOAD,
+      payload,
+      meta: {
+        cmd: 'ontology',
+        ...meta
+      }
+    }
+  },
+
   vocab: {
     load(payload, meta = {}) {
       return {

@@ -220,7 +220,10 @@ class Tropy extends EventEmitter {
       frame: !this.hash.frameless,
       titleBarStyle: 'hidden'
     })
-      .once('closed', () => { this.prefs = undefined })
+      .once('closed', () => {
+        this.prefs = undefined
+        this.dispatch(act.ontology.load(), this.win)
+      })
 
     return this
   }
