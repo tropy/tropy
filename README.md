@@ -7,7 +7,7 @@
 Bring order to your research — use the power of Tropy to organize and describe
 your research photos so you can quickly find your sources whenever you need them.
 
-Visit [tropy.org](https://tropy.og) to learn more or follow
+Visit [tropy.org](https://tropy.org) to learn more or follow
 [@tropy](https://twitter.com/tropy) on Twitter for important announcements.
 
 
