@@ -23,6 +23,5 @@ module.exports = {
   shell: require('./shell'),
   tag: require('./tag'),
   ui: require('./ui'),
-  vocab: require('./vocab'),
   wizard: require('./wizard')
 }
