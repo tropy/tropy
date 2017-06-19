@@ -21,6 +21,12 @@ module.exports = {
     SAVE: 'ontology.label.save'
   },
 
+  TEMPS: {
+    DELETE: 'ontology.temp.delete',
+    LOAD: 'ontology.temp.load',
+    RESTORE: 'ontology.temp.restore',
+    SAVE: 'ontology.temp.save'
+  },
 
   VOCAB: {
     DELETE: 'ontology.vocab.delete',

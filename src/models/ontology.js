@@ -20,12 +20,12 @@ const ontology = {
 
       await db.each(`
         SELECT
-          vocabulary_id AS id,
-          prefix,
-          title,
-          description,
-          comment,
-          see_also AS seeAlso
+            vocabulary_id AS id,
+            prefix,
+            title,
+            description,
+            comment,
+            see_also AS seeAlso
           FROM vocabularies
           WHERE ${cond.join(' AND ')}`, (data) => {
         vocabs[data.id] = {
@@ -236,6 +236,36 @@ const ontology = {
           WHERE id NOT IN (SELECT class_id FROM classes)
             AND id NOT IN (SELECT property_id FROM properties)`
       )
+    }
+  },
+
+  temps: {
+    async load(db) {
+      const temps = {}
+
+      await db.each(`
+        SELECT template_id AS id, template_type AS type, protected
+          FROM templates`, (data) => {
+        temps[data.id] = { ...data, classes: [], fields: [] }
+      })
+
+      await all([
+        db.each(`
+          SELECT class_id AS klass, template_id AS tpl
+            ORDER BY position`, ({ tpl, klass }) => {
+          temps[tpl].push(klass)
+        }),
+        db.each(`
+          SELECT
+              field_id AS id,
+              template_id AS tpl,
+              property_id AS property
+            ORDER BY position`, ({ id, tpl, property }) => {
+          temps[tpl].push({ id, property })
+        })
+      ])
+
+      return temps
     }
   }
 }
