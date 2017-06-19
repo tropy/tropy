@@ -1,0 +1,34 @@
+{
+  "@context": {
+    "name": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#label",
+      "@type": "@id"
+    },
+    "type": {
+      "@id": "http://purl.org/dc/elements/1.1/type",
+      "@type": "@id"
+    },
+    "class": {
+      "@id": "http://www.w3.org/2000/01/rdf-schema#Class",
+      "@type": "@id"
+    },
+    "field": {
+      "@id": "https://tropy.org/schema/v1/template#field",
+      "@container": "@list"
+    }
+  },
+  "@id": "https://tropy.org/schema/v1/templates/photo",
+  "name": "Tropy Photo",
+  "type": "photo",
+  "class": "http://iiif.io/api/image/2#Image",
+  "field": [
+    {
+      "@context": "https://tropy.org/schema/v1/ctx/field",
+      "property": "http://purl.org/dc/elements/1.1/title"
+    },
+    {
+      "@context": "https://tropy.org/schema/v1/ctx/field",
+      "property": "http://purl.org/dc/elements/1.1/date"
+    }
+  ]
+}
