@@ -239,12 +239,16 @@ const ontology = {
     }
   },
 
-  temps: {
+  template: {
     async load(db) {
       const temps = {}
 
       await db.each(`
-        SELECT template_id AS id, template_type AS type, protected
+        SELECT
+            template_id AS id,
+            template_type AS type,
+            name,
+            protected AS isProtected
           FROM templates`, (data) => {
         temps[data.id] = { ...data, classes: [], fields: [] }
       })
@@ -266,6 +270,30 @@ const ontology = {
       ])
 
       return temps
+    },
+
+    create(db, { id, type, name, isProtected }) {
+      return db.run(`
+        INSERT INTO templates (template_id, template_type, name, protected)
+          VALUES (?, ?, ?, ?)`, [id, type, name, !!isProtected]
+      )
+    }
+  },
+
+  field: {
+    add(db, template, ...fields) {
+      return db.prepare(`
+        INSERT INTO template_fields
+          (template_id, field_id, property_id, position)
+          VALUES (?, ?, ?, ?)`, stmt =>
+          all(fields.map((f, idx) => stmt.run([
+            template,
+            f.id,
+            f.property,
+            (f.position != null) ? f.position : idx
+          ])
+        ))
+      )
     }
   }
 }
