@@ -29,6 +29,15 @@ linux:
     - label: 'New Tag'
       command: 'app:create-tag'
   tag: &tag
+    - label: 'Change Color'
+      id: 'colors'
+      enabled: false
+      submenu:
+        - label: 'None'
+          type: checkbox
+          checked: true
+          enabled: false
+        - type: separator
     - label: 'Rename Tag'
       command: 'app:rename-tag'
     - label: 'Delete Tag'
