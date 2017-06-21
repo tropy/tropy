@@ -161,3 +161,5 @@ error:
   ontology:
     vocab:
       save: Failed to save vocabulary. Prefix must be unique.
+    template:
+      import: Failed to import template.
