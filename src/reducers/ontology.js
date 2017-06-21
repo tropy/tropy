@@ -2,7 +2,7 @@
 
 const { combineReducers } = require('redux')
 const { ONTOLOGY } = require('../constants')
-const { PROPS, CLASS, VOCAB, LABEL } = ONTOLOGY
+const { PROPS, CLASS, VOCAB, LABEL, TEMPLATE } = ONTOLOGY
 const { load, merge, replace, remove, update } = require('./util')
 
 function props(state = {}, { type, payload, error, meta }) {
@@ -68,10 +68,32 @@ function vocab(state = {}, { type, payload, error, meta }) {
   }
 }
 
+// eslint-disable-next-line complexity
+function template(state = {}, { type, payload, error, meta }) {
+  switch (type) {
+    case TEMPLATE.IMPORT:
+      return (meta.done && !error) ?
+        replace(state, payload) :
+        state
+    case TEMPLATE.DELETE:
+      return (meta.done && !error) ?
+        remove(state, payload) :
+        state
+    case TEMPLATE.LOAD:
+    case TEMPLATE.RESTORE:
+      return (meta.done && !error) ?
+        merge(state, payload) :
+        state
+    default:
+      return state
+  }
+}
+
 module.exports = {
   ontology: combineReducers({
     props,
     class: klass,
+    template,
     vocab
   })
 }
