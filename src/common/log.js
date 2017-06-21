@@ -49,11 +49,10 @@ function init(dir) {
         logger.add(transports.File, {
           label: LABEL,
           filename: join(dir, `${LABEL}.log`),
-          maxsize: 1024 * 256,
-          maxFiles: 0,
           tailable: true,
           handleExceptions: true,
-          humanReadableUnhandledException: true
+          humanReadableUnhandledException: true,
+          options: { flags: 'w' }
         })
       }
 
