@@ -6,6 +6,24 @@ const { any, empty, get, titlecase } = require('./util')
 const { Resource } = require('./res')
 const N3 = require('n3')
 const { RDF, RDFS, DC, DCT, SKOS, OWL, VANN } = require('../constants')
+const { readFileAsync: read } = require('fs')
+
+
+class Template {
+  static async open(path) {
+    return JSON.parse(await read(path))
+  }
+
+  static export(data) {
+    return {
+      '@id': data.id,
+      'type': data.type,
+      'name': data.name,
+      'domain': data.domain,
+      'fields': data.field.map(field => ({ ...field }))
+    }
+  }
+}
 
 
 class Ontology extends Resource {
@@ -201,5 +219,6 @@ module.exports = {
   isDefinedBy,
   literal,
   namespace,
-  Ontology
+  Ontology,
+  Template
 }
