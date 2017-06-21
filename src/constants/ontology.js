@@ -22,10 +22,11 @@ module.exports = {
   },
 
   TEMPLATE: {
-    DELETE: 'ontology.temp.delete',
-    LOAD: 'ontology.temp.load',
-    RESTORE: 'ontology.temp.restore',
-    SAVE: 'ontology.temp.save'
+    DELETE: 'ontology.template.delete',
+    IMPORT: 'ontology.template.import',
+    LOAD: 'ontology.template.load',
+    RESTORE: 'ontology.template.restore',
+    SAVE: 'ontology.template.save'
   },
 
   VOCAB: {

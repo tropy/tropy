@@ -98,7 +98,17 @@ function openImages(options) {
 function openVocabs(options) {
   return open('file', {
     filters: [
-      { name: 'Vocabularies', extensions: ['n3'] }
+      { name: 'RDF Vocabularies', extensions: ['n3'] }
+    ],
+    properties: ['openFile', 'multiSelections'],
+    ...options
+  })
+}
+
+function openTemplates(options) {
+  return open('file', {
+    filters: [
+      { name: 'Tropy Templates', extensions: ['ttp'] }
     ],
     properties: ['openFile', 'multiSelections'],
     ...options
@@ -122,6 +132,7 @@ module.exports = {
   fail,
   file,
   openImages,
+  openTemplates,
   openVocabs,
   save,
   saveProject,

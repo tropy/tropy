@@ -119,6 +119,8 @@ activity:
       save: Saving vocabulary …
     label:
       save: Saving label …
+    template:
+      import: Importing templates …
   photo:
     create: Importing photos …
     delete: Deleting photo …
@@ -153,6 +155,9 @@ error:
     created: Project creation failed.
   item:
     import: Failed to import item.
+  list:
+    item:
+      add: Failed to add item(s) to list.
   ontology:
     vocab:
       save: Failed to save vocabulary. Prefix must be unique.

@@ -3,12 +3,13 @@
 const assert = require('assert')
 const { Command } = require('./command')
 const { ONTOLOGY } = require('../constants')
-const { VOCAB, PROPS, CLASS, LABEL } = ONTOLOGY
+const { VOCAB, PROPS, CLASS, LABEL, TEMPLATE } = ONTOLOGY
 const { Ontology } = require('../common/ontology')
-const { openVocabs, fail  } = require('../dialog')
+const { openTemplates, openVocabs, fail  } = require('../dialog')
 const { verbose, warn } = require('../common/log')
 const { get, pick } = require('../common/util')
 const { all, call, select } = require('redux-saga/effects')
+const { readFileAsync: read } = require('fs')
 const act = require('../actions')
 const mod = require('../models')
 const { keys } = Object
@@ -187,6 +188,58 @@ class LabelSave extends Command {
   }
 }
 
+class TemplateImport extends Command {
+  static get action() { return TEMPLATE.IMPORT }
+
+  *exec() {
+    const { db } = this.options
+    let { files } = this.action.payload
+
+    if (!files) {
+      files = yield call(openTemplates)
+      this.init = performance.now()
+    }
+
+    if (!files) return
+
+    let temps = []
+
+    for (let i = 0, ii = files.length; i < ii; ++i) {
+      let file = files[i]
+
+      try {
+        let data = JSON.parse(yield call(read, file))
+
+        yield call(db.transaction, async tx => {
+          await mod.ontology.template.create(tx, {
+            id: data['@id'],
+            type: data.type,
+            name: data.name
+          })
+
+          await Promise.all([
+            mod.ontology.field.add(tx, data['@id'], ...data.fields)
+          ])
+
+          temps.push(data.id)
+        })
+
+
+      } catch (error) {
+        warn(`Failed to import "${file}": ${error.message}`)
+        verbose(error.stack)
+
+        fail(error, this.action.type)
+      }
+    }
+
+    if (temps.length > 0) {
+      this.undo = act.ontology.template.delete(temps)
+      return yield call(mod.ontology.template.load, db, { id: temps })
+    }
+  }
+}
+
 
 module.exports = {
   ClassLoad,
@@ -194,6 +247,7 @@ module.exports = {
   LabelSave,
   Load,
   PropsLoad,
+  TemplateImport,
   VocabDelete,
   VocabLoad,
   VocabRestore,
