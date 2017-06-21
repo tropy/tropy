@@ -10,7 +10,6 @@ const { openTemplates, openVocabs, fail  } = require('../dialog')
 const { verbose, warn } = require('../common/log')
 const { get, pick } = require('../common/util')
 const { all, call, select } = require('redux-saga/effects')
-const fs = require('fs')
 const act = require('../actions')
 const mod = require('../models')
 const { keys } = Object
