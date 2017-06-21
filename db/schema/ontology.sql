@@ -68,7 +68,6 @@ CREATE TABLE templates (
   template_type  TEXT     NOT NULL DEFAULT 'item',
   protected      BOOLEAN  NOT NULL DEFAULT FALSE,
   created        NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted        NUMERIC,
   modified       NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
   CHECK (template_id != ''),
