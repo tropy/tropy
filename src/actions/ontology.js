@@ -1,7 +1,7 @@
 'use strict'
 
 const { ONTOLOGY } = require('../constants')
-const { PROPS, CLASS, VOCAB, LABEL } = ONTOLOGY
+const { PROPS, CLASS, VOCAB, TEMPLATE, LABEL } = ONTOLOGY
 const { array } = require('../common/util')
 
 module.exports = {
@@ -120,6 +120,43 @@ module.exports = {
         meta: {
           cmd: 'ontology',
           history: 'add',
+          ...meta
+        }
+      }
+    }
+  },
+
+  template: {
+    import(payload = {}, meta = {}) {
+      return {
+        type: TEMPLATE.IMPORT,
+        payload,
+        meta: {
+          cmd: 'ontology',
+          history: 'add',
+          ...meta
+        }
+      }
+    },
+
+    delete(payload, meta = {}) {
+      return {
+        type: TEMPLATE.DELETE,
+        payload,
+        meta: {
+          cmd: 'ontology',
+          history: 'add',
+          ...meta
+        }
+      }
+    },
+
+    load(payload, meta = {}) {
+      return {
+        type: TEMPLATE.LOAD,
+        payload,
+        meta: {
+          cmd: 'ontology',
           ...meta
         }
       }
