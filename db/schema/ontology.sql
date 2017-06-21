@@ -66,6 +66,7 @@ CREATE TABLE labels (
 CREATE TABLE templates (
   template_id    TEXT     NOT NULL PRIMARY KEY,
   template_type  TEXT     NOT NULL DEFAULT 'item',
+  name           TEXT     NOT NULL,
   protected      BOOLEAN  NOT NULL DEFAULT FALSE,
   created        NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified       NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
