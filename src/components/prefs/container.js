@@ -85,8 +85,10 @@ class PrefsContainer extends PureComponent {
             <TemplateEditor
               properties={this.props.properties}
               templates={this.props.templates}
-              onSave={this.props.onTemplateSave}
-              onCreate={this.props.onTemplateCreate}/>
+              onCreate={this.props.onTemplateCreate}
+              onDelete={this.props.onTemplateDelete}
+              onImport={this.props.onTemplateImport}
+              onSave={this.props.onTemplateSave}/>
           </PrefPane>
 
           <VocabPane
@@ -115,6 +117,8 @@ class PrefsContainer extends PureComponent {
     onPrefsUpdate: func.isRequired,
     onPropsSave: func.isRequired,
     onTemplateCreate: func.isRequired,
+    onTemplateDelete: func.isRequired,
+    onTemplateImport: func.isRequired,
     onTemplateSave: func.isRequired,
     onVocabDelete: func.isRequired,
     onVocabSave: func.isRequired,
@@ -156,6 +160,13 @@ module.exports = {
       },
 
       onTemplateCreate() {
+      },
+
+      onTemplateDelete() {
+      },
+
+      onTemplateImport() {
+        dispatch(actions.ontology.template.import())
       },
 
       onTemplateSave() {

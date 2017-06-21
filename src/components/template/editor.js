@@ -34,7 +34,7 @@ function TemplateControl(props) {
           <IconButton icon={<IconNew/>}/>
           <IconButton icon={<IconCopy/>}/>
           <IconButton icon={<IconTrash/>}/>
-          <IconButton icon={<IconImport/>}/>
+          <IconButton icon={<IconImport/>} onClick={props.onImport}/>
           <IconButton icon={<IconExport/>}/>
         </ButtonGroup>
       </div>
@@ -48,6 +48,7 @@ TemplateControl.propTypes = {
     name: string
   })).isRequired,
   selected: string,
+  onImport: func.isRequired,
   onChange: func.isRequired
 }
 
@@ -108,7 +109,8 @@ class TemplateEditor extends PureComponent {
           <TemplateControl
             selected={this.state.id}
             templates={this.props.templates}
-            onChange={this.handleTemplateChange}/>
+            onChange={this.handleTemplateChange}
+            onImport={this.props.onImport}/>
           <FormField
             id="template.name"
             name="name"
@@ -154,6 +156,8 @@ class TemplateEditor extends PureComponent {
       name: string
     })).isRequired,
     onCreate: func.isRequired,
+    onDelete: func.isRequired,
+    onImport: func.isRequired,
     onSave: func.isRequired
   }
 }
