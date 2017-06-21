@@ -4,6 +4,7 @@ const { all } = require('bluebird')
 const { assign } = Object
 const { into, map } = require('transducers.js')
 const { array, list: lst, uniq } = require('../common/util')
+const { TEMPLATE } = require('../constants/item')
 
 const mod = {
   metadata: require('./metadata'),
@@ -183,7 +184,7 @@ module.exports = mod.item = {
 
   async create(db, data) {
     const { id } = await db.run(`
-      INSERT INTO subjects DEFAULT VALUES`)
+      INSERT INTO subjects (template) VALUES (?)`, TEMPLATE)
     await db.run(`
       INSERT INTO items (id) VALUES (?)`, id)
 
@@ -196,7 +197,8 @@ module.exports = mod.item = {
 
   async dup(db, source) {
     const { id } = await db.run(`
-      INSERT INTO subjects DEFAULT VALUES`)
+      INSERT INTO subjects (template)
+        SELECT template FROM subjects WHERE id = ?`, source)
     await db.run(`
       INSERT INTO items (id) VALUES (?)`, id)
 

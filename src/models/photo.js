@@ -15,13 +15,13 @@ const skel = (id) => ({
 
 module.exports = {
 
-  async create(db, { item, image, template }) {
+  async create(db, { item, image }) {
     const {
       path, checksum, mimetype, width, height, orientation
     } = image
 
     const { id } = await db.run(`
-      INSERT INTO subjects (template) VALUES (?)`, template || TEMPLATE)
+      INSERT INTO subjects (template) VALUES (?)`, TEMPLATE)
 
     await db.run(`
       INSERT INTO images (id, width, height) VALUES (?,?,?)`,
