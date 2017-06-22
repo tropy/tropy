@@ -250,24 +250,26 @@ const ontology = {
             name,
             protected AS isProtected
           FROM templates${
-            (ids.length > 0) ? `WHERE template_id IN (${list(ids, quote)})` : ''
+            (ids.length > 0) ? ` WHERE template_id IN (${list(ids, quote)})` : ''
           }`, (data) => {
-        temps[data.id] = { ...data, classes: [], fields: [] }
+        temps[data.id] = { ...data, domain: [], fields: [] }
       })
 
       await all([
         db.each(`
           SELECT class_id AS klass, template_id AS tpl
+            FROM domains
             ORDER BY position`, ({ tpl, klass }) => {
-          temps[tpl].push(klass)
+          temps[tpl].domain.push(klass)
         }),
         db.each(`
           SELECT
               field_id AS id,
               template_id AS tpl,
               property_id AS property
+            FROM fields
             ORDER BY position`, ({ id, tpl, property }) => {
-          temps[tpl].push({ id, property })
+          temps[tpl].fields.push({ id, property })
         })
       ])
 

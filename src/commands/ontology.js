@@ -209,20 +209,18 @@ class TemplateImport extends Command {
       let file = files[i]
 
       try {
-        let data = yield call(Template.open, file)
+        const {
+          '@id': id, type, name, field
+        } = yield call(Template.open, file)
 
         yield call(db.transaction, async tx => {
-          await mod.ontology.template.create(tx, {
-            id: data['@id'],
-            type: data.type,
-            name: data.name
-          })
+          await mod.ontology.template.create(tx, { id, type, name })
 
           await Promise.all([
-            mod.ontology.field.add(tx, data['@id'], ...data.field)
+            mod.ontology.field.add(tx, id, ...field)
           ])
 
-          temps.push(data.id)
+          temps.push(id)
         })
 
 
