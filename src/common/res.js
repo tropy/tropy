@@ -88,9 +88,20 @@ class KeyMap extends Resource {
   }
 }
 
+const Icons = {
+  color(name, ext = '.png', variant = '') {
+    return join(
+      Resource.base,
+      'icons',
+      'colors',
+      `${name}${variant}${ext}`)
+  }
+}
+
 module.exports = {
   Resource,
   Menu,
   Strings,
-  KeyMap
+  KeyMap,
+  Icons
 }

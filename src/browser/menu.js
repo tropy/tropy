@@ -83,6 +83,20 @@ class Menu {
         item.enabled = check(item, ...params)
       }
 
+      if ('color' in item) {
+        const { target } = params[0]
+
+        if (item.color != null) {
+          item.icon = res.Icons.color(item.color)
+        }
+
+        item.checked = target.color === item.color
+        item.click = this.responder('app:update-tag', {
+          id: target.id,
+          color: item.color
+        })
+      }
+
       switch (item.id) {
         // Electron does not support removing menu items
         // dynamically (#527), therefore we currently populate
@@ -158,11 +172,10 @@ class Menu {
 
           break
         }
-
       }
 
       if (item.submenu) {
-        item.submenu = this.translate(item.submenu)
+        item.submenu = this.translate(item.submenu, ...params)
       }
 
       return item
