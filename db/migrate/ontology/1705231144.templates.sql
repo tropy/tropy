@@ -12,15 +12,15 @@ CREATE TABLE templates (
 );
 
 
-CREATE TABLE template_classes (
-  template_id   TEXT     NOT NULL REFERENCES templates ON DELETE CASCADE,
-  class_id      TEXT     NOT NULL REFERENCES classes,
+CREATE TABLE domains (
+  template_id   TEXT      NOT NULL REFERENCES templates ON DELETE CASCADE,
+  class_id      TEXT      NOT NULL REFERENCES classes,
   position      INTEGER
 );
 
-CREATE TABLE template_fields (
-  field_id      INTEGER  PRIMARY KEY,
-  template_id   TEXT     NOT NULL REFERENCES templates ON DELETE CASCADE,
-  property_id   TEXT     NOT NULL REFERENCES properties,
+CREATE TABLE fields (
+  field_id      INTEGER   PRIMARY KEY,
+  template_id   TEXT      NOT NULL REFERENCES templates ON DELETE CASCADE,
+  property_id   TEXT      NOT NULL REFERENCES properties,
   position      INTEGER
 )

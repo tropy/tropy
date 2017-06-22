@@ -285,8 +285,7 @@ const ontology = {
   field: {
     add(db, template, ...fields) {
       return db.prepare(`
-        INSERT INTO template_fields
-          (template_id, property_id, position)
+        INSERT INTO fields (template_id, property_id, position)
           VALUES (?, ?, ?)`, stmt =>
           all(fields.map((f, idx) => stmt.run([
             template, f.property, (f.position != null) ? f.position : idx
