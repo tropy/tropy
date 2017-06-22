@@ -159,10 +159,12 @@ module.exports = {
         dispatch(actions.ontology.props.save(...args))
       },
 
-      onTemplateCreate() {
+      onTemplateCreate(...args) {
+        dispatch(actions.ontology.template.create(...args))
       },
 
-      onTemplateDelete() {
+      onTemplateDelete(...args) {
+        dispatch(actions.ontology.template.delete(...args))
       },
 
       onTemplateImport() {
