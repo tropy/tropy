@@ -9,7 +9,15 @@
     },
     {
       "property": "http://purl.org/dc/elements/1.1/date"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/creator"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/description"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/rights"
     }
   ]
 }
-
