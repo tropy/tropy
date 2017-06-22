@@ -243,22 +243,23 @@ const ontology = {
     async load(db, ...ids) {
       const temps = {}
 
+      const constraint = (ids.length > 0) ? `
+          WHERE template_id IN (${list(ids, quote)})` : ''
+
       await db.each(`
         SELECT
             template_id AS id,
             template_type AS type,
             name,
             protected AS isProtected
-          FROM templates${
-            (ids.length > 0) ? ` WHERE template_id IN (${list(ids, quote)})` : ''
-          }`, (data) => {
+          FROM templates${constraint}`, (data) => {
         temps[data.id] = { ...data, domain: [], fields: [] }
       })
 
       await all([
         db.each(`
           SELECT class_id AS klass, template_id AS tpl
-            FROM domains
+            FROM domains${constraint}
             ORDER BY position`, ({ tpl, klass }) => {
           temps[tpl].domain.push(klass)
         }),
@@ -267,7 +268,7 @@ const ontology = {
               field_id AS id,
               template_id AS tpl,
               property_id AS property
-            FROM fields
+            FROM fields${constraint}
             ORDER BY position`, ({ id, tpl, property }) => {
           temps[tpl].fields.push({ id, property })
         })

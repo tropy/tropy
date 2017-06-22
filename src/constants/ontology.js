@@ -25,7 +25,8 @@ module.exports = {
     DELETE: 'ontology.template.delete',
     IMPORT: 'ontology.template.import',
     LOAD: 'ontology.template.load',
-    SAVE: 'ontology.template.save'
+    SAVE: 'ontology.template.save',
+    CONTEXT: 'https://tropy.org/schema/v1/contexts/template.jsonld'
   },
 
   VOCAB: {

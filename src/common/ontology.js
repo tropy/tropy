@@ -5,7 +5,7 @@ const { createReadStream: stream } = require('fs')
 const { any, empty, get, titlecase } = require('./util')
 const { Resource } = require('./res')
 const N3 = require('n3')
-const { RDF, RDFS, DC, DCT, SKOS, OWL, VANN } = require('../constants')
+const { RDF, RDFS, DC, DCT, SKOS, OWL, VANN, ONTOLOGY } = require('../constants')
 const { readFileAsync: read } = require('fs')
 
 
@@ -16,11 +16,12 @@ class Template {
 
   static export(data) {
     return {
+      '@context': ONTOLOGY.TEMPLATE.CONTEXT,
       '@id': data.id,
       'type': data.type,
       'name': data.name,
       'domain': data.domain,
-      'fields': data.field.map(field => ({ ...field }))
+      'field': data.field.map(field => ({ ...field }))
     }
   }
 }
