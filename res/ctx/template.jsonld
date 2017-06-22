@@ -1,0 +1,14 @@
+{
+  "@context": {
+    "vocab": "https://tropy.org/schema/v1/ttp#",
+    "domain": {
+      "@id": "https://tropy.org/schema/v1/ttp#domain",
+      "@type": "@id",
+      "@container": "@list"
+    },
+    "field": {
+      "@id": "https://tropy.org/schema/v1/ttp#field",
+      "@container": "@list"
+    }
+  }
+}
