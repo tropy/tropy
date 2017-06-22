@@ -21,8 +21,13 @@ class Tag extends PureComponent {
       tag: true,
       active: this.props.isSelected,
       mixed: !!this.props.tag.mixed,
-      over: this.props.isOver
+      over: this.props.isOver,
+      [`color-${this.props.tag.color}`]: this.hasColor
     }
+  }
+
+  get hasColor() {
+    return this.props.tag.color != null
   }
 
   get isDropTarget() {

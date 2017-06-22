@@ -3,6 +3,8 @@
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { TAG } = require('../constants')
+const { pick } = require('../common/util')
+const { keys } = Object
 const mod = require('../models')
 const act = require('../actions')
 
@@ -51,12 +53,13 @@ class Save extends Command {
 
   *exec() {
     const { db } = this.options
-    const { id, name } = this.action.payload
+    const { payload } = this.action
 
-    this.original = yield select(({ tags }) => tags[id])
+    this.original = yield select(({ tags }) =>
+      pick(tags[payload.id], keys(payload)))
 
-    yield put(act.tag.update({ id, name }))
-    yield call(mod.tag.save, db, { id, name })
+    yield put(act.tag.update(payload))
+    yield call(mod.tag.save, db, payload)
 
     this.undo = act.tag.save(this.original)
   }
