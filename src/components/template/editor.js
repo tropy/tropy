@@ -71,6 +71,13 @@ class TemplateEditor extends PureComponent {
     this.state = dup()
   }
 
+  handleTemplateDelete = () => {
+    if (this.state.id) {
+      this.props.onDelete([this.state.id])
+      this.setState(dup())
+    }
+  }
+
   handleTemplateChange = (template) => {
     this.setState(dup(template))
   }
@@ -115,7 +122,7 @@ class TemplateEditor extends PureComponent {
             selected={this.state.id}
             templates={this.props.templates}
             onChange={this.handleTemplateChange}
-            onDelete={this.props.onDelete}
+            onDelete={this.handleTemplateDelete}
             onImport={this.props.onImport}/>
           <FormField
             id="template.name"

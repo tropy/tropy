@@ -209,8 +209,11 @@ class TemplateImport extends Command {
       let file = files[i]
 
       try {
-        const { '@id': id, ...data } = yield call(Template.open, file)
-        ids.push(yield call(createTemplate, db, { id, ...data }))
+        const {
+          '@id': id, type, name, field: fields
+        } = yield call(Template.open, file)
+
+        ids.push(yield call(createTemplate, db, { id, type, name, fields }))
 
       } catch (error) {
         warn(`Failed to import "${file}": ${error.message}`)
@@ -241,16 +244,8 @@ class TemplateCreate extends Command {
     let ids = []
 
     for (let id in payload) {
-      try {
-        yield call(createTemplate, db, { ...payload, id })
-        ids.push(id)
-
-      } catch (error) {
-        warn(`Failed to create template "${id}": ${error.message}`)
-        verbose(error.stack)
-
-        fail(error, this.action.type)
-      }
+      yield call(createTemplate, db, { ...payload[id], id })
+      ids.push(id)
     }
 
     this.undo = act.ontology.template.delete(ids)
@@ -267,7 +262,7 @@ async function createTemplate(db, data) {
     await mod.ontology.template.create(tx, data)
 
     await Promise.all([
-      mod.ontology.field.add(tx, data.id, ...data.field)
+      mod.ontology.field.add(tx, data.id, ...data.fields)
     ])
   })
 
