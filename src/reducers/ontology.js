@@ -71,6 +71,8 @@ function vocab(state = {}, { type, payload, error, meta }) {
 // eslint-disable-next-line complexity
 function template(state = {}, { type, payload, error, meta }) {
   switch (type) {
+    case TEMPLATE.CREATE:
+    case TEMPLATE.IMPORT:
     case TEMPLATE.LOAD:
       return (meta.done && !error) ?
         replace(state, payload) :
@@ -78,10 +80,6 @@ function template(state = {}, { type, payload, error, meta }) {
     case TEMPLATE.DELETE:
       return (meta.done && !error) ?
         remove(state, payload) :
-        state
-    case TEMPLATE.IMPORT:
-      return (meta.done && !error) ?
-        merge(state, payload) :
         state
     default:
       return state

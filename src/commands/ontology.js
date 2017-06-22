@@ -1,6 +1,5 @@
 'use strict'
 
-require('../common/promisify')
 const assert = require('assert')
 const { Command } = require('./command')
 const { ONTOLOGY } = require('../constants')
@@ -202,27 +201,15 @@ class TemplateImport extends Command {
 
     if (!files) return
 
-    let temps = []
-    let result = {}
+    let ids = []
+    let temps = {}
 
     for (let i = 0, ii = files.length; i < ii; ++i) {
       let file = files[i]
 
       try {
-        const {
-          '@id': id, type, name, field
-        } = yield call(Template.open, file)
-
-        yield call(db.transaction, async tx => {
-          await mod.ontology.template.create(tx, { id, type, name })
-
-          await Promise.all([
-            mod.ontology.field.add(tx, id, ...field)
-          ])
-
-          temps.push(id)
-        })
-
+        const { '@id': id, ...data } = yield call(Template.open, file)
+        ids.push(yield call(createTemplate, db, { id, ...data }))
 
       } catch (error) {
         warn(`Failed to import "${file}": ${error.message}`)
@@ -232,14 +219,79 @@ class TemplateImport extends Command {
       }
     }
 
-    if (temps.length > 0) {
-      this.undo = act.ontology.template.delete(temps)
-      result = yield call(mod.ontology.template.load, db, ...temps)
+    if (ids.length > 0) {
+      temps = yield call(mod.ontology.template.load, db, ...ids)
+
+      this.undo = act.ontology.template.delete(ids)
+      this.redo = act.ontology.template.create(temps)
     }
 
-    return result
+    return temps
   }
 }
+
+class TemplateCreate extends Command {
+  static get action() { return TEMPLATE.CREATE }
+
+  *exec() {
+    const { db } = this.options
+    const { payload } = this.action
+
+    let ids = []
+
+    for (let id in payload) {
+      try {
+        yield call(createTemplate, db, { ...payload, id })
+        ids.push(id)
+
+      } catch (error) {
+        warn(`Failed to create template "${id}": ${error.message}`)
+        verbose(error.stack)
+
+        fail(error, this.action.type)
+      }
+    }
+
+    this.undo = act.ontology.template.delete(ids)
+
+    return payload
+  }
+
+}
+
+async function createTemplate(db, data) {
+  assert(data.id != null, 'missing template id')
+
+  await db.transaction(async tx => {
+    await mod.ontology.template.create(tx, data)
+
+    await Promise.all([
+      mod.ontology.field.add(tx, data.id, ...data.field)
+    ])
+  })
+
+  return data.id
+}
+
+
+class TemplateDelete extends Command {
+  static get action() { return TEMPLATE.DELETE }
+
+  *exec() {
+    const { db } = this.options
+    const { payload } = this.action
+
+    const originals = yield select(state =>
+      pick(state.ontology.template, payload))
+
+    yield call(mod.ontology.template.delete, db, ...payload)
+    this.undo = act.ontology.template.create(originals)
+
+    return payload
+  }
+}
+
+
 
 
 module.exports = {
@@ -248,7 +300,9 @@ module.exports = {
   LabelSave,
   Load,
   PropsLoad,
+  TemplateCreate,
   TemplateImport,
+  TemplateDelete,
   VocabDelete,
   VocabLoad,
   VocabRestore,

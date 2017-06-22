@@ -127,6 +127,18 @@ module.exports = {
   },
 
   template: {
+    create(payload, meta = {}) {
+      return {
+        type: TEMPLATE.CREATE,
+        payload,
+        meta: {
+          cmd: 'ontology',
+          history: 'add',
+          ...meta
+        }
+      }
+    },
+
     import(payload = {}, meta = {}) {
       return {
         type: TEMPLATE.IMPORT,

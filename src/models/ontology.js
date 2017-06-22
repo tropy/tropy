@@ -282,6 +282,13 @@ const ontology = {
         INSERT INTO templates (template_id, template_type, name, protected)
           VALUES (?, ?, ?, ?)`, [id, type, name, !!isProtected]
       )
+    },
+
+    delete(db, ...ids) {
+      return db.run(`
+        DELETE FROM templates
+          WHERE template_id IN (${list(ids, quote)})`
+      )
     }
   },
 
