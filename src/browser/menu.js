@@ -91,7 +91,7 @@ class Menu {
         }
 
         item.checked = target.color === item.color
-        item.click = this.responder('app:update-tag', {
+        item.click = this.responder('app:save-tag', {
           id: target.id,
           color: item.color
         })

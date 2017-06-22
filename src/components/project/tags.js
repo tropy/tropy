@@ -10,7 +10,10 @@ const { TagList, Tag } = require('../tag')
 class ProjectTags extends PureComponent {
 
   handleContextMenu = (event, tag) => {
-    this.props.onContextMenu(event, 'tag', { id: tag.id })
+    this.props.onContextMenu(event, 'tag', {
+      id: tag.id,
+      color: tag.color
+    })
   }
 
   handleDelete = (tag) => {
