@@ -43,7 +43,7 @@ class PropertyListItem extends PureComponent {
             isCompact
             isOptional
             size={8}
-            value={property.definition}/>
+            value={property.description}/>
         </fieldset>
       </li>
     )

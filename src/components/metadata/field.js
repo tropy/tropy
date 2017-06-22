@@ -31,7 +31,7 @@ class MetadataField extends PureComponent {
   }
 
   get details() {
-    return pluck(this.props.property, ['id', 'definition', 'comment'])
+    return pluck(this.props.property, ['id', 'description', 'comment'])
   }
 
   handleClick = () => {
@@ -87,7 +87,7 @@ class MetadataField extends PureComponent {
       id: string.isRequired,
       label: string,
       type: string,
-      definition: string,
+      description: string,
       comment: string
     }),
 

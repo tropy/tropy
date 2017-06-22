@@ -175,7 +175,7 @@ class Ontology extends Resource {
 function info(data) {
   return {
     comment: getValue(data, RDFS.comment),
-    definition: getValue(
+    description: getValue(
       any(data, SKOS.defintion, DC.description, DCT.description)
     )
   }
