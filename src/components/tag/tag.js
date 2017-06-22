@@ -105,7 +105,8 @@ class Tag extends PureComponent {
     isSelected: bool,
     tag: shape({
       id: number,
-      name: string.isRequired
+      name: string.isRequired,
+      color: string
     }).isRequired,
 
     onChange: func.isRequired,
