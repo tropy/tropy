@@ -80,13 +80,14 @@ class Load extends Command {
   *exec() {
     const { db } = this.options
 
-    const [vocab, klass, props] = yield all([
+    const [vocab, klass, props, template] = yield all([
       mod.ontology.vocab.load(db),
       mod.ontology.class.load(db),
-      mod.ontology.props.load(db)
+      mod.ontology.props.load(db),
+      mod.ontology.template.load(db)
     ])
 
-    return { vocab, class: klass, props }
+    return { vocab, class: klass, props, template }
   }
 }
 

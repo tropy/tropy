@@ -71,6 +71,9 @@ function vocab(state = {}, { type, payload, error, meta }) {
 // eslint-disable-next-line complexity
 function template(state = {}, { type, payload, error, meta }) {
   switch (type) {
+    case ONTOLOGY.LOAD:
+      payload = payload.template
+      // eslint-disable-line no-fallthrough
     case TEMPLATE.CREATE:
     case TEMPLATE.IMPORT:
     case TEMPLATE.LOAD:
