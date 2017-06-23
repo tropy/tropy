@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { Thumbnail } = require('../photo')
 const { TagColors } = require('../colors')
 const { pick, get } = require('../../common/util')
-const { arrayOf, bool, number, object, shape } = require('prop-types')
+const { arrayOf, number, object, shape } = require('prop-types')
 
 const ThumbProps = Object.keys(Thumbnail.propTypes)
 
