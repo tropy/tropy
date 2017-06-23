@@ -4,6 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { CoverImage } = require('./cover-image')
 const { Editable } = require('../editable')
+const { TagColors } = require('../colors')
 const { createClickHandler } = require('../util')
 const { meta } = require('../../common/os')
 const cn = require('classnames')
@@ -73,9 +74,10 @@ class ItemTableCell extends PureComponent {
       cache,
       photos,
       size,
+      tags,
       isEditing,
       isDisabled,
-      hasCoverImage,
+      isMainCell,
       onCancel
     } = this.props
 
@@ -85,20 +87,22 @@ class ItemTableCell extends PureComponent {
         style={this.style}
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>
-
-        {hasCoverImage &&
+        {isMainCell &&
           <CoverImage
             item={item}
             cache={cache}
             photos={photos}
             size={size}/>}
-
         <Editable
           value={this.value}
           isEditing={isEditing}
           isDisabled={isDisabled}
           onCancel={onCancel}
           onChange={this.handleChange}/>
+        {isMainCell &&
+          <TagColors
+            selection={item.tags}
+            tags={tags}/>}
       </td>
     )
   }
@@ -108,7 +112,7 @@ class ItemTableCell extends PureComponent {
     isDisabled: bool,
     isSelected: bool,
 
-    hasCoverImage: bool,
+    isMainCell: bool,
 
     property: shape({
       id: string.isRequired,
@@ -122,7 +126,8 @@ class ItemTableCell extends PureComponent {
     }).isRequired,
 
     data: object.isRequired,
-    photos: object.isRequired,
+    photos: object,
+    tags: object,
 
     cache: string.isRequired,
     width: number.isRequired,

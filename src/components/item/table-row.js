@@ -13,6 +13,10 @@ const CellProps = Object.keys(ItemTableCell.propTypes)
 
 class ItemTableRow extends ItemIterable {
 
+  isMainCell(id) {
+    return DC.title === id
+  }
+
   isEditing = (id) => {
     return get(this.props.edit, [this.props.item.id]) === id
   }
@@ -24,7 +28,7 @@ class ItemTableRow extends ItemIterable {
   }
 
   render() {
-    const { columns, data, ...props } = this.props
+    const { columns, data, photos, tags, ...props } = this.props
 
     return this.connect(
       <tr
@@ -33,14 +37,20 @@ class ItemTableRow extends ItemIterable {
         onMouseDown={this.handleMouseDown}
         onDoubleClick={this.handleOpen}
         onContextMenu={this.handleContextMenu}>{
-          columns.map(({ property, width }) =>
-            <ItemTableCell {...pick(props, CellProps)}
-              key={property.id}
-              property={property}
-              data={data}
-              width={width}
-              isEditing={this.isEditing(property.id)}
-              hasCoverImage={property.id === DC.title}/>)
+          columns.map(({ property, width }) => {
+            const isMainCell = this.isMainCell(property.id)
+            return (
+              <ItemTableCell {...pick(props, CellProps)}
+                key={property.id}
+                property={property}
+                data={data}
+                width={width}
+                tags={isMainCell ? tags : null}
+                photos={isMainCell ? photos : null}
+                isEditing={this.isEditing(property.id)}
+                isMainCell={isMainCell}/>
+            )
+          })
       }</tr>
     )
   }
