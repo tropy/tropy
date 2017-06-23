@@ -58,7 +58,7 @@
     "electron-devtools-installer": "^2.0.0",
     "electron-mocha": "^4.0.0",
     "electron-packager": "^8.7.1",
-    "enzyme": "^2.8.1",
+    "enzyme": "^2.9.0",
     "eslint": "^4.0.0",
     "eslint-plugin-react": "^7.1.0",
     "glob": "^7.0.0",
