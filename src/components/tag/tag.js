@@ -22,12 +22,12 @@ class Tag extends PureComponent {
       active: this.props.isSelected,
       mixed: !!this.props.tag.mixed,
       over: this.props.isOver,
-      [`color-${this.props.tag.color}`]: this.hasColor
     }
   }
 
-  get hasColor() {
-    return this.props.tag.color != null
+  get color() {
+    const { tag } = this.props
+    return (tag.color) ? `color-${tag.color}` : null
   }
 
   get isDropTarget() {
@@ -79,7 +79,7 @@ class Tag extends PureComponent {
         onContextMenu={isEditing ? null : this.handleContextMenu}
         onMouseDown={isEditing ? null : this.handleClick}
         onKeyDown={isEditing ? null : this.handleKeyDown}>
-        <IconTag/>
+        <IconTag className={this.color}/>
         <div className="name">
           <Editable
             value={tag.name}
