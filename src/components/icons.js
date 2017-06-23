@@ -1,26 +1,39 @@
 'use strict'
 
 const React = require('react')
-const PropTypes = require('prop-types')
+const { PureComponent } = React
+const { element, string } = require('prop-types')
+const cx = require('classnames')
 
-const Icon = ({ children, name }) => (
-  <span className={`icon icon-${name}`}>
+const Icon = ({ children, className, name }) => (
+  <span className={cx('icon', `icon-${name}`, className)}>
     {children}
   </span>
 )
 
 Icon.propTypes = {
-  children: PropTypes.element,
-  name: PropTypes.string
+  children: element.isRequired,
+  className: string,
+  name: string.isRequired
 }
 
 module.exports = { Icon }
 
 
 function i(name, svg) {
-  const icon = () => (
-    <Icon name={name.toLowerCase()}>{svg}</Icon>
-  )
+  const icon = class extends PureComponent {
+    render() {
+      const { className } = this.props
+
+      return (
+        <Icon className={className} name={name.toLowerCase()}>{svg}</Icon>
+      )
+    }
+  }
+
+  icon.propTypes = {
+    className: string
+  }
 
   icon.displayName = `Icon${name}`
 
