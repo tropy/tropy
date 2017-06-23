@@ -47,6 +47,7 @@ class DragLayer extends Component {
 
   static propTypes = {
     cache: PropTypes.string,
+    tags: PropTypes.object,
 
     item: PropTypes.object,
     type: PropTypes.string,

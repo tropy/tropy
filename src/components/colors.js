@@ -8,7 +8,7 @@ const { get } = require('../common/util')
 
 function Circle({ color, isCrescent }) {
   return (isCrescent) ?
-    <span className={`crescent- circle color-${color}`}/> :
+    <span className={`crescent-circle color-${color}`}/> :
     <span className={`circle color-${color}`}/>
 }
 

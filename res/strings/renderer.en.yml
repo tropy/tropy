@@ -155,6 +155,8 @@ error:
     created: Project creation failed.
   item:
     import: Failed to import item.
+    tag:
+      create: Failed to tag item. Tags must be unique per item.
   list:
     item:
       add: Failed to add item(s) to list.

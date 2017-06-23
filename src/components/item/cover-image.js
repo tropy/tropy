@@ -2,10 +2,10 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const { Thumbnail } = require('../photo')
+const { TagColors } = require('../colors')
 const { pick, get } = require('../../common/util')
-const { shape, number, arrayOf } = PropTypes
+const { arrayOf, number, object, shape } = require('prop-types')
 
 const ThumbProps = Object.keys(Thumbnail.propTypes)
 
@@ -38,14 +38,19 @@ class CoverImage extends PureComponent {
         <Thumbnail {...pick(this.props, ThumbProps)}
           id={this.cover}
           orientation={this.orientation}/>
+        <TagColors
+          selection={this.props.item.tags}
+          tags={this.props.tags}/>
       </div>
     )
   }
 
   static propTypes = {
     ...Thumbnail.propTypes,
+    tags: object.isRequired,
     item: shape({
       photos: arrayOf(number),
+      tags: arrayOf(number),
       cover: number
     }).isRequired,
   }

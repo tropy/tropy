@@ -156,6 +156,7 @@ class ItemIterable extends PureComponent {
     isVertical: bool,
     canDrop: bool,
     photos: object.isRequired,
+    tags: object.isRequired,
 
     item: shape({
       id: number.isRequired,

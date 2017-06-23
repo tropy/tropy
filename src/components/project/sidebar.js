@@ -177,7 +177,6 @@ class ProjectSidebar extends PureComponent {
       keymap,
       lists,
       project,
-      tags,
       selectedList,
       selectedTags,
       onContextMenu,

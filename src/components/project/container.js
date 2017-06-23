@@ -187,7 +187,7 @@ class ProjectContainer extends PureComponent {
           onPanelDragStop={this.handlePanelDragStop}
           onMetadataSave={this.handleMetadataSave}/>
 
-        <DragLayer cache={props.cache}/>
+        <DragLayer cache={props.cache} tags={props.tags}/>
       </div>
     )
   }
@@ -234,6 +234,7 @@ class ProjectContainer extends PureComponent {
       column: string.isRequired,
       type: oneOf(['property']).isRequired
     }).isRequired,
+    tags: object.isRequired,
 
     isOver: bool,
     canDrop: bool,

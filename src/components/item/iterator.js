@@ -123,6 +123,7 @@ class ItemIterator extends Iterator {
         item,
         cache: this.props.cache,
         photos: this.props.photos,
+        tags: this.props.tags,
         isLast: index === this.props.items.length - 1,
         isSelected: this.isSelected(item),
         isDisabled: this.isDisabled,
@@ -158,6 +159,7 @@ class ItemIterator extends Iterator {
     list: number,
     size: number.isRequired,
     photos: object.isRequired,
+    tags: object.isRequired,
 
     dt: func.isRequired,
     onContextMenu: func.isRequired,
