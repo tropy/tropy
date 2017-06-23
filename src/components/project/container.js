@@ -18,7 +18,6 @@ const actions = require('../../actions')
 
 const {
   getActivities,
-  getAllTags,
   getCachePrefix,
   getColumns,
   getSelectedItems,
@@ -291,7 +290,7 @@ module.exports = {
       properties: state.ontology.props,
       selection: getSelectedItems(state),
       sort: state.nav.sort,
-      tags: getAllTags(state),
+      tags: state.tags,
       ui: state.ui
     }),
 

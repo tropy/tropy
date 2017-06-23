@@ -2,9 +2,10 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { arrayOf, func, number, object } = PropTypes
+const { connect } = require('react-redux')
+const { arrayOf, func, number, object } = require('prop-types')
 const { TagList, Tag } = require('../tag')
+const { getAllTags } = require('../../selectors')
 
 
 class ProjectTags extends PureComponent {
@@ -71,5 +72,9 @@ class ProjectTags extends PureComponent {
 }
 
 module.exports = {
-  ProjectTags
+  ProjectTags: connect(
+    state => ({
+      tags: getAllTags(state)
+    })
+  )(ProjectTags)
 }

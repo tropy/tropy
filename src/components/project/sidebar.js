@@ -248,7 +248,6 @@ class ProjectSidebar extends PureComponent {
           <section>
             <h2><FormattedMessage id="sidebar.tags"/></h2>
             <ProjectTags
-              tags={tags}
               keymap={keymap.TagList}
               selection={selectedTags}
               edit={edit.tag}
@@ -282,7 +281,6 @@ class ProjectSidebar extends PureComponent {
     activities: arrayOf(object).isRequired,
     edit: object.isRequired,
     lists: object.isRequired,
-    tags: arrayOf(object).isRequired,
     selectedList: number,
     selectedTags: arrayOf(number).isRequired,
 
