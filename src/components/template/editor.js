@@ -145,21 +145,21 @@ class TemplateEditor extends PureComponent {
             name="name"
             value={this.state.name}
             isCompact
-            tabIndex={-1}
+            tabIndex={0}
             onChange={this.handleTemplateUpdate}/>
           <FormField
             id="template.id"
             name="id"
             value={this.state.id}
             isCompact
-            tabIndex={-1}
+            tabIndex={0}
             onChange={this.handleTemplateUpdate}/>
           <FormSelect
             id="template.type"
             name="type"
             value={this.state.type}
             options={this.props.types}
-            tabIndex={-1}
+            tabIndex={0}
             onChange={this.handleTemplateUpdate}/>
           {this.isPristine &&
             <FormGroup>
@@ -167,7 +167,7 @@ class TemplateEditor extends PureComponent {
                 <button
                   className="btn btn-primary min-width"
                   disabled={!this.isValid}
-                  tabIndex={-1}
+                  tabIndex={0}
                   onClick={this.handleTemplateCreate}>
                   <FormattedMessage id="prefs.template.create"/>
                 </button>

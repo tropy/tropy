@@ -29,6 +29,7 @@ class PrefPaneToggle extends PureComponent {
       <button
         className={cx(this.classes)}
         disabled={this.props.isDisabled}
+        tabIndex={-1}
         onClick={this.handleClick}>
         {create(icons[this.props.icon])}
         <FormattedMessage id={this.label}/>
