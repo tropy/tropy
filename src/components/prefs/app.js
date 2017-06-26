@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { arrayOf, func, string } = require('prop-types')
+const { arrayOf, string } = require('prop-types')
 const { FormattedMessage } = require('react-intl')
 const { FormSelect } = require('../form')
 const { win } = require('../../window')
