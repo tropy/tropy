@@ -71,11 +71,26 @@ class TemplateEditor extends PureComponent {
     this.state = dup()
   }
 
+  get isPristine() {
+    return this.state.created == null
+  }
+
+  get isValid() {
+    return this.state.id !== '' && this.state.name !== ''
+  }
+
   handleTemplateDelete = () => {
     if (this.state.id) {
       this.props.onDelete([this.state.id])
       this.setState(dup())
     }
+  }
+
+  handleTemplateCreate = () => {
+    this.props.onCreate({
+      id: this.state.id,
+      name: this.state.name
+    })
   }
 
   handleTemplateChange = (template) => {
@@ -129,19 +144,26 @@ class TemplateEditor extends PureComponent {
             name="name"
             value={this.state.name}
             isCompact
+            tabIndex={-1}
             onChange={this.handleTemplateUpdate}/>
           <FormField
             id="template.id"
             name="id"
             value={this.state.id}
+            tabIndex={-1}
             onChange={this.handleTemplateUpdate}/>
-          <FormGroup>
-            <div className="col-12 text-right">
-              <button className="btn btn-primary min-width">
-                <FormattedMessage id="prefs.template.save"/>
-              </button>
-            </div>
-          </FormGroup>
+          {this.isPristine &&
+            <FormGroup>
+              <div className="col-12 text-right">
+                <button
+                  className="btn btn-primary min-width"
+                  disabled={!this.isValid}
+                  tabIndex={-1}
+                  onClick={this.handleTemplateCreate}>
+                  <FormattedMessage id="prefs.template.create"/>
+                </button>
+              </div>
+            </FormGroup>}
         </header>
 
         <ul className="template-field-list">

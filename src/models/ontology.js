@@ -251,7 +251,8 @@ const ontology = {
             template_id AS id,
             template_type AS type,
             name,
-            protected AS isProtected
+            protected AS isProtected,
+            created
           FROM templates${constraint}`, (data) => {
         temps[data.id] = { ...data, domain: [], fields: [] }
       })
