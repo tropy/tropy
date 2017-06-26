@@ -5,9 +5,10 @@ const { PureComponent } = React
 const { FormattedMessage } = require('react-intl')
 const { BufferedInput } = require('./input')
 const cx = require('classnames')
-const { bool, func, node, number, string } = require('prop-types')
+const { arrayOf, bool, func, node, number, string } = require('prop-types')
 const { noop } = require('../common/util')
 const { GRID } = require('../constants/sass')
+const { injectIntl, intlShape } = require('react-intl')
 
 
 class FormGroup extends PureComponent {
@@ -147,6 +148,58 @@ class FormField extends PureComponent {
   }
 }
 
+class FormSelect extends PureComponent {
+  optLabel = (opt) => (
+    this.props.intl.formatMessage({
+      id: `${this.props.id}s.${opt}`
+    })
+  )
+
+  handleChange = (event) => {
+    this.props.onChange({
+      [this.props.name]: event.target.value
+    })
+  }
+
+  render() {
+    return (
+      <FormElement
+        id={this.props.id}
+        size={this.props.size}
+        isCompact={this.props.isCompact}>
+        <select
+          id={this.props.id}
+          className="form-control"
+          name={this.props.name}
+          tabIndex={this.props.tabIndex}
+          value={this.props.value}
+          disabled={this.props.isDisabled}
+          onChange={this.handleChange}>
+          {this.props.options.map((opt) =>
+            <option key={opt} value={opt}>{this.optLabel(opt)}</option>)}
+        </select>
+      </FormElement>
+    )
+  }
+
+  static propTypes = {
+    id: string.isRequired,
+    intl: intlShape,
+    isCompact: bool,
+    isDisabled: bool,
+    name: string.isRequired,
+    options: arrayOf(string).isRequired,
+    size: number.isRequired,
+    tabIndex: number,
+    value: string.isRequired,
+    onChange: func.isRequired
+  }
+
+  static defaultProps = {
+    size: 9
+  }
+}
+
 class FormText extends PureComponent {
   get isVisible() {
     return this.props.value || !this.props.isOptional
@@ -223,6 +276,7 @@ module.exports = {
   FormField,
   FormGroup,
   FormLink,
+  FormSelect: injectIntl(FormSelect),
   FormText,
   Label
 }
