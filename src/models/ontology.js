@@ -254,7 +254,9 @@ const ontology = {
             protected AS isProtected,
             created
           FROM templates${constraint}`, (data) => {
-        temps[data.id] = { ...data, domain: [], fields: [] }
+        temps[data.id] = {
+          ...data, isProtected: !!data.isProtected, domain: [], fields: []
+        }
       })
 
       await all([

@@ -59,7 +59,15 @@ TemplateControl.propTypes = {
 
 
 function dup(template) {
-  template = template || { name: '', id: '', fields: [], type: 'item' }
+  template = template || {
+    name: '',
+    id: '',
+    fields: [],
+    type: 'item',
+    created: null,
+    isProtected: null
+  }
+
   return {
     ...template, fields: [...template.fields]
   }
@@ -88,9 +96,11 @@ class TemplateEditor extends PureComponent {
 
   handleTemplateCreate = () => {
     this.props.onCreate({
-      id: this.state.id,
-      name: this.state.name,
-      type: this.state.type
+      [this.state.id]: {
+        id: this.state.id,
+        name: this.state.name,
+        type: this.state.type
+      }
     })
   }
 

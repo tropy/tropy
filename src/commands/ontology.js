@@ -242,28 +242,44 @@ class TemplateCreate extends Command {
     const { payload } = this.action
 
     let ids = []
+    let temps = {}
 
     for (let id in payload) {
-      yield call(createTemplate, db, { ...payload[id], id })
-      ids.push(id)
+      try {
+        yield call(createTemplate, db, { ...payload[id], id })
+        ids.push(id)
+
+      } catch (error) {
+        warn(`Failed to create template "${id}": ${error.message}`)
+        verbose(error.stack)
+
+        fail(error, this.action.type)
+      }
     }
 
-    this.undo = act.ontology.template.delete(ids)
+    if (ids.length > 0) {
+      temps = yield call(mod.ontology.template.load, db, ...ids)
+      this.undo = act.ontology.template.delete(ids)
+    }
 
-    return payload
+    return temps
   }
 
 }
 
 async function createTemplate(db, data) {
   assert(data.id != null, 'missing template id')
+  assert(data.name != null, 'missing template name')
+  assert(data.type != null, 'missing template type')
 
   await db.transaction(async tx => {
     await mod.ontology.template.create(tx, data)
 
-    await Promise.all([
-      mod.ontology.field.add(tx, data.id, ...data.fields)
-    ])
+    if (data.fields != null) {
+      await Promise.all([
+        mod.ontology.field.add(tx, data.id, ...data.fields)
+      ])
+    }
   })
 
   return data.id
