@@ -26,6 +26,12 @@ prefs:
   title: Tropy Preferences
   app:
     label: Global
+    style:
+      label: Look and Feel
+      theme: Theme
+      themes:
+        light: Tropy Light
+        dark: Tropy Dark
   project:
     label: Project
   template:
