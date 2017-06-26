@@ -190,8 +190,16 @@ class AppMenu extends Menu {
   }
 
   reload() {
+    const old = this.menu
+
     this.menu = this.build(this.template)
-    return this.update()
+    this.update()
+
+    if (old != null) {
+      old.destroy()
+    }
+
+    return this
   }
 
   update() {
