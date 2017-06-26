@@ -5,11 +5,33 @@ const { PureComponent } = React
 const { arrayOf, func, string } = require('prop-types')
 const { FormattedMessage } = require('react-intl')
 const { FormSelect } = require('../form')
+const { win } = require('../../window')
+const { ipcRenderer: ipc } = require('electron')
 
 
 class AppPrefs extends PureComponent {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      theme: win.state.theme
+    }
+  }
+
+  componentDidMount() {
+    win.on('style.update', this.handleStyleUpdate)
+  }
+
+  componentWillUnmount() {
+    win.removeListener('style.update', this.handleStyleUpdate)
+  }
+
+  handleStyleUpdate = () => {
+    this.setState({ theme: win.state.theme })
+  }
+
   handleThemeChange = ({ theme }) => {
-    this.props.onThemeChange(theme)
+    ipc.send('cmd', 'app:switch-theme', theme, theme)
   }
 
   render() {
@@ -21,7 +43,7 @@ class AppPrefs extends PureComponent {
         <FormSelect
           id="prefs.app.style.theme"
           name="theme"
-          value={this.props.theme}
+          value={this.state.theme}
           options={this.props.themes}
           onChange={this.handleThemeChange}/>
       </div>
@@ -29,9 +51,7 @@ class AppPrefs extends PureComponent {
   }
 
   static propTypes = {
-    theme: string.isRequired,
-    themes: arrayOf(string).isRequired,
-    onThemeChange: func.isRequired
+    themes: arrayOf(string).isRequired
   }
 
   static defaultProps = {

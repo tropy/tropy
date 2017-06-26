@@ -5,18 +5,20 @@ const { remote, ipcRenderer: ipc } = require('electron')
 const { basename, join, resolve } = require('path')
 const { existsSync: exists } = require('fs')
 const { EL_CAPITAN } = require('./common/os')
+const { EventEmitter } = require('events')
 
 const {
   $$, append, emit, create, on, once, toggle, stylesheet, remove
 } = require('./dom')
 
 
-class Window {
+class Window extends EventEmitter {
   constructor({ theme, frameless, scrollbars, aqua } = ARGS) {
     if (Window.instance) {
       throw Error('Singleton Window constructor called multiple times')
     }
 
+    super()
     Window.instance = this
 
     this.state = {
@@ -179,7 +181,11 @@ class Window {
   }
 
   style(theme, prune = false, done) {
-    if (theme) this.state.theme = theme
+    if (theme) {
+      this.state.theme = theme
+      ARGS.theme = this.state.theme
+      window.location.hash = encodeURIComponent(JSON.stringify(ARGS))
+    }
 
     if (prune) {
       for (let css of $$('head > link[rel="stylesheet"]')) remove(css)
@@ -193,6 +199,8 @@ class Window {
         append(stylesheet(css), document.head)
       }
     }
+
+    this.emit('style.update', this.state.theme)
 
     if (done == null) return
 

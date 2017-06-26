@@ -75,9 +75,7 @@ class PrefsContainer extends PureComponent {
           <PrefPane
             name="app"
             isActive={this.isActive('app')}>
-            <AppPrefs
-              theme={this.props.theme}
-              onThemeChange={this.props.onThemeChange}/>
+            <AppPrefs/>
           </PrefPane>
 
 
@@ -117,7 +115,6 @@ class PrefsContainer extends PureComponent {
     pane: string.isRequired,
     properties: array.isRequired,
     templates: array.isRequired,
-    theme: string.isRequired,
     vocab: array.isRequired,
     onClassSave: func.isRequired,
     onOpenLink: func.isRequired,
@@ -127,7 +124,6 @@ class PrefsContainer extends PureComponent {
     onTemplateDelete: func.isRequired,
     onTemplateImport: func.isRequired,
     onTemplateSave: func.isRequired,
-    onThemeChange: func.isRequired,
     onVocabDelete: func.isRequired,
     onVocabSave: func.isRequired,
     onOntologyImport: func.isRequired
@@ -147,7 +143,6 @@ module.exports = {
       pane: state.prefs.pane,
       properties: getAllProperties(state),
       templates: getTemplates(state),
-      theme: ARGS.theme,
       vocab: getVocabs(state)
     }),
 
@@ -181,9 +176,6 @@ module.exports = {
       },
 
       onTemplateSave() {
-      },
-
-      onThemeChange() {
       },
 
       onVocabDelete(...args) {
