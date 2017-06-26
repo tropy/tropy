@@ -51,6 +51,10 @@ prefs:
 template:
   id: URI
   name: Name
+  type: Type
+  types:
+    item: Item Template
+    photo: Photo Template
   field:
     property: Property
     label: Label

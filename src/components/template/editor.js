@@ -6,7 +6,7 @@ const { TemplateSelect } = require('./select')
 const { TemplateField } = require('./field')
 const { ButtonGroup, IconButton } = require('../button')
 const { FormattedMessage } = require('react-intl')
-const { FormField, FormGroup, Label } = require('../form')
+const { FormField, FormGroup, FormSelect, Label } = require('../form')
 const { insert, remove, move } = require('../../common/util')
 const { arrayOf, func, shape, string } = require('prop-types')
 
@@ -59,7 +59,7 @@ TemplateControl.propTypes = {
 
 
 function dup(template) {
-  template = template || { name: '', id: '', fields: [] }
+  template = template || { name: '', id: '', fields: [], type: 'item' }
   return {
     ...template, fields: [...template.fields]
   }
@@ -89,7 +89,8 @@ class TemplateEditor extends PureComponent {
   handleTemplateCreate = () => {
     this.props.onCreate({
       id: this.state.id,
-      name: this.state.name
+      name: this.state.name,
+      type: this.state.type
     })
   }
 
@@ -150,6 +151,14 @@ class TemplateEditor extends PureComponent {
             id="template.id"
             name="id"
             value={this.state.id}
+            isCompact
+            tabIndex={-1}
+            onChange={this.handleTemplateUpdate}/>
+          <FormSelect
+            id="template.type"
+            name="type"
+            value={this.state.type}
+            options={this.props.types}
             tabIndex={-1}
             onChange={this.handleTemplateUpdate}/>
           {this.isPristine &&
@@ -190,10 +199,15 @@ class TemplateEditor extends PureComponent {
       id: string.isRequired,
       name: string
     })).isRequired,
+    types: arrayOf(string).isRequired,
     onCreate: func.isRequired,
     onDelete: func.isRequired,
     onImport: func.isRequired,
     onSave: func.isRequired
+  }
+
+  static defaultProps = {
+    types: ['item', 'photo']
   }
 }
 

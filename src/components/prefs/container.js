@@ -11,7 +11,7 @@ const { PrefPane, PrefPaneToggle } = require('./pane')
 const actions = require('../../actions')
 
 const {
-  getItemTemplates,
+  getTemplates,
   getAllProperties,
   getVocabs
 } = require('../../selectors')
@@ -138,7 +138,7 @@ module.exports = {
       keymap: state.keymap,
       pane: state.prefs.pane,
       properties: getAllProperties(state),
-      templates: getItemTemplates(state),
+      templates: getTemplates(state),
       vocab: getVocabs(state)
     }),
 
