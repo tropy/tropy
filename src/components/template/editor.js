@@ -79,6 +79,12 @@ class TemplateEditor extends PureComponent {
     this.state = dup()
   }
 
+  onComponentWillReceiveProps({ templates }) {
+    if (this.state.id != null && this.props.templates !== templates) {
+      this.setState(dup(templates.find(t => t.id === this.state.id)))
+    }
+  }
+
   get isPristine() {
     return this.state.created == null
   }
