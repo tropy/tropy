@@ -27,12 +27,12 @@ class BufferedInput extends PureComponent {
     this.clearResetTimeout()
   }
 
-  get isEmpty() {
-    return !this.state.value
+  get isBlank() {
+    return this.state.value == null || this.state.value === ''
   }
 
   get isValid() {
-    return !this.props.isRequired || !this.isEmpty
+    return !this.props.isRequired || !this.isBlank
   }
 
   get hasChanged() {

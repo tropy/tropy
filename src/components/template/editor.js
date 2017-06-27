@@ -175,6 +175,7 @@ class TemplateEditor extends PureComponent {
             name="name"
             value={this.state.name}
             isCompact
+            isRequired
             tabIndex={0}
             onChange={this.handleTemplateUpdate}/>
           <FormField
