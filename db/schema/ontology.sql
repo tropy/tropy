@@ -22,6 +22,7 @@ CREATE TABLE vocabularies (
   prefix          TEXT,
   created         NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   deleted         NUMERIC,
+  protected       BOOLEAN  NOT NULL DEFAULT FALSE,
 
   title           TEXT,
   description     TEXT,
