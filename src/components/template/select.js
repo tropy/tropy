@@ -35,7 +35,7 @@ class TemplateSelect extends PureComponent {
         onChange={this.handleChange}>
         {this.renderPlaceholder()}
         {this.props.templates.map(({ id, name }) =>
-          <option key={id} value={id}>{name}</option>)}
+          <option key={id} value={id}>{name || id}</option>)}
       </select>
     )
   }
