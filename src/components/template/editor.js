@@ -31,15 +31,21 @@ function TemplateControl(props) {
           placeholder="prefs.template.new"
           onChange={props.onChange}/>
         <ButtonGroup>
-          <IconButton icon={<IconNew/>}/>
-          <IconButton icon={<IconCopy/>}/>
+          <IconButton
+            isDisabled={!props.selected}
+            icon={<IconNew/>}/>
+          <IconButton
+            isDisabled={!props.selected}
+            icon={<IconCopy/>}/>
           <IconButton
             icon={<IconTrash/>}
             isDisabled={!props.selected}
             onClick={props.onDelete}/>
           <IconButton icon={<IconImport/>}
             onClick={props.onImport}/>
-          <IconButton icon={<IconExport/>}/>
+          <IconButton
+            isDisabled={!props.selected}
+            icon={<IconExport/>}/>
         </ButtonGroup>
       </div>
     </FormGroup>
