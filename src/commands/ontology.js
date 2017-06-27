@@ -19,7 +19,7 @@ class Import extends Command {
 
   *exec() {
     const { db } = this.options
-    let { files } = this.action.payload
+    let { files, isProtected } = this.action.payload
 
     if (!files) {
       files = yield call(openVocabs)
@@ -38,7 +38,7 @@ class Import extends Command {
 
         yield call(db.transaction, async tx => {
           for (let id in data) {
-            await mod.ontology.vocab.create(tx, data[id])
+            await mod.ontology.vocab.create(tx, { ...data[id], isProtected })
 
             await Promise.all([
               mod.ontology.props.create(tx, ...data[id].properties),

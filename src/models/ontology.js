@@ -58,7 +58,8 @@ const ontology = {
       title,
       description,
       comment,
-      seeAlso
+      seeAlso,
+      isProtected
     }) {
       if (prefix === '') prefix = null
 
@@ -70,8 +71,9 @@ const ontology = {
           description,
           comment,
           see_also,
+          protected,
           deleted) VALUES (?, ?, ?, ?, ?, ?, NULL)`, [
-            id, prefix, title, description, comment, seeAlso
+            id, prefix, title, description, comment, seeAlso, !!isProtected
           ]
       )
     },
