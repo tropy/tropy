@@ -80,6 +80,10 @@ function template(state = {}, { type, payload, error, meta }) {
       return (meta.done && !error) ?
         replace(state, payload) :
         state
+    case TEMPLATE.SAVE:
+      return (meta.done && !error) ?
+        update(state, payload) :
+        state
     case TEMPLATE.DELETE:
       return (meta.done && !error) ?
         remove(state, payload) :

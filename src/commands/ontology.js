@@ -286,6 +286,24 @@ async function createTemplate(db, data) {
 }
 
 
+class TemplateSave extends Command {
+  static get action() { return TEMPLATE.SAVE }
+
+  *exec() {
+    const { db } = this.options
+    const { payload } = this.action
+
+    const original = yield select(state =>
+      state.ontology.template[payload.id])
+
+    yield call(mod.ontology.template.save, db, payload)
+    this.undo = act.ontology.template.save(original)
+
+    return payload
+  }
+}
+
+
 class TemplateDelete extends Command {
   static get action() { return TEMPLATE.DELETE }
 
@@ -315,6 +333,7 @@ module.exports = {
   TemplateCreate,
   TemplateImport,
   TemplateDelete,
+  TemplateSave,
   VocabDelete,
   VocabLoad,
   VocabRestore,

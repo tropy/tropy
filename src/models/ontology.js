@@ -1,5 +1,6 @@
 'use strict'
 
+const assert = require('assert')
 const { SCHEMA } = require('../constants/ontology')
 const { all } = require('bluebird')
 const { list, quote } = require('../common/util')
@@ -292,7 +293,17 @@ const ontology = {
         DELETE FROM templates
           WHERE template_id IN (${list(ids, quote)})`
       )
+    },
+
+    save(db, { id, name }) {
+      assert(id != null, 'missing template id')
+
+      return db.run(`
+        UPDATE templates
+          SET name = ?, modified = datetime("now")
+          WHERE template_id = ?`, name, id)
     }
+
   },
 
   field: {
