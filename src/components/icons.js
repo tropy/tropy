@@ -190,6 +190,15 @@ i('Hand', (
   </svg>
 ))
 
+i('Hangtag', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M6.086,1l8.5,8.5L9.5,14.586L1,6.086V1H6.086 M6.5,0h-6C0.224,0,0,0.224,0,0.5v6l9.146,9.146c0.098,0.098,0.226,0.146,0.354,0.146c0.128,0,0.256-0.049,0.354-0.146l5.793-5.793c0.195-0.195,0.195-0.512,0-0.707L6.5,0L6.5,0z"/>
+      <circle cx="4" cy="4" r="1.25"/>
+    </g>
+  </svg>
+))
+
 i('I', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
@@ -419,12 +428,12 @@ i('Sup', (
 
 i('Tag', (
   <svg width="16" height="16">
-    <g className="line" fill="currentColor">
-      <path d="M6.086,1l8.5,8.5L9.5,14.586L1,6.086V1H6.086 M6.5,0h-6C0.224,0,0,0.224,0,0.5v6l9.146,9.146c0.098,0.098,0.226,0.146,0.354,0.146c0.128,0,0.256-0.049,0.354-0.146l5.793-5.793c0.195-0.195,0.195-0.512,0-0.707L6.5,0L6.5,0z"/>
-      <circle cx="4" cy="4" r="1.25"/>
-    </g>
+    <circle className="border" fill="currentColor" cx="8" cy="8" r="6"/>
+    <circle className="color" fill="currentColor" cx="8" cy="8" r="5"/>
   </svg>
 ))
+
+
 
 i('Trash', (
   <svg width="16" height="16">

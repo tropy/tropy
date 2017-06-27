@@ -40,44 +40,46 @@ $brand-primary-darken-4: $blue-darken-4;
 :root {
   #{--transparent}:   transparent;
 
-  #{--shade-0}:          #fff;             // Body
+  #{--shade-0}:           #fff;              // Body
 
   #{--shade-1}: if($platform == win32,
-                         #f0f0f0,
-                         #f6f6f6);         // Sidbar bg, panel bg
+                          #f0f0f0,
+                          #f6f6f6);          // Sidbar bg, panel bg
   #{--shade-1-darken-4}:
     if($platform == win32,
-                  darken(#f0f0f0, 4.5%),
-                  darken(#f6f6f6, 4.5%));    // 8% Fieldset bg
+                   darken(#f0f0f0, 4.5%),
+                   darken(#f6f6f6, 4.5%));   // 8% Fieldset bg
   #{--shade-1-darken-8}:
     if($platform == win32,
-                  darken(#f0f0f0, 8.5%),
-                  darken(#f6f6f6, 8.5%));  // 12% Vocab property bg
+                   darken(#f0f0f0, 8.5%),
+                   darken(#f6f6f6, 8.5%));   // 12% Vocab property bg
   #{--shade-1-darken-14}:
     if($platform == win32,
-                  darken(#f0f0f0, 14%),
-                  darken(#f6f6f6, 14%));   // 18% Vocab property input border
+                   darken(#f0f0f0, 14%),
+                   darken(#f6f6f6, 14%));    // 18% Vocab property input border
   #{--shade-1-darken-18}:
     if($platform == win32,
-                  darken(#f0f0f0, 18%),
-                  darken(#f6f6f6, 18%));   // 22% Vocab property input border
+                   darken(#f0f0f0, 18%),
+                   darken(#f6f6f6, 18%));    // 22% Vocab property input border
 
-  #{--shade-2}:          #e6e6e6;          // Inactive tab, Esper bg
+  #{--shade-2}:           #e6e6e6;           // Inactive tab, Esper bg
 
-  #{--shade-3}:          #ddd;             // Active state bg/border
-  #{--shade-3-darken-5}: darken(#ddd, 5%); // Thumbnail bg
+  #{--shade-3}:           #ddd;              // Active state bg/border
+  #{--shade-3-darken-5}:  darken(#ddd, 5%);  // Thumbnail bg
 
-  #{--shade-4}:          #ccc;             // Slider track
-  #{--shade-5}:          #bbb;             // Panel heading, mixed color
+  #{--shade-4}:           #ccc;              // Slider track
+  #{--shade-4-darken-14}: darken(#ccc, 14%);
 
-  #{--shade-6}:          #777;             // Icon color
-  #{--shade-6-50}:       rgba(#777, 0.5);
+  #{--shade-5}:           #bbb;              // Panel heading, mixed color
 
-  #{--shade-7}:          #555;             // Sidebar active icon
-  #{--shade-8}:          #444;             // Softened text
-  #{--shade-9}:          #222;             // Text color, active icon
+  #{--shade-6}:           #777;              // Icon color
+  #{--shade-6-50}:        rgba(#777, 0.5);
 
-  #{--shade-10}:          #000;            // Black
+  #{--shade-7}:           #555;              // Sidebar active icon
+  #{--shade-8}:           #444;              // Softened text
+  #{--shade-9}:           #222;              // Text color, active icon
+
+  #{--shade-10}:          #000;              // Black
   #{--shade-10-10}:       rgba(#000, 0.1);
   #{--shade-10-20}:       rgba(#000, 0.2);
 }
@@ -94,7 +96,10 @@ $shade-2:           var(--shade-2);
 $shade-3:           var(--shade-3);
 $shade-2-3:         var(--shade-2-3);
 $shade-3-darken-5:  var(--shade-3-darken-5);
+
 $shade-4:           var(--shade-4);
+$shade-4-darken-14: var(--shade-4-darken-14);
+
 $shade-5:           var(--shade-5);
 
 $shade-6:           var(--shade-6);
@@ -107,6 +112,37 @@ $shade-9:           var(--shade-9);
 $shade-10:           var(--shade-10);
 $shade-10-10:        var(--shade-10-10);
 $shade-10-20:        var(--shade-10-20);
+
+
+// Tag colors
+// --------------------------------------------------
+
+$tag-colors: (
+  color-red:    #f66,
+  color-orange: #ff8c19,
+  color-yellow: #ffc200,
+  color-green:  #5fb236,
+  color-blue:   #576dd9,
+  color-purple: #a6507b,
+  color-gray:   #999
+);
+
+@each $key, $val in $tag-colors {
+  :root {
+    #{--#{$key}}: $val;
+    #{--#{$key}-dark}: mix(#000, $val, 8%);
+  }
+
+  $tag-colors: map-merge(
+    $tag-colors,
+    (
+      $key: (
+        color-base: var(--#{$key}),
+        color-dark: var(--#{$key}-dark)
+      )
+    )
+  );
+}
 
 
 // Scaffolding
@@ -228,12 +264,15 @@ $metadata-field-mixed-color: $shade-5;
 // Tag list
 $tag-list-focus-color:              $shade-0;
 $tag-list-focus-bg:                 $brand-primary;
+$tag-list-active-border:            $shade-4-darken-14;
 $tag-list-active-bg:                $shade-3;
 $mixed-color:                       $shade-5;
 $add-tag-default-bg:                $panel-bg;
 $add-tag-focus-bg:                  $shade-0;
 $add-tag-placeholder-color-default: $text-color;
 $add-tag-border-color:              $shade-3;
+$icon-tag-color:                    $shade-1;
+$icon-tag-border:                   $shade-5;
 
 // Photo list
 $photo-list-focus-color: $shade-0;

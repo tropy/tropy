@@ -1,7 +1,6 @@
 // sass-lint:disable no-color-literals
 
 
-//
 // Dark theme
 // --------------------------------------------------
 
@@ -53,12 +52,45 @@ $shade-5:           #404040;               // 75% Active state bg/border, slider
 $shade-5-lighten-5: lighten(#404040, 5%);  // 70% Thumbnail bg
 
 $shade-6:           #555;                  // Panel heading color, slider range
+$shade-6-lighten-5: lighten(#555, 5%);     // Active tag border
+
 $shade-7:           #777;                  // Icon color, sidebar headings
 $shade-8:           #999;                  // Softened text, active icon
 $shade-9:           #bbb;                  // Text color
 
 $shade-10:          #fff;
 $shade-10-5:        rgba(#fff, 0.05);
+
+
+// Tag colors
+// --------------------------------------------------
+
+$tag-colors: (
+  color-red:    #f66,
+  color-orange: #ff8c19,
+  color-yellow: #ffc200,
+  color-green:  #5fb236,
+  color-blue:   #576dd9,
+  color-purple: #a6507b,
+  color-gray:   #999
+);
+
+@each $key, $val in $tag-colors {
+  :root {
+    #{--#{$key}}: $val;
+    #{--#{$key}-dark}: mix(#000, $val, 20%);
+  }
+
+  $tag-colors: map-merge(
+    $tag-colors,
+    (
+      $key: (
+        color-base: var(--#{$key}),
+        color-dark: var(--#{$key}-dark)
+      )
+    )
+  );
+}
 
 
 // Scaffolding
@@ -180,12 +212,15 @@ $metadata-field-mixed-color: $shade-6;
 // Tag list
 $tag-list-focus-color:              $brand-primary-light;
 $tag-list-focus-bg:                 $brand-primary;
+$tag-list-active-border:            $shade-6-lighten-5;
 $tag-list-active-bg:                $shade-5;
 $mixed-color:                       $shade-6;
 $add-tag-default-bg:                $panel-bg;
 $add-tag-focus-bg:                  $shade-3;
 $add-tag-placeholder-color-default: $text-color;
 $add-tag-border-color:              $shade-1;
+$icon-tag-color:                    $shade-4;
+$icon-tag-border:                   $shade-6;
 
 // Photo list
 $photo-list-focus-color:  $brand-primary-light;
