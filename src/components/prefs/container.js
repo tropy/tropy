@@ -175,7 +175,8 @@ module.exports = {
         dispatch(actions.ontology.template.import())
       },
 
-      onTemplateSave() {
+      onTemplateSave(...args) {
+        dispatch(actions.ontology.template.save(...args))
       },
 
       onVocabDelete(...args) {

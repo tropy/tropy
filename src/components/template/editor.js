@@ -79,7 +79,7 @@ class TemplateEditor extends PureComponent {
     this.state = dup()
   }
 
-  onComponentWillReceiveProps({ templates }) {
+  componentWillReceiveProps({ templates }) {
     if (this.state.id != null && this.props.templates !== templates) {
       this.setState(dup(templates.find(t => t.id === this.state.id)))
     }
@@ -115,7 +115,15 @@ class TemplateEditor extends PureComponent {
   }
 
   handleTemplateUpdate = (template) => {
-    this.setState(template)
+    if (this.isPristine) {
+      this.setState(template)
+
+    } else {
+      this.props.onSave({
+        id: this.state.id,
+        name: template.name
+      })
+    }
   }
 
   handleFieldInsert = (field) => {
@@ -168,6 +176,7 @@ class TemplateEditor extends PureComponent {
             name="id"
             value={this.state.id}
             isCompact
+            isDisabled={!this.isPristine}
             tabIndex={0}
             onChange={this.handleTemplateUpdate}/>
           <FormSelect
@@ -176,6 +185,7 @@ class TemplateEditor extends PureComponent {
             value={this.state.type}
             options={this.props.types}
             tabIndex={0}
+            isDisabled={!this.isPristine}
             onChange={this.handleTemplateUpdate}/>
           {this.isPristine &&
             <FormGroup>

@@ -9,11 +9,7 @@ module.exports = {
     return {
       type: ONTOLOGY.IMPORT,
       payload,
-      meta: {
-        cmd: 'ontology',
-        history: 'add',
-        ...meta
-      }
+      meta: { cmd: 'ontology', history: 'add', ...meta }
     }
   },
 
@@ -21,10 +17,7 @@ module.exports = {
     return {
       type: ONTOLOGY.LOAD,
       payload,
-      meta: {
-        cmd: 'ontology',
-        ...meta
-      }
+      meta: { cmd: 'ontology', ...meta }
     }
   },
 
@@ -33,10 +26,7 @@ module.exports = {
       return {
         type: VOCAB.LOAD,
         payload,
-        meta: {
-          cmd: 'ontology',
-          ...meta
-        }
+        meta: { cmd: 'ontology', ...meta }
       }
     },
 
@@ -44,22 +34,15 @@ module.exports = {
       return {
         type: VOCAB.DELETE,
         payload: array(payload),
-        meta: {
-          cmd: 'ontology',
-          history: 'add',
-          ...meta
-        }
+        meta: { cmd: 'ontology', history: 'add', ...meta }
       }
     },
 
     restore(payload, meta = {}) {
       return {
         type: VOCAB.RESTORE,
-        payload, meta: {
-          cmd: 'ontology',
-          history: 'add',
-          ...meta
-        }
+        payload,
+        meta: { cmd: 'ontology', history: 'add', ...meta }
       }
     },
 
@@ -67,11 +50,7 @@ module.exports = {
       return {
         type: VOCAB.SAVE,
         payload,
-        meta: {
-          cmd: 'ontology',
-          history: 'add',
-          ...meta
-        }
+        meta: { cmd: 'ontology', history: 'add', ...meta }
       }
     }
   },
@@ -81,10 +60,7 @@ module.exports = {
       return {
         type: PROPS.LOAD,
         payload,
-        meta: {
-          cmd: 'ontology',
-          ...meta
-        }
+        meta: { cmd: 'ontology', ...meta }
       }
     },
 
@@ -92,11 +68,7 @@ module.exports = {
       return {
         type: LABEL.SAVE,
         payload: { ...payload, type: 'props' },
-        meta: {
-          cmd: 'ontology',
-          history: 'add',
-          ...meta
-        }
+        meta: { cmd: 'ontology', history: 'add', ...meta }
       }
     }
   },
@@ -106,10 +78,7 @@ module.exports = {
       return {
         type: CLASS.LOAD,
         payload,
-        meta: {
-          cmd: 'ontology',
-          ...meta
-        }
+        meta: { cmd: 'ontology', ...meta }
       }
     },
 
@@ -117,11 +86,7 @@ module.exports = {
       return {
         type: LABEL.SAVE,
         payload: { ...payload, type: 'class' },
-        meta: {
-          cmd: 'ontology',
-          history: 'add',
-          ...meta
-        }
+        meta: { cmd: 'ontology', history: 'add', ...meta }
       }
     }
   },
@@ -131,11 +96,7 @@ module.exports = {
       return {
         type: TEMPLATE.CREATE,
         payload,
-        meta: {
-          cmd: 'ontology',
-          history: 'add',
-          ...meta
-        }
+        meta: { cmd: 'ontology', history: 'add', ...meta }
       }
     },
 
@@ -143,10 +104,7 @@ module.exports = {
       return {
         type: TEMPLATE.IMPORT,
         payload,
-        meta: {
-          cmd: 'ontology',
-          history: 'add',
-          ...meta
+        meta: { cmd: 'ontology', history: 'add', ...meta
         }
       }
     },
@@ -155,11 +113,15 @@ module.exports = {
       return {
         type: TEMPLATE.DELETE,
         payload,
-        meta: {
-          cmd: 'ontology',
-          history: 'add',
-          ...meta
-        }
+        meta: { cmd: 'ontology', history: 'add', ...meta }
+      }
+    },
+
+    save(payload, meta = {}) {
+      return {
+        type: TEMPLATE.SAVE,
+        payload,
+        meta: { cmd: 'ontology', history: 'add', ...meta }
       }
     },
 
@@ -167,10 +129,7 @@ module.exports = {
       return {
         type: TEMPLATE.LOAD,
         payload,
-        meta: {
-          cmd: 'ontology',
-          ...meta
-        }
+        meta: { cmd: 'ontology', ...meta }
       }
     }
   }
