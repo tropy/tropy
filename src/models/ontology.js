@@ -26,11 +26,12 @@ const ontology = {
             title,
             description,
             comment,
-            see_also AS seeAlso
+            see_also AS seeAlso,
+            protected AS isProtected
           FROM vocabularies
           WHERE ${cond.join(' AND ')}`, (data) => {
         vocabs[data.id] = {
-          ...data, classes: [], properties: []
+          ...data, isProtected: !!data.isProtected, classes: [], properties: []
         }
       })
 
@@ -72,7 +73,7 @@ const ontology = {
           comment,
           see_also,
           protected,
-          deleted) VALUES (?, ?, ?, ?, ?, ?, NULL)`, [
+          deleted) VALUES (?, ?, ?, ?, ?, ?, ?, NULL)`, [
             id, prefix, title, description, comment, seeAlso, !!isProtected
           ]
       )

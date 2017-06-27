@@ -23,7 +23,8 @@ function *create(db) {
   yield call(exec, { db }, act.ontology.import({
     files: [
       Ontology.expand('dc')
-    ]
+    ],
+    isProtected: true
   }, { history: false }))
 }
 

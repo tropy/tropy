@@ -26,9 +26,10 @@ class VocabAccordion extends Accordion {
         <h1 className="panel-heading">
           {this.props.vocab.title}
         </h1>
+        {!this.props.vocab.isProtected &&
         <IconButton
           icon={<IconTrash/>}
-          onClick={this.handleDelete}/>
+          onClick={this.handleDelete}/>}
       </div>
     )
   }
