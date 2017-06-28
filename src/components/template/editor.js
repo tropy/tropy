@@ -7,7 +7,7 @@ const { TemplateField } = require('./field')
 const { ButtonGroup, IconButton } = require('../button')
 const { FormattedMessage } = require('react-intl')
 const { FormField, FormGroup, FormSelect, Label } = require('../form')
-const { insert, remove, move } = require('../../common/util')
+const { insert, pick, remove, move } = require('../../common/util')
 const { arrayOf, func, shape, string } = require('prop-types')
 
 const {
@@ -110,11 +110,9 @@ class TemplateEditor extends PureComponent {
 
   handleTemplateCreate = () => {
     this.props.onCreate({
-      [this.state.id]: {
-        id: this.state.id,
-        name: this.state.name,
-        type: this.state.type
-      }
+      [this.state.id]: pick(this.state, [
+        'id', 'name', 'type', 'creator', 'description'
+      ])
     })
   }
 
@@ -128,8 +126,7 @@ class TemplateEditor extends PureComponent {
 
     } else {
       this.props.onSave({
-        id: this.state.id,
-        name: template.name
+        id: this.state.id, ...template
       })
     }
   }

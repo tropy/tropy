@@ -255,6 +255,8 @@ const ontology = {
             template_id AS id,
             template_type AS type,
             name,
+            creator,
+            description,
             protected AS isProtected,
             created
           FROM templates${constraint}`, (data) => {
@@ -284,10 +286,17 @@ const ontology = {
       return temps
     },
 
-    create(db, { id, type, name, isProtected }) {
+    create(db, { id, type, name, creator, description, isProtected }) {
       return db.run(`
-        INSERT INTO templates (template_id, template_type, name, protected)
-          VALUES (?, ?, ?, ?)`, [id, type, name, !!isProtected]
+        INSERT INTO templates (
+            template_id,
+            template_type,
+            name,
+            creator,
+            description,
+            protected)
+          VALUES (?, ?, ?, ?, ?, ?)`,
+        [id, type, name, creator, description, !!isProtected]
       )
     },
 
@@ -298,13 +307,22 @@ const ontology = {
       )
     },
 
-    save(db, { id, name }) {
-      assert(id != null, 'missing template id')
+    save(db, { id, ...data }) {
+      const assign = []
+      const params = { $id: id }
+
+      for (let attr in data) {
+        assign.push(`${attr} = $${attr}`)
+        params[`$${attr}`] = data[attr]
+      }
+
+      assert(id != null, 'missing tag id')
+      assert(assign.length > 0, 'missing assignments')
 
       return db.run(`
         UPDATE templates
-          SET name = ?, modified = datetime("now")
-          WHERE template_id = ?`, name, id)
+          SET ${assign.join(', ')}, modified = datetime("now")
+          WHERE template_id = $id`, params)
     }
 
   },

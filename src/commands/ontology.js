@@ -210,10 +210,17 @@ class TemplateImport extends Command {
 
       try {
         const {
-          '@id': id, type, name, field: fields
+          '@id': id, type, name, creator, description, field: fields
         } = yield call(Template.open, file)
 
-        ids.push(yield call(createTemplate, db, { id, type, name, fields }))
+        ids.push(yield call(createTemplate, db, {
+          id,
+          type,
+          name,
+          creator,
+          description,
+          fields
+        }))
 
       } catch (error) {
         warn(`Failed to import "${file}": ${error.message}`)
