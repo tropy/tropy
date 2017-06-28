@@ -91,7 +91,7 @@ class Ontology extends Resource {
       let vocab = json[ns] || this.getVocabulary(ns)
 
       if (vocab == null) return []
-      json[ns] = vocab
+      if (json[ns] == null) json[ns] = vocab
 
       if (data[RDFS.label]) {
         for (let lbl of data[RDFS.label]) {
@@ -128,15 +128,17 @@ class Ontology extends Resource {
     return json
   }
 
-  getVocabulary(id, title = this.name, prefix = this.name) {
-    const data = this.getData(id)
-    if (empty(data)) return null
+  getVocabulary(id, title = id, prefix = this.name) {
+    let data = this.getData(id)
+
+    if (empty(data) && (/[#/]$/).test(id)) {
+      data = this.getData(id.slice(0, id.length - 1))
+    }
 
     title = get(any(data, DC.title, DCT.title), [0, '@value'], title)
     prefix = get(data, [VANN.preferredNamespacePrefix, 0, '@value'], prefix)
 
     const seeAlso = get(data, [RDFS.seeAlso, 0, '@id'])
-
     const description = getValue(
       any(data, DC.description, DCT.description, RDFS.comment)
     )
