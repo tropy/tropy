@@ -1,13 +1,13 @@
 {
   "@context": {
-    "vocab": "https://tropy.org/schema/v1/ttp#",
+    "vocab": "https://tropy.org/schema/v1/tropy#",
     "domain": {
-      "@id": "https://tropy.org/schema/v1/ttp#domain",
+      "@id": "https://tropy.org/schema/v1/tropy#domain",
       "@type": "@id",
       "@container": "@list"
     },
     "field": {
-      "@id": "https://tropy.org/schema/v1/ttp#field",
+      "@id": "https://tropy.org/schema/v1/tropy#field",
       "@container": "@list"
     }
   }

@@ -1,4 +1,4 @@
-@prefix tropy: <https://tropy.org/schema/v1/core#> .
+@prefix tropy: <https://tropy.org/schema/v1/tropy#> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix vann: <http://purl.org/vocab/vann/> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
@@ -7,35 +7,119 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
-<https://tropy.org/schema/v1/core#> a owl:Ontology ;
+<https://tropy.org/schema/v1/tropy#> a owl:Ontology ;
 	vann:preferredNamespacePrefix "tropy" ;
-	vann:preferredNamespaceUri "https://tropy.org/schema/v1/core#" ;
-	dc:title "Tropy Core Vocabulary"@en ;
-	dc:description "The RDF vocabulary for https://tropy.org/schema/v1/core defines the core elements used by Tropy."@en ;
+	vann:preferredNamespaceUri "https://tropy.org/schema/v1/tropy#" ;
+  rdf:seeAlso <https://tropy.org/> ;
+	dc:title "Tropy Vocabulary"@en ;
+	dc:description "The RDF vocabulary for https://tropy.org/schema/v1/tropy defines the core elements used by the Tropy application and Tropy templates."@en ;
 	dc:issued "2017-05-09"^^xsd:date ;
-	dc:publisher "Roy Rosenzweig Center for History and New Media, George Mason University" ;
+	dc:publisher "Roy Rosenzweig Center for History and New Media, George Mason University"@en .
+
+# Classes
+# ----------------------------------------------------------------------------
+
+tropy:Item a rdfs:Class ;
+  rdfs:label "Item"@en ;
+  rdfs:isDefinedBy <https://tropy.org/schema/v1/tropy#> ;
+  rdfs:comment "A Tropy item contains metadata and photos."@en .
+
+tropy:Photo a rdfs:Class ;
+  rdfs:label "Photo"@en ;
+  rdfs:isDefinedBy <https://tropy.org/schema/v1/tropy#> ;
+  rdfs:comment "A photo."@en .
+
+tropy:Selection a rdfs:Class ;
+  rdfs:label "Selection"@en ;
+  rdfs:isDefinedBy <https://tropy.org/schema/v1/tropy#> ;
+  rdfs:comment "A selection within a photo."@en .
+
+tropy:Note a rdfs:Class ;
+  rdfs:label "Note"@en ;
+  rdfs:isDefinedBy <https://tropy.org/schema/v1/tropy#> ;
+  rdfs:comment "A note."@en .
+
+tropy:Template a rdfs:Class ;
+  rdfs:label "Template"@en ;
+  rdfs:isDefinedBy <https://tropy.org/schema/v1/tropy#> ;
+  rdfs:comment "A Tropy template."@en .
+
+tropy:Field a rdfs:Class ;
+  rdfs:label "Template Field"@en ;
+  rdfs:isDefinedBy <https://tropy.org/schema/v1/tropy#> ;
+  rdfs:domain tropy:Template ;
+  rdfs:comment "A Tropy template field."@en .
+
+
+# Data Types
+# ----------------------------------------------------------------------------
 
 tropy:date a rdf:DataType ;
 	rdfs:label "Date"@en ;
-	rdfs:isDefinedBy <https://tropy.org/schema/v1/core#> ;
+	rdfs:isDefinedBy <https://tropy.org/schema/v1/tropy#> ;
+  rdfs:comment "A EDTF date or date range."@en .
 
 tropy:name a rdf:DataType ;
 	rdfs:label "Name"@en ;
-	rdfs:isDefinedBy <https://tropy.org/schema/v1/core#> ;
+	rdfs:isDefinedBy <https://tropy.org/schema/v1/tropy#> ;
+  rdfs:comment "A personal name."@en .
+
+
+# Properties
+# ----------------------------------------------------------------------------
 
 tropy:box a rdf:Property ;
 	rdfs:label "Box"@en ;
-	rdfs:isDefinedBy <https://tropy.org/schema/v1/core#> ;
-	dc:description "A unit of archival organization."@en ;
+	rdfs:isDefinedBy <https://tropy.org/schema/v1/tropy#> ;
+	rdfs:comment "A unit of archival organization."@en .
 
 tropy:folder a rdf:Property ;
 	rdfs:label "Folder"@en ;
-	rdfs:isDefinedBy <https://tropy.org/schema/v1/core#> ;
+	rdfs:isDefinedBy <https://tropy.org/schema/v1/tropy#> ;
   rdfs:subPropertyOf tropy:box ;
-	dc:description "A unit of archival organization, usually within a box."@en ;
+	rdfs:comment "A unit of archival organization, usually within a box."@en .
 
 tropy:piece a rdf:Property ;
 	rdfs:label "Piece"@en ;
-	rdfs:isDefinedBy <https://tropy.org/schema/v1/core#> ;
+	rdfs:isDefinedBy <https://tropy.org/schema/v1/tropy#> ;
   rdfs:subPropertyOf tropy:folder ;
-	dc:description "A unit of archival organization, usually within a folder."@en ;
+	rdfs:comment "A unit of archival organization, usually within a folder."@en .
+
+
+tropy:name a rdf:Property ;
+  rdfs:label "Template Name"@en ;
+  rdfs:isDefinedBy <https://tropy.org/schema/v1/tropy#> ;
+  rdfs:subPropertyOf dc:title ;
+  rdfs:domain tropy:Template ;
+  rdfs:range rdfs:Literal ;
+  rdfs:comment "The name of a template."@en .
+
+tropy:type a rdf:Property ;
+  rdfs:label "Type"@en ;
+  rdfs:isDefinedBy <https://tropy.org/schema/v1/tropy#> ;
+  rdfs:subPropertyOf dc:type ;
+  rdfs:domain tropy:Template ;
+  rdfs:range tropy:Image , tropy:Photo , tropy:Selection ;
+  rdfs:comment "The type of object, in Tropy, which the template describes."@en .
+
+tropy:domain a rdf:Property ;
+  rdfs:label "Domain"@en ;
+  rdfs:isDefinedBy <https://tropy.org/schema/v1/tropy#> ;
+  rdfs:subPropertyOf rdfs:domain ;
+  rdfs:domain tropy:Template ;
+  rdfs:comment "Denotes a valid class for the item described by the template."@en .
+
+tropy:field a rdf:Property ;
+  rdfs:label "Field"@en ;
+  rdfs:isDefinedBy <https://tropy.org/schema/v1/tropy#> ;
+  rdfs:domain tropy:Template ;
+  rdfs:range tropy:Field ;
+  rdfs:comment "Describes a field in the template."@en .
+
+tropy:property a rdf:Property ;
+  rdfs:label "Property"@en ;
+  rdfs:isDefinedBy <https://tropy.org/schema/v1/tropy#> ;
+  rdfs:domain tropy:Field ;
+  rdfs:range rdf:Property ;
+  rdfs:comment "Denotes the field's property."@en .
+
