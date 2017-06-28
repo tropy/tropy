@@ -22,7 +22,11 @@ function *create(db) {
 
   yield call(exec, { db }, act.ontology.import({
     files: [
-      Ontology.expand('dc')
+      Ontology.expand('tropy'),
+      Ontology.expand('dc'),
+      Ontology.expand('dcterms'),
+      Ontology.expand('rdf'),
+      Ontology.expand('rdfs')
     ],
     isProtected: true
   }, { history: false }))
