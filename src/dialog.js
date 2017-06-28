@@ -98,7 +98,7 @@ function openImages(options) {
 function openVocabs(options) {
   return open('file', {
     filters: [
-      { name: 'RDF Vocabularies', extensions: ['n3'] }
+      { name: 'RDF Vocabularies', extensions: ['n3', 'ttl'] }
     ],
     properties: ['openFile', 'multiSelections'],
     ...options
