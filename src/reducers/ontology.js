@@ -4,12 +4,13 @@ const { combineReducers } = require('redux')
 const { ONTOLOGY } = require('../constants')
 const { PROPS, CLASS, VOCAB, LABEL, TEMPLATE } = ONTOLOGY
 const { load, merge, replace, remove, update } = require('./util')
+const { has } = require('../common/util')
 
 function props(state = {}, { type, payload, error, meta }) {
   switch (type) {
     case ONTOLOGY.LOAD:
     case ONTOLOGY.IMPORT:
-      return (meta.done && !error) ?
+      return (meta.done && !error && has(payload, 'props')) ?
         replace(state, payload.props) :
         state
     case PROPS.LOAD:
@@ -27,7 +28,7 @@ function klass(state = {}, { type, payload, error, meta }) {
   switch (type) {
     case ONTOLOGY.LOAD:
     case ONTOLOGY.IMPORT:
-      return (meta.done && !error) ?
+      return (meta.done && !error && has(payload, 'class')) ?
         replace(state, payload.class) :
         state
     case CLASS.LOAD:
@@ -46,7 +47,7 @@ function vocab(state = {}, { type, payload, error, meta }) {
   switch (type) {
     case ONTOLOGY.LOAD:
     case ONTOLOGY.IMPORT:
-      return (meta.done && !error) ?
+      return (meta.done && !error && has(payload, 'vocab')) ?
         replace(state, payload.vocab) :
         state
     case VOCAB.LOAD:
