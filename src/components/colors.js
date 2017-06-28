@@ -4,12 +4,13 @@ const React = require('react')
 const { PureComponent } = React
 const { arrayOf, bool, number, object, string } = require('prop-types')
 const { get } = require('../common/util')
+const { IconTag } = require('./icons')
 
 
 function Circle({ color, isCrescent }) {
   return (isCrescent) ?
-    <span className={`crescent-circle color-${color}`}/> :
-    <span className={`circle color-${color}`}/>
+    <IconTag className={`crescent color-${color}`}/> :
+    <IconTag className={`color-${color}`}/>
 }
 
 Circle.propTypes = {
@@ -39,7 +40,7 @@ class TagColors extends PureComponent {
     const colors = this.getColors()
 
     return (colors.length === 0) ? null : (
-      <div className="colors">
+      <div className="tag colors">
         {colors.map((color, idx) =>
           <Circle key={color} color={color} isCrescent={idx > 0}/>)}
       </div>
