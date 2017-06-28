@@ -70,6 +70,8 @@ function dup(template) {
     id: '',
     fields: [],
     type: 'item',
+    creator: '',
+    description: '',
     created: null,
     isProtected: null
   }
@@ -192,7 +194,21 @@ class TemplateEditor extends PureComponent {
             value={this.state.type}
             options={this.props.types}
             tabIndex={0}
+            isCompact
             isDisabled={!this.isPristine}
+            onChange={this.handleTemplateUpdate}/>
+          <FormField
+            id="template.creator"
+            name="creator"
+            value={this.state.creator}
+            isCompact
+            tabIndex={0}
+            onChange={this.handleTemplateUpdate}/>
+          <FormField
+            id="template.description"
+            name="description"
+            value={this.state.description}
+            tabIndex={0}
             onChange={this.handleTemplateUpdate}/>
           {this.isPristine &&
             <FormGroup>

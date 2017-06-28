@@ -58,6 +58,8 @@ template:
   id: URI
   name: Name
   type: Type
+  creator: Creator
+  description: Description
   types:
     item: Item Template
     photo: Photo Template
