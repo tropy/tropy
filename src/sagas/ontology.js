@@ -30,6 +30,14 @@ function *create(db) {
     ],
     isProtected: true
   }, { history: false }))
+
+  yield call(exec, { db }, act.ontology.template.import({
+    files: [
+      join(Ontology.base, '..', 'ttp', 'photo.ttp'),
+      join(Ontology.base, '..', 'ttp', 'item.ttp')
+    ],
+    isProtected: true
+  }, { history: false }))
 }
 
 function *migrate() {
