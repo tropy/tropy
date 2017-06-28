@@ -237,17 +237,23 @@ class Tropy extends EventEmitter {
 
       .then(state => (this.state = state, this))
 
-      .tap(state => all([
+      .tap(() => all([
+        this.migrate(),
         this.menu.load(),
         this.ctx.load(),
         this.cache.init(),
         Strings
-          .openWithFallback(Tropy.defaults.locale, state.locale)
+          .openWithFallback(Tropy.defaults.locale, this.state.locale)
           .then(strings => this.strings = strings)
       ]))
 
+
       .tap(() => this.emit('app:restored'))
       .tap(() => verbose('app state restored'))
+  }
+
+  migrate() {
+    this.state.version = this.version
   }
 
   persist() {
