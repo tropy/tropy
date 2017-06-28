@@ -82,13 +82,18 @@ class Ontology extends Resource {
 
   toJSON() {
     let json = {}
+    let seq = 0
+
+    let prefix = () => {
+      return (++seq > 1) ? `${this.name}${seq}` : this.name
+    }
 
     let collect = (id) => {
       let data = this.getData(id)
       if (empty(data)) return []
 
       let ns = isDefinedBy(id, data)
-      let vocab = json[ns] || this.getVocabulary(ns)
+      let vocab = json[ns] || this.getVocabulary(ns, prefix())
 
       if (vocab == null) return []
       if (json[ns] == null) json[ns] = vocab
@@ -128,7 +133,7 @@ class Ontology extends Resource {
     return json
   }
 
-  getVocabulary(id, title = id, prefix = this.name) {
+  getVocabulary(id, prefix, title = id) {
     let data = this.getData(id)
 
     if (empty(data) && (/[#/]$/).test(id)) {

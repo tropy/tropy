@@ -53,7 +53,7 @@ const ontology = {
       return vocabs
     },
 
-    create(db, {
+    async create(db, {
       id,
       prefix,
       title,
@@ -64,16 +64,25 @@ const ontology = {
     }) {
       if (prefix === '') prefix = null
 
+      const ex = await db.get(`
+        SELECT vocabulary_id AS id, protected AS isProtected
+          FROM vocabularies
+          WHERE vocabulary_id = ?`, id)
+
+      if (ex != null) {
+        assert(!ex.isProtected, 'vocabulary is protected')
+        return ontology.vocab.restore(db, id)
+      }
+
       return db.run(`
-        REPLACE INTO vocabularies (
+        INSERT INTO vocabularies (
           vocabulary_id,
           prefix,
           title,
           description,
           comment,
           see_also,
-          protected,
-          deleted) VALUES (?, ?, ?, ?, ?, ?, ?, NULL)`, [
+          protected) VALUES (?, ?, ?, ?, ?, ?, ?)`, [
             id, prefix, title, description, comment, seeAlso, !!isProtected
           ]
       )
@@ -84,7 +93,7 @@ const ontology = {
 
       return db.run(`
         UPDATE vocabularies
-          SET prefix = ?
+          SET prefix = ?, deleted = NULL
           WHERE vocabulary_id = ?`, [prefix, id]
       )
     },
