@@ -10,11 +10,12 @@
 <https://tropy.org/schema/v1/tropy#> a owl:Ontology ;
 	vann:preferredNamespacePrefix "tropy" ;
 	vann:preferredNamespaceUri "https://tropy.org/schema/v1/tropy#" ;
-  rdf:seeAlso <https://tropy.org/> ;
+  rdfs:seeAlso <https://tropy.org/> ;
 	dc:title "Tropy Vocabulary"@en ;
 	dc:description "The RDF vocabulary for https://tropy.org/schema/v1/tropy defines the core elements used by the Tropy application and Tropy templates."@en ;
 	dc:issued "2017-05-09"^^xsd:date ;
 	dc:publisher "Roy Rosenzweig Center for History and New Media, George Mason University"@en .
+
 
 # Classes
 # ----------------------------------------------------------------------------

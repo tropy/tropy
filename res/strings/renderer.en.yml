@@ -72,6 +72,7 @@ vocab:
   title: Name
   description: Description
   properties: Properties
+  seeAlso: See Also
 
 property:
   select: Select a Property …

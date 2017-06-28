@@ -59,6 +59,13 @@ class VocabAccordion extends Accordion {
             isOptional
             size={8}
             value={vocab.description}/>
+          <FormLink
+            id="vocab.seeAlso"
+            isCompact
+            isOptional
+            size={8}
+            value={vocab.seeAlso}
+            onClick={this.props.onOpenLink}/>
         </header>
         <h2 className="vocab-heading">
           <FormattedMessage
