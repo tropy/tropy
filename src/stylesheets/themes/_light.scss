@@ -10,108 +10,62 @@ $theme: "light";
 // Colors
 // --------------------------------------------------
 
+$blue:       #5c93e5;
+$blue-light: #cedef7;
+$red:        #e62e2e;
+
+$brand-primary:       $blue;
+$brand-primary-light: $blue-light;
+
 :root {
-  #{--blue}:          #5c93e5;
-  #{--blue-light}:    #cedef7;
-  #{--blue-30}:       rgba(#5c93e5, 0.3);
-  #{--blue-60}:       rgba(#5c93e5, 0.6);
-  #{--blue-darken-4}: darken(#5c93e5, 4%);
-  #{--red}:           #e62e2e;
+  #{--brand-primary}:          $brand-primary;
+  #{--brand-primary-light}:    $brand-primary-light;
+  #{--brand-primary-30}:       rgba($brand-primary, 0.3);
+  #{--brand-primary-60}:       rgba($brand-primary, 0.6);
+  #{--brand-primary-darken-4}: darken($brand-primary, 4%);
 }
-
-$blue:                   var(--blue);
-$blue-light:             var(--blue-light);
-$blue-30:                var(--blue-30);
-$blue-60:                var(--blue-60);
-$blue-darken-4:          var(--blue-darken-4);
-
-$red:                    var(--red);
-
-$brand-primary:          $blue;
-$brand-primary-light:    $blue-light;
-$brand-primary-30:       $blue-30;
-$brand-primary-60:       $blue-60;
-$brand-primary-darken-4: $blue-darken-4;
 
 
 // Grays
 // --------------------------------------------------
 
+$transparent: transparent;
+
+$shade-0:  #fff; // Body
+$shade-1:  if($platform == win32, #f0f0f0, #f6f6f6); // Sidebar bg, panel bg
+$shade-2:  #e6e6e6; // Inactive tab, Esper bg
+$shade-3:  #ddd; // Active state bg/border
+$shade-4:  #ccc; // Slider track
+$shade-5:  #bbb; // Panel heading, mixed color
+$shade-6:  #777; // Icon color
+$shade-7:  #555; // Sidebar active icon
+$shade-8:  #444; // Softened text
+$shade-9:  #222; // Text color, icon active state
+$shade-10: #000; // Black
+
 :root {
-  #{--transparent}:   transparent;
-
-  #{--shade-0}:           #fff;              // Body
-
-  #{--shade-1}: if($platform == win32,
-                          #f0f0f0,
-                          #f6f6f6);          // Sidbar bg, panel bg
-  #{--shade-1-darken-4}:
-    if($platform == win32,
-                   darken(#f0f0f0, 4.5%),
-                   darken(#f6f6f6, 4.5%));   // 8% Fieldset bg
-  #{--shade-1-darken-8}:
-    if($platform == win32,
-                   darken(#f0f0f0, 8.5%),
-                   darken(#f6f6f6, 8.5%));   // 12% Vocab property bg
-  #{--shade-1-darken-14}:
-    if($platform == win32,
-                   darken(#f0f0f0, 14%),
-                   darken(#f6f6f6, 14%));    // 18% Vocab property input border
-  #{--shade-1-darken-18}:
-    if($platform == win32,
-                   darken(#f0f0f0, 18%),
-                   darken(#f6f6f6, 18%));    // 22% Vocab property input border
-
-  #{--shade-2}:           #e6e6e6;           // Inactive tab, Esper bg
-
-  #{--shade-3}:           #ddd;              // Active state bg/border
-  #{--shade-3-darken-5}:  darken(#ddd, 5%);  // Thumbnail bg
-
-  #{--shade-4}:           #ccc;              // Slider track
-  #{--shade-4-darken-14}: darken(#ccc, 14%);
-
-  #{--shade-5}:           #bbb;              // Panel heading, mixed color
-
-  #{--shade-6}:           #777;              // Icon color
-  #{--shade-6-50}:        rgba(#777, 0.5);
-
-  #{--shade-7}:           #555;              // Sidebar active icon
-  #{--shade-8}:           #444;              // Softened text
-  #{--shade-9}:           #222;              // Text color, active icon
-
-  #{--shade-10}:          #000;              // Black
-  #{--shade-10-10}:       rgba(#000, 0.1);
-  #{--shade-10-20}:       rgba(#000, 0.2);
+  #{--transparent}:       $transparent;
+  #{--shade-0}:           $shade-0;
+  #{--shade-1}:           $shade-1;
+  #{--shade-1-darken-4}:  darken($shade-1, 4.5%); // 8% Fieldset bg
+  #{--shade-1-darken-8}:  darken($shade-1, 8.5); // 12% Vocab property bg
+  #{--shade-1-darken-14}: darken($shade-1, 14%); // 18% Vocab property input border
+  #{--shade-1-darken-18}: darken($shade-1, 18%); // 22% Vocab property input border
+  #{--shade-2}:           $shade-2;
+  #{--shade-3}:           $shade-3;
+  #{--shade-3-darken-5}:  darken($shade-3, 5%); // Thumbnail bg
+  #{--shade-4}:           $shade-4;
+  #{--shade-4-darken-14}: darken($shade-4, 14%);
+  #{--shade-5}:           $shade-5;
+  #{--shade-6}:           $shade-6;
+  #{--shade-6-50}:        rgba($shade-6, 0.5);
+  #{--shade-7}:           $shade-7;
+  #{--shade-8}:           $shade-8;
+  #{--shade-9}:           $shade-9;
+  #{--shade-10}:          $shade-10;
+  #{--shade-10-10}:       rgba($shade-10, 0.1);
+  #{--shade-10-20}:       rgba($shade-10, 0.2);
 }
-
-$transparent: var(--transparent);
-
-$shade-0:           var(--shade-0);
-$shade-1:           var(--shade-1);
-$shade-1-darken-4:  var(--shade-1-darken-4);
-$shade-1-darken-8:  var(--shade-1-darken-8);
-$shade-1-darken-14: var(--shade-1-darken-14);
-$shade-1-darken-18: var(--shade-1-darken-18);
-$shade-2:           var(--shade-2);
-$shade-3:           var(--shade-3);
-$shade-2-3:         var(--shade-2-3);
-$shade-3-darken-5:  var(--shade-3-darken-5);
-
-$shade-4:           var(--shade-4);
-$shade-4-darken-14: var(--shade-4-darken-14);
-
-$shade-5:           var(--shade-5);
-
-$shade-6:           var(--shade-6);
-$shade-6-50:        var(--shade-6-50);
-
-$shade-7:           var(--shade-7);
-$shade-8:           var(--shade-8);
-$shade-9:           var(--shade-9);
-
-$shade-10:           var(--shade-10);
-$shade-10-10:        var(--shade-10-10);
-$shade-10-20:        var(--shade-10-20);
 
 
 // Tag colors
@@ -148,60 +102,60 @@ $tag-colors: (
 // Scaffolding
 // --------------------------------------------------
 
-$body-bg:    $shade-0;
-$text-color: $shade-9;
+$body-bg:    var(--shade-0);
+$text-color: var(--shade-9);
 
 
 // Typography
 // --------------------------------------------------
 
-$link-color:       $brand-primary;
-$link-hover-color: $brand-primary;
+$link-color:       var(--brand-primary);
+$link-hover-color: var(--brand-primary);
 
 $text-selection-color: inherit;
-$text-selection-bg: $brand-primary-light;
+$text-selection-bg:    var(--brand-primary-light);
 
 
 // Partials
 // --------------------------------------------------
 
 // Forms
-$input-color:                $shade-9;
-$input-bg:                   $shade-0; // Transparent causes border/box-shadow issue
-$input-bg-readonly:          $shade-1-darken-4;
-$input-border:               $shade-3;
-$input-color-focus:          $brand-primary-60;
-$input-color-placeholder:    $shade-5;
-$fieldset-bg:                $shade-1-darken-4;
-$fieldset-input-border:      $shade-1-darken-14;
-$fieldset-input-bg:          $shade-0;
-$fieldset-input-bg-readonly: $shade-1-darken-8;
+$input-color:                var(--shade-9);
+$input-bg:                   var(--shade-0); // Transparent causes border/box-shadow issue
+$input-bg-readonly:          var(--shade-1-darken-4);
+$input-border:               var(--shade-3);
+$input-color-focus:          var(--brand-primary-60);
+$input-color-placeholder:    var(--shade-5);
+$fieldset-bg:                var(--shade-1-darken-4);
+$fieldset-input-border:      var(--shade-1-darken-14);
+$fieldset-input-bg:          var(--shade-0);
+$fieldset-input-bg-readonly: var(--shade-1-darken-8);
 
 // Badge
-$badge-color: $shade-0;
-$badge-bg:    $red;
+$badge-color: var(--shade-0);
+$badge-bg:    var(--red);
 
 // Drop target
-$drop-target-color:      $brand-primary-30;
+$drop-target-color: var(--brand-primary-30);
 
 // Sort indicator
-$photo-sort-indicator: $shade-9;
+$photo-sort-indicator: var(--shade-9);
 
 // Tile
-$tile-focus-color:  $brand-primary;
-$tile-active-color: $shade-4;
+$tile-focus-color:  var(--brand-primary);
+$tile-active-color: var(--shade-4);
 
 // Stack
-$stack-color:             $shade-6;
-$stack-bg:                $body-bg;
-$stack-focus-color:       $shade-0;
-$stack-line-gap-color:    $shade-0;
-$stack-line-tint-color:   $shade-0;
+$stack-color:             var(--shade-6);
+$stack-bg:                var(--body-bg);
+$stack-focus-color:       var(--shade-0);
+$stack-line-gap-color:    var(--shade-0);
+$stack-line-tint-color:   var(--shade-0);
 $stack-line-tint-opacity: 0.5;
 
 // Scrollbar
-$scrollbar-bg: $transparent;
-$scrollbar-color: $shade-4;
+$scrollbar-bg: var(--transparent);
+$scrollbar-color: var(--shade-4);
 
 
 // Components
@@ -209,147 +163,147 @@ $scrollbar-color: $shade-4;
 
 // Icons
 $icon-style:        "line";
-$icon-color:        $shade-6;
-$icon-active-color: $shade-9;
+$icon-color:        var(--shade-6);
+$icon-active-color: var(--shade-9);
 
-$icon-spin-color:   $brand-primary;
+$icon-spin-color: var(--brand-primary);
 
 // Project
-$project-darken-color: $shade-10-10;
+$project-darken-color: var(--shade-10-10);
 
 // Sidebar
-$sidebar-bg:                $shade-1;
-$sidebar-text-color:        $shade-8;
-$sidebar-headings-color:    $shade-6;
-$sidebar-focus-icon-color:  $shade-0;
-$sidebar-focus-color:       $shade-0;
-$sidebar-focus-bg:          $brand-primary;
-$sidebar-active-icon-color: $shade-7;
-$sidebar-active-color:      $shade-9;
-$sidebar-active-bg:         $shade-3;
-$activity-border-color:     $shade-3;
+$sidebar-bg:                var(--shade-1);
+$sidebar-text-color:        var(--shade-8);
+$sidebar-headings-color:    var(--shade-6);
+$sidebar-focus-icon-color:  var(--shade-0);
+$sidebar-focus-color:       var(--shade-0);
+$sidebar-focus-bg:          var(--brand-primary);
+$sidebar-active-icon-color: var(--shade-7);
+$sidebar-active-color:      var(--shade-9);
+$sidebar-active-bg:         var(--shade-3);
+$activity-border-color:     var(--shade-3);
 
 // Items
-$item-table-header-color:        $shade-8;
-$item-table-header-sort-color:   $shade-9;
-$item-table-header-active-bg:    $shade-1;
-$item-table-header-border-color: $shade-2;
-$items-odd-bg:                   $shade-1;
-$items-focus-color:              $shade-0;
-$items-focus-bg:                 $brand-primary;
-$items-active-color:             $shade-9;
-$items-active-bg:                $shade-3;
+$item-table-header-color:        var(--shade-8);
+$item-table-header-sort-color:   var(--shade-9);
+$item-table-header-active-bg:    var(--shade-1);
+$item-table-header-border-color: var(--shade-2);
+$items-odd-bg:                   var(--shade-1);
+$items-focus-color:              var(--shade-0);
+$items-focus-bg:                 var(--brand-primary);
+$items-active-color:             var(--shade-9);
+$items-active-bg:                var(--shade-3);
 
 // Panel group
 $panels-bg: $shade-1;
 
 // Panel
-$panel-bg:              $shade-1;
-$panel-header-color:    $shade-8;
-$panel-separator-color: $shade-3;
-$panel-heading-color:   $shade-5;
+$panel-bg:              var(--shade-1);
+$panel-header-color:    var(--shade-8);
+$panel-separator-color: var(--shade-3);
+$panel-heading-color:   var(--shade-5);
 
 // Tabs
-$tab-bg:             $shade-2;
-$tab-active-color:   $shade-9;
-$tab-active-bg:      $transparent;
-$tab-inactive-color: $shade-6;
+$tab-bg:             var(--shade-2);
+$tab-active-color:   var(--shade-9);
+$tab-active-bg:      var(--transparent);
+$tab-inactive-color: var(--shade-6);
 
 // Metadata
-$label-color:                $shade-6;
-$template-select-border:     $shade-3;
-$template-select-bg:         $shade-1;
-$metadata-field-mixed-color: $shade-5;
+$label-color:                var(--shade-6);
+$template-select-border:     var(--shade-3);
+$template-select-bg:         var(--shade-1);
+$metadata-field-mixed-color: var(--shade-5);
 
 // Tag list
-$tag-list-focus-color:              $shade-0;
-$tag-list-focus-bg:                 $brand-primary;
-$tag-list-active-border:            $shade-4-darken-14;
-$tag-list-active-bg:                $shade-3;
-$mixed-color:                       $shade-5;
-$add-tag-default-bg:                $panel-bg;
-$add-tag-focus-bg:                  $shade-0;
-$add-tag-placeholder-color-default: $text-color;
-$add-tag-border-color:              $shade-3;
-$icon-tag-color:                    $shade-1;
-$icon-tag-border:                   $shade-5;
+$tag-list-focus-color:              var(--shade-0);
+$tag-list-focus-bg:                 var(--brand-primary);
+$tag-list-active-border:            var(--shade-4-darken-14);
+$tag-list-active-bg:                var(--shade-3);
+$mixed-color:                       var(--shade-5);
+$add-tag-default-bg:                var(--panel-bg);
+$add-tag-focus-bg:                  var(--shade-0);
+$add-tag-placeholder-color-default: var(--text-color);
+$add-tag-border-color:              var(--shade-3);
+$icon-tag-color:                    var(--shade-1);
+$icon-tag-border:                   var(--shade-5);
 
 // Photo list
-$photo-list-focus-color: $shade-0;
-$photo-list-focus-bg: $brand-primary;
-$photo-list-active-color: $shade-9;
-$photo-list-active-bg: $shade-3;
+$photo-list-focus-color:  var(--shade-0);
+$photo-list-focus-bg:     var(--brand-primary);
+$photo-list-active-color: var(--shade-9);
+$photo-list-active-bg:    var(--shade-3);
 
 // Note list
-$note-list-focus-color:  $shade-0;
-$note-list-focus-bg:     $brand-primary;
-$note-list-active-color: $shade-9;
-$note-list-active-bg:    $shade-3;
+$note-list-focus-color:  var(--shade-0);
+$note-list-focus-bg:     var(--brand-primary);
+$note-list-active-color: var(--shade-9);
+$note-list-active-bg:    var(--shade-3);
 
 // Editable
-$editable-color: $text-color;
-$editable-bg: $shade-0;
-$editable-border-color: $shade-10-10;
+$editable-color:        var(--text-color);
+$editable-bg:           var(--shade-0);
+$editable-border-color: var(--shade-10-10);
 
 // Wizard
-$wizard-heading-color: $shade-8;
-$wizard-link-color:    $brand-primary;
+$wizard-heading-color: var(--shade-8);
+$wizard-link-color:    var(--brand-primary);
 
 // Button
-$btn-default-color:     $shade-9;
-$btn-default-bg:        $shade-0;
-$btn-default-border:    $shade-2;
-$btn-default-active-bg: $shade-1;
-$btn-primary-color:     $shade-0;
-$btn-primary-bg:        $brand-primary;
-$btn-primary-active-bg: $brand-primary-darken-4;
-$btn-icon-bg:           $transparent;
+$btn-default-color:     var(--shade-9);
+$btn-default-bg:        var(--shade-0);
+$btn-default-border:    var(--shade-2);
+$btn-default-active-bg: var(--shade-1);
+$btn-primary-color:     var(--shade-0);
+$btn-primary-bg:        var(--brand-primary);
+$btn-primary-active-bg: var(--brand-primary-darken-4);
+$btn-icon-bg:           var(--transparent);
 
 // Slider
-$slider-track-bg: $shade-4;
-$slider-range-bg: $shade-6;
-$slider-handle-bg: $shade-0;
-$slider-handle-border: $shade-10-20;
+$slider-track-bg:      var(--shade-4);
+$slider-range-bg:      var(--shade-6);
+$slider-handle-bg:     var(--shade-0);
+$slider-handle-border: var(--shade-10-20);
 
 // Esper
-$esper-bg:             $shade-2;
-$esper-toolbar-bg:     $shade-0;
-$esper-icon-color:     $shade-7;
+$esper-bg:         var(--shade-2);
+$esper-toolbar-bg: var(--shade-0);
+$esper-icon-color: var(--shade-7);
 
 // Drag preview
 $drag-preview-opacity:           0.8;
 $drag-preview-thumbnail-opacity: 0.8;
 
 // Thumbnail
-$thumbnail-color: $shade-6-50;
-$thumbnail-bg:    $shade-3-darken-5;
+$thumbnail-color: var(--shade-6-50);
+$thumbnail-bg:    var(--shade-3-darken-5);
 
 // Progress bar
-$progress-bar-bg:       $shade-3;
-$progress-bar-color:    $brand-primary;
-$progress-cancel-color: $shade-1;
-$progress-cancel-bg:    $shade-6;
+$progress-bar-bg:       var(--shade-3);
+$progress-bar-color:    var(--brand-primary);
+$progress-cancel-color: var(--shade-1);
+$progress-cancel-bg:    var(--shade-6);
 
 // Editor
-$editor-toolbar-border:        $shade-2;
-$editor-btn-hover-bg:          $shade-1;
-$editor-btn-active-color:      $shade-7;
-$editor-btn-active-bg:         $shade-2;
-$editor-text-selection-bg:     $text-selection-bg;
+$editor-toolbar-border:    var(--shade-2);
+$editor-btn-hover-bg:      var(--shade-1);
+$editor-btn-active-color:  var(--shade-7);
+$editor-btn-active-bg:     var(--shade-2);
+$editor-text-selection-bg: var(--text-selection-bg);
 
-$blockquote-border-color: $shade-2;
-$selected-node-color:     $brand-primary-60;
-$editor-hr-border-color:  $shade-2;
+$blockquote-border-color: var(--shade-2);
+$selected-node-color:     var(--brand-primary-60);
+$editor-hr-border-color:  var(--shade-2);
 
 // Preferences
-$prefs-bg:            $shade-1;
-$prefs-header-border: $shade-3;
+$prefs-bg:            var(--shade-1);
+$prefs-header-border: var(--shade-3);
 
 // Vocab
-$vocab-panel-bg:        $shade-1-darken-4;
-$vocab-label-color:     $shade-6;
-$vocab-input-bg:        $shade-0;
-$vocab-input-border:    $shade-1-darken-14;
-$property-bg:           $shade-1-darken-8;
-$property-input-bg:     $shade-0;
-$property-input-border: $shade-1-darken-18;
+$vocab-panel-bg:        var(--shade-1-darken-4);
+$vocab-label-color:     var(--shade-6);
+$vocab-input-bg:        var(--shade-0);
+$vocab-input-border:    var(--shade-1-darken-14);
+$property-bg:           var(--shade-1-darken-8);
+$property-input-bg:     var(--shade-0);
+$property-input-border: var(--shade-1-darken-18);
