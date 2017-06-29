@@ -148,7 +148,7 @@ $tile-active-color: var(--shade-4);
 
 // Stack
 $stack-color:             var(--shade-6);
-$stack-bg:                var(--body-bg);
+$stack-bg:                $body-bg;
 $stack-focus-color:       var(--shade-0);
 $stack-line-gap-color:    var(--shade-0);
 $stack-line-tint-color:   var(--shade-0);
@@ -222,9 +222,9 @@ $tag-list-focus-bg:                 var(--brand-primary);
 $tag-list-active-border:            var(--shade-4-darken-14);
 $tag-list-active-bg:                var(--shade-3);
 $mixed-color:                       var(--shade-5);
-$add-tag-default-bg:                var(--panel-bg);
+$add-tag-default-bg:                $panel-bg;
 $add-tag-focus-bg:                  var(--shade-0);
-$add-tag-placeholder-color-default: var(--text-color);
+$add-tag-placeholder-color-default: $text-color;
 $add-tag-border-color:              var(--shade-3);
 $icon-tag-color:                    var(--shade-1);
 $icon-tag-border:                   var(--shade-5);
@@ -242,7 +242,7 @@ $note-list-active-color: var(--shade-9);
 $note-list-active-bg:    var(--shade-3);
 
 // Editable
-$editable-color:        var(--text-color);
+$editable-color:        $text-color;
 $editable-bg:           var(--shade-0);
 $editable-border-color: var(--shade-10-10);
 
@@ -290,7 +290,7 @@ $editor-toolbar-border:    var(--shade-2);
 $editor-btn-hover-bg:      var(--shade-1);
 $editor-btn-active-color:  var(--shade-7);
 $editor-btn-active-bg:     var(--shade-2);
-$editor-text-selection-bg: var(--text-selection-bg);
+$editor-text-selection-bg: $text-selection-bg;
 
 $blockquote-border-color: var(--shade-2);
 $selected-node-color:     var(--brand-primary-60);
