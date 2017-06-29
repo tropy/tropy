@@ -5,6 +5,41 @@
 .cover-image {
   box-sizing: content-box;
   position: relative;
+
+  .tag.colors {
+    position: absolute;
+    right: $space-min;
+    bottom: $space-min;
+
+    .icon-circle,
+    .icon-crescentcircle {
+      @if $theme == "light" {
+        @each $key, $val in $tag-colors {
+          &.#{$key} {
+            .color {
+              color: map-get($val, "color-base");
+            }
+
+            .border {
+              color: $colors-focus-border-grid;
+            }
+          }
+        }
+      } @else {
+        @each $key, $val in $tag-colors {
+          &.#{$key} {
+            .color {
+              color: map-get($val, "color-dark");
+            }
+
+            .border {
+              color: $colors-focus-border-grid;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 .stack-lines {

@@ -1,5 +1,12 @@
+//
+// Colors
+// --------------------------------------------------
+
 .tag.colors {
-  position: absolute;
-  bottom: 0;
-  right: 0;
+  display: flex;
+  flex-direction: row;
+
+  .icon-crescentcircle {
+    margin-left: -2px;
+  }
 }

@@ -4,13 +4,12 @@ const React = require('react')
 const { PureComponent } = React
 const { arrayOf, bool, number, object, string } = require('prop-types')
 const { get } = require('../common/util')
-const { IconTag } = require('./icons')
-
+const { IconCircle, IconCrescentCircle } = require('./icons')
 
 function Circle({ color, isCrescent }) {
   return (isCrescent) ?
-    <IconTag className={`crescent color-${color}`}/> :
-    <IconTag className={`color-${color}`}/>
+    <IconCrescentCircle className={`color-${color}`}/> :
+    <IconCircle className={`color-${color}`}/>
 }
 
 Circle.propTypes = {

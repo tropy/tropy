@@ -66,6 +66,7 @@ $shade-10: #fff; // White
   #{--shade-9}: $shade-9;
   #{--shade-10}: $shade-10;
   #{--shade-10-5}: rgba($shade-10, 0.05);
+  #{--shade-10-darken-14}: darken($shade-10, 14%);
 }
 
 
@@ -190,7 +191,7 @@ $item-table-header-sort-color:   var(--shade-9);
 $item-table-header-active-bg:    var(--shade-2);
 $item-table-header-border-color: var(--shade-1);
 $items-odd-bg:                   var(--shade-4);
-$items-focus-color:              var(--blue-light);
+$items-focus-color:              var(--brand-primary-light);
 $items-focus-bg:                 var(--brand-primary);
 $items-active-color:             var(--shade-9);
 $items-active-bg:                var(--shade-5);
@@ -308,3 +309,7 @@ $vocab-input-border:    var(--shade-1-lighten-2);
 $property-bg:           var(--shade-4-lighten-4);
 $property-input-bg:     var(--shade-4-lighten-2);
 $property-input-border: var(--shade-1-lighten-4);
+
+// Colors
+$colors-focus-border-table: var(--brand-primary-light);
+$colors-focus-border-grid:  var(--shade-10-darken-14);

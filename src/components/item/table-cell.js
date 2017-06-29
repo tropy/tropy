@@ -87,22 +87,24 @@ class ItemTableCell extends PureComponent {
         style={this.style}
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>
-        {isMainCell &&
-          <CoverImage
-            item={item}
-            cache={cache}
-            photos={photos}
-            size={size}/>}
-        <Editable
-          value={this.value}
-          isEditing={isEditing}
-          isDisabled={isDisabled}
-          onCancel={onCancel}
-          onChange={this.handleChange}/>
-        {isMainCell &&
-          <TagColors
-            selection={item.tags}
-            tags={tags}/>}
+        <div className="flex-row center">
+          {isMainCell &&
+            <CoverImage
+              item={item}
+              cache={cache}
+              photos={photos}
+              size={size}/>}
+          <Editable
+            value={this.value}
+            isEditing={isEditing}
+            isDisabled={isDisabled}
+            onCancel={onCancel}
+            onChange={this.handleChange}/>
+          {isMainCell &&
+            <TagColors
+              selection={item.tags}
+              tags={tags}/>}
+        </div>
       </td>
     )
   }

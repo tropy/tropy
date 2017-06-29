@@ -43,6 +43,20 @@ function i(name, svg) {
 /* eslint-disable max-len */
 
 
+i('Circle', (
+  <svg width="10" height="10">
+    <circle className="border" fill="currentColor" cx="5" cy="5" r="5"/>
+    <circle className="color" fill="currentColor" cx="5" cy="5" r="4"/>
+  </svg>
+))
+
+i('CrescentCircle', (
+  <svg width="7" height="10">
+    <path  className="border" fill="currentColor" d="M2,0A4.947,4.947,0,0,0,.614.219,5.968,5.968,0,0,1,1.5,1.05h.008l1.68.945A5.964,5.964,0,0,1,4,5a5.964,5.964,0,0,1-.812,3.005l-1.68.945-.011,0a5.968,5.968,0,0,1-.883.827A4.947,4.947,0,0,0,2,10,5,5,0,0,0,2,0Z"/>
+    <path className="color" fill="currentColor" d="M2,1a3.947,3.947,0,0,0-.492.05A5.97,5.97,0,0,1,3,5,5.97,5.97,0,0,1,1.508,8.95,3.947,3.947,0,0,0,2,9,4,4,0,0,0,2,1Z"/>
+  </svg>
+))
+
 /* 16 x 16 */
 
 i('AlignCenter', (
