@@ -187,7 +187,10 @@ class ProjectContainer extends PureComponent {
           onPanelDragStop={this.handlePanelDragStop}
           onMetadataSave={this.handleMetadataSave}/>
 
-        <DragLayer cache={props.cache} tags={props.tags}/>
+        <DragLayer
+          cache={props.cache}
+          photos={photos}
+          tags={props.tags}/>
       </div>
     )
   }

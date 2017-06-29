@@ -53,6 +53,7 @@ class CoverImage extends PureComponent {
   static propTypes = {
     ...Thumbnail.propTypes,
     tags: object,
+    photos: object,
     item: shape({
       photos: arrayOf(number),
       tags: arrayOf(number),

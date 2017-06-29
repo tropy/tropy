@@ -24,12 +24,13 @@ class ItemDragPreview extends PureComponent {
   }
 
   render() {
-    const { cache, size, tags } = this.props
+    const { cache, photos, size, tags } = this.props
 
     return (
       <div className={cx(this.classes)}>
         <CoverImage
           cache={cache}
+          photos={photos}
           size={size}
           item={this.item}
           tags={tags}/>
@@ -45,6 +46,7 @@ class ItemDragPreview extends PureComponent {
     cache: string.isRequired,
     size: number.isRequired,
     tags: object.isRequired,
+    photos: object.isRequired,
     items: arrayOf(shape({
       id: number.isRequired
     })).isRequired
