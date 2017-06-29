@@ -13,7 +13,7 @@ const CellProps = Object.keys(ItemTableCell.propTypes)
 
 class ItemTableRow extends ItemIterable {
 
-  isMainCell(id) {
+  isMainColumn(id) {
     return DC.title === id
   }
 
@@ -38,17 +38,17 @@ class ItemTableRow extends ItemIterable {
         onDoubleClick={this.handleOpen}
         onContextMenu={this.handleContextMenu}>{
           columns.map(({ property, width }) => {
-            const isMainCell = this.isMainCell(property.id)
+            const isMainColumn = this.isMainColumn(property.id)
             return (
               <ItemTableCell {...pick(props, CellProps)}
                 key={property.id}
                 property={property}
                 data={data}
                 width={width}
-                tags={isMainCell ? tags : null}
-                photos={isMainCell ? photos : null}
+                tags={isMainColumn ? tags : null}
+                photos={isMainColumn ? photos : null}
                 isEditing={this.isEditing(property.id)}
-                isMainCell={isMainCell}/>
+                isMainColumn={isMainColumn}/>
             )
           })
       }</tr>

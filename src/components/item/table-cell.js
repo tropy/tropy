@@ -77,7 +77,7 @@ class ItemTableCell extends PureComponent {
       tags,
       isEditing,
       isDisabled,
-      isMainCell,
+      isMainColumn,
       onCancel
     } = this.props
 
@@ -88,7 +88,7 @@ class ItemTableCell extends PureComponent {
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>
         <div className="flex-row center">
-          {isMainCell &&
+          {isMainColumn &&
             <CoverImage
               item={item}
               cache={cache}
@@ -100,7 +100,7 @@ class ItemTableCell extends PureComponent {
             isDisabled={isDisabled}
             onCancel={onCancel}
             onChange={this.handleChange}/>
-          {isMainCell &&
+          {isMainColumn &&
             <TagColors
               selection={item.tags}
               tags={tags}/>}
@@ -114,7 +114,7 @@ class ItemTableCell extends PureComponent {
     isDisabled: bool,
     isSelected: bool,
 
-    isMainCell: bool,
+    isMainColumn: bool,
 
     property: shape({
       id: string.isRequired,
