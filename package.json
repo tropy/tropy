@@ -54,7 +54,7 @@
     "chai-enzyme": "^0.7.0",
     "chokidar": "^1.6.0",
     "devtron": "^1.0.0",
-    "electron": "^1.7.3",
+    "electron": "^1.7.4",
     "electron-devtools-installer": "^2.0.0",
     "electron-mocha": "^4.0.0",
     "electron-packager": "^8.7.2",
@@ -71,7 +71,7 @@
     "react-test-renderer": "^15.6.1",
     "sass-lint": "^1.9.1",
     "shelljs": "^0.7.8",
-    "sinon": "^2.3.5",
+    "sinon": "^2.3.6",
     "sinon-chai": "^2.11.0",
     "sqleton": "^1.2.3"
   },
