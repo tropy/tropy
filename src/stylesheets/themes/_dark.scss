@@ -18,12 +18,13 @@ $brand-primary: $blue;
 $brand-primary-light: $blue-light;
 
 :root {
-  #{--brand-primary}: $brand-primary;
-  #{--brand-primary-35}: rgba($brand-primary, 0.35);
-  #{--brand-primary-60}: rgba($brand-primary, 0.6);
+  #{--brand-primary}:          $brand-primary;
+  #{--brand-primary-35}:       rgba($brand-primary, 0.35);
+  #{--brand-primary-60}:       rgba($brand-primary, 0.6);
   #{--brand-primary-darken-2}: darken($brand-primary, 2%);
-  #{--brand-primary-light}: $brand-primary-light;
+  #{--brand-primary-light}:    $brand-primary-light;
   #{--brand-primary-light-10}: rgba($brand-primary-light, 0.1);
+  #{--red}:                    $red;
 }
 
 

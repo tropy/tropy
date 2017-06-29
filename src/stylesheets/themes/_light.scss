@@ -23,6 +23,7 @@ $brand-primary-light: $blue-light;
   #{--brand-primary-30}:       rgba($brand-primary, 0.3);
   #{--brand-primary-60}:       rgba($brand-primary, 0.6);
   #{--brand-primary-darken-4}: darken($brand-primary, 4%);
+  #{--red}:                    $red;
 }
 
 
