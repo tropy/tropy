@@ -4,64 +4,12 @@ const React = require('react')
 const { PureComponent } = React
 const { TemplateSelect } = require('./select')
 const { TemplateFieldList } = require('./field-list')
+const { TemplateToolbar } = require('./toolbar')
 const { ButtonGroup, IconButton } = require('../button')
 const { FormattedMessage } = require('react-intl')
 const { FormField, FormGroup, FormSelect, Label } = require('../form')
 const { pick } = require('../../common/util')
 const { arrayOf, func, shape, string } = require('prop-types')
-
-const {
-  IconNew,
-  IconCopy,
-  IconTrash,
-  IconImport,
-  IconExport,
-} = require('../icons')
-
-
-function TemplateControl(props) {
-  return (
-    <FormGroup className="select-template">
-      <Label id="prefs.template.select"/>
-      <div className="col-9 flex-row center">
-        <TemplateSelect
-          templates={props.templates}
-          selected={props.selected}
-          isRequired={false}
-          placeholder="prefs.template.new"
-          onChange={props.onChange}/>
-        <ButtonGroup>
-          <IconButton
-            isDisabled={!props.selected}
-            icon={<IconNew/>}/>
-          <IconButton
-            isDisabled={!props.selected}
-            icon={<IconCopy/>}/>
-          <IconButton
-            icon={<IconTrash/>}
-            isDisabled={!props.selected}
-            onClick={props.onDelete}/>
-          <IconButton icon={<IconImport/>}
-            onClick={props.onImport}/>
-          <IconButton
-            isDisabled={!props.selected}
-            icon={<IconExport/>}/>
-        </ButtonGroup>
-      </div>
-    </FormGroup>
-  )
-}
-
-TemplateControl.propTypes = {
-  templates: arrayOf(shape({
-    id: string.isRequired,
-    name: string
-  })).isRequired,
-  selected: string,
-  onChange: func.isRequired,
-  onDelete: func.isRequired,
-  onImport: func.isRequired
-}
 
 
 function dup(template) {
@@ -135,7 +83,7 @@ class TemplateEditor extends PureComponent {
     return (
       <div className="template editor form-horizontal">
         <header className="template-header">
-          <TemplateControl
+          <TemplateToolbar
             selected={this.state.id}
             templates={this.props.templates}
             onChange={this.handleTemplateChange}
