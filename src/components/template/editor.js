@@ -2,12 +2,10 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { TemplateSelect } = require('./select')
 const { TemplateFieldList } = require('./field-list')
 const { TemplateToolbar } = require('./toolbar')
-const { ButtonGroup, IconButton } = require('../button')
 const { FormattedMessage } = require('react-intl')
-const { FormField, FormGroup, FormSelect, Label } = require('../form')
+const { FormField, FormGroup, FormSelect } = require('../form')
 const { pick } = require('../../common/util')
 const { arrayOf, func, shape, string } = require('prop-types')
 
