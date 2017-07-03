@@ -3,11 +3,11 @@
 const React = require('react')
 const { PureComponent } = React
 const { TemplateSelect } = require('./select')
-const { TemplateField } = require('./field')
+const { TemplateFieldList } = require('./field-list')
 const { ButtonGroup, IconButton } = require('../button')
 const { FormattedMessage } = require('react-intl')
 const { FormField, FormGroup, FormSelect, Label } = require('../form')
-const { insert, pick, remove, move } = require('../../common/util')
+const { pick } = require('../../common/util')
 const { arrayOf, func, shape, string } = require('prop-types')
 
 const {
@@ -68,17 +68,15 @@ function dup(template) {
   template = template || {
     name: '',
     id: '',
-    fields: [],
     type: 'item',
     creator: '',
     description: '',
     created: null,
-    isProtected: null
+    isProtected: null,
+    fields: []
   }
 
-  return {
-    ...template, fields: [...template.fields]
-  }
+  return { ...template }
 }
 
 class TemplateEditor extends PureComponent {
@@ -131,35 +129,9 @@ class TemplateEditor extends PureComponent {
     }
   }
 
-  handleFieldInsert = (field) => {
-    const at = this.state.fields.indexOf(field)
-
-    this.setState({
-      fields: insert(this.state.fields, at + 1, {
-        property: { id: '' }
-      })
-    })
-  }
-
-  handleFieldRemove = (field) => {
-    this.setState({
-      fields: remove(this.state.fields, field)
-    })
-  }
-
-  handleSort = () => {
-  }
-
-  handleSortPreview = (from, to, offset) => {
-    this.setState({
-      fields: move(this.state.fields, from, to, offset)
-    })
-  }
-
-  handleSortReset = () => {
-  }
-
   render() {
+    const { isPristine } = this
+
     return (
       <div className="template editor form-horizontal">
         <header className="template-header">
@@ -182,7 +154,7 @@ class TemplateEditor extends PureComponent {
             name="id"
             value={this.state.id}
             isCompact
-            isDisabled={!this.isPristine}
+            isDisabled={!isPristine}
             tabIndex={0}
             onChange={this.handleTemplateUpdate}/>
           <FormSelect
@@ -192,7 +164,7 @@ class TemplateEditor extends PureComponent {
             options={this.props.types}
             tabIndex={0}
             isCompact
-            isDisabled={!this.isPristine}
+            isDisabled={!isPristine}
             onChange={this.handleTemplateUpdate}/>
           <FormField
             id="template.creator"
@@ -207,7 +179,7 @@ class TemplateEditor extends PureComponent {
             value={this.state.description}
             tabIndex={0}
             onChange={this.handleTemplateUpdate}/>
-          {this.isPristine &&
+          {isPristine &&
             <FormGroup>
               <div className="col-12 text-right">
                 <button
@@ -220,19 +192,9 @@ class TemplateEditor extends PureComponent {
               </div>
             </FormGroup>}
         </header>
-
-        <ul className="template-field-list">
-          {this.state.fields.map((field) =>
-            <TemplateField
-              key={field.property.id}
-              field={field}
-              properties={this.props.properties}
-              onInsert={this.handleFieldInsert}
-              onRemove={this.handleFieldRemove}
-              onSort={this.handleSort}
-              onSortPreview={this.handleSortPreview}
-              onSortReset={this.handleSortReset}/>)}
-        </ul>
+        <TemplateFieldList
+          fields={this.state.fields}
+          properties={this.props.properties}/>
       </div>
     )
   }
