@@ -30,7 +30,7 @@ describe('Database', () => {
 
     describe('constructor', () => {
       it('creates an empty connection pool', () => {
-        expect(db.pool.size).to.be.zero
+        expect(db.pool.size).to.equal(0)
       })
     })
 

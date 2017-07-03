@@ -20,7 +20,7 @@ describe('dom', () => {
 
   describe('ready', () => {
     it('resolves eventually', () =>
-      expect(dom.ready).eventually.to.be.resolved)
+      expect(dom.ready).eventually.to.be.fulfilled)
   })
 
   describe('.attr()', () => {
