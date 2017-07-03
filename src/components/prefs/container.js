@@ -34,7 +34,9 @@ class PrefsContainer extends PureComponent {
 
   render() {
     return (
-      <div className="prefs">
+      <div
+        className="prefs"
+        onContextMenu={this.props.onContextMenu}>
         <header className="prefs-header draggable">
           {this.renderTitleBar()}
           <nav className="prefs-nav">
@@ -117,6 +119,7 @@ class PrefsContainer extends PureComponent {
     templates: array.isRequired,
     vocab: array.isRequired,
     onClassSave: func.isRequired,
+    onContextMenu: func.isRequired,
     onOpenLink: func.isRequired,
     onPrefsUpdate: func.isRequired,
     onPropsSave: func.isRequired,
@@ -149,6 +152,11 @@ module.exports = {
     dispatch => ({
       onClassSave(...args) {
         dispatch(actions.ontology.class.save(...args))
+      },
+
+      onContextMenu(event) {
+        event.stopPropagation()
+        dispatch(actions.context.show(event))
       },
 
       onOpenLink(...args) {
