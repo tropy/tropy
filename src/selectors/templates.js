@@ -39,10 +39,28 @@ const getTemplates = memo(
   getAllTemplates, (templates) => values(templates)
 )
 
+const getTemplateField = memo(
+  ({ ontology }, props) => ontology.template[props.id],
+  (_, props) => props.field,
+  (template, field) =>
+    template && template.fields.find(f => f.id === field)
+)
+
+const getTemplateFields = memo(
+  ({ ontology }, props) => ontology.template[props.id],
+  (_, props) => props.fields,
+  (template, fields) => {
+    if (template == null) return []
+    if (fields == null) return []
+    return template.fields.filter(f => fields.includes(f.id))
+  }
+)
 
 module.exports = {
   getAllTemplates,
   getItemTemplates: getTemplatesByType('item'),
   getPhotoTemplates: getTemplatesByType('photo'),
-  getTemplates
+  getTemplates,
+  getTemplateField,
+  getTemplateFields
 }
