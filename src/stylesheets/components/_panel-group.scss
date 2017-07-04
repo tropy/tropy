@@ -3,9 +3,9 @@
 // --------------------------------------------------
 
 .panel-group {
+  flex: 1 1 0;
   display: flex;
   flex-direction: column;
-  height: 100%;
 
   .panel-group-header {
     .toolbar {

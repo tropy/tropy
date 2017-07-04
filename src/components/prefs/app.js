@@ -35,13 +35,15 @@ class AppPrefs extends PureComponent {
 
   render() {
     return (
-      <div className="form-horizontal">
-        <FormSelect
-          id="prefs.app.style.theme"
-          name="theme"
-          value={this.state.theme}
-          options={this.props.themes}
-          onChange={this.handleThemeChange}/>
+      <div className="scroll-container">
+        <div className="form-horizontal">
+          <FormSelect
+            id="prefs.app.style.theme"
+            name="theme"
+            value={this.state.theme}
+            options={this.props.themes}
+            onChange={this.handleThemeChange}/>
+        </div>
       </div>
     )
   }

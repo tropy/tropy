@@ -22,6 +22,7 @@ $brand-primary-light: $blue-light;
   #{--brand-primary-light}:    $brand-primary-light;
   #{--brand-primary-30}:       rgba($brand-primary, 0.3);
   #{--brand-primary-60}:       rgba($brand-primary, 0.6);
+  #{--brand-primary-dark}:     mix(#222, $brand-primary, 60%);
   #{--brand-primary-darken-4}: darken($brand-primary, 4%);
   #{--red}:                    $red;
 }
@@ -110,8 +111,8 @@ $text-color: var(--shade-9);
 // Typography
 // --------------------------------------------------
 
-$link-color:       var(--brand-primary);
-$link-hover-color: var(--brand-primary);
+$link-color:       var(--brand-primary-dark);
+$link-hover-color: var(--brand-primary-dark);
 
 $text-selection-color: inherit;
 $text-selection-bg:    var(--brand-primary-light);
@@ -248,7 +249,7 @@ $editable-border-color: var(--shade-10-10);
 
 // Wizard
 $wizard-heading-color: var(--shade-8);
-$wizard-link-color:    var(--brand-primary);
+$wizard-link-color:    $link-color;
 
 // Button
 $btn-default-color:     var(--shade-9);
@@ -305,6 +306,7 @@ $vocab-panel-bg:        var(--shade-1-darken-4);
 $vocab-label-color:     var(--shade-6);
 $vocab-input-bg:        var(--shade-0);
 $vocab-input-border:    var(--shade-1-darken-14);
+$vocab-link-color:      var(--brand-primary-dark);
 $property-bg:           var(--shade-1-darken-8);
 $property-input-bg:     var(--shade-0);
 $property-input-border: var(--shade-1-darken-18);

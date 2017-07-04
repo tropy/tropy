@@ -26,7 +26,7 @@
     padding: 0 $default-padding-horizontal;
     min-width: 0;
 
-    .icon {
+    > .icon {
       margin-right: $space-xs;
     }
   }

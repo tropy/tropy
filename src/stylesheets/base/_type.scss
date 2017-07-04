@@ -24,6 +24,19 @@ h1, h2, h3, h4, h5, h6,
 }
 
 
+// Links
+
+a {
+  text-decoration: none;
+  color: $vocab-link-color;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+
 // Lists
 
 ul, ol {

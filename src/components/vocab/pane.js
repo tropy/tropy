@@ -16,10 +16,7 @@ class VocabPane extends PureComponent {
       <PrefPane
         name={this.props.name}
         isActive={this.props.isActive}>
-        <div>
-          <IconButton
-            icon={<IconPlus/>}
-            onClick={this.props.onImport}/>
+        <div className="scroll-container">
           <AccordionGroup className="form-horizontal">
             {this.props.vocab.map(vocab =>
               <VocabAccordion
@@ -32,6 +29,11 @@ class VocabPane extends PureComponent {
                 onSave={this.props.onSave}/>)}
           </AccordionGroup>
         </div>
+        <footer className="vocab-footer">
+          <IconButton
+            icon={<IconPlus/>}
+            onClick={this.props.onImport}/>
+        </footer>
       </PrefPane>
     )
   }

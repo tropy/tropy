@@ -248,12 +248,14 @@ class FormLink extends PureComponent {
         id={this.props.id}
         isCompact={this.props.isCompact}
         size={this.props.size}>
-        <a
-          tabIndex={-1}
-          className="form-link"
-          onClick={this.handleClick}>
-          {this.props.value}
-        </a>
+        <div className="form-text">
+          <a
+            tabIndex={-1}
+            className="form-link"
+            onClick={this.handleClick}>
+            {this.props.value}
+          </a>
+        </div>
       </FormElement>
     )
   }
