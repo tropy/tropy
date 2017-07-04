@@ -11,7 +11,7 @@ const { get, titlecase } = require('../../common/util')
 const { basename } = require('path')
 const { DND } = require('../../constants')
 const cx = require('classnames')
-const { array, bool, func, object } = require('prop-types')
+const { array, bool, func, number, object } = require('prop-types')
 const { bounds } = require('../../dom')
 const { round } = Math
 
@@ -41,7 +41,7 @@ class TemplateField extends PureComponent {
   }
 
   handleInsert = () => {
-    this.props.onInsert(this.props.field)
+    this.props.onInsert(this.props.field, this.props.position + 1)
   }
 
   handleRemove = () => {
@@ -93,6 +93,7 @@ class TemplateField extends PureComponent {
   static propTypes = {
     field: object.isRequired,
     isDragging: bool,
+    position: number.isRequired,
     properties: array.isRequired,
     ds: func.isRequired,
     dt: func.isRequired,

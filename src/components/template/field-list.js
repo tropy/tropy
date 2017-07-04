@@ -6,6 +6,12 @@ const { TemplateField } = require('./field')
 const { insert, move } = require('../../common/util')
 const { arrayOf, func, object, shape, string } = require('prop-types')
 
+let tmpId = -1
+
+const newField = () => ({
+  id: tmpId--,
+  property: ''
+})
 
 class TemplateFieldList extends PureComponent {
   constructor(props) {
@@ -24,13 +30,18 @@ class TemplateFieldList extends PureComponent {
     }
   }
 
-  handleFieldInsert = (field) => {
-    const at = this.state.fields.indexOf(field)
+  handleFieldSave = (field) => {
+    if (field.id < 0) {
+      this.props.onFieldAdd({
+        id: this.props.template,
+        field: field.id
+      }, { idx: field.position })
+    }
+  }
 
+  handleFieldInsert = (field, at) => {
     this.setState({
-      fields: insert(this.state.fields, at + 1, {
-        property: { id: '' }
-      })
+      fields: insert(this.state.fields, at, newField())
     })
   }
 
@@ -56,10 +67,11 @@ class TemplateFieldList extends PureComponent {
   render() {
     return this.props.template != null && (
       <ul className="template-field-list">
-        {this.state.fields.map((field) =>
+        {this.state.fields.map((field, idx) =>
           <TemplateField
             key={field.id}
             field={field}
+            position={idx}
             properties={this.props.properties}
             onInsert={this.handleFieldInsert}
             onRemove={this.handleFieldRemove}
