@@ -79,70 +79,72 @@ class TemplateEditor extends PureComponent {
     const { isPristine } = this
 
     return (
-      <div className="template editor form-horizontal">
-        <header className="template-header">
-          <TemplateToolbar
-            selected={this.state.id}
-            templates={this.props.templates}
-            onChange={this.handleTemplateChange}
-            onDelete={this.handleTemplateDelete}
-            onImport={this.props.onImport}/>
-          <FormField
-            id="template.name"
-            name="name"
-            value={this.state.name}
-            isCompact
-            isRequired
-            tabIndex={0}
-            onChange={this.handleTemplateUpdate}/>
-          <FormField
-            id="template.id"
-            name="id"
-            value={this.state.id}
-            isCompact
-            isDisabled={!isPristine}
-            tabIndex={0}
-            onChange={this.handleTemplateUpdate}/>
-          <FormSelect
-            id="template.type"
-            name="type"
-            value={this.state.type}
-            options={this.props.types}
-            tabIndex={0}
-            isCompact
-            isDisabled={!isPristine}
-            onChange={this.handleTemplateUpdate}/>
-          <FormField
-            id="template.creator"
-            name="creator"
-            value={this.state.creator}
-            isCompact
-            tabIndex={0}
-            onChange={this.handleTemplateUpdate}/>
-          <FormField
-            id="template.description"
-            name="description"
-            value={this.state.description}
-            tabIndex={0} onChange={this.handleTemplateUpdate}/>
-          {isPristine &&
-            <FormGroup>
-              <div className="col-12 text-right">
-                <button
-                  className="btn btn-primary min-width"
-                  disabled={!this.isValid}
-                  tabIndex={0}
-                  onClick={this.handleTemplateCreate}>
-                  <FormattedMessage id="prefs.template.create"/>
-                </button>
-              </div>
-            </FormGroup>}
-        </header>
-        <TemplateFieldList
-          template={this.state.id}
-          fields={this.state.fields}
-          properties={this.props.properties}
-          onFieldAdd={this.props.onFieldAdd}
-          onFieldRemove={this.props.onFieldRemove}/>
+      <div className="scroll-container">
+        <div className="template editor form-horizontal">
+          <header className="template-header">
+            <TemplateToolbar
+              selected={this.state.id}
+              templates={this.props.templates}
+              onChange={this.handleTemplateChange}
+              onDelete={this.handleTemplateDelete}
+              onImport={this.props.onImport}/>
+            <FormField
+              id="template.name"
+              name="name"
+              value={this.state.name}
+              isCompact
+              isRequired
+              tabIndex={0}
+              onChange={this.handleTemplateUpdate}/>
+            <FormField
+              id="template.id"
+              name="id"
+              value={this.state.id}
+              isCompact
+              isDisabled={!isPristine}
+              tabIndex={0}
+              onChange={this.handleTemplateUpdate}/>
+            <FormSelect
+              id="template.type"
+              name="type"
+              value={this.state.type}
+              options={this.props.types}
+              tabIndex={0}
+              isCompact
+              isDisabled={!isPristine}
+              onChange={this.handleTemplateUpdate}/>
+            <FormField
+              id="template.creator"
+              name="creator"
+              value={this.state.creator}
+              isCompact
+              tabIndex={0}
+              onChange={this.handleTemplateUpdate}/>
+            <FormField
+              id="template.description"
+              name="description"
+              value={this.state.description}
+              tabIndex={0} onChange={this.handleTemplateUpdate}/>
+            {isPristine &&
+              <FormGroup>
+                <div className="col-12 text-right">
+                  <button
+                    className="btn btn-primary min-width"
+                    disabled={!this.isValid}
+                    tabIndex={0}
+                    onClick={this.handleTemplateCreate}>
+                    <FormattedMessage id="prefs.template.create"/>
+                  </button>
+                </div>
+              </FormGroup>}
+          </header>
+          <TemplateFieldList
+            template={this.state.id}
+            fields={this.state.fields}
+            properties={this.props.properties}
+            onFieldAdd={this.props.onFieldAdd}
+            onFieldRemove={this.props.onFieldRemove}/>
+        </div>
       </div>
     )
   }

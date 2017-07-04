@@ -48,7 +48,25 @@
 
   main {
     flex: 1 1 auto;
-    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pane {
+    display: none;
+
+    &.active {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .scroll-container {
     padding: $space-lg $space-lg 0;
+
+    .scrollbar-style-old-school & {
+      padding-right: ($space-lg - $scrollbar-size);
+    }
   }
 }
