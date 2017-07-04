@@ -52,9 +52,7 @@ const util = {
         [id]: {
           ...state[id],
           [name]: state[id][name].filter(x =>
-            (typeof x === 'object' && x.id != null) ?
-              payload[name].findIndex(y => y.id === x.id) === -1 :
-              !payload[name].includes(x))
+            !payload[name].includes(x.id != null ? x.id : x))
         }
       })), array(payload.id))
     }

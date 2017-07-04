@@ -347,7 +347,7 @@ class TemplateFieldRemove extends Command {
       { idx: original.idx }
     )
 
-    return { id, field }
+    return { id, fields: [field] }
   }
 }
 
