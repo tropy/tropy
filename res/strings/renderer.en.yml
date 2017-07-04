@@ -27,7 +27,6 @@ prefs:
   app:
     label: Global
     style:
-      label: Look and Feel
       theme: Theme
       themes:
         light: Tropy Light

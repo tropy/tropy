@@ -37,9 +37,6 @@ class AppPrefs extends PureComponent {
   render() {
     return (
       <div className="form-horizontal">
-        <header>
-          <FormattedMessage id="prefs.app.style.label"/>
-        </header>
         <FormSelect
           id="prefs.app.style.theme"
           name="theme"
