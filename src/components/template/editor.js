@@ -123,8 +123,7 @@ class TemplateEditor extends PureComponent {
             id="template.description"
             name="description"
             value={this.state.description}
-            tabIndex={0}
-            onChange={this.handleTemplateUpdate}/>
+            tabIndex={0} onChange={this.handleTemplateUpdate}/>
           {isPristine &&
             <FormGroup>
               <div className="col-12 text-right">
@@ -139,8 +138,11 @@ class TemplateEditor extends PureComponent {
             </FormGroup>}
         </header>
         <TemplateFieldList
+          template={this.state.id}
           fields={this.state.fields}
-          properties={this.props.properties}/>
+          properties={this.props.properties}
+          onFieldAdd={this.props.onFieldAdd}
+          onFieldRemove={this.props.onFieldRemove}/>
       </div>
     )
   }
@@ -156,6 +158,8 @@ class TemplateEditor extends PureComponent {
     types: arrayOf(string).isRequired,
     onCreate: func.isRequired,
     onDelete: func.isRequired,
+    onFieldAdd: func.isRequired,
+    onFieldRemove: func.isRequired,
     onImport: func.isRequired,
     onSave: func.isRequired
   }

@@ -2,9 +2,9 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { arrayOf, object, shape, string } = require('prop-types')
 const { TemplateField } = require('./field')
-const { insert, remove, move } = require('../../common/util')
+const { insert, move } = require('../../common/util')
+const { arrayOf, func, object, shape, string } = require('prop-types')
 
 
 class TemplateFieldList extends PureComponent {
@@ -35,8 +35,9 @@ class TemplateFieldList extends PureComponent {
   }
 
   handleFieldRemove = (field) => {
-    this.setState({
-      fields: remove(this.state.fields, field)
+    this.props.onFieldRemove({
+      id: this.props.template,
+      field: field.id
     })
   }
 
@@ -53,7 +54,7 @@ class TemplateFieldList extends PureComponent {
   }
 
   render() {
-    return (
+    return this.props.template != null && (
       <ul className="template-field-list">
         {this.state.fields.map((field) =>
           <TemplateField
@@ -70,11 +71,13 @@ class TemplateFieldList extends PureComponent {
   }
 
   static propTypes = {
+    template: string.isRequired,
     fields: arrayOf(object).isRequired,
-
     properties: arrayOf(shape({
       id: string.isRequired
-    })).isRequired
+    })).isRequired,
+    onFieldAdd: func.isRequired,
+    onFieldRemove: func.isRequired,
   }
 }
 

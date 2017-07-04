@@ -89,9 +89,13 @@ function template(state = {}, { type, payload, error, meta }) {
       return (meta.done && !error) ?
         remove(state, payload) :
         state
+    case TEMPLATE.FIELD.ADD:
+      return (meta.done && !error) ?
+        nested.add('fields', state, payload, meta) :
+        state
     case TEMPLATE.FIELD.REMOVE:
       return (meta.done && !error) ?
-        nested.remove('fields', state, payload) :
+        nested.remove('fields', state, payload, meta) :
         state
     default:
       return state
