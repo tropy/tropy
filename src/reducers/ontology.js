@@ -3,7 +3,7 @@
 const { combineReducers } = require('redux')
 const { ONTOLOGY } = require('../constants')
 const { PROPS, CLASS, VOCAB, LABEL, TEMPLATE } = ONTOLOGY
-const { load, merge, replace, remove, update } = require('./util')
+const { load, merge, nested, replace, remove, update } = require('./util')
 const { has } = require('../common/util')
 
 function props(state = {}, { type, payload, error, meta }) {
@@ -88,6 +88,10 @@ function template(state = {}, { type, payload, error, meta }) {
     case TEMPLATE.DELETE:
       return (meta.done && !error) ?
         remove(state, payload) :
+        state
+    case TEMPLATE.FIELD.REMOVE:
+      return (meta.done && !error) ?
+        nested.remove('fields', state, payload) :
         state
     default:
       return state

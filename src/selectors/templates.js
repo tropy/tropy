@@ -3,6 +3,7 @@
 const { createSelector: memo } = require('reselect')
 const { into, compose, map, filter } = require('transducers.js')
 const { entries, values } = Object
+const { get } = require('../common/util')
 
 const getAllTemplates = memo(
   ({ ontology }) => ontology.template,
@@ -39,22 +40,18 @@ const getTemplates = memo(
   getAllTemplates, (templates) => values(templates)
 )
 
-const getTemplateField = memo(
-  ({ ontology }, props) => ontology.template[props.id],
-  (_, props) => props.field,
-  (template, field) =>
-    template && template.fields.find(f => f.id === field)
-)
+const getTemplateFields = ({ ontology }, props) =>
+  get(ontology.template, [props.id, 'fields'], [])
 
-const getTemplateFields = memo(
-  ({ ontology }, props) => ontology.template[props.id],
-  (_, props) => props.fields,
-  (template, fields) => {
-    if (template == null) return []
-    if (fields == null) return []
-    return template.fields.filter(f => fields.includes(f.id))
+const getTemplateField = memo(
+  getTemplateFields,
+  (_, props) => props.field,
+  (fields, id) => {
+    const idx = fields.find(f => f.id === id)
+    return { idx, field: fields[idx] }
   }
 )
+
 
 module.exports = {
   getAllTemplates,

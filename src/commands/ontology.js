@@ -9,7 +9,7 @@ const { openTemplates, openVocabs, fail  } = require('../dialog')
 const { verbose, warn } = require('../common/log')
 const { get, pick } = require('../common/util')
 const { all, call, select } = require('redux-saga/effects')
-const { getTemplateFields } = require('../selectors')
+const { getTemplateField } = require('../selectors')
 const act = require('../actions')
 const mod = require('../models')
 const { keys } = Object
@@ -335,23 +335,21 @@ class TemplateFieldRemove extends Command {
 
   *exec() {
     const { db } = this.options
-    const { id, fields } = this.action.payload
+    const { id, field } = this.action.payload
 
-    const originals = yield select(state =>
-      getTemplateFields(state, { id, fields }))
+    const original = yield select(state =>
+      getTemplateField(state, { id, field }))
 
-    yield call(mod.ontology.template.field.remove, db, id, ...fields)
+    yield call(mod.ontology.template.field.remove, db, id, field)
 
-    this.undo = act.ontology.template.field.add({
-      id,
-      fields: originals
-    })
+    this.undo = act.ontology.template.field.add(
+      { id, fields: [original.field] },
+      { idx: original.idx }
+    )
 
-    return { id, fields }
+    return { id, field }
   }
 }
-
-
 
 
 module.exports = {
