@@ -285,7 +285,7 @@ async function createTemplate(db, data) {
 
     if (data.fields != null) {
       await Promise.all([
-        mod.ontology.field.add(tx, data.id, ...data.fields)
+        mod.ontology.template.field.add(tx, data.id, ...data.fields)
       ])
     }
   })
