@@ -49,6 +49,6 @@
   main {
     flex: 1 1 auto;
     overflow-y: scroll;
-    padding: 0 $space-lg;
+    padding: $space-lg $space-lg 0;
   }
 }

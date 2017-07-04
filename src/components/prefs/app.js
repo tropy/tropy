@@ -3,7 +3,6 @@
 const React = require('react')
 const { PureComponent } = React
 const { arrayOf, string } = require('prop-types')
-const { FormattedMessage } = require('react-intl')
 const { FormSelect } = require('../form')
 const { win } = require('../../window')
 const { ipcRenderer: ipc } = require('electron')
@@ -37,9 +36,6 @@ class AppPrefs extends PureComponent {
   render() {
     return (
       <div className="form-horizontal">
-        <header>
-          <FormattedMessage id="prefs.app.style.label"/>
-        </header>
         <FormSelect
           id="prefs.app.style.theme"
           name="theme"
