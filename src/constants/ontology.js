@@ -27,6 +27,13 @@ module.exports = {
     IMPORT: 'ontology.template.import',
     LOAD: 'ontology.template.load',
     SAVE: 'ontology.template.save',
+
+    FIELD: {
+      ADD: 'ontology.template.field.add',
+      REMOVE: 'ontology.template.field.remove',
+      SORT: 'ontology.template.field.sort'
+    },
+
     CONTEXT: 'https://tropy.org/schema/v1/contexts/template.jsonld'
   },
 

@@ -131,6 +131,24 @@ module.exports = {
         payload,
         meta: { cmd: 'ontology', ...meta }
       }
+    },
+
+    field: {
+      add(payload, meta = {}) {
+        return {
+          type: TEMPLATE.FIELD.ADD,
+          payload,
+          meta: { cmd: 'ontology', ...meta }
+        }
+      },
+
+      remove(payload, meta = {}) {
+        return {
+          type: TEMPLATE.FIELD.REMOVE,
+          payload,
+          meta: { cmd: 'ontology', ...meta }
+        }
+      },
     }
   }
 }

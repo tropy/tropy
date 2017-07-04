@@ -332,22 +332,27 @@ const ontology = {
         UPDATE templates
           SET ${assign.join(', ')}, modified = datetime("now")
           WHERE template_id = $id`, params)
-    }
+    },
 
+    field: {
+      add(db, id, ...fields) {
+        return db.prepare(`
+          INSERT INTO fields (template_id, property_id, position)
+            VALUES (?, ?, ?)`, stmt =>
+            all(fields.map((f, idx) => stmt.run([
+              id, f.property, (f.position != null) ? f.position : idx
+            ])
+          ))
+        )
+      },
+
+      remove(db, id, ...fields) {
+        return db.run(`
+          DELETE FROM fields
+            WHERE template_id = ? AND field_id IN (${list(fields)})`, id)
+      }
+    }
   },
-
-  field: {
-    add(db, template, ...fields) {
-      return db.prepare(`
-        INSERT INTO fields (template_id, property_id, position)
-          VALUES (?, ?, ?)`, stmt =>
-          all(fields.map((f, idx) => stmt.run([
-            template, f.property, (f.position != null) ? f.position : idx
-          ])
-        ))
-      )
-    }
-  }
 }
 
 module.exports = ontology
