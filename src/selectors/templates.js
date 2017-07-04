@@ -47,7 +47,7 @@ const getTemplateField = memo(
   getTemplateFields,
   (_, props) => props.field,
   (fields, id) => {
-    const idx = fields.find(f => f.id === id)
+    const idx = fields.findIndex(f => f.id === id)
     return { idx, field: fields[idx] }
   }
 )

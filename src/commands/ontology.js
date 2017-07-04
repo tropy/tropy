@@ -330,6 +330,24 @@ class TemplateDelete extends Command {
 }
 
 
+class TemplateFieldAdd extends Command {
+  static get action() { return TEMPLATE.FIELD.ADD }
+
+  *exec() {
+    const { db } = this.options
+    const { id, field } = this.action.payload
+    const { idx } = this.action.meta
+
+    yield call(mod.ontology.template.field.add, db, id, {
+      ...field, position: idx
+    })
+
+    this.undo = act.ontology.template.field.remove({ id, field })
+
+    return { id, fields: [field] }
+  }
+}
+
 class TemplateFieldRemove extends Command {
   static get action() { return TEMPLATE.FIELD.REMOVE }
 
@@ -343,7 +361,7 @@ class TemplateFieldRemove extends Command {
     yield call(mod.ontology.template.field.remove, db, id, field)
 
     this.undo = act.ontology.template.field.add(
-      { id, fields: [original.field] },
+      { id, field: original.field },
       { idx: original.idx }
     )
 
@@ -359,6 +377,7 @@ module.exports = {
   Load,
   PropsLoad,
   TemplateCreate,
+  TemplateFieldAdd,
   TemplateFieldRemove,
   TemplateImport,
   TemplateDelete,
