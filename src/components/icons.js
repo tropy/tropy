@@ -107,6 +107,22 @@ i('Book16', (
   </svg>
 ))
 
+i('BookLock', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M7,16H2a1,1,0,0,1-1-1V3a.994.994,0,0,1,.305-.716L3.284.306A.994.994,0,0,1,4,0H14a1,1,0,0,1,1,1V5H14V1H4L3,2h9a1,1,0,0,1,1,1V5H12V3H2V15H7Zm9-6v6H8V10H9V9a3,3,0,0,1,6,0v1Zm-6,0h4V9a2,2,0,0,0-4,0Zm5,1H9v4h6Z"/>
+    </g>
+  </svg>
+))
+
+i('BookTemplate', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M14,0H4a.994.994,0,0,0-.716.306L1.305,2.284A.994.994,0,0,0,1,3V15a1,1,0,0,0,1,1H7V15H2V3H12V5h1V3a1,1,0,0,0-1-1H3L4,1H14V5h1V1a1,1,0,0,0-1-1ZM12.707,6H8V16h8V9.293L12.707,6ZM9,15V7h3v3h3v5Zm4-6V7.707L14.293,9ZM11,9H10v1h1V9Zm3,2H10v1h4V11Zm0,2H10v1h4V13Z"/>
+    </g>
+  </svg>
+))
+
 i('BulletList', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
