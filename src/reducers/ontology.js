@@ -2,7 +2,7 @@
 
 const { combineReducers } = require('redux')
 const { ONTOLOGY } = require('../constants')
-const { PROPS, CLASS, VOCAB, LABEL, TEMPLATE } = ONTOLOGY
+const { PROPS, CLASS, VOCAB, LABEL, TEMPLATE, TYPE } = ONTOLOGY
 const { load, merge, nested, replace, remove, update } = require('./util')
 const { has } = require('../common/util')
 
@@ -41,6 +41,25 @@ function klass(state = {}, { type, payload, error, meta }) {
       return state
   }
 }
+
+function datatype(state = {}, { type, payload, error, meta }) {
+  switch (type) {
+    case ONTOLOGY.LOAD:
+    case ONTOLOGY.IMPORT:
+      return (meta.done && !error && has(payload, 'type')) ?
+        replace(state, payload.type) :
+        state
+    case TYPE.LOAD:
+      return load(state, payload, meta, error)
+    case LABEL.SAVE:
+      return (payload.type === 'type' && meta.done && !error) ?
+        update(state, { id: payload.id, label: payload.label }) :
+        state
+    default:
+      return state
+  }
+}
+
 
 // eslint-disable-next-line complexity
 function vocab(state = {}, { type, payload, error, meta }) {
@@ -107,6 +126,7 @@ module.exports = {
     props,
     class: klass,
     template,
+    type: datatype,
     vocab
   })
 }

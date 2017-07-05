@@ -9,6 +9,7 @@ module.exports = {
   RDFS: {
     Class: 'http://www.w3.org/2000/01/rdf-schema#Class',
     comment: 'http://www.w3.org/2000/01/rdf-schema#comment',
+    Datatype: 'http://www.w3.org/2000/01/rdf-schema#Datatype',
     domain: 'http://www.w3.org/2000/01/rdf-schema#domain',
     isDefinedBy: 'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
     label: 'http://www.w3.org/2000/01/rdf-schema#label',

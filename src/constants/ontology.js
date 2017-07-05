@@ -17,6 +17,10 @@ module.exports = {
     LOAD: 'ontology.class.load'
   },
 
+  TYPE: {
+    LOAD: 'ontology.type.load'
+  },
+
   LABEL: {
     SAVE: 'ontology.label.save'
   },
