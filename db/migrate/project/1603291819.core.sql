@@ -45,25 +45,6 @@ CREATE TABLE items (
 ) WITHOUT ROWID;
 
 
-CREATE TABLE datatypes (
-  type_name    TEXT  NOT NULL PRIMARY KEY COLLATE NOCASE,
-  type_schema  TEXT  NOT NULL UNIQUE,
-
-  CHECK (type_schema != ''),
-  CHECK (type_name != '')
-
-) WITHOUT ROWID;
-
-INSERT INTO datatypes (type_name, type_schema) VALUES
-  ('text', 'https://schema.org/Text'),
-  ('date', 'https://tropy.org/schema/v1/core#date'),
-  ('name', 'https://tropy.org/schema/v1/core#name'),
-  ('boolean', 'https://schema.org/Boolean'),
-  ('number', 'https://schema.org/Number'),
-  ('location', 'https://schema.org/GeoCoordinates'),
-  ('url', 'https://schema.org/URL');
-
-
 CREATE TABLE metadata (
   id          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   property    TEXT     NOT NULL,
@@ -80,11 +61,12 @@ CREATE TABLE metadata (
 
 CREATE TABLE metadata_values (
   value_id   INTEGER  PRIMARY KEY,
-  type_name  TEXT     NOT NULL REFERENCES datatypes ON UPDATE CASCADE,
+  datatype   TEXT     NOT NULL,
   text                NOT NULL,
   data       TEXT,
 
-  UNIQUE (type_name, text)
+  CHECK (datatype != ''),
+  UNIQUE (datatype, text)
 );
 
 

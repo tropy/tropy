@@ -22,6 +22,7 @@ module.exports = {
   SHELL: require('./shell'),
   TABS: require('./tabs'),
   TAG: require('./tag'),
+  TYPES: require('./types'),
   UI: require('./ui'),
   WIZARD: require('./wizard'),
   ...require('./rdf')

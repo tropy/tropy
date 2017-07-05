@@ -50,21 +50,6 @@ CREATE TABLE items (
   id              INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   cover_image_id  INTEGER  REFERENCES images ON DELETE SET NULL
 ) WITHOUT ROWID;
-CREATE TABLE metadata_types (
-  type_name    TEXT  NOT NULL PRIMARY KEY COLLATE NOCASE,
-  type_schema  TEXT  NOT NULL UNIQUE,
-
-  CHECK (type_schema != ''),
-  CHECK (type_name != '')
-
-) WITHOUT ROWID;
-INSERT INTO metadata_types(type_name,type_schema) VALUES('boolean','https://schema.org/Boolean');
-INSERT INTO metadata_types(type_name,type_schema) VALUES('location','https://schema.org/GeoCoordinates');
-INSERT INTO metadata_types(type_name,type_schema) VALUES('number','https://schema.org/Number');
-INSERT INTO metadata_types(type_name,type_schema) VALUES('text','https://schema.org/Text');
-INSERT INTO metadata_types(type_name,type_schema) VALUES('url','https://schema.org/URL');
-INSERT INTO metadata_types(type_name,type_schema) VALUES('date','https://tropy.org/schema/v1/core#date');
-INSERT INTO metadata_types(type_name,type_schema) VALUES('name','https://tropy.org/schema/v1/core#name');
 CREATE TABLE metadata (
   id          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   property    TEXT     NOT NULL,
@@ -80,11 +65,12 @@ CREATE TABLE metadata (
 ) WITHOUT ROWID;
 CREATE TABLE metadata_values (
   value_id   INTEGER  PRIMARY KEY,
-  type_name  TEXT     NOT NULL REFERENCES metadata_types ON UPDATE CASCADE,
+  datatype   TEXT     NOT NULL,
   text                NOT NULL,
   data       TEXT,
 
-  UNIQUE (type_name, text)
+  CHECK (datatype != ''),
+  UNIQUE (datatype, text)
 );
 CREATE TABLE notes (
   note_id      INTEGER  PRIMARY KEY,
@@ -114,7 +100,7 @@ CREATE TABLE lists (
 
   UNIQUE (parent_list_id, name)
 );
-INSERT INTO lists(list_id,name,parent_list_id,position,created,modified) VALUES(0,'ROOT',NULL,NULL,'2017-01-31 12:00:00','2017-01-31 12:00:00');
+INSERT INTO lists VALUES(0,'ROOT',NULL,NULL,'2017-01-31 12:00:00','2017-01-31 12:00:00');
 CREATE TABLE list_items (
   list_id  INTEGER  REFERENCES lists ON DELETE CASCADE,
   id       INTEGER  REFERENCES items ON DELETE CASCADE,
@@ -176,10 +162,10 @@ CREATE TABLE image_scales (
 CREATE TABLE image_qualities (
   quality  TEXT  NOT NULL PRIMARY KEY
 ) WITHOUT ROWID;
-INSERT INTO image_qualities(quality) VALUES('bitonal');
-INSERT INTO image_qualities(quality) VALUES('color');
-INSERT INTO image_qualities(quality) VALUES('default');
-INSERT INTO image_qualities(quality) VALUES('gray');
+INSERT INTO image_qualities VALUES('bitonal');
+INSERT INTO image_qualities VALUES('color');
+INSERT INTO image_qualities VALUES('default');
+INSERT INTO image_qualities VALUES('gray');
 PRAGMA writable_schema=ON;
 INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_notes','fts_notes',0,'CREATE VIRTUAL TABLE fts_notes USING fts5(
   id UNINDEXED,
@@ -190,26 +176,26 @@ INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_no
   tokenize = ''porter unicode61''
 )');
 CREATE TABLE IF NOT EXISTS 'fts_notes_data'(id INTEGER PRIMARY KEY, block BLOB);
-INSERT INTO fts_notes_data(id,block) VALUES(1,X'');
-INSERT INTO fts_notes_data(id,block) VALUES(10,X'00000000000000');
+INSERT INTO fts_notes_data VALUES(1,X'');
+INSERT INTO fts_notes_data VALUES(10,X'00000000000000');
 CREATE TABLE IF NOT EXISTS 'fts_notes_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
 CREATE TABLE IF NOT EXISTS 'fts_notes_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
 CREATE TABLE IF NOT EXISTS 'fts_notes_config'(k PRIMARY KEY, v) WITHOUT ROWID;
-INSERT INTO fts_notes_config(k,v) VALUES('version',4);
+INSERT INTO fts_notes_config VALUES('version',4);
 INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_metadata','fts_metadata',0,'CREATE VIRTUAL TABLE fts_metadata USING fts5(
-  type_name UNINDEXED,
+  datatype UNINDEXED,
   text,
   content = ''metadata_values'',
   content_rowid = ''value_id'',
   tokenize = ''porter unicode61''
 )');
 CREATE TABLE IF NOT EXISTS 'fts_metadata_data'(id INTEGER PRIMARY KEY, block BLOB);
-INSERT INTO fts_metadata_data(id,block) VALUES(1,X'');
-INSERT INTO fts_metadata_data(id,block) VALUES(10,X'00000000000000');
+INSERT INTO fts_metadata_data VALUES(1,X'');
+INSERT INTO fts_metadata_data VALUES(10,X'00000000000000');
 CREATE TABLE IF NOT EXISTS 'fts_metadata_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
 CREATE TABLE IF NOT EXISTS 'fts_metadata_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
 CREATE TABLE IF NOT EXISTS 'fts_metadata_config'(k PRIMARY KEY, v) WITHOUT ROWID;
-INSERT INTO fts_metadata_config(k,v) VALUES('version',4);
+INSERT INTO fts_metadata_config VALUES('version',4);
 CREATE TRIGGER insert_tags_trim_name
   AFTER INSERT ON tags
   BEGIN
@@ -282,14 +268,26 @@ CREATE TRIGGER notes_au_fts
   END;
 CREATE TRIGGER metadata_values_ai_fts
   AFTER INSERT ON metadata_values
-  FOR EACH ROW WHEN NEW.type_name NOT IN ('boolean', 'location')
+  FOR EACH ROW WHEN NEW.type_name NOT IN (
+    'http://www.w3.org/2001/XMLSchema#boolean',
+    'http://www.w3.org/2001/XMLSchema#hexBinary',
+    'http://www.w3.org/2001/XMLSchema#base64Binary',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral')
   BEGIN
     INSERT INTO fts_metadata (rowid, type_name, text)
       VALUES (NEW.value_id, NEW.type_name, NEW.text);
   END;
 CREATE TRIGGER metadata_values_ad_fts
   AFTER DELETE ON metadata_values
-  FOR EACH ROW WHEN OLD.type_name NOT IN ('boolean', 'location')
+  FOR EACH ROW WHEN OLD.type_name NOT IN (
+    'http://www.w3.org/2001/XMLSchema#boolean',
+    'http://www.w3.org/2001/XMLSchema#hexBinary',
+    'http://www.w3.org/2001/XMLSchema#base64Binary',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral')
   BEGIN
     INSERT INTO fts_metadata (fts_metadata, rowid, type_name, text)
       VALUES ('delete', OLD.value_id, OLD.type_name, OLD.text);

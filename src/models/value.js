@@ -5,11 +5,11 @@ module.exports = {
     let v = await db.get(`
       SELECT value_id AS id
         FROM metadata_values
-        WHERE type_name = ? AND text = ?`, type, text)
+        WHERE datatype = ? AND text = ?`, type, text)
 
     if (!v) {
       v = await db.run(`
-        INSERT INTO metadata_values (type_name, text)
+        INSERT INTO metadata_values (datatype, text)
           VALUES (?, ?)`, type, text)
     }
 

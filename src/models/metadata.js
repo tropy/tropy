@@ -11,7 +11,7 @@ const metadata = {
 
     if (ids.length) {
       await db.each(`
-        SELECT id, property, text, type_name AS type, metadata.created
+        SELECT id, property, text, datatype AS type, metadata.created
           FROM subjects
             JOIN metadata USING (id)
             JOIN metadata_values USING (value_id)
