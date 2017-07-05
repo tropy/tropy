@@ -40,13 +40,15 @@ class Label extends PureComponent {
     return (
       <label
         className={cx('control-label', `col-${this.props.size}`)}
-        htmlFor={this.props.id}>
+        htmlFor={this.props.children == null ? this.props.id : null}>
+        {this.props.children}
         <FormattedMessage id={this.props.id}/>
       </label>
     )
   }
 
   static propTypes = {
+    children: node,
     id: string.isRequired,
     size: number.isRequired
   }
@@ -202,6 +204,49 @@ class FormSelect extends PureComponent {
   }
 }
 
+class FormToggle extends PureComponent {
+  handleChange = (event) => {
+    console.log(event.target.value)
+    this.props.onChange({
+      [this.props.name]: !!event.target.value
+    })
+  }
+
+  render() {
+    return (
+      <FormGroup isCompact={this.props.isCompact}>
+        <Label
+          id={this.props.id}
+          size={this.props.size}>
+          <input
+            name={this.props.name}
+            type="checkbox"
+            value={this.props.value}
+            checked={!!this.props.value}
+            disabled={this.props.isDisabled}
+            tabIndex={this.props.tabIndex}
+            onChange={this.handleChange}/>
+        </Label>
+      </FormGroup>
+    )
+  }
+
+  static propTypes = {
+    id: string.isRequired,
+    isCompact: bool,
+    isDisabled: bool,
+    name: string.isRequired,
+    size: number.isRequired,
+    tabIndex: number,
+    value: bool.isRequired,
+    onChange: func.isRequired
+  }
+
+  static defaultProps = {
+    size: 9
+  }
+}
+
 class FormText extends PureComponent {
   get isVisible() {
     return this.props.value || !this.props.isOptional
@@ -282,5 +327,6 @@ module.exports = {
   FormLink,
   FormSelect: injectIntl(FormSelect),
   FormText,
+  FormToggle,
   Label
 }
