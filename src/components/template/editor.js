@@ -2,13 +2,16 @@
 
 const React = require('react')
 const { PureComponent } = React
+const { connect } = require('react-redux')
 const { TemplateFieldList } = require('./field-list')
 const { TemplateToolbar } = require('./toolbar')
 const { FormattedMessage } = require('react-intl')
 const { FormField, FormGroup, FormSelect } = require('../form')
 const { pick } = require('../../common/util')
 const { arrayOf, func, shape, string } = require('prop-types')
+const actions = require('../../actions')
 
+const { getTemplateList, getAllProperties } = require('../../selectors')
 
 function dup(template) {
   template = template || {
@@ -172,5 +175,36 @@ class TemplateEditor extends PureComponent {
 }
 
 module.exports = {
-  TemplateEditor
+  TemplateEditor: connect(
+    state => ({
+      properties: getAllProperties(state),
+      templates: getTemplateList(state),
+    }),
+
+    dispatch => ({
+      onCreate(...args) {
+        dispatch(actions.ontology.template.create(...args))
+      },
+
+      onDelete(...args) {
+        dispatch(actions.ontology.template.delete(...args))
+      },
+
+      onFieldAdd(...args) {
+        dispatch(actions.ontology.template.field.add(...args))
+      },
+
+      onFieldRemove(...args) {
+        dispatch(actions.ontology.template.field.remove(...args))
+      },
+
+      onImport() {
+        dispatch(actions.ontology.template.import())
+      },
+
+      onSave(...args) {
+        dispatch(actions.ontology.template.save(...args))
+      }
+    })
+  )(TemplateEditor)
 }

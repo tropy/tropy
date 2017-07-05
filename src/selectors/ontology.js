@@ -47,7 +47,7 @@ const getAllTemplates = memo(
 
 
 const getTemplatesByType = (type) => memo(
-  getAllTemplates,
+  ({ ontology }) => ontology.template,
   (templates) => into(
     [],
     compose(
@@ -57,8 +57,9 @@ const getTemplatesByType = (type) => memo(
   ).sort(by('name', 'id'))
 )
 
-const getTemplates = memo(
-  getAllTemplates, (templates) => values(templates).sort(by('name', 'id'))
+const getTemplateList = memo(
+  ({ ontology }) => ontology.template,
+  (templates) => values(templates).sort(by('name', 'id'))
 )
 
 const getTemplateFields = ({ ontology }, props) =>
@@ -81,6 +82,6 @@ module.exports = {
   getPhotoTemplates: getTemplatesByType('photo'),
   getTemplateField,
   getTemplateFields,
-  getTemplates,
+  getTemplateList,
   getVocabs
 }

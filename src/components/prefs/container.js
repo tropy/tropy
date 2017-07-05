@@ -10,12 +10,7 @@ const { VocabPane } = require('../vocab')
 const { PrefPane, PrefPaneToggle } = require('./pane')
 const { AppPrefs } = require('./app')
 const actions = require('../../actions')
-
-const {
-  getTemplates,
-  getAllProperties,
-  getVocabs
-} = require('../../selectors')
+const { getAllProperties, getVocabs } = require('../../selectors')
 
 class PrefsContainer extends PureComponent {
   isActive(pane) {
@@ -88,15 +83,7 @@ class PrefsContainer extends PureComponent {
           <PrefPane
             name="template"
             isActive={this.isActive('template')}>
-            <TemplateEditor
-              properties={this.props.properties}
-              templates={this.props.templates}
-              onCreate={this.props.onTemplateCreate}
-              onDelete={this.props.onTemplateDelete}
-              onFieldAdd={this.props.onTemplateFieldAdd}
-              onFieldRemove={this.props.onTemplateFieldRemove}
-              onImport={this.props.onTemplateImport}
-              onSave={this.props.onTemplateSave}/>
+            <TemplateEditor/>
           </PrefPane>
 
           <VocabPane
@@ -117,20 +104,12 @@ class PrefsContainer extends PureComponent {
     isFrameless: bool,
     edit: object.isRequired,
     pane: string.isRequired,
-    properties: array.isRequired,
-    templates: array.isRequired,
     vocab: array.isRequired,
     onClassSave: func.isRequired,
     onContextMenu: func.isRequired,
     onOpenLink: func.isRequired,
     onPrefsUpdate: func.isRequired,
     onPropsSave: func.isRequired,
-    onTemplateCreate: func.isRequired,
-    onTemplateDelete: func.isRequired,
-    onTemplateFieldAdd: func.isRequired,
-    onTemplateFieldRemove: func.isRequired,
-    onTemplateImport: func.isRequired,
-    onTemplateSave: func.isRequired,
     onVocabDelete: func.isRequired,
     onVocabSave: func.isRequired,
     onOntologyImport: func.isRequired
@@ -149,7 +128,6 @@ module.exports = {
       keymap: state.keymap,
       pane: state.prefs.pane,
       properties: getAllProperties(state),
-      templates: getTemplates(state),
       vocab: getVocabs(state)
     }),
 
@@ -173,30 +151,6 @@ module.exports = {
 
       onPropsSave(...args) {
         dispatch(actions.ontology.props.save(...args))
-      },
-
-      onTemplateCreate(...args) {
-        dispatch(actions.ontology.template.create(...args))
-      },
-
-      onTemplateDelete(...args) {
-        dispatch(actions.ontology.template.delete(...args))
-      },
-
-      onTemplateFieldAdd(...args) {
-        dispatch(actions.ontology.template.field.add(...args))
-      },
-
-      onTemplateFieldRemove(...args) {
-        dispatch(actions.ontology.template.field.remove(...args))
-      },
-
-      onTemplateImport() {
-        dispatch(actions.ontology.template.import())
-      },
-
-      onTemplateSave(...args) {
-        dispatch(actions.ontology.template.save(...args))
       },
 
       onVocabDelete(...args) {

@@ -13,6 +13,7 @@ const newField = () => ({
   property: ''
 })
 
+
 class TemplateFieldList extends PureComponent {
   constructor(props) {
     super(props)
