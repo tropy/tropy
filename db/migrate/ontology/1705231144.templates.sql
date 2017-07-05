@@ -1,4 +1,3 @@
-
 CREATE TABLE templates (
   template_id    TEXT     NOT NULL PRIMARY KEY,
   template_type  TEXT     NOT NULL DEFAULT 'item',
@@ -25,5 +24,6 @@ CREATE TABLE fields (
   field_id      INTEGER   PRIMARY KEY,
   template_id   TEXT      NOT NULL REFERENCES templates ON DELETE CASCADE,
   property_id   TEXT      NOT NULL REFERENCES properties,
+  datatype      TEXT      NOT NULL REFERENCES datatypes,
   position      INTEGER
 )

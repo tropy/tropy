@@ -4,7 +4,7 @@ CREATE TABLE vocabularies (
   created         NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   deleted         NUMERIC,
   protected       BOOLEAN  NOT NULL DEFAULT FALSE,
-
+  auto            BOOLEAN  NOT NULL DEFAULT FALSE,
   title           TEXT,
   description     TEXT,
   comment         TEXT,
@@ -20,7 +20,6 @@ CREATE TABLE properties (
   domain          TEXT,
   range           TEXT,
   parent          TEXT,
-
   description     TEXT,
   comment         TEXT,
 
@@ -31,11 +30,19 @@ CREATE TABLE classes (
   class_id        TEXT NOT NULL PRIMARY KEY,
   vocabulary_id   TEXT NOT NULL REFERENCES vocabularies ON DELETE CASCADE,
   parent          TEXT,
-
   description     TEXT,
   comment         TEXT,
 
   CHECK (class_id != '')
+);
+
+CREATE TABLE datatypes (
+  datatype_id     TEXT NOT NULL PRIMARY KEY,
+  vocabulary_id   TEXT NOT NULL REFERENCES vocabularies ON DELETE CASCADE,
+  description     TEXT,
+  comment         TEXT,
+
+  CHECK (datatype_id != '')
 );
 
 CREATE TABLE labels (
