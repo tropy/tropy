@@ -21,7 +21,8 @@ fieldset {
 
     @include form-control-focus; // sass-lint:disable-line mixins-before-declarations
 
-    &[readonly] {
+    &[readonly],
+    &[disabled] {
       background: $fieldset-input-bg-readonly;
     }
   }
@@ -79,7 +80,8 @@ label {
     color: $input-color-placeholder;
   }
 
-  &[readonly] {
+  &[readonly],
+  &[disabled] {
     background: $input-bg-readonly;
   }
 
@@ -114,4 +116,8 @@ label {
     padding: 0 $padding-base-horizontal;
     margin-top: -2px;
   }
+}
+
+.form-link {
+  word-break: break-word;
 }
