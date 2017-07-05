@@ -200,7 +200,7 @@ class TemplateImport extends Command {
 
   *exec() {
     const { db } = this.options
-    let { files } = this.action.payload
+    let { files, isProtected } = this.action.payload
 
     if (!files) {
       files = yield call(openTemplates)
@@ -226,7 +226,8 @@ class TemplateImport extends Command {
           name,
           creator,
           description,
-          fields
+          fields,
+          isProtected
         }))
 
       } catch (error) {
