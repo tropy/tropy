@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { TemplateField } = require('./field')
 const { insert, move } = require('../../common/util')
-const { arrayOf, func, object, shape, string } = require('prop-types')
+const { arrayOf, bool, func, object, shape, string } = require('prop-types')
 
 let tmpId = -1
 
@@ -74,6 +74,8 @@ class TemplateFieldList extends PureComponent {
             field={field}
             position={idx}
             properties={this.props.properties}
+            isDisabled={this.props.isDisabled}
+            isTransient={field.id < 0}
             onInsert={this.handleFieldInsert}
             onRemove={this.handleFieldRemove}
             onSort={this.handleSort}
@@ -84,6 +86,7 @@ class TemplateFieldList extends PureComponent {
   }
 
   static propTypes = {
+    isDisabled: bool,
     template: string.isRequired,
     fields: arrayOf(object).isRequired,
     properties: arrayOf(shape({

@@ -11,7 +11,7 @@ const { pick } = require('../../common/util')
 const { arrayOf, func, shape, string } = require('prop-types')
 const actions = require('../../actions')
 
-const { getTemplateList, getAllProperties } = require('../../selectors')
+const { getTemplateList, getPropertyList } = require('../../selectors')
 
 function dup(template) {
   template = template || {
@@ -145,6 +145,7 @@ class TemplateEditor extends PureComponent {
             template={this.state.id}
             fields={this.state.fields}
             properties={this.props.properties}
+            isDisabled={this.state.isProtected}
             onFieldAdd={this.props.onFieldAdd}
             onFieldRemove={this.props.onFieldRemove}/>
         </div>
@@ -177,7 +178,7 @@ class TemplateEditor extends PureComponent {
 module.exports = {
   TemplateEditor: connect(
     state => ({
-      properties: getAllProperties(state),
+      properties: getPropertyList(state),
       templates: getTemplateList(state),
     }),
 

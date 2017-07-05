@@ -10,7 +10,7 @@ const { VocabPane } = require('../vocab')
 const { PrefPane, PrefPaneToggle } = require('./pane')
 const { AppPrefs } = require('./app')
 const actions = require('../../actions')
-const { getAllProperties, getVocabs } = require('../../selectors')
+const { getVocabs } = require('../../selectors')
 
 class PrefsContainer extends PureComponent {
   isActive(pane) {
@@ -127,7 +127,6 @@ module.exports = {
       project: state.project,
       keymap: state.keymap,
       pane: state.prefs.pane,
-      properties: getAllProperties(state),
       vocab: getVocabs(state)
     }),
 

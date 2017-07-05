@@ -7,8 +7,6 @@ const { PropertySelect } = require('../property/select')
 const { IconButton } = require('../button')
 const { FormField, FormGroup, Label } = require('../form')
 const { IconGrip, IconPlusCircle, IconMinusCircle } = require('../icons')
-const { get, titlecase } = require('../../common/util')
-const { basename } = require('path')
 const { DND } = require('../../constants')
 const cx = require('classnames')
 const { array, bool, func, number, object } = require('prop-types')
@@ -22,15 +20,6 @@ class TemplateField extends PureComponent {
       'template-field': true,
       'dragging': this.props.isDragging
     }
-  }
-
-  get property() {
-    return get(this.props.field, ['property', 'id']) || ''
-  }
-
-  get defaultLabel() {
-    return get(this.props.field, ['property', 'label'])
-      || titlecase(basename(this.property))
   }
 
   setContainer = (container) => {
@@ -48,12 +37,20 @@ class TemplateField extends PureComponent {
     this.props.onRemove(this.props.field)
   }
 
+  connectDragSource(element) {
+    return this.props.isDisabled ? element : this.props.ds(element)
+  }
+
+  connectDropTarget(element) {
+    return this.props.isDisabled ? element : this.props.ds(element)
+  }
+
   render() {
-    return this.props.dt(
+    return this.connectDropTarget(
       <li
         className={cx(this.classes)}
         ref={this.setContainer}>
-        {this.props.ds(
+        {this.connectDragSource(
           <fieldset>
             <IconGrip/>
             <FormGroup isCompact>
@@ -61,22 +58,17 @@ class TemplateField extends PureComponent {
               <div className="col-9">
                 <PropertySelect
                   properties={this.props.properties}
-                  selected={this.property}
+                  selected={this.props.field.property}
                   isRequired={false}
                   placeholder="property.select"
                   onChange={this.handlePropertyChange}/>
               </div>
             </FormGroup>
             <FormField
-              id="template.field.label"
-              name="label"
-              value={this.props.field.label || ''}
-              placeholder={this.defaultLabel}
-              onChange={this.handlePropertyChange}/>
-            <FormField
               id="template.field.hint"
               name="hint"
               value={this.props.field.hint || ''}
+              isDisabled={this.props.isDisabled || this.props.isTransient}
               onChange={this.handlePropertyChange}/>
           </fieldset>
         )}
@@ -93,6 +85,8 @@ class TemplateField extends PureComponent {
   static propTypes = {
     field: object.isRequired,
     isDragging: bool,
+    isDisabled: bool,
+    isTransient: bool,
     position: number.isRequired,
     properties: array.isRequired,
     ds: func.isRequired,
