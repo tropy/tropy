@@ -220,8 +220,8 @@ class FormToggle extends PureComponent {
   render() {
     return (
       <FormGroup isCompact={this.props.isCompact}>
-        <div class-name={cx(...this.classes)}>
-          <label className={cx('control-label', `col-${this.props.size}`)}>
+        <div className={cx(...this.classes)}>
+          <label>
             <input
               name={this.props.name}
               type="checkbox"
