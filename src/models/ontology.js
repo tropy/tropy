@@ -287,8 +287,12 @@ const ontology = {
               template_id AS tpl,
               property_id AS property
             FROM fields${constraint}
-            ORDER BY position`, ({ id, tpl, property }) => {
-          temps[tpl].fields.push({ id, property })
+            ORDER BY position`, ({ id, tpl, property, isRequired }) => {
+          temps[tpl].fields.push({
+            id,
+            property,
+            isRequired: !!isRequired
+          })
         })
       ])
 

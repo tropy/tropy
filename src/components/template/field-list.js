@@ -10,7 +10,8 @@ let tmpId = -1
 
 const newField = () => ({
   id: tmpId--,
-  property: ''
+  property: '',
+  isRequired: false
 })
 
 

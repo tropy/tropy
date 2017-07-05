@@ -64,6 +64,7 @@ template:
     photo: Photo Template
   field:
     property: Property
+    isRequired: Is mandatory field
     label: Label
     hint: Hint
 

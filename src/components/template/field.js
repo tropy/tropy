@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { DragSource, DropTarget } = require('react-dnd')
 const { PropertySelect } = require('../property/select')
 const { IconButton } = require('../button')
-const { FormField, FormGroup, Label } = require('../form')
+const { FormField, FormGroup, FormToggle, Label } = require('../form')
 const { IconGrip, IconPlusCircle, IconMinusCircle } = require('../icons')
 const { DND } = require('../../constants')
 const cx = require('classnames')
@@ -68,6 +68,12 @@ class TemplateField extends PureComponent {
               id="template.field.hint"
               name="hint"
               value={this.props.field.hint || ''}
+              isDisabled={this.props.isDisabled || this.props.isTransient}
+              onChange={this.handlePropertyChange}/>
+            <FormToggle
+              id="template.field.isRequired"
+              name="isRequired"
+              value={this.props.field.isRequired}
               isDisabled={this.props.isDisabled || this.props.isTransient}
               onChange={this.handlePropertyChange}/>
           </fieldset>
