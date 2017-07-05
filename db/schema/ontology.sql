@@ -93,7 +93,10 @@ CREATE TABLE fields (
   field_id      INTEGER   PRIMARY KEY,
   template_id   TEXT      NOT NULL REFERENCES templates ON DELETE CASCADE,
   property_id   TEXT      NOT NULL REFERENCES properties,
-  datatype      TEXT      NOT NULL REFERENCES datatypes,
+  datatype_id   TEXT      NOT NULL REFERENCES datatypes,
+  required      BOOLEAN   NOT NULL DEFAULT false,
+  hint          TEXT,
+  constant      TEXT,
   position      INTEGER
 );
 COMMIT;

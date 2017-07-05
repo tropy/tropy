@@ -2,6 +2,7 @@
 
 const assert = require('assert')
 const { SCHEMA } = require('../constants/ontology')
+const { TEXT } = require('../constants/types')
 const { all } = require('bluebird')
 const { list, quote } = require('../common/util')
 
@@ -388,10 +389,17 @@ const ontology = {
     field: {
       add(db, id, ...fields) {
         return db.prepare(`
-          INSERT INTO fields (template_id, property_id, position)
-            VALUES (?, ?, ?)`, stmt =>
+          INSERT INTO fields (
+              template_id,
+              property_id,
+              datatype_id,
+              position
+            ) VALUES (?, ?, ?, ?)`, stmt =>
             all(fields.map((f, idx) => stmt.run([
-              id, f.property, (f.position != null) ? f.position : idx
+              id,
+              f.property,
+              f.datatype || TEXT,
+              (f.position != null) ? f.position : idx
             ])
           ))
         )
