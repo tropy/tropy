@@ -1,7 +1,7 @@
 'use strict'
 
 const coll = new Intl.Collator(ARGS.locale, { numeric: true })
-const { any } = require('common/util')
+const { any } = require('./common/util')
 
 module.exports = {
   compare(a, b) {
