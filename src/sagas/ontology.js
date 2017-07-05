@@ -23,6 +23,7 @@ function *create(db) {
   yield call(exec, { db }, act.ontology.import({
     files: [
       Ontology.expand('tropy'),
+      Ontology.expand('xsd'),
       Ontology.expand('dc'),
       Ontology.expand('dcterms'),
       Ontology.expand('rdf'),
