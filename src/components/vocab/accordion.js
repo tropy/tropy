@@ -6,11 +6,20 @@ const { Accordion } = require('../accordion')
 const { FormField, FormLink, FormText } = require('../form')
 const { PropertyList } = require('../property')
 const { IconButton } = require('../button')
-const { IconBook16, IconTrash } = require('../icons')
+const { IconBook16, IconBookLock, IconTrash } = require('../icons')
 const { arrayOf, func, object, shape, string } = require('prop-types')
 
 
 class VocabAccordion extends Accordion {
+  get isProtected() {
+    return this.props.vocab.isProtected
+  }
+
+  get icon() {
+    if (this.isProtected) return <IconBookLock/>
+    return <IconBook16/>
+  }
+
   handleDelete = () => {
     this.props.onDelete(this.props.vocab.id)
   }
@@ -19,10 +28,11 @@ class VocabAccordion extends Accordion {
     this.props.onSave({ id: this.props.vocab.id, ...data })
   }
 
+
   renderHeader() {
     return super.renderHeader(
       <div className="flex-row center panel-header-container">
-        <IconBook16/>
+        {this.icon}
         <h1 className="panel-heading">
           {this.props.vocab.title}
         </h1>
