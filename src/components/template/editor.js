@@ -97,6 +97,7 @@ class TemplateEditor extends PureComponent {
               value={this.state.name}
               isCompact
               isRequired
+              isDisabled={this.state.isProtected}
               tabIndex={0}
               onChange={this.handleTemplateUpdate}/>
             <FormField
@@ -104,7 +105,7 @@ class TemplateEditor extends PureComponent {
               name="id"
               value={this.state.id}
               isCompact
-              isDisabled={!isPristine}
+              isDisabled={this.state.isProtected && !isPristine}
               tabIndex={0}
               onChange={this.handleTemplateUpdate}/>
             <FormSelect
@@ -114,19 +115,21 @@ class TemplateEditor extends PureComponent {
               options={this.props.types}
               tabIndex={0}
               isCompact
-              isDisabled={!isPristine}
+              isDisabled={this.state.isProtected && !isPristine}
               onChange={this.handleTemplateUpdate}/>
             <FormField
               id="template.creator"
               name="creator"
               value={this.state.creator}
               isCompact
+              isDisabled={this.state.isProtected}
               tabIndex={0}
               onChange={this.handleTemplateUpdate}/>
             <FormField
               id="template.description"
               name="description"
               value={this.state.description}
+              isDisabled={this.state.isProtected}
               tabIndex={0} onChange={this.handleTemplateUpdate}/>
             {isPristine &&
               <FormGroup>
