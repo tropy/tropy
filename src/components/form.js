@@ -40,15 +40,13 @@ class Label extends PureComponent {
     return (
       <label
         className={cx('control-label', `col-${this.props.size}`)}
-        htmlFor={this.props.children == null ? this.props.id : null}>
-        {this.props.children}
+        htmlFor={this.props.id}>
         <FormattedMessage id={this.props.id}/>
       </label>
     )
   }
 
   static propTypes = {
-    children: node,
     id: string.isRequired,
     size: number.isRequired
   }
@@ -205,6 +203,14 @@ class FormSelect extends PureComponent {
 }
 
 class FormToggle extends PureComponent {
+  get classes() {
+    return [
+      `col-${this.props.size}`,
+      `col-offset-${GRID.SIZE - this.props.size}`,
+      'checkbox'
+    ]
+  }
+
   handleChange = (event) => {
     this.props.onChange({
       [this.props.name]: !!event.target.value
@@ -214,18 +220,19 @@ class FormToggle extends PureComponent {
   render() {
     return (
       <FormGroup isCompact={this.props.isCompact}>
-        <Label
-          id={this.props.id}
-          size={this.props.size}>
-          <input
-            name={this.props.name}
-            type="checkbox"
-            value={this.props.value}
-            checked={!!this.props.value}
-            disabled={this.props.isDisabled}
-            tabIndex={this.props.tabIndex}
-            onChange={this.handleChange}/>
-        </Label>
+        <div class-name={cx(...this.classes)}>
+          <label className={cx('control-label', `col-${this.props.size}`)}>
+            <input
+              name={this.props.name}
+              type="checkbox"
+              value={this.props.value}
+              checked={!!this.props.value}
+              disabled={this.props.isDisabled}
+              tabIndex={this.props.tabIndex}
+              onChange={this.handleChange}/>
+            <FormattedMessage id={this.props.id}/>
+          </label>
+        </div>
       </FormGroup>
     )
   }
