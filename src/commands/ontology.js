@@ -45,6 +45,7 @@ class Import extends Command {
               await Promise.all([
                 mod.ontology.props.create(tx, ...data[id].properties),
                 mod.ontology.class.create(tx, ...data[id].classes),
+                mod.ontology.type.create(tx, ...data[id].datatypes),
                 mod.ontology.label.save(tx, ...data[id].labels)
               ])
 
@@ -70,6 +71,7 @@ class Import extends Command {
       const [vocab, klass, props] = yield all([
         mod.ontology.vocab.load(db, ...vocabs),
         mod.ontology.class.load(db, ...vocabs),
+        mod.ontology.type.load(db, ...vocabs),
         mod.ontology.props.load(db, ...vocabs)
       ])
 

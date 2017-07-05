@@ -63,6 +63,10 @@ class Ontology extends Resource {
     OWL.Class
   ]
 
+  static DATATYPES = [
+    RDFS.Datatype
+  ]
+
   static PROPERTIES = [
     RDF.Property,
     OWL.ObjectProperty,
@@ -130,6 +134,14 @@ class Ontology extends Resource {
       })
     }
 
+    for (let id of this.getByType(...Ontology.DATATYPES)) {
+      let [vocab, data] = collect(id)
+      if (vocab == null) continue
+      vocab.datatypes.push({
+        id, data, vocabulary: vocab.id, ...info(data)
+      })
+    }
+
     return json
   }
 
@@ -155,6 +167,7 @@ class Ontology extends Resource {
       description,
       seeAlso,
       classes: [],
+      datatypes: [],
       labels: [],
       properties: []
     }
