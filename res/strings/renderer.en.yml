@@ -29,8 +29,8 @@ prefs:
     style:
       theme: Theme
       themes:
-        light: Tropy Light
-        dark: Tropy Dark
+        light: Light
+        dark: Dark
   project:
     label: Project
   template:
