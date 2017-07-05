@@ -45,7 +45,7 @@ CREATE TABLE items (
 ) WITHOUT ROWID;
 
 
-CREATE TABLE metadata_types (
+CREATE TABLE datatypes (
   type_name    TEXT  NOT NULL PRIMARY KEY COLLATE NOCASE,
   type_schema  TEXT  NOT NULL UNIQUE,
 
@@ -54,7 +54,7 @@ CREATE TABLE metadata_types (
 
 ) WITHOUT ROWID;
 
-INSERT INTO metadata_types (type_name, type_schema) VALUES
+INSERT INTO datatypes (type_name, type_schema) VALUES
   ('text', 'https://schema.org/Text'),
   ('date', 'https://tropy.org/schema/v1/core#date'),
   ('name', 'https://tropy.org/schema/v1/core#name'),
@@ -80,7 +80,7 @@ CREATE TABLE metadata (
 
 CREATE TABLE metadata_values (
   value_id   INTEGER  PRIMARY KEY,
-  type_name  TEXT     NOT NULL REFERENCES metadata_types ON UPDATE CASCADE,
+  type_name  TEXT     NOT NULL REFERENCES datatypes ON UPDATE CASCADE,
   text                NOT NULL,
   data       TEXT,
 
