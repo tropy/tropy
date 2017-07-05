@@ -68,7 +68,7 @@ class Import extends Command {
     }
 
     if (vocabs.length) {
-      const [vocab, klass, props] = yield all([
+      const [vocab, klass, type, props] = yield all([
         mod.ontology.vocab.load(db, ...vocabs),
         mod.ontology.class.load(db, ...vocabs),
         mod.ontology.type.load(db, ...vocabs),
@@ -78,7 +78,7 @@ class Import extends Command {
       this.undo = act.ontology.vocab.delete(vocabs)
       this.redo = act.ontology.vocab.restore(vocab)
 
-      return { vocab, class: klass, props }
+      return { vocab, class: klass, type, props }
     }
   }
 }
@@ -89,14 +89,15 @@ class Load extends Command {
   *exec() {
     const { db } = this.options
 
-    const [vocab, klass, props, template] = yield all([
+    const [vocab, klass, type, props, template] = yield all([
       mod.ontology.vocab.load(db),
       mod.ontology.class.load(db),
+      mod.ontology.type.load(db),
       mod.ontology.props.load(db),
       mod.ontology.template.load(db)
     ])
 
-    return { vocab, class: klass, props, template }
+    return { vocab, class: klass, type, props, template }
   }
 }
 

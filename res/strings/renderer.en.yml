@@ -46,6 +46,12 @@ prefs:
         one {# Class}
         other {# Classes}
       }
+    datatypes: >
+      {count, plural,
+        =0 {No Datatypes}
+        one {# Datatype}
+        other {# Datatypes}
+      }
     properties: >
       {count, plural,
         =0 {No Properties}

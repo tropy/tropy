@@ -95,6 +95,15 @@ class VocabAccordion extends Accordion {
           properties={vocab.properties}
           onOpenLink={this.props.onOpenLink}
           onSave={this.props.onPropsSave}/>
+        <h2 className="vocab-heading">
+          <FormattedMessage
+            id="prefs.vocab.datatypes"
+            values={{ count: vocab.datatypes.length }}/>
+        </h2>
+        <PropertyList
+          properties={vocab.datatypes}
+          onOpenLink={this.props.onOpenLink}
+          onSave={this.props.onPropsSave}/>
       </div>
     )
   }

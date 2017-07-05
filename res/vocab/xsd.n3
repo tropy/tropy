@@ -79,6 +79,6 @@ xsd:unsignedShort a rdfs:Datatype ;
   rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
 xsd:unsignedByte a rdfs:Datatype ;
   rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
-xsd:positiveIntege a rdfs:Datatype ;
+xsd:positiveInteger a rdfs:Datatype ;
   rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
 

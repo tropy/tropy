@@ -32,7 +32,11 @@ const ontology = {
           FROM vocabularies
           WHERE ${cond.join(' AND ')}`, (data) => {
         vocabs[data.id] = {
-          ...data, isProtected: !!data.isProtected, classes: [], properties: []
+          ...data,
+          isProtected: !!data.isProtected,
+          classes: [],
+          datatypes: [],
+          properties: []
         }
       })
 
@@ -49,6 +53,12 @@ const ontology = {
             WHERE ${cond.join(' AND ')}`, ({ id, klass }) => {
           vocabs[id].classes.push(klass)
         }),
+        db.each(`
+          SELECT vocabulary_id AS id, datatype_id AS datatype
+            FROM datatypes JOIN vocabularies USING (vocabulary_id)
+            WHERE ${cond.join(' AND ')}`, ({ id, datatype }) => {
+          vocabs[id].datatypes.push(datatype)
+        })
       ])
 
       return vocabs
@@ -128,7 +138,7 @@ const ontology = {
     async load(db, ...args) {
       const props = {}
       const cond = [
-        'language = ?', 'deleted is NULL'
+        '(language = ? OR language IS NULL)', 'deleted is NULL'
       ]
 
       if (args.length > 0) {
@@ -144,7 +154,7 @@ const ontology = {
           label
           FROM properties p
             JOIN vocabularies v USING (vocabulary_id)
-            JOIN labels ON (property_id = id)
+            LEFT JOIN labels ON (property_id = id)
           WHERE ${cond.join(' AND ')}`, [ARGS.locale],
         (data) => {
           props[data.id] = data
@@ -182,7 +192,7 @@ const ontology = {
     async load(db, ...args) {
       const classes = {}
       const cond = [
-        'language = ?', 'deleted is NULL'
+        '(language = ? OR language IS NULL)', 'deleted is NULL'
       ]
 
       if (args.length > 0) {
@@ -198,7 +208,7 @@ const ontology = {
           label
           FROM classes c
             JOIN vocabularies v USING (vocabulary_id)
-            JOIN labels ON (class_id = id)
+            LEFT JOIN labels ON (class_id = id)
           WHERE ${cond.join(' AND ')}`, [ARGS.locale],
         (data) => {
           classes[data.id] = data
@@ -232,7 +242,7 @@ const ontology = {
     async load(db, ...args) {
       const types = {}
       const cond = [
-        'language = ?', 'deleted is NULL'
+        '(language = ? OR language IS NULL)', 'deleted is NULL'
       ]
 
       if (args.length > 0) {
@@ -248,7 +258,7 @@ const ontology = {
           label
           FROM datatypes dt
             JOIN vocabularies v USING (vocabulary_id)
-            JOIN labels ON (datatype_id = id)
+            LEFT OUTER JOIN labels ON (datatype_id = id)
           WHERE ${cond.join(' AND ')}`, [ARGS.locale],
         (data) => {
           types[data.id] = data
