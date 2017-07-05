@@ -39,15 +39,22 @@ class Import extends Command {
 
         yield call(db.transaction, async tx => {
           for (let id in data) {
-            await mod.ontology.vocab.create(tx, { ...data[id], isProtected })
+            try {
+              await mod.ontology.vocab.create(tx, { ...data[id], isProtected })
 
-            await Promise.all([
-              mod.ontology.props.create(tx, ...data[id].properties),
-              mod.ontology.class.create(tx, ...data[id].classes),
-              mod.ontology.label.save(tx, ...data[id].labels)
-            ])
+              await Promise.all([
+                mod.ontology.props.create(tx, ...data[id].properties),
+                mod.ontology.class.create(tx, ...data[id].classes),
+                mod.ontology.label.save(tx, ...data[id].labels)
+              ])
 
-            vocabs.push(id)
+              vocabs.push(id)
+
+            } catch (error) {
+              warn(`Failed to import "${id}": ${error.message}`)
+              verbose(error.stack)
+              fail(error, this.action.type)
+            }
           }
         })
 
@@ -55,7 +62,6 @@ class Import extends Command {
       } catch (error) {
         warn(`Failed to import "${file}": ${error.message}`)
         verbose(error.stack)
-
         fail(error, this.action.type)
       }
     }

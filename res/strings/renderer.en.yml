@@ -173,6 +173,7 @@ error:
     item:
       add: Failed to add item(s) to list.
   ontology:
+    import: Failed to import vocabulary.
     vocab:
       save: Failed to save vocabulary. Prefix must be unique.
     template:
