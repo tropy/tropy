@@ -227,6 +227,53 @@ const ontology = {
     }
   },
 
+  type: {
+    async load(db, ...args) {
+      const types = {}
+      const cond = [
+        'language = ?', 'deleted is NULL'
+      ]
+
+      if (args.length > 0) {
+        cond.push(`vocabulary_id IN (${list(args, quote)})`)
+      }
+
+      await db.each(`
+        SELECT
+          datatype_id AS id,
+          vocabulary_id AS vocabulary,
+          dt.description,
+          dt.comment,
+          label
+          FROM datatypes dt
+            JOIN vocabularies v USING (vocabulary_id)
+            JOIN labels ON (datatype_id = id)
+          WHERE ${cond.join(' AND ')}`, [ARGS.locale],
+        (data) => {
+          types[data.id] = data
+        }
+      )
+
+      return types
+    },
+
+    create(db, ...types) {
+      return db.prepare(`
+        REPLACE INTO datatypes (
+          datatype_id,
+          vocabulary_id,
+          description,
+          comment) VALUES (?, ?, ?, ?)`, stmt =>
+            all(types.map(dt => stmt.run([
+              dt.id,
+              dt.vocabulary,
+              dt.description,
+              dt.comment
+            ])
+          ))
+      )
+    }
+  },
 
   label: {
     save(db, ...labels) {
