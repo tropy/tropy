@@ -88,7 +88,7 @@ class TemplateFieldList extends PureComponent {
             position={idx}
             properties={this.props.properties}
             isDisabled={this.props.isDisabled}
-            isOnly={this.isEmpty}
+            isSingle={this.isEmpty}
             isTransient={field.id < 0}
             onInsert={this.handleFieldInsert}
             onRemove={this.handleFieldRemove}

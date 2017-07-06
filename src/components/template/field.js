@@ -22,6 +22,10 @@ class TemplateField extends PureComponent {
     }
   }
 
+  get isDragAndDropEnabled() {
+    return !this.props.isDisabled && !this.props.isSingle
+  }
+
   setContainer = (container) => {
     this.container = container
   }
@@ -38,31 +42,27 @@ class TemplateField extends PureComponent {
   }
 
   connectDragSource(element) {
-    return this.props.isDisabled ? element : this.props.ds(element)
+    return this.isDragAndDropEnabled ? this.props.ds(element) : element
   }
 
   connectDropTarget(element) {
-    return this.props.isDisabled ? element : this.props.ds(element)
+    return this.isDragAndDropEnabled ? this.props.dt(element) : element
   }
 
   renderInsertButton() {
-    if (this.props.isDisabled) return null
-    if (this.props.isTransient) return null
-
-    return (
+    return !this.props.isDisabled && (
       <IconButton
         icon={<IconPlusCircle/>}
+        isDisabled={this.props.isTransient}
         onClick={this.handleInsert}/>
     )
   }
 
   renderRemoveButton() {
-    if (this.props.isDisabled) return null
-    if (this.props.isTransient && this.props.isOnly) return null
-
-    return (
+    return !this.props.isDisabled && (
       <IconButton
         icon={<IconMinusCircle/>}
+        isDisabled={this.props.isTransient && this.props.isSingle}
         onClick={this.handleRemove}/>
     )
   }
@@ -119,7 +119,7 @@ class TemplateField extends PureComponent {
     isDragging: bool,
     isDisabled: bool,
     isTransient: bool,
-    isOnly: bool,
+    isSingle: bool,
     position: number.isRequired,
     properties: array.isRequired,
     ds: func.isRequired,
