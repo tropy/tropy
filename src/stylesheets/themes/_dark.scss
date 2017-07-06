@@ -65,6 +65,7 @@ $shade-10: #fff; // White
   #{--shade-7}: $shade-7;
   #{--shade-7-50}: rgba($shade-7, 0.5);
   #{--shade-8}: $shade-8;
+  #{--shade-8-darken-5}: darken($shade-8, 5%);
   #{--shade-9}: $shade-9;
   #{--shade-10}: $shade-10;
   #{--shade-10-5}: rgba($shade-10, 0.05);
@@ -124,16 +125,22 @@ $text-selection-bg:    var(--brand-primary-35);
 // --------------------------------------------------
 
 // Forms
-$input-color:                var(--shade-9);
-$input-bg:                   var(--shade-3); // Transparent causes border/box-shadow issue
-$input-bg-readonly:          var(--shade-4-lighten-2);
-$input-border:               var(--shade-1);
-$input-color-focus:          var(--brand-primary);
-$input-color-placeholder:    var(--shade-6);
-$fieldset-bg:                var(--shade-4-lighten-2);
-$fieldset-input-border:      var(--shade-1-lighten-2);
-$fieldset-input-bg:          var(--shade-4);
-$fieldset-input-bg-readonly: var(--shade-4-lighten-4);
+$input-color:                    var(--shade-9);
+$input-bg:                       var(--shade-3); // Transparent causes border/box-shadow issue
+$input-bg-readonly:              var(--shade-4-lighten-2);
+$input-border:                   var(--shade-1);
+$input-color-focus:              var(--brand-primary);
+$input-color-placeholder:        var(--shade-6);
+$fieldset-bg:                    var(--shade-4-lighten-2);
+$fieldset-input-border:          var(--shade-1-lighten-2);
+$fieldset-input-bg:              var(--shade-4);
+$fieldset-input-bg-readonly:     var(--shade-4-lighten-4);
+$checkbox-bg:                    var(--shade-3);
+$checkbox-checked-bg:            var(--shade-8);
+$checkbox-checked-border:        var(--shade-8);
+$checkbox-checked-active-bg:     var(--shade-8-darken-5);
+$checkbox-checked-active-border: var(--shade-8-darken-5);
+$tick-color:                     var(--shade-4);
 
 // Badge
 $badge-color: var(--shade-10);

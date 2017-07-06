@@ -94,7 +94,7 @@ $padding-large-horizontal: $space-sm;
 
 $border-radius-small: 3px;
 $border-radius-base:  4px;
-$border-radius-large: 3px;
+$border-radius-large: 6px;
 
 $default-padding-horizontal: $space-sm;
 
@@ -126,6 +126,7 @@ $btn-disabled-opacity: 0.5;
 $input-height-base: $space-lg + 2 * $shim;
 $input-height-large: ($space-xl + $space-xs);
 $input-border-radius-small: $border-radius-small;
+$checkbox-size: 14px;
 
 
 // Z-index master list

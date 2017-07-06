@@ -52,7 +52,7 @@ fieldset {
   }
 }
 
-label {
+.control-label {
   .form-horizontal & {
     text-align: right;
     padding-top: 3px;
@@ -120,4 +120,100 @@ label {
 
 .form-link {
   word-break: break-word;
+}
+
+.checkbox {
+  height: $input-height-base;
+  display: flex;
+
+  label {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+  }
+
+  [type="checkbox"] {
+    margin: 0 ($space-min * 1.5) 0 0;
+    -webkit-appearance: none;
+    width: $checkbox-size;
+    height: $checkbox-size;
+    background: $checkbox-bg;
+    border: 1px solid $input-border;
+    border-radius: $border-radius-small;
+    position: relative;
+
+    &:active {
+      background: $checkbox-checked-bg;
+      border-color: $checkbox-checked-bg;
+    }
+
+    &[disabled] {
+      background: $input-bg-readonly;
+      border-color: $input-border;
+    }
+
+    &:checked {
+      background: $checkbox-checked-bg;
+      border-color: $checkbox-checked-border;
+
+      &:active {
+        background: $checkbox-checked-active-bg;
+        border-color: $checkbox-checked-active-border;
+      }
+
+      &[disabled] {
+        background: $input-bg-readonly;
+        border-color: $input-border;
+
+        &:before,
+        &:after {
+          background: $checkbox-checked-bg;
+        }
+      }
+
+      &:before,
+      &:after {
+        content: "";
+        position: absolute;
+        left: 4px;
+        top: 8px;
+        height: 2px;
+        border-radius: 1px;
+        background: $tick-color;
+        transform-origin: 1px 1px;
+      }
+
+      &:before {
+        width: 5px;
+        transform: translateX(-0.75px) rotate(-135deg) scaleY(0.75);
+      }
+
+      &:after {
+        width: 10px;
+        transform: translateX(-0.25px) rotate(-50.19deg) scaleY(0.75);
+      }
+    }
+
+    fieldset & {
+      background: $fieldset-input-bg;
+      border-color: $fieldset-input-border;
+
+      &[disabled] {
+        background: $fieldset-input-bg-readonly;
+        border-color: $fieldset-input-border;
+      }
+
+      &:checked {
+        &[disabled] {
+          background: $fieldset-input-bg-readonly;
+          border-color: $fieldset-input-border;
+
+          &:before,
+          &:after {
+            background: $checkbox-checked-bg;
+          }
+        }
+      }
+    }
+  }
 }
