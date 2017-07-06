@@ -71,8 +71,8 @@ template:
   field:
     property: Property
     isRequired: Is mandatory field
-    label: Label
     hint: Hint
+    constant: Constant value
 
 vocab:
   id: URI

@@ -6,6 +6,7 @@ const { TemplateField } = require('./field')
 const { insert, move } = require('../../common/util')
 const { arrayOf, bool, func, object, shape, string } = require('prop-types')
 
+
 let tmpId = -1
 
 const newField = () => ({

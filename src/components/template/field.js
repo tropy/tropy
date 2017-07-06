@@ -64,6 +64,12 @@ class TemplateField extends PureComponent {
                   onChange={this.handlePropertyChange}/>
               </div>
             </FormGroup>
+            <FormToggle
+              id="template.field.isRequired"
+              name="isRequired"
+              value={this.props.field.isRequired}
+              isDisabled={this.props.isDisabled || this.props.isTransient}
+              onChange={this.handlePropertyChange}/>
             <FormField
               id="template.field.hint"
               name="hint"
@@ -71,12 +77,13 @@ class TemplateField extends PureComponent {
               isDisabled={this.props.isDisabled || this.props.isTransient}
               onChange={this.handlePropertyChange}
               isCompact/>
-            <FormToggle
-              id="template.field.isRequired"
-              name="isRequired"
-              value={this.props.field.isRequired}
+            <FormField
+              id="template.field.constant"
+              name="constant"
+              value={this.props.field.constant || ''}
               isDisabled={this.props.isDisabled || this.props.isTransient}
-              onChange={this.handlePropertyChange}/>
+              onChange={this.handlePropertyChange}
+              isCompact/>
           </fieldset>
         )}
         <IconButton

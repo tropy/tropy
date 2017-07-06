@@ -343,15 +343,20 @@ const ontology = {
           SELECT
               field_id AS id,
               template_id AS tpl,
-              property_id AS property
+              property_id AS property,
+              datatype_id AS datatype,
+              required,
+              hint,
+              constant
             FROM fields${constraint}
-            ORDER BY position`, ({ id, tpl, property, isRequired }) => {
-          temps[tpl].fields.push({
-            id,
-            property,
-            isRequired: !!isRequired
+            ORDER BY position, field_id`,
+          ({ id, tpl, property, isRequired }) => {
+            temps[tpl].fields.push({
+              id,
+              property,
+              isRequired: !!isRequired
+            })
           })
-        })
       ])
 
       return temps
