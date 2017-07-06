@@ -47,7 +47,7 @@ class TemplateField extends PureComponent {
 
   renderInsertButton() {
     if (this.props.isDisabled) return null
-    if (this.props.isTransit) return null
+    if (this.props.isTransient) return null
 
     return (
       <IconButton
@@ -58,6 +58,7 @@ class TemplateField extends PureComponent {
 
   renderRemoveButton() {
     if (this.props.isDisabled) return null
+    if (this.props.isTransient && this.props.isOnly) return null
 
     return (
       <IconButton
@@ -118,6 +119,7 @@ class TemplateField extends PureComponent {
     isDragging: bool,
     isDisabled: bool,
     isTransient: bool,
+    isOnly: bool,
     position: number.isRequired,
     properties: array.isRequired,
     ds: func.isRequired,

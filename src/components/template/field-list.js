@@ -40,6 +40,10 @@ class TemplateFieldList extends PureComponent {
     return [newField()]
   }
 
+  get isEmpty() {
+    return this.props.fields.length === 0
+  }
+
   handleFieldSave = (field) => {
     if (field.id < 0) {
       this.props.onFieldAdd({
@@ -84,6 +88,7 @@ class TemplateFieldList extends PureComponent {
             position={idx}
             properties={this.props.properties}
             isDisabled={this.props.isDisabled}
+            isOnly={this.isEmpty}
             isTransient={field.id < 0}
             onInsert={this.handleFieldInsert}
             onRemove={this.handleFieldRemove}
