@@ -45,6 +45,27 @@ class TemplateField extends PureComponent {
     return this.props.isDisabled ? element : this.props.ds(element)
   }
 
+  renderInsertButton() {
+    if (this.props.isDisabled) return null
+    if (this.props.isTransit) return null
+
+    return (
+      <IconButton
+        icon={<IconPlusCircle/>}
+        onClick={this.handleInsert}/>
+    )
+  }
+
+  renderRemoveButton() {
+    if (this.props.isDisabled) return null
+
+    return (
+      <IconButton
+        icon={<IconMinusCircle/>}
+        onClick={this.handleRemove}/>
+    )
+  }
+
   render() {
     return this.connectDropTarget(
       <li
@@ -86,12 +107,8 @@ class TemplateField extends PureComponent {
               isCompact/>
           </fieldset>
         )}
-        <IconButton
-          icon={<IconPlusCircle/>}
-          onClick={this.handleInsert}/>
-        <IconButton
-          icon={<IconMinusCircle/>}
-          onClick={this.handleRemove}/>
+        {this.renderInsertButton()}
+        {this.renderRemoveButton()}
       </li>
     )
   }
