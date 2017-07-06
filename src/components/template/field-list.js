@@ -21,16 +21,23 @@ class TemplateFieldList extends PureComponent {
     super(props)
 
     this.state = {
-      fields: [...props.fields]
+      fields: this.getFields(props)
     }
   }
 
   componentWillReceiveProps(props) {
     if (props.fields !== this.props.fields) {
       this.setState({
-        fields: [...props.fields]
+        fields: this.getFields(props)
       })
     }
+  }
+
+  getFields(props) {
+    const { isDisabled, fields, template } = props
+    if (isDisabled || !template) return fields
+    if (fields.length > 0) return [...fields]
+    return [newField()]
   }
 
   handleFieldSave = (field) => {

@@ -18,7 +18,7 @@ function dup(template) {
   template = template || {
     name: '',
     id: '',
-    type: 'item',
+    type: TYPE.ITEM,
     creator: '',
     description: '',
     created: null,
