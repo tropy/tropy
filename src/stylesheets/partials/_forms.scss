@@ -123,17 +123,21 @@ fieldset {
 }
 
 .checkbox {
-  height: $input-height-base;
   display: flex;
+  padding: {
+    top: ($input-height-base - $line-height-computed) / 2;
+    bottom: ($input-height-base - $line-height-computed) / 2;
+  }
 
   label {
     flex: 1 1 auto;
     display: flex;
-    align-items: center;
+    padding-right: $padding-base-horizontal;
   }
 
   [type="checkbox"] {
-    margin: 0 ($space-min * 1.5) 0 0;
+    flex: 0 0 auto;
+    margin: 3px ($space-min * 1.5) 0 0;
     -webkit-appearance: none;
     width: $checkbox-size;
     height: $checkbox-size;
