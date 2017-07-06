@@ -60,7 +60,7 @@ tropy:Field a rdfs:Class ;
 # Data Types
 # ----------------------------------------------------------------------------
 
-tropy:date a rdf:DataType ;
+tropy:date a rdfs:Datatype ;
   owl:equivalentProperty <http://id.loc.gov/datatypes/edtf> ;
 	rdfs:label "Date"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
