@@ -12,14 +12,21 @@
   rdfs:seeAlso <https://www.w3.org/TR/xmlschema11-2/> .
 
 xsd:string a rdfs:Datatype ;
+	rdfs:label "String"@en ;
+  rdfs:comment "The string datatype represents character strings in XML."@en ;
   rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
 xsd:boolean a rdfs:Datatype ;
+	rdfs:label "Boolean"@en ;
+  rdfs:comment "Boolean represents the values of two-valued logic."@en ;
   rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
 xsd:decimal a rdfs:Datatype ;
+	rdfs:label "Decimal"@en ;
   rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
 xsd:float a rdfs:Datatype ;
+	rdfs:label "Float"@en ;
   rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
 xsd:double a rdfs:Datatype ;
+	rdfs:label "Double"@en ;
   rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
 xsd:dateTime a rdfs:Datatype ;
   rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
