@@ -32,7 +32,7 @@ CREATE TABLE project (
 ) WITHOUT ROWID;
 CREATE TABLE subjects (
   id           INTEGER  PRIMARY KEY,
-  template     TEXT     NOT NULL DEFAULT 'https://tropy.org/schema/v1/templates/item',
+  template     TEXT     NOT NULL DEFAULT 'https://tropy.org/v1/templates/item',
   type         TEXT,
   created      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP

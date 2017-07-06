@@ -38,7 +38,7 @@ module.exports = {
       SORT: 'ontology.template.field.sort'
     },
 
-    CONTEXT: 'https://tropy.org/schema/v1/contexts/template.jsonld'
+    CONTEXT: 'https://tropy.org/v1/contexts/template.jsonld'
   },
 
   VOCAB: {

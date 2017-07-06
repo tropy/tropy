@@ -1,8 +1,8 @@
 {
-  "@context": "https://tropy.org/schema/v1/contexts/template.jsonld",
-  "@id": "https://tropy.org/schema/v1/templates/photo",
+  "@context": "https://tropy.org/v1/contexts/template.jsonld",
+  "@id": "https://tropy.org/v1/templates/photo",
   "name": "Tropy Photo",
-  "type": "photo",
+  "type": "https://tropy.org/v1/tropy#Photo",
   "domain": [
     "http://iiif.io/api/image/2#Image"
   ],
@@ -11,7 +11,8 @@
       "property": "http://purl.org/dc/elements/1.1/title"
     },
     {
-      "property": "http://purl.org/dc/elements/1.1/date"
+      "property": "http://purl.org/dc/elements/1.1/date",
+      "datatype": "https://tropy.org/v1/tropy#date"
     }
   ]
 }
