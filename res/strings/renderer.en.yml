@@ -48,8 +48,7 @@ prefs:
       }
     datatypes: >
       {count, plural,
-        =0 {No Datatypes}
-        one {# Datatype}
+        =0 {No Datatypes} one {# Datatype}
         other {# Datatypes}
       }
     properties: >
@@ -175,8 +174,10 @@ error:
   item:
     import: Failed to import item.
     tag:
+      save: Failed to save tag.
       create: Failed to tag item. Tags must be unique per item.
   list:
+    save: Failed to save list.
     item:
       add: Failed to add item(s) to list.
   ontology:
