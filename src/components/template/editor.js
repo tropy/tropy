@@ -174,7 +174,10 @@ class TemplateEditor extends PureComponent {
   }
 
   static defaultProps = {
-    types: ['item', 'photo']
+    types: [
+      'https://tropy.org/v1/tropy#Item',
+      'https://tropy.org/v1/tropy#Photo'
+    ]
   }
 }
 

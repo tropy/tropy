@@ -65,8 +65,9 @@ template:
   creator: Creator
   description: Description
   types:
-    item: Item Template
-    photo: Photo Template
+    "https://tropy.org/v1/tropy#Item": Item Template
+    "https://tropy.org/v1/tropy#Photo": Photo Template
+    "https://tropy.org/v1/tropy#Selection": Photo Selection Template
   field:
     property: Property
     isRequired: Is mandatory field
