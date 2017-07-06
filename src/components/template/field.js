@@ -69,7 +69,8 @@ class TemplateField extends PureComponent {
               name="hint"
               value={this.props.field.hint || ''}
               isDisabled={this.props.isDisabled || this.props.isTransient}
-              onChange={this.handlePropertyChange}/>
+              onChange={this.handlePropertyChange}
+              isCompact/>
             <FormToggle
               id="template.field.isRequired"
               name="isRequired"
