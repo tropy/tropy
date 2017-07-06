@@ -2,7 +2,7 @@
 
 const assert = require('assert')
 const { SCHEMA } = require('../constants/ontology')
-const { TEXT } = require('../constants/types')
+const { TEXT } = require('../constants/type')
 const { all } = require('bluebird')
 const { list, quote } = require('../common/util')
 

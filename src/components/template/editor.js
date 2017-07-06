@@ -10,6 +10,7 @@ const { FormField, FormGroup, FormSelect } = require('../form')
 const { pick } = require('../../common/util')
 const { arrayOf, func, shape, string } = require('prop-types')
 const actions = require('../../actions')
+const { TYPE } = require('../../constants')
 
 const { getTemplateList, getPropertyList } = require('../../selectors')
 
@@ -174,10 +175,7 @@ class TemplateEditor extends PureComponent {
   }
 
   static defaultProps = {
-    types: [
-      'https://tropy.org/v1/tropy#Item',
-      'https://tropy.org/v1/tropy#Photo'
-    ]
+    types: [TYPE.ITEM, TYPE.PHOTO]
   }
 }
 
