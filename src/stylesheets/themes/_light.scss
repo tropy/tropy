@@ -46,27 +46,29 @@ $shade-9:  #222; // Text color, icon active state
 $shade-10: #000; // Black
 
 :root {
-  #{--transparent}:       $transparent;
-  #{--shade-0}:           $shade-0;
-  #{--shade-1}:           $shade-1;
-  #{--shade-1-darken-4}:  darken($shade-1, 4.5%); // 8% Fieldset bg
-  #{--shade-1-darken-8}:  darken($shade-1, 8.5); // 12% Vocab property bg
-  #{--shade-1-darken-14}: darken($shade-1, 14%); // 18% Vocab property input border
-  #{--shade-1-darken-18}: darken($shade-1, 18%); // 22% Vocab property input border
-  #{--shade-2}:           $shade-2;
-  #{--shade-3}:           $shade-3;
-  #{--shade-3-darken-5}:  darken($shade-3, 5%); // Thumbnail bg
-  #{--shade-4}:           $shade-4;
-  #{--shade-4-darken-14}: darken($shade-4, 14%);
-  #{--shade-5}:           $shade-5;
-  #{--shade-6}:           $shade-6;
-  #{--shade-6-50}:        rgba($shade-6, 0.5);
-  #{--shade-7}:           $shade-7;
-  #{--shade-8}:           $shade-8;
-  #{--shade-9}:           $shade-9;
-  #{--shade-10}:          $shade-10;
-  #{--shade-10-10}:       rgba($shade-10, 0.1);
-  #{--shade-10-20}:       rgba($shade-10, 0.2);
+  #{--transparent}:        $transparent;
+  #{--shade-0}:            $shade-0;
+  #{--shade-1}:            $shade-1;
+  #{--shade-1-darken-4}:   darken($shade-1, 4.5%); // 8% Fieldset bg
+  #{--shade-1-darken-8}:   darken($shade-1, 8.5); // 12% Vocab property bg
+  #{--shade-1-darken-14}:  darken($shade-1, 14%); // 18% Vocab property input border
+  #{--shade-1-darken-18}:  darken($shade-1, 18%); // 22% Vocab property input border
+  #{--shade-2}:            $shade-2;
+  #{--shade-3}:            $shade-3;
+  #{--shade-3-darken-5}:   darken($shade-3, 5%); // Thumbnail bg
+  #{--shade-4}:            $shade-4;
+  #{--shade-4-darken-14}:  darken($shade-4, 14%);
+  #{--shade-5}:            $shade-5;
+  #{--shade-6}:            $shade-6;
+  #{--shade-6-50}:         rgba($shade-6, 0.5);
+  #{--shade-6-lighten-13}: lighten($shade-6, 13.5%);
+  #{--shade-6-lighten-8}:  lighten($shade-6, 8%);
+  #{--shade-7}:            $shade-7;
+  #{--shade-8}:            $shade-8;
+  #{--shade-9}:            $shade-9;
+  #{--shade-10}:           $shade-10;
+  #{--shade-10-10}:        rgba($shade-10, 0.1);
+  #{--shade-10-20}:        rgba($shade-10, 0.2);
 }
 
 
@@ -122,16 +124,22 @@ $text-selection-bg:    var(--brand-primary-light);
 // --------------------------------------------------
 
 // Forms
-$input-color:                var(--shade-9);
-$input-bg:                   var(--shade-0); // Transparent causes border/box-shadow issue
-$input-bg-readonly:          var(--shade-1-darken-4);
-$input-border:               var(--shade-3);
-$input-color-focus:          var(--brand-primary-60);
-$input-color-placeholder:    var(--shade-5);
-$fieldset-bg:                var(--shade-1-darken-4);
-$fieldset-input-border:      var(--shade-1-darken-14);
-$fieldset-input-bg:          var(--shade-0);
-$fieldset-input-bg-readonly: var(--shade-1-darken-8);
+$input-color:                    var(--shade-9);
+$input-bg:                       var(--shade-0); // Transparent causes border/box-shadow issue
+$input-bg-readonly:              var(--shade-1-darken-4);
+$input-border:                   var(--shade-3);
+$input-color-focus:              var(--brand-primary-60);
+$input-color-placeholder:        var(--shade-5);
+$fieldset-bg:                    var(--shade-1-darken-4);
+$fieldset-input-border:          var(--shade-1-darken-14);
+$fieldset-input-bg:              var(--shade-0);
+$fieldset-input-bg-readonly:     var(--shade-1-darken-8);
+$checkbox-bg:                    var(--shade-0);
+$checkbox-checked-bg:            var(--shade-6-lighten-13);
+$checkbox-checked-border:        var(--shade-6-lighten-13);
+$checkbox-checked-active-bg:     var(--shade-6-lighten-8);
+$checkbox-checked-active-border: var(--shade-6-lighten-8);
+$tick-color:                     var(--shade-0);
 
 // Badge
 $badge-color: var(--shade-0);
