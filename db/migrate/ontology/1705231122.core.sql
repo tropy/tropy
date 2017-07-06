@@ -4,7 +4,6 @@ CREATE TABLE vocabularies (
   created         NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   deleted         NUMERIC,
   protected       BOOLEAN  NOT NULL DEFAULT FALSE,
-  auto            BOOLEAN  NOT NULL DEFAULT FALSE,
   title           TEXT,
   description     TEXT,
   comment         TEXT,
