@@ -351,10 +351,9 @@ const ontology = {
               constant
             FROM fields${constraint}
             ORDER BY position, field_id`,
-          ({ id, tpl, property, isRequired }) => {
+          ({ tpl, isRequired, ...data }) => {
             temps[tpl].fields.push({
-              id,
-              property,
+              ...data,
               isRequired: !!isRequired
             })
           })
@@ -432,7 +431,7 @@ const ontology = {
         const params = { $id: id }
 
         for (let attr in data) {
-          assign.push(`${attr} = $${attr}`)
+          assign.push(`${COL.FIELD[attr]} = $${attr}`)
           params[`$${attr}`] = data[attr]
         }
 
@@ -446,6 +445,13 @@ const ontology = {
       }
     }
   },
+}
+
+const COL = {
+  FIELD: {
+    property: 'property_id',
+    datatype: 'datatype_id'
+  }
 }
 
 module.exports = ontology

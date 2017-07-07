@@ -312,7 +312,7 @@ class TemplateSave extends Command {
     const { payload } = this.action
 
     const original = yield select(state =>
-      state.ontology.template[payload.id])
+      pick(state.ontology.template[payload.id], keys(payload)))
 
     yield call(mod.ontology.template.save, db, payload)
     this.undo = act.ontology.template.save(original)
@@ -379,6 +379,26 @@ class TemplateFieldRemove extends Command {
   }
 }
 
+class TemplateFieldSave extends Command {
+  static get action() { return TEMPLATE.FIELD.SAVE }
+
+  *exec() {
+    const { db } = this.options
+    const { id, field } = this.action.payload
+
+    const original = yield select(state =>
+      getTemplateField(state, { id, field: field.id }))
+
+    yield call(mod.ontology.template.field.save, db, field)
+
+    this.undo = act.ontology.template.field.save({
+      id, field: pick(original.field, keys(field))
+    })
+
+    return { id, field }
+  }
+}
+
 
 module.exports = {
   ClassLoad,
@@ -389,6 +409,7 @@ module.exports = {
   TemplateCreate,
   TemplateFieldAdd,
   TemplateFieldRemove,
+  TemplateFieldSave,
   TemplateImport,
   TemplateDelete,
   TemplateSave,
