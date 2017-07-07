@@ -79,7 +79,7 @@ class TemplateField extends PureComponent {
         ref={this.setContainer}>
         {this.connectDragSource(
           <fieldset>
-            {!this.props.isDisabled && <IconGrip/>}
+            {this.isDragAndDropEnabled && <IconGrip/>}
             <FormGroup isCompact>
               <Label id="template.field.property"/>
               <div className="col-9">

@@ -41,10 +41,6 @@ class TemplateFieldList extends PureComponent {
     }
   }
 
-  get isEmpty() {
-    return this.props.fields.length === 0
-  }
-
   handleFieldSave = (id, idx, data) => {
     if (id < 0) {
       this.props.onFieldAdd({
@@ -86,7 +82,10 @@ class TemplateFieldList extends PureComponent {
   }
 
   render() {
-    return this.props.template != null && (
+    if (this.props.template == null) return
+    const isSingle = this.state.fields.length === 1
+
+    return (
       <ul className="template-field-list">
         {this.state.fields.map((field, idx) =>
           <TemplateField
@@ -95,7 +94,7 @@ class TemplateFieldList extends PureComponent {
             position={idx}
             properties={this.props.properties}
             isDisabled={this.props.isDisabled}
-            isSingle={this.isEmpty}
+            isSingle={isSingle}
             isTransient={field.id < 0}
             onInsert={this.handleFieldInsert}
             onRemove={this.handleFieldRemove}
