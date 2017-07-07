@@ -35,7 +35,7 @@ class TemplateField extends PureComponent {
   }
 
   handleChange = (data) => {
-    this.props.onSave(this.props.field.id, this.props.position, data)
+    this.props.onSave(this.props.field.id, data, this.props.position)
   }
 
   handleInsert = () => {

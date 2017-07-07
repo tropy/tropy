@@ -41,12 +41,17 @@ class TemplateFieldList extends PureComponent {
     }
   }
 
-  handleFieldSave = (id, idx, data) => {
+  handleFieldSave = (id, data, idx) => {
     if (id < 0) {
       this.props.onFieldAdd({
         id: this.props.template,
         field: data
       }, { idx })
+    } else {
+      this.props.onFieldSave({
+        id: this.props.template,
+        field: { id, ...data }
+      })
     }
   }
 
