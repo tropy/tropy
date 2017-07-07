@@ -30,7 +30,12 @@ class TemplateField extends PureComponent {
     this.container = container
   }
 
-  handlePropertyChange = () => {
+  handlePropertyChange = ({ id }) => {
+    this.handleChange({ property: id })
+  }
+
+  handleChange = (data) => {
+    this.props.onSave(this.props.field.id, this.props.position, data)
   }
 
   handleInsert = () => {
@@ -91,20 +96,20 @@ class TemplateField extends PureComponent {
               name="isRequired"
               value={this.props.field.isRequired}
               isDisabled={this.props.isDisabled || this.props.isTransient}
-              onChange={this.handlePropertyChange}/>
+              onChange={this.handleChange}/>
             <FormField
               id="template.field.hint"
               name="hint"
               value={this.props.field.hint || ''}
               isDisabled={this.props.isDisabled || this.props.isTransient}
-              onChange={this.handlePropertyChange}
+              onChange={this.handleChange}
               isCompact/>
             <FormField
               id="template.field.constant"
               name="constant"
               value={this.props.field.constant || ''}
               isDisabled={this.props.isDisabled || this.props.isTransient}
-              onChange={this.handlePropertyChange}
+              onChange={this.handleChange}
               isCompact/>
           </fieldset>
         )}
@@ -126,6 +131,7 @@ class TemplateField extends PureComponent {
     dt: func.isRequired,
     onInsert: func.isRequired,
     onRemove: func.isRequired,
+    onSave: func.isRequired,
     onSort: func.isRequired,
     onSortPreview: func.isRequired,
     onSortReset: func.isRequired

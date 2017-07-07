@@ -156,7 +156,8 @@ class TemplateEditor extends PureComponent {
             properties={this.props.properties}
             isDisabled={this.state.isProtected}
             onFieldAdd={this.props.onFieldAdd}
-            onFieldRemove={this.props.onFieldRemove}/>
+            onFieldRemove={this.props.onFieldRemove}
+            onFieldSave={this.props.onFieldSave}/>
         </div>
       </div>
     )
@@ -175,6 +176,7 @@ class TemplateEditor extends PureComponent {
     onDelete: func.isRequired,
     onFieldAdd: func.isRequired,
     onFieldRemove: func.isRequired,
+    onFieldSave: func.isRequired,
     onImport: func.isRequired,
     onSave: func.isRequired
   }
@@ -206,6 +208,10 @@ module.exports = {
 
       onFieldRemove(...args) {
         dispatch(actions.ontology.template.field.remove(...args))
+      },
+
+      onFieldSave(...args) {
+        dispatch(actions.ontology.template.field.save(...args))
       },
 
       onImport() {

@@ -167,6 +167,22 @@ module.exports = {
           meta: { cmd: 'ontology', history: 'add', ...meta }
         }
       },
+
+      save(payload, meta = {}) {
+        return {
+          type: TEMPLATE.FIELD.SAVE,
+          payload,
+          meta: { cmd: 'ontology', history: 'add', ...meta }
+        }
+      },
+
+      sort(payload, meta = {}) {
+        return {
+          type: TEMPLATE.FIELD.SORT,
+          payload,
+          meta: { cmd: 'ontology', history: 'add', ...meta }
+        }
+      }
     }
   }
 }

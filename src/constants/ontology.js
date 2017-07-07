@@ -35,6 +35,7 @@ module.exports = {
     FIELD: {
       ADD: 'ontology.template.field.add',
       REMOVE: 'ontology.template.field.remove',
+      SAVE: 'ontology.template.field.save',
       SORT: 'ontology.template.field.sort'
     },
 

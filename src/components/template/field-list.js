@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { TemplateField } = require('./field')
-const { insert, move } = require('../../common/util')
+const { insert, move, remove } = require('../../common/util')
 const { arrayOf, bool, func, object, shape, string } = require('prop-types')
 
 
@@ -15,41 +15,42 @@ const newField = () => ({
   isRequired: false
 })
 
+const updateFields = (props) => (
+  props.isDisabled || !props.template ?
+    props.fields :
+    props.fields.length > 0 ?
+      [...props.fields] :
+      [newField()]
+)
+
 
 class TemplateFieldList extends PureComponent {
   constructor(props) {
     super(props)
 
     this.state = {
-      fields: this.getFields(props)
+      fields: updateFields(props)
     }
   }
 
   componentWillReceiveProps(props) {
     if (props.fields !== this.props.fields) {
       this.setState({
-        fields: this.getFields(props)
+        fields: updateFields(props)
       })
     }
-  }
-
-  getFields(props) {
-    const { isDisabled, fields, template } = props
-    if (isDisabled || !template) return fields
-    if (fields.length > 0) return [...fields]
-    return [newField()]
   }
 
   get isEmpty() {
     return this.props.fields.length === 0
   }
 
-  handleFieldSave = (field) => {
-    if (field.id < 0) {
+  handleFieldSave = (id, idx, data) => {
+    if (id < 0) {
       this.props.onFieldAdd({
         id: this.props.template,
-        field: field.id
-      }, { idx: field.position })
+        field: data
+      }, { idx })
     }
   }
 
@@ -60,10 +61,16 @@ class TemplateFieldList extends PureComponent {
   }
 
   handleFieldRemove = (field) => {
-    this.props.onFieldRemove({
-      id: this.props.template,
-      field: field.id
-    })
+    if (field.id < 0) {
+      this.setState({
+        fields: remove(this.state.fields, field)
+      })
+    } else {
+      this.props.onFieldRemove({
+        id: this.props.template,
+        field: field.id
+      })
+    }
   }
 
   handleSort = () => {
@@ -92,6 +99,7 @@ class TemplateFieldList extends PureComponent {
             isTransient={field.id < 0}
             onInsert={this.handleFieldInsert}
             onRemove={this.handleFieldRemove}
+            onSave={this.handleFieldSave}
             onSort={this.handleSort}
             onSortPreview={this.handleSortPreview}
             onSortReset={this.handleSortReset}/>)}
@@ -108,6 +116,7 @@ class TemplateFieldList extends PureComponent {
     })).isRequired,
     onFieldAdd: func.isRequired,
     onFieldRemove: func.isRequired,
+    onFieldSave: func.isRequired,
   }
 }
 
