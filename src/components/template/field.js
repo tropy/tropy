@@ -86,7 +86,8 @@ class TemplateField extends PureComponent {
                 <PropertySelect
                   properties={this.props.properties}
                   selected={this.props.field.property}
-                  isRequired={false}
+                  isRequired={!this.props.isTransient}
+                  isDisabled={this.props.isDisabled}
                   placeholder="property.select"
                   onChange={this.handlePropertyChange}/>
               </div>
