@@ -211,9 +211,9 @@ class FormToggle extends PureComponent {
     ]
   }
 
-  handleChange = (event) => {
+  handleChange = () => {
     this.props.onChange({
-      [this.props.name]: !!event.target.value
+      [this.props.name]: !this.props.value
     })
   }
 
