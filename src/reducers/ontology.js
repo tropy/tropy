@@ -116,6 +116,22 @@ function template(state = {}, { type, payload, error, meta }) {
       return (meta.done && !error) ?
         nested.remove('fields', state, payload, meta) :
         state
+    case TEMPLATE.FIELD.SAVE:
+      if (meta.done && !error) {
+        const { id, field } = payload
+
+        return {
+          ...state,
+          [id]: {
+            ...state[id],
+            fields: state[id].fields.map(f => (
+              f.id !== field.id ? f : { ...f, ...field }
+            ))
+          }
+        }
+      } else {
+        return state
+      }
     default:
       return state
   }
