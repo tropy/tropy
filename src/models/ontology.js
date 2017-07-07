@@ -425,6 +425,24 @@ const ontology = {
         return db.run(`
           DELETE FROM fields
             WHERE template_id = ? AND field_id IN (${list(fields)})`, id)
+      },
+
+      save(db, { id, ...data }) {
+        const assign = []
+        const params = { $id: id }
+
+        for (let attr in data) {
+          assign.push(`${attr} = $${attr}`)
+          params[`$${attr}`] = data[attr]
+        }
+
+        assert(id != null, 'missing field id')
+        assert(assign.length > 0, 'missing assignments')
+
+        return db.run(`
+          UPDATE fields
+            SET ${assign.join(', ')}
+            WHERE field_id = $id`, params)
       }
     }
   },
