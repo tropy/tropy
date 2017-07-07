@@ -346,7 +346,7 @@ const ontology = {
               template_id AS tpl,
               property_id AS property,
               datatype_id AS datatype,
-              required,
+              required AS isRequired,
               hint,
               constant
             FROM fields${constraint}
