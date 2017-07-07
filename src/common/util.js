@@ -239,11 +239,11 @@ const util = {
     }
   },
 
-  pick(src, props = [], into = {}) {
+  pick(src, props = [], into = {}, expand = false) {
     return props.reduce((res, key) => {
       const value = src[key]
 
-      if (typeof value !== 'undefined' || src.hasOwnProperty(key)) {
+      if (expand || typeof value !== 'undefined' || src.hasOwnProperty(key)) {
         res[key] = value
       }
 
