@@ -305,6 +305,7 @@ const ontology = {
         DELETE
           FROM labels
           WHERE id NOT IN (SELECT class_id FROM classes)
+            AND id NOT IN (SELECT datatype_id FROM datatypes)
             AND id NOT IN (SELECT property_id FROM properties)`
       )
     }
