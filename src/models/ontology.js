@@ -431,7 +431,7 @@ const ontology = {
         const params = { $id: id }
 
         for (let attr in data) {
-          assign.push(`${COL.FIELD[attr]} = $${attr}`)
+          assign.push(`${COL.FIELD[attr] || attr} = $${attr}`)
           params[`$${attr}`] = data[attr]
         }
 
@@ -450,7 +450,8 @@ const ontology = {
 const COL = {
   FIELD: {
     property: 'property_id',
-    datatype: 'datatype_id'
+    datatype: 'datatype_id',
+    isRequired: 'required'
   }
 }
 
