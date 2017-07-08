@@ -9,7 +9,7 @@ const { openTemplates, openVocabs, fail  } = require('../dialog')
 const { verbose, warn } = require('../common/log')
 const { get, pick } = require('../common/util')
 const { all, call, select } = require('redux-saga/effects')
-const { getTemplateField } = require('../selectors')
+const { getTemplateField, getTemplateFields } = require('../selectors')
 const act = require('../actions')
 const mod = require('../models')
 const { keys } = Object
@@ -379,23 +379,23 @@ class TemplateFieldRemove extends Command {
   }
 }
 
-class TemplateFieldSave extends Command {
-  static get action() { return TEMPLATE.FIELD.SAVE }
+class TemplateFieldOrder extends Command {
+  static get action() { return TEMPLATE.FIELD.ORDER }
 
   *exec() {
     const { db } = this.options
-    const { id, field } = this.action.payload
+    const { id, fields } = this.action.payload
 
     const original = yield select(state =>
-      getTemplateField(state, { id, field: field.id }))
+      getTemplateFields(state, { id }).map(f => f.id))
 
-    yield call(mod.ontology.template.field.save, db, field)
+    yield call(mod.ontology.template.field.order, db, fields)
 
-    this.undo = act.ontology.template.field.save({
-      id, field: pick(original.field, keys(field))
+    this.undo = act.ontology.template.field.order({
+      id, fields: original
     })
 
-    return { id, field }
+    return { id, fields }
   }
 }
 
@@ -408,6 +408,7 @@ module.exports = {
   PropsLoad,
   TemplateCreate,
   TemplateFieldAdd,
+  TemplateFieldOrder,
   TemplateFieldRemove,
   TemplateFieldSave,
   TemplateImport,

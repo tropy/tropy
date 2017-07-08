@@ -34,9 +34,9 @@ module.exports = {
 
     FIELD: {
       ADD: 'ontology.template.field.add',
+      ORDER: 'ontology.template.field.order',
       REMOVE: 'ontology.template.field.remove',
-      SAVE: 'ontology.template.field.save',
-      SORT: 'ontology.template.field.sort'
+      SAVE: 'ontology.template.field.save'
     },
 
     CONTEXT: 'https://tropy.org/v1/contexts/template.jsonld'
