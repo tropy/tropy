@@ -389,7 +389,7 @@ class TemplateFieldSave extends Command {
     const original = yield select(state =>
       getTemplateField(state, { id, field: field.id }))
 
-    yield call(mod.ontology.template.field.save, db, field);
+    yield call(mod.ontology.template.field.save, db, id, field);
 
     this.undo = act.ontology.template.field.save({
       id, field: pick(original.field, keys(field))
@@ -409,7 +409,7 @@ class TemplateFieldOrder extends Command {
     const original = yield select(state =>
       getTemplateFields(state, { id }).map(f => f.id))
 
-    yield call(mod.ontology.template.field.order, db, fields)
+    yield call(mod.ontology.template.field.order, db, id, fields)
 
     this.undo = act.ontology.template.field.order({
       id, fields: original
