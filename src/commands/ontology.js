@@ -379,6 +379,26 @@ class TemplateFieldRemove extends Command {
   }
 }
 
+class TemplateFieldSave extends Command {
+  static get action() { return TEMPLATE.FIELD.SAVE }
+
+  *exec() {
+    const { db } = this.options
+    const { id, field } = this.action.payload
+
+    const original = yield select(state =>
+      getTemplateField(state, { id, field: field.id }))
+
+    yield call(mod.ontology.template.field.save, db, field);
+
+    this.undo = act.ontology.template.field.save({
+      id, field: pick(original.field, keys(field))
+    })
+
+    return { id, field }
+  }
+}
+
 class TemplateFieldOrder extends Command {
   static get action() { return TEMPLATE.FIELD.ORDER }
 
