@@ -136,6 +136,7 @@ class TemplateFieldList extends PureComponent {
       id: string.isRequired
     })).isRequired,
     onFieldAdd: func.isRequired,
+    onFieldOrder: func.isRequired,
     onFieldRemove: func.isRequired,
     onFieldSave: func.isRequired,
   }

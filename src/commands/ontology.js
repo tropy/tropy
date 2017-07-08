@@ -389,7 +389,7 @@ class TemplateFieldSave extends Command {
     const original = yield select(state =>
       getTemplateField(state, { id, field: field.id }))
 
-    yield call(mod.ontology.template.field.save, db, field);
+    yield call(mod.ontology.template.field.save, db, field)
 
     this.undo = act.ontology.template.field.save({
       id, field: pick(original.field, keys(field))
