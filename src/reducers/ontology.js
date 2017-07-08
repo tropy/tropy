@@ -132,6 +132,22 @@ function template(state = {}, { type, payload, error, meta }) {
       } else {
         return state
       }
+    case TEMPLATE.FIELD.ORDER:
+      if (meta.done && !error) {
+        const { id, fields } = payload
+
+        return {
+          ...state,
+          [id]: {
+            ...state[id],
+            fields: fields.map(fid => (
+              state[id].fields.find(f => f.id === fid)
+            ))
+          }
+        }
+      } else {
+        return state
+      }
     default:
       return state
   }
