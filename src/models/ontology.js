@@ -447,7 +447,7 @@ const ontology = {
       order(db, id, order) {
         return db.run(`
           UPDATE fields
-            SET position = CASE list_id
+            SET position = CASE field_id
               ${order.map((_, idx) => (`WHEN ? THEN ${idx + 1}`)).join(' ')}
               END
             WHERE template_id = ?`,

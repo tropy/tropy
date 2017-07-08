@@ -74,7 +74,21 @@ class TemplateFieldList extends PureComponent {
     }
   }
 
-  handleSort = () => {
+  handleSortStart = () => {
+    this.originalFields = this.state.fields
+  }
+
+  handleSort = (field) => {
+    this.originalFields = null
+
+    if (field.id > 0) {
+      this.props.onFieldOrder({
+        id: this.props.template,
+        fields: this.state.fields
+          .map(f => f.id)
+          .filter(id => id > 0)
+      })
+    }
   }
 
   handleSortPreview = (from, to, offset) => {
@@ -84,6 +98,8 @@ class TemplateFieldList extends PureComponent {
   }
 
   handleSortReset = () => {
+    this.setState({ fields: this.originalFields })
+    this.originalFields = null
   }
 
   render() {
@@ -106,7 +122,8 @@ class TemplateFieldList extends PureComponent {
             onSave={this.handleFieldSave}
             onSort={this.handleSort}
             onSortPreview={this.handleSortPreview}
-            onSortReset={this.handleSortReset}/>)}
+            onSortReset={this.handleSortReset}
+            onSortStart={this.handleSortStart}/>)}
       </ul>
     )
   }

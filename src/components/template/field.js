@@ -135,21 +135,23 @@ class TemplateField extends PureComponent {
     onSave: func.isRequired,
     onSort: func.isRequired,
     onSortPreview: func.isRequired,
-    onSortReset: func.isRequired
+    onSortReset: func.isRequired,
+    onSortStart: func.isRequired
   }
 }
 
 
 const DragSourceSpec = {
-  beginDrag({ field }) {
+  beginDrag({ field, onSortStart }) {
+    onSortStart(field)
     return field
   },
 
-  endDrag({ onSort, onSortReset }, monitor) {
+  endDrag({ field, onSort, onSortReset }, monitor) {
     if (monitor.didDrop()) {
-      onSort()
+      onSort(field)
     } else {
-      onSortReset()
+      onSortReset(field)
     }
   }
 }

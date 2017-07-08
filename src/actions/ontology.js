@@ -176,9 +176,9 @@ module.exports = {
         }
       },
 
-      sort(payload, meta = {}) {
+      order(payload, meta = {}) {
         return {
-          type: TEMPLATE.FIELD.SORT,
+          type: TEMPLATE.FIELD.ORDER,
           payload,
           meta: { cmd: 'ontology', history: 'add', ...meta }
         }
