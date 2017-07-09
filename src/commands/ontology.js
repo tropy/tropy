@@ -394,13 +394,16 @@ class TemplateFieldAdd extends Command {
     const { id, field } = this.action.payload
     const { idx } = this.action.meta
 
-    yield call(mod.ontology.template.field.add, db, id, {
-      ...field, position: idx
-    })
+    const [stmt] =
+      yield call(mod.ontology.template.field.add, db, id, {
+        ...field, position: idx
+      })
 
-    this.undo = act.ontology.template.field.remove({ id, field })
+    this.undo = act.ontology.template.field.remove({ id, field: stmt.id })
 
-    return { id, fields: [field] }
+    return { id, fields: [{
+      ...field, id: stmt.id
+    }] }
   }
 }
 
