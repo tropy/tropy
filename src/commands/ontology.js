@@ -5,14 +5,21 @@ const { Command } = require('./command')
 const { ONTOLOGY } = require('../constants')
 const { VOCAB, PROPS, CLASS, LABEL, TEMPLATE } = ONTOLOGY
 const { Ontology, Template } = require('../common/ontology')
-const { openTemplates, openVocabs, fail  } = require('../dialog')
 const { verbose, warn } = require('../common/log')
 const { get, pick } = require('../common/util')
 const { all, call, select } = require('redux-saga/effects')
 const { getTemplateField, getTemplateFields } = require('../selectors')
 const act = require('../actions')
 const mod = require('../models')
+const sanitize = require('sanitize-filename')
 const { keys } = Object
+
+const {
+  openTemplates,
+  openVocabs,
+  exportTemplate,
+  fail
+} = require('../dialog')
 
 
 class Import extends Command {
@@ -258,15 +265,19 @@ class TemplateExport extends Command {
   *exec() {
     let { id, path } = this.action.payload
 
-    if (!path) {
-      path = yield call(openTemplates)
-      this.init = performance.now()
-    }
-
-    if (!path) return
-
     try {
       const data = yield select(state => state.ontology.template[id])
+      assert(data != null, 'missing template')
+
+      if (!path) {
+        path = yield call(exportTemplate({
+          defaultPath: data.name ? sanitize(`${data.name}.ttp`) : null
+        }))
+        this.init = performance.now()
+      }
+
+      if (!path) return
+
       yield call(Template.save, data, path)
 
     } catch (error) {

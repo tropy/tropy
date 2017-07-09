@@ -124,11 +124,21 @@ function saveProject(options) {
   })
 }
 
+function exportTemplate(options) {
+  return open('save', {
+    filters: [
+      { name: 'Tropy Templates', extensions: ['ttp'] }
+    ],
+    ...options
+  })
+}
+
 module.exports = {
   start,
   stop,
   open,
   notify,
+  exportTemplate,
   fail,
   file,
   openImages,
