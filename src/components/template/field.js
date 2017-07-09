@@ -89,6 +89,7 @@ class TemplateField extends PureComponent {
                   isRequired={!this.props.isTransient}
                   isDisabled={this.props.isDisabled}
                   placeholder="property.select"
+                  tabIndex={0}
                   onChange={this.handlePropertyChange}/>
               </div>
             </FormGroup>
@@ -97,6 +98,7 @@ class TemplateField extends PureComponent {
               name="isRequired"
               value={this.props.field.isRequired}
               isDisabled={this.props.isDisabled || this.props.isTransient}
+              tabIndex={0}
               onChange={this.handleChange}/>
             <FormField
               id="template.field.hint"
@@ -104,6 +106,7 @@ class TemplateField extends PureComponent {
               value={this.props.field.hint || ''}
               isDisabled={this.props.isDisabled || this.props.isTransient}
               onChange={this.handleChange}
+              tabIndex={0}
               isCompact/>
             <FormField
               id="template.field.constant"
@@ -111,6 +114,7 @@ class TemplateField extends PureComponent {
               value={this.props.field.constant || ''}
               isDisabled={this.props.isDisabled || this.props.isTransient}
               onChange={this.handleChange}
+              tabIndex={0}
               isCompact/>
           </fieldset>
         )}
