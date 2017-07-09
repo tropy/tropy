@@ -228,7 +228,12 @@ class TemplateImport extends Command {
 
       try {
         const {
-          '@id': id, type, name, creator, description, field: fields
+          '@id': id,
+          type,
+          name,
+          creator,
+          description,
+          field: fields
         } = yield call(Template.open, file)
 
         ids.push(yield call(createTemplate, db, {

@@ -408,12 +408,18 @@ const ontology = {
               template_id,
               property_id,
               datatype_id,
+              required,
+              hint,
+              constant,
               position
-            ) VALUES (?, ?, ?, ?)`, stmt =>
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)`, stmt =>
             all(fields.map((f, idx) => stmt.run([
               id,
               f.property,
               f.datatype || TEXT,
+              !!f.isRequired,
+              f.hint,
+              f.constant,
               (f.position != null) ? f.position : idx
             ])
           ))
