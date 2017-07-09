@@ -244,7 +244,7 @@ class FormToggle extends PureComponent {
     name: string.isRequired,
     size: number.isRequired,
     tabIndex: number,
-    value: bool.isRequired,
+    value: bool,
     onChange: func.isRequired
   }
 
