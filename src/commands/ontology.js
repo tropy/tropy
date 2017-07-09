@@ -12,6 +12,7 @@ const { getTemplateField, getTemplateFields } = require('../selectors')
 const act = require('../actions')
 const mod = require('../models')
 const sanitize = require('sanitize-filename')
+const { join } = require('path')
 const { keys } = Object
 
 const {
@@ -270,9 +271,12 @@ class TemplateExport extends Command {
       assert(data != null, 'missing template')
 
       if (!path) {
-        path = yield call(exportTemplate({
-          defaultPath: data.name ? sanitize(`${data.name}.ttp`) : null
-        }))
+        path = yield call(exportTemplate, {
+          defaultPath: join(
+            ARGS.documents,
+            data.name ? sanitize(`${data.name}.ttp`) : ''
+          )
+        })
         this.init = performance.now()
       }
 

@@ -17,6 +17,11 @@ const {
 
 
 class TemplateToolbar extends PureComponent {
+  handleExport = () => {
+    this.props.onExport({
+      id: this.props.selected
+    })
+  }
 
   render() {
     return (
@@ -41,11 +46,13 @@ class TemplateToolbar extends PureComponent {
               icon={<IconTrash/>}
               isDisabled={!this.props.selected}
               onClick={this.props.onDelete}/>
-            <IconButton icon={<IconImport/>}
+            <IconButton
+              icon={<IconImport/>}
               onClick={this.props.onImport}/>
             <IconButton
+              icon={<IconExport/>}
               isDisabled={!this.props.selected}
-              icon={<IconExport/>}/>
+              onClick={this.handleExport}/>
           </ButtonGroup>
         </div>
       </FormGroup>
@@ -61,6 +68,7 @@ class TemplateToolbar extends PureComponent {
     onChange: func.isRequired,
     onClear: func.isRequired,
     onDelete: func.isRequired,
+    onExport: func.isRequired,
     onImport: func.isRequired
   }
 }

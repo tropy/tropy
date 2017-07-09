@@ -15,7 +15,7 @@ class Template {
     return JSON.parse(await read(path))
   }
 
-  static write(data, path, options = {}) {
+  static save(data, path, options = {}) {
     return write(path, JSON.stringify(Template.parse(data)), options)
   }
 

@@ -96,6 +96,7 @@ class TemplateEditor extends PureComponent {
               onChange={this.handleTemplateChange}
               onClear={this.handleTemplateClear}
               onDelete={this.handleTemplateDelete}
+              onExport={this.props.onExport}
               onImport={this.props.onImport}/>
             <FormField
               id="template.name"
@@ -175,6 +176,7 @@ class TemplateEditor extends PureComponent {
     types: arrayOf(string).isRequired,
     onCreate: func.isRequired,
     onDelete: func.isRequired,
+    onExport: func.isRequired,
     onFieldAdd: func.isRequired,
     onFieldOrder: func.isRequired,
     onFieldRemove: func.isRequired,
@@ -202,6 +204,10 @@ module.exports = {
 
       onDelete(...args) {
         dispatch(actions.ontology.template.delete(...args))
+      },
+
+      onExport(...args) {
+        dispatch(actions.ontology.template.export(...args))
       },
 
       onFieldAdd(...args) {

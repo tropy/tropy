@@ -129,7 +129,7 @@ module.exports = {
 
     export(payload = {}, meta = {}) {
       return {
-        type: TEMPLATE.IMPORT,
+        type: TEMPLATE.EXPORT,
         payload,
         meta: { cmd: 'ontology', history: 'add', ...meta
         }
