@@ -29,6 +29,7 @@ module.exports = {
     CREATE: 'ontology.template.create',
     DELETE: 'ontology.template.delete',
     IMPORT: 'ontology.template.import',
+    EXPORT: 'ontology.template.export',
     LOAD: 'ontology.template.load',
     SAVE: 'ontology.template.save',
 

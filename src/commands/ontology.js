@@ -252,6 +252,32 @@ class TemplateImport extends Command {
   }
 }
 
+class TemplateExport extends Command {
+  static get action() { return TEMPLATE.EXPORT }
+
+  *exec() {
+    let { id, path } = this.action.payload
+
+    if (!path) {
+      path = yield call(openTemplates)
+      this.init = performance.now()
+    }
+
+    if (!path) return
+
+    try {
+      const data = yield select(state => state.ontology.template[id])
+      yield call(Template.save, data, path)
+
+    } catch (error) {
+      warn(`Failed to export template ${id} to ${path}: ${error.message}`)
+      verbose(error.stack)
+
+      fail(error, this.action.type)
+    }
+  }
+}
+
 class TemplateCreate extends Command {
   static get action() { return TEMPLATE.CREATE }
 
@@ -427,6 +453,7 @@ module.exports = {
   Load,
   PropsLoad,
   TemplateCreate,
+  TemplateExport,
   TemplateFieldAdd,
   TemplateFieldOrder,
   TemplateFieldRemove,

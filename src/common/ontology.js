@@ -2,12 +2,12 @@
 
 const { join, basename, extname } = require('path')
 const { createReadStream: stream } = require('fs')
-const { any, empty, get, titlecase } = require('./util')
+const { any, empty, get, pick, titlecase } = require('./util')
 const { Resource } = require('./res')
 const N3 = require('n3')
 const { RDF, RDFS, DC, DCT, SKOS, OWL, VANN } = require('../constants')
 const { TEMPLATE } = require('../constants/ontology')
-const { readFileAsync: read } = require('fs')
+const { readFileAsync: read, writeFileAsync: write } = require('fs')
 
 
 class Template {
@@ -15,14 +15,24 @@ class Template {
     return JSON.parse(await read(path))
   }
 
-  static export(data) {
+  static write(data, path, options = {}) {
+    return write(path, JSON.stringify(Template.parse(data)), options)
+  }
+
+  static parse(data) {
     return {
       '@context': TEMPLATE.CONTEXT,
       '@id': data.id,
       'type': data.type,
       'name': data.name,
       'domain': data.domain,
-      'field': data.field.map(field => ({ ...field }))
+      'field': data.fields.map(field => pick(field, [
+        'property',
+        'datatype',
+        'isRequired',
+        'hint',
+        'constant'
+      ]))
     }
   }
 }

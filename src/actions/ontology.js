@@ -127,6 +127,15 @@ module.exports = {
       }
     },
 
+    export(payload = {}, meta = {}) {
+      return {
+        type: TEMPLATE.IMPORT,
+        payload,
+        meta: { cmd: 'ontology', history: 'add', ...meta
+        }
+      }
+    },
+
     delete(payload, meta = {}) {
       return {
         type: TEMPLATE.DELETE,
