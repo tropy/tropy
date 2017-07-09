@@ -335,7 +335,7 @@ class Statement {
   }
 
   run(...params) {
-    return this.stmt.runAsync(flatten(params)).return(this)
+    return this.stmt.runAsync(flatten(params))
   }
 
   get(...params) {
