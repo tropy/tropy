@@ -96,7 +96,11 @@ class FormField extends PureComponent {
     this.props.onBlur(this.props.id, event)
   }
 
-  handleChange = (value, hasChanged) => {
+  handleChange = (value) => {
+    this.props.onInputChange({ [this.props.name]: value })
+  }
+
+  handleCommit = (value, hasChanged) => {
     if (hasChanged) {
       this.props.onChange({
         [this.props.name]: value
@@ -123,7 +127,8 @@ class FormField extends PureComponent {
           isReadOnly={this.props.isReadOnly}
           isRequired={this.props.isRequired}
           onBlur={this.handleBlur}
-          onCommit={this.handleChange}/>
+          onChange={this.handleChange}
+          onCommit={this.handleCommit}/>
       </FormElement>
     )
   }
@@ -140,13 +145,16 @@ class FormField extends PureComponent {
     tabIndex: number,
     value: string,
     onBlur: func.isRequired,
-    onChange: func.isRequired
+    onChange: func.isRequired,
+    onInputChange: func.isRequired
   }
 
   static defaultProps = {
     isReadOnly: false,
     size: 9,
-    onBlur: noop
+    onBlur: noop,
+    onChange: noop,
+    onInputChange: noop
   }
 }
 
