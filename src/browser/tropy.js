@@ -11,6 +11,7 @@ const { verbose, warn } = require('../common/log')
 const { open, hasOverlayScrollBars } = require('./window')
 const { all } = require('bluebird')
 const { existsSync: exists } = require('fs')
+const { join } = require('path')
 const { into, compose, remove, take } = require('transducers.js')
 
 const { AppMenu, ContextMenu } = require('./menu')
@@ -404,6 +405,18 @@ class Tropy extends EventEmitter {
 
     this.on('app:search-issues', () => {
       shell.openExternal('https://github.com/tropy/tropy/issues')
+    })
+
+    this.on('app:open-docs', () => {
+      shell.openExternal('https://docs.tropy.org')
+    })
+
+    this.on('app:open-forums', () => {
+      shell.openExternal('https://forums.tropy.org')
+    })
+
+    this.on('app:open-logs', () => {
+      shell.showItemInFolder(join(app.getPath('userData'), 'log'))
     })
 
     this.on('app:open-dialog', (win, options = {}) => {

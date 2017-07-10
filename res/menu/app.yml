@@ -122,8 +122,15 @@ linux:
     submenu:
       - label: 'View &License'
         command: 'app:open-license'
+      - label: 'View Manual'
+        command: 'app:open-docs'
+      - label: 'Visit Forums'
+        command: 'app:open-forums'
       - label: 'Search Issues'
         command: 'app:search-issues'
+      - type: 'separator'
+      - label: 'Show Log Files'
+        command: 'app:open-logs'
       - type: 'separator'
       - label: 'About %name'
         command: 'app:about'
@@ -191,8 +198,15 @@ darwin:
     submenu:
       - label: 'View &License'
         command: 'app:open-license'
+      - label: 'View Manual'
+        command: 'app:open-docs'
+      - label: 'Visit Forums'
+        command: 'app:open-forums'
       - label: 'Search Issues'
         command: 'app:search-issues'
+      - type: 'separator'
+      - label: 'Show Log Files'
+        command: 'app:open-logs'
 
 win32:
   - *file
