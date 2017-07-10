@@ -4,7 +4,7 @@ CREATE TABLE templates (
   name           TEXT     NOT NULL,
   description    TEXT,
   creator        TEXT,
-  protected      BOOLEAN  NOT NULL DEFAULT FALSE,
+  protected      BOOLEAN  NOT NULL DEFAULT 0,
   created        NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified       NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -33,7 +33,7 @@ CREATE TABLE fields (
   template_id   TEXT      NOT NULL REFERENCES templates ON DELETE CASCADE,
   property_id   TEXT      NOT NULL,
   datatype_id   TEXT      NOT NULL,
-  required      BOOLEAN   NOT NULL DEFAULT FALSE,
+  required      BOOLEAN   NOT NULL DEFAULT 0,
   hint          TEXT,
   constant      TEXT,
   position      INTEGER,

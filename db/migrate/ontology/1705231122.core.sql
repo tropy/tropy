@@ -3,7 +3,7 @@ CREATE TABLE vocabularies (
   prefix          TEXT,
   created         NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   deleted         NUMERIC,
-  protected       BOOLEAN  NOT NULL DEFAULT FALSE,
+  protected       BOOLEAN  NOT NULL DEFAULT 0,
   title           TEXT,
   description     TEXT,
   comment         TEXT,
