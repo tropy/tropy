@@ -21,7 +21,7 @@ $brand-primary-light: $blue-light;
   #{--brand-primary}:          $brand-primary;
   #{--brand-primary-light}:    $brand-primary-light;
   #{--brand-primary-30}:       rgba($brand-primary, 0.3);
-  #{--brand-primary-60}:       rgba($brand-primary, 0.6);
+  #{--brand-primary-tint-40}:  mix(#fff, $brand-primary, 40%);
   #{--brand-primary-dark}:     mix(#222, $brand-primary, 60%);
   #{--brand-primary-darken-4}: darken($brand-primary, 4%);
   #{--red}:                    $red;
@@ -128,7 +128,7 @@ $input-color:                    var(--shade-9);
 $input-bg:                       var(--shade-0); // Transparent causes border/box-shadow issue
 $input-bg-readonly:              var(--shade-1-darken-4);
 $input-border:                   var(--shade-3);
-$input-color-focus:              var(--brand-primary-60);
+$input-color-focus:              var(--brand-primary-tint-40);
 $input-color-placeholder:        var(--shade-5);
 $fieldset-bg:                    var(--shade-1-darken-4);
 $fieldset-input-border:          var(--shade-1-darken-14);
@@ -302,7 +302,7 @@ $editor-btn-active-bg:     var(--shade-2);
 $editor-text-selection-bg: $text-selection-bg;
 
 $blockquote-border-color: var(--shade-2);
-$selected-node-color:     var(--brand-primary-60);
+$selected-node-color:     var(--brand-primary-tint-40);
 $editor-hr-border-color:  var(--shade-2);
 
 // Preferences
