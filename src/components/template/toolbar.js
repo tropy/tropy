@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { TemplateSelect } = require('./select')
 const { ButtonGroup, IconButton } = require('../button')
 const { FormGroup, Label } = require('../form')
-const { arrayOf, func, shape, string } = require('prop-types')
+const { arrayOf, bool, func, shape, string } = require('prop-types')
 
 const {
   IconNew,
@@ -45,7 +45,7 @@ class TemplateToolbar extends PureComponent {
               onClick={this.props.onCopy}/>
             <IconButton
               icon={<IconTrash/>}
-              isDisabled={!this.props.selected}
+              isDisabled={!this.props.selected && !this.props.isProtected}
               onClick={this.props.onDelete}/>
             <IconButton
               icon={<IconImport/>}
@@ -66,6 +66,7 @@ class TemplateToolbar extends PureComponent {
       name: string
     })).isRequired,
     selected: string,
+    isProtected: bool,
     onChange: func.isRequired,
     onClear: func.isRequired,
     onCopy: func.isRequired,

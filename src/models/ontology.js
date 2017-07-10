@@ -379,7 +379,7 @@ const ontology = {
     delete(db, ...ids) {
       return db.run(`
         DELETE FROM templates
-          WHERE template_id IN (${list(ids, quote)})`
+          WHERE template_id IN (${list(ids, quote)}) AND NOT protected`
       )
     },
 

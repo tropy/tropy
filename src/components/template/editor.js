@@ -106,6 +106,7 @@ class TemplateEditor extends PureComponent {
             <TemplateToolbar
               selected={this.state.id}
               templates={this.props.templates}
+              isProtected={this.state.isProtected}
               onChange={this.handleTemplateChange}
               onClear={this.handleTemplateClear}
               onCopy={this.handleTemplateCopy}
