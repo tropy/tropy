@@ -45,7 +45,7 @@ class TemplateToolbar extends PureComponent {
               onClick={this.props.onCopy}/>
             <IconButton
               icon={<IconTrash/>}
-              isDisabled={!this.props.selected && !this.props.isProtected}
+              isDisabled={!this.props.selected && this.props.isProtected}
               onClick={this.props.onDelete}/>
             <IconButton
               icon={<IconImport/>}
