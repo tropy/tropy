@@ -5,22 +5,40 @@
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
-      <key>LSItemContentTypes</key>
-      <array>
-        <string>org.tropy.schema.v1.mime-types.tpy</string>
-      </array>
-      <key>NSExportableTypes</key>
-      <array>
-        <string>org.tropy.schema.v1.mime-types.tpy</string>
-      </array>
-			<key>CFBundleTypeIconFile</key>
-			<string>tpy.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Tropy Project</string>
+			<key>CFBundleTypeIconFile</key>
+			<string>tpy.icns</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSHandlerRank</key>
 			<string>Owner</string>
+      <key>LSItemContentTypes</key>
+      <array>
+        <string>org.tropy.v1.mime-types.tpy</string>
+      </array>
+      <key>NSExportableTypes</key>
+      <array>
+        <string>org.tropy.v1.mime-types.tpy</string>
+      </array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Tropy Template</string>
+			<key>CFBundleTypeIconFile</key>
+			<string>ttp.icns</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+      <key>LSItemContentTypes</key>
+      <array>
+        <string>org.tropy.v1.mime-types.ttp</string>
+      </array>
+      <key>NSExportableTypes</key>
+      <array>
+        <string>org.tropy.v1.mime-types.ttp</string>
+      </array>
 		</dict>
     <dict>
       <key>CFBundleTypeName</key>
@@ -51,9 +69,9 @@
 	<array>
     <dict>
       <key>UTTypeIdentifier</key>
-      <string>org.tropy.schema.v1.mime-types.tpy</string>
+      <string>org.tropy.v1.mime-types.tpy</string>
       <key>UTTypeReferenceURL</key>
-      <string>https://schema.tropy.org/v1/mime-types/tpy</string>
+      <string>https://tropy.org/v1/mime-types/tpy</string>
       <key>UTTypeDescription</key>
       <string>Tropy Project</string>
       <key>UTTypeIconFile</key>
@@ -67,7 +85,28 @@
         <key>public.filename-extension</key>
         <string>tpy</string>
         <key>public.mime-type</key>
-        <string>application/vnd.tropy.tpy</string>
+        <string>application-vnd.tropy.tpy</string>
+      </dict>
+    </dict>
+    <dict>
+      <key>UTTypeIdentifier</key>
+      <string>org.tropy.v1.mime-types.ttp</string>
+      <key>UTTypeReferenceURL</key>
+      <string>https://tropy.org/v1/mime-types/ttp</string>
+      <key>UTTypeDescription</key>
+      <string>Tropy Template</string>
+      <key>UTTypeIconFile</key>
+      <string>ttp.icns</string>
+      <key>UTTypeConformsTo</key>
+      <array>
+        <string>public.data</string>
+      </array>
+      <key>UTTypeTagSpecification</key>
+      <dict>
+        <key>public.filename-extension</key>
+        <string>ttp</string>
+        <key>public.mime-type</key>
+        <string>application-vnd.tropy.ttp</string>
       </dict>
     </dict>
 	</array>
