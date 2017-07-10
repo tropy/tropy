@@ -122,7 +122,8 @@ class TemplateEditor extends PureComponent {
               isDisabled={this.state.isProtected}
               tabIndex={0}
               onChange={isPristine ? undefined : this.handleTemplateUpdate}
-              onInputChange={isPristine ? this.handleTemplateUpdate : undefined}/>
+              onInputChange={isPristine ?
+                this.handleTemplateUpdate : undefined}/>
             <FormField
               id="template.id"
               name="id"
