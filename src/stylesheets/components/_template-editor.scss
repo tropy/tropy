@@ -49,6 +49,11 @@
       opacity: 0;
     }
 
+    .btn-container {
+      flex: 0 0 auto;
+      width: 2 * ($space-md + $space-min);
+    }
+
     .btn-icon {
       flex: 0 0 auto;
       padding: {

@@ -119,8 +119,10 @@ class TemplateField extends PureComponent {
               isCompact/>
           </fieldset>
         )}
-        {this.renderInsertButton()}
-        {this.renderRemoveButton()}
+        <div className="btn-container">
+          {this.renderInsertButton()}
+          {this.renderRemoveButton()}
+        </div>
       </li>
     )
   }
