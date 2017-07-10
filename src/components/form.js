@@ -219,6 +219,10 @@ class FormToggle extends PureComponent {
     ]
   }
 
+  handleMouseDown = (event) => {
+    event.preventDefault()
+  }
+
   handleChange = () => {
     this.props.onChange({
       [this.props.name]: !this.props.value
@@ -237,6 +241,7 @@ class FormToggle extends PureComponent {
               checked={!!this.props.value}
               disabled={this.props.isDisabled}
               tabIndex={this.props.tabIndex}
+              onMouseDown={this.handleMouseDown}
               onChange={this.handleChange}/>
             <FormattedMessage id={this.props.id}/>
           </label>
