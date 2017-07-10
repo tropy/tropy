@@ -30,6 +30,7 @@ class PropertySelect extends PureComponent {
         tabIndex={this.props.tabIndex}
         name="property-select"
         className="property-select form-control"
+        disabled={this.props.isDisabled}
         required={this.props.isRequired}
         value={this.props.selected}
         onChange={this.handleChange}>
@@ -42,6 +43,7 @@ class PropertySelect extends PureComponent {
 
   static propTypes = {
     intl: intlShape,
+    isDisabled: bool,
     isRequired: bool,
     placeholder: string,
     tabIndex: number.isRequired,

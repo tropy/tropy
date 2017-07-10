@@ -14,30 +14,29 @@ const { TYPE } = require('../../constants')
 
 const { getTemplateList, getPropertyList } = require('../../selectors')
 
-function dup(template) {
-  template = template || {
-    name: '',
-    id: '',
-    type: TYPE.ITEM,
-    creator: '',
-    description: '',
-    created: null,
-    isProtected: null,
-    fields: []
-  }
-
-  return { ...template }
+const TEMPLATE = {
+  name: '',
+  id: '',
+  type: TYPE.ITEM,
+  creator: '',
+  description: '',
+  created: null,
+  isProtected: false,
+  fields: []
 }
+
+const makeTemplate = (template = TEMPLATE) => ({ ...template })
+
 
 class TemplateEditor extends PureComponent {
   constructor(props) {
     super(props)
-    this.state = dup()
+    this.state = makeTemplate()
   }
 
   componentWillReceiveProps({ templates }) {
     if (this.state.id != null && this.props.templates !== templates) {
-      this.setState(dup(templates.find(t => t.id === this.state.id)))
+      this.setState(makeTemplate(templates.find(t => t.id === this.state.id)))
     }
   }
 
@@ -49,17 +48,31 @@ class TemplateEditor extends PureComponent {
     return this.state.id !== '' && this.state.name !== ''
   }
 
+  handleTemplateCopy = () => {
+    this.setState(makeTemplate({
+      ...TEMPLATE,
+      name: this.state.name,
+      type: this.state.type,
+      creator: this.state.creator,
+      description: this.state.description,
+      fields: this.state.fields.map((f, idx) => ({
+        id: -(idx + 1),
+        ...pick(f, ['property', 'datatype', 'isRequired', 'hint', 'constant'])
+      }))
+    }))
+  }
+
   handleTemplateDelete = () => {
     if (this.state.id) {
       this.props.onDelete([this.state.id])
-      this.setState(dup())
+      this.setState(makeTemplate())
     }
   }
 
   handleTemplateCreate = () => {
     this.props.onCreate({
       [this.state.id]: pick(this.state, [
-        'id', 'name', 'type', 'creator', 'description'
+        'id', 'name', 'type', 'creator', 'description', 'fields'
       ])
     })
   }
@@ -69,7 +82,7 @@ class TemplateEditor extends PureComponent {
   }
 
   handleTemplateChange = (template) => {
-    this.setState(dup(template))
+    this.setState(makeTemplate(template))
   }
 
   handleTemplateUpdate = (template) => {
@@ -95,6 +108,7 @@ class TemplateEditor extends PureComponent {
               templates={this.props.templates}
               onChange={this.handleTemplateChange}
               onClear={this.handleTemplateClear}
+              onCopy={this.handleTemplateCopy}
               onDelete={this.handleTemplateDelete}
               onExport={this.props.onExport}
               onImport={this.props.onImport}/>
@@ -155,7 +169,7 @@ class TemplateEditor extends PureComponent {
             template={this.state.id}
             fields={this.state.fields}
             properties={this.props.properties}
-            isDisabled={this.state.isProtected}
+            isDisabled={this.state.isProtected || isPristine}
             onFieldAdd={this.props.onFieldAdd}
             onFieldOrder={this.props.onFieldOrder}
             onFieldRemove={this.props.onFieldRemove}

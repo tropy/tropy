@@ -40,8 +40,9 @@ class TemplateToolbar extends PureComponent {
               isDisabled={!this.props.selected}
               onClick={this.props.onClear}/>
             <IconButton
-              isDisabled
-              icon={<IconCopy/>}/>
+              icon={<IconCopy/>}
+              isDisabled={!this.props.selected}
+              onClick={this.props.onCopy}/>
             <IconButton
               icon={<IconTrash/>}
               isDisabled={!this.props.selected}
@@ -67,6 +68,7 @@ class TemplateToolbar extends PureComponent {
     selected: string,
     onChange: func.isRequired,
     onClear: func.isRequired,
+    onCopy: func.isRequired,
     onDelete: func.isRequired,
     onExport: func.isRequired,
     onImport: func.isRequired
