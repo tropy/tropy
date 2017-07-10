@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="a" data-name="Unbenannter Verlauf 26" x1="18" y1="29" x2="110" y2="29" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#395bac" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#395bac"/>
+      <stop offset="1" stop-color="#395bac" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="b" data-name="Unbenannter Verlauf 22" x1="1147.166" y1="238.125" x2="1170.916" y2="230.5" gradientTransform="translate(316 -1048) rotate(90)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#395bac" stop-opacity="0"/>
+      <stop offset="1" stop-color="#395bac"/>
+    </linearGradient>
+    <clipPath id="c">
+      <path d="M82,88a8,8,0,1,1-8,8,8.009,8.009,0,0,1,8-8m0-4A12,12,0,1,0,94,96,12,12,0,0,0,82,84Z" fill="#e7effb"/>
+    </clipPath>
+    <linearGradient id="d" data-name="Unbenannter Verlauf 41" x1="90" y1="88" x2="90" y2="96.057" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e7effb"/>
+      <stop offset="1" stop-color="#9dbeef"/>
+    </linearGradient>
+    <linearGradient id="e" x1="64" y1="104" x2="64" y2="112.057" gradientTransform="translate(14 -4)" xlink:href="#d"/>
+  </defs>
+  <g>
+    <rect x="18" y="91" width="92" height="37" fill="#e7effb"/>
+    <polygon points="18 0 18 124 82 124 82 96 110 96 110 0 18 0" fill="#5c93e5"/>
+    <rect x="18" width="92" height="28" fill="#e7effb"/>
+    <rect x="18" y="28" width="92" height="2" opacity="0.5" fill="url(#a)"/>
+    <polyline points="82 56 46 76 82 96" fill="none" stroke="#e7effb" stroke-miterlimit="10" stroke-width="4"/>
+    <path d="M82,106A10,10,0,1,1,92,96,10.011,10.011,0,0,1,82,106Z" fill="#5c93e5"/>
+    <g>
+      <path d="M82,66A10,10,0,1,1,92,56,10.011,10.011,0,0,1,82,66Z" fill="#5c93e5"/>
+      <path d="M82,48a8,8,0,1,1-8,8,8.009,8.009,0,0,1,8-8m0-4A12,12,0,1,0,94,56,12,12,0,0,0,82,44Z" fill="#e7effb"/>
+    </g>
+    <g>
+      <path d="M46,86A10,10,0,1,1,56,76,10.011,10.011,0,0,1,46,86Z" fill="#5c93e5"/>
+      <path d="M46,68a8,8,0,1,1-8,8,8.009,8.009,0,0,1,8-8m0-4A12,12,0,1,0,58,76,12,12,0,0,0,46,64Z" fill="#e7effb"/>
+    </g>
+    <polygon points="74 100 82 124 82 99.111 74 100" opacity="0.5" fill="url(#b)"/>
+    <rect x="18" y="124" width="92" height="4" fill="#cedff7"/>
+    <g>
+      <path d="M49.35,23V8.106h5.277V5H40.319V8.106h5.264V23Z" fill="#5c93e5"/>
+      <path d="M65.658,23V8.106h5.277V5H56.627V8.106h5.264V23Z" fill="#5c93e5"/>
+      <path d="M73.934,5V23H77.7V17.324h3.555c3.792,0,6.424-2.47,6.424-6.162A5.88,5.88,0,0,0,81.444,5ZM77.7,7.981h2.744c2.158,0,3.405,1.148,3.405,3.193s-1.26,3.206-3.418,3.206H77.7Z" fill="#5c93e5"/>
+    </g>
+    <g>
+      <path d="M82,88a8,8,0,1,1-8,8,8.009,8.009,0,0,1,8-8m0-4A12,12,0,1,0,94,96,12,12,0,0,0,82,84Z" fill="#e7effb"/>
+      <g clip-path="url(#c)">
+        <rect x="82" y="88" width="16" height="8" fill="url(#d)"/>
+        <rect x="70" y="100" width="16" height="8" transform="translate(-26 182) rotate(-90)" fill="url(#e)"/>
+      </g>
+    </g>
+    <polygon points="82 96 82 124 110 96 82 96" fill="#cedff7"/>
+  </g>
+</svg>
