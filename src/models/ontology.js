@@ -113,7 +113,7 @@ const ontology = {
       return db.run(`
         UPDATE vocabularies
           SET deleted = datetime("now")
-          WHERE vocabulary_id = ?`, id
+          WHERE vocabulary_id = ? AND NOT protected`, id
       )
     },
 
