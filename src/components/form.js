@@ -9,6 +9,7 @@ const { arrayOf, bool, func, node, number, string } = require('prop-types')
 const { noop } = require('../common/util')
 const { GRID } = require('../constants/sass')
 const { injectIntl, intlShape } = require('react-intl')
+const { on, off } = require('../dom')
 
 
 class FormGroup extends PureComponent {
@@ -211,16 +212,40 @@ class FormSelect extends PureComponent {
 }
 
 class FormToggle extends PureComponent {
+  constructor(props) {
+    super(props)
+    this.state = {
+      isTabFocus: false
+    }
+  }
+
+  componentDidMount() {
+    on(this.input, 'tab:focus', this.handleTabFocus)
+  }
+
+  componentWillUnmount() {
+    off(this.input, 'tab:focus', this.handleTabFocus)
+  }
+
   get classes() {
     return [
       `col-${this.props.size}`,
       `col-offset-${GRID.SIZE - this.props.size}`,
-      'checkbox'
+      'checkbox',
+      { tab: this.state.isTabFocus }
     ]
   }
 
-  handleMouseDown = (event) => {
-    event.preventDefault()
+  setInput = (input) => {
+    this.input = input
+  }
+
+  handleTabFocus = () => {
+    this.setState({ isTabFocus: true })
+  }
+
+  handleBlur = () => {
+    this.setState({ isTabFocus: false })
   }
 
   handleChange = () => {
@@ -235,13 +260,14 @@ class FormToggle extends PureComponent {
         <div className={cx(...this.classes)}>
           <label>
             <input
+              ref={this.setInput}
               name={this.props.name}
               type="checkbox"
               value={this.props.value}
               checked={!!this.props.value}
               disabled={this.props.isDisabled}
               tabIndex={this.props.tabIndex}
-              onMouseDown={this.handleMouseDown}
+              onBlur={this.handleBlur}
               onChange={this.handleChange}/>
             <FormattedMessage id={this.props.id}/>
           </label>
