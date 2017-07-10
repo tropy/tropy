@@ -145,11 +145,14 @@ fieldset {
     border: 1px solid $input-border;
     border-radius: $border-radius-small;
     position: relative;
+    transition: border-color ease 0.15s, box-shadow ease 0.15s;
 
     &:active {
       background: $checkbox-checked-bg;
       border-color: $checkbox-checked-bg;
     }
+
+    @include form-control-focus;
 
     &[disabled] {
       background: $input-bg-readonly;
@@ -164,6 +167,8 @@ fieldset {
         background: $checkbox-checked-active-bg;
         border-color: $checkbox-checked-active-border;
       }
+
+      @include form-control-focus;
 
       &[disabled] {
         background: $input-bg-readonly;
