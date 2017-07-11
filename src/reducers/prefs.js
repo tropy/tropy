@@ -1,11 +1,13 @@
 'use strict'
 
 const { PREFS } = require('../constants')
-const init = { pane: 'template' }
+const defaults = { pane: 'app' }
 
 module.exports = {
-  prefs(state = init, { type, payload }) {
+  prefs(state = defaults, { type, payload }) {
     switch (type) {
+      case PREFS.RESTORE:
+        return { ...defaults, ...payload }
       case PREFS.UPDATE:
         return { ...state, ...payload }
       default:

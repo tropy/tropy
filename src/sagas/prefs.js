@@ -6,7 +6,11 @@ const { history } = require('./history')
 const { ipc } = require('./ipc')
 const { shell } = require('./shell')
 const { warn, debug, verbose } = require('../common/log')
-const { all, cancel, cancelled, fork, take } = require('redux-saga/effects')
+const storage = require('./storage')
+
+const {
+  all, call, cancel, cancelled, fork, take
+} = require('redux-saga/effects')
 
 module.exports = {
   *main() {
@@ -20,6 +24,10 @@ module.exports = {
         fork(shell)
       ])
 
+      yield all([
+        call(storage.restore, 'prefs')
+      ])
+
       yield take(CLOSE)
 
     } catch (error) {
@@ -27,6 +35,10 @@ module.exports = {
       debug(error.stack)
 
     } finally {
+      yield all([
+        call(storage.persist, 'prefs')
+      ])
+
       if (!(yield cancelled())) {
         yield all(aux.map(t => cancel(t)))
       }

@@ -1,6 +1,7 @@
 'use strict'
 
 module.exports = {
-  UPDATE: 'prefs.update',
-  CLOSE: 'prefs.close'
+  CLOSE: 'prefs.close',
+  RESTORE: 'prefs.restore',
+  UPDATE: 'prefs.update'
 }
