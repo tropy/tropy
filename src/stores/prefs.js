@@ -10,13 +10,14 @@ const { log: logger, warn, debug } = require('../common/log')
 const { seq, debounce, throttle, log } = require('../middleware')
 
 const {
-  intl,
   edit,
+  history,
+  intl,
+  keymap,
   ontology,
   prefs,
   project,
-  keymap,
-  history
+  settings
 } = require('../reducers')
 
 
@@ -34,13 +35,14 @@ module.exports = {
     })
 
     let reducer = combineReducers({
-      intl,
       edit,
+      history,
+      intl,
+      keymap,
       ontology,
       prefs,
       project,
-      keymap,
-      history
+      settings
     })
 
     let middleware = applyMiddleware(

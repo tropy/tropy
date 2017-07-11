@@ -72,7 +72,9 @@ class PrefsContainer extends PureComponent {
           <PrefPane
             name="app"
             isActive={this.isActive('app')}>
-            <AppPrefs/>
+            <AppPrefs
+              settings={this.props.settings}
+              onSettingsUpdate={this.props.onSettingsUpdate}/>
           </PrefPane>
 
 
@@ -104,12 +106,14 @@ class PrefsContainer extends PureComponent {
     isFrameless: bool,
     edit: object.isRequired,
     pane: string.isRequired,
+    settings: object.isRequired,
     vocab: array.isRequired,
     onClassSave: func.isRequired,
     onContextMenu: func.isRequired,
     onOpenLink: func.isRequired,
     onPrefsUpdate: func.isRequired,
     onPropsSave: func.isRequired,
+    onSettingsUpdate: func.isRequired,
     onVocabDelete: func.isRequired,
     onVocabSave: func.isRequired,
     onOntologyImport: func.isRequired
@@ -127,6 +131,7 @@ module.exports = {
       project: state.project,
       keymap: state.keymap,
       pane: state.prefs.pane,
+      settings: state.settings,
       vocab: getVocabs(state)
     }),
 

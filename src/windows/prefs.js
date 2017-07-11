@@ -28,6 +28,10 @@ all([
 
 dialog.start(store)
 
+win.on('style.update', () => {
+  store.dispatch(act.settings.update({ theme: win.state.theme }))
+})
+
 win.unloaders.push(dialog.stop)
 win.unloaders.push(() => (
   store.dispatch(act.prefs.close()), tasks.done

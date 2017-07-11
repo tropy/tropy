@@ -10,23 +10,24 @@ const { log: logger, warn, debug } = require('../common/log')
 const { seq, debounce, throttle, log } = require('../middleware')
 
 const {
-  intl,
-  nav,
-  ui,
   activities,
   columns,
   edit,
+  history,
+  intl,
+  items,
+  keymap,
+  lists,
+  metadata,
+  nav,
+  notes,
+  ontology,
   photos,
   project,
   qr,
-  keymap,
-  lists,
-  notes,
-  ontology,
-  items,
-  metadata,
+  settings,
   tags,
-  history
+  ui,
 } = require('../reducers')
 
 const devtools = (ARGS.dev || ARGS.debug) &&
@@ -44,23 +45,24 @@ module.exports = {
     })
 
     let reducer = combineReducers({
-      intl,
-      nav,
-      ui,
       activities,
       columns,
       edit,
+      history,
+      intl,
+      items,
+      keymap,
+      lists,
+      metadata,
+      nav,
+      notes,
+      ontology,
       photos,
       project,
       qr,
-      keymap,
-      lists,
-      notes,
-      ontology,
-      items,
-      metadata,
+      settings,
       tags,
-      history
+      ui,
     })
 
     let middleware = applyMiddleware(

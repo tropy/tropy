@@ -25,7 +25,8 @@ module.exports = {
       ])
 
       yield all([
-        call(storage.restore, 'prefs')
+        call(storage.restore, 'prefs'),
+        call(storage.restore, 'settings')
       ])
 
       yield take(CLOSE)
@@ -36,7 +37,8 @@ module.exports = {
 
     } finally {
       yield all([
-        call(storage.persist, 'prefs')
+        call(storage.persist, 'prefs'),
+        call(storage.persist, 'settings')
       ])
 
       if (!(yield cancelled())) {

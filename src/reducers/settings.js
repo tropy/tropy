@@ -10,7 +10,7 @@ module.exports = {
   settings(state = defaults, { type, payload }) {
     switch (type) {
       case SETTINGS.RESTORE:
-        return { ...defaults, ...payload }
+        return { ...defaults, ...payload, theme: ARGS.theme }
       case SETTINGS.UPDATE:
         return { ...state, ...payload }
       default:
