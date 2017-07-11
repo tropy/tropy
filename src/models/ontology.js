@@ -11,6 +11,13 @@ const ontology = {
     return db.read(SCHEMA)
   },
 
+  clear(db) {
+    return db.exec(`
+      DELETE FROM vocabularies;
+      DELETE FROM templates;
+      DELETE FROM labels;`)
+  },
+
   vocab: {
     async load(db, ...args) {
       const vocabs = {}

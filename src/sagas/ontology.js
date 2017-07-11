@@ -12,14 +12,23 @@ const mod = require('../models')
 const act = require('../actions')
 const { call, fork, put, take } = require('redux-saga/effects')
 
-const command = ({ error, meta }) =>
-  (!error && meta && meta.cmd === 'ontology')
+const command = ({ type, error, meta }) =>
+  (!error && meta && meta.cmd === 'ontology') || type === ONTOLOGY.RESET
 
+
+function *reset(db) {
+  verbose('*ontology resetting db...')
+  yield call(mod.ontology.clear, db)
+  yield* populate(db)
+}
 
 function *create(db) {
+  verbose('*ontology creating db...')
   yield call(mod.ontology.create, db)
-  verbose('*ontology created db...')
+  yield* populate(db)
+}
 
+function *populate(db) {
   yield call(exec, { db }, act.ontology.import({
     files: [
       Ontology.expand('tropy'),
@@ -58,7 +67,14 @@ function *ontology(file = join(ARGS.home, ONTOLOGY.DB)) {
 
     while (true) {
       const action = yield take(command)
-      yield fork(exec, { db }, action)
+
+      switch (action.type) {
+        case ONTOLOGY.RESET:
+          yield fork(reset, db)
+          break
+        default:
+          yield fork(exec, { db }, action)
+      }
     }
 
   } catch (error) {

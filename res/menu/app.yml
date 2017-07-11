@@ -107,6 +107,9 @@ linux:
         accelerator: 'CmdOrCtrl+Shift+I'
         role: 'toggledevtools'
       - type: 'separator'
+      - label: 'Reset Ontology Database'
+        command: 'app:reset-ontology-db'
+      - type: 'separator'
       - label: 'Theme'
         id: 'theme'
         submenu:

@@ -13,6 +13,7 @@ const { all } = require('bluebird')
 const { existsSync: exists } = require('fs')
 const { join } = require('path')
 const { into, compose, remove, take } = require('transducers.js')
+const rm = require('rimraf')
 
 const { AppMenu, ContextMenu } = require('./menu')
 const { Cache } = require('../common/cache')
@@ -417,6 +418,14 @@ class Tropy extends EventEmitter {
 
     this.on('app:open-logs', () => {
       shell.showItemInFolder(join(app.getPath('userData'), 'log'))
+    })
+
+    this.on('app:reset-ontology-db', () => {
+      if (this.win || this.prefs) {
+        this.dispatch(act.ontology.reset())
+      } else {
+        rm(join(app.getPath('userData'), 'ontology.db'))
+      }
     })
 
     this.on('app:open-dialog', (win, options = {}) => {
