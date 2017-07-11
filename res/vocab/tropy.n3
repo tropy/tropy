@@ -105,12 +105,12 @@ tropy:name a rdf:Property ;
   rdfs:range rdfs:Literal ;
   rdfs:comment "A unique name."@en .
 
-tropy:type a rdf:Property ;
+tropy:template-type a rdf:Property ;
   rdfs:label "Type"@en ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:subPropertyOf dc:type ;
   rdfs:domain tropy:Template ;
-  rdfs:range tropy:Image , tropy:Photo , tropy:Selection ;
+  rdfs:range rdfs:Class ;
   rdfs:comment "The type of object, in Tropy, which the template describes."@en .
 
 tropy:domain a rdf:Property ;

@@ -1,9 +1,13 @@
 {
   "@context": {
-    "vocab": "https://tropy.org/v1/tropy#",
+    "@vocab": "https://tropy.org/v1/tropy#",
     "creator": "http://purl.org/dc/elements/1.1/creator",
     "description": "http://purl.org/dc/elements/1.1/description",
     "seeAlso": "http://www.w3.org/2000/01/rdf-schema#seeAlso",
+    "type": {
+      "@id": "https://tropy.org/v1/tropy#template-type",
+      "@type": "@id"
+    },
     "domain": {
       "@id": "https://tropy.org/v1/tropy#domain",
       "@type": "@id",
@@ -13,7 +17,7 @@
       "@id": "https://tropy.org/v1/tropy#field",
       "@container": "@list",
       "@context": {
-        "vocab": "https://tropy.org/v1/tropy#",
+        "@vocab": "https://tropy.org/v1/tropy#",
         "property": {
           "@id": "https://tropy.org/v1/tropy#property",
           "@type": "@id"
