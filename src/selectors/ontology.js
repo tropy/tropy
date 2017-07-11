@@ -5,7 +5,7 @@ const { entries, values } = Object
 const { by } = require('../collate')
 const { compose, filter, into, map } = require('transducers.js')
 const { get } = require('../common/util')
-const { TYPE } = require('../constants')
+const { TYPE, ITEM, PHOTO } = require('../constants')
 
 const getPropertyList = memo(
   ({ ontology }) => ontology.props,
@@ -77,11 +77,25 @@ const getTemplateField = memo(
   }
 )
 
+const getItemTemplate = memo(
+  ({ ontology }) => ontology.template,
+  ({ settings }) => settings.itemTemplate,
+  (template, id) => template[id] || template[ITEM.TEMPLATE]
+)
+
+const getPhotoTemplate = memo(
+  ({ ontology }) => ontology.template,
+  ({ settings }) => settings.photoTemplate,
+  (template, id) => template[id] || template[PHOTO.TEMPLATE]
+)
+
 
 module.exports = {
   getAllTemplates,
   getItemTemplates: getTemplatesByType(TYPE.ITEM),
+  getItemTemplate,
   getPhotoTemplates: getTemplatesByType(TYPE.PHOTO),
+  getPhotoTemplate,
   getPropertyList,
   getTemplateField,
   getTemplateFields,

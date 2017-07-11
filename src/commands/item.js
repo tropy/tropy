@@ -16,6 +16,7 @@ const { map, cat, filter, into, compose } = require('transducers.js')
 const { ITEM, DC } = require('../constants')
 const { isArray } = Array
 const { keys } = Object
+const { getItemTemplate, getPhotoTemplate } = require('../selectors')
 
 
 class Create extends Command {
@@ -24,7 +25,11 @@ class Create extends Command {
   *exec() {
     const { db } = this.options
 
-    const item = yield call(db.transaction, tx => mod.item.create(tx))
+    const template = yield select(getItemTemplate)
+
+    const item = yield call(db.transaction, tx =>
+      mod.item.create(tx, template.id))
+
     yield put(act.item.insert(item))
 
     this.undo = act.item.delete([item.id])
@@ -49,6 +54,11 @@ class Import extends Command {
 
     if (!files) return
 
+    const [it, pt] = yield all([
+      select(getItemTemplate),
+      select(getPhotoTemplate)
+    ])
+
     for (let i = 0, ii = files.length; i < ii; ++i) {
       let file, image, item, photo
 
@@ -57,11 +67,13 @@ class Import extends Command {
         image = yield call(Image.read, file)
 
         yield call(db.transaction, async tx => {
-          item = await mod.item.create(tx, {
+          item = await mod.item.create(tx, it.id, {
             [DC.title]: text(image.title)
           })
 
-          photo = await mod.photo.create(tx, { item: item.id, image })
+          photo = await mod.photo.create(tx, pt.id, {
+            item: item.id, image
+          })
 
           if (list) {
             await mod.list.items.add(tx, list, [item.id])

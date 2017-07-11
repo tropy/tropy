@@ -182,9 +182,9 @@ module.exports = mod.item = {
     return items
   },
 
-  async create(db, data) {
+  async create(db, template, data) {
     const { id } = await db.run(`
-      INSERT INTO subjects (template) VALUES (?)`, TEMPLATE)
+      INSERT INTO subjects (template) VALUES (?)`, template || TEMPLATE)
     await db.run(`
       INSERT INTO items (id) VALUES (?)`, id)
 

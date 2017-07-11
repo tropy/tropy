@@ -11,6 +11,7 @@ const { imagePath } = require('../common/cache')
 const { warn, verbose } = require('../common/log')
 const { splice } = require('../common/util')
 const { map, cat, filter, into, compose } = require('transducers.js')
+const { getPhotoTemplate } = require('../selectors')
 
 
 class Create extends Command {
@@ -32,6 +33,8 @@ class Create extends Command {
       this.init = performance.now()
     }
 
+    const template = yield select(getPhotoTemplate)
+
     if (files && files.length) {
       // TODO Improve handling of multiple photos!
       // Progress reporting, cancel import etc.
@@ -40,7 +43,7 @@ class Create extends Command {
         const image = yield call(Image.read, file)
 
         const photo = yield call([db, db.transaction], tx => (
-          mod.photo.create(tx, { item, image })
+          mod.photo.create(tx, template.id, { item, image })
         ))
 
         yield put(act.photo.insert(photo, { idx: [idx[0] + photos.length] }))
