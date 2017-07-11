@@ -17,6 +17,10 @@
         "property": {
           "@id": "https://tropy.org/v1/tropy#property",
           "@type": "@id"
+        },
+        "datatype": {
+          "@id": "https://tropy.org/v1/tropy#property",
+          "@type": "@id"
         }
       }
     }
