@@ -248,27 +248,41 @@ class ProjectContainer extends PureComponent {
     onModeChange: func.isRequired,
     onMetadataSave: func.isRequired,
     onSort: func.isRequired,
+    onTemplateImport: func.isRequired,
     onUiUpdate: func.isRequired
   }
 }
 
 
 const DropTargetSpec = {
-  drop({ onProjectOpen }, monitor) {
-    const { files } = monitor.getItem()
-    const project = files[0].path
+  drop({ onProjectOpen, onTemplateImport }, monitor) {
+    const files = monitor.getItem().files.map(f => f.path)
 
-    return onProjectOpen(project), { project }
+    switch (extname(files[0])) {
+      case '.tpy':
+        onProjectOpen(files[0].path)
+        break
+      case '.ttp':
+        onTemplateImport(files.filter(f => f.endsWith('.ttp')))
+        break
+    }
+
+    return { files }
   },
 
   canDrop({ project }, monitor) {
     const { files } = monitor.getItem()
 
-    if (files.length !== 1) return false
-    if (extname(files[0].path) !== '.tpy') return false
-    if (files[0].path === project.file) return false
+    if (files.length < 1) return false
 
-    return true
+    switch (extname(files[0].path)) {
+      case '.tpy':
+        return files[0].path !== project.file
+      case '.ttp':
+        return true
+      default:
+        return false
+    }
   }
 }
 
@@ -427,6 +441,10 @@ module.exports = {
         dispatch(actions.tag.select(...args))
       },
 
+      onTemplateImport(files) {
+        dispatch(actions.ontology.template.import({ files }))
+      },
+
       onNoteCreate(...args) {
         dispatch(actions.note.create(...args))
       },
@@ -458,6 +476,7 @@ module.exports = {
       onUiUpdate(...args) {
         dispatch(actions.ui.update(...args))
       }
+
     })
 
   )(DropTarget(NativeTypes.FILE, DropTargetSpec, (c, m) => ({
