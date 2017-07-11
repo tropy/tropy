@@ -31,6 +31,9 @@ prefs:
       themes:
         light: Light
         dark: Dark
+    template:
+      item: Default Item Template
+      photo: Default Photo Template
   project:
     label: Project
   template:

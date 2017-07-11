@@ -1,9 +1,11 @@
 'use strict'
 
-const { SETTINGS } = require('../constants')
+const { SETTINGS, ITEM, PHOTO } = require('../constants')
 
 const defaults = {
-  theme: ARGS.theme
+  theme: ARGS.theme,
+  itemTemplate: ITEM.TEMPLATE,
+  photoTemplate: PHOTO.TEMPLATE
 }
 
 module.exports = {

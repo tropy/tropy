@@ -10,7 +10,12 @@ const { VocabPane } = require('../vocab')
 const { PrefPane, PrefPaneToggle } = require('./pane')
 const { AppPrefs } = require('./app')
 const actions = require('../../actions')
-const { getVocabs } = require('../../selectors')
+
+const {
+  getItemTemplates,
+  getPhotoTemplates,
+  getVocabs
+} = require('../../selectors')
 
 class PrefsContainer extends PureComponent {
   isActive(pane) {
@@ -73,6 +78,8 @@ class PrefsContainer extends PureComponent {
             name="app"
             isActive={this.isActive('app')}>
             <AppPrefs
+              itemTemplates={this.props.itemTemplates}
+              photoTemplates={this.props.photoTemplates}
               settings={this.props.settings}
               onSettingsUpdate={this.props.onSettingsUpdate}/>
           </PrefPane>
@@ -103,11 +110,13 @@ class PrefsContainer extends PureComponent {
   }
 
   static propTypes = {
-    isFrameless: bool,
     edit: object.isRequired,
+    isFrameless: bool,
+    itemTemplates: array.isRequired,
     pane: string.isRequired,
     settings: object.isRequired,
     vocab: array.isRequired,
+    photoTemplates: array.isRequired,
     onClassSave: func.isRequired,
     onContextMenu: func.isRequired,
     onOpenLink: func.isRequired,
@@ -128,9 +137,11 @@ module.exports = {
   PrefsContainer: connect(
     state => ({
       edit: state.edit,
-      project: state.project,
+      itemTemplates: getItemTemplates(state),
       keymap: state.keymap,
       pane: state.prefs.pane,
+      photoTemplates: getPhotoTemplates(state),
+      project: state.project,
       settings: state.settings,
       vocab: getVocabs(state)
     }),
@@ -155,6 +166,10 @@ module.exports = {
 
       onPropsSave(...args) {
         dispatch(actions.ontology.props.save(...args))
+      },
+
+      onSettingsUpdate(...args) {
+        dispatch(actions.settings.update(...args))
       },
 
       onVocabDelete(...args) {
