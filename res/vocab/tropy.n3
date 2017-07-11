@@ -78,28 +78,32 @@ tropy:name a rdfs:Datatype ;
 tropy:box a rdf:Property ;
 	rdfs:label "Box"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Item , tropy:Photo ;
 	rdfs:comment "A unit of archival organization."@en .
 
 tropy:folder a rdf:Property ;
 	rdfs:label "Folder"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:subPropertyOf tropy:box ;
+  rdfs:domain tropy:Item , tropy:Photo ;
 	rdfs:comment "A unit of archival organization, usually within a box."@en .
 
 tropy:piece a rdf:Property ;
 	rdfs:label "Piece"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:subPropertyOf tropy:folder ;
+  rdfs:domain tropy:Item , tropy:Photo ;
 	rdfs:comment "A unit of archival organization, usually within a folder."@en .
 
 
+
 tropy:name a rdf:Property ;
-  rdfs:label "Template Name"@en ;
+  rdfs:label "Name"@en ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:subPropertyOf dc:title ;
-  rdfs:domain tropy:Template ;
+  rdfs:domain tropy:Item , tropy:Photo, tropy:Selection , tropy:Template ;
   rdfs:range rdfs:Literal ;
-  rdfs:comment "The name of a template."@en .
+  rdfs:comment "A unique name."@en .
 
 tropy:type a rdf:Property ;
   rdfs:label "Type"@en ;
@@ -129,6 +133,13 @@ tropy:property a rdf:Property ;
   rdfs:domain tropy:Field ;
   rdfs:range rdf:Property ;
   rdfs:comment "Denotes the field's property."@en .
+
+tropy:datatype a rdf:Property ;
+  rdfs:label "Datatype"@en ;
+  rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Field ;
+  rdfs:range rdfs:Datatype ;
+  rdfs:comment "Denotes the field's suggested datatype."@en .
 
 tropy:hint a rdf:Property ;
   rdfs:label "Hint"@en ;

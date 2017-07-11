@@ -3,6 +3,7 @@
     "vocab": "https://tropy.org/v1/tropy#",
     "creator": "http://purl.org/dc/elements/1.1/creator",
     "description": "http://purl.org/dc/elements/1.1/description",
+    "seeAlso": "http://www.w3.org/2000/01/rdf-schema#seeAlso",
     "domain": {
       "@id": "https://tropy.org/v1/tropy#domain",
       "@type": "@id",
@@ -10,7 +11,14 @@
     },
     "field": {
       "@id": "https://tropy.org/v1/tropy#field",
-      "@container": "@list"
+      "@container": "@list",
+      "@context": {
+        "vocab": "https://tropy.org/v1/tropy#",
+        "property": {
+          "@id": "https://tropy.org/v1/tropy#property",
+          "@type": "@id"
+        }
+      }
     }
   }
 }
