@@ -149,10 +149,13 @@ fieldset {
 
     &:active {
       background: $checkbox-checked-bg;
-      border-color: $checkbox-checked-bg;
+      border-color: $checkbox-checked-border;
     }
 
-    @include form-control-focus;
+    @at-root #{selector-replace(&, ".checkbox", ".checkbox.tab")} {
+      border-color: $input-color-focus;
+      box-shadow: 0 0 0 2px $input-color-focus;
+    }
 
     &[disabled] {
       background: $input-bg-readonly;
@@ -168,7 +171,10 @@ fieldset {
         border-color: $checkbox-checked-active-border;
       }
 
-      @include form-control-focus;
+      @at-root #{selector-replace(&, ".checkbox", ".checkbox.tab")} {
+        border-color: $input-color-focus;
+        box-shadow: 0 0 0 2px $input-color-focus;
+      }
 
       &[disabled] {
         background: $input-bg-readonly;
