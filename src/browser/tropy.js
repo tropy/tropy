@@ -424,7 +424,7 @@ class Tropy extends EventEmitter {
       if (this.win || this.prefs) {
         this.dispatch(act.ontology.reset())
       } else {
-        rm(join(app.getPath('userData'), 'ontology.db'))
+        rm.sync(join(app.getPath('userData'), 'ontology.db'))
       }
     })
 
