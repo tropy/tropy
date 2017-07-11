@@ -47,7 +47,8 @@ target.all = (args = []) => {
       `${author.name}. All rights not expressly granted are reserved.`,
     extendInfo: join(res, 'ext.plist'),
     extraResource: [
-      join(res, 'icons', 'mime', 'tpy.icns')
+      join(res, 'icons', 'mime', 'tpy.icns'),
+      join(res, 'icons', 'mime', 'ttp.icns')
     ],
     win32metadata: {
       CompanyName: author.name,
