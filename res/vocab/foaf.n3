@@ -22,8 +22,6 @@ dc:title a owl:AnnotationProperty .
 
 dc:date a owl:AnnotationProperty .
 
-rdfs:Class a owl:Class .
-
 foaf:LabelProperty a rdfs:Class ;
 	vs:term_status "unstable" ;
 	rdfs:label "Label Property" ;

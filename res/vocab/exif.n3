@@ -530,7 +530,7 @@ exif:_unknown  a      rdf:Property ;
 
 <http://www.w3.org/2003/12/exif/ns>
         a                 owl:Ontology ;
-        dc:description    "Exifフォーマットの写真からデータを取りだしてRDFで表現するため、Exif 2.2の全てのタグをRDFプロパティとして定義し、さらにそれを記述するのに必要な語彙を追加したボキャブラリ"@ja , "Vocabulary to describe an Exif format picture data. All Exif 2.2 tags are defined as RDF properties, as well as several terms to help this schema."@en , "Vocabulaire pour décrire les données Exif d'une photographie. Toutes les balises Exif 2.2 sont définies comme des propriétés RDF, ainsi que plusieurs termes pour donner de l'aide."@fr ;
+        dc:description    "Exifフォーマットの写真からデータを取りだしてRDFで表現するため、Exif 2.2の全てのタグをRDFプロパティとして定義し、さらにそれを記述するのに必要な語彙を追加したボキャブラリ"@ja , "Vocabulaire pour décrire les données Exif d'une photographie. Toutes les balises Exif 2.2 sont définies comme des propriétés RDF, ainsi que plusieurs termes pour donner de l'aide."@fr , "Vocabulary to describe an Exif format picture data. All Exif 2.2 tags are defined as RDF properties, as well as several terms to help this schema."@en ;
         dc:source         <http://tsc.jeita.or.jp/avs/data/cp3451.pdf> ;
         dc:title          "Exif data description vocabulary"@en ;
         dcterms:created   "2003-07-18"@en ;
