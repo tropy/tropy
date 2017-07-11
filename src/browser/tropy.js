@@ -225,6 +225,7 @@ class Tropy extends EventEmitter {
       .once('closed', () => {
         this.prefs = undefined
         this.dispatch(act.ontology.load(), this.win)
+        this.dispatch(act.storage.reload([['settings']]), this.win)
       })
 
     return this

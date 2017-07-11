@@ -22,6 +22,7 @@ module.exports = {
   qr: require('./qr'),
   settings: require('./settings'),
   shell: require('./shell'),
+  storage: require('./storage'),
   tag: require('./tag'),
   ui: require('./ui'),
   wizard: require('./wizard')

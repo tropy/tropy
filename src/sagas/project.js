@@ -112,7 +112,8 @@ function *main() {
     aux = yield all([
       fork(ontology),
       fork(ipc),
-      fork(history)
+      fork(history),
+      fork(storage.reload)
     ])
 
     yield all([

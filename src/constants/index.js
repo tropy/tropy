@@ -21,6 +21,7 @@ module.exports = {
   SASS: require('./sass'),
   SETTINGS: require('./settings'),
   SHELL: require('./shell'),
+  STORAGE: require('./storage'),
   TABS: require('./tabs'),
   TAG: require('./tag'),
   TYPE: require('./type'),

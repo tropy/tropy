@@ -1,10 +1,11 @@
 'use strict'
 
-const { put, select } = require('redux-saga/effects')
+const { put, select, takeEvery: every, fork } = require('redux-saga/effects')
 const { Storage } = require('../storage')
 const actions = require('../actions')
+const { STORAGE } = require('../constants')
 
-module.exports = {
+const storage = {
 
   *restore(name, ...args) {
     const data = Storage.load(name, ...args)
@@ -14,6 +15,15 @@ module.exports = {
   *persist(name, ...args) {
     const data = yield select(state => state[name])
     Storage.save(name, data, ...args)
-  }
+  },
 
+  *reload() {
+    yield every(STORAGE.RELOAD, function* (action) {
+      for (let args of action.payload) {
+        yield fork(storage.restore, ...args)
+      }
+    })
+  }
 }
+
+module.exports = storage
