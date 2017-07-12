@@ -527,7 +527,8 @@ class Tropy extends EventEmitter {
       frameless: this.state.frameless,
       theme: this.state.theme,
       locale: this.state.locale,
-      uuid: this.state.uuid
+      uuid: this.state.uuid,
+      version
     }
   }
 
