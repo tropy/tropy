@@ -66,17 +66,17 @@ class MetadataField extends PureComponent {
 
   render() {
     const { classes,  details, label } = this
-    const { text, isEditing, isDisabled, isRequired } = this.props
 
     return (
       <li className={cx(classes)}>
         <label title={details.join('\n\n')}>{label}</label>
         <div className="value" onClick={this.handleClick}>
           <Editable
-            value={text}
-            isDisabled={isDisabled}
-            isEditing={isEditing}
-            isRequired={isRequired}
+            value={this.props.text}
+            placeholder={this.props.placeholder}
+            isDisabled={this.props.isDisabled}
+            isEditing={this.props.isEditing}
+            isRequired={this.props.isRequired}
             onCancel={this.handleCancel}
             onChange={this.handleChange}/>
         </div>
@@ -102,6 +102,7 @@ class MetadataField extends PureComponent {
       comment: string
     }),
 
+    placeholder: string,
     text: string,
     type: string.isRequired,
 
