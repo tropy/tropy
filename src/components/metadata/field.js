@@ -44,7 +44,9 @@ class MetadataField extends PureComponent {
   }
 
   handleClick = () => {
-    this.props.onEdit(this.props.id, this.property)
+    if (!this.props.isDisabled) {
+      this.props.onEdit(this.props.id, this.property)
+    }
   }
 
   handleChange = (text) => {
