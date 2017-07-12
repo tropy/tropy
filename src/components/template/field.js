@@ -110,12 +110,20 @@ class TemplateField extends PureComponent {
               tabIndex={0}
               isCompact/>
             <FormField
-              id="template.field.constant"
-              name="constant"
-              value={this.props.field.constant || ''}
+              id="template.field.value"
+              name="value"
+              value={this.props.field.value || ''}
               isDisabled={this.props.isDisabled || this.props.isTransient}
               onChange={this.handleChange}
               tabIndex={0}
+              isCompact/>
+            <FormToggle
+              id="template.field.isConstant"
+              name="isConstant"
+              value={this.props.field.isConstant}
+              isDisabled={this.props.isDisabled || this.props.isTransient}
+              tabIndex={0}
+              onChange={this.handleChange}
               isCompact/>
           </fieldset>
         )}

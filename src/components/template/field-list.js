@@ -11,9 +11,10 @@ let tmpId = -1
 
 const newField = () => ({
   id: tmpId--,
-  constant: '',
+  value: '',
   hint: '',
   property: '',
+  isConstant: false,
   isRequired: false
 })
 

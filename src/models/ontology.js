@@ -355,12 +355,14 @@ const ontology = {
               datatype_id AS datatype,
               required AS isRequired,
               hint,
-              constant
+              value,
+              constant AS isConstant
             FROM fields${constraint}
             ORDER BY position, field_id`,
-          ({ tpl, isRequired, ...data }) => {
+          ({ tpl, isRequired, isConstant, ...data }) => {
             temps[tpl].fields.push({
               ...data,
+              isConstant: !!isConstant,
               isRequired: !!isRequired
             })
           })
@@ -420,6 +422,7 @@ const ontology = {
               datatype_id,
               required,
               hint,
+              value,
               constant,
               position
             ) VALUES (
@@ -429,7 +432,8 @@ const ontology = {
               $datatype,
               $isRequired,
               $hint,
-              $constant,
+              $value,
+              $isConstant,
               $position
             )`, stmt =>
             all(fields.map((f, idx) => stmt.run({
@@ -439,7 +443,8 @@ const ontology = {
               $datatype: f.datatype || TEXT,
               $isRequired: !!f.isRequired,
               $hint: f.hint,
-              $constant: f.constant,
+              $value: f.value,
+              $isConstant: !!f.isConstant,
               $position: (f.position != null) ? f.position : idx
             })
           ))
@@ -487,6 +492,7 @@ const COL = {
   FIELD: {
     property: 'property_id',
     datatype: 'datatype_id',
+    isConstant: 'constant',
     isRequired: 'required'
   }
 }

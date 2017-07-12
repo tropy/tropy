@@ -102,8 +102,9 @@ CREATE TABLE fields (
   property_id   TEXT      NOT NULL,
   datatype_id   TEXT      NOT NULL,
   required      BOOLEAN   NOT NULL DEFAULT 0,
+  constant      BOOLEAN   NOT NULL DEFAULT 0,
   hint          TEXT,
-  constant      TEXT,
+  value         TEXT,
   position      INTEGER,
 
   CHECK (datatype_id != ''),

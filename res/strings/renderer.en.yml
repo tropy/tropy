@@ -75,7 +75,8 @@ template:
     property: Property
     isRequired: Is mandatory field
     hint: Hint
-    constant: Constant value
+    value: Default Value
+    isConstant: Is read-only
 
 vocab:
   id: URI
