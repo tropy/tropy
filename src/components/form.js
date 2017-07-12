@@ -53,7 +53,7 @@ class Label extends PureComponent {
   }
 
   static defaultProps = {
-    size: 3
+    size: 4
   }
 }
 
@@ -79,7 +79,7 @@ class FormElement extends PureComponent {
   }
 
   static defaultProps = {
-    size: 9
+    size: 8
   }
 }
 
@@ -152,7 +152,7 @@ class FormField extends PureComponent {
 
   static defaultProps = {
     isReadOnly: false,
-    size: 9,
+    size: 8,
     onBlur: noop,
     onChange: noop,
     onInputChange: noop
@@ -207,7 +207,7 @@ class FormSelect extends PureComponent {
   }
 
   static defaultProps = {
-    size: 9
+    size: 8
   }
 }
 
@@ -288,7 +288,7 @@ class FormToggle extends PureComponent {
   }
 
   static defaultProps = {
-    size: 9
+    size: 8
   }
 }
 
@@ -319,7 +319,7 @@ class FormText extends PureComponent {
   }
 
   static defaultProps = {
-    size: 9
+    size: 8
   }
 }
 
@@ -360,7 +360,7 @@ class FormLink extends PureComponent {
   }
 
   static defaultProps = {
-    size: 9
+    size: 8
   }
 }
 

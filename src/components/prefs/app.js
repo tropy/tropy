@@ -29,13 +29,6 @@ class AppPrefs extends PureComponent {
     return (
       <div className="scroll-container">
         <div className="form-horizontal">
-          <FormSelect
-            id="prefs.app.style.theme"
-            name="theme"
-            isRequired
-            value={this.props.settings.theme}
-            options={this.props.themes}
-            onChange={this.handleThemeChange}/>
           <FormElement
             id="prefs.app.template.item">
             <TemplateSelect
@@ -50,6 +43,14 @@ class AppPrefs extends PureComponent {
               selected={this.props.settings.photoTemplate}
               onChange={this.handlePhotoTemplateChange}/>
           </FormElement>
+          <hr/>
+          <FormSelect
+            id="prefs.app.style.theme"
+            name="theme"
+            isRequired
+            value={this.props.settings.theme}
+            options={this.props.themes}
+            onChange={this.handleThemeChange}/>
         </div>
       </div>
     )

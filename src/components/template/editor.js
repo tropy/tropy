@@ -130,7 +130,8 @@ class TemplateEditor extends PureComponent {
               tabIndex={0}
               onChange={isPristine ? undefined : this.handleTemplateUpdate}
               onInputChange={isPristine ?
-                this.handleTemplateUpdate : undefined}/>
+                this.handleTemplateUpdate : undefined}
+              size={9}/>
             <FormField
               id="template.id"
               name="id"
@@ -138,7 +139,8 @@ class TemplateEditor extends PureComponent {
               isCompact
               isDisabled={this.state.isProtected || !isPristine}
               tabIndex={0}
-              onInputChange={this.handleTemplateUpdate}/>
+              onInputChange={this.handleTemplateUpdate}
+              size={9}/>
             <FormSelect
               id="template.type"
               name="type"
@@ -147,7 +149,8 @@ class TemplateEditor extends PureComponent {
               tabIndex={0}
               isCompact
               isDisabled={this.state.isProtected || !isPristine}
-              onChange={this.handleTemplateUpdate}/>
+              onChange={this.handleTemplateUpdate}
+              size={9}/>
             <FormField
               id="template.creator"
               name="creator"
@@ -155,13 +158,15 @@ class TemplateEditor extends PureComponent {
               isCompact
               isDisabled={this.state.isProtected}
               tabIndex={0}
-              onChange={this.handleTemplateUpdate}/>
+              onChange={this.handleTemplateUpdate}
+              size={9}/>
             <FormField
               id="template.description"
               name="description"
               value={this.state.description}
               isDisabled={this.state.isProtected}
-              tabIndex={0} onChange={this.handleTemplateUpdate}/>
+              tabIndex={0} onChange={this.handleTemplateUpdate}
+              size={9}/>
             {isPristine &&
               <FormGroup>
                 <div className="col-12 text-right">

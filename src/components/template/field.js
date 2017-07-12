@@ -81,7 +81,8 @@ class TemplateField extends PureComponent {
           <fieldset>
             {this.isDragAndDropEnabled && <IconGrip/>}
             <FormGroup isCompact>
-              <Label id="template.field.property"/>
+              <Label id="template.field.property"
+                size={3}/>
               <div className="col-9">
                 <PropertySelect
                   properties={this.props.properties}
@@ -100,7 +101,8 @@ class TemplateField extends PureComponent {
               isDisabled={this.props.isDisabled || this.props.isTransient}
               tabIndex={0}
               onChange={this.handleChange}
-              isCompact/>
+              isCompact
+              size={9}/>
             <FormField
               id="template.field.hint"
               name="hint"
@@ -108,7 +110,8 @@ class TemplateField extends PureComponent {
               isDisabled={this.props.isDisabled || this.props.isTransient}
               onChange={this.handleChange}
               tabIndex={0}
-              isCompact/>
+              isCompact
+              size={9}/>
             <FormField
               id="template.field.value"
               name="value"
@@ -116,7 +119,8 @@ class TemplateField extends PureComponent {
               isDisabled={this.props.isDisabled || this.props.isTransient}
               onChange={this.handleChange}
               tabIndex={0}
-              isCompact/>
+              isCompact
+              size={9}/>
             <FormToggle
               id="template.field.isConstant"
               name="isConstant"
@@ -124,7 +128,8 @@ class TemplateField extends PureComponent {
               isDisabled={this.props.isDisabled || this.props.isTransient}
               tabIndex={0}
               onChange={this.handleChange}
-              isCompact/>
+              isCompact
+              size={9}/>
           </fieldset>
         )}
         <div className="btn-group">
