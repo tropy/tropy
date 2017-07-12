@@ -42,7 +42,7 @@ class MetadataFields extends PureComponent {
   }
 
   renderField = (property, props) => {
-    const { data, onChange, onEditCancel } = this.props
+    const { data, isDisabled, onChange, onEditCancel } = this.props
     const value = data[property.id] || {}
 
     return (
@@ -52,6 +52,7 @@ class MetadataFields extends PureComponent {
         property={property}
         type={value.type || property.type}
         text={value.text}
+        isDisabled={isDisabled}
         isEditing={this.isEditing(property.id)}
         isMixed={!!value.mixed}
         onChange={onChange}
