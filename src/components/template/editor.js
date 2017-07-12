@@ -7,7 +7,7 @@ const { TemplateFieldList } = require('./field-list')
 const { TemplateToolbar } = require('./toolbar')
 const { FormattedMessage } = require('react-intl')
 const { FormField, FormGroup, FormSelect } = require('../form')
-const { pick } = require('../../common/util')
+const { omit, pick } = require('../../common/util')
 const { arrayOf, func, shape, string } = require('prop-types')
 const actions = require('../../actions')
 const { TYPE } = require('../../constants')
@@ -70,10 +70,17 @@ class TemplateEditor extends PureComponent {
   }
 
   handleTemplateCreate = () => {
+    const { id, name, type, creator, description, fields } = this.state
+
     this.props.onCreate({
-      [this.state.id]: pick(this.state, [
-        'id', 'name', 'type', 'creator', 'description', 'fields'
-      ])
+      [id]: {
+        id,
+        name,
+        type,
+        creator,
+        description,
+        fields: fields.map(field => omit(field, ['id']))
+      }
     })
   }
 
