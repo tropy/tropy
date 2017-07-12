@@ -20,16 +20,19 @@ BEGIN TRANSACTION;
 CREATE TABLE project (
   project_id  TEXT     NOT NULL PRIMARY KEY,
   name        TEXT     NOT NULL,
-  settings             NOT NULL DEFAULT '{}',
   created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modified    NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  opened      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  locked      BOOLEAN  NOT NULL DEFAULT 0,
 
   CHECK (project_id != ''),
   CHECK (name != '')
 
 ) WITHOUT ROWID;
+CREATE TABLE access (
+  uuid        TEXT     NOT NULL,
+  version     TEXT     NOT NULL,
+  opened      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  closed      NUMERIC,
+  CHECK (uuid != '' AND version != '')
+);
 CREATE TABLE subjects (
   id           INTEGER  PRIMARY KEY,
   template     TEXT     NOT NULL DEFAULT 'https://tropy.org/v1/templates/item',
