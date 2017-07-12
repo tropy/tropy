@@ -14,6 +14,7 @@ const { existsSync: exists } = require('fs')
 const { join } = require('path')
 const { into, compose, remove, take } = require('transducers.js')
 const rm = require('rimraf')
+const uuid = require('uuid/v1')
 
 const { AppMenu, ContextMenu } = require('./menu')
 const { Cache } = require('../common/cache')
@@ -238,10 +239,9 @@ class Tropy extends EventEmitter {
       .then(([state]) => ({ ...Tropy.defaults, ...state }))
       .catch({ code: 'ENOENT' }, () => Tropy.defaults)
 
-      .then(state => (this.state = state, this))
+      .then(state => this.migrate(state))
 
       .tap(() => all([
-        this.migrate(),
         this.menu.load(),
         this.ctx.load(),
         this.cache.init(),
@@ -255,8 +255,12 @@ class Tropy extends EventEmitter {
       .tap(() => verbose('app state restored'))
   }
 
-  migrate() {
-    this.state.version = this.version
+  migrate(state) {
+    state.version = this.version
+    state.uuid = state.uuid || uuid()
+
+    this.state = state
+    return this
   }
 
   persist() {
@@ -522,7 +526,8 @@ class Tropy extends EventEmitter {
       cache: this.cache.root,
       frameless: this.state.frameless,
       theme: this.state.theme,
-      locale: this.state.locale
+      locale: this.state.locale,
+      uuid: this.state.uuid
     }
   }
 
