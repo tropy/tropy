@@ -399,6 +399,10 @@ const util = {
 
   toId(obj) {
     return obj.id
+  },
+
+  blank(string) {
+    return string == null || string.length === 0
   }
 }
 

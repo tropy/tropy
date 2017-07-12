@@ -15,7 +15,7 @@ const skel = (id) => ({
 
 module.exports = {
 
-  async create(db, template, { item, image }) {
+  async create(db, template, { item, image, data }) {
     const {
       path, checksum, mimetype, width, height, orientation
     } = image
@@ -37,7 +37,8 @@ module.exports = {
         ids: [id],
         data: {
           [DC.title]: text(image.title),
-          [DC.date]: date(image.date)
+          [DC.date]: date(image.date),
+          ...data
         }
       })
     ])

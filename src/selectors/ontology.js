@@ -4,8 +4,9 @@ const { createSelector: memo } = require('reselect')
 const { entries, values } = Object
 const { by } = require('../collate')
 const { compose, filter, into, map } = require('transducers.js')
-const { get } = require('../common/util')
+const { blank, get } = require('../common/util')
 const { TYPE, ITEM, PHOTO } = require('../constants')
+const { value }  = require('../value')
 
 const getPropertyList = memo(
   ({ ontology }) => ontology.props,
@@ -89,6 +90,15 @@ const getPhotoTemplate = memo(
   (template, id) => template[id] || template[PHOTO.TEMPLATE]
 )
 
+const getTemplateValues = (template) =>
+  template.fields.reduce((acc, field) => {
+    if (!blank(field.value)) {
+      acc[field.property] = value(field.value, field.datatype)
+    }
+
+    return acc
+  }, {})
+
 
 module.exports = {
   getAllTemplates,
@@ -100,5 +110,6 @@ module.exports = {
   getTemplateField,
   getTemplateFields,
   getTemplateList,
+  getTemplateValues,
   getVocabs
 }
