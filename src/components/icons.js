@@ -283,6 +283,14 @@ i('ListSmall', (
   </svg>
 ))
 
+i('Lock', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M12,6V4A4,4,0,0,0,4,4V6H2v9H14V6ZM5,4a3,3,0,0,1,6,0V6H5Zm8,10H3V7H13Z"/>
+    </g>
+  </svg>
+))
+
 i('Maze', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
