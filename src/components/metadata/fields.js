@@ -46,7 +46,7 @@ class MetadataFields extends PureComponent {
     const value = data[property.id] || {}
 
     return (
-      <MetadataField {...props}
+      <MetadataField
         key={property.id}
         id={data.id}
         property={property}
@@ -56,7 +56,8 @@ class MetadataFields extends PureComponent {
         isMixed={!!value.mixed}
         onChange={onChange}
         onEdit={this.handleEdit}
-        onEditCancel={onEditCancel}/>
+        onEditCancel={onEditCancel}
+        {...props}/>
     )
   }
 
@@ -64,7 +65,7 @@ class MetadataFields extends PureComponent {
     const { template } = this.props
     return template && template.fields.map(f =>
       this.renderField(f.property, {
-        isDisabled: f.isConstant,
+        isReadOnly: f.isConstant,
         isRequired: f.isRequired,
         placeholder: f.hint
       }))

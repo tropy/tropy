@@ -6,7 +6,7 @@ const { Editable } = require('../editable')
 const { FormattedMessage } = require('react-intl')
 const { pluck } = require('../../common/util')
 const { getLabel } = require('../../common/ontology')
-const { IconWarning } = require('../icons')
+const { IconBookLock, IconWarning } = require('../icons')
 const cx = require('classnames')
 const {
   arrayOf, bool, func, number, oneOfType, shape, string
@@ -44,7 +44,7 @@ class MetadataField extends PureComponent {
   }
 
   handleClick = () => {
-    if (!this.props.isDisabled) {
+    if (!this.props.isDisabled && !this.props.isReadOnly) {
       this.props.onEdit(this.props.id, this.property)
     }
   }
@@ -76,12 +76,12 @@ class MetadataField extends PureComponent {
           <Editable
             value={this.props.text}
             placeholder={this.props.placeholder}
-            isDisabled={this.props.isDisabled}
             isEditing={this.props.isEditing}
             isRequired={this.props.isRequired}
             onCancel={this.handleCancel}
             onChange={this.handleChange}/>
           {this.isInvalid && <IconWarning/>}
+          {this.props.isReadOnly && <IconBookLock/>}
         </div>
       </li>
     )
@@ -96,6 +96,7 @@ class MetadataField extends PureComponent {
     isExtra: bool,
     isMixed: bool,
     isRequired: bool,
+    isReadOnly: bool,
 
     property: shape({
       id: string.isRequired,
