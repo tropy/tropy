@@ -3,8 +3,8 @@
 module.exports = {
   async open(db) {
     const { id } = await db.run(`
-      INSERT INTO access (uuid, version) VALUES (?, ?)`,
-      ARGS.uuid, ARGS.version
+      INSERT INTO access (uuid, version, path) VALUES (?, ?, ?)`,
+      ARGS.uuid, ARGS.version, db.path
     )
 
     return id

@@ -36,12 +36,10 @@ function *open(file) {
       throw error
     })
 
-    const project = yield call(mod.project.load, db)
-
+    var project = yield call(mod.project.load, db)
     var access  = yield call(mod.access.open, db)
-    var { id } = project
 
-    const cache = new Cache(ARGS.cache, id)
+    const cache = new Cache(ARGS.cache, project.id)
 
     if (db.path !== ARGS.file) {
       ARGS.file = db.path
@@ -55,8 +53,8 @@ function *open(file) {
     yield every(has('load'), load)
 
     yield all([
-      call(storage.restore, 'nav', id),
-      call(storage.restore, 'columns', id)
+      call(storage.restore, 'nav', project.id),
+      call(storage.restore, 'columns', project.id)
     ])
 
     yield fork(function* () {
@@ -72,7 +70,7 @@ function *open(file) {
 
     while (true) {
       const action = yield take(command)
-      yield fork(exec, { db, id, cache }, action)
+      yield fork(exec, { db, id: project.id, cache }, action)
     }
 
 
@@ -81,15 +79,15 @@ function *open(file) {
     debug(error.stack)
 
   } finally {
-    if (id) {
+    if (project.id) {
       yield all([
-        call(storage.persist, 'nav', id),
-        call(storage.persist, 'columns', id)
+        call(storage.persist, 'nav', project.id),
+        call(storage.persist, 'columns', project.id)
       ])
     }
 
     if (db) {
-      if (access) {
+      if (access != null && access.id > 0) {
         yield call(mod.access.close, db, access.id)
       }
 
@@ -105,7 +103,7 @@ function *open(file) {
       yield call(db.close)
     }
 
-    yield put(act.project.closed(id))
+    yield put(act.project.closed(project.id))
   }
 }
 

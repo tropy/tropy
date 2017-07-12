@@ -29,9 +29,10 @@ CREATE TABLE project (
 CREATE TABLE access (
   uuid        TEXT     NOT NULL,
   version     TEXT     NOT NULL,
+  path        TEXT     NOT NULL,
   opened      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   closed      NUMERIC,
-  CHECK (uuid != '' AND version != '')
+  CHECK (uuid != '' AND version != '' AND path != '')
 );
 CREATE TABLE subjects (
   id           INTEGER  PRIMARY KEY,
