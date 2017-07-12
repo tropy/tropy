@@ -10,16 +10,16 @@
   }
 }
 
-html {
-  // Fix #item-view positioning bug on window resize.
-  // Remove this fix when it is not needed anymore.
-  position: relative;
-}
-
 html,
 body,
 .view {
   height: 100%;
+}
+
+html {
+  // Fix #item-view positioning bug on window resize.
+  // Remove this fix when it is not needed anymore.
+  position: relative;
 }
 
 body {
