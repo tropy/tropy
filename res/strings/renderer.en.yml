@@ -190,3 +190,6 @@ error:
       save: Failed to save vocabulary. Prefix must be unique.
     template:
       import: Failed to import template.
+      field:
+        add: Failed to add field to template.
+        remove: Failed to remove field from template.

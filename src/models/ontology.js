@@ -410,8 +410,11 @@ const ontology = {
 
     field: {
       add(db, id, ...fields) {
+        const hasId = (fields[0].id != null)
+
         return db.prepare(`
           INSERT INTO fields (
+              ${hasId ? 'field_id,\n' : ''}
               template_id,
               property_id,
               datatype_id,
@@ -419,16 +422,26 @@ const ontology = {
               hint,
               constant,
               position
-            ) VALUES (?, ?, ?, ?, ?, ?, ?)`, stmt =>
-            all(fields.map((f, idx) => stmt.run([
-              id,
-              f.property,
-              f.datatype || TEXT,
-              !!f.isRequired,
-              f.hint,
-              f.constant,
-              (f.position != null) ? f.position : idx
-            ])
+            ) VALUES (
+              ${hasId ? '$id,\n' : ''}
+              $template,
+              $property,
+              $datatype,
+              $isRequired,
+              $hint,
+              $constant,
+              $position
+            )`, stmt =>
+            all(fields.map((f, idx) => stmt.run({
+              $id: f.id,
+              $template: id,
+              $property: f.property,
+              $datatype: f.datatype || TEXT,
+              $isRequired: !!f.isRequired,
+              $hint: f.hint,
+              $constant: f.constant,
+              $position: (f.position != null) ? f.position : idx
+            })
           ))
         )
       },
