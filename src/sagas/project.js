@@ -38,7 +38,9 @@ function *open(file) {
 
     const project = yield call(mod.project.load, db)
 
+    var access  = yield call(mod.access.open, db)
     var { id } = project
+
     const cache = new Cache(ARGS.cache, id)
 
     if (db.path !== ARGS.file) {
@@ -59,7 +61,6 @@ function *open(file) {
 
     yield fork(function* () {
       yield all([
-        call(mod.project.touch, db, { id }),
         put(act.history.drop()),
         put(act.list.load()),
         put(act.tag.load())
@@ -88,12 +89,17 @@ function *open(file) {
     }
 
     if (db) {
+      if (access) {
+        yield call(mod.access.close, db, access.id)
+      }
+
       yield all([
         call(mod.item.prune, db),
         call(mod.list.prune, db),
         call(mod.value.prune, db),
         call(mod.photo.prune, db),
-        call(mod.note.prune, db)
+        call(mod.note.prune, db),
+        call(mod.access.prune, db)
       ])
 
       yield call(db.close)

@@ -1,6 +1,7 @@
 'use strict'
 
 module.exports = {
+  access: require('./access'),
   item: require('./item'),
   list: require('./list'),
   note: require('./note'),
