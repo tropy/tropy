@@ -26,6 +26,7 @@ $brand-primary-light: $blue-light;
   #{--brand-primary-light-10}: rgba($brand-primary-light, 0.1);
   #{--brand-primary-light-76}: rgba($blue-light, 0.76);
   #{--red}:                    $red;
+  #{--red-64}:                 rgba($red, 0.64);
 }
 
 
@@ -179,6 +180,8 @@ $icon-color:        var(--shade-7);
 $icon-active-color: var(--shade-9);
 
 $icon-spin-color:   var(--brand-primary);
+
+$icon-warning: var(--red-64);
 
 // Project
 $project-darken-color: var(--shade-0-5);

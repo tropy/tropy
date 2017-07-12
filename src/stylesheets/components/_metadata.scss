@@ -67,6 +67,8 @@ $default-padding-horizontal: 12px !default;
 
   .value {
     flex: 0 0 calc(100% - #{$metadata-horizontal-offset});
+    display: flex;
+    align-items: center;
     padding-left: $metadata-gutter / 2
       - ($editable-border-width + $editable-padding-horizontal);
     padding-right: $default-padding-horizontal;
@@ -82,6 +84,10 @@ $default-padding-horizontal: 12px !default;
     text-decoration: none;
   }
 
+  .editable {
+    flex: 1 1 auto;
+  }
+
   div {
     &.editable {
       padding-left: $editable-border-width + $editable-padding-horizontal;
@@ -92,5 +98,9 @@ $default-padding-horizontal: 12px !default;
   .editable-control {
     left: auto;
     width: 100%;
+  }
+
+  .icon-warning {
+    color: $icon-warning;
   }
 }
