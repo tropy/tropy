@@ -18,8 +18,17 @@ class MetadataField extends PureComponent {
       'metadata-field': true,
       'extra': this.props.isExtra,
       'mixed': this.props.isMixed,
+      'invalid': this.isInvalid,
       [this.props.type]: true
     }
+  }
+
+  get isBlank() {
+    return this.props.text == null || this.props.text === ''
+  }
+
+  get isInvalid() {
+    return this.props.isRequired && this.isBlank
   }
 
   get label() {
@@ -57,7 +66,7 @@ class MetadataField extends PureComponent {
 
   render() {
     const { classes,  details, label } = this
-    const { text, isEditing, isDisabled } = this.props
+    const { text, isEditing, isDisabled, isRequired } = this.props
 
     return (
       <li className={cx(classes)}>
@@ -67,6 +76,7 @@ class MetadataField extends PureComponent {
             value={text}
             isDisabled={isDisabled}
             isEditing={isEditing}
+            isRequired={isRequired}
             onCancel={this.handleCancel}
             onChange={this.handleChange}/>
         </div>
@@ -82,6 +92,7 @@ class MetadataField extends PureComponent {
     isDisabled: bool,
     isExtra: bool,
     isMixed: bool,
+    isRequired: bool,
 
     property: shape({
       id: string.isRequired,

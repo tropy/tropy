@@ -63,7 +63,8 @@ class MetadataFields extends PureComponent {
 
   renderTemplate() {
     const { template } = this.props
-    return template && template.fields.map(f => this.renderField(f.property))
+    return template && template.fields.map(f =>
+      this.renderField(f.property, { isRequired: f.isRequired }))
   }
 
   renderExtraFields() {
