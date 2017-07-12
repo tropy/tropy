@@ -1,12 +1,18 @@
 'use strict'
 
+const { TYPE } = require('./constants')
+
 module.exports = {
   date(value) {
-    return { text: value, type: 'date' }
+    return { text: value, type: TYPE.DATE }
   },
 
   text(value) {
-    return { text: value, type: 'text' }
+    return { text: value, type: TYPE.TEXT }
+  },
+
+  value(value, type) {
+    return { text: value, type: type || TYPE.TEXT }
   },
 
   equal(a, b) {
