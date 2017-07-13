@@ -8,6 +8,7 @@ const { pluck } = require('../../common/util')
 const { getLabel } = require('../../common/ontology')
 const { IconLock, IconWarning } = require('../icons')
 const cx = require('classnames')
+const { TYPE } = require('../../constants')
 const {
   arrayOf, bool, func, number, oneOfType, shape, string
 } = require('prop-types')
@@ -116,7 +117,7 @@ class MetadataField extends PureComponent {
   }
 
   static defaultProps = {
-    type: 'text'
+    type: TYPE.TEXT
   }
 }
 
