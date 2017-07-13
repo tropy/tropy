@@ -91,7 +91,7 @@ target.all = (args = []) => {
       ProductName: qualified.product
     },
     asar: {
-      unpack: '**/{*.node,lib/stylesheets/**/*}',
+      unpack: '**/{*.node,lib/stylesheets/**/*,res/icons/mime/*.ico}',
     }
 
   }, (err, dst) => {
