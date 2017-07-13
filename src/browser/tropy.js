@@ -259,6 +259,7 @@ class Tropy extends EventEmitter {
       state.recent = []
     }
 
+    state.locale = 'en'
     state.version = this.version
     state.uuid = state.uuid || uuid()
 
