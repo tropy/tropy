@@ -50,6 +50,17 @@ CREATE TABLE images (
 
   CHECK (angle >= 0 AND angle <= 360)
 ) WITHOUT ROWID;
+CREATE TABLE photos (
+  id           INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
+  item_id      INTEGER  NOT NULL REFERENCES items ON DELETE CASCADE,
+  position     INTEGER,
+  path         TEXT     NOT NULL,
+  protocol     TEXT     NOT NULL DEFAULT 'file',
+  mimetype     TEXT     NOT NULL,
+  checksum     TEXT     NOT NULL,
+  orientation  INTEGER  NOT NULL DEFAULT 1,
+  metadata     TEXT     NOT NULL DEFAULT '{}'
+) WITHOUT ROWID;
 CREATE TABLE items (
   id              INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   cover_image_id  INTEGER  REFERENCES images ON DELETE SET NULL
@@ -136,40 +147,6 @@ CREATE TABLE trash (
 
   CHECK (reason IN ('user', 'auto', 'merge'))
 ) WITHOUT ROWID;
-CREATE TABLE photos (
-  id           INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
-  item_id      INTEGER  NOT NULL REFERENCES items ON DELETE CASCADE,
-  position     INTEGER,
-  path         TEXT     NOT NULL,
-  protocol     TEXT     NOT NULL DEFAULT 'file',
-  mimetype     TEXT     NOT NULL,
-  checksum     TEXT     NOT NULL,
-  orientation  INTEGER  NOT NULL DEFAULT 1,
-  metadata     TEXT     NOT NULL DEFAULT '{}'
-) WITHOUT ROWID;
-CREATE TABLE selections (
-  id        INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
-  photo_id  INTEGER  NOT NULL REFERENCES photos ON DELETE CASCADE,
-  position  INTEGER,
-  quality   TEXT     NOT NULL DEFAULT 'default' REFERENCES image_qualities,
-  x         NUMERIC  NOT NULL DEFAULT 0,
-  y         NUMERIC  NOT NULL DEFAULT 0,
-  pct       BOOLEAN  NOT NULL DEFAULT 0
-) WITHOUT ROWID;
-CREATE TABLE image_scales (
-  id      INTEGER  PRIMARY KEY REFERENCES selections ON DELETE CASCADE,
-  x       NUMERIC  NOT NULL DEFAULT 0,
-  y       NUMERIC  NOT NULL DEFAULT 0,
-  factor  NUMERIC  NOT NULL,
-  fit     BOOLEAN  NOT NULL DEFAULT 0
-) WITHOUT ROWID;
-CREATE TABLE image_qualities (
-  quality  TEXT  NOT NULL PRIMARY KEY
-) WITHOUT ROWID;
-INSERT INTO image_qualities VALUES('bitonal');
-INSERT INTO image_qualities VALUES('color');
-INSERT INTO image_qualities VALUES('default');
-INSERT INTO image_qualities VALUES('gray');
 PRAGMA writable_schema=ON;
 INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_notes','fts_notes',0,'CREATE VIRTUAL TABLE fts_notes USING fts5(
   id UNINDEXED,

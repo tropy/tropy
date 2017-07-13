@@ -67,17 +67,17 @@ module.exports = {
           }
         ),
 
-        db.each(`
-          SELECT id, photo_id AS photo
-            FROM selections
-              LEFT OUTER JOIN trash USING (id)
-            WHERE photo_id IN (${ids})
-              AND deleted IS NULL
-            ORDER BY photo_id, position`,
-          ({ id, photo }) => {
-            photos[photo].selections.push(id)
-          }
-        ),
+        //db.each(`
+        //  SELECT id, photo_id AS photo
+        //    FROM selections
+        //      LEFT OUTER JOIN trash USING (id)
+        //    WHERE photo_id IN (${ids})
+        //      AND deleted IS NULL
+        //    ORDER BY photo_id, position`,
+        //  ({ id, photo }) => {
+        //    photos[photo].selections.push(id)
+        //  }
+        //),
 
         db.each(`
           SELECT id, note_id AS note

@@ -43,6 +43,19 @@ CREATE TABLE images (
 ) WITHOUT ROWID;
 
 
+CREATE TABLE photos (
+  id           INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
+  item_id      INTEGER  NOT NULL REFERENCES items ON DELETE CASCADE,
+  position     INTEGER,
+  path         TEXT     NOT NULL,
+  protocol     TEXT     NOT NULL DEFAULT 'file',
+  mimetype     TEXT     NOT NULL,
+  checksum     TEXT     NOT NULL,
+  orientation  INTEGER  NOT NULL DEFAULT 1,
+  metadata     TEXT     NOT NULL DEFAULT '{}'
+) WITHOUT ROWID;
+
+
 CREATE TABLE items (
   id              INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   cover_image_id  INTEGER  REFERENCES images ON DELETE SET NULL
@@ -143,3 +156,5 @@ CREATE TABLE trash (
 
   CHECK (reason IN ('user', 'auto', 'merge'))
 ) WITHOUT ROWID;
+
+
