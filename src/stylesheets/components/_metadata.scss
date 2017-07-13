@@ -69,8 +69,7 @@ $default-padding-horizontal: 12px !default;
     flex: 0 0 calc(100% - #{$metadata-horizontal-offset});
     display: flex;
     align-items: center;
-    padding-left: $metadata-gutter / 2
-      - ($editable-border-width + $editable-padding-horizontal);
+    padding-left: $metadata-gutter / 2;
     padding-right: $default-padding-horizontal;
     min-width: 0; // Fix truncation
 
@@ -90,14 +89,17 @@ $default-padding-horizontal: 12px !default;
 
   div {
     &.editable {
-      padding-left: $editable-border-width + $editable-padding-horizontal;
       height: 100%; // For empty fields
     }
   }
 
-  .editable-control {
-    left: auto;
-    width: 100%;
+  .icon {
+    flex: 0 0 auto;
+    margin-left: $space-xs;
+
+    & + .icon {
+      margin-left: $space-min;
+    }
   }
 
   .icon-warning {
