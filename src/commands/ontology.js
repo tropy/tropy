@@ -339,7 +339,7 @@ async function createTemplate(db, data) {
   await db.transaction(async tx => {
     await mod.ontology.template.create(tx, data)
 
-    if (data.fields != null) {
+    if (data.fields != null && data.fields.length > 0) {
       await Promise.all([
         mod.ontology.template.field.add(tx, data.id, ...data.fields)
       ])
