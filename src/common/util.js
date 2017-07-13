@@ -32,7 +32,7 @@ const util = {
   },
 
   empty(obj) {
-    return keys(obj).length === 0
+    return obj == null || keys(obj).length === 0
   },
 
   times(n, fn) {

@@ -20,6 +20,14 @@ module.exports = {
     }
   },
 
+  merge(payload, meta) {
+    return {
+      type: METADATA.MERGE,
+      payload,
+      meta
+    }
+  },
+
   replace(payload, meta) {
     return {
       type: METADATA.REPLACE,

@@ -11,11 +11,11 @@ const { text } = require('../value')
 const intl = require('../selectors/intl')
 const act = require('../actions')
 const mod = require('../models')
-const { mixed, pluck, remove } = require('../common/util')
+const { get, pluck, pick, remove } = require('../common/util')
 const { map, cat, filter, into, compose } = require('transducers.js')
 const { ITEM, DC } = require('../constants')
-const { isArray } = Array
 const { keys } = Object
+const { isArray } = Array
 
 const {
   getItemTemplate,
@@ -224,38 +224,72 @@ class Save extends Command {
 
   *exec() {
     const { db } = this.options
-    const { id: ids, property, value } = this.action.payload
+    const { payload } = this.action
 
-    let original = yield select(({ items }) =>
-      pluck(items, ids).map(item => item[property]))
+    if (!isArray(payload)) {
+      const { id: ids, property, value } = this.action.payload
 
-    if (!mixed(original)) {
-      original = original[0]
-    }
+      assert.equal(property, 'template')
 
-    if (isArray(value)) {
-      assert.equal(ids.length, value.length)
+      const state = yield select(({ items, ontology, metadata }) => ({
+        items, templates: ontology.template, metadata
+      }))
 
-      const data = {}
+      const props = { [property]: value }
+      const template = state.templates[value]
+
+      assert(template != null, 'unknown template')
+
+      const data = getTemplateValues(template)
+      const datakeys = data != null ? keys(data) : []
+      const hasData = datakeys.length > 0
+
+      const original = ids.map(id => [
+        id,
+        get(state.items, [id, property]),
+        hasData ? pick(state.metadata[id], datakeys, {}, true) : null
+      ])
 
       yield call(db.transaction, async tx => {
-        for (let i = 0; i < ids.length; ++i) {
-          let id = ids[i]
-          data[id] = { [property]: value[i] }
-          await mod.item.update(tx, [id], data[id])
+        await mod.item.update(tx, ids, props)
+
+        if (hasData) {
+          await mod.metadata.update(tx, { ids, data })
         }
       })
 
-      yield put(act.item.bulk.update(data))
+      yield put(act.item.bulk.update([ids, props]))
+
+      if (hasData) {
+        yield put(act.metadata.update({ ids, data }))
+      }
+
+      this.undo = { ...this.action, payload: original }
 
     } else {
-      let data = { [property]: value }
 
-      yield call(mod.item.update, db, ids, data)
-      yield put(act.item.bulk.update([ids, data]))
+      let hasData = false
+      let changed = { props: {}, data: {} }
+
+      yield call(db.transaction, async tx => {
+        for (let [id, template, data] of payload) {
+          changed.props[id] = { template }
+          await mod.item.update(tx, [id], changed.props[id])
+
+          if (data) {
+            hasData = true
+            changed.data[id] = data
+            await mod.metadata.update(tx, { ids: [id], data })
+          }
+        }
+      })
+
+      yield put(act.item.bulk.update(changed.props))
+
+      if (hasData) {
+        yield put(act.metadata.merge(changed.data))
+      }
     }
-
-    this.undo = act.item.save({ id: ids, property, value: original })
   }
 }
 
