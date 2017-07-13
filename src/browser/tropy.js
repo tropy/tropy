@@ -48,8 +48,7 @@ class Tropy extends EventEmitter {
     locale: 'en', // app.getLocale() || 'en',
     theme: 'light',
     recent: [],
-    win: {},
-    version
+    win: {}
   }
 
   constructor() {
@@ -256,6 +255,10 @@ class Tropy extends EventEmitter {
   }
 
   migrate(state) {
+    if (!state.version || state.version === '1.0.0-beta.0') {
+      state.recent = []
+    }
+
     state.version = this.version
     state.uuid = state.uuid || uuid()
 
