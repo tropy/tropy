@@ -112,6 +112,7 @@
     "string.prototype.padstart": "^3.0.0",
     "transducers.js": "^0.3.2",
     "uuid": "^3.1.0",
+    "winreg": "^1.2.4",
     "winston": "^2.1.1",
     "write-file-atomic": "^2.0.0",
     "yargs": "^8.0.2"

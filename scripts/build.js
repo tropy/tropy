@@ -16,16 +16,51 @@ const res = join(dir, 'res')
 const icons = resolve(res, 'icons', channel, 'tropy')
 const mime = resolve(res, 'icons', 'mime')
 
+const IGNORE = [
+  /.DS_Store/,
+  /.babelrc/,
+  /.eslintrc/,
+  /.gitignore/,
+  /.nvmrc/,
+  /.nyc_output/,
+  /.sass-lint\.yml/,
+  /.travis\.yml/,
+  /.vimrc/,
+  /^\/coverage/,
+  /^\/db.test/,
+  /^\/dist/,
+  /^\/doc/,
+  /^\/ext/,
+  /^\/res.ext/,
+  /^\/res.mime/,
+  /^\/res.icons.dev/,
+  /^\/res.icons.beta/,
+  /^\/res.icons.stable/,
+  /^\/res.icons.mime/,
+  /^\/res.dmg/,
+  /^\/res.linux/,
+  /^\/res.ext\.plist/,
+  /^\/scripts/,
+  /^\/src/,
+  /^\/test/,
+  /^\/tmp/,
+  /appveyor\.yml/
+]
 
 target.all = (args = []) => {
   const platform = args[0] || process.platform
   const arch = args[1] || process.arch
+  const ignore = [...IGNORE]
 
   const icon = platform === 'win32' ?
     join(res, 'icons', channel, `${name}.ico`) :
     join(res, 'icons', channel, `${name}.icns`)
 
   say(`packaging for ${platform} ${arch}...`)
+
+  if (platform !== 'win32') {
+    ignore.push(/^\/node_modules\/winreg/)
+  }
 
   packager({
     platform,
@@ -37,6 +72,7 @@ target.all = (args = []) => {
     prune: true,
     overwrite: true,
     quiet: true,
+    ignore,
     electronVersion: electron.version,
     appVersion: version,
     appBundleId: 'org.tropy.tropy',
@@ -56,37 +92,7 @@ target.all = (args = []) => {
     },
     asar: {
       unpack: '**/{*.node,lib/stylesheets/**/*}',
-    },
-    ignore: [
-      /.DS_Store/,
-      /.babelrc/,
-      /.eslintrc/,
-      /.gitignore/,
-      /.nvmrc/,
-      /.nyc_output/,
-      /.sass-lint\.yml/,
-      /.travis\.yml/,
-      /.vimrc/,
-      /^\/coverage/,
-      /^\/db.test/,
-      /^\/dist/,
-      /^\/doc/,
-      /^\/ext/,
-      /^\/res.ext/,
-      /^\/res.mime/,
-      /^\/res.icons.dev/,
-      /^\/res.icons.beta/,
-      /^\/res.icons.stable/,
-      /^\/res.icons.mime/,
-      /^\/res.dmg/,
-      /^\/res.linux/,
-      /^\/res.ext\.plist/,
-      /^\/scripts/,
-      /^\/src/,
-      /^\/test/,
-      /^\/tmp/,
-      /appveyor\.yml/
-    ]
+    }
 
   }, (err, dst) => {
     if (err) return error(err)
