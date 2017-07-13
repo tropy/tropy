@@ -29,9 +29,10 @@ class Template {
       'field': data.fields.map(field => pick(field, [
         'property',
         'datatype',
-        'isRequired',
         'hint',
-        'constant'
+        'isRequired',
+        'isConstant',
+        'value'
       ]))
     }
   }
