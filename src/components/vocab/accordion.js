@@ -66,6 +66,7 @@ class VocabAccordion extends Accordion {
             onChange={this.handleChange}/>
           <FormText
             id="vocab.description"
+            isCompact
             isOptional
             size={8}
             value={vocab.description}/>
