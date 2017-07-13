@@ -39,7 +39,7 @@ CREATE TRIGGER notes_au_fts
 -- ------------------------------------------------------------
 
 CREATE VIRTUAL TABLE fts_metadata USING fts5(
-  type_name UNINDEXED,
+  datatype UNINDEXED,
   text,
   content = 'metadata_values',
   content_rowid = 'value_id',
@@ -48,16 +48,28 @@ CREATE VIRTUAL TABLE fts_metadata USING fts5(
 
 CREATE TRIGGER metadata_values_ai_fts
   AFTER INSERT ON metadata_values
-  FOR EACH ROW WHEN NEW.type_name NOT IN ('boolean', 'location')
+  FOR EACH ROW WHEN NEW.datatype NOT IN (
+    'http://www.w3.org/2001/XMLSchema#boolean',
+    'http://www.w3.org/2001/XMLSchema#hexBinary',
+    'http://www.w3.org/2001/XMLSchema#base64Binary',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral')
   BEGIN
-    INSERT INTO fts_metadata (rowid, type_name, text)
-      VALUES (NEW.value_id, NEW.type_name, NEW.text);
+    INSERT INTO fts_metadata (rowid, datatype, text)
+      VALUES (NEW.value_id, NEW.datatype, NEW.text);
   END;
 
 CREATE TRIGGER metadata_values_ad_fts
   AFTER DELETE ON metadata_values
-  FOR EACH ROW WHEN OLD.type_name NOT IN ('boolean', 'location')
+  FOR EACH ROW WHEN OLD.datatype NOT IN (
+    'http://www.w3.org/2001/XMLSchema#boolean',
+    'http://www.w3.org/2001/XMLSchema#hexBinary',
+    'http://www.w3.org/2001/XMLSchema#base64Binary',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral')
   BEGIN
-    INSERT INTO fts_metadata (fts_metadata, rowid, type_name, text)
-      VALUES ('delete', OLD.value_id, OLD.type_name, OLD.text);
+    INSERT INTO fts_metadata (fts_metadata, rowid, datatype, text)
+      VALUES ('delete', OLD.value_id, OLD.datatype, OLD.text);
   END;

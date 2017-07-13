@@ -1,0 +1,115 @@
+'use strict'
+
+const { createSelector: memo } = require('reselect')
+const { entries, values } = Object
+const { by } = require('../collate')
+const { compose, filter, into, map } = require('transducers.js')
+const { blank, get } = require('../common/util')
+const { TYPE, ITEM, PHOTO } = require('../constants')
+const { value }  = require('../value')
+
+const getPropertyList = memo(
+  ({ ontology }) => ontology.props,
+  (props) => values(props).sort(by('id'))
+)
+
+const getVocabs = memo(
+  ({ ontology }) => ontology.vocab,
+  ({ ontology }) => ontology.props,
+  ({ ontology }) => ontology.class,
+  ({ ontology }) => ontology.type,
+  (vocab, props, klass, types) => into(
+    [],
+    map(kv => ({
+      ...kv[1],
+      classes: kv[1].classes.map(id => klass[id]),
+      datatypes: kv[1].datatypes.map(id => types[id]),
+      properties: kv[1].properties.map(id => props[id])
+    })),
+    vocab
+  )
+)
+
+const getAllTemplates = memo(
+  ({ ontology }) => ontology.template,
+  ({ ontology }) => ontology.props,
+
+  (templates, props) =>
+    entries(templates)
+      .reduce((tpl, [k, v]) => {
+        tpl[k] = {
+          ...v,
+          fields: v.fields.map(field => ({
+            ...field,
+            property: props[field.property] || { id: field.property }
+          }))
+        }
+
+        return tpl
+
+      }, {}))
+
+
+const getTemplatesByType = (type) => memo(
+  ({ ontology }) => ontology.template,
+  (templates) => into(
+    [],
+    compose(
+      map(kv => kv[1]),
+      filter(t => t.type === type)),
+    templates
+  ).sort(by('name', 'id'))
+)
+
+const getTemplateList = memo(
+  ({ ontology }) => ontology.template,
+  (templates) => values(templates).sort(by('name', 'id'))
+)
+
+const getTemplateFields = ({ ontology }, props) =>
+  get(ontology.template, [props.id, 'fields'], [])
+
+const getTemplateField = memo(
+  getTemplateFields,
+  (_, props) => props.field,
+  (fields, id) => {
+    const idx = fields.findIndex(f => f.id === id)
+    return { idx, field: fields[idx] }
+  }
+)
+
+const getItemTemplate = memo(
+  ({ ontology }) => ontology.template,
+  ({ settings }) => settings.itemTemplate,
+  (template, id) => template[id] || template[ITEM.TEMPLATE]
+)
+
+const getPhotoTemplate = memo(
+  ({ ontology }) => ontology.template,
+  ({ settings }) => settings.photoTemplate,
+  (template, id) => template[id] || template[PHOTO.TEMPLATE]
+)
+
+const getTemplateValues = (template) =>
+  template.fields.reduce((acc, field) => {
+    if (!blank(field.value)) {
+      acc[field.property] = value(field.value, field.datatype)
+    }
+
+    return acc
+  }, {})
+
+
+module.exports = {
+  getAllTemplates,
+  getItemTemplates: getTemplatesByType(TYPE.ITEM),
+  getItemTemplate,
+  getPhotoTemplates: getTemplatesByType(TYPE.PHOTO),
+  getPhotoTemplate,
+  getPropertyList,
+  getTemplateField,
+  getTemplateFields,
+  getTemplateList,
+  getTemplateValues,
+  getVocabs
+}

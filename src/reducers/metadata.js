@@ -1,16 +1,19 @@
 'use strict'
 
 const { METADATA, ITEM, PHOTO, PROJECT } = require('../constants')
-const { bulk, load, remove, replace, insert, update } = require('./util')
+const { bulk, load, merge, remove, replace, insert, update } = require('./util')
 
 
 module.exports = {
+  // eslint-disable-next-line complexity
   metadata(state = {}, { type, payload, meta, error }) {
     switch (type) {
       case PROJECT.OPEN:
         return {}
       case METADATA.LOAD:
         return load(state, payload, meta, error)
+      case METADATA.MERGE:
+        return merge(state, payload, meta, error)
       case METADATA.REPLACE:
         return replace(state, payload)
       case METADATA.INSERT:

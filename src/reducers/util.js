@@ -52,7 +52,7 @@ const util = {
         [id]: {
           ...state[id],
           [name]: state[id][name].filter(x =>
-            !payload[name].includes(x))
+            !payload[name].includes(x.id != null ? x.id : x))
         }
       })), array(payload.id))
     }

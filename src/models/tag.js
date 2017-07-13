@@ -1,5 +1,6 @@
 'use strict'
 
+const assert = require('assert')
 const { list, pick } = require('../common/util')
 const { keys, values } = Object
 const mod = {}
@@ -10,7 +11,7 @@ module.exports = mod.tag = {
     const tags = {}
 
     await db.each(`
-      SELECT tag_id AS id, name, created, modified
+      SELECT tag_id AS id, name, color, created, modified
         FROM tags${
           (ids != null) ? ` WHERE tag_id IN (${list(ids)})` : ''
         }`,
@@ -31,12 +32,22 @@ module.exports = mod.tag = {
     return (await mod.tag.load(db, [id]))[id]
   },
 
-  async save(db, { id, name }) {
+  async save(db, { id, ...data }) {
+    const assign = []
+    const params = { $id: id }
+
+    for (let attr in data) {
+      assign.push(`${attr} = $${attr}`)
+      params[`$${attr}`] = data[attr]
+    }
+
+    assert(id != null, 'missing tag id')
+    assert(assign.length > 0, 'missing valid assignments')
+
     return db.run(`
       UPDATE tags
-        SET name = ?, modified = datetime("now")
-        WHERE tag_id = ?`,
-      name, id)
+        SET ${assign.join(', ')}, modified = datetime("now")
+        WHERE tag_id = $id`, params)
   },
 
   async delete(db, ids) {

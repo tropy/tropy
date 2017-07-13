@@ -2,17 +2,23 @@
 
 const assert = require('assert')
 const { ipcRenderer: ipc } = require('electron')
-const { counter } = require('./common/util')
+const { counter, get } = require('./common/util')
 const { warn } = require('./common/log')
 
-let seq = null
-let pending = null
+let seq
+let pending
+let STORE
 
-function start() {
-  assert(!seq, 'already initialized')
+function t(id) {
+  return get(STORE.getState(), ['intl', 'messages', `error.${id}`], id)
+}
+
+function start(store) {
+  assert(seq == null, 'already initialized')
 
   seq = counter()
   pending = {}
+  STORE = store
 
   ipc.on('dialog', onClosed)
 }
@@ -50,11 +56,12 @@ function notify(options) {
   })
 }
 
-function fail(error, context = 'global') {
+function fail(error, message = 'Error') {
   return notify({
     type: 'error',
     title: 'Error',
-    message: `${context}: ${error.message}`
+    message: t(message),
+    detail: (message === error.message) ? null : error.message
   })
 }
 
@@ -88,10 +95,39 @@ function openImages(options) {
   })
 }
 
+function openVocabs(options) {
+  return open('file', {
+    filters: [
+      { name: 'RDF Vocabularies', extensions: ['n3', 'ttl'] }
+    ],
+    properties: ['openFile', 'multiSelections'],
+    ...options
+  })
+}
+
+function openTemplates(options) {
+  return open('file', {
+    filters: [
+      { name: 'Tropy Templates', extensions: ['ttp'] }
+    ],
+    properties: ['openFile', 'multiSelections'],
+    ...options
+  })
+}
+
 function saveProject(options) {
   return open('save', {
     filters: [
       { name: 'Tropy Projects', extensions: ['tpy'] }
+    ],
+    ...options
+  })
+}
+
+function exportTemplate(options) {
+  return open('save', {
+    filters: [
+      { name: 'Tropy Templates', extensions: ['ttp'] }
     ],
     ...options
   })
@@ -102,9 +138,12 @@ module.exports = {
   stop,
   open,
   notify,
+  exportTemplate,
   fail,
   file,
   openImages,
+  openTemplates,
+  openVocabs,
   save,
   saveProject,
   prompt

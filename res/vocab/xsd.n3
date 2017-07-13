@@ -1,0 +1,91 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+
+
+<http://www.w3.org/2001/XMLSchema#>
+	vann:preferredNamespacePrefix "xsd" ;
+	dc:title "XML Schema Definition Language (XSD) Datatypes"@en ;
+	dc:description "XML Schema: Datatypes is part 2 of the specification of the XML Schema language. It defines facilities for defining datatypes to be used in XML Schemas as well as other XML specifications. The datatype language, which is itself represented in XML, provides a superset of the capabilities found in XML document type definitions (DTDs) for specifying datatypes on elements and attributes."@en ;
+  rdfs:seeAlso <https://www.w3.org/TR/xmlschema11-2/> .
+
+xsd:string a rdfs:Datatype ;
+	rdfs:label "String"@en ;
+  rdfs:comment "The string datatype represents character strings in XML."@en ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:boolean a rdfs:Datatype ;
+	rdfs:label "Boolean"@en ;
+  rdfs:comment "Boolean represents the values of two-valued logic."@en ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:decimal a rdfs:Datatype ;
+	rdfs:label "Decimal"@en ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:float a rdfs:Datatype ;
+	rdfs:label "Float"@en ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:double a rdfs:Datatype ;
+	rdfs:label "Double"@en ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:dateTime a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:time a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:date a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:gYearMonth a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:gYear a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:gMonthDay a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:gDay a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:gMonth a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:hexBinary a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:base64Binary a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:anyURI a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:normalizedString a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:token a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:language a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:NMTOKEN a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:Name a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:NCName a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:integer a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:nonPositiveInteger a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:negativeInteger a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:long a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:int a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:short a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:byte a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:nonNegativeInteger a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:unsignedLong a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:unsignedInt a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:unsignedShort a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:unsignedByte a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+xsd:positiveInteger a rdfs:Datatype ;
+  rdfs:isDefinedBy <http://www.w3.org/2001/XMLSchema#> .
+

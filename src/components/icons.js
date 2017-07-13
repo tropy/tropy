@@ -1,26 +1,39 @@
 'use strict'
 
 const React = require('react')
-const PropTypes = require('prop-types')
+const { PureComponent } = React
+const { element, string } = require('prop-types')
+const cx = require('classnames')
 
-const Icon = ({ children, name }) => (
-  <span className={`icon icon-${name}`}>
+const Icon = ({ children, className, name }) => (
+  <span className={cx('icon', `icon-${name}`, className)}>
     {children}
   </span>
 )
 
 Icon.propTypes = {
-  children: PropTypes.element,
-  name: PropTypes.string
+  children: element.isRequired,
+  className: string,
+  name: string.isRequired
 }
 
 module.exports = { Icon }
 
 
 function i(name, svg) {
-  const icon = () => (
-    <Icon name={name.toLowerCase()}>{svg}</Icon>
-  )
+  const icon = class extends PureComponent {
+    render() {
+      const { className } = this.props
+
+      return (
+        <Icon className={className} name={name.toLowerCase()}>{svg}</Icon>
+      )
+    }
+  }
+
+  icon.propTypes = {
+    className: string
+  }
 
   icon.displayName = `Icon${name}`
 
@@ -28,6 +41,40 @@ function i(name, svg) {
 }
 
 /* eslint-disable max-len */
+
+
+i('Circle', (
+  <svg width="10" height="10">
+    <circle className="border" fill="currentColor" cx="5" cy="5" r="5"/>
+    <circle className="color" fill="currentColor" cx="5" cy="5" r="4"/>
+  </svg>
+))
+
+i('CrescentCircle', (
+  <svg width="7" height="10">
+    <path  className="border" fill="currentColor" d="M2,0A4.947,4.947,0,0,0,.614.219,5.968,5.968,0,0,1,1.5,1.05h.008l1.68.945A5.964,5.964,0,0,1,4,5a5.964,5.964,0,0,1-.812,3.005l-1.68.945-.011,0a5.968,5.968,0,0,1-.883.827A4.947,4.947,0,0,0,2,10,5,5,0,0,0,2,0Z"/>
+    <path className="color" fill="currentColor" d="M2,1a3.947,3.947,0,0,0-.492.05A5.97,5.97,0,0,1,3,5,5.97,5.97,0,0,1,1.508,8.95,3.947,3.947,0,0,0,2,9,4,4,0,0,0,2,1Z"/>
+  </svg>
+))
+
+
+/* 12 x 12 */
+
+i('Lock', (
+  <svg width="12" height="12">
+    <g className="line" fill="currentColor">
+      <path d="M9,4V3A3,3,0,0,0,3,3V4H1v8H11V4ZM4,3A2,2,0,0,1,8,3V4H4Zm6,8H2V5h8Z"/>
+    </g>
+  </svg>
+))
+
+i('Warning', (
+  <svg width="12" height="12">
+    <g className="line" fill="currentColor">
+      <path d="M11.606,10.211,6.894.789C6.4-.2,5.6-.2,5.106.789L.394,10.211A1.139,1.139,0,0,0,1.5,12h9A1.139,1.139,0,0,0,11.606,10.211ZM7,10.5a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5v-1A.5.5,0,0,1,5.5,9h1a.5.5,0,0,1,.5.5Zm0-3a.5.5,0,0,1-.5.5h-1A.5.5,0,0,1,5,7.5v-4A.5.5,0,0,1,5.5,3h1a.5.5,0,0,1,.5.5Z"/>
+    </g>
+  </svg>
+))
 
 
 /* 16 x 16 */
@@ -76,6 +123,22 @@ i('Book16', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
       <path d="M14,0H4a.994.994,0,0,0-.716.306L1.305,2.284A.994.994,0,0,0,1,3V15a1,1,0,0,0,1,1H12a1,1,0,0,0,1-1V3a1,1,0,0,0-1-1H3L4,1H14V14a1,1,0,0,0,1-1V1A1,1,0,0,0,14,0ZM12,15H2V3H12Z"/>
+    </g>
+  </svg>
+))
+
+i('BookLock', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M7,16H2a1,1,0,0,1-1-1V3a.994.994,0,0,1,.305-.716L3.284.306A.994.994,0,0,1,4,0H14a1,1,0,0,1,1,1V5H14V1H4L3,2h9a1,1,0,0,1,1,1V5H12V3H2V15H7Zm9-6v6H8V10H9V9a3,3,0,0,1,6,0v1Zm-6,0h4V9a2,2,0,0,0-4,0Zm5,1H9v4h6Z"/>
+    </g>
+  </svg>
+))
+
+i('BookTemplate', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M14,0H4a.994.994,0,0,0-.716.306L1.305,2.284A.994.994,0,0,0,1,3V15a1,1,0,0,0,1,1H7V15H2V3H12V5h1V3a1,1,0,0,0-1-1H3L4,1H14V5h1V1a1,1,0,0,0-1-1ZM12.707,6H8V16h8V9.293L12.707,6ZM9,15V7h3v3h3v5Zm4-6V7.707L14.293,9ZM11,9H10v1h1V9Zm3,2H10v1h4V11Zm0,2H10v1h4V13Z"/>
     </g>
   </svg>
 ))
@@ -173,6 +236,15 @@ i('Hand', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
       <path d="M8.7,1a.875.875,0,0,1,.875.875V7.267a.437.437,0,0,0,.875,0h0V2.75a.875.875,0,0,1,1.75,0v5.6a.249.249,0,0,0,.249.249.241.241,0,0,0,.23-.2l.012.01.575-3.259a.875.875,0,0,1,1.723.3l-1.1,6.251c0,.009-.008.016-.01.026A4.585,4.585,0,0,1,9.189,15,4.823,4.823,0,0,1,4.76,12.5L1.7,7.188a1.749,1.749,0,0,1,2.391.64L5.2,9.75h0V3.625a.875.875,0,1,1,1.75,0V7.6l.006,0a.435.435,0,0,0,.869-.031V1.875A.875.875,0,0,1,8.7,1m0-1A1.877,1.877,0,0,0,6.821,1.875v.032A1.875,1.875,0,0,0,4.2,3.625V6.486a2.745,2.745,0,0,0-3-.164l-.866.5.5.866,3.045,5.274A5.809,5.809,0,0,0,9.189,16a5.6,5.6,0,0,0,5.636-3.942l.014-.028.031-.161,1.1-6.249A1.876,1.876,0,0,0,13.2,3.664V2.75a1.874,1.874,0,0,0-2.787-1.638A1.878,1.878,0,0,0,8.7,0Z"/>
+    </g>
+  </svg>
+))
+
+i('Hangtag', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M6.086,1l8.5,8.5L9.5,14.586L1,6.086V1H6.086 M6.5,0h-6C0.224,0,0,0.224,0,0.5v6l9.146,9.146c0.098,0.098,0.226,0.146,0.354,0.146c0.128,0,0.256-0.049,0.354-0.146l5.793-5.793c0.195-0.195,0.195-0.512,0-0.707L6.5,0L6.5,0z"/>
+      <circle cx="4" cy="4" r="1.25"/>
     </g>
   </svg>
 ))
@@ -406,10 +478,8 @@ i('Sup', (
 
 i('Tag', (
   <svg width="16" height="16">
-    <g className="line" fill="currentColor">
-      <path d="M6.086,1l8.5,8.5L9.5,14.586L1,6.086V1H6.086 M6.5,0h-6C0.224,0,0,0.224,0,0.5v6l9.146,9.146c0.098,0.098,0.226,0.146,0.354,0.146c0.128,0,0.256-0.049,0.354-0.146l5.793-5.793c0.195-0.195,0.195-0.512,0-0.707L6.5,0L6.5,0z"/>
-      <circle cx="4" cy="4" r="1.25"/>
-    </g>
+    <circle className="border" fill="currentColor" cx="8" cy="8" r="6"/>
+    <circle className="color" fill="currentColor" cx="8" cy="8" r="5"/>
   </svg>
 ))
 

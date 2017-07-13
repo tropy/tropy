@@ -21,8 +21,6 @@
     border-spacing: 0;
     color: $item-table-header-color;
 
-
-
     .scrollbar-style-old-school & {
       width: calc(100% - #{$default-padding-horizontal});
     }
@@ -43,6 +41,7 @@
 
     .editable {
       @include css-truncation;
+      flex: 1 1 auto;
     }
   }
 
@@ -176,6 +175,13 @@
         @at-root #{selector-replace(&, ".item.table", ".item.table:focus")} {
           color: $items-focus-color;
           background: $items-focus-bg;
+
+          .icon-circle,
+          .icon-crescentcircle {
+            .border {
+              color: $colors-focus-border-table;
+            }
+          }
         }
       }
     }
@@ -193,6 +199,37 @@
         $default-padding-horizontal
         + $thumbnail-size
         + $padding-base-horizontal;
+    }
+  }
+
+  .tag.colors {
+    margin-left: $space-xs;
+    flex: 0 0 auto;
+
+    .icon-circle,
+    .icon-crescentcircle {
+      @if $theme == "light" {
+        @each $key, $val in $tag-colors {
+          &.#{$key} {
+            .color {
+              color: map-get($val, "color-base");
+            }
+
+            .border {
+              color: map-get($val, "color-dark");
+            }
+          }
+        }
+      } @else {
+        @each $key, $val in $tag-colors {
+          &.#{$key} {
+            .color,
+            .border {
+              color: map-get($val, "color-dark");
+            }
+          }
+        }
+      }
     }
   }
 }

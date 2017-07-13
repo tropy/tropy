@@ -1,0 +1,425 @@
+@prefix o: <http://omeka.org/s/vocabs/o#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+# Notes ########################################################################
+
+# @todo Clarify comments
+# @todo Add rdfs:subClassOf, rdfs:subPropertyOf, owl:equivalentProperty,
+#       owl:sameAs where needed
+
+# Classes ######################################################################
+
+o:Asset a rdfs:Class ;
+    rdfs:label "Asset" ;
+    rdfs:comment "An asset." .
+o:Item a rdfs:Class ;
+    rdfs:label "Item" ;
+    rdfs:comment "An item." ;
+    rdfs:subClassOf rdfs:Resource .
+o:ItemSet a rdfs:Class ;
+    rdfs:label "Item Set" ;
+    rdfs:comment "An item set." ;
+    rdfs:subClassOf rdfs:Resource .
+o:Job a rdfs:Class ;
+    rdfs:label "Job" ;
+    rdfs:comment "A job." .
+o:Media a rdfs:Class ;
+    rdfs:label "Media" ;
+    rdfs:comment "A media." ;
+    rdfs:subClassOf rdfs:Resource .
+o:Module a rdfs:Class ;
+    rdfs:label "Module" ;
+    rdfs:comment "A module." .
+o:Property a rdfs:Class ;
+    rdfs:label "Property" ;
+    rdfs:comment "A property." ;
+    owl:sameAs rdf:Property .
+o:ResourceClass a rdfs:Class ;
+    rdfs:label "Resource Class" ;
+    rdfs:comment "A resource class." ;
+    owl:sameAs rdfs:Class .
+o:ResourceTemplate a rdfs:Class ;
+    rdfs:label "Resource Template" ;
+    rdfs:comment "A resource template." .
+o:ResourceTemplateProperty a rdfs:Class ;
+    rdfs:label "Resource Template Property" ;
+    rdfs:comment "A resource template property." .
+o:Site a rdfs:Class ;
+    rdfs:label "Site" ;
+    rdfs:comment "A site." .
+o:SitePermission a rdfs:Class ;
+    rdfs:label "Site Permission" ;
+    rdfs:comment "A site permission." .
+o:SiteItemSet a rdfs:Class ;
+    rdfs:label "Site Item Set" ;
+    rdfs:comment "A site item set." .
+o:SitePage a rdfs:Class ;
+    rdfs:label "Site Page" ;
+    rdfs:comment "A site page." .
+o:SitePageBlock a rdfs:Class ;
+    rdfs:label "Site Page Block" ;
+    rdfs:comment "A site page block." .
+o:SiteBlockAttachment a rdfs:Class ;
+    rdfs:label "Site Block Attachment" ;
+    rdfs:comment "A site block attachment." .
+o:User a rdfs:Class ;
+    rdfs:label "User" ;
+    rdfs:comment "A user." .
+o:Vocabulary a rdfs:Class ;
+    rdfs:label "Vocabulary" ;
+    rdfs:comment "A vocabulary." .
+
+# Properties ############################################################
+
+# ResourceReference
+# AbstractResourceRepresentation
+# AssetRepresentation
+o:id a rdf:Property ;
+    rdfs:label "id" ;
+    rdfs:comment "A unique identifier." ;
+    owl:sameAs dcterms:identifier .
+
+# AbstractResourceEntityRepresentation
+# SitePageRepresentation
+# SiteRepresentation
+# UserRepresentation
+o:created a rdf:Property ;
+    rdfs:label "created" ;
+    rdfs:comment "A creation timestamp." ;
+    owl:sameAs dcterms:created .
+
+# AbstractResourceEntityRepresentation
+# SitePageRepresentation
+# SiteRepresentation
+o:modified a rdf:Property ;
+    rdfs:label "modified" ;
+    rdfs:comment "A modification timestamp." ;
+    owl:sameAs dcterms:modified .
+
+# AbstractResourceEntityRepresentation
+# SiteRepresentation
+o:is_public a rdf:Property ;
+    rdfs:label "is public" ;
+    rdfs:comment "A public or not public flag." .
+
+# AbstractVocabularyMemberRepresentation
+o:local_name a rdf:Property ;
+    rdfs:label "local name" ;
+    rdfs:comment "A local part of a qualified name." .
+
+# AbstractVocabularyMemberRepresentation
+# ResourceTemplateRepresentation
+# VocabularyRepresentation
+o:label a rdf:Property ;
+    rdfs:label "label" ;
+    rdfs:comment "A label." ;
+    owl:sameAs rdfs:label .
+
+# AbstractVocabularyMemberRepresentation
+# VocabularyRepresentation
+o:comment a rdf:Property ;
+    rdfs:label "comment" ;
+    rdfs:comment "A comment." ;
+    owl:sameAs rdfs:comment .
+
+# AbstractVocabularyMemberRepresentation
+o:term a rdf:Property ;
+    rdfs:label "term" ;
+    rdfs:comment "A qualified name." .
+
+# AssetRepresentation
+# UserRepresentation
+o:name a rdf:Property ;
+    rdfs:label "name" ;
+    rdfs:comment "A name." .
+
+# AssetRepresentation
+# MediaRepresentation
+o:filename a rdf:Property ;
+    rdfs:label "filename" ;
+    rdfs:comment "A filename." .
+
+# AssetRepresentation
+# MediaRepresentation
+o:media_type a rdf:Property ;
+    rdfs:label "media type" ;
+    rdfs:comment "An internet media type." .
+
+# AssetRepresentation
+o:asset_url a rdf:Property ;
+    rdfs:label "asset url" ;
+    rdfs:comment "An asset URL." .
+
+# ItemSetRepresentation
+o:is_open a rdf:Property ;
+    rdfs:label "is open" ;
+    rdfs:comment "An open or not open flag." .
+
+# JobRepresentation
+o:started a rdf:Property ;
+    rdfs:label "started" ;
+    rdfs:comment "A started timestamp." .
+
+# JobRepresentation
+o:ended a rdf:Property ;
+    rdfs:label "ended" ;
+    rdfs:comment "An ended timestamp." .
+
+# JobRepresentation
+o:status a rdf:Property ;
+    rdfs:label "status" ;
+    rdfs:comment "A status." .
+
+# JobRepresentation
+o:job_class a rdf:Property ;
+    rdfs:label "job class" ;
+    rdfs:comment "A job class." .
+
+# JobRepresentation
+o:args a rdf:Property ;
+    rdfs:label "args" ;
+    rdfs:comment "Argument data." .
+
+# MediaRepresentation
+o:ingester a rdf:Property ;
+    rdfs:label "ingester" ;
+    rdfs:comment "An ingester class." .
+
+# MediaRepresentation
+o:renderer a rdf:Property ;
+    rdfs:label "renderer" ;
+    rdfs:comment "A renderer class." .
+
+# MediaRepresentation
+o:source a rdf:Property ;
+    rdfs:label "source" ;
+    rdfs:comment "A source." .
+
+# MediaRepresentation
+o:sha256 a rdf:Property ;
+    rdfs:label "sha256" ;
+    rdfs:comment "A SHA-256 hash." .
+
+# MediaRepresentation
+o:lang a rdf:Property ;
+    rdfs:label "lang" ;
+    rdfs:comment "A language tag." .
+
+# MediaRepresentation
+o:original_url a rdf:Property ;
+    rdfs:label "original url" ;
+    rdfs:comment "An original URL." .
+
+# MediaRepresentation
+o:thumbnail_urls a rdf:Property ;
+    rdfs:label "thumbnail urls" ;
+    rdfs:comment "Thumbnail URLs." .
+
+# ModuleRepresentation
+o:state a rdf:Property ;
+    rdfs:label "state" ;
+    rdfs:comment "A state." .
+
+# ModuleRepresentation
+o:ini a rdf:Property ;
+    rdfs:label "ini" ;
+    rdfs:comment "INI configuration." .
+
+# ResourceTemplatePropertyRepresentation
+o:alternate_label a rdf:Property ;
+    rdfs:label "alternate label" ;
+    rdfs:comment "An alternate label." .
+
+# ResourceTemplatePropertyRepresentation
+o:alternate_comment a rdf:Property ;
+    rdfs:label "alternate comment" ;
+    rdfs:comment "An alternate comment." .
+
+# ResourceTemplatePropertyRepresentation
+o:data_type a rdf:Property ;
+    rdfs:label "data type" ;
+    rdfs:comment "A data type." .
+
+# ResourceTemplatePropertyRepresentation
+o:is_required a rdf:Property ;
+    rdfs:label "is required" ;
+    rdfs:comment "A required or not required flag." .
+
+# SiteBlockAttachmentRepresentation
+o:caption a rdf:Property ;
+    rdfs:label "caption" ;
+    rdfs:comment "A caption." .
+
+# SitePageBlockRepresentation
+o:layout a rdf:Property ;
+    rdfs:label "layout" ;
+    rdfs:comment "A layout." .
+
+# SitePageBlockRepresentation
+o:data a rdf:Property ;
+    rdfs:label "data" ;
+    rdfs:comment "Data." .
+
+# SitePageRepresentation
+# SiteRepresentation
+o:slug a rdf:Property ;
+    rdfs:label "slug" ;
+    rdfs:comment "A slug." .
+
+# SitePageRepresentation
+# SiteRepresentation
+o:title a rdf:Property ;
+    rdfs:label "title" ;
+    rdfs:comment "A title." .
+
+# SitePermissionRepresentation
+o:role a rdf:Property ;
+    rdfs:label "role" ;
+    rdfs:comment "A role." .
+
+# SiteRepresentation
+o:theme a rdf:Property ;
+    rdfs:label "theme" ;
+    rdfs:comment "A theme." .
+
+# SiteRepresentation
+o:navigation a rdf:Property ;
+    rdfs:label "navigation" ;
+    rdfs:comment "Navigation data." .
+
+# SiteRepresentation
+o:item_pool a rdf:Property ;
+    rdfs:label "item pool" ;
+    rdfs:comment "Item pool data." .
+
+# UserRepresentation
+o:email a rdf:Property ;
+    rdfs:label "email" ;
+    rdfs:comment "An email address." .
+
+# UserRepresentation
+o:is_active a rdf:Property ;
+    rdfs:label "is active" ;
+    rdfs:comment "An active or not active flag." .
+
+# VocabularyRepresentation
+o:namespace_uri a rdf:Property ;
+    rdfs:label "namespace uri" ;
+    rdfs:comment "A namespace URI." .
+
+# VocabularyRepresentation
+o:prefix a rdf:Property ;
+    rdfs:label "prefix" ;
+    rdfs:comment "A prefix of a qualified name" .
+
+# AbstractResourceEntityRepresentation
+# JobRepresentation
+# ResourceTemplateRepresentation
+# SiteRepresentation
+# VocabularyRepresentation
+o:owner a rdf:Property ;
+    rdfs:label "has owner" ;
+    rdfs:comment "An owner of this resource." ;
+    rdfs:range o:User .
+
+# AbstractResourceEntityRepresentation
+# ResourceTemplateRepresentation
+o:resource_class a rdf:Property ;
+    rdfs:label "has resource class" ;
+    rdfs:comment "A resource class of this resource." ;
+    rdfs:range o:ResourceClass.
+
+# AbstractResourceEntityRepresentation
+o:resource_template a rdf:Property ;
+    rdfs:label "has resource template" ;
+    rdfs:comment "A resource template of this resource." ;
+    rdfs:range o:ResourceTemplate .
+
+# AbstractVocabularyMemberRepresentation
+o:vocabulary a rdf:Property ;
+    rdfs:label "has vocabulary" ;
+    rdfs:comment "A vocabulary of this resource." ;
+    rdfs:range o:Vocabulary .
+
+# ItemRepresentation
+# SiteBlockAttachmentRepresentation
+o:media a rdf:Property ;
+    rdfs:label "has media" ;
+    rdfs:comment "A media of this resource." ;
+    rdfs:range o:Media .
+
+# ItemRepresentation
+# SiteItemSetRepresentation
+o:item_set a rdf:Property ;
+    rdfs:label "has item set" ;
+    rdfs:comment "An item set of this resource." ;
+    rdfs:range o:ItemSet .
+
+# MediaRepresentation
+# SiteBlockAttachmentRepresentation
+o:item a rdf:Property ;
+    rdfs:label "has item" ;
+    rdfs:comment "An item of this resource." ;
+    rdfs:range o:Item .
+
+# ItemSetRepresentation
+o:items a rdf:Property ;
+    rdfs:label "has items" ;
+    rdfs:comment "Items of this resource." .
+
+# ResourceTemplatePropertyRepresentation
+o:property a rdf:Property ;
+    rdfs:label "has property" ;
+    rdfs:comment "A property of this resource." ;
+    rdfs:range o:Property .
+
+# ResourceTemplateRepresentation
+o:resource_template_property a rdf:Property ;
+    rdfs:label "has resource template property" ;
+    rdfs:comment "A resource template property of this resource." ;
+    rdfs:range o:ResourceTemplateProperty .
+
+# SitePageBlockRepresentation
+o:attachment a rdf:Property ;
+    rdfs:label "has site block attachment" ;
+    rdfs:comment "A site block attachment of this resource." ;
+    rdfs:range o:SiteBlockAttachment .
+
+# SitePageRepresentation
+o:block a rdf:Property ;
+    rdfs:label "has site page block" ;
+    rdfs:comment "A site page block of this resource." ;
+    rdfs:range o:SitePageBlock .
+
+# SitePageRepresentation
+o:site a rdf:Property ;
+    rdfs:label "has site" ;
+    rdfs:comment "A site of this resource." ;
+    rdfs:range o:Site .
+
+# SitePermissionRepresentation
+o:user a rdf:Property ;
+    rdfs:label "has user" ;
+    rdfs:comment "A user of this resource." ;
+    rdfs:range o:User .
+
+# SiteRepresentation
+o:page a rdf:Property ;
+    rdfs:label "has page" ;
+    rdfs:comment "A site page of this resource." ;
+    rdfs:range o:SitePage .
+
+# SiteRepresentation
+o:site_permission a rdf:Property ;
+    rdfs:label "has site permission" ;
+    rdfs:comment "The site permission(s) of this resource." ;
+    rdfs:range o:SitePermission .
+
+# SiteRepresentation
+o:site_item_set a rdf:Property ;
+    rdfs:label "has site item set" ;
+    rdfs:comment "The site site item set(s) of this resource." ;
+    rdfs:range o:SiteItemSet .

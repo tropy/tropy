@@ -55,6 +55,7 @@ class ProjectView extends PureComponent {
       nav,
       photos,
       sidebar,
+      tags,
       zoom,
       onItemCreate,
       onItemSelect,
@@ -104,6 +105,7 @@ class ProjectView extends PureComponent {
               list={nav.list}
               selection={nav.items}
               size={size}
+              tags={tags}
               isDisabled={nav.trash}
               isOver={isOver && canDrop}
               onCreate={onItemCreate}
@@ -125,6 +127,7 @@ class ProjectView extends PureComponent {
     offset: number.isRequired,
     photos: object.isRequired,
     sidebar: object.isRequired,
+    tags: object.isRequired,
     dt: func.isRequired,
     zoom: number.isRequired,
     onItemCreate: func.isRequired,

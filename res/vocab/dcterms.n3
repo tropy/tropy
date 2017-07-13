@@ -7,7 +7,7 @@
 
 <http://purl.org/dc/terms/> dcterms:modified "2012-06-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
 	dcterms:publisher <http://purl.org/dc/aboutdcmi#DCMI> ;
-	dcterms:title "DCMI Metadata Terms - other"@en .
+	dcterms:title "DCMI Metadata Terms"@en .
 
 dcterms:Agent dcterms:description "Examples of Agent include person, organization, and software agent."@en ;
 	dcterms:hasVersion <http://dublincore.org/usage/terms/history/#Agent-001> ;

@@ -31,3 +31,28 @@
 .icon-spin {
   color: $icon-spin-color;
 }
+
+.icon-tag {
+  @if $theme == "light" {
+    @each $key, $val in $tag-colors {
+      &.#{$key} {
+        .color {
+          color: map-get($val, "color-base");
+        }
+
+        .border {
+          color: map-get($val, "color-dark");
+        }
+      }
+    }
+  } @else {
+    @each $key, $val in $tag-colors {
+      &.#{$key} {
+        .color,
+        .border {
+          color: map-get($val, "color-dark");
+        }
+      }
+    }
+  }
+}

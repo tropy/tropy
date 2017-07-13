@@ -5,7 +5,7 @@ const { PureComponent, createElement: create } = React
 const { FormattedMessage } = require('react-intl')
 const icons = require('../icons')
 const cx = require('classnames')
-const { bool, element, func, object, string } = require('prop-types')
+const { bool, node, func, object, string } = require('prop-types')
 
 class PrefPaneToggle extends PureComponent {
   get classes() {
@@ -29,6 +29,7 @@ class PrefPaneToggle extends PureComponent {
       <button
         className={cx(this.classes)}
         disabled={this.props.isDisabled}
+        tabIndex={-1}
         onClick={this.handleClick}>
         {create(icons[this.props.icon])}
         <FormattedMessage id={this.label}/>
@@ -68,7 +69,7 @@ class PrefPane extends PureComponent {
   }
 
   static propTypes = {
-    children: element,
+    children: node,
     classes: object,
     isActive: bool,
     name: string.isRequired

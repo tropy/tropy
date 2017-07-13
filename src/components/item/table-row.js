@@ -1,21 +1,24 @@
 'use strict'
 
 const React = require('react')
-const PropTypes = require('prop-types')
 const { ItemIterable } = require('./iterable')
 const { ItemTableCell } = require('./table-cell')
 const { meta } = require('../../common/os')
 const { get, pick } = require('../../common/util')
-const { DC } = require('../../constants/properties')
+const { DC } = require('../../constants')
 const cx = require('classnames')
-const { arrayOf, object } = PropTypes
+const { arrayOf, object } = require('prop-types')
 
 const CellProps = Object.keys(ItemTableCell.propTypes)
 
 class ItemTableRow extends ItemIterable {
 
-  isEditing = (uri) => {
-    return get(this.props.edit, [this.props.item.id]) === uri
+  isMainColumn(id) {
+    return DC.title === id
+  }
+
+  isEditing = (id) => {
+    return get(this.props.edit, [this.props.item.id]) === id
   }
 
   handleMouseDown = (event) => {
@@ -25,7 +28,7 @@ class ItemTableRow extends ItemIterable {
   }
 
   render() {
-    const { columns, data, ...props } = this.props
+    const { columns, data, photos, tags, ...props } = this.props
 
     return this.connect(
       <tr
@@ -34,14 +37,20 @@ class ItemTableRow extends ItemIterable {
         onMouseDown={this.handleMouseDown}
         onDoubleClick={this.handleOpen}
         onContextMenu={this.handleContextMenu}>{
-          columns.map(({ property, width }) =>
-            <ItemTableCell {...pick(props, CellProps)}
-              key={property.uri}
-              property={property}
-              data={data}
-              width={width}
-              isEditing={this.isEditing(property.uri)}
-              hasCoverImage={property.uri === DC.TITLE}/>)
+          columns.map(({ property, width }) => {
+            const isMainColumn = this.isMainColumn(property.id)
+            return (
+              <ItemTableCell {...pick(props, CellProps)}
+                key={property.id}
+                property={property}
+                data={data}
+                width={width}
+                tags={isMainColumn ? tags : null}
+                photos={isMainColumn ? photos : null}
+                isEditing={this.isEditing(property.id)}
+                isMainColumn={isMainColumn}/>
+            )
+          })
       }</tr>
     )
   }

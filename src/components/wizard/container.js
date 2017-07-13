@@ -9,6 +9,7 @@ const { Toolbar } = require('../toolbar')
 const { ProjectStep } = require('./project')
 const { join } = require('path')
 const actions = require('../../actions')
+const sanitize = require('sanitize-filename')
 
 
 class WizardContainer extends PureComponent {
@@ -17,7 +18,7 @@ class WizardContainer extends PureComponent {
   }
 
   getDefaultFilename(name = this.props.project.name) {
-    return name ? join(this.props.userData, `${name}.tpy`) : ''
+    return name ? join(this.props.userData, sanitize(`${name}.tpy`)) : ''
   }
 
   handleProjectComplete = () => {

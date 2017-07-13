@@ -32,7 +32,7 @@ const util = {
   },
 
   empty(obj) {
-    return keys(obj).length === 0
+    return obj == null || keys(obj).length === 0
   },
 
   times(n, fn) {
@@ -58,8 +58,8 @@ const util = {
     return util.splice(array, at, 0, ...items)
   },
 
-  remove(array, item) {
-    return array.filter(it => it !== item)
+  remove(array, ...items) {
+    return array.filter(it => items.indexOf(it) < 0)
   },
 
   sort(array, ...args) {
@@ -75,6 +75,14 @@ const util = {
     }
 
     return into
+  },
+
+  compact(array) {
+    return array.filter(util.exist)
+  },
+
+  exist(obj) {
+    return obj != null
   },
 
   mixed(array) {
@@ -231,11 +239,11 @@ const util = {
     }
   },
 
-  pick(src, props = [], into = {}) {
+  pick(src, props = [], into = {}, expand = false) {
     return props.reduce((res, key) => {
       const value = src[key]
 
-      if (typeof value !== 'undefined' || src.hasOwnProperty(key)) {
+      if (expand || typeof value !== 'undefined' || src.hasOwnProperty(key)) {
         res[key] = value
       }
 
@@ -391,6 +399,10 @@ const util = {
 
   toId(obj) {
     return obj.id
+  },
+
+  blank(string) {
+    return string == null || string.length === 0
   }
 }
 

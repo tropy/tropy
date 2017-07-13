@@ -19,5 +19,5 @@ module.exports = {
     REMOVE: 'photo.note.remove'
   },
 
-  TEMPLATE: 'https://tropy.org/schema/v1/templates/photo'
+  TEMPLATE: 'https://tropy.org/v1/templates/photo'
 }

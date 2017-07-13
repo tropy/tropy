@@ -16,7 +16,7 @@ class TemplateSelect extends PureComponent {
 
   handleChange = ({ target }) => {
     this.props.onChange(
-      this.props.templates.find(t => t.uri === target.value)
+      this.props.templates.find(t => t.id === target.value)
     )
   }
 
@@ -34,8 +34,8 @@ class TemplateSelect extends PureComponent {
         value={this.props.selected}
         onChange={this.handleChange}>
         {this.renderPlaceholder()}
-        {this.props.templates.map(({ uri, name }) =>
-          <option key={uri} value={uri}>{name}</option>)}
+        {this.props.templates.map(({ id, name }) =>
+          <option key={id} value={id}>{name || id}</option>)}
       </select>
     )
   }

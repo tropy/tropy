@@ -3,8 +3,6 @@
 // --------------------------------------------------
 
 .vocab {
-  padding-top: $space-lg;
-
   .panel {
     background-color: $vocab-panel-bg;
   }
@@ -54,5 +52,10 @@
 
       @include form-control-focus; // sass-lint:disable-line mixins-before-declarations
     }
+  }
+
+  .vocab-footer {
+    flex: 0 0 auto;
+    padding: $space-xs ($space-lg + $space-sm - $btn-icon-padding);
   }
 }

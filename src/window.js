@@ -2,22 +2,23 @@
 
 const { each } = require('bluebird')
 const { remote, ipcRenderer: ipc } = require('electron')
-const { basename, resolve, join } = require('path')
+const { basename, join, resolve } = require('path')
 const { existsSync: exists } = require('fs')
-const { debug } = require('./common/log')
 const { EL_CAPITAN } = require('./common/os')
+const { EventEmitter } = require('events')
 
 const {
   $$, append, emit, create, on, once, toggle, stylesheet, remove
 } = require('./dom')
 
 
-class Window {
+class Window extends EventEmitter {
   constructor({ theme, frameless, scrollbars, aqua } = ARGS) {
     if (Window.instance) {
       throw Error('Singleton Window constructor called multiple times')
     }
 
+    super()
     Window.instance = this
 
     this.state = {
@@ -29,9 +30,7 @@ class Window {
     this.hasFinishedUnloading = false
   }
 
-  init() {
-    this.style()
-
+  init(done) {
     this.handleUnload()
     this.handleTabFocus()
     this.handleIpcEvents()
@@ -54,6 +53,8 @@ class Window {
         this.createWindowControls()
       }
     }
+
+    this.style(this.state.theme, false, done)
   }
 
   show() {
@@ -111,7 +112,6 @@ class Window {
 
       if (this.isUnloading) return
 
-      debug(`unloading ${this.type}...`)
       this.isUnloading = true
 
       toggle(document.body, 'closing', true)
@@ -121,8 +121,6 @@ class Window {
         return res
       })
         .finally(() => {
-          debug(`ready to close ${this.type} (${this.unloader})`)
-
           this.hasFinishedUnloading = true
 
           // Calling reload/close immediately does not work reliably.
@@ -182,18 +180,38 @@ class Window {
     this.current.reload()
   }
 
-  style(theme, prune = false) {
-    if (theme) this.state.theme = theme
+  style(theme, prune = false, done) {
+    if (theme) {
+      this.state.theme = theme
+      ARGS.theme = this.state.theme
+      window.location.hash = encodeURIComponent(JSON.stringify(ARGS))
+    }
 
     if (prune) {
       for (let css of $$('head > link[rel="stylesheet"]')) remove(css)
     }
 
+    let count = document.styleSheets.length
+
     for (let css of this.stylesheets) {
       if (exists(resolve(__dirname, css))) {
+        ++count
         append(stylesheet(css), document.head)
       }
     }
+
+    this.emit('style.update', this.state.theme)
+
+    if (done == null) return
+
+    let limit = Date.now() + 2000
+    let ti = setInterval(() => {
+      if (document.styleSheets.length === count || Date.now() > limit) {
+        clearInterval(ti)
+        done()
+      }
+    }, 10)
+
   }
 
   toggle(state) {

@@ -17,14 +17,22 @@ class BufferedInput extends PureComponent {
 
   componentWillReceiveProps({ value }) {
     this.setState({ value })
+    this.clearResetTimeout()
+
+    this.hasBeenCommitted = false
+    this.hasBeenCancelled = false
   }
 
-  get isEmpty() {
-    return !this.state.value
+  componentWillUnmount() {
+    this.clearResetTimeout()
+  }
+
+  get isBlank() {
+    return this.state.value == null || this.state.value === ''
   }
 
   get isValid() {
-    return !this.props.isRequired || !this.isEmpty
+    return !this.props.isRequired || !this.isBlank
   }
 
   get hasChanged() {
@@ -38,13 +46,20 @@ class BufferedInput extends PureComponent {
     }
   }
 
-  reset() {
+  reset = () => {
     this.setState({ value: this.props.value })
+    this.clearResetTimeout()
   }
 
   commit(force) {
     if (force || this.isValid) {
       this.props.onCommit(this.state.value, this.hasChanged, force)
+      this.hasBeenCommitted = true
+
+      if (this.hasChanged && this.props.delay > 0) {
+        this.tm = setTimeout(this.reset, this.props.delay)
+      }
+
     } else {
       this.cancel()
     }
@@ -56,6 +71,13 @@ class BufferedInput extends PureComponent {
     this.props.onCancel()
   }
 
+  clearResetTimeout() {
+    if (this.tm != null) {
+      clearTimeout(this.tm)
+      this.tm = null
+    }
+  }
+
   handleChange = (event) => {
     this.setState({ value: event.target.value })
     this.props.onChange(event.target.value)
@@ -63,7 +85,7 @@ class BufferedInput extends PureComponent {
 
   handleBlur = (event) => {
     const cancel = this.props.onBlur(event)
-    if (this.hasBeenCancelled) return
+    if (this.hasBeenCancelled || this.hasBeenCommitted) return
 
     if (cancel) {
       this.cancel()
@@ -74,6 +96,7 @@ class BufferedInput extends PureComponent {
 
   handleFocus = (event) => {
     this.hasBeenCancelled = false
+    this.hasBeenCommitted = false
     this.props.onFocus(event)
   }
 
@@ -92,24 +115,17 @@ class BufferedInput extends PureComponent {
 
 
   render() {
-    const {
-      className,
-      isDisabled,
-      isRequired,
-      placeholder,
-      tabIndex,
-      type
-    } = this.props
-
     return (
       <input
-        className={className}
-        disabled={isDisabled}
-        placeholder={placeholder}
+        id={this.props.id}
+        className={this.props.className}
+        disabled={this.props.isDisabled}
+        placeholder={this.props.placeholder}
         ref={this.autofocus}
-        required={isRequired}
-        tabIndex={tabIndex}
-        type={type}
+        readOnly={this.props.isReadOnly}
+        required={this.props.isRequired}
+        tabIndex={this.props.tabIndex}
+        type={this.props.type}
         value={this.state.value}
         onBlur={this.handleBlur}
         onChange={this.handleChange}
@@ -121,10 +137,13 @@ class BufferedInput extends PureComponent {
   static propTypes = {
     autofocus: bool,
     className: string,
+    delay: number.isRequired,
+    id: string,
     isDisabled: bool,
+    isReadOnly: bool,
     isRequired: bool,
     placeholder: string,
-    tabIndex: number.isRequired,
+    tabIndex: number,
     type: oneOf(['text', 'number']).isRequired,
     value: oneOfType([string, number]).isRequired,
     onBlur: func.isRequired,
@@ -135,6 +154,7 @@ class BufferedInput extends PureComponent {
   }
 
   static defaultProps = {
+    delay: 100,
     tabIndex: -1,
     type: 'text',
     onBlur: noop,

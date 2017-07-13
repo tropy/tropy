@@ -2,11 +2,8 @@
 
 require('shelljs/make')
 
-const log = require('./log')
-
+const { say } = require('./util')('rebuild')
 const { join, resolve } = require('path')
-
-const say = msg => log.info(msg, { tag: 'rebuild' })
 
 const home = resolve(__dirname, '..')
 const mods = join(home, 'node_modules')

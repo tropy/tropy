@@ -8,13 +8,13 @@ const {
 } = require('transducers.js')
 
 
-const collect = transformer((data, [uri, value]) => {
+const collect = transformer((data, [key, value]) => {
   if (value != null) {
-    if (data.hasOwnProperty(uri)) {
-      if (equal(data[uri], value)) data[uri].count++
+    if (data.hasOwnProperty(key)) {
+      if (equal(data[key], value)) data[key].count++
 
     } else {
-      data[uri] = { ...value, count: 1 }
+      data[key] = { ...value, count: 1 }
     }
   }
 
@@ -36,12 +36,12 @@ const getItemMetadata = memo(
         compose(map(id => metadata[id]), keep(), cat, skipId),
         collect,
         { id: ids }),
-      map(([uri, value]) => {
-        if (uri !== 'id') {
+      map(([key, value]) => {
+        if (key !== 'id') {
           value.mixed = value.count !== ids.length
         }
 
-        return [uri, value]
+        return [key, value]
       }))
 )
 

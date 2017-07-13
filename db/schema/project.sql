@@ -5,10 +5,10 @@
 -- then regenerate this schema file.
 --
 -- To create a new empty migration, run:
---   npm run db -- migration -- [name] [sql|js]
+--   node scripts/db migration -- project [name] [sql|js]
 --
 -- To re-generate this file, run:
---   npm run db -- migrate
+--   node scripts/db migrate
 --
 
 -- Save the current migration number
@@ -20,19 +20,23 @@ BEGIN TRANSACTION;
 CREATE TABLE project (
   project_id  TEXT     NOT NULL PRIMARY KEY,
   name        TEXT     NOT NULL,
-  settings             NOT NULL DEFAULT '{}',
   created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modified    NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  opened      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  locked      BOOLEAN  NOT NULL DEFAULT FALSE,
 
   CHECK (project_id != ''),
   CHECK (name != '')
 
 ) WITHOUT ROWID;
+CREATE TABLE access (
+  uuid        TEXT     NOT NULL,
+  version     TEXT     NOT NULL,
+  path        TEXT     NOT NULL,
+  opened      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  closed      NUMERIC,
+  CHECK (uuid != '' AND version != '' AND path != '')
+);
 CREATE TABLE subjects (
   id           INTEGER  PRIMARY KEY,
-  template     TEXT     NOT NULL DEFAULT 'https://tropy.org/schema/v1/templates/item',
+  template     TEXT     NOT NULL DEFAULT 'https://tropy.org/v1/templates/item',
   type         TEXT,
   created      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -42,29 +46,25 @@ CREATE TABLE images (
   width   INTEGER  NOT NULL DEFAULT 0,
   height  INTEGER  NOT NULL DEFAULT 0,
   angle   NUMERIC  NOT NULL DEFAULT 0,
-  mirror  BOOLEAN  NOT NULL DEFAULT FALSE,
+  mirror  BOOLEAN  NOT NULL DEFAULT 0,
 
   CHECK (angle >= 0 AND angle <= 360)
+) WITHOUT ROWID;
+CREATE TABLE photos (
+  id           INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
+  item_id      INTEGER  NOT NULL REFERENCES items ON DELETE CASCADE,
+  position     INTEGER,
+  path         TEXT     NOT NULL,
+  protocol     TEXT     NOT NULL DEFAULT 'file',
+  mimetype     TEXT     NOT NULL,
+  checksum     TEXT     NOT NULL,
+  orientation  INTEGER  NOT NULL DEFAULT 1,
+  metadata     TEXT     NOT NULL DEFAULT '{}'
 ) WITHOUT ROWID;
 CREATE TABLE items (
   id              INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   cover_image_id  INTEGER  REFERENCES images ON DELETE SET NULL
 ) WITHOUT ROWID;
-CREATE TABLE metadata_types (
-  type_name    TEXT  NOT NULL PRIMARY KEY COLLATE NOCASE,
-  type_schema  TEXT  NOT NULL UNIQUE,
-
-  CHECK (type_schema != ''),
-  CHECK (type_name != '')
-
-) WITHOUT ROWID;
-INSERT INTO metadata_types(type_name,type_schema) VALUES('boolean','https://schema.org/Boolean');
-INSERT INTO metadata_types(type_name,type_schema) VALUES('location','https://schema.org/GeoCoordinates');
-INSERT INTO metadata_types(type_name,type_schema) VALUES('number','https://schema.org/Number');
-INSERT INTO metadata_types(type_name,type_schema) VALUES('text','https://schema.org/Text');
-INSERT INTO metadata_types(type_name,type_schema) VALUES('url','https://schema.org/URL');
-INSERT INTO metadata_types(type_name,type_schema) VALUES('date','https://tropy.org/schema/v1/core#date');
-INSERT INTO metadata_types(type_name,type_schema) VALUES('name','https://tropy.org/schema/v1/core#name');
 CREATE TABLE metadata (
   id          INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   property    TEXT     NOT NULL,
@@ -80,11 +80,12 @@ CREATE TABLE metadata (
 ) WITHOUT ROWID;
 CREATE TABLE metadata_values (
   value_id   INTEGER  PRIMARY KEY,
-  type_name  TEXT     NOT NULL REFERENCES metadata_types ON UPDATE CASCADE,
+  datatype   TEXT     NOT NULL,
   text                NOT NULL,
   data       TEXT,
 
-  UNIQUE (type_name, text)
+  CHECK (datatype != ''),
+  UNIQUE (datatype, text)
 );
 CREATE TABLE notes (
   note_id      INTEGER  PRIMARY KEY,
@@ -114,7 +115,7 @@ CREATE TABLE lists (
 
   UNIQUE (parent_list_id, name)
 );
-INSERT INTO lists(list_id,name,parent_list_id,position,created,modified) VALUES(0,'ROOT',NULL,NULL,'2017-01-31 12:00:00','2017-01-31 12:00:00');
+INSERT INTO lists VALUES(0,'ROOT',NULL,NULL,'2017-01-31 12:00:00','2017-01-31 12:00:00');
 CREATE TABLE list_items (
   list_id  INTEGER  REFERENCES lists ON DELETE CASCADE,
   id       INTEGER  REFERENCES items ON DELETE CASCADE,
@@ -146,40 +147,6 @@ CREATE TABLE trash (
 
   CHECK (reason IN ('user', 'auto', 'merge'))
 ) WITHOUT ROWID;
-CREATE TABLE photos (
-  id           INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
-  item_id      INTEGER  NOT NULL REFERENCES items ON DELETE CASCADE,
-  position     INTEGER,
-  path         TEXT     NOT NULL,
-  protocol     TEXT     NOT NULL DEFAULT 'file',
-  mimetype     TEXT     NOT NULL,
-  checksum     TEXT     NOT NULL,
-  orientation  INTEGER  NOT NULL DEFAULT 1,
-  metadata     TEXT     NOT NULL DEFAULT '{}'
-) WITHOUT ROWID;
-CREATE TABLE selections (
-  id        INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
-  photo_id  INTEGER  NOT NULL REFERENCES photos ON DELETE CASCADE,
-  position  INTEGER,
-  quality   TEXT     NOT NULL DEFAULT 'default' REFERENCES image_qualities,
-  x         NUMERIC  NOT NULL DEFAULT 0,
-  y         NUMERIC  NOT NULL DEFAULT 0,
-  pct       BOOLEAN  NOT NULL DEFAULT 0
-) WITHOUT ROWID;
-CREATE TABLE image_scales (
-  id      INTEGER  PRIMARY KEY REFERENCES selections ON DELETE CASCADE,
-  x       NUMERIC  NOT NULL DEFAULT 0,
-  y       NUMERIC  NOT NULL DEFAULT 0,
-  factor  NUMERIC  NOT NULL,
-  fit     BOOLEAN  NOT NULL DEFAULT 0
-) WITHOUT ROWID;
-CREATE TABLE image_qualities (
-  quality  TEXT  NOT NULL PRIMARY KEY
-) WITHOUT ROWID;
-INSERT INTO image_qualities(quality) VALUES('bitonal');
-INSERT INTO image_qualities(quality) VALUES('color');
-INSERT INTO image_qualities(quality) VALUES('default');
-INSERT INTO image_qualities(quality) VALUES('gray');
 PRAGMA writable_schema=ON;
 INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_notes','fts_notes',0,'CREATE VIRTUAL TABLE fts_notes USING fts5(
   id UNINDEXED,
@@ -190,26 +157,26 @@ INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_no
   tokenize = ''porter unicode61''
 )');
 CREATE TABLE IF NOT EXISTS 'fts_notes_data'(id INTEGER PRIMARY KEY, block BLOB);
-INSERT INTO fts_notes_data(id,block) VALUES(1,X'');
-INSERT INTO fts_notes_data(id,block) VALUES(10,X'00000000000000');
+INSERT INTO fts_notes_data VALUES(1,X'');
+INSERT INTO fts_notes_data VALUES(10,X'00000000000000');
 CREATE TABLE IF NOT EXISTS 'fts_notes_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
 CREATE TABLE IF NOT EXISTS 'fts_notes_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
 CREATE TABLE IF NOT EXISTS 'fts_notes_config'(k PRIMARY KEY, v) WITHOUT ROWID;
-INSERT INTO fts_notes_config(k,v) VALUES('version',4);
+INSERT INTO fts_notes_config VALUES('version',4);
 INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_metadata','fts_metadata',0,'CREATE VIRTUAL TABLE fts_metadata USING fts5(
-  type_name UNINDEXED,
+  datatype UNINDEXED,
   text,
   content = ''metadata_values'',
   content_rowid = ''value_id'',
   tokenize = ''porter unicode61''
 )');
 CREATE TABLE IF NOT EXISTS 'fts_metadata_data'(id INTEGER PRIMARY KEY, block BLOB);
-INSERT INTO fts_metadata_data(id,block) VALUES(1,X'');
-INSERT INTO fts_metadata_data(id,block) VALUES(10,X'00000000000000');
+INSERT INTO fts_metadata_data VALUES(1,X'');
+INSERT INTO fts_metadata_data VALUES(10,X'00000000000000');
 CREATE TABLE IF NOT EXISTS 'fts_metadata_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
 CREATE TABLE IF NOT EXISTS 'fts_metadata_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
 CREATE TABLE IF NOT EXISTS 'fts_metadata_config'(k PRIMARY KEY, v) WITHOUT ROWID;
-INSERT INTO fts_metadata_config(k,v) VALUES('version',4);
+INSERT INTO fts_metadata_config VALUES('version',4);
 CREATE TRIGGER insert_tags_trim_name
   AFTER INSERT ON tags
   BEGIN
@@ -282,17 +249,29 @@ CREATE TRIGGER notes_au_fts
   END;
 CREATE TRIGGER metadata_values_ai_fts
   AFTER INSERT ON metadata_values
-  FOR EACH ROW WHEN NEW.type_name NOT IN ('boolean', 'location')
+  FOR EACH ROW WHEN NEW.datatype NOT IN (
+    'http://www.w3.org/2001/XMLSchema#boolean',
+    'http://www.w3.org/2001/XMLSchema#hexBinary',
+    'http://www.w3.org/2001/XMLSchema#base64Binary',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral')
   BEGIN
-    INSERT INTO fts_metadata (rowid, type_name, text)
-      VALUES (NEW.value_id, NEW.type_name, NEW.text);
+    INSERT INTO fts_metadata (rowid, datatype, text)
+      VALUES (NEW.value_id, NEW.datatype, NEW.text);
   END;
 CREATE TRIGGER metadata_values_ad_fts
   AFTER DELETE ON metadata_values
-  FOR EACH ROW WHEN OLD.type_name NOT IN ('boolean', 'location')
+  FOR EACH ROW WHEN OLD.datatype NOT IN (
+    'http://www.w3.org/2001/XMLSchema#boolean',
+    'http://www.w3.org/2001/XMLSchema#hexBinary',
+    'http://www.w3.org/2001/XMLSchema#base64Binary',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString',
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral')
   BEGIN
-    INSERT INTO fts_metadata (fts_metadata, rowid, type_name, text)
-      VALUES ('delete', OLD.value_id, OLD.type_name, OLD.text);
+    INSERT INTO fts_metadata (fts_metadata, rowid, datatype, text)
+      VALUES ('delete', OLD.value_id, OLD.datatype, OLD.text);
   END;
 PRAGMA writable_schema=OFF;
 COMMIT;

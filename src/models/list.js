@@ -40,17 +40,17 @@ module.exports = {
     return { id, name, parent }
   },
 
-  async remove(db, id) {
+  remove(db, id) {
     return db.run(
       'UPDATE lists SET parent_list_id = NULL WHERE list_id = ?', id)
   },
 
-  async restore(db, id, parent) {
+  restore(db, id, parent) {
     return db.run(
       'UPDATE lists SET parent_list_id = ? WHERE list_id = ?', parent, id)
   },
 
-  async prune(db) {
+  prune(db) {
     return db.seq(conn => all([
       conn.run(
         'DELETE FROM lists WHERE list_id != ? AND parent_list_id IS NULL', ROOT
@@ -59,13 +59,13 @@ module.exports = {
     ]))
   },
 
-  async save(db, { id, name }) {
+  save(db, { id, name }) {
     return db.run(
       'UPDATE lists SET name = ?, modified = datetime("now") WHERE list_id = ?',
       name, id)
   },
 
-  async order(db, parent, order) {
+  order(db, parent, order) {
     if (order.length) {
       return db.run(`
         UPDATE lists
@@ -78,7 +78,7 @@ module.exports = {
   },
 
   items: {
-    async add(db, id, items) {
+    add(db, id, items) {
       return db.run(`
         INSERT INTO list_items (list_id, id) VALUES ${
           items.map(item =>
@@ -86,13 +86,13 @@ module.exports = {
           }`)
     },
 
-    async remove(db, id, items) {
+    remove(db, id, items) {
       return db.run(`
         UPDATE list_items SET deleted = datetime("now")
           WHERE list_id = ? AND id IN (${items.map(Number).join(',')})`, id)
     },
 
-    async restore(db, id, items) {
+    restore(db, id, items) {
       return db.run(`
         UPDATE list_items SET deleted = NULL
           WHERE list_id = ? AND id IN (${items.map(Number).join(',')})`, id)

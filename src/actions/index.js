@@ -14,13 +14,16 @@ module.exports = {
   metadata: require('./metadata'),
   nav: require('./nav'),
   note: require('./note'),
+  ontology: require('./ontology'),
   photo: require('./photo'),
   prefs: require('./prefs'),
   project: require('./project'),
   properties: require('./properties'),
   qr: require('./qr'),
+  settings: require('./settings'),
+  shell: require('./shell'),
+  storage: require('./storage'),
   tag: require('./tag'),
   ui: require('./ui'),
-  vocab: require('./vocab'),
   wizard: require('./wizard')
 }

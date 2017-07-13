@@ -16,7 +16,15 @@ module.exports = {
     return {
       type: METADATA.LOAD,
       payload,
-      meta: { async: true, ...meta }
+      meta: { cmd: 'project', ...meta }
+    }
+  },
+
+  merge(payload, meta) {
+    return {
+      type: METADATA.MERGE,
+      payload,
+      meta
     }
   },
 
@@ -32,7 +40,7 @@ module.exports = {
     return {
       type: METADATA.RESTORE,
       payload,
-      meta: { async: true, history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'add', ...meta }
     }
   },
 
@@ -40,7 +48,7 @@ module.exports = {
     return {
       type: METADATA.SAVE,
       payload: { ids: array(ids || id), data },
-      meta: { async: true, history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'add', ...meta }
     }
   },
 

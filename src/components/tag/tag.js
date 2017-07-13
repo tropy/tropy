@@ -21,8 +21,13 @@ class Tag extends PureComponent {
       tag: true,
       active: this.props.isSelected,
       mixed: !!this.props.tag.mixed,
-      over: this.props.isOver
+      over: this.props.isOver,
     }
+  }
+
+  get color() {
+    const { tag } = this.props
+    return (tag.color) ? `color-${tag.color}` : null
   }
 
   get isDropTarget() {
@@ -74,7 +79,7 @@ class Tag extends PureComponent {
         onContextMenu={isEditing ? null : this.handleContextMenu}
         onMouseDown={isEditing ? null : this.handleClick}
         onKeyDown={isEditing ? null : this.handleKeyDown}>
-        <IconTag/>
+        <IconTag className={this.color}/>
         <div className="name">
           <Editable
             value={tag.name}
@@ -100,7 +105,8 @@ class Tag extends PureComponent {
     isSelected: bool,
     tag: shape({
       id: number,
-      name: string.isRequired
+      name: string.isRequired,
+      color: string
     }).isRequired,
 
     onChange: func.isRequired,

@@ -5,7 +5,7 @@ const { PureComponent } = React
 const PropTypes = require('prop-types')
 const { FormattedMessage } = require('react-intl')
 const { Tab, Tabs } = require('../tabs')
-const { IconMetadata, IconTag } = require('../icons')
+const { IconMetadata, IconHangtag } = require('../icons')
 const { MetadataPanel } = require('../metadata')
 const { TagPanel } = require('../tag')
 const { PANEL: { METADATA, TAGS } } = require('../../constants/ui')
@@ -41,7 +41,7 @@ class ItemTabs extends PureComponent {
         <Tab
           isActive={this.isActive(TAGS)}
           onActivate={this.handleSelectTags}>
-          <IconTag/>
+          <IconHangtag/>
           <FormattedMessage id="panel.tags.tab"/>
         </Tab>
       </Tabs>

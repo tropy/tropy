@@ -11,7 +11,10 @@ const { verbose, warn } = require('../common/log')
 const { open, hasOverlayScrollBars } = require('./window')
 const { all } = require('bluebird')
 const { existsSync: exists } = require('fs')
+const { join } = require('path')
 const { into, compose, remove, take } = require('transducers.js')
+const rm = require('rimraf')
+const uuid = require('uuid/v1')
 
 const { AppMenu, ContextMenu } = require('./menu')
 const { Cache } = require('../common/cache')
@@ -42,7 +45,7 @@ const T = new WeakMap()
 class Tropy extends EventEmitter {
   static defaults = {
     frameless: darwin,
-    locale: app.getLocale() || 'en',
+    locale: 'en', // app.getLocale() || 'en',
     theme: 'light',
     recent: [],
     win: {},
@@ -93,7 +96,7 @@ class Tropy extends EventEmitter {
 
       if (this.win) {
         if (file) {
-          this.dispatch(act.project.open(file))
+          this.dispatch(act.project.open(file), this.win)
         }
 
         return this.win.show(), this
@@ -157,6 +160,7 @@ class Tropy extends EventEmitter {
 
   opened({ file, name }) {
     if (this.wiz) this.wiz.close()
+    if (this.prefs) this.prefs.close()
 
     this.state.recent = into([file],
         compose(remove(f => f === file), take(9)), this.state.recent)
@@ -175,12 +179,11 @@ class Tropy extends EventEmitter {
   }
 
   import() {
-    if (this.win) {
-      this.dispatch(act.item.import())
-    }
+    this.dispatch(act.item.import(), this.win)
   }
 
   create() {
+    if (this.prefs) this.prefs.close()
     if (this.wiz) return this.wiz.show(), this
 
     this.wiz = open('wizard', this.hash, {
@@ -220,7 +223,11 @@ class Tropy extends EventEmitter {
       frame: !this.hash.frameless,
       titleBarStyle: 'hidden'
     })
-      .once('closed', () => { this.prefs = undefined })
+      .once('closed', () => {
+        this.prefs = undefined
+        this.dispatch(act.ontology.load(), this.win)
+        this.dispatch(act.storage.reload([['settings']]), this.win)
+      })
 
     return this
   }
@@ -232,19 +239,28 @@ class Tropy extends EventEmitter {
       .then(([state]) => ({ ...Tropy.defaults, ...state }))
       .catch({ code: 'ENOENT' }, () => Tropy.defaults)
 
-      .then(state => (this.state = state, this))
+      .then(state => this.migrate(state))
 
-      .tap(state => all([
+      .tap(() => all([
         this.menu.load(),
         this.ctx.load(),
         this.cache.init(),
         Strings
-          .openWithFallback(Tropy.defaults.locale, state.locale)
+          .openWithFallback(Tropy.defaults.locale, this.state.locale)
           .then(strings => this.strings = strings)
       ]))
 
+
       .tap(() => this.emit('app:restored'))
       .tap(() => verbose('app state restored'))
+  }
+
+  migrate(state) {
+    state.version = this.version
+    state.uuid = state.uuid || uuid()
+
+    this.state = state
+    return this
   }
 
   persist() {
@@ -256,138 +272,201 @@ class Tropy extends EventEmitter {
   }
 
   listen() {
-    this
-      .on('app:create-project', () =>
-        this.create())
-      .on('app:import-photos', () =>
-        this.import())
-      .on('app:rename-project', () =>
-        this.dispatch(act.edit.start({ project: { name: true } })))
-      .on('app:show-in-folder', (_, { target }) =>
-        shell.showItemInFolder(target.path))
-      .on('app:create-item', () =>
-        this.dispatch(act.item.create()))
-      .on('app:delete-item', (_, { target }) =>
-        this.dispatch(act.item.delete(target.id)))
-      .on('app:merge-item', (_, { target }) =>
-        this.dispatch(act.item.merge(target.id)))
-      .on('app:restore-item', (_, { target }) =>
-        this.dispatch(act.item.restore(target.id)))
-      .on('app:destroy-item', (_, { target }) =>
-        this.dispatch(act.item.destroy(target.id)))
-      .on('app:create-item-photo', (_, { target }) =>
-        this.dispatch(act.photo.create({ item: target.id })))
-      .on('app:toggle-item-tag', (_, { id, tag }) =>
-        this.dispatch(act.item.tags.toggle({ id, tags: [tag] })))
-      .on('app:clear-item-tags', (_, { id }) =>
-        this.dispatch(act.item.tags.clear(id)))
-      .on('app:list-item-remove', (_, { target }) =>
-        this.dispatch(act.list.items.remove({
-          id: target.list,
-          items: target.id
-        })))
-      .on('app:rename-photo', (_, { target }) =>
-        this.dispatch(act.edit.start({ photo: target.id })))
-      .on('app:delete-photo', (_, { target }) =>
-        this.dispatch(act.photo.delete({
-          item: target.item, photos: [target.id]
-        })))
-      .on('app:create-list', () =>
-        this.dispatch(act.list.new()))
-      .on('app:rename-list', (_, { target: id }) =>
-        this.dispatch(act.edit.start({ list: { id } })))
-      .on('app:delete-list', (_, { target }) =>
-        this.dispatch(act.list.delete(target)))
-      .on('app:create-tag', () =>
-        this.dispatch(act.tag.new()))
-      .on('app:rename-tag', (_, { target }) =>
-        this.dispatch(act.tag.edit(target)))
-      .on('app:remove-tag', (_, { target }) =>
-        this.dispatch(act.item.tags.delete({
-          id: target.items, tags: [target.id]
-        })))
-      .on('app:delete-tag', (_, { target }) =>
-        this.dispatch(act.tag.delete(target.id)))
-      .on('app:create-note', (_, { target }) =>
-        this.dispatch(act.note.create(target)))
-      .on('app:delete-note', (_, { target }) =>
-        this.dispatch(act.note.delete(target)))
+    this.on('app:create-project', () =>
+      this.create())
 
-      .on('app:toggle-menu-bar', win => {
-        if (win.isMenuBarAutoHide()) {
-          win.setAutoHideMenuBar(false)
-        } else {
-          win.setAutoHideMenuBar(true)
-          win.setMenuBarVisibility(false)
-        }
-      })
+    this.on('app:import-photos', () =>
+      this.import())
 
-      .on('app:clear-recent-projects', () => {
-        verbose('clearing recent projects...')
+    this.on('app:rename-project', () =>
+      this.dispatch(act.edit.start({ project: { name: true } })))
 
-        this.state.recent = []
-        this.emit('app:reload-menu')
-      })
+    this.on('app:show-in-folder', (_, { target }) =>
+      shell.showItemInFolder(target.path))
 
-      .on('app:switch-theme', (_, theme) => {
-        verbose(`switching to "${theme}" theme...`)
+    this.on('app:create-item', () =>
+      this.dispatch(act.item.create()))
 
-        this.state.theme = theme
-        this.broadcast('theme', theme)
-        this.emit('app:reload-menu')
-      })
-      .on('app:reload-menu', () => {
-        // Note: there may be Electron issues when reloading
-        // the main menu. But since we cannot remove items
-        // dynamically (#527) this is our only option.
-        this.menu.reload()
-      })
-      .on('app:undo', () => {
-        if (this.history.past) this.dispatch(act.history.undo())
-      })
-      .on('app:redo', () => {
-        if (this.history.future) this.dispatch(act.history.redo())
-      })
-      .on('app:inspect', (win, { x, y }) => {
-        win.webContents.inspectElement(x, y)
-      })
-      .on('app:open-preferences', () => {
-        this.configure()
-      })
-      .on('app:open-license', () => {
-        shell.openExternal('https://github.com/tropy/tropy/blob/master/LICENSE')
-      })
-      .on('app:search-issues', () => {
-        shell.openExternal('https://github.com/tropy/tropy/issues')
-      })
+    this.on('app:delete-item', (_, { target }) =>
+      this.dispatch(act.item.delete(target.id)))
 
-      .on('app:open-dialog', (win, options = {}) => {
-        dialog
-          .show('file', win, {
-            ...options,
-            defaultPath: app.getPath('userData'),
-            filters: [{ name: 'Tropy Projects', extensions: ['tpy'] }],
-            properties: ['openFile']
+    this.on('app:merge-item', (_, { target }) =>
+      this.dispatch(act.item.merge(target.id)))
 
-          })
-          .then(files => {
-            if (files) this.open(...files)
-          })
-      })
+    this.on('app:explode-item', (_, { target }) =>
+      this.dispatch(act.item.explode({ id: target.id })))
 
+    this.on('app:explode-photo', (_, { target }) =>
+      this.dispatch(act.item.explode({ id: target.item, photos: [target.id] })))
+
+    this.on('app:restore-item', (_, { target }) =>
+      this.dispatch(act.item.restore(target.id)))
+
+    this.on('app:destroy-item', (_, { target }) =>
+      this.dispatch(act.item.destroy(target.id)))
+
+    this.on('app:create-item-photo', (_, { target }) =>
+      this.dispatch(act.photo.create({ item: target.id })))
+
+    this.on('app:toggle-item-tag', (_, { id, tag }) =>
+      this.dispatch(act.item.tags.toggle({ id, tags: [tag] })))
+
+    this.on('app:clear-item-tags', (_, { id }) =>
+      this.dispatch(act.item.tags.clear(id)))
+
+    this.on('app:list-item-remove', (_, { target }) =>
+      this.dispatch(act.list.items.remove({
+        id: target.list,
+        items: target.id
+      })))
+
+    this.on('app:rename-photo', (_, { target }) =>
+      this.dispatch(act.edit.start({ photo: target.id })))
+
+    this.on('app:delete-photo', (_, { target }) =>
+      this.dispatch(act.photo.delete({
+        item: target.item, photos: [target.id]
+      })))
+
+    this.on('app:create-list', () =>
+      this.dispatch(act.list.new()))
+
+    this.on('app:rename-list', (_, { target: id }) =>
+      this.dispatch(act.edit.start({ list: { id } })))
+
+    this.on('app:delete-list', (_, { target }) =>
+      this.dispatch(act.list.delete(target)))
+
+    this.on('app:create-tag', () =>
+      this.dispatch(act.tag.new()))
+
+    this.on('app:rename-tag', (_, { target }) =>
+      this.dispatch(act.tag.edit(target)))
+
+    this.on('app:save-tag', (_, tag) =>
+      this.dispatch(act.tag.save(tag)))
+
+    this.on('app:remove-tag', (_, { target }) =>
+      this.dispatch(act.item.tags.delete({
+        id: target.items, tags: [target.id]
+      })))
+
+    this.on('app:delete-tag', (_, { target }) =>
+      this.dispatch(act.tag.delete(target.id)))
+
+    this.on('app:create-note', (_, { target }) =>
+      this.dispatch(act.note.create(target)))
+
+    this.on('app:delete-note', (_, { target }) =>
+      this.dispatch(act.note.delete(target)))
+
+    this.on('app:toggle-menu-bar', win => {
+      if (win.isMenuBarAutoHide()) {
+        win.setAutoHideMenuBar(false)
+      } else {
+        win.setAutoHideMenuBar(true)
+        win.setMenuBarVisibility(false)
+      }
+    })
+
+    this.on('app:clear-recent-projects', () => {
+      verbose('clearing recent projects...')
+      this.state.recent = []
+      this.emit('app:reload-menu')
+    })
+
+    this.on('app:switch-theme', (_, theme) => {
+      verbose(`switching to "${theme}" theme...`)
+      this.state.theme = theme
+      this.broadcast('theme', theme)
+      this.emit('app:reload-menu')
+    })
+
+    this.on('app:reload-menu', () => {
+      // Note: there may be Electron issues when reloading
+      // the main menu. But since we cannot remove items
+      // dynamically (#527) this is our only option.
+      this.menu.reload()
+    })
+
+    this.on('app:undo', () => {
+      if (this.history.past) this.dispatch(act.history.undo())
+    })
+
+    this.on('app:redo', () => {
+      if (this.history.future) this.dispatch(act.history.redo())
+    })
+
+    this.on('app:inspect', (win, { x, y }) => {
+      win.webContents.inspectElement(x, y)
+    })
+
+    this.on('app:open-preferences', () => {
+      this.configure()
+    })
+
+    this.on('app:open-license', () => {
+      shell.openExternal('https://github.com/tropy/tropy/blob/master/LICENSE')
+    })
+
+    this.on('app:search-issues', () => {
+      shell.openExternal('https://github.com/tropy/tropy/issues')
+    })
+
+    this.on('app:open-docs', () => {
+      shell.openExternal('https://docs.tropy.org')
+    })
+
+    this.on('app:open-forums', () => {
+      shell.openExternal('https://forums.tropy.org')
+    })
+
+    this.on('app:open-logs', () => {
+      shell.showItemInFolder(join(app.getPath('userData'), 'log'))
+    })
+
+    this.on('app:reset-ontology-db', () => {
+      if (this.win || this.prefs) {
+        this.dispatch(act.ontology.reset())
+      } else {
+        rm.sync(join(app.getPath('userData'), 'ontology.db'))
+      }
+    })
+
+    this.on('app:open-dialog', (win, options = {}) => {
+      dialog
+        .show('file', win, {
+          ...options,
+          defaultPath: app.getPath('userData'),
+          filters: [{ name: 'Tropy Projects', extensions: ['tpy'] }],
+          properties: ['openFile']
+
+        }).then(files => {
+          if (files) this.open(...files)
+        })
+    })
 
     let quit = false
+    let winId
 
-    app
-      .once('before-quit', () => { quit = true })
+    app.on('browser-window-focus', (_, win) => {
+      try {
+        if (winId !== win.id) this.emit('app:reload-menu')
+      } finally {
+        winId = win.id
+      }
+    })
 
-      .on('window-all-closed', () => {
-        if (quit || !darwin) app.quit()
-      })
-      .on('quit', () => {
-        verbose('saving app state')
-        this.persist()
-      })
+    app.once('before-quit', () => { quit = true })
+
+    app.on('window-all-closed', () => {
+      if (quit || !darwin) app.quit()
+    })
+
+    app.on('quit', () => {
+      verbose('saving app state')
+      this.persist()
+    })
 
     if (darwin) {
       app.on('activate', () => this.open())
@@ -403,33 +482,34 @@ class Tropy extends EventEmitter {
       })
     }
 
-    ipc
-      .on('cmd', (_, command, ...params) => this.emit(command, ...params))
+    ipc.on('cmd', (_, command, ...params) => this.emit(command, ...params))
 
-      .on(PROJECT.OPENED, (_, project) => this.opened(project))
-      .on(PROJECT.CREATED, (_, { file }) => this.open(file))
+    ipc.on(PROJECT.OPENED, (_, project) => this.opened(project))
+    ipc.on(PROJECT.CREATED, (_, { file }) => this.open(file))
 
-      .on(PROJECT.UPDATE, (_, { name }) => {
-        if (name) this.win.setTitle(name)
-      })
+    ipc.on(PROJECT.UPDATE, (_, { name }) => {
+      if (name) this.win.setTitle(name)
+    })
 
-      .on(HISTORY.CHANGED, (_, history) => {
-        H.set(this.win, history)
-        this.emit('app:reload-menu')
-      })
-      .on(TAG.CHANGED, (_, tags) => {
-        T.set(this.win, tags)
-      })
+    ipc.on(HISTORY.CHANGED, (event, history) => {
+      H.set(BrowserWindow.fromWebContents(event.sender), history)
+      this.emit('app:reload-menu')
+    })
 
-      .on(CONTEXT.SHOW, (_, event) => {
-        this.ctx.show(event)
-      })
+    ipc.on(TAG.CHANGED, (event, tags) => {
+      T.set(BrowserWindow.fromWebContents(event.sender), tags)
+      this.emit('app:reload-menu')
+    })
 
-      .on(ITEM.PREVIEW, (_, paths) => {
-        if (darwin && paths && paths.length) {
-          this.win.previewFile(paths[0])
-        }
-      })
+    ipc.on(CONTEXT.SHOW, (_, event) => {
+      this.ctx.show(event)
+    })
+
+    ipc.on(ITEM.PREVIEW, (_, paths) => {
+      if (darwin && paths && paths.length) {
+        this.win.previewFile(paths[0])
+      }
+    })
 
     dialog.start()
 
@@ -446,14 +526,16 @@ class Tropy extends EventEmitter {
       cache: this.cache.root,
       frameless: this.state.frameless,
       theme: this.state.theme,
-      locale: this.state.locale
+      locale: this.state.locale,
+      uuid: this.state.uuid,
+      version
     }
   }
 
 
-  dispatch(action) {
-    if (this.win) {
-      this.win.webContents.send('dispatch', action)
+  dispatch(action, win = BrowserWindow.getFocusedWindow()) {
+    if (win != null) {
+      win.webContents.send('dispatch', action)
     }
   }
 
@@ -464,11 +546,11 @@ class Tropy extends EventEmitter {
   }
 
   get history() {
-    return H.get(this.win) || {}
+    return H.get(BrowserWindow.getFocusedWindow()) || {}
   }
 
   get tags() {
-    return T.get(this.win) || []
+    return T.get(BrowserWindow.getFocusedWindow()) || []
   }
 
   get name() {

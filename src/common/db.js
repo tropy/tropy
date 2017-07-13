@@ -12,7 +12,6 @@ const { readFileAsync: read } = require('fs')
 const { createPool } = require('generic-pool')
 const { debug, info, verbose, warn } = require('./log')
 const { entries } = Object
-const { project } = require('../models')
 
 const M = {
   'r': sqlite.OPEN_READONLY,
@@ -25,12 +24,12 @@ const cache = {}
 
 class Database extends EventEmitter {
 
-  static async create(path, options = {}) {
+  static async create(path, script, ...args) {
     try {
       var db = new Database(path, 'w+', { max: 1 })
-      await project.create(db, options)
 
-      verbose(`created project db at ${db.path}`)
+      const isEmpty = await db.empty()
+      if (isEmpty && script) await script(db, ...args)
 
       return db.path
 
@@ -61,7 +60,7 @@ class Database extends EventEmitter {
     }, {
       min: 0,
       max: 4,
-      idleTimeoutMillis: 60000,
+      idleTimeoutMillis: 60000 * 5,
       ...options,
       validate: (conn) => resolve(conn.db.open)
     })
@@ -140,6 +139,13 @@ class Database extends EventEmitter {
     await this.pool.clear()
 
     this.emit('close')
+  }
+
+  empty = async () => {
+    const { count } = await this.get(`
+      SELECT count(*) AS count FROM sqlite_master`)
+
+    return count === 0
   }
 
   seq = (fn) =>
@@ -239,10 +245,9 @@ class Connection {
     return this.db.serialize(...args), this
   }
 
-
-  prepare(sql, ...params) {
-    return this.db.prepareAsync(sql, flatten(params))
-      .then(stmt => new Statement(stmt))
+  prepare(...args) {
+    const fn = args.pop()
+    return using(Statement.disposable(this, ...args), stmt => fn(stmt, this))
   }
 
   all(sql, ...params) {
@@ -307,9 +312,9 @@ Connection.defaults = {
 
 class Statement {
 
-  static disposable(conn, ...args) {
-    return conn
-      .prepare(...args)
+  static disposable(conn, sql, ...params) {
+    return conn.db.prepareAsync(sql, flatten(params))
+      .then(stmt => new Statement(stmt))
       .disposer(stmt => stmt.finalize())
   }
 
@@ -330,7 +335,7 @@ class Statement {
   }
 
   run(...params) {
-    return this.stmt.runAsync(flatten(params)).return(this)
+    return this.stmt.runAsync(flatten(params))
   }
 
   get(...params) {

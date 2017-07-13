@@ -13,7 +13,7 @@ module.exports = {
     return {
       type: NOTE.CREATE,
       payload: json(payload),
-      meta: { async: true, history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'add', ...meta }
     }
   },
 
@@ -21,7 +21,7 @@ module.exports = {
     return {
       type: NOTE.SAVE,
       payload: json(payload),
-      meta: { async: true, history: 'merge', ...meta }
+      meta: { cmd: 'project', history: 'merge', ...meta }
     }
   },
 
@@ -29,7 +29,7 @@ module.exports = {
     return {
       type: NOTE.LOAD,
       payload,
-      meta: { async: true, ...meta }
+      meta: { cmd: 'project', ...meta }
     }
   },
 
@@ -62,7 +62,7 @@ module.exports = {
     return {
       type: NOTE.DELETE,
       payload,
-      meta: { async: true, history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'add', ...meta }
     }
   },
 
@@ -70,7 +70,7 @@ module.exports = {
     return {
       type: NOTE.RESTORE,
       payload,
-      meta: { async: true, history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'add', ...meta }
     }
   }
 }

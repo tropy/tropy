@@ -5,13 +5,11 @@ const { PureComponent } = React
 const { DragSource, DropTarget } = require('react-dnd')
 const { PropertySelect } = require('../property/select')
 const { IconButton } = require('../button')
-const { FormField, FormGroup, Label } = require('../form')
+const { FormField, FormGroup, FormToggle, Label } = require('../form')
 const { IconGrip, IconPlusCircle, IconMinusCircle } = require('../icons')
-const { get, titlecase } = require('../../common/util')
-const { basename } = require('path')
 const { DND } = require('../../constants')
 const cx = require('classnames')
-const { array, bool, func, object } = require('prop-types')
+const { array, bool, func, number, object } = require('prop-types')
 const { bounds } = require('../../dom')
 const { round } = Math
 
@@ -24,68 +22,120 @@ class TemplateField extends PureComponent {
     }
   }
 
-  get uri() {
-    return get(this.props.field, ['property', 'uri']) || ''
-  }
-
-  get defaultLabel() {
-    return get(this.props.field, ['property', 'label'])
-      || titlecase(basename(this.uri))
+  get isDragAndDropEnabled() {
+    return !this.props.isDisabled && !this.props.isSingle
   }
 
   setContainer = (container) => {
     this.container = container
   }
 
-  handlePropertyChange = () => {
+  handlePropertyChange = ({ id }) => {
+    this.handleChange({ property: id })
+  }
+
+  handleChange = (data) => {
+    this.props.onSave(this.props.field.id, data, this.props.position)
   }
 
   handleInsert = () => {
-    this.props.onInsert(this.props.field)
+    this.props.onInsert(this.props.field, this.props.position + 1)
   }
 
   handleRemove = () => {
     this.props.onRemove(this.props.field)
   }
 
+  connectDragSource(element) {
+    return this.isDragAndDropEnabled ? this.props.ds(element) : element
+  }
+
+  connectDropTarget(element) {
+    return this.isDragAndDropEnabled ? this.props.dt(element) : element
+  }
+
+  renderInsertButton() {
+    return !this.props.isDisabled && (
+      <IconButton
+        icon={<IconPlusCircle/>}
+        isDisabled={this.props.isTransient}
+        onClick={this.handleInsert}/>
+    )
+  }
+
+  renderRemoveButton() {
+    return !this.props.isDisabled && (
+      <IconButton
+        icon={<IconMinusCircle/>}
+        isDisabled={this.props.isTransient && this.props.isSingle}
+        onClick={this.handleRemove}/>
+    )
+  }
+
   render() {
-    return this.props.dt(
+    return this.connectDropTarget(
       <li
         className={cx(this.classes)}
         ref={this.setContainer}>
-        {this.props.ds(
+        {this.connectDragSource(
           <fieldset>
-            <IconGrip/>
+            {this.isDragAndDropEnabled && <IconGrip/>}
             <FormGroup isCompact>
-              <Label id="template.field.property"/>
+              <Label id="template.field.property"
+                size={3}/>
               <div className="col-9">
                 <PropertySelect
                   properties={this.props.properties}
-                  selected={this.uri}
-                  isRequired={false}
+                  selected={this.props.field.property}
+                  isRequired={!this.props.isTransient}
+                  isDisabled={this.props.isDisabled}
                   placeholder="property.select"
+                  tabIndex={0}
                   onChange={this.handlePropertyChange}/>
               </div>
             </FormGroup>
-            <FormField
-              id="template.field.label"
-              name="label"
-              value={this.props.field.label || ''}
-              placeholder={this.defaultLabel}
-              onChange={this.handlePropertyChange}/>
+            <FormToggle
+              id="template.field.isRequired"
+              name="isRequired"
+              value={this.props.field.isRequired}
+              isDisabled={this.props.isDisabled || this.props.isTransient}
+              tabIndex={0}
+              onChange={this.handleChange}
+              isCompact
+              size={9}/>
             <FormField
               id="template.field.hint"
               name="hint"
               value={this.props.field.hint || ''}
-              onChange={this.handlePropertyChange}/>
+              isDisabled={this.props.isDisabled || this.props.isTransient}
+              onChange={this.handleChange}
+              tabIndex={0}
+              isCompact
+              size={9}/>
+            <FormField
+              id="template.field.value"
+              name="value"
+              value={this.props.field.value || ''}
+              isDisabled={this.props.isDisabled || this.props.isTransient}
+              onChange={this.handleChange}
+              tabIndex={0}
+              isCompact
+              size={9}/>
+            <FormToggle
+              id="template.field.isConstant"
+              name="isConstant"
+              value={this.props.field.isConstant}
+              isDisabled={this.props.isDisabled || this.props.isTransient}
+              tabIndex={0}
+              onChange={this.handleChange}
+              isCompact
+              size={9}/>
           </fieldset>
         )}
-        <IconButton
-          icon={<IconPlusCircle/>}
-          onClick={this.handleInsert}/>
-        <IconButton
-          icon={<IconMinusCircle/>}
-          onClick={this.handleRemove}/>
+        <div className="btn-group">
+          {this.renderInsertButton()}
+          {this.renderRemoveButton()}
+        </div>
       </li>
     )
   }
@@ -93,28 +143,35 @@ class TemplateField extends PureComponent {
   static propTypes = {
     field: object.isRequired,
     isDragging: bool,
+    isDisabled: bool,
+    isTransient: bool,
+    isSingle: bool,
+    position: number.isRequired,
     properties: array.isRequired,
     ds: func.isRequired,
     dt: func.isRequired,
     onInsert: func.isRequired,
     onRemove: func.isRequired,
+    onSave: func.isRequired,
     onSort: func.isRequired,
     onSortPreview: func.isRequired,
-    onSortReset: func.isRequired
+    onSortReset: func.isRequired,
+    onSortStart: func.isRequired
   }
 }
 
 
 const DragSourceSpec = {
-  beginDrag({ field }) {
+  beginDrag({ field, onSortStart }) {
+    onSortStart(field)
     return field
   },
 
-  endDrag({ onSort, onSortReset }, monitor) {
+  endDrag({ field, onSort, onSortReset }, monitor) {
     if (monitor.didDrop()) {
-      onSort()
+      onSort(field)
     } else {
-      onSortReset()
+      onSortReset(field)
     }
   }
 }

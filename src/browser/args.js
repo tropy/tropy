@@ -9,8 +9,7 @@ module.exports = require('yargs')
   .wrap(78)
   .env(pkg.name.toUpperCase())
 
-  // See https://github.com/yargs/yargs/issues/878
-  //.demand(0, 1)
+  .demand(0, 1)
 
   .option('dir', {
     type: 'string',

@@ -58,7 +58,9 @@ class ItemIterator extends Iterator {
     const { list, isDisabled, selection, onContextMenu } = this.props
 
     const context = ['item']
-    const target = { id: item.id, tags: item.tags, list }
+    const target = {
+      id: item.id, photos: item.photos, tags: item.tags, list
+    }
 
     if (selection.length > 1) {
       context.push('bulk')
@@ -121,6 +123,7 @@ class ItemIterator extends Iterator {
         item,
         cache: this.props.cache,
         photos: this.props.photos,
+        tags: this.props.tags,
         isLast: index === this.props.items.length - 1,
         isSelected: this.isSelected(item),
         isDisabled: this.isDisabled,
@@ -156,6 +159,7 @@ class ItemIterator extends Iterator {
     list: number,
     size: number.isRequired,
     photos: object.isRequired,
+    tags: object.isRequired,
 
     dt: func.isRequired,
     onContextMenu: func.isRequired,

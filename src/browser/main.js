@@ -11,9 +11,6 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
   const args = require('./args')
   const opts = args.parse(process.argv.slice(1))
 
-  // See https://github.com/yargs/yargs/issues/878
-  if (opts._.length > 0) opts._ = opts._.filter(f => f !== true)
-
   process.env.NODE_ENV = opts.environment
   global.ARGS = opts
 
@@ -22,14 +19,16 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
   const { qualified }  = require('../common/release')
   const { linux, darwin } = require('../common/os')
 
-  let userdata = opts.dir
-  if (!userdata) {
+  let USERDATA = opts.dir
+  let LOGDIR
+
+  if (!USERDATA) {
     switch (opts.environment) {
       case 'development':
-        userdata = join(process.cwd(), 'tmp')
+        USERDATA = join(process.cwd(), 'tmp')
         break
       case 'production':
-        userdata = join(
+        USERDATA = join(
           app.getPath('appData'),
           qualified[linux ? 'name' : 'product'])
         break
@@ -38,64 +37,75 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
 
   // Set app name and data location as soon as possible!
   app.setName(qualified.product)
-  if (userdata) app.setPath('userData', userdata)
+  if (USERDATA) {
+    app.setPath('userData', USERDATA)
+    LOGDIR = join(USERDATA, 'log')
+  }
 
 
   if (!require('./squirrel')()) {
     const { all }  = require('bluebird')
     const { once } = require('../common/util')
-    const { info, verbose } = require('../common/log')(userdata)
+    const { info, verbose } = require('../common/log')(LOGDIR)
+
+    let quit = false
 
     if (opts.environment !== 'test') {
-      if (app.makeSingleInstance(() => tropy.open(...opts._))) {
-        verbose('other instance detected, exiting...')
-        app.exit(0)
-      }
-    }
-
-    if (opts.scale) {
-      app.commandLine.appendSwitch('force-device-scale-factor', opts.scale)
-    }
-
-    verbose(`started in ${opts.e} mode`)
-    verbose(`using ${app.getPath('userData')}`)
-
-    const tropy = new (require('./tropy'))()
-
-    tropy.listen()
-    tropy.restore()
-
-    if (darwin) {
-      app.on('open-file', (event, file) => {
-        switch (extname(file)) {
-          case '.tpy':
-            event.preventDefault()
-            if (!READY) opts._ = [file]
-            else tropy.open(file)
-            break
-          case '.jpg':
-          case '.jpeg':
-            if (READY && tropy.win) {
-              event.preventDefault()
-              tropy.import([file])
-            }
-            break
-        }
+      quit = app.makeSingleInstance(argv => {
+        tropy.open(args.parse(argv.slice(1)._))
       })
     }
 
-    all([
-      once(app, 'ready'),
-      once(tropy, 'app:restored')
+    if (quit) {
+      verbose('other instance detected, exiting...')
+      app.exit(0)
 
-    ]).then(() => {
-      READY = Date.now()
-      info('ready after %sms', READY - START)
-      tropy.open(...opts._)
-    })
+    } else {
 
-    app.on('quit', (_, code) => {
-      verbose(`quit with exit code ${code}`)
-    })
+      if (opts.scale) {
+        app.commandLine.appendSwitch('force-device-scale-factor', opts.scale)
+      }
+
+      verbose(`started in ${opts.env} mode`)
+      verbose(`using ${app.getPath('userData')}`)
+
+      var tropy = new (require('./tropy'))()
+
+      tropy.listen()
+      tropy.restore()
+
+      if (darwin) {
+        app.on('open-file', (event, file) => {
+          switch (extname(file)) {
+            case '.tpy':
+              event.preventDefault()
+              if (!READY) opts._ = [file]
+              else tropy.open(file)
+              break
+            case '.jpg':
+            case '.jpeg':
+              if (READY && tropy.win) {
+                event.preventDefault()
+                tropy.import([file])
+              }
+              break
+          }
+        })
+      }
+
+      all([
+        once(app, 'ready'),
+        once(tropy, 'app:restored')
+
+      ]).then(() => {
+        READY = Date.now()
+        info('ready after %sms', READY - START)
+        tropy.open(...opts._)
+      })
+
+      app.on('quit', (_, code) => {
+        verbose(`quit with exit code ${code}`)
+      })
+    }
   }
 }

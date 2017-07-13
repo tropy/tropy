@@ -11,17 +11,17 @@ const { isArray } = Array
 
 class MetadataFields extends PureComponent {
 
-  isEditing(uri) {
-    return get(this.props.edit, [uri]) === this.getEditKey()
+  isEditing(key) {
+    return get(this.props.edit, [key]) === this.getEditKey()
   }
 
-  isExtra(uri) {
+  isExtra(key) {
     const { template } = this.props
 
-    if (uri === 'id') return false
+    if (key === 'id') return false
     if (template == null) return true
 
-    return !template.fields.find(({ property }) => property.uri === uri)
+    return !template.fields.find(({ property }) => property.id === key)
   }
 
   getEditKey(id = this.props.data.id) {
@@ -30,29 +30,30 @@ class MetadataFields extends PureComponent {
 
 
   *extras() {
-    for (let uri in this.props.data) {
-      if (this.isExtra(uri)) yield uri
+    for (let key in this.props.data) {
+      if (this.isExtra(key)) yield key
     }
   }
 
-  handleEdit = (id, uri) => {
+  handleEdit = (id, key) => {
     this.props.onEdit({
-      field: { [uri]: this.getEditKey(id) }
+      field: { [key]: this.getEditKey(id) }
     })
   }
 
   renderField = (property, props) => {
-    const { data, onChange, onEditCancel } = this.props
-    const value = data[property.uri] || {}
+    const { data, isDisabled, onChange, onEditCancel } = this.props
+    const value = data[property.id] || {}
 
     return (
       <MetadataField
-        key={property.uri}
+        key={property.id}
         id={data.id}
         property={property}
         type={value.type || property.type}
         text={value.text}
-        isEditing={this.isEditing(property.uri)}
+        isDisabled={isDisabled}
+        isEditing={this.isEditing(property.id)}
         isMixed={!!value.mixed}
         onChange={onChange}
         onEdit={this.handleEdit}
@@ -63,13 +64,18 @@ class MetadataFields extends PureComponent {
 
   renderTemplate() {
     const { template } = this.props
-    return template && template.fields.map(f => this.renderField(f.property))
+    return template && template.fields.map(f =>
+      this.renderField(f.property, {
+        isReadOnly: f.isConstant,
+        isRequired: f.isRequired,
+        placeholder: f.hint
+      }))
   }
 
   renderExtraFields() {
     const { properties } = this.props
-    return [...this.extras()].map(uri =>
-      this.renderField(properties[uri] || { uri }, { isExtra: true })
+    return [...this.extras()].map(id =>
+      this.renderField(properties[id] || { id }, { isExtra: true })
     )
   }
 

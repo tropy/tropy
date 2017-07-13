@@ -2,10 +2,12 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { shape, func, string, bool, object, arrayOf, oneOf } = PropTypes
-const cn = require('classnames')
+const cx = require('classnames')
+const { getLabel } = require('../../common/ontology')
 const { IconChevron7 } = require('../icons')
+const {
+  arrayOf, bool, func, number, object, oneOf, shape, string
+} = require('prop-types')
 
 
 class ItemTableHeadCell extends PureComponent {
@@ -19,7 +21,7 @@ class ItemTableHeadCell extends PureComponent {
 
   get style() {
     return {
-      width: this.props.width
+      width: `${this.props.width}%`
     }
   }
 
@@ -28,11 +30,11 @@ class ItemTableHeadCell extends PureComponent {
   }
 
   handleClick = () => {
-    const { uri, isActive, isAscending, onClick } = this.props
+    const { id, isActive, isAscending, onClick } = this.props
 
     onClick({
       type: 'property',
-      column: uri,
+      column: id,
       asc: !isActive || !isAscending
     })
   }
@@ -43,7 +45,7 @@ class ItemTableHeadCell extends PureComponent {
     return (
       <th
         style={this.style}
-        className={cn(this.classes)}
+        className={cx(this.classes)}
         onClick={this.handleClick}>
         <div className="metadata-head-container">
           <div className="label">{label}</div>
@@ -59,8 +61,8 @@ class ItemTableHeadCell extends PureComponent {
     isAscending: bool.isRequired,
     label: string.isRequired,
     type: string.isRequired,
-    uri: string.isRequired,
-    width: string.isRequired,
+    id: string.isRequired,
+    width: number.isRequired,
     onClick: func.isRequired
   }
 
@@ -75,8 +77,12 @@ class ItemTableHead extends PureComponent {
     return this.props.sort.asc
   }
 
-  isActive(uri) {
-    return (uri === this.props.sort.column)
+  isActive(id) {
+    return (id === this.props.sort.column)
+  }
+
+  getLabel(property) {
+    return property.label || getLabel(property.id)
   }
 
   render() {
@@ -87,10 +93,12 @@ class ItemTableHead extends PureComponent {
         <thead>
           <tr>
             {columns.map(({ width, property }) =>
-              <ItemTableHeadCell {...property}
-                key={property.uri}
+              <ItemTableHeadCell
+                key={property.id}
+                id={property.id}
+                label={this.getLabel(property)}
                 width={width}
-                isActive={this.isActive(property.uri)}
+                isActive={this.isActive(property.id)}
                 isAscending={this.isAscending}
                 onClick={onSort}/>)}
           </tr>
@@ -102,7 +110,7 @@ class ItemTableHead extends PureComponent {
   static propTypes = {
     columns: arrayOf(shape({
       property: object.isRequired,
-      width: string.isRequired
+      width: number.isRequired
     })).isRequired,
 
     sort: shape({

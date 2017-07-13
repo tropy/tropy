@@ -121,7 +121,7 @@ class PhotoIterable extends PureComponent {
 
 
   static DropTargetSpec = {
-    hover({ photo, onOver, isVertical }, monitor, component) {
+    hover({ photo, isVertical }, monitor, component) {
       const { id, adj } = monitor.getItem()
       const { top, left, width, height } = bounds(component.container)
       const { x, y } = monitor.getClientOffset()

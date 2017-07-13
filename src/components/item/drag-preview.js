@@ -2,10 +2,9 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const { CoverImage } = require('./cover-image')
 const cx = require('classnames')
-const { arrayOf, string, shape, number } = PropTypes
+const { arrayOf, string, shape, number, object } =  require('prop-types')
 
 class ItemDragPreview extends PureComponent {
   get classes() {
@@ -25,11 +24,16 @@ class ItemDragPreview extends PureComponent {
   }
 
   render() {
-    const { cache, size } = this.props
+    const { cache, photos, size, tags } = this.props
 
     return (
       <div className={cx(this.classes)}>
-        <CoverImage cache={cache} size={size} item={this.item}/>
+        <CoverImage
+          cache={cache}
+          photos={photos}
+          size={size}
+          item={this.item}
+          tags={tags}/>
         {this.count > 1 &&
           <div className="badge">{this.count}</div>
         }
@@ -41,6 +45,8 @@ class ItemDragPreview extends PureComponent {
   static propTypes = {
     cache: string.isRequired,
     size: number.isRequired,
+    tags: object.isRequired,
+    photos: object.isRequired,
     items: arrayOf(shape({
       id: number.isRequired
     })).isRequired

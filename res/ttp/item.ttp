@@ -1,0 +1,28 @@
+{
+  "@context": "https://tropy.org/v1/contexts/template.jsonld",
+  "@id": "https://tropy.org/v1/templates/item",
+  "name": "Tropy Item",
+  "type": "https://tropy.org/v1/tropy#Item",
+  "field": [
+    {
+      "property": "http://purl.org/dc/elements/1.1/title"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/creator",
+      "datatype": "https://tropy.org/v1/tropy#name"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/date",
+      "datatype": "https://tropy.org/v1/tropy#date"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/description"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/source"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/rights"
+    }
+  ]
+}

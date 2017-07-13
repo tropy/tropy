@@ -2,6 +2,7 @@
 
 require('shelljs/make')
 
+const { say, error } = require('./util')('build')
 const electron = require('electron/package')
 const packager = require('electron-packager')
 const { basename, extname, join, resolve, relative } = require('path')
@@ -15,14 +16,51 @@ const res = join(dir, 'res')
 const icons = resolve(res, 'icons', channel, 'tropy')
 const mime = resolve(res, 'icons', 'mime')
 
+const IGNORE = [
+  /.DS_Store/,
+  /.babelrc/,
+  /.eslintrc/,
+  /.gitignore/,
+  /.nvmrc/,
+  /.nyc_output/,
+  /.sass-lint\.yml/,
+  /.travis\.yml/,
+  /.vimrc/,
+  /^\/coverage/,
+  /^\/db.test/,
+  /^\/dist/,
+  /^\/doc/,
+  /^\/ext/,
+  /^\/res.ext/,
+  /^\/res.mime/,
+  /^\/res.icons.dev/,
+  /^\/res.icons.beta/,
+  /^\/res.icons.stable/,
+  /^\/res.icons.mime/,
+  /^\/res.dmg/,
+  /^\/res.linux/,
+  /^\/res.ext\.plist/,
+  /^\/scripts/,
+  /^\/src/,
+  /^\/test/,
+  /^\/tmp/,
+  /appveyor\.yml/
+]
 
 target.all = (args = []) => {
   const platform = args[0] || process.platform
   const arch = args[1] || process.arch
+  const ignore = [...IGNORE]
 
   const icon = platform === 'win32' ?
     join(res, 'icons', channel, `${name}.ico`) :
     join(res, 'icons', channel, `${name}.icns`)
+
+  say(`packaging for ${platform} ${arch}...`)
+
+  if (platform !== 'win32') {
+    ignore.push(/^\/node_modules\/winreg/)
+  }
 
   packager({
     platform,
@@ -33,6 +71,8 @@ target.all = (args = []) => {
     name: qualified.product,
     prune: true,
     overwrite: true,
+    quiet: true,
+    ignore,
     electronVersion: electron.version,
     appVersion: version,
     appBundleId: 'org.tropy.tropy',
@@ -43,71 +83,45 @@ target.all = (args = []) => {
       `${author.name}. All rights not expressly granted are reserved.`,
     extendInfo: join(res, 'ext.plist'),
     extraResource: [
-      join(res, 'icons', 'mime', 'tpy.icns')
+      join(res, 'icons', 'mime', 'tpy.icns'),
+      join(res, 'icons', 'mime', 'ttp.icns')
     ],
     win32metadata: {
       CompanyName: author.name,
       ProductName: qualified.product
     },
     asar: {
-      unpack: '**/{*.node,lib/stylesheets/**/*}',
-    },
-    ignore: [
-      /.DS_Store/,
-      /.babelrc/,
-      /.eslintrc/,
-      /.gitignore/,
-      /.nvmrc/,
-      /.nyc_output/,
-      /.sass-lint\.yml/,
-      /.travis\.yml/,
-      /.vimrc/,
-      /^\/coverage/,
-      /^\/db.test/,
-      /^\/dist/,
-      /^\/doc/,
-      /^\/ext/,
-      /^\/res.ext/,
-      /^\/res.mime/,
-      /^\/res.icons/,
-      /^\/res.dmg/,
-      /^\/res.linux/,
-      /^\/res.ext\.plist/,
-      /^\/scripts/,
-      /^\/src/,
-      /^\/test/,
-      /^\/tmp/,
-      /appveyor\.yml/
-    ]
+      unpack: '**/{*.node,lib/stylesheets/**/*,res/icons/mime/*.ico}',
+    }
 
   }, (err, dst) => {
-    if (err) return console.error(err)
+    if (err) return error(err)
     dst = String(dst)
 
     switch (platform) {
       case 'linux': {
-        console.log(`Renaming executable to ${qualified.name}...`)
+        say(`renaming executable to ${qualified.name}...`)
         rename(dst, qualified.product, qualified.name)
 
-        console.log('Creating .desktop file...')
+        say('creating .desktop file...')
         desktop().to(join(dst, `${qualified.name}.desktop`))
 
-        console.log('Copying icons...')
+        say('copying icons...')
         copyIcons(dst)
 
-        console.log('Copying mime types...')
+        say('copying mime types...')
         mkdir('-p', join(dst, 'mime', 'packages'))
         cp(join(res, 'mime', '*.xml'), join(dst, 'mime', 'packages'))
 
         break
       }
       case 'win32': {
-        console.log(`Renaming executable to ${qualified.name}.exe...`)
+        say(`renaming executable to ${qualified.name}.exe...`)
         rename(dst, `${qualified.product}.exe`, `${qualified.name}.exe`)
       }
     }
 
-    console.log(`Saved app to ${relative(dir, dst)}`)
+    say(`saved app to ${relative(dir, dst)}`)
   })
 }
 

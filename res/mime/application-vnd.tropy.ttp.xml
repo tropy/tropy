@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/vnd.tropy.ttp">
+    <comment>Tropy Template</comment>
+    <icon name="application-vnd.tropy.ttp"/>
+    <glob-deleteall/>
+    <glob pattern="*.ttp"/>
+  </mime-type>
+</mime-info>

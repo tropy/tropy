@@ -3,16 +3,46 @@
 // --------------------------------------------------
 
 .tag.list {
+  .icon-tag {
+    &:not([class*="color"]) {
+      .color {
+        color: $icon-tag-color;
+      }
+
+      .border {
+        color: $icon-tag-border;
+      }
+    }
+  }
+
   #sidebar & {
     .active {
       background: $tag-list-active-bg;
 
+      .icon-tag:not([class*="color"]) {
+        .color {
+          color: $tag-list-active-bg;
+        }
+
+        .border {
+          color: $tag-list-active-border;
+        }
+      }
+
       &:focus {
         background: $tag-list-focus-bg;
+        color: $tag-list-focus-color;
 
-        &,
         .icon-tag {
-          color: $tag-list-focus-color;
+          &:not([class*="color"]) {
+            .color {
+              color: $tag-list-focus-bg;
+            }
+          }
+
+          .border {
+            color: $tag-list-focus-color;
+          }
         }
       }
     }
@@ -31,14 +61,19 @@
       padding: 0 $default-padding-horizontal;
 
       &.mixed {
-        &,
+        color: $mixed-color;
+
         .icon-tag {
-          color: $mixed-color;
+          opacity: 0.5;
         }
 
         &:focus {
           .icon-pluscircles {
             display: block;
+          }
+
+          .icon-tag {
+            opacity: 1;
           }
         }
       }
@@ -49,6 +84,18 @@
         &,
         .icon {
           color: $tag-list-focus-color;
+        }
+
+        .icon-tag {
+          &:not([class*="color"]) {
+            .color {
+              color: $tag-list-focus-bg;
+            }
+          }
+
+          .border {
+            color: $tag-list-focus-color;
+          }
         }
       }
 

@@ -2,6 +2,7 @@
 
 require('shelljs/make')
 
+const { check, error, say } = require('./util')('pack')
 const { join, resolve } = require('path')
 const { platform } = process
 const { getSignToolParams } = require('./sign')
@@ -41,9 +42,9 @@ target.linux = (args = ['bz2', 'AppImage']) => {
           categories: ['Graphics', 'Viewer', 'Science']
         }
 
-        installer(options, error => {
-          if (error) return console.log(error)
-          console.log(`created flatpak at ${options.dest}`)
+        installer(options, err => {
+          if (err) return error(err)
+          say(`created flatpak at ${options.dest}`)
 
         })
 
@@ -77,7 +78,7 @@ target.linux = (args = ['bz2', 'AppImage']) => {
       }
 
       default:
-        console.error(`unknown linux target: ${arg}`)
+        error(`unknown linux target: ${arg}`)
     }
   }
 
@@ -136,12 +137,4 @@ target.win32 = async (args = []) => {
     iconUrl: join(res, 'icons', channel, `${name}.ico`),
     noMsi: true
   })
-}
-
-
-function check(predicate, msg) {
-  if (!predicate) {
-    console.error(msg)
-    exit(1)
-  }
 }

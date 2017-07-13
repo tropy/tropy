@@ -1,7 +1,7 @@
 'use strict'
 
 const {
-  NAV, ITEM, LIST, TAG, NOTE, PHOTO, PROJECT, PROPERTIES: { DC }
+  NAV, ITEM, LIST, TAG, NOTE, PHOTO, PROJECT, DC
 } = require('../constants')
 
 const { isSelected } = require('../selection')
@@ -11,7 +11,7 @@ const init = {
   items: [],
   query: '',
   tags: [],
-  sort: { type: 'property', column: DC.TITLE, asc: true },
+  sort: { type: 'property', column: DC.title, asc: true },
   lists: {}
 }
 

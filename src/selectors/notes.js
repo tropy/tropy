@@ -34,6 +34,7 @@ const getVisibleNotes = memo(
     seq(parents, compose(
       cat,
       map(parent => parent.notes),
+      keep(),
       cat,
       map(id => notes[id]),
       keep()

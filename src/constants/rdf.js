@@ -9,20 +9,34 @@ module.exports = {
   RDFS: {
     Class: 'http://www.w3.org/2000/01/rdf-schema#Class',
     comment: 'http://www.w3.org/2000/01/rdf-schema#comment',
+    Datatype: 'http://www.w3.org/2000/01/rdf-schema#Datatype',
+    domain: 'http://www.w3.org/2000/01/rdf-schema#domain',
     isDefinedBy: 'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
-    label: 'http://www.w3.org/2000/01/rdf-schema#label'
+    label: 'http://www.w3.org/2000/01/rdf-schema#label',
+    range: 'http://www.w3.org/2000/01/rdf-schema#range',
+    seeAlso: 'http://www.w3.org/2000/01/rdf-schema#seeAlso'
   },
 
   OWL: {
     Class: 'http://www.w3.org/2002/07/owl#Class',
     DatatypeProperty: 'http://www.w3.org/2002/07/owl#DatatypeProerty',
+    FunctionalProperty: 'http://www.w3.org/2002/07/owl#FunctionalProperty',
+    InverseFunctionalProperty: 'http://www.w3.org/2002/07/owl#InverseFunctionalProperty',
+    ObjectProperty: 'http://www.w3.org/2002/07/owl#ObjectProperty',
     Ontology: 'http://www.w3.org/2002/07/owl#Ontology',
-    ObjectProperty: 'http://www.w3.org/2002/07/owl#ObjectProerty'
+    SymmetricProperty: 'http://www.w3.org/2002/07/owl#SymmetricProperty',
+    TransitiveProperty: 'http://www.w3.org/2002/07/owl#TransitiveProperty'
   },
 
   DC: {
+    creator: 'http://purl.org/dc/elements/1.1/creator',
+    date: 'http://purl.org/dc/elements/1.1/date',
     description: 'http://purl.org/dc/elements/1.1/description',
-    title: 'http://purl.org/dc/elements/1.1/title'
+    publisher: 'http://purl.org/dc/elements/1.1/publisher',
+    rights: 'http://purl.org/dc/elements/1.1/rights',
+    source: 'http://purl.org/dc/elements/1.1/source',
+    title: 'http://purl.org/dc/elements/1.1/title',
+    type: 'http://purl.org/dc/elements/1.1/type'
   },
 
   DCT: {

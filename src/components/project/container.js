@@ -10,7 +10,7 @@ const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
 const { extname } = require('path')
 const { MODE } = require('../../constants/project')
-const { ensure } = require('../../dom')
+const { ensure, reflow } = require('../../dom')
 const { win } = require('../../window')
 const cx = require('classnames')
 const { values } = Object
@@ -18,7 +18,6 @@ const actions = require('../../actions')
 
 const {
   getActivities,
-  getAllTags,
   getCachePrefix,
   getColumns,
   getSelectedItems,
@@ -75,13 +74,17 @@ class ProjectContainer extends PureComponent {
     if (this.state.willModeChange) return
 
     this.setState({ willModeChange: true, isModeChanging: false }, () => {
-      this.setState({ isModeChanging: true })
-      ensure(
-        this.container,
-        'transitionend',
-        this.modeDidChange,
-        5000,
-        this.isMainView)
+      reflow(this.container)
+
+      requestAnimationFrame(() => {
+        this.setState({ isModeChanging: true })
+        ensure(
+          this.container,
+          'transitionend',
+          this.modeDidChange,
+          3000,
+          this.isMainView)
+      })
     })
   }
 
@@ -184,7 +187,10 @@ class ProjectContainer extends PureComponent {
           onPanelDragStop={this.handlePanelDragStop}
           onMetadataSave={this.handleMetadataSave}/>
 
-        <DragLayer cache={props.cache}/>
+        <DragLayer
+          cache={props.cache}
+          photos={photos}
+          tags={props.tags}/>
       </div>
     )
   }
@@ -231,6 +237,7 @@ class ProjectContainer extends PureComponent {
       column: string.isRequired,
       type: oneOf(['property']).isRequired
     }).isRequired,
+    tags: object.isRequired,
 
     isOver: bool,
     canDrop: bool,
@@ -241,27 +248,41 @@ class ProjectContainer extends PureComponent {
     onModeChange: func.isRequired,
     onMetadataSave: func.isRequired,
     onSort: func.isRequired,
+    onTemplateImport: func.isRequired,
     onUiUpdate: func.isRequired
   }
 }
 
 
 const DropTargetSpec = {
-  drop({ onProjectOpen }, monitor) {
-    const { files } = monitor.getItem()
-    const project = files[0].path
+  drop({ onProjectOpen, onTemplateImport }, monitor) {
+    const files = monitor.getItem().files.map(f => f.path)
 
-    return onProjectOpen(project), { project }
+    switch (extname(files[0])) {
+      case '.tpy':
+        onProjectOpen(files[0].path)
+        break
+      case '.ttp':
+        onTemplateImport(files.filter(f => f.endsWith('.ttp')))
+        break
+    }
+
+    return { files }
   },
 
   canDrop({ project }, monitor) {
     const { files } = monitor.getItem()
 
-    if (files.length !== 1) return false
-    if (extname(files[0].path) !== '.tpy') return false
-    if (files[0].path === project.file) return false
+    if (files.length < 1) return false
 
-    return true
+    switch (extname(files[0].path)) {
+      case '.tpy':
+        return files[0].path !== project.file
+      case '.ttp':
+        return true
+      default:
+        return false
+    }
   }
 }
 
@@ -284,10 +305,10 @@ module.exports = {
       photos: state.photos,
       visiblePhotos: getVisiblePhotos(state),
       project: state.project,
-      properties: state.properties,
+      properties: state.ontology.props,
       selection: getSelectedItems(state),
       sort: state.nav.sort,
-      tags: getAllTags(state),
+      tags: state.tags,
       ui: state.ui
     }),
 
@@ -420,6 +441,10 @@ module.exports = {
         dispatch(actions.tag.select(...args))
       },
 
+      onTemplateImport(files) {
+        dispatch(actions.ontology.template.import({ files }))
+      },
+
       onNoteCreate(...args) {
         dispatch(actions.note.create(...args))
       },
@@ -451,6 +476,7 @@ module.exports = {
       onUiUpdate(...args) {
         dispatch(actions.ui.update(...args))
       }
+
     })
 
   )(DropTarget(NativeTypes.FILE, DropTargetSpec, (c, m) => ({

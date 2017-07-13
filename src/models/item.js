@@ -4,6 +4,7 @@ const { all } = require('bluebird')
 const { assign } = Object
 const { into, map } = require('transducers.js')
 const { array, list: lst, uniq } = require('../common/util')
+const { TEMPLATE } = require('../constants/item')
 
 const mod = {
   metadata: require('./metadata'),
@@ -27,7 +28,7 @@ const SEARCH = `
     WHERE fts_metadata MATCH $query`
 
 const prefix = (query) =>
-  (!(/\*\+\'\"/).test(query)) ? query + '*' : query
+  (!(/[*+'"]/).test(query)) ? query + '*' : query
 
 
 module.exports = mod.item = {
@@ -181,9 +182,9 @@ module.exports = mod.item = {
     return items
   },
 
-  async create(db, data) {
+  async create(db, template, data) {
     const { id } = await db.run(`
-      INSERT INTO subjects DEFAULT VALUES`)
+      INSERT INTO subjects (template) VALUES (?)`, template || TEMPLATE)
     await db.run(`
       INSERT INTO items (id) VALUES (?)`, id)
 
@@ -191,9 +192,23 @@ module.exports = mod.item = {
       await mod.metadata.update(db, { ids: [id], data })
     }
 
-    const { [id]: item } = await mod.item.load(db, [id])
-    return item
+    return (await mod.item.load(db, [id]))[id]
+  },
 
+  async dup(db, source) {
+    const { id } = await db.run(`
+      INSERT INTO subjects (template)
+        SELECT template FROM subjects WHERE id = ?`, source)
+    await db.run(`
+      INSERT INTO items (id) VALUES (?)`, id)
+
+    await all([
+      mod.metadata.copy(db, { source, target: id }),
+      mod.item.tags.copy(db, { source, target: id }),
+      mod.item.lists.copy(db, { source, target: id })
+    ])
+
+    return (await mod.item.load(db, [id]))[id]
   },
 
   async update(db, ids, data) {
@@ -239,7 +254,7 @@ module.exports = mod.item = {
       mod.item.tags.add(db, tags.map(tag => ({ id: item.id, tag }))),
       mod.item.lists.merge(db, item.id, ids, lists),
       mod.metadata.update(db, { ids: [item.id], data }),
-      mod.item.delete(db, ids, 'merge')
+      mod.item.delete(db, ids, 'auto')
     ])
 
     return {
@@ -254,6 +269,14 @@ module.exports = mod.item = {
       mod.item.lists.remove(db, id, lists),
       mod.metadata.replace(db, { ids: [id], data }),
       mod.item.restore(db, items.map(i => i.id))
+    ])
+  },
+
+  async implode(db, { id, photos, items }) {
+    await all([
+      mod.photo.move(db, { ids: photos, item: id }),
+      mod.photo.order(db, id, photos),
+      mod.item.delete(db, items, 'auto')
     ])
   },
 
@@ -279,7 +302,7 @@ module.exports = mod.item = {
   async prune(db, since = '-1 month') {
     const condition = since ?
       ` WHERE reason != 'user' OR
-          (reason = 'user' AND deleted < datetime("now", "${since}"))` : ''
+         (reason = 'user' AND deleted < datetime("now", "${since}"))` : ''
 
     return db.run(`
       DELETE FROM subjects
@@ -307,6 +330,13 @@ module.exports = mod.item = {
       return db.run(`
         DELETE FROM taggings
           WHERE id IN (${lst(array(id))}) AND tag_id IN (${lst(tags)})`)
+    },
+
+    async copy(db, { source, target }) {
+      return db.run(`
+        INSERT INTO taggings (tag_id, id)
+          SELECT tag_id, ${Number(target)} AS id
+            FROM taggings WHERE id = ?`, source)
     }
   },
 
@@ -326,6 +356,13 @@ module.exports = mod.item = {
       return db.run(`
         DELETE FROM list_items
           WHERE id = ? AND list_id IN (${lists.map(Number).join(',')})`, id)
+    },
+
+    async copy(db, { source, target }) {
+      return db.run(`
+        INSERT INTO list_items (list_id, id, position, added)
+          SELECT list_id, ${Number(target)} AS id, position, added
+            FROM list_items WHERE id = ?`, source)
     }
   }
 }

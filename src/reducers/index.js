@@ -2,7 +2,6 @@
 
 module.exports = {
   ...require('./activity'),
-  ...require('./classes'),
   ...require('./columns'),
   ...require('./edit'),
   ...require('./history'),
@@ -13,13 +12,13 @@ module.exports = {
   ...require('./metadata'),
   ...require('./nav'),
   ...require('./notes'),
+  ...require('./ontology'),
   ...require('./photos'),
   ...require('./prefs'),
   ...require('./project'),
-  ...require('./properties'),
   ...require('./qr'),
+  ...require('./settings'),
   ...require('./tags'),
   ...require('./ui'),
-  ...require('./vocab'),
   ...require('./wizard')
 }

@@ -2,162 +2,266 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { TemplateSelect } = require('./select')
-const { TemplateField } = require('./field')
-const { ButtonGroup, IconButton } = require('../button')
+const { connect } = require('react-redux')
+const { TemplateFieldList } = require('./field-list')
+const { TemplateToolbar } = require('./toolbar')
 const { FormattedMessage } = require('react-intl')
-const { FormField, FormGroup, Label } = require('../form')
-const { insert, remove, move } = require('../../common/util')
+const { FormField, FormGroup, FormSelect } = require('../form')
+const { omit, pick } = require('../../common/util')
 const { arrayOf, func, shape, string } = require('prop-types')
+const actions = require('../../actions')
+const { TYPE } = require('../../constants')
 
-const {
-  IconNew,
-  IconCopy,
-  IconTrash,
-  IconImport,
-  IconExport,
-} = require('../icons')
+const { getTemplateList, getPropertyList } = require('../../selectors')
 
-
-function TemplateControl(props) {
-  return (
-    <FormGroup className="select-template">
-      <Label id="prefs.template.select"/>
-      <div className="col-9 flex-row center">
-        <TemplateSelect
-          templates={props.templates}
-          selected={props.selected}
-          isRequired={false}
-          placeholder="prefs.template.new"
-          onChange={props.onChange}/>
-        <ButtonGroup>
-          <IconButton icon={<IconNew/>}/>
-          <IconButton icon={<IconCopy/>}/>
-          <IconButton icon={<IconTrash/>}/>
-          <IconButton icon={<IconImport/>}/>
-          <IconButton icon={<IconExport/>}/>
-        </ButtonGroup>
-      </div>
-    </FormGroup>
-  )
+const TEMPLATE = {
+  name: '',
+  id: '',
+  type: TYPE.ITEM,
+  creator: '',
+  description: '',
+  created: null,
+  isProtected: false,
+  fields: []
 }
 
-TemplateControl.propTypes = {
-  templates: arrayOf(shape({
-    uri: string.isRequired,
-    name: string
-  })).isRequired,
-  selected: string,
-  onChange: func.isRequired
-}
+const makeTemplate = (template = TEMPLATE) => ({ ...template })
 
-
-function dup(template) {
-  template = template || { name: '', uri: '', fields: [] }
-  return {
-    ...template, fields: [...template.fields]
-  }
-}
 
 class TemplateEditor extends PureComponent {
   constructor(props) {
     super(props)
-    this.state = dup()
+    this.state = makeTemplate()
+  }
+
+  componentWillReceiveProps({ templates }) {
+    if (this.state.id != null && this.props.templates !== templates) {
+      this.setState(makeTemplate(templates.find(t => t.id === this.state.id)))
+    }
+  }
+
+  get isPristine() {
+    return this.state.created == null
+  }
+
+  get isValid() {
+    return this.state.id !== '' && this.state.name !== ''
+  }
+
+  handleTemplateCopy = () => {
+    this.setState(makeTemplate({
+      ...TEMPLATE,
+      name: this.state.name,
+      type: this.state.type,
+      creator: this.state.creator,
+      description: this.state.description,
+      fields: this.state.fields.map((f, idx) => ({
+        id: -(idx + 1),
+        ...pick(f, ['property', 'datatype', 'isRequired', 'hint', 'constant'])
+      }))
+    }))
+  }
+
+  handleTemplateDelete = () => {
+    if (this.state.id) {
+      this.props.onDelete([this.state.id])
+      this.setState(makeTemplate())
+    }
+  }
+
+  handleTemplateCreate = () => {
+    const { id, name, type, creator, description, fields } = this.state
+
+    this.props.onCreate({
+      [id]: {
+        id,
+        name,
+        type,
+        creator,
+        description,
+        fields: fields.map(field => omit(field, ['id']))
+      }
+    })
+  }
+
+  handleTemplateClear = () => {
+    this.handleTemplateChange()
   }
 
   handleTemplateChange = (template) => {
-    this.setState(dup(template))
+    this.setState(makeTemplate(template))
   }
 
   handleTemplateUpdate = (template) => {
-    this.setState(template)
-  }
+    if (this.isPristine) {
+      this.setState(template)
 
-  handleFieldInsert = (field) => {
-    const at = this.state.fields.indexOf(field)
-
-    this.setState({
-      fields: insert(this.state.fields, at + 1, {
-        property: { uri: '' }
+    } else {
+      this.props.onSave({
+        id: this.state.id, ...template
       })
-    })
-  }
-
-  handleFieldRemove = (field) => {
-    this.setState({
-      fields: remove(this.state.fields, field)
-    })
-  }
-
-  handleSort = () => {
-  }
-
-  handleSortPreview = (from, to, offset) => {
-    this.setState({
-      fields: move(this.state.fields, from, to, offset)
-    })
-  }
-
-  handleSortReset = () => {
+    }
   }
 
   render() {
-    return (
-      <div className="template editor form-horizontal">
-        <header className="template-header">
-          <TemplateControl
-            selected={this.state.uri}
-            templates={this.props.templates}
-            onChange={this.handleTemplateChange}/>
-          <FormField
-            id="template.name"
-            name="name"
-            value={this.state.name}
-            isCompact
-            onChange={this.handleTemplateUpdate}/>
-          <FormField
-            id="template.uri"
-            name="uri"
-            value={this.state.uri}
-            onChange={this.handleTemplateUpdate}/>
-          <FormGroup>
-            <div className="col-12 text-right">
-              <button className="btn btn-primary min-width">
-                <FormattedMessage id="prefs.template.save"/>
-              </button>
-            </div>
-          </FormGroup>
-        </header>
+    const { isPristine } = this
 
-        <ul className="template-field-list">
-          {this.state.fields.map((field) =>
-            <TemplateField
-              key={field.property.uri}
-              field={field}
-              properties={this.props.properties}
-              onInsert={this.handleFieldInsert}
-              onRemove={this.handleFieldRemove}
-              onSort={this.handleSort}
-              onSortPreview={this.handleSortPreview}
-              onSortReset={this.handleSortReset}/>)}
-        </ul>
+    return (
+      <div className="scroll-container">
+        <div className="template editor form-horizontal">
+          <header className="template-header">
+            <TemplateToolbar
+              selected={this.state.id}
+              templates={this.props.templates}
+              isProtected={this.state.isProtected}
+              onChange={this.handleTemplateChange}
+              onClear={this.handleTemplateClear}
+              onCopy={this.handleTemplateCopy}
+              onDelete={this.handleTemplateDelete}
+              onExport={this.props.onExport}
+              onImport={this.props.onImport}/>
+            <FormField
+              id="template.name"
+              name="name"
+              value={this.state.name}
+              isCompact
+              isRequired
+              isDisabled={this.state.isProtected}
+              tabIndex={0}
+              onChange={isPristine ? undefined : this.handleTemplateUpdate}
+              onInputChange={isPristine ?
+                this.handleTemplateUpdate : undefined}
+              size={9}/>
+            <FormField
+              id="template.id"
+              name="id"
+              value={this.state.id}
+              isCompact
+              isDisabled={this.state.isProtected || !isPristine}
+              tabIndex={0}
+              onInputChange={this.handleTemplateUpdate}
+              size={9}/>
+            <FormSelect
+              id="template.type"
+              name="type"
+              value={this.state.type}
+              options={this.props.types}
+              tabIndex={0}
+              isCompact
+              isDisabled={this.state.isProtected || !isPristine}
+              onChange={this.handleTemplateUpdate}
+              size={9}/>
+            <FormField
+              id="template.creator"
+              name="creator"
+              value={this.state.creator}
+              isCompact
+              isDisabled={this.state.isProtected}
+              tabIndex={0}
+              onChange={this.handleTemplateUpdate}
+              size={9}/>
+            <FormField
+              id="template.description"
+              name="description"
+              value={this.state.description}
+              isDisabled={this.state.isProtected}
+              tabIndex={0} onChange={this.handleTemplateUpdate}
+              size={9}/>
+            {isPristine &&
+              <FormGroup>
+                <div className="col-12 text-right">
+                  <button
+                    className="btn btn-primary min-width"
+                    disabled={!this.isValid}
+                    tabIndex={0}
+                    onClick={this.handleTemplateCreate}>
+                    <FormattedMessage id="prefs.template.create"/>
+                  </button>
+                </div>
+              </FormGroup>}
+          </header>
+          <TemplateFieldList
+            template={this.state.id}
+            fields={this.state.fields}
+            properties={this.props.properties}
+            isDisabled={this.state.isProtected || isPristine}
+            onFieldAdd={this.props.onFieldAdd}
+            onFieldOrder={this.props.onFieldOrder}
+            onFieldRemove={this.props.onFieldRemove}
+            onFieldSave={this.props.onFieldSave}/>
+        </div>
       </div>
     )
   }
 
   static propTypes = {
     properties: arrayOf(shape({
-      uri: string.isRequired
+      id: string.isRequired
     })).isRequired,
     templates: arrayOf(shape({
-      uri: string.isRequired,
+      id: string.isRequired,
       name: string
     })).isRequired,
+    types: arrayOf(string).isRequired,
     onCreate: func.isRequired,
+    onDelete: func.isRequired,
+    onExport: func.isRequired,
+    onFieldAdd: func.isRequired,
+    onFieldOrder: func.isRequired,
+    onFieldRemove: func.isRequired,
+    onFieldSave: func.isRequired,
+    onImport: func.isRequired,
     onSave: func.isRequired
+  }
+
+  static defaultProps = {
+    types: [TYPE.ITEM, TYPE.PHOTO]
   }
 }
 
 module.exports = {
-  TemplateEditor
+  TemplateEditor: connect(
+    state => ({
+      properties: getPropertyList(state),
+      templates: getTemplateList(state),
+    }),
+
+    dispatch => ({
+      onCreate(...args) {
+        dispatch(actions.ontology.template.create(...args))
+      },
+
+      onDelete(...args) {
+        dispatch(actions.ontology.template.delete(...args))
+      },
+
+      onExport(...args) {
+        dispatch(actions.ontology.template.export(...args))
+      },
+
+      onFieldAdd(...args) {
+        dispatch(actions.ontology.template.field.add(...args))
+      },
+
+      onFieldOrder(...args) {
+        dispatch(actions.ontology.template.field.order(...args))
+      },
+
+      onFieldRemove(...args) {
+        dispatch(actions.ontology.template.field.remove(...args))
+      },
+
+      onFieldSave(...args) {
+        dispatch(actions.ontology.template.field.save(...args))
+      },
+
+      onImport() {
+        dispatch(actions.ontology.template.import())
+      },
+
+      onSave(...args) {
+        dispatch(actions.ontology.template.save(...args))
+      }
+    })
+  )(TemplateEditor)
 }

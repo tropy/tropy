@@ -27,6 +27,7 @@ const DESKTOP = resolve(
 )
 
 const root = resolve(process.execPath, '..', '..')
+const mime = resolve(process.execPath, '..', 'res', 'icons', 'mime')
 const update = join(root, 'Update.exe')
 const exe = basename(process.execPath)
 
@@ -41,6 +42,43 @@ function link(path, force = false) {
     iconIndex: 0,
     appUserModelId: 'org.tropy.app'
   })
+}
+
+function setMimeType(...types) {
+  const { Registry } = require('winreg')
+  const { DEFAULT_VALUE, HKCU, REG_SZ } = Registry
+
+  return Promise.all(types.map(type => {
+    return Promise((resolve, reject) => {
+      const icon = join(mime, `${type}.ico`)
+      const key = `\\Software\\Classes\\.${type}\\DefaultIcon`
+
+      const reg = new Registry({ hive: HKCU, key })
+
+      reg.set(DEFAULT_VALUE, REG_SZ, icon, (err) => {
+        if (err != null) reject(err)
+        else resolve()
+      })
+    })
+  }))
+}
+
+function clearMimeType(...types) {
+  const { Registry } = require('winreg')
+  const { HKCU } = Registry
+
+  return Promise.all(types.map(type => {
+    return Promise((resolve, reject) => {
+      const key = `\\Software\\Classes\\.${type}`
+
+      const reg = new Registry({ hive: HKCU, key })
+
+      reg.clear((err) => {
+        if (err != null) reject(err)
+        else resolve()
+      })
+    })
+  }))
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -63,7 +101,9 @@ function handleSquirrelEvent() {
       case '--squirrel-install':
         link(DESKTOP, true)
         link(START_MENU, true)
-        app.quit()
+        setMimeType('tpy', 'ttp')
+          .then(() => app.quit, () => app.quit())
+
         return true
       case '--squirrel-updated':
         link(DESKTOP)
@@ -77,7 +117,8 @@ function handleSquirrelEvent() {
           rm(app.getPath('userData'))
 
         } finally {
-          app.quit()
+          clearMimeType('tpy', 'ttp')
+            .then(() => app.quit, () => app.quit())
         }
         return true
       case '--squirrel-obsolete':

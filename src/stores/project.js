@@ -6,29 +6,28 @@ const {
 
 const { default: thunk } = require('redux-thunk')
 const { default: createSagaMiddleware } = require('redux-saga')
-
 const { log: logger, warn, debug } = require('../common/log')
 const { seq, debounce, throttle, log } = require('../middleware')
 
 const {
-  intl,
-  nav,
-  ui,
   activities,
   columns,
   edit,
-  photos,
-  project,
-  properties,
-  qr,
+  history,
+  intl,
+  items,
   keymap,
   lists,
-  notes,
-  items,
   metadata,
+  nav,
+  notes,
+  ontology,
+  photos,
+  project,
+  qr,
+  settings,
   tags,
-  history,
-  vocab
+  ui,
 } = require('../reducers')
 
 const devtools = (ARGS.dev || ARGS.debug) &&
@@ -46,24 +45,24 @@ module.exports = {
     })
 
     let reducer = combineReducers({
-      intl,
-      nav,
-      ui,
       activities,
       columns,
       edit,
-      photos,
-      project,
-      properties,
-      qr,
+      history,
+      intl,
+      items,
       keymap,
       lists,
-      notes,
-      items,
       metadata,
+      nav,
+      notes,
+      ontology,
+      photos,
+      project,
+      qr,
+      settings,
       tags,
-      history,
-      vocab
+      ui,
     })
 
     let middleware = applyMiddleware(

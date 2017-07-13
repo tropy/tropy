@@ -13,6 +13,16 @@ function withWindow(cmd, fn) {
   }
 }
 
+const CHECK = {
+  hasMultiplePhotos(_, e) {
+    return e && e.target && e.target.photos && e.target.photos.length > 1
+  }
+}
+
+function check(item, event) {
+  return CHECK[item.condition] && CHECK[item.condition](item, event)
+}
+
 
 class Menu {
   constructor(app) {
@@ -67,6 +77,24 @@ class Menu {
       if (item.label) {
         item.label = item.label
           .replace(/%(\w+)/g, (_, prop) => this.app[prop])
+      }
+
+      if (item.condition) {
+        item.enabled = check(item, ...params)
+      }
+
+      if ('color' in item) {
+        const { target } = params[0]
+
+        if (item.color != null) {
+          item.icon = res.Icons.color(item.color)
+        }
+
+        item.checked = target.color === item.color
+        item.click = this.responder('app:save-tag', {
+          id: target.id,
+          color: item.color
+        })
       }
 
       switch (item.id) {
@@ -144,11 +172,10 @@ class Menu {
 
           break
         }
-
       }
 
       if (item.submenu) {
-        item.submenu = this.translate(item.submenu)
+        item.submenu = this.translate(item.submenu, ...params)
       }
 
       return item
@@ -163,8 +190,16 @@ class AppMenu extends Menu {
   }
 
   reload() {
+    const old = this.menu
+
     this.menu = this.build(this.template)
-    return this.update()
+    this.update()
+
+    if (old != null) {
+      old.destroy()
+    }
+
+    return this
   }
 
   update() {

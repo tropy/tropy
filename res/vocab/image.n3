@@ -1,0 +1,93 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+<http://iiif.io/api/image/2#tile>
+  a rdf:Property ;
+  rdfs:label "tile" ;
+  rdfs:range <http://iiif.io/api/image/2#Tile> ;
+  rdfs:domain <http://iiif.io/api/image/2#Image> ;
+  rdfs:isDefinedBy <http://iiif.io/api/image/2#> .
+
+<http://iiif.io/api/image/2#>
+  a owl:Ontology ;
+  owl:versionInfo "2015-12-13 23:00:00Z" .
+
+<http://iiif.io/api/image/2#corsFeature> a <http://iiif.io/api/image/2#Feature> .
+<http://iiif.io/api/image/2#regionByPxFeature> a <http://iiif.io/api/image/2#Feature> .
+<http://iiif.io/api/image/2#sizeByWFeature> a <http://iiif.io/api/image/2#Feature> .
+<http://iiif.io/api/image/2#sizeByWHFeature> a <http://iiif.io/api/image/2#Feature> .
+<http://iiif.io/api/image/2#scaleFactor>
+  a rdf:Property ;
+  rdfs:isDefinedBy <http://iiif.io/api/image/2#> ;
+  rdfs:label "scaleFactor" ;
+  rdfs:domain <http://iiif.io/api/image/2#Tile> .
+
+<http://iiif.io/api/image/2#size>
+  a rdf:Property ;
+  rdfs:isDefinedBy <http://iiif.io/api/image/2#> ;
+  rdfs:domain <http://iiif.io/api/image/2#Image> ;
+  rdfs:label "size" ;
+  rdfs:range <http://iiif.io/api/image/2#Size> .
+
+<http://iiif.io/api/image/2#format>
+  a rdf:Property ;
+  rdfs:isDefinedBy <http://iiif.io/api/image/2#> ;
+  rdfs:domain <http://iiif.io/api/image/2#ImageProfile> ;
+  rdfs:label "format" .
+
+<http://iiif.io/api/image/2#quality>
+  a rdf:Property ;
+  rdfs:label "quality" ;
+  rdfs:isDefinedBy <http://iiif.io/api/image/2#> ;
+  rdfs:domain <http://iiif.io/api/image/2#ImageProfile> .
+
+<http://iiif.io/api/image/2#sizeByHFeature> a <http://iiif.io/api/image/2#Feature> .
+<http://iiif.io/api/image/2#mirroringFeature> a <http://iiif.io/api/image/2#Feature> .
+<http://iiif.io/api/image/2#supports>
+  a rdf:Property ;
+  rdfs:range <http://iiif.io/api/image/2#Feature> ;
+  rdfs:isDefinedBy <http://iiif.io/api/image/2#> ;
+  rdfs:domain <http://iiif.io/api/image/2#ImageProfile> ;
+  rdfs:label "supports" .
+
+<http://iiif.io/api/image/2#arbitraryRotationFeature> a <http://iiif.io/api/image/2#Feature> .
+<http://iiif.io/api/image/2#jsonLdMediaTypeFeature> a <http://iiif.io/api/image/2#Feature> .
+<http://iiif.io/api/image/2#baseUriRedirectFeature> a <http://iiif.io/api/image/2#Feature> .
+<http://iiif.io/api/image/2#sizeByWHListedFeature> a <http://iiif.io/api/image/2#Feature> .
+<http://iiif.io/api/image/2#sizeByForcedWHFeature> a <http://iiif.io/api/image/2#Feature> .
+<http://iiif.io/api/image/2#rotationBy90sFeature> a <http://iiif.io/api/image/2#Feature> .
+<http://iiif.io/api/image/2#regionSquareFeature> a <http://iiif.io/api/image/2#Feature> .
+<http://iiif.io/api/image/2#sizeByPctFeature> a <http://iiif.io/api/image/2#Feature> .
+<http://iiif.io/api/image/2#regionByPctFeature> a <http://iiif.io/api/image/2#Feature> .
+<http://iiif.io/api/image/2#sizeAboveFullFeature> a <http://iiif.io/api/image/2#Feature> .
+<http://iiif.io/api/image/2#profileLinkHeaderFeature> a <http://iiif.io/api/image/2#Feature> .
+<http://iiif.io/api/image/2#canonicalLinkHeaderFeature> a <http://iiif.io/api/image/2#Feature> .
+<http://iiif.io/api/image/2#Feature>
+  a rdfs:Class ;
+  rdfs:isDefinedBy <http://iiif.io/api/image/2#> ;
+  rdfs:comment "" ;
+  rdfs:label "Feature" .
+
+<http://iiif.io/api/image/2#ImageProfile>
+  a rdfs:Class ;
+  rdfs:label "ImageProfile" ;
+  rdfs:isDefinedBy <http://iiif.io/api/image/2#> ;
+  rdfs:comment "" .
+
+<http://iiif.io/api/image/2#Size>
+  a rdfs:Class ;
+  rdfs:isDefinedBy <http://iiif.io/api/image/2#> ;
+  rdfs:label "Size" ;
+  rdfs:comment "" .
+
+<http://iiif.io/api/image/2#Image>
+  a rdfs:Class ;
+  rdfs:comment "" ;
+  rdfs:isDefinedBy <http://iiif.io/api/image/2#> ;
+  rdfs:label "Image" .
+
+<http://iiif.io/api/image/2#Tile>
+  a rdfs:Class ;
+  rdfs:isDefinedBy <http://iiif.io/api/image/2#> ;
+  rdfs:label "Tile" .

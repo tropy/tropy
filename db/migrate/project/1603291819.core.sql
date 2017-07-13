@@ -3,24 +3,28 @@
 CREATE TABLE project (
   project_id  TEXT     NOT NULL PRIMARY KEY,
   name        TEXT     NOT NULL,
-  settings             NOT NULL DEFAULT '{}',
   created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modified    NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  opened      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  locked      BOOLEAN  NOT NULL DEFAULT FALSE,
 
   CHECK (project_id != ''),
   CHECK (name != '')
 
 ) WITHOUT ROWID;
 
+CREATE TABLE access (
+  uuid        TEXT     NOT NULL,
+  version     TEXT     NOT NULL,
+  path        TEXT     NOT NULL,
+  opened      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  closed      NUMERIC,
+  CHECK (uuid != '' AND version != '' AND path != '')
+);
 
 -- Metatable for items, photos, and selections.
 -- A field `id` in the database always references
 -- a row in the subjects table.
 CREATE TABLE subjects (
   id           INTEGER  PRIMARY KEY,
-  template     TEXT     NOT NULL DEFAULT 'https://tropy.org/schema/v1/templates/item',
+  template     TEXT     NOT NULL DEFAULT 'https://tropy.org/v1/templates/item',
   type         TEXT,
   created      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -33,9 +37,22 @@ CREATE TABLE images (
   width   INTEGER  NOT NULL DEFAULT 0,
   height  INTEGER  NOT NULL DEFAULT 0,
   angle   NUMERIC  NOT NULL DEFAULT 0,
-  mirror  BOOLEAN  NOT NULL DEFAULT FALSE,
+  mirror  BOOLEAN  NOT NULL DEFAULT 0,
 
   CHECK (angle >= 0 AND angle <= 360)
+) WITHOUT ROWID;
+
+
+CREATE TABLE photos (
+  id           INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
+  item_id      INTEGER  NOT NULL REFERENCES items ON DELETE CASCADE,
+  position     INTEGER,
+  path         TEXT     NOT NULL,
+  protocol     TEXT     NOT NULL DEFAULT 'file',
+  mimetype     TEXT     NOT NULL,
+  checksum     TEXT     NOT NULL,
+  orientation  INTEGER  NOT NULL DEFAULT 1,
+  metadata     TEXT     NOT NULL DEFAULT '{}'
 ) WITHOUT ROWID;
 
 
@@ -43,25 +60,6 @@ CREATE TABLE items (
   id              INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   cover_image_id  INTEGER  REFERENCES images ON DELETE SET NULL
 ) WITHOUT ROWID;
-
-
-CREATE TABLE metadata_types (
-  type_name    TEXT  NOT NULL PRIMARY KEY COLLATE NOCASE,
-  type_schema  TEXT  NOT NULL UNIQUE,
-
-  CHECK (type_schema != ''),
-  CHECK (type_name != '')
-
-) WITHOUT ROWID;
-
-INSERT INTO metadata_types (type_name, type_schema) VALUES
-  ('text', 'https://schema.org/Text'),
-  ('date', 'https://tropy.org/schema/v1/core#date'),
-  ('name', 'https://tropy.org/schema/v1/core#name'),
-  ('boolean', 'https://schema.org/Boolean'),
-  ('number', 'https://schema.org/Number'),
-  ('location', 'https://schema.org/GeoCoordinates'),
-  ('url', 'https://schema.org/URL');
 
 
 CREATE TABLE metadata (
@@ -80,11 +78,12 @@ CREATE TABLE metadata (
 
 CREATE TABLE metadata_values (
   value_id   INTEGER  PRIMARY KEY,
-  type_name  TEXT     NOT NULL REFERENCES metadata_types ON UPDATE CASCADE,
+  datatype   TEXT     NOT NULL,
   text                NOT NULL,
   data       TEXT,
 
-  UNIQUE (type_name, text)
+  CHECK (datatype != ''),
+  UNIQUE (datatype, text)
 );
 
 
@@ -157,3 +156,5 @@ CREATE TABLE trash (
 
   CHECK (reason IN ('user', 'auto', 'merge'))
 ) WITHOUT ROWID;
+
+

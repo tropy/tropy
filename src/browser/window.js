@@ -79,7 +79,6 @@ module.exports = {
         }
       })
 
-
     for (let event of EVENTS) {
       win.on(event, () => { win.webContents.send('win', event) })
     }

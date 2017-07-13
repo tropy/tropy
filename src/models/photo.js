@@ -1,7 +1,7 @@
 'use strict'
 
 const { TEMPLATE } = require('../constants/photo')
-const { DC } = require('../constants/properties')
+const { DC } = require('../constants')
 const { all } = require('bluebird')
 const { text, date } = require('../value')
 const metadata = require('./metadata')
@@ -15,7 +15,7 @@ const skel = (id) => ({
 
 module.exports = {
 
-  async create(db, { item, image, template }) {
+  async create(db, template, { item, image, data }) {
     const {
       path, checksum, mimetype, width, height, orientation
     } = image
@@ -36,8 +36,9 @@ module.exports = {
       metadata.update(db, {
         ids: [id],
         data: {
-          [DC.TITLE]: text(image.title),
-          [DC.DATE]: date(image.date)
+          [DC.title]: text(image.title),
+          [DC.date]: date(image.date),
+          ...data
         }
       })
     ])
@@ -66,17 +67,17 @@ module.exports = {
           }
         ),
 
-        db.each(`
-          SELECT id, photo_id AS photo
-            FROM selections
-              LEFT OUTER JOIN trash USING (id)
-            WHERE photo_id IN (${ids})
-              AND deleted IS NULL
-            ORDER BY photo_id, position`,
-          ({ id, photo }) => {
-            photos[photo].selections.push(id)
-          }
-        ),
+        //db.each(`
+        //  SELECT id, photo_id AS photo
+        //    FROM selections
+        //      LEFT OUTER JOIN trash USING (id)
+        //    WHERE photo_id IN (${ids})
+        //      AND deleted IS NULL
+        //    ORDER BY photo_id, position`,
+        //  ({ id, photo }) => {
+        //    photos[photo].selections.push(id)
+        //  }
+        //),
 
         db.each(`
           SELECT id, note_id AS note

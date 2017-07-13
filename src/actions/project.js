@@ -34,7 +34,7 @@ module.exports = {
       type: SAVE,
       payload,
       meta: {
-        async: true,
+        cmd: 'project',
         history: 'add',
         ...meta
       }

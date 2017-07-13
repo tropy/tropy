@@ -3,8 +3,6 @@
 // --------------------------------------------------
 
 .template.editor {
-  margin-top: $space-lg;
-
   .template-header {
     padding: 0 54px 0 $space-xs;
   }
@@ -49,6 +47,11 @@
 
     &.dragging {
       opacity: 0;
+    }
+
+    .btn-group {
+      flex: 0 0 auto;
+      width: 2 * ($space-md + $space-min);
     }
 
     .btn-icon {

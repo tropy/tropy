@@ -7,15 +7,21 @@ const { Command } = require('./command')
 const { prompt, openImages, fail  } = require('../dialog')
 const { Image } = require('../image')
 const { imagePath } = require('../common/cache')
-const { DC } = require('../constants/properties')
 const { text } = require('../value')
 const intl = require('../selectors/intl')
 const act = require('../actions')
 const mod = require('../models')
-const { mixed, pluck } = require('../common/util')
+const { get, pluck, pick, remove } = require('../common/util')
 const { map, cat, filter, into, compose } = require('transducers.js')
-const { ITEM } = require('../constants')
+const { ITEM, DC } = require('../constants')
+const { keys } = Object
 const { isArray } = Array
+
+const {
+  getItemTemplate,
+  getPhotoTemplate,
+  getTemplateValues
+} = require('../selectors')
 
 
 class Create extends Command {
@@ -24,7 +30,12 @@ class Create extends Command {
   *exec() {
     const { db } = this.options
 
-    const item = yield call(db.transaction, tx => mod.item.create(tx))
+    const template = yield select(getItemTemplate)
+    const data = getTemplateValues(template)
+
+    const item = yield call(db.transaction, tx =>
+      mod.item.create(tx, template.id, data))
+
     yield put(act.item.insert(item))
 
     this.undo = act.item.delete([item.id])
@@ -49,6 +60,14 @@ class Import extends Command {
 
     if (!files) return
 
+    const [itemp, ptemp] = yield all([
+      select(getItemTemplate),
+      select(getPhotoTemplate)
+    ])
+
+    const idata = getTemplateValues(itemp)
+    const pdata = getTemplateValues(ptemp)
+
     for (let i = 0, ii = files.length; i < ii; ++i) {
       let file, image, item, photo
 
@@ -57,11 +76,13 @@ class Import extends Command {
         image = yield call(Image.read, file)
 
         yield call(db.transaction, async tx => {
-          item = await mod.item.create(tx, {
-            [DC.TITLE]: text(image.title)
+          item = await mod.item.create(tx, itemp.id, {
+            [DC.title]: text(image.title), ...idata
           })
 
-          photo = await mod.photo.create(tx, { item: item.id, image })
+          photo = await mod.photo.create(tx, ptemp.id, {
+            item: item.id, image, data: pdata
+          })
 
           if (list) {
             await mod.list.items.add(tx, list, [item.id])
@@ -96,7 +117,7 @@ class Import extends Command {
         warn(`Failed to import "${file}": ${error.message}`)
         verbose(error.stack)
 
-        fail(error)
+        fail(error, this.action.type)
       }
     }
 
@@ -203,38 +224,72 @@ class Save extends Command {
 
   *exec() {
     const { db } = this.options
-    const { id: ids, property, value } = this.action.payload
+    const { payload } = this.action
 
-    let original = yield select(({ items }) =>
-      pluck(items, ids).map(item => item[property]))
+    if (!isArray(payload)) {
+      const { id: ids, property, value } = this.action.payload
 
-    if (!mixed(original)) {
-      original = original[0]
-    }
+      assert.equal(property, 'template')
 
-    if (isArray(value)) {
-      assert.equal(ids.length, value.length)
+      const state = yield select(({ items, ontology, metadata }) => ({
+        items, templates: ontology.template, metadata
+      }))
 
-      const data = {}
+      const props = { [property]: value }
+      const template = state.templates[value]
+
+      assert(template != null, 'unknown template')
+
+      const data = getTemplateValues(template)
+      const datakeys = data != null ? keys(data) : []
+      const hasData = datakeys.length > 0
+
+      const original = ids.map(id => [
+        id,
+        get(state.items, [id, property]),
+        hasData ? pick(state.metadata[id], datakeys, {}, true) : null
+      ])
 
       yield call(db.transaction, async tx => {
-        for (let i = 0; i < ids.length; ++i) {
-          let id = ids[i]
-          data[id] = { [property]: value[i] }
-          await mod.item.update(tx, [id], data[id])
+        await mod.item.update(tx, ids, props)
+
+        if (hasData) {
+          await mod.metadata.update(tx, { ids, data })
         }
       })
 
-      yield put(act.item.bulk.update(data))
+      yield put(act.item.bulk.update([ids, props]))
+
+      if (hasData) {
+        yield put(act.metadata.update({ ids, data }))
+      }
+
+      this.undo = { ...this.action, payload: original }
 
     } else {
-      let data = { [property]: value }
 
-      yield call(mod.item.update, db, ids, data)
-      yield put(act.item.bulk.update([ids, data]))
+      let hasData = false
+      let changed = { props: {}, data: {} }
+
+      yield call(db.transaction, async tx => {
+        for (let [id, template, data] of payload) {
+          changed.props[id] = { template }
+          await mod.item.update(tx, [id], changed.props[id])
+
+          if (data) {
+            hasData = true
+            changed.data[id] = data
+            await mod.metadata.update(tx, { ids: [id], data })
+          }
+        }
+      })
+
+      yield put(act.item.bulk.update(changed.props))
+
+      if (hasData) {
+        yield put(act.metadata.merge(changed.data))
+      }
     }
-
-    this.undo = act.item.save({ id: ids, property, value: original })
   }
 }
 
@@ -289,6 +344,91 @@ class Split extends Command {
   }
 }
 
+class Explode extends Command {
+  static get action() { return ITEM.EXPLODE }
+
+  *exec() {
+    const { db } = this.options
+    const { payload } = this.action
+
+    let item = yield select(state => ({
+      ...state.items[payload.id]
+    }))
+
+    let photos = payload.photos || item.photos.slice(1)
+    let items = {}
+    let moves = {}
+
+    if (payload.items == null) {
+      yield call(db.transaction, async tx => {
+        for (let photo of photos) {
+          let dup = await mod.item.dup(tx, item.id)
+
+          await mod.photo.move(tx, { ids: [photo], item: dup.id })
+          moves[photo] = { item: dup.id }
+          dup.photos.push(photo)
+
+          items[dup.id] = dup
+        }
+      })
+
+    } else {
+      items = payload.items
+      let ids = keys(items)
+
+      assert(ids.length === photos.length)
+
+      yield call(db.transaction, async tx => {
+        await mod.item.restore(tx, ids)
+
+        for (let i = 0, ii = photos.length; i < ii; ++i) {
+          let pid = photos[i]
+          let iid = ids[i]
+
+          await mod.photo.move(tx, { ids: [pid], item: iid })
+          moves[pid] = { item: iid }
+        }
+      })
+    }
+
+    yield put(act.photo.bulk.update(moves))
+
+    this.undo = act.item.implode({
+      item, items: keys(items)
+    })
+
+    this.redo = act.item.explode({
+      id: item.id, photos, items
+    })
+
+    return {
+      ...items,
+      [item.id]: {
+        ...item, photos: remove(item.photos, ...photos)
+      }
+    }
+  }
+}
+
+class Implode extends Command {
+  static get action() { return ITEM.IMPLODE }
+
+  *exec() {
+    const { db } = this.options
+    const { item, items } = this.action.payload
+    const { id, photos } = item
+
+    yield call(db.transaction, async tx =>
+      mod.item.implode(tx, { id, photos, items }))
+
+    yield put(act.photo.bulk.update([photos, { item: id }]))
+    yield put(act.item.remove(items))
+    yield put(act.item.select({ items: [id] }, { mod: 'replace' }))
+
+    return item
+  }
+}
+
 
 class ToggleTags extends Command {
   static get action() { return ITEM.TAG.TOGGLE }
@@ -299,21 +439,21 @@ class ToggleTags extends Command {
 
     const current = yield select(({ items }) => items[id].tags)
 
-    const add = []
-    const remove = []
+    const added = []
+    const removed = []
 
     for (let tag of tags) {
-      (current.includes(tag) ? remove : add).push(tag)
+      (current.includes(tag) ? removed : added).push(tag)
     }
 
-    if (add.length) {
-      yield call(mod.item.tags.add, db, add.map(tag => ({ id, tag })))
-      yield put(act.item.tags.insert({ id, tags: add }))
+    if (added.length) {
+      yield call(mod.item.tags.add, db, added.map(tag => ({ id, tag })))
+      yield put(act.item.tags.insert({ id, tags: added }))
     }
 
-    if (remove.length) {
-      yield call(mod.item.tags.remove, db, { id, tags: remove })
-      yield put(act.item.tags.remove({ id, tags: remove }))
+    if (removed.length) {
+      yield call(mod.item.tags.remove, db, { id, tags: removed })
+      yield put(act.item.tags.remove({ id, tags: removed }))
     }
 
     this.undo = this.action
@@ -374,7 +514,9 @@ module.exports = {
   Create,
   Delete,
   Destroy,
+  Explode,
   Import,
+  Implode,
   Load,
   Merge,
   Split,

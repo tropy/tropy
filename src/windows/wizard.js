@@ -24,11 +24,9 @@ all([
       <Main store={store}><WizardContainer/></Main>,
       $('main')
     )
-
-    win.show()
   })
 
-dialog.start()
+dialog.start(store)
 win.unloaders.push(dialog.stop)
 
 if (ARGS.dev || ARGS.debug) {

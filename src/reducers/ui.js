@@ -1,6 +1,6 @@
 'use strict'
 
-const { UI } = require('../constants')
+const { UI, SASS } = require('../constants')
 const { merge } = require('../common/util')
 
 const init = {
@@ -12,10 +12,12 @@ const init = {
       { height: 20, isClosed: false }
     ],
     tab: 'metadata',
-    width: 320,
+    width: SASS.PANEL.DEFAULT_WIDTH,
     zoom: 0
   },
-  sidebar: { width: 250 },
+  sidebar: {
+    width: SASS.SIDEBAR.DEFAULT_WIDTH
+  },
   zoom: 0
 }
 

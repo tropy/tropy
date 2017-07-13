@@ -5,7 +5,7 @@ const PropTypes = require('prop-types')
 const { number, object, func } = PropTypes
 const { PhotoListItem } = require('./list-item')
 const { PhotoIterator } = require('./iterator')
-const { DC } = require('../../constants/properties')
+const { DC } = require('../../constants')
 const { on, off } = require('../../dom')
 const cx = require('classnames')
 
@@ -53,7 +53,7 @@ class PhotoList extends PhotoIterator {
             key={photo.id}
             photo={photo}
             data={data[photo.id]}
-            title={DC.TITLE}
+            title={DC.title}
             isEditing={this.isEditing(photo)}
             onChange={onChange}
             onEdit={onEdit}

@@ -2,29 +2,37 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const { CoverImage } = require('./cover-image')
 const { Editable } = require('../editable')
+const { TagColors } = require('../colors')
 const { createClickHandler } = require('../util')
 const { meta } = require('../../common/os')
 const cn = require('classnames')
-const { bool, shape, string, number, object, arrayOf, func } = PropTypes
+const {
+  arrayOf, bool, func, number, object, shape, string
+} = require('prop-types')
 
 
 class ItemTableCell extends PureComponent {
 
+  get style() {
+    return {
+      width: `${this.props.width}%`
+    }
+  }
+
   get value() {
     const { data, property } = this.props
 
-    return data[property.uri] ?
-      data[property.uri].text : null
+    return data[property.id] ?
+      data[property.id].text : null
   }
 
   get type() {
     const { data, property } = this.props
 
-    return data[property.uri] ?
-      data[property.uri].type : (property.type || 'text')
+    return data[property.id] ?
+      data[property.id].type : (property.type || 'text')
   }
 
 
@@ -32,7 +40,7 @@ class ItemTableCell extends PureComponent {
     this.props.onChange({
       id: this.props.item.id,
       data: {
-        [this.props.property.uri]: { text, type: this.type }
+        [this.props.property.id]: { text, type: this.type }
       }
     })
   }
@@ -54,7 +62,7 @@ class ItemTableCell extends PureComponent {
     onSingleClick: () => {
       if (!this.props.isEditing) {
         this.props.onEdit({
-          column: { [this.props.item.id]: this.props.property.uri }
+          column: { [this.props.item.id]: this.props.property.id }
         })
       }
     }
@@ -66,33 +74,37 @@ class ItemTableCell extends PureComponent {
       cache,
       photos,
       size,
-      width,
+      tags,
       isEditing,
       isDisabled,
-      hasCoverImage,
+      isMainColumn,
       onCancel
     } = this.props
 
     return (
       <td
         className={cn({ metadata: true, [this.type]: true })}
-        style={{ width }}
+        style={this.style}
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>
-
-        {hasCoverImage &&
-          <CoverImage
-            item={item}
-            cache={cache}
-            photos={photos}
-            size={size}/>}
-
-        <Editable
-          value={this.value}
-          isEditing={isEditing}
-          isDisabled={isDisabled}
-          onCancel={onCancel}
-          onChange={this.handleChange}/>
+        <div className="flex-row center">
+          {isMainColumn &&
+            <CoverImage
+              item={item}
+              cache={cache}
+              photos={photos}
+              size={size}/>}
+          <Editable
+            value={this.value}
+            isEditing={isEditing}
+            isDisabled={isDisabled}
+            onCancel={onCancel}
+            onChange={this.handleChange}/>
+          {isMainColumn &&
+            <TagColors
+              selection={item.tags}
+              tags={tags}/>}
+        </div>
       </td>
     )
   }
@@ -102,10 +114,10 @@ class ItemTableCell extends PureComponent {
     isDisabled: bool,
     isSelected: bool,
 
-    hasCoverImage: bool,
+    isMainColumn: bool,
 
     property: shape({
-      uri: string.isRequired,
+      id: string.isRequired,
       type: string,
     }),
 
@@ -116,10 +128,11 @@ class ItemTableCell extends PureComponent {
     }).isRequired,
 
     data: object.isRequired,
-    photos: object.isRequired,
+    photos: object,
+    tags: object,
 
     cache: string.isRequired,
-    width: string.isRequired,
+    width: number.isRequired,
     size: number.isRequired,
 
     onCancel: func.isRequired,

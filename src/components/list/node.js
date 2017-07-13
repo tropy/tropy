@@ -159,7 +159,7 @@ const DropTargetSpec = {
     }
   },
 
-  canDrop({ list }, monitor) {
+  canDrop(_, monitor) {
     const type = monitor.getItemType()
     const item = monitor.getItem()
 

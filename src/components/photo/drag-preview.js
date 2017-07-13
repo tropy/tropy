@@ -5,7 +5,8 @@ const { PureComponent } = React
 const PropTypes = require('prop-types')
 const { Thumbnail } = require('./thumbnail')
 const cx = require('classnames')
-const { string, arrayOf, shape, number } = PropTypes
+const { get } = require('../../common/util')
+const { string, arrayOf, object, shape, number } = PropTypes
 
 class PhotoDragPreview extends PureComponent {
 
@@ -25,12 +26,20 @@ class PhotoDragPreview extends PureComponent {
     return this.props.items.length
   }
 
+  get orientation() {
+    return get(this.props.photos, [this.item.id, 'orientation']) || 1
+  }
+
   render() {
     const { cache, size } = this.props
 
     return (
       <div className={cx(this.classes)}>
-        <Thumbnail id={this.item.id} size={size} cache={cache}/>
+        <Thumbnail
+          id={this.item.id}
+          orientation={this.orientation}
+          size={size}
+          cache={cache}/>
         {this.count > 1 &&
           <div className="badge">{this.count}</div>
         }
@@ -41,6 +50,7 @@ class PhotoDragPreview extends PureComponent {
 
   static propTypes = {
     cache: string.isRequired,
+    photos: object.isRequired,
     size: number.isRequired,
     items: arrayOf(shape({
       id: number.isRequired

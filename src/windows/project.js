@@ -18,25 +18,26 @@ const tasks = store.saga.run(main)
 const { locale, file } = ARGS
 
 all([
-  store.dispatch(act.vocab.load('dc')),
   store.dispatch(act.intl.load({ locale })),
   store.dispatch(act.keymap.load({ name: 'project', locale })),
-  store.dispatch(act.project.open(file)),
   ready
 ])
   .then(() => {
+    store.dispatch(act.project.open(file))
+
     render(
       <Main store={store}><ProjectContainer/></Main>,
       $('.view')
     )
-
-    win.show()
   })
 
-dialog.start()
+dialog.start(store)
+
+win.on('style.update', () => {
+  store.dispatch(act.settings.update({ theme: win.state.theme }))
+})
 
 win.unloaders.push(dialog.stop)
-
 win.unloaders.push(() => (
   store.dispatch(act.project.close()), tasks.done
 ))

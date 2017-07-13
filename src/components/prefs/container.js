@@ -8,11 +8,12 @@ const { TitleBar } = require('../titlebar')
 const { TemplateEditor } = require('../template')
 const { VocabPane } = require('../vocab')
 const { PrefPane, PrefPaneToggle } = require('./pane')
+const { AppPrefs } = require('./app')
 const actions = require('../../actions')
 
 const {
   getItemTemplates,
-  getAllProperties,
+  getPhotoTemplates,
   getVocabs
 } = require('../../selectors')
 
@@ -33,7 +34,9 @@ class PrefsContainer extends PureComponent {
 
   render() {
     return (
-      <div className="prefs">
+      <div
+        className="prefs"
+        onContextMenu={this.props.onContextMenu}>
         <header className="prefs-header draggable">
           {this.renderTitleBar()}
           <nav className="prefs-nav">
@@ -43,7 +46,6 @@ class PrefsContainer extends PureComponent {
                   name="app"
                   icon="IconTropy"
                   isActive={this.isActive('app')}
-                  isDisabled
                   onClick={this.toggle}/>
               </li>
               <li>
@@ -74,7 +76,14 @@ class PrefsContainer extends PureComponent {
         <main>
           <PrefPane
             name="app"
-            isActive={this.isActive('app')}/>
+            isActive={this.isActive('app')}>
+            <AppPrefs
+              itemTemplates={this.props.itemTemplates}
+              photoTemplates={this.props.photoTemplates}
+              settings={this.props.settings}
+              onSettingsUpdate={this.props.onSettingsUpdate}/>
+          </PrefPane>
+
 
           <PrefPane
             name="project"
@@ -83,31 +92,40 @@ class PrefsContainer extends PureComponent {
           <PrefPane
             name="template"
             isActive={this.isActive('template')}>
-            <TemplateEditor
-              properties={this.props.properties}
-              templates={this.props.templates}
-              onSave={this.props.onTemplateSave}
-              onCreate={this.props.onTemplateCreate}/>
+            <TemplateEditor/>
           </PrefPane>
 
           <VocabPane
             isActive={this.isActive('vocab')}
-            vocab={this.props.vocab}/>
+            vocab={this.props.vocab}
+            onClassSave={this.props.onClassSave}
+            onDelete={this.props.onVocabDelete}
+            onImport={this.props.onOntologyImport}
+            onOpenLink={this.props.onOpenLink}
+            onPropsSave={this.props.onPropsSave}
+            onSave={this.props.onVocabSave}/>
         </main>
       </div>
     )
   }
 
   static propTypes = {
-    isFrameless: bool,
     edit: object.isRequired,
+    isFrameless: bool,
+    itemTemplates: array.isRequired,
     pane: string.isRequired,
-    properties: array.isRequired,
-    templates: array.isRequired,
+    settings: object.isRequired,
     vocab: array.isRequired,
+    photoTemplates: array.isRequired,
+    onClassSave: func.isRequired,
+    onContextMenu: func.isRequired,
+    onOpenLink: func.isRequired,
     onPrefsUpdate: func.isRequired,
-    onTemplateCreate: func.isRequired,
-    onTemplateSave: func.isRequired
+    onPropsSave: func.isRequired,
+    onSettingsUpdate: func.isRequired,
+    onVocabDelete: func.isRequired,
+    onVocabSave: func.isRequired,
+    onOntologyImport: func.isRequired
   }
 
   static defaultProps = {
@@ -119,23 +137,51 @@ module.exports = {
   PrefsContainer: connect(
     state => ({
       edit: state.edit,
-      project: state.project,
+      itemTemplates: getItemTemplates(state),
       keymap: state.keymap,
       pane: state.prefs.pane,
-      properties: getAllProperties(state),
-      templates: getItemTemplates(state),
+      photoTemplates: getPhotoTemplates(state),
+      project: state.project,
+      settings: state.settings,
       vocab: getVocabs(state)
     }),
 
     dispatch => ({
+      onClassSave(...args) {
+        dispatch(actions.ontology.class.save(...args))
+      },
+
+      onContextMenu(event) {
+        event.stopPropagation()
+        dispatch(actions.context.show(event))
+      },
+
+      onOpenLink(...args) {
+        dispatch(actions.shell.openLink(args))
+      },
+
       onPrefsUpdate(...args) {
         dispatch(actions.prefs.update(...args))
       },
 
-      onTemplateCreate() {
+      onPropsSave(...args) {
+        dispatch(actions.ontology.props.save(...args))
       },
 
-      onTemplateSave() {
+      onSettingsUpdate(...args) {
+        dispatch(actions.settings.update(...args))
+      },
+
+      onVocabDelete(...args) {
+        dispatch(actions.ontology.vocab.delete(...args))
+      },
+
+      onVocabSave(...args) {
+        dispatch(actions.ontology.vocab.save(...args))
+      },
+
+      onOntologyImport() {
+        dispatch(actions.ontology.import())
       }
     })
   )(PrefsContainer)

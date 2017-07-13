@@ -3,16 +3,16 @@
 // --------------------------------------------------
 
 .editable-control {
+  flex: 1 1 auto;
   font: {
     family: inherit;
     size: inherit;
     weight: inherit;
   }
   text-align: inherit;
-  position: relative;
-  left: -($editable-border-width + $editable-padding-horizontal);
+  margin: -($editable-border-width + $editable-padding-horizontal);
   width: calc(
-    100% + #{$editable-border-width + $editable-padding-horizontal}
+    100% + #{2 * ($editable-border-width + $editable-padding-horizontal)}
   );
   line-height: normal;
   padding: $editable-padding-vertical $editable-padding-horizontal;
@@ -20,6 +20,5 @@
   color: $editable-color;
   background: $editable-bg;
   border-radius: $editable-border-radius;
-  margin: -2em 0; // For the sake of safety
   background-clip: padding-box;
 }

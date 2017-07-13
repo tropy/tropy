@@ -2,26 +2,20 @@
 
 require('shelljs/make')
 
-const assert = require('assert')
-const babel = require('babel-core')
-const glob = require('glob')
-const sass = require('node-sass')
-const log = require('./log')
+const { rules, say, warn } = require('./util')('make')
 
-const { statSync: stat, existsSync: exists } = require('fs')
-const { join, resolve, relative, dirname } = require('path')
+const { existsSync: exists } = require('fs')
+const { join, resolve } = require('path')
+
+const compile = require('./compile')
+const test = require('./test')
+const db = require('./db')
 
 const home = resolve(__dirname, '..')
 const nbin = join(home, 'node_modules', '.bin')
-const cov = join(home, 'coverage')
-const covtmp = join(home, '.nyc_output')
 
-const emocha = join(nbin, 'electron-mocha')
 const eslint = join(nbin, 'eslint')
 const sasslint = join(nbin, 'sass-lint')
-const nyc = join(nbin, 'nyc')
-
-Object.assign(target, require('./electron'))
 
 config.fatal = false
 config.silent = false
@@ -44,112 +38,38 @@ target['lint:css'] = (bail) => {
 }
 
 
-target.test = (...args) => {
-  let code
+target.test = (args = []) => {
+  let code = 0
 
-  code = target['lint']()
-  code = target['test:browser'](...args) || code
-  code = target['test:renderer'](...args) || code
+  code += target.lint()
+  code += test.all(...args)
 
-  if (code) process.exit(1)
+  if (code > 0) process.exit(1)
 }
 
-target['test:renderer'] = (args = []) => {
-  return mocha(['--renderer', ...args].concat(
-    glob.sync('test/**/*_test.js', { ignore: 'test/browser/*' }))).code
-}
+target['test:renderer'] = (args = []) =>
+  test.renderer(...args) && process.exit(1)
 
-target['test:browser'] = (args = []) => {
-  return mocha([...args].concat(
-    glob.sync('test/{browser,common}/**/*_test.js'))).code
-}
+target['test:browser'] = (args = []) =>
+  test.browser(...args) && process.exit(1)
 
-target.mocha = (args = []) => mocha([...args], false)
+target.cover = (args) =>
+  test.cover(args) && process.exit(1)
 
+target.compile = () =>
+  Promise.all([compile.js(), compile.css()])
 
-target.compile = () => {
-  target['compile:js']()
-  target['compile:css']()
-}
+target['compile:js'] = () =>
+  compile.js()
 
-target['compile:js'] = (pattern) => {
-  const tag = 'compile:js'
+target['compile:css'] = () =>
+  compile.css()
 
-  new glob
-    .Glob(pattern || 'src/**/*.{js,jsx}')
-    .on('error', (err) => log.error(err, { tag }))
-
-    .on('match', (file) => {
-      let src = relative(home, file)
-      let dst = swap(src, 'src', 'lib', '.js')
-
-      assert(src.startsWith('src'))
-      if (fresh(src, dst)) return
-
-      log.info(dst, { tag })
-
-      babel.transformFile(src, (err, result) => {
-        if (err) return log.error(err, { tag })
-
-        mkdir('-p', dirname(dst))
-        result.code.to(dst)
-      })
-    })
-}
-
-target['compile:css'] = (pattern) => {
-  const tag = 'compile:css'
-
-  new glob
-    .Glob(pattern || 'src/stylesheets/**/!(_*).{sass,scss}')
-    .on('error', (err) => log.error(err, { tag }))
-
-    .on('match', (file) => {
-      let src = relative(home, file)
-      let dst = swap(src, 'src', 'lib', '.css')
-
-      assert(src.startsWith(join('src', 'stylesheets')))
-      log.info(dst, { tag })
-
-      let options = {
-        file: src,
-        functions: SassExtensions,
-        includePaths: SassIncludePath,
-        outFile: dst,
-        outputStyle: 'compressed',
-        sourceMap: true
-      }
-
-      sass.render(options, (err, result) => {
-        if (err) return log.error(`${err.line}: ${err.message}`, { tag })
-
-        mkdir('-p', dirname(dst))
-        String(result.css).to(dst)
-        String(result.map).to(`${dst}.map`)
-      })
-    })
-}
-
-
-target.cover = (args) => {
-  rm('-rf', cov)
-
-  rm('-rf', covtmp)
-  mkdir(covtmp)
-
-  args = args || ['text-summary', 'html', 'lcov']
-  args = args.map(reporter => `-r ${reporter}`)
-
-  process.env.COVERAGE = true
-
-  const bc = target['test:browser'](['--require test/support/coverage'])
-  const rc = target['test:renderer'](['--require test/support/coverage'])
-
-  exec(`${nyc} report ${args.join(' ')}`, { silent: false })
-
-  if (bc || rc) process.exit(1)
-}
-
+target['db:create'] = db.create
+target['db:migrate'] = db.migrate
+target['db:migration'] = db.migration
+target['db:viz'] = db.viz
+target['db:all'] = db.all
 
 target.window = ([name]) => {
   template(join(home, 'static', `${name}.html`),
@@ -181,73 +101,20 @@ target.window = ([name]) => {
 function template(path, content) {
   if (!exists(path)) {
     content.to(path)
-    log.info(path, { tag: 'created' })
+    say(path)
   } else {
-    log.warn(path, { tag: 'skipped' })
+    warn(path)
   }
-}
-
-
-target.rules = () => {
-  for (let rule in target) log.info(rule, { tag: 'make' })
 }
 
 
 target.clean = () => {
+  test.clean()
   rm('-rf', join(home, 'lib'))
   rm('-rf', join(home, 'dist'))
-  rm('-rf', cov)
-  rm('-rf', covtmp)
-
   rm('-f', join(home, 'npm-debug.log'))
 }
 
+target.rules = () =>
+  rules(target)
 
-function fresh(src, dst) {
-  try {
-    return stat(dst).mtime > stat(src).mtime
-
-  } catch (_) {
-    return false
-  }
-}
-
-function swap(filename, src, dst, ext) {
-  return filename
-    .replace(src, dst)
-    .replace(/(\..+)$/, m => ext || m[1])
-}
-
-function mocha(options, silent) {
-  return exec(`${emocha} ${options.join(' ')}`, { silent })
-}
-
-const SassIncludePath = [
-  join(home, 'node_modules')
-]
-
-const SassExtensions = {
-  'const($name, $unit:"")'(name, unit) {
-    const SASS = require('../src/constants/sass')
-    const { get } = require('../src/common/util')
-
-    const value = get(SASS, name.getValue())
-    unit = unit.getValue()
-
-    if (typeof value === 'number') {
-      return new sass.types.Number(value, unit)
-    }
-
-    if (Array.isArray(value)) {
-      return value.reduce((list, val, i) => (
-        list.setValue(i, new sass.types.Number(val, unit)), list
-      ), new sass.types.List(value.length))
-    }
-
-    return sass.types.Null.NULL
-  }
-}
-
-// We need to make a copy when exposing targets to other scripts,
-// because any method on target can be called just once per execution!
-module.exports = Object.assign({}, target)

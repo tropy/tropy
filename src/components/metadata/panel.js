@@ -31,7 +31,7 @@ class MetadataPanel extends PureComponent {
     this.props.onItemSave({
       id: this.props.items.map(it => it.id),
       property: 'template',
-      value: template.uri
+      value: template.id
     })
   }
 
@@ -74,7 +74,7 @@ class MetadataPanel extends PureComponent {
 
     const { photo, photoData, templates, onMetadataSave, ...props } = this.props
 
-    return photo && (
+    return photo && !photo.pending && (
       <section>
         <h5 className="metadata-heading separator">
           <FormattedMessage id="panel.metadata.photo"/>
@@ -110,7 +110,7 @@ class MetadataPanel extends PureComponent {
 
     photo: shape({
       id: number.isRequired,
-      template: string.isRequired
+      template: string
     }),
     photoData: object,
 

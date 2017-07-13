@@ -17,7 +17,7 @@ describe('Metadata Selectors', () => {
 
     it('returns combined metadata in bulk', () => {
       expect(getItemMetadata(state([1, 2])))
-        .to.have.deep.property('title.text', 'foo')
+        .to.have.nested.property('title.text', 'foo')
 
       expect(getItemMetadata(state([])))
         .to.eql({ id: [] })
@@ -28,9 +28,9 @@ describe('Metadata Selectors', () => {
 
     it('collects stats', () => {
       expect(getItemMetadata(state([1, 2])))
-        .to.have.deep.property('title.mixed', true)
+        .to.have.nested.property('title.mixed', true)
       expect(getItemMetadata(state([1, 2])))
-        .to.have.deep.property('type.mixed', false)
+        .to.have.nested.property('type.mixed', false)
     })
   })
 

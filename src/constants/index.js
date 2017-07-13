@@ -2,7 +2,6 @@
 
 module.exports = {
   ACTIVITY: require('./activity'),
-  CLASSES: require('./classes'),
   CONTEXT: require('./context'),
   COLUMNS: require('./columns'),
   DND: require('./dnd'),
@@ -14,16 +13,19 @@ module.exports = {
   METADATA: require('./metadata'),
   NAV: require('./nav'),
   NOTE: require('./note'),
+  ONTOLOGY: require('./ontology'),
   PHOTO: require('./photo'),
   PREFS: require('./prefs'),
   PROJECT: require('./project'),
-  PROPERTIES: require('./properties'),
   QR: require('./qr'),
   SASS: require('./sass'),
+  SETTINGS: require('./settings'),
+  SHELL: require('./shell'),
+  STORAGE: require('./storage'),
   TABS: require('./tabs'),
   TAG: require('./tag'),
+  TYPE: require('./type'),
   UI: require('./ui'),
-  VOCAB: require('./vocab'),
   WIZARD: require('./wizard'),
   ...require('./rdf')
 }
