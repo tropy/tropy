@@ -57,6 +57,26 @@ i('CrescentCircle', (
   </svg>
 ))
 
+
+/* 12 x 12 */
+
+i('Lock', (
+  <svg width="12" height="12">
+    <g className="line" fill="currentColor">
+      <path d="M9,4V3A3,3,0,0,0,3,3V4H1v8H11V4ZM4,3A2,2,0,0,1,8,3V4H4Zm6,8H2V5h8Z"/>
+    </g>
+  </svg>
+))
+
+i('Warning', (
+  <svg width="12" height="12">
+    <g className="line" fill="currentColor">
+      <path d="M11.606,10.211,6.894.789C6.4-.2,5.6-.2,5.106.789L.394,10.211A1.139,1.139,0,0,0,1.5,12h9A1.139,1.139,0,0,0,11.606,10.211ZM7,10.5a.5.5,0,0,1-.5.5h-1a.5.5,0,0,1-.5-.5v-1A.5.5,0,0,1,5.5,9h1a.5.5,0,0,1,.5.5Zm0-3a.5.5,0,0,1-.5.5h-1A.5.5,0,0,1,5,7.5v-4A.5.5,0,0,1,5.5,3h1a.5.5,0,0,1,.5.5Z"/>
+    </g>
+  </svg>
+))
+
+
 /* 16 x 16 */
 
 i('AlignCenter', (
@@ -283,14 +303,6 @@ i('ListSmall', (
   </svg>
 ))
 
-i('Lock', (
-  <svg width="16" height="16">
-    <g className="line" fill="currentColor">
-      <path d="M12,6V4A4,4,0,0,0,4,4V6H2v9H14V6ZM5,4a3,3,0,0,1,6,0V6H5Zm8,10H3V7H13Z"/>
-    </g>
-  </svg>
-))
-
 i('Maze', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
@@ -471,8 +483,6 @@ i('Tag', (
   </svg>
 ))
 
-
-
 i('Trash', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
@@ -489,14 +499,6 @@ i('U', (
     <g className="line" fill="currentColor">
       <rect x="2" y="15" width="12" height="1"/>
       <path d="M8,14c-2.944,0-5-1.851-5-4.5V1H5V9.7c0,1.846,1.616,2.5,3,2.5s3-.654,3-2.5V1h2V9.5C13,12.149,10.944,14,8,14Z"/>
-    </g>
-  </svg>
-))
-
-i('Warning', (
-  <svg width="16" height="16">
-    <g className="line" fill="currentColor">
-      <path d="M8,2.136c.018.028.038.06.059.1l6.118,11.471a.711.711,0,0,1,.09.254A.711.711,0,0,1,14,14H2a.711.711,0,0,1-.267-.04.711.711,0,0,1,.09-.254L7.941,2.235c.021-.039.04-.071.059-.1m0-1.1a1.148,1.148,0,0,0-.941.728L.941,13.235A1.1,1.1,0,0,0,2,15H14a1.1,1.1,0,0,0,1.059-1.765L8.941,1.765A1.148,1.148,0,0,0,8,1.037ZM9,9.5V6a.5.5,0,0,0-.5-.5h-1A.5.5,0,0,0,7,6V9.5a.5.5,0,0,0,.5.5h1A.5.5,0,0,0,9,9.5Zm0,3v-1a.5.5,0,0,0-.5-.5h-1a.5.5,0,0,0-.5.5v1a.5.5,0,0,0,.5.5h1A.5.5,0,0,0,9,12.5Z"/>
     </g>
   </svg>
 ))
