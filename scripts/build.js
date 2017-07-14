@@ -44,6 +44,7 @@ const IGNORE = [
   /^\/src/,
   /^\/test/,
   /^\/tmp/,
+  /node_modules.\.bin/,
   /appveyor\.yml/
 ]
 
@@ -59,7 +60,7 @@ target.all = (args = []) => {
   say(`packaging for ${platform} ${arch}...`)
 
   if (platform !== 'win32') {
-    ignore.push(/^\/node_modules\/winreg/)
+    ignore.push(/^\/node_modules.winreg/)
   }
 
   packager({
