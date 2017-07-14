@@ -55,7 +55,7 @@ function registry(reg, cmd, ...args) {
 
 
 function setMimeType(...types) {
-  const { Registry } = require('winreg')
+  const Registry = require('winreg')
   const { DEFAULT_VALUE, HKCU, REG_SZ } = Registry
 
   return Promise.all(types.map(async type => {
@@ -74,7 +74,7 @@ function setMimeType(...types) {
 }
 
 function clearMimeType(...types) {
-  const { Registry } = require('winreg')
+  const Registry = require('winreg')
   const { HKCU } = Registry
 
   return Promise.all(types.map(async type => {
