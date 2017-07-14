@@ -44,22 +44,32 @@ function link(path, force = false) {
   })
 }
 
+function registry(reg, cmd, ...args) {
+  return Promise((resolve, reject) => {
+    reg[cmd](...args, (err, ...res) => {
+      if (err != null) reject(err)
+      else resolve(...res)
+    })
+  })
+}
+
+
 function setMimeType(...types) {
   const { Registry } = require('winreg')
   const { DEFAULT_VALUE, HKCU, REG_SZ } = Registry
 
-  return Promise.all(types.map(type => {
-    return Promise((resolve, reject) => {
-      const icon = join(mime, `${type}.ico`)
-      const key = `\\Software\\Classes\\.${type}\\DefaultIcon`
+  return Promise.all(types.map(async type => {
+    let icon = join(mime, `${type}.ico`)
+    let key = `\\Software\\Classes\\.${type}`
+    let reg = new Registry({ hive: HKCU, key })
 
-      const reg = new Registry({ hive: HKCU, key })
+    await registry(reg, 'set', DEFAULT_VALUE, REG_SZ, qualified.product)
 
-      reg.set(DEFAULT_VALUE, REG_SZ, icon, (err) => {
-        if (err != null) reject(err)
-        else resolve()
-      })
-    })
+    key = `${key}\\DefaultIcon`
+    reg = new Registry({ hive: HKCU, key })
+
+    await registry(reg, 'set', DEFAULT_VALUE, REG_SZ, icon)
+
   }))
 }
 
@@ -67,17 +77,10 @@ function clearMimeType(...types) {
   const { Registry } = require('winreg')
   const { HKCU } = Registry
 
-  return Promise.all(types.map(type => {
-    return Promise((resolve, reject) => {
-      const key = `\\Software\\Classes\\.${type}`
-
-      const reg = new Registry({ hive: HKCU, key })
-
-      reg.clear((err) => {
-        if (err != null) reject(err)
-        else resolve()
-      })
-    })
+  return Promise.all(types.map(async type => {
+    const key = `\\Software\\Classes\\.${type}`
+    const reg = new Registry({ hive: HKCU, key })
+    await registry(reg, 'clear')
   }))
 }
 
@@ -85,10 +88,13 @@ function clearMimeType(...types) {
 function spawn(cmd, ...args) {
   try {
     return ChildProcess.spawn(cmd, args, { detached: true })
-
   } catch (error) {
     app.quit(1)
   }
+}
+
+function quit() {
+  app.quit()
 }
 
 function handleSquirrelEvent() {
@@ -101,8 +107,7 @@ function handleSquirrelEvent() {
       case '--squirrel-install':
         link(DESKTOP, true)
         link(START_MENU, true)
-        setMimeType('tpy', 'ttp')
-          .then(() => app.quit, () => app.quit())
+        setMimeType('tpy', 'ttp').then(quit, quit)
 
         return true
       case '--squirrel-updated':
@@ -117,8 +122,7 @@ function handleSquirrelEvent() {
           rm(app.getPath('userData'))
 
         } finally {
-          clearMimeType('tpy', 'ttp')
-            .then(() => app.quit, () => app.quit())
+          clearMimeType('tpy', 'ttp').then(quit, quit)
         }
         return true
       case '--squirrel-obsolete':
