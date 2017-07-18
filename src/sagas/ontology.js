@@ -55,7 +55,7 @@ function *migrate(db) {
 
   const stale = yield call(mod.ontology.template.stale, db, {
     id: ITEM.TEMPLATE,
-    date: '2017-07-20'
+    date: '2017-07-19'
   })
 
   if (stale != null) {
