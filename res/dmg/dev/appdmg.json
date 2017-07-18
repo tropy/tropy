@@ -1,17 +1,17 @@
 {
   "title": "Tropy Dev",
   "background": "background.png",
-  "icon-size": 128,
+  "icon-size": 92,
   "contents": [
     {
-      "x": 192,
-      "y": 181,
+      "x": 216,
+      "y": 206,
       "type": "file",
       "path": "../../../dist/Tropy Dev-darwin-x64/Tropy Dev.app"
     },
     {
-      "x": 448,
-      "y": 181,
+      "x": 504,
+      "y": 206,
       "type": "link",
       "path": "/Applications"
     }

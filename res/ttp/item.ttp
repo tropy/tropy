@@ -1,28 +1,52 @@
 {
   "@context": "https://tropy.org/v1/contexts/template.jsonld",
   "@id": "https://tropy.org/v1/templates/item",
-  "name": "Tropy Item",
   "type": "https://tropy.org/v1/tropy#Item",
+  "name": "Tropy Item",
+  "domain": [],
   "field": [
     {
-      "property": "http://purl.org/dc/elements/1.1/title"
+      "property": "http://purl.org/dc/elements/1.1/title",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string"
     },
     {
-      "property": "http://purl.org/dc/elements/1.1/creator",
-      "datatype": "https://tropy.org/v1/tropy#name"
+      "property": "http://purl.org/dc/elements/1.1/rights",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "isRequired": true
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/source",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "hint": "Archive",
+      "isRequired": true
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/relation",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "hint": "Collection"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/identifier",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "hint": "Unique ID such as call number"
+    },
+    {
+      "property": "https://tropy.org/v1/tropy#box",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    {
+      "property": "https://tropy.org/v1/tropy#folder",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string"
     },
     {
       "property": "http://purl.org/dc/elements/1.1/date",
-      "datatype": "https://tropy.org/v1/tropy#date"
+      "datatype": "https://tropy.org/v1/tropy#date",
+      "hint": "ISO 8601"
     },
     {
-      "property": "http://purl.org/dc/elements/1.1/description"
-    },
-    {
-      "property": "http://purl.org/dc/elements/1.1/source"
-    },
-    {
-      "property": "http://purl.org/dc/elements/1.1/rights"
+      "property": "http://purl.org/dc/elements/1.1/type",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "hint": "Type of document"
     }
   ]
 }

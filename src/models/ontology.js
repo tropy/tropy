@@ -371,7 +371,19 @@ const ontology = {
       return temps
     },
 
-    create(db, { id, type, name, creator, description, isProtected }) {
+    async create(db, {
+      id,
+      type,
+      name,
+      creator,
+      description,
+      isProtected
+    }, { replace } = {}) {
+      if (replace) {
+        db.run(`
+          DELETE FROM templates WHERE template_id = ?`, id)
+      }
+
       return db.run(`
         INSERT INTO templates (
             template_id,
@@ -383,6 +395,13 @@ const ontology = {
           VALUES (?, ?, ?, ?, ?, ?)`,
         [id, type, name, creator, description, !!isProtected]
       )
+    },
+
+    stale(db, { id, date }) {
+      return db.get(`
+        SELECT template_id AS id, created, protected  AS isProtected
+          FROM TEMPLATES
+          WHERE template_id = ? AND created < date(?)`, id, date)
     },
 
     delete(db, ...ids) {

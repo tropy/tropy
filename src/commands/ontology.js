@@ -211,7 +211,8 @@ class TemplateImport extends Command {
 
   *exec() {
     const { db } = this.options
-    let { files, isProtected } = this.action.payload
+    const { payload, meta } = this.action
+    let { files, isProtected } = payload
 
     if (!files) {
       files = yield call(openTemplates)
@@ -244,7 +245,7 @@ class TemplateImport extends Command {
           description,
           fields,
           isProtected
-        }))
+        }, meta))
 
       } catch (error) {
         warn(`Failed to import "${file}": ${error.message}`)
@@ -303,14 +304,14 @@ class TemplateCreate extends Command {
 
   *exec() {
     const { db } = this.options
-    const { payload } = this.action
+    const { payload, meta } = this.action
 
     let ids = []
     let temps = {}
 
     for (let id in payload) {
       try {
-        yield call(createTemplate, db, { ...payload[id], id })
+        yield call(createTemplate, db, { ...payload[id], id }, meta)
         ids.push(id)
 
       } catch (error) {
@@ -331,13 +332,15 @@ class TemplateCreate extends Command {
 
 }
 
-async function createTemplate(db, data) {
+async function createTemplate(db, data, meta) {
   assert(data.id != null, 'missing template id')
   assert(data.name != null, 'missing template name')
   assert(data.type != null, 'missing template type')
 
+  const replace = meta && meta.replace
+
   await db.transaction(async tx => {
-    await mod.ontology.template.create(tx, data)
+    await mod.ontology.template.create(tx, data, { replace })
 
     if (data.fields != null && data.fields.length > 0) {
       await Promise.all([
