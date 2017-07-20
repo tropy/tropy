@@ -26,6 +26,8 @@ class Template {
       'type': data.type,
       'name': data.name,
       'domain': data.domain,
+      'creator': data.creator,
+      'description': data.description,
       'field': data.fields.map(field => pick(field, [
         'property',
         'datatype',
