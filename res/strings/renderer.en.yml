@@ -41,6 +41,12 @@ prefs:
     new: New Template …
     create: Create
     select: Template
+    tools:
+      new: New
+      copy: Duplicate
+      delete: Delete
+      import: Import
+      export: Export
   vocab:
     label: Vocabularies
     classes: >

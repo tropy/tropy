@@ -38,21 +38,26 @@ class TemplateToolbar extends PureComponent {
           <ButtonGroup>
             <IconButton
               icon={<IconNew/>}
+              title="prefs.template.tools.new"
               isDisabled={!this.props.selected}
               onClick={this.props.onClear}/>
             <IconButton
               icon={<IconCopy/>}
+              title="prefs.template.tools.copy"
               isDisabled={!this.props.selected}
               onClick={this.props.onCopy}/>
             <IconButton
               icon={<IconTrash/>}
+              title="prefs.template.tools.delete"
               isDisabled={!this.props.selected || this.props.isProtected}
               onClick={this.props.onDelete}/>
             <IconButton
               icon={<IconImport/>}
+              title="prefs.template.tools.import"
               onClick={this.props.onImport}/>
             <IconButton
               icon={<IconExport/>}
+              title="prefs.template.tools.export"
               isDisabled={!this.props.selected}
               onClick={this.handleExport}/>
           </ButtonGroup>
