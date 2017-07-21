@@ -2,7 +2,8 @@ sidebar:
   lists: Lists
   tags: Tags
   trash: Deleted Items
-
+toolbar:
+  import: Import Photos
 panel:
   metadata:
     tab: Metadata
@@ -11,7 +12,9 @@ panel:
   tags:
     tab: Tags
     add: Add Tag
-  photos: Photos
+  photo:
+    title: Photos
+    create: Add Photos
   notes: Notes
 
 wizard:

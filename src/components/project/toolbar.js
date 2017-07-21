@@ -17,7 +17,10 @@ class ProjectToolbar extends PureComponent {
     if (!this.props.canCreateItems) return
 
     return (
-      <IconButton icon={<IconPlus/>} onClick={this.props.onItemCreate}/>
+      <IconButton
+        icon={<IconPlus/>}
+        title="toolbar.import"
+        onClick={this.props.onItemCreate}/>
     )
   }
 
