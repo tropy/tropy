@@ -204,11 +204,11 @@ class Window extends EventEmitter {
 
     if (done == null) return
 
-    let limit = Date.now() + 2000
+    let limit = Date.now() + 200
     let ti = setInterval(() => {
       if (document.styleSheets.length === count || Date.now() > limit) {
         clearInterval(ti)
-        done()
+        requestIdleCallback(done, { timeout: 100 })
       }
     }, 10)
 
