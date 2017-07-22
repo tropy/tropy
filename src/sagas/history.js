@@ -9,7 +9,8 @@ module.exports = {
 
   *undo() {
     try {
-      yield put(yield select(undone))
+      const action = yield select(undone)
+      if (action != null) yield put(action)
 
     } catch (error) {
       warn(`unexpected error in history:undo: ${error.message}`)
@@ -19,7 +20,8 @@ module.exports = {
 
   *redo() {
     try {
-      yield put(yield select(redone))
+      const action = yield select(redone)
+      if (action != null) yield put(action)
 
     } catch (error) {
       warn(`unexpected error in history:undo: ${error.message}`)
