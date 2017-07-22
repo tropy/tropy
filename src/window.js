@@ -4,12 +4,16 @@ const { each } = require('bluebird')
 const { remote, ipcRenderer: ipc } = require('electron')
 const { basename, join, resolve } = require('path')
 const { existsSync: exists } = require('fs')
-const { EL_CAPITAN } = require('./common/os')
+const { EL_CAPITAN, darwin } = require('./common/os')
 const { EventEmitter } = require('events')
 
 const {
-  $$, append, emit, create, on, once, toggle, stylesheet, remove
+  $$, append, emit, create, isInput, on, once, toggle, stylesheet, remove
 } = require('./dom')
+
+const isCommand = darwin ?
+  e => e.metaKey && !e.altKey && !e.ctrlKey :
+  e => e.ctrlKey && !e.altKey && !e.metaKey
 
 
 class Window extends EventEmitter {
@@ -34,6 +38,7 @@ class Window extends EventEmitter {
     this.handleUnload()
     this.handleTabFocus()
     this.handleIpcEvents()
+    this.handleEditorCommands()
 
     const { aqua, frameless } = this.state
 
@@ -58,7 +63,17 @@ class Window extends EventEmitter {
   }
 
   show() {
-    this.current.show()
+    const { current } = this
+    current.show()
+    current.focus()
+  }
+
+  undo() {
+    this.current.webContents.undo()
+  }
+
+  redo() {
+    this.current.webContents.redo()
   }
 
   get current() {
@@ -141,6 +156,30 @@ class Window extends EventEmitter {
     })
   }
 
+  handleEditorCommands() {
+    on(document, 'keydown', event => {
+      if (!isCommand(event)) return
+
+      switch (event.key) {
+        case 'z':
+          if (isInput(event.target)) this.undo()
+          else this.emit('app.undo')
+          break
+
+        case 'Z':
+        case 'y':
+          if (isInput(event.target)) this.redo()
+          else this.emit('app.redo')
+          break
+
+        default:
+          return
+      }
+
+      event.preventDefault()
+      event.stopImmediatePropagation()
+    })
+  }
 
   createWindowControls() {
     this.controls = {

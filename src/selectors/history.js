@@ -1,19 +1,20 @@
 'use strict'
 
-const {
-  createSelector: memo
-} = require('reselect')
+const { createSelector: memo } = require('reselect')
+const { get } = require('../common/util')
 
 
-const past = ({ history }) => history.past
+const past = ({ history }) =>
+  history.past
 
-const future = ({ history }) => history.future
+const future = ({ history }) =>
+  history.future
 
 const undone = ({ history }) =>
-  history.future[0].undo
+  get(history.future, [0, 'undo'])
 
 const redone = ({ history }) =>
-  history.past[0].redo
+  get(history.past, [0, 'redo'])
 
 const length = memo([past, future],
   (past, future) => ({
