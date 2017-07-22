@@ -32,7 +32,8 @@ class Image {
   }
 
   get checksum() {
-    return this.digest()
+    if (this.__digest == null) this.__digest = this.digest()
+    return this.__digest
   }
 
   get orientation() {
