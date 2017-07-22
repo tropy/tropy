@@ -14,7 +14,7 @@ const undone = ({ history }) =>
   get(history.future, [0, 'undo'])
 
 const redone = ({ history }) =>
-  get(history.future, [0, 'redo'])
+  get(history.past, [0, 'redo'])
 
 const length = memo([past, future],
   (past, future) => ({
