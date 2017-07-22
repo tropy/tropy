@@ -9,7 +9,6 @@ const { prompt, openImages, fail  } = require('../dialog')
 const { Image } = require('../image')
 const { imagePath } = require('../common/cache')
 const { text } = require('../value')
-const intl = require('../selectors/intl')
 const act = require('../actions')
 const mod = require('../models')
 const { get, pluck, pick, remove } = require('../common/util')
@@ -69,14 +68,6 @@ class Import extends Command {
     const idata = getTemplateValues(itemp)
     const pdata = getTemplateValues(ptemp)
 
-    const txt = yield select(state => ({
-      message: state.intl.messages['prompt.item.import.dup.message'],
-      buttons: [
-        state.intl.messages['prompt.item.import.dup.cancel'],
-        state.intl.messages['prompt.item.import.dup.ok']
-      ]
-    }))
-
     for (let i = 0, ii = files.length; i < ii; ++i) {
       let file, image, item, photo
 
@@ -89,12 +80,14 @@ class Import extends Command {
           const dup = await mod.photo.find(db, { checksum: image.checksum })
 
           if (dup) {
-            const cont = await prompt(txt.message, {
-              buttons: txt.buttons,
+            const { cancel } = await prompt('photo.dup.message', {
+              buttons: ['photo.dup.cancel', 'photo.dup.ok'],
+              checkbox: 'photo.dup.checkbox',
+              isChecked: false,
               detail: basename(file)
             })
 
-            if (!cont) throw new Skipped(file)
+            if (cancel) throw new Skipped(file)
           }
 
           item = await mod.item.create(tx, itemp.id, {
@@ -176,12 +169,10 @@ class Destroy extends Command {
     const { db } = this.options
     const ids = this.action.payload
 
-    const confirmed = yield call(prompt,
-      yield select(intl.message, { id: 'prompt.item.destroy' })
-    )
+    const { cancel } = yield call(prompt, 'item.destroy')
 
     this.init = performance.now()
-    if (!confirmed) return
+    if (cancel) return
 
     try {
       if (ids.length) {

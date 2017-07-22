@@ -9,8 +9,8 @@ let seq
 let pending
 let STORE
 
-function t(id) {
-  return get(STORE.getState(), ['intl', 'messages', `error.${id}`], id)
+function t(id, prefix = '') {
+  return get(STORE.getState(), ['intl', 'messages', `${prefix}${id}`], id)
 }
 
 function start(store) {
@@ -60,27 +60,35 @@ function fail(error, message = 'Error') {
   return notify({
     type: 'error',
     title: 'Error',
-    message: t(message),
+    message: t(message, 'error.'),
     detail: (message === error.message) ? null : error.message
   })
 }
 
 async function prompt(message, {
-  buttons = ['Cancel', 'Yes'],
+  buttons = ['cancel', 'ok'],
   defaultId = 0,
   cancelId = 0,
-  detail
-} = {}) {
-  const response = await open('message-box', {
+  checkbox,
+  isChecked,
+  ...options
+} = {}, prefix = 'prompt.') {
+  const { response, checked } = await open('message-box', {
     type: 'question',
-    buttons,
-    message,
+    buttons: buttons.map(id => t(id, prefix)),
+    message: t(message, prefix),
     defaultId,
     cancelId,
-    detail
+    checkboxLabel: (checkbox != null) ? t(checkbox, prefix) : undefined,
+    checkboxChecked: isChecked,
+    ...options
   })
 
-  return response !== cancelId
+  const ok = response !== cancelId
+
+  return {
+    ok, cancel: !ok, isChecked: checked
+  }
 }
 
 function save(options) {

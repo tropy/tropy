@@ -103,18 +103,20 @@ property:
   comment: Comment
 
 prompt:
+  ok: Yes
+  cancel: Cancel
   item:
     destroy: >
       Are your sure you want to permanently delete items?
       This action cannot be undone.
-    import:
-      dup:
-        message: >
-          This photo already exists in your project. Are you sure
-          you want to import it again?
-        checkbox: Ask me every time
-        ok: Import Anyway
-        cancel: Skip
+  photo:
+    dup:
+      message: >
+        This photo already exists in your project. Are you sure
+        you want to import it again?
+      checkbox: Remember this choice
+      cancel: Skip
+      ok: Import Anyway
 
 activity:
   project:
