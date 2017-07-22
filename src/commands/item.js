@@ -54,8 +54,8 @@ class Import extends Command {
     const metadata = []
 
     if (!files) {
+      this.isInteractive = true
       files = yield call(openImages)
-      this.init = performance.now()
     }
 
     if (!files) return
@@ -80,6 +80,7 @@ class Import extends Command {
           const dup = await mod.photo.find(db, { checksum: image.checksum })
 
           if (dup) {
+            this.isInteractive = true
             const { cancel } = await prompt('photo.dup.message', {
               buttons: ['photo.dup.cancel', 'photo.dup.ok'],
               checkbox: 'photo.dup.checkbox',

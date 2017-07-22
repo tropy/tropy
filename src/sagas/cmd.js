@@ -21,7 +21,7 @@ module.exports = {
       }
 
       if (cmd.error) fail(cmd.error, type)
-      if (cmd.duration > TOO_LONG) warn(`SLOW: ${type}`)
+      if (!cmd.isInteractive && cmd.duration > TOO_LONG) warn(`SLOW: ${type}`)
 
     } catch (error) {
       warn(`${action.type} unexpectedly failed in *exec: ${error.message}`)
