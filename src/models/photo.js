@@ -94,6 +94,13 @@ module.exports = {
     return photos
   },
 
+  find(db, { checksum }) {
+    return db.get(`
+      SELECT id, item_id AS item
+        FROM photos
+        WHERE checksum = ?`, checksum)
+  },
+
   async move(db, { ids, item }) {
     return db.run(`
       UPDATE photos SET item_id = ?  WHERE id in (${ids.join(',')})`,
