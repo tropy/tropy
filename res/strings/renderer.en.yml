@@ -107,6 +107,14 @@ prompt:
     destroy: >
       Are your sure you want to permanently delete items?
       This action cannot be undone.
+    import:
+      dup:
+        message: >
+          This photo already exists in your project. Are you sure
+          you want to import it again?
+        checkbox: Ask me every time
+        ok: Import Anyway
+        cancel: Skip
 
 activity:
   project:

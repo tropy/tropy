@@ -1,6 +1,7 @@
 'use strict'
 
 const assert = require('assert')
+const { basename } = require('path')
 const { warn, verbose } = require('../common/log')
 const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
@@ -68,6 +69,14 @@ class Import extends Command {
     const idata = getTemplateValues(itemp)
     const pdata = getTemplateValues(ptemp)
 
+    const txt = yield select(state => ({
+      message: state.intl.messages['prompt.item.import.dup.message'],
+      buttons: [
+        state.intl.messages['prompt.item.import.dup.cancel'],
+        state.intl.messages['prompt.item.import.dup.ok']
+      ]
+    }))
+
     for (let i = 0, ii = files.length; i < ii; ++i) {
       let file, image, item, photo
 
@@ -76,6 +85,18 @@ class Import extends Command {
         image = yield call(Image.read, file)
 
         yield call(db.transaction, async tx => {
+
+          const dup = await mod.photo.find(db, { checksum: image.checksum })
+
+          if (dup) {
+            const cont = await prompt(txt.message, {
+              buttons: txt.buttons,
+              detail: basename(file)
+            })
+
+            if (!cont) throw new Skipped(file)
+          }
+
           item = await mod.item.create(tx, itemp.id, {
             [DC.title]: text(image.title), ...idata
           })
@@ -114,6 +135,8 @@ class Import extends Command {
         metadata.push(item.id, photo.id)
 
       } catch (error) {
+        if (error instanceof Skipped) continue
+
         warn(`Failed to import "${file}": ${error.message}`)
         verbose(error.stack)
 
@@ -507,6 +530,12 @@ class ClearTags extends Command {
     yield put(act.item.tags.remove({ id, tags }))
 
     this.undo = act.item.tags.toggle({ id, tags })
+  }
+}
+
+class Skipped extends Error {
+  constructor(file) {
+    super(`Skipped import ${file}`)
   }
 }
 

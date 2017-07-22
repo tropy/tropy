@@ -65,16 +65,22 @@ function fail(error, message = 'Error') {
   })
 }
 
-async function prompt(message) {
+async function prompt(message, {
+  buttons = ['Cancel', 'Yes'],
+  defaultId = 0,
+  cancelId = 0,
+  detail
+} = {}) {
   const response = await open('message-box', {
     type: 'question',
-    buttons: ['Cancel', 'Yes'],
+    buttons,
     message,
-    defaultId: 0,
-    cancelId: 0
+    defaultId,
+    cancelId,
+    detail
   })
 
-  return response !== 0
+  return response !== cancelId
 }
 
 function save(options) {
