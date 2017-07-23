@@ -9,9 +9,6 @@ const { ipcRenderer: ipc } = require('electron')
 
 
 class AppPrefs extends PureComponent {
-  handleChange = () => {
-  }
-
   handleThemeChange = ({ theme }) => {
     ipc.send('cmd', 'app:switch-theme', theme, theme)
   }
@@ -50,8 +47,8 @@ class AppPrefs extends PureComponent {
             id="prefs.app.dup"
             name="dup"
             value={this.props.settings.dup}
-            options={['skip', 'import', 'prompt']}
-            onChange={this.handleChange}/>
+            options={this.props.dupOptions}
+            onChange={this.props.onSettingsUpdate}/>
           <hr/>
           <FormSelect
             id="prefs.app.style.theme"
@@ -72,11 +69,13 @@ class AppPrefs extends PureComponent {
       theme: string.isRequired,
     }).isRequired,
     themes: arrayOf(string).isRequired,
+    dupOptions: arrayOf(string).isRequired,
     onSettingsUpdate: func.isRequired
   }
 
   static defaultProps = {
-    themes: ['light', 'dark']
+    themes: ['light', 'dark'],
+    dupOptions: ['skip', 'import', 'prompt']
   }
 }
 
