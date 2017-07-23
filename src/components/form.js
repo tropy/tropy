@@ -5,7 +5,9 @@ const { PureComponent } = React
 const { FormattedMessage } = require('react-intl')
 const { BufferedInput } = require('./input')
 const cx = require('classnames')
-const { arrayOf, bool, func, node, number, string } = require('prop-types')
+const {
+  arrayOf, bool, func, node, oneOf, number, shape, string
+} = require('prop-types')
 const { noop } = require('../common/util')
 const { GRID } = require('../constants/sass')
 const { injectIntl, intlShape } = require('react-intl')
@@ -211,7 +213,8 @@ class FormSelect extends PureComponent {
   }
 }
 
-class FormToggle extends PureComponent {
+
+class Toggle extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
@@ -229,9 +232,8 @@ class FormToggle extends PureComponent {
 
   get classes() {
     return [
-      `col-${this.props.size}`,
-      `col-offset-${GRID.SIZE - this.props.size}`,
-      'checkbox',
+      this.props.className,
+      this.props.type,
       { tab: this.state.isTabFocus }
     ]
   }
@@ -256,23 +258,96 @@ class FormToggle extends PureComponent {
 
   render() {
     return (
-      <FormGroup isCompact={this.props.isCompact}>
-        <div className={cx(...this.classes)}>
-          <label>
-            <input
-              ref={this.setInput}
-              name={this.props.name}
-              type="checkbox"
-              value={this.props.value}
-              checked={!!this.props.value}
-              disabled={this.props.isDisabled}
-              tabIndex={this.props.tabIndex}
-              onBlur={this.handleBlur}
-              onChange={this.handleChange}/>
-            <FormattedMessage id={this.props.id}/>
-          </label>
-        </div>
+      <div className={cx(...this.classes)}>
+        <label>
+          <input
+            ref={this.setInput}
+            name={this.props.name}
+            type={this.props.type}
+            value={this.props.value}
+            checked={!!this.props.value}
+            disabled={this.props.isDisabled}
+            tabIndex={this.props.tabIndex}
+            onBlur={this.handleBlur}
+            onChange={this.handleChange}/>
+          <FormattedMessage id={this.props.id}/>
+        </label>
+      </div>
+    )
+  }
+
+  static propTypes = {
+    className: string,
+    id: string.isRequired,
+    isDisabled: bool,
+    name: string.isRequired,
+    tabIndex: number,
+    type: oneOf(['checkbox', 'radio']).isRequired,
+    value: bool,
+    onChange: func.isRequired
+  }
+
+  static defaultProps = {
+    type: 'checkbox'
+  }
+}
+
+
+class FormToggle extends PureComponent {
+  get classes() {
+    return [
+      `col-${this.props.size}`,
+      `col-offset-${GRID.SIZE - this.props.size}`,
+    ]
+  }
+
+  render() {
+    const { isCompact, ...props } = this.props
+
+    return (
+      <FormGroup isCompact={isCompact}>
+        <Toggle className={cx(...this.classes)} {...props}/>
       </FormGroup>
+    )
+  }
+
+  static propTypes = {
+    ...Toggle.propTypes,
+    size: number.isRequired,
+    isCompact: bool
+  }
+
+  static defaultProps = {
+    size: 8,
+    type: 'checkbox'
+  }
+}
+
+class FormToggleGroup extends PureComponent {
+  handleChange = (option) => {
+    for (let value in option) {
+      if (option[value]) {
+        this.props.onChange({ [this.props.name]: value })
+      }
+    }
+  }
+
+  render() {
+    return (
+      <FormElement
+        id={this.props.id}
+        size={this.props.size}
+        isCompact={this.props.isCompact}>
+        {this.props.options.map(({ id, value }, idx) =>
+          <Toggle
+            id={id}
+            key={id}
+            name={value}
+            tabIndex={this.props.tabIndex}
+            type="radio"
+            value={this.props.value === (value || String(idx))}
+            onChange={this.handleChange}/>)}
+      </FormElement>
     )
   }
 
@@ -281,9 +356,13 @@ class FormToggle extends PureComponent {
     isCompact: bool,
     isDisabled: bool,
     name: string.isRequired,
+    options: arrayOf(shape({
+      id: string.isRequired,
+      value: string,
+    })).isRequired,
     size: number.isRequired,
     tabIndex: number,
-    value: bool,
+    value: string,
     onChange: func.isRequired
   }
 
@@ -373,5 +452,6 @@ module.exports = {
   FormSelect: injectIntl(FormSelect),
   FormText,
   FormToggle,
+  FormToggleGroup,
   Label
 }
