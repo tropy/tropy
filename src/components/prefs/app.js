@@ -47,14 +47,10 @@ class AppPrefs extends PureComponent {
               onChange={this.handlePhotoTemplateChange}/>
           </FormElement>
           <FormToggleGroup
-            id="prefs.app.dup.label"
+            id="prefs.app.dup"
             name="dup"
             value={this.props.settings.dup}
-            options={[
-              { id: 'prefs.app.dup.options.skip', value: 'skip' },
-              { id: 'prefs.app.dup.options.import', value: 'import' },
-              { id: 'prefs.app.dup.options.prompt', value: 'prompt' }
-            ]}
+            options={['skip', 'import', 'prompt']}
             onChange={this.handleChange}/>
           <hr/>
           <FormSelect

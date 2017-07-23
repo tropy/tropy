@@ -39,7 +39,7 @@ prefs:
       photo: Default Photo Template
     dup:
       label: During Import
-      options:
+      option:
         skip: Skip duplicate photos
         import: Accept duplicate photos
         prompt: Ask me every time

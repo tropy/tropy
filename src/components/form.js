@@ -6,7 +6,7 @@ const { FormattedMessage } = require('react-intl')
 const { BufferedInput } = require('./input')
 const cx = require('classnames')
 const {
-  arrayOf, bool, func, node, oneOf, number, shape, string
+  arrayOf, bool, func, node, oneOf, number, string
 } = require('prop-types')
 const { noop } = require('../common/util')
 const { GRID } = require('../constants/sass')
@@ -335,17 +335,17 @@ class FormToggleGroup extends PureComponent {
   render() {
     return (
       <FormElement
-        id={this.props.id}
+        id={`${this.props.id}.label`}
         size={this.props.size}
         isCompact={this.props.isCompact}>
-        {this.props.options.map(({ id, value }, idx) =>
+        {this.props.options.map(value =>
           <Toggle
-            id={id}
-            key={id}
+            id={`${this.props.id}.option.${value}`}
+            key={value}
             name={value}
             tabIndex={this.props.tabIndex}
             type="radio"
-            value={this.props.value === (value || String(idx))}
+            value={this.props.value === value}
             onChange={this.handleChange}/>)}
       </FormElement>
     )
@@ -356,10 +356,7 @@ class FormToggleGroup extends PureComponent {
     isCompact: bool,
     isDisabled: bool,
     name: string.isRequired,
-    options: arrayOf(shape({
-      id: string.isRequired,
-      value: string,
-    })).isRequired,
+    options: arrayOf(string).isRequired,
     size: number.isRequired,
     tabIndex: number,
     value: string,
