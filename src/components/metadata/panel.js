@@ -8,6 +8,7 @@ const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
 const { MetadataFields } = require('./fields')
 const { TemplateSelect } = require('../template/select')
+const { PhotoInfo } = require('../photo/info')
 
 const {
   getAllTemplates,
@@ -83,6 +84,7 @@ class MetadataPanel extends PureComponent {
           data={photoData}
           template={templates[photo.template]}
           onChange={onMetadataSave}/>
+        <PhotoInfo photo={photo}/>
       </section>
     )
   }

@@ -77,6 +77,10 @@ prefs:
         other {# Properties}
       }
 
+photo:
+  filename: Filename
+  size: Size
+
 template:
   id: URI
   name: Name

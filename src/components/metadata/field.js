@@ -122,18 +122,31 @@ class MetadataField extends PureComponent {
 }
 
 
-const StaticField = ({ type, label, value }) => (
-  <li className={cx({ 'metadata-field': true, 'static': true, [type]: true })}>
-    <label><FormattedMessage id={label}/></label>
-    <div className="value static">{value}</div>
-  </li>
-)
+class StaticField extends PureComponent {
+  get classes() {
+    return [
+      'metadata-field',
+      'static'
+    ]
+  }
 
-StaticField.propTypes = {
-  label: string.isRequired,
-  type: string.isRequired,
-  value: oneOfType([string, number]).isRequired
+  render() {
+    return this.props.value && (
+      <li className={cx(this.classes)}>
+        <label>
+          <FormattedMessage id={this.props.label}/>
+        </label>
+        <div className="value static">{this.props.value}</div>
+      </li>
+    )
+  }
+
+  static propTypes = {
+    label: string.isRequired,
+    value: oneOfType([string, number]).isRequired
+  }
 }
+
 
 module.exports = {
   MetadataField,
