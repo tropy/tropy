@@ -46,6 +46,7 @@ class Create extends Command {
 class Import extends Command {
   static get action() { return ITEM.IMPORT }
 
+  // eslint-disable-next-line complexity
   *exec() {
     const { db, cache } = this.options
     let { files, list } = this.action.payload
@@ -60,9 +61,10 @@ class Import extends Command {
 
     if (!files) return
 
-    const [itemp, ptemp] = yield all([
+    const [itemp, ptemp, settings] = yield all([
       select(getItemTemplate),
-      select(getPhotoTemplate)
+      select(getPhotoTemplate),
+      select(state => state.settings)
     ])
 
     const idata = getTemplateValues(itemp)
@@ -75,22 +77,37 @@ class Import extends Command {
         file = files[i]
         image = yield call(Image.read, file)
 
-        yield call(db.transaction, async tx => {
+        const isDuplicate = yield call(mod.photo.find, db, {
+          checksum: image.checksum
+        })
 
-          const dup = await mod.photo.find(db, { checksum: image.checksum })
+        if (isDuplicate) {
+          switch (settings.dup) {
+            case 'prompt': {
+              this.isInteractive = true
 
-          if (dup) {
-            this.isInteractive = true
-            const { cancel } = await prompt('photo.dup.message', {
-              buttons: ['photo.dup.cancel', 'photo.dup.ok'],
-              checkbox: 'photo.dup.checkbox',
-              isChecked: false,
-              detail: basename(file)
-            })
+              const response = yield call(prompt, 'photo.dup.message', {
+                buttons: ['photo.dup.cancel', 'photo.dup.ok'],
+                checkbox: 'photo.dup.checkbox',
+                isChecked: false,
+                detail: basename(file)
+              })
 
-            if (cancel) throw new Skipped(file)
+              if (response.isChecked) {
+                yield put(act.settings.update({
+                  dup: response.ok ? 'import' : 'skip'
+                }, { persist: 'settings' }))
+              }
+
+              if (response.ok) break
+            }
+            // eslint-disable-next-line no-fallthrough
+            case 'skip':
+              throw new Skipped(file)
           }
+        }
 
+        yield call(db.transaction, async tx => {
           item = await mod.item.create(tx, itemp.id, {
             [DC.title]: text(image.title), ...idata
           })

@@ -117,7 +117,7 @@ function *main() {
       fork(ontology),
       fork(ipc),
       fork(history),
-      fork(storage.reload)
+      fork(storage.start)
     ])
 
     yield all([
