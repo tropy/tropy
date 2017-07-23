@@ -37,6 +37,13 @@ prefs:
     template:
       item: Default Item Template
       photo: Default Photo Template
+    dup:
+      label: During Import
+      options:
+        skip: Skip duplicate photos
+        import: Accept duplicate photos
+        prompt: Ask me every time
+
   project:
     label: Project
   template:

@@ -3,12 +3,15 @@
 const React = require('react')
 const { PureComponent } = React
 const { array, arrayOf, func, shape, string } = require('prop-types')
-const { FormElement, FormSelect } = require('../form')
+const { FormElement, FormSelect, FormToggleGroup } = require('../form')
 const { TemplateSelect } = require('../template/select')
 const { ipcRenderer: ipc } = require('electron')
 
 
 class AppPrefs extends PureComponent {
+  handleChange = () => {
+  }
+
   handleThemeChange = ({ theme }) => {
     ipc.send('cmd', 'app:switch-theme', theme, theme)
   }
@@ -43,6 +46,16 @@ class AppPrefs extends PureComponent {
               selected={this.props.settings.photoTemplate}
               onChange={this.handlePhotoTemplateChange}/>
           </FormElement>
+          <FormToggleGroup
+            id="prefs.app.dup.label"
+            name="dup"
+            value={this.props.settings.dup}
+            options={[
+              { id: 'prefs.app.dup.options.skip', value: 'skip' },
+              { id: 'prefs.app.dup.options.import', value: 'import' },
+              { id: 'prefs.app.dup.options.prompt', value: 'prompt' }
+            ]}
+            onChange={this.handleChange}/>
           <hr/>
           <FormSelect
             id="prefs.app.style.theme"
