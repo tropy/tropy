@@ -16,7 +16,7 @@ class Migration {
 
   static async all(dir) {
     return (await ls(dir))
-      .filter(migration => (/^\d+[\w.]*\.(js|sql)$/).test(migration))
+      .filter(migration => (/^\d+[\w.-]*\.(js|sql)$/).test(migration))
       .sort()
       .map(migration => new this(join(dir, migration)))
   }
