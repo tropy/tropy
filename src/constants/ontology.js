@@ -9,6 +9,7 @@ module.exports = {
 
   DB: 'ontology.db',
   SCHEMA: join(__dirname, '..', '..', 'db', 'schema', 'ontology.sql'),
+  MIGRATIONS: join(__dirname, '..', '..', 'db', 'migrate', 'ontology'),
 
   PROPS: {
     LOAD: 'ontology.props.load'

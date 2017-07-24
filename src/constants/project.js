@@ -13,6 +13,7 @@ module.exports = {
 
   SAVE: 'project.save',
   SCHEMA: join(__dirname, '..', '..', 'db', 'schema', 'project.sql'),
+  MIGRATIONS: join(__dirname, '..', '..', 'db', 'migrate', 'project'),
 
   UPDATE: 'project.update',
 

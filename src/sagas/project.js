@@ -1,6 +1,6 @@
 'use strict'
 
-const { OPEN, CLOSE, CLOSED } = require('../constants/project')
+const { OPEN, CLOSE, CLOSED, MIGRATIONS } = require('../constants/project')
 const { Database } = require('../common/db')
 const { Cache } = require('../common/cache')
 const { warn, debug, verbose } = require('../common/log')
@@ -32,9 +32,10 @@ function *open(file) {
     db.on('error', error => {
       warn(`unexpected database error: ${error.message}`)
       debug(error.stack)
-
-      throw error
     })
+
+    verbose('migrate project db...')
+    yield call(db.migrate, MIGRATIONS)
 
     var project = yield call(mod.project.load, db)
     var access  = yield call(mod.access.open, db)
