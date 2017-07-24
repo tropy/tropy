@@ -17,7 +17,7 @@ module.exports = {
 
   async create(db, template, { item, image, data }) {
     const {
-      path, checksum, mimetype, width, height, orientation
+      path, checksum, mimetype, width, height, orientation, file
     } = image
 
     const { id } = await db.run(`
@@ -29,9 +29,16 @@ module.exports = {
 
     await all([
       db.run(`
-        INSERT INTO photos (id, item_id, path, checksum, mimetype, orientation)
-          VALUES (?,?,?,?,?,?)`,
-        [id, item, path, checksum, mimetype, orientation]),
+        INSERT INTO photos (
+            id,
+            item_id,
+            path,
+            size,
+            checksum,
+            mimetype,
+            orientation
+          ) VALUES (?,?,?,?,?,?,?)`,
+        [id, item, path, file.size, checksum, mimetype, orientation]),
 
       metadata.update(db, {
         ids: [id],
@@ -42,7 +49,6 @@ module.exports = {
         }
       })
     ])
-
 
     return (await module.exports.load(db, [id]))[id]
   },
