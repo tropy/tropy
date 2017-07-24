@@ -64,6 +64,14 @@ module.exports = {
     }
   },
 
+  export(payload, meta) {
+    return {
+      type: ITEM.EXPORT,
+      payload: payload,
+      meta: { cmd: 'project', ...meta }
+    }
+  },
+
   implode(payload, meta) {
     return {
       type: ITEM.IMPLODE,

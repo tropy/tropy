@@ -461,6 +461,29 @@ class Implode extends Command {
   }
 }
 
+class Export extends Command {
+  static get action() { return ITEM.EXPORT }
+
+  // eslint-disable-next-line
+  *exec() {
+    let { id, path } = this.action.payload
+
+    try {
+      if (!path) {
+        this.isInteractive = true
+        //path = yield call(saveAs, {})
+      }
+
+      if (!path) return
+
+    } catch (error) {
+      warn(`Failed to export item ${id} to ${path}: ${error.message}`)
+      verbose(error.stack)
+
+      fail(error, this.action.type)
+    }
+  }
+}
 
 class ToggleTags extends Command {
   static get action() { return ITEM.TAG.TOGGLE }
@@ -553,6 +576,7 @@ module.exports = {
   Delete,
   Destroy,
   Explode,
+  Export,
   Import,
   Implode,
   Load,

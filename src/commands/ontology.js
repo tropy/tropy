@@ -277,13 +277,13 @@ class TemplateExport extends Command {
       assert(data != null, 'missing template')
 
       if (!path) {
+        this.isInteractive = true
         path = yield call(exportTemplate, {
           defaultPath: join(
             ARGS.documents,
             data.name ? sanitize(`${data.name}.ttp`) : ''
           )
         })
-        this.init = performance.now()
       }
 
       if (!path) return

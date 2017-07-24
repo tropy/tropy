@@ -5,6 +5,7 @@ module.exports = {
   DELETE: 'item.delete',
   DESTROY: 'item.destroy',
   EXPLODE: 'item.explode',
+  EXPORT: 'item.export',
   INSERT: 'item.insert',
   IMPORT: 'item.import',
   IMPLODE: 'item.implode',
