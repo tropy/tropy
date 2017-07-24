@@ -12,7 +12,7 @@
 --
 
 -- Save the current migration number
-PRAGMA user_version=1610181540;
+PRAGMA user_version=1707240933;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -60,7 +60,7 @@ CREATE TABLE photos (
   checksum     TEXT     NOT NULL,
   orientation  INTEGER  NOT NULL DEFAULT 1,
   metadata     TEXT     NOT NULL DEFAULT '{}'
-) WITHOUT ROWID;
+, size INTEGER NOT NULL DEFAULT 0) WITHOUT ROWID;
 CREATE TABLE items (
   id              INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   cover_image_id  INTEGER  REFERENCES images ON DELETE SET NULL
@@ -273,6 +273,7 @@ CREATE TRIGGER metadata_values_ad_fts
     INSERT INTO fts_metadata (fts_metadata, rowid, datatype, text)
       VALUES ('delete', OLD.value_id, OLD.datatype, OLD.text);
   END;
+CREATE INDEX idx_photos_checksum ON photos (checksum);
 PRAGMA writable_schema=OFF;
 COMMIT;
 PRAGMA foreign_keys=ON;
