@@ -51,7 +51,7 @@ function *populate(db) {
 }
 
 function *migrate(db) {
-  // TODO actually migrate
+  yield call(db.migrate, ONTOLOGY.MIGRATIONS)
 
   const stale = yield call(mod.ontology.template.stale, db, {
     id: ITEM.TEMPLATE,

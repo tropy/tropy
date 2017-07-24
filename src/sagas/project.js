@@ -34,7 +34,6 @@ function *open(file) {
       debug(error.stack)
     })
 
-    verbose('migrate project db...')
     yield call(db.migrate, MIGRATIONS)
 
     var project = yield call(mod.project.load, db)
