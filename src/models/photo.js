@@ -55,8 +55,20 @@ module.exports = {
 
       await all([
         db.each(`
-          SELECT id, item_id AS item, template, created, modified,
-            width, height, path, protocol, mimetype, checksum, orientation
+          SELECT
+              id,
+              item_id AS item,
+              template,
+              created,
+              modified,
+              width,
+              height,
+              path,
+              size,
+              protocol,
+              mimetype,
+              checksum,
+              orientation
             FROM subjects
               JOIN images USING (id)
               JOIN photos USING (id)

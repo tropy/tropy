@@ -78,8 +78,9 @@ prefs:
       }
 
 photo:
-  filename: Filename
+  file: File
   size: Size
+  type: Type
 
 template:
   id: URI

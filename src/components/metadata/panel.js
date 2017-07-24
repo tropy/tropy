@@ -73,7 +73,14 @@ class MetadataPanel extends PureComponent {
   renderPhotoFields() {
     if (this.isEmpty || this.isBulk) return null
 
-    const { photo, photoData, templates, onMetadataSave, ...props } = this.props
+    const {
+      photo,
+      photoData,
+      templates,
+      onMetadataSave,
+      onOpenInFolder,
+      ...props
+    } = this.props
 
     return photo && !photo.pending && (
       <section>
@@ -84,7 +91,9 @@ class MetadataPanel extends PureComponent {
           data={photoData}
           template={templates[photo.template]}
           onChange={onMetadataSave}/>
-        <PhotoInfo photo={photo}/>
+        <PhotoInfo
+          photo={photo}
+          onOpenInFolder={onOpenInFolder}/>
       </section>
     )
   }
@@ -120,7 +129,8 @@ class MetadataPanel extends PureComponent {
     itemTemplates: arrayOf(object).isRequired,
 
     onItemSave: func.isRequired,
-    onMetadataSave: func.isRequired
+    onMetadataSave: func.isRequired,
+    onOpenInFolder: func.isRequired
   }
 }
 

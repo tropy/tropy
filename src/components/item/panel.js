@@ -147,6 +147,7 @@ class ItemPanel extends PureComponent {
     onModeChange: func.isRequired,
     onNoteCreate: func.isRequired,
     onNoteSelect: func.isRequired,
+    onOpenInFolder: func.isRequired,
     onPhotoCreate: func.isRequired,
     onPhotoSelect: func.isRequired,
     onPhotoSort: func.isRequired,
