@@ -28,10 +28,10 @@ class Editable extends PureComponent {
   }
 
   render() {
-    const { isEditing, isDisabled, value, ...props } = this.props
+    const { isEditing, isDisabled, value, display, ...props } = this.props
 
     if (!isEditing || isDisabled) {
-      return (<div className={cx(this.classes)}>{value}</div>)
+      return (<div className={cx(this.classes)}>{display || value}</div>)
     }
 
     delete props.onChange
@@ -50,6 +50,7 @@ class Editable extends PureComponent {
     isDisabled: bool,
     isEditing: bool,
     value: oneOfType([string, number]),
+    display: string,
     onCancel: func.isRequired,
     onChange: func.isRequired
   }

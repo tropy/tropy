@@ -1,6 +1,10 @@
 'use strict'
 
-const NUM = new Intl.NumberFormat(ARGS.locale)
+const { TYPE } = require('./constants')
+
+const NUM = new Intl.NumberFormat(ARGS.locale, {
+  maximumFractionDigits: 2
+})
 
 const size = {
   bytes: 1,
@@ -11,6 +15,18 @@ const size = {
 }
 
 const format = {
+  datetime(value) {
+    try {
+      return new Intl.DateTimeFormat(ARGS.locale, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      }).format(new Date(value))
+    } catch (error) {
+      return value
+    }
+  },
+
   number(value) {
     return NUM.format(value)
   },
@@ -27,6 +43,15 @@ const format = {
         'kB' : 'bytes'
 
     return `${format.number(value / size[unit])} ${unit}`
+  },
+
+  auto(value, type) {
+    switch (type) {
+      case TYPE.DATE:
+        return format.datetime(value)
+      default:
+        return value
+    }
   }
 }
 

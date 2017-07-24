@@ -9,6 +9,7 @@ const { getLabel } = require('../../common/ontology')
 const { IconLock, IconWarning } = require('../icons')
 const cx = require('classnames')
 const { TYPE } = require('../../constants')
+const { auto } = require('../../format')
 const {
   arrayOf, bool, func, number, oneOfType, shape, string
 } = require('prop-types')
@@ -68,7 +69,7 @@ class MetadataField extends PureComponent {
   }
 
   render() {
-    const { classes,  details, label } = this
+    const { classes, details, label } = this
 
     return (
       <li className={cx(classes)}>
@@ -76,6 +77,7 @@ class MetadataField extends PureComponent {
         <div className="value" onClick={this.handleClick}>
           <Editable
             value={this.props.text}
+            display={auto(this.props.text, this.props.type)}
             placeholder={this.props.placeholder}
             isEditing={this.props.isEditing}
             isRequired={this.props.isRequired}
