@@ -5,7 +5,7 @@ const { basename } = require('path')
 const { warn, verbose } = require('../common/log')
 const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-const { prompt, openImages, fail  } = require('../dialog')
+const { prompt, open, fail  } = require('../dialog')
 const { Image } = require('../image')
 const { imagePath } = require('../common/cache')
 const { text } = require('../value')
@@ -56,7 +56,7 @@ class Import extends Command {
 
     if (!files) {
       this.isInteractive = true
-      files = yield call(openImages)
+      files = yield call(open.images)
     }
 
     if (!files) return

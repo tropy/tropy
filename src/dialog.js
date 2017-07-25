@@ -41,7 +41,7 @@ function onClosed(_, { id, payload, error }) {
   }
 }
 
-function open(type, options = {}) {
+function show(type, options = {}) {
   return new Promise((resolve, reject) => {
     const id = seq.next().value
 
@@ -51,7 +51,7 @@ function open(type, options = {}) {
 }
 
 function notify(options) {
-  return open('message-box', {
+  return show('message-box', {
     type: 'none', buttons: ['OK'], ...options
   })
 }
@@ -73,7 +73,7 @@ async function prompt(message, {
   isChecked,
   ...options
 } = {}, prefix = 'dialog.prompt.') {
-  const { response, checked } = await open('message-box', {
+  const { response, checked } = await show('message-box', {
     type: 'question',
     buttons: buttons.map(id => t(id, prefix)),
     message: t(message, prefix),
@@ -92,73 +92,65 @@ async function prompt(message, {
 }
 
 function save(options) {
-  return open('save', options)
+  return show('save', options)
 }
 
-function file(options) {
-  return open('file', options)
+function open(options) {
+  return show('file', options)
 }
 
-function openImages(options) {
-  return open('file', {
-    filters: [
-      { name: t('dialog.filter.images'), extensions: ['jpg', 'jpeg'] }
-    ],
-    properties: ['openFile', 'multiSelections'],
-    ...options
-  })
-}
+open.images = (options) => open({
+  filters: [{
+    name: t('dialog.filter.images'),
+    extensions: ['jpg', 'jpeg']
+  }],
+  properties: ['openFile', 'multiSelections'],
+  ...options
+})
 
-function openVocabs(options) {
-  return open('file', {
-    filters: [
-      { name: t('dialog.filter.rdf'), extensions: ['n3', 'ttl'] }
-    ],
-    properties: ['openFile', 'multiSelections'],
-    ...options
-  })
-}
+open.vocab = (options) => open({
+  filters: [{
+    name: t('dialog.filter.rdf'),
+    extensions: ['n3', 'ttl']
+  }],
+  properties: ['openFile', 'multiSelections'],
+  ...options
+})
 
-function openTemplates(options) {
-  return open('file', {
-    filters: [
-      { name: t('dialog.filter.templates'), extensions: ['ttp'] }
-    ],
-    properties: ['openFile', 'multiSelections'],
-    ...options
-  })
-}
+open.templates = (options) => open({
+  filters: [{
+    name: t('dialog.filter.templates'),
+    extensions: ['ttp']
+  }],
+  properties: ['openFile', 'multiSelections'],
+  ...options
+})
 
-function saveProject(options) {
-  return open('save', {
-    filters: [
-      { name: t('dialog.filter.projects'), extensions: ['tpy'] }
-    ],
-    ...options
-  })
-}
 
-function exportTemplate(options) {
-  return open('save', {
-    filters: [
-      { name: t('dialog.filter.templates'), extensions: ['ttp'] }
-    ],
-    ...options
-  })
-}
+save.project = (options) => save({
+  filters: [{
+    name: t('dialog.filter.projects'),
+    extensions: ['tpy']
+  }],
+  ...options
+})
+
+
+save.template = (options) => save({
+  filters: [{
+    name: t('dialog.filter.templates'),
+    extensions: ['ttp']
+  }],
+  ...options
+})
 
 module.exports = {
-  start,
-  stop,
-  open,
-  notify,
-  exportTemplate,
   fail,
-  file,
-  openImages,
-  openTemplates,
-  openVocabs,
+  notify,
+  open,
+  prompt,
   save,
-  saveProject,
-  prompt
+  show,
+  start,
+  stop
 }

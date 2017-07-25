@@ -2,7 +2,7 @@
 
 const { Database } = require('../common/db')
 const { ipcRenderer: ipc } = require('electron')
-const { fail, saveProject } = require('../dialog')
+const { fail, save } = require('../dialog')
 const { PROJECT, WIZARD } = require('../constants')
 const { create } = require('../models/project')
 
@@ -30,7 +30,7 @@ module.exports = {
     save(payload) {
       return async (dispatch) => {
         try {
-          const file = await saveProject({ defaultPath: payload })
+          const file = await save.project({ defaultPath: payload })
           dispatch(module.exports.project.update({ file }))
 
         } catch (error) {

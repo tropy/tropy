@@ -2,7 +2,7 @@
 
 const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-const { openImages } = require('../dialog')
+const { open } = require('../dialog')
 const mod = require('../models')
 const act = require('../actions')
 const { PHOTO } = require('../constants')
@@ -29,7 +29,7 @@ class Create extends Command {
     }
 
     if (!files) {
-      files = yield call(openImages)
+      files = yield call(open.images)
       this.init = performance.now()
     }
 
