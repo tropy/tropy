@@ -128,7 +128,8 @@ class StaticField extends PureComponent {
   get classes() {
     return [
       'metadata-field',
-      'static'
+      'static',
+      { clickable: this.props.onClick != null }
     ]
   }
 
