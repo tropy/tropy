@@ -9,6 +9,7 @@ const { history } = require('./history')
 const { search, load } = require('./search')
 const { ontology } = require('./ontology')
 const { exec } = require('./cmd')
+const { shell } = require('./shell')
 const mod = require('../models')
 const act = require('../actions')
 const storage = require('./storage')
@@ -117,6 +118,7 @@ function *main() {
       fork(ontology),
       fork(ipc),
       fork(history),
+      fork(shell),
       fork(storage.start)
     ])
 

@@ -326,8 +326,8 @@ module.exports = {
         dispatch(actions.nav.update({ mode }))
       },
 
-      onOpenInFolder(file) {
-        dispatch(actions.shell.openInFolder(file))
+      onOpenInFolder(...args) {
+        dispatch(actions.shell.openInFolder(args))
       },
 
       onProjectOpen(path) {
