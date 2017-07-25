@@ -72,7 +72,7 @@ async function prompt(message, {
   checkbox,
   isChecked,
   ...options
-} = {}, prefix = 'prompt.') {
+} = {}, prefix = 'dialog.prompt.') {
   const { response, checked } = await open('message-box', {
     type: 'question',
     buttons: buttons.map(id => t(id, prefix)),
@@ -102,7 +102,7 @@ function file(options) {
 function openImages(options) {
   return open('file', {
     filters: [
-      { name: 'Images', extensions: ['jpg', 'jpeg'] }
+      { name: t('dialog.filter.images'), extensions: ['jpg', 'jpeg'] }
     ],
     properties: ['openFile', 'multiSelections'],
     ...options
@@ -112,7 +112,7 @@ function openImages(options) {
 function openVocabs(options) {
   return open('file', {
     filters: [
-      { name: 'RDF Vocabularies', extensions: ['n3', 'ttl'] }
+      { name: t('dialog.filter.rdf'), extensions: ['n3', 'ttl'] }
     ],
     properties: ['openFile', 'multiSelections'],
     ...options
@@ -122,7 +122,7 @@ function openVocabs(options) {
 function openTemplates(options) {
   return open('file', {
     filters: [
-      { name: 'Tropy Templates', extensions: ['ttp'] }
+      { name: t('dialog.filter.templates'), extensions: ['ttp'] }
     ],
     properties: ['openFile', 'multiSelections'],
     ...options
@@ -132,7 +132,7 @@ function openTemplates(options) {
 function saveProject(options) {
   return open('save', {
     filters: [
-      { name: 'Tropy Projects', extensions: ['tpy'] }
+      { name: t('dialog.filter.projects'), extensions: ['tpy'] }
     ],
     ...options
   })
@@ -141,7 +141,7 @@ function saveProject(options) {
 function exportTemplate(options) {
   return open('save', {
     filters: [
-      { name: 'Tropy Templates', extensions: ['ttp'] }
+      { name: t('dialog.filter.templates'), extensions: ['ttp'] }
     ],
     ...options
   })
