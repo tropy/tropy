@@ -5,7 +5,7 @@ const { basename } = require('path')
 const { warn, verbose } = require('../common/log')
 const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-const { prompt, open, fail  } = require('../dialog')
+const { prompt, open, fail, save  } = require('../dialog')
 const { Image } = require('../image')
 const { imagePath } = require('../common/cache')
 const { text } = require('../value')
@@ -464,14 +464,13 @@ class Implode extends Command {
 class Export extends Command {
   static get action() { return ITEM.EXPORT }
 
-  // eslint-disable-next-line
   *exec() {
     let { id, path } = this.action.payload
 
     try {
       if (!path) {
         this.isInteractive = true
-        //path = yield call(saveAs, {})
+        path = yield call(save.items, {})
       }
 
       if (!path) return

@@ -132,6 +132,7 @@ save.project = (options) => save({
     name: t('dialog.filter.projects'),
     extensions: ['tpy']
   }],
+  properties: ['createDirectory'],
   ...options
 })
 
@@ -141,8 +142,19 @@ save.template = (options) => save({
     name: t('dialog.filter.templates'),
     extensions: ['ttp']
   }],
+  properties: ['createDirectory'],
   ...options
 })
+
+save.items = (options) => save({
+  filters: [{
+    name: t('dialog.filter.jsonld'),
+    extensions: ['json', 'jsonld']
+  }],
+  properties: ['createDirectory'],
+  ...options
+})
+
 
 module.exports = {
   fail,
