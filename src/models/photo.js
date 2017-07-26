@@ -81,7 +81,10 @@ module.exports = {
             WHERE id IN (${ids})`,
 
           (data) => {
-            assign(photos[data.id], data)
+            assign(photos[data.id], data, {
+              created: new Date(data.created),
+              modified: new Date(data.modified),
+            })
           }
         ),
 

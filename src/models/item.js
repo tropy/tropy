@@ -150,7 +150,11 @@ module.exports = mod.item = {
             WHERE id IN (${ids})`,
 
           (data) => {
-            assign(items[data.id], data, { deleted: !!data.deleted })
+            assign(items[data.id], data, {
+              created: new Date(data.created),
+              modified: new Date(data.modified),
+              deleted: !!data.deleted
+            })
           }
         ),
 
