@@ -24,7 +24,7 @@ class Restore extends Command {
 
   *exec() {
     const { db } = this.options
-    const payload = this.action.payload
+    const { payload, meta } = this.action
 
     this.original = yield select(({ metadata }) =>
       pick(metadata, keys(payload)))
@@ -33,7 +33,11 @@ class Restore extends Command {
 
     yield call(db.transaction, async tx => {
       for (let { id, ...data } of values(payload)) {
-        await mod.replace(tx, { ids: [id], data })
+        await mod.replace(tx, {
+          ids: [id],
+          data,
+          timestamp: meta.now
+        })
       }
     })
 
@@ -58,7 +62,11 @@ class Save extends Command {
     this.original = yield select(({ metadata }) =>
       pick(metadata, ids))
 
-    yield put(act.update({ ids, data }, { replace: meta.replace }))
+    yield put(act.update({
+      ids,
+      data,
+      timestamp: meta.now
+    }, { replace: meta.replace }))
 
     yield call(db.transaction, tx =>
       mod.update(tx, { ids, data }, meta.replace))
