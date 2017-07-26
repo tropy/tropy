@@ -8,6 +8,7 @@ const { createHash } = require('crypto')
 const { exif } = require('./exif')
 const { nativeImage } = require('electron')
 const { assign } = Object
+const { warn, debug } = require('./common/log')
 
 
 class Image {
@@ -41,8 +42,16 @@ class Image {
   }
 
   get date() {
-    // temporarily return as string until we add value types
-    return String(this.exif.DateTimeOriginal || this.file.ctime)
+    try {
+      // temporarily return as string until we add value types
+      return (this.exif.DateTimeOriginal || this.file.ctime).toISOString()
+
+    } catch (error) {
+      warn(`failed to convert image date: ${error.message}`)
+      debug(error.stack)
+
+      return new Date().toISOString()
+    }
   }
 
   digest(encoding = 'hex') {
