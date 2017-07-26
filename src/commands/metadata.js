@@ -48,6 +48,8 @@ class Restore extends Command {
     })
 
     this.undo = act.restore(this.original)
+
+    return ids
   }
 
   *abort() {
@@ -85,6 +87,8 @@ class Save extends Command {
       }))
 
     this.undo = act.restore(this.original)
+
+    return ids
   }
 
   *abort() {

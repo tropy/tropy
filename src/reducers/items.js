@@ -1,10 +1,10 @@
 'use strict'
 
-const { ITEM, PROJECT, LIST } = require('../constants')
+const { ITEM, PROJECT, LIST, METADATA } = require('../constants')
 const { into, map } = require('transducers.js')
 
 const {
-  load, insert, remove, replace, update, nested, bulk
+  load, insert, remove, replace, update, nested, bulk, touch
 } = require('./util')
 
 
@@ -81,6 +81,10 @@ module.exports = {
           }
         })), items)
       }
+
+      case METADATA.SAVE:
+      case METADATA.RESTORE:
+        return touch(state, payload, meta, error)
 
       default:
         return state
