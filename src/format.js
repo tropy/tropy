@@ -20,7 +20,9 @@ const format = {
       return new Intl.DateTimeFormat(ARGS.locale, {
         year: 'numeric',
         month: 'short',
-        day: 'numeric'
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
       }).format(new Date(value))
     } catch (error) {
       return value

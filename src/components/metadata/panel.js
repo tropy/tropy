@@ -9,6 +9,7 @@ const { FormattedMessage } = require('react-intl')
 const { MetadataFields } = require('./fields')
 const { TemplateSelect } = require('../template/select')
 const { PhotoInfo } = require('../photo/info')
+const { ItemInfo } = require('../item/info')
 
 const {
   getAllTemplates,
@@ -66,6 +67,7 @@ class MetadataPanel extends PureComponent {
           template={templates[item.template]}
           isDisabled={isDisabled}
           onChange={onMetadataSave}/>
+        <ItemInfo item={item}/>
       </section>
     )
   }

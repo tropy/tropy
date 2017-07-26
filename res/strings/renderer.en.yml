@@ -77,6 +77,10 @@ prefs:
         other {# Properties}
       }
 
+item:
+  created: Date Added
+  modified: Modified
+
 photo:
   file: File
   size: Size
