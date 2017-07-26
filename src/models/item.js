@@ -138,7 +138,12 @@ module.exports = mod.item = {
 
       await all([
         db.each(`
-          SELECT id, template, created, modified, deleted
+          SELECT
+              id,
+              template,
+              datetime(created, "localtime") AS created,
+              datetime(modified, "localtime") AS modified,
+              deleted
             FROM subjects
               JOIN items USING (id)
               LEFT OUTER JOIN trash USING (id)
