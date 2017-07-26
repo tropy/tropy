@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { StaticField } = require('../metadata/field')
 const { func, object } = require('prop-types')
 const { basename } = require('path')
-const { number, bytes } = require('../../format')
+const { bytes, datetime, number } = require('../../format')
 
 
 class PhotoInfo extends PureComponent {
@@ -32,6 +32,12 @@ class PhotoInfo extends PureComponent {
         <StaticField
           label="photo.size"
           value={this.size}/>
+        <StaticField
+          label="photo.created"
+          value={datetime(this.props.photo.created)}/>
+        <StaticField
+          label="item.modified"
+          value={datetime(this.props.photo.modified)}/>
       </ol>
     )
   }

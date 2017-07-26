@@ -85,6 +85,8 @@ photo:
   file: File
   size: Size
   type: Type
+  created: Date Added
+  modified: Modified
 
 template:
   id: URI

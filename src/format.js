@@ -23,7 +23,7 @@ const format = {
         day: 'numeric',
         hour: 'numeric',
         minute: 'numeric'
-      }).format(new Date(value))
+      }).format(value instanceof Date ? value : new Date(value))
     } catch (error) {
       return value
     }
