@@ -256,7 +256,7 @@ class Save extends Command {
 
   *exec() {
     const { db } = this.options
-    const { payload } = this.action
+    const { payload, meta } = this.action
 
     if (!isArray(payload)) {
       const { id: ids, property, value } = this.action.payload
@@ -267,7 +267,7 @@ class Save extends Command {
         items, templates: ontology.template, metadata
       }))
 
-      const props = { [property]: value }
+      const props = { [property]: value, modified: new Date(meta.now) }
       const template = state.templates[value]
 
       assert(template != null, 'unknown template')
@@ -283,7 +283,7 @@ class Save extends Command {
       ])
 
       yield call(db.transaction, async tx => {
-        await mod.item.update(tx, ids, props)
+        await mod.item.update(tx, ids, props, meta.now)
 
         if (hasData) {
           await mod.metadata.update(tx, { ids, data })
@@ -305,8 +305,8 @@ class Save extends Command {
 
       yield call(db.transaction, async tx => {
         for (let [id, template, data] of payload) {
-          changed.props[id] = { template }
-          await mod.item.update(tx, [id], changed.props[id])
+          changed.props[id] = { template, modified: new Date(meta.now) }
+          await mod.item.update(tx, [id], changed.props[id], meta.now)
 
           if (data) {
             hasData = true

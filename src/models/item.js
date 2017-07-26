@@ -220,15 +220,15 @@ module.exports = mod.item = {
     return (await mod.item.load(db, [id]))[id]
   },
 
-  async update(db, ids, data) {
+  async update(db, ids, data, timestamp = Date.now()) {
     for (let prop in data) {
       if (prop !== 'template') continue
 
       await db.run(`
         UPDATE subjects
-          SET template = ?, modified = datetime("now")
+          SET template = ?, modified = datetime(?)
           WHERE id IN (${lst(ids)})`,
-        data[prop])
+        data[prop], new Date(timestamp).toISOString())
     }
   },
 

@@ -27,7 +27,7 @@ const metadata = {
     return data
   },
 
-  async update(db, { ids, data, timestamp = Date.now() }, replace = false) {
+  async update(db, { ids, data, timestamp }, replace = false) {
     const idList = list(ids)
 
     await db.run(`
@@ -46,11 +46,13 @@ const metadata = {
             `(${[id, quote(prop), value, 'NULL'].join(',')})`).join(', ')}`)
     }
 
-    await db.run(`
-      UPDATE subjects
-        SET modified = datetime(?)
-        WHERE id IN (${idList})`,
-      new Date(timestamp).toISOString())
+    if (timestamp != null) {
+      await db.run(`
+        UPDATE subjects
+          SET modified = datetime(?)
+          WHERE id IN (${idList})`,
+        new Date(timestamp).toISOString())
+    }
   },
 
   async replace(db, data) {
