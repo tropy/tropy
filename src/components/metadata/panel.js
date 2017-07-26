@@ -67,7 +67,7 @@ class MetadataPanel extends PureComponent {
           template={templates[item.template]}
           isDisabled={isDisabled}
           onChange={onMetadataSave}/>
-        <ItemInfo item={item}/>
+        {items.length === 1 && <ItemInfo item={item}/>}
       </section>
     )
   }
