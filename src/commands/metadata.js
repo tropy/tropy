@@ -6,7 +6,7 @@ const { pick } = require('../common/util')
 const mod = require('../models/metadata')
 const act = require('../actions/metadata')
 const { LOAD, RESTORE, SAVE } = require('../constants/metadata')
-const { keys, values } = Object
+const { keys } = Object
 
 
 class Load extends Command {
@@ -26,16 +26,22 @@ class Restore extends Command {
     const { db } = this.options
     const { payload, meta } = this.action
 
-    this.original = yield select(({ metadata }) =>
-      pick(metadata, keys(payload)))
+    const ids = keys(payload)
+    this.original = {}
 
-    yield put(act.replace(payload))
+    yield select(({ metadata }) => {
+      for (let id of ids) {
+        this.original[id] = pick(metadata[id], keys(payload[id]), {}, true)
+      }
+    })
+
+    yield put(act.merge(payload))
 
     yield call(db.transaction, async tx => {
-      for (let { id, ...data } of values(payload)) {
-        await mod.replace(tx, {
+      for (let id of ids) {
+        await mod.update(tx, {
           ids: [id],
-          data,
+          data: payload[id],
           timestamp: meta.now
         })
       }
@@ -46,7 +52,7 @@ class Restore extends Command {
 
   *abort() {
     if (this.original) {
-      yield put(act.replace(this.original))
+      yield put(act.merge(this.original))
     }
   }
 }
@@ -59,24 +65,31 @@ class Save extends Command {
     const { payload, meta } = this.action
     const { ids, data } = payload
 
-    this.original = yield select(({ metadata }) =>
-      pick(metadata, ids))
+    this.original = {}
 
-    yield put(act.update({
-      ids,
-      data,
-      timestamp: meta.now
-    }, { replace: meta.replace }))
+    yield select(({ metadata }) => {
+      const props = keys(data)
+
+      for (let id of ids) {
+        this.original[id] = pick(metadata[id], props, {}, true)
+      }
+    })
+
+    yield put(act.update({ ids, data, }))
 
     yield call(db.transaction, tx =>
-      mod.update(tx, { ids, data }, meta.replace))
+      mod.update(tx, {
+        ids,
+        data,
+        timestamp: meta.now
+      }))
 
     this.undo = act.restore(this.original)
   }
 
   *abort() {
     if (this.original) {
-      yield put(act.replace(this.original))
+      yield put(act.merge(this.original))
     }
   }
 }
