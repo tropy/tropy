@@ -1,6 +1,7 @@
 {
   "@context": "https://tropy.org/v1/contexts/template.jsonld",
   "@id": "https://tropy.org/v1/templates/photo",
+  "@type": "https://tropy.org/v1/tropy#Template",
   "name": "Tropy Photo",
   "type": "https://tropy.org/v1/tropy#Photo",
   "domain": [

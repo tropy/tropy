@@ -23,6 +23,7 @@ class Template {
     return {
       '@context': TEMPLATE.CONTEXT,
       '@id': data.id,
+      '@type': TEMPLATE.TYPE,
       'type': data.type,
       'name': data.name,
       'domain': data.domain,
