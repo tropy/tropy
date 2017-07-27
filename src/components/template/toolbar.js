@@ -39,17 +39,17 @@ class TemplateToolbar extends PureComponent {
             <IconButton
               icon={<IconNew/>}
               title="prefs.template.tools.new"
-              isDisabled={!this.props.selected}
+              isDisabled={this.props.isPristine}
               onClick={this.props.onClear}/>
             <IconButton
               icon={<IconCopy/>}
               title="prefs.template.tools.copy"
-              isDisabled={!this.props.selected}
+              isDisabled={this.props.isPristine}
               onClick={this.props.onCopy}/>
             <IconButton
               icon={<IconTrash/>}
               title="prefs.template.tools.delete"
-              isDisabled={!this.props.selected || this.props.isProtected}
+              isDisabled={this.props.isPristine || this.props.isProtected}
               onClick={this.props.onDelete}/>
             <IconButton
               icon={<IconImport/>}
@@ -58,7 +58,7 @@ class TemplateToolbar extends PureComponent {
             <IconButton
               icon={<IconExport/>}
               title="prefs.template.tools.export"
-              isDisabled={!this.props.selected}
+              isDisabled={this.props.isPristine}
               onClick={this.handleExport}/>
           </ButtonGroup>
         </div>
@@ -72,6 +72,7 @@ class TemplateToolbar extends PureComponent {
       name: string
     })).isRequired,
     selected: string,
+    isPristine: bool,
     isProtected: bool,
     onChange: func.isRequired,
     onClear: func.isRequired,
