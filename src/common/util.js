@@ -2,6 +2,7 @@
 
 const B = require('bluebird')
 const pad = require('string.prototype.padstart')
+const shortid = require('shortid')
 const { keys } = Object
 
 const util = {
@@ -403,6 +404,10 @@ const util = {
 
   blank(string) {
     return string == null || string.length === 0
+  },
+
+  identify() {
+    return shortid.generate()
   }
 }
 

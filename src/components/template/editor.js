@@ -7,16 +7,14 @@ const { TemplateFieldList } = require('./field-list')
 const { TemplateToolbar } = require('./toolbar')
 const { FormattedMessage } = require('react-intl')
 const { FormField, FormGroup, FormSelect } = require('../form')
-const { omit, pick } = require('../../common/util')
+const { identify, omit, pick } = require('../../common/util')
 const { arrayOf, func, shape, string } = require('prop-types')
 const actions = require('../../actions')
 const { TYPE } = require('../../constants')
-
 const { getTemplateList, getPropertyList } = require('../../selectors')
 
 const TEMPLATE = {
   name: '',
-  id: '',
   type: TYPE.ITEM,
   creator: '',
   description: '',
@@ -25,7 +23,12 @@ const TEMPLATE = {
   fields: []
 }
 
-const makeTemplate = (template = TEMPLATE) => ({ ...template })
+const defaultId = () =>
+  `https:/tropy.org/v1/templates/id#${identify()}`
+
+const makeTemplate = (template = TEMPLATE) => ({
+  id: template.id || defaultId(), ...template
+})
 
 
 class TemplateEditor extends PureComponent {
