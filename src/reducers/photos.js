@@ -13,11 +13,6 @@ module.exports = {
       case PHOTO.LOAD:
         return load(state, payload, meta, error)
 
-      case PHOTO.CREATE:
-        return (error || !meta.done) ?
-          state :
-          insert(state, payload)
-
       case PHOTO.INSERT:
         return insert(state, payload, meta)
       case PHOTO.UPDATE:

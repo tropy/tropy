@@ -64,7 +64,8 @@ class Create extends Command {
       }
 
       yield put(act.metadata.load(photos))
-      yield put(act.item.photos.add({ id: item, photos }))
+      yield put(act.item.photos.add({ id: item, photos }, { idx }))
+      yield put(act.photo.select({ item, photo: photos[0] }))
 
       this.undo = act.photo.delete({ item, photos })
       this.redo = act.photo.restore({ item, photos }, { idx })

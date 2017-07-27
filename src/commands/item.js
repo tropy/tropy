@@ -161,6 +161,8 @@ class Import extends Command {
       this.undo = act.item.delete(items)
       this.redo = act.item.restore(items)
     }
+
+    return items
   }
 }
 
