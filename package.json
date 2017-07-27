@@ -109,6 +109,7 @@
     "reselect": "^3.0.0",
     "rimraf": "^2.5.2",
     "sanitize-filename": "^1.6.1",
+    "shortid": "^2.2.8",
     "sqlite3": "^3.1.8",
     "string.prototype.padstart": "^3.0.0",
     "transducers.js": "^0.3.2",
