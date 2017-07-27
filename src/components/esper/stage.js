@@ -10,7 +10,13 @@ const { append, bounds, on, off } = require('../../dom')
 class EsperStage extends PureComponent {
   componentDidMount() {
     const { width, height } = this.bounds
-    this.pixi = new PIXI.Application({ width, height })
+
+    this.pixi = new PIXI.Application({
+      transparent: true,
+      width,
+      height
+    })
+
     append(this.pixi.view, this.container)
     on(window, 'resize', this.handleResize)
   }
