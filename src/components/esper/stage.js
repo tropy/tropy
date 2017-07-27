@@ -2,8 +2,8 @@
 
 const React = require('react')
 const PIXI = require('pixi.js')
-const { PureComponent, PropTypes } = React
-const { bool } = PropTypes
+const { PureComponent } = React
+const { bool } = require('prop-types')
 const { append } = require('../../dom')
 
 
