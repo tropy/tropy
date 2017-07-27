@@ -5,9 +5,9 @@ const { warn, verbose } = require('../common/log')
 const { DuplicateError } = require('../common/error')
 const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
+const { ImportCommand } = require('./import')
 const { prompt, open, fail, save  } = require('../dialog')
 const { Image } = require('../image')
-const { imagePath } = require('../common/cache')
 const { text } = require('../value')
 const act = require('../actions')
 const mod = require('../models')
@@ -46,7 +46,7 @@ class Create extends Command {
   }
 }
 
-class Import extends Command {
+class Import extends ImportCommand {
   static get action() { return ITEM.IMPORT }
 
   *exec() {
@@ -61,7 +61,7 @@ class Import extends Command {
       files = yield call(open.images)
     }
 
-    if (!files) return
+    if (!files) return []
 
     const [itemp, ptemp] = yield all([
       select(getItemTemplate),
@@ -71,7 +71,7 @@ class Import extends Command {
     const defaultItemData = getTemplateValues(itemp)
     const defaultPhotoData = getTemplateValues(ptemp)
 
-    for (let i = 0, ii = files.length; i < ii; ++i) {
+    for (let i = 0, total = files.length; i < total; ++i) {
       let file, image, item, photo
 
       try {
@@ -102,7 +102,7 @@ class Import extends Command {
         yield all([
           put(act.item.insert(item)),
           put(act.photo.insert(photo)),
-          put(act.activity.update(this.action, { total: ii, progress: i + 1 }))
+          put(act.activity.update(this.action, { total, progress: i + 1 }))
         ])
 
         items.push(item.id)
@@ -126,62 +126,6 @@ class Import extends Command {
     }
 
     return items
-  }
-
-
-  *createThumbnails(id, image) {
-    try {
-      for (let size of [48, 512]) {
-        const thumb = yield call([image, image.resize], size)
-        yield call(this.options.cache.save,
-          imagePath(id, size), thumb.toJPEG(100))
-      }
-    } catch (error) {
-      warn(`Failed to create thumbnail: ${error.message}`)
-      verbose(error.stack)
-    }
-  }
-
-  *isDuplicate(image) {
-    return null != (yield call(mod.photo.find, this.options.db, {
-      checksum: image.checksum
-    }))
-  }
-
-  *getDuplicateHandler() {
-    if (this.duplicateHandler == null) {
-      this.duplicateHandler = yield select(({ settings }) => settings.dup)
-    }
-
-    return this.duplicateHandler
-  }
-
-  *setDuplicateHandler(handler) {
-    this.duplicateHandler = handler
-    yield put(act.settings.persist({ dup: handler }))
-  }
-
-  *handleDuplicate(image) {
-    const handler = yield* this.getDuplicateHandler()
-    if (handler === 'import') return
-
-    if (yield* this.isDuplicate(image)) {
-      switch (handler) {
-        case 'prompt': {
-          this.isInteractive = true
-          const { ok, isChecked } = yield call(prompt.dup, image.path)
-
-          if (isChecked) {
-            yield* this.setDuplicateHandler(ok ? 'import' : 'skip')
-          }
-
-          if (ok) break
-        }
-        // eslint-disable-next-line no-fallthrough
-        case 'skip':
-          throw new DuplicateError(image.path)
-      }
-    }
   }
 }
 
@@ -208,7 +152,7 @@ class Destroy extends Command {
     const { db } = this.options
     const ids = this.action.payload
 
-    const { cancel } = yield call(prompt, 'item.destroy')
+    const { cancel } = yield call(prompt, 'dialog.prompt.item.destroy')
 
     this.init = performance.now()
     if (cancel) return

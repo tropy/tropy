@@ -2,19 +2,21 @@
 
 const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-const { open } = require('../dialog')
+const { ImportCommand } = require('./import')
+const { fail, open } = require('../dialog')
 const mod = require('../models')
 const act = require('../actions')
 const { PHOTO } = require('../constants')
 const { Image } = require('../image')
 const { imagePath } = require('../common/cache')
+const { DuplicateError } = require('../common/error')
 const { warn, verbose } = require('../common/log')
 const { splice } = require('../common/util')
 const { map, cat, filter, into, compose } = require('transducers.js')
 const { getPhotoTemplate, getTemplateValues } = require('../selectors')
 
 
-class Create extends Command {
+class Create extends ImportCommand {
   static get action() { return PHOTO.CREATE }
 
   *exec() {
@@ -33,45 +35,42 @@ class Create extends Command {
       this.init = performance.now()
     }
 
+    if (!files) return []
+
     const template = yield select(getPhotoTemplate)
     const data = getTemplateValues(template)
 
-    if (files && files.length) {
-      // TODO Improve handling of multiple photos!
-      // Progress reporting, cancel import etc.
+    for (let i = 0, total = files.length; i < total; ++i) {
+      let file
+      let image
+      let photo
 
-      for (let file of files) {
-        try {
-          const image = yield call(Image.read, file)
+      try {
+        file = files[i]
+        image = yield call(Image.read, file)
 
-          const isDuplicate = yield call(mod.photo.find, db, {
-            checksum: image.checksum
-          })
+        yield* this.handleDuplicate(image)
 
-          const photo = yield call([db, db.transaction], tx => (
-            mod.photo.create(tx, template.id, { item, image, data })
-          ))
+        photo = yield call(db.transaction, tx =>
+          mod.photo.create(tx, template.id, { item, image, data })
+        )
 
-          yield put(act.photo.insert(photo, { idx: [idx[0] + photos.length] }))
-          photos.push(photo.id)
+        yield all([
+          put(act.photo.insert(photo, { idx: [idx[0] + photos.length] })),
+          put(act.activity.update(this.action, { total, progress: i + 1 }))
+        ])
 
-          try {
-            for (let size of [48, 512]) {
-              const icon = yield call([image, image.resize], size)
-              yield call([cache, cache.save],
-                imagePath(photo.id, size), icon.toJPEG(100))
-            }
+        photos.push(photo.id)
 
-          } catch (error) {
-            warn(`Failed to create thumbnail: ${error.message}`)
-            verbose(error.stack)
-          }
-        } catch (error) {
-          warn(`Failed to import "${file}": ${error.message}`)
-          verbose(error.stack)
+        yield* this.createThumbnails(photo.id, image)
 
-          fail(error, this.action.type)
-        }
+      } catch (error) {
+        if (error instanceof DuplicateError) continue
+
+        warn(`Failed to import "${file}": ${error.message}`)
+        verbose(error.stack)
+
+        fail(error, this.action.type)
       }
 
       yield put(act.metadata.load(photos))
@@ -222,6 +221,7 @@ class Order extends Command {
 module.exports = {
   Create,
   Delete,
+  ImportCommand,
   Load,
   Restore,
   Move,
