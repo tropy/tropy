@@ -8,7 +8,6 @@ const mod = require('../models')
 const act = require('../actions')
 const { PHOTO } = require('../constants')
 const { Image } = require('../image')
-const { imagePath } = require('../common/cache')
 const { DuplicateError } = require('../common/error')
 const { warn, verbose } = require('../common/log')
 const { splice } = require('../common/util')
@@ -20,7 +19,7 @@ class Create extends ImportCommand {
   static get action() { return PHOTO.CREATE }
 
   *exec() {
-    const { db, cache } = this.options
+    const { db } = this.options
     let { item, files } = this.action.payload
     let { idx } = this.action.meta
 
