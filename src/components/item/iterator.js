@@ -77,6 +77,13 @@ class ItemIterator extends Iterator {
     onContextMenu(event, context.join('-'), target)
   }
 
+  handleItemDelete(items) {
+    if (!this.props.isDisabled && items != null && items.length > 0) {
+      this.props.onItemDelete(items)
+    }
+  }
+
+
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
       case (this.isVertical ? 'up' : 'left'):
@@ -93,6 +100,9 @@ class ItemIterator extends Iterator {
         break
       case 'clear':
         this.props.onSelect({ items: [] })
+        break
+      case 'delete':
+        this.handleItemDelete(this.props.selection)
         break
       default:
         return
@@ -163,6 +173,7 @@ class ItemIterator extends Iterator {
 
     dt: func.isRequired,
     onContextMenu: func.isRequired,
+    onItemDelete: func.isRequired,
     onItemMerge: func.isRequired,
     onItemOpen: func.isRequired,
     onItemPreview: func.isRequired,

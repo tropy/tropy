@@ -372,7 +372,7 @@ module.exports = {
       },
 
       onItemDelete(items) {
-        dispatch(actions.item.delete(items.map(item => item.id)))
+        dispatch(actions.item.delete(items))
       },
 
       onItemMerge(...args) {
@@ -398,6 +398,10 @@ module.exports = {
 
       onPhotoCreate(...args) {
         dispatch(actions.photo.create(...args))
+      },
+
+      onPhotoDelete(...args) {
+        dispatch(actions.photo.delete(...args))
       },
 
       onPhotoMove(...args) {

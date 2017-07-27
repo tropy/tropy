@@ -10,12 +10,14 @@ linux: &linux
     preview: Space
     open: Enter
     clear: Escape
+    delete: Backspace
   PhotoIterator:
     up: ArrowUp
     down: ArrowDown
     left: ArrowLeft
     right: ArrowRight
     open: Enter
+    delete: Backspace
   NoteList:
     up: ArrowUp
     down: ArrowDown

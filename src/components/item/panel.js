@@ -59,6 +59,7 @@ class ItemPanel extends PureComponent {
       onModeChange,
       onNoteCreate,
       onNoteSelect,
+      onPhotoDelete,
       onPhotoSelect,
       onPhotoSort,
       ...props
@@ -94,6 +95,7 @@ class ItemPanel extends PureComponent {
           zoom={panel.zoom}
           selection={photo && photo.id}
           onCreate={this.handlePhotoCreate}
+          onDelete={onPhotoDelete}
           onSelect={onPhotoSelect}
           onSort={onPhotoSort}
           onZoomChange={this.handleZoomChange}/>
@@ -149,6 +151,7 @@ class ItemPanel extends PureComponent {
     onNoteSelect: func.isRequired,
     onOpenInFolder: func.isRequired,
     onPhotoCreate: func.isRequired,
+    onPhotoDelete: func.isRequired,
     onPhotoSelect: func.isRequired,
     onPhotoSort: func.isRequired,
     onTagCreate: func.isRequired,
