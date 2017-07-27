@@ -41,25 +41,36 @@ class Create extends Command {
       // Progress reporting, cancel import etc.
 
       for (let file of files) {
-        const image = yield call(Image.read, file)
-
-        const photo = yield call([db, db.transaction], tx => (
-          mod.photo.create(tx, template.id, { item, image, data })
-        ))
-
-        yield put(act.photo.insert(photo, { idx: [idx[0] + photos.length] }))
-        photos.push(photo.id)
-
         try {
-          for (let size of [48, 512]) {
-            const icon = yield call([image, image.resize], size)
-            yield call([cache, cache.save],
-              imagePath(photo.id, size), icon.toJPEG(100))
-          }
+          const image = yield call(Image.read, file)
 
+          const isDuplicate = yield call(mod.photo.find, db, {
+            checksum: image.checksum
+          })
+
+          const photo = yield call([db, db.transaction], tx => (
+            mod.photo.create(tx, template.id, { item, image, data })
+          ))
+
+          yield put(act.photo.insert(photo, { idx: [idx[0] + photos.length] }))
+          photos.push(photo.id)
+
+          try {
+            for (let size of [48, 512]) {
+              const icon = yield call([image, image.resize], size)
+              yield call([cache, cache.save],
+                imagePath(photo.id, size), icon.toJPEG(100))
+            }
+
+          } catch (error) {
+            warn(`Failed to create thumbnail: ${error.message}`)
+            verbose(error.stack)
+          }
         } catch (error) {
-          warn(`Failed to create thumbnail: ${error.message}`)
+          warn(`Failed to import "${file}": ${error.message}`)
           verbose(error.stack)
+
+          fail(error, this.action.type)
         }
       }
 

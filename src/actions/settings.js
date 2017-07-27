@@ -7,6 +7,14 @@ module.exports = {
     return { type: SETTINGS.CLOSE, payload, meta }
   },
 
+  persist(payload, meta = {}) {
+    return {
+      type: SETTINGS.UPDATE,
+      payload,
+      meta: { persist: 'settings', ...meta }
+    }
+  },
+
   restore(payload, meta = {}) {
     return { type: SETTINGS.RESTORE, payload, meta }
   },
@@ -15,4 +23,3 @@ module.exports = {
     return { type: SETTINGS.UPDATE, payload, meta }
   }
 }
-

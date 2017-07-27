@@ -2,6 +2,7 @@
 
 const assert = require('assert')
 const { warn, verbose } = require('../common/log')
+const { DuplicateError } = require('../common/error')
 const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { prompt, open, fail, save  } = require('../dialog')
@@ -48,9 +49,8 @@ class Create extends Command {
 class Import extends Command {
   static get action() { return ITEM.IMPORT }
 
-  // eslint-disable-next-line complexity
   *exec() {
-    const { db, cache } = this.options
+    const { db } = this.options
     let { files, list } = this.action.payload
 
     const items = []
@@ -63,14 +63,13 @@ class Import extends Command {
 
     if (!files) return
 
-    const [itemp, ptemp, settings] = yield all([
+    const [itemp, ptemp] = yield all([
       select(getItemTemplate),
-      select(getPhotoTemplate),
-      select(state => state.settings)
+      select(getPhotoTemplate)
     ])
 
-    const idata = getTemplateValues(itemp)
-    const pdata = getTemplateValues(ptemp)
+    const defaultItemData = getTemplateValues(itemp)
+    const defaultPhotoData = getTemplateValues(ptemp)
 
     for (let i = 0, ii = files.length; i < ii; ++i) {
       let file, image, item, photo
@@ -79,37 +78,15 @@ class Import extends Command {
         file = files[i]
         image = yield call(Image.read, file)
 
-        const isDuplicate = yield call(mod.photo.find, db, {
-          checksum: image.checksum
-        })
-
-        if (isDuplicate) {
-          switch (settings.dup) {
-            case 'prompt': {
-              this.isInteractive = true
-              const { ok, isChecked } = yield call(prompt.dup, file)
-
-              if (isChecked) {
-                yield put(act.settings.update({
-                  dup: ok ? 'import' : 'skip'
-                }, { persist: 'settings' }))
-              }
-
-              if (ok) break
-            }
-            // eslint-disable-next-line no-fallthrough
-            case 'skip':
-              throw new Skipped(file)
-          }
-        }
+        yield* this.handleDuplicate(image)
 
         yield call(db.transaction, async tx => {
           item = await mod.item.create(tx, itemp.id, {
-            [DC.title]: text(image.title), ...idata
+            [DC.title]: text(image.title), ...defaultItemData
           })
 
           photo = await mod.photo.create(tx, ptemp.id, {
-            item: item.id, image, data: pdata
+            item: item.id, image, data: defaultPhotoData
           })
 
           if (list) {
@@ -120,17 +97,7 @@ class Import extends Command {
           item.photos.push(photo.id)
         })
 
-        try {
-          for (let size of [48, 512]) {
-            const thumb = yield call([image, image.resize], size)
-            yield call([cache, cache.save],
-              imagePath(photo.id, size), thumb.toJPEG(100))
-          }
-
-        } catch (error) {
-          warn(`Failed to create thumbnail: ${error.message}`)
-          verbose(error.stack)
-        }
+        yield* this.createThumbnails(photo.id, image)
 
         yield all([
           put(act.item.insert(item)),
@@ -142,7 +109,7 @@ class Import extends Command {
         metadata.push(item.id, photo.id)
 
       } catch (error) {
-        if (error instanceof Skipped) continue
+        if (error instanceof DuplicateError) continue
 
         warn(`Failed to import "${file}": ${error.message}`)
         verbose(error.stack)
@@ -159,6 +126,62 @@ class Import extends Command {
     }
 
     return items
+  }
+
+
+  *createThumbnails(id, image) {
+    try {
+      for (let size of [48, 512]) {
+        const thumb = yield call([image, image.resize], size)
+        yield call(this.options.cache.save,
+          imagePath(id, size), thumb.toJPEG(100))
+      }
+    } catch (error) {
+      warn(`Failed to create thumbnail: ${error.message}`)
+      verbose(error.stack)
+    }
+  }
+
+  *isDuplicate(image) {
+    return null != (yield call(mod.photo.find, this.options.db, {
+      checksum: image.checksum
+    }))
+  }
+
+  *getDuplicateHandler() {
+    if (this.duplicateHandler == null) {
+      this.duplicateHandler = yield select(({ settings }) => settings.dup)
+    }
+
+    return this.duplicateHandler
+  }
+
+  *setDuplicateHandler(handler) {
+    this.duplicateHandler = handler
+    yield put(act.settings.persist({ dup: handler }))
+  }
+
+  *handleDuplicate(image) {
+    const handler = yield* this.getDuplicateHandler()
+    if (handler === 'import') return
+
+    if (yield* this.isDuplicate(image)) {
+      switch (handler) {
+        case 'prompt': {
+          this.isInteractive = true
+          const { ok, isChecked } = yield call(prompt.dup, image.path)
+
+          if (isChecked) {
+            yield* this.setDuplicateHandler(ok ? 'import' : 'skip')
+          }
+
+          if (ok) break
+        }
+        // eslint-disable-next-line no-fallthrough
+        case 'skip':
+          throw new DuplicateError(image.path)
+      }
+    }
   }
 }
 
@@ -559,12 +582,6 @@ class ClearTags extends Command {
     yield put(act.item.tags.remove({ id, tags }))
 
     this.undo = act.item.tags.toggle({ id, tags })
-  }
-}
-
-class Skipped extends Error {
-  constructor(file) {
-    super(`Skipped import ${file}`)
   }
 }
 
