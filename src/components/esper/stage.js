@@ -4,16 +4,19 @@ const React = require('react')
 const PIXI = require('pixi.js')
 const { PureComponent } = React
 const { bool } = require('prop-types')
-const { append } = require('../../dom')
+const { append, bounds, on, off } = require('../../dom')
 
 
 class EsperStage extends PureComponent {
   componentDidMount() {
-    this.pixi = new PIXI.Application()
+    const { width, height } = this.bounds
+    this.pixi = new PIXI.Application({ width, height })
     append(this.pixi.view, this.container)
+    on(window, 'resize', this.handleResize)
   }
 
   componentWillUnmount() {
+    off(window, 'resize', this.handleResize)
     this.pixi.destroy(true)
   }
 
@@ -25,6 +28,15 @@ class EsperStage extends PureComponent {
 
   setContainer = (container) => {
     this.container = container
+  }
+
+  handleResize = () => {
+    const { width, height } = this.bounds
+    this.pixi.renderer.resize(width, height)
+  }
+
+  get bounds() {
+    return bounds(this.container)
   }
 
   update(props) {

@@ -21,6 +21,14 @@ class EsperImage extends PureComponent {
     return photo && `${photo.protocol}://${photo.path}`
   }
 
+  setStage = (stage) => {
+    this.stage = stage
+  }
+
+  resize = () => {
+    this.stage.handleResize()
+  }
+
   render() {
     return (
       <section className="esper">
@@ -28,6 +36,7 @@ class EsperImage extends PureComponent {
           <EsperToolbar/>
         </EsperHeader>
         <EsperStage
+          ref={this.setStage}
           isDisabled={!this.props.isVisible}
           image={this.src}/>
       </section>
@@ -35,8 +44,8 @@ class EsperImage extends PureComponent {
   }
 
   static propTypes = {
-    photo: object,
-    isVisible: bool
+    isVisible: bool,
+    photo: object
   }
 
   static defaultProps = {

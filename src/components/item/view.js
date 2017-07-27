@@ -66,8 +66,21 @@ class ItemView extends PureComponent {
     this.notepad = notepad
   }
 
-  handleEsperResize = (height) => {
+  setEsper = (esper) => {
+    this.esper = esper
+  }
+
+  handleEsperResized = (height) => {
     this.props.onUiUpdate({ esper: { height } })
+  }
+
+  handleEsperResize = () => {
+    this.esper.resize()
+  }
+
+  handlePanelResize = (...args) => {
+    this.props.onPanelResize(...args)
+    this.esper.resize()
   }
 
 
@@ -124,7 +137,6 @@ class ItemView extends PureComponent {
       offset,
       panel,
       photo,
-      onPanelResize,
       onPanelDragStop,
       isTrashSelected,
       ...props
@@ -139,7 +151,7 @@ class ItemView extends PureComponent {
           value={offset}
           min={PANEL.MIN_WIDTH}
           max={PANEL.MAX_WIDTH}
-          onResize={onPanelResize}
+          onResize={this.handlePanelResize}
           onDragStop={onPanelDragStop}>
           <ItemPanel {...pick(props, ItemPanel.props)}
             panel={panel}
@@ -156,9 +168,13 @@ class ItemView extends PureComponent {
             edge="bottom"
             value={esper.height}
             isRelative
-            onChange={this.handleEsperResize}
+            onChange={this.handleEsperResized}
+            onResize={this.handleEsperResize}
             min={256}>
-            <EsperImage isVisible photo={photo}/>
+            <EsperImage
+              ref={this.setEsper}
+              isVisible
+              photo={photo}/>
           </BufferedResizable>
           <NotePad
             ref={this.setNotePad}
