@@ -102,6 +102,7 @@ class PhotoIterator extends Iterator {
         break
       case 'delete':
         this.handleDelete(this.getCurrentPhoto())
+        this.select(this.getNextPhoto() || this.getPrevPhoto())
         break
       default:
         return

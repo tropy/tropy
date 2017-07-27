@@ -103,6 +103,7 @@ class ItemIterator extends Iterator {
         break
       case 'delete':
         this.handleItemDelete(this.props.selection)
+        this.select(this.getNextItem() || this.getPrevItem())
         break
       default:
         return
