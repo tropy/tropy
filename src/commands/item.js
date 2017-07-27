@@ -1,7 +1,6 @@
 'use strict'
 
 const assert = require('assert')
-const { basename } = require('path')
 const { warn, verbose } = require('../common/log')
 const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
@@ -88,21 +87,15 @@ class Import extends Command {
           switch (settings.dup) {
             case 'prompt': {
               this.isInteractive = true
+              const { ok, isChecked } = yield call(prompt.dup, file)
 
-              const response = yield call(prompt, 'photo.dup.message', {
-                buttons: ['photo.dup.cancel', 'photo.dup.ok'],
-                checkbox: 'photo.dup.checkbox',
-                isChecked: false,
-                detail: basename(file)
-              })
-
-              if (response.isChecked) {
+              if (isChecked) {
                 yield put(act.settings.update({
-                  dup: response.ok ? 'import' : 'skip'
+                  dup: ok ? 'import' : 'skip'
                 }, { persist: 'settings' }))
               }
 
-              if (response.ok) break
+              if (ok) break
             }
             // eslint-disable-next-line no-fallthrough
             case 'skip':

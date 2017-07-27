@@ -128,14 +128,13 @@ dialog:
       destroy: >
         Are your sure you want to permanently delete items?
         This action cannot be undone.
-    photo:
-      dup:
-        message: >
-          This photo already exists in your project. Are you sure
-          you want to import it again?
-        checkbox: Remember this choice
-        cancel: Skip
-        ok: Import Anyway
+    dup:
+      message: >
+        This photo already exists in your project. Are you sure
+        you want to import it again?
+      checkbox: Remember this choice
+      cancel: Skip
+      ok: Import Anyway
   filter:
     templates: Tropy Templates
     images: Images

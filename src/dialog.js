@@ -4,6 +4,7 @@ const assert = require('assert')
 const { ipcRenderer: ipc } = require('electron')
 const { counter, get } = require('./common/util')
 const { warn } = require('./common/log')
+const { basename } = require('path')
 
 let seq
 let pending
@@ -71,16 +72,18 @@ async function prompt(message, {
   cancelId = 0,
   checkbox,
   isChecked,
+  detail,
   ...options
-} = {}, prefix = 'dialog.prompt.') {
+} = {}) {
   const { response, checked } = await show('message-box', {
     type: 'question',
-    buttons: buttons.map(id => t(id, prefix)),
-    message: t(message, prefix),
+    buttons: buttons.map(id => t(id)),
+    message: t(message),
     defaultId,
     cancelId,
-    checkboxLabel: (checkbox != null) ? t(checkbox, prefix) : undefined,
+    checkboxLabel: (checkbox != null) ? t(checkbox) : undefined,
     checkboxChecked: isChecked,
+    detail: t(detail),
     ...options
   })
 
@@ -98,6 +101,15 @@ function save(options) {
 function open(options) {
   return show('file', options)
 }
+
+prompt.dup = (file, options) =>
+  prompt(basename(file), {
+    buttons: ['dialog.prompt.dup.cancel', 'dialog.prompt.dup.ok'],
+    checkbox: 'dialog.prompt.dup.checkbox',
+    isChecked: false,
+    detail: 'dialog.prompt.dup.message',
+    ...options
+  })
 
 open.images = (options) => open({
   filters: [{
