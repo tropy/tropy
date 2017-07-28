@@ -3,7 +3,7 @@
 const React = require('react')
 const PIXI = require('pixi.js')
 const { PureComponent } = React
-const { bool, string } = require('prop-types')
+const { bool, number, string } = require('prop-types')
 const { append, bounds, on, off } = require('../../dom')
 
 
@@ -18,7 +18,12 @@ class EsperStage extends PureComponent {
     })
 
     this.pixi.renderer.autoResize = true
+
+    this.image = new PIXI.Sprite()
+    this.pixi.stage.addChild(this.image)
+
     append(this.pixi.view, this.container)
+
     on(window, 'resize', this.handleResize)
   }
 
@@ -41,22 +46,40 @@ class EsperStage extends PureComponent {
 
   handleResize = () => {
     const { width, height } = this.bounds
+
     this.pixi.renderer.resize(width, height)
+
+    this.image.scale.x = this.scale(width)
+    this.image.scale.y = this.image.scale.x
+
+    this.image.x = 0
+    this.image.y = this.offset(height)
   }
 
   get bounds() {
     return bounds(this.container)
   }
 
+  scale(width = this.pixi.view.width) {
+    return this.props.width > 0 ? (width / this.props.width) : 1
+  }
+
+  offset(height = this.pixi.view.height) {
+    return this.props.height > 0 ?
+      (height - (this.props.height * this.image.scale.y)) / 2 :
+      0
+  }
+
   reset(src) {
-    const size = this.pixi.stage.children.length
-
     if (src != null) {
-      this.pixi.stage.addChild(PIXI.Sprite.fromImage(src))
-    }
-
-    if (size > 0) {
-      this.pixi.stage.removeChildren(0, size)
+      this.image.texture = PIXI.Texture.fromImage(src)
+      this.image.visible = true
+      this.image.scale.x = this.scale()
+      this.image.scale.y = this.image.scale.x
+      this.image.x = 0
+      this.image.y = this.offset()
+    } else {
+      this.image.visible = false
     }
   }
 
@@ -75,12 +98,11 @@ class EsperStage extends PureComponent {
   }
 
   static propTypes = {
-  }
-
-  static propTypes = {
     isDisabled: bool.isRequired,
     isVisible: bool.isRequired,
-    src: string
+    src: string,
+    width: number.isRequired,
+    height: number.isRequired
   }
 }
 

@@ -17,7 +17,7 @@ EsperHeader.propTypes = {
 
 class EsperImage extends PureComponent {
   get isEmpty() {
-    return this.props.photo == null
+    return this.props.photo == null || this.props.photo.pending
   }
 
   get isVisible() {
@@ -29,8 +29,17 @@ class EsperImage extends PureComponent {
   }
 
   get src() {
-    const { photo } = this.props
-    return photo && photo.protocol && photo.path && `${photo.protocol}://${photo.path}`
+    return this.isEmpty ?
+      null :
+      `${this.props.photo.protocol}://${this.props.photo.path}`
+  }
+
+  get width() {
+    return (this.props.photo && this.props.photo.width) || 0
+  }
+
+  get height() {
+    return (this.props.photo && this.props.photo.height) || 0
   }
 
   setStage = (stage) => {
@@ -42,8 +51,6 @@ class EsperImage extends PureComponent {
   }
 
   render() {
-    const { isDisabled, isVisible, src } = this
-
     return (
       <section className="esper">
         <EsperHeader>
@@ -51,9 +58,11 @@ class EsperImage extends PureComponent {
         </EsperHeader>
         <EsperStage
           ref={this.setStage}
-          isDisabled={isDisabled}
-          isVisible={isVisible}
-          src={src}/>
+          isDisabled={this.isDisabled}
+          isVisible={this.isVisible}
+          src={this.src}
+          width={this.width}
+          height={this.height}/>
       </section>
     )
   }
