@@ -33,6 +33,15 @@ ToolbarLeft.propTypes = {
   children: node
 }
 
+const ToolbarRight = ({ children }) => (
+  <div className="toolbar-right">{children}</div>
+)
+
+ToolbarRight.propTypes = {
+  children: node
+}
+
+
 
 class Toolbar extends PureComponent {
   handleDoubleClick = (event) => {
@@ -72,5 +81,6 @@ module.exports = {
   Toolbar,
   ToolbarContext,
   ToolbarLeft,
+  ToolbarRight,
   ToolGroup
 }
