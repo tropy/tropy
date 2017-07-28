@@ -66,7 +66,6 @@
     "istanbul-lib-instrument": "^1.7.4",
     "node-sass": "^4.0.0",
     "nyc": "^11.0.3",
-    "react-addons-perf": "^15.4.2",
     "react-dnd-test-backend": "^2.2.3",
     "react-test-renderer": "^15.6.1",
     "sass-lint": "^1.9.1",
