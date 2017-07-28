@@ -16,9 +16,21 @@ EsperHeader.propTypes = {
 
 
 class EsperImage extends PureComponent {
+  get isEmpty() {
+    return this.props.photo == null
+  }
+
+  get isVisible() {
+    return this.props.isVisible && !this.isEmpty
+  }
+
+  get isDisabled() {
+    return this.props.isDisabled && !this.isEmpty
+  }
+
   get src() {
     const { photo } = this.props
-    return photo && `${photo.protocol}://${photo.path}`
+    return photo && photo.protocol && photo.path && `${photo.protocol}://${photo.path}`
   }
 
   setStage = (stage) => {
@@ -30,6 +42,8 @@ class EsperImage extends PureComponent {
   }
 
   render() {
+    const { isDisabled, isVisible, src } = this
+
     return (
       <section className="esper">
         <EsperHeader>
@@ -37,13 +51,15 @@ class EsperImage extends PureComponent {
         </EsperHeader>
         <EsperStage
           ref={this.setStage}
-          isDisabled={!this.props.isVisible}
-          image={this.src}/>
+          isDisabled={isDisabled}
+          isVisible={isVisible}
+          src={src}/>
       </section>
     )
   }
 
   static propTypes = {
+    isDisabled: bool,
     isVisible: bool,
     photo: object
   }

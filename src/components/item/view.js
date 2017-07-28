@@ -173,7 +173,8 @@ class ItemView extends PureComponent {
             min={256}>
             <EsperImage
               ref={this.setEsper}
-              isVisible
+              isDisabled={isTrashSelected}
+              isVisible={isItemOpen}
               photo={photo}/>
           </BufferedResizable>
           <NotePad

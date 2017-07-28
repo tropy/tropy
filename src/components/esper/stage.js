@@ -3,7 +3,7 @@
 const React = require('react')
 const PIXI = require('pixi.js')
 const { PureComponent } = React
-const { bool } = require('prop-types')
+const { bool, string } = require('prop-types')
 const { append, bounds, on, off } = require('../../dom')
 
 
@@ -17,6 +17,7 @@ class EsperStage extends PureComponent {
       height
     })
 
+    this.pixi.renderer.autoResize = true
     append(this.pixi.view, this.container)
     on(window, 'resize', this.handleResize)
   }
@@ -26,9 +27,11 @@ class EsperStage extends PureComponent {
     this.pixi.destroy(true)
   }
 
-
-  shouldComponentUpdate(props) {
+  componentWillReceiveProps(props) {
     if (props !== this.props) this.update(props)
+  }
+
+  shouldComponentUpdate() {
     return false
   }
 
@@ -45,9 +48,24 @@ class EsperStage extends PureComponent {
     return bounds(this.container)
   }
 
+  reset(src) {
+    const size = this.pixi.stage.children.length
+
+    if (src != null) {
+      this.pixi.stage.addChild(PIXI.Sprite.fromImage(src))
+    }
+
+    if (size > 0) {
+      this.pixi.stage.removeChildren(0, size)
+    }
+  }
+
   update(props) {
-    const { isDisabled } = props
-    this.pixi[isDisabled ? 'stop' : 'start']()
+    if (props.src !== this.props.src) {
+      this.reset(props.src)
+    }
+
+    this.pixi[props.isVisible ? 'start' : 'stop']()
   }
 
   render() {
@@ -57,7 +75,12 @@ class EsperStage extends PureComponent {
   }
 
   static propTypes = {
-    isDisabled: bool
+  }
+
+  static propTypes = {
+    isDisabled: bool.isRequired,
+    isVisible: bool.isRequired,
+    src: string
   }
 }
 
