@@ -16,6 +16,13 @@ EsperHeader.propTypes = {
 
 
 class EsperImage extends PureComponent {
+  constructor(props) {
+    super(props)
+    this.state = {
+      angle: 0
+    }
+  }
+
   get isEmpty() {
     return this.props.photo == null || this.props.photo.pending
   }
@@ -50,17 +57,26 @@ class EsperImage extends PureComponent {
     this.stage.handleResize()
   }
 
+  handleRotate = (by) => {
+    this.setState({
+      angle: (360 + (this.state.angle + by)) % 360
+    })
+  }
+
   render() {
     return (
       <section className="esper">
         <EsperHeader>
-          <EsperToolbar/>
+          <EsperToolbar
+            isDisabled={this.isDisabled}
+            onRotate={this.handleRotate}/>
         </EsperHeader>
         <EsperStage
           ref={this.setStage}
           isDisabled={this.isDisabled}
           isVisible={this.isVisible}
           src={this.src}
+          angle={this.state.angle}
           width={this.width}
           height={this.height}/>
       </section>

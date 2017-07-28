@@ -4,6 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { Toolbar, ToolbarLeft, ToolGroup } = require('../toolbar')
 const { IconButton } = require('../button')
+const { bool, func } = require('prop-types')
 
 const {
   IconArrow,
@@ -16,29 +17,50 @@ const {
   IconFit
 } = require('../icons')
 
-// eslint-disable-next-line react/prefer-stateless-function
 class EsperToolbar extends PureComponent {
+  handleRotate = () => {
+    this.props.onRotate(-90)
+  }
+
   render() {
     return (
       <Toolbar>
         <ToolbarLeft>
           <ToolGroup>
-            <IconButton icon={<IconArrow/>}/>
-            <IconButton icon={<IconSelection/>}/>
+            <IconButton
+              icon={<IconArrow/>}
+              isDisabled={this.props.isDisabled}/>
+            <IconButton
+              icon={<IconSelection/>}
+              isDisabled={this.props.isDisabled}/>
           </ToolGroup>
           <ToolGroup>
-            <IconButton icon={<IconRotate/>}/>
-            <IconButton icon={<IconNut/>}/>
+            <IconButton
+              icon={<IconRotate/>}
+              isDisabled={this.props.isDisabled}
+              onClick={this.handleRotate}/>
+            <IconButton
+              icon={<IconNut/>}
+              isDisabled={this.props.isDisabled}/>
           </ToolGroup>
           <ToolGroup>
-            <IconButton icon={<IconHand/>}/>
-            <IconButton icon={<IconMinusCircle/>}/>
-            <IconButton icon={<IconPlusCircle/>}/>
-            <IconButton icon={<IconFit/>}/>
+            <IconButton
+              icon={<IconHand/>}/>
+            <IconButton
+              icon={<IconMinusCircle/>}/>
+            <IconButton
+              icon={<IconPlusCircle/>}/>
+            <IconButton
+              icon={<IconFit/>}/>
           </ToolGroup>
         </ToolbarLeft>
       </Toolbar>
     )
+  }
+
+  static propTypes = {
+    isDisabled: bool.isRequired,
+    onRotate: func.isRequired
   }
 }
 

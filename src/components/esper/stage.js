@@ -20,6 +20,7 @@ class EsperStage extends PureComponent {
     this.pixi.renderer.autoResize = true
 
     this.image = new PIXI.Sprite()
+    this.image.anchor.set(0.5, 0.5)
     this.pixi.stage.addChild(this.image)
 
     append(this.pixi.view, this.container)
@@ -52,8 +53,8 @@ class EsperStage extends PureComponent {
     this.image.scale.x = this.scale(width)
     this.image.scale.y = this.image.scale.x
 
-    this.image.x = 0
-    this.image.y = this.offset(height)
+    this.image.x = width / 2
+    this.image.y = height / 2
   }
 
   get bounds() {
@@ -64,20 +65,14 @@ class EsperStage extends PureComponent {
     return this.props.width > 0 ? (width / this.props.width) : 1
   }
 
-  offset(height = this.pixi.view.height) {
-    return this.props.height > 0 ?
-      (height - (this.props.height * this.image.scale.y)) / 2 :
-      0
-  }
-
   reset(src) {
     if (src != null) {
       this.image.texture = PIXI.Texture.fromImage(src)
       this.image.visible = true
       this.image.scale.x = this.scale()
       this.image.scale.y = this.image.scale.x
-      this.image.x = 0
-      this.image.y = this.offset()
+      this.image.x = this.pixi.view.width / 2
+      this.image.y = this.pixi.view.height / 2
     } else {
       this.image.visible = false
     }
@@ -87,6 +82,8 @@ class EsperStage extends PureComponent {
     if (props.src !== this.props.src) {
       this.reset(props.src)
     }
+
+    this.image.rotation = (props.angle / 180) * Math.PI
 
     this.pixi[props.isVisible ? 'start' : 'stop']()
   }
@@ -101,6 +98,7 @@ class EsperStage extends PureComponent {
     isDisabled: bool.isRequired,
     isVisible: bool.isRequired,
     src: string,
+    angle: number.isRequired,
     width: number.isRequired,
     height: number.isRequired
   }
