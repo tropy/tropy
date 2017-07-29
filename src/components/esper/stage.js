@@ -118,14 +118,12 @@ class EsperStage extends PureComponent {
     this.container = container
   }
 
-  handleLoadProgress = (loader, resource) => {
-    console.log(`loading ${resource.url}... ${loader.progress}`)
+  handleLoadProgress = () => {
   }
 
   handleLoadError = (loader, resource) => {
-    console.log('failed to load ', resource.url)
     if (this.props.onLoadError) {
-      this.props.onLoadError()
+      this.props.onLoadError(resource.url)
     }
   }
 
