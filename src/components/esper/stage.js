@@ -8,6 +8,9 @@ const PIXI = require('pixi.js')
 const { Sprite } = PIXI
 const { TextureCache, skipHello } = PIXI.utils
 const { PI, abs, min } = Math
+const TWEEN = require('@tweenjs/tween.js')
+const { Tween } = TWEEN
+const { Cubic } = TWEEN.Easing
 
 
 class EsperStage extends PureComponent {
@@ -17,6 +20,7 @@ class EsperStage extends PureComponent {
     skipHello()
 
     this.pixi = new PIXI.Application({
+      resolution: window.devicePixelRatio,
       transparent: true,
       width,
       height
@@ -64,7 +68,7 @@ class EsperStage extends PureComponent {
   }
 
   reset(props = this.props) {
-    const oldImage = this.image
+    this.fadeOut(this.image)
     this.image = null
 
     if (props.src != null) {
@@ -74,11 +78,16 @@ class EsperStage extends PureComponent {
       this.load(props.src, this.image)
       this.pixi.stage.addChildAt(this.image, 0)
     }
+  }
 
-    if (oldImage != null) {
-      this.pixi.stage.removeChild(oldImage)
-    }
+  fadeOut(sprite) {
+    if (sprite == null) return
 
+    new Tween(sprite)
+      .to({ alpha: 0 }, 250)
+      .easing(Cubic.InOut)
+      .onComplete(() => { this.pixi.stage.removeChild(sprite) })
+      .start()
   }
 
   load(url, sprite) {
@@ -114,6 +123,8 @@ class EsperStage extends PureComponent {
   }
 
   update = (delta) => {
+    TWEEN.update()
+
     if (this.isDirty()) {
       const { image, rotation, scale } = this
 
