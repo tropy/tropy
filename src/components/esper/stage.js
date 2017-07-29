@@ -104,7 +104,7 @@ class EsperStage extends PureComponent {
       this.image.scale.x = this.scale()
       this.image.scale.y = this.image.scale.x
 
-      //this.image.rotation = (props.angle / 180) * Math.PI
+      this.image.rotation = (this.props.angle / 180) * Math.PI
     }
   }
 
