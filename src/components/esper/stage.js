@@ -1,15 +1,19 @@
 'use strict'
 
 const React = require('react')
-const PIXI = require('pixi.js')
 const { PureComponent } = React
-const { bool, number, string } = require('prop-types')
+const { bool, func, number, string } = require('prop-types')
 const { append, bounds, on, off } = require('../../dom')
+const PIXI = require('pixi.js')
+const { Sprite } = PIXI
+const { TextureCache, skipHello } = PIXI.utils
 
 
 class EsperStage extends PureComponent {
   componentDidMount() {
-    const { width, height } = this.bounds
+    const { width, height } = bounds(this.container)
+
+    skipHello()
 
     this.pixi = new PIXI.Application({
       transparent: true,
@@ -17,75 +21,112 @@ class EsperStage extends PureComponent {
       height
     })
 
+    this.pixi.loader.onError.add(this.handleLoadError)
+    this.pixi.loader.onLoad.add(this.handleLoadProgress)
+    this.pixi.ticker.add(this.update)
     this.pixi.renderer.autoResize = true
-
-    this.image = new PIXI.Sprite()
-    this.image.anchor.set(0.5, 0.5)
-    this.pixi.stage.addChild(this.image)
 
     append(this.pixi.view, this.container)
 
-    on(window, 'resize', this.handleResize)
+    on(window, 'resize', this.resize)
+    this.handlePropsChange(this.props)
   }
 
   componentWillUnmount() {
-    off(window, 'resize', this.handleResize)
+    off(window, 'resize', this.resize)
     this.pixi.destroy(true)
   }
 
   componentWillReceiveProps(props) {
-    if (props !== this.props) this.update(props)
+    if (props !== this.props) {
+      this.handlePropsChange(props)
+    }
   }
 
   shouldComponentUpdate() {
     return false
   }
 
-  setContainer = (container) => {
-    this.container = container
+  handlePropsChange(props, reset = false) {
+    if (reset || this.props.src !== props.src) {
+      this.reset(props)
+    }
+
+    if (props.isVisible) {
+      this.pixi.start()
+    } else {
+      this.pixi.stop()
+    }
   }
 
-  handleResize = () => {
-    const { width, height } = this.bounds
+  reset(props = this.props) {
+    const oldImage = this.image
+    this.image = null
 
+    if (props.src != null) {
+      this.image = new Sprite()
+      this.load(props.src, this.image)
+
+      this.pixi.stage.addChildAt(this.image, 0)
+    }
+
+    if (oldImage != null) {
+      this.pixi.stage.removeChild(oldImage)
+    }
+
+  }
+
+  load(url, sprite) {
+    if (TextureCache[url]) {
+      sprite.texture = TextureCache[url]
+    } else {
+      this.pixi.loader.reset().add(url).load(() => {
+        sprite.texture = this.pixi.loader.resources[url].texture
+      })
+    }
+  }
+
+  resize = () => {
+    const { width, height } = bounds(this.container)
     this.pixi.renderer.resize(width, height)
-
-    this.image.scale.x = this.scale(width)
-    this.image.scale.y = this.image.scale.x
-
-    this.image.x = width / 2
-    this.image.y = height / 2
-  }
-
-  get bounds() {
-    return bounds(this.container)
   }
 
   scale(width = this.pixi.view.width) {
     return this.props.width > 0 ? (width / this.props.width) : 1
   }
 
-  reset(src) {
-    if (src != null) {
-      this.image.texture = PIXI.Texture.fromImage(src)
-      this.image.visible = true
-      this.image.scale.x = this.scale()
-      this.image.scale.y = this.image.scale.x
+  update = () => {
+    if (this.image != null) {
+      this.image.anchor.x = 0.5
+      this.image.anchor.y = 0.5
       this.image.x = this.pixi.view.width / 2
       this.image.y = this.pixi.view.height / 2
-    } else {
-      this.image.visible = false
+      this.image.scale.x = this.scale()
+      this.image.scale.y = this.image.scale.x
+
+      //this.image.rotation = (props.angle / 180) * Math.PI
     }
   }
 
-  update(props) {
-    if (props.src !== this.props.src) {
-      this.reset(props.src)
+
+  get isLoading() {
+    return this.pixi.loader.loading
+  }
+
+
+  setContainer = (container) => {
+    this.container = container
+  }
+
+  handleLoadProgress = (loader, resource) => {
+    console.log(`loading ${resource.url}... ${loader.progress}`)
+  }
+
+  handleLoadError = (loader, resource) => {
+    console.log('failed to load ', resource.url)
+    if (this.props.onLoadError) {
+      this.props.onLoadError()
     }
-
-    this.image.rotation = (props.angle / 180) * Math.PI
-
-    this.pixi[props.isVisible ? 'start' : 'stop']()
   }
 
   render() {
@@ -100,7 +141,8 @@ class EsperStage extends PureComponent {
     src: string,
     angle: number.isRequired,
     width: number.isRequired,
-    height: number.isRequired
+    height: number.isRequired,
+    onLoadError: func
   }
 }
 

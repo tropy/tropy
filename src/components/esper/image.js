@@ -6,47 +6,40 @@ const { EsperStage } = require('./stage')
 const { EsperToolbar } = require('./toolbar')
 const { bool, node, object } = require('prop-types')
 
-const EsperHeader = ({ children }) => (
-  <header className="esper-header draggable">{children}</header>
-)
-
-EsperHeader.propTypes = {
-  children: node
-}
-
-
 class EsperImage extends PureComponent {
   constructor(props) {
     super(props)
-    this.state = {
-      angle: 0
+    this.state = this.getStateFromProps(props)
+  }
+
+  componentWillReceiveProps(props) {
+    if (props !== this.props) {
+      this.setState(this.getStateFromProps(props))
     }
   }
 
-  get isEmpty() {
-    return this.props.photo == null || this.props.photo.pending
-  }
+  getStateFromProps(props) {
+    const { photo, isVisible, isDisabled } = props
 
-  get isVisible() {
-    return this.props.isVisible && !this.isEmpty
-  }
+    if (photo == null || photo.pending) {
+      return {
+        isDisabled: true,
+        isVisible: false,
+        src: null,
+        width: 0,
+        height: 0,
+        angle: 0
+      }
+    }
 
-  get isDisabled() {
-    return this.props.isDisabled && !this.isEmpty
-  }
-
-  get src() {
-    return this.isEmpty ?
-      null :
-      `${this.props.photo.protocol}://${this.props.photo.path}`
-  }
-
-  get width() {
-    return (this.props.photo && this.props.photo.width) || 0
-  }
-
-  get height() {
-    return (this.props.photo && this.props.photo.height) || 0
+    return {
+      isDisabled,
+      isVisible,
+      src: `${photo.protocol}://${photo.path}`,
+      width: photo.width,
+      height: photo.height,
+      angle: 0
+    }
   }
 
   setStage = (stage) => {
@@ -54,8 +47,9 @@ class EsperImage extends PureComponent {
   }
 
   resize = () => {
-    this.stage.handleResize()
+    this.stage.resize()
   }
+
 
   handleRotate = (by) => {
     this.setState({
@@ -68,17 +62,17 @@ class EsperImage extends PureComponent {
       <section className="esper">
         <EsperHeader>
           <EsperToolbar
-            isDisabled={this.isDisabled}
+            isDisabled={this.state.isDisabled}
             onRotate={this.handleRotate}/>
         </EsperHeader>
         <EsperStage
           ref={this.setStage}
-          isDisabled={this.isDisabled}
-          isVisible={this.isVisible}
-          src={this.src}
+          isDisabled={this.state.isDisabled}
+          isVisible={this.state.isVisible}
+          src={this.state.src}
           angle={this.state.angle}
-          width={this.width}
-          height={this.height}/>
+          width={this.state.width}
+          height={this.state.height}/>
       </section>
     )
   }
@@ -94,6 +88,16 @@ class EsperImage extends PureComponent {
   }
 }
 
+const EsperHeader = ({ children }) => (
+  <header className="esper-header draggable">{children}</header>
+)
+
+EsperHeader.propTypes = {
+  children: node
+}
+
+
 module.exports = {
+  EsperHeader,
   EsperImage
 }
