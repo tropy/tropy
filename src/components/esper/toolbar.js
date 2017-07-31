@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { Toolbar, ToolbarLeft, ToolGroup } = require('../toolbar')
 const { IconButton } = require('../button')
-const { bool, func } = require('prop-types')
+const { bool, func, number } = require('prop-types')
 
 const {
   IconArrow,
@@ -19,7 +19,15 @@ const {
 
 class EsperToolbar extends PureComponent {
   handleRotate = () => {
-    this.props.onRotate(-90)
+    this.props.onRotationChange(-90)
+  }
+
+  handleZoomIn = () => {
+    this.props.onZoomChange(this.props.zoom + 0.1)
+  }
+
+  handleZoomOut = () => {
+    this.props.onZoomChange(this.props.zoom - 0.1)
   }
 
   render() {
@@ -47,11 +55,18 @@ class EsperToolbar extends PureComponent {
             <IconButton
               icon={<IconHand/>}/>
             <IconButton
-              icon={<IconMinusCircle/>}/>
+              icon={<IconMinusCircle/>}
+              isDisabled={this.props.isDisabled}
+              onClick={this.handleZoomOut}/>
             <IconButton
-              icon={<IconPlusCircle/>}/>
+              icon={<IconPlusCircle/>}
+              isDisabled={this.props.isDisabled}
+              onClick={this.handleZoomIn}/>
             <IconButton
-              icon={<IconFit/>}/>
+              icon={<IconFit/>}
+              isDisabled={this.props.isDisabled}
+              isActive={this.props.isAutoZoomActive}
+              onClick={this.props.onZoomToggle}/>
           </ToolGroup>
         </ToolbarLeft>
       </Toolbar>
@@ -60,7 +75,11 @@ class EsperToolbar extends PureComponent {
 
   static propTypes = {
     isDisabled: bool.isRequired,
-    onRotate: func.isRequired
+    isAutoZoomActive: bool.isRequired,
+    zoom: number.isRequired,
+    onRotationChange: func.isRequired,
+    onZoomChange: func.isRequired,
+    onZoomToggle: func.isRequired
   }
 }
 

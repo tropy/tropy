@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { bool, func, number, string } = require('prop-types')
-const { append, bounds, on, off } = require('../../dom')
+const { append, bounds } = require('../../dom')
 const PIXI = require('pixi.js')
 const { Sprite } = PIXI
 const { TextureCache, skipHello } = PIXI.utils
@@ -34,12 +34,10 @@ class EsperStage extends PureComponent {
 
     append(this.pixi.view, this.container)
 
-    on(window, 'resize', this.resize)
     this.handlePropsChange(this.props)
   }
 
   componentWillUnmount() {
-    off(window, 'resize', this.resize)
     this.pixi.destroy(true)
   }
 
@@ -58,7 +56,6 @@ class EsperStage extends PureComponent {
       this.reset(props)
     }
 
-    this.zoom(props)
     this.rotate(props)
 
     if (props.isVisible) {
@@ -75,6 +72,9 @@ class EsperStage extends PureComponent {
     if (props.src != null) {
       this.image = new Sprite()
       this.image.anchor.set(0.5)
+      this.image.x = this.screen.width / 2
+      this.image.y = this.screen.height / 2
+      this.image.scale.set(props.zoom)
 
       this.load(props.src, this.image)
       this.pixi.stage.addChildAt(this.image, 0)
@@ -101,22 +101,23 @@ class EsperStage extends PureComponent {
     }
   }
 
-  resize = () => {
-    const { width, height } = bounds(this.container)
+  resize({ width, height, zoom }) {
     this.pixi.renderer.resize(width, height)
-    this.zoom()
+
+    if (this.image != null) {
+      this.image.x = width / 2
+      this.image.y = height / 2
+      this.image.scale.set(zoom)
+    }
   }
 
-  zoom(props = this.props) {
-    if (props.scale != null) {
-      return this.scale = props.scale
-    }
+  zoom(zoom) {
+    if (this.image == null) return
 
-    if (props.width === 0) {
-      return this.scale = 1
-    }
-
-    return this.scale = this.pixi.screen.width / props.width
+    new Tween(this.image.scale)
+      .to({ x: zoom, y: zoom }, 250)
+      .easing(Cubic.InOut)
+      .start()
   }
 
   rotate(props = this.props.angle) {
@@ -127,13 +128,7 @@ class EsperStage extends PureComponent {
     TWEEN.update(performance.now())
 
     if (this.isDirty()) {
-      const { image, rotation, scale } = this
-
-      image.x = this.pixi.screen.width / 2
-      image.y = this.pixi.screen.height / 2
-
-      image.scale.set(scale)
-
+      const { image, rotation } = this
 
       const diff = abs(image.rotation - rotation)
 
@@ -152,10 +147,9 @@ class EsperStage extends PureComponent {
 
 
   isDirty() {
-    const { image, scale, rotation } = this
+    const { image, rotation } = this
 
     if (image == null) return false
-    if (image.scale.x !== scale) return true
     if (image.rotation !== rotation) return true
 
     return false
@@ -163,6 +157,10 @@ class EsperStage extends PureComponent {
 
   get isLoading() {
     return this.pixi.loader.loading
+  }
+
+  get screen() {
+    return this.pixi.screen
   }
 
 
