@@ -34,11 +34,15 @@ class Slider extends PureComponent {
     return this.props.max - this.props.min
   }
 
+  get isDisabled() {
+    return this.props.isDisabled || this.delta <= 0
+  }
+
   get classes() {
     return {
       slider: true,
       [`slider-${this.props.size}`]: true,
-      disabled: this.props.isDisabled
+      disabled: this.isDisabled
     }
   }
 
@@ -80,7 +84,7 @@ class Slider extends PureComponent {
 
 
   renderMinButton() {
-    const { min, minIcon, isDisabled } = this.props
+    const { min, minIcon } = this.props
     const { value } = this.state
 
     if (minIcon) {
@@ -88,14 +92,14 @@ class Slider extends PureComponent {
         <IconButton
           icon={this.props.minIcon}
           isActive={value === min}
-          isDisabled={isDisabled}
+          isDisabled={this.isDisabled}
           onMouseDown={this.min}/>
       )
     }
   }
 
   renderMaxButton() {
-    const { max, maxIcon, isDisabled } = this.props
+    const { max, maxIcon } = this.props
     const { value } = this.state
 
     if (maxIcon) {
@@ -103,15 +107,14 @@ class Slider extends PureComponent {
         <IconButton
           icon={this.props.maxIcon}
           isActive={value === max}
-          isDisabled={isDisabled}
+          isDisabled={this.isDisabled}
           onMouseDown={this.max}/>
       )
     }
   }
 
   render() {
-    const { isDisabled } = this.props
-    const { offset, delta } = this
+    const { offset, delta, isDisabled } = this
 
     const percentage = `${100 * offset / delta}%`
 
