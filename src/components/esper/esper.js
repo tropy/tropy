@@ -52,7 +52,9 @@ class Esper extends PureComponent {
       width: photo.width,
       height: photo.height,
       angle: 0,
-      zoom: isAutoZoomActive ? this.fitToWidth(props) : 1
+      minZoom: this.getZoomToFit(),
+      maxZoom: 4,
+      zoom: isAutoZoomActive ? this.getZoomToFill(props) : 1
     }
   }
 
@@ -60,8 +62,27 @@ class Esper extends PureComponent {
     return bounds(this.stage.container)
   }
 
-  fitToWidth({ photo } = this.props, width = this.stage.screen.width) {
+  get isZoomToFill() {
+  }
+
+  get isZoomToFit() {
+  }
+
+  getZoomToFill({ photo } = this.props, width = this.stage.screen.width) {
     return (photo == null || photo.width === 0) ? 1 : width / photo.width
+  }
+
+  getZoomToFit(screen = this.stage.screen) {
+    const { width, height } = this.getAngleBounds()
+
+    return Math.min(0.8,
+      Math.min(screen.width / width, screen.height / height))
+  }
+
+  getAngleBounds({ angle, width, height } = this.state) {
+    return isHorizontal(angle) ?
+      { width, height } :
+      { width: height, height: width }
   }
 
   setStage = (stage) => {
@@ -69,13 +90,18 @@ class Esper extends PureComponent {
   }
 
   resize = () => {
-    let { width, height } = this.bounds
-    let zoom = this.state.zoom
+    const { width, height } = this.bounds
+    let { zoom } = this.state
+
+    const minZoom = this.getZoomToFit({ width, height })
 
     if (this.state.isAutoZoomActive) {
-      zoom = this.fitToWidth(this.props, width)
-      this.setState({ zoom })
+      zoom = this.getZoomToFill(this.props, width)
     }
+
+    if (minZoom > zoom) zoom = minZoom
+
+    this.setState({ zoom, minZoom })
 
     this.stage.resize({ width, height, zoom })
   }
@@ -97,7 +123,7 @@ class Esper extends PureComponent {
     isAutoZoomActive = !isAutoZoomActive
 
     if (isAutoZoomActive) {
-      zoom = this.fitToWidth()
+      zoom = this.getZoomToFill()
     }
 
     this.setState({ zoom, isAutoZoomActive })
@@ -112,6 +138,8 @@ class Esper extends PureComponent {
             isAutoZoomActive={this.state.isAutoZoomActive}
             isDisabled={this.state.isDisabled}
             zoom={this.state.zoom}
+            minZoom={this.state.minZoom}
+            maxZoom={this.state.maxZoom}
             onRotationChange={this.handleRotationChange}
             onZoomChange={this.handleZoomChange}
             onZoomToggle={this.handleZoomToggle}/>
@@ -141,6 +169,11 @@ class Esper extends PureComponent {
     isVisible: false
   }
 }
+
+function isHorizontal(angle) {
+  return angle < 45 || angle > 315 || (angle > 135 && angle < 225)
+}
+
 
 const EsperHeader = ({ children }) => (
   <header className="esper-header draggable">{children}</header>

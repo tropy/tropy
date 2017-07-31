@@ -52,16 +52,20 @@ class EsperToolbar extends PureComponent {
           <ToolGroup>
             <IconButton
               icon={<IconHand/>}/>
+          </ToolGroup>
+          <ToolGroup>
             <Slider
               value={this.props.zoom}
-              min={0.2}
-              max={5}
-              precision={100}
+              min={this.props.minZoom}
+              max={this.props.maxZoom}
+              precision={this.props.zoomPrecision}
               size="sm"
               minIcon={<IconMinusCircle/>}
               maxIcon={<IconPlusCircle/>}
               isDisabled={this.props.isDisabled}
               onChange={this.handleZoomChange}/>
+          </ToolGroup>
+          <ToolGroup>
             <IconButton
               icon={<IconFit/>}
               isDisabled={this.props.isDisabled}
@@ -77,9 +81,16 @@ class EsperToolbar extends PureComponent {
     isDisabled: bool.isRequired,
     isAutoZoomActive: bool.isRequired,
     zoom: number.isRequired,
+    zoomPrecision: number.isRequired,
+    minZoom: number.isRequired,
+    maxZoom: number.isRequired,
     onRotationChange: func.isRequired,
     onZoomChange: func.isRequired,
     onZoomToggle: func.isRequired
+  }
+
+  static defaultProps = {
+    zoomPrecision: 100
   }
 }
 
