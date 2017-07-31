@@ -6,7 +6,7 @@ const { EsperStage } = require('./stage')
 const { EsperToolbar } = require('./toolbar')
 const { bool, node, object } = require('prop-types')
 
-class EsperImage extends PureComponent {
+class Esper extends PureComponent {
   constructor(props) {
     super(props)
     this.state = this.getStateFromProps(props)
@@ -99,5 +99,5 @@ EsperHeader.propTypes = {
 
 module.exports = {
   EsperHeader,
-  EsperImage
+  Esper
 }

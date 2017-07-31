@@ -20,6 +20,7 @@ class EsperStage extends PureComponent {
     skipHello()
 
     this.pixi = new PIXI.Application({
+      antialias: true,
       resolution: window.devicePixelRatio,
       transparent: true,
       width,
@@ -123,7 +124,7 @@ class EsperStage extends PureComponent {
   }
 
   update = (delta) => {
-    TWEEN.update()
+    TWEEN.update(performance.now())
 
     if (this.isDirty()) {
       const { image, rotation, scale } = this

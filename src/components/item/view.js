@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { ItemPanel } = require('./panel')
 const { Resizable, BufferedResizable } = require('../resizable')
-const { EsperImage } = require('../esper')
+const { Esper } = require('../esper')
 const { NotePad } = require('../note')
 const { PROJECT: { MODE }, SASS: { PANEL } } = require('../../constants')
 const { pick } = require('../../common/util')
@@ -171,7 +171,7 @@ class ItemView extends PureComponent {
             onChange={this.handleEsperResized}
             onResize={this.handleEsperResize}
             min={256}>
-            <EsperImage
+            <Esper
               ref={this.setEsper}
               isDisabled={isTrashSelected}
               isVisible={isItemOpen}
