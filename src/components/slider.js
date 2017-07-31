@@ -8,7 +8,6 @@ const { Draggable } = require('./draggable')
 const { bounds, borders } = require('../dom')
 const { restrict } = require('../common/util')
 const { bool, element, func, number, oneOf } = PropTypes
-const { round } = Math
 
 
 class Slider extends PureComponent {
@@ -22,7 +21,7 @@ class Slider extends PureComponent {
 
   componentWillReceiveProps({ value }) {
     if (value !== this.props.value &&
-        value !== round(this.state.value)) {
+        value !== this.round(this.state.value)) {
       this.setState({ value })
     }
   }
@@ -58,11 +57,15 @@ class Slider extends PureComponent {
   set(value) {
     this.setState({ value })
 
-    const nearest = round(value)
+    const nearest = this.round(value)
 
     if (nearest !== this.props.value) {
       this.props.onChange(nearest)
     }
+  }
+
+  round(value, precision = this.props.precision) {
+    return Math.round(value * precision) / precision
   }
 
   min = () => {
@@ -137,6 +140,7 @@ class Slider extends PureComponent {
 
     min: number.isRequired,
     max: number.isRequired,
+    precision: number.isRequired,
 
     size: oneOf(['sm', 'md', 'lg']).isRequired,
 
@@ -149,7 +153,8 @@ class Slider extends PureComponent {
   static defaultProps = {
     min: 0,
     max: 1,
-    size: 'md'
+    size: 'md',
+    precision: 1
   }
 }
 
