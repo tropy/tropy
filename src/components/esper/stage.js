@@ -17,6 +17,8 @@ class EsperStage extends PureComponent {
   componentDidMount() {
     const { width, height } = bounds(this.container)
 
+    this.tweens = new TWEEN.Group()
+
     skipHello()
 
     this.pixi = new PIXI.Application({
@@ -38,6 +40,7 @@ class EsperStage extends PureComponent {
   }
 
   componentWillUnmount() {
+    this.tweens.removeAll()
     this.pixi.destroy(true)
   }
 
@@ -81,10 +84,14 @@ class EsperStage extends PureComponent {
     }
   }
 
+  animate(something) {
+    return new Tween(something, this.tweens)
+  }
+
   fadeOut(sprite) {
     if (sprite == null) return
 
-    new Tween(sprite)
+    this.animate(sprite)
       .to({ alpha: 0 }, 250)
       .easing(Cubic.InOut)
       .onComplete(() => { this.pixi.stage.removeChild(sprite) })
@@ -114,7 +121,7 @@ class EsperStage extends PureComponent {
   zoom(zoom) {
     if (this.image == null) return
 
-    new Tween(this.image.scale)
+    this.animate(this.image.scale)
       .to({ x: zoom, y: zoom }, 250)
       .easing(Cubic.InOut)
       .start()
@@ -125,7 +132,7 @@ class EsperStage extends PureComponent {
   }
 
   update = (delta) => {
-    TWEEN.update(performance.now())
+    this.tweens.update(performance.now())
 
     if (this.isDirty()) {
       const { image, rotation } = this
