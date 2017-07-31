@@ -67,6 +67,7 @@ module.exports = {
               template,
               datetime(created, "localtime") AS created,
               datetime(modified, "localtime") AS modified,
+              angle,
               width,
               height,
               path,

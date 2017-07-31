@@ -40,6 +40,8 @@ class Esper extends PureComponent {
         width: 0,
         height: 0,
         angle: 0,
+        minZoom: 1,
+        maxZoom: 1,
         zoom: 1
       }
     }
@@ -51,8 +53,8 @@ class Esper extends PureComponent {
       src: `${photo.protocol}://${photo.path}`,
       width: photo.width,
       height: photo.height,
-      angle: 0,
-      minZoom: this.getZoomToFit(),
+      angle: photo.angle,
+      minZoom: this.getZoomToFit(this.stage.screen, photo),
       maxZoom: 4,
       zoom: isAutoZoomActive ? this.getZoomToFill(props) : 1
     }
@@ -72,8 +74,8 @@ class Esper extends PureComponent {
     return (photo == null || photo.width === 0) ? 1 : width / photo.width
   }
 
-  getZoomToFit(screen = this.stage.screen) {
-    const { width, height } = this.getAngleBounds()
+  getZoomToFit(screen = this.stage.screen, state = this.state) {
+    const { width, height } = this.getAngleBounds(state)
 
     return Math.min(0.8,
       Math.min(screen.width / width, screen.height / height))
