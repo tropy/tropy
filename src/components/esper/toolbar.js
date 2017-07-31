@@ -4,7 +4,9 @@ const React = require('react')
 const { PureComponent } = React
 const { Toolbar, ToolbarLeft, ToolGroup } = require('../toolbar')
 const { IconButton } = require('../button')
+const { Slider } = require('../slider')
 const { bool, func, number } = require('prop-types')
+const throttle = require('lodash.throttle')
 
 const {
   IconArrow,
@@ -22,13 +24,9 @@ class EsperToolbar extends PureComponent {
     this.props.onRotationChange(-90)
   }
 
-  handleZoomIn = () => {
-    this.props.onZoomChange(this.props.zoom + 0.1)
-  }
-
-  handleZoomOut = () => {
-    this.props.onZoomChange(this.props.zoom - 0.1)
-  }
+  handleZoomChange = throttle((zoom) => {
+    this.props.onZoomChange(zoom)
+  }, 150)
 
   render() {
     return (
@@ -54,14 +52,16 @@ class EsperToolbar extends PureComponent {
           <ToolGroup>
             <IconButton
               icon={<IconHand/>}/>
-            <IconButton
-              icon={<IconMinusCircle/>}
+            <Slider
+              value={this.props.zoom}
+              min={0.2}
+              max={5}
+              precision={100}
+              size="sm"
+              minIcon={<IconMinusCircle/>}
+              maxIcon={<IconPlusCircle/>}
               isDisabled={this.props.isDisabled}
-              onClick={this.handleZoomOut}/>
-            <IconButton
-              icon={<IconPlusCircle/>}
-              isDisabled={this.props.isDisabled}
-              onClick={this.handleZoomIn}/>
+              onChange={this.handleZoomChange}/>
             <IconButton
               icon={<IconFit/>}
               isDisabled={this.props.isDisabled}

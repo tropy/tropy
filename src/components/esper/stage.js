@@ -84,17 +84,35 @@ class EsperStage extends PureComponent {
     }
   }
 
-  animate(something) {
-    return new Tween(something, this.tweens)
+  animate(something, scope) {
+    const tween = new Tween(something, this.tweens)
+
+    if (scope != null) {
+      tween
+        .onStart(() => {
+          const current = this.tweens[scope]
+          if (current) current.stop()
+
+          this.tweens[scope] = tween
+        })
+
+        .onComplete(() => this.tweens[scope] = null)
+    }
+
+    return tween
+
   }
 
   fadeOut(sprite) {
     if (sprite == null) return
 
+    const remove = () => { this.pixi.stage.removeChild(sprite) }
+
     this.animate(sprite)
       .to({ alpha: 0 }, 250)
       .easing(Cubic.InOut)
-      .onComplete(() => { this.pixi.stage.removeChild(sprite) })
+      .onStop(remove)
+      .onComplete(remove)
       .start()
   }
 
@@ -121,8 +139,8 @@ class EsperStage extends PureComponent {
   zoom(zoom) {
     if (this.image == null) return
 
-    this.animate(this.image.scale)
-      .to({ x: zoom, y: zoom }, 250)
+    this.animate(this.image.scale, 'zoom')
+      .to({ x: zoom, y: zoom }, 200)
       .easing(Cubic.InOut)
       .start()
   }
