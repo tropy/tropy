@@ -62,7 +62,6 @@ class Slider extends PureComponent {
     this.setState({ value })
 
     const nearest = this.round(value)
-
     if (nearest !== this.props.value) {
       this.props.onChange(nearest)
     }
@@ -80,7 +79,9 @@ class Slider extends PureComponent {
     this.set(this.props.max)
   }
 
-  setTrack = (track) => this.track = track
+  setTrack = (track) => {
+    this.track = track
+  }
 
 
   renderMinButton() {
@@ -123,7 +124,8 @@ class Slider extends PureComponent {
         classes={this.classes}
         delay={15}
         isDisabled={isDisabled}
-        onDrag={this.handleDrag}>
+        onDrag={this.handleDrag}
+        onDragStart={this.handleDrag}>
         {this.renderMinButton()}
         <div ref={this.setTrack} className="slider-track">
           <div className="slider-range" style={{ width: percentage }}/>
