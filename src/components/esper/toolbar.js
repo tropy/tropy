@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { Toolbar, ToolbarLeft, ToolGroup } = require('../toolbar')
 const { IconButton } = require('../button')
 const { Slider } = require('../slider')
-const { bool, func, number } = require('prop-types')
+const { bool, func, number, string } = require('prop-types')
 const throttle = require('lodash.throttle')
 
 const {
@@ -20,13 +20,29 @@ const {
 } = require('../icons')
 
 class EsperToolbar extends PureComponent {
+  get isZoomToFill() {
+    return this.props.mode === 'fill'
+  }
+
+  get isZoomToFit() {
+    return this.props.mode === 'fit'
+  }
+
   handleRotate = () => {
     this.props.onRotationChange(-90)
   }
 
   handleZoomChange = throttle((zoom) => {
     this.props.onZoomChange(zoom)
-  }, 150)
+  }, 100)
+
+  setZoomToFit = () => {
+    this.props.onModeChange('fit')
+  }
+
+  setZoomToFill = () => {
+    this.props.onModeChange('fill')
+  }
 
   render() {
     return (
@@ -69,8 +85,13 @@ class EsperToolbar extends PureComponent {
             <IconButton
               icon={<IconFit/>}
               isDisabled={this.props.isDisabled}
-              isActive={this.props.isAutoZoomActive}
-              onClick={this.props.onZoomToggle}/>
+              isActive={this.isZoomToFill}
+              onClick={this.setZoomToFill}/>
+            <IconButton
+              icon={<IconFit/>}
+              isDisabled={this.props.isDisabled}
+              isActive={this.isZoomToFit}
+              onClick={this.setZoomToFit}/>
           </ToolGroup>
         </ToolbarLeft>
       </Toolbar>
@@ -79,14 +100,14 @@ class EsperToolbar extends PureComponent {
 
   static propTypes = {
     isDisabled: bool.isRequired,
-    isAutoZoomActive: bool.isRequired,
+    mode: string.isRequired,
     zoom: number.isRequired,
     zoomPrecision: number.isRequired,
     minZoom: number.isRequired,
     maxZoom: number.isRequired,
+    onModeChange: func.isRequired,
     onRotationChange: func.isRequired,
-    onZoomChange: func.isRequired,
-    onZoomToggle: func.isRequired
+    onZoomChange: func.isRequired
   }
 
   static defaultProps = {

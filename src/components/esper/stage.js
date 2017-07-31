@@ -140,7 +140,7 @@ class EsperStage extends PureComponent {
     if (this.image == null) return
 
     this.animate(this.image.scale, 'zoom')
-      .to({ x: zoom, y: zoom }, 200)
+      .to({ x: zoom, y: zoom }, 250)
       .easing(Cubic.InOut)
       .start()
   }

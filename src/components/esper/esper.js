@@ -4,8 +4,9 @@ const React = require('react')
 const { PureComponent } = React
 const { EsperStage } = require('./stage')
 const { EsperToolbar } = require('./toolbar')
-const { bool, node, object } = require('prop-types')
+const { bool, node, object, string } = require('prop-types')
 const { bounds, on, off } = require('../../dom')
+
 
 class Esper extends PureComponent {
   constructor(props) {
@@ -21,7 +22,6 @@ class Esper extends PureComponent {
     off(window, 'resize', this.resize)
   }
 
-
   componentWillReceiveProps(props) {
     if (props !== this.props) {
       this.setState(this.getStateFromProps(props))
@@ -29,13 +29,13 @@ class Esper extends PureComponent {
   }
 
   getStateFromProps(props) {
-    const { photo, isVisible, isDisabled, isAutoZoomActive } = props
+    const { photo, isVisible, isDisabled, mode } = props
 
     if (photo == null || photo.pending) {
       return {
-        isAutoZoomActive,
         isDisabled: true,
         isVisible: false,
+        mode,
         src: null,
         width: 0,
         height: 0,
@@ -46,28 +46,26 @@ class Esper extends PureComponent {
       }
     }
 
+    const minZoom = this.getZoomToFit(this.stage.screen, photo)
+    const zoom = (mode === 'fit') ?  minZoom :
+      (mode === 'fill') ? this.getZoomToFill(props) : 1
+
     return {
-      isAutoZoomActive,
       isDisabled,
       isVisible,
+      mode,
       src: `${photo.protocol}://${photo.path}`,
       width: photo.width,
       height: photo.height,
       angle: photo.angle,
-      minZoom: this.getZoomToFit(this.stage.screen, photo),
+      minZoom,
       maxZoom: 4,
-      zoom: isAutoZoomActive ? this.getZoomToFill(props) : 1
+      zoom
     }
   }
 
   get bounds() {
     return bounds(this.stage.container)
-  }
-
-  get isZoomToFill() {
-  }
-
-  get isZoomToFit() {
   }
 
   getZoomToFill({ photo } = this.props, width = this.stage.screen.width) {
@@ -97,8 +95,13 @@ class Esper extends PureComponent {
 
     const minZoom = this.getZoomToFit({ width, height })
 
-    if (this.state.isAutoZoomActive) {
-      zoom = this.getZoomToFill(this.props, width)
+    switch (this.state.mode) {
+      case 'fill':
+        zoom = this.getZoomToFill(this.props, width)
+        break
+      case 'fit':
+        zoom = minZoom
+        break
     }
 
     if (minZoom > zoom) zoom = minZoom
@@ -115,20 +118,23 @@ class Esper extends PureComponent {
   }
 
   handleZoomChange = (zoom) => {
-    this.setState({ zoom, isAutoZoomActive: false })
+    this.setState({ zoom, mode: 'zoom' })
     this.stage.zoom(zoom)
   }
 
-  handleZoomToggle = () => {
-    let { zoom, isAutoZoomActive } = this.state
+  handleModeChange = (mode) => {
+    let { zoom, minZoom  } = this.state
 
-    isAutoZoomActive = !isAutoZoomActive
-
-    if (isAutoZoomActive) {
-      zoom = this.getZoomToFill()
+    switch (mode) {
+      case 'fill':
+        zoom = this.getZoomToFill()
+        break
+      case 'fit':
+        zoom = minZoom
+        break
     }
 
-    this.setState({ zoom, isAutoZoomActive })
+    this.setState({ zoom, mode })
     this.stage.zoom(zoom)
   }
 
@@ -137,14 +143,14 @@ class Esper extends PureComponent {
       <section className="esper">
         <EsperHeader>
           <EsperToolbar
-            isAutoZoomActive={this.state.isAutoZoomActive}
             isDisabled={this.state.isDisabled}
+            mode={this.state.mode}
             zoom={this.state.zoom}
             minZoom={this.state.minZoom}
             maxZoom={this.state.maxZoom}
+            onModeChange={this.handleModeChange}
             onRotationChange={this.handleRotationChange}
-            onZoomChange={this.handleZoomChange}
-            onZoomToggle={this.handleZoomToggle}/>
+            onZoomChange={this.handleZoomChange}/>
         </EsperHeader>
         <EsperStage
           ref={this.setStage}
@@ -160,14 +166,14 @@ class Esper extends PureComponent {
   }
 
   static propTypes = {
-    isAutoZoomActive: bool,
     isDisabled: bool,
     isVisible: bool,
+    mode: string.isRequired,
     photo: object
   }
 
   static defaultProps = {
-    isAutoZoomActive: true,
+    mode: 'fit',
     isVisible: false
   }
 }
