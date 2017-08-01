@@ -37,11 +37,11 @@ class EsperToolbar extends PureComponent {
   }, 100)
 
   setZoomToFit = () => {
-    this.props.onModeChange('fit')
+    this.props.onModeChange(this.isZoomToFit ? 'zoom' : 'fit')
   }
 
   setZoomToFill = () => {
-    this.props.onModeChange('fill')
+    this.props.onModeChange(this.isZoomToFill ? 'zoom' : 'fill')
   }
 
   render() {
@@ -75,7 +75,6 @@ class EsperToolbar extends PureComponent {
               min={this.props.minZoom}
               max={this.props.maxZoom}
               precision={this.props.zoomPrecision}
-              size="sm"
               minIcon={<IconMinusCircle/>}
               maxIcon={<IconPlusCircle/>}
               isDisabled={this.props.isDisabled}

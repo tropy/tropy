@@ -155,8 +155,16 @@ class Esper extends PureComponent {
   }
 
   handleModeChange = (mode) => {
-    const { minZoom, zoomToFill  } = this.state
-    const zoom = (mode === 'fill') ? zoomToFill : minZoom
+    let { minZoom, zoom, zoomToFill  } = this.state
+
+    switch (mode) {
+      case 'fill':
+        zoom = zoomToFill
+        break
+      case 'fit':
+        zoom = minZoom
+        break
+    }
 
     this.setState({ zoom, mode })
     this.stage.zoom(zoom)
