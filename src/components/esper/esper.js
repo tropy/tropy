@@ -85,8 +85,8 @@ class Esper extends PureComponent {
   }
 
   getZoomBounds(screen = this.screen, state = this.state, props = this.props) {
-    let { width, height } = state
-    let { zoom, minZoom } = props
+    let { zoom, width, height } = state
+    let { minZoom } = props
     let zoomToFill = minZoom
 
     if (width > 0 && height > 0) {
@@ -134,10 +134,19 @@ class Esper extends PureComponent {
 
 
   handleRotationChange = (by) => {
-    // TODO update bounds and zoom
-    this.setState({
-      angle: (360 + (this.state.angle + by)) % 360
-    })
+    const state = {
+      angle: (360 + (this.state.angle + by)) % 360,
+      mode: this.state.mode,
+      zoom: this.state.zoom,
+      width: this.props.photo.width,
+      height: this.props.photo.height
+    }
+
+    assign(state, this.getAngleBounds(state))
+    assign(state, this.getZoomBounds(this.screen, state))
+
+    this.setState(state)
+    this.stage.zoom(state.zoom)
   }
 
   handleZoomChange = (zoom) => {
@@ -146,16 +155,8 @@ class Esper extends PureComponent {
   }
 
   handleModeChange = (mode) => {
-    let { zoom, minZoom  } = this.state
-
-    switch (mode) {
-      case 'fill':
-        zoom = this.getZoomToFill()
-        break
-      case 'fit':
-        zoom = minZoom
-        break
-    }
+    const { minZoom, zoomToFill  } = this.state
+    const zoom = (mode === 'fill') ? zoomToFill : minZoom
 
     this.setState({ zoom, mode })
     this.stage.zoom(zoom)
