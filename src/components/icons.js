@@ -183,6 +183,14 @@ i('Export', (
   </svg>
 ))
 
+i('Fill', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M13.207,7.5l-2.854,2.854-.707-.707L11.293,8H4.707L6.354,9.646l-.707.707L2.793,7.5,5.646,4.646l.707.707L4.707,7h6.586L9.646,5.354l.707-.707ZM1,0H0V15H1ZM16,0H15V15h1Z"/>
+    </g>
+  </svg>
+))
+
 i('Fit', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">

@@ -16,7 +16,8 @@ const {
   IconHand,
   IconMinusCircle,
   IconPlusCircle,
-  IconFit
+  IconFit,
+  IconFill
 } = require('../icons')
 
 class EsperToolbar extends PureComponent {
@@ -82,7 +83,7 @@ class EsperToolbar extends PureComponent {
           </ToolGroup>
           <ToolGroup>
             <IconButton
-              icon={<IconFit/>}
+              icon={<IconFill/>}
               title="esper.mode.fill"
               isDisabled={this.props.isDisabled}
               isActive={this.isZoomToFill}
