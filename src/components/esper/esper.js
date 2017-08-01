@@ -6,6 +6,7 @@ const { EsperStage } = require('./stage')
 const { EsperToolbar } = require('./toolbar')
 const { bool, node, number, object, string } = require('prop-types')
 const { bounds, on, off } = require('../../dom')
+const { shallow } = require('../../common/util')
 const { assign } = Object
 
 
@@ -24,7 +25,7 @@ class Esper extends PureComponent {
   }
 
   componentWillReceiveProps(props) {
-    if (props !== this.props) {
+    if (!shallow(props, this.props)) {
       this.setState(this.getStateFromProps(props))
     }
   }

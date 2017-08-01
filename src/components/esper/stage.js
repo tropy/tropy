@@ -4,6 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { bool, func, number, string } = require('prop-types')
 const { append, bounds } = require('../../dom')
+const { shallow } = require('../../common/util')
 const PIXI = require('pixi.js')
 const { Sprite } = PIXI
 const { TextureCache, skipHello } = PIXI.utils
@@ -45,7 +46,7 @@ class EsperStage extends PureComponent {
   }
 
   componentWillReceiveProps(props) {
-    if (props !== this.props) {
+    if (!shallow(props, this.props)) {
       this.handlePropsChange(props)
     }
   }
