@@ -84,11 +84,13 @@ class EsperToolbar extends PureComponent {
           <ToolGroup>
             <IconButton
               icon={<IconFit/>}
+              title="esper.mode.fill"
               isDisabled={this.props.isDisabled}
               isActive={this.isZoomToFill}
               onClick={this.setZoomToFill}/>
             <IconButton
               icon={<IconFit/>}
+              title="esper.mode.fit"
               isDisabled={this.props.isDisabled}
               isActive={this.isZoomToFit}
               onClick={this.setZoomToFit}/>

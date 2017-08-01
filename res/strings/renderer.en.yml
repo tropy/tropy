@@ -80,13 +80,16 @@ prefs:
 item:
   created: Date Added
   modified: Modified
-
 photo:
   file: File
   size: Size
   type: Type
   created: Date Added
   modified: Modified
+esper:
+  mode:
+    fill: Fill
+    fit: Fit
 
 template:
   id: URI
