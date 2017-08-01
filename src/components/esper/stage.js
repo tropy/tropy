@@ -78,7 +78,9 @@ class EsperStage extends PureComponent {
       this.image.anchor.set(0.5)
       this.image.x = this.screen.width / 2
       this.image.y = this.screen.height / 2
-      this.image.scale.set(props.zoom)
+      this.image.scale.set(
+        props.mirror ? -props.zoom : props.zoom,
+        props.zoom)
 
       this.load(props.src, this.image)
       this.pixi.stage.addChildAt(this.image, 0)
@@ -127,13 +129,13 @@ class EsperStage extends PureComponent {
     }
   }
 
-  resize({ width, height, zoom }) {
+  resize({ width, height, zoom, mirror }) {
     this.pixi.renderer.resize(width, height)
 
     if (this.image != null) {
       this.image.x = width / 2
       this.image.y = height / 2
-      this.image.scale.set(zoom)
+      this.image.scale.set(mirror ? -zoom : zoom, zoom)
     }
   }
 
@@ -141,13 +143,13 @@ class EsperStage extends PureComponent {
     if (this.image == null) return
 
     this.animate(this.image.scale, 'zoom')
-      .to({ x: zoom, y: zoom }, 250)
+      .to({ x: this.props.mirror ? -zoom : zoom, y: zoom }, 250)
       .easing(Cubic.InOut)
       .start()
   }
 
   rotate(props) {
-    return this.rotation = (props.angle / 180) * PI
+    return this.rotation = ((360 - props.angle) / 180) * PI
   }
 
   update = (delta) => {
@@ -214,6 +216,7 @@ class EsperStage extends PureComponent {
     isVisible: bool.isRequired,
     src: string,
     angle: number.isRequired,
+    mirror: bool.isRequired,
     onLoadError: func
   }
 }

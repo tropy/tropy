@@ -66,7 +66,7 @@ class Esper extends PureComponent {
     if (photo != null && !photo.pending) {
       state.src = `${photo.protocol}://${photo.path}`
 
-      // TODO Convert EXIF orientation
+      assign(state, this.getOrientationState(photo))
       assign(state, this.getAngleBounds(photo))
     }
 
@@ -121,6 +121,37 @@ class Esper extends PureComponent {
     return { width: height, height: width, aspect: height / width }
   }
 
+  getOrientationState({ angle, mirror, orientation }) {
+    switch (orientation) {
+      case 2:
+        mirror = !mirror
+        break
+      case 3:
+        angle = rotate(angle, 180)
+        break
+      case 4:
+        angle = rotate(angle, 180)
+        mirror = !mirror
+        break
+      case 5:
+        angle = rotate(angle, 90)
+        mirror = !mirror
+        break
+      case 6:
+        angle = rotate(angle, 270)
+        break
+      case 7:
+        angle = rotate(angle, 270)
+        mirror = !mirror
+        break
+      case 8:
+        angle = rotate(angle, 90)
+        break
+    }
+
+    return { angle, mirror }
+  }
+
   setStage = (stage) => {
     this.stage = stage
   }
@@ -129,14 +160,20 @@ class Esper extends PureComponent {
     const screen = bounds(this.stage.container)
     const { minZoom, zoom, zoomToFill } = this.getZoomBounds(screen)
 
-    this.stage.resize({ width: screen.width, height: screen.height, zoom })
+    this.stage.resize({
+      width: screen.width,
+      height: screen.height,
+      zoom,
+      mirror: this.state.mirror
+    })
+
     this.setState({ minZoom, zoom, zoomToFill })
   }
 
 
   handleRotationChange = (by) => {
     const state = {
-      angle: (360 + (this.state.angle + by)) % 360,
+      angle: rotate(this.state.angle, by),
       mode: this.state.mode,
       zoom: this.state.zoom,
       width: this.props.photo.width,
@@ -193,6 +230,7 @@ class Esper extends PureComponent {
           isVisible={isVisible}
           src={this.state.src}
           angle={this.state.angle}
+          mirror={this.state.mirror}
           zoom={this.state.zoom}/>
       </section>
     )
@@ -215,6 +253,10 @@ class Esper extends PureComponent {
     mode: 'fit',
     isVisible: false
   }
+}
+
+function rotate(angle, by) {
+  return (360 + angle + by) % 360
 }
 
 function isHorizontal(angle) {

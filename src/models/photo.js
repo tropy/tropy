@@ -68,6 +68,7 @@ module.exports = {
               datetime(created, "localtime") AS created,
               datetime(modified, "localtime") AS modified,
               angle,
+              mirror,
               width,
               height,
               path,
@@ -85,6 +86,7 @@ module.exports = {
             assign(photos[data.id], data, {
               created: new Date(data.created),
               modified: new Date(data.modified),
+              mirror: !!data.mirror
             })
           }
         ),
