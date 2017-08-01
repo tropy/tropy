@@ -343,6 +343,14 @@ i('MinusCircles', (
   </svg>
 ))
 
+i('Mirror', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M9,15H8V0H9ZM2.049,4.384v6.232L5.448,7.5l-3.4-3.116M1,2,7,7.5,1,13V2ZM16,13V2L10,7.5Z"/>
+    </g>
+  </svg>
+))
+
 i('New', (
   <svg width="16" height="18">
     <g className="line" fill="currentColor">
