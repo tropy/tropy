@@ -59,4 +59,18 @@
       position: absolute;
     }
   }
+
+  .toolbar {
+    .tool-group {
+      > .btn-icon {
+        &.active {
+          background: $esper-btn-active-bg;
+
+          .icon {
+            color: $esper-btn-active-color;
+          }
+        }
+      }
+    }
+  }
 }

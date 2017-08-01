@@ -51,6 +51,7 @@ $shade-10: #fff; // White
   #{--transparent}: $transparent;
   #{--shade-0}: $shade-0;
   #{--shade-0-5}: rgba($shade-0, 0.05);
+  #{--shade-0-40}: rgba($shade-0, 0.4);
   #{--shade-1}: $shade-1;
   #{--shade-1-lighten-2}: lighten($shade-1, 2%);
   #{--shade-1-lighten-4}: lighten($shade-1, 4%);
@@ -281,9 +282,11 @@ $slider-handle-bg:     var(--shade-7);
 $slider-handle-border: var(--transparent);
 
 // Esper
-$esper-bg:         var(--shade-1);
-$esper-toolbar-bg: var(--shade-1);
-$esper-icon-color: var(--shade-8);
+$esper-bg:               var(--shade-1);
+$esper-toolbar-bg:       var(--shade-1);
+$esper-icon-color:       var(--shade-8);
+$esper-btn-active-color: var(--shade-9);
+$esper-btn-active-bg:    var(--shade-0-40);
 
 // Drag preview
 $drag-preview-opacity:           0.64;
