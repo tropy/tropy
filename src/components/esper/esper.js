@@ -4,14 +4,15 @@ const React = require('react')
 const { PureComponent } = React
 const { EsperStage } = require('./stage')
 const { EsperToolbar } = require('./toolbar')
-const { bool, node, object, string } = require('prop-types')
+const { bool, node, number, object, string } = require('prop-types')
 const { bounds, on, off } = require('../../dom')
+const { assign } = Object
 
 
 class Esper extends PureComponent {
   constructor(props) {
     super(props)
-    this.state = this.getStateFromProps(props)
+    this.state = this.getEmptyState(props)
   }
 
   componentDidMount() {
@@ -28,61 +29,95 @@ class Esper extends PureComponent {
     }
   }
 
-  getStateFromProps(props) {
-    const { photo, isVisible, isDisabled, mode } = props
+  get isEmpty() {
+    return this.props.photo == null || this.props.photo.pending === true
+  }
 
-    if (photo == null || photo.pending) {
-      return {
-        isDisabled: true,
-        isVisible: false,
-        mode,
-        src: null,
-        width: 0,
-        height: 0,
-        angle: 0,
-        minZoom: 1,
-        maxZoom: 1,
-        zoom: 1
-      }
-    }
+  get isDisabled() {
+    return this.props.isDisabled || this.isEmpty
+  }
 
-    const minZoom = this.getZoomToFit(this.stage.screen, photo)
-    const zoom = (mode === 'fit') ?  minZoom :
-      (mode === 'fill') ? this.getZoomToFill(props) : 1
+  get isVisible() {
+    return this.props.isVisible && !this.isEmpty
+  }
 
+  get screen() {
+    return this.stage.screen
+  }
+
+  getEmptyState(props = this.props) {
     return {
-      isDisabled,
-      isVisible,
-      mode,
-      src: `${photo.protocol}://${photo.path}`,
-      width: photo.width,
-      height: photo.height,
-      angle: photo.angle,
-      minZoom,
-      maxZoom: 4,
-      zoom
+      mode: props.mode,
+      zoom: props.zoom,
+      minZoom: props.minZoom,
+      angle: 0,
+      mirror: false,
+      width: 0,
+      height: 0,
+      src: null
     }
   }
 
-  get bounds() {
-    return bounds(this.stage.container)
+  getStateFromProps(props) {
+    const state = this.getEmptyState()
+    const { photo } = props
+
+    if (photo != null && !photo.pending) {
+      state.src = `${photo.protocol}://${photo.path}`
+
+      // TODO Convert EXIF orientation
+      assign(state, this.getAngleBounds(photo))
+    }
+
+    assign(state, this.getZoomBounds(this.screen, state, props))
+
+    return state
   }
 
-  getZoomToFill({ photo } = this.props, width = this.stage.screen.width) {
-    return (photo == null || photo.width === 0) ? 1 : width / photo.width
+
+  getZoomToFill(screen = this.screen, state = this.state, props = this.props) {
+    return Math.min(props.maxZoom, screen.width / state.width)
   }
 
-  getZoomToFit(screen = this.stage.screen, state = this.state) {
-    const { width, height } = this.getAngleBounds(state)
-
-    return Math.min(0.8,
-      Math.min(screen.width / width, screen.height / height))
+  getZoomToFit(screen = this.screen, state = this.state, props = this.props) {
+    return Math.min(props.minZoom,
+      Math.min(screen.width / state.width, screen.height / state.height))
   }
 
-  getAngleBounds({ angle, width, height } = this.state) {
-    return isHorizontal(angle) ?
-      { width, height } :
-      { width: height, height: width }
+  getZoomBounds(screen = this.screen, state = this.state, props = this.props) {
+    let { width, height } = state
+    let { zoom, minZoom } = props
+    let zoomToFill = minZoom
+
+    if (width > 0 && height > 0) {
+      minZoom = this.getZoomToFit(screen, state, props)
+      zoomToFill = this.getZoomToFill(screen, state, props)
+
+      switch (state.mode) {
+        case 'fill':
+          zoom = zoomToFill
+          break
+        case 'fit':
+          zoom = minZoom
+          break
+      }
+
+      if (minZoom > zoom) zoom = minZoom
+    }
+
+    return { minZoom, zoom, zoomToFill }
+  }
+
+  getAngleBounds({ angle, width, height }) {
+    if (width === 0 || height === 0) {
+      return { width: 0, height: 0, aspect: 0 }
+    }
+
+    if (isHorizontal(angle)) {
+      return { width, height, aspect: width / height }
+    }
+
+    return { width: height, height: width, aspect: height / width }
   }
 
   setStage = (stage) => {
@@ -90,28 +125,16 @@ class Esper extends PureComponent {
   }
 
   resize = () => {
-    const { width, height } = this.bounds
-    let { zoom } = this.state
+    const screen = bounds(this.stage.container)
+    const { minZoom, zoom, zoomToFill } = this.getZoomBounds(screen)
 
-    const minZoom = this.getZoomToFit({ width, height })
-
-    switch (this.state.mode) {
-      case 'fill':
-        zoom = this.getZoomToFill(this.props, width)
-        break
-      case 'fit':
-        zoom = minZoom
-        break
-    }
-
-    if (minZoom > zoom) zoom = minZoom
-
-    this.setState({ zoom, minZoom })
-
-    this.stage.resize({ width, height, zoom })
+    this.stage.resize({ width: screen.width, height: screen.height, zoom })
+    this.setState({ minZoom, zoom, zoomToFill })
   }
 
+
   handleRotationChange = (by) => {
+    // TODO update bounds and zoom
     this.setState({
       angle: (360 + (this.state.angle + by)) % 360
     })
@@ -139,27 +162,27 @@ class Esper extends PureComponent {
   }
 
   render() {
+    const { isDisabled, isVisible } = this
+
     return (
       <section className="esper">
         <EsperHeader>
           <EsperToolbar
-            isDisabled={this.state.isDisabled}
+            isDisabled={isDisabled}
             mode={this.state.mode}
             zoom={this.state.zoom}
             minZoom={this.state.minZoom}
-            maxZoom={this.state.maxZoom}
+            maxZoom={this.props.maxZoom}
             onModeChange={this.handleModeChange}
             onRotationChange={this.handleRotationChange}
             onZoomChange={this.handleZoomChange}/>
         </EsperHeader>
         <EsperStage
           ref={this.setStage}
-          isDisabled={this.state.isDisabled}
-          isVisible={this.state.isVisible}
+          isDisabled={isDisabled}
+          isVisible={isVisible}
           src={this.state.src}
           angle={this.state.angle}
-          width={this.state.width}
-          height={this.state.height}
           zoom={this.state.zoom}/>
       </section>
     )
@@ -168,11 +191,17 @@ class Esper extends PureComponent {
   static propTypes = {
     isDisabled: bool,
     isVisible: bool,
+    maxZoom: number.isRequired,
+    minZoom: number.isRequired,
+    zoom: number.isRequired,
     mode: string.isRequired,
     photo: object
   }
 
   static defaultProps = {
+    maxZoom: 4,
+    minZoom: 1,
+    zoom: 1,
     mode: 'fit',
     isVisible: false
   }

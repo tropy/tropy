@@ -145,7 +145,7 @@ class EsperStage extends PureComponent {
       .start()
   }
 
-  rotate(props = this.props.angle) {
+  rotate(props) {
     return this.rotation = (props.angle / 180) * PI
   }
 
@@ -213,8 +213,6 @@ class EsperStage extends PureComponent {
     isVisible: bool.isRequired,
     src: string,
     angle: number.isRequired,
-    width: number.isRequired,
-    height: number.isRequired,
     onLoadError: func
   }
 }
