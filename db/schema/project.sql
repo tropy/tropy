@@ -59,8 +59,10 @@ CREATE TABLE photos (
   mimetype     TEXT     NOT NULL,
   checksum     TEXT     NOT NULL,
   orientation  INTEGER  NOT NULL DEFAULT 1,
-  metadata     TEXT     NOT NULL DEFAULT '{}'
-, size INTEGER NOT NULL DEFAULT 0) WITHOUT ROWID;
+  metadata     TEXT     NOT NULL DEFAULT '{}', size INTEGER NOT NULL DEFAULT 0,
+
+  CHECK (orientation > 0 AND orientation < 9)
+) WITHOUT ROWID;
 CREATE TABLE items (
   id              INTEGER  PRIMARY KEY REFERENCES subjects ON DELETE CASCADE,
   cover_image_id  INTEGER  REFERENCES images ON DELETE SET NULL

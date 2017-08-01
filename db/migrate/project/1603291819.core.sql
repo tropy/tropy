@@ -52,7 +52,9 @@ CREATE TABLE photos (
   mimetype     TEXT     NOT NULL,
   checksum     TEXT     NOT NULL,
   orientation  INTEGER  NOT NULL DEFAULT 1,
-  metadata     TEXT     NOT NULL DEFAULT '{}'
+  metadata     TEXT     NOT NULL DEFAULT '{}',
+
+  CHECK (orientation > 0 AND orientation < 9)
 ) WITHOUT ROWID;
 
 
