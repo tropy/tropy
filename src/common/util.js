@@ -408,7 +408,19 @@ const util = {
 
   identify() {
     return shortid.generate()
+  },
+
+  shallow(a, b) {
+    if (a === b) return true
+    if (a == null || b == null) return false
+
+    for (let prop in a) {
+      if (a[prop] !== b[prop]) return false
+    }
+
+    return true
   }
+
 }
 
 module.exports = util
