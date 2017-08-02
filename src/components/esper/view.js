@@ -13,7 +13,7 @@ const { Tween } = TWEEN
 const { Cubic } = TWEEN.Easing
 
 
-class EsperStage extends PureComponent {
+class EsperView extends PureComponent {
   componentDidMount() {
     const { width, height } = bounds(this.container)
 
@@ -63,10 +63,12 @@ class EsperStage extends PureComponent {
     this.image = null
 
     if (props.src != null) {
+      const { width, height } = this.bounds
+
       this.image = new Sprite()
       this.image.anchor.set(0.5)
-      this.image.x = this.screen.width / 2
-      this.image.y = this.screen.height / 2
+      this.image.x = width / 2
+      this.image.y = height / 2
       this.image.scale.set(
         props.mirror ? -props.zoom : props.zoom,
         props.zoom)
@@ -159,7 +161,7 @@ class EsperStage extends PureComponent {
     return this.pixi.loader.loading
   }
 
-  get screen() {
+  get bounds() {
     return this.pixi.screen
   }
 
@@ -178,7 +180,7 @@ class EsperStage extends PureComponent {
 
   render() {
     return (
-      <div ref={this.setContainer} className="esper-stage"/>
+      <div ref={this.setContainer} className="esper-view"/>
     )
   }
 
@@ -189,5 +191,5 @@ class EsperStage extends PureComponent {
 }
 
 module.exports = {
-  EsperStage
+  EsperView
 }

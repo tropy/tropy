@@ -2,6 +2,6 @@
 
 module.exports = {
   ...require('./esper'),
-  ...require('./stage'),
-  ...require('./toolbar')
+  ...require('./toolbar'),
+  ...require('./view')
 }

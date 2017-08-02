@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { EsperStage } = require('./stage')
+const { EsperView } = require('./view')
 const { EsperToolbar } = require('./toolbar')
 const { bool, node, number, object, string } = require('prop-types')
 const { bounds, on, off } = require('../../dom')
@@ -28,15 +28,15 @@ class Esper extends PureComponent {
     if (!shallow(props, this.props)) {
       const state = this.getStateFromProps(props)
 
-      if (this.shouldStageReset(state)) {
-        this.stage.reset(state)
+      if (this.shouldViewReset(state)) {
+        this.view.reset(state)
       }
 
       this.setState(state)
     }
   }
 
-  shouldStageReset(state) {
+  shouldViewReset(state) {
     if (state.src !== this.state.src) return true
     if (get(state.photo, ['id']) !== get(this.state.photo, ['id'])) return true
 
@@ -55,8 +55,8 @@ class Esper extends PureComponent {
     return this.props.isVisible && !this.isEmpty
   }
 
-  get screen() {
-    return this.stage.screen
+  get bounds() {
+    return this.view.bounds
   }
 
   getEmptyState(props = this.props) {
@@ -83,22 +83,26 @@ class Esper extends PureComponent {
       assign(state, this.getAngleBounds(photo))
     }
 
-    assign(state, this.getZoomBounds(this.screen, state, props))
+    assign(state, this.getZoomBounds(this.view.bounds, state, props))
 
     return state
   }
 
 
-  getZoomToFill(screen = this.screen, state = this.state, props = this.props) {
+  getZoomToFill(screen, state, props = this.props) {
     return Math.min(props.maxZoom, screen.width / state.width)
   }
 
-  getZoomToFit(screen = this.screen, state = this.state, props = this.props) {
+  getZoomToFit(screen, state, props) {
     return Math.min(props.minZoom,
       Math.min(screen.width / state.width, screen.height / state.height))
   }
 
-  getZoomBounds(screen = this.screen, state = this.state, props = this.props) {
+  getZoomBounds(
+    screen = this.view.bounds,
+    state = this.state,
+    props = this.props
+  ) {
     let { zoom, width, height } = state
     let { minZoom } = props
     let zoomToFill = minZoom
@@ -171,19 +175,16 @@ class Esper extends PureComponent {
     return { angle, mirror }
   }
 
-  setStage = (stage) => {
-    this.stage = stage
+  setView = (view) => {
+    this.view = view
   }
 
   resize = () => {
-    const screen = bounds(this.stage.container)
-    const { minZoom, zoom, zoomToFill } = this.getZoomBounds(screen)
+    const { width, height } = bounds(this.view.container)
+    const { minZoom, zoom, zoomToFill } = this.getZoomBounds({ width, height })
 
-    this.stage.resize({
-      width: screen.width,
-      height: screen.height,
-      zoom,
-      mirror: this.state.mirror
+    this.view.resize({
+      width, height, zoom, mirror: this.state.mirror
     })
 
     this.setState({ minZoom, zoom, zoomToFill })
@@ -200,17 +201,17 @@ class Esper extends PureComponent {
     }
 
     assign(state, this.getAngleBounds(state))
-    assign(state, this.getZoomBounds(this.screen, state))
+    assign(state, this.getZoomBounds(this.view.bounds, state))
 
     this.setState(state)
 
-    this.stage.rotate(state, 250)
-    this.stage.scale(state, 250)
+    this.view.rotate(state, 250)
+    this.view.scale(state, 250)
   }
 
   handleZoomChange = (zoom) => {
     this.setState({ zoom, mode: 'zoom' })
-    this.stage.scale({ zoom, mirror: this.state.mirror })
+    this.view.scale({ zoom, mirror: this.state.mirror })
   }
 
   handleMirrorChange = () => {
@@ -222,8 +223,8 @@ class Esper extends PureComponent {
 
     this.setState({ angle, mirror })
 
-    this.stage.scale({ zoom, mirror })
-    this.stage.rotate({ angle })
+    this.view.scale({ zoom, mirror })
+    this.view.rotate({ angle })
   }
 
   handleModeChange = (mode) => {
@@ -239,7 +240,7 @@ class Esper extends PureComponent {
     }
 
     this.setState({ zoom, mode })
-    this.stage.scale({ zoom, mirror })
+    this.view.scale({ zoom, mirror })
   }
 
   render() {
@@ -259,8 +260,8 @@ class Esper extends PureComponent {
             onRotationChange={this.handleRotationChange}
             onZoomChange={this.handleZoomChange}/>
         </EsperHeader>
-        <EsperStage
-          ref={this.setStage}
+        <EsperView
+          ref={this.setView}
           isVisible={isVisible}/>
       </section>
     )
