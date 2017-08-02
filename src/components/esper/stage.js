@@ -2,13 +2,12 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { bool, func, number, string } = require('prop-types')
+const { bool, func } = require('prop-types')
 const { append, bounds } = require('../../dom')
 const { shallow } = require('../../common/util')
 const PIXI = require('pixi.js')
 const { Sprite } = PIXI
 const { TextureCache, skipHello } = PIXI.utils
-const { PI, abs, min } = Math
 const TWEEN = require('@tweenjs/tween.js')
 const { Tween } = TWEEN
 const { Cubic } = TWEEN.Easing
@@ -55,21 +54,11 @@ class EsperStage extends PureComponent {
     return false
   }
 
-  handlePropsChange(props, reset = false) {
-    if (reset || this.props.src !== props.src) {
-      this.reset(props)
-    }
-
-    this.rotate(props)
-
-    if (props.isVisible) {
-      this.pixi.start()
-    } else {
-      this.pixi.stop()
-    }
+  handlePropsChange({ isVisible }) {
+    this.pixi[isVisible ? 'start' : 'stop']()
   }
 
-  reset(props = this.props) {
+  reset(props) {
     this.fadeOut(this.image)
     this.image = null
 
@@ -87,8 +76,8 @@ class EsperStage extends PureComponent {
     }
   }
 
-  animate(something, scope) {
-    const tween = new Tween(something, this.tweens)
+  animate(thing, scope) {
+    const tween = new Tween(thing, this.tweens)
 
     if (scope != null) {
       tween
@@ -98,7 +87,6 @@ class EsperStage extends PureComponent {
 
           this.tweens[scope] = tween
         })
-
         .onComplete(() => this.tweens[scope] = null)
     }
 
@@ -139,52 +127,32 @@ class EsperStage extends PureComponent {
     }
   }
 
-  zoom(zoom) {
-    if (this.image == null) return
+  scale({ zoom, mirror }, duration = 0) {
+    const x = mirror ? -zoom : zoom
+    const y = zoom
 
-    this.animate(this.image.scale, 'zoom')
-      .to({ x: this.props.mirror ? -zoom : zoom, y: zoom }, 250)
-      .easing(Cubic.InOut)
-      .start()
-  }
+    if (duration > 0) {
+      this.animate(this.image.scale, 'zoom')
+        .to({ x, y }, duration)
+        .easing(Cubic.InOut)
+        .start()
 
-  scale({ zoom, mirror }) {
-    this.image.scale.set(mirror ? -zoom : zoom, zoom)
-  }
-
-  rotate(props) {
-    return this.rotation = ((360 - props.angle) / 180) * PI
-  }
-
-  update = (delta) => {
-    this.tweens.update(performance.now())
-
-    if (this.isDirty()) {
-      const { image, rotation } = this
-
-      const diff = abs(image.rotation - rotation)
-
-      if (diff < 0.25) {
-        image.rotation = rotation
-      } else {
-        const step = min(diff, 0.25 * delta)
-
-        let next = image.rotation - step
-        if (next < 0) next = (2 * PI) - next
-
-        image.rotation = next
-      }
+    } else {
+      this.image.scale.set(x, y)
     }
   }
 
+  rotate({ angle }, duration = 0) {
+    if (duration > 0) {
+      // TODO
+      this.image.rotation = ((360 - angle) / 180) * Math.PI
+    } else {
+      this.image.rotation = ((360 - angle) / 180) * Math.PI
+    }
+  }
 
-  isDirty() {
-    const { image, rotation } = this
-
-    if (image == null) return false
-    if (image.rotation !== rotation) return true
-
-    return false
+  update = () => {
+    this.tweens.update(performance.now())
   }
 
   get isLoading() {
@@ -194,7 +162,6 @@ class EsperStage extends PureComponent {
   get screen() {
     return this.pixi.screen
   }
-
 
   setContainer = (container) => {
     this.container = container
@@ -216,11 +183,7 @@ class EsperStage extends PureComponent {
   }
 
   static propTypes = {
-    isDisabled: bool.isRequired,
     isVisible: bool.isRequired,
-    src: string,
-    angle: number.isRequired,
-    mirror: bool.isRequired,
     onLoadError: func
   }
 }

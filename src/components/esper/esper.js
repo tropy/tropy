@@ -6,7 +6,7 @@ const { EsperStage } = require('./stage')
 const { EsperToolbar } = require('./toolbar')
 const { bool, node, number, object, string } = require('prop-types')
 const { bounds, on, off } = require('../../dom')
-const { shallow } = require('../../common/util')
+const { get, shallow } = require('../../common/util')
 const { assign } = Object
 
 
@@ -26,8 +26,21 @@ class Esper extends PureComponent {
 
   componentWillReceiveProps(props) {
     if (!shallow(props, this.props)) {
-      this.setState(this.getStateFromProps(props))
+      const state = this.getStateFromProps(props)
+
+      if (this.shouldStageReset(state)) {
+        this.stage.reset(state)
+      }
+
+      this.setState(state)
     }
+  }
+
+  shouldStageReset(state) {
+    if (state.src !== this.state.src) return true
+    if (get(state.photo, ['id']) !== get(this.state.photo, ['id'])) return true
+
+    return false
   }
 
   get isEmpty() {
@@ -190,12 +203,14 @@ class Esper extends PureComponent {
     assign(state, this.getZoomBounds(this.screen, state))
 
     this.setState(state)
-    this.stage.zoom(state.zoom)
+
+    this.stage.rotate(state, 250)
+    this.stage.scale(state, 250)
   }
 
   handleZoomChange = (zoom) => {
     this.setState({ zoom, mode: 'zoom' })
-    this.stage.zoom(zoom)
+    this.stage.scale({ zoom, mirror: this.state.mirror })
   }
 
   handleMirrorChange = () => {
@@ -212,7 +227,7 @@ class Esper extends PureComponent {
   }
 
   handleModeChange = (mode) => {
-    let { minZoom, zoom, zoomToFill  } = this.state
+    let { minZoom, mirror, zoom, zoomToFill  } = this.state
 
     switch (mode) {
       case 'fill':
@@ -224,7 +239,7 @@ class Esper extends PureComponent {
     }
 
     this.setState({ zoom, mode })
-    this.stage.zoom(zoom)
+    this.stage.scale({ zoom, mirror })
   }
 
   render() {
@@ -246,12 +261,7 @@ class Esper extends PureComponent {
         </EsperHeader>
         <EsperStage
           ref={this.setStage}
-          isDisabled={isDisabled}
-          isVisible={isVisible}
-          src={this.state.src}
-          angle={this.state.angle}
-          mirror={this.state.mirror}
-          zoom={this.state.zoom}/>
+          isVisible={isVisible}/>
       </section>
     )
   }
