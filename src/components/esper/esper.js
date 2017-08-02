@@ -198,9 +198,8 @@ class Esper extends PureComponent {
 
   handleRotationChange = (by) => {
     const state = {
+      ...this.state,
       angle: rotate(this.state.angle, by),
-      mode: this.state.mode,
-      zoom: this.state.zoom,
       width: this.props.photo.width,
       height: this.props.photo.height
     }
