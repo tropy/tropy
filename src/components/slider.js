@@ -100,14 +100,14 @@ class Slider extends PureComponent {
   }
 
   handleDrag = ({ pageX }, reason = 'drag') => {
-    const { min, max } = this.props
+    const { min } = this.props
     const box = bounds(this.track)
     const border = borders(this.track)
 
     const left = box.left + border.left
     const width = box.width - border.left - border.right
 
-    this.set(min + restrict((pageX - left) / width, 0, 1) * max, reason)
+    this.set(min + restrict((pageX - left) / width, 0, 1) * this.delta, reason)
   }
 
   handleMinButtonClick = (event) => {
@@ -157,7 +157,6 @@ class Slider extends PureComponent {
 
   render() {
     const { offset, delta, isDisabled } = this
-
     const percentage = `${100 * offset / delta}%`
 
     return (
