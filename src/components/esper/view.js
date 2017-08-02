@@ -146,8 +146,18 @@ class EsperView extends PureComponent {
 
   rotate({ angle }, duration = 0) {
     if (duration > 0) {
-      // TODO
-      this.image.rotation = rad(angle)
+      const cur = this.image.rotation
+      const tgt = rad(angle)
+
+      // Always rotate counter-clockwise!
+      const tmp = (tgt > cur) ? cur - (2 * Math.PI - tgt) : tgt
+
+      this.animate(this.image, 'rotate')
+        .to({ rotation: tmp }, duration)
+        .easing(Cubic.InOut)
+        .onComplete(() => this.image.rotation = tgt)
+        .start()
+
     } else {
       this.image.rotation = rad(angle)
     }
