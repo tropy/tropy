@@ -14,6 +14,7 @@ const {
   IconRotate,
   IconNut,
   IconHand,
+  IconMirror,
   IconMinusCircle,
   IconPlusCircle,
   IconFit,
@@ -63,6 +64,10 @@ class EsperToolbar extends PureComponent {
               isDisabled={this.props.isDisabled}
               onClick={this.handleRotate}/>
             <IconButton
+              icon={<IconMirror/>}
+              isDisabled={this.props.isDisabled}
+              onClick={this.props.onMirrorChange}/>
+            <IconButton
               icon={<IconNut/>}
               isDisabled={this.props.isDisabled}/>
           </ToolGroup>
@@ -105,6 +110,7 @@ class EsperToolbar extends PureComponent {
     zoomPrecision: number.isRequired,
     minZoom: number.isRequired,
     maxZoom: number.isRequired,
+    onMirrorChange: func.isRequired,
     onModeChange: func.isRequired,
     onRotationChange: func.isRequired,
     onZoomChange: func.isRequired

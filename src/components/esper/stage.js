@@ -148,6 +148,10 @@ class EsperStage extends PureComponent {
       .start()
   }
 
+  scale({ zoom, mirror }) {
+    this.image.scale.set(mirror ? -zoom : zoom, zoom)
+  }
+
   rotate(props) {
     return this.rotation = ((360 - props.angle) / 180) * PI
   }

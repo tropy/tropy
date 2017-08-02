@@ -111,14 +111,20 @@ class Esper extends PureComponent {
 
   getAngleBounds({ angle, width, height }) {
     if (width === 0 || height === 0) {
-      return { width: 0, height: 0, aspect: 0 }
+      return {
+        width: 0, height: 0, aspect: 0
+      }
     }
 
     if (isHorizontal(angle)) {
-      return { width, height, aspect: width / height }
+      return {
+        width, height, aspect: width / height
+      }
     }
 
-    return { width: height, height: width, aspect: height / width }
+    return {
+      width: height, height: width, aspect: height / width
+    }
   }
 
   getOrientationState({ angle, mirror, orientation }) {
@@ -192,6 +198,19 @@ class Esper extends PureComponent {
     this.stage.zoom(zoom)
   }
 
+  handleMirrorChange = () => {
+    let { angle, zoom, mirror } = this.state
+
+    mirror = !mirror
+
+    if (!isHorizontal(angle)) angle = rotate(angle, 180)
+
+    this.setState({ angle, mirror })
+
+    this.stage.scale({ zoom, mirror })
+    this.stage.rotate({ angle })
+  }
+
   handleModeChange = (mode) => {
     let { minZoom, zoom, zoomToFill  } = this.state
 
@@ -220,6 +239,7 @@ class Esper extends PureComponent {
             zoom={this.state.zoom}
             minZoom={this.state.minZoom}
             maxZoom={this.props.maxZoom}
+            onMirrorChange={this.handleMirrorChange}
             onModeChange={this.handleModeChange}
             onRotationChange={this.handleRotationChange}
             onZoomChange={this.handleZoomChange}/>
