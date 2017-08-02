@@ -36,7 +36,7 @@ class EsperToolbar extends PureComponent {
 
   handleZoomChange = throttle((zoom) => {
     this.props.onZoomChange(zoom)
-  }, 100)
+  }, 15)
 
   setZoomToFit = () => {
     this.props.onModeChange(this.isZoomToFit ? 'zoom' : 'fit')
