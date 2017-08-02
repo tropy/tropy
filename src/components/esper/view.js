@@ -112,10 +112,14 @@ class EsperView extends PureComponent {
   load(url, sprite) {
     if (TextureCache[url]) {
       sprite.texture = TextureCache[url]
+
     } else {
-      this.pixi.loader.reset().add(url).load(() => {
-        sprite.texture = this.pixi.loader.resources[url].texture
-      })
+      this.pixi.loader
+        .reset()
+        .add(url)
+        .load(() => {
+          sprite.texture = TextureCache[url]
+        })
     }
   }
 
