@@ -74,7 +74,7 @@ class Slider extends PureComponent {
   }
 
 
-  set(value, reason = 'slider') {
+  set(value, reason) {
     this.setState({ value })
 
     if (value === this.props.min) {
@@ -95,7 +95,11 @@ class Slider extends PureComponent {
     return round(value, precision)
   }
 
-  handleDrag = ({ pageX }) => {
+  handleDragStart = (event) => {
+    this.handleDrag(event, 'drag-start')
+  }
+
+  handleDrag = ({ pageX }, reason = 'drag') => {
     const { min, max } = this.props
     const box = bounds(this.track)
     const border = borders(this.track)
@@ -103,7 +107,7 @@ class Slider extends PureComponent {
     const left = box.left + border.left
     const width = box.width - border.left - border.right
 
-    this.set(min + restrict((pageX - left) / width, 0, 1) * max)
+    this.set(min + restrict((pageX - left) / width, 0, 1) * max, reason)
   }
 
   handleMinButtonClick = (event) => {
@@ -162,7 +166,7 @@ class Slider extends PureComponent {
         delay={15}
         isDisabled={isDisabled}
         onDrag={this.handleDrag}
-        onDragStart={this.handleDrag}>
+        onDragStart={this.handleDragStart}>
         {this.renderMinButton()}
         <div ref={this.setTrack} className="slider-track">
           <div className="slider-range" style={{ width: percentage }}/>
