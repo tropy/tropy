@@ -67,8 +67,8 @@ class EsperView extends PureComponent {
 
       this.image = new Sprite()
       this.image.anchor.set(0.5)
-      this.image.x = width / 2
-      this.image.y = height / 2
+      this.image.position.set(width / 2, height / 2)
+      this.image.rotation = rad(props.angle)
       this.image.scale.set(
         props.mirror ? -props.zoom : props.zoom,
         props.zoom)
@@ -147,9 +147,9 @@ class EsperView extends PureComponent {
   rotate({ angle }, duration = 0) {
     if (duration > 0) {
       // TODO
-      this.image.rotation = ((360 - angle) / 180) * Math.PI
+      this.image.rotation = rad(angle)
     } else {
-      this.image.rotation = ((360 - angle) / 180) * Math.PI
+      this.image.rotation = rad(angle)
     }
   }
 
@@ -188,6 +188,10 @@ class EsperView extends PureComponent {
     isVisible: bool.isRequired,
     onLoadError: func
   }
+}
+
+function rad(deg) {
+  return (deg / 180) * Math.PI
 }
 
 module.exports = {

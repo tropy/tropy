@@ -157,18 +157,18 @@ class Esper extends PureComponent {
         mirror = !mirror
         break
       case 5:
-        angle = rotate(angle, 90)
+        angle = rotate(angle, 270)
         mirror = !mirror
         break
       case 6:
-        angle = rotate(angle, 270)
+        angle = rotate(angle, 90)
         break
       case 7:
-        angle = rotate(angle, 270)
+        angle = rotate(angle, 90)
         mirror = !mirror
         break
       case 8:
-        angle = rotate(angle, 90)
+        angle = rotate(angle, 270)
         break
     }
 
