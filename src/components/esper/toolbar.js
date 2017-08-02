@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { Toolbar, ToolbarLeft, ToolGroup } = require('../toolbar')
 const { IconButton } = require('../button')
 const { Slider } = require('../slider')
-const { bool, func, number, string } = require('prop-types')
+const { arrayOf, bool, func, number, string } = require('prop-types')
 const throttle = require('lodash.throttle')
 
 const {
@@ -93,6 +93,7 @@ class EsperToolbar extends PureComponent {
               min={this.props.minZoom}
               max={this.props.maxZoom}
               precision={this.props.zoomPrecision}
+              steps={this.props.zoomSteps}
               minIcon={<IconMinusCircle/>}
               maxIcon={<IconPlusCircle/>}
               isDisabled={this.props.isDisabled}
@@ -108,6 +109,7 @@ class EsperToolbar extends PureComponent {
     mode: string.isRequired,
     zoom: number.isRequired,
     zoomPrecision: number.isRequired,
+    zoomSteps: arrayOf(number).isRequired,
     minZoom: number.isRequired,
     maxZoom: number.isRequired,
     onMirrorChange: func.isRequired,
@@ -117,7 +119,8 @@ class EsperToolbar extends PureComponent {
   }
 
   static defaultProps = {
-    zoomPrecision: 100
+    zoomPrecision: 100,
+    zoomSteps: [1, 2, 3]
   }
 }
 

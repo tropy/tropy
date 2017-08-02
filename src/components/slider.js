@@ -2,12 +2,11 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const { IconButton } = require('./button')
 const { Draggable } = require('./draggable')
 const { bounds, borders } = require('../dom')
-const { restrict } = require('../common/util')
-const { bool, element, func, number, oneOf } = PropTypes
+const { restrict, round } = require('../common/util')
+const { arrayOf, bool, element, func, number, oneOf } = require('prop-types')
 
 
 class Slider extends PureComponent {
@@ -19,9 +18,9 @@ class Slider extends PureComponent {
     }
   }
 
-  componentWillReceiveProps({ value }) {
+  componentWillReceiveProps({ value, precision }) {
     if (value !== this.props.value &&
-        value !== this.round(this.state.value)) {
+        value !== this.round(this.state.value, precision)) {
       this.setState({ value })
     }
   }
@@ -46,6 +45,55 @@ class Slider extends PureComponent {
     }
   }
 
+  getNextStep() {
+    const { max, steps } = this.props
+    const { value } = this.state
+
+    if (steps.length === 0) return max
+
+    let i = 0
+    while (i < steps.length && value >= steps[i]) ++i
+
+    if (steps.length === i) return max
+
+    return Math.min(steps[i], max)
+  }
+
+  getPrevStep() {
+    const { min, steps } = this.props
+    const { value } = this.state
+
+    if (steps.length === 0) return min
+
+    let i = steps.length - 1
+    while (i >= 0 && value <= steps[i]) --i
+
+    if (i < 0) return min
+
+    return Math.max(steps[i], min)
+  }
+
+
+  set(value, reason = 'slider') {
+    this.setState({ value })
+
+    if (value === this.props.min) {
+      return this.props.onChange(value, reason)
+    }
+
+    if (value === this.props.max) {
+      return this.props.onChange(value, reason)
+    }
+
+    const nearest = this.round(value)
+    if (nearest !== this.props.value) {
+      this.props.onChange(nearest, reason)
+    }
+  }
+
+  round(value, precision = this.props.precision) {
+    return round(value, precision)
+  }
 
   handleDrag = ({ pageX }) => {
     const { min, max } = this.props
@@ -58,25 +106,14 @@ class Slider extends PureComponent {
     this.set(min + restrict((pageX - left) / width, 0, 1) * max)
   }
 
-  set(value) {
-    this.setState({ value })
-
-    const nearest = this.round(value)
-    if (nearest !== this.props.value) {
-      this.props.onChange(nearest)
-    }
+  handleMinButtonClick = (event) => {
+    event.stopPropagation()
+    this.set(this.getPrevStep(), 'button')
   }
 
-  round(value, precision = this.props.precision) {
-    return Math.round(value * precision) / precision
-  }
-
-  min = () => {
-    this.set(this.props.min)
-  }
-
-  max = () => {
-    this.set(this.props.max)
+  handleMaxButtonClick = (event) => {
+    event.stopPropagation()
+    this.set(this.getNextStep(), 'button')
   }
 
   setTrack = (track) => {
@@ -94,7 +131,7 @@ class Slider extends PureComponent {
           icon={this.props.minIcon}
           isActive={value === min}
           isDisabled={this.isDisabled}
-          onMouseDown={this.min}/>
+          onMouseDown={this.handleMinButtonClick}/>
       )
     }
   }
@@ -109,7 +146,7 @@ class Slider extends PureComponent {
           icon={this.props.maxIcon}
           isActive={value === max}
           isDisabled={this.isDisabled}
-          onMouseDown={this.max}/>
+          onMouseDown={this.handleMaxButtonClick}/>
       )
     }
   }
@@ -140,26 +177,24 @@ class Slider extends PureComponent {
   }
 
   static propTypes = {
-    value: number.isRequired,
     isDisabled: bool,
-
-    min: number.isRequired,
     max: number.isRequired,
-    precision: number.isRequired,
-
-    size: oneOf(['sm', 'md', 'lg']).isRequired,
-
-    minIcon: element,
     maxIcon: element,
-
+    min: number.isRequired,
+    minIcon: element,
+    precision: number.isRequired,
+    size: oneOf(['sm', 'md', 'lg']).isRequired,
+    steps: arrayOf(number).isRequired,
+    value: number.isRequired,
     onChange: func.isRequired
   }
 
   static defaultProps = {
     min: 0,
     max: 1,
+    precision: 1,
     size: 'md',
-    precision: 1
+    steps: []
   }
 }
 
