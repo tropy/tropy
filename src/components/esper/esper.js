@@ -68,19 +68,24 @@ class Esper extends PureComponent {
       mirror: false,
       width: 0,
       height: 0,
+      aspect: 0,
       src: null
     }
   }
 
   getStateFromProps(props) {
-    const state = this.getEmptyState()
+    const state = this.getEmptyState(props)
     const { photo } = props
 
     if (photo != null && !photo.pending) {
       state.src = `${photo.protocol}://${photo.path}`
 
       assign(state, this.getOrientationState(photo))
-      assign(state, this.getAngleBounds(photo))
+      assign(state, this.getAngleBounds({
+        angle: state.angle,
+        width: photo.width,
+        height: photo.height
+      }))
     }
 
     assign(state, this.getZoomBounds(this.view.bounds, state, props))
