@@ -16,11 +16,11 @@ class PhotoGrid extends PhotoIterator {
       if (!event.isPropagationStopped()) {
         switch (event.key) {
           case (this.isVertical ? 'ArrowLeft' : 'ArrowUp'):
-            this.handleSelect(this.getPrevPhoto(this.state.cols))
+            this.select(this.getPrevPhoto(this.state.cols))
             break
 
           case (this.isVertical ? 'ArrowRight' : 'ArrowDown'):
-            this.handleSelect(this.getNextPhoto(this.state.cols))
+            this.select(this.getNextPhoto(this.state.cols))
             break
 
           default:
