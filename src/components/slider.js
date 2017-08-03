@@ -5,7 +5,8 @@ const { PureComponent } = React
 const { IconButton } = require('./button')
 const { Draggable } = require('./draggable')
 const { bounds, borders } = require('../dom')
-const { restrict, round } = require('../common/util')
+const { restrict } = require('../common/util')
+const { round } = require('../common/math')
 const { arrayOf, bool, element, func, number, oneOf } = require('prop-types')
 
 

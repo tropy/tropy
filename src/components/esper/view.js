@@ -5,6 +5,7 @@ const { PureComponent } = React
 const { bool, func } = require('prop-types')
 const { append, bounds } = require('../../dom')
 const { shallow } = require('../../common/util')
+const { rad } = require('../../common/math')
 const PIXI = require('pixi.js')
 const { Sprite } = PIXI
 const { TextureCache, skipHello } = PIXI.utils
@@ -202,10 +203,6 @@ class EsperView extends PureComponent {
     isVisible: bool.isRequired,
     onLoadError: func
   }
-}
-
-function rad(deg) {
-  return (deg / 180) * Math.PI
 }
 
 module.exports = {

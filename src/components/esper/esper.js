@@ -7,6 +7,7 @@ const { EsperToolbar } = require('./toolbar')
 const { bool, node, number, object, string } = require('prop-types')
 const { bounds, on, off } = require('../../dom')
 const { get, shallow } = require('../../common/util')
+const { isHorizontal, rotate } = require('../../common/math')
 const { assign } = Object
 
 
@@ -288,14 +289,6 @@ class Esper extends PureComponent {
     mode: 'fit',
     isVisible: false
   }
-}
-
-function rotate(angle, by) {
-  return (360 + angle + by) % 360
-}
-
-function isHorizontal(angle) {
-  return angle < 45 || angle > 315 || (angle > 135 && angle < 225)
 }
 
 

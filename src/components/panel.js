@@ -2,15 +2,15 @@
 
 const React = require('react')
 const { PureComponent, Children, cloneElement: clone } = React
-const PropTypes = require('prop-types')
 const { only } = require('./util')
 const { Resizable } = require('./resizable')
 const cx = require('classnames')
 const { bounds, on, off } = require('../dom')
 const { restrict } = require('../common/util')
-const { bool, func, node, arrayOf, number, shape } = PropTypes
+const { bool, func, node, arrayOf, number, shape } = require('prop-types')
 const { PANEL } = require('../constants/sass')
-const { round, remap } = require('../common/util')
+const { remap } = require('../common/util')
+const { round } = require('../common/math')
 
 
 class Panel extends PureComponent {
@@ -132,11 +132,11 @@ class PanelGroup extends PureComponent {
       let slot = slots[i]
 
       if (slot.isClosed) {
-        slot.height = round((scale + slot.min) * slot.height / 100, 1)
+        slot.height = round((scale + slot.min) * slot.height / 100)
         surplus = surplus - slot.min
 
       } else {
-        slot.height = round(scale * slot.height / 100, 1)
+        slot.height = round(scale * slot.height / 100)
         surplus = surplus - slot.height
         numOpen++
       }
@@ -328,7 +328,7 @@ class PanelGroup extends PureComponent {
       slots.map(({ height, isClosed }) => ({
         isClosed,
         height: round(
-          height * 100 / (isClosed ? scale + PANEL.CLOSED_HEIGHT : scale)
+          height * 100 / (isClosed ? scale + PANEL.CLOSED_HEIGHT : scale), 100
         )
       }))
     )
