@@ -8,6 +8,7 @@ const { bool, node, number, object, string } = require('prop-types')
 const { bounds, on, off } = require('../../dom')
 const { get, shallow } = require('../../common/util')
 const { isHorizontal, rotate } = require('../../common/math')
+const { Rotation } = require('../../common/iiif')
 const { assign } = Object
 
 
@@ -151,34 +152,10 @@ class Esper extends PureComponent {
   }
 
   getOrientationState({ angle, mirror, orientation }) {
-    switch (orientation) {
-      case 2:
-        mirror = !mirror
-        break
-      case 3:
-        angle = rotate(angle, 180)
-        break
-      case 4:
-        angle = rotate(angle, 180)
-        mirror = !mirror
-        break
-      case 5:
-        angle = rotate(angle, 270)
-        mirror = !mirror
-        break
-      case 6:
-        angle = rotate(angle, 90)
-        break
-      case 7:
-        angle = rotate(angle, 90)
-        mirror = !mirror
-        break
-      case 8:
-        angle = rotate(angle, 270)
-        break
-    }
-
-    return { angle, mirror }
+    return Rotation
+      .fromExifOrientation(orientation)
+      .add({ angle, mirror })
+      .toJSON()
   }
 
   setView = (view) => {
