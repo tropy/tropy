@@ -145,6 +145,60 @@ dialog:
     rdf: RDF Vocabularies
     jsonld: JSON-LD
 
+action:
+  project:
+    save: Save Project
+  list:
+    create: Create List
+    delete: Delete List
+    item:
+      add: Add Items To List
+      merge: Merge Items
+      remove: Remove Item From List
+      restore: Add Item To List
+    order: Sort List
+    restore: Restore List
+    save: Save List
+  tag:
+    create: Create Tag
+    delete: Delete Tag
+    restore: Create Tag
+    save: Save Tag
+  item:
+    create: Create Items
+    delete: Delete Items
+    explode: Explode Item
+    implode: Merge Items
+    merge: Merge Items
+    split: Split Items
+    import: Import Items
+    restore: Restore Items
+    save: Save Item
+    tag:
+      toggle: Toggle Tags
+      clear: Clear Tags
+  metadata:
+    save: Save Metadata
+  ontology:
+    import: Import Vocabularies
+    vocab:
+      save: Save Vocabulary
+    label:
+      save: Save Label
+    template:
+      import: Import Template
+  photo:
+    create: Import Photo
+    delete: Delete Photo
+    move: Moving Photo
+    order: Sort Photos
+    restore: Restore Photo
+  note:
+    create: Creat Note
+    delete: Delete Note
+    order: Sort Notes
+    restore: Restore Note
+
 activity:
   project:
     save: Saving …

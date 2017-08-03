@@ -10,21 +10,23 @@ const past = ({ history }) =>
 const future = ({ history }) =>
   history.future
 
-const undone = ({ history }) =>
+const undo = ({ history }) =>
   get(history.future, [0, 'undo'])
 
-const redone = ({ history }) =>
+const redo = ({ history }) =>
   get(history.past, [0, 'redo'])
 
-const length = memo([past, future],
+const summary = memo([past, future],
   (past, future) => ({
     past: past.length,
+    undo: get(past, [0, 'redo', 'type']),
     future: future.length,
+    redo: get(future, [0, 'redo', 'type'])
   })
 )
 
 module.exports = {
-  undone,
-  redone,
-  length
+  undo,
+  redo,
+  summary
 }

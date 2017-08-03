@@ -131,11 +131,21 @@ class Menu {
           break
 
         case 'undo':
-          item.enabled = this.app.history.past > 0
+          if (this.app.history.past > 0) {
+            item.enabled = true
+            item.label = `${item.label} ${this.app.history.undo}`
+          } else {
+            item.enabled = false
+          }
           break
 
         case 'redo':
-          item.enabled = this.app.history.future > 0
+          if (this.app.history.future > 0) {
+            item.enabled = true
+            item.label = `${item.label} ${this.app.history.redo}`
+          } else {
+            item.enabled = false
+          }
           break
 
         case 'tag': {
