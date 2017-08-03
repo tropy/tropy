@@ -20,6 +20,7 @@ class Esper extends PureComponent {
 
   componentDidMount() {
     on(window, 'resize', this.resize)
+    this.resize()
   }
 
   componentWillUnmount() {
