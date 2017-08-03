@@ -194,10 +194,11 @@ action:
     order: Sort Photos
     restore: Restore Photo
   note:
-    create: Creat Note
+    create: Create Note
     delete: Delete Note
     order: Sort Notes
     restore: Restore Note
+    save: Save Note
 
 activity:
   project:
