@@ -75,28 +75,25 @@ class EsperView extends PureComponent {
       this.rotate(props)
       this.scale(props)
 
+      this.makeInteractive(this.image)
+
       this.load(props.src, this.image)
       this.pixi.stage.addChildAt(this.image, 0)
     }
   }
 
-  animate(thing, scope) {
-    const tween = new Tween(thing, this.tweens)
-      .easing(Cubic.InOut)
 
-    if (scope != null) {
-      tween
-        .onStart(() => {
-          const current = this.tweens[scope]
-          if (current) current.stop()
+  makeInteractive(sprite) {
+    if (sprite == null || sprite.interactive) return
 
-          this.tweens[scope] = tween
-        })
-        .onComplete(() => this.tweens[scope] = null)
-    }
+    sprite.interactive = true
+    sprite.cursor = 'grab'
 
-    return tween
-
+    sprite
+      .on('pointerdown', handleDragStart)
+      .on('pointerup', handleDragStop)
+      .on('pointerupoutside', handleDragStop)
+      .on('pointermove', handleDragMove)
   }
 
   center({ width, height } = this.bounds) {
@@ -168,8 +165,31 @@ class EsperView extends PureComponent {
   }
 
   remove(sprite) {
+    if (sprite == null) return
+
+    sprite.removeAllListeners()
     this.pixi.stage.removeChild(sprite)
   }
+
+  animate(thing, scope) {
+    const tween = new Tween(thing, this.tweens)
+      .easing(Cubic.InOut)
+
+    if (scope != null) {
+      tween
+        .onStart(() => {
+          const current = this.tweens[scope]
+          if (current) current.stop()
+
+          this.tweens[scope] = tween
+        })
+        .onComplete(() => this.tweens[scope] = null)
+    }
+
+    return tween
+
+  }
+
 
   load(url, sprite) {
     if (TextureCache[url]) {
@@ -213,6 +233,28 @@ class EsperView extends PureComponent {
     onLoadError: func
   }
 }
+
+function handleDragStart(event) {
+  this.data = event.data
+  this.dragging = true
+  this.cursor = 'grabbing'
+}
+
+function handleDragStop() {
+  this.data = null
+  this.dragging = false
+  this.cursor = 'grab'
+}
+
+function handleDragMove() {
+  if (this.dragging) {
+    let { x, y } = this.data.getLocalPosition(this.parent)
+
+    this.x = x
+    this.y = y
+  }
+}
+
 
 module.exports = {
   EsperView
