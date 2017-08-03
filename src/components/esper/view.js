@@ -59,20 +59,21 @@ class EsperView extends PureComponent {
     this.pixi[isVisible ? 'start' : 'stop']()
   }
 
+  get bounds() {
+    return this.pixi.screen
+  }
+
   reset(props) {
     this.fadeOut(this.image)
     this.image = null
 
     if (props.src != null) {
-      const { width, height } = this.bounds
-
       this.image = new Sprite()
       this.image.anchor.set(0.5)
-      this.image.position.set(width / 2, height / 2)
-      this.image.rotation = rad(props.angle)
-      this.image.scale.set(
-        props.mirror ? -props.zoom : props.zoom,
-        props.zoom)
+
+      this.center()
+      this.rotate(props)
+      this.scale(props)
 
       this.load(props.src, this.image)
       this.pixi.stage.addChildAt(this.image, 0)
@@ -81,6 +82,7 @@ class EsperView extends PureComponent {
 
   animate(thing, scope) {
     const tween = new Tween(thing, this.tweens)
+      .easing(Cubic.InOut)
 
     if (scope != null) {
       tween
@@ -97,32 +99,11 @@ class EsperView extends PureComponent {
 
   }
 
-  fadeOut(sprite) {
-    if (sprite == null) return
-
-    const remove = () => { this.pixi.stage.removeChild(sprite) }
-
-    this.animate(sprite)
-      .to({ alpha: 0 }, 250)
-      .easing(Cubic.InOut)
-      .onStop(remove)
-      .onComplete(remove)
-      .start()
+  center({ width, height } = this.bounds) {
+    this.image.x = width / 2
+    this.image.y = height / 2
   }
 
-  load(url, sprite) {
-    if (TextureCache[url]) {
-      sprite.texture = TextureCache[url]
-
-    } else {
-      this.pixi.loader
-        .reset()
-        .add(url)
-        .load(() => {
-          sprite.texture = TextureCache[url]
-        })
-    }
-  }
 
   resize({ width, height, zoom, mirror }) {
     this.pixi.renderer.resize(width, height)
@@ -134,6 +115,16 @@ class EsperView extends PureComponent {
     }
   }
 
+  move({ x, y }, duration = 0) {
+    if (duration > 0) {
+      this.animate(this.image.position, 'move')
+        .to({ x, y }, duration)
+
+    } else {
+      this.image.position.set(x, y)
+    }
+  }
+
   scale({ zoom, mirror }, duration = 0) {
     const x = mirror ? -zoom : zoom
     const y = zoom
@@ -141,7 +132,6 @@ class EsperView extends PureComponent {
     if (duration > 0) {
       this.animate(this.image.scale, 'zoom')
         .to({ x, y }, duration)
-        .easing(Cubic.InOut)
         .start()
 
     } else {
@@ -159,7 +149,6 @@ class EsperView extends PureComponent {
 
       this.animate(this.image, 'rotate')
         .to({ rotation: tmp }, duration)
-        .easing(Cubic.InOut)
         .onComplete(() => this.image.rotation = tgt)
         .start()
 
@@ -168,16 +157,36 @@ class EsperView extends PureComponent {
     }
   }
 
+  fadeOut(sprite, duration = 250) {
+    if (sprite == null) return
+
+    this.animate(sprite)
+      .to({ alpha: 0 }, duration)
+      .onStop(() => this.remove(sprite))
+      .onComplete(() => this.remove(sprite))
+      .start()
+  }
+
+  remove(sprite) {
+    this.pixi.stage.removeChild(sprite)
+  }
+
+  load(url, sprite) {
+    if (TextureCache[url]) {
+      sprite.texture = TextureCache[url]
+
+    } else {
+      this.pixi.loader
+        .reset()
+        .add(url)
+        .load(() => {
+          sprite.texture = TextureCache[url]
+        })
+    }
+  }
+
   update = () => {
     this.tweens.update(performance.now())
-  }
-
-  get isLoading() {
-    return this.pixi.loader.loading
-  }
-
-  get bounds() {
-    return this.pixi.screen
   }
 
   setContainer = (container) => {
