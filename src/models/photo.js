@@ -131,7 +131,7 @@ module.exports = {
     assert(assign.length > 0, 'missing assignments')
 
     await db.run(`
-      UPDATE photos
+      UPDATE images
         SET ${assign.join(', ')}
         WHERE id = $id`, params)
 

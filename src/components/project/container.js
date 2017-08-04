@@ -408,6 +408,10 @@ module.exports = {
         dispatch(actions.photo.move(...args))
       },
 
+      onPhotoSave(...args) {
+        dispatch(actions.photo.save(...args))
+      },
+
       onPhotoSort(...args) {
         dispatch(actions.photo.order(...args))
       },

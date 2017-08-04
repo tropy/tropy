@@ -4,12 +4,13 @@ const React = require('react')
 const { PureComponent } = React
 const { EsperView } = require('./view')
 const { EsperToolbar } = require('./toolbar')
-const { bool, node, number, object, string } = require('prop-types')
+const { bool, func, node, number, object, string } = require('prop-types')
 const { bounds, on, off } = require('../../dom')
 const { get, shallow } = require('../../common/util')
 const { isHorizontal, rotate } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
 const { assign } = Object
+const debounce = require('lodash.debounce')
 
 
 class Esper extends PureComponent {
@@ -174,6 +175,14 @@ class Esper extends PureComponent {
     this.setState({ minZoom, zoom, zoomToFill })
   }
 
+  persist = debounce(() => {
+    const { angle, mirror } = this.state
+
+    this.props.onPhotoSave({
+      id: this.props.photo.id,
+      data: { angle, mirror }
+    })
+  }, 1000)
 
   handleRotationChange = (by) => {
     const state = {
@@ -190,6 +199,8 @@ class Esper extends PureComponent {
 
     this.view.rotate(state, 250)
     this.view.scale(state, 250)
+
+    this.persist()
   }
 
   handleZoomChange = (zoom, animate) => {
@@ -208,6 +219,8 @@ class Esper extends PureComponent {
 
     this.view.scale({ zoom, mirror })
     this.view.rotate({ angle })
+
+    this.persist()
   }
 
   handleModeChange = (mode) => {
@@ -257,7 +270,8 @@ class Esper extends PureComponent {
     minZoom: number.isRequired,
     zoom: number.isRequired,
     mode: string.isRequired,
-    photo: object
+    photo: object,
+    onPhotoSave: func.isRequired
   }
 
   static defaultProps = {
