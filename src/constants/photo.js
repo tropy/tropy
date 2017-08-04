@@ -2,13 +2,14 @@
 
 module.exports = {
   CREATE: 'photo.create',
+  DELETE: 'photo.delete',
   INSERT: 'photo.insert',
   LOAD: 'photo.load',
-  SELECT: 'photo.select',
-  DELETE: 'photo.delete',
-  RESTORE: 'photo.restore',
   MOVE: 'photo.move',
   ORDER: 'photo.order',
+  RESTORE: 'photo.restore',
+  SAVE: 'photo.save',
+  SELECT: 'photo.select',
 
   BULK: {
     UPDATE: 'photo.bulk.update'

@@ -10,9 +10,10 @@ const { PHOTO } = require('../constants')
 const { Image } = require('../image')
 const { DuplicateError } = require('../common/error')
 const { warn, verbose } = require('../common/log')
-const { splice } = require('../common/util')
+const { pick, splice } = require('../common/util')
 const { map, cat, filter, into, compose } = require('transducers.js')
 const { getPhotoTemplate, getTemplateValues } = require('../selectors')
+const { keys } = Object
 
 
 class Create extends ImportCommand {
@@ -133,6 +134,26 @@ class Restore extends Command {
   }
 }
 
+class Save extends Command {
+  static get action() { return PHOTO.SAVE }
+
+  *exec() {
+    const { db } = this.options
+    const { payload, meta } = this.action
+    const { id, data } = payload
+
+    const original = yield select(state =>
+      pick(state.photos[id], keys(data)))
+
+    yield call(db.transaction, tx =>
+      mod.photo.save(tx, { id, timestamp: meta.now, ...data }))
+
+    this.undo = act.photo.save({ id, data: original })
+
+    return { id, ...data }
+  }
+}
+
 class Load extends Command {
   static get action() { return PHOTO.LOAD }
 
@@ -223,6 +244,7 @@ module.exports = {
   ImportCommand,
   Load,
   Restore,
+  Save,
   Move,
   Order
 }

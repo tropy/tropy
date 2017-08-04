@@ -35,6 +35,14 @@ module.exports = {
     }
   },
 
+  save(payload, meta) {
+    return {
+      type: PHOTO.SAVE,
+      payload,
+      meta: { cmd: 'project', history: 'merge', ...meta }
+    }
+  },
+
   load(payload, meta) {
     return {
       type: PHOTO.LOAD,
