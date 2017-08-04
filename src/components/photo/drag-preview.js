@@ -2,11 +2,10 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const { Thumbnail } = require('./thumbnail')
 const cx = require('classnames')
-const { get } = require('../../common/util')
-const { string, arrayOf, object, shape, number } = PropTypes
+const { get, pick } = require('../../common/util')
+const { string, arrayOf, object, shape, number } = require('prop-types')
 
 class PhotoDragPreview extends PureComponent {
 

@@ -46,7 +46,7 @@ class Thumbnail extends PureComponent {
     id: number,
     angle: number,
     mirror: bool,
-    oirentation: number,
+    orientation: number,
     size: number.isRequired,
     onClick: func,
     onContextMenu: func,
