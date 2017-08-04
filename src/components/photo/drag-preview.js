@@ -27,7 +27,9 @@ class PhotoDragPreview extends PureComponent {
   }
 
   get orientation() {
-    return get(this.props.photos, [this.item.id, 'orientation']) || 1
+    return pick(get(this.props.photos, [this.item.id]), [
+      'angle', 'mirror', 'orientation'
+    ])
   }
 
   render() {
@@ -35,9 +37,8 @@ class PhotoDragPreview extends PureComponent {
 
     return (
       <div className={cx(this.classes)}>
-        <Thumbnail
+        <Thumbnail {...this.orientation}
           id={this.item.id}
-          orientation={this.orientation}
           size={size}
           cache={cache}/>
         {this.count > 1 &&

@@ -36,8 +36,8 @@ class Rotation {
     return this
   }
 
-  format() {
-    return `${this.mirror ? '!' : ''}${this.angle}`
+  format(symbol = '!') {
+    return `${this.mirror ? symbol : ''}${this.angle}`
   }
 
   get orientation() {
