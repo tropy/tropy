@@ -15,8 +15,14 @@ module.exports = {
 
       case PHOTO.SAVE:
         return (!meta.done || error) ?
-          state :
-          update(state, payload, meta)
+          state : {
+            ...state,
+            [payload.id]: {
+              ...state[payload.id],
+              ...payload,
+              modified: new Date(meta.was)
+            }
+          }
 
       case PHOTO.INSERT:
         return insert(state, payload, meta)
