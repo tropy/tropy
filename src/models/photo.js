@@ -1,12 +1,12 @@
 'use strict'
 
+const assert = require('assert')
 const { TEMPLATE } = require('../constants/photo')
 const { DC } = require('../constants')
 const { all } = require('bluebird')
 const { text, date } = require('../value')
 const metadata = require('./metadata')
 const { into, map } = require('transducers.js')
-const { assign } = Object
 const bb = require('bluebird')
 
 const skel = (id) => ({
@@ -83,7 +83,7 @@ module.exports = {
             WHERE id IN (${ids})`,
 
           (data) => {
-            assign(photos[data.id], data, {
+            Object.assign(photos[data.id], data, {
               created: new Date(data.created),
               modified: new Date(data.modified),
               mirror: !!data.mirror
@@ -116,6 +116,32 @@ module.exports = {
     }
 
     return photos
+  },
+
+  async save(db, { id, timestamp, ...data }) {
+    const assign = []
+    const params = { $id: id }
+
+    for (let attr in data) {
+      assign.push(`${attr} = $${attr}`)
+      params[`$${attr}`] = data[attr]
+    }
+
+    assert(id != null, 'missing photo id')
+    assert(assign.length > 0, 'missing assignments')
+
+    await db.run(`
+      UPDATE photos
+        SET ${assign.join(', ')}
+        WHERE id = $id`, params)
+
+    if (timestamp != null) {
+      await db.run(`
+        UPDATE subjects
+          SET modified = datetime(?)
+          WHERE id = ?`,
+        new Date(timestamp).toISOString(), id)
+    }
   },
 
   find(db, { checksum }) {
