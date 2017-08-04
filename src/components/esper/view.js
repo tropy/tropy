@@ -235,19 +235,23 @@ class EsperView extends PureComponent {
 }
 
 function handleDragStart(event) {
-  this.data = event.data
-  this.dragging = true
-  this.cursor = 'grabbing'
+  if (event.data.originalEvent.button === 0) {
+    event.stopPropagation()
+
+    this.data = event.data
+    this.isDragging = true
+    this.cursor = 'grabbing'
+  }
 }
 
 function handleDragStop() {
   this.data = null
-  this.dragging = false
+  this.isDragging = false
   this.cursor = 'grab'
 }
 
 function handleDragMove() {
-  if (this.dragging) {
+  if (this.isDragging) {
     let { x, y } = this.data.getLocalPosition(this.parent)
 
     this.x = x
