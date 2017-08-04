@@ -159,16 +159,9 @@ class EsperView extends PureComponent {
 
     this.animate(sprite)
       .to({ alpha: 0 }, duration)
-      .onStop(() => this.remove(sprite))
-      .onComplete(() => this.remove(sprite))
+      .onStop(() => sprite.destroy())
+      .onComplete(() => sprite.destroy())
       .start()
-  }
-
-  remove(sprite) {
-    if (sprite == null) return
-
-    sprite.removeAllListeners()
-    this.pixi.stage.removeChild(sprite)
   }
 
   animate(thing, scope) {
@@ -235,27 +228,34 @@ class EsperView extends PureComponent {
 }
 
 function handleDragStart(event) {
-  if (event.data.originalEvent.button === 0) {
+  if (event.data.isPrimary) {
     event.stopPropagation()
+
+    this.origin = {
+      pos: { x: this.x, y: this.y },
+      mov: event.data.getLocalPosition(this.parent)
+    }
 
     this.data = event.data
     this.isDragging = true
-    this.cursor = 'grabbing'
+
+  } else {
+    handleDragStop.call(this)
   }
 }
 
 function handleDragStop() {
   this.data = null
+  this.origin = null
   this.isDragging = false
-  this.cursor = 'grab'
 }
 
 function handleDragMove() {
   if (this.isDragging) {
-    let { x, y } = this.data.getLocalPosition(this.parent)
+    const { x, y } = this.data.getLocalPosition(this.parent)
 
-    this.x = x
-    this.y = y
+    this.x = this.origin.pos.x + (x - this.origin.mov.x)
+    this.y = this.origin.pos.y + (y - this.origin.mov.y)
   }
 }
 
