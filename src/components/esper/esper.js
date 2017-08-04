@@ -32,7 +32,7 @@ class Esper extends PureComponent {
     if (!shallow(props, this.props)) {
       const state = this.getStateFromProps(props)
 
-      if (this.shouldViewReset(state)) {
+      if (this.shouldViewReset(props, state)) {
         this.view.reset(state)
       }
 
@@ -40,9 +40,12 @@ class Esper extends PureComponent {
     }
   }
 
-  shouldViewReset(state) {
+  shouldViewReset(props, state) {
     if (state.src !== this.state.src) return true
-    if (get(state.photo, ['id']) !== get(this.state.photo, ['id'])) return true
+    if (get(props.photo, ['id']) !== get(this.props.photo, ['id'])) return true
+
+    if (state.angle !== this.state.angle) return true
+    if (state.mirror !== this.state.mirror) return true
 
     return false
   }

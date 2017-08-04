@@ -193,6 +193,7 @@ action:
     move: Moving Photo
     order: Sort Photos
     restore: Restore Photo
+    save: Save Photo
   note:
     create: Create Note
     delete: Delete Note
