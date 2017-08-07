@@ -6,7 +6,7 @@ const { EsperView } = require('./view')
 const { EsperToolbar } = require('./toolbar')
 const { bool, func, node, number, object, string } = require('prop-types')
 const { bounds, on, off } = require('../../dom')
-const { get, shallow } = require('../../common/util')
+const { get, restrict, shallow } = require('../../common/util')
 const { isHorizontal, rotate } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
 const { assign } = Object
@@ -206,7 +206,9 @@ class Esper extends PureComponent {
     this.persist()
   }
 
-  handleZoomChange = (zoom, animate) => {
+  handleZoomChange = ({ zoom }, animate) => {
+    zoom = restrict(zoom, this.state.minZoom, this.props.maxZoom)
+
     this.setState({ zoom, mode: 'zoom' })
     this.view.scale({ zoom, mirror: this.state.mirror }, animate ? 300 : 0)
   }
@@ -242,6 +244,12 @@ class Esper extends PureComponent {
     this.view.scale({ zoom, mirror }, 300)
   }
 
+  handleWheel = ({ x, y, dy }) => {
+    this.handleZoomChange({
+      x, y, zoom: this.state.zoom + dy / 100
+    })
+  }
+
   render() {
     const { isDisabled, isVisible } = this
 
@@ -261,7 +269,8 @@ class Esper extends PureComponent {
         </EsperHeader>
         <EsperView
           ref={this.setView}
-          isVisible={isVisible}/>
+          isVisible={isVisible}
+          onWheel={this.handleWheel}/>
       </section>
     )
   }

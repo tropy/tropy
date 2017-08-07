@@ -215,15 +215,30 @@ class EsperView extends PureComponent {
     }
   }
 
+  handleWheel = (e) => {
+    e.stopPropagation()
+
+    this.props.onWheel({
+      x: e.nativeEvent.offsetX,
+      y: e.nativeEvent.offsetY,
+      dx: e.nativeEvent.deltaX,
+      dy: e.nativeEvent.deltaY,
+    })
+  }
+
   render() {
     return (
-      <div ref={this.setContainer} className="esper-view"/>
+      <div
+        ref={this.setContainer}
+        className="esper-view"
+        onWheel={this.handleWheel}/>
     )
   }
 
   static propTypes = {
     isVisible: bool.isRequired,
-    onLoadError: func
+    onLoadError: func,
+    onWheel: func.isRequired
   }
 }
 
