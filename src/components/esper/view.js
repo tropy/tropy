@@ -118,12 +118,30 @@ class EsperView extends PureComponent {
       .start()
   }
 
-  scale({ zoom, mirror }, duration = 0) {
-    const x = mirror ? -zoom : zoom
-    const y = zoom
+  scale({ mirror, x, y, zoom }, duration = 0) {
+    const { scale, position } = this.image
 
-    this.animate(this.image.scale, 'zoom')
-      .to({ x, y }, duration)
+    const zx = mirror ? -1 : 1
+    const dz = zoom / scale.y
+
+    x = x == null ? position.x : x
+    y = y == null ? position.y : y
+
+    const dx = (x - position.x)
+    const dy = (y - position.y)
+
+    this.animate({ x: position.x, y: position.y, zoom: scale.y }, 'zoom')
+      .to({
+        x: position.x + dx - dx * dz,
+        y: position.y + dy - dy * dz,
+        zoom
+      }, duration)
+      .onUpdate(m => {
+        this.image.scale.x = m.zoom * zx
+        this.image.scale.y = m.zoom
+        this.image.x = m.x
+        this.image.y = m.y
+      })
       .start()
   }
 

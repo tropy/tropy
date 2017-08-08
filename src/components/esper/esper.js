@@ -206,11 +206,11 @@ class Esper extends PureComponent {
     this.persist()
   }
 
-  handleZoomChange = ({ zoom }, animate) => {
+  handleZoomChange = ({ x, y, zoom }, animate) => {
     zoom = restrict(zoom, this.state.minZoom, this.props.maxZoom)
 
     this.setState({ zoom, mode: 'zoom' })
-    this.view.scale({ zoom, mirror: this.state.mirror }, animate ? 300 : 0)
+    this.view.scale({ x, y, zoom, mirror: this.state.mirror }, animate ? 300 : 0)
   }
 
   handleMirrorChange = () => {
@@ -246,7 +246,7 @@ class Esper extends PureComponent {
 
   handleWheel = ({ x, y, dy }) => {
     this.handleZoomChange({
-      x, y, zoom: this.state.zoom + dy / 100
+      x, y, zoom: this.state.zoom + dy / 500
     })
   }
 
