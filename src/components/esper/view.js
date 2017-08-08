@@ -119,7 +119,7 @@ class EsperView extends PureComponent {
 
   move({ x, y }, duration = 0) {
     const { position } = this.image
-    const limit = getMovementBounds(this.image, this.bounds)
+    const limit = getMovementBounds(this.image, null, this.bounds)
 
     this.animate(position, 'move')
       .to({
@@ -142,9 +142,7 @@ class EsperView extends PureComponent {
     const dx = (x - position.x)
     const dy = (y - position.y)
 
-    const limit = getMovementBounds(
-      getSpriteBounds(this.image, zoom), viewport
-    )
+    const limit = getMovementBounds(this.image, zoom, viewport)
 
     this
       .animate({
@@ -289,20 +287,30 @@ class EsperView extends PureComponent {
 }
 
 
+function isVertical(angle) {
+  if (angle > Math.PI * 0.25 && angle < Math.PI * 0.75) return true
+  if (angle > Math.PI * 1.25 && angle < Math.PI * 1.75) return true
+  return false
+}
+
 function getSpriteBounds(sprite, scale) {
-  let { x, y, width, height, texture } = sprite
+  let { x, y, width, height, rotation, texture } = sprite
 
   if (scale != null) {
     width = texture.orig.width * scale
     height = texture.orig.height * scale
   }
 
-  return new Rectangle(x, y, width, height)
+  return isVertical(rotation) ?
+    new Rectangle(x, y, height, width) :
+    new Rectangle(x, y, width, height)
 }
 
-function getMovementBounds(sprite, viewport) {
-  const dx = Math.max(0, sprite.width - viewport.width)
-  const dy = Math.max(0, sprite.height - viewport.height)
+function getMovementBounds(sprite, scale, viewport) {
+  const { width, height } = getSpriteBounds(sprite, scale)
+
+  const dx = Math.max(0, width - viewport.width)
+  const dy = Math.max(0, height - viewport.height)
 
   return new Rectangle(
     (viewport.width - dx) / 2, (viewport.height - dy) / 2, dx, dy
@@ -316,7 +324,7 @@ function handleDragStart(event) {
       mov: event.data.getLocalPosition(this.parent)
     }
 
-    this.limit = getMovementBounds(this, this.viewport)
+    this.limit = getMovementBounds(this, null, this.viewport)
 
     this.data = event.data
     this.isDragging = true
