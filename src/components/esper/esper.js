@@ -244,10 +244,17 @@ class Esper extends PureComponent {
     this.view.scale({ zoom, mirror }, 300)
   }
 
-  handleWheel = ({ x, y, dy }) => {
-    this.handleZoomChange({
-      x, y, zoom: this.state.zoom + dy / 500
-    })
+  handleWheel = ({ x, y, dy, dx, shift }) => {
+    if (shift) {
+      this.handleZoomChange({
+        x, y, zoom: this.state.zoom + dy / 500
+      })
+    } else {
+      this.view.move({
+        x: this.view.image.x + dx,
+        y: this.view.image.y + dy
+      })
+    }
   }
 
   render() {

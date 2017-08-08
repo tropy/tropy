@@ -256,6 +256,7 @@ class EsperView extends PureComponent {
       y: e.nativeEvent.offsetY,
       dx: e.nativeEvent.deltaX,
       dy: e.nativeEvent.deltaY,
+      shift: e.shiftKey
     })
   }
 
