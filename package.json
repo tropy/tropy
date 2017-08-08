@@ -64,6 +64,7 @@
     "glob": "^7.0.0",
     "istanbul-lib-hook": "^1.0.5",
     "istanbul-lib-instrument": "^1.7.4",
+    "node-pre-gyp": "^0.6.36",
     "node-sass": "^4.0.0",
     "nyc": "^11.1.0",
     "react-dnd-test-backend": "^2.2.3",
