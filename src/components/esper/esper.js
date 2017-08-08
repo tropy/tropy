@@ -210,7 +210,9 @@ class Esper extends PureComponent {
     zoom = restrict(zoom, this.state.minZoom, this.props.maxZoom)
 
     this.setState({ zoom, mode: 'zoom' })
-    this.view.scale({ x, y, zoom, mirror: this.state.mirror }, animate ? 300 : 0)
+    this.view.scale({
+      x, y, zoom, mirror: this.state.mirror
+    }, animate ? 300 : 0)
   }
 
   handleMirrorChange = () => {
