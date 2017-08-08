@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { bool, func } = require('prop-types')
 const { append, bounds } = require('../../dom')
-const { restrict, shallow } = require('../../common/util')
+const { get, restrict, shallow } = require('../../common/util')
 const { rad } = require('../../common/math')
 const PIXI = require('pixi.js')
 const { Sprite, Rectangle } = PIXI
@@ -63,6 +63,33 @@ class EsperView extends PureComponent {
     return this.pixi.screen
   }
 
+  get center() {
+    const { width, height } = this.pixi.screen
+
+    return {
+      x: width / 2,
+      y: height / 2
+    }
+  }
+
+  getSpriteBounds(sprite = this.image, at) {
+    let { x, y, width, height } = sprite
+
+    if (at != null) {
+      width = sprite.texture.orig.width * at
+      height = sprite.texture.orig.height * at
+    }
+
+    return new Rectangle(x, y, width, height)
+  }
+
+  getMovementBounds({ width, height } = this.image, vp = this.bounds) {
+    const dx = Math.max(0, width - vp.width)
+    const dy = Math.max(0, height - vp.height)
+
+    return new Rectangle((vp.width - dx) / 2, (vp.height - dy) / 2, dx, dy)
+  }
+
   reset(props) {
     this.fadeOut(this.image)
     this.image = null
@@ -71,7 +98,7 @@ class EsperView extends PureComponent {
       this.image = new Sprite()
       this.image.anchor.set(0.5)
 
-      this.center()
+      this.move(this.center)
       this.rotate(props)
       this.scale(props)
 
@@ -95,12 +122,6 @@ class EsperView extends PureComponent {
       .on('pointerupoutside', handleDragStop)
       .on('pointermove', handleDragMove)
   }
-
-  center({ width, height } = this.bounds) {
-    this.image.x = width / 2
-    this.image.y = height / 2
-  }
-
 
   resize({ width, height, zoom, mirror }) {
     this.pixi.renderer.resize(width, height)
@@ -131,11 +152,8 @@ class EsperView extends PureComponent {
     const dx = (x - position.x)
     const dy = (y - position.y)
 
-    const limit = new Rectangle(width / 2, height / 2)
-
-    limit.pad(
-      Math.max(0, this.image.texture.orig.width * zoom - width),
-      Math.max(0, this.image.texture.orig.height * zoom - height)
+    const limit = this.getMovementBounds(
+      this.getSpriteBounds(this.image, zoom)
     )
 
     this
