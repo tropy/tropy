@@ -292,4 +292,23 @@ describe('util', () => {
       expect(remove([1, 2, 3], 1, 3)).to.eql([2])
     })
   })
+
+  describe('.shallow', () => {
+    const { shallow } = util
+
+    it('returns true if params are shallowly equal', () => {
+      const a = { a: 1, b: [], c: 'foo' }
+      const b = { a: 1, b: a.b, c: 'foo' }
+
+      expect(shallow(a, a)).to.be.true
+      expect(shallow(a, b)).to.be.true
+    })
+
+    it('retuns false if params are not equal', () => {
+      const a = { a: 1, b: [], c: 'foo' }
+      const b = { a: 1, b: [], c: 'foo' }
+
+      expect(shallow(a, b)).to.be.false
+    })
+  })
 })

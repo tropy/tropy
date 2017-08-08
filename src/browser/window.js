@@ -72,6 +72,10 @@ module.exports = {
         win.webContents.send('reload')
       })
 
+      .on('did-finish-load', () => {
+        win.webContents.setVisualZoomLevelLimits(1, 1)
+      })
+
       .on('will-navigate', (event, url) => {
         if (url !== win.webContents.getURL()) {
           warn(`win#${win.id} attempted to navigate to ${url}`)

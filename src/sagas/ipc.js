@@ -53,7 +53,18 @@ module.exports = {
 
 const FILTER = {
   *[HISTORY.CHANGED]() {
-    return yield select(history.length)
+    const summary = yield select(history.summary)
+    const messages = yield select(state => state.intl.messages)
+
+    if (summary.undo != null) {
+      summary.undo = messages[`action.${summary.undo}`] || summary.undo
+    }
+
+    if (summary.redo != null) {
+      summary.redo = messages[`action.${summary.redo}`] || summary.redo
+    }
+
+    return summary
   },
 
   *[TAG.CHANGED]() {

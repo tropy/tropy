@@ -9,6 +9,7 @@ module.exports = {
 
   DB: 'ontology.db',
   SCHEMA: join(__dirname, '..', '..', 'db', 'schema', 'ontology.sql'),
+  MIGRATIONS: join(__dirname, '..', '..', 'db', 'migrate', 'ontology'),
 
   PROPS: {
     LOAD: 'ontology.props.load'
@@ -41,7 +42,8 @@ module.exports = {
       SAVE: 'ontology.template.field.save'
     },
 
-    CONTEXT: 'https://tropy.org/v1/contexts/template.jsonld'
+    CONTEXT: 'https://tropy.org/v1/contexts/template.jsonld',
+    TYPE: 'https://tropy.org/v1/tropy#Template'
   },
 
   VOCAB: {

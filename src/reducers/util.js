@@ -37,6 +37,23 @@ const util = {
     }
   },
 
+  touch(state, payload, meta, error) {
+    if (!meta.done || error) return state
+
+    let dirty = false
+    let modified = {}
+
+    for (let id of payload) {
+      const current = state[id]
+      if (current == null) continue
+
+      dirty = true
+      modified[id] = { ...current, modified: new Date(meta.was) }
+    }
+
+    return dirty ? { ...state, ...modified } : state
+  },
+
   nested: {
     add(name, state = {}, payload, { idx } = {}) {
       return into({ ...state }, map(id => ({

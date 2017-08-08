@@ -26,10 +26,10 @@ class ItemPanel extends PureComponent {
     return this.props.items.length === 0
   }
 
-  handlePhotoCreate = (options) => {
+  handlePhotoCreate = () => {
     this.props.onPhotoCreate({
-      ...options,
-      item: get(this.props.items, [0, 'id']) })
+      item: get(this.props.items, [0, 'id'])
+    })
   }
 
   handleResize = (slots) => {
@@ -59,6 +59,7 @@ class ItemPanel extends PureComponent {
       onModeChange,
       onNoteCreate,
       onNoteSelect,
+      onPhotoDelete,
       onPhotoSelect,
       onPhotoSort,
       ...props
@@ -94,6 +95,7 @@ class ItemPanel extends PureComponent {
           zoom={panel.zoom}
           selection={photo && photo.id}
           onCreate={this.handlePhotoCreate}
+          onDelete={onPhotoDelete}
           onSelect={onPhotoSelect}
           onSort={onPhotoSort}
           onZoomChange={this.handleZoomChange}/>
@@ -147,7 +149,9 @@ class ItemPanel extends PureComponent {
     onModeChange: func.isRequired,
     onNoteCreate: func.isRequired,
     onNoteSelect: func.isRequired,
+    onOpenInFolder: func.isRequired,
     onPhotoCreate: func.isRequired,
+    onPhotoDelete: func.isRequired,
     onPhotoSelect: func.isRequired,
     onPhotoSort: func.isRequired,
     onTagCreate: func.isRequired,

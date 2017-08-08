@@ -2,13 +2,13 @@
 
 const assert = require('assert')
 const { warn, verbose } = require('../common/log')
+const { DuplicateError } = require('../common/error')
 const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-const { prompt, openImages, fail  } = require('../dialog')
+const { ImportCommand } = require('./import')
+const { prompt, open, fail, save  } = require('../dialog')
 const { Image } = require('../image')
-const { imagePath } = require('../common/cache')
 const { text } = require('../value')
-const intl = require('../selectors/intl')
 const act = require('../actions')
 const mod = require('../models')
 const { get, pluck, pick, remove } = require('../common/util')
@@ -37,51 +37,56 @@ class Create extends Command {
       mod.item.create(tx, template.id, data))
 
     yield put(act.item.insert(item))
+    yield put(act.item.select({ items: [item.id] }, { mod: 'replace' }))
 
     this.undo = act.item.delete([item.id])
     this.redo = act.item.restore([item.id])
+
+    return item
   }
 }
 
-class Import extends Command {
+class Import extends ImportCommand {
   static get action() { return ITEM.IMPORT }
 
   *exec() {
-    const { db, cache } = this.options
+    const { db } = this.options
     let { files, list } = this.action.payload
 
     const items = []
     const metadata = []
 
     if (!files) {
-      files = yield call(openImages)
-      this.init = performance.now()
+      this.isInteractive = true
+      files = yield call(open.images)
     }
 
-    if (!files) return
+    if (!files) return []
 
     const [itemp, ptemp] = yield all([
       select(getItemTemplate),
       select(getPhotoTemplate)
     ])
 
-    const idata = getTemplateValues(itemp)
-    const pdata = getTemplateValues(ptemp)
+    const defaultItemData = getTemplateValues(itemp)
+    const defaultPhotoData = getTemplateValues(ptemp)
 
-    for (let i = 0, ii = files.length; i < ii; ++i) {
+    for (let i = 0, total = files.length; i < total; ++i) {
       let file, image, item, photo
 
       try {
         file = files[i]
         image = yield call(Image.read, file)
 
+        yield* this.handleDuplicate(image)
+
         yield call(db.transaction, async tx => {
           item = await mod.item.create(tx, itemp.id, {
-            [DC.title]: text(image.title), ...idata
+            [DC.title]: text(image.title), ...defaultItemData
           })
 
           photo = await mod.photo.create(tx, ptemp.id, {
-            item: item.id, image, data: pdata
+            item: item.id, image, data: defaultPhotoData
           })
 
           if (list) {
@@ -92,28 +97,20 @@ class Import extends Command {
           item.photos.push(photo.id)
         })
 
-        try {
-          for (let size of [48, 512]) {
-            const thumb = yield call([image, image.resize], size)
-            yield call([cache, cache.save],
-              imagePath(photo.id, size), thumb.toJPEG(100))
-          }
-
-        } catch (error) {
-          warn(`Failed to create thumbnail: ${error.message}`)
-          verbose(error.stack)
-        }
+        yield* this.createThumbnails(photo.id, image)
 
         yield all([
           put(act.item.insert(item)),
           put(act.photo.insert(photo)),
-          put(act.activity.update(this.action, { total: ii, progress: i + 1 }))
+          put(act.activity.update(this.action, { total, progress: i + 1 }))
         ])
 
         items.push(item.id)
         metadata.push(item.id, photo.id)
 
       } catch (error) {
+        if (error instanceof DuplicateError) continue
+
         warn(`Failed to import "${file}": ${error.message}`)
         verbose(error.stack)
 
@@ -127,6 +124,8 @@ class Import extends Command {
       this.undo = act.item.delete(items)
       this.redo = act.item.restore(items)
     }
+
+    return items
   }
 }
 
@@ -153,12 +152,10 @@ class Destroy extends Command {
     const { db } = this.options
     const ids = this.action.payload
 
-    const confirmed = yield call(prompt,
-      yield select(intl.message, { id: 'prompt.item.destroy' })
-    )
+    const { cancel } = yield call(prompt, 'dialog.prompt.item.destroy')
 
     this.init = performance.now()
-    if (!confirmed) return
+    if (cancel) return
 
     try {
       if (ids.length) {
@@ -224,7 +221,7 @@ class Save extends Command {
 
   *exec() {
     const { db } = this.options
-    const { payload } = this.action
+    const { payload, meta } = this.action
 
     if (!isArray(payload)) {
       const { id: ids, property, value } = this.action.payload
@@ -235,7 +232,7 @@ class Save extends Command {
         items, templates: ontology.template, metadata
       }))
 
-      const props = { [property]: value }
+      const props = { [property]: value, modified: new Date(meta.now) }
       const template = state.templates[value]
 
       assert(template != null, 'unknown template')
@@ -251,7 +248,7 @@ class Save extends Command {
       ])
 
       yield call(db.transaction, async tx => {
-        await mod.item.update(tx, ids, props)
+        await mod.item.update(tx, ids, props, meta.now)
 
         if (hasData) {
           await mod.metadata.update(tx, { ids, data })
@@ -273,8 +270,8 @@ class Save extends Command {
 
       yield call(db.transaction, async tx => {
         for (let [id, template, data] of payload) {
-          changed.props[id] = { template }
-          await mod.item.update(tx, [id], changed.props[id])
+          changed.props[id] = { template, modified: new Date(meta.now) }
+          await mod.item.update(tx, [id], changed.props[id], meta.now)
 
           if (data) {
             hasData = true
@@ -429,6 +426,28 @@ class Implode extends Command {
   }
 }
 
+class Export extends Command {
+  static get action() { return ITEM.EXPORT }
+
+  *exec() {
+    let { id, path } = this.action.payload
+
+    try {
+      if (!path) {
+        this.isInteractive = true
+        path = yield call(save.items, {})
+      }
+
+      if (!path) return
+
+    } catch (error) {
+      warn(`Failed to export item ${id} to ${path}: ${error.message}`)
+      verbose(error.stack)
+
+      fail(error, this.action.type)
+    }
+  }
+}
 
 class ToggleTags extends Command {
   static get action() { return ITEM.TAG.TOGGLE }
@@ -515,6 +534,7 @@ module.exports = {
   Delete,
   Destroy,
   Explode,
+  Export,
   Import,
   Implode,
   Load,

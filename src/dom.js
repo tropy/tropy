@@ -132,6 +132,10 @@ const dom = {
 
   reflow(node) {
     node.scrollTop
+  },
+
+  isInput(node) {
+    return node.tagName === 'INPUT'
   }
 }
 

@@ -70,11 +70,11 @@ linux:
     - label: 'New Item'
       command: 'app:create-item'
   item: &item
-    - label: 'Delete Item'
-      command: 'app:delete-item'
     - label: 'Explode Item'
       command: 'app:explode-item'
       condition: 'hasMultiplePhotos'
+    - label: 'Export Item …'
+      command: 'app:export-item'
     - label: 'Add Photo…'
       command: 'app:create-item-photo'
     - label: 'Tags'
@@ -85,9 +85,13 @@ linux:
           checked: true
           enabled: false
         - type: separator
+    - label: 'Delete Item'
+      command: 'app:delete-item'
   item-bulk: &item-bulk
     - label: 'Merge Selected Items'
       command: 'app:merge-item'
+    - label: 'Export Selected Items …'
+      command: 'app:export-item'
     - label: 'Delete Selected Items'
       command: 'app:delete-item'
   item-list: &item-list

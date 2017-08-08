@@ -31,6 +31,7 @@ class TemplateSelect extends PureComponent {
         name="template-select"
         className="template-select form-control"
         required={this.props.isRequired}
+        disabled={this.props.isDisabled}
         value={this.props.selected}
         onChange={this.handleChange}>
         {this.renderPlaceholder()}
@@ -42,6 +43,7 @@ class TemplateSelect extends PureComponent {
 
   static propTypes = {
     intl: intlShape,
+    isDisabled: bool,
     isRequired: bool,
     placeholder: string,
     tabIndex: number.isRequired,

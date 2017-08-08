@@ -74,6 +74,12 @@ class PhotoIterator extends Iterator {
     }
   }
 
+  handleDelete = (photo) => {
+    if (!this.props.isDisabled) {
+      this.props.onDelete({ item: photo.item, photos: [photo.id] })
+    }
+  }
+
   handleDropPhoto = ({ id, to, offset }) => {
     const { onSort, photos } = this.props
 
@@ -93,6 +99,10 @@ class PhotoIterator extends Iterator {
         break
       case 'open':
         this.handleItemOpen(this.getCurrentPhoto())
+        break
+      case 'delete':
+        this.handleDelete(this.getCurrentPhoto())
+        this.select(this.getNextPhoto() || this.getPrevPhoto())
         break
       default:
         return
@@ -184,6 +194,7 @@ class PhotoIterator extends Iterator {
     dt: func.isRequired,
 
     onContextMenu: func.isRequired,
+    onDelete: func.isRequired,
     onItemOpen: func.isRequired,
     onSelect: func.isRequired,
     onSort: func.isRequired

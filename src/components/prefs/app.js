@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { array, arrayOf, func, shape, string } = require('prop-types')
-const { FormElement, FormSelect } = require('../form')
+const { FormElement, FormSelect, FormToggleGroup } = require('../form')
 const { TemplateSelect } = require('../template/select')
 const { ipcRenderer: ipc } = require('electron')
 
@@ -43,6 +43,12 @@ class AppPrefs extends PureComponent {
               selected={this.props.settings.photoTemplate}
               onChange={this.handlePhotoTemplateChange}/>
           </FormElement>
+          <FormToggleGroup
+            id="prefs.app.dup"
+            name="dup"
+            value={this.props.settings.dup}
+            options={this.props.dupOptions}
+            onChange={this.props.onSettingsUpdate}/>
           <hr/>
           <FormSelect
             id="prefs.app.style.theme"
@@ -63,11 +69,13 @@ class AppPrefs extends PureComponent {
       theme: string.isRequired,
     }).isRequired,
     themes: arrayOf(string).isRequired,
+    dupOptions: arrayOf(string).isRequired,
     onSettingsUpdate: func.isRequired
   }
 
   static defaultProps = {
-    themes: ['light', 'dark']
+    themes: ['light', 'dark'],
+    dupOptions: ['skip', 'import', 'prompt']
   }
 }
 

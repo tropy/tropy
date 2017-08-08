@@ -43,12 +43,13 @@ class PhotoPanel extends Panel {
   }
 
   renderContent() {
-    const { onMetadataSave, zoom } = this.props
+    const { onDelete, onMetadataSave, zoom } = this.props
 
     const props = {
       ...this.props,
       size: PHOTO.ZOOM[zoom],
       onChange: onMetadataSave,
+      onDelete,
       onDropImages: this.handleDropFiles,
       onEdit: this.handleEdit
     }
@@ -85,6 +86,7 @@ class PhotoPanel extends Panel {
     dt: func.isRequired,
 
     onCreate: func.isRequired,
+    onDelete: func.isRequired,
     onEdit: func.isRequired,
     onMetadataSave: func.isRequired,
     onZoomChange: func.isRequired

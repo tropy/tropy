@@ -2,6 +2,7 @@
 
 const B = require('bluebird')
 const pad = require('string.prototype.padstart')
+const shortid = require('shortid')
 const { keys } = Object
 
 const util = {
@@ -319,10 +320,6 @@ const util = {
     }
   },
 
-  round(value, digits = 100) {
-    return Math.round(value * digits) / digits
-  },
-
   titlecase(string) {
     return string.replace(/\b[a-z]/g, (match) => match.toUpperCase())
   },
@@ -403,7 +400,23 @@ const util = {
 
   blank(string) {
     return string == null || string.length === 0
+  },
+
+  identify() {
+    return shortid.generate()
+  },
+
+  shallow(a, b) {
+    if (a === b) return true
+    if (a == null || b == null) return false
+
+    for (let prop in a) {
+      if (a[prop] !== b[prop]) return false
+    }
+
+    return true
   }
+
 }
 
 module.exports = util

@@ -2,23 +2,25 @@
 
 const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-const { openImages } = require('../dialog')
+const { ImportCommand } = require('./import')
+const { fail, open } = require('../dialog')
 const mod = require('../models')
 const act = require('../actions')
 const { PHOTO } = require('../constants')
 const { Image } = require('../image')
-const { imagePath } = require('../common/cache')
+const { DuplicateError } = require('../common/error')
 const { warn, verbose } = require('../common/log')
-const { splice } = require('../common/util')
+const { pick, splice } = require('../common/util')
 const { map, cat, filter, into, compose } = require('transducers.js')
 const { getPhotoTemplate, getTemplateValues } = require('../selectors')
+const { keys } = Object
 
 
-class Create extends Command {
+class Create extends ImportCommand {
   static get action() { return PHOTO.CREATE }
 
   *exec() {
-    const { db, cache } = this.options
+    const { db } = this.options
     let { item, files } = this.action.payload
     let { idx } = this.action.meta
 
@@ -29,42 +31,51 @@ class Create extends Command {
     }
 
     if (!files) {
-      files = yield call(openImages)
+      files = yield call(open.images)
       this.init = performance.now()
     }
+
+    if (!files) return []
 
     const template = yield select(getPhotoTemplate)
     const data = getTemplateValues(template)
 
-    if (files && files.length) {
-      // TODO Improve handling of multiple photos!
-      // Progress reporting, cancel import etc.
+    for (let i = 0, total = files.length; i < total; ++i) {
+      let file
+      let image
+      let photo
 
-      for (let file of files) {
-        const image = yield call(Image.read, file)
+      try {
+        file = files[i]
+        image = yield call(Image.read, file)
 
-        const photo = yield call([db, db.transaction], tx => (
+        yield* this.handleDuplicate(image)
+
+        photo = yield call(db.transaction, tx =>
           mod.photo.create(tx, template.id, { item, image, data })
-        ))
+        )
 
-        yield put(act.photo.insert(photo, { idx: [idx[0] + photos.length] }))
+        yield all([
+          put(act.photo.insert(photo, { idx: [idx[0] + photos.length] })),
+          put(act.activity.update(this.action, { total, progress: i + 1 }))
+        ])
+
         photos.push(photo.id)
 
-        try {
-          for (let size of [48, 512]) {
-            const icon = yield call([image, image.resize], size)
-            yield call([cache, cache.save],
-              imagePath(photo.id, size), icon.toJPEG(100))
-          }
+        yield* this.createThumbnails(photo.id, image)
 
-        } catch (error) {
-          warn(`Failed to create thumbnail: ${error.message}`)
-          verbose(error.stack)
-        }
+      } catch (error) {
+        if (error instanceof DuplicateError) continue
+
+        warn(`Failed to import "${file}": ${error.message}`)
+        verbose(error.stack)
+
+        fail(error, this.action.type)
       }
 
       yield put(act.metadata.load(photos))
-      yield put(act.item.photos.add({ id: item, photos }))
+      yield put(act.item.photos.add({ id: item, photos }, { idx }))
+      yield put(act.photo.select({ item, photo: photos[0] }))
 
       this.undo = act.photo.delete({ item, photos })
       this.redo = act.photo.restore({ item, photos }, { idx })
@@ -120,6 +131,26 @@ class Restore extends Command {
     yield put(act.item.photos.add({ id: item, photos }, { idx }))
 
     this.undo = act.photo.delete({ item, photos })
+  }
+}
+
+class Save extends Command {
+  static get action() { return PHOTO.SAVE }
+
+  *exec() {
+    const { db } = this.options
+    const { payload, meta } = this.action
+    const { id, data } = payload
+
+    const original = yield select(state =>
+      pick(state.photos[id], keys(data)))
+
+    yield call(db.transaction, tx =>
+      mod.photo.save(tx, { id, timestamp: meta.now, ...data }))
+
+    this.undo = act.photo.save({ id, data: original })
+
+    return { id, ...data }
   }
 }
 
@@ -210,8 +241,10 @@ class Order extends Command {
 module.exports = {
   Create,
   Delete,
+  ImportCommand,
   Load,
   Restore,
+  Save,
   Move,
   Order
 }

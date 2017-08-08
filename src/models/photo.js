@@ -1,12 +1,12 @@
 'use strict'
 
+const assert = require('assert')
 const { TEMPLATE } = require('../constants/photo')
 const { DC } = require('../constants')
 const { all } = require('bluebird')
 const { text, date } = require('../value')
 const metadata = require('./metadata')
 const { into, map } = require('transducers.js')
-const { assign } = Object
 const bb = require('bluebird')
 
 const skel = (id) => ({
@@ -17,7 +17,7 @@ module.exports = {
 
   async create(db, template, { item, image, data }) {
     const {
-      path, checksum, mimetype, width, height, orientation
+      path, checksum, mimetype, width, height, orientation, file
     } = image
 
     const { id } = await db.run(`
@@ -29,9 +29,16 @@ module.exports = {
 
     await all([
       db.run(`
-        INSERT INTO photos (id, item_id, path, checksum, mimetype, orientation)
-          VALUES (?,?,?,?,?,?)`,
-        [id, item, path, checksum, mimetype, orientation]),
+        INSERT INTO photos (
+            id,
+            item_id,
+            path,
+            size,
+            checksum,
+            mimetype,
+            orientation
+          ) VALUES (?,?,?,?,?,?,?)`,
+        [id, item, path, file.size, checksum, mimetype, orientation]),
 
       metadata.update(db, {
         ids: [id],
@@ -42,7 +49,6 @@ module.exports = {
         }
       })
     ])
-
 
     return (await module.exports.load(db, [id]))[id]
   },
@@ -55,15 +61,33 @@ module.exports = {
 
       await all([
         db.each(`
-          SELECT id, item_id AS item, template, created, modified,
-            width, height, path, protocol, mimetype, checksum, orientation
+          SELECT
+              id,
+              item_id AS item,
+              template,
+              datetime(created, "localtime") AS created,
+              datetime(modified, "localtime") AS modified,
+              angle,
+              mirror,
+              width,
+              height,
+              path,
+              size,
+              protocol,
+              mimetype,
+              checksum,
+              orientation
             FROM subjects
               JOIN images USING (id)
               JOIN photos USING (id)
             WHERE id IN (${ids})`,
 
           (data) => {
-            assign(photos[data.id], data)
+            Object.assign(photos[data.id], data, {
+              created: new Date(data.created),
+              modified: new Date(data.modified),
+              mirror: !!data.mirror
+            })
           }
         ),
 
@@ -92,6 +116,39 @@ module.exports = {
     }
 
     return photos
+  },
+
+  async save(db, { id, timestamp, ...data }) {
+    const assign = []
+    const params = { $id: id }
+
+    for (let attr in data) {
+      assign.push(`${attr} = $${attr}`)
+      params[`$${attr}`] = data[attr]
+    }
+
+    assert(id != null, 'missing photo id')
+    assert(assign.length > 0, 'missing assignments')
+
+    await db.run(`
+      UPDATE images
+        SET ${assign.join(', ')}
+        WHERE id = $id`, params)
+
+    if (timestamp != null) {
+      await db.run(`
+        UPDATE subjects
+          SET modified = datetime(?)
+          WHERE id = ?`,
+        new Date(timestamp).toISOString(), id)
+    }
+  },
+
+  find(db, { checksum }) {
+    return db.get(`
+      SELECT id, item_id AS item
+        FROM photos
+        WHERE checksum = ?`, checksum)
   },
 
   async move(db, { ids, item }) {

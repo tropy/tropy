@@ -2,14 +2,13 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const cx = require('classnames')
 const { on, off } = require('../dom')
 const { noop, pick } = require('../common/util')
 
 const {
   array, func, bool, string, number, object, oneOfType, node
-} = PropTypes
+} = require('prop-types')
 
 
 class Draggable extends PureComponent {

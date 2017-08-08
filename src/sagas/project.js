@@ -1,6 +1,6 @@
 'use strict'
 
-const { OPEN, CLOSE, CLOSED } = require('../constants/project')
+const { OPEN, CLOSE, CLOSED, MIGRATIONS } = require('../constants/project')
 const { Database } = require('../common/db')
 const { Cache } = require('../common/cache')
 const { warn, debug, verbose } = require('../common/log')
@@ -9,6 +9,7 @@ const { history } = require('./history')
 const { search, load } = require('./search')
 const { ontology } = require('./ontology')
 const { exec } = require('./cmd')
+const { shell } = require('./shell')
 const mod = require('../models')
 const act = require('../actions')
 const storage = require('./storage')
@@ -32,9 +33,9 @@ function *open(file) {
     db.on('error', error => {
       warn(`unexpected database error: ${error.message}`)
       debug(error.stack)
-
-      throw error
     })
+
+    yield call(db.migrate, MIGRATIONS)
 
     var project = yield call(mod.project.load, db)
     var access  = yield call(mod.access.open, db)
@@ -117,7 +118,8 @@ function *main() {
       fork(ontology),
       fork(ipc),
       fork(history),
-      fork(storage.reload)
+      fork(shell),
+      fork(storage.start)
     ])
 
     yield all([

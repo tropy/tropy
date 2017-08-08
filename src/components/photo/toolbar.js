@@ -29,14 +29,17 @@ class PhotoToolbar extends PureComponent {
       <Toolbar isDraggable={false}>
         <div className="toolbar-left">
           <IconPhoto/>
-          <h4><FormattedMessage id="panel.photos"/></h4>
+          <h4><FormattedMessage id="panel.photo.title"/></h4>
         </div>
 
         <div className="toolbar-right">
           {
             hasCreateButton &&
               <ToolGroup>
-                <IconButton icon={<IconPlus/>} onClick={onCreate}/>
+                <IconButton
+                  icon={<IconPlus/>}
+                  title="panel.photo.create"
+                  onClick={onCreate}/>
               </ToolGroup>
           }
           <ToolGroup>

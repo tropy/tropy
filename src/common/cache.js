@@ -14,7 +14,6 @@ class Cache {
   async init() {
     try {
       await mkdir(this.root)
-
     } catch (error) {
       if (error.code !== 'EEXIST') throw error
     }
@@ -22,9 +21,9 @@ class Cache {
     return this
   }
 
-  async save(name, data) {
-    await write(this.expand(name), data)
-  }
+  save = (name, data) => (
+    write(this.expand(name), data)
+  )
 
   expand(...args) {
     return join(this.root, ...args)

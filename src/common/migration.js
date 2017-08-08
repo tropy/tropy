@@ -4,7 +4,7 @@ require('./promisify')
 
 const { readdirAsync: ls, readFileAsync: read } = require('fs')
 const { basename, extname, join } = require('path')
-const { debug } = require('./log')
+const { info } = require('./log')
 
 
 class Migration {
@@ -16,9 +16,9 @@ class Migration {
 
   static async all(dir) {
     return (await ls(dir))
-      .filter(migration => (/^\d+[\w.]*\.(js|sql)$/).test(migration))
+      .filter(migration => (/^\d+[\w.-]*\.(js|sql)$/).test(migration))
       .sort()
-      .map(migration => new this(join(dir, migration)))
+      .map(migration => new Migration(join(dir, migration)))
   }
 
   static async since(number = 0, dir) {
@@ -26,10 +26,10 @@ class Migration {
   }
 
   up(db) {
-    debug(`migrating ${db.path} to #${this.number}`)
+    info(`migrating ${db.path} to #${this.number}`)
 
     return db
-      .migration(async function (tx) {
+      .migration(async (tx) => {
         if (this.type === 'js') {
           await require(this.path).up(tx)
         } else {
@@ -37,7 +37,7 @@ class Migration {
         }
 
         await tx.version(this.number)
-      }.bind(this))
+      })
 
       .catch(error => {
         throw new Error(`Migration #${this.number} failed: ${error.message}`)

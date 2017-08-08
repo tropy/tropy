@@ -66,7 +66,7 @@ class Database extends EventEmitter {
     })
   }
 
-  async migrate(...args) {
+  migrate = async (...args) => {
     const version = await this.version()
     const migrations = await Migration.since(version, ...args)
 

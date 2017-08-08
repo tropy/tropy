@@ -50,7 +50,7 @@ class MetadataFields extends PureComponent {
         key={property.id}
         id={data.id}
         property={property}
-        type={value.type || property.type}
+        type={value.type || props.type}
         text={value.text}
         isDisabled={isDisabled}
         isEditing={this.isEditing(property.id)}
@@ -68,7 +68,8 @@ class MetadataFields extends PureComponent {
       this.renderField(f.property, {
         isReadOnly: f.isConstant,
         isRequired: f.isRequired,
-        placeholder: f.hint
+        placeholder: f.hint,
+        type: f.datatype
       }))
   }
 
@@ -93,7 +94,8 @@ class MetadataFields extends PureComponent {
 
     template: shape({
       fields: arrayOf(shape({
-        property: object.isRequired
+        property: object.isRequired,
+        datatype: string
       })).isRequired
     }),
 

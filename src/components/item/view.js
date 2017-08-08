@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { ItemPanel } = require('./panel')
 const { Resizable, BufferedResizable } = require('../resizable')
-const { EsperImage } = require('../esper')
+const { Esper } = require('../esper')
 const { NotePad } = require('../note')
 const { PROJECT: { MODE }, SASS: { PANEL } } = require('../../constants')
 const { pick } = require('../../common/util')
@@ -66,8 +66,21 @@ class ItemView extends PureComponent {
     this.notepad = notepad
   }
 
-  handleEsperResize = (height) => {
+  setEsper = (esper) => {
+    this.esper = esper
+  }
+
+  handleEsperResized = (height) => {
     this.props.onUiUpdate({ esper: { height } })
+  }
+
+  handleEsperResize = () => {
+    this.esper.resize()
+  }
+
+  handlePanelResize = (...args) => {
+    this.props.onPanelResize(...args)
+    this.esper.resize()
   }
 
 
@@ -124,8 +137,8 @@ class ItemView extends PureComponent {
       offset,
       panel,
       photo,
-      onPanelResize,
       onPanelDragStop,
+      onPhotoSave,
       isTrashSelected,
       ...props
     } = this.props
@@ -139,7 +152,7 @@ class ItemView extends PureComponent {
           value={offset}
           min={PANEL.MIN_WIDTH}
           max={PANEL.MAX_WIDTH}
-          onResize={onPanelResize}
+          onResize={this.handlePanelResize}
           onDragStop={onPanelDragStop}>
           <ItemPanel {...pick(props, ItemPanel.props)}
             panel={panel}
@@ -156,9 +169,15 @@ class ItemView extends PureComponent {
             edge="bottom"
             value={esper.height}
             isRelative
-            onChange={this.handleEsperResize}
+            onChange={this.handleEsperResized}
+            onResize={this.handleEsperResize}
             min={256}>
-            <EsperImage isVisible photo={photo}/>
+            <Esper
+              ref={this.setEsper}
+              isDisabled={isTrashSelected}
+              isVisible={isItemOpen}
+              photo={photo}
+              onPhotoSave={onPhotoSave}/>
           </BufferedResizable>
           <NotePad
             ref={this.setNotePad}
@@ -199,6 +218,7 @@ class ItemView extends PureComponent {
     onNoteSelect: func.isRequired,
     onPanelResize: func.isRequired,
     onPanelDragStop: func.isRequired,
+    onPhotoSave: func.isRequired,
     onUiUpdate: func.isRequired
   }
 }

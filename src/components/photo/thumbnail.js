@@ -2,12 +2,12 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const { IconPhoto } = require('../icons')
 const { imageURL } = require('../../common/cache')
 const { pick } = require('../../common/util')
-const { string, number, func } = PropTypes
+const { bool, func, number, string } = require('prop-types')
 const { ICON } = require('../../constants/sass')
+const { Rotation } = require('../../common/iiif')
 
 
 class Thumbnail extends PureComponent {
@@ -18,9 +18,15 @@ class Thumbnail extends PureComponent {
       imageURL(cache, id, size > ICON.SIZE ? ICON.MAX : ICON.SIZE) : null
   }
 
+  get rotation() {
+    return Rotation
+      .fromExifOrientation(this.props.orientation)
+      .add(this.props)
+      .format('x')
+  }
+
   render() {
-    const { src } = this
-    const { orientation } = this.props
+    const { src, rotation } = this
 
     const listeners = pick(this.props, [
       'onClick', 'onDoubleClick', 'onMouseDown', 'onContextMenu'
@@ -30,7 +36,7 @@ class Thumbnail extends PureComponent {
       <figure {...listeners} className="thumbnail">
         <IconPhoto/>
         {src &&
-          <img className={`exif orientation-${orientation}`} src={src}/>}
+          <img className={`iiif rot-${rotation}`} src={src}/>}
       </figure>
     )
   }
@@ -38,6 +44,8 @@ class Thumbnail extends PureComponent {
   static propTypes = {
     cache: string.isRequired,
     id: number,
+    angle: number,
+    mirror: bool,
     orientation: number,
     size: number.isRequired,
     onClick: func,

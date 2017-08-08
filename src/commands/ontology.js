@@ -14,13 +14,7 @@ const mod = require('../models')
 const sanitize = require('sanitize-filename')
 const { join } = require('path')
 const { keys } = Object
-
-const {
-  openTemplates,
-  openVocabs,
-  exportTemplate,
-  fail
-} = require('../dialog')
+const dialog = require('../dialog')
 
 
 class Import extends Command {
@@ -31,7 +25,7 @@ class Import extends Command {
     let { files, isProtected } = this.action.payload
 
     if (!files) {
-      files = yield call(openVocabs)
+      files = yield call(dialog.open.vocab)
       this.init = performance.now()
     }
 
@@ -62,7 +56,7 @@ class Import extends Command {
             } catch (error) {
               warn(`Failed to import "${id}": ${error.message}`)
               verbose(error.stack)
-              fail(error, this.action.type)
+              dialog.fail(error, this.action.type)
             }
           }
         })
@@ -71,7 +65,7 @@ class Import extends Command {
       } catch (error) {
         warn(`Failed to import "${file}": ${error.message}`)
         verbose(error.stack)
-        fail(error, this.action.type)
+        dialog.fail(error, this.action.type)
       }
     }
 
@@ -215,7 +209,7 @@ class TemplateImport extends Command {
     let { files, isProtected } = payload
 
     if (!files) {
-      files = yield call(openTemplates)
+      files = yield call(dialog.open.templates)
       this.init = performance.now()
     }
 
@@ -251,7 +245,7 @@ class TemplateImport extends Command {
         warn(`Failed to import "${file}": ${error.message}`)
         verbose(error.stack)
 
-        fail(error, this.action.type)
+        dialog.fail(error, this.action.type)
       }
     }
 
@@ -277,13 +271,13 @@ class TemplateExport extends Command {
       assert(data != null, 'missing template')
 
       if (!path) {
-        path = yield call(exportTemplate, {
+        this.isInteractive = true
+        path = yield call(dialog.save.template, {
           defaultPath: join(
             ARGS.documents,
             data.name ? sanitize(`${data.name}.ttp`) : ''
           )
         })
-        this.init = performance.now()
       }
 
       if (!path) return
@@ -294,7 +288,7 @@ class TemplateExport extends Command {
       warn(`Failed to export template ${id} to ${path}: ${error.message}`)
       verbose(error.stack)
 
-      fail(error, this.action.type)
+      dialog.fail(error, this.action.type)
     }
   }
 }
@@ -318,7 +312,7 @@ class TemplateCreate extends Command {
         warn(`Failed to create template "${id}": ${error.message}`)
         verbose(error.stack)
 
-        fail(error, this.action.type)
+        dialog.fail(error, this.action.type)
       }
     }
 

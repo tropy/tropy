@@ -326,6 +326,10 @@ module.exports = {
         dispatch(actions.nav.update({ mode }))
       },
 
+      onOpenInFolder(...args) {
+        dispatch(actions.shell.openInFolder(args))
+      },
+
       onProjectOpen(path) {
         dispatch(actions.project.open(path))
       },
@@ -368,7 +372,7 @@ module.exports = {
       },
 
       onItemDelete(items) {
-        dispatch(actions.item.delete(items.map(item => item.id)))
+        dispatch(actions.item.delete(items))
       },
 
       onItemMerge(...args) {
@@ -396,8 +400,16 @@ module.exports = {
         dispatch(actions.photo.create(...args))
       },
 
+      onPhotoDelete(...args) {
+        dispatch(actions.photo.delete(...args))
+      },
+
       onPhotoMove(...args) {
         dispatch(actions.photo.move(...args))
+      },
+
+      onPhotoSave(...args) {
+        dispatch(actions.photo.save(...args))
       },
 
       onPhotoSort(...args) {

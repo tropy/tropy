@@ -27,9 +27,11 @@ const metadata = {
     return data
   },
 
-  async update(db, { ids, data }, replace = false) {
+  async update(db, { ids, data, timestamp }, replace = false) {
+    const idList = list(ids)
+
     await db.run(`
-      DELETE FROM metadata WHERE id IN (${list(ids)})${
+      DELETE FROM metadata WHERE id IN (${idList})${
         replace ? '' : ` AND property IN (${list(keys(data), quote)})`
       }`)
 
@@ -42,6 +44,14 @@ const metadata = {
         INSERT INTO metadata (id, property, value_id, language)
           VALUES ${ids.map(id =>
             `(${[id, quote(prop), value, 'NULL'].join(',')})`).join(', ')}`)
+    }
+
+    if (timestamp != null) {
+      await db.run(`
+        UPDATE subjects
+          SET modified = datetime(?)
+          WHERE id IN (${idList})`,
+        new Date(timestamp).toISOString())
     }
   },
 

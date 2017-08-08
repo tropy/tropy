@@ -8,6 +8,8 @@ const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
 const { MetadataFields } = require('./fields')
 const { TemplateSelect } = require('../template/select')
+const { PhotoInfo } = require('../photo/info')
+const { ItemInfo } = require('../item/info')
 
 const {
   getAllTemplates,
@@ -65,6 +67,7 @@ class MetadataPanel extends PureComponent {
           template={templates[item.template]}
           isDisabled={isDisabled}
           onChange={onMetadataSave}/>
+        {items.length === 1 && <ItemInfo item={item}/>}
       </section>
     )
   }
@@ -72,7 +75,14 @@ class MetadataPanel extends PureComponent {
   renderPhotoFields() {
     if (this.isEmpty || this.isBulk) return null
 
-    const { photo, photoData, templates, onMetadataSave, ...props } = this.props
+    const {
+      photo,
+      photoData,
+      templates,
+      onMetadataSave,
+      onOpenInFolder,
+      ...props
+    } = this.props
 
     return photo && !photo.pending && (
       <section>
@@ -83,6 +93,9 @@ class MetadataPanel extends PureComponent {
           data={photoData}
           template={templates[photo.template]}
           onChange={onMetadataSave}/>
+        <PhotoInfo
+          photo={photo}
+          onOpenInFolder={onOpenInFolder}/>
       </section>
     )
   }
@@ -118,7 +131,8 @@ class MetadataPanel extends PureComponent {
     itemTemplates: arrayOf(object).isRequired,
 
     onItemSave: func.isRequired,
-    onMetadataSave: func.isRequired
+    onMetadataSave: func.isRequired,
+    onOpenInFolder: func.isRequired
   }
 }
 

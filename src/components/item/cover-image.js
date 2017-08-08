@@ -32,7 +32,9 @@ class CoverImage extends PureComponent {
   }
 
   get orientation() {
-    return get(this.props.photos, [this.cover, 'orientation']) || 1
+    return pick(get(this.props.photos, [this.cover]), [
+      'angle', 'mirror', 'orientation'
+    ])
   }
 
   render() {
@@ -41,7 +43,7 @@ class CoverImage extends PureComponent {
         {this.isStack && stack }
         <Thumbnail {...pick(this.props, ThumbProps)}
           id={this.cover}
-          orientation={this.orientation}/>
+          {...this.orientation}/>
         {this.hasTags &&
           <TagColors
             selection={this.props.item.tags}

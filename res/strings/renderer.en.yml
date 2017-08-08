@@ -2,7 +2,8 @@ sidebar:
   lists: Lists
   tags: Tags
   trash: Deleted Items
-
+toolbar:
+  import: Import Photos
 panel:
   metadata:
     tab: Metadata
@@ -11,7 +12,9 @@ panel:
   tags:
     tab: Tags
     add: Add Tag
-  photos: Photos
+  photo:
+    title: Photos
+    create: Add Photos
   notes: Notes
 
 wizard:
@@ -34,6 +37,13 @@ prefs:
     template:
       item: Default Item Template
       photo: Default Photo Template
+    dup:
+      label: During Import
+      option:
+        skip: Skip duplicate photos
+        import: Accept duplicate photos
+        prompt: Ask me every time
+
   project:
     label: Project
   template:
@@ -41,6 +51,12 @@ prefs:
     new: New Template …
     create: Create
     select: Template
+    tools:
+      new: New
+      copy: Duplicate
+      delete: Delete
+      import: Import
+      export: Export
   vocab:
     label: Vocabularies
     classes: >
@@ -60,6 +76,20 @@ prefs:
         one {# Property}
         other {# Properties}
       }
+
+item:
+  created: Date Added
+  modified: Modified
+photo:
+  file: File
+  size: Size
+  type: Type
+  created: Date Added
+  modified: Modified
+esper:
+  mode:
+    fill: Fill
+    fit: Fit
 
 template:
   id: URI
@@ -93,11 +123,83 @@ property:
   description: Description
   comment: Comment
 
-prompt:
+dialog:
+  prompt:
+    ok: Yes
+    cancel: Cancel
+    item:
+      destroy: >
+        Are your sure you want to permanently delete items?
+        This action cannot be undone.
+    dup:
+      message: >
+        This photo already exists in your project. Are you sure
+        you want to import it again?
+      checkbox: Remember this choice
+      cancel: Skip
+      ok: Import Anyway
+  filter:
+    templates: Tropy Templates
+    images: Images
+    projects: Tropy Projects
+    rdf: RDF Vocabularies
+    jsonld: JSON-LD
+
+action:
+  project:
+    save: Save Project
+  list:
+    create: Create List
+    delete: Delete List
+    item:
+      add: Add Items To List
+      merge: Merge Items
+      remove: Remove Item From List
+      restore: Add Item To List
+    order: Sort List
+    restore: Restore List
+    save: Save List
+  tag:
+    create: Create Tag
+    delete: Delete Tag
+    restore: Create Tag
+    save: Save Tag
   item:
-    destroy: >
-      Are your sure you want to permanently delete items?
-      This action cannot be undone.
+    create: Create Items
+    delete: Delete Items
+    explode: Explode Item
+    implode: Merge Items
+    merge: Merge Items
+    split: Split Items
+    import: Import Items
+    restore: Restore Items
+    save: Save Item
+    tag:
+      toggle: Toggle Tags
+      clear: Clear Tags
+  metadata:
+    save: Save Metadata
+  ontology:
+    import: Import Vocabularies
+    vocab:
+      save: Save Vocabulary
+    label:
+      save: Save Label
+    template:
+      import: Import Template
+  photo:
+    create: Import Photo
+    delete: Delete Photo
+    move: Moving Photo
+    order: Sort Photos
+    restore: Restore Photo
+    save: Save Photo
+  note:
+    create: Create Note
+    delete: Delete Note
+    order: Sort Notes
+    restore: Restore Note
+    save: Save Note
 
 activity:
   project:

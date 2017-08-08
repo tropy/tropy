@@ -127,6 +127,10 @@ class ProjectSidebar extends PureComponent {
     this.props.onSelect({ trash: true }, { throttle: true })
   }
 
+  handleTrashDropItems = (items) => {
+    this.props.onItemDelete(items.map(it => it.id))
+  }
+
   handleListClick = (list) => {
     if (!this.handleListSelect(list.id)) {
       this.props.onEdit({ list: { id: list.id } })
@@ -181,7 +185,6 @@ class ProjectSidebar extends PureComponent {
       selectedTags,
       onContextMenu,
       onEditCancel,
-      onItemDelete,
       onItemImport,
       onItemTagAdd,
       onListItemsAdd,
@@ -238,7 +241,7 @@ class ProjectSidebar extends PureComponent {
                 <TrashListNode
                   isSelected={isTrashSelected}
                   onContextMenu={onContextMenu}
-                  onDropItems={onItemDelete}
+                  onDropItems={this.handleTrashDropItems}
                   onClick={this.handleTrashSelect}/>
               </ol>
             </nav>

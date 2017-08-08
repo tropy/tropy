@@ -138,14 +138,23 @@ module.exports = mod.item = {
 
       await all([
         db.each(`
-          SELECT id, template, created, modified, deleted
+          SELECT
+              id,
+              template,
+              datetime(created, "localtime") AS created,
+              datetime(modified, "localtime") AS modified,
+              deleted
             FROM subjects
               JOIN items USING (id)
               LEFT OUTER JOIN trash USING (id)
             WHERE id IN (${ids})`,
 
           (data) => {
-            assign(items[data.id], data, { deleted: !!data.deleted })
+            assign(items[data.id], data, {
+              created: new Date(data.created),
+              modified: new Date(data.modified),
+              deleted: !!data.deleted
+            })
           }
         ),
 
@@ -211,15 +220,15 @@ module.exports = mod.item = {
     return (await mod.item.load(db, [id]))[id]
   },
 
-  async update(db, ids, data) {
+  async update(db, ids, data, timestamp = Date.now()) {
     for (let prop in data) {
       if (prop !== 'template') continue
 
       await db.run(`
         UPDATE subjects
-          SET template = ?, modified = datetime("now")
+          SET template = ?, modified = datetime(?)
           WHERE id IN (${lst(ids)})`,
-        data[prop])
+        data[prop], new Date(timestamp).toISOString())
     }
   },
 

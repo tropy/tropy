@@ -3,9 +3,10 @@
 const { SETTINGS, ITEM, PHOTO } = require('../constants')
 
 const defaults = {
-  theme: ARGS.theme,
+  dup: 'prompt',
   itemTemplate: ITEM.TEMPLATE,
-  photoTemplate: PHOTO.TEMPLATE
+  photoTemplate: PHOTO.TEMPLATE,
+  theme: ARGS.theme
 }
 
 module.exports = {

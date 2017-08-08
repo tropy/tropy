@@ -183,6 +183,14 @@ i('Export', (
   </svg>
 ))
 
+i('Fill', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M13.207,7.5l-2.854,2.854-.707-.707L11.293,8H4.707L6.354,9.646l-.707.707L2.793,7.5,5.646,4.646l.707.707L4.707,7h6.586L9.646,5.354l.707-.707ZM1,0H0V15H1ZM16,0H15V15h1Z"/>
+    </g>
+  </svg>
+))
+
 i('Fit', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
@@ -331,6 +339,14 @@ i('MinusCircles', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
       <path d="M3,4H8V5H3ZM2,4.5a3.5,3.5,0,1,1,6.92.733,5.465,5.465,0,0,1,1.027-.205A4.428,4.428,0,0,0,10,4.5,4.5,4.5,0,1,0,5.22,8.972a5.455,5.455,0,0,1,.391-.983C5.573,7.99,5.538,8,5.5,8A3.5,3.5,0,0,1,2,4.5Zm13,6A4.5,4.5,0,1,1,10.5,6,4.5,4.5,0,0,1,15,10.5Zm-1,0A3.5,3.5,0,1,0,10.5,14,3.5,3.5,0,0,0,14,10.5ZM8,10v1h5V10Z"/>
+    </g>
+  </svg>
+))
+
+i('Mirror', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M9,15H8V0H9ZM2.049,4.384v6.232L5.448,7.5l-3.4-3.116M1,2,7,7.5,1,13V2ZM16,13V2L10,7.5Z"/>
     </g>
   </svg>
 ))

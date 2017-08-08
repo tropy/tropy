@@ -3,44 +3,51 @@
 const { dialog, ipcMain: ipc, BrowserWindow } = require('electron')
 const { warn, verbose } = require('../common/log')
 
-module.exports = {
 
+function show(type, win, options) {
+  return new Promise((resolve, reject) => {
+    switch (type) {
+      case 'save':
+        dialog.showSaveDialog(win, options, resolve)
+        break
+      case 'file':
+        dialog.showOpenDialog(win, options, resolve)
+        break
+      case 'message-box':
+        dialog.showMessageBox(win, options, (response, checked) => {
+          resolve({ response, checked })
+        })
+        break
+      default:
+        reject(`unknown dialog type: ${type}`)
+    }
+  })
+}
+
+function onOpen({ sender }, { id, type, options }) {
+  show(type, BrowserWindow.fromWebContents(sender), options)
+    .then(payload => {
+      sender.send('dialog', { id, payload })
+    })
+    .catch(error => {
+      warn(`dialog open failed: ${error.message}`)
+      verbose(error.stack)
+
+      sender.send('dialog', { id, payload: {
+        message: error.message
+      }, error: true })
+    })
+}
+
+module.exports = {
   start() {
-    ipc.on('dialog', module.exports.onOpen)
+    ipc.on('dialog', onOpen)
   },
 
   stop() {
-    ipc.removeListener('dialog', module.exports.onOpen)
+    ipc.removeListener('dialog', onOpen)
   },
 
-  onOpen({ sender }, { id, type, options }) {
-    module.exports.show(type, BrowserWindow.fromWebContents(sender), options)
-      .then(payload => {
-        sender.send('dialog', { id, payload })
-      })
-
-      .catch(error => {
-        warn(`dialog open failed: ${error.message}`)
-        verbose(error.stack)
-
-        sender.send('dialog', { id, payload: {
-          message: error.message
-        }, error: true })
-      })
-  },
-
-  show(type, win, options) {
-    return new Promise((resolve, reject) => {
-      switch (type) {
-        case 'save':
-          return dialog.showSaveDialog(win, options, resolve)
-        case 'file':
-          return dialog.showOpenDialog(win, options, resolve)
-        case 'message-box':
-          return dialog.showMessageBox(win, options, resolve)
-        default:
-          reject(`unknown dialog type: ${type}`)
-      }
-    })
-  }
+  onOpen,
+  show
 }

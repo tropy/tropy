@@ -1,5 +1,7 @@
 'use strict'
 
 module.exports = {
-  ...require('./image')
+  ...require('./esper'),
+  ...require('./toolbar'),
+  ...require('./view')
 }

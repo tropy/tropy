@@ -4,13 +4,14 @@ const assert = require('assert')
 const { ipcRenderer: ipc } = require('electron')
 const { counter, get } = require('./common/util')
 const { warn } = require('./common/log')
+const { basename } = require('path')
 
 let seq
 let pending
 let STORE
 
-function t(id) {
-  return get(STORE.getState(), ['intl', 'messages', `error.${id}`], id)
+function t(id, prefix = '') {
+  return get(STORE.getState(), ['intl', 'messages', `${prefix}${id}`], id)
 }
 
 function start(store) {
@@ -41,7 +42,7 @@ function onClosed(_, { id, payload, error }) {
   }
 }
 
-function open(type, options = {}) {
+function show(type, options = {}) {
   return new Promise((resolve, reject) => {
     const id = seq.next().value
 
@@ -51,7 +52,7 @@ function open(type, options = {}) {
 }
 
 function notify(options) {
-  return open('message-box', {
+  return show('message-box', {
     type: 'none', buttons: ['OK'], ...options
   })
 }
@@ -60,91 +61,120 @@ function fail(error, message = 'Error') {
   return notify({
     type: 'error',
     title: 'Error',
-    message: t(message),
+    message: t(message, 'error.'),
     detail: (message === error.message) ? null : error.message
   })
 }
 
-async function prompt(message) {
-  const response = await open('message-box', {
+async function prompt(message, {
+  buttons = ['cancel', 'ok'],
+  defaultId = 0,
+  cancelId = 0,
+  checkbox,
+  isChecked,
+  detail,
+  ...options
+} = {}) {
+  const { response, checked } = await show('message-box', {
     type: 'question',
-    buttons: ['Cancel', 'Yes'],
-    message,
-    defaultId: 0,
-    cancelId: 0
+    buttons: buttons.map(id => t(id)),
+    message: t(message),
+    defaultId,
+    cancelId,
+    checkboxLabel: (checkbox != null) ? t(checkbox) : undefined,
+    checkboxChecked: isChecked,
+    detail: t(detail),
+    ...options
   })
 
-  return response !== 0
+  const ok = response !== cancelId
+
+  return {
+    ok, cancel: !ok, isChecked: checked
+  }
 }
 
 function save(options) {
-  return open('save', options)
+  return show('save', options)
 }
 
-function file(options) {
-  return open('file', options)
+function open(options) {
+  return show('file', options)
 }
 
-function openImages(options) {
-  return open('file', {
-    filters: [
-      { name: 'Images', extensions: ['jpg', 'jpeg'] }
-    ],
-    properties: ['openFile', 'multiSelections'],
+prompt.dup = (file, options) =>
+  prompt(basename(file), {
+    buttons: ['dialog.prompt.dup.cancel', 'dialog.prompt.dup.ok'],
+    checkbox: 'dialog.prompt.dup.checkbox',
+    isChecked: false,
+    detail: 'dialog.prompt.dup.message',
     ...options
   })
-}
 
-function openVocabs(options) {
-  return open('file', {
-    filters: [
-      { name: 'RDF Vocabularies', extensions: ['n3', 'ttl'] }
-    ],
-    properties: ['openFile', 'multiSelections'],
-    ...options
-  })
-}
+open.images = (options) => open({
+  filters: [{
+    name: t('dialog.filter.images'),
+    extensions: ['jpg', 'jpeg']
+  }],
+  properties: ['openFile', 'multiSelections'],
+  ...options
+})
 
-function openTemplates(options) {
-  return open('file', {
-    filters: [
-      { name: 'Tropy Templates', extensions: ['ttp'] }
-    ],
-    properties: ['openFile', 'multiSelections'],
-    ...options
-  })
-}
+open.vocab = (options) => open({
+  filters: [{
+    name: t('dialog.filter.rdf'),
+    extensions: ['n3', 'ttl']
+  }],
+  properties: ['openFile', 'multiSelections'],
+  ...options
+})
 
-function saveProject(options) {
-  return open('save', {
-    filters: [
-      { name: 'Tropy Projects', extensions: ['tpy'] }
-    ],
-    ...options
-  })
-}
+open.templates = (options) => open({
+  filters: [{
+    name: t('dialog.filter.templates'),
+    extensions: ['ttp']
+  }],
+  properties: ['openFile', 'multiSelections'],
+  ...options
+})
 
-function exportTemplate(options) {
-  return open('save', {
-    filters: [
-      { name: 'Tropy Templates', extensions: ['ttp'] }
-    ],
-    ...options
-  })
-}
+
+save.project = (options) => save({
+  filters: [{
+    name: t('dialog.filter.projects'),
+    extensions: ['tpy']
+  }],
+  properties: ['createDirectory'],
+  ...options
+})
+
+
+save.template = (options) => save({
+  filters: [{
+    name: t('dialog.filter.templates'),
+    extensions: ['ttp']
+  }],
+  properties: ['createDirectory'],
+  ...options
+})
+
+save.items = (options) => save({
+  filters: [{
+    name: t('dialog.filter.jsonld'),
+    extensions: ['json', 'jsonld']
+  }],
+  properties: ['createDirectory'],
+  ...options
+})
+
 
 module.exports = {
-  start,
-  stop,
-  open,
-  notify,
-  exportTemplate,
   fail,
-  file,
-  openImages,
-  openTemplates,
-  openVocabs,
+  notify,
+  open,
+  prompt,
   save,
-  saveProject,
-  prompt
+  show,
+  start,
+  stop
 }

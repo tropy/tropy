@@ -9,6 +9,7 @@ const { getLabel } = require('../../common/ontology')
 const { IconLock, IconWarning } = require('../icons')
 const cx = require('classnames')
 const { TYPE } = require('../../constants')
+const { auto } = require('../../format')
 const {
   arrayOf, bool, func, number, oneOfType, shape, string
 } = require('prop-types')
@@ -68,7 +69,7 @@ class MetadataField extends PureComponent {
   }
 
   render() {
-    const { classes,  details, label } = this
+    const { classes, details, label } = this
 
     return (
       <li className={cx(classes)}>
@@ -76,6 +77,7 @@ class MetadataField extends PureComponent {
         <div className="value" onClick={this.handleClick}>
           <Editable
             value={this.props.text}
+            display={auto(this.props.text, this.props.type)}
             placeholder={this.props.placeholder}
             isEditing={this.props.isEditing}
             isRequired={this.props.isRequired}
@@ -122,18 +124,37 @@ class MetadataField extends PureComponent {
 }
 
 
-const StaticField = ({ type, label, value }) => (
-  <li className={cx({ 'metadata-field': true, 'static': true, [type]: true })}>
-    <label><FormattedMessage id={label}/></label>
-    <div className="value static">{value}</div>
-  </li>
-)
+class StaticField extends PureComponent {
+  get classes() {
+    return [
+      'metadata-field',
+      'static',
+      { clickable: this.props.onClick != null }
+    ]
+  }
 
-StaticField.propTypes = {
-  label: string.isRequired,
-  type: string.isRequired,
-  value: oneOfType([string, number]).isRequired
+  render() {
+    return this.props.value && (
+      <li className={cx(this.classes)}>
+        <label>
+          <FormattedMessage id={this.props.label}/>
+        </label>
+        <div
+          className="value static"
+          onClick={this.props.onClick}>
+          {this.props.value}
+        </div>
+      </li>
+    )
+  }
+
+  static propTypes = {
+    label: string.isRequired,
+    value: oneOfType([string, number]).isRequired,
+    onClick: func
+  }
 }
+
 
 module.exports = {
   MetadataField,

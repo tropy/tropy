@@ -74,7 +74,8 @@ linux:
         accelerator: 'CmdOrCtrl+A'
         role: 'selectall'
       - type: 'separator'
-      - label: 'Prefere&nces …'
+      - &preferences
+        label: 'Prefere&nces …'
         accelerator: 'Shift+Control+S'
         command: 'app:open-preferences'
   - &view
@@ -213,7 +214,20 @@ darwin:
 
 win32:
   - *file
-  - *edit
+  - label: '&Edit'
+    submenu:
+      - *undo
+      - id: 'redo'
+        label: '&Redo'
+        accelerator: 'Control+Y'
+        command: 'app:redo'
+        enabled: false
+      - type: 'separator'
+      - *cut
+      - *copy
+      - *paste
+      - *select-all
+      - *preferences
   - *view
   - *win
   - *dev
