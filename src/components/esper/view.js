@@ -4,10 +4,10 @@ const React = require('react')
 const { PureComponent } = React
 const { bool, func } = require('prop-types')
 const { append, bounds } = require('../../dom')
-const { shallow } = require('../../common/util')
+const { restrict, shallow } = require('../../common/util')
 const { rad } = require('../../common/math')
 const PIXI = require('pixi.js')
-const { Sprite } = PIXI
+const { Sprite, Rectangle } = PIXI
 const { TextureCache, skipHello } = PIXI.utils
 const TWEEN = require('@tweenjs/tween.js')
 const { Tween } = TWEEN
@@ -120,28 +120,44 @@ class EsperView extends PureComponent {
 
   scale({ mirror, x, y, zoom }, duration = 0) {
     const { scale, position } = this.image
+    const { width, height } = this.bounds
 
     const zx = mirror ? -1 : 1
     const dz = zoom / scale.y
 
-    x = x == null ? position.x : x
-    y = y == null ? position.y : y
+    x = x == null ? width / 2 : x
+    y = y == null ? height / 2 : y
 
     const dx = (x - position.x)
     const dy = (y - position.y)
 
-    this.animate({ x: position.x, y: position.y, zoom: scale.y }, 'zoom')
+    const limit = new Rectangle(width / 2, height / 2)
+
+    limit.pad(
+      Math.max(0, this.image.texture.orig.width * zoom - width),
+      Math.max(0, this.image.texture.orig.height * zoom - height)
+    )
+
+    this
+      .animate({
+        x: position.x,
+        y: position.y,
+        zoom: scale.y
+      }, 'zoom')
+
       .to({
-        x: position.x + dx - dx * dz,
-        y: position.y + dy - dy * dz,
+        x: restrict(position.x + dx - dx * dz, limit.left, limit.right),
+        y: restrict(position.y + dy - dy * dz, limit.top, limit.bottom),
         zoom
       }, duration)
+
       .onUpdate(m => {
         this.image.scale.x = m.zoom * zx
         this.image.scale.y = m.zoom
         this.image.x = m.x
         this.image.y = m.y
       })
+
       .start()
   }
 
