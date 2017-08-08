@@ -72,23 +72,6 @@ class EsperView extends PureComponent {
     }
   }
 
-  getSpriteBounds(sprite = this.image, at) {
-    let { x, y, width, height } = sprite
-
-    if (at != null) {
-      width = sprite.texture.orig.width * at
-      height = sprite.texture.orig.height * at
-    }
-
-    return new Rectangle(x, y, width, height)
-  }
-
-  getMovementBounds({ width, height } = this.image, vp = this.bounds) {
-    const dx = Math.max(0, width - vp.width)
-    const dy = Math.max(0, height - vp.height)
-
-    return new Rectangle((vp.width - dx) / 2, (vp.height - dy) / 2, dx, dy)
-  }
 
   reset(props) {
     this.fadeOut(this.image)
@@ -115,6 +98,7 @@ class EsperView extends PureComponent {
 
     sprite.interactive = true
     sprite.cursor = 'grab'
+    sprite.viewport = this.bounds
 
     sprite
       .on('pointerdown', handleDragStart)
@@ -134,26 +118,32 @@ class EsperView extends PureComponent {
   }
 
   move({ x, y }, duration = 0) {
-    this.animate(this.image.position, 'move')
-      .to({ x, y }, duration)
+    const { position } = this.image
+    const limit = getMovementBounds(this.image, this.bounds)
+
+    this.animate(position, 'move')
+      .to({
+        x: restrict(x, limit.left, limit.right),
+        y: restrict(y, limit.top, limit.bottom)
+      }, duration)
       .start()
   }
 
   scale({ mirror, x, y, zoom }, duration = 0) {
     const { scale, position } = this.image
-    const { width, height } = this.bounds
+    const viewport = this.bounds
 
     const zx = mirror ? -1 : 1
     const dz = zoom / scale.y
 
-    x = x == null ? width / 2 : x
-    y = y == null ? height / 2 : y
+    x = x == null ? viewport.width / 2 : x
+    y = y == null ? viewport.height / 2 : y
 
     const dx = (x - position.x)
     const dy = (y - position.y)
 
-    const limit = this.getMovementBounds(
-      this.getSpriteBounds(this.image, zoom)
+    const limit = getMovementBounds(
+      getSpriteBounds(this.image, zoom), viewport
     )
 
     this
@@ -285,14 +275,35 @@ class EsperView extends PureComponent {
   }
 }
 
+
+function getSpriteBounds(sprite, scale) {
+  let { x, y, width, height, texture } = sprite
+
+  if (scale != null) {
+    width = texture.orig.width * scale
+    height = texture.orig.height * scale
+  }
+
+  return new Rectangle(x, y, width, height)
+}
+
+function getMovementBounds(sprite, viewport) {
+  const dx = Math.max(0, sprite.width - viewport.width)
+  const dy = Math.max(0, sprite.height - viewport.height)
+
+  return new Rectangle(
+    (viewport.width - dx) / 2, (viewport.height - dy) / 2, dx, dy
+  )
+}
+
 function handleDragStart(event) {
   if (event.data.isPrimary) {
-    event.stopPropagation()
-
     this.origin = {
       pos: { x: this.x, y: this.y },
       mov: event.data.getLocalPosition(this.parent)
     }
+
+    this.limit = getMovementBounds(this, this.viewport)
 
     this.data = event.data
     this.isDragging = true
@@ -305,15 +316,18 @@ function handleDragStart(event) {
 function handleDragStop() {
   this.data = null
   this.origin = null
+  this.limit = null
   this.isDragging = false
 }
 
 function handleDragMove() {
   if (this.isDragging) {
+    const { pos, mov } = this.origin
+    const { top, right, bottom, left } = this.limit
     const { x, y } = this.data.getLocalPosition(this.parent)
 
-    this.x = this.origin.pos.x + (x - this.origin.mov.x)
-    this.y = this.origin.pos.y + (y - this.origin.mov.y)
+    this.x = restrict(pos.x + (x - mov.x), left, right)
+    this.y = restrict(pos.y + (y - mov.y), top, bottom)
   }
 }
 
