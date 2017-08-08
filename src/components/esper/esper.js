@@ -246,17 +246,23 @@ class Esper extends PureComponent {
     this.view.scale({ zoom, mirror }, 300)
   }
 
-  handleWheel = ({ x, y, dy, dx, shift }) => {
-    if (shift) {
+  handleWheel = ({ x, y, dy, dx, ctrl }) => {
+    if (ctrl) {
       this.handleZoomChange({
         x, y, zoom: this.state.zoom + dy / 500
       })
     } else {
       this.view.move({
-        x: this.view.image.x + dx,
-        y: this.view.image.y + dy
+        x: this.view.image.x - dx,
+        y: this.view.image.y - dy
       })
     }
+  }
+
+  handleDoubleClick = ({ x, y, shift }) => {
+    this.handleZoomChange({
+      x, y, zoom: this.state.zoom + (shift ? -0.5 : 0.5)
+    }, 250)
   }
 
   render() {
@@ -279,6 +285,7 @@ class Esper extends PureComponent {
         <EsperView
           ref={this.setView}
           isVisible={isVisible}
+          onDoubleClick={this.handleDoubleClick}
           onWheel={this.handleWheel}/>
       </section>
     )

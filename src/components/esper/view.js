@@ -256,7 +256,17 @@ class EsperView extends PureComponent {
       y: e.nativeEvent.offsetY,
       dx: e.nativeEvent.deltaX,
       dy: e.nativeEvent.deltaY,
-      shift: e.shiftKey
+      ctrl: e.nativeEvent.ctrlKey || e.nativeEvent.metaKey
+    })
+  }
+
+  handleDoubleClick = (e) => {
+    e.stopPropagation()
+
+    this.props.onDoubleClick({
+      x: e.nativeEvent.offsetX,
+      y: e.nativeEvent.offsetY,
+      shift: e.nativeEvent.shiftKey
     })
   }
 
@@ -265,6 +275,7 @@ class EsperView extends PureComponent {
       <div
         ref={this.setContainer}
         className="esper-view"
+        onDoubleClick={this.handleDoubleClick}
         onWheel={this.handleWheel}/>
     )
   }
@@ -272,6 +283,7 @@ class EsperView extends PureComponent {
   static propTypes = {
     isVisible: bool.isRequired,
     onLoadError: func,
+    onDoubleClick: func.isRequired,
     onWheel: func.isRequired
   }
 }
