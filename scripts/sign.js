@@ -35,8 +35,8 @@ target.win32 = (args = []) => {
 
   for (let target of targets) {
     for (let file of ls(join(target, '*.exe'))) {
-      exec(`"${signtool}" sign ${params} ${file}`)
-      exec(`"${signtool}" verify /pa ${file}`)
+      exec(`"${signtool}" sign ${params} "${file}"`)
+      exec(`"${signtool}" verify /pa "${file}"`)
     }
   }
 }
