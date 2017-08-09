@@ -27,7 +27,8 @@ const EVENTS = [
   'maximize',
   'unmaximize',
   'enter-full-screen',
-  'leave-full-screen'
+  'leave-full-screen',
+  'show'
 ]
 
 const AQUA = {

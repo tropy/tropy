@@ -6,6 +6,7 @@ const { EsperView } = require('./view')
 const { EsperToolbar } = require('./toolbar')
 const { bool, func, node, number, object, string } = require('prop-types')
 const { bounds, on, off } = require('../../dom')
+const { win } = require('../../window')
 const { get, restrict, shallow } = require('../../common/util')
 const { isHorizontal, rotate } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
@@ -21,11 +22,13 @@ class Esper extends PureComponent {
 
   componentDidMount() {
     on(window, 'resize', this.resize)
+    win.on('show', this.resize)
     this.resize()
   }
 
   componentWillUnmount() {
     off(window, 'resize', this.resize)
+    win.removeEventListener('show', this.resize)
   }
 
   componentWillReceiveProps(props) {
