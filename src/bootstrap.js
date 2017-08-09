@@ -21,7 +21,7 @@ ready.then(() => {
   const READY = performance.now()
 
   win.init(() => {
-    win.show()
+    requestIdleCallback(win.show, { timeout: 100 })
     const DONE = performance.now()
 
     verbose('%s ready after %dms (%dms)', win.type,
