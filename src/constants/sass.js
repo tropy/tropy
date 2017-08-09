@@ -104,6 +104,10 @@ const NOTEPAD = {
   MIN_HEIGHT: 100
 }
 
+const ESPER = {
+  MIN_HEIGHT: WINDOW.MIN_HEIGHT - NOTEPAD.MIN_HEIGHT
+}
+
 const WIZARD = {
   WIDTH: 456,
   HEIGHT: 580
@@ -120,6 +124,7 @@ const GRID = {
 
 module.exports =  {
   ACTIVITY,
+  ESPER,
   GRID,
   ICON,
   ITEM,

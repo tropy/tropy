@@ -175,7 +175,8 @@ action:
     restore: Restore Items
     save: Save Item
     tag:
-      toggle: Toggle Tags
+      create: Tag
+      toggle: Tag
       clear: Clear Tags
   metadata:
     save: Save Metadata
@@ -233,7 +234,8 @@ activity:
     restore: Restoring item …
     save: Saving items …
     tag:
-      toggle: Toggling item tag …
+      create: Tagging item
+      toggle: Tagging item …
       clear: Clearing item tags …
   metadata:
     load: Loading metadata …
