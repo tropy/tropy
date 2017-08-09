@@ -75,6 +75,7 @@ linux:
       condition: 'hasMultiplePhotos'
     - label: 'Export Item …'
       command: 'app:export-item'
+      enabled: false
     - label: 'Add Photo…'
       command: 'app:create-item-photo'
     - label: 'Tags'
@@ -92,6 +93,7 @@ linux:
       command: 'app:merge-item'
     - label: 'Export Selected Items …'
       command: 'app:export-item'
+      enabled: false
     - label: 'Delete Selected Items'
       command: 'app:delete-item'
   item-list: &item-list

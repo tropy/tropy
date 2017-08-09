@@ -244,7 +244,7 @@ class Window extends EventEmitter {
 
     if (done == null) return
 
-    let limit = Date.now() + 200
+    let limit = Date.now() + 500
     let ti = setInterval(() => {
       if (document.styleSheets.length === count || Date.now() > limit) {
         clearInterval(ti)

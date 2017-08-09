@@ -22,13 +22,12 @@ class Esper extends PureComponent {
 
   componentDidMount() {
     on(window, 'resize', this.resize)
-    win.on('show', this.resize)
-    this.resize()
+    win.once('init', this.resize)
+    requestIdleCallback(this.resize)
   }
 
   componentWillUnmount() {
     off(window, 'resize', this.resize)
-    win.removeEventListener('show', this.resize)
   }
 
   componentWillReceiveProps(props) {
