@@ -12,6 +12,7 @@ const { isHorizontal, rotate } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
 const { assign } = Object
 const debounce = require('lodash.debounce')
+const { ESPER } = require('../../constants/sass')
 
 
 class Esper extends PureComponent {
@@ -172,6 +173,11 @@ class Esper extends PureComponent {
   resize = () => {
     const { width, height } = bounds(this.view.container)
     const { minZoom, zoom, zoomToFill } = this.getZoomBounds({ width, height })
+
+    // HACK re-schedule resize if it happens before CSS was applied!
+    if (height < ESPER.MIN_HEIGHT) {
+      setTimeout(this.resize, 500)
+    }
 
     this.view.resize({
       width, height, zoom, mirror: this.state.mirror
