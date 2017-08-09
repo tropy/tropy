@@ -103,6 +103,7 @@ class Window extends EventEmitter {
     ipc
       .on('win', (_, state) => {
         this.toggle(state)
+        this.emit(state)
       })
       .on('theme', (_, theme) => {
         this.style(theme, true)
