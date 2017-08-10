@@ -39,9 +39,8 @@ class EsperView extends PureComponent {
 
     append(this.pixi.view, this.container)
 
-    this.io = new IntersectionObserver(entries => {
-      const { intersectionRatio: ratio } = entries[entries.length - 1]
-      requestIdleCallback(ratio > 0 ? this.start : this.stop)
+    this.io = new IntersectionObserver(([e]) => {
+      requestIdleCallback(e.intersectionRatio > 0 ? this.start : this.stop)
     }, { threshold: [0] })
 
     this.io.observe(this.container)

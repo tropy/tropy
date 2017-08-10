@@ -66,21 +66,12 @@ class ItemView extends PureComponent {
     this.notepad = notepad
   }
 
-  setEsper = (esper) => {
-    this.esper = esper
-  }
-
-  handleEsperResized = (height) => {
+  handleEsperResize = (height) => {
     this.props.onUiUpdate({ esper: { height } })
-  }
-
-  handleEsperResize = () => {
-    this.esper.resize()
   }
 
   handlePanelResize = (...args) => {
     this.props.onPanelResize(...args)
-    this.esper.resize()
   }
 
 
@@ -169,11 +160,9 @@ class ItemView extends PureComponent {
             edge="bottom"
             value={esper.height}
             isRelative
-            onChange={this.handleEsperResized}
-            onResize={this.handleEsperResize}
+            onChange={this.handleEsperResize}
             min={256}>
             <Esper
-              ref={this.setEsper}
               isDisabled={isTrashSelected}
               isVisible={isItemOpen}
               photo={photo}

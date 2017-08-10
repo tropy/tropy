@@ -5,14 +5,13 @@ const { PureComponent } = React
 const { EsperView } = require('./view')
 const { EsperToolbar } = require('./toolbar')
 const { bool, func, node, number, object, string } = require('prop-types')
-const { bounds, on, off } = require('../../dom')
-const { win } = require('../../window')
 const { get, restrict, shallow } = require('../../common/util')
 const { isHorizontal, rotate } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
 const { assign } = Object
 const debounce = require('lodash.debounce')
-const { ESPER } = require('../../constants/sass')
+const throttle = require('lodash.throttle')
+//const { ESPER } = require('../../constants/sass')
 
 
 class Esper extends PureComponent {
@@ -22,13 +21,15 @@ class Esper extends PureComponent {
   }
 
   componentDidMount() {
-    on(window, 'resize', this.resize)
-    win.once('init', this.resize)
-    requestIdleCallback(this.resize)
+    this.ro = new ResizeObserver(([e]) => {
+      this.resize(e.contentRect)
+    })
+
+    this.ro.observe(this.view.container)
   }
 
   componentWillUnmount() {
-    off(window, 'resize', this.resize)
+    this.ro.disconnect()
   }
 
   componentWillReceiveProps(props) {
@@ -166,21 +167,15 @@ class Esper extends PureComponent {
     this.view = view
   }
 
-  resize = () => {
-    const { width, height } = bounds(this.view.container)
+  resize = throttle(({ width, height }) => {
     const { minZoom, zoom, zoomToFill } = this.getZoomBounds({ width, height })
-
-    // HACK re-schedule resize if it happens before CSS was applied!
-    if (height < ESPER.MIN_HEIGHT) {
-      setTimeout(this.resize, 500)
-    }
 
     this.view.resize({
       width, height, zoom, mirror: this.state.mirror
     })
 
     this.setState({ minZoom, zoom, zoomToFill })
-  }
+  }, 20)
 
   persist = debounce(() => {
     const { angle, mirror } = this.state

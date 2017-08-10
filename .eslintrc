@@ -21,6 +21,9 @@ env:
   node: true
   browser: true
 
+globals:
+  ResizeObserver: true
+
 rules:
   array-bracket-spacing: 2
   block-spacing: 2

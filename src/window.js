@@ -62,7 +62,7 @@ class Window extends EventEmitter {
     this.style(this.state.theme, false, done)
   }
 
-  show() {
+  show = () => {
     const { current } = this
     current.show()
     current.focus()
