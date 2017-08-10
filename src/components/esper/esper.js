@@ -61,10 +61,6 @@ class Esper extends PureComponent {
     return this.props.isDisabled || this.isEmpty
   }
 
-  get isVisible() {
-    return this.props.isVisible && !this.isEmpty
-  }
-
   get bounds() {
     return this.view.bounds
   }
@@ -274,7 +270,7 @@ class Esper extends PureComponent {
   }
 
   render() {
-    const { isDisabled, isVisible } = this
+    const { isDisabled } = this
 
     return (
       <section className="esper">
@@ -292,7 +288,6 @@ class Esper extends PureComponent {
         </EsperHeader>
         <EsperView
           ref={this.setView}
-          isVisible={isVisible}
           onDoubleClick={this.handleDoubleClick}
           onWheel={this.handleWheel}/>
       </section>
@@ -301,7 +296,6 @@ class Esper extends PureComponent {
 
   static propTypes = {
     isDisabled: bool,
-    isVisible: bool,
     maxZoom: number.isRequired,
     minZoom: number.isRequired,
     zoom: number.isRequired,
@@ -314,8 +308,7 @@ class Esper extends PureComponent {
     maxZoom: 4,
     minZoom: 1,
     zoom: 1,
-    mode: 'fit',
-    isVisible: false
+    mode: 'fit'
   }
 }
 

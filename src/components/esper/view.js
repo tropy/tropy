@@ -2,9 +2,9 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { bool, func } = require('prop-types')
+const { func } = require('prop-types')
 const { append, bounds } = require('../../dom')
-const { restrict, shallow } = require('../../common/util')
+const { restrict } = require('../../common/util')
 const { rad } = require('../../common/math')
 const PIXI = require('pixi.js')
 const { Sprite, Rectangle } = PIXI
@@ -37,26 +37,35 @@ class EsperView extends PureComponent {
 
     append(this.pixi.view, this.container)
 
-    this.handlePropsChange(this.props)
+    this.io = new IntersectionObserver(entries => {
+      const { intersectionRatio: ratio } = entries[entries.length - 1]
+      requestIdleCallback(ratio > 0 ? this.start : this.stop)
+    }, { threshold: [0] })
+
+    this.io.observe(this.container)
   }
 
   componentWillUnmount() {
     this.tweens.removeAll()
     this.pixi.destroy(true)
-  }
-
-  componentWillReceiveProps(props) {
-    if (!shallow(props, this.props)) {
-      this.handlePropsChange(props)
-    }
+    this.io.disconnect()
   }
 
   shouldComponentUpdate() {
     return false
   }
 
-  handlePropsChange({ isVisible }) {
-    this.pixi[isVisible ? 'start' : 'stop']()
+  start = () => {
+    this.pixi.start()
+  }
+
+  stop = () => {
+    this.pixi.stop()
+  }
+
+
+  get isStarted() {
+    return !!this.pixi.ticker.started
   }
 
   get bounds() {
@@ -71,7 +80,6 @@ class EsperView extends PureComponent {
       y: height / 2
     }
   }
-
 
   reset(props) {
     this.fadeOut(this.image)
@@ -188,6 +196,11 @@ class EsperView extends PureComponent {
   fadeOut(sprite, duration = 250) {
     if (sprite == null) return
 
+    if (!this.isStarted) {
+      sprite.destroy()
+      return
+    }
+
     this.animate(sprite)
       .to({ alpha: 0 }, duration)
       .onStop(() => sprite.destroy())
@@ -279,7 +292,6 @@ class EsperView extends PureComponent {
   }
 
   static propTypes = {
-    isVisible: bool.isRequired,
     onLoadError: func,
     onDoubleClick: func.isRequired,
     onWheel: func.isRequired
