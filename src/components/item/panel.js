@@ -120,6 +120,7 @@ class ItemPanel extends PureComponent {
     data: object.isRequired,
     edit: object.isRequired,
     keymap: object.isRequired,
+    isDisabled: bool.isRequired,
     isItemOpen: bool.isRequired,
     items: array.isRequired,
 
