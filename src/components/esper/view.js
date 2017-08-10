@@ -6,6 +6,7 @@ const { func } = require('prop-types')
 const { append, bounds } = require('../../dom')
 const { restrict } = require('../../common/util')
 const { rad } = require('../../common/math')
+const { linux } = require('../../common/os')
 const PIXI = require('pixi.js')
 const { Sprite, Rectangle } = PIXI
 const { TextureCache, skipHello } = PIXI.utils
@@ -26,6 +27,7 @@ class EsperView extends PureComponent {
       antialias: true,
       resolution: window.devicePixelRatio,
       transparent: true,
+      legacy: linux,
       width,
       height
     })
