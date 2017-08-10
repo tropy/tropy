@@ -2,13 +2,13 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const { TABS, SASS: { TILE, SCROLLBAR } } = require('../constants')
-const { bounds, on, off } = require('../dom')
+const { bounds } = require('../dom')
 const { times } = require('../common/util')
 const { win } = require('../window')
 const { floor } = Math
-const { bool, number } = PropTypes
+const { bool, number } = require('prop-types')
+const throttle = require('lodash.throttle')
 
 
 class Iterator extends PureComponent {
@@ -22,24 +22,25 @@ class Iterator extends PureComponent {
 
   componentDidMount() {
     if (this.constructor.isGrid) {
-      on(window, 'resize', this.handleResize)
-      this.handleResize()
+      this.ro = new ResizeObserver(([e]) => {
+        this.handleResize(e.contentRect)
+      })
+
+      this.ro.observe(this.container)
     }
   }
 
   componentWillUnmount() {
-    if (this.constructor.isGrid) {
-      off(window, 'resize', this.handleResize)
+    if (this.ro != null) {
+      this.ro.disconnect()
     }
   }
 
   componentWillReceiveProps(props) {
     if (this.constructor.isGrid) {
       if (this.props.size !== props.size) {
-        const { width } = bounds(this.container)
-
         this.setState({
-          cols: this.getColumns(width, props.size)
+          cols: this.getColumns(props.size)
         })
       }
     }
@@ -73,7 +74,7 @@ class Iterator extends PureComponent {
     return this.isEmpty ? null : TABS[this.constructor.name]
   }
 
-  getColumns(width, size = this.props.size) {
+  getColumns(size = this.props.size, width = this.width) {
     if (win.state.scrollbars) {
       width = width - SCROLLBAR.WIDTH
     }
@@ -91,18 +92,18 @@ class Iterator extends PureComponent {
     ))
   }
 
-  handleResize = () => {
-    const { width } = bounds(this.container)
-    const maxCols = this.getColumns(width, TILE.MIN)
+  handleResize = throttle(({ width }) => {
+    this.width = width
+    const maxCols = this.getColumns(TILE.MIN)
 
     this.setState({
-      cols: this.getColumns(width), maxCols
+      cols: this.getColumns(), maxCols
     })
 
     if (this.constructor.isGrid) {
       this.filler = this.fill(maxCols)
     }
-  }
+  }, 20)
 
 
   static get isGrid() {
