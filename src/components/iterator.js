@@ -3,7 +3,6 @@
 const React = require('react')
 const { PureComponent } = React
 const { TABS, SASS: { TILE, SCROLLBAR } } = require('../constants')
-const { bounds } = require('../dom')
 const { times } = require('../common/util')
 const { win } = require('../window')
 const { floor } = Math
