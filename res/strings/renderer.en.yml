@@ -87,9 +87,13 @@ photo:
   created: Date Added
   modified: Modified
 esper:
+  tool:
+    pan: Pan Tool
+    select: Selection Tool
   mode:
     fill: Fill
     fit: Fit
+    zoom: Zoom
 
 template:
   id: URI

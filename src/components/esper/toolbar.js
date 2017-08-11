@@ -40,8 +40,8 @@ class EsperToolbar extends PureComponent {
     return this.props.mode === MODE.FIT
   }
 
-  get isPanToolActive() {
-    return this.props.tool === TOOL.PAN
+  isToolActive(tool) {
+    return this.props.tool === tool
   }
 
   handleRotate = () => {
@@ -64,6 +64,10 @@ class EsperToolbar extends PureComponent {
     this.props.onToolChange(TOOL.PAN)
   }
 
+  setSelectTool = () => {
+    this.props.onToolChange(TOOL.SELECT)
+  }
+
   render() {
     return (
       <Toolbar>
@@ -74,7 +78,10 @@ class EsperToolbar extends PureComponent {
               isDisabled={this.props.isDisabled}/>
             <IconButton
               icon={<IconSelection/>}
-              isDisabled={this.props.isDisabled}/>
+              title="esper.tool.select"
+              isActive={this.isToolActive(TOOL.SELECT)}
+              isDisabled={this.props.isDisabled}
+              onClick={this.setSelectTool}/>
           </ToolGroup>
           <ToolGroup>
             <IconButton
@@ -92,7 +99,8 @@ class EsperToolbar extends PureComponent {
           <ToolGroup>
             <IconButton
               icon={<IconHand/>}
-              isActive={this.isPanToolActive}
+              title="esper.tool.pan"
+              isActive={this.isToolActive(TOOL.PAN)}
               onClick={this.setPanTool}/>
             <IconButton
               icon={<IconFill/>}
