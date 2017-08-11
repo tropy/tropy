@@ -113,13 +113,12 @@ class EsperView extends PureComponent {
 
     sprite.interactive = true
     sprite.cursor = 'grab'
-    sprite.viewport = this.bounds
 
     sprite
-      .on('pointerdown', handleDragStart)
-      .on('pointerup', handleDragStop)
-      .on('pointerupoutside', handleDragStop)
-      .on('pointermove', handleDragMove)
+      .on('pointerdown', this.handleDragStart)
+      .on('pointerup', this.handleDragStop)
+      .on('pointerupoutside', this.handleDragStop)
+      .on('pointermove', this.handleDragMove)
   }
 
   resize({ width, height, zoom, mirror }) {
@@ -291,6 +290,43 @@ class EsperView extends PureComponent {
     })
   }
 
+  handleDragStart = (event) => {
+    const { data, target } = event
+
+    if (data.isPrimary) {
+      target.origin = {
+        pos: { x: target.x, y: target.y },
+        mov: data.getLocalPosition(target.parent)
+      }
+
+      target.limit = getMovementBounds(target, null, this.bounds)
+
+      target.data = event.data
+      target.isDragging = true
+
+    } else {
+      this.handleDragStop(event)
+    }
+  }
+
+  handleDragStop = ({ target }) => {
+    target.data = null
+    target.origin = null
+    target.limit = null
+    target.isDragging = false
+  }
+
+  handleDragMove = ({ target }) => {
+    if (target.isDragging) {
+      const { pos, mov } = target.origin
+      const { top, right, bottom, left } = target.limit
+      const { x, y } = target.data.getLocalPosition(target.parent)
+
+      target.x = restrict(pos.x + (x - mov.x), left, right)
+      target.y = restrict(pos.y + (y - mov.y), top, bottom)
+    }
+  }
+
   render() {
     return (
       <div
@@ -338,42 +374,6 @@ function getMovementBounds(sprite, scale, viewport) {
     (viewport.width - dx) / 2, (viewport.height - dy) / 2, dx, dy
   )
 }
-
-function handleDragStart(event) {
-  if (event.data.isPrimary) {
-    this.origin = {
-      pos: { x: this.x, y: this.y },
-      mov: event.data.getLocalPosition(this.parent)
-    }
-
-    this.limit = getMovementBounds(this, null, this.viewport)
-
-    this.data = event.data
-    this.isDragging = true
-
-  } else {
-    handleDragStop.call(this)
-  }
-}
-
-function handleDragStop() {
-  this.data = null
-  this.origin = null
-  this.limit = null
-  this.isDragging = false
-}
-
-function handleDragMove() {
-  if (this.isDragging) {
-    const { pos, mov } = this.origin
-    const { top, right, bottom, left } = this.limit
-    const { x, y } = this.data.getLocalPosition(this.parent)
-
-    this.x = restrict(pos.x + (x - mov.x), left, right)
-    this.y = restrict(pos.y + (y - mov.y), top, bottom)
-  }
-}
-
 
 module.exports = {
   EsperView
