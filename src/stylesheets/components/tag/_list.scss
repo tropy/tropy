@@ -120,11 +120,10 @@
 
 .add-tag-container {
   flex: 0 0 auto;
-  padding-bottom: 2px;
+  padding: ($space-min + $space-min / 2) $default-padding-horizontal 2px;
 
   .editable-control {
-    left: $default-padding-horizontal;
-    width: calc(100% - 2 * #{$default-padding-horizontal});
+    width: 100%;
     height: $input-height-base;
     background: $add-tag-default-bg;
     cursor: default;
