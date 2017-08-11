@@ -2,17 +2,19 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { func } = require('prop-types')
+const { func, string } = require('prop-types')
 const { append, bounds } = require('../../dom')
 const { restrict } = require('../../common/util')
 const { rad } = require('../../common/math')
 const { linux } = require('../../common/os')
 const PIXI = require('pixi.js')
-const { Sprite, Rectangle } = PIXI
+const { Graphics, Sprite, Rectangle } = PIXI
 const { TextureCache, skipHello } = PIXI.utils
 const TWEEN = require('@tweenjs/tween.js')
 const { Tween } = TWEEN
 const { Cubic } = TWEEN.Easing
+
+const { TOOL } = require('../../constants/esper')
 
 const {
   ESPER: {
@@ -79,30 +81,27 @@ class EsperView extends PureComponent {
     return this.pixi.screen
   }
 
-  get center() {
-    const { width, height } = this.pixi.screen
-
-    return {
-      x: width / 2,
-      y: height / 2
-    }
-  }
-
   reset(props) {
     this.fadeOut(this.image)
     this.image = null
+    this.g = null
 
     if (props.src != null) {
       this.image = new Sprite()
       this.image.anchor.set(0.5)
 
-      this.move(this.center)
+      const { width, height } = this.bounds
+
+      this.move({ x: width / 2, y: height / 2 })
       this.rotate(props)
       this.scale(props)
 
       this.makeInteractive(this.image)
-
       this.load(props.src, this.image)
+
+      this.g = new Graphics()
+      this.image.addChild(this.g)
+
       this.pixi.stage.addChildAt(this.image, 0)
     }
   }
@@ -253,6 +252,20 @@ class EsperView extends PureComponent {
 
   update = () => {
     this.tweens.update(performance.now())
+
+    if (this.image != null) {
+      const { g } = this
+      const { selection } = this.image
+
+      g.clear()
+
+      if (selection != null) {
+        g.lineStyle(2, 0x5c93e5, 1)
+        g.beginFill(0xcedef7, 0.5)
+        g.drawRect(selection.x, selection.y, selection.width, selection.height)
+        g.endFill()
+      }
+    }
   }
 
   setContainer = (container) => {
@@ -294,15 +307,20 @@ class EsperView extends PureComponent {
     const { data, target } = event
 
     if (data.isPrimary) {
+
       target.origin = {
         pos: { x: target.x, y: target.y },
         mov: data.getLocalPosition(target.parent)
       }
 
+      target.selection = {
+        x: target.origin.mov.x, y: target.origin.mov.y, width: 0, height: 0
+      }
+
       target.limit = getMovementBounds(target, null, this.bounds)
 
       target.data = event.data
-      target.isDragging = true
+      target.drag = this.props.tool
 
     } else {
       this.handleDragStop(event)
@@ -310,20 +328,39 @@ class EsperView extends PureComponent {
   }
 
   handleDragStop = ({ target }) => {
+    if (target == null) return
+
+    //target.selection = null
     target.data = null
     target.origin = null
     target.limit = null
-    target.isDragging = false
+    target.drag = null
   }
 
   handleDragMove = ({ target }) => {
-    if (target.isDragging) {
-      const { pos, mov } = target.origin
-      const { top, right, bottom, left } = target.limit
-      const { x, y } = target.data.getLocalPosition(target.parent)
+    if (target == null) return
 
-      target.x = restrict(pos.x + (x - mov.x), left, right)
-      target.y = restrict(pos.y + (y - mov.y), top, bottom)
+    switch (target.drag) {
+      case TOOL.PAN: {
+        const { pos, mov } = target.origin
+        const { top, right, bottom, left } = target.limit
+        const { x, y } = target.data.getLocalPosition(target.parent)
+
+        target.x = restrict(pos.x + (x - mov.x), left, right)
+        target.y = restrict(pos.y + (y - mov.y), top, bottom)
+
+        break
+      }
+
+      case TOOL.SELECT: {
+        const { mov } = target.origin
+        const { x, y } = target.data.getLocalPosition(target.parent)
+
+        target.selection.width = x - mov.x
+        target.selection.height = y - mov.y
+
+        break
+      }
     }
   }
 
@@ -338,6 +375,7 @@ class EsperView extends PureComponent {
   }
 
   static propTypes = {
+    tool: string.isRequired,
     onLoadError: func,
     onDoubleClick: func.isRequired,
     onWheel: func.isRequired
