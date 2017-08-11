@@ -6,6 +6,7 @@ module.exports = {
   COLUMNS: require('./columns'),
   DND: require('./dnd'),
   EDIT: require('./edit'),
+  ESPER: require('./esper'),
   HISTORY: require('./history'),
   ITEM: require('./item'),
   KEYMAP: require('./keymap'),

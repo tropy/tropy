@@ -8,6 +8,8 @@ const { Slider } = require('../slider')
 const { arrayOf, bool, func, number, string } = require('prop-types')
 const throttle = require('lodash.throttle')
 
+const { TOOL, MODE } = require('../../constants/esper')
+
 const {
   ESPER: {
     ZOOM_SLIDER_PRECISION,
@@ -28,13 +30,18 @@ const {
   IconFill
 } = require('../icons')
 
+
 class EsperToolbar extends PureComponent {
   get isZoomToFill() {
-    return this.props.mode === 'fill'
+    return this.props.mode === MODE.FILL
   }
 
   get isZoomToFit() {
-    return this.props.mode === 'fit'
+    return this.props.mode === MODE.FIT
+  }
+
+  get isPanToolActive() {
+    return this.props.tool === TOOL.PAN
   }
 
   handleRotate = () => {
@@ -46,11 +53,15 @@ class EsperToolbar extends PureComponent {
   }, 15)
 
   setZoomToFit = () => {
-    this.props.onModeChange(this.isZoomToFit ? 'zoom' : 'fit')
+    this.props.onModeChange(this.isZoomToFit ? MODE.ZOOM : MODE.FIT)
   }
 
   setZoomToFill = () => {
-    this.props.onModeChange(this.isZoomToFill ? 'zoom' : 'fill')
+    this.props.onModeChange(this.isZoomToFill ? MODE.ZOOM : MODE.FILL)
+  }
+
+  setPanTool = () => {
+    this.props.onToolChange(TOOL.PAN)
   }
 
   render() {
@@ -80,7 +91,9 @@ class EsperToolbar extends PureComponent {
           </ToolGroup>
           <ToolGroup>
             <IconButton
-              icon={<IconHand/>}/>
+              icon={<IconHand/>}
+              isActive={this.isPanToolActive}
+              onClick={this.setPanTool}/>
             <IconButton
               icon={<IconFill/>}
               title="esper.mode.fill"
@@ -114,6 +127,7 @@ class EsperToolbar extends PureComponent {
   static propTypes = {
     isDisabled: bool.isRequired,
     mode: string.isRequired,
+    tool: string.isRequired,
     zoom: number.isRequired,
     zoomPrecision: number.isRequired,
     zoomSteps: arrayOf(number).isRequired,
@@ -121,6 +135,7 @@ class EsperToolbar extends PureComponent {
     maxZoom: number.isRequired,
     onMirrorChange: func.isRequired,
     onModeChange: func.isRequired,
+    onToolChange: func.isRequired,
     onRotationChange: func.isRequired,
     onZoomChange: func.isRequired
   }

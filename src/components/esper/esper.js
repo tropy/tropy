@@ -12,6 +12,8 @@ const { assign } = Object
 const debounce = require('lodash.debounce')
 const throttle = require('lodash.throttle')
 
+const { TOOL, MODE } = require('../../constants/esper')
+
 const {
   ESPER: {
     MAX_ZOOM,
@@ -79,6 +81,7 @@ class Esper extends PureComponent {
   getEmptyState(props = this.props) {
     return {
       mode: props.mode,
+      tool: props.tool,
       zoom: props.zoom,
       minZoom: props.minZoom,
       angle: 0,
@@ -255,6 +258,10 @@ class Esper extends PureComponent {
     this.view.scale({ zoom, mirror }, ZOOM_DURATION)
   }
 
+  handleToolChange = (tool) => {
+    this.setState({ tool })
+  }
+
   handleWheel = ({ x, y, dy, dx, ctrl }) => {
     if (ctrl) {
       this.handleZoomChange({
@@ -286,16 +293,19 @@ class Esper extends PureComponent {
           <EsperToolbar
             isDisabled={isDisabled}
             mode={this.state.mode}
+            tool={this.state.tool}
             zoom={this.state.zoom}
             minZoom={this.state.minZoom}
             maxZoom={this.props.maxZoom}
             onMirrorChange={this.handleMirrorChange}
             onModeChange={this.handleModeChange}
+            onToolChange={this.handleToolChange}
             onRotationChange={this.handleRotationChange}
             onZoomChange={this.handleZoomChange}/>
         </EsperHeader>
         <EsperView
           ref={this.setView}
+          tool={this.state.tool}
           onDoubleClick={this.handleDoubleClick}
           onWheel={this.handleWheel}/>
       </section>
@@ -309,6 +319,7 @@ class Esper extends PureComponent {
     zoom: number.isRequired,
     mode: string.isRequired,
     photo: object,
+    tool: string.isRequired,
     onPhotoSave: func.isRequired
   }
 
@@ -316,7 +327,8 @@ class Esper extends PureComponent {
     maxZoom: MAX_ZOOM,
     minZoom: MIN_ZOOM,
     zoom: 1,
-    mode: 'fit'
+    mode: MODE.FIT,
+    tool: TOOL.PAN
   }
 }
 
