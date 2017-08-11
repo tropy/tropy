@@ -14,6 +14,12 @@ const TWEEN = require('@tweenjs/tween.js')
 const { Tween } = TWEEN
 const { Cubic } = TWEEN.Easing
 
+const {
+  ESPER: {
+    FADE_DURATION
+  }
+} = require('../../constants/sass')
+
 
 class EsperView extends PureComponent {
   componentDidMount() {
@@ -194,7 +200,7 @@ class EsperView extends PureComponent {
     }
   }
 
-  fadeOut(sprite, duration = 250) {
+  fadeOut(sprite, duration = FADE_DURATION) {
     if (sprite == null) return
 
     if (!this.isStarted) {

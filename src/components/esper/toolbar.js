@@ -9,6 +9,13 @@ const { arrayOf, bool, func, number, string } = require('prop-types')
 const throttle = require('lodash.throttle')
 
 const {
+  ESPER: {
+    ZOOM_SLIDER_PRECISION,
+    ZOOM_SLIDER_STEPS
+  }
+} = require('../../constants/sass')
+
+const {
   IconArrow,
   IconSelection,
   IconRotate,
@@ -119,8 +126,8 @@ class EsperToolbar extends PureComponent {
   }
 
   static defaultProps = {
-    zoomPrecision: 100,
-    zoomSteps: [1, 2, 3]
+    zoomPrecision: ZOOM_SLIDER_PRECISION,
+    zoomSteps: ZOOM_SLIDER_STEPS
   }
 }
 

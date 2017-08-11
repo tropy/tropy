@@ -11,7 +11,17 @@ const { Rotation } = require('../../common/iiif')
 const { assign } = Object
 const debounce = require('lodash.debounce')
 const throttle = require('lodash.throttle')
-//const { ESPER } = require('../../constants/sass')
+
+const {
+  ESPER: {
+    MAX_ZOOM,
+    MIN_ZOOM,
+    ROTATE_DURATION,
+    ZOOM_DURATION,
+    ZOOM_STEP_SIZE,
+    ZOOM_WHEEL_FACTOR
+  }
+} = require('../../constants/sass')
 
 
 class Esper extends PureComponent {
@@ -199,8 +209,8 @@ class Esper extends PureComponent {
 
     this.setState(state)
 
-    this.view.rotate(state, 250)
-    this.view.scale(state, 250)
+    this.view.rotate(state, ROTATE_DURATION)
+    this.view.scale(state, ROTATE_DURATION)
 
     this.persist()
   }
@@ -211,7 +221,7 @@ class Esper extends PureComponent {
     this.setState({ zoom, mode: 'zoom' })
     this.view.scale({
       x, y, zoom, mirror: this.state.mirror
-    }, animate ? 300 : 0)
+    }, animate ? ZOOM_DURATION : 0)
   }
 
   handleMirrorChange = () => {
@@ -242,13 +252,13 @@ class Esper extends PureComponent {
     }
 
     this.setState({ zoom, mode })
-    this.view.scale({ zoom, mirror }, 300)
+    this.view.scale({ zoom, mirror }, ZOOM_DURATION)
   }
 
   handleWheel = ({ x, y, dy, dx, ctrl }) => {
     if (ctrl) {
       this.handleZoomChange({
-        x, y, zoom: this.state.zoom + dy / 500
+        x, y, zoom: this.state.zoom + dy * ZOOM_WHEEL_FACTOR
       })
     } else {
       this.view.move({
@@ -259,9 +269,12 @@ class Esper extends PureComponent {
   }
 
   handleDoubleClick = ({ x, y, shift }) => {
+    const step = shift ?
+      -ZOOM_STEP_SIZE : ZOOM_STEP_SIZE
+
     this.handleZoomChange({
-      x, y, zoom: this.state.zoom + (shift ? -0.5 : 0.5)
-    }, 250)
+      x, y, zoom: this.state.zoom + step
+    }, ZOOM_DURATION)
   }
 
   render() {
@@ -300,8 +313,8 @@ class Esper extends PureComponent {
   }
 
   static defaultProps = {
-    maxZoom: 4,
-    minZoom: 1,
+    maxZoom: MAX_ZOOM,
+    minZoom: MIN_ZOOM,
     zoom: 1,
     mode: 'fit'
   }
