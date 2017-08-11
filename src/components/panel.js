@@ -68,12 +68,12 @@ class Panel extends PureComponent {
 class PanelGroup extends PureComponent {
   constructor(props) {
     super(props)
-    this.state = { slots: [] }
+    this.state = { slots: [], height: 0 }
   }
 
   componentDidMount() {
     this.ro = new ResizeObserver(([e]) => {
-      this.handleResize(e.contentRect)
+      this.handleResize(e.contentRect.height)
     })
     this.ro.observe(this.container)
   }
@@ -89,8 +89,7 @@ class PanelGroup extends PureComponent {
   }
 
 
-  getLayout(props = this.props) {
-    const { top, bottom, height } = this.bounds
+  getLayout(props = this.props, height = this.state.height) {
     if (height === 0) return
 
     const slots = []
@@ -145,7 +144,7 @@ class PanelGroup extends PureComponent {
 
     if (surplus !== 0) fixLayout(slots, surplus)
 
-    return { top, bottom, height, slots, canClosePanel: numOpen > 1 }
+    return { height, slots, canClosePanel: numOpen > 1 }
   }
 
   getShrinkMapper(by) {
@@ -180,13 +179,13 @@ class PanelGroup extends PureComponent {
   }
 
 
-  handleResize = throttle((rect) => {
-    this.bounds = rect
-    this.setState(this.getLayout())
+  handleResize = throttle(height => {
+    this.setState(this.getLayout(this.props, height))
   }, 20)
 
   handleDragStart = (_, active) => {
-    const { top, bottom, slots } = this.state
+    const { top, bottom } = bounds(this.container)
+    const { slots } = this.state
     const { upper, lower } = slots[active.props.id]
 
     this.limits = {
@@ -280,7 +279,8 @@ class PanelGroup extends PureComponent {
   }
 
   open(at) {
-    const { top, bottom, slots } = this.state
+    const { top, bottom } = bounds(this.container)
+    const { slots } = this.state
 
     const pivot = { ...slots[at], isClosed: false }
     const max = bottom - top - pivot.upper - pivot.lower
