@@ -126,8 +126,11 @@ class EsperView extends PureComponent {
     this.pixi.renderer.resize(width, height)
 
     if (this.image != null) {
-      this.image.x = width / 2
-      this.image.y = height / 2
+      const limit = getMovementBounds(this.image, zoom, { width, height })
+
+      this.image.x = restrict(this.image.x, limit.left, limit.right)
+      this.image.y = restrict(this.image.y, limit.top, limit.bottom)
+
       this.image.scale.set(mirror ? -zoom : zoom, zoom)
     }
   }
