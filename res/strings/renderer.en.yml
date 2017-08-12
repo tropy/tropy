@@ -90,6 +90,8 @@ esper:
   tool:
     pan: Pan Tool
     select: Selection Tool
+    rotate: Rotate
+    mirror: Mirror
   mode:
     fill: Fill
     fit: Fit

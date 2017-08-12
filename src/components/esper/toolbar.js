@@ -86,15 +86,17 @@ class EsperToolbar extends PureComponent {
           <ToolGroup>
             <IconButton
               icon={<IconRotate/>}
+              title="esper.tool.rotate"
               isDisabled={this.props.isDisabled}
               onClick={this.handleRotate}/>
             <IconButton
               icon={<IconMirror/>}
+              title="esper.tool.mirror"
               isDisabled={this.props.isDisabled}
               onClick={this.props.onMirrorChange}/>
             <IconButton
               icon={<IconNut/>}
-              isDisabled={this.props.isDisabled}/>
+              isDisabled/>
           </ToolGroup>
           <ToolGroup>
             <IconButton
