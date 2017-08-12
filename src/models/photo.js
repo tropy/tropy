@@ -1,6 +1,5 @@
 'use strict'
 
-const assert = require('assert')
 const { TEMPLATE } = require('../constants/photo')
 const { DC } = require('../constants')
 const { all } = require('bluebird')
