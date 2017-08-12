@@ -48,7 +48,9 @@ CREATE TABLE images (
   angle   NUMERIC  NOT NULL DEFAULT 0,
   mirror  BOOLEAN  NOT NULL DEFAULT 0,
 
-  CHECK (angle >= 0 AND angle <= 360)
+  CHECK (angle >= 0 AND angle <= 360),
+  CHECK (width >= 0 AND height >= 0)
+
 ) WITHOUT ROWID;
 CREATE TABLE photos (
   id           INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
