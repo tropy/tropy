@@ -36,7 +36,7 @@ const selection = {
           datetime(modified, "localtime") AS modified
         FROM subjects
           JOIN images USING (id)
-          JOIN selection USING (id)
+          JOIN selections USING (id)
         WHERE id IN (${list(ids)})`, (data) => {
       selections[data.id] = data
     })

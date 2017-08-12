@@ -12,6 +12,7 @@ module.exports = {
   ...seq(require('./ontology'), handles),
   ...seq(require('./photo'), handles),
   ...seq(require('./project'), handles),
+  ...seq(require('./selection'), handles),
   ...seq(require('./tag'), handles),
 
   exec(action, options) {
