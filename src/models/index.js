@@ -10,6 +10,7 @@ module.exports = {
   ontology: require('./ontology'),
   photo: require('./photo'),
   project: require('./project'),
+  selection: require('./selection'),
   tag: require('./tag'),
   value: require('./value')
 }
