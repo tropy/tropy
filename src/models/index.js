@@ -2,6 +2,7 @@
 
 module.exports = {
   access: require('./access'),
+  image: require('./image'),
   item: require('./item'),
   list: require('./list'),
   note: require('./note'),

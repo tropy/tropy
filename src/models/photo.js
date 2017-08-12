@@ -118,32 +118,6 @@ module.exports = {
     return photos
   },
 
-  async save(db, { id, timestamp, ...data }) {
-    const assign = []
-    const params = { $id: id }
-
-    for (let attr in data) {
-      assign.push(`${attr} = $${attr}`)
-      params[`$${attr}`] = data[attr]
-    }
-
-    assert(id != null, 'missing photo id')
-    assert(assign.length > 0, 'missing assignments')
-
-    await db.run(`
-      UPDATE images
-        SET ${assign.join(', ')}
-        WHERE id = $id`, params)
-
-    if (timestamp != null) {
-      await db.run(`
-        UPDATE subjects
-          SET modified = datetime(?)
-          WHERE id = ?`,
-        new Date(timestamp).toISOString(), id)
-    }
-  },
-
   find(db, { checksum }) {
     return db.get(`
       SELECT id, item_id AS item
