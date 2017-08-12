@@ -204,6 +204,8 @@ class EsperView extends PureComponent {
   fadeOut(sprite, duration = FADE_DURATION) {
     if (sprite == null) return
 
+    sprite.interactive = false
+
     if (!this.isStarted) {
       sprite.destroy()
       return
@@ -313,9 +315,7 @@ class EsperView extends PureComponent {
         mov: data.getLocalPosition(target.parent)
       }
 
-      target.selection = {
-        x: target.origin.mov.x, y: target.origin.mov.y, width: 0, height: 0
-      }
+      target.selection = data.getLocalPosition(target)
 
       target.limit = getMovementBounds(target, null, this.bounds)
 
@@ -353,11 +353,11 @@ class EsperView extends PureComponent {
       }
 
       case TOOL.SELECT: {
-        const { mov } = target.origin
-        const { x, y } = target.data.getLocalPosition(target.parent)
+        const { selection } = target
+        const { x, y } = target.data.getLocalPosition(target)
 
-        target.selection.width = x - mov.x
-        target.selection.height = y - mov.y
+        selection.width = x - selection.x
+        selection.height = y - selection.y
 
         break
       }
