@@ -435,6 +435,10 @@ module.exports = {
         }))
       },
 
+      onSelectionCreate(...args) {
+        dispatch(actions.selection.create(...args))
+      },
+
       onTagCreate(data) {
         dispatch(actions.tag.create(data))
         dispatch(actions.edit.cancel())

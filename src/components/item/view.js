@@ -130,6 +130,7 @@ class ItemView extends PureComponent {
       photo,
       onPanelDragStop,
       onPhotoSave,
+      onSelectionCreate,
       isTrashSelected,
       ...props
     } = this.props
@@ -166,7 +167,8 @@ class ItemView extends PureComponent {
               isDisabled={isTrashSelected}
               isVisible={isItemOpen}
               photo={photo}
-              onPhotoSave={onPhotoSave}/>
+              onPhotoSave={onPhotoSave}
+              onSelectionCreate={onSelectionCreate}/>
           </BufferedResizable>
           <NotePad
             ref={this.setNotePad}
@@ -208,6 +210,7 @@ class ItemView extends PureComponent {
     onPanelResize: func.isRequired,
     onPanelDragStop: func.isRequired,
     onPhotoSave: func.isRequired,
+    onSelectionCreate: func.isRequired,
     onUiUpdate: func.isRequired
   }
 }

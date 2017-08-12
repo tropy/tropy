@@ -256,16 +256,15 @@ class EsperView extends PureComponent {
     this.tweens.update(performance.now())
 
     if (this.image != null) {
-      const { g } = this
-      const { selection } = this.image
+      this.g.clear()
 
-      g.clear()
+      if (this.image.selection != null) {
+        const { x, y, width, height } = this.image.selection
 
-      if (selection != null) {
-        g.lineStyle(2, 0x5c93e5, 1)
-        g.beginFill(0xcedef7, 0.5)
-        g.drawRect(selection.x, selection.y, selection.width, selection.height)
-        g.endFill()
+        this.g.lineStyle(2, 0x5c93e5, 1)
+        this.g.beginFill(0xcedef7, 0.5)
+        this.g.drawRect(x, y, width, height)
+        this.g.endFill()
       }
     }
   }
@@ -330,7 +329,35 @@ class EsperView extends PureComponent {
   handleDragStop = ({ target }) => {
     if (target == null) return
 
-    //target.selection = null
+    switch (target.drag) {
+      case TOOL.SELECT: {
+        let { x, y, width, height } = target.selection
+
+        x = x + target.texture.orig.width / 2
+        y = y + target.texture.orig.height / 2
+
+        if (width < 0) {
+          x = x + width
+          width = -width
+        }
+
+        if (height < 0) {
+          y = y + height
+          height = -height
+        }
+
+        this.props.onSelectionCreate({
+          x: Math.round(x),
+          y: Math.round(y),
+          width: Math.round(width),
+          height: Math.round(height)
+        })
+
+        break
+      }
+    }
+
+    target.selection = null
     target.data = null
     target.origin = null
     target.limit = null
@@ -378,6 +405,7 @@ class EsperView extends PureComponent {
     tool: string.isRequired,
     onLoadError: func,
     onDoubleClick: func.isRequired,
+    onSelectionCreate: func.isRequired,
     onWheel: func.isRequired
   }
 }
