@@ -1,12 +1,12 @@
 'use strict'
 
 const React = require('react')
-const PropTypes = require('prop-types')
 const { Editable } = require('../editable')
 const { createClickHandler } = require('../util')
 const { PhotoIterable } = require('./iterable')
 const { get } = require('../../common/util')
-const cn = require('classnames')
+const cx = require('classnames')
+const { bool, func, object, string } = require('prop-types')
 
 
 class PhotoListItem extends PhotoIterable {
@@ -57,7 +57,7 @@ class PhotoListItem extends PhotoIterable {
 
     return this.connect(
       <li
-        className={cn(this.classes)}
+        className={cx(this.classes)}
         ref={this.setContainer}
         onClick={this.handleClick}
         onContextMenu={this.handleContextMenu}>
@@ -79,14 +79,14 @@ class PhotoListItem extends PhotoIterable {
   static propTypes = {
     ...PhotoIterable.propTypes,
 
-    title: PropTypes.string.isRequired,
-    data: PropTypes.object.isRequired,
+    title: string.isRequired,
+    data: object.isRequired,
 
-    isEditing: PropTypes.bool,
+    isEditing: bool,
 
-    onChange: PropTypes.func.isRequired,
-    onEdit: PropTypes.func.isRequired,
-    onEditCancel: PropTypes.func.isRequired
+    onChange: func.isRequired,
+    onEdit: func.isRequired,
+    onEditCancel: func.isRequired
   }
 
   static defaultProps = {
