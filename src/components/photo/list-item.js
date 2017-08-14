@@ -4,6 +4,7 @@ const React = require('react')
 const { Editable } = require('../editable')
 const { createClickHandler } = require('../util')
 const { PhotoIterable } = require('./iterable')
+const { SelectionList } = require('./selection-list')
 const { get } = require('../../common/util')
 const cx = require('classnames')
 const { bool, func, object, string } = require('prop-types')
@@ -52,8 +53,23 @@ class PhotoListItem extends PhotoIterable {
   }
 
 
+  renderSelections() {
+    if (!this.hasSelections || !this.props.isOpen) return null
+
+    const { photo } = this.props
+
+    return (
+      <SelectionList
+        selections={photo.selections}/>
+    )
+  }
+
   render() {
-    const { isEditing, isDisabled, onEditCancel } = this.props
+    const {
+      isEditing,
+      isDisabled,
+      onEditCancel
+    } = this.props
 
     return this.connect(
       <li
@@ -72,18 +88,18 @@ class PhotoListItem extends PhotoIterable {
             onCancel={onEditCancel}
             onChange={this.handleChange}/>
         </div>
+
+        {this.renderSelections()}
       </li>
     )
   }
 
   static propTypes = {
     ...PhotoIterable.propTypes,
-
     title: string.isRequired,
     data: object.isRequired,
-
     isEditing: bool,
-
+    isOpen: bool,
     onChange: func.isRequired,
     onEdit: func.isRequired,
     onEditCancel: func.isRequired

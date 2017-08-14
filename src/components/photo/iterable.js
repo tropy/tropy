@@ -9,7 +9,7 @@ const { getEmptyImage } = require('react-dnd-electron-backend')
 const { bounds } = require('../../dom')
 const { pure } = require('../util')
 const { DND } = require('../../constants')
-const { bool, func, number, string, object, shape } = PropTypes
+const { arrayOf, bool, func, number, string, object, shape } = PropTypes
 
 
 class PhotoIterable extends PureComponent {
@@ -51,6 +51,10 @@ class PhotoIterable extends PureComponent {
     return !this.props.isDisabled
   }
 
+  get hasSelections() {
+    const { photo } = this.props
+    return photo.selections != null && photo.selections.length > 0
+  }
 
   handleContextMenu = (event) => {
     const {
@@ -175,6 +179,7 @@ class PhotoIterable extends PureComponent {
     isDisabled: bool,
     isDragging: bool,
     isLast: bool,
+    isOpen: bool,
     isOver: bool,
     isSelected: bool,
     isSortable: bool,
@@ -182,6 +187,7 @@ class PhotoIterable extends PureComponent {
 
     photo: shape({
       id: number.isRequired,
+      selections: arrayOf(number),
       data: object
     }).isRequired,
 

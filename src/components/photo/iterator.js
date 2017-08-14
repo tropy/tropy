@@ -126,6 +126,7 @@ class PhotoIterator extends Iterator {
         isSelected: this.isSelected(photo),
         isSortable,
         isLast: index === this.props.photos.length - 1,
+        isOpen: true,
         isVertical: this.isVertical,
         getAdjacent: this.getAdjacent,
         onDropPhoto: this.handleDropPhoto,
