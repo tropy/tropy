@@ -6,9 +6,9 @@ const { isArray } = Array
 
 const util = {
   load(state, payload, meta, error) {
-    return (meta.done && !error) ?
-      util.replace(state, payload) :
-      util.pending(state, payload)
+    if (error) return state
+    if (meta.done) return util.replace(state, payload)
+    return util.pending(state, payload)
   },
 
   replace(state, payload) {
@@ -91,7 +91,9 @@ const util = {
     if (payload == null || payload.length === 0) return state
 
     return into(
-      { ...state }, map(id => ({ [id]: { id, pending: true } })), payload
+      { ...state },
+      map(id => ({ [id]: { id, pending: true } })),
+      payload
     )
   }
 }

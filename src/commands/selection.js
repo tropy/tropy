@@ -24,6 +24,18 @@ class Create extends Command {
   }
 }
 
+class Load extends Command {
+  static get action() { return SELECTION.LOAD }
+
+  *exec() {
+    const { db } = this.options
+    const { payload } = this.action
+
+    return yield call(mod.selection.load, db, payload)
+  }
+}
+
 module.exports = {
-  Create
+  Create,
+  Load
 }

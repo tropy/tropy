@@ -13,5 +13,16 @@ module.exports = {
         ...meta
       }
     }
+  },
+
+  load(payload, meta) {
+    return {
+      type: SELECTION.LOAD,
+      payload,
+      meta: {
+        cmd: 'project',
+        ...meta
+      }
+    }
   }
 }
