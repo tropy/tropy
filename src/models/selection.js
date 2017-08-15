@@ -38,7 +38,9 @@ const selection = {
           JOIN images USING (id)
           JOIN selections USING (id)
         WHERE id IN (${list(ids)})`, (data) => {
-      selections[data.id] = data
+      selections[data.id] = {
+        ...data, mirror: !!data.mirror
+      }
     })
 
     return selections
