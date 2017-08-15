@@ -2,14 +2,16 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const { Thumbnail } = require('./thumbnail')
 const { DragSource, DropTarget } = require('react-dnd')
 const { getEmptyImage } = require('react-dnd-electron-backend')
 const { bounds } = require('../../dom')
 const { pure } = require('../util')
 const { DND } = require('../../constants')
-const { arrayOf, bool, func, number, string, object, shape } = PropTypes
+
+const {
+  arrayOf, bool, func, number, string, object, shape
+} = require('prop-types')
 
 
 class PhotoIterable extends PureComponent {

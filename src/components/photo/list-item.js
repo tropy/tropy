@@ -53,15 +53,20 @@ class PhotoListItem extends PhotoIterable {
   }
 
 
-  renderSelections() {
+  renderSelectionList() {
     if (!this.hasSelections || !this.props.isOpen) return null
 
     const { photo } = this.props
 
+    const selections = photo.selections.map(id =>
+      ({ id, angle: 0, mirror: false }))
+
     return (
       <SelectionList
         cache={this.props.cache}
-        selections={photo.selections}
+        isDisabled={this.props.isDisabled}
+        photo={photo}
+        selections={selections}
         size={this.props.size}/>
     )
   }
@@ -91,7 +96,7 @@ class PhotoListItem extends PhotoIterable {
             onChange={this.handleChange}/>
         </div>
 
-        {this.renderSelections()}
+        {this.renderSelectionList()}
       </li>
     )
   }
