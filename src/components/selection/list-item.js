@@ -28,6 +28,8 @@ class SelectionListItem extends SelectionIterable {
   }
 
   render() {
+    const { title } = this
+
     return (
       <li
         className={cx(this.classes)}
@@ -35,8 +37,8 @@ class SelectionListItem extends SelectionIterable {
 
         <div className="title">
           <Editable
-            value={this.title}
-            placeholder="Selection"
+            display={title || 'Selection'}
+            value={title}
             isEditing={this.props.isEditing}
             isDisabled={this.props.isDisabled}
             onCancel={this.props.onEditCancel}
