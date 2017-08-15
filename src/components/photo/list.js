@@ -52,7 +52,7 @@ class PhotoList extends PhotoIterator {
           <PhotoListItem {...props}
             key={photo.id}
             photo={photo}
-            data={data[photo.id]}
+            data={data}
             title={DC.title}
             isEditing={this.isEditing(photo)}
             onChange={onChange}

@@ -13,7 +13,8 @@ const { bool, func, object, string } = require('prop-types')
 class PhotoListItem extends PhotoIterable {
 
   get title() {
-    return get(this.props, ['data', this.props.title, 'text'])
+    const { data, photo, title } = this.props
+    return get(data, [photo.id, title, 'text'])
   }
 
   get isDraggable() {
@@ -64,10 +65,15 @@ class PhotoListItem extends PhotoIterable {
     return (
       <SelectionList
         cache={this.props.cache}
+        data={this.props.data}
+        edit={this.props.edit}
         isDisabled={this.props.isDisabled}
         photo={photo}
         selections={selections}
-        size={this.props.size}/>
+        size={this.props.size}
+        onEdit={this.props.onEdit}
+        onEditCancel={this.props.onEditCancel}
+        onChange={this.props.onChange}/>
     )
   }
 
@@ -110,11 +116,6 @@ class PhotoListItem extends PhotoIterable {
     onChange: func.isRequired,
     onEdit: func.isRequired,
     onEditCancel: func.isRequired
-  }
-
-  static defaultProps = {
-    ...PhotoIterable.defaultProps,
-    data: {}
   }
 }
 

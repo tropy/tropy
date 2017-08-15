@@ -38,6 +38,7 @@ class SelectionIterable extends PureComponent {
   }
 
   static propTypes = {
+    isDisabled: bool.isRequired,
     isSelected: bool.isRequired,
     isLast: bool.isRequired,
     cache: string.isRequired,
