@@ -1,23 +1,22 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
-const { array } = require('prop-types')
+const { SelectionIterator } = require('./iterator')
 
 
-class SelectionList extends PureComponent {
+class SelectionList extends SelectionIterator {
 
   render() {
     return (
       <ul className="selection list">
-        {this.props.selections.map(selection =>
+        {this.map(({ selection }) =>
           <div key={selection}>{selection}</div>)}
       </ul>
     )
   }
 
   static propTypes = {
-    selections: array.isRequired
+    ...SelectionIterator.propTypes
   }
 }
 

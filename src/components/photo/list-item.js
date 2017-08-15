@@ -4,7 +4,7 @@ const React = require('react')
 const { Editable } = require('../editable')
 const { createClickHandler } = require('../util')
 const { PhotoIterable } = require('./iterable')
-const { SelectionList } = require('./selection-list')
+const { SelectionList } = require('../selection/list')
 const { get } = require('../../common/util')
 const cx = require('classnames')
 const { bool, func, object, string } = require('prop-types')
@@ -60,7 +60,9 @@ class PhotoListItem extends PhotoIterable {
 
     return (
       <SelectionList
-        selections={photo.selections}/>
+        cache={this.props.cache}
+        selections={photo.selections}
+        size={this.props.size}/>
     )
   }
 
