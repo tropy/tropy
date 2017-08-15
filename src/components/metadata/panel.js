@@ -113,7 +113,6 @@ class MetadataPanel extends PureComponent {
       selectionData,
       templates,
       onMetadataSave,
-      onOpenInFolder,
       ...props
     } = this.props
 
