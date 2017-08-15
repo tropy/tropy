@@ -4,6 +4,7 @@
 const React = require('react')
 const { SelectionIterable } = require('./iterable')
 const { Editable } = require('../editable')
+const { createClickHandler } = require('../util')
 const cx = require('classnames')
 const { get } = require('../../common/util')
 const { bool, func, object, string } = require('prop-types')
@@ -15,6 +16,33 @@ class SelectionListItem extends SelectionIterable {
     const { data, selection, title } = this.props
     return get(data, [selection.id, title, 'text'])
   }
+
+  handleClick = createClickHandler({
+    onClick: (event) => {
+      const { photo, selection, isSelected, onSelect } = this.props
+
+      if (!isSelected) {
+        onSelect({
+          item: photo.item,
+          photo: photo.id,
+          selection: selection.id,
+          //note: selection.notes[0]
+        }, event)
+
+        return true
+      }
+    },
+
+    onSingleClick: () => {
+      if (!(this.props.isDisabled || this.props.isDragging)) {
+        this.props.onEdit(this.selection.id)
+      }
+    },
+
+    onDoubleClick: () => {
+      //this.props.onItemOpen(this.props.photo)
+    }
+  })
 
   handleChange = (text) => {
     const { selection, title, onChange } = this.props
@@ -33,7 +61,8 @@ class SelectionListItem extends SelectionIterable {
     return (
       <li
         className={cx(this.classes)}
-        ref={this.setContainer}>
+        ref={this.setContainer}
+        onClick={this.handleClick}>
         {this.renderThumbnail()}
         <div className="title">
           <Editable

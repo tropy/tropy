@@ -64,13 +64,23 @@ class PhotoIterable extends PureComponent {
     return pluck(this.props.selections, this.props.photo.selections)
   }
 
+  select = () => {
+    if (!this.props.isSelected) {
+      const { photo } = this.props
+
+      this.props.onSelect({
+        item: photo.item,
+        photo: photo.id,
+        note: photo.notes[0]
+      })
+    }
+  }
+
   handleContextMenu = (event) => {
-    const {
-      photo, isDisabled, isSelected, onContextMenu, onSelect
-    } = this.props
+    const { photo, isDisabled, onContextMenu } = this.props
 
     if (!isDisabled) {
-      if (!isSelected) onSelect(photo, event)
+      this.select()
 
       onContextMenu(event, 'photo', {
         id: photo.id, item: photo.item, path: photo.path

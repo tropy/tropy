@@ -65,7 +65,9 @@ class PhotoIterator extends Iterator {
   select = (photo) => {
     if (photo && !this.isSelected(photo)) {
       this.props.onSelect({
-        photo: photo.id, item: photo.item, note: photo.notes[0]
+        photo: photo.id,
+        item: photo.item,
+        note: photo.notes[0]
       })
     }
   }
@@ -139,7 +141,7 @@ class PhotoIterator extends Iterator {
         onDropPhoto: this.handleDropPhoto,
         onExpand: this.props.onExpand,
         onItemOpen: this.handleItemOpen,
-        onSelect: this.select
+        onSelect: this.props.onSelect
       })
     })
   }

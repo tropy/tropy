@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { Iterator } = require('../iterator')
-const { arrayOf, bool, number, shape, string } = require('prop-types')
+const { arrayOf, bool, func, number, shape, string } = require('prop-types')
 
 
 class SelectionIterator extends Iterator {
@@ -28,7 +28,8 @@ class SelectionIterator extends Iterator {
         isDisabled: this.props.isDisabled,
         isLast: index === this.props.selections.length - 1,
         isVertical: this.isVertical,
-        photo: this.props.photo
+        photo: this.props.photo,
+        onSelect: this.props.onSelect
       })
     })
   }
@@ -42,7 +43,8 @@ class SelectionIterator extends Iterator {
       id: number.isRequired
     })).isRequired,
     cache: string.isRequired,
-    size: number.isRequired
+    size: number.isRequired,
+    onSelect: func.isRequired
   }
 }
 

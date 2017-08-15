@@ -18,9 +18,7 @@ class PhotoTile extends PhotoIterable {
   }
 
   handleClick = createClickHandler({
-    onClick: (event) => {
-      this.props.onSelect(this.props.photo, event)
-    },
+    onClick: this.select,
 
     onDoubleClick: () => {
       this.props.onItemOpen(this.props.photo)

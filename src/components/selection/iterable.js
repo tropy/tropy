@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { Thumbnail } = require('../photo/thumbnail')
-const { bool, number, shape, string } = require('prop-types')
+const { bool, func, number, shape, string } = require('prop-types')
 
 
 class SelectionIterable extends PureComponent {
@@ -52,6 +52,7 @@ class SelectionIterable extends PureComponent {
       mirror: bool,
     }).isRequired,
     size: number.isRequired,
+    onSelect: func.isRequired
   }
 
   static defaultProps = {

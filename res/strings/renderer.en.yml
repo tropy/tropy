@@ -9,6 +9,7 @@ panel:
     tab: Metadata
     photo: Photo
     item: Item
+    selection: Selection
   tags:
     tab: Tags
     add: Add Tag
