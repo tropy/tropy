@@ -6,7 +6,7 @@ const { join } = require('path')
 const { Database } = require('../common/db')
 const { Ontology } = require('../common/ontology')
 const { verbose, warn } = require('../common/log')
-const { ONTOLOGY, ITEM } = require('../constants')
+const { ONTOLOGY, ITEM, SELECTION } = require('../constants')
 const { exec } = require('./cmd')
 const mod = require('../models')
 const act = require('../actions')
@@ -44,29 +44,30 @@ function *populate(db) {
   yield call(exec, { db }, act.ontology.template.import({
     files: [
       join(Ontology.base, '..', 'ttp', 'photo.ttp'),
-      join(Ontology.base, '..', 'ttp', 'item.ttp')
+      join(Ontology.base, '..', 'ttp', 'item.ttp'),
+      join(Ontology.base, '..', 'ttp', 'selection.ttp')
     ],
     isProtected: true
   }, { history: false }))
 }
 
-function *migrate(db) {
-  yield call(db.migrate, ONTOLOGY.MIGRATIONS)
-
-  const stale = yield call(mod.ontology.template.stale, db, {
-    id: ITEM.TEMPLATE,
-    date: '2017-07-19'
-  })
-
-  if (stale != null) {
-    verbose('updating default item template...')
+// TODO upgrade templates via js migrations
+function *refresh(db, id, date, file) {
+  if (yield call(mod.ontology.template.stale, db, { id, date })) {
+    verbose(`updating default ${file}...`)
     yield call(exec, { db }, act.ontology.template.import({
-      files: [
-        join(Ontology.base, '..', 'ttp', 'item.ttp')
-      ],
+      files: [join(Ontology.base, '..', 'ttp', file)],
       isProtected: true
     }, { history: false, replace: true }))
   }
+}
+
+
+function *migrate(db) {
+  yield call(db.migrate, ONTOLOGY.MIGRATIONS)
+
+  yield call(refresh, db, ITEM.TEMPLATE, '2017-07-19', 'item.ttp')
+  yield call(refresh, db, SELECTION.TEMPLATE, '2017-08-14', 'selection.ttp')
 
   yield put(act.ontology.load())
 }

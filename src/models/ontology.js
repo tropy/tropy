@@ -397,11 +397,11 @@ const ontology = {
       )
     },
 
-    stale(db, { id, date }) {
-      return db.get(`
+    async stale(db, { id, date }) {
+      return null == await db.get(`
         SELECT template_id AS id, created, protected  AS isProtected
           FROM TEMPLATES
-          WHERE template_id = ? AND created < date(?)`, id, date)
+          WHERE template_id = ? AND created >= date(?)`, id, date)
     },
 
     delete(db, ...ids) {
