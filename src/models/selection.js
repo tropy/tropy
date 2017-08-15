@@ -32,6 +32,7 @@ const selection = {
           height,
           angle,
           mirror,
+          template,
           datetime(created, "localtime") AS created,
           datetime(modified, "localtime") AS modified
         FROM subjects
