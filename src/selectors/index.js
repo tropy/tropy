@@ -9,5 +9,6 @@ module.exports = {
   ...require('./ontology'),
   ...require('./photos'),
   ...require('./project'),
+  ...require('./selections'),
   ...require('./tags')
 }
