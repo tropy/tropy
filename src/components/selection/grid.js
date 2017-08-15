@@ -2,15 +2,15 @@
 
 const React = require('react')
 const { SelectionIterator } = require('./iterator')
-const { SelectionListItem } = require('./list-item')
+const { SelectionTile } = require('./tile')
 const cx = require('classnames')
 
 
-class SelectionList extends SelectionIterator {
+class SelectionGrid extends SelectionIterator {
   get classes() {
     return {
       ...super.classes,
-      list: true
+      grid: true
     }
   }
 
@@ -18,7 +18,7 @@ class SelectionList extends SelectionIterator {
     return (
       <ul className={cx(this.classes)}>
         {this.map(({ selection, ...props }) =>
-          <SelectionListItem {...props}
+          <SelectionTile {...props}
             key={selection.id}
             isSelected={false}
             selection={selection}/>)}
@@ -29,8 +29,12 @@ class SelectionList extends SelectionIterator {
   static propTypes = {
     ...SelectionIterator.propTypes
   }
+
+  static get isGrid() {
+    return true
+  }
 }
 
 module.exports = {
-  SelectionList
+  SelectionGrid
 }

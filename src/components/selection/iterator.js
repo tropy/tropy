@@ -6,6 +6,12 @@ const { arrayOf, bool, number, shape, string } = require('prop-types')
 
 
 class SelectionIterator extends Iterator {
+  get classes() {
+    return {
+      selection: true
+    }
+  }
+
   get iteration() {
     return this.props.selections
   }
