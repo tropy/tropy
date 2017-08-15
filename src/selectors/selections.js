@@ -8,6 +8,13 @@ const getActiveSelection = memo(
   (selections, id) => (id != null) ? selections[id] : null
 )
 
+const getActiveSelectionData = memo(
+  ({ metadata }) => metadata,
+  ({ nav }) => nav.selection,
+  (metadata, id) => (id != null) ? metadata[id] : null
+)
+
 module.exports = {
-  getActiveSelection
+  getActiveSelection,
+  getActiveSelectionData
 }

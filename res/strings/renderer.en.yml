@@ -86,6 +86,10 @@ photo:
   type: Type
   created: Date Added
   modified: Modified
+selection:
+  size: Size
+  created: Date Added
+  modified: Modified
 esper:
   tool:
     pan: Pan Tool
