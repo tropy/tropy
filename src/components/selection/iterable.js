@@ -48,8 +48,8 @@ class SelectionIterable extends PureComponent {
     }).isRequired,
     selection: shape({
       id: number.isRequired,
-      angle: number.isRequired,
-      mirror: bool.isRequired
+      angle: number,
+      mirror: bool,
     }).isRequired,
     size: number.isRequired,
   }

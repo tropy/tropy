@@ -59,9 +59,6 @@ class PhotoListItem extends PhotoIterable {
 
     const { photo } = this.props
 
-    const selections = photo.selections.map(id =>
-      ({ id, angle: 0, mirror: false }))
-
     return (
       <SelectionList
         cache={this.props.cache}
@@ -69,7 +66,7 @@ class PhotoListItem extends PhotoIterable {
         edit={this.props.edit}
         isDisabled={this.props.isDisabled}
         photo={photo}
-        selections={selections}
+        selections={this.selections}
         size={this.props.size}
         onEdit={this.props.onEdit}
         onEditCancel={this.props.onEditCancel}
@@ -87,21 +84,20 @@ class PhotoListItem extends PhotoIterable {
     return this.connect(
       <li
         className={cx(this.classes)}
-        ref={this.setContainer}
-        onClick={this.handleClick}
-        onContextMenu={this.handleContextMenu}>
-
-        {this.renderThumbnail()}
-
-        <div className="title">
-          <Editable
-            value={this.title}
-            isEditing={isEditing}
-            isDisabled={isDisabled}
-            onCancel={onEditCancel}
-            onChange={this.handleChange}/>
+        ref={this.setContainer}>
+        <div
+          onClick={this.handleClick}
+          onContextMenu={this.handleContextMenu}>
+          {this.renderThumbnail()}
+          <div className="title">
+            <Editable
+              value={this.title}
+              isEditing={isEditing}
+              isDisabled={isDisabled}
+              onCancel={onEditCancel}
+              onChange={this.handleChange}/>
+          </div>
         </div>
-
         {this.renderSelectionList()}
       </li>
     )
@@ -111,8 +107,8 @@ class PhotoListItem extends PhotoIterable {
     ...PhotoIterable.propTypes,
     title: string.isRequired,
     data: object.isRequired,
-    isEditing: bool,
-    isExpanded: bool,
+    isEditing: bool.isRequired,
+    isExpanded: bool.isRequired,
     onChange: func.isRequired,
     onEdit: func.isRequired,
     onEditCancel: func.isRequired

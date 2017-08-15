@@ -7,6 +7,7 @@ const { DragSource, DropTarget } = require('react-dnd')
 const { getEmptyImage } = require('react-dnd-electron-backend')
 const { bounds } = require('../../dom')
 const { pure } = require('../util')
+const { pluck } = require('../../common/util')
 const { DND } = require('../../constants')
 
 const {
@@ -57,6 +58,10 @@ class PhotoIterable extends PureComponent {
   get hasSelections() {
     const { photo } = this.props
     return photo.selections != null && photo.selections.length > 0
+  }
+
+  get selections() {
+    return pluck(this.props.selections, this.props.photo.selections)
   }
 
   handleContextMenu = (event) => {

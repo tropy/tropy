@@ -34,7 +34,7 @@ class SelectionListItem extends SelectionIterable {
       <li
         className={cx(this.classes)}
         ref={this.setContainer}>
-
+        {this.renderThumbnail()}
         <div className="title">
           <Editable
             display={title || 'Selection'}
