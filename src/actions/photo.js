@@ -3,6 +3,12 @@
 const { PHOTO } = require('../constants')
 
 module.exports = {
+  contract(payload, meta = {}) {
+    return {
+      type: PHOTO.CONTRACT, payload, meta
+    }
+  },
+
   create(payload, meta) {
     return {
       type: PHOTO.CREATE,
@@ -18,6 +24,13 @@ module.exports = {
       meta: { cmd: 'project', history: 'add', ...meta }
     }
   },
+
+  expand(payload, meta = {}) {
+    return {
+      type: PHOTO.EXPAND, payload, meta
+    }
+  },
+
 
   update(payload, meta) {
     return {

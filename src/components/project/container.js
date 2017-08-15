@@ -147,6 +147,7 @@ class ProjectContainer extends PureComponent {
       photos,
       visiblePhotos,
       selection,
+      selections,
       ui,
       ...props
     } = this.props
@@ -173,6 +174,8 @@ class ProjectContainer extends PureComponent {
         <ItemView {...props}
           items={selection}
           data={data}
+          expanded={nav.expanded}
+          selections={selections}
           note={note}
           notes={notes}
           photo={photo}
@@ -208,6 +211,7 @@ class ProjectContainer extends PureComponent {
     selection: arrayOf(
       shape({ id: number.isRequired })
     ),
+    selections: object.isRequired,
 
     photo: object,
     photos: object.isRequired,
@@ -307,6 +311,7 @@ module.exports = {
       project: state.project,
       properties: state.ontology.props,
       selection: getSelectedItems(state),
+      selections: state.selections,
       sort: state.nav.sort,
       tags: state.tags,
       ui: state.ui
@@ -396,6 +401,10 @@ module.exports = {
         dispatch(actions.edit.cancel())
       },
 
+      onPhotoContract(...args) {
+        dispatch(actions.photo.contract(...args))
+      },
+
       onPhotoCreate(...args) {
         dispatch(actions.photo.create(...args))
       },
@@ -403,6 +412,11 @@ module.exports = {
       onPhotoDelete(...args) {
         dispatch(actions.photo.delete(...args))
       },
+
+      onPhotoExpand(...args) {
+        dispatch(actions.photo.expand(...args))
+      },
+
 
       onPhotoMove(...args) {
         dispatch(actions.photo.move(...args))

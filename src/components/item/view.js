@@ -128,6 +128,7 @@ class ItemView extends PureComponent {
       offset,
       panel,
       photo,
+      selections,
       onPanelDragStop,
       onPhotoSave,
       onSelectionCreate,
@@ -151,6 +152,7 @@ class ItemView extends PureComponent {
             photo={photo}
             note={this.state.note}
             keymap={keymap}
+            selections={selections}
             isItemOpen={isItemOpen}
             isDisabled={isTrashSelected}
             onNoteCreate={this.handleNoteCreate}/>
@@ -201,6 +203,7 @@ class ItemView extends PureComponent {
     keymap: object.isRequired,
     offset: number.isRequired,
     mode: string.isRequired,
+    selections: object.isRequired,
     isModeChanging: bool.isRequired,
     isTrashSelected: bool.isRequired,
 

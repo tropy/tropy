@@ -1,8 +1,10 @@
 'use strict'
 
 module.exports = {
+  CONTRACT: 'photo.contract',
   CREATE: 'photo.create',
   DELETE: 'photo.delete',
+  EXPAND: 'photo.expand',
   INSERT: 'photo.insert',
   LOAD: 'photo.load',
   MOVE: 'photo.move',

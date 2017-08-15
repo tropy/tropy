@@ -41,6 +41,7 @@ class PhotoIterable extends PureComponent {
       'over': this.props.isOver,
       'dragging': this.props.isDragging,
       'last': this.props.isLast,
+      'expanded': this.props.isExpanded,
       [this.direction]: this.props.isOver && this.state.offset != null
     }
   }
@@ -181,7 +182,7 @@ class PhotoIterable extends PureComponent {
     isDisabled: bool,
     isDragging: bool,
     isLast: bool,
-    isOpen: bool,
+    isExpanded: bool,
     isOver: bool,
     isSelected: bool,
     isSortable: bool,
@@ -194,6 +195,7 @@ class PhotoIterable extends PureComponent {
     }).isRequired,
 
     cache: string.isRequired,
+    selections: object.isRequired,
     size: number.isRequired,
 
     ds: func.isRequired,
@@ -203,7 +205,9 @@ class PhotoIterable extends PureComponent {
     getAdjacent: func.isRequired,
 
     onContextMenu: func.isRequired,
+    onContract: func.isRequired,
     onDropPhoto: func.isRequired,
+    onExpand: func.isRequired,
     onItemOpen: func.isRequired,
     onSelect: func.isRequired
   }

@@ -33,6 +33,10 @@ class PhotoIterator extends Iterator {
     return this.props.selection === photo.id
   }
 
+  isExpanded(photo) {
+    return this.props.expanded.includes(photo.id)
+  }
+
   getNextPhoto(offset = 1) {
     const { photos, selection } = this.props
 
@@ -122,17 +126,20 @@ class PhotoIterator extends Iterator {
       return fn({
         photo,
         cache: this.props.cache,
+        selections: this.props.selections,
         isDisabled: this.props.isDisabled,
+        isExpanded: this.isExpanded(photo),
         isSelected: this.isSelected(photo),
         isSortable,
         isLast: index === this.props.photos.length - 1,
-        isOpen: true,
         isVertical: this.isVertical,
         getAdjacent: this.getAdjacent,
+        onContextMenu: this.props.onContextMenu,
+        onContract: this.props.onContract,
         onDropPhoto: this.handleDropPhoto,
-        onSelect: this.select,
+        onExpand: this.props.onExpand,
         onItemOpen: this.handleItemOpen,
-        onContextMenu: this.props.onContextMenu
+        onSelect: this.select
       })
     })
   }
@@ -184,8 +191,10 @@ class PhotoIterator extends Iterator {
     ).isRequired,
 
     cache: string.isRequired,
+    expanded: arrayOf(number).isRequired,
     keymap: object.isRequired,
     selection: number,
+    selections: object.isRequired,
     size: number.isRequired,
 
     isItemOpen: bool,
@@ -194,8 +203,10 @@ class PhotoIterator extends Iterator {
 
     dt: func.isRequired,
 
+    onContract: func.isRequired,
     onContextMenu: func.isRequired,
     onDelete: func.isRequired,
+    onExpand: func.isRequired,
     onItemOpen: func.isRequired,
     onSelect: func.isRequired,
     onSort: func.isRequired

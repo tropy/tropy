@@ -52,6 +52,10 @@ class PhotoGrid extends PhotoIterator {
     }
   }
 
+  isExpanded(photo) {
+    return this.props.expanded[0] === photo.id
+  }
+
   render() {
     return this.connect(
       <ul

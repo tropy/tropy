@@ -75,8 +75,8 @@ class PhotoPanel extends Panel {
 
 
   static propTypes = {
-    zoom: number.isRequired,
     photos: array.isRequired,
+    zoom: number.isRequired,
 
     isClosed: bool,
     isDisabled: bool,
@@ -85,8 +85,10 @@ class PhotoPanel extends Panel {
 
     dt: func.isRequired,
 
+    onContract: func.isRequired,
     onCreate: func.isRequired,
     onDelete: func.isRequired,
+    onExpand: func.isRequired,
     onEdit: func.isRequired,
     onMetadataSave: func.isRequired,
     onZoomChange: func.isRequired

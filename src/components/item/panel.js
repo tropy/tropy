@@ -48,18 +48,22 @@ class ItemPanel extends PureComponent {
   render() {
     const {
       edit,
+      expanded,
       keymap,
       note,
       notes,
       panel,
       photo,
+      selections,
       isDisabled,
       isItemOpen,
       onMaximize,
       onModeChange,
       onNoteCreate,
       onNoteSelect,
+      onPhotoContract,
       onPhotoDelete,
+      onPhotoExpand,
       onPhotoSelect,
       onPhotoSort,
       ...props
@@ -91,11 +95,15 @@ class ItemPanel extends PureComponent {
           isDisabled={isDisabled}
           isItemOpen={isItemOpen}
           edit={edit.photo}
+          expanded={expanded}
           keymap={keymap.PhotoIterator}
           zoom={panel.zoom}
           selection={photo && photo.id}
+          selections={selections}
+          onContract={onPhotoContract}
           onCreate={this.handlePhotoCreate}
           onDelete={onPhotoDelete}
+          onExpand={onPhotoExpand}
           onSelect={onPhotoSelect}
           onSort={onPhotoSort}
           onZoomChange={this.handleZoomChange}/>
@@ -118,6 +126,7 @@ class ItemPanel extends PureComponent {
     cache: string.isRequired,
     data: object.isRequired,
     edit: object.isRequired,
+    expanded: array.isRequired,
     keymap: object.isRequired,
     isDisabled: bool.isRequired,
     isItemOpen: bool.isRequired,
@@ -125,6 +134,7 @@ class ItemPanel extends PureComponent {
 
     note: object,
     notes: array.isRequired,
+    selections: object.isRequired,
 
     panel: shape({
       slots: array.isRequired,
@@ -151,8 +161,10 @@ class ItemPanel extends PureComponent {
     onNoteCreate: func.isRequired,
     onNoteSelect: func.isRequired,
     onOpenInFolder: func.isRequired,
+    onPhotoContract: func.isRequired,
     onPhotoCreate: func.isRequired,
     onPhotoDelete: func.isRequired,
+    onPhotoExpand: func.isRequired,
     onPhotoSelect: func.isRequired,
     onPhotoSort: func.isRequired,
     onTagCreate: func.isRequired,

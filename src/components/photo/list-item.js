@@ -55,7 +55,7 @@ class PhotoListItem extends PhotoIterable {
 
 
   renderSelectionList() {
-    if (!this.hasSelections || !this.props.isOpen) return null
+    if (!this.hasSelections || !this.props.isExpanded) return null
 
     const { photo } = this.props
 
@@ -112,7 +112,7 @@ class PhotoListItem extends PhotoIterable {
     title: string.isRequired,
     data: object.isRequired,
     isEditing: bool,
-    isOpen: bool,
+    isExpanded: bool,
     onChange: func.isRequired,
     onEdit: func.isRequired,
     onEditCancel: func.isRequired
