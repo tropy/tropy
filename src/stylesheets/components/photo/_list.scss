@@ -28,12 +28,16 @@
       }
     }
 
+    &:not(.expandable) {
+      .photo-container {
+        padding-left: $default-padding-horizontal + $space-md + $space-min;
+      }
+    }
+
     &.expanded {
-      .twisty-container {
-        .btn {
-          .icon {
-            transform: scaleY(-1);
-          }
+      .btn {
+        .icon {
+          transform: scaleY(-1);
         }
       }
     }
@@ -45,18 +49,15 @@
     }
   }
 
-  .twisty-container {
+
+  .btn {
     flex: 0 0 auto;
-    display: flex;
-    align-items: center;
+    padding: 0;
+    border-radius: 0;
     margin-right: $space-min;
 
-    .btn {
-      padding: 0;
-
-      .icon {
-        transform: rotate(90deg);
-      }
+    .icon {
+      transform: rotate(90deg);
     }
   }
 
