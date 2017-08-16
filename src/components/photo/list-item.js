@@ -8,8 +8,8 @@ const { SelectionList } = require('../selection/list')
 const { get } = require('../../common/util')
 const cx = require('classnames')
 const { bool, func, object, string } = require('prop-types')
-const { IconSelection } = require('../icons')
-
+const { IconSelection, IconChevron9 } = require('../icons')
+const { IconButton } = require('../button')
 
 class PhotoListItem extends PhotoIterable {
 
@@ -92,6 +92,11 @@ class PhotoListItem extends PhotoIterable {
           className="photo-container"
           onClick={this.handleClick}
           onContextMenu={this.handleContextMenu}>
+          <div className="twisty-container">
+            <IconButton
+              icon={<IconChevron9/>}
+              onClick={function () {}}/>
+          </div>
           {this.renderThumbnail()}
           <div className="title">
             <Editable
