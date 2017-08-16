@@ -101,6 +101,10 @@ class BufferedInput extends PureComponent {
   }
 
   handleKeyDown = (event) => {
+    if (this.props.onKeyDown != null) {
+      if (this.props.onKeyDown(event)) return
+    }
+
     switch (event.key) {
       case 'Escape':
         this.cancel()
@@ -150,7 +154,8 @@ class BufferedInput extends PureComponent {
     onCancel: func.isRequired,
     onChange: func.isRequired,
     onCommit: func.isRequired,
-    onFocus: func.isRequired
+    onFocus: func.isRequired,
+    onKeyDown: func,
   }
 
   static defaultProps = {
