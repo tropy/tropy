@@ -32,7 +32,7 @@
       .twisty-container {
         .btn {
           .icon {
-            transform: translateX(-1px) scaleY(-1);
+            transform: scaleY(-1);
           }
         }
       }
@@ -49,6 +49,7 @@
     flex: 0 0 auto;
     display: flex;
     align-items: center;
+    margin-right: $space-min;
 
     .btn {
       padding: 0;
@@ -81,7 +82,9 @@
     .selection {
       display: flex;
       align-items: center;
-      padding: 0 40px;
+      padding-left: $default-padding-horizontal + $space-md + $space-sm
+        + $space-min;
+      padding-right: $default-padding-horizontal;
     }
   }
 }
