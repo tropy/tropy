@@ -175,6 +175,7 @@ class ProjectContainer extends PureComponent {
           items={selection}
           data={data}
           expanded={nav.expanded}
+          activeSelection={nav.selection}
           selections={selections}
           note={note}
           notes={notes}

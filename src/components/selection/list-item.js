@@ -18,7 +18,7 @@ class SelectionListItem extends SelectionIterable {
   }
 
   handleClick = createClickHandler({
-    onClick: (event) => {
+    onClick: () => {
       const { photo, selection, isSelected, onSelect } = this.props
 
       if (!isSelected) {
@@ -27,7 +27,7 @@ class SelectionListItem extends SelectionIterable {
           photo: photo.id,
           selection: selection.id,
           //note: selection.notes[0]
-        }, event)
+        })
 
         return true
       }
@@ -35,7 +35,7 @@ class SelectionListItem extends SelectionIterable {
 
     onSingleClick: () => {
       if (!(this.props.isDisabled || this.props.isDragging)) {
-        this.props.onEdit(this.selection.id)
+        this.props.onEdit(this.props.selection.id)
       }
     },
 

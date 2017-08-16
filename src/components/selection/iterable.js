@@ -17,6 +17,7 @@ class SelectionIterable extends PureComponent {
   get classes() {
     return {
       selection: true,
+      active: this.props.isSelected,
       last: this.props.isLast
     }
   }

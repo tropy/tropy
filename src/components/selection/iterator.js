@@ -16,6 +16,11 @@ class SelectionIterator extends Iterator {
     return this.props.selections
   }
 
+  isSelected(selection) {
+    return this.props.active === selection
+  }
+
+
   map(fn) {
     this.idx = {}
 
@@ -26,6 +31,7 @@ class SelectionIterator extends Iterator {
         selection,
         cache: this.props.cache,
         isDisabled: this.props.isDisabled,
+        isSelected: this.isSelected(selection.id),
         isLast: index === this.props.selections.length - 1,
         isVertical: this.isVertical,
         photo: this.props.photo,
@@ -35,6 +41,7 @@ class SelectionIterator extends Iterator {
   }
 
   static propTypes = {
+    active: number,
     isDisabled: bool.isRequired,
     photo: shape({
       id: number.isRequired

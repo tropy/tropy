@@ -49,6 +49,7 @@ class ItemPanel extends PureComponent {
     const {
       edit,
       expanded,
+      activeSelection,
       keymap,
       note,
       notes,
@@ -99,6 +100,7 @@ class ItemPanel extends PureComponent {
           keymap={keymap.PhotoIterator}
           zoom={panel.zoom}
           selection={photo && photo.id}
+          activeSelection={activeSelection}
           selections={selections}
           onContract={onPhotoContract}
           onCreate={this.handlePhotoCreate}
@@ -127,6 +129,7 @@ class ItemPanel extends PureComponent {
     data: object.isRequired,
     edit: object.isRequired,
     expanded: array.isRequired,
+    activeSelection: number,
     keymap: object.isRequired,
     isDisabled: bool.isRequired,
     isItemOpen: bool.isRequired,

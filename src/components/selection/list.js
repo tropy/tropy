@@ -20,7 +20,6 @@ class SelectionList extends SelectionIterator {
     return this.props.edit === selection
   }
 
-
   handleEditCancel = (...args) => {
     this.props.onEditCancel(...args)
     this.container.focus()
@@ -34,7 +33,6 @@ class SelectionList extends SelectionIterator {
             key={selection.id}
             data={this.props.data}
             isEditing={this.isEditing(selection.id)}
-            isSelected={false}
             selection={selection}
             title={DC.title}
             onChange={this.props.onChange}
