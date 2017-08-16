@@ -181,7 +181,6 @@ class ProjectContainer extends PureComponent {
           photo={photo}
           photos={visiblePhotos}
           panel={ui.panel}
-          esper={ui.esper}
           offset={this.state.offset}
           mode={this.state.mode}
           isModeChanging={this.state.isModeChanging}
@@ -422,10 +421,6 @@ module.exports = {
         dispatch(actions.photo.move(...args))
       },
 
-      onPhotoSave(...args) {
-        dispatch(actions.photo.save(...args))
-      },
-
       onPhotoSort(...args) {
         dispatch(actions.photo.order(...args))
       },
@@ -447,10 +442,6 @@ module.exports = {
         dispatch(actions.list.items.add({
           id: list, items: items.map(item => item.id)
         }))
-      },
-
-      onSelectionCreate(...args) {
-        dispatch(actions.selection.create(...args))
       },
 
       onTagCreate(data) {

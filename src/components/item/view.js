@@ -3,9 +3,8 @@
 const React = require('react')
 const { PureComponent } = React
 const { ItemPanel } = require('./panel')
-const { Resizable, BufferedResizable } = require('../resizable')
-const { Esper } = require('../esper')
-const { NotePad } = require('../note')
+const { ItemContainer } = require('./container')
+const { Resizable } = require('../resizable')
 const { PROJECT: { MODE }, SASS: { PANEL } } = require('../../constants')
 const { pick } = require('../../common/util')
 const debounce = require('lodash.debounce')
@@ -66,10 +65,6 @@ class ItemView extends PureComponent {
     this.notepad = notepad
   }
 
-  handleEsperResize = (height) => {
-    this.props.onUiUpdate({ esper: { height } })
-  }
-
   handlePanelResize = (...args) => {
     this.props.onPanelResize(...args)
   }
@@ -123,15 +118,12 @@ class ItemView extends PureComponent {
 
   render() {
     const {
-      esper,
       keymap,
       offset,
       panel,
       photo,
       selections,
       onPanelDragStop,
-      onPhotoSave,
-      onSelectionCreate,
       isTrashSelected,
       ...props
     } = this.props
@@ -157,29 +149,13 @@ class ItemView extends PureComponent {
             isDisabled={isTrashSelected}
             onNoteCreate={this.handleNoteCreate}/>
         </Resizable>
-
-        <div className="item-container">
-          <BufferedResizable
-            edge="bottom"
-            value={esper.height}
-            isRelative
-            onChange={this.handleEsperResize}
-            min={256}>
-            <Esper
-              isDisabled={isTrashSelected}
-              isVisible={isItemOpen}
-              photo={photo}
-              onPhotoSave={onPhotoSave}
-              onSelectionCreate={onSelectionCreate}/>
-          </BufferedResizable>
-          <NotePad
-            ref={this.setNotePad}
-            note={this.state.note}
-            isDisabled={isTrashSelected || !photo}
-            isItemOpen={isItemOpen}
-            keymap={keymap.NotePad}
-            onChange={this.handleNoteChange}/>
-        </div>
+        <ItemContainer
+          note={this.state.note}
+          photo={photo}
+          isDisabled={isTrashSelected}
+          isOpen={isItemOpen}
+          onNoteChange={this.handleNoteChange}
+          onUiUpdate={this.props.onUiUpdate}/>
       </section>
     )
   }
@@ -196,10 +172,6 @@ class ItemView extends PureComponent {
       })
     ),
 
-    esper: shape({
-      height: number.isRequired
-    }).isRequired,
-
     keymap: object.isRequired,
     offset: number.isRequired,
     mode: string.isRequired,
@@ -212,8 +184,6 @@ class ItemView extends PureComponent {
     onNoteSelect: func.isRequired,
     onPanelResize: func.isRequired,
     onPanelDragStop: func.isRequired,
-    onPhotoSave: func.isRequired,
-    onSelectionCreate: func.isRequired,
     onUiUpdate: func.isRequired
   }
 }
