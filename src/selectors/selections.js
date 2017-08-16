@@ -1,7 +1,7 @@
 'use strict'
 
 const { createSelector: memo } = require('reselect')
-const { getSelectedPhoto } = require('./photo')
+const { getSelectedPhoto } = require('./photos')
 const { pluck } = require('../common/util')
 
 const NOTHING = []
