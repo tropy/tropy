@@ -10,22 +10,24 @@
 
   .photo {
     align-items: center;
-    padding: 0 $default-padding-horizontal;
     position: relative;
 
     &.active {
-      color: $photo-list-active-color;
-      background: $photo-list-active-bg;
+      .photo-container {
+        color: $photo-list-active-color;
+        background: $photo-list-active-bg;
 
-      @at-root #{selector-replace(&, ".photo.list", ".photo.list:focus")} {
-        color: $photo-list-focus-color;
-        background: $photo-list-focus-bg;
+        @at-root #{selector-replace(&, ".photo.list", ".photo.list:focus")} {
+          color: $photo-list-focus-color;
+          background: $photo-list-focus-bg;
+        }
       }
     }
 
     .photo-container {
       display: flex;
       align-items: center;
+      padding: 0 $default-padding-horizontal;
     }
   }
 
@@ -46,6 +48,7 @@
     .selection {
       display: flex;
       align-items: center;
+      padding: 0 $space-lg;
     }
   }
 }
