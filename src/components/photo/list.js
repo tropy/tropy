@@ -53,6 +53,7 @@ class PhotoList extends PhotoIterator {
             key={photo.id}
             photo={photo}
             data={data}
+            selections={this.props.selections}
             title={DC.title}
             isEditing={this.isEditing(photo)}
             onChange={onChange}

@@ -19,7 +19,7 @@ class SelectionTile extends SelectionIterable {
         className={cx(this.classes)}
         ref={this.setContainer}>
         <div className="tile-state">
-          {this.props.selection.id}
+          {this.renderThumbnail()}
         </div>
       </li>
     )

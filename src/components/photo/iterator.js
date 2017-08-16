@@ -123,7 +123,6 @@ class PhotoIterator extends Iterator {
       photo,
       cache: this.props.cache,
       activeSelection: this.props.activeSelection,
-      selections: this.props.selections,
       isDisabled: this.props.isDisabled,
       isExpanded: this.isExpanded(photo),
       isSelected: this.isSelected(photo),

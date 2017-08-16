@@ -3,8 +3,9 @@
 const React = require('react')
 const { PhotoIterator } = require('./iterator')
 const { PhotoTile } = require('./tile')
+const { SelectionGrid } = require('../selection/grid')
 const { on, off } = require('../../dom')
-const { refine } = require('../../common/util')
+const { pluck, refine } = require('../../common/util')
 const cx = require('classnames')
 
 
@@ -101,9 +102,20 @@ class PhotoGrid extends PhotoIterator {
   }
 
   renderSelectionGrid(photo) {
+    const selections = pluck(this.props.selections, photo.selections)
+
     return (
       <li key="expansion" className="tile-expansion">
-        {photo.id}
+        <SelectionGrid
+          cache={this.props.cache}
+          active={this.props.activeSelection}
+          data={this.props.data}
+          edit={this.props.edit}
+          isDisabled={this.props.isDisabled}
+          onSelect={this.props.onSelect}
+          photo={photo}
+          selections={selections}
+          size={this.props.size}/>
       </li>
     )
   }

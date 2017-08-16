@@ -16,7 +16,7 @@ class SelectionGrid extends SelectionIterator {
 
   render() {
     return (
-      <ul className={cx(this.classes)}>
+      <ul className={cx(this.classes)} ref={this.setContainer}>
         {this.map(({ selection, ...props }) =>
           <SelectionTile {...props}
             key={selection.id}
