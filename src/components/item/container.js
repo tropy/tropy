@@ -6,8 +6,9 @@ const { connect } = require('react-redux')
 const { BufferedResizable } = require('../resizable')
 const { Esper } = require('../esper')
 const { NotePad } = require('../note')
-const { bool, func, number, object, shape } = require('prop-types')
+const { arrayOf, bool, func, number, object, shape } = require('prop-types')
 const act = require('../../actions')
+const { getPhotoSelections } = require('../../selectors')
 
 
 class ItemContainer extends PureComponent {
@@ -27,6 +28,8 @@ class ItemContainer extends PureComponent {
           <Esper
             isDisabled={this.props.isDisabled}
             photo={this.props.photo}
+            selection={this.props.selection}
+            selections={this.props.selections}
             onPhotoSave={this.props.onPhotoSave}
             onSelectionCreate={this.props.onSelectionCreate}/>
         </BufferedResizable>
@@ -50,6 +53,8 @@ class ItemContainer extends PureComponent {
     keymap: object.isRequired,
     note: object,
     photo: object,
+    selection: number,
+    selections: arrayOf(object).isRequired,
     onNoteChange: func.isRequired,
     onPhotoSave: func.isRequired,
     onSelectionCreate: func.isRequired,
@@ -63,6 +68,8 @@ module.exports = {
     state => ({
       esper: state.ui.esper,
       keymap: state.keymap,
+      selection: state.nav.selection,
+      selections: getPhotoSelections(state)
     }),
 
     dispatch => ({

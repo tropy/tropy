@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { func, string } = require('prop-types')
+const { array, func, string } = require('prop-types')
 const { append, bounds } = require('../../dom')
 const { restrict } = require('../../common/util')
 const { rad } = require('../../common/math')
@@ -99,6 +99,10 @@ class EsperView extends PureComponent {
       this.makeInteractive(this.image)
       this.load(props.src, this.image)
 
+      this.s = new Graphics()
+      this.s.pivot.set(props.width / 2, props.height / 2)
+      this.image.addChild(this.s)
+
       this.g = new Graphics()
       this.image.addChild(this.g)
 
@@ -118,6 +122,17 @@ class EsperView extends PureComponent {
       .on('pointerup', this.handleDragStop)
       .on('pointerupoutside', this.handleDragStop)
       .on('pointermove', this.handleDragMove)
+  }
+
+  drawSelection(g, ...selections) {
+    g.lineStyle(2, 0x5c93e5, 1)
+    g.beginFill(0xcedef7, 0.5)
+
+    for (let { x, y, width, height } of selections) {
+      g.drawRect(x, y, width, height)
+    }
+
+    g.endFill()
   }
 
   resize({ width, height, zoom, mirror }) {
@@ -259,12 +274,13 @@ class EsperView extends PureComponent {
       this.g.clear()
 
       if (this.image.selection != null) {
-        const { x, y, width, height } = this.image.selection
+        this.drawSelection(this.g, this.image.selection)
+      }
 
-        this.g.lineStyle(2, 0x5c93e5, 1)
-        this.g.beginFill(0xcedef7, 0.5)
-        this.g.drawRect(x, y, width, height)
-        this.g.endFill()
+      this.s.clear()
+
+      if (this.props.selections.length > 0) {
+        this.drawSelection(this.s, ...this.props.selections)
       }
     }
   }
@@ -403,6 +419,7 @@ class EsperView extends PureComponent {
 
   static propTypes = {
     tool: string.isRequired,
+    selections: array.isRequired,
     onLoadError: func,
     onDoubleClick: func.isRequired,
     onSelectionCreate: func.isRequired,

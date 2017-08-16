@@ -4,13 +4,16 @@ const React = require('react')
 const { PureComponent } = React
 const { EsperView } = require('./view')
 const { EsperToolbar } = require('./toolbar')
-const { bool, func, node, number, object, string } = require('prop-types')
 const { get, restrict, shallow } = require('../../common/util')
 const { isHorizontal, rotate } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
 const { assign } = Object
 const debounce = require('lodash.debounce')
 const throttle = require('lodash.throttle')
+
+const {
+  arrayOf, bool, func, node, number, object, shape, string
+} = require('prop-types')
 
 const { TOOL, MODE } = require('../../constants/esper')
 
@@ -316,6 +319,7 @@ class Esper extends PureComponent {
         </EsperHeader>
         <EsperView
           ref={this.setView}
+          selections={this.props.selections}
           tool={this.state.tool}
           onSelectionCreate={this.handleSelectionCreate}
           onDoubleClick={this.handleDoubleClick}
@@ -332,6 +336,14 @@ class Esper extends PureComponent {
     mode: string.isRequired,
     photo: object,
     tool: string.isRequired,
+    selection: number,
+    selections: arrayOf(shape({
+      id: number.isRequired,
+      height: number.isRequired,
+      width: number.isRequired,
+      x: number.isRequired,
+      y: number.isRequired
+    })).isRequired,
     onPhotoSave: func.isRequired,
     onSelectionCreate: func.isRequired
   }
