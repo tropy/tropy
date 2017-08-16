@@ -43,6 +43,7 @@ class PhotoIterable extends PureComponent {
       'dragging': this.props.isDragging,
       'last': this.props.isLast,
       'expanded': this.props.isExpanded,
+      'expandable': this.hasSelections,
       [this.direction]: this.props.isOver && this.state.offset != null
     }
   }
@@ -75,6 +76,15 @@ class PhotoIterable extends PureComponent {
       })
     }
   }
+
+  contract() {
+    this.props.onContract(this.props.photo.id)
+  }
+
+  expand() {
+    this.props.onExpand(this.props.photo.id)
+  }
+
 
   handleContextMenu = (event) => {
     const { photo, isDisabled, onContextMenu } = this.props

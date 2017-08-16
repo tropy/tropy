@@ -55,6 +55,13 @@ class PhotoListItem extends PhotoIterable {
     })
   }
 
+  handleTwistyButtonClick = (event) => {
+    event.stopPropagation()
+
+    if (this.props.isExpanded) this.contract()
+    else this.expand()
+  }
+
 
   renderSelectionList() {
     if (!this.hasSelections || !this.props.isExpanded) return null
@@ -77,6 +84,16 @@ class PhotoListItem extends PhotoIterable {
     )
   }
 
+  renderTwistyButton() {
+    return this.hasSelections && (
+      <div className="twisty-container">
+        <IconButton
+          icon={<IconChevron9/>}
+          onClick={this.handleTwistyButtonClick}/>
+      </div>
+    )
+  }
+
   render() {
     const {
       isEditing,
@@ -92,11 +109,7 @@ class PhotoListItem extends PhotoIterable {
           className="photo-container"
           onClick={this.handleClick}
           onContextMenu={this.handleContextMenu}>
-          <div className="twisty-container">
-            <IconButton
-              icon={<IconChevron9/>}
-              onClick={function () {}}/>
-          </div>
+          {this.renderTwistyButton()}
           {this.renderThumbnail()}
           <div className="title">
             <Editable
@@ -106,7 +119,7 @@ class PhotoListItem extends PhotoIterable {
               onCancel={onEditCancel}
               onChange={this.handleChange}/>
           </div>
-          <IconSelection/>
+          {this.hasSelections && <IconSelection/>}
         </div>
         {this.renderSelectionList()}
       </li>
