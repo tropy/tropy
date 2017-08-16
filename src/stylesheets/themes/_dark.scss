@@ -214,10 +214,11 @@ $items-active-bg:                var(--shade-5);
 $panels-bg: var(--shade-4);
 
 // Panel
-$panel-bg:              var(--shade-4);
-$panel-header-color:    var(--shade-8);
-$panel-separator-color: var(--shade-1);
-$panel-heading-color:   var(--shade-6);
+$panel-bg:                var(--shade-4);
+$panel-header-color:      var(--shade-8);
+$panel-separator-color:   var(--shade-1);
+$panel-heading-color:     var(--shade-6);
+$panel-active-icon-color: var(--shade-8);
 
 // Tabs
 $tab-bg: $shade-2;
