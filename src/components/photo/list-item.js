@@ -86,11 +86,9 @@ class PhotoListItem extends PhotoIterable {
 
   renderTwistyButton() {
     return this.hasSelections && (
-      <div className="twisty-container">
-        <IconButton
-          icon={<IconChevron9/>}
-          onClick={this.handleTwistyButtonClick}/>
-      </div>
+      <IconButton
+        icon={<IconChevron9/>}
+        onClick={this.handleTwistyButtonClick}/>
     )
   }
 
