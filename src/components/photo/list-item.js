@@ -88,6 +88,7 @@ class PhotoListItem extends PhotoIterable {
         className={cx(this.classes)}
         ref={this.setContainer}>
         <div
+          className="photo-container"
           onClick={this.handleClick}
           onContextMenu={this.handleContextMenu}>
           {this.renderThumbnail()}
