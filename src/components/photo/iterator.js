@@ -118,31 +118,33 @@ class PhotoIterator extends Iterator {
     event.stopPropagation()
   }
 
+  getIterableProps(photo, index) {
+    return {
+      photo,
+      cache: this.props.cache,
+      selections: this.props.selections,
+      isDisabled: this.props.isDisabled,
+      isExpanded: this.isExpanded(photo),
+      isSelected: this.isSelected(photo),
+      isSortable: this.isSortable,
+      isLast: this.isLast(index),
+      isVertical: this.isVertical,
+      getAdjacent: this.getAdjacent,
+      onContextMenu: this.props.onContextMenu,
+      onContract: this.props.onContract,
+      onDropPhoto: this.handleDropPhoto,
+      onExpand: this.props.onExpand,
+      onItemOpen: this.handleItemOpen,
+      onSelect: this.props.onSelect
+    }
+  }
+
   map(fn) {
     this.idx = {}
-    const { isSortable } = this
 
     return this.props.photos.map((photo, index) => {
       this.idx[photo.id] = index
-
-      return fn({
-        photo,
-        cache: this.props.cache,
-        selections: this.props.selections,
-        isDisabled: this.props.isDisabled,
-        isExpanded: this.isExpanded(photo),
-        isSelected: this.isSelected(photo),
-        isSortable,
-        isLast: index === this.props.photos.length - 1,
-        isVertical: this.isVertical,
-        getAdjacent: this.getAdjacent,
-        onContextMenu: this.props.onContextMenu,
-        onContract: this.props.onContract,
-        onDropPhoto: this.handleDropPhoto,
-        onExpand: this.props.onExpand,
-        onItemOpen: this.handleItemOpen,
-        onSelect: this.props.onSelect
-      })
+      return fn(this.getIterableProps(photo, index))
     })
   }
 

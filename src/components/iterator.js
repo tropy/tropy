@@ -62,7 +62,7 @@ class Iterator extends PureComponent {
   }
 
   get size() {
-    return this.iteration.length
+    return this.iteration != null ? this.iteration.length : 0
   }
 
   get orientation() {
@@ -71,6 +71,10 @@ class Iterator extends PureComponent {
 
   get tabIndex() {
     return this.isEmpty ? null : TABS[this.constructor.name]
+  }
+
+  isLast(index) {
+    return index === this.size - 1
   }
 
   getColumns(size = this.props.size, width = this.width) {
@@ -85,9 +89,9 @@ class Iterator extends PureComponent {
     this.container = container
   }
 
-  fill(count) {
+  fill(count, key = 'filler') {
     return times(count, (i) => (
-      <li key={`filler-${i}`} className="filler tile"/>
+      <li key={`${key}-${i}`} className="filler tile"/>
     ))
   }
 

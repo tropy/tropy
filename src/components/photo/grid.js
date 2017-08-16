@@ -52,8 +52,60 @@ class PhotoGrid extends PhotoIterator {
     }
   }
 
+  getNextRowOffset(index) {
+    return index + (this.state.cols - (index % this.state.cols))
+  }
+
   isExpanded(photo) {
-    return this.props.expanded[0] === photo.id
+    return !photo.pending &&
+      this.props.expanded[0] === photo.id &&
+      photo.selections.length > 0
+  }
+
+  map(fn) {
+    this.idx = {}
+    const { photos } = this.props
+    const { size } = this
+    let out = []
+    let cur = 0
+    let gap = size
+    let exp
+
+    for (; cur < gap && cur < size; ++cur) {
+      let photo = photos[cur]
+      this.idx[photo.id] = cur
+
+      if (this.isExpanded(photo)) {
+        exp = photo
+        gap = this.getNextRowOffset(cur)
+      }
+
+      out.push(fn(this.getIterableProps(photo, cur)))
+    }
+
+    if (exp != null) {
+      if (gap > size) {
+        out = out.concat(this.fill(gap - size, 'gap'))
+      }
+
+      out.push(this.renderSelectionGrid(exp))
+    }
+
+    for (; cur < size; ++cur) {
+      let photo = photos[cur]
+      this.idx[photo.id] = cur
+      out.push(fn(this.getIterableProps(photo, cur)))
+    }
+
+    return out
+  }
+
+  renderSelectionGrid(photo) {
+    return (
+      <li key="expansion" className="tile-expansion">
+        {photo.id}
+      </li>
+    )
   }
 
   render() {
@@ -63,12 +115,10 @@ class PhotoGrid extends PhotoIterator {
         ref={this.setContainer}
         tabIndex={this.tabIndex}
         data-size={this.props.size}
-        onKeyDown={this.handleKeyDown}
-        onClick={this.handleClickOutside}>
+        onKeyDown={this.handleKeyDown}>
         {this.map(({ photo, ...props }) =>
           <PhotoTile {...props} key={photo.id} photo={photo}/>
         )}
-
         {this.filler}
       </ul>
     )
