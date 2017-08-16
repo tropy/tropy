@@ -20,6 +20,7 @@
     height: $panel-header-height;
     margin: 0;
     padding-top: 0;
+    padding-right: $default-padding-horizontal - ($space-min + $shim); // Align icons with icon buttons
   }
 
   .toolbar-context {

@@ -20,6 +20,10 @@
         @at-root #{selector-replace(&, ".photo.list", ".photo.list:focus")} {
           color: $photo-list-focus-color;
           background: $photo-list-focus-bg;
+
+          .icon-selection {
+            color: $photo-list-focus-color;
+          }
         }
       }
     }
@@ -42,6 +46,11 @@
     .editable {
       @include css-truncation;
     }
+  }
+
+  .icon-selection {
+    flex: 0 0 auto;
+    margin-left: $space-xs;
   }
 
   .selection.list {

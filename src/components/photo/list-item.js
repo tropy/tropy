@@ -8,6 +8,7 @@ const { SelectionList } = require('../selection/list')
 const { get } = require('../../common/util')
 const cx = require('classnames')
 const { bool, func, object, string } = require('prop-types')
+const { IconSelection } = require('../icons')
 
 
 class PhotoListItem extends PhotoIterable {
@@ -100,6 +101,7 @@ class PhotoListItem extends PhotoIterable {
               onCancel={onEditCancel}
               onChange={this.handleChange}/>
           </div>
+          <IconSelection/>
         </div>
         {this.renderSelectionList()}
       </li>
