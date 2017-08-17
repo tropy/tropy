@@ -9,14 +9,14 @@
   .icon {
     color: $panel-active-icon-color;
   }
+}
 
-  @at-root #{selector-replace(&, ".photo.list", ".photo.list:focus")} {
+%focus-styles {
+  color: $photo-list-focus-color;
+  background: $photo-list-focus-bg;
+
+  .icon {
     color: $photo-list-focus-color;
-    background: $photo-list-focus-bg;
-
-    .icon {
-      color: $photo-list-focus-color;
-    }
   }
 }
 
@@ -33,6 +33,10 @@
     &.active {
       .photo-container {
         @extend %active-styles;
+
+        @at-root #{selector-replace(&, ".photo.list", ".photo.list:focus")} {
+          @extend %focus-styles;
+        }
       }
     }
 
@@ -96,6 +100,10 @@
 
       &.active {
         @extend %active-styles;
+
+        @at-root #{selector-replace(&, ".photo.list", ".photo.list:focus")} {
+          @extend %focus-styles;
+        }
       }
     }
   }
