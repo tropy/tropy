@@ -14,20 +14,10 @@
 
     &.active {
       .photo-container {
-        color: $photo-list-active-color;
-        background: $photo-list-active-bg;
-
-        .icon {
-          color: $panel-active-icon-color;
-        }
+        @extend %list-active;
 
         @at-root #{selector-replace(&, ".photo.list", ".photo.list:focus")} {
-          color: $photo-list-focus-color;
-          background: $photo-list-focus-bg;
-
-          .icon {
-            color: $photo-list-focus-color;
-          }
+          @extend %list-focus;
         }
       }
     }
@@ -52,7 +42,6 @@
       padding: 0 $default-padding-horizontal;
     }
   }
-
 
   .btn {
     flex: 0 0 auto;
@@ -90,6 +79,14 @@
       padding-left: $default-padding-horizontal + $space-md + $space-sm
         + $space-min;
       padding-right: $default-padding-horizontal;
+
+      &.active {
+        @extend %list-active;
+
+        @at-root #{selector-replace(&, ".photo.list", ".photo.list:focus")} {
+          @extend %list-focus;
+        }
+      }
     }
   }
 }

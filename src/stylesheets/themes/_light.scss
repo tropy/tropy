@@ -35,7 +35,7 @@ $transparent: transparent;
 
 $shade-0:  #fff; // Body
 $shade-1:  if($platform == win32, #f0f0f0, #f6f6f6); // Sidebar bg, panel bg
-$shade-2:  #e6e6e6; // Inactive tab, Esper bg
+$shade-2:  #e6e6e6; // Inactive tab, Esper bg, tile expansion
 $shade-3:  #ddd; // Active state bg/border
 $shade-4:  #ccc; // Slider track
 $shade-5:  #bbb; // Panel heading, mixed color
@@ -157,6 +157,7 @@ $photo-sort-indicator: var(--shade-9);
 // Tile
 $tile-focus-color:  var(--brand-primary);
 $tile-active-color: var(--shade-4);
+$tile-expansion-bg: var(--shade-2);
 
 // Stack
 $stack-color:             var(--shade-6);
@@ -169,6 +170,13 @@ $stack-line-tint-opacity: 0.5;
 // Scrollbar
 $scrollbar-bg: var(--transparent);
 $scrollbar-color: var(--shade-4);
+
+// List states
+$list-focus-color:       var(--shade-0);
+$list-focus-bg:          var(--brand-primary);
+$list-active-color:      var(--shade-9);
+$list-active-bg:         var(--shade-3);
+$list-active-icon-color: var(--shade-7);
 
 
 // Components
@@ -190,12 +198,6 @@ $project-darken-color: var(--shade-10-10);
 $sidebar-bg:                var(--shade-1);
 $sidebar-text-color:        var(--shade-8);
 $sidebar-headings-color:    var(--shade-6);
-$sidebar-focus-icon-color:  var(--shade-0);
-$sidebar-focus-color:       var(--shade-0);
-$sidebar-focus-bg:          var(--brand-primary);
-$sidebar-active-icon-color: var(--shade-7);
-$sidebar-active-color:      var(--shade-9);
-$sidebar-active-bg:         var(--shade-3);
 $activity-border-color:     var(--shade-3);
 
 // Items
@@ -217,7 +219,6 @@ $panel-bg:                var(--shade-1);
 $panel-header-color:      var(--shade-8);
 $panel-separator-color:   var(--shade-3);
 $panel-heading-color:     var(--shade-5);
-$panel-active-icon-color: var(--shade-7);
 
 // Tabs
 $tab-bg:             var(--shade-2);
@@ -243,12 +244,6 @@ $add-tag-placeholder-color-default: $text-color;
 $add-tag-border-color:              var(--shade-3);
 $icon-tag-color:                    var(--shade-1);
 $icon-tag-border:                   var(--shade-5);
-
-// Photo list
-$photo-list-focus-color:  var(--shade-0);
-$photo-list-focus-bg:     var(--brand-primary);
-$photo-list-active-color: var(--shade-9);
-$photo-list-active-bg:    var(--shade-3);
 
 // Note list
 $note-list-focus-color:  var(--shade-0);

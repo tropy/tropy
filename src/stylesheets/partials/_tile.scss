@@ -53,3 +53,9 @@
     }
   }
 }
+
+.tile-expansion {
+  flex: 1 1 100%;
+  background: $tile-expansion-bg;
+  margin: 0 (-$default-padding-horizontal);
+}
