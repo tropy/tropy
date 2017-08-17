@@ -95,7 +95,7 @@ class ItemPanel extends PureComponent {
         <PhotoPanel {...props}
           isDisabled={isDisabled}
           isItemOpen={isItemOpen}
-          edit={edit.photo}
+          edit={edit}
           expanded={expanded}
           keymap={keymap.PhotoIterator}
           zoom={panel.zoom}

@@ -36,7 +36,7 @@ class PhotoListItem extends PhotoIterable {
       const { photo, isDisabled, isDragging, onEdit } = this.props
 
       if (!(isDisabled || isDragging)) {
-        onEdit(photo.id)
+        onEdit({ photo: photo.id })
       }
     },
 
@@ -73,7 +73,7 @@ class PhotoListItem extends PhotoIterable {
         cache={this.props.cache}
         active={this.props.activeSelection}
         data={this.props.data}
-        edit={this.props.edit}
+        edit={this.props.edit.selection}
         isDisabled={this.props.isDisabled}
         onChange={this.props.onChange}
         onEdit={this.props.onEdit}
@@ -129,6 +129,7 @@ class PhotoListItem extends PhotoIterable {
   static propTypes = {
     ...PhotoIterable.propTypes,
     data: object.isRequired,
+    edit: object.isRequired,
     isEditing: bool.isRequired,
     isExpanded: bool.isRequired,
     selections: object.isRequired,

@@ -22,10 +22,6 @@ class PhotoPanel extends Panel {
     }
   }
 
-  handleEdit = (photo) => {
-    this.props.onEdit({ photo })
-  }
-
   connect(element) {
     return this.props.isDisabled ? element : this.props.dt(element)
   }
@@ -43,7 +39,7 @@ class PhotoPanel extends Panel {
   }
 
   renderContent() {
-    const { onDelete, onMetadataSave, zoom } = this.props
+    const { onDelete, onEdit, onMetadataSave, zoom } = this.props
 
     const props = {
       ...this.props,
@@ -51,7 +47,7 @@ class PhotoPanel extends Panel {
       onChange: onMetadataSave,
       onDelete,
       onDropImages: this.handleDropFiles,
-      onEdit: this.handleEdit
+      onEdit
     }
 
     const PhotoIterator = zoom ? PhotoGrid : PhotoList

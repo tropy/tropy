@@ -26,7 +26,7 @@ class SelectionListItem extends SelectionIterable {
 
     onSingleClick: () => {
       if (!(this.props.isDisabled || this.props.isDragging)) {
-        this.props.onEdit(this.props.selection.id)
+        this.props.onEdit({ selection: this.props.selection.id })
       }
     },
 

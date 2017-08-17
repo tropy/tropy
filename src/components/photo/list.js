@@ -29,7 +29,7 @@ class PhotoList extends PhotoIterator {
   }
 
   isEditing(photo) {
-    return this.props.edit === photo.id
+    return this.props.edit.photo === photo.id
   }
 
   handleEditCancel = (...args) => {
@@ -39,7 +39,7 @@ class PhotoList extends PhotoIterator {
 
 
   render() {
-    const { data, onChange, onEdit } = this.props
+    const { data, edit, onChange, onEdit } = this.props
 
     return this.connect(
       <ul
@@ -53,6 +53,7 @@ class PhotoList extends PhotoIterator {
             key={photo.id}
             photo={photo}
             data={data}
+            edit={edit}
             selections={this.props.selections}
             title={DC.title}
             isEditing={this.isEditing(photo)}
@@ -65,7 +66,7 @@ class PhotoList extends PhotoIterator {
 
   static propTypes = {
     ...PhotoIterator.propTypes,
-    edit: number,
+    edit: object.isRequired,
     data: object.isRequired,
     onChange: func.isRequired,
     onEdit: func.isRequired,
