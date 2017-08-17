@@ -32,6 +32,45 @@ class PhotoList extends PhotoIterator {
     return this.props.edit.photo === photo.id
   }
 
+  getNextPhoto(offset = 1) {
+    if (!(offset === 1 || offset === -1)) {
+      return super.getNextPhoto(offset)
+    }
+
+    const photo = super.getNextPhoto(0)
+    if (!this.isExpanded(photo)) {
+      return this.preselect(super.getNextPhoto(offset), offset)
+    }
+
+    const { selection } = this.props
+    const idx = photo.selections.indexOf(selection)
+
+    if (offset > 0) {
+      if (idx + offset >= photo.selections.length) {
+        return super.getNextPhoto(offset)
+      }
+    } else {
+      if (idx === 0) return photo
+      if (idx < 0) {
+        return this.preselect(super.getNextPhoto(offset), offset)
+      }
+    }
+
+    return {
+      ...photo,
+      selection: photo.selections[idx + offset]
+    }
+  }
+
+  preselect(photo, offset) {
+    if (offset >= 0 || !this.isExpanded(photo)) return photo
+
+    return {
+      ...photo,
+      selection: photo.selections[photo.selections.length - 1]
+    }
+  }
+
   handleEditCancel = (...args) => {
     this.props.onEditCancel(...args)
     this.container.focus()
