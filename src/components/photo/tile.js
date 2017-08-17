@@ -39,11 +39,6 @@ class PhotoTile extends PhotoIterable {
     )
   }
 
-  static propTypes = {
-    ...PhotoIterable.propTypes,
-    size: number.isRequired
-  }
-
   static defaultProps = {
     ...PhotoIterable.defaultProps,
     size: 512

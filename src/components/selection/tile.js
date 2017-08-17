@@ -32,6 +32,11 @@ class SelectionTile extends SelectionIterable {
       </li>
     )
   }
+
+  static defaultProps = {
+    ...SelectionIterable.defaultProps,
+    size: 512
+  }
 }
 
 module.exports = {
