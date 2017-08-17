@@ -37,7 +37,7 @@ $transparent: transparent;
 
 $shade-0:  #000; // Black
 $shade-1:  #212121; // 87% Border search field, Esper bg
-$shade-2:  #292929; // 84% Inactive tab
+$shade-2:  #292929; // 84% Inactive tab, tile expansion
 $shade-3:  #2f2f2f; // 82% Body
 $shade-4:  #333; // 80% Sidebar bg, panel bg
 $shade-5:  #404040; // 75% Active state bg/border, slider track
@@ -158,6 +158,7 @@ $photo-sort-indicator: var(--shade-9);
 // Tile
 $tile-focus-color:  var(--brand-primary);
 $tile-active-color: var(--shade-5);
+$tile-expansion-bg: var(--shade-2);
 
 // Stack
 $stack-color:             var(--shade-7);

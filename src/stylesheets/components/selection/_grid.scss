@@ -1,0 +1,9 @@
+//
+// Selection grid
+// --------------------------------------------------
+
+.selection.grid {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 $default-padding-horizontal;
+}

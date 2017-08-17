@@ -35,7 +35,7 @@ $transparent: transparent;
 
 $shade-0:  #fff; // Body
 $shade-1:  if($platform == win32, #f0f0f0, #f6f6f6); // Sidebar bg, panel bg
-$shade-2:  #e6e6e6; // Inactive tab, Esper bg
+$shade-2:  #e6e6e6; // Inactive tab, Esper bg, tile expansion
 $shade-3:  #ddd; // Active state bg/border
 $shade-4:  #ccc; // Slider track
 $shade-5:  #bbb; // Panel heading, mixed color
@@ -157,6 +157,7 @@ $photo-sort-indicator: var(--shade-9);
 // Tile
 $tile-focus-color:  var(--brand-primary);
 $tile-active-color: var(--shade-4);
+$tile-expansion-bg: var(--shade-2);
 
 // Stack
 $stack-color:             var(--shade-6);

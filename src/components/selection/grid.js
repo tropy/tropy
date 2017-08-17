@@ -22,6 +22,7 @@ class SelectionGrid extends SelectionIterator {
             key={selection.id}
             isSelected={false}
             selection={selection}/>)}
+        {this.filler}
       </ul>
     )
   }
