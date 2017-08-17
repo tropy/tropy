@@ -71,16 +71,13 @@ class PhotoPanel extends Panel {
 
 
   static propTypes = {
-    photos: array.isRequired,
-    zoom: number.isRequired,
-
+    canDrop: bool,
     isClosed: bool,
     isDisabled: bool,
     isOver: bool,
-    canDrop: bool,
-
+    photos: array.isRequired,
+    zoom: number.isRequired,
     dt: func.isRequired,
-
     onContract: func.isRequired,
     onCreate: func.isRequired,
     onDelete: func.isRequired,

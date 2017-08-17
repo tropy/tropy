@@ -52,7 +52,7 @@ class PhotoIterable extends PureComponent {
   }
 
   get isActive() {
-    return this.props.isSelected && this.props.activeSelection == null
+    return this.props.isSelected && this.props.selection == null
   }
 
   get isDraggable() {
@@ -192,6 +192,7 @@ class PhotoIterable extends PureComponent {
 
 
   static propTypes = {
+    cache: string.isRequired,
     isDisabled: bool,
     isDragging: bool,
     isLast: bool,
@@ -201,23 +202,17 @@ class PhotoIterable extends PureComponent {
     isSelected: bool,
     isSortable: bool,
     isVertical: bool,
-
     photo: shape({
       id: number.isRequired,
       selections: arrayOf(number),
       data: object
     }).isRequired,
-
-    cache: string.isRequired,
-    activeSelection: number,
+    selection: number,
     size: number.isRequired,
-
     ds: func.isRequired,
     dt: func.isRequired,
     dp: func.isRequired,
-
     getAdjacent: func.isRequired,
-
     onContextMenu: func.isRequired,
     onContract: func.isRequired,
     onDropPhoto: func.isRequired,

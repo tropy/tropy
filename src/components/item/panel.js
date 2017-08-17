@@ -99,8 +99,8 @@ class ItemPanel extends PureComponent {
           expanded={expanded}
           keymap={keymap.PhotoIterator}
           zoom={panel.zoom}
-          selection={photo && photo.id}
-          activeSelection={activeSelection}
+          current={photo && photo.id}
+          selection={activeSelection}
           selections={selections}
           onContract={onPhotoContract}
           onCreate={this.handlePhotoCreate}

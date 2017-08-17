@@ -29,11 +29,11 @@ class PhotoIterator extends Iterator {
   }
 
   isSelected(photo) {
-    return this.props.selection === photo.id
+    return this.props.current === photo.id
   }
 
   isActive(selection) {
-    return this.props.activeSelection === selection
+    return this.props.selection === selection
   }
 
   isExpandable(photo) {
@@ -46,12 +46,12 @@ class PhotoIterator extends Iterator {
   }
 
   getNextPhoto(offset = 1) {
-    const { photos, selection } = this.props
+    const { photos, current } = this.props
 
     if (!photos.length) return null
-    if (!selection) return photos[0]
+    if (!current) return photos[0]
 
-    return photos[this.idx[selection] + offset]
+    return photos[this.idx[current] + offset]
   }
 
   getPrevPhoto(offset = 1) {
@@ -101,7 +101,9 @@ class PhotoIterator extends Iterator {
   handleItemOpen = (photo) => {
     if (!this.props.isItemOpen) {
       this.props.onItemOpen({
-        id: photo.item, photos: [photo.id], selection: photo.selection
+        id: photo.item,
+        photos: [photo.id],
+        selection: photo.selection
       })
     }
   }
@@ -125,7 +127,7 @@ class PhotoIterator extends Iterator {
     return {
       photo,
       cache: this.props.cache,
-      activeSelection: this.props.activeSelection,
+      selection: this.props.selection,
       isDisabled: this.props.isDisabled,
       isExpandable: this.isExpandable(photo),
       isExpanded: this.isExpanded(photo),
@@ -198,8 +200,8 @@ class PhotoIterator extends Iterator {
       })
     ).isRequired,
 
-    activeSelection: number,
     cache: string.isRequired,
+    current: number,
     expanded: arrayOf(number).isRequired,
     keymap: object.isRequired,
     selection: number,
