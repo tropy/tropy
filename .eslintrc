@@ -30,7 +30,7 @@ rules:
   brace-style: [2, '1tbs', { allowSingleLine: true }]
   comma-spacing: 2
   comma-style: 2
-  complexity: [1, 9]
+  complexity: [1, 14]
   curly: [2, 'multi-line']
   dot-location: [2, 'property']
   eqeqeq: [2, 'smart']
