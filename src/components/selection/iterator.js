@@ -35,6 +35,7 @@ class SelectionIterator extends Iterator {
         isLast: index === this.props.selections.length - 1,
         isVertical: this.isVertical,
         photo: this.props.photo,
+        onItemOpen: this.props.onItemOpen,
         onSelect: this.props.onSelect
       })
     })
@@ -51,6 +52,7 @@ class SelectionIterator extends Iterator {
     })).isRequired,
     cache: string.isRequired,
     size: number.isRequired,
+    onItemOpen: func.isRequired,
     onSelect: func.isRequired
   }
 }

@@ -37,7 +37,7 @@ class PhotoIterable extends PureComponent {
     return {
       'photo': true,
       'drop-target': this.props.isSortable,
-      'active': this.props.isSelected && this.props.activeSelection == null,
+      'active': this.isActive,
       'over': this.props.isOver,
       'dragging': this.props.isDragging,
       'last': this.props.isLast,
@@ -51,6 +51,10 @@ class PhotoIterable extends PureComponent {
     return this.state.offset ? 'after' : 'before'
   }
 
+  get isActive() {
+    return this.props.isSelected && this.props.activeSelection == null
+  }
+
   get isDraggable() {
     return !this.props.isDisabled
   }
@@ -61,7 +65,9 @@ class PhotoIterable extends PureComponent {
   }
 
   select = () => {
-    this.props.onSelect(this.props.photo)
+    if (!this.isActive) {
+      this.props.onSelect(this.props.photo)
+    }
   }
 
   contract() {

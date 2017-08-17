@@ -19,18 +19,9 @@ class SelectionListItem extends SelectionIterable {
 
   handleClick = createClickHandler({
     onClick: () => {
-      const { photo, selection, isActive, onSelect } = this.props
-
-      if (!isActive) {
-        onSelect({
-          item: photo.item,
-          photo: photo.id,
-          selection: selection.id,
-          notes: selection.notes
-        })
-
-        return true
-      }
+      const { isActive } = this.props
+      this.select()
+      return !isActive
     },
 
     onSingleClick: () => {
@@ -39,9 +30,7 @@ class SelectionListItem extends SelectionIterable {
       }
     },
 
-    onDoubleClick: () => {
-      //this.props.onItemOpen(this.props.photo)
-    }
+    onDoubleClick: this.open
   })
 
   handleChange = (text) => {

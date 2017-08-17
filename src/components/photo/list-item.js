@@ -27,9 +27,9 @@ class PhotoListItem extends PhotoIterable {
 
   handleClick = createClickHandler({
     onClick: () => {
-      const { isSelected } = this.props
+      const { isActive } = this
       this.select()
-      return !isSelected
+      return !isActive
     },
 
     onSingleClick: () => {
@@ -78,6 +78,7 @@ class PhotoListItem extends PhotoIterable {
         onChange={this.props.onChange}
         onEdit={this.props.onEdit}
         onEditCancel={this.props.onEditCancel}
+        onItemOpen={this.props.onItemOpen}
         onSelect={this.props.onSelect}
         photo={this.props.photo}
         selections={this.selections}

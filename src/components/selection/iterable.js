@@ -25,6 +25,25 @@ class SelectionIterable extends PureComponent {
     this.container = container
   }
 
+  select = () => {
+    if (!this.props.isActive) {
+      this.props.onSelect({
+        id: this.props.photo.id,
+        item: this.props.photo.item,
+        selection: this.props.selection.id,
+        notes: this.props.selection.notes
+      })
+    }
+  }
+
+  open = () => {
+    this.props.onItemOpen({
+      id: this.props.photo.id,
+      item: this.props.photo.item,
+      selection: this.props.selection.id
+    })
+  }
+
   renderThumbnail(props) {
     return (
       <Thumbnail {...props}
@@ -52,6 +71,7 @@ class SelectionIterable extends PureComponent {
       mirror: bool,
     }).isRequired,
     size: number.isRequired,
+    onItemOpen: func.isRequired,
     onSelect: func.isRequired
   }
 
