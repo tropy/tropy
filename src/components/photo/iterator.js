@@ -42,7 +42,8 @@ class PhotoIterator extends Iterator {
   }
 
   isExpanded(photo) {
-    return this.props.expanded.includes(photo.id)
+    return photo != null &&
+      this.props.expanded.includes(photo.id)
   }
 
   getNextPhoto(offset = 1) {
