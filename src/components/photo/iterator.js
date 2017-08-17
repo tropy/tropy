@@ -33,6 +33,10 @@ class PhotoIterator extends Iterator {
     return this.props.selection === photo.id
   }
 
+  isActive(selection) {
+    return this.props.activeSelection === selection
+  }
+
   isExpanded(photo) {
     return this.props.expanded.includes(photo.id)
   }
@@ -63,13 +67,17 @@ class PhotoIterator extends Iterator {
   }
 
   select = (photo) => {
-    if (photo && !this.isSelected(photo)) {
-      this.props.onSelect({
-        photo: photo.id,
-        item: photo.item,
-        note: photo.notes[0]
-      })
+    if (photo == null ||
+      this.isSelected(photo) && this.isActive(photo.selection)) {
+      return
     }
+
+    this.props.onSelect({
+      photo: photo.id,
+      item: photo.item,
+      note: photo.notes[0],
+      selection: photo.selection
+    })
   }
 
   handleItemOpen = (photo) => {
@@ -135,7 +143,7 @@ class PhotoIterator extends Iterator {
       onDropPhoto: this.handleDropPhoto,
       onExpand: this.props.onExpand,
       onItemOpen: this.handleItemOpen,
-      onSelect: this.props.onSelect
+      onSelect: this.select
     }
   }
 

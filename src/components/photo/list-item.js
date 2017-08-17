@@ -26,11 +26,10 @@ class PhotoListItem extends PhotoIterable {
   }
 
   handleClick = createClickHandler({
-    onClick: (event) => {
-      if (!this.props.isSelected) {
-        this.select(event)
-        return true
-      }
+    onClick: () => {
+      const { isSelected } = this.props
+      this.select()
+      return !isSelected
     },
 
     onSingleClick: () => {

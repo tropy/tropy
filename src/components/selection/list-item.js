@@ -19,14 +19,14 @@ class SelectionListItem extends SelectionIterable {
 
   handleClick = createClickHandler({
     onClick: () => {
-      const { photo, selection, isSelected, onSelect } = this.props
+      const { photo, selection, isActive, onSelect } = this.props
 
-      if (!isSelected) {
+      if (!isActive) {
         onSelect({
           item: photo.item,
           photo: photo.id,
           selection: selection.id,
-          //note: selection.notes[0]
+          notes: selection.notes
         })
 
         return true

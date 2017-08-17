@@ -61,15 +61,7 @@ class PhotoIterable extends PureComponent {
   }
 
   select = () => {
-    if (!this.props.isSelected) {
-      const { photo } = this.props
-
-      this.props.onSelect({
-        item: photo.item,
-        photo: photo.id,
-        note: photo.notes[0]
-      })
-    }
+    this.props.onSelect(this.props.photo)
   }
 
   contract() {

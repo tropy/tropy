@@ -7,9 +7,8 @@ const { bool, func, number, shape, string } = require('prop-types')
 
 
 class SelectionIterable extends PureComponent {
-
-  componentDidUpdate(props) {
-    if (this.props.isSelected && !props.isSelected) {
+  componentDidUpdate({ isActive }) {
+    if (this.props.isActive && !isActive) {
       this.container.scrollIntoViewIfNeeded()
     }
   }
@@ -17,7 +16,7 @@ class SelectionIterable extends PureComponent {
   get classes() {
     return {
       selection: true,
-      active: this.props.isSelected,
+      active: this.props.isActive,
       last: this.props.isLast
     }
   }
@@ -39,8 +38,8 @@ class SelectionIterable extends PureComponent {
   }
 
   static propTypes = {
+    isActive: bool.isRequired,
     isDisabled: bool.isRequired,
-    isSelected: bool.isRequired,
     isLast: bool.isRequired,
     cache: string.isRequired,
     photo: shape({

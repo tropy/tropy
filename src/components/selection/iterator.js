@@ -16,7 +16,7 @@ class SelectionIterator extends Iterator {
     return this.props.selections
   }
 
-  isSelected(selection) {
+  isActive(selection) {
     return this.props.active === selection
   }
 
@@ -30,8 +30,8 @@ class SelectionIterator extends Iterator {
       return fn({
         selection,
         cache: this.props.cache,
+        isActive: this.isActive(selection.id),
         isDisabled: this.props.isDisabled,
-        isSelected: this.isSelected(selection.id),
         isLast: index === this.props.selections.length - 1,
         isVertical: this.isVertical,
         photo: this.props.photo,

@@ -40,7 +40,7 @@ const selection = {
           JOIN selections USING (id)
         WHERE id IN (${list(ids)})`, (data) => {
       selections[data.id] = {
-        ...data, mirror: !!data.mirror
+        ...data, mirror: !!data.mirror, notes: []
       }
     })
 
