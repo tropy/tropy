@@ -33,6 +33,7 @@ class PhotoTile extends PhotoIterable {
             onContextMenu: this.handleContextMenu
           })}
         </div>
+        <div className="pointer"/>
       </li>
     )
   }

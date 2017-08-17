@@ -8,6 +8,7 @@
   flex-shrink: 0;
   justify-content: center;
   align-items: center;
+  position: relative;
 
   @each $size in $tile-thumbnail-sizes {
     [data-size="#{$size}"] & {
@@ -52,10 +53,28 @@
       }
     }
   }
+
+  .pointer {
+    display: none;
+    position: absolute;
+    left: calc(50% - 10px);
+    bottom: -$space-sm;
+    width: 2 * $pointer-height;
+    height: 2 * $pointer-height;
+    border: $pointer-height solid transparent;
+    border-bottom: $pointer-height solid $tile-expansion-bg;
+  }
+
+  &.expanded {
+    .pointer {
+      display: block;
+    }
+  }
 }
 
 .tile-expansion {
   flex: 1 1 100%;
   background: $tile-expansion-bg;
-  margin: 0 (-$default-padding-horizontal);
+  margin: $space-sm (-$default-padding-horizontal); // Todo
+  padding: $space-sm 0; // Todo
 }
