@@ -1,13 +1,13 @@
 'use strict'
 
 const React = require('react')
-const PropTypes = require('prop-types')
-const { number, object, func } = PropTypes
+const { object, func } = require('prop-types')
 const { PhotoListItem } = require('./list-item')
 const { PhotoIterator } = require('./iterator')
 const { DC } = require('../../constants')
 const { on, off } = require('../../dom')
 const cx = require('classnames')
+const { match } = require('../../keymap')
 
 
 class PhotoList extends PhotoIterator {
@@ -35,6 +35,37 @@ class PhotoList extends PhotoIterator {
   handleEditCancel = (...args) => {
     this.props.onEditCancel(...args)
     this.container.focus()
+  }
+
+  handleKeyDown = (event) => {
+    switch (match(this.props.keymap, event)) {
+      case 'up':
+        this.select(this.getPrevPhoto())
+        break
+      case 'down':
+        this.select(this.getNextPhoto())
+        break
+      case 'left':
+      case 'contract':
+        this.contract(this.getCurrentPhoto())
+        break
+      case 'right':
+      case 'expand':
+        this.expand(this.getCurrentPhoto())
+        break
+      case 'open':
+        this.handleItemOpen(this.getCurrentPhoto())
+        break
+      case 'delete':
+        this.handleDelete(this.getCurrentPhoto())
+        this.select(this.getNextPhoto() || this.getPrevPhoto())
+        break
+      default:
+        return
+    }
+
+    event.preventDefault()
+    event.stopPropagation()
   }
 
 

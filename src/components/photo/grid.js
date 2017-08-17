@@ -5,35 +5,12 @@ const { PhotoIterator } = require('./iterator')
 const { PhotoTile } = require('./tile')
 const { SelectionGrid } = require('../selection/grid')
 const { on, off } = require('../../dom')
-const { pluck, refine } = require('../../common/util')
+const { pluck } = require('../../common/util')
 const cx = require('classnames')
+const { match } = require('../../keymap')
 
 
 class PhotoGrid extends PhotoIterator {
-  constructor(props) {
-    super(props)
-
-    refine(this, 'handleKeyDown', ([event]) => {
-      if (!event.isPropagationStopped()) {
-        switch (event.key) {
-          case (this.isVertical ? 'ArrowLeft' : 'ArrowUp'):
-            this.select(this.getPrevPhoto(this.state.cols))
-            break
-
-          case (this.isVertical ? 'ArrowRight' : 'ArrowDown'):
-            this.select(this.getNextPhoto(this.state.cols))
-            break
-
-          default:
-            return
-        }
-
-        event.preventDefault()
-        event.stopPropagation()
-      }
-    })
-  }
-
   componentDidMount() {
     super.componentDidMount()
     on(this.container, 'tab:focus', this.handleFocus)
@@ -100,6 +77,36 @@ class PhotoGrid extends PhotoIterator {
 
     return out
   }
+
+  handleKeyDown = (event) => {
+    switch (match(this.props.keymap, event)) {
+      case (this.isVertical ? 'up' : 'left'):
+        this.select(this.getPrevPhoto())
+        break
+      case (this.isVertical ? 'down' : 'right'):
+        this.select(this.getNextPhoto())
+        break
+      case (this.isVertical ? 'left' : 'up'):
+        this.select(this.getPrevPhoto(this.state.cols))
+        break
+      case (this.isVertical ? 'right' : 'down'):
+        this.select(this.getNextPhoto(this.state.cols))
+        break
+      case 'open':
+        this.handleItemOpen(this.getCurrentPhoto())
+        break
+      case 'delete':
+        this.handleDelete(this.getCurrentPhoto())
+        this.select(this.getNextPhoto() || this.getPrevPhoto())
+        break
+      default:
+        return
+    }
+
+    event.preventDefault()
+    event.stopPropagation()
+  }
+
 
   renderSelectionGrid(photo) {
     const selections = pluck(this.props.selections, photo.selections)

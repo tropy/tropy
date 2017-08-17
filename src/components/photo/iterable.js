@@ -42,7 +42,7 @@ class PhotoIterable extends PureComponent {
       'dragging': this.props.isDragging,
       'last': this.props.isLast,
       'expanded': this.props.isExpanded,
-      'expandable': this.hasSelections,
+      'expandable': this.props.isExpandable,
       [this.direction]: this.props.isOver && this.state.offset != null
     }
   }
@@ -59,11 +59,6 @@ class PhotoIterable extends PureComponent {
     return !this.props.isDisabled
   }
 
-  get hasSelections() {
-    const { photo } = this.props
-    return photo.selections != null && photo.selections.length > 0
-  }
-
   select = () => {
     if (!this.isActive) {
       this.props.onSelect(this.props.photo)
@@ -71,11 +66,11 @@ class PhotoIterable extends PureComponent {
   }
 
   contract() {
-    this.props.onContract(this.props.photo.id)
+    this.props.onContract(this.props.photo)
   }
 
   expand() {
-    this.props.onExpand(this.props.photo.id)
+    this.props.onExpand(this.props.photo)
   }
 
 
@@ -200,6 +195,7 @@ class PhotoIterable extends PureComponent {
     isDisabled: bool,
     isDragging: bool,
     isLast: bool,
+    isExpandable: bool,
     isExpanded: bool,
     isOver: bool,
     isSelected: bool,

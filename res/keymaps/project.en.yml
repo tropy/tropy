@@ -18,6 +18,8 @@ linux: &linux
     right: ArrowRight
     open: Enter
     delete: Backspace
+    expand: CmdOrCtrl+ArrowDown
+    contract: CmdOrCtrl+ArrowUp
   NoteList:
     up: ArrowUp
     down: ArrowDown

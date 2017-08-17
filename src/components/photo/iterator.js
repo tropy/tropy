@@ -5,7 +5,6 @@ const { Iterator } = require('../iterator')
 const { DropTarget } = require('react-dnd')
 const { DND } = require('../../constants')
 const { move, adjacent } = require('../../common/util')
-const { match } = require('../../keymap')
 
 const {
   arrayOf, bool, func, number, object, string, shape
@@ -35,6 +34,11 @@ class PhotoIterator extends Iterator {
 
   isActive(selection) {
     return this.props.activeSelection === selection
+  }
+
+  isExpandable(photo) {
+    return photo != null &&
+      photo.selections != null && photo.selections.length > 0
   }
 
   isExpanded(photo) {
@@ -80,6 +84,20 @@ class PhotoIterator extends Iterator {
     })
   }
 
+  contract = (photo) => {
+    if (this.isExpandable(photo)) {
+      this.props.onContract(photo.id)
+      if (this.isSelected(photo)) this.select(photo)
+    }
+  }
+
+  expand = (photo) => {
+    if (this.isExpandable(photo)) {
+      this.props.onExpand(photo.id)
+    }
+  }
+
+
   handleItemOpen = (photo) => {
     if (!this.props.isItemOpen) {
       this.props.onItemOpen({
@@ -103,35 +121,13 @@ class PhotoIterator extends Iterator {
     onSort({ item, photos: order })
   }
 
-  handleKeyDown = (event) => {
-    switch (match(this.props.keymap, event)) {
-      case (this.isVertical ? 'up' : 'left'):
-        this.select(this.getPrevPhoto())
-        break
-      case (this.isVertical ? 'down' : 'right'):
-        this.select(this.getNextPhoto())
-        break
-      case 'open':
-        this.handleItemOpen(this.getCurrentPhoto())
-        break
-      case 'delete':
-        this.handleDelete(this.getCurrentPhoto())
-        this.select(this.getNextPhoto() || this.getPrevPhoto())
-        break
-      default:
-        return
-    }
-
-    event.preventDefault()
-    event.stopPropagation()
-  }
-
   getIterableProps(photo, index) {
     return {
       photo,
       cache: this.props.cache,
       activeSelection: this.props.activeSelection,
       isDisabled: this.props.isDisabled,
+      isExpandable: this.isExpandable(photo),
       isExpanded: this.isExpanded(photo),
       isSelected: this.isSelected(photo),
       isSortable: this.isSortable,
@@ -139,9 +135,9 @@ class PhotoIterator extends Iterator {
       isVertical: this.isVertical,
       getAdjacent: this.getAdjacent,
       onContextMenu: this.props.onContextMenu,
-      onContract: this.props.onContract,
+      onContract: this.contract,
       onDropPhoto: this.handleDropPhoto,
-      onExpand: this.props.onExpand,
+      onExpand: this.expand,
       onItemOpen: this.handleItemOpen,
       onSelect: this.select
     }

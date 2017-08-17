@@ -66,7 +66,7 @@ class PhotoListItem extends PhotoIterable {
 
 
   renderSelectionList() {
-    if (!this.hasSelections || !this.props.isExpanded) return null
+    if (!this.props.isExpanded) return null
 
     return (
       <SelectionList
@@ -87,7 +87,7 @@ class PhotoListItem extends PhotoIterable {
   }
 
   renderTwistyButton() {
-    return this.hasSelections && (
+    return this.props.isExpandable && (
       <IconButton
         icon={<IconChevron9/>}
         onClick={this.handleTwistyButtonClick}/>
@@ -96,8 +96,9 @@ class PhotoListItem extends PhotoIterable {
 
   render() {
     const {
-      isEditing,
       isDisabled,
+      isEditing,
+      isExpandable,
       onEditCancel
     } = this.props
 
@@ -119,7 +120,7 @@ class PhotoListItem extends PhotoIterable {
               onCancel={onEditCancel}
               onChange={this.handleChange}/>
           </div>
-          {this.hasSelections && <IconSelection/>}
+          {isExpandable && <IconSelection/>}
         </div>
         {this.renderSelectionList()}
       </li>
