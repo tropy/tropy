@@ -2,24 +2,6 @@
 // Photo list
 // --------------------------------------------------
 
-%active-styles {
-  color: $photo-list-active-color;
-  background: $photo-list-active-bg;
-
-  .icon {
-    color: $panel-active-icon-color;
-  }
-}
-
-%focus-styles {
-  color: $photo-list-focus-color;
-  background: $photo-list-focus-bg;
-
-  .icon {
-    color: $photo-list-focus-color;
-  }
-}
-
 .photo.list {
   flex: 1 1 0;
   margin-bottom: $space-min;
@@ -32,10 +14,10 @@
 
     &.active {
       .photo-container {
-        @extend %active-styles;
+        @extend %list-active;
 
         @at-root #{selector-replace(&, ".photo.list", ".photo.list:focus")} {
-          @extend %focus-styles;
+          @extend %list-focus;
         }
       }
     }
@@ -99,10 +81,10 @@
       padding-right: $default-padding-horizontal;
 
       &.active {
-        @extend %active-styles;
+        @extend %list-active;
 
         @at-root #{selector-replace(&, ".photo.list", ".photo.list:focus")} {
-          @extend %focus-styles;
+          @extend %list-focus;
         }
       }
     }

@@ -1,0 +1,21 @@
+//
+// List states
+// --------------------------------------------------
+
+%list-active {
+  color: $list-active-color;
+  background: $list-active-bg;
+
+  .icon {
+    color: $list-active-icon-color;
+  }
+}
+
+%list-focus {
+  color: $list-focus-color;
+  background: $list-focus-bg;
+
+  .icon {
+    color: $list-focus-color;
+  }
+}

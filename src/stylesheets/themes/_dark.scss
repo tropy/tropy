@@ -171,6 +171,13 @@ $stack-line-tint-opacity: 0.5;
 $scrollbar-bg:    var(--transparent);
 $scrollbar-color: var(--shade-6);
 
+// List states
+$list-focus-color:       var(--brand-primary-light);
+$list-focus-bg:          var(--brand-primary);
+$list-active-color:      var(--shade-9);
+$list-active-bg:         var(--shade-5);
+$list-active-icon-color: var(--shade-8);
+
 
 // Components
 // --------------------------------------------------
@@ -191,12 +198,6 @@ $project-darken-color: var(--shade-0-5);
 $sidebar-bg:                var(--shade-4);
 $sidebar-text-color:        var(--shade-8);
 $sidebar-headings-color:    var(--shade-7);
-$sidebar-focus-icon-color:  var(--brand-primary-light);
-$sidebar-focus-color:       var(--brand-primary-light);
-$sidebar-focus-bg:          var(--brand-primary);
-$sidebar-active-icon-color: var(--shade-8);
-$sidebar-active-color:      var(--shade-9);
-$sidebar-active-bg:         var(--shade-5);
 $activity-border-color:     var(--shade-1);
 
 // Items
@@ -218,7 +219,6 @@ $panel-bg:                var(--shade-4);
 $panel-header-color:      var(--shade-8);
 $panel-separator-color:   var(--shade-1);
 $panel-heading-color:     var(--shade-6);
-$panel-active-icon-color: var(--shade-8);
 
 // Tabs
 $tab-bg: $shade-2;
@@ -244,12 +244,6 @@ $add-tag-placeholder-color-default: $text-color;
 $add-tag-border-color:              var(--shade-1);
 $icon-tag-color:                    var(--shade-4);
 $icon-tag-border:                   var(--shade-6);
-
-// Photo list
-$photo-list-focus-color:  var(--brand-primary-light);
-$photo-list-focus-bg:     var(--brand-primary);
-$photo-list-active-color: var(--shade-9);
-$photo-list-active-bg:    var(--shade-5);
 
 // Note list
 $note-list-focus-color:  var(--brand-primary-light);
