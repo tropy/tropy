@@ -19,7 +19,7 @@ const selection = {
     return (await selection.load(db, [id]))[id]
   },
 
-  async load(db, ids) {
+  async load(db, ...ids) {
     const selections = {}
 
     await db.each(`
@@ -45,6 +45,26 @@ const selection = {
     })
 
     return selections
+  },
+
+  async delete(db, ...ids) {
+    return db.run(`
+      INSERT INTO trash (id) VALUES ${list(ids)}`)
+  },
+
+  async restore(db, ...ids) {
+    return db.run(`
+      DELETE FROM trash WHERE id IN (${list(ids)})`
+    )
+  },
+
+  async prune(db) {
+    return db.run(`
+      DELETE FROM subjects
+        WHERE id IN (
+          SELECT id FROM trash JOIN selections USING (id)
+        )`
+    )
   }
 }
 

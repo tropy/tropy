@@ -48,7 +48,7 @@ class Delete extends Command {
     ord = ord.filter(id => !selections.includes(id))
 
     yield call(db.transaction, async tx => {
-      await mod.selection.delete(tx, selections)
+      await mod.selection.delete(tx, ...selections)
       //await mod.selection.order(tx, photo, ord)
     })
 
@@ -75,7 +75,7 @@ class Restore extends Command {
     ord = splice(ord, idx, 0, ...selections)
 
     yield call(db.transaction, async tx => {
-      await mod.selection.restore(tx, { photo, ids: selections })
+      await mod.selection.restore(tx, ...selections)
       //await mod.selection.order(tx, photo, ord)
     })
 
@@ -93,7 +93,7 @@ class Load extends Command {
     const { db } = this.options
     const { payload } = this.action
 
-    return yield call(mod.selection.load, db, payload)
+    return yield call(mod.selection.load, db, ...payload)
   }
 }
 
