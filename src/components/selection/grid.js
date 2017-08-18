@@ -21,6 +21,7 @@ class SelectionGrid extends SelectionIterator {
           <SelectionTile {...props}
             key={selection.id}
             isSelected={false}
+            onContextMenu={this.props.onContextMenu}
             selection={selection}/>)}
         {this.filler}
       </ul>

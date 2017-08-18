@@ -44,6 +44,20 @@ class SelectionIterable extends PureComponent {
     })
   }
 
+  handleContextMenu = (event) => {
+    if (!this.props.isDisabled) {
+      const { photo, selection } = this.props
+      this.select()
+
+      this.props.onContextMenu(event, 'selection', {
+        id: photo.id,
+        item: photo.item,
+        path: photo.path,
+        selection: selection.id
+      })
+    }
+  }
+
   renderThumbnail(props) {
     return (
       <Thumbnail {...props}
@@ -71,6 +85,7 @@ class SelectionIterable extends PureComponent {
       mirror: bool,
     }).isRequired,
     size: number.isRequired,
+    onContextMenu: func.isRequired,
     onItemOpen: func.isRequired,
     onSelect: func.isRequired
   }

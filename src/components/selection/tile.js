@@ -25,6 +25,7 @@ class SelectionTile extends SelectionIterable {
       <li
         className={cx(this.classes)}
         ref={this.setContainer}
+        onContextMenu={this.handleContextMenu}
         onClick={this.handleClick}>
         <div className="tile-state">
           {this.renderThumbnail()}

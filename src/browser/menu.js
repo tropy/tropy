@@ -268,6 +268,7 @@ class ContextMenu extends Menu {
   scopes.item = [...scopes.items, 'item']
   scopes.trash = [...scopes.sidebar, 'trash']
   scopes.photo = [...scopes.global, 'photo']
+  scopes.selection = [...scopes.photo, 'selection']
   scopes.notes = [...scopes.global]
   scopes.note = [...scopes.notes, 'note']
   scopes['item-bulk'] = [...scopes.items, 'item-bulk']

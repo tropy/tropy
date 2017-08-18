@@ -334,6 +334,10 @@ class Tropy extends EventEmitter {
       this.dispatch(act.photo.delete({
         item: target.item, photos: [target.id]
       })))
+    this.on('app:delete-selection', (_, { target }) =>
+      this.dispatch(act.selection.delete({
+        photo: target.id, selections: [target.selection]
+      })))
 
     this.on('app:create-list', () =>
       this.dispatch(act.list.new()))

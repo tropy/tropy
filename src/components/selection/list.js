@@ -36,6 +36,7 @@ class SelectionList extends SelectionIterator {
             selection={selection}
             title={DC.title}
             onChange={this.props.onChange}
+            onContextMenu={this.props.onContextMenu}
             onEdit={this.props.onEdit}
             onEditCancel={this.handleEditCancel}/>)}
       </ul>

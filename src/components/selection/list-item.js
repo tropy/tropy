@@ -51,6 +51,7 @@ class SelectionListItem extends SelectionIterable {
       <li
         className={cx(this.classes)}
         ref={this.setContainer}
+        onContextMenu={this.handleContextMenu}
         onClick={this.handleClick}>
         {this.renderThumbnail()}
         <div className="title">

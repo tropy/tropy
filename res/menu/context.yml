@@ -109,6 +109,12 @@ linux:
       command: 'app:explode-photo'
     - label: 'Show Photo in Folder…'
       command: 'app:show-in-folder'
+  selection: &selection
+    - label: 'Delete Selection'
+      command: 'app:delete-selection'
+    - label: 'Save Selection as Image …'
+      command: 'app:save-selection'
+      enabled: false
   item-deleted: &item-deleted
     - label: 'Restore Item'
       command: 'app:restore-item'
@@ -151,6 +157,7 @@ darwin:
   item-bulk-deleted: *item-bulk-deleted
   trash: *trash
   photo: *photo
+  selection: *selection
   dev: *dev
 
 win32:
@@ -173,4 +180,5 @@ win32:
   item-bulk-deleted: *item-bulk-deleted
   trash: *trash
   photo: *photo
+  selection: *selection
   dev: *dev

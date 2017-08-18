@@ -76,6 +76,7 @@ class PhotoListItem extends PhotoIterable {
         edit={this.props.edit.selection}
         isDisabled={this.props.isDisabled}
         onChange={this.props.onChange}
+        onContextMenu={this.props.onContextMenu}
         onEdit={this.props.onEdit}
         onEditCancel={this.props.onEditCancel}
         onItemOpen={this.props.onItemOpen}
