@@ -109,9 +109,12 @@ class PhotoIterator extends Iterator {
     }
   }
 
-  handleDelete = (photo) => {
+  handleDelete = ({ id, item, selection }) => {
     if (!this.props.isDisabled) {
-      this.props.onDelete({ item: photo.item, photos: [photo.id] })
+      this.props.onDelete((selection == null) ?
+        { item, photos: [id] } :
+        { photo: id, selections: [selection] }
+      )
     }
   }
 

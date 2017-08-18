@@ -409,8 +409,12 @@ module.exports = {
         dispatch(actions.photo.create(...args))
       },
 
-      onPhotoDelete(...args) {
-        dispatch(actions.photo.delete(...args))
+      onPhotoDelete(payload) {
+        if (payload.selections == null) {
+          dispatch(actions.photo.delete(payload))
+        } else {
+          dispatch(actions.selection.delete(payload))
+        }
       },
 
       onPhotoExpand(...args) {

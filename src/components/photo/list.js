@@ -62,6 +62,19 @@ class PhotoList extends PhotoIterator {
     }
   }
 
+  getCurrentPhoto() {
+    const photo = super.getNextPhoto(0)
+    if (!this.isExpanded(photo)) return photo
+
+    const { selection } = this.props
+    if (!photo.selections.includes(selection)) return photo
+
+    return {
+      ...photo,
+      selection
+    }
+  }
+
   preselect(photo, offset) {
     if (offset >= 0 || !this.isExpanded(photo)) return photo
 
