@@ -47,6 +47,19 @@ const selection = {
     return selections
   },
 
+  async order(db, photo, selections, offset = 0) {
+    if (selections.length) {
+      return db.run(`
+        UPDATE selections
+          SET position = CASE id
+            ${selections.map((_, idx) =>
+              (`WHEN ? THEN ${offset + idx + 1}`)).join(' ')}
+            END
+          WHERE photo_id = ?`,
+        ...selections, photo)
+    }
+  },
+
   async delete(db, ...ids) {
     return db.run(`
       INSERT INTO trash (id) VALUES ${list(ids)}`)
