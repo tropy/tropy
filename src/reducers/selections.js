@@ -1,7 +1,7 @@
 'use strict'
 
 const { METADATA, SELECTION, PROJECT } = require('../constants')
-const { replace, touch } = require('./util')
+const { insert, replace, touch } = require('./util')
 
 module.exports = {
   // eslint-disable-next-line complexity
@@ -12,6 +12,8 @@ module.exports = {
 
       case SELECTION.LOAD:
         return (error || !meta.done) ? state : replace(state, payload)
+      case SELECTION.CREATE:
+        return (error || !meta.done) ? state : insert(state, payload)
 
       case METADATA.SAVE:
       case METADATA.RESTORE:

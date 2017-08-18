@@ -15,12 +15,36 @@ module.exports = {
     }
   },
 
+  delete(payload, meta) {
+    return {
+      type: SELECTION.DELETE,
+      payload,
+      meta: {
+        cmd: 'project',
+        history: 'add',
+        ...meta
+      }
+    }
+  },
+
   load(payload, meta) {
     return {
       type: SELECTION.LOAD,
       payload,
       meta: {
         cmd: 'project',
+        ...meta
+      }
+    }
+  },
+
+  restore(payload, meta) {
+    return {
+      type: SELECTION.RESTORE,
+      payload,
+      meta: {
+        cmd: 'project',
+        history: 'add',
         ...meta
       }
     }

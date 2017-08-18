@@ -114,6 +114,24 @@ module.exports = {
     }
   },
 
+  selections: {
+    add(payload, meta) {
+      return {
+        type: PHOTO.SELECTION.ADD,
+        payload,
+        meta: { ...meta }
+      }
+    },
+
+    remove(payload, meta) {
+      return {
+        type: PHOTO.SELECTION.REMOVE,
+        payload,
+        meta: { ...meta }
+      }
+    }
+  },
+
   bulk: {
     update(payload, meta) {
       return {

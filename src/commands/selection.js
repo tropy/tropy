@@ -1,9 +1,9 @@
 'use strict'
 
-const { call } = require('redux-saga/effects')
+const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const mod = require('../models')
-//const act = require('../actions')
+const act = require('../actions')
 const { SELECTION } = require('../constants')
 
 class Create extends Command {
@@ -11,16 +11,24 @@ class Create extends Command {
 
   *exec() {
     const { db } = this.options
-    const { payload } = this.action
+    const { payload, meta } = this.action
+
+    const idx = (meta.idx != null) ? meta.idx : [
+      yield select(state => state.photos[payload.photo].selections.length)
+    ]
 
     const selection = yield call(db.transaction, tx =>
       mod.selection.create(tx, null, payload))
 
-    //this.undo = act.selection.delete()
-    //this.redo = act.selection.restore()
+    const photo = selection.photo
+    const selections = [selection.id]
+
+    yield put(act.photo.selections.add({ id: photo, selections }, { idx }))
+
+    this.undo = act.selection.delete({ photo, selections }, { idx })
+    this.redo = act.selection.restore({ photo, selections }, { idx })
 
     return selection
-
   }
 }
 

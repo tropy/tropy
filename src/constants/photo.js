@@ -22,5 +22,10 @@ module.exports = {
     REMOVE: 'photo.note.remove'
   },
 
+  SELECTION: {
+    ADD: 'photo.selection.add',
+    REMOVE: 'photo.selection.remove'
+  },
+
   TEMPLATE: 'https://tropy.org/v1/templates/photo'
 }

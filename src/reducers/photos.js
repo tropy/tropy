@@ -34,6 +34,11 @@ module.exports = {
       case PHOTO.NOTE.REMOVE:
         return nested.remove('notes', state, payload, meta)
 
+      case PHOTO.SELECTION.ADD:
+        return nested.add('selections', state, payload, meta)
+      case PHOTO.SELECTION.REMOVE:
+        return nested.remove('selections', state, payload, meta)
+
       case PHOTO.BULK.UPDATE:
         return bulk.update(state, payload, meta)
 
