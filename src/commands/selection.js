@@ -32,6 +32,31 @@ class Create extends Command {
   }
 }
 
+class Delete extends Command {
+  static get action() { return SELECTION.DELETE }
+
+  *exec() {
+    const { db } = this.options
+    const { payload } = this.action
+    const { photo, selections } = payload
+
+    let ord = yield select(({ photos }) => photos[photo].selections)
+    let idx = selections.map(id => ord.indexOf(id))
+
+    ord = ord.filter(id => !selections.includes(id))
+
+    yield call(db.transaction, async tx => {
+      await mod.selection.delete(tx, selections)
+      //await mod.selection.order(tx, photo, ord)
+    })
+
+    yield put(act.photo.selections.remove({ id: photo, selections }))
+
+    this.undo = act.selection.restore(payload, { idx })
+  }
+}
+
+
 class Load extends Command {
   static get action() { return SELECTION.LOAD }
 
@@ -45,5 +70,6 @@ class Load extends Command {
 
 module.exports = {
   Create,
+  Delete,
   Load
 }
