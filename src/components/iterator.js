@@ -89,11 +89,20 @@ class Iterator extends PureComponent {
     this.container = container
   }
 
-  fill(count, key = 'filler') {
+  fill(count = this.state.maxCols, key = 'filler') {
     return times(count, (i) => (
       <li key={`${key}-${i}`} className="filler tile"/>
     ))
   }
+
+  fillRow() {
+    if (this.filler == null || this.filler.length !== this.state.maxCols) {
+      this.filler = this.fill()
+    }
+
+    return this.filler
+  }
+
 
   handleResize = throttle(({ width }) => {
     this.width = width
@@ -102,10 +111,6 @@ class Iterator extends PureComponent {
     this.setState({
       cols: this.getColumns(), maxCols
     })
-
-    if (this.constructor.isGrid) {
-      this.filler = this.fill(maxCols)
-    }
   }, 20)
 
 

@@ -22,8 +22,7 @@ class PhotoGrid extends PhotoIterator {
   }
 
   get classes() {
-    return {
-      ...super.classes,
+    return { ...super.classes,
       'photo': true,
       'grid': true,
       'click-catcher': true
@@ -139,7 +138,7 @@ class PhotoGrid extends PhotoIterator {
         {this.map(({ photo, ...props }) =>
           <PhotoTile {...props} key={photo.id} photo={photo}/>
         )}
-        {this.filler}
+        {this.fillRow()}
       </ul>
     )
   }
