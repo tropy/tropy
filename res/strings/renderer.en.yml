@@ -170,11 +170,6 @@ action:
     order: Sort List
     restore: Restore List
     save: Save List
-  tag:
-    create: Create Tag
-    delete: Delete Tag
-    restore: Create Tag
-    save: Save Tag
   item:
     create: Create Items
     delete: Delete Items
@@ -212,6 +207,16 @@ action:
     order: Sort Notes
     restore: Restore Note
     save: Save Note
+  tag:
+    create: Create Tag
+    delete: Delete Tag
+    restore: Create Tag
+    save: Save Tag
+  selection:
+    create: Create Selection
+    delete: Delete Selection
+    restore: Create Selection
+    save: Save Selection
 
 activity:
   project:
