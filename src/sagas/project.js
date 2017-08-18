@@ -97,7 +97,7 @@ function *open(file) {
         call(mod.list.prune, db),
         call(mod.value.prune, db),
         call(mod.photo.prune, db),
-        call(mod.selections.prune, db),
+        call(mod.selection.prune, db),
         call(mod.note.prune, db),
         call(mod.access.prune, db)
       ])
