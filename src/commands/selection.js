@@ -5,6 +5,8 @@ const { Command } = require('./command')
 const mod = require('../models')
 const act = require('../actions')
 const { SELECTION } = require('../constants')
+const { splice } = require('../common/util')
+
 
 class Create extends Command {
   static get action() { return SELECTION.CREATE }
@@ -56,6 +58,33 @@ class Delete extends Command {
   }
 }
 
+class Restore extends Command {
+  static get action() { return SELECTION.RESTORE }
+
+  *exec() {
+    const { db } = this.options
+    const { payload, meta } = this.action
+    const { photo, selections } = payload
+
+    // Restore all selections in a batch at the former index
+    // of the first selection to be restored. Need to differentiate
+    // if we support selecting multiple selections!
+    let [idx] = meta.idx
+
+    let ord = yield select(({ photos }) => photos[photo].selections)
+    ord = splice(ord, idx, 0, ...selections)
+
+    yield call(db.transaction, async tx => {
+      await mod.selection.restore(tx, { photo, ids: selections })
+      //await mod.selection.order(tx, photo, ord)
+    })
+
+    yield put(act.photo.selections.add({ id: photo, selections }, { idx }))
+
+    this.undo = act.photo.delete(payload)
+  }
+}
+
 
 class Load extends Command {
   static get action() { return SELECTION.LOAD }
@@ -71,5 +100,6 @@ class Load extends Command {
 module.exports = {
   Create,
   Delete,
-  Load
+  Load,
+  Restore
 }
