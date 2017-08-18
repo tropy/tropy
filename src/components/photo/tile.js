@@ -4,6 +4,8 @@ const React = require('react')
 const { PhotoIterable } = require('./iterable')
 const { createClickHandler } = require('../util')
 const cx = require('classnames')
+const { IconSelection } = require('../icons')
+const { IconButton } = require('../button')
 
 
 class PhotoTile extends PhotoIterable {
@@ -32,6 +34,8 @@ class PhotoTile extends PhotoIterable {
             onClick: this.handleClick,
             onContextMenu: this.handleContextMenu
           })}
+          <IconButton
+            icon={<IconSelection/>}/>
         </div>
         <div className="pointer"/>
       </li>
