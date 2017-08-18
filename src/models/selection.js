@@ -62,7 +62,8 @@ const selection = {
 
   async delete(db, ...ids) {
     return db.run(`
-      INSERT INTO trash (id) VALUES ${list(ids)}`)
+      INSERT INTO trash (id)
+        VALUES ${ids.map(id => `(${id})`).join(',')}`)
   },
 
   async restore(db, ...ids) {

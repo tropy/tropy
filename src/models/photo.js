@@ -171,14 +171,12 @@ module.exports = {
   async delete(db, ids) {
     return db.run(`
       INSERT INTO trash (id)
-        VALUES ${ids.map(id => `(${id})`).join(',')}`
-    )
+        VALUES ${ids.map(id => `(${id})`).join(',')}`)
   },
 
   async restore(db, { ids }) {
     return db.run(`
-      DELETE FROM trash WHERE id IN (${ids.join(',')})`
-    )
+      DELETE FROM trash WHERE id IN (${ids.join(',')})`)
   },
 
   async prune(db) {
