@@ -49,12 +49,40 @@ class Delete extends Command {
 
     yield call(db.transaction, async tx => {
       await mod.selection.delete(tx, ...selections)
-      //await mod.selection.order(tx, photo, ord)
+      await mod.selection.order(tx, photo, ord)
     })
 
     yield put(act.photo.selections.remove({ id: photo, selections }))
 
     this.undo = act.selection.restore(payload, { idx })
+  }
+}
+
+class Load extends Command {
+  static get action() { return SELECTION.LOAD }
+
+  *exec() {
+    const { db } = this.options
+    const { payload } = this.action
+
+    return yield call(mod.selection.load, db, ...payload)
+  }
+}
+
+class Order extends Command {
+  static get action() { return SELECTION.ORDER }
+
+  *exec() {
+    const { db } = this.options
+    const { payload } = this.action
+    const { photo, selections } = payload
+
+    const cur = yield select(({ photos }) => photos[photo].selections)
+
+    yield call(mod.selection.order, db, photo, selections)
+    yield put(act.photo.update({ id: photo, selections }))
+
+    this.undo = act.selection.order({ photo, selections: cur })
   }
 }
 
@@ -76,7 +104,7 @@ class Restore extends Command {
 
     yield call(db.transaction, async tx => {
       await mod.selection.restore(tx, ...selections)
-      //await mod.selection.order(tx, photo, ord)
+      await mod.selection.order(tx, photo, ord)
     })
 
     yield put(act.photo.selections.add({ id: photo, selections }, { idx }))
@@ -86,20 +114,10 @@ class Restore extends Command {
 }
 
 
-class Load extends Command {
-  static get action() { return SELECTION.LOAD }
-
-  *exec() {
-    const { db } = this.options
-    const { payload } = this.action
-
-    return yield call(mod.selection.load, db, ...payload)
-  }
-}
-
 module.exports = {
   Create,
   Delete,
   Load,
+  Order,
   Restore
 }

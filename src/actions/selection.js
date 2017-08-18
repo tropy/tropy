@@ -38,6 +38,17 @@ module.exports = {
     }
   },
 
+  order(payload, meta) {
+    return {
+      type: SELECTION.ORDER,
+      payload,
+      meta: {
+        cmd: 'project',
+        ...meta
+      }
+    }
+  },
+
   restore(payload, meta) {
     return {
       type: SELECTION.RESTORE,
