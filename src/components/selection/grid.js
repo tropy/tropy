@@ -23,7 +23,7 @@ class SelectionGrid extends SelectionIterator {
             isSelected={false}
             onContextMenu={this.props.onContextMenu}
             selection={selection}/>)}
-        {this.filler}
+        {this.fillRow()}
       </ul>
     )
   }
