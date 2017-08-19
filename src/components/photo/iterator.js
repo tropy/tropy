@@ -85,7 +85,14 @@ class PhotoIterator extends Iterator {
   contract = (photo) => {
     if (this.isExpandable(photo)) {
       this.props.onContract(photo.id)
-      if (this.isSelected(photo)) this.select(photo)
+
+      if (this.isSelected(photo)) {
+        this.props.onSelect({
+          photo: photo.id,
+          item: photo.item,
+          note: photo.notes[0]
+        })
+      }
     }
   }
 
