@@ -143,8 +143,7 @@ class SelectionIterable extends PureComponent {
   static withDragAndDrop() {
     return pure(
       DragSource(DND.SELECTION, DragSourceSpec, DragSourceCollect)(
-        DropTarget(DND.SELECTION, DropTargetSpec, DropTargetCollect))
-    )
+        DropTarget(DND.SELECTION, DropTargetSpec, DropTargetCollect)(this)))
   }
 }
 
