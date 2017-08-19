@@ -34,6 +34,7 @@
     padding: 2px;
     border-radius: $border-radius-small;
     margin: -4px;
+    position: relative;
   }
 
   &.active {
@@ -54,6 +55,18 @@
     }
   }
 
+  .btn-icon {
+    display: none;
+    position: absolute;
+    right: 6px;
+    bottom: 5px;
+    padding: 0;
+
+    .icon {
+      color: $tile-selection-icon-color;
+    }
+  }
+
   .pointer {
     display: none;
     position: absolute;
@@ -66,6 +79,7 @@
   }
 
   &.expanded {
+    .btn-icon,
     .pointer {
       display: block;
     }
