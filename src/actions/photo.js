@@ -32,11 +32,11 @@ module.exports = {
   },
 
 
-  update(payload, meta) {
+  update(payload, meta = {}) {
     return {
       type: PHOTO.UPDATE,
       payload,
-      meta: { ...meta }
+      meta
     }
   },
 

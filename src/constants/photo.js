@@ -12,6 +12,7 @@ module.exports = {
   RESTORE: 'photo.restore',
   SAVE: 'photo.save',
   SELECT: 'photo.select',
+  UPDATE: 'photo.update',
 
   BULK: {
     UPDATE: 'photo.bulk.update'
