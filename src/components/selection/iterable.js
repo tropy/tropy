@@ -151,6 +151,7 @@ const DragSourceSpec = {
   beginDrag({ selection, getAdjacent }) {
     return {
       id: selection.id,
+      photo: selection.photo,
       adj: getAdjacent(selection).map(s => s && s.id)
     }
   },
@@ -174,6 +175,11 @@ const DragSourceCollect = (connect, monitor) => ({
 
 
 const DropTargetSpec = {
+  canDrop({ photo }, monitor) {
+    const selection = monitor.getItem()
+    return photo.id === selection.photo
+  },
+
   hover({ selection, isVertical }, monitor, component) {
     const { id, adj } = monitor.getItem()
     // TODO call bounds only on enter!

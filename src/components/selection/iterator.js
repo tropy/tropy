@@ -89,6 +89,11 @@ class SelectionIterator extends Iterator {
 
 
 const DropTargetSpec = {
+  canDrop({ photo }, monitor) {
+    const selection = monitor.getItem()
+    return photo.id === selection.photo
+  },
+
   drop({ photo }, monitor) {
     if (monitor.didDrop()) return
 
