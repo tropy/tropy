@@ -220,7 +220,8 @@ class PhotoIterator extends Iterator {
     onExpand: func.isRequired,
     onItemOpen: func.isRequired,
     onSelect: func.isRequired,
-    onSort: func.isRequired
+    onSort: func.isRequired,
+    onSelectionSort: func.isRequired
   }
 }
 

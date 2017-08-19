@@ -44,6 +44,7 @@ module.exports = {
       payload,
       meta: {
         cmd: 'project',
+        history: 'merge',
         ...meta
       }
     }

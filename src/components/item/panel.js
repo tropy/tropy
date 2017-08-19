@@ -67,6 +67,7 @@ class ItemPanel extends PureComponent {
       onPhotoExpand,
       onPhotoSelect,
       onPhotoSort,
+      onSelectionSort,
       ...props
     } = this.props
 
@@ -108,6 +109,7 @@ class ItemPanel extends PureComponent {
           onExpand={onPhotoExpand}
           onSelect={onPhotoSelect}
           onSort={onPhotoSort}
+          onSelectionSort={onSelectionSort}
           onZoomChange={this.handleZoomChange}/>
 
         <NotePanel {...props}
@@ -172,6 +174,7 @@ class ItemPanel extends PureComponent {
     onPhotoSort: func.isRequired,
     onTagCreate: func.isRequired,
     onTagSave: func.isRequired,
+    onSelectionSort: func.isRequired,
     onUiUpdate: func.isRequired
   }
 

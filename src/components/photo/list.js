@@ -142,7 +142,8 @@ class PhotoList extends PhotoIterator {
             isEditing={this.isEditing(photo)}
             onChange={onChange}
             onEdit={onEdit}
-            onEditCancel={this.handleEditCancel}/>)}
+            onEditCancel={this.handleEditCancel}
+            onSelectionSort={this.props.onSelectionSort}/>)}
       </ul>
     )
   }

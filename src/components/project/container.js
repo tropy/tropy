@@ -471,6 +471,10 @@ module.exports = {
         dispatch(actions.ontology.template.import({ files }))
       },
 
+      onSelectionSort(...args) {
+        dispatch(actions.selection.order(...args))
+      },
+
       onNoteCreate(...args) {
         dispatch(actions.note.create(...args))
       },

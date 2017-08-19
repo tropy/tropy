@@ -92,7 +92,7 @@ module.exports = {
     return {
       type: PHOTO.ORDER,
       payload,
-      meta: { cmd: 'project', history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'merge', ...meta }
     }
   },
 
