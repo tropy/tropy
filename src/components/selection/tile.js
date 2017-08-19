@@ -21,7 +21,7 @@ class SelectionTile extends SelectionIterable {
 
 
   render() {
-    return (
+    return this.connect(
       <li
         className={cx(this.classes)}
         ref={this.setContainer}
@@ -41,5 +41,5 @@ class SelectionTile extends SelectionIterable {
 }
 
 module.exports = {
-  SelectionTile
+  SelectionTile: SelectionTile.withDragAndDrop()
 }

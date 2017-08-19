@@ -22,9 +22,7 @@ class PhotoList extends PhotoIterator {
   get classes() {
     return {
       ...super.classes,
-      'photo': true,
-      'list': true,
-      'click-catcher': true
+      list: true
     }
   }
 

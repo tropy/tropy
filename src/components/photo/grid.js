@@ -11,6 +11,8 @@ const { match } = require('../../keymap')
 
 
 class PhotoGrid extends PhotoIterator {
+  static get isGrid() { return true }
+
   componentDidMount() {
     super.componentDidMount()
     on(this.container, 'tab:focus', this.handleFocus)
@@ -22,10 +24,9 @@ class PhotoGrid extends PhotoIterator {
   }
 
   get classes() {
-    return { ...super.classes,
-      'photo': true,
-      'grid': true,
-      'click-catcher': true
+    return {
+      ...super.classes,
+      grid: true
     }
   }
 
@@ -116,11 +117,11 @@ class PhotoGrid extends PhotoIterator {
           cache={this.props.cache}
           active={this.props.selection}
           data={this.props.data}
-          edit={this.props.edit}
           isDisabled={this.props.isDisabled}
           onContextMenu={this.props.onContextMenu}
           onItemOpen={this.handleItemOpen}
           onSelect={this.select}
+          onSort={this.props.onSelectionSort}
           photo={photo}
           selections={selections}
           size={this.props.size}/>
@@ -147,10 +148,6 @@ class PhotoGrid extends PhotoIterator {
 
   static propTypes = {
     ...PhotoIterator.propTypes
-  }
-
-  static get isGrid() {
-    return true
   }
 }
 

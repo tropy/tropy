@@ -7,6 +7,8 @@ const cx = require('classnames')
 
 
 class SelectionGrid extends SelectionIterator {
+  static get isGrid() { return true }
+
   get classes() {
     return {
       ...super.classes,
@@ -15,7 +17,7 @@ class SelectionGrid extends SelectionIterator {
   }
 
   render() {
-    return (
+    return this.connect(
       <ul className={cx(this.classes)} ref={this.setContainer}>
         {this.map(({ selection, ...props }) =>
           <SelectionTile {...props}
@@ -31,12 +33,8 @@ class SelectionGrid extends SelectionIterator {
   static propTypes = {
     ...SelectionIterator.propTypes
   }
-
-  static get isGrid() {
-    return true
-  }
 }
 
 module.exports = {
-  SelectionGrid
+  SelectionGrid: SelectionGrid.asDropTarget()
 }
