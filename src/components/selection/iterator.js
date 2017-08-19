@@ -28,10 +28,48 @@ class SelectionIterator extends Iterator {
     return this.props.active === selection
   }
 
+  getNext(offset = 1) {
+    const { selections, active } = this.props
+
+    if (!selections.length) return null
+    if (!active) return selections[0]
+
+    return selections[this.idx[active] + offset]
+  }
+
+  getPrev(offset = 1) {
+    return this.getNext(-offset)
+  }
+
+  getCurrent() {
+    return this.getNext(0)
+  }
+
   handleDropSelection = ({ id, to, offset }) => {
     const { onSort, photo } = this.props
     const order = move(photo.selections, id, to, offset)
     onSort({ photo: photo.id, selections: order })
+  }
+
+  select = (selection) => {
+    if (selection != null && !this.props.isActive) {
+      this.props.onSelect({
+        id: this.props.photo.id,
+        item: this.props.photo.item,
+        selection: selection.id,
+        notes: selection.notes
+      })
+    }
+  }
+
+  open = (selection) => {
+    if (selection != null) {
+      this.props.onItemOpen({
+        id: this.props.photo.id,
+        item: this.props.photo.item,
+        selection: selection.id
+      })
+    }
   }
 
   connect(element) {
@@ -43,7 +81,7 @@ class SelectionIterator extends Iterator {
     const { isSortable, isVertical } = this
 
     return this.props.selections.map((selection, index) => {
-      this.idx[selection] = index
+      this.idx[selection.id] = index
 
       return fn({
         selection,
@@ -57,8 +95,8 @@ class SelectionIterator extends Iterator {
         photo: this.props.photo,
         onContextMenu: this.props.onContextMenu,
         onDropSelection: this.handleDropSelection,
-        onItemOpen: this.props.onItemOpen,
-        onSelect: this.props.onSelect
+        onItemOpen: this.open,
+        onSelect: this.select
       })
     })
   }

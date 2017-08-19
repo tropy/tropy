@@ -88,7 +88,7 @@ class PhotoList extends PhotoIterator {
   }
 
   handleKeyDown = (event) => {
-    switch (match(this.props.keymap, event)) {
+    switch (match(this.keymap, event)) {
       case 'up':
         this.select(this.getPrevPhoto())
         break

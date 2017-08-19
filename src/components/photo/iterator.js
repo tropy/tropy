@@ -47,6 +47,11 @@ class PhotoIterator extends Iterator {
       this.props.expanded.includes(photo.id)
   }
 
+  get keymap() {
+    return this.props.keymap.PhotoIterator
+  }
+
+
   getNextPhoto(offset = 1) {
     const { photos, current } = this.props
 

@@ -56,22 +56,11 @@ class SelectionIterable extends PureComponent {
   }
 
   select = () => {
-    if (!this.props.isActive) {
-      this.props.onSelect({
-        id: this.props.photo.id,
-        item: this.props.photo.item,
-        selection: this.props.selection.id,
-        notes: this.props.selection.notes
-      })
-    }
+    this.props.onSelect(this.props.selection)
   }
 
   open = () => {
-    this.props.onItemOpen({
-      id: this.props.photo.id,
-      item: this.props.photo.item,
-      selection: this.props.selection.id
-    })
+    this.props.onItemOpen(this.props.selection)
   }
 
   handleContextMenu = (event) => {

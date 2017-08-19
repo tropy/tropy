@@ -79,7 +79,7 @@ class PhotoGrid extends PhotoIterator {
   }
 
   handleKeyDown = (event) => {
-    switch (match(this.props.keymap, event)) {
+    switch (match(this.keymap, event)) {
       case (this.isVertical ? 'up' : 'left'):
         this.select(this.getPrevPhoto())
         break
@@ -118,7 +118,9 @@ class PhotoGrid extends PhotoIterator {
           active={this.props.selection}
           data={this.props.data}
           isDisabled={this.props.isDisabled}
+          keymap={this.props.keymap.SelectionGrid}
           onContextMenu={this.props.onContextMenu}
+          onDelete={this.handleDelete}
           onItemOpen={this.handleItemOpen}
           onSelect={this.select}
           onSort={this.props.onSelectionSort}

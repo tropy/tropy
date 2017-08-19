@@ -98,7 +98,7 @@ class ItemPanel extends PureComponent {
           isItemOpen={isItemOpen}
           edit={edit}
           expanded={expanded}
-          keymap={keymap.PhotoIterator}
+          keymap={keymap}
           zoom={panel.zoom}
           current={photo && photo.id}
           selection={activeSelection}
