@@ -28,7 +28,7 @@ class SelectionIterator extends Iterator {
   }
 
   connect(element) {
-    return this.isSortable ? this.props.dt(element) : element
+    return this.isSortable ? this.props.dropTarget(element) : element
   }
 
   map(fn) {
@@ -72,8 +72,8 @@ class SelectionIterator extends Iterator {
     onSelect: func.isRequired
   }
 
-  static DropTarget(C = this) {
-    return DropTarget(DND.SELECTION, DropTargetSpec, DropTargetCollect)(C)
+  static asDropTarget() {
+    return DropTarget(DND.SELECTION, DropTargetSpec, DropTargetCollect)(this)
   }
 }
 

@@ -26,7 +26,7 @@ class SelectionList extends SelectionIterator {
   }
 
   render() {
-    return (
+    return this.connect(
       <ul className={cx(this.classes)}>
         {this.map(({ selection, ...props }) =>
           <SelectionListItem {...props}
@@ -54,5 +54,5 @@ class SelectionList extends SelectionIterator {
 }
 
 module.exports = {
-  SelectionList
+  SelectionList: SelectionList.asDropTarget()
 }
