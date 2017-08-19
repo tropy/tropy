@@ -11,6 +11,9 @@ const { bool, func, object, string } = require('prop-types')
 
 
 class SelectionListItem extends SelectionIterable {
+  get isDraggable() {
+    return !this.props.isEditing && super.isDraggable
+  }
 
   get title() {
     const { data, selection, title } = this.props
@@ -47,7 +50,7 @@ class SelectionListItem extends SelectionIterable {
   render() {
     const { title } = this
 
-    return (
+    return this.connect(
       <li
         className={cx(this.classes)}
         ref={this.setContainer}
@@ -79,5 +82,5 @@ class SelectionListItem extends SelectionIterable {
 }
 
 module.exports = {
-  SelectionListItem
+  SelectionListItem: SelectionListItem.withDragAndDrop()
 }

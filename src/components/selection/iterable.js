@@ -3,10 +3,27 @@
 const React = require('react')
 const { PureComponent } = React
 const { Thumbnail } = require('../photo/thumbnail')
+const { DragSource, DropTarget } = require('react-dnd')
+const { getEmptyImage } = require('react-dnd-electron-backend')
 const { bool, func, number, shape, string } = require('prop-types')
+const { pure } = require('../util')
+const { bounds } = require('../../dom')
+const { DND } = require('../../constants')
 
 
 class SelectionIterable extends PureComponent {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      offset: null
+    }
+  }
+
+  componentDidMount() {
+    this.props.dragPreview(getEmptyImage())
+  }
+
   componentDidUpdate({ isActive }) {
     if (this.props.isActive && !isActive) {
       this.container.scrollIntoViewIfNeeded()
@@ -15,11 +32,24 @@ class SelectionIterable extends PureComponent {
 
   get classes() {
     return {
-      selection: true,
-      active: this.props.isActive,
-      last: this.props.isLast
+      'active': this.props.isActive,
+      'dragging': this.props.isDragging,
+      'drop-target': this.props.isSortable,
+      'last': this.props.isLast,
+      'over': this.props.isOver,
+      'selection': true,
+      [this.direction]: this.props.isOver && this.state.offset != null
     }
   }
+
+  get direction() {
+    return this.state.offset ? 'after' : 'before'
+  }
+
+  get isDraggable() {
+    return !this.props.isDisabled
+  }
+
 
   setContainer = (container) => {
     this.container = container
@@ -58,6 +88,13 @@ class SelectionIterable extends PureComponent {
     }
   }
 
+  connect(element) {
+    if (this.props.isSortable) element = this.props.dropTarget(element)
+    if (this.isDraggable) element = this.props.dragSource(element)
+
+    return element
+  }
+
   renderThumbnail(props) {
     return (
       <Thumbnail {...props}
@@ -71,9 +108,17 @@ class SelectionIterable extends PureComponent {
   }
 
   static propTypes = {
+    dragPreview: func,
+    dragSource: func,
+    dropTarget: func,
+    getAdjacent: func.isRequired,
     isActive: bool.isRequired,
     isDisabled: bool.isRequired,
+    isDragging: bool,
     isLast: bool.isRequired,
+    isOver: bool,
+    isSortable: bool.isRequired,
+    isVertical: bool.isRequired,
     cache: string.isRequired,
     photo: shape({
       id: number.isRequired,
@@ -86,6 +131,7 @@ class SelectionIterable extends PureComponent {
     }).isRequired,
     size: number.isRequired,
     onContextMenu: func.isRequired,
+    onDropSelection: func.isRequired,
     onItemOpen: func.isRequired,
     onSelect: func.isRequired
   }
@@ -93,7 +139,82 @@ class SelectionIterable extends PureComponent {
   static defaultProps = {
     size: 48
   }
+
+  static withDragAndDrop() {
+    return pure(
+      DragSource(DND.SELECTION, DragSourceSpec, DragSourceCollect)(
+        DropTarget(DND.SELECTION, DropTargetSpec, DropTargetCollect))
+    )
+  }
 }
+
+const DragSourceSpec = {
+  beginDrag({ selection, getAdjacent }) {
+    return {
+      id: selection.id,
+      adj: getAdjacent(selection).map(s => s && s.id)
+    }
+  },
+
+  endDrag({ onDropSelection }, monitor) {
+    const result = monitor.didDrop() && monitor.getDropResult()
+
+    if (!result) return
+    if (result.id === result.to) return
+    if (result.offset == null) return
+
+    onDropSelection(result)
+  }
+}
+
+const DragSourceCollect = (connect, monitor) => ({
+  dragSource: connect.dragSource(),
+  dragPreview: connect.dragPreview(),
+  isDragging: monitor.isDragging()
+})
+
+
+const DropTargetSpec = {
+  hover({ selection, isVertical }, monitor, component) {
+    const { id, adj } = monitor.getItem()
+    // TODO call bounds only on enter!
+    const { top, left, width, height } = bounds(component.container)
+    const { x, y } = monitor.getClientOffset()
+
+    let offset = null
+
+    if (selection.id !== id) {
+      offset = Math.round(
+        isVertical ? ((y - top) / height) : ((x - left) / width)
+      )
+
+      if (adj[1 - offset] === selection.id) {
+        offset = null
+      }
+    }
+
+    component.setState({ offset })
+  },
+
+  drop({ selection }, monitor, component) {
+    try {
+      return {
+        id: monitor.getItem().id,
+        to: selection.id,
+        offset: component.state.offset
+      }
+
+    } finally {
+      component.setState({ offset: null })
+    }
+  }
+}
+
+const DropTargetCollect = (connect, monitor) => ({
+  dropTarget: connect.dropTarget(),
+  isOver: monitor.isOver()
+})
+
 
 module.exports = {
   SelectionIterable

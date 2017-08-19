@@ -5,6 +5,7 @@ const { Iterator } = require('../iterator')
 const { DropTarget } = require('react-dnd')
 const { arrayOf, bool, func, number, shape, string } = require('prop-types')
 const { DND } = require('../../constants')
+const { move } = require('../../common/util')
 
 
 class SelectionIterator extends Iterator {
@@ -27,6 +28,12 @@ class SelectionIterator extends Iterator {
     return this.props.active === selection
   }
 
+  handleDropSelection = ({ id, to, offset }) => {
+    const { onSort, photo } = this.props
+    const order = move(photo.selections, id, to, offset)
+    onSort({ photo: photo.id, selections: order })
+  }
+
   connect(element) {
     return this.isSortable ? this.props.dropTarget(element) : element
   }
@@ -41,6 +48,7 @@ class SelectionIterator extends Iterator {
       return fn({
         selection,
         cache: this.props.cache,
+        getAdjacent: this.getAdjacent,
         isActive: this.isActive(selection.id),
         isDisabled: this.props.isDisabled,
         isLast: index === this.props.selections.length - 1,
@@ -48,6 +56,7 @@ class SelectionIterator extends Iterator {
         isVertical,
         photo: this.props.photo,
         onContextMenu: this.props.onContextMenu,
+        onDropSelection: this.handleDropSelection,
         onItemOpen: this.props.onItemOpen,
         onSelect: this.props.onSelect
       })
@@ -69,7 +78,8 @@ class SelectionIterator extends Iterator {
     size: number.isRequired,
     onContextMenu: func.isRequired,
     onItemOpen: func.isRequired,
-    onSelect: func.isRequired
+    onSelect: func.isRequired,
+    onSort: func.isRequired
   }
 
   static asDropTarget() {

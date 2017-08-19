@@ -11,6 +11,7 @@ const { bool, func, object, string } = require('prop-types')
 const { IconSelection, IconChevron9 } = require('../icons')
 const { IconButton } = require('../button')
 
+
 class PhotoListItem extends PhotoIterable {
   get isDraggable() {
     return !this.props.isEditing && super.isDraggable

@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { TABS, SASS: { TILE, SCROLLBAR } } = require('../constants')
-const { times } = require('../common/util')
+const { adjacent, times } = require('../common/util')
 const { win } = require('../window')
 const { floor } = Math
 const { bool, number } = require('prop-types')
@@ -75,6 +75,10 @@ class Iterator extends PureComponent {
 
   isLast(index) {
     return index === this.size - 1
+  }
+
+  getAdjacent = (iterable) => {
+    return adjacent(this.iteration, iterable)
   }
 
   getColumns(size = this.props.size, width = this.width) {

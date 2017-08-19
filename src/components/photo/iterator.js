@@ -4,7 +4,7 @@ const React = require('react')
 const { Iterator } = require('../iterator')
 const { DropTarget } = require('react-dnd')
 const { DND } = require('../../constants')
-const { move, adjacent } = require('../../common/util')
+const { move } = require('../../common/util')
 
 const {
   arrayOf, bool, func, number, object, string, shape
@@ -61,10 +61,6 @@ class PhotoIterator extends Iterator {
 
   getCurrentPhoto() {
     return this.getNextPhoto(0)
-  }
-
-  getAdjacent = (photo) => {
-    return adjacent(this.props.photos, photo)
   }
 
   handleFocus = () => {
