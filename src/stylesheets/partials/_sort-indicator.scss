@@ -2,7 +2,8 @@
 // Sort indicator
 // --------------------------------------------------
 
-.photo {
+.photo,
+.selection {
   &::before,
   &::after {
     position: absolute;
