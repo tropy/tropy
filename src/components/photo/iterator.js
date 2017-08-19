@@ -25,7 +25,7 @@ class PhotoIterator extends Iterator {
   }
 
   get isSortable() {
-    return !this.props.isDisabled && this.props.photos.length > 1
+    return !this.props.isDisabled && this.size > 1
   }
 
   isSelected(photo) {
