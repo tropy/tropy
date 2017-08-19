@@ -39,7 +39,7 @@ class PhotoList extends PhotoIterator {
 
     const photo = super.getNextPhoto(0)
     if (!this.isExpanded(photo)) {
-      return this.preselect(super.getNextPhoto(offset), offset)
+      return this.getPhotoBackwards(super.getNextPhoto(offset), offset)
     }
 
     const { selection } = this.props
@@ -52,7 +52,7 @@ class PhotoList extends PhotoIterator {
     } else {
       if (idx === 0) return photo
       if (idx < 0) {
-        return this.preselect(super.getNextPhoto(offset), offset)
+        return this.getPhotoBackwards(super.getNextPhoto(offset), offset)
       }
     }
 
@@ -75,7 +75,7 @@ class PhotoList extends PhotoIterator {
     }
   }
 
-  preselect(photo, offset) {
+  getPhotoBackwards(photo, offset) {
     if (offset >= 0 || !this.isExpanded(photo)) return photo
 
     return {
