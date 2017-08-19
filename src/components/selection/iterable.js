@@ -148,10 +148,13 @@ class SelectionIterable extends PureComponent {
 }
 
 const DragSourceSpec = {
-  beginDrag({ selection, getAdjacent }) {
+  beginDrag({ photo, selection, getAdjacent }) {
     return {
       id: selection.id,
       photo: selection.photo,
+      angle: selection.angle,
+      mirror: selection.mirror,
+      orientation: photo.orientation,
       adj: getAdjacent(selection).map(s => s && s.id)
     }
   },

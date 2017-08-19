@@ -116,6 +116,9 @@ class PhotoIterable extends PureComponent {
       return {
         id: photo.id,
         item: photo.item,
+        angle: photo.angle,
+        mirror: photo.mirror,
+        orientation: photo.orientation,
         adj: getAdjacent(photo).map(p => p && p.id)
       }
     },

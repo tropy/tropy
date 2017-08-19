@@ -217,6 +217,7 @@ action:
     delete: Delete Selection
     restore: Create Selection
     save: Save Selection
+    order: Sort Selections
 
 activity:
   project:
