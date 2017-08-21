@@ -109,6 +109,9 @@ linux:
       command: 'app:explode-photo'
     - label: 'Show Photo in Folder…'
       command: 'app:show-in-folder'
+    - label: 'Use Photo as Cover Image'
+      command: 'app:update-cover-image'
+      enabled: false
   selection: &selection
     - label: 'Delete Selection'
       command: 'app:delete-selection'
