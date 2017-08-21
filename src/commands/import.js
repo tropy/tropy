@@ -7,6 +7,7 @@ const { imagePath } = require('../common/cache')
 const mod = require('../models')
 const act = require('../actions')
 const { warn, debug } = require('../common/log')
+const { prompt } = require('../dialog')
 
 
 class ImportCommand extends Command {
