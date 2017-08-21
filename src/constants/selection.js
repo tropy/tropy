@@ -7,6 +7,10 @@ module.exports = {
   ORDER: 'selection.order',
   RESTORE: 'selection.restore',
 
+  NOTE: {
+    ADD: 'selection.note.add',
+    REMOVE: 'selection.note.remove'
+  },
+
   TEMPLATE: 'https://tropy.org/v1/templates/selection'
 }
-

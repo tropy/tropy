@@ -38,6 +38,16 @@ module.exports = {
     }
   },
 
+  notes: {
+    add(payload, meta = {}) {
+      return { type: SELECTION.NOTE.ADD, payload, meta }
+    },
+
+    remove(payload, meta = {}) {
+      return { type: SELECTION.NOTE.REMOVE, payload, meta }
+    }
+  },
+
   order(payload, meta) {
     return {
       type: SELECTION.ORDER,
