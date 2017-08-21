@@ -93,7 +93,7 @@ CREATE TABLE metadata_values (
 
 CREATE TABLE notes (
   note_id      INTEGER  PRIMARY KEY,
-  id           INTEGER  REFERENCES subjects ON DELETE CASCADE,
+  id           INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   text         TEXT     NOT NULL,
   state        TEXT     NOT NULL,
   language     TEXT     NOT NULL DEFAULT 'en',
