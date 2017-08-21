@@ -29,8 +29,8 @@ class Create extends Command {
     const { payload } = this.action
     const { state, text, photo, selection, created } = payload
 
-    const type = (selection != null) ? 'photo' : 'selection'
-    const id = (selection != null) ? photo : selection
+    const type = (selection != null) ? 'selection' : 'photo'
+    const id = (selection != null) ? selection : photo
 
     const note = yield call(db.transaction, tx =>
       mod.note.create(tx, { id, state, text }))
@@ -78,8 +78,8 @@ class Delete extends Command {
     const { payload } = this.action
     const { photo, selection, notes } = payload
 
-    const type = (selection != null) ? 'photo' : 'selection'
-    const id = (selection != null) ? photo : selection
+    const type = (selection != null) ? 'selection' : 'photo'
+    const id = (selection != null) ? selection : photo
 
     const [isSelected, nextId] = yield select(state => [
       state.nav.note === notes[0], getSelectableNoteId(state)
@@ -107,8 +107,8 @@ class Restore extends Command {
     const { payload } = this.action
     const { photo, selection, notes } = payload
 
-    const type = (selection != null) ? 'photo' : 'selection'
-    const id = (selection != null) ? photo : selection
+    const type = (selection != null) ? 'selection' : 'photo'
+    const id = (selection != null) ? selection : photo
 
     yield call(mod.note.restore, db, notes)
     yield put(act[type].notes.add({ id, notes }))
