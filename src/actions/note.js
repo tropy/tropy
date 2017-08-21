@@ -40,7 +40,12 @@ module.exports = {
       let { note, photo, item, selection } = payload
 
       if (item == null) {
-        const { photos } = getState()
+        const { photos, selections } = getState()
+
+        if (photo == null) {
+          photo = get(selections, [selection, 'photo'])
+        }
+
         item = get(photos, [photo, 'item'])
 
         if (item == null) {

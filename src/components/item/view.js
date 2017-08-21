@@ -76,12 +76,18 @@ class ItemView extends PureComponent {
     if (!this.isItemOpen) {
       delay = 1000
       this.props.onItemOpen({
-        id: this.props.items[0].id, photos: [this.props.photo.id]
+        id: this.props.items[0].id,
+        photos: [this.props.photo.id],
+        selection: this.props.activeSelection
       })
     }
 
     if (this.props.note) {
-      this.props.onNoteSelect({ photo: this.props.photo.id, note: null })
+      this.props.onNoteSelect({
+        photo: this.props.photo.id,
+        note: null,
+        selection: this.props.activeSelection
+      })
     } else {
       if (this.state.note.text) {
         this.setState({ note: getNoteTemplate() })
@@ -106,6 +112,7 @@ class ItemView extends PureComponent {
         if (!note.created) {
           note.created = Date.now()
           note.photo = this.props.photo.id
+          note.selection = this.props.activeSelection
 
           this.props.onNoteCreate(note)
         }
