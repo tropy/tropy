@@ -26,18 +26,22 @@ class Create extends Command {
 
   *exec() {
     const { db } = this.options
-    const { state, text, photo, created } = this.action.payload
+    const { payload } = this.action
+    const { state, text, photo, selection, created } = payload
 
-    const note = yield call([db, db.transaction], tx =>
-      mod.note.create(tx, { photo, state, text }))
+    const type = (selection != null) ? 'photo' : 'selection'
+    const id = (selection != null) ? photo : selection
+
+    const note = yield call(db.transaction, tx =>
+      mod.note.create(tx, { id, state, text }))
 
     note.created = created
 
-    yield put(act.photo.notes.add({ id: photo, notes: [note.id] }))
-    yield put(act.note.select({ note: note.id, photo }))
+    yield put(act[type].notes.add({ id, notes: [note.id] }))
+    yield put(act.note.select({ note: note.id, photo, selection }))
 
-    this.undo = act.note.delete({ photo, notes: [note.id] })
-    this.redo = act.note.restore({ photo, notes: [note.id] })
+    this.undo = act.note.delete({ photo, selection, notes: [note.id] })
+    this.redo = act.note.restore({ photo, selection, notes: [note.id] })
 
     return { [note.id]: note }
   }
@@ -71,25 +75,27 @@ class Delete extends Command {
 
   *exec() {
     const { db } = this.options
-    const { photo, notes } = this.action.payload
+    const { payload } = this.action
+    const { photo, selection, notes } = payload
+
+    const type = (selection != null) ? 'photo' : 'selection'
+    const id = (selection != null) ? photo : selection
 
     const [isSelected, nextId] = yield select(state => [
       state.nav.note === notes[0], getSelectableNoteId(state)
     ])
 
-    yield call([db, db.transaction], async tx => {
-      await mod.note.delete(tx, notes)
-    })
+    yield call(db.transaction, tx => mod.note.delete(tx, notes))
 
     if (isSelected) {
-      yield put(act.note.select({ photo, note: nextId }))
+      yield put(act.note.select({ photo, selection, note: nextId }))
     }
 
-    yield put(act.photo.notes.remove({ id: photo, notes }))
+    yield put(act[type].notes.remove({ id, notes }))
 
-    this.undo = act.note.restore(this.action.payload)
+    this.undo = act.note.restore(payload)
 
-    return this.action.payload
+    return payload
   }
 }
 
@@ -98,14 +104,18 @@ class Restore extends Command {
 
   *exec() {
     const { db } = this.options
-    const { photo, notes } = this.action.payload
+    const { payload } = this.action
+    const { photo, selection, notes } = payload
+
+    const type = (selection != null) ? 'photo' : 'selection'
+    const id = (selection != null) ? photo : selection
 
     yield call(mod.note.restore, db, notes)
-    yield put(act.photo.notes.add({ id: photo, notes }))
+    yield put(act[type].notes.add({ id, notes }))
 
-    this.undo = act.note.delete(this.action.payload)
+    this.undo = act.note.delete(payload)
 
-    return this.action.payload
+    return payload
   }
 }
 
