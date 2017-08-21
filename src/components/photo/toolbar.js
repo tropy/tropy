@@ -15,13 +15,16 @@ const {
 
 
 class PhotoToolbar extends PureComponent {
+  handleCreate = () => {
+    this.props.onCreate()
+  }
+
   render() {
     const {
       hasCreateButton,
       isDisabled,
       zoom,
       maxZoom,
-      onCreate,
       onZoomChange
     } = this.props
 
@@ -39,7 +42,7 @@ class PhotoToolbar extends PureComponent {
                 <IconButton
                   icon={<IconPlus/>}
                   title="panel.photo.create"
-                  onClick={onCreate}/>
+                  onClick={this.handleCreate}/>
               </ToolGroup>
           }
           <ToolGroup>
