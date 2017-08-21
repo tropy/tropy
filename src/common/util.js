@@ -241,20 +241,22 @@ const util = {
   },
 
   pick(src, props = [], into = {}, expand = false) {
-    return props.reduce((res, key) => {
-      const value = src[key]
+    return (src == null) ?
+      into :
+      props.reduce((res, key) => {
+        const value = src[key]
 
-      if (expand || typeof value !== 'undefined' || src.hasOwnProperty(key)) {
-        res[key] = value
-      }
+        if (expand || typeof value !== 'undefined' || src.hasOwnProperty(key)) {
+          res[key] = value
+        }
 
-      return res
+        return res
 
-    }, into)
+      }, into)
   },
 
   omit(src, props = [], into = {}) {
-    return module.exports.pick(src,
+    return util.pick(src,
       // eslint-disable-next-line eqeqeq
       keys(src).filter(key => !props.find(prop => prop == key)), into)
   },
@@ -284,7 +286,7 @@ const util = {
             break
 
           default:
-            res[prop] = module.exports.merge(res[prop], value)
+            res[prop] = util.merge(res[prop], value)
             break
         }
       }
