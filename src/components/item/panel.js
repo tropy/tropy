@@ -26,9 +26,10 @@ class ItemPanel extends PureComponent {
     return this.props.items.length === 0
   }
 
-  handlePhotoCreate = () => {
+  handlePhotoCreate = (dropped) => {
     this.props.onPhotoCreate({
-      item: get(this.props.items, [0, 'id'])
+      item: get(this.props.items, [0, 'id']),
+      files: dropped && dropped.files
     })
   }
 

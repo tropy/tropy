@@ -91,13 +91,12 @@ class PhotoPanel extends Panel {
 
 const spec = {
   drop({ onCreate }, monitor) {
-    const { files } = monitor.getItem()
-
-    const images = files
+    const files = monitor.getItem()
+      .files
       .filter(isValidImage)
       .map(file => file.path)
 
-    return onCreate({ files: images }), { images }
+    return onCreate({ files })
   },
 
   canDrop(_, monitor) {
