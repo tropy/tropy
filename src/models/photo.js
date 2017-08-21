@@ -119,9 +119,13 @@ module.exports = {
 
   find(db, { checksum }) {
     return db.get(`
-      SELECT id, item_id AS item
-        FROM photos
-        WHERE checksum = ?`, checksum)
+      SELECT p.id, item_id AS item
+        FROM photos p
+          LEFT OUTER JOIN trash tp USING (id)
+          LEFT OUTER JOIN trash ti ON (ti.id = item_id)
+        WHERE tp.deleted IS NULL
+          AND ti.deleted IS NULL
+          AND checksum = ?`, checksum)
   },
 
   async move(db, { ids, item }) {
