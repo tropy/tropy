@@ -1,6 +1,8 @@
 'use strict'
 
 const { NOTE } = require('../constants')
+const { warn } = require('../common/log')
+const { get } = require('../common/util')
 
 function json(note) {
   return (note.state != null && typeof note.state.toJSON === 'function') ?
@@ -35,16 +37,20 @@ module.exports = {
 
   select(payload, meta) {
     return (dispatch, getState) => {
-      let { note, photo, item } = payload
+      let { note, photo, item, selection } = payload
 
       if (item == null) {
         const { photos } = getState()
-        item = photos[photo].item
+        item = get(photos, [photo, 'item'])
+
+        if (item == null) {
+          return warn(`cannot select note #${note} without item`)
+        }
       }
 
       dispatch({
         type: NOTE.SELECT,
-        payload: { note, photo, item },
+        payload: { note, photo, item, selection },
         meta: { ...meta }
       })
     }

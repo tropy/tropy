@@ -44,7 +44,10 @@ class NoteList extends PureComponent {
   select = (note) => {
     if (note && !this.isSelected(note)) {
       this.props.onSelect({
-        note: note.id, photo: note.photo
+        note:
+        note.id,
+        photo: note.photo,
+        selection: note.selection
       })
     }
   }

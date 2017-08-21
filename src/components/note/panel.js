@@ -19,7 +19,10 @@ class NotePanel extends Panel {
 
     if (note && !isItemOpen) {
       onItemOpen({
-        id: item, photos: [photo], notes: [note.id]
+        id: item,
+        photos: [photo],
+        notes: [note.id],
+        selection: note.selection
       })
     }
   }
