@@ -271,9 +271,11 @@ class Esper extends PureComponent {
         x, y, zoom: this.state.zoom + dy * ZOOM_WHEEL_FACTOR
       })
     } else {
+      const mw = this.props.invertMouseWheel ? -1 : 1
+
       this.view.move({
-        x: this.view.image.x - dx,
-        y: this.view.image.y - dy
+        x: this.view.image.x + (dx * mw),
+        y: this.view.image.y + (dy * mw)
       })
     }
   }
@@ -330,6 +332,7 @@ class Esper extends PureComponent {
 
   static propTypes = {
     isDisabled: bool,
+    invertMouseWheel: bool.isRequired,
     maxZoom: number.isRequired,
     minZoom: number.isRequired,
     zoom: number.isRequired,
@@ -349,6 +352,7 @@ class Esper extends PureComponent {
   }
 
   static defaultProps = {
+    invertMouseWheel: true,
     maxZoom: MAX_ZOOM,
     minZoom: MIN_ZOOM,
     zoom: 1,
