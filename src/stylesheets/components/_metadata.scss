@@ -53,7 +53,8 @@ $default-padding-horizontal: 12px !default;
   }
 
   label,
-  .editable {
+  .editable,
+  .static {
     @include css-truncation;
   }
 

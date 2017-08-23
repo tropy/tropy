@@ -139,10 +139,8 @@ class StaticField extends PureComponent {
         <label>
           <FormattedMessage id={this.props.label}/>
         </label>
-        <div
-          className="value static"
-          onClick={this.props.onClick}>
-          {this.props.value}
+        <div className="value" onClick={this.props.onClick}>
+          <div className="static">{this.props.value}</div>
         </div>
       </li>
     )
