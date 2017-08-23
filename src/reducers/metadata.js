@@ -1,6 +1,6 @@
 'use strict'
 
-const { METADATA, ITEM, PHOTO, PROJECT } = require('../constants')
+const { METADATA, ITEM, PHOTO, PROJECT, SELECTION } = require('../constants')
 const { bulk, load, merge, remove, replace, insert, update } = require('./util')
 
 
@@ -26,6 +26,12 @@ module.exports = {
           update(state, { ...data, id: ids[0] }, meta) :
           bulk.update(state, [ids, data], meta)
       }
+
+      case SELECTION.CREATE:
+        return (error || !meta.done) ? state : {
+          ...state,
+          [payload.id]: { id: payload.id }
+        }
 
       case ITEM.REMOVE:
       case PHOTO.REMOVE:

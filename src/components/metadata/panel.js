@@ -116,7 +116,7 @@ class MetadataPanel extends PureComponent {
       ...props
     } = this.props
 
-    return selection && !selection.pending && (
+    return selection != null && !selection.pending && (
       <section>
         <h5 className="metadata-heading separator">
           <FormattedMessage id="panel.metadata.selection"/>
