@@ -179,6 +179,14 @@ class Esper extends PureComponent {
       .toJSON()
   }
 
+  getRelativeRotation(
+    { angle, mirror } = this.state,
+    orientation = this.props.photo.orientation
+  ) {
+    return new Rotation({ angle, mirror })
+      .subtract(Rotation.fromExifOrientation(orientation))
+  }
+
   setView = (view) => {
     this.view = view
   }
@@ -194,7 +202,7 @@ class Esper extends PureComponent {
   }, 20)
 
   persist = debounce(() => {
-    const { angle, mirror } = this.state
+    const { angle, mirror } = this.getRelativeRotation()
 
     this.props.onPhotoSave({
       id: this.props.photo.id,

@@ -30,6 +30,10 @@ class Rotation {
     return this
   }
 
+  subtract({ angle = 0, mirror = false }) {
+    return this.add({ angle: -angle, mirror })
+  }
+
   parse(input = '') {
     this.angle = parseFloat(input.slice(1))
     this.mirror = input.startsWith('!')
