@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { DragSource, DropTarget } = require('react-dnd')
-const { PropertySelect } = require('../property/select')
+const { ResourceSelect } = require('../resource/select')
 const { IconButton } = require('../button')
 const { FormField, FormGroup, FormToggle, Label } = require('../form')
 const { IconGrip, IconPlusCircle, IconMinusCircle } = require('../icons')
@@ -81,11 +81,12 @@ class TemplateField extends PureComponent {
           <fieldset>
             {this.isDragAndDropEnabled && <IconGrip/>}
             <FormGroup isCompact>
-              <Label id="template.field.property"
+              <Label
+                id="template.field.property"
                 size={3}/>
               <div className="col-9">
-                <PropertySelect
-                  properties={this.props.properties}
+                <ResourceSelect
+                  resources={this.props.properties}
                   selected={this.props.field.property}
                   isRequired={!this.props.isTransient}
                   isDisabled={this.props.isDisabled}

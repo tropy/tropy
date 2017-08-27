@@ -126,9 +126,12 @@ vocab:
   description: Description
   properties: Properties
   seeAlso: See Also
-
 property:
   select: Select a Property …
+datatype:
+  select: Select a Datatype …
+resource:
+  select: Select a Resource …
   id: URI
   label: Label
   description: Description
