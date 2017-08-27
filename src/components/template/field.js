@@ -34,6 +34,10 @@ class TemplateField extends PureComponent {
     this.handleChange({ property: id })
   }
 
+  handleDatatypeChange = ({ id }) => {
+    this.handleChange({ datatype: id })
+  }
+
   handleLabelChange = () => {
   }
 
@@ -106,8 +110,23 @@ class TemplateField extends PureComponent {
               tabIndex={0}
               isCompact
               size={9}
-              placeholder
+              placeholder=""
               onChange={this.handleLabelChange}/>
+            <FormGroup isCompact>
+              <Label
+                id="template.field.datatype"
+                size={3}/>
+              <div className="col-9">
+                <ResourceSelect
+                  resources={this.props.datatypes}
+                  selected={this.props.field.datatype}
+                  isRequired
+                  isDisabled={this.props.isDisabled}
+                  placeholder="datatype.select"
+                  tabIndex={0}
+                  onChange={this.handleDatatypeChange}/>
+              </div>
+            </FormGroup>
             <FormToggle
               id="template.field.isRequired"
               name="isRequired"
@@ -161,6 +180,7 @@ class TemplateField extends PureComponent {
     isTransient: bool,
     isSingle: bool,
     position: number.isRequired,
+    datatypes: array.isRequired,
     properties: array.isRequired,
     ds: func.isRequired,
     dt: func.isRequired,

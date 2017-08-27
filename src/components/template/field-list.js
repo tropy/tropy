@@ -116,6 +116,7 @@ class TemplateFieldList extends PureComponent {
             key={field.id}
             field={field}
             position={idx}
+            datatypes={this.props.datatypes}
             properties={this.props.properties}
             isDisabled={this.props.isDisabled}
             isSingle={isSingle}
@@ -135,6 +136,9 @@ class TemplateFieldList extends PureComponent {
     isDisabled: bool,
     template: string.isRequired,
     fields: arrayOf(object).isRequired,
+    datatypes: arrayOf(shape({
+      id: string.isRequired
+    })).isRequired,
     properties: arrayOf(shape({
       id: string.isRequired
     })).isRequired,

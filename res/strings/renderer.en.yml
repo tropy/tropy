@@ -115,6 +115,7 @@ template:
   field:
     property: Property
     label: Label
+    datatype: Datatype
     isRequired: Is mandatory field
     hint: Hint
     value: Default Value
