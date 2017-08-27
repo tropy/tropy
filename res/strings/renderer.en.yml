@@ -114,6 +114,7 @@ template:
     "https://tropy.org/v1/tropy#Selection": Photo Selection Template
   field:
     property: Property
+    label: Label
     isRequired: Is mandatory field
     hint: Hint
     value: Default Value

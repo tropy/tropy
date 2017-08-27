@@ -34,6 +34,9 @@ class TemplateField extends PureComponent {
     this.handleChange({ property: id })
   }
 
+  handleLabelChange = () => {
+  }
+
   handleChange = (data) => {
     this.props.onSave(this.props.field.id, data, this.props.position)
   }
@@ -95,6 +98,16 @@ class TemplateField extends PureComponent {
                   onChange={this.handlePropertyChange}/>
               </div>
             </FormGroup>
+            <FormField
+              id="template.field.label"
+              name="label"
+              value={this.props.field.label}
+              isDisabled={this.props.isDisabled || this.props.isTransient}
+              tabIndex={0}
+              isCompact
+              size={9}
+              placeholder
+              onChange={this.handleLabelChange}/>
             <FormToggle
               id="template.field.isRequired"
               name="isRequired"
