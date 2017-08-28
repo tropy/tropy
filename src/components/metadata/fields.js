@@ -71,6 +71,7 @@ class MetadataFields extends PureComponent {
       this.renderField(f.property, {
         isReadOnly: f.isConstant,
         isRequired: f.isRequired,
+        label: f.label,
         placeholder: f.hint,
         type: f.datatype
       }))
