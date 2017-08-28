@@ -5,6 +5,7 @@ const { PureComponent } = React
 const { TemplateField } = require('./field')
 const { insert, move, remove } = require('../../common/util')
 const { arrayOf, bool, func, object, shape, string } = require('prop-types')
+const { TEXT } = require('../../constants/type')
 
 
 let tmpId = -1
@@ -14,6 +15,7 @@ const newField = () => ({
   value: '',
   hint: '',
   property: '',
+  datatype: TEXT,
   isConstant: false,
   isRequired: false
 })
