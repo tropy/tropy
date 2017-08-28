@@ -42,9 +42,6 @@ class TemplateField extends PureComponent {
     this.handleChange({ datatype: id })
   }
 
-  handleLabelChange = () => {
-  }
-
   handleChange = (data) => {
     this.props.onSave(this.props.field.id, data, this.props.position)
   }
@@ -117,7 +114,7 @@ class TemplateField extends PureComponent {
               isCompact
               size={9}
               placeholder=""
-              onChange={this.handleLabelChange}/>
+              onChange={this.handleChange}/>
             <FormGroup isCompact>
               <Label
                 id="template.field.datatype"

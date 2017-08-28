@@ -430,18 +430,25 @@ class TemplateFieldSave extends Command {
 
   *exec() {
     const { db } = this.options
-    const { id, field } = this.action.payload
+    const { payload } = this.action
+    const { id, field } = payload
 
     const original = yield select(state =>
       getTemplateField(state, { id, field: field.id }))
 
-    yield call(mod.ontology.template.field.save, db, field)
+    // Subtle: currently each field property is saved individually,
+    // so if there is a label, we are saving only the label!
+    if ('label' in field) {
+      yield call(mod.ontology.template.field.label.save, db, field)
+    } else {
+      yield call(mod.ontology.template.field.save, db, field)
+    }
 
     this.undo = act.ontology.template.field.save({
       id, field: pick(original.field, keys(field))
     })
 
-    return { id, field }
+    return payload
   }
 }
 
