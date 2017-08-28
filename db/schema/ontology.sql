@@ -12,7 +12,7 @@
 --
 
 -- Save the current migration number
-PRAGMA user_version=1705231144;
+PRAGMA user_version=1708281429;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -111,5 +111,16 @@ CREATE TABLE fields (
   CHECK (property_id != ''),
   UNIQUE (template_id, property_id)
 );
+CREATE TABLE field_labels (
+  field_id  INTEGER NOT NULL REFERENCES fields ON DELETE CASCADE,
+  language  TEXT    NOT NULL COLLATE NOCASE,
+  label     TEXT    NOT NULL,
+
+  PRIMARY KEY (field_id, language),
+
+  CHECK (
+    label != '' AND language != '' AND language = trim(lower(language))
+  )
+) WITHOUT ROWID;
 COMMIT;
 PRAGMA foreign_keys=ON;
