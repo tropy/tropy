@@ -26,6 +26,10 @@ class TemplateField extends PureComponent {
     return !this.props.isDisabled && !this.props.isSingle
   }
 
+  get isEditable() {
+    return !(this.props.isDisabled || this.props.isTransient)
+  }
+
   setContainer = (container) => {
     this.container = container
   }
@@ -80,6 +84,8 @@ class TemplateField extends PureComponent {
   }
 
   render() {
+    const { isEditable } = this
+
     return this.connectDropTarget(
       <li
         className={cx(this.classes)}
@@ -106,7 +112,7 @@ class TemplateField extends PureComponent {
               id="template.field.label"
               name="label"
               value={this.props.field.label}
-              isDisabled={this.props.isDisabled || this.props.isTransient}
+              isDisabled={!isEditable}
               tabIndex={0}
               isCompact
               size={9}
@@ -121,7 +127,7 @@ class TemplateField extends PureComponent {
                   resources={this.props.datatypes}
                   selected={this.props.field.datatype}
                   isRequired
-                  isDisabled={this.props.isDisabled}
+                  isDisabled={!isEditable}
                   placeholder="datatype.select"
                   tabIndex={0}
                   onChange={this.handleDatatypeChange}/>
@@ -131,7 +137,7 @@ class TemplateField extends PureComponent {
               id="template.field.isRequired"
               name="isRequired"
               value={this.props.field.isRequired}
-              isDisabled={this.props.isDisabled || this.props.isTransient}
+              isDisabled={!isEditable}
               tabIndex={0}
               onChange={this.handleChange}
               isCompact
@@ -140,7 +146,7 @@ class TemplateField extends PureComponent {
               id="template.field.hint"
               name="hint"
               value={this.props.field.hint || ''}
-              isDisabled={this.props.isDisabled || this.props.isTransient}
+              isDisabled={!isEditable}
               onChange={this.handleChange}
               tabIndex={0}
               isCompact
@@ -149,7 +155,7 @@ class TemplateField extends PureComponent {
               id="template.field.value"
               name="value"
               value={this.props.field.value || ''}
-              isDisabled={this.props.isDisabled || this.props.isTransient}
+              isDisabled={!isEditable}
               onChange={this.handleChange}
               tabIndex={0}
               isCompact
@@ -158,7 +164,7 @@ class TemplateField extends PureComponent {
               id="template.field.isConstant"
               name="isConstant"
               value={this.props.field.isConstant}
-              isDisabled={this.props.isDisabled || this.props.isTransient}
+              isDisabled={!isEditable}
               tabIndex={0}
               onChange={this.handleChange}
               isCompact
