@@ -50,7 +50,7 @@ class TemplateFieldList extends PureComponent {
     if (id < 0) {
       this.props.onFieldAdd({
         id: this.props.template,
-        field: data
+        field: { datatype: TEXT, ...data }
       }, { idx })
     } else {
       this.props.onFieldSave({
