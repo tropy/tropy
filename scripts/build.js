@@ -48,7 +48,7 @@ const IGNORE = [
   /appveyor\.yml/
 ]
 
-target.all = (args = []) => {
+target.all = async (args = []) => {
   const platform = args[0] || process.platform
   const arch = args[1] || process.arch
   const ignore = [...IGNORE]
@@ -63,7 +63,12 @@ target.all = (args = []) => {
     ignore.push(/^\/node_modules.winreg/)
   }
 
-  packager({
+  const extraResource = (platform !== 'darwin') ? [] : [
+    join(res, 'icons', 'mime', 'tpy.icns'),
+    join(res, 'icons', 'mime', 'ttp.icns')
+  ]
+
+  let dst = await packager({
     platform,
     arch,
     icon,
@@ -83,10 +88,7 @@ target.all = (args = []) => {
       `Copyright (c) 2015-${new Date().getFullYear()} ` +
       `${author.name}. All rights not expressly granted are reserved.`,
     extendInfo: join(res, 'ext.plist'),
-    extraResource: [
-      join(res, 'icons', 'mime', 'tpy.icns'),
-      join(res, 'icons', 'mime', 'ttp.icns')
-    ],
+    extraResource,
     win32metadata: {
       CompanyName: author.name,
       ProductName: qualified.product
@@ -95,35 +97,34 @@ target.all = (args = []) => {
       unpack: '**/{*.node,lib/stylesheets/**/*,res/icons/mime/*.ico}',
     }
 
-  }, (err, dst) => {
-    if (err) return error(err)
-    dst = String(dst)
-
-    switch (platform) {
-      case 'linux': {
-        say(`renaming executable to ${qualified.name}...`)
-        rename(dst, qualified.product, qualified.name)
-
-        say('creating .desktop file...')
-        desktop().to(join(dst, `${qualified.name}.desktop`))
-
-        say('copying icons...')
-        copyIcons(dst)
-
-        say('copying mime types...')
-        mkdir('-p', join(dst, 'mime', 'packages'))
-        cp(join(res, 'mime', '*.xml'), join(dst, 'mime', 'packages'))
-
-        break
-      }
-      case 'win32': {
-        say(`renaming executable to ${qualified.name}.exe...`)
-        rename(dst, `${qualified.product}.exe`, `${qualified.name}.exe`)
-      }
-    }
-
-    say(`saved app to ${relative(dir, dst)}`)
   })
+
+  dst = String(dst)
+
+  switch (platform) {
+    case 'linux': {
+      say(`renaming executable to ${qualified.name}...`)
+      rename(dst, qualified.product, qualified.name)
+
+      say('creating .desktop file...')
+      desktop().to(join(dst, `${qualified.name}.desktop`))
+
+      say('copying icons...')
+      copyIcons(dst)
+
+      say('copying mime types...')
+      mkdir('-p', join(dst, 'mime', 'packages'))
+      cp(join(res, 'mime', '*.xml'), join(dst, 'mime', 'packages'))
+
+      break
+    }
+    case 'win32': {
+      say(`renaming executable to ${qualified.name}.exe...`)
+      rename(dst, `${qualified.product}.exe`, `${qualified.name}.exe`)
+    }
+  }
+
+  say(`saved app to ${relative(dir, dst)}`)
 }
 
 function rename(ctx, from, to) {

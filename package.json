@@ -57,7 +57,7 @@
     "electron": "~1.6.12",
     "electron-devtools-installer": "^2.0.0",
     "electron-mocha": "^4.0.0",
-    "electron-packager": "^8.7.2",
+    "electron-packager": "^9.0.0",
     "electron-winstaller": "^2.6.3",
     "enzyme": "^2.9.1",
     "eslint": "^4.5.0",
