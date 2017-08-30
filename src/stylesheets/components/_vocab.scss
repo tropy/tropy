@@ -34,7 +34,7 @@
     @include form-control-focus; // sass-lint:disable-line mixins-before-declarations
   }
 
-  .property {
+  .resource {
     margin-bottom: $space-min;
 
     &:last-child {

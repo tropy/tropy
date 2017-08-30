@@ -34,7 +34,9 @@ class MetadataField extends PureComponent {
   }
 
   get label() {
-    return this.props.property.label || getLabel(this.props.property.id)
+    return this.props.label ||
+      this.props.property.label ||
+      getLabel(this.props.property.id)
   }
 
   get property() {
@@ -109,6 +111,7 @@ class MetadataField extends PureComponent {
       comment: string
     }),
 
+    label: string,
     placeholder: string,
     text: string,
     type: string.isRequired,

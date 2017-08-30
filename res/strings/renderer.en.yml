@@ -114,6 +114,8 @@ template:
     "https://tropy.org/v1/tropy#Selection": Photo Selection Template
   field:
     property: Property
+    label: Label
+    datatype: Datatype
     isRequired: Is mandatory field
     hint: Hint
     value: Default Value
@@ -126,9 +128,12 @@ vocab:
   description: Description
   properties: Properties
   seeAlso: See Also
-
 property:
   select: Select a Property …
+datatype:
+  select: Select a Datatype …
+resource:
+  select: Select a Resource …
   id: URI
   label: Label
   description: Description

@@ -5,6 +5,7 @@ const { PureComponent } = React
 const { TemplateField } = require('./field')
 const { insert, move, remove } = require('../../common/util')
 const { arrayOf, bool, func, object, shape, string } = require('prop-types')
+const { TEXT } = require('../../constants/type')
 
 
 let tmpId = -1
@@ -14,6 +15,7 @@ const newField = () => ({
   value: '',
   hint: '',
   property: '',
+  datatype: TEXT,
   isConstant: false,
   isRequired: false
 })
@@ -48,7 +50,7 @@ class TemplateFieldList extends PureComponent {
     if (id < 0) {
       this.props.onFieldAdd({
         id: this.props.template,
-        field: data
+        field: { datatype: TEXT, ...data }
       }, { idx })
     } else {
       this.props.onFieldSave({
@@ -116,6 +118,7 @@ class TemplateFieldList extends PureComponent {
             key={field.id}
             field={field}
             position={idx}
+            datatypes={this.props.datatypes}
             properties={this.props.properties}
             isDisabled={this.props.isDisabled}
             isSingle={isSingle}
@@ -135,6 +138,9 @@ class TemplateFieldList extends PureComponent {
     isDisabled: bool,
     template: string.isRequired,
     fields: arrayOf(object).isRequired,
+    datatypes: arrayOf(shape({
+      id: string.isRequired
+    })).isRequired,
     properties: arrayOf(shape({
       id: string.isRequired
     })).isRequired,

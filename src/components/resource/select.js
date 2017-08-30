@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { injectIntl, intlShape } = require('react-intl')
 const { bool, array, func, number, string } = require('prop-types')
 
-class PropertySelect extends PureComponent {
+class ResourceSelect extends PureComponent {
   get hasPlaceholder() {
     return !this.props.isRequired && this.props.placeholder != null
   }
@@ -16,7 +16,7 @@ class PropertySelect extends PureComponent {
 
   handleChange = ({ target }) => {
     this.props.onChange(
-      this.props.properties.find(p => p.id === target.value)
+      this.props.resources.find(p => p.id === target.value)
     )
   }
 
@@ -28,14 +28,14 @@ class PropertySelect extends PureComponent {
     return (
       <select
         tabIndex={this.props.tabIndex}
-        name="property-select"
-        className="property-select form-control"
+        name="resource-select"
+        className="resource-select form-control"
         disabled={this.props.isDisabled}
         required={this.props.isRequired}
         value={this.props.selected}
         onChange={this.handleChange}>
         {this.renderPlaceholder()}
-        {this.props.properties.map(({ id }) =>
+        {this.props.resources.map(({ id }) =>
           <option key={id} value={id}>{id}</option>)}
       </select>
     )
@@ -47,7 +47,7 @@ class PropertySelect extends PureComponent {
     isRequired: bool,
     placeholder: string,
     tabIndex: number.isRequired,
-    properties: array.isRequired,
+    resources: array.isRequired,
     selected: string,
     onChange: func.isRequired
   }
@@ -59,6 +59,6 @@ class PropertySelect extends PureComponent {
 }
 
 module.exports = {
-  PropertySelect: injectIntl(PropertySelect)
+  ResourceSelect: injectIntl(ResourceSelect)
 }
 

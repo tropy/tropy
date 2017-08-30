@@ -31,6 +31,7 @@ class Template {
       'description': data.description,
       'field': data.fields.map(field => pick(field, [
         'property',
+        'label',
         'datatype',
         'hint',
         'isRequired',
