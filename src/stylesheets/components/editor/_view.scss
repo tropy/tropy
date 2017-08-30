@@ -12,9 +12,9 @@
   //padding-top: 0;
   padding-top: $toolbar-height + 1px;
 
-  &:hover {
-    //padding-top: $toolbar-height + 1px;
-  }
+  //&:hover {
+  //  padding-top: $toolbar-height + 1px;
+  //}
 
   .scroll-container {
     overflow-y: scroll;
@@ -39,7 +39,7 @@
   padding-bottom: $prose-mirror-padding-bottom;
   padding-top: $prose-mirror-padding-top;
 
-  .editor:hover & {
-    //padding-top: $prose-mirror-padding;
-  }
+  //.editor:hover & {
+  //  padding-top: $prose-mirror-padding;
+  //}
 }
