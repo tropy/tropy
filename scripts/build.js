@@ -49,82 +49,88 @@ const IGNORE = [
 ]
 
 target.all = async (args = []) => {
-  const platform = args[0] || process.platform
-  const arch = args[1] || process.arch
-  const ignore = [...IGNORE]
+  try {
 
-  const icon = platform === 'win32' ?
-    join(res, 'icons', channel, `${name}.ico`) :
-    join(res, 'icons', channel, `${name}.icns`)
+    const platform = args[0] || process.platform
+    const arch = args[1] || process.arch
+    const ignore = [...IGNORE]
 
-  say(`packaging for ${platform} ${arch}...`)
+    const icon = platform === 'win32' ?
+      join(res, 'icons', channel, `${name}.ico`) :
+      join(res, 'icons', channel, `${name}.icns`)
 
-  if (platform !== 'win32') {
-    ignore.push(/^\/node_modules.winreg/)
+    say(`packaging for ${platform} ${arch}...`)
+
+    if (platform !== 'win32') {
+      ignore.push(/^\/node_modules.winreg/)
+    }
+
+    const extraResource = (platform !== 'darwin') ? [] : [
+      join(res, 'icons', 'mime', 'tpy.icns'),
+      join(res, 'icons', 'mime', 'ttp.icns')
+    ]
+
+    let dst = await packager({
+      platform,
+      arch,
+      icon,
+      dir,
+      out: join(dir, 'dist'),
+      name: qualified.product,
+      prune: true,
+      overwrite: true,
+      quiet: true,
+      ignore,
+      electronVersion: electron.version,
+      appVersion: version,
+      appBundleId: 'org.tropy.tropy',
+      helperBundleId: 'org.tropy.tropy-helper',
+      appCategoryType: 'public.app-category.productivity',
+      appCopyright:
+        `Copyright (c) 2015-${new Date().getFullYear()} ` +
+        `${author.name}. All rights not expressly granted are reserved.`,
+      extendInfo: join(res, 'ext.plist'),
+      extraResource,
+      win32metadata: {
+        CompanyName: author.name,
+        ProductName: qualified.product
+      },
+      asar: {
+        unpack: '**/{*.node,lib/stylesheets/**/*,res/icons/mime/*.ico}',
+      }
+
+    })
+
+    dst = String(dst)
+
+    switch (platform) {
+      case 'linux': {
+        say(`renaming executable to ${qualified.name}...`)
+        rename(dst, qualified.product, qualified.name)
+
+        say('creating .desktop file...')
+        desktop().to(join(dst, `${qualified.name}.desktop`))
+
+        say('copying icons...')
+        copyIcons(dst)
+
+        say('copying mime types...')
+        mkdir('-p', join(dst, 'mime', 'packages'))
+        cp(join(res, 'mime', '*.xml'), join(dst, 'mime', 'packages'))
+
+        break
+      }
+      case 'win32': {
+        say(`renaming executable to ${qualified.name}.exe...`)
+        rename(dst, `${qualified.product}.exe`, `${qualified.name}.exe`)
+      }
+    }
+
+    say(`saved app to ${relative(dir, dst)}`)
+
+  } catch (err) {
+    error(err)
   }
-
-  const extraResource = (platform !== 'darwin') ? [] : [
-    join(res, 'icons', 'mime', 'tpy.icns'),
-    join(res, 'icons', 'mime', 'ttp.icns')
-  ]
-
-  let dst = await packager({
-    platform,
-    arch,
-    icon,
-    dir,
-    out: join(dir, 'dist'),
-    name: qualified.product,
-    prune: true,
-    overwrite: true,
-    quiet: true,
-    ignore,
-    electronVersion: electron.version,
-    appVersion: version,
-    appBundleId: 'org.tropy.tropy',
-    helperBundleId: 'org.tropy.tropy-helper',
-    appCategoryType: 'public.app-category.productivity',
-    appCopyright:
-      `Copyright (c) 2015-${new Date().getFullYear()} ` +
-      `${author.name}. All rights not expressly granted are reserved.`,
-    extendInfo: join(res, 'ext.plist'),
-    extraResource,
-    win32metadata: {
-      CompanyName: author.name,
-      ProductName: qualified.product
-    },
-    asar: {
-      unpack: '**/{*.node,lib/stylesheets/**/*,res/icons/mime/*.ico}',
-    }
-
-  })
-
-  dst = String(dst)
-
-  switch (platform) {
-    case 'linux': {
-      say(`renaming executable to ${qualified.name}...`)
-      rename(dst, qualified.product, qualified.name)
-
-      say('creating .desktop file...')
-      desktop().to(join(dst, `${qualified.name}.desktop`))
-
-      say('copying icons...')
-      copyIcons(dst)
-
-      say('copying mime types...')
-      mkdir('-p', join(dst, 'mime', 'packages'))
-      cp(join(res, 'mime', '*.xml'), join(dst, 'mime', 'packages'))
-
-      break
-    }
-    case 'win32': {
-      say(`renaming executable to ${qualified.name}.exe...`)
-      rename(dst, `${qualified.product}.exe`, `${qualified.name}.exe`)
-    }
-  }
-
-  say(`saved app to ${relative(dir, dst)}`)
 }
 
 function rename(ctx, from, to) {
