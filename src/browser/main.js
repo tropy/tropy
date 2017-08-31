@@ -51,8 +51,8 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
     let quit = false
 
     if (opts.environment !== 'test') {
-      quit = app.makeSingleInstance(argv => {
-        tropy.open(args.parse(argv.slice(1)._))
+      quit = app.makeSingleInstance((argv) => {
+        tropy.open(...args.parse(argv.slice(1))._)
       })
     }
 
