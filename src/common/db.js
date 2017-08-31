@@ -11,7 +11,7 @@ const Bluebird = require('bluebird')
 const { using } = Bluebird
 const { readFileAsync: read } = require('fs')
 const { createPool } = require('generic-pool')
-const { debug, info, verbose, warn } = require('./log')
+const { debug, verbose, warn } = require('./log')
 const { entries } = Object
 
 const M = {
