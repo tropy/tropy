@@ -7,7 +7,8 @@ const ms = require('ms')
 const { EventEmitter } = require('events')
 const { Migration } = require('./migration')
 const { normalize } = require('path')
-const { using, resolve } = require('bluebird')
+const Bluebird = require('bluebird')
+const { using } = Bluebird
 const { readFileAsync: read } = require('fs')
 const { createPool } = require('generic-pool')
 const { debug, info, verbose, warn } = require('./log')
@@ -61,8 +62,10 @@ class Database extends EventEmitter {
       min: 0,
       max: 4,
       idleTimeoutMillis: 60000 * 5,
+      maxWaitingClients: 10,
+      Promise: Bluebird,
       ...options,
-      validate: (conn) => resolve(conn.db.open)
+      validate: (conn) => Bluebird.resolve(conn.db.open)
     })
   }
 
@@ -87,7 +90,8 @@ class Database extends EventEmitter {
 
       let db = new sqlite.Database(this.path, M[mode], (error) => {
         if (error) {
-          return reject(error), this.emit('error', error)
+          this.emit('error', error)
+          return reject(error)
         }
 
         new Connection(db)
@@ -124,7 +128,7 @@ class Database extends EventEmitter {
   }
 
   acquire() {
-    return resolve(this.pool.acquire())
+    return this.pool.acquire()
       .disposer(conn => this.release(conn))
   }
 
@@ -170,7 +174,7 @@ class Database extends EventEmitter {
     this.seq(conn =>
       using(nofk(conn), conn =>
         using(transaction(conn, 'EXCLUSIVE'), tx =>
-          resolve(fn(tx)).then(() => tx.check()))))
+          Bluebird.resolve(fn(tx)).then(() => tx.check()))))
 
 
   prepare(...args) {
