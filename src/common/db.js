@@ -55,14 +55,15 @@ class Database extends EventEmitter {
     debug(`init db ${path}`)
 
     this.path = path
+
     this.pool = createPool({
       create: () => this.create(mode),
       destroy: (conn) => this.destroy(conn)
     }, {
       min: 0,
       max: 4,
-      idleTimeoutMillis: 60000 * 5,
-      maxWaitingClients: 10,
+      idleTimeoutMillis: 1000 * 60 * 5,
+      acquireTimeoutMillis: 1000 * 3,
       Promise: Bluebird,
       ...options,
       validate: (conn) => Bluebird.resolve(conn.db.open)
@@ -86,7 +87,7 @@ class Database extends EventEmitter {
 
   create(mode) {
     return new Promise((resolve, reject) => {
-      info(`opening db ${this.path}`)
+      verbose(`opening db ${this.path}`)
 
       let db = new sqlite.Database(this.path, M[mode], (error) => {
         if (error) {
@@ -119,7 +120,7 @@ class Database extends EventEmitter {
   }
 
   async destroy(conn) {
-    info(`closing db ${this.path}`)
+    verbose(`closing db ${this.path}`)
 
     await conn.optimize()
     await conn.close()
