@@ -264,7 +264,7 @@ const DropTargetSpec = {
 
     switch (extname(files[0])) {
       case '.tpy':
-        onProjectOpen(files[0].path)
+        onProjectOpen(files[0])
         break
       case '.ttp':
         onTemplateImport(files.filter(f => f.endsWith('.ttp')))
