@@ -1,11 +1,12 @@
 'use strict'
 
-const { UI, SASS } = require('../constants')
+const { ESPER, UI, SASS } = require('../constants')
 const { merge } = require('../common/util')
 
 const init = {
   esper: {
-    height: 50
+    height: 50,
+    tool: ESPER.TOOL.PAN
   },
   image: {},
   panel: {

@@ -181,11 +181,11 @@ class Esper extends PureComponent {
   }
 
   getImageState() {
-    const { mode, tool, zoom } = this.state
+    const { mode, zoom } = this.state
     const id = this.getActiveImageId()
 
     return id == null ? null : {
-      [id]: { mode, tool, zoom }
+      [id]: { mode, zoom }
     }
   }
 
@@ -294,7 +294,7 @@ class Esper extends PureComponent {
   }
 
   handleToolChange = (tool) => {
-    this.setState({ tool })
+    this.props.onChange({ esper: { tool } })
   }
 
   handleWheel = ({ x, y, dy, dx, ctrl }) => {

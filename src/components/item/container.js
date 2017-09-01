@@ -6,8 +6,11 @@ const { connect } = require('react-redux')
 const { BufferedResizable } = require('../resizable')
 const { Esper } = require('../esper')
 const { NotePad } = require('../note')
-const { arrayOf, bool, func, number, object, shape } = require('prop-types')
 const act = require('../../actions')
+
+const {
+  arrayOf, bool, func, number, object, shape, string
+} = require('prop-types')
 
 const {
   getActiveImageProps,
@@ -16,11 +19,8 @@ const {
 
 
 class ItemContainer extends PureComponent {
-
-  handleEsperChange = ({ image, photo }) => {
-    if (image != null) {
-      this.props.onUiUpdate({ image })
-    }
+  handleEsperChange = ({ photo, ...ui }) => {
+    this.props.onUiUpdate(ui)
 
     if (photo != null) {
       this.props.onPhotoSave(photo)
@@ -45,6 +45,7 @@ class ItemContainer extends PureComponent {
             photo={this.props.photo}
             selection={this.props.selection}
             selections={this.props.selections}
+            tool={this.props.esper.tool}
             onChange={this.handleEsperChange}
             onSelectionCreate={this.props.onSelectionCreate}/>
         </BufferedResizable>
@@ -61,7 +62,8 @@ class ItemContainer extends PureComponent {
 
   static propTypes = {
     esper: shape({
-      height: number.isRequired
+      height: number.isRequired,
+      tool: string.isRequired
     }).isRequired,
     image: object.isRequired,
     isDisabled: bool.isRequired,
