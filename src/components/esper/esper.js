@@ -61,10 +61,11 @@ class Esper extends PureComponent {
 
   shouldViewReset(props, state) {
     if (state.src !== this.state.src) return true
+    if (props.selection !== this.props.selection) return true
     if (get(props.photo, ['id']) !== get(this.props.photo, ['id'])) return true
 
-    if (state.angle !== this.state.angle) return true
-    if (state.mirror !== this.state.mirror) return true
+    //if (state.angle !== this.state.angle) return true
+    //if (state.mirror !== this.state.mirror) return true
 
     return false
   }
@@ -81,6 +82,11 @@ class Esper extends PureComponent {
     return this.view.bounds
   }
 
+  getActiveImageId() {
+    return this.props.selection || get(this.props.photo, ['id'])
+  }
+
+
   getEmptyState(props = this.props) {
     return {
       mode: props.mode,
@@ -92,7 +98,9 @@ class Esper extends PureComponent {
       width: 0,
       height: 0,
       aspect: 0,
-      src: null
+      src: null,
+      x: props.x,
+      y: props.y
     }
   }
 
@@ -172,6 +180,24 @@ class Esper extends PureComponent {
     }
   }
 
+  getImageState() {
+    const { mode, tool, zoom } = this.state
+    const id = this.getActiveImageId()
+
+    return id == null ? null : {
+      [id]: { mode, tool, zoom }
+    }
+  }
+
+  getPhotoState() {
+    const id = get(this.props.photo, ['id'])
+    const { angle, mirror } = this.getRelativeRotation()
+
+    return id == null ? null : {
+      id, data: { angle, mirror }
+    }
+  }
+
   getOrientationState({ angle, mirror, orientation }) {
     return Rotation
       .fromExifOrientation(orientation)
@@ -202,13 +228,11 @@ class Esper extends PureComponent {
   }, 20)
 
   persist = debounce(() => {
-    const { angle, mirror } = this.getRelativeRotation()
-
-    this.props.onPhotoSave({
-      id: this.props.photo.id,
-      data: { angle, mirror }
+    this.props.onChange({
+      image: this.getImageState(),
+      photo: this.getPhotoState()
     })
-  }, 1000)
+  }, 650)
 
   handleRotationChange = (by) => {
     const state = {
@@ -355,17 +379,21 @@ class Esper extends PureComponent {
       x: number.isRequired,
       y: number.isRequired
     })).isRequired,
-    onPhotoSave: func.isRequired,
-    onSelectionCreate: func.isRequired
+    onChange: func.isRequired,
+    onSelectionCreate: func.isRequired,
+    x: number.isRequired,
+    y: number.isRequired
   }
 
   static defaultProps = {
     invertMouseWheel: true,
     maxZoom: MAX_ZOOM,
     minZoom: MIN_ZOOM,
-    zoom: 1,
     mode: MODE.FIT,
-    tool: TOOL.PAN
+    tool: TOOL.PAN,
+    x: 0,
+    y: 0,
+    zoom: 1
   }
 }
 

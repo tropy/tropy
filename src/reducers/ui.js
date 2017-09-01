@@ -4,7 +4,10 @@ const { UI, SASS } = require('../constants')
 const { merge } = require('../common/util')
 
 const init = {
-  esper: { height: 50 },
+  esper: {
+    height: 50
+  },
+  image: {},
   panel: {
     slots: [
       { height: 40, isClosed: false },

@@ -10,5 +10,6 @@ module.exports = {
   ...require('./photos'),
   ...require('./project'),
   ...require('./selections'),
-  ...require('./tags')
+  ...require('./tags'),
+  ...require('./ui')
 }

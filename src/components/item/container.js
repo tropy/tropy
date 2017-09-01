@@ -8,10 +8,25 @@ const { Esper } = require('../esper')
 const { NotePad } = require('../note')
 const { arrayOf, bool, func, number, object, shape } = require('prop-types')
 const act = require('../../actions')
-const { getPhotoSelections } = require('../../selectors')
+
+const {
+  getActiveImageProps,
+  getPhotoSelections
+} = require('../../selectors')
 
 
 class ItemContainer extends PureComponent {
+
+  handleEsperChange = ({ image, photo }) => {
+    if (image != null) {
+      this.props.onUiUpdate({ image })
+    }
+
+    if (photo != null) {
+      this.props.onPhotoSave(photo)
+    }
+  }
+
   handleEsperResize = (height) => {
     this.props.onUiUpdate({ esper: { height } })
   }
@@ -25,12 +40,12 @@ class ItemContainer extends PureComponent {
           isRelative
           onChange={this.handleEsperResize}
           min={256}>
-          <Esper
+          <Esper {...this.props.image}
             isDisabled={this.props.isDisabled}
             photo={this.props.photo}
             selection={this.props.selection}
             selections={this.props.selections}
-            onPhotoSave={this.props.onPhotoSave}
+            onChange={this.handleEsperChange}
             onSelectionCreate={this.props.onSelectionCreate}/>
         </BufferedResizable>
         <NotePad
@@ -48,6 +63,7 @@ class ItemContainer extends PureComponent {
     esper: shape({
       height: number.isRequired
     }).isRequired,
+    image: object.isRequired,
     isDisabled: bool.isRequired,
     isOpen: bool.isRequired,
     keymap: object.isRequired,
@@ -67,6 +83,7 @@ module.exports = {
   ItemContainer: connect(
     state => ({
       esper: state.ui.esper,
+      image: getActiveImageProps(state),
       keymap: state.keymap,
       selection: state.nav.selection,
       selections: getPhotoSelections(state)
