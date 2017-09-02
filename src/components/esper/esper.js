@@ -64,9 +64,6 @@ class Esper extends PureComponent {
     if (props.selection !== this.props.selection) return true
     if (get(props.photo, ['id']) !== get(this.props.photo, ['id'])) return true
 
-    //if (state.angle !== this.state.angle) return true
-    //if (state.mirror !== this.state.mirror) return true
-
     return false
   }
 
@@ -78,14 +75,9 @@ class Esper extends PureComponent {
     return this.props.isDisabled || this.isEmpty
   }
 
-  get bounds() {
-    return this.view.bounds
-  }
-
   getActiveImageId() {
     return this.props.selection || get(this.props.photo, ['id'])
   }
-
 
   getEmptyState(props = this.props) {
     return {
@@ -100,13 +92,14 @@ class Esper extends PureComponent {
       aspect: 0,
       src: null,
       x: props.x,
-      y: props.y
+      y: props.y,
     }
   }
 
   getStateFromProps(props) {
     const state = this.getEmptyState(props)
     const { photo } = props
+    const { bounds } = this.view
 
     if (photo != null && !photo.pending) {
       state.src = `${photo.protocol}://${photo.path}`
@@ -119,7 +112,15 @@ class Esper extends PureComponent {
       }))
     }
 
-    assign(state, this.getZoomBounds(this.view.bounds, state, props))
+    if (state.x == null || state.mode !== 'zoom') {
+      state.x = bounds.width / 2
+    }
+
+    if (state.y == null || state.mode === 'fit') {
+      state.y = bounds.height / 2
+    }
+
+    assign(state, this.getZoomBounds(bounds, state, props))
 
     return state
   }
@@ -181,11 +182,16 @@ class Esper extends PureComponent {
   }
 
   getImageState() {
-    const { mode, zoom } = this.state
+    const { mode, x, y, zoom } = this.state
     const id = this.getActiveImageId()
 
     return id == null ? null : {
-      [id]: { mode, zoom }
+      [id]: {
+        mode,
+        x: Math.round(x),
+        y: Math.round(y),
+        zoom
+      }
     }
   }
 
@@ -258,8 +264,8 @@ class Esper extends PureComponent {
 
     this.setState({ zoom, mode: 'zoom' })
     this.view.scale({
-      x, y, zoom, mirror: this.state.mirror
-    }, animate ? ZOOM_DURATION : 0)
+      zoom, mirror: this.state.mirror
+    }, animate ? ZOOM_DURATION : 0, { x, y })
   }
 
   handleMirrorChange = () => {
@@ -332,6 +338,14 @@ class Esper extends PureComponent {
     })
   }
 
+  handleViewChange = (state) => {
+    this.setState(state, () => {
+      this.props.onChange({
+        image: this.getImageState()
+      })
+    })
+  }
+
   render() {
     const { isDisabled } = this
 
@@ -355,6 +369,7 @@ class Esper extends PureComponent {
           ref={this.setView}
           selections={this.props.selections}
           tool={this.state.tool}
+          onChange={this.handleViewChange}
           onSelectionCreate={this.handleSelectionCreate}
           onDoubleClick={this.handleDoubleClick}
           onWheel={this.handleWheel}/>
@@ -367,8 +382,9 @@ class Esper extends PureComponent {
     invertMouseWheel: bool.isRequired,
     maxZoom: number.isRequired,
     minZoom: number.isRequired,
-    zoom: number.isRequired,
     mode: string.isRequired,
+    onChange: func.isRequired,
+    onSelectionCreate: func.isRequired,
     photo: object,
     tool: string.isRequired,
     selection: number,
@@ -379,10 +395,9 @@ class Esper extends PureComponent {
       x: number.isRequired,
       y: number.isRequired
     })).isRequired,
-    onChange: func.isRequired,
-    onSelectionCreate: func.isRequired,
-    x: number.isRequired,
-    y: number.isRequired
+    x: number,
+    y: number,
+    zoom: number.isRequired
   }
 
   static defaultProps = {
@@ -391,8 +406,6 @@ class Esper extends PureComponent {
     minZoom: MIN_ZOOM,
     mode: MODE.FIT,
     tool: TOOL.PAN,
-    x: 0,
-    y: 0,
     zoom: 1
   }
 }

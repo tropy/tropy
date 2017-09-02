@@ -81,7 +81,7 @@ class EsperView extends PureComponent {
     return this.pixi.screen
   }
 
-  reset(props) {
+  async reset(props) {
     this.fadeOut(this.image)
     this.image = null
     this.g = null
@@ -90,15 +90,6 @@ class EsperView extends PureComponent {
       this.image = new Sprite()
       this.image.anchor.set(0.5)
 
-      const { width, height } = this.bounds
-
-      this.move({ x: width / 2, y: height / 2 })
-      this.rotate(props)
-      this.scale(props)
-
-      this.makeInteractive(this.image)
-      this.load(props.src, this.image)
-
       this.s = new Graphics()
       this.s.pivot.set(props.width / 2, props.height / 2)
       this.image.addChild(this.s)
@@ -106,7 +97,20 @@ class EsperView extends PureComponent {
       this.g = new Graphics()
       this.image.addChild(this.g)
 
+      this.rotate(props)
+      this.image.texture = await this.load(props.src, this.image)
+
+      const { mirror, x, y, zoom } = props
+      this.image.scale.x = mirror ? -zoom : zoom
+      this.image.scale.y = zoom
+
+      this.image.position.set(x, y)
+      constrain(this.image.position, this.image, null, this.bounds)
+
+      this.makeInteractive(this.image)
+
       this.pixi.stage.addChildAt(this.image, 0)
+      this.persist()
     }
   }
 
@@ -139,28 +143,26 @@ class EsperView extends PureComponent {
     this.pixi.renderer.resize(width, height)
 
     if (this.image != null) {
-      const limit = getMovementBounds(this.image, zoom, { width, height })
-
-      this.image.x = restrict(this.image.x, limit.left, limit.right)
-      this.image.y = restrict(this.image.y, limit.top, limit.bottom)
+      constrain(this.image.position, this.image, zoom, { width, height })
 
       this.image.scale.set(mirror ? -zoom : zoom, zoom)
+      this.persist()
     }
   }
 
   move({ x, y }, duration = 0) {
     const { position } = this.image
-    const limit = getMovementBounds(this.image, null, this.bounds)
+    const next = constrain({ x, y }, this.image, null, this.bounds)
 
-    this.animate(position, 'move')
-      .to({
-        x: restrict(x, limit.left, limit.right),
-        y: restrict(y, limit.top, limit.bottom)
-      }, duration)
+    if (equal(position, next)) return
+
+    this
+      .animate(position, 'move', this.persist)
+      .to(next, duration)
       .start()
   }
 
-  scale({ mirror, x, y, zoom }, duration = 0) {
+  scale({ mirror, zoom }, duration = 0, { x, y } = {}) {
     const { scale, position } = this.image
     const viewport = this.bounds
 
@@ -173,28 +175,25 @@ class EsperView extends PureComponent {
     const dx = (x - position.x)
     const dy = (y - position.y)
 
-    const limit = getMovementBounds(this.image, zoom, viewport)
+    const next = constrain({
+      x: position.x + dx - dx * dz,
+      y: position.y + dy - dy * dz,
+      zoom
+    }, this.image, zoom, viewport)
 
     this
       .animate({
         x: position.x,
         y: position.y,
         zoom: scale.y
-      }, 'zoom')
-
-      .to({
-        x: restrict(position.x + dx - dx * dz, limit.left, limit.right),
-        y: restrict(position.y + dy - dy * dz, limit.top, limit.bottom),
-        zoom
-      }, duration)
-
+      }, 'zoom', this.persist)
+      .to(next, duration)
       .onUpdate(m => {
         this.image.scale.x = m.zoom * zx
         this.image.scale.y = m.zoom
         this.image.x = m.x
         this.image.y = m.y
       })
-
       .start()
   }
 
@@ -208,7 +207,7 @@ class EsperView extends PureComponent {
 
       this.animate(this.image, 'rotate')
         .to({ rotation: tmp }, duration)
-        .onComplete(() => this.image.rotation = tgt)
+        .onComplete(() => { this.image.rotation = tgt })
         .start()
 
     } else {
@@ -226,14 +225,12 @@ class EsperView extends PureComponent {
       return
     }
 
-    this.animate(sprite)
+    this.animate(sprite, null, () => void sprite.destroy())
       .to({ alpha: 0 }, duration)
-      .onStop(() => sprite.destroy())
-      .onComplete(() => sprite.destroy())
       .start()
   }
 
-  animate(thing, scope) {
+  animate(thing, scope, done) {
     const tween = new Tween(thing, this.tweens)
       .easing(Cubic.InOut)
 
@@ -248,23 +245,30 @@ class EsperView extends PureComponent {
         .onComplete(() => this.tweens[scope] = null)
     }
 
-    return tween
+    if (typeof done === 'function') {
+      tween
+        .onComplete(done)
+        .onStop(done)
+    }
 
+    return tween
   }
 
 
-  load(url, sprite) {
-    if (TextureCache[url]) {
-      sprite.texture = TextureCache[url]
+  load(url) {
+    return new Promise((resolve, reject) => {
+      if (TextureCache[url]) {
+        return resolve(TextureCache[url])
+      }
 
-    } else {
       this.pixi.loader
         .reset()
         .add(url)
-        .load(() => {
-          sprite.texture = TextureCache[url]
+        .load((_, { [url]: res }) => {
+          if (res.error) reject(res.error)
+          else resolve(res.texture)
         })
-    }
+    })
   }
 
   update = () => {
@@ -283,6 +287,14 @@ class EsperView extends PureComponent {
         this.drawSelection(this.s, ...this.props.selections)
       }
     }
+  }
+
+  persist = () => {
+    this.props.onChange({
+      x: this.image.x,
+      y: this.image.y,
+      zoom: this.image.scale.y
+    })
   }
 
   setContainer = (container) => {
@@ -346,6 +358,10 @@ class EsperView extends PureComponent {
     if (target == null) return
 
     switch (target.drag) {
+      case TOOL.PAN:
+        this.persist()
+        break
+
       case TOOL.SELECT: {
         let { x, y, width, height } = target.selection
 
@@ -420,6 +436,7 @@ class EsperView extends PureComponent {
   static propTypes = {
     tool: string.isRequired,
     selections: array.isRequired,
+    onChange: func.isRequired,
     onLoadError: func,
     onDoubleClick: func.isRequired,
     onSelectionCreate: func.isRequired,
@@ -456,6 +473,17 @@ function getMovementBounds(sprite, scale, viewport) {
   return new Rectangle(
     (viewport.width - dx) / 2, (viewport.height - dy) / 2, dx, dy
   )
+}
+
+function constrain(point, ...args) {
+  const limit = getMovementBounds(...args)
+  point.x = restrict(point.x, limit.left, limit.right)
+  point.y = restrict(point.y, limit.top, limit.bottom)
+  return point
+}
+
+function equal(p1, p2) {
+  return p1.x === p2.x && p1.y === p2.y
 }
 
 module.exports = {
