@@ -265,8 +265,15 @@ class EsperView extends PureComponent {
         .reset()
         .add(url)
         .load((_, { [url]: res }) => {
-          if (res.error) reject(res.error)
-          else resolve(res.texture)
+          if (res.error) {
+            reject(res.error)
+          } else {
+            // Loading typically happens on item open while
+            // the view transition is in progress: this
+            // adds a slight delay but improves the overall
+            // smoothness of the transition!
+            requestIdleCallback(() => resolve(res.texture), { timeout: 500 })
+          }
         })
     })
   }
