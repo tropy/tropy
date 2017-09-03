@@ -97,8 +97,15 @@ class EsperView extends PureComponent {
       this.g = new Graphics()
       this.image.addChild(this.g)
 
+      try {
+        this.image.texture = await this.load(props.src, this.image)
+
+      } catch (_) {
+        this.image.width = props.width
+        this.image.height = props.height
+      }
+
       this.rotate(props)
-      this.image.texture = await this.load(props.src, this.image)
 
       const { mirror, x, y, zoom } = props
       this.image.scale.x = mirror ? -zoom : zoom
@@ -265,15 +272,14 @@ class EsperView extends PureComponent {
         .reset()
         .add(url)
         .load((_, { [url]: res }) => {
-          if (res.error) {
-            reject(res.error)
-          } else {
-            // Loading typically happens on item open while
-            // the view transition is in progress: this
-            // adds a slight delay but improves the overall
-            // smoothness of the transition!
-            requestIdleCallback(() => resolve(res.texture), { timeout: 500 })
-          }
+          if (res == null) return reject()
+          if (res.error) return reject(res.error)
+
+          // Loading typically happens on item open while
+          // the view transition is in progress: this
+          // adds a slight delay but improves the overall
+          // smoothness of the transition!
+          requestIdleCallback(() => resolve(res.texture), { timeout: 500 })
         })
     })
   }
