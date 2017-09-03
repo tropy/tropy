@@ -1,5 +1,6 @@
 'use strict'
 
+const assert = require('assert')
 const { OPEN, CLOSE, CLOSED, MIGRATIONS } = require('../constants/project')
 const { Database } = require('../common/db')
 const { Cache } = require('../common/cache')
@@ -10,14 +11,17 @@ const { search, load } = require('./search')
 const { ontology } = require('./ontology')
 const { exec } = require('./cmd')
 const { shell } = require('./shell')
+const { fail } = require('../dialog')
 const mod = require('../models')
 const act = require('../actions')
 const storage = require('./storage')
+const { onErrorPut } = require('./db')
 
 const {
-  all, fork, cancel, cancelled, call, put, take, takeEvery: every
+  all, fork, cancel, call, put, take, takeEvery: every, race
 } = require('redux-saga/effects')
 
+const { delay } = require('redux-saga')
 
 const has = (condition) => (({ error, meta }) =>
   (!error && meta && (!meta.cmd || meta.done) && meta[condition]))
@@ -25,88 +29,97 @@ const has = (condition) => (({ error, meta }) =>
 const command = ({ error, meta }) =>
   (!error && meta && meta.cmd === 'project')
 
+const onErrorClose = onErrorPut(act.project.close)
+
 
 function *open(file) {
   try {
     var db = new Database(file, 'w')
 
-    db.on('error', error => {
-      warn(`unexpected database error: ${error.message}`)
-      debug(error.stack)
-    })
-
+    yield fork(onErrorClose, db)
     yield call(db.migrate, MIGRATIONS)
 
-    var project = yield call(mod.project.load, db)
-    var access  = yield call(mod.access.open, db)
+    const project = yield call(mod.project.load, db)
+    const access = yield call(mod.access.open, db)
 
-    const cache = new Cache(ARGS.cache, project.id)
+    assert(project != null && project.id != null, 'invalid project')
 
+    // Update window's global ARGS to allow reloading the project!
     if (db.path !== ARGS.file) {
       ARGS.file = db.path
       window.location.hash = encodeURIComponent(JSON.stringify(ARGS))
     }
 
+    const cache = new Cache(ARGS.cache, project.id)
     yield call([cache, cache.init])
+
     yield put(act.project.opened({ file: db.path, ...project }))
 
-    yield every(has('search'), search, db)
-    yield every(has('load'), load)
+    try {
+      yield fork(setup, db, project)
 
-    yield all([
-      call(storage.restore, 'nav', project.id),
-      call(storage.restore, 'columns', project.id)
-    ])
-
-    yield fork(function* () {
-      yield all([
-        put(act.history.drop()),
-        put(act.list.load()),
-        put(act.tag.load())
-      ])
-
-      yield call(search, db)
-      yield call(load, db)
-    })
-
-    while (true) {
-      const action = yield take(command)
-      yield fork(exec, { db, id: project.id, cache }, action)
-    }
-
-
-  } catch (error) {
-    warn(`unexpected error in open: ${error.message}`)
-    debug(error.stack)
-
-  } finally {
-    if (project.id) {
-      yield all([
-        call(storage.persist, 'nav', project.id),
-        call(storage.persist, 'columns', project.id)
-      ])
-    }
-
-    if (db) {
-      if (access != null && access.id > 0) {
-        yield call(mod.access.close, db, access.id)
+      while (true) {
+        const action = yield take(command)
+        yield fork(exec, { db, id: project.id, cache }, action)
       }
 
-      yield all([
-        call(mod.item.prune, db),
-        call(mod.list.prune, db),
-        call(mod.value.prune, db),
-        call(mod.photo.prune, db),
-        call(mod.selection.prune, db),
-        call(mod.note.prune, db),
-        call(mod.access.prune, db)
-      ])
-
-      yield call(db.close)
+    } finally {
+      yield call(close, db, project, access)
     }
+  } catch (error) {
+    warn(`unexpected error in *open: ${error.message}`)
+    debug(error.stack)
 
-    yield put(act.project.closed(project.id))
+    yield call(fail, error, db.path)
+
+  } finally {
+    yield call(db.close)
+    yield put(act.project.closed())
+
+    verbose('*open terminated')
   }
+}
+
+
+function *setup(db, project) {
+  yield every(has('search'), search, db)
+  yield every(has('load'), load)
+
+  yield all([
+    call(storage.restore, 'nav', project.id),
+    call(storage.restore, 'columns', project.id)
+  ])
+
+  yield all([
+    put(act.history.drop()),
+    put(act.list.load()),
+    put(act.tag.load())
+  ])
+
+  yield call(search, db)
+  yield call(load, db)
+}
+
+
+function *close(db, project, access) {
+  if (access != null && access.id > 0) {
+    yield call(mod.access.close, db, access.id)
+  }
+
+  yield all([
+    call(mod.item.prune, db),
+    call(mod.list.prune, db),
+    call(mod.value.prune, db),
+    call(mod.photo.prune, db),
+    call(mod.selection.prune, db),
+    call(mod.note.prune, db),
+    call(mod.access.prune, db)
+  ])
+
+  yield all([
+    call(storage.persist, 'nav', project.id),
+    call(storage.persist, 'columns', project.id)
+  ])
 }
 
 
@@ -129,16 +142,23 @@ function *main() {
     ])
 
     while (true) {
-      const { type, payload } = yield take([OPEN, CLOSE])
+      const { type, payload, error } = yield take([OPEN, CLOSE])
 
-      if (task) {
+      if (task != null && task.isRunning()) {
         yield cancel(task)
-        yield take(CLOSED)
+        yield race({
+          closed: take(CLOSED),
+          timeout: call(delay, 2000)
+        })
+
+        task = null
       }
 
-      if (type === CLOSE) return
+      if (type === CLOSE && !error) break
 
-      task = yield fork(open, payload)
+      if (type === OPEN) {
+        task = yield fork(open, payload)
+      }
     }
 
   } catch (error) {
@@ -151,9 +171,9 @@ function *main() {
       call(storage.persist, 'ui')
     ])
 
-    if (!(yield cancelled())) {
-      yield all(aux.map(t => cancel(t)))
-    }
+    yield all(aux.map(bg => {
+      if (bg != null && bg.isRunning()) return cancel(bg)
+    }))
 
     verbose('*main terminated')
   }
