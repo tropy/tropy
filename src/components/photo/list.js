@@ -82,6 +82,18 @@ class PhotoList extends PhotoIterator {
     }
   }
 
+  edit = (photo) => {
+    if (photo != null && !this.props.isDisabled) {
+      const { id, selection } = photo
+
+      if (selection == null) {
+        this.props.onEdit({ photo: id })
+      } else {
+        this.props.onEdit({ selection })
+      }
+    }
+  }
+
   handleEditCancel = (...args) => {
     this.props.onEditCancel(...args)
     this.container.focus()
@@ -103,6 +115,10 @@ class PhotoList extends PhotoIterator {
       case 'expand':
         this.expand(this.getCurrentPhoto())
         break
+      case 'edit':
+      case 'enter':
+        this.edit(this.getCurrentPhoto())
+        break
       case 'open':
         this.handleItemOpen(this.getCurrentPhoto())
         break
@@ -120,7 +136,7 @@ class PhotoList extends PhotoIterator {
 
 
   render() {
-    const { data, edit, onChange, onEdit } = this.props
+    const { data, edit, onChange } = this.props
 
     return this.connect(
       <ul
@@ -139,7 +155,7 @@ class PhotoList extends PhotoIterator {
             title={DC.title}
             isEditing={this.isEditing(photo)}
             onChange={onChange}
-            onEdit={onEdit}
+            onEdit={this.edit}
             onEditCancel={this.handleEditCancel}
             onSelectionSort={this.props.onSelectionSort}/>)}
       </ul>

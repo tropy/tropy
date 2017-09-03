@@ -34,10 +34,8 @@ class PhotoListItem extends PhotoIterable {
     },
 
     onSingleClick: () => {
-      const { photo, isDisabled, isDragging, onEdit } = this.props
-
-      if (!(isDisabled || isDragging)) {
-        onEdit({ photo: photo.id })
+      if (!(this.props.isDisabled || this.props.isDragging)) {
+        this.props.onEdit(this.props.photo)
       }
     },
 
