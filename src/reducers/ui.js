@@ -26,7 +26,7 @@ const init = {
   zoom: 0
 }
 
-function contract(state, ...photos) {
+function contract(state, photos) {
   return {
     ...state, expand: omit(state.expand, photos)
   }

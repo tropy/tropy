@@ -20,7 +20,7 @@ class Iterator extends PureComponent {
   }
 
   componentDidMount() {
-    if (this.constructor.isGrid) {
+    if (this.isGrid) {
       this.ro = new ResizeObserver(([e]) => {
         this.handleResize(e.contentRect)
       })
@@ -36,7 +36,7 @@ class Iterator extends PureComponent {
   }
 
   componentWillReceiveProps(props) {
-    if (this.constructor.isGrid) {
+    if (this.isGrid) {
       if (this.props.size !== props.size) {
         this.setState({
           cols: this.getColumns(props.size)
@@ -117,6 +117,10 @@ class Iterator extends PureComponent {
     })
   }, 20)
 
+
+  get isGrid() {
+    return this.constructor.isGrid
+  }
 
   static get isGrid() {
     return false
