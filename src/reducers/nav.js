@@ -9,7 +9,6 @@ const { isSelected } = require('../selection')
 const init = {
   mode: PROJECT.MODE.PROJECT,
   items: [],
-  expanded: [],
   query: '',
   tags: [],
   sort: { type: 'property', column: DC.title, asc: true },
@@ -75,7 +74,6 @@ module.exports = {
           ...state,
           photo: payload.photo,
           selection: payload.selection,
-          expanded: payload.photo != null ? [payload.photo] : [],
           note: payload.note,
           items: select(state.items, payload.items[0], meta.mod)
         }
@@ -98,7 +96,6 @@ module.exports = {
           mode: PROJECT.MODE.ITEM,
           photo,
           selection,
-          expanded: photo != null ? [photo] : [],
           items: select(state.items, id, 'replace')
         }
       }
@@ -127,15 +124,6 @@ module.exports = {
           note: payload.note,
           items: select(state.items, payload.item, 'replace')
         } : { ...state, photo: null, selection: null }
-
-      case PHOTO.CONTRACT:
-        return {
-          ...state, expanded: state.expanded.filter(s => s !== payload)
-        }
-      case PHOTO.EXPAND:
-        return {
-          ...state, expanded: [payload, ...state.expanded]
-        }
 
       case NOTE.SELECT:
         return payload ? {

@@ -20,6 +20,7 @@ const {
   getActivities,
   getCachePrefix,
   getColumns,
+  getExpandedPhotos,
   getSelectedItems,
   getSelectedPhoto,
   getSelectedNote,
@@ -139,6 +140,7 @@ class ProjectContainer extends PureComponent {
       columns,
       data,
       dt,
+      expanded,
       items,
       nav,
       note,
@@ -174,7 +176,7 @@ class ProjectContainer extends PureComponent {
         <ItemView {...props}
           items={selection}
           data={data}
-          expanded={nav.expanded}
+          expanded={expanded}
           activeSelection={nav.selection}
           selections={selections}
           note={note}
@@ -200,6 +202,7 @@ class ProjectContainer extends PureComponent {
 
 
   static propTypes = {
+    expanded: arrayOf(number).isRequired,
     project: shape({
       file: string
     }).isRequired,
@@ -299,6 +302,7 @@ module.exports = {
       columns: getColumns(state),
       data: state.metadata,
       edit: state.edit,
+      expanded: getExpandedPhotos(state),
       items: getVisibleItems(state),
       keymap: state.keymap,
       lists: state.lists,
