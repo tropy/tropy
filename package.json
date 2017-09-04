@@ -60,7 +60,7 @@
     "electron-packager": "^9.0.1",
     "electron-winstaller": "^2.6.3",
     "enzyme": "^2.9.1",
-    "eslint": "^4.6.0",
+    "eslint": "^4.6.1",
     "eslint-plugin-react": "^7.3.0",
     "glob": "^7.0.0",
     "istanbul-lib-hook": "^1.0.5",
