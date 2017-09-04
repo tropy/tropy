@@ -78,6 +78,7 @@ class PhotoGrid extends PhotoIterator {
     return out
   }
 
+  // eslint-disable-next-line complexity
   handleKeyDown = (event) => {
     switch (match(this.keymap, event)) {
       case (this.isVertical ? 'up' : 'left'):
