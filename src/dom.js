@@ -136,6 +136,27 @@ const dom = {
 
   isInput(node) {
     return node.tagName === 'INPUT'
+  },
+
+  createDragHandler({ handleDrag, handleDragStop }) {
+    function drag() {
+      dom.on(document, 'mousemove', handleDrag)
+      dom.on(document, 'mouseup', onDragStop, { capture: true })
+      dom.on(document, 'mouseleave', onDragStop)
+      dom.on(window, 'blur', onDragStop)
+    }
+
+    function onDragStop(event) {
+      dom.off(document, 'mousemove', handleDrag)
+      dom.off(document, 'mouseup', onDragStop, { capture: true })
+      dom.off(document, 'mouseleave', onDragStop)
+      dom.off(window, 'blur', onDragStop)
+      handleDragStop(event)
+    }
+
+    drag.stop = onDragStop
+
+    return drag
   }
 }
 
