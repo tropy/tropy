@@ -22,7 +22,6 @@ const {
   }
 } = require('../../constants/sass')
 
-
 class EsperView extends PureComponent {
   componentDidMount() {
     const { width, height } = bounds(this.container)
@@ -44,6 +43,7 @@ class EsperView extends PureComponent {
     this.pixi.loader.onLoad.add(this.handleLoadProgress)
     this.pixi.ticker.add(this.update)
     this.pixi.renderer.autoResize = true
+    addCursorStyles(this.pixi.renderer.plugins.interaction)
 
     append(this.pixi.view, this.container)
 
@@ -59,6 +59,12 @@ class EsperView extends PureComponent {
     this.pixi.destroy(true)
     this.io.disconnect()
     if (this.drag.current) this.drag.stop()
+  }
+
+  componentWillReceiveProps(props) {
+    if (this.image != null) {
+      this.image.cursor = props.tool
+    }
   }
 
   shouldComponentUpdate() {
@@ -119,6 +125,7 @@ class EsperView extends PureComponent {
       constrain(this.image.position, this.image, null, this.bounds)
 
       this.makeInteractive(this.image)
+      this.image.cursor = props.tool
 
       this.pixi.stage.addChildAt(this.image, 0)
       this.persist()
@@ -130,8 +137,6 @@ class EsperView extends PureComponent {
     if (sprite == null || sprite.interactive) return
 
     sprite.interactive = true
-    sprite.cursor = 'grab'
-
     sprite.on('mousedown', this.handleDragStart)
   }
 
@@ -354,6 +359,8 @@ class EsperView extends PureComponent {
     if (this.isDragging) this.drag.stop()
     if (!data.isPrimary) return
 
+    target.cursor = `${this.props.tool}-active`
+
     this.drag.start()
     this.drag.current = {
       data,
@@ -372,6 +379,8 @@ class EsperView extends PureComponent {
     try {
       if (!this.isDragging) return
       const { selection, target, tool } = this.drag.current
+
+      target.cursor = tool
 
       switch (tool) {
         case TOOL.PAN:
@@ -499,6 +508,14 @@ function constrain(point, ...args) {
 function equal(p1, p2) {
   return p1.x === p2.x && p1.y === p2.y
 }
+
+function addCursorStyles({ cursorStyles }) {
+  cursorStyles[TOOL.PAN] = '-webkit-grab'
+  cursorStyles[`${TOOL.PAN}-active`] = '-webkit-grabbing'
+  cursorStyles[TOOL.SELECT] = 'crosshair'
+  cursorStyles[`${TOOL.SELECT}-active`] = 'crosshair'
+}
+
 
 module.exports = {
   EsperView
