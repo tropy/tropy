@@ -17,14 +17,17 @@ const skel = (id) => ({
 
 const SEARCH = `
   SELECT item_id AS id
-    FROM fts_notes JOIN photos USING (id)
+    FROM fts_notes n
+      LEFT OUTER JOIN selections USING (id)
+      LEFT OUTER JOIN photos p ON (p.id = n.id OR p.id = photo_id)
     WHERE fts_notes MATCH $query
   UNION
-  SELECT coalesce(items.id, item_id) AS id
-    FROM metadata
+  SELECT coalesce(i.id, p.item_id) AS id
+    FROM metadata m
       JOIN fts_metadata ON (value_id = fts_metadata.rowid)
-      LEFT OUTER JOIN items USING (id)
-      LEFT OUTER JOIN photos USING (id)
+      LEFT OUTER JOIN items i USING (id)
+      LEFT OUTER JOIN selections USING (id)
+      LEFT OUTER JOIN photos p ON (p.id = m.id OR p.id = photo_id)
     WHERE fts_metadata MATCH $query`
 
 const prefix = (query) =>
