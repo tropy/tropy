@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { array, func, string } = require('prop-types')
-const { append, bounds } = require('../../dom')
+const { append, bounds, createDragHandler } = require('../../dom')
 const { restrict } = require('../../common/util')
 const { rad } = require('../../common/math')
 const { linux } = require('../../common/os')
@@ -58,6 +58,7 @@ class EsperView extends PureComponent {
     this.tweens.removeAll()
     this.pixi.destroy(true)
     this.io.disconnect()
+    this.drag.stop()
   }
 
   shouldComponentUpdate() {
@@ -128,11 +129,7 @@ class EsperView extends PureComponent {
     sprite.interactive = true
     sprite.cursor = 'grab'
 
-    sprite
-      .on('pointerdown', this.handleDragStart)
-      .on('pointerup', this.handleDragStop)
-      .on('pointerupoutside', this.handleDragStop)
-      .on('pointermove', this.handleDragMove)
+    sprite.on('pointerdown', this.handleDragStart)
   }
 
   drawSelection(g, ...selections) {
@@ -347,29 +344,31 @@ class EsperView extends PureComponent {
   handleDragStart = (event) => {
     const { data, target } = event
 
-    if (data.isPrimary) {
+    this.drag.stop()
+    this.drag()
 
-      target.origin = {
-        pos: { x: target.x, y: target.y },
-        mov: data.getLocalPosition(target.parent)
-      }
+    if (!data.isPrimary) return
 
-      target.selection = data.getLocalPosition(target)
-
-      target.limit = getMovementBounds(target, null, this.bounds)
-
-      target.data = event.data
-      target.drag = this.props.tool
-
-    } else {
-      this.handleDragStop(event)
+    target.origin = {
+      pos: { x: target.x, y: target.y },
+      mov: data.getLocalPosition(target.parent)
     }
+
+    target.selection = data.getLocalPosition(target)
+
+    target.limit = getMovementBounds(target, null, this.bounds)
+
+    target.data = data
+    target.tool = this.props.tool
+
+    this.drag.target = target
   }
 
-  handleDragStop = ({ target }) => {
+  handleDragStop = () => {
+    const { target } = this.drag
     if (target == null) return
 
-    switch (target.drag) {
+    switch (target.tool) {
       case TOOL.PAN:
         this.persist()
         break
@@ -405,13 +404,16 @@ class EsperView extends PureComponent {
     target.data = null
     target.origin = null
     target.limit = null
-    target.drag = null
+    target.tool = null
+
+    this.drag.target = null
   }
 
-  handleDragMove = ({ target }) => {
+  handleDrag = () => {
+    const { target } = this.drag
     if (target == null) return
 
-    switch (target.drag) {
+    switch (target.tool) {
       case TOOL.PAN: {
         const { pos, mov } = target.origin
         const { top, right, bottom, left } = target.limit
@@ -434,6 +436,11 @@ class EsperView extends PureComponent {
       }
     }
   }
+
+  drag = createDragHandler({
+    handleDrag: this.handleDrag,
+    handleDragStop: this.handleDragStop
+  })
 
   render() {
     return (
