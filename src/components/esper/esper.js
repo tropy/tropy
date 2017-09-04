@@ -244,6 +244,10 @@ class Esper extends PureComponent {
     })
   }, 650)
 
+  update = debounce(() => {
+    this.props.onChange({ image: this.getImageState() })
+  }, 650)
+
   handleRotationChange = (by) => {
     const state = {
       ...this.state,
@@ -343,7 +347,7 @@ class Esper extends PureComponent {
   }
 
   handleViewChange = (state) => {
-    this.setState(state, this.persist)
+    this.setState(state, this.update)
   }
 
   render() {
