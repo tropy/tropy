@@ -139,7 +139,7 @@ const dom = {
   },
 
   createDragHandler({ handleDrag, handleDragStop }) {
-    function drag() {
+    function onDragStart() {
       dom.on(document, 'mousemove', handleDrag)
       dom.on(document, 'mouseup', onDragStop, { capture: true })
       dom.on(document, 'mouseleave', onDragStop)
@@ -154,9 +154,10 @@ const dom = {
       handleDragStop(event)
     }
 
-    drag.stop = onDragStop
-
-    return drag
+    return {
+      start: onDragStart,
+      stop: onDragStop
+    }
   }
 }
 

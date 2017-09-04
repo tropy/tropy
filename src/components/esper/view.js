@@ -58,7 +58,7 @@ class EsperView extends PureComponent {
     this.tweens.removeAll()
     this.pixi.destroy(true)
     this.io.disconnect()
-    this.drag.stop()
+    if (this.drag.current) this.drag.stop()
   }
 
   shouldComponentUpdate() {
@@ -73,9 +73,12 @@ class EsperView extends PureComponent {
     this.pixi.stop()
   }
 
-
   get isStarted() {
     return !!this.pixi.ticker.started
+  }
+
+  get isDragging() {
+    return this.drag.current != null
   }
 
   get bounds() {
@@ -129,7 +132,7 @@ class EsperView extends PureComponent {
     sprite.interactive = true
     sprite.cursor = 'grab'
 
-    sprite.on('pointerdown', this.handleDragStart)
+    sprite.on('mousedown', this.handleDragStart)
   }
 
   drawSelection(g, ...selections) {
@@ -286,8 +289,12 @@ class EsperView extends PureComponent {
     if (this.image != null) {
       this.g.clear()
 
-      if (this.image.selection != null) {
-        this.drawSelection(this.g, this.image.selection)
+      if (this.isDragging) {
+        const { selection } = this.drag.current
+
+        if (selection != null) {
+          this.drawSelection(this.g, selection)
+        }
       }
 
       this.s.clear()
@@ -344,103 +351,90 @@ class EsperView extends PureComponent {
   handleDragStart = (event) => {
     const { data, target } = event
 
-    this.drag.stop()
-    this.drag()
-
+    if (this.isDragging) this.drag.stop()
     if (!data.isPrimary) return
 
-    target.origin = {
-      pos: { x: target.x, y: target.y },
-      mov: data.getLocalPosition(target.parent)
+    this.drag.start()
+    this.drag.current = {
+      data,
+      target,
+      tool: this.props.tool,
+      origin: {
+        pos: { x: target.x, y: target.y },
+        mov: data.getLocalPosition(target.parent)
+      },
+      selection: data.getLocalPosition(target),
+      limit: getMovementBounds(target, null, this.bounds)
     }
-
-    target.selection = data.getLocalPosition(target)
-
-    target.limit = getMovementBounds(target, null, this.bounds)
-
-    target.data = data
-    target.tool = this.props.tool
-
-    this.drag.target = target
   }
 
   handleDragStop = () => {
-    const { target } = this.drag
-    if (target == null) return
+    try {
+      if (!this.isDragging) return
+      const { selection, target, tool } = this.drag.current
 
-    switch (target.tool) {
-      case TOOL.PAN:
-        this.persist()
-        break
+      switch (tool) {
+        case TOOL.PAN:
+          this.persist()
+          break
 
-      case TOOL.SELECT: {
-        let { x, y, width, height } = target.selection
+        case TOOL.SELECT: {
+          let { x, y, width, height } = selection
 
-        x = x + target.texture.orig.width / 2
-        y = y + target.texture.orig.height / 2
+          x = x + target.texture.orig.width / 2
+          y = y + target.texture.orig.height / 2
 
-        if (width < 0) {
-          x = x + width
-          width = -width
+          if (width < 0) {
+            x = x + width
+            width = -width
+          }
+
+          if (height < 0) {
+            y = y + height
+            height = -height
+          }
+
+          this.props.onSelectionCreate({
+            x: Math.round(x),
+            y: Math.round(y),
+            width: Math.round(width),
+            height: Math.round(height)
+          })
+
+          break
         }
-
-        if (height < 0) {
-          y = y + height
-          height = -height
-        }
-
-        this.props.onSelectionCreate({
-          x: Math.round(x),
-          y: Math.round(y),
-          width: Math.round(width),
-          height: Math.round(height)
-        })
-
-        break
       }
+
+    } finally {
+      this.drag.current = null
     }
-
-    target.selection = null
-    target.data = null
-    target.origin = null
-    target.limit = null
-    target.tool = null
-
-    this.drag.target = null
   }
 
   handleDrag = () => {
-    const { target } = this.drag
-    if (target == null) return
+    if (!this.isDragging) return
+    const { data, limit, origin, target, tool } = this.drag.current
 
-    switch (target.tool) {
+    switch (tool) {
       case TOOL.PAN: {
-        const { pos, mov } = target.origin
-        const { top, right, bottom, left } = target.limit
-        const { x, y } = target.data.getLocalPosition(target.parent)
-
+        const { pos, mov } = origin
+        const { top, right, bottom, left } = limit
+        const { x, y } = data.getLocalPosition(target.parent)
         target.x = restrict(pos.x + (x - mov.x), left, right)
         target.y = restrict(pos.y + (y - mov.y), top, bottom)
-
         break
       }
 
       case TOOL.SELECT: {
-        const { selection } = target
-        const { x, y } = target.data.getLocalPosition(target)
-
+        const { selection } = this.drag.current
+        const { x, y } = data.getLocalPosition(target)
         selection.width = x - selection.x
         selection.height = y - selection.y
-
         break
       }
     }
   }
 
-  drag = createDragHandler({
-    handleDrag: this.handleDrag,
-    handleDragStop: this.handleDragStop
-  })
+  drag = createDragHandler(this)
 
   render() {
     return (

@@ -25,7 +25,7 @@ class Draggable extends PureComponent {
     }
 
     this.isDragging = true
-    this.drag()
+    this.drag.start()
 
     const { pageX, pageY } = event
 
