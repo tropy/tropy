@@ -149,9 +149,8 @@ class EsperView extends PureComponent {
   resize({ width, height, zoom, mirror }) {
     this.pixi.renderer.resize(width, height)
 
-    if (this.image != null) {
+    if (this.image != null && zoom !== this.image.scale.y) {
       constrain(this.image.position, this.image, zoom, { width, height })
-
       this.image.scale.set(mirror ? -zoom : zoom, zoom)
       this.persist()
     }

@@ -44,6 +44,7 @@ class Esper extends PureComponent {
   }
 
   componentWillUnmount() {
+    this.persist.flush()
     this.ro.disconnect()
   }
 
@@ -224,6 +225,9 @@ class Esper extends PureComponent {
   }
 
   resize = throttle(({ width, height }) => {
+    width = Math.round(width)
+    height = Math.round(height)
+
     const { minZoom, zoom, zoomToFill } = this.getZoomBounds({ width, height })
 
     this.view.resize({
@@ -231,7 +235,7 @@ class Esper extends PureComponent {
     })
 
     this.setState({ minZoom, zoom, zoomToFill })
-  }, 20)
+  }, 50)
 
   persist = debounce(() => {
     this.props.onChange({
@@ -339,11 +343,7 @@ class Esper extends PureComponent {
   }
 
   handleViewChange = (state) => {
-    this.setState(state, () => {
-      this.props.onChange({
-        image: this.getImageState()
-      })
-    })
+    this.setState(state, this.persist)
   }
 
   render() {
