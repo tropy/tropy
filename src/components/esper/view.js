@@ -140,7 +140,7 @@ class EsperView extends PureComponent {
     g.beginFill(0xcedef7, 0.5)
 
     for (let { x, y, width, height } of selections) {
-      g.drawRect(x, y, width, height)
+      if (width && height) g.drawRect(x, y, width, height)
     }
 
     g.endFill()
@@ -380,6 +380,7 @@ class EsperView extends PureComponent {
 
         case TOOL.SELECT: {
           let { x, y, width, height } = selection
+          if (!width || !height) break
 
           x = x + target.texture.orig.width / 2
           y = y + target.texture.orig.height / 2
