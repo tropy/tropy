@@ -9,6 +9,7 @@
   padding: 0 $space-min;
   position: relative;
   height: 100%;
+  contain: strict;
 
   .scrollbar-style-old-school & {
     padding-right: 0;
@@ -140,6 +141,7 @@
     position: relative;
     height: 100%;
     display: flex; // Prevent overflow
+    contain: strict;
 
     .scroll-container {
       background-image: repeating-linear-gradient(to bottom,
@@ -163,6 +165,8 @@
   }
 
   .item {
+    contain: layout size style;
+
     .metadata {
       height: $row-height;
     }

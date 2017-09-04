@@ -7,6 +7,7 @@
   align-items: center;
   width: $slider-width;
   height: $slider-handle-size + 2px;
+  contain: strict;
 
   .btn {
     flex: 0 0 auto;

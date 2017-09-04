@@ -9,6 +9,7 @@ $resizable-threshold: 8px !default;
   display: flex;
   flex-direction: column;
   position: relative;
+  contain: strict;
 
   .resizable-handle {
     &-col,

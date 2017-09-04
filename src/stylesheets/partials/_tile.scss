@@ -9,6 +9,7 @@
   justify-content: center;
   align-items: center;
   position: relative;
+  contain: strict;
 
   @each $size in $tile-thumbnail-sizes {
     [data-size="#{$size}"] & {
@@ -22,6 +23,10 @@
         height: #{$size}px;
       }
     }
+  }
+
+  &.photo {
+    contain: layout style size;
   }
 
   &.filler {

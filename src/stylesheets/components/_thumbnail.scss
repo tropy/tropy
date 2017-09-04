@@ -5,6 +5,7 @@
 .thumbnail {
   position: relative;
   box-sizing: content-box;
+  contain: strict;
 
   .item.table &,
   .photo.list & {

@@ -9,6 +9,7 @@
   flex-direction: column;
   position: relative;
   background-clip: content-box;
+  contain: strict;
 
   .panel-header {
     flex: 0 0 $panel-header-height;
@@ -16,6 +17,7 @@
     color: $panel-header-color;
     position: relative;
     z-index: 1;
+    contain: strict;
 
     nav {
       width: 100%;
@@ -42,6 +44,7 @@
     height: 100%;
     display: flex; // Prevent overflow
     flex-direction: column;
+    contain: strict;
 
     &.over {
       @extend %drop-target;
