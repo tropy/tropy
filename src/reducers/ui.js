@@ -1,6 +1,6 @@
 'use strict'
 
-const { ESPER, PHOTO, NOTE, UI, SASS } = require('../constants')
+const { ESPER, ITEM, PHOTO, NOTE, UI, SASS } = require('../constants')
 const { merge, omit } = require('../common/util')
 
 const init = {
@@ -33,7 +33,7 @@ function contract(state, photos) {
 }
 
 function expand(state, photo) {
-  return (state.expand[photo] != null) ? state : {
+  return {
     ...state, expand: { ...state.expand, [photo]: Date.now() }
   }
 }
@@ -50,6 +50,8 @@ module.exports = {
         return contract(state, payload)
       case PHOTO.EXPAND:
         return expand(state, payload)
+      case ITEM.OPEN:
+        return expand(state, payload.photos[0])
       case NOTE.SELECT:
         return expand(state, payload.photo)
       default:
