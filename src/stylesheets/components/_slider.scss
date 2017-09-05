@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   width: $slider-width;
-  height: $slider-handle-size + 2px;
+  height: $slider-height;
   contain: strict;
 
   .btn {
@@ -73,7 +73,6 @@
 // Small slider
 .slider-sm {
   width: $slider-width-sm;
-  height: $slider-handle-size-sm + 2px;
 
   .slider-track {
     border-left-width: ($slider-handle-size-sm / 2);
