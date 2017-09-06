@@ -1,10 +1,19 @@
 'use strict'
 
 const { TYPE } = require('./constants')
+const edtf = require('edtf')
 
 const NUM = new Intl.NumberFormat(ARGS.locale, {
   maximumFractionDigits: 2
 })
+
+const DTF = {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric'
+}
 
 const size = {
   bytes: 1,
@@ -15,15 +24,13 @@ const size = {
 }
 
 const format = {
-  datetime(value) {
+  datetime(value, options = DTF) {
     try {
-      return new Intl.DateTimeFormat(ARGS.locale, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric'
-      }).format(value instanceof Date ? value : new Date(value))
+      return value && edtf.format(
+        (value instanceof Date) ? value : edtf(value),
+        ARGS.locale,
+        options)
+
     } catch (error) {
       return value
     }
