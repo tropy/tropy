@@ -11,7 +11,7 @@
   z-index: $zindex-item;
   display: flex;
   background: $body-bg;
-  contain: strict;
+  contain: size layout style;
 
   .item-mode-enter &,
   .item-mode-leave & {
