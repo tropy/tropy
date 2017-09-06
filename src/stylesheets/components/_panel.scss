@@ -9,7 +9,7 @@
   flex-direction: column;
   position: relative;
   background-clip: content-box;
-  contain: strict;
+  contain: content;
 
   .panel-header {
     flex: 0 0 $panel-header-height;
@@ -44,7 +44,7 @@
     height: 100%;
     display: flex; // Prevent overflow
     flex-direction: column;
-    contain: strict;
+    contain: content;
 
     &.over {
       @extend %drop-target;
