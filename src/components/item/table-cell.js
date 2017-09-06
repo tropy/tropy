@@ -8,7 +8,8 @@ const { TagColors } = require('../colors')
 const { createClickHandler } = require('../util')
 const { meta } = require('../../common/os')
 const { auto } = require('../../format')
-const cn = require('classnames')
+const cx = require('classnames')
+const { TYPE } = require('../../constants')
 const {
   arrayOf, bool, func, number, object, shape, string
 } = require('prop-types')
@@ -33,7 +34,7 @@ class ItemTableCell extends PureComponent {
     const { data, property } = this.props
 
     return data[property.id] ?
-      data[property.id].type : (property.type || 'text')
+      data[property.id].type : TYPE.TEXT
   }
 
 
@@ -86,7 +87,7 @@ class ItemTableCell extends PureComponent {
 
     return (
       <td
-        className={cn({ metadata: true, [type]: true })}
+        className={cx({ metadata: true, [type]: true })}
         style={this.style}
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>
