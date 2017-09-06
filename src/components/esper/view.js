@@ -512,8 +512,9 @@ function equal(p1, p2) {
 function addCursorStyles({ cursorStyles }) {
   cursorStyles[TOOL.PAN] = '-webkit-grab'
   cursorStyles[`${TOOL.PAN}-active`] = '-webkit-grabbing'
-  cursorStyles[TOOL.SELECT] = 'crosshair'
-  cursorStyles[`${TOOL.SELECT}-active`] = 'crosshair'
+  cursorStyles[TOOL.SELECT] =
+    cursorStyles[`${TOOL.SELECT}-active`] =
+      '-webkit-image-set(url(./images/esper/arrow@1x.svg) 1x, url(./images/esper/arrow@2x.svg) 2x) 1 1,default'
 }
 
 
