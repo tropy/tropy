@@ -7,6 +7,7 @@ const { Editable } = require('../editable')
 const { TagColors } = require('../colors')
 const { createClickHandler } = require('../util')
 const { meta } = require('../../common/os')
+const { auto } = require('../../format')
 const cn = require('classnames')
 const {
   arrayOf, bool, func, number, object, shape, string
@@ -81,9 +82,11 @@ class ItemTableCell extends PureComponent {
       onCancel
     } = this.props
 
+    const { type, value } = this
+
     return (
       <td
-        className={cn({ metadata: true, [this.type]: true })}
+        className={cn({ metadata: true, [type]: true })}
         style={this.style}
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>
@@ -95,7 +98,8 @@ class ItemTableCell extends PureComponent {
               photos={photos}
               size={size}/>}
           <Editable
-            value={this.value}
+            value={value}
+            display={auto(value, type)}
             isEditing={isEditing}
             isDisabled={isDisabled}
             onCancel={onCancel}
