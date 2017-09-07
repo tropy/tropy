@@ -126,8 +126,8 @@ class Iterator extends PureComponent {
     return false
   }
 
-  static get props() {
-    return Object.keys(this.propTypes)
+  static getPropKeys() {
+    return Object.keys(this.propTypes || this.DecoratedComponent.propTypes)
   }
 
   static propTypes = {

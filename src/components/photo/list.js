@@ -174,5 +174,5 @@ class PhotoList extends PhotoIterator {
 
 
 module.exports = {
-  PhotoList: PhotoList.wrap()
+  PhotoList: PhotoList.asDropTarget()
 }
