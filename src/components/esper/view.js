@@ -14,7 +14,7 @@ const TWEEN = require('@tweenjs/tween.js')
 const { Tween } = TWEEN
 const { Cubic } = TWEEN.Easing
 
-const { TOOL } = require('../../constants/esper')
+const { TOOL, CURSOR } = require('../../constants/esper')
 
 const {
   ESPER: {
@@ -509,14 +509,23 @@ function equal(p1, p2) {
   return p1.x === p2.x && p1.y === p2.y
 }
 
-function addCursorStyles({ cursorStyles }) {
-  cursorStyles[TOOL.PAN] = '-webkit-grab'
-  cursorStyles[`${TOOL.PAN}-active`] = '-webkit-grabbing'
-  cursorStyles[TOOL.SELECT] =
-    cursorStyles[`${TOOL.SELECT}-active`] =
-      '-webkit-image-set(url(./images/esper/arrow@1x.svg) 1x, url(./images/esper/arrow@2x.svg) 2x) 1 1,default'
+function act(name) {
+  return `${name}-active`
 }
 
+function cursorStyle(name) {
+  return CURSOR.STYLE.replace(/%\{name\}/g, name)
+}
+
+function addCursorStyle(styles, tool, cursor = CURSOR[tool]) {
+  styles[tool] = cursorStyle(cursor)
+  styles[act(tool)] = cursorStyle(act(cursor))
+}
+
+function addCursorStyles({ cursorStyles: styles }) {
+  addCursorStyle(styles, TOOL.PAN)
+  addCursorStyle(styles, TOOL.SELECT)
+}
 
 module.exports = {
   EsperView

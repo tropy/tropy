@@ -10,5 +10,11 @@ module.exports = {
   TOOL: {
     PAN: 'pan',
     SELECT: 'select'
+  },
+
+  CURSOR: {
+    STYLE: '-webkit-image-set(url(./images/esper/%{name}@1x.svg) 1x, url(./images/esper/%{name}@2x.svg) 2x) 1 1,default',
+    pan: 'arrow',
+    select: 'crosshair'
   }
 }
