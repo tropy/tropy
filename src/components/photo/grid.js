@@ -162,5 +162,5 @@ class PhotoGrid extends PhotoIterator {
 }
 
 module.exports = {
-  PhotoGrid: PhotoGrid.wrap()
+  PhotoGrid: PhotoGrid.asDropTarget()
 }

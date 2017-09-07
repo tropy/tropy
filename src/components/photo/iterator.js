@@ -174,38 +174,12 @@ class PhotoIterator extends Iterator {
   }
 
 
-  static DropTargetSpec = {
-    drop({ photos }, monitor) {
-      if (monitor.didDrop()) return
-
-      const { id } = monitor.getItem()
-      const to = photos[photos.length - 1].id
-
-      if (id !== to) {
-        return { id, to, offset: 1 }
-      }
-    }
-  }
-
-  static DropTargetCollect = (connect, monitor) => ({
-    dt: connect.dropTarget(),
-    isOver: monitor.isOver({ shallow: true })
-  })
-
-  static wrap() {
-    const Component = DropTarget(
+  static asDropTarget() {
+    return DropTarget(
         DND.PHOTO,
-        this.DropTargetSpec,
-        this.DropTargetCollect
+        DropTargetSpec,
+        DropTargetCollect
       )(this)
-
-    Component.props = this.props
-
-    return Component
-  }
-
-  static get props() {
-    return Object.keys(this.propTypes)
   }
 
   static propTypes = {
@@ -239,6 +213,24 @@ class PhotoIterator extends Iterator {
     onSelectionSort: func.isRequired
   }
 }
+
+const DropTargetSpec = {
+  drop({ photos }, monitor) {
+    if (monitor.didDrop()) return
+
+    const { id } = monitor.getItem()
+    const to = photos[photos.length - 1].id
+
+    if (id !== to) {
+      return { id, to, offset: 1 }
+    }
+  }
+}
+
+const DropTargetCollect = (connect, monitor) => ({
+  dt: connect.dropTarget(),
+  isOver: monitor.isOver({ shallow: true })
+})
 
 
 module.exports = {

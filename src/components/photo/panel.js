@@ -53,7 +53,7 @@ class PhotoPanel extends Panel {
     const PhotoIterator = zoom ? PhotoGrid : PhotoList
 
     return (
-      <PhotoIterator {...pick(props, PhotoIterator.props)}/>
+      <PhotoIterator {...pick(props, PhotoIterator.getPropKeys())}/>
     )
   }
 
