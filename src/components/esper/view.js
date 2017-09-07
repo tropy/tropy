@@ -518,8 +518,8 @@ function cursorStyle(name) {
 }
 
 function addCursorStyle(styles, tool, cursor = CURSOR[tool]) {
-  styles[tool] = cursorStyle(cursor)
-  styles[act(tool)] = cursorStyle(act(cursor))
+  styles[tool] = cursorStyle(cursor.default)
+  styles[act(tool)] = cursorStyle(cursor.active)
 }
 
 function addCursorStyles({ cursorStyles: styles }) {
