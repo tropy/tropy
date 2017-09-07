@@ -10,6 +10,7 @@ const { Rotation } = require('../../common/iiif')
 const { assign } = Object
 const debounce = require('lodash.debounce')
 const throttle = require('lodash.throttle')
+const cx = require('classnames')
 
 const {
   arrayOf, bool, func, node, number, object, shape, string
@@ -354,7 +355,7 @@ class Esper extends PureComponent {
     const { isDisabled } = this
 
     return (
-      <section className="esper">
+      <section className={cx(['esper', this.props.tool])}>
         <EsperHeader>
           <EsperToolbar
             isDisabled={isDisabled}
