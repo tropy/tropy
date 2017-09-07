@@ -103,14 +103,6 @@ i('AlignRight', (
   </svg>
 ))
 
-i('Arrow', (
-  <svg width="16" height="16">
-    <g className="line" fill="currentColor">
-      <path d="M4,2.414,11.586,10h-4l-.293.293L4,13.586V2.414M3,0V16l5-5h6L3,0Z"/>
-    </g>
-  </svg>
-))
-
 i('B', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
@@ -531,6 +523,17 @@ i('X', (
   <svg width="16" height="16">
     <g className="line" fill="currentcolor">
       <polygon points="11.536 10.828 8.707 8 11.536 5.172 10.828 4.464 8 7.293 5.172 4.464 4.464 5.172 7.293 8 4.464 10.828 5.172 11.536 8 8.707 10.828 11.536 11.536 10.828"/>
+    </g>
+  </svg>
+))
+
+
+/* 20 x 20 */
+
+i('Arrow', (
+  <svg width="20" height="20">
+    <g className="line" fill="currentColor">
+      <path d="M5,4.273,13.429,12h-4.9l-.3.36L5,16.238V4.273M4,2V19l5-6h7L4,2Z"/>
     </g>
   </svg>
 ))
