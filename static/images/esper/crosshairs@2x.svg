@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 16 16">
+  <title>Zeichenfläche 1</title>
+  <g>
+    <polygon points="15 6 9 6 9 0 6 0 6 6 0 6 0 9 6 9 6 15 9 15 9 9 15 9 15 6" fill="#fff" opacity="0.6"/>
+    <polygon points="14 7 8 7 8 1 7 1 7 7 1 7 1 8 7 8 7 14 8 14 8 8 14 8 14 7"/>
+  </g>
+</svg>

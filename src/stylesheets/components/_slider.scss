@@ -39,8 +39,8 @@
   border-radius: $slider-track-height / 2;
   margin: 0 ($space-min - $shim);
   position: relative;
-  border-left: ($slider-handle-size / 2) solid $slider-track-bg;
-  border-right: ($slider-handle-size / 2) solid $slider-track-bg;
+  border-left: ($slider-handle-size / 2) solid transparent;
+  border-right: ($slider-handle-size / 2) solid transparent;
 
   &:only-child {
     margin: 0;
@@ -52,8 +52,8 @@
   background: $slider-range-bg;
   height: $slider-track-height;
   border-radius: $slider-track-height / 2;
-  border-left: ($slider-handle-size / 2) solid $slider-range-bg;
-  border-right: ($slider-handle-size / 2) solid $slider-range-bg;
+  border-left: ($slider-handle-size / 2) solid transparent;
+  border-right: ($slider-handle-size / 2) solid transparent;
   margin-left: -($slider-handle-size / 2);
 }
 

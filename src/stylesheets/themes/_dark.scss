@@ -279,11 +279,15 @@ $slider-handle-bg:     var(--shade-7);
 $slider-handle-border: var(--transparent);
 
 // Esper
-$esper-bg:               var(--shade-1);
-$esper-toolbar-bg:       var(--shade-1);
-$esper-icon-color:       var(--shade-8);
-$esper-btn-active-color: var(--shade-9);
-$esper-btn-active-bg:    var(--shade-0-40);
+$esper-bg:                   var(--shade-1);
+$esper-toolbar-bg:           var(--shade-1);
+$esper-icon-color:           var(--shade-8);
+$esper-btn-active-color:     var(--shade-9);
+$esper-btn-active-bg:        var(--shade-0-40);
+$esper-slider-track-bg:      var(--shade-5);
+$esper-slider-range-bg:      var(--shade-6);
+$esper-slider-handle-bg:     var(--shade-7);
+$esper-slider-handle-border: var(--transparent);
 
 // Drag preview
 $drag-preview-opacity:           0.64;
