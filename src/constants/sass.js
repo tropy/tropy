@@ -151,7 +151,7 @@ const PREFS = {
 }
 
 const GRID = {
-  SIZE: 12
+  SIZE: 12,
 }
 
 
@@ -171,4 +171,3 @@ module.exports =  {
   WIZARD,
   NOTEPAD
 }
-

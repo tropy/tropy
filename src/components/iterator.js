@@ -2,9 +2,8 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { TABS, SASS: { TILE, SCROLLBAR } } = require('../constants')
+const { TABS, SASS: { TILE } } = require('../constants')
 const { adjacent, times } = require('../common/util')
-const { win } = require('../window')
 const { floor } = Math
 const { bool, number } = require('prop-types')
 const throttle = require('lodash.throttle')
@@ -22,7 +21,20 @@ class Iterator extends PureComponent {
   componentDidMount() {
     if (this.isGrid) {
       this.ro = new ResizeObserver(([e]) => {
-        this.handleResize(e.contentRect)
+        const { left, right } = e.contentRect
+
+        //const bounds = e.target.getBoundingClientRect()
+        //const delta = bounds.width - left - right
+
+        //if (delta !== 0) {
+        //  console.log( // eslint-disable-line
+        //    delta,
+        //    e.target.className,
+        //    e.target.getBoundingClientRect(),
+        //    e.contentRect)
+        //}
+
+        this.handleResize(left + right)
       })
 
       this.ro.observe(this.container)
@@ -82,10 +94,6 @@ class Iterator extends PureComponent {
   }
 
   getColumns(size = this.props.size, width = this.width) {
-    if (win.state.scrollbars) {
-      width = width - SCROLLBAR.WIDTH
-    }
-
     return floor(width / (size * TILE.FACTOR))
   }
 
@@ -108,12 +116,11 @@ class Iterator extends PureComponent {
   }
 
 
-  handleResize = throttle(({ width }) => {
+  handleResize = throttle((width) => {
     this.width = width
-    const maxCols = this.getColumns(TILE.MIN)
-
     this.setState({
-      cols: this.getColumns(), maxCols
+      cols: this.getColumns(),
+      maxCols: this.getColumns(TILE.MIN)
     })
   }, 20)
 
