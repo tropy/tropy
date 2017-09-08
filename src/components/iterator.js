@@ -22,18 +22,6 @@ class Iterator extends PureComponent {
     if (this.isGrid) {
       this.ro = new ResizeObserver(([e]) => {
         const { left, right } = e.contentRect
-
-        //const bounds = e.target.getBoundingClientRect()
-        //const delta = bounds.width - left - right
-
-        //if (delta !== 0) {
-        //  console.log( // eslint-disable-line
-        //    delta,
-        //    e.target.className,
-        //    e.target.getBoundingClientRect(),
-        //    e.contentRect)
-        //}
-
         this.handleResize(left + right)
       })
 
