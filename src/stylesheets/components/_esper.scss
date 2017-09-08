@@ -25,13 +25,6 @@
       image-url("esper/grab@1x.svg") 1x,
       image-url("esper/grab@2x.svg") 2x
     ) 9 10, default;
-
-    &:active {
-      cursor: -webkit-image-set(
-        image-url("esper/grabbing@1x.svg") 1x,
-        image-url("esper/grabbing@2x.svg") 2x
-      ) 9 10, default;
-    }
   }
 
   .esper-header.draggable {
