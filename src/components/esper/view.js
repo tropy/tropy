@@ -390,6 +390,7 @@ class EsperView extends PureComponent {
       target.cursor = tool
 
       switch (tool) {
+        case TOOL.ARROW:
         case TOOL.PAN:
           this.persist()
           break
@@ -432,6 +433,7 @@ class EsperView extends PureComponent {
     const { data, limit, origin, target, tool } = this.drag.current
 
     switch (tool) {
+      case TOOL.ARROW:
       case TOOL.PAN: {
         const { pos, mov } = origin
         const { top, right, bottom, left } = limit

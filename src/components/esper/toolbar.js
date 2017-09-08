@@ -60,6 +60,10 @@ class EsperToolbar extends PureComponent {
     this.props.onModeChange(this.isZoomToFill ? MODE.ZOOM : MODE.FILL)
   }
 
+  setArrowTool = () => {
+    this.props.onToolChange(TOOL.Arrow)
+  }
+
   setPanTool = () => {
     this.props.onToolChange(TOOL.PAN)
   }
@@ -75,7 +79,9 @@ class EsperToolbar extends PureComponent {
           <ToolGroup>
             <IconButton
               icon={<IconArrow/>}
-              isDisabled={this.props.isDisabled}/>
+              isActive={this.isToolActive(TOOL.ARROW)}
+              isDisabled={this.props.isDisabled}
+              onClick={this.setArrowTool}/>
             <IconButton
               icon={<IconSelection/>}
               title="esper.tool.select"

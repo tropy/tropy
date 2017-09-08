@@ -410,7 +410,7 @@ class Esper extends PureComponent {
     maxZoom: MAX_ZOOM,
     minZoom: MIN_ZOOM,
     mode: MODE.FIT,
-    tool: TOOL.PAN,
+    tool: TOOL.ARROW,
     zoom: 1
   }
 }

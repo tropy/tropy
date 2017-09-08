@@ -8,6 +8,7 @@ module.exports = {
   },
 
   TOOL: {
+    ARROW: 'arrow',
     PAN: 'pan',
     SELECT: 'select'
   }
