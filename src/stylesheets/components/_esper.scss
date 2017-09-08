@@ -82,4 +82,17 @@
       }
     }
   }
+
+  .slider-track {
+    background: $esper-slider-track-bg;
+  }
+
+  .slider-range {
+    background: $esper-slider-range-bg;
+  }
+
+  .slider-handle {
+    background-color: $esper-slider-handle-bg;
+    border-color: $esper-slider-handle-border;
+  }
 }
