@@ -14,14 +14,15 @@ const { TextureCache, skipHello } = PIXI.utils
 const TWEEN = require('@tweenjs/tween.js')
 const { Tween } = TWEEN
 const { Cubic } = TWEEN.Easing
-
-const { TOOL, CURSOR } = require('../../constants/esper')
+const { TOOL } = require('../../constants/esper')
 
 const {
   ESPER: {
+    CURSOR,
     FADE_DURATION
   }
 } = require('../../constants/sass')
+
 
 class EsperView extends PureComponent {
   componentDidMount() {
