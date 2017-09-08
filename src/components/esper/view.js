@@ -4,6 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { array, func, string } = require('prop-types')
 const { append, bounds, createDragHandler } = require('../../dom')
+const css = require('../../css')
 const { restrict } = require('../../common/util')
 const { rad } = require('../../common/math')
 const { linux } = require('../../common/os')
@@ -43,7 +44,12 @@ class EsperView extends PureComponent {
     this.pixi.loader.onLoad.add(this.handleLoadProgress)
     this.pixi.ticker.add(this.update)
     this.pixi.renderer.autoResize = true
-    addCursorStyles(this.pixi.renderer.plugins.interaction)
+
+    for (let name in TOOL) {
+      addCursorStyle(
+        this.pixi.renderer.plugins.interaction.cursorStyles, TOOL[name]
+      )
+    }
 
     append(this.pixi.view, this.container)
 
@@ -509,22 +515,16 @@ function equal(p1, p2) {
   return p1.x === p2.x && p1.y === p2.y
 }
 
-function act(name) {
-  return `${name}-active`
+
+function svg(name) {
+  return [`esper/${name}@1x.svg`, `esper/${name}@2x.svg`]
 }
 
-function cursorStyle(name) {
-  return CURSOR.STYLE.replace(/%\{name\}/g, name)
-}
+function addCursorStyle(styles, name, cursor = CURSOR[name]) {
+  if (cursor == null) return
 
-function addCursorStyle(styles, tool, cursor = CURSOR[tool]) {
-  styles[tool] = cursorStyle(cursor.default)
-  styles[act(tool)] = cursorStyle(cursor.active)
-}
-
-function addCursorStyles({ cursorStyles: styles }) {
-  addCursorStyle(styles, TOOL.PAN)
-  addCursorStyle(styles, TOOL.SELECT)
+  styles[name] = css.cursor(svg(cursor.default), cursor)
+  styles[`${name}-active`] = css.cursor(svg(cursor.active), cursor)
 }
 
 module.exports = {
