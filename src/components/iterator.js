@@ -21,8 +21,7 @@ class Iterator extends PureComponent {
   componentDidMount() {
     if (this.isGrid) {
       this.ro = new ResizeObserver(([e]) => {
-        const { left, right } = e.contentRect
-        this.handleResize(left + right)
+        this.handleResize(e.contentRect)
       })
 
       this.ro.observe(this.container)
@@ -104,7 +103,7 @@ class Iterator extends PureComponent {
   }
 
 
-  handleResize = throttle((width) => {
+  handleResize = throttle(({ width }) => {
     this.width = width
     this.setState({
       cols: this.getColumns(),
