@@ -120,10 +120,14 @@ const ESPER = {
     arrow: {
       default: 'arrow',
       active: 'arrow',
+      x: '1',
+      y: '1'
     },
     move: {
       move: 'arrow',
       active: 'arrow',
+      x: '1',
+      y: '1'
     },
     pan: {
       default: 'grab',

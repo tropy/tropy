@@ -13,18 +13,13 @@
   position: relative;
   overflow: hidden;
 
-  &.select {
-    cursor: -webkit-image-set(
-      image-url("esper/crosshairs@1x.svg") 1x,
-      image-url("esper/crosshairs@2x.svg") 2x
-    ) 7 7, default;
-  }
-
-  &.pan {
-    cursor: -webkit-image-set(
-      image-url("esper/grab@1x.svg") 1x,
-      image-url("esper/grab@2x.svg") 2x
-    ) 9 10, default;
+  @each $key, $val in $esper-cursor {
+    &.#{$key} {
+      cursor: -webkit-image-set(
+        image-url("esper/#{map-get($val, 'default')}@1x.svg") 1x,
+        image-url("esper/#{map-get($val, 'default')}@2x.svg") 2x
+      ) map-get($val, "x") map-get($val, "y"), default;
+    }
   }
 
   .esper-header.draggable {
