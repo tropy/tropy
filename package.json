@@ -54,7 +54,7 @@
     "chai-enzyme": "^0.8.0",
     "chokidar": "^1.6.0",
     "devtron": "^1.0.0",
-    "electron": "^1.6.13",
+    "electron": "1.6.13",
     "electron-devtools-installer": "^2.0.0",
     "electron-mocha": "^4.0.2",
     "electron-packager": "^9.0.1",
