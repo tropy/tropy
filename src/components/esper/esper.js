@@ -5,12 +5,13 @@ const { PureComponent } = React
 const { EsperView } = require('./view')
 const { EsperToolbar } = require('./toolbar')
 const { get, restrict, shallow } = require('../../common/util')
-const { isHorizontal, rotate } = require('../../common/math')
+const { isHorizontal, rotate, round } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
 const { assign } = Object
 const debounce = require('lodash.debounce')
 const throttle = require('lodash.throttle')
 const cx = require('classnames')
+const { min } = Math
 
 const {
   arrayOf, bool, func, node, number, object, shape, string
@@ -128,13 +129,18 @@ class Esper extends PureComponent {
   }
 
 
-  getZoomToFill(screen, state, props = this.props) {
-    return Math.min(props.maxZoom, screen.width / state.width)
+  getZoomToFill(screen, { width } = this.state, props = this.props) {
+    return round(min(props.maxZoom, screen.width / width), 10000)
   }
 
-  getZoomToFit(screen, state, props) {
-    return Math.min(props.minZoom,
-      Math.min(screen.width / state.width, screen.height / state.height))
+  getZoomToFit(
+    screen,
+    { width, height } = this.state,
+    { minZoom } = this.props
+  ) {
+    return round(
+      min(minZoom, min(screen.width / width, screen.height / height)
+    ), 10000)
   }
 
   getZoomBounds(
@@ -190,8 +196,8 @@ class Esper extends PureComponent {
     return id == null ? null : {
       [id]: {
         mode,
-        x: Math.round(x),
-        y: Math.round(y),
+        x: round(x),
+        y: round(y),
         zoom
       }
     }
@@ -226,8 +232,8 @@ class Esper extends PureComponent {
   }
 
   resize = throttle(({ width, height }) => {
-    width = Math.round(width)
-    height = Math.round(height)
+    width = round(width)
+    height = round(height)
 
     const { minZoom, zoom, zoomToFill } = this.getZoomBounds({ width, height })
 
