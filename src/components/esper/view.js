@@ -7,7 +7,6 @@ const { append, bounds, createDragHandler } = require('../../dom')
 const css = require('../../css')
 const { restrict } = require('../../common/util')
 const { rad } = require('../../common/math')
-const { linux } = require('../../common/os')
 const PIXI = require('pixi.js/dist/pixi.js')
 const { Graphics, Sprite, Rectangle } = PIXI
 const { TextureCache, skipHello } = PIXI.utils
@@ -36,7 +35,6 @@ class EsperView extends PureComponent {
       antialias: true,
       resolution: window.devicePixelRatio,
       transparent: true,
-      legacy: linux,
       width,
       height
     })
