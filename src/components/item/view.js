@@ -65,8 +65,8 @@ class ItemView extends PureComponent {
     this.notepad = notepad
   }
 
-  handlePanelResize = (...args) => {
-    this.props.onPanelResize(...args)
+  handlePanelResize = ({ value }) => {
+    this.props.onPanelResize(value)
   }
 
 

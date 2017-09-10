@@ -74,15 +74,18 @@ class Resizable extends PureComponent {
     const { edge, min, max, isRelative } = this.props
     const { isInverse, origin, scale } = this
 
-    let value = restrict(
+    const value = restrict(
       (event[AXS[edge]] - origin) * (isInverse ? -1 : 1), min, max
     )
 
     if (isRelative) {
-      value = restrict(round(value / scale, 100), null, 100)
+      return {
+        absolute: value,
+        value: restrict(round(value / scale, 100), null, 100)
+      }
     }
 
-    return value
+    return { value }
   }
 
   setContainer = (container) => {
@@ -105,8 +108,8 @@ class Resizable extends PureComponent {
       this.props.onDrag(event, this)
     }
 
-    if (this.props.onResize) {
-      this.props.onResize(this.getNewValue(event), event, this)
+    if (this.props.onResize != null) {
+      this.props.onResize(this.getNewValue(event))
     }
   }
 
@@ -196,9 +199,8 @@ class BufferedResizable extends Resizable {
 
   handleDrag = (event) => {
     const value = this.getNewValue(event)
-
-    if (!this.props.onResize(value, event, this)) {
-      this.setState({ value })
+    if (!this.props.onResize(value, this)) {
+      this.setState({ value: value.value })
     }
   }
 
