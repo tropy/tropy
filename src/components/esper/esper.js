@@ -7,6 +7,7 @@ const { EsperToolbar } = require('./toolbar')
 const { get, restrict, shallow } = require('../../common/util')
 const { isHorizontal, rotate, round } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
+const { bounds, on, off } = require('../../dom')
 const { assign } = Object
 const debounce = require('lodash.debounce')
 const throttle = require('lodash.throttle')
@@ -38,16 +39,14 @@ class Esper extends PureComponent {
   }
 
   componentDidMount() {
-    this.ro = new ResizeObserver(([e]) => {
-      this.resize(e.contentRect)
-    })
-
-    this.ro.observe(this.view.container)
+    // Note: Using a ResizeObserver here causes flicker on resize. See #34.
+    on(window, 'resize', this.handleWindowResize)
+    requestIdleCallback(this.handleWindowResize)
   }
 
   componentWillUnmount() {
+    off(window, 'resize', this.handleWindowResize)
     this.persist.flush()
-    this.ro.disconnect()
   }
 
   componentWillReceiveProps(props) {
@@ -102,7 +101,7 @@ class Esper extends PureComponent {
   getStateFromProps(props) {
     const state = this.getEmptyState(props)
     const { photo } = props
-    const { bounds } = this.view
+    const screen = this.view.bounds
 
     if (photo != null && !photo.pending) {
       state.src = `${photo.protocol}://${photo.path}`
@@ -116,14 +115,14 @@ class Esper extends PureComponent {
     }
 
     if (state.x == null || state.mode !== 'zoom') {
-      state.x = bounds.width / 2
+      state.x = screen.width / 2
     }
 
     if (state.y == null || state.mode === 'fit') {
-      state.y = bounds.height / 2
+      state.y = screen.height / 2
     }
 
-    assign(state, this.getZoomBounds(bounds, state, props))
+    assign(state, this.getZoomBounds(screen, state, props))
 
     return state
   }
@@ -231,9 +230,13 @@ class Esper extends PureComponent {
     this.view = view
   }
 
+  handleWindowResize = () => {
+    this.resize(bounds(this.view.container))
+  }
+
   resize = throttle(({ width, height }) => {
-    width = round(width)
-    height = round(height)
+    width = round(width || this.view.bounds.width)
+    height = round(height || this.view.bounds.height)
 
     const { minZoom, zoom, zoomToFill } = this.getZoomBounds({ width, height })
 
