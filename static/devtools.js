@@ -4,9 +4,7 @@
 
 const {
   default: dti,
-
   REACT_DEVELOPER_TOOLS,
-  REACT_PERF,
   REDUX_DEVTOOLS
 
 } = require('electron-devtools-installer')
@@ -21,10 +19,7 @@ module.exports = {
   install,
 
   react() {
-    return Promise.all([
-      install(REACT_DEVELOPER_TOOLS),
-      install(REACT_PERF)
-    ])
+    return install(REACT_DEVELOPER_TOOLS)
   },
 
   redux() {
