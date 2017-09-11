@@ -61,7 +61,7 @@ class EsperToolbar extends PureComponent {
   }
 
   setArrowTool = () => {
-    this.props.onToolChange(TOOL.Arrow)
+    this.props.onToolChange(TOOL.ARROW)
   }
 
   setPanTool = () => {
