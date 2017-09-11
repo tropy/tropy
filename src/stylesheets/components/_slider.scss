@@ -9,6 +9,13 @@
   height: $slider-height;
   contain: strict;
 
+  .draggable {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    height: $slider-handle-size + 2px;
+  }
+
   .btn {
     flex: 0 0 auto;
 
