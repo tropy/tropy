@@ -99,7 +99,6 @@ class EsperView extends PureComponent {
   async reset(props) {
     this.fadeOut(this.image)
     this.image = null
-    this.g = null
 
     if (props.src != null) {
       this.image = new Sprite()
@@ -109,8 +108,8 @@ class EsperView extends PureComponent {
       this.s.pivot.set(props.width / 2, props.height / 2)
       this.image.addChild(this.s)
 
-      this.g = new Graphics()
-      this.image.addChild(this.g)
+      this.image.live = new Graphics()
+      this.image.addChild(this.image.live)
 
       try {
         this.image.texture = await this.load(props.src, this.image)
@@ -140,20 +139,8 @@ class EsperView extends PureComponent {
 
   makeInteractive(sprite) {
     if (sprite == null || sprite.interactive) return
-
     sprite.interactive = true
     sprite.on('mousedown', this.handleDragStart)
-  }
-
-  drawSelection(g, ...selections) {
-    g.lineStyle(2, 0x5c93e5, 1)
-    g.beginFill(0xcedef7, 0.5)
-
-    for (let { x, y, width, height } of selections) {
-      if (width && height) g.drawRect(x, y, width, height)
-    }
-
-    g.endFill()
   }
 
   resize({ width, height, zoom, mirror }) {
@@ -296,24 +283,34 @@ class EsperView extends PureComponent {
 
   update = () => {
     this.tweens.update(performance.now())
+    if (this.image == null) return
 
-    if (this.image != null) {
-      this.g.clear()
+    this.updateLiveSelection()
 
-      if (this.isDragging) {
-        const { selection } = this.drag.current
-
-        if (selection != null) {
-          this.drawSelection(this.g, selection)
-        }
-      }
-
-      this.s.clear()
-
-      if (this.props.selections.length > 0) {
-        this.drawSelection(this.s, ...this.props.selections)
-      }
+    this.s.clear()
+    if (this.props.selections.length > 0) {
+      this.drawSelection(this.s, ...this.props.selections)
     }
+  }
+
+  updateLiveSelection() {
+    this.image.live.clear()
+    if (this.isDragging) {
+      this.drawSelection(this.image.live, this.drag.current.selection)
+    }
+  }
+
+  drawSelection(ctx, ...selections) {
+    if (ctx == null) return
+
+    ctx.lineStyle(2, 0x5c93e5, 1)
+    ctx.beginFill(0xcedef7, 0.5)
+
+    for (let { x, y, width, height } of selections) {
+      if (width && height) ctx.drawRect(x, y, width, height)
+    }
+
+    ctx.endFill()
   }
 
   persist = () => {
