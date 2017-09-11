@@ -9,6 +9,7 @@ const { restrict } = require('../common/util')
 const { round } = require('../common/math')
 const { arrayOf, bool, element, func, number, oneOf } = require('prop-types')
 const cx = require('classnames')
+const throttle = require('lodash.throttle')
 
 
 class Slider extends PureComponent {
@@ -49,7 +50,7 @@ class Slider extends PureComponent {
 
   getNextStep() {
     const { max, steps } = this.props
-    const { value } = this.state
+    const { value } = this.props
 
     if (steps.length === 0) return max
 
@@ -63,7 +64,7 @@ class Slider extends PureComponent {
 
   getPrevStep() {
     const { min, steps } = this.props
-    const { value } = this.state
+    const { value } = this.props
 
     if (steps.length === 0) return min
 
@@ -77,19 +78,12 @@ class Slider extends PureComponent {
 
 
   set(value, reason) {
+    value = restrict(value, this.props.min, this.props.max)
     this.setState({ value })
 
-    if (value === this.props.min) {
-      return this.props.onChange(value, reason)
-    }
-
-    if (value === this.props.max) {
-      return this.props.onChange(value, reason)
-    }
-
-    const nearest = this.round(value)
-    if (nearest !== this.props.value) {
-      this.props.onChange(nearest, reason)
+    value  = this.round(value)
+    if (value !== this.props.value) {
+      this.props.onChange(value, reason)
     }
   }
 
@@ -112,15 +106,13 @@ class Slider extends PureComponent {
     this.set(min + restrict((pageX - left) / width, 0, 1) * this.delta, reason)
   }
 
-  handleMinButtonClick = (event) => {
-    event.stopPropagation()
+  handleMinButtonClick = throttle(() => {
     this.set(this.getPrevStep(), 'button')
-  }
+  }, 100)
 
-  handleMaxButtonClick = (event) => {
-    event.stopPropagation()
+  handleMaxButtonClick = throttle(() => {
     this.set(this.getNextStep(), 'button')
-  }
+  }, 100)
 
   setTrack = (track) => {
     this.track = track
