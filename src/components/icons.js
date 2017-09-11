@@ -533,7 +533,7 @@ i('X', (
 i('Arrow', (
   <svg width="20" height="20">
     <g className="line" fill="currentColor">
-      <path d="M5,4.273,13.429,12h-4.9l-.3.36L5,16.238V4.273M4,2V19l5-6h7L4,2Z"/>
+      <path d="M6,4.273,14.429,12h-4.9l-.3.36L6,16.238V4.273M5,2V19l5-6h7L5,2Z"/>
     </g>
   </svg>
 ))
