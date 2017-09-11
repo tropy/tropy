@@ -339,24 +339,12 @@ class EsperView extends PureComponent {
 
   handleWheel = (e) => {
     e.stopPropagation()
-
-    this.props.onWheel({
-      x: e.nativeEvent.offsetX,
-      y: e.nativeEvent.offsetY,
-      dx: e.nativeEvent.deltaX,
-      dy: e.nativeEvent.deltaY,
-      ctrl: e.nativeEvent.ctrlKey || e.nativeEvent.metaKey
-    })
+    this.props.onWheel(coords(e))
   }
 
   handleDoubleClick = (e) => {
     e.stopPropagation()
-
-    this.props.onDoubleClick({
-      x: e.nativeEvent.offsetX,
-      y: e.nativeEvent.offsetY,
-      shift: e.nativeEvent.shiftKey
-    })
+    this.props.onDoubleClick(coords(e))
   }
 
   handleDragStart = (event) => {
@@ -383,42 +371,18 @@ class EsperView extends PureComponent {
 
   handleDragStop = () => {
     try {
-      if (!this.isDragging) return
-      const { selection, target, tool } = this.drag.current
+      if (this.isDragging) {
+        const { target, tool } = this.drag.current
+        target.cursor = this.props.tool
 
-      target.cursor = tool
-
-      switch (tool) {
-        case TOOL.ARROW:
-        case TOOL.PAN:
-          this.persist()
-          break
-
-        case TOOL.SELECT: {
-          let { x, y, width, height } = selection
-          if (!width || !height) break
-
-          x = x + target.texture.orig.width / 2
-          y = y + target.texture.orig.height / 2
-
-          if (width < 0) {
-            x = x + width
-            width = -width
-          }
-
-          if (height < 0) {
-            y = y + height
-            height = -height
-          }
-
-          this.props.onSelectionCreate({
-            x: Math.round(x),
-            y: Math.round(y),
-            width: Math.round(width),
-            height: Math.round(height)
-          })
-
-          break
+        switch (tool) {
+          case TOOL.ARROW:
+          case TOOL.PAN:
+            this.handlePanStop()
+            break
+          case TOOL.SELECT:
+            this.handleSelectStop()
+            break
         }
       }
 
@@ -428,28 +392,65 @@ class EsperView extends PureComponent {
   }
 
   handleDrag = () => {
-    if (!this.isDragging) return
-    const { data, limit, origin, target, tool } = this.drag.current
-
-    switch (tool) {
-      case TOOL.ARROW:
-      case TOOL.PAN: {
-        const { pos, mov } = origin
-        const { top, right, bottom, left } = limit
-        const { x, y } = data.getLocalPosition(target.parent)
-        target.x = restrict(pos.x + (x - mov.x), left, right)
-        target.y = restrict(pos.y + (y - mov.y), top, bottom)
-        break
-      }
-
-      case TOOL.SELECT: {
-        const { selection } = this.drag.current
-        const { x, y } = data.getLocalPosition(target)
-        selection.width = x - selection.x
-        selection.height = y - selection.y
-        break
+    if (this.isDragging) {
+      switch (this.drag.current.tool) {
+        case TOOL.ARROW:
+        case TOOL.PAN:
+          this.handlePanMove()
+          break
+        case TOOL.SELECT:
+          this.handleSelectMove()
+          break
       }
     }
+  }
+
+  handlePanMove() {
+    const { data, limit, origin, target } = this.drag.current
+    const { pos, mov } = origin
+    const { top, right, bottom, left } = limit
+    const { x, y } = data.getLocalPosition(target.parent)
+    target.x = restrict(pos.x + (x - mov.x), left, right)
+    target.y = restrict(pos.y + (y - mov.y), top, bottom)
+  }
+
+  handlePanStop() {
+    this.persist()
+  }
+
+  handleSelectMove() {
+    const { data, target } = this.drag.current
+    const { selection } = this.drag.current
+    const { x, y } = data.getLocalPosition(target)
+    selection.width = x - selection.x
+    selection.height = y - selection.y
+  }
+
+  handleSelectStop() {
+    const { selection, target } = this.drag.current
+    let { x, y, width, height } = selection
+
+    if (!width || !height) return
+
+    x = x + target.texture.orig.width / 2
+    y = y + target.texture.orig.height / 2
+
+    if (width < 0) {
+      x = x + width
+      width = -width
+    }
+
+    if (height < 0) {
+      y = y + height
+      height = -height
+    }
+
+    this.props.onSelectionCreate({
+      x: Math.round(x),
+      y: Math.round(y),
+      width: Math.round(width),
+      height: Math.round(height)
+    })
   }
 
   drag = createDragHandler(this)
@@ -511,6 +512,17 @@ function constrain(point, ...args) {
   point.x = restrict(point.x, limit.left, limit.right)
   point.y = restrict(point.y, limit.top, limit.bottom)
   return point
+}
+
+function coords(e) {
+  return {
+    x: e.nativeEvent.offsetX,
+    y: e.nativeEvent.offsetY,
+    dx: e.nativeEvent.deltaX,
+    dy: e.nativeEvent.deltaY,
+    ctrl: e.nativeEvent.ctrlKey || e.nativeEvent.metaKey,
+    shift: e.nativeEvent.shiftKey
+  }
 }
 
 function equal(p1, p2) {
