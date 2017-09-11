@@ -48,29 +48,31 @@ $shade-9:  #bbb; // Text color
 $shade-10: #fff; // White
 
 :root {
-  #{--transparent}: $transparent;
-  #{--shade-0}: $shade-0;
-  #{--shade-0-5}: rgba($shade-0, 0.05);
-  #{--shade-0-40}: rgba($shade-0, 0.4);
-  #{--shade-1}: $shade-1;
-  #{--shade-1-lighten-2}: lighten($shade-1, 2%);
-  #{--shade-1-lighten-4}: lighten($shade-1, 4%);
-  #{--shade-2}: $shade-2;
-  #{--shade-3}: $shade-3;
-  #{--shade-4}: $shade-4;
-  #{--shade-4-lighten-2}: lighten($shade-4, 2%);
-  #{--shade-4-lighten-4}: lighten($shade-4, 4%);
-  #{--shade-5}: $shade-5;
-  #{--shade-5-lighten-5}: lighten($shade-5, 5%);
-  #{--shade-6}: $shade-6;
-  #{--shade-6-lighten-5}: lighten($shade-6, 5%);
-  #{--shade-7}: $shade-7;
-  #{--shade-7-50}: rgba($shade-7, 0.5);
-  #{--shade-8}: $shade-8;
-  #{--shade-8-darken-5}: darken($shade-8, 5%);
-  #{--shade-9}: $shade-9;
-  #{--shade-10}: $shade-10;
-  #{--shade-10-5}: rgba($shade-10, 0.05);
+  #{--transparent}:        $transparent;
+  #{--shade-0}:            $shade-0;
+  #{--shade-0-5}:          rgba($shade-0, 0.05);
+  #{--shade-0-60}:         rgba($shade-0, 0.6);
+  #{--shade-1}:            $shade-1;
+  #{--shade-1-lighten-2}:  lighten($shade-1, 2%);
+  #{--shade-1-lighten-4}:  lighten($shade-1, 4%);
+  #{--shade-2}:            $shade-2;
+  #{--shade-3}:            $shade-3;
+  #{--shade-4}:            $shade-4;
+  #{--shade-4-lighten-2}:  lighten($shade-4, 2%);
+  #{--shade-4-lighten-4}:  lighten($shade-4, 4%);
+  #{--shade-5}:            $shade-5;
+  #{--shade-5-lighten-5}:  lighten($shade-5, 5%);
+  #{--shade-6}:            $shade-6;
+  #{--shade-6-lighten-5}:  lighten($shade-6, 5%);
+  #{--shade-7}:            $shade-7;
+  #{--shade-7-50}:         rgba($shade-7, 0.5);
+  #{--shade-8}:            $shade-8;
+  #{--shade-8-darken-5}:   darken($shade-8, 5%);
+  #{--shade-9}:            $shade-9;
+  #{--shade-10}:           $shade-10;
+  #{--shade-10-5}:         rgba($shade-10, 0.05);
+  #{--shade-10-20}:        rgba($shade-10, 0.2);
+  #{--shade-10-darken-4}:  darken($shade-10, 4%);
   #{--shade-10-darken-14}: darken($shade-10, 14%);
 }
 
@@ -280,13 +282,13 @@ $slider-handle-border: var(--transparent);
 
 // Esper
 $esper-bg:                   var(--shade-1);
-$esper-toolbar-bg:           var(--shade-1);
-$esper-icon-color:           var(--shade-8);
-$esper-btn-active-color:     var(--shade-9);
-$esper-btn-active-bg:        var(--shade-0-40);
-$esper-slider-track-bg:      var(--shade-5);
-$esper-slider-range-bg:      var(--shade-6);
-$esper-slider-handle-bg:     var(--shade-7);
+$esper-toolbar-bg:           var(--shade-0-60);
+$esper-icon-color:           var(--shade-10-darken-14);
+$esper-btn-active-color:     var(--shade-10-darken-4);
+$esper-btn-active-bg:        var(--shade-10-20);
+$esper-slider-track-bg:      var(--shade-10-20);
+$esper-slider-range-bg:      var(--shade-10-darken-14);
+$esper-slider-handle-bg:     var(--shade-10-darken-14);
 $esper-slider-handle-border: var(--transparent);
 
 // Drag preview
