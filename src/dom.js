@@ -163,7 +163,7 @@ const dom = {
       dom.off(window, 'blur', onDragStop)
       dom.off(document, 'keydown', onKeyPress)
 
-      handleDragStop(event, event.type !== 'mouseup')
+      handleDragStop(event, event == null || event.type !== 'mouseup')
     }
 
     return {
