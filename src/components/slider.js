@@ -174,7 +174,9 @@ class Slider extends PureComponent {
             <div
               className="slider-handle"
               tabIndex="-1"
-              style={{ left: percentage }}/>
+              style={{ left: percentage }}>
+              <div className="slider-value">888&thinsp;%</div>
+            </div>
           </div>
         </Draggable>
         {this.renderMaxButton()}

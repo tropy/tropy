@@ -7,6 +7,7 @@
   align-items: center;
   width: $slider-width;
   height: $slider-height;
+  margin-top: -$space-min;
   contain: strict;
 
   .draggable {
@@ -77,9 +78,32 @@
   margin-left: -($slider-handle-size / 2 + 1px);
 }
 
+.slider-value {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  width: 32px;        // Use fixed width in order to work around buggy
+  margin-left: -16px; // antialiasing (translateX + transition).
+  font-size: 10px;
+  text-align: center;
+  line-height: $toolbar-height / 2 - $slider-handle-size / 2;
+  color: $slider-value-color;
+  opacity: 0;
+  transition: opacity $slider-value-transition;
+}
+
+.slider .draggable:hover,
+.slider-handle:active {
+  .slider-value {
+    opacity: 1;
+  }
+}
+
+
 // Small slider
 .slider-sm {
   width: $slider-width-sm;
+  height: $slider-height-sm;
 
   .slider-track {
     border-left-width: ($slider-handle-size-sm / 2);
@@ -97,5 +121,9 @@
     height: $slider-handle-size-sm;
     top: -($slider-handle-size-sm / 2 + 1px - $slider-track-height / 2);
     margin-left: -($slider-handle-size-sm / 2 + 1px);
+  }
+
+  .slider-value {
+    display: none;
   }
 }
