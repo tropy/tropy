@@ -26,7 +26,8 @@ const {
     ROTATE_DURATION,
     ZOOM_DURATION,
     ZOOM_STEP_SIZE,
-    ZOOM_WHEEL_FACTOR
+    ZOOM_WHEEL_FACTOR,
+    ZOOM_PRECISION
   }
 } = require('../../constants/sass')
 
@@ -129,7 +130,7 @@ class Esper extends PureComponent {
 
 
   getZoomToFill(screen, { width } = this.state, props = this.props) {
-    return round(min(props.maxZoom, screen.width / width), 10000)
+    return round(min(props.maxZoom, screen.width / width), ZOOM_PRECISION)
   }
 
   getZoomToFit(
@@ -139,7 +140,7 @@ class Esper extends PureComponent {
   ) {
     return round(
       min(minZoom, min(screen.width / width, screen.height / height)
-    ), 10000)
+    ), ZOOM_PRECISION)
   }
 
   getZoomBounds(
@@ -353,6 +354,7 @@ class Esper extends PureComponent {
   }
 
   handleViewChange = (state) => {
+    state.zoom = round(state.zoom, ZOOM_PRECISION)
     this.setState(state, this.update)
   }
 
