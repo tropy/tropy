@@ -21,7 +21,6 @@
     z-index: $zindex-esper-header;
 
     .toolbar {
-      box-sizing: content-box;
       background: $esper-toolbar-bg;
       transform: translate3d(0, -100%, 0);
       padding-top: 0;
@@ -47,6 +46,10 @@
 
       .icon:not(:active) {
         color: $esper-icon-color;
+      }
+
+      .slider {
+        margin-top: 0;
       }
     }
   }
@@ -96,5 +99,9 @@
   .slider-handle {
     background-color: $esper-slider-handle-bg;
     border-color: $esper-slider-handle-border;
+  }
+
+  .slider-value {
+    color: $esper-slider-value-color;
   }
 }

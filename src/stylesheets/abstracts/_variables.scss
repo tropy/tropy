@@ -214,12 +214,14 @@ $resizable-threshold: $space-xs;
 // Slider
 // --------------------------------------------------
 
-$slider-width: 154px;
-$slider-height: $line-height-large;
-$slider-track-height: 4px;
-$slider-handle-size: $space-sm;
+$slider-width:            154px;
+$slider-height:           $toolbar-height;
+$slider-track-height:     $space-min;
+$slider-handle-size:      $space-sm;
+$slider-value-transition: 0.3s ease;
 
-$slider-width-sm: 104px;
+$slider-width-sm:       104px;
+$slider-height-sm:      $line-height-large;
 $slider-handle-size-sm: 10px;
 
 

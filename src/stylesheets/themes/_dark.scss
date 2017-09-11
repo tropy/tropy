@@ -279,6 +279,7 @@ $slider-track-bg:      var(--shade-5);
 $slider-range-bg:      var(--shade-6);
 $slider-handle-bg:     var(--shade-7);
 $slider-handle-border: var(--transparent);
+$slider-value-color:   var(--shade-8);
 
 // Esper
 $esper-bg:                   var(--shade-1);
@@ -290,6 +291,7 @@ $esper-slider-track-bg:      var(--shade-10-20);
 $esper-slider-range-bg:      var(--shade-10-darken-14);
 $esper-slider-handle-bg:     var(--shade-10-darken-14);
 $esper-slider-handle-border: var(--transparent);
+$esper-slider-value-color:   var(--shade-10-darken-14);
 
 // Drag preview
 $drag-preview-opacity:           0.64;
