@@ -61,11 +61,13 @@
   }
 
   @each $key, $val in $esper-cursor {
-    .#{$key} {
-      cursor: -webkit-image-set(
-        image-url("esper/#{map-get($val, 'default')}@1x.svg") 1x,
-        image-url("esper/#{map-get($val, 'default')}@2x.svg") 2x
-      ) map-get($val, "x") map-get($val, "y"), default;
+    &.#{$key} {
+      .esper-view {
+        cursor: -webkit-image-set(
+          image-url("esper/#{map-get($val, 'default')}@1x.svg") 1x,
+          image-url("esper/#{map-get($val, 'default')}@2x.svg") 2x
+        ) map-get($val, "x") map-get($val, "y"), default;
+      }
     }
   }
 
