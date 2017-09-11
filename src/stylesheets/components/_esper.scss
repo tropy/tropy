@@ -13,15 +13,6 @@
   position: relative;
   overflow: hidden;
 
-  @each $key, $val in $esper-cursor {
-    &.#{$key} {
-      cursor: -webkit-image-set(
-        image-url("esper/#{map-get($val, 'default')}@1x.svg") 1x,
-        image-url("esper/#{map-get($val, 'default')}@2x.svg") 2x
-      ) map-get($val, "x") map-get($val, "y"), default;
-    }
-  }
-
   .esper-header.draggable {
     position: absolute;
     left: 0;
@@ -66,6 +57,15 @@
 
     canvas {
       position: absolute;
+    }
+  }
+
+  @each $key, $val in $esper-cursor {
+    .#{$key} {
+      cursor: -webkit-image-set(
+        image-url("esper/#{map-get($val, 'default')}@1x.svg") 1x,
+        image-url("esper/#{map-get($val, 'default')}@2x.svg") 2x
+      ) map-get($val, "x") map-get($val, "y"), default;
     }
   }
 
