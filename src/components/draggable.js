@@ -81,6 +81,7 @@ class Draggable extends PureComponent {
   }
 
   static defaultProps = {
+    classes: 'draggable',
     delay: 250,
     onDrag: noop,
     onDragStop: noop

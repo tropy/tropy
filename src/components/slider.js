@@ -8,6 +8,7 @@ const { bounds, borders } = require('../dom')
 const { restrict } = require('../common/util')
 const { round } = require('../common/math')
 const { arrayOf, bool, element, func, number, oneOf } = require('prop-types')
+const cx = require('classnames')
 
 
 class Slider extends PureComponent {
@@ -161,10 +162,9 @@ class Slider extends PureComponent {
     const percentage = `${100 * offset / delta}%`
 
     return (
-      <div>
+      <div className={cx(this.classes)}>
         {this.renderMinButton()}
         <Draggable
-          classes={this.classes}
           delay={15}
           isDisabled={isDisabled}
           onDrag={this.handleDrag}
