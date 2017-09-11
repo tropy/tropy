@@ -92,7 +92,7 @@
   transition: opacity $slider-value-transition;
 }
 
-.slider .draggable:hover,
+.slider:hover,
 .slider-handle:active {
   .slider-value {
     opacity: 1;
