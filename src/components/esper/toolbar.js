@@ -129,6 +129,7 @@ class EsperToolbar extends PureComponent {
               min={this.props.minZoom}
               max={this.props.maxZoom}
               precision={this.props.zoomPrecision}
+              showCurrentValue
               steps={this.props.zoomSteps}
               minIcon={<IconMinusCircle/>}
               maxIcon={<IconPlusCircle/>}

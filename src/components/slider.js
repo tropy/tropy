@@ -157,6 +157,14 @@ class Slider extends PureComponent {
     }
   }
 
+  renderCurrentValue() {
+    return this.props.showCurrentValue && (
+      <div className="slider-value">
+        {round(this.props.value * 100)}&thinsp;%
+      </div>
+    )
+  }
+
   render() {
     const { offset, delta, isDisabled } = this
     const percentage = `${100 * offset / delta}%`
@@ -175,7 +183,7 @@ class Slider extends PureComponent {
               className="slider-handle"
               tabIndex="-1"
               style={{ left: percentage }}>
-              <div className="slider-value">888&thinsp;%</div>
+              {this.renderCurrentValue()}
             </div>
           </div>
         </Draggable>
@@ -191,6 +199,7 @@ class Slider extends PureComponent {
     min: number.isRequired,
     minIcon: element,
     precision: number.isRequired,
+    showCurrentValue: bool.isRequired,
     size: oneOf(['sm', 'md', 'lg']).isRequired,
     steps: arrayOf(number).isRequired,
     value: number.isRequired,
@@ -201,6 +210,7 @@ class Slider extends PureComponent {
     min: 0,
     max: 1,
     precision: 1,
+    showCurrentValue: false,
     size: 'md',
     steps: []
   }
