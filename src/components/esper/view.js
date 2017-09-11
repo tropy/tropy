@@ -161,8 +161,9 @@ class EsperView extends PureComponent {
     if (equal(position, next)) return
 
     this
-      .animate(position, 'move', this.persist)
+      .animate(position, 'move')
       .to(next, duration)
+      .onComplete(this.persist)
       .start()
   }
 
@@ -190,7 +191,7 @@ class EsperView extends PureComponent {
         x: position.x,
         y: position.y,
         zoom: scale.y
-      }, 'zoom', this.persist)
+      }, 'zoom')
       .to(next, duration)
       .onUpdate(m => {
         this.image.scale.x = m.zoom * zx
@@ -198,6 +199,7 @@ class EsperView extends PureComponent {
         this.image.x = m.x
         this.image.y = m.y
       })
+      .onComplete(this.persist)
       .start()
   }
 
