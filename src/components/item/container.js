@@ -31,14 +31,6 @@ class ItemContainer extends PureComponent {
     this.props.onUiUpdate({ esper: { height } })
   }
 
-  // Note: Remove when using ResizeObserver in Esper! See #34.
-  setEsper = (esper) => {
-    this.esper = esper
-  }
-  resize = ({ absolute }) => {
-    this.esper.resize({ height: absolute })
-  }
-
   render() {
     return (
       <div className="item-container">
@@ -46,11 +38,9 @@ class ItemContainer extends PureComponent {
           edge="bottom"
           value={this.props.esper.height}
           isRelative
-          onResize={this.resize}
           onChange={this.handleEsperResize}
           min={256}>
           <Esper {...this.props.image}
-            ref={this.setEsper}
             isDisabled={this.props.isDisabled}
             photo={this.props.photo}
             selection={this.props.selection}

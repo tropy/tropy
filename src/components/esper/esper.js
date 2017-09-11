@@ -7,7 +7,6 @@ const { EsperToolbar } = require('./toolbar')
 const { get, restrict, shallow } = require('../../common/util')
 const { isHorizontal, rotate, round } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
-const { bounds, on, off } = require('../../dom')
 const { assign } = Object
 const debounce = require('lodash.debounce')
 const throttle = require('lodash.throttle')
@@ -39,13 +38,14 @@ class Esper extends PureComponent {
   }
 
   componentDidMount() {
-    // Note: Using a ResizeObserver here causes flicker on resize. See #34.
-    on(window, 'resize', this.handleWindowResize)
-    requestIdleCallback(this.handleWindowResize)
+    this.ro = new ResizeObserver(([e]) => {
+      this.resize(e.contentRect)
+    })
+    this.ro.observe(this.view.container)
   }
 
   componentWillUnmount() {
-    off(window, 'resize', this.handleWindowResize)
+    this.ro.disconnect()
     this.persist.flush()
   }
 
@@ -228,10 +228,6 @@ class Esper extends PureComponent {
 
   setView = (view) => {
     this.view = view
-  }
-
-  handleWindowResize = () => {
-    this.resize(bounds(this.view.container))
   }
 
   resize = throttle(({ width, height }) => {
