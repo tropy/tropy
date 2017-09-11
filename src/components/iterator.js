@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { TABS, SASS: { TILE } } = require('../constants')
 const { adjacent, times } = require('../common/util')
-const { ceil, floor } = Math
+const { floor, round } = Math
 const { bool, number } = require('prop-types')
 const throttle = require('lodash.throttle')
 
@@ -81,7 +81,7 @@ class Iterator extends PureComponent {
   }
 
   getColumns(size = this.props.size, width = this.width) {
-    return floor(width / ceil(size * TILE.FACTOR))
+    return floor(width / round(size * TILE.FACTOR))
   }
 
   setContainer = (container) => {
