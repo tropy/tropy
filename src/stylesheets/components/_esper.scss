@@ -22,7 +22,7 @@
 
     .toolbar {
       box-sizing: content-box;
-      background: if($theme=="dark", rgba(#444, 0.5), rgba(#fff, 0.6));
+      background: $esper-toolbar-bg;
       transform: translate3d(0, -100%, 0);
       padding-top: 0;
       height: $toolbar-height;
