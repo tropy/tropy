@@ -161,22 +161,24 @@ class Slider extends PureComponent {
     const percentage = `${100 * offset / delta}%`
 
     return (
-      <Draggable
-        classes={this.classes}
-        delay={15}
-        isDisabled={isDisabled}
-        onDrag={this.handleDrag}
-        onDragStart={this.handleDragStart}>
+      <div>
         {this.renderMinButton()}
-        <div ref={this.setTrack} className="slider-track">
-          <div className="slider-range" style={{ width: percentage }}/>
-          <div
-            className="slider-handle"
-            tabIndex="-1"
-            style={{ left: percentage }}/>
-        </div>
+        <Draggable
+          classes={this.classes}
+          delay={15}
+          isDisabled={isDisabled}
+          onDrag={this.handleDrag}
+          onDragStart={this.handleDragStart}>
+          <div ref={this.setTrack} className="slider-track">
+            <div className="slider-range" style={{ width: percentage }}/>
+            <div
+              className="slider-handle"
+              tabIndex="-1"
+              style={{ left: percentage }}/>
+          </div>
+        </Draggable>
         {this.renderMaxButton()}
-      </Draggable>
+      </div>
     )
   }
 
