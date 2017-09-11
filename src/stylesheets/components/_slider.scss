@@ -7,7 +7,6 @@
   align-items: center;
   width: $slider-width;
   height: $slider-height;
-  margin-top: -$space-min;
   contain: strict;
 
   .draggable {
@@ -103,7 +102,6 @@
 // Small slider
 .slider-sm {
   width: $slider-width-sm;
-  height: $slider-height-sm;
 
   .slider-track {
     border-left-width: ($slider-handle-size-sm / 2);
