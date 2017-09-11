@@ -139,11 +139,21 @@ const dom = {
   },
 
   createDragHandler({ handleDrag, handleDragStop }) {
+    function onKeyPress(event) {
+      switch (event.key) {
+        case 'Escape':
+          event.stopPropagation()
+          onDragStop(event)
+          break
+      }
+    }
+
     function onDragStart() {
       dom.on(document, 'mousemove', handleDrag)
       dom.on(document, 'mouseup', onDragStop, { capture: true })
       dom.on(document, 'mouseleave', onDragStop)
       dom.on(window, 'blur', onDragStop)
+      dom.on(document, 'keydown', onKeyPress)
     }
 
     function onDragStop(event) {
@@ -151,7 +161,9 @@ const dom = {
       dom.off(document, 'mouseup', onDragStop, { capture: true })
       dom.off(document, 'mouseleave', onDragStop)
       dom.off(window, 'blur', onDragStop)
-      handleDragStop(event)
+      dom.off(document, 'keydown', onKeyPress)
+
+      handleDragStop(event, event.type !== 'mouseup')
     }
 
     return {

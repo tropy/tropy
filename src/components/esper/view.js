@@ -366,7 +366,7 @@ class EsperView extends PureComponent {
     }
   }
 
-  handleDragStop = () => {
+  handleDragStop = (_, wasCancelled) => {
     try {
       if (this.isDragging) {
         const { target, tool } = this.drag.current
@@ -378,7 +378,7 @@ class EsperView extends PureComponent {
             this.handlePanStop()
             break
           case TOOL.SELECT:
-            this.handleSelectStop()
+            this.handleSelectStop(wasCancelled)
             break
         }
       }
@@ -423,11 +423,11 @@ class EsperView extends PureComponent {
     selection.height = y - selection.y
   }
 
-  handleSelectStop() {
+  handleSelectStop(wasCancelled) {
     const { selection, target } = this.drag.current
     let { x, y, width, height } = selection
 
-    if (!width || !height) return
+    if (wasCancelled || !width || !height) return
 
     x = x + target.texture.orig.width / 2
     y = y + target.texture.orig.height / 2
