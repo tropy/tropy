@@ -34,7 +34,7 @@ class EsperView extends PureComponent {
 
     this.pixi = new PIXI.Application({
       antialias: false,
-      roundPixels: true,
+      roundPixels: false,
       resolution: window.devicePixelRatio,
       transparent: true,
       width,
