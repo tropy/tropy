@@ -61,7 +61,6 @@
   }
 
   .btn-icon {
-    display: none;
     position: absolute;
     right: 6px;
     bottom: 5px;
@@ -73,7 +72,6 @@
   }
 
   .pointer {
-    display: none;
     position: absolute;
     left: calc(50% - 10px);
     bottom: -$space-sm;
@@ -81,13 +79,6 @@
     height: 2 * $pointer-height;
     border: $pointer-height solid transparent;
     border-bottom: $pointer-height solid $tile-expansion-bg;
-  }
-
-  &.expanded {
-    .btn-icon,
-    .pointer {
-      display: block;
-    }
   }
 }
 

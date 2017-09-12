@@ -24,6 +24,14 @@ class PhotoTile extends PhotoIterable {
     }
   })
 
+  handleExpansionToggle= () => {
+    if (this.props.isExpanded) {
+      this.props.onContract(this.props.photo)
+    } else {
+      this.props.onExpand(this.props.photo)
+    }
+  }
+
   render() {
     return this.connect(
       <li
@@ -34,10 +42,12 @@ class PhotoTile extends PhotoIterable {
             onClick: this.handleClick,
             onContextMenu: this.handleContextMenu
           })}
-          <IconButton
-            icon={<IconSelection/>}/>
+          {this.props.isExpandable &&
+            <IconButton
+              icon={<IconSelection/>}
+              onClick={this.handleExpansionToggle}/>}
         </div>
-        <div className="pointer"/>
+        {this.props.isExpanded && <div className="pointer"/>}
       </li>
     )
   }
