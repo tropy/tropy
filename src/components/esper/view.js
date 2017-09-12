@@ -8,7 +8,7 @@ const css = require('../../css')
 const { restrict } = require('../../common/util')
 const { rad } = require('../../common/math')
 const PIXI = require('pixi.js/dist/pixi.js')
-const { Graphics, Sprite, Rectangle } = PIXI
+const { Graphics, Sprite, SCALE_MODES, Rectangle } = PIXI
 const { TextureCache, skipHello } = PIXI.utils
 const TWEEN = require('@tweenjs/tween.js')
 const { Tween } = TWEEN
@@ -18,11 +18,11 @@ const { TOOL } = require('../../constants/esper')
 const {
   ESPER: {
     CURSOR,
-    FADE_DURATION
+    FADE_DURATION,
+    ZOOM_LINEAR_MAX
   }
 } = require('../../constants/sass')
 
-PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
 
 class EsperView extends PureComponent {
   componentDidMount() {
@@ -34,7 +34,7 @@ class EsperView extends PureComponent {
 
     this.pixi = new PIXI.Application({
       antialias: false,
-      roundPixels: true,
+      roundPixels: false,
       resolution: window.devicePixelRatio,
       transparent: true,
       width,
@@ -122,8 +122,9 @@ class EsperView extends PureComponent {
       }
 
       this.rotate(props)
-
       const { mirror, x, y, zoom } = props
+
+      setScaleMode(this.image.texture, zoom)
       this.image.scale.x = mirror ? -zoom : zoom
       this.image.scale.y = zoom
 
@@ -149,11 +150,12 @@ class EsperView extends PureComponent {
     this.pixi.renderer.resize(width, height)
     this.pixi.render()
 
-    if (this.image != null) {
-      constrain(this.image.position, this.image, zoom, { width, height })
-      this.image.scale.set(mirror ? -zoom : zoom, zoom)
-      this.persist()
-    }
+    if (this.image == null) return
+
+    constrain(this.image.position, this.image, zoom, { width, height })
+    setScaleMode(this.image.texture, zoom)
+    this.image.scale.set(mirror ? -zoom : zoom, zoom)
+    this.persist()
   }
 
   move({ x, y }, duration = 0) {
@@ -170,7 +172,7 @@ class EsperView extends PureComponent {
   }
 
   scale({ mirror, zoom }, duration = 0, { x, y } = {}) {
-    const { scale, position } = this.image
+    const { scale, position, texture } = this.image
     const viewport = this.bounds
 
     const zx = mirror ? -1 : 1
@@ -187,6 +189,8 @@ class EsperView extends PureComponent {
       y: position.y + dy - dy * dz,
       zoom
     }, this.image, zoom, viewport)
+
+    setScaleMode(texture, zoom)
 
     this
       .animate({
@@ -482,6 +486,14 @@ function isVertical(angle) {
   if (angle > Math.PI * 0.25 && angle < Math.PI * 0.75) return true
   if (angle > Math.PI * 1.25 && angle < Math.PI * 1.75) return true
   return false
+}
+
+function setScaleMode(texture, zoom) {
+  if (texture == null) return
+
+  texture.baseTexture.scaleMode = (zoom > ZOOM_LINEAR_MAX) ?
+    SCALE_MODES.LINEAR :
+    SCALE_MODES.NEAREST
 }
 
 function getSpriteBounds(sprite, scale) {
