@@ -492,8 +492,8 @@ function setScaleMode(texture, zoom) {
   if (texture == null) return
 
   texture.baseTexture.scaleMode = (zoom > ZOOM_LINEAR_MAX) ?
-    SCALE_MODES.LINEAR :
-    SCALE_MODES.NEAREST
+    SCALE_MODES.NEAREST :
+    SCALE_MODES.LINEAR
 }
 
 function getSpriteBounds(sprite, scale) {
