@@ -22,6 +22,7 @@ const {
   }
 } = require('../../constants/sass')
 
+PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR
 
 class EsperView extends PureComponent {
   componentDidMount() {
@@ -32,8 +33,8 @@ class EsperView extends PureComponent {
     skipHello()
 
     this.pixi = new PIXI.Application({
-      antialias: false,
-      roundPixels: true,
+      antialias: true,
+      roundPixels: false,
       resolution: window.devicePixelRatio,
       transparent: true,
       width,
