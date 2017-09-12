@@ -111,13 +111,15 @@ class PhotoIterator extends Iterator {
 
 
   handleItemOpen = (photo) => {
-    if (!this.props.isItemOpen) {
-      this.props.onItemOpen({
-        id: photo.item,
-        photos: [photo.id],
-        selection: photo.selection
-      })
+    if (this.props.isItemOpen) {
+      return this.expand(photo)
     }
+
+    this.props.onItemOpen({
+      id: photo.item,
+      photos: [photo.id],
+      selection: photo.selection
+    })
   }
 
   handleDelete = ({ id, item, selection }) => {
