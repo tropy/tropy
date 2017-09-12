@@ -124,7 +124,7 @@ class EsperView extends PureComponent {
       this.rotate(props)
       const { mirror, x, y, zoom } = props
 
-      setScaleMode(this.image.texture, zoom)
+      this.setScaleMode(this.image.texture, zoom)
       this.image.scale.x = mirror ? -zoom : zoom
       this.image.scale.y = zoom
 
@@ -146,6 +146,28 @@ class EsperView extends PureComponent {
     sprite.on('mousedown', this.handleDragStart)
   }
 
+  setScaleMode(texture, zoom, renderer = this.pixi.renderer) {
+    if (texture == null) return
+
+    const { baseTexture } = texture
+    const isNearest = (zoom > ZOOM_LINEAR_MAX)
+    const scaleMode = isNearest ? SCALE_MODES.NEAREST : SCALE_MODES.LINEAR
+
+    if (baseTexture.scaleMode !== scaleMode) {
+      baseTexture.scaleMode = scaleMode
+
+      // Updating scale mode dynamically is broken in Pixi v4. See #4096.
+      // baseTexture.update()
+      const glTexture = baseTexture._glTextures[renderer.CONTEXT_UID]
+
+      if (glTexture) {
+        glTexture.bind()
+        glTexture[`enable${isNearest ? 'Nearest' : 'Linear'}Scaling`]()
+      }
+    }
+  }
+
+
   resize({ width, height, zoom, mirror }) {
     this.pixi.renderer.resize(width, height)
     this.pixi.render()
@@ -153,7 +175,7 @@ class EsperView extends PureComponent {
     if (this.image == null) return
 
     constrain(this.image.position, this.image, zoom, { width, height })
-    setScaleMode(this.image.texture, zoom)
+    this.setScaleMode(this.image.texture, zoom)
     this.image.scale.set(mirror ? -zoom : zoom, zoom)
     this.persist()
   }
@@ -190,7 +212,7 @@ class EsperView extends PureComponent {
       zoom
     }, this.image, zoom, viewport)
 
-    setScaleMode(texture, zoom)
+    this.setScaleMode(texture, zoom)
 
     this
       .animate({
@@ -486,14 +508,6 @@ function isVertical(angle) {
   if (angle > Math.PI * 0.25 && angle < Math.PI * 0.75) return true
   if (angle > Math.PI * 1.25 && angle < Math.PI * 1.75) return true
   return false
-}
-
-function setScaleMode(texture, zoom) {
-  if (texture == null) return
-
-  texture.baseTexture.scaleMode = (zoom > ZOOM_LINEAR_MAX) ?
-    SCALE_MODES.NEAREST :
-    SCALE_MODES.LINEAR
 }
 
 function getSpriteBounds(sprite, scale) {
