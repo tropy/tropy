@@ -8,8 +8,9 @@ const css = require('../../css')
 const { restrict } = require('../../common/util')
 const { rad } = require('../../common/math')
 const PIXI = require('pixi.js/dist/pixi.js')
-const { Graphics, Sprite, SCALE_MODES, Rectangle } = PIXI
+const { Graphics, Sprite, Rectangle } = PIXI
 const { TextureCache, skipHello } = PIXI.utils
+const { SelectionPool } = require('./selection')
 const TWEEN = require('@tweenjs/tween.js')
 const { Tween } = TWEEN
 const { Cubic } = TWEEN.Easing
@@ -70,7 +71,13 @@ class EsperView extends PureComponent {
 
   componentWillReceiveProps(props) {
     if (this.image != null) {
-      this.image.cursor = props.tool
+      if (!this.isDragging) {
+        this.image.cursor = props.tool
+      }
+
+      if (props.selections !== this.props.selections) {
+        this.image.selections.update(props)
+      }
     }
   }
 
@@ -106,12 +113,8 @@ class EsperView extends PureComponent {
       this.image = new Sprite()
       this.image.anchor.set(0.5)
 
-      this.s = new Graphics()
-      this.s.pivot.set(props.width / 2, props.height / 2)
-      this.image.addChild(this.s)
-
-      this.image.live = new Graphics()
-      this.image.addChild(this.image.live)
+      this.image.selections = new SelectionPool(this)
+      this.image.addChild(this.image.selections)
 
       try {
         this.image.texture = await this.load(props.src, this.image)
@@ -150,19 +153,21 @@ class EsperView extends PureComponent {
     if (texture == null) return
 
     const { baseTexture } = texture
-    const isNearest = (zoom > ZOOM_LINEAR_MAX)
-    const scaleMode = isNearest ? SCALE_MODES.NEAREST : SCALE_MODES.LINEAR
+    const pixellate = (zoom > ZOOM_LINEAR_MAX)
+    const scaleMode = pixellate ?
+      PIXI.SCALE_MODES.NEAREST :
+      PIXI.SCALE_MODES.LINEAR
 
     if (baseTexture.scaleMode !== scaleMode) {
       baseTexture.scaleMode = scaleMode
 
-      // Updating scale mode dynamically is broken in Pixi v4. See #4096.
-      // baseTexture.update()
+      // HACK: Updating scale mode dynamically is broken in Pixi v4.
+      // See Pixi #4096.
       const glTexture = baseTexture._glTextures[renderer.CONTEXT_UID]
 
       if (glTexture) {
         glTexture.bind()
-        glTexture[`enable${isNearest ? 'Nearest' : 'Linear'}Scaling`]()
+        glTexture[`enable${pixellate ? 'Nearest' : 'Linear'}Scaling`]()
       }
     }
   }
@@ -255,11 +260,11 @@ class EsperView extends PureComponent {
     sprite.interactive = false
 
     if (!this.isStarted) {
-      sprite.destroy()
+      sprite.destroy({ children: true })
       return
     }
 
-    this.animate(sprite, null, () => void sprite.destroy())
+    this.animate(sprite, null, () => void sprite.destroy({ children: true }))
       .to({ alpha: 0 }, duration)
       .start()
   }
@@ -314,33 +319,7 @@ class EsperView extends PureComponent {
   update = () => {
     this.tweens.update(performance.now())
     if (this.image == null) return
-
-    this.updateLiveSelection()
-
-    this.s.clear()
-    if (this.props.selections.length > 0) {
-      this.drawSelection(this.s, ...this.props.selections)
-    }
-  }
-
-  updateLiveSelection() {
-    this.image.live.clear()
-    if (this.isDragging) {
-      this.drawSelection(this.image.live, this.drag.current.selection)
-    }
-  }
-
-  drawSelection(ctx, ...selections) {
-    if (ctx == null) return
-
-    ctx.lineStyle(2, 0x5c93e5, 1)
-    ctx.beginFill(0xcedef7, 0.5)
-
-    for (let { x, y, width, height } of selections) {
-      if (width && height) ctx.drawRect(x, y, width, height)
-    }
-
-    ctx.endFill()
+    this.image.selections.draw(this.drag.current)
   }
 
   persist = () => {
@@ -414,7 +393,7 @@ class EsperView extends PureComponent {
       }
 
     } finally {
-      this.drag.current = null
+      this.drag.current = undefined
     }
   }
 
