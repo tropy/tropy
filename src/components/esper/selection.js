@@ -6,10 +6,10 @@ const BLANK = Object.freeze({})
 
 
 class SelectionPool extends Container {
-  constructor(view) {
+  constructor({ width, height }) {
     super()
-    this.view = view
-    this.update()
+    this.pivot.set(width / 2, height / 2)
+    this.addChild(new Selection())
   }
 
   draw({ selection } = BLANK) {
@@ -26,13 +26,10 @@ class SelectionPool extends Container {
   }
 
   destroy() {
-    this.view = null
     super.destroy({ children: true })
   }
 
-  update({ selections } = this.view.props) {
-    this.selections = selections
-
+  update({ selections }) {
     for (let i = 0; i < selections.length; ++i) {
       if (i < this.children.length) {
         this.children[i].update(selections[i])

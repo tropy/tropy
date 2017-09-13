@@ -113,7 +113,7 @@ class EsperView extends PureComponent {
       this.image = new Sprite()
       this.image.anchor.set(0.5)
 
-      this.image.selections = new SelectionPool(this)
+      this.image.selections = new SelectionPool(props)
       this.image.addChild(this.image.selections)
 
       try {
@@ -364,6 +364,16 @@ class EsperView extends PureComponent {
 
     target.cursor = `${this.props.tool}-active`
 
+    const selection = data.getLocalPosition(target)
+
+    selection.offset = {
+      x: target.texture.orig.width / 2,
+      y: target.texture.orig.height / 2
+    }
+
+    selection.x += selection.offset.x
+    selection.y += selection.offset.y
+
     this.drag.start()
     this.drag.current = {
       data,
@@ -373,7 +383,7 @@ class EsperView extends PureComponent {
         pos: { x: target.x, y: target.y },
         mov: data.getLocalPosition(target.parent)
       },
-      selection: data.getLocalPosition(target),
+      selection,
       limit: getMovementBounds(target, null, this.bounds)
     }
   }
@@ -431,18 +441,13 @@ class EsperView extends PureComponent {
     const { data, target } = this.drag.current
     const { selection } = this.drag.current
     const { x, y } = data.getLocalPosition(target)
-    selection.width = x - selection.x
-    selection.height = y - selection.y
+    selection.width = (x + selection.offset.x) - selection.x
+    selection.height = (y + selection.offset.y) - selection.y
   }
 
   handleSelectStop(wasCancelled) {
-    const { selection, target } = this.drag.current
-    let { x, y, width, height } = selection
-
+    let { x, y, width, height } = this.drag.current.selection
     if (wasCancelled || !width || !height) return
-
-    x = x + target.texture.orig.width / 2
-    y = y + target.texture.orig.height / 2
 
     if (width < 0) {
       x = x + width
