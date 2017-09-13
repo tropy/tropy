@@ -2,20 +2,27 @@
 
 const PIXI = require('pixi.js/dist/pixi.js')
 const { Container, Graphics } = PIXI
-const BLANK = {}
+const BLANK = Object.freeze({})
+
 
 class SelectionPool extends Container {
   constructor(view) {
     super()
     this.view = view
     this.update()
-
-    this.addChild(new Selection())
   }
 
-  draw(live = BLANK) {
+  draw({ selection } = BLANK) {
+    if (!this.children.length) return
+
     const scale = 1 / this.parent.scale.y
-    this.children[0].draw(scale, live.selection)
+    let i = 0
+
+    for (; i < this.children.length - 1; ++i) {
+      this.children[i].draw(scale)
+    }
+
+    this.children[i].draw(scale, selection)
   }
 
   destroy() {
@@ -23,15 +30,40 @@ class SelectionPool extends Container {
     super.destroy({ children: true })
   }
 
-  update(props = this.view.props) {
-    this.selections = props.selections
+  update({ selections } = this.view.props) {
+    this.selections = selections
+
+    for (let i = 0; i < selections.length; ++i) {
+      if (i < this.children.length) {
+        this.children[i].update(selections[i])
+      } else {
+        this.addChild(new Selection(selections[i]))
+      }
+    }
+
+    if (this.children.length <= selections.length) {
+      this.addChild(new Selection())
+    } else {
+      this.children[selections.length].update(BLANK)
+
+      if (this.children.length > selections.length + 1) {
+        for (let s of this.removeChildren(selections.length + 1)) {
+          s.destroy()
+        }
+      }
+    }
   }
 }
 
+
 class Selection extends Graphics {
-  constructor(state = {}) {
+  constructor(state = BLANK) {
     super()
     this.update(state)
+  }
+
+  get isBlank() {
+    return this.state === BLANK
   }
 
   destroy() {
