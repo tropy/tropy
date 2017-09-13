@@ -47,6 +47,7 @@ class ItemContainer extends PureComponent {
             selections={this.props.selections}
             tool={this.props.esper.tool}
             onChange={this.handleEsperChange}
+            onSelect={this.props.onPhotoSelect}
             onSelectionCreate={this.props.onSelectionCreate}/>
         </BufferedResizable>
         <NotePad
@@ -75,6 +76,7 @@ class ItemContainer extends PureComponent {
     selections: arrayOf(object).isRequired,
     onNoteChange: func.isRequired,
     onPhotoSave: func.isRequired,
+    onPhotoSelect: func.isRequired,
     onSelectionCreate: func.isRequired,
     onUiUpdate: func.isRequired
   }
@@ -94,6 +96,10 @@ module.exports = {
     dispatch => ({
       onPhotoSave(...args) {
         dispatch(act.photo.save(...args))
+      },
+
+      onPhotoSelect(...args) {
+        dispatch(act.photo.select(...args))
       },
 
       onSelectionCreate(...args) {

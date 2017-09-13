@@ -10,7 +10,7 @@ const { rad } = require('../../common/math')
 const PIXI = require('pixi.js/dist/pixi.js')
 const { Sprite, Rectangle } = PIXI
 const { TextureCache, skipHello } = PIXI.utils
-const { SelectionPool } = require('./selection')
+const { Selection, SelectionPool } = require('./selection')
 const TWEEN = require('@tweenjs/tween.js')
 const { Tween } = TWEEN
 const { Cubic } = TWEEN.Easing
@@ -362,6 +362,10 @@ class EsperView extends PureComponent {
     if (this.isDragging) this.drag.stop()
     if (!data.isPrimary) return
 
+    if (target instanceof Selection) {
+      return this.props.onSelectionActivate(target.state)
+    }
+
     target.cursor = `${this.props.tool}-active`
 
     const selection = data.getLocalPosition(target)
@@ -486,6 +490,7 @@ class EsperView extends PureComponent {
     onLoadError: func,
     onDoubleClick: func.isRequired,
     onSelectionCreate: func.isRequired,
+    onSelectionActivate: func.isRequired,
     onWheel: func.isRequired
   }
 }

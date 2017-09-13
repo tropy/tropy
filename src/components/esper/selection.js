@@ -58,7 +58,6 @@ class Selection extends Graphics {
     super()
     this.update(state)
 
-    this.on('mousedown', this.handleClick)
     this.on('mouseover', this.handleMouseOver)
     this.on('mouseout', this.handleMouseOut)
   }
@@ -98,10 +97,6 @@ class Selection extends Graphics {
         state.x, state.y, state.width, state.height
       )
     }
-  }
-
-  handleClick = (event) => {
-    event.stopPropagation()
   }
 
   handleMouseOver = (event) => {

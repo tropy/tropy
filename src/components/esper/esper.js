@@ -342,6 +342,16 @@ class Esper extends PureComponent {
     }, ZOOM_DURATION)
   }
 
+  handleSelectionActivate = (selection) => {
+    const { photo } = this.props
+    this.props.onSelect({
+      photo: photo.id,
+      item: photo.item,
+      selection: selection.id,
+      note: selection.notes[0]
+    })
+  }
+
   handleSelectionCreate = (selection) => {
     const { angle, mirror } = this.state
 
@@ -382,6 +392,7 @@ class Esper extends PureComponent {
           selections={this.props.selections}
           tool={this.state.tool}
           onChange={this.handleViewChange}
+          onSelectionActivate={this.handleSelectionActivate}
           onSelectionCreate={this.handleSelectionCreate}
           onDoubleClick={this.handleDoubleClick}
           onWheel={this.handleWheel}/>
@@ -396,6 +407,7 @@ class Esper extends PureComponent {
     minZoom: number.isRequired,
     mode: string.isRequired,
     onChange: func.isRequired,
+    onSelect: func.isRequired,
     onSelectionCreate: func.isRequired,
     photo: object,
     tool: string.isRequired,
