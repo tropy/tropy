@@ -43,7 +43,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
-    "babel-eslint": "^7.0.0",
+    "babel-eslint": "^8.0.0",
     "babel-plugin-syntax-jsx": "^6.3.13",
     "babel-plugin-transform-class-properties": "^6.11.5",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
@@ -114,7 +114,7 @@
     "rimraf": "^2.6.2",
     "sanitize-filename": "^1.6.1",
     "shortid": "^2.2.8",
-    "sqlite3": "^3.1.10",
+    "sqlite3": "^3.1.11",
     "string.prototype.padstart": "^3.0.0",
     "transducers.js": "^0.3.2",
     "uuid": "^3.1.0",
