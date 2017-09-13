@@ -1,7 +1,7 @@
 'use strict'
 
 const PIXI = require('pixi.js/dist/pixi.js')
-const { Container, Graphics } = PIXI
+const { Container, Graphics, Rectangle } = PIXI
 const BLANK = Object.freeze({})
 
 
@@ -22,7 +22,7 @@ class SelectionPool extends Container {
       this.children[i].draw(scale)
     }
 
-    this.children[i].draw(scale, selection)
+    this.children[i].draw(scale, selection, true)
   }
 
   destroy() {
@@ -57,6 +57,10 @@ class Selection extends Graphics {
   constructor(state = BLANK) {
     super()
     this.update(state)
+
+    this.on('mousedown', this.handleClick)
+    this.on('mouseover', this.handleMouseOver)
+    this.on('mouseout', this.handleMouseOut)
   }
 
   get isBlank() {
@@ -68,7 +72,11 @@ class Selection extends Graphics {
     super.destroy({ children: true })
   }
 
-  draw(scale = 1, { x, y, width, height } = this.state, isActive = false) {
+  draw(
+    scale = 1,
+    { x, y, width, height } = this.state,
+    isActive = this.isActive
+  ) {
     this.clear()
     if (!width || !height) return
 
@@ -80,8 +88,31 @@ class Selection extends Graphics {
 
   update(state) {
     this.state = state
+
+    if (this.isBlank) {
+      this.interactive = false
+      this.hitArea = null
+    } else {
+      this.interactive = true
+      this.hitArea = new Rectangle(
+        state.x, state.y, state.width, state.height
+      )
+    }
   }
 
+  handleClick = (event) => {
+    event.stopPropagation()
+  }
+
+  handleMouseOver = (event) => {
+    event.stopPropagation()
+    this.isActive = true
+  }
+
+  handleMouseOut = (event) => {
+    event.stopPropagation()
+    this.isActive = false
+  }
 }
 
 
