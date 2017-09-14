@@ -36,11 +36,14 @@ class EsperView extends PureComponent {
     this.pixi = new PIXI.Application({
       antialias: false,
       roundPixels: false,
-      resolution: window.devicePixelRatio,
+      resolution: Math.round(devicePixelRatio),
       transparent: true,
       width,
       height
     })
+
+    this.m = matchMedia('(max-resolution: 1dppx)')
+    this.m.addListener(this.handleResolutionChange)
 
     this.pixi.loader.onError.add(this.handleLoadError)
     this.pixi.loader.onLoad.add(this.handleLoadProgress)
@@ -66,6 +69,7 @@ class EsperView extends PureComponent {
     this.tweens.removeAll()
     this.pixi.destroy(true)
     this.io.disconnect()
+    this.m.removeListener(this.handleResolutionChange)
     if (this.drag.current) this.drag.stop()
   }
 
@@ -335,6 +339,17 @@ class EsperView extends PureComponent {
 
   setContainer = (container) => {
     this.container = container
+  }
+
+  handleResolutionChange = () => {
+    const resolution = Math.round(devicePixelRatio)
+    const { width, height } = this.pixi.renderer
+
+    this.pixi.renderer.resolution = resolution
+    this.pixi.renderer.rootRenderTarget.resolution = resolution
+    this.pixi.renderer.plugins.interaction.resolution = resolution
+    this.pixi.renderer.resize(width, height - 1)
+    this.pixi.renderer.resize(width, height)
   }
 
   handleLoadProgress = () => {
