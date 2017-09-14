@@ -343,13 +343,14 @@ class EsperView extends PureComponent {
 
   handleResolutionChange = () => {
     const resolution = devicePixelRatio
-    const { width, height } = this.pixi.renderer
+    const { width, height } = bounds(this.container)
 
     this.pixi.renderer.resolution = resolution
     this.pixi.renderer.rootRenderTarget.resolution = resolution
     this.pixi.renderer.plugins.interaction.resolution = resolution
-    this.pixi.renderer.resize(width, height - 1)
+    this.pixi.renderer.resize(width - 1, height)
     this.pixi.renderer.resize(width, height)
+    this.pixi.render()
   }
 
   handleLoadProgress = () => {
