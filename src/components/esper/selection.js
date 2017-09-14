@@ -79,7 +79,7 @@ class Selection extends Graphics {
     this.clear()
     if (!width || !height) return
 
-    this.lineStyle(scale, 0x5c93e5, 1)
+    this.lineStyle(window.devicePixelRatio * scale, 0x5c93e5, 1)
     this.beginFill(0xcedef7, isActive ? 0.8 : 0.4)
     this.drawRect(x, y, width, height)
     this.endFill()
