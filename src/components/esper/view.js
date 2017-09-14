@@ -36,7 +36,7 @@ class EsperView extends PureComponent {
     this.pixi = new PIXI.Application({
       antialias: false,
       roundPixels: false,
-      resolution: Math.round(devicePixelRatio),
+      resolution: devicePixelRatio,
       transparent: true,
       width,
       height
@@ -342,7 +342,7 @@ class EsperView extends PureComponent {
   }
 
   handleResolutionChange = () => {
-    const resolution = Math.round(devicePixelRatio)
+    const resolution = devicePixelRatio
     const { width, height } = this.pixi.renderer
 
     this.pixi.renderer.resolution = resolution
