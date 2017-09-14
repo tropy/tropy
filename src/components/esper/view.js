@@ -178,10 +178,13 @@ class EsperView extends PureComponent {
 
 
   resize({ width, height, zoom, mirror }) {
+    width = Math.round(width)
+    height = Math.round(height)
+
     this.pixi.renderer.resize(width, height)
     this.pixi.render()
 
-    if (this.image == null) return
+    if (this.image == null || zoom == null) return
 
     constrain(this.image.position, this.image, zoom, { width, height })
     this.setScaleMode(this.image.texture, zoom)
@@ -342,18 +345,11 @@ class EsperView extends PureComponent {
   }
 
   handleResolutionChange = () => {
-    let resolution = devicePixelRatio
-    let { width, height } = bounds(this.container)
-
-    width = Math.round(width)
-    height = Math.round(height)
-
-    this.pixi.renderer.resolution = resolution
-    this.pixi.renderer.rootRenderTarget.resolution = resolution
-    this.pixi.renderer.plugins.interaction.resolution = resolution
-    this.pixi.renderer.resize(width - 1, height)
-    this.pixi.renderer.resize(width, height)
-    this.pixi.render()
+    const dppx = devicePixelRatio
+    this.pixi.renderer.resolution = dppx
+    this.pixi.renderer.rootRenderTarget.resolution = dppx
+    this.pixi.renderer.plugins.interaction.resolution = dppx
+    this.resize(bounds(this.container))
   }
 
   handleLoadProgress = () => {
