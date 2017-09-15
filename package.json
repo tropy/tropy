@@ -83,7 +83,7 @@
     "colors": "^1.1.2",
     "edtf": "^2.2.2",
     "exif-reader": "github:inukshuk/exif-reader#patched",
-    "generic-pool": "^3.0.0",
+    "generic-pool": "^3.1.8",
     "js-yaml": "^3.10.0",
     "jsonld": "^0.4.12",
     "lodash.debounce": "^4.0.7",
