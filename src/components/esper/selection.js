@@ -10,11 +10,7 @@ class SelectionPool extends Container {
   constructor(props) {
     super()
     this.pivot.set(props.width / 2, props.height / 2)
-    this.grow()
     this.on('mousemove', this.handleMouseMove)
-  }
-
-  grow() {
   }
 
   update({ selection } = BLANK) {
@@ -142,8 +138,32 @@ class Selection extends Graphics {
 
 
 class SelectionMask extends Graphics {
+  constructor() {
+    super()
+  }
 
-  sync() {
+  update() {
+    this.clear()
+
+    if (this.parent == null) return
+    const { width, height } = this.parent
+
+    this.pivot.set(width / 2, height / 2)
+    this.beginFill(0x000000, 0.6)
+    this.drawRect(0, 0, width, height)
+    this.endFill()
+  }
+
+
+  sync({ selection }) {
+    this.update()
+
+    if (selection != null) {
+      this.visible = true
+
+    } else {
+      this.visible = false
+    }
   }
 }
 
