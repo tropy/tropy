@@ -390,7 +390,7 @@ class EsperView extends PureComponent {
     if (!data.isPrimary) return
 
     if (target instanceof Selection) {
-      return this.props.onSelectionActivate(target.state)
+      return this.props.onSelectionActivate(target.data)
     }
 
     target.cursor = `${this.props.tool}-active`

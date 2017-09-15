@@ -11,6 +11,8 @@ class SelectionPool extends Container {
     super()
     this.pivot.set(width / 2, height / 2)
     this.addChild(new Selection())
+    this.interactive = true
+    this.on('mousemove', this.handleMouseMove)
   }
 
   draw({ selection } = BLANK) {
@@ -28,6 +30,18 @@ class SelectionPool extends Container {
 
   destroy() {
     super.destroy({ children: true })
+  }
+
+  handleMouseMove(event) {
+    const { target } = event
+
+    if (target instanceof Selection) {
+      event.stopPropagation()
+      this.active = target
+
+    } else {
+      this.active = null
+    }
   }
 
   update({ selections }) {
@@ -59,12 +73,16 @@ class Selection extends Graphics {
     super()
     this.update(data)
 
-    this.on('mouseover', this.handleMouseOver)
-    this.on('mouseout', this.handleMouseOut)
+    //this.on('mouseover', this.handleMouseOver)
+    //this.on('mouseout', this.handleMouseOut)
   }
 
   get isBlank() {
     return this.data === BLANK
+  }
+
+  get isActive() {
+    return this === this.parent.active
   }
 
   get state() {
@@ -107,14 +125,14 @@ class Selection extends Graphics {
     }
   }
 
-  handleMouseOver = (event) => {
+  handleMouseOver(event) {
     event.stopPropagation()
-    this.isActive = true
+    event.target.parent.activeSelection = event.target
   }
 
-  handleMouseOut = (event) => {
+  handleMouseOut(event) {
     event.stopPropagation()
-    this.isActive = false
+    this.parent.activeSelection = null
   }
 }
 
