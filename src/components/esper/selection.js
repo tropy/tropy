@@ -140,30 +140,26 @@ class Selection extends Graphics {
 class SelectionMask extends Graphics {
   constructor() {
     super()
+    this.cacheAsBitmap = true
   }
 
   update() {
     this.clear()
 
-    if (this.parent == null) return
-    const { width, height } = this.parent
+    if (this.parent == null || this.data == null) return
+    const { width, height } = this.parent.texture.orig
 
     this.pivot.set(width / 2, height / 2)
-    this.beginFill(0x000000, 0.6)
+    this.beginFill(0x000000, 0.2)
     this.drawRect(0, 0, width, height)
     this.endFill()
   }
 
 
   sync({ selection }) {
+    this.data = selection
+    this.visible = (selection != null)
     this.update()
-
-    if (selection != null) {
-      this.visible = true
-
-    } else {
-      this.visible = false
-    }
   }
 }
 
