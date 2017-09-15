@@ -54,8 +54,13 @@ class Esper extends PureComponent {
     if (!shallow(props, this.props)) {
       const state = this.getStateFromProps(props)
 
-      if (this.shouldViewReset(props, state)) {
-        this.view.reset(state)
+      switch (true) {
+        case (this.shouldViewReset(props, state)):
+          this.view.reset(state)
+          break
+        case (this.shouldViewRefresh(props, state)):
+          this.view.refresh(state)
+          break
       }
 
       this.setState(state)
@@ -64,9 +69,12 @@ class Esper extends PureComponent {
 
   shouldViewReset(props, state) {
     if (state.src !== this.state.src) return true
-    if (props.selection !== this.props.selection) return true
     if (get(props.photo, ['id']) !== get(this.props.photo, ['id'])) return true
+    return false
+  }
 
+  shouldViewRefresh(props) {
+    if (props.selection !== this.props.selection) return true
     return false
   }
 

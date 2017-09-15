@@ -128,22 +128,28 @@ class EsperView extends PureComponent {
         this.image.height = props.height
       }
 
-      this.rotate(props)
-      const { mirror, x, y, zoom } = props
-
-      this.setScaleMode(this.image.texture, zoom)
-      this.image.scale.x = mirror ? -zoom : zoom
-      this.image.scale.y = zoom
-
-      this.image.position.set(x, y)
-      constrain(this.image.position, this.image, null, this.bounds)
-
       this.makeInteractive(this.image)
       this.image.cursor = props.tool
-
       this.pixi.stage.addChildAt(this.image, 0)
-      this.persist()
+
+      this.refresh(props)
     }
+  }
+
+  refresh(props) {
+    if (this.image == null) return
+
+    this.rotate(props)
+    const { mirror, x, y, zoom } = props
+
+    this.setScaleMode(this.image.texture, zoom)
+    this.image.scale.x = mirror ? -zoom : zoom
+    this.image.scale.y = zoom
+
+    this.image.position.set(x, y)
+    constrain(this.image.position, this.image, null, this.bounds)
+
+    this.persist()
   }
 
 
