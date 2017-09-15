@@ -3,6 +3,7 @@
 const PIXI = require('pixi.js/dist/pixi.js')
 const { Container, Graphics, Rectangle } = PIXI
 const BLANK = Object.freeze({})
+const { COLOR } = require('../../constants/esper')
 
 
 class SelectionPool extends Container {
@@ -22,7 +23,7 @@ class SelectionPool extends Container {
       this.children[i].draw(scale)
     }
 
-    this.children[i].draw(scale, selection, true)
+    this.children[i].draw(scale, selection, 'live')
   }
 
   destroy() {
@@ -54,39 +55,46 @@ class SelectionPool extends Container {
 
 
 class Selection extends Graphics {
-  constructor(state = BLANK) {
+  constructor(data = BLANK) {
     super()
-    this.update(state)
+    this.update(data)
 
     this.on('mouseover', this.handleMouseOver)
     this.on('mouseout', this.handleMouseOut)
   }
 
   get isBlank() {
-    return this.state === BLANK
+    return this.data === BLANK
+  }
+
+  get state() {
+    if (this.isActive) return 'active'
+    return 'default'
   }
 
   destroy() {
-    this.state = null
+    this.data = null
     super.destroy({ children: true })
   }
 
   draw(
     scale = 1,
-    { x, y, width, height } = this.state,
-    isActive = this.isActive
+    { x, y, width, height } = this.data,
+    state = this.state
   ) {
     this.clear()
     if (!width || !height) return
 
-    this.lineStyle(scale, 0x5c93e5, 1)
-    this.beginFill(0xcedef7, isActive ? 0.8 : 0.4)
+    const colors = COLOR.selection[state]
+
+    this.lineStyle(scale, ...colors.line)
+    this.beginFill(...colors.fill)
     this.drawRect(x, y, width, height)
     this.endFill()
   }
 
-  update(state) {
-    this.state = state
+  update(data) {
+    this.data = data
 
     if (this.isBlank) {
       this.interactive = false
@@ -94,7 +102,7 @@ class Selection extends Graphics {
     } else {
       this.interactive = true
       this.hitArea = new Rectangle(
-        state.x, state.y, state.width, state.height
+        data.x, data.y, data.width, data.height
       )
     }
   }
