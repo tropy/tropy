@@ -72,9 +72,6 @@ class Selection extends Graphics {
   constructor(data = BLANK) {
     super()
     this.update(data)
-
-    //this.on('mouseover', this.handleMouseOver)
-    //this.on('mouseout', this.handleMouseOut)
   }
 
   get isBlank() {
@@ -123,16 +120,6 @@ class Selection extends Graphics {
         data.x, data.y, data.width, data.height
       )
     }
-  }
-
-  handleMouseOver(event) {
-    event.stopPropagation()
-    event.target.parent.activeSelection = event.target
-  }
-
-  handleMouseOut(event) {
-    event.stopPropagation()
-    this.parent.activeSelection = null
   }
 }
 
