@@ -15,8 +15,10 @@ class ProseMirror extends Component {
       ...this.getEditorProps(),
       dispatchTransaction: this.handleChange,
       handleKeyDown: this.handleKeyDown,
-      onFocus: this.handleFocus,
-      onBlur: this.handleBlur
+      handleDOM: {
+        focus: this.handleFocus,
+        blur: this.handleBlur
+      }
     })
   }
 

@@ -7,9 +7,7 @@ const {
   inputRules,
   smartQuotes,
   ellipsis,
-  orderedListRule,
-  bulletListRule,
-  blockQuoteRule
+  wrappingInputRule
 } = require('prosemirror-inputrules')
 
 const enDash = new InputRule(/--$/, '–')
@@ -22,6 +20,19 @@ const hrRule = (hr, p) =>
   new InputRule(/^\s*–-$/, (state, match, start, end) =>
     state.tr.replaceRangeWith(start, end, [hr.create(), p.create()])
   )
+
+const blockQuoteRule = (nodeType) =>
+  wrappingInputRule(/^\s*>\s$/, nodeType)
+
+const orderedListRule = (nodeType) =>
+  wrappingInputRule(
+    /^(\d+)\.\s$/,
+    nodeType,
+    (match) => ({ order: +match[1] }),
+    (match, node) => node.childCount + node.attrs.order === +match[1])
+
+const bulletListRule = (nodeType) =>
+  wrappingInputRule(/^\s*([-+*])\s$/, nodeType)
 
 module.exports = (schema) => {
   const rules = [
