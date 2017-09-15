@@ -58,8 +58,8 @@ class Esper extends PureComponent {
         case (this.shouldViewReset(props, state)):
           this.view.reset(state)
           break
-        case (this.shouldViewRefresh(props, state)):
-          this.view.refresh(state)
+        case (this.shouldViewSync(props, state)):
+          this.view.sync(state)
           break
       }
 
@@ -73,8 +73,10 @@ class Esper extends PureComponent {
     return false
   }
 
-  shouldViewRefresh(props) {
+  shouldViewSync(props) {
     if (props.selection !== this.props.selection) return true
+    if (props.selections !== this.props.selections) return true
+    if (props.tool !== this.props.tool) return true
     return false
   }
 
@@ -87,13 +89,12 @@ class Esper extends PureComponent {
   }
 
   getActiveImageId() {
-    return this.props.selection || get(this.props.photo, ['id'])
+    return get(this.props.selection, ['id']) || get(this.props.photo, ['id'])
   }
 
   getEmptyState(props = this.props) {
     return {
       mode: props.mode,
-      tool: props.tool,
       zoom: props.zoom,
       minZoom: props.minZoom,
       angle: 0,
@@ -104,6 +105,10 @@ class Esper extends PureComponent {
       src: null,
       x: props.x,
       y: props.y,
+
+      selection: props.selection,
+      selections: props.selections,
+      tool: props.tool
     }
   }
 
@@ -385,7 +390,7 @@ class Esper extends PureComponent {
           <EsperToolbar
             isDisabled={isDisabled}
             mode={this.state.mode}
-            tool={this.state.tool}
+            tool={this.props.tool}
             zoom={this.state.zoom}
             minZoom={this.state.minZoom}
             maxZoom={this.props.maxZoom}
@@ -397,8 +402,7 @@ class Esper extends PureComponent {
         </EsperHeader>
         <EsperView
           ref={this.setView}
-          selections={this.props.selections}
-          tool={this.state.tool}
+          tool={this.props.tool}
           onChange={this.handleViewChange}
           onSelectionActivate={this.handleSelectionActivate}
           onSelectionCreate={this.handleSelectionCreate}
@@ -419,7 +423,7 @@ class Esper extends PureComponent {
     onSelectionCreate: func.isRequired,
     photo: object,
     tool: string.isRequired,
-    selection: number,
+    selection: object,
     selections: arrayOf(shape({
       id: number.isRequired,
       height: number.isRequired,

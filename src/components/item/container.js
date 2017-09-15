@@ -14,6 +14,7 @@ const {
 
 const {
   getActiveImageProps,
+  getActiveSelection,
   getPhotoSelections
 } = require('../../selectors')
 
@@ -72,7 +73,7 @@ class ItemContainer extends PureComponent {
     keymap: object.isRequired,
     note: object,
     photo: object,
-    selection: number,
+    selection: object,
     selections: arrayOf(object).isRequired,
     onNoteChange: func.isRequired,
     onPhotoSave: func.isRequired,
@@ -89,7 +90,7 @@ module.exports = {
       esper: state.ui.esper,
       image: getActiveImageProps(state),
       keymap: state.keymap,
-      selection: state.nav.selection,
+      selection: getActiveSelection(state),
       selections: getPhotoSelections(state)
     }),
 

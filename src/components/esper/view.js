@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { array, func, string } = require('prop-types')
+const { func, string } = require('prop-types')
 const { append, bounds, createDragHandler } = require('../../dom')
 const css = require('../../css')
 const { restrict } = require('../../common/util')
@@ -10,7 +10,7 @@ const { rad } = require('../../common/math')
 const PIXI = require('pixi.js/dist/pixi.js')
 const { Sprite, Rectangle } = PIXI
 const { TextureCache, skipHello } = PIXI.utils
-const { Selection, SelectionPool } = require('./selection')
+const { Selection, SelectionMask, SelectionPool } = require('./selection')
 const TWEEN = require('@tweenjs/tween.js')
 const { Tween } = TWEEN
 const { Cubic } = TWEEN.Easing
@@ -73,19 +73,6 @@ class EsperView extends PureComponent {
     if (this.drag.current) this.drag.stop()
   }
 
-  componentWillReceiveProps(props) {
-    if (this.image != null) {
-
-      if (props.tool !== this.props.tool) {
-        this.handleToolChange(props.tool)
-      }
-
-      if (props.selections !== this.props.selections) {
-        this.image.selections.update(props)
-      }
-    }
-  }
-
   shouldComponentUpdate() {
     return false
   }
@@ -110,7 +97,7 @@ class EsperView extends PureComponent {
     return this.pixi.screen
   }
 
-  async reset(props) {
+  reset(props) {
     this.fadeOut(this.image)
     this.image = null
 
@@ -118,26 +105,28 @@ class EsperView extends PureComponent {
       this.image = new Sprite()
       this.image.anchor.set(0.5)
 
+      this.image.width = props.width
+      this.image.height = props.height
+
+      this.load(props.src, this.image).then(texture => {
+        this.image.texture = texture
+        this.pixi.stage.addChildAt(this.image, 0)
+      })
+
       this.image.selections = new SelectionPool(props)
       this.image.addChild(this.image.selections)
 
-      try {
-        this.image.texture = await this.load(props.src, this.image)
+      this.image.cover = new SelectionMask(props)
+      this.image.addChild(this.image.cover)
 
-      } catch (_) {
-        this.image.width = props.width
-        this.image.height = props.height
-      }
+      this.image.interactive = true
+      this.image.on('mousedown', this.handleDragStart)
 
-      this.makeInteractive(this.image)
-      this.handleToolChange(props.tool)
-      this.pixi.stage.addChildAt(this.image, 0)
-
-      this.refresh(props)
+      this.sync(props)
     }
   }
 
-  refresh(props) {
+  sync(props) {
     if (this.image == null) return
 
     this.rotate(props)
@@ -150,14 +139,16 @@ class EsperView extends PureComponent {
     this.image.position.set(x, y)
     constrain(this.image.position, this.image, null, this.bounds)
 
+    this.image.cursor = props.tool || this.props.tool
+    this.image.selections.sync(props)
+    this.image.cover.sync(props)
+
     this.persist()
   }
 
 
   makeInteractive(sprite) {
     if (sprite == null || sprite.interactive) return
-    sprite.interactive = true
-    sprite.on('mousedown', this.handleDragStart)
   }
 
   setScaleMode(texture, zoom, renderer = this.pixi.renderer) {
@@ -335,7 +326,7 @@ class EsperView extends PureComponent {
     if (this.image == null) return
 
     if (this.image.selections.visible) {
-      this.image.selections.draw(this.drag.current)
+      this.image.selections.update(this.drag.current)
     }
   }
 
@@ -357,11 +348,6 @@ class EsperView extends PureComponent {
     this.pixi.renderer.rootRenderTarget.resolution = dppx
     this.pixi.renderer.plugins.interaction.resolution = dppx
     this.resize(bounds(this.container))
-  }
-
-  handleToolChange(tool) {
-    this.image.cursor = tool
-    this.image.selections.visible = (tool !== TOOL.PAN)
   }
 
   handleLoadProgress = () => {
@@ -512,7 +498,6 @@ class EsperView extends PureComponent {
 
   static propTypes = {
     tool: string.isRequired,
-    selections: array.isRequired,
     onChange: func.isRequired,
     onLoadError: func,
     onDoubleClick: func.isRequired,

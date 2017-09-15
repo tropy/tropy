@@ -3,29 +3,31 @@
 const PIXI = require('pixi.js/dist/pixi.js')
 const { Container, Graphics, Rectangle } = PIXI
 const BLANK = Object.freeze({})
-const { COLOR } = require('../../constants/esper')
+const { COLOR, TOOL } = require('../../constants/esper')
 
 
 class SelectionPool extends Container {
-  constructor({ width, height }) {
+  constructor(props) {
     super()
-    this.pivot.set(width / 2, height / 2)
-    this.addChild(new Selection())
-    this.interactive = true
+    this.pivot.set(props.width / 2, props.height / 2)
+    this.grow()
     this.on('mousemove', this.handleMouseMove)
   }
 
-  draw({ selection } = BLANK) {
+  grow() {
+  }
+
+  update({ selection } = BLANK) {
     if (!this.children.length) return
 
     const scale = 1 / this.parent.scale.y
     let i = 0
 
     for (; i < this.children.length - 1; ++i) {
-      this.children[i].draw(scale)
+      this.children[i].update(scale)
     }
 
-    this.children[i].draw(scale, selection, 'live')
+    this.children[i].update(scale, selection, 'live')
   }
 
   destroy() {
@@ -44,24 +46,39 @@ class SelectionPool extends Container {
     }
   }
 
-  update({ selections }) {
+  isVisible({ selection, tool }) {
+    return selection == null && (
+      tool === TOOL.ARROW || tool === TOOL.SELECT
+    )
+  }
+
+  isInteractive({ tool }) {
+    return tool === TOOL.ARROW
+  }
+
+  sync(props) {
+    this.visible = this.isVisible(props)
+    this.interactive = this.isInteractive(props)
+
+    const { selections } = props
+
     for (let i = 0; i < selections.length; ++i) {
-      if (i < this.children.length) {
-        this.children[i].update(selections[i])
-      } else {
-        this.addChild(new Selection(selections[i]))
+      if (i >= this.children.length) {
+        this.addChild(new Selection())
       }
+
+      this.children[i].sync(selections[i])
     }
 
     if (this.children.length <= selections.length) {
       this.addChild(new Selection())
-    } else {
-      this.children[selections.length].update(BLANK)
+    }
 
-      if (this.children.length > selections.length + 1) {
-        for (let s of this.removeChildren(selections.length + 1)) {
-          s.destroy()
-        }
+    this.children[selections.length].sync(BLANK)
+
+    if (this.children.length > selections.length + 1) {
+      for (let s of this.removeChildren(selections.length + 1)) {
+        s.destroy()
       }
     }
   }
@@ -69,9 +86,9 @@ class SelectionPool extends Container {
 
 
 class Selection extends Graphics {
-  constructor(data = BLANK) {
+  constructor() {
     super()
-    this.update(data)
+    this.data = BLANK
   }
 
   get isBlank() {
@@ -92,7 +109,7 @@ class Selection extends Graphics {
     super.destroy({ children: true })
   }
 
-  draw(
+  update(
     scale = 1,
     { x, y, width, height } = this.data,
     state = this.state
@@ -108,10 +125,10 @@ class Selection extends Graphics {
     this.endFill()
   }
 
-  update(data) {
+  sync(data = BLANK) {
     this.data = data
 
-    if (this.isBlank) {
+    if (this.isBlank || !this.parent.interactive) {
       this.interactive = false
       this.hitArea = null
     } else {
@@ -124,7 +141,15 @@ class Selection extends Graphics {
 }
 
 
+class SelectionMask extends Graphics {
+
+  sync() {
+  }
+}
+
+
 module.exports = {
   Selection,
+  SelectionMask,
   SelectionPool
 }
