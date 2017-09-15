@@ -75,8 +75,9 @@ class EsperView extends PureComponent {
 
   componentWillReceiveProps(props) {
     if (this.image != null) {
-      if (!this.isDragging) {
-        this.image.cursor = props.tool
+
+      if (props.tool !== this.props.tool) {
+        this.handleToolChange(props.tool)
       }
 
       if (props.selections !== this.props.selections) {
@@ -129,7 +130,7 @@ class EsperView extends PureComponent {
       }
 
       this.makeInteractive(this.image)
-      this.image.cursor = props.tool
+      this.handleToolChange(props.tool)
       this.pixi.stage.addChildAt(this.image, 0)
 
       this.refresh(props)
@@ -356,6 +357,11 @@ class EsperView extends PureComponent {
     this.pixi.renderer.rootRenderTarget.resolution = dppx
     this.pixi.renderer.plugins.interaction.resolution = dppx
     this.resize(bounds(this.container))
+  }
+
+  handleToolChange(tool) {
+    this.image.cursor = tool
+    this.image.selections.visible = (tool !== TOOL.PAN)
   }
 
   handleLoadProgress = () => {
