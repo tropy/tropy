@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { func, string } = require('prop-types')
+const { array, func, object, string } = require('prop-types')
 const { append, bounds, createDragHandler } = require('../../dom')
 const css = require('../../css')
 const { restrict } = require('../../common/util')
@@ -73,6 +73,16 @@ class EsperView extends PureComponent {
     if (this.drag.current) this.drag.stop()
   }
 
+  componentWillReceiveProps(props) {
+    if (this.image != null) {
+      if (this.props.selection !== props.selection ||
+        this.props.selections !== props.selections) {
+        this.image.selections.sync(props)
+        this.image.cover.sync(props)
+      }
+    }
+  }
+
   shouldComponentUpdate() {
     return false
   }
@@ -97,7 +107,7 @@ class EsperView extends PureComponent {
     return this.pixi.screen
   }
 
-  reset(props) {
+  async reset(props) {
     this.fadeOut(this.image)
     this.image = null
 
@@ -105,24 +115,25 @@ class EsperView extends PureComponent {
       this.image = new Sprite()
       this.image.anchor.set(0.5)
 
-      this.image.width = props.width
-      this.image.height = props.height
-
-      this.load(props.src, this.image).then(texture => {
-        this.image.texture = texture
-        this.pixi.stage.addChildAt(this.image, 0)
-      })
-
       this.image.selections = new SelectionPool(props)
       this.image.addChild(this.image.selections)
 
       this.image.cover = new SelectionMask(props)
       this.image.addChild(this.image.cover)
 
-      this.image.interactive = true
-      this.image.on('mousedown', this.handleDragStart)
+      try {
+        this.image.texture = await this.load(props.src, this.image)
+
+        this.image.interactive = true
+        this.image.on('mousedown', this.handleDragStart)
+
+      } catch (_) {
+        this.image.width = props.width
+        this.image.height = props.height
+      }
 
       this.sync(props)
+      this.pixi.stage.addChildAt(this.image, 0)
     }
   }
 
@@ -140,8 +151,6 @@ class EsperView extends PureComponent {
     constrain(this.image.position, this.image, null, this.bounds)
 
     this.image.cursor = props.tool || this.props.tool
-    this.image.selections.sync(props)
-    this.image.cover.sync(props)
 
     this.persist()
   }
@@ -497,6 +506,8 @@ class EsperView extends PureComponent {
   }
 
   static propTypes = {
+    selection: object,
+    selections: array.isRequired,
     tool: string.isRequired,
     onChange: func.isRequired,
     onLoadError: func,

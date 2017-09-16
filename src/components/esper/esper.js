@@ -105,9 +105,6 @@ class Esper extends PureComponent {
       src: null,
       x: props.x,
       y: props.y,
-
-      selection: props.selection,
-      selections: props.selections,
       tool: props.tool
     }
   }
@@ -402,6 +399,8 @@ class Esper extends PureComponent {
         </EsperHeader>
         <EsperView
           ref={this.setView}
+          selection={this.props.selection}
+          selections={this.props.selections}
           tool={this.props.tool}
           onChange={this.handleViewChange}
           onSelectionActivate={this.handleSelectionActivate}
