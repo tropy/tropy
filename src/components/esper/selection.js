@@ -143,7 +143,8 @@ class SelectionMask extends Graphics {
     super()
     this.cacheAsBitmap = false
     this.visible = false
-    this.mask = new Graphics()
+    this.addChild(new Graphics())
+    this.mask = this.children[0]
   }
 
   update(selection) {
