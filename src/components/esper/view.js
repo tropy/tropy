@@ -75,10 +75,12 @@ class EsperView extends PureComponent {
 
   componentWillReceiveProps(props) {
     if (this.image != null) {
-      if (this.props.selection !== props.selection ||
-        this.props.selections !== props.selections) {
-        this.image.selections.sync(props)
+      if (this.props.selection !== props.selection) {
         this.image.cover.sync(props)
+        this.image.selections.sync(props)
+
+      } else if (this.props.selections !== props.selections) {
+        this.image.selections.sync(props)
       }
     }
   }

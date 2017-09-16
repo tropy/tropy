@@ -11,6 +11,7 @@ class SelectionPool extends Container {
     super()
     this.pivot.set(props.width / 2, props.height / 2)
     this.on('mousemove', this.handleMouseMove)
+    this.visible = false
   }
 
   update({ selection } = BLANK) {
@@ -140,40 +141,41 @@ class Selection extends Graphics {
 class SelectionMask extends Graphics {
   constructor() {
     super()
-    this.cacheAsBitmap = true
+    this.cacheAsBitmap = false
+    this.visible = false
+    this.mask = new Graphics()
   }
 
-  update() {
+  update(selection) {
     this.clear()
 
-    if (this.parent == null || this.data == null) return
-    const { width, height } = this.parent.texture.orig
+    if (this.parent == null || selection == null) return
+    const { width: W, height: H } = this.parent.texture.orig
 
-    this.pivot.set(width / 2, height / 2)
-    this.beginFill(0, 0.3)
-    this.drawRect(0, 0, width, height)
-    this.endFill()
+    this.pivot.set(W / 2, H / 2)
+    this.beginFill(0, 0.4)
+    this.drawRect(0, 0, W, H)
 
-    const mask = new Graphics()
+    const { x, y, width, height } = selection
+
+    this.mask
+      .clear()
       .beginFill(0xff, 1)
       .moveTo(0, 0)
-      .lineTo(width, 0)
-      .lineTo(width, height)
-      .lineTo(0, height)
-      .moveTo(this.data.x, this.data.y)
-      .lineTo(this.data.x + this.data.width, this.data.y)
-      .lineTo(this.data.x + this.data.width, this.data.y + this.data.height)
-      .lineTo(this.data.x, this.data.y + this.data.height)
+      .lineTo(W, 0)
+      .lineTo(W, H)
+      .lineTo(0, H)
+      .moveTo(x, y)
+      .lineTo(x + width, y)
+      .lineTo(x + width, y + height)
+      .lineTo(x, y + height)
       .addHole()
-
-    this.mask = mask
   }
 
 
   sync({ selection }) {
-    this.data = selection
     this.visible = (selection != null)
-    this.update()
+    this.update(selection)
   }
 }
 
