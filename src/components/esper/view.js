@@ -131,8 +131,7 @@ class EsperView extends PureComponent {
         this.image.on('mousedown', this.handleDragStart)
 
       } catch (_) {
-        this.image.width = props.width
-        this.image.height = props.height
+        // TODO handle missing photo
       }
 
       this.sync(props)
