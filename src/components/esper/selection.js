@@ -116,10 +116,10 @@ class Selection extends Graphics {
 
     const colors = COLOR.selection[state]
 
-    this.lineStyle(scale, ...colors.line)
-    this.beginFill(...colors.fill)
-    this.drawRect(x, y, width, height)
-    this.endFill()
+    this
+      .lineStyle(scale, ...colors.line)
+      .beginFill(...colors.fill)
+      .drawRect(x, y, width, height)
   }
 
   sync(data = BLANK) {
@@ -143,39 +143,54 @@ class SelectionMask extends Graphics {
     super()
 
     this.pivot.set(width / 2, height / 2)
-    this.beginFill(...COLOR.mask)
+    this.beginFill(...COLOR.mask.fill)
     this.drawRect(0, 0, width, height)
 
     this.cacheAsBitmap = false
     this.visible = false
 
-    this.addChild(new Graphics())
+    this.addChild(new Graphics(), new Graphics())
     this.mask = this.children[0]
+    this.line = this.children[1]
   }
 
-  update(selection) {
-    this.mask.clear()
+  update() {
+    this.line.clear()
+    if (this.active == null || this.parent == null) return
 
-    if (selection == null) return
-    const { x, y, width, height } = selection
+    const scale = 1 / this.parent.scale.y
+    const { x, y, width, height } = this.active
 
-    this.mask
-      .beginFill(0xFFFFFF)
-      .moveTo(0, 0)
-      .lineTo(this.width, 0)
-      .lineTo(this.width, this.height)
-      .lineTo(0, this.height)
-      .moveTo(x, y)
-      .lineTo(x + width, y)
-      .lineTo(x + width, y + height)
-      .lineTo(x, y + height)
-      .addHole()
+    this.line
+      .lineStyle(scale, ...COLOR.mask.line)
+      .beginFill(0, 0)
+      .drawRect(x, y, width, height)
   }
 
 
   sync({ selection }) {
-    this.update(selection)
-    this.visible = (selection != null)
+    this.active = selection
+    this.mask.clear()
+
+    if (selection == null) {
+      this.visible = false
+
+    } else {
+      this.visible = true
+      const { x, y, width, height } = selection
+
+      this.mask
+        .beginFill(0xFFFFFF)
+        .moveTo(0, 0)
+        .lineTo(this.width, 0)
+        .lineTo(this.width, this.height)
+        .lineTo(0, this.height)
+        .moveTo(x, y)
+        .lineTo(x + width, y)
+        .lineTo(x + width, y + height)
+        .lineTo(x, y + height)
+        .addHole()
+    }
   }
 }
 

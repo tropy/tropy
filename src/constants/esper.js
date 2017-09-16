@@ -14,7 +14,10 @@ module.exports = {
   },
 
   COLOR: {
-    mask: [0x000000, 0.4],
+    mask: {
+      line: [0xffffff, 1],
+      fill: [0x000000, 0.4]
+    },
     selection: {
       default: {
         line: [0x5c93e5, 1],

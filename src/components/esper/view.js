@@ -339,6 +339,10 @@ class EsperView extends PureComponent {
     if (this.image.selections.visible) {
       this.image.selections.update(this.drag.current)
     }
+
+    if (this.image.cover.visible) {
+      this.image.cover.update()
+    }
   }
 
   persist = () => {
