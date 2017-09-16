@@ -150,9 +150,23 @@ class SelectionMask extends Graphics {
     const { width, height } = this.parent.texture.orig
 
     this.pivot.set(width / 2, height / 2)
-    this.beginFill(0x000000, 0.2)
+    this.beginFill(0, 0.3)
     this.drawRect(0, 0, width, height)
     this.endFill()
+
+    const mask = new Graphics()
+      .beginFill(0xff, 1)
+      .moveTo(0, 0)
+      .lineTo(width, 0)
+      .lineTo(width, height)
+      .lineTo(0, height)
+      .moveTo(this.data.x, this.data.y)
+      .lineTo(this.data.x + this.data.width, this.data.y)
+      .lineTo(this.data.x + this.data.width, this.data.y + this.data.height)
+      .lineTo(this.data.x, this.data.y + this.data.height)
+      .addHole()
+
+    this.mask = mask
   }
 
 
