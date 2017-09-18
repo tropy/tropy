@@ -50,6 +50,10 @@ module.exports = {
         return contract(state, payload)
       case PHOTO.EXPAND:
         return expand(state, payload)
+      case PHOTO.SELECT:
+        return (payload.selection == null) ?
+          state :
+          expand(state, payload.photo)
       case ITEM.OPEN:
         return expand(state, payload.photos[0])
       case NOTE.SELECT:
