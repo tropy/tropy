@@ -156,6 +156,8 @@ class SelectionOverlay extends Graphics {
 
   update() {
     this.line.clear()
+    this.mask.clear()
+
     if (this.active == null || this.parent == null) return
 
     const scale = 1 / this.parent.scale.y
@@ -165,32 +167,30 @@ class SelectionOverlay extends Graphics {
       .lineStyle(scale, ...COLOR.mask.line)
       .beginFill(0, 0)
       .drawRect(x, y, width, height)
+
+    const top = y + scale
+    const right = x + width - 2 * scale
+    const bottom = y + height - 2 * scale
+    const left =  x + scale
+
+    this.mask
+      .beginFill(0xFFFFFF)
+      .moveTo(0, 0)
+      .lineTo(this.width, 0)
+      .lineTo(this.width, this.height)
+      .lineTo(0, this.height)
+      .moveTo(left, top)
+      .lineTo(right, top)
+      .lineTo(right, bottom)
+      .lineTo(left, bottom)
+      .addHole()
   }
 
 
   sync({ selection }) {
     this.active = selection
     this.mask.clear()
-
-    if (selection == null) {
-      this.visible = false
-
-    } else {
-      this.visible = true
-      const { x, y, width, height } = selection
-
-      this.mask
-        .beginFill(0xFFFFFF)
-        .moveTo(0, 0)
-        .lineTo(this.width, 0)
-        .lineTo(this.width, this.height)
-        .lineTo(0, this.height)
-        .moveTo(x, y)
-        .lineTo(x + width, y)
-        .lineTo(x + width, y + height)
-        .lineTo(x, y + height)
-        .addHole()
-    }
+    this.visible = (selection != null)
   }
 }
 
