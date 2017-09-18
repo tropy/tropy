@@ -127,13 +127,9 @@ class Esper extends PureComponent {
 
     if (photo != null && !photo.pending) {
       state.src = `${photo.protocol}://${photo.path}`
-
+      state.width = photo.width
+      state.height = photo.height
       assign(state, this.getOrientationState(photo))
-      assign(state, this.getAngleBounds({
-        angle: state.angle,
-        width: photo.width,
-        height: photo.height
-      }))
     }
 
     if (state.x == null || state.mode !== 'zoom') {
@@ -169,13 +165,17 @@ class Esper extends PureComponent {
     state = this.state,
     props = this.props
   ) {
-    let { zoom, width, height } = state
+    let { angle, zoom, width, height } = state
     let { minZoom } = props
     let zoomToFill = minZoom
 
     if (width > 0 && height > 0) {
-      minZoom = this.getZoomToFit(screen, state, props)
-      zoomToFill = this.getZoomToFill(screen, state, props)
+      if (!isHorizontal(angle)) {
+        [width, height] = [height, width]
+      }
+
+      minZoom = this.getZoomToFit(screen, { width, height }, props)
+      zoomToFill = this.getZoomToFill(screen, { width }, props)
 
       switch (state.mode) {
         case 'fill':
@@ -190,24 +190,6 @@ class Esper extends PureComponent {
     }
 
     return { minZoom, zoom, zoomToFill }
-  }
-
-  getAngleBounds({ angle, width, height }) {
-    if (width === 0 || height === 0) {
-      return {
-        width: 0, height: 0, aspect: 0
-      }
-    }
-
-    if (isHorizontal(angle)) {
-      return {
-        width, height, aspect: width / height
-      }
-    }
-
-    return {
-      width: height, height: width, aspect: height / width
-    }
   }
 
   getImageState() {
@@ -284,7 +266,6 @@ class Esper extends PureComponent {
       height: this.props.photo.height
     }
 
-    assign(state, this.getAngleBounds(state))
     assign(state, this.getZoomBounds(this.view.bounds, state))
 
     this.setState(state)
