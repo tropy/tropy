@@ -17,14 +17,17 @@ const skel = (id) => ({
 
 const SEARCH = `
   SELECT item_id AS id
-    FROM fts_notes JOIN photos USING (id)
+    FROM fts_notes n
+      LEFT OUTER JOIN selections USING (id)
+      LEFT OUTER JOIN photos p ON (p.id = n.id OR p.id = photo_id)
     WHERE fts_notes MATCH $query
   UNION
-  SELECT coalesce(items.id, item_id) AS id
-    FROM metadata
+  SELECT coalesce(i.id, p.item_id) AS id
+    FROM metadata m
       JOIN fts_metadata ON (value_id = fts_metadata.rowid)
-      LEFT OUTER JOIN items USING (id)
-      LEFT OUTER JOIN photos USING (id)
+      LEFT OUTER JOIN items i USING (id)
+      LEFT OUTER JOIN selections USING (id)
+      LEFT OUTER JOIN photos p ON (p.id = m.id OR p.id = photo_id)
     WHERE fts_metadata MATCH $query`
 
 const prefix = (query) =>
@@ -271,8 +274,8 @@ module.exports = mod.item = {
     }
   },
 
-  async split(db, id, items, data, lists, tags) {
-    await all([
+  split(db, id, items, data, lists, tags) {
+    return all([
       mod.photo.split(db, id, items),
       mod.item.tags.remove(db, { id, tags }),
       mod.item.lists.remove(db, id, lists),
@@ -281,34 +284,34 @@ module.exports = mod.item = {
     ])
   },
 
-  async implode(db, { id, photos, items }) {
-    await all([
+  implode(db, { id, photos, items }) {
+    return all([
       mod.photo.move(db, { ids: photos, item: id }),
       mod.photo.order(db, id, photos),
       mod.item.delete(db, items, 'auto')
     ])
   },
 
-  async delete(db, ids, $reason = 'user') {
+  delete(db, ids, $reason = 'user') {
     return db.run(`
       INSERT INTO trash (id, reason)
         VALUES ${ids.map(id => `(${id}, $reason)`).join(',')}`, { $reason }
     )
   },
 
-  async restore(db, ids) {
+  restore(db, ids) {
     return db.run(
       `DELETE FROM trash WHERE id IN (${ids.join(',')})`
     )
   },
 
-  async destroy(db, ids) {
+  destroy(db, ids) {
     return db.run(
       `DELETE FROM subjects WHERE id IN (${ids.join(',')})`
     )
   },
 
-  async prune(db, since = '-1 month') {
+  prune(db, since = '-1 month') {
     const condition = since ?
       ` WHERE reason != 'user' OR
          (reason = 'user' AND deleted < datetime("now", "${since}"))` : ''
@@ -318,6 +321,10 @@ module.exports = mod.item = {
         WHERE id IN (
           SELECT id FROM trash JOIN items USING (id)${condition})`
     )
+  },
+
+  export() {
+    return {}
   },
 
   tags: {

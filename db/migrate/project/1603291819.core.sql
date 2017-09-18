@@ -39,7 +39,9 @@ CREATE TABLE images (
   angle   NUMERIC  NOT NULL DEFAULT 0,
   mirror  BOOLEAN  NOT NULL DEFAULT 0,
 
-  CHECK (angle >= 0 AND angle <= 360)
+  CHECK (angle >= 0 AND angle <= 360),
+  CHECK (width >= 0 AND height >= 0)
+
 ) WITHOUT ROWID;
 
 
@@ -91,7 +93,7 @@ CREATE TABLE metadata_values (
 
 CREATE TABLE notes (
   note_id      INTEGER  PRIMARY KEY,
-  id           INTEGER  REFERENCES subjects ON DELETE CASCADE,
+  id           INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   text         TEXT     NOT NULL,
   state        TEXT     NOT NULL,
   language     TEXT     NOT NULL DEFAULT 'en',

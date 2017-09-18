@@ -8,6 +8,8 @@ const { bounds, borders } = require('../dom')
 const { restrict } = require('../common/util')
 const { round } = require('../common/math')
 const { arrayOf, bool, element, func, number, oneOf } = require('prop-types')
+const cx = require('classnames')
+const throttle = require('lodash.throttle')
 
 
 class Slider extends PureComponent {
@@ -48,7 +50,7 @@ class Slider extends PureComponent {
 
   getNextStep() {
     const { max, steps } = this.props
-    const { value } = this.state
+    const { value } = this.props
 
     if (steps.length === 0) return max
 
@@ -62,7 +64,7 @@ class Slider extends PureComponent {
 
   getPrevStep() {
     const { min, steps } = this.props
-    const { value } = this.state
+    const { value } = this.props
 
     if (steps.length === 0) return min
 
@@ -76,19 +78,12 @@ class Slider extends PureComponent {
 
 
   set(value, reason) {
+    value = restrict(value, this.props.min, this.props.max)
     this.setState({ value })
 
-    if (value === this.props.min) {
-      return this.props.onChange(value, reason)
-    }
-
-    if (value === this.props.max) {
-      return this.props.onChange(value, reason)
-    }
-
-    const nearest = this.round(value)
-    if (nearest !== this.props.value) {
-      this.props.onChange(nearest, reason)
+    value  = this.round(value)
+    if (value !== this.props.value) {
+      this.props.onChange(value, reason)
     }
   }
 
@@ -111,15 +106,13 @@ class Slider extends PureComponent {
     this.set(min + restrict((pageX - left) / width, 0, 1) * this.delta, reason)
   }
 
-  handleMinButtonClick = (event) => {
-    event.stopPropagation()
+  handleMinButtonClick = throttle(() => {
     this.set(this.getPrevStep(), 'button')
-  }
+  }, 100)
 
-  handleMaxButtonClick = (event) => {
-    event.stopPropagation()
+  handleMaxButtonClick = throttle(() => {
     this.set(this.getNextStep(), 'button')
-  }
+  }, 100)
 
   setTrack = (track) => {
     this.track = track
@@ -156,27 +149,38 @@ class Slider extends PureComponent {
     }
   }
 
+  renderCurrentValue() {
+    return this.props.showCurrentValue && (
+      <div className="slider-value">
+        {round(this.props.value * 100)}&thinsp;%
+      </div>
+    )
+  }
+
   render() {
     const { offset, delta, isDisabled } = this
     const percentage = `${100 * offset / delta}%`
 
     return (
-      <Draggable
-        classes={this.classes}
-        delay={15}
-        isDisabled={isDisabled}
-        onDrag={this.handleDrag}
-        onDragStart={this.handleDragStart}>
+      <div className={cx(this.classes)}>
         {this.renderMinButton()}
-        <div ref={this.setTrack} className="slider-track">
-          <div className="slider-range" style={{ width: percentage }}/>
-          <div
-            className="slider-handle"
-            tabIndex="-1"
-            style={{ left: percentage }}/>
-        </div>
+        <Draggable
+          delay={15}
+          isDisabled={isDisabled}
+          onDrag={this.handleDrag}
+          onDragStart={this.handleDragStart}>
+          <div ref={this.setTrack} className="slider-track">
+            <div className="slider-range" style={{ width: percentage }}/>
+            <div
+              className="slider-handle"
+              tabIndex="-1"
+              style={{ left: percentage }}>
+              {this.renderCurrentValue()}
+            </div>
+          </div>
+        </Draggable>
         {this.renderMaxButton()}
-      </Draggable>
+      </div>
     )
   }
 
@@ -187,6 +191,7 @@ class Slider extends PureComponent {
     min: number.isRequired,
     minIcon: element,
     precision: number.isRequired,
+    showCurrentValue: bool.isRequired,
     size: oneOf(['sm', 'md', 'lg']).isRequired,
     steps: arrayOf(number).isRequired,
     value: number.isRequired,
@@ -197,6 +202,7 @@ class Slider extends PureComponent {
     min: 0,
     max: 1,
     precision: 1,
+    showCurrentValue: false,
     size: 'md',
     steps: []
   }

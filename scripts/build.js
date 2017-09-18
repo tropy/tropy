@@ -48,55 +48,59 @@ const IGNORE = [
   /appveyor\.yml/
 ]
 
-target.all = (args = []) => {
-  const platform = args[0] || process.platform
-  const arch = args[1] || process.arch
-  const ignore = [...IGNORE]
+target.all = async (args = []) => {
+  try {
 
-  const icon = platform === 'win32' ?
-    join(res, 'icons', channel, `${name}.ico`) :
-    join(res, 'icons', channel, `${name}.icns`)
+    const platform = args[0] || process.platform
+    const arch = args[1] || process.arch
+    const ignore = [...IGNORE]
 
-  say(`packaging for ${platform} ${arch}...`)
+    const icon = platform === 'win32' ?
+      join(res, 'icons', channel, `${name}.ico`) :
+      join(res, 'icons', channel, `${name}.icns`)
 
-  if (platform !== 'win32') {
-    ignore.push(/^\/node_modules.winreg/)
-  }
+    say(`packaging for ${platform} ${arch}...`)
 
-  packager({
-    platform,
-    arch,
-    icon,
-    dir,
-    out: join(dir, 'dist'),
-    name: qualified.product,
-    prune: true,
-    overwrite: true,
-    quiet: true,
-    ignore,
-    electronVersion: electron.version,
-    appVersion: version,
-    appBundleId: 'org.tropy.tropy',
-    helperBundleId: 'org.tropy.tropy-helper',
-    appCategoryType: 'public.app-category.productivity',
-    appCopyright:
-      `Copyright (c) 2015-${new Date().getFullYear()} ` +
-      `${author.name}. All rights not expressly granted are reserved.`,
-    extendInfo: join(res, 'ext.plist'),
-    extraResource: [
-      join(res, 'icons', 'mime', 'tpy.icns'),
-      join(res, 'icons', 'mime', 'ttp.icns')
-    ],
-    win32metadata: {
-      CompanyName: author.name,
-      ProductName: qualified.product
-    },
-    asar: {
-      unpack: '**/{*.node,lib/stylesheets/**/*,res/icons/mime/*.ico}',
+    if (platform !== 'win32') {
+      ignore.push(/^\/node_modules.winreg/)
     }
 
-  }, (err, dst) => {
-    if (err) return error(err)
+    const extraResource = (platform !== 'darwin') ? [] : [
+      join(res, 'icons', 'mime', 'tpy.icns'),
+      join(res, 'icons', 'mime', 'ttp.icns')
+    ]
+
+    let dst = await packager({
+      platform,
+      arch,
+      icon,
+      dir,
+      out: join(dir, 'dist'),
+      name: qualified.product,
+      prune: true,
+      overwrite: true,
+      quiet: true,
+      ignore,
+      electronVersion: electron.version,
+      appVersion: version,
+      appBundleId: 'org.tropy.tropy',
+      helperBundleId: 'org.tropy.tropy-helper',
+      appCategoryType: 'public.app-category.productivity',
+      appCopyright:
+        `Copyright (c) 2015-${new Date().getFullYear()} ` +
+        `${author.name}. All rights not expressly granted are reserved.`,
+      extendInfo: join(res, 'ext.plist'),
+      extraResource,
+      win32metadata: {
+        CompanyName: author.name,
+        ProductName: qualified.product
+      },
+      asar: {
+        unpack: '**/{*.node,lib/stylesheets/**/*,res/icons/mime/*.ico}',
+      }
+
+    })
+
     dst = String(dst)
 
     switch (platform) {
@@ -123,7 +127,10 @@ target.all = (args = []) => {
     }
 
     say(`saved app to ${relative(dir, dst)}`)
-  })
+
+  } catch (err) {
+    error(err)
+  }
 }
 
 function rename(ctx, from, to) {

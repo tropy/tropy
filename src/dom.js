@@ -136,6 +136,40 @@ const dom = {
 
   isInput(node) {
     return node.tagName === 'INPUT'
+  },
+
+  createDragHandler({ handleDrag, handleDragStop }) {
+    function onKeyPress(event) {
+      switch (event.key) {
+        case 'Escape':
+          event.stopPropagation()
+          onDragStop(event)
+          break
+      }
+    }
+
+    function onDragStart() {
+      dom.on(document, 'mousemove', handleDrag)
+      dom.on(document, 'mouseup', onDragStop, { capture: true })
+      dom.on(document, 'mouseleave', onDragStop)
+      dom.on(window, 'blur', onDragStop)
+      dom.on(document, 'keydown', onKeyPress)
+    }
+
+    function onDragStop(event) {
+      dom.off(document, 'mousemove', handleDrag)
+      dom.off(document, 'mouseup', onDragStop, { capture: true })
+      dom.off(document, 'mouseleave', onDragStop)
+      dom.off(window, 'blur', onDragStop)
+      dom.off(document, 'keydown', onKeyPress)
+
+      handleDragStop(event, event == null || event.type !== 'mouseup')
+    }
+
+    return {
+      start: onDragStart,
+      stop: onDragStop
+    }
   }
 }
 

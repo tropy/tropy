@@ -3,6 +3,12 @@
 const { PHOTO } = require('../constants')
 
 module.exports = {
+  contract(payload, meta = {}) {
+    return {
+      type: PHOTO.CONTRACT, payload, meta
+    }
+  },
+
   create(payload, meta) {
     return {
       type: PHOTO.CREATE,
@@ -19,11 +25,18 @@ module.exports = {
     }
   },
 
-  update(payload, meta) {
+  expand(payload, meta = {}) {
+    return {
+      type: PHOTO.EXPAND, payload, meta
+    }
+  },
+
+
+  update(payload, meta = {}) {
     return {
       type: PHOTO.UPDATE,
       payload,
-      meta: { ...meta }
+      meta
     }
   },
 
@@ -79,7 +92,7 @@ module.exports = {
     return {
       type: PHOTO.ORDER,
       payload,
-      meta: { cmd: 'project', history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'merge', ...meta }
     }
   },
 
@@ -95,6 +108,24 @@ module.exports = {
     remove(payload, meta) {
       return {
         type: PHOTO.NOTE.REMOVE,
+        payload,
+        meta: { ...meta }
+      }
+    }
+  },
+
+  selections: {
+    add(payload, meta) {
+      return {
+        type: PHOTO.SELECTION.ADD,
+        payload,
+        meta: { ...meta }
+      }
+    },
+
+    remove(payload, meta) {
+      return {
+        type: PHOTO.SELECTION.REMOVE,
         payload,
         meta: { ...meta }
       }

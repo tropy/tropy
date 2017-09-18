@@ -1,0 +1,16 @@
+{
+  "@context": "https://tropy.org/v1/contexts/template.jsonld",
+  "@id": "https://tropy.org/v1/templates/selection",
+  "@type": "https://tropy.org/v1/tropy#Template",
+  "name": "Tropy Photo Selection",
+  "type": "https://tropy.org/v1/tropy#Selection",
+  "domain": [
+    "http://iiif.io/api/image/2#Image"
+  ],
+  "field": [
+    {
+      "property": "http://purl.org/dc/elements/1.1/title"
+    }
+  ]
+}
+

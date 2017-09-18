@@ -49,20 +49,26 @@ class ItemPanel extends PureComponent {
   render() {
     const {
       edit,
+      expanded,
+      activeSelection,
       keymap,
       note,
       notes,
       panel,
       photo,
+      selections,
       isDisabled,
       isItemOpen,
       onMaximize,
       onModeChange,
       onNoteCreate,
       onNoteSelect,
+      onPhotoContract,
       onPhotoDelete,
+      onPhotoExpand,
       onPhotoSelect,
       onPhotoSort,
+      onSelectionSort,
       ...props
     } = this.props
 
@@ -91,14 +97,20 @@ class ItemPanel extends PureComponent {
         <PhotoPanel {...props}
           isDisabled={isDisabled}
           isItemOpen={isItemOpen}
-          edit={edit.photo}
-          keymap={keymap.PhotoIterator}
+          edit={edit}
+          expanded={expanded}
+          keymap={keymap}
           zoom={panel.zoom}
-          selection={photo && photo.id}
+          current={photo && photo.id}
+          selection={activeSelection}
+          selections={selections}
+          onContract={onPhotoContract}
           onCreate={this.handlePhotoCreate}
           onDelete={onPhotoDelete}
+          onExpand={onPhotoExpand}
           onSelect={onPhotoSelect}
           onSort={onPhotoSort}
+          onSelectionSort={onSelectionSort}
           onZoomChange={this.handleZoomChange}/>
 
         <NotePanel {...props}
@@ -119,6 +131,8 @@ class ItemPanel extends PureComponent {
     cache: string.isRequired,
     data: object.isRequired,
     edit: object.isRequired,
+    expanded: array.isRequired,
+    activeSelection: number,
     keymap: object.isRequired,
     isDisabled: bool.isRequired,
     isItemOpen: bool.isRequired,
@@ -126,6 +140,7 @@ class ItemPanel extends PureComponent {
 
     note: object,
     notes: array.isRequired,
+    selections: object.isRequired,
 
     panel: shape({
       slots: array.isRequired,
@@ -152,12 +167,15 @@ class ItemPanel extends PureComponent {
     onNoteCreate: func.isRequired,
     onNoteSelect: func.isRequired,
     onOpenInFolder: func.isRequired,
+    onPhotoContract: func.isRequired,
     onPhotoCreate: func.isRequired,
     onPhotoDelete: func.isRequired,
+    onPhotoExpand: func.isRequired,
     onPhotoSelect: func.isRequired,
     onPhotoSort: func.isRequired,
     onTagCreate: func.isRequired,
     onTagSave: func.isRequired,
+    onSelectionSort: func.isRequired,
     onUiUpdate: func.isRequired
   }
 

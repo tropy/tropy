@@ -2,16 +2,21 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { arrayOf, bool, func, number, object, shape, string } = PropTypes
 const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
 const { MetadataFields } = require('./fields')
 const { TemplateSelect } = require('../template/select')
 const { PhotoInfo } = require('../photo/info')
 const { ItemInfo } = require('../item/info')
+const { SelectionInfo } = require('../selection/info')
 
 const {
+  arrayOf, bool, func, number, object, shape, string
+} = require('prop-types')
+
+const {
+  getActiveSelection,
+  getActiveSelectionData,
   getAllTemplates,
   getItemMetadata,
   getItemTemplates,
@@ -100,12 +105,39 @@ class MetadataPanel extends PureComponent {
     )
   }
 
+  renderSelectionFields() {
+    if (this.isEmpty || this.isBulk) return null
+
+    const {
+      selection,
+      selectionData,
+      templates,
+      onMetadataSave,
+      ...props
+    } = this.props
+
+    return selection != null && !selection.pending && (
+      <section>
+        <h5 className="metadata-heading separator">
+          <FormattedMessage id="panel.metadata.selection"/>
+        </h5>
+        <MetadataFields {...props}
+          data={selectionData}
+          template={templates[selection.template]}
+          onChange={onMetadataSave}/>
+        <SelectionInfo
+          selection={selection}/>
+      </section>
+    )
+  }
+
   render() {
     return (
       <div className="metadata tab-pane">
         <div className="scroll-container">
           {this.renderItemFields()}
           {this.renderPhotoFields()}
+          {this.renderSelectionFields()}
         </div>
       </div>
     )
@@ -130,6 +162,12 @@ class MetadataPanel extends PureComponent {
     templates: object.isRequired,
     itemTemplates: arrayOf(object).isRequired,
 
+    selection: shape({
+      id: number.isRequired,
+      template: string
+    }),
+    selectionData: object,
+
     onItemSave: func.isRequired,
     onMetadataSave: func.isRequired,
     onOpenInFolder: func.isRequired
@@ -145,7 +183,9 @@ module.exports = {
       photo: getSelectedPhoto(state),
       photoData: state.metadata[state.nav.photo],
       templates: getAllTemplates(state),
-      itemTemplates: getItemTemplates(state)
+      itemTemplates: getItemTemplates(state),
+      selection: getActiveSelection(state),
+      selectionData: getActiveSelectionData(state)
     })
   )(MetadataPanel)
 }

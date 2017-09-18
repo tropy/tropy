@@ -25,9 +25,13 @@ module.exports = {
   },
 
   close(payload, meta) {
-    return { type: CLOSE, payload, meta }
+    return {
+      type: CLOSE,
+      payload,
+      meta,
+      error: payload instanceof Error
+    }
   },
-
 
   save(payload, meta) {
     return {

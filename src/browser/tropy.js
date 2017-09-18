@@ -189,7 +189,7 @@ class Tropy extends EventEmitter {
       title: this.strings.dict.windows.wizard.title,
       width: WIZ.WIDTH * ZOOM,
       height: WIZ.HEIGHT * ZOOM,
-      parent: this.win,
+      parent: darwin ? null : this.win,
       modal: !darwin && !!this.win,
       autoHideMenuBar: true,
       resizable: false,
@@ -211,7 +211,7 @@ class Tropy extends EventEmitter {
       title: this.strings.dict.windows.prefs.title,
       width: PREFS.WIDTH * ZOOM,
       height: PREFS.HEIGHT * ZOOM,
-      parent: this.win,
+      parent: darwin ? null : this.win,
       modal: !darwin && !!this.win,
       autoHideMenuBar: true,
       resizable: false,
@@ -333,6 +333,10 @@ class Tropy extends EventEmitter {
     this.on('app:delete-photo', (_, { target }) =>
       this.dispatch(act.photo.delete({
         item: target.item, photos: [target.id]
+      })))
+    this.on('app:delete-selection', (_, { target }) =>
+      this.dispatch(act.selection.delete({
+        photo: target.id, selections: [target.selection]
       })))
 
     this.on('app:create-list', () =>

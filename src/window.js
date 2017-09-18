@@ -62,7 +62,7 @@ class Window extends EventEmitter {
     this.style(this.state.theme, false, done)
   }
 
-  show() {
+  show = () => {
     const { current } = this
     current.show()
     current.focus()
@@ -248,9 +248,9 @@ class Window extends EventEmitter {
     let ti = setInterval(() => {
       if (document.styleSheets.length === count || Date.now() > limit) {
         clearInterval(ti)
-        requestIdleCallback(done, { timeout: 100 })
+        done()
       }
-    }, 10)
+    }, 15)
 
   }
 

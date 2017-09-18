@@ -2,14 +2,18 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { arrayOf, bool, func, object, shape, string } = PropTypes
 const { MetadataField } = require('./field')
 const { get } = require('../../common/util')
 const { isArray } = Array
+const {
+  arrayOf, bool, func, number, object, oneOfType, shape, string
+} =  require('prop-types')
 
 
 class MetadataFields extends PureComponent {
+  get isEmpty() {
+    return this.props.data == null
+  }
 
   isEditing(key) {
     return get(this.props.edit, [key]) === this.getEditKey()
@@ -27,7 +31,6 @@ class MetadataFields extends PureComponent {
   getEditKey(id = this.props.data.id) {
     return isArray(id) ? 'bulk' : id
   }
-
 
   *extras() {
     for (let key in this.props.data) {
@@ -68,6 +71,7 @@ class MetadataFields extends PureComponent {
       this.renderField(f.property, {
         isReadOnly: f.isConstant,
         isRequired: f.isRequired,
+        label: f.label,
         placeholder: f.hint,
         type: f.datatype
       }))
@@ -81,7 +85,7 @@ class MetadataFields extends PureComponent {
   }
 
   render() {
-    return (
+    return !this.isEmpty && (
       <ol className="metadata-fields">
         {this.renderTemplate()}
         {this.renderExtraFields()}
@@ -103,7 +107,9 @@ class MetadataFields extends PureComponent {
     properties: object.isRequired,
     static: string,
 
-    data: object.isRequired,
+    data: shape({
+      id: oneOfType([number, arrayOf(number)]).isRequired
+    }),
 
     onEdit: func,
     onEditCancel: func,

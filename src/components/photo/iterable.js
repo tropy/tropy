@@ -2,14 +2,16 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const { Thumbnail } = require('./thumbnail')
 const { DragSource, DropTarget } = require('react-dnd')
 const { getEmptyImage } = require('react-dnd-electron-backend')
 const { bounds } = require('../../dom')
 const { pure } = require('../util')
 const { DND } = require('../../constants')
-const { bool, func, number, string, object, shape } = PropTypes
+
+const {
+  arrayOf, bool, func, number, string, object, shape
+} = require('prop-types')
 
 
 class PhotoIterable extends PureComponent {
@@ -35,10 +37,12 @@ class PhotoIterable extends PureComponent {
     return {
       'photo': true,
       'drop-target': this.props.isSortable,
-      'active': this.props.isSelected,
+      'active': this.isActive,
       'over': this.props.isOver,
       'dragging': this.props.isDragging,
       'last': this.props.isLast,
+      'expanded': this.props.isExpanded,
+      'expandable': this.props.isExpandable,
       [this.direction]: this.props.isOver && this.state.offset != null
     }
   }
@@ -47,18 +51,34 @@ class PhotoIterable extends PureComponent {
     return this.state.offset ? 'after' : 'before'
   }
 
+  get isActive() {
+    return this.props.isSelected && this.props.selection == null
+  }
+
   get isDraggable() {
     return !this.props.isDisabled
   }
 
+  select = () => {
+    if (!this.isActive) {
+      this.props.onSelect(this.props.photo)
+    }
+  }
+
+  contract() {
+    this.props.onContract(this.props.photo)
+  }
+
+  expand() {
+    this.props.onExpand(this.props.photo)
+  }
+
 
   handleContextMenu = (event) => {
-    const {
-      photo, isDisabled, isSelected, onContextMenu, onSelect
-    } = this.props
+    const { photo, isDisabled, onContextMenu } = this.props
 
     if (!isDisabled) {
-      if (!isSelected) onSelect(photo, event)
+      this.select()
 
       onContextMenu(event, 'photo', {
         id: photo.id, item: photo.item, path: photo.path
@@ -96,6 +116,9 @@ class PhotoIterable extends PureComponent {
       return {
         id: photo.id,
         item: photo.item,
+        angle: photo.angle,
+        mirror: photo.mirror,
+        orientation: photo.orientation,
         adj: getAdjacent(photo).map(p => p && p.id)
       }
     },
@@ -172,30 +195,31 @@ class PhotoIterable extends PureComponent {
 
 
   static propTypes = {
+    cache: string.isRequired,
     isDisabled: bool,
     isDragging: bool,
     isLast: bool,
+    isExpandable: bool,
+    isExpanded: bool,
     isOver: bool,
     isSelected: bool,
     isSortable: bool,
     isVertical: bool,
-
     photo: shape({
       id: number.isRequired,
+      selections: arrayOf(number),
       data: object
     }).isRequired,
-
-    cache: string.isRequired,
+    selection: number,
     size: number.isRequired,
-
     ds: func.isRequired,
     dt: func.isRequired,
     dp: func.isRequired,
-
     getAdjacent: func.isRequired,
-
     onContextMenu: func.isRequired,
+    onContract: func.isRequired,
     onDropPhoto: func.isRequired,
+    onExpand: func.isRequired,
     onItemOpen: func.isRequired,
     onSelect: func.isRequired
   }

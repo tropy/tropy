@@ -1,11 +1,11 @@
 'use strict'
 
 const React = require('react')
-const PropTypes = require('prop-types')
-const { number } = PropTypes
 const { PhotoIterable } = require('./iterable')
 const { createClickHandler } = require('../util')
 const cx = require('classnames')
+const { IconSelection } = require('../icons')
+const { IconButton } = require('../button')
 
 
 class PhotoTile extends PhotoIterable {
@@ -18,14 +18,19 @@ class PhotoTile extends PhotoIterable {
   }
 
   handleClick = createClickHandler({
-    onClick: (event) => {
-      this.props.onSelect(this.props.photo, event)
-    },
-
+    onClick: this.select,
     onDoubleClick: () => {
       this.props.onItemOpen(this.props.photo)
     }
   })
+
+  handleExpansionToggle= () => {
+    if (this.props.isExpanded) {
+      this.props.onContract(this.props.photo)
+    } else {
+      this.props.onExpand(this.props.photo)
+    }
+  }
 
   render() {
     return this.connect(
@@ -37,14 +42,14 @@ class PhotoTile extends PhotoIterable {
             onClick: this.handleClick,
             onContextMenu: this.handleContextMenu
           })}
+          {this.props.isExpandable &&
+            <IconButton
+              icon={<IconSelection/>}
+              onClick={this.handleExpansionToggle}/>}
         </div>
+        {this.props.isExpanded && <div className="pointer"/>}
       </li>
     )
-  }
-
-  static propTypes = {
-    ...PhotoIterable.propTypes,
-    size: number.isRequired
   }
 
   static defaultProps = {

@@ -4,8 +4,7 @@ const React = require('react')
 const { Iterator } = require('../iterator')
 const { DropTarget } = require('react-dnd')
 const { DND } = require('../../constants')
-const { move, adjacent } = require('../../common/util')
-const { match } = require('../../keymap')
+const { move } = require('../../common/util')
 
 const {
   arrayOf, bool, func, number, object, string, shape
@@ -21,25 +20,45 @@ class PhotoIterator extends Iterator {
     return {
       'drop-target': this.isSortable,
       'over': this.props.isOver,
+      'photo': true,
       [this.orientation]: true
     }
   }
 
   get isSortable() {
-    return !this.props.isDisabled && this.props.photos.length > 1
+    return !this.props.isDisabled && this.size > 1
   }
 
   isSelected(photo) {
-    return this.props.selection === photo.id
+    return this.props.current === photo.id
   }
 
+  isActive(selection) {
+    return this.props.selection === selection
+  }
+
+  isExpandable(photo) {
+    return photo != null &&
+      photo.selections != null && photo.selections.length > 0
+  }
+
+  isExpanded(photo) {
+    return photo != null &&
+      this.props.expanded.includes(photo.id)
+  }
+
+  get keymap() {
+    return this.props.keymap.PhotoIterator
+  }
+
+
   getNextPhoto(offset = 1) {
-    const { photos, selection } = this.props
+    const { photos, current } = this.props
 
     if (!photos.length) return null
-    if (!selection) return photos[0]
+    if (!current) return photos[0]
 
-    return photos[this.idx[selection] + offset]
+    return photos[this.idx[current] + offset]
   }
 
   getPrevPhoto(offset = 1) {
@@ -50,33 +69,65 @@ class PhotoIterator extends Iterator {
     return this.getNextPhoto(0)
   }
 
-  getAdjacent = (photo) => {
-    return adjacent(this.props.photos, photo)
-  }
-
   handleFocus = () => {
     this.select(this.getCurrentPhoto())
   }
 
   select = (photo) => {
-    if (photo && !this.isSelected(photo)) {
-      this.props.onSelect({
-        photo: photo.id, item: photo.item, note: photo.notes[0]
-      })
+    if (photo == null ||
+      this.isSelected(photo) && this.isActive(photo.selection)) {
+      return
+    }
+
+    this.props.onSelect({
+      photo: photo.id,
+      item: photo.item,
+      note: photo.notes[0],
+      selection: photo.selection
+    })
+  }
+
+  contract = (photo) => {
+    if (this.isExpandable(photo)) {
+      this.props.onContract(
+        this.isGrid ? this.props.expanded : [photo.id]
+      )
+
+      if (this.isSelected(photo)) {
+        this.props.onSelect({
+          photo: photo.id,
+          item: photo.item,
+          note: photo.notes[0]
+        })
+      }
     }
   }
+
+  expand = (photo) => {
+    if (this.isExpandable(photo)) {
+      this.props.onExpand(photo.id)
+    }
+  }
+
 
   handleItemOpen = (photo) => {
-    if (!this.props.isItemOpen) {
-      this.props.onItemOpen({
-        id: photo.item, photos: [photo.id]
-      })
+    if (this.props.isItemOpen) {
+      return this.expand(photo)
     }
+
+    this.props.onItemOpen({
+      id: photo.item,
+      photos: [photo.id],
+      selection: photo.selection
+    })
   }
 
-  handleDelete = (photo) => {
+  handleDelete = ({ id, item, selection }) => {
     if (!this.props.isDisabled) {
-      this.props.onDelete({ item: photo.item, photos: [photo.id] })
+      this.props.onDelete((selection == null) ?
+        { item, photos: [id] } :
+        { photo: id, selections: [selection] }
+      )
     }
   }
 
@@ -89,50 +140,34 @@ class PhotoIterator extends Iterator {
     onSort({ item, photos: order })
   }
 
-  handleKeyDown = (event) => {
-    switch (match(this.props.keymap, event)) {
-      case (this.isVertical ? 'up' : 'left'):
-        this.select(this.getPrevPhoto())
-        break
-      case (this.isVertical ? 'down' : 'right'):
-        this.select(this.getNextPhoto())
-        break
-      case 'open':
-        this.handleItemOpen(this.getCurrentPhoto())
-        break
-      case 'delete':
-        this.handleDelete(this.getCurrentPhoto())
-        this.select(this.getNextPhoto() || this.getPrevPhoto())
-        break
-      default:
-        return
+  getIterableProps(photo, index) {
+    return {
+      photo,
+      cache: this.props.cache,
+      selection: this.props.selection,
+      isDisabled: this.props.isDisabled,
+      isExpandable: this.isExpandable(photo),
+      isExpanded: this.isExpanded(photo),
+      isSelected: this.isSelected(photo),
+      isSortable: this.isSortable,
+      isLast: this.isLast(index),
+      isVertical: this.isVertical,
+      getAdjacent: this.getAdjacent,
+      onContextMenu: this.props.onContextMenu,
+      onContract: this.contract,
+      onDropPhoto: this.handleDropPhoto,
+      onExpand: this.expand,
+      onItemOpen: this.handleItemOpen,
+      onSelect: this.select
     }
-
-    event.preventDefault()
-    event.stopPropagation()
   }
 
   map(fn) {
     this.idx = {}
-    const { isSortable } = this
 
     return this.props.photos.map((photo, index) => {
       this.idx[photo.id] = index
-
-      return fn({
-        photo,
-        cache: this.props.cache,
-        isDisabled: this.props.isDisabled,
-        isSelected: this.isSelected(photo),
-        isSortable,
-        isLast: index === this.props.photos.length - 1,
-        isVertical: this.isVertical,
-        getAdjacent: this.getAdjacent,
-        onDropPhoto: this.handleDropPhoto,
-        onSelect: this.select,
-        onItemOpen: this.handleItemOpen,
-        onContextMenu: this.props.onContextMenu
-      })
+      return fn(this.getIterableProps(photo, index))
     })
   }
 
@@ -141,38 +176,12 @@ class PhotoIterator extends Iterator {
   }
 
 
-  static DropTargetSpec = {
-    drop({ photos }, monitor) {
-      if (monitor.didDrop()) return
-
-      const { id } = monitor.getItem()
-      const to = photos[photos.length - 1].id
-
-      if (id !== to) {
-        return { id, to, offset: 1 }
-      }
-    }
-  }
-
-  static DropTargetCollect = (connect, monitor) => ({
-    dt: connect.dropTarget(),
-    isOver: monitor.isOver({ shallow: true })
-  })
-
-  static wrap() {
-    const Component = DropTarget(
+  static asDropTarget() {
+    return DropTarget(
         DND.PHOTO,
-        this.DropTargetSpec,
-        this.DropTargetCollect
+        DropTargetSpec,
+        DropTargetCollect
       )(this)
-
-    Component.props = this.props
-
-    return Component
-  }
-
-  static get props() {
-    return Object.keys(this.propTypes)
   }
 
   static propTypes = {
@@ -183,8 +192,11 @@ class PhotoIterator extends Iterator {
     ).isRequired,
 
     cache: string.isRequired,
+    current: number,
+    expanded: arrayOf(number).isRequired,
     keymap: object.isRequired,
     selection: number,
+    selections: object.isRequired,
     size: number.isRequired,
 
     isItemOpen: bool,
@@ -193,13 +205,34 @@ class PhotoIterator extends Iterator {
 
     dt: func.isRequired,
 
+    onContract: func.isRequired,
     onContextMenu: func.isRequired,
     onDelete: func.isRequired,
+    onExpand: func.isRequired,
     onItemOpen: func.isRequired,
     onSelect: func.isRequired,
-    onSort: func.isRequired
+    onSort: func.isRequired,
+    onSelectionSort: func.isRequired
   }
 }
+
+const DropTargetSpec = {
+  drop({ photos }, monitor) {
+    if (monitor.didDrop()) return
+
+    const { id } = monitor.getItem()
+    const to = photos[photos.length - 1].id
+
+    if (id !== to) {
+      return { id, to, offset: 1 }
+    }
+  }
+}
+
+const DropTargetCollect = (connect, monitor) => ({
+  dt: connect.dropTarget(),
+  isOver: monitor.isOver({ shallow: true })
+})
 
 
 module.exports = {

@@ -13,6 +13,11 @@ const getPropertyList = memo(
   (props) => values(props).sort(by('id'))
 )
 
+const getDatatypeList = memo(
+  ({ ontology }) => ontology.type,
+  (type) => values(type).sort(by('id'))
+)
+
 const getVocabs = memo(
   ({ ontology }) => ontology.vocab,
   ({ ontology }) => ontology.props,
@@ -102,6 +107,7 @@ const getTemplateValues = (template) =>
 
 module.exports = {
   getAllTemplates,
+  getDatatypeList,
   getItemTemplates: getTemplatesByType(TYPE.ITEM),
   getItemTemplate,
   getPhotoTemplates: getTemplatesByType(TYPE.PHOTO),

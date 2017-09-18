@@ -1,28 +1,47 @@
 linux: &linux
-  Sidebar:
+  Sidebar: &Sidebar
     next: ArrowDown
     prev: ArrowUp
-  ItemIterator:
+  ItemIterator: &ItemIterator
     up: ArrowUp
     down: ArrowDown
     left: ArrowLeft
     right: ArrowRight
     preview: Space
     open: Enter
+    edit: F2
     clear: Escape
     delete: Backspace
-  PhotoIterator:
+  PhotoIterator: &PhotoIterator
     up: ArrowUp
     down: ArrowDown
     left: ArrowLeft
     right: ArrowRight
     open: Enter
+    edit: F2
     delete: Backspace
-  NoteList:
+    expand:
+      - CmdOrCtrl+ArrowDown
+      - CmdOrCtrl+ArrowRight
+    contract:
+      - CmdOrCtrl+ArrowUp
+      - CmdOrCtrl+ArrowLeft
+  SelectionGrid: &SelectionGrid
     up: ArrowUp
     down: ArrowDown
+    left: ArrowLeft
+    right: ArrowRight
     open: Enter
-  NotePad:
+    contract: Escape
+    delete: Backspace
+  NoteList: &NoteList
+    up: ArrowUp
+    down: ArrowDown
+    open:
+      - Enter
+      - Cmd+ArrowDown
+      - Cmd+ArrowRight
+  NotePad: &NotePad
     break: Enter
     br:
       - Shift+Enter
@@ -46,11 +65,46 @@ linux: &linux
     blockquote: CmdOrCtrl+Shift+>
     undo: CmdOrCtrl+z
     redo: CmdOrCtrl+Shift+Z
-  TagList:
+  TagList: &TagList
     remove:
       - Backspace
       - Delete
     commit: Enter
-
-darwin: *linux
+darwin:
+  Sidebar: *Sidebar
+  ItemIterator:
+    up: ArrowUp
+    down: ArrowDown
+    left: ArrowLeft
+    right: ArrowRight
+    preview: Space
+    open:
+      - Cmd+ArrowDown
+      - Cmd+ArrowRight
+    clear: Escape
+    edit: Enter
+    delete: Backspace
+  PhotoIterator:
+    up: ArrowUp
+    down: ArrowDown
+    left: ArrowLeft
+    right: ArrowRight
+    open:
+      - Cmd+ArrowDown
+      - Cmd+ArrowRight
+    delete: Backspace
+    enter: Enter
+    contract: Escape
+  SelectionGrid:
+    up: ArrowUp
+    down: ArrowDown
+    left: ArrowLeft
+    right: ArrowRight
+    open:
+      - Cmd+ArrowDown
+      - Cmd+ArrowRight
+    delete: Backspace
+  NoteList: *NoteList
+  NotePad: *NotePad
+  TagList: *TagList
 win32: *linux

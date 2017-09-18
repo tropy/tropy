@@ -17,6 +17,7 @@ module.exports = {
   ...require('./prefs'),
   ...require('./project'),
   ...require('./qr'),
+  ...require('./selections'),
   ...require('./settings'),
   ...require('./tags'),
   ...require('./ui'),

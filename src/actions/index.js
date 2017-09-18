@@ -21,6 +21,7 @@ module.exports = {
   properties: require('./properties'),
   qr: require('./qr'),
   settings: require('./settings'),
+  selection: require('./selection'),
   shell: require('./shell'),
   storage: require('./storage'),
   tag: require('./tag'),

@@ -16,6 +16,7 @@ const { map, cat, filter, into, compose } = require('transducers.js')
 const { ITEM, DC } = require('../constants')
 const { keys } = Object
 const { isArray } = Array
+const { writeFileAsync: write } = require('fs')
 
 const {
   getItemTemplate,
@@ -430,7 +431,9 @@ class Export extends Command {
   static get action() { return ITEM.EXPORT }
 
   *exec() {
-    let { id, path } = this.action.payload
+    const { db } = this.options
+    const { payload } = this.action
+    let path = payload.path
 
     try {
       if (!path) {
@@ -440,8 +443,13 @@ class Export extends Command {
 
       if (!path) return
 
+      const data =
+        yield call(db.seq, conn => mod.item.export(conn, [payload.id]))
+
+      yield call((...args) => write(...args), path, data, { flags: 'w' })
+
     } catch (error) {
-      warn(`Failed to export item ${id} to ${path}: ${error.message}`)
+      warn(`Failed to export items to ${path}: ${error.message}`)
       verbose(error.stack)
 
       fail(error, this.action.type)

@@ -2,13 +2,11 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { TABS, SASS: { TILE, SCROLLBAR } } = require('../constants')
-const { bounds, on, off } = require('../dom')
-const { times } = require('../common/util')
-const { win } = require('../window')
-const { floor } = Math
-const { bool, number } = PropTypes
+const { TABS, SASS: { TILE } } = require('../constants')
+const { adjacent, times } = require('../common/util')
+const { floor, round } = Math
+const { bool, number } = require('prop-types')
+const throttle = require('lodash.throttle')
 
 
 class Iterator extends PureComponent {
@@ -21,25 +19,26 @@ class Iterator extends PureComponent {
   }
 
   componentDidMount() {
-    if (this.constructor.isGrid) {
-      on(window, 'resize', this.handleResize)
-      this.handleResize()
+    if (this.isGrid) {
+      this.ro = new ResizeObserver(([e]) => {
+        this.handleResize(e.contentRect)
+      })
+
+      this.ro.observe(this.container)
     }
   }
 
   componentWillUnmount() {
-    if (this.constructor.isGrid) {
-      off(window, 'resize', this.handleResize)
+    if (this.ro != null) {
+      this.ro.disconnect()
     }
   }
 
   componentWillReceiveProps(props) {
-    if (this.constructor.isGrid) {
+    if (this.isGrid) {
       if (this.props.size !== props.size) {
-        const { width } = bounds(this.container)
-
         this.setState({
-          cols: this.getColumns(width, props.size)
+          cols: this.getColumns(props.size)
         })
       }
     }
@@ -62,7 +61,7 @@ class Iterator extends PureComponent {
   }
 
   get size() {
-    return this.iteration.length
+    return this.iteration != null ? this.iteration.length : 0
   }
 
   get orientation() {
@@ -73,44 +72,56 @@ class Iterator extends PureComponent {
     return this.isEmpty ? null : TABS[this.constructor.name]
   }
 
-  getColumns(width, size = this.props.size) {
-    if (win.state.scrollbars) {
-      width = width - SCROLLBAR.WIDTH
-    }
+  isLast(index) {
+    return index === this.size - 1
+  }
 
-    return floor(width / (size * TILE.FACTOR))
+  getAdjacent = (iterable) => {
+    return adjacent(this.iteration, iterable)
+  }
+
+  getColumns(size = this.props.size, width = this.width) {
+    return floor(width / round(size * TILE.FACTOR))
   }
 
   setContainer = (container) => {
     this.container = container
   }
 
-  fill(count) {
+  fill(count = this.state.maxCols, key = 'filler') {
     return times(count, (i) => (
-      <li key={`filler-${i}`} className="filler tile"/>
+      <li key={`${key}-${i}`} className="filler tile"/>
     ))
   }
 
-  handleResize = () => {
-    const { width } = bounds(this.container)
-    const maxCols = this.getColumns(width, TILE.MIN)
-
-    this.setState({
-      cols: this.getColumns(width), maxCols
-    })
-
-    if (this.constructor.isGrid) {
-      this.filler = this.fill(maxCols)
+  fillRow() {
+    if (this.filler == null || this.filler.length !== this.state.maxCols) {
+      this.filler = this.fill()
     }
+
+    return this.filler
   }
 
+
+  handleResize = throttle(({ width }) => {
+    this.width = width
+    this.setState({
+      cols: this.getColumns(),
+      maxCols: this.getColumns(TILE.MIN)
+    })
+  }, 20)
+
+
+  get isGrid() {
+    return this.constructor.isGrid
+  }
 
   static get isGrid() {
     return false
   }
 
-  static get props() {
-    return Object.keys(this.propTypes)
+  static getPropKeys() {
+    return Object.keys(this.propTypes || this.DecoratedComponent.propTypes)
   }
 
   static propTypes = {

@@ -6,6 +6,7 @@ const { Component } = React
 const PropTypes = require('prop-types')
 const { ItemDragPreview } = require('./item')
 const { PhotoDragPreview } = require('./photo')
+const { SelectionDragPreview } = require('./selection')
 const { DND } = require('../constants')
 
 
@@ -24,9 +25,10 @@ class DragLayer extends Component {
     switch (type) {
       case DND.ITEMS:
         return <ItemDragPreview {...props} items={item.items}/>
-
       case DND.PHOTO:
         return <PhotoDragPreview {...props} items={[item]}/>
+      case DND.SELECTION:
+        return <SelectionDragPreview {...props} items={[item]}/>
     }
   }
 

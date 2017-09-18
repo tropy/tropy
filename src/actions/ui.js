@@ -15,7 +15,7 @@ module.exports = {
     return {
       type: UI.UPDATE,
       payload,
-      meta: { throttle: true, ...meta }
+      meta: { throttle: true, log: 'silly', ...meta }
     }
   }
 }

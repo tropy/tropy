@@ -1,6 +1,6 @@
 'use strict'
 
-const { debug, warn, verbose } = require('../common/log')
+const { debug, warn, log } = require('../common/log')
 const { gray } = require('colors/safe')
 const ms = require('ms')
 
@@ -21,7 +21,7 @@ module.exports = {
           debug(payload.message, payload.stack)
           break
         default:
-          verbose(format(type, meta))
+          log(meta.log || 'verbose', format(type, meta))
       }
 
       return next(action)

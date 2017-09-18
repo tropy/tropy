@@ -1,6 +1,5 @@
 'use strict'
 
-const assert = require('assert')
 const { TEMPLATE } = require('../constants/photo')
 const { DC } = require('../constants')
 const { all } = require('bluebird')
@@ -91,17 +90,17 @@ module.exports = {
           }
         ),
 
-        //db.each(`
-        //  SELECT id, photo_id AS photo
-        //    FROM selections
-        //      LEFT OUTER JOIN trash USING (id)
-        //    WHERE photo_id IN (${ids})
-        //      AND deleted IS NULL
-        //    ORDER BY photo_id, position`,
-        //  ({ id, photo }) => {
-        //    photos[photo].selections.push(id)
-        //  }
-        //),
+        db.each(`
+          SELECT id, photo_id AS photo
+            FROM selections
+              LEFT OUTER JOIN trash USING (id)
+            WHERE photo_id IN (${ids})
+              AND deleted IS NULL
+            ORDER BY photo_id, position`,
+          ({ id, photo }) => {
+            photos[photo].selections.push(id)
+          }
+        ),
 
         db.each(`
           SELECT id, note_id AS note
@@ -116,32 +115,6 @@ module.exports = {
     }
 
     return photos
-  },
-
-  async save(db, { id, timestamp, ...data }) {
-    const assign = []
-    const params = { $id: id }
-
-    for (let attr in data) {
-      assign.push(`${attr} = $${attr}`)
-      params[`$${attr}`] = data[attr]
-    }
-
-    assert(id != null, 'missing photo id')
-    assert(assign.length > 0, 'missing assignments')
-
-    await db.run(`
-      UPDATE images
-        SET ${assign.join(', ')}
-        WHERE id = $id`, params)
-
-    if (timestamp != null) {
-      await db.run(`
-        UPDATE subjects
-          SET modified = datetime(?)
-          WHERE id = ?`,
-        new Date(timestamp).toISOString(), id)
-    }
   },
 
   find(db, { checksum }) {
@@ -202,14 +175,12 @@ module.exports = {
   async delete(db, ids) {
     return db.run(`
       INSERT INTO trash (id)
-        VALUES ${ids.map(id => `(${id})`).join(',')}`
-    )
+        VALUES ${ids.map(id => `(${id})`).join(',')}`)
   },
 
   async restore(db, { ids }) {
     return db.run(`
-      DELETE FROM trash WHERE id IN (${ids.join(',')})`
-    )
+      DELETE FROM trash WHERE id IN (${ids.join(',')})`)
   },
 
   async prune(db) {

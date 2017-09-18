@@ -11,7 +11,6 @@ const { Image } = require('../image')
 const { DuplicateError } = require('../common/error')
 const { warn, verbose } = require('../common/log')
 const { pick, splice } = require('../common/util')
-const { map, cat, filter, into, compose } = require('transducers.js')
 const { getPhotoTemplate, getTemplateValues } = require('../selectors')
 const { keys } = Object
 
@@ -146,7 +145,7 @@ class Save extends Command {
       pick(state.photos[id], keys(data)))
 
     yield call(db.transaction, tx =>
-      mod.photo.save(tx, { id, timestamp: meta.now, ...data }))
+      mod.image.save(tx, { id, timestamp: meta.now, ...data }))
 
     this.undo = act.photo.save({ id, data: original })
 
@@ -157,21 +156,39 @@ class Save extends Command {
 class Load extends Command {
   static get action() { return PHOTO.LOAD }
 
+  // eslint-disable-next-line complexity
   *exec() {
     const { db } = this.options
-    const ids = this.action.payload
+    const { payload } = this.action
 
-    const photos = yield call(mod.photo.load, db, ids)
+    const photos = yield call(mod.photo.load, db, payload)
 
-    const { notes } = yield select()
-    const missing = into([], compose(
-      map(([, p]) => p.notes),
-      cat,
-      filter(id => !notes[id])
-    ), photos)
+    const { notes, selections } = yield select()
+    const missing = { notes: [], selections: [] }
 
-    if (missing.length) {
-      yield put(act.note.load(missing))
+    // TODO DRY -- generalize fetching missing dependents.
+    for (let id in photos) {
+      for (let nId of photos[id].notes) {
+        if (notes[nId] == null || notes[nId].pending) {
+          missing.notes.push(nId)
+        }
+      }
+      for (let sId of photos[id].selections) {
+        if (selections[sId] == null || selections[sId].pending) {
+          missing.selections.push(sId)
+        }
+      }
+    }
+
+    if (missing.notes.length > 0) {
+      yield put(act.note.load(missing.notes))
+    }
+
+    if (missing.selections.length > 0) {
+      yield all([
+        put(act.selection.load(missing.selections)),
+        put(act.metadata.load(missing.selections))
+      ])
     }
 
     return photos

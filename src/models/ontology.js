@@ -4,7 +4,7 @@ const assert = require('assert')
 const { SCHEMA } = require('../constants/ontology')
 const { TEXT } = require('../constants/type')
 const { all } = require('bluebird')
-const { list, quote } = require('../common/util')
+const { blank, list, quote } = require('../common/util')
 
 const ontology = {
   create(db) {
@@ -321,9 +321,8 @@ const ontology = {
   template: {
     async load(db, ...ids) {
       const temps = {}
-
-      const constraint = (ids.length > 0) ? `
-          WHERE template_id IN (${list(ids, quote)})` : ''
+      const cons = (ids.length > 0) ?
+        `template_id IN (${list(ids, quote)})` : null
 
       await db.each(`
         SELECT
@@ -334,7 +333,8 @@ const ontology = {
             description,
             protected AS isProtected,
             created
-          FROM templates${constraint}`, (data) => {
+          FROM templates
+          ${cons == null ? '' : `WHERE ${cons}`}`, (data) => {
         temps[data.id] = {
           ...data, isProtected: !!data.isProtected, domain: [], fields: []
         }
@@ -343,7 +343,8 @@ const ontology = {
       await all([
         db.each(`
           SELECT class_id AS klass, template_id AS tpl
-            FROM domains${constraint}
+            FROM domains
+            ${cons == null ? '' : `WHERE ${cons}`}
             ORDER BY position`, ({ tpl, klass }) => {
           temps[tpl].domain.push(klass)
         }),
@@ -352,13 +353,18 @@ const ontology = {
               field_id AS id,
               template_id AS tpl,
               property_id AS property,
+              label,
               datatype_id AS datatype,
               required AS isRequired,
               hint,
               value,
               constant AS isConstant
-            FROM fields${constraint}
-            ORDER BY position, field_id`,
+            FROM fields
+              LEFT OUTER JOIN field_labels USING (field_id)
+            WHERE (language IS NULL OR language = ?)${
+              cons == null ? '' : ` AND ${cons}`
+            }
+            ORDER BY position, field_id`, ARGS.locale,
           ({ tpl, isRequired, isConstant, ...data }) => {
             temps[tpl].fields.push({
               ...data,
@@ -397,11 +403,11 @@ const ontology = {
       )
     },
 
-    stale(db, { id, date }) {
-      return db.get(`
+    async stale(db, { id, date }) {
+      return null == await db.get(`
         SELECT template_id AS id, created, protected  AS isProtected
           FROM TEMPLATES
-          WHERE template_id = ? AND created < date(?)`, id, date)
+          WHERE template_id = ? AND created >= date(?)`, id, date)
     },
 
     delete(db, ...ids) {
@@ -467,6 +473,14 @@ const ontology = {
               $position: (f.position != null) ? f.position : idx
             })
           ))
+        ).then(res =>
+          db.prepare(`
+            INSERT INTO field_labels (field_id, language, label)
+              VALUES (?,?,?)`, addLabel =>
+                all(res.map((f, idx) => blank(fields[idx].label) ?
+                  null :
+                  addLabel.run([f.id, ARGS.locale, fields[idx].label])))
+          ).then(() => res)
         )
       },
 
@@ -502,6 +516,20 @@ const ontology = {
               END
             WHERE template_id = ?`,
           ...order, id)
+      },
+
+      label: {
+        save(db, { id, label }, language = ARGS.locale) {
+          if (blank(label)) {
+            return db.run(`
+              DELETE FROM field_labels
+                WHERE field_id = ? AND language = ?`, [id, language])
+          }
+
+          return db.run(`
+            REPLACE INTO field_labels (field_id, language, label)
+              VALUES (?,?,?)`, [id, language, label])
+        }
       }
     }
   },

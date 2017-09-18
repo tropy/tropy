@@ -51,8 +51,8 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
     let quit = false
 
     if (opts.environment !== 'test') {
-      quit = app.makeSingleInstance(argv => {
-        tropy.open(args.parse(argv.slice(1)._))
+      quit = app.makeSingleInstance((argv) => {
+        tropy.open(...args.parse(argv.slice(1))._)
       })
     }
 
@@ -61,6 +61,8 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
       app.exit(0)
 
     } else {
+
+      app.commandLine.appendSwitch('js-flags', '--datetime_format_to_parts')
 
       if (opts.scale) {
         app.commandLine.appendSwitch('force-device-scale-factor', opts.scale)

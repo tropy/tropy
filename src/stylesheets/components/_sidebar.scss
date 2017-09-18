@@ -42,28 +42,18 @@
 
       &.active,
       &.over {
-        color: $sidebar-active-color;
-
-        .icon {
-          color: $sidebar-active-icon-color;
-        }
+        @extend %list-active;
       }
 
       &.active {
-        background: $sidebar-active-bg;
-
         @at-root #{selector-replace(&, "#sidebar", "#sidebar :focus")} {
-          color: $sidebar-focus-color;
-          background: $sidebar-focus-bg;
-
-          .icon {
-            color: $sidebar-focus-icon-color;
-          }
+          @extend %list-focus;
         }
       }
 
       &.over {
         @extend %drop-target;
+        background: transparent; // Remove background from %list-active
       }
 
       &.dragging {

@@ -11,6 +11,14 @@
   margin-bottom: $space-min;
   overflow: hidden;
 
+  &.draggable {
+    .frameless & {
+      -webkit-app-region: drag;
+      position: relative;
+      z-index: $zindex-draggable;
+    }
+  }
+
   .panel-group-header & {
     padding-top: 0;
   }
@@ -20,6 +28,7 @@
     height: $panel-header-height;
     margin: 0;
     padding-top: 0;
+    padding-right: $default-padding-horizontal - ($space-min + $shim); // Align icons with icon buttons
   }
 
   .toolbar-context {

@@ -56,6 +56,7 @@ $tile-thumbnail-sizes:    const("ITEM.ZOOM");
 $tile-thumbnail-size-min: const("ICON.SIZE");
 $tile-thumbnail-size-max: const("ICON.MAX");
 $tile-factor:             const("TILE.FACTOR");
+$pointer-height:          10px;
 
 
 // Stack
@@ -213,11 +214,13 @@ $resizable-threshold: $space-xs;
 // Slider
 // --------------------------------------------------
 
-$slider-width: 154px;
-$slider-track-height: 4px;
-$slider-handle-size: $space-sm;
+$slider-width:            154px;
+$slider-height:           $line-height-large;
+$slider-track-height:     $space-min;
+$slider-handle-size:      $space-sm;
+$slider-value-transition: 0.3s ease;
 
-$slider-width-sm: 104px;
+$slider-width-sm:       104px;
 $slider-handle-size-sm: 10px;
 
 
@@ -226,12 +229,13 @@ $slider-handle-size-sm: 10px;
 
 $esper-toolbar-transition-in: 0.3s 0.4s ease;
 $esper-toolbar-transition-out: 0.3s ease;
+$esper-cursor: const("ESPER.CURSOR");
 
 
 // Scrollbar
 // --------------------------------------------------
 
-$scrollbar-size: $space-sm;
+$scrollbar-size: 12; // $space-sm;
 
 
 // Progress bar

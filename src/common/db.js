@@ -7,10 +7,11 @@ const ms = require('ms')
 const { EventEmitter } = require('events')
 const { Migration } = require('./migration')
 const { normalize } = require('path')
-const { using, resolve } = require('bluebird')
+const Bluebird = require('bluebird')
+const { using } = Bluebird
 const { readFileAsync: read } = require('fs')
 const { createPool } = require('generic-pool')
-const { debug, info, verbose, warn } = require('./log')
+const { debug, verbose, warn } = require('./log')
 const { entries } = Object
 
 const M = {
@@ -54,15 +55,18 @@ class Database extends EventEmitter {
     debug(`init db ${path}`)
 
     this.path = path
+
     this.pool = createPool({
       create: () => this.create(mode),
       destroy: (conn) => this.destroy(conn)
     }, {
       min: 0,
       max: 4,
-      idleTimeoutMillis: 60000 * 5,
+      idleTimeoutMillis: 1000 * 60 * 5,
+      acquireTimeoutMillis: 1000 * 3,
+      Promise: Bluebird,
       ...options,
-      validate: (conn) => resolve(conn.db.open)
+      validate: (conn) => Bluebird.resolve(conn.db.open)
     })
   }
 
@@ -83,11 +87,12 @@ class Database extends EventEmitter {
 
   create(mode) {
     return new Promise((resolve, reject) => {
-      info(`opening db ${this.path}`)
+      verbose(`opening db ${this.path}`)
 
       let db = new sqlite.Database(this.path, M[mode], (error) => {
         if (error) {
-          return reject(error), this.emit('error', error)
+          this.emit('error', error)
+          return reject(error)
         }
 
         new Connection(db)
@@ -115,7 +120,7 @@ class Database extends EventEmitter {
   }
 
   async destroy(conn) {
-    info(`closing db ${this.path}`)
+    verbose(`closing db ${this.path}`)
 
     await conn.optimize()
     await conn.close()
@@ -124,7 +129,7 @@ class Database extends EventEmitter {
   }
 
   acquire() {
-    return resolve(this.pool.acquire())
+    return this.pool.acquire()
       .disposer(conn => this.release(conn))
   }
 
@@ -170,7 +175,7 @@ class Database extends EventEmitter {
     this.seq(conn =>
       using(nofk(conn), conn =>
         using(transaction(conn, 'EXCLUSIVE'), tx =>
-          resolve(fn(tx)).then(() => tx.check()))))
+          Bluebird.resolve(fn(tx)).then(() => tx.check()))))
 
 
   prepare(...args) {

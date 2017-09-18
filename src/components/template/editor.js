@@ -11,7 +11,12 @@ const { identify, omit, pick } = require('../../common/util')
 const { arrayOf, func, shape, string } = require('prop-types')
 const actions = require('../../actions')
 const { TYPE } = require('../../constants')
-const { getTemplateList, getPropertyList } = require('../../selectors')
+
+const {
+  getDatatypeList,
+  getTemplateList,
+  getPropertyList
+} = require('../../selectors')
 
 const TEMPLATE = {
   name: '',
@@ -187,6 +192,7 @@ class TemplateEditor extends PureComponent {
           <TemplateFieldList
             template={this.state.id}
             fields={this.state.fields}
+            datatypes={this.props.datatypes}
             properties={this.props.properties}
             isDisabled={this.state.isProtected || isPristine}
             onFieldAdd={this.props.onFieldAdd}
@@ -199,6 +205,9 @@ class TemplateEditor extends PureComponent {
   }
 
   static propTypes = {
+    datatypes: arrayOf(shape({
+      id: string.isRequired
+    })).isRequired,
     properties: arrayOf(shape({
       id: string.isRequired
     })).isRequired,
@@ -228,6 +237,7 @@ module.exports = {
     state => ({
       properties: getPropertyList(state),
       templates: getTemplateList(state),
+      datatypes: getDatatypeList(state)
     }),
 
     dispatch => ({

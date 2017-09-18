@@ -9,19 +9,48 @@
   line-height: $row-height;
 
   .photo {
-    display: flex;
     align-items: center;
-    padding: 0 $default-padding-horizontal;
     position: relative;
 
     &.active {
-      color: $photo-list-active-color;
-      background: $photo-list-active-bg;
+      .photo-container {
+        @extend %list-active;
 
-      @at-root #{selector-replace(&, ".photo.list", ".photo.list:focus")} {
-        color: $photo-list-focus-color;
-        background: $photo-list-focus-bg;
+        @at-root #{selector-replace(&, ".photo.list", ".photo.list:focus")} {
+          @extend %list-focus;
+        }
       }
+    }
+
+    &:not(.expandable) {
+      .photo-container {
+        padding-left: $default-padding-horizontal + $space-md + $space-min;
+      }
+    }
+
+    &.expanded {
+      .btn {
+        .icon {
+          transform: scaleY(-1);
+        }
+      }
+    }
+
+    .photo-container {
+      display: flex;
+      align-items: center;
+      padding: 0 $default-padding-horizontal;
+    }
+  }
+
+  .btn {
+    flex: 0 0 auto;
+    padding: 0;
+    border-radius: 0;
+    margin-right: $space-min;
+
+    .icon {
+      transform: rotate(90deg);
     }
   }
 
@@ -35,6 +64,29 @@
 
     .editable {
       @include css-truncation;
+    }
+  }
+
+  .icon-selection {
+    flex: 0 0 auto;
+    margin-left: $space-xs;
+  }
+
+  .selection.list {
+    .selection {
+      display: flex;
+      align-items: center;
+      padding-left: $default-padding-horizontal + $space-md + $space-sm
+        + $space-min;
+      padding-right: $default-padding-horizontal;
+
+      &.active {
+        @extend %list-active;
+
+        @at-root #{selector-replace(&, ".photo.list", ".photo.list:focus")} {
+          @extend %list-focus;
+        }
+      }
     }
   }
 }

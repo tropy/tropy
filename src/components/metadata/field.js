@@ -34,7 +34,9 @@ class MetadataField extends PureComponent {
   }
 
   get label() {
-    return this.props.property.label || getLabel(this.props.property.id)
+    return this.props.label ||
+      this.props.property.label ||
+      getLabel(this.props.property.id)
   }
 
   get property() {
@@ -109,6 +111,7 @@ class MetadataField extends PureComponent {
       comment: string
     }),
 
+    label: string,
     placeholder: string,
     text: string,
     type: string.isRequired,
@@ -139,10 +142,8 @@ class StaticField extends PureComponent {
         <label>
           <FormattedMessage id={this.props.label}/>
         </label>
-        <div
-          className="value static"
-          onClick={this.props.onClick}>
-          {this.props.value}
+        <div className="value" onClick={this.props.onClick}>
+          <div className="static">{this.props.value}</div>
         </div>
       </li>
     )

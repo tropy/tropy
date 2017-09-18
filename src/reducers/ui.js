@@ -1,10 +1,15 @@
 'use strict'
 
-const { UI, SASS } = require('../constants')
-const { merge } = require('../common/util')
+const { ESPER, ITEM, PHOTO, NOTE, UI, SASS } = require('../constants')
+const { merge, omit } = require('../common/util')
 
 const init = {
-  esper: { height: 50 },
+  esper: {
+    height: 50,
+    tool: ESPER.TOOL.PAN
+  },
+  image: {},
+  expand: {},
   panel: {
     slots: [
       { height: 40, isClosed: false },
@@ -21,6 +26,19 @@ const init = {
   zoom: 0
 }
 
+function contract(state, photos) {
+  return {
+    ...state, expand: omit(state.expand, photos)
+  }
+}
+
+function expand(state, photo) {
+  return {
+    ...state, expand: { ...state.expand, [photo]: Date.now() }
+  }
+}
+
+
 module.exports = {
   ui(state = init, { type, payload }) {
     switch (type) {
@@ -28,6 +46,18 @@ module.exports = {
         return merge(init, payload)
       case UI.UPDATE:
         return merge(state, payload)
+      case PHOTO.CONTRACT:
+        return contract(state, payload)
+      case PHOTO.EXPAND:
+        return expand(state, payload)
+      case PHOTO.SELECT:
+        return (payload.selection == null) ?
+          state :
+          expand(state, payload.photo)
+      case ITEM.OPEN:
+        return expand(state, payload.photos[0])
+      case NOTE.SELECT:
+        return expand(state, payload.photo)
       default:
         return state
     }

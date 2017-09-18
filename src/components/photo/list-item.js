@@ -1,36 +1,41 @@
 'use strict'
 
 const React = require('react')
-const PropTypes = require('prop-types')
 const { Editable } = require('../editable')
 const { createClickHandler } = require('../util')
 const { PhotoIterable } = require('./iterable')
-const { get } = require('../../common/util')
-const cn = require('classnames')
+const { SelectionList } = require('../selection/list')
+const { get, pluck } = require('../../common/util')
+const cx = require('classnames')
+const { bool, func, object, string } = require('prop-types')
+const { IconSelection, IconChevron9 } = require('../icons')
+const { IconButton } = require('../button')
 
 
 class PhotoListItem extends PhotoIterable {
-
-  get title() {
-    return get(this.props, ['data', this.props.title, 'text'])
-  }
-
   get isDraggable() {
     return !this.props.isEditing && super.isDraggable
   }
 
+  get selections() {
+    return pluck(this.props.selections, this.props.photo.selections)
+  }
+
+  get title() {
+    const { data, photo, title } = this.props
+    return get(data, [photo.id, title, 'text'])
+  }
+
   handleClick = createClickHandler({
-    onClick: (event) => {
-      const cancel = !this.props.isSelected
-      this.props.onSelect(this.props.photo, event)
-      return cancel
+    onClick: () => {
+      const { isActive } = this
+      this.select()
+      return !isActive
     },
 
     onSingleClick: () => {
-      const { photo, isDisabled, isDragging, onEdit } = this.props
-
-      if (!(isDisabled || isDragging)) {
-        onEdit(photo.id)
+      if (!(this.props.isDisabled || this.props.isDragging)) {
+        this.props.onEdit(this.props.photo)
       }
     },
 
@@ -51,47 +56,90 @@ class PhotoListItem extends PhotoIterable {
     })
   }
 
+  handleTwistyButtonClick = (event) => {
+    event.stopPropagation()
+
+    if (this.props.isExpanded) this.contract()
+    else this.expand()
+  }
+
+
+  renderSelectionList() {
+    if (!this.props.isExpanded) return null
+
+    return (
+      <SelectionList
+        cache={this.props.cache}
+        active={this.props.selection}
+        data={this.props.data}
+        edit={this.props.edit.selection}
+        isDisabled={this.props.isDisabled}
+        onChange={this.props.onChange}
+        onContextMenu={this.props.onContextMenu}
+        onEdit={this.props.onEdit}
+        onEditCancel={this.props.onEditCancel}
+        onItemOpen={this.props.onItemOpen}
+        onSelect={this.props.onSelect}
+        onSort={this.props.onSelectionSort}
+        photo={this.props.photo}
+        selections={this.selections}
+        size={this.props.size}/>
+    )
+  }
+
+  renderTwistyButton() {
+    return this.props.isExpandable && (
+      <IconButton
+        icon={<IconChevron9/>}
+        onClick={this.handleTwistyButtonClick}/>
+    )
+  }
 
   render() {
-    const { isEditing, isDisabled, onEditCancel } = this.props
+    const {
+      isDisabled,
+      isEditing,
+      isExpandable,
+      onEditCancel
+    } = this.props
 
     return this.connect(
       <li
-        className={cn(this.classes)}
-        ref={this.setContainer}
-        onClick={this.handleClick}
-        onContextMenu={this.handleContextMenu}>
-
-        {this.renderThumbnail()}
-
-        <div className="title">
-          <Editable
-            value={this.title}
-            isEditing={isEditing}
-            isDisabled={isDisabled}
-            onCancel={onEditCancel}
-            onChange={this.handleChange}/>
+        className={cx(this.classes)}
+        ref={this.setContainer}>
+        <div
+          className="photo-container"
+          onClick={this.handleClick}
+          onContextMenu={this.handleContextMenu}>
+          {this.renderTwistyButton()}
+          {this.renderThumbnail()}
+          <div className="title">
+            <Editable
+              value={this.title}
+              isEditing={isEditing}
+              isDisabled={isDisabled}
+              onCancel={onEditCancel}
+              onChange={this.handleChange}/>
+          </div>
+          {isExpandable && <IconSelection/>}
         </div>
+        {this.renderSelectionList()}
       </li>
     )
   }
 
   static propTypes = {
     ...PhotoIterable.propTypes,
-
-    title: PropTypes.string.isRequired,
-    data: PropTypes.object.isRequired,
-
-    isEditing: PropTypes.bool,
-
-    onChange: PropTypes.func.isRequired,
-    onEdit: PropTypes.func.isRequired,
-    onEditCancel: PropTypes.func.isRequired
-  }
-
-  static defaultProps = {
-    ...PhotoIterable.defaultProps,
-    data: {}
+    data: object.isRequired,
+    edit: object.isRequired,
+    isEditing: bool.isRequired,
+    isExpanded: bool.isRequired,
+    selections: object.isRequired,
+    title: string.isRequired,
+    onChange: func.isRequired,
+    onEdit: func.isRequired,
+    onEditCancel: func.isRequired,
+    onSelectionSort: func.isRequired
   }
 }
 

@@ -72,19 +72,20 @@ class Resizable extends PureComponent {
 
   getNewValue(event) {
     const { edge, min, max, isRelative } = this.props
+    const { isInverse, origin, scale } = this
 
-    let origin = bounds(this.container)[OPP[edge]]
-    let value = event[AXS[edge]] - origin
-
-    if (this.isInverse) value = -value
-
-    value = restrict(value, min, max)
+    const value = restrict(
+      (event[AXS[edge]] - origin) * (isInverse ? -1 : 1), min, max
+    )
 
     if (isRelative) {
-      value = restrict(round(value / this.scale, 100), null, 100)
+      return {
+        absolute: value,
+        value: restrict(round(value / scale, 100), null, 100)
+      }
     }
 
-    return value
+    return { value }
   }
 
   setContainer = (container) => {
@@ -95,6 +96,7 @@ class Resizable extends PureComponent {
     const { edge, onDragStart } = this.props
 
     this.scale = bounds(this.container.parentElement)[DIM[edge]] / 100
+    this.origin = bounds(this.container)[OPP[edge]]
 
     if (onDragStart) {
       return onDragStart(event, this)
@@ -106,12 +108,15 @@ class Resizable extends PureComponent {
       this.props.onDrag(event, this)
     }
 
-    if (this.props.onResize) {
-      this.props.onResize(this.getNewValue(event), event, this)
+    if (this.props.onResize != null) {
+      this.props.onResize(this.getNewValue(event))
     }
   }
 
   handleDragStop = (event) => {
+    this.scale = 1
+    this.origin = 0
+
     if (this.props.onDragStop) {
       this.props.onDragStop(event, this)
     }
@@ -185,7 +190,9 @@ class BufferedResizable extends Resizable {
   }
 
   componentWillReceiveProps(props) {
-    this.setState({ value: props.value })
+    if (props.value !== this.props.value) {
+      this.setState({ value: props.value })
+    }
   }
 
   get value() {
@@ -194,9 +201,8 @@ class BufferedResizable extends Resizable {
 
   handleDrag = (event) => {
     const value = this.getNewValue(event)
-
-    if (!this.props.onResize(value, event, this)) {
-      this.setState({ value })
+    if (!this.props.onResize(value, this)) {
+      this.setState({ value: value.value })
     }
   }
 

@@ -12,7 +12,7 @@
 --
 
 -- Save the current migration number
-PRAGMA user_version=1707240933;
+PRAGMA user_version=1708121306;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -48,7 +48,9 @@ CREATE TABLE images (
   angle   NUMERIC  NOT NULL DEFAULT 0,
   mirror  BOOLEAN  NOT NULL DEFAULT 0,
 
-  CHECK (angle >= 0 AND angle <= 360)
+  CHECK (angle >= 0 AND angle <= 360),
+  CHECK (width >= 0 AND height >= 0)
+
 ) WITHOUT ROWID;
 CREATE TABLE photos (
   id           INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
@@ -91,7 +93,7 @@ CREATE TABLE metadata_values (
 );
 CREATE TABLE notes (
   note_id      INTEGER  PRIMARY KEY,
-  id           INTEGER  REFERENCES subjects ON DELETE CASCADE,
+  id           INTEGER  NOT NULL REFERENCES subjects ON DELETE CASCADE,
   text         TEXT     NOT NULL,
   state        TEXT     NOT NULL,
   language     TEXT     NOT NULL DEFAULT 'en',
@@ -179,6 +181,14 @@ CREATE TABLE 'fts_metadata_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WIT
 CREATE TABLE 'fts_metadata_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
 CREATE TABLE 'fts_metadata_config'(k PRIMARY KEY, v) WITHOUT ROWID;
 INSERT INTO "fts_metadata_config" VALUES('version',4);
+CREATE TABLE selections (
+  id        INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
+  photo_id  INTEGER  NOT NULL REFERENCES photos ON DELETE CASCADE,
+  x         NUMERIC  NOT NULL DEFAULT 0,
+  y         NUMERIC  NOT NULL DEFAULT 0,
+  position  INTEGER
+
+) WITHOUT ROWID;
 CREATE TRIGGER insert_tags_trim_name
   AFTER INSERT ON tags
   BEGIN

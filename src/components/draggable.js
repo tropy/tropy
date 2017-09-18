@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const cx = require('classnames')
-const { on, off } = require('../dom')
+const { createDragHandler } = require('../dom')
 const { noop, pick } = require('../common/util')
 
 const {
@@ -13,11 +13,11 @@ const {
 
 class Draggable extends PureComponent {
   componentWillUnmount() {
-    this.stop()
+    this.drag.stop()
   }
 
   handleMouseDown = (event) => {
-    if (this.isDragging) this.stop()
+    if (this.isDragging) this.drag.stop()
     if (event.button !== 0) return
 
     if (this.props.onDragStart) {
@@ -25,16 +25,12 @@ class Draggable extends PureComponent {
     }
 
     this.isDragging = true
-
-    on(document, 'mousemove', this.handleDrag)
-    on(document, 'mouseup', this.handleDragStop, { capture: true })
-    on(document, 'mouseleave', this.handleDragStop)
-    on(window, 'blur', this.handleDragStop)
+    this.drag.start()
 
     const { pageX, pageY } = event
 
     this.delay = setTimeout(() =>
-      this.handleDrag({ pageX, pageY }), this.props.delay)
+      void this.handleDrag({ pageX, pageY }), this.props.delay)
   }
 
   handleDrag = (event) => {
@@ -43,26 +39,21 @@ class Draggable extends PureComponent {
   }
 
   handleDragStop = (event) => {
-    this.stop()
-
+    this.clear()
     if (!this.isDragging) return
     this.isDragging = false
-
     this.props.onDragStop(event)
   }
+
+  drag = createDragHandler({
+    handleDrag: this.handleDrag,
+    handleDragStop: this.handleDragStop
+  })
+
 
   clear() {
     if (this.delay) clearTimeout(this.delay)
     this.delay = null
-  }
-
-  stop() {
-    this.clear()
-
-    off(document, 'mousemove', this.handleDrag)
-    off(document, 'mouseup', this.handleDragStop, { capture: true })
-    off(document, 'mouseleave', this.handleDragStop)
-    off(window, 'blur', this.handleDragStop)
   }
 
   render() {
@@ -90,6 +81,7 @@ class Draggable extends PureComponent {
   }
 
   static defaultProps = {
+    classes: 'draggable',
     delay: 250,
     onDrag: noop,
     onDragStop: noop

@@ -97,7 +97,7 @@ class ProjectView extends PureComponent {
                 onZoomChange={this.handleZoomChange}/>
             </header>
 
-            <ItemIterator {...pick(props, ItemIterator.props)}
+            <ItemIterator {...pick(props, ItemIterator.getPropKeys())}
               items={items}
               photos={photos}
               edit={edit.column}

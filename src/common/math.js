@@ -15,7 +15,7 @@ const math = {
   },
 
   rotate(deg, by) {
-    return (360 + deg + by) % 360
+    return (360 + ((deg + by) % 360)) % 360
   }
 
 }

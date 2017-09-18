@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { DragSource, DropTarget } = require('react-dnd')
-const { PropertySelect } = require('../property/select')
+const { ResourceSelect } = require('../resource/select')
 const { IconButton } = require('../button')
 const { FormField, FormGroup, FormToggle, Label } = require('../form')
 const { IconGrip, IconPlusCircle, IconMinusCircle } = require('../icons')
@@ -26,12 +26,20 @@ class TemplateField extends PureComponent {
     return !this.props.isDisabled && !this.props.isSingle
   }
 
+  get isEditable() {
+    return !(this.props.isDisabled || this.props.isTransient)
+  }
+
   setContainer = (container) => {
     this.container = container
   }
 
   handlePropertyChange = ({ id }) => {
     this.handleChange({ property: id })
+  }
+
+  handleDatatypeChange = ({ id }) => {
+    this.handleChange({ datatype: id })
   }
 
   handleChange = (data) => {
@@ -73,6 +81,8 @@ class TemplateField extends PureComponent {
   }
 
   render() {
+    const { isEditable } = this
+
     return this.connectDropTarget(
       <li
         className={cx(this.classes)}
@@ -81,11 +91,12 @@ class TemplateField extends PureComponent {
           <fieldset>
             {this.isDragAndDropEnabled && <IconGrip/>}
             <FormGroup isCompact>
-              <Label id="template.field.property"
+              <Label
+                id="template.field.property"
                 size={3}/>
               <div className="col-9">
-                <PropertySelect
-                  properties={this.props.properties}
+                <ResourceSelect
+                  resources={this.props.properties}
                   selected={this.props.field.property}
                   isRequired={!this.props.isTransient}
                   isDisabled={this.props.isDisabled}
@@ -94,11 +105,36 @@ class TemplateField extends PureComponent {
                   onChange={this.handlePropertyChange}/>
               </div>
             </FormGroup>
+            <FormField
+              id="template.field.label"
+              name="label"
+              value={this.props.field.label}
+              isDisabled={!isEditable}
+              tabIndex={0}
+              isCompact
+              size={9}
+              placeholder=""
+              onChange={this.handleChange}/>
+            <FormGroup isCompact>
+              <Label
+                id="template.field.datatype"
+                size={3}/>
+              <div className="col-9">
+                <ResourceSelect
+                  resources={this.props.datatypes}
+                  selected={this.props.field.datatype}
+                  isRequired
+                  isDisabled={!isEditable}
+                  placeholder="datatype.select"
+                  tabIndex={0}
+                  onChange={this.handleDatatypeChange}/>
+              </div>
+            </FormGroup>
             <FormToggle
               id="template.field.isRequired"
               name="isRequired"
               value={this.props.field.isRequired}
-              isDisabled={this.props.isDisabled || this.props.isTransient}
+              isDisabled={!isEditable}
               tabIndex={0}
               onChange={this.handleChange}
               isCompact
@@ -107,7 +143,7 @@ class TemplateField extends PureComponent {
               id="template.field.hint"
               name="hint"
               value={this.props.field.hint || ''}
-              isDisabled={this.props.isDisabled || this.props.isTransient}
+              isDisabled={!isEditable}
               onChange={this.handleChange}
               tabIndex={0}
               isCompact
@@ -116,7 +152,7 @@ class TemplateField extends PureComponent {
               id="template.field.value"
               name="value"
               value={this.props.field.value || ''}
-              isDisabled={this.props.isDisabled || this.props.isTransient}
+              isDisabled={!isEditable}
               onChange={this.handleChange}
               tabIndex={0}
               isCompact
@@ -125,7 +161,7 @@ class TemplateField extends PureComponent {
               id="template.field.isConstant"
               name="isConstant"
               value={this.props.field.isConstant}
-              isDisabled={this.props.isDisabled || this.props.isTransient}
+              isDisabled={!isEditable}
               tabIndex={0}
               onChange={this.handleChange}
               isCompact
@@ -147,6 +183,7 @@ class TemplateField extends PureComponent {
     isTransient: bool,
     isSingle: bool,
     position: number.isRequired,
+    datatypes: array.isRequired,
     properties: array.isRequired,
     ds: func.isRequired,
     dt: func.isRequired,

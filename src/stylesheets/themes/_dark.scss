@@ -37,7 +37,7 @@ $transparent: transparent;
 
 $shade-0:  #000; // Black
 $shade-1:  #212121; // 87% Border search field, Esper bg
-$shade-2:  #292929; // 84% Inactive tab
+$shade-2:  #292929; // 84% Inactive tab, tile expansion
 $shade-3:  #2f2f2f; // 82% Body
 $shade-4:  #333; // 80% Sidebar bg, panel bg
 $shade-5:  #404040; // 75% Active state bg/border, slider track
@@ -48,29 +48,31 @@ $shade-9:  #bbb; // Text color
 $shade-10: #fff; // White
 
 :root {
-  #{--transparent}: $transparent;
-  #{--shade-0}: $shade-0;
-  #{--shade-0-5}: rgba($shade-0, 0.05);
-  #{--shade-0-40}: rgba($shade-0, 0.4);
-  #{--shade-1}: $shade-1;
-  #{--shade-1-lighten-2}: lighten($shade-1, 2%);
-  #{--shade-1-lighten-4}: lighten($shade-1, 4%);
-  #{--shade-2}: $shade-2;
-  #{--shade-3}: $shade-3;
-  #{--shade-4}: $shade-4;
-  #{--shade-4-lighten-2}: lighten($shade-4, 2%);
-  #{--shade-4-lighten-4}: lighten($shade-4, 4%);
-  #{--shade-5}: $shade-5;
-  #{--shade-5-lighten-5}: lighten($shade-5, 5%);
-  #{--shade-6}: $shade-6;
-  #{--shade-6-lighten-5}: lighten($shade-6, 5%);
-  #{--shade-7}: $shade-7;
-  #{--shade-7-50}: rgba($shade-7, 0.5);
-  #{--shade-8}: $shade-8;
-  #{--shade-8-darken-5}: darken($shade-8, 5%);
-  #{--shade-9}: $shade-9;
-  #{--shade-10}: $shade-10;
-  #{--shade-10-5}: rgba($shade-10, 0.05);
+  #{--transparent}:        $transparent;
+  #{--shade-0}:            $shade-0;
+  #{--shade-0-5}:          rgba($shade-0, 0.05);
+  #{--shade-0-60}:         rgba($shade-0, 0.6);
+  #{--shade-1}:            $shade-1;
+  #{--shade-1-lighten-2}:  lighten($shade-1, 2%);
+  #{--shade-1-lighten-4}:  lighten($shade-1, 4%);
+  #{--shade-2}:            $shade-2;
+  #{--shade-3}:            $shade-3;
+  #{--shade-4}:            $shade-4;
+  #{--shade-4-lighten-2}:  lighten($shade-4, 2%);
+  #{--shade-4-lighten-4}:  lighten($shade-4, 4%);
+  #{--shade-5}:            $shade-5;
+  #{--shade-5-lighten-5}:  lighten($shade-5, 5%);
+  #{--shade-6}:            $shade-6;
+  #{--shade-6-lighten-5}:  lighten($shade-6, 5%);
+  #{--shade-7}:            $shade-7;
+  #{--shade-7-50}:         rgba($shade-7, 0.5);
+  #{--shade-8}:            $shade-8;
+  #{--shade-8-darken-5}:   darken($shade-8, 5%);
+  #{--shade-9}:            $shade-9;
+  #{--shade-10}:           $shade-10;
+  #{--shade-10-5}:         rgba($shade-10, 0.05);
+  #{--shade-10-20}:        rgba($shade-10, 0.2);
+  #{--shade-10-darken-4}:  darken($shade-10, 4%);
   #{--shade-10-darken-14}: darken($shade-10, 14%);
 }
 
@@ -156,8 +158,10 @@ $drop-target-color: var(--brand-primary-35);
 $photo-sort-indicator: var(--shade-9);
 
 // Tile
-$tile-focus-color:  var(--brand-primary);
-$tile-active-color: var(--shade-5);
+$tile-focus-color:          var(--brand-primary);
+$tile-active-color:         var(--shade-5);
+$tile-expansion-bg:         var(--shade-2);
+$tile-selection-icon-color: var(--shade-10-darken-14);
 
 // Stack
 $stack-color:             var(--shade-7);
@@ -170,6 +174,13 @@ $stack-line-tint-opacity: 0.5;
 // Scrollbar
 $scrollbar-bg:    var(--transparent);
 $scrollbar-color: var(--shade-6);
+
+// List states
+$list-focus-color:       var(--brand-primary-light);
+$list-focus-bg:          var(--brand-primary);
+$list-active-color:      var(--shade-9);
+$list-active-bg:         var(--shade-5);
+$list-active-icon-color: var(--shade-8);
 
 
 // Components
@@ -191,12 +202,6 @@ $project-darken-color: var(--shade-0-5);
 $sidebar-bg:                var(--shade-4);
 $sidebar-text-color:        var(--shade-8);
 $sidebar-headings-color:    var(--shade-7);
-$sidebar-focus-icon-color:  var(--brand-primary-light);
-$sidebar-focus-color:       var(--brand-primary-light);
-$sidebar-focus-bg:          var(--brand-primary);
-$sidebar-active-icon-color: var(--shade-8);
-$sidebar-active-color:      var(--shade-9);
-$sidebar-active-bg:         var(--shade-5);
 $activity-border-color:     var(--shade-1);
 
 // Items
@@ -214,10 +219,10 @@ $items-active-bg:                var(--shade-5);
 $panels-bg: var(--shade-4);
 
 // Panel
-$panel-bg:              var(--shade-4);
-$panel-header-color:    var(--shade-8);
-$panel-separator-color: var(--shade-1);
-$panel-heading-color:   var(--shade-6);
+$panel-bg:                var(--shade-4);
+$panel-header-color:      var(--shade-8);
+$panel-separator-color:   var(--shade-1);
+$panel-heading-color:     var(--shade-6);
 
 // Tabs
 $tab-bg: $shade-2;
@@ -243,12 +248,6 @@ $add-tag-placeholder-color-default: $text-color;
 $add-tag-border-color:              var(--shade-1);
 $icon-tag-color:                    var(--shade-4);
 $icon-tag-border:                   var(--shade-6);
-
-// Photo list
-$photo-list-focus-color:  var(--brand-primary-light);
-$photo-list-focus-bg:     var(--brand-primary);
-$photo-list-active-color: var(--shade-9);
-$photo-list-active-bg:    var(--shade-5);
 
 // Note list
 $note-list-focus-color:  var(--brand-primary-light);
@@ -280,13 +279,19 @@ $slider-track-bg:      var(--shade-5);
 $slider-range-bg:      var(--shade-6);
 $slider-handle-bg:     var(--shade-7);
 $slider-handle-border: var(--transparent);
+$slider-value-color:   var(--shade-8);
 
 // Esper
-$esper-bg:               var(--shade-1);
-$esper-toolbar-bg:       var(--shade-1);
-$esper-icon-color:       var(--shade-8);
-$esper-btn-active-color: var(--shade-9);
-$esper-btn-active-bg:    var(--shade-0-40);
+$esper-bg:                   var(--shade-1);
+$esper-toolbar-bg:           var(--shade-0-60);
+$esper-icon-color:           var(--shade-10-darken-14);
+$esper-btn-active-color:     var(--shade-10-darken-4);
+$esper-btn-active-bg:        var(--shade-10-20);
+$esper-slider-track-bg:      var(--shade-10-20);
+$esper-slider-range-bg:      var(--shade-10-darken-14);
+$esper-slider-handle-bg:     var(--shade-10-darken-14);
+$esper-slider-handle-border: var(--transparent);
+$esper-slider-value-color:   var(--shade-10-darken-14);
 
 // Drag preview
 $drag-preview-opacity:           0.64;

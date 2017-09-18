@@ -5,12 +5,13 @@ const { PureComponent, Children, cloneElement: clone } = React
 const { only } = require('./util')
 const { Resizable } = require('./resizable')
 const cx = require('classnames')
-const { bounds, on, off } = require('../dom')
+const { bounds } = require('../dom')
 const { restrict } = require('../common/util')
 const { bool, func, node, arrayOf, number, shape } = require('prop-types')
 const { PANEL } = require('../constants/sass')
 const { remap } = require('../common/util')
 const { round } = require('../common/math')
+const throttle = require('lodash.throttle')
 
 
 class Panel extends PureComponent {
@@ -67,17 +68,18 @@ class Panel extends PureComponent {
 class PanelGroup extends PureComponent {
   constructor(props) {
     super(props)
-    this.state = { slots: [] }
+    this.state = { slots: [], height: 0 }
   }
 
   componentDidMount() {
-    this.setState(this.getLayout())
-    on(window, 'resize', this.handleResizeWindow)
+    this.ro = new ResizeObserver(([e]) => {
+      this.handleResize(e.contentRect.height)
+    })
+    this.ro.observe(this.container)
   }
 
   componentWillUnmount() {
-    off(window, 'resize', this.handleResizeWindow)
-    clearTimeout(this.willResizeWindow)
+    this.ro.disconnect()
   }
 
   componentWillReceiveProps(props) {
@@ -87,15 +89,8 @@ class PanelGroup extends PureComponent {
   }
 
 
-  getLayout(props = this.props) {
-    const { top, bottom, height } = bounds(this.container)
-
-    clearTimeout(this.willResizeWindow)
-
-    if (height === 0) {
-      this.willResizeWindow = setTimeout(this.handleResizeWindow, 15)
-      return
-    }
+  getLayout(props = this.props, height = this.state.height) {
+    if (height === 0) return
 
     const slots = []
 
@@ -149,7 +144,7 @@ class PanelGroup extends PureComponent {
 
     if (surplus !== 0) fixLayout(slots, surplus)
 
-    return { top, bottom, height, slots, canClosePanel: numOpen > 1 }
+    return { height, slots, canClosePanel: numOpen > 1 }
   }
 
   getShrinkMapper(by) {
@@ -184,15 +179,16 @@ class PanelGroup extends PureComponent {
   }
 
 
-  handleResizeWindow = () => {
-    this.setState(this.getLayout())
-  }
+  handleResize = throttle(height => {
+    this.setState(this.getLayout(this.props, height))
+  }, 20)
 
   handleDragStart = (_, active) => {
-    const { top, bottom, slots } = this.state
+    const { top, bottom } = bounds(this.container)
+    const { slots } = this.state
     const { upper, lower } = slots[active.props.id]
 
-    this.bounds = {
+    this.limits = {
       upper: top + upper,
       lower: bottom - lower
     }
@@ -204,7 +200,7 @@ class PanelGroup extends PureComponent {
       if (!slot.isClosed && slot.height >= PANEL.MIN_HEIGHT) {
         const offset = top + slots[0].height
 
-        this.bounds.memo = (active.props.id === 0) ?
+        this.limits.memo = (active.props.id === 0) ?
           offset + slot.height - PANEL.MIN_HEIGHT :
           offset + PANEL.MIN_HEIGHT
       }
@@ -212,7 +208,7 @@ class PanelGroup extends PureComponent {
   }
 
   handleDrag = ({ pageY }, active) => {
-    const { upper, lower } = this.bounds
+    const { upper, lower } = this.limits
 
     const position = restrict(pageY, upper, lower)
     const delta = position - bounds(active.container).bottom
@@ -226,7 +222,7 @@ class PanelGroup extends PureComponent {
 
   handleDragStop = () => {
     this.commit()
-    this.bounds = null
+    this.limits = null
   }
 
   handleToggle = (panel, close) => {
@@ -261,7 +257,7 @@ class PanelGroup extends PureComponent {
     if (delta > 0) {
       while (at > 0 && slots[at].isClosed) --at
 
-      if (at === 1 && position < this.bounds.memo) --at
+      if (at === 1 && position < this.limits.memo) --at
 
       pivot = this.grow(slots[at], delta)
 
@@ -271,7 +267,7 @@ class PanelGroup extends PureComponent {
     } else {
       do ++at; while (at < slots.length && slots[at].isClosed)
 
-      if (at === 1 && position > this.bounds.memo) ++at
+      if (at === 1 && position > this.limits.memo) ++at
 
       pivot = this.grow(slots[at], -delta)
 
@@ -283,7 +279,8 @@ class PanelGroup extends PureComponent {
   }
 
   open(at) {
-    const { top, bottom, slots } = this.state
+    const { top, bottom } = bounds(this.container)
+    const { slots } = this.state
 
     const pivot = { ...slots[at], isClosed: false }
     const max = bottom - top - pivot.upper - pivot.lower

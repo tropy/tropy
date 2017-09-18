@@ -22,10 +22,6 @@ class PhotoPanel extends Panel {
     }
   }
 
-  handleEdit = (photo) => {
-    this.props.onEdit({ photo })
-  }
-
   connect(element) {
     return this.props.isDisabled ? element : this.props.dt(element)
   }
@@ -43,7 +39,7 @@ class PhotoPanel extends Panel {
   }
 
   renderContent() {
-    const { onDelete, onMetadataSave, zoom } = this.props
+    const { onDelete, onEdit, onMetadataSave, zoom } = this.props
 
     const props = {
       ...this.props,
@@ -51,13 +47,13 @@ class PhotoPanel extends Panel {
       onChange: onMetadataSave,
       onDelete,
       onDropImages: this.handleDropFiles,
-      onEdit: this.handleEdit
+      onEdit
     }
 
     const PhotoIterator = zoom ? PhotoGrid : PhotoList
 
     return (
-      <PhotoIterator {...pick(props, PhotoIterator.props)}/>
+      <PhotoIterator {...pick(props, PhotoIterator.getPropKeys())}/>
     )
   }
 
@@ -75,18 +71,17 @@ class PhotoPanel extends Panel {
 
 
   static propTypes = {
-    zoom: number.isRequired,
-    photos: array.isRequired,
-
+    canDrop: bool,
     isClosed: bool,
     isDisabled: bool,
     isOver: bool,
-    canDrop: bool,
-
+    photos: array.isRequired,
+    zoom: number.isRequired,
     dt: func.isRequired,
-
+    onContract: func.isRequired,
     onCreate: func.isRequired,
     onDelete: func.isRequired,
+    onExpand: func.isRequired,
     onEdit: func.isRequired,
     onMetadataSave: func.isRequired,
     onZoomChange: func.isRequired

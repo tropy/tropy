@@ -78,22 +78,35 @@ const SassExtensions = {
   'const($name, $unit:"")'(name, unit) {
     const SASS = require('../src/constants/sass')
     const { get } = require('../src/common/util')
+    return toSass(get(SASS, name.getValue()), unit.getValue())
+  }
+}
 
-    const value = get(SASS, name.getValue())
-    unit = unit.getValue()
+function toSass(value, unit) {
+  if (typeof value === 'number') {
+    return new sass.types.Number(value, unit)
+  }
 
-    if (typeof value === 'number') {
-      return new sass.types.Number(value, unit)
-    }
+  if (typeof value === 'string') {
+    return new sass.types.String(value)
+  }
 
+  if (value != null && typeof value === 'object') {
     if (Array.isArray(value)) {
       return value.reduce((list, val, i) => (
-        list.setValue(i, new sass.types.Number(val, unit)), list
+        list.setValue(i, toSass(val, unit)), list
       ), new sass.types.List(value.length))
     }
 
-    return sass.types.Null.NULL
+    const entries = Object.entries(value)
+    return entries.reduce((map, [key, val], i) => {
+      map.setKey(i, new sass.types.String(key))
+      map.setValue(i, toSass(val))
+      return map
+    }, new sass.types.Map(entries.length))
   }
+
+  return sass.types.Null.NULL
 }
 
 function fresh(src, dst) {

@@ -3,9 +3,8 @@
 const React = require('react')
 const { PureComponent } = React
 const { ItemPanel } = require('./panel')
-const { Resizable, BufferedResizable } = require('../resizable')
-const { Esper } = require('../esper')
-const { NotePad } = require('../note')
+const { ItemContainer } = require('./container')
+const { Resizable } = require('../resizable')
 const { PROJECT: { MODE }, SASS: { PANEL } } = require('../../constants')
 const { pick } = require('../../common/util')
 const debounce = require('lodash.debounce')
@@ -66,21 +65,8 @@ class ItemView extends PureComponent {
     this.notepad = notepad
   }
 
-  setEsper = (esper) => {
-    this.esper = esper
-  }
-
-  handleEsperResized = (height) => {
-    this.props.onUiUpdate({ esper: { height } })
-  }
-
-  handleEsperResize = () => {
-    this.esper.resize()
-  }
-
-  handlePanelResize = (...args) => {
-    this.props.onPanelResize(...args)
-    this.esper.resize()
+  handlePanelResize = ({ value }) => {
+    this.props.onPanelResize(value)
   }
 
 
@@ -90,12 +76,18 @@ class ItemView extends PureComponent {
     if (!this.isItemOpen) {
       delay = 1000
       this.props.onItemOpen({
-        id: this.props.items[0].id, photos: [this.props.photo.id]
+        id: this.props.items[0].id,
+        photos: [this.props.photo.id],
+        selection: this.props.activeSelection
       })
     }
 
     if (this.props.note) {
-      this.props.onNoteSelect({ photo: this.props.photo.id, note: null })
+      this.props.onNoteSelect({
+        photo: this.props.photo.id,
+        note: null,
+        selection: this.props.activeSelection
+      })
     } else {
       if (this.state.note.text) {
         this.setState({ note: getNoteTemplate() })
@@ -120,6 +112,7 @@ class ItemView extends PureComponent {
         if (!note.created) {
           note.created = Date.now()
           note.photo = this.props.photo.id
+          note.selection = this.props.activeSelection
 
           this.props.onNoteCreate(note)
         }
@@ -132,13 +125,12 @@ class ItemView extends PureComponent {
 
   render() {
     const {
-      esper,
       keymap,
       offset,
       panel,
       photo,
+      selections,
       onPanelDragStop,
-      onPhotoSave,
       isTrashSelected,
       ...props
     } = this.props
@@ -159,34 +151,18 @@ class ItemView extends PureComponent {
             photo={photo}
             note={this.state.note}
             keymap={keymap}
+            selections={selections}
             isItemOpen={isItemOpen}
             isDisabled={isTrashSelected}
             onNoteCreate={this.handleNoteCreate}/>
         </Resizable>
-
-        <div className="item-container">
-          <BufferedResizable
-            edge="bottom"
-            value={esper.height}
-            isRelative
-            onChange={this.handleEsperResized}
-            onResize={this.handleEsperResize}
-            min={256}>
-            <Esper
-              ref={this.setEsper}
-              isDisabled={isTrashSelected}
-              isVisible={isItemOpen}
-              photo={photo}
-              onPhotoSave={onPhotoSave}/>
-          </BufferedResizable>
-          <NotePad
-            ref={this.setNotePad}
-            note={this.state.note}
-            isDisabled={isTrashSelected || !photo}
-            isItemOpen={isItemOpen}
-            keymap={keymap.NotePad}
-            onChange={this.handleNoteChange}/>
-        </div>
+        <ItemContainer
+          note={this.state.note}
+          photo={photo}
+          isDisabled={isTrashSelected}
+          isOpen={isItemOpen}
+          onNoteChange={this.handleNoteChange}
+          onUiUpdate={this.props.onUiUpdate}/>
       </section>
     )
   }
@@ -203,13 +179,10 @@ class ItemView extends PureComponent {
       })
     ),
 
-    esper: shape({
-      height: number.isRequired
-    }).isRequired,
-
     keymap: object.isRequired,
     offset: number.isRequired,
     mode: string.isRequired,
+    selections: object.isRequired,
     isModeChanging: bool.isRequired,
     isTrashSelected: bool.isRequired,
 
@@ -218,7 +191,6 @@ class ItemView extends PureComponent {
     onNoteSelect: func.isRequired,
     onPanelResize: func.isRequired,
     onPanelDragStop: func.isRequired,
-    onPhotoSave: func.isRequired,
     onUiUpdate: func.isRequired
   }
 }

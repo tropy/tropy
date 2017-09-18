@@ -2,16 +2,27 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { bool, func } = require('prop-types')
-const { append, bounds } = require('../../dom')
-const { restrict, shallow } = require('../../common/util')
+const { array, func, object, string } = require('prop-types')
+const { append, bounds, createDragHandler } = require('../../dom')
+const css = require('../../css')
+const { restrict } = require('../../common/util')
 const { rad } = require('../../common/math')
-const PIXI = require('pixi.js')
+const PIXI = require('pixi.js/dist/pixi.js')
 const { Sprite, Rectangle } = PIXI
 const { TextureCache, skipHello } = PIXI.utils
+const { Selection, SelectionLayer, SelectionOverlay } = require('./selection')
 const TWEEN = require('@tweenjs/tween.js')
 const { Tween } = TWEEN
 const { Cubic } = TWEEN.Easing
+const { TOOL } = require('../../constants/esper')
+
+const {
+  ESPER: {
+    CURSOR,
+    FADE_DURATION,
+    ZOOM_LINEAR_MAX
+  }
+} = require('../../constants/sass')
 
 
 class EsperView extends PureComponent {
@@ -23,31 +34,57 @@ class EsperView extends PureComponent {
     skipHello()
 
     this.pixi = new PIXI.Application({
-      antialias: true,
-      resolution: window.devicePixelRatio,
+      antialias: false,
+      roundPixels: false,
+      resolution: devicePixelRatio,
       transparent: true,
       width,
       height
     })
+
+    this.m = matchMedia('(max-resolution: 1dppx)')
+    this.m.addListener(this.handleResolutionChange)
 
     this.pixi.loader.onError.add(this.handleLoadError)
     this.pixi.loader.onLoad.add(this.handleLoadProgress)
     this.pixi.ticker.add(this.update)
     this.pixi.renderer.autoResize = true
 
+    for (let name in TOOL) {
+      addCursorStyle(
+        this.pixi.renderer.plugins.interaction.cursorStyles, TOOL[name]
+      )
+    }
+
     append(this.pixi.view, this.container)
 
-    this.handlePropsChange(this.props)
+    this.io = new IntersectionObserver(([e]) => {
+      requestIdleCallback(e.intersectionRatio > 0 ? this.start : this.stop)
+    }, { threshold: [0] })
+
+    this.io.observe(this.container)
   }
 
   componentWillUnmount() {
     this.tweens.removeAll()
     this.pixi.destroy(true)
+    this.io.disconnect()
+    this.m.removeListener(this.handleResolutionChange)
+    if (this.drag.current) this.drag.stop()
   }
 
   componentWillReceiveProps(props) {
-    if (!shallow(props, this.props)) {
-      this.handlePropsChange(props)
+    if (this.image != null) {
+      if (this.props.selection !== props.selection) {
+        this.image.overlay.sync(props)
+        this.image.selections.sync(props)
+
+      } else if (this.props.selections !== props.selections ||
+        this.props.tool !== props.tool) {
+        this.image.selections.sync(props)
+      }
+
+      this.image.cursor = props.tool
     }
   }
 
@@ -55,25 +92,27 @@ class EsperView extends PureComponent {
     return false
   }
 
-  handlePropsChange({ isVisible }) {
-    this.pixi[isVisible ? 'start' : 'stop']()
+  start = () => {
+    this.pixi.start()
+  }
+
+  stop = () => {
+    this.pixi.stop()
+  }
+
+  get isStarted() {
+    return !!this.pixi.ticker.started
+  }
+
+  get isDragging() {
+    return this.drag.current != null
   }
 
   get bounds() {
     return this.pixi.screen
   }
 
-  get center() {
-    const { width, height } = this.pixi.screen
-
-    return {
-      x: width / 2,
-      y: height / 2
-    }
-  }
-
-
-  reset(props) {
+  async reset(props) {
     this.fadeOut(this.image)
     this.image = null
 
@@ -81,56 +120,130 @@ class EsperView extends PureComponent {
       this.image = new Sprite()
       this.image.anchor.set(0.5)
 
-      this.move(this.center)
+      this.image.selections = new SelectionLayer(props)
+      this.image.addChild(this.image.selections)
+
+      this.image.overlay = new SelectionOverlay(props)
+      this.image.addChild(this.image.overlay)
+
+      try {
+        this.image.texture = await this.load(props.src, this.image)
+
+        this.image.interactive = true
+        this.image.on('mousedown', this.handleDragStart)
+
+      } catch (_) {
+        // TODO handle missing photo
+      }
+
       this.rotate(props)
-      this.scale(props)
+      const { mirror, x, y, zoom } = props
 
-      this.makeInteractive(this.image)
+      this.setScaleMode(this.image.texture, zoom)
+      this.image.scale.x = mirror ? -zoom : zoom
+      this.image.scale.y = zoom
 
-      this.load(props.src, this.image)
+      this.image.position.set(x, y)
+      constrain(this.image.position, this.image, null, this.bounds)
+
+      this.image.cursor = props.tool
+
       this.pixi.stage.addChildAt(this.image, 0)
+      this.persist()
     }
+  }
+
+  sync(props, duration = 0) {
+    if (this.image == null) return
+
+    const { angle, mirror, x, y, zoom } = props
+    const { position, scale, texture } = this.image
+
+    this.setScaleMode(texture, zoom)
+
+    const zx = mirror ? -1 : 1
+    const next = constrain({ x, y, zoom }, this.image, zoom, this.bounds)
+
+    // TODO fixate, change pivot and rotate after move and scale!
+    this.image.scale.x = this.image.scale.y * zx
+    this.image.rotation = rad(angle)
+
+    this
+      .animate({
+        x: position.x,
+        y: position.y,
+        zoom: scale.y
+      }, 'sync')
+      .to(next, duration * 0.67)
+      .onUpdate(m => {
+        this.image.scale.x = m.zoom * zx
+        this.image.scale.y = m.zoom
+        this.image.x = m.x
+        this.image.y = m.y
+      })
+      .onComplete(this.persist)
+      .start()
   }
 
 
   makeInteractive(sprite) {
     if (sprite == null || sprite.interactive) return
-
-    sprite.interactive = true
-    sprite.cursor = 'grab'
-    sprite.viewport = this.bounds
-
-    sprite
-      .on('pointerdown', handleDragStart)
-      .on('pointerup', handleDragStop)
-      .on('pointerupoutside', handleDragStop)
-      .on('pointermove', handleDragMove)
   }
 
-  resize({ width, height, zoom, mirror }) {
-    this.pixi.renderer.resize(width, height)
+  setScaleMode(texture, zoom, renderer = this.pixi.renderer) {
+    if (texture == null) return
 
-    if (this.image != null) {
-      this.image.x = width / 2
-      this.image.y = height / 2
-      this.image.scale.set(mirror ? -zoom : zoom, zoom)
+    const { baseTexture } = texture
+    const pixellate = (zoom > ZOOM_LINEAR_MAX)
+    const scaleMode = pixellate ?
+      PIXI.SCALE_MODES.NEAREST :
+      PIXI.SCALE_MODES.LINEAR
+
+    if (baseTexture.scaleMode !== scaleMode) {
+      baseTexture.scaleMode = scaleMode
+
+      // HACK: Updating scale mode dynamically is broken in Pixi v4.
+      // See Pixi #4096.
+      const glTexture = baseTexture._glTextures[renderer.CONTEXT_UID]
+
+      if (glTexture) {
+        glTexture.bind()
+        glTexture[`enable${pixellate ? 'Nearest' : 'Linear'}Scaling`]()
+      }
     }
+  }
+
+
+  resize({ width, height, zoom, mirror }) {
+    width = Math.round(width)
+    height = Math.round(height)
+
+    this.pixi.renderer.resize(width, height)
+    this.pixi.render()
+
+    if (this.image == null || zoom == null) return
+
+    constrain(this.image.position, this.image, zoom, { width, height })
+    this.setScaleMode(this.image.texture, zoom)
+    this.image.scale.set(mirror ? -zoom : zoom, zoom)
+    this.persist()
   }
 
   move({ x, y }, duration = 0) {
     const { position } = this.image
-    const limit = getMovementBounds(this.image, null, this.bounds)
+    const next = constrain({ x, y }, this.image, null, this.bounds)
 
-    this.animate(position, 'move')
-      .to({
-        x: restrict(x, limit.left, limit.right),
-        y: restrict(y, limit.top, limit.bottom)
-      }, duration)
+    if (equal(position, next)) return
+
+    this
+      .animate(position, 'move')
+      .to(next, duration)
+      .onComplete(this.persist)
       .start()
   }
 
-  scale({ mirror, x, y, zoom }, duration = 0) {
-    const { scale, position } = this.image
+  scale({ mirror, zoom }, duration = 0, { x, y } = {}) {
+    const { scale, position, texture } = this.image
     const viewport = this.bounds
 
     const zx = mirror ? -1 : 1
@@ -142,7 +255,13 @@ class EsperView extends PureComponent {
     const dx = (x - position.x)
     const dy = (y - position.y)
 
-    const limit = getMovementBounds(this.image, zoom, viewport)
+    const next = constrain({
+      x: position.x + dx - dx * dz,
+      y: position.y + dy - dy * dz,
+      zoom
+    }, this.image, zoom, viewport)
+
+    this.setScaleMode(texture, zoom)
 
     this
       .animate({
@@ -150,20 +269,14 @@ class EsperView extends PureComponent {
         y: position.y,
         zoom: scale.y
       }, 'zoom')
-
-      .to({
-        x: restrict(position.x + dx - dx * dz, limit.left, limit.right),
-        y: restrict(position.y + dy - dy * dz, limit.top, limit.bottom),
-        zoom
-      }, duration)
-
+      .to(next, duration)
       .onUpdate(m => {
         this.image.scale.x = m.zoom * zx
         this.image.scale.y = m.zoom
         this.image.x = m.x
         this.image.y = m.y
       })
-
+      .onComplete(this.persist)
       .start()
   }
 
@@ -177,7 +290,7 @@ class EsperView extends PureComponent {
 
       this.animate(this.image, 'rotate')
         .to({ rotation: tmp }, duration)
-        .onComplete(() => this.image.rotation = tgt)
+        .onComplete(() => { this.image.rotation = tgt })
         .start()
 
     } else {
@@ -185,17 +298,22 @@ class EsperView extends PureComponent {
     }
   }
 
-  fadeOut(sprite, duration = 250) {
+  fadeOut(sprite, duration = FADE_DURATION) {
     if (sprite == null) return
 
-    this.animate(sprite)
+    sprite.interactive = false
+
+    if (!this.isStarted) {
+      sprite.destroy({ children: true })
+      return
+    }
+
+    this.animate(sprite, null, () => void sprite.destroy({ children: true }))
       .to({ alpha: 0 }, duration)
-      .onStop(() => sprite.destroy())
-      .onComplete(() => sprite.destroy())
       .start()
   }
 
-  animate(thing, scope) {
+  animate(thing, scope, done) {
     const tween = new Tween(thing, this.tweens)
       .easing(Cubic.InOut)
 
@@ -210,31 +328,69 @@ class EsperView extends PureComponent {
         .onComplete(() => this.tweens[scope] = null)
     }
 
-    return tween
+    if (typeof done === 'function') {
+      tween
+        .onComplete(done)
+        .onStop(done)
+    }
 
+    return tween
   }
 
 
-  load(url, sprite) {
-    if (TextureCache[url]) {
-      sprite.texture = TextureCache[url]
+  load(url) {
+    return new Promise((resolve, reject) => {
+      if (TextureCache[url]) {
+        return resolve(TextureCache[url])
+      }
 
-    } else {
       this.pixi.loader
         .reset()
         .add(url)
-        .load(() => {
-          sprite.texture = TextureCache[url]
+        .load((_, { [url]: res }) => {
+          if (res == null) return reject()
+          if (res.error) return reject(res.error)
+
+          // Loading typically happens on item open while
+          // the view transition is in progress: this
+          // adds a slight delay but improves the overall
+          // smoothness of the transition!
+          requestIdleCallback(() => resolve(res.texture), { timeout: 500 })
         })
-    }
+    })
   }
 
   update = () => {
     this.tweens.update(performance.now())
+    if (this.image == null) return
+
+    if (this.image.selections.visible) {
+      this.image.selections.update(this.drag.current)
+    }
+
+    if (this.image.overlay.visible) {
+      this.image.overlay.update()
+    }
+  }
+
+  persist = () => {
+    this.props.onChange({
+      x: this.image.x,
+      y: this.image.y,
+      zoom: this.image.scale.y
+    })
   }
 
   setContainer = (container) => {
     this.container = container
+  }
+
+  handleResolutionChange = () => {
+    const dppx = devicePixelRatio
+    this.pixi.renderer.resolution = dppx
+    this.pixi.renderer.rootRenderTarget.resolution = dppx
+    this.pixi.renderer.plugins.interaction.resolution = dppx
+    this.resize(bounds(this.container))
   }
 
   handleLoadProgress = () => {
@@ -248,25 +404,132 @@ class EsperView extends PureComponent {
 
   handleWheel = (e) => {
     e.stopPropagation()
-
-    this.props.onWheel({
-      x: e.nativeEvent.offsetX,
-      y: e.nativeEvent.offsetY,
-      dx: e.nativeEvent.deltaX,
-      dy: e.nativeEvent.deltaY,
-      ctrl: e.nativeEvent.ctrlKey || e.nativeEvent.metaKey
-    })
+    this.props.onWheel(coords(e))
   }
 
   handleDoubleClick = (e) => {
     e.stopPropagation()
+    this.props.onDoubleClick(coords(e))
+  }
 
-    this.props.onDoubleClick({
-      x: e.nativeEvent.offsetX,
-      y: e.nativeEvent.offsetY,
-      shift: e.nativeEvent.shiftKey
+  handleDragStart = (event) => {
+    const { data, target } = event
+
+    if (this.isDragging) this.drag.stop()
+    if (!data.isPrimary) return
+
+    if (target instanceof Selection) {
+      return this.props.onSelectionActivate(target.data)
+    }
+
+    target.cursor = `${this.props.tool}-active`
+
+    const selection = data.getLocalPosition(target)
+
+    selection.offset = {
+      x: target.texture.orig.width / 2,
+      y: target.texture.orig.height / 2
+    }
+
+    selection.x += selection.offset.x
+    selection.y += selection.offset.y
+
+    this.drag.start()
+    this.drag.current = {
+      data,
+      target,
+      tool: this.props.tool,
+      origin: {
+        pos: { x: target.x, y: target.y },
+        mov: data.getLocalPosition(target.parent)
+      },
+      selection,
+      limit: getMovementBounds(target, null, this.bounds)
+    }
+  }
+
+  handleDragStop = (_, wasCancelled) => {
+    try {
+      if (this.isDragging) {
+        const { target, tool } = this.drag.current
+        target.cursor = this.props.tool
+
+        switch (tool) {
+          case TOOL.ARROW:
+          case TOOL.PAN:
+            this.handlePanStop()
+            break
+          case TOOL.SELECT:
+            this.handleSelectStop(wasCancelled)
+            break
+        }
+      }
+
+    } finally {
+      this.drag.current = undefined
+    }
+  }
+
+  handleDrag = () => {
+    if (this.isDragging) {
+      switch (this.drag.current.tool) {
+        case TOOL.ARROW:
+        case TOOL.PAN:
+          this.handlePanMove()
+          break
+        case TOOL.SELECT:
+          this.handleSelectMove()
+          break
+      }
+    }
+  }
+
+  handlePanMove() {
+    const { data, limit, origin, target } = this.drag.current
+    const { pos, mov } = origin
+    const { top, right, bottom, left } = limit
+    const { x, y } = data.getLocalPosition(target.parent)
+    target.x = restrict(pos.x + (x - mov.x), left, right)
+    target.y = restrict(pos.y + (y - mov.y), top, bottom)
+  }
+
+  handlePanStop() {
+    this.persist()
+  }
+
+  handleSelectMove() {
+    const { data, target } = this.drag.current
+    const { selection } = this.drag.current
+    const { x, y } = data.getLocalPosition(target)
+    selection.width = (x + selection.offset.x) - selection.x
+    selection.height = (y + selection.offset.y) - selection.y
+  }
+
+  handleSelectStop(wasCancelled) {
+    let { x, y, width, height } = this.drag.current.selection
+
+    if (wasCancelled || !width || !height) return
+    if (this.props.selection != null) return
+
+    if (width < 0) {
+      x = x + width
+      width = -width
+    }
+
+    if (height < 0) {
+      y = y + height
+      height = -height
+    }
+
+    this.props.onSelectionCreate({
+      x: Math.round(x),
+      y: Math.round(y),
+      width: Math.round(width),
+      height: Math.round(height)
     })
   }
+
+  drag = createDragHandler(this)
 
   render() {
     return (
@@ -279,9 +542,14 @@ class EsperView extends PureComponent {
   }
 
   static propTypes = {
-    isVisible: bool.isRequired,
+    selection: object,
+    selections: array.isRequired,
+    tool: string.isRequired,
+    onChange: func.isRequired,
     onLoadError: func,
     onDoubleClick: func.isRequired,
+    onSelectionCreate: func.isRequired,
+    onSelectionActivate: func.isRequired,
     onWheel: func.isRequired
   }
 }
@@ -317,41 +585,39 @@ function getMovementBounds(sprite, scale, viewport) {
   )
 }
 
-function handleDragStart(event) {
-  if (event.data.isPrimary) {
-    this.origin = {
-      pos: { x: this.x, y: this.y },
-      mov: event.data.getLocalPosition(this.parent)
-    }
+function constrain(point, ...args) {
+  const limit = getMovementBounds(...args)
+  point.x = restrict(point.x, limit.left, limit.right)
+  point.y = restrict(point.y, limit.top, limit.bottom)
+  return point
+}
 
-    this.limit = getMovementBounds(this, null, this.viewport)
-
-    this.data = event.data
-    this.isDragging = true
-
-  } else {
-    handleDragStop.call(this)
+function coords(e) {
+  return {
+    x: e.nativeEvent.offsetX,
+    y: e.nativeEvent.offsetY,
+    dx: e.nativeEvent.deltaX,
+    dy: e.nativeEvent.deltaY,
+    ctrl: e.nativeEvent.ctrlKey || e.nativeEvent.metaKey,
+    shift: e.nativeEvent.shiftKey
   }
 }
 
-function handleDragStop() {
-  this.data = null
-  this.origin = null
-  this.limit = null
-  this.isDragging = false
+function equal(p1, p2) {
+  return p1.x === p2.x && p1.y === p2.y
 }
 
-function handleDragMove() {
-  if (this.isDragging) {
-    const { pos, mov } = this.origin
-    const { top, right, bottom, left } = this.limit
-    const { x, y } = this.data.getLocalPosition(this.parent)
 
-    this.x = restrict(pos.x + (x - mov.x), left, right)
-    this.y = restrict(pos.y + (y - mov.y), top, bottom)
-  }
+function svg(name) {
+  return [`esper/${name}@1x.svg`, `esper/${name}@2x.svg`]
 }
 
+function addCursorStyle(styles, name, cursor = CURSOR[name]) {
+  if (cursor == null) return
+
+  styles[name] = css.cursor(svg(cursor.default), cursor)
+  styles[`${name}-active`] = css.cursor(svg(cursor.active), cursor)
+}
 
 module.exports = {
   EsperView

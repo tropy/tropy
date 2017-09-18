@@ -67,8 +67,8 @@ class ItemGrid extends ItemIterator {
           {this.map(({ item, ...props }) =>
             <ItemTile {...props} key={item.id} item={item}/>
           )}
-
-          {this.filler}</ul>
+          {this.fillRow()}
+        </ul>
       </div>
     )
   }

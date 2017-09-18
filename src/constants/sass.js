@@ -105,7 +105,46 @@ const NOTEPAD = {
 }
 
 const ESPER = {
-  MIN_HEIGHT: WINDOW.MIN_HEIGHT - NOTEPAD.MIN_HEIGHT
+  MIN_HEIGHT: WINDOW.MIN_HEIGHT - NOTEPAD.MIN_HEIGHT,
+  FADE_DURATION: 250,
+  ROTATE_DURATION: 250,
+  MAX_ZOOM: 4,
+  MIN_ZOOM: 1,
+  SYNC_DURATION: 600,
+  ZOOM_LINEAR_MAX: 1.96,
+  ZOOM_SLIDER_PRECISION: 100,
+  ZOOM_SLIDER_STEPS: [1, 2, 3],
+  ZOOM_STEP_SIZE: 1.0,
+  ZOOM_DURATION: 300,
+  ZOOM_PRECISION: 10000,
+  ZOOM_WHEEL_FACTOR: 1 / 500,
+
+  CURSOR: {
+    arrow: {
+      default: 'arrow',
+      active: 'arrow',
+      x: '1',
+      y: '1'
+    },
+    move: {
+      move: 'arrow',
+      active: 'arrow',
+      x: '1',
+      y: '1'
+    },
+    pan: {
+      default: 'grab',
+      active: 'grabbing',
+      x: '9',
+      y: '10'
+    },
+    select: {
+      default: 'crosshairs',
+      active: 'crosshairs',
+      x: '7',
+      y: '7'
+    }
+  }
 }
 
 const WIZARD = {
@@ -119,8 +158,9 @@ const PREFS = {
 }
 
 const GRID = {
-  SIZE: 12
+  SIZE: 12,
 }
+
 
 module.exports =  {
   ACTIVITY,
@@ -138,4 +178,3 @@ module.exports =  {
   WIZARD,
   NOTEPAD
 }
-

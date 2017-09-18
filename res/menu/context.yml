@@ -75,7 +75,6 @@ linux:
       condition: 'hasMultiplePhotos'
     - label: 'Export Item …'
       command: 'app:export-item'
-      enabled: false
     - label: 'Add Photo…'
       command: 'app:create-item-photo'
     - label: 'Tags'
@@ -109,6 +108,15 @@ linux:
       command: 'app:explode-photo'
     - label: 'Show Photo in Folder…'
       command: 'app:show-in-folder'
+    - label: 'Use Photo as Cover Image'
+      command: 'app:update-cover-image'
+      enabled: false
+  selection: &selection
+    - label: 'Delete Selection'
+      command: 'app:delete-selection'
+    - label: 'Save Selection as Image …'
+      command: 'app:save-selection'
+      enabled: false
   item-deleted: &item-deleted
     - label: 'Restore Item'
       command: 'app:restore-item'
@@ -151,6 +159,7 @@ darwin:
   item-bulk-deleted: *item-bulk-deleted
   trash: *trash
   photo: *photo
+  selection: *selection
   dev: *dev
 
 win32:
@@ -173,4 +182,5 @@ win32:
   item-bulk-deleted: *item-bulk-deleted
   trash: *trash
   photo: *photo
+  selection: *selection
   dev: *dev

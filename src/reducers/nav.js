@@ -73,6 +73,7 @@ module.exports = {
         return {
           ...state,
           photo: payload.photo,
+          selection: payload.selection,
           note: payload.note,
           items: select(state.items, payload.items[0], meta.mod)
         }
@@ -86,7 +87,7 @@ module.exports = {
         }
 
       case ITEM.OPEN: {
-        const { id, photos } = payload
+        const { id, photos, selection } = payload
         const photo = photos ?
           (photos.includes(state.photo) ? state.photo : photos[0]) : null
 
@@ -94,6 +95,7 @@ module.exports = {
           ...state,
           mode: PROJECT.MODE.ITEM,
           photo,
+          selection,
           items: select(state.items, id, 'replace')
         }
       }
@@ -118,16 +120,18 @@ module.exports = {
         return payload ? {
           ...state,
           photo: payload.photo,
+          selection: payload.selection,
           note: payload.note,
           items: select(state.items, payload.item, 'replace')
-        } : { ...state, photo: null }
+        } : { ...state, photo: null, selection: null }
 
       case NOTE.SELECT:
         return payload ? {
           ...state,
-          note: payload.note,
+          items: select(state.items, payload.item, 'replace'),
           photo: payload.photo,
-          items: select(state.items, payload.item, 'replace')
+          selection: payload.selection,
+          note: payload.note
         } : { ...state, note: null }
 
       case ITEM.PHOTO.REMOVE:

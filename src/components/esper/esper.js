@@ -4,15 +4,33 @@ const React = require('react')
 const { PureComponent } = React
 const { EsperView } = require('./view')
 const { EsperToolbar } = require('./toolbar')
-const { bool, func, node, number, object, string } = require('prop-types')
-const { bounds, on, off } = require('../../dom')
-const { win } = require('../../window')
 const { get, restrict, shallow } = require('../../common/util')
-const { isHorizontal, rotate } = require('../../common/math')
+const { isHorizontal, rotate, round } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
 const { assign } = Object
 const debounce = require('lodash.debounce')
-const { ESPER } = require('../../constants/sass')
+const throttle = require('lodash.throttle')
+const cx = require('classnames')
+const { min } = Math
+
+const {
+  arrayOf, bool, func, node, number, object, shape, string
+} = require('prop-types')
+
+const { TOOL, MODE } = require('../../constants/esper')
+
+const {
+  ESPER: {
+    MAX_ZOOM,
+    MIN_ZOOM,
+    ROTATE_DURATION,
+    SYNC_DURATION,
+    ZOOM_DURATION,
+    ZOOM_STEP_SIZE,
+    ZOOM_WHEEL_FACTOR,
+    ZOOM_PRECISION
+  }
+} = require('../../constants/sass')
 
 
 class Esper extends PureComponent {
@@ -22,21 +40,33 @@ class Esper extends PureComponent {
   }
 
   componentDidMount() {
-    on(window, 'resize', this.resize)
-    win.once('init', this.resize)
-    requestIdleCallback(this.resize)
+    this.ro = new ResizeObserver(([e]) => {
+      this.resize(e.contentRect)
+    })
+    this.ro.observe(this.view.container)
   }
 
   componentWillUnmount() {
-    off(window, 'resize', this.resize)
+    this.ro.disconnect()
+    this.persist.flush()
   }
 
   componentWillReceiveProps(props) {
     if (!shallow(props, this.props)) {
       const state = this.getStateFromProps(props)
 
-      if (this.shouldViewReset(props, state)) {
-        this.view.reset(state)
+      switch (true) {
+        case (this.shouldViewReset(props, state)):
+          this.view.reset(state)
+          break
+        case (this.shouldViewSync(props, state)):
+          this.view.sync(state, SYNC_DURATION)
+          break
+      }
+
+      if (this.shouldToolReset(props)) {
+        state.tool = Esper.defaultProps.tool
+        this.handleToolChange(state.tool)
       }
 
       this.setState(state)
@@ -46,11 +76,18 @@ class Esper extends PureComponent {
   shouldViewReset(props, state) {
     if (state.src !== this.state.src) return true
     if (get(props.photo, ['id']) !== get(this.props.photo, ['id'])) return true
-
-    if (state.angle !== this.state.angle) return true
-    if (state.mirror !== this.state.mirror) return true
-
     return false
+  }
+
+  shouldViewSync(props) {
+    if (props.selection !== this.props.selection) return true
+    return false
+  }
+
+  shouldToolReset(props) {
+    if (props.selection == null) return false
+    if (props.tool !== TOOL.SELECT) return false
+    return true
   }
 
   get isEmpty() {
@@ -61,12 +98,12 @@ class Esper extends PureComponent {
     return this.props.isDisabled || this.isEmpty
   }
 
-  get isVisible() {
-    return this.props.isVisible && !this.isEmpty
+  get isSelectionActive() {
+    return this.props.selection != null
   }
 
-  get bounds() {
-    return this.view.bounds
+  getActiveImageId() {
+    return get(this.props.selection, ['id']) || get(this.props.photo, ['id'])
   }
 
   getEmptyState(props = this.props) {
@@ -79,38 +116,52 @@ class Esper extends PureComponent {
       width: 0,
       height: 0,
       aspect: 0,
-      src: null
+      src: null,
+      x: props.x,
+      y: props.y,
+      tool: props.tool
     }
   }
 
   getStateFromProps(props) {
     const state = this.getEmptyState(props)
-    const { photo } = props
+    const { photo, selection } = props
+    const screen = this.view.bounds
 
     if (photo != null && !photo.pending) {
-      state.src = `${photo.protocol}://${photo.path}`
-
-      assign(state, this.getOrientationState(photo))
-      assign(state, this.getAngleBounds({
-        angle: state.angle,
+      assign(state, {
+        src: `${photo.protocol}://${photo.path}`,
         width: photo.width,
         height: photo.height
-      }))
+      }, this.getOrientationState(selection || photo, photo.orientation))
     }
 
-    assign(state, this.getZoomBounds(this.view.bounds, state, props))
+    if (state.x == null || state.mode !== 'zoom') {
+      state.x = screen.width / 2
+    }
+
+    if (state.y == null || state.mode === 'fit') {
+      state.y = screen.height / 2
+    }
+
+    assign(state, this.getZoomBounds(screen, state, props))
 
     return state
   }
 
 
-  getZoomToFill(screen, state, props = this.props) {
-    return Math.min(props.maxZoom, screen.width / state.width)
+  getZoomToFill(screen, { width } = this.state, props = this.props) {
+    return round(min(props.maxZoom, screen.width / width), ZOOM_PRECISION)
   }
 
-  getZoomToFit(screen, state, props) {
-    return Math.min(props.minZoom,
-      Math.min(screen.width / state.width, screen.height / state.height))
+  getZoomToFit(
+    screen,
+    { width, height } = this.state,
+    { minZoom } = this.props
+  ) {
+    return round(
+      min(minZoom, min(screen.width / width, screen.height / height)
+    ), ZOOM_PRECISION)
   }
 
   getZoomBounds(
@@ -118,13 +169,17 @@ class Esper extends PureComponent {
     state = this.state,
     props = this.props
   ) {
-    let { zoom, width, height } = state
+    let { angle, zoom, width, height } = state
     let { minZoom } = props
     let zoomToFill = minZoom
 
     if (width > 0 && height > 0) {
-      minZoom = this.getZoomToFit(screen, state, props)
-      zoomToFill = this.getZoomToFill(screen, state, props)
+      if (!isHorizontal(angle)) {
+        [width, height] = [height, width]
+      }
+
+      minZoom = this.getZoomToFit(screen, { width, height }, props)
+      zoomToFill = this.getZoomToFill(screen, { width }, props)
 
       switch (state.mode) {
         case 'fill':
@@ -141,59 +196,71 @@ class Esper extends PureComponent {
     return { minZoom, zoom, zoomToFill }
   }
 
-  getAngleBounds({ angle, width, height }) {
-    if (width === 0 || height === 0) {
-      return {
-        width: 0, height: 0, aspect: 0
-      }
-    }
+  getImageState() {
+    const { mode, x, y, zoom } = this.state
+    const id = this.getActiveImageId()
 
-    if (isHorizontal(angle)) {
-      return {
-        width, height, aspect: width / height
+    return id == null ? null : {
+      [id]: {
+        mode,
+        x: round(x),
+        y: round(y),
+        zoom
       }
-    }
-
-    return {
-      width: height, height: width, aspect: height / width
     }
   }
 
-  getOrientationState({ angle, mirror, orientation }) {
+  getPhotoState() {
+    const id = this.getActiveImageId()
+    const { angle, mirror } = this.getRelativeRotation()
+
+    return id == null ? null : {
+      id, data: { angle, mirror }
+    }
+  }
+
+  getOrientationState({ angle, mirror }, orientation) {
     return Rotation
       .fromExifOrientation(orientation)
       .add({ angle, mirror })
       .toJSON()
   }
 
+  getRelativeRotation(
+    { angle, mirror } = this.state,
+    orientation = this.props.photo.orientation
+  ) {
+    return new Rotation({ angle, mirror })
+      .subtract(Rotation.fromExifOrientation(orientation))
+  }
+
   setView = (view) => {
     this.view = view
   }
 
-  resize = () => {
-    const { width, height } = bounds(this.view.container)
-    const { minZoom, zoom, zoomToFill } = this.getZoomBounds({ width, height })
+  resize = throttle(({ width, height }) => {
+    width = round(width || this.view.bounds.width)
+    height = round(height || this.view.bounds.height)
 
-    // HACK re-schedule resize if it happens before CSS was applied!
-    if (height < ESPER.MIN_HEIGHT) {
-      setTimeout(this.resize, 500)
-    }
+    const { minZoom, zoom, zoomToFill } = this.getZoomBounds({ width, height })
 
     this.view.resize({
       width, height, zoom, mirror: this.state.mirror
     })
 
     this.setState({ minZoom, zoom, zoomToFill })
-  }
+  }, 50)
 
   persist = debounce(() => {
-    const { angle, mirror } = this.state
-
-    this.props.onPhotoSave({
-      id: this.props.photo.id,
-      data: { angle, mirror }
+    this.props.onChange({
+      image: this.getImageState(),
+      [this.isSelectionActive ? 'selection' : 'photo']: this.getPhotoState()
     })
-  }, 1000)
+  }, 650)
+
+  update = debounce(() => {
+    this.props.onChange({ image: this.getImageState() })
+  }, 650)
 
   handleRotationChange = (by) => {
     const state = {
@@ -203,13 +270,12 @@ class Esper extends PureComponent {
       height: this.props.photo.height
     }
 
-    assign(state, this.getAngleBounds(state))
     assign(state, this.getZoomBounds(this.view.bounds, state))
 
     this.setState(state)
 
-    this.view.rotate(state, 250)
-    this.view.scale(state, 250)
+    this.view.rotate(state, ROTATE_DURATION)
+    this.view.scale(state, ROTATE_DURATION)
 
     this.persist()
   }
@@ -219,8 +285,8 @@ class Esper extends PureComponent {
 
     this.setState({ zoom, mode: 'zoom' })
     this.view.scale({
-      x, y, zoom, mirror: this.state.mirror
-    }, animate ? 300 : 0)
+      zoom, mirror: this.state.mirror
+    }, animate ? ZOOM_DURATION : 0, { x, y })
   }
 
   handleMirrorChange = () => {
@@ -251,48 +317,91 @@ class Esper extends PureComponent {
     }
 
     this.setState({ zoom, mode })
-    this.view.scale({ zoom, mirror }, 300)
+    this.view.scale({ zoom, mirror }, ZOOM_DURATION)
+  }
+
+  handleToolChange = (tool) => {
+    this.props.onChange({ esper: { tool } })
   }
 
   handleWheel = ({ x, y, dy, dx, ctrl }) => {
     if (ctrl) {
       this.handleZoomChange({
-        x, y, zoom: this.state.zoom + dy / 500
+        x, y, zoom: this.state.zoom + dy * ZOOM_WHEEL_FACTOR
       })
     } else {
+      const mw = this.props.invertMouseWheel ? -1 : 1
+
       this.view.move({
-        x: this.view.image.x - dx,
-        y: this.view.image.y - dy
+        x: this.view.image.x + (dx * mw),
+        y: this.view.image.y + (dy * mw)
       })
     }
   }
 
   handleDoubleClick = ({ x, y, shift }) => {
+    const step = shift ?
+      -ZOOM_STEP_SIZE : ZOOM_STEP_SIZE
+
     this.handleZoomChange({
-      x, y, zoom: this.state.zoom + (shift ? -0.5 : 0.5)
-    }, 250)
+      x, y, zoom: this.state.zoom + step
+    }, ZOOM_DURATION)
+  }
+
+  handleSelectionActivate = (selection) => {
+    const { photo } = this.props
+    this.props.onSelect({
+      photo: photo.id,
+      item: photo.item,
+      selection: selection.id,
+      note: selection.notes[0]
+    })
+  }
+
+  handleSelectionCreate = (selection) => {
+    const { angle, mirror } = this.getRelativeRotation()
+
+    this.props.onSelectionCreate({
+      photo: this.props.photo.id,
+      angle,
+      mirror,
+      ...selection
+    })
+  }
+
+  handleViewChange = (state) => {
+    state.zoom = round(state.zoom, ZOOM_PRECISION)
+    this.setState(state, this.update)
   }
 
   render() {
-    const { isDisabled, isVisible } = this
+    const { isDisabled, isSelectionActive } = this
 
     return (
-      <section className="esper">
+      <section className={cx(['esper', this.props.tool])}>
         <EsperHeader>
           <EsperToolbar
             isDisabled={isDisabled}
+            isSelectionActive={isSelectionActive}
             mode={this.state.mode}
+            tool={this.props.tool}
             zoom={this.state.zoom}
             minZoom={this.state.minZoom}
             maxZoom={this.props.maxZoom}
             onMirrorChange={this.handleMirrorChange}
             onModeChange={this.handleModeChange}
+            onToolChange={this.handleToolChange}
             onRotationChange={this.handleRotationChange}
             onZoomChange={this.handleZoomChange}/>
         </EsperHeader>
         <EsperView
           ref={this.setView}
-          isVisible={isVisible}
+          selection={this.props.selection}
+          selections={this.props.selections}
+          tool={this.props.tool}
+          onChange={this.handleViewChange}
+          onSelectionActivate={this.handleSelectionActivate}
+          onSelectionCreate={this.handleSelectionCreate}
           onDoubleClick={this.handleDoubleClick}
           onWheel={this.handleWheel}/>
       </section>
@@ -301,21 +410,35 @@ class Esper extends PureComponent {
 
   static propTypes = {
     isDisabled: bool,
-    isVisible: bool,
+    invertMouseWheel: bool.isRequired,
     maxZoom: number.isRequired,
     minZoom: number.isRequired,
-    zoom: number.isRequired,
     mode: string.isRequired,
+    onChange: func.isRequired,
+    onSelect: func.isRequired,
+    onSelectionCreate: func.isRequired,
     photo: object,
-    onPhotoSave: func.isRequired
+    tool: string.isRequired,
+    selection: object,
+    selections: arrayOf(shape({
+      id: number.isRequired,
+      height: number.isRequired,
+      width: number.isRequired,
+      x: number.isRequired,
+      y: number.isRequired
+    })).isRequired,
+    x: number,
+    y: number,
+    zoom: number.isRequired
   }
 
   static defaultProps = {
-    maxZoom: 4,
-    minZoom: 1,
-    zoom: 1,
-    mode: 'fit',
-    isVisible: false
+    invertMouseWheel: true,
+    maxZoom: MAX_ZOOM,
+    minZoom: MIN_ZOOM,
+    mode: MODE.FIT,
+    tool: TOOL.ARROW,
+    zoom: 1
   }
 }
 

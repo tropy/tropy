@@ -4,7 +4,7 @@ const React = require('react')
 const { FormattedMessage } = require('react-intl')
 const { Accordion } = require('../accordion')
 const { FormField, FormLink, FormText } = require('../form')
-const { PropertyList } = require('../property')
+const { ResourceList } = require('../resource')
 const { IconButton } = require('../button')
 const { IconBook16, IconBookLock, IconTrash } = require('../icons')
 const { arrayOf, func, object, shape, string } = require('prop-types')
@@ -83,8 +83,8 @@ class VocabAccordion extends Accordion {
             id="prefs.vocab.classes"
             values={{ count: vocab.classes.length }}/>
         </h2>
-        <PropertyList
-          properties={vocab.classes}
+        <ResourceList
+          resources={vocab.classes}
           onOpenLink={this.props.onOpenLink}
           onSave={this.props.onClassSave}/>
         <h2 className="vocab-heading">
@@ -92,8 +92,8 @@ class VocabAccordion extends Accordion {
             id="prefs.vocab.properties"
             values={{ count: vocab.properties.length }}/>
         </h2>
-        <PropertyList
-          properties={vocab.properties}
+        <ResourceList
+          resources={vocab.properties}
           onOpenLink={this.props.onOpenLink}
           onSave={this.props.onPropsSave}/>
         <h2 className="vocab-heading">
@@ -101,8 +101,8 @@ class VocabAccordion extends Accordion {
             id="prefs.vocab.datatypes"
             values={{ count: vocab.datatypes.length }}/>
         </h2>
-        <PropertyList
-          properties={vocab.datatypes}
+        <ResourceList
+          resources={vocab.datatypes}
           onOpenLink={this.props.onOpenLink}
           onSave={this.props.onPropsSave}/>
       </div>

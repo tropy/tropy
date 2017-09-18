@@ -9,6 +9,7 @@ panel:
     tab: Metadata
     photo: Photo
     item: Item
+    selection: Selection
   tags:
     tab: Tags
     add: Add Tag
@@ -86,10 +87,20 @@ photo:
   type: Type
   created: Date Added
   modified: Modified
+selection:
+  size: Size
+  created: Date Added
+  modified: Modified
 esper:
+  tool:
+    pan: Pan Tool
+    select: Selection Tool
+    rotate: Rotate
+    mirror: Mirror
   mode:
     fill: Fill
     fit: Fit
+    zoom: Zoom
 
 template:
   id: URI
@@ -103,6 +114,8 @@ template:
     "https://tropy.org/v1/tropy#Selection": Photo Selection Template
   field:
     property: Property
+    label: Label
+    datatype: Datatype
     isRequired: Is mandatory field
     hint: Hint
     value: Default Value
@@ -115,9 +128,12 @@ vocab:
   description: Description
   properties: Properties
   seeAlso: See Also
-
 property:
   select: Select a Property …
+datatype:
+  select: Select a Datatype …
+resource:
+  select: Select a Resource …
   id: URI
   label: Label
   description: Description
@@ -159,11 +175,6 @@ action:
     order: Sort List
     restore: Restore List
     save: Save List
-  tag:
-    create: Create Tag
-    delete: Delete Tag
-    restore: Create Tag
-    save: Save Tag
   item:
     create: Create Items
     delete: Delete Items
@@ -201,6 +212,17 @@ action:
     order: Sort Notes
     restore: Restore Note
     save: Save Note
+  tag:
+    create: Create Tag
+    delete: Delete Tag
+    restore: Create Tag
+    save: Save Tag
+  selection:
+    create: Create Selection
+    delete: Delete Selection
+    restore: Create Selection
+    save: Save Selection
+    order: Sort Selections
 
 activity:
   project:
@@ -261,6 +283,8 @@ activity:
     load: Loading notes …
     order: Sorting notes …
     restore: Restoring notes …
+  selection:
+    load: Loading photo selections …
 editor:
   commands:
     bold: Bold
