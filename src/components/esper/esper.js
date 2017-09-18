@@ -63,6 +63,11 @@ class Esper extends PureComponent {
           break
       }
 
+      if (this.shouldToolReset(props)) {
+        state.tool = Esper.defaultProps.tool
+        this.handleToolChange(state.tool)
+      }
+
       this.setState(state)
     }
   }
@@ -78,6 +83,12 @@ class Esper extends PureComponent {
     if (props.selections !== this.props.selections) return true
     if (props.tool !== this.props.tool) return true
     return false
+  }
+
+  shouldToolReset(props) {
+    if (props.selection == null) return false
+    if (props.tool !== TOOL.SELECT) return false
+    return true
   }
 
   get isEmpty() {
