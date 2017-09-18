@@ -57,10 +57,10 @@
     "electron": "1.6.13",
     "electron-devtools-installer": "^2.0.0",
     "electron-mocha": "^4.0.2",
-    "electron-packager": "^9.0.1",
+    "electron-packager": "^9.1.0",
     "electron-winstaller": "^2.6.3",
     "enzyme": "^2.9.1",
-    "eslint": "^4.6.1",
+    "eslint": "^4.7.0",
     "eslint-plugin-react": "^7.3.0",
     "glob": "^7.0.0",
     "istanbul-lib-hook": "^1.0.5",
@@ -77,7 +77,7 @@
     "sqleton": "^1.2.3"
   },
   "dependencies": {
-    "@tweenjs/tween.js": "^17.1.0",
+    "@tweenjs/tween.js": "^17.1.1",
     "bluebird": "^3.1.1",
     "classnames": "^2.2.5",
     "colors": "^1.1.2",
@@ -121,7 +121,7 @@
     "winreg": "^1.2.4",
     "winston": "^2.1.1",
     "write-file-atomic": "^2.3.0",
-    "yargs": "^8.0.2"
+    "yargs": "^9.0.1"
   },
   "yargs": {
     "short-option-groups": false
