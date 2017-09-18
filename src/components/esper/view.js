@@ -10,7 +10,7 @@ const { rad } = require('../../common/math')
 const PIXI = require('pixi.js/dist/pixi.js')
 const { Sprite, Rectangle } = PIXI
 const { TextureCache, skipHello } = PIXI.utils
-const { Selection, SelectionMask, SelectionPool } = require('./selection')
+const { Selection, SelectionLayer, SelectionOverlay } = require('./selection')
 const TWEEN = require('@tweenjs/tween.js')
 const { Tween } = TWEEN
 const { Cubic } = TWEEN.Easing
@@ -76,7 +76,7 @@ class EsperView extends PureComponent {
   componentWillReceiveProps(props) {
     if (this.image != null) {
       if (this.props.selection !== props.selection) {
-        this.image.cover.sync(props)
+        this.image.overlay.sync(props)
         this.image.selections.sync(props)
 
       } else if (this.props.selections !== props.selections ||
@@ -118,11 +118,11 @@ class EsperView extends PureComponent {
       this.image = new Sprite()
       this.image.anchor.set(0.5)
 
-      this.image.selections = new SelectionPool(props)
+      this.image.selections = new SelectionLayer(props)
       this.image.addChild(this.image.selections)
 
-      this.image.cover = new SelectionMask(props)
-      this.image.addChild(this.image.cover)
+      this.image.overlay = new SelectionOverlay(props)
+      this.image.addChild(this.image.overlay)
 
       try {
         this.image.texture = await this.load(props.src, this.image)
@@ -340,8 +340,8 @@ class EsperView extends PureComponent {
       this.image.selections.update(this.drag.current)
     }
 
-    if (this.image.cover.visible) {
-      this.image.cover.update()
+    if (this.image.overlay.visible) {
+      this.image.overlay.update()
     }
   }
 

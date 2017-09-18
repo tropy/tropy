@@ -6,7 +6,7 @@ const BLANK = Object.freeze({})
 const { COLOR, TOOL } = require('../../constants/esper')
 
 
-class SelectionPool extends Container {
+class SelectionLayer extends Container {
   constructor(props) {
     super()
     this.pivot.set(props.width / 2, props.height / 2)
@@ -138,7 +138,7 @@ class Selection extends Graphics {
 }
 
 
-class SelectionMask extends Graphics {
+class SelectionOverlay extends Graphics {
   constructor({ width, height }) {
     super()
 
@@ -197,6 +197,6 @@ class SelectionMask extends Graphics {
 
 module.exports = {
   Selection,
-  SelectionMask,
-  SelectionPool
+  SelectionLayer,
+  SelectionOverlay
 }
