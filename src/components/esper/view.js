@@ -83,6 +83,8 @@ class EsperView extends PureComponent {
         this.props.tool !== props.tool) {
         this.image.selections.sync(props)
       }
+
+      this.image.cursor = props.tool
     }
   }
 
@@ -134,27 +136,49 @@ class EsperView extends PureComponent {
         // TODO handle missing photo
       }
 
-      this.sync(props)
+      this.rotate(props)
+      const { mirror, x, y, zoom } = props
+
+      this.setScaleMode(this.image.texture, zoom)
+      this.image.scale.x = mirror ? -zoom : zoom
+      this.image.scale.y = zoom
+
+      this.image.position.set(x, y)
+      constrain(this.image.position, this.image, null, this.bounds)
+
+      this.image.cursor = props.tool
+
       this.pixi.stage.addChildAt(this.image, 0)
+      this.persist()
     }
   }
 
-  sync(props) {
+  sync(props, duration = 0) {
     if (this.image == null) return
 
-    this.rotate(props)
     const { mirror, x, y, zoom } = props
+    const { position, scale, texture } = this.image
 
-    this.setScaleMode(this.image.texture, zoom)
-    this.image.scale.x = mirror ? -zoom : zoom
-    this.image.scale.y = zoom
+    this.setScaleMode(texture, zoom)
 
-    this.image.position.set(x, y)
-    constrain(this.image.position, this.image, null, this.bounds)
+    const zx = mirror ? -1 : 1
+    const next = constrain({ x, y, zoom }, this.image, zoom, this.bounds)
 
-    this.image.cursor = props.tool || this.props.tool
-
-    this.persist()
+    this
+      .animate({
+        x: position.x,
+        y: position.y,
+        zoom: scale.y
+      }, 'sync')
+      .to(next, duration * 0.67)
+      .onUpdate(m => {
+        this.image.scale.x = m.zoom * zx
+        this.image.scale.y = m.zoom
+        this.image.x = m.x
+        this.image.y = m.y
+      })
+      .onComplete(() => this.rotate(props, duration * 0.33))
+      .start()
   }
 
 

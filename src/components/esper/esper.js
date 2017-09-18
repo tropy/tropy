@@ -24,6 +24,7 @@ const {
     MAX_ZOOM,
     MIN_ZOOM,
     ROTATE_DURATION,
+    SYNC_DURATION,
     ZOOM_DURATION,
     ZOOM_STEP_SIZE,
     ZOOM_WHEEL_FACTOR,
@@ -59,7 +60,7 @@ class Esper extends PureComponent {
           this.view.reset(state)
           break
         case (this.shouldViewSync(props, state)):
-          this.view.sync(state)
+          this.view.sync(state, SYNC_DURATION)
           break
       }
 
@@ -80,8 +81,6 @@ class Esper extends PureComponent {
 
   shouldViewSync(props) {
     if (props.selection !== this.props.selection) return true
-    if (props.selections !== this.props.selections) return true
-    if (props.tool !== this.props.tool) return true
     return false
   }
 
