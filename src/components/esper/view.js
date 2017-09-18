@@ -156,13 +156,17 @@ class EsperView extends PureComponent {
   sync(props, duration = 0) {
     if (this.image == null) return
 
-    const { mirror, x, y, zoom } = props
+    const { angle, mirror, x, y, zoom } = props
     const { position, scale, texture } = this.image
 
     this.setScaleMode(texture, zoom)
 
     const zx = mirror ? -1 : 1
     const next = constrain({ x, y, zoom }, this.image, zoom, this.bounds)
+
+    // TODO fixate, change pivot and rotate after move and scale!
+    this.image.scale.x = this.image.scale.y * zx
+    this.image.rotation = rad(angle)
 
     this
       .animate({
@@ -177,7 +181,7 @@ class EsperView extends PureComponent {
         this.image.x = m.x
         this.image.y = m.y
       })
-      .onComplete(() => this.rotate(props, duration * 0.33))
+      .onComplete(this.persist)
       .start()
   }
 

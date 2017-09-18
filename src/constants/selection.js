@@ -6,6 +6,7 @@ module.exports = {
   LOAD: 'selection.load',
   ORDER: 'selection.order',
   RESTORE: 'selection.restore',
+  SAVE: 'selection.save',
 
   NOTE: {
     ADD: 'selection.note.add',

@@ -70,5 +70,14 @@ module.exports = {
         ...meta
       }
     }
-  }
+  },
+
+  save(payload, meta) {
+    return {
+      type: SELECTION.SAVE,
+      payload,
+      meta: { cmd: 'project', history: 'merge', ...meta }
+    }
+  },
+
 }

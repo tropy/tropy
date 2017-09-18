@@ -20,11 +20,15 @@ const {
 
 
 class ItemContainer extends PureComponent {
-  handleEsperChange = ({ photo, ...ui }) => {
+  handleEsperChange = ({ photo, selection, ...ui }) => {
     this.props.onUiUpdate(ui)
 
     if (photo != null) {
       this.props.onPhotoSave(photo)
+    }
+
+    if (selection != null) {
+      this.props.onSelectionSave(selection)
     }
   }
 
@@ -79,6 +83,7 @@ class ItemContainer extends PureComponent {
     onPhotoSave: func.isRequired,
     onPhotoSelect: func.isRequired,
     onSelectionCreate: func.isRequired,
+    onSelectionSave: func.isRequired,
     onUiUpdate: func.isRequired
   }
 }
@@ -105,6 +110,10 @@ module.exports = {
 
       onSelectionCreate(...args) {
         dispatch(act.selection.create(...args))
+      },
+
+      onSelectionSave(...args) {
+        dispatch(act.selection.save(...args))
       }
     })
   )(ItemContainer)

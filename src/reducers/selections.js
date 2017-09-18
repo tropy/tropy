@@ -14,6 +14,16 @@ module.exports = {
         return (error || !meta.done) ? state : replace(state, payload)
       case SELECTION.CREATE:
         return (error || !meta.done) ? state : insert(state, payload)
+      case SELECTION.SAVE:
+        return (!meta.done || error) ?
+          state : {
+            ...state,
+            [payload.id]: {
+              ...state[payload.id],
+              ...payload,
+              modified: new Date(meta.was)
+            }
+          }
 
       case SELECTION.NOTE.ADD:
         return nested.add('notes', state, payload, meta)

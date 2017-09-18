@@ -98,6 +98,10 @@ class Esper extends PureComponent {
     return this.props.isDisabled || this.isEmpty
   }
 
+  get isSelectionActive() {
+    return this.props.selection != null
+  }
+
   getActiveImageId() {
     return get(this.props.selection, ['id']) || get(this.props.photo, ['id'])
   }
@@ -121,14 +125,15 @@ class Esper extends PureComponent {
 
   getStateFromProps(props) {
     const state = this.getEmptyState(props)
-    const { photo } = props
+    const { photo, selection } = props
     const screen = this.view.bounds
 
     if (photo != null && !photo.pending) {
-      state.src = `${photo.protocol}://${photo.path}`
-      state.width = photo.width
-      state.height = photo.height
-      assign(state, this.getOrientationState(photo))
+      assign(state, {
+        src: `${photo.protocol}://${photo.path}`,
+        width: photo.width,
+        height: photo.height
+      }, this.getOrientationState(selection || photo, photo.orientation))
     }
 
     if (state.x == null || state.mode !== 'zoom') {
@@ -206,7 +211,7 @@ class Esper extends PureComponent {
   }
 
   getPhotoState() {
-    const id = get(this.props.photo, ['id'])
+    const id = this.getActiveImageId()
     const { angle, mirror } = this.getRelativeRotation()
 
     return id == null ? null : {
@@ -214,7 +219,7 @@ class Esper extends PureComponent {
     }
   }
 
-  getOrientationState({ angle, mirror, orientation }) {
+  getOrientationState({ angle, mirror }, orientation) {
     return Rotation
       .fromExifOrientation(orientation)
       .add({ angle, mirror })
@@ -249,7 +254,7 @@ class Esper extends PureComponent {
   persist = debounce(() => {
     this.props.onChange({
       image: this.getImageState(),
-      photo: this.getPhotoState()
+      [this.isSelectionActive ? 'selection' : 'photo']: this.getPhotoState()
     })
   }, 650)
 
@@ -354,7 +359,7 @@ class Esper extends PureComponent {
   }
 
   handleSelectionCreate = (selection) => {
-    const { angle, mirror } = this.state
+    const { angle, mirror } = this.getRelativeRotation()
 
     this.props.onSelectionCreate({
       photo: this.props.photo.id,
@@ -370,14 +375,14 @@ class Esper extends PureComponent {
   }
 
   render() {
-    const { isDisabled } = this
+    const { isDisabled, isSelectionActive } = this
 
     return (
       <section className={cx(['esper', this.props.tool])}>
         <EsperHeader>
           <EsperToolbar
             isDisabled={isDisabled}
-            isSelectionActive={this.props.selection != null}
+            isSelectionActive={isSelectionActive}
             mode={this.state.mode}
             tool={this.props.tool}
             zoom={this.state.zoom}

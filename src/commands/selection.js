@@ -5,7 +5,8 @@ const { Command } = require('./command')
 const mod = require('../models')
 const act = require('../actions')
 const { SELECTION } = require('../constants')
-const { splice } = require('../common/util')
+const { pick, splice } = require('../common/util')
+const { keys } = Object
 
 
 class Create extends Command {
@@ -131,11 +132,32 @@ class Restore extends Command {
   }
 }
 
+class Save extends Command {
+  static get action() { return SELECTION.SAVE }
+
+  *exec() {
+    const { db } = this.options
+    const { payload, meta } = this.action
+    const { id, data } = payload
+
+    const original = yield select(state =>
+      pick(state.selections[id], keys(data)))
+
+    yield call(db.transaction, tx =>
+      mod.image.save(tx, { id, timestamp: meta.now, ...data }))
+
+    this.undo = act.selection.save({ id, data: original })
+
+    return { id, ...data }
+  }
+}
+
 
 module.exports = {
   Create,
   Delete,
   Load,
   Order,
-  Restore
+  Restore,
+  Save
 }
