@@ -479,7 +479,9 @@ class EsperView extends PureComponent {
 
   handleSelectStop(wasCancelled) {
     let { x, y, width, height } = this.drag.current.selection
+
     if (wasCancelled || !width || !height) return
+    if (this.props.selection != null) return
 
     if (width < 0) {
       x = x + width
