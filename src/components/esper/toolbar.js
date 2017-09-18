@@ -86,7 +86,7 @@ class EsperToolbar extends PureComponent {
               icon={<IconSelection/>}
               title="esper.tool.select"
               isActive={this.isToolActive(TOOL.SELECT)}
-              isDisabled={this.props.isDisabled}
+              isDisabled={this.props.isDisabled || this.props.isSelectionActive}
               onClick={this.setSelectTool}/>
           </ToolGroup>
           <ToolGroup>
@@ -143,6 +143,7 @@ class EsperToolbar extends PureComponent {
 
   static propTypes = {
     isDisabled: bool.isRequired,
+    isSelectionActive: bool.isRequired,
     mode: string.isRequired,
     tool: string.isRequired,
     zoom: number.isRequired,

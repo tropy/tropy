@@ -397,6 +397,7 @@ class Esper extends PureComponent {
         <EsperHeader>
           <EsperToolbar
             isDisabled={isDisabled}
+            isSelectionActive={this.props.selection != null}
             mode={this.state.mode}
             tool={this.props.tool}
             zoom={this.state.zoom}
