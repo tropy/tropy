@@ -144,8 +144,10 @@ class ProjectContainer extends PureComponent {
   }
 
   renderNoProject() {
-    return this.props.dt(
-      <div className="no-project">
+    const { dt, isOver, canDrop } = this.props
+
+    return dt(
+      <div className={cx(['no-project', { over: isOver && canDrop }])}>
         <FormattedMessage id="project.none"/>
       </div>
     )
