@@ -145,11 +145,11 @@ class ProjectContainer extends PureComponent {
   }
 
   renderNoProject() {
-    const { dt, isOver, canDrop, onMaximize } = this.props
+    const { dt, isFrameless, isOver, canDrop, onMaximize } = this.props
 
     return dt(
       <div className={cx(['no-project', { over: isOver && canDrop }])}>
-        <Toolbar onDoubleClick={onMaximize}/>
+        {isFrameless && <Toolbar onDoubleClick={onMaximize}/>}
         <div className="no-project-illustration"/>
         <h1>
           <FormattedMessage id="project.none"/>
@@ -230,6 +230,7 @@ class ProjectContainer extends PureComponent {
 
 
   static propTypes = {
+    isFrameless: bool,
     expanded: arrayOf(number).isRequired,
     project: shape({
       file: string
@@ -286,6 +287,10 @@ class ProjectContainer extends PureComponent {
     onSort: func.isRequired,
     onTemplateImport: func.isRequired,
     onUiUpdate: func.isRequired
+  }
+
+  static defaultProps = {
+    isFrameless: ARGS.frameless
   }
 }
 
