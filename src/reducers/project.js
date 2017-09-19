@@ -2,7 +2,7 @@
 
 const { UPDATE, OPENED } = require('../constants/project')
 
-const init = { name: '' }
+const init = { name: '', items: 0 }
 
 module.exports = {
   project(state = init, { type, payload }) {

@@ -8,6 +8,7 @@ const { ItemView } = require('../item')
 const { DragLayer } = require('../drag-layer')
 const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
+const { FormattedMessage } = require('react-intl')
 const { extname } = require('path')
 const { MODE } = require('../../constants/project')
 const { ensure, reflow } = require('../../dom')
@@ -57,18 +58,27 @@ class ProjectContainer extends PureComponent {
   }
 
   get classes() {
-    const { isOver, canDrop } = this.props
-    const { willModeChange, isModeChanging } = this.state
+    const { isOver, canDrop, nav } = this.props
+    const { mode, willModeChange, isModeChanging } = this.state
 
     return {
       project: true,
+      empty: this.isEmpty,
       over: isOver && canDrop,
-      [`${this.state.mode}-mode`]: true,
-      [`${this.state.mode}-mode-leave`]: willModeChange,
-      [`${this.state.mode}-mode-leave-active`]: isModeChanging,
-      [`${this.props.nav.mode}-mode-enter`]: willModeChange,
-      [`${this.props.nav.mode}-mode-enter-active`]: isModeChanging
+      [`${mode}-mode`]: true,
+      [`${mode}-mode-leave`]: willModeChange,
+      [`${mode}-mode-leave-active`]: isModeChanging,
+      [`${nav.mode}-mode-enter`]: willModeChange,
+      [`${nav.mode}-mode-enter-active`]: isModeChanging
     }
+  }
+
+  get hasNoProject() {
+    return this.props.project.id == null
+  }
+
+  get isEmpty() {
+    return this.props.project.items === 0
   }
 
   modeWillChange() {
@@ -133,8 +143,16 @@ class ProjectContainer extends PureComponent {
     this.container = container
   }
 
-
+  renderNoProject() {
+    return this.props.dt(
+      <div className="no-project">
+        <FormattedMessage id="project.none"/>
+      </div>
+    )
+  }
   render() {
+    if (this.hasNoProject) return this.renderNoProject()
+
     const {
       activities,
       columns,
