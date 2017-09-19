@@ -151,7 +151,11 @@ class ProjectContainer extends PureComponent {
       <div className={cx(['no-project', { over: isOver && canDrop }])}>
         <Toolbar isDraggable={isDraggable} onDoubleClick={onDoubleClick}/>
         <div className="no-project-illustration"/>
-        <h1><FormattedMessage id="project.none"/></h1>
+        <h1>
+          <FormattedMessage id="project.none"/>
+          &#8197;
+          <a><FormattedMessage id="project.new"/></a>
+        </h1>
       </div>
     )
   }
