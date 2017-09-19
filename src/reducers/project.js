@@ -12,6 +12,7 @@ function inc(state, by = 1) {
 }
 
 module.exports = {
+  // eslint-disable-next-line complexity
   project(state = INIT, { type, payload, meta, error }) {
     switch (type) {
       case PROJECT.OPENED:
