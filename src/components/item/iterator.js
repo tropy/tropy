@@ -2,8 +2,10 @@
 
 const React = require('react')
 const { Iterator } = require('../iterator')
+const { FormattedMessage } = require('react-intl')
 const { has } = require('../../dom')
 const { match } = require('../../keymap')
+const cx = require('classnames')
 
 const {
   arrayOf, oneOf, shape, bool, func, number, object, string
@@ -148,6 +150,18 @@ class ItemIterator extends Iterator {
         onSelect: this.props.onSelect
       })
     })
+  }
+
+  renderNoItems() {
+    return this.connect(
+      <div
+        ref={this.setContainer}
+        className={
+        cx('no-items', 'drop-target', { over: this.props.isOver })
+      }>
+        <FormattedMessage id="project.empty"/>
+      </div>
+    )
   }
 
   static propTypes = {

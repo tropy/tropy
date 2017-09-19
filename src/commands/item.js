@@ -214,6 +214,8 @@ class Restore extends Command {
     yield put(act.item.bulk.update([ids, { deleted: false }], { search: true }))
 
     this.undo = act.item.delete(ids)
+
+    return ids
   }
 }
 
@@ -315,6 +317,7 @@ class Merge extends Command {
 
 
     this.undo = act.item.split({ ...m, item, items, data })
+    this.meta = { dec: items.length }
 
     return {
       ...item,
@@ -337,6 +340,7 @@ class Split extends Command {
     yield put(act.metadata.insert({ id: item.id, ...data }))
 
     this.undo = act.item.merge([item.id, ...items.map(i => i.id)])
+    this.meta = { inc: items.length }
 
     return item
   }
@@ -399,6 +403,8 @@ class Explode extends Command {
       id: item.id, photos, items
     })
 
+    this.meta = { inc: photos.length }
+
     return {
       ...items,
       [item.id]: {
@@ -422,6 +428,8 @@ class Implode extends Command {
     yield put(act.photo.bulk.update([photos, { item: id }]))
     yield put(act.item.remove(items))
     yield put(act.item.select({ items: [id] }, { mod: 'replace' }))
+
+    this.meta = { dec: items.length }
 
     return item
   }
