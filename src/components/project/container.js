@@ -145,11 +145,11 @@ class ProjectContainer extends PureComponent {
   }
 
   renderNoProject() {
-    const { dt, isOver, canDrop, isDraggable, onDoubleClick } = this.props
+    const { dt, isOver, canDrop, onMaximize } = this.props
 
     return dt(
       <div className={cx(['no-project', { over: isOver && canDrop }])}>
-        <Toolbar isDraggable={isDraggable} onDoubleClick={onDoubleClick}/>
+        <Toolbar onDoubleClick={onMaximize}/>
         <div className="no-project-illustration"/>
         <h1>
           <FormattedMessage id="project.none"/>
@@ -280,6 +280,7 @@ class ProjectContainer extends PureComponent {
 
     onContextMenu: func.isRequired,
     onProjectOpen: func.isRequired,
+    onMaximize: func.isRequired,
     onModeChange: func.isRequired,
     onMetadataSave: func.isRequired,
     onSort: func.isRequired,
