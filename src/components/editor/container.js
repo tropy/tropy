@@ -12,7 +12,7 @@ const commands = require('./commands')(schema)
 const plugins = require('./plugins')(schema)
 const { match } = require('../../keymap')
 const cx = require('classnames')
-const { noop } = require('../../common/util')
+const { get, noop } = require('../../common/util')
 
 
 class Editor extends PureComponent {
@@ -26,7 +26,7 @@ class Editor extends PureComponent {
   }
 
   setView = (view) => {
-    this.view = view.pm
+    this.view = get(view, ['pm'])
   }
 
   get classes() {

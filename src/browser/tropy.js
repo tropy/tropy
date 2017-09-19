@@ -278,6 +278,8 @@ class Tropy extends EventEmitter {
   listen() {
     this.on('app:create-project', () =>
       this.create())
+    this.on('app:close-project', () =>
+      this.win && this.dispatch(act.project.close('debug')))
 
     this.on('app:import-photos', () =>
       this.import())

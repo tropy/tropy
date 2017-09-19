@@ -154,7 +154,7 @@ function *main() {
         task = null
       }
 
-      if (type === CLOSE && !error) break
+      if (type === CLOSE && !(error || payload === 'debug')) break
 
       if (type === OPEN) {
         task = yield fork(open, payload)

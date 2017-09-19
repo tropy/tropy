@@ -184,6 +184,7 @@ class ProjectContainer extends PureComponent {
           items={items}
           data={data}
           isActive={this.state.mode === MODE.PROJECT}
+          isEmpty={this.isEmpty}
           columns={columns}
           sidebar={ui.sidebar}
           offset={this.state.offset}

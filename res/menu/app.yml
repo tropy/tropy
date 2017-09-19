@@ -110,6 +110,8 @@ linux:
       - type: 'separator'
       - label: 'Reset Ontology Database'
         command: 'app:reset-ontology-db'
+      - label: 'Close Project'
+        command: 'app:close-project'
       - type: 'separator'
       - label: 'Theme'
         id: 'theme'

@@ -1,19 +1,16 @@
 'use strict'
 
-const { UPDATE, OPENED } = require('../constants/project')
-
-const init = { name: '', items: 0 }
+const { PROJECT } = require('../constants')
 
 module.exports = {
-  project(state = init, { type, payload }) {
+  project(state = {}, { type, payload }) {
     switch (type) {
-
-      case OPENED:
+      case PROJECT.OPENED:
         return { ...payload }
-
-      case UPDATE:
+      case PROJECT.UPDATE:
         return { ...state, ...payload }
-
+      case PROJECT.CLOSED:
+        return {}
       default:
         return state
     }
