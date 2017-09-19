@@ -16,6 +16,7 @@ const { win } = require('../../window')
 const cx = require('classnames')
 const { values } = Object
 const actions = require('../../actions')
+const { Toolbar } = require('../toolbar')
 
 const {
   getActivities,
@@ -144,11 +145,17 @@ class ProjectContainer extends PureComponent {
   }
 
   renderNoProject() {
-    const { dt, isOver, canDrop } = this.props
+    const { dt, isOver, canDrop, isDraggable, onDoubleClick } = this.props
 
     return dt(
       <div className={cx(['no-project', { over: isOver && canDrop }])}>
-        <FormattedMessage id="project.none"/>
+        <Toolbar isDraggable={isDraggable} onDoubleClick={onDoubleClick}/>
+        <div className="no-project-illustration"/>
+        <h1>
+          <FormattedMessage id="project.none"/>
+          &#8197;
+          <a><FormattedMessage id="project.new"/></a>
+        </h1>
       </div>
     )
   }

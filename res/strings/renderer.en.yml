@@ -19,8 +19,9 @@ panel:
   notes: Notes
 
 project:
-  none: Drop a project file here or create a new project
+  none: Drop a project file here or create a
   empty: Drop or import your photos into Tropy to get started
+  new: new project
 
 wizard:
   project:
