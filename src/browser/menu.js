@@ -118,7 +118,7 @@ class Menu {
           break
 
         case 'dev':
-          item.visible = (this.app.dev || ARGS.debug)
+          item.visible = (this.app.dev || this.app.debug)
           break
 
         case 'undo':
@@ -223,7 +223,7 @@ class ContextMenu extends Menu {
   }
 
   prepare(template, settings) {
-    if (this.app.dev) {
+    if (this.app.dev || this.app.debug) {
       settings = [...settings, 'dev']
     }
 

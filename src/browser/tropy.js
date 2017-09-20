@@ -45,6 +45,7 @@ const T = new WeakMap()
 class Tropy extends EventEmitter {
   static defaults = {
     frameless: darwin,
+    debug: false,
     locale: 'en', // app.getLocale() || 'en',
     theme: 'light',
     recent: [],
@@ -395,6 +396,13 @@ class Tropy extends EventEmitter {
       this.emit('app:reload-menu')
     })
 
+    this.on('app:toggle-debug', () => {
+      verbose('toggling dev/debug mode...')
+      this.state.debug = !this.state.debug
+      this.broadcast('debug', this.state.debug)
+      this.emit('app:reload-menu')
+    })
+
     this.on('app:reload-menu', () => {
       // Note: there may be Electron issues when reloading
       // the main menu. But since we cannot remove items
@@ -532,7 +540,7 @@ class Tropy extends EventEmitter {
   get hash() {
     return {
       environment: ARGS.environment,
-      debug: ARGS.debug,
+      debug: this.debug,
       dev: this.dev,
       home: app.getPath('userData'),
       documents: app.getPath('documents'),
@@ -572,6 +580,10 @@ class Tropy extends EventEmitter {
 
   get dev() {
     return release.channel === 'dev' || ARGS.environment === 'development'
+  }
+
+  get debug() {
+    return ARGS.debug || this.state.debug
   }
 
   get version() {
