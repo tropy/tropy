@@ -3,6 +3,7 @@
 const { SETTINGS, ITEM, PHOTO } = require('../constants')
 
 const defaults = {
+  debug: ARGS.debug,
   dup: 'prompt',
   itemTemplate: ITEM.TEMPLATE,
   photoTemplate: PHOTO.TEMPLATE,

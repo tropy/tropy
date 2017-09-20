@@ -396,7 +396,7 @@ class Tropy extends EventEmitter {
       this.emit('app:reload-menu')
     })
 
-    this.on('app:toggle-debug', () => {
+    this.on('app:toggle-debug-flag', () => {
       verbose('toggling dev/debug mode...')
       this.state.debug = !this.state.debug
       this.broadcast('debug', this.state.debug)

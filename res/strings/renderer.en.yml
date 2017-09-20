@@ -43,6 +43,7 @@ prefs:
     template:
       item: Default Item Template
       photo: Default Photo Template
+    debug: Enable Developer Mode
     dup:
       label: During Import
       option:
