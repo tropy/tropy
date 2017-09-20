@@ -506,6 +506,7 @@ class Tropy extends EventEmitter {
     ipc.on('cmd', (_, command, ...params) => this.emit(command, ...params))
 
     ipc.on(PROJECT.OPENED, (_, project) => this.opened(project))
+    ipc.on(PROJECT.CREATE, () => this.create())
     ipc.on(PROJECT.CREATED, (_, { file }) => this.open(file))
 
     ipc.on(PROJECT.UPDATE, (_, { name }) => {

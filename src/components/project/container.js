@@ -8,7 +8,7 @@ const { ItemView } = require('../item')
 const { DragLayer } = require('../drag-layer')
 const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
-const { FormattedMessage } = require('react-intl')
+const { NoProject } = require('./none')
 const { extname } = require('path')
 const { MODE } = require('../../constants/project')
 const { ensure, reflow } = require('../../dom')
@@ -16,7 +16,6 @@ const { win } = require('../../window')
 const cx = require('classnames')
 const { values } = Object
 const actions = require('../../actions')
-const { Toolbar } = require('../toolbar')
 const debounce = require('lodash.debounce')
 
 const {
@@ -156,18 +155,13 @@ class ProjectContainer extends PureComponent {
   }
 
   renderNoProject() {
-    const { dt, isFrameless, isOver, canDrop, onMaximize } = this.props
-
-    return dt(
-      <div className={cx(['no-project', { over: isOver && canDrop }])}>
-        {isFrameless && <Toolbar onDoubleClick={onMaximize}/>}
-        <figure className="no-project-illustration"/>
-        <h1>
-          <FormattedMessage id="project.none"/>
-          &#8197;
-          <a><FormattedMessage id="project.new"/></a>
-        </h1>
-      </div>
+    return (
+      <NoProject
+        connect={this.props.dt}
+        canDrop={this.props.canDrop}
+        isOver={this.props.isOver}
+        onProjectCreate={this.props.onProjectCreate}
+        onToolbarDoubleClick={this.props.onMaximize}/>
     )
   }
   render() {
@@ -241,7 +235,6 @@ class ProjectContainer extends PureComponent {
 
 
   static propTypes = {
-    isFrameless: bool,
     expanded: arrayOf(number).isRequired,
     project: shape({
       file: string
@@ -291,6 +284,7 @@ class ProjectContainer extends PureComponent {
     dt: func.isRequired,
 
     onContextMenu: func.isRequired,
+    onProjectCreate: func.isRequired,
     onProjectOpen: func.isRequired,
     onMaximize: func.isRequired,
     onModeChange: func.isRequired,
@@ -298,10 +292,6 @@ class ProjectContainer extends PureComponent {
     onSort: func.isRequired,
     onTemplateImport: func.isRequired,
     onUiUpdate: func.isRequired
-  }
-
-  static defaultProps = {
-    isFrameless: ARGS.frameless
   }
 }
 
@@ -382,6 +372,10 @@ module.exports = {
 
       onOpenInFolder(...args) {
         dispatch(actions.shell.openInFolder(args))
+      },
+
+      onProjectCreate() {
+        dispatch(actions.project.create())
       },
 
       onProjectOpen(path) {

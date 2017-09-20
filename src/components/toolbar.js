@@ -2,8 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { node, bool, func } = PropTypes
+const { node, bool, func } = require('prop-types')
 const cx = require('classnames')
 
 
@@ -67,7 +66,7 @@ class Toolbar extends PureComponent {
 
   static propTypes = {
     children: node,
-    isDraggable: bool,
+    isDraggable: bool.isRequired,
     onDoubleClick: func
   }
 
