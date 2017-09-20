@@ -8,6 +8,7 @@ const { DC } = require('../../constants')
 const { on, off } = require('../../dom')
 const cx = require('classnames')
 const { match } = require('../../keymap')
+const { get } = require('../../common/util')
 
 
 class PhotoList extends PhotoIterator {
@@ -40,7 +41,7 @@ class PhotoList extends PhotoIterator {
       return this.getPhotoBackwards(super.getNextPhoto(offset), offset)
     }
 
-    const { selection } = this.props
+    let { selection } = this.props
     const idx = photo.selections.indexOf(selection)
 
     if (offset > 0) {
@@ -54,9 +55,16 @@ class PhotoList extends PhotoIterator {
       }
     }
 
+    selection = photo.selections[idx + offset]
+
+    const notes = (selection != null) ?
+      get(this.props.selections, [selection, 'notes'], []) :
+      photo.notes
+
     return {
       ...photo,
-      selection: photo.selections[idx + offset]
+      selection,
+      notes
     }
   }
 
