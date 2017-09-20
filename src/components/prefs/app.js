@@ -53,6 +53,7 @@ class AppPrefs extends PureComponent {
               selected={this.props.settings.photoTemplate}
               onChange={this.handlePhotoTemplateChange}/>
           </FormElement>
+          <hr/>
           <FormToggleGroup
             id="prefs.app.dup"
             name="dup"
@@ -67,6 +68,7 @@ class AppPrefs extends PureComponent {
             value={this.props.settings.theme}
             options={this.props.themes}
             onChange={this.handleThemeChange}/>
+          <hr/>
           <FormToggle
             id="prefs.app.debug"
             name="debug"
