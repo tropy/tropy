@@ -85,7 +85,8 @@ class ProjectContainer extends PureComponent {
   }
 
   get isEmpty() {
-    return this.props.project.items === 0
+    return this.props.project.id != null &&
+      this.props.project.items === 0
   }
 
   modeWillChange() {
