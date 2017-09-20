@@ -112,6 +112,17 @@ linux:
         command: 'app:reset-ontology-db'
       - label: 'Close Project'
         command: 'app:close-project'
+      - type: 'separator'
+      - label: 'Theme'
+        id: 'theme'
+        submenu:
+          - label: 'Light'
+            id: 'light'
+            type: 'checkbox'
+          - label: 'Dark'
+            id: 'dark'
+            type: 'checkbox'
+
   - &help
     label: 'Help'
     submenu:

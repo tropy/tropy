@@ -121,6 +121,15 @@ class Menu {
           item.visible = (this.app.dev || this.app.debug)
           break
 
+        case 'theme':
+          item.submenu = item.submenu.map(theme => ({
+            ...theme,
+            checked: (theme.id === this.app.state.theme),
+            enabled: (theme.id !== this.app.state.theme),
+            click: this.responder('app:switch-theme', theme.id)
+          }))
+          break
+
         case 'undo':
           if (this.app.history.past > 0) {
             item.enabled = true
