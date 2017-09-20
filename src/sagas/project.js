@@ -47,7 +47,7 @@ function *open(file) {
 
     // Update window's global ARGS to allow reloading the project!
     if (db.path !== ARGS.file) {
-      args.udpate({ file: db.path })
+      args.update({ file: db.path })
     }
 
     const cache = new Cache(ARGS.cache, project.id)
