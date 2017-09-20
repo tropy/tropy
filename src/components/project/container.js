@@ -17,6 +17,7 @@ const cx = require('classnames')
 const { values } = Object
 const actions = require('../../actions')
 const { Toolbar } = require('../toolbar')
+const debounce = require('lodash.debounce')
 
 const {
   getActivities,
@@ -41,6 +42,7 @@ class ProjectContainer extends PureComponent {
     super(props)
 
     this.state = {
+      isClosed: props.project.closed != null,
       mode: props.nav.mode,
       offset: props.ui.panel.width,
       willModeChange: false,
@@ -48,13 +50,21 @@ class ProjectContainer extends PureComponent {
     }
   }
 
-  componentWillReceiveProps({ nav, ui }) {
+  componentWillUnmount() {
+    this.projectWillChange.cancel()
+  }
+
+  componentWillReceiveProps({ nav, project, ui }) {
     if (nav.mode !== this.props.nav.mode) {
       this.modeWillChange()
     }
 
     if (this.props.ui.panel !== ui.panel) {
       this.setState({ offset: ui.panel.width })
+    }
+
+    if (project !== this.props.project) {
+      this.projectWillChange(project)
     }
   }
 
@@ -72,10 +82,6 @@ class ProjectContainer extends PureComponent {
       [`${nav.mode}-mode-enter`]: willModeChange,
       [`${nav.mode}-mode-enter-active`]: isModeChanging
     }
-  }
-
-  get hasNoProject() {
-    return this.props.project.id == null
   }
 
   get isEmpty() {
@@ -107,6 +113,10 @@ class ProjectContainer extends PureComponent {
       isModeChanging: false
     })
   }
+
+  projectWillChange = debounce(project => {
+    this.setState({ isClosed: (project.closed != null) })
+  }, 500, { leading: false })
 
   isMainView = (event) => {
     return event.target.parentNode === this.container
@@ -160,7 +170,7 @@ class ProjectContainer extends PureComponent {
     )
   }
   render() {
-    if (this.hasNoProject) return this.renderNoProject()
+    if (this.state.isClosed) return this.renderNoProject()
 
     const {
       activities,
