@@ -161,7 +161,7 @@ class ProjectContainer extends PureComponent {
     return dt(
       <div className={cx(['no-project', { over: isOver && canDrop }])}>
         {isFrameless && <Toolbar onDoubleClick={onMaximize}/>}
-        <div className="no-project-illustration"/>
+        <figure className="no-project-illustration"/>
         <h1>
           <FormattedMessage id="project.none"/>
           &#8197;

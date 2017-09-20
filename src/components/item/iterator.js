@@ -159,7 +159,10 @@ class ItemIterator extends Iterator {
         className={
         cx('no-items', 'drop-target', { over: this.props.isOver })
       }>
-        <FormattedMessage id="project.empty"/>
+        <figure className="no-items-illustration"/>
+        <h1>
+          <FormattedMessage id="project.empty"/>
+        </h1>
       </div>
     )
   }

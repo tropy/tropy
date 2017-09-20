@@ -130,5 +130,50 @@ main {
       right: ($default-padding-horizontal + $space-min);
     }
   }
-}
 
+  .no-items {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid $item-table-header-border-color;
+    margin: 0 $space-min;
+    position: relative;
+
+    &.over {
+      @extend %drop-target;
+    }
+
+    .no-items-illustration {
+      flex: 0 0 auto;
+      width: 252px;
+      height: 273px;
+      margin-top: 11px;
+      margin-bottom: 48px; // 60px
+      background:
+        if(
+          $theme == "dark",
+          image-url("project/no-items-dark.svg") no-repeat 0 0,
+          image-url("project/no-items-light.svg") no-repeat 0 0
+        );
+
+      @media (max-height: 540px) {
+        display: none;
+      }
+    }
+
+    h1 {
+      font: {
+        family: "HelveticaNeue-Thin", $font-family-base;
+        weight: 200;
+        size: 32px;
+      }
+      line-height: 1.1;
+      text-align: center;
+      color: $project-heading-color;
+      max-width: 380px;
+      margin-bottom: 49px; // Geometric center (incl. toolbar)
+    }
+  }
+}

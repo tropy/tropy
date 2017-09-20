@@ -20,7 +20,7 @@ panel:
 
 project:
   none: Drop a project file here or create a
-  empty: Drop or import your photos into Tropy to get started
+  empty: Drop your photos into Tropy to get started
   new: new project
 
 wizard:
