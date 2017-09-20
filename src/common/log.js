@@ -26,17 +26,17 @@ const COLORS = {
 const seq = timer()
 
 const logger = new Logger({
-  level: 'info',
+  level: 'verbose',
   transports: []
 })
 
 
 function init(dir) {
   logger.clear()
+  if (ARGS.debug) logger.level = 'debug'
 
   switch (ARGS.environment) {
     case 'development':
-      logger.level = 'verbose'
       logger.add(transports.Console, {
         handleExceptions: true,
         humanReadableUnhandledException: true,
@@ -58,8 +58,6 @@ function init(dir) {
 
       break
   }
-
-  if (ARGS.debug) logger.level = 'debug'
 
   logger.debug('logger initialized at level %s', logger.level)
 
