@@ -6,6 +6,7 @@ const { basename, join, resolve } = require('path')
 const { existsSync: exists } = require('fs')
 const { EL_CAPITAN, darwin } = require('./common/os')
 const { EventEmitter } = require('events')
+const { update } = require('./args')
 
 const {
   $$, append, emit, create, isInput, on, once, toggle, stylesheet, remove
@@ -223,8 +224,7 @@ class Window extends EventEmitter {
   style(theme, prune = false, done) {
     if (theme) {
       this.state.theme = theme
-      ARGS.theme = this.state.theme
-      window.location.hash = encodeURIComponent(JSON.stringify(ARGS))
+      update({ theme })
     }
 
     if (prune) {
