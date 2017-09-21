@@ -47,6 +47,7 @@ class ItemContainer extends PureComponent {
           min={256}>
           <Esper {...this.props.image}
             isDisabled={this.props.isDisabled}
+            keymap={this.props.keymap.Esper}
             photo={this.props.photo}
             selection={this.props.selection}
             selections={this.props.selections}

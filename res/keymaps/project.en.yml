@@ -1,4 +1,18 @@
 linux: &linux
+  Esper: &Esper
+    zoomIn:
+      - CmdOrCtrl-+
+      - Shift-CmdOrCtrl-+
+    zoomOut:
+      - CmdOrCtrl+-
+      - Shift+CmdOrCtrl+-
+    up: ArrowUp
+    down: ArrowDown
+    left: ArrowLeft
+    right: ArrowRight
+    quickPan: Space
+    quickZoomIn: CmdOrCtrl+Space
+    quickZoomOut: Alt+CmdOrCtrl+Space
   Sidebar: &Sidebar
     next: ArrowDown
     prev: ArrowUp
