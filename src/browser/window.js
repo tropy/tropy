@@ -52,6 +52,7 @@ module.exports = {
         break
 
       case 'darwin':
+        options.disableAutoHideCursor = true
         if (!options.frame && EL_CAPITAN) {
           options.frame = true
           options.titleBarStyle = options.titleBarStyle || 'hidden-inset'
