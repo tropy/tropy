@@ -453,7 +453,7 @@ class Esper extends PureComponent {
     return (
       <section
         tabIndex={this.props.tabIndex}
-        className={cx(['esper', this.props.tool])}
+        className={cx(['esper', this.state.tool])}
         onKeyDown={this.handleKeyDown}
         onKeyUp={this.handleKeyUp}>
         <EsperHeader>
