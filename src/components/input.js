@@ -4,6 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { bool, func, number, oneOf, oneOfType, string } = require('prop-types')
 const { noop } = require('../common/util')
+const { AutoResizer } = require('./auto-resizer')
 
 
 class BufferedInput extends PureComponent {
@@ -119,7 +120,7 @@ class BufferedInput extends PureComponent {
 
 
   render() {
-    return (
+    const input = (
       <input
         id={this.props.id}
         className={this.props.className}
@@ -136,6 +137,10 @@ class BufferedInput extends PureComponent {
         onFocus={this.handleFocus}
         onKeyDown={this.handleKeyDown}/>
     )
+
+    return (this.props.resize) ?
+      <AutoResizer content={this.state.value}>{input}</AutoResizer> :
+      input
   }
 
   static propTypes = {
@@ -147,6 +152,7 @@ class BufferedInput extends PureComponent {
     isReadOnly: bool,
     isRequired: bool,
     placeholder: string,
+    resize: bool,
     tabIndex: number,
     type: oneOf(['text', 'number']).isRequired,
     value: oneOfType([string, number]).isRequired,
