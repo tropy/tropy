@@ -6,7 +6,6 @@
   flex: 1 1 0;
   margin-bottom: $space-min;
   overflow-y: auto;
-  line-height: $row-height;
 
   .photo {
     align-items: center;
@@ -40,6 +39,7 @@
       display: flex;
       align-items: center;
       padding: 0 $default-padding-horizontal;
+      height: $row-height;
     }
   }
 
@@ -61,6 +61,7 @@
   .title {
     flex: 1 1 0;
     min-width: 0; // Fix truncation
+    display: flex;
 
     .editable {
       @include css-truncation;
@@ -79,6 +80,7 @@
       padding-left: $default-padding-horizontal + $space-md + $space-sm
         + $space-min;
       padding-right: $default-padding-horizontal;
+      height: $row-height;
 
       &.active {
         @extend %list-active;

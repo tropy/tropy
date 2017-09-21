@@ -116,6 +116,7 @@ class PhotoListItem extends PhotoIterable {
           <div className="title">
             <Editable
               value={this.title}
+              resize
               isEditing={isEditing}
               isDisabled={isDisabled}
               onCancel={onEditCancel}

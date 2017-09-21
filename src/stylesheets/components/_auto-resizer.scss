@@ -4,12 +4,12 @@
 
 .auto-resizer {
   flex: 0 0 auto;
+  margin-right: auto;
   position: relative;
   max-width: 100%;
 
   .content {
     @include css-truncation;
-    display: block;
     color: transparent;
     line-height: normal; // Todo: only when containing editables
     min-width: $space-sm;

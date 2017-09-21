@@ -61,6 +61,7 @@ class SelectionListItem extends SelectionIterable {
           <Editable
             display={title || 'Selection'}
             value={title}
+            resize
             isEditing={this.props.isEditing}
             isDisabled={this.props.isDisabled}
             onCancel={this.props.onEditCancel}
