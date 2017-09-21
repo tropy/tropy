@@ -99,6 +99,7 @@
 
     .name {
       flex: 1 1 auto;
+      display: flex;
       min-width: 0; // Fix truncation
 
       .editable {
