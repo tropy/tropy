@@ -32,6 +32,7 @@ linux:
       - &import
         label: 'Import Photos…'
         command: 'app:import-photos'
+        accelerator: 'CmdOrCtrl+Shift+I'        
       - type: 'separator'
       - label: 'Close'
         accelerator: 'CmdOrCtrl+W'
@@ -126,15 +127,13 @@ linux:
   - &help
     label: 'Help'
     submenu:
-      - label: 'View &License'
-        command: 'app:open-license'
-      - label: 'View Manual'
+      - label: 'User Guide'
         command: 'app:open-docs'
-      - label: 'Visit Forums'
+      - label: 'Support Forums'
         command: 'app:open-forums'
-      - label: 'Search Issues'
-        command: 'app:search-issues'
       - type: 'separator'
+      - label: 'Software &License'
+        command: 'app:open-license'
       - label: 'Show Log Files'
         command: 'app:open-logs'
       - type: 'separator'
@@ -164,7 +163,7 @@ darwin:
         accelerator: 'Command+Q'
         role: 'quit'
 
-  - label: '&File'
+  - label: 'File'
     submenu:
       - *new
       - type: 'separator'
@@ -176,7 +175,7 @@ darwin:
       - label: 'Close'
         accelerator: 'Command+W'
         role: 'close'
-  - label: '&Edit'
+  - label: 'Edit'
     submenu:
       - *undo
       - *redo
@@ -202,15 +201,13 @@ darwin:
   - label: 'Help'
     role: 'help'
     submenu:
-      - label: 'View &License'
-        command: 'app:open-license'
-      - label: 'View Manual'
+      - label: 'User Guide'
         command: 'app:open-docs'
-      - label: 'Visit Forums'
+      - label: 'Support Forums'
         command: 'app:open-forums'
-      - label: 'Search Issues'
-        command: 'app:search-issues'
       - type: 'separator'
+      - label: 'Software License'
+        command: 'app:open-license'      
       - label: 'Show Log Files'
         command: 'app:open-logs'
 
