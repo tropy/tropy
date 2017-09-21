@@ -319,7 +319,7 @@ const DropTargetSpec = {
 
     switch (extname(files[0].path)) {
       case '.tpy':
-        return files[0].path !== project.file
+        return project.closed || files[0].path !== project.file
       case '.ttp':
         return true
       default:
