@@ -85,6 +85,7 @@ linux: &linux
       - Delete
     commit: Enter
 darwin:
+  Esper: *Esper
   Sidebar: *Sidebar
   ItemIterator:
     up: ArrowUp
