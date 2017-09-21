@@ -427,13 +427,13 @@ class Esper extends PureComponent {
         this.move({ x: -PAN_STEP_SIZE * this.state.zoom })
         break
       case 'quickPan':
-        this.setState({ tool: TOOL.PAN })
+        this.setState({ quicktool: TOOL.PAN })
         break
       case 'quickZoomIn':
-        this.setState({ tool: TOOL.ZOOM.IN })
+        this.setState({ quicktool: TOOL.ZOOM.IN })
         break
       case 'quickZoomOut':
-        this.setState({ tool: TOOL.ZOOM.OUT })
+        this.setState({ quicktool: TOOL.ZOOM.OUT })
         break
       default:
         return
@@ -444,16 +444,17 @@ class Esper extends PureComponent {
   }
 
   handleKeyUp = () => {
-    this.setState({ tool: this.props.tool })
+    this.setState({ quicktool: null })
   }
 
   render() {
     const { isDisabled, isSelectionActive } = this
+    const tool = this.state.quicktool || this.state.tool
 
     return (
       <section
         tabIndex={this.props.tabIndex}
-        className={cx(['esper', this.state.tool])}
+        className={cx(['esper', tool])}
         onKeyDown={this.handleKeyDown}
         onKeyUp={this.handleKeyUp}>
         <EsperHeader>
@@ -461,7 +462,7 @@ class Esper extends PureComponent {
             isDisabled={isDisabled}
             isSelectionActive={isSelectionActive}
             mode={this.state.mode}
-            tool={this.state.tool}
+            tool={tool}
             zoom={this.state.zoom}
             minZoom={this.state.minZoom}
             maxZoom={this.props.maxZoom}
@@ -475,7 +476,7 @@ class Esper extends PureComponent {
           ref={this.setView}
           selection={this.props.selection}
           selections={this.props.selections}
-          tool={this.state.tool}
+          tool={tool}
           onChange={this.handleViewChange}
           onSelectionActivate={this.handleSelectionActivate}
           onSelectionCreate={this.handleSelectionCreate}
