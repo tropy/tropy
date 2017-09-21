@@ -61,6 +61,7 @@ class Esper extends PureComponent {
 
       switch (true) {
         case (this.shouldViewReset(props, state)):
+          state.quicktool = null
           this.view.reset(state)
           break
         case (this.shouldViewSync(props, state)):
@@ -426,14 +427,8 @@ class Esper extends PureComponent {
       case 'right':
         this.move({ x: -PAN_STEP_SIZE * this.state.zoom })
         break
-      case 'quickPan':
-        this.setState({ quicktool: TOOL.PAN })
-        break
-      case 'quickZoomIn':
-        this.setState({ quicktool: TOOL.ZOOM.IN })
-        break
-      case 'quickZoomOut':
-        this.setState({ quicktool: TOOL.ZOOM.OUT })
+      case 'quicktool':
+        this.setState({ quicktool: setQuickTool(event) })
         break
       default:
         return
@@ -443,8 +438,10 @@ class Esper extends PureComponent {
     event.stopPropagation()
   }
 
-  handleKeyUp = () => {
-    this.setState({ quicktool: null })
+  handleKeyUp = (event) => {
+    if (this.state.quicktool != null && event.key === ' ') {
+      this.setState({ quicktool: null })
+    }
   }
 
   render() {
@@ -523,6 +520,14 @@ class Esper extends PureComponent {
     tool: TOOL.ARROW,
     zoom: 1
   }
+}
+
+
+function setQuickTool({ key, altKey, ctrlKey, metaKey }) {
+  if (key !== ' ') return null
+  if (!ctrlKey && !metaKey) return TOOL.PAN
+  if (altKey) return TOOL.ZOOM.OUT
+  return TOOL.ZOOM.IN
 }
 
 

@@ -10,9 +10,10 @@ linux: &linux
     down: ArrowDown
     left: ArrowLeft
     right: ArrowRight
-    quickPan: Space
-    quickZoomIn: CmdOrCtrl+Space
-    quickZoomOut: Alt+CmdOrCtrl+Space
+    quicktool:
+      - Space
+      - CmdOrCtrl-Space
+      - CmdOrCtrl-Alt-Space
   Sidebar: &Sidebar
     next: ArrowDown
     prev: ArrowUp
