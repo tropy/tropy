@@ -362,12 +362,21 @@ class Esper extends PureComponent {
   }
 
   handleDoubleClick = ({ x, y, shift }) => {
-    const step = shift ?
-      -ZOOM_STEP_SIZE : ZOOM_STEP_SIZE
+    return shift ?
+      this.handleZoomOut({ x, y }) :
+      this.handleZoomIn({ x, y })
+  }
 
+  handleZoomIn = ({ x, y }, animate = true) => {
     this.handleZoomChange({
-      x, y, zoom: this.state.zoom + step
-    }, ZOOM_DURATION)
+      x, y, zoom: this.state.zoom + ZOOM_STEP_SIZE
+    }, animate)
+  }
+
+  handleZoomOut = ({ x, y }, animate = true) => {
+    this.handleZoomChange({
+      x, y, zoom: this.state.zoom - ZOOM_STEP_SIZE
+    }, animate)
   }
 
   handleSelectionActivate = (selection) => {
@@ -420,6 +429,12 @@ class Esper extends PureComponent {
       case 'quickPan':
         this.setState({ tool: TOOL.PAN })
         break
+      case 'quickZoomIn':
+        this.setState({ tool: TOOL.ZOOM.IN })
+        break
+      case 'quickZoomOut':
+        this.setState({ tool: TOOL.ZOOM.OUT })
+        break
       default:
         return
     }
@@ -465,7 +480,9 @@ class Esper extends PureComponent {
           onSelectionActivate={this.handleSelectionActivate}
           onSelectionCreate={this.handleSelectionCreate}
           onDoubleClick={this.handleDoubleClick}
-          onWheel={this.handleWheel}/>
+          onWheel={this.handleWheel}
+          onZoomIn={this.handleZoomIn}
+          onZoomOut={this.handleZoomOut}/>
       </section>
     )
   }

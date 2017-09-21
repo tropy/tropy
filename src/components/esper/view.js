@@ -451,7 +451,7 @@ class EsperView extends PureComponent {
   handleDragStop = (_, wasCancelled) => {
     try {
       if (this.isDragging) {
-        const { target, tool } = this.drag.current
+        const { origin, target, tool } = this.drag.current
         target.cursor = this.props.tool
 
         switch (tool) {
@@ -461,6 +461,12 @@ class EsperView extends PureComponent {
             break
           case TOOL.SELECT:
             this.handleSelectStop(wasCancelled)
+            break
+          case TOOL.ZOOM.IN:
+            if (!wasCancelled) this.props.onZoomIn(origin.mov)
+            break
+          case TOOL.ZOOM.OUT:
+            if (!wasCancelled) this.props.onZoomOut(origin.mov)
             break
         }
       }
@@ -550,7 +556,9 @@ class EsperView extends PureComponent {
     onDoubleClick: func.isRequired,
     onSelectionCreate: func.isRequired,
     onSelectionActivate: func.isRequired,
-    onWheel: func.isRequired
+    onWheel: func.isRequired,
+    onZoomIn: func.isRequired,
+    onZoomOut: func.isRequired
   }
 }
 

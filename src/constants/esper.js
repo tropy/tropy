@@ -10,7 +10,11 @@ module.exports = {
   TOOL: {
     ARROW: 'arrow',
     PAN: 'pan',
-    SELECT: 'select'
+    SELECT: 'select',
+    ZOOM: {
+      IN: 'zoomIn',
+      OUT: 'zoomOut'
+    }
   },
 
   COLOR: {
