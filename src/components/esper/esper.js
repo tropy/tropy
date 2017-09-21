@@ -417,6 +417,9 @@ class Esper extends PureComponent {
       case 'right':
         this.move({ x: -PAN_STEP_SIZE * this.state.zoom })
         break
+      case 'quickPan':
+        this.setState({ tool: TOOL.PAN })
+        break
       default:
         return
     }
@@ -426,6 +429,7 @@ class Esper extends PureComponent {
   }
 
   handleKeyUp = () => {
+    this.setState({ tool: this.props.tool })
   }
 
   render() {
@@ -442,7 +446,7 @@ class Esper extends PureComponent {
             isDisabled={isDisabled}
             isSelectionActive={isSelectionActive}
             mode={this.state.mode}
-            tool={this.props.tool}
+            tool={this.state.tool}
             zoom={this.state.zoom}
             minZoom={this.state.minZoom}
             maxZoom={this.props.maxZoom}
@@ -456,7 +460,7 @@ class Esper extends PureComponent {
           ref={this.setView}
           selection={this.props.selection}
           selections={this.props.selections}
-          tool={this.props.tool}
+          tool={this.state.tool}
           onChange={this.handleViewChange}
           onSelectionActivate={this.handleSelectionActivate}
           onSelectionCreate={this.handleSelectionCreate}
