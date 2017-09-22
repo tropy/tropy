@@ -1,6 +1,7 @@
 'use strict'
 
 const { history } = require('prosemirror-history')
+const { gapCursor } = require('prosemirror-gapcursor')
 
 const {
   InputRule,
@@ -58,6 +59,7 @@ module.exports = (schema) => {
   }
 
   return [
+    gapCursor(),
     history(),
     inputRules({ rules })
   ]

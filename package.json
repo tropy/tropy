@@ -94,6 +94,7 @@
     "pixi.js": "^4.5.6",
     "prop-types": "^15.5.4",
     "prosemirror-commands": "^0.23.0",
+    "prosemirror-gapcursor": "^0.23.1",
     "prosemirror-history": "^0.23.0",
     "prosemirror-inputrules": "^0.23.0",
     "prosemirror-model": "^0.23.1",
