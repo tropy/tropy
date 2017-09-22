@@ -408,8 +408,6 @@ class Esper extends PureComponent {
 
 
   handleKeyDown = (event) => {
-    // eslint-disable-next-line
-    //console.log(`DOWN ${event.ctrlKey || event.metaKey ? 'meta ' : ''}${event.altKey ? 'alt ' : ''}"${event.key}"${event.repeat ? ' (repeat)' : ''}`)
     if (this.state.quicktool != null) {
       this.handleQuickToolKeyDown(event)
 
@@ -446,8 +444,6 @@ class Esper extends PureComponent {
   }
 
   handleKeyUp = (event) => {
-    // eslint-disable-next-line
-    //console.log(`UP   ${event.ctrlKey || event.metaKey ? 'meta ' : ''}${event.altKey ? 'alt ' : ''}"${event.key}"${event.repeat ? ' (repeat)' : ''}`)
     if (this.state.quicktool != null) {
       this.handleQuickToolKeyUp(event)
     }
@@ -468,7 +464,13 @@ class Esper extends PureComponent {
     }
   }
 
-  handleQuickToolKeyUp({ key }) {
+  // Subtle: On macOS pressing the cmd key suppresses all repeats
+  // on key-down and all key-up events. To work around this, we clear
+  // everything on key-up of cmd/ctrl or by default. The only valid
+  // state without cmd/ctrl is just the space key, which will continue
+  // to repeat as soon as cmd/ctrl are released, so the quicktool
+  // will be initialized straight away on keydown.
+  handleQuickToolKeyUp({ key, ctrlKey, metaKey }) {
     switch (key) {
       case ' ':
       case 'Meta':
@@ -480,9 +482,13 @@ class Esper extends PureComponent {
           this.setState({ quicktool: TOOL.ZOOM.IN })
         }
         break
+      default:
+        if (!(ctrlKey || metaKey)) {
+          this.setState({ quicktool: null })
+        }
+        break
     }
   }
-
 
 
   render() {
