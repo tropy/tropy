@@ -138,7 +138,7 @@ const ESPER = {
       default: 'grab',
       active: 'grabbing',
       x: '9',
-      y: '10'
+      y: '9'
     },
     select: {
       default: 'crosshairs',
