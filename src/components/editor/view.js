@@ -15,7 +15,7 @@ class ProseMirror extends Component {
       ...this.getEditorProps(),
       dispatchTransaction: this.handleChange,
       handleKeyDown: this.handleKeyDown,
-      handleDOM: {
+      handleDOMEvents: {
         focus: this.handleFocus,
         blur: this.handleBlur
       }
@@ -72,6 +72,7 @@ class ProseMirror extends Component {
   }
 
   handleBlur = (...args) => {
+    getSelection().removeAllRanges()
     this.props.onBlur(...args)
   }
 
