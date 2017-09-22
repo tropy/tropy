@@ -408,30 +408,37 @@ class Esper extends PureComponent {
 
 
   handleKeyDown = (event) => {
-    switch (match(this.props.keymap, event)) {
-      case 'zoomIn':
-        this.zoom(ZOOM_STEP_SIZE)
-        break
-      case 'zoomOut':
-        this.zoom(-ZOOM_STEP_SIZE)
-        break
-      case 'up':
-        this.move({ y: PAN_STEP_SIZE * this.state.zoom })
-        break
-      case 'down':
-        this.move({ y: -PAN_STEP_SIZE * this.state.zoom })
-        break
-      case 'left':
-        this.move({ x: PAN_STEP_SIZE * this.state.zoom })
-        break
-      case 'right':
-        this.move({ x: -PAN_STEP_SIZE * this.state.zoom })
-        break
-      case 'quicktool':
-        this.setState({ quicktool: setQuickTool(event) })
-        break
-      default:
-        return
+    // eslint-disable-next-line
+    console.log(`DOWN ${event.ctrlKey || event.metaKey ? 'meta ' : ''}${event.altKey ? 'alt ' : ''}"${event.key}"${event.repeat ? ' (repeat)' : ''}`)
+    if (this.state.quicktool != null) {
+      this.handleQuickToolKeyDown(event)
+
+    } else {
+      switch (match(this.props.keymap, event)) {
+        case 'zoomIn':
+          this.zoom(ZOOM_STEP_SIZE)
+          break
+        case 'zoomOut':
+          this.zoom(-ZOOM_STEP_SIZE)
+          break
+        case 'up':
+          this.move({ y: PAN_STEP_SIZE * this.state.zoom })
+          break
+        case 'down':
+          this.move({ y: -PAN_STEP_SIZE * this.state.zoom })
+          break
+        case 'left':
+          this.move({ x: PAN_STEP_SIZE * this.state.zoom })
+          break
+        case 'right':
+          this.move({ x: -PAN_STEP_SIZE * this.state.zoom })
+          break
+        case 'quicktool':
+          this.setState({ quicktool: TOOL.PAN })
+          break
+        default:
+          return
+      }
     }
 
     event.preventDefault()
@@ -439,10 +446,20 @@ class Esper extends PureComponent {
   }
 
   handleKeyUp = (event) => {
-    if (this.state.quicktool != null && event.key === ' ') {
+    // eslint-disable-next-line
+    console.log(`UP   ${event.ctrlKey || event.metaKey ? 'meta ' : ''}${event.altKey ? 'alt ' : ''}"${event.key}"${event.repeat ? ' (repeat)' : ''}`)
+    if (this.state.quicktool != null) {
       this.setState({ quicktool: null })
     }
   }
+
+  handleQuickToolKeyDown() {
+  }
+
+  handleQuickToolKeyUp() {
+  }
+
+
 
   render() {
     const { isDisabled, isSelectionActive } = this
@@ -520,14 +537,6 @@ class Esper extends PureComponent {
     tool: TOOL.ARROW,
     zoom: 1
   }
-}
-
-
-function setQuickTool({ key, altKey, ctrlKey, metaKey }) {
-  if (key !== ' ') return null
-  if (!ctrlKey && !metaKey) return TOOL.PAN
-  if (altKey) return TOOL.ZOOM.OUT
-  return TOOL.ZOOM.IN
 }
 
 

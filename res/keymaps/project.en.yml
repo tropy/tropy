@@ -10,10 +10,7 @@ linux: &linux
     down: ArrowDown
     left: ArrowLeft
     right: ArrowRight
-    quicktool:
-      - Space
-      - CmdOrCtrl-Space
-      - CmdOrCtrl-Alt-Space
+    quicktool: Space
   Sidebar: &Sidebar
     next: ArrowDown
     prev: ArrowUp
