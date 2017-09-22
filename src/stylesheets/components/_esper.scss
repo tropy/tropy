@@ -23,39 +23,61 @@
     &.window-draggable {
       position: absolute;
     }
+  }
 
-    .toolbar {
-      background: $esper-toolbar-bg;
-      transform: translate3d(0, -100%, 0);
-      padding-top: 0;
-      height: $toolbar-height;
-      transition: transform $esper-toolbar-transition-out;
-      margin: 0;
+  .toolbar {
+    background: $esper-toolbar-bg;
+    transform: translate3d(0, -100%, 0);
+    padding-top: 0;
+    height: $toolbar-height;
+    transition: transform $esper-toolbar-transition-out;
+    margin: 0;
 
-      @at-root #{selector-replace(&, ".esper", ".esper:hover")} {
-        transform: translate3d(0, 0, 0);
-        transition: transform $esper-toolbar-transition-in;
-      }
+    @at-root #{selector-replace(&, ".esper", ".esper:hover")} {
+      transform: translate3d(0, 0, 0);
+      transition: transform $esper-toolbar-transition-in;
+    }
 
-      .tool-group {
-        & + .tool-group {
-          margin-left: $space-lg;
-        }
-      }
-
-      .btn-icon {
-        & + .btn-icon {
-          margin-left: $space-min / 2;
-        }
-      }
-
-      .icon:not(:active) {
+    .btn-icon {
+      .icon {
         color: $esper-icon-color;
       }
 
-      .slider {
-        margin-top: 0;
+      &:active {
+        .icon {
+          color: $icon-active-color;
+        }
+
+        &[disabled] {
+          .icon {
+            color: $esper-icon-color;
+          }
+        }
       }
+
+      & + .btn-icon {
+        margin-left: $space-min / 2;
+      }
+    }
+
+    .tool-group {
+      > .btn-icon {
+        &.active {
+          background: $esper-btn-active-bg;
+
+          .icon {
+            color: $esper-btn-active-color;
+          }
+        }
+      }
+
+      & + .tool-group {
+        margin-left: $space-lg;
+      }
+    }
+
+    .slider {
+      margin-top: 0;
     }
   }
 
@@ -75,20 +97,6 @@
           image-url("esper/#{map-get($val, 'default')}@1x.svg") 1x,
           image-url("esper/#{map-get($val, 'default')}@2x.svg") 2x
         ) map-get($val, "x") map-get($val, "y"), default;
-      }
-    }
-  }
-
-  .toolbar {
-    .tool-group {
-      > .btn-icon {
-        &.active {
-          background: $esper-btn-active-bg;
-
-          .icon {
-            color: $esper-btn-active-color;
-          }
-        }
       }
     }
   }

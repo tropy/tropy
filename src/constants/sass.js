@@ -138,7 +138,7 @@ const ESPER = {
       default: 'grab',
       active: 'grabbing',
       x: '9',
-      y: '10'
+      y: '9'
     },
     select: {
       default: 'crosshairs',
@@ -149,14 +149,14 @@ const ESPER = {
     zoomIn: {
       default: 'zoom-in',
       active: 'zoom-in',
-      x: '1',
-      y: '1'
+      x: '8',
+      y: '8'
     },
     zoomOut: {
       default: 'zoom-out',
       active: 'zoom-out',
-      x: '1',
-      y: '1'
+      x: '8',
+      y: '8'
     }
   }
 }
