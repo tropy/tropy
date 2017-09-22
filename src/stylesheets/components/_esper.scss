@@ -38,12 +38,6 @@
       transition: transform $esper-toolbar-transition-in;
     }
 
-    .tool-group {
-      & + .tool-group {
-        margin-left: $space-lg;
-      }
-    }
-
     .btn-icon {
       .icon {
         color: $esper-icon-color;
@@ -61,16 +55,24 @@
         }
       }
 
-      &.active {
-        background: $esper-btn-active-bg;
+      & + .btn-icon {
+        margin-left: $space-min / 2;
+      }
+    }
 
-        .icon {
-          color: $esper-btn-active-color;
+    .tool-group {
+      > .btn-icon {
+        &.active {
+          background: $esper-btn-active-bg;
+
+          .icon {
+            color: $esper-btn-active-color;
+          }
         }
       }
 
-      & + .btn-icon {
-        margin-left: $space-min / 2;
+      & + .tool-group {
+        margin-left: $space-lg;
       }
     }
 
