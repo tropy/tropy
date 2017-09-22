@@ -368,13 +368,13 @@ class Esper extends PureComponent {
       this.handleZoomIn({ x, y })
   }
 
-  handleZoomIn = ({ x, y }, animate = true) => {
+  handleZoomIn = ({ x, y }, animate = false) => {
     this.handleZoomChange({
       x, y, zoom: this.state.zoom + ZOOM_STEP_SIZE
     }, animate)
   }
 
-  handleZoomOut = ({ x, y }, animate = true) => {
+  handleZoomOut = ({ x, y }, animate = false) => {
     this.handleZoomChange({
       x, y, zoom: this.state.zoom - ZOOM_STEP_SIZE
     }, animate)
