@@ -149,14 +149,14 @@ const ESPER = {
     zoomIn: {
       default: 'zoom-in',
       active: 'zoom-in',
-      x: '1',
-      y: '1'
+      x: '8',
+      y: '8'
     },
     zoomOut: {
       default: 'zoom-out',
       active: 'zoom-out',
-      x: '1',
-      y: '1'
+      x: '8',
+      y: '8'
     }
   }
 }
