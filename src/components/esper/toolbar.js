@@ -74,7 +74,7 @@ class EsperToolbar extends PureComponent {
 
   render() {
     return (
-      <Toolbar>
+      <Toolbar isDraggable={false}>
         <ToolbarLeft>
           <ToolGroup>
             <IconButton

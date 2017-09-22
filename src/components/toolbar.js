@@ -56,7 +56,9 @@ class Toolbar extends PureComponent {
   render() {
     return (
       <div
-        className={cx({ toolbar: true,  draggable: this.props.isDraggable })}
+        className={
+          cx({ 'toolbar': true, 'window-draggable': this.props.isDraggable })
+        }
         ref={this.props.onDoubleClick ? this.setContainer : null}
         onDoubleClick={this.handleDoubleClick}>
         {this.props.children}

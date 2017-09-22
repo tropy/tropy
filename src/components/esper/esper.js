@@ -532,7 +532,7 @@ function setQuickTool({ key, altKey, ctrlKey, metaKey }) {
 
 
 const EsperHeader = ({ children }) => (
-  <header className="esper-header draggable">{children}</header>
+  <header className="esper-header window-draggable">{children}</header>
 )
 
 EsperHeader.propTypes = {

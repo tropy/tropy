@@ -37,7 +37,7 @@ class PrefsContainer extends PureComponent {
       <div
         className="prefs"
         onContextMenu={this.props.onContextMenu}>
-        <header className="prefs-header draggable">
+        <header className="prefs-header window-draggable">
           {this.renderTitleBar()}
           <nav className="prefs-nav">
             <ul>
