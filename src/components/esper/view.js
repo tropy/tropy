@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
+const { Component } = React
 const { array, func, object, string } = require('prop-types')
 const { append, bounds, createDragHandler } = require('../../dom')
 const css = require('../../css')
@@ -25,7 +25,7 @@ const {
 } = require('../../constants/sass')
 
 
-class EsperView extends PureComponent {
+class EsperView extends Component {
   componentDidMount() {
     const { width, height } = bounds(this.container)
 
