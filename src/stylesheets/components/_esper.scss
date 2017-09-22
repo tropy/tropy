@@ -13,12 +13,16 @@
   position: relative;
   overflow: hidden;
 
-  .esper-header.draggable {
+  .esper-header {
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     z-index: $zindex-esper-header;
+
+    &.window-draggable {
+      position: absolute;
+    }
 
     .toolbar {
       background: $esper-toolbar-bg;
@@ -26,6 +30,7 @@
       padding-top: 0;
       height: $toolbar-height;
       transition: transform $esper-toolbar-transition-out;
+      margin: 0;
 
       @at-root #{selector-replace(&, ".esper", ".esper:hover")} {
         transform: translate3d(0, 0, 0);
