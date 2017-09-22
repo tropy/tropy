@@ -61,6 +61,14 @@
         }
       }
 
+      &.active {
+        background: $esper-btn-active-bg;
+
+        .icon {
+          color: $esper-btn-active-color;
+        }
+      }
+
       & + .btn-icon {
         margin-left: $space-min / 2;
       }
@@ -87,20 +95,6 @@
           image-url("esper/#{map-get($val, 'default')}@1x.svg") 1x,
           image-url("esper/#{map-get($val, 'default')}@2x.svg") 2x
         ) map-get($val, "x") map-get($val, "y"), default;
-      }
-    }
-  }
-
-  .toolbar {
-    .tool-group {
-      > .btn-icon {
-        &.active {
-          background: $esper-btn-active-bg;
-
-          .icon {
-            color: $esper-btn-active-color;
-          }
-        }
       }
     }
   }
