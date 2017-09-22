@@ -165,6 +165,7 @@ class Window extends EventEmitter {
   handleEditorCommands() {
     on(document, 'keydown', event => {
       if (!isCommand(event)) return
+      if (event.defaultPrevented) return
 
       switch (event.key) {
         case 'z':
