@@ -409,7 +409,7 @@ class Esper extends PureComponent {
 
   handleKeyDown = (event) => {
     // eslint-disable-next-line
-    console.log(`DOWN ${event.ctrlKey || event.metaKey ? 'meta ' : ''}${event.altKey ? 'alt ' : ''}"${event.key}"${event.repeat ? ' (repeat)' : ''}`)
+    //console.log(`DOWN ${event.ctrlKey || event.metaKey ? 'meta ' : ''}${event.altKey ? 'alt ' : ''}"${event.key}"${event.repeat ? ' (repeat)' : ''}`)
     if (this.state.quicktool != null) {
       this.handleQuickToolKeyDown(event)
 
@@ -447,16 +447,40 @@ class Esper extends PureComponent {
 
   handleKeyUp = (event) => {
     // eslint-disable-next-line
-    console.log(`UP   ${event.ctrlKey || event.metaKey ? 'meta ' : ''}${event.altKey ? 'alt ' : ''}"${event.key}"${event.repeat ? ' (repeat)' : ''}`)
+    //console.log(`UP   ${event.ctrlKey || event.metaKey ? 'meta ' : ''}${event.altKey ? 'alt ' : ''}"${event.key}"${event.repeat ? ' (repeat)' : ''}`)
     if (this.state.quicktool != null) {
-      this.setState({ quicktool: null })
+      this.handleQuickToolKeyUp(event)
     }
   }
 
-  handleQuickToolKeyDown() {
+  handleQuickToolKeyDown({ ctrlKey, metaKey, altKey }) {
+    switch (this.state.quicktool) {
+      case TOOL.PAN:
+        if (ctrlKey || metaKey) {
+          this.setState({ quicktool: altKey ? TOOL.ZOOM.OUT : TOOL.ZOOM.IN })
+        }
+        break
+      case TOOL.ZOOM.IN:
+        if (altKey) {
+          this.setState({ quicktool: TOOL.ZOOM.OUT })
+        }
+        break
+    }
   }
 
-  handleQuickToolKeyUp() {
+  handleQuickToolKeyUp({ key }) {
+    switch (key) {
+      case ' ':
+      case 'Meta':
+      case 'Control':
+        this.setState({ quicktool: null })
+        break
+      case 'Alt':
+        if (this.state.quicktool === TOOL.ZOOM.OUT) {
+          this.setState({ quicktool: TOOL.ZOOM.IN })
+        }
+        break
+    }
   }
 
 
