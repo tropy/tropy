@@ -453,12 +453,12 @@ class Esper extends PureComponent {
     switch (this.state.quicktool) {
       case TOOL.PAN:
         if (ctrlKey || metaKey) {
-          this.setState({ quicktool: altKey ? TOOL.ZOOM.OUT : TOOL.ZOOM.IN })
+          this.setState({ quicktool: altKey ? TOOL.ZOOM_OUT : TOOL.ZOOM_IN })
         }
         break
-      case TOOL.ZOOM.IN:
+      case TOOL.ZOOM_IN:
         if (altKey) {
-          this.setState({ quicktool: TOOL.ZOOM.OUT })
+          this.setState({ quicktool: TOOL.ZOOM_OUT })
         }
         break
     }
@@ -478,8 +478,8 @@ class Esper extends PureComponent {
         this.setState({ quicktool: null })
         break
       case 'Alt':
-        if (this.state.quicktool === TOOL.ZOOM.OUT) {
-          this.setState({ quicktool: TOOL.ZOOM.IN })
+        if (this.state.quicktool === TOOL.ZOOM_OUT) {
+          this.setState({ quicktool: TOOL.ZOOM_IN })
         }
         break
       default:

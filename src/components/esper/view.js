@@ -462,10 +462,10 @@ class EsperView extends PureComponent {
           case TOOL.SELECT:
             this.handleSelectStop(wasCancelled)
             break
-          case TOOL.ZOOM.IN:
+          case TOOL.ZOOM_IN:
             if (!wasCancelled) this.props.onZoomIn(origin.mov)
             break
-          case TOOL.ZOOM.OUT:
+          case TOOL.ZOOM_OUT:
             if (!wasCancelled) this.props.onZoomOut(origin.mov)
             break
         }
