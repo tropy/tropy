@@ -2,8 +2,8 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { func, bool, object, number } = PropTypes
+const { FormattedMessage } = require('react-intl')
+const { func, bool, object, number, string } = require('prop-types')
 const { EditorToolbar } = require('./toolbar')
 const { EditorState } = require('prosemirror-state')
 const { EditorView } = require('./view')
@@ -48,6 +48,13 @@ class Editor extends PureComponent {
     return EditorState.fromJSON({ schema, plugins }, state)
   }
 
+  isEmpty(doc) {
+    if (doc.childCount !== 1) return false
+    if (!doc.firstChild.isTextblock) return false
+    if (doc.firstChild.content.size !== 0) return false
+    return true
+  }
+
   focus = () => {
     this.view.focus()
   }
@@ -87,8 +94,9 @@ class Editor extends PureComponent {
   }
 
   render() {
-    const { isDisabled, tabIndex } = this.props
+    const { isDisabled, placeholder, tabIndex } = this.props
     const state = this.getEditorState()
+    const showPlaceholder = placeholder != null && this.isEmpty(state.doc)
 
     return (
       <div
@@ -103,6 +111,10 @@ class Editor extends PureComponent {
         }
 
         <div className="scroll-container">
+          {showPlaceholder &&
+            <FormattedMessage
+              id={placeholder}
+              className="placeholder"/>}
           <EditorView
             ref={this.setView}
             state={state}
@@ -118,10 +130,11 @@ class Editor extends PureComponent {
   }
 
   static propTypes = {
-    state: object,
     isDisabled: bool,
     keymap: object.isRequired,
     onChange: func.isRequired,
+    placeholder: string,
+    state: object,
     tabIndex: number.isRequired
   }
 

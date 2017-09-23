@@ -81,11 +81,9 @@ class ProseMirror extends Component {
     )
   }
 
-  static displayName = 'EditorView'
-
   static propTypes = {
-    state: instanceOf(EditorState),
     isDisabled: bool,
+    state: instanceOf(EditorState),
     tabIndex: number.isRequired,
     onBlur: func.isRequired,
     onChange: func.isRequired,

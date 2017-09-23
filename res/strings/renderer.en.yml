@@ -107,6 +107,8 @@ esper:
     fill: Fill
     fit: Fit
     zoom: Zoom
+notepad:
+  placeholder: Add your notes here …
 
 template:
   id: URI
