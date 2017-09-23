@@ -112,9 +112,9 @@ class Editor extends PureComponent {
 
         <div className="scroll-container">
           {showPlaceholder &&
-            <FormattedMessage
-              id={placeholder}
-              className="placeholder"/>}
+            <div className="placeholder">
+              <FormattedMessage id={placeholder}/>
+            </div>}
           <EditorView
             ref={this.setView}
             state={state}
