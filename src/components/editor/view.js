@@ -27,7 +27,7 @@ class ProseMirror extends Component {
 
   shouldComponentUpdate(props) {
     const { state, isDisabled, tabIndex } = props
-    const wasDisabled = this.props
+    const wasDisabled = this.props.isDisabled
 
     if (
       isDisabled !== wasDisabled ||
