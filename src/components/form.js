@@ -60,14 +60,23 @@ class Label extends PureComponent {
 }
 
 class FormElement extends PureComponent {
+  get hasLabel() {
+    return this.props.id != null
+  }
+
+  get offset() {
+    return GRID.SIZE - this.props.size
+  }
+
   render() {
+    const { hasLabel, offset } = this
+
     return (
       <FormGroup isCompact={this.props.isCompact}>
-        {this.props.id != null &&
-          <Label
-            id={this.props.id}
-            size={GRID.SIZE - this.props.size}/>}
-        <div className={`col-${this.props.size}`}>
+        {hasLabel && <Label id={this.props.id} size={offset}/>}
+        <div className={
+          cx(`col-${this.props.size}`, { [`col-offset-${offset}`]: !hasLabel })
+        }>
           {this.props.children}
         </div>
       </FormGroup>
