@@ -7,7 +7,10 @@ const defaults = {
   dup: 'prompt',
   itemTemplate: ITEM.TEMPLATE,
   photoTemplate: PHOTO.TEMPLATE,
-  theme: ARGS.theme
+  theme: ARGS.theme,
+  overlayToolbars: true,
+  invertScroll: true,
+  invertZoom: false
 }
 
 module.exports = {

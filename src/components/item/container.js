@@ -46,7 +46,9 @@ class ItemContainer extends PureComponent {
           onChange={this.handleEsperResize}
           min={256}>
           <Esper {...this.props.image}
-            hasOverlayToolbar
+            hasOverlayToolbar={this.props.settings.overlayToolbars}
+            invertScroll={this.props.settings.invertScroll}
+            invertZoom={this.props.settings.invertZoom}
             isDisabled={this.props.isDisabled}
             keymap={this.props.keymap.Esper}
             photo={this.props.photo}
@@ -81,6 +83,7 @@ class ItemContainer extends PureComponent {
     photo: object,
     selection: object,
     selections: arrayOf(object).isRequired,
+    settings: object.isRequired,
     onNoteChange: func.isRequired,
     onPhotoSave: func.isRequired,
     onPhotoSelect: func.isRequired,
@@ -98,7 +101,8 @@ module.exports = {
       image: getActiveImageProps(state),
       keymap: state.keymap,
       selection: getActiveSelection(state),
-      selections: getPhotoSelections(state)
+      selections: getPhotoSelections(state),
+      settings: state.settings
     }),
 
     dispatch => ({

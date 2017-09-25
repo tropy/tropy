@@ -355,11 +355,13 @@ class Esper extends PureComponent {
 
   handleWheel = ({ x, y, dy, dx, ctrl }) => {
     if (ctrl) {
+      const mw = this.props.invertZoom ? -1 : 1
+
       this.handleZoomChange({
-        x, y, zoom: this.state.zoom + dy * ZOOM_WHEEL_FACTOR
+        x, y, zoom: this.state.zoom + dy * mw * ZOOM_WHEEL_FACTOR
       })
     } else {
-      const mw = this.props.invertMouseWheel ? -1 : 1
+      const mw = this.props.invertScroll ? -1 : 1
 
       this.handlePositionChange({
         x: this.view.image.x + (dx * mw),
@@ -541,7 +543,8 @@ class Esper extends PureComponent {
   static propTypes = {
     hasOverlayToolbar: bool,
     isDisabled: bool,
-    invertMouseWheel: bool.isRequired,
+    invertScroll: bool.isRequired,
+    invertZoom: bool.isRequired,
     keymap: object.isRequired,
     maxZoom: number.isRequired,
     minZoom: number.isRequired,
@@ -566,7 +569,6 @@ class Esper extends PureComponent {
   }
 
   static defaultProps = {
-    invertMouseWheel: true,
     maxZoom: MAX_ZOOM,
     minZoom: MIN_ZOOM,
     mode: MODE.FIT,
