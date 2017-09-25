@@ -37,7 +37,7 @@ prefs:
     label: Global
     invertScroll: Invert direction when scrolling in photos
     invertZoom: Invert direction when zooming in photos
-    overlayToolbars: Prefer overlay toolbars
+    overlayToolbars: Automatically hide and show toolbars
     style:
       theme: Theme
       themes:
