@@ -63,9 +63,10 @@ class FormElement extends PureComponent {
   render() {
     return (
       <FormGroup isCompact={this.props.isCompact}>
-        <Label
-          id={this.props.id}
-          size={GRID.SIZE - this.props.size}/>
+        {this.props.id != null &&
+          <Label
+            id={this.props.id}
+            size={GRID.SIZE - this.props.size}/>}
         <div className={`col-${this.props.size}`}>
           {this.props.children}
         </div>
@@ -75,7 +76,7 @@ class FormElement extends PureComponent {
 
   static propTypes = {
     children: node,
-    id: string.isRequired,
+    id: string,
     isCompact: bool,
     size: number.isRequired
   }
@@ -450,5 +451,6 @@ module.exports = {
   FormText,
   FormToggle,
   FormToggleGroup,
-  Label
+  Label,
+  Toggle
 }

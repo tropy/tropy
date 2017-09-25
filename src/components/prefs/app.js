@@ -10,7 +10,8 @@ const {
   FormElement,
   FormSelect,
   FormToggle,
-  FormToggleGroup
+  FormToggleGroup,
+  Toggle
 } = require('../form')
 
 
@@ -69,21 +70,23 @@ class AppPrefs extends PureComponent {
             options={this.props.themes}
             onChange={this.handleThemeChange}/>
           <hr/>
-          <FormToggle
-            id="prefs.app.invertScroll"
-            name="invertScroll"
-            value={this.props.settings.invertScroll}
-            onChange={this.props.onSettingsUpdate}/>
-          <FormToggle
-            id="prefs.app.invertZoom"
-            name="invertZoom"
-            value={this.props.settings.invertZoom}
-            onChange={this.props.onSettingsUpdate}/>
-          <FormToggle
-            id="prefs.app.overlayToolbars"
-            name="overlayToolbars"
-            value={this.props.settings.overlayToolbars}
-            onChange={this.props.onSettingsUpdate}/>
+          <FormElement>
+            <Toggle
+              id="prefs.app.invertScroll"
+              name="invertScroll"
+              value={this.props.settings.invertScroll}
+              onChange={this.props.onSettingsUpdate}/>
+            <Toggle
+              id="prefs.app.invertZoom"
+              name="invertZoom"
+              value={this.props.settings.invertZoom}
+              onChange={this.props.onSettingsUpdate}/>
+            <Toggle
+              id="prefs.app.overlayToolbars"
+              name="overlayToolbars"
+              value={this.props.settings.overlayToolbars}
+              onChange={this.props.onSettingsUpdate}/>
+          </FormElement>
           <hr/>
           <FormToggle
             id="prefs.app.debug"
