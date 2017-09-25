@@ -48,7 +48,7 @@ class Editor extends PureComponent {
     return EditorState.fromJSON({ schema, plugins }, state)
   }
 
-  isEmpty(doc) {
+  isBlank(doc) {
     if (doc.childCount !== 1) return false
     if (!doc.firstChild.isTextblock) return false
     if (doc.firstChild.content.size !== 0) return false
@@ -96,7 +96,7 @@ class Editor extends PureComponent {
   render() {
     const { isDisabled, placeholder, tabIndex } = this.props
     const state = this.getEditorState()
-    const showPlaceholder = placeholder != null && this.isEmpty(state.doc)
+    const showPlaceholder = placeholder != null && this.isBlank(state.doc)
 
     return (
       <div

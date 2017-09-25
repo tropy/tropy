@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { ItemPanel } = require('./panel')
 const { ItemContainer } = require('./container')
 const { Resizable } = require('../resizable')
-const { PROJECT: { MODE }, SASS: { PANEL } } = require('../../constants')
+const { NOTE, PROJECT: { MODE }, SASS: { PANEL } } = require('../../constants')
 const { pick } = require('../../common/util')
 const debounce = require('lodash.debounce')
 
@@ -30,20 +30,7 @@ class ItemView extends PureComponent {
 
   componentWillReceiveProps(props) {
     if (props.note !== this.props.note) {
-
-      if (!props.note) {
-        this.handleNoteUpdate.flush()
-        return this.setState({ note: getNoteTemplate() })
-      }
-
-      const { note } = this.state
-
-      if (!note.id && note.created && note.created === props.note.created) {
-        return this.setState({ note: { ...note, id: props.note.id } })
-      }
-
-      this.handleNoteUpdate.flush()
-      this.setState({ note: props.note })
+      this.handleNoteUpdate(props.note)
     }
   }
 
@@ -97,23 +84,57 @@ class ItemView extends PureComponent {
     setTimeout(this.notepad.focus, delay)
   }
 
-  handleNoteUpdate = debounce(note => {
-    if (note.text.length) {
-      this.props.onNoteSave(note)
-    }
-  }, 5000)
+  handleNoteUpdate(note) {
+    if (note == null) {
+      this.handleNoteDelete()
+      this.setState({ note: getNoteTemplate() })
 
-  handleNoteChange = (note, hasDocChanged) => {
-    if (hasDocChanged && note.text.length) {
-      if (note.id) {
-        this.handleNoteUpdate(note)
+    } else {
+      const { id, created } = this.state.note
+
+      // On initial save, just merge id into current state.
+      if (id == null && created != null && created === note.created) {
+        return this.setState({
+          note: { ...this.state.note, id: note.id }
+        })
+      }
+
+      if (id != null && id !== note.id) {
+        this.handleNoteDelete()
+      }
+
+      this.setState({ note })
+    }
+  }
+
+  handleNoteDelete(note = this.state.note) {
+    if (note.id != null && note.text.length === 0) {
+      this.handleNoteSave.cancel()
+      this.props.onNoteDelete({
+        photo: note.photo,
+        selection: note.selection,
+        notes: [note.id]
+      })
+    } else {
+      this.handleNoteSave.flush()
+    }
+  }
+
+  handleNoteSave = debounce(note => {
+    this.props.onNoteSave(note)
+  }, NOTE.AUTOSAVE_DELAY)
+
+  handleNoteChange = (note, hasDocChanged, isDocBlank) => {
+    if (hasDocChanged) {
+      if (note.id != null) {
+        if (isDocBlank) this.handleNoteSave.cancel()
+        else this.handleNoteSave(note)
 
       } else {
-        if (!note.created) {
+        if (note.created == null && !isDocBlank) {
           note.created = Date.now()
           note.photo = this.props.photo.id
           note.selection = this.props.activeSelection
-
           this.props.onNoteCreate(note)
         }
       }
@@ -187,6 +208,7 @@ class ItemView extends PureComponent {
     isTrashSelected: bool.isRequired,
 
     onNoteCreate: func.isRequired,
+    onNoteDelete: func.isRequired,
     onNoteSave: func.isRequired,
     onNoteSelect: func.isRequired,
     onPanelResize: func.isRequired,

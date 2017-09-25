@@ -25,7 +25,7 @@ const mod = {
               state,
               text,
               language,
-              modified
+              datetime(modified, "localtime") AS modified
             FROM notes
               LEFT OUTER JOIN photos USING (id)
               LEFT OUTER JOIN selections USING (id)
@@ -33,9 +33,13 @@ const mod = {
               AND deleted IS NULL
             ORDER BY created ASC`,
 
-          ({ note, state, ...data }) => {
-            notes[note] = {
-              ...data, id: note, state: json(state), deleted: false
+          ({ note: id, modified, state, ...data }) => {
+            notes[id] = {
+              ...data,
+              id,
+              modified: new Date(modified),
+              state: json(state),
+              deleted: false
             }
           }
         )
@@ -44,11 +48,12 @@ const mod = {
       return notes
     },
 
-    async save(db, { id, state, text }) {
+    async save(db, { id, state, text }, timestamp = Date.now()) {
       return db.run(`
         UPDATE notes
-          SET state = ?, text = ?, modified = datetime("now")
-          WHERE note_id = ?`, stringify(state), text, id
+          SET state = ?, text = ?, modified = datetime(?)
+          WHERE note_id = ?`,
+          stringify(state), text, new Date(timestamp).toISOString(), id
       )
     },
 

@@ -6,6 +6,7 @@ const mod = require('../models')
 const act = require('../actions')
 const { NOTE } = require('../constants')
 const { getSelectableNoteId } = require('../selectors')
+const { blank } = require('../common/util')
 
 
 class Load extends Command {
@@ -57,7 +58,10 @@ class Save extends Command {
     const original = yield select(({ notes }) => notes[id])
     const data = { id, state, text }
 
-    yield call(mod.note.save, db, data)
+    if (!blank(text)) {
+      yield call(mod.note.save, db, data)
+    }
+
     yield put(act.note.update(data))
 
     this.undo = act.note.save({

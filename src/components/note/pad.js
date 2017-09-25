@@ -2,9 +2,8 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { bool, func, number, object, shape } = require('prop-types')
+const { bool, func, number, object, shape, string } = require('prop-types')
 const { Editor } = require('../editor')
-const cx = require('classnames')
 const { TABS } = require('../../constants')
 
 
@@ -28,14 +27,14 @@ class NotePad extends PureComponent {
       note.text = state.doc.textBetween(0, state.doc.content.size, ' ')
     }
 
-    this.props.onChange(note, hasDocChanged)
+    this.props.onChange(note, hasDocChanged, note.text.length === 0)
   }
 
   render() {
     const { note, keymap, tabIndex } = this.props
 
     return (
-      <section className={cx({ note: true, pad: true })}>
+      <section className="note pad">
         <Editor
           ref={this.setEditor}
           state={note.state}
@@ -53,7 +52,8 @@ class NotePad extends PureComponent {
     isItemOpen: bool,
     keymap: object.isRequired,
     note: shape({
-      state: object
+      state: object,
+      text: string.isRequried
     }).isRequired,
     tabIndex: number.isRequired,
     onChange: func.isRequired
