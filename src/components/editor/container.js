@@ -2,11 +2,11 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { FormattedMessage } = require('react-intl')
 const { func, bool, object, number, string } = require('prop-types')
 const { EditorToolbar } = require('./toolbar')
 const { EditorState } = require('prosemirror-state')
 const { EditorView } = require('./view')
+const { Placeholder } = require('../placeholder')
 const { schema } = require('./schema')
 const commands = require('./commands')(schema)
 const plugins = require('./plugins')(schema)
@@ -111,10 +111,7 @@ class Editor extends PureComponent {
         }
 
         <div className="scroll-container">
-          {showPlaceholder &&
-            <div className="placeholder">
-              <FormattedMessage id={placeholder}/>
-            </div>}
+          {showPlaceholder && <Placeholder id={placeholder}/>}
           <EditorView
             ref={this.setView}
             state={state}
