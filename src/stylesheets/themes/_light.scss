@@ -55,6 +55,8 @@ $shade-10: #000; // Black
   #{--shade-1-darken-14}:  darken($shade-1, 14%); // 18% Vocab property input border
   #{--shade-1-darken-18}:  darken($shade-1, 18%); // 22% Vocab property input border
   #{--shade-2}:            $shade-2;
+  #{--shade-2-lighten-4}:  lighten($shade-2, 4%); // Esper slider handle bg
+  #{--shade-2-darken-10}:  darken($shade-2, 10%); // Esper toolbar border
   #{--shade-3}:            $shade-3;
   #{--shade-3-darken-5}:   darken($shade-3, 5%); // Thumbnail bg
   #{--shade-4}:            $shade-4;
@@ -281,16 +283,21 @@ $slider-handle-border: var(--shade-10-20);
 $slider-value-color:   var(--shade-8);
 
 // Esper
-$esper-bg:                   var(--shade-2);
-$esper-toolbar-bg:           var(--shade-0-60);
-$esper-icon-color:           var(--shade-7);
-$esper-btn-active-color:     var(--shade-0);
-$esper-btn-active-bg:        var(--shade-10-60);
-$esper-slider-track-bg:      var(--shade-10-20);
-$esper-slider-range-bg:      var(--shade-7);
-$esper-slider-handle-bg:     var(--shade-7);
-$esper-slider-handle-border: var(--transparent);
-$esper-slider-value-color:   var(--shade-7);
+$esper-bg:                                   var(--shade-2);
+$esper-toolbar-shadow:                       var(--shade-10-10);
+$esper-btn-active-color:                     var(--shade-7);
+$esper-btn-active-bg:                        var(--shade-4);
+$esper-slider-handle-bg:                     var(--shade-2-lighten-4);
+$esper-slider-value-color:                   var(--shade-6);
+$esper-toolbar-overlay-btn-active-color:     var(--shade-0);
+$esper-toolbar-overlay-bg:                   var(--shade-0-60);
+$esper-toolbar-overlay-icon-color:           var(--shade-7);
+$esper-toolbar-overlay-btn-active-bg:        var(--shade-10-60);
+$esper-toolbar-overlay-slider-track-bg:      var(--shade-10-20);
+$esper-toolbar-overlay-slider-range-bg:      var(--shade-7);
+$esper-toolbar-overlay-slider-handle-bg:     var(--shade-7);
+$esper-toolbar-overlay-slider-handle-border: var(--transparent);
+$esper-toolbar-overlay-slider-value-color:   var(--shade-7);
 
 // Drag preview
 $drag-preview-opacity:           0.8;

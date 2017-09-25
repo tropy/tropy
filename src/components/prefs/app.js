@@ -68,6 +68,7 @@ class AppPrefs extends PureComponent {
             value={this.props.settings.theme}
             options={this.props.themes}
             onChange={this.handleThemeChange}/>
+          <hr/>
           <FormToggle
             id="prefs.app.invertScroll"
             name="invertScroll"
