@@ -95,6 +95,12 @@ class Esper extends PureComponent {
     return true
   }
 
+  get classes() {
+    return ['esper', this.state.tool, {
+      'overlay-toolbar': this.props.hasOverlayToolbar
+    }]
+  }
+
   get isEmpty() {
     return this.props.photo == null || this.props.photo.pending === true
   }
@@ -498,7 +504,7 @@ class Esper extends PureComponent {
     return (
       <section
         tabIndex={this.props.tabIndex}
-        className={cx(['esper', tool])}
+        className={cx(this.classes)}
         onKeyDown={this.handleKeyDown}
         onKeyUp={this.handleKeyUp}>
         <EsperHeader>
@@ -533,6 +539,7 @@ class Esper extends PureComponent {
   }
 
   static propTypes = {
+    hasOverlayToolbar: bool,
     isDisabled: bool,
     invertMouseWheel: bool.isRequired,
     keymap: object.isRequired,

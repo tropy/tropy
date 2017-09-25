@@ -46,6 +46,7 @@ class ItemContainer extends PureComponent {
           onChange={this.handleEsperResize}
           min={256}>
           <Esper {...this.props.image}
+            hasOverlayToolbar
             isDisabled={this.props.isDisabled}
             keymap={this.props.keymap.Esper}
             photo={this.props.photo}
