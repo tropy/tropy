@@ -21,7 +21,7 @@ const {
   IconArrow,
   IconSelection,
   IconRotate,
-  IconNut,
+  // IconNut,
   IconHand,
   IconMirror,
   IconMinusCircle,
