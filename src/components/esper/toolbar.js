@@ -100,9 +100,9 @@ class EsperToolbar extends PureComponent {
               title="esper.tool.mirror"
               isDisabled={this.props.isDisabled}
               onClick={this.props.onMirrorChange}/>
-            <IconButton
+            {/*<IconButton
               icon={<IconNut/>}
-              isDisabled/>
+              isDisabled/>*/}
           </ToolGroup>
           <ToolGroup>
             <IconButton
