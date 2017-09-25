@@ -30,7 +30,7 @@ const format = {
       if (blank(value)) return value
       const date = (value instanceof Date) ? value : edtf(value)
 
-      if (date.getUTCFullYear() < 1000) {
+      if (date.getUTCFullYear() < 1300) {
         options = { ...options, era: 'short' }
       }
 
