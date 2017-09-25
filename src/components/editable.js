@@ -49,6 +49,7 @@ class Editable extends PureComponent {
     autofocus: bool,
     isDisabled: bool,
     isEditing: bool,
+    resize: bool,
     value: oneOfType([string, number]),
     display: string,
     onCancel: func.isRequired,

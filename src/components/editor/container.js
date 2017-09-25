@@ -2,17 +2,17 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { func, bool, object, number } = PropTypes
+const { func, bool, object, number, string } = require('prop-types')
 const { EditorToolbar } = require('./toolbar')
 const { EditorState } = require('prosemirror-state')
 const { EditorView } = require('./view')
+const { Placeholder } = require('../placeholder')
 const { schema } = require('./schema')
 const commands = require('./commands')(schema)
 const plugins = require('./plugins')(schema)
 const { match } = require('../../keymap')
 const cx = require('classnames')
-const { noop } = require('../../common/util')
+const { get, noop } = require('../../common/util')
 
 
 class Editor extends PureComponent {
@@ -26,7 +26,7 @@ class Editor extends PureComponent {
   }
 
   setView = (view) => {
-    this.view = view.pm
+    this.view = get(view, ['pm'])
   }
 
   get classes() {
@@ -46,6 +46,13 @@ class Editor extends PureComponent {
     }
 
     return EditorState.fromJSON({ schema, plugins }, state)
+  }
+
+  isBlank(doc) {
+    if (doc.childCount !== 1) return false
+    if (!doc.firstChild.isTextblock) return false
+    if (doc.firstChild.content.size !== 0) return false
+    return true
   }
 
   focus = () => {
@@ -87,8 +94,9 @@ class Editor extends PureComponent {
   }
 
   render() {
-    const { isDisabled, tabIndex } = this.props
+    const { isDisabled, placeholder, tabIndex } = this.props
     const state = this.getEditorState()
+    const showPlaceholder = placeholder != null && this.isBlank(state.doc)
 
     return (
       <div
@@ -103,6 +111,7 @@ class Editor extends PureComponent {
         }
 
         <div className="scroll-container">
+          {showPlaceholder && <Placeholder id={placeholder}/>}
           <EditorView
             ref={this.setView}
             state={state}
@@ -118,10 +127,11 @@ class Editor extends PureComponent {
   }
 
   static propTypes = {
-    state: object,
     isDisabled: bool,
     keymap: object.isRequired,
     onChange: func.isRequired,
+    placeholder: string,
+    state: object,
     tabIndex: number.isRequired
   }
 

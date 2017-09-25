@@ -110,6 +110,8 @@ const ESPER = {
   ROTATE_DURATION: 250,
   MAX_ZOOM: 4,
   MIN_ZOOM: 1,
+  PAN_STEP_SIZE: 10,
+  PAN_DURATION: 250,
   SYNC_DURATION: 600,
   ZOOM_LINEAR_MAX: 1.96,
   ZOOM_SLIDER_PRECISION: 100,
@@ -136,13 +138,25 @@ const ESPER = {
       default: 'grab',
       active: 'grabbing',
       x: '9',
-      y: '10'
+      y: '9'
     },
     select: {
       default: 'crosshairs',
       active: 'crosshairs',
       x: '7',
       y: '7'
+    },
+    zoomIn: {
+      default: 'zoom-in',
+      active: 'zoom-in',
+      x: '8',
+      y: '8'
+    },
+    zoomOut: {
+      default: 'zoom-out',
+      active: 'zoom-out',
+      x: '8',
+      y: '8'
     }
   }
 }

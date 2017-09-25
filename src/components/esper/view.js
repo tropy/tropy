@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
+const { Component } = React
 const { array, func, object, string } = require('prop-types')
 const { append, bounds, createDragHandler } = require('../../dom')
 const css = require('../../css')
@@ -25,7 +25,7 @@ const {
 } = require('../../constants/sass')
 
 
-class EsperView extends PureComponent {
+class EsperView extends Component {
   componentDidMount() {
     const { width, height } = bounds(this.container)
 
@@ -451,7 +451,7 @@ class EsperView extends PureComponent {
   handleDragStop = (_, wasCancelled) => {
     try {
       if (this.isDragging) {
-        const { target, tool } = this.drag.current
+        const { origin, target, tool } = this.drag.current
         target.cursor = this.props.tool
 
         switch (tool) {
@@ -461,6 +461,12 @@ class EsperView extends PureComponent {
             break
           case TOOL.SELECT:
             this.handleSelectStop(wasCancelled)
+            break
+          case TOOL.ZOOM_IN:
+            if (!wasCancelled) this.props.onZoomIn(origin.mov)
+            break
+          case TOOL.ZOOM_OUT:
+            if (!wasCancelled) this.props.onZoomOut(origin.mov)
             break
         }
       }
@@ -550,7 +556,9 @@ class EsperView extends PureComponent {
     onDoubleClick: func.isRequired,
     onSelectionCreate: func.isRequired,
     onSelectionActivate: func.isRequired,
-    onWheel: func.isRequired
+    onWheel: func.isRequired,
+    onZoomIn: func.isRequired,
+    onZoomOut: func.isRequired
   }
 }
 

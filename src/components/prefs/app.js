@@ -2,13 +2,24 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { array, arrayOf, func, shape, string } = require('prop-types')
-const { FormElement, FormSelect, FormToggleGroup } = require('../form')
+const { array, arrayOf, bool, func, shape, string } = require('prop-types')
 const { TemplateSelect } = require('../template/select')
 const { ipcRenderer: ipc } = require('electron')
 
+const {
+  FormElement,
+  FormSelect,
+  FormToggle,
+  FormToggleGroup,
+  Toggle
+} = require('../form')
+
 
 class AppPrefs extends PureComponent {
+  handleDebugChange() {
+    ipc.send('cmd', 'app:toggle-debug-flag')
+  }
+
   handleThemeChange = ({ theme }) => {
     ipc.send('cmd', 'app:switch-theme', theme, theme)
   }
@@ -43,6 +54,7 @@ class AppPrefs extends PureComponent {
               selected={this.props.settings.photoTemplate}
               onChange={this.handlePhotoTemplateChange}/>
           </FormElement>
+          <hr/>
           <FormToggleGroup
             id="prefs.app.dup"
             name="dup"
@@ -57,6 +69,31 @@ class AppPrefs extends PureComponent {
             value={this.props.settings.theme}
             options={this.props.themes}
             onChange={this.handleThemeChange}/>
+          <hr/>
+          <FormElement>
+            <Toggle
+              id="prefs.app.invertScroll"
+              name="invertScroll"
+              value={this.props.settings.invertScroll}
+              onChange={this.props.onSettingsUpdate}/>
+            <Toggle
+              id="prefs.app.invertZoom"
+              name="invertZoom"
+              value={this.props.settings.invertZoom}
+              onChange={this.props.onSettingsUpdate}/>
+            <Toggle
+              id="prefs.app.overlayToolbars"
+              name="overlayToolbars"
+              value={this.props.settings.overlayToolbars}
+              onChange={this.props.onSettingsUpdate}/>
+          </FormElement>
+          <hr/>
+          <FormToggle
+            id="prefs.app.debug"
+            name="debug"
+            isDisabled={ARGS.dev}
+            value={this.props.settings.debug || ARGS.dev}
+            onChange={this.handleDebugChange}/>
         </div>
       </div>
     )
@@ -66,6 +103,7 @@ class AppPrefs extends PureComponent {
     itemTemplates: array.isRequired,
     photoTemplates: array.isRequired,
     settings: shape({
+      debug: bool.isRequired,
       theme: string.isRequired,
     }).isRequired,
     themes: arrayOf(string).isRequired,

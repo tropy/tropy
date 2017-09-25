@@ -8,11 +8,29 @@ const { omit } = require('../common/util')
 
 module.exports = {
   undo(payload, meta) {
-    return { type: UNDO, payload, meta: { ipc: CHANGED, ...meta } }
+    return (dispatch, getState) => {
+      const { history } = getState()
+      if (history.past.length > 0) {
+        dispatch({
+          type: UNDO,
+          payload,
+          meta: { ipc: CHANGED, ...meta }
+        })
+      }
+    }
   },
 
   redo(payload, meta) {
-    return { type: REDO, payload, meta: { ipc: CHANGED, ...meta } }
+    return (dispatch, getState) => {
+      const { history } = getState()
+      if (history.future.length > 0) {
+        dispatch({
+          type: REDO,
+          payload,
+          meta: { ipc: CHANGED, ...meta }
+        })
+      }
+    }
   },
 
   tick({ undo, redo }, mode = 'add', meta) {

@@ -6,6 +6,7 @@ const { basename, join, resolve } = require('path')
 const { existsSync: exists } = require('fs')
 const { EL_CAPITAN, darwin } = require('./common/os')
 const { EventEmitter } = require('events')
+const args = require('./args')
 
 const {
   $$, append, emit, create, isInput, on, once, toggle, stylesheet, remove
@@ -108,6 +109,10 @@ class Window extends EventEmitter {
       .on('theme', (_, theme) => {
         this.style(theme, true)
       })
+      .on('debug', (_, debug) => {
+        args.update({ debug })
+        this.emit('settings.update', { debug })
+      })
       .on('scrollbars', (_, scrollbars) => {
         this.setScrollBarStyle(scrollbars)
         this.style(false, true)
@@ -160,6 +165,7 @@ class Window extends EventEmitter {
   handleEditorCommands() {
     on(document, 'keydown', event => {
       if (!isCommand(event)) return
+      if (event.defaultPrevented) return
 
       switch (event.key) {
         case 'z':
@@ -223,8 +229,7 @@ class Window extends EventEmitter {
   style(theme, prune = false, done) {
     if (theme) {
       this.state.theme = theme
-      ARGS.theme = this.state.theme
-      window.location.hash = encodeURIComponent(JSON.stringify(ARGS))
+      args.update({ theme })
     }
 
     if (prune) {
@@ -240,7 +245,7 @@ class Window extends EventEmitter {
       }
     }
 
-    this.emit('style.update', this.state.theme)
+    this.emit('settings.update', { theme: this.state.theme })
 
     if (done == null) return
 

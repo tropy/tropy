@@ -2,8 +2,7 @@
 
 const React = require('react')
 const { Component } = React
-const PropTypes = require('prop-types')
-const { func, bool, instanceOf, number } = PropTypes
+const { func, bool, instanceOf, number } = require('prop-types')
 const { EditorView } = require('prosemirror-view')
 const { EditorState } = require('prosemirror-state')
 
@@ -15,7 +14,7 @@ class ProseMirror extends Component {
       ...this.getEditorProps(),
       dispatchTransaction: this.handleChange,
       handleKeyDown: this.handleKeyDown,
-      handleDOM: {
+      handleDOMEvents: {
         focus: this.handleFocus,
         blur: this.handleBlur
       }
@@ -28,7 +27,7 @@ class ProseMirror extends Component {
 
   shouldComponentUpdate(props) {
     const { state, isDisabled, tabIndex } = props
-    const wasDisabled = this.props
+    const wasDisabled = this.props.isDisabled
 
     if (
       isDisabled !== wasDisabled ||
@@ -72,6 +71,7 @@ class ProseMirror extends Component {
   }
 
   handleBlur = (...args) => {
+    getSelection().removeAllRanges()
     this.props.onBlur(...args)
   }
 
@@ -81,11 +81,9 @@ class ProseMirror extends Component {
     )
   }
 
-  static displayName = 'EditorView'
-
   static propTypes = {
-    state: instanceOf(EditorState),
     isDisabled: bool,
+    state: instanceOf(EditorState),
     tabIndex: number.isRequired,
     onBlur: func.isRequired,
     onChange: func.isRequired,

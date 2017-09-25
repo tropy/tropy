@@ -18,6 +18,11 @@ panel:
     create: Add Photos
   notes: Notes
 
+project:
+  none: Drop a project file here or create a {newProject}
+  empty: Drop your photos into Tropy to get started
+  new: new project
+
 wizard:
   project:
     title: Create a new project
@@ -30,6 +35,9 @@ prefs:
   title: Tropy Preferences
   app:
     label: Global
+    invertScroll: Invert direction when scrolling in photos
+    invertZoom: Invert direction when zooming in photos
+    overlayToolbars: Automatically hide and show toolbars
     style:
       theme: Theme
       themes:
@@ -38,6 +46,7 @@ prefs:
     template:
       item: Default Item Template
       photo: Default Photo Template
+    debug: Enable Developer Mode
     dup:
       label: During Import
       option:
@@ -101,6 +110,8 @@ esper:
     fill: Fill
     fit: Fit
     zoom: Zoom
+notepad:
+  placeholder: Add your notes here …
 
 template:
   id: URI

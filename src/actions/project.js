@@ -1,15 +1,20 @@
 'use strict'
 
-const {
-  OPEN, OPENED, CLOSE, CLOSED, SAVE, UPDATE
-} =  require('../constants/project')
+const { PROJECT } =  require('../constants')
 
 
 module.exports = {
+  create(payload, meta) {
+    return {
+      type: PROJECT.CREATE,
+      payload,
+      meta: { ipc: true, ...meta }
+    }
+  },
 
   opened(payload, meta) {
     return {
-      type: OPENED,
+      type: PROJECT.OPENED,
       error: (payload instanceof Error),
       payload,
       meta: { ipc: true, ...meta }
@@ -17,16 +22,16 @@ module.exports = {
   },
 
   open(payload, meta) {
-    return { type: OPEN, payload, meta }
+    return { type: PROJECT.OPEN, payload, meta }
   },
 
   closed(payload, meta) {
-    return { type: CLOSED, payload, meta }
+    return { type: PROJECT.CLOSED, payload, meta }
   },
 
   close(payload, meta) {
     return {
-      type: CLOSE,
+      type: PROJECT.CLOSE,
       payload,
       meta,
       error: payload instanceof Error
@@ -35,7 +40,7 @@ module.exports = {
 
   save(payload, meta) {
     return {
-      type: SAVE,
+      type: PROJECT.SAVE,
       payload,
       meta: {
         cmd: 'project',
@@ -47,7 +52,7 @@ module.exports = {
 
   update(payload, meta) {
     return {
-      type: UPDATE,
+      type: PROJECT.UPDATE,
       payload,
       meta: { ipc: true, ...meta }
     }

@@ -2,16 +2,9 @@
 
 const START = performance.now()
 
-{
-  const decode = decodeURIComponent
-  const hash = window.location.hash.slice(1)
-
-  global.ARGS = JSON.parse(decode(hash))
-  process.env.NODE_ENV = ARGS.environment
-}
-
+const { home, dev } = require('./args').parse()
 const { join } = require('path')
-const LOGDIR = join(ARGS.home, 'log')
+const LOGDIR = join(home, 'log')
 
 const { verbose } = require('./common/log')(LOGDIR)
 const { ready } = require('./dom')
@@ -32,7 +25,7 @@ ready.then(() => {
 })
 
 
-if (ARGS.dev) {
+if (dev) {
   if (process.platform !== 'linux') {
     const { remote } = require('electron')
 

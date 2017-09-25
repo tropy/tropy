@@ -118,7 +118,7 @@ class Menu {
           break
 
         case 'dev':
-          item.visible = (this.app.dev || ARGS.debug)
+          item.visible = (this.app.dev || this.app.debug)
           break
 
         case 'theme':
@@ -133,7 +133,7 @@ class Menu {
         case 'undo':
           if (this.app.history.past > 0) {
             item.enabled = true
-            item.label = `${item.label} ${this.app.history.undo}`
+            // item.label = `${item.label} ${this.app.history.undo}`
           } else {
             item.enabled = false
           }
@@ -142,7 +142,7 @@ class Menu {
         case 'redo':
           if (this.app.history.future > 0) {
             item.enabled = true
-            item.label = `${item.label} ${this.app.history.redo}`
+            // item.label = `${item.label} ${this.app.history.redo}`
           } else {
             item.enabled = false
           }
@@ -232,7 +232,7 @@ class ContextMenu extends Menu {
   }
 
   prepare(template, settings) {
-    if (this.app.dev) {
+    if (this.app.dev || this.app.debug) {
       settings = [...settings, 'dev']
     }
 

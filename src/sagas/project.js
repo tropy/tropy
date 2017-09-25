@@ -16,6 +16,7 @@ const mod = require('../models')
 const act = require('../actions')
 const storage = require('./storage')
 const { onErrorPut } = require('./db')
+const args = require('../args')
 
 const {
   all, fork, cancel, call, put, take, takeEvery: every, race
@@ -46,8 +47,7 @@ function *open(file) {
 
     // Update window's global ARGS to allow reloading the project!
     if (db.path !== ARGS.file) {
-      ARGS.file = db.path
-      window.location.hash = encodeURIComponent(JSON.stringify(ARGS))
+      args.update({ file: db.path })
     }
 
     const cache = new Cache(ARGS.cache, project.id)
@@ -154,7 +154,7 @@ function *main() {
         task = null
       }
 
-      if (type === CLOSE && !error) break
+      if (type === CLOSE && !(error || payload === 'debug')) break
 
       if (type === OPEN) {
         task = yield fork(open, payload)

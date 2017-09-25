@@ -3,6 +3,10 @@
 // --------------------------------------------------
 
 .vocab {
+  a {
+    color: $vocab-link-color;
+  }
+
   .panel {
     background-color: $vocab-panel-bg;
   }

@@ -5,26 +5,83 @@
 // --------------------------------------------------
 
 .esper {
-  height: 100%;
+  flex: 1 1 0;
   background: $esper-bg;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
   position: relative;
   overflow: hidden;
 
-  .esper-header.draggable {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    z-index: $zindex-esper-header;
+  .toolbar {
+    box-sizing: content-box;
+    padding-top: 0;
+    height: $toolbar-height;
+    margin: 0;
+    box-shadow: 0 1px 0 $esper-toolbar-shadow;
+
+    .btn-icon {
+      & + .btn-icon {
+        margin-left: $space-min / 2;
+      }
+    }
+
+    .tool-group {
+      > .btn-icon {
+        &.active {
+          background: $esper-btn-active-bg;
+
+          .icon {
+             color: $esper-btn-active-color;
+          }
+
+        }
+      }
+
+      & + .tool-group {
+        margin-left: $space-lg;
+      }
+    }
+
+    .slider {
+      margin-top: 0;
+      height: $toolbar-height;
+    }
+
+    .slider-handle {
+      background-color: $esper-slider-handle-bg;
+    }
+
+    .slider-value {
+      color: $esper-slider-value-color;
+    }
+  }
+
+  .esper-view {
+    flex: 1 1 0;
+    position: relative;
+
+    canvas {
+      position: absolute;
+    }
+  }
+
+  &.overlay-toolbar {
+    .esper-header {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      z-index: $zindex-esper-header;
+
+      &.window-draggable {
+        position: absolute;
+      }
+    }
 
     .toolbar {
-      background: $esper-toolbar-bg;
+      background: $esper-toolbar-overlay-bg;
+      box-shadow: none;
       transform: translate3d(0, -100%, 0);
-      padding-top: 0;
-      height: $toolbar-height;
       transition: transform $esper-toolbar-transition-out;
 
       @at-root #{selector-replace(&, ".esper", ".esper:hover")} {
@@ -32,34 +89,56 @@
         transition: transform $esper-toolbar-transition-in;
       }
 
+      .btn-icon {
+        .icon {
+          color: $esper-toolbar-overlay-icon-color;
+        }
+
+        &:active {
+          .icon {
+            color: $icon-active-color;
+          }
+
+          &[disabled] {
+            .icon {
+              color: $esper-toolbar-overlay-icon-color;
+            }
+          }
+        }
+      }
+
       .tool-group {
+        > .btn-icon {
+          &.active {
+            background: $esper-toolbar-overlay-btn-active-bg;
+
+            .icon {
+              color: $esper-toolbar-overlay-btn-active-color;
+            }
+          }
+        }
+
         & + .tool-group {
           margin-left: $space-lg;
         }
       }
 
-      .btn-icon {
-        & + .btn-icon {
-          margin-left: $space-min / 2;
-        }
+      .slider-track {
+        background: $esper-toolbar-overlay-slider-track-bg;
       }
 
-      .icon:not(:active) {
-        color: $esper-icon-color;
+      .slider-range {
+        background: $esper-toolbar-overlay-slider-range-bg;
       }
 
-      .slider {
-        margin-top: 0;
+      .slider-handle {
+        background-color: $esper-toolbar-overlay-slider-handle-bg;
+        border-color: $esper-toolbar-overlay-slider-handle-border;
       }
-    }
-  }
 
-  .esper-view {
-    width: 100%;
-    height: 100%;
-
-    canvas {
-      position: absolute;
+      .slider-value {
+        color: $esper-toolbar-overlay-slider-value-color;
+      }
     }
   }
 
@@ -72,40 +151,5 @@
         ) map-get($val, "x") map-get($val, "y"), default;
       }
     }
-  }
-
-  .toolbar {
-    .tool-group {
-      > .btn-icon {
-        &.active {
-          background: $esper-btn-active-bg;
-
-          .icon {
-            color: $esper-btn-active-color;
-          }
-        }
-      }
-    }
-  }
-
-  .slider {
-    height: $toolbar-height;
-  }
-
-  .slider-track {
-    background: $esper-slider-track-bg;
-  }
-
-  .slider-range {
-    background: $esper-slider-range-bg;
-  }
-
-  .slider-handle {
-    background-color: $esper-slider-handle-bg;
-    border-color: $esper-slider-handle-border;
-  }
-
-  .slider-value {
-    color: $esper-slider-value-color;
   }
 }

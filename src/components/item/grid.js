@@ -55,6 +55,8 @@ class ItemGrid extends ItemIterator {
 
 
   render() {
+    if (this.props.isEmpty) return this.renderNoItems()
+
     return this.connect(
       <div
         className={cx(this.classes)}

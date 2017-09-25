@@ -3,10 +3,14 @@
 const { SETTINGS, ITEM, PHOTO } = require('../constants')
 
 const defaults = {
+  debug: ARGS.debug,
   dup: 'prompt',
   itemTemplate: ITEM.TEMPLATE,
   photoTemplate: PHOTO.TEMPLATE,
-  theme: ARGS.theme
+  theme: ARGS.theme,
+  overlayToolbars: true,
+  invertScroll: true,
+  invertZoom: false
 }
 
 module.exports = {

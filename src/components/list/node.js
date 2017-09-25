@@ -78,6 +78,7 @@ class ListNode extends PureComponent {
           <Editable
             value={list.name}
             isRequired
+            resize
             isEditing={isEditing}
             onCancel={onEditCancel}
             onChange={this.handleChange}/>

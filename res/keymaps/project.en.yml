@@ -1,4 +1,16 @@
 linux: &linux
+  Esper: &Esper
+    zoomIn:
+      - CmdOrCtrl-+
+      - Shift-CmdOrCtrl-+
+    zoomOut:
+      - CmdOrCtrl+-
+      - Shift+CmdOrCtrl+-
+    up: ArrowUp
+    down: ArrowDown
+    left: ArrowLeft
+    right: ArrowRight
+    quicktool: Space
   Sidebar: &Sidebar
     next: ArrowDown
     prev: ArrowUp
@@ -71,6 +83,7 @@ linux: &linux
       - Delete
     commit: Enter
 darwin:
+  Esper: *Esper
   Sidebar: *Sidebar
   ItemIterator:
     up: ArrowUp

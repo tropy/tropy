@@ -14,7 +14,7 @@ module.exports = {
       const cmd = yield exec(action, options)
       const { type, meta } = action
 
-      yield put(activity.done(action, cmd.error || cmd.result))
+      yield put(activity.done(action, cmd.error || cmd.result, cmd.meta))
 
       if (meta.history && cmd.isomorph) {
         yield put(history.tick(cmd.history(), meta.history))

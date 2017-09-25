@@ -101,6 +101,7 @@ class ItemTableCell extends PureComponent {
           <Editable
             value={value}
             display={auto(value, type)}
+            resize
             isEditing={isEditing}
             isDisabled={isDisabled}
             onCancel={onCancel}

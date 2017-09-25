@@ -34,8 +34,8 @@ win.on('app.undo', () => {
 win.on('app.redo', () => {
   store.dispatch(act.history.redo())
 })
-win.on('style.update', () => {
-  store.dispatch(act.settings.update({ theme: win.state.theme }))
+win.on('settings.update', (settings) => {
+  store.dispatch(act.settings.update(settings))
 })
 
 win.unloaders.push(dialog.stop)

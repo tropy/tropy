@@ -8,6 +8,7 @@ const { ItemView } = require('../item')
 const { DragLayer } = require('../drag-layer')
 const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
+const { NoProject } = require('./none')
 const { extname } = require('path')
 const { MODE } = require('../../constants/project')
 const { ensure, reflow } = require('../../dom')
@@ -15,6 +16,7 @@ const { win } = require('../../window')
 const cx = require('classnames')
 const { values } = Object
 const actions = require('../../actions')
+const debounce = require('lodash.debounce')
 
 const {
   getActivities,
@@ -39,6 +41,7 @@ class ProjectContainer extends PureComponent {
     super(props)
 
     this.state = {
+      isClosed: props.project.closed != null,
       mode: props.nav.mode,
       offset: props.ui.panel.width,
       willModeChange: false,
@@ -46,7 +49,11 @@ class ProjectContainer extends PureComponent {
     }
   }
 
-  componentWillReceiveProps({ nav, ui }) {
+  componentWillUnmount() {
+    this.projectWillChange.cancel()
+  }
+
+  componentWillReceiveProps({ nav, project, ui }) {
     if (nav.mode !== this.props.nav.mode) {
       this.modeWillChange()
     }
@@ -54,21 +61,31 @@ class ProjectContainer extends PureComponent {
     if (this.props.ui.panel !== ui.panel) {
       this.setState({ offset: ui.panel.width })
     }
+
+    if (project !== this.props.project) {
+      this.projectWillChange(project)
+    }
   }
 
   get classes() {
-    const { isOver, canDrop } = this.props
-    const { willModeChange, isModeChanging } = this.state
+    const { isOver, canDrop, nav } = this.props
+    const { mode, willModeChange, isModeChanging } = this.state
 
     return {
       project: true,
+      empty: this.isEmpty,
       over: isOver && canDrop,
-      [`${this.state.mode}-mode`]: true,
-      [`${this.state.mode}-mode-leave`]: willModeChange,
-      [`${this.state.mode}-mode-leave-active`]: isModeChanging,
-      [`${this.props.nav.mode}-mode-enter`]: willModeChange,
-      [`${this.props.nav.mode}-mode-enter-active`]: isModeChanging
+      [`${mode}-mode`]: true,
+      [`${mode}-mode-leave`]: willModeChange,
+      [`${mode}-mode-leave-active`]: isModeChanging,
+      [`${nav.mode}-mode-enter`]: willModeChange,
+      [`${nav.mode}-mode-enter-active`]: isModeChanging
     }
+  }
+
+  get isEmpty() {
+    return this.props.project.id != null &&
+      this.props.project.items === 0
   }
 
   modeWillChange() {
@@ -96,6 +113,10 @@ class ProjectContainer extends PureComponent {
       isModeChanging: false
     })
   }
+
+  projectWillChange = debounce(project => {
+    this.setState({ isClosed: (project.closed != null) })
+  }, 500, { leading: false })
 
   isMainView = (event) => {
     return event.target.parentNode === this.container
@@ -133,8 +154,19 @@ class ProjectContainer extends PureComponent {
     this.container = container
   }
 
-
+  renderNoProject() {
+    return (
+      <NoProject
+        connect={this.props.dt}
+        canDrop={this.props.canDrop}
+        isOver={this.props.isOver}
+        onProjectCreate={this.props.onProjectCreate}
+        onToolbarDoubleClick={this.props.onMaximize}/>
+    )
+  }
   render() {
+    if (this.state.isClosed) return this.renderNoProject()
+
     const {
       activities,
       columns,
@@ -166,6 +198,7 @@ class ProjectContainer extends PureComponent {
           items={items}
           data={data}
           isActive={this.state.mode === MODE.PROJECT}
+          isEmpty={this.isEmpty}
           columns={columns}
           sidebar={ui.sidebar}
           offset={this.state.offset}
@@ -251,7 +284,9 @@ class ProjectContainer extends PureComponent {
     dt: func.isRequired,
 
     onContextMenu: func.isRequired,
+    onProjectCreate: func.isRequired,
     onProjectOpen: func.isRequired,
+    onMaximize: func.isRequired,
     onModeChange: func.isRequired,
     onMetadataSave: func.isRequired,
     onSort: func.isRequired,
@@ -284,7 +319,7 @@ const DropTargetSpec = {
 
     switch (extname(files[0].path)) {
       case '.tpy':
-        return files[0].path !== project.file
+        return project.closed || files[0].path !== project.file
       case '.ttp':
         return true
       default:
@@ -337,6 +372,10 @@ module.exports = {
 
       onOpenInFolder(...args) {
         dispatch(actions.shell.openInFolder(args))
+      },
+
+      onProjectCreate() {
+        dispatch(actions.project.create())
       },
 
       onProjectOpen(path) {

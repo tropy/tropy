@@ -21,7 +21,7 @@ const {
   IconArrow,
   IconSelection,
   IconRotate,
-  IconNut,
+  // IconNut,
   IconHand,
   IconMirror,
   IconMinusCircle,
@@ -74,7 +74,7 @@ class EsperToolbar extends PureComponent {
 
   render() {
     return (
-      <Toolbar>
+      <Toolbar isDraggable={false}>
         <ToolbarLeft>
           <ToolGroup>
             <IconButton
@@ -100,9 +100,9 @@ class EsperToolbar extends PureComponent {
               title="esper.tool.mirror"
               isDisabled={this.props.isDisabled}
               onClick={this.props.onMirrorChange}/>
-            <IconButton
+            {/*<IconButton
               icon={<IconNut/>}
-              isDisabled/>
+              isDisabled/>*/}
           </ToolGroup>
           <ToolGroup>
             <IconButton

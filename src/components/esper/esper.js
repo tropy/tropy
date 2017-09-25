@@ -7,6 +7,7 @@ const { EsperToolbar } = require('./toolbar')
 const { get, restrict, shallow } = require('../../common/util')
 const { isHorizontal, rotate, round } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
+const { match } = require('../../keymap')
 const { assign } = Object
 const debounce = require('lodash.debounce')
 const throttle = require('lodash.throttle')
@@ -17,12 +18,15 @@ const {
   arrayOf, bool, func, node, number, object, shape, string
 } = require('prop-types')
 
+const { TABS } = require('../../constants')
 const { TOOL, MODE } = require('../../constants/esper')
 
 const {
   ESPER: {
     MAX_ZOOM,
     MIN_ZOOM,
+    PAN_DURATION,
+    PAN_STEP_SIZE,
     ROTATE_DURATION,
     SYNC_DURATION,
     ZOOM_DURATION,
@@ -57,6 +61,7 @@ class Esper extends PureComponent {
 
       switch (true) {
         case (this.shouldViewReset(props, state)):
+          state.quicktool = null
           this.view.reset(state)
           break
         case (this.shouldViewSync(props, state)):
@@ -88,6 +93,12 @@ class Esper extends PureComponent {
     if (props.selection == null) return false
     if (props.tool !== TOOL.SELECT) return false
     return true
+  }
+
+  get classes() {
+    return ['esper', this.state.tool, {
+      'overlay-toolbar': this.props.hasOverlayToolbar
+    }]
   }
 
   get isEmpty() {
@@ -262,6 +273,17 @@ class Esper extends PureComponent {
     this.props.onChange({ image: this.getImageState() })
   }, 650)
 
+  move({ x = 0, y = 0 }, animate) {
+    this.handlePositionChange({
+      x: this.state.x + x,
+      y: this.state.y + y
+    }, animate)
+  }
+
+  zoom(by, animate) {
+    this.handleZoomChange({ zoom: this.state.zoom + by }, animate)
+  }
+
   handleRotationChange = (by) => {
     const state = {
       ...this.state,
@@ -287,6 +309,13 @@ class Esper extends PureComponent {
     this.view.scale({
       zoom, mirror: this.state.mirror
     }, animate ? ZOOM_DURATION : 0, { x, y })
+  }
+
+  handlePositionChange(position, animate) {
+    if (this.state.mode === 'fit') return
+
+    this.setState(position)
+    this.view.move(position, animate ? PAN_DURATION : 0)
   }
 
   handleMirrorChange = () => {
@@ -326,13 +355,15 @@ class Esper extends PureComponent {
 
   handleWheel = ({ x, y, dy, dx, ctrl }) => {
     if (ctrl) {
+      const mw = this.props.invertZoom ? -1 : 1
+
       this.handleZoomChange({
-        x, y, zoom: this.state.zoom + dy * ZOOM_WHEEL_FACTOR
+        x, y, zoom: this.state.zoom + dy * mw * ZOOM_WHEEL_FACTOR
       })
     } else {
-      const mw = this.props.invertMouseWheel ? -1 : 1
+      const mw = this.props.invertScroll ? -1 : 1
 
-      this.view.move({
+      this.handlePositionChange({
         x: this.view.image.x + (dx * mw),
         y: this.view.image.y + (dy * mw)
       })
@@ -340,12 +371,21 @@ class Esper extends PureComponent {
   }
 
   handleDoubleClick = ({ x, y, shift }) => {
-    const step = shift ?
-      -ZOOM_STEP_SIZE : ZOOM_STEP_SIZE
+    return shift ?
+      this.handleZoomOut({ x, y }) :
+      this.handleZoomIn({ x, y })
+  }
 
+  handleZoomIn = ({ x, y }, animate = false) => {
     this.handleZoomChange({
-      x, y, zoom: this.state.zoom + step
-    }, ZOOM_DURATION)
+      x, y, zoom: this.state.zoom + ZOOM_STEP_SIZE
+    }, animate)
+  }
+
+  handleZoomOut = ({ x, y }, animate = false) => {
+    this.handleZoomChange({
+      x, y, zoom: this.state.zoom - ZOOM_STEP_SIZE
+    }, animate)
   }
 
   handleSelectionActivate = (selection) => {
@@ -374,17 +414,107 @@ class Esper extends PureComponent {
     this.setState(state, this.update)
   }
 
+
+  handleKeyDown = (event) => {
+    if (this.state.quicktool != null) {
+      this.handleQuickToolKeyDown(event)
+
+    } else {
+      switch (match(this.props.keymap, event)) {
+        case 'zoomIn':
+          this.zoom(ZOOM_STEP_SIZE)
+          break
+        case 'zoomOut':
+          this.zoom(-ZOOM_STEP_SIZE)
+          break
+        case 'up':
+          this.move({ y: PAN_STEP_SIZE * this.state.zoom })
+          break
+        case 'down':
+          this.move({ y: -PAN_STEP_SIZE * this.state.zoom })
+          break
+        case 'left':
+          this.move({ x: PAN_STEP_SIZE * this.state.zoom })
+          break
+        case 'right':
+          this.move({ x: -PAN_STEP_SIZE * this.state.zoom })
+          break
+        case 'quicktool':
+          this.setState({ quicktool: TOOL.PAN })
+          break
+        default:
+          return
+      }
+    }
+
+    event.preventDefault()
+    event.stopPropagation()
+  }
+
+  handleKeyUp = (event) => {
+    if (this.state.quicktool != null) {
+      this.handleQuickToolKeyUp(event)
+    }
+  }
+
+  handleQuickToolKeyDown({ ctrlKey, metaKey, altKey }) {
+    switch (this.state.quicktool) {
+      case TOOL.PAN:
+        if (ctrlKey || metaKey) {
+          this.setState({ quicktool: altKey ? TOOL.ZOOM_OUT : TOOL.ZOOM_IN })
+        }
+        break
+      case TOOL.ZOOM_IN:
+        if (altKey) {
+          this.setState({ quicktool: TOOL.ZOOM_OUT })
+        }
+        break
+    }
+  }
+
+  // Subtle: On macOS pressing the cmd key suppresses all repeats
+  // on key-down and all key-up events. To work around this, we clear
+  // everything on key-up of cmd/ctrl or by default. The only valid
+  // state without cmd/ctrl is just the space key, which will continue
+  // to repeat as soon as cmd/ctrl are released, so the quicktool
+  // will be initialized straight away on keydown.
+  handleQuickToolKeyUp({ key, ctrlKey, metaKey }) {
+    switch (key) {
+      case ' ':
+      case 'Meta':
+      case 'Control':
+        this.setState({ quicktool: null })
+        break
+      case 'Alt':
+        if (this.state.quicktool === TOOL.ZOOM_OUT) {
+          this.setState({ quicktool: TOOL.ZOOM_IN })
+        }
+        break
+      default:
+        if (!(ctrlKey || metaKey)) {
+          this.setState({ quicktool: null })
+        }
+        break
+    }
+  }
+
+
   render() {
     const { isDisabled, isSelectionActive } = this
+    const tool = this.state.quicktool || this.state.tool
 
     return (
-      <section className={cx(['esper', this.props.tool])}>
+      <section
+        tabIndex={this.props.tabIndex}
+        className={cx(this.classes)}
+        onKeyDown={this.handleKeyDown}
+        onKeyUp={this.handleKeyUp}>
         <EsperHeader>
           <EsperToolbar
             isDisabled={isDisabled}
             isSelectionActive={isSelectionActive}
             mode={this.state.mode}
-            tool={this.props.tool}
+            tool={tool}
             zoom={this.state.zoom}
             minZoom={this.state.minZoom}
             maxZoom={this.props.maxZoom}
@@ -398,19 +528,24 @@ class Esper extends PureComponent {
           ref={this.setView}
           selection={this.props.selection}
           selections={this.props.selections}
-          tool={this.props.tool}
+          tool={tool}
           onChange={this.handleViewChange}
           onSelectionActivate={this.handleSelectionActivate}
           onSelectionCreate={this.handleSelectionCreate}
           onDoubleClick={this.handleDoubleClick}
-          onWheel={this.handleWheel}/>
+          onWheel={this.handleWheel}
+          onZoomIn={this.handleZoomIn}
+          onZoomOut={this.handleZoomOut}/>
       </section>
     )
   }
 
   static propTypes = {
+    hasOverlayToolbar: bool,
     isDisabled: bool,
-    invertMouseWheel: bool.isRequired,
+    invertScroll: bool.isRequired,
+    invertZoom: bool.isRequired,
+    keymap: object.isRequired,
     maxZoom: number.isRequired,
     minZoom: number.isRequired,
     mode: string.isRequired,
@@ -418,6 +553,7 @@ class Esper extends PureComponent {
     onSelect: func.isRequired,
     onSelectionCreate: func.isRequired,
     photo: object,
+    tabIndex: number.isRequired,
     tool: string.isRequired,
     selection: object,
     selections: arrayOf(shape({
@@ -433,10 +569,10 @@ class Esper extends PureComponent {
   }
 
   static defaultProps = {
-    invertMouseWheel: true,
     maxZoom: MAX_ZOOM,
     minZoom: MIN_ZOOM,
     mode: MODE.FIT,
+    tabIndex: TABS.Esper,
     tool: TOOL.ARROW,
     zoom: 1
   }
@@ -444,7 +580,7 @@ class Esper extends PureComponent {
 
 
 const EsperHeader = ({ children }) => (
-  <header className="esper-header draggable">{children}</header>
+  <header className="esper-header window-draggable">{children}</header>
 )
 
 EsperHeader.propTypes = {

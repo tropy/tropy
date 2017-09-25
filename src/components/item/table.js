@@ -35,6 +35,8 @@ class ItemTable extends ItemIterator {
   }
 
   render() {
+    if (this.props.isEmpty) return this.renderNoItems()
+
     const {
       columns,
       data,

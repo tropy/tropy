@@ -2,12 +2,69 @@
 // Project
 // --------------------------------------------------
 
-.project {
+.project,
+.no-project {
   height: 100%;
   overflow: hidden;
 
   &.over {
     @extend %drop-target;
+  }
+}
+
+.no-project {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .toolbar.window-draggable {
+    .frameless & {
+      position: fixed;
+      left: 0;
+      top: 0;
+      right: 0;
+    }
+  }
+
+  .no-project-illustration {
+    flex: 0 0 auto;
+    width: 380px;
+    height: 400px;
+    margin-top: 16px;
+    margin-right: -128px; // Center optically
+    margin-bottom: 44px; // 60px
+    background:
+      if(
+        $theme == "dark",
+        image-url("project/no-project-dark-theme.svg") no-repeat 0 0,
+        image-url("project/no-project-light-theme.svg") no-repeat 0 0
+      );
+
+    @media (max-height: 580px) {
+      display: none;
+    }
+  }
+
+  h1 {
+    font: {
+      family: "HelveticaNeue-Thin", $font-family-base;
+      weight: 200;
+      size: 40px;
+    }
+    line-height: 1.1;
+    text-align: center;
+    color: $project-heading-color;
+    margin-bottom: 50px; // Geometric center
+    max-width: 480px;
+
+    @media (max-height: 580px) {
+      margin-bottom: 10px; // Geometric center
+    }
+  }
+
+  a {
+    text-decoration: none;
   }
 }
 
@@ -71,6 +128,52 @@ main {
     padding: {
       left: $default-padding-horizontal;
       right: ($default-padding-horizontal + $space-min);
+    }
+  }
+
+  .no-items {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid $item-table-header-border-color;
+    margin: 0 $space-min;
+    position: relative;
+
+    &.over {
+      @extend %drop-target;
+    }
+
+    .no-items-illustration {
+      flex: 0 0 auto;
+      width: 200px;
+      height: 200px;
+      margin-top: 11px;
+      margin-bottom: 48px; // 60px
+      background:
+        if(
+          $theme == "dark",
+          image-url("project/no-items-dark.svg") no-repeat 0 0,
+          image-url("project/no-items-light.svg") no-repeat 0 0
+        );
+
+      @media (max-height: 540px) {
+        display: none;
+      }
+    }
+
+    h1 {
+      font: {
+        family: "HelveticaNeue-Thin", $font-family-base;
+        weight: 200;
+        size: 32px;
+      }
+      line-height: 1.1;
+      text-align: center;
+      color: $project-heading-color;
+      max-width: 380px;
+      margin-bottom: 49px; // Geometric center (incl. toolbar)
     }
   }
 }

@@ -19,6 +19,12 @@ class ProjectView extends PureComponent {
     return ITEM.ZOOM[this.props.zoom]
   }
 
+  get isEmpty() {
+    return this.props.isEmpty &&
+      !this.props.nav.trash &&
+      this.props.items.length === 0
+  }
+
   get maxZoom() {
     return ITEM.ZOOM.length - 1
   }
@@ -63,7 +69,7 @@ class ProjectView extends PureComponent {
       ...props
     } = this.props
 
-    const { size, maxZoom, ItemIterator } = this
+    const { size, maxZoom, ItemIterator, isEmpty } = this
 
     return (
       <div id="project-view">
@@ -99,6 +105,7 @@ class ProjectView extends PureComponent {
 
             <ItemIterator {...pick(props, ItemIterator.getPropKeys())}
               items={items}
+              isEmpty={isEmpty}
               photos={photos}
               edit={edit.column}
               keymap={keymap.ItemIterator}
@@ -119,8 +126,9 @@ class ProjectView extends PureComponent {
   static propTypes = {
     canDrop: bool,
     edit: object.isRequired,
-    isOver: bool,
     isActive: bool,
+    isEmpty: bool.isRequired,
+    isOver: bool,
     items: array.isRequired,
     keymap: object.isRequired,
     nav: object.isRequired,

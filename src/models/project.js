@@ -1,6 +1,7 @@
 'use strict'
 
 const uuid = require('uuid/v4')
+const { all } = require('bluebird')
 const { PROJECT } = require('../constants')
 
 module.exports = {
@@ -14,12 +15,21 @@ module.exports = {
   },
 
   async load(db) {
-    return db.get(
-      'SELECT project_id AS id, name FROM project'
-    )
+    const [project, items] = await all([
+      db.get(`
+        SELECT project_id AS id, name FROM project LIMIT 1`),
+      db.get(`
+        SELECT COUNT (id) AS total
+          FROM items LEFT OUTER JOIN trash USING (id)
+          WHERE deleted IS NULL`)
+    ])
+
+    project.items = items.total
+
+    return project
   },
 
-  async save(db, { id, name }) {
+  save(db, { id, name }) {
     return db.run(
       'UPDATE project SET name = ? WHERE project_id = ?',
       name, id

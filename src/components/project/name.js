@@ -31,6 +31,7 @@ class ProjectName extends PureComponent {
           <Editable
             value={name}
             isRequired
+            resize
             isEditing={isEditing}
             onCancel={onEditCancel}
             onChange={onChange}/>

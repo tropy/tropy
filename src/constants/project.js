@@ -3,22 +3,20 @@
 const { join } = require('path')
 
 module.exports = {
-
-  OPEN: 'project.open',
-  OPENED: 'project.opened',
   CLOSE: 'project.close',
   CLOSED: 'project.closed',
-
+  CREATE: 'project.create',
   CREATED: 'project.created',
-
+  OPEN: 'project.open',
+  OPENED: 'project.opened',
   SAVE: 'project.save',
-  SCHEMA: join(__dirname, '..', '..', 'db', 'schema', 'project.sql'),
-  MIGRATIONS: join(__dirname, '..', '..', 'db', 'migrate', 'project'),
-
   UPDATE: 'project.update',
 
   MODE: {
     PROJECT: 'project',
     ITEM: 'item'
-  }
+  },
+
+  MIGRATIONS: join(__dirname, '..', '..', 'db', 'migrate', 'project'),
+  SCHEMA: join(__dirname, '..', '..', 'db', 'schema', 'project.sql')
 }

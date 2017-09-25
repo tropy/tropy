@@ -45,6 +45,7 @@ const T = new WeakMap()
 class Tropy extends EventEmitter {
   static defaults = {
     frameless: darwin,
+    debug: false,
     locale: 'en', // app.getLocale() || 'en',
     theme: 'light',
     recent: [],
@@ -278,6 +279,8 @@ class Tropy extends EventEmitter {
   listen() {
     this.on('app:create-project', () =>
       this.create())
+    this.on('app:close-project', () =>
+      this.win && this.dispatch(act.project.close('debug')))
 
     this.on('app:import-photos', () =>
       this.import())
@@ -393,6 +396,13 @@ class Tropy extends EventEmitter {
       this.emit('app:reload-menu')
     })
 
+    this.on('app:toggle-debug-flag', () => {
+      verbose('toggling dev/debug mode...')
+      this.state.debug = !this.state.debug
+      this.broadcast('debug', this.state.debug)
+      this.emit('app:reload-menu')
+    })
+
     this.on('app:reload-menu', () => {
       // Note: there may be Electron issues when reloading
       // the main menu. But since we cannot remove items
@@ -496,6 +506,7 @@ class Tropy extends EventEmitter {
     ipc.on('cmd', (_, command, ...params) => this.emit(command, ...params))
 
     ipc.on(PROJECT.OPENED, (_, project) => this.opened(project))
+    ipc.on(PROJECT.CREATE, () => this.create())
     ipc.on(PROJECT.CREATED, (_, { file }) => this.open(file))
 
     ipc.on(PROJECT.UPDATE, (_, { name }) => {
@@ -530,7 +541,7 @@ class Tropy extends EventEmitter {
   get hash() {
     return {
       environment: ARGS.environment,
-      debug: ARGS.debug,
+      debug: this.debug,
       dev: this.dev,
       home: app.getPath('userData'),
       documents: app.getPath('documents'),
@@ -570,6 +581,10 @@ class Tropy extends EventEmitter {
 
   get dev() {
     return release.channel === 'dev' || ARGS.environment === 'development'
+  }
+
+  get debug() {
+    return ARGS.debug || this.state.debug
   }
 
   get version() {
