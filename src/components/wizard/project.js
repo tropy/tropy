@@ -48,10 +48,8 @@ class ProjectStep extends PureComponent {
 
   renderFile() {
     return (
-      <div className={cx({
-        'form-group': true,
-        'save-as': true,
-        'custom': !this.props.hasDefaultFilename
+      <div className={cx('form-group', 'save-as', {
+        custom: !this.props.hasDefaultFilename
       })}>
         <div className="save-as-link-container">
           <a

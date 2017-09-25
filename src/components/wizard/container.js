@@ -22,7 +22,7 @@ class WizardContainer extends PureComponent {
   }
 
   handleProjectComplete = () => {
-    this.props.onComplete(this.props.project)
+    this.props.onComplete(this.props.project, { truncate: true })
   }
 
   handleProjectChange = (name) => {
