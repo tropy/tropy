@@ -20,6 +20,19 @@
     overflow-y: scroll;
     display: flex;
     flex-direction: column;
+    position: relative;
+  }
+
+  .placeholder {
+    position: absolute;
+    left: 50%;
+    top: $prose-mirror-padding-top;
+    width: $editor-width;
+    transform: translateX(-50%);
+    max-width: $editor-max-width;
+    font-size: $editor-font-size;
+    line-height: $editor-line-height;
+    color: $editor-placeholder-color;
   }
 }
 
