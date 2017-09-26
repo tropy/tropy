@@ -8,14 +8,14 @@ body {
 }
 
 .el-capitan {
-  font-family: BlinkMacSystemFont, $font-family-base;
+  font-family: system-ui, $font-family-base;
 
   // Reset San Francisco
   #wizard,
   #items .no-items,
   .no-project {
     h1 {
-      font-family: BlinkMacSystemFont, "HelveticaNeue-Thin", $font-family-base;
+      font-family: system-ui, "HelveticaNeue-Thin", $font-family-base;
     }
   }
 }
