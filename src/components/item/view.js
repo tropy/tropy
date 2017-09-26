@@ -120,23 +120,21 @@ class ItemView extends PureComponent {
     }
   }
 
-  handleNoteSave = debounce(note => {
-    this.props.onNoteSave(note)
+  handleNoteSave = debounce((note, meta) => {
+    this.props.onNoteSave(note, meta)
   }, NOTE.AUTOSAVE_DELAY)
 
-  handleNoteChange = (note, hasDocChanged, isDocBlank) => {
-    if (hasDocChanged) {
-      if (note.id != null) {
-        if (isDocBlank) this.handleNoteSave.cancel()
-        else this.handleNoteSave(note)
+  handleNoteChange = (note, changed, blank) => {
+    if (note.id != null) {
+      if (blank) this.handleNoteSave.cancel()
+      else this.handleNoteSave(note, { changed })
 
-      } else {
-        if (note.created == null && !isDocBlank) {
-          note.created = Date.now()
-          note.photo = this.props.photo.id
-          note.selection = this.props.activeSelection
-          this.props.onNoteCreate(note)
-        }
+    } else {
+      if (note.created == null && !blank) {
+        note.created = Date.now()
+        note.photo = this.props.photo.id
+        note.selection = this.props.activeSelection
+        this.props.onNoteCreate(note)
       }
     }
 

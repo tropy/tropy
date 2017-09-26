@@ -1,5 +1,6 @@
 'use strict'
 
+const assert = require('assert')
 const { json, stringify } = require('../common/util')
 
 const mod = {
@@ -48,16 +49,33 @@ const mod = {
       return notes
     },
 
-    async save(db, { id, state, text }, timestamp = Date.now()) {
+    save(db, { id, state, text }, timestamp = Date.now()) {
+      assert(id != null, 'missing id')
+      assert(state != null, 'missing state')
+
+      const assigs = [
+        'state = $state',
+        'modified = datetime($modified)'
+      ]
+
+      if (text != null) {
+        assert(text !== '', 'empty text')
+        assigs.push('text = $text')
+      }
+
       return db.run(`
         UPDATE notes
-          SET state = ?, text = ?, modified = datetime(?)
-          WHERE note_id = ?`,
-          stringify(state), text, new Date(timestamp).toISOString(), id
+          SET ${assigs.join(', ')}
+          WHERE note_id = $id`, {
+            $id: id,
+            $state: stringify(state),
+            $text: text,
+            $modified: new Date(timestamp).toISOString()
+          }
       )
     },
 
-    async delete(db, ids) {
+    delete(db, ids) {
       return db.run(`
         UPDATE notes
           SET deleted = datetime("now")
@@ -65,7 +83,7 @@ const mod = {
       )
     },
 
-    async restore(db, ids) {
+    restore(db, ids) {
       return db.run(`
         UPDATE notes
           SET deleted = NULL
@@ -73,7 +91,7 @@ const mod = {
       )
     },
 
-    async prune(db) {
+    prune(db) {
       return db.run(`
         DELETE FROM notes WHERE deleted IS NOT NULL`
       )

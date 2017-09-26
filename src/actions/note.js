@@ -23,7 +23,12 @@ module.exports = {
     return {
       type: NOTE.SAVE,
       payload: json(payload),
-      meta: { cmd: 'project', history: 'merge', ...meta }
+      meta: {
+        cmd: 'project',
+        history: 'merge',
+        changed: true,
+        ...meta
+      }
     }
   },
 
