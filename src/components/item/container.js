@@ -20,6 +20,10 @@ const {
 
 
 class ItemContainer extends PureComponent {
+  setNotePad = (notepad) => {
+    this.notepad = notepad
+  }
+
   handleEsperChange = ({ photo, selection, ...ui }) => {
     this.props.onUiUpdate(ui)
 
@@ -121,6 +125,6 @@ module.exports = {
       onSelectionSave(...args) {
         dispatch(act.selection.save(...args))
       }
-    })
+    }), null, { withRef: true }
   )(ItemContainer)
 }

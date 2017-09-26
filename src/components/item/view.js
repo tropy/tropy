@@ -48,8 +48,9 @@ class ItemView extends PureComponent {
   }
 
 
-  setNotePad = (notepad) => {
-    this.notepad = notepad
+  setNotePad = (container) => {
+    this.notepad = container != null ?
+      container.getWrappedInstance().notepad : null
   }
 
   handlePanelResize = ({ value }) => {
@@ -81,7 +82,9 @@ class ItemView extends PureComponent {
       }
     }
 
-    setTimeout(this.notepad.focus, delay)
+    if (this.notepad != null) {
+      setTimeout(this.notepad.focus, delay)
+    }
   }
 
   handleNoteUpdate(note) {
@@ -176,6 +179,7 @@ class ItemView extends PureComponent {
             onNoteCreate={this.handleNoteCreate}/>
         </Resizable>
         <ItemContainer
+          ref={this.setNotePad}
           note={this.state.note}
           photo={photo}
           isDisabled={isTrashSelected}
