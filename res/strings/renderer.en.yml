@@ -35,9 +35,6 @@ prefs:
   title: Tropy Preferences
   app:
     label: Global
-    invertScroll: Invert direction when scrolling in photos
-    invertZoom: Invert direction when zooming in photos
-    overlayToolbars: Automatically hide and show toolbars
     style:
       theme: Theme
       themes:
@@ -53,6 +50,12 @@ prefs:
         skip: Skip duplicate photos
         import: Accept duplicate photos
         prompt: Ask me every time
+    ui:
+      label: Interface
+      option:
+        invertScroll: Invert direction when scrolling in photos
+        invertZoom: Invert direction when zooming in photos
+        overlayToolbars: Automatically hide and show toolbars
 
   project:
     label: Project

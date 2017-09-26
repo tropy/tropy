@@ -70,19 +70,19 @@ class AppPrefs extends PureComponent {
             options={this.props.themes}
             onChange={this.handleThemeChange}/>
           <hr/>
-          <FormElement>
+          <FormElement id="prefs.app.ui.label">
             <Toggle
-              id="prefs.app.invertScroll"
+              id="prefs.app.ui.option.invertScroll"
               name="invertScroll"
               value={this.props.settings.invertScroll}
               onChange={this.props.onSettingsUpdate}/>
             <Toggle
-              id="prefs.app.invertZoom"
+              id="prefs.app.ui.option.invertZoom"
               name="invertZoom"
               value={this.props.settings.invertZoom}
               onChange={this.props.onSettingsUpdate}/>
             <Toggle
-              id="prefs.app.overlayToolbars"
+              id="prefs.app.ui.option.overlayToolbars"
               name="overlayToolbars"
               value={this.props.settings.overlayToolbars}
               onChange={this.props.onSettingsUpdate}/>
