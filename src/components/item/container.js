@@ -97,7 +97,6 @@ class ItemContainer extends PureComponent {
   }
 }
 
-
 module.exports = {
   ItemContainer: connect(
     state => ({
