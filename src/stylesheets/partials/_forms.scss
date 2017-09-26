@@ -66,7 +66,6 @@ fieldset {
   padding: 0 $padding-base-horizontal;
   font-family: inherit;
   font-size: $font-size-base;
-  line-height: 2; // Better alignment of San Francisco
   color: $input-color;
   background: $input-bg;
   border: 1px solid $input-border;
@@ -87,7 +86,6 @@ fieldset {
 
   @at-root select#{&} {
     -webkit-appearance: none;
-    line-height: 1;
     background-repeat: no-repeat;
     background-position: right $space-min center;
     background-image: if($theme == "light",
