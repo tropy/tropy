@@ -2,8 +2,12 @@
 
 const cmd  = require('prosemirror-commands')
 const { undo, redo } = require('prosemirror-history')
+const { undoInputRule } = require('prosemirror-inputrules')
 const {
-  wrapInList, splitListItem, liftListItem, sinkListItem
+  wrapInList,
+  splitListItem,
+  liftListItem,
+  sinkListItem
 } = require('prosemirror-schema-list')
 
 
@@ -49,6 +53,7 @@ module.exports = (schema) => {
     ),
 
     backspace: cmd.chainCommands(
+      undoInputRule,
       cmd.deleteSelection,
       cmd.joinBackward
     ),
