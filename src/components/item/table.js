@@ -6,21 +6,11 @@ const { arrayOf, func, object } = PropTypes
 const { ItemIterator } = require('./iterator')
 const { ItemTableRow } = require('./table-row')
 const { ItemTableHead } = require('./table-head')
-const { on, off } = require('../../dom')
 const cx = require('classnames')
 const { noop } = require('../../common/util')
 
 
 class ItemTable extends ItemIterator {
-
-  componentDidMount() {
-    on(this.container, 'tab:focus', this.handleFocus)
-  }
-
-  componentWillUnmount() {
-    off(this.container, 'tab:focus', this.handleFocus)
-  }
-
   get classes() {
     return {
       'table-body': true,

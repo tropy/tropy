@@ -3,7 +3,6 @@
 const React = require('react')
 const { ItemIterator } = require('./iterator')
 const { ItemTile } = require('./tile')
-const { on, off } = require('../../dom')
 const { refine } = require('../../common/util')
 const cx = require('classnames')
 
@@ -31,16 +30,6 @@ class ItemGrid extends ItemIterator {
         event.stopPropagation()
       }
     })
-  }
-
-  componentDidMount() {
-    super.componentDidMount()
-    on(this.container, 'tab:focus', this.handleFocus)
-  }
-
-  componentWillUnmount() {
-    super.componentWillUnmount()
-    off(this.container, 'tab:focus', this.handleFocus)
   }
 
   get classes() {

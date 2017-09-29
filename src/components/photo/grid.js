@@ -4,7 +4,6 @@ const React = require('react')
 const { PhotoIterator } = require('./iterator')
 const { PhotoTile } = require('./tile')
 const { SelectionGrid } = require('../selection/grid')
-const { on, off } = require('../../dom')
 const { pluck } = require('../../common/util')
 const cx = require('classnames')
 const { match } = require('../../keymap')
@@ -12,16 +11,6 @@ const { match } = require('../../keymap')
 
 class PhotoGrid extends PhotoIterator {
   static get isGrid() { return true }
-
-  componentDidMount() {
-    super.componentDidMount()
-    on(this.container, 'tab:focus', this.handleFocus)
-  }
-
-  componentWillUnmount() {
-    super.componentWillUnmount()
-    off(this.container, 'tab:focus', this.handleFocus)
-  }
 
   get classes() {
     return {

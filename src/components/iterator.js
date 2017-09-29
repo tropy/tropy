@@ -7,6 +7,7 @@ const { adjacent, times } = require('../common/util')
 const { floor, round } = Math
 const { bool, number } = require('prop-types')
 const throttle = require('lodash.throttle')
+const { on, off } = require('../../dom')
 
 
 class Iterator extends PureComponent {
@@ -26,12 +27,16 @@ class Iterator extends PureComponent {
 
       this.ro.observe(this.container)
     }
+
+    on(this.container, 'tab:focus', this.handleFocus)
   }
 
   componentWillUnmount() {
     if (this.ro != null) {
       this.ro.disconnect()
     }
+
+    off(this.container, 'tab:focus', this.handleFocus)
   }
 
   componentWillReceiveProps(props) {
