@@ -8,6 +8,8 @@ const cx = require('classnames')
 
 
 class ItemGrid extends ItemIterator {
+  get isGrid() { return true }
+
   constructor(props) {
     super(props)
 
@@ -62,10 +64,6 @@ class ItemGrid extends ItemIterator {
         </ul>
       </div>
     )
-  }
-
-  static get isGrid() {
-    return true
   }
 
   static propTypes = {

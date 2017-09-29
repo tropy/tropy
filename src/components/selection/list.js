@@ -10,10 +10,11 @@ const { DC } = require('../../constants')
 
 class SelectionList extends SelectionIterator {
   get classes() {
-    return {
-      ...super.classes,
-      list: true
-    }
+    return ['list', super.classes]
+  }
+
+  getColumns() {
+    return 1
   }
 
   isEditing(selection) {

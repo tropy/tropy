@@ -12,10 +12,11 @@ const { get } = require('../../common/util')
 
 class PhotoList extends PhotoIterator {
   get classes() {
-    return {
-      ...super.classes,
-      list: true
-    }
+    return ['list', super.classes]
+  }
+
+  getColumns() {
+    return 1
   }
 
   isEditing(photo) {

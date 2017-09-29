@@ -19,6 +19,10 @@ class ItemTable extends ItemIterator {
     }
   }
 
+  getColumns() {
+    return 1
+  }
+
   handleEditCancel = (...args) => {
     this.props.onEditCancel(...args)
     this.container.focus()

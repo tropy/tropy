@@ -4,10 +4,10 @@ const React = require('react')
 const { PureComponent } = React
 const { TABS, SASS: { TILE } } = require('../constants')
 const { adjacent, times } = require('../common/util')
+const { on, off } = require('../dom')
 const { floor, round } = Math
 const { bool, number } = require('prop-types')
 const throttle = require('lodash.throttle')
-const { on, off } = require('../dom')
 
 
 class Iterator extends PureComponent {
@@ -20,32 +20,24 @@ class Iterator extends PureComponent {
   }
 
   componentDidMount() {
-    if (this.isGrid) {
-      this.ro = new ResizeObserver(([e]) => {
-        this.handleResize(e.contentRect)
-      })
+    this.ro = new ResizeObserver(([e]) => {
+      this.handleResize(e.contentRect)
+    })
 
-      this.ro.observe(this.container)
-    }
-
+    this.ro.observe(this.container)
     on(this.container, 'tab:focus', this.handleFocus)
   }
 
   componentWillUnmount() {
-    if (this.ro != null) {
-      this.ro.disconnect()
-    }
-
+    if (this.ro != null) { this.ro.disconnect() }
     off(this.container, 'tab:focus', this.handleFocus)
   }
 
   componentWillReceiveProps(props) {
-    if (this.isGrid) {
-      if (this.props.size !== props.size) {
-        this.setState({
-          cols: this.getColumns(props.size)
-        })
-      }
+    if (this.props.size !== props.size) {
+      this.setState({
+        cols: this.getColumns(props.size)
+      })
     }
   }
 
@@ -85,8 +77,8 @@ class Iterator extends PureComponent {
     return adjacent(this.iteration, iterable)
   }
 
-  getColumns(size = this.props.size, width = this.width) {
-    return floor(width / round(size * TILE.FACTOR))
+  getColumns(size = this.props.size) {
+    return floor(this.viewport.width / round(size * TILE.FACTOR))
   }
 
   setContainer = (container) => {
@@ -107,23 +99,13 @@ class Iterator extends PureComponent {
     return this.filler
   }
 
-
-  handleResize = throttle(({ width }) => {
-    this.width = width
+  handleResize = throttle((viewport) => {
+    this.viewport = viewport
     this.setState({
       cols: this.getColumns(),
       maxCols: this.getColumns(TILE.MIN)
     })
-  }, 20)
-
-
-  get isGrid() {
-    return this.constructor.isGrid
-  }
-
-  static get isGrid() {
-    return false
-  }
+  }, 15)
 
   static getPropKeys() {
     return Object.keys(this.propTypes || this.DecoratedComponent.propTypes)
