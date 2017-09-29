@@ -43,13 +43,13 @@ class Iterator extends PureComponent {
 
       this.setState({
         cols,
-        rows: this.getRows(cols),
+        rows: this.getRows(cols, props),
         viewportRows: this.getViewportRows(props.size)
       })
     } else {
       if (this.getItems(props).length !== this.size) {
         this.setState({
-          rows: this.getRows()
+          rows: this.getRows(this.state.cols, props)
         })
       }
     }
@@ -99,8 +99,8 @@ class Iterator extends PureComponent {
     return EMPTY
   }
 
-  getRows(cols = this.state.cols) {
-    return ceil(this.size / cols)
+  getRows(cols = this.state.cols, props = this.props) {
+    return ceil(this.getItems(props).length / cols)
   }
 
   getRowHeight(size = this.props.size) {

@@ -33,6 +33,7 @@ class ItemTable extends ItemIterator {
     this.container.focus()
   }
 
+
   render() {
     if (this.props.isEmpty) return this.renderNoItems()
 
@@ -46,6 +47,8 @@ class ItemTable extends ItemIterator {
     } = this.props
 
     const onEdit = this.props.selection.length === 1 ? this.props.onEdit : noop
+    const items = this.props.items.slice(0, this.state.viewportRows)
+    const minHeight = this.state.rows * this.getRowHeight()
 
     return (
       <div
@@ -60,21 +63,23 @@ class ItemTable extends ItemIterator {
             className={cx(this.classes)}
             onClick={this.handleClickOutside}>
             <div className="scroll-container click-catcher">
-              <table>
-                <tbody>
-                  {this.map(({ item, ...props }) =>
-                    <ItemTableRow {...props}
-                      key={item.id}
-                      item={item}
-                      data={data[item.id]}
-                      columns={columns}
-                      edit={edit}
-                      onCancel={this.handleEditCancel}
-                      onChange={onMetadataSave}
-                      onEdit={onEdit}/>
-                  )}
-                </tbody>
-              </table>
+              <div style={{ minHeight }}>
+                <table>
+                  <tbody>
+                    {this.map(({ item, ...props }) => (
+                      <ItemTableRow {...props}
+                        key={item.id}
+                        item={item}
+                        data={data[item.id]}
+                        columns={columns}
+                        edit={edit}
+                        onCancel={this.handleEditCancel}
+                        onChange={onMetadataSave}
+                        onEdit={onEdit}/>
+                    ), items)}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         )}

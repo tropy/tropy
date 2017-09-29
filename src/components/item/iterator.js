@@ -127,10 +127,10 @@ class ItemIterator extends Iterator {
     return (this.isDisabled) ? element : this.props.dt(element)
   }
 
-  map(fn) {
+  map(fn, items = this.props.items) {
     this.idx = {}
 
-    return this.props.items.map((item, index) => {
+    return items.map((item, index) => {
       this.idx[item.id] = index
 
       return fn({
