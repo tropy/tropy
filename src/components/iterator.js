@@ -5,9 +5,10 @@ const { PureComponent } = React
 const { TABS, SASS: { TILE } } = require('../constants')
 const { adjacent, times } = require('../common/util')
 const { on, off } = require('../dom')
-const { floor, round } = Math
+const { ceil, floor, round } = Math
 const { bool, number } = require('prop-types')
 const throttle = require('lodash.throttle')
+const EMPTY = []
 
 
 class Iterator extends PureComponent {
@@ -15,7 +16,10 @@ class Iterator extends PureComponent {
     super(props)
 
     this.state = {
-      cols: 1, maxCols: 1
+      cols: 1,
+      maxCols: 1,
+      rows: 0,
+      viewportRows: 0
     }
   }
 
@@ -35,9 +39,19 @@ class Iterator extends PureComponent {
 
   componentWillReceiveProps(props) {
     if (this.props.size !== props.size) {
+      const cols = this.getColumns(props.size)
+
       this.setState({
-        cols: this.getColumns(props.size)
+        cols,
+        rows: this.getRows(cols),
+        viewportRows: this.getViewportRows(props.size)
       })
+    } else {
+      if (this.getItems(props).length !== this.size) {
+        this.setState({
+          rows: this.getRows()
+        })
+      }
     }
   }
 
@@ -58,7 +72,7 @@ class Iterator extends PureComponent {
   }
 
   get size() {
-    return this.iteration != null ? this.iteration.length : 0
+    return this.getItems().length
   }
 
   get orientation() {
@@ -74,11 +88,31 @@ class Iterator extends PureComponent {
   }
 
   getAdjacent = (iterable) => {
-    return adjacent(this.iteration, iterable)
+    return adjacent(this.getItems(), iterable)
   }
 
   getColumns(size = this.props.size) {
-    return floor(this.viewport.width / round(size * TILE.FACTOR))
+    return floor(this.viewport.width / this.getTileSize(size))
+  }
+
+  getItems() {
+    return EMPTY
+  }
+
+  getRows(cols = this.state.cols) {
+    return ceil(this.size / cols)
+  }
+
+  getRowHeight(size = this.props.size) {
+    return this.getTileSize(size)
+  }
+
+  getViewportRows(size = this.props.size) {
+    return ceil(this.viewport.height / this.getRowHeight(size))
+  }
+
+  getTileSize(size = this.props.size) {
+    return round(size * TILE.FACTOR)
   }
 
   setContainer = (container) => {
@@ -101,9 +135,13 @@ class Iterator extends PureComponent {
 
   handleResize = throttle((viewport) => {
     this.viewport = viewport
+    const cols = this.getColumns()
+
     this.setState({
-      cols: this.getColumns(),
-      maxCols: this.getColumns(TILE.MIN)
+      cols,
+      maxCols: this.getColumns(TILE.MIN),
+      rows: this.getRows(cols),
+      viewportRows: this.getViewportRows()
     })
   }, 15)
 

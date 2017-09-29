@@ -8,6 +8,7 @@ const { ItemTableRow } = require('./table-row')
 const { ItemTableHead } = require('./table-head')
 const cx = require('classnames')
 const { noop } = require('../../common/util')
+const { ROW } = require('../../constants/sass')
 
 
 class ItemTable extends ItemIterator {
@@ -21,6 +22,10 @@ class ItemTable extends ItemIterator {
 
   getColumns() {
     return 1
+  }
+
+  getRowHeight() {
+    return ROW.HEIGHT
   }
 
   handleEditCancel = (...args) => {

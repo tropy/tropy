@@ -13,16 +13,16 @@ const {
 
 
 class ItemIterator extends Iterator {
-  get iteration() {
-    return this.props.items
-  }
-
   get tabIndex() {
     return this.props.isActive ? super.tabIndex : null
   }
 
   isSelected(item) {
     return this.props.selection.includes(item.id)
+  }
+
+  getItems(props = this.props) {
+    return props.items || super.getItems()
   }
 
   getNextItem(offset = 1) {

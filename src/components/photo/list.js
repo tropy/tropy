@@ -4,7 +4,7 @@ const React = require('react')
 const { object, func } = require('prop-types')
 const { PhotoListItem } = require('./list-item')
 const { PhotoIterator } = require('./iterator')
-const { DC } = require('../../constants')
+const { DC, SASS: { ROW } } = require('../../constants')
 const cx = require('classnames')
 const { match } = require('../../keymap')
 const { get } = require('../../common/util')
@@ -17,6 +17,10 @@ class PhotoList extends PhotoIterator {
 
   getColumns() {
     return 1
+  }
+
+  getRowHeight() {
+    return ROW.HEIGHT
   }
 
   isEditing(photo) {
