@@ -8,7 +8,7 @@ const { ItemTableRow } = require('./table-row')
 const { ItemTableHead } = require('./table-head')
 const cx = require('classnames')
 const { on, off } = require('../../dom')
-const { noop } = require('../../common/util')
+const { noop, restrict } = require('../../common/util')
 const { ROW } = require('../../constants/sass')
 
 const SCROLL_OPTIONS = {
@@ -17,11 +17,6 @@ const SCROLL_OPTIONS = {
 }
 
 class ItemTable extends ItemIterator {
-  constructor(props) {
-    super(props)
-    this.state.offset = 0
-  }
-
   componentDidMount() {
     super.componentDidMount()
     on(this.scroller, 'scroll', this.handleScroll, SCROLL_OPTIONS)
@@ -30,6 +25,10 @@ class ItemTable extends ItemIterator {
   componentWillUnmount() {
     super.componentWillUnmount()
     off(this.scroller, 'scroll', this.handleScroll, SCROLL_OPTIONS)
+  }
+
+  componentDidUpdate() {
+    this.isUpdateScheduled = false
   }
 
   get classes() {
@@ -48,6 +47,15 @@ class ItemTable extends ItemIterator {
     return ROW.HEIGHT
   }
 
+  getOffset() {
+    if (this.scroller == null) return 0
+
+    const { overflow, maxOffset, rowHeight } = this.state
+    const offset = this.scroller.scrollTop
+
+    return restrict(offset - (offset % rowHeight) - overflow, 0, maxOffset)
+  }
+
   setScroller = (scroller) => {
     this.scroller = scroller
   }
@@ -58,7 +66,10 @@ class ItemTable extends ItemIterator {
   }
 
   handleScroll = () => {
-    this.setState({ offset: this.scroller.scrollTop })
+    if (!this.isUpdateScheduled) {
+      this.isUpdateScheduled = true
+      requestAnimationFrame(() => void this.forceUpdate())
+    }
   }
 
   render() {
@@ -75,13 +86,13 @@ class ItemTable extends ItemIterator {
 
     const onEdit = this.props.selection.length === 1 ? this.props.onEdit : noop
 
-    const { height, offset, overflow, rowHeight, viewportRows } = this.state
+    const { height, rowHeight, viewportRows } = this.state
 
-    const top = offset < overflow ? 0 : offset - (offset % rowHeight)
-    const first = Math.floor(top / rowHeight)
+    const offset = this.getOffset()
+    const start = Math.floor(offset / rowHeight)
 
-    const transform = `translate3d(0,${top}px,0)`
-    const items = this.props.items.slice(first, first + viewportRows * 2)
+    const transform = `translate3d(0,${offset}px,0)`
+    const items = this.props.items.slice(start, start + viewportRows * 2)
 
     return (
       <div

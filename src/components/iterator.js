@@ -49,12 +49,19 @@ class Iterator extends PureComponent {
     const rows = this.getRows(cols, props)
     const viewportRows = this.getViewportRows(props.size)
     const rowHeight = this.getRowHeight(props.size)
+    const height = rows * rowHeight
+    const overflow = (viewportRows / 2) * rowHeight
+    const maxCols = this.getColumns(TILE.MIN)
+
+    let maxOffset = height - this.viewport.height
+    maxOffset = maxOffset - (maxOffset % rowHeight)
 
     this.setState({
       cols,
-      maxCols: this.getColumns(TILE.MIN),
-      overflow: (viewportRows / 2) * rowHeight,
-      height: rows * rowHeight,
+      height,
+      maxCols,
+      maxOffset,
+      overflow,
       rowHeight,
       rows,
       viewportRows
