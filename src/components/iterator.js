@@ -38,21 +38,27 @@ class Iterator extends PureComponent {
   }
 
   componentWillReceiveProps(props) {
-    if (this.props.size !== props.size) {
-      const cols = this.getColumns(props.size)
-
-      this.setState({
-        cols,
-        rows: this.getRows(cols, props),
-        viewportRows: this.getViewportRows(props.size)
-      })
-    } else {
-      if (this.getItems(props).length !== this.size) {
-        this.setState({
-          rows: this.getRows(this.state.cols, props)
-        })
-      }
+    if (this.props.size !== props.size ||
+      this.getItems(props).length !== this.size) {
+      this.update(props)
     }
+  }
+
+  update(props = this.props) {
+    const cols = this.getColumns(props.size)
+    const rows = this.getRows(cols, props)
+    const viewportRows = this.getViewportRows(props.size)
+    const rowHeight = this.getRowHeight(props.size)
+
+    this.setState({
+      cols,
+      maxCols: this.getColumns(TILE.MIN),
+      overflow: (viewportRows / 2) * rowHeight,
+      height: rows * rowHeight,
+      rowHeight,
+      rows,
+      viewportRows
+    })
   }
 
   get isVertical() {
@@ -135,14 +141,7 @@ class Iterator extends PureComponent {
 
   handleResize = throttle((viewport) => {
     this.viewport = viewport
-    const cols = this.getColumns()
-
-    this.setState({
-      cols,
-      maxCols: this.getColumns(TILE.MIN),
-      rows: this.getRows(cols),
-      viewportRows: this.getViewportRows()
-    })
+    this.update()
   }, 15)
 
   static getPropKeys() {

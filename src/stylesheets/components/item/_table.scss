@@ -11,6 +11,10 @@
   height: 100%;
   contain: strict;
 
+  .runway {
+    min-height: 100%;
+  }
+
   .scrollbar-style-old-school & {
     padding-right: 0;
   }
@@ -161,6 +165,7 @@
       width: 100%;
       table-layout: fixed;
       border-collapse: collapse;
+      will-change: transform;
     }
   }
 
