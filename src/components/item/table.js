@@ -50,10 +50,10 @@ class ItemTable extends ItemIterator {
   getOffset() {
     if (this.scroller == null) return 0
 
-    const { overflow, maxOffset, rowHeight } = this.state
+    const { overscan, maxOffset, rowHeight } = this.state
     const offset = this.scroller.scrollTop
 
-    return restrict(offset - (offset % rowHeight) - overflow, 0, maxOffset)
+    return restrict(offset - (offset % rowHeight) - overscan, 0, maxOffset)
   }
 
   setScroller = (scroller) => {

@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { TABS, SASS: { TILE } } = require('../constants')
 const { adjacent, times } = require('../common/util')
 const { on, off } = require('../dom')
-const { ceil, floor, round } = Math
+const { ceil, floor, max, round } = Math
 const { bool, number } = require('prop-types')
 const throttle = require('lodash.throttle')
 const EMPTY = []
@@ -50,18 +50,18 @@ class Iterator extends PureComponent {
     const viewportRows = this.getViewportRows(props.size)
     const rowHeight = this.getRowHeight(props.size)
     const height = rows * rowHeight
-    const overflow = (viewportRows / 2) * rowHeight
+    const overscan = (viewportRows / 2) * rowHeight
     const maxCols = this.getColumns(TILE.MIN)
 
     let maxOffset = height - this.viewport.height
-    maxOffset = maxOffset - (maxOffset % rowHeight)
+    maxOffset = max(maxOffset - (maxOffset % rowHeight), height)
 
     this.setState({
       cols,
       height,
       maxCols,
       maxOffset,
-      overflow,
+      overscan,
       rowHeight,
       rows,
       viewportRows
