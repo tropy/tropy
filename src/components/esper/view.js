@@ -3,7 +3,7 @@
 const React = require('react')
 const { Component } = React
 const { array, func, object, string } = require('prop-types')
-const { append, bounds, createDragHandler } = require('../../dom')
+const { append, bounds, createDragHandler, on, off } = require('../../dom')
 const css = require('../../css')
 const { restrict } = require('../../common/util')
 const { rad } = require('../../common/math')
@@ -57,12 +57,15 @@ class EsperView extends Component {
     }
 
     append(this.pixi.view, this.container)
+
+    on(this.container, 'wheel', this.handleWheel, { passive: true })
   }
 
   componentWillUnmount() {
     this.tweens.removeAll()
     this.pixi.destroy(true)
     this.m.removeListener(this.handleResolutionChange)
+    off(this.container, 'wheel', this.handleWheel, { passive: true })
     if (this.drag.current) this.drag.stop()
   }
 
@@ -402,7 +405,7 @@ class EsperView extends Component {
 
   handleDoubleClick = (e) => {
     e.stopPropagation()
-    this.props.onDoubleClick(coords(e))
+    this.props.onDoubleClick(coords(e.nativeEvent))
   }
 
   handleDragStart = (event) => {
@@ -535,8 +538,7 @@ class EsperView extends Component {
       <div
         ref={this.setContainer}
         className="esper-view"
-        onDoubleClick={this.handleDoubleClick}
-        onWheel={this.handleWheel}/>
+        onDoubleClick={this.handleDoubleClick}/>
     )
   }
 
@@ -595,12 +597,12 @@ function constrain(point, ...args) {
 
 function coords(e) {
   return {
-    x: e.nativeEvent.offsetX,
-    y: e.nativeEvent.offsetY,
-    dx: e.nativeEvent.deltaX,
-    dy: e.nativeEvent.deltaY,
-    ctrl: e.nativeEvent.ctrlKey || e.nativeEvent.metaKey,
-    shift: e.nativeEvent.shiftKey
+    x: e.offsetX,
+    y: e.offsetY,
+    dx: e.deltaX,
+    dy: e.deltaY,
+    ctrl: e.ctrlKey || e.metaKey,
+    shift: e.shiftKey
   }
 }
 
