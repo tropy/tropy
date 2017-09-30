@@ -161,7 +161,7 @@
       @extend %drop-target;
     }
 
-    table {
+    table.viewport {
       width: 100%;
       table-layout: fixed;
       border-collapse: collapse;

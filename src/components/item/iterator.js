@@ -3,7 +3,9 @@
 const React = require('react')
 const { Iterator } = require('../iterator')
 const { FormattedMessage } = require('react-intl')
-const { has } = require('../../dom')
+const { has, on, off } = require('../../dom')
+const { floor, min } = Math
+const { restrict } = require('../../common/util')
 const { match } = require('../../keymap')
 const cx = require('classnames')
 
@@ -13,12 +15,40 @@ const {
 
 
 class ItemIterator extends Iterator {
+  componentDidMount() {
+    super.componentDidMount()
+    on(this.scroller, 'scroll', this.handleScroll, SCROLL_OPTIONS)
+  }
+
+  componentWillUnmount() {
+    super.componentWillUnmount()
+    off(this.scroller, 'scroll', this.handleScroll, SCROLL_OPTIONS)
+  }
+
+  componentDidUpdate() {
+    this.isUpdateScheduled = false
+  }
+
   get tabIndex() {
     return this.props.isActive ? super.tabIndex : null
   }
 
-  isSelected(item) {
-    return this.props.selection.includes(item.id)
+  setScroller = (scroller) => {
+    this.scroller = scroller
+  }
+
+  getOffset(update = false) {
+    if (this.scroller == null) return 0
+
+    if (this.offset == null || update) {
+      const { overscan, maxOffset, rowHeight } = this.state
+      const offset = this.scroller.scrollTop
+
+      this.offset =
+        restrict(offset - (offset % rowHeight) - overscan, 0, maxOffset)
+    }
+
+    return this.offset
   }
 
   getItems(props = this.props) {
@@ -45,6 +75,10 @@ class ItemIterator extends Iterator {
   }
 
   getSelection = () => this.props.selection
+
+  isSelected(item) {
+    return this.props.selection.includes(item.id)
+  }
 
   handleClickOutside = (event) => {
     if (has(event.target, 'click-catcher')) {
@@ -85,7 +119,6 @@ class ItemIterator extends Iterator {
     }
   }
 
-
   // eslint-disable-next-line complexity
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
@@ -116,6 +149,12 @@ class ItemIterator extends Iterator {
     event.stopPropagation()
   }
 
+  handleScroll = () => {
+    if (!this.isUpdateScheduled) {
+      this.isUpdateScheduled = true
+      requestAnimationFrame(() => void this.forceUpdate())
+    }
+  }
 
   select(item) {
     if (item && !this.isSelected(item)) {
@@ -127,10 +166,27 @@ class ItemIterator extends Iterator {
     return (this.isDisabled) ? element : this.props.dt(element)
   }
 
-  map(fn, items = this.props.items) {
+  getItemRange() {
+    const { cols, rowHeight, viewportRows } = this.state
+
+    const from = cols * floor(this.getOffset(false) / rowHeight)
+    const size = cols * viewportRows * 2
+
+    return {
+      from,
+      size,
+      to: min(from + size, this.props.items.length)
+    }
+  }
+
+  mapItemRange(fn) {
     this.idx = {}
 
-    return items.map((item, index) => {
+    const { items } = this.props
+    const range = this.getItemRange()
+
+    return items.slice(range.from, range.to).map((item, i) => {
+      const index = range.from + i
       this.idx[item.id] = index
 
       return fn({
@@ -138,7 +194,7 @@ class ItemIterator extends Iterator {
         cache: this.props.cache,
         photos: this.props.photos,
         tags: this.props.tags,
-        isLast: index === this.props.items.length - 1,
+        isLast: index === items.length - 1,
         isSelected: this.isSelected(item),
         isDisabled: this.isDisabled,
         isVertical: this.isVertical,
@@ -200,6 +256,11 @@ class ItemIterator extends Iterator {
     onSelect: func.isRequired,
     onSort: func.isRequired
   }
+}
+
+const SCROLL_OPTIONS = {
+  capture: true,
+  passive: true
 }
 
 

@@ -48,6 +48,10 @@ class ItemGrid extends ItemIterator {
   render() {
     if (this.props.isEmpty) return this.renderNoItems()
 
+    const { height } = this.state
+    const offset = this.getOffset(true)
+    const transform = `translate3d(0,${offset}px,0)`
+
     return this.connect(
       <div
         className={cx(this.classes)}
@@ -56,12 +60,18 @@ class ItemGrid extends ItemIterator {
         ref={this.setContainer}
         data-size={this.props.size}
         onClick={this.handleClickOutside}>
-        <ul className="scroll-container click-catcher">
-          {this.map(({ item, ...props }) =>
-            <ItemTile {...props} key={item.id} item={item}/>
-          )}
-          {this.fillRow()}
-        </ul>
+        <div
+          ref={this.setScroller}
+          className="scroll-container">
+          <div className="runway click-catcher" style={{ height }}>
+            <ul className="viewport" style={{ transform }}>
+              {this.mapItemRange(({ item, ...props }) =>
+                <ItemTile {...props} key={item.id} item={item}/>
+              )}
+              {this.fillRow()}
+            </ul>
+          </div>
+        </div>
       </div>
     )
   }

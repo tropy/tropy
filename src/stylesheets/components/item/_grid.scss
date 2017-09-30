@@ -26,11 +26,19 @@
   }
 
   .scroll-container {
+    overflow-y: scroll;
+  }
+
+  .runway {
+    min-height: 100%;
+  }
+
+  .viewport {
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
     padding: $space-min;
-    overflow-y: scroll;
+    will-change: transform;
   }
 
   &.over {

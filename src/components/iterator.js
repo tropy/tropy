@@ -21,6 +21,11 @@ class Iterator extends PureComponent {
       rows: 0,
       viewportRows: 0
     }
+
+    this.viewport = {
+      width: 0,
+      height: 0
+    }
   }
 
   componentDidMount() {
