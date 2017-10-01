@@ -32,7 +32,7 @@ linux:
       - &import
         label: 'Import Photos…'
         command: 'app:import-photos'
-        accelerator: 'CmdOrCtrl+Shift+I'        
+        accelerator: 'CmdOrCtrl+Shift+I'
       - type: 'separator'
       - label: 'Close'
         accelerator: 'CmdOrCtrl+W'
@@ -106,7 +106,7 @@ linux:
         accelerator: 'CmdOrCtrl+S'
         command: 'win:refresh'
       - label: 'Toggle &Developer Tools'
-        accelerator: 'CmdOrCtrl+Shift+I'
+        accelerator: 'CmdOrCtrl+D'
         role: 'toggledevtools'
       - type: 'separator'
       - label: 'Reset Ontology Database'
