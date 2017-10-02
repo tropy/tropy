@@ -134,6 +134,7 @@ class EsperToolbar extends PureComponent {
               minIcon={<IconMinusCircle/>}
               maxIcon={<IconPlusCircle/>}
               isDisabled={this.props.isDisabled}
+              tabIndex={null}
               onChange={this.handleZoomChange}/>
           </ToolGroup>
         </ToolbarLeft>
