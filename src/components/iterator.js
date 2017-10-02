@@ -7,7 +7,7 @@ const { adjacent, times } = require('../common/util')
 const { floor, round } = Math
 const { bool, number } = require('prop-types')
 const throttle = require('lodash.throttle')
-const { on, off } = require('../../dom')
+const { on, off } = require('../dom')
 
 
 class Iterator extends PureComponent {
