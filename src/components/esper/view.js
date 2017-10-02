@@ -96,6 +96,10 @@ class EsperView extends Component {
     this.pixi.stop()
   }
 
+  get bounds() {
+    return this.pixi.screen
+  }
+
   get isStarted() {
     return !!this.pixi.ticker.started
   }
@@ -104,8 +108,17 @@ class EsperView extends Component {
     return this.drag.current != null
   }
 
-  get bounds() {
-    return this.pixi.screen
+  isDoubleClick(time = Date.now(), threshold = 350) {
+    try {
+      return this.isDoubleClickSupported() &&
+        (time - this.lastClickTime) <= threshold
+    } finally {
+      this.lastClickTime = time
+    }
+  }
+
+  isDoubleClickSupported(tool = this.props.tool) {
+    return tool === TOOL.PAN || tool === TOOL.ARROW
   }
 
   async reset(props) {
@@ -126,7 +139,7 @@ class EsperView extends Component {
         this.image.texture = await this.load(props.src, this.image)
 
         this.image.interactive = true
-        this.image.on('mousedown', this.handleDragStart)
+        this.image.on('mousedown', this.handleMouseDown)
 
       } catch (_) {
         // TODO handle missing photo
@@ -403,12 +416,7 @@ class EsperView extends Component {
     this.props.onWheel(coords(e))
   }
 
-  handleDoubleClick = (e) => {
-    e.stopPropagation()
-    this.props.onDoubleClick(coords(e.nativeEvent))
-  }
-
-  handleDragStart = (event) => {
+  handleMouseDown = (event) => {
     const { data, target } = event
 
     if (this.isDragging) this.drag.stop()
@@ -416,6 +424,10 @@ class EsperView extends Component {
 
     if (target instanceof Selection) {
       return this.props.onSelectionActivate(target.data)
+    }
+
+    if (this.isDoubleClick()) {
+      return this.props.onDoubleClick(coords(data.originalEvent))
     }
 
     target.cursor = `${this.props.tool}-active`
@@ -535,10 +547,7 @@ class EsperView extends Component {
 
   render() {
     return (
-      <div
-        ref={this.setContainer}
-        className="esper-view"
-        onDoubleClick={this.handleDoubleClick}/>
+      <div ref={this.setContainer} className="esper-view"/>
     )
   }
 
