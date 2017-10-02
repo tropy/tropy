@@ -48,10 +48,18 @@ class Esper extends PureComponent {
       this.resize(e.contentRect)
     })
     this.ro.observe(this.view.container)
+
+    this.io = new IntersectionObserver(([e]) => {
+      requestIdleCallback(e.intersectionRatio > 0 ?
+        this.view.start : this.view.stop)
+    }, { threshold: [0] })
+
+    this.io.observe(this.view.container)
   }
 
   componentWillUnmount() {
     this.ro.disconnect()
+    this.io.disconnect()
     this.persist.flush()
   }
 
@@ -111,6 +119,10 @@ class Esper extends PureComponent {
 
   get isSelectionActive() {
     return this.props.selection != null
+  }
+
+  get tabIndex() {
+    return (this.props.isItemOpen) ? this.props.tabIndex : -1
   }
 
   getActiveImageId() {
@@ -500,12 +512,12 @@ class Esper extends PureComponent {
 
 
   render() {
-    const { isDisabled, isSelectionActive } = this
+    const { isDisabled, isSelectionActive, tabIndex } = this
     const tool = this.state.quicktool || this.state.tool
 
     return (
       <section
-        tabIndex={this.props.tabIndex}
+        tabIndex={tabIndex}
         className={cx(this.classes)}
         onKeyDown={this.handleKeyDown}
         onKeyUp={this.handleKeyUp}>
@@ -542,9 +554,10 @@ class Esper extends PureComponent {
 
   static propTypes = {
     hasOverlayToolbar: bool,
-    isDisabled: bool,
     invertScroll: bool.isRequired,
     invertZoom: bool.isRequired,
+    isDisabled: bool,
+    isItemOpen: bool.isRequired,
     keymap: object.isRequired,
     maxZoom: number.isRequired,
     minZoom: number.isRequired,

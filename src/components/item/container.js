@@ -54,6 +54,7 @@ class ItemContainer extends PureComponent {
             invertScroll={this.props.settings.invertScroll}
             invertZoom={this.props.settings.invertZoom}
             isDisabled={this.props.isDisabled}
+            isItemOpen={this.props.isOpen}
             keymap={this.props.keymap.Esper}
             photo={this.props.photo}
             selection={this.props.selection}

@@ -57,18 +57,11 @@ class EsperView extends Component {
     }
 
     append(this.pixi.view, this.container)
-
-    this.io = new IntersectionObserver(([e]) => {
-      requestIdleCallback(e.intersectionRatio > 0 ? this.start : this.stop)
-    }, { threshold: [0] })
-
-    this.io.observe(this.container)
   }
 
   componentWillUnmount() {
     this.tweens.removeAll()
     this.pixi.destroy(true)
-    this.io.disconnect()
     this.m.removeListener(this.handleResolutionChange)
     if (this.drag.current) this.drag.stop()
   }
