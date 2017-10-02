@@ -69,7 +69,8 @@ class ItemContainer extends PureComponent {
           isDisabled={this.props.isDisabled || !this.props.photo}
           isItemOpen={this.props.isOpen}
           keymap={this.props.keymap.NotePad}
-          onChange={this.props.onNoteChange}/>
+          onChange={this.props.onNoteChange}
+          onCommit={this.props.onNoteCommit}/>
       </div>
     )
   }
@@ -89,6 +90,7 @@ class ItemContainer extends PureComponent {
     selections: arrayOf(object).isRequired,
     settings: object.isRequired,
     onNoteChange: func.isRequired,
+    onNoteCommit: func.isRequired,
     onPhotoSave: func.isRequired,
     onPhotoSelect: func.isRequired,
     onSelectionCreate: func.isRequired,
