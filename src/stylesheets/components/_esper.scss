@@ -12,12 +12,22 @@
   position: relative;
   overflow: hidden;
 
+  .esper-header {
+    position: relative;
+    z-index: $zindex-esper-header;
+  }
+
   .toolbar {
     box-sizing: content-box;
     padding-top: 0;
     height: $toolbar-height;
     margin: 0;
     box-shadow: 0 1px 0 $esper-toolbar-shadow;
+    background: $esper-toolbar-solid-bg;
+
+    .frameless & {
+      background: transparent;
+    }
 
     .btn-icon {
       & + .btn-icon {
@@ -71,7 +81,6 @@
       left: 0;
       top: 0;
       width: 100%;
-      z-index: $zindex-esper-header;
 
       &.window-draggable {
         position: absolute;
