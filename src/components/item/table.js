@@ -43,6 +43,9 @@ class ItemTable extends ItemIterator {
     return this.connect(
       <div
         className={cx(this.classes)}
+        ref={this.setContainer}
+        tabIndex={this.tabIndex}
+        onKeyDown={this.handleKeyDown}
         onClick={this.handleClickOutside}>
         <div
           ref={this.setScroller}
@@ -71,12 +74,7 @@ class ItemTable extends ItemIterator {
 
   render() {
     return (this.props.isEmpty) ? this.renderNoItems() : (
-      <div
-        className="item table"
-        ref={this.setContainer}
-        tabIndex={this.tabIndex}
-        onKeyDown={this.handleKeyDown}>
-
+      <div className="item table">
         <ItemTableHead
           columns={this.props.columns}
           sort={this.props.sort}
@@ -95,6 +93,11 @@ class ItemTable extends ItemIterator {
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,
     onMetadataSave: func.isRequired
+  }
+
+  static defaultProps = {
+    ...ItemIterator.defaultProps,
+    overscan: 2
   }
 }
 

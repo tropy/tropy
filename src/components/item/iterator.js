@@ -41,11 +41,11 @@ class ItemIterator extends Iterator {
     if (this.scroller == null) return 0
 
     if (this.offset == null || update) {
-      const { overscan, maxOffset, rowHeight } = this.state
-      const offset = this.scroller.scrollTop
+      const { overscan, maxOffset, rowHeight, viewportRows } = this.state
+      const top = this.scroller.scrollTop
+      const offset = (overscan - viewportRows) / 2 * rowHeight
 
-      this.offset =
-        restrict(offset - (offset % rowHeight) - overscan, 0, maxOffset)
+      this.offset = restrict(top - (top % rowHeight) - offset, 0, maxOffset)
     }
 
     return this.offset
@@ -167,10 +167,10 @@ class ItemIterator extends Iterator {
   }
 
   getItemRange() {
-    const { cols, rowHeight, viewportRows } = this.state
+    const { cols, overscan, rowHeight } = this.state
 
     const from = cols * floor(this.getOffset(false) / rowHeight)
-    const size = cols * viewportRows * 2
+    const size = cols * overscan
 
     return {
       from,

@@ -55,11 +55,11 @@ class Iterator extends PureComponent {
     const viewportRows = this.getViewportRows(props.size)
     const rowHeight = this.getRowHeight(props.size)
     const height = rows * rowHeight
-    const overscan = (viewportRows / 2) * rowHeight
+    const overscan = ceil(viewportRows * this.props.overscan)
     const maxCols = this.getColumns(TILE.MIN)
 
-    let maxOffset = height - this.viewport.height
-    maxOffset = max(maxOffset - (maxOffset % rowHeight), height)
+    let maxOffset = height - (overscan * rowHeight)
+    maxOffset = max(maxOffset - (maxOffset % rowHeight), 0)
 
     this.setState({
       cols,
@@ -162,7 +162,12 @@ class Iterator extends PureComponent {
 
   static propTypes = {
     isDisabled: bool,
+    overscan: number.isRequired,
     size: number.isRequired
+  }
+
+  static defaultProps = {
+    overscan: 2
   }
 }
 
