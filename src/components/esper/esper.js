@@ -384,17 +384,17 @@ class Esper extends PureComponent {
 
   handleDoubleClick = ({ x, y, shift }) => {
     return shift ?
-      this.handleZoomOut({ x, y }) :
-      this.handleZoomIn({ x, y })
+      this.handleZoomOut({ x, y }, true) :
+      this.handleZoomIn({ x, y }, true)
   }
 
-  handleZoomIn = ({ x, y }, animate = false) => {
+  handleZoomIn = ({ x, y } = {}, animate = false) => {
     this.handleZoomChange({
       x, y, zoom: this.state.zoom + ZOOM_STEP_SIZE
     }, animate)
   }
 
-  handleZoomOut = ({ x, y }, animate = false) => {
+  handleZoomOut = ({ x, y } = {}, animate = false) => {
     this.handleZoomChange({
       x, y, zoom: this.state.zoom - ZOOM_STEP_SIZE
     }, animate)
@@ -434,10 +434,10 @@ class Esper extends PureComponent {
     } else {
       switch (match(this.props.keymap, event)) {
         case 'zoomIn':
-          this.zoom(ZOOM_STEP_SIZE)
+          this.handleZoomIn()
           break
         case 'zoomOut':
-          this.zoom(-ZOOM_STEP_SIZE)
+          this.handleZoomOut()
           break
         case 'up':
           this.move({ y: PAN_STEP_SIZE * this.state.zoom })
