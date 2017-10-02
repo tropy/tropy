@@ -12,6 +12,12 @@
   position: relative;
   overflow: hidden;
 
+  &:not(:focus) {
+    .toolbar-left {
+      opacity: 0.6;
+    }
+  }
+
   .esper-header {
     position: relative;
     z-index: $zindex-esper-header;
@@ -95,7 +101,12 @@
 
       @at-root #{selector-replace(&, ".esper", ".esper:hover")} {
         transform: translate3d(0, 0, 0);
-        transition: transform $esper-toolbar-transition-in;
+        transition: transform $esper-toolbar-transition-in-hover;
+      }
+
+      @at-root #{selector-replace(&, ".esper", ".esper:focus")} {
+        transform: translate3d(0, 0, 0);
+        transition: transform $esper-toolbar-transition-in-focus;
       }
 
       .btn-icon {
