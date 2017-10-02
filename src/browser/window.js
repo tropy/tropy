@@ -2,7 +2,7 @@
 
 const { BrowserWindow, systemPreferences: pref } = require('electron')
 const { join } = require('path')
-const { format } = require('url')
+const { format, parse } = require('url')
 const { darwin, EL_CAPITAN } = require('../common/os')
 const { channel } = require('../common/release')
 const { warn } = require('../common/log')
@@ -79,8 +79,16 @@ module.exports = {
       })
 
       .on('will-navigate', (event, url) => {
-        if (url !== win.webContents.getURL()) {
-          warn(`win#${win.id} attempted to navigate to ${url}`)
+        try {
+          const cur = parse(win.webContents.getURL())
+          const nxt = parse(url)
+
+          if (cur.pathname !== nxt.pathname) {
+            warn(`win#${win.id} attempted to navigate to ${url}`)
+            event.preventDefault()
+          }
+        } catch (error) {
+          warn(`win#${win.id} attempted to navigate to ${url}`, { error })
           event.preventDefault()
         }
       })

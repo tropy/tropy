@@ -108,6 +108,8 @@ linux:
       - label: 'Toggle &Developer Tools'
         accelerator: 'CmdOrCtrl+Shift+I'
         role: 'toggledevtools'
+      - label: 'Toggle Performance Tools'
+        command: 'win:toggle-perf-tools'
       - type: 'separator'
       - label: 'Reset Ontology Database'
         command: 'app:reset-ontology-db'
