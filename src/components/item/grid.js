@@ -48,8 +48,7 @@ class ItemGrid extends ItemIterator {
   render() {
     if (this.props.isEmpty) return this.renderNoItems()
 
-    const { height } = this.state
-    const offset = this.getOffset(true)
+    const { offset, height } = this.state
     const transform = `translate3d(0,${offset}px,0)`
 
     return this.connect(

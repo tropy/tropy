@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { TABS, SASS: { TILE } } = require('../constants')
-const { adjacent, times } = require('../common/util')
+const { adjacent, restrict, times } = require('../common/util')
 const { on, off } = require('../dom')
 const { ceil, floor, max, round } = Math
 const { bool, number } = require('prop-types')
@@ -17,7 +17,12 @@ class Iterator extends PureComponent {
 
     this.state = {
       cols: 1,
+      height: 0,
       maxCols: 1,
+      maxOffset: 0,
+      offset: 0,
+      overscan: 0,
+      rowHeight: 0,
       rows: 0,
       viewportRows: 0
     }
@@ -55,11 +60,15 @@ class Iterator extends PureComponent {
     const viewportRows = this.getViewportRows(props.size)
     const rowHeight = this.getRowHeight(props.size)
     const height = rows * rowHeight
-    const overscan = ceil(viewportRows * this.props.overscan)
+    const overscan = ceil(viewportRows * props.overscan)
     const maxCols = this.getColumns(TILE.MIN)
 
     let maxOffset = height - (overscan * rowHeight)
     maxOffset = max(maxOffset - (maxOffset % rowHeight), 0)
+
+    const offset = this.getOffset({
+      overscan, maxOffset, rowHeight, viewportRows
+    })
 
     this.setState({
       cols,
@@ -67,6 +76,7 @@ class Iterator extends PureComponent {
       maxCols,
       maxOffset,
       overscan,
+      offset,
       rowHeight,
       rows,
       viewportRows
@@ -116,6 +126,16 @@ class Iterator extends PureComponent {
   getItems() {
     return EMPTY
   }
+
+  getOffset({ overscan, maxOffset, rowHeight, viewportRows } = this.state) {
+    if (this.scroller == null) return 0
+
+    const top = this.scroller.scrollTop
+    const offset = (overscan - viewportRows) / 2 * rowHeight
+
+    return restrict(top - (top % rowHeight) - offset, 0, maxOffset)
+  }
+
 
   getRows(cols = this.state.cols, props = this.props) {
     return ceil(this.getItems(props).length / cols)

@@ -36,8 +36,7 @@ class ItemTable extends ItemIterator {
     const { columns, data, edit, onMetadataSave } = this.props
     const onEdit = this.props.selection.length === 1 ? this.props.onEdit : noop
 
-    const { height } = this.state
-    const offset = this.getOffset(true)
+    const { offset, height } = this.state
     const transform = `translate3d(0,${offset}px,0)`
 
     return this.connect(
@@ -79,7 +78,6 @@ class ItemTable extends ItemIterator {
           columns={this.props.columns}
           sort={this.props.sort}
           onSort={this.props.onSort}/>
-
         {this.renderTableBody()}
       </div>
     )

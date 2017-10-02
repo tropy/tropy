@@ -5,7 +5,6 @@ const { Iterator } = require('../iterator')
 const { FormattedMessage } = require('react-intl')
 const { has, on, off } = require('../../dom')
 const { floor, min } = Math
-const { restrict } = require('../../common/util')
 const { match } = require('../../keymap')
 const cx = require('classnames')
 
@@ -25,30 +24,12 @@ class ItemIterator extends Iterator {
     off(this.scroller, 'scroll', this.handleScroll, SCROLL_OPTIONS)
   }
 
-  componentDidUpdate() {
-    this.isUpdateScheduled = false
-  }
-
   get tabIndex() {
     return this.props.isActive ? super.tabIndex : null
   }
 
   setScroller = (scroller) => {
     this.scroller = scroller
-  }
-
-  getOffset(update = false) {
-    if (this.scroller == null) return 0
-
-    if (this.offset == null || update) {
-      const { overscan, maxOffset, rowHeight, viewportRows } = this.state
-      const top = this.scroller.scrollTop
-      const offset = (overscan - viewportRows) / 2 * rowHeight
-
-      this.offset = restrict(top - (top % rowHeight) - offset, 0, maxOffset)
-    }
-
-    return this.offset
   }
 
   getItems(props = this.props) {
@@ -150,9 +131,13 @@ class ItemIterator extends Iterator {
   }
 
   handleScroll = () => {
-    if (!this.isUpdateScheduled) {
-      this.isUpdateScheduled = true
-      requestAnimationFrame(() => void this.forceUpdate())
+    if (!this.isScrollUpdateScheduled) {
+      this.isScrollUpdateScheduled = true
+
+      requestAnimationFrame(() => {
+        this.setState({ offset: this.getOffset() })
+        this.isScrollUpdateScheduled = false
+      })
     }
   }
 
@@ -167,9 +152,9 @@ class ItemIterator extends Iterator {
   }
 
   getItemRange() {
-    const { cols, overscan, rowHeight } = this.state
+    const { cols, offset, overscan, rowHeight } = this.state
 
-    const from = cols * floor(this.getOffset(false) / rowHeight)
+    const from = cols * floor(offset / rowHeight)
     const size = cols * overscan
 
     return {
