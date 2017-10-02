@@ -51,7 +51,6 @@
     "babel-plugin-transform-react-jsx": "^6.4.0",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
-    "chai-enzyme": "^0.8.0",
     "chokidar": "^1.6.0",
     "devtron": "^1.0.0",
     "electron": "^1.6.14",

@@ -7,12 +7,12 @@ describe('Steps', () => {
   const { Steps, Step } = __require('components/steps')
 
   it('has class steps', () => {
-    expect(shallow(<Steps/>)).to.have.className('steps')
+    expect(shallow(<Steps/>).hasClass('steps')).to.eql(true)
   })
 
   describe('Step', () => {
     it('has class step', () => {
-      expect(shallow(<Step/>)).to.have.className('step')
+      expect(shallow(<Step/>).hasClass('step')).to.eql(true)
     })
   })
 })
