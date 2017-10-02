@@ -12,6 +12,11 @@
   position: relative;
   overflow: hidden;
 
+  .esper-header {
+    position: relative;
+    z-index: $zindex-esper-header;
+  }
+
   .toolbar {
     box-sizing: content-box;
     padding-top: 0;
