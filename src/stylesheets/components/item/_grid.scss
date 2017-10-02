@@ -30,6 +30,7 @@
   }
 
   .runway {
+    contain: strict;
     min-height: 100%;
   }
 
@@ -38,6 +39,7 @@
     flex-wrap: wrap;
     align-content: flex-start;
     padding: $space-min;
+    contain: layout size style;
     will-change: transform;
   }
 

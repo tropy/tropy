@@ -12,6 +12,7 @@
   contain: strict;
 
   .runway {
+    contain: strict;
     min-height: 100%;
   }
 
@@ -165,6 +166,7 @@
       width: 100%;
       table-layout: fixed;
       border-collapse: collapse;
+      contain: layout size style;
       will-change: transform;
     }
   }
