@@ -211,6 +211,7 @@ class ProjectSidebar extends PureComponent {
               <ol>
                 <ProjectName
                   name={project.name}
+                  size={project.items}
                   isSelected={isSelected}
                   isEditing={this.isEditing}
                   onChange={this.handleChange}
@@ -276,7 +277,8 @@ class ProjectSidebar extends PureComponent {
 
     project: shape({
       file: string,
-      name: string
+      name: string,
+      items: number
     }).isRequired,
 
     keymap: object.isRequired,
