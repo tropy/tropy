@@ -510,6 +510,16 @@ class Esper extends PureComponent {
     }
   }
 
+  setContainer = (container) => {
+    this.container = container
+  }
+
+  handleMouseDown = () => {
+    if (document.activeElement !== this.container) {
+      this.container.focus()
+    }
+  }
+
 
   render() {
     const { isDisabled, isSelectionActive, tabIndex } = this
@@ -517,8 +527,10 @@ class Esper extends PureComponent {
 
     return (
       <section
+        ref={this.setContainer}
         tabIndex={tabIndex}
         className={cx(this.classes)}
+        onMouseDown={this.handleMouseDown}
         onKeyDown={this.handleKeyDown}
         onKeyUp={this.handleKeyUp}>
         <EsperHeader>
