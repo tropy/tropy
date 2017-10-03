@@ -171,12 +171,18 @@ const PREFS = {
   HEIGHT: 580
 }
 
+const ABOUT = {
+  WIDTH: 456,
+  HEIGHT: 580
+}
+
 const GRID = {
   SIZE: 12,
 }
 
 
 module.exports =  {
+  ABOUT,
   ACTIVITY,
   ESPER,
   GRID,

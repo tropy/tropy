@@ -35,6 +35,7 @@ const {
 
 const WIN = SASS.WINDOW
 const WIZ = SASS.WIZARD
+const ABT = SASS.ABOUT
 const PREFS = SASS.PREFS
 const ZOOM = ARGS.zoom || 1
 
@@ -87,7 +88,7 @@ class Tropy extends EventEmitter {
         }
       }
 
-      if (!file) return this.create()
+      if (!file) return this.showWizard()
     }
 
     try {
@@ -182,7 +183,29 @@ class Tropy extends EventEmitter {
     this.dispatch(act.item.import(), this.win)
   }
 
-  create() {
+  showAboutWindow() {
+    if (this.about) return this.about.show(), this
+
+    this.about = open('about', this.hash, {
+      title: this.strings.dict.windows.about.title,
+      width: ABT.WIDTH * ZOOM,
+      height: ABT.HEIGHT * ZOOM,
+      parent: darwin ? null : this.win,
+      modal: !darwin && !!this.win,
+      autoHideMenuBar: true,
+      resizable: false,
+      minimizable: false,
+      maximizable: false,
+      fullscreenable: false,
+      darkTheme: (this.state.theme === 'dark'),
+      frame: !this.hash.frameless
+    })
+      .once('closed', () => { this.about = undefined })
+
+    return this
+  }
+
+  showWizard() {
     if (this.prefs) this.prefs.close()
     if (this.wiz) return this.wiz.show(), this
 
@@ -277,8 +300,10 @@ class Tropy extends EventEmitter {
   }
 
   listen() {
+    this.on('app:about', () =>
+      this.showAboutWindow())
     this.on('app:create-project', () =>
-      this.create())
+      this.showWizard())
     this.on('app:close-project', () =>
       this.win && this.dispatch(act.project.close('debug')))
 
@@ -506,7 +531,7 @@ class Tropy extends EventEmitter {
     ipc.on('cmd', (_, command, ...params) => this.emit(command, ...params))
 
     ipc.on(PROJECT.OPENED, (_, project) => this.opened(project))
-    ipc.on(PROJECT.CREATE, () => this.create())
+    ipc.on(PROJECT.CREATE, () => this.showWizard())
     ipc.on(PROJECT.CREATED, (_, { file }) => this.open(file))
 
     ipc.on(PROJECT.UPDATE, (_, { name }) => {

@@ -21,3 +21,5 @@ windows:
     title: Tropy Preferences
   wizard:
     title: Welcome to Tropy
+  about:
+    title: About Tropy

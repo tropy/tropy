@@ -146,7 +146,7 @@ darwin:
   - label: '%name'
     submenu:
       - label: 'About %name'
-        role: 'about'
+        command: 'app:about'
       - type: 'separator'
       - label: 'Preferences …'
         accelerator: 'Command+,'
