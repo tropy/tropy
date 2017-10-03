@@ -26,7 +26,7 @@
   }
 
   .scroll-container {
-    overflow-y: scroll;
+    padding: $space-min;
   }
 
   .runway {
@@ -38,7 +38,6 @@
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
-    padding: $space-min;
     contain: layout size style;
     will-change: transform;
   }
