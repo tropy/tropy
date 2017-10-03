@@ -4,10 +4,55 @@ const { list } = require('../common/util')
 const { TEMPLATE } = require('../constants/selection')
 const { all } = require('bluebird')
 const { into, map } = require('transducers.js')
+const { assign } = Object
 
 
 const mod = {
   selection: {
+    async all(db) {
+      const selections = {}
+
+      await all([
+        db.each(`
+          SELECT
+              id,
+              photo_id AS photo,
+              x,
+              y,
+              width,
+              height,
+              angle,
+              mirror,
+              template,
+              datetime(created, "localtime") AS created,
+              datetime(modified, "localtime") AS modified
+            FROM subjects
+              JOIN images USING (id)
+              JOIN selections USING (id)`,
+        ({ id, created, modified, mirror, ...data }) => {
+          data.created = new Date(created)
+          data.modified = new Date(modified)
+          data.mirror = !!mirror
+
+          if (id in selections) assign(selections[id], data)
+          else selections[id] = assign({ id, notes: [] }, data)
+        }),
+
+        db.each(`
+          SELECT id, note_id AS note
+            FROM notes JOIN selections USING (id)
+            WHERE deleted IS NULL
+            ORDER BY id, created`,
+          ({ id, note }) => {
+            if (id in selections) selections[id].notes.push(note)
+            else selections[id] = { id, notes: [note] }
+          }
+        )
+      ])
+
+      return selections
+    },
+
     async create(db, template, { photo, x, y, width, height, angle, mirror }) {
       const { id } = await db.run(`
         INSERT INTO subjects (template) VALUES (?)`, template || TEMPLATE)
@@ -23,7 +68,7 @@ const mod = {
       return (await mod.selection.load(db, [id]))[id]
     },
 
-    async load(db, ...ids) {
+    async load(db, ids) {
       const selections = into({}, map(id => [id, { id, notes: [] }]), ids)
 
       ids = list(ids)

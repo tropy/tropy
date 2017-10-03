@@ -181,13 +181,13 @@ class Load extends Command {
     }
 
     if (missing.notes.length > 0) {
-      yield put(act.note.load(missing.notes))
+      //yield put(act.note.load(missing.notes))
     }
 
     if (missing.selections.length > 0) {
       yield all([
-        put(act.selection.load(missing.selections)),
-        put(act.metadata.load(missing.selections))
+        //put(act.selection.load(missing.selections)),
+        //put(act.metadata.load(missing.selections))
       ])
     }
 

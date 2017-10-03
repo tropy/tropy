@@ -13,9 +13,9 @@ class Load extends Command {
 
   *exec() {
     const { db } = this.options
-    const ids = this.action.payload
+    const { payload } = this.action
 
-    const notes = yield call(mod.note.load, db, ids)
+    const notes = yield call(mod.note.load, db, payload)
 
     return notes
   }

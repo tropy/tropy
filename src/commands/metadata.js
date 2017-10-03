@@ -13,9 +13,12 @@ class Load extends Command {
   static get action() { return LOAD }
 
   *exec() {
-    return (
-      yield call(mod.load, this.options.db, this.action.payload)
-    )
+    const { db } = this.options
+    const { payload } = this.action
+
+    const data = yield call((payload.ids) ? mod.load : mod.all, db, payload)
+
+    return data
   }
 }
 

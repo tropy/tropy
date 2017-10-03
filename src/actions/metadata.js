@@ -12,7 +12,7 @@ module.exports = {
     }
   },
 
-  load(payload, meta) {
+  load(payload = {}, meta) {
     return {
       type: METADATA.LOAD,
       payload,

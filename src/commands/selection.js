@@ -64,26 +64,7 @@ class Load extends Command {
 
   *exec() {
     const { db } = this.options
-    const { payload } = this.action
-
-    const selections = yield call(mod.selection.load, db, ...payload)
-
-    const { notes } = yield select()
-    const missing = []
-
-    // TODO DRY -- generalize fetching missing dependents.
-    for (let id in selections) {
-      for (let nId of selections[id].notes) {
-        if (notes[nId] == null || notes[nId].pending) {
-          missing.push(nId)
-        }
-      }
-    }
-
-    if (missing.length > 0) {
-      yield put(act.note.load(missing))
-    }
-
+    const selections = yield call(mod.selection.all, db)
     return selections
   }
 }

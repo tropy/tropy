@@ -96,6 +96,13 @@ function *setup(db, project) {
     put(act.tag.load())
   ])
 
+  yield put(act.metadata.load())
+
+  yield all([
+    put(act.selection.load()),
+    put(act.note.load())
+  ])
+
   yield call(search, db)
   yield call(load, db)
 }
@@ -106,15 +113,17 @@ function *close(db, project, access) {
     yield call(mod.access.close, db, access.id)
   }
 
+  //yield call(mod.item.prune, db)
+
   yield all([
-    call(mod.item.prune, db),
     call(mod.list.prune, db),
-    call(mod.value.prune, db),
+    //call(mod.value.prune, db),
     call(mod.photo.prune, db),
     call(mod.selection.prune, db),
-    call(mod.note.prune, db),
-    call(mod.access.prune, db)
+    call(mod.note.prune, db)
   ])
+
+  yield call(mod.access.prune, db)
 
   yield all([
     call(storage.persist, 'nav', project.id),

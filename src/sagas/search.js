@@ -12,7 +12,7 @@ module.exports = {
   // eslint-disable-next-line complexity
   *search(db) {
     try {
-      const { nav, metadata, items } = yield select()
+      const { nav, items } = yield select()
       const { list, tags, trash, sort, lists, query } = nav
 
       const START = Date.now()
@@ -41,21 +41,14 @@ module.exports = {
 
       yield put(act.qr.items.update(result))
 
-      const missing = {
-        items: [], metadata: []
-      }
+      const missing = { items: [] }
 
       for (let id of result) {
         if (!(id in items)) missing.items.push(id)
-        if (!(id in metadata)) missing.metadata.push(id)
       }
 
       if (missing.items.length > 0) {
         yield put(act.item.load(missing.items))
-      }
-
-      if (missing.metadata.length > 0) {
-        yield put(act.metadata.load(missing.metadata))
       }
 
 
@@ -69,10 +62,10 @@ module.exports = {
   //eslint-disable-next-line complexity
   *load() {
     try {
-      const { nav, items, metadata, photos, notes } = yield select()
+      const { nav, items, photos } = yield select()
 
       const missing = {
-        items: [], photos: [], metadata: [], notes: []
+        items: [], photos: []
       }
 
       for (let id of nav.items) {
@@ -82,40 +75,22 @@ module.exports = {
           if (item.pending) continue
 
           for (let photo of item.photos) {
-            if (!(photo in metadata)) missing.metadata.push(photo)
-
             if (!(photo in photos)) {
               missing.photos.push(photo)
-
-            } else {
-              for (let note of photos[photo].notes) {
-                //eslint-disable-next-line max-depth
-                if (!(note in notes)) missing.notes.push(note)
-              }
             }
           }
 
         } else {
           missing.items.push(id)
         }
-
-        if (!(id in metadata)) missing.metadata.push(id)
       }
 
       if (missing.items.length) {
         yield put(act.item.load(missing.items, { load: true }))
       }
 
-      if (missing.metadata.length) {
-        yield put(act.metadata.load(missing.metadata))
-      }
-
       if (missing.photos.length) {
         yield put(act.photo.load(missing.photos))
-      }
-
-      if (missing.notes.length) {
-        yield put(act.note.load(missing.notes))
       }
 
     } catch (error) {
