@@ -19,16 +19,26 @@ panel:
   notes: Notes
 about:
     tropy: Tropy™
-    rrchnm: Roy Rosenzweig Center for History and New Media
-    cds: Corporation for Digital Scholarship
+    rrchnm:
+      title: Roy Rosenzweig Center for History and New Media
+      url: https://rrchnm.org
+    cds:
+      title: Corporation for Digital Scholarship
+      url: https://
     text: >
       Tropy is designed by the {rrchnm}, a team that develops
       historical teaching resources, digital exhibits, and
       open-source software.
     trademark: Tropy is a trademark of the {cds}.
-    changelog: Release Notes
-    license: Licensing Information
-    credits: Credits
+    changelog:
+      title: Release Notes
+      url: https://
+    license:
+      title: Licensing Information
+      url: https://tropy.org/license
+    credits:
+      title: Credits
+      url: https://tropy.org/credits
 project:
   none: Drop a project file here or create a {newProject}
   empty: Drop your photos into Tropy to get started
