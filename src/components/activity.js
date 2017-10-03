@@ -38,7 +38,7 @@ const Activity = ({ type, progress, total, onCancel }) => {
           <div className="activity-text">
             <FormattedMessage
               id={`activity.${type}`}
-              values={{ progress, total }}/>
+              values={{ progress, total, hasProgressBar }}/>
           </div>
           {CancelButton}
         </div>
