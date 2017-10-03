@@ -154,6 +154,8 @@
       transparent (2 * $row-height + $space-min));
     background-attachment: local;
     padding-top: $space-min;
+    position: relative;
+    z-index: 0; // Fix stacking context (overlay toolbar covered by active item)
   }
 
   .runway {
