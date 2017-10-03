@@ -118,9 +118,9 @@ function *close(db, project, access) {
     call(storage.persist, 'columns', project.id)
   ])
 
-  //yield call(mod.item.prune, db)
+  yield call(mod.item.prune, db)
   yield call(mod.list.prune, db)
-  //yiel call(mod.value.prune, db)
+  yield call(mod.value.prune, db)
   yield call(mod.photo.prune, db)
   yield call(mod.selection.prune, db)
   yield call(mod.note.prune, db)
@@ -153,7 +153,7 @@ function *main() {
         yield cancel(task)
         yield race({
           closed: take(CLOSED),
-          timeout: call(delay, 2000)
+          timeout: call(delay, 8000)
         })
 
         task = null

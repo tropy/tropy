@@ -12,7 +12,7 @@
 --
 
 -- Save the current migration number
-PRAGMA user_version=1708121306;
+PRAGMA user_version=1710032150;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -119,7 +119,7 @@ CREATE TABLE lists (
 
   UNIQUE (parent_list_id, name)
 );
-INSERT INTO "lists" VALUES(0,'ROOT',NULL,NULL,'2017-01-31 12:00:00','2017-01-31 12:00:00');
+INSERT INTO lists VALUES(0,'ROOT',NULL,NULL,'2017-01-31 12:00:00','2017-01-31 12:00:00');
 CREATE TABLE list_items (
   list_id  INTEGER  REFERENCES lists ON DELETE CASCADE,
   id       INTEGER  REFERENCES items ON DELETE CASCADE,
@@ -160,13 +160,13 @@ INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_no
   content_rowid = ''note_id'',
   tokenize = ''porter unicode61''
 )');
-CREATE TABLE 'fts_notes_data'(id INTEGER PRIMARY KEY, block BLOB);
-INSERT INTO "fts_notes_data" VALUES(1,X'');
-INSERT INTO "fts_notes_data" VALUES(10,X'00000000000000');
-CREATE TABLE 'fts_notes_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
-CREATE TABLE 'fts_notes_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
-CREATE TABLE 'fts_notes_config'(k PRIMARY KEY, v) WITHOUT ROWID;
-INSERT INTO "fts_notes_config" VALUES('version',4);
+CREATE TABLE IF NOT EXISTS 'fts_notes_data'(id INTEGER PRIMARY KEY, block BLOB);
+INSERT INTO fts_notes_data VALUES(1,X'');
+INSERT INTO fts_notes_data VALUES(10,X'00000000000000');
+CREATE TABLE IF NOT EXISTS 'fts_notes_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
+CREATE TABLE IF NOT EXISTS 'fts_notes_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
+CREATE TABLE IF NOT EXISTS 'fts_notes_config'(k PRIMARY KEY, v) WITHOUT ROWID;
+INSERT INTO fts_notes_config VALUES('version',4);
 INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_metadata','fts_metadata',0,'CREATE VIRTUAL TABLE fts_metadata USING fts5(
   datatype UNINDEXED,
   text,
@@ -174,13 +174,13 @@ INSERT INTO sqlite_master(type,name,tbl_name,rootpage,sql)VALUES('table','fts_me
   content_rowid = ''value_id'',
   tokenize = ''porter unicode61''
 )');
-CREATE TABLE 'fts_metadata_data'(id INTEGER PRIMARY KEY, block BLOB);
-INSERT INTO "fts_metadata_data" VALUES(1,X'');
-INSERT INTO "fts_metadata_data" VALUES(10,X'00000000000000');
-CREATE TABLE 'fts_metadata_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
-CREATE TABLE 'fts_metadata_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
-CREATE TABLE 'fts_metadata_config'(k PRIMARY KEY, v) WITHOUT ROWID;
-INSERT INTO "fts_metadata_config" VALUES('version',4);
+CREATE TABLE IF NOT EXISTS 'fts_metadata_data'(id INTEGER PRIMARY KEY, block BLOB);
+INSERT INTO fts_metadata_data VALUES(1,X'');
+INSERT INTO fts_metadata_data VALUES(10,X'00000000000000');
+CREATE TABLE IF NOT EXISTS 'fts_metadata_idx'(segid, term, pgno, PRIMARY KEY(segid, term)) WITHOUT ROWID;
+CREATE TABLE IF NOT EXISTS 'fts_metadata_docsize'(id INTEGER PRIMARY KEY, sz BLOB);
+CREATE TABLE IF NOT EXISTS 'fts_metadata_config'(k PRIMARY KEY, v) WITHOUT ROWID;
+INSERT INTO fts_metadata_config VALUES('version',4);
 CREATE TABLE selections (
   id        INTEGER  PRIMARY KEY REFERENCES images ON DELETE CASCADE,
   photo_id  INTEGER  NOT NULL REFERENCES photos ON DELETE CASCADE,
@@ -286,6 +286,7 @@ CREATE TRIGGER metadata_values_ad_fts
       VALUES ('delete', OLD.value_id, OLD.datatype, OLD.text);
   END;
 CREATE INDEX idx_photos_checksum ON photos (checksum);
+CREATE INDEX idx_metadata_value_id ON metadata (value_id);
 PRAGMA writable_schema=OFF;
 COMMIT;
 PRAGMA foreign_keys=ON;
