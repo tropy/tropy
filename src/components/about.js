@@ -5,6 +5,8 @@ const { PureComponent } = React
 const { FormattedMessage, injectIntl, intlShape } = require('react-intl')
 const { shell } = require('electron')
 const { version } = require('../common/release')
+const { bool, func } = require('prop-types')
+const { Toolbar } = require('./toolbar')
 
 
 class About extends PureComponent {
@@ -20,9 +22,17 @@ class About extends PureComponent {
     )
   }
 
+  renderToolbar() {
+    return this.props.showToolbar && (
+      <Toolbar onDoubleClick={this.props.onToolbarDoubleClick}/>
+    )
+  }
+
   render() {
     return (
       <div className="about">
+        {this.renderToolbar()}
+
         <FormattedMessage id="about.tropy"/>
 
         <span className="version">{version}</span>
@@ -43,7 +53,13 @@ class About extends PureComponent {
   }
 
   static propTypes = {
-    intl: intlShape.isRequired
+    intl: intlShape.isRequired,
+    showToolbar: bool.isRequired,
+    onToolbarDoubleClick: func
+  }
+
+  static defaultProps = {
+    showToolbar: ARGS.frameless
   }
 }
 
