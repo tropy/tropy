@@ -123,9 +123,9 @@ module.exports = {
         FROM photos p
           LEFT OUTER JOIN trash tp USING (id)
           LEFT OUTER JOIN trash ti ON (ti.id = item_id)
-        WHERE tp.deleted IS NULL
-          AND ti.deleted IS NULL
-          AND checksum = ?`, checksum)
+        WHERE checksum = ?
+          AND tp.deleted IS NULL
+          AND ti.deleted IS NULL`, checksum)
   },
 
   async move(db, { ids, item }) {

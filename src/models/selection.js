@@ -3,13 +3,11 @@
 const { list } = require('../common/util')
 const { TEMPLATE } = require('../constants/selection')
 const { all } = require('bluebird')
-const { into, map } = require('transducers.js')
 const { assign } = Object
-
 
 const mod = {
   selection: {
-    async all(db) {
+    async load(db, ids) {
       const selections = {}
 
       await all([
@@ -28,7 +26,9 @@ const mod = {
               datetime(modified, "localtime") AS modified
             FROM subjects
               JOIN images USING (id)
-              JOIN selections USING (id)`,
+              JOIN selections USING (id)${
+          (ids != null) ? ` WHERE id IN (${list(ids)})` : ''
+        }`,
         ({ id, created, modified, mirror, ...data }) => {
           data.created = new Date(created)
           data.modified = new Date(modified)
@@ -41,7 +41,8 @@ const mod = {
         db.each(`
           SELECT id, note_id AS note
             FROM notes JOIN selections USING (id)
-            WHERE deleted IS NULL
+            WHERE ${(ids != null) ? `id IN (${list(ids)}) AND` : ''}
+              deleted IS NULL
             ORDER BY id, created`,
           ({ id, note }) => {
             if (id in selections) selections[id].notes.push(note)
@@ -66,51 +67,6 @@ const mod = {
           VALUES (?,?,?,?)`, [id, photo, x, y])
 
       return (await mod.selection.load(db, [id]))[id]
-    },
-
-    async load(db, ids) {
-      const selections = into({}, map(id => [id, { id, notes: [] }]), ids)
-
-      ids = list(ids)
-
-      await all([
-        db.each(`
-          SELECT
-              id,
-              photo_id AS photo,
-              x,
-              y,
-              width,
-              height,
-              angle,
-              mirror,
-              template,
-              datetime(created, "localtime") AS created,
-              datetime(modified, "localtime") AS modified
-            FROM subjects
-              JOIN images USING (id)
-              JOIN selections USING (id)
-            WHERE id IN (${ids})`,
-        (data) => {
-          Object.assign(selections[data.id], data, {
-            created: new Date(data.created),
-            modified: new Date(data.modified),
-            mirror: !!data.mirror
-          })
-        }),
-
-        db.each(`
-          SELECT id, note_id AS note
-            FROM notes
-            WHERE id IN (${ids}) AND deleted IS NULL
-            ORDER BY id, created`,
-          ({ id, note }) => {
-            selections[id].notes.push(note)
-          }
-        )
-      ])
-
-      return selections
     },
 
     async order(db, photo, selections, offset = 0) {

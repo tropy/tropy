@@ -64,7 +64,11 @@ class Load extends Command {
 
   *exec() {
     const { db } = this.options
-    const selections = yield call(mod.selection.all, db)
+    const { payload } = this.action
+
+    const selections = yield call(db.seq, conn =>
+      mod.selection.load(conn, payload))
+
     return selections
   }
 }
