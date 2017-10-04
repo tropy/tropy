@@ -11,7 +11,6 @@ module.exports = {
       meta: {
         ipc: action.meta.ipc,
         idx: action.meta.idx,
-        load: action.meta.load,
         search: action.meta.search,
         ...meta,
         done: true,
