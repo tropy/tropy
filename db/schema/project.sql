@@ -12,7 +12,7 @@
 --
 
 -- Save the current migration number
-PRAGMA user_version=1710032150;
+PRAGMA user_version=1710041315;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -287,6 +287,8 @@ CREATE TRIGGER metadata_values_ad_fts
   END;
 CREATE INDEX idx_photos_checksum ON photos (checksum);
 CREATE INDEX idx_metadata_value_id ON metadata (value_id);
+CREATE INDEX idx_trash_reason_deleted ON trash (reason, deleted);
+CREATE INDEX idx_metadata_property ON metadata (property);
 PRAGMA writable_schema=OFF;
 COMMIT;
 PRAGMA foreign_keys=ON;
