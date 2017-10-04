@@ -1,47 +1,26 @@
 'use strict'
 
 const { save } = require('./value')
-const { into, map } = require('transducers.js')
 const { keys } = Object
 const { get, list, quote } = require('../common/util')
 
 
 const metadata = {
-  async all(db) {
+  async load(db, ids) {
     const data = {}
 
     await db.each(`
       SELECT id, property, text, datatype AS type
         FROM subjects
           JOIN metadata USING (id)
-          JOIN metadata_values USING (value_id)
-        ORDER BY id, metadata.created ASC`,
+          JOIN metadata_values USING (value_id)${
+        (ids != null) ? ` WHERE id IN (${list(ids)}) ` : ''
+      } ORDER BY id, metadata.created ASC`,
       ({ id, property, type, text }) => {
         if (id in data) data[id][property] = { type, text }
         else data[id] = { id, [property]: { type, text } }
       }
     )
-
-    return data
-  },
-
-  async load(db, ids) {
-    const data = into({}, map(id => [id, { id }]), ids)
-
-    if (ids.length) {
-      await db.each(`
-        SELECT id, property, text, datatype AS type
-          FROM subjects
-            JOIN metadata USING (id)
-            JOIN metadata_values USING (value_id)
-          WHERE id IN (${ids.join(',')})
-          ORDER BY id, metadata.created ASC`,
-
-        ({ id, property, type, text }) => {
-          data[id][property] = { type, text }
-        }
-      )
-    }
 
     return data
   },
