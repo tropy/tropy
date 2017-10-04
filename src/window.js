@@ -291,7 +291,7 @@ class Window extends EventEmitter {
     }
   }
 
-  maximize() {
+  maximize = () => {
     this.current.isMaximized() ?
       this.current.unmaximize() : this.current.maximize()
   }
