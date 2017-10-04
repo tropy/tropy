@@ -7,7 +7,6 @@ const { shell } = require('electron')
 const { version } = require('../common/release')
 const { bool } = require('prop-types')
 const { Toolbar } = require('./toolbar')
-const { win } = require('../window')
 
 
 class About extends PureComponent {
@@ -24,9 +23,7 @@ class About extends PureComponent {
   }
 
   renderToolbar() {
-    return this.props.showToolbar && (
-      <Toolbar onDoubleClick={win.maximize}/>
-    )
+    return this.props.showToolbar && <Toolbar/>
   }
 
   render() {
