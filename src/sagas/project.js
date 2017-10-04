@@ -7,7 +7,7 @@ const { Cache } = require('../common/cache')
 const { warn, debug, verbose } = require('../common/log')
 const { ipc } = require('./ipc')
 const { history } = require('./history')
-const { search, load } = require('./search')
+const { search } = require('./search')
 const { ontology } = require('./ontology')
 const { exec } = require('./cmd')
 const { shell } = require('./shell')
@@ -83,7 +83,6 @@ function *open(file) {
 
 function *setup(db, project) {
   yield every(has('search'), search, db)
-  yield every(has('load'), load)
 
   yield all([
     call(storage.restore, 'nav', project.id),
@@ -93,19 +92,15 @@ function *setup(db, project) {
   yield all([
     put(act.history.drop()),
     put(act.list.load()),
-    put(act.tag.load())
-  ])
-
-  yield put(act.photo.load())
-  yield put(act.metadata.load())
-
-  yield all([
+    put(act.tag.load()),
+    put(act.item.load()),
+    put(act.photo.load()),
+    put(act.metadata.load()),
     put(act.selection.load()),
     put(act.note.load())
   ])
 
   yield call(search, db)
-  yield call(load, db)
 }
 
 

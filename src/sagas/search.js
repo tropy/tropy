@@ -12,7 +12,7 @@ module.exports = {
   // eslint-disable-next-line complexity
   *search(db) {
     try {
-      const { nav, items } = yield select()
+      const { nav } = yield select()
       const { list, tags, trash, sort, lists, query } = nav
 
       const START = Date.now()
@@ -41,49 +41,8 @@ module.exports = {
 
       yield put(act.qr.items.update(result))
 
-      const missing = { items: [] }
-
-      for (let id of result) {
-        if (!(id in items)) missing.items.push(id)
-      }
-
-      if (missing.items.length > 0) {
-        yield put(act.item.load(missing.items))
-      }
-
-
     } catch (error) {
       warn(`unexpectedly failed in *search: ${error.message}`)
-      verbose(error.stack)
-    }
-  },
-
-
-  //eslint-disable-next-line complexity
-  *load() {
-    try {
-      const { nav, items } = yield select()
-
-      const missing = {
-        items: []
-      }
-
-      for (let id of nav.items) {
-        const item = items[id]
-
-        if (item) {
-          if (item.pending) continue
-        } else {
-          missing.items.push(id)
-        }
-      }
-
-      if (missing.items.length) {
-        yield put(act.item.load(missing.items, { load: true }))
-      }
-
-    } catch (error) {
-      warn(`unexpectedly failed in *load: ${error.message}`)
       verbose(error.stack)
     }
   }
