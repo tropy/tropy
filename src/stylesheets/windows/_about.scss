@@ -1,0 +1,36 @@
+//
+// About window
+// --------------------------------------------------
+
+
+// Abstracts
+// --------------------------------------------------
+
+@import
+  "../abstracts/variables",
+  "../abstracts/mixins",
+  "../abstracts/functions";
+
+
+// Scaffolding
+// --------------------------------------------------
+
+@import
+  "../base/reset",
+  "../base/base",
+  "../base/type";
+
+
+// Components
+// --------------------------------------------------
+
+@import
+  "../components/toolbar";
+
+
+// Partials
+// --------------------------------------------------
+
+@import
+  "../partials/window-controls",
+  "../partials/window-draggable";
