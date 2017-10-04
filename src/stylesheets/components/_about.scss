@@ -1,0 +1,66 @@
+//
+// About
+// --------------------------------------------------
+
+.about.view {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  color: $soft-text-color;
+  padding: 0 40px;
+  font-size: 11px;
+  line-height: 19px;
+
+  .toolbar.window-draggable {
+    .frameless & {
+      position: fixed;
+      left: 0;
+      top: 0;
+      right: 0;
+    }
+  }
+
+  .app-icon {
+    flex: 0 0 auto;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: var(--brand-primary);
+    margin-right: 40px;
+  }
+
+  h1 {
+    font: {
+      family: "HelveticaNeue-Thin", $font-family-base;
+      weight: 200;
+      size: 40px;
+    }
+    line-height: 1.1;
+
+    span:first-child {
+      margin-left: -2px;
+    }
+
+    span:last-child {
+      font: {
+        weight: 300;
+        size: 0.5em;
+      }
+      position: relative;
+      top: -14px;
+      left: 3px;
+    }
+  }
+
+  .version {
+    font-size: $font-size-base;
+    margin-top: 4px;
+    margin-bottom: 19px;
+  }
+
+  .links {
+    a + a {
+      margin-left: $space-md;
+    }
+  }
+}

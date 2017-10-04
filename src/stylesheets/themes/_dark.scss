@@ -112,8 +112,9 @@ $tag-colors: (
 // Scaffolding
 // --------------------------------------------------
 
-$body-bg:    var(--shade-3);
-$text-color: var(--shade-9);
+$body-bg:         var(--shade-3);
+$text-color:      var(--shade-9);
+$soft-text-color: var(--shade-8);
 
 
 // Typography
@@ -126,6 +127,7 @@ $text-selection-color: inherit;
 $text-selection-bg:    var(--brand-primary-35);
 
 $hr-border: var(--shade-1);
+
 
 // Partials
 // --------------------------------------------------

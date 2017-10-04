@@ -18,7 +18,9 @@ panel:
     create: Add Photos
   notes: Notes
 about:
-    tropy: Tropy™
+    tropy: Tropy
+    tm: ™
+    version: Version {version}
     rrchnm:
       title: Roy Rosenzweig Center for History and New Media
       url: https://rrchnm.org

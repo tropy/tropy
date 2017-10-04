@@ -28,24 +28,33 @@ class About extends PureComponent {
 
   render() {
     return (
-      <div className="about">
+      <div className="about view">
         {this.renderToolbar()}
-
-        <FormattedMessage id="about.tropy"/>
-
-        <span className="version">{version}</span>
-
-        <FormattedMessage
-          id="about.text"
-          values={{ rrchnm: this.renderLink('about.rrchnm') }}/>
-        <FormattedMessage
-          id="about.trademark"
-          values={{ cds: this.renderLink('about.cds') }}/>
-
-        {this.renderLink('about.release', { version })}
-        {this.renderLink('about.license')}
-        {this.renderLink('about.credits')}
-
+        <figure className="app-icon"/>
+        <div className="flex-row center">
+          <h1>
+            <FormattedMessage id="about.tropy"/>
+            <FormattedMessage id="about.tm"/>
+          </h1>
+          <p className="version">
+            <FormattedMessage id="about.version" values={{ version }}/>
+          </p>
+          <p>
+            <FormattedMessage
+              id="about.text"
+              values={{ rrchnm: this.renderLink('about.rrchnm') }}/>
+          </p>
+          <p>
+            <FormattedMessage
+              id="about.trademark"
+              values={{ cds: this.renderLink('about.cds') }}/>
+          </p>
+          <p className="links">
+            {this.renderLink('about.release', { version })}
+            {this.renderLink('about.license')}
+            {this.renderLink('about.credits')}
+          </p>
+        </div>
       </div>
     )
   }

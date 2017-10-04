@@ -172,8 +172,8 @@ const PREFS = {
 }
 
 const ABOUT = {
-  WIDTH: 456,
-  HEIGHT: 580
+  WIDTH: 600,
+  HEIGHT: 300
 }
 
 const GRID = {
