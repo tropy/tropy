@@ -13,6 +13,10 @@ const TILE = {
   FACTOR: 1.2
 }
 
+const ROW = {
+  HEIGHT: 30
+}
+
 const ITEM = {
   TILE: {
     MIN: TILE.MIN,
@@ -191,6 +195,7 @@ module.exports =  {
   PANEL,
   PHOTO,
   PREFS,
+  ROW,
   SCROLLBAR,
   SIDEBAR,
   TILE,

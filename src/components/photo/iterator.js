@@ -12,10 +12,6 @@ const {
 
 
 class PhotoIterator extends Iterator {
-  get iteration() {
-    return this.props.photos
-  }
-
   get classes() {
     return {
       'drop-target': this.isSortable,
@@ -27,6 +23,10 @@ class PhotoIterator extends Iterator {
 
   get isSortable() {
     return !this.props.isDisabled && this.size > 1
+  }
+
+  getItems(props = this.props) {
+    return props.photos || super.getItems()
   }
 
   isSelected(photo) {

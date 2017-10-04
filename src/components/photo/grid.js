@@ -10,7 +10,7 @@ const { match } = require('../../keymap')
 
 
 class PhotoGrid extends PhotoIterator {
-  static get isGrid() { return true }
+  get isGrid() { return true }
 
   get classes() {
     return {

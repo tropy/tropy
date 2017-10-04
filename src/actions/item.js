@@ -147,7 +147,7 @@ module.exports = {
       dispatch({
         type: ITEM.SELECT,
         payload: { items, photo, note },
-        meta: { load: true, ...meta }
+        meta: { ...meta }
       })
     }
   },
@@ -156,7 +156,7 @@ module.exports = {
     return {
       type: ITEM.OPEN,
       payload,
-      meta: { load: true, ...meta }
+      meta: { ...meta }
     }
   },
 

@@ -17,34 +17,34 @@ const mod = {
     async load(db, ids) {
       const notes = {}
 
-      if (ids.length) {
-        await db.each(`
-          SELECT
-              note_id AS note,
-              photos.id AS photo,
-              selections.id AS selection,
-              state,
-              text,
-              language,
-              datetime(modified, "localtime") AS modified
-            FROM notes
-              LEFT OUTER JOIN photos USING (id)
-              LEFT OUTER JOIN selections USING (id)
-            WHERE note_id IN (${ids.join(',')})
-              AND deleted IS NULL
-            ORDER BY created ASC`,
+      const conditions = ['deleted IS NULL']
+      if (ids != null) conditions.push(`note_id IN (${ids.join(',')})`)
 
-          ({ note: id, modified, state, ...data }) => {
-            notes[id] = {
-              ...data,
-              id,
-              modified: new Date(modified),
-              state: json(state),
-              deleted: false
-            }
+      await db.each(`
+        SELECT
+            note_id AS note,
+            photos.id AS photo,
+            selections.id AS selection,
+            state,
+            text,
+            language,
+            datetime(modified, "localtime") AS modified
+          FROM notes
+            LEFT OUTER JOIN photos USING (id)
+            LEFT OUTER JOIN selections USING (id)
+          WHERE ${conditions.join(' AND ')}
+          ORDER BY created ASC`,
+
+        ({ note: id, modified, state, ...data }) => {
+          notes[id] = {
+            ...data,
+            id,
+            modified: new Date(modified),
+            state: json(state),
+            deleted: false
           }
-        )
-      }
+        }
+      )
 
       return notes
     },

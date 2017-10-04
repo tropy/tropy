@@ -3,11 +3,12 @@
 const React = require('react')
 const { PureComponent } = React
 const { TABS, SASS: { TILE } } = require('../constants')
-const { adjacent, times } = require('../common/util')
-const { floor, round } = Math
+const { adjacent, restrict, times } = require('../common/util')
+const { on, off } = require('../dom')
+const { ceil, floor, max, round } = Math
 const { bool, number } = require('prop-types')
 const throttle = require('lodash.throttle')
-const { on, off } = require('../dom')
+const EMPTY = []
 
 
 class Iterator extends PureComponent {
@@ -15,38 +16,71 @@ class Iterator extends PureComponent {
     super(props)
 
     this.state = {
-      cols: 1, maxCols: 1
+      cols: 1,
+      height: 0,
+      maxCols: 1,
+      maxOffset: 0,
+      offset: 0,
+      overscan: 0,
+      rowHeight: 0,
+      rows: 0,
+      viewportRows: 0
+    }
+
+    this.viewport = {
+      width: 0,
+      height: 0
     }
   }
 
   componentDidMount() {
-    if (this.isGrid) {
-      this.ro = new ResizeObserver(([e]) => {
-        this.handleResize(e.contentRect)
-      })
+    this.ro = new ResizeObserver(([e]) => {
+      this.handleResize(e.contentRect)
+    })
 
-      this.ro.observe(this.container)
-    }
-
+    this.ro.observe(this.container)
     on(this.container, 'tab:focus', this.handleFocus)
   }
 
   componentWillUnmount() {
-    if (this.ro != null) {
-      this.ro.disconnect()
-    }
-
+    if (this.ro != null) { this.ro.disconnect() }
     off(this.container, 'tab:focus', this.handleFocus)
   }
 
   componentWillReceiveProps(props) {
-    if (this.isGrid) {
-      if (this.props.size !== props.size) {
-        this.setState({
-          cols: this.getColumns(props.size)
-        })
-      }
+    if (this.props.size !== props.size ||
+      this.getItems(props).length !== this.size) {
+      this.update(props)
     }
+  }
+
+  update(props = this.props) {
+    const cols = this.getColumns(props.size)
+    const rows = this.getRows(cols, props)
+    const viewportRows = this.getViewportRows(props.size)
+    const rowHeight = this.getRowHeight(props.size)
+    const height = rows * rowHeight
+    const overscan = ceil(viewportRows * props.overscan)
+    const maxCols = this.getColumns(TILE.MIN)
+
+    let maxOffset = height - (overscan * rowHeight)
+    maxOffset = max(maxOffset - (maxOffset % rowHeight), 0)
+
+    const offset = this.getOffset({
+      overscan, maxOffset, rowHeight, viewportRows
+    })
+
+    this.setState({
+      cols,
+      height,
+      maxCols,
+      maxOffset,
+      overscan,
+      offset,
+      rowHeight,
+      rows,
+      viewportRows
+    })
   }
 
   get isVertical() {
@@ -66,7 +100,7 @@ class Iterator extends PureComponent {
   }
 
   get size() {
-    return this.iteration != null ? this.iteration.length : 0
+    return this.getItems().length
   }
 
   get orientation() {
@@ -82,11 +116,41 @@ class Iterator extends PureComponent {
   }
 
   getAdjacent = (iterable) => {
-    return adjacent(this.iteration, iterable)
+    return adjacent(this.getItems(), iterable)
   }
 
-  getColumns(size = this.props.size, width = this.width) {
-    return floor(width / round(size * TILE.FACTOR))
+  getColumns(size = this.props.size) {
+    return floor(this.viewport.width / this.getTileSize(size))
+  }
+
+  getItems() {
+    return EMPTY
+  }
+
+  getOffset({ overscan, maxOffset, rowHeight, viewportRows } = this.state) {
+    if (this.scroller == null) return 0
+
+    const top = this.scroller.scrollTop
+    const offset = (overscan - viewportRows) / 2 * rowHeight
+
+    return restrict(top - (top % rowHeight) - offset, 0, maxOffset)
+  }
+
+
+  getRows(cols = this.state.cols, props = this.props) {
+    return ceil(this.getItems(props).length / cols)
+  }
+
+  getRowHeight(size = this.props.size) {
+    return this.getTileSize(size)
+  }
+
+  getViewportRows(size = this.props.size) {
+    return ceil(this.viewport.height / this.getRowHeight(size))
+  }
+
+  getTileSize(size = this.props.size) {
+    return round(size * TILE.FACTOR)
   }
 
   setContainer = (container) => {
@@ -107,23 +171,10 @@ class Iterator extends PureComponent {
     return this.filler
   }
 
-
-  handleResize = throttle(({ width }) => {
-    this.width = width
-    this.setState({
-      cols: this.getColumns(),
-      maxCols: this.getColumns(TILE.MIN)
-    })
-  }, 20)
-
-
-  get isGrid() {
-    return this.constructor.isGrid
-  }
-
-  static get isGrid() {
-    return false
-  }
+  handleResize = throttle((viewport) => {
+    this.viewport = viewport
+    this.update()
+  }, 15)
 
   static getPropKeys() {
     return Object.keys(this.propTypes || this.DecoratedComponent.propTypes)
@@ -131,7 +182,12 @@ class Iterator extends PureComponent {
 
   static propTypes = {
     isDisabled: bool,
+    overscan: number.isRequired,
     size: number.isRequired
+  }
+
+  static defaultProps = {
+    overscan: 2
   }
 }
 
