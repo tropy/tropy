@@ -62,10 +62,10 @@ module.exports = {
   //eslint-disable-next-line complexity
   *load() {
     try {
-      const { nav, items, photos } = yield select()
+      const { nav, items } = yield select()
 
       const missing = {
-        items: [], photos: []
+        items: []
       }
 
       for (let id of nav.items) {
@@ -73,13 +73,6 @@ module.exports = {
 
         if (item) {
           if (item.pending) continue
-
-          for (let photo of item.photos) {
-            if (!(photo in photos)) {
-              missing.photos.push(photo)
-            }
-          }
-
         } else {
           missing.items.push(id)
         }
@@ -87,10 +80,6 @@ module.exports = {
 
       if (missing.items.length) {
         yield put(act.item.load(missing.items, { load: true }))
-      }
-
-      if (missing.photos.length) {
-        yield put(act.photo.load(missing.photos))
       }
 
     } catch (error) {

@@ -96,6 +96,7 @@ function *setup(db, project) {
     put(act.tag.load())
   ])
 
+  yield put(act.photo.load())
   yield put(act.metadata.load())
 
   yield all([

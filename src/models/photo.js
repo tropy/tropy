@@ -5,15 +5,15 @@ const { DC } = require('../constants')
 const { all } = require('bluebird')
 const { text, date } = require('../value')
 const metadata = require('./metadata')
-const { into, map } = require('transducers.js')
 const bb = require('bluebird')
+const { assign } = Object
 
-const skel = (id) => ({
-  id, selections: [], notes: []
+const skel = (id, selections = [], notes = []) => ({
+  id, selections, notes
 })
 
-module.exports = {
 
+module.exports = {
   async create(db, template, { item, image, data }) {
     const {
       path, checksum, mimetype, width, height, orientation, file
@@ -53,66 +53,66 @@ module.exports = {
   },
 
   async load(db, ids) {
-    const photos = into({}, map(id => [id, skel(id)]), ids)
+    const photos = {}
+    if (ids != null) ids = ids.join(',')
 
-    if (ids.length) {
-      ids = ids.join(',')
+    await all([
+      db.each(`
+        SELECT
+            id,
+            item_id AS item,
+            template,
+            datetime(created, "localtime") AS created,
+            datetime(modified, "localtime") AS modified,
+            angle,
+            mirror,
+            width,
+            height,
+            path,
+            size,
+            protocol,
+            mimetype,
+            checksum,
+            orientation
+          FROM subjects
+            JOIN images USING (id)
+            JOIN photos USING (id)${
+          ids != null ? ` WHERE id IN (${ids})` : ''
+        }`,
+        ({ id, created, modified, mirror, ...data }) => {
+          data.created = new Date(created)
+          data.modified = new Date(modified)
+          data.mirror = !!mirror
 
-      await all([
-        db.each(`
-          SELECT
-              id,
-              item_id AS item,
-              template,
-              datetime(created, "localtime") AS created,
-              datetime(modified, "localtime") AS modified,
-              angle,
-              mirror,
-              width,
-              height,
-              path,
-              size,
-              protocol,
-              mimetype,
-              checksum,
-              orientation
-            FROM subjects
-              JOIN images USING (id)
-              JOIN photos USING (id)
-            WHERE id IN (${ids})`,
+          if (id in photos) assign(photos[id], data)
+          else photos[id] = assign(skel(id), data)
+        }
+      ),
 
-          (data) => {
-            Object.assign(photos[data.id], data, {
-              created: new Date(data.created),
-              modified: new Date(data.modified),
-              mirror: !!data.mirror
-            })
-          }
-        ),
+      db.each(`
+        SELECT id AS selection, photo_id AS id
+          FROM selections
+            LEFT OUTER JOIN trash USING (id)
+          WHERE ${ids != null ? `photo_id IN (${ids}) AND` : ''}
+            deleted IS NULL
+          ORDER BY photo_id, position`,
+        ({ selection, id }) => {
+          if (id in photos) photos[id].selections.push(selection)
+          else photos[id] = skel(id, [selection])
+        }
+      ),
 
-        db.each(`
-          SELECT id, photo_id AS photo
-            FROM selections
-              LEFT OUTER JOIN trash USING (id)
-            WHERE photo_id IN (${ids})
-              AND deleted IS NULL
-            ORDER BY photo_id, position`,
-          ({ id, photo }) => {
-            photos[photo].selections.push(id)
-          }
-        ),
-
-        db.each(`
-          SELECT id, note_id AS note
-            FROM notes
-            WHERE id IN (${ids}) AND deleted IS NULL
-            ORDER BY id, created`,
-          ({ id, note }) => {
-            photos[id].notes.push(note)
-          }
-        )
-      ])
-    }
+      db.each(`
+        SELECT id, note_id AS note
+          FROM notes
+          WHERE ${ids != null ? `id IN (${ids}) AND` : ''} deleted IS NULL
+          ORDER BY id, created`,
+        ({ id, note }) => {
+          if (id in photos) photos[id].notes.push(note)
+          else photos[id] = skel(id, [], [note])
+        }
+      )
+    ])
 
     return photos
   },
