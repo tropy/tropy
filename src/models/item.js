@@ -313,8 +313,8 @@ module.exports = mod.item = {
 
   prune(db, since = '-1 month') {
     const condition = since ?
-      ` WHERE reason != 'user' OR
-         (reason = 'user' AND deleted < datetime("now", "${since}"))` : ''
+      ` WHERE reason IN ('auto', 'merge')
+          OR deleted < datetime("now", "${since}")` : ''
 
     return db.run(`
       DELETE FROM subjects
