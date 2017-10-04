@@ -30,9 +30,9 @@ about:
       historical teaching resources, digital exhibits, and
       open-source software.
     trademark: Tropy is a trademark of the {cds}.
-    changelog:
+    release:
       title: Release Notes
-      url: https://
+      url: https://github.com/tropy/tropy/releases/tag/{version}
     license:
       title: Licensing Information
       url: https://tropy.org/license

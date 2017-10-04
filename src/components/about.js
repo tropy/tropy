@@ -4,12 +4,15 @@ const React = require('react')
 const { PureComponent } = React
 const { FormattedMessage, injectIntl, intlShape } = require('react-intl')
 const { shell } = require('electron')
+const { version } = require('../common/release')
 
 
 class About extends PureComponent {
-  renderLink(id) {
-    const url = this.props.intl.formatMessage({ id: `${id}.url` })
-    const title = this.props.intl.formatMessage({ id: `${id}.title` })
+  renderLink(id, ...options) {
+    const { intl } = this.props
+
+    const url = intl.formatMessage({ id: `${id}.url` }, ...options)
+    const title = intl.formatMessage({ id: `${id}.title` }, ...options)
 
     return (
       // eslint-disable-next-line react/jsx-no-bind
@@ -22,6 +25,8 @@ class About extends PureComponent {
       <div className="about">
         <FormattedMessage id="about.tropy"/>
 
+        <span className="version">{version}</span>
+
         <FormattedMessage
           id="about.text"
           values={{ rrchnm: this.renderLink('about.rrchnm') }}/>
@@ -29,7 +34,7 @@ class About extends PureComponent {
           id="about.trademark"
           values={{ cds: this.renderLink('about.cds') }}/>
 
-        {this.renderLink('about.changelog')}
+        {this.renderLink('about.release', { version })}
         {this.renderLink('about.license')}
         {this.renderLink('about.credits')}
 
