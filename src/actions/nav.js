@@ -15,6 +15,14 @@ module.exports = {
     return { type: NAV.UPDATE, payload, meta }
   },
 
+  search(payload, meta) {
+    return {
+      type: NAV.SEARCH,
+      payload,
+      meta: { search: true, ...meta }
+    }
+  },
+
   select(payload, meta) {
     return {
       type: NAV.SELECT,

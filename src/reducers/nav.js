@@ -39,6 +39,16 @@ module.exports = {
       case NAV.UPDATE:
         return { ...state, ...payload }
 
+      case NAV.SEARCH:
+        return {
+          ...state,
+          items: [],
+          photo: null,
+          selection: null,
+          note: null,
+          ...payload
+        }
+
       case NAV.SORT: {
         const { list, ...sort } = payload
 
