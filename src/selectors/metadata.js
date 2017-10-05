@@ -3,8 +3,9 @@
 const { createSelector: memo } = require('reselect')
 const { pluck } = require('./util')
 const { equal } = require('../value')
+const { MAX_SELECT } = require('../constants')
 const {
-  cat, compose, filter, keep, map, seq, transduce, transformer
+  cat, compose, filter, keep, map, seq, transduce, transformer, take
 } = require('transducers.js')
 
 
@@ -29,16 +30,16 @@ const getItemMetadata = memo(
   getMetadata,
   ({ nav }) => (nav.items),
 
-  (metadata, ids) =>
+  (metadata, items) =>
     seq(
       transduce(
-        ids,
-        compose(map(id => metadata[id]), keep(), cat, skipId),
+        items,
+        compose(take(MAX_SELECT), map(id => metadata[id]), keep(), cat, skipId),
         collect,
-        { id: ids }),
+        { id: items }),
       map(([key, value]) => {
         if (key !== 'id') {
-          value.mixed = value.count !== ids.length
+          value.mixed = value.count !== items.length
         }
 
         return [key, value]

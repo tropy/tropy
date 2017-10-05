@@ -1,8 +1,9 @@
 'use strict'
 
 const { createSelector: memo } = require('reselect')
-const { seq, compose, map, cat, keep } = require('transducers.js')
+const { seq, compose, map, cat, keep, take } = require('transducers.js')
 const { getSelectedItems } = require('./items')
+const { MAX_SELECT } = require('../constants')
 
 const getPhotos = ({ photos }) => photos
 
@@ -21,7 +22,8 @@ const getVisiblePhotos = memo(
       map(item => item.photos),
       cat,
       map(id => photos[id]),
-      keep()
+      keep(),
+      take(MAX_SELECT)
     ))
 )
 

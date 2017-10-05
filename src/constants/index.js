@@ -29,5 +29,7 @@ module.exports = {
   TYPE: require('./type'),
   UI: require('./ui'),
   WIZARD: require('./wizard'),
-  ...require('./rdf')
+  ...require('./rdf'),
+
+  MAX_SELECT: 100 // TODO remove when we virtualize photo and note panel!
 }

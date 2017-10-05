@@ -1,9 +1,10 @@
 'use strict'
 
-const { seq, compose, cat, map, keep } = require('transducers.js')
+const { seq, compose, cat, map, keep, take } = require('transducers.js')
 const { createSelector: memo } = require('reselect')
 const { getVisiblePhotos, getSelectedPhoto } = require('./photos')
 const { getVisibleSelections } = require('./selections')
+const { MAX_SELECT } = require('../constants')
 
 const getNotes = ({ notes }) => notes
 const getSelectedNoteId = ({ nav }) => nav.note
@@ -39,7 +40,8 @@ const getVisibleNotes = memo(
       keep(),
       cat,
       map(id => notes[id]),
-      keep()
+      keep(),
+      take(MAX_SELECT)
     ))
 )
 
