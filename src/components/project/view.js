@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
+const { Component } = React
 const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
 const { BufferedResizable } = require('../resizable')
@@ -14,7 +14,7 @@ const { array, bool, func, object, number } = require('prop-types')
 const { ITEM, SIDEBAR } = require('../../constants/sass')
 
 
-class ProjectView extends PureComponent {
+class ProjectView extends Component {
   get size() {
     return ITEM.ZOOM[this.props.zoom]
   }
@@ -129,6 +129,7 @@ class ProjectView extends PureComponent {
     isActive: bool,
     isEmpty: bool.isRequired,
     isOver: bool,
+    index: object.isRequired,
     items: array.isRequired,
     keymap: object.isRequired,
     nav: object.isRequired,

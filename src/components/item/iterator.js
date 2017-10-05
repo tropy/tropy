@@ -36,13 +36,17 @@ class ItemIterator extends Iterator {
     return props.items || super.getItems()
   }
 
+  getIndex(id) {
+    return this.props.index[id]
+  }
+
   getNextItem(offset = 1) {
     const { items, selection } = this.props
 
     if (!items.length) return null
     if (!selection.length) return items[0]
 
-    const idx = this.idx[selection[selection.length - 1]] + offset
+    const idx = this.getIndex(selection[selection.length - 1]) + offset
 
     return (idx >= 0 && idx < items.length) ? items[idx] : null
   }
@@ -165,21 +169,16 @@ class ItemIterator extends Iterator {
   }
 
   mapItemRange(fn) {
-    this.idx = {}
-
     const { items } = this.props
-    const range = this.getItemRange()
+    const { from, to } = this.getItemRange()
 
-    return items.slice(range.from, range.to).map((item, i) => {
-      const index = range.from + i
-      this.idx[item.id] = index
-
+    return items.slice(from, to).map((item, index) => {
       return fn({
         item,
         cache: this.props.cache,
         photos: this.props.photos,
         tags: this.props.tags,
-        isLast: index === items.length - 1,
+        isLast: from + index === items.length - 1,
         isSelected: this.isSelected(item),
         isDisabled: this.isDisabled,
         isVertical: this.isVertical,
@@ -197,8 +196,7 @@ class ItemIterator extends Iterator {
     return this.connect(
       <div
         ref={this.setContainer}
-        className={
-        cx('no-items', 'drop-target', { over: this.props.isOver })
+        className={cx('no-items', 'drop-target', { over: this.props.isOver })
       }>
         <figure className="no-items-illustration"/>
         <h1>
@@ -209,6 +207,7 @@ class ItemIterator extends Iterator {
   }
 
   static propTypes = {
+    index: object.isRequired,
     items: arrayOf(shape({
       id: number.isRequired
     })).isRequired,
