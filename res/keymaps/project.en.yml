@@ -24,6 +24,7 @@ linux: &linux
     edit: F2
     clear: Escape
     delete: Backspace
+    all: CmdOrCtrl+a
   PhotoIterator: &PhotoIterator
     up: ArrowUp
     down: ArrowDown

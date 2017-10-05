@@ -70,11 +70,6 @@ linux:
         accelerator: 'CmdOrCtrl+V'
         role: 'paste'
       - type: 'separator'
-      - &select-all
-        label: 'Select &All'
-        accelerator: 'CmdOrCtrl+A'
-        role: 'selectall'
-      - type: 'separator'
       - &preferences
         label: 'Prefere&nces …'
         accelerator: 'Shift+Control+S'
@@ -185,7 +180,6 @@ darwin:
       - *cut
       - *copy
       - *paste
-      - *select-all
   - *view
   - label: 'Window'
     role: 'window'
@@ -209,7 +203,7 @@ darwin:
         command: 'app:open-forums'
       - type: 'separator'
       - label: 'Software License'
-        command: 'app:open-license'      
+        command: 'app:open-license'
       - label: 'Show Log Files'
         command: 'app:open-logs'
 
@@ -227,7 +221,6 @@ win32:
       - *cut
       - *copy
       - *paste
-      - *select-all
       - *preferences
   - *view
   - *win

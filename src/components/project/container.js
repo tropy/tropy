@@ -403,8 +403,8 @@ module.exports = {
         dispatch(actions.nav.sort(...args))
       },
 
-      onItemSelect(id, mod, meta) {
-        dispatch(actions.item.select(id, { mod, ...meta }))
+      onItemSelect(payload, mod, meta) {
+        dispatch(actions.item.select(payload, { mod, ...meta }))
       },
 
       onItemOpen(item) {
