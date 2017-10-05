@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { FormattedMessage, injectIntl, intlShape } = require('react-intl')
 const { shell } = require('electron')
-const { version } = require('../common/release')
+const { product, version } = require('../common/release')
 const { bool } = require('prop-types')
 const { Toolbar } = require('./toolbar')
 
@@ -32,10 +32,7 @@ class About extends PureComponent {
         {this.renderToolbar()}
         <figure className="app-icon"/>
         <div className="flex-row center">
-          <h1>
-            <FormattedMessage id="about.tropy"/>
-            <FormattedMessage id="about.tm"/>
-          </h1>
+          <h1>{product}</h1>
           <p className="version">
             <FormattedMessage id="about.version" values={{ version }}/>
           </p>
