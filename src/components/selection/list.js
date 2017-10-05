@@ -3,18 +3,36 @@
 const React = require('react')
 const { SelectionIterator } = require('./iterator')
 const { SelectionListItem } = require('./list-item')
+const { on, off } = require('../../dom')
 const cx = require('classnames')
 const { func, number, object } = require('prop-types')
-const { DC } = require('../../constants')
+const { DC, SASS: { ROW } } = require('../../constants')
 
 
 class SelectionList extends SelectionIterator {
-  get classes() {
-    return {
-      ...super.classes,
-      list: true
-    }
+  componentDidMount() {
+    on(this.container, 'tab:focus', this.handleFocus)
   }
+
+  componentWillUnmount() {
+    off(this.container, 'tab:focus', this.handleFocus)
+  }
+
+  componentWillReceiveProps() {
+  }
+
+  get classes() {
+    return ['list', super.classes]
+  }
+
+  getColumns() {
+    return 1
+  }
+
+  getRowHeight() {
+    return ROW.HEIGHT
+  }
+
 
   isEditing(selection) {
     return this.props.edit === selection

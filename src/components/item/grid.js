@@ -3,12 +3,13 @@
 const React = require('react')
 const { ItemIterator } = require('./iterator')
 const { ItemTile } = require('./tile')
-const { on, off } = require('../../dom')
 const { refine } = require('../../common/util')
 const cx = require('classnames')
 
 
 class ItemGrid extends ItemIterator {
+  get isGrid() { return true }
+
   constructor(props) {
     super(props)
 
@@ -33,16 +34,6 @@ class ItemGrid extends ItemIterator {
     })
   }
 
-  componentDidMount() {
-    super.componentDidMount()
-    on(this.container, 'tab:focus', this.handleFocus)
-  }
-
-  componentWillUnmount() {
-    super.componentWillUnmount()
-    off(this.container, 'tab:focus', this.handleFocus)
-  }
-
   get classes() {
     return {
       'item': true,
@@ -57,6 +48,9 @@ class ItemGrid extends ItemIterator {
   render() {
     if (this.props.isEmpty) return this.renderNoItems()
 
+    const { offset, height } = this.state
+    const transform = `translate3d(0,${offset}px,0)`
+
     return this.connect(
       <div
         className={cx(this.classes)}
@@ -65,18 +59,20 @@ class ItemGrid extends ItemIterator {
         ref={this.setContainer}
         data-size={this.props.size}
         onClick={this.handleClickOutside}>
-        <ul className="scroll-container click-catcher">
-          {this.map(({ item, ...props }) =>
-            <ItemTile {...props} key={item.id} item={item}/>
-          )}
-          {this.fillRow()}
-        </ul>
+        <div
+          ref={this.setScroller}
+          className="scroll-container">
+          <div className="runway click-catcher" style={{ height }}>
+            <ul className="viewport" style={{ transform }}>
+              {this.mapItemRange(({ item, ...props }) =>
+                <ItemTile {...props} key={item.id} item={item}/>
+              )}
+              {this.fillRow()}
+            </ul>
+          </div>
+        </div>
       </div>
     )
-  }
-
-  static get isGrid() {
-    return true
   }
 
   static propTypes = {

@@ -6,21 +6,10 @@ const { SelectionTile } = require('./tile')
 const cx = require('classnames')
 const { object } = require('prop-types')
 const { match } = require('../../keymap')
-const { on, off } = require('../../dom')
 
 
 class SelectionGrid extends SelectionIterator {
-  static get isGrid() { return true }
-
-  componentDidMount() {
-    super.componentDidMount()
-    on(this.container, 'tab:focus', this.handleFocus)
-  }
-
-  componentWillUnmount() {
-    super.componentWillUnmount()
-    off(this.container, 'tab:focus', this.handleFocus)
-  }
+  get isGrid() { return true }
 
   get classes() {
     return {

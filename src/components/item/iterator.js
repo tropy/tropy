@@ -3,7 +3,8 @@
 const React = require('react')
 const { Iterator } = require('../iterator')
 const { FormattedMessage } = require('react-intl')
-const { has } = require('../../dom')
+const { has, on, off } = require('../../dom')
+const { floor, min } = Math
 const { match } = require('../../keymap')
 const cx = require('classnames')
 
@@ -13,16 +14,30 @@ const {
 
 
 class ItemIterator extends Iterator {
-  get iteration() {
-    return this.props.items
+  componentDidMount() {
+    super.componentDidMount()
+    on(this.scroller, 'scroll', this.handleScroll, SCROLL_OPTIONS)
+  }
+
+  componentWillUnmount() {
+    super.componentWillUnmount()
+    off(this.scroller, 'scroll', this.handleScroll, SCROLL_OPTIONS)
   }
 
   get tabIndex() {
     return this.props.isActive ? super.tabIndex : null
   }
 
-  isSelected(item) {
-    return this.props.selection.includes(item.id)
+  setScroller = (scroller) => {
+    this.scroller = scroller
+  }
+
+  getItems(props = this.props) {
+    return props.items || super.getItems()
+  }
+
+  getIndex(id) {
+    return this.props.index[id]
   }
 
   getNextItem(offset = 1) {
@@ -31,7 +46,7 @@ class ItemIterator extends Iterator {
     if (!items.length) return null
     if (!selection.length) return items[0]
 
-    const idx = this.idx[selection[selection.length - 1]] + offset
+    const idx = this.getIndex(selection[selection.length - 1]) + offset
 
     return (idx >= 0 && idx < items.length) ? items[idx] : null
   }
@@ -45,6 +60,10 @@ class ItemIterator extends Iterator {
   }
 
   getSelection = () => this.props.selection
+
+  isSelected(item) {
+    return this.props.selection.includes(item.id)
+  }
 
   handleClickOutside = (event) => {
     if (has(event.target, 'click-catcher')) {
@@ -85,7 +104,6 @@ class ItemIterator extends Iterator {
     }
   }
 
-
   // eslint-disable-next-line complexity
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
@@ -108,6 +126,9 @@ class ItemIterator extends Iterator {
         this.handleItemDelete(this.props.selection)
         this.select(this.getNextItem() || this.getPrevItem())
         break
+      case 'all':
+        this.props.onSelect({}, 'all')
+        break
       default:
         return
     }
@@ -116,6 +137,16 @@ class ItemIterator extends Iterator {
     event.stopPropagation()
   }
 
+  handleScroll = () => {
+    if (!this.isScrollUpdateScheduled) {
+      this.isScrollUpdateScheduled = true
+
+      requestAnimationFrame(() => {
+        this.setState({ offset: this.getOffset() })
+        this.isScrollUpdateScheduled = false
+      })
+    }
+  }
 
   select(item) {
     if (item && !this.isSelected(item)) {
@@ -127,18 +158,30 @@ class ItemIterator extends Iterator {
     return (this.isDisabled) ? element : this.props.dt(element)
   }
 
-  map(fn) {
-    this.idx = {}
+  getItemRange() {
+    const { cols, offset, overscan, rowHeight } = this.state
 
-    return this.props.items.map((item, index) => {
-      this.idx[item.id] = index
+    const from = cols * floor(offset / rowHeight)
+    const size = cols * overscan
 
+    return {
+      from,
+      size,
+      to: min(from + size, this.props.items.length)
+    }
+  }
+
+  mapItemRange(fn) {
+    const { items } = this.props
+    const { from, to } = this.getItemRange()
+
+    return items.slice(from, to).map((item, index) => {
       return fn({
         item,
         cache: this.props.cache,
         photos: this.props.photos,
         tags: this.props.tags,
-        isLast: index === this.props.items.length - 1,
+        isLast: from + index === items.length - 1,
         isSelected: this.isSelected(item),
         isDisabled: this.isDisabled,
         isVertical: this.isVertical,
@@ -156,8 +199,7 @@ class ItemIterator extends Iterator {
     return this.connect(
       <div
         ref={this.setContainer}
-        className={
-        cx('no-items', 'drop-target', { over: this.props.isOver })
+        className={cx('no-items', 'drop-target', { over: this.props.isOver })
       }>
         <figure className="no-items-illustration"/>
         <h1>
@@ -168,6 +210,7 @@ class ItemIterator extends Iterator {
   }
 
   static propTypes = {
+    index: object.isRequired,
     items: arrayOf(shape({
       id: number.isRequired
     })).isRequired,
@@ -200,6 +243,11 @@ class ItemIterator extends Iterator {
     onSelect: func.isRequired,
     onSort: func.isRequired
   }
+}
+
+const SCROLL_OPTIONS = {
+  capture: true,
+  passive: true
 }
 
 

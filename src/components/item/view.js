@@ -144,6 +144,10 @@ class ItemView extends PureComponent {
     this.setState({ note })
   }
 
+  handleNoteCommit = () => {
+    this.handleNoteDelete()
+  }
+
 
   render() {
     const {
@@ -185,6 +189,7 @@ class ItemView extends PureComponent {
           isDisabled={isTrashSelected}
           isOpen={isItemOpen}
           onNoteChange={this.handleNoteChange}
+          onNoteCommit={this.handleNoteCommit}
           onUiUpdate={this.props.onUiUpdate}/>
       </section>
     )

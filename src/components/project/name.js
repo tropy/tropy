@@ -2,14 +2,13 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
 const { IconMaze } = require('../icons')
 const { Editable } = require('../editable')
 const { isValidImage } = require('../../image')
 const cx = require('classnames')
-const { bool, string, func } = PropTypes
+const { bool, func, number, string } = require('prop-types')
 
 
 class ProjectName extends PureComponent {
@@ -21,21 +20,26 @@ class ProjectName extends PureComponent {
     }
   }
 
-  render() {
-    const { name, dt, isEditing, onChange, onEditCancel, onClick } = this.props
+  renderProjectSize() {
+    return ARGS.dev && (
+      <span>{`(${this.props.size})`}</span>
+    )
+  }
 
-    return dt(
-      <li className={cx(this.classes)} onClick={onClick}>
+  render() {
+    return this.props.dt(
+      <li className={cx(this.classes)} onClick={this.props.onClick}>
         <IconMaze/>
         <div className="name">
           <Editable
-            value={name}
+            value={this.props.name}
             isRequired
             resize
-            isEditing={isEditing}
-            onCancel={onEditCancel}
-            onChange={onChange}/>
+            isEditing={this.props.isEditing}
+            onCancel={this.props.onEditCancel}
+            onChange={this.props.onChange}/>
         </div>
+        {this.renderProjectSize()}
       </li>
     )
   }
@@ -46,6 +50,7 @@ class ProjectName extends PureComponent {
     isEditing: bool,
     isSelected: bool,
     isOver: bool,
+    size: number.isRequired,
     canDrop: bool,
     dt: func.isRequired,
     onClick: func.isRequired,

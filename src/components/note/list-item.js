@@ -17,7 +17,10 @@ class NoteListItem extends PureComponent {
       if (!isSelected) onSelect(note)
 
       onContextMenu(event, 'note', {
-        notes: [note.id], item: note.item, photo: note.photo
+        notes: [note.id],
+        item: note.item,
+        photo: note.photo,
+        selection: note.selection
       })
     }
   }

@@ -30,6 +30,11 @@ class NotePad extends PureComponent {
     this.props.onChange(note, hasDocChanged, note.text.length === 0)
   }
 
+  handleEditorBlur = () => {
+    const { note } = this.props
+    this.props.onCommit(note, note.text.length === 0)
+  }
+
   render() {
     const { note, keymap, tabIndex } = this.props
 
@@ -42,6 +47,7 @@ class NotePad extends PureComponent {
           placeholder="notepad.placeholder"
           isDisabled={this.isDisabled}
           tabIndex={tabIndex}
+          onBlur={this.handleEditorBlur}
           onChange={this.handleChange}/>
       </section>
     )
@@ -56,7 +62,8 @@ class NotePad extends PureComponent {
       text: string.isRequried
     }).isRequired,
     tabIndex: number.isRequired,
-    onChange: func.isRequired
+    onChange: func.isRequired,
+    onCommit: func.isRequired
   }
 
   static defaultProps = {

@@ -9,8 +9,6 @@ const { move } = require('../../common/util')
 
 
 class SelectionIterator extends Iterator {
-  get iteration() { return this.props.selections }
-
   get classes() {
     return {
       'drop-target': this.isSortable,
@@ -26,6 +24,10 @@ class SelectionIterator extends Iterator {
 
   isActive(selection) {
     return this.props.active === selection
+  }
+
+  getItems(props = this.props) {
+    return props.selections || super.getItems()
   }
 
   getNext(offset = 1) {

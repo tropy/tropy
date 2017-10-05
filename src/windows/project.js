@@ -27,7 +27,7 @@ all([
 
     render(
       <Main store={store}><ProjectContainer/></Main>,
-      $('.view')
+      $('main')
     )
   })
 

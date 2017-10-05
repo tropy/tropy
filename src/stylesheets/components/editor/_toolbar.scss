@@ -3,6 +3,12 @@
 // --------------------------------------------------
 
 .editor {
+  &.is-blurred {
+    .toolbar-context {
+      opacity: 0.6;
+    }
+  }
+
   .toolbar {
     box-sizing: content-box;
     padding-top: 0;

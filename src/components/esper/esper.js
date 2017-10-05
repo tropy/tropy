@@ -48,10 +48,18 @@ class Esper extends PureComponent {
       this.resize(e.contentRect)
     })
     this.ro.observe(this.view.container)
+
+    this.io = new IntersectionObserver(([e]) => {
+      requestIdleCallback(e.intersectionRatio > 0 ?
+        this.view.start : this.view.stop)
+    }, { threshold: [0] })
+
+    this.io.observe(this.view.container)
   }
 
   componentWillUnmount() {
     this.ro.disconnect()
+    this.io.disconnect()
     this.persist.flush()
   }
 
@@ -111,6 +119,10 @@ class Esper extends PureComponent {
 
   get isSelectionActive() {
     return this.props.selection != null
+  }
+
+  get tabIndex() {
+    return (this.props.isItemOpen) ? this.props.tabIndex : -1
   }
 
   getActiveImageId() {
@@ -372,17 +384,17 @@ class Esper extends PureComponent {
 
   handleDoubleClick = ({ x, y, shift }) => {
     return shift ?
-      this.handleZoomOut({ x, y }) :
-      this.handleZoomIn({ x, y })
+      this.handleZoomOut({ x, y }, true) :
+      this.handleZoomIn({ x, y }, true)
   }
 
-  handleZoomIn = ({ x, y }, animate = false) => {
+  handleZoomIn = ({ x, y } = {}, animate = false) => {
     this.handleZoomChange({
       x, y, zoom: this.state.zoom + ZOOM_STEP_SIZE
     }, animate)
   }
 
-  handleZoomOut = ({ x, y }, animate = false) => {
+  handleZoomOut = ({ x, y } = {}, animate = false) => {
     this.handleZoomChange({
       x, y, zoom: this.state.zoom - ZOOM_STEP_SIZE
     }, animate)
@@ -422,10 +434,10 @@ class Esper extends PureComponent {
     } else {
       switch (match(this.props.keymap, event)) {
         case 'zoomIn':
-          this.zoom(ZOOM_STEP_SIZE)
+          this.handleZoomIn()
           break
         case 'zoomOut':
-          this.zoom(-ZOOM_STEP_SIZE)
+          this.handleZoomOut()
           break
         case 'up':
           this.move({ y: PAN_STEP_SIZE * this.state.zoom })
@@ -498,15 +510,27 @@ class Esper extends PureComponent {
     }
   }
 
+  setContainer = (container) => {
+    this.container = container
+  }
+
+  handleMouseDown = () => {
+    if (document.activeElement !== this.container) {
+      this.container.focus()
+    }
+  }
+
 
   render() {
-    const { isDisabled, isSelectionActive } = this
+    const { isDisabled, isSelectionActive, tabIndex } = this
     const tool = this.state.quicktool || this.state.tool
 
     return (
       <section
-        tabIndex={this.props.tabIndex}
+        ref={this.setContainer}
+        tabIndex={tabIndex}
         className={cx(this.classes)}
+        onMouseDown={this.handleMouseDown}
         onKeyDown={this.handleKeyDown}
         onKeyUp={this.handleKeyUp}>
         <EsperHeader>
@@ -542,9 +566,10 @@ class Esper extends PureComponent {
 
   static propTypes = {
     hasOverlayToolbar: bool,
-    isDisabled: bool,
     invertScroll: bool.isRequired,
     invertZoom: bool.isRequired,
+    isDisabled: bool,
+    isItemOpen: bool.isRequired,
     keymap: object.isRequired,
     maxZoom: number.isRequired,
     minZoom: number.isRequired,

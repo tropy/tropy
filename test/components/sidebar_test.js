@@ -3,7 +3,7 @@
 const React = require('react')
 const { shallow } = require('enzyme')
 
-describe('Sidebar', () => {
+describe.skip('Sidebar', () => {
   const { Sidebar } = __require('components/sidebar')
 
   it('has id sidebar', () => {

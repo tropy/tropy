@@ -110,8 +110,9 @@ $tag-colors: (
 // Scaffolding
 // --------------------------------------------------
 
-$body-bg:    var(--shade-0);
-$text-color: var(--shade-9);
+$body-bg:         var(--shade-0);
+$text-color:      var(--shade-9);
+$soft-text-color: var(--shade-8);
 
 
 // Typography
@@ -284,6 +285,7 @@ $slider-value-color:   var(--shade-8);
 
 // Esper
 $esper-bg:                                   var(--shade-2);
+$esper-toolbar-solid-bg:                     var(--shade-1);
 $esper-toolbar-shadow:                       var(--shade-10-10);
 $esper-btn-active-color:                     var(--shade-7);
 $esper-btn-active-bg:                        var(--shade-4);

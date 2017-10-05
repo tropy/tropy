@@ -70,11 +70,6 @@ linux:
         accelerator: 'CmdOrCtrl+V'
         role: 'paste'
       - type: 'separator'
-      - &select-all
-        label: 'Select &All'
-        accelerator: 'CmdOrCtrl+A'
-        role: 'selectall'
-      - type: 'separator'
       - &preferences
         label: 'Prefere&nces …'
         accelerator: 'Shift+Control+S'
@@ -108,6 +103,8 @@ linux:
       - label: 'Toggle &Developer Tools'
         accelerator: 'CmdOrCtrl+D'
         role: 'toggledevtools'
+      - label: 'Toggle Performance Tools'
+        command: 'win:toggle-perf-tools'
       - type: 'separator'
       - label: 'Reset Ontology Database'
         command: 'app:reset-ontology-db'
@@ -144,7 +141,7 @@ darwin:
   - label: '%name'
     submenu:
       - label: 'About %name'
-        role: 'about'
+        command: 'app:about'
       - type: 'separator'
       - label: 'Preferences …'
         accelerator: 'Command+,'
@@ -183,7 +180,6 @@ darwin:
       - *cut
       - *copy
       - *paste
-      - *select-all
   - *view
   - label: 'Window'
     role: 'window'
@@ -207,7 +203,7 @@ darwin:
         command: 'app:open-forums'
       - type: 'separator'
       - label: 'Software License'
-        command: 'app:open-license'      
+        command: 'app:open-license'
       - label: 'Show Log Files'
         command: 'app:open-logs'
 
@@ -225,7 +221,6 @@ win32:
       - *cut
       - *copy
       - *paste
-      - *select-all
       - *preferences
   - *view
   - *win

@@ -56,7 +56,6 @@
     }
     position: relative;
 
-
     &:first-child {
       padding-left: $space-sm;
 
@@ -143,25 +142,33 @@
     display: flex; // Prevent overflow
     contain: strict;
 
-    .scroll-container {
-      background-image: repeating-linear-gradient(to bottom,
-        $items-odd-bg $space-min, $items-odd-bg ($row-height + $space-min),
-        transparent ($row-height + $space-min),
-        transparent (2 * $row-height + $space-min));
-      background-attachment: local;
-      padding-top: $space-min;
-      overflow-y: scroll;
-    }
-
     &.over {
       @extend %drop-target;
     }
+  }
 
-    table {
-      width: 100%;
-      table-layout: fixed;
-      border-collapse: collapse;
-    }
+  .scroll-container {
+    background-image: repeating-linear-gradient(to bottom,
+      $items-odd-bg $space-min, $items-odd-bg ($row-height + $space-min),
+      transparent ($row-height + $space-min),
+      transparent (2 * $row-height + $space-min));
+    background-attachment: local;
+    padding-top: $space-min;
+    position: relative;
+    z-index: 0; // Fix stacking context (overlay toolbar covered by active item)
+  }
+
+  .runway {
+    contain: strict;
+    min-height: 100%;
+  }
+
+  .viewport {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    contain: layout style;
+    will-change: transform;
   }
 
   .item {
@@ -176,7 +183,9 @@
         color: $items-active-color;
         background: $items-active-bg;
 
-        @at-root #{selector-replace(&, ".item.table", ".item.table:focus")} {
+        @at-root #{
+          selector-replace(&, ".item.table", ".item.table .table-body:focus")
+        } {
           color: $items-focus-color;
           background: $items-focus-bg;
 

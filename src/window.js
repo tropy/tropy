@@ -123,6 +123,15 @@ class Window extends EventEmitter {
       .on('reload', () => {
         this.reload()
       })
+      .on('toggle-perf-tools', () => {
+        const { search, hash } = location
+        const perf = '?react_perf'
+
+        history.pushState('', '',
+          `${(search === perf) ? '' : perf}${hash}`)
+
+        this.reload()
+      })
   }
 
   handleUnload() {
@@ -282,7 +291,7 @@ class Window extends EventEmitter {
     }
   }
 
-  maximize() {
+  maximize = () => {
     this.current.isMaximized() ?
       this.current.unmaximize() : this.current.maximize()
   }

@@ -4,27 +4,23 @@ const React = require('react')
 const { object, func } = require('prop-types')
 const { PhotoListItem } = require('./list-item')
 const { PhotoIterator } = require('./iterator')
-const { DC } = require('../../constants')
-const { on, off } = require('../../dom')
+const { DC, SASS: { ROW } } = require('../../constants')
 const cx = require('classnames')
 const { match } = require('../../keymap')
 const { get } = require('../../common/util')
 
 
 class PhotoList extends PhotoIterator {
-  componentDidMount() {
-    on(this.container, 'tab:focus', this.handleFocus)
-  }
-
-  componentWillUnmount() {
-    off(this.container, 'tab:focus', this.handleFocus)
-  }
-
   get classes() {
-    return {
-      ...super.classes,
-      list: true
-    }
+    return ['list', super.classes]
+  }
+
+  getColumns() {
+    return 1
+  }
+
+  getRowHeight() {
+    return ROW.HEIGHT
   }
 
   isEditing(photo) {

@@ -2,7 +2,6 @@
 
 const { all } = require('bluebird')
 const { assign } = Object
-const { into, map } = require('transducers.js')
 const { array, list: lst, uniq } = require('../common/util')
 const { TEMPLATE } = require('../constants/item')
 
@@ -11,8 +10,8 @@ const mod = {
   photo: require('./photo')
 }
 
-const skel = (id) => ({
-  id, tags: [], photos: [], lists: []
+const skel = (id, lists = [], photos = [], tags = []) => ({
+  id, lists, photos, tags
 })
 
 const SEARCH = `
@@ -30,16 +29,30 @@ const SEARCH = `
       LEFT OUTER JOIN photos p ON (p.id = m.id OR p.id = photo_id)
     WHERE fts_metadata MATCH $query`
 
+const SORT = `
+  sort(id, text) AS (
+    SELECT id, text
+    FROM metadata JOIN metadata_values USING (value_id)
+    WHERE property = $sort)`
+
 const prefix = (query) =>
   (!(/[*+'"]/).test(query)) ? query + '*' : query
 
 
+function search(db, query, params) {
+  const items = []
+  const index = {}
+
+  return db.each(query, params, ({ id }) => {
+    index[id] = items.length
+    items.push(id)
+  }).then(() => ({ index, items }))
+}
+
+
 module.exports = mod.item = {
-
-  async all(db, { trash, tags, sort, query }) {
-    const items = []
+  all(db, { trash, tags, sort, query }) {
     const dir = sort.asc ? 'ASC' : 'DESC'
-
     const params = { $sort: sort.column }
 
     query = query.trim()
@@ -48,13 +61,8 @@ module.exports = mod.item = {
       params.$query = prefix(query)
     }
 
-    await db.each(`
-      WITH
-        sort(id, text) AS (
-          SELECT id, text
-          FROM metadata JOIN metadata_values USING (value_id)
-          WHERE property = $sort
-        )
+    return search(db, `
+      WITH ${SORT}
         SELECT DISTINCT id
           FROM items
             ${tags.length ? 'JOIN taggings USING (id)' : ''}
@@ -65,16 +73,11 @@ module.exports = mod.item = {
             ${(query.length > 0) ? `id IN (${SEARCH}) AND` : ''}
             deleted ${trash ? 'NOT' : 'IS'} NULL
           ORDER BY sort.text ${dir}, id ${dir}`,
-      params,
-      ({ id }) => { items.push(id) })
-
-    return items
+      params)
   },
 
   async trash(db, { sort, query }) {
-    const items = []
     const dir = sort.asc ? 'ASC' : 'DESC'
-
     const params = { $sort: sort.column }
 
     query = query.trim()
@@ -83,13 +86,8 @@ module.exports = mod.item = {
       params.$query = prefix(query)
     }
 
-    await db.each(`
-      WITH
-        sort(id, text) AS (
-          SELECT id, text
-          FROM metadata JOIN metadata_values USING (value_id)
-          WHERE property = $sort
-        )
+    return search(db, `
+      WITH ${SORT}
         SELECT DISTINCT id
           FROM items
             JOIN trash USING (id)
@@ -98,14 +96,10 @@ module.exports = mod.item = {
             ${(query.length > 0) ? `id IN (${SEARCH}) AND` : ''}
             reason = 'user'
           ORDER BY sort.text ${dir}, id ${dir}`,
-      params,
-      ({ id }) => { items.push(id) })
-
-    return items
+      params)
   },
 
   async list(db, list, { tags, sort, query }) {
-    const items = []
     const dir = sort.asc ? 'ASC' : 'DESC'
     const params = { $list: list }
 
@@ -115,7 +109,7 @@ module.exports = mod.item = {
       params.$query = prefix(query)
     }
 
-    await db.each(`
+    return search(db, `
       SELECT DISTINCT id, added
         FROM list_items
           ${tags.length ? 'JOIN taggings USING (id)' : ''}
@@ -127,69 +121,71 @@ module.exports = mod.item = {
             ${tags.length ? `tag_id IN (${tags.join(',')}) AND` : ''}
             trash.deleted IS NULL
           ORDER BY added ${dir}, id ${dir}`,
-      params,
-      ({ id }) => { items.push(id) })
-
-    return items
+      params)
   },
 
   async load(db, ids) {
-    const items = into({}, map(id => [id, skel(id)]), ids)
+    const items = {}
+    if (ids != null) ids = ids.join(',')
 
-    if (ids.length) {
-      ids = ids.join(',')
+    await all([
+      db.each(`
+        SELECT
+            id,
+            template,
+            datetime(created, "localtime") AS created,
+            datetime(modified, "localtime") AS modified,
+            deleted
+          FROM subjects
+            JOIN items USING (id)
+            LEFT OUTER JOIN trash USING (id)${
+          (ids != null) ? ` WHERE id IN (${ids})` : ''
+        }`,
+        ({ id, created, modified, deleted, ...data }) => {
+          data.created = new Date(created)
+          data.modified = new Date(modified)
+          data.deleted = !!deleted
 
-      await all([
-        db.each(`
-          SELECT
-              id,
-              template,
-              datetime(created, "localtime") AS created,
-              datetime(modified, "localtime") AS modified,
-              deleted
-            FROM subjects
-              JOIN items USING (id)
-              LEFT OUTER JOIN trash USING (id)
-            WHERE id IN (${ids})`,
+          if (id in items) assign(items[id], data)
+          else items[id] = assign(skel(id), data)
+        }
+      ),
 
-          (data) => {
-            assign(items[data.id], data, {
-              created: new Date(data.created),
-              modified: new Date(data.modified),
-              deleted: !!data.deleted
-            })
-          }
-        ),
+      db.each(`
+        SELECT id, tag_id AS tag
+          FROM taggings${
+          (ids != null) ? ` WHERE id IN (${ids})` : ''
+        }`,
+        ({ id, tag }) => {
+          if (id in items) items[id].tags.push(tag)
+          else items[id] = skel(id, [], [], [tag])
+        }
+      ),
 
-        db.each(`
-          SELECT id, tag_id AS tag
-            FROM taggings WHERE id IN (${ids})`,
-          ({ id, tag }) => {
-            items[id].tags.push(tag)
-          }
-        ),
+      db.each(`
+        SELECT id AS photo, item_id AS id
+          FROM photos
+            LEFT OUTER JOIN trash USING (id)
+          WHERE ${(ids != null) ? `item_id IN (${ids}) AND` : ''}
+            deleted IS NULL
+          ORDER BY item_id, position`,
+        ({ id, photo }) => {
+          if (id in items) items[id].photos.push(photo)
+          else items[id] = skel(id, [], [photo])
+        }
+      ),
 
-        db.each(`
-          SELECT id AS photo, item_id AS item
-            FROM photos
-              LEFT OUTER JOIN trash USING (id)
-            WHERE item IN (${ids})
-              AND deleted IS NULL
-            ORDER BY item, position`,
-          ({ item, photo }) => {
-            items[item].photos.push(photo)
-          }
-        ),
-
-        db.each(`
-          SELECT id, list_id AS list
-            FROM list_items WHERE id IN (${ids})`,
-          ({ id, list }) => {
-            items[id].lists.push(list)
-          }
-        )
-      ])
-    }
+      db.each(`
+        SELECT id, list_id AS list
+          FROM list_items${
+          (ids != null) ? ` WHERE id IN (${ids})` : ''
+        }`,
+        ({ id, list }) => {
+          if (id in items) items[id].lists.push(list)
+          else items[id] = skel(id, [list])
+        }
+      )
+    ])
 
     return items
   },
@@ -313,8 +309,8 @@ module.exports = mod.item = {
 
   prune(db, since = '-1 month') {
     const condition = since ?
-      ` WHERE reason != 'user' OR
-         (reason = 'user' AND deleted < datetime("now", "${since}"))` : ''
+      ` WHERE reason IN ('auto', 'merge')
+          OR deleted < datetime("now", "${since}")` : ''
 
     return db.run(`
       DELETE FROM subjects

@@ -8,7 +8,8 @@ const { default: thunk } = require('redux-thunk')
 const { intl, wizard } = require('../reducers')
 const { debounce } = require('../middleware/debounce')
 
-const dev = (ARGS.dev || ARGS.debug)
+const devtools = (ARGS.dev || ARGS.debug) &&
+  window.__REDUX_DEVTOOLS_EXTENSION__
 
 module.exports = {
   create(init = {}) {
@@ -18,17 +19,17 @@ module.exports = {
       intl
     })
 
-    const middleware = applyMiddleware(
+    let middleware = applyMiddleware(
       debounce,
       thunk
     )
-    const enhancer = (dev && window.devToolsExtension) ?
-      compose(middleware, window.devToolsExtension()) :
-      middleware
 
-    const store = createStore(reducer, init, enhancer)
+    if (typeof devtools === 'function') {
+      middleware = compose(middleware, devtools())
+    }
+
+    const store = createStore(reducer, init, middleware)
 
     return store
   }
 }
-

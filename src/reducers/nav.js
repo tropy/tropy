@@ -15,14 +15,15 @@ const init = {
   lists: {}
 }
 
-function select(selection, id, mod) {
+function select(selection, items = [], mod) {
   switch (mod) {
+    case 'all':
     case 'replace':
-      return [id]
+      return items
     case 'remove':
-      return selection.filter(i => i !== id)
+      return selection.filter(id => !items.includes(id))
     case 'merge':
-      return [...selection, id]
+      return [...selection, ...items]
     default:
       return []
   }
@@ -38,6 +39,16 @@ module.exports = {
 
       case NAV.UPDATE:
         return { ...state, ...payload }
+
+      case NAV.SEARCH:
+        return {
+          ...state,
+          items: [],
+          photo: null,
+          selection: null,
+          note: null,
+          ...payload
+        }
 
       case NAV.SORT: {
         const { list, ...sort } = payload
@@ -75,7 +86,7 @@ module.exports = {
           photo: payload.photo,
           selection: payload.selection,
           note: payload.note,
-          items: select(state.items, payload.items[0], meta.mod)
+          items: select(state.items, payload.items, meta.mod)
         }
 
       case ITEM.IMPORT:
@@ -96,7 +107,7 @@ module.exports = {
           mode: PROJECT.MODE.ITEM,
           photo,
           selection,
-          items: select(state.items, id, 'replace')
+          items: select(state.items, [id], 'replace')
         }
       }
 
@@ -104,7 +115,7 @@ module.exports = {
         return (!meta.done || error || !isSelected(state.tags, payload)) ?
           state : {
             ...state,
-            tags: select(state.tags, payload, 'remove')
+            tags: select(state.tags, [payload], 'remove')
           }
 
       case TAG.SELECT:
@@ -113,7 +124,7 @@ module.exports = {
           photo: null,
           items: select(state.items),
           trash: null,
-          tags: select(state.tags, payload, meta.mod)
+          tags: select(state.tags, [payload], meta.mod)
         }
 
       case PHOTO.SELECT:
@@ -122,13 +133,13 @@ module.exports = {
           photo: payload.photo,
           selection: payload.selection,
           note: payload.note,
-          items: select(state.items, payload.item, 'replace')
+          items: select(state.items, [payload.item], 'replace')
         } : { ...state, photo: null, selection: null }
 
       case NOTE.SELECT:
         return payload ? {
           ...state,
-          items: select(state.items, payload.item, 'replace'),
+          items: select(state.items, [payload.item], 'replace'),
           photo: payload.photo,
           selection: payload.selection,
           note: payload.note
