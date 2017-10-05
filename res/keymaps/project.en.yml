@@ -98,6 +98,7 @@ darwin:
     clear: Escape
     edit: Enter
     delete: Backspace
+    all: CmdOrCtrl+a
   PhotoIterator:
     up: ArrowUp
     down: ArrowDown
