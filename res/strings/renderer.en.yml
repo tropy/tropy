@@ -16,7 +16,11 @@ panel:
     selection: Selection
   tags:
     tab: Tags
-    add: Add Tag
+    add: >
+      {count, plural,
+        =0 {Add Tag}
+        one {Add Tag to Item}
+        other {Add Tag to # Items}}
   photo:
     title: Photos
     create: Add Photos
