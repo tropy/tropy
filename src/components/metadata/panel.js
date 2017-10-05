@@ -60,7 +60,9 @@ class MetadataPanel extends PureComponent {
     return (
       <section>
         <h5 className="metadata-heading">
-          <FormattedMessage id="panel.metadata.item"/>
+          <FormattedMessage
+            id="panel.metadata.item"
+            values={{ count: items.length }}/>
         </h5>
         <TemplateSelect
           templates={itemTemplates}

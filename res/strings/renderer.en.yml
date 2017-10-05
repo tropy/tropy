@@ -8,7 +8,11 @@ panel:
   metadata:
     tab: Metadata
     photo: Photo
-    item: Item
+    item: >
+      {count, plural,
+        =0 {}
+        one {Item}
+        other {# Items}}
     selection: Selection
   tags:
     tab: Tags
