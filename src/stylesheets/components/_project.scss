@@ -12,6 +12,13 @@
   }
 }
 
+.project {
+  .main {
+    display: flex;
+    flex: 1 1 0;
+  }
+}
+
 .no-project {
   display: flex;
   flex-direction: column;
@@ -114,11 +121,6 @@
       opacity: 0;
     }
   }
-}
-
-main {
-  display: flex;
-  flex: 1 1 0;
 }
 
 #items {

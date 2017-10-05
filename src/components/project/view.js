@@ -87,7 +87,7 @@ class ProjectView extends Component {
             isSelected={!(nav.list || nav.trash)}
             isTrashSelected={nav.trash}/>
         </BufferedResizable>
-        <main>
+        <div className="main">
           <section id="items" style={this.style}>
             <header>
               <ProjectToolbar
@@ -118,7 +118,7 @@ class ProjectView extends Component {
               onCreate={onItemCreate}
               onSelect={onItemSelect}/>
           </section>
-        </main>
+        </div>
       </div>
     )
   }
