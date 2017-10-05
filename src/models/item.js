@@ -29,16 +29,30 @@ const SEARCH = `
       LEFT OUTER JOIN photos p ON (p.id = m.id OR p.id = photo_id)
     WHERE fts_metadata MATCH $query`
 
+const SORT = `
+  sort(id, text) AS (
+    SELECT id, text
+    FROM metadata JOIN metadata_values USING (value_id)
+    WHERE property = $sort)`
+
 const prefix = (query) =>
   (!(/[*+'"]/).test(query)) ? query + '*' : query
 
 
+function search(db, query, params) {
+  const items = []
+  const index = {}
+
+  return db.each(query, params, ({ id }) => {
+    index[id] = items.length
+    items.push(id)
+  }).then(() => ({ index, items }))
+}
+
+
 module.exports = mod.item = {
-
-  async all(db, { trash, tags, sort, query }) {
-    const items = []
+  all(db, { trash, tags, sort, query }) {
     const dir = sort.asc ? 'ASC' : 'DESC'
-
     const params = { $sort: sort.column }
 
     query = query.trim()
@@ -47,13 +61,8 @@ module.exports = mod.item = {
       params.$query = prefix(query)
     }
 
-    await db.each(`
-      WITH
-        sort(id, text) AS (
-          SELECT id, text
-          FROM metadata JOIN metadata_values USING (value_id)
-          WHERE property = $sort
-        )
+    return search(db, `
+      WITH ${SORT}
         SELECT DISTINCT id
           FROM items
             ${tags.length ? 'JOIN taggings USING (id)' : ''}
@@ -64,16 +73,11 @@ module.exports = mod.item = {
             ${(query.length > 0) ? `id IN (${SEARCH}) AND` : ''}
             deleted ${trash ? 'NOT' : 'IS'} NULL
           ORDER BY sort.text ${dir}, id ${dir}`,
-      params,
-      ({ id }) => { items.push(id) })
-
-    return items
+      params)
   },
 
   async trash(db, { sort, query }) {
-    const items = []
     const dir = sort.asc ? 'ASC' : 'DESC'
-
     const params = { $sort: sort.column }
 
     query = query.trim()
@@ -82,13 +86,8 @@ module.exports = mod.item = {
       params.$query = prefix(query)
     }
 
-    await db.each(`
-      WITH
-        sort(id, text) AS (
-          SELECT id, text
-          FROM metadata JOIN metadata_values USING (value_id)
-          WHERE property = $sort
-        )
+    return search(db, `
+      WITH ${SORT}
         SELECT DISTINCT id
           FROM items
             JOIN trash USING (id)
@@ -97,14 +96,10 @@ module.exports = mod.item = {
             ${(query.length > 0) ? `id IN (${SEARCH}) AND` : ''}
             reason = 'user'
           ORDER BY sort.text ${dir}, id ${dir}`,
-      params,
-      ({ id }) => { items.push(id) })
-
-    return items
+      params)
   },
 
   async list(db, list, { tags, sort, query }) {
-    const items = []
     const dir = sort.asc ? 'ASC' : 'DESC'
     const params = { $list: list }
 
@@ -114,7 +109,7 @@ module.exports = mod.item = {
       params.$query = prefix(query)
     }
 
-    await db.each(`
+    return search(db, `
       SELECT DISTINCT id, added
         FROM list_items
           ${tags.length ? 'JOIN taggings USING (id)' : ''}
@@ -126,10 +121,7 @@ module.exports = mod.item = {
             ${tags.length ? `tag_id IN (${tags.join(',')}) AND` : ''}
             trash.deleted IS NULL
           ORDER BY added ${dir}, id ${dir}`,
-      params,
-      ({ id }) => { items.push(id) })
-
-    return items
+      params)
   },
 
   async load(db, ids) {

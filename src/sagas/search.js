@@ -3,13 +3,11 @@
 const { warn, verbose } = require('../common/log')
 const { call, put, select } = require('redux-saga/effects')
 const { get } = require('../common/util')
-const mod = require('../models/item')
+const mod = require('../models')
 const act = require('../actions')
 const ms = require('ms')
 
 module.exports = {
-
-  // eslint-disable-next-line complexity
   *search(db) {
     try {
       const { nav } = yield select()
@@ -21,11 +19,11 @@ module.exports = {
 
       switch (true) {
         case (trash):
-          result = yield call(mod.trash, db, { sort, query })
+          result = yield call(mod.item.trash, db, { sort, query })
           break
 
         case (list != null):
-          result = yield call(mod.list, db, list, {
+          result = yield call(mod.item.list, db, list, {
             tags,
             query,
             sort: get(lists, [list, 'sort']) || sort
@@ -34,12 +32,12 @@ module.exports = {
           break
 
         default:
-          result = yield call(mod.all, db, { tags, sort, query })
+          result = yield call(mod.item.all, db, { tags, sort, query })
       }
 
       verbose(`*search query took ${ms(Date.now() - START)}`)
 
-      yield put(act.qr.items.update(result))
+      yield put(act.qr.update(result))
 
     } catch (error) {
       warn(`unexpectedly failed in *search: ${error.message}`)
