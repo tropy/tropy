@@ -135,7 +135,8 @@
       color: $add-tag-placeholder-color-default;
       position: relative;
       left: 50%;
-      transform: translateX(-27px);
+      transform: translateX(-50%);
+      max-width: max-content;
       transition:
         left $add-tag-transition,
         transform $add-tag-transition,
