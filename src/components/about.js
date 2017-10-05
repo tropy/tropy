@@ -32,7 +32,7 @@ class About extends PureComponent {
         {this.renderToolbar()}
         <figure className="app-icon"/>
         <div className="flex-row center">
-          <h1>{product}</h1>
+          <h1><span class="product">{product}</span></h1>
           <p className="version">
             <FormattedMessage id="about.version" values={{ version }}/>
           </p>

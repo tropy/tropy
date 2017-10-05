@@ -37,11 +37,12 @@
     }
     line-height: 1.1;
 
-    span:first-child {
+    .product {
       margin-left: -2px;
     }
 
-    span:last-child {
+    &::after {
+      content: "™";
       font: {
         weight: 300;
         size: 0.5em;
