@@ -1,28 +1,34 @@
 'use strict'
 
-module.exports = {
+const { isArray } = Array
 
-  select(selection, mod = 'replace', ...ids) {
-    return module.exports[mod](selection, ...ids)
+
+const selection = {
+  select(s, items, mod = 'replace') {
+    return module.exports[mod](s, items)
   },
 
   clear() {
     return []
   },
 
-  replace(selection, ...ids) {
-    return [...ids]
+  replace(_, items) {
+    return [...items]
   },
 
-  remove(selection, ...ids) {
-    return selection.filter(id => !ids.includes(id))
+  remove(s, items) {
+    return s.filter(it => !items.includes(it))
   },
 
-  append(selection, ...ids) {
-    return [...selection, ...ids]
+  merge(s, items) {
+    return [...selection.remove(s, items), ...items]
   },
 
-  isSelected(selection, ...ids) {
-    return ids.find(id => selection.includes(id))
+  isSelected(s, items) {
+    return isArray(items) ?
+      items.find(it => s.includes(it)) :
+      s.includes(items)
   }
 }
+
+module.exports = selection

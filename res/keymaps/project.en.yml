@@ -15,10 +15,18 @@ linux: &linux
     next: ArrowDown
     prev: ArrowUp
   ItemIterator: &ItemIterator
-    up: ArrowUp
-    down: ArrowDown
-    left: ArrowLeft
-    right: ArrowRight
+    up:
+      - ArrowUp
+      - Shift+ArrowUp
+    down:
+      - ArrowDown
+      - Shift+ArrowDown
+    left:
+      - ArrowLeft
+      - Shift+ArrowLeft
+    right:
+      - ArrowRight
+      - Shift+ArrowRight
     preview: Space
     open: Enter
     edit: F2
@@ -87,10 +95,18 @@ darwin:
   Esper: *Esper
   Sidebar: *Sidebar
   ItemIterator:
-    up: ArrowUp
-    down: ArrowDown
-    left: ArrowLeft
-    right: ArrowRight
+    up:
+      - ArrowUp
+      - Shift+ArrowUp
+    down:
+      - ArrowDown
+      - Shift+ArrowDown
+    left:
+      - ArrowLeft
+      - Shift+ArrowLeft
+    right:
+      - ArrowRight
+      - Shift+ArrowRight
     preview: Space
     open:
       - Cmd+ArrowDown

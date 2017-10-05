@@ -5,6 +5,7 @@ const { ItemIterator } = require('./iterator')
 const { ItemTile } = require('./tile')
 const { refine } = require('../../common/util')
 const cx = require('classnames')
+const { match } = require('../../keymap')
 
 
 class ItemGrid extends ItemIterator {
@@ -14,23 +15,21 @@ class ItemGrid extends ItemIterator {
     super(props)
 
     refine(this, 'handleKeyDown', ([event]) => {
-      if (!event.isPropagationStopped()) {
-        switch (event.key) {
-          case (this.isVertical ? 'ArrowLeft' : 'ArrowUp'):
-            this.select(this.getPrevItem(this.state.cols))
-            break
+      if (event.isPropagationStopped()) return
 
-          case (this.isVertical ? 'ArrowRight' : 'ArrowDown'):
-            this.select(this.getNextItem(this.state.cols))
-            break
-
-          default:
-            return
-        }
-
-        event.preventDefault()
-        event.stopPropagation()
+      switch (match(this.props.keymap, event)) {
+        case (this.isVertical ? 'left' : 'up'):
+          this.select(this.getPrevItem(this.state.cols), event.shiftKey, true)
+          break
+        case (this.isVertical ? 'right' : 'down'):
+          this.select(this.getNextItem(this.state.cols), event.shiftKey, true)
+          break
+        default:
+          return
       }
+
+      event.preventDefault()
+      event.stopPropagation()
     })
   }
 

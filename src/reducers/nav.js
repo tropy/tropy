@@ -4,7 +4,7 @@ const {
   NAV, ITEM, LIST, TAG, NOTE, PHOTO, PROJECT, DC
 } = require('../constants')
 
-const { isSelected } = require('../selection')
+const { isSelected, select } = require('../selection')
 
 const init = {
   mode: PROJECT.MODE.PROJECT,
@@ -13,20 +13,6 @@ const init = {
   tags: [],
   sort: { type: 'property', column: DC.title, asc: true },
   lists: {}
-}
-
-function select(selection, items = [], mod) {
-  switch (mod) {
-    case 'all':
-    case 'replace':
-      return items
-    case 'remove':
-      return selection.filter(id => !items.includes(id))
-    case 'merge':
-      return [...selection, ...items]
-    default:
-      return []
-  }
 }
 
 module.exports = {
@@ -70,14 +56,14 @@ module.exports = {
 
       case LIST.REMOVE:
         return state.list === payload ?
-          { ...state, list: null, items: select(state.items), photo: null } :
+          { ...state, list: null, items: [], photo: null } :
           state
 
       case ITEM.DELETE:
       case ITEM.RESTORE:
       case ITEM.REMOVE:
-        return !meta.done && isSelected(state.items, ...payload) ?
-          { ...state, items: select(state.items), photo: null } :
+        return !meta.done && isSelected(state.items, payload) ?
+          { ...state, items: [], photo: null } :
           state
 
       case ITEM.SELECT:
@@ -122,7 +108,7 @@ module.exports = {
         return {
           ...state,
           photo: null,
-          items: select(state.items),
+          items: [],
           trash: null,
           tags: select(state.tags, [payload], meta.mod)
         }
@@ -133,13 +119,13 @@ module.exports = {
           photo: payload.photo,
           selection: payload.selection,
           note: payload.note,
-          items: select(state.items, [payload.item], 'replace')
+          items: [payload.item]
         } : { ...state, photo: null, selection: null }
 
       case NOTE.SELECT:
         return payload ? {
           ...state,
-          items: select(state.items, [payload.item], 'replace'),
+          items: [payload.item],
           photo: payload.photo,
           selection: payload.selection,
           note: payload.note
@@ -154,8 +140,8 @@ module.exports = {
       case NAV.SELECT:
         return {
           ...state,
-          items: select(state.items),
-          tags: select(state.tags),
+          items: [],
+          tags: [],
           trash: null,
           list: null,
           photo: null,

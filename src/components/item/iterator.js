@@ -108,10 +108,10 @@ class ItemIterator extends Iterator {
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
       case (this.isVertical ? 'up' : 'left'):
-        this.select(this.getPrevItem())
+        this.select(this.getPrevItem(), event.shiftKey, true)
         break
       case (this.isVertical ? 'down' : 'right'):
-        this.select(this.getNextItem())
+        this.select(this.getNextItem(), event.shiftKey, true)
         break
       case 'open':
         this.props.onItemOpen(this.getCurrentItem())
@@ -148,10 +148,11 @@ class ItemIterator extends Iterator {
     }
   }
 
-  select(item) {
-    if (item && !this.isSelected(item)) {
-      this.props.onSelect({ items: [item.id] }, 'replace', { throttle: true })
-    }
+  select(item, isRange = false, throttle = false) {
+    if (item == null) return
+
+    const mod = isRange ? 'merge' : 'replace'
+    this.props.onSelect({ items: [item.id] }, mod, { throttle })
   }
 
   connect(element) {
