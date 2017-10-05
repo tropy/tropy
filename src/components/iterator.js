@@ -131,7 +131,7 @@ class Iterator extends PureComponent {
     if (this.scroller == null) return 0
 
     const top = this.scroller.scrollTop
-    const offset = (overscan - viewportRows) / 2 * rowHeight
+    const offset = floor((overscan - viewportRows) / 2) * rowHeight
 
     return restrict(top - (top % rowHeight) - offset, 0, maxOffset)
   }
