@@ -145,14 +145,12 @@ class PhotoList extends PhotoIterator {
     const transform = `translate3d(0,${offset}px,0)`
 
     return this.connect(
-      <div
-        className={cx(this.classes)}
-        ref={this.setContainer}
-        tabIndex={this.tabIndex}
-        onKeyDown={this.handleKeyDown}>
+      <div className={cx(this.classes)}>
         <div
-          ref={this.setScroller}
-          className="scroll-container">
+          className="scroll-container"
+          ref={this.setContainer}
+          tabIndex={this.tabIndex}
+          onKeyDown={this.handleKeyDown}>
           <div className="runway click-catcher" style={{ height }}>
             <ul className="viewport" style={{ transform }}>
               {this.mapIterableRange(({ photo, ...props }) =>

@@ -42,13 +42,12 @@ class ItemTable extends ItemIterator {
     return this.connect(
       <div
         className={cx(this.classes)}
-        ref={this.setContainer}
-        tabIndex={this.tabIndex}
-        onKeyDown={this.handleKeyDown}
         onClick={this.handleClickOutside}>
         <div
-          ref={this.setScroller}
-          className="scroll-container">
+          className="scroll-container"
+          ref={this.setContainer}
+          tabIndex={this.tabIndex}
+          onKeyDown={this.handleKeyDown}>
           <div className="runway click-catcher" style={{ height }}>
             <table className="viewport" style={{ transform }}>
               <tbody>

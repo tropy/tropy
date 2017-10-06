@@ -53,12 +53,13 @@ class ItemGrid extends ItemIterator {
     return this.connect(
       <div
         className={cx(this.classes)}
-        tabIndex={this.tabIndex}
-        onKeyDown={this.handleKeyDown}
-        ref={this.setContainer}
         data-size={this.props.size}
         onClick={this.handleClickOutside}>
-        <div ref={this.setScroller} className="scroll-container">
+        <div
+          className="scroll-container"
+          ref={this.setContainer}
+          tabIndex={this.tabIndex}
+          onKeyDown={this.handleKeyDown}>
           <div className="runway click-catcher" style={{ height }}>
             <ul className="viewport" style={{ transform }}>
               {this.mapIterableRange(({ item, ...props }) =>

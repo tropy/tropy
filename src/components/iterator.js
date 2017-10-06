@@ -41,10 +41,7 @@ class Iterator extends PureComponent {
 
       this.ro.observe(this.container)
       on(this.container, 'tab:focus', this.handleFocus)
-    }
-
-    if (this.scroller != null) {
-      on(this.scroller, 'scroll', this.handleScroll, {
+      on(this.container, 'scroll', this.handleScroll, {
         capture: true, passive: true
       })
     }
@@ -57,10 +54,7 @@ class Iterator extends PureComponent {
 
     if (this.container != null) {
       off(this.container, 'tab:focus', this.handleFocus)
-    }
-
-    if (this.scroller != null) {
-      off(this.scroller, 'scroll', this.handleScroll, {
+      off(this.container, 'scroll', this.handleScroll, {
         capture: true, passive: true
       })
     }
@@ -147,9 +141,9 @@ class Iterator extends PureComponent {
   }
 
   getOffset({ overscan, maxOffset, rowHeight, viewportRows } = this.state) {
-    if (this.scroller == null) return 0
+    if (this.container == null) return 0
 
-    const top = this.scroller.scrollTop
+    const top = this.container.scrollTop
     const offset = floor((overscan - viewportRows) / 2) * rowHeight
 
     return restrict(top - (top % rowHeight) - offset, 0, maxOffset)
@@ -222,10 +216,6 @@ class Iterator extends PureComponent {
 
   setContainer = (container) => {
     this.container = container
-  }
-
-  setScroller = (scroller) => {
-    this.scroller = scroller
   }
 
 

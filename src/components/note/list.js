@@ -82,12 +82,12 @@ class NoteList extends Iterator {
     const transform = `translate3d(0,${offset}px,0)`
 
     return (
-      <div
-        className="note list"
-        ref={this.setContainer}
-        tabIndex={this.tabIndex}
-        onKeyDown={this.handleKeyDown}>
-        <div ref={this.setScroller} className="scroll-container">
+      <div className="note list">
+        <div
+          className="scroll-container"
+          ref={this.setContainer}
+          tabIndex={this.tabIndex}
+          onKeyDown={this.handleKeyDown}>
           <div className="runway click-catcher" style={{ height }}>
             <ul className="viewport" style={{ transform }}>
               {this.mapIterableRange(props =>
