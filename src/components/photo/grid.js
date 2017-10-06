@@ -36,22 +36,22 @@ class PhotoGrid extends PhotoIterator {
     return num
   }
 
-
   isExpanded(photo) {
-    return !photo.pending &&
-      this.props.expanded[0] === photo &&
-      photo.selections.length > 0
+    return photo.selections != null &&
+      photo.selections.length > 0 &&
+      this.props.expanded[0] === photo
   }
 
-  map(fn) {
+  mapIterableRange(fn) {
     const { photos } = this.props
-    const { size } = this
+    const { from, to } = this.getIterableRange()
+
     let out = []
-    let cur = 0
-    let gap = size
+    let cur = from
+    let gap = to
     let exp
 
-    for (; cur < gap && cur < size; ++cur) {
+    for (; cur < gap && cur < to; ++cur) {
       let photo = photos[cur]
 
       if (this.isExpanded(photo)) {
@@ -63,14 +63,14 @@ class PhotoGrid extends PhotoIterator {
     }
 
     if (exp != null) {
-      if (gap > size) {
-        out = out.concat(this.fill(gap - size, 'gap'))
+      if (gap > to) {
+        out = out.concat(this.fill(gap - to, 'gap'))
       }
 
       out.push(this.renderSelectionGrid(exp))
     }
 
-    for (; cur < size; ++cur) {
+    for (; cur < to; ++cur) {
       let photo = photos[cur]
       out.push(fn(this.getIterableProps(photo, cur)))
     }

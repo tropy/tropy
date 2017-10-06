@@ -26,7 +26,7 @@ const getExpandedPhotos = memo(
     ))
 
     if (isGrid) {
-      expanded.sort((a, b) => rev(expand[a], expand[b]))
+      expanded.sort((a, b) => rev(expand[a.id], expand[b.id]))
     }
 
     return expanded
