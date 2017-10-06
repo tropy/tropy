@@ -26,8 +26,8 @@ class SelectionIterator extends Iterator {
     return this.props.active === selection
   }
 
-  getItems(props = this.props) {
-    return props.selections || super.getItems()
+  getIterables(props = this.props) {
+    return props.selections || super.getIterables()
   }
 
   getNext(offset = 1) {
@@ -37,14 +37,6 @@ class SelectionIterator extends Iterator {
     if (!active) return selections[0]
 
     return selections[this.idx[active] + offset]
-  }
-
-  getPrev(offset = 1) {
-    return this.getNext(-offset)
-  }
-
-  getCurrent() {
-    return this.getNext(0)
   }
 
   handleDropSelection = ({ id, to, offset }) => {

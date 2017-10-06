@@ -27,14 +27,14 @@ class PhotoList extends PhotoIterator {
     return this.props.edit.photo === photo.id
   }
 
-  getNextPhoto(offset = 1) {
+  getNext(offset = 1) {
     if (!(offset === 1 || offset === -1)) {
-      return super.getNextPhoto(offset)
+      return super.getNext(offset)
     }
 
-    const photo = super.getNextPhoto(0)
+    const photo = super.getNext(0)
     if (!this.isExpanded(photo)) {
-      return this.getPhotoBackwards(super.getNextPhoto(offset), offset)
+      return this.getPhotoBackwards(super.getNext(offset), offset)
     }
 
     let { selection } = this.props
@@ -42,12 +42,12 @@ class PhotoList extends PhotoIterator {
 
     if (offset > 0) {
       if (idx + offset >= photo.selections.length) {
-        return super.getNextPhoto(offset)
+        return super.getNext(offset)
       }
     } else {
       if (idx === 0) return photo
       if (idx < 0) {
-        return this.getPhotoBackwards(super.getNextPhoto(offset), offset)
+        return this.getPhotoBackwards(super.getNext(offset), offset)
       }
     }
 
@@ -64,8 +64,8 @@ class PhotoList extends PhotoIterator {
     }
   }
 
-  getCurrentPhoto() {
-    const photo = super.getNextPhoto(0)
+  getCurrent() {
+    const photo = super.getNext(0)
     if (!this.isExpanded(photo)) return photo
 
     const { selection } = this.props
@@ -106,29 +106,29 @@ class PhotoList extends PhotoIterator {
   handleKeyDown = (event) => {
     switch (match(this.keymap, event)) {
       case 'up':
-        this.select(this.getPrevPhoto())
+        this.select(this.getPrev())
         break
       case 'down':
-        this.select(this.getNextPhoto())
+        this.select(this.getNext())
         break
       case 'left':
       case 'contract':
-        this.contract(this.getCurrentPhoto())
+        this.contract(this.getCurrent())
         break
       case 'right':
       case 'expand':
-        this.expand(this.getCurrentPhoto())
+        this.expand(this.getCurrent())
         break
       case 'edit':
       case 'enter':
-        this.edit(this.getCurrentPhoto())
+        this.edit(this.getCurrent())
         break
       case 'open':
-        this.handleItemOpen(this.getCurrentPhoto())
+        this.handleItemOpen(this.getCurrent())
         break
       case 'delete':
-        this.handleDelete(this.getCurrentPhoto())
-        this.select(this.getNextPhoto() || this.getPrevPhoto())
+        this.handleDelete(this.getCurrent())
+        this.select(this.getNext() || this.getPrev())
         break
       default:
         return
@@ -147,8 +147,7 @@ class PhotoList extends PhotoIterator {
         className={cx(this.classes)}
         ref={this.setContainer}
         tabIndex={this.tabIndex}
-        onKeyDown={this.handleKeyDown}
-        onClick={this.handleClickOutside}>
+        onKeyDown={this.handleKeyDown}>
         {this.map(({ photo, ...props }) =>
           <PhotoListItem {...props}
             key={photo.id}

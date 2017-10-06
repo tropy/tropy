@@ -4,8 +4,8 @@ const React = require('react')
 const { PureComponent } = React
 const { TABS, SASS: { TILE } } = require('../constants')
 const { adjacent, restrict, times } = require('../common/util')
-const { on, off } = require('../dom')
-const { ceil, floor, max, round } = Math
+const { has, on, off } = require('../dom')
+const { ceil, floor, max, min, round } = Math
 const { bool, number } = require('prop-types')
 const throttle = require('lodash.throttle')
 const EMPTY = []
@@ -34,22 +34,41 @@ class Iterator extends PureComponent {
   }
 
   componentDidMount() {
-    this.ro = new ResizeObserver(([e]) => {
-      this.handleResize(e.contentRect)
-    })
+    if (this.container != null) {
+      this.ro = new ResizeObserver(([e]) => {
+        this.handleResize(e.contentRect)
+      })
 
-    this.ro.observe(this.container)
-    on(this.container, 'tab:focus', this.handleFocus)
+      this.ro.observe(this.container)
+      on(this.container, 'tab:focus', this.handleFocus)
+    }
+
+    if (this.scroller != null) {
+      on(this.scroller, 'scroll', this.handleScroll, {
+        capture: true, passive: true
+      })
+    }
   }
 
   componentWillUnmount() {
-    if (this.ro != null) { this.ro.disconnect() }
-    off(this.container, 'tab:focus', this.handleFocus)
+    if (this.ro != null) {
+      this.ro.disconnect()
+    }
+
+    if (this.container != null) {
+      off(this.container, 'tab:focus', this.handleFocus)
+    }
+
+    if (this.scroller != null) {
+      off(this.scroller, 'scroll', this.handleScroll, {
+        capture: true, passive: true
+      })
+    }
   }
 
   componentWillReceiveProps(props) {
     if (this.props.size !== props.size ||
-      this.getItems(props).length !== this.size) {
+      this.getIterables(props).length !== this.size) {
       this.update(props)
     }
   }
@@ -100,7 +119,7 @@ class Iterator extends PureComponent {
   }
 
   get size() {
-    return this.getItems().length
+    return this.getIterables().length
   }
 
   get orientation() {
@@ -116,14 +135,14 @@ class Iterator extends PureComponent {
   }
 
   getAdjacent = (iterable) => {
-    return adjacent(this.getItems(), iterable)
+    return adjacent(this.getIterables(), iterable)
   }
 
   getColumns(size = this.props.size) {
     return floor(this.viewport.width / this.getTileSize(size))
   }
 
-  getItems() {
+  getIterables() {
     return EMPTY
   }
 
@@ -138,7 +157,7 @@ class Iterator extends PureComponent {
 
 
   getRows(cols = this.state.cols, props = this.props) {
-    return ceil(this.getItems(props).length / cols)
+    return ceil(this.getIterables(props).length / cols)
   }
 
   getRowHeight(size = this.props.size) {
@@ -153,9 +172,34 @@ class Iterator extends PureComponent {
     return round(size * TILE.FACTOR)
   }
 
+  getIterableRange() {
+    const { cols, offset, overscan, rowHeight } = this.state
+
+    const from = cols * floor(offset / rowHeight)
+    const size = cols * overscan
+
+    return {
+      from, size, to: min(from + size, this.size)
+    }
+  }
+
+  getPrev(offset = 1) {
+    return this.getNext(-offset)
+  }
+
+  getCurrent() {
+    return this.getNext(0)
+  }
+
+
   setContainer = (container) => {
     this.container = container
   }
+
+  setScroller = (scroller) => {
+    this.scroller = scroller
+  }
+
 
   fill(count = this.state.maxCols, key = 'filler') {
     return times(count, (i) => (
@@ -176,6 +220,17 @@ class Iterator extends PureComponent {
     this.update()
   }, 15)
 
+  handleClickOutside = (event) => {
+    if (has(event.target, 'click-catcher') &&
+      typeof this.clearSelection === 'function') {
+      this.clearSelection()
+    }
+  }
+
+  handleFocus = () => {
+    this.select(this.getCurrent())
+  }
+
   static getPropKeys() {
     return Object.keys(this.propTypes || this.DecoratedComponent.propTypes)
   }
@@ -185,7 +240,7 @@ class Iterator extends PureComponent {
     overscan: number.isRequired,
     size: number.isRequired
   }
-
+  rables
   static defaultProps = {
     overscan: 2
   }

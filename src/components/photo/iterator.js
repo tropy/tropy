@@ -25,8 +25,12 @@ class PhotoIterator extends Iterator {
     return !this.props.isDisabled && this.size > 1
   }
 
-  getItems(props = this.props) {
-    return props.photos || super.getItems()
+  getIterables(props = this.props) {
+    return props.photos || super.getIterables()
+  }
+
+  clearSelection() {
+    this.props.onSelect({ items: [] })
   }
 
   isSelected(photo) {
@@ -51,26 +55,13 @@ class PhotoIterator extends Iterator {
     return this.props.keymap.PhotoIterator
   }
 
-
-  getNextPhoto(offset = 1) {
+  getNext(offset = 1) {
     const { photos, current } = this.props
 
     if (!photos.length) return null
     if (!current) return photos[0]
 
     return photos[this.idx[current] + offset]
-  }
-
-  getPrevPhoto(offset = 1) {
-    return this.getNextPhoto(-offset)
-  }
-
-  getCurrentPhoto() {
-    return this.getNextPhoto(0)
-  }
-
-  handleFocus = () => {
-    this.select(this.getCurrentPhoto())
   }
 
   select = (photo) => {
