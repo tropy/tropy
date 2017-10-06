@@ -133,7 +133,7 @@ class Iterator extends PureComponent {
   }
 
   getColumns(size = this.props.size) {
-    return floor(this.viewport.width / this.getTileSize(size))
+    return floor(this.viewport.width / this.getTileSize(size)) || 1
   }
 
   getIterables() {
