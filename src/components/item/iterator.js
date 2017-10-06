@@ -31,8 +31,8 @@ class ItemIterator extends Iterator {
 
   getSelection = () => this.props.selection
 
-  isSelected(item) {
-    return this.props.selection.includes(item.id)
+  isSelected({ id }) {
+    return this.props.selection.includes(id)
   }
 
   clearSelection() {

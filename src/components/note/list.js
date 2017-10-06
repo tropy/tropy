@@ -1,44 +1,29 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
+const { Iterator } = require('../iterator')
 const { NoteListItem } = require('./list-item')
 const { TABS } = require('../../constants')
 const { match } = require('../../keymap')
-const { has } = require('../../common/util')
+const { get } = require('../../common/util')
 const { arrayOf, bool, func, number, object, shape } = require('prop-types')
 
 
-class NoteList extends PureComponent {
-
-  get isEmpty() {
-    return this.props.notes.length === 0
-  }
-
-  get hasSelection() {
-    return has(this.props.selection, ['id'])
-  }
-
+class NoteList extends Iterator {
   get tabIndex() {
-    return this.isEmpty ? null : TABS.NoteList
+    return this.size === 0 ? null : TABS.NoteList
   }
 
-  isSelected(note) {
-    return this.hasSelection && note.id === this.props.selection.id
+  getIterables() {
+    return this.props.notes
   }
 
-  next(offset = 1) {
-    if (this.isEmpty) return null
-    if (!this.hasSelection) return this.props.notes[0]
-    return this.props.notes[this.idx[this.props.selection.id] + offset]
+  head() {
+    return get(this.props.selection, ['id'])
   }
 
-  prev(offset = 1) {
-    return this.next(-offset)
-  }
-
-  current() {
-    return this.next(0)
+  isSelected({ id }) {
+    return id === this.head()
   }
 
   select = (note) => {
@@ -71,11 +56,9 @@ class NoteList extends PureComponent {
     event.stopPropagation()
   }
 
-  renderNoteListItem = (note, index) => {
+  renderNoteListItem = (note) => {
     const { selection, isDisabled, onContextMenu, onOpen } = this.props
     const isSelected = this.isSelected(note)
-
-    this.idx[note.id] = index
 
     return (
       <NoteListItem
@@ -88,9 +71,8 @@ class NoteList extends PureComponent {
         onSelect={this.select}/>
     )
   }
-  render() {
-    this.idx = {}
 
+  render() {
     return (
       <ul
         className="note list"
