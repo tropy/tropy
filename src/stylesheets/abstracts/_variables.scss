@@ -236,7 +236,7 @@ $esper-cursor: const("ESPER.CURSOR");
 // Scrollbar
 // --------------------------------------------------
 
-$scrollbar-size: 12; // $space-sm;
+$scrollbar-size: $space-sm;
 
 
 // Progress bar
