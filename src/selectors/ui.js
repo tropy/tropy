@@ -21,7 +21,7 @@ const getExpandedPhotos = memo(
   getVisiblePhotos,
   (expand, isGrid, photos) => {
     const expanded = seq(photos, compose(
-      map(photo => expand[photo.id] > 0 ? photo.id : null),
+      map(photo => expand[photo.id] > 0 ? photo : null),
       keep()
     ))
 

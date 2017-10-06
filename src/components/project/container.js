@@ -237,7 +237,7 @@ class ProjectContainer extends Component {
 
 
   static propTypes = {
-    expanded: arrayOf(number).isRequired,
+    expanded: arrayOf(object).isRequired,
     project: shape({
       file: string
     }).isRequired,

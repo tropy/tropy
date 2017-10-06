@@ -5,6 +5,7 @@ const { Iterator } = require('../iterator')
 const { DropTarget } = require('react-dnd')
 const { DND } = require('../../constants')
 const { move } = require('../../common/util')
+const { ceil } = Math
 
 const {
   arrayOf, bool, func, number, object, string, shape
@@ -29,6 +30,28 @@ class PhotoIterator extends Iterator {
     return props.photos || super.getIterables()
   }
 
+  getRows(cols = this.state.cols, props = this.props) {
+    return super.getRows(cols, props) + this.getExpansionRows(cols, props)
+  }
+
+  getExpansionRows(cols = this.state.cols, props = this.props) {
+    return props.expanded.reduce((rows, photo) => (
+      rows + ceil(photo.selections.length / cols)
+    ), 0)
+  }
+
+  //getIterableRange() {
+  //  const { cols, offset, overscan, rowHeight } = this.state
+
+  //  const from = cols * floor(offset / rowHeight)
+  //  const size = cols * overscan
+
+  //  return {
+  //    from, size, to: min(from + size, this.size)
+  //  }
+  //}
+
+
   isSelected(photo) {
     return this.props.current === photo.id
   }
@@ -44,7 +67,7 @@ class PhotoIterator extends Iterator {
 
   isExpanded(photo) {
     return photo != null &&
-      this.props.expanded.includes(photo.id)
+      this.props.expanded.includes(photo)
   }
 
   get keymap() {
@@ -166,7 +189,7 @@ class PhotoIterator extends Iterator {
 
     cache: string.isRequired,
     current: number,
-    expanded: arrayOf(number).isRequired,
+    expanded: arrayOf(object).isRequired,
     keymap: object.isRequired,
     selection: number,
     selections: object.isRequired,

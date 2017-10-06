@@ -7,6 +7,7 @@ const { SelectionGrid } = require('../selection/grid')
 const { pluck } = require('../../common/util')
 const cx = require('classnames')
 const { match } = require('../../keymap')
+const { ceil } = Math
 
 
 class PhotoGrid extends PhotoIterator {
@@ -20,9 +21,15 @@ class PhotoGrid extends PhotoIterator {
     return index + (this.state.cols - (index % this.state.cols))
   }
 
+  getExpansionRows(cols = this.state.cols, props = this.props) {
+    const photo = props.expanded[0]
+    return (photo == null) ? 0 : ceil(photo.selections.length / cols)
+  }
+
+
   isExpanded(photo) {
     return !photo.pending &&
-      this.props.expanded[0] === photo.id &&
+      this.props.expanded[0] === photo &&
       photo.selections.length > 0
   }
 
