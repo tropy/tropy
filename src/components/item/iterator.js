@@ -112,28 +112,23 @@ class ItemIterator extends Iterator {
     return (this.isDisabled) ? element : this.props.dt(element)
   }
 
-  mapItemRange(fn) {
-    const { items } = this.props
-    const { from, to } = this.getIterableRange()
-
-    return items.slice(from, to).map((item, index) => {
-      return fn({
-        item,
-        cache: this.props.cache,
-        photos: this.props.photos,
-        tags: this.props.tags,
-        isLast: from + index === items.length - 1,
-        isSelected: this.isSelected(item),
-        isDisabled: this.isDisabled,
-        isVertical: this.isVertical,
-        getSelection: this.getSelection,
-        onContextMenu: this.handleContextMenu,
-        onDropItems: this.props.onItemMerge,
-        onDropPhotos: this.props.onPhotoMove,
-        onItemOpen: this.props.onItemOpen,
-        onSelect: this.props.onSelect
-      })
-    })
+  getIterableProps(item, index) {
+    return {
+      item,
+      cache: this.props.cache,
+      photos: this.props.photos,
+      tags: this.props.tags,
+      isLast: this.isLast(index),
+      isSelected: this.isSelected(item),
+      isDisabled: this.isDisabled,
+      isVertical: this.isVertical,
+      getSelection: this.getSelection,
+      onContextMenu: this.handleContextMenu,
+      onDropItems: this.props.onItemMerge,
+      onDropPhotos: this.props.onPhotoMove,
+      onItemOpen: this.props.onItemOpen,
+      onSelect: this.props.onSelect
+    }
   }
 
   renderNoItems() {

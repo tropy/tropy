@@ -123,18 +123,29 @@ class PhotoGrid extends PhotoIterator {
   }
 
   render() {
+    const { offset, height } = this.state
+    const transform = `translate3d(0,${offset}px,0)`
+
     return this.connect(
-      <ul
+      <div
         className={cx(this.classes)}
         ref={this.setContainer}
         tabIndex={this.tabIndex}
         data-size={this.props.size}
         onKeyDown={this.handleKeyDown}>
-        {this.map(({ photo, ...props }) =>
-          <PhotoTile {...props} key={photo.id} photo={photo}/>
-        )}
-        {this.fillRow()}
-      </ul>
+        <div
+          ref={this.setScroller}
+          className="scroll-container">
+          <div className="runway click-catcher" style={{ height }}>
+            <ul className="viewport" style={{ transform }}>
+              {this.mapIterableRange(({ photo, ...props }) =>
+                <PhotoTile {...props} key={photo.id} photo={photo}/>
+              )}
+              {this.fillRow()}
+            </ul>
+          </div>
+        </div>
+      </div>
     )
   }
 

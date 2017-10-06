@@ -141,27 +141,37 @@ class PhotoList extends PhotoIterator {
 
   render() {
     const { data, edit, onChange } = this.props
+    const { offset, height } = this.state
+    const transform = `translate3d(0,${offset}px,0)`
 
     return this.connect(
-      <ul
+      <div
         className={cx(this.classes)}
         ref={this.setContainer}
         tabIndex={this.tabIndex}
         onKeyDown={this.handleKeyDown}>
-        {this.map(({ photo, ...props }) =>
-          <PhotoListItem {...props}
-            key={photo.id}
-            photo={photo}
-            data={data}
-            edit={edit}
-            selections={this.props.selections}
-            title={DC.title}
-            isEditing={this.isEditing(photo)}
-            onChange={onChange}
-            onEdit={this.edit}
-            onEditCancel={this.handleEditCancel}
-            onSelectionSort={this.props.onSelectionSort}/>)}
-      </ul>
+        <div
+          ref={this.setScroller}
+          className="scroll-container">
+          <div className="runway click-catcher" style={{ height }}>
+            <ul className="viewport" style={{ transform }}>
+              {this.mapIterableRange(({ photo, ...props }) =>
+                <PhotoListItem {...props}
+                  key={photo.id}
+                  photo={photo}
+                  data={data}
+                  edit={edit}
+                  selections={this.props.selections}
+                  title={DC.title}
+                  isEditing={this.isEditing(photo)}
+                  onChange={onChange}
+                  onEdit={this.edit}
+                  onEditCancel={this.handleEditCancel}
+                  onSelectionSort={this.props.onSelectionSort}/>)}
+            </ul>
+          </div>
+        </div>
+      </div>
     )
   }
 

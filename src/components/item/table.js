@@ -52,7 +52,7 @@ class ItemTable extends ItemIterator {
           <div className="runway click-catcher" style={{ height }}>
             <table className="viewport" style={{ transform }}>
               <tbody>
-                {this.mapItemRange(({ item, ...props }) =>
+                {this.mapIterableRange(({ item, ...props }) =>
                   <ItemTableRow {...props}
                     key={item.id}
                     item={item}

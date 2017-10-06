@@ -144,12 +144,6 @@ class PhotoIterator extends Iterator {
     }
   }
 
-  map(fn) {
-    return this.props.photos.map((photo, index) => {
-      return fn(this.getIterableProps(photo, index))
-    })
-  }
-
   connect(element) {
     return this.isSortable ? this.props.dt(element) : element
   }
