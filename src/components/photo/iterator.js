@@ -5,11 +5,13 @@ const { Iterator } = require('../iterator')
 const { DropTarget } = require('react-dnd')
 const { DND } = require('../../constants')
 const { move } = require('../../common/util')
-const { ceil } = Math
+const { ceil, floor, max, min } = Math
 
 const {
   arrayOf, bool, func, number, object, string, shape
 } = require('prop-types')
+
+const byIdx = ([a], [b]) => (a < b) ? -1 : (a > b) ? 1 : 0
 
 
 class PhotoIterator extends Iterator {
@@ -30,26 +32,56 @@ class PhotoIterator extends Iterator {
     return props.photos || super.getIterables()
   }
 
-  getRows(cols = this.state.cols, props = this.props) {
-    return super.getRows(cols, props) + this.getExpansionRows(cols, props)
+  getRows(state = this.state, props = this.props) {
+    return super.getRows(state, props) + this.getExpansionRows(state, props)
   }
 
-  getExpansionRows(cols = this.state.cols, props = this.props) {
-    return props.expanded.reduce((rows, photo) => (
-      rows + ceil(photo.selections.length / cols)
-    ), 0)
+  getExpansionRows({ cols, rowHeight } = this.state, props = this.props) {
+    let total = 0
+    let rows = []
+
+    for (let photo of props.expanded) {
+      let num = ceil(photo.selections.length / cols)
+      let idx = this.indexOf(photo)
+
+      rows.push([idx, num])
+    }
+
+    rows = rows.sort(byIdx)
+    this.expansionRows = []
+
+    for (let i = 0; i < rows.length; ++i) {
+      let [idx, num] = rows[i]
+      total += num
+
+      let offset = (idx + 1 + total) * rowHeight
+      this.expansionRows.push([offset, total])
+    }
+
+    return total
   }
 
-  //getIterableRange() {
-  //  const { cols, offset, overscan, rowHeight } = this.state
+  getExpansionRowsBefore(offset) {
+    if (this.expansionRows != null) {
+      for (let [at, rows] of this.expansionRows) {
+        if (offset >= at) return rows
+      }
+    }
 
-  //  const from = cols * floor(offset / rowHeight)
-  //  const size = cols * overscan
+    return 0
+  }
 
-  //  return {
-  //    from, size, to: min(from + size, this.size)
-  //  }
-  //}
+  getIterableRange() {
+    const { cols, offset, overscan, rowHeight } = this.state
+
+    const expr = this.getExpansionRowsBefore(offset)
+    const from = cols * max(floor(offset / rowHeight) - expr, 0)
+    const size = cols * overscan
+
+    return {
+      from, size, to: min(from + size, this.size)
+    }
+  }
 
 
   isSelected(photo) {

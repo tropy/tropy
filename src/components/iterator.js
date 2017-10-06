@@ -75,9 +75,9 @@ class Iterator extends PureComponent {
 
   update(props = this.props) {
     const cols = this.getColumns(props.size)
-    const rows = this.getRows(cols, props)
-    const viewportRows = this.getViewportRows(props.size)
     const rowHeight = this.getRowHeight(props.size)
+    const rows = this.getRows({ cols, rowHeight }, props)
+    const viewportRows = this.getViewportRows(props.size)
     const height = rows * rowHeight
     const overscan = ceil(viewportRows * props.overscan)
     const maxCols = this.getColumns(TILE.MIN)
@@ -156,7 +156,7 @@ class Iterator extends PureComponent {
   }
 
 
-  getRows(cols = this.state.cols, props = this.props) {
+  getRows({ cols } = this.state, props = this.props) {
     return ceil(this.getIterables(props).length / cols)
   }
 
