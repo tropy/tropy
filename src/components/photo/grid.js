@@ -65,30 +65,30 @@ class PhotoGrid extends PhotoIterator {
   handleKeyDown = (event) => {
     switch (match(this.keymap, event)) {
       case (this.isVertical ? 'up' : 'left'):
-        this.select(this.getPrev())
+        this.select(this.prev())
         break
       case (this.isVertical ? 'down' : 'right'):
-        this.select(this.getNext())
+        this.select(this.next())
         break
       case (this.isVertical ? 'left' : 'up'):
-        this.select(this.getPrev(this.state.cols))
+        this.select(this.prev(this.state.cols))
         break
       case (this.isVertical ? 'right' : 'down'):
-        this.select(this.getNext(this.state.cols))
+        this.select(this.next(this.state.cols))
         break
       case 'open':
-        this.handleItemOpen(this.getCurrent())
+        this.handleItemOpen(this.current())
         break
       case 'expand':
       case 'enter':
-        this.expand(this.getCurrent())
+        this.expand(this.current())
         break
       case 'contract':
-        this.contract(this.getCurrent())
+        this.contract(this.current())
         break
       case 'delete':
-        this.handleDelete(this.getCurrent())
-        this.select(this.getNext() || this.getPrev())
+        this.handleDelete(this.current())
+        this.select(this.next() || this.prev())
         break
       default:
         return

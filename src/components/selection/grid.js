@@ -24,30 +24,26 @@ class SelectionGrid extends SelectionIterator {
     }
   }
 
-  handleFocus = () => {
-    this.select(this.getCurrent())
-  }
-
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
       case (this.isVertical ? 'up' : 'left'):
-        this.select(this.getPrev())
+        this.select(this.prev())
         break
       case (this.isVertical ? 'down' : 'right'):
-        this.select(this.getNext())
+        this.select(this.next())
         break
       case (this.isVertical ? 'left' : 'up'):
-        this.select(this.getPrev(this.state.cols))
+        this.select(this.prev(this.state.cols))
         break
       case (this.isVertical ? 'right' : 'down'):
-        this.select(this.getNext(this.state.cols))
+        this.select(this.next(this.state.cols))
         break
       case 'open':
-        this.open(this.getCurrent())
+        this.open(this.current())
         break
       case 'delete':
-        this.delete(this.getCurrent())
-        this.select(this.getNext() || this.getPrev())
+        this.delete(this.current())
+        this.select(this.next() || this.prev())
         break
       default:
         return

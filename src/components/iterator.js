@@ -184,30 +184,30 @@ class Iterator extends PureComponent {
   }
 
   // Note: override for better performance, if possible!
-  getIndexOf(id) {
+  indexOf(id) {
     return this.getIterables().findIndex(it => it.id === id)
   }
 
-  getNext(offset = 1) {
+  next(offset = 1) {
     const items = this.getIterables()
     if (!items.length) return null
 
-    const head = this.getSelectionHead()
+    const head = this.head()
     if (head == null) return items[0]
 
-    const idx = this.getIndexOf(head) + offset
+    const idx = this.indexOf(head) + offset
     return (idx >= 0 && idx < items.length) ? items[idx] : null
   }
 
-  getPrev(offset = 1) {
-    return this.getNext(-offset)
+  prev(offset = 1) {
+    return this.next(-offset)
   }
 
-  getCurrent() {
-    return this.getNext(0)
+  current() {
+    return this.next(0)
   }
 
-  getSelectionHead() {
+  head() {
     throw new Error('not implemented')
   }
 
@@ -258,7 +258,7 @@ class Iterator extends PureComponent {
   }
 
   handleFocus = () => {
-    this.select(this.getCurrent())
+    this.select(this.current())
   }
 
   static getPropKeys() {
@@ -270,7 +270,7 @@ class Iterator extends PureComponent {
     overscan: number.isRequired,
     size: number.isRequired
   }
-  rables
+
   static defaultProps = {
     overscan: 2
   }

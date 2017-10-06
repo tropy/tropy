@@ -27,14 +27,14 @@ class PhotoList extends PhotoIterator {
     return this.props.edit.photo === photo.id
   }
 
-  getNext(offset = 1) {
+  next(offset = 1) {
     if (!(offset === 1 || offset === -1)) {
-      return super.getNext(offset)
+      return super.next(offset)
     }
 
-    const photo = super.getNext(0)
+    const photo = super.next(0)
     if (!this.isExpanded(photo)) {
-      return this.getPhotoBackwards(super.getNext(offset), offset)
+      return this.getPhotoBackwards(super.next(offset), offset)
     }
 
     let { selection } = this.props
@@ -42,12 +42,12 @@ class PhotoList extends PhotoIterator {
 
     if (offset > 0) {
       if (idx + offset >= photo.selections.length) {
-        return super.getNext(offset)
+        return super.next(offset)
       }
     } else {
       if (idx === 0) return photo
       if (idx < 0) {
-        return this.getPhotoBackwards(super.getNext(offset), offset)
+        return this.getPhotoBackwards(super.next(offset), offset)
       }
     }
 
@@ -64,8 +64,8 @@ class PhotoList extends PhotoIterator {
     }
   }
 
-  getCurrent() {
-    const photo = super.getNext(0)
+  current() {
+    const photo = super.next(0)
     if (!this.isExpanded(photo)) return photo
 
     const { selection } = this.props
@@ -106,29 +106,29 @@ class PhotoList extends PhotoIterator {
   handleKeyDown = (event) => {
     switch (match(this.keymap, event)) {
       case 'up':
-        this.select(this.getPrev())
+        this.select(this.prev())
         break
       case 'down':
-        this.select(this.getNext())
+        this.select(this.next())
         break
       case 'left':
       case 'contract':
-        this.contract(this.getCurrent())
+        this.contract(this.current())
         break
       case 'right':
       case 'expand':
-        this.expand(this.getCurrent())
+        this.expand(this.current())
         break
       case 'edit':
       case 'enter':
-        this.edit(this.getCurrent())
+        this.edit(this.current())
         break
       case 'open':
-        this.handleItemOpen(this.getCurrent())
+        this.handleItemOpen(this.current())
         break
       case 'delete':
-        this.handleDelete(this.getCurrent())
-        this.select(this.getNext() || this.getPrev())
+        this.handleDelete(this.current())
+        this.select(this.next() || this.prev())
         break
       default:
         return

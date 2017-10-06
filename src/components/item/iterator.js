@@ -20,11 +20,11 @@ class ItemIterator extends Iterator {
     return props.items || super.getIterables()
   }
 
-  getIndexOf(id) {
+  indexOf(id) {
     return this.props.index[id]
   }
 
-  getSelectionHead() {
+  head() {
     const { selection } = this.props
     return selection.length > 0 ? selection[selection.length - 1] : null
   }
@@ -72,23 +72,23 @@ class ItemIterator extends Iterator {
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
       case (this.isVertical ? 'up' : 'left'):
-        this.select(this.getPrev(), event.shiftKey, true)
+        this.select(this.prev(), event.shiftKey, true)
         break
       case (this.isVertical ? 'down' : 'right'):
-        this.select(this.getNext(), event.shiftKey, true)
+        this.select(this.next(), event.shiftKey, true)
         break
       case 'open':
-        this.props.onItemOpen(this.getCurrent())
+        this.props.onItemOpen(this.current())
         break
       case 'preview':
-        this.props.onItemPreview(this.getCurrent())
+        this.props.onItemPreview(this.current())
         break
       case 'clear':
         this.clearSelection()
         break
       case 'delete':
         this.handleItemDelete(this.props.selection)
-        this.select(this.getNext() || this.getPrev())
+        this.select(this.next() || this.prev())
         break
       case 'all':
         this.props.onSelect({}, 'all')

@@ -51,7 +51,7 @@ class PhotoIterator extends Iterator {
     return this.props.keymap.PhotoIterator
   }
 
-  getSelectionHead() {
+  head() {
     return this.props.current
   }
 

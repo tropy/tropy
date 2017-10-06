@@ -30,7 +30,7 @@ class SelectionIterator extends Iterator {
     return props.selections || super.getIterables()
   }
 
-  getSelectionHead() {
+  head() {
     return this.props.active
   }
 
