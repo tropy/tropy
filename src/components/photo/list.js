@@ -106,10 +106,10 @@ class PhotoList extends PhotoIterator {
   handleKeyDown = (event) => {
     switch (match(this.keymap, event)) {
       case 'up':
-        this.select(this.prev())
+        this.select(this.prev(), true)
         break
       case 'down':
-        this.select(this.next())
+        this.select(this.next(), true)
         break
       case 'left':
       case 'contract':

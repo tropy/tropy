@@ -55,7 +55,7 @@ class PhotoIterator extends Iterator {
     return this.props.current
   }
 
-  select = (photo) => {
+  select = (photo, throttle = false) => {
     if (photo == null ||
       this.isSelected(photo) && this.isActive(photo.selection)) {
       return
@@ -66,7 +66,7 @@ class PhotoIterator extends Iterator {
       item: photo.item,
       note: photo.notes[0],
       selection: photo.selection
-    })
+    }, { throttle })
   }
 
   contract = (photo) => {
