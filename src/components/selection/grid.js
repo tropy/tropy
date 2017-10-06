@@ -12,10 +12,7 @@ class SelectionGrid extends SelectionIterator {
   get isGrid() { return true }
 
   get classes() {
-    return {
-      ...super.classes,
-      grid: true
-    }
+    return [super.classes, 'grid']
   }
 
   delete(selection) {

@@ -13,10 +13,7 @@ class PhotoGrid extends PhotoIterator {
   get isGrid() { return true }
 
   get classes() {
-    return {
-      ...super.classes,
-      grid: true
-    }
+    return [super.classes, 'grid']
   }
 
   getNextRowOffset(index) {
@@ -30,7 +27,6 @@ class PhotoGrid extends PhotoIterator {
   }
 
   map(fn) {
-    this.idx = {}
     const { photos } = this.props
     const { size } = this
     let out = []
@@ -40,7 +36,6 @@ class PhotoGrid extends PhotoIterator {
 
     for (; cur < gap && cur < size; ++cur) {
       let photo = photos[cur]
-      this.idx[photo.id] = cur
 
       if (this.isExpanded(photo)) {
         exp = photo
@@ -60,7 +55,6 @@ class PhotoGrid extends PhotoIterator {
 
     for (; cur < size; ++cur) {
       let photo = photos[cur]
-      this.idx[photo.id] = cur
       out.push(fn(this.getIterableProps(photo, cur)))
     }
 

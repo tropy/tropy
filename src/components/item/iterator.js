@@ -24,15 +24,9 @@ class ItemIterator extends Iterator {
     return this.props.index[id]
   }
 
-  getNext(offset = 1) {
-    const { items, selection } = this.props
-
-    if (!items.length) return null
-    if (!selection.length) return items[0]
-
-    const idx = this.getIndexOf(selection[selection.length - 1]) + offset
-
-    return (idx >= 0 && idx < items.length) ? items[idx] : null
+  getSelectionHead() {
+    const { selection } = this.props
+    return selection.length > 0 ? selection[selection.length - 1] : null
   }
 
   getSelection = () => this.props.selection
@@ -90,7 +84,7 @@ class ItemIterator extends Iterator {
         this.props.onItemPreview(this.getCurrent())
         break
       case 'clear':
-        this.props.onSelect({ items: [] })
+        this.clearSelection()
         break
       case 'delete':
         this.handleItemDelete(this.props.selection)
@@ -105,17 +99,6 @@ class ItemIterator extends Iterator {
 
     event.preventDefault()
     event.stopPropagation()
-  }
-
-  handleScroll = () => {
-    if (!this.isScrollUpdateScheduled) {
-      this.isScrollUpdateScheduled = true
-
-      requestAnimationFrame(() => {
-        this.setState({ offset: this.getOffset() })
-        this.isScrollUpdateScheduled = false
-      })
-    }
   }
 
   select(item, isRange = false, throttle = false) {
@@ -160,9 +143,7 @@ class ItemIterator extends Iterator {
         className={cx('no-items', 'drop-target', { over: this.props.isOver })
       }>
         <figure className="no-items-illustration"/>
-        <h1>
-          <FormattedMessage id="project.empty"/>
-        </h1>
+        <h1><FormattedMessage id="project.empty"/></h1>
       </div>
     )
   }

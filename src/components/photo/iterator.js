@@ -29,10 +29,6 @@ class PhotoIterator extends Iterator {
     return props.photos || super.getIterables()
   }
 
-  clearSelection() {
-    this.props.onSelect({ items: [] })
-  }
-
   isSelected(photo) {
     return this.props.current === photo.id
   }
@@ -55,13 +51,8 @@ class PhotoIterator extends Iterator {
     return this.props.keymap.PhotoIterator
   }
 
-  getNext(offset = 1) {
-    const { photos, current } = this.props
-
-    if (!photos.length) return null
-    if (!current) return photos[0]
-
-    return photos[this.idx[current] + offset]
+  getSelectionHead() {
+    return this.props.current
   }
 
   select = (photo) => {
@@ -154,10 +145,7 @@ class PhotoIterator extends Iterator {
   }
 
   map(fn) {
-    this.idx = {}
-
     return this.props.photos.map((photo, index) => {
-      this.idx[photo.id] = index
       return fn(this.getIterableProps(photo, index))
     })
   }

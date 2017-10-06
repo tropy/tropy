@@ -183,6 +183,22 @@ class Iterator extends PureComponent {
     }
   }
 
+  // Note: override for better performance, if possible!
+  getIndexOf(id) {
+    return this.getIterables().findIndex(it => it.id === id)
+  }
+
+  getNext(offset = 1) {
+    const items = this.getIterables()
+    if (!items.length) return null
+
+    const head = this.getSelectionHead()
+    if (head == null) return items[0]
+
+    const idx = this.getIndexOf(head) + offset
+    return (idx >= 0 && idx < items.length) ? items[idx] : null
+  }
+
   getPrev(offset = 1) {
     return this.getNext(-offset)
   }
@@ -191,6 +207,9 @@ class Iterator extends PureComponent {
     return this.getNext(0)
   }
 
+  getSelectionHead() {
+    throw new Error('not implemented')
+  }
 
   setContainer = (container) => {
     this.container = container
@@ -213,6 +232,17 @@ class Iterator extends PureComponent {
     }
 
     return this.filler
+  }
+
+  handleScroll = () => {
+    if (!this.isScrollUpdateScheduled) {
+      this.isScrollUpdateScheduled = true
+
+      requestAnimationFrame(() => {
+        this.setState({ offset: this.getOffset() })
+        this.isScrollUpdateScheduled = false
+      })
+    }
   }
 
   handleResize = throttle((viewport) => {
