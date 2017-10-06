@@ -4,8 +4,9 @@
 
 .photo.list {
   flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
   margin-bottom: $space-min;
-  overflow-y: auto;
 
   .photo {
     align-items: center;
