@@ -3,7 +3,7 @@
 const React = require('react')
 const { Iterator } = require('../iterator')
 const { NoteListItem } = require('./list-item')
-const { TABS } = require('../../constants')
+const { TABS, SASS: { NOTE } } = require('../../constants')
 const { match } = require('../../keymap')
 const { get } = require('../../common/util')
 const { arrayOf, bool, func, number, object, shape } = require('prop-types')
@@ -12,6 +12,14 @@ const { arrayOf, bool, func, number, object, shape } = require('prop-types')
 class NoteList extends Iterator {
   get tabIndex() {
     return this.size === 0 ? null : TABS.NoteList
+  }
+
+  getColumns() {
+    return 1
+  }
+
+  getRowHeight() {
+    return NOTE.ROW_HEIGHT
   }
 
   getIterables() {
@@ -56,30 +64,38 @@ class NoteList extends Iterator {
     event.stopPropagation()
   }
 
-  renderNoteListItem = (note) => {
-    const { selection, isDisabled, onContextMenu, onOpen } = this.props
+  getIterableProps(note) {
     const isSelected = this.isSelected(note)
 
-    return (
-      <NoteListItem
-        key={note.id}
-        note={isSelected ? selection : note}
-        isDisabled={isDisabled}
-        isSelected={isSelected}
-        onContextMenu={onContextMenu}
-        onOpen={onOpen}
-        onSelect={this.select}/>
-    )
+    return {
+      note: isSelected ? this.props.selection : note,
+      isDisabled: this.props.isDisabled,
+      isSelected,
+      onContextMenu: this.props.onContextMenu,
+      onOpen: this.props.onOpen,
+      onSelect: this.select
+    }
   }
 
   render() {
+    const { offset, height } = this.state
+    const transform = `translate3d(0,${offset}px,0)`
+
     return (
-      <ul
+      <div
         className="note list"
+        ref={this.setContainer}
         tabIndex={this.tabIndex}
         onKeyDown={this.handleKeyDown}>
-        {this.props.notes.map(this.renderNoteListItem)}
-      </ul>
+        <div ref={this.setScroller} className="scroll-container">
+          <div className="runway click-catcher" style={{ height }}>
+            <ul className="viewport" style={{ transform }}>
+              {this.mapIterableRange(props =>
+                <NoteListItem {...props} key={props.note.id}/>)}
+            </ul>
+          </div>
+        </div>
+      </div>
     )
   }
 
