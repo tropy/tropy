@@ -21,19 +21,21 @@ class PhotoGrid extends PhotoIterator {
     return index + (this.state.cols - (index % this.state.cols))
   }
 
-  getExpansionRows({ cols, rowHeight } = this.state, props = this.props) {
+  getExpansionRows({ cols } = this.state, props = this.props) {
     const photo = props.expanded[0]
-    this.expansionRows = []
+    this.expRows = []
 
     if (photo == null) return 0
 
-    const num = ceil(photo.selections.length / cols)
-    const idx = this.indexOf(photo)
+    let exp = ceil(photo.selections.length / cols)
+    let idx = this.indexOf(photo, props)
+    if (idx === -1) return 0
 
-    const offset = (idx + 1 + num) * rowHeight
-    this.expansionRows.push([offset, num])
+    for (let j = 0; j < exp; ++j) {
+      this.expRows.push([++idx, j + 1])
+    }
 
-    return num
+    return exp
   }
 
   isExpanded(photo) {

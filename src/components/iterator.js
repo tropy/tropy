@@ -70,7 +70,7 @@ class Iterator extends PureComponent {
   update(props = this.props) {
     const cols = this.getColumns(props.size)
     const rowHeight = this.getRowHeight(props.size)
-    const rows = this.getRows({ cols, rowHeight }, props)
+    const rows = this.getRows({ cols }, props)
     const viewportRows = this.getViewportRows(props.size)
     const height = rows * rowHeight
     const overscan = ceil(viewportRows * props.overscan)
@@ -187,8 +187,8 @@ class Iterator extends PureComponent {
   }
 
   // Note: override for better performance, if possible!
-  indexOf(id) {
-    return this.getIterables().findIndex(it => it.id === id)
+  indexOf(id, props = this.props) {
+    return this.getIterables(props).findIndex(it => it.id === id)
   }
 
   next(offset = 1) {
