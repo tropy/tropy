@@ -319,10 +319,6 @@ module.exports = mod.item = {
     )
   },
 
-  export() {
-    return {}
-  },
-
   tags: {
     async add(db, values) {
       if (values.length) {

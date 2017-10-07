@@ -16,6 +16,7 @@ const { ITEM, DC } = require('../constants')
 const { keys } = Object
 const { isArray } = Array
 const { writeFileAsync: write } = require('fs')
+const { itemToLD } = require('../common/linked-data')
 
 const {
   getItemTemplate,
@@ -424,7 +425,6 @@ class Export extends Command {
   static get action() { return ITEM.EXPORT }
 
   *exec() {
-    const { db } = this.options
     const { payload } = this.action
     let path = payload.path
 
@@ -436,10 +436,10 @@ class Export extends Command {
 
       if (!path) return
 
-      const data =
-        yield call(db.seq, conn => mod.item.export(conn, [payload.id]))
+      const ld = yield itemToLD(payload.id)
+      const data = JSON.stringify(ld, null, '  ')
 
-      yield call((...args) => write(...args), path, data, { flags: 'w' })
+      yield call(() => { write(path, data, { flags: 'w' }) })
 
     } catch (error) {
       warn(`Failed to export items to ${path}: ${error.message}`)
