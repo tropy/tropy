@@ -436,11 +436,14 @@ class Export extends Command {
 
       if (!path) return
 
-      const ld = yield itemToLD(payload.id)
-      const data = JSON.stringify(ld, null, '  ')
-
-      yield call(() => { write(path, data, { flags: 'w' }) })
-
+      yield itemToLD(payload.id, (error, ld) => {
+        if (error) {
+          warn(`Failed to compact jsonld: ${error.message}`)
+        }
+        console.log(ld)
+        const ldString = JSON.stringify(ld, null, 2)
+        write(path, ldString, { flags: 'w' })
+      })
     } catch (error) {
       warn(`Failed to export items to ${path}: ${error.message}`)
       verbose(error.stack)
