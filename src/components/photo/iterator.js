@@ -61,8 +61,8 @@ class PhotoIterator extends Iterator {
     for (let i = 0; i < rows.length; ++i) {
       let [idx, exp] = rows[i]
       idx += total
-      for (let j = 0; j < exp; ++j) {
-        this.expRows.push([++idx, ++total])
+      for (let j = 1; j <= exp; ++j) {
+        this.expRows.push([++idx, ++total, j])
       }
     }
 
@@ -70,13 +70,14 @@ class PhotoIterator extends Iterator {
   }
 
   getExpansionRowsBefore(row) {
-    let exp = 0
+    let exp = [0, 0]
 
     if (this.expRows != null) {
       for (let i = 0; i < this.expRows.length; ++i) {
         let cur = this.expRows[i]
         if (row < cur[0]) break
-        exp = cur[1]
+        if (row === cur[0]) exp[1] = cur[2]
+        exp[0] = cur[1]
       }
     }
 
@@ -86,10 +87,8 @@ class PhotoIterator extends Iterator {
   getOffset(state = this.state) {
     let offset = super.getOffset(state)
     let row = floor(offset / state.rowHeight)
-    let exp = this.getExpansionRowsBefore(row)
-    row = row - exp
-    exp = this.getExpansionRowsBefore(row)
-    return (row + exp) * state.rowHeight
+    let [, adj] = this.getExpansionRowsBefore(row)
+    return (row - adj) * state.rowHeight
   }
 
   getIterableRange() {
@@ -97,7 +96,7 @@ class PhotoIterator extends Iterator {
 
     const row = floor(offset / rowHeight)
     const exp = this.getExpansionRowsBefore(row)
-    const from = cols * (row - exp)
+    const from = cols * (row - exp[0])
     const size = cols * overscan
 
     return {
