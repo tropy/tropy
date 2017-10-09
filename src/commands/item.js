@@ -440,7 +440,6 @@ class Export extends Command {
         if (error) {
           warn(`Failed to compact jsonld: ${error.message}`)
         }
-        console.log(ld)
         const ldString = JSON.stringify(ld, null, 2)
         write(path, ldString, { flags: 'w' })
       })

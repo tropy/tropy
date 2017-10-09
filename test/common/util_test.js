@@ -311,4 +311,16 @@ describe('util', () => {
       expect(shallow(a, b)).to.be.false
     })
   })
+
+  describe('.camelize', () => {
+    const { camelize } = util
+
+    it('', () => {
+      expect(camelize('foo')).to.eql('foo')
+      expect(camelize('Foo')).to.eql('foo')
+      expect(camelize('foo bar')).to.eql('fooBar')
+      expect(camelize('Foo Bar')).to.eql('fooBar')
+    })
+
+  })
 })
