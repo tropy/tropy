@@ -109,7 +109,7 @@ const NOTEPAD = {
 }
 
 const NOTE = {
-  ROW_HEIGHT: 30
+  ROW_HEIGHT: 60
 }
 
 const ESPER = {
