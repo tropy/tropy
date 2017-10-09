@@ -9,6 +9,11 @@ $panel-separator-color: #ddd !default;
   display: flex;
   flex-direction: column;
 
+  .scroll-container {
+    position: relative;
+    z-index: 0;
+  }
+
   .note {
     padding: $note-padding-top $default-padding-horizontal $note-padding-bottom;
     position: relative;
