@@ -61,7 +61,7 @@ class ItemGrid extends ItemIterator {
           tabIndex={this.tabIndex}
           onKeyDown={this.handleKeyDown}>
           <div className="runway click-catcher" style={{ height }}>
-            <ul className="viewport" style={{ transform }}>
+            <ul className="viewport click-catcher" style={{ transform }}>
               {this.mapIterableRange(({ item, ...props }) =>
                 <ItemTile {...props} key={item.id} item={item}/>
               )}

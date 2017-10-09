@@ -60,8 +60,7 @@ class ItemTable extends ItemIterator {
                     edit={edit}
                     onCancel={this.handleEditCancel}
                     onChange={onMetadataSave}
-                    onEdit={onEdit}/>
-                )}
+                    onEdit={onEdit}/>)}
               </tbody>
             </table>
           </div>
