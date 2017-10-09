@@ -100,7 +100,7 @@ class PhotoIterator extends Iterator {
     const size = cols * overscan
 
     return {
-      from, size, to: min(from + size, this.size)
+      from, size, to: min(from + size, this.size), exp
     }
   }
 

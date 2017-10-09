@@ -8,6 +8,7 @@ const { pluck } = require('../../common/util')
 const cx = require('classnames')
 const { match } = require('../../keymap')
 const { ceil } = Math
+const { GRID } = require('../../constants/sass')
 
 
 class PhotoGrid extends PhotoIterator {
@@ -27,12 +28,12 @@ class PhotoGrid extends PhotoIterator {
 
     if (photo == null) return 0
 
-    let exp = ceil(photo.selections.length / cols)
-    let idx = this.indexOf(photo, props)
+    const exp = ceil(photo.selections.length / cols)
+    const idx = this.indexOf(photo.id, props)
     if (idx === -1) return 0
 
-    for (let j = 0; j < exp; ++j) {
-      this.expRows.push([++idx, j + 1])
+    for (let j = 1, k = ceil(idx / cols); j <= exp; ++j, ++k) {
+      this.expRows.push([k, j, j])
     }
 
     return exp
@@ -44,9 +45,9 @@ class PhotoGrid extends PhotoIterator {
       this.props.expanded[0] === photo
   }
 
-  mapIterableRange(fn) {
+  mapIterableRange(fn, range = this.getIterableRange()) {
     const { photos } = this.props
-    const { from, to } = this.getIterableRange()
+    const { from, to } = range
 
     let out = []
     let cur = from
@@ -143,7 +144,11 @@ class PhotoGrid extends PhotoIterator {
 
   render() {
     const { offset, height } = this.state
-    const transform = `translate3d(0,${offset}px,0)`
+    const range = this.getIterableRange()
+    const [exp, adj] = range.exp
+    console.log({ exp, adj })
+    const pad = (exp > 0 && adj === 0) ? GRID.PADDING * 2 : 0
+    const transform = `translate3d(0,${offset + pad}px,0)`
 
     return this.connect(
       <div className={cx(this.classes)}
@@ -155,9 +160,9 @@ class PhotoGrid extends PhotoIterator {
           onKeyDown={this.handleKeyDown}>
           <div className="runway click-catcher" style={{ height }}>
             <ul className="viewport" style={{ transform }}>
-              {this.mapIterableRange(({ photo, ...props }) =>
+              {this.mapIterableRange(({ photo, ...props }) => (
                 <PhotoTile {...props} key={photo.id} photo={photo}/>
-              )}
+              ), range)}
               {this.fillRow()}
             </ul>
           </div>

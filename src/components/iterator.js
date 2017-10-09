@@ -177,9 +177,9 @@ class Iterator extends PureComponent {
     }
   }
 
-  mapIterableRange(fn) {
+  mapIterableRange(fn, range = this.getIterableRange()) {
     const items = this.getIterables()
-    const { from, to } = this.getIterableRange()
+    const { from, to } = range
 
     return items.slice(from, to).map((item, index) => {
       return fn(this.getIterableProps(item, from + index))

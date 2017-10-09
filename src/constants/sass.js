@@ -186,6 +186,7 @@ const ABOUT = {
 
 const GRID = {
   SIZE: 12,
+  PADDING: 12
 }
 
 
