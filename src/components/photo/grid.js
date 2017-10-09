@@ -146,7 +146,6 @@ class PhotoGrid extends PhotoIterator {
     const { offset, height } = this.state
     const range = this.getIterableRange()
     const [exp, adj] = range.exp
-    console.log({ exp, adj })
     const pad = (exp > 0 && adj === 0) ? GRID.PADDING * 2 : 0
     const transform = `translate3d(0,${offset + pad}px,0)`
 

@@ -47,7 +47,8 @@ describe('PhotoList', () => {
         props.expanded = [PHOTO[3], PHOTO[6]]
 
         expect(list.getExpansionRows(undefined, props)).to.eql(4)
-        expect(list.expRows).to.eql([[3, 1, 1], [7, 2, 1], [8, 3, 2], [9, 4, 3]])
+        expect(list.expRows)
+          .to.eql([[3, 1, 1], [7, 2, 1], [8, 3, 2], [9, 4, 3]])
       })
     })
 
