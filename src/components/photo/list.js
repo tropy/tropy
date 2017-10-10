@@ -147,7 +147,7 @@ class PhotoList extends PhotoIterator {
     return this.connect(
       <div className={cx(this.classes)}>
         <div
-          className="scroll-container click-catcher"
+          className="scroll-container"
           ref={this.setContainer}
           tabIndex={this.tabIndex}
           onKeyDown={this.handleKeyDown}>
