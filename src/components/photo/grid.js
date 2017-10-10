@@ -161,8 +161,9 @@ class PhotoGrid extends PhotoIterator {
     return (
       <li key="expansion" className="tile-expansion">
         <SelectionGrid
-          cache={this.props.cache}
           active={this.props.selection}
+          cache={this.props.cache}
+          cols={this.state.cols}
           data={this.props.data}
           isDisabled={this.props.isDisabled}
           keymap={this.props.keymap.SelectionGrid}
@@ -186,7 +187,7 @@ class PhotoGrid extends PhotoIterator {
     const padding = GRID.PADDING * 4
     const [exp, adj] = range.exp
 
-    let { offset, height } = this.state
+    let { cols, offset, height } = this.state
 
     if (expanded.length > 0) {
       height += padding
@@ -194,6 +195,7 @@ class PhotoGrid extends PhotoIterator {
     }
 
     const transform = `translate3d(0,${offset}px,0)`
+    const gridTemplateColumns = `repeat(${cols}, ${cols}fr)`
 
     return this.connect(
       <div className={cx(this.classes)}
@@ -204,7 +206,9 @@ class PhotoGrid extends PhotoIterator {
           tabIndex={this.tabIndex}
           onKeyDown={this.handleKeyDown}>
           <div className="runway" style={{ height }}>
-            <ul className="viewport" style={{ transform }}>
+            <ul
+              className="viewport"
+              style={{ gridTemplateColumns, transform }}>
               {this.mapIterableRange(({ photo, ...props }) => (
                 <PhotoTile {...props} key={photo.id} photo={photo}/>
               ), range)}

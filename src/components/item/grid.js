@@ -57,8 +57,9 @@ class ItemGrid extends ItemIterator {
   render() {
     if (this.props.isEmpty) return this.renderNoItems()
 
-    const { offset, height } = this.state
+    const { cols, offset, height } = this.state
     const transform = `translate3d(0,${offset}px,0)`
+    const gridTemplateColumns = `repeat(${cols}, ${cols}fr)`
 
     return this.connect(
       <div
@@ -71,7 +72,9 @@ class ItemGrid extends ItemIterator {
           tabIndex={this.tabIndex}
           onKeyDown={this.handleKeyDown}>
           <div className="runway" style={{ height }}>
-            <ul className="viewport click-catcher" style={{ transform }}>
+            <ul
+              className="viewport click-catcher"
+              style={{ gridTemplateColumns, transform }}>
               {this.mapIterableRange(({ item, ...props }) =>
                 <ItemTile {...props} key={item.id} item={item}/>
               )}
