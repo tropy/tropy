@@ -104,7 +104,10 @@
       &.active {
         @extend %list-active;
 
-        @at-root #{selector-replace(&, ".photo.list", ".photo.list:focus")} {
+        @at-root #{
+          selector-replace(&, ".photo.list",
+            ".photo.list .scroll-container:focus")
+        } {
           @extend %list-focus;
         }
       }
