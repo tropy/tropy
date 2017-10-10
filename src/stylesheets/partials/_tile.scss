@@ -46,7 +46,8 @@
     .tile-state {
       border: 3px solid $tile-active-color;
 
-      .scroll-container:focus & {
+      .scroll-container:focus &,
+      .selection.grid:focus & {
         border-color: $tile-focus-color;
       }
     }
