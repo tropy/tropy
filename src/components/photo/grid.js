@@ -32,7 +32,7 @@ class PhotoGrid extends PhotoIterator {
     const idx = this.indexOf(photo.id, props)
     if (idx === -1) return 0
 
-    for (let j = 1, k = ceil(idx / cols); j <= exp; ++j, ++k) {
+    for (let j = 1, k = 1 + ceil(idx / cols); j <= exp; ++j, ++k) {
       this.expRows.push([k, j, j])
     }
 
