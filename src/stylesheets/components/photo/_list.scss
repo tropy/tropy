@@ -8,6 +8,11 @@
   flex-direction: column;
   margin-bottom: $space-min;
 
+  .scroll-container {
+    position: relative;
+    z-index: 0;
+  }
+
   .photo {
     align-items: center;
     position: relative;
