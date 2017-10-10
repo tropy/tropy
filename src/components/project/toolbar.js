@@ -16,20 +16,9 @@ class ProjectToolbar extends PureComponent {
     return this.props.items.length === 0
   }
 
-  renderItemCreateButton() {
-    if (this.props.isDisabled) return
-    if (!this.props.canCreateItems) return
-
-    return (
-      <IconButton
-        icon={<IconPlus/>}
-        title="toolbar.import"
-        onClick={this.props.onItemCreate}/>
-    )
-  }
-
   render() {
     const {
+      canCreateItems,
       isDisabled,
       isDraggable,
       items,
@@ -54,7 +43,11 @@ class ProjectToolbar extends PureComponent {
               maxIcon={<IconGrid/>}/>
           </div>
           <div className="tool-group">
-            {this.renderItemCreateButton()}
+            <IconButton
+              icon={<IconPlus/>}
+              isDisabled={isDisabled || !canCreateItems}
+              title="toolbar.import"
+              onClick={this.props.onItemCreate}/>
           </div>
         </div>
         <div className="toolbar-center">

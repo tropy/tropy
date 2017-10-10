@@ -95,7 +95,7 @@ class ProjectView extends Component {
                 zoom={zoom}
                 items={items.length}
                 maxZoom={maxZoom}
-                canCreateItems
+                canCreateItems={!nav.trash}
                 isDisabled={!props.isActive}
                 onItemCreate={this.handleItemImport}
                 onDoubleClick={ARGS.frameless ? props.onMaximize : null}
