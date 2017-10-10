@@ -46,6 +46,10 @@ class PhotoGrid extends PhotoIterator {
   }
 
   mapIterableRange(fn, range = this.getIterableRange()) {
+    if (this.props.expanded.length === 0) {
+      return super.mapIterabaleRange(fn, range)
+    }
+
     const { photos } = this.props
     const { from, to } = range
 
@@ -143,11 +147,19 @@ class PhotoGrid extends PhotoIterator {
   }
 
   render() {
-    const { offset, height } = this.state
+    const { expanded } = this.props
     const range = this.getIterableRange()
+    const padding = GRID.PADDING * 2
     const [exp, adj] = range.exp
-    const pad = (exp > 0 && adj === 0) ? GRID.PADDING * 2 : 0
-    const transform = `translate3d(0,${offset + pad}px,0)`
+
+    let { offset, height } = this.state
+
+    if (expanded.length > 0) {
+      height += padding
+      if (exp > 0 && adj === 0) offset += padding
+    }
+
+    const transform = `translate3d(0,${offset}px,0)`
 
     return this.connect(
       <div className={cx(this.classes)}
