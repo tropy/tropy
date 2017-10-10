@@ -186,9 +186,11 @@ class Iterator extends PureComponent {
     })
   }
 
-  // Note: override for better performance, if possible!
   indexOf(id, props = this.props) {
-    return this.getIterables(props).findIndex(it => it.id === id)
+    const items = this.getIterables(props)
+    return (items.idx != null) ?
+      items.idx[id] :
+      items.findIndex(it => it.id === id)
   }
 
   next(offset = 1) {

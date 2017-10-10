@@ -173,7 +173,6 @@ class ProjectContainer extends Component {
       data,
       dt,
       expanded,
-      index,
       items,
       nav,
       note,
@@ -196,7 +195,6 @@ class ProjectContainer extends Component {
         <ProjectView {...props}
           activities={activities}
           nav={nav}
-          index={index}
           items={items}
           data={data}
           isActive={this.state.mode === MODE.PROJECT}
@@ -242,7 +240,6 @@ class ProjectContainer extends Component {
       file: string
     }).isRequired,
 
-    index: object.isRequired,
     items: arrayOf(
       shape({ id: number.isRequired })
     ).isRequired,

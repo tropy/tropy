@@ -20,10 +20,6 @@ class ItemIterator extends Iterator {
     return props.items || super.getIterables()
   }
 
-  indexOf(id) {
-    return this.props.index[id]
-  }
-
   head() {
     const { selection } = this.props
     return selection.length > 0 ? selection[selection.length - 1] : null
@@ -144,7 +140,6 @@ class ItemIterator extends Iterator {
   }
 
   static propTypes = {
-    index: object.isRequired,
     items: arrayOf(shape({
       id: number.isRequired
     })).isRequired,

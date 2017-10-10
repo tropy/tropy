@@ -129,7 +129,6 @@ class ProjectView extends Component {
     isActive: bool,
     isEmpty: bool.isRequired,
     isOver: bool,
-    index: object.isRequired,
     items: array.isRequired,
     keymap: object.isRequired,
     nav: object.isRequired,

@@ -1,7 +1,7 @@
 'use strict'
 
 const { QR } = require('../constants')
-const init = { index: {}, items: [] }
+const init = { items: [] }
 
 module.exports = {
   qr(state = init, { type, payload }) {

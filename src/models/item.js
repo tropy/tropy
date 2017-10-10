@@ -39,14 +39,16 @@ const prefix = (query) =>
   (!(/[*+'"]/).test(query)) ? query + '*' : query
 
 
-function search(db, query, params) {
+async function search(db, query, params) {
   const items = []
-  const index = {}
+  items.idx = {}
 
-  return db.each(query, params, ({ id }) => {
-    index[id] = items.length
+  await db.each(query, params, ({ id }) => {
+    items.idx[id] = items.length
     items.push(id)
-  }).then(() => ({ index, items }))
+  })
+
+  return { items }
 }
 
 

@@ -16,13 +16,20 @@ const getVisiblePhotos = memo(
   getPhotos,
   getSelectedItems,
 
-  (photos, items) =>
-    seq(items, compose(
+  (photos, items) => {
+    let k = 0
+    let idx = {}
+    let lst = seq(items, compose(
       map(item => item.photos),
       cat,
       map(id => photos[id]),
-      keep()
+      keep(),
+      map(photo => (idx[photo.id] = k++, photo))
     ))
+
+    lst.idx = idx
+    return lst
+  }
 )
 
 module.exports = {
