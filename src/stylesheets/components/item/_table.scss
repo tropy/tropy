@@ -184,7 +184,8 @@
         background: $items-active-bg;
 
         @at-root #{
-          selector-replace(&, ".item.table", ".item.table .table-body:focus")
+          selector-replace(&, ".item.table",
+            ".item.table .scroll-container:focus")
         } {
           color: $items-focus-color;
           background: $items-focus-bg;
