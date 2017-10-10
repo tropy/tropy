@@ -34,6 +34,9 @@ class SelectionIterator extends Iterator {
     return this.props.active
   }
 
+  // No auto-select, because that could change the active photo!
+  handleFocus = () => {}
+
   handleDropSelection = ({ id, to, offset }) => {
     const { onSort, photo } = this.props
     const order = move(photo.selections, id, to, offset)

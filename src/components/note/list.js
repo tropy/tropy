@@ -45,7 +45,7 @@ class NoteList extends Iterator {
     }
   }
 
-  // Do not auto-select note!
+  // No auto-select, because that could change the active photo!
   handleFocus = () => {}
 
   handleKeyDown = (event) => {
