@@ -93,9 +93,9 @@ class ProjectView extends Component {
               <ProjectToolbar
                 query={nav.query}
                 zoom={zoom}
+                items={items.length}
                 maxZoom={maxZoom}
                 canCreateItems
-                isEmpty={!items.length}
                 isDisabled={!props.isActive}
                 onItemCreate={this.handleItemImport}
                 onDoubleClick={ARGS.frameless ? props.onMaximize : null}

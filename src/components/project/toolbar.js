@@ -2,6 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
+const { FormattedMessage } = require('react-intl')
 const { bool, func, number, string } = require('prop-types')
 const { Toolbar } = require('../toolbar')
 const { IconPlus, IconList, IconGrid } = require('../icons')
@@ -11,6 +12,9 @@ const { IconButton } = require('../button')
 
 
 class ProjectToolbar extends PureComponent {
+  get isEmpty() {
+    return this.props.items.length === 0
+  }
 
   renderItemCreateButton() {
     if (this.props.isDisabled) return
@@ -28,7 +32,7 @@ class ProjectToolbar extends PureComponent {
     const {
       isDisabled,
       isDraggable,
-      isEmpty,
+      items,
       query,
       zoom,
       maxZoom,
@@ -44,7 +48,7 @@ class ProjectToolbar extends PureComponent {
             <Slider
               value={zoom}
               max={maxZoom}
-              isDisabled={isEmpty || isDisabled}
+              isDisabled={this.isEmpty || isDisabled}
               onChange={onZoomChange}
               minIcon={<IconList/>}
               maxIcon={<IconGrid/>}/>
@@ -53,6 +57,7 @@ class ProjectToolbar extends PureComponent {
             {this.renderItemCreateButton()}
           </div>
         </div>
+        <FormattedMessage id="toolbar.items" values={{ count: items }}/>
         <div className="toolbar-right">
           <SearchField
             query={query}
@@ -67,7 +72,7 @@ class ProjectToolbar extends PureComponent {
     canCreateItems: bool,
     isDraggable: bool,
     isDisabled: bool,
-    isEmpty: bool,
+    items: number.isRequired,
     query: string.isRequired,
     maxZoom: number.isRequired,
     zoom: number.isRequired,

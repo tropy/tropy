@@ -4,6 +4,11 @@ sidebar:
   trash: Deleted Items
 toolbar:
   import: Import Photos
+  items: >
+    {count, plural,
+      =0 {}
+      one {1 Item}
+      other {# Items}}
 panel:
   metadata:
     tab: Metadata
