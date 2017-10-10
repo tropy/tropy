@@ -57,7 +57,11 @@ class ProjectToolbar extends PureComponent {
             {this.renderItemCreateButton()}
           </div>
         </div>
-        <FormattedMessage id="toolbar.items" values={{ count: items }}/>
+        <div className="toolbar-center">
+          <div className="item-count">
+            <FormattedMessage id="toolbar.items" values={{ count: items }}/>
+          </div>
+        </div>
         <div className="toolbar-right">
           <SearchField
             query={query}
