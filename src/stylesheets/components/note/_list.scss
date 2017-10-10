@@ -14,6 +14,10 @@ $panel-separator-color: #ddd !default;
     z-index: 0;
   }
 
+  .runway {
+    contain: strict;
+  }
+
   .note {
     padding: $note-padding-top $default-padding-horizontal $note-padding-bottom;
     position: relative;
