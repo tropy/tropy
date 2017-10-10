@@ -20,5 +20,11 @@ describe('linked-data', () => {
     it('transformation', () => {
       expect(short(' F\xd6O B\xe4r ')).to.equal('fooBar')
     })
+
+    it('using label from template', () => {
+      expect(shortenProperty(
+        'uri', {}, { fields: [{ property: 'uri', label: 'My Label' }] }))
+        .to.equal('myLabel')
+    })
   })
 })

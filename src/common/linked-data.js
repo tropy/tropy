@@ -3,11 +3,24 @@
 const { select } = require('redux-saga/effects')
 const { pick, camelize } = require('./util')
 const { ITEM } = require('../constants/type')
+const { getLabel } = require('./ontology')
 
-function shortenProperty(property, props) {
-  if (!property || !props) return
-  const label = props[property] && props[property].label
-  if (!label) return
+
+function shortenProperty(property, props, template) {
+  let label, field
+  try {
+    if (template) {
+      field = template.fields.find(f => f.property === property)
+      label = field.label
+    }
+    if (!label) {
+      label = props[property] && props[property].label
+    }
+    if (!label) {
+      label = getLabel(field.id)
+    }
+    if (!label) return
+  } catch (_) { return }
   return camelize(
     label
     .toLowerCase()
@@ -36,7 +49,8 @@ function* itemToLD(item_id, callback) {
 
   // add fields to context
   resources.item_template.fields.forEach(field => {
-    const short = shortenProperty(field.property, resources.ontology.props)
+    const short = shortenProperty(
+      field.property, resources.ontology.props, resources.item_template)
     context[short] = {
       '@id': field.property,
       '@type': field.datatype
@@ -50,7 +64,8 @@ function* itemToLD(item_id, callback) {
 
   // add metadata to document.metadata
   for (var property in resources.metadata) {
-    const short = shortenProperty(property, resources.ontology.props)
+    const short = shortenProperty(
+      property, resources.ontology.props, resources.item_template)
     if (short) {
       const text = resources.metadata[property].text
       if (text) {
@@ -59,18 +74,10 @@ function* itemToLD(item_id, callback) {
     }
   }
 
-  // add photos to document.photos
-  /*
-  for (var photo_id in resources.photos) {
-    const photo = resources.photos[photo_id]
-    document.photos.push(photo)
-  }
-  */
-
   callback(null, document)
 }
 
 module.exports = {
-  shortenProperty,
+  shortenProperty, // exported for testing (not used in the src)
   itemToLD
 }
