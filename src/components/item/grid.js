@@ -56,11 +56,11 @@ class ItemGrid extends ItemIterator {
         data-size={this.props.size}
         onClick={this.handleClickOutside}>
         <div
-          className="scroll-container"
+          className="scroll-container click-catcher"
           ref={this.setContainer}
           tabIndex={this.tabIndex}
           onKeyDown={this.handleKeyDown}>
-          <div className="runway click-catcher" style={{ height }}>
+          <div className="runway" style={{ height }}>
             <ul className="viewport click-catcher" style={{ transform }}>
               {this.mapIterableRange(({ item, ...props }) =>
                 <ItemTile {...props} key={item.id} item={item}/>
