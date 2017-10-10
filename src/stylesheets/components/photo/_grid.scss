@@ -24,6 +24,8 @@
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
+    contain: content;
+    will-change: transform;
   }
 
   .photo {

@@ -26,7 +26,7 @@
   }
 
   .scroll-container {
-    padding: $space-min;
+    padding: $space-min $space-min 0;
   }
 
   .runway {
@@ -37,7 +37,7 @@
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
-    contain: layout style;
+    contain: content;
     will-change: transform;
   }
 
