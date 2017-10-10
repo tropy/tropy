@@ -8,7 +8,7 @@ const { IconMaze } = require('../icons')
 const { Editable } = require('../editable')
 const { isValidImage } = require('../../image')
 const cx = require('classnames')
-const { bool, func, number, string } = require('prop-types')
+const { bool, func, string } = require('prop-types')
 
 
 class ProjectName extends PureComponent {
@@ -18,12 +18,6 @@ class ProjectName extends PureComponent {
       'active': this.props.isSelected,
       'over': this.props.isOver && this.props.canDrop
     }
-  }
-
-  renderProjectSize() {
-    return ARGS.dev && (
-      <span>{`(${this.props.size})`}</span>
-    )
   }
 
   render() {
@@ -39,7 +33,6 @@ class ProjectName extends PureComponent {
             onCancel={this.props.onEditCancel}
             onChange={this.props.onChange}/>
         </div>
-        {this.renderProjectSize()}
       </li>
     )
   }
@@ -50,7 +43,6 @@ class ProjectName extends PureComponent {
     isEditing: bool,
     isSelected: bool,
     isOver: bool,
-    size: number.isRequired,
     canDrop: bool,
     dt: func.isRequired,
     onClick: func.isRequired,

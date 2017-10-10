@@ -211,7 +211,6 @@ class ProjectSidebar extends PureComponent {
               <ol>
                 <ProjectName
                   name={project.name}
-                  size={project.items}
                   isSelected={isSelected}
                   isEditing={this.isEditing}
                   onChange={this.handleChange}
