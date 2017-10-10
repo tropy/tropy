@@ -47,7 +47,7 @@ class PhotoGrid extends PhotoIterator {
 
   mapIterableRange(fn, range = this.getIterableRange()) {
     if (this.props.expanded.length === 0) {
-      return super.mapIterabaleRange(fn, range)
+      return super.mapIterableRange(fn, range)
     }
 
     const { photos } = this.props
