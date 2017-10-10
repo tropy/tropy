@@ -40,6 +40,7 @@ class NotePanel extends Panel {
   renderContent() {
     return (
       <NoteList
+        isDisabled={this.props.isDisabled}
         keymap={this.props.keymap}
         notes={this.props.notes}
         selection={this.props.selection}
