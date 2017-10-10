@@ -22,8 +22,8 @@ class NoteList extends Iterator {
     return NOTE.ROW_HEIGHT
   }
 
-  getIterables() {
-    return this.props.notes
+  getIterables(props = this.props) {
+    return props.notes
   }
 
   head() {
@@ -84,7 +84,7 @@ class NoteList extends Iterator {
     return (
       <div className="note list">
         <div
-          className="scroll-container click-catcher"
+          className="scroll-container"
           ref={this.setContainer}
           tabIndex={this.tabIndex}
           onKeyDown={this.handleKeyDown}>
