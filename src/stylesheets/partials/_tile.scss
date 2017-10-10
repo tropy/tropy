@@ -80,6 +80,10 @@
     height: 2 * $pointer-height;
     border: $pointer-height solid transparent;
     border-bottom: $pointer-height solid $tile-expansion-bg;
+
+    .nested-focus & {
+      border-bottom-color: $tile-expansion-focus-bg;
+    }
   }
 }
 
@@ -88,4 +92,8 @@
   background: $tile-expansion-bg;
   margin: $space-sm (-$default-padding-horizontal); // Todo
   padding: $space-sm 0; // Todo
+
+  .nested-focus & {
+    background: $tile-expansion-focus-bg;
+  }
 }
