@@ -15,7 +15,9 @@ class PhotoGrid extends PhotoIterator {
   get isGrid() { return true }
 
   get classes() {
-    return [super.classes, 'grid']
+    return [super.classes, 'grid', {
+      'nested-focus': this.state.hasSelectionGridFocus
+    }]
   }
 
   getNextRowOffset(index) {
@@ -122,6 +124,13 @@ class PhotoGrid extends PhotoIterator {
     event.stopPropagation()
   }
 
+  handleSelectionGridFocus = () => {
+    this.setState({ hasSelectionGridFocus: true })
+  }
+
+  handleSelectionGridBlur = () => {
+    this.setState({ hasSelectionGridFocus: false })
+  }
 
   renderSelectionGrid(photo) {
     const selections = pluck(this.props.selections, photo.selections)
@@ -134,6 +143,8 @@ class PhotoGrid extends PhotoIterator {
           data={this.props.data}
           isDisabled={this.props.isDisabled}
           keymap={this.props.keymap.SelectionGrid}
+          onBlur={this.handleSelectionGridBlur}
+          onFocus={this.handleSelectionGridFocus}
           onContextMenu={this.props.onContextMenu}
           onDelete={this.handleDelete}
           onItemOpen={this.handleItemOpen}

@@ -4,7 +4,7 @@ const React = require('react')
 const { SelectionIterator } = require('./iterator')
 const { SelectionTile } = require('./tile')
 const cx = require('classnames')
-const { object } = require('prop-types')
+const { func, object } = require('prop-types')
 const { match } = require('../../keymap')
 
 
@@ -60,6 +60,8 @@ class SelectionGrid extends SelectionIterator {
         className={cx(this.classes)}
         ref={this.setContainer}
         tabIndex={this.tabIndex}
+        onBlur={this.props.onBlur}
+        onFocus={this.props.onFocus}
         onKeyDown={this.handleKeyDown}>
         {this.map(({ selection, ...props }) =>
           <SelectionTile {...props}
@@ -74,7 +76,9 @@ class SelectionGrid extends SelectionIterator {
 
   static propTypes = {
     ...SelectionIterator.propTypes,
-    keymap: object.isRequired
+    keymap: object.isRequired,
+    onBlur: func.isRequired,
+    onFocus: func.isRequired
   }
 }
 
