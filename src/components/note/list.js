@@ -45,8 +45,10 @@ class NoteList extends Iterator {
     }
   }
 
-  // No auto-select, because that could change the active photo!
-  handleFocus = () => {}
+  handleFocus = () => {
+    // No auto-select, because that could change the active photo!
+    this.props.onFocus()
+  }
 
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
@@ -90,6 +92,7 @@ class NoteList extends Iterator {
           className="scroll-container"
           ref={this.setContainer}
           tabIndex={this.tabIndex}
+          onBlur={this.props.onBlur}
           onKeyDown={this.handleKeyDown}>
           <div className="runway" style={{ height }}>
             <ul className="viewport" style={{ transform }}>
@@ -111,6 +114,8 @@ class NoteList extends Iterator {
       id: number
     }),
     isDisabled: bool,
+    onBlur: func.isRequired,
+    onFocus: func.isRequired,
     onSelect: func.isRequired,
     onContextMenu: func.isRequired,
     onOpen: func.isRequired
