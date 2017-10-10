@@ -75,7 +75,6 @@ class ItemGrid extends ItemIterator {
               {this.mapIterableRange(({ item, ...props }) =>
                 <ItemTile {...props} key={item.id} item={item}/>
               )}
-              {this.fillRow()}
             </ul>
           </div>
         </div>

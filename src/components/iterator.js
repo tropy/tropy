@@ -288,20 +288,6 @@ class Iterator extends PureComponent {
   }
 
 
-  fill(count = this.state.maxCols, key = 'filler') {
-    return times(count, (i) => (
-      <li key={`${key}-${i}`} className="filler tile"/>
-    ))
-  }
-
-  fillRow() {
-    if (this.filler == null || this.filler.length !== this.state.maxCols) {
-      this.filler = this.fill()
-    }
-
-    return this.filler
-  }
-
   handleScroll = () => {
     if (!this.isScrollUpdateScheduled) {
       this.isScrollUpdateScheduled = true

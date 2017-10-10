@@ -74,10 +74,6 @@ class PhotoGrid extends PhotoIterator {
     }
 
     if (exp != null) {
-      if (gap > to) {
-        out = out.concat(this.fill(gap - to, 'gap'))
-      }
-
       out.push(this.renderSelectionGrid(exp))
     }
 
@@ -212,7 +208,6 @@ class PhotoGrid extends PhotoIterator {
               {this.mapIterableRange(({ photo, ...props }) => (
                 <PhotoTile {...props} key={photo.id} photo={photo}/>
               ), range)}
-              {this.fillRow()}
             </ul>
           </div>
         </div>
