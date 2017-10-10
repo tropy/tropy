@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { TABS, SASS: { TILE } } = require('../constants')
-const { adjacent, restrict, times } = require('../common/util')
+const { adjacent, restrict } = require('../common/util')
 const { has, on, off } = require('../dom')
 const { abs, ceil, floor, max, min, round } = Math
 const { bool, number } = require('prop-types')
