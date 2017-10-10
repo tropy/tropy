@@ -3,8 +3,6 @@
 const React = require('react')
 const { Iterator } = require('../iterator')
 const { FormattedMessage } = require('react-intl')
-const { has, on, off } = require('../../dom')
-const { floor, min } = Math
 const { match } = require('../../keymap')
 const cx = require('classnames')
 
@@ -14,65 +12,31 @@ const {
 
 
 class ItemIterator extends Iterator {
-  componentDidMount() {
-    super.componentDidMount()
-    on(this.scroller, 'scroll', this.handleScroll, SCROLL_OPTIONS)
-  }
-
-  componentWillUnmount() {
-    super.componentWillUnmount()
-    off(this.scroller, 'scroll', this.handleScroll, SCROLL_OPTIONS)
-  }
-
   get tabIndex() {
     return this.props.isActive ? super.tabIndex : null
   }
 
-  setScroller = (scroller) => {
-    this.scroller = scroller
+  getIterables(props = this.props) {
+    return props.items || super.getIterables()
   }
 
-  getItems(props = this.props) {
-    return props.items || super.getItems()
-  }
-
-  getIndex(id) {
+  indexOf(id) {
     return this.props.index[id]
   }
 
-  getNextItem(offset = 1) {
-    const { items, selection } = this.props
-
-    if (!items.length) return null
-    if (!selection.length) return items[0]
-
-    const idx = this.getIndex(selection[selection.length - 1]) + offset
-
-    return (idx >= 0 && idx < items.length) ? items[idx] : null
-  }
-
-  getPrevItem(offset = 1) {
-    return this.getNextItem(-offset)
-  }
-
-  getCurrentItem() {
-    return this.getNextItem(0)
+  head() {
+    const { selection } = this.props
+    return selection.length > 0 ? selection[selection.length - 1] : null
   }
 
   getSelection = () => this.props.selection
 
-  isSelected(item) {
-    return this.props.selection.includes(item.id)
+  isSelected({ id }) {
+    return this.props.selection.includes(id)
   }
 
-  handleClickOutside = (event) => {
-    if (has(event.target, 'click-catcher')) {
-      this.props.onSelect({ items: [] })
-    }
-  }
-
-  handleFocus = () => {
-    this.select(this.getCurrentItem())
+  clearSelection() {
+    this.props.onSelect({ items: [] })
   }
 
   handleContextMenu = (event, item) => {
@@ -108,23 +72,23 @@ class ItemIterator extends Iterator {
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
       case (this.isVertical ? 'up' : 'left'):
-        this.select(this.getPrevItem(), event.shiftKey, true)
+        this.select(this.prev(), event.shiftKey, true)
         break
       case (this.isVertical ? 'down' : 'right'):
-        this.select(this.getNextItem(), event.shiftKey, true)
+        this.select(this.next(), event.shiftKey, true)
         break
       case 'open':
-        this.props.onItemOpen(this.getCurrentItem())
+        this.props.onItemOpen(this.current())
         break
       case 'preview':
-        this.props.onItemPreview(this.getCurrentItem())
+        this.props.onItemPreview(this.current())
         break
       case 'clear':
-        this.props.onSelect({ items: [] })
+        this.clearSelection()
         break
       case 'delete':
         this.handleItemDelete(this.props.selection)
-        this.select(this.getNextItem() || this.getPrevItem())
+        this.select(this.next() || this.prev())
         break
       case 'all':
         this.props.onSelect({}, 'all')
@@ -135,17 +99,6 @@ class ItemIterator extends Iterator {
 
     event.preventDefault()
     event.stopPropagation()
-  }
-
-  handleScroll = () => {
-    if (!this.isScrollUpdateScheduled) {
-      this.isScrollUpdateScheduled = true
-
-      requestAnimationFrame(() => {
-        this.setState({ offset: this.getOffset() })
-        this.isScrollUpdateScheduled = false
-      })
-    }
   }
 
   select(item, isRange = false, throttle = false) {
@@ -159,41 +112,23 @@ class ItemIterator extends Iterator {
     return (this.isDisabled) ? element : this.props.dt(element)
   }
 
-  getItemRange() {
-    const { cols, offset, overscan, rowHeight } = this.state
-
-    const from = cols * floor(offset / rowHeight)
-    const size = cols * overscan
-
+  getIterableProps(item, index) {
     return {
-      from,
-      size,
-      to: min(from + size, this.props.items.length)
+      item,
+      cache: this.props.cache,
+      photos: this.props.photos,
+      tags: this.props.tags,
+      isLast: this.isLast(index),
+      isSelected: this.isSelected(item),
+      isDisabled: this.isDisabled,
+      isVertical: this.isVertical,
+      getSelection: this.getSelection,
+      onContextMenu: this.handleContextMenu,
+      onDropItems: this.props.onItemMerge,
+      onDropPhotos: this.props.onPhotoMove,
+      onItemOpen: this.props.onItemOpen,
+      onSelect: this.props.onSelect
     }
-  }
-
-  mapItemRange(fn) {
-    const { items } = this.props
-    const { from, to } = this.getItemRange()
-
-    return items.slice(from, to).map((item, index) => {
-      return fn({
-        item,
-        cache: this.props.cache,
-        photos: this.props.photos,
-        tags: this.props.tags,
-        isLast: from + index === items.length - 1,
-        isSelected: this.isSelected(item),
-        isDisabled: this.isDisabled,
-        isVertical: this.isVertical,
-        getSelection: this.getSelection,
-        onContextMenu: this.handleContextMenu,
-        onDropItems: this.props.onItemMerge,
-        onDropPhotos: this.props.onPhotoMove,
-        onItemOpen: this.props.onItemOpen,
-        onSelect: this.props.onSelect
-      })
-    })
   }
 
   renderNoItems() {
@@ -203,9 +138,7 @@ class ItemIterator extends Iterator {
         className={cx('no-items', 'drop-target', { over: this.props.isOver })
       }>
         <figure className="no-items-illustration"/>
-        <h1>
-          <FormattedMessage id="project.empty"/>
-        </h1>
+        <h1><FormattedMessage id="project.empty"/></h1>
       </div>
     )
   }
@@ -244,11 +177,6 @@ class ItemIterator extends Iterator {
     onSelect: func.isRequired,
     onSort: func.isRequired
   }
-}
-
-const SCROLL_OPTIONS = {
-  capture: true,
-  passive: true
 }
 
 

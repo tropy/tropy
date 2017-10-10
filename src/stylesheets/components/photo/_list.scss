@@ -4,8 +4,23 @@
 
 .photo.list {
   flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
   margin-bottom: $space-min;
-  overflow-y: auto;
+
+  .scroll-container {
+    position: relative;
+    z-index: 0;
+  }
+
+  .runway {
+    contain: strict;
+  }
+
+  .viewport {
+    contain: content;
+    will-change: transform;
+  }
 
   .photo {
     align-items: center;
@@ -14,8 +29,12 @@
     &.active {
       .photo-container {
         @extend %list-active;
+        contain: strict;
 
-        @at-root #{selector-replace(&, ".photo.list", ".photo.list:focus")} {
+        @at-root #{
+          selector-replace(&, ".photo.list",
+            ".photo.list .scroll-container:focus")
+        } {
           @extend %list-focus;
         }
       }
@@ -85,7 +104,10 @@
       &.active {
         @extend %list-active;
 
-        @at-root #{selector-replace(&, ".photo.list", ".photo.list:focus")} {
+        @at-root #{
+          selector-replace(&, ".photo.list",
+            ".photo.list .scroll-container:focus")
+        } {
           @extend %list-focus;
         }
       }

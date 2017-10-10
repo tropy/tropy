@@ -3,24 +3,12 @@
 const React = require('react')
 const { SelectionIterator } = require('./iterator')
 const { SelectionListItem } = require('./list-item')
-const { on, off } = require('../../dom')
 const cx = require('classnames')
 const { func, number, object } = require('prop-types')
 const { DC, SASS: { ROW } } = require('../../constants')
 
 
 class SelectionList extends SelectionIterator {
-  componentDidMount() {
-    on(this.container, 'tab:focus', this.handleFocus)
-  }
-
-  componentWillUnmount() {
-    off(this.container, 'tab:focus', this.handleFocus)
-  }
-
-  componentWillReceiveProps() {
-  }
-
   get classes() {
     return ['list', super.classes]
   }
@@ -32,7 +20,6 @@ class SelectionList extends SelectionIterator {
   getRowHeight() {
     return ROW.HEIGHT
   }
-
 
   isEditing(selection) {
     return this.props.edit === selection

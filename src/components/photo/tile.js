@@ -10,11 +10,7 @@ const { IconButton } = require('../button')
 
 class PhotoTile extends PhotoIterable {
   get classes() {
-    return {
-      ...super.classes,
-      'tile': true,
-      'click-catcher': true
-    }
+    return [super.classes, 'tile']
   }
 
   handleClick = createClickHandler({

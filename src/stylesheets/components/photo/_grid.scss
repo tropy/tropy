@@ -6,13 +6,26 @@
   flex: 1 1 0;
   margin-bottom: $space-min;
   display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  padding: $space-min $default-padding-horizontal 0;
-  overflow-y: scroll;
+  flex-direction: column;
 
   .over & {
     overflow: hidden;
+  }
+
+  .scroll-container {
+    padding: $space-min $default-padding-horizontal 0;
+  }
+
+  .runway {
+    contain: layout style size;
+  }
+
+  .viewport {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    contain: layout style;
+    will-change: transform;
   }
 
   .photo {

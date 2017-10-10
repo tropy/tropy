@@ -27,14 +27,14 @@ class PhotoList extends PhotoIterator {
     return this.props.edit.photo === photo.id
   }
 
-  getNextPhoto(offset = 1) {
+  next(offset = 1) {
     if (!(offset === 1 || offset === -1)) {
-      return super.getNextPhoto(offset)
+      return super.next(offset)
     }
 
-    const photo = super.getNextPhoto(0)
+    const photo = super.next(0)
     if (!this.isExpanded(photo)) {
-      return this.getPhotoBackwards(super.getNextPhoto(offset), offset)
+      return this.getPhotoBackwards(super.next(offset), offset)
     }
 
     let { selection } = this.props
@@ -42,12 +42,12 @@ class PhotoList extends PhotoIterator {
 
     if (offset > 0) {
       if (idx + offset >= photo.selections.length) {
-        return super.getNextPhoto(offset)
+        return super.next(offset)
       }
     } else {
       if (idx === 0) return photo
       if (idx < 0) {
-        return this.getPhotoBackwards(super.getNextPhoto(offset), offset)
+        return this.getPhotoBackwards(super.next(offset), offset)
       }
     }
 
@@ -64,8 +64,8 @@ class PhotoList extends PhotoIterator {
     }
   }
 
-  getCurrentPhoto() {
-    const photo = super.getNextPhoto(0)
+  current() {
+    const photo = super.next(0)
     if (!this.isExpanded(photo)) return photo
 
     const { selection } = this.props
@@ -106,29 +106,29 @@ class PhotoList extends PhotoIterator {
   handleKeyDown = (event) => {
     switch (match(this.keymap, event)) {
       case 'up':
-        this.select(this.getPrevPhoto())
+        this.select(this.prev(), true)
         break
       case 'down':
-        this.select(this.getNextPhoto())
+        this.select(this.next(), true)
         break
       case 'left':
       case 'contract':
-        this.contract(this.getCurrentPhoto())
+        this.contract(this.current())
         break
       case 'right':
       case 'expand':
-        this.expand(this.getCurrentPhoto())
+        this.expand(this.current())
         break
       case 'edit':
       case 'enter':
-        this.edit(this.getCurrentPhoto())
+        this.edit(this.current())
         break
       case 'open':
-        this.handleItemOpen(this.getCurrentPhoto())
+        this.handleItemOpen(this.current())
         break
       case 'delete':
-        this.handleDelete(this.getCurrentPhoto())
-        this.select(this.getNextPhoto() || this.getPrevPhoto())
+        this.handleDelete(this.current())
+        this.select(this.next() || this.prev())
         break
       default:
         return
@@ -141,28 +141,35 @@ class PhotoList extends PhotoIterator {
 
   render() {
     const { data, edit, onChange } = this.props
+    const { offset, height } = this.state
+    const transform = `translate3d(0,${offset}px,0)`
 
     return this.connect(
-      <ul
-        className={cx(this.classes)}
-        ref={this.setContainer}
-        tabIndex={this.tabIndex}
-        onKeyDown={this.handleKeyDown}
-        onClick={this.handleClickOutside}>
-        {this.map(({ photo, ...props }) =>
-          <PhotoListItem {...props}
-            key={photo.id}
-            photo={photo}
-            data={data}
-            edit={edit}
-            selections={this.props.selections}
-            title={DC.title}
-            isEditing={this.isEditing(photo)}
-            onChange={onChange}
-            onEdit={this.edit}
-            onEditCancel={this.handleEditCancel}
-            onSelectionSort={this.props.onSelectionSort}/>)}
-      </ul>
+      <div className={cx(this.classes)}>
+        <div
+          className="scroll-container"
+          ref={this.setContainer}
+          tabIndex={this.tabIndex}
+          onKeyDown={this.handleKeyDown}>
+          <div className="runway" style={{ height }}>
+            <ul className="viewport" style={{ transform }}>
+              {this.mapIterableRange(({ photo, ...props }) =>
+                <PhotoListItem {...props}
+                  key={photo.id}
+                  photo={photo}
+                  data={data}
+                  edit={edit}
+                  selections={this.props.selections}
+                  title={DC.title}
+                  isEditing={this.isEditing(photo)}
+                  onChange={onChange}
+                  onEdit={this.edit}
+                  onEditCancel={this.handleEditCancel}
+                  onSelectionSort={this.props.onSelectionSort}/>)}
+            </ul>
+          </div>
+        </div>
+      </div>
     )
   }
 

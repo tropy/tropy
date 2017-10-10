@@ -108,6 +108,10 @@ const NOTEPAD = {
   MIN_HEIGHT: 100
 }
 
+const NOTE = {
+  ROW_HEIGHT: 60
+}
+
 const ESPER = {
   MIN_HEIGHT: WINDOW.MIN_HEIGHT - NOTEPAD.MIN_HEIGHT,
   FADE_DURATION: 250,
@@ -182,6 +186,7 @@ const ABOUT = {
 
 const GRID = {
   SIZE: 12,
+  PADDING: 12
 }
 
 
@@ -201,5 +206,6 @@ module.exports =  {
   TILE,
   WINDOW,
   WIZARD,
+  NOTE,
   NOTEPAD
 }

@@ -1,44 +1,37 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
+const { Iterator } = require('../iterator')
 const { NoteListItem } = require('./list-item')
-const { TABS } = require('../../constants')
+const { TABS, SASS: { NOTE } } = require('../../constants')
 const { match } = require('../../keymap')
-const { has } = require('../../common/util')
+const { get } = require('../../common/util')
 const { arrayOf, bool, func, number, object, shape } = require('prop-types')
 
 
-class NoteList extends PureComponent {
-
-  get isEmpty() {
-    return this.props.notes.length === 0
-  }
-
-  get hasSelection() {
-    return has(this.props.selection, ['id'])
-  }
-
+class NoteList extends Iterator {
   get tabIndex() {
-    return this.isEmpty ? null : TABS.NoteList
+    return this.size === 0 ? null : TABS.NoteList
   }
 
-  isSelected(note) {
-    return this.hasSelection && note.id === this.props.selection.id
+  getColumns() {
+    return 1
   }
 
-  next(offset = 1) {
-    if (this.isEmpty) return null
-    if (!this.hasSelection) return this.props.notes[0]
-    return this.props.notes[this.idx[this.props.selection.id] + offset]
+  getRowHeight() {
+    return NOTE.ROW_HEIGHT
   }
 
-  prev(offset = 1) {
-    return this.next(-offset)
+  getIterables(props = this.props) {
+    return props.notes
   }
 
-  current() {
-    return this.next(0)
+  head() {
+    return get(this.props.selection, ['id'])
+  }
+
+  isSelected({ id }) {
+    return id === this.head()
   }
 
   select = (note) => {
@@ -71,33 +64,38 @@ class NoteList extends PureComponent {
     event.stopPropagation()
   }
 
-  renderNoteListItem = (note, index) => {
-    const { selection, isDisabled, onContextMenu, onOpen } = this.props
+  getIterableProps(note) {
     const isSelected = this.isSelected(note)
 
-    this.idx[note.id] = index
-
-    return (
-      <NoteListItem
-        key={note.id}
-        note={isSelected ? selection : note}
-        isDisabled={isDisabled}
-        isSelected={isSelected}
-        onContextMenu={onContextMenu}
-        onOpen={onOpen}
-        onSelect={this.select}/>
-    )
+    return {
+      note: isSelected ? this.props.selection : note,
+      isDisabled: this.props.isDisabled,
+      isSelected,
+      onContextMenu: this.props.onContextMenu,
+      onOpen: this.props.onOpen,
+      onSelect: this.select
+    }
   }
+
   render() {
-    this.idx = {}
+    const { offset, height } = this.state
+    const transform = `translate3d(0,${offset}px,0)`
 
     return (
-      <ul
-        className="note list"
-        tabIndex={this.tabIndex}
-        onKeyDown={this.handleKeyDown}>
-        {this.props.notes.map(this.renderNoteListItem)}
-      </ul>
+      <div className="note list">
+        <div
+          className="scroll-container"
+          ref={this.setContainer}
+          tabIndex={this.tabIndex}
+          onKeyDown={this.handleKeyDown}>
+          <div className="runway" style={{ height }}>
+            <ul className="viewport" style={{ transform }}>
+              {this.mapIterableRange(props =>
+                <NoteListItem {...props} key={props.note.id}/>)}
+            </ul>
+          </div>
+        </div>
+      </div>
     )
   }
 

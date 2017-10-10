@@ -7,40 +7,59 @@ const { SelectionGrid } = require('../selection/grid')
 const { pluck } = require('../../common/util')
 const cx = require('classnames')
 const { match } = require('../../keymap')
+const { floor, ceil } = Math
+const { GRID } = require('../../constants/sass')
 
 
 class PhotoGrid extends PhotoIterator {
   get isGrid() { return true }
 
   get classes() {
-    return {
-      ...super.classes,
-      grid: true
-    }
+    return [super.classes, 'grid']
   }
 
   getNextRowOffset(index) {
     return index + (this.state.cols - (index % this.state.cols))
   }
 
-  isExpanded(photo) {
-    return !photo.pending &&
-      this.props.expanded[0] === photo.id &&
-      photo.selections.length > 0
+  getExpansionRows({ cols } = this.state, props = this.props) {
+    const photo = props.expanded[0]
+    this.expRows = []
+
+    if (photo == null) return 0
+
+    const exp = ceil(photo.selections.length / cols)
+    const idx = this.indexOf(photo.id, props)
+    if (idx === -1) return 0
+
+    for (let j = 1, k = 1 + floor(idx / cols); j <= exp; ++j, ++k) {
+      this.expRows.push([k, j, j])
+    }
+
+    return exp
   }
 
-  map(fn) {
-    this.idx = {}
+  isExpanded(photo) {
+    return photo.selections != null &&
+      photo.selections.length > 0 &&
+      this.props.expanded[0] === photo
+  }
+
+  mapIterableRange(fn, range = this.getIterableRange()) {
+    if (this.props.expanded.length === 0) {
+      return super.mapIterableRange(fn, range)
+    }
+
     const { photos } = this.props
-    const { size } = this
+    const { from, to } = range
+
     let out = []
-    let cur = 0
-    let gap = size
+    let cur = from
+    let gap = to
     let exp
 
-    for (; cur < gap && cur < size; ++cur) {
+    for (; cur < gap && cur < to; ++cur) {
       let photo = photos[cur]
-      this.idx[photo.id] = cur
 
       if (this.isExpanded(photo)) {
         exp = photo
@@ -51,16 +70,15 @@ class PhotoGrid extends PhotoIterator {
     }
 
     if (exp != null) {
-      if (gap > size) {
-        out = out.concat(this.fill(gap - size, 'gap'))
+      if (gap > to) {
+        out = out.concat(this.fill(gap - to, 'gap'))
       }
 
       out.push(this.renderSelectionGrid(exp))
     }
 
-    for (; cur < size; ++cur) {
+    for (; cur < to; ++cur) {
       let photo = photos[cur]
-      this.idx[photo.id] = cur
       out.push(fn(this.getIterableProps(photo, cur)))
     }
 
@@ -71,30 +89,30 @@ class PhotoGrid extends PhotoIterator {
   handleKeyDown = (event) => {
     switch (match(this.keymap, event)) {
       case (this.isVertical ? 'up' : 'left'):
-        this.select(this.getPrevPhoto())
+        this.select(this.prev(), true)
         break
       case (this.isVertical ? 'down' : 'right'):
-        this.select(this.getNextPhoto())
+        this.select(this.next(), true)
         break
       case (this.isVertical ? 'left' : 'up'):
-        this.select(this.getPrevPhoto(this.state.cols))
+        this.select(this.prev(this.state.cols), true)
         break
       case (this.isVertical ? 'right' : 'down'):
-        this.select(this.getNextPhoto(this.state.cols))
+        this.select(this.next(this.state.cols), true)
         break
       case 'open':
-        this.handleItemOpen(this.getCurrentPhoto())
+        this.handleItemOpen(this.current())
         break
       case 'expand':
       case 'enter':
-        this.expand(this.getCurrentPhoto())
+        this.expand(this.current())
         break
       case 'contract':
-        this.contract(this.getCurrentPhoto())
+        this.contract(this.current())
         break
       case 'delete':
-        this.handleDelete(this.getCurrentPhoto())
-        this.select(this.getNextPhoto() || this.getPrevPhoto())
+        this.handleDelete(this.current())
+        this.select(this.next() || this.prev())
         break
       default:
         return
@@ -129,18 +147,38 @@ class PhotoGrid extends PhotoIterator {
   }
 
   render() {
+    const { expanded } = this.props
+    const range = this.getIterableRange()
+    const padding = GRID.PADDING * 4
+    const [exp, adj] = range.exp
+
+    let { offset, height } = this.state
+
+    if (expanded.length > 0) {
+      height += padding
+      if (exp > 0 && adj === 0) offset += padding
+    }
+
+    const transform = `translate3d(0,${offset}px,0)`
+
     return this.connect(
-      <ul
-        className={cx(this.classes)}
-        ref={this.setContainer}
-        tabIndex={this.tabIndex}
-        data-size={this.props.size}
-        onKeyDown={this.handleKeyDown}>
-        {this.map(({ photo, ...props }) =>
-          <PhotoTile {...props} key={photo.id} photo={photo}/>
-        )}
-        {this.fillRow()}
-      </ul>
+      <div className={cx(this.classes)}
+        data-size={this.props.size}>
+        <div
+          className="scroll-container"
+          ref={this.setContainer}
+          tabIndex={this.tabIndex}
+          onKeyDown={this.handleKeyDown}>
+          <div className="runway" style={{ height }}>
+            <ul className="viewport" style={{ transform }}>
+              {this.mapIterableRange(({ photo, ...props }) => (
+                <PhotoTile {...props} key={photo.id} photo={photo}/>
+              ), range)}
+              {this.fillRow()}
+            </ul>
+          </div>
+        </div>
+      </div>
     )
   }
 

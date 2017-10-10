@@ -26,25 +26,12 @@ class SelectionIterator extends Iterator {
     return this.props.active === selection
   }
 
-  getItems(props = this.props) {
-    return props.selections || super.getItems()
+  getIterables(props = this.props) {
+    return props.selections || super.getIterables()
   }
 
-  getNext(offset = 1) {
-    const { selections, active } = this.props
-
-    if (!selections.length) return null
-    if (!active) return selections[0]
-
-    return selections[this.idx[active] + offset]
-  }
-
-  getPrev(offset = 1) {
-    return this.getNext(-offset)
-  }
-
-  getCurrent() {
-    return this.getNext(0)
+  head() {
+    return this.props.active
   }
 
   handleDropSelection = ({ id, to, offset }) => {
@@ -79,12 +66,9 @@ class SelectionIterator extends Iterator {
   }
 
   map(fn) {
-    this.idx = {}
     const { isSortable, isVertical } = this
 
     return this.props.selections.map((selection, index) => {
-      this.idx[selection.id] = index
-
       return fn({
         selection,
         cache: this.props.cache,
