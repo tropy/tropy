@@ -17,6 +17,11 @@
     contain: strict;
   }
 
+  .viewport {
+    contain: content;
+    will-change: transform;
+  }
+
   .photo {
     align-items: center;
     position: relative;
@@ -24,6 +29,7 @@
     &.active {
       .photo-container {
         @extend %list-active;
+        contain: strict;
 
         @at-root #{
           selector-replace(&, ".photo.list",
