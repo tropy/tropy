@@ -45,6 +45,9 @@ class NoteList extends Iterator {
     }
   }
 
+  // Do not auto-select note!
+  handleFocus = () => {}
+
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
       case 'up':
