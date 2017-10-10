@@ -149,7 +149,7 @@ class PhotoGrid extends PhotoIterator {
   render() {
     const { expanded } = this.props
     const range = this.getIterableRange()
-    const padding = GRID.PADDING * 2
+    const padding = GRID.PADDING * 4
     const [exp, adj] = range.exp
 
     let { offset, height } = this.state
