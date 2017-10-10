@@ -18,9 +18,15 @@ $panel-separator-color: #ddd !default;
     contain: strict;
   }
 
+  .viewport {
+    contain: content;
+    will-change: transform;
+  }
+
   .note {
     padding: $note-padding-top $default-padding-horizontal $note-padding-bottom;
     position: relative;
+    contain: content;
 
     &::before {
       content: " ";
