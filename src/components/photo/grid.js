@@ -7,7 +7,7 @@ const { SelectionGrid } = require('../selection/grid')
 const { pluck } = require('../../common/util')
 const cx = require('classnames')
 const { match } = require('../../keymap')
-const { ceil } = Math
+const { floor, ceil } = Math
 const { GRID } = require('../../constants/sass')
 
 
@@ -32,7 +32,7 @@ class PhotoGrid extends PhotoIterator {
     const idx = this.indexOf(photo.id, props)
     if (idx === -1) return 0
 
-    for (let j = 1, k = 1 + ceil(idx / cols); j <= exp; ++j, ++k) {
+    for (let j = 1, k = 1 + floor(idx / cols); j <= exp; ++j, ++k) {
       this.expRows.push([k, j, j])
     }
 
