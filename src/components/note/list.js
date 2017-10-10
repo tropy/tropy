@@ -84,11 +84,11 @@ class NoteList extends Iterator {
     return (
       <div className="note list">
         <div
-          className="scroll-container"
+          className="scroll-container click-catcher"
           ref={this.setContainer}
           tabIndex={this.tabIndex}
           onKeyDown={this.handleKeyDown}>
-          <div className="runway click-catcher" style={{ height }}>
+          <div className="runway" style={{ height }}>
             <ul className="viewport" style={{ transform }}>
               {this.mapIterableRange(props =>
                 <NoteListItem {...props} key={props.note.id}/>)}

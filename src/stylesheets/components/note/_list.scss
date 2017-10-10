@@ -38,7 +38,9 @@ $panel-separator-color: #ddd !default;
       color: $note-list-active-color;
       background: $note-list-active-bg;
 
-      @at-root #{selector-replace(&, ".note.list", ".note.list:focus")} {
+      @at-root #{
+        selector-replace(&, ".note.list", ".note.list .scroll-container:focus")
+      } {
         color: $note-list-focus-color;
         background: $note-list-focus-bg;
       }
@@ -51,7 +53,10 @@ $panel-separator-color: #ddd !default;
         border-top: 1px solid $note-list-active-bg;
         padding-top: ($note-padding-top - 1px);
 
-        @at-root #{selector-replace(&, ".note.list", ".note.list:focus")} {
+        @at-root #{
+          selector-replace(&, ".note.list",
+          ".note.list .scroll-container:focus")
+        } {
           border-top-color: $note-list-focus-bg;
         }
 
