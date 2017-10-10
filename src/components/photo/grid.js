@@ -153,12 +153,12 @@ class PhotoGrid extends PhotoIterator {
       <div className={cx(this.classes)}
         data-size={this.props.size}>
         <div
-          className="scroll-container"
+          className="scroll-container click-catcher"
           ref={this.setContainer}
           tabIndex={this.tabIndex}
           onKeyDown={this.handleKeyDown}>
-          <div className="runway click-catcher" style={{ height }}>
-            <ul className="viewport" style={{ transform }}>
+          <div className="runway" style={{ height }}>
+            <ul className="viewport click-catcher" style={{ transform }}>
               {this.mapIterableRange(({ photo, ...props }) => (
                 <PhotoTile {...props} key={photo.id} photo={photo}/>
               ), range)}
