@@ -60,6 +60,7 @@ function* itemToLD(item_id, callback) {
   let document = {
     '@context': context,
     '@type': ITEM,
+    '_template': resources.item_template.id
   }
 
   // add metadata to document.metadata
