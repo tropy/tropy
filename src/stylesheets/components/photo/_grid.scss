@@ -16,6 +16,10 @@
     padding: $space-min $default-padding-horizontal 0;
   }
 
+  .runway {
+    contain: strict;
+  }
+
   .viewport {
     display: flex;
     flex-wrap: wrap;
