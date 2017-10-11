@@ -31,6 +31,10 @@ class ItemIterator extends Iterator {
     return this.props.selection.includes(id)
   }
 
+  get hasMultiSelection() {
+    return this.props.selection.length > 1
+  }
+
   clearSelection() {
     this.props.onSelect({ items: [] })
   }
@@ -121,7 +125,7 @@ class ItemIterator extends Iterator {
         break
 
       default:
-        if (this.isSelected(item)) return
+        if (!this.hasMultiSelection && this.isSelected(item)) return
         mod = 'replace'
         items = [item.id]
     }
