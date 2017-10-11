@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { TABS, SASS: { TILE } } = require('../constants')
 const { adjacent, restrict, times } = require('../common/util')
 const { has, on, off } = require('../dom')
-const { abs, ceil, floor, max, min, round } = Math
+const { ceil, floor, max, min, round } = Math
 const { bool, number } = require('prop-types')
 const throttle = require('lodash.throttle')
 const EMPTY = []
@@ -230,6 +230,10 @@ class Iterator extends PureComponent {
     throw new Error('not implemented')
   }
 
+  isSelected() {
+    throw new Error('not implemented')
+  }
+
   select() {
     throw new Error('not implemented')
   }
@@ -272,13 +276,16 @@ class Iterator extends PureComponent {
     const { cols, rowHeight } = this.state
     const { height } = this.viewport
     const top = this.container.scrollTop
-    let offset = floor(idx / cols) * rowHeight
 
-    if (offset > top) {
+    let offset = floor(idx / cols) * rowHeight
+    const bottom = offset + rowHeight
+    const isBelow = (bottom > top)
+
+    if (!force && isBelow && bottom <= top + height) return
+
+    if (isBelow) {
       offset += rowHeight - height
     }
-
-    if (!force && abs(offset - top) < height) return
 
     this.scroll(offset)
   }
@@ -326,7 +333,14 @@ class Iterator extends PureComponent {
   }
 
   handleFocus = () => {
-    this.select(this.current(), { scrollIntoView: true })
+    const item = this.current()
+    if (item == null) return
+
+    if (this.isSelected(item)) {
+      this.scrollIntoView(item, false)
+    } else {
+      this.select(item, { scrollIntoView: true })
+    }
   }
 
   static getPropKeys() {
