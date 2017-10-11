@@ -128,6 +128,18 @@ class Iterator extends PureComponent {
     return index === this.size - 1
   }
 
+  isMapped(index) {
+    if (this.mappedRange == null) return false
+    if (this.mappedRange.from > index) return false
+    if (this.mappedRange.to < index) return false
+    return true
+  }
+
+  isIterableMapped({ id }) {
+    const index = this.indexOf(id)
+    return (index === -1) ? false : this.isMapped(index)
+  }
+
   getAdjacent = (iterable) => {
     return adjacent(this.getIterables(), iterable)
   }
@@ -181,6 +193,8 @@ class Iterator extends PureComponent {
     const items = this.getIterables()
     const { from, to } = range
 
+    this.mappedRange = range
+
     return items.slice(from, to).map((item, index) => {
       return fn(this.getIterableProps(item, from + index))
     })
@@ -225,6 +239,24 @@ class Iterator extends PureComponent {
     return (from > to) ?
       items.slice(to, from + 1).reverse() :
       items.slice(from, to + 1)
+  }
+
+  get offset() {
+    this.container.scrollTop
+  }
+
+  set offset(offset) {
+    this.container.scrollTop = offset
+  }
+
+  scrollIntoView(item) {
+    const idx = this.indexOf(item.id)
+    if (idx === -1) return
+
+    const { cols, rowHeight } = this.state
+
+    const offset = floor(idx / cols) * rowHeight
+    this.offset = offset
   }
 
   setContainer = (container) => {

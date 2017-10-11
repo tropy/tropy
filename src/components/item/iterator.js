@@ -79,6 +79,7 @@ class ItemIterator extends Iterator {
         this.select(this.prev(), {
           isMeta: meta(event),
           isRange: event.shiftKey,
+          scrollIntoView: true,
           throttle: true
         })
         break
@@ -86,6 +87,7 @@ class ItemIterator extends Iterator {
         this.select(this.next(), {
           isMeta: meta(event),
           isRange: event.shiftKey,
+          scrollIntoView: true,
           throttle: true
         })
         break
@@ -113,7 +115,7 @@ class ItemIterator extends Iterator {
     event.stopPropagation()
   }
 
-  select = (item, { isMeta, isRange, throttle } = {}) => {
+  select = (item, { isMeta, isRange, scrollIntoView, throttle } = {}) => {
     if (item == null || this.size === 0) return
     let mod, items
 
@@ -132,6 +134,10 @@ class ItemIterator extends Iterator {
         if (!this.hasMultiSelection && this.isSelected(item)) return
         mod = 'replace'
         items = [item.id]
+    }
+
+    if (scrollIntoView && !this.isIterableMapped(item)) {
+      this.scrollIntoView(item)
     }
 
     this.props.onSelect({ items }, mod, { throttle })

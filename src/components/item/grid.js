@@ -22,6 +22,7 @@ class ItemGrid extends ItemIterator {
           this.select(this.prev(this.state.cols), {
             isMeta: isMeta(event),
             isRange: event.shiftKey,
+            scrollIntoView: true,
             throttle: true
           })
           break
@@ -29,6 +30,7 @@ class ItemGrid extends ItemIterator {
           this.select(this.next(this.state.cols), {
             isMeta: isMeta(event),
             isRange: event.shiftKey,
+            scrollIntoView: true,
             throttle: true
           })
           break
