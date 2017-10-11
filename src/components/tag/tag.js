@@ -6,7 +6,7 @@ const PropTypes = require('prop-types')
 const { shape, number, string, bool, func } = PropTypes
 const { Editable } = require('../editable')
 const { IconTag, IconPlusCircles } = require('../icons')
-const { meta } = require('../../common/os')
+const { isMeta } = require('../../keymap')
 const { toId } = require('../../common/util')
 const { hasFocus } = require('../../dom')
 const cx = require('classnames')
@@ -46,8 +46,8 @@ class Tag extends PureComponent {
     const { tag, isSelected, onSelect, onFocusClick } = this.props
 
     const mod = isSelected ?
-      (meta(event) ? 'remove' : 'clear') :
-      (meta(event) ? 'merge' : 'replace')
+      (isMeta(event) ? 'remove' : 'clear') :
+      (isMeta(event) ? 'merge' : 'replace')
 
     onSelect(tag.id, { mod })
 
