@@ -16,7 +16,8 @@ class PhotoGrid extends PhotoIterator {
 
   get classes() {
     return [super.classes, 'grid', {
-      'nested-focus': this.state.hasSelectionGridFocus
+      'nested-focus': this.state.hasSelectionGridFocus,
+      'has-nested-active': this.props.selection != null
     }]
   }
 
