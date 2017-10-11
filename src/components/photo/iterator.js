@@ -131,10 +131,14 @@ class PhotoIterator extends Iterator {
     return this.props.current
   }
 
-  select = (photo, throttle = false) => {
+  select = (photo, { scrollIntoView, throttle } = {}) => {
     if (photo == null ||
       this.isSelected(photo) && this.isActive(photo.selection)) {
       return
+    }
+
+    if (scrollIntoView && !this.isIterableMapped(photo)) {
+      this.scrollIntoView(photo)
     }
 
     this.props.onSelect({
