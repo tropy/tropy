@@ -75,6 +75,10 @@
     .nested-focus & {
       border-bottom-color: $tile-expansion-focus-bg;
     }
+
+    .has-nested-active & {
+      border-bottom-color: $tile-expansion-bg;
+    }
   }
 }
 
@@ -86,5 +90,9 @@
 
   .nested-focus & {
     background: $tile-expansion-focus-bg;
+  }
+
+  .nested-focus.has-nested-active & {
+    background: $tile-expansion-bg;
   }
 }
