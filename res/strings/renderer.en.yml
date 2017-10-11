@@ -6,9 +6,9 @@ toolbar:
   import: Import Photos
   items: >
     {count, plural,
-      =0 {}
-      one {1 Item}
-      other {# Items}}
+      =0 {No items in this view}
+      one {1 item in this view}
+      other {# items in this view}}
 panel:
   metadata:
     tab: Metadata
@@ -24,7 +24,7 @@ panel:
     add: >
       {count, plural,
         =0 {Add Tag}
-        one {Add Tag to Item}
+        one {Add Tag to 1 Item}
         other {Add Tag to # Items}}
   photo:
     title: Photos
@@ -37,7 +37,7 @@ about:
       url: https://rrchnm.org
     cds:
       title: Corporation for Digital Scholarship
-      url: https://
+      url: http://digitalscholar.org
     text: >
       Tropy is designed by the {rrchnm}, a team that develops
       historical teaching resources, digital exhibits, and
