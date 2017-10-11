@@ -23,6 +23,17 @@
     }
   }
 
+  &.item,
+  &.photo {
+    &.active {
+      .tile-state {
+        .scroll-container:focus & {
+          border-color: $tile-focus-color;
+        }
+      }
+    }
+  }
+
   &.photo {
     contain: layout style size;
 
