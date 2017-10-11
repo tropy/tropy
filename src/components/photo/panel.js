@@ -29,6 +29,7 @@ class PhotoPanel extends Panel {
   renderToolbar() {
     return (
       <PhotoToolbar
+        photos={this.props.photos.length}
         zoom={this.props.zoom}
         maxZoom={PHOTO.ZOOM.length - 1}
         onZoomChange={this.props.onZoomChange}

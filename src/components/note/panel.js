@@ -45,12 +45,12 @@ class NotePanel extends Panel {
   }
 
   renderToolbar() {
-    const { isDisabled, onCreate } = this.props
-
     return (
       <NoteToolbar
-        hasCreateButton={!isDisabled}
-        onCreate={onCreate}/>
+        hasCreateButton
+        isDisabled={this.props.isDisabled}
+        notes={this.props.notes.length}
+        onCreate={this.props.onCreate}/>
     )
   }
 
@@ -94,7 +94,7 @@ class NotePanel extends Panel {
     keymap: object.isRequired,
     notes: arrayOf(shape({
       id: number.isRequired
-    })),
+    })).isRequired,
     photo: number,
     selection: object,
     onItemOpen: func.isRequired,
