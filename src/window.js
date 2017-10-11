@@ -160,13 +160,31 @@ class Window extends EventEmitter {
     })
   }
 
+
   handleTabFocus() {
     on(document.body, 'keydown', event => {
       if (event.key === 'Tab' && !event.defaultPrevented) {
-        const t = setTimeout(() => {
+        const onTabFocus = ({ target }) => {
+          try {
+            if (target != null) {
+              emit(target, 'tab:focus')
+            }
+          } finally {
+            clearTimeout(tm)
+            offTabFocus()
+          }
+        }
+
+        const offTabFocus = () => {
+          off(document.body, 'focusin', onTabFocus)
+        }
+
+        const tm = setTimeout(() => {
           // Hit the tab 'gap'! Forward to first tab index?
           offTabFocus()
-        }, 25)
+        }, 50)
+
+        on(document.body, 'focusin', onTabFocus)
       }
     })
   }
@@ -299,20 +317,6 @@ class Window extends EventEmitter {
   minimize() {
     this.current.minimize()
   }
-}
-
-function onTabFocus(event) {
-  try {
-    if (event.target != null) {
-      emit(event.target, 'tab:focus')
-    }
-  } finally {
-    offTabFocus()
-  }
-}
-
-function offTabFocus() {
-  off(document.body, 'focusin', onTabFocus)
 }
 
 module.exports = {
