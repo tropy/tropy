@@ -10,7 +10,9 @@ const { IconButton } = require('../button')
 
 class PhotoTile extends PhotoIterable {
   get classes() {
-    return [super.classes, 'tile']
+    return [...super.classes, 'tile', {
+      active: this.props.isSelected
+    }]
   }
 
   handleClick = createClickHandler({

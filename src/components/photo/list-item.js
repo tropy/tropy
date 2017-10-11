@@ -13,6 +13,10 @@ const { IconButton } = require('../button')
 
 
 class PhotoListItem extends PhotoIterable {
+  get classes() {
+    return [...super.classes, { active: this.isActive }]
+  }
+
   get isDraggable() {
     return !this.props.isEditing && super.isDraggable
   }
