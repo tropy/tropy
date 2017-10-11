@@ -73,7 +73,7 @@ class PrefsContainer extends PureComponent {
             </ul>
           </nav>
         </header>
-        <main>
+        <div className="prefs-body">
           <PrefPane
             name="app"
             isActive={this.isActive('app')}>
@@ -104,7 +104,7 @@ class PrefsContainer extends PureComponent {
             onOpenLink={this.props.onOpenLink}
             onPropsSave={this.props.onPropsSave}
             onSave={this.props.onVocabSave}/>
-        </main>
+        </div>
       </div>
     )
   }

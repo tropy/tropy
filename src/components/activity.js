@@ -2,28 +2,28 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const { IconSpin, IconX } = require('./icons')
 const { FormattedMessage } = require('react-intl')
 const cx = require('classnames')
 const { ACTIVITY } = require('../constants/sass')
-const { arrayOf, shape, string, number, func } = PropTypes
+const { arrayOf, shape, string, number, func } = require('prop-types')
 const { IconButton } = require('./button')
 
 
-
 const Activity = ({ type, progress, total, onCancel }) => {
-  const hasProgressBar = (progress != null)
+  const hasProgressBar = (progress != null || !isNaN(progress))
   const hasCancelButton = false
 
+  let CancelButton, ProgressBar
+
   if (hasCancelButton) {
-    var CancelButton = (
+    CancelButton = (
       <IconButton icon={<IconX/>} onClick={onCancel}/>
     )
   }
 
   if (hasProgressBar) {
-    var ProgressBar = (
+    ProgressBar = (
       <div className="flex-row center">
         <progress value={progress} max={total}/>
       </div>
@@ -38,7 +38,7 @@ const Activity = ({ type, progress, total, onCancel }) => {
           <div className="activity-text">
             <FormattedMessage
               id={`activity.${type}`}
-              values={{ progress, total }}/>
+              values={{ progress, total, hasProgressBar }}/>
           </div>
           {CancelButton}
         </div>

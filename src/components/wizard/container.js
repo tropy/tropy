@@ -40,7 +40,7 @@ class WizardContainer extends PureComponent {
 
   render() {
     return (
-      <div id="wizard">
+      <div className="wizard">
         <Toolbar/>
         <Steps>
           <ProjectStep {...this.props.project}

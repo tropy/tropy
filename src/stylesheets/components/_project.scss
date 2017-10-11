@@ -12,6 +12,13 @@
   }
 }
 
+.project {
+  .main {
+    display: flex;
+    flex: 1 1 0;
+  }
+}
+
 .no-project {
   display: flex;
   flex-direction: column;
@@ -75,6 +82,7 @@
   transform: translate3d(0, 0, 0);
   z-index: $zindex-project;
   contain: strict;
+  will-change: transform;
 
   &::after {
     position: absolute;
@@ -115,11 +123,6 @@
   }
 }
 
-main {
-  display: flex;
-  flex: 1 1 0;
-}
-
 #items {
   display: flex;
   flex-direction: column;
@@ -129,6 +132,12 @@ main {
       left: $default-padding-horizontal;
       right: ($default-padding-horizontal + $space-min);
     }
+  }
+
+  .item-count {
+    color: $item-count-color;
+    white-space: nowrap;
+    padding: 0 $space-md;
   }
 
   .no-items {

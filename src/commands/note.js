@@ -6,7 +6,6 @@ const mod = require('../models')
 const act = require('../actions')
 const { NOTE } = require('../constants')
 const { getSelectableNoteId } = require('../selectors')
-const { blank } = require('../common/util')
 
 
 class Load extends Command {
@@ -14,9 +13,9 @@ class Load extends Command {
 
   *exec() {
     const { db } = this.options
-    const ids = this.action.payload
+    const { payload } = this.action
 
-    const notes = yield call(mod.note.load, db, ids)
+    const notes = yield call(mod.note.load, db, payload)
 
     return notes
   }
@@ -53,14 +52,15 @@ class Save extends Command {
 
   *exec() {
     const { db } = this.options
-    const { id, state, text } = this.action.payload
+    const { payload, meta } = this.action
+    const { id, state, text } = payload
 
     const original = yield select(({ notes }) => notes[id])
     const data = { id, state, text }
 
-    if (!blank(text)) {
-      yield call(mod.note.save, db, data)
-    }
+    yield call(mod.note.save, db, {
+      id, state, text: meta.changed ? text : undefined
+    })
 
     yield put(act.note.update(data))
 

@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
+const { Component } = React
 const { connect } = require('react-redux')
 const { ProjectView } = require('./view')
 const { ItemView } = require('../item')
@@ -36,7 +36,7 @@ const {
 } = require('prop-types')
 
 
-class ProjectContainer extends PureComponent {
+class ProjectContainer extends Component {
   constructor(props) {
     super(props)
 
@@ -235,14 +235,14 @@ class ProjectContainer extends PureComponent {
 
 
   static propTypes = {
-    expanded: arrayOf(number).isRequired,
+    expanded: arrayOf(object).isRequired,
     project: shape({
       file: string
     }).isRequired,
 
     items: arrayOf(
       shape({ id: number.isRequired })
-    ),
+    ).isRequired,
 
     selection: arrayOf(
       shape({ id: number.isRequired })
@@ -338,6 +338,7 @@ module.exports = {
       data: state.metadata,
       edit: state.edit,
       expanded: getExpandedPhotos(state),
+      index: state.qr.index,
       items: getVisibleItems(state),
       keymap: state.keymap,
       lists: state.lists,
@@ -392,15 +393,15 @@ module.exports = {
       },
 
       onSearch(query) {
-        dispatch(actions.nav.update({ query }, { search: true }))
+        dispatch(actions.nav.search({ query }))
       },
 
       onSort(...args) {
         dispatch(actions.nav.sort(...args))
       },
 
-      onItemSelect(id, mod, meta) {
-        dispatch(actions.item.select(id, { mod, ...meta }))
+      onItemSelect(payload, mod, meta) {
+        dispatch(actions.item.select(payload, { mod, ...meta }))
       },
 
       onItemOpen(item) {

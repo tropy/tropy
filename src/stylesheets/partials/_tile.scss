@@ -3,9 +3,8 @@
 // --------------------------------------------------
 
 .tile {
+  // sass-lint:disable-block nesting-depth
   display: flex;
-  flex-grow: 1;
-  flex-shrink: 0;
   justify-content: center;
   align-items: center;
   position: relative;
@@ -15,7 +14,6 @@
     [data-size="#{$size}"] & {
       $tile-size: #{round($size * $tile-factor)}px;
 
-      flex-basis: $tile-size;
       height: $tile-size;
 
       .thumbnail {
@@ -25,13 +23,40 @@
     }
   }
 
+  &.item,
   &.photo {
-    contain: layout style size;
+    &.active {
+      .tile-state {
+        .scroll-container:focus & {
+          border-color: $tile-focus-color;
+        }
+      }
+    }
   }
 
-  &.filler {
-    ul & { // Needs specifity
-      height: 0;
+  &.photo {
+    contain: layout style size;
+
+    &.active {
+      .tile-state {
+        .scroll-container:focus & {
+          border-color: $tile-focus-color;
+
+          .nested-focus & {
+            border-color: $tile-active-color;
+          }
+        }
+      }
+    }
+  }
+
+  &.selection {
+    &.active {
+      .tile-state {
+        .selection.grid:focus & {
+          border-color: $tile-focus-color;
+        }
+      }
     }
   }
 
@@ -45,10 +70,6 @@
   &.active {
     .tile-state {
       border: 3px solid $tile-active-color;
-
-      [class*="grid"]:focus & {
-        border-color: $tile-focus-color;
-      }
     }
   }
 
@@ -79,12 +100,28 @@
     height: 2 * $pointer-height;
     border: $pointer-height solid transparent;
     border-bottom: $pointer-height solid $tile-expansion-bg;
+
+    .nested-focus & {
+      border-bottom-color: $tile-expansion-focus-bg;
+    }
+
+    .has-nested-active & {
+      border-bottom-color: $tile-expansion-bg;
+    }
   }
 }
 
 .tile-expansion {
-  flex: 1 1 100%;
+  grid-column-start: 1;
   background: $tile-expansion-bg;
   margin: $space-sm (-$default-padding-horizontal); // Todo
   padding: $space-sm 0; // Todo
+
+  .nested-focus & {
+    background: $tile-expansion-focus-bg;
+  }
+
+  .nested-focus.has-nested-active & {
+    background: $tile-expansion-bg;
+  }
 }

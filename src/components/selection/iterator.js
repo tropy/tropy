@@ -9,8 +9,6 @@ const { move } = require('../../common/util')
 
 
 class SelectionIterator extends Iterator {
-  get iteration() { return this.props.selections }
-
   get classes() {
     return {
       'drop-target': this.isSortable,
@@ -28,22 +26,16 @@ class SelectionIterator extends Iterator {
     return this.props.active === selection
   }
 
-  getNext(offset = 1) {
-    const { selections, active } = this.props
-
-    if (!selections.length) return null
-    if (!active) return selections[0]
-
-    return selections[this.idx[active] + offset]
+  getIterables(props = this.props) {
+    return props.selections || super.getIterables()
   }
 
-  getPrev(offset = 1) {
-    return this.getNext(-offset)
+  head() {
+    return this.props.active
   }
 
-  getCurrent() {
-    return this.getNext(0)
-  }
+  // No auto-select, because that could change the active photo!
+  handleFocus = () => {}
 
   handleDropSelection = ({ id, to, offset }) => {
     const { onSort, photo } = this.props
@@ -77,12 +69,9 @@ class SelectionIterator extends Iterator {
   }
 
   map(fn) {
-    this.idx = {}
     const { isSortable, isVertical } = this
 
     return this.props.selections.map((selection, index) => {
-      this.idx[selection.id] = index
-
       return fn({
         selection,
         cache: this.props.cache,

@@ -8,7 +8,7 @@ module.exports = {
   // eslint-disable-next-line complexity
   metadata(state = {}, { type, payload, meta, error }) {
     switch (type) {
-      case PROJECT.OPEN:
+      case PROJECT.OPENED:
         return {}
       case METADATA.LOAD:
         return load(state, payload, meta, error)

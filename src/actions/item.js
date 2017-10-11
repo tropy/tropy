@@ -131,8 +131,14 @@ module.exports = {
   select(payload, meta = {}) {
     return (dispatch, getState) => {
       let { items, photo, note } = payload
+      let mod = meta.mod || 'replace'
 
-      if (items.length === 1 && meta.mod === 'replace') {
+      if (mod === 'all') {
+        const { qr } = getState()
+        mod = 'replace'
+        items = qr.items
+
+      } else if (items.length === 1 && mod === 'replace') {
         const state = getState()
 
         if (photo === undefined) {
@@ -144,10 +150,11 @@ module.exports = {
         }
       }
 
+
       dispatch({
         type: ITEM.SELECT,
         payload: { items, photo, note },
-        meta: { load: true, ...meta }
+        meta: { log: 'trace', ...meta, mod }
       })
     }
   },
@@ -156,7 +163,7 @@ module.exports = {
     return {
       type: ITEM.OPEN,
       payload,
-      meta: { load: true, ...meta }
+      meta: { ...meta }
     }
   },
 

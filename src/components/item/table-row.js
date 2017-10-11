@@ -3,7 +3,6 @@
 const React = require('react')
 const { ItemIterable } = require('./iterable')
 const { ItemTableCell } = require('./table-cell')
-const { meta } = require('../../common/os')
 const { get, pick } = require('../../common/util')
 const { DC } = require('../../constants')
 const cx = require('classnames')
@@ -12,7 +11,6 @@ const { arrayOf, object } = require('prop-types')
 const CellProps = Object.keys(ItemTableCell.propTypes)
 
 class ItemTableRow extends ItemIterable {
-
   isMainColumn(id) {
     return DC.title === id
   }
@@ -21,37 +19,49 @@ class ItemTableRow extends ItemIterable {
     return get(this.props.edit, [this.props.item.id]) === id
   }
 
-  handleMouseDown = (event) => {
-    if (!this.props.isSelected || meta(event)) {
-      this.handleSelect(event)
+  mapColumns(fn) {
+    const { columns } = this.props
+    const mapped = new Array(columns.length)
+
+    for (let i = 0, ii = columns.length; i < ii; ++i) {
+      const column = columns[i]
+      const isMainColumn = this.isMainColumn(column.property.id)
+
+      mapped.push(fn({
+        column,
+        isMainColumn,
+        next: columns[(i + 1) % ii],
+        prev: columns[(ii + i - 1) % ii]
+      }))
     }
+
+    return mapped
   }
 
   render() {
-    const { columns, data, photos, tags, ...props } = this.props
+    const { data, photos, tags, ...props } = this.props
 
     return this.connect(
       <tr
         className={cx(this.classes)}
         ref={this.setContainer}
-        onMouseDown={this.handleMouseDown}
+        onMouseDown={this.handleSelect}
         onDoubleClick={this.handleOpen}
-        onContextMenu={this.handleContextMenu}>{
-          columns.map(({ property, width }) => {
-            const isMainColumn = this.isMainColumn(property.id)
-            return (
-              <ItemTableCell {...pick(props, CellProps)}
-                key={property.id}
-                property={property}
-                data={data}
-                width={width}
-                tags={isMainColumn ? tags : null}
-                photos={isMainColumn ? photos : null}
-                isEditing={this.isEditing(property.id)}
-                isMainColumn={isMainColumn}/>
-            )
-          })
-      }</tr>
+        onContextMenu={this.handleContextMenu}>
+        {this.mapColumns(({ column, isMainColumn, next, prev }) =>
+          <ItemTableCell {...pick(props, CellProps)}
+            key={column.property.id}
+            property={column.property}
+            data={data}
+            width={column.width}
+            tags={isMainColumn ? tags : null}
+            photos={isMainColumn ? photos : null}
+            isEditing={this.isEditing(column.property.id)}
+            isMainColumn={isMainColumn}
+            nextColumn={next.property.id}
+            prevColumn={prev.property.id}
+            getSelection={this.props.getSelection}/>)}
+      </tr>
     )
   }
 

@@ -91,6 +91,7 @@ class Editor extends PureComponent {
 
   handleViewBlur = () => {
     this.setState({ hasViewFocus: false })
+    this.props.onBlur()
   }
 
   render() {
@@ -129,6 +130,7 @@ class Editor extends PureComponent {
   static propTypes = {
     isDisabled: bool,
     keymap: object.isRequired,
+    onBlur: func.isRequired,
     onChange: func.isRequired,
     placeholder: string,
     state: object,

@@ -8,7 +8,7 @@ describe('ProjectSidebar', () => {
 
   const project = { name: 'My Research' }
 
-  it('renders a toolbar when prop is set', () => {
+  it.skip('renders a toolbar when prop is set', () => {
     expect(
       shallow(
         <ProjectSidebar
@@ -23,7 +23,7 @@ describe('ProjectSidebar', () => {
     ).to.have.exactly(1).descendants('Toolbar')
   })
 
-  it('renders the project name', () => {
+  it.skip('renders the project name', () => {
     expect(
       shallow(
         <ProjectSidebar

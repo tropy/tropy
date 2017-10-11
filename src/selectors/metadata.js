@@ -29,16 +29,16 @@ const getItemMetadata = memo(
   getMetadata,
   ({ nav }) => (nav.items),
 
-  (metadata, ids) =>
+  (metadata, items) =>
     seq(
       transduce(
-        ids,
+        items,
         compose(map(id => metadata[id]), keep(), cat, skipId),
         collect,
-        { id: ids }),
+        { id: items }),
       map(([key, value]) => {
         if (key !== 'id') {
-          value.mixed = value.count !== ids.length
+          value.mixed = value.count !== items.length
         }
 
         return [key, value]

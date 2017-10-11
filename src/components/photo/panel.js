@@ -29,10 +29,12 @@ class PhotoPanel extends Panel {
   renderToolbar() {
     return (
       <PhotoToolbar
+        photos={this.props.photos.length}
         zoom={this.props.zoom}
         maxZoom={PHOTO.ZOOM.length - 1}
         onZoomChange={this.props.onZoomChange}
-        hasCreateButton={!this.props.isDisabled}
+        hasCreateButton
+        canCreate={!this.props.isDisabled}
         isDisabled={this.props.isClosed || !this.props.photos.length}
         onCreate={this.props.onCreate}/>
     )

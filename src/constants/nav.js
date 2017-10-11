@@ -3,7 +3,8 @@
 module.exports = {
   PERSIST: 'nav.persist',
   RESTORE: 'nav.restore',
-  UPDATE: 'nav.update',
+  SEARCH: 'nav.search',
   SELECT: 'nav.select',
-  SORT: 'nav.sort'
+  SORT: 'nav.sort',
+  UPDATE: 'nav.update'
 }

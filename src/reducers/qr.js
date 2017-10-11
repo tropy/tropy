@@ -1,17 +1,15 @@
 'use strict'
 
-const { combineReducers } = require('redux')
 const { QR } = require('../constants')
+const init = { items: [] }
 
 module.exports = {
-  qr: combineReducers({
-    items(state = [], { type, payload }) {
-      switch (type) {
-        case QR.ITEMS.UPDATE:
-          return [...payload]
-        default:
-          return state
-      }
+  qr(state = init, { type, payload }) {
+    switch (type) {
+      case QR.UPDATE:
+        return { ...state, ...payload }
+      default:
+        return state
     }
-  })
+  }
 }

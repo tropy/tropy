@@ -6,7 +6,7 @@ const { CoverImage } = require('./cover-image')
 const { Editable } = require('../editable')
 const { TagColors } = require('../colors')
 const { createClickHandler } = require('../util')
-const { meta } = require('../../common/os')
+const { isMeta } = require('../../keymap')
 const { auto } = require('../../format')
 const cx = require('classnames')
 const { TYPE } = require('../../constants')
@@ -16,7 +16,6 @@ const {
 
 
 class ItemTableCell extends PureComponent {
-
   get style() {
     return {
       width: `${this.props.width}%`
@@ -37,6 +36,11 @@ class ItemTableCell extends PureComponent {
       data[property.id].type : TYPE.TEXT
   }
 
+  edit(property) {
+    this.props.onEdit({
+      column: { [this.props.item.id]: property }
+    })
+  }
 
   handleChange = (text) => {
     this.props.onChange({
@@ -53,22 +57,40 @@ class ItemTableCell extends PureComponent {
   // selections happens as the event bubbles therefore allowing us to
   // detect a click event that was associated to the item's selection.
   handleMouseDown = () => {
-    this.wasSelected = this.props.isSelected
+    this.wasSelected = this.props.isSelected &&
+      this.props.getSelection().length === 1
   }
 
   handleClick = createClickHandler({
-    onClick: (event) => {
-      return !this.props.isSelected || meta(event) || !this.wasSelected
-    },
+    onClick: (event) => (
+      !this.props.isSelected ||
+      !this.wasSelected ||
+      event.shiftKey ||
+      isMeta(event)
+    ),
 
     onSingleClick: () => {
       if (!this.props.isEditing) {
-        this.props.onEdit({
-          column: { [this.props.item.id]: this.props.property.id }
-        })
+        this.edit(this.props.property.id)
       }
     }
   })
+
+  handleKeyDown = (event, text, hasChanged) => {
+    if (event.key === 'Tab') {
+      event.preventDefault()
+      event.stopPropagation()
+
+      if (hasChanged) {
+        this.handleChange(text)
+      }
+
+      this.edit(event.shiftKey ?
+        this.props.prevColumn :
+        this.props.nextColumn )
+
+    }
+  }
 
   render() {
     const {
@@ -105,7 +127,8 @@ class ItemTableCell extends PureComponent {
             isEditing={isEditing}
             isDisabled={isDisabled}
             onCancel={onCancel}
-            onChange={this.handleChange}/>
+            onChange={this.handleChange}
+            onKeyDown={this.handleKeyDown}/>
           {isMainColumn &&
             <TagColors
               selection={item.tags}
@@ -119,13 +142,15 @@ class ItemTableCell extends PureComponent {
     isEditing: bool,
     isDisabled: bool,
     isSelected: bool,
-
     isMainColumn: bool,
 
     property: shape({
       id: string.isRequired,
       type: string,
     }),
+
+    nextColumn: string.isRequired,
+    prevColumn: string.isRequired,
 
     item: shape({
       id: number.isRequired,
@@ -141,6 +166,7 @@ class ItemTableCell extends PureComponent {
     width: number.isRequired,
     size: number.isRequired,
 
+    getSelection: func.isRequired,
     onCancel: func.isRequired,
     onChange: func.isRequired,
     onEdit: func.isRequired

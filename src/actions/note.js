@@ -23,7 +23,12 @@ module.exports = {
     return {
       type: NOTE.SAVE,
       payload: json(payload),
-      meta: { cmd: 'project', history: 'merge', ...meta }
+      meta: {
+        cmd: 'project',
+        history: 'merge',
+        changed: true,
+        ...meta
+      }
     }
   },
 
@@ -56,7 +61,7 @@ module.exports = {
       dispatch({
         type: NOTE.SELECT,
         payload: { note, photo, item, selection },
-        meta: { ...meta }
+        meta: { log: 'trace', ...meta }
       })
     }
   },

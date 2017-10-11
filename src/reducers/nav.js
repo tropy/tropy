@@ -4,7 +4,7 @@ const {
   NAV, ITEM, LIST, TAG, NOTE, PHOTO, PROJECT, DC
 } = require('../constants')
 
-const { isSelected } = require('../selection')
+const { isSelected, select } = require('../selection')
 
 const init = {
   mode: PROJECT.MODE.PROJECT,
@@ -13,19 +13,6 @@ const init = {
   tags: [],
   sort: { type: 'property', column: DC.title, asc: true },
   lists: {}
-}
-
-function select(selection, id, mod) {
-  switch (mod) {
-    case 'replace':
-      return [id]
-    case 'remove':
-      return selection.filter(i => i !== id)
-    case 'merge':
-      return [...selection, id]
-    default:
-      return []
-  }
 }
 
 module.exports = {
@@ -38,6 +25,16 @@ module.exports = {
 
       case NAV.UPDATE:
         return { ...state, ...payload }
+
+      case NAV.SEARCH:
+        return {
+          ...state,
+          items: [],
+          photo: null,
+          selection: null,
+          note: null,
+          ...payload
+        }
 
       case NAV.SORT: {
         const { list, ...sort } = payload
@@ -59,14 +56,14 @@ module.exports = {
 
       case LIST.REMOVE:
         return state.list === payload ?
-          { ...state, list: null, items: select(state.items), photo: null } :
+          { ...state, list: null, items: [], photo: null } :
           state
 
       case ITEM.DELETE:
       case ITEM.RESTORE:
       case ITEM.REMOVE:
-        return !meta.done && isSelected(state.items, ...payload) ?
-          { ...state, items: select(state.items), photo: null } :
+        return !meta.done && isSelected(state.items, payload) ?
+          { ...state, items: [], photo: null } :
           state
 
       case ITEM.SELECT:
@@ -75,7 +72,7 @@ module.exports = {
           photo: payload.photo,
           selection: payload.selection,
           note: payload.note,
-          items: select(state.items, payload.items[0], meta.mod)
+          items: select(state.items, payload.items, meta.mod)
         }
 
       case ITEM.IMPORT:
@@ -96,7 +93,7 @@ module.exports = {
           mode: PROJECT.MODE.ITEM,
           photo,
           selection,
-          items: select(state.items, id, 'replace')
+          items: select(state.items, [id], 'replace')
         }
       }
 
@@ -104,16 +101,16 @@ module.exports = {
         return (!meta.done || error || !isSelected(state.tags, payload)) ?
           state : {
             ...state,
-            tags: select(state.tags, payload, 'remove')
+            tags: select(state.tags, [payload], 'remove')
           }
 
       case TAG.SELECT:
         return {
           ...state,
           photo: null,
-          items: select(state.items),
+          items: [],
           trash: null,
-          tags: select(state.tags, payload, meta.mod)
+          tags: select(state.tags, [payload], meta.mod)
         }
 
       case PHOTO.SELECT:
@@ -122,13 +119,13 @@ module.exports = {
           photo: payload.photo,
           selection: payload.selection,
           note: payload.note,
-          items: select(state.items, payload.item, 'replace')
+          items: [payload.item]
         } : { ...state, photo: null, selection: null }
 
       case NOTE.SELECT:
         return payload ? {
           ...state,
-          items: select(state.items, payload.item, 'replace'),
+          items: [payload.item],
           photo: payload.photo,
           selection: payload.selection,
           note: payload.note
@@ -143,8 +140,8 @@ module.exports = {
       case NAV.SELECT:
         return {
           ...state,
-          items: select(state.items),
-          tags: select(state.tags),
+          items: [],
+          tags: [],
           trash: null,
           list: null,
           photo: null,

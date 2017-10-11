@@ -26,11 +26,17 @@
   }
 
   .scroll-container {
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    padding: $space-min;
-    overflow-y: scroll;
+    padding: $space-min $space-min 0;
+  }
+
+  .runway {
+    contain: strict;
+  }
+
+  .viewport {
+    display: grid;
+    contain: content;
+    will-change: transform;
   }
 
   &.over {

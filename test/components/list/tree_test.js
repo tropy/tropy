@@ -4,7 +4,7 @@ const React = require('react')
 const { render } = require('enzyme')
 const dnd = require('../../support/dnd')
 
-describe('Tree', () => {
+describe.skip('Tree', () => {
   const ListTree = dnd.wrap(__require('components/list').ListTree)
 
   it('renders all lists', () => {

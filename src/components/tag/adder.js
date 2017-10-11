@@ -9,6 +9,11 @@ const { Editable } = require('../editable')
 
 
 class TagAdder extends PureComponent {
+  get placeholder() {
+    const { count, intl } = this.props
+    return intl.formatMessage({ id: 'panel.tags.add' }, { count })
+  }
+
   handleCancel = () => {
     document.body.focus()
   }
@@ -33,8 +38,6 @@ class TagAdder extends PureComponent {
   }
 
   render() {
-    const { intl } = this.props
-
     return (
       <div className="add-tag-container">
         <Editable
@@ -45,7 +48,7 @@ class TagAdder extends PureComponent {
           tabIndex={-1}
           type="text"
           value={''}
-          placeholder={intl.formatMessage({ id: 'panel.tags.add' })}
+          placeholder={this.placeholder}
           onBlur={this.handleBlur}
           onCancel={this.handleCancel}
           onChange={this.handleChange}/>
@@ -54,6 +57,7 @@ class TagAdder extends PureComponent {
   }
 
   static propTypes = {
+    count: number.isRequired,
     intl: intlShape.isRequired,
     tags: arrayOf(shape({
       id: number.isRequired,

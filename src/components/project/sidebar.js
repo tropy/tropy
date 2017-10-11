@@ -276,7 +276,8 @@ class ProjectSidebar extends PureComponent {
 
     project: shape({
       file: string,
-      name: string
+      name: string,
+      items: number
     }).isRequired,
 
     keymap: object.isRequired,

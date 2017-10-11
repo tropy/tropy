@@ -9,6 +9,11 @@ const { createClickHandler } = require('../util')
 
 
 class NoteListItem extends PureComponent {
+  componentDidUpdate(props) {
+    if (this.props.isSelected && !props.isSelected) {
+      this.container.scrollIntoViewIfNeeded(false)
+    }
+  }
 
   handleContextMenu = (event) => {
     const { note, isDisabled, isSelected, onContextMenu, onSelect } = this.props
@@ -17,7 +22,10 @@ class NoteListItem extends PureComponent {
       if (!isSelected) onSelect(note)
 
       onContextMenu(event, 'note', {
-        notes: [note.id], item: note.item, photo: note.photo
+        notes: [note.id],
+        item: note.item,
+        photo: note.photo,
+        selection: note.selection
       })
     }
   }
@@ -32,16 +40,19 @@ class NoteListItem extends PureComponent {
     }
   })
 
-  render() {
-    const { note, isSelected } = this.props
+  setContainer = (container) => {
+    this.container = container
+  }
 
+  render() {
     return (
       <li
-        className={cx({ note: true, active: isSelected })}
+        ref={this.setContainer}
+        className={cx('note', { active: this.props.isSelected })}
         onMouseDown={this.handleClick}
         onContextMenu={this.handleContextMenu}>
         <div className="css-multiline-truncate">
-          {note.text.slice(0, 280)}
+          {this.props.note.text.slice(0, 280)}
         </div>
       </li>
     )

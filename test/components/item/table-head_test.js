@@ -3,7 +3,7 @@
 const React = require('react')
 const { shallow } = require('enzyme')
 
-describe('ItemTableHead', () => {
+describe.skip('ItemTableHead', () => {
   const { ItemTableHead } = __require('components/item/table-head')
 
   it('has class table-head', () => {

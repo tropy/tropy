@@ -1,5 +1,6 @@
 'use strict'
 
+const assert = require('assert')
 const { json, stringify } = require('../common/util')
 
 const mod = {
@@ -16,48 +17,65 @@ const mod = {
     async load(db, ids) {
       const notes = {}
 
-      if (ids.length) {
-        await db.each(`
-          SELECT
-              note_id AS note,
-              photos.id AS photo,
-              selections.id AS selection,
-              state,
-              text,
-              language,
-              datetime(modified, "localtime") AS modified
-            FROM notes
-              LEFT OUTER JOIN photos USING (id)
-              LEFT OUTER JOIN selections USING (id)
-            WHERE note_id IN (${ids.join(',')})
-              AND deleted IS NULL
-            ORDER BY created ASC`,
+      const conditions = ['deleted IS NULL']
+      if (ids != null) conditions.push(`note_id IN (${ids.join(',')})`)
 
-          ({ note: id, modified, state, ...data }) => {
-            notes[id] = {
-              ...data,
-              id,
-              modified: new Date(modified),
-              state: json(state),
-              deleted: false
-            }
+      await db.each(`
+        SELECT
+            note_id AS note,
+            photos.id AS photo,
+            selections.id AS selection,
+            state,
+            text,
+            language,
+            datetime(modified, "localtime") AS modified
+          FROM notes
+            LEFT OUTER JOIN photos USING (id)
+            LEFT OUTER JOIN selections USING (id)
+          WHERE ${conditions.join(' AND ')}
+          ORDER BY created ASC`,
+
+        ({ note: id, modified, state, ...data }) => {
+          notes[id] = {
+            ...data,
+            id,
+            modified: new Date(modified),
+            state: json(state),
+            deleted: false
           }
-        )
-      }
+        }
+      )
 
       return notes
     },
 
-    async save(db, { id, state, text }, timestamp = Date.now()) {
+    save(db, { id, state, text }, timestamp = Date.now()) {
+      assert(id != null, 'missing id')
+      assert(state != null, 'missing state')
+
+      const assigs = [
+        'state = $state',
+        'modified = datetime($modified)'
+      ]
+
+      if (text != null) {
+        assert(text !== '', 'empty text')
+        assigs.push('text = $text')
+      }
+
       return db.run(`
         UPDATE notes
-          SET state = ?, text = ?, modified = datetime(?)
-          WHERE note_id = ?`,
-          stringify(state), text, new Date(timestamp).toISOString(), id
+          SET ${assigs.join(', ')}
+          WHERE note_id = $id`, {
+            $id: id,
+            $state: stringify(state),
+            $text: text,
+            $modified: new Date(timestamp).toISOString()
+          }
       )
     },
 
-    async delete(db, ids) {
+    delete(db, ids) {
       return db.run(`
         UPDATE notes
           SET deleted = datetime("now")
@@ -65,7 +83,7 @@ const mod = {
       )
     },
 
-    async restore(db, ids) {
+    restore(db, ids) {
       return db.run(`
         UPDATE notes
           SET deleted = NULL
@@ -73,7 +91,7 @@ const mod = {
       )
     },
 
-    async prune(db) {
+    prune(db) {
       return db.run(`
         DELETE FROM notes WHERE deleted IS NOT NULL`
       )

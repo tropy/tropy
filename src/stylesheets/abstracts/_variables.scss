@@ -227,7 +227,8 @@ $slider-handle-size-sm: 10px;
 // Esper
 // --------------------------------------------------
 
-$esper-toolbar-transition-in: 0.3s 0.4s ease;
+$esper-toolbar-transition-in-hover: 0.3s 0.4s ease;
+$esper-toolbar-transition-in-focus: 0.3s ease;
 $esper-toolbar-transition-out: 0.3s ease;
 $esper-cursor: const("ESPER.CURSOR");
 
@@ -235,7 +236,7 @@ $esper-cursor: const("ESPER.CURSOR");
 // Scrollbar
 // --------------------------------------------------
 
-$scrollbar-size: 12; // $space-sm;
+$scrollbar-size: $space-sm;
 
 
 // Progress bar

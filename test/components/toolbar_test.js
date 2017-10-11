@@ -3,7 +3,7 @@
 const React = require('react')
 const { shallow } = require('enzyme')
 
-describe('Toolbar', () => {
+describe.skip('Toolbar', () => {
   const { Toolbar } = __require('components/toolbar')
 
   it('has class toolbar', () => {

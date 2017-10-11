@@ -4,25 +4,68 @@ sidebar:
   trash: Deleted Items
 toolbar:
   import: Import Photos
+  items: >
+    {count, plural,
+      =0 {No items in this view}
+      one {1 item in this view}
+      other {# items in this view}}
 panel:
   metadata:
     tab: Metadata
-    photo: Photo
-    item: Item
+    photo:  Photo
+    item: >
+      {count, plural,
+        =0 {}
+        one {Item}
+        other {# Items}}
     selection: Selection
   tags:
     tab: Tags
-    add: Add Tag
+    add: >
+      {count, plural,
+        =0 {Add Tag}
+        one {Add Tag to 1 Item}
+        other {Add Tag to # Items}}
   photo:
-    title: Photos
+    title: >
+      {count, plural,
+        =0 {No Photos}
+        one {1 Photo}
+        other {# Photos}}
     create: Add Photos
-  notes: Notes
-
+  note:
+    title: >
+      {count, plural,
+        =0 {No Notes}
+        one {1 Note}
+        other {# Notes}}
+    create: Add Note
+about:
+    version: Version {version}
+    rrchnm:
+      title: Roy Rosenzweig Center for History and New Media
+      url: https://rrchnm.org
+    cds:
+      title: Corporation for Digital Scholarship
+      url: http://digitalscholar.org
+    text: >
+      Tropy is designed by the {rrchnm}, a team that develops
+      historical teaching resources, digital exhibits, and
+      open-source software.
+    trademark: Tropy is a trademark of the {cds}.
+    release:
+      title: Release Notes
+      url: https://github.com/tropy/tropy/releases/tag/{version}
+    license:
+      title: Licensing Information
+      url: https://tropy.org/license
+    credits:
+      title: Credits
+      url: https://tropy.org/credits
 project:
   none: Drop a project file here or create a {newProject}
   empty: Drop your photos into Tropy to get started
   new: new project
-
 wizard:
   project:
     title: Create a new project
@@ -30,14 +73,10 @@ wizard:
     name: Name
     save_as: Change file name and location
     change: Change
-
 prefs:
   title: Tropy Preferences
   app:
     label: Global
-    invertScroll: Invert direction when scrolling in photos
-    invertZoom: Invert direction when zooming in photos
-    overlayToolbars: Automatically hide and show toolbars
     style:
       theme: Theme
       themes:
@@ -53,6 +92,12 @@ prefs:
         skip: Skip duplicate photos
         import: Accept duplicate photos
         prompt: Ask me every time
+    ui:
+      label: Interface
+      option:
+        invertScroll: Invert direction when scrolling in photos
+        invertZoom: Invert direction when zooming in photos
+        overlayToolbars: Automatically hide and show toolbars
 
   project:
     label: Project
@@ -262,7 +307,11 @@ activity:
     destroy: Deleting items permanently …
     explode: Exploding item …
     implode: Restoring item …
-    import: Importing items {progress, number} of {total, number} …
+    import: >
+      {hasProgressBar, select,
+        true {Importing items {progress, number} of {total, number} …}
+        other {Importing items …}
+      }
     load: Loading items …
     restore: Restoring item …
     save: Saving items …

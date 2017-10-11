@@ -13,6 +13,10 @@ const TILE = {
   FACTOR: 1.2
 }
 
+const ROW = {
+  HEIGHT: 30
+}
+
 const ITEM = {
   TILE: {
     MIN: TILE.MIN,
@@ -104,6 +108,10 @@ const NOTEPAD = {
   MIN_HEIGHT: 100
 }
 
+const NOTE = {
+  ROW_HEIGHT: 60
+}
+
 const ESPER = {
   MIN_HEIGHT: WINDOW.MIN_HEIGHT - NOTEPAD.MIN_HEIGHT,
   FADE_DURATION: 250,
@@ -171,12 +179,19 @@ const PREFS = {
   HEIGHT: 580
 }
 
+const ABOUT = {
+  WIDTH: 600,
+  HEIGHT: 300
+}
+
 const GRID = {
   SIZE: 12,
+  PADDING: 12
 }
 
 
 module.exports =  {
+  ABOUT,
   ACTIVITY,
   ESPER,
   GRID,
@@ -185,10 +200,12 @@ module.exports =  {
   PANEL,
   PHOTO,
   PREFS,
+  ROW,
   SCROLLBAR,
   SIDEBAR,
   TILE,
   WINDOW,
   WIZARD,
+  NOTE,
   NOTEPAD
 }

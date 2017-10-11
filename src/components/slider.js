@@ -126,6 +126,7 @@ class Slider extends PureComponent {
     if (minIcon) {
       return (
         <IconButton
+          canHaveFocus={this.props.canHaveFocus}
           icon={this.props.minIcon}
           isActive={value === min}
           isDisabled={this.isDisabled}
@@ -141,6 +142,7 @@ class Slider extends PureComponent {
     if (maxIcon) {
       return (
         <IconButton
+          canHaveFocus={this.props.canHaveFocus}
           icon={this.props.maxIcon}
           isActive={value === max}
           isDisabled={this.isDisabled}
@@ -173,7 +175,7 @@ class Slider extends PureComponent {
             <div className="slider-range" style={{ width: percentage }}/>
             <div
               className="slider-handle"
-              tabIndex="-1"
+              tabIndex={this.props.tabIndex}
               style={{ left: percentage }}>
               {this.renderCurrentValue()}
             </div>
@@ -185,6 +187,7 @@ class Slider extends PureComponent {
   }
 
   static propTypes = {
+    canHaveFocus: bool,
     isDisabled: bool,
     max: number.isRequired,
     maxIcon: element,
@@ -194,6 +197,7 @@ class Slider extends PureComponent {
     showCurrentValue: bool.isRequired,
     size: oneOf(['sm', 'md', 'lg']).isRequired,
     steps: arrayOf(number).isRequired,
+    tabIndex: number,
     value: number.isRequired,
     onChange: func.isRequired
   }
@@ -204,7 +208,8 @@ class Slider extends PureComponent {
     precision: 1,
     showCurrentValue: false,
     size: 'md',
-    steps: []
+    steps: [],
+    tabIndex: -1
   }
 }
 

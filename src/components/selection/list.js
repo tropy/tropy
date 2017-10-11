@@ -5,15 +5,20 @@ const { SelectionIterator } = require('./iterator')
 const { SelectionListItem } = require('./list-item')
 const cx = require('classnames')
 const { func, number, object } = require('prop-types')
-const { DC } = require('../../constants')
+const { DC, SASS: { ROW } } = require('../../constants')
 
 
 class SelectionList extends SelectionIterator {
   get classes() {
-    return {
-      ...super.classes,
-      list: true
-    }
+    return ['list', super.classes]
+  }
+
+  getColumns() {
+    return 1
+  }
+
+  getRowHeight() {
+    return ROW.HEIGHT
   }
 
   isEditing(selection) {

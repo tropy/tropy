@@ -63,6 +63,7 @@ class TagPanel extends PureComponent {
           onContextMenu={this.handleContextMenu}/>
         <TagAdder
           tags={this.props.allTags}
+          count={this.props.items.length}
           onAdd={this.handleTagAdd}
           onCreate={this.handleTagCreate}/>
       </div>

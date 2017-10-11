@@ -15,15 +15,32 @@ linux: &linux
     next: ArrowDown
     prev: ArrowUp
   ItemIterator: &ItemIterator
-    up: ArrowUp
-    down: ArrowDown
-    left: ArrowLeft
-    right: ArrowRight
+    up:
+      - ArrowUp
+      - Shift+ArrowUp
+      - Ctrl+ArrowUp
+    down:
+      - ArrowDown
+      - Shift+ArrowDown
+      - Ctrl+ArrowDown
+    left:
+      - ArrowLeft
+      - Shift+ArrowLeft
+      - Ctrl+ArrowLeft
+    right:
+      - ArrowRight
+      - Shift+ArrowRight
+      - Ctrl+ArrowRight
     preview: Space
     open: Enter
     edit: F2
     clear: Escape
     delete: Backspace
+    all: Ctrl+a
+    home: Home
+    end: End
+    pageUp: PageUp
+    pageDown: PageDown
   PhotoIterator: &PhotoIterator
     up: ArrowUp
     down: ArrowDown
@@ -38,6 +55,10 @@ linux: &linux
     contract:
       - CmdOrCtrl+ArrowUp
       - CmdOrCtrl+ArrowLeft
+    home: Home
+    end: End
+    pageUp: PageUp
+    pageDown: PageDown
   SelectionGrid: &SelectionGrid
     up: ArrowUp
     down: ArrowDown
@@ -46,6 +67,10 @@ linux: &linux
     open: Enter
     contract: Escape
     delete: Backspace
+    home: Home
+    end: End
+    pageUp: PageUp
+    pageDown: PageDown
   NoteList: &NoteList
     up: ArrowUp
     down: ArrowDown
@@ -53,6 +78,10 @@ linux: &linux
       - Enter
       - Cmd+ArrowDown
       - Cmd+ArrowRight
+    home: Home
+    end: End
+    pageUp: PageUp
+    pageDown: PageDown
   NotePad: &NotePad
     break: Enter
     br:
@@ -86,10 +115,22 @@ darwin:
   Esper: *Esper
   Sidebar: *Sidebar
   ItemIterator:
-    up: ArrowUp
-    down: ArrowDown
-    left: ArrowLeft
-    right: ArrowRight
+    up:
+      - ArrowUp
+      - Shift+ArrowUp
+      - Cmd+ArrowUp
+    down:
+      - ArrowDown
+      - Shift+ArrowDown
+      - Cmd+ArrowDown
+    left:
+      - ArrowLeft
+      - Shift+ArrowLeft
+      - Cmdl+ArrowLeft
+    right:
+      - ArrowRight
+      - Shift+ArrowRight
+      - Cmd+ArrowRight
     preview: Space
     open:
       - Cmd+ArrowDown
@@ -97,6 +138,11 @@ darwin:
     clear: Escape
     edit: Enter
     delete: Backspace
+    all: Cmd+a
+    home: Home
+    end: End
+    pageUp: PageUp
+    pageDown: PageDown
   PhotoIterator:
     up: ArrowUp
     down: ArrowDown
@@ -108,6 +154,10 @@ darwin:
     delete: Backspace
     enter: Enter
     contract: Escape
+    home: Home
+    end: End
+    pageUp: PageUp
+    pageDown: PageDown
   SelectionGrid:
     up: ArrowUp
     down: ArrowDown
@@ -117,6 +167,10 @@ darwin:
       - Cmd+ArrowDown
       - Cmd+ArrowRight
     delete: Backspace
+    home: Home
+    end: End
+    pageUp: PageUp
+    pageDown: PageDown
   NoteList: *NoteList
   NotePad: *NotePad
   TagList: *TagList

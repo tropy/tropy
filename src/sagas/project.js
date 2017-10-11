@@ -7,7 +7,7 @@ const { Cache } = require('../common/cache')
 const { warn, debug, verbose } = require('../common/log')
 const { ipc } = require('./ipc')
 const { history } = require('./history')
-const { search, load } = require('./search')
+const { search } = require('./search')
 const { ontology } = require('./ontology')
 const { exec } = require('./cmd')
 const { shell } = require('./shell')
@@ -83,7 +83,6 @@ function *open(file) {
 
 function *setup(db, project) {
   yield every(has('search'), search, db)
-  yield every(has('load'), load)
 
   yield all([
     call(storage.restore, 'nav', project.id),
@@ -93,11 +92,15 @@ function *setup(db, project) {
   yield all([
     put(act.history.drop()),
     put(act.list.load()),
-    put(act.tag.load())
+    put(act.tag.load()),
+    put(act.item.load()),
+    put(act.photo.load()),
+    put(act.metadata.load()),
+    put(act.selection.load()),
+    put(act.note.load())
   ])
 
   yield call(search, db)
-  yield call(load, db)
 }
 
 
@@ -107,19 +110,17 @@ function *close(db, project, access) {
   }
 
   yield all([
-    call(mod.item.prune, db),
-    call(mod.list.prune, db),
-    call(mod.value.prune, db),
-    call(mod.photo.prune, db),
-    call(mod.selection.prune, db),
-    call(mod.note.prune, db),
-    call(mod.access.prune, db)
-  ])
-
-  yield all([
     call(storage.persist, 'nav', project.id),
     call(storage.persist, 'columns', project.id)
   ])
+
+  yield call(mod.item.prune, db)
+  yield call(mod.list.prune, db)
+  yield call(mod.value.prune, db)
+  yield call(mod.photo.prune, db)
+  yield call(mod.selection.prune, db)
+  yield call(mod.note.prune, db)
+  yield call(mod.access.prune, db)
 }
 
 
@@ -148,7 +149,7 @@ function *main() {
         yield cancel(task)
         yield race({
           closed: take(CLOSED),
-          timeout: call(delay, 2000)
+          timeout: call(delay, 8000)
         })
 
         task = null

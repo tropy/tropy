@@ -48,8 +48,9 @@ class ItemView extends PureComponent {
   }
 
 
-  setNotePad = (notepad) => {
-    this.notepad = notepad
+  setNotePad = (container) => {
+    this.notepad = container != null ?
+      container.getWrappedInstance().notepad : null
   }
 
   handlePanelResize = ({ value }) => {
@@ -81,7 +82,9 @@ class ItemView extends PureComponent {
       }
     }
 
-    setTimeout(this.notepad.focus, delay)
+    if (this.notepad != null) {
+      setTimeout(this.notepad.focus, delay)
+    }
   }
 
   handleNoteUpdate(note) {
@@ -120,27 +123,29 @@ class ItemView extends PureComponent {
     }
   }
 
-  handleNoteSave = debounce(note => {
-    this.props.onNoteSave(note)
+  handleNoteSave = debounce((note, meta) => {
+    this.props.onNoteSave(note, meta)
   }, NOTE.AUTOSAVE_DELAY)
 
-  handleNoteChange = (note, hasDocChanged, isDocBlank) => {
-    if (hasDocChanged) {
-      if (note.id != null) {
-        if (isDocBlank) this.handleNoteSave.cancel()
-        else this.handleNoteSave(note)
+  handleNoteChange = (note, changed, blank) => {
+    if (note.id != null) {
+      if (blank) this.handleNoteSave.cancel()
+      else this.handleNoteSave(note, { changed })
 
-      } else {
-        if (note.created == null && !isDocBlank) {
-          note.created = Date.now()
-          note.photo = this.props.photo.id
-          note.selection = this.props.activeSelection
-          this.props.onNoteCreate(note)
-        }
+    } else {
+      if (note.created == null && !blank) {
+        note.created = Date.now()
+        note.photo = this.props.photo.id
+        note.selection = this.props.activeSelection
+        this.props.onNoteCreate(note)
       }
     }
 
     this.setState({ note })
+  }
+
+  handleNoteCommit = () => {
+    this.handleNoteDelete()
   }
 
 
@@ -178,11 +183,13 @@ class ItemView extends PureComponent {
             onNoteCreate={this.handleNoteCreate}/>
         </Resizable>
         <ItemContainer
+          ref={this.setNotePad}
           note={this.state.note}
           photo={photo}
           isDisabled={isTrashSelected}
           isOpen={isItemOpen}
           onNoteChange={this.handleNoteChange}
+          onNoteCommit={this.handleNoteCommit}
           onUiUpdate={this.props.onUiUpdate}/>
       </section>
     )

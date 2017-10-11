@@ -5,15 +5,22 @@ const { Iterator } = require('../iterator')
 const { DropTarget } = require('react-dnd')
 const { DND } = require('../../constants')
 const { move } = require('../../common/util')
+const { ceil, floor, min } = Math
 
 const {
   arrayOf, bool, func, number, object, string, shape
 } = require('prop-types')
 
+const byIdx = ([a], [b]) => (a < b) ? -1 : (a > b) ? 1 : 0
+
 
 class PhotoIterator extends Iterator {
-  get iteration() {
-    return this.props.photos
+  componentWillReceiveProps(props) {
+    if (this.props.size !== props.size ||
+      this.props.photos !== props.photos ||
+      this.props.expanded !== props.expanded) {
+      this.update(props)
+    }
   }
 
   get classes() {
@@ -28,6 +35,75 @@ class PhotoIterator extends Iterator {
   get isSortable() {
     return !this.props.isDisabled && this.size > 1
   }
+
+  getIterables(props = this.props) {
+    return props.photos || super.getIterables()
+  }
+
+  getRows(state = this.state, props = this.props) {
+    return super.getRows(state, props) + this.getExpansionRows(state, props)
+  }
+
+  getExpansionRows({ cols } = this.state, props = this.props) {
+    let rows = []
+
+    for (let photo of props.expanded) {
+      let exp = ceil(photo.selections.length / cols)
+      let idx = this.indexOf(photo.id, props)
+      if (idx === -1) continue
+      rows.push([idx, exp])
+    }
+
+    rows = rows.sort(byIdx)
+    let total = 0
+    this.expRows = []
+
+    for (let i = 0; i < rows.length; ++i) {
+      let [idx, exp] = rows[i]
+      idx += total
+      for (let j = 1; j <= exp; ++j) {
+        this.expRows.push([++idx, ++total, j])
+      }
+    }
+
+    return total
+  }
+
+  getExpansionRowsBefore(row) {
+    let exp = [0, 0]
+
+    if (this.expRows != null) {
+      for (let i = 0; i < this.expRows.length; ++i) {
+        let cur = this.expRows[i]
+        if (row < cur[0]) break
+        if (row === cur[0]) exp[1] = cur[2]
+        exp[0] = cur[1]
+      }
+    }
+
+    return exp
+  }
+
+  getOffset(state = this.state) {
+    let offset = super.getOffset(state)
+    let row = floor(offset / state.rowHeight)
+    let [, adj] = this.getExpansionRowsBefore(row)
+    return (row - adj) * state.rowHeight
+  }
+
+  getIterableRange() {
+    const { cols, offset, overscan, rowHeight } = this.state
+
+    const row = floor(offset / rowHeight)
+    const exp = this.getExpansionRowsBefore(row)
+    const from = cols * (row - exp[0])
+    const size = cols * overscan
+
+    return {
+      from, size, to: min(from + size, this.size), exp
+    }
+  }
+
 
   isSelected(photo) {
     return this.props.current === photo.id
@@ -44,39 +120,25 @@ class PhotoIterator extends Iterator {
 
   isExpanded(photo) {
     return photo != null &&
-      this.props.expanded.includes(photo.id)
+      this.props.expanded.includes(photo)
   }
 
   get keymap() {
     return this.props.keymap.PhotoIterator
   }
 
-
-  getNextPhoto(offset = 1) {
-    const { photos, current } = this.props
-
-    if (!photos.length) return null
-    if (!current) return photos[0]
-
-    return photos[this.idx[current] + offset]
+  head() {
+    return this.props.current
   }
 
-  getPrevPhoto(offset = 1) {
-    return this.getNextPhoto(-offset)
-  }
-
-  getCurrentPhoto() {
-    return this.getNextPhoto(0)
-  }
-
-  handleFocus = () => {
-    this.select(this.getCurrentPhoto())
-  }
-
-  select = (photo) => {
+  select = (photo, { scrollIntoView, throttle } = {}) => {
     if (photo == null ||
       this.isSelected(photo) && this.isActive(photo.selection)) {
       return
+    }
+
+    if (scrollIntoView) {
+      this.scrollIntoView(photo, false)
     }
 
     this.props.onSelect({
@@ -84,13 +146,13 @@ class PhotoIterator extends Iterator {
       item: photo.item,
       note: photo.notes[0],
       selection: photo.selection
-    })
+    }, { throttle })
   }
 
   contract = (photo) => {
     if (this.isExpandable(photo)) {
       this.props.onContract(
-        this.isGrid ? this.props.expanded : [photo.id]
+        this.isGrid ? this.props.expanded.map(p => p.id) : [photo.id]
       )
 
       if (this.isSelected(photo)) {
@@ -162,15 +224,6 @@ class PhotoIterator extends Iterator {
     }
   }
 
-  map(fn) {
-    this.idx = {}
-
-    return this.props.photos.map((photo, index) => {
-      this.idx[photo.id] = index
-      return fn(this.getIterableProps(photo, index))
-    })
-  }
-
   connect(element) {
     return this.isSortable ? this.props.dt(element) : element
   }
@@ -193,7 +246,7 @@ class PhotoIterator extends Iterator {
 
     cache: string.isRequired,
     current: number,
-    expanded: arrayOf(number).isRequired,
+    expanded: arrayOf(object).isRequired,
     keymap: object.isRequired,
     selection: number,
     selections: object.isRequired,

@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
+const { Component } = React
 const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
 const { BufferedResizable } = require('../resizable')
@@ -14,7 +14,7 @@ const { array, bool, func, object, number } = require('prop-types')
 const { ITEM, SIDEBAR } = require('../../constants/sass')
 
 
-class ProjectView extends PureComponent {
+class ProjectView extends Component {
   get size() {
     return ITEM.ZOOM[this.props.zoom]
   }
@@ -87,15 +87,15 @@ class ProjectView extends PureComponent {
             isSelected={!(nav.list || nav.trash)}
             isTrashSelected={nav.trash}/>
         </BufferedResizable>
-        <main>
+        <div className="main">
           <section id="items" style={this.style}>
             <header>
               <ProjectToolbar
                 query={nav.query}
                 zoom={zoom}
+                items={items.length}
                 maxZoom={maxZoom}
-                canCreateItems
-                isEmpty={!items.length}
+                canCreateItems={!nav.trash}
                 isDisabled={!props.isActive}
                 onItemCreate={this.handleItemImport}
                 onDoubleClick={ARGS.frameless ? props.onMaximize : null}
@@ -118,7 +118,7 @@ class ProjectView extends PureComponent {
               onCreate={onItemCreate}
               onSelect={onItemSelect}/>
           </section>
-        </main>
+        </div>
       </div>
     )
   }

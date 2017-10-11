@@ -76,7 +76,7 @@ module.exports = {
     return {
       type: PHOTO.SELECT,
       payload,
-      meta: { ...meta }
+      meta: { log: 'trace', ...meta }
     }
   },
 

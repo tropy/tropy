@@ -3,8 +3,7 @@
 const React = require('react')
 const { Iterator } = require('../iterator')
 const { FormattedMessage } = require('react-intl')
-const { has } = require('../../dom')
-const { match } = require('../../keymap')
+const { match, isMeta: meta } = require('../../keymap')
 const cx = require('classnames')
 
 const {
@@ -13,47 +12,35 @@ const {
 
 
 class ItemIterator extends Iterator {
-  get iteration() {
-    return this.props.items
-  }
-
   get tabIndex() {
     return this.props.isActive ? super.tabIndex : null
   }
 
-  isSelected(item) {
-    return this.props.selection.includes(item.id)
+  getIterables(props = this.props) {
+    return props.items || super.getIterables()
   }
 
-  getNextItem(offset = 1) {
-    const { items, selection } = this.props
-
-    if (!items.length) return null
-    if (!selection.length) return items[0]
-
-    const idx = this.idx[selection[selection.length - 1]] + offset
-
-    return (idx >= 0 && idx < items.length) ? items[idx] : null
-  }
-
-  getPrevItem(offset = 1) {
-    return this.getNextItem(-offset)
-  }
-
-  getCurrentItem() {
-    return this.getNextItem(0)
+  head() {
+    const { selection } = this.props
+    return selection.length > 0 ? selection[selection.length - 1] : null
   }
 
   getSelection = () => this.props.selection
 
-  handleClickOutside = (event) => {
-    if (has(event.target, 'click-catcher')) {
-      this.props.onSelect({ items: [] })
-    }
+  isSelected({ id }) {
+    return this.props.selection.includes(id)
   }
 
-  handleFocus = () => {
-    this.select(this.getCurrentItem())
+  isRangeSelected(items) {
+    return items.every(id => this.props.selection.includes(id))
+  }
+
+  get hasMultiSelection() {
+    return this.props.selection.length > 1
+  }
+
+  clearSelection() {
+    this.props.onSelect({ items: [] })
   }
 
   handleContextMenu = (event, item) => {
@@ -85,28 +72,52 @@ class ItemIterator extends Iterator {
     }
   }
 
-
   // eslint-disable-next-line complexity
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
       case (this.isVertical ? 'up' : 'left'):
-        this.select(this.getPrevItem())
+        this.select(this.prev(), {
+          isMeta: meta(event),
+          isRange: event.shiftKey,
+          scrollIntoView: true,
+          throttle: true
+        })
         break
       case (this.isVertical ? 'down' : 'right'):
-        this.select(this.getNextItem())
+        this.select(this.next(), {
+          isMeta: meta(event),
+          isRange: event.shiftKey,
+          scrollIntoView: true,
+          throttle: true
+        })
+        break
+      case 'home':
+        this.scroll(0)
+        break
+      case 'end':
+        this.scrollToEnd()
+        break
+      case 'pageUp':
+        this.scrollPageUp()
+        break
+      case 'pageDown':
+        this.scrollPageDown()
         break
       case 'open':
-        this.props.onItemOpen(this.getCurrentItem())
+        this.props.onItemOpen(this.current())
         break
       case 'preview':
-        this.props.onItemPreview(this.getCurrentItem())
+        this.props.onItemPreview(this.current())
         break
       case 'clear':
-        this.props.onSelect({ items: [] })
+        this.clearSelection()
         break
       case 'delete':
         this.handleItemDelete(this.props.selection)
-        this.select(this.getNextItem() || this.getPrevItem())
+        this.select(this.next() || this.prev())
+        break
+      case 'all':
+        this.props.onSelect({}, 'all')
         break
       default:
         return
@@ -116,53 +127,65 @@ class ItemIterator extends Iterator {
     event.stopPropagation()
   }
 
+  select = (item, { isMeta, isRange, scrollIntoView, throttle } = {}) => {
+    if (item == null || this.size === 0) return
+    let mod, items
 
-  select(item) {
-    if (item && !this.isSelected(item)) {
-      this.props.onSelect({ items: [item.id] }, 'replace', { throttle: true })
+    if (scrollIntoView) {
+      this.scrollIntoView(item, false)
     }
+
+    switch (true) {
+      case isRange:
+        items = this.range({ to: item.id }).map(it => it.id)
+        mod = this.isRangeSelected(items) ? 'remove' : 'merge'
+        break
+
+      case isMeta:
+        mod = this.isSelected(item) ? 'remove' : 'append'
+        items = [item.id]
+        break
+
+      default:
+        if (!this.hasMultiSelection && this.isSelected(item)) return
+        mod = 'replace'
+        items = [item.id]
+    }
+
+    this.props.onSelect({ items }, mod, { throttle })
   }
 
   connect(element) {
     return (this.isDisabled) ? element : this.props.dt(element)
   }
 
-  map(fn) {
-    this.idx = {}
-
-    return this.props.items.map((item, index) => {
-      this.idx[item.id] = index
-
-      return fn({
-        item,
-        cache: this.props.cache,
-        photos: this.props.photos,
-        tags: this.props.tags,
-        isLast: index === this.props.items.length - 1,
-        isSelected: this.isSelected(item),
-        isDisabled: this.isDisabled,
-        isVertical: this.isVertical,
-        getSelection: this.getSelection,
-        onContextMenu: this.handleContextMenu,
-        onDropItems: this.props.onItemMerge,
-        onDropPhotos: this.props.onPhotoMove,
-        onItemOpen: this.props.onItemOpen,
-        onSelect: this.props.onSelect
-      })
-    })
+  getIterableProps(item, index) {
+    return {
+      item,
+      cache: this.props.cache,
+      photos: this.props.photos,
+      tags: this.props.tags,
+      isLast: this.isLast(index),
+      isSelected: this.isSelected(item),
+      isDisabled: this.isDisabled,
+      isVertical: this.isVertical,
+      getSelection: this.getSelection,
+      onContextMenu: this.handleContextMenu,
+      onDropItems: this.props.onItemMerge,
+      onDropPhotos: this.props.onPhotoMove,
+      onItemOpen: this.props.onItemOpen,
+      onSelect: this.select
+    }
   }
 
   renderNoItems() {
     return this.connect(
       <div
         ref={this.setContainer}
-        className={
-        cx('no-items', 'drop-target', { over: this.props.isOver })
+        className={cx('no-items', 'drop-target', { over: this.props.isOver })
       }>
         <figure className="no-items-illustration"/>
-        <h1>
-          <FormattedMessage id="project.empty"/>
-        </h1>
+        <h1><FormattedMessage id="project.empty"/></h1>
       </div>
     )
   }

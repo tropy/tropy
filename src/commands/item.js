@@ -12,7 +12,6 @@ const { text } = require('../value')
 const act = require('../actions')
 const mod = require('../models')
 const { get, pluck, pick, remove } = require('../common/util')
-const { map, cat, filter, into, compose } = require('transducers.js')
 const { ITEM, DC } = require('../constants')
 const { keys } = Object
 const { isArray } = Array
@@ -179,24 +178,10 @@ class Load extends Command {
 
   *exec() {
     const { db } = this.options
-    const ids = this.action.payload
+    const { payload } = this.action
 
-    const items =
-      yield call(db.seq, conn => mod.item.load(conn, ids))
-
-    const { photos } = yield select()
-    const missing = into([], compose(
-      map(([, i]) => i.photos),
-      cat,
-      filter(id => !photos[id])
-    ), items)
-
-    if (missing.length > 0) {
-      yield all([
-        put(act.photo.load(missing)),
-        put(act.metadata.load(missing))
-      ])
-    }
+    const items = yield call(db.seq, conn =>
+      mod.item.load(conn, payload))
 
     return items
   }

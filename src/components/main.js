@@ -4,9 +4,10 @@ const { Provider, connect } = require('react-redux')
 const ReactIntl = require('react-intl')
 const React = require('react')
 const { Component } = React
-const PropTypes = require('prop-types')
+const { element, object } = require('prop-types')
 const { DragDropContext } = require('react-dnd')
 const ElectronBackend = require('react-dnd-electron-backend')
+const { ErrorBoundary } = require('./error-boundary')
 
 const IntlProvider = connect(state => {
   return {
@@ -19,17 +20,19 @@ const IntlProvider = connect(state => {
 class Main extends Component {
   render() {
     return (
-      <Provider store={this.props.store}>
-        <IntlProvider>
-          {this.props.children}
-        </IntlProvider>
-      </Provider>
+      <ErrorBoundary>
+        <Provider store={this.props.store}>
+          <IntlProvider>
+            {this.props.children}
+          </IntlProvider>
+        </Provider>
+      </ErrorBoundary>
     )
   }
 
   static propTypes = {
-    children: PropTypes.element.isRequired,
-    store: PropTypes.object.isRequired
+    children: element.isRequired,
+    store: object.isRequired
   }
 }
 

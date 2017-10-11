@@ -78,11 +78,13 @@ class EsperToolbar extends PureComponent {
         <ToolbarLeft>
           <ToolGroup>
             <IconButton
+              canHaveFocus={false}
               icon={<IconArrow/>}
               isActive={this.isToolActive(TOOL.ARROW)}
               isDisabled={this.props.isDisabled}
               onClick={this.setArrowTool}/>
             <IconButton
+              canHaveFocus={false}
               icon={<IconSelection/>}
               title="esper.tool.select"
               isActive={this.isToolActive(TOOL.SELECT)}
@@ -91,32 +93,38 @@ class EsperToolbar extends PureComponent {
           </ToolGroup>
           <ToolGroup>
             <IconButton
+              canHaveFocus={false}
               icon={<IconRotate/>}
               title="esper.tool.rotate"
               isDisabled={this.props.isDisabled}
               onClick={this.handleRotate}/>
             <IconButton
+              canHaveFocus={false}
               icon={<IconMirror/>}
               title="esper.tool.mirror"
               isDisabled={this.props.isDisabled}
               onClick={this.props.onMirrorChange}/>
             {/*<IconButton
+              canHaveFocus={false}
               icon={<IconNut/>}
               isDisabled/>*/}
           </ToolGroup>
           <ToolGroup>
             <IconButton
+              canHaveFocus={false}
               icon={<IconHand/>}
               title="esper.tool.pan"
               isActive={this.isToolActive(TOOL.PAN)}
               onClick={this.setPanTool}/>
             <IconButton
+              canHaveFocus={false}
               icon={<IconFill/>}
               title="esper.mode.fill"
               isDisabled={this.props.isDisabled}
               isActive={this.isZoomToFill}
               onClick={this.setZoomToFill}/>
             <IconButton
+              canHaveFocus={false}
               icon={<IconFit/>}
               title="esper.mode.fit"
               isDisabled={this.props.isDisabled}
@@ -125,6 +133,7 @@ class EsperToolbar extends PureComponent {
           </ToolGroup>
           <ToolGroup>
             <Slider
+              canHaveFocus={false}
               value={this.props.zoom}
               min={this.props.minZoom}
               max={this.props.maxZoom}
@@ -134,6 +143,7 @@ class EsperToolbar extends PureComponent {
               minIcon={<IconMinusCircle/>}
               maxIcon={<IconPlusCircle/>}
               isDisabled={this.props.isDisabled}
+              tabIndex={null}
               onChange={this.handleZoomChange}/>
           </ToolGroup>
         </ToolbarLeft>

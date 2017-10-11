@@ -3,7 +3,7 @@
 const React = require('react')
 const { shallow } = require('enzyme')
 
-describe('Esper', () => {
+describe.skip('Esper', () => {
   const { Esper } = __require('components/esper/esper')
 
   it('has class esper', () => {

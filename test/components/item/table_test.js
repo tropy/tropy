@@ -4,7 +4,7 @@ const React = require('react')
 const { shallow } = require('enzyme')
 const { noop } = __require('common/util')
 
-describe('ItemTable', () => {
+describe.skip('ItemTable', () => {
   const { ItemTable } = __require('components/item/table')
 
   it('has classes item and table', () => {

@@ -12,6 +12,7 @@
   display: flex;
   background: $body-bg;
   contain: size layout style;
+  will-change: transform;
 
   .item-mode-enter &,
   .item-mode-leave & {

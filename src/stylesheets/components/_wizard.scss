@@ -2,12 +2,8 @@
 // Wizard
 // --------------------------------------------------
 
-main,
-#wizard {
+.wizard {
   height: 100%;
-}
-
-#wizard {
   text-align: center;
   padding: 0 $space-xxl;
   background:

@@ -3,44 +3,44 @@
 const React = require('react')
 const { ItemIterator } = require('./iterator')
 const { ItemTile } = require('./tile')
-const { on, off } = require('../../dom')
 const { refine } = require('../../common/util')
 const cx = require('classnames')
+const { match, isMeta } = require('../../keymap')
 
 
 class ItemGrid extends ItemIterator {
+  get isGrid() { return true }
+
   constructor(props) {
     super(props)
 
     refine(this, 'handleKeyDown', ([event]) => {
-      if (!event.isPropagationStopped()) {
-        switch (event.key) {
-          case (this.isVertical ? 'ArrowLeft' : 'ArrowUp'):
-            this.select(this.getPrevItem(this.state.cols))
-            break
+      if (event.isPropagationStopped()) return
 
-          case (this.isVertical ? 'ArrowRight' : 'ArrowDown'):
-            this.select(this.getNextItem(this.state.cols))
-            break
-
-          default:
-            return
-        }
-
-        event.preventDefault()
-        event.stopPropagation()
+      switch (match(this.props.keymap, event)) {
+        case (this.isVertical ? 'left' : 'up'):
+          this.select(this.prev(this.state.cols), {
+            isMeta: isMeta(event),
+            isRange: event.shiftKey,
+            scrollIntoView: true,
+            throttle: true
+          })
+          break
+        case (this.isVertical ? 'right' : 'down'):
+          this.select(this.next(this.state.cols), {
+            isMeta: isMeta(event),
+            isRange: event.shiftKey,
+            scrollIntoView: true,
+            throttle: true
+          })
+          break
+        default:
+          return
       }
+
+      event.preventDefault()
+      event.stopPropagation()
     })
-  }
-
-  componentDidMount() {
-    super.componentDidMount()
-    on(this.container, 'tab:focus', this.handleFocus)
-  }
-
-  componentWillUnmount() {
-    super.componentWillUnmount()
-    off(this.container, 'tab:focus', this.handleFocus)
   }
 
   get classes() {
@@ -57,26 +57,32 @@ class ItemGrid extends ItemIterator {
   render() {
     if (this.props.isEmpty) return this.renderNoItems()
 
+    const { cols, offset, height } = this.state
+    const transform = `translate3d(0,${offset}px,0)`
+    const gridTemplateColumns = `repeat(${cols}, ${cols}fr)`
+
     return this.connect(
       <div
         className={cx(this.classes)}
-        tabIndex={this.tabIndex}
-        onKeyDown={this.handleKeyDown}
-        ref={this.setContainer}
         data-size={this.props.size}
         onClick={this.handleClickOutside}>
-        <ul className="scroll-container click-catcher">
-          {this.map(({ item, ...props }) =>
-            <ItemTile {...props} key={item.id} item={item}/>
-          )}
-          {this.fillRow()}
-        </ul>
+        <div
+          className="scroll-container click-catcher"
+          ref={this.setContainer}
+          tabIndex={this.tabIndex}
+          onKeyDown={this.handleKeyDown}>
+          <div className="runway" style={{ height }}>
+            <ul
+              className="viewport click-catcher"
+              style={{ gridTemplateColumns, transform }}>
+              {this.mapIterableRange(({ item, ...props }) =>
+                <ItemTile {...props} key={item.id} item={item}/>
+              )}
+            </ul>
+          </div>
+        </div>
       </div>
     )
-  }
-
-  static get isGrid() {
-    return true
   }
 
   static propTypes = {
