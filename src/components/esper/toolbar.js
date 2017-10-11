@@ -133,6 +133,7 @@ class EsperToolbar extends PureComponent {
           </ToolGroup>
           <ToolGroup>
             <Slider
+              canHaveFocus={false}
               value={this.props.zoom}
               min={this.props.minZoom}
               max={this.props.maxZoom}
