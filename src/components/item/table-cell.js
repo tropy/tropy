@@ -16,7 +16,6 @@ const {
 
 
 class ItemTableCell extends PureComponent {
-
   get style() {
     return {
       width: `${this.props.width}%`
@@ -53,7 +52,8 @@ class ItemTableCell extends PureComponent {
   // selections happens as the event bubbles therefore allowing us to
   // detect a click event that was associated to the item's selection.
   handleMouseDown = () => {
-    this.wasSelected = this.props.isSelected
+    this.wasSelected = this.props.isSelected &&
+      this.props.getSelection().length === 1
   }
 
   handleClick = createClickHandler({
@@ -122,7 +122,6 @@ class ItemTableCell extends PureComponent {
     isEditing: bool,
     isDisabled: bool,
     isSelected: bool,
-
     isMainColumn: bool,
 
     property: shape({
@@ -144,6 +143,7 @@ class ItemTableCell extends PureComponent {
     width: number.isRequired,
     size: number.isRequired,
 
+    getSelection: func.isRequired,
     onCancel: func.isRequired,
     onChange: func.isRequired,
     onEdit: func.isRequired

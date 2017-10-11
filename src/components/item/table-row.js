@@ -41,7 +41,8 @@ class ItemTableRow extends ItemIterable {
                 tags={isMainColumn ? tags : null}
                 photos={isMainColumn ? photos : null}
                 isEditing={this.isEditing(property.id)}
-                isMainColumn={isMainColumn}/>
+                isMainColumn={isMainColumn}
+                getSelection={this.props.getSelection}/>
             )
           })
       }</tr>
