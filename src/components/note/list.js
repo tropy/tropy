@@ -34,15 +34,18 @@ class NoteList extends Iterator {
     return id === this.head()
   }
 
-  select = (note) => {
-    if (note && !this.isSelected(note)) {
-      this.props.onSelect({
-        note:
-        note.id,
-        photo: note.photo,
-        selection: note.selection
-      })
+  select = (note, { scrollIntoView, throttle } = {}) => {
+    if (note == null || this.isSelected(note)) return
+
+    if (scrollIntoView && !this.isIterableMapped(note)) {
+      this.scrollIntoView(note)
     }
+
+    this.props.onSelect({
+      note: note.id,
+      photo: note.photo,
+      selection: note.selection
+    }, { throttle })
   }
 
   handleFocus = () => {
@@ -53,10 +56,10 @@ class NoteList extends Iterator {
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
       case 'up':
-        this.select(this.prev())
+        this.select(this.prev(), { scrollIntoView: true, throttle: true })
         break
       case 'down':
-        this.select(this.next())
+        this.select(this.next(), { scrollIntoView: true, throttle: true })
         break
       case 'home':
         this.scroll(0)
