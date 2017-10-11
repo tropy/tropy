@@ -230,6 +230,10 @@ class Iterator extends PureComponent {
     throw new Error('not implemented')
   }
 
+  select() {
+    throw new Error('not implemented')
+  }
+
   range({ from = this.head(), to } = {}) {
     const items = this.getIterables()
 
@@ -319,7 +323,7 @@ class Iterator extends PureComponent {
   }
 
   handleFocus = () => {
-    this.select(this.current())
+    this.select(this.current(), { scrollIntoView: true })
   }
 
   static getPropKeys() {

@@ -137,7 +137,7 @@ class PhotoIterator extends Iterator {
       return
     }
 
-    if (scrollIntoView && !this.isIterableMapped(photo)) {
+    if (scrollIntoView) {
       this.scrollIntoView(photo)
     }
 

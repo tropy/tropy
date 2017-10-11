@@ -37,7 +37,7 @@ class NoteList extends Iterator {
   select = (note, { scrollIntoView, throttle } = {}) => {
     if (note == null || this.isSelected(note)) return
 
-    if (scrollIntoView && !this.isIterableMapped(note)) {
+    if (scrollIntoView) {
       this.scrollIntoView(note)
     }
 

@@ -131,6 +131,10 @@ class ItemIterator extends Iterator {
     if (item == null || this.size === 0) return
     let mod, items
 
+    if (scrollIntoView) {
+      this.scrollIntoView(item)
+    }
+
     switch (true) {
       case isRange:
         items = this.range({ to: item.id }).map(it => it.id)
@@ -146,10 +150,6 @@ class ItemIterator extends Iterator {
         if (!this.hasMultiSelection && this.isSelected(item)) return
         mod = 'replace'
         items = [item.id]
-    }
-
-    if (scrollIntoView && !this.isIterableMapped(item)) {
-      this.scrollIntoView(item)
     }
 
     this.props.onSelect({ items }, mod, { throttle })
