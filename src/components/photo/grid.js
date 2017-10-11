@@ -157,9 +157,13 @@ class PhotoGrid extends PhotoIterator {
 
   renderSelectionGrid(photo) {
     const selections = pluck(this.props.selections, photo.selections)
+    const gridColumnEnd = this.state.cols + 1
 
     return (
-      <li key="expansion" className="tile-expansion">
+      <li
+        key="expansion"
+        className="tile-expansion"
+        style={{ gridColumnEnd }}>
         <SelectionGrid
           active={this.props.selection}
           cache={this.props.cache}
