@@ -103,6 +103,7 @@ class PhotoList extends PhotoIterator {
     this.container.focus()
   }
 
+  // eslint-disable-next-line complexity
   handleKeyDown = (event) => {
     switch (match(this.keymap, event)) {
       case 'up':

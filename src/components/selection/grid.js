@@ -24,6 +24,7 @@ class SelectionGrid extends SelectionIterator {
     }
   }
 
+  // eslint-disable-next-line complexity
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
       case (this.isVertical ? 'up' : 'left'):
