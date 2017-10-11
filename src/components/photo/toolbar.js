@@ -41,6 +41,7 @@ class PhotoToolbar extends PureComponent {
               <ToolGroup>
                 <IconButton
                   icon={<IconPlus/>}
+                  isDisabled={!this.props.canCreate || this.props.isDisabled}
                   title="panel.photo.create"
                   onClick={this.handleCreate}/>
               </ToolGroup>
@@ -62,6 +63,7 @@ class PhotoToolbar extends PureComponent {
 
 
   static propTypes = {
+    canCreate: bool,
     hasCreateButton: bool,
     isDisabled: bool,
     maxZoom: number.isRequired,
