@@ -241,22 +241,19 @@ class Iterator extends PureComponent {
       items.slice(from, to + 1)
   }
 
-  get offset() {
-    this.container.scrollTop
-  }
-
-  set offset(offset) {
-    this.container.scrollTop = offset
-  }
-
-  scrollIntoView(item) {
+  scrollIntoView(item = this.current()) {
     const idx = this.indexOf(item.id)
     if (idx === -1) return
 
     const { cols, rowHeight } = this.state
+    const top = this.container.scrollTop
+    let offset = floor(idx / cols) * rowHeight
 
-    const offset = floor(idx / cols) * rowHeight
-    this.offset = offset
+    if (offset > top) {
+      offset += rowHeight - this.viewport.height
+    }
+
+    this.container.scrollTop = offset
   }
 
   setContainer = (container) => {
