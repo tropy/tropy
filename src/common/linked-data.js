@@ -1,8 +1,11 @@
 'use strict'
 
+var jsonld = require('jsonld')
+
 const { select } = require('redux-saga/effects')
 const { pick, camelize } = require('./util')
 const { ITEM } = require('../constants/type')
+const { TEMPLATE } = require('../constants/ontology')
 const { getLabel } = require('./ontology')
 
 
@@ -45,6 +48,7 @@ function* itemToLD(item_id, callback) {
   })
 
   let context = {
+    _template: { '@id': TEMPLATE.TYPE, '@type': '@id' }
   }
 
   // add fields to context
@@ -75,7 +79,7 @@ function* itemToLD(item_id, callback) {
     }
   }
 
-  callback(null, document)
+  jsonld.compact(document, context, callback)
 }
 
 module.exports = {
