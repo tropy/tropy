@@ -11,6 +11,14 @@ const { noop } = require('../../common/util')
 const { ROW } = require('../../constants/sass')
 
 class ItemTable extends ItemIterator {
+  componentDidUpdate() {
+    if (this.props.edit != null) {
+      for (let id in this.props.edit) {
+        this.scrollIntoView({ id: Number(id) }, false)
+      }
+    }
+  }
+
   get classes() {
     return {
       'table-body': true,
