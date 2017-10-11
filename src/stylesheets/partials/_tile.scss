@@ -3,6 +3,7 @@
 // --------------------------------------------------
 
 .tile {
+  // sass-lint:disable-block nesting-depth
   display: flex;
   justify-content: center;
   align-items: center;
@@ -24,6 +25,28 @@
 
   &.photo {
     contain: layout style size;
+
+    &.active {
+      .tile-state {
+        .scroll-container:focus & {
+          border-color: $tile-focus-color;
+
+          .nested-focus & {
+            border-color: $tile-active-color;
+          }
+        }
+      }
+    }
+  }
+
+  &.selection {
+    &.active {
+      .tile-state {
+        .selection.grid:focus & {
+          border-color: $tile-focus-color;
+        }
+      }
+    }
   }
 
   .tile-state {
@@ -36,11 +59,6 @@
   &.active {
     .tile-state {
       border: 3px solid $tile-active-color;
-
-      .scroll-container:focus &,
-      .selection.grid:focus & {
-        border-color: $tile-focus-color;
-      }
     }
   }
 
