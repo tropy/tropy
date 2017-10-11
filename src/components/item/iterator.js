@@ -31,6 +31,10 @@ class ItemIterator extends Iterator {
     return this.props.selection.includes(id)
   }
 
+  isRangeSelected(items) {
+    return items.every(id => this.props.selection.includes(id))
+  }
+
   get hasMultiSelection() {
     return this.props.selection.length > 1
   }
@@ -115,8 +119,8 @@ class ItemIterator extends Iterator {
 
     switch (true) {
       case isRange:
-        mod = 'merge'
         items = this.range({ to: item.id }).map(it => it.id)
+        mod = this.isRangeSelected(items) ? 'remove' : 'merge'
         break
 
       case isMeta:
