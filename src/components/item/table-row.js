@@ -3,7 +3,6 @@
 const React = require('react')
 const { ItemIterable } = require('./iterable')
 const { ItemTableCell } = require('./table-cell')
-const { meta } = require('../../common/os')
 const { get, pick } = require('../../common/util')
 const { DC } = require('../../constants')
 const cx = require('classnames')
@@ -21,12 +20,6 @@ class ItemTableRow extends ItemIterable {
     return get(this.props.edit, [this.props.item.id]) === id
   }
 
-  handleMouseDown = (event) => {
-    if (!this.props.isSelected || meta(event)) {
-      this.handleSelect(event)
-    }
-  }
-
   render() {
     const { columns, data, photos, tags, ...props } = this.props
 
@@ -34,7 +27,7 @@ class ItemTableRow extends ItemIterable {
       <tr
         className={cx(this.classes)}
         ref={this.setContainer}
-        onMouseDown={this.handleMouseDown}
+        onMouseDown={this.handleSelect}
         onDoubleClick={this.handleOpen}
         onContextMenu={this.handleContextMenu}>{
           columns.map(({ property, width }) => {

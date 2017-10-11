@@ -216,6 +216,17 @@ class Iterator extends PureComponent {
     throw new Error('not implemented')
   }
 
+  range({ from = this.head(), to } = {}) {
+    const items = this.getIterables()
+
+    from = (from == null) ? 0 : this.indexOf(from)
+    to = (to == null) ? this.size - 1 : this.indexOf(to)
+
+    return (from > to) ?
+      items.slice(to, from + 1).reverse() :
+      items.slice(from, to + 1)
+  }
+
   setContainer = (container) => {
     this.container = container
   }

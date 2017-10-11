@@ -8,7 +8,7 @@ const { DragSource, DropTarget } = require('react-dnd')
 const { getEmptyImage } = require('react-dnd-electron-backend')
 const { compose, map, filter, into } = require('transducers.js')
 const { DND } = require('../../constants')
-const { meta } = require('../../common/os')
+const { isMeta } = require('../../keymap')
 const { pure } = require('../util')
 
 
@@ -43,16 +43,10 @@ class ItemIterable extends PureComponent {
   }
 
   handleSelect = (event) => {
-    const { item, isSelected, onSelect } = this.props
-
-    if (meta(event)) {
-      onSelect({ items: [item.id] }, isSelected ? 'remove' : 'merge')
-
-    } else {
-      if (!isSelected) {
-        onSelect({ items: [item.id] }, 'replace')
-      }
-    }
+    this.props.onSelect(this.props.item, {
+      isMeta: isMeta(event),
+      isRange: event.shiftKey
+    })
   }
 
   handleContextMenu = (event) => {

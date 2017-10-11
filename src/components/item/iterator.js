@@ -68,10 +68,10 @@ class ItemIterator extends Iterator {
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
       case (this.isVertical ? 'up' : 'left'):
-        this.select(this.prev(), event.shiftKey, true)
+        this.select(this.prev(), { isRange: event.shiftKey, throttle: true })
         break
       case (this.isVertical ? 'down' : 'right'):
-        this.select(this.next(), event.shiftKey, true)
+        this.select(this.next(), { isRange: event.shiftKey, throttle: true })
         break
       case 'open':
         this.props.onItemOpen(this.current())
@@ -97,11 +97,28 @@ class ItemIterator extends Iterator {
     event.stopPropagation()
   }
 
-  select(item, isRange = false, throttle = false) {
-    if (item == null) return
+  select = (item, { isMeta, isRange, throttle } = {}) => {
+    if (item == null || this.size === 0) return
+    let mod, items
 
-    const mod = isRange ? 'merge' : 'replace'
-    this.props.onSelect({ items: [item.id] }, mod, { throttle })
+    switch (true) {
+      case isRange:
+        mod = 'merge'
+        items = this.range({ to: item.id }).map(it => it.id)
+        break
+
+      case isMeta:
+        mod = this.isSelected(item) ? 'remove' : 'append'
+        items = [item.id]
+        break
+
+      default:
+        if (this.isSelected(item)) return
+        mod = 'replace'
+        items = [item.id]
+    }
+
+    this.props.onSelect({ items }, mod, { throttle })
   }
 
   connect(element) {
@@ -123,7 +140,7 @@ class ItemIterator extends Iterator {
       onDropItems: this.props.onItemMerge,
       onDropPhotos: this.props.onPhotoMove,
       onItemOpen: this.props.onItemOpen,
-      onSelect: this.props.onSelect
+      onSelect: this.select
     }
   }
 

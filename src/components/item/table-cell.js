@@ -6,7 +6,7 @@ const { CoverImage } = require('./cover-image')
 const { Editable } = require('../editable')
 const { TagColors } = require('../colors')
 const { createClickHandler } = require('../util')
-const { meta } = require('../../common/os')
+const { isMeta } = require('../../keymap')
 const { auto } = require('../../format')
 const cx = require('classnames')
 const { TYPE } = require('../../constants')
@@ -57,9 +57,12 @@ class ItemTableCell extends PureComponent {
   }
 
   handleClick = createClickHandler({
-    onClick: (event) => {
-      return !this.props.isSelected || meta(event) || !this.wasSelected
-    },
+    onClick: (event) => (
+      !this.props.isSelected ||
+      !this.wasSelected ||
+      event.shiftKey ||
+      isMeta(event)
+    ),
 
     onSingleClick: () => {
       if (!this.props.isEditing) {

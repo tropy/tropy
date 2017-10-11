@@ -20,6 +20,10 @@ const selection = {
     return s.filter(it => !items.includes(it))
   },
 
+  append(s, items) {
+    return [...s, ...items]
+  },
+
   merge(s, items) {
     return [...selection.remove(s, items), ...items]
   },

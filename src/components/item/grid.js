@@ -19,10 +19,14 @@ class ItemGrid extends ItemIterator {
 
       switch (match(this.props.keymap, event)) {
         case (this.isVertical ? 'left' : 'up'):
-          this.select(this.prev(this.state.cols), event.shiftKey, true)
+          this.select(this.prev(this.state.cols), {
+            isRange: event.shiftKey, throttle: true
+          })
           break
         case (this.isVertical ? 'right' : 'down'):
-          this.select(this.next(this.state.cols), event.shiftKey, true)
+          this.select(this.next(this.state.cols), {
+            isRange: event.shiftKey, throttle: true
+          })
           break
         default:
           return
