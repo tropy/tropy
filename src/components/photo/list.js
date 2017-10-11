@@ -111,6 +111,18 @@ class PhotoList extends PhotoIterator {
       case 'down':
         this.select(this.next(), true)
         break
+      case 'home':
+        this.scroll(0)
+        break
+      case 'end':
+        this.scrollToEnd()
+        break
+      case 'pageUp':
+        this.scrollPageUp()
+        break
+      case 'pageDown':
+        this.scrollPageDown()
+        break
       case 'left':
       case 'contract':
         this.contract(this.current())

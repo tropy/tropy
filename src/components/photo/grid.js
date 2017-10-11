@@ -104,6 +104,18 @@ class PhotoGrid extends PhotoIterator {
       case (this.isVertical ? 'right' : 'down'):
         this.select(this.next(this.state.cols), true)
         break
+      case 'home':
+        this.scroll(0)
+        break
+      case 'end':
+        this.scrollToEnd()
+        break
+      case 'pageUp':
+        this.scrollPageUp()
+        break
+      case 'pageDown':
+        this.scrollPageDown()
+        break
       case 'open':
         this.handleItemOpen(this.current())
         break

@@ -91,6 +91,18 @@ class ItemIterator extends Iterator {
           throttle: true
         })
         break
+      case 'home':
+        this.scroll(0)
+        break
+      case 'end':
+        this.scrollToEnd()
+        break
+      case 'pageUp':
+        this.scrollPageUp()
+        break
+      case 'pageDown':
+        this.scrollPageDown()
+        break
       case 'open':
         this.props.onItemOpen(this.current())
         break
