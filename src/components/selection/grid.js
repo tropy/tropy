@@ -32,6 +32,10 @@ class SelectionGrid extends SelectionIterator {
     }
   }
 
+  handleFocus = () => {
+    this.props.onFocus()
+  }
+
   // eslint-disable-next-line complexity
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
@@ -83,7 +87,6 @@ class SelectionGrid extends SelectionIterator {
         style={this.style}
         tabIndex={this.tabIndex}
         onBlur={this.props.onBlur}
-        onFocus={this.props.onFocus}
         onKeyDown={this.handleKeyDown}>
         {this.map(({ selection, ...props }) =>
           <SelectionTile {...props}
