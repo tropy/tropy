@@ -26,12 +26,6 @@
     contain: layout style size;
   }
 
-  &.filler {
-    ul & { // Needs specifity
-      height: 0;
-    }
-  }
-
   .tile-state {
     padding: 2px;
     border-radius: $border-radius-small;
