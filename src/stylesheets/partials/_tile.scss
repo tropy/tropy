@@ -86,6 +86,7 @@
 
 .tile-expansion {
   grid-column-start: 1;
+  grid-column-end: 12; // Max columns + 1
   background: $tile-expansion-bg;
   margin: $space-sm (-$default-padding-horizontal); // Todo
   padding: $space-sm 0; // Todo
