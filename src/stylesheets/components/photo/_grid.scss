@@ -21,9 +21,7 @@
   }
 
   .viewport {
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
+    display: grid;
     contain: layout style;
     will-change: transform;
   }

@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { TABS, SASS: { TILE } } = require('../constants')
-const { adjacent, restrict, times } = require('../common/util')
+const { adjacent, restrict } = require('../common/util')
 const { has, on, off } = require('../dom')
 const { ceil, floor, max, min, round } = Math
 const { bool, number } = require('prop-types')
@@ -18,7 +18,6 @@ class Iterator extends PureComponent {
     this.state = {
       cols: 1,
       height: 0,
-      maxCols: 1,
       maxOffset: 0,
       offset: 0,
       overscan: 0,
@@ -74,7 +73,6 @@ class Iterator extends PureComponent {
     const viewportRows = this.getViewportRows(props.size)
     const height = rows * rowHeight
     const overscan = ceil(viewportRows * props.overscan)
-    const maxCols = this.getColumns(TILE.MIN)
 
     let maxOffset = height - (overscan * rowHeight)
     maxOffset = max(maxOffset - (maxOffset % rowHeight), 0)
@@ -86,7 +84,6 @@ class Iterator extends PureComponent {
     this.setState({
       cols,
       height,
-      maxCols,
       maxOffset,
       overscan,
       offset,
@@ -294,20 +291,6 @@ class Iterator extends PureComponent {
     this.container = container
   }
 
-
-  fill(count = this.state.maxCols, key = 'filler') {
-    return times(count, (i) => (
-      <li key={`${key}-${i}`} className="filler tile"/>
-    ))
-  }
-
-  fillRow() {
-    if (this.filler == null || this.filler.length !== this.state.maxCols) {
-      this.filler = this.fill()
-    }
-
-    return this.filler
-  }
 
   handleScroll = () => {
     if (!this.isScrollUpdateScheduled) {

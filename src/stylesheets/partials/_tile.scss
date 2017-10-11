@@ -4,8 +4,6 @@
 
 .tile {
   display: flex;
-  flex-grow: 1;
-  flex-shrink: 0;
   justify-content: center;
   align-items: center;
   position: relative;
@@ -15,7 +13,6 @@
     [data-size="#{$size}"] & {
       $tile-size: #{round($size * $tile-factor)}px;
 
-      flex-basis: $tile-size;
       height: $tile-size;
 
       .thumbnail {
@@ -27,12 +24,6 @@
 
   &.photo {
     contain: layout style size;
-  }
-
-  &.filler {
-    ul & { // Needs specifity
-      height: 0;
-    }
   }
 
   .tile-state {
@@ -88,7 +79,7 @@
 }
 
 .tile-expansion {
-  flex: 1 1 100%;
+  grid-column-start: 1;
   background: $tile-expansion-bg;
   margin: $space-sm (-$default-padding-horizontal); // Todo
   padding: $space-sm 0; // Todo

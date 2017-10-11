@@ -4,7 +4,7 @@ const React = require('react')
 const { SelectionIterator } = require('./iterator')
 const { SelectionTile } = require('./tile')
 const cx = require('classnames')
-const { func, object } = require('prop-types')
+const { func, number, object } = require('prop-types')
 const { match } = require('../../keymap')
 
 
@@ -13,6 +13,14 @@ class SelectionGrid extends SelectionIterator {
 
   get classes() {
     return [super.classes, 'grid']
+  }
+
+  get style() {
+    const { cols } = this.props
+
+    return {
+      gridTemplateColumns: `repeat(${cols}, ${cols}fr)`
+    }
   }
 
   delete(selection) {
@@ -72,6 +80,7 @@ class SelectionGrid extends SelectionIterator {
       <ul
         className={cx(this.classes)}
         ref={this.setContainer}
+        style={this.style}
         tabIndex={this.tabIndex}
         onBlur={this.props.onBlur}
         onFocus={this.props.onFocus}
@@ -82,13 +91,13 @@ class SelectionGrid extends SelectionIterator {
             isSelected={false}
             onContextMenu={this.props.onContextMenu}
             selection={selection}/>)}
-        {this.fillRow()}
       </ul>
     )
   }
 
   static propTypes = {
     ...SelectionIterator.propTypes,
+    cols: number.isRequired,
     keymap: object.isRequired,
     onBlur: func.isRequired,
     onFocus: func.isRequired
