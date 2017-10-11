@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { TABS, SASS: { TILE } } = require('../constants')
 const { adjacent, restrict, times } = require('../common/util')
 const { has, on, off } = require('../dom')
-const { ceil, floor, max, min, round } = Math
+const { abs, ceil, floor, max, min, round } = Math
 const { bool, number } = require('prop-types')
 const throttle = require('lodash.throttle')
 const EMPTY = []
@@ -265,17 +265,20 @@ class Iterator extends PureComponent {
     this.scroll(this.state.height - this.viewport.height)
   }
 
-  scrollIntoView(item = this.current()) {
+  scrollIntoView(item = this.current(), force = true) {
     const idx = this.indexOf(item.id)
     if (idx === -1) return
 
     const { cols, rowHeight } = this.state
+    const { height } = this.viewport
     const top = this.container.scrollTop
     let offset = floor(idx / cols) * rowHeight
 
     if (offset > top) {
-      offset += rowHeight - this.viewport.height
+      offset += rowHeight - height
     }
+
+    if (!force && abs(offset - top) < height) return
 
     this.scroll(offset)
   }

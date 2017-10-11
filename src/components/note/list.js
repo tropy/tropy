@@ -38,7 +38,7 @@ class NoteList extends Iterator {
     if (note == null || this.isSelected(note)) return
 
     if (scrollIntoView) {
-      this.scrollIntoView(note)
+      this.scrollIntoView(note, false)
     }
 
     this.props.onSelect({

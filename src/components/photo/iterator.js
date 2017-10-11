@@ -138,7 +138,7 @@ class PhotoIterator extends Iterator {
     }
 
     if (scrollIntoView) {
-      this.scrollIntoView(photo)
+      this.scrollIntoView(photo, false)
     }
 
     this.props.onSelect({

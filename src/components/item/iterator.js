@@ -132,7 +132,7 @@ class ItemIterator extends Iterator {
     let mod, items
 
     if (scrollIntoView) {
-      this.scrollIntoView(item)
+      this.scrollIntoView(item, false)
     }
 
     switch (true) {
