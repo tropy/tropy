@@ -5,7 +5,7 @@ const { ItemIterator } = require('./iterator')
 const { ItemTile } = require('./tile')
 const { refine } = require('../../common/util')
 const cx = require('classnames')
-const { match } = require('../../keymap')
+const { match, isMeta } = require('../../keymap')
 
 
 class ItemGrid extends ItemIterator {
@@ -20,12 +20,16 @@ class ItemGrid extends ItemIterator {
       switch (match(this.props.keymap, event)) {
         case (this.isVertical ? 'left' : 'up'):
           this.select(this.prev(this.state.cols), {
-            isRange: event.shiftKey, throttle: true
+            isMeta: isMeta(event),
+            isRange: event.shiftKey,
+            throttle: true
           })
           break
         case (this.isVertical ? 'right' : 'down'):
           this.select(this.next(this.state.cols), {
-            isRange: event.shiftKey, throttle: true
+            isMeta: isMeta(event),
+            isRange: event.shiftKey,
+            throttle: true
           })
           break
         default:

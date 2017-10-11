@@ -3,7 +3,7 @@
 const React = require('react')
 const { Iterator } = require('../iterator')
 const { FormattedMessage } = require('react-intl')
-const { match } = require('../../keymap')
+const { match, isMeta } = require('../../keymap')
 const cx = require('classnames')
 
 const {
@@ -68,10 +68,18 @@ class ItemIterator extends Iterator {
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
       case (this.isVertical ? 'up' : 'left'):
-        this.select(this.prev(), { isRange: event.shiftKey, throttle: true })
+        this.select(this.prev(), {
+          isMeta: isMeta(event),
+          isRange: event.shiftKey,
+          throttle: true
+        })
         break
       case (this.isVertical ? 'down' : 'right'):
-        this.select(this.next(), { isRange: event.shiftKey, throttle: true })
+        this.select(this.next(), {
+          isMeta: isMeta(event),
+          isRange: event.shiftKey,
+          throttle: true
+        })
         break
       case 'open':
         this.props.onItemOpen(this.current())

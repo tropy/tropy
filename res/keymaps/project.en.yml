@@ -18,15 +18,19 @@ linux: &linux
     up:
       - ArrowUp
       - Shift+ArrowUp
+      - Ctrl+ArrowUp
     down:
       - ArrowDown
       - Shift+ArrowDown
+      - Ctrl+ArrowDown
     left:
       - ArrowLeft
       - Shift+ArrowLeft
+      - Ctrl+ArrowLeft
     right:
       - ArrowRight
       - Shift+ArrowRight
+      - Ctrl+ArrowRight
     preview: Space
     open: Enter
     edit: F2
@@ -98,15 +102,19 @@ darwin:
     up:
       - ArrowUp
       - Shift+ArrowUp
+      - Cmd+ArrowUp
     down:
       - ArrowDown
       - Shift+ArrowDown
+      - Cmd+ArrowDown
     left:
       - ArrowLeft
       - Shift+ArrowLeft
+      - Cmdl+ArrowLeft
     right:
       - ArrowRight
       - Shift+ArrowRight
+      - Cmd+ArrowRight
     preview: Space
     open:
       - Cmd+ArrowDown
