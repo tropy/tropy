@@ -36,6 +36,11 @@ class ItemTableCell extends PureComponent {
       data[property.id].type : TYPE.TEXT
   }
 
+  edit(property) {
+    this.props.onEdit({
+      column: { [this.props.item.id]: property }
+    })
+  }
 
   handleChange = (text) => {
     this.props.onChange({
@@ -66,12 +71,26 @@ class ItemTableCell extends PureComponent {
 
     onSingleClick: () => {
       if (!this.props.isEditing) {
-        this.props.onEdit({
-          column: { [this.props.item.id]: this.props.property.id }
-        })
+        this.edit(this.props.property.id)
       }
     }
   })
+
+  handleKeyDown = (event, text, hasChanged) => {
+    if (event.key === 'Tab') {
+      event.preventDefault()
+      event.stopPropagation()
+
+      if (hasChanged) {
+        this.handleChange(text)
+      }
+
+      this.edit(event.shiftKey ?
+        this.props.prevColumn :
+        this.props.nextColumn )
+
+    }
+  }
 
   render() {
     const {
@@ -108,7 +127,8 @@ class ItemTableCell extends PureComponent {
             isEditing={isEditing}
             isDisabled={isDisabled}
             onCancel={onCancel}
-            onChange={this.handleChange}/>
+            onChange={this.handleChange}
+            onKeyDown={this.handleKeyDown}/>
           {isMainColumn &&
             <TagColors
               selection={item.tags}
@@ -128,6 +148,9 @@ class ItemTableCell extends PureComponent {
       id: string.isRequired,
       type: string,
     }),
+
+    nextColumn: string.isRequired,
+    prevColumn: string.isRequired,
 
     item: shape({
       id: number.isRequired,
