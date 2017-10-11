@@ -29,15 +29,15 @@ panel:
   photo:
     title: >
       {count, plural,
-        =0 {Photos}
-        one {Photos}
+        =0 {No Photos}
+        one {1 Photo}
         other {# Photos}}
     create: Add Photos
   note:
     title: >
       {count, plural,
-        =0 {Notes}
-        one {Notes}
+        =0 {No Notes}
+        one {1 Note}
         other {# Notes}}
     create: Add Note
 about:
