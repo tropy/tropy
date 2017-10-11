@@ -34,9 +34,7 @@
   }
 
   .viewport {
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
+    display: grid;
     contain: content;
     will-change: transform;
   }

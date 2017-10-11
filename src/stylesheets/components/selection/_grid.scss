@@ -3,8 +3,7 @@
 // --------------------------------------------------
 
 .selection.grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   padding: 0 $default-padding-horizontal;
   contain: content;
 }
