@@ -9,7 +9,7 @@ const { TEMPLATE } = require('../constants/ontology')
 const { getLabel } = require('./ontology')
 
 
-function shortenProperty(property, props, template) {
+function propertyLabel(property, props, template) {
   let label, field
   try {
     if (template) {
@@ -22,15 +22,24 @@ function shortenProperty(property, props, template) {
     if (!label) {
       label = getLabel(field.id)
     }
-    if (!label) return
-  } catch (_) { return }
+    return label
+  } catch (_) { return label }
+}
+
+function shortenLabel(label) {
   return camelize(
     label
     .toLowerCase()
     .trim()
-    .normalize('NFD')                 // normalize unicode
+    .normalize('NFD')                // normalize unicode
     .replace(/[\u0300-\u036f]/g, '') // remove accents, ligatures
-  )
+    .replace(/[^a-zA-Z0-9]+/g, ' ')  // remove non-alphanumeric
+  ).replace('_', ' ')                // remove _
+}
+
+function shorten(property, props, template) {
+  const label = propertyLabel(property, props, template)
+  return shortenLabel(label)
 }
 
 function* itemToLD(item_id, callback) {
@@ -53,7 +62,7 @@ function* itemToLD(item_id, callback) {
 
   // add fields to context
   resources.item_template.fields.forEach(field => {
-    const short = shortenProperty(
+    const short = shorten(
       field.property, resources.ontology.props, resources.item_template)
     context[short] = {
       '@id': field.property,
@@ -69,7 +78,7 @@ function* itemToLD(item_id, callback) {
 
   // add metadata to document.metadata
   for (var property in resources.metadata) {
-    const short = shortenProperty(
+    const short = shorten(
       property, resources.ontology.props, resources.item_template)
     if (short) {
       const text = resources.metadata[property].text
@@ -83,6 +92,7 @@ function* itemToLD(item_id, callback) {
 }
 
 module.exports = {
-  shortenProperty, // exported for testing (not used in the src)
+  shortenLabel,
+  propertyLabel,
   itemToLD
 }

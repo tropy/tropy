@@ -3,28 +3,33 @@
 describe('linked-data', () => {
   const ld = __require('common/linked-data')
 
-  describe('shortenProperty', () => {
-    const { shortenProperty } = ld
+  const { shortenLabel, propertyLabel } = ld
 
-    const short = (str) => {
-      return shortenProperty('x', { x: { label: str } })
-    }
+  it('parse propertyLabel arguments', () => {
+    expect(propertyLabel('x')).to.be.undefined
+    expect(propertyLabel('x', {})).to.be.undefined
+    expect(propertyLabel('x', { x: {} })).to.be.undefined
+    expect(propertyLabel('x', { x: { label: '' } })).to.equal('')
+  })
 
-    it('argument structure', () => {
-      expect(shortenProperty('x')).to.be.undefined
-      expect(shortenProperty('x', {})).to.be.undefined
-      expect(shortenProperty('x', { x: {} })).to.be.undefined
-      expect(shortenProperty('x', { x: { label: '' } })).to.be.undefined
-    })
+  it('extract label from props', () => {
+    expect(propertyLabel('uri', { uri: { label: 'Props Label' } }))
+      .to.equal('Props Label')
+  })
 
-    it('transformation', () => {
-      expect(short(' F\xd6O B\xe4r ')).to.equal('fooBar')
-    })
+  it('extract label from template', () => {
+    expect(propertyLabel(
+      'uri', {}, { fields: [{ property: 'uri', label: 'My Label' }] }))
+      .to.equal('My Label')
+  })
 
-    it('using label from template', () => {
-      expect(shortenProperty(
-        'uri', {}, { fields: [{ property: 'uri', label: 'My Label' }] }))
-        .to.equal('myLabel')
-    })
+  it('shortenlabel', () => {
+    expect(shortenLabel('Oneword')).to.equal('oneword')
+    expect(shortenLabel('Two Words')).to.equal('twoWords')
+    expect(shortenLabel('Now Three Words')).to.equal('nowThreeWords')
+    expect(shortenLabel(' Untrimmed ')).to.equal('untrimmed')
+    expect(shortenLabel('CaSe FiXes')).to.equal('caseFixes')
+    expect(shortenLabel('f\xf6reign ch\xe4rs')).to.equal('foreignChars')
+    expect(shortenLabel('special _@й symbols!')).to.equal('specialSymbols')
   })
 })
