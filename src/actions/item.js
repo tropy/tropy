@@ -154,7 +154,7 @@ module.exports = {
       dispatch({
         type: ITEM.SELECT,
         payload: { items, photo, note },
-        meta: { ...meta, mod }
+        meta: { log: 'trace', ...meta, mod }
       })
     }
   },
