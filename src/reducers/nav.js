@@ -76,7 +76,7 @@ module.exports = {
         }
 
       case ITEM.IMPORT:
-        return !meta.done || error ? state : {
+        return (!meta.done || error || !payload.length) ? state : {
           ...state,
           photo: null,
           note: null,
