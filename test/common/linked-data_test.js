@@ -38,8 +38,8 @@ describe('linked-data helpers', () => {
 describe('itemToLD', () => {
   const { itemToLD } = __require('common/linked-data')
 
-  const resources = {
-    item_template: {
+  const resources = [
+    {
       id: 'https://tropy.org/v1/tropy#test-template',
       fields: [{
         property: 'http://example.com/property',
@@ -47,12 +47,11 @@ describe('itemToLD', () => {
         label: 'My Label'
       }]
     },
-    photos: [],
-    metadata: { 'http://example.com/property': { text: 'value' } },
-    props: {}
-  }
+    { 'http://example.com/property': { text: 'value' } },
+    {}
+  ]
 
-  const ld = itemToLD(resources)
+  const ld = itemToLD(...resources)
 
   it('metadata', () => {
     expect(ld).to.eventually.have.property('myLabel', 'value')

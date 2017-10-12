@@ -439,15 +439,14 @@ class Export extends Command {
       // TODO replace with a 'selector'
       const resources = yield select(state => {
         const item = state.items[payload.id]
-        return {
-          item_template: state.ontology.template[item.template],
-          // photos: pick(state.photos, item.photos),
-          metadata: state.metadata[payload.id],
-          props: state.ontology.props
-        }
+        return [
+          state.ontology.template[item.template],
+          state.metadata[payload.id],
+          state.ontology.props
+        ]
       })
 
-      const linkedData = yield call(itemToLD, resources)
+      const linkedData = yield call(itemToLD, ...resources)
       const data = JSON.stringify(linkedData, null, 2)
 
       yield call((...args) => write(...args), path, data, { flags: 'w' })
