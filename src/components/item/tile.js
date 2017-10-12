@@ -5,31 +5,17 @@ const PropTypes = require('prop-types')
 const { number } = PropTypes
 const { ItemIterable } = require('./iterable')
 const { CoverImage } = require('./cover-image')
-const { createClickHandler } = require('../util')
 const cx = require('classnames')
 
 
 class ItemTile extends ItemIterable {
-  get classes() {
-    return {
-      ...super.classes,
-      'tile': true,
-      'click-catcher': true
-    }
-  }
-
-  handleMouseDown = createClickHandler({
-    onClick: this.handleSelect,
-    onDoubleClick: this.handleOpen
-  })
-
   render() {
     const { item, cache, photos, size, tags } = this.props
 
     return this.connect(
       <li
         ref={this.setContainer}
-        className={cx(this.classes)}>
+        className={cx(this.classes, 'tile', 'click-catcher')}>
         <div className="tile-state">
           <CoverImage
             cache={cache}
@@ -37,7 +23,8 @@ class ItemTile extends ItemIterable {
             photos={photos}
             tags={tags}
             size={size}
-            onMouseDown={this.handleMouseDown}
+            onClick={this.handleSelect}
+            onDoubleClick={this.handleOpen}
             onContextMenu={this.handleContextMenu}/>
         </div>
       </li>

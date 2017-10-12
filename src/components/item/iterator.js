@@ -137,8 +137,12 @@ class ItemIterator extends Iterator {
 
     switch (true) {
       case isRange:
+        mod = 'merge'
         items = this.range({ to: item.id }).map(it => it.id)
-        mod = this.isRangeSelected(items) ? 'remove' : 'merge'
+        if (this.isRangeSelected(items)) {
+          mod = 'subtract'
+          if (items[0] !== item.id) items.unshift(items.pop())
+        }
         break
 
       case isMeta:

@@ -55,6 +55,7 @@ linux: &linux
     contract:
       - CmdOrCtrl+ArrowUp
       - CmdOrCtrl+ArrowLeft
+      - Escape
     home: Home
     end: End
     pageUp: PageUp
@@ -65,7 +66,6 @@ linux: &linux
     left: ArrowLeft
     right: ArrowRight
     open: Enter
-    contract: Escape
     delete: Backspace
     home: Home
     end: End
