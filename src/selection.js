@@ -20,6 +20,10 @@ const selection = {
     return s.filter(it => !items.includes(it))
   },
 
+  subtract(s, [head, ...items]) {
+    return [...s.filter(it => !items.includes(it)), head]
+  },
+
   append(s, items) {
     return [...s, ...items]
   },
