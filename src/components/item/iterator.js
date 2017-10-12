@@ -119,6 +119,9 @@ class ItemIterator extends Iterator {
       case 'all':
         this.props.onSelect({}, 'all')
         break
+      case 'edit':
+        this.edit(this.current())
+        break
       default:
         return
     }

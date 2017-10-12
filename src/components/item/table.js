@@ -35,13 +35,26 @@ class ItemTable extends ItemIterator {
     return ROW.HEIGHT
   }
 
+  handleChange = (...args) => {
+    this.props.onMetadataSave(...args)
+    this.container.focus()
+  }
+
   handleEditCancel = (...args) => {
     this.props.onEditCancel(...args)
     this.container.focus()
   }
 
+  edit(item) {
+    const { property } = this.props.columns[0]
+    this.props.onEdit({
+      column: { [item.id]: property.id }
+    })
+  }
+
+
   renderTableBody() {
-    const { columns, data, edit, onMetadataSave } = this.props
+    const { columns, data, edit } = this.props
     const onEdit = this.props.selection.length === 1 ? this.props.onEdit : noop
 
     const { offset, height } = this.state
@@ -67,7 +80,7 @@ class ItemTable extends ItemIterator {
                     columns={columns}
                     edit={edit}
                     onCancel={this.handleEditCancel}
-                    onChange={onMetadataSave}
+                    onChange={this.handleChange}
                     onEdit={onEdit}/>)}
               </tbody>
             </table>
