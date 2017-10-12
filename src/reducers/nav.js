@@ -112,6 +112,7 @@ module.exports = {
           photo: null,
           items: [],
           trash: null,
+          imports: null,
           tags: select(state.tags, [payload], meta.mod)
         }
 
@@ -145,6 +146,7 @@ module.exports = {
           items: [],
           tags: [],
           trash: null,
+          imports: null,
           list: null,
           photo: null,
           ...payload
