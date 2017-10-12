@@ -20,7 +20,7 @@ module.exports = {
     return {
       type: ITEM.IMPORT,
       payload,
-      meta: { cmd: 'project', history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'add', search: true, ...meta }
     }
   },
 

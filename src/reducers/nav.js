@@ -81,6 +81,7 @@ module.exports = {
           ...state,
           photo: null,
           note: null,
+          tags: [],
           items: [...payload]
         }
 

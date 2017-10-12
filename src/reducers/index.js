@@ -5,6 +5,7 @@ module.exports = {
   ...require('./columns'),
   ...require('./edit'),
   ...require('./history'),
+  ...require('./import'),
   ...require('./intl'),
   ...require('./items'),
   ...require('./keymap'),
