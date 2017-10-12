@@ -5,6 +5,7 @@ const {
 } = require('../constants')
 
 const { isSelected, select } = require('../selection')
+const { empty } = require('../common/util')
 
 const init = {
   mode: PROJECT.MODE.PROJECT,
@@ -76,7 +77,7 @@ module.exports = {
         }
 
       case ITEM.IMPORT:
-        return !meta.done || error ? state : {
+        return (!meta.done || error || empty(payload)) ? state : {
           ...state,
           photo: null,
           note: null,

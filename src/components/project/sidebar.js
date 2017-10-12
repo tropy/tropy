@@ -14,6 +14,7 @@ const { ProjectName } = require('./name')
 const { TABS, LIST } = require('../../constants')
 const { has } = require('../../common/util')
 const { match } = require('../../keymap')
+const { testFocusChange } = require('../../dom')
 
 
 class ProjectSidebar extends PureComponent {
@@ -109,14 +110,20 @@ class ProjectSidebar extends PureComponent {
   }
 
 
+  handleMouseDown = () => {
+    this.hasFocusChanged = testFocusChange()
+  }
+
   handleClick = () => {
     if (!this.props.isSelected || this.hasActiveFilters) {
       return this.handleSelect()
     }
 
-    this.props.onEdit({
-      project: { name: this.props.project.name }
-    })
+    if (!this.hasFocusChanged()) {
+      this.props.onEdit({
+        project: { name: this.props.project.name }
+      })
+    }
   }
 
   handleChange = (name) => {
@@ -133,7 +140,9 @@ class ProjectSidebar extends PureComponent {
 
   handleListClick = (list) => {
     if (!this.handleListSelect(list.id)) {
-      this.props.onEdit({ list: { id: list.id } })
+      if (!this.hasFocusChanged()) {
+        this.props.onEdit({ list: { id: list.id } })
+      }
     }
   }
 
@@ -206,7 +215,8 @@ class ProjectSidebar extends PureComponent {
 
           <section
             tabIndex={this.tabIndex}
-            onKeyDown={this.handleKeyDown}>
+            onKeyDown={this.handleKeyDown}
+            onMouseDown={this.handleMouseDown}>
             <nav onContextMenu={this.showProjectMenu}>
               <ol>
                 <ProjectName

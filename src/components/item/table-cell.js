@@ -6,6 +6,7 @@ const { CoverImage } = require('./cover-image')
 const { Editable } = require('../editable')
 const { TagColors } = require('../colors')
 const { createClickHandler } = require('../util')
+const { testFocusChange } = require('../../dom')
 const { isMeta } = require('../../keymap')
 const { auto } = require('../../format')
 const cx = require('classnames')
@@ -57,12 +58,14 @@ class ItemTableCell extends PureComponent {
   // selections happens as the event bubbles therefore allowing us to
   // detect a click event that was associated to the item's selection.
   handleMouseDown = () => {
+    this.hasFocusChanged = testFocusChange()
     this.wasSelected = this.props.isSelected &&
       this.props.getSelection().length === 1
   }
 
   handleClick = createClickHandler({
     onClick: (event) => (
+      this.hasFocusChanged() ||
       !this.props.isSelected ||
       !this.wasSelected ||
       event.shiftKey ||

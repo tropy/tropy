@@ -4,6 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { TABS, SASS: { TILE } } = require('../constants')
 const { adjacent, restrict } = require('../common/util')
+const { win32 } = require('../common/os')
 const { has, on, off } = require('../dom')
 const { ceil, floor, max, min, round } = Math
 const { bool, number } = require('prop-types')
@@ -34,10 +35,7 @@ class Iterator extends PureComponent {
 
   componentDidMount() {
     if (this.container != null) {
-      this.ro = new ResizeObserver(([e]) => {
-        this.handleResize(e.contentRect)
-      })
-
+      this.ro = new ResizeObserver(this.handleResize)
       this.ro.observe(this.container)
       on(this.container, 'tab:focus', this.handleFocus)
       on(this.container, 'scroll', this.handleScroll, {
@@ -91,6 +89,13 @@ class Iterator extends PureComponent {
       rows,
       viewportRows
     })
+  }
+
+  get bounds() {
+    return {
+      width: this.container.clientWidth,
+      height: this.container.clientHeight
+    }
   }
 
   get isVertical() {
@@ -303,10 +308,15 @@ class Iterator extends PureComponent {
     }
   }
 
-  handleResize = throttle((viewport) => {
+  handleResize = throttle((!win32 ?
+    ([e]) => this.resize(e.contentRect) :
+    () => this.resize(this.bounds)
+  ), 15)
+
+  resize(viewport) {
     this.viewport = viewport
     this.update()
-  }, 15)
+  }
 
   handleClickOutside = (event) => {
     if (has(event.target, 'click-catcher') &&

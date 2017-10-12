@@ -130,6 +130,20 @@ const dom = {
     return document.activeElement === node
   },
 
+  testFocusChange() {
+    let wasActiveElement = document.activeElement
+    let t = setTimeout(() => { wasActiveElement = null }, 500)
+
+    return () => {
+      try {
+        return wasActiveElement !== document.activeElement
+      } finally {
+        clearTimeout(t)
+        wasActiveElement = null
+      }
+    }
+  },
+
   reflow(node) {
     node.scrollTop
   },

@@ -7,6 +7,7 @@ const { Resizable } = require('./resizable')
 const cx = require('classnames')
 const { bounds } = require('../dom')
 const { restrict } = require('../common/util')
+const { win32 } = require('../common/os')
 const { bool, func, node, arrayOf, number, shape } = require('prop-types')
 const { PANEL } = require('../constants/sass')
 const { remap } = require('../common/util')
@@ -72,9 +73,7 @@ class PanelGroup extends PureComponent {
   }
 
   componentDidMount() {
-    this.ro = new ResizeObserver(([e]) => {
-      this.handleResize(e.contentRect.height)
-    })
+    this.ro = new ResizeObserver(this.handleResize)
     this.ro.observe(this.container)
   }
 
@@ -87,7 +86,6 @@ class PanelGroup extends PureComponent {
       this.setState(this.getLayout(props))
     }
   }
-
 
   getLayout(props = this.props, height = this.state.height) {
     if (height === 0) return
@@ -179,9 +177,14 @@ class PanelGroup extends PureComponent {
   }
 
 
-  handleResize = throttle(height => {
+  handleResize = throttle((!win32 ?
+    ([e]) => this.update(e.contentRect.height) :
+    () => this.update(this.container.clientHeight)
+  ), 20)
+
+  update(height) {
     this.setState(this.getLayout(this.props, height))
-  }, 20)
+  }
 
   handleDragStart = (_, active) => {
     const { top, bottom } = bounds(this.container)

@@ -7,6 +7,7 @@ const { EsperToolbar } = require('./toolbar')
 const { get, restrict, shallow } = require('../../common/util')
 const { isHorizontal, rotate, round } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
+const { win32 } = require('../../common/os')
 const { match } = require('../../keymap')
 const { assign } = Object
 const debounce = require('lodash.debounce')
@@ -44,9 +45,7 @@ class Esper extends PureComponent {
   }
 
   componentDidMount() {
-    this.ro = new ResizeObserver(([e]) => {
-      this.resize(e.contentRect)
-    })
+    this.ro = new ResizeObserver(this.handleResize)
     this.ro.observe(this.view.container)
 
     this.io = new IntersectionObserver(([e]) => {
@@ -101,6 +100,14 @@ class Esper extends PureComponent {
     if (props.selection == null) return false
     if (props.tool !== TOOL.SELECT) return false
     return true
+  }
+
+  // Hack: Windows ResizeObserver reports wrong dimensions
+  get bounds() {
+    return {
+      width: this.view.container.clientWidth,
+      height: this.view.container.clientHeight
+    }
   }
 
   get classes() {
@@ -260,6 +267,10 @@ class Esper extends PureComponent {
   setView = (view) => {
     this.view = view
   }
+
+  handleResize = (win32) ?
+    () => this.resize(this.bounds) :
+    ([e]) => this.resize(e.contentRect)
 
   resize = throttle(({ width, height }) => {
     width = round(width || this.view.bounds.width)
