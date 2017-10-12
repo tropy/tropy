@@ -5,7 +5,6 @@ const {
 } = require('../constants')
 
 const { isSelected, select } = require('../selection')
-const { empty } = require('../common/util')
 
 const init = {
   mode: PROJECT.MODE.PROJECT,
@@ -22,7 +21,7 @@ module.exports = {
     switch (type) {
 
       case NAV.RESTORE:
-        return { ...init, ...payload }
+        return { ...init, ...payload, imports: null }
 
       case NAV.UPDATE:
         return { ...state, ...payload }
@@ -77,7 +76,7 @@ module.exports = {
         }
 
       case ITEM.IMPORT:
-        return (!meta.done || error || empty(payload)) ? state : {
+        return (!meta.done || error || !payload.length) ? state : {
           ...state,
           photo: null,
           note: null,

@@ -10,7 +10,7 @@ const ms = require('ms')
 module.exports = {
   *search(db) {
     try {
-      const { nav } = yield select()
+      const { nav, imports } = yield select()
       const { list, tags, trash, sort, lists, query } = nav
 
       const START = Date.now()
@@ -18,6 +18,13 @@ module.exports = {
       let result
 
       switch (true) {
+        case (nav.imports && imports.length > 0):
+          result = yield call(mod.item.find, db, {
+            ids: imports[0].items,
+            query
+          })
+          break
+
         case (trash):
           result = yield call(mod.item.trash, db, { sort, query })
           break
