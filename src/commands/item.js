@@ -436,13 +436,21 @@ class Export extends Command {
 
       if (!path) return
 
-      yield itemToLD(payload.id, (error, ld) => {
-        if (error) {
-          warn(`Failed to compact jsonld: ${error.message}`)
+      // TODO replace with a 'selector'
+      const resources = yield select(state => {
+        const item = state.items[payload.id]
+        return {
+          item_template: state.ontology.template[item.template],
+          // photos: pick(state.photos, item.photos),
+          metadata: state.metadata[payload.id],
+          props: state.ontology.props
         }
-        const ldString = JSON.stringify(ld, null, 2)
-        write(path, ldString, { flags: 'w' })
       })
+
+      const linkedData = yield call(itemToLD, resources)
+      const data = JSON.stringify(linkedData, null, 2)
+
+      yield call((...args) => write(...args), path, data, { flags: 'w' })
     } catch (error) {
       warn(`Failed to export items to ${path}: ${error.message}`)
       verbose(error.stack)

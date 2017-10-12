@@ -1,9 +1,8 @@
 'use strict'
 
-var jsonld = require('jsonld')
+const { promises: jsonld } = require('jsonld')
 
-const { select } = require('redux-saga/effects')
-const { pick, camelize } = require('./util')
+const { camelize } = require('./util')
 const { ITEM } = require('../constants/type')
 const { TEMPLATE } = require('../constants/ontology')
 const { getLabel } = require('./ontology')
@@ -39,22 +38,10 @@ function shortenLabel(label) {
 
 function shorten(property, props, template) {
   const label = propertyLabel(property, props, template)
-  return shortenLabel(label)
+  if (label) return shortenLabel(label)
 }
 
-function* itemToLD(item_id, callback) {
-
-  // extract useful data from current state
-  const resources = yield select(state => {
-    const item = state.items[item_id]
-    return {
-      item,
-      item_template: state.ontology.template[item.template],
-      photos: pick(state.photos, item.photos),
-      metadata: state.metadata[item_id],
-      ontology: state.ontology
-    }
-  })
+function itemToLD(resources) {
 
   let context = {
     _template: { '@id': TEMPLATE.TYPE, '@type': '@id' }
@@ -63,10 +50,14 @@ function* itemToLD(item_id, callback) {
   // add fields to context
   resources.item_template.fields.forEach(field => {
     const short = shorten(
-      field.property, resources.ontology.props, resources.item_template)
-    context[short] = {
-      '@id': field.property,
-      '@type': field.datatype
+      field.property,
+      resources.props,
+      resources.item_template)
+    if (short) {
+      context[short] = {
+        '@id': field.property,
+        '@type': field.datatype
+      }
     }
   })
 
@@ -79,7 +70,9 @@ function* itemToLD(item_id, callback) {
   // add metadata to document.metadata
   for (var property in resources.metadata) {
     const short = shorten(
-      property, resources.ontology.props, resources.item_template)
+      property,
+      resources.props,
+      resources.item_template)
     if (short) {
       const text = resources.metadata[property].text
       if (text) {
@@ -88,7 +81,7 @@ function* itemToLD(item_id, callback) {
     }
   }
 
-  jsonld.compact(document, context, callback)
+  return jsonld.compact(document, context)
 }
 
 module.exports = {
