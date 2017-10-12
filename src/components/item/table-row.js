@@ -39,13 +39,14 @@ class ItemTableRow extends ItemIterable {
   }
 
   render() {
-    const { data, photos, tags, ...props } = this.props
+    const { data, photos, tags, isSelected, ...props } = this.props
 
     return this.connect(
       <tr
         className={cx(this.classes)}
         ref={this.setContainer}
-        onClick={this.handleSelect}
+        onMouseDown={isSelected ? null : this.handleSelect}
+        onClick={isSelected ? this.handleSelect : null}
         onDoubleClick={this.handleOpen}
         onContextMenu={this.handleContextMenu}>
         {this.mapColumns(({ column, isMainColumn, next, prev }) =>
@@ -58,6 +59,7 @@ class ItemTableRow extends ItemIterable {
             photos={isMainColumn ? photos : null}
             isEditing={this.isEditing(column.property.id)}
             isMainColumn={isMainColumn}
+            isSelected={isSelected}
             nextColumn={next.property.id}
             prevColumn={prev.property.id}
             getSelection={this.props.getSelection}/>)}

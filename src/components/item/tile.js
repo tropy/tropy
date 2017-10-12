@@ -10,7 +10,7 @@ const cx = require('classnames')
 
 class ItemTile extends ItemIterable {
   render() {
-    const { item, cache, photos, size, tags } = this.props
+    const { item, cache, photos, size, tags, isSelected } = this.props
 
     return this.connect(
       <li
@@ -23,7 +23,8 @@ class ItemTile extends ItemIterable {
             photos={photos}
             tags={tags}
             size={size}
-            onClick={this.handleSelect}
+            onMouseDown={isSelected ? null : this.handleSelect}
+            onClick={isSelected ? this.handleSelect : null}
             onDoubleClick={this.handleOpen}
             onContextMenu={this.handleContextMenu}/>
         </div>
