@@ -208,6 +208,7 @@ class PhotoIterator extends Iterator {
       isDisabled: this.props.isDisabled,
       isExpandable: this.isExpandable(photo),
       isExpanded: this.isExpanded(photo),
+      isItemOpen: this.props.isItemOpen,
       isSelected: this.isSelected(photo),
       isSortable: this.isSortable,
       isLast: this.isLast(index),

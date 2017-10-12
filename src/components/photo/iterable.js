@@ -199,6 +199,7 @@ class PhotoIterable extends PureComponent {
     isLast: bool,
     isExpandable: bool,
     isExpanded: bool,
+    isItemOpen: bool,
     isOver: bool,
     isSelected: bool,
     isSortable: bool,

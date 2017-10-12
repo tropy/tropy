@@ -105,6 +105,7 @@ class SelectionIterable extends PureComponent {
     isDisabled: bool.isRequired,
     isDragging: bool,
     isLast: bool.isRequired,
+    isItemOpen: bool,
     isOver: bool,
     isSortable: bool.isRequired,
     isVertical: bool.isRequired,

@@ -78,6 +78,7 @@ class SelectionIterator extends Iterator {
         getAdjacent: this.getAdjacent,
         isActive: this.isActive(selection.id),
         isDisabled: this.props.isDisabled,
+        isItemOpen: this.props.isItemOpen,
         isLast: index === this.props.selections.length - 1,
         isSortable,
         isVertical,
@@ -94,6 +95,7 @@ class SelectionIterator extends Iterator {
     active: number,
     dropTarget: func,
     isDisabled: bool.isRequired,
+    isItemOpen: bool,
     isOver: bool,
     photo: shape({
       id: number.isRequired
