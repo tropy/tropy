@@ -54,6 +54,8 @@ class Create extends ImportCommand {
           mod.photo.create(tx, template.id, { item, image, data })
         )
 
+        yield put(act.metadata.load([photo.id]))
+
         yield all([
           put(act.photo.insert(photo, { idx: [idx[0] + photos.length] })),
           put(act.activity.update(this.action, { total, progress: i + 1 }))
@@ -72,7 +74,6 @@ class Create extends ImportCommand {
         fail(error, this.action.type)
       }
 
-      yield put(act.metadata.load(photos))
       yield put(act.item.photos.add({ id: item, photos }, { idx }))
       yield put(act.photo.select({ item, photo: photos[0] }))
 

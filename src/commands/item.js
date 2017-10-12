@@ -54,7 +54,6 @@ class Import extends ImportCommand {
     let { files, list } = this.action.payload
 
     const items = []
-    const metadata = []
 
     if (!files) {
       this.isInteractive = true
@@ -99,6 +98,8 @@ class Import extends ImportCommand {
 
         yield* this.createThumbnails(photo.id, image)
 
+        yield put(act.metadata.load([item.id, photo.id]))
+
         yield all([
           put(act.item.insert(item)),
           put(act.photo.insert(photo)),
@@ -106,7 +107,6 @@ class Import extends ImportCommand {
         ])
 
         items.push(item.id)
-        metadata.push(item.id, photo.id)
 
       } catch (error) {
         if (error instanceof DuplicateError) continue
@@ -119,8 +119,6 @@ class Import extends ImportCommand {
     }
 
     if (items.length) {
-      yield put(act.metadata.load(metadata))
-
       this.undo = act.item.delete(items)
       this.redo = act.item.restore(items)
     }
