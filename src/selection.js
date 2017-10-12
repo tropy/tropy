@@ -21,7 +21,7 @@ const selection = {
   },
 
   subtract(s, [head, ...items]) {
-    return [...s.filter(it => !items.includes(it)), head]
+    return [...s.filter(it => it !== head && !items.includes(it)), head]
   },
 
   append(s, items) {
