@@ -45,7 +45,7 @@ class ItemTableRow extends ItemIterable {
       <tr
         className={cx(this.classes)}
         ref={this.setContainer}
-        onMouseDown={this.handleSelect}
+        onClick={this.handleSelect}
         onDoubleClick={this.handleOpen}
         onContextMenu={this.handleContextMenu}>
         {this.mapColumns(({ column, isMainColumn, next, prev }) =>
