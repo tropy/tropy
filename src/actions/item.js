@@ -32,6 +32,23 @@ module.exports = {
     }
   },
 
+  copy(payload, meta) {
+    return {
+      type: ITEM.COPY,
+      payload: array(payload),
+      meta: { cmd: 'project', ...meta }
+    }
+  },
+
+  paste(payload, meta) {
+    return {
+      type: ITEM.PASTE,
+      payload,
+      meta: { cmd: 'project', history: 'add', ...meta }
+    }
+  },
+
+
   destroy(payload, meta) {
     return {
       type: ITEM.DESTROY,

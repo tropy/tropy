@@ -1,5 +1,6 @@
 'use strict'
 
+const { clipboard } = require('electron')
 const assert = require('assert')
 const { warn, verbose } = require('../common/log')
 const { DuplicateError } = require('../common/error')
@@ -127,6 +128,45 @@ class Import extends ImportCommand {
     }
 
     return items
+  }
+}
+
+class Copy extends Command {
+  static get action() { return ITEM.COPY }
+
+  *exec() {
+    const ids = this.action.payload
+    const id = ids[0] // TODO: support multiple items
+
+    // TODO replace with a 'selector'
+    const resources = yield select(state => {
+      const item = state.items[id]
+      return [
+        state.ontology.template[item.template],
+        state.metadata[id],
+        state.ontology.props
+      ]
+    })
+
+    const linkedData = yield call(itemToLD, ...resources)
+    const data = JSON.stringify(linkedData, null, 2)
+
+    clipboard.writeText(data)
+
+    return ids
+  }
+}
+
+class Paste extends Command {
+  static get action() { return ITEM.PASTE }
+
+  exec() {
+    const ids = this.action.payload
+    // TODO
+
+    // TODO this.undo = act.item....
+
+    return ids
   }
 }
 
@@ -555,5 +595,7 @@ module.exports = {
   AddTag,
   RemoveTag,
   ToggleTags,
-  ClearTags
+  ClearTags,
+  Copy,
+  Paste
 }
