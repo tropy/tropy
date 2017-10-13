@@ -40,7 +40,7 @@ module.exports = {
     }
   },
 
-  paste(payload, meta) {
+  paste(payload = {}, meta) {
     return {
       type: ITEM.IMPORT,
       payload,

@@ -18,7 +18,7 @@ const { ITEM, DC } = require('../constants')
 const { keys } = Object
 const { isArray } = Array
 const { writeFileAsync: write } = require('fs')
-const { itemToLD } = require('../common/linked-data')
+const { itemToLD, itemFromLD } = require('../common/linked-data')
 const { win } = require('../window')
 
 const {
@@ -56,8 +56,65 @@ class Import extends ImportCommand {
   *exec() {
     const { db } = this.options
     let { files, list } = this.action.payload
+    const { source } = this.action.meta
 
     const items = []
+
+    // much shared with the image file import
+    // TODO will be refactored later
+    if (source === ':clipboard:') {
+      let pasted
+      try {
+        pasted = JSON.parse(clipboard.readText())
+      } catch (e) {
+        return []
+      }
+      for (const obj in pasted) {
+        const parsed = yield call(itemFromLD, pasted[obj])
+        if (!parsed) { // ignore unparsable items
+          // TODO inform the user about failed items
+          continue
+        }
+        let item
+
+        const template = yield select(
+          state => state.ontology.template[parsed.templateID])
+        if (!template) {
+          continue
+        }
+        const templateDefaults = getTemplateValues(template)
+
+        let metadata = {}
+        for (let property in parsed.metadata) {
+          const [prop] = parsed.metadata[property]
+          metadata[property] =  {
+            type: prop['@type'],
+            text: prop['@value']
+          }
+        }
+
+        const data = { ...templateDefaults, ...metadata }
+
+        yield call(db.transaction, async tx => {
+          item = await mod.item.create(tx, template.id, data)
+        })
+
+        yield put(act.metadata.load([item.id]))
+
+        yield all([
+          put(act.item.insert(item)),
+        ])
+
+        items.push(item.id)
+      }
+
+      if (items.length) {
+        this.undo = act.item.delete(items)
+        this.redo = act.item.restore(items)
+      }
+
+      return items
+    }
 
     if (!files) {
       this.isInteractive = true
@@ -449,7 +506,7 @@ class Export extends Command {
       })
 
       const linkedData = yield call(itemToLD, ...resources)
-      const data = JSON.stringify(linkedData, null, 2)
+      const data = JSON.stringify([linkedData], null, 2)
 
       if (path === ':clipboard:') {
         yield call(clipboard.writeText, data)

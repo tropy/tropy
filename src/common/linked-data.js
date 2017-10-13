@@ -2,7 +2,7 @@
 
 const { promises: jsonld } = require('jsonld')
 
-const { camelize } = require('./util')
+const { camelize, omit } = require('./util')
 const { ITEM } = require('../constants/type')
 const { TEMPLATE } = require('../constants/ontology')
 const { getLabel } = require('./ontology')
@@ -88,8 +88,20 @@ function itemToLD() {
   return jsonld.compact(document, context)
 }
 
+async function itemFromLD(obj) {
+  let metadata, type, templateID
+  try {
+    const [expanded] = await jsonld.expand(obj)
+    type = expanded['@type'][0]
+    templateID = expanded[TEMPLATE.TYPE][0]['@id']
+    metadata = omit(expanded, ['@type', TEMPLATE.TYPE])
+  } catch (e) { return }
+  return { type, templateID, metadata }
+}
+
 module.exports = {
   shortenLabel,
   propertyLabel,
-  itemToLD
+  itemToLD,
+  itemFromLD
 }
