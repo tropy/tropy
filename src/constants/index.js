@@ -8,6 +8,7 @@ module.exports = {
   EDIT: require('./edit'),
   ESPER: require('./esper'),
   HISTORY: require('./history'),
+  IMPORTS: require('./import'),
   ITEM: require('./item'),
   KEYMAP: require('./keymap'),
   LIST: require('./list'),

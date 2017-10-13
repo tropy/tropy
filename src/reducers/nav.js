@@ -21,7 +21,7 @@ module.exports = {
     switch (type) {
 
       case NAV.RESTORE:
-        return { ...init, ...payload, imports: null }
+        return { ...init, ...payload }
 
       case NAV.UPDATE:
         return { ...state, ...payload }
