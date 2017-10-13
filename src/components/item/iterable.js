@@ -34,6 +34,25 @@ class ItemIterable extends PureComponent {
     }
   }
 
+  // Subtle: when an item is not selected, we need to select
+  // on mouse down, because the mouse down may kick-off a
+  // drag event. If the item is already selected, we handle
+  // selection in the click event for the same reason!
+  handleMouseDown = (event) => {
+    if (this.props.isSelected) {
+      this.wasSelected = true
+    } else {
+      this.wasSelected = false
+      this.handleSelect(event)
+    }
+  }
+
+  handleClick = (event) => {
+    if (this.props.isSelected && this.wasSelected) {
+      this.handleSelect(event)
+    }
+  }
+
   handleOpen = () => {
     const { item, onItemOpen } = this.props
 
