@@ -30,7 +30,7 @@ const { darwin } = require('../common/os')
 const { version } = require('../common/release')
 
 const {
-  HISTORY, TAG, PROJECT, ITEM, CONTEXT, SASS
+  HISTORY, TAG, PROJECT, CONTEXT, SASS
 } = require('../constants')
 
 const WIN = SASS.WINDOW
@@ -436,15 +436,25 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:undo', () => {
-      if (this.history.past) this.dispatch(act.history.undo())
+      if (this.history.past) {
+        this.dispatch({
+          type: HISTORY.UNDO,
+          meta: { ipc: HISTORY.CHANGED }
+        })
+      }
     })
 
     this.on('app:redo', () => {
-      if (this.history.future) this.dispatch(act.history.redo())
+      if (this.history.future) {
+        this.dispatch({
+          type: HISTORY.REDO,
+          meta: { ipc: HISTORY.CHANGED }
+        })
+      }
     })
 
     this.on('app:inspect', (win, { x, y }) => {
-      win.webContents.inspectElement(x, y)
+      if (win != null) win.webContents.inspectElement(x, y)
     })
 
     this.on('app:open-preferences', () => {
@@ -550,12 +560,6 @@ class Tropy extends EventEmitter {
 
     ipc.on(CONTEXT.SHOW, (_, event) => {
       this.ctx.show(event)
-    })
-
-    ipc.on(ITEM.PREVIEW, (_, paths) => {
-      if (darwin && paths && paths.length) {
-        this.win.previewFile(paths[0])
-      }
     })
 
     dialog.start()
