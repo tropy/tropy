@@ -223,6 +223,11 @@ class PhotoIterator extends Iterator {
     }
   }
 
+  preview({ id, item }) {
+    this.props.onItemPreview({ id: item, photos: [id] })
+  }
+
+
   connect(element) {
     return this.isSortable ? this.props.dt(element) : element
   }
@@ -262,6 +267,7 @@ class PhotoIterator extends Iterator {
     onDelete: func.isRequired,
     onExpand: func.isRequired,
     onItemOpen: func.isRequired,
+    onItemPreview: func.isRequired,
     onSelect: func.isRequired,
     onSort: func.isRequired,
     onSelectionSort: func.isRequired

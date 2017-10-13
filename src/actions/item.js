@@ -167,11 +167,11 @@ module.exports = {
     }
   },
 
-  preview({ id, photos }, meta) {
+  preview(payload, meta) {
     return {
       type: ITEM.PREVIEW,
-      payload: { id, photos },
-      meta: { ipc: true, ...meta }
+      payload,
+      meta: { cmd: 'project', ...meta }
     }
   },
 

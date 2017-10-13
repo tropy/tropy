@@ -107,7 +107,7 @@ class ItemIterator extends Iterator {
         this.props.onItemOpen(this.current())
         break
       case 'preview':
-        this.props.onItemPreview(this.current())
+        this.preview(this.current())
         break
       case 'clear':
         this.clearSelection()
@@ -160,6 +160,10 @@ class ItemIterator extends Iterator {
     }
 
     this.props.onSelect({ items }, mod, { throttle })
+  }
+
+  preview({ id, photos }) {
+    this.props.onItemPreview({ id, photos })
   }
 
   connect(element) {

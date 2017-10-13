@@ -49,6 +49,7 @@ linux: &linux
     open: Enter
     edit: F2
     delete: Backspace
+    preview: Space
     expand:
       - CmdOrCtrl+ArrowDown
       - CmdOrCtrl+ArrowRight
