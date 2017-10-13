@@ -167,6 +167,14 @@ i('Chevron16', (
   </svg>
 ))
 
+i('Clock', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M8.5,0A7.5,7.5,0,1,0,16,7.5,7.5,7.5,0,0,0,8.5,0Zm0,14A6.5,6.5,0,1,1,15,7.5,6.507,6.507,0,0,1,8.5,14Zm3.354-3.854a.5.5,0,1,1-.707.707l-3-3A.507.507,0,0,1,8,7.5v-5a.5.5,0,0,1,1,0V7.293Z"/>
+    </g>
+  </svg>
+))
+
 i('Copy', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">

@@ -174,6 +174,7 @@ class ProjectContainer extends Component {
       dt,
       expanded,
       items,
+      hasLastImport,
       nav,
       note,
       notes,
@@ -200,6 +201,7 @@ class ProjectContainer extends Component {
           isActive={this.state.mode === MODE.PROJECT}
           isEmpty={this.isEmpty}
           columns={columns}
+          hasLastImport={hasLastImport}
           sidebar={ui.sidebar}
           offset={this.state.offset}
           photos={photos}
@@ -264,6 +266,7 @@ class ProjectContainer extends Component {
       shape({ id: number.isRequired })
     ),
 
+    hasLastImport: bool,
     nav: shape({
       mode: oneOf(values(MODE)).isRequired
     }).isRequired,
@@ -341,6 +344,7 @@ module.exports = {
       index: state.qr.index,
       items: getVisibleItems(state),
       keymap: state.keymap,
+      hasLastImport: state.imports.length > 0,
       lists: state.lists,
       nav: state.nav,
       note: getSelectedNote(state),
