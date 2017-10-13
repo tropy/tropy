@@ -73,12 +73,16 @@ class PanelGroup extends PureComponent {
   }
 
   componentDidMount() {
-    this.ro = new ResizeObserver(this.handleResize)
-    this.ro.observe(this.container)
+    this.ro = new ResizeObserver(([e]) => {
+      this.handleResize(e.contentRect.height)
+    })
+    this.observe(this.container)
   }
 
   componentWillUnmount() {
+    this.unobserve(this.container)
     this.ro.disconnect()
+    this.ro = null
   }
 
   componentWillReceiveProps(props) {
@@ -86,6 +90,25 @@ class PanelGroup extends PureComponent {
       this.setState(this.getLayout(props))
     }
   }
+
+  observe(container) {
+    if (container != null) {
+      this.ro.observe(container)
+    }
+  }
+
+  unobserve(container) {
+    if (container != null && this.ro != null) {
+      this.ro.unobserve(container)
+    }
+  }
+
+  setContainer = (container) => {
+    if (this.container != null) this.unobserve(this.container)
+    this.container = container
+    if (this.ro != null) this.observe(container)
+  }
+
 
   getLayout(props = this.props, height = this.state.height) {
     if (height === 0) return
@@ -172,15 +195,10 @@ class PanelGroup extends PureComponent {
   }
 
 
-  setContainer = (container) => {
-    this.container = container
-  }
-
-
   handleResize = throttle((!win32 ?
-    ([e]) => this.update(e.contentRect.height) :
+    (height) => this.update(height) :
     () => this.update(this.container.clientHeight)
-  ), 20)
+  ), 15)
 
   update(height) {
     this.setState(this.getLayout(this.props, height))

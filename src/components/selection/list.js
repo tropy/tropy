@@ -32,9 +32,7 @@ class SelectionList extends SelectionIterator {
 
   render() {
     return this.connect(
-      <ul
-        className={cx(this.classes)}
-        ref={this.setContainer}>
+      <ul className={cx(this.classes)}>
         {this.map(({ selection, ...props }) =>
           <SelectionListItem {...props}
             key={selection.id}

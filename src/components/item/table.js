@@ -20,11 +20,10 @@ class ItemTable extends ItemIterator {
   }
 
   get classes() {
-    return {
-      'table-body': true,
+    return ['table-body', {
       'drop-target': !this.props.isDisabled,
       'over': this.props.isOver
-    }
+    }]
   }
 
   getColumns() {

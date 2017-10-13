@@ -191,9 +191,8 @@ class ItemIterator extends Iterator {
 
   renderNoItems() {
     return this.connect(
-      <div
-        ref={this.setContainer}
-        className={cx('no-items', 'drop-target', { over: this.props.isOver })
+      <div className={
+        cx('no-items', 'drop-target', { over: this.props.isOver })
       }>
         <figure className="no-items-illustration"/>
         <h1><FormattedMessage id="project.empty"/></h1>
