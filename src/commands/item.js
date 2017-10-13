@@ -12,10 +12,12 @@ const { text } = require('../value')
 const act = require('../actions')
 const mod = require('../models')
 const { get, pluck, pick, remove } = require('../common/util')
+const { darwin } = require('../common/os')
 const { ITEM, DC } = require('../constants')
 const { keys } = Object
 const { isArray } = Array
 const { writeFileAsync: write } = require('fs')
+const { win } = require('../window')
 
 const {
   getItemTemplate,
@@ -478,6 +480,22 @@ class ToggleTags extends Command {
   }
 }
 
+class Preview extends Command {
+  static get action() { return ITEM.PREVIEW }
+
+  *exec() {
+    if (!darwin) return
+
+    const { photos } = this.action.payload
+    const paths = yield select(state =>
+      photos.map(id => get(state.photos, [id, 'path'])))
+
+    if (paths.length > 0) {
+      win.current.previewFile(paths[0])
+    }
+  }
+}
+
 class AddTag extends Command {
   static get action() { return ITEM.TAG.CREATE }
 
@@ -541,6 +559,7 @@ module.exports = {
   Split,
   Restore,
   Save,
+  Preview,
   AddTag,
   RemoveTag,
   ToggleTags,

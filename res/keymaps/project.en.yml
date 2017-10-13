@@ -153,6 +153,7 @@ darwin:
       - Cmd+ArrowRight
     delete: Backspace
     enter: Enter
+    preview: Space
     contract: Escape
     home: Home
     end: End

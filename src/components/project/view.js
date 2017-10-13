@@ -84,7 +84,8 @@ class ProjectView extends Component {
             keymap={keymap}
             selectedList={nav.list}
             selectedTags={nav.tags}
-            isSelected={!(nav.list || nav.trash)}
+            isSelected={!(nav.list || nav.trash || nav.imports)}
+            isLastImportSelected={nav.imports}
             isTrashSelected={nav.trash}/>
         </BufferedResizable>
         <div className="main">

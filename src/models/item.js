@@ -78,6 +78,27 @@ module.exports = mod.item = {
       params)
   },
 
+  async find(db, { ids, query }) {
+    const params = {}
+    query = query.trim()
+
+    if (query.length) {
+      params.$query = prefix(query)
+    }
+
+    return search(db, `
+      SELECT DISTINCT id
+        FROM subjects
+          JOIN items USING (id)
+          LEFT OUTER JOIN trash USING (id)
+        WHERE
+          id IN (${ids.join(',')}) AND
+          deleted IS NULL
+          ${(query.length > 0) ? `AND id IN (${SEARCH})` : ''}
+        ORDER BY created DESC`,
+      params)
+  },
+
   async trash(db, { sort, query }) {
     const dir = sort.asc ? 'ASC' : 'DESC'
     const params = { $sort: sort.column }

@@ -2,13 +2,12 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const cx = require('classnames')
 const { IconTrash } = require('../icons')
 const { FormattedMessage } = require('react-intl')
 const { DropTarget } = require('react-dnd')
 const { DND } = require('../../constants')
-const { bool, func } = PropTypes
+const { bool, func } = require('prop-types')
 
 
 class TrashListNode extends PureComponent {

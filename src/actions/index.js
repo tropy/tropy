@@ -7,6 +7,7 @@ module.exports = {
   context: require('./context'),
   edit: require('./edit'),
   history: require('./history'),
+  imports: require('./imports'),
   intl: require('./intl'),
   item: require('./item'),
   keymap: require('./keymap'),

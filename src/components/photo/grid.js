@@ -144,6 +144,9 @@ class PhotoGrid extends PhotoIterator {
       case 'open':
         this.handleItemOpen(this.current())
         break
+      case 'preview':
+        this.preview(this.current())
+        break
       case 'expand':
       case 'enter':
         this.expand(this.current())

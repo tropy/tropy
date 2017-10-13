@@ -86,7 +86,8 @@ function *setup(db, project) {
 
   yield all([
     call(storage.restore, 'nav', project.id),
-    call(storage.restore, 'columns', project.id)
+    call(storage.restore, 'columns', project.id),
+    call(storage.restore, 'imports', project.id)
   ])
 
   yield all([
@@ -111,7 +112,8 @@ function *close(db, project, access) {
 
   yield all([
     call(storage.persist, 'nav', project.id),
-    call(storage.persist, 'columns', project.id)
+    call(storage.persist, 'columns', project.id),
+    call(storage.persist, 'imports', project.id)
   ])
 
   yield call(mod.item.prune, db)

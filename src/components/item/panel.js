@@ -59,6 +59,7 @@ class ItemPanel extends PureComponent {
       selections,
       isDisabled,
       isItemOpen,
+      onItemPreview,
       onMaximize,
       onModeChange,
       onNoteCreate,
@@ -109,6 +110,7 @@ class ItemPanel extends PureComponent {
           onCreate={this.handlePhotoCreate}
           onDelete={onPhotoDelete}
           onExpand={onPhotoExpand}
+          onItemPreview={onItemPreview}
           onSelect={onPhotoSelect}
           onSort={onPhotoSort}
           onSelectionSort={onSelectionSort}
@@ -159,6 +161,7 @@ class ItemPanel extends PureComponent {
     onEdit: func.isRequired,
     onEditCancel: func,
     onItemOpen: func.isRequired,
+    onItemPreview: func.isRequired,
     onItemSave: func.isRequired,
     onItemTagAdd: func.isRequired,
     onItemTagRemove: func.isRequired,
