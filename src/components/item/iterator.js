@@ -5,6 +5,7 @@ const { Iterator } = require('../iterator')
 const { FormattedMessage } = require('react-intl')
 const { match, isMeta: meta } = require('../../keymap')
 const cx = require('classnames')
+const { blank } = require('../../common/util')
 
 const {
   arrayOf, oneOf, shape, bool, func, number, object, string
@@ -23,6 +24,20 @@ class ItemIterator extends Iterator {
   head() {
     const { selection } = this.props
     return selection.length > 0 ? selection[selection.length - 1] : null
+  }
+
+  // Note: this can be improved, but we currently check only
+  // for the first item before and after the current item. This
+  // is because the worst case for weird/sparse selections is
+  // not worth the price!
+  after() {
+    const next = this.next()
+    return (next == null || this.isSelected(next)) ? null : next
+  }
+
+  before() {
+    const prev = this.prev()
+    return (prev == null || this.isSelected(prev)) ? null : prev
   }
 
   getSelection = () => this.props.selection
@@ -67,7 +82,7 @@ class ItemIterator extends Iterator {
   }
 
   handleItemDelete(items) {
-    if (!this.props.isDisabled && items != null && items.length > 0) {
+    if (!(this.props.isDisabled || blank(items))) {
       this.props.onItemDelete(items)
     }
   }
@@ -113,8 +128,8 @@ class ItemIterator extends Iterator {
         this.clearSelection()
         break
       case 'delete':
+        this.select(this.after() || this.before())
         this.handleItemDelete(this.props.selection)
-        this.select(this.next() || this.prev())
         break
       case 'all':
         this.props.onSelect({}, 'all')
