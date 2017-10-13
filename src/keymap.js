@@ -70,6 +70,13 @@ function match(map, event) {
   return null
 }
 
+function isMeta(event) {
+  return (!darwin && event.ctrlKey) || (darwin && event.metaKey)
+}
+
 module.exports = {
-  compile, parse, match
+  compile,
+  isMeta,
+  parse,
+  match
 }

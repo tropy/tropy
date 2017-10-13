@@ -3,9 +3,8 @@
 const { createSelector: memo } = require('reselect')
 const { pluck } = require('./util')
 const { equal } = require('../value')
-const { MAX_SELECT } = require('../constants')
 const {
-  cat, compose, filter, keep, map, seq, transduce, transformer, take
+  cat, compose, filter, keep, map, seq, transduce, transformer
 } = require('transducers.js')
 
 
@@ -34,7 +33,7 @@ const getItemMetadata = memo(
     seq(
       transduce(
         items,
-        compose(take(MAX_SELECT), map(id => metadata[id]), keep(), cat, skipId),
+        compose(map(id => metadata[id]), keep(), cat, skipId),
         collect,
         { id: items }),
       map(([key, value]) => {

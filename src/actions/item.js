@@ -20,7 +20,7 @@ module.exports = {
     return {
       type: ITEM.IMPORT,
       payload,
-      meta: { cmd: 'project', history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'add', search: true, ...meta }
     }
   },
 
@@ -171,7 +171,7 @@ module.exports = {
       dispatch({
         type: ITEM.SELECT,
         payload: { items, photo, note },
-        meta: { ...meta, mod }
+        meta: { log: 'trace', ...meta, mod }
       })
     }
   },
@@ -184,11 +184,11 @@ module.exports = {
     }
   },
 
-  preview({ id, photos }, meta) {
+  preview(payload, meta) {
     return {
       type: ITEM.PREVIEW,
-      payload: { id, photos },
-      meta: { ipc: true, ...meta }
+      payload,
+      meta: { cmd: 'project', ...meta }
     }
   },
 

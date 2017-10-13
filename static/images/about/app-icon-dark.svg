@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="180" height="180" viewBox="0 0 180 180">
+  <defs>
+    <linearGradient id="a" data-name="Unbenannter Verlauf 4" x1="90" y1="-208.185" x2="90" y2="387.976" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5c93e5"/>
+      <stop offset="0.5" stop-color="#395bac"/>
+      <stop offset="1" stop-color="#060d2e"/>
+    </linearGradient>
+  </defs>
+  <circle cx="90" cy="90" r="90" fill="url(#a)"/>
+  <polygon points="149.562 53 30.438 53 50.067 87 58.151 87 42.562 60 137.437 60 125.891 80 73 80 73 155.063 107 135.432 107 101.849 100 105.891 100 131.391 80 142.938 80 87 129.932 87 149.562 53" fill="#fff" opacity="0.5"/>
+</svg>

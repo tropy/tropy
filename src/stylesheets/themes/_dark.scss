@@ -18,15 +18,16 @@ $brand-primary: $blue;
 $brand-primary-light: $blue-light;
 
 :root {
-  #{--brand-primary}:          $brand-primary;
-  #{--brand-primary-35}:       rgba($brand-primary, 0.35);
-  #{--brand-primary-60}:       rgba($brand-primary, 0.6);
-  #{--brand-primary-darken-2}: darken($brand-primary, 2%);
-  #{--brand-primary-light}:    $brand-primary-light;
-  #{--brand-primary-light-10}: rgba($brand-primary-light, 0.1);
-  #{--brand-primary-light-76}: rgba($blue-light, 0.76);
-  #{--red}:                    $red;
-  #{--red-64}:                 rgba($red, 0.64);
+  #{--brand-primary}:            $brand-primary;
+  #{--brand-primary-35}:         rgba($brand-primary, 0.35);
+  #{--brand-primary-60}:         rgba($brand-primary, 0.6);
+  #{--brand-primary-darken-2}:   darken($brand-primary, 2%);
+  #{--brand-primary-light}:      $brand-primary-light;
+  #{--brand-primary-light-10}:   rgba($brand-primary-light, 0.1);
+  #{--brand-primary-light-76}:   rgba($blue-light, 0.76);
+  #{--brand-primary-lighten-14}: saturate(lighten($brand-primary, 14%), 14%);
+  #{--red}:                      $red;
+  #{--red-64}:                   rgba($red, 0.64);
 }
 
 
@@ -120,8 +121,8 @@ $soft-text-color: var(--shade-8);
 // Typography
 // --------------------------------------------------
 
-$link-color:       var(--brand-primary);
-$link-hover-color: var(--brand-primary);
+$link-color:       var(--brand-primary-lighten-14);
+$link-hover-color: var(--brand-primary-lighten-14);
 
 $text-selection-color: inherit;
 $text-selection-bg:    var(--brand-primary-35);
@@ -164,6 +165,7 @@ $photo-sort-indicator: var(--shade-9);
 $tile-focus-color:          var(--brand-primary);
 $tile-active-color:         var(--shade-5);
 $tile-expansion-bg:         var(--shade-2);
+$tile-expansion-focus-bg:   var(--shade-1);
 $tile-selection-icon-color: var(--shade-10-darken-14);
 
 // Stack
@@ -201,6 +203,7 @@ $icon-warning: var(--red-64);
 // Project
 $project-darken-color:  var(--shade-0-5);
 $project-heading-color: var(--shade-8);
+$item-count-color:      var(--shade-6);
 
 // Sidebar
 $sidebar-bg:                var(--shade-4);
@@ -224,6 +227,7 @@ $panels-bg: var(--shade-4);
 
 // Panel
 $panel-bg:                var(--shade-4);
+$panel-focus-bg:          var(--shade-4-lighten-2);
 $panel-header-color:      var(--shade-8);
 $panel-separator-color:   var(--shade-1);
 $panel-heading-color:     var(--shade-6);

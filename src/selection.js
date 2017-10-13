@@ -20,6 +20,14 @@ const selection = {
     return s.filter(it => !items.includes(it))
   },
 
+  subtract(s, [head, ...items]) {
+    return [...s.filter(it => it !== head && !items.includes(it)), head]
+  },
+
+  append(s, items) {
+    return [...s, ...items]
+  },
+
   merge(s, items) {
     return [...selection.remove(s, items), ...items]
   },

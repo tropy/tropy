@@ -162,6 +162,7 @@ $photo-sort-indicator: var(--shade-9);
 $tile-focus-color:          var(--brand-primary);
 $tile-active-color:         var(--shade-4);
 $tile-expansion-bg:         var(--shade-2);
+$tile-expansion-focus-bg:   var(--shade-3);
 $tile-selection-icon-color: var(--shade-0);
 
 // Stack
@@ -199,6 +200,7 @@ $icon-warning: var(--red);
 // Project
 $project-darken-color:  var(--shade-10-10);
 $project-heading-color: var(--shade-8);
+$item-count-color:      var(--shade-5);
 
 // Sidebar
 $sidebar-bg:                var(--shade-1);
@@ -222,6 +224,7 @@ $panels-bg: $shade-1;
 
 // Panel
 $panel-bg:                var(--shade-1);
+$panel-focus-bg:          var(--shade-1-darken-4);
 $panel-header-color:      var(--shade-8);
 $panel-separator-color:   var(--shade-3);
 $panel-heading-color:     var(--shade-5);

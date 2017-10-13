@@ -160,14 +160,14 @@
 
   .runway {
     contain: strict;
-    min-height: 100%;
+    min-height: 100%; // Needs some flex row parent to work
   }
 
   .viewport {
     width: 100%;
     table-layout: fixed;
     border-collapse: collapse;
-    contain: layout style;
+    contain: content;
     will-change: transform;
   }
 
@@ -184,7 +184,8 @@
         background: $items-active-bg;
 
         @at-root #{
-          selector-replace(&, ".item.table", ".item.table .table-body:focus")
+          selector-replace(&, ".item.table",
+            ".item.table .scroll-container:focus")
         } {
           color: $items-focus-color;
           background: $items-focus-bg;

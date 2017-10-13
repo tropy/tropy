@@ -84,7 +84,8 @@ class ProjectView extends Component {
             keymap={keymap}
             selectedList={nav.list}
             selectedTags={nav.tags}
-            isSelected={!(nav.list || nav.trash)}
+            isSelected={!(nav.list || nav.trash || nav.imports)}
+            isLastImportSelected={nav.imports}
             isTrashSelected={nav.trash}/>
         </BufferedResizable>
         <div className="main">
@@ -93,9 +94,9 @@ class ProjectView extends Component {
               <ProjectToolbar
                 query={nav.query}
                 zoom={zoom}
+                items={items.length}
                 maxZoom={maxZoom}
-                canCreateItems
-                isEmpty={!items.length}
+                canCreateItems={!nav.trash}
                 isDisabled={!props.isActive}
                 onItemCreate={this.handleItemImport}
                 onDoubleClick={ARGS.frameless ? props.onMaximize : null}
@@ -129,7 +130,6 @@ class ProjectView extends Component {
     isActive: bool,
     isEmpty: bool.isRequired,
     isOver: bool,
-    index: object.isRequired,
     items: array.isRequired,
     keymap: object.isRequired,
     nav: object.isRequired,

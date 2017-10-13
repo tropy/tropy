@@ -59,6 +59,7 @@ class ItemPanel extends PureComponent {
       selections,
       isDisabled,
       isItemOpen,
+      onItemPreview,
       onMaximize,
       onModeChange,
       onNoteCreate,
@@ -73,6 +74,7 @@ class ItemPanel extends PureComponent {
     } = this.props
 
     const { item } = this
+    const hasMultipleItems = this.props.items.length > 1
 
     return (
       <PanelGroup
@@ -95,7 +97,7 @@ class ItemPanel extends PureComponent {
         </Panel>
 
         <PhotoPanel {...props}
-          isDisabled={isDisabled}
+          isDisabled={isDisabled || hasMultipleItems}
           isItemOpen={isItemOpen}
           edit={edit}
           expanded={expanded}
@@ -108,13 +110,14 @@ class ItemPanel extends PureComponent {
           onCreate={this.handlePhotoCreate}
           onDelete={onPhotoDelete}
           onExpand={onPhotoExpand}
+          onItemPreview={onItemPreview}
           onSelect={onPhotoSelect}
           onSort={onPhotoSort}
           onSelectionSort={onSelectionSort}
           onZoomChange={this.handleZoomChange}/>
 
         <NotePanel {...props}
-          isDisabled={isDisabled || !photo}
+          isDisabled={isDisabled || !photo || hasMultipleItems}
           isItemOpen={isItemOpen}
           item={item && item.id}
           keymap={keymap.NoteList}
@@ -158,6 +161,7 @@ class ItemPanel extends PureComponent {
     onEdit: func.isRequired,
     onEditCancel: func,
     onItemOpen: func.isRequired,
+    onItemPreview: func.isRequired,
     onItemSave: func.isRequired,
     onItemTagAdd: func.isRequired,
     onItemTagRemove: func.isRequired,

@@ -23,6 +23,7 @@ class PhotoToolbar extends PureComponent {
     const {
       hasCreateButton,
       isDisabled,
+      photos,
       zoom,
       maxZoom,
       onZoomChange
@@ -32,7 +33,11 @@ class PhotoToolbar extends PureComponent {
       <Toolbar isDraggable={false}>
         <div className="toolbar-left">
           <IconPhoto/>
-          <h4><FormattedMessage id="panel.photo.title"/></h4>
+          <h4>
+            <FormattedMessage
+              id="panel.photo.title"
+              values={{ count: photos }}/>
+          </h4>
         </div>
 
         <div className="toolbar-right">
@@ -41,6 +46,7 @@ class PhotoToolbar extends PureComponent {
               <ToolGroup>
                 <IconButton
                   icon={<IconPlus/>}
+                  isDisabled={!this.props.canCreate || this.props.isDisabled}
                   title="panel.photo.create"
                   onClick={this.handleCreate}/>
               </ToolGroup>
@@ -62,9 +68,11 @@ class PhotoToolbar extends PureComponent {
 
 
   static propTypes = {
+    canCreate: bool,
     hasCreateButton: bool,
     isDisabled: bool,
     maxZoom: number.isRequired,
+    photos: number.isRequired,
     zoom: number.isRequired,
     onCreate: func.isRequired,
     onZoomChange: func.isRequired

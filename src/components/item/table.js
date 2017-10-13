@@ -11,6 +11,14 @@ const { noop } = require('../../common/util')
 const { ROW } = require('../../constants/sass')
 
 class ItemTable extends ItemIterator {
+  componentDidUpdate() {
+    if (this.props.edit != null) {
+      for (let id in this.props.edit) {
+        this.scrollIntoView({ id: Number(id) }, false)
+      }
+    }
+  }
+
   get classes() {
     return {
       'table-body': true,
@@ -27,13 +35,26 @@ class ItemTable extends ItemIterator {
     return ROW.HEIGHT
   }
 
+  handleChange = (...args) => {
+    this.props.onMetadataSave(...args)
+    this.container.focus()
+  }
+
   handleEditCancel = (...args) => {
     this.props.onEditCancel(...args)
     this.container.focus()
   }
 
+  edit(item) {
+    const { property } = this.props.columns[0]
+    this.props.onEdit({
+      column: { [item.id]: property.id }
+    })
+  }
+
+
   renderTableBody() {
-    const { columns, data, edit, onMetadataSave } = this.props
+    const { columns, data, edit } = this.props
     const onEdit = this.props.selection.length === 1 ? this.props.onEdit : noop
 
     const { offset, height } = this.state
@@ -42,17 +63,16 @@ class ItemTable extends ItemIterator {
     return this.connect(
       <div
         className={cx(this.classes)}
-        ref={this.setContainer}
-        tabIndex={this.tabIndex}
-        onKeyDown={this.handleKeyDown}
         onClick={this.handleClickOutside}>
         <div
-          ref={this.setScroller}
-          className="scroll-container">
+          className="scroll-container"
+          ref={this.setContainer}
+          tabIndex={this.tabIndex}
+          onKeyDown={this.handleKeyDown}>
           <div className="runway click-catcher" style={{ height }}>
             <table className="viewport" style={{ transform }}>
               <tbody>
-                {this.mapItemRange(({ item, ...props }) =>
+                {this.mapIterableRange(({ item, ...props }) =>
                   <ItemTableRow {...props}
                     key={item.id}
                     item={item}
@@ -60,9 +80,8 @@ class ItemTable extends ItemIterator {
                     columns={columns}
                     edit={edit}
                     onCancel={this.handleEditCancel}
-                    onChange={onMetadataSave}
-                    onEdit={onEdit}/>
-                )}
+                    onChange={this.handleChange}
+                    onEdit={onEdit}/>)}
               </tbody>
             </table>
           </div>

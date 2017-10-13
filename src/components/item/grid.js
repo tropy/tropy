@@ -5,7 +5,7 @@ const { ItemIterator } = require('./iterator')
 const { ItemTile } = require('./tile')
 const { refine } = require('../../common/util')
 const cx = require('classnames')
-const { match } = require('../../keymap')
+const { match, isMeta } = require('../../keymap')
 
 
 class ItemGrid extends ItemIterator {
@@ -19,10 +19,20 @@ class ItemGrid extends ItemIterator {
 
       switch (match(this.props.keymap, event)) {
         case (this.isVertical ? 'left' : 'up'):
-          this.select(this.getPrevItem(this.state.cols), event.shiftKey, true)
+          this.select(this.prev(this.state.cols), {
+            isMeta: isMeta(event),
+            isRange: event.shiftKey,
+            scrollIntoView: true,
+            throttle: true
+          })
           break
         case (this.isVertical ? 'right' : 'down'):
-          this.select(this.getNextItem(this.state.cols), event.shiftKey, true)
+          this.select(this.next(this.state.cols), {
+            isMeta: isMeta(event),
+            isRange: event.shiftKey,
+            scrollIntoView: true,
+            throttle: true
+          })
           break
         default:
           return
@@ -47,26 +57,27 @@ class ItemGrid extends ItemIterator {
   render() {
     if (this.props.isEmpty) return this.renderNoItems()
 
-    const { offset, height } = this.state
+    const { cols, offset, height } = this.state
     const transform = `translate3d(0,${offset}px,0)`
+    const gridTemplateColumns = `repeat(${cols}, ${cols}fr)`
 
     return this.connect(
       <div
         className={cx(this.classes)}
-        tabIndex={this.tabIndex}
-        onKeyDown={this.handleKeyDown}
-        ref={this.setContainer}
         data-size={this.props.size}
         onClick={this.handleClickOutside}>
         <div
-          ref={this.setScroller}
-          className="scroll-container">
-          <div className="runway click-catcher" style={{ height }}>
-            <ul className="viewport" style={{ transform }}>
-              {this.mapItemRange(({ item, ...props }) =>
+          className="scroll-container click-catcher"
+          ref={this.setContainer}
+          tabIndex={this.tabIndex}
+          onKeyDown={this.handleKeyDown}>
+          <div className="runway" style={{ height }}>
+            <ul
+              className="viewport click-catcher"
+              style={{ gridTemplateColumns, transform }}>
+              {this.mapIterableRange(({ item, ...props }) =>
                 <ItemTile {...props} key={item.id} item={item}/>
               )}
-              {this.fillRow()}
             </ul>
           </div>
         </div>

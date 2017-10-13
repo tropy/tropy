@@ -13,11 +13,13 @@ const { text } = require('../value')
 const act = require('../actions')
 const mod = require('../models')
 const { get, pluck, pick, remove } = require('../common/util')
+const { darwin } = require('../common/os')
 const { ITEM, DC } = require('../constants')
 const { keys } = Object
 const { isArray } = Array
 const { writeFileAsync: write } = require('fs')
 const { itemToLD } = require('../common/linked-data')
+const { win } = require('../window')
 
 const {
   getItemTemplate,
@@ -56,7 +58,6 @@ class Import extends ImportCommand {
     let { files, list } = this.action.payload
 
     const items = []
-    const metadata = []
 
     if (!files) {
       this.isInteractive = true
@@ -101,6 +102,8 @@ class Import extends ImportCommand {
 
         yield* this.createThumbnails(photo.id, image)
 
+        yield put(act.metadata.load([item.id, photo.id]))
+
         yield all([
           put(act.item.insert(item)),
           put(act.photo.insert(photo)),
@@ -108,7 +111,6 @@ class Import extends ImportCommand {
         ])
 
         items.push(item.id)
-        metadata.push(item.id, photo.id)
 
       } catch (error) {
         if (error instanceof DuplicateError) continue
@@ -121,8 +123,6 @@ class Import extends ImportCommand {
     }
 
     if (items.length) {
-      yield put(act.metadata.load(metadata))
-
       this.undo = act.item.delete(items)
       this.redo = act.item.restore(items)
     }
@@ -529,6 +529,19 @@ class ToggleTags extends Command {
   }
 }
 
+class Preview extends Command {
+  static get action() { return ITEM.PREVIEW }
+
+  *exec() {
+    if (!darwin) return
+
+    const { photos } = this.action.payload
+    const paths = yield select(state => pluck(state.photos, photos))
+
+    win.current.previewFile(paths[0])
+  }
+}
+
 class AddTag extends Command {
   static get action() { return ITEM.TAG.CREATE }
 
@@ -592,6 +605,7 @@ module.exports = {
   Split,
   Restore,
   Save,
+  Preview,
   AddTag,
   RemoveTag,
   ToggleTags,

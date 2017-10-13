@@ -7,13 +7,14 @@ const { bool, shape, string, object, arrayOf, func, number } = PropTypes
 const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')
 const { ActivityPane } = require('../activity')
-const { ListTree, TrashListNode } = require('../list')
+const { LastImportListNode, ListTree, TrashListNode } = require('../list')
 const { ProjectTags } = require('./tags')
 const { Sidebar } = require('../sidebar')
 const { ProjectName } = require('./name')
 const { TABS, LIST } = require('../../constants')
 const { has } = require('../../common/util')
 const { match } = require('../../keymap')
+const { testFocusChange } = require('../../dom')
 
 
 class ProjectSidebar extends PureComponent {
@@ -79,9 +80,13 @@ class ProjectSidebar extends PureComponent {
     switch (true) {
       case this.props.isTrashSelected:
         return
+      case this.props.isLastImportSelected:
+        return this.handleTrashSelect()
       case this.isListEmpty():
       case this.isListSelected(this.getLastList()):
-        return this.handleTrashSelect()
+        return this.props.hasLastImport ?
+          this.handleLastImportSelect() :
+          this.handleTrashSelect()
       case this.props.isSelected:
         return this.handleListSelect(this.getFirstList())
       default:
@@ -97,9 +102,12 @@ class ProjectSidebar extends PureComponent {
       case this.isListSelected(this.getFirstList()):
         return this.handleSelect()
       case this.props.isTrashSelected:
+        return this.props.hasLastImport ?
+          this.handleLastImportSelect() :
+          this.handleListSelect(this.getLastList())
+      case this.props.isLastImportSelected:
         return this.handleListSelect(this.getLastList())
       default:
-
         return this.handleListSelect(this.getPrevList())
     }
   }
@@ -109,14 +117,20 @@ class ProjectSidebar extends PureComponent {
   }
 
 
+  handleMouseDown = () => {
+    this.hasFocusChanged = testFocusChange()
+  }
+
   handleClick = () => {
     if (!this.props.isSelected || this.hasActiveFilters) {
       return this.handleSelect()
     }
 
-    this.props.onEdit({
-      project: { name: this.props.project.name }
-    })
+    if (!this.hasFocusChanged()) {
+      this.props.onEdit({
+        project: { name: this.props.project.name }
+      })
+    }
   }
 
   handleChange = (name) => {
@@ -127,13 +141,19 @@ class ProjectSidebar extends PureComponent {
     this.props.onSelect({ trash: true }, { throttle: true })
   }
 
+  handleLastImportSelect = () => {
+    this.props.onSelect({ imports: true }, { throttle: true })
+  }
+
   handleTrashDropItems = (items) => {
     this.props.onItemDelete(items.map(it => it.id))
   }
 
   handleListClick = (list) => {
     if (!this.handleListSelect(list.id)) {
-      this.props.onEdit({ list: { id: list.id } })
+      if (!this.hasFocusChanged()) {
+        this.props.onEdit({ list: { id: list.id } })
+      }
     }
   }
 
@@ -175,8 +195,10 @@ class ProjectSidebar extends PureComponent {
     const {
       activities,
       edit,
+      hasLastImport,
       hasToolbar,
       isSelected,
+      isLastImportSelected,
       isTrashSelected,
       keymap,
       lists,
@@ -206,12 +228,12 @@ class ProjectSidebar extends PureComponent {
 
           <section
             tabIndex={this.tabIndex}
-            onKeyDown={this.handleKeyDown}>
+            onKeyDown={this.handleKeyDown}
+            onMouseDown={this.handleMouseDown}>
             <nav onContextMenu={this.showProjectMenu}>
               <ol>
                 <ProjectName
                   name={project.name}
-                  size={project.items}
                   isSelected={isSelected}
                   isEditing={this.isEditing}
                   onChange={this.handleChange}
@@ -239,6 +261,10 @@ class ProjectSidebar extends PureComponent {
                   onListSave={onListSave}
                   onSort={onListSort}/>}
               <ol>
+                {hasLastImport &&
+                  <LastImportListNode
+                    isSelected={isLastImportSelected}
+                    onClick={this.handleLastImportSelect}/>}
                 <TrashListNode
                   isSelected={isTrashSelected}
                   onContextMenu={onContextMenu}
@@ -272,7 +298,9 @@ class ProjectSidebar extends PureComponent {
   static propTypes = {
     isActive: bool,
     isSelected: bool,
+    isLastImportSelected: bool,
     isTrashSelected: bool,
+    hasLastImport: bool.isRequired,
     hasToolbar: bool,
 
     project: shape({

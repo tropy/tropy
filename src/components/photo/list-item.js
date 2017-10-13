@@ -7,12 +7,17 @@ const { PhotoIterable } = require('./iterable')
 const { SelectionList } = require('../selection/list')
 const { get, pluck } = require('../../common/util')
 const cx = require('classnames')
+const { testFocusChange } = require('../../dom')
 const { bool, func, object, string } = require('prop-types')
 const { IconSelection, IconChevron9 } = require('../icons')
 const { IconButton } = require('../button')
 
 
 class PhotoListItem extends PhotoIterable {
+  get classes() {
+    return [...super.classes, { active: this.isActive }]
+  }
+
   get isDraggable() {
     return !this.props.isEditing && super.isDraggable
   }
@@ -26,21 +31,31 @@ class PhotoListItem extends PhotoIterable {
     return get(data, [photo.id, title, 'text'])
   }
 
+  handleMouseDown = () => {
+    this.hasFocusChanged = testFocusChange()
+  }
+
+  handleSingleClick = () => {
+    if (!(this.props.isDisabled || this.props.isDragging)) {
+      this.props.onEdit(this.props.photo)
+    }
+  }
+
   handleClick = createClickHandler({
     onClick: () => {
       const { isActive } = this
       this.select()
-      return !isActive
+      return !isActive || this.hasFocusChanged()
     },
 
-    onSingleClick: () => {
-      if (!(this.props.isDisabled || this.props.isDragging)) {
-        this.props.onEdit(this.props.photo)
-      }
-    },
+    onSingleClick: this.handleSingleClick,
 
     onDoubleClick: () => {
-      this.props.onItemOpen(this.props.photo)
+      if (!this.props.isItemOpen) {
+        this.props.onItemOpen(this.props.photo)
+      } else {
+        this.handleSingleClick()
+      }
     }
   })
 
@@ -74,6 +89,7 @@ class PhotoListItem extends PhotoIterable {
         data={this.props.data}
         edit={this.props.edit.selection}
         isDisabled={this.props.isDisabled}
+        isItemOpen={this.props.isItemOpen}
         onChange={this.props.onChange}
         onContextMenu={this.props.onContextMenu}
         onEdit={this.props.onEdit}
@@ -110,7 +126,8 @@ class PhotoListItem extends PhotoIterable {
         <div
           className="photo-container"
           onClick={this.handleClick}
-          onContextMenu={this.handleContextMenu}>
+          onContextMenu={this.handleContextMenu}
+          onMouseDown={this.handleMouseDown}>
           {this.renderTwistyButton()}
           {this.renderThumbnail()}
           <div className="title">

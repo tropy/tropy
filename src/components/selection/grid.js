@@ -4,7 +4,7 @@ const React = require('react')
 const { SelectionIterator } = require('./iterator')
 const { SelectionTile } = require('./tile')
 const cx = require('classnames')
-const { object } = require('prop-types')
+const { func, number, object } = require('prop-types')
 const { match } = require('../../keymap')
 
 
@@ -12,9 +12,14 @@ class SelectionGrid extends SelectionIterator {
   get isGrid() { return true }
 
   get classes() {
+    return [super.classes, 'grid']
+  }
+
+  get style() {
+    const { cols } = this.props
+
     return {
-      ...super.classes,
-      grid: true
+      gridTemplateColumns: `repeat(${cols}, ${cols}fr)`
     }
   }
 
@@ -28,29 +33,42 @@ class SelectionGrid extends SelectionIterator {
   }
 
   handleFocus = () => {
-    this.select(this.getCurrent())
+    this.props.onFocus()
   }
 
+  // eslint-disable-next-line complexity
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
       case (this.isVertical ? 'up' : 'left'):
-        this.select(this.getPrev())
+        this.select(this.prev())
         break
       case (this.isVertical ? 'down' : 'right'):
-        this.select(this.getNext())
+        this.select(this.next())
         break
       case (this.isVertical ? 'left' : 'up'):
-        this.select(this.getPrev(this.state.cols))
+        this.select(this.prev(this.state.cols))
         break
       case (this.isVertical ? 'right' : 'down'):
-        this.select(this.getNext(this.state.cols))
+        this.select(this.next(this.state.cols))
+        break
+      case 'home':
+        this.scroll(0)
+        break
+      case 'end':
+        this.scrollToEnd()
+        break
+      case 'pageUp':
+        this.scrollPageUp()
+        break
+      case 'pageDown':
+        this.scrollPageDown()
         break
       case 'open':
-        this.open(this.getCurrent())
+        this.open(this.current())
         break
       case 'delete':
-        this.delete(this.getCurrent())
-        this.select(this.getNext() || this.getPrev())
+        this.delete(this.current())
+        this.select(this.next() || this.prev())
         break
       default:
         return
@@ -66,7 +84,9 @@ class SelectionGrid extends SelectionIterator {
       <ul
         className={cx(this.classes)}
         ref={this.setContainer}
+        style={this.style}
         tabIndex={this.tabIndex}
+        onBlur={this.props.onBlur}
         onKeyDown={this.handleKeyDown}>
         {this.map(({ selection, ...props }) =>
           <SelectionTile {...props}
@@ -74,14 +94,16 @@ class SelectionGrid extends SelectionIterator {
             isSelected={false}
             onContextMenu={this.props.onContextMenu}
             selection={selection}/>)}
-        {this.fillRow()}
       </ul>
     )
   }
 
   static propTypes = {
     ...SelectionIterator.propTypes,
-    keymap: object.isRequired
+    cols: number.isRequired,
+    keymap: object.isRequired,
+    onBlur: func.isRequired,
+    onFocus: func.isRequired
   }
 }
 

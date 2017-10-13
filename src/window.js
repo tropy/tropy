@@ -9,7 +9,7 @@ const { EventEmitter } = require('events')
 const args = require('./args')
 
 const {
-  $$, append, emit, create, isInput, on, once, toggle, stylesheet, remove
+  $$, append, emit, create, isInput, on, off, toggle, stylesheet, remove
 } = require('./dom')
 
 const isCommand = darwin ?
@@ -160,13 +160,31 @@ class Window extends EventEmitter {
     })
   }
 
+
   handleTabFocus() {
     on(document.body, 'keydown', event => {
       if (event.key === 'Tab' && !event.defaultPrevented) {
-        // Set up timer here to detect tab 'gap'!
-        once(document.body, 'focusin', ({ target }) => {
-          if (target) emit(target, 'tab:focus')
-        })
+        const onTabFocus = ({ target }) => {
+          try {
+            if (target != null) {
+              emit(target, 'tab:focus')
+            }
+          } finally {
+            clearTimeout(tm)
+            offTabFocus()
+          }
+        }
+
+        const offTabFocus = () => {
+          off(document.body, 'focusin', onTabFocus)
+        }
+
+        const tm = setTimeout(() => {
+          // Hit the tab 'gap'! Forward to first tab index?
+          offTabFocus()
+        }, 50)
+
+        on(document.body, 'focusin', onTabFocus)
       }
     })
   }

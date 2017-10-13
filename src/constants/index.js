@@ -8,6 +8,7 @@ module.exports = {
   EDIT: require('./edit'),
   ESPER: require('./esper'),
   HISTORY: require('./history'),
+  IMPORTS: require('./import'),
   ITEM: require('./item'),
   KEYMAP: require('./keymap'),
   LIST: require('./list'),
@@ -29,7 +30,5 @@ module.exports = {
   TYPE: require('./type'),
   UI: require('./ui'),
   WIZARD: require('./wizard'),
-  ...require('./rdf'),
-
-  MAX_SELECT: 100 // TODO remove when we virtualize photo and note panel!
+  ...require('./rdf')
 }

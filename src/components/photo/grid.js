@@ -7,40 +7,64 @@ const { SelectionGrid } = require('../selection/grid')
 const { pluck } = require('../../common/util')
 const cx = require('classnames')
 const { match } = require('../../keymap')
+const { floor, ceil } = Math
+const { GRID } = require('../../constants/sass')
 
 
 class PhotoGrid extends PhotoIterator {
   get isGrid() { return true }
 
   get classes() {
-    return {
-      ...super.classes,
-      grid: true
-    }
+    return [super.classes, 'grid', {
+      'nested-focus': this.state.hasSelectionGridFocus,
+      'has-nested-active': this.props.selection != null
+    }]
   }
 
   getNextRowOffset(index) {
     return index + (this.state.cols - (index % this.state.cols))
   }
 
-  isExpanded(photo) {
-    return !photo.pending &&
-      this.props.expanded[0] === photo.id &&
-      photo.selections.length > 0
+  getExpansionRows({ cols } = this.state, props = this.props) {
+    const photo = props.expanded[0]
+    this.expRows = []
+
+    if (photo == null) return 0
+
+    const exp = ceil(photo.selections.length / cols)
+    const idx = this.indexOf(photo.id, props)
+    if (idx === -1) return 0
+
+    for (let j = 1, k = 1 + floor(idx / cols); j <= exp; ++j, ++k) {
+      this.expRows.push([k, j, j])
+    }
+
+    return exp
   }
 
-  map(fn) {
-    this.idx = {}
+  isExpanded(photo) {
+    return photo.selections != null &&
+      photo.selections.length > 0 &&
+      this.props.expanded[0] === photo
+  }
+
+  mapIterableRange(fn, range = this.getIterableRange()) {
+    if (this.props.expanded.length === 0) {
+      return super.mapIterableRange(fn, range)
+    }
+
+    this.mappedRange = range
+
     const { photos } = this.props
-    const { size } = this
+    const { from, to } = range
+
     let out = []
-    let cur = 0
-    let gap = size
+    let cur = from
+    let gap = to
     let exp
 
-    for (; cur < gap && cur < size; ++cur) {
+    for (; cur < gap && cur < to; ++cur) {
       let photo = photos[cur]
-      this.idx[photo.id] = cur
 
       if (this.isExpanded(photo)) {
         exp = photo
@@ -51,50 +75,88 @@ class PhotoGrid extends PhotoIterator {
     }
 
     if (exp != null) {
-      if (gap > size) {
-        out = out.concat(this.fill(gap - size, 'gap'))
-      }
-
       out.push(this.renderSelectionGrid(exp))
     }
 
-    for (; cur < size; ++cur) {
+    for (; cur < to; ++cur) {
       let photo = photos[cur]
-      this.idx[photo.id] = cur
       out.push(fn(this.getIterableProps(photo, cur)))
     }
 
     return out
   }
 
+  contract = (photo) => {
+    if (this.isExpandable(photo)) {
+      this.handleSelectionGridBlur()
+      this.props.onContract(this.props.expanded.map(p => p.id))
+
+      if (this.isSelected(photo)) {
+        this.props.onSelect({
+          photo: photo.id,
+          item: photo.item,
+          note: photo.notes[0]
+        })
+      }
+    }
+  }
+
   // eslint-disable-next-line complexity
   handleKeyDown = (event) => {
     switch (match(this.keymap, event)) {
       case (this.isVertical ? 'up' : 'left'):
-        this.select(this.getPrevPhoto())
+        this.select(this.prev(), {
+          scrollIntoView: true,
+          throttle: true
+        })
         break
       case (this.isVertical ? 'down' : 'right'):
-        this.select(this.getNextPhoto())
+        this.select(this.next(), {
+          scrollIntoView: true,
+          throttle: true
+        })
         break
       case (this.isVertical ? 'left' : 'up'):
-        this.select(this.getPrevPhoto(this.state.cols))
+        this.select(this.prev(this.state.cols), true)
+        this.select(this.prev(this.state.cols), {
+          scrollIntoView: true,
+          throttle: true
+        })
         break
       case (this.isVertical ? 'right' : 'down'):
-        this.select(this.getNextPhoto(this.state.cols))
+        this.select(this.next(this.state.cols), {
+          scrollIntoView: true,
+          throttle: true
+        })
+        break
+      case 'home':
+        this.scroll(0)
+        break
+      case 'end':
+        this.scrollToEnd()
+        break
+      case 'pageUp':
+        this.scrollPageUp()
+        break
+      case 'pageDown':
+        this.scrollPageDown()
         break
       case 'open':
-        this.handleItemOpen(this.getCurrentPhoto())
+        this.handleItemOpen(this.current())
+        break
+      case 'preview':
+        this.preview(this.current())
         break
       case 'expand':
       case 'enter':
-        this.expand(this.getCurrentPhoto())
+        this.expand(this.current())
         break
       case 'contract':
-        this.contract(this.getCurrentPhoto())
+        this.contract(this.current())
         break
       case 'delete':
-        this.handleDelete(this.getCurrentPhoto())
-        this.select(this.getNextPhoto() || this.getPrevPhoto())
+        this.handleDelete(this.current())
+        this.select(this.next() || this.prev())
         break
       default:
         return
@@ -104,18 +166,32 @@ class PhotoGrid extends PhotoIterator {
     event.stopPropagation()
   }
 
+  handleSelectionGridFocus = () => {
+    this.setState({ hasSelectionGridFocus: true })
+  }
+
+  handleSelectionGridBlur = () => {
+    this.setState({ hasSelectionGridFocus: false })
+  }
 
   renderSelectionGrid(photo) {
     const selections = pluck(this.props.selections, photo.selections)
+    const gridColumnEnd = this.state.cols + 1
 
     return (
-      <li key="expansion" className="tile-expansion">
+      <li
+        key="expansion"
+        className="tile-expansion"
+        style={{ gridColumnEnd }}>
         <SelectionGrid
-          cache={this.props.cache}
           active={this.props.selection}
+          cache={this.props.cache}
+          cols={this.state.cols}
           data={this.props.data}
           isDisabled={this.props.isDisabled}
           keymap={this.props.keymap.SelectionGrid}
+          onBlur={this.handleSelectionGridBlur}
+          onFocus={this.handleSelectionGridFocus}
           onContextMenu={this.props.onContextMenu}
           onDelete={this.handleDelete}
           onItemOpen={this.handleItemOpen}
@@ -129,18 +205,40 @@ class PhotoGrid extends PhotoIterator {
   }
 
   render() {
+    const { expanded } = this.props
+    const range = this.getIterableRange()
+    const padding = GRID.PADDING * 4
+    const [exp, adj] = range.exp
+
+    let { cols, offset, height } = this.state
+
+    if (expanded.length > 0) {
+      height += padding
+      if (exp > 0 && adj === 0) offset += padding
+    }
+
+    const transform = `translate3d(0,${offset}px,0)`
+    const gridTemplateColumns = `repeat(${cols}, ${cols}fr)`
+
     return this.connect(
-      <ul
-        className={cx(this.classes)}
-        ref={this.setContainer}
-        tabIndex={this.tabIndex}
-        data-size={this.props.size}
-        onKeyDown={this.handleKeyDown}>
-        {this.map(({ photo, ...props }) =>
-          <PhotoTile {...props} key={photo.id} photo={photo}/>
-        )}
-        {this.fillRow()}
-      </ul>
+      <div className={cx(this.classes)}
+        data-size={this.props.size}>
+        <div
+          className="scroll-container"
+          ref={this.setContainer}
+          tabIndex={this.tabIndex}
+          onKeyDown={this.handleKeyDown}>
+          <div className="runway" style={{ height }}>
+            <ul
+              className="viewport"
+              style={{ gridTemplateColumns, transform }}>
+              {this.mapIterableRange(({ photo, ...props }) => (
+                <PhotoTile {...props} key={photo.id} photo={photo}/>
+              ), range)}
+            </ul>
+          </div>
+        </div>
+      </div>
     )
   }
 

@@ -126,6 +126,7 @@ class Slider extends PureComponent {
     if (minIcon) {
       return (
         <IconButton
+          canHaveFocus={this.props.canHaveFocus}
           icon={this.props.minIcon}
           isActive={value === min}
           isDisabled={this.isDisabled}
@@ -141,6 +142,7 @@ class Slider extends PureComponent {
     if (maxIcon) {
       return (
         <IconButton
+          canHaveFocus={this.props.canHaveFocus}
           icon={this.props.maxIcon}
           isActive={value === max}
           isDisabled={this.isDisabled}
@@ -185,6 +187,7 @@ class Slider extends PureComponent {
   }
 
   static propTypes = {
+    canHaveFocus: bool,
     isDisabled: bool,
     max: number.isRequired,
     maxIcon: element,

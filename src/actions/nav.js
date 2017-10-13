@@ -27,7 +27,7 @@ module.exports = {
     return {
       type: NAV.SELECT,
       payload,
-      meta: { search: true, ...meta }
+      meta: { log: 'trace', search: true, ...meta }
     }
   },
 

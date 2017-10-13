@@ -173,8 +173,8 @@ class ProjectContainer extends Component {
       data,
       dt,
       expanded,
-      index,
       items,
+      hasLastImport,
       nav,
       note,
       notes,
@@ -196,12 +196,12 @@ class ProjectContainer extends Component {
         <ProjectView {...props}
           activities={activities}
           nav={nav}
-          index={index}
           items={items}
           data={data}
           isActive={this.state.mode === MODE.PROJECT}
           isEmpty={this.isEmpty}
           columns={columns}
+          hasLastImport={hasLastImport}
           sidebar={ui.sidebar}
           offset={this.state.offset}
           photos={photos}
@@ -237,12 +237,11 @@ class ProjectContainer extends Component {
 
 
   static propTypes = {
-    expanded: arrayOf(number).isRequired,
+    expanded: arrayOf(object).isRequired,
     project: shape({
       file: string
     }).isRequired,
 
-    index: object.isRequired,
     items: arrayOf(
       shape({ id: number.isRequired })
     ).isRequired,
@@ -267,6 +266,7 @@ class ProjectContainer extends Component {
       shape({ id: number.isRequired })
     ),
 
+    hasLastImport: bool,
     nav: shape({
       mode: oneOf(values(MODE)).isRequired
     }).isRequired,
@@ -344,6 +344,7 @@ module.exports = {
       index: state.qr.index,
       items: getVisibleItems(state),
       keymap: state.keymap,
+      hasLastImport: state.imports.length > 0,
       lists: state.lists,
       nav: state.nav,
       note: getSelectedNote(state),

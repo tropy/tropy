@@ -26,19 +26,16 @@
   }
 
   .scroll-container {
-    padding: $space-min;
+    padding: $space-min $space-min 0;
   }
 
   .runway {
     contain: strict;
-    min-height: 100%;
   }
 
   .viewport {
-    display: flex;
-    flex-wrap: wrap;
-    align-content: flex-start;
-    contain: layout style;
+    display: grid;
+    contain: content;
     will-change: transform;
   }
 

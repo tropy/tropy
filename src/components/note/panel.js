@@ -5,9 +5,26 @@ const { Panel } = require('../panel')
 const { NoteToolbar } = require('./toolbar')
 const { NoteList } = require('./list')
 const { arrayOf, bool, func, number, object, shape } = require('prop-types')
+const cx = require('classnames')
+const { has } = require('../../common/util')
 
 
 class NotePanel extends Panel {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      hasListFocus: false
+    }
+  }
+
+  handleBlur = () => {
+    this.setState({ hasListFocus: false })
+  }
+
+  handleFocus = () => {
+    this.setState({ hasListFocus: true })
+  }
 
   handleContextMenu = (event) => {
     const { item, photo, onContextMenu } = this.props
@@ -28,21 +45,24 @@ class NotePanel extends Panel {
   }
 
   renderToolbar() {
-    const { isDisabled, onCreate } = this.props
-
     return (
       <NoteToolbar
-        hasCreateButton={!isDisabled}
-        onCreate={onCreate}/>
+        hasCreateButton
+        isDisabled={this.props.isDisabled}
+        notes={this.props.notes.length}
+        onCreate={this.props.onCreate}/>
     )
   }
 
   renderContent() {
     return (
       <NoteList
+        isDisabled={this.props.isDisabled}
         keymap={this.props.keymap}
         notes={this.props.notes}
         selection={this.props.selection}
+        onBlur={this.handleBlur}
+        onFocus={this.handleFocus}
         onContextMenu={this.props.onContextMenu}
         onOpen={this.handleOpen}
         onSelect={this.props.onSelect}/>
@@ -52,10 +72,14 @@ class NotePanel extends Panel {
   render() {
     const toolbar = this.renderToolbar()
     const content = this.renderContent()
+    const classes = {
+      'nested-focus': this.state.hasListFocus,
+      'has-active': has(this.props, ['selection', 'id'])
+    }
 
     return (
       <section
-        className="note-panel panel"
+        className={cx('note-panel', 'panel', classes)}
         onContextMenu={this.handleContextMenu}>
         {this.renderHeader(toolbar)}
         {this.renderBody(content)}
@@ -70,7 +94,7 @@ class NotePanel extends Panel {
     keymap: object.isRequired,
     notes: arrayOf(shape({
       id: number.isRequired
-    })),
+    })).isRequired,
     photo: number,
     selection: object,
     onItemOpen: func.isRequired,

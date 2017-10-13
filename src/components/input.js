@@ -17,11 +17,9 @@ class BufferedInput extends PureComponent {
   }
 
   componentWillReceiveProps({ value }) {
-    this.setState({ value })
-    this.clearResetTimeout()
-
     this.hasBeenCommitted = false
     this.hasBeenCancelled = false
+    this.setState({ value })
   }
 
   componentWillUnmount() {
@@ -54,11 +52,14 @@ class BufferedInput extends PureComponent {
 
   commit(force) {
     if (force || this.isValid) {
-      this.props.onCommit(this.state.value, this.hasChanged, force)
-      this.hasBeenCommitted = true
+      if (!this.hasBeenCommitted) {
+        this.hasBeenCommitted = true
+        this.props.onCommit(this.state.value, this.hasChanged, force)
 
-      if (this.hasChanged && this.props.delay > 0) {
-        this.tm = setTimeout(this.reset, this.props.delay)
+        if (this.hasChanged && this.props.delay > 0) {
+          this.clearResetTimeout()
+          this.tm = setTimeout(this.reset, this.props.delay)
+        }
       }
 
     } else {
@@ -103,7 +104,12 @@ class BufferedInput extends PureComponent {
 
   handleKeyDown = (event) => {
     if (this.props.onKeyDown != null) {
-      if (this.props.onKeyDown(event)) return
+      const { value } = this.state
+      const { hasChanged } = this
+
+      if (this.props.onKeyDown(event, value, hasChanged)) {
+        return
+      }
     }
 
     switch (event.key) {

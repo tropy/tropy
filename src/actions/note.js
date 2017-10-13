@@ -61,7 +61,7 @@ module.exports = {
       dispatch({
         type: NOTE.SELECT,
         payload: { note, photo, item, selection },
-        meta: { ...meta }
+        meta: { log: 'trace', ...meta }
       })
     }
   },

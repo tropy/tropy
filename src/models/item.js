@@ -39,14 +39,16 @@ const prefix = (query) =>
   (!(/[*+'"]/).test(query)) ? query + '*' : query
 
 
-function search(db, query, params) {
+async function search(db, query, params) {
   const items = []
-  const index = {}
+  items.idx = {}
 
-  return db.each(query, params, ({ id }) => {
-    index[id] = items.length
+  await db.each(query, params, ({ id }) => {
+    items.idx[id] = items.length
     items.push(id)
-  }).then(() => ({ index, items }))
+  })
+
+  return { items }
 }
 
 
@@ -73,6 +75,27 @@ module.exports = mod.item = {
             ${(query.length > 0) ? `id IN (${SEARCH}) AND` : ''}
             deleted ${trash ? 'NOT' : 'IS'} NULL
           ORDER BY sort.text ${dir}, id ${dir}`,
+      params)
+  },
+
+  async find(db, { ids, query }) {
+    const params = {}
+    query = query.trim()
+
+    if (query.length) {
+      params.$query = prefix(query)
+    }
+
+    return search(db, `
+      SELECT DISTINCT id
+        FROM subjects
+          JOIN items USING (id)
+          LEFT OUTER JOIN trash USING (id)
+        WHERE
+          id IN (${ids.join(',')}) AND
+          deleted IS NULL
+          ${(query.length > 0) ? `AND id IN (${SEARCH})` : ''}
+        ORDER BY created DESC`,
       params)
   },
 
