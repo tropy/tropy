@@ -487,9 +487,12 @@ class Preview extends Command {
     if (!darwin) return
 
     const { photos } = this.action.payload
-    const paths = yield select(state => pluck(state.photos, photos))
+    const paths = yield select(state =>
+      photos.map(id => get(state.photos, [id, 'path'])))
 
-    win.current.previewFile(paths[0])
+    if (paths.length > 0) {
+      win.current.previewFile(paths[0])
+    }
   }
 }
 

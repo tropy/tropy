@@ -49,7 +49,6 @@ linux: &linux
     open: Enter
     edit: F2
     delete: Backspace
-    preview: Space
     expand:
       - CmdOrCtrl+ArrowDown
       - CmdOrCtrl+ArrowRight
@@ -154,6 +153,7 @@ darwin:
       - Cmd+ArrowRight
     delete: Backspace
     enter: Enter
+    preview: Space
     contract: Escape
     home: Home
     end: End
