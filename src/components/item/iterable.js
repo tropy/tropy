@@ -54,11 +54,8 @@ class ItemIterable extends PureComponent {
   }
 
   handleOpen = () => {
-    const { item, onItemOpen } = this.props
-
-    onItemOpen({
-      id: item.id, photos: item.photos
-    })
+    const { id, photos } = this.props.item
+    this.props.onItemOpen({ id, photos })
   }
 
   handleSelect = (event) => {
