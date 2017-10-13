@@ -34,17 +34,17 @@ module.exports = {
 
   copy(payload, meta) {
     return {
-      type: ITEM.COPY,
+      type: ITEM.EXPORT,
       payload: array(payload),
-      meta: { cmd: 'project', ...meta }
+      meta: { cmd: 'project', target: ':clipboard:', ...meta }
     }
   },
 
   paste(payload, meta) {
     return {
-      type: ITEM.PASTE,
+      type: ITEM.IMPORT,
       payload,
-      meta: { cmd: 'project', history: 'add', ...meta }
+      meta: { cmd: 'project', history: 'add', source: ':clipboard:', ...meta }
     }
   },
 
@@ -84,7 +84,7 @@ module.exports = {
   export(payload, meta) {
     return {
       type: ITEM.EXPORT,
-      payload: payload,
+      payload: array(payload),
       meta: { cmd: 'project', ...meta }
     }
   },
