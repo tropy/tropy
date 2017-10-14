@@ -7,7 +7,6 @@ module.exports = {
   EXPLODE: 'item.explode',
   EXPORT: 'item.export',
   INSERT: 'item.insert',
-  IMPORT: 'item.import',
   IMPLODE: 'item.implode',
   LOAD: 'item.load',
   MERGE: 'item.merge',
@@ -36,6 +35,11 @@ module.exports = {
   PHOTO: {
     ADD: 'item.photo.add',
     REMOVE: 'item.photo.remove'
+  },
+
+  IMPORT: {
+    IMAGE: 'item.import.image',
+    ITEM: 'item.import.item'
   },
 
   TEMPLATE: 'https://tropy.org/v1/templates/item'

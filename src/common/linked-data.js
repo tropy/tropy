@@ -80,6 +80,15 @@ function createDocument(item_template, metadata, props) {
   return document
 }
 
+class ParseError extends Error {
+  constructor(obj, ...args) {
+    super(...args)
+    Error.captureStackTrace(this, ParseError)
+
+    this.details = JSON.stringify(obj, null, 2)
+  }
+}
+
 function itemToLD() {
   var document = createDocument(...arguments)
   const context = createContext(...arguments)
@@ -95,13 +104,27 @@ async function itemFromLD(obj) {
     type = expanded['@type'][0]
     templateID = expanded[TEMPLATE.TYPE][0]['@id']
     metadata = omit(expanded, ['@type', TEMPLATE.TYPE])
-  } catch (e) { return }
-  return { type, templateID, metadata }
+  } catch (e) {
+    throw new ParseError(obj, 'Could not parse jsonld object')
+  }
+
+  // convert metadata to a format supported by `mod.item.create`
+  let md = {}
+  for (let property in metadata) {
+    const [prop] = metadata[property]
+    md[property] =  {
+      type: prop['@type'],
+      text: prop['@value']
+    }
+  }
+
+  return { type, templateID, metadata: md }
 }
 
 module.exports = {
   shortenLabel,
   propertyLabel,
   itemToLD,
-  itemFromLD
+  itemFromLD,
+  ParseError
 }

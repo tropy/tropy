@@ -12,13 +12,13 @@ const { Image } = require('../image')
 const { text } = require('../value')
 const act = require('../actions')
 const mod = require('../models')
-const { get, pluck, pick, remove } = require('../common/util')
+const { get, pluck, pick, remove, array } = require('../common/util')
 const { darwin } = require('../common/os')
 const { ITEM, DC } = require('../constants')
 const { keys } = Object
 const { isArray } = Array
 const { writeFileAsync: write } = require('fs')
-const { itemToLD, itemFromLD } = require('../common/linked-data')
+const { itemToLD, itemFromLD, ParseError } = require('../common/linked-data')
 const { win } = require('../window')
 
 const {
@@ -50,53 +50,42 @@ class Create extends Command {
   }
 }
 
-class Import extends ImportCommand {
-  static get action() { return ITEM.IMPORT }
+class ImportItem extends ImportCommand {
+  /* Import items either from file or clipboard */
+  static get action() { return ITEM.IMPORT.ITEM }
 
   *exec() {
     const { db } = this.options
-    let { files, list } = this.action.payload
     const { source } = this.action.meta
 
-    const items = []
+    var unparsed // string from file or clipboard
+    var objects  // array parsed from the above
+    const items = { success: [], fail: [] }
 
-    // much shared with the image file import
-    // TODO will be refactored later
     if (source === ':clipboard:') {
-      let pasted
-      try {
-        pasted = JSON.parse(clipboard.readText())
-      } catch (e) {
-        return []
-      }
-      for (const obj in pasted) {
-        const parsed = yield call(itemFromLD, pasted[obj])
-        if (!parsed) { // ignore unparsable items
-          // TODO inform the user about failed items
-          continue
-        }
+      unparsed = clipboard.readText()
+    } else {
+      // TODO unparsed = ...read file
+    }
+
+    try {
+      objects = array(JSON.parse(unparsed))
+
+      for (let i = 0, total = objects.length; i < total; ++i) {
         let item
+        const parsed = yield call(itemFromLD, objects[i])
 
         const template = yield select(
           state => state.ontology.template[parsed.templateID])
         if (!template) {
+          items.fail.push(i) // append index to items.fail -> alert user later
           continue
         }
-        const templateDefaults = getTemplateValues(template)
 
-        let metadata = {}
-        for (let property in parsed.metadata) {
-          const [prop] = parsed.metadata[property]
-          metadata[property] =  {
-            type: prop['@type'],
-            text: prop['@value']
-          }
-        }
-
-        const data = { ...templateDefaults, ...metadata }
+        const metadata = { ...getTemplateValues(template), ...parsed.metadata }
 
         yield call(db.transaction, async tx => {
-          item = await mod.item.create(tx, template.id, data)
+          item = await mod.item.create(tx, template.id, metadata)
         })
 
         yield put(act.metadata.load([item.id]))
@@ -105,16 +94,39 @@ class Import extends ImportCommand {
           put(act.item.insert(item)),
         ])
 
-        items.push(item.id)
-      }
+        // TODO import lists, tags, photos, selections, notes, etc.
 
-      if (items.length) {
-        this.undo = act.item.delete(items)
-        this.redo = act.item.restore(items)
+        items.success.push(item.id)
       }
+    } catch (error) {
+      if (error instanceof SyntaxError) {
+        // might want to ignore this if user pastes something accidentally
+        warn(`Could not parse ${source} contents.`)
+      } else if (error instanceof ParseError) {
+        warn(error.message)
+        verbose(error.details)
+      } else {
+        //
+      }
+      verbose(error.stack)
 
-      return items
+      fail(error, this.action.type)
     }
+    this.setUndo(items.success)
+    return items.success
+  }
+}
+
+class ImportImage extends ImportCommand {
+  /* Import items with photos from files */
+
+  static get action() { return ITEM.IMPORT.IMAGE }
+
+  *exec() {
+    const { db } = this.options
+    let { files, list } = this.action.payload
+
+    const items = []
 
     if (!files) {
       this.isInteractive = true
@@ -179,11 +191,7 @@ class Import extends ImportCommand {
       }
     }
 
-    if (items.length) {
-      this.undo = act.item.delete(items)
-      this.redo = act.item.restore(items)
-    }
-
+    this.setUndo(items)
     return items
   }
 }
@@ -621,7 +629,8 @@ module.exports = {
   Destroy,
   Explode,
   Export,
-  Import,
+  ImportImage,
+  ImportItem,
   Implode,
   Load,
   Merge,
