@@ -52,6 +52,8 @@ class BufferedInput extends PureComponent {
   }
 
   reset = () => {
+    this.hasBeenCommitted = false
+    this.hasBeenCancelled = false
     this.setState({ value: this.props.value })
     this.clearResetTimeout()
   }
