@@ -19,8 +19,23 @@ const {
 
 
 class Panel extends PureComponent {
+  constructor(props) {
+    super(props)
+    this.state = {
+      hasNestedFocus: false
+    }
+  }
+
   get classes() {
     return { 'panel-body': true }
+  }
+
+  handleNestedBlur = () => {
+    this.setState({ hasNestedFocus: false })
+  }
+
+  handleNestedFocus = () => {
+    this.setState({ hasNestedFocus: true })
   }
 
   handleToggle = () => {

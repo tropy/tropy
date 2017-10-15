@@ -156,7 +156,7 @@ class PhotoList extends PhotoIterator {
 
 
   render() {
-    const { data, edit, onChange } = this.props
+    const { data, edit, onBlur, onChange } = this.props
     const { offset, height } = this.state
     const transform = `translate3d(0,${offset}px,0)`
 
@@ -166,6 +166,7 @@ class PhotoList extends PhotoIterator {
           className="scroll-container"
           ref={this.setContainer}
           tabIndex={this.tabIndex}
+          onBlur={onBlur}
           onKeyDown={this.handleKeyDown}>
           <div className="runway" style={{ height }}>
             <ul className="viewport" style={{ transform }}>
