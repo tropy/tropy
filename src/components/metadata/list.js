@@ -65,7 +65,7 @@ class MetadataList extends PureComponent {
     )
   }
 
-  renderTemplate() {
+  renderTemplateFields() {
     const { template } = this.props
     return template && template.fields.map(f =>
       this.renderField(f.property, {
@@ -87,7 +87,7 @@ class MetadataList extends PureComponent {
   render() {
     return !this.isEmpty && (
       <ol className="metadata-fields">
-        {this.renderTemplate()}
+        {this.renderTemplateFields()}
         {this.renderExtraFields()}
       </ol>
     )

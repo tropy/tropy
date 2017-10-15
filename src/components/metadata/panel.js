@@ -10,6 +10,7 @@ const { PhotoInfo } = require('../photo/info')
 const { ItemInfo } = require('../item/info')
 const { SelectionInfo } = require('../selection/info')
 const { TABS } = require('../../constants')
+const { match } = require('../../keymap')
 
 const {
   arrayOf, bool, func, number, object, shape, string
@@ -75,10 +76,17 @@ class MetadataPanel extends PureComponent {
   }
 
   handleKeyDown = (event) => {
-    if (event.key === 'ArrowDown') {
-      this.focus()
-      event.stopPropagation()
+    switch (match(this.props.keymap, event)) {
+      case 'down':
+      case 'enter':
+        this.focus()
+        break
+      default:
+        return
     }
+
+    event.stopPropagation()
+    event.preventDefault()
   }
 
 
@@ -206,6 +214,7 @@ class MetadataPanel extends PureComponent {
     }),
     photoData: object,
 
+    keymap: object.isRequired,
     templates: object.isRequired,
     itemTemplates: arrayOf(object).isRequired,
 

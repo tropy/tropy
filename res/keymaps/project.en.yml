@@ -71,6 +71,10 @@ linux: &linux
     end: End
     pageUp: PageUp
     pageDown: PageDown
+  MetadataList: &MetadataList
+    up: ArrowUp
+    down: ArrowDown
+    activate: Enter
   NoteList: &NoteList
     up: ArrowUp
     down: ArrowDown
@@ -107,6 +111,8 @@ linux: &linux
     undo: CmdOrCtrl+z
     redo: CmdOrCtrl+Shift+Z
   TagList: &TagList
+    up: ArrowUp
+    down: ArrowDown
     remove:
       - Backspace
       - Delete
@@ -172,6 +178,7 @@ darwin:
     end: End
     pageUp: PageUp
     pageDown: PageDown
+  MetadataList: *MetadataList
   NoteList: *NoteList
   NotePad: *NotePad
   TagList: *TagList

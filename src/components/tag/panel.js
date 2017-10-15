@@ -9,6 +9,7 @@ const { TagAdder } = require('./adder')
 const { toId } = require('../../common/util')
 const { seq, map, filter, compose } = require('transducers.js')
 const { TABS } = require('../../constants')
+const { match } = require('../../keymap')
 
 const {
   getAllTags,
@@ -91,12 +92,17 @@ class TagPanel extends PureComponent {
   }
 
   handleKeyDown = (event) => {
-    if (event.key === 'ArrowDown') {
-      if (this.adder) {
+    switch (match(this.props.keymap, event)) {
+      case 'down':
+      case 'commit':
         this.adder.focus()
-        event.stopPropagation()
-      }
+        break
+      default:
+        return
     }
+
+    event.stopPropagation()
+    event.preventDefault()
   }
 
   render() {
@@ -160,7 +166,6 @@ module.exports = {
       allTags: getAllTags(state),
       edit: state.edit.tabTag,
       items: getSelectedItems(state),
-      keymap: state.keymap.TagList,
       tags: getItemTags(state)
     })
   )(TagPanel)

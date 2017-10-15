@@ -25,8 +25,8 @@ class ItemPanel extends PureComponent {
     }
   }
 
-  setFirstPanel = (first) => {
-    this.first = first
+  setPanel = (panel) => {
+    this.first = panel
   }
 
   handlePhotoCreate = (dropped) => {
@@ -118,7 +118,8 @@ class ItemPanel extends PureComponent {
             tab={panel.tab}
             isDisabled={isDisabled}
             isItemOpen={isItemOpen}
-            setPanel={this.setFirstPanel}
+            keymap={keymap}
+            setPanel={this.setPanel}
             onActivate={this.handleFirstPanelActivate}
             onDeactivate={this.handleFirstPanelDeactivate}
             onBlur={this.handleFirstPanelBlur}
