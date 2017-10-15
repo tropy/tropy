@@ -20,7 +20,8 @@ class ItemPanel extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
-      hasFirstPanelFocus: false
+      hasFirstPanelFocus: false,
+      isFirstPanelActive: false
     }
   }
 
@@ -55,6 +56,13 @@ class ItemPanel extends PureComponent {
     this.setState({ hasFirstPanelFocus: false })
   }
 
+  handleFirstPanelActivate = () => {
+    this.setState({ isFirstPanelActive: true })
+  }
+
+  handleFirstPanelDeactivate = () => {
+    this.setState({ isFirstPanelActive: false })
+  }
 
   renderItemToolbar() {
     return (
@@ -100,7 +108,8 @@ class ItemPanel extends PureComponent {
         header={this.renderItemToolbar()}>
 
         <Panel className={cx('item', 'panel', {
-          'nested-focus': this.state.hasFirstPanelFocus
+          'nested-focus': this.state.hasFirstPanelFocus,
+          'has-active': this.state.isFirstPanelActive
         })}>
           <ItemTabHeader
             tab={panel.tab}
@@ -110,6 +119,8 @@ class ItemPanel extends PureComponent {
             isDisabled={isDisabled}
             isItemOpen={isItemOpen}
             setPanel={this.setFirstPanel}
+            onActivate={this.handleFirstPanelActivate}
+            onDeactivate={this.handleFirstPanelDeactivate}
             onBlur={this.handleFirstPanelBlur}
             onFocus={this.handleFirstPanelFocus}/>
         </Panel>

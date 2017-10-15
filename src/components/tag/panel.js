@@ -46,6 +46,21 @@ class TagPanel extends PureComponent {
     if (isForced) this.container.focus()
   }
 
+  handleFocus = (event) => {
+    this.props.onFocus()
+
+    if (event != null && event.target === this.container) {
+      this.props.onDeactivate()
+    } else {
+      this.props.onActivate()
+    }
+  }
+
+  handleBlur = () => {
+    this.props.onBlur()
+    this.props.onDeactivate()
+  }
+
   handleTagRemove = (tag) => {
     const present = seq(this.props.items,
       compose(filter(it => it.tags.includes(tag.id)), map(toId)))
@@ -90,8 +105,8 @@ class TagPanel extends PureComponent {
         ref={this.setContainer}
         className="tab-pane"
         tabIndex={this.tabIndex}
-        onBlur={this.props.onBlur}
-        onFocus={this.props.onFocus}
+        onBlur={this.handleBlur}
+        onFocus={this.handleFocus}
         onKeyDown={this.handleKeyDown}>
         <TagList
           edit={this.props.edit}
@@ -108,6 +123,8 @@ class TagPanel extends PureComponent {
           tags={this.props.allTags}
           count={this.props.items.length}
           onAdd={this.handleTagAdd}
+          onBlur={this.handleBlur}
+          onFocus={this.handleFocus}
           onCancel={this.handleCancel}
           onCreate={this.handleTagCreate}/>
       </div>
@@ -124,6 +141,8 @@ class TagPanel extends PureComponent {
       name: string.isRequired
     })).isRequired,
 
+    onActivate: func.isRequired,
+    onDeactivate: func.isRequired,
     onBlur: func.isRequired,
     onFocus: func.isRequired,
     onContextMenu: func.isRequired,

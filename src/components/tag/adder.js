@@ -30,7 +30,10 @@ class TagAdder extends PureComponent {
     this.editable.input.reset()
   }
 
-  handleBlur = () => true
+  handleBlur = (event) => {
+    this.props.onBlur(event)
+    return true // cancel on blur
+  }
 
   setEditable = (editable) => {
     this.editable = editable
@@ -49,6 +52,7 @@ class TagAdder extends PureComponent {
           value={''}
           placeholder={this.placeholder}
           onBlur={this.handleBlur}
+          onFocus={this.props.onFocus}
           onCancel={this.props.onCancel}
           onChange={this.handleChange}/>
       </div>
@@ -63,7 +67,9 @@ class TagAdder extends PureComponent {
       name: string.isRequired
     })),
     onAdd: func.isRequired,
+    onBlur: func.isRequired,
     onCancel: func.isRequired,
+    onFocus: func.isRequired,
     onCreate: func.isRequired
   }
 }
