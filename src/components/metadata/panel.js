@@ -9,6 +9,7 @@ const { TemplateSelect } = require('../template/select')
 const { PhotoInfo } = require('../photo/info')
 const { ItemInfo } = require('../item/info')
 const { SelectionInfo } = require('../selection/info')
+const { TABS } = require('../../constants')
 
 const {
   arrayOf, bool, func, number, object, shape, string
@@ -26,12 +27,28 @@ const {
 
 
 class MetadataPanel extends PureComponent {
+  componentWillUnmount() {
+    this.props.onBlur()
+  }
+
   get isEmpty() {
     return this.props.items.length === 0
   }
 
   get isBulk() {
     return this.props.items.length > 1
+  }
+
+  get tabIndex() {
+    return this.isEmpty ? -1 : TABS.MetadataPanel
+  }
+
+  setContainer = (container) => {
+    this.container = container
+  }
+
+  focus = () => {
+    this.container.focus()
   }
 
   handleTemplateChange = (template) => {
@@ -41,6 +58,14 @@ class MetadataPanel extends PureComponent {
       value: template.id
     })
   }
+
+  handleKeyDown = (event) => {
+    if (event.key === 'ArrowDown') {
+      this.focus()
+      event.stopPropagation()
+    }
+  }
+
 
   renderItemFields() {
     if (this.isEmpty) return null
@@ -136,7 +161,12 @@ class MetadataPanel extends PureComponent {
   render() {
     return (
       <div className="metadata tab-pane">
-        <div className="scroll-container">
+        <div
+          className="scroll-container"
+          ref={this.setContainer}
+          tabIndex={this.tabIndex}
+          onBlur={this.props.onBlur}
+          onFocus={this.props.onFocus}>
           {this.renderItemFields()}
           {this.renderPhotoFields()}
           {this.renderSelectionFields()}
@@ -170,6 +200,8 @@ class MetadataPanel extends PureComponent {
     }),
     selectionData: object,
 
+    onBlur: func.isRequired,
+    onFocus: func.isRequired,
     onItemSave: func.isRequired,
     onMetadataSave: func.isRequired,
     onOpenInFolder: func.isRequired

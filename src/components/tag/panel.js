@@ -2,13 +2,13 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { arrayOf, func, number, object, shape, string } = PropTypes
+const { arrayOf, func, number, object, shape, string } = require('prop-types')
 const { connect } = require('react-redux')
 const { TagList } = require('./list')
 const { TagAdder } = require('./adder')
 const { toId } = require('../../common/util')
 const { seq, map, filter, compose } = require('transducers.js')
+const { TABS } = require('../../constants')
 
 const {
   getAllTags,
@@ -18,6 +18,33 @@ const {
 
 
 class TagPanel extends PureComponent {
+  componentWillUnmount() {
+    this.props.onBlur()
+  }
+
+  get isEmpty() {
+    return this.props.items.length === 0
+  }
+
+  get tabIndex() {
+    return this.isEmpty ? -1 : TABS.TagPanel
+  }
+
+  setContainer = (container) => {
+    this.container = container
+  }
+
+  setAdder = (adder) => {
+    this.adder = (adder == null) ? null : adder.getWrappedInstance()
+  }
+
+  focus = () => {
+    this.container.focus()
+  }
+
+  handleCancel = (isForced) => {
+    if (isForced) this.container.focus()
+  }
 
   handleTagRemove = (tag) => {
     const present = seq(this.props.items,
@@ -48,9 +75,24 @@ class TagPanel extends PureComponent {
     })
   }
 
+  handleKeyDown = (event) => {
+    if (event.key === 'ArrowDown') {
+      if (this.adder) {
+        this.adder.focus()
+        event.stopPropagation()
+      }
+    }
+  }
+
   render() {
     return (
-      <div className="tab-pane">
+      <div
+        ref={this.setContainer}
+        className="tab-pane"
+        tabIndex={this.tabIndex}
+        onBlur={this.props.onBlur}
+        onFocus={this.props.onFocus}
+        onKeyDown={this.handleKeyDown}>
         <TagList
           edit={this.props.edit}
           keymap={this.props.keymap}
@@ -62,9 +104,11 @@ class TagPanel extends PureComponent {
           onSave={this.props.onTagSave}
           onContextMenu={this.handleContextMenu}/>
         <TagAdder
+          ref={this.setAdder}
           tags={this.props.allTags}
           count={this.props.items.length}
           onAdd={this.handleTagAdd}
+          onCancel={this.handleCancel}
           onCreate={this.handleTagCreate}/>
       </div>
     )
@@ -80,6 +124,8 @@ class TagPanel extends PureComponent {
       name: string.isRequired
     })).isRequired,
 
+    onBlur: func.isRequired,
+    onFocus: func.isRequired,
     onContextMenu: func.isRequired,
     onEditCancel: func.isRequired,
     onItemTagAdd: func.isRequired,

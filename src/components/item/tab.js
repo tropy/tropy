@@ -2,17 +2,16 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const { FormattedMessage } = require('react-intl')
 const { Tab, Tabs } = require('../tabs')
 const { IconMetadata, IconHangtag } = require('../icons')
 const { MetadataPanel } = require('../metadata')
 const { TagPanel } = require('../tag')
 const { PANEL: { METADATA, TAGS } } = require('../../constants/ui')
-const { bool, func, oneOf } = PropTypes
+const { array, func, oneOf } = require('prop-types')
 
 
-class ItemTabs extends PureComponent {
+class ItemTabHeader extends PureComponent {
   isActive(tab) {
     return this.props.tab === tab
   }
@@ -55,30 +54,27 @@ class ItemTabs extends PureComponent {
 }
 
 
-class ItemTab extends PureComponent {
-  render() {
-    const { isEmpty, tab, ...props } = this.props
-
-    switch (true) {
-      case (isEmpty):
-        return null
-      case (tab === METADATA):
-        return <MetadataPanel {...props}/>
-      case (tab === TAGS):
-        return <TagPanel {...props}/>
-      default:
-        return null
-    }
+const ItemTabBody = ({ items, setPanel, tab, ...props }) => {
+  switch (true) {
+    case (items.length === 0):
+      return null
+    case (tab === METADATA):
+      return <MetadataPanel {...props} ref={setPanel} items={items}/>
+    case (tab === TAGS):
+      return <TagPanel {...props} ref={setPanel} items={items}/>
+    default:
+      return null
   }
+}
 
-  static propTypes = {
-    isEmpty: bool.isRequired,
-    tab: oneOf([METADATA, TAGS]).isRequired
-  }
+ItemTabBody.propTypes = {
+  items: array.isRequired,
+  setPanel: func.isRequired,
+  tab: oneOf([METADATA, TAGS]).isRequired
 }
 
 
 module.exports = {
-  ItemTab,
-  ItemTabs
+  ItemTabHeader,
+  ItemTabBody
 }

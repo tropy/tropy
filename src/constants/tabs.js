@@ -5,6 +5,8 @@ module.exports = {
   ProjectSidebar: 2,
   ItemTable: 10,
   ItemGrid: 10,
+  MetadataPanel: 20,
+  TagPanel: 20,
   PhotoList: 25,
   PhotoGrid: 25,
   SelectionGrid: 26,
