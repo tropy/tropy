@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
-const { MetadataFields } = require('./fields')
+const { MetadataList } = require('./list')
 const { TemplateSelect } = require('../template/select')
 const { PhotoInfo } = require('../photo/info')
 const { ItemInfo } = require('../item/info')
@@ -51,6 +51,21 @@ class MetadataPanel extends PureComponent {
     this.container.focus()
   }
 
+  handleFocus = (event) => {
+    this.props.onFocus()
+
+    if (event != null && event.target === this.container) {
+      this.props.onDeactivate()
+    } else {
+      this.props.onActivate()
+    }
+  }
+
+  handleBlur = () => {
+    this.props.onBlur()
+    this.props.onDeactivate()
+  }
+
   handleTemplateChange = (template) => {
     this.props.onItemSave({
       id: this.props.items.map(it => it.id),
@@ -94,7 +109,7 @@ class MetadataPanel extends PureComponent {
           selected={item.template}
           isDisabled={isDisabled}
           onChange={this.handleTemplateChange}/>
-        <MetadataFields {...props}
+        <MetadataList {...props}
           data={itemsData}
           template={templates[item.template]}
           isDisabled={isDisabled}
@@ -121,7 +136,7 @@ class MetadataPanel extends PureComponent {
         <h5 className="metadata-heading separator">
           <FormattedMessage id="panel.metadata.photo"/>
         </h5>
-        <MetadataFields {...props}
+        <MetadataList {...props}
           data={photoData}
           template={templates[photo.template]}
           onChange={onMetadataSave}/>
@@ -148,7 +163,7 @@ class MetadataPanel extends PureComponent {
         <h5 className="metadata-heading separator">
           <FormattedMessage id="panel.metadata.selection"/>
         </h5>
-        <MetadataFields {...props}
+        <MetadataList {...props}
           data={selectionData}
           template={templates[selection.template]}
           onChange={onMetadataSave}/>
@@ -165,8 +180,8 @@ class MetadataPanel extends PureComponent {
           className="scroll-container"
           ref={this.setContainer}
           tabIndex={this.tabIndex}
-          onBlur={this.props.onBlur}
-          onFocus={this.props.onFocus}>
+          onBlur={this.handleBlur}
+          onFocus={this.handleFocus}>
           {this.renderItemFields()}
           {this.renderPhotoFields()}
           {this.renderSelectionFields()}
@@ -200,7 +215,9 @@ class MetadataPanel extends PureComponent {
     }),
     selectionData: object,
 
+    onActivate: func.isRequired,
     onBlur: func.isRequired,
+    onDeactivate: func.isRequired,
     onFocus: func.isRequired,
     onItemSave: func.isRequired,
     onMetadataSave: func.isRequired,

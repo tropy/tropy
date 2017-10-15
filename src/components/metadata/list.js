@@ -10,7 +10,7 @@ const {
 } =  require('prop-types')
 
 
-class MetadataFields extends PureComponent {
+class MetadataList extends PureComponent {
   get isEmpty() {
     return this.props.data == null
   }
@@ -119,5 +119,5 @@ class MetadataFields extends PureComponent {
 
 
 module.exports = {
-  MetadataFields
+  MetadataList
 }
