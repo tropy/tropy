@@ -54,6 +54,26 @@ class MetadataPanel extends PureComponent {
     this.container = container
   }
 
+  setItem = (item) => {
+    this.item = item
+  }
+
+  setPhoto = (photo) => {
+    this.photo = photo
+  }
+
+  setSelection = (selection) => {
+    this.selection = selection
+  }
+
+  next() {
+    if (this.item != null) this.item.handleNext()
+  }
+
+  prev() {
+    if (this.item != null) this.item.handlePrev()
+  }
+
   focus = () => {
     this.container.focus()
   }
@@ -68,6 +88,12 @@ class MetadataPanel extends PureComponent {
     this.props.onDeactivate()
   }
 
+  handleEditCancel = () => {
+    this.props.onEditCancel()
+    this.props.onDeactivate()
+    this.focus()
+  }
+
   handleTemplateChange = (template) => {
     this.props.onItemSave({
       id: this.props.items.map(it => it.id),
@@ -78,9 +104,12 @@ class MetadataPanel extends PureComponent {
 
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
+      case 'up':
+        this.prev()
+        break
       case 'down':
       case 'enter':
-        this.focus()
+        this.next()
         break
       default:
         return
@@ -91,14 +120,15 @@ class MetadataPanel extends PureComponent {
   }
 
 
-  renderMetadataList(fields) {
+  renderMetadataList(fields, ref) {
     return (
       <MetadataList
+        ref={ref}
         edit={this.props.edit}
         fields={fields}
         isDisabled={this.props.isDisabled}
         onEdit={this.props.onEdit}
-        onEditCancel={this.props.onEditCancel}
+        onEditCancel={this.handleEditCancel}
         onChange={this.props.onMetadataSave}/>
     )
   }
@@ -125,7 +155,7 @@ class MetadataPanel extends PureComponent {
           isDisabled={isDisabled}
           onChange={this.handleTemplateChange}
           onFocus={onActivate}/>
-        {this.renderMetadataList(itemFields)}
+        {this.renderMetadataList(itemFields, this.setItem)}
         {!this.isBulk && <ItemInfo item={items[0]}/>}
       </section>
     )
@@ -140,7 +170,7 @@ class MetadataPanel extends PureComponent {
         <h5 className="metadata-heading separator">
           <FormattedMessage id="panel.metadata.photo"/>
         </h5>
-        {this.renderMetadataList(photoFields)}
+        {this.renderMetadataList(photoFields, this.setPhoto)}
         <PhotoInfo
           photo={photo}
           onOpenInFolder={onOpenInFolder}/>
@@ -157,7 +187,7 @@ class MetadataPanel extends PureComponent {
         <h5 className="metadata-heading separator">
           <FormattedMessage id="panel.metadata.selection"/>
         </h5>
-        {this.renderMetadataList(selectionFields)}
+        {this.renderMetadataList(selectionFields, this.setSelection)}
         <SelectionInfo
           selection={selection}/>
       </section>
@@ -171,7 +201,8 @@ class MetadataPanel extends PureComponent {
           className="scroll-container"
           ref={this.setContainer}
           tabIndex={this.tabIndex}
-          onBlur={this.handleBlur}>
+          onBlur={this.handleBlur}
+          onKeyDown={this.handleKeyDown}>
           {this.renderItemFields()}
           {this.renderPhotoFields()}
           {this.renderSelectionFields()}

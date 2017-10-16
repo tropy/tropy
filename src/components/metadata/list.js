@@ -62,7 +62,7 @@ class MetadataList extends PureComponent {
     return (fields != null) ? (isArray(fields.id) ? 'bulk' : fields.id) : null
   }
 
-  handleEdit = (property) => {
+  edit = (property) => {
     this.props.onEdit({ field: { [property]: this.key } })
   }
 
@@ -70,6 +70,16 @@ class MetadataList extends PureComponent {
     this.props.onChange({
       id: this.props.fields.id, data
     })
+  }
+
+  handleNext = () => {
+    const next = this.next()
+    if (next != null) this.edit(next.property.id)
+  }
+
+  handlePrev = () => {
+    const prev = this.prev()
+    if (prev != null) this.edit(prev.property.id)
   }
 
   render() {
@@ -87,8 +97,10 @@ class MetadataList extends PureComponent {
             text={value.text}
             type={value.type || type}
             onChange={this.handleChange}
-            onEdit={this.handleEdit}
-            onEditCancel={this.props.onEditCancel}/>
+            onEdit={this.edit}
+            onEditCancel={this.props.onEditCancel}
+            onNext={this.handleNext}
+            onPrev={this.handlePrev}/>
         )}
       </ol>
     )

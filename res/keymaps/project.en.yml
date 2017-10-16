@@ -74,7 +74,7 @@ linux: &linux
   MetadataList: &MetadataList
     up: ArrowUp
     down: ArrowDown
-    activate: Enter
+    enter: Enter
   NoteList: &NoteList
     up: ArrowUp
     down: ArrowDown

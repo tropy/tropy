@@ -60,6 +60,21 @@ class MetadataField extends PureComponent {
     this.props.onEditCancel()
   }
 
+  handleKeyDown = (event, text, hasChanged) => {
+    if (event.key === 'Tab') {
+      event.preventDefault()
+      event.stopPropagation()
+
+      if (hasChanged) {
+        this.handleChange(text)
+      }
+
+      if (event.shiftKey) this.props.onPrev()
+      else this.props.onNext()
+    }
+  }
+
+
   render() {
     const { classes, details, label, isInvalid } = this
 
@@ -74,7 +89,8 @@ class MetadataField extends PureComponent {
             isEditing={this.props.isEditing}
             isRequired={this.props.isRequired}
             onCancel={this.handleCancel}
-            onChange={this.handleChange}/>
+            onChange={this.handleChange}
+            onKeyDown={this.handleKeyDown}/>
           {isInvalid && <IconWarning/>}
           {this.props.isReadOnly && <IconLock/>}
         </div>
@@ -106,7 +122,9 @@ class MetadataField extends PureComponent {
 
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,
-    onChange: func.isRequired
+    onChange: func.isRequired,
+    onNext: func.isRequired,
+    onPrev: func.isRequired
   }
 
   static defaultProps = {
