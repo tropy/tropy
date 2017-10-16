@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { Editable } = require('../editable')
 const { FormattedMessage } = require('react-intl')
-const { pluck } = require('../../common/util')
+const { blank, pluck } = require('../../common/util')
 const { getLabel } = require('../../common/ontology')
 const { IconLock, IconWarning } = require('../icons')
 const cx = require('classnames')
@@ -17,20 +17,15 @@ const {
 
 class MetadataField extends PureComponent {
   get classes() {
-    return {
-      'metadata-field': true,
-      'extra': this.props.isExtra,
-      'mixed': this.props.isMixed,
+    return ['metadata-field', {
+      extra: this.props.isExtra,
+      mixed: this.props.isMixed,
       [this.props.type]: true
-    }
-  }
-
-  get isBlank() {
-    return this.props.text == null || this.props.text === ''
+    }]
   }
 
   get isInvalid() {
-    return this.props.isRequired && this.isBlank
+    return this.props.isRequired && blank(this.props.text)
   }
 
   get label() {
@@ -94,11 +89,11 @@ class MetadataField extends PureComponent {
 
 
   static propTypes = {
-    id: oneOfType([number, arrayOf(number)]),
+    id: oneOfType([number, arrayOf(number)]).isRequired,
 
     isEditing: bool,
     isDisabled: bool,
-    isExtra: bool,
+    isExtra: bool.isRequired,
     isMixed: bool,
     isRequired: bool,
     isReadOnly: bool,
@@ -109,7 +104,7 @@ class MetadataField extends PureComponent {
       type: string,
       description: string,
       comment: string
-    }),
+    }).isRequired,
 
     label: string,
     placeholder: string,
@@ -129,11 +124,9 @@ class MetadataField extends PureComponent {
 
 class StaticField extends PureComponent {
   get classes() {
-    return [
-      'metadata-field',
-      'static',
-      { clickable: this.props.onClick != null }
-    ]
+    return ['metadata-field', 'static', {
+      clickable: this.props.onClick != null
+    }]
   }
 
   render() {

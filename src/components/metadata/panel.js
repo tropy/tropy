@@ -18,10 +18,10 @@ const {
 
 const {
   getActiveSelection,
-  getActiveSelectionData,
-  getAllTemplates,
-  getItemMetadata,
   getItemTemplates,
+  getItemFields,
+  getPhotoFields,
+  getSelectionFields,
   getSelectedItems,
   getSelectedPhoto
 } = require('../../selectors')
@@ -90,22 +90,22 @@ class MetadataPanel extends PureComponent {
   }
 
 
-  renderItemFields() {
-    if (this.isEmpty) return null
-
-    const {
-      items,
-      itemsData,
-      itemTemplates,
-      templates,
-      isDisabled,
-      onMetadataSave,
-      ...props
-    } = this.props
-
-    const item = items[0]
-
+  renderMetadataList(fields) {
     return (
+      <MetadataList
+        edit={this.props.edit}
+        fields={fields}
+        isDisabled={this.props.isDisabled}
+        onEdit={this.props.onEdit}
+        onEditCancel={this.props.onEditCancel}
+        onChange={this.props.onMetadataSave}/>
+    )
+  }
+
+  renderItemFields() {
+    const { items, itemFields, templates, isDisabled } = this.props
+
+    return !this.isEmpty && (
       <section>
         <h5 className="metadata-heading">
           <FormattedMessage
@@ -113,41 +113,26 @@ class MetadataPanel extends PureComponent {
             values={{ count: items.length }}/>
         </h5>
         <TemplateSelect
-          templates={itemTemplates}
-          selected={item.template}
+          templates={templates}
+          selected={items[0].template}
           isDisabled={isDisabled}
           onChange={this.handleTemplateChange}/>
-        <MetadataList {...props}
-          data={itemsData}
-          template={templates[item.template]}
-          isDisabled={isDisabled}
-          onChange={onMetadataSave}/>
-        {items.length === 1 && <ItemInfo item={item}/>}
+        {this.renderMetadataList(itemFields)}
+        {!this.isBulk && <ItemInfo item={items[0]}/>}
       </section>
     )
   }
 
   renderPhotoFields() {
     if (this.isEmpty || this.isBulk) return null
-
-    const {
-      photo,
-      photoData,
-      templates,
-      onMetadataSave,
-      onOpenInFolder,
-      ...props
-    } = this.props
+    const { photo, photoFields, onOpenInFolder } = this.props
 
     return photo && !photo.pending && (
       <section>
         <h5 className="metadata-heading separator">
           <FormattedMessage id="panel.metadata.photo"/>
         </h5>
-        <MetadataList {...props}
-          data={photoData}
-          template={templates[photo.template]}
-          onChange={onMetadataSave}/>
+        {this.renderMetadataList(photoFields)}
         <PhotoInfo
           photo={photo}
           onOpenInFolder={onOpenInFolder}/>
@@ -157,24 +142,14 @@ class MetadataPanel extends PureComponent {
 
   renderSelectionFields() {
     if (this.isEmpty || this.isBulk) return null
-
-    const {
-      selection,
-      selectionData,
-      templates,
-      onMetadataSave,
-      ...props
-    } = this.props
+    const { selection, selectionFields } = this.props
 
     return selection != null && !selection.pending && (
       <section>
         <h5 className="metadata-heading separator">
           <FormattedMessage id="panel.metadata.selection"/>
         </h5>
-        <MetadataList {...props}
-          data={selectionData}
-          template={templates[selection.template]}
-          onChange={onMetadataSave}/>
+        {this.renderMetadataList(selectionFields)}
         <SelectionInfo
           selection={selection}/>
       </section>
@@ -206,27 +181,37 @@ class MetadataPanel extends PureComponent {
       id: number.isRequired,
       template: string.isRequired
     })),
-    itemsData: object.isRequired,
+    itemFields: arrayOf(shape({
+      isExtra: bool.isRequired,
+      property: object.isRequired
+    })).isRequired,
 
     photo: shape({
       id: number.isRequired,
       template: string
     }),
-    photoData: object,
+    photoFields: arrayOf(shape({
+      isExtra: bool.isRequired,
+      property: object.isRequired
+    })).isRequired,
 
     keymap: object.isRequired,
-    templates: object.isRequired,
-    itemTemplates: arrayOf(object).isRequired,
+    templates: arrayOf(object).isRequired,
 
     selection: shape({
       id: number.isRequired,
       template: string
     }),
-    selectionData: object,
+    selectionFields: arrayOf(shape({
+      isExtra: bool.isRequired,
+      property: object.isRequired
+    })).isRequired,
 
     onActivate: func.isRequired,
     onBlur: func.isRequired,
     onDeactivate: func.isRequired,
+    onEdit: func,
+    onEditCancel: func,
     onFocus: func.isRequired,
     onItemSave: func.isRequired,
     onMetadataSave: func.isRequired,
@@ -239,13 +224,12 @@ module.exports = {
     (state) => ({
       edit: state.edit.field,
       items: getSelectedItems(state),
-      itemsData: getItemMetadata(state),
+      itemFields: getItemFields(state),
       photo: getSelectedPhoto(state),
-      photoData: state.metadata[state.nav.photo],
-      templates: getAllTemplates(state),
-      itemTemplates: getItemTemplates(state),
+      photoFields: getPhotoFields(state),
+      templates: getItemTemplates(state),
       selection: getActiveSelection(state),
-      selectionData: getActiveSelectionData(state)
+      selectionFields: getSelectionFields(state)
     })
   )(MetadataPanel)
 }
