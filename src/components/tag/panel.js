@@ -10,6 +10,7 @@ const { toId } = require('../../common/util')
 const { seq, map, filter, compose } = require('transducers.js')
 const { TABS } = require('../../constants')
 const { match } = require('../../keymap')
+const { on, off } = require('../../dom')
 
 const {
   getAllTags,
@@ -19,7 +20,12 @@ const {
 
 
 class TagPanel extends PureComponent {
+  componentDidMount() {
+    on(this.container, 'tab:focus', this.handleTabFocus)
+  }
+
   componentWillUnmount() {
+    off(this.container, 'tab:focus', this.handleTabFocus)
     this.props.onBlur()
   }
 
@@ -47,14 +53,9 @@ class TagPanel extends PureComponent {
     if (isForced) this.container.focus()
   }
 
-  handleFocus = (event) => {
+  handleTabFocus = () => {
     this.props.onFocus()
-
-    if (event != null && event.target === this.container) {
-      this.props.onDeactivate()
-    } else {
-      this.props.onActivate()
-    }
+    this.props.onDeactivate()
   }
 
   handleBlur = () => {
@@ -112,7 +113,6 @@ class TagPanel extends PureComponent {
         className="tab-pane"
         tabIndex={this.tabIndex}
         onBlur={this.handleBlur}
-        onFocus={this.handleFocus}
         onKeyDown={this.handleKeyDown}>
         <TagList
           edit={this.props.edit}
@@ -130,7 +130,7 @@ class TagPanel extends PureComponent {
           count={this.props.items.length}
           onAdd={this.handleTagAdd}
           onBlur={this.handleBlur}
-          onFocus={this.handleFocus}
+          onFocus={this.props.onActivate}
           onCancel={this.handleCancel}
           onCreate={this.handleTagCreate}/>
       </div>

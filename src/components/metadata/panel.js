@@ -11,6 +11,7 @@ const { ItemInfo } = require('../item/info')
 const { SelectionInfo } = require('../selection/info')
 const { TABS } = require('../../constants')
 const { match } = require('../../keymap')
+const { on, off } = require('../../dom')
 
 const {
   arrayOf, bool, func, number, object, shape, string
@@ -28,7 +29,12 @@ const {
 
 
 class MetadataPanel extends PureComponent {
+  componentDidMount() {
+    on(this.container, 'tab:focus', this.handleTabFocus)
+  }
+
   componentWillUnmount() {
+    off(this.container, 'tab:focus', this.handleTabFocus)
     this.props.onBlur()
   }
 
@@ -52,14 +58,9 @@ class MetadataPanel extends PureComponent {
     this.container.focus()
   }
 
-  handleFocus = (event) => {
+  handleTabFocus = () => {
     this.props.onFocus()
-
-    if (event != null && event.target === this.container) {
-      this.props.onDeactivate()
-    } else {
-      this.props.onActivate()
-    }
+    this.props.onDeactivate()
   }
 
   handleBlur = () => {
@@ -103,7 +104,13 @@ class MetadataPanel extends PureComponent {
   }
 
   renderItemFields() {
-    const { items, itemFields, templates, isDisabled } = this.props
+    const {
+      items,
+      itemFields,
+      templates,
+      isDisabled,
+      onActivate
+    } = this.props
 
     return !this.isEmpty && (
       <section>
@@ -116,7 +123,8 @@ class MetadataPanel extends PureComponent {
           templates={templates}
           selected={items[0].template}
           isDisabled={isDisabled}
-          onChange={this.handleTemplateChange}/>
+          onChange={this.handleTemplateChange}
+          onFocus={onActivate}/>
         {this.renderMetadataList(itemFields)}
         {!this.isBulk && <ItemInfo item={items[0]}/>}
       </section>
@@ -163,8 +171,7 @@ class MetadataPanel extends PureComponent {
           className="scroll-container"
           ref={this.setContainer}
           tabIndex={this.tabIndex}
-          onBlur={this.handleBlur}
-          onFocus={this.handleFocus}>
+          onBlur={this.handleBlur}>
           {this.renderItemFields()}
           {this.renderPhotoFields()}
           {this.renderSelectionFields()}
