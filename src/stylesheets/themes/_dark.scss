@@ -233,7 +233,8 @@ $panel-separator-color:   var(--shade-1);
 $panel-heading-color:     var(--shade-6);
 
 // Tabs
-$tab-bg: $shade-2;
+$tab-bg:             var(--shade-2);
+$tab-focus-bg:       var(--shade-2);
 $tab-active-color:   inherit;
 $tab-active-bg:      transparent;
 $tab-inactive-color: var(--shade-7);
