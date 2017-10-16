@@ -10,9 +10,7 @@ const { IconLock, IconWarning } = require('../icons')
 const cx = require('classnames')
 const { TYPE } = require('../../constants')
 const { auto } = require('../../format')
-const {
-  arrayOf, bool, func, number, oneOfType, shape, string
-} = require('prop-types')
+const { bool, func, number, oneOfType, shape, string } = require('prop-types')
 
 
 class MetadataField extends PureComponent {
@@ -44,16 +42,13 @@ class MetadataField extends PureComponent {
 
   handleClick = () => {
     if (!this.props.isDisabled && !this.props.isReadOnly) {
-      this.props.onEdit(this.props.id, this.property)
+      this.props.onEdit(this.property)
     }
   }
 
   handleChange = (text) => {
     this.props.onChange({
-      id: this.props.id,
-      data: {
-        [this.property]: { text, type: this.props.type }
-      }
+      [this.property]: { text, type: this.props.type }
     })
   }
 
@@ -66,7 +61,7 @@ class MetadataField extends PureComponent {
   }
 
   render() {
-    const { classes, details, label } = this
+    const { classes, details, label, isInvalid } = this
 
     return (
       <li className={cx(classes)}>
@@ -80,7 +75,7 @@ class MetadataField extends PureComponent {
             isRequired={this.props.isRequired}
             onCancel={this.handleCancel}
             onChange={this.handleChange}/>
-          {this.isInvalid && <IconWarning/>}
+          {isInvalid && <IconWarning/>}
           {this.props.isReadOnly && <IconLock/>}
         </div>
       </li>
@@ -89,8 +84,6 @@ class MetadataField extends PureComponent {
 
 
   static propTypes = {
-    id: oneOfType([number, arrayOf(number)]).isRequired,
-
     isEditing: bool,
     isDisabled: bool,
     isExtra: bool.isRequired,

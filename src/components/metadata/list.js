@@ -9,39 +9,84 @@ const { arrayOf, bool, func, object, shape, string } =  require('prop-types')
 
 
 class MetadataList extends PureComponent {
+  constructor(props) {
+    super(props)
+    this.key = this.getEditKey(props)
+  }
+
+  componentWillReceiveProps(props) {
+    if (props.fields !== this.props.fields) {
+      this.key = this.getEditKey(props)
+    }
+  }
+
   get isEmpty() {
     return this.props.fields.length === 0
   }
 
-  isEditing(key) {
-    return get(this.props.edit, [key]) === this.getEditKey()
+  indexOf(id) {
+    const { fields } = this.props
+    return (fields.idx != null) ?
+      fields.idx[id] :
+      fields.findIndex(f => f.property.id === id)
   }
 
-  getEditKey(id = this.props.fields.id) {
-    return isArray(id) ? 'bulk' : id
+  next(offset = 1) {
+    const { fields } = this.props
+    if (!fields.length) return null
+
+    if (this.head == null) return fields[0]
+
+    const idx = this.indexOf(this.head) + offset
+    return (idx >= 0 && idx < fields.length) ? fields[idx] : null
   }
 
-  handleEdit = (id, key) => {
-    this.props.onEdit({
-      field: { [key]: this.getEditKey(id) }
+  prev(offset = 1) {
+    return this.next(-offset)
+  }
+
+  current() {
+    return this.next(0)
+  }
+
+  isEditing(property) {
+    if (get(this.props.edit, [property]) === this.key) {
+      this.head = property
+      return true
+    } else {
+      return false
+    }
+  }
+
+  getEditKey({ fields } = this.props) {
+    return (fields != null) ? (isArray(fields.id) ? 'bulk' : fields.id) : null
+  }
+
+  handleEdit = (property) => {
+    this.props.onEdit({ field: { [property]: this.key } })
+  }
+
+  handleChange = (data) => {
+    this.props.onChange({
+      id: this.props.fields.id, data
     })
   }
 
   render() {
+    this.head = null
+
     return (
       <ol className="metadata-fields">
         {this.props.fields.map(({ property, value, type, ...props }) =>
-          <MetadataField
-            {...props}
+          <MetadataField {...props}
             key={property.id}
-            id={this.props.fields.id}
             isDisabled={this.props.isDisabled}
             isEditing={this.isEditing(property.id)}
             isMixed={!!value.mixed}
             property={property}
             text={value.text}
             type={value.type || type}
-            onChange={this.props.onChange}
+            onChange={this.handleChange}
             onEdit={this.handleEdit}
             onEditCancel={this.props.onEditCancel}/>
         )}
