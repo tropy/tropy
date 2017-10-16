@@ -102,7 +102,7 @@
           color: $tag-list-focus-color;
         }
 
-        .icon-tag {
+        .icon.icon-tag { // Needs specifity to override nested focus
           &:not([class*="color"]) {
             .color {
               color: $tag-list-focus-bg;
@@ -150,6 +150,11 @@
     .nested-focus & {
       background: $add-tag-nested-focus-bg;
       border-color: $add-tag-nested-focus-border-color;
+    }
+
+    .nested-focus.has-active & {
+      background: $add-tag-default-bg;
+      border-color: $add-tag-border-color;
     }
 
     &::-webkit-input-placeholder {
