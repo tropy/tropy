@@ -155,6 +155,8 @@
     .nested-focus.has-active & {
       background: $add-tag-default-bg;
       border-color: $add-tag-border-color;
+
+      @include form-control-focus; // sass-lint:disable-line mixins-before-declarations
     }
 
     &::-webkit-input-placeholder {
