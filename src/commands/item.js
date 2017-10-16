@@ -106,10 +106,10 @@ class ImportItem extends ImportCommand {
         warn(error.message)
         verbose(error.details)
       } else {
-        //
+        verbose(error.stack)
       }
-      verbose(error.stack)
 
+      // TODO decide how to alert the user
       fail(error, this.action.type)
     }
     this.setUndo(items.success)
@@ -163,7 +163,6 @@ class ImportImage extends ImportCommand {
 
           if (list) {
             await mod.list.items.add(tx, list, [item.id])
-            // item.lists.push(list)
           }
 
           item.photos.push(photo.id)
@@ -491,8 +490,6 @@ class Export extends Command {
   static get action() { return ITEM.EXPORT }
 
   *exec() {
-    // TODO: support multiple ids
-    const id = this.action.payload[0]
     let path = this.action.meta.target
 
     try {
@@ -503,18 +500,23 @@ class Export extends Command {
 
       if (!path) return
 
-      // TODO replace with a 'selector'
-      const resources = yield select(state => {
-        const item = state.items[id]
-        return [
-          state.ontology.template[item.template],
-          state.metadata[id],
-          state.ontology.props
-        ]
-      })
+      const results = []
+      for (const id of this.action.payload) {
+        // TODO replace with a 'selector'
+        const resources = yield select(state => {
+          const item = state.items[id]
+          return [
+            state.ontology.template[item.template],
+            state.metadata[id],
+            state.ontology.props
+          ]
+        })
 
-      const linkedData = yield call(itemToLD, ...resources)
-      const data = JSON.stringify([linkedData], null, 2)
+        const linkedData = yield call(itemToLD, ...resources)
+        results.push(linkedData)
+      }
+
+      const data = JSON.stringify(results, null, 2)
 
       if (path === ':clipboard:') {
         yield call(clipboard.writeText, data)
