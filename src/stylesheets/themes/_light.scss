@@ -58,10 +58,12 @@ $shade-10: #000; // Black
   #{--shade-2-lighten-4}:  lighten($shade-2, 4%); // Esper slider handle bg
   #{--shade-2-darken-10}:  darken($shade-2, 10%); // Esper toolbar border
   #{--shade-3}:            $shade-3;
+  #{--shade-3-darken-4}:   darken($shade-3, 4%);
   #{--shade-3-darken-5}:   darken($shade-3, 5%); // Thumbnail bg
   #{--shade-4}:            $shade-4;
   #{--shade-4-darken-14}:  darken($shade-4, 14%);
   #{--shade-5}:            $shade-5;
+  #{--shade-5-darken-4}:   darken($shade-5, 4%);
   #{--shade-6}:            $shade-6;
   #{--shade-6-50}:         rgba($shade-6, 0.5);
   #{--shade-6-lighten-13}: lighten($shade-6, 13.5%);
@@ -223,24 +225,28 @@ $items-active-bg:                var(--shade-3);
 $panels-bg: $shade-1;
 
 // Panel
-$panel-bg:                var(--shade-1);
-$panel-focus-bg:          var(--shade-1-darken-4);
-$panel-header-color:      var(--shade-8);
-$panel-separator-color:   var(--shade-3);
-$panel-heading-color:     var(--shade-5);
+$panel-bg:                           var(--shade-1);
+$panel-focus-bg:                     var(--shade-1-darken-4);
+$panel-header-color:                 var(--shade-8);
+$panel-separator-color:              var(--shade-3);
+$panel-nested-focus-separator-color: var(--shade-3-darken-4);
+$panel-heading-color:                var(--shade-5);
+$panel-nested-focus-heading-color:   var(--shade-5-darken-4);
 
 // Tabs
-$tab-bg:             var(--shade-2);
-$tab-focus-bg:       var(--shade-3);
-$tab-active-color:   var(--shade-9);
-$tab-active-bg:      var(--transparent);
-$tab-inactive-color: var(--shade-6);
+$tab-bg:              var(--shade-2);
+$tab-nested-focus-bg: var(--shade-3);
+$tab-active-color:    var(--shade-9);
+$tab-active-bg:       var(--transparent);
+$tab-inactive-color:  var(--shade-6);
 
 // Metadata
-$label-color:                var(--shade-6);
-$template-select-border:     var(--shade-3);
-$template-select-bg:         var(--shade-1);
-$metadata-field-mixed-color: var(--shade-5);
+$label-color:                         var(--shade-6);
+$template-select-border:              var(--shade-3);
+$template-select-nested-focus-border: var(--shade-3-darken-4);
+$template-select-bg:                  var(--shade-1);
+$template-select-nested-focus-bg:     var(--shade-1-darken-4);
+$metadata-field-mixed-color:          var(--shade-5);
 
 // Tag list
 $tag-list-focus-color:              var(--shade-0);
@@ -250,10 +256,14 @@ $tag-list-active-bg:                var(--shade-3);
 $mixed-color:                       var(--shade-5);
 $add-tag-default-bg:                $panel-bg;
 $add-tag-focus-bg:                  var(--shade-0);
+$add-tag-nested-focus-bg:           var(--shade-1-darken-4);
 $add-tag-placeholder-color-default: $text-color;
 $add-tag-border-color:              var(--shade-3);
+$add-tag-nested-focus-border-color: var(--shade-3-darken-4);
 $icon-tag-color:                    var(--shade-1);
+$icon-tag-nested-focus-color:       var(--shade-1-darken-4);
 $icon-tag-border:                   var(--shade-5);
+$icon-tag-nested-focus-border:      var(--shade-5-darken-4);
 
 // Note list
 $note-list-focus-color:  var(--shade-0);

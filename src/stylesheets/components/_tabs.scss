@@ -30,7 +30,7 @@
 
     &:not(.active) {
       .nested-focus & {
-        background: $tab-focus-bg;
+        background: $tab-nested-focus-bg;
       }
     }
   }
