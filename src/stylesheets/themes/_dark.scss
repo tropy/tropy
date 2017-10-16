@@ -51,7 +51,7 @@ $shade-10: #fff; // White
 :root {
   #{--transparent}:        $transparent;
   #{--shade-0}:            $shade-0;
-  #{--shade-0-5}:          rgba($shade-0, 0.05);
+  #{--shade-0-20}:         rgba($shade-0, 0.2);
   #{--shade-0-60}:         rgba($shade-0, 0.6);
   #{--shade-1}:            $shade-1;
   #{--shade-1-lighten-2}:  lighten($shade-1, 2%);
@@ -201,7 +201,7 @@ $icon-spin-color:   var(--brand-primary);
 $icon-warning: var(--red-64);
 
 // Project
-$project-darken-color:  var(--shade-0-5);
+$project-darken-color:  var(--shade-0-20);
 $project-heading-color: var(--shade-8);
 $item-count-color:      var(--shade-6);
 
