@@ -91,8 +91,7 @@ const getItemTemplate = memo(
 
 const getPhotoTemplate = memo(
   ({ ontology }) => ontology.template,
-  ({ settings }) => settings.photoTemplate,
-  (template, id) => template[id] || template[PHOTO.TEMPLATE]
+  (template) => template[PHOTO.TEMPLATE]
 )
 
 const getTemplateValues = (template) =>

@@ -1,12 +1,11 @@
 'use strict'
 
-const { SETTINGS, ITEM, PHOTO } = require('../constants')
+const { SETTINGS, ITEM } = require('../constants')
 
 const defaults = {
   debug: ARGS.debug,
   dup: 'prompt',
-  itemTemplate: ITEM.TEMPLATE,
-  photoTemplate: PHOTO.TEMPLATE,
+  template: ITEM.TEMPLATE,
   theme: ARGS.theme,
   overlayToolbars: true,
   invertScroll: true,
