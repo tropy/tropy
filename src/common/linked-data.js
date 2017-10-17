@@ -41,110 +41,62 @@ function shorten() {
   if (label) return shortenLabel(label)
 }
 
-function createContext(item_template, metadata, props) {
-  var context = {
-    template: { '@id': TEMPLATE.TYPE, '@type': '@id' }
+function makeContext(template, props) {
+  const result = {
+    '@vocab': 'https://tropy.org/v1/tropy#',
+    'template': TEMPLATE.TYPE,
+    'items': {
+      '@id': ITEM,
+      '@container': '@list',
+      '@context': {}
+    }
   }
+  // TODO fill context up with metadata items
+  // TODO don't include fields that have no metadata set
 
-  // add fields to context
-  for (const field of item_template.fields) {
-    const short = shorten(field.property, props, item_template)
+  // fill context up with template items
+  for (const field of template.fields) {
+    const short = shorten(field.property, props, template)
     if (short) {
-      context[short] = {
+      result['items']['@context'][short] = {
         '@id': field.property,
         '@type': field.datatype
       }
     }
   }
 
-  return context
+  return result
 }
 
-function createDocument(item_template, metadata, props) {
-  var document = {
-    '@type': ITEM,
-    'template': item_template.id
+function makeDocument(items, metadata, template, props) {
+  const result = {
+    template: template.id,
+    items: []
   }
-
-  // add metadata to document.metadata
-  for (const property in metadata) {
-    const short = shorten(property, props, item_template)
-    if (short) {
-      const text = metadata[property].text
-      if (text) {
-        document[short] = text
-      }
-    }
-  }
-
-  return document
-}
-
-function itemToLD() {
-  const document = createDocument(...arguments)
-  const context = createContext(...arguments)
-
-  document['@context'] = context
-  return jsonld.compact(document, context)
-}
-
-//////// Grouped
-async function groupedByTemplate(resources, props) {
-  function makeContext(template) {
-    const result = {
-      '@vocab': 'https://tropy.org/v1/tropy#',
-      'template': TEMPLATE.TYPE,
-      'items': {
-        '@id': ITEM,
-        '@container': '@list',
-        '@context': {}
-      }
-    }
-    // TODO fill context up with metadata items
-    // TODO don't include fields that have no metadata set
-
-    // fill context up with template items
-    for (const field of template.fields) {
-      const short = shorten(field.property, props, template)
+  for (const i in items) {
+    const item = items[i]
+    let doc = {}
+    // fill items up with metadata
+    for (const property in metadata[item.id]) {
+      const short = shorten(property, props, template)
       if (short) {
-        result['items']['@context'][short] = {
-          '@id': field.property,
-          '@type': field.datatype
+        const text = metadata[item.id][property].text
+        if (text) {
+          doc[short] = text
         }
       }
     }
-
-    return result
+    result.items.push(doc)
   }
+  return result
+}
 
-  function makeDocument(items, metadata, template) {
-    const result = {
-      template: template.id,
-      items: []
-    }
-    for (const i in items) {
-      const item = items[i]
-      let doc = {}
-      // fill items up with metadata
-      for (const property in metadata[item.id]) {
-        const short = shorten(property, props, template)
-        if (short) {
-          const text = metadata[item.id][property].text
-          if (text) {
-            doc[short] = text
-          }
-        }
-      }
-      result.items.push(doc)
-    }
-    return result
-  }
-
+async function groupedByTemplate(resources, props = {}) {
   const results = []
   for (const r in resources) {
     const { items, template, metadata } = resources[r]
-    const context = makeContext(template)
-    const document = makeDocument(items, metadata, template)
+    const context = makeContext(template, props)
+    const document = makeDocument(items, metadata, template, props)
     document['@context'] = context
     results.push(await jsonld.compact(document, context))
   }
@@ -189,7 +141,6 @@ async function itemFromLD(obj) {
 module.exports = {
   shortenLabel,
   propertyLabel,
-  itemToLD,
   itemFromLD,
   ParseError,
   groupedByTemplate

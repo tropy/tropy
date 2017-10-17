@@ -34,53 +34,50 @@ describe('linked-data helpers', () => {
   })
 })
 
+describe('groupedByTemplate', async () => {
+  const { groupedByTemplate } = __require('common/linked-data')
 
-describe('itemToLD', () => {
-  const { itemToLD } = __require('common/linked-data')
+  const template = {
+    id: 'https://tropy.org/v1/tropy#test-template',
+    fields: [{
+      property: 'http://example.com/property',
+      datatype: 'http://example.com/property#datatype',
+      label: 'My Label'
+    }]
+  }
 
-  const resources = [
-    // template
-    {
-      id: 'https://tropy.org/v1/tropy#test-template',
-      fields: [{
-        property: 'http://example.com/property',
-        datatype: 'http://example.com/property#datatype',
-        label: 'My Label'
-      }]
-    },
-    // metadata
-    { 'http://example.com/property': { text: 'value' } },
-    // state.ontology.props
-    {}
+  const items = [
+    { id: 1, template: 'https://tropy.org/v1/tropy#test-template' }
   ]
 
-  const ld = itemToLD(...resources)
+  const metadata = {
+    1: { 'http://example.com/property': { text: 'value' } }
+  }
+
+  const resources = [
+    { template, items, metadata }
+  ]
+
+  const ld = groupedByTemplate(resources)
+  const data = (await ld)[0]
 
   it('metadata', () => {
-    expect(ld).to.eventually.have.property('myLabel', 'value')
+    expect(data.items).to.eql([{ myLabel: 'value' }])
   })
 
-  it('@context', () => {
-    expect(ld).to.eventually.have.deep.property(
-      '@context', {
-        _template: {
-          '@id': 'https://tropy.org/v1/tropy#Template',
-          '@type': '@id'
-        },
-        myLabel: {
-          '@id': 'http://example.com/property',
-          '@type': 'http://example.com/property#datatype'
-        }
-      })
+  it('context', () => {
+    expect(data['@context']).to.have.property('@vocab')
+    expect(data['@context']).to.have.property('template')
+
+    expect(data['@context']['items']['@context']).to.eql({
+      myLabel: {
+        '@id': 'http://example.com/property',
+        '@type': 'http://example.com/property#datatype'
+      }
+    })
   })
 
-  it('@type', () => {
-    expect(ld).to.eventually.have.property('@type', 'https://tropy.org/v1/tropy#Item')
-  })
-
-  it('_template', () => {
-    expect(ld).to.eventually.have.property('_template', 'https://tropy.org/v1/tropy#test-template')
+  it('template', () => {
+    expect(data).to.have.property('template', 'https://tropy.org/v1/tropy#test-template')
   })
 })
-
-// export
