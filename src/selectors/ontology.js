@@ -122,7 +122,7 @@ const getActivePhotoTemplate = memo(
 
 const getActiveSelectionTemplate = memo(
   ({ ontology }) => ontology.template,
-  ({ nav }) => nav.photo,
+  ({ nav }) => nav.selection,
   ({ selections }) => selections,
   (template, id, selections) =>
     (id != null && id in selections) ? template[selections[id].template] : null
