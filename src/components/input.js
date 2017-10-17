@@ -76,9 +76,9 @@ class BufferedInput extends PureComponent {
   }
 
   cancel(force) {
-    this.hasBeenCancelled = true
     this.reset()
-    this.props.onCancel(force)
+    this.hasBeenCancelled = true
+    this.props.onCancel(false, force)
   }
 
   clearResetTimeout() {

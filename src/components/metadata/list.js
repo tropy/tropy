@@ -67,9 +67,11 @@ class MetadataList extends PureComponent {
   }
 
   handleChange = (data, hasChanged) => {
-    this.props.onChange({
-      id: this.props.fields.id, data
-    }, hasChanged)
+    if (hasChanged || this.key === 'bulk') {
+      this.props.onChange({ id: this.props.fields.id, data })
+    } else {
+      this.props.onEditCancel()
+    }
   }
 
   handleNext = () => {
