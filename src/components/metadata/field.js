@@ -46,15 +46,15 @@ class MetadataField extends PureComponent {
     }
   }
 
-  handleChange = (text) => {
+  handleChange = (text, hasChanged = true) => {
     this.props.onChange({
       [this.property]: { text, type: this.props.type }
-    })
+    }, hasChanged)
   }
 
   handleCancel = (isCommitUnchanged) => {
     if (isCommitUnchanged) {
-      return this.handleChange(this.props.text)
+      return this.handleChange(this.props.text, false)
     }
 
     this.props.onEditCancel()

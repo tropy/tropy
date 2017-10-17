@@ -94,10 +94,12 @@ class MetadataPanel extends PureComponent {
     this.focus()
   }
 
-  handleChange = (...args) => {
-    this.props.onMetadataSave(...args)
-    this.props.onDeactivate()
-    this.focus()
+  handleChange = (data, hasChanged) => {
+    if (hasChanged || this.isBulk) {
+      this.props.onMetadataSave(data)
+    }
+
+    this.handleEditCancel()
   }
 
   handleTemplateChange = (template) => {

@@ -66,10 +66,10 @@ class MetadataList extends PureComponent {
     this.props.onEdit({ field: { [property]: this.key } })
   }
 
-  handleChange = (data) => {
+  handleChange = (data, hasChanged) => {
     this.props.onChange({
       id: this.props.fields.id, data
-    })
+    }, hasChanged)
   }
 
   handleNext = () => {
