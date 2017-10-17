@@ -31,11 +31,21 @@ class MetadataList extends PureComponent {
       fields.findIndex(f => f.property.id === id)
   }
 
+  first() {
+    return this.props.fields[0]
+  }
+
+  last() {
+    return this.props.fields[this.props.fields.length - 1]
+  }
+
   next(offset = 1) {
     const { fields } = this.props
     if (!fields.length) return null
 
-    if (this.head == null) return fields[0]
+    if (this.head == null) {
+      return (offset < 0) ? this.last() : this.first()
+    }
 
     const idx = this.indexOf(this.head) + offset
     return (idx >= 0 && idx < fields.length) ? fields[idx] : null
@@ -77,11 +87,13 @@ class MetadataList extends PureComponent {
   handleNext = () => {
     const next = this.next()
     if (next != null) this.edit(next.property.id)
+    else this.props.onAfter()
   }
 
   handlePrev = () => {
     const prev = this.prev()
     if (prev != null) this.edit(prev.property.id)
+    else this.props.onBefore()
   }
 
   render() {
@@ -118,6 +130,8 @@ class MetadataList extends PureComponent {
       property: object.isRequired,
       value: object
     })).isRequired,
+    onAfter: func.isRequired,
+    onBefore: func.isRequired,
     onEdit: func,
     onEditCancel: func,
     onChange: func.isRequired

@@ -29,6 +29,11 @@ const {
 
 
 class MetadataPanel extends PureComponent {
+  constructor(props) {
+    super(props)
+    this.fields = [null, null, null]
+  }
+
   componentDidMount() {
     on(this.container, 'tab:focus', this.handleTabFocus)
   }
@@ -50,32 +55,64 @@ class MetadataPanel extends PureComponent {
     return this.isEmpty ? -1 : TABS.MetadataPanel
   }
 
+  focus = () => {
+    this.container.focus()
+  }
+
+  next(i = 0) {
+    for (let ii = i + 3; i < ii; ++i) {
+      let fields = this.fields[i % 3]
+      let next = (fields != null) && fields.next()
+      if (next) return fields.edit(next.property.id)
+    }
+  }
+
+  prev(i = 2) {
+    for (let ii = i - 2; i >= ii; --i) {
+      let fields = this.fields[i % 3]
+      let prev = (fields != null) && fields.prev()
+      if (prev) return fields.edit(prev.property.id)
+    }
+  }
+
   setContainer = (container) => {
     this.container = container
   }
 
-  setItem = (item) => {
-    this.item = item
+  setItemFields = (item) => {
+    this.fields[0] = item
   }
 
-  setPhoto = (photo) => {
-    this.photo = photo
+  setPhotoFields = (photo) => {
+    this.fields[1] = photo
   }
 
-  setSelection = (selection) => {
-    this.selection = selection
+  setSelectionFields = (selection) => {
+    this.fields[2] = selection
   }
 
-  next() {
-    if (this.item != null) this.item.handleNext()
+  handleAfterItemFields = () => {
+    this.next(1)
   }
 
-  prev() {
-    if (this.item != null) this.item.handlePrev()
+  handleBeforeItemFields = () => {
+    this.prev(2)
   }
 
-  focus = () => {
-    this.container.focus()
+  handleAfterPhotoFields = () => {
+    this.next(2)
+  }
+
+  handleBeforePhotoFields = () => {
+    this.prev(0)
+  }
+
+  handleAfterSelectionFields = () => {
+    this.next(0)
+  }
+
+  handleBeforeSelectionFields = () => {
+    this.prev(1)
   }
 
   handleTabFocus = () => {
@@ -125,20 +162,6 @@ class MetadataPanel extends PureComponent {
     event.preventDefault()
   }
 
-
-  renderMetadataList(fields, ref) {
-    return (
-      <MetadataList
-        ref={ref}
-        edit={this.props.edit}
-        fields={fields}
-        isDisabled={this.props.isDisabled}
-        onEdit={this.props.onEdit}
-        onEditCancel={this.handleEditCancel}
-        onChange={this.handleChange}/>
-    )
-  }
-
   renderItemFields() {
     const {
       items,
@@ -161,7 +184,16 @@ class MetadataPanel extends PureComponent {
           isDisabled={isDisabled}
           onChange={this.handleTemplateChange}
           onFocus={onActivate}/>
-        {this.renderMetadataList(itemFields, this.setItem)}
+        <MetadataList
+          ref={this.setItemFields}
+          edit={this.props.edit}
+          fields={itemFields}
+          isDisabled={this.props.isDisabled}
+          onEdit={this.props.onEdit}
+          onEditCancel={this.handleEditCancel}
+          onChange={this.handleChange}
+          onAfter={this.handleAfterItemFields}
+          onBefore={this.handleBeforeItemFields}/>
         {!this.isBulk && <ItemInfo item={items[0]}/>}
       </section>
     )
@@ -176,7 +208,16 @@ class MetadataPanel extends PureComponent {
         <h5 className="metadata-heading separator">
           <FormattedMessage id="panel.metadata.photo"/>
         </h5>
-        {this.renderMetadataList(photoFields, this.setPhoto)}
+        <MetadataList
+          ref={this.setPhotoFields}
+          edit={this.props.edit}
+          fields={photoFields}
+          isDisabled={this.props.isDisabled}
+          onEdit={this.props.onEdit}
+          onEditCancel={this.handleEditCancel}
+          onChange={this.handleChange}
+          onAfter={this.handleAfterPhotoFields}
+          onBefore={this.handleBeforePhotoFields}/>
         <PhotoInfo
           photo={photo}
           onOpenInFolder={onOpenInFolder}/>
@@ -193,7 +234,16 @@ class MetadataPanel extends PureComponent {
         <h5 className="metadata-heading separator">
           <FormattedMessage id="panel.metadata.selection"/>
         </h5>
-        {this.renderMetadataList(selectionFields, this.setSelection)}
+        <MetadataList
+          ref={this.setSelectionFields}
+          edit={this.props.edit}
+          fields={selectionFields}
+          isDisabled={this.props.isDisabled}
+          onEdit={this.props.onEdit}
+          onEditCancel={this.handleEditCancel}
+          onChange={this.handleChange}
+          onAfter={this.handleAfterSelectionFields}
+          onBefore={this.handleBeforeSelectionFields}/>
         <SelectionInfo
           selection={selection}/>
       </section>
