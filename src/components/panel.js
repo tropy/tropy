@@ -8,16 +8,34 @@ const cx = require('classnames')
 const { bounds } = require('../dom')
 const { restrict } = require('../common/util')
 const { win32 } = require('../common/os')
-const { bool, func, node, arrayOf, number, shape } = require('prop-types')
 const { PANEL } = require('../constants/sass')
 const { remap } = require('../common/util')
 const { round } = require('../common/math')
 const throttle = require('lodash.throttle')
 
+const {
+  arrayOf, bool, func, node, number, string, shape
+} = require('prop-types')
+
 
 class Panel extends PureComponent {
+  constructor(props) {
+    super(props)
+    this.state = {
+      hasNestedFocus: false
+    }
+  }
+
   get classes() {
     return { 'panel-body': true }
+  }
+
+  handleNestedBlur = () => {
+    this.setState({ hasNestedFocus: false })
+  }
+
+  handleNestedFocus = () => {
+    this.setState({ hasNestedFocus: true })
   }
 
   handleToggle = () => {
@@ -49,7 +67,7 @@ class Panel extends PureComponent {
     const [header, ...body] = Children.toArray(this.props.children)
 
     return (
-      <section className="panel">
+      <section className={this.props.className}>
         {this.renderHeader(header)}
         {this.renderBody(body)}
       </section>
@@ -57,11 +75,16 @@ class Panel extends PureComponent {
   }
 
   static propTypes = {
+    className: string.isRequired,
     children: node,
     id: number,
     isClosed: bool,
     canToggle: bool,
     onToggle: func
+  }
+
+  static defaultProps = {
+    className: 'panel'
   }
 }
 

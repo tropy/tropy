@@ -19,6 +19,10 @@ class Editable extends PureComponent {
     this.input = input
   }
 
+  focus = () => {
+    if (this.input) this.input.focus()
+  }
+
   handleCommit = (value, hasChanged) => {
     if (hasChanged) {
       this.props.onChange(value)

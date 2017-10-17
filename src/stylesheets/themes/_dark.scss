@@ -65,6 +65,7 @@ $shade-10: #fff; // White
   #{--shade-5}:            $shade-5;
   #{--shade-5-lighten-5}:  lighten($shade-5, 5%);
   #{--shade-6}:            $shade-6;
+  #{--shade-6-lighten-2}:  lighten($shade-6, 2%);
   #{--shade-6-lighten-5}:  lighten($shade-6, 5%);
   #{--shade-7}:            $shade-7;
   #{--shade-7-50}:         rgba($shade-7, 0.5);
@@ -226,23 +227,28 @@ $items-active-bg:                var(--shade-5);
 $panels-bg: var(--shade-4);
 
 // Panel
-$panel-bg:                var(--shade-4);
-$panel-focus-bg:          var(--shade-4-lighten-2);
-$panel-header-color:      var(--shade-8);
-$panel-separator-color:   var(--shade-1);
-$panel-heading-color:     var(--shade-6);
+$panel-bg:                           var(--shade-4);
+$panel-focus-bg:                     var(--shade-4-lighten-2);
+$panel-header-color:                 var(--shade-8);
+$panel-separator-color:              var(--shade-1);
+$panel-nested-focus-separator-color: var(shade-1-lighten-2);
+$panel-heading-color:                var(--shade-6);
+$panel-nested-focus-heading-color:   var(--shade-6-lighten-2);
 
 // Tabs
-$tab-bg: $shade-2;
-$tab-active-color:   inherit;
-$tab-active-bg:      transparent;
-$tab-inactive-color: var(--shade-7);
+$tab-bg:              var(--shade-2);
+$tab-nested-focus-bg: var(--shade-2);
+$tab-active-color:    inherit;
+$tab-active-bg:       transparent;
+$tab-inactive-color:  var(--shade-7);
 
 // Metadata
-$label-color:                var(--shade-7);
-$template-select-border:     var(--shade-1);
-$template-select-bg:         var(--shade-4);
-$metadata-field-mixed-color: var(--shade-6);
+$label-color:                         var(--shade-7);
+$template-select-border:              var(--shade-1);
+$template-select-nested-focus-border: var(--shade-1-lighten-2);
+$template-select-bg:                  var(--shade-4);
+$template-select-nested-focus-bg:     var(--shade-4-lighten-2);
+$metadata-field-mixed-color:          var(--shade-6);
 
 // Tag list
 $tag-list-focus-color:              var(--brand-primary-light);
@@ -252,10 +258,14 @@ $tag-list-active-bg:                var(--shade-5);
 $mixed-color:                       var(--shade-6);
 $add-tag-default-bg:                $panel-bg;
 $add-tag-focus-bg:                  var(--shade-3);
+$add-tag-nested-focus-bg:           var(--shade-4-lighten-2);
 $add-tag-placeholder-color-default: $text-color;
 $add-tag-border-color:              var(--shade-1);
+$add-tag-nested-focus-border-color: var(--shade-1-lighten-2);
 $icon-tag-color:                    var(--shade-4);
+$icon-tag-nested-focus-color:       var(--shade-4-lighten-2);
 $icon-tag-border:                   var(--shade-6);
+$icon-tag-nested-focus-border:      var(--shade-6-lighten-2);
 
 // Note list
 $note-list-focus-color:  var(--brand-primary-light);
