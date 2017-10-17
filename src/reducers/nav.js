@@ -62,9 +62,14 @@ module.exports = {
       case ITEM.DELETE:
       case ITEM.RESTORE:
       case ITEM.REMOVE:
-        return !meta.done && isSelected(state.items, payload) ?
-          { ...state, items: [], photo: null } :
-          state
+        return meta.done || !isSelected(state.items, payload) ?
+          state : {
+            ...state,
+            items: [],
+            photo: null,
+            selection: null,
+            note: null
+          }
 
       case ITEM.SELECT:
         return {
@@ -73,15 +78,6 @@ module.exports = {
           selection: payload.selection,
           note: payload.note,
           items: select(state.items, payload.items, meta.mod)
-        }
-
-      case ITEM.IMPORT:
-        return (!meta.done || error || !payload.length) ? state : {
-          ...state,
-          photo: null,
-          note: null,
-          tags: [],
-          items: [...payload]
         }
 
       case ITEM.OPEN: {

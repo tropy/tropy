@@ -4,11 +4,14 @@ const React = require('react')
 const { PureComponent } = React
 const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
-const { MetadataFields } = require('./fields')
+const { MetadataList } = require('./list')
 const { TemplateSelect } = require('../template/select')
 const { PhotoInfo } = require('../photo/info')
 const { ItemInfo } = require('../item/info')
 const { SelectionInfo } = require('../selection/info')
+const { TABS } = require('../../constants')
+const { match } = require('../../keymap')
+const { on, off } = require('../../dom')
 
 const {
   arrayOf, bool, func, number, object, shape, string
@@ -16,22 +19,122 @@ const {
 
 const {
   getActiveSelection,
-  getActiveSelectionData,
-  getAllTemplates,
-  getItemMetadata,
   getItemTemplates,
+  getItemFields,
+  getPhotoFields,
+  getSelectionFields,
   getSelectedItems,
   getSelectedPhoto
 } = require('../../selectors')
 
 
 class MetadataPanel extends PureComponent {
+  constructor(props) {
+    super(props)
+    this.fields = [null, null, null]
+  }
+
+  componentDidMount() {
+    on(this.container, 'tab:focus', this.handleTabFocus)
+  }
+
+  componentWillUnmount() {
+    off(this.container, 'tab:focus', this.handleTabFocus)
+    this.props.onBlur()
+  }
+
   get isEmpty() {
     return this.props.items.length === 0
   }
 
   get isBulk() {
     return this.props.items.length > 1
+  }
+
+  get tabIndex() {
+    return this.isEmpty ? -1 : TABS.MetadataPanel
+  }
+
+  focus = () => {
+    this.container.focus()
+  }
+
+  next(i = 0) {
+    for (let ii = i + 3; i < ii; ++i) {
+      let fields = this.fields[i % 3]
+      let next = (fields != null) && fields.next()
+      if (next) return fields.edit(next.property.id)
+    }
+  }
+
+  prev(i = 2) {
+    for (let ii = i - 2; i >= ii; --i) {
+      let fields = this.fields[i % 3]
+      let prev = (fields != null) && fields.prev()
+      if (prev) return fields.edit(prev.property.id)
+    }
+  }
+
+  setContainer = (container) => {
+    this.container = container
+  }
+
+  setItemFields = (item) => {
+    this.fields[0] = item
+  }
+
+  setPhotoFields = (photo) => {
+    this.fields[1] = photo
+  }
+
+  setSelectionFields = (selection) => {
+    this.fields[2] = selection
+  }
+
+  handleAfterItemFields = () => {
+    this.next(1)
+  }
+
+  handleBeforeItemFields = () => {
+    this.prev(2)
+  }
+
+  handleAfterPhotoFields = () => {
+    this.next(2)
+  }
+
+  handleBeforePhotoFields = () => {
+    this.prev(0)
+  }
+
+  handleAfterSelectionFields = () => {
+    this.next(0)
+  }
+
+  handleBeforeSelectionFields = () => {
+    this.prev(1)
+  }
+
+  handleTabFocus = () => {
+    this.props.onFocus()
+    this.props.onDeactivate()
+  }
+
+  handleBlur = () => {
+    this.props.onBlur()
+    this.props.onDeactivate()
+  }
+
+  handleEditCancel = () => {
+    this.props.onEditCancel()
+    this.props.onDeactivate()
+    this.focus()
+  }
+
+  handleChange = (data) => {
+    this.props.onMetadataSave(data)
+    this.props.onDeactivate()
+    this.focus()
   }
 
   handleTemplateChange = (template) => {
@@ -42,22 +145,33 @@ class MetadataPanel extends PureComponent {
     })
   }
 
-  renderItemFields() {
-    if (this.isEmpty) return null
+  handleKeyDown = (event) => {
+    switch (match(this.props.keymap, event)) {
+      case 'up':
+        this.prev()
+        break
+      case 'down':
+      case 'enter':
+        this.next()
+        break
+      default:
+        return
+    }
 
+    event.stopPropagation()
+    event.preventDefault()
+  }
+
+  renderItemFields() {
     const {
       items,
-      itemsData,
-      itemTemplates,
+      itemFields,
       templates,
       isDisabled,
-      onMetadataSave,
-      ...props
+      onActivate
     } = this.props
 
-    const item = items[0]
-
-    return (
+    return !this.isEmpty && (
       <section>
         <h5 className="metadata-heading">
           <FormattedMessage
@@ -65,41 +179,45 @@ class MetadataPanel extends PureComponent {
             values={{ count: items.length }}/>
         </h5>
         <TemplateSelect
-          templates={itemTemplates}
-          selected={item.template}
+          templates={templates}
+          selected={items[0].template}
           isDisabled={isDisabled}
-          onChange={this.handleTemplateChange}/>
-        <MetadataFields {...props}
-          data={itemsData}
-          template={templates[item.template]}
-          isDisabled={isDisabled}
-          onChange={onMetadataSave}/>
-        {items.length === 1 && <ItemInfo item={item}/>}
+          onChange={this.handleTemplateChange}
+          onFocus={onActivate}/>
+        <MetadataList
+          ref={this.setItemFields}
+          edit={this.props.edit}
+          fields={itemFields}
+          isDisabled={this.props.isDisabled}
+          onEdit={this.props.onEdit}
+          onEditCancel={this.handleEditCancel}
+          onChange={this.handleChange}
+          onAfter={this.handleAfterItemFields}
+          onBefore={this.handleBeforeItemFields}/>
+        {!this.isBulk && <ItemInfo item={items[0]}/>}
       </section>
     )
   }
 
   renderPhotoFields() {
     if (this.isEmpty || this.isBulk) return null
-
-    const {
-      photo,
-      photoData,
-      templates,
-      onMetadataSave,
-      onOpenInFolder,
-      ...props
-    } = this.props
+    const { photo, photoFields, onOpenInFolder } = this.props
 
     return photo && !photo.pending && (
       <section>
         <h5 className="metadata-heading separator">
           <FormattedMessage id="panel.metadata.photo"/>
         </h5>
-        <MetadataFields {...props}
-          data={photoData}
-          template={templates[photo.template]}
-          onChange={onMetadataSave}/>
+        <MetadataList
+          ref={this.setPhotoFields}
+          edit={this.props.edit}
+          fields={photoFields}
+          isDisabled={this.props.isDisabled}
+          onEdit={this.props.onEdit}
+          onEditCancel={this.handleEditCancel}
+          onChange={this.handleChange}
+          onAfter={this.handleAfterPhotoFields}
+          onBefore={this.handleBeforePhotoFields}/>
         <PhotoInfo
           photo={photo}
           onOpenInFolder={onOpenInFolder}/>
@@ -109,24 +227,23 @@ class MetadataPanel extends PureComponent {
 
   renderSelectionFields() {
     if (this.isEmpty || this.isBulk) return null
-
-    const {
-      selection,
-      selectionData,
-      templates,
-      onMetadataSave,
-      ...props
-    } = this.props
+    const { selection, selectionFields } = this.props
 
     return selection != null && !selection.pending && (
       <section>
         <h5 className="metadata-heading separator">
           <FormattedMessage id="panel.metadata.selection"/>
         </h5>
-        <MetadataFields {...props}
-          data={selectionData}
-          template={templates[selection.template]}
-          onChange={onMetadataSave}/>
+        <MetadataList
+          ref={this.setSelectionFields}
+          edit={this.props.edit}
+          fields={selectionFields}
+          isDisabled={this.props.isDisabled}
+          onEdit={this.props.onEdit}
+          onEditCancel={this.handleEditCancel}
+          onChange={this.handleChange}
+          onAfter={this.handleAfterSelectionFields}
+          onBefore={this.handleBeforeSelectionFields}/>
         <SelectionInfo
           selection={selection}/>
       </section>
@@ -136,7 +253,12 @@ class MetadataPanel extends PureComponent {
   render() {
     return (
       <div className="metadata tab-pane">
-        <div className="scroll-container">
+        <div
+          className="scroll-container"
+          ref={this.setContainer}
+          tabIndex={this.tabIndex}
+          onBlur={this.handleBlur}
+          onKeyDown={this.handleKeyDown}>
           {this.renderItemFields()}
           {this.renderPhotoFields()}
           {this.renderSelectionFields()}
@@ -153,23 +275,38 @@ class MetadataPanel extends PureComponent {
       id: number.isRequired,
       template: string.isRequired
     })),
-    itemsData: object.isRequired,
+    itemFields: arrayOf(shape({
+      isExtra: bool.isRequired,
+      property: object.isRequired
+    })).isRequired,
 
     photo: shape({
       id: number.isRequired,
       template: string
     }),
-    photoData: object,
+    photoFields: arrayOf(shape({
+      isExtra: bool.isRequired,
+      property: object.isRequired
+    })).isRequired,
 
-    templates: object.isRequired,
-    itemTemplates: arrayOf(object).isRequired,
+    keymap: object.isRequired,
+    templates: arrayOf(object).isRequired,
 
     selection: shape({
       id: number.isRequired,
       template: string
     }),
-    selectionData: object,
+    selectionFields: arrayOf(shape({
+      isExtra: bool.isRequired,
+      property: object.isRequired
+    })).isRequired,
 
+    onActivate: func.isRequired,
+    onBlur: func.isRequired,
+    onDeactivate: func.isRequired,
+    onEdit: func,
+    onEditCancel: func,
+    onFocus: func.isRequired,
     onItemSave: func.isRequired,
     onMetadataSave: func.isRequired,
     onOpenInFolder: func.isRequired
@@ -181,13 +318,12 @@ module.exports = {
     (state) => ({
       edit: state.edit.field,
       items: getSelectedItems(state),
-      itemsData: getItemMetadata(state),
+      itemFields: getItemFields(state),
       photo: getSelectedPhoto(state),
-      photoData: state.metadata[state.nav.photo],
-      templates: getAllTemplates(state),
-      itemTemplates: getItemTemplates(state),
+      photoFields: getPhotoFields(state),
+      templates: getItemTemplates(state),
       selection: getActiveSelection(state),
-      selectionData: getActiveSelectionData(state)
+      selectionFields: getSelectionFields(state)
     })
   )(MetadataPanel)
 }

@@ -2,7 +2,7 @@
 
 const { LIST, PROJECT } = require('../constants')
 const { omit, splice } = require('../common/util')
-const { load, update } = require('./util')
+const { replace, update } = require('./util')
 
 module.exports = {
   lists(state = {}, { type, payload, error, meta }) {
@@ -10,7 +10,7 @@ module.exports = {
       case PROJECT.OPEN:
         return {}
       case LIST.LOAD:
-        return load(state, payload, meta, error)
+        return replace(state, payload, meta, error)
 
       case LIST.INSERT: {
         const parent = state[payload.parent]

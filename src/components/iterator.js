@@ -34,27 +34,16 @@ class Iterator extends PureComponent {
   }
 
   componentDidMount() {
-    if (this.container != null) {
-      this.ro = new ResizeObserver(this.handleResize)
-      this.ro.observe(this.container)
-      on(this.container, 'tab:focus', this.handleFocus)
-      on(this.container, 'scroll', this.handleScroll, {
-        capture: true, passive: true
-      })
-    }
+    this.ro = new ResizeObserver(([e]) => {
+      this.handleResize(e.contentRect)
+    })
+    this.observe(this.container)
   }
 
   componentWillUnmount() {
-    if (this.ro != null) {
-      this.ro.disconnect()
-    }
-
-    if (this.container != null) {
-      off(this.container, 'tab:focus', this.handleFocus)
-      off(this.container, 'scroll', this.handleScroll, {
-        capture: true, passive: true
-      })
-    }
+    this.unobserve(this.container)
+    this.ro.disconnect()
+    this.ro = null
   }
 
   componentWillReceiveProps(props) {
@@ -62,6 +51,36 @@ class Iterator extends PureComponent {
       this.getIterables(props).length !== this.size) {
       this.update(props)
     }
+  }
+
+  observe(container) {
+    if (container != null) {
+      on(container, 'tab:focus', this.handleFocus)
+      on(container, 'scroll', this.handleScroll, {
+        capture: true, passive: true
+      })
+
+      this.ro.observe(container)
+    }
+  }
+
+  unobserve(container) {
+    if (container != null) {
+      off(container, 'tab:focus', this.handleFocus)
+      off(container, 'scroll', this.handleScroll, {
+        capture: true, passive: true
+      })
+
+      if (this.ro != null) {
+        this.ro.unobserve(container)
+      }
+    }
+  }
+
+  setContainer = (container) => {
+    if (this.container != null) this.unobserve(this.container)
+    this.container = container
+    if (this.ro != null) this.observe(container)
   }
 
   update(props = this.props) {
@@ -292,11 +311,6 @@ class Iterator extends PureComponent {
     this.scroll(offset)
   }
 
-  setContainer = (container) => {
-    this.container = container
-  }
-
-
   handleScroll = () => {
     if (!this.isScrollUpdateScheduled) {
       this.isScrollUpdateScheduled = true
@@ -309,7 +323,7 @@ class Iterator extends PureComponent {
   }
 
   handleResize = throttle((!win32 ?
-    ([e]) => this.resize(e.contentRect) :
+    (rect) => this.resize(rect) :
     () => this.resize(this.bounds)
   ), 15)
 

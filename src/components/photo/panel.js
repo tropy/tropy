@@ -11,6 +11,7 @@ const { PhotoGrid } = require('./grid')
 const { isValidImage } = require('../../image')
 const { pick } = require('../../common/util')
 const { PHOTO } = require('../../constants/sass')
+const cx = require('classnames')
 
 
 class PhotoPanel extends Panel {
@@ -46,10 +47,12 @@ class PhotoPanel extends Panel {
     const props = {
       ...this.props,
       size: PHOTO.ZOOM[zoom],
+      onBlur: this.handleNestedBlur,
       onChange: onMetadataSave,
       onDelete,
       onDropImages: this.handleDropFiles,
-      onEdit
+      onEdit,
+      onFocus: this.handleNestedFocus
     }
 
     const PhotoIterator = zoom ? PhotoGrid : PhotoList
@@ -62,9 +65,13 @@ class PhotoPanel extends Panel {
   render() {
     const toolbar = this.renderToolbar()
     const content = this.renderContent()
+    const classes = {
+      'nested-focus': this.state.hasNestedFocus,
+      'has-active': this.props.current != null
+    }
 
     return (
-      <section className="photo-panel panel">
+      <section className={cx('photo-panel', 'panel', classes)}>
         {this.renderHeader(toolbar)}
         {this.connect(this.renderBody(content))}
       </section>
@@ -77,6 +84,7 @@ class PhotoPanel extends Panel {
     isClosed: bool,
     isDisabled: bool,
     isOver: bool,
+    current: number,
     photos: array.isRequired,
     zoom: number.isRequired,
     dt: func.isRequired,

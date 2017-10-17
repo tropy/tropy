@@ -27,6 +27,16 @@
       color: $tab-active-color;
       background: $tab-active-bg;
     }
+
+    &:not(.active) {
+      .nested-focus & {
+        background: $tab-nested-focus-bg;
+      }
+
+      .nested-focus.has-active & {
+        background: $tab-bg;
+      }
+    }
   }
 
   &.justified {

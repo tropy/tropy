@@ -19,11 +19,13 @@ describe('Metadata Selectors', () => {
       expect(getItemMetadata(state([1, 2])))
         .to.have.nested.property('title.text', 'foo')
 
+      expect(getItemMetadata(state([1, 2])).id).to.eql([1, 2])
+
       expect(getItemMetadata(state([])))
-        .to.eql({ id: [] })
+        .to.eql({ id: undefined })
 
       expect(getItemMetadata(state([23])))
-        .to.eql({ id: [23] })
+        .to.eql({ id: 23 })
     })
 
     it('collects stats', () => {

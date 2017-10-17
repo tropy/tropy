@@ -4,33 +4,26 @@ const React = require('react')
 const { PureComponent } = React
 const { Editable } = require('../editable')
 const { FormattedMessage } = require('react-intl')
-const { pluck } = require('../../common/util')
+const { blank, pluck } = require('../../common/util')
 const { getLabel } = require('../../common/ontology')
 const { IconLock, IconWarning } = require('../icons')
 const cx = require('classnames')
 const { TYPE } = require('../../constants')
 const { auto } = require('../../format')
-const {
-  arrayOf, bool, func, number, oneOfType, shape, string
-} = require('prop-types')
+const { bool, func, number, oneOfType, shape, string } = require('prop-types')
 
 
 class MetadataField extends PureComponent {
   get classes() {
-    return {
-      'metadata-field': true,
-      'extra': this.props.isExtra,
-      'mixed': this.props.isMixed,
+    return ['metadata-field', {
+      extra: this.props.isExtra,
+      mixed: this.props.isMixed,
       [this.props.type]: true
-    }
-  }
-
-  get isBlank() {
-    return this.props.text == null || this.props.text === ''
+    }]
   }
 
   get isInvalid() {
-    return this.props.isRequired && this.isBlank
+    return this.props.isRequired && blank(this.props.text)
   }
 
   get label() {
@@ -49,29 +42,38 @@ class MetadataField extends PureComponent {
 
   handleClick = () => {
     if (!this.props.isDisabled && !this.props.isReadOnly) {
-      this.props.onEdit(this.props.id, this.property)
+      this.props.onEdit(this.property)
     }
   }
 
-  handleChange = (text) => {
+  handleChange = (text, hasChanged = true) => {
     this.props.onChange({
-      id: this.props.id,
-      data: {
-        [this.property]: { text, type: this.props.type }
+      [this.property]: { text, type: this.props.type }
+    }, hasChanged)
+  }
+
+  handleCancel = (isCommitUnchanged, hasBeenForced) => {
+    if (hasBeenForced) this.props.onEditCancel()
+    else this.handleChange(this.props.text, !isCommitUnchanged)
+  }
+
+  handleKeyDown = (event, text, hasChanged) => {
+    if (event.key === 'Tab') {
+      event.preventDefault()
+      event.stopPropagation()
+
+      if (hasChanged) {
+        this.handleChange(text)
       }
-    })
-  }
 
-  handleCancel = (isCommitUnchanged) => {
-    if (isCommitUnchanged) {
-      return this.handleChange(this.props.text)
+      if (event.shiftKey) this.props.onPrev()
+      else this.props.onNext()
     }
-
-    this.props.onEditCancel()
   }
+
 
   render() {
-    const { classes, details, label } = this
+    const { classes, details, label, isInvalid } = this
 
     return (
       <li className={cx(classes)}>
@@ -84,8 +86,9 @@ class MetadataField extends PureComponent {
             isEditing={this.props.isEditing}
             isRequired={this.props.isRequired}
             onCancel={this.handleCancel}
-            onChange={this.handleChange}/>
-          {this.isInvalid && <IconWarning/>}
+            onChange={this.handleChange}
+            onKeyDown={this.handleKeyDown}/>
+          {isInvalid && <IconWarning/>}
           {this.props.isReadOnly && <IconLock/>}
         </div>
       </li>
@@ -94,11 +97,9 @@ class MetadataField extends PureComponent {
 
 
   static propTypes = {
-    id: oneOfType([number, arrayOf(number)]),
-
     isEditing: bool,
     isDisabled: bool,
-    isExtra: bool,
+    isExtra: bool.isRequired,
     isMixed: bool,
     isRequired: bool,
     isReadOnly: bool,
@@ -109,7 +110,7 @@ class MetadataField extends PureComponent {
       type: string,
       description: string,
       comment: string
-    }),
+    }).isRequired,
 
     label: string,
     placeholder: string,
@@ -118,7 +119,9 @@ class MetadataField extends PureComponent {
 
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,
-    onChange: func.isRequired
+    onChange: func.isRequired,
+    onNext: func.isRequired,
+    onPrev: func.isRequired
   }
 
   static defaultProps = {
@@ -129,11 +132,9 @@ class MetadataField extends PureComponent {
 
 class StaticField extends PureComponent {
   get classes() {
-    return [
-      'metadata-field',
-      'static',
-      { clickable: this.props.onClick != null }
-    ]
+    return ['metadata-field', 'static', {
+      clickable: this.props.onClick != null
+    }]
   }
 
   render() {
