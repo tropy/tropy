@@ -80,15 +80,6 @@ module.exports = {
           items: select(state.items, payload.items, meta.mod)
         }
 
-      case ITEM.IMPORT:
-        return (!meta.done || error || !payload.length) ? state : {
-          ...state,
-          photo: null,
-          note: null,
-          tags: [],
-          items: [...payload]
-        }
-
       case ITEM.OPEN: {
         const { id, photos, selection } = payload
         const photo = photos ?
