@@ -43,7 +43,7 @@ function shorten() {
 
 function createContext(item_template, metadata, props) {
   var context = {
-    _template: { '@id': TEMPLATE.TYPE, '@type': '@id' }
+    template: { '@id': TEMPLATE.TYPE, '@type': '@id' }
   }
 
   // add fields to context
@@ -63,7 +63,7 @@ function createContext(item_template, metadata, props) {
 function createDocument(item_template, metadata, props) {
   var document = {
     '@type': ITEM,
-    '_template': item_template.id
+    'template': item_template.id
   }
 
   // add metadata to document.metadata
@@ -80,6 +80,79 @@ function createDocument(item_template, metadata, props) {
   return document
 }
 
+function itemToLD() {
+  const document = createDocument(...arguments)
+  const context = createContext(...arguments)
+
+  document['@context'] = context
+  return jsonld.compact(document, context)
+}
+
+//////// Grouped
+async function groupedByTemplate(resources, props) {
+  function makeContext(template) {
+    const result = {
+      '@vocab': 'https://tropy.org/v1/tropy#',
+      'template': TEMPLATE.TYPE,
+      'items': {
+        '@id': ITEM,
+        '@container': '@list',
+        '@context': {}
+      }
+    }
+    // TODO fill context up with metadata items
+    // TODO don't include fields that have no metadata set
+
+    // fill context up with template items
+    for (const field of template.fields) {
+      const short = shorten(field.property, props, template)
+      if (short) {
+        result['items']['@context'][short] = {
+          '@id': field.property,
+          '@type': field.datatype
+        }
+      }
+    }
+
+    return result
+  }
+
+  function makeDocument(items, metadata, template) {
+    const result = {
+      template: template.id,
+      items: []
+    }
+    for (const i in items) {
+      const item = items[i]
+      let doc = {}
+      // fill items up with metadata
+      for (const property in metadata[item.id]) {
+        const short = shorten(property, props, template)
+        if (short) {
+          const text = metadata[item.id][property].text
+          if (text) {
+            doc[short] = text
+          }
+        }
+      }
+      result.items.push(doc)
+    }
+    return result
+  }
+
+  const results = []
+  for (const r in resources) {
+    const { items, template, metadata } = resources[r]
+    const context = makeContext(template)
+    const document = makeDocument(items, metadata, template)
+    document['@context'] = context
+    results.push(await jsonld.compact(document, context))
+  }
+  return results
+}
+
+//////// Import
+
 class ParseError extends Error {
   constructor(obj, ...args) {
     super(...args)
@@ -87,14 +160,6 @@ class ParseError extends Error {
 
     this.details = JSON.stringify(obj, null, 2)
   }
-}
-
-function itemToLD() {
-  var document = createDocument(...arguments)
-  const context = createContext(...arguments)
-
-  document['@context'] = context
-  return jsonld.compact(document, context)
 }
 
 async function itemFromLD(obj) {
@@ -126,5 +191,6 @@ module.exports = {
   propertyLabel,
   itemToLD,
   itemFromLD,
-  ParseError
+  ParseError,
+  groupedByTemplate
 }

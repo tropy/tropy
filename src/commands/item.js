@@ -18,7 +18,7 @@ const { ITEM, DC } = require('../constants')
 const { keys } = Object
 const { isArray } = Array
 const { writeFileAsync: write } = require('fs')
-const { itemToLD, itemFromLD, ParseError } = require('../common/linked-data')
+const ld = require('../common/linked-data')
 const { win } = require('../window')
 
 const {
@@ -73,7 +73,7 @@ class ImportItem extends ImportCommand {
 
       for (let i = 0, total = objects.length; i < total; ++i) {
         let item
-        const parsed = yield call(itemFromLD, objects[i])
+        const parsed = yield call(ld.itemFromLD, objects[i])
 
         const template = yield select(
           state => state.ontology.template[parsed.templateID])
@@ -102,7 +102,7 @@ class ImportItem extends ImportCommand {
       if (error instanceof SyntaxError) {
         // might want to ignore this if user pastes something accidentally
         warn(`Could not parse ${source} contents.`)
-      } else if (error instanceof ParseError) {
+      } else if (error instanceof ld.ParseError) {
         warn(error.message)
         verbose(error.details)
       } else {
@@ -491,6 +491,7 @@ class Export extends Command {
 
   *exec() {
     let path = this.action.meta.target
+    const ids = this.action.payload
 
     try {
       if (!path) {
@@ -500,21 +501,26 @@ class Export extends Command {
 
       if (!path) return
 
-      const results = []
-      for (const id of this.action.payload) {
-        // TODO replace with a 'selector'
-        const resources = yield select(state => {
-          const item = state.items[id]
-          return [
-            state.ontology.template[item.template],
-            state.metadata[id],
-            state.ontology.props
-          ]
-        })
+      const [resources, props] = yield select(state => {
+        const itms = pick(state.items, ids)
+        const metadata = pick(state.metadata, ids)
+        const templateIDs = Object.values(itms).map(itm => itm.template)
+        const templates = pick(state.ontology.template, templateIDs)
+        let results = []
+        for (const t in templates) {
+          const template = templates[t]
+          const templateItems = Object.values(itms).filter(
+            i => i.template === t)
+          results.push({
+            template,
+            items: templateItems,
+            metadata: pick(metadata, templateItems.map(i => i.id))
+          })
+        }
+        return [results, state.ontology.props]
+      })
 
-        const linkedData = yield call(itemToLD, ...resources)
-        results.push(linkedData)
-      }
+      const results = yield call(ld.groupedByTemplate, resources, props)
 
       const data = JSON.stringify(results, null, 2)
 

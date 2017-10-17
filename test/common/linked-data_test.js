@@ -39,6 +39,7 @@ describe('itemToLD', () => {
   const { itemToLD } = __require('common/linked-data')
 
   const resources = [
+    // template
     {
       id: 'https://tropy.org/v1/tropy#test-template',
       fields: [{
@@ -47,7 +48,9 @@ describe('itemToLD', () => {
         label: 'My Label'
       }]
     },
+    // metadata
     { 'http://example.com/property': { text: 'value' } },
+    // state.ontology.props
     {}
   ]
 
@@ -79,3 +82,5 @@ describe('itemToLD', () => {
     expect(ld).to.eventually.have.property('_template', 'https://tropy.org/v1/tropy#test-template')
   })
 })
+
+// export
