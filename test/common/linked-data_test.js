@@ -43,6 +43,10 @@ describe('groupedByTemplate', async () => {
       property: 'http://example.com/property',
       datatype: 'http://example.com/property#datatype',
       label: 'My Label'
+    }, {
+      property: 'http://example.com/empty-property',
+      datatype: 'http://example.com/empty-property#datatype',
+      label: 'Empty'
     }]
   }
 
@@ -51,18 +55,30 @@ describe('groupedByTemplate', async () => {
   ]
 
   const metadata = {
-    1: { 'http://example.com/property': { text: 'value' } }
+    1: {
+      'http://example.com/property': { text: 'value' },
+      'http://example.com/custom-property': {
+        text: 'custom', type: 'http://example.com/custom-property#type'
+      }
+    }
+  }
+
+  const props = {
+    'http://example.com/custom-property': { label: 'Non-template Property' }
   }
 
   const resources = [
     { template, items, metadata }
   ]
 
-  const ld = groupedByTemplate(resources)
+  const ld = groupedByTemplate(resources, props)
   const data = (await ld)[0]
 
   it('metadata', () => {
-    expect(data.items).to.eql([{ myLabel: 'value' }])
+    expect(data.items).to.eql([{
+      myLabel: 'value',
+      nonTemplateProperty: 'custom'
+    }])
   })
 
   it('context', () => {
@@ -73,6 +89,10 @@ describe('groupedByTemplate', async () => {
       myLabel: {
         '@id': 'http://example.com/property',
         '@type': 'http://example.com/property#datatype'
+      },
+      nonTemplateProperty: {
+        '@id': 'http://example.com/custom-property',
+        '@type': 'http://example.com/custom-property#type'
       }
     })
   })
