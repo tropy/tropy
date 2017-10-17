@@ -312,6 +312,7 @@ activity:
         other {Importing items …}
       }
     load: Loading items …
+    merge: Merging item …
     restore: Restoring item …
     save: Saving items …
     tag:
@@ -365,6 +366,7 @@ error:
   project:
     created: Project creation failed.
   item:
+    merge: Failed to merge items.
     import: Failed to import item.
     tag:
       save: Failed to save tag.

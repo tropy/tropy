@@ -359,6 +359,8 @@ class Explode extends Command {
         }
       })
 
+      yield put(act.metadata.load(keys(items)))
+
     } else {
       items = payload.items
       let ids = keys(items)
