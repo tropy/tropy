@@ -94,6 +94,12 @@ class MetadataPanel extends PureComponent {
     this.focus()
   }
 
+  handleChange = (...args) => {
+    this.props.onMetadataSave(...args)
+    this.props.onDeactivate()
+    this.focus()
+  }
+
   handleTemplateChange = (template) => {
     this.props.onItemSave({
       id: this.props.items.map(it => it.id),
@@ -129,7 +135,7 @@ class MetadataPanel extends PureComponent {
         isDisabled={this.props.isDisabled}
         onEdit={this.props.onEdit}
         onEditCancel={this.handleEditCancel}
-        onChange={this.props.onMetadataSave}/>
+        onChange={this.handleChange}/>
     )
   }
 
