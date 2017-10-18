@@ -15,7 +15,7 @@ module.exports = {
     return {
       type: FLASH.HIDE,
       payload,
-      meta
+      meta: { ipc: true, ...meta }
     }
   }
 }

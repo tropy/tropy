@@ -31,7 +31,7 @@ const { darwin } = require('../common/os')
 const { version } = require('../common/release')
 
 const {
-  HISTORY, TAG, PROJECT, CONTEXT, SASS
+  FLASH, HISTORY, TAG, PROJECT, CONTEXT, SASS
 } = require('../constants')
 
 const WIN = SASS.WINDOW
@@ -545,10 +545,15 @@ class Tropy extends EventEmitter {
 
     ipc.on('cmd', (_, command, ...params) => this.emit(command, ...params))
 
-    ipc.on('update.install', () => this.updater.install())
     ipc.on(PROJECT.OPENED, (_, project) => this.hasOpened(project))
     ipc.on(PROJECT.CREATE, () => this.showWizard())
     ipc.on(PROJECT.CREATED, (_, { file }) => this.open(file))
+
+    ipc.on(FLASH.HIDE, (_, { id, confirm }) => {
+      if (id === 'update.ready' && confirm) {
+        this.updater.install()
+      }
+    })
 
     ipc.on(PROJECT.UPDATE, (_, { name }) => {
       if (name) this.win.setTitle(name)
