@@ -18,8 +18,8 @@ const { ITEM, DC } = require('../constants')
 const { keys } = Object
 const { isArray } = Array
 const { writeFileAsync: write } = require('fs')
-const ld = require('../common/linked-data')
 const { win } = require('../window')
+const { groupedByTemplate, itemFromLD, ParseError } = require('../export')
 
 const {
   getItemTemplate,
@@ -73,7 +73,7 @@ class ImportItem extends ImportCommand {
 
       for (let i = 0, total = objects.length; i < total; ++i) {
         let item
-        const parsed = yield call(ld.itemFromLD, objects[i])
+        const parsed = yield call(itemFromLD, objects[i])
 
         const template = yield select(
           state => state.ontology.template[parsed.templateID])
@@ -102,7 +102,7 @@ class ImportItem extends ImportCommand {
       if (error instanceof SyntaxError) {
         // might want to ignore this if user pastes something accidentally
         warn(`Could not parse ${source} contents.`)
-      } else if (error instanceof ld.ParseError) {
+      } else if (error instanceof ParseError) {
         warn(error.message)
         verbose(error.details)
       } else {
@@ -520,7 +520,7 @@ class Export extends Command {
         return [results, state.ontology.props]
       })
 
-      const results = yield call(ld.groupedByTemplate, resources, props)
+      const results = yield call(groupedByTemplate, resources, props)
 
       const data = JSON.stringify(results, null, 2)
 
