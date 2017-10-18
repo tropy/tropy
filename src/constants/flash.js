@@ -1,5 +1,6 @@
 'use strict'
 
 module.exports = {
-  UPDATE: 'flash.update'
+  HIDE: 'flash.hide',
+  SHOW: 'flash.show'
 }
