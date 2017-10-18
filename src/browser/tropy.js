@@ -62,6 +62,7 @@ class Tropy extends EventEmitter {
 
     this.menu = new AppMenu(this)
     this.ctx = new ContextMenu(this)
+
     this.updater = new Updater(this)
 
     prop(this, 'cache', {

@@ -4,16 +4,17 @@ const { autoUpdater } = require('electron')
 const { feed } = require('../common/release')
 const { linux } = require('../common/os')
 const { warn, info, verbose } = require('../common/log')
-const { noop } = require('../common/util')
 const flash  = require('../actions/flash')
 
 
 class Updater {
   constructor(app, timeout = 1000 * 60 * 30) {
+    this.isSupported = !linux && ARGS.environment === 'production'
+
     this.app = app
     this.timeout = timeout
 
-    if (linux) return
+    if (!this.isSupported) return
 
     autoUpdater.setFeedURL(feed)
 
@@ -31,22 +32,27 @@ class Updater {
     })
   }
 
-  start = (linux) ? noop : () => {
+  start() {
     this.stop()
-    this.check()
-    this.interval = setInterval(this.check, this.timeout)
+
+    if (this.isSupported) {
+      this.check()
+      this.interval = setInterval(this.check, this.timeout)
+    }
   }
 
   stop() {
     clearInterval(this.interval)
   }
 
-  check = (linux) ? noop : () => {
-    autoUpdater.checkForUpdates()
+  check = () => {
+    if (this.isSupported) {
+      autoUpdater.checkForUpdates()
+    }
   }
 
   install() {
-    if (this.update != null) {
+    if (this.isUpdateReady) {
       autoUpdater.quitAndInstall()
     }
   }
