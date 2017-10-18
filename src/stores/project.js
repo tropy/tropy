@@ -13,6 +13,7 @@ const {
   activities,
   columns,
   edit,
+  flash,
   history,
   imports,
   intl,
@@ -29,7 +30,7 @@ const {
   selections,
   settings,
   tags,
-  ui,
+  ui
 } = require('../reducers')
 
 const devtools = (ARGS.dev || ARGS.debug) &&
@@ -50,6 +51,7 @@ module.exports = {
       activities,
       columns,
       edit,
+      flash,
       history,
       imports,
       intl,
@@ -66,7 +68,7 @@ module.exports = {
       selections,
       settings,
       tags,
-      ui,
+      ui
     })
 
     let middleware = applyMiddleware(
