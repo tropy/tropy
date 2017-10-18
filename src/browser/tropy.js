@@ -276,7 +276,7 @@ class Tropy extends EventEmitter {
           .then(strings => this.strings = strings)
       ]))
 
-
+      .tap(() => this.updater.start())
       .tap(() => this.emit('app:restored'))
       .tap(() => verbose('app state restored'))
   }
@@ -301,8 +301,6 @@ class Tropy extends EventEmitter {
   }
 
   listen() {
-    this.updater.start()
-
     this.on('app:install-update', () =>
       this.updater.install())
 
