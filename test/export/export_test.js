@@ -1,6 +1,6 @@
 'use strict'
 
-describe('groupedByTemplate', async () => {
+describe('export', () => {
   const { groupedByTemplate } = __require('export')
 
   const template = {
@@ -17,7 +17,7 @@ describe('groupedByTemplate', async () => {
   }
 
   const items = [
-    { id: 1, template: 'https://tropy.org/v1/tropy#test-template' }
+    { id: 1, template: 'https://tropy.org/v1/tropy#test-template', photos: [11, 12] }
   ]
 
   const metadata = {
@@ -33,42 +33,43 @@ describe('groupedByTemplate', async () => {
     'http://example.com/custom-property': { label: 'Non-template Property' }
   }
 
+  const photos = { 11: { path: '/path' }, 12: { path: '/another' } }
+
   const resources = [
-    { template, items, metadata }
+    { template, items, metadata, photos }
   ]
 
   const ld = groupedByTemplate(resources, props)
-  const data = (await ld)[0]
 
-  it('metadata', () => {
-    expect(data.items).to.eql([{
+  it('has item/photo metadata', async () => {
+    const data = (await ld)[0]
+    expect(data.item).to.eql([{
       myLabel: 'value',
-      nonTemplateProperty: 'custom'
+      nonTemplateProperty: 'custom',
+      photo: [{ path: '/path' }, { path: '/another' }]
     }])
   })
 
-  it('context', () => {
+  it('has @context', async () => {
+    const data = (await ld)[0]
+
     expect(data['@context']).to.have.property('@vocab')
     expect(data['@context']).to.have.property('template')
 
-    expect(data['@context']['items']['@context']).to.eql({
-      myLabel: {
+    expect(data['@context']['item']['@context']).to.have.deep.property(
+      'myLabel', {
         '@id': 'http://example.com/property',
         '@type': 'http://example.com/property#datatype'
-      },
-      nonTemplateProperty: {
+      })
+    expect(data['@context']['item']['@context']).to.have.deep.property(
+      'nonTemplateProperty', {
         '@id': 'http://example.com/custom-property',
         '@type': 'http://example.com/custom-property#type'
-      }
-    })
+      })
   })
 
-  it('template', () => {
+  it('has item.template', async () => {
+    const data = (await ld)[0]
     expect(data).to.have.property('template', 'https://tropy.org/v1/tropy#test-template')
-  })
-})
-
-describe('', () => {
-  it('async function test cannot be only one in file?', () => {
   })
 })

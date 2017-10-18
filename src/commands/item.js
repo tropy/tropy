@@ -511,10 +511,12 @@ class Export extends Command {
           const template = templates[t]
           const templateItems = Object.values(itms).filter(
             i => i.template === t)
+          const templateItemIDs = templateItems.map(i => i.id)
           results.push({
             template,
             items: templateItems,
-            metadata: pick(metadata, templateItems.map(i => i.id))
+            metadata: pick(metadata, templateItemIDs),
+            photos: state.photos
           })
         }
         return [results, state.ontology.props]
