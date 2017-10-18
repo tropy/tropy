@@ -31,3 +31,28 @@ describe('linked-data helpers', () => {
     expect(shortenLabel('special _@й symbols!')).to.equal('specialSymbols')
   })
 })
+
+
+describe('newProperties', () => {
+  const { newProperties } = __require('export/utils')
+  // const { assign } = Object
+  const { template, metadata, props } = require('./helpers')
+
+  it('standard case', () => {
+    // const src = { myLabel: 'overwritten' }
+    expect(newProperties(metadata[1], {}, false, props, template)).to.eql({
+      myLabel: 'value',
+      nonTemplateProperty: 'custom'
+    })
+  })
+
+  /*
+  it('something is being overitten', () => {
+    const src = { myLabel: 'overwritten' }
+    expect(newProperties(metadata[1], src, false, props, template)).to.eql({
+      myLabel: 'value',
+      nonTemplateProperty: 'custom'
+    })
+  })
+  */
+})

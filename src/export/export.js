@@ -1,12 +1,13 @@
 'use strict'
 
+const { values } = Object
 const { promises: jsonld } = require('jsonld')
 
 const { pick } = require('../common/util')
-const { shorten } = require('./utils')
 const { ITEM, PHOTO } = require('../constants/type')
 const { TEMPLATE } = require('../constants/ontology')
-const { entries, values, keys } = Object
+
+const { newProperties } = require('./utils')
 
 function makeContext(items, photos, metadata, template, props) {
   const result = {
@@ -27,93 +28,40 @@ function makeContext(items, photos, metadata, template, props) {
     }
   }
 
-  const mdItems = values(pick(metadata, items.map(i => i.id)))
-
-  // don't include fields that have no metadata set
-  // validProperties is a set of item properties that have metadata
-  const validProperties = new Set()
-  for (const itemMetadata of mdItems) {
-    for (const property of keys(itemMetadata)) {
-      validProperties.add(property)
-    }
-  }
-
-  // fill context up with template items (that have metadata)
-  for (const field of template.fields) {
-    const key = shorten(field.property, props, template)
-    const valid = !!validProperties.has(field.property)
-    if (key && valid) {
-      result['item']['@context'][key] = {
-        '@id': field.property,
-        '@type': field.datatype
-      }
-    }
-  }
-
   // fill context up with item metadata fields
-  for (const itemMetadata of mdItems) {
-    for (const [property, { type }] of entries(itemMetadata)) {
-      const key = shorten(property, props, template)
-      const alreadySet = !!result['item']['@context'][key]
-      if (key && !alreadySet) {
-        result['item']['@context'][key] = { '@id': property, '@type': type }
-      }
-    }
-  }
+  const metadataOfItems = values(pick(metadata, items.map(i => i.id)))
+  result['item']['@context'] = newProperties(
+    metadataOfItems, result['item']['@context'], true, props, template)
 
-  // add Photo metadata fields to context
-  const mdPhotos = values(pick(metadata, items.map(i => i.photos)
-                               .reduce((acc, ps) => acc.concat(ps))))
-
-  for (const photoMetadata of mdPhotos) {
-    for (const [property, { type }] of entries(photoMetadata)) {
-      const key = shorten(property, props, template)
-      const alreadySet = !!result['item']['@context']['photo']['@context'][key]
-      if (key && !alreadySet) {
-        result['item']['@context']['photo']['@context'][key] =
-          { '@id': property, '@type': type }
-      }
-    }
-  }
+  // add Photo metadata fields to context from all selected photos
+  const metadataOfPhotos = values(pick(metadata, items.map(i => i.photos)
+                                       .reduce((acc, ps) => acc.concat(ps))))
+  const newPhotoProperties = newProperties(metadataOfPhotos,
+    result['item']['@context']['photo']['@context'], true, props, template)
+  result['item']['@context']['photo']['@context'] = newPhotoProperties
 
   return result
 }
 
 function renderItem(item, photos, metadata, template, props) {
-  let result = {}
-  // add metadata
-  for (const property in metadata[item.id]) {
-    const key = shorten(property, props, template)
-    if (key) {
-      const text = metadata[item.id][property].text
-      if (text) {
-        result[key] = text
-      }
-    }
+  // the item starts with a photo property, it may not be overwritten
+  let result = { photo: [] }
+
+  // add item metadata
+  result = newProperties(metadata[item.id], result, false, props, template)
+
+  // add photo metadata
+  result.photo = values(pick(photos, item.photos)).map(p => {
+    let photo = { path: p.path }
+    photo = newProperties(metadata[p.id], photo, false, props, template)
+    return photo
+  })
+
+  // clear property if there are no photos
+  if (!result.photo.length) {
+    delete result.photo
   }
 
-  // add photos
-  const itemPhotos = values(pick(photos, item.photos))
-  if (itemPhotos.length) {
-    result.photo = itemPhotos.map(p => {
-      let photo = {
-        path: p.path
-      }
-
-      // add photo metadata
-      const photoMetadata = metadata[p.id] || {}
-
-      for (const [property, { text }] of entries(photoMetadata)) {
-        const key = shorten(property, props, template)
-        if (key && text) {
-          photo[key] = text
-        }
-      }
-
-      return photo
-    })
-
-  }
   return result
 }
 

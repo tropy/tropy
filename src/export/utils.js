@@ -1,7 +1,8 @@
 'use strict'
 
-const { camelize } = require('../common/util')
+const { array, camelize } = require('../common/util')
 const { getLabel } = require('../common/ontology')
+const { entries } = Object
 
 function propertyLabel(property, props, template) {
   var label, field
@@ -36,8 +37,25 @@ function shorten() {
   if (label) return shortenLabel(label)
 }
 
+function newProperties(src, dest, toContext = false, props, template) {
+  // TODO check with dest for possible key collision
+  for (const itemMetadata of array(src)) {
+    for (const [property, { type, text }] of entries(itemMetadata)) {
+      const key = shorten(property, props, template)
+      if (toContext && key && type) {
+        dest[key] = { '@id': property, '@type': type }
+      }
+      if (!toContext && key && text) {
+        dest[key] = text
+      }
+    }
+  }
+  return dest
+}
+
 module.exports = {
   shortenLabel,
   propertyLabel,
-  shorten
+  shorten,
+  newProperties
 }
