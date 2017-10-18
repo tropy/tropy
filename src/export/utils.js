@@ -2,7 +2,7 @@
 
 const { array, camelize } = require('../common/util')
 const { getLabel } = require('../common/ontology')
-const { entries } = Object
+const { entries, values } = Object
 
 function propertyLabel(property, props, template) {
   var label, field
@@ -37,16 +37,33 @@ function shorten() {
   if (label) return shortenLabel(label)
 }
 
-function newProperties(src, dest, toContext = false, props, template) {
-  // TODO check with dest for possible key collision
+
+function newKey(key) {
+  const re = /(\d+)$/ // ends with a number
+  const match = key.match(re)
+  return match ? key.replace(re, Number(match[1]) + 1) : key + '2'
+}
+
+function newProperties(src, dest, toContext, props, template) {
   for (const itemMetadata of array(src)) {
     for (const [property, { type, text }] of entries(itemMetadata)) {
-      const key = shorten(property, props, template)
-      if (toContext && key && type) {
-        dest[key] = { '@id': property, '@type': type }
+      let key = shorten(property, props, template)
+
+      if (!key) continue
+
+      // prevent key collision by modifying key if it is already set
+      while (dest[key]) {
+        key = newKey(key)
       }
-      if (!toContext && key && text) {
-        dest[key] = text
+
+      // either we're writing item/photo metadata or @context type info
+      if (toContext) {
+        // do not add same property to @context twice
+        if (!values(dest).map(c => c['@id']).includes(property)) {
+          if (type) dest[key] = { '@id': property, '@type': type }
+        }
+      } else {
+        if (text) dest[key] = text
       }
     }
   }
@@ -57,5 +74,6 @@ module.exports = {
   shortenLabel,
   propertyLabel,
   shorten,
-  newProperties
+  newProperties,
+  newKey
 }

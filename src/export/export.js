@@ -70,8 +70,7 @@ function makeDocument(items, photos, metadata, template, props) {
     template: template.id,
     item: []
   }
-  for (const i in items) {
-    const item = items[i]
+  for (const item of items) {
     const rendered = renderItem(item, photos, metadata, template, props)
     result.item.push(rendered)
   }
@@ -80,8 +79,8 @@ function makeDocument(items, photos, metadata, template, props) {
 
 async function groupedByTemplate(resources, props = {}) {
   const results = []
-  for (const r in resources) {
-    const { items, metadata, template, photos } = resources[r]
+  for (const resource of resources) {
+    const { items, metadata, template, photos } = resource
     const context = makeContext(items, photos, metadata, template, props)
     const document = makeDocument(items, photos, metadata, template, props)
     document['@context'] = context

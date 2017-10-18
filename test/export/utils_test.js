@@ -32,27 +32,50 @@ describe('linked-data helpers', () => {
   })
 })
 
+describe('newKey', () => {
+  const { newKey } = __require('export/utils')
+  it('no number', () => {
+    expect(newKey('foo')).to.equal('foo2')
+  })
+  it('ends with a number', () => {
+    expect(newKey('foo42')).to.equal('foo43')
+  })
+})
 
 describe('newProperties', () => {
   const { newProperties } = __require('export/utils')
   // const { assign } = Object
   const { template, metadata, props } = require('./helpers')
 
-  it('standard case', () => {
-    // const src = { myLabel: 'overwritten' }
+  it('add values to empty destination', () => {
     expect(newProperties(metadata[1], {}, false, props, template)).to.eql({
       myLabel: 'value',
       nonTemplateProperty: 'custom'
     })
   })
 
-  /*
-  it('something is being overitten', () => {
-    const src = { myLabel: 'overwritten' }
+  it('does not overwrite existing values', () => {
+    const src = {
+      myLabel: 'already here',
+    }
     expect(newProperties(metadata[1], src, false, props, template)).to.eql({
-      myLabel: 'value',
+      myLabel: 'already here',
+      myLabel2: 'value',
       nonTemplateProperty: 'custom'
     })
   })
-  */
+
+  it('does not add multiple @context entries for same thing', () => {
+    const context = {
+      myLabel: { '@id': 'http://example.com/property' }
+    }
+    expect(newProperties(metadata[1], context, true, props, template)).to.eql({
+      myLabel: { '@id': 'http://example.com/property' },
+      nonTemplateProperty: {
+        '@id': 'http://example.com/custom-property',
+        '@type': 'http://example.com/custom-property#type'
+      }
+    })
+  })
+
 })
