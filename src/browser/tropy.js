@@ -587,6 +587,7 @@ class Tropy extends EventEmitter {
       theme: this.state.theme,
       locale: this.state.locale,
       uuid: this.state.uuid,
+      update: this.updater.release,
       version
     }
   }
