@@ -77,17 +77,21 @@ class ProjectSidebar extends PureComponent {
 
 
   next() {
+    const {
+      isSelected, isTrashSelected, hasLastImport, isLastImportSelected
+    } = this.props
+
     switch (true) {
-      case this.props.isTrashSelected:
+      case isTrashSelected:
         return
-      case this.props.isLastImportSelected:
+      case isLastImportSelected:
         return this.handleTrashSelect()
       case this.isListEmpty():
       case this.isListSelected(this.getLastList()):
-        return this.props.hasLastImport ?
+        return hasLastImport ?
           this.handleLastImportSelect() :
           this.handleTrashSelect()
-      case this.props.isSelected:
+      case isSelected:
         return this.handleListSelect(this.getFirstList())
       default:
         return this.handleListSelect(this.getNextList())
@@ -95,18 +99,24 @@ class ProjectSidebar extends PureComponent {
   }
 
   prev() {
+    const {
+      isSelected, isTrashSelected, hasLastImport, isLastImportSelected
+    } = this.props
+
     switch (true) {
-      case this.props.isSelected:
+      case isSelected:
         return
+      case isTrashSelected && hasLastImport:
+        return this.handleLastImportSelect()
       case this.isListEmpty():
       case this.isListSelected(this.getFirstList()):
         return this.handleSelect()
-      case this.props.isTrashSelected:
-        return this.props.hasLastImport ?
+      case isLastImportSelected:
+        return this.handleListSelect(this.getLastList())
+      case isTrashSelected:
+        return hasLastImport ?
           this.handleLastImportSelect() :
           this.handleListSelect(this.getLastList())
-      case this.props.isLastImportSelected:
-        return this.handleListSelect(this.getLastList())
       default:
         return this.handleListSelect(this.getPrevList())
     }

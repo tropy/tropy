@@ -24,35 +24,19 @@ class AppPrefs extends PureComponent {
     ipc.send('cmd', 'app:switch-theme', theme, theme)
   }
 
-  handleItemTemplateChange = (template) => {
-    this.props.onSettingsUpdate({
-      itemTemplate: template.id
-    })
-  }
-
-  handlePhotoTemplateChange = (template) => {
-    this.props.onSettingsUpdate({
-      photoTemplate: template.id
-    })
+  handleTemplateChange = (template) => {
+    this.props.onSettingsUpdate({ template: template.id })
   }
 
   render() {
     return (
       <div className="scroll-container">
         <div className="form-horizontal">
-          <FormElement
-            id="prefs.app.template.item">
+          <FormElement id="prefs.app.template">
             <TemplateSelect
-              templates={this.props.itemTemplates}
-              selected={this.props.settings.itemTemplate}
-              onChange={this.handleItemTemplateChange}/>
-          </FormElement>
-          <FormElement
-            id="prefs.app.template.photo">
-            <TemplateSelect
-              templates={this.props.photoTemplates}
-              selected={this.props.settings.photoTemplate}
-              onChange={this.handlePhotoTemplateChange}/>
+              templates={this.props.templates}
+              selected={this.props.settings.template}
+              onChange={this.handleTemplateChange}/>
           </FormElement>
           <hr/>
           <FormToggleGroup
@@ -100,8 +84,7 @@ class AppPrefs extends PureComponent {
   }
 
   static propTypes = {
-    itemTemplates: array.isRequired,
-    photoTemplates: array.isRequired,
+    templates: array.isRequired,
     settings: shape({
       debug: bool.isRequired,
       theme: string.isRequired,

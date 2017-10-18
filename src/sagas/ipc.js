@@ -75,7 +75,12 @@ const FILTER = {
 function channel(name) {
   return eventChannel(emitter => {
     const listener = (_, action) => {
-      emitter(action)
+      try {
+        emitter(action)
+      } catch (error) {
+        warn(`unexpected error in channel "${name}": ${error}`)
+        debug(error.stack)
+      }
     }
 
     ipc.on(name, listener)

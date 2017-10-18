@@ -51,7 +51,6 @@ linux: &linux
     open: Enter
     edit: F2
     delete: Backspace
-    preview: Space
     expand:
       - CmdOrCtrl+ArrowDown
       - CmdOrCtrl+ArrowRight
@@ -74,6 +73,10 @@ linux: &linux
     end: End
     pageUp: PageUp
     pageDown: PageDown
+  MetadataList: &MetadataList
+    up: ArrowUp
+    down: ArrowDown
+    enter: Enter
   NoteList: &NoteList
     up: ArrowUp
     down: ArrowDown
@@ -110,6 +113,8 @@ linux: &linux
     undo: CmdOrCtrl+z
     redo: CmdOrCtrl+Shift+Z
   TagList: &TagList
+    up: ArrowUp
+    down: ArrowDown
     remove:
       - Backspace
       - Delete
@@ -158,6 +163,7 @@ darwin:
       - Cmd+ArrowRight
     delete: Backspace
     enter: Enter
+    preview: Space
     contract: Escape
     home: Home
     end: End
@@ -176,6 +182,7 @@ darwin:
     end: End
     pageUp: PageUp
     pageDown: PageDown
+  MetadataList: *MetadataList
   NoteList: *NoteList
   NotePad: *NotePad
   TagList: *TagList

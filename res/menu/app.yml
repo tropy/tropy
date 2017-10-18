@@ -69,6 +69,9 @@ linux:
         label: '&Paste'
         accelerator: 'CmdOrCtrl+V'
         role: 'paste'
+      - &all
+        label: 'Select All'
+        role: 'selectall'
       - type: 'separator'
       - &preferences
         label: 'Prefere&nces …'
@@ -180,6 +183,7 @@ darwin:
       - *cut
       - *copy
       - *paste
+      - *all
   - *view
   - label: 'Window'
     role: 'window'

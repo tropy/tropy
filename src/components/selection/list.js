@@ -25,16 +25,9 @@ class SelectionList extends SelectionIterator {
     return this.props.edit === selection
   }
 
-  handleEditCancel = (...args) => {
-    this.props.onEditCancel(...args)
-    this.container.focus()
-  }
-
   render() {
     return this.connect(
-      <ul
-        className={cx(this.classes)}
-        ref={this.setContainer}>
+      <ul className={cx(this.classes)}>
         {this.map(({ selection, ...props }) =>
           <SelectionListItem {...props}
             key={selection.id}
@@ -45,7 +38,7 @@ class SelectionList extends SelectionIterator {
             onChange={this.props.onChange}
             onContextMenu={this.props.onContextMenu}
             onEdit={this.props.onEdit}
-            onEditCancel={this.handleEditCancel}/>)}
+            onEditCancel={this.props.onEditCancel}/>)}
       </ul>
     )
   }

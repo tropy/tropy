@@ -17,6 +17,14 @@ $default-padding-horizontal: 12px !default;
   &.separator {
     margin-bottom: (($metadata-line-height - 10px) / 2); // 10px: Caps height
     border-bottom: 1px solid $panel-separator-color;
+
+    .nested-focus & {
+      border-bottom-color: $panel-nested-focus-separator-color;
+    }
+  }
+
+  .nested-focus & {
+    color: $panel-nested-focus-heading-color;
   }
 }
 
@@ -32,6 +40,18 @@ $default-padding-horizontal: 12px !default;
       width: calc(100% - 2 * #{$default-padding-horizontal}
         + #{$scrollbar-size} / 3);
       margin-left: $default-padding-horizontal;
+    }
+
+    .nested-focus & {
+      background-color: $template-select-nested-focus-bg;
+      border-color: $template-select-nested-focus-border;
+    }
+
+    .nested-focus.has-active & {
+      background-color: $template-select-bg;
+      border-color: $template-select-border;
+
+      @include form-control-focus; // sass-lint:disable-line mixins-before-declarations
     }
   }
 }

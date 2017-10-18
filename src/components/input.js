@@ -38,14 +38,22 @@ class BufferedInput extends PureComponent {
     return this.state.value !== this.props.value
   }
 
-  autofocus = (input) => {
+  setInput = (input) => {
     if (input && this.props.autofocus) {
       input.focus()
       input.select()
     }
+
+    this.input = input
+  }
+
+  focus = () => {
+    if (this.input) this.input.focus()
   }
 
   reset = () => {
+    this.hasBeenCommitted = false
+    this.hasBeenCancelled = false
     this.setState({ value: this.props.value })
     this.clearResetTimeout()
   }
@@ -67,10 +75,10 @@ class BufferedInput extends PureComponent {
     }
   }
 
-  cancel() {
-    this.hasBeenCancelled = true
+  cancel(force) {
     this.reset()
-    this.props.onCancel()
+    this.hasBeenCancelled = true
+    this.props.onCancel(false, force)
   }
 
   clearResetTimeout() {
@@ -114,7 +122,7 @@ class BufferedInput extends PureComponent {
 
     switch (event.key) {
       case 'Escape':
-        this.cancel()
+        this.cancel(true)
         break
       case 'Enter':
         this.commit(true)
@@ -132,7 +140,7 @@ class BufferedInput extends PureComponent {
         className={this.props.className}
         disabled={this.props.isDisabled}
         placeholder={this.props.placeholder}
-        ref={this.autofocus}
+        ref={this.setInput}
         readOnly={this.props.isReadOnly}
         required={this.props.isRequired}
         tabIndex={this.props.tabIndex}

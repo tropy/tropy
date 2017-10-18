@@ -1,7 +1,6 @@
 'use strict'
 
 module.exports = {
-  ...require('./fields'),
-  ...require('./field'),
+  ...require('./list'),
   ...require('./panel')
 }

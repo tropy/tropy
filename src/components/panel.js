@@ -8,16 +8,34 @@ const cx = require('classnames')
 const { bounds } = require('../dom')
 const { restrict } = require('../common/util')
 const { win32 } = require('../common/os')
-const { bool, func, node, arrayOf, number, shape } = require('prop-types')
 const { PANEL } = require('../constants/sass')
 const { remap } = require('../common/util')
 const { round } = require('../common/math')
 const throttle = require('lodash.throttle')
 
+const {
+  arrayOf, bool, func, node, number, string, shape
+} = require('prop-types')
+
 
 class Panel extends PureComponent {
+  constructor(props) {
+    super(props)
+    this.state = {
+      hasNestedFocus: false
+    }
+  }
+
   get classes() {
     return { 'panel-body': true }
+  }
+
+  handleNestedBlur = () => {
+    this.setState({ hasNestedFocus: false })
+  }
+
+  handleNestedFocus = () => {
+    this.setState({ hasNestedFocus: true })
   }
 
   handleToggle = () => {
@@ -49,7 +67,7 @@ class Panel extends PureComponent {
     const [header, ...body] = Children.toArray(this.props.children)
 
     return (
-      <section className="panel">
+      <section className={this.props.className}>
         {this.renderHeader(header)}
         {this.renderBody(body)}
       </section>
@@ -57,11 +75,16 @@ class Panel extends PureComponent {
   }
 
   static propTypes = {
+    className: string.isRequired,
     children: node,
     id: number,
     isClosed: bool,
     canToggle: bool,
     onToggle: func
+  }
+
+  static defaultProps = {
+    className: 'panel'
   }
 }
 
@@ -73,12 +96,16 @@ class PanelGroup extends PureComponent {
   }
 
   componentDidMount() {
-    this.ro = new ResizeObserver(this.handleResize)
-    this.ro.observe(this.container)
+    this.ro = new ResizeObserver(([e]) => {
+      this.handleResize(e.contentRect.height)
+    })
+    this.observe(this.container)
   }
 
   componentWillUnmount() {
+    this.unobserve(this.container)
     this.ro.disconnect()
+    this.ro = null
   }
 
   componentWillReceiveProps(props) {
@@ -86,6 +113,25 @@ class PanelGroup extends PureComponent {
       this.setState(this.getLayout(props))
     }
   }
+
+  observe(container) {
+    if (container != null) {
+      this.ro.observe(container)
+    }
+  }
+
+  unobserve(container) {
+    if (container != null && this.ro != null) {
+      this.ro.unobserve(container)
+    }
+  }
+
+  setContainer = (container) => {
+    if (this.container != null) this.unobserve(this.container)
+    this.container = container
+    if (this.ro != null) this.observe(container)
+  }
+
 
   getLayout(props = this.props, height = this.state.height) {
     if (height === 0) return
@@ -172,15 +218,10 @@ class PanelGroup extends PureComponent {
   }
 
 
-  setContainer = (container) => {
-    this.container = container
-  }
-
-
   handleResize = throttle((!win32 ?
-    ([e]) => this.update(e.contentRect.height) :
+    (height) => this.update(height) :
     () => this.update(this.container.clientHeight)
-  ), 20)
+  ), 15)
 
   update(height) {
     this.setState(this.getLayout(this.props, height))

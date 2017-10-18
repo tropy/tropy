@@ -98,7 +98,8 @@
 
     .toolbar {
       background: $esper-toolbar-overlay-bg;
-      backdrop-filter: blur($esper-toolbar-blur-radius);
+      // Causes flickering on macOS. See #101
+      // backdrop-filter: blur($esper-toolbar-blur-radius);
       box-shadow: none;
       transform: translate3d(0, -100%, 0);
       transition: transform $esper-toolbar-transition-out;

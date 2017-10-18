@@ -45,7 +45,9 @@ class Esper extends PureComponent {
   }
 
   componentDidMount() {
-    this.ro = new ResizeObserver(this.handleResize)
+    this.ro = new ResizeObserver(([e]) => {
+      this.handleResize(e.contentRect)
+    })
     this.ro.observe(this.view.container)
 
     this.io = new IntersectionObserver(([e]) => {
@@ -270,7 +272,7 @@ class Esper extends PureComponent {
 
   handleResize = (win32) ?
     () => this.resize(this.bounds) :
-    ([e]) => this.resize(e.contentRect)
+    (rect) => this.resize(rect)
 
   resize = throttle(({ width, height }) => {
     width = round(width || this.view.bounds.width)

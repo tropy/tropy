@@ -207,7 +207,7 @@ module.exports = {
       return {
         type: ITEM.TAG.TOGGLE,
         payload,
-        meta: { cmd: 'project', history: 'add', ...meta }
+        meta: { cmd: 'project', history: 'add', search: true, ...meta }
       }
     },
 
@@ -215,7 +215,7 @@ module.exports = {
       return {
         type: ITEM.TAG.CLEAR,
         payload,
-        meta: { cmd: 'project', history: 'add', ...meta }
+        meta: { cmd: 'project', history: 'add', search: true, ...meta }
       }
     },
 
@@ -223,7 +223,7 @@ module.exports = {
       return {
         type: ITEM.TAG.CREATE,
         payload,
-        meta: { cmd: 'project', history: 'add', ...meta }
+        meta: { cmd: 'project', history: 'add', search: true, ...meta }
       }
     },
 
@@ -239,7 +239,7 @@ module.exports = {
       return {
         type: ITEM.TAG.DELETE,
         payload,
-        meta: { cmd: 'project', history: 'add', ...meta }
+        meta: { cmd: 'project', history: 'add', search: true, ...meta }
       }
     },
 

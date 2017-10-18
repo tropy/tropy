@@ -3,10 +3,11 @@
 const React = require('react')
 const { PureComponent } = React
 const { ItemToolbar } = require('./toolbar')
-const { ItemTabs, ItemTab } = require('./tabs')
+const { ItemTabHeader, ItemTabBody } = require('./tab')
 const { NotePanel } = require('../note')
 const { PanelGroup, Panel } = require('../panel')
 const { PhotoPanel } = require('../photo')
+const cx = require('classnames')
 const { get } = require('../../common/util')
 const { keys } = Object
 
@@ -16,14 +17,16 @@ const {
 
 
 class ItemPanel extends PureComponent {
-
-  get item() { // TODO remove
-    const { items } = this.props
-    return items.length === 1 ? items[0] : null
+  constructor(props) {
+    super(props)
+    this.state = {
+      hasFirstPanelFocus: false,
+      isFirstPanelActive: false
+    }
   }
 
-  get isEmpty() {
-    return this.props.items.length === 0
+  setPanel = (panel) => {
+    this.first = panel
   }
 
   handlePhotoCreate = (dropped) => {
@@ -45,6 +48,30 @@ class ItemPanel extends PureComponent {
     this.props.onUiUpdate({ panel: { zoom } })
   }
 
+  handleFirstPanelFocus = () => {
+    this.setState({ hasFirstPanelFocus: true })
+  }
+
+  handleFirstPanelBlur = () => {
+    this.setState({ hasFirstPanelFocus: false })
+  }
+
+  handleFirstPanelActivate = () => {
+    this.setState({ isFirstPanelActive: true })
+  }
+
+  handleFirstPanelDeactivate = () => {
+    this.setState({ isFirstPanelActive: false })
+  }
+
+  renderItemToolbar() {
+    return (
+      <ItemToolbar
+        isItemOpen={this.props.isItemOpen}
+        onMaximize={this.props.onMaximize}
+        onModeChange={this.props.onModeChange}/>
+    )
+  }
 
   render() {
     const {
@@ -60,8 +87,6 @@ class ItemPanel extends PureComponent {
       isDisabled,
       isItemOpen,
       onItemPreview,
-      onMaximize,
-      onModeChange,
       onNoteCreate,
       onNoteSelect,
       onPhotoContract,
@@ -73,27 +98,32 @@ class ItemPanel extends PureComponent {
       ...props
     } = this.props
 
-    const { item } = this
     const hasMultipleItems = this.props.items.length > 1
+    const item = hasMultipleItems ? null : this.props.items[0]
 
     return (
       <PanelGroup
         slots={panel.slots}
         onResize={this.handleResize}
-        header={
-          <ItemToolbar
-            isItemOpen={isItemOpen}
-            onMaximize={onMaximize}
-            onModeChange={onModeChange}/>
-        }>
+        header={this.renderItemToolbar()}>
 
-        <Panel>
-          <ItemTabs tab={panel.tab} onChange={this.handleTabChange}/>
-          <ItemTab {...props}
+        <Panel className={cx('item', 'panel', {
+          'nested-focus': this.state.hasFirstPanelFocus,
+          'has-active': this.state.isFirstPanelActive
+        })}>
+          <ItemTabHeader
             tab={panel.tab}
-            isEmpty={this.isEmpty}
+            onChange={this.handleTabChange}/>
+          <ItemTabBody {...props}
+            tab={panel.tab}
             isDisabled={isDisabled}
-            isItemOpen={isItemOpen}/>
+            isItemOpen={isItemOpen}
+            keymap={keymap}
+            setPanel={this.setPanel}
+            onActivate={this.handleFirstPanelActivate}
+            onDeactivate={this.handleFirstPanelDeactivate}
+            onBlur={this.handleFirstPanelBlur}
+            onFocus={this.handleFirstPanelFocus}/>
         </Panel>
 
         <PhotoPanel {...props}

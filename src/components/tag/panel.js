@@ -2,13 +2,15 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { arrayOf, func, number, object, shape, string } = PropTypes
+const { arrayOf, func, number, object, shape, string } = require('prop-types')
 const { connect } = require('react-redux')
 const { TagList } = require('./list')
 const { TagAdder } = require('./adder')
 const { toId } = require('../../common/util')
 const { seq, map, filter, compose } = require('transducers.js')
+const { TABS } = require('../../constants')
+const { match } = require('../../keymap')
+const { on, off } = require('../../dom')
 
 const {
   getAllTags,
@@ -18,6 +20,48 @@ const {
 
 
 class TagPanel extends PureComponent {
+  componentDidMount() {
+    on(this.container, 'tab:focus', this.handleTabFocus)
+  }
+
+  componentWillUnmount() {
+    off(this.container, 'tab:focus', this.handleTabFocus)
+    this.props.onBlur()
+  }
+
+  get isEmpty() {
+    return this.props.items.length === 0
+  }
+
+  get tabIndex() {
+    return this.isEmpty ? -1 : TABS.TagPanel
+  }
+
+  setContainer = (container) => {
+    this.container = container
+  }
+
+  setAdder = (adder) => {
+    this.adder = (adder == null) ? null : adder.getWrappedInstance()
+  }
+
+  focus = () => {
+    this.container.focus()
+  }
+
+  handleCancel = (isForced) => {
+    if (isForced) this.container.focus()
+  }
+
+  handleTabFocus = () => {
+    this.props.onFocus()
+    this.props.onDeactivate()
+  }
+
+  handleBlur = () => {
+    this.props.onBlur()
+    this.props.onDeactivate()
+  }
 
   handleTagRemove = (tag) => {
     const present = seq(this.props.items,
@@ -48,9 +92,28 @@ class TagPanel extends PureComponent {
     })
   }
 
+  handleKeyDown = (event) => {
+    switch (match(this.props.keymap, event)) {
+      case 'down':
+      case 'commit':
+        this.adder.focus()
+        break
+      default:
+        return
+    }
+
+    event.stopPropagation()
+    event.preventDefault()
+  }
+
   render() {
     return (
-      <div className="tab-pane">
+      <div
+        ref={this.setContainer}
+        className="tab-pane"
+        tabIndex={this.tabIndex}
+        onBlur={this.handleBlur}
+        onKeyDown={this.handleKeyDown}>
         <TagList
           edit={this.props.edit}
           keymap={this.props.keymap}
@@ -62,9 +125,13 @@ class TagPanel extends PureComponent {
           onSave={this.props.onTagSave}
           onContextMenu={this.handleContextMenu}/>
         <TagAdder
+          ref={this.setAdder}
           tags={this.props.allTags}
           count={this.props.items.length}
           onAdd={this.handleTagAdd}
+          onBlur={this.handleBlur}
+          onFocus={this.props.onActivate}
+          onCancel={this.handleCancel}
           onCreate={this.handleTagCreate}/>
       </div>
     )
@@ -80,6 +147,10 @@ class TagPanel extends PureComponent {
       name: string.isRequired
     })).isRequired,
 
+    onActivate: func.isRequired,
+    onDeactivate: func.isRequired,
+    onBlur: func.isRequired,
+    onFocus: func.isRequired,
     onContextMenu: func.isRequired,
     onEditCancel: func.isRequired,
     onItemTagAdd: func.isRequired,
@@ -95,7 +166,6 @@ module.exports = {
       allTags: getAllTags(state),
       edit: state.edit.tabTag,
       items: getSelectedItems(state),
-      keymap: state.keymap.TagList,
       tags: getItemTags(state)
     })
   )(TagPanel)

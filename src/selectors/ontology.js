@@ -91,8 +91,7 @@ const getItemTemplate = memo(
 
 const getPhotoTemplate = memo(
   ({ ontology }) => ontology.template,
-  ({ settings }) => settings.photoTemplate,
-  (template, id) => template[id] || template[PHOTO.TEMPLATE]
+  (template) => template[PHOTO.TEMPLATE]
 )
 
 const getTemplateValues = (template) =>
@@ -104,8 +103,34 @@ const getTemplateValues = (template) =>
     return acc
   }, {})
 
+const getActiveItemTemplate = memo(
+  ({ ontology }) => ontology.template,
+  ({ nav }) => nav.items[0],
+  ({ items }) => items,
+  (template, id, items) =>
+    (id != null && id in items) ? template[items[id].template] : null
+)
+
+const getActivePhotoTemplate = memo(
+  ({ ontology }) => ontology.template,
+  ({ nav }) => nav.photo,
+  ({ photos }) => photos,
+  (template, id, photos) =>
+    (id != null && id in photos) ? template[photos[id].template] : null
+)
+
+const getActiveSelectionTemplate = memo(
+  ({ ontology }) => ontology.template,
+  ({ nav }) => nav.selection,
+  ({ selections }) => selections,
+  (template, id, selections) =>
+    (id != null && id in selections) ? template[selections[id].template] : null
+)
 
 module.exports = {
+  getActiveItemTemplate,
+  getActivePhotoTemplate,
+  getActiveSelectionTemplate,
   getAllTemplates,
   getDatatypeList,
   getItemTemplates: getTemplatesByType(TYPE.ITEM),

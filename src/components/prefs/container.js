@@ -13,7 +13,6 @@ const actions = require('../../actions')
 
 const {
   getItemTemplates,
-  getPhotoTemplates,
   getVocabs
 } = require('../../selectors')
 
@@ -78,8 +77,7 @@ class PrefsContainer extends PureComponent {
             name="app"
             isActive={this.isActive('app')}>
             <AppPrefs
-              itemTemplates={this.props.itemTemplates}
-              photoTemplates={this.props.photoTemplates}
+              templates={this.props.itemTemplates}
               settings={this.props.settings}
               onSettingsUpdate={this.props.onSettingsUpdate}/>
           </PrefPane>
@@ -140,7 +138,6 @@ module.exports = {
       itemTemplates: getItemTemplates(state),
       keymap: state.keymap,
       pane: state.prefs.pane,
-      photoTemplates: getPhotoTemplates(state),
       project: state.project,
       settings: state.settings,
       vocab: getVocabs(state)
