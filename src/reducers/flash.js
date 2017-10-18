@@ -9,7 +9,7 @@ module.exports = {
       case FLASH.READY:
         return { ...payload }
       default:
-        state
+        return state
     }
   }
 }
