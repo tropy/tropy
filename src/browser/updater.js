@@ -69,7 +69,7 @@ class Updater {
     this.lastCheck = new Date()
   }
 
-  onNoUpdateAvailable = () => {
+  onUpdateNotAvailable = () => {
     verbose('no updates available')
     this.isUpdateAvailable = false
   }
