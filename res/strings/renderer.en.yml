@@ -384,3 +384,12 @@ error:
       field:
         add: Failed to add field to template.
         remove: Failed to remove field from template.
+
+flash:
+  update:
+    ready:
+      message: >
+        Tropy {version} is ready to be installed.
+        Do you want to restart now?
+      confirm: Install
+

@@ -1,37 +1,69 @@
 'use strict'
 
 const React = require('react')
-const { PureCompnent } = React
+const { PureComponent } = React
+const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
-const { array, object, string } = require('prop-types')
+const { array, func, object, string } = require('prop-types')
+const act = require('../actions')
 
 
-const FlashMessage = ({ id, values }) => (
-  <li className="flash-message">
-    <FormattedMessage id={id} values={values}/>
-  </li>
-)
+class FlashMessage extends PureComponent {
+  handleConfirm = () => {
+    this.props.onHide({ id: this.props.id, confirm: true })
+  }
 
-FlashMessage.propTypes = {
-  id: string.isRequired,
-  values: object
-}
+  handleDismiss = () => {
+    this.props.onHide({ id: this.props.id, dismiss: true })
+  }
 
-class Flash extends PureCompnent {
   render() {
-    return this.props.messages.length > 0 && (
-      <ul className="flash">
-        {this.props.messages.map(msg =>
-          <FlashMessage key={msg.id} {...msg}/>)}
-      </ul>
+    return (
+      <li className="flash-message">
+        <FormattedMessage
+          id={`flash.${this.props.id}.message`}
+          values={this.props.values}/>
+
+        <button onClick={this.handleConfirm}>
+          <FormattedMessage id={`flash.${this.props.id}.confirm`}/>
+        </button>
+
+        <button onClick={this.handleDismiss}>X</button>
+      </li>
     )
   }
 
   static propTypes = {
-    messages: array.isRequired
+    id: string.isRequired,
+    values: object,
+    onHide: func.isRequired
   }
 }
 
+
+const Flash = ({ messages, onHide }) => (
+  messages.length > 0 && (
+    <ul className="flash">
+      {messages.map(({ id, values }) =>
+        <FlashMessage key={id} id={id} values={values} onHide={onHide}/>)}
+    </ul>
+  )
+)
+
+Flash.propTypes = {
+  messages: array.isRequired,
+  onHide: func.isRequired
+}
+
 module.exports = {
-  Flash
+  Flash: connect(
+    state => ({
+      messages: state.flash
+    }),
+    dispatch => ({
+      onHide(...args) {
+        dispatch(act.flash.hide(...args))
+      }
+    })
+  )(Flash)
 }

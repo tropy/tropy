@@ -5,7 +5,7 @@ const {
 } = require('redux')
 
 const { default: thunk } = require('redux-thunk')
-const { intl, wizard } = require('../reducers')
+const { flash, intl, wizard } = require('../reducers')
 const { debounce } = require('../middleware/debounce')
 
 const devtools = (ARGS.dev || ARGS.debug) &&
@@ -15,6 +15,7 @@ module.exports = {
   create(init = {}) {
 
     const reducer = combineReducers({
+      flash,
       wizard,
       intl
     })
