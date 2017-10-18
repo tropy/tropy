@@ -20,6 +20,7 @@ const { AppMenu, ContextMenu } = require('./menu')
 const { Cache } = require('../common/cache')
 const { Strings } = require('../common/res')
 const Storage = require('./storage')
+const Updater = require('./updater')
 const dialog = require('./dialog')
 
 const release = require('../common/release')
@@ -61,6 +62,10 @@ class Tropy extends EventEmitter {
 
     this.menu = new AppMenu(this)
     this.ctx = new ContextMenu(this)
+
+    if (darwin) {
+      this.updater = new Updater(this)
+    }
 
     prop(this, 'cache', {
       value: new Cache(app.getPath('userData'), 'cache')
@@ -300,6 +305,8 @@ class Tropy extends EventEmitter {
   }
 
   listen() {
+    if (this.updater) this.updater.start()
+
     this.on('app:about', () =>
       this.showAboutWindow())
     this.on('app:create-project', () =>
@@ -521,6 +528,7 @@ class Tropy extends EventEmitter {
 
     app.on('quit', () => {
       verbose('saving app state')
+      if (this.updater) this.updater.stop()
       this.persist()
     })
 
