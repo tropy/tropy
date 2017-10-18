@@ -55,6 +55,9 @@ class ImportItem extends ImportCommand {
   static get action() { return ITEM.IMPORT.ITEM }
 
   *exec() {
+    return // TODO enable when done (sometime after 1.0 release)
+    /* eslint-disable no-unreachable */
+
     const { db } = this.options
     const { source } = this.action.meta
 
@@ -114,6 +117,7 @@ class ImportItem extends ImportCommand {
     }
     this.setUndo(items.success)
     return items.success
+    /* eslint-enable no-unreachable */
   }
 }
 
