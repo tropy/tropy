@@ -62,10 +62,7 @@ class Tropy extends EventEmitter {
 
     this.menu = new AppMenu(this)
     this.ctx = new ContextMenu(this)
-
-    if (darwin) {
-      this.updater = new Updater(this)
-    }
+    this.updater = new Updater(this)
 
     prop(this, 'cache', {
       value: new Cache(app.getPath('userData'), 'cache')
@@ -164,7 +161,7 @@ class Tropy extends EventEmitter {
     }
   }
 
-  opened({ file, name }) {
+  hasOpened({ file, name }) {
     if (this.wiz) this.wiz.close()
     if (this.prefs) this.prefs.close()
 
@@ -233,7 +230,7 @@ class Tropy extends EventEmitter {
     return this
   }
 
-  configure() {
+  showPreferences() {
     if (this.prefs) return this.prefs.show(), this
 
     this.prefs = open('prefs', this.hash, {
@@ -284,10 +281,6 @@ class Tropy extends EventEmitter {
   }
 
   migrate(state) {
-    if (!state.version || state.version === '1.0.0-beta.0') {
-      state.recent = []
-    }
-
     state.locale = 'en'
     state.version = this.version
     state.uuid = state.uuid || uuid()
@@ -297,6 +290,8 @@ class Tropy extends EventEmitter {
   }
 
   persist() {
+    verbose('saving app state')
+
     if (this.state != null) {
       this.store.save.sync('state.json', this.state)
     }
@@ -305,12 +300,17 @@ class Tropy extends EventEmitter {
   }
 
   listen() {
-    if (this.updater) this.updater.start()
+    this.updater.start()
+
+    this.on('app:install-update', () =>
+      this.updater.install())
 
     this.on('app:about', () =>
       this.showAboutWindow())
+
     this.on('app:create-project', () =>
       this.showWizard())
+
     this.on('app:close-project', () =>
       this.win && this.dispatch(act.project.close('debug')))
 
@@ -465,11 +465,11 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:open-preferences', () => {
-      this.configure()
+      this.showPreferences()
     })
 
     this.on('app:open-license', () => {
-      shell.openExternal('https://github.com/tropy/tropy/blob/master/LICENSE')
+      shell.openExternal('https://tropy.org/license')
     })
 
     this.on('app:search-issues', () => {
@@ -527,8 +527,7 @@ class Tropy extends EventEmitter {
     })
 
     app.on('quit', () => {
-      verbose('saving app state')
-      if (this.updater) this.updater.stop()
+      this.updater.stop()
       this.persist()
     })
 
@@ -548,7 +547,7 @@ class Tropy extends EventEmitter {
 
     ipc.on('cmd', (_, command, ...params) => this.emit(command, ...params))
 
-    ipc.on(PROJECT.OPENED, (_, project) => this.opened(project))
+    ipc.on(PROJECT.OPENED, (_, project) => this.hasOpened(project))
     ipc.on(PROJECT.CREATE, () => this.showWizard())
     ipc.on(PROJECT.CREATED, (_, { file }) => this.open(file))
 

@@ -2,54 +2,46 @@
 
 const { autoUpdater } = require('electron')
 const { feed } = require('../common/release')
+const { linux } = require('../common/os')
 const { warn, info, verbose } = require('../common/log')
+const { noop } = require('../common/util')
 const flash  = require('../actions/flash')
 
 
 class Updater {
-  constructor(app) {
+  constructor(app, timeout = 1000 * 60 * 30) {
     this.app = app
+    this.timeout = timeout
+
+    if (linux) return
+
     autoUpdater.setFeedURL(feed)
 
-    autoUpdater.on('error', (error) => {
-      warn(`Failed to fetch update: ${error.message}`, { error })
-    })
-
-    autoUpdater.on('checking-for-update', () => {
-      this.lastCheck = new Date()
-      verbose('checking for updates...')
-    })
-
-    autoUpdater.on('update-not-available', () => {
-      this.isUpdateAvailable = false
-      verbose('no updates available')
-    })
-
-    autoUpdater.on('update-available', () => {
-      this.isUpdateAvailable = true
-      info('update available')
-    })
+    autoUpdater.on('error', this.onError)
+    autoUpdater.on('checking-for-update', this.onCheckingForUpdate)
+    autoUpdater.on('update-not-available', this.onUpdateNotAvailable)
+    autoUpdater.on('update-available', this.onUpdateAvailable)
 
     autoUpdater.on('update-downloaded', (event, notes, version) => {
-      this.update = { notes, version, date: new Date() }
-      info(`update ${version} downloaded`)
-
-      this.app.broadcast('dispatch', flash.update(this.update))
+      this.onUpdateReady({
+        notes,
+        version,
+        date: new Date()
+      })
     })
   }
 
-  start() {
+  start = (linux) ? noop : () => {
     this.stop()
-    this.timeout = setTimeout(this.check, 1000 * 10)
-    this.interval = setInterval(this.check, 1000 * 60 * 30)
+    this.check()
+    this.interval = setInterval(this.check, this.timeout)
   }
 
   stop() {
-    clearTimeout(this.timeout)
     clearInterval(this.interval)
   }
 
-  check() {
+  check = (linux) ? noop : () => {
     autoUpdater.checkForUpdates()
   }
 
@@ -57,6 +49,31 @@ class Updater {
     if (this.update != null) {
       autoUpdater.quitAndInstall()
     }
+  }
+
+  onError(error) {
+    warn(`Failed to fetch update: ${error.message}`, { error })
+  }
+
+  onCheckingForUpdate = () =>{
+    verbose('checking for updates...')
+    this.lastCheck = new Date()
+  }
+
+  onNoUpdateAvailable = () => {
+    verbose('no updates available')
+    this.isUpdateAvailable = false
+  }
+
+  onUpdateAvailable = () => {
+    info('updates available')
+    this.isUpdateAvailable = true
+  }
+
+  onUpdateReady = (release) => {
+    info(`update ${release.version} ready`)
+    this.app.broadcast('dispatch', flash.update({ release }))
+    this.isUpdateReady = true
   }
 }
 
