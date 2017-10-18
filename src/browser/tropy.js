@@ -301,9 +301,6 @@ class Tropy extends EventEmitter {
   }
 
   listen() {
-    this.on('app:install-update', () =>
-      this.updater.install())
-
     this.on('app:about', () =>
       this.showAboutWindow())
 
@@ -546,6 +543,7 @@ class Tropy extends EventEmitter {
 
     ipc.on('cmd', (_, command, ...params) => this.emit(command, ...params))
 
+    ipc.on('update.install', () => this.updater.install())
     ipc.on(PROJECT.OPENED, (_, project) => this.hasOpened(project))
     ipc.on(PROJECT.CREATE, () => this.showWizard())
     ipc.on(PROJECT.CREATED, (_, { file }) => this.open(file))
