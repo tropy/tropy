@@ -503,19 +503,15 @@ class Export extends Command {
 
       const [resources, props] = yield select(state => {
         const itms = pick(state.items, ids)
-        const metadata = pick(state.metadata, ids)
         const templateIDs = Object.values(itms).map(itm => itm.template)
         const templates = pick(state.ontology.template, templateIDs)
         let results = []
         for (const t in templates) {
           const template = templates[t]
-          const templateItems = Object.values(itms).filter(
-            i => i.template === t)
-          const templateItemIDs = templateItems.map(i => i.id)
           results.push({
             template,
-            items: templateItems,
-            metadata: pick(metadata, templateItemIDs),
+            items: Object.values(itms).filter(i => i.template === t),
+            metadata: state.metadata,
             photos: state.photos
           })
         }

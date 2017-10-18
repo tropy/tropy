@@ -19,15 +19,26 @@ function makeContext(items, photos, metadata, template, props) {
     }
   }
 
+  result['item']['@context']['photo'] = {
+    '@id': PHOTO,
+    '@container': '@list',
+    '@context': {
+      path: 'http://schema.org/image'
+    }
+  }
+
+  const mdItems = values(pick(metadata, items.map(i => i.id)))
+
   // don't include fields that have no metadata set
+  // validProperties is a set of item properties that have metadata
   const validProperties = new Set()
-  for (const itemMetadata of values(metadata)) {
+  for (const itemMetadata of mdItems) {
     for (const property of keys(itemMetadata)) {
       validProperties.add(property)
     }
   }
 
-  // fill context up with template items
+  // fill context up with template items (that have metadata)
   for (const field of template.fields) {
     const key = shorten(field.property, props, template)
     const valid = !!validProperties.has(field.property)
@@ -39,24 +50,29 @@ function makeContext(items, photos, metadata, template, props) {
     }
   }
 
-  // fill context up with metadata fields
-  for (const itemMetadata of values(metadata)) {
+  // fill context up with item metadata fields
+  for (const itemMetadata of mdItems) {
     for (const [property, { type }] of entries(itemMetadata)) {
       const key = shorten(property, props, template)
       const alreadySet = !!result['item']['@context'][key]
-      const valid = !!validProperties.has(property)
-      if (key && valid && !alreadySet) {
+      if (key && !alreadySet) {
         result['item']['@context'][key] = { '@id': property, '@type': type }
       }
     }
   }
 
-  // TODO add Photo metadata to context
-  result['item']['@context']['photo'] = {
-    '@id': PHOTO,
-    '@container': '@list',
-    '@context': {
-      path: 'http://schema.org/image'
+  // add Photo metadata fields to context
+  const mdPhotos = values(pick(metadata, items.map(i => i.photos)
+                               .reduce((acc, ps) => acc.concat(ps))))
+
+  for (const photoMetadata of mdPhotos) {
+    for (const [property, { type }] of entries(photoMetadata)) {
+      const key = shorten(property, props, template)
+      const alreadySet = !!result['item']['@context']['photo']['@context'][key]
+      if (key && !alreadySet) {
+        result['item']['@context']['photo']['@context'][key] =
+          { '@id': property, '@type': type }
+      }
     }
   }
 
@@ -79,7 +95,24 @@ function renderItem(item, photos, metadata, template, props) {
   // add photos
   const itemPhotos = values(pick(photos, item.photos))
   if (itemPhotos.length) {
-    result.photo = itemPhotos.map(p => ({ path: p.path }))
+    result.photo = itemPhotos.map(p => {
+      let photo = {
+        path: p.path
+      }
+
+      // add photo metadata
+      const photoMetadata = metadata[p.id] || {}
+
+      for (const [property, { text }] of entries(photoMetadata)) {
+        const key = shorten(property, props, template)
+        if (key && text) {
+          photo[key] = text
+        }
+      }
+
+      return photo
+    })
+
   }
   return result
 }
