@@ -2,13 +2,14 @@
 
 const { autoUpdater } = require('electron')
 const { feed } = require('../common/release')
-const { linux } = require('../common/os')
+const { linux, win32 } = require('../common/os')
 const { warn, info, verbose } = require('../common/log')
 const flash  = require('../actions/flash')
 
+const MIN = 1000 * 60
 
 class Updater {
-  constructor(app, timeout = 1000 * 60 * 30) {
+  constructor(app, timeout = 30 * MIN) {
     this.isSupported = !linux && ARGS.environment === 'production'
 
     this.app = app
@@ -36,7 +37,9 @@ class Updater {
     this.stop()
 
     if (this.isSupported) {
-      this.check()
+      if (win32) setTimeout(this.check, MIN)
+      else this.check()
+
       this.interval = setInterval(this.check, this.timeout)
     }
   }
