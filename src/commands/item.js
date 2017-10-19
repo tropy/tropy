@@ -51,7 +51,7 @@ class Create extends Command {
 }
 
 class Import extends ImportCommand {
-  static get action() { return ITEM.IMPORT.IMAGE }
+  static get action() { return ITEM.IMPORT }
 
   *exec() {
     const { db } = this.options
@@ -123,7 +123,6 @@ class Import extends ImportCommand {
     }
 
     if (items.length) {
-      this.setUndo(items)
       this.undo = act.item.delete(items)
       this.redo = act.item.restore(items)
     }
