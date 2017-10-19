@@ -123,6 +123,7 @@ linux: &linux
       - Backspace
       - Delete
     commit: Enter
+    clear: Escape
 darwin:
   global: *global
   Esper: *Esper
