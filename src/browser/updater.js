@@ -2,61 +2,92 @@
 
 const { autoUpdater } = require('electron')
 const { feed } = require('../common/release')
+const { linux, win32 } = require('../common/os')
 const { warn, info, verbose } = require('../common/log')
 const flash  = require('../actions/flash')
 
+const MIN = 1000 * 60
 
 class Updater {
-  constructor(app) {
+  constructor(app, timeout = 30 * MIN) {
+    this.isSupported = !linux && ARGS.environment === 'production'
+
     this.app = app
-    autoUpdater.setFeedURL(feed)
+    this.timeout = timeout
 
-    autoUpdater.on('error', (error) => {
-      warn(`Failed to fetch update: ${error.message}`, { error })
-    })
+    if (!this.isSupported) return
 
-    autoUpdater.on('checking-for-update', () => {
-      this.lastCheck = new Date()
-      verbose('checking for updates...')
-    })
+    try {
+      autoUpdater.setFeedURL(feed)
 
-    autoUpdater.on('update-not-available', () => {
-      this.isUpdateAvailable = false
-      verbose('no updates available')
-    })
+      autoUpdater.on('error', this.onError)
+      autoUpdater.on('checking-for-update', this.onCheckingForUpdate)
+      autoUpdater.on('update-not-available', this.onUpdateNotAvailable)
+      autoUpdater.on('update-available', this.onUpdateAvailable)
 
-    autoUpdater.on('update-available', () => {
-      this.isUpdateAvailable = true
-      info('update available')
-    })
-
-    autoUpdater.on('update-downloaded', (event, notes, version) => {
-      this.update = { notes, version, date: new Date() }
-      info(`update ${version} downloaded`)
-
-      this.app.broadcast('dispatch', flash.update(this.update))
-    })
+      autoUpdater.on('update-downloaded', (event, notes, version) => {
+        this.onUpdateReady({
+          notes,
+          version,
+          date: new Date()
+        })
+      })
+    } catch (error) {
+      warn(`failed to setup auto updater: ${error.message}`, { error })
+      this.isSupported = false
+    }
   }
 
   start() {
     this.stop()
-    this.timeout = setTimeout(this.check, 1000 * 10)
-    this.interval = setInterval(this.check, 1000 * 60 * 30)
+
+    if (this.isSupported) {
+      if (win32) setTimeout(this.check, MIN)
+      else process.nextTick(this.check)
+
+      this.interval = setInterval(this.check, this.timeout)
+    }
   }
 
   stop() {
-    clearTimeout(this.timeout)
     clearInterval(this.interval)
   }
 
-  check() {
-    autoUpdater.checkForUpdates()
+  check = () => {
+    if (this.isSupported) {
+      autoUpdater.checkForUpdates()
+    }
   }
 
   install() {
-    if (this.update != null) {
+    if (this.isUpdateReady) {
       autoUpdater.quitAndInstall()
     }
+  }
+
+  onError(error) {
+    warn(`Failed to fetch update: ${error.message}`, { error })
+  }
+
+  onCheckingForUpdate = () =>{
+    verbose('checking for updates...')
+    this.lastCheck = new Date()
+  }
+
+  onUpdateNotAvailable = () => {
+    verbose('no updates available')
+    this.isUpdateAvailable = false
+  }
+
+  onUpdateAvailable = () => {
+    info('updates available')
+    this.isUpdateAvailable = true
+  }
+
+  onUpdateReady = (release) => {
+    info(`update ${release.version} ready`)
+    this.app.broadcast('dispatch', flash.update({ release }))
+    this.isUpdateReady = true
   }
 }
 
