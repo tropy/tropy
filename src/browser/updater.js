@@ -10,7 +10,8 @@ const MIN = 1000 * 60
 
 class Updater {
   constructor(app, timeout = 30 * MIN) {
-    this.isSupported = !linux && ARGS.environment === 'production'
+    this.isSupported = !linux &&
+      ARGS.environment === 'production' && !ARGS.noUpdates
 
     this.app = app
     this.timeout = timeout

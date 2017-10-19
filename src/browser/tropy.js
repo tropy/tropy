@@ -51,6 +51,7 @@ class Tropy extends EventEmitter {
     locale: 'en', // app.getLocale() || 'en',
     theme: 'light',
     recent: [],
+    updater: true,
     win: {}
   }
 
@@ -276,7 +277,8 @@ class Tropy extends EventEmitter {
           .then(strings => this.strings = strings)
       ]))
 
-      .tap(() => this.updater.start())
+      .tap(state => void (state.updater) && this.updater.start())
+
       .tap(() => this.emit('app:restored'))
       .tap(() => verbose('app state restored'))
   }
