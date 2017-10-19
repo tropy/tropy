@@ -15,6 +15,11 @@ const byIdx = ([a], [b]) => (a < b) ? -1 : (a > b) ? 1 : 0
 
 
 class PhotoIterator extends Iterator {
+  componentWillUnmount() {
+    super.componentWillUnmount()
+    this.props.onBlur()
+  }
+
   componentWillReceiveProps(props) {
     if (this.props.size !== props.size ||
       this.props.photos !== props.photos ||
@@ -169,6 +174,10 @@ class PhotoIterator extends Iterator {
     }
   }
 
+  handleFocus = () => {
+    // No auto-select, because that could change the active photo!
+    this.props.onFocus()
+  }
 
   handleItemOpen = (photo) => {
     if (this.props.isItemOpen) {
@@ -262,10 +271,12 @@ class PhotoIterator extends Iterator {
 
     dt: func.isRequired,
 
+    onBlur: func.isRequired,
     onContract: func.isRequired,
     onContextMenu: func.isRequired,
     onDelete: func.isRequired,
     onExpand: func.isRequired,
+    onFocus: func.isRequired,
     onItemOpen: func.isRequired,
     onItemPreview: func.isRequired,
     onSelect: func.isRequired,

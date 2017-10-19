@@ -186,7 +186,7 @@ class Window extends EventEmitter {
 
         on(document.body, 'focusin', onTabFocus)
       }
-    })
+    }, { passive: true })
   }
 
   handleEditorCommands() {

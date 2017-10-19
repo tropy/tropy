@@ -10,22 +10,6 @@ const { has } = require('../../common/util')
 
 
 class NotePanel extends Panel {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      hasListFocus: false
-    }
-  }
-
-  handleBlur = () => {
-    this.setState({ hasListFocus: false })
-  }
-
-  handleFocus = () => {
-    this.setState({ hasListFocus: true })
-  }
-
   handleContextMenu = (event) => {
     const { item, photo, onContextMenu } = this.props
     onContextMenu(event, 'notes', { item, photo })
@@ -61,8 +45,8 @@ class NotePanel extends Panel {
         keymap={this.props.keymap}
         notes={this.props.notes}
         selection={this.props.selection}
-        onBlur={this.handleBlur}
-        onFocus={this.handleFocus}
+        onBlur={this.handleNestedBlur}
+        onFocus={this.handleNestedFocus}
         onContextMenu={this.props.onContextMenu}
         onOpen={this.handleOpen}
         onSelect={this.props.onSelect}/>
@@ -73,7 +57,7 @@ class NotePanel extends Panel {
     const toolbar = this.renderToolbar()
     const content = this.renderContent()
     const classes = {
-      'nested-focus': this.state.hasListFocus,
+      'nested-focus': this.state.hasNestedFocus,
       'has-active': has(this.props, ['selection', 'id'])
     }
 

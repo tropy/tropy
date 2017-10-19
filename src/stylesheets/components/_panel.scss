@@ -12,10 +12,10 @@
   contain: content;
 
   &.nested-focus {
-    background: $panel-focus-bg;
+    background-color: $panel-focus-bg;
 
     &.has-active {
-      background: $panel-bg;
+      background-color: $panel-bg;
     }
   }
 

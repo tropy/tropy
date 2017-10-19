@@ -205,7 +205,7 @@ class PhotoGrid extends PhotoIterator {
   }
 
   render() {
-    const { expanded } = this.props
+    const { expanded, onBlur } = this.props
     const range = this.getIterableRange()
     const padding = GRID.PADDING * 4
     const [exp, adj] = range.exp
@@ -227,6 +227,7 @@ class PhotoGrid extends PhotoIterator {
           className="scroll-container"
           ref={this.setContainer}
           tabIndex={this.tabIndex}
+          onBlur={onBlur}
           onKeyDown={this.handleKeyDown}>
           <div className="runway" style={{ height }}>
             <ul

@@ -83,7 +83,6 @@ class SelectionGrid extends SelectionIterator {
     return this.connect(
       <ul
         className={cx(this.classes)}
-        ref={this.setContainer}
         style={this.style}
         tabIndex={this.tabIndex}
         onBlur={this.props.onBlur}
