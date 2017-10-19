@@ -44,6 +44,7 @@ class TagList extends PureComponent {
 
     event.preventDefault()
     event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
   }
 
   render() {

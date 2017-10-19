@@ -143,6 +143,7 @@ class ItemIterator extends Iterator {
 
     event.preventDefault()
     event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
   }
 
   select = (item, { isMeta, isRange, scrollIntoView, throttle } = {}) => {

@@ -11,12 +11,13 @@ const { NativeTypes } = require('react-dnd-electron-backend')
 const { NoProject } = require('./none')
 const { extname } = require('path')
 const { MODE } = require('../../constants/project')
-const { ensure, reflow } = require('../../dom')
+const { on, off, ensure, reflow } = require('../../dom')
 const { win } = require('../../window')
 const cx = require('classnames')
 const { values } = Object
 const actions = require('../../actions')
 const debounce = require('lodash.debounce')
+const { match } = require('../../keymap')
 
 const {
   getActivities,
@@ -49,8 +50,13 @@ class ProjectContainer extends Component {
     }
   }
 
+  componentDidMount() {
+    on(document, 'keydown', this.handleKeyDown)
+  }
+
   componentWillUnmount() {
     this.projectWillChange.cancel()
+    off(document, 'keydown', this.handleKeyDown)
   }
 
   componentWillReceiveProps({ nav, project, ui }) {
@@ -148,6 +154,19 @@ class ProjectContainer extends Component {
     }
 
     onMetadataSave(payload, meta)
+  }
+
+  handleKeyDown = (event) => {
+    switch (match(this.props.keymap.global, event)) {
+      case 'back':
+        console.log('go back!')
+        break
+      default:
+        return
+    }
+
+    event.stopPropagation()
+    event.preventDefault()
   }
 
   setContainer = (container) => {
