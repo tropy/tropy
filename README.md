@@ -9,14 +9,15 @@ your research photos so you can quickly find your sources whenever you need them
 
 Visit [tropy.org](https://tropy.org) to learn more or follow
 [@tropy](https://twitter.com/tropy) on Twitter for important announcements.
-
-To get started, download the latest version of Tropy for your platform at
-[tropy.org](https://tropy.org) and consult the
-[user's manual](https://docs.tropy.org) or join the discussion in the
+To get started, download the latest version of Tropy for your platform, check
+out the [user's manual](https://docs.tropy.org) and join the discussion on the
 [forums](https://forums.tropy.org).
 
+If you are interested to work on Tropy or create your own builds, please
+find more details below. Happy hacking!
 
-## Installation From Source
+
+## Install from Source
 Install the latest version of [Node.js](https://nodejs.org) (at least the
 version that ships with the current [Electron](https://electron.atom.io)
 release) with [`node-gyp`](https://www.npmjs.com/package/node-gyp) and all
