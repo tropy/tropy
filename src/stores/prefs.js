@@ -11,6 +11,7 @@ const { seq, debounce, throttle, log } = require('../middleware')
 
 const {
   edit,
+  flash,
   history,
   intl,
   keymap,
@@ -36,6 +37,7 @@ module.exports = {
 
     let reducer = combineReducers({
       edit,
+      flash,
       history,
       intl,
       keymap,

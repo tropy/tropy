@@ -4,6 +4,7 @@ module.exports = {
   ...require('./activity'),
   ...require('./columns'),
   ...require('./edit'),
+  ...require('./flash'),
   ...require('./history'),
   ...require('./import'),
   ...require('./intl'),

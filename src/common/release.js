@@ -2,6 +2,7 @@
 
 const { version, author, name, productName } = require('../../package')
 const { titlecase } = require('./util')
+const { platform } = process
 
 const channel =
   version.includes('beta') ? 'beta' :
@@ -20,5 +21,7 @@ module.exports = {
       productName : `${productName} ${titlecase(channel)}`,
 
     name: (channel === 'stable') ? name : `${name}-${channel}`
-  }
+  },
+
+  feed: `https://tropy.org/update/${channel}/${platform}/${version}`
 }

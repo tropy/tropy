@@ -474,6 +474,7 @@ class Esper extends PureComponent {
 
     event.preventDefault()
     event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
   }
 
   handleKeyUp = (event) => {

@@ -107,10 +107,10 @@ class PhotoList extends PhotoIterator {
   handleKeyDown = (event) => {
     switch (match(this.keymap, event)) {
       case 'up':
-        this.select(this.prev(), { scrollIntoView: true, throttle: true })
+        this.handlePrevPhoto(event)
         break
       case 'down':
-        this.select(this.next(), { scrollIntoView: true, throttle: true })
+        this.handleNextPhoto(event)
         break
       case 'home':
         this.scroll(0)

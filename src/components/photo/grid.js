@@ -105,19 +105,12 @@ class PhotoGrid extends PhotoIterator {
   handleKeyDown = (event) => {
     switch (match(this.keymap, event)) {
       case (this.isVertical ? 'up' : 'left'):
-        this.select(this.prev(), {
-          scrollIntoView: true,
-          throttle: true
-        })
+        this.handlePrevPhoto()
         break
       case (this.isVertical ? 'down' : 'right'):
-        this.select(this.next(), {
-          scrollIntoView: true,
-          throttle: true
-        })
+        this.handleNextPhoto(event)
         break
       case (this.isVertical ? 'left' : 'up'):
-        this.select(this.prev(this.state.cols), true)
         this.select(this.prev(this.state.cols), {
           scrollIntoView: true,
           throttle: true

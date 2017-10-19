@@ -6,6 +6,7 @@ module.exports = {
   columns: require('./columns'),
   context: require('./context'),
   edit: require('./edit'),
+  flash: require('./flash'),
   history: require('./history'),
   imports: require('./imports'),
   intl: require('./intl'),

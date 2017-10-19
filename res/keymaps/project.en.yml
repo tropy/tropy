@@ -1,4 +1,10 @@
 linux: &linux
+  global: &global
+    back: Escape
+    nextItem: Alt+ArrowDown
+    prevItem: Alt+ArrowUp
+    nextPhoto: Alt+ArrowRight
+    prevPhoto: Alt+ArrowLeft
   Esper: &Esper
     zoomIn:
       - CmdOrCtrl-+
@@ -118,6 +124,7 @@ linux: &linux
       - Delete
     commit: Enter
 darwin:
+  global: *global
   Esper: *Esper
   Sidebar: *Sidebar
   ItemIterator:

@@ -6,6 +6,7 @@ const { DropTarget } = require('react-dnd')
 const { DND } = require('../../constants')
 const { move } = require('../../common/util')
 const { ceil, floor, min } = Math
+const { on, off } = require('../../dom')
 
 const {
   arrayOf, bool, func, number, object, string, shape
@@ -15,9 +16,17 @@ const byIdx = ([a], [b]) => (a < b) ? -1 : (a > b) ? 1 : 0
 
 
 class PhotoIterator extends Iterator {
+  componentDidMount() {
+    super.componentDidMount()
+    on(document, 'global:next-photo', this.handleNextPhoto)
+    on(document, 'global:prev-photo', this.handlePrevPhoto)
+  }
+
   componentWillUnmount() {
     super.componentWillUnmount()
     this.props.onBlur()
+    off(document, 'global:next-photo', this.handleNextPhoto)
+    off(document, 'global:prev-photo', this.handlePrevPhoto)
   }
 
   componentWillReceiveProps(props) {
@@ -208,6 +217,15 @@ class PhotoIterator extends Iterator {
 
     onSort({ item, photos: order })
   }
+
+  handleNextPhoto = () => {
+    this.select(this.next(), { scrollIntoView: true, throttle: true })
+  }
+
+  handlePrevPhoto = () => {
+    this.select(this.prev(), { scrollIntoView: true, throttle: true })
+  }
+
 
   getIterableProps(photo, index) {
     return {

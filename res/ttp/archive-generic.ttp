@@ -1,0 +1,102 @@
+{
+  "@context": "https://tropy.org/v1/contexts/template.jsonld",
+  "@id": "https://tropy.org/v1/templates/archive-generic",
+  "@type": "https://tropy.org/v1/tropy#Template",
+  "type": "https://tropy.org/v1/tropy#Item",
+  "name": "Archive Generic",
+  "domain": [],
+  "creator": "RRCHNM",
+  "description": "General template to fit a generic archival object",
+  "field": [
+    {
+      "property": "http://purl.org/dc/elements/1.1/title",
+      "label": null,
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "hint": null,
+      "isRequired": false,
+      "isConstant": false,
+      "value": null
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/creator",
+      "label": null,
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "hint": "Author or creator",
+      "isRequired": false,
+      "isConstant": false,
+      "value": null
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/date",
+      "label": null,
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "hint": "ISO format",
+      "isRequired": false,
+      "isConstant": false,
+      "value": null
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/type",
+      "label": null,
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "hint": "Type of document",
+      "isRequired": false,
+      "isConstant": false,
+      "value": null
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/source",
+      "label": "Archive",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "hint": "Name of the holding archive",
+      "isRequired": false,
+      "isConstant": false,
+      "value": null
+    },
+    {
+      "property": "http://purl.org/dc/terms/source",
+      "label": "Collection",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "hint": "Collection",
+      "isRequired": false,
+      "isConstant": false,
+      "value": null
+    },
+    {
+      "property": "https://tropy.org/v1/tropy#box",
+      "label": null,
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "hint": null,
+      "isRequired": false,
+      "isConstant": false,
+      "value": null
+    },
+    {
+      "property": "https://tropy.org/v1/tropy#folder",
+      "label": null,
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "hint": null,
+      "isRequired": false,
+      "isConstant": false,
+      "value": null
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/identifier",
+      "label": "URL",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "hint": "Unique ID such as call number",
+      "isRequired": false,
+      "isConstant": false,
+      "value": null
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/rights",
+      "label": null,
+      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "hint": null,
+      "isRequired": true,
+      "isConstant": false,
+      "value": null
+    }
+  ]
+}

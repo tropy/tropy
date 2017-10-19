@@ -1,23 +1,24 @@
-dialogs:
-  crashed:
-    buttons:
-      - Close Window
-      - Reload
-      - Keep It Open
-    message: Tropy has crashed
-    detail: Please report this issue at https://github.com/tropy/tropy
-  unresponsive:
-    buttons:
-      - Close
-      - Keep Waiting
-    message: Tropy is not responding
-    detail: >
-      Tropy is not responding.
-      Would you like to force close it or just keep waiting?
-windows:
-  prefs:
-    title: Tropy Preferences
-  wizard:
-    title: Welcome to Tropy
-  about:
-    title: About Tropy
+en:
+  dialogs:
+    crashed:
+      buttons:
+        - Close Window
+        - Reload
+        - Keep It Open
+      message: Tropy has crashed
+      detail: Please report this issue at https://github.com/tropy/tropy
+    unresponsive:
+      buttons:
+        - Close
+        - Keep Waiting
+      message: Tropy is not responding
+      detail: >
+        Tropy is not responding.
+        Would you like to force close it or just keep waiting?
+  windows:
+    prefs:
+      title: Tropy Preferences
+    wizard:
+      title: Welcome to Tropy
+    about:
+      title: About Tropy

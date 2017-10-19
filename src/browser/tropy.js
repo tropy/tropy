@@ -20,6 +20,7 @@ const { AppMenu, ContextMenu } = require('./menu')
 const { Cache } = require('../common/cache')
 const { Strings } = require('../common/res')
 const Storage = require('./storage')
+const Updater = require('./updater')
 const dialog = require('./dialog')
 
 const release = require('../common/release')
@@ -30,7 +31,7 @@ const { darwin } = require('../common/os')
 const { version } = require('../common/release')
 
 const {
-  HISTORY, TAG, PROJECT, CONTEXT, SASS
+  FLASH, HISTORY, TAG, PROJECT, CONTEXT, SASS
 } = require('../constants')
 
 const WIN = SASS.WINDOW
@@ -50,6 +51,7 @@ class Tropy extends EventEmitter {
     locale: 'en', // app.getLocale() || 'en',
     theme: 'light',
     recent: [],
+    updater: true,
     win: {}
   }
 
@@ -61,6 +63,8 @@ class Tropy extends EventEmitter {
 
     this.menu = new AppMenu(this)
     this.ctx = new ContextMenu(this)
+
+    this.updater = new Updater(this)
 
     prop(this, 'cache', {
       value: new Cache(app.getPath('userData'), 'cache')
@@ -118,7 +122,7 @@ class Tropy extends EventEmitter {
 
           const chosen = await dialog.show('message-box', this.win, {
             type: 'warning',
-            ...this.strings.dict.dialogs.unresponsive
+            ...this.dict.dialogs.unresponsive
           })
 
           switch (chosen) {
@@ -138,7 +142,7 @@ class Tropy extends EventEmitter {
 
           const chosen = await dialog.show('message-box', this.win, {
             type: 'warning',
-            ...this.strings.dict.dialogs.crashed
+            ...this.dict.dialogs.crashed
           })
 
           switch (chosen) {
@@ -159,7 +163,7 @@ class Tropy extends EventEmitter {
     }
   }
 
-  opened({ file, name }) {
+  hasOpened({ file, name }) {
     if (this.wiz) this.wiz.close()
     if (this.prefs) this.prefs.close()
 
@@ -187,7 +191,7 @@ class Tropy extends EventEmitter {
     if (this.about) return this.about.show(), this
 
     this.about = open('about', this.hash, {
-      title: this.strings.dict.windows.about.title,
+      title: this.dict.windows.about.title,
       width: ABT.WIDTH * ZOOM,
       height: ABT.HEIGHT * ZOOM,
       parent: darwin ? null : this.win,
@@ -210,7 +214,7 @@ class Tropy extends EventEmitter {
     if (this.wiz) return this.wiz.show(), this
 
     this.wiz = open('wizard', this.hash, {
-      title: this.strings.dict.windows.wizard.title,
+      title: this.dict.windows.wizard.title,
       width: WIZ.WIDTH * ZOOM,
       height: WIZ.HEIGHT * ZOOM,
       parent: darwin ? null : this.win,
@@ -228,11 +232,11 @@ class Tropy extends EventEmitter {
     return this
   }
 
-  configure() {
+  showPreferences() {
     if (this.prefs) return this.prefs.show(), this
 
     this.prefs = open('prefs', this.hash, {
-      title: this.strings.dict.windows.prefs.title,
+      title: this.dict.windows.prefs.title,
       width: PREFS.WIDTH * ZOOM,
       height: PREFS.HEIGHT * ZOOM,
       parent: darwin ? null : this.win,
@@ -273,16 +277,13 @@ class Tropy extends EventEmitter {
           .then(strings => this.strings = strings)
       ]))
 
+      .tap(state => void (state.updater) && this.updater.start())
 
       .tap(() => this.emit('app:restored'))
       .tap(() => verbose('app state restored'))
   }
 
   migrate(state) {
-    if (!state.version || state.version === '1.0.0-beta.0') {
-      state.recent = []
-    }
-
     state.locale = 'en'
     state.version = this.version
     state.uuid = state.uuid || uuid()
@@ -292,6 +293,8 @@ class Tropy extends EventEmitter {
   }
 
   persist() {
+    verbose('saving app state')
+
     if (this.state != null) {
       this.store.save.sync('state.json', this.state)
     }
@@ -302,8 +305,10 @@ class Tropy extends EventEmitter {
   listen() {
     this.on('app:about', () =>
       this.showAboutWindow())
+
     this.on('app:create-project', () =>
       this.showWizard())
+
     this.on('app:close-project', () =>
       this.win && this.dispatch(act.project.close('debug')))
 
@@ -458,11 +463,11 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:open-preferences', () => {
-      this.configure()
+      this.showPreferences()
     })
 
     this.on('app:open-license', () => {
-      shell.openExternal('https://github.com/tropy/tropy/blob/master/LICENSE')
+      shell.openExternal('https://tropy.org/license')
     })
 
     this.on('app:search-issues', () => {
@@ -520,7 +525,7 @@ class Tropy extends EventEmitter {
     })
 
     app.on('quit', () => {
-      verbose('saving app state')
+      this.updater.stop()
       this.persist()
     })
 
@@ -540,9 +545,15 @@ class Tropy extends EventEmitter {
 
     ipc.on('cmd', (_, command, ...params) => this.emit(command, ...params))
 
-    ipc.on(PROJECT.OPENED, (_, project) => this.opened(project))
+    ipc.on(PROJECT.OPENED, (_, project) => this.hasOpened(project))
     ipc.on(PROJECT.CREATE, () => this.showWizard())
     ipc.on(PROJECT.CREATED, (_, { file }) => this.open(file))
+
+    ipc.on(FLASH.HIDE, (_, { id, confirm }) => {
+      if (id === 'update.ready' && confirm) {
+        this.updater.install()
+      }
+    })
 
     ipc.on(PROJECT.UPDATE, (_, { name }) => {
       if (name) this.win.setTitle(name)
@@ -579,6 +590,7 @@ class Tropy extends EventEmitter {
       theme: this.state.theme,
       locale: this.state.locale,
       uuid: this.state.uuid,
+      update: this.updater.release,
       version
     }
   }
@@ -594,6 +606,10 @@ class Tropy extends EventEmitter {
     for (let win of BrowserWindow.getAllWindows()) {
       win.webContents.send(...args)
     }
+  }
+
+  get dict() {
+    return this.strings.dict[this.state.locale]
   }
 
   get history() {
