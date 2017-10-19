@@ -4,7 +4,7 @@ require('shelljs/make')
 
 const { check, error, say } = require('./util')('pack')
 const { join, resolve } = require('path')
-const { platform } = process
+const { arch, platform } = process
 const { getSignToolParams } = require('./sign')
 const { repository } = require('../package')
 
@@ -22,7 +22,7 @@ target.all = (...args) => {
 }
 
 
-target.linux = (args = ['bz2', 'AppImage']) => {
+target.linux = (args = ['bz2']) => {
   check(platform === 'linux', 'must be run on Linux')
 
   const src = join(dist, `${qualified.product}-linux-x64`)
@@ -53,7 +53,7 @@ target.linux = (args = ['bz2', 'AppImage']) => {
       }
       case 'bz2': {
         exec(
-          `tar cjf ${join(dist, `${name}-${version}.tar.bz2`)} -C "${src}" .`
+          `tar cjf ${join(dist, `${name}-${version}-${arch}.tar.bz2`)} -C "${src}" .`
         )
         break
       }
