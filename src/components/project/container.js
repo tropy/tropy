@@ -159,6 +159,9 @@ class ProjectContainer extends Component {
   handleKeyDown = (event) => {
     switch (match(this.props.keymap.global, event)) {
       case 'back':
+        if (this.state.mode !== MODE.PROJECT) {
+          this.handleModeChange(MODE.PROJECT)
+        }
         break
       case 'nextItem':
         emit(document, 'global:next-item')
