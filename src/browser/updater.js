@@ -17,20 +17,25 @@ class Updater {
 
     if (!this.isSupported) return
 
-    autoUpdater.setFeedURL(feed)
+    try {
+      autoUpdater.setFeedURL(feed)
 
-    autoUpdater.on('error', this.onError)
-    autoUpdater.on('checking-for-update', this.onCheckingForUpdate)
-    autoUpdater.on('update-not-available', this.onUpdateNotAvailable)
-    autoUpdater.on('update-available', this.onUpdateAvailable)
+      autoUpdater.on('error', this.onError)
+      autoUpdater.on('checking-for-update', this.onCheckingForUpdate)
+      autoUpdater.on('update-not-available', this.onUpdateNotAvailable)
+      autoUpdater.on('update-available', this.onUpdateAvailable)
 
-    autoUpdater.on('update-downloaded', (event, notes, version) => {
-      this.onUpdateReady({
-        notes,
-        version,
-        date: new Date()
+      autoUpdater.on('update-downloaded', (event, notes, version) => {
+        this.onUpdateReady({
+          notes,
+          version,
+          date: new Date()
+        })
       })
-    })
+    } catch (error) {
+      warn(`failed to setup auto updater: ${error.message}`, { error })
+      this.isSupported = false
+    }
   }
 
   start() {
@@ -38,7 +43,7 @@ class Updater {
 
     if (this.isSupported) {
       if (win32) setTimeout(this.check, MIN)
-      else this.check()
+      else process.nextTick(this.check)
 
       this.interval = setInterval(this.check, this.timeout)
     }
