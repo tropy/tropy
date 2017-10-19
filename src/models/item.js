@@ -89,34 +89,36 @@ module.exports = mod.item = {
       params)
   },
 
-  async find(db, { ids, query }) {
-    const params = {}
+  async find(db, { ids, query, sort }) {
+    const dir = sort.asc ? 'ASC' : 'DESC'
+    const params = { $sort: sort.column }
     query = query.trim()
+    const hasQuery = query.length > 0
 
-    if (query.length) {
+    if (hasQuery) {
       params.$query = prefix(query)
     }
 
     return search(db, `
-      SELECT DISTINCT id
-        FROM subjects
-          JOIN items USING (id)
-          LEFT OUTER JOIN trash USING (id)
-        WHERE
-          id IN (${ids.join(',')}) AND
-          deleted IS NULL
-          ${(query.length > 0) ? `AND id IN (${SEARCH})` : ''}
-        ORDER BY created DESC`,
+      WITH ${SORT}
+        SELECT DISTINCT id
+          FROM items
+            LEFT OUTER JOIN sort USING (id)
+            LEFT OUTER JOIN trash USING (id)
+          WHERE
+            id IN (${lst(ids)}) AND deleted IS NULL
+            ${hasQuery ? `AND id IN (${SEARCH})` : ''}
+          ORDER BY sort.text ${dir}, id ${dir}`,
       params)
   },
 
   async trash(db, { sort, query }) {
     const dir = sort.asc ? 'ASC' : 'DESC'
     const params = { $sort: sort.column }
-
     query = query.trim()
+    const hasQuery = query.length > 0
 
-    if (query.length) {
+    if (hasQuery) {
       params.$query = prefix(query)
     }
 
@@ -127,7 +129,7 @@ module.exports = mod.item = {
             JOIN trash USING (id)
             LEFT OUTER JOIN sort USING (id)
           WHERE
-            ${(query.length > 0) ? `id IN (${SEARCH}) AND` : ''}
+            ${hasQuery ? `id IN (${SEARCH}) AND` : ''}
             reason = 'user'
           ORDER BY sort.text ${dir}, id ${dir}`,
       params)
@@ -136,9 +138,7 @@ module.exports = mod.item = {
   async list(db, list, { tags, sort, query }) {
     const dir = sort.asc ? 'ASC' : 'DESC'
     const params = { $list: list }
-
     query = query.trim()
-
     const hasTags = tags.length > 0
     const hasQuery = query.length > 0
 
