@@ -432,10 +432,6 @@ module.exports = {
         dispatch(actions.item.copy(items))
       },
 
-      onItemPaste() {
-        dispatch(actions.item.paste())
-      },
-
       onItemMerge(...args) {
         dispatch(actions.item.merge(...args))
       },

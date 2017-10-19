@@ -143,9 +143,6 @@ class ItemIterator extends Iterator {
       case 'copy':
         this.handleItemCopy(this.props.selection)
         break
-      case 'paste':
-        this.props.onItemPaste()
-        break
       case 'edit':
         this.edit(this.current())
         break
@@ -254,7 +251,6 @@ class ItemIterator extends Iterator {
     onContextMenu: func.isRequired,
     onItemDelete: func.isRequired,
     onItemCopy: func.isRequired,
-    onItemPaste: func.isRequired,
     onItemMerge: func.isRequired,
     onItemOpen: func.isRequired,
     onItemPreview: func.isRequired,

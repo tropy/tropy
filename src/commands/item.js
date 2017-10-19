@@ -12,14 +12,14 @@ const { Image } = require('../image')
 const { text } = require('../value')
 const act = require('../actions')
 const mod = require('../models')
-const { get, pluck, pick, remove, array } = require('../common/util')
+const { get, pluck, pick, remove } = require('../common/util')
 const { darwin } = require('../common/os')
 const { ITEM, DC } = require('../constants')
 const { keys } = Object
 const { isArray } = Array
 const { writeFileAsync: write } = require('fs')
 const { win } = require('../window')
-const { groupedByTemplate, itemFromLD, ParseError } = require('../export')
+const { groupedByTemplate } = require('../export')
 
 const {
   getItemTemplate,
@@ -50,80 +50,7 @@ class Create extends Command {
   }
 }
 
-class ImportItem extends ImportCommand {
-  /* Import items either from file or clipboard */
-  static get action() { return ITEM.IMPORT.ITEM }
-
-  *exec() {
-    return // TODO enable when done (sometime after 1.0 release)
-    /* eslint-disable no-unreachable */
-
-    const { db } = this.options
-    const { source } = this.action.meta
-
-    var unparsed // string from file or clipboard
-    var objects  // array parsed from the above
-    const items = { success: [], fail: [] }
-
-    if (source === ':clipboard:') {
-      unparsed = clipboard.readText()
-    } else {
-      // TODO unparsed = ...read file
-    }
-
-    try {
-      objects = array(JSON.parse(unparsed))
-
-      for (let i = 0, total = objects.length; i < total; ++i) {
-        let item
-        const parsed = yield call(itemFromLD, objects[i])
-
-        const template = yield select(
-          state => state.ontology.template[parsed.templateID])
-        if (!template) {
-          items.fail.push(i) // append index to items.fail -> alert user later
-          continue
-        }
-
-        const metadata = { ...getTemplateValues(template), ...parsed.metadata }
-
-        yield call(db.transaction, async tx => {
-          item = await mod.item.create(tx, template.id, metadata)
-        })
-
-        yield put(act.metadata.load([item.id]))
-
-        yield all([
-          put(act.item.insert(item)),
-        ])
-
-        // TODO import lists, tags, photos, selections, notes, etc.
-
-        items.success.push(item.id)
-      }
-    } catch (error) {
-      if (error instanceof SyntaxError) {
-        // might want to ignore this if user pastes something accidentally
-        warn(`Could not parse ${source} contents.`)
-      } else if (error instanceof ParseError) {
-        warn(error.message)
-        verbose(error.details)
-      } else {
-        verbose(error.stack)
-      }
-
-      // TODO decide how to alert the user
-      fail(error, this.action.type)
-    }
-    this.setUndo(items.success)
-    return items.success
-    /* eslint-enable no-unreachable */
-  }
-}
-
-class ImportImage extends ImportCommand {
-  /* Import items with photos from files */
-
+class Import extends ImportCommand {
   static get action() { return ITEM.IMPORT.IMAGE }
 
   *exec() {
@@ -167,6 +94,7 @@ class ImportImage extends ImportCommand {
 
           if (list) {
             await mod.list.items.add(tx, list, [item.id])
+            // item.lists.push(list)
           }
 
           item.photos.push(photo.id)
@@ -194,7 +122,12 @@ class ImportImage extends ImportCommand {
       }
     }
 
-    this.setUndo(items)
+    if (items.length) {
+      this.setUndo(items)
+      this.undo = act.item.delete(items)
+      this.redo = act.item.restore(items)
+    }
+
     return items
   }
 }
@@ -644,8 +577,7 @@ module.exports = {
   Destroy,
   Explode,
   Export,
-  ImportImage,
-  ImportItem,
+  Import,
   Implode,
   Load,
   Merge,

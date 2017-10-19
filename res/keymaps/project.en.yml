@@ -42,7 +42,6 @@ linux: &linux
     pageUp: PageUp
     pageDown: PageDown
     copy: Ctrl+c
-    paste: Ctrl+v
   PhotoIterator: &PhotoIterator
     up: ArrowUp
     down: ArrowDown
@@ -147,7 +146,6 @@ darwin:
     edit: Enter
     delete: Backspace
     copy: Cmd+c
-    paste: Cmd+v
     all: Cmd+a
     home: Home
     end: End

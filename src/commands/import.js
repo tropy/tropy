@@ -65,13 +65,6 @@ class ImportCommand extends Command {
       }
     }
   }
-
-  setUndo(items) {
-    if (items.length) {
-      this.undo = act.item.delete(items)
-      this.redo = act.item.restore(items)
-    }
-  }
 }
 
 

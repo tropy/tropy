@@ -18,7 +18,7 @@ module.exports = {
 
   import(payload = {}, meta) {
     return {
-      type: ITEM.IMPORT.IMAGE,
+      type: ITEM.IMPORT,
       payload,
       meta: { cmd: 'project', history: 'add', search: true, ...meta }
     }
@@ -39,15 +39,6 @@ module.exports = {
       meta: { cmd: 'project', target: ':clipboard:', ...meta }
     }
   },
-
-  paste(payload = {}, meta) {
-    return {
-      type: ITEM.IMPORT.ITEM,
-      payload,
-      meta: { cmd: 'project', history: 'add', source: ':clipboard:', ...meta }
-    }
-  },
-
 
   destroy(payload, meta) {
     return {
