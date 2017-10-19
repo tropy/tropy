@@ -1,395 +1,395 @@
-sidebar:
-  lists: Lists
-  tags: Tags
-  imports: Last Import
-  trash: Deleted Items
-toolbar:
-  import: Import Photos
-  items: >
-    {count, plural,
-      =0 {No items in this view}
-      one {1 item in this view}
-      other {# items in this view}}
-panel:
-  metadata:
-    tab: Metadata
-    photo:  Photo
-    item: >
+en:
+  sidebar:
+    lists: Lists
+    tags: Tags
+    imports: Last Import
+    trash: Deleted Items
+  toolbar:
+    import: Import Photos
+    items: >
       {count, plural,
-        =0 {}
-        one {Item}
-        other {# Items}}
-    selection: Selection
-  tags:
-    tab: Tags
-    add: >
-      {count, plural,
-        =0 {Add Tag}
-        one {Add Tag to 1 Item}
-        other {Add Tag to # Items}}
-  photo:
-    title: >
-      {count, plural,
-        =0 {No Photos}
-        one {1 Photo}
-        other {# Photos}}
-    create: Add Photos
-  note:
-    title: >
-      {count, plural,
-        =0 {No Notes}
-        one {1 Note}
-        other {# Notes}}
-    create: Add Note
-about:
-    version: Version {version}
-    rrchnm:
-      title: Roy Rosenzweig Center for History and New Media
-      url: https://rrchnm.org
-    cds:
-      title: Corporation for Digital Scholarship
-      url: http://digitalscholar.org
-    text: >
-      Tropy is designed by the {rrchnm}, a team that develops
-      historical teaching resources, digital exhibits, and
-      open-source software.
-    trademark: Tropy is a trademark of the {cds}.
-    release:
-      title: Release Notes
-      url: https://github.com/tropy/tropy/releases/tag/{version}
-    license:
-      title: Licensing Information
-      url: https://tropy.org/license
-    credits:
-      title: Credits
-      url: https://tropy.org/credits
-project:
-  none: Drop a project file here or create a {newProject}
-  empty: Drop your photos into Tropy to get started
-  new: new project
-wizard:
+        =0 {No items in this view}
+        one {1 item in this view}
+        other {# items in this view}}
+  panel:
+    metadata:
+      tab: Metadata
+      photo:  Photo
+      item: >
+        {count, plural,
+          =0 {}
+          one {Item}
+          other {# Items}}
+      selection: Selection
+    tags:
+      tab: Tags
+      add: >
+        {count, plural,
+          =0 {Add Tag}
+          one {Add Tag to 1 Item}
+          other {Add Tag to # Items}}
+    photo:
+      title: >
+        {count, plural,
+          =0 {No Photos}
+          one {1 Photo}
+          other {# Photos}}
+      create: Add Photos
+    note:
+      title: >
+        {count, plural,
+          =0 {No Notes}
+          one {1 Note}
+          other {# Notes}}
+      create: Add Note
+  about:
+      version: Version {version}
+      rrchnm:
+        title: Roy Rosenzweig Center for History and New Media
+        url: https://rrchnm.org
+      cds:
+        title: Corporation for Digital Scholarship
+        url: http://digitalscholar.org
+      text: >
+        Tropy is designed by the {rrchnm}, a team that develops
+        historical teaching resources, digital exhibits, and
+        open-source software.
+      trademark: Tropy is a trademark of the {cds}.
+      release:
+        title: Release Notes
+        url: https://github.com/tropy/tropy/releases/tag/{version}
+      license:
+        title: Licensing Information
+        url: https://tropy.org/license
+      credits:
+        title: Credits
+        url: https://tropy.org/credits
   project:
-    title: Create a new project
-    submit: Create project
-    name: Name
-    save_as: Change file name and location
-    change: Change
-prefs:
-  title: Tropy Preferences
-  app:
-    label: Global
-    style:
-      theme: Theme
-      themes:
-        light: Light
-        dark: Dark
-    template: Default Template
-    debug: Enable Developer Mode
-    dup:
-      label: During Import
-      option:
-        skip: Skip duplicate photos
-        import: Accept duplicate photos
-        prompt: Ask me every time
-    ui:
-      label: Interface
-      option:
-        invertScroll: Invert direction when scrolling in photos
-        invertZoom: Invert direction when zooming in photos
-        overlayToolbars: Automatically hide and show toolbars
+    none: Drop a project file here or create a {newProject}
+    empty: Drop your photos into Tropy to get started
+    new: new project
+  wizard:
+    project:
+      title: Create a new project
+      submit: Create project
+      name: Name
+      save_as: Change file name and location
+      change: Change
+  prefs:
+    title: Tropy Preferences
+    app:
+      label: Global
+      style:
+        theme: Theme
+        themes:
+          light: Light
+          dark: Dark
+      template: Default Template
+      debug: Enable Developer Mode
+      dup:
+        label: During Import
+        option:
+          skip: Skip duplicate photos
+          import: Accept duplicate photos
+          prompt: Ask me every time
+      ui:
+        label: Interface
+        option:
+          invertScroll: Invert direction when scrolling in photos
+          invertZoom: Invert direction when zooming in photos
+          overlayToolbars: Automatically hide and show toolbars
 
-  project:
-    label: Project
+    project:
+      label: Project
+    template:
+      label: Templates
+      new: New Template …
+      create: Create
+      select: Template
+      tools:
+        new: New
+        copy: Duplicate
+        delete: Delete
+        import: Import
+        export: Export
+    vocab:
+      label: Vocabularies
+      classes: >
+        {count, plural,
+          =0 {No Classes}
+          one {# Class}
+          other {# Classes}
+        }
+      datatypes: >
+        {count, plural,
+          =0 {No Datatypes} one {# Datatype}
+          other {# Datatypes}
+        }
+      properties: >
+        {count, plural,
+          =0 {No Properties}
+          one {# Property}
+          other {# Properties}
+        }
+
+  item:
+    created: Date Added
+    modified: Modified
+  photo:
+    file: File
+    size: Size
+    type: Type
+    created: Date Added
+    modified: Modified
+  selection:
+    size: Size
+    created: Date Added
+    modified: Modified
+  esper:
+    tool:
+      pan: Pan Tool
+      select: Selection Tool
+      rotate: Rotate
+      mirror: Mirror
+    mode:
+      fill: Fill
+      fit: Fit
+      zoom: Zoom
+  notepad:
+    placeholder: Add your notes here …
+
   template:
-    label: Templates
-    new: New Template …
-    create: Create
-    select: Template
-    tools:
-      new: New
-      copy: Duplicate
-      delete: Delete
-      import: Import
-      export: Export
+    id: URI
+    name: Name
+    type: Type
+    creator: Creator
+    description: Description
+    types:
+      "https://tropy.org/v1/tropy#Item": Item Template
+      "https://tropy.org/v1/tropy#Photo": Photo Template
+      "https://tropy.org/v1/tropy#Selection": Photo Selection Template
+    field:
+      property: Property
+      label: Label
+      datatype: Datatype
+      isRequired: Is mandatory field
+      hint: Hint
+      value: Default Value
+      isConstant: Is read-only
+
   vocab:
-    label: Vocabularies
-    classes: >
-      {count, plural,
-        =0 {No Classes}
-        one {# Class}
-        other {# Classes}
-      }
-    datatypes: >
-      {count, plural,
-        =0 {No Datatypes} one {# Datatype}
-        other {# Datatypes}
-      }
-    properties: >
-      {count, plural,
-        =0 {No Properties}
-        one {# Property}
-        other {# Properties}
-      }
-
-item:
-  created: Date Added
-  modified: Modified
-photo:
-  file: File
-  size: Size
-  type: Type
-  created: Date Added
-  modified: Modified
-selection:
-  size: Size
-  created: Date Added
-  modified: Modified
-esper:
-  tool:
-    pan: Pan Tool
-    select: Selection Tool
-    rotate: Rotate
-    mirror: Mirror
-  mode:
-    fill: Fill
-    fit: Fit
-    zoom: Zoom
-notepad:
-  placeholder: Add your notes here …
-
-template:
-  id: URI
-  name: Name
-  type: Type
-  creator: Creator
-  description: Description
-  types:
-    "https://tropy.org/v1/tropy#Item": Item Template
-    "https://tropy.org/v1/tropy#Photo": Photo Template
-    "https://tropy.org/v1/tropy#Selection": Photo Selection Template
-  field:
-    property: Property
+    id: URI
+    prefix: Prefix
+    title: Name
+    description: Description
+    properties: Properties
+    seeAlso: See Also
+  property:
+    select: Select a Property …
+  datatype:
+    select: Select a Datatype …
+  resource:
+    select: Select a Resource …
+    id: URI
     label: Label
-    datatype: Datatype
-    isRequired: Is mandatory field
-    hint: Hint
-    value: Default Value
-    isConstant: Is read-only
+    description: Description
+    comment: Comment
 
-vocab:
-  id: URI
-  prefix: Prefix
-  title: Name
-  description: Description
-  properties: Properties
-  seeAlso: See Also
-property:
-  select: Select a Property …
-datatype:
-  select: Select a Datatype …
-resource:
-  select: Select a Resource …
-  id: URI
-  label: Label
-  description: Description
-  comment: Comment
+  dialog:
+    prompt:
+      ok: Yes
+      cancel: Cancel
+      item:
+        destroy: >
+          Are your sure you want to permanently delete items?
+          This action cannot be undone.
+      dup:
+        message: >
+          This photo already exists in your project. Are you sure
+          you want to import it again?
+        checkbox: Remember this choice
+        cancel: Skip
+        ok: Import Anyway
+    filter:
+      templates: Tropy Templates
+      images: Images
+      projects: Tropy Projects
+      rdf: RDF Vocabularies
+      jsonld: JSON-LD
 
-dialog:
-  prompt:
-    ok: Yes
-    cancel: Cancel
+  action:
+    project:
+      save: Save Project
+    list:
+      create: Create List
+      delete: Delete List
+      item:
+        add: Add Items To List
+        merge: Merge Items
+        remove: Remove Item From List
+        restore: Add Item To List
+      order: Sort List
+      restore: Restore List
+      save: Save List
     item:
-      destroy: >
-        Are your sure you want to permanently delete items?
-        This action cannot be undone.
-    dup:
-      message: >
-        This photo already exists in your project. Are you sure
-        you want to import it again?
-      checkbox: Remember this choice
-      cancel: Skip
-      ok: Import Anyway
-  filter:
-    templates: Tropy Templates
-    images: Images
-    projects: Tropy Projects
-    rdf: RDF Vocabularies
-    jsonld: JSON-LD
-
-action:
-  project:
-    save: Save Project
-  list:
-    create: Create List
-    delete: Delete List
-    item:
-      add: Add Items To List
+      create: Create Items
+      delete: Delete Items
+      explode: Explode Item
+      implode: Merge Items
       merge: Merge Items
-      remove: Remove Item From List
-      restore: Add Item To List
-    order: Sort List
-    restore: Restore List
-    save: Save List
-  item:
-    create: Create Items
-    delete: Delete Items
-    explode: Explode Item
-    implode: Merge Items
-    merge: Merge Items
-    split: Split Items
-    import: Import Items
-    restore: Restore Items
-    save: Save Item
+      split: Split Items
+      import: Import Items
+      restore: Restore Items
+      save: Save Item
+      tag:
+        create: Tag
+        toggle: Tag
+        clear: Clear Tags
+    metadata:
+      save: Save Metadata
+    ontology:
+      import: Import Vocabularies
+      vocab:
+        save: Save Vocabulary
+      label:
+        save: Save Label
+      template:
+        import: Import Template
+    photo:
+      create: Import Photo
+      delete: Delete Photo
+      move: Moving Photo
+      order: Sort Photos
+      restore: Restore Photo
+      save: Save Photo
+    note:
+      create: Create Note
+      delete: Delete Note
+      order: Sort Notes
+      restore: Restore Note
+      save: Save Note
     tag:
-      create: Tag
-      toggle: Tag
-      clear: Clear Tags
-  metadata:
-    save: Save Metadata
-  ontology:
-    import: Import Vocabularies
-    vocab:
-      save: Save Vocabulary
-    label:
-      save: Save Label
-    template:
-      import: Import Template
-  photo:
-    create: Import Photo
-    delete: Delete Photo
-    move: Moving Photo
-    order: Sort Photos
-    restore: Restore Photo
-    save: Save Photo
-  note:
-    create: Create Note
-    delete: Delete Note
-    order: Sort Notes
-    restore: Restore Note
-    save: Save Note
-  tag:
-    create: Create Tag
-    delete: Delete Tag
-    restore: Create Tag
-    save: Save Tag
-  selection:
-    create: Create Selection
-    delete: Delete Selection
-    restore: Create Selection
-    save: Save Selection
-    order: Sort Selections
+      create: Create Tag
+      delete: Delete Tag
+      restore: Create Tag
+      save: Save Tag
+    selection:
+      create: Create Selection
+      delete: Delete Selection
+      restore: Create Selection
+      save: Save Selection
+      order: Sort Selections
 
-activity:
-  project:
-    save: Saving …
-  list:
-    create: Creating list …
-    delete: Deleting list …
+  activity:
+    project:
+      save: Saving …
+    list:
+      create: Creating list …
+      delete: Deleting list …
+      item:
+        add: Adding items to list …
+        merge: Merging items …
+        remove: Removing items from list …
+        restore: Restoring items to list …
+      load: Loading lists …
+      order: Sorting list …
+      restore: Restoring list …
+      save: Saving list …
+    tag:
+      create: Creating tag …
+      delete: Deleting tag …
+      load: Loading tags …
+      restore: Restoring tag …
+      save: Saving tag …
     item:
-      add: Adding items to list …
-      merge: Merging items …
-      remove: Removing items from list …
-      restore: Restoring items to list …
-    load: Loading lists …
-    order: Sorting list …
-    restore: Restoring list …
-    save: Saving list …
-  tag:
-    create: Creating tag …
-    delete: Deleting tag …
-    load: Loading tags …
-    restore: Restoring tag …
-    save: Saving tag …
-  item:
-    create: Creating item …
-    delete: Deleteing item …
-    destroy: Deleting items permanently …
-    explode: Exploding item …
-    implode: Restoring item …
-    import: >
-      {hasProgressBar, select,
-        true {Importing items {progress, number} of {total, number} …}
-        other {Importing items …}
-      }
-    load: Loading items …
-    merge: Merging item …
-    restore: Restoring item …
-    save: Saving items …
-    tag:
-      create: Tagging item
-      toggle: Tagging item …
-      clear: Clearing item tags …
-  metadata:
-    load: Loading metadata …
-    save: Saving metadata …
-  ontology:
-    load: Loading ontology …
-    import: Importing vocabularies …
-    vocab:
-      save: Saving vocabulary …
-    label:
-      save: Saving label …
-    template:
-      import: Importing templates …
-  photo:
-    create: Importing photos …
-    delete: Deleting photo …
-    load: Loading photos …
-    move: Moving photos …
-    order: Sorting photos …
-    restore: Restoring photos …
-  note:
-    create: Creating note …
-    delete: Deleting note …
-    load: Loading notes …
-    order: Sorting notes …
-    restore: Restoring notes …
-  selection:
-    load: Loading photo selections …
-editor:
-  commands:
-    bold: Bold
-    italic: Italic
-    underline: Underline
-    strikethrough: Strikethrough
-    subscript: Subscript
-    superscript: Superscript
-    blockquote: Toggle Quote
-    ol: Toggle Numbered List
-    ul: Toggle Bulleted List
-    link: Insert Link
-    left: Align Left
-    center: Center
-    right: Align Right
+      create: Creating item …
+      delete: Deleteing item …
+      destroy: Deleting items permanently …
+      explode: Exploding item …
+      implode: Restoring item …
+      import: >
+        {hasProgressBar, select,
+          true {Importing items {progress, number} of {total, number} …}
+          other {Importing items …}
+        }
+      load: Loading items …
+      merge: Merging item …
+      restore: Restoring item …
+      save: Saving items …
+      tag:
+        create: Tagging item
+        toggle: Tagging item …
+        clear: Clearing item tags …
+    metadata:
+      load: Loading metadata …
+      save: Saving metadata …
+    ontology:
+      load: Loading ontology …
+      import: Importing vocabularies …
+      vocab:
+        save: Saving vocabulary …
+      label:
+        save: Saving label …
+      template:
+        import: Importing templates …
+    photo:
+      create: Importing photos …
+      delete: Deleting photo …
+      load: Loading photos …
+      move: Moving photos …
+      order: Sorting photos …
+      restore: Restoring photos …
+    note:
+      create: Creating note …
+      delete: Deleting note …
+      load: Loading notes …
+      order: Sorting notes …
+      restore: Restoring notes …
+    selection:
+      load: Loading photo selections …
+  editor:
+    commands:
+      bold: Bold
+      italic: Italic
+      underline: Underline
+      strikethrough: Strikethrough
+      subscript: Subscript
+      superscript: Superscript
+      blockquote: Toggle Quote
+      ol: Toggle Numbered List
+      ul: Toggle Bulleted List
+      link: Insert Link
+      left: Align Left
+      center: Center
+      right: Align Right
 
-error:
-  project:
-    created: Project creation failed.
-  item:
-    merge: Failed to merge items.
-    import: Failed to import item.
-    tag:
-      save: Failed to save tag.
-      create: Failed to tag item. Tags must be unique per item.
-  list:
-    save: Failed to save list.
+  error:
+    project:
+      created: Project creation failed.
     item:
-      add: Failed to add item(s) to list.
-  ontology:
-    import: Failed to import vocabulary.
-    vocab:
-      save: Failed to save vocabulary. Prefix must be unique.
-    template:
-      import: Failed to import template.
-      field:
-        add: Failed to add field to template.
-        remove: Failed to remove field from template.
+      merge: Failed to merge items.
+      import: Failed to import item.
+      tag:
+        save: Failed to save tag.
+        create: Failed to tag item. Tags must be unique per item.
+    list:
+      save: Failed to save list.
+      item:
+        add: Failed to add item(s) to list.
+    ontology:
+      import: Failed to import vocabulary.
+      vocab:
+        save: Failed to save vocabulary. Prefix must be unique.
+      template:
+        import: Failed to import template.
+        field:
+          add: Failed to add field to template.
+          remove: Failed to remove field from template.
 
-flash:
-  update:
-    ready:
-      message: >
-        Tropy {version} is ready to be installed.
-        Do you want to restart now?
-      confirm: Install
-
+  flash:
+    update:
+      ready:
+        message: >
+          Tropy {version} is ready to be installed.
+          Do you want to install and restart now?
+        confirm: Install Now

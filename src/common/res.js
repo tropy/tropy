@@ -67,7 +67,7 @@ class Strings extends Resource {
   }
 
   flatten() {
-    return flatten(this.dict)
+    return flatten(this.dict[this.locale])
   }
 }
 
