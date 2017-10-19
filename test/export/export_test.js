@@ -3,6 +3,7 @@
 describe('export', () => {
   const { groupedByTemplate } = __require('export')
   const { template, items, metadata, props, photos } = require('./helpers')
+  const { keys } = Object
 
   const resources = [
     { template, items, metadata, photos }
@@ -56,13 +57,29 @@ describe('export', () => {
 
   it('has photo metadata', async () => {
     const data = (await ld)[0]['item'][0]
-    expect(data.photo).to.eql([
-      {
-        path: '/path',
-        helloWorld: 'photo property',
-        nonTemplateProperty: 'custom property'
-      },
-      { path: '/another' }
-    ])
+    expect(keys(data.photo).length).to.eql(2)
+    expect(data.photo[0]).to.eql({
+      path: '/path',
+      helloWorld: 'photo property',
+      nonTemplateProperty: 'custom property'
+    })
+  })
+
+  it('has photo->selection @context', async () => {
+    let data = (await ld)[0] ['@context']['item']['@context']['photo']
+    data = data['@context']['selection']['@context']
+
+    expect(data.selectProp).to.eql({
+      '@id': 'http://example.com/selection-property',
+      '@type': 'http://example.com/selection-property#type'
+    })
+    expect(keys(data).length).to.eql(1)
+  })
+
+  it('has photo->selection metadata', async () => {
+    const data = (await ld)[0]['item'][0]['photo'][1]['selection']
+    expect(data).to.eql({
+      selectProp: 'selection property'
+    })
   })
 })

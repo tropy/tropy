@@ -39,15 +39,26 @@ const metadata = {
       text: 'custom property',
       type: 'http://example.com/custom-property#type'
     }
+  },
+  // metadata of a selection
+  21: {
+    'http://example.com/selection-property': {
+      text: 'selection property',
+      type: 'http://example.com/selection-property#type'
+    }
   }
 }
 
 const props = {
   'http://example.com/custom-property': { label: 'Non-template Property' },
-  'http://example.com/photo-property': { label: 'hello world' }
+  'http://example.com/photo-property': { label: 'hello world' },
+  'http://example.com/selection-property': { label: 'select prop' }
 }
 
-const photos = { 11: { id: 11, path: '/path' }, 12: { path: '/another' } }
+const photos = {
+  11: { id: 11, path: '/path' },
+  12: { path: '/another', selections: [21] }
+}
 
 module.exports = {
   template,

@@ -4,12 +4,13 @@ const { values } = Object
 const { promises: jsonld } = require('jsonld')
 
 const { pick } = require('../common/util')
-const { ITEM, PHOTO } = require('../constants/type')
+const { ITEM, PHOTO, SELECTION } = require('../constants/type')
 const { TEMPLATE } = require('../constants/ontology')
 
 const { newProperties } = require('./utils')
 
 function makeContext(items, photos, metadata, template, props) {
+  const flatten = (acc, ps) => acc.concat(ps)
   const result = {
     '@vocab': 'https://tropy.org/v1/tropy#',
     'template': TEMPLATE.TYPE,
@@ -24,7 +25,12 @@ function makeContext(items, photos, metadata, template, props) {
     '@id': PHOTO,
     '@container': '@list',
     '@context': {
-      path: 'http://schema.org/image'
+      path: 'http://schema.org/image',
+      selection: {
+        '@id': SELECTION,
+        '@container': '@list',
+        '@context': {}
+      }
     }
   }
 
@@ -34,11 +40,21 @@ function makeContext(items, photos, metadata, template, props) {
     metadataOfItems, result['item']['@context'], true, props, template)
 
   // add Photo metadata fields to context from all selected photos
-  const metadataOfPhotos = values(pick(metadata, items.map(i => i.photos)
-                                       .reduce((acc, ps) => acc.concat(ps))))
-  const newPhotoProperties = newProperties(metadataOfPhotos,
-    result['item']['@context']['photo']['@context'], true, props, template)
+  const photoIDs = items.map(i => i.photos).reduce(flatten, [])
+  const metadataOfPhotos = values(pick(metadata, photoIDs))
+  const photoContext = result['item']['@context']['photo']['@context']
+  const newPhotoProperties = newProperties(
+    metadataOfPhotos, photoContext, true, props, template)
   result['item']['@context']['photo']['@context'] = newPhotoProperties
+
+  // add Selection metadata fields to context from all selections metadata
+  const selectionIDs = values(pick(photos, photoIDs))
+        .map(p => p.selections).reduce(flatten, [])
+  const metadataOfSelections = values(pick(metadata, selectionIDs))
+  const newSelectionProperties = newProperties(
+    metadataOfSelections, {}, true, props, template)
+  result['item']['@context']['photo']['@context']['selection']['@context'] =
+    newSelectionProperties
 
   return result
 }
@@ -52,8 +68,25 @@ function renderItem(item, photos, metadata, template, props) {
 
   // add photo metadata
   result.photo = values(pick(photos, item.photos)).map(p => {
-    let photo = { path: p.path }
+    let photo = {
+      path: p.path,
+      selection: []
+    }
+
     photo = newProperties(metadata[p.id], photo, false, props, template)
+
+    // add selection metadata
+    if (p.selections) {
+      photo.selection = p.selections.map(sID => {
+        return newProperties(metadata[sID], {}, false, props, template)
+      })
+    }
+
+    // clear property if there are no selections
+    if (!photo.selection.length) {
+      delete photo.selection
+    }
+
     return photo
   })
 
