@@ -11,7 +11,7 @@ const { NativeTypes } = require('react-dnd-electron-backend')
 const { NoProject } = require('./none')
 const { extname } = require('path')
 const { MODE } = require('../../constants/project')
-const { on, off, ensure, reflow } = require('../../dom')
+const { emit, on, off, ensure, reflow } = require('../../dom')
 const { win } = require('../../window')
 const cx = require('classnames')
 const { values } = Object
@@ -159,7 +159,18 @@ class ProjectContainer extends Component {
   handleKeyDown = (event) => {
     switch (match(this.props.keymap.global, event)) {
       case 'back':
-        console.log('go back!')
+        break
+      case 'nextItem':
+        emit(document, 'global:next-item')
+        break
+      case 'prevItem':
+        emit(document, 'global:prev-item')
+        break
+      case 'nextPhoto':
+        emit(document, 'global:next-photo')
+        break
+      case 'prevPhoto':
+        emit(document, 'global:prev-photo')
         break
       default:
         return
@@ -261,6 +272,7 @@ class ProjectContainer extends Component {
       file: string
     }).isRequired,
 
+    keymap: object.isRequired,
     items: arrayOf(
       shape({ id: number.isRequired })
     ).isRequired,
