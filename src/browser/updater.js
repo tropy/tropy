@@ -90,7 +90,7 @@ class Updater {
     info(`update ${release.values.version} ready`)
     this.release = release
     this.isUpdateReady = true
-    this.app.broadcast('dispatch', flash.show(release))
+    this.app.dispatch(flash.show(release))
   }
 }
 
