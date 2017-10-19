@@ -59,21 +59,32 @@ module.exports = mod.item = {
 
     query = query.trim()
 
-    if (query.length) {
+    const hasTags = tags.length > 0
+    const hasQuery = query.length > 0
+
+    if (hasQuery) {
       params.$query = prefix(query)
     }
+
+    if (hasTags) {
+      params.$tags = tags.length
+    }
+
+    const doTagsIntersect = true
 
     return search(db, `
       WITH ${SORT}
         SELECT DISTINCT id
           FROM items
-            ${tags.length ? 'JOIN taggings USING (id)' : ''}
+            ${hasTags ? 'JOIN taggings USING (id)' : ''}
             LEFT OUTER JOIN sort USING (id)
             LEFT OUTER JOIN trash USING (id)
           WHERE
-            ${(tags.length > 0) ? `tag_id IN (${lst(tags)}) AND` : ''}
-            ${(query.length > 0) ? `id IN (${SEARCH}) AND` : ''}
+            ${hasTags ? `tag_id IN (${lst(tags)}) AND` : ''}
+            ${hasQuery ? `id IN (${SEARCH}) AND` : ''}
             deleted ${trash ? 'NOT' : 'IS'} NULL
+          ${hasTags && doTagsIntersect ?
+            'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
           ORDER BY sort.text ${dir}, id ${dir}`,
       params)
   },
@@ -128,21 +139,32 @@ module.exports = mod.item = {
 
     query = query.trim()
 
-    if (query.length) {
+    const hasTags = tags.length > 0
+    const hasQuery = query.length > 0
+
+    if (hasQuery) {
       params.$query = prefix(query)
     }
+
+    if (hasTags) {
+      params.$tags = tags.length
+    }
+
+    const doTagsIntersect = true
 
     return search(db, `
       SELECT DISTINCT id, added
         FROM list_items
-          ${tags.length ? 'JOIN taggings USING (id)' : ''}
+          ${hasTags ? 'JOIN taggings USING (id)' : ''}
           LEFT OUTER JOIN items USING (id)
           LEFT OUTER JOIN trash USING (id)
           WHERE
             list_id = $list AND list_items.deleted IS NULL AND
-            ${(query.length > 0) ? `id IN (${SEARCH}) AND` : ''}
-            ${tags.length ? `tag_id IN (${tags.join(',')}) AND` : ''}
+            ${hasQuery ? `id IN (${SEARCH}) AND` : ''}
+            ${hasTags ? `tag_id IN (${lst(tags)}) AND` : ''}
             trash.deleted IS NULL
+          ${hasTags && doTagsIntersect ?
+            'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
           ORDER BY added ${dir}, id ${dir}`,
       params)
   },
