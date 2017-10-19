@@ -21,6 +21,7 @@ $brand-primary-light: $blue-light;
 
 :root {
   #{--brand-primary}:            $brand-primary;
+  #{--brand-primary-30}:         rgba($brand-primary, 0.3);
   #{--brand-primary-35}:         rgba($brand-primary, 0.35);
   #{--brand-primary-60}:         rgba($brand-primary, 0.6);
   #{--brand-primary-darken-2}:   darken($brand-primary, 2%);
@@ -369,3 +370,4 @@ $colors-focus-border-grid:  var(--shade-10-darken-14);
 $flash-bg:               var(--brand-primary-dark);
 $flash-color:            var(--brand-primary-lighten-14);
 $flash-close-icon-color: var(--brand-primary-lighten-14);
+$flash-shadow-color:     var(--brand-primary-30);

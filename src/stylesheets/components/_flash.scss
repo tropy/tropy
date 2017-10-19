@@ -18,10 +18,15 @@
     color: $flash-color;
     padding: 0 ($space-sm + $line-height-large + $space-sm + 7px);
     line-height: 19px;
+    position: relative;
 
     > span {
       mix-blend-mode: if($theme == "light", multiply, inherit);
       padding: 9px 0;
+    }
+
+    & + .flash-message {
+      box-shadow: inset 0 1px 0 $flash-shadow-color;
     }
   }
 
