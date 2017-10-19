@@ -59,7 +59,7 @@ function init(dir) {
       break
   }
 
-  logger.debug('logger initialized at level %s', logger.level)
+  logger.info('logger initialized at level %s', logger.level)
 
   return module.exports
 }

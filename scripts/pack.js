@@ -133,7 +133,7 @@ target.win32 = async (args = []) => {
     title: qualified.product,
     name: qualified.name,
     exe: `${qualified.name}.exe`,
-    setupExe: `setup-${name}-${version}.exe`,
+    setupExe: `setup-${name}-${version}-${arch}.exe`,
     setupIcon: join(res, 'icons', channel, `${name}.ico`),
     iconUrl: join(res, 'icons', channel, `${name}.ico`),
     remoteReleases: repository.url,
