@@ -31,7 +31,7 @@ const { darwin } = require('../common/os')
 const { version } = require('../common/release')
 
 const {
-  HISTORY, TAG, PROJECT, CONTEXT, SASS
+  FLASH, HISTORY, TAG, PROJECT, CONTEXT, SASS
 } = require('../constants')
 
 const WIN = SASS.WINDOW
@@ -303,9 +303,6 @@ class Tropy extends EventEmitter {
   }
 
   listen() {
-    this.on('app:install-update', () =>
-      this.updater.install())
-
     this.on('app:about', () =>
       this.showAboutWindow())
 
@@ -552,6 +549,12 @@ class Tropy extends EventEmitter {
     ipc.on(PROJECT.CREATE, () => this.showWizard())
     ipc.on(PROJECT.CREATED, (_, { file }) => this.open(file))
 
+    ipc.on(FLASH.HIDE, (_, { id, confirm }) => {
+      if (id === 'update.ready' && confirm) {
+        this.updater.install()
+      }
+    })
+
     ipc.on(PROJECT.UPDATE, (_, { name }) => {
       if (name) this.win.setTitle(name)
     })
@@ -587,6 +590,7 @@ class Tropy extends EventEmitter {
       theme: this.state.theme,
       locale: this.state.locale,
       uuid: this.state.uuid,
+      update: this.updater.release,
       version
     }
   }
