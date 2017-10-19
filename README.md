@@ -9,10 +9,15 @@ your research photos so you can quickly find your sources whenever you need them
 
 Visit [tropy.org](https://tropy.org) to learn more or follow
 [@tropy](https://twitter.com/tropy) on Twitter for important announcements.
+To get started, download the latest version of Tropy for your platform, check
+out the [user's manual](https://docs.tropy.org) and join the discussion on the
+[forums](https://forums.tropy.org).
+
+If you are interested to work on Tropy or create your own builds, please
+find more details below. Happy hacking!
 
 
-## Development
-
+## Install from Source
 Install the latest version of [Node.js](https://nodejs.org) (at least the
 version that ships with the current [Electron](https://electron.atom.io)
 release) with [`node-gyp`](https://www.npmjs.com/package/node-gyp) and all
@@ -21,11 +26,18 @@ its requirements for your platform.
 Then clone [this repository](https://github.com/tropy/tropy.git) and run
 `npm install` to install all of Tropy's dependencies.
 
-Run `npm test` to run all tests; `npm run test:renderer` or `npm run
-test:browser` to run only the Renderer/Browser tests, or `node scripts/make
-mocha -- <path>` to run only a given test file.
+## Creating Builds
+To create a dev build for your current platform run the following scripts
+in order at the root of the repository:
 
-See `node scripts/make rules` and `node scripts/db rules` for additional
-available targets.
+```bash
+node scripts/make clean
+node scripts/make compile
+node scripts/build
+```
 
-Finally, to start [Tropy](https://tropy.org) in development mode, run `npm start`.
+This will create a dev build of Tropy in the `dist` folder.
+
+## Running in Dev Mode
+Alternatively, you can start Tropy in dev mode directly in the
+repository, by running `npm start`.
