@@ -55,10 +55,10 @@ class SelectionGrid extends SelectionIterator {
         this.select(this.next())
         break
       case (this.isVertical ? 'left' : 'up'):
-        this.select(this.prev(this.state.cols))
+        this.select(this.prev(this.props.cols))
         break
       case (this.isVertical ? 'right' : 'down'):
-        this.select(this.next(this.state.cols))
+        this.select(this.next(this.props.cols))
         break
       case 'home':
         this.scroll(0)
