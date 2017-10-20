@@ -460,7 +460,8 @@ class Export extends Command {
             template,
             items: Object.values(itms).filter(i => i.template === t),
             metadata: state.metadata,
-            photos: state.photos
+            photos: state.photos,
+            lists: state.lists
           })
         }
         return [results, state.ontology.props]

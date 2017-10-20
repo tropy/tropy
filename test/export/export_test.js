@@ -2,13 +2,12 @@
 
 describe('export', () => {
   const { groupedByTemplate } = __require('export')
-  const {
-    template, items, metadata, props, photos
-  } = require('../fixtures/export')
+  const { template, items, metadata, props, photos, lists } =
+        require('./helpers')
   const { keys } = Object
 
   const resources = [
-    { template, items, metadata, photos }
+    { template, items, metadata, photos, lists }
   ]
 
   const ld = groupedByTemplate(resources, props)
@@ -85,6 +84,14 @@ describe('export', () => {
     expect(data).to.eql({
       '@type': 'Selection',
       'selectProp': 'selection property'
+    })
+  })
+
+  describe('item has auxiliary property', () => {
+    it('list', async () => {
+      const data = (await ld)[0]['item']
+      expect(data[0]).to.not.have.property('list')
+      expect(data[1]['list']).to.eql(['list1'])
     })
   })
 })

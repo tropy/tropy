@@ -64,9 +64,17 @@ function makeContext(items, photos, metadata, template, props) {
   return result
 }
 
-function renderItem(item, photos, metadata, template, props) {
+function renderItem(item, photos, metadata, template, props, lists) {
   // the item starts with a photo property, it may not be overwritten
   let result = { '@type': ITEM, 'photo': [] }
+
+  // add item list info
+  if (item.lists && item.lists.length) {
+    result.list = values(pick(lists, item.lists)).map(l => l.name)
+    if (result.list.length === 1) {
+      result.list = result.list[0]
+    }
+  }
 
   // add item metadata
   result = newProperties(metadata[item.id], result, false, props, template)
@@ -110,7 +118,7 @@ function renderItem(item, photos, metadata, template, props) {
   return result
 }
 
-function makeDocument(items, photos, metadata, template, props) {
+function makeDocument(items, photos, metadata, template, props, lists) {
   const result = {
     'template': template.id,
     '@graph': []
@@ -125,9 +133,10 @@ function makeDocument(items, photos, metadata, template, props) {
 async function groupedByTemplate(resources, props = {}) {
   const results = []
   for (const resource of resources) {
-    const { items, metadata, template, photos } = resource
+    const { items, metadata, template, photos, lists } = resource
     const context = makeContext(items, photos, metadata, template, props)
-    const document = makeDocument(items, photos, metadata, template, props)
+    const document = makeDocument(
+      items, photos, metadata, template, props, lists)
     document['@context'] = context
     results.push(await jsonld.compact(document, context))
   }
