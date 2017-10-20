@@ -8,6 +8,7 @@ const { element, object } = require('prop-types')
 const { DragDropContext } = require('react-dnd')
 const ElectronBackend = require('react-dnd-electron-backend')
 const { ErrorBoundary } = require('./error-boundary')
+const { Flash } = require('./flash')
 
 const IntlProvider = connect(state => {
   return {
@@ -23,7 +24,10 @@ class Main extends Component {
       <ErrorBoundary>
         <Provider store={this.props.store}>
           <IntlProvider>
-            {this.props.children}
+            <div className="main-container">
+              {this.props.children}
+              <Flash/>
+            </div>
           </IntlProvider>
         </Provider>
       </ErrorBoundary>

@@ -6,6 +6,7 @@ const { FormattedMessage } = require('react-intl')
 const { match, isMeta: meta } = require('../../keymap')
 const cx = require('classnames')
 const { blank } = require('../../common/util')
+const { on, off } = require('../../dom')
 
 const {
   arrayOf, oneOf, shape, bool, func, number, object, string
@@ -13,6 +14,18 @@ const {
 
 
 class ItemIterator extends Iterator {
+  componentDidMount() {
+    super.componentDidMount()
+    on(document, 'global:next-item', this.handleNextItem)
+    on(document, 'global:prev-item', this.handlePrevItem)
+  }
+
+  componentWillUnmount() {
+    super.componentWillUnmount()
+    off(document, 'global:next-item', this.handleNextItem)
+    off(document, 'global:prev-item', this.handlePrevItem)
+  }
+
   get tabIndex() {
     return this.props.isActive ? super.tabIndex : null
   }
@@ -97,20 +110,10 @@ class ItemIterator extends Iterator {
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
       case (this.isVertical ? 'up' : 'left'):
-        this.select(this.prev(), {
-          isMeta: meta(event),
-          isRange: event.shiftKey,
-          scrollIntoView: true,
-          throttle: true
-        })
+        this.handlePrevItem(event)
         break
       case (this.isVertical ? 'down' : 'right'):
-        this.select(this.next(), {
-          isMeta: meta(event),
-          isRange: event.shiftKey,
-          scrollIntoView: true,
-          throttle: true
-        })
+        this.handleNextItem(event)
         break
       case 'home':
         this.scroll(0)
@@ -152,6 +155,25 @@ class ItemIterator extends Iterator {
 
     event.preventDefault()
     event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
+  }
+
+  handleNextItem = (event) => {
+    this.select(this.next(), {
+      isMeta: meta(event),
+      isRange: event.shiftKey,
+      scrollIntoView: true,
+      throttle: true
+    })
+  }
+
+  handlePrevItem = (event) => {
+    this.select(this.prev(), {
+      isMeta: meta(event),
+      isRange: event.shiftKey,
+      scrollIntoView: true,
+      throttle: true
+    })
   }
 
   select = (item, { isMeta, isRange, scrollIntoView, throttle } = {}) => {

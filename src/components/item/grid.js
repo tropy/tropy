@@ -40,6 +40,7 @@ class ItemGrid extends ItemIterator {
 
       event.preventDefault()
       event.stopPropagation()
+      event.nativeEvent.stopImmediatePropagation()
     })
   }
 

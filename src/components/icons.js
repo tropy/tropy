@@ -527,10 +527,18 @@ i('U', (
   </svg>
 ))
 
-i('X', (
+i('XSmall', (
   <svg width="16" height="16">
-    <g className="line" fill="currentcolor">
+    <g className="line" fill="currentColor">
       <polygon points="11.536 10.828 8.707 8 11.536 5.172 10.828 4.464 8 7.293 5.172 4.464 4.464 5.172 7.293 8 4.464 10.828 5.172 11.536 8 8.707 10.828 11.536 11.536 10.828"/>
+    </g>
+  </svg>
+))
+
+i('XLarge', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <polygon points="15.924 0.924 15.076 0.076 8 7.151 0.924 0.076 0.076 0.924 7.151 8 0.076 15.076 0.924 15.924 8 8.849 15.076 15.924 15.924 15.076 8.849 8 15.924 0.924"/>
     </g>
   </svg>
 ))

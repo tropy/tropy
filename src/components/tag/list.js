@@ -38,12 +38,16 @@ class TagList extends PureComponent {
       case 'commit':
         this.props.onCommit(tag)
         break
+      case 'clear':
+        this.props.onSelect(tag.id, { mod: 'clear' })
+        break
       default:
         return
     }
 
     event.preventDefault()
     event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
   }
 
   render() {

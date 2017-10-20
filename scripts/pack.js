@@ -4,8 +4,9 @@ require('shelljs/make')
 
 const { check, error, say } = require('./util')('pack')
 const { join, resolve } = require('path')
-const { platform } = process
+const { arch, platform } = process
 const { getSignToolParams } = require('./sign')
+const { repository } = require('../package')
 
 const {
   author, channel, qualified, name, product, version
@@ -21,7 +22,7 @@ target.all = (...args) => {
 }
 
 
-target.linux = (args = ['bz2', 'AppImage']) => {
+target.linux = (args = ['bz2']) => {
   check(platform === 'linux', 'must be run on Linux')
 
   const src = join(dist, `${qualified.product}-linux-x64`)
@@ -52,7 +53,7 @@ target.linux = (args = ['bz2', 'AppImage']) => {
       }
       case 'bz2': {
         exec(
-          `tar cjf ${join(dist, `${name}-${version}.tar.bz2`)} -C "${src}" .`
+          `tar cjf ${join(dist, `${name}-${version}-${arch}.tar.bz2`)} -C "${src}" .`
         )
         break
       }
@@ -88,6 +89,7 @@ target.linux = (args = ['bz2', 'AppImage']) => {
 target.darwin = () => {
   check(platform === 'darwin', 'must be run on macOS')
   check(which('appdmg'), 'missing dependency: appdmg')
+  check(which('7z'), 'missing dependency: 7z')
 
   const sources = ls('-d', join(dist, '*-darwin-*'))
   check(sources.length, 'no sources found')
@@ -102,6 +104,12 @@ target.darwin = () => {
     check(test('-f', config), `missing config: ${config}`)
 
     exec(`appdmg ${config} ${dmg}`)
+
+    let zip = join(dist, `${name}-${version}-darwin.zip`)
+
+    cd(src)
+    exec(`7z a ../${zip} ${qualified.product}.app`)
+    cd('-')
   }
 }
 
@@ -132,9 +140,11 @@ target.win32 = async (args = []) => {
     title: qualified.product,
     name: qualified.name,
     exe: `${qualified.name}.exe`,
-    setupExe: `setup-${name}-${version}.exe`,
+    setupExe: `setup-${name}-${version}-${arch}.exe`,
     setupIcon: join(res, 'icons', channel, `${name}.ico`),
     iconUrl: join(res, 'icons', channel, `${name}.ico`),
+    remoteReleases: repository.url,
+    noDelta: false,
     noMsi: true
   })
 }

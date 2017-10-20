@@ -11,6 +11,7 @@ linux:
             accelerator: 'CmdOrCtrl+Shift+P'
           - label: 'Item'
             command: 'app:create-item'
+            accelerator: 'CmdOrCtrl+Shift+N'
           - label: 'List'
             command: 'app:create-list'
           - label: 'Tag'

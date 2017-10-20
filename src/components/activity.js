@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { IconSpin, IconX } = require('./icons')
+const { IconSpin, IconXSmall } = require('./icons')
 const { FormattedMessage } = require('react-intl')
 const cx = require('classnames')
 const { ACTIVITY } = require('../constants/sass')
@@ -18,7 +18,7 @@ const Activity = ({ type, progress, total, onCancel }) => {
 
   if (hasCancelButton) {
     CancelButton = (
-      <IconButton icon={<IconX/>} onClick={onCancel}/>
+      <IconButton icon={<IconXSmall/>} onClick={onCancel}/>
     )
   }
 

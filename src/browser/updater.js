@@ -10,10 +10,12 @@ const MIN = 1000 * 60
 
 class Updater {
   constructor(app, timeout = 30 * MIN) {
-    this.isSupported = !linux && ARGS.environment === 'production'
+    this.isSupported = !linux &&
+      ARGS.environment === 'production' && !ARGS.noUpdates
 
     this.app = app
     this.timeout = timeout
+    this.release = {}
 
     if (!this.isSupported) return
 
@@ -27,11 +29,11 @@ class Updater {
 
       autoUpdater.on('update-downloaded', (event, notes, version) => {
         this.onUpdateReady({
-          notes,
-          version,
-          date: new Date()
+          id: 'update.ready',
+          values: { notes, version, date: new Date() }
         })
       })
+
     } catch (error) {
       warn(`failed to setup auto updater: ${error.message}`, { error })
       this.isSupported = false
@@ -85,9 +87,10 @@ class Updater {
   }
 
   onUpdateReady = (release) => {
-    info(`update ${release.version} ready`)
-    this.app.broadcast('dispatch', flash.update({ release }))
+    info(`update ${release.values.version} ready`)
+    this.release = release
     this.isUpdateReady = true
+    this.app.dispatch(flash.show(release))
   }
 }
 
