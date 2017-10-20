@@ -2,7 +2,8 @@
 
 describe('export', () => {
   const { groupedByTemplate } = __require('export')
-  const { template, items, metadata, props, photos } = require('./helpers')
+  const { template, items, metadata, props, photos } =
+        require('../fixtures/export')
   const { keys } = Object
 
   const resources = [

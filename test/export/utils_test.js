@@ -45,7 +45,7 @@ describe('newKey', () => {
 describe('newProperties', () => {
   const { newProperties } = __require('export/utils')
   // const { assign } = Object
-  const { template, metadata, props } = require('./helpers')
+  const { template, metadata, props } = require('../fixtures/export')
 
   it('add values to empty destination', () => {
     expect(newProperties(metadata[1], {}, false, props, template)).to.eql({
