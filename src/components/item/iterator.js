@@ -89,7 +89,7 @@ class ItemIterator extends Iterator {
 
   handleItemCopy(items) {
     if (!this.props.isDisabled && items != null && items.length > 0) {
-      this.props.onItemCopy(items)
+      this.props.onItemExport(items, { target: ':clipboard:' })
     }
   }
 
@@ -250,7 +250,7 @@ class ItemIterator extends Iterator {
     dt: func.isRequired,
     onContextMenu: func.isRequired,
     onItemDelete: func.isRequired,
-    onItemCopy: func.isRequired,
+    onItemExport: func.isRequired,
     onItemMerge: func.isRequired,
     onItemOpen: func.isRequired,
     onItemPreview: func.isRequired,

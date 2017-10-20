@@ -424,12 +424,12 @@ module.exports = {
         dispatch(actions.item.import(...args))
       },
 
-      onItemDelete(items) {
-        dispatch(actions.item.delete(items))
+      onItemExport(items, meta) {
+        dispatch(actions.item.export(items, meta))
       },
 
-      onItemCopy(items) {
-        dispatch(actions.item.copy(items))
+      onItemDelete(items) {
+        dispatch(actions.item.delete(items))
       },
 
       onItemMerge(...args) {

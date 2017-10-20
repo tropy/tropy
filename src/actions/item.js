@@ -32,14 +32,6 @@ module.exports = {
     }
   },
 
-  copy(payload, meta) {
-    return {
-      type: ITEM.EXPORT,
-      payload: array(payload),
-      meta: { cmd: 'project', target: ':clipboard:', ...meta }
-    }
-  },
-
   destroy(payload, meta) {
     return {
       type: ITEM.DESTROY,
