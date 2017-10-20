@@ -459,6 +459,9 @@ class Export extends Command {
           results.push({
             template,
             items: Object.values(itms).filter(i => i.template === t),
+            metadata: state.metadata,
+            photos: state.photos,
+            lists: state.lists
           })
         }
         const needed = [

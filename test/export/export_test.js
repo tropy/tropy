@@ -2,6 +2,7 @@
 
 describe('export', () => {
   const { groupedByTemplate } = __require('export')
+
   const f = require('../fixtures/export')
 
   const { keys } = Object
@@ -119,6 +120,14 @@ describe('export', () => {
     it('note', () => {
       expect(s['note']['text']).to.eql('selection note')
       expect(s['note']['doc']).to.be.undefined
+    })
+  })
+
+  describe('item has auxiliary property', () => {
+    it('list', async () => {
+      const data = (await ld)[0]['item']
+      expect(data[0]).to.not.have.property('list')
+      expect(data[1]['list']).to.eql(['list1'])
     })
   })
 })

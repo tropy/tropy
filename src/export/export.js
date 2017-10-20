@@ -152,7 +152,6 @@ function renderItem(item, template, resources) {
   return result
 }
 
-
 function makeDocument(template, items, resources) {
   const result = {
     'template': template.id,
