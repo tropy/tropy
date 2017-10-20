@@ -4,7 +4,7 @@ const { clipboard } = require('electron')
 const assert = require('assert')
 const { warn, verbose } = require('../common/log')
 const { DuplicateError } = require('../common/error')
-const { all, call, put, select } = require('redux-saga/effects')
+const { all, call, put, select, cps } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
 const { prompt, open, fail, save  } = require('../dialog')
@@ -17,7 +17,7 @@ const { darwin } = require('../common/os')
 const { ITEM, DC } = require('../constants')
 const { keys } = Object
 const { isArray } = Array
-const { writeFileAsync: write } = require('fs')
+const { writeFile: write } = require('fs')
 const { win } = require('../window')
 const { groupedByTemplate } = require('../export')
 
@@ -463,7 +463,7 @@ class Export extends Command {
       if (path === ':clipboard:') {
         yield call(clipboard.writeText, data)
       } else {
-        yield call((...args) => write(...args), path, data, { flags: 'w' })
+        yield cps(write, path, data)
       }
     } catch (error) {
       warn(`Failed to export items to ${path}: ${error.message}`)
