@@ -88,7 +88,7 @@ class PhotoGrid extends PhotoIterator {
 
   contract = (photo) => {
     if (this.isExpandable(photo)) {
-      this.handleSelectionGridBlur()
+      this.handleNestedBlur()
       this.props.onContract(this.props.expanded.map(p => p.id))
 
       if (this.isSelected(photo)) {
