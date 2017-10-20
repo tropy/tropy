@@ -1,6 +1,6 @@
 'use strict'
 
-const { array, camelize } = require('../common/util')
+const { array, camelcase } = require('../common/util')
 const { getLabel } = require('../common/ontology')
 const { entries, values } = Object
 
@@ -22,7 +22,7 @@ function propertyLabel(property, props, template) {
 }
 
 function shortenLabel(label) {
-  return camelize(
+  return camelcase(
     label
     .toLowerCase()
     .trim()

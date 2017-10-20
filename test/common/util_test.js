@@ -312,15 +312,14 @@ describe('util', () => {
     })
   })
 
-  describe('.camelize', () => {
-    const { camelize } = util
+  describe('.camelcase', () => {
+    const { camelcase } = util
 
-    it('', () => {
-      expect(camelize('foo')).to.eql('foo')
-      expect(camelize('Foo')).to.eql('foo')
-      expect(camelize('foo bar')).to.eql('fooBar')
-      expect(camelize('Foo Bar')).to.eql('fooBar')
-    })
-
+    expect(camelcase('')).to.eql('')
+    expect(camelcase('foo')).to.eql('foo')
+    expect(camelcase('Foo')).to.eql('foo')
+    expect(camelcase('foo bar')).to.eql('fooBar')
+    expect(camelcase('Foo Bar')).to.eql('fooBar')
+    expect(camelcase('one two three')).to.eql('oneTwoThree')
   })
 })
