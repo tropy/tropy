@@ -92,7 +92,6 @@ linux:
       command: 'app:merge-item'
     - label: 'Export Selected Items …'
       command: 'app:export-item'
-      enabled: false
     - label: 'Delete Selected Items'
       command: 'app:delete-item'
   item-list: &item-list
