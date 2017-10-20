@@ -55,7 +55,7 @@
     },
     {
       "property": "http://purl.org/dc/terms/source",
-      "label": "Collection",
+      "label": null,
       "datatype": "http://www.w3.org/2001/XMLSchema#string",
       "hint": "Collection",
       "isRequired": false,
@@ -82,9 +82,9 @@
     },
     {
       "property": "http://purl.org/dc/elements/1.1/identifier",
-      "label": "URL",
+      "label": null,
       "datatype": "http://www.w3.org/2001/XMLSchema#string",
-      "hint": "Unique ID such as call number",
+      "hint": "URL or call number",
       "isRequired": false,
       "isConstant": false,
       "value": null
