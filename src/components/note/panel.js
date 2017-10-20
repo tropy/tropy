@@ -46,7 +46,7 @@ class NotePanel extends Panel {
         notes={this.props.notes}
         selection={this.props.selection}
         onBlur={this.handleNestedBlur}
-        onFocus={this.handleNestedFocus}
+        onTabFocus={this.handleNestedTabFocus}
         onContextMenu={this.props.onContextMenu}
         onOpen={this.handleOpen}
         onSelect={this.props.onSelect}/>
@@ -57,7 +57,7 @@ class NotePanel extends Panel {
     const toolbar = this.renderToolbar()
     const content = this.renderContent()
     const classes = {
-      'nested-focus': this.state.hasNestedFocus,
+      'nested-tab-focus': this.state.hasNestedTabFocus,
       'has-active': has(this.props, ['selection', 'id'])
     }
 

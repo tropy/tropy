@@ -108,7 +108,7 @@ class ItemPanel extends PureComponent {
         header={this.renderItemToolbar()}>
 
         <Panel className={cx('item', 'panel', {
-          'nested-focus': this.state.hasFirstPanelFocus,
+          'nested-tab-focus': this.state.hasFirstPanelFocus,
           'has-active': this.state.isFirstPanelActive
         })}>
           <ItemTabHeader
