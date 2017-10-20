@@ -20,6 +20,10 @@ class SelectionGrid extends SelectionIterator {
 
   get isGrid() { return true }
 
+  get isVertical() {
+    return this.props.cols === 1
+  }
+
   get classes() {
     return [super.classes, 'grid']
   }
