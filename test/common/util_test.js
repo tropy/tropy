@@ -311,4 +311,15 @@ describe('util', () => {
       expect(shallow(a, b)).to.be.false
     })
   })
+
+  describe('.camelcase', () => {
+    const { camelcase } = util
+
+    expect(camelcase('')).to.eql('')
+    expect(camelcase('foo')).to.eql('foo')
+    expect(camelcase('Foo')).to.eql('foo')
+    expect(camelcase('foo bar')).to.eql('fooBar')
+    expect(camelcase('Foo Bar')).to.eql('fooBar')
+    expect(camelcase('one two three')).to.eql('oneTwoThree')
+  })
 })

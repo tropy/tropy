@@ -12,7 +12,7 @@
 --
 
 -- Save the current migration number
-PRAGMA user_version=1708281429;
+PRAGMA user_version=1710212032;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -77,7 +77,7 @@ CREATE TABLE templates (
   creator        TEXT,
   protected      BOOLEAN  NOT NULL DEFAULT 0,
   created        NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modified       NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  modified       NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP, version TEXT,
 
   CHECK (template_id != ''),
   CHECK (template_type IN (
@@ -112,9 +112,9 @@ CREATE TABLE fields (
   UNIQUE (template_id, property_id)
 );
 CREATE TABLE field_labels (
-  field_id  INTEGER NOT NULL REFERENCES fields ON DELETE CASCADE,
-  language  TEXT    NOT NULL COLLATE NOCASE,
-  label     TEXT    NOT NULL,
+  field_id  INTEGER  NOT NULL REFERENCES fields ON DELETE CASCADE,
+  language  TEXT     NOT NULL COLLATE NOCASE,
+  label     TEXT     NOT NULL,
 
   PRIMARY KEY (field_id, language),
 

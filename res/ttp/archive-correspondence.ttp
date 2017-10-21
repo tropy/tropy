@@ -4,6 +4,7 @@
   "@type": "https://tropy.org/v1/tropy#Template",
   "type": "https://tropy.org/v1/tropy#Item",
   "name": "Archives Correspondence",
+  "version": "1.0.0",
   "domain": [],
   "creator": "RRCHNM",
   "description": "Template meant to focus on correspondence",

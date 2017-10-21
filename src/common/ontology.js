@@ -26,6 +26,7 @@ class Template {
       '@type': TEMPLATE.TYPE,
       'type': data.type,
       'name': data.name,
+      'version': data.version,
       'domain': data.domain,
       'creator': data.creator,
       'description': data.description,
