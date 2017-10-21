@@ -277,7 +277,7 @@ class Tropy extends EventEmitter {
           .then(strings => this.strings = strings)
       ]))
 
-      .tap(state => void (state.updater) && this.updater.start())
+      .tap(state => state.updater && this.updater.start())
 
       .tap(() => this.emit('app:restored'))
       .tap(() => verbose('app state restored'))
@@ -431,6 +431,14 @@ class Tropy extends EventEmitter {
       this.state.debug = !this.state.debug
       this.broadcast('debug', this.state.debug)
       this.emit('app:reload-menu')
+    })
+
+    this.on('app:check-for-updates', () => {
+      this.updater.check()
+    })
+
+    this.on('app:install-updates', () => {
+      this.updater.install()
     })
 
     this.on('app:reload-menu', () => {
@@ -626,6 +634,10 @@ class Tropy extends EventEmitter {
 
   get dev() {
     return release.channel === 'dev' || ARGS.environment === 'development'
+  }
+
+  get isBuild() {
+    return ARGS.environment === 'production'
   }
 
   get debug() {

@@ -10,12 +10,15 @@ const MIN = 1000 * 60
 
 class Updater {
   constructor(app, timeout = 30 * MIN) {
-    this.isSupported = !linux &&
-      ARGS.environment === 'production' && !ARGS.noUpdates
+    this.isSupported = !linux && app.isBuild && ARGS.autoUpdates
 
     this.app = app
     this.timeout = timeout
     this.release = {}
+
+    this.isChecking = false
+    this.isUpdateAvailable = false
+    this.isUpdateReady = false
 
     if (!this.isSupported) return
 
@@ -52,7 +55,14 @@ class Updater {
   }
 
   stop() {
-    clearInterval(this.interval)
+    if (this.interval != null) {
+      clearInterval(this.interval)
+      this.interval = null
+    }
+  }
+
+  get canCheck() {
+    return !this.isChecking && !this.isUpdateAvailable
   }
 
   check = () => {
@@ -68,17 +78,24 @@ class Updater {
   }
 
   onError(error) {
+    this.isChecking = false
+    this.isUpdateAvailable = false
+    this.isUpdateReady = false
     warn(`Failed to fetch update: ${error.message}`, { error })
   }
 
   onCheckingForUpdate = () =>{
     verbose('checking for updates...')
     this.lastCheck = new Date()
+    this.isChecking = true
+    this.app.emit('app:reload-menu')
   }
 
   onUpdateNotAvailable = () => {
     verbose('no updates available')
     this.isUpdateAvailable = false
+    this.isChecking = false
+    this.app.emit('app:reload-menu')
   }
 
   onUpdateAvailable = () => {
@@ -90,7 +107,8 @@ class Updater {
     info(`update ${release.values.version} ready`)
     this.release = release
     this.isUpdateReady = true
-    this.app.dispatch(flash.show(release))
+    this.isChecking = false
+    this.app.broadcast('dispatch', flash.show(release))
   }
 }
 
