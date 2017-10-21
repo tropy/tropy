@@ -226,6 +226,7 @@ class TemplateImport extends Command {
           '@id': id,
           type,
           name,
+          version,
           creator,
           description,
           field: fields
@@ -235,6 +236,7 @@ class TemplateImport extends Command {
           id,
           type,
           name,
+          version,
           creator,
           description,
           fields,
