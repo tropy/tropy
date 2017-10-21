@@ -1,5 +1,6 @@
 {
   "@context": {
+    "@version": "1.1",
     "@vocab": "https://tropy.org/v1/tropy#",
     "creator": "http://purl.org/dc/elements/1.1/creator",
     "description": "http://purl.org/dc/elements/1.1/description",
@@ -17,13 +18,12 @@
       "@id": "https://tropy.org/v1/tropy#field",
       "@container": "@list",
       "@context": {
-        "@vocab": "https://tropy.org/v1/tropy#",
         "property": {
           "@id": "https://tropy.org/v1/tropy#property",
           "@type": "@id"
         },
         "datatype": {
-          "@id": "https://tropy.org/v1/tropy#property",
+          "@id": "https://tropy.org/v1/tropy#datatype",
           "@type": "@id"
         }
       }
