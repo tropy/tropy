@@ -2,8 +2,9 @@
 
 describe('export', () => {
   const { groupedByTemplate } = __require('export')
-  const { template, items, metadata, props, photos } =
-        require('../fixtures/export')
+  const {
+    template, items, metadata, props, photos
+  } = require('../fixtures/export')
   const { keys } = Object
 
   const resources = [
@@ -20,15 +21,17 @@ describe('export', () => {
   it('has item @context', async () => {
     const data = (await ld)[0]
 
-    expect(data['@context']).to.have.property('@vocab')
-    expect(data['@context']).to.have.property('template')
+    expect(data['@context']).to.have.deep.property('template', {
+      '@id': 'https://tropy.org/v1/tropy#template',
+      '@type': '@id'
+    })
 
-    expect(data['@context']['item']['@context']).to.have.deep.property(
+    expect(data['@context']).to.have.deep.property(
       'myLabel', {
         '@id': 'http://example.com/property',
         '@type': 'http://example.com/property#datatype'
       })
-    expect(data['@context']['item']['@context']).to.have.deep.property(
+    expect(data['@context']).to.have.deep.property(
       'nonTemplateProperty', {
         '@id': 'http://example.com/custom-property',
         '@type': 'http://example.com/custom-property#type'
@@ -36,14 +39,13 @@ describe('export', () => {
   })
 
   it('has item metadata', async () => {
-    const data = (await ld)[0]['item'][0]
+    const data = (await ld)[0]['@graph'][0]
     expect(data).to.have.property('myLabel', 'value')
     expect(data).to.have.property('nonTemplateProperty', 'custom')
   })
 
   it('has photo @context', async () => {
-    const data =
-          (await ld)[0]['@context']['item']['@context']['photo']['@context']
+    const data = (await ld)[0]['@context']['photo']['@context']
 
     expect(data.path).to.equal('http://schema.org/image')
     expect(data.nonTemplateProperty).to.eql({
@@ -57,17 +59,18 @@ describe('export', () => {
   })
 
   it('has photo metadata', async () => {
-    const data = (await ld)[0]['item'][0]
+    const data = (await ld)[0]['@graph'][0]
     expect(keys(data.photo).length).to.eql(2)
     expect(data.photo[0]).to.eql({
-      path: '/path',
-      helloWorld: 'photo property',
-      nonTemplateProperty: 'custom property'
+      '@type': 'Photo',
+      'path': '/path',
+      'helloWorld': 'photo property',
+      'nonTemplateProperty': 'custom property'
     })
   })
 
   it('has photo->selection @context', async () => {
-    let data = (await ld)[0] ['@context']['item']['@context']['photo']
+    let data = (await ld)[0]['@context']['photo']
     data = data['@context']['selection']['@context']
 
     expect(data.selectProp).to.eql({
@@ -78,9 +81,10 @@ describe('export', () => {
   })
 
   it('has photo->selection metadata', async () => {
-    const data = (await ld)[0]['item'][0]['photo'][1]['selection']
+    const data = (await ld)[0]['@graph'][0]['photo'][1]['selection']
     expect(data).to.eql({
-      selectProp: 'selection property'
+      '@type': 'Selection',
+      'selectProp': 'selection property'
     })
   })
 })
