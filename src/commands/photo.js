@@ -15,6 +15,77 @@ const { getPhotoTemplate, getTemplateValues } = require('../selectors')
 const { keys } = Object
 
 
+class Consolidate extends ImportCommand {
+  static get action() { return PHOTO.CONSOLIDATE }
+
+  *exec() {
+    //const { db } = this.options
+    //let { item, files } = this.action.payload
+    //let { idx } = this.action.meta
+
+    const photos = []
+
+    //if (idx == null) {
+    //  idx = [yield select(state => state.items[item].photos.length)]
+    //}
+
+    //if (!files) {
+    //  files = yield call(open.images)
+    //  this.init = performance.now()
+    //}
+
+    //if (!files) return []
+
+    //const template = yield select(getPhotoTemplate)
+    //const data = getTemplateValues(template)
+
+    //for (let i = 0, total = files.length; i < total; ++i) {
+    //  let file
+    //  let image
+    //  let photo
+
+    //  try {
+    //    file = files[i]
+    //    image = yield call(Image.read, file)
+
+    //    yield* this.handleDuplicate(image)
+
+    //    photo = yield call(db.transaction, tx =>
+    //      mod.photo.create(tx, template.id, { item, image, data })
+    //    )
+
+    //    yield put(act.metadata.load([photo.id]))
+
+    //    yield all([
+    //      put(act.photo.insert(photo, { idx: [idx[0] + photos.length] })),
+    //      put(act.activity.update(this.action, { total, progress: i + 1 }))
+    //    ])
+
+    //    photos.push(photo.id)
+
+    //    yield* this.createThumbnails(photo.id, image)
+
+    //  } catch (error) {
+    //    if (error instanceof DuplicateError) continue
+
+    //    warn(`Failed to import "${file}": ${error.message}`)
+    //    verbose(error.stack)
+
+    //    fail(error, this.action.type)
+    //  }
+
+    //  yield put(act.item.photos.add({ id: item, photos }, { idx }))
+    //  yield put(act.photo.select({ item, photo: photos[0] }))
+
+    //  this.undo = act.photo.delete({ item, photos })
+    //  this.redo = act.photo.restore({ item, photos }, { idx })
+    //}
+
+    return photos
+  }
+}
+
+
 class Create extends ImportCommand {
   static get action() { return PHOTO.CREATE }
 
@@ -227,8 +298,8 @@ class Restore extends Command {
   }
 }
 
-
 module.exports = {
+  Consolidate,
   Create,
   Delete,
   Load,

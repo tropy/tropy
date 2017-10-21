@@ -110,6 +110,9 @@ linux:
     - label: 'Use Photo as Cover Image'
       command: 'app:update-cover-image'
       enabled: false
+      visible: false
+    - label: 'Consolidate Photo'
+      command: 'app:consolidate-photo'
   selection: &selection
     - label: 'Delete Selection'
       command: 'app:delete-selection'
