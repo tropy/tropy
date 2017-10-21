@@ -67,7 +67,7 @@ module.exports = {
   export(payload, meta) {
     return {
       type: ITEM.EXPORT,
-      payload: payload,
+      payload: array(payload),
       meta: { cmd: 'project', ...meta }
     }
   },

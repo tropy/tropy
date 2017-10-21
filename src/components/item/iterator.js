@@ -100,6 +100,12 @@ class ItemIterator extends Iterator {
     }
   }
 
+  handleItemCopy(items) {
+    if (!this.props.isDisabled && items != null && items.length > 0) {
+      this.props.onItemExport(items, { target: ':clipboard:' })
+    }
+  }
+
   // eslint-disable-next-line complexity
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
@@ -136,6 +142,9 @@ class ItemIterator extends Iterator {
         break
       case 'all':
         this.props.onSelect({}, 'all')
+        break
+      case 'copy':
+        this.handleItemCopy(this.props.selection)
         break
       case 'edit':
         this.edit(this.current())
@@ -263,6 +272,7 @@ class ItemIterator extends Iterator {
     dt: func.isRequired,
     onContextMenu: func.isRequired,
     onItemDelete: func.isRequired,
+    onItemExport: func.isRequired,
     onItemMerge: func.isRequired,
     onItemOpen: func.isRequired,
     onItemPreview: func.isRequired,

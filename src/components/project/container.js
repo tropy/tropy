@@ -458,6 +458,10 @@ module.exports = {
         dispatch(actions.item.import(...args))
       },
 
+      onItemExport(items, meta) {
+        dispatch(actions.item.export(items, meta))
+      },
+
       onItemDelete(items) {
         dispatch(actions.item.delete(items))
       },
