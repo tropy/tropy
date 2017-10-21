@@ -393,4 +393,4 @@ en:
         message: >
           Tropy {version} is ready to be installed.
           Do you want to install and restart now?
-        confirm: Install Now
+        confirm: Restart Now
