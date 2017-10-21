@@ -4,6 +4,7 @@
   "@type": "https://tropy.org/v1/tropy#Template",
   "type": "https://tropy.org/v1/tropy#Item",
   "name": "Dublin Core",
+  "version": "1.0.0",
   "domain": [],
   "creator": "RRCHNM",
   "description": "Item Template based on the Dublic Core Metadata Element Set",

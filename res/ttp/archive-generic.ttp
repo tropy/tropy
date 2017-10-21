@@ -4,6 +4,7 @@
   "@type": "https://tropy.org/v1/tropy#Template",
   "type": "https://tropy.org/v1/tropy#Item",
   "name": "Archive Generic",
+  "version": "1.0.0",
   "domain": [],
   "creator": "RRCHNM",
   "description": "General template to fit a generic archival object",
