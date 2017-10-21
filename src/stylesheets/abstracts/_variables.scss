@@ -6,7 +6,13 @@
 // Typography
 // --------------------------------------------------
 
-$font-family-sans-serif: "Helvetica Neue", "Segoe UI", Helvetica, sans-serif;
+$sans-serif-fonts: (
+  darwin: '"Helvetica Neue", Helvetica, sans-serif',
+  linux: 'sans-serif',
+  win32: '"Segoe UI", sans-serif'
+);
+
+$font-family-sans-serif: unquote(map-get($sans-serif-fonts, $platform));
 $font-family-base:       $font-family-sans-serif;
 
 $font-size-small: 12px;
