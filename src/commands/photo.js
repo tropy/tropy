@@ -108,52 +108,6 @@ class Delete extends Command {
   }
 }
 
-class Restore extends Command {
-  static get action() { return PHOTO.RESTORE }
-
-  *exec() {
-    const { db } = this.options
-    const { item, photos } = this.action.payload
-
-    // Restore all photos in a batch at the former index
-    // of the first photo to be restored. Need to differentiate
-    // if we support selecting multiple photos!
-    let [idx] = this.action.meta.idx
-    let order = yield select(state => state.items[item].photos)
-
-    order = splice(order, idx, 0, ...photos)
-
-    yield call([db, db.transaction], async tx => {
-      await mod.photo.restore(tx, { item, ids: photos })
-      await mod.photo.order(tx, item, order)
-    })
-
-    yield put(act.item.photos.add({ id: item, photos }, { idx }))
-
-    this.undo = act.photo.delete({ item, photos })
-  }
-}
-
-class Save extends Command {
-  static get action() { return PHOTO.SAVE }
-
-  *exec() {
-    const { db } = this.options
-    const { payload, meta } = this.action
-    const { id, data } = payload
-
-    const original = yield select(state =>
-      pick(state.photos[id], keys(data)))
-
-    yield call(db.transaction, tx =>
-      mod.image.save(tx, { id, timestamp: meta.now, ...data }))
-
-    this.undo = act.photo.save({ id, data: original })
-
-    return { id, ...data }
-  }
-}
-
 class Load extends Command {
   static get action() { return PHOTO.LOAD }
 
@@ -227,14 +181,59 @@ class Order extends Command {
   }
 }
 
+class Save extends Command {
+  static get action() { return PHOTO.SAVE }
+
+  *exec() {
+    const { db } = this.options
+    const { payload, meta } = this.action
+    const { id, data } = payload
+
+    const original = yield select(state =>
+      pick(state.photos[id], keys(data)))
+
+    yield call(db.transaction, tx =>
+      mod.image.save(tx, { id, timestamp: meta.now, ...data }))
+
+    this.undo = act.photo.save({ id, data: original })
+
+    return { id, ...data }
+  }
+}
+
+class Restore extends Command {
+  static get action() { return PHOTO.RESTORE }
+
+  *exec() {
+    const { db } = this.options
+    const { item, photos } = this.action.payload
+
+    // Restore all photos in a batch at the former index
+    // of the first photo to be restored. Need to differentiate
+    // if we support selecting multiple photos!
+    let [idx] = this.action.meta.idx
+    let order = yield select(state => state.items[item].photos)
+
+    order = splice(order, idx, 0, ...photos)
+
+    yield call([db, db.transaction], async tx => {
+      await mod.photo.restore(tx, { item, ids: photos })
+      await mod.photo.order(tx, item, order)
+    })
+
+    yield put(act.item.photos.add({ id: item, photos }, { idx }))
+
+    this.undo = act.photo.delete({ item, photos })
+  }
+}
+
 
 module.exports = {
   Create,
   Delete,
-  ImportCommand,
   Load,
-  Restore,
-  Save,
   Move,
-  Order
+  Order,
+  Restore,
+  Save
 }
