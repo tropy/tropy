@@ -52,7 +52,7 @@ class PhotoPanel extends Panel {
       onDelete,
       onDropImages: this.handleDropFiles,
       onEdit,
-      onFocus: this.handleNestedFocus
+      onFocus: this.handleNestedTabFocus
     }
 
     const PhotoIterator = zoom ? PhotoGrid : PhotoList
@@ -66,7 +66,7 @@ class PhotoPanel extends Panel {
     const toolbar = this.renderToolbar()
     const content = this.renderContent()
     const classes = {
-      'nested-focus': this.state.hasNestedFocus,
+      'nested-tab-focus': this.state.hasNestedTabFocus,
       'has-active': this.props.current != null
     }
 

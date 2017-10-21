@@ -16,7 +16,7 @@ class PhotoGrid extends PhotoIterator {
 
   get classes() {
     return [super.classes, 'grid', {
-      'nested-focus': this.state.hasSelectionGridFocus,
+      'nested-tab-focus': this.state.hasNestedTabFocus,
       'has-nested-active': this.props.selection != null
     }]
   }
@@ -88,7 +88,7 @@ class PhotoGrid extends PhotoIterator {
 
   contract = (photo) => {
     if (this.isExpandable(photo)) {
-      this.handleSelectionGridBlur()
+      this.handleNestedBlur()
       this.props.onContract(this.props.expanded.map(p => p.id))
 
       if (this.isSelected(photo)) {
@@ -159,12 +159,12 @@ class PhotoGrid extends PhotoIterator {
     event.stopPropagation()
   }
 
-  handleSelectionGridFocus = () => {
-    this.setState({ hasSelectionGridFocus: true })
+  handleNestedTabFocus = () => {
+    this.setState({ hasNestedTabFocus: true })
   }
 
-  handleSelectionGridBlur = () => {
-    this.setState({ hasSelectionGridFocus: false })
+  handleNestedBlur = () => {
+    this.setState({ hasNestedTabFocus: false })
   }
 
   renderSelectionGrid(photo) {
@@ -183,8 +183,8 @@ class PhotoGrid extends PhotoIterator {
           data={this.props.data}
           isDisabled={this.props.isDisabled}
           keymap={this.props.keymap.SelectionGrid}
-          onBlur={this.handleSelectionGridBlur}
-          onFocus={this.handleSelectionGridFocus}
+          onBlur={this.handleNestedBlur}
+          onTabFocus={this.handleNestedTabFocus}
           onContextMenu={this.props.onContextMenu}
           onDelete={this.handleDelete}
           onItemOpen={this.handleItemOpen}

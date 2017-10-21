@@ -153,7 +153,7 @@ const dom = {
   },
 
   createDragHandler({ handleDrag, handleDragStop }) {
-    function onKeyPress(event) {
+    function onKeyDown(event) {
       switch (event.key) {
         case 'Escape':
           event.stopPropagation()
@@ -167,7 +167,11 @@ const dom = {
       dom.on(document, 'mouseup', onDragStop, { capture: true })
       dom.on(document, 'mouseleave', onDragStop)
       dom.on(window, 'blur', onDragStop)
-      dom.on(document, 'keydown', onKeyPress)
+
+      // Register on body because global bindings are bound
+      // on document and we need to stop the propagation in
+      // case we handle it here!
+      dom.on(document.body, 'keydown', onKeyDown)
     }
 
     function onDragStop(event) {
@@ -175,7 +179,7 @@ const dom = {
       dom.off(document, 'mouseup', onDragStop, { capture: true })
       dom.off(document, 'mouseleave', onDragStop)
       dom.off(window, 'blur', onDragStop)
-      dom.off(document, 'keydown', onKeyPress)
+      dom.off(document.body, 'keydown', onKeyDown)
 
       handleDragStop(event, event == null || event.type !== 'mouseup')
     }

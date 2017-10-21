@@ -117,6 +117,18 @@ class Menu {
           }
           break
 
+        case 'updater-check':
+          item.enabled = this.app.updater.isSupported
+          item.visible = this.app.updater.canCheck
+          break
+        case 'updater-is-checking':
+          item.visible = this.app.updater.isChecking
+          break
+        case 'updater-install':
+          item.enabled = this.app.updater.isSupported
+          item.visible = this.app.updater.isUpdateReady
+          break
+
         case 'dev':
           item.visible = (this.app.dev || this.app.debug)
           break

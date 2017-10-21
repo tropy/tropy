@@ -9,7 +9,8 @@ describe('AppMenu', () => {
   before(() => {
     menu = new AppMenu({
       state: { recent: [] },
-      history: {}
+      history: {},
+      updater: {}
     })
   })
 

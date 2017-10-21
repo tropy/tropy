@@ -37,10 +37,10 @@ module.exports = require('yargs')
     describe: 'Set the zoom factor'
   })
 
-  .option('no-updates', {
+  .option('auto-updates', {
     type: 'boolean',
-    describe: 'Do not automatically check for updates',
-    default: false
+    describe: 'Automatically check for updates',
+    default: true
   })
 
   .option('debug', {

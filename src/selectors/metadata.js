@@ -113,13 +113,13 @@ const getItemFields = memo(
 const getPhotoMetadata = memo(
   getMetadata,
   ({ nav }) => nav.photo,
-  (metadata, id) => metadata[id]
+  (metadata, id) => metadata[id] || { id }
 )
 
 const getSelectionMetadata = memo(
   getMetadata,
   ({ nav }) => nav.selection,
-  (metadata, id) => metadata[id]
+  (metadata, id) => metadata[id] || { id }
 )
 
 const getPhotoFields = memo(

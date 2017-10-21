@@ -89,6 +89,7 @@ target.linux = (args = ['bz2']) => {
 target.darwin = () => {
   check(platform === 'darwin', 'must be run on macOS')
   check(which('appdmg'), 'missing dependency: appdmg')
+  check(which('7z'), 'missing dependency: 7z')
 
   const sources = ls('-d', join(dist, '*-darwin-*'))
   check(sources.length, 'no sources found')
@@ -103,6 +104,12 @@ target.darwin = () => {
     check(test('-f', config), `missing config: ${config}`)
 
     exec(`appdmg ${config} ${dmg}`)
+
+    let zip = join(dist, `${name}-${version}-darwin.zip`)
+
+    cd(src)
+    exec(`7z a ../${zip} ${qualified.product}.app`)
+    cd('-')
   }
 }
 

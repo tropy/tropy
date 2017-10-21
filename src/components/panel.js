@@ -22,7 +22,7 @@ class Panel extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
-      hasNestedFocus: false
+      hasNestedTabFocus: false
     }
   }
 
@@ -31,11 +31,11 @@ class Panel extends PureComponent {
   }
 
   handleNestedBlur = () => {
-    this.setState({ hasNestedFocus: false })
+    this.setState({ hasNestedTabFocus: false })
   }
 
-  handleNestedFocus = () => {
-    this.setState({ hasNestedFocus: true })
+  handleNestedTabFocus = () => {
+    this.setState({ hasNestedTabFocus: true })
   }
 
   handleToggle = () => {

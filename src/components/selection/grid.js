@@ -6,10 +6,23 @@ const { SelectionTile } = require('./tile')
 const cx = require('classnames')
 const { func, number, object } = require('prop-types')
 const { match } = require('../../keymap')
+const { on, off } = require('../../dom')
 
 
 class SelectionGrid extends SelectionIterator {
+  componentDidMount() {
+    on(this.container, 'tab:focus', this.handleTabFocus)
+  }
+
+  componentWillUnmount() {
+    off(this.container, 'tab:focus', this.handleTabFocus)
+  }
+
   get isGrid() { return true }
+
+  get isVertical() {
+    return this.props.cols === 1
+  }
 
   get classes() {
     return [super.classes, 'grid']
@@ -32,8 +45,8 @@ class SelectionGrid extends SelectionIterator {
     }
   }
 
-  handleFocus = () => {
-    this.props.onFocus()
+  handleTabFocus = () => {
+    this.props.onTabFocus()
   }
 
   // eslint-disable-next-line complexity
@@ -46,10 +59,10 @@ class SelectionGrid extends SelectionIterator {
         this.select(this.next())
         break
       case (this.isVertical ? 'left' : 'up'):
-        this.select(this.prev(this.state.cols))
+        this.select(this.prev(this.props.cols))
         break
       case (this.isVertical ? 'right' : 'down'):
-        this.select(this.next(this.state.cols))
+        this.select(this.next(this.props.cols))
         break
       case 'home':
         this.scroll(0)
@@ -83,6 +96,7 @@ class SelectionGrid extends SelectionIterator {
   render() {
     return this.connect(
       <ul
+        ref={this.setContainer}
         className={cx(this.classes)}
         style={this.style}
         tabIndex={this.tabIndex}
@@ -103,7 +117,7 @@ class SelectionGrid extends SelectionIterator {
     cols: number.isRequired,
     keymap: object.isRequired,
     onBlur: func.isRequired,
-    onFocus: func.isRequired
+    onTabFocus: func.isRequired
   }
 }
 
