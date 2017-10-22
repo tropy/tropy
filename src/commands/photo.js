@@ -40,7 +40,9 @@ class Consolidate extends ImportCommand {
             if (total === 1) {
               // Ask the user to figue it out.
               this.isInteractive = true
-              const [path] = yield call(open.images, { properties: ['openFile'] })
+              const [path] = yield call(open.images, {
+                properties: ['openFile']
+              })
 
               image = (path == null) ?
                 null :
