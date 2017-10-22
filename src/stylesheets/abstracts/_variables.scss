@@ -7,9 +7,9 @@
 // --------------------------------------------------
 
 $sans-serif-fonts: (
-  darwin: '"Helvetica Neue", Helvetica, sans-serif',
-  linux: 'sans-serif',
-  win32: '"Segoe UI", sans-serif'
+  darwin: "'Helvetica Neue', Helvetica, sans-serif",
+  linux: "sans-serif",
+  win32: "'Segoe UI', sans-serif"
 );
 
 $font-family-sans-serif: unquote(map-get($sans-serif-fonts, $platform));
