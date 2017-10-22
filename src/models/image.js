@@ -1,6 +1,7 @@
 'use strict'
 
 const assert = require('assert')
+const subject = require('./subject')
 
 module.exports = {
 
@@ -22,11 +23,7 @@ module.exports = {
         WHERE id = $id`, params)
 
     if (timestamp != null) {
-      await db.run(`
-        UPDATE subjects
-          SET modified = datetime(?)
-          WHERE id = ?`,
-        new Date(timestamp).toISOString(), id)
+      await subject.touch(db, { id, timestamp })
     }
   },
 
