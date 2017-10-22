@@ -10,10 +10,6 @@ const bb = require('bluebird')
 const { assign } = Object
 const subject = require('./subject')
 
-const skel = (id, selections = [], notes = []) => ({
-  id, selections, notes
-})
-
 const COLUMNS = [
   'broken',
   'checksum',
@@ -24,10 +20,23 @@ const COLUMNS = [
   'size'
 ]
 
+const VALUES = {
+  consolidated: (column) => (`datetime($${column})`),
+  default: (column) => `$${column}`
+}
+
+const filter = (column) =>
+  (VALUES[column] || VALUES.default)(column)
+
+const skel = (id, selections = [], notes = []) => ({
+  id, selections, notes
+})
+
+
 module.exports = {
   async create(db, template, { item, image, data }) {
     const {
-      path, checksum, mimetype, width, height, orientation, file
+      path, checksum, mimetype, width, height, orientation, size
     } = image
 
     const { id } = await db.run(`
@@ -48,7 +57,7 @@ module.exports = {
             mimetype,
             orientation
           ) VALUES (?,?,?,?,?,?,?)`,
-        [id, item, path, file.size, checksum, mimetype, orientation]),
+        [id, item, path, size, checksum, mimetype, orientation]),
 
       metadata.update(db, {
         ids: [id],
@@ -69,7 +78,7 @@ module.exports = {
 
     for (let column of COLUMNS) {
       if (column in data) {
-        assignments.push(`${column} = $${column}`)
+        assignments.push(`${column} = ${filter(column)}`)
         params[`$${column}`] = data[column]
       }
     }

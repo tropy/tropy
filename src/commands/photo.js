@@ -37,24 +37,39 @@ class Consolidate extends ImportCommand {
 
             // TODO Figure out where it is!
 
-            // Ask the user to figue it out.
-            this.isInteractive = true
-            const [path] = yield call(open.images, { properties: ['openFile'] })
+            if (total === 1) {
+              // Ask the user to figue it out.
+              this.isInteractive = true
+              const [path] = yield call(open.images, { properties: ['openFile'] })
 
-            image = (path == null) ?
-              null :
-              yield call(Image.read, path)
+              image = (path == null) ?
+                null :
+                yield call(Image.read, path)
+            }
           }
 
           if (image != null) {
-            // Update Photo
-            // yield put(act.photo.save({ id: photo.id, broken: false, ...data }))
+            if (meta.force || (image.checksum !== photo.checksum)) {
+              yield put(act.photo.save({ id: photo.id, data: {
+                ...image.toJSON(),
+                broken: false,
+                consolidated: Date.now()
+              } }, { history: false }))
 
-            yield* this.createThumbnails(photo.id, image)
+              yield* this.createThumbnails(photo.id, image)
+
+            } else {
+              yield put(act.photo.save({
+                id: photo.id, data: { broken: true }
+              }, { history: false }))
+            }
+
             consolidated.push(photo.id)
 
           } else {
-            // yield put(act.photo.save({ id: photo.id, broken: true }))
+            yield put(act.photo.save({
+              id: photo.id, data: { broken: true }
+            }, { history: false }))
           }
         }
       } catch (error) {

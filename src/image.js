@@ -30,6 +30,7 @@ class Image {
     } catch (error) {
       debug(`image check failed for ${path}: ${error.message}`, { error })
       status.hasChanged = true
+      status.image = null
       status.error = error
     }
 
@@ -71,6 +72,22 @@ class Image {
       debug(error.stack)
 
       return new Date().toISOString()
+    }
+  }
+
+  get size() {
+    return this.file && this.file.size
+  }
+
+  toJSON() {
+    return {
+      path: this.path,
+      checksum: this.checksum,
+      mimetype: this.mimetype,
+      width: this.width,
+      height: this.height,
+      orientation: this.orientation,
+      size: this.size
     }
   }
 
