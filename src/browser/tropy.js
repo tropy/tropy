@@ -369,7 +369,7 @@ class Tropy extends EventEmitter {
       })))
 
     this.on('app:consolidate-photo', (_, { target }) =>
-      this.dispatch(act.photo.consolidate(target.id)))
+      this.dispatch(act.photo.consolidate([target.id])))
 
     this.on('app:delete-selection', (_, { target }) =>
       this.dispatch(act.selection.delete({

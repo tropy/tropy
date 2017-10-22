@@ -16,6 +16,26 @@ class Image {
     return (new Image(path)).read()
   }
 
+  static async check({ path, created, checksum }, { force } = {}) {
+    const status = {}
+
+    try {
+      const { mtime } = await stat(path)
+      status.hasChanged = (mtime > created)
+
+      if (force || created == null || status.hasChanged) {
+        status.image = await Image.read(path)
+        status.hasChanged = (status.image.checksum !== checksum)
+      }
+    } catch (error) {
+      debug(`image check failed for ${path}: ${error.message}`, { error })
+      status.hasChanged = true
+      status.error = error
+    }
+
+    return status
+  }
+
   constructor(path) {
     this.path = path
   }

@@ -9,8 +9,8 @@ const act = require('../actions')
 const { PHOTO } = require('../constants')
 const { Image } = require('../image')
 const { DuplicateError } = require('../common/error')
-const { warn, verbose } = require('../common/log')
-const { pick, splice } = require('../common/util')
+const { info, warn, verbose } = require('../common/log')
+const { blank, pick, pluck, splice } = require('../common/util')
 const { getPhotoTemplate, getTemplateValues } = require('../selectors')
 const { keys } = Object
 
@@ -19,69 +19,53 @@ class Consolidate extends ImportCommand {
   static get action() { return PHOTO.CONSOLIDATE }
 
   *exec() {
-    //const { db } = this.options
-    //let { item, files } = this.action.payload
-    //let { idx } = this.action.meta
+    const { payload, meta } = this.action
+    const consolidated = []
 
-    const photos = []
+    if (blank(payload)) return consolidated
+    const photos = yield select(state => pluck(state.photos, payload))
 
-    //if (idx == null) {
-    //  idx = [yield select(state => state.items[item].photos.length)]
-    //}
+    for (let i = 0, total = photos.length; i < total; ++i) {
+      const photo = photos[i]
 
-    //if (!files) {
-    //  files = yield call(open.images)
-    //  this.init = performance.now()
-    //}
+      try {
+        let { image, hasChanged, error } = yield call(Image.check, photo, meta)
 
-    //if (!files) return []
+        if (meta.force || hasChanged) {
+          if (error != null) {
+            info(`failed to open photo ${photo.id}`, { error })
 
-    //const template = yield select(getPhotoTemplate)
-    //const data = getTemplateValues(template)
+            // TODO Figure out where it is!
 
-    //for (let i = 0, total = files.length; i < total; ++i) {
-    //  let file
-    //  let image
-    //  let photo
+            // Ask the user to figue it out.
+            this.isInteractive = true
+            const [path] = yield call(open.images, { properties: ['openFile'] })
 
-    //  try {
-    //    file = files[i]
-    //    image = yield call(Image.read, file)
+            image = (path == null) ?
+              null :
+              yield call(Image.read, path)
+          }
 
-    //    yield* this.handleDuplicate(image)
+          if (image != null) {
+            // Update Photo
+            // yield put(act.photo.save({ id: photo.id, broken: false, ...data }))
 
-    //    photo = yield call(db.transaction, tx =>
-    //      mod.photo.create(tx, template.id, { item, image, data })
-    //    )
+            yield* this.createThumbnails(photo.id, image)
+            consolidated.push(photo.id)
 
-    //    yield put(act.metadata.load([photo.id]))
+          } else {
+            // yield put(act.photo.save({ id: photo.id, broken: true }))
+          }
+        }
+      } catch (error) {
+        warn(`Failed to consolidate photo ${photo.id}`, { error })
+        fail(error, this.action.type)
+      }
 
-    //    yield all([
-    //      put(act.photo.insert(photo, { idx: [idx[0] + photos.length] })),
-    //      put(act.activity.update(this.action, { total, progress: i + 1 }))
-    //    ])
+      yield put(act.activity.update(this.action, { total, progress: i + 1 }))
+    }
 
-    //    photos.push(photo.id)
-
-    //    yield* this.createThumbnails(photo.id, image)
-
-    //  } catch (error) {
-    //    if (error instanceof DuplicateError) continue
-
-    //    warn(`Failed to import "${file}": ${error.message}`)
-    //    verbose(error.stack)
-
-    //    fail(error, this.action.type)
-    //  }
-
-    //  yield put(act.item.photos.add({ id: item, photos }, { idx }))
-    //  yield put(act.photo.select({ item, photo: photos[0] }))
-
-    //  this.undo = act.photo.delete({ item, photos })
-    //  this.redo = act.photo.restore({ item, photos }, { idx })
-    //}
-
-    return photos
+    return consolidated
   }
 }
 
@@ -101,8 +85,8 @@ class Create extends ImportCommand {
     }
 
     if (!files) {
+      this.isInteractive = true
       files = yield call(open.images)
-      this.init = performance.now()
     }
 
     if (!files) return []
@@ -146,7 +130,6 @@ class Create extends ImportCommand {
       }
 
       yield put(act.item.photos.add({ id: item, photos }, { idx }))
-      yield put(act.photo.select({ item, photo: photos[0] }))
 
       this.undo = act.photo.delete({ item, photos })
       this.redo = act.photo.restore({ item, photos }, { idx })
@@ -263,6 +246,7 @@ class Save extends Command {
     const original = yield select(state =>
       pick(state.photos[id], keys(data)))
 
+    // TODO update photo fields
     yield call(db.transaction, tx =>
       mod.image.save(tx, { id, timestamp: meta.now, ...data }))
 
