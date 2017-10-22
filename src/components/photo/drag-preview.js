@@ -26,12 +26,13 @@ class PhotoDragPreview extends PureComponent {
 
   render() {
     const { cache, size } = this.props
-    const { id, angle, mirror, orientation } = this.item
+    const { id, broken, angle, mirror, orientation } = this.item
 
     return (
       <div className={cx(this.classes)}>
         <Thumbnail
           id={id}
+          isBroken={broken}
           angle={angle}
           mirror={mirror}
           orientation={orientation}

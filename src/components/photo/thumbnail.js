@@ -42,9 +42,10 @@ class Thumbnail extends PureComponent {
   }
 
   static propTypes = {
+    angle: number,
     cache: string.isRequired,
     id: number,
-    angle: number,
+    isBroken: bool,
     mirror: bool,
     orientation: number,
     size: number.isRequired,

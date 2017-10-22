@@ -100,6 +100,7 @@ class PhotoIterable extends PureComponent {
     return (
       <Thumbnail {...props}
         id={this.props.photo.id}
+        isBroken={this.props.photo.broken}
         angle={this.props.photo.angle}
         mirror={this.props.photo.mirror}
         orientation={this.props.photo.orientation}
@@ -115,6 +116,7 @@ class PhotoIterable extends PureComponent {
         id: photo.id,
         item: photo.item,
         angle: photo.angle,
+        broken: photo.broken,
         mirror: photo.mirror,
         orientation: photo.orientation,
         adj: getAdjacent(photo).map(p => p && p.id)
