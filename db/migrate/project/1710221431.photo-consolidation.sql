@@ -1,0 +1,5 @@
+ALTER TABLE photos
+  ADD COLUMN broken BOOLEAN NOT NULL DEFAULT 0;
+
+ALTER TABLE photos
+  ADD COLUMN consolidated NUMERIC;
