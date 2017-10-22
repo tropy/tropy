@@ -73,16 +73,20 @@ module.exports = {
             protocol,
             mimetype,
             checksum,
-            orientation
+            orientation,
+            datetime(consolidated, "localtime") AS consolidated,
+            broken
           FROM subjects
             JOIN images USING (id)
             JOIN photos USING (id)${
           ids != null ? ` WHERE id IN (${ids})` : ''
         }`,
-        ({ id, created, modified, mirror, ...data }) => {
+        ({ id, created, modified, consolidated, broken, mirror, ...data }) => {
           data.created = new Date(created)
           data.modified = new Date(modified)
+          data.consolidated = new Date(consolidated || created)
           data.mirror = !!mirror
+          data.broken = !!broken
 
           if (id in photos) assign(photos[id], data)
           else photos[id] = assign(skel(id), data)
