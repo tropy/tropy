@@ -246,9 +246,12 @@ class Save extends Command {
     const original = yield select(state =>
       pick(state.photos[id], keys(data)))
 
-    // TODO update photo fields
-    yield call(db.transaction, tx =>
-      mod.image.save(tx, { id, timestamp: meta.now, ...data }))
+    const params = { id, timestamp: meta.now, ...data }
+
+    yield call(db.transaction, async tx => {
+      await mod.photo.save(tx, params)
+      await mod.image.save(tx, params)
+    })
 
     this.undo = act.photo.save({ id, data: original })
 

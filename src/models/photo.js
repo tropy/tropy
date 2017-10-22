@@ -1,5 +1,6 @@
 'use strict'
 
+const assert = require('assert')
 const { TEMPLATE } = require('../constants/photo')
 const { DC } = require('../constants')
 const { all } = require('bluebird')
@@ -7,11 +8,21 @@ const { text, date } = require('../value')
 const metadata = require('./metadata')
 const bb = require('bluebird')
 const { assign } = Object
+const subject = require('./subject')
 
 const skel = (id, selections = [], notes = []) => ({
   id, selections, notes
 })
 
+const COLUMNS = [
+  'broken',
+  'checksum',
+  'consolidated',
+  'mimetype',
+  'orientation',
+  'path',
+  'size'
+]
 
 module.exports = {
   async create(db, template, { item, image, data }) {
@@ -50,6 +61,30 @@ module.exports = {
     ])
 
     return (await module.exports.load(db, [id]))[id]
+  },
+
+  async save(db, { id, timestamp, ...data }) {
+    const assignments = []
+    const params = { $id: id }
+
+    for (let column of COLUMNS) {
+      if (column in data) {
+        assignments.push(`${column} = $${column}`)
+        params[`$${column}`] = data[column]
+      }
+    }
+
+    assert(id != null, 'missing photo id')
+    if (assignments.length === 0) return
+
+    await db.run(`
+      UPDATE photos
+        SET ${assignments.join(', ')}
+        WHERE id = $id`, params)
+
+    if (timestamp != null) {
+      await subject.touch(db, { id, timestamp })
+    }
   },
 
   async load(db, ids) {

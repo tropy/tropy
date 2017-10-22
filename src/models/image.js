@@ -3,28 +3,32 @@
 const assert = require('assert')
 const subject = require('./subject')
 
-module.exports = {
+const COLUMNS = [
+  'width', 'height', 'angle', 'mirror'
+]
 
+module.exports = {
   async save(db, { id, timestamp, ...data }) {
-    const assign = []
+    const assignments = []
     const params = { $id: id }
 
-    for (let attr in data) {
-      assign.push(`${attr} = $${attr}`)
-      params[`$${attr}`] = data[attr]
+    for (let column of COLUMNS) {
+      if (column in data) {
+        assignments.push(`${column} = $${column}`)
+        params[`$${column}`] = data[column]
+      }
     }
 
     assert(id != null, 'missing image id')
-    assert(assign.length > 0, 'missing assignments')
+    if (assignments.length === 0) return
 
     await db.run(`
       UPDATE images
-        SET ${assign.join(', ')}
+        SET ${assignments.join(', ')}
         WHERE id = $id`, params)
 
     if (timestamp != null) {
       await subject.touch(db, { id, timestamp })
     }
-  },
-
+  }
 }
