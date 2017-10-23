@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { Thumbnail } = require('../photo')
 const { TagColors } = require('../colors')
 const { pick, get } = require('../../common/util')
-const { arrayOf, number, object, shape } = require('prop-types')
+const { arrayOf, func, number, object, shape } = require('prop-types')
 
 const ThumbProps = Object.keys(Thumbnail.propTypes)
 
@@ -33,7 +33,7 @@ class CoverImage extends PureComponent {
 
   getPhotoProps() {
     return pick(get(this.props.photos, [this.cover]), [
-      'angle', 'mirror', 'orientation', 'broken'
+      'angle', 'mirror', 'orientation'
     ])
   }
 
@@ -43,7 +43,8 @@ class CoverImage extends PureComponent {
         {this.isStack && stack }
         <Thumbnail {...pick(this.props, ThumbProps)}
           id={this.cover}
-          {...this.getPhotoProps()}/>
+          {...this.getPhotoProps()}
+          onError={this.props.onError}/>
         {this.hasTags &&
           <TagColors
             selection={this.props.item.tags}
@@ -60,7 +61,7 @@ class CoverImage extends PureComponent {
       photos: arrayOf(number),
       tags: arrayOf(number),
       cover: number
-    }).isRequired,
+    }).isRequired
   }
 }
 

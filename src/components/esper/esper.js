@@ -162,6 +162,7 @@ class Esper extends PureComponent {
 
     if (photo != null && !photo.pending) {
       assign(state, {
+        photo: photo.id,
         src: `${photo.protocol}://${photo.path}`,
         width: photo.width,
         height: photo.height
@@ -571,6 +572,7 @@ class Esper extends PureComponent {
           onSelectionActivate={this.handleSelectionActivate}
           onSelectionCreate={this.handleSelectionCreate}
           onDoubleClick={this.handleDoubleClick}
+          onPhotoError={this.props.onPhotoError}
           onWheel={this.handleWheel}
           onZoomIn={this.handleZoomIn}
           onZoomOut={this.handleZoomOut}/>
@@ -589,6 +591,7 @@ class Esper extends PureComponent {
     minZoom: number.isRequired,
     mode: string.isRequired,
     onChange: func.isRequired,
+    onPhotoError: func.isRequired,
     onSelect: func.isRequired,
     onSelectionCreate: func.isRequired,
     photo: object,

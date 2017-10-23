@@ -105,7 +105,8 @@ class ItemTableCell extends PureComponent {
       isEditing,
       isDisabled,
       isMainColumn,
-      onCancel
+      onCancel,
+      onPhotoError
     } = this.props
 
     const { type, value } = this
@@ -122,7 +123,8 @@ class ItemTableCell extends PureComponent {
               item={item}
               cache={cache}
               photos={photos}
-              size={size}/>}
+              size={size}
+              onError={onPhotoError}/>}
           <Editable
             value={value}
             display={auto(value, type)}
@@ -172,7 +174,8 @@ class ItemTableCell extends PureComponent {
     getSelection: func.isRequired,
     onCancel: func.isRequired,
     onChange: func.isRequired,
-    onEdit: func.isRequired
+    onEdit: func.isRequired,
+    onPhotoError: func.isRequired
   }
 
   static defaultProps = {

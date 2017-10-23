@@ -34,12 +34,17 @@ module.exports = {
     }
   },
 
+  error(payload, meta = {}) {
+    return module.exports.update( {
+      id: payload, broken: true, consolidated: new Date()
+    }, meta)
+  },
+
   expand(payload, meta = {}) {
     return {
       type: PHOTO.EXPAND, payload, meta
     }
   },
-
 
   update(payload, meta = {}) {
     return {

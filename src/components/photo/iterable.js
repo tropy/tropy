@@ -100,12 +100,12 @@ class PhotoIterable extends PureComponent {
     return (
       <Thumbnail {...props}
         id={this.props.photo.id}
-        isBroken={this.props.photo.broken}
         angle={this.props.photo.angle}
         mirror={this.props.photo.mirror}
         orientation={this.props.photo.orientation}
         cache={this.props.cache}
-        size={this.props.size}/>
+        size={this.props.size}
+        onError={this.props.onError}/>
     )
   }
 
@@ -220,6 +220,7 @@ class PhotoIterable extends PureComponent {
     onContextMenu: func.isRequired,
     onContract: func.isRequired,
     onDropPhoto: func.isRequired,
+    onError: func.isRequired,
     onExpand: func.isRequired,
     onItemOpen: func.isRequired,
     onSelect: func.isRequired

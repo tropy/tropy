@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { Thumbnail } = require('./thumbnail')
 const cx = require('classnames')
-const { string, arrayOf, shape, number } = require('prop-types')
+const { arrayOf, func, number, shape, string } = require('prop-types')
 
 
 class PhotoDragPreview extends PureComponent {
@@ -26,13 +26,12 @@ class PhotoDragPreview extends PureComponent {
 
   render() {
     const { cache, size } = this.props
-    const { id, broken, angle, mirror, orientation } = this.item
+    const { id, angle, mirror, orientation } = this.item
 
     return (
       <div className={cx(this.classes)}>
         <Thumbnail
           id={id}
-          isBroken={broken}
           angle={angle}
           mirror={mirror}
           orientation={orientation}
@@ -51,7 +50,8 @@ class PhotoDragPreview extends PureComponent {
     size: number.isRequired,
     items: arrayOf(shape({
       id: number.isRequired
-    })).isRequired
+    })).isRequired,
+    onPhotoError: func.isRequired
   }
 
   static defaultProps = {

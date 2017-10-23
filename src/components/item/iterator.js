@@ -236,6 +236,7 @@ class ItemIterator extends Iterator {
       onDropItems: this.props.onItemMerge,
       onDropPhotos: this.props.onPhotoMove,
       onItemOpen: this.props.onItemOpen,
+      onPhotoError: this.props.onPhotoError,
       onSelect: this.select
     }
   }
@@ -281,6 +282,7 @@ class ItemIterator extends Iterator {
     onItemMerge: func.isRequired,
     onItemOpen: func.isRequired,
     onItemPreview: func.isRequired,
+    onPhotoError: func.isRequired,
     onPhotoMove: func.isRequired,
     onSelect: func.isRequired,
     onSort: func.isRequired
