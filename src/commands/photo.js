@@ -19,6 +19,7 @@ class Consolidate extends ImportCommand {
   static get action() { return PHOTO.CONSOLIDATE }
 
   *exec() {
+    const { db } = this.options
     const { payload, meta } = this.action
     const consolidated = []
 
@@ -52,26 +53,29 @@ class Consolidate extends ImportCommand {
 
           if (image != null) {
             if (meta.force || (image.checksum !== photo.checksum)) {
-              yield put(act.photo.save({ id: photo.id, data: {
-                ...image.toJSON(),
+              const data = { id: photo.id, ...image.toJSON() }
+
+              yield call(mod.photo.save, db, data)
+              yield put(act.photo.update({
                 broken: false,
-                consolidated: Date.now()
-              } }, { history: false }))
+                consolidated: new Date(),
+                ...data
+              }))
 
               yield* this.createThumbnails(photo.id, image)
 
             } else {
-              yield put(act.photo.save({
-                id: photo.id, data: { broken: true }
-              }, { history: false }))
+              yield put(act.photo.update({
+                id: photo.id, broken: true, consolidated: new Date()
+              }))
             }
 
             consolidated.push(photo.id)
 
           } else {
-            yield put(act.photo.save({
-              id: photo.id, data: { broken: true }
-            }, { history: false }))
+            yield put(act.photo.update({
+              id: photo.id, broken: true, consolidated: new Date()
+            }))
           }
         }
       } catch (error) {

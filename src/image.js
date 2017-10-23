@@ -16,12 +16,17 @@ class Image {
     return (new Image(path)).read()
   }
 
-  static async check({ path, created, checksum }, { force } = {}) {
+  static async check({
+    path,
+    consolidated,
+    created,
+    checksum
+  }, { force } = {}) {
     const status = {}
 
     try {
       const { mtime } = await stat(path)
-      status.hasChanged = (mtime > created)
+      status.hasChanged = (mtime > (consolidated || created))
 
       if (force || created == null || status.hasChanged) {
         status.image = await Image.read(path)
