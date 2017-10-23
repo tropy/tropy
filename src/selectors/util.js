@@ -1,17 +1,24 @@
 'use strict'
 
-const { seq, keep, compose, map, filter } = require('transducers.js')
+const { blank } = require('../common/util')
 
-const isNotPending = (data) => !data.pending
+const pluck = (data, ids) => {
+  const idx = {}
+  const res = []
 
-const pluck = (data, ids) =>
-  seq(ids, compose(
-    map(id => data[id]),
-    keep(),
-    filter(isNotPending)
-  ))
+  if (!blank(ids)) {
+    for (const id of ids) {
+      const item = data[id]
+      if (item == null || item.pending) continue
+      idx[id] = res.length
+      res.push(item)
+    }
+  }
+
+  res.idx = idx
+  return res
+}
 
 module.exports = {
-  isNotPending,
   pluck
 }
