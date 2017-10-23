@@ -114,6 +114,11 @@ tropy:piece a rdf:Property ;
   rdfs:domain tropy:Item , tropy:Photo, tropy:Selection ;
 	rdfs:comment "A unit of archival organization, usually within a folder."@en .
 
+tropy:collection a rdf:Property ;
+	rdfs:label "Collection"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Item , tropy:Photo, tropy:Selection ;
+	rdfs:comment "A unit of archival organizations."@en .
 
 
 tropy:name a rdf:Property ;
