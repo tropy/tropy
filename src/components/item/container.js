@@ -61,6 +61,7 @@ class ItemContainer extends PureComponent {
             selections={this.props.selections}
             tool={this.props.esper.tool}
             onChange={this.handleEsperChange}
+            onPhotoError={this.props.onPhotoError}
             onSelect={this.props.onPhotoSelect}
             onSelectionCreate={this.props.onSelectionCreate}/>
         </BufferedResizable>
@@ -92,6 +93,7 @@ class ItemContainer extends PureComponent {
     settings: object.isRequired,
     onNoteChange: func.isRequired,
     onNoteCommit: func.isRequired,
+    onPhotoError: func.isRequired,
     onPhotoSave: func.isRequired,
     onPhotoSelect: func.isRequired,
     onSelectionCreate: func.isRequired,

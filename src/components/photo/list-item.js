@@ -116,7 +116,8 @@ class PhotoListItem extends PhotoIterable {
       isDisabled,
       isEditing,
       isExpandable,
-      onEditCancel
+      onEditCancel,
+      photo
     } = this.props
 
     return this.connect(
@@ -140,7 +141,7 @@ class PhotoListItem extends PhotoIterable {
               onChange={this.handleChange}/>
           </div>
           <div className="icon-container">
-            <IconWarning/>
+            {photo.broken && <IconWarning/>}
             {isExpandable && <IconSelection/>}
           </div>
         </div>

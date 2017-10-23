@@ -263,7 +263,8 @@ class ProjectContainer extends Component {
         <DragLayer
           cache={props.cache}
           photos={photos}
-          tags={props.tags}/>
+          tags={props.tags}
+          onPhotoError={props.onPhotoError}/>
       </div>
     )
   }
@@ -321,6 +322,7 @@ class ProjectContainer extends Component {
     dt: func.isRequired,
 
     onContextMenu: func.isRequired,
+    onPhotoError: func.isRequired,
     onProjectCreate: func.isRequired,
     onProjectOpen: func.isRequired,
     onMaximize: func.isRequired,
@@ -507,7 +509,6 @@ module.exports = {
         dispatch(actions.photo.expand(...args))
       },
 
-
       onPhotoMove(...args) {
         dispatch(actions.photo.move(...args))
       },
@@ -518,6 +519,10 @@ module.exports = {
 
       onPhotoSelect(...args) {
         dispatch(actions.photo.select(...args))
+      },
+
+      onPhotoError(...args) {
+        dispatch(actions.photo.error(...args))
       },
 
       onListSave(...args) {
