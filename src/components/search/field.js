@@ -3,7 +3,8 @@
 const React = require('react')
 const { PureComponent } = React
 const { bool, func, string } = require('prop-types')
-const { IconSearch } = require('../icons')
+const { IconSearch, IconXSmall } = require('../icons')
+const { IconButton } = require('../button')
 const { BufferedInput } = require('../input')
 const { TABS } = require('../../constants')
 const debounce = require('lodash.debounce')
@@ -42,6 +43,7 @@ class SearchField extends PureComponent {
           onCancel={this.handleCancel}
           onChange={this.handleChange}
           onCommit={this.handleCommit}/>
+        <IconButton icon={<IconXSmall/>}/>
       </div>
     )
   }

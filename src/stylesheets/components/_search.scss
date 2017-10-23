@@ -15,5 +15,38 @@
 
   .search-input {
     padding-left: ($space-xs + $space-md);
+    padding-right: 1px + $clear-button-size + $space-min;
+  }
+
+  .search-input:not([value=""]) + .btn-icon {
+    display: block;
+  }
+
+  .btn-icon {
+    position: absolute;
+    right: $space-min + 1px;
+    top: (($input-height-base - $clear-button-size) / 2);
+    width: $clear-button-size;
+    height: $clear-button-size;
+    background: $icon-color;
+    padding: 0;
+    border-radius: 50%;
+    display: none;
+
+    .icon {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      color: $clear-search-color;
+    }
+
+    &:active {
+      background: $icon-active-color;
+
+      .icon {
+        color: $clear-search-color;
+      }
+    }
   }
 }
