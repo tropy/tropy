@@ -38,8 +38,7 @@ class Consolidate extends ImportCommand {
 
             // TODO Figure out where it is!
 
-            if (total === 1) {
-              // Ask the user to figue it out.
+            if (meta.prompt) {
               this.isInteractive = true
               const [path] = yield call(open.images, {
                 properties: ['openFile']
