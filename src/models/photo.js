@@ -11,9 +11,7 @@ const { assign } = Object
 const subject = require('./subject')
 
 const COLUMNS = [
-  'broken',
   'checksum',
-  'consolidated',
   'mimetype',
   'orientation',
   'path',
@@ -117,20 +115,16 @@ module.exports = {
             protocol,
             mimetype,
             checksum,
-            orientation,
-            datetime(consolidated, "localtime") AS consolidated,
-            broken
+            orientation
           FROM subjects
             JOIN images USING (id)
             JOIN photos USING (id)${
           ids != null ? ` WHERE id IN (${ids})` : ''
         }`,
-        ({ id, created, modified, consolidated, broken, mirror, ...data }) => {
+        ({ id, created, modified, mirror, ...data }) => {
           data.created = new Date(created)
           data.modified = new Date(modified)
-          data.consolidated = new Date(consolidated || created)
           data.mirror = !!mirror
-          data.broken = !!broken
 
           if (id in photos) assign(photos[id], data)
           else photos[id] = assign(skel(id), data)
