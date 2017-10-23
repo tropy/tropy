@@ -35,7 +35,9 @@ module.exports = {
   },
 
   error(payload, meta = {}) {
-    return module.exports.update({ id: payload, broken: true }, meta)
+    return module.exports.update(
+      { id: payload, broken: true },
+      { consolidate: true, ...meta })
   },
 
   expand(payload, meta = {}) {
