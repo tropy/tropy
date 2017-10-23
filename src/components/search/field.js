@@ -43,7 +43,9 @@ class SearchField extends PureComponent {
           onCancel={this.handleCancel}
           onChange={this.handleChange}
           onCommit={this.handleCommit}/>
-        <IconButton icon={<IconXSmall/>}/>
+        <IconButton
+          icon={<IconXSmall/>}
+          onClick={this.handleCancel}/>
       </div>
     )
   }
