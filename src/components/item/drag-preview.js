@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { CoverImage } = require('./cover-image')
 const cx = require('classnames')
-const { arrayOf, string, shape, number, object } =  require('prop-types')
+const { arrayOf, string, func, shape, number, object } =  require('prop-types')
 
 class ItemDragPreview extends PureComponent {
   get classes() {
@@ -24,7 +24,7 @@ class ItemDragPreview extends PureComponent {
   }
 
   render() {
-    const { cache, photos, size, tags } = this.props
+    const { cache, photos, size, tags, onPhotoError } = this.props
 
     return (
       <div className={cx(this.classes)}>
@@ -33,7 +33,8 @@ class ItemDragPreview extends PureComponent {
           photos={photos}
           size={size}
           item={this.item}
-          tags={tags}/>
+          tags={tags}
+          onError={onPhotoError}/>
         {this.count > 1 &&
           <div className="badge">{this.count}</div>
         }
@@ -49,7 +50,8 @@ class ItemDragPreview extends PureComponent {
     photos: object.isRequired,
     items: arrayOf(shape({
       id: number.isRequired
-    })).isRequired
+    })).isRequired,
+    onPhotoError: func.isRequired
   }
 
   static defaultProps = {

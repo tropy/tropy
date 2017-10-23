@@ -7,7 +7,8 @@ const { TEMPLATE } = require('../constants/item')
 
 const mod = {
   metadata: require('./metadata'),
-  photo: require('./photo')
+  photo: require('./photo'),
+  subject: require('./subject')
 }
 
 const skel = (id, lists = [], photos = [], tags = []) => ({
@@ -264,16 +265,8 @@ module.exports = mod.item = {
     return (await mod.item.load(db, [id]))[id]
   },
 
-  async update(db, ids, data, timestamp = Date.now()) {
-    for (let prop in data) {
-      if (prop !== 'template') continue
-
-      await db.run(`
-        UPDATE subjects
-          SET template = ?, modified = datetime(?)
-          WHERE id IN (${lst(ids)})`,
-        data[prop], new Date(timestamp).toISOString())
-    }
+  update(db, id, data, timestamp = Date.now()) {
+    return mod.subject.update(db, { id, template: data.template, timestamp })
   },
 
   async merge(db, item, items, metadata) {

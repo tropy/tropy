@@ -178,6 +178,7 @@ class ItemIterable extends PureComponent {
     onDropItems: func.isRequired,
     onDropPhotos: func.isRequired,
     onItemOpen: func.isRequired,
+    onPhotoError: func.isRequired,
     onSelect: func.isRequired
   }
 }

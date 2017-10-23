@@ -6,7 +6,13 @@
 // Typography
 // --------------------------------------------------
 
-$font-family-sans-serif: "Helvetica Neue", "Segoe UI", Helvetica, sans-serif;
+$sans-serif-fonts: (
+  darwin: "'Helvetica Neue', Helvetica, sans-serif",
+  linux: "system-ui",
+  win32: "'Segoe UI', sans-serif"
+);
+
+$font-family-sans-serif: unquote(map-get($sans-serif-fonts, $platform));
 $font-family-base:       $font-family-sans-serif;
 
 $font-size-small: 12px;
@@ -283,6 +289,12 @@ $toolbar-context-transition: 0.24s ease;
 // --------------------------------------------------
 
 $add-tag-transition:                0.3s ease;
+
+
+// Search
+// --------------------------------------------------
+
+$clear-button-size: 14px;
 
 
 // Debug

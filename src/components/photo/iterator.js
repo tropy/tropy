@@ -244,6 +244,7 @@ class PhotoIterator extends Iterator {
       onContextMenu: this.props.onContextMenu,
       onContract: this.contract,
       onDropPhoto: this.handleDropPhoto,
+      onError: this.props.onError,
       onExpand: this.expand,
       onItemOpen: this.handleItemOpen,
       onSelect: this.select
@@ -294,6 +295,7 @@ class PhotoIterator extends Iterator {
     onContextMenu: func.isRequired,
     onDelete: func.isRequired,
     onExpand: func.isRequired,
+    onError: func.isRequired,
     onFocus: func.isRequired,
     onItemOpen: func.isRequired,
     onItemPreview: func.isRequired,

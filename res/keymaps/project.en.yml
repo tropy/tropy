@@ -41,7 +41,9 @@ linux: &linux
     open: Enter
     edit: F2
     clear: Escape
-    delete: Backspace
+    delete:
+      - Backspace
+      - Delete
     all: Ctrl+a
     home: Home
     end: End
@@ -55,7 +57,9 @@ linux: &linux
     right: ArrowRight
     open: Enter
     edit: F2
-    delete: Backspace
+    delete:
+      - Backspace
+      - Delete
     expand:
       - CmdOrCtrl+ArrowDown
       - CmdOrCtrl+ArrowRight
@@ -73,7 +77,9 @@ linux: &linux
     left: ArrowLeft
     right: ArrowRight
     open: Enter
-    delete: Backspace
+    delete:
+      - Backspace
+      - Delete
     home: Home
     end: End
     pageUp: PageUp
@@ -133,26 +139,24 @@ darwin:
     up:
       - ArrowUp
       - Shift+ArrowUp
-      - Cmd+ArrowUp
     down:
       - ArrowDown
       - Shift+ArrowDown
-      - Cmd+ArrowDown
     left:
       - ArrowLeft
       - Shift+ArrowLeft
-      - Cmdl+ArrowLeft
     right:
       - ArrowRight
       - Shift+ArrowRight
-      - Cmd+ArrowRight
     preview: Space
     open:
       - Cmd+ArrowDown
       - Cmd+ArrowRight
     clear: Escape
     edit: Enter
-    delete: Backspace
+    delete:
+      - Backspace
+      - Delete
     copy: Cmd+c
     all: Cmd+a
     home: Home
@@ -167,7 +171,9 @@ darwin:
     open:
       - Cmd+ArrowDown
       - Cmd+ArrowRight
-    delete: Backspace
+    delete:
+      - Backspace
+      - Delete
     enter: Enter
     preview: Space
     contract: Escape
@@ -183,7 +189,9 @@ darwin:
     open:
       - Cmd+ArrowDown
       - Cmd+ArrowRight
-    delete: Backspace
+    delete:
+      - Backspace
+      - Delete
     home: Home
     end: End
     pageUp: PageUp

@@ -36,18 +36,6 @@
 
   &.photo {
     contain: layout style size;
-
-    &.active {
-      .tile-state {
-        .scroll-container:focus & {
-          border-color: $tile-focus-color;
-
-          .nested-focus & {
-            border-color: $tile-active-color;
-          }
-        }
-      }
-    }
   }
 
   &.selection {
@@ -81,10 +69,14 @@
     }
   }
 
-  .btn-icon {
+  .icon-container {
     position: absolute;
     right: 6px;
     bottom: 5px;
+    margin-left: 0;
+  }
+
+  .btn-icon {
     padding: 0;
 
     .icon {
@@ -101,11 +93,11 @@
     border: $pointer-height solid transparent;
     border-bottom: $pointer-height solid $tile-expansion-bg;
 
-    .nested-focus & {
+    .photo.grid.nested-tab-focus & {
       border-bottom-color: $tile-expansion-focus-bg;
     }
 
-    .has-nested-active & {
+    .photo.grid.has-nested-active & {
       border-bottom-color: $tile-expansion-bg;
     }
   }
@@ -117,11 +109,11 @@
   margin: $space-sm (-$default-padding-horizontal); // Todo
   padding: $space-sm 0; // Todo
 
-  .nested-focus & {
+  .photo.grid.nested-tab-focus & {
     background: $tile-expansion-focus-bg;
   }
 
-  .nested-focus.has-nested-active & {
+  .photo.grid.nested-tab-focus.has-nested-active & {
     background: $tile-expansion-bg;
   }
 }

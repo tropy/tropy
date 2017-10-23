@@ -8,11 +8,11 @@
       .color {
         color: $icon-tag-color;
 
-        .nested-focus & {
+        .nested-tab-focus & {
           color: $icon-tag-nested-focus-color;
         }
 
-        .nested-focus.has-active & {
+        .nested-tab-focus.has-active & {
           color: $icon-tag-color;
         }
       }
@@ -20,11 +20,11 @@
       .border {
         color: $icon-tag-border;
 
-        .nested-focus & {
+        .nested-tab-focus & {
           color: $icon-tag-nested-focus-border;
         }
 
-        .nested-focus.has-active & {
+        .nested-tab-focus.has-active & {
           color: $icon-tag-border;
         }
       }
@@ -147,12 +147,12 @@
     margin: 0; // Reset to form-control
     padding: 0 $padding-base-horizontal; // Reset to form-control
 
-    .nested-focus & {
+    .nested-tab-focus & {
       background: $add-tag-nested-focus-bg;
       border-color: $add-tag-nested-focus-border-color;
     }
 
-    .nested-focus.has-active & {
+    .nested-tab-focus.has-active & {
       background: $add-tag-default-bg;
       border-color: $add-tag-border-color;
 

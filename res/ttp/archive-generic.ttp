@@ -40,7 +40,7 @@
       "property": "http://purl.org/dc/elements/1.1/type",
       "label": null,
       "datatype": "http://www.w3.org/2001/XMLSchema#string",
-      "hint": "Type of document",
+      "hint": "Type of document or object",
       "isRequired": false,
       "isConstant": false,
       "value": null
@@ -56,9 +56,9 @@
     },
     {
       "property": "http://purl.org/dc/terms/source",
-      "label": null,
+      "label": "Collection",
       "datatype": "http://www.w3.org/2001/XMLSchema#string",
-      "hint": "Collection",
+      "hint": null,
       "isRequired": false,
       "isConstant": false,
       "value": null

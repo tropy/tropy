@@ -6,6 +6,7 @@ const { Database } = require('../common/db')
 const { Cache } = require('../common/cache')
 const { warn, debug, verbose } = require('../common/log')
 const { ipc } = require('./ipc')
+const consolidator = require('./consolidator')
 const { history } = require('./history')
 const { search } = require('./search')
 const { ontology } = require('./ontology')
@@ -136,7 +137,8 @@ function *main() {
       fork(ipc),
       fork(history),
       fork(shell),
-      fork(storage.start)
+      fork(storage.start),
+      fork(consolidator.run)
     ])
 
     yield all([

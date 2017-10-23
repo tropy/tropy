@@ -190,6 +190,7 @@ class ItemView extends PureComponent {
           isOpen={isItemOpen}
           onNoteChange={this.handleNoteChange}
           onNoteCommit={this.handleNoteCommit}
+          onPhotoError={this.props.onPhotoError}
           onUiUpdate={this.props.onUiUpdate}/>
       </section>
     )
@@ -218,6 +219,7 @@ class ItemView extends PureComponent {
     onNoteDelete: func.isRequired,
     onNoteSave: func.isRequired,
     onNoteSelect: func.isRequired,
+    onPhotoError: func.isRequired,
     onPanelResize: func.isRequired,
     onPanelDragStop: func.isRequired,
     onUiUpdate: func.isRequired

@@ -1,5 +1,6 @@
 'use strict'
 
+const assert = require('assert')
 const { TEMPLATE } = require('../constants/photo')
 const { DC } = require('../constants')
 const { all } = require('bluebird')
@@ -7,6 +8,23 @@ const { text, date } = require('../value')
 const metadata = require('./metadata')
 const bb = require('bluebird')
 const { assign } = Object
+const subject = require('./subject')
+
+const COLUMNS = [
+  'checksum',
+  'mimetype',
+  'orientation',
+  'path',
+  'size'
+]
+
+const VALUES = {
+  consolidated: (column) => (`datetime($${column})`),
+  default: (column) => `$${column}`
+}
+
+const filter = (column) =>
+  (VALUES[column] || VALUES.default)(column)
 
 const skel = (id, selections = [], notes = []) => ({
   id, selections, notes
@@ -16,7 +34,7 @@ const skel = (id, selections = [], notes = []) => ({
 module.exports = {
   async create(db, template, { item, image, data }) {
     const {
-      path, checksum, mimetype, width, height, orientation, file
+      path, checksum, mimetype, width, height, orientation, size
     } = image
 
     const { id } = await db.run(`
@@ -37,7 +55,7 @@ module.exports = {
             mimetype,
             orientation
           ) VALUES (?,?,?,?,?,?,?)`,
-        [id, item, path, file.size, checksum, mimetype, orientation]),
+        [id, item, path, size, checksum, mimetype, orientation]),
 
       metadata.update(db, {
         ids: [id],
@@ -50,6 +68,30 @@ module.exports = {
     ])
 
     return (await module.exports.load(db, [id]))[id]
+  },
+
+  async save(db, { id, timestamp, ...data }) {
+    const assignments = []
+    const params = { $id: id }
+
+    for (let column of COLUMNS) {
+      if (column in data) {
+        assignments.push(`${column} = ${filter(column)}`)
+        params[`$${column}`] = data[column]
+      }
+    }
+
+    assert(id != null, 'missing photo id')
+    if (assignments.length === 0) return
+
+    await db.run(`
+      UPDATE photos
+        SET ${assignments.join(', ')}
+        WHERE id = $id`, params)
+
+    if (timestamp != null) {
+      await subject.touch(db, { id, timestamp })
+    }
   },
 
   async load(db, ids) {

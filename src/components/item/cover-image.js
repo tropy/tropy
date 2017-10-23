@@ -17,7 +17,6 @@ const stack = (
 )
 
 class CoverImage extends PureComponent {
-
   get isStack() {
     const { photos } = this.props.item
     return photos && photos.length > 1
@@ -31,9 +30,9 @@ class CoverImage extends PureComponent {
     return this.props.item.cover || get(this.props.item.photos, [0])
   }
 
-  get orientation() {
+  getPhotoProps() {
     return pick(get(this.props.photos, [this.cover]), [
-      'angle', 'mirror', 'orientation'
+      'angle', 'mirror', 'orientation', 'broken'
     ])
   }
 
@@ -43,7 +42,8 @@ class CoverImage extends PureComponent {
         {this.isStack && stack }
         <Thumbnail {...pick(this.props, ThumbProps)}
           id={this.cover}
-          {...this.orientation}/>
+          {...this.getPhotoProps()}
+          onError={this.props.onError}/>
         {this.hasTags &&
           <TagColors
             selection={this.props.item.tags}
@@ -60,7 +60,7 @@ class CoverImage extends PureComponent {
       photos: arrayOf(number),
       tags: arrayOf(number),
       cover: number
-    }).isRequired,
+    }).isRequired
   }
 }
 

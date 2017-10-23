@@ -4,6 +4,7 @@ const React = require('react')
 const { SelectionIterable } = require('./iterable')
 const cx = require('classnames')
 const { createClickHandler } = require('../util')
+const { IconWarningOverlay } = require('../icons')
 
 
 class SelectionTile extends SelectionIterable {
@@ -29,6 +30,9 @@ class SelectionTile extends SelectionIterable {
         onClick={this.handleClick}>
         <div className="tile-state">
           {this.renderThumbnail()}
+          <div className="icon-container">
+            <IconWarningOverlay/>
+          </div>
         </div>
       </li>
     )

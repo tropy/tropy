@@ -1,6 +1,7 @@
 'use strict'
 
 module.exports = {
+  CONSOLIDATE: 'photo.consolidate',
   CONTRACT: 'photo.contract',
   CREATE: 'photo.create',
   DELETE: 'photo.delete',

@@ -334,11 +334,21 @@ en:
       template:
         import: Importing templates …
     photo:
-      create: Importing photos …
+      consolidate: >
+        {hasProgressBar, select,
+          true {Consolidating photos {progress, number} of {total, number} …}
+          other {Consolidating photos …}
+        }
+      create: >
+        {hasProgressBar, select,
+          true {Importing photos {progress, number} of {total, number} …}
+          other {Importing photos …}
+        }
       delete: Deleting photo …
       load: Loading photos …
       move: Moving photos …
       order: Sorting photos …
+      save: Saving photo …
       restore: Restoring photos …
     note:
       create: Creating note …
@@ -377,6 +387,10 @@ en:
       save: Failed to save list.
       item:
         add: Failed to add item(s) to list.
+    photo:
+      consolidate: Failed to consolidate photos.
+      create: Failed to import photo.
+      save: Failed to save photo.
     ontology:
       import: Failed to import vocabulary.
       vocab:
@@ -393,4 +407,4 @@ en:
         message: >
           Tropy {version} is ready to be installed.
           Do you want to install and restart now?
-        confirm: Install Now
+        confirm: Restart Now

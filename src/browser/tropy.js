@@ -367,6 +367,15 @@ class Tropy extends EventEmitter {
       this.dispatch(act.photo.delete({
         item: target.item, photos: [target.id]
       })))
+
+    this.on('app:consolidate-item', (_, { target }) =>
+      this.dispatch(act.photo.consolidate(target.photos, { force: true })))
+
+    this.on('app:consolidate-photo', (_, { target }) =>
+      this.dispatch(act.photo.consolidate([target.id], {
+        force: true, prompt: true
+      })))
+
     this.on('app:delete-selection', (_, { target }) =>
       this.dispatch(act.selection.delete({
         photo: target.id, selections: [target.selection]
