@@ -41,7 +41,7 @@ class PhotoTile extends PhotoIterable {
             onContextMenu: this.handleContextMenu
           })}
           <div className="icon-container">
-            <IconWarningOverlay/>
+            {this.props.photo.broken && <IconWarningOverlay/>}
             {this.props.isExpandable &&
               <IconButton
                 icon={<IconSelectionOverlay/>}
