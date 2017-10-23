@@ -468,6 +468,13 @@ i('Selection', (
   </svg>
 ))
 
+i('SelectionOverlay', (
+  <svg width="16" height="16">
+    <path d="M4,1V2H1V4H0V1ZM1,6H0v4H1Zm0,6H0v3H4V14H1Zm14,2H12v1h4V12H15Zm0-4h1V6H15ZM12,1V2h3V4h1V1ZM6,2h4V1H6ZM6,15h4V14H6Z" fill="#fff"/>
+    <path d="M4,2V3H2V4H1V2ZM2,6H1v4H2Zm0,6H1v2H4V13H2Zm4,2h4V13H6Zm8-1H12v1h3V12H14Zm0-3h1V6H14ZM12,2V3h2V4h1V2ZM6,3h4V2H6Z" opacity="0.5"/>
+  </svg>
+))
+
 i('Sink', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
