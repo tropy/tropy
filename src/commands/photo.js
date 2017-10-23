@@ -40,13 +40,13 @@ class Consolidate extends ImportCommand {
 
             if (meta.prompt) {
               this.isInteractive = true
-              const [path] = yield call(open.images, {
+              const paths = yield call(open.images, {
                 properties: ['openFile']
               })
 
-              image = (path == null) ?
+              image = (blank(paths)) ?
                 null :
-                yield call(Image.read, path)
+                yield call(Image.read, paths[0])
             }
           }
 
