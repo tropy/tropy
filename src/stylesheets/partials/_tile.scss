@@ -69,10 +69,14 @@
     }
   }
 
-  .btn-icon {
+  .icon-container {
     position: absolute;
     right: 6px;
     bottom: 5px;
+    margin-left: 0;
+  }
+
+  .btn-icon {
     padding: 0;
 
     .icon {

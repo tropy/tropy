@@ -6,7 +6,7 @@ const { Editable } = require('../editable')
 const { FormattedMessage } = require('react-intl')
 const { blank, pluck } = require('../../common/util')
 const { getLabel } = require('../../common/ontology')
-const { IconLock, IconWarning } = require('../icons')
+const { IconLock, IconWarningSm } = require('../icons')
 const cx = require('classnames')
 const { TYPE } = require('../../constants')
 const { auto } = require('../../format')
@@ -88,7 +88,7 @@ class MetadataField extends PureComponent {
             onCancel={this.handleCancel}
             onChange={this.handleChange}
             onKeyDown={this.handleKeyDown}/>
-          {isInvalid && <IconWarning/>}
+          {isInvalid && <IconWarningSm/>}
           {this.props.isReadOnly && <IconLock/>}
         </div>
       </li>

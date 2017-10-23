@@ -60,3 +60,17 @@
 .icon-arrow {
   margin: -2px; // Special treat 20 x 20 arrow icon
 }
+
+.icon-container {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  margin-left: $space-xs;
+
+  .icon + .icon,
+  .icon + .btn,
+  .btn + .icon,
+  .btn + .btn {
+    margin-left: $space-min;
+  }
+}

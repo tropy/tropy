@@ -4,7 +4,7 @@ const React = require('react')
 const { PhotoIterable } = require('./iterable')
 const { createClickHandler } = require('../util')
 const cx = require('classnames')
-const { IconSelectionOverlay } = require('../icons')
+const { IconSelectionOverlay, IconWarningOverlay } = require('../icons')
 const { IconButton } = require('../button')
 
 
@@ -40,10 +40,13 @@ class PhotoTile extends PhotoIterable {
             onClick: this.handleClick,
             onContextMenu: this.handleContextMenu
           })}
-          {this.props.isExpandable &&
-            <IconButton
-              icon={<IconSelectionOverlay/>}
-              onClick={this.handleExpansionToggle}/>}
+          <div className="icon-container">
+            <IconWarningOverlay/>
+            {this.props.isExpandable &&
+              <IconButton
+                icon={<IconSelectionOverlay/>}
+                onClick={this.handleExpansionToggle}/>}
+          </div>
         </div>
         {this.props.isExpanded && <div className="pointer"/>}
       </li>
