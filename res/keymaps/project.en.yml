@@ -139,19 +139,15 @@ darwin:
     up:
       - ArrowUp
       - Shift+ArrowUp
-      - Cmd+ArrowUp
     down:
       - ArrowDown
       - Shift+ArrowDown
-      - Cmd+ArrowDown
     left:
       - ArrowLeft
       - Shift+ArrowLeft
-      - Cmdl+ArrowLeft
     right:
       - ArrowRight
       - Shift+ArrowRight
-      - Cmd+ArrowRight
     preview: Space
     open:
       - Cmd+ArrowDown
