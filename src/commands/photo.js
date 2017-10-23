@@ -53,6 +53,8 @@ class Consolidate extends ImportCommand {
 
           if (image != null) {
             if (meta.force || (image.checksum !== photo.checksum)) {
+              yield* this.createThumbnails(photo.id, image)
+
               const data = { id: photo.id, ...image.toJSON() }
 
               yield call(mod.photo.save, db, data)
@@ -61,8 +63,6 @@ class Consolidate extends ImportCommand {
                 consolidated: new Date(),
                 ...data
               }))
-
-              yield* this.createThumbnails(photo.id, image)
 
             } else {
               yield put(act.photo.update({

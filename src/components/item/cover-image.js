@@ -17,7 +17,6 @@ const stack = (
 )
 
 class CoverImage extends PureComponent {
-
   get isStack() {
     const { photos } = this.props.item
     return photos && photos.length > 1
@@ -33,7 +32,7 @@ class CoverImage extends PureComponent {
 
   getPhotoProps() {
     return pick(get(this.props.photos, [this.cover]), [
-      'angle', 'mirror', 'orientation'
+      'angle', 'mirror', 'orientation', 'broken'
     ])
   }
 

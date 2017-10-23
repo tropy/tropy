@@ -101,6 +101,7 @@ class PhotoIterable extends PureComponent {
       <Thumbnail {...props}
         id={this.props.photo.id}
         angle={this.props.photo.angle}
+        broken={this.props.photo.broken}
         mirror={this.props.photo.mirror}
         orientation={this.props.photo.orientation}
         cache={this.props.cache}

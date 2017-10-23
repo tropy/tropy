@@ -11,11 +11,15 @@ const { Rotation } = require('../../common/iiif')
 
 
 class Thumbnail extends PureComponent {
+  componentWillReceiveProps(props) {
+    this.hasBeenFixed = (this.props.broken && !props.broken)
+  }
+
   get src() {
     const { cache, id, size } = this.props
-
-    return (id != null) ?
-      imageURL(cache, id, size > ICON.SIZE ? ICON.MAX : ICON.SIZE) : null
+    if (id == null) return null
+    const url = imageURL(cache, id, size > ICON.SIZE ? ICON.MAX : ICON.SIZE)
+    return (this.hasBeenFixed) ? `${url}?fixed=true` : url
   }
 
   get rotation() {
@@ -56,6 +60,7 @@ class Thumbnail extends PureComponent {
 
   static propTypes = {
     angle: number,
+    broken: bool,
     cache: string.isRequired,
     id: number,
     mirror: bool,
