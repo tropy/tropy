@@ -2,12 +2,12 @@
 
 describe('export', () => {
   const { groupedByTemplate } = __require('export')
-  const { template, items, metadata, props, photos, lists } =
+  const { template, items, metadata, props, photos, lists, tags } =
         require('../fixtures/export')
   const { keys } = Object
 
   const resources = [
-    { template, items, metadata, photos, lists }
+    { template, items, metadata, photos, lists, tags }
   ]
 
   const ld = groupedByTemplate(resources, props)
@@ -92,6 +92,12 @@ describe('export', () => {
       const data = (await ld)[0]['@graph']
       expect(data[0]).to.not.have.property('list')
       expect(data[1]['list']).to.eql('list1')
+    })
+
+    it('tag', async () => {
+      const data = (await ld)[0]['@graph']
+      expect(data[0]).to.not.have.property('tag')
+      expect(data[1]['tag']).to.eql('mytag')
     })
   })
 })

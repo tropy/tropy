@@ -64,7 +64,7 @@ function makeContext(items, photos, metadata, template, props) {
   return result
 }
 
-function renderItem(item, photos, metadata, template, props, lists) {
+function renderItem(item, photos, metadata, template, props, lists, tags) {
   // the item starts with a photo property, it may not be overwritten
   let result = { '@type': ITEM, 'photo': [] }
 
@@ -73,6 +73,14 @@ function renderItem(item, photos, metadata, template, props, lists) {
     result.list = values(pick(lists, item.lists)).map(l => l.name)
     if (result.list.length === 1) {
       result.list = result.list[0]
+    }
+  }
+
+  // add item tags info
+  if (item.tags && item.tags.length) {
+    result.tag = values(pick(tags, item.tags)).map(t => t.name)
+    if (result.tag.length === 1) {
+      result.tag = result.tag[0]
     }
   }
 
@@ -118,13 +126,13 @@ function renderItem(item, photos, metadata, template, props, lists) {
   return result
 }
 
-function makeDocument(items, photos, metadata, template, props, lists) {
+function makeDocument(items, photos, metadata, template, props, lists, tags) {
   const result = {
     'template': template.id,
     '@graph': []
   }
   for (const item of items) {
-    const rendered = renderItem(item, photos, metadata, template, props, lists)
+    const rendered = renderItem(item, photos, metadata, template, props, lists, tags)
     result['@graph'].push(rendered)
   }
   return result
@@ -133,10 +141,10 @@ function makeDocument(items, photos, metadata, template, props, lists) {
 async function groupedByTemplate(resources, props = {}) {
   const results = []
   for (const resource of resources) {
-    const { items, metadata, template, photos, lists } = resource
+    const { items, metadata, template, photos, lists, tags } = resource
     const context = makeContext(items, photos, metadata, template, props)
     const document = makeDocument(
-      items, photos, metadata, template, props, lists)
+      items, photos, metadata, template, props, lists, tags)
     document['@context'] = context
     results.push(await jsonld.compact(document, context))
   }
