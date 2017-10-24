@@ -124,7 +124,7 @@ function makeDocument(items, photos, metadata, template, props, lists) {
     '@graph': []
   }
   for (const item of items) {
-    const rendered = renderItem(item, photos, metadata, template, props)
+    const rendered = renderItem(item, photos, metadata, template, props, lists)
     result['@graph'].push(rendered)
   }
   return result

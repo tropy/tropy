@@ -3,7 +3,7 @@
 describe('export', () => {
   const { groupedByTemplate } = __require('export')
   const { template, items, metadata, props, photos, lists } =
-        require('./helpers')
+        require('../fixtures/export')
   const { keys } = Object
 
   const resources = [
@@ -89,9 +89,9 @@ describe('export', () => {
 
   describe('item has auxiliary property', () => {
     it('list', async () => {
-      const data = (await ld)[0]['item']
+      const data = (await ld)[0]['@graph']
       expect(data[0]).to.not.have.property('list')
-      expect(data[1]['list']).to.eql(['list1'])
+      expect(data[1]['list']).to.eql('list1')
     })
   })
 })
