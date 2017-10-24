@@ -20,7 +20,7 @@
 <http://www.europeana.eu/schemas/edm/> a owl:Ontology , voaf:Vocabulary ;
 	vann:preferredNamespacePrefix "edm" ;
 	vann:preferredNamespaceUri "http://www.europeana.eu/schemas/edm/" ;
-	dc:title "Europeana Data Model (EDM) vocabulary"@en ;
+	dc:title "Europeana Data Model (EDM) Vocabulary"@en ;
 	dc:description "The Europeana Data Model (EDM) is aimed at being an integration medium for collecting, connecting and enriching the descriptions provided by Europeana data providers. The RDF vocabulary for http://www.europeana.eu/schemas/edm/ defines the elements introduced by EDM (as opposed to the ones EDM re-uses from other namespaces)."@en ;
 	dc:issued "2010-03-25"^^xsd:date ;
 	dc:modified "2012-08-20"^^xsd:date ;

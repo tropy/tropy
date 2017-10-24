@@ -7,19 +7,22 @@ const { assign } = Object
 module.exports = {
   async up(tx) {
     const files = [
-      Ontology.expand('tropy'),
-      Ontology.expand('xsd'),
-      Ontology.expand('dc'),
-      Ontology.expand('dcterms'),
-      Ontology.expand('rdf'),
-      Ontology.expand('rdfs')
+      [Ontology.expand('tropy'), true],
+      [Ontology.expand('xsd'), true],
+      [Ontology.expand('dc'), true],
+      [Ontology.expand('dcterms'), true],
+      [Ontology.expand('rdf'), true],
+      [Ontology.expand('rdfs'), true],
+      [Ontology.expand('ore'), false],
+      [Ontology.expand('skos'), false],
+      [Ontology.expand('edm'), false]
     ]
 
-    for (const file of files) {
+    for (const [file, isProtected] of files) {
       let data = (await Ontology.open(file, false)).toJSON()
 
       for (let id in data) {
-        await mod.vocab.create(tx, assign(data[id], { isProtected: true }))
+        await mod.vocab.create(tx, assign(data[id], { isProtected }))
 
         await Promise.all([
           mod.props.create(tx, ...data[id].properties),
