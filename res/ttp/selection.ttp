@@ -3,6 +3,7 @@
   "@id": "https://tropy.org/v1/templates/selection",
   "@type": "https://tropy.org/v1/tropy#Template",
   "name": "Tropy Photo Selection",
+  "version": "1.0.0",
   "type": "https://tropy.org/v1/tropy#Selection",
   "domain": [
     "http://iiif.io/api/image/2#Image"

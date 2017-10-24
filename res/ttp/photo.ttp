@@ -3,6 +3,7 @@
   "@id": "https://tropy.org/v1/templates/photo",
   "@type": "https://tropy.org/v1/tropy#Template",
   "name": "Tropy Photo",
+  "version": "1.0.0",
   "type": "https://tropy.org/v1/tropy#Photo",
   "domain": [
     "http://iiif.io/api/image/2#Image"

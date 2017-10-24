@@ -12,16 +12,20 @@ $theme: "dark";
 
 $blue: #395bac;
 $blue-light: #cedef7;
+$blue-dark: #171b2e;
 $red: #e62e2e;
 
 $brand-primary: $blue;
+$brand-primary-dark: $blue-dark;
 $brand-primary-light: $blue-light;
 
 :root {
   #{--brand-primary}:            $brand-primary;
+  #{--brand-primary-30}:         rgba($brand-primary, 0.3);
   #{--brand-primary-35}:         rgba($brand-primary, 0.35);
   #{--brand-primary-60}:         rgba($brand-primary, 0.6);
   #{--brand-primary-darken-2}:   darken($brand-primary, 2%);
+  #{--brand-primary-dark}:       $brand-primary-dark;
   #{--brand-primary-light}:      $brand-primary-light;
   #{--brand-primary-light-10}:   rgba($brand-primary-light, 0.1);
   #{--brand-primary-light-76}:   rgba($blue-light, 0.76);
@@ -75,6 +79,7 @@ $shade-10: #fff; // White
   #{--shade-10}:           $shade-10;
   #{--shade-10-5}:         rgba($shade-10, 0.05);
   #{--shade-10-20}:        rgba($shade-10, 0.2);
+  #{--shade-10-50}:        rgba($shade-10, 0.5);
   #{--shade-10-darken-4}:  darken($shade-10, 4%);
   #{--shade-10-darken-14}: darken($shade-10, 14%);
 }
@@ -360,3 +365,12 @@ $property-input-border: var(--shade-1-lighten-4);
 // Colors
 $colors-focus-border-table: var(--brand-primary-light);
 $colors-focus-border-grid:  var(--shade-10-darken-14);
+
+// Flash
+$flash-bg:               var(--brand-primary-dark);
+$flash-color:            var(--brand-primary-lighten-14);
+$flash-close-icon-color: var(--brand-primary-lighten-14);
+$flash-shadow-color:     var(--brand-primary-30);
+
+// Flash
+$clear-search-color: var(--shade-4);

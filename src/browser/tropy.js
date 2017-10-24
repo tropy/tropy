@@ -31,7 +31,7 @@ const { darwin } = require('../common/os')
 const { version } = require('../common/release')
 
 const {
-  HISTORY, TAG, PROJECT, CONTEXT, SASS
+  FLASH, HISTORY, TAG, PROJECT, CONTEXT, SASS
 } = require('../constants')
 
 const WIN = SASS.WINDOW
@@ -51,6 +51,7 @@ class Tropy extends EventEmitter {
     locale: 'en', // app.getLocale() || 'en',
     theme: 'light',
     recent: [],
+    updater: true,
     win: {}
   }
 
@@ -121,7 +122,7 @@ class Tropy extends EventEmitter {
 
           const chosen = await dialog.show('message-box', this.win, {
             type: 'warning',
-            ...this.strings.dict.dialogs.unresponsive
+            ...this.dict.dialogs.unresponsive
           })
 
           switch (chosen) {
@@ -141,7 +142,7 @@ class Tropy extends EventEmitter {
 
           const chosen = await dialog.show('message-box', this.win, {
             type: 'warning',
-            ...this.strings.dict.dialogs.crashed
+            ...this.dict.dialogs.crashed
           })
 
           switch (chosen) {
@@ -190,7 +191,7 @@ class Tropy extends EventEmitter {
     if (this.about) return this.about.show(), this
 
     this.about = open('about', this.hash, {
-      title: this.strings.dict.windows.about.title,
+      title: this.dict.windows.about.title,
       width: ABT.WIDTH * ZOOM,
       height: ABT.HEIGHT * ZOOM,
       parent: darwin ? null : this.win,
@@ -213,7 +214,7 @@ class Tropy extends EventEmitter {
     if (this.wiz) return this.wiz.show(), this
 
     this.wiz = open('wizard', this.hash, {
-      title: this.strings.dict.windows.wizard.title,
+      title: this.dict.windows.wizard.title,
       width: WIZ.WIDTH * ZOOM,
       height: WIZ.HEIGHT * ZOOM,
       parent: darwin ? null : this.win,
@@ -235,7 +236,7 @@ class Tropy extends EventEmitter {
     if (this.prefs) return this.prefs.show(), this
 
     this.prefs = open('prefs', this.hash, {
-      title: this.strings.dict.windows.prefs.title,
+      title: this.dict.windows.prefs.title,
       width: PREFS.WIDTH * ZOOM,
       height: PREFS.HEIGHT * ZOOM,
       parent: darwin ? null : this.win,
@@ -276,7 +277,8 @@ class Tropy extends EventEmitter {
           .then(strings => this.strings = strings)
       ]))
 
-      .tap(() => this.updater.start())
+      .tap(state => state.updater && this.updater.start())
+
       .tap(() => this.emit('app:restored'))
       .tap(() => verbose('app state restored'))
   }
@@ -335,7 +337,7 @@ class Tropy extends EventEmitter {
       this.dispatch(act.item.explode({ id: target.item, photos: [target.id] })))
 
     this.on('app:export-item', (_, { target }) =>
-      this.dispatch(act.item.export({ id: target.id })))
+      this.dispatch(act.item.export(target.id)))
 
     this.on('app:restore-item', (_, { target }) =>
       this.dispatch(act.item.restore(target.id)))
@@ -365,6 +367,15 @@ class Tropy extends EventEmitter {
       this.dispatch(act.photo.delete({
         item: target.item, photos: [target.id]
       })))
+
+    this.on('app:consolidate-item', (_, { target }) =>
+      this.dispatch(act.photo.consolidate(target.photos, { force: true })))
+
+    this.on('app:consolidate-photo', (_, { target }) =>
+      this.dispatch(act.photo.consolidate([target.id], {
+        force: true, prompt: true
+      })))
+
     this.on('app:delete-selection', (_, { target }) =>
       this.dispatch(act.selection.delete({
         photo: target.id, selections: [target.selection]
@@ -429,6 +440,14 @@ class Tropy extends EventEmitter {
       this.state.debug = !this.state.debug
       this.broadcast('debug', this.state.debug)
       this.emit('app:reload-menu')
+    })
+
+    this.on('app:check-for-updates', () => {
+      this.updater.check()
+    })
+
+    this.on('app:install-updates', () => {
+      this.updater.install()
     })
 
     this.on('app:reload-menu', () => {
@@ -548,6 +567,12 @@ class Tropy extends EventEmitter {
     ipc.on(PROJECT.CREATE, () => this.showWizard())
     ipc.on(PROJECT.CREATED, (_, { file }) => this.open(file))
 
+    ipc.on(FLASH.HIDE, (_, { id, confirm }) => {
+      if (id === 'update.ready' && confirm) {
+        this.updater.install()
+      }
+    })
+
     ipc.on(PROJECT.UPDATE, (_, { name }) => {
       if (name) this.win.setTitle(name)
     })
@@ -601,6 +626,10 @@ class Tropy extends EventEmitter {
     }
   }
 
+  get dict() {
+    return this.strings.dict[this.state.locale]
+  }
+
   get history() {
     return H.get(BrowserWindow.getFocusedWindow()) || {}
   }
@@ -615,6 +644,10 @@ class Tropy extends EventEmitter {
 
   get dev() {
     return release.channel === 'dev' || ARGS.environment === 'development'
+  }
+
+  get isBuild() {
+    return ARGS.environment === 'production'
   }
 
   get debug() {

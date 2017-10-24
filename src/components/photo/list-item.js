@@ -9,7 +9,7 @@ const { get, pluck } = require('../../common/util')
 const cx = require('classnames')
 const { testFocusChange } = require('../../dom')
 const { bool, func, object, string } = require('prop-types')
-const { IconSelection, IconChevron9 } = require('../icons')
+const { IconSelection, IconChevron9, IconWarning } = require('../icons')
 const { IconButton } = require('../button')
 
 
@@ -116,7 +116,8 @@ class PhotoListItem extends PhotoIterable {
       isDisabled,
       isEditing,
       isExpandable,
-      onEditCancel
+      onEditCancel,
+      photo
     } = this.props
 
     return this.connect(
@@ -139,7 +140,10 @@ class PhotoListItem extends PhotoIterable {
               onCancel={onEditCancel}
               onChange={this.handleChange}/>
           </div>
-          {isExpandable && <IconSelection/>}
+          <div className="icon-container">
+            {photo.broken && <IconWarning/>}
+            {isExpandable && <IconSelection/>}
+          </div>
         </div>
         {this.renderSelectionList()}
       </li>

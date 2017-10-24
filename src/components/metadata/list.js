@@ -60,7 +60,7 @@ class MetadataList extends PureComponent {
   }
 
   isEditing(property) {
-    if (get(this.props.edit, [property]) === this.key) {
+    if (this.key != null && this.key === get(this.props.edit, [property])) {
       this.head = property
       return true
     } else {

@@ -1,0 +1,73 @@
+{
+  "@context": "https://tropy.org/v1/contexts/template.jsonld",
+  "@id": "https:/tropy.org/v1/templates/dc",
+  "@type": "https://tropy.org/v1/tropy#Template",
+  "type": "https://tropy.org/v1/tropy#Item",
+  "name": "Dublin Core",
+  "version": "1.0.0",
+  "domain": [],
+  "creator": "RRCHNM",
+  "description": "Generic template based on the Dublic Core Metadata Element Set",
+  "field": [
+    {
+      "property": "http://purl.org/dc/elements/1.1/title",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/creator",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/date",
+      "datatype": "https://tropy.org/v1/tropy#date"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/type",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/source",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/identifier",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/rights",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/subject",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/language",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/format",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/contributor",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/description",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/publisher",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/coverage",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string"
+    },
+    {
+      "property": "http://purl.org/dc/elements/1.1/relation",
+      "datatype": "http://www.w3.org/2001/XMLSchema#string"
+    }
+  ]
+}

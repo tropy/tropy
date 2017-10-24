@@ -10,31 +10,37 @@ const MIN = 1000 * 60
 
 class Updater {
   constructor(app, timeout = 30 * MIN) {
-    this.isSupported = !linux && ARGS.environment === 'production'
+    this.isSupported = !linux && app.isBuild && ARGS.autoUpdates
 
     this.app = app
     this.timeout = timeout
     this.release = {}
 
+    this.isChecking = false
+    this.isUpdateAvailable = false
+    this.isUpdateReady = false
+
     if (!this.isSupported) return
 
-    autoUpdater.setFeedURL(feed)
+    try {
+      autoUpdater.setFeedURL(feed)
 
-    autoUpdater.on('error', this.onError)
-    autoUpdater.on('checking-for-update', this.onCheckingForUpdate)
-    autoUpdater.on('update-not-available', this.onUpdateNotAvailable)
-    autoUpdater.on('update-available', this.onUpdateAvailable)
+      autoUpdater.on('error', this.onError)
+      autoUpdater.on('checking-for-update', this.onCheckingForUpdate)
+      autoUpdater.on('update-not-available', this.onUpdateNotAvailable)
+      autoUpdater.on('update-available', this.onUpdateAvailable)
 
-    autoUpdater.on('update-downloaded', (event, notes, version) => {
-      this.onUpdateReady({
-        id: 'update.ready',
-        values: {
-          notes,
-          version,
-          date: new Date()
-        }
+      autoUpdater.on('update-downloaded', (event, notes, version) => {
+        this.onUpdateReady({
+          id: 'update.ready',
+          values: { notes, version, date: new Date() }
+        })
       })
-    })
+
+    } catch (error) {
+      warn(`failed to setup auto updater: ${error.message}`, { error })
+      this.isSupported = false
+    }
   }
 
   start() {
@@ -42,14 +48,21 @@ class Updater {
 
     if (this.isSupported) {
       if (win32) setTimeout(this.check, MIN)
-      else this.check()
+      else process.nextTick(this.check)
 
       this.interval = setInterval(this.check, this.timeout)
     }
   }
 
   stop() {
-    clearInterval(this.interval)
+    if (this.interval != null) {
+      clearInterval(this.interval)
+      this.interval = null
+    }
+  }
+
+  get canCheck() {
+    return !this.isChecking && !this.isUpdateAvailable
   }
 
   check = () => {
@@ -65,17 +78,24 @@ class Updater {
   }
 
   onError(error) {
+    this.isChecking = false
+    this.isUpdateAvailable = false
+    this.isUpdateReady = false
     warn(`Failed to fetch update: ${error.message}`, { error })
   }
 
   onCheckingForUpdate = () =>{
     verbose('checking for updates...')
     this.lastCheck = new Date()
+    this.isChecking = true
+    this.app.emit('app:reload-menu')
   }
 
   onUpdateNotAvailable = () => {
     verbose('no updates available')
     this.isUpdateAvailable = false
+    this.isChecking = false
+    this.app.emit('app:reload-menu')
   }
 
   onUpdateAvailable = () => {
@@ -87,6 +107,7 @@ class Updater {
     info(`update ${release.values.version} ready`)
     this.release = release
     this.isUpdateReady = true
+    this.isChecking = false
     this.app.broadcast('dispatch', flash.show(release))
   }
 }

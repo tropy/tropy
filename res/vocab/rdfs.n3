@@ -4,7 +4,7 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 
 <http://www.w3.org/2000/01/rdf-schema#> a owl:Ontology ;
-	dc:title "The RDF Schema Vocabulary (RDFS)" .
+	dc:title "RDF Schema Vocabulary (RDFS)" .
 
 rdfs:Resource a rdfs:Class ;
 	rdfs:isDefinedBy <http://www.w3.org/2000/01/rdf-schema#> ;

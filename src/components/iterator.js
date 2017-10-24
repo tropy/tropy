@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { TABS, SASS: { TILE } } = require('../constants')
 const { adjacent, restrict } = require('../common/util')
-const { win32 } = require('../common/os')
+const { darwin } = require('../common/os')
 const { has, on, off } = require('../dom')
 const { ceil, floor, max, min, round } = Math
 const { bool, number } = require('prop-types')
@@ -322,7 +322,7 @@ class Iterator extends PureComponent {
     }
   }
 
-  handleResize = throttle((!win32 ?
+  handleResize = throttle((darwin || window.devicePixelRatio === 1 ?
     (rect) => this.resize(rect) :
     () => this.resize(this.bounds)
   ), 15)

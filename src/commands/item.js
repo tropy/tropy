@@ -1,9 +1,10 @@
 'use strict'
 
+const { clipboard } = require('electron')
 const assert = require('assert')
 const { warn, verbose } = require('../common/log')
 const { DuplicateError } = require('../common/error')
-const { all, call, put, select } = require('redux-saga/effects')
+const { all, call, put, select, cps } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
 const { prompt, open, fail, save  } = require('../dialog')
@@ -16,8 +17,9 @@ const { darwin } = require('../common/os')
 const { ITEM, DC } = require('../constants')
 const { keys } = Object
 const { isArray } = Array
-const { writeFileAsync: write } = require('fs')
+const { writeFile: write } = require('fs')
 const { win } = require('../window')
+const { groupedByTemplate } = require('../export')
 
 const {
   getItemTemplate,
@@ -426,9 +428,8 @@ class Export extends Command {
   static get action() { return ITEM.EXPORT }
 
   *exec() {
-    const { db } = this.options
-    const { payload } = this.action
-    let path = payload.path
+    let path = this.action.meta.target
+    const ids = this.action.payload
 
     try {
       if (!path) {
@@ -438,11 +439,32 @@ class Export extends Command {
 
       if (!path) return
 
-      const data =
-        yield call(db.seq, conn => mod.item.export(conn, [payload.id]))
+      const [resources, props] = yield select(state => {
+        const itms = pick(state.items, ids)
+        const templateIDs = Object.values(itms).map(itm => itm.template)
+        const templates = pick(state.ontology.template, templateIDs)
+        let results = []
+        for (const t in templates) {
+          const template = templates[t]
+          results.push({
+            template,
+            items: Object.values(itms).filter(i => i.template === t),
+            metadata: state.metadata,
+            photos: state.photos
+          })
+        }
+        return [results, state.ontology.props]
+      })
 
-      yield call((...args) => write(...args), path, data, { flags: 'w' })
+      const results = yield call(groupedByTemplate, resources, props)
 
+      const data = JSON.stringify(results, null, 2)
+
+      if (path === ':clipboard:') {
+        yield call(clipboard.writeText, data)
+      } else {
+        yield cps(write, path, data)
+      }
     } catch (error) {
       warn(`Failed to export items to ${path}: ${error.message}`)
       verbose(error.stack)

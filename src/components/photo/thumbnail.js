@@ -11,11 +11,15 @@ const { Rotation } = require('../../common/iiif')
 
 
 class Thumbnail extends PureComponent {
+  componentWillReceiveProps(props) {
+    this.hasBeenFixed = (this.props.broken && !props.broken)
+  }
+
   get src() {
     const { cache, id, size } = this.props
-
-    return (id != null) ?
-      imageURL(cache, id, size > ICON.SIZE ? ICON.MAX : ICON.SIZE) : null
+    if (id == null) return null
+    const url = imageURL(cache, id, size > ICON.SIZE ? ICON.MAX : ICON.SIZE)
+    return (this.hasBeenFixed) ? `${url}?fixed=true` : url
   }
 
   get rotation() {
@@ -25,9 +29,23 @@ class Thumbnail extends PureComponent {
       .format('x')
   }
 
-  render() {
-    const { src, rotation } = this
+  handleError = () => {
+    if (this.props.onError != null) {
+      this.props.onError(this.props.id)
+    }
+  }
 
+  renderImage() {
+    const { src, rotation } = this
+    return src && (
+      <img
+        className={`iiif rot-${rotation}`}
+        src={src}
+        onError={this.handleError}/>
+    )
+  }
+
+  render() {
     const listeners = pick(this.props, [
       'onClick', 'onDoubleClick', 'onMouseDown', 'onContextMenu'
     ])
@@ -35,22 +53,23 @@ class Thumbnail extends PureComponent {
     return (
       <figure {...listeners} className="thumbnail">
         <IconPhoto/>
-        {src &&
-          <img className={`iiif rot-${rotation}`} src={src}/>}
+        {this.renderImage()}
       </figure>
     )
   }
 
   static propTypes = {
+    angle: number,
+    broken: bool,
     cache: string.isRequired,
     id: number,
-    angle: number,
     mirror: bool,
     orientation: number,
     size: number.isRequired,
     onClick: func,
     onContextMenu: func,
     onDoubleClick: func,
+    onError: func,
     onMouseDown: func
   }
 

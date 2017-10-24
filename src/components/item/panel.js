@@ -91,6 +91,7 @@ class ItemPanel extends PureComponent {
       onNoteSelect,
       onPhotoContract,
       onPhotoDelete,
+      onPhotoError,
       onPhotoExpand,
       onPhotoSelect,
       onPhotoSort,
@@ -108,7 +109,7 @@ class ItemPanel extends PureComponent {
         header={this.renderItemToolbar()}>
 
         <Panel className={cx('item', 'panel', {
-          'nested-focus': this.state.hasFirstPanelFocus,
+          'nested-tab-focus': this.state.hasFirstPanelFocus,
           'has-active': this.state.isFirstPanelActive
         })}>
           <ItemTabHeader
@@ -139,6 +140,7 @@ class ItemPanel extends PureComponent {
           onContract={onPhotoContract}
           onCreate={this.handlePhotoCreate}
           onDelete={onPhotoDelete}
+          onError={onPhotoError}
           onExpand={onPhotoExpand}
           onItemPreview={onItemPreview}
           onSelect={onPhotoSelect}
@@ -204,6 +206,7 @@ class ItemPanel extends PureComponent {
     onPhotoContract: func.isRequired,
     onPhotoCreate: func.isRequired,
     onPhotoDelete: func.isRequired,
+    onPhotoError: func.isRequired,
     onPhotoExpand: func.isRequired,
     onPhotoSelect: func.isRequired,
     onPhotoSort: func.isRequired,

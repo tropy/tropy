@@ -101,10 +101,12 @@ class PhotoIterable extends PureComponent {
       <Thumbnail {...props}
         id={this.props.photo.id}
         angle={this.props.photo.angle}
+        broken={this.props.photo.broken}
         mirror={this.props.photo.mirror}
         orientation={this.props.photo.orientation}
         cache={this.props.cache}
-        size={this.props.size}/>
+        size={this.props.size}
+        onError={this.props.onError}/>
     )
   }
 
@@ -115,6 +117,7 @@ class PhotoIterable extends PureComponent {
         id: photo.id,
         item: photo.item,
         angle: photo.angle,
+        broken: photo.broken,
         mirror: photo.mirror,
         orientation: photo.orientation,
         adj: getAdjacent(photo).map(p => p && p.id)
@@ -218,6 +221,7 @@ class PhotoIterable extends PureComponent {
     onContextMenu: func.isRequired,
     onContract: func.isRequired,
     onDropPhoto: func.isRequired,
+    onError: func.isRequired,
     onExpand: func.isRequired,
     onItemOpen: func.isRequired,
     onSelect: func.isRequired

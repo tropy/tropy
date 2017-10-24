@@ -222,7 +222,7 @@ $items-active-color:             var(--shade-9);
 $items-active-bg:                var(--shade-3);
 
 // Panel group
-$panels-bg: $shade-1;
+$panels-bg: var(--shade-1);
 
 // Panel
 $panel-bg:                           var(--shade-1);
@@ -358,3 +358,12 @@ $property-input-border: var(--shade-1-darken-18);
 // Colors
 $colors-focus-border-table: var(--shade-0);
 $colors-focus-border-grid:  var(--shade-0);
+
+// Flash
+$flash-bg:               var(--brand-primary-light);
+$flash-color:            var(--brand-primary);
+$flash-close-icon-color: var(--brand-primary);
+$flash-shadow-color:     var(--brand-primary-30);
+
+// Search
+$clear-search-color: var(--shade-0);

@@ -142,7 +142,7 @@ class EsperView extends Component {
         this.image.on('mousedown', this.handleMouseDown)
 
       } catch (_) {
-        // TODO handle missing photo
+        this.props.onPhotoError(props.photo)
       }
 
       this.rotate(props)
@@ -407,7 +407,7 @@ class EsperView extends Component {
 
   handleLoadError = (loader, resource) => {
     if (this.props.onLoadError) {
-      this.props.onLoadError(resource.url)
+      this.props.onLoadError({ resource })
     }
   }
 
@@ -556,8 +556,9 @@ class EsperView extends Component {
     selections: array.isRequired,
     tool: string.isRequired,
     onChange: func.isRequired,
-    onLoadError: func,
     onDoubleClick: func.isRequired,
+    onLoadError: func,
+    onPhotoError: func.isRequired,
     onSelectionCreate: func.isRequired,
     onSelectionActivate: func.isRequired,
     onWheel: func.isRequired,

@@ -37,6 +37,12 @@ module.exports = require('yargs')
     describe: 'Set the zoom factor'
   })
 
+  .option('auto-updates', {
+    type: 'boolean',
+    describe: 'Automatically check for updates',
+    default: true
+  })
+
   .option('debug', {
     type: 'boolean',
     describe: 'Set debug flag',

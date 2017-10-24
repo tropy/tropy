@@ -114,7 +114,6 @@ class PrefsContainer extends PureComponent {
     pane: string.isRequired,
     settings: object.isRequired,
     vocab: array.isRequired,
-    photoTemplates: array.isRequired,
     onClassSave: func.isRequired,
     onContextMenu: func.isRequired,
     onOpenLink: func.isRequired,

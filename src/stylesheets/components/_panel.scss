@@ -11,7 +11,7 @@
   background-clip: content-box;
   contain: content;
 
-  &.nested-focus {
+  &.nested-tab-focus {
     background-color: $panel-focus-bg;
 
     &.has-active {

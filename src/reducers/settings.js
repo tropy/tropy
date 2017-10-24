@@ -7,7 +7,7 @@ const defaults = {
   dup: 'prompt',
   template: ITEM.TEMPLATE,
   theme: ARGS.theme,
-  overlayToolbars: true,
+  overlayToolbars: ARGS.frameless,
   invertScroll: true,
   invertZoom: false
 }

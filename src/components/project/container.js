@@ -11,12 +11,13 @@ const { NativeTypes } = require('react-dnd-electron-backend')
 const { NoProject } = require('./none')
 const { extname } = require('path')
 const { MODE } = require('../../constants/project')
-const { ensure, reflow } = require('../../dom')
+const { emit, on, off, ensure, reflow } = require('../../dom')
 const { win } = require('../../window')
 const cx = require('classnames')
 const { values } = Object
 const actions = require('../../actions')
 const debounce = require('lodash.debounce')
+const { match } = require('../../keymap')
 
 const {
   getActivities,
@@ -49,8 +50,13 @@ class ProjectContainer extends Component {
     }
   }
 
+  componentDidMount() {
+    on(document, 'keydown', this.handleKeyDown)
+  }
+
   componentWillUnmount() {
     this.projectWillChange.cancel()
+    off(document, 'keydown', this.handleKeyDown)
   }
 
   componentWillReceiveProps({ nav, project, ui }) {
@@ -150,6 +156,33 @@ class ProjectContainer extends Component {
     onMetadataSave(payload, meta)
   }
 
+  handleKeyDown = (event) => {
+    switch (match(this.props.keymap.global, event)) {
+      case 'back':
+        if (this.state.mode !== MODE.PROJECT) {
+          this.handleModeChange(MODE.PROJECT)
+        }
+        break
+      case 'nextItem':
+        emit(document, 'global:next-item')
+        break
+      case 'prevItem':
+        emit(document, 'global:prev-item')
+        break
+      case 'nextPhoto':
+        emit(document, 'global:next-photo')
+        break
+      case 'prevPhoto':
+        emit(document, 'global:prev-photo')
+        break
+      default:
+        return
+    }
+
+    event.stopPropagation()
+    event.preventDefault()
+  }
+
   setContainer = (container) => {
     this.container = container
   }
@@ -230,7 +263,8 @@ class ProjectContainer extends Component {
         <DragLayer
           cache={props.cache}
           photos={photos}
-          tags={props.tags}/>
+          tags={props.tags}
+          onPhotoError={props.onPhotoError}/>
       </div>
     )
   }
@@ -242,6 +276,7 @@ class ProjectContainer extends Component {
       file: string
     }).isRequired,
 
+    keymap: object.isRequired,
     items: arrayOf(
       shape({ id: number.isRequired })
     ).isRequired,
@@ -287,6 +322,7 @@ class ProjectContainer extends Component {
     dt: func.isRequired,
 
     onContextMenu: func.isRequired,
+    onPhotoError: func.isRequired,
     onProjectCreate: func.isRequired,
     onProjectOpen: func.isRequired,
     onMaximize: func.isRequired,
@@ -424,6 +460,10 @@ module.exports = {
         dispatch(actions.item.import(...args))
       },
 
+      onItemExport(items, meta) {
+        dispatch(actions.item.export(items, meta))
+      },
+
       onItemDelete(items) {
         dispatch(actions.item.delete(items))
       },
@@ -469,7 +509,6 @@ module.exports = {
         dispatch(actions.photo.expand(...args))
       },
 
-
       onPhotoMove(...args) {
         dispatch(actions.photo.move(...args))
       },
@@ -480,6 +519,10 @@ module.exports = {
 
       onPhotoSelect(...args) {
         dispatch(actions.photo.select(...args))
+      },
+
+      onPhotoError(...args) {
+        dispatch(actions.photo.error(...args))
       },
 
       onListSave(...args) {

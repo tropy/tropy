@@ -329,6 +329,7 @@ const ontology = {
             template_id AS id,
             template_type AS type,
             name,
+            version,
             creator,
             description,
             protected AS isProtected,
@@ -381,6 +382,7 @@ const ontology = {
       id,
       type,
       name,
+      version,
       creator,
       description,
       isProtected
@@ -395,11 +397,12 @@ const ontology = {
             template_id,
             template_type,
             name,
+            version,
             creator,
             description,
             protected)
-          VALUES (?, ?, ?, ?, ?, ?)`,
-        [id, type, name, creator, description, !!isProtected]
+          VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [id, type, name, version, creator, description, !!isProtected]
       )
     },
 

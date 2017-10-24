@@ -9,10 +9,85 @@ const act = require('../actions')
 const { PHOTO } = require('../constants')
 const { Image } = require('../image')
 const { DuplicateError } = require('../common/error')
-const { warn, verbose } = require('../common/log')
-const { pick, splice } = require('../common/util')
+const { info, warn, verbose } = require('../common/log')
+const { blank, pick, pluck, splice } = require('../common/util')
 const { getPhotoTemplate, getTemplateValues } = require('../selectors')
 const { keys } = Object
+
+
+class Consolidate extends ImportCommand {
+  static get action() { return PHOTO.CONSOLIDATE }
+
+  *exec() {
+    const { db } = this.options
+    const { payload, meta } = this.action
+    const consolidated = []
+
+    if (blank(payload)) return consolidated
+    const photos = yield select(state => pluck(state.photos, payload))
+
+    for (let i = 0, total = photos.length; i < total; ++i) {
+      const photo = photos[i]
+
+      try {
+        let { image, hasChanged, error } = yield call(Image.check, photo, meta)
+
+        if (meta.force || hasChanged) {
+          if (error != null) {
+            info(`failed to open photo ${photo.id}`, { error })
+
+            // TODO Figure out where it is!
+
+            if (meta.prompt) {
+              this.isInteractive = true
+              const paths = yield call(open.images, {
+                properties: ['openFile']
+              })
+
+              image = (blank(paths)) ?
+                null :
+                yield call(Image.read, paths[0])
+            }
+          }
+
+          if (image != null) {
+            if (meta.force || (image.checksum !== photo.checksum)) {
+              yield* this.createThumbnails(photo.id, image)
+
+              const data = { id: photo.id, ...image.toJSON() }
+
+              yield call(mod.photo.save, db, data)
+              yield put(act.photo.update({
+                broken: false,
+                consolidated: new Date(),
+                ...data
+              }))
+
+            } else {
+              yield put(act.photo.update({
+                id: photo.id, broken: true, consolidated: new Date()
+              }))
+            }
+
+            consolidated.push(photo.id)
+
+          } else {
+            yield put(act.photo.update({
+              id: photo.id, broken: true, consolidated: new Date()
+            }))
+          }
+        }
+      } catch (error) {
+        warn(`Failed to consolidate photo ${photo.id}`, { error })
+        fail(error, this.action.type)
+      }
+
+      yield put(act.activity.update(this.action, { total, progress: i + 1 }))
+    }
+
+    return consolidated
+  }
+}
 
 
 class Create extends ImportCommand {
@@ -30,8 +105,8 @@ class Create extends ImportCommand {
     }
 
     if (!files) {
+      this.isInteractive = true
       files = yield call(open.images)
-      this.init = performance.now()
     }
 
     if (!files) return []
@@ -75,7 +150,6 @@ class Create extends ImportCommand {
       }
 
       yield put(act.item.photos.add({ id: item, photos }, { idx }))
-      yield put(act.photo.select({ item, photo: photos[0] }))
 
       this.undo = act.photo.delete({ item, photos })
       this.redo = act.photo.restore({ item, photos }, { idx })
@@ -105,52 +179,6 @@ class Delete extends Command {
     yield put(act.item.photos.remove({ id: item, photos }))
 
     this.undo = act.photo.restore({ item, photos }, { idx })
-  }
-}
-
-class Restore extends Command {
-  static get action() { return PHOTO.RESTORE }
-
-  *exec() {
-    const { db } = this.options
-    const { item, photos } = this.action.payload
-
-    // Restore all photos in a batch at the former index
-    // of the first photo to be restored. Need to differentiate
-    // if we support selecting multiple photos!
-    let [idx] = this.action.meta.idx
-    let order = yield select(state => state.items[item].photos)
-
-    order = splice(order, idx, 0, ...photos)
-
-    yield call([db, db.transaction], async tx => {
-      await mod.photo.restore(tx, { item, ids: photos })
-      await mod.photo.order(tx, item, order)
-    })
-
-    yield put(act.item.photos.add({ id: item, photos }, { idx }))
-
-    this.undo = act.photo.delete({ item, photos })
-  }
-}
-
-class Save extends Command {
-  static get action() { return PHOTO.SAVE }
-
-  *exec() {
-    const { db } = this.options
-    const { payload, meta } = this.action
-    const { id, data } = payload
-
-    const original = yield select(state =>
-      pick(state.photos[id], keys(data)))
-
-    yield call(db.transaction, tx =>
-      mod.image.save(tx, { id, timestamp: meta.now, ...data }))
-
-    this.undo = act.photo.save({ id, data: original })
-
-    return { id, ...data }
   }
 }
 
@@ -227,14 +255,63 @@ class Order extends Command {
   }
 }
 
+class Save extends Command {
+  static get action() { return PHOTO.SAVE }
+
+  *exec() {
+    const { db } = this.options
+    const { payload, meta } = this.action
+    const { id, data } = payload
+
+    const original = yield select(state =>
+      pick(state.photos[id], keys(data)))
+
+    const params = { id, timestamp: meta.now, ...data }
+
+    yield call(db.transaction, async tx => {
+      await mod.photo.save(tx, params)
+      await mod.image.save(tx, params)
+    })
+
+    this.undo = act.photo.save({ id, data: original })
+
+    return { id, ...data }
+  }
+}
+
+class Restore extends Command {
+  static get action() { return PHOTO.RESTORE }
+
+  *exec() {
+    const { db } = this.options
+    const { item, photos } = this.action.payload
+
+    // Restore all photos in a batch at the former index
+    // of the first photo to be restored. Need to differentiate
+    // if we support selecting multiple photos!
+    let [idx] = this.action.meta.idx
+    let order = yield select(state => state.items[item].photos)
+
+    order = splice(order, idx, 0, ...photos)
+
+    yield call([db, db.transaction], async tx => {
+      await mod.photo.restore(tx, { item, ids: photos })
+      await mod.photo.order(tx, item, order)
+    })
+
+    yield put(act.item.photos.add({ id: item, photos }, { idx }))
+
+    this.undo = act.photo.delete({ item, photos })
+  }
+}
 
 module.exports = {
+  Consolidate,
   Create,
   Delete,
-  ImportCommand,
   Load,
-  Restore,
-  Save,
   Move,
-  Order
+  Order,
+  Restore,
+  Save
 }

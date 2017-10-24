@@ -24,7 +24,7 @@ class Main extends Component {
       <ErrorBoundary>
         <Provider store={this.props.store}>
           <IntlProvider>
-            <div>
+            <div className="main-container">
               {this.props.children}
               <Flash/>
             </div>

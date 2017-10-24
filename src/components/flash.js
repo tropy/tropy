@@ -6,6 +6,8 @@ const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
 const { array, func, object, string } = require('prop-types')
 const act = require('../actions')
+const { IconXLarge } = require('./icons')
+const { IconButton } = require('./button')
 
 
 class FlashMessage extends PureComponent {
@@ -24,11 +26,11 @@ class FlashMessage extends PureComponent {
           id={`flash.${this.props.id}.message`}
           values={this.props.values}/>
 
-        <button onClick={this.handleConfirm}>
+        <button className="btn btn-primary" onClick={this.handleConfirm}>
           <FormattedMessage id={`flash.${this.props.id}.confirm`}/>
         </button>
 
-        <button onClick={this.handleDismiss}>X</button>
+        <IconButton icon={<IconXLarge/>} onClick={this.handleDismiss}/>
       </li>
     )
   }

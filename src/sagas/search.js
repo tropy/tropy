@@ -18,13 +18,11 @@ module.exports = {
       let result
 
       switch (true) {
-        case (nav.imports && imports.length > 0):
-          result = yield call(mod.item.find, db, {
-            ids: imports[0].items,
-            query
-          })
+        case (nav.imports && imports.length > 0): {
+          const ids = imports[0].items
+          result = yield call(mod.item.find, db, { ids, query, sort })
           break
-
+        }
         case (trash):
           result = yield call(mod.item.trash, db, { sort, query })
           break

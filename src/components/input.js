@@ -130,6 +130,7 @@ class BufferedInput extends PureComponent {
     }
 
     event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
   }
 
 

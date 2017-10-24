@@ -11,6 +11,7 @@ linux:
             accelerator: 'CmdOrCtrl+Shift+P'
           - label: 'Item'
             command: 'app:create-item'
+            accelerator: 'CmdOrCtrl+Shift+N'
           - label: 'List'
             command: 'app:create-list'
           - label: 'Tag'
@@ -139,6 +140,23 @@ linux:
       - type: 'separator'
       - label: 'About %name'
         command: 'app:about'
+      - type: 'separator'
+      - &updaterCheck
+        id: 'updater-check'
+        label: 'Check for Updates …'
+        command: 'app:check-for-updates'
+        enabled: false
+      - &updaterIsChecking
+        id: 'updater-is-checking'
+        label: 'Fetching Latest Updates …'
+        enabled: false
+        visible: false
+      - &updaterInstall
+        id: 'updater-install'
+        label: 'Install Updates …'
+        command: 'app:install-updates'
+        enabled: false
+        visible: false
 
 darwin:
   - label: '%name'
@@ -210,6 +228,10 @@ darwin:
         command: 'app:open-license'
       - label: 'Show Log Files'
         command: 'app:open-logs'
+      - type: 'separator'
+      - *updaterCheck
+      - *updaterIsChecking
+      - *updaterInstall
 
 win32:
   - *file

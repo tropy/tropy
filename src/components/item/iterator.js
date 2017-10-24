@@ -5,7 +5,9 @@ const { Iterator } = require('../iterator')
 const { FormattedMessage } = require('react-intl')
 const { match, isMeta: meta } = require('../../keymap')
 const cx = require('classnames')
-const { blank } = require('../../common/util')
+const { blank, get } = require('../../common/util')
+const { on, off } = require('../../dom')
+const { seq, compose, map, cat, keep } = require('transducers.js')
 
 const {
   arrayOf, oneOf, shape, bool, func, number, object, string
@@ -13,6 +15,18 @@ const {
 
 
 class ItemIterator extends Iterator {
+  componentDidMount() {
+    super.componentDidMount()
+    on(document, 'global:next-item', this.handleNextItem)
+    on(document, 'global:prev-item', this.handlePrevItem)
+  }
+
+  componentWillUnmount() {
+    super.componentWillUnmount()
+    off(document, 'global:next-item', this.handleNextItem)
+    off(document, 'global:prev-item', this.handlePrevItem)
+  }
+
   get tabIndex() {
     return this.props.isActive ? super.tabIndex : null
   }
@@ -59,7 +73,7 @@ class ItemIterator extends Iterator {
   }
 
   handleContextMenu = (event, item) => {
-    const { list, isDisabled, selection, onContextMenu } = this.props
+    const { list, items, isDisabled, selection, onContextMenu } = this.props
 
     const context = ['item']
     const target = {
@@ -69,6 +83,10 @@ class ItemIterator extends Iterator {
     if (selection.length > 1) {
       context.push('bulk')
       target.id = [...selection]
+      target.photos = seq(selection, compose(
+        map(id => get(items, [this.indexOf(id), 'photos'])),
+        keep(),
+        cat))
 
       if (!this.isSelected(item)) {
         target.id.push(item.id)
@@ -87,24 +105,20 @@ class ItemIterator extends Iterator {
     }
   }
 
+  handleItemCopy(items) {
+    if (!this.props.isDisabled && items != null && items.length > 0) {
+      this.props.onItemExport(items, { target: ':clipboard:' })
+    }
+  }
+
   // eslint-disable-next-line complexity
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
       case (this.isVertical ? 'up' : 'left'):
-        this.select(this.prev(), {
-          isMeta: meta(event),
-          isRange: event.shiftKey,
-          scrollIntoView: true,
-          throttle: true
-        })
+        this.handlePrevItem(event)
         break
       case (this.isVertical ? 'down' : 'right'):
-        this.select(this.next(), {
-          isMeta: meta(event),
-          isRange: event.shiftKey,
-          scrollIntoView: true,
-          throttle: true
-        })
+        this.handleNextItem(event)
         break
       case 'home':
         this.scroll(0)
@@ -134,6 +148,9 @@ class ItemIterator extends Iterator {
       case 'all':
         this.props.onSelect({}, 'all')
         break
+      case 'copy':
+        this.handleItemCopy(this.props.selection)
+        break
       case 'edit':
         this.edit(this.current())
         break
@@ -143,6 +160,25 @@ class ItemIterator extends Iterator {
 
     event.preventDefault()
     event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
+  }
+
+  handleNextItem = (event) => {
+    this.select(this.next(), {
+      isMeta: meta(event),
+      isRange: event.shiftKey,
+      scrollIntoView: true,
+      throttle: true
+    })
+  }
+
+  handlePrevItem = (event) => {
+    this.select(this.prev(), {
+      isMeta: meta(event),
+      isRange: event.shiftKey,
+      scrollIntoView: true,
+      throttle: true
+    })
   }
 
   select = (item, { isMeta, isRange, scrollIntoView, throttle } = {}) => {
@@ -200,6 +236,7 @@ class ItemIterator extends Iterator {
       onDropItems: this.props.onItemMerge,
       onDropPhotos: this.props.onPhotoMove,
       onItemOpen: this.props.onItemOpen,
+      onPhotoError: this.props.onPhotoError,
       onSelect: this.select
     }
   }
@@ -241,9 +278,11 @@ class ItemIterator extends Iterator {
     dt: func.isRequired,
     onContextMenu: func.isRequired,
     onItemDelete: func.isRequired,
+    onItemExport: func.isRequired,
     onItemMerge: func.isRequired,
     onItemOpen: func.isRequired,
     onItemPreview: func.isRequired,
+    onPhotoError: func.isRequired,
     onPhotoMove: func.isRequired,
     onSelect: func.isRequired,
     onSort: func.isRequired

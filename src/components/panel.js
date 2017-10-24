@@ -7,7 +7,7 @@ const { Resizable } = require('./resizable')
 const cx = require('classnames')
 const { bounds } = require('../dom')
 const { restrict } = require('../common/util')
-const { win32 } = require('../common/os')
+const { darwin } = require('../common/os')
 const { PANEL } = require('../constants/sass')
 const { remap } = require('../common/util')
 const { round } = require('../common/math')
@@ -22,7 +22,7 @@ class Panel extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
-      hasNestedFocus: false
+      hasNestedTabFocus: false
     }
   }
 
@@ -31,11 +31,11 @@ class Panel extends PureComponent {
   }
 
   handleNestedBlur = () => {
-    this.setState({ hasNestedFocus: false })
+    this.setState({ hasNestedTabFocus: false })
   }
 
-  handleNestedFocus = () => {
-    this.setState({ hasNestedFocus: true })
+  handleNestedTabFocus = () => {
+    this.setState({ hasNestedTabFocus: true })
   }
 
   handleToggle = () => {
@@ -218,7 +218,7 @@ class PanelGroup extends PureComponent {
   }
 
 
-  handleResize = throttle((!win32 ?
+  handleResize = throttle((darwin || window.devicePixelRatio === 1 ?
     (height) => this.update(height) :
     () => this.update(this.container.clientHeight)
   ), 15)

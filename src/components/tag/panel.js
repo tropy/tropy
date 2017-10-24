@@ -104,6 +104,7 @@ class TagPanel extends PureComponent {
 
     event.stopPropagation()
     event.preventDefault()
+    event.nativeEvent.stopImmediatePropagation()
   }
 
   render() {

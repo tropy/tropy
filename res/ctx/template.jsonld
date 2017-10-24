@@ -1,9 +1,11 @@
 {
   "@context": {
+    "@version": "1.1",
     "@vocab": "https://tropy.org/v1/tropy#",
     "creator": "http://purl.org/dc/elements/1.1/creator",
     "description": "http://purl.org/dc/elements/1.1/description",
     "seeAlso": "http://www.w3.org/2000/01/rdf-schema#seeAlso",
+    "version": "http://www.w3.org/2002/07/owl#versionInfo",
     "type": {
       "@id": "https://tropy.org/v1/tropy#template-type",
       "@type": "@id"
@@ -17,13 +19,12 @@
       "@id": "https://tropy.org/v1/tropy#field",
       "@container": "@list",
       "@context": {
-        "@vocab": "https://tropy.org/v1/tropy#",
         "property": {
           "@id": "https://tropy.org/v1/tropy#property",
           "@type": "@id"
         },
         "datatype": {
-          "@id": "https://tropy.org/v1/tropy#property",
+          "@id": "https://tropy.org/v1/tropy#datatype",
           "@type": "@id"
         }
       }

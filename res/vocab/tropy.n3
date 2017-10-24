@@ -75,26 +75,50 @@ tropy:name a rdfs:Datatype ;
 # Properties
 # ----------------------------------------------------------------------------
 
+tropy:template a rdf:Property ;
+	rdfs:label "Template"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:range tropy:Template ;
+	rdfs:comment "A Tropy template."@en .
+
+tropy:photo a rdf:Property ;
+	rdfs:label "Photo"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:range tropy:Photo ;
+	rdfs:comment "A Tropy photo."@en .
+
+tropy:selection a rdf:Property ;
+	rdfs:label "Photo Selection"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo ;
+  rdfs:range tropy:Selection ;
+	rdfs:comment "A Tropy photo selection."@en .
+
 tropy:box a rdf:Property ;
 	rdfs:label "Box"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
-  rdfs:domain tropy:Item , tropy:Photo ;
+  rdfs:domain tropy:Item , tropy:Photo, tropy:Selection ;
 	rdfs:comment "A unit of archival organization."@en .
 
 tropy:folder a rdf:Property ;
 	rdfs:label "Folder"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:subPropertyOf tropy:box ;
-  rdfs:domain tropy:Item , tropy:Photo ;
+  rdfs:domain tropy:Item , tropy:Photo, tropy:Selection ;
 	rdfs:comment "A unit of archival organization, usually within a box."@en .
 
 tropy:piece a rdf:Property ;
 	rdfs:label "Piece"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:subPropertyOf tropy:folder ;
-  rdfs:domain tropy:Item , tropy:Photo ;
+  rdfs:domain tropy:Item , tropy:Photo, tropy:Selection ;
 	rdfs:comment "A unit of archival organization, usually within a folder."@en .
 
+tropy:collection a rdf:Property ;
+	rdfs:label "Collection"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Item , tropy:Photo, tropy:Selection ;
+	rdfs:comment "A unit of archival organizations."@en .
 
 
 tropy:name a rdf:Property ;

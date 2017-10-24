@@ -1,8 +1,17 @@
 'use strict'
 
 const { PHOTO } = require('../constants')
+const { array } = require('../common/util')
 
 module.exports = {
+  consolidate(payload, meta) {
+    return {
+      type: PHOTO.CONSOLIDATE,
+      payload: array(payload),
+      meta: { cmd: 'project', ...meta }
+    }
+  },
+
   contract(payload, meta = {}) {
     return {
       type: PHOTO.CONTRACT, payload, meta
@@ -25,12 +34,17 @@ module.exports = {
     }
   },
 
+  error(payload, meta = {}) {
+    return module.exports.update(
+      { id: payload, broken: true },
+      { consolidate: true, ...meta })
+  },
+
   expand(payload, meta = {}) {
     return {
       type: PHOTO.EXPAND, payload, meta
     }
   },
-
 
   update(payload, meta = {}) {
     return {

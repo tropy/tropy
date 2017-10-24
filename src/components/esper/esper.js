@@ -7,7 +7,7 @@ const { EsperToolbar } = require('./toolbar')
 const { get, restrict, shallow } = require('../../common/util')
 const { isHorizontal, rotate, round } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
-const { win32 } = require('../../common/os')
+const { darwin } = require('../../common/os')
 const { match } = require('../../keymap')
 const { assign } = Object
 const debounce = require('lodash.debounce')
@@ -104,7 +104,8 @@ class Esper extends PureComponent {
     return true
   }
 
-  // Hack: Windows ResizeObserver reports wrong dimensions
+  // Hack: Linux/Windows ResizeObserver reports wrong dimensions
+  // if scale factor is not 1
   get bounds() {
     return {
       width: this.view.container.clientWidth,
@@ -162,6 +163,7 @@ class Esper extends PureComponent {
 
     if (photo != null && !photo.pending) {
       assign(state, {
+        photo: photo.id,
         src: `${photo.protocol}://${photo.path}`,
         width: photo.width,
         height: photo.height
@@ -270,9 +272,9 @@ class Esper extends PureComponent {
     this.view = view
   }
 
-  handleResize = (win32) ?
-    () => this.resize(this.bounds) :
-    (rect) => this.resize(rect)
+  handleResize = (darwin || window.devicePixelRatio === 1) ?
+    (rect) => this.resize(rect) :
+    () => this.resize(this.bounds)
 
   resize = throttle(({ width, height }) => {
     width = round(width || this.view.bounds.width)
@@ -474,6 +476,7 @@ class Esper extends PureComponent {
 
     event.preventDefault()
     event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
   }
 
   handleKeyUp = (event) => {
@@ -570,6 +573,7 @@ class Esper extends PureComponent {
           onSelectionActivate={this.handleSelectionActivate}
           onSelectionCreate={this.handleSelectionCreate}
           onDoubleClick={this.handleDoubleClick}
+          onPhotoError={this.props.onPhotoError}
           onWheel={this.handleWheel}
           onZoomIn={this.handleZoomIn}
           onZoomOut={this.handleZoomOut}/>
@@ -588,6 +592,7 @@ class Esper extends PureComponent {
     minZoom: number.isRequired,
     mode: string.isRequired,
     onChange: func.isRequired,
+    onPhotoError: func.isRequired,
     onSelect: func.isRequired,
     onSelectionCreate: func.isRequired,
     photo: object,
