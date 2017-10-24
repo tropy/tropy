@@ -39,7 +39,7 @@ module.exports = {
     type: 'http://purl.org/dc/elements/1.1/type'
   },
 
-  DCT: {
+  TERMS: {
     description: 'http://purl.org/dc/terms/description',
     publisher: 'http://purl.org/dc/terms/publisher',
     comment: 'http://purl.org/dc/terms/publisher',
