@@ -28,7 +28,8 @@ legalEagle(
       text += '<div class="dependency">'
       text += ` <a href="#" class="package">${packageName}</a>\n`
       text += ' <div class="license" style="display: none">\n'
-      const preText = packageLicense.sourceText || `License: ${packageLicense.license}`
+      const preText = escapeHTML(packageLicense.sourceText) ||
+            `License: ${packageLicense.license}`
       text += `  <pre>${preText}</pre>\n`
       text += ' </div>\n'
       text += '</div>\n'
@@ -40,3 +41,12 @@ legalEagle(
       console.log(`Wrote dependencies' licenses to "${outFile}"`)
     })
   })
+
+function escapeHTML(text) {
+  if (!text) {
+    return
+  }
+  return text
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+}
