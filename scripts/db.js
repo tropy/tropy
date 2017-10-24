@@ -11,6 +11,11 @@ const cwd = process.cwd()
 const SCHEMA = join(home, 'db', 'schema')
 const MIGRATE = join(home, 'db', 'migrate')
 
+global.ARGS = global.ARGS || {
+  debug: false,
+  environment: 'production',
+  locale: 'en'
+}
 
 target.create = async (args = []) => {
   const { Database } = require('../lib/common/db')
@@ -80,8 +85,11 @@ PRAGMA user_version=${version};
     say(`migrated ${domain} to #${version}`)
     say(`schema saved as ${relative(cwd, schema)}`)
 
+  } catch (error) {
+    say(`migration failed: ${error.message}`)
+    say(error.stack)
   } finally {
-    await db.close()
+    if (db) await db.close()
     rm(tmp)
   }
 }
