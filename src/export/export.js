@@ -122,6 +122,14 @@ function renderItem(item, template, resources) {
   result = addInfo(result, item.lists, 'list', lists)
   result = addInfo(result, item.tags, 'tag', tags)
 
+  // add item tags info
+  if (item.tags && item.tags.length) {
+    result.tag = values(pick(tags, item.tags)).map(t => t.name)
+    if (result.tag.length === 1) {
+      result.tag = result.tag[0]
+    }
+  }
+
   // add item metadata
   result = newProperties(metadata[item.id], result, false, props, template)
 

@@ -127,5 +127,11 @@ describe('export', () => {
       expect(data[0]).to.not.have.property('list')
       expect(data[1]['list']).to.eql('list1')
     })
+
+    it('tag', async () => {
+      const data = (await ld)[0]['@graph']
+      expect(data[0]).to.not.have.property('tag')
+      expect(data[1]['tag']).to.eql('mytag')
+    })
   })
 })
