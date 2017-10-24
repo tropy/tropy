@@ -12,7 +12,7 @@
 --
 
 -- Save the current migration number
-PRAGMA user_version=1710241005;
+PRAGMA user_version=1710241031;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -31,12 +31,12 @@ CREATE TABLE vocabularies (
   CHECK (vocabulary_id != '' AND prefix != ''),
   UNIQUE (prefix)
 );
-INSERT INTO vocabularies VALUES('https://tropy.org/v1/tropy#','tropy','2017-10-24 08:25:43',NULL,1,'Tropy Vocabulary','The RDF vocabulary for https://tropy.org/v1/tropy defines the core elements used by the Tropy application and Tropy templates.',NULL,'https://tropy.org/');
-INSERT INTO vocabularies VALUES('http://www.w3.org/2001/XMLSchema#','xsd','2017-10-24 08:25:43',NULL,1,'XML Schema Definition Language (XSD) Datatypes','XML Schema: Datatypes is part 2 of the specification of the XML Schema language. It defines facilities for defining datatypes to be used in XML Schemas as well as other XML specifications. The datatype language, which is itself represented in XML, provides a superset of the capabilities found in XML document type definitions (DTDs) for specifying datatypes on elements and attributes.',NULL,'https://www.w3.org/TR/xmlschema11-2/');
-INSERT INTO vocabularies VALUES('http://purl.org/dc/elements/1.1/','dc','2017-10-24 08:25:43',NULL,1,'Dublin Core Metadata Element Set, Version 1.1',NULL,NULL,NULL);
-INSERT INTO vocabularies VALUES('http://purl.org/dc/terms/','dcterms','2017-10-24 08:25:43',NULL,1,'DCMI Metadata Terms',NULL,NULL,NULL);
-INSERT INTO vocabularies VALUES('http://www.w3.org/1999/02/22-rdf-syntax-ns#','rdf','2017-10-24 08:25:43',NULL,1,'The RDF Concepts Vocabulary (RDF)','This is the RDF Schema for the RDF vocabulary terms in the RDF Namespace, defined in RDF 1.1 Concepts.',NULL,NULL);
-INSERT INTO vocabularies VALUES('http://www.w3.org/2000/01/rdf-schema#','rdfs','2017-10-24 08:25:43',NULL,1,'The RDF Schema Vocabulary (RDFS)',NULL,NULL,'http://www.w3.org/2000/01/rdf-schema-more');
+INSERT INTO vocabularies VALUES('https://tropy.org/v1/tropy#','tropy','2017-10-24 09:29:11',NULL,1,'Tropy Vocabulary','The RDF vocabulary for https://tropy.org/v1/tropy defines the core elements used by the Tropy application and Tropy templates.',NULL,'https://tropy.org/');
+INSERT INTO vocabularies VALUES('http://www.w3.org/2001/XMLSchema#','xsd','2017-10-24 09:29:11',NULL,1,'XML Schema Definition Language (XSD) Datatypes','XML Schema: Datatypes is part 2 of the specification of the XML Schema language. It defines facilities for defining datatypes to be used in XML Schemas as well as other XML specifications. The datatype language, which is itself represented in XML, provides a superset of the capabilities found in XML document type definitions (DTDs) for specifying datatypes on elements and attributes.',NULL,'https://www.w3.org/TR/xmlschema11-2/');
+INSERT INTO vocabularies VALUES('http://purl.org/dc/elements/1.1/','dc','2017-10-24 09:29:11',NULL,1,'Dublin Core Metadata Element Set, Version 1.1',NULL,NULL,NULL);
+INSERT INTO vocabularies VALUES('http://purl.org/dc/terms/','dcterms','2017-10-24 09:29:11',NULL,1,'DCMI Metadata Terms',NULL,NULL,NULL);
+INSERT INTO vocabularies VALUES('http://www.w3.org/1999/02/22-rdf-syntax-ns#','rdf','2017-10-24 09:29:11',NULL,1,'The RDF Concepts Vocabulary (RDF)','This is the RDF Schema for the RDF vocabulary terms in the RDF Namespace, defined in RDF 1.1 Concepts.',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://www.w3.org/2000/01/rdf-schema#','rdfs','2017-10-24 09:29:11',NULL,1,'The RDF Schema Vocabulary (RDFS)',NULL,NULL,'http://www.w3.org/2000/01/rdf-schema-more');
 CREATE TABLE properties (
   property_id     TEXT NOT NULL PRIMARY KEY,
   vocabulary_id   TEXT NOT NULL REFERENCES vocabularies ON DELETE CASCADE,
@@ -452,6 +452,11 @@ CREATE TABLE templates (
   ))
   CHECK (name != '')
 );
+INSERT INTO templates VALUES('https://tropy.org/v1/templates/generic','https://tropy.org/v1/tropy#Item','Tropy Generic','General template to fit a generic archival object','RRCHNM',1,'2017-10-24 09:29:11','2017-10-24 09:29:11','1.0.0');
+INSERT INTO templates VALUES('https:/tropy.org/v1/templates/correspondence','https://tropy.org/v1/tropy#Item','Tropy Correspondence','Template meant to focus on correspondence','RRCHNM',1,'2017-10-24 09:29:11','2017-10-24 09:29:11','1.0.0');
+INSERT INTO templates VALUES('https:/tropy.org/v1/templates/dc','https://tropy.org/v1/tropy#Item','Dublin Core','Generic template based on the Dublic Core Metadata Element Set','RRCHNM',1,'2017-10-24 09:29:11','2017-10-24 09:29:11','1.0.0');
+INSERT INTO templates VALUES('https://tropy.org/v1/templates/photo','https://tropy.org/v1/tropy#Photo','Tropy Photo',NULL,NULL,1,'2017-10-24 09:29:11','2017-10-24 09:29:11','1.0.0');
+INSERT INTO templates VALUES('https://tropy.org/v1/templates/selection','https://tropy.org/v1/tropy#Selection','Tropy Photo Selection',NULL,NULL,1,'2017-10-24 09:29:11','2017-10-24 09:29:11','1.0.0');
 CREATE TABLE domains (
   domain_id     INTEGER   PRIMARY KEY,
   template_id   TEXT      NOT NULL REFERENCES templates ON DELETE CASCADE,
@@ -476,6 +481,46 @@ CREATE TABLE fields (
   CHECK (property_id != ''),
   UNIQUE (template_id, property_id)
 );
+INSERT INTO fields VALUES(1,'https://tropy.org/v1/templates/generic','http://purl.org/dc/elements/1.1/title','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,0);
+INSERT INTO fields VALUES(2,'https://tropy.org/v1/templates/generic','http://purl.org/dc/elements/1.1/creator','http://www.w3.org/2001/XMLSchema#string',0,0,'Author or creator',NULL,1);
+INSERT INTO fields VALUES(3,'https://tropy.org/v1/templates/generic','http://purl.org/dc/elements/1.1/date','http://www.w3.org/2001/XMLSchema#string',0,0,'ISO format',NULL,2);
+INSERT INTO fields VALUES(4,'https://tropy.org/v1/templates/generic','http://purl.org/dc/elements/1.1/type','http://www.w3.org/2001/XMLSchema#string',0,0,'Type of document or object',NULL,3);
+INSERT INTO fields VALUES(5,'https://tropy.org/v1/templates/generic','http://purl.org/dc/elements/1.1/source','http://www.w3.org/2001/XMLSchema#string',0,0,'Name of the holding archive',NULL,4);
+INSERT INTO fields VALUES(6,'https://tropy.org/v1/templates/generic','https://tropy.org/v1/tropy#collection','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,5);
+INSERT INTO fields VALUES(7,'https://tropy.org/v1/templates/generic','https://tropy.org/v1/tropy#box','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,6);
+INSERT INTO fields VALUES(8,'https://tropy.org/v1/templates/generic','https://tropy.org/v1/tropy#folder','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,7);
+INSERT INTO fields VALUES(9,'https://tropy.org/v1/templates/generic','http://purl.org/dc/elements/1.1/identifier','http://www.w3.org/2001/XMLSchema#string',0,0,'URL or call number',NULL,8);
+INSERT INTO fields VALUES(10,'https://tropy.org/v1/templates/generic','http://purl.org/dc/elements/1.1/rights','http://www.w3.org/2001/XMLSchema#string',1,0,NULL,NULL,9);
+INSERT INTO fields VALUES(11,'https:/tropy.org/v1/templates/correspondence','http://purl.org/dc/elements/1.1/title','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,0);
+INSERT INTO fields VALUES(12,'https:/tropy.org/v1/templates/correspondence','http://purl.org/dc/elements/1.1/creator','http://www.w3.org/2001/XMLSchema#string',0,0,'Author or creator',NULL,1);
+INSERT INTO fields VALUES(13,'https:/tropy.org/v1/templates/correspondence','http://purl.org/dc/terms/audience','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,2);
+INSERT INTO fields VALUES(14,'https:/tropy.org/v1/templates/correspondence','http://purl.org/dc/elements/1.1/date','https://tropy.org/v1/tropy#date',0,0,'ISO format',NULL,3);
+INSERT INTO fields VALUES(15,'https:/tropy.org/v1/templates/correspondence','http://purl.org/dc/elements/1.1/coverage','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,4);
+INSERT INTO fields VALUES(16,'https:/tropy.org/v1/templates/correspondence','http://purl.org/dc/elements/1.1/type','http://www.w3.org/2001/XMLSchema#string',0,0,'Type of document','Correspondence',5);
+INSERT INTO fields VALUES(17,'https:/tropy.org/v1/templates/correspondence','http://purl.org/dc/elements/1.1/source','http://www.w3.org/2001/XMLSchema#string',0,0,'Name of the holding archive',NULL,6);
+INSERT INTO fields VALUES(18,'https:/tropy.org/v1/templates/correspondence','https://tropy.org/v1/tropy#collection','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,7);
+INSERT INTO fields VALUES(19,'https:/tropy.org/v1/templates/correspondence','https://tropy.org/v1/tropy#box','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,8);
+INSERT INTO fields VALUES(20,'https:/tropy.org/v1/templates/correspondence','https://tropy.org/v1/tropy#folder','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,9);
+INSERT INTO fields VALUES(21,'https:/tropy.org/v1/templates/correspondence','http://purl.org/dc/elements/1.1/identifier','http://www.w3.org/2001/XMLSchema#string',0,0,'URL or call number',NULL,10);
+INSERT INTO fields VALUES(22,'https:/tropy.org/v1/templates/correspondence','http://purl.org/dc/elements/1.1/rights','http://www.w3.org/2001/XMLSchema#string',1,0,NULL,NULL,11);
+INSERT INTO fields VALUES(23,'https:/tropy.org/v1/templates/dc','http://purl.org/dc/elements/1.1/title','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,0);
+INSERT INTO fields VALUES(24,'https:/tropy.org/v1/templates/dc','http://purl.org/dc/elements/1.1/creator','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,1);
+INSERT INTO fields VALUES(25,'https:/tropy.org/v1/templates/dc','http://purl.org/dc/elements/1.1/date','https://tropy.org/v1/tropy#date',0,0,NULL,NULL,2);
+INSERT INTO fields VALUES(26,'https:/tropy.org/v1/templates/dc','http://purl.org/dc/elements/1.1/type','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,3);
+INSERT INTO fields VALUES(27,'https:/tropy.org/v1/templates/dc','http://purl.org/dc/elements/1.1/source','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,4);
+INSERT INTO fields VALUES(28,'https:/tropy.org/v1/templates/dc','http://purl.org/dc/elements/1.1/identifier','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,5);
+INSERT INTO fields VALUES(29,'https:/tropy.org/v1/templates/dc','http://purl.org/dc/elements/1.1/rights','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,6);
+INSERT INTO fields VALUES(30,'https:/tropy.org/v1/templates/dc','http://purl.org/dc/elements/1.1/subject','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,7);
+INSERT INTO fields VALUES(31,'https:/tropy.org/v1/templates/dc','http://purl.org/dc/elements/1.1/language','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,8);
+INSERT INTO fields VALUES(32,'https:/tropy.org/v1/templates/dc','http://purl.org/dc/elements/1.1/format','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,9);
+INSERT INTO fields VALUES(33,'https:/tropy.org/v1/templates/dc','http://purl.org/dc/elements/1.1/contributor','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,10);
+INSERT INTO fields VALUES(34,'https:/tropy.org/v1/templates/dc','http://purl.org/dc/elements/1.1/description','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,11);
+INSERT INTO fields VALUES(35,'https:/tropy.org/v1/templates/dc','http://purl.org/dc/elements/1.1/publisher','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,12);
+INSERT INTO fields VALUES(36,'https:/tropy.org/v1/templates/dc','http://purl.org/dc/elements/1.1/coverage','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,13);
+INSERT INTO fields VALUES(37,'https:/tropy.org/v1/templates/dc','http://purl.org/dc/elements/1.1/relation','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,14);
+INSERT INTO fields VALUES(38,'https://tropy.org/v1/templates/photo','http://purl.org/dc/elements/1.1/title','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,0);
+INSERT INTO fields VALUES(39,'https://tropy.org/v1/templates/photo','http://purl.org/dc/elements/1.1/date','https://tropy.org/v1/tropy#date',0,0,NULL,NULL,1);
+INSERT INTO fields VALUES(40,'https://tropy.org/v1/templates/selection','http://purl.org/dc/elements/1.1/title','http://www.w3.org/2001/XMLSchema#string',0,0,NULL,NULL,0);
 CREATE TABLE field_labels (
   field_id  INTEGER  NOT NULL REFERENCES fields ON DELETE CASCADE,
   language  TEXT     NOT NULL COLLATE NOCASE,
@@ -487,5 +532,10 @@ CREATE TABLE field_labels (
     label != '' AND language != '' AND language = trim(lower(language))
   )
 ) WITHOUT ROWID;
+INSERT INTO field_labels VALUES(5,'en','Archive');
+INSERT INTO field_labels VALUES(12,'en','Author');
+INSERT INTO field_labels VALUES(13,'en','Recipient');
+INSERT INTO field_labels VALUES(15,'en','Location');
+INSERT INTO field_labels VALUES(17,'en','Archive');
 COMMIT;
 PRAGMA foreign_keys=ON;
