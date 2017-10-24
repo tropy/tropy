@@ -444,6 +444,16 @@ class Export extends Command {
         const templateIDs = Object.values(itms).map(itm => itm.template)
         const templates = pick(state.ontology.template, templateIDs)
         let results = []
+
+        // check for missing templates
+        const isTrue = x => x === true
+        const hasTemplates = keys(state.ontology.template)
+        if (!templateIDs.map(t => hasTemplates.includes(t)).every(isTrue)) {
+          const notFound = templateIDs.filter(t => !hasTemplates.includes(t))[0]
+          throw new Error(`Template '${notFound}' not found.\n` +
+                          'Please create it though the preferences.')
+        }
+
         for (const t in templates) {
           const template = templates[t]
           results.push({
