@@ -38,5 +38,5 @@ module.exports = {
     REMOVE: 'item.photo.remove'
   },
 
-  TEMPLATE: 'https://tropy.org/v1/templates/item'
+  TEMPLATE: 'https://tropy.org/v1/templates/generic'
 }

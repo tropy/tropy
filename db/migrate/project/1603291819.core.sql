@@ -24,7 +24,7 @@ CREATE TABLE access (
 -- a row in the subjects table.
 CREATE TABLE subjects (
   id           INTEGER  PRIMARY KEY,
-  template     TEXT     NOT NULL DEFAULT 'https://tropy.org/v1/templates/item',
+  template     TEXT     NOT NULL DEFAULT 'https://tropy.org/v1/templates/generic',
   type         TEXT,
   created      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
