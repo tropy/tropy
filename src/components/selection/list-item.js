@@ -9,7 +9,6 @@ const { testFocusChange } = require('../../dom')
 const cx = require('classnames')
 const { get } = require('../../common/util')
 const { bool, func, object, string } = require('prop-types')
-const { IconWarning } = require('../icons')
 
 
 class SelectionListItem extends SelectionIterable {
@@ -78,9 +77,6 @@ class SelectionListItem extends SelectionIterable {
             isDisabled={this.props.isDisabled}
             onCancel={this.props.onEditCancel}
             onChange={this.handleChange}/>
-        </div>
-        <div className="icon-container">
-          <IconWarning/>
         </div>
       </li>
     )
