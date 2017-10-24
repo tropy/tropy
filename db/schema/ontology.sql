@@ -31,12 +31,12 @@ CREATE TABLE vocabularies (
   CHECK (vocabulary_id != '' AND prefix != ''),
   UNIQUE (prefix)
 );
-INSERT INTO vocabularies VALUES('https://tropy.org/v1/tropy#','tropy','2017-10-24 09:29:11',NULL,1,'Tropy Vocabulary','The RDF vocabulary for https://tropy.org/v1/tropy defines the core elements used by the Tropy application and Tropy templates.',NULL,'https://tropy.org/');
-INSERT INTO vocabularies VALUES('http://www.w3.org/2001/XMLSchema#','xsd','2017-10-24 09:29:11',NULL,1,'XML Schema Definition Language (XSD) Datatypes','XML Schema: Datatypes is part 2 of the specification of the XML Schema language. It defines facilities for defining datatypes to be used in XML Schemas as well as other XML specifications. The datatype language, which is itself represented in XML, provides a superset of the capabilities found in XML document type definitions (DTDs) for specifying datatypes on elements and attributes.',NULL,'https://www.w3.org/TR/xmlschema11-2/');
-INSERT INTO vocabularies VALUES('http://purl.org/dc/elements/1.1/','dc','2017-10-24 09:29:11',NULL,1,'Dublin Core Metadata Element Set, Version 1.1',NULL,NULL,NULL);
-INSERT INTO vocabularies VALUES('http://purl.org/dc/terms/','dcterms','2017-10-24 09:29:11',NULL,1,'DCMI Metadata Terms',NULL,NULL,NULL);
-INSERT INTO vocabularies VALUES('http://www.w3.org/1999/02/22-rdf-syntax-ns#','rdf','2017-10-24 09:29:11',NULL,1,'The RDF Concepts Vocabulary (RDF)','This is the RDF Schema for the RDF vocabulary terms in the RDF Namespace, defined in RDF 1.1 Concepts.',NULL,NULL);
-INSERT INTO vocabularies VALUES('http://www.w3.org/2000/01/rdf-schema#','rdfs','2017-10-24 09:29:11',NULL,1,'The RDF Schema Vocabulary (RDFS)',NULL,NULL,'http://www.w3.org/2000/01/rdf-schema-more');
+INSERT INTO vocabularies VALUES('https://tropy.org/v1/tropy#','tropy','2017-10-24 11:00:05',NULL,1,'Tropy Vocabulary','The RDF vocabulary for https://tropy.org/v1/tropy defines the core elements used by the Tropy application and Tropy templates.',NULL,'https://tropy.org/');
+INSERT INTO vocabularies VALUES('http://www.w3.org/2001/XMLSchema#','xsd','2017-10-24 11:00:05',NULL,1,'XML Schema Definition Language (XSD) Datatypes','XML Schema: Datatypes is part 2 of the specification of the XML Schema language. It defines facilities for defining datatypes to be used in XML Schemas as well as other XML specifications. The datatype language, which is itself represented in XML, provides a superset of the capabilities found in XML document type definitions (DTDs) for specifying datatypes on elements and attributes.',NULL,'https://www.w3.org/TR/xmlschema11-2/');
+INSERT INTO vocabularies VALUES('http://purl.org/dc/elements/1.1/','dc','2017-10-24 11:00:05',NULL,1,'Dublin Core Metadata Element Set',NULL,NULL,NULL);
+INSERT INTO vocabularies VALUES('http://purl.org/dc/terms/','dcterms','2017-10-24 11:00:05',NULL,1,'DCMI Metadata Terms',NULL,NULL,NULL);
+INSERT INTO vocabularies VALUES('http://www.w3.org/1999/02/22-rdf-syntax-ns#','rdf','2017-10-24 11:00:05',NULL,1,'RDF Concepts Vocabulary (RDF)','This is the RDF Schema for the RDF vocabulary terms in the RDF Namespace, defined in RDF 1.1 Concepts.',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://www.w3.org/2000/01/rdf-schema#','rdfs','2017-10-24 11:00:05',NULL,1,'RDF Schema Vocabulary (RDFS)',NULL,NULL,'http://www.w3.org/2000/01/rdf-schema-more');
 CREATE TABLE properties (
   property_id     TEXT NOT NULL PRIMARY KEY,
   vocabulary_id   TEXT NOT NULL REFERENCES vocabularies ON DELETE CASCADE,
@@ -452,11 +452,11 @@ CREATE TABLE templates (
   ))
   CHECK (name != '')
 );
-INSERT INTO templates VALUES('https://tropy.org/v1/templates/generic','https://tropy.org/v1/tropy#Item','Tropy Generic','General template to fit a generic archival object','RRCHNM',1,'2017-10-24 09:29:11','2017-10-24 09:29:11','1.0.0');
-INSERT INTO templates VALUES('https:/tropy.org/v1/templates/correspondence','https://tropy.org/v1/tropy#Item','Tropy Correspondence','Template meant to focus on correspondence','RRCHNM',1,'2017-10-24 09:29:11','2017-10-24 09:29:11','1.0.0');
-INSERT INTO templates VALUES('https:/tropy.org/v1/templates/dc','https://tropy.org/v1/tropy#Item','Dublin Core','Generic template based on the Dublic Core Metadata Element Set','RRCHNM',1,'2017-10-24 09:29:11','2017-10-24 09:29:11','1.0.0');
-INSERT INTO templates VALUES('https://tropy.org/v1/templates/photo','https://tropy.org/v1/tropy#Photo','Tropy Photo',NULL,NULL,1,'2017-10-24 09:29:11','2017-10-24 09:29:11','1.0.0');
-INSERT INTO templates VALUES('https://tropy.org/v1/templates/selection','https://tropy.org/v1/tropy#Selection','Tropy Photo Selection',NULL,NULL,1,'2017-10-24 09:29:11','2017-10-24 09:29:11','1.0.0');
+INSERT INTO templates VALUES('https://tropy.org/v1/templates/generic','https://tropy.org/v1/tropy#Item','Tropy Generic','General template to fit a generic archival object','RRCHNM',1,'2017-10-24 11:00:05','2017-10-24 11:00:05','1.0.0');
+INSERT INTO templates VALUES('https:/tropy.org/v1/templates/correspondence','https://tropy.org/v1/tropy#Item','Tropy Correspondence','Template meant to focus on correspondence','RRCHNM',1,'2017-10-24 11:00:05','2017-10-24 11:00:05','1.0.0');
+INSERT INTO templates VALUES('https:/tropy.org/v1/templates/dc','https://tropy.org/v1/tropy#Item','Dublin Core','Generic template based on the Dublic Core Metadata Element Set','RRCHNM',1,'2017-10-24 11:00:05','2017-10-24 11:00:05','1.0.0');
+INSERT INTO templates VALUES('https://tropy.org/v1/templates/photo','https://tropy.org/v1/tropy#Photo','Tropy Photo',NULL,NULL,1,'2017-10-24 11:00:05','2017-10-24 11:00:05','1.0.0');
+INSERT INTO templates VALUES('https://tropy.org/v1/templates/selection','https://tropy.org/v1/tropy#Selection','Tropy Photo Selection',NULL,NULL,1,'2017-10-24 11:00:05','2017-10-24 11:00:05','1.0.0');
 CREATE TABLE domains (
   domain_id     INTEGER   PRIMARY KEY,
   template_id   TEXT      NOT NULL REFERENCES templates ON DELETE CASCADE,

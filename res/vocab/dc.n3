@@ -7,7 +7,7 @@
 
 <http://purl.org/dc/elements/1.1/> dcterms:modified "2012-06-14"^^<http://www.w3.org/2001/XMLSchema#date> ;
 	dcterms:publisher <http://purl.org/dc/aboutdcmi#DCMI> ;
-	dcterms:title "Dublin Core Metadata Element Set, Version 1.1"@en .
+	dcterms:title "Dublin Core Metadata Element Set"@en .
 
 <http://purl.org/dc/elements/1.1/contributor> dcterms:description "Examples of a Contributor include a person, an organization, or a service. Typically, the name of a Contributor should be used to indicate the entity."@en ;
 	dcterms:hasVersion <http://dublincore.org/usage/terms/history/#contributor-006> ;
