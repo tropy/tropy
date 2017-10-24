@@ -136,8 +136,9 @@ target.migration = (args = []) => {
 
   if (type === 'js') {
     (`'use strict'
-exports.up = function ${name}$up(tx) {
-  // Return a promise here!
+module.exports = {
+  async up(tx) {
+  }
 }`).to(path)
   } else {
     ('').to(path)
