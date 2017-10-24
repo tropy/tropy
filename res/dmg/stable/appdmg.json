@@ -1,0 +1,19 @@
+{
+  "title": "Tropy",
+  "background": "background.png",
+  "icon-size": 92,
+  "contents": [
+    {
+      "x": 216,
+      "y": 206,
+      "type": "file",
+      "path": "../../../dist/Tropy-darwin-x64/Tropy.app"
+    },
+    {
+      "x": 504,
+      "y": 206,
+      "type": "link",
+      "path": "/Applications"
+    }
+  ]
+}
