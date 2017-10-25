@@ -75,7 +75,7 @@ linux:
       condition: 'hasMultiplePhotos'
     - label: 'Export Item …'
       command: 'app:export-item'
-    - label: 'Add Photo…'
+    - label: 'Add Photo …'
       command: 'app:create-item-photo'
     - label: 'Tags'
       id: 'tag'
