@@ -64,11 +64,11 @@
     "eslint-plugin-react": "^7.4.0",
     "glob": "^7.0.0",
     "istanbul-lib-hook": "^1.1.0",
-    "istanbul-lib-instrument": "^1.9.0",
+    "istanbul-lib-instrument": "^1.9.1",
     "legal-eagle": "^0.15.0",
     "node-pre-gyp": "^0.6.38",
     "node-sass": "^4.0.0",
-    "nyc": "^11.2.1",
+    "nyc": "^11.3.0",
     "react-dnd-test-backend": "^2.5.4",
     "react-test-renderer": "^16.0.0",
     "sass-lint": "^1.12.1",
@@ -123,7 +123,7 @@
     "winreg": "^1.2.4",
     "winston": "^2.4.0",
     "write-file-atomic": "^2.3.0",
-    "yargs": "^9.0.1"
+    "yargs": "^10.0.3"
   },
   "yargs": {
     "short-option-groups": false
