@@ -167,9 +167,8 @@ function resize(image, size) {
 }
 
 function isValidImage(file) {
-  return file.type === 'image/jpeg'
+  return ['image/jpeg', 'image/png'].includes(file.type)
 }
-
 
 function NI(src) {
   return new Promise((resolve) => {
@@ -184,6 +183,10 @@ function magic(b) {
 
   if (b[0] === 0xFF && b[1] === 0xD8 && b[2] === 0xFF) {
     return 'image/jpeg'
+  }
+  if (b.slice(0, 8).compare(
+    Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])) === 0) {
+    return 'image/png'
   }
 }
 
