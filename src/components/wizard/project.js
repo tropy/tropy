@@ -14,10 +14,10 @@ class ProjectStep extends PureComponent {
   handleNameKeyDown = (event) => {
     switch (event.key) {
       case 'Escape':
-        if (!blank(this.name)) this.props.onNameChange('')
+        if (!blank(this.props.name)) this.props.onNameChange('')
         break
       case 'Enter':
-        if (!blank(this.name)) this.props.onComplete()
+        if (!blank(this.props.name)) this.props.onComplete()
         break
       default:
         return
