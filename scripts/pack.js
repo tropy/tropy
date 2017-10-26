@@ -105,7 +105,7 @@ target.darwin = () => {
 
     exec(`appdmg ${config} ${dmg}`)
 
-    let zip = join(dist, `${name}-${version}-darwin.zip`)
+    let zip = `${name}-${version}-darwin.zip`
 
     cd(src)
     exec(`7z a ../${zip} ${qualified.product}.app`)

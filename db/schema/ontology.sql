@@ -12,7 +12,7 @@
 --
 
 -- Save the current migration number
-PRAGMA user_version=1710241031;
+PRAGMA user_version=1710241557;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -31,15 +31,15 @@ CREATE TABLE vocabularies (
   CHECK (vocabulary_id != '' AND prefix != ''),
   UNIQUE (prefix)
 );
-INSERT INTO vocabularies VALUES('https://tropy.org/v1/tropy#','tropy','2017-10-24 11:12:12',NULL,1,'Tropy Vocabulary','The RDF vocabulary for https://tropy.org/v1/tropy defines the core elements used by the Tropy application and Tropy templates.',NULL,'https://tropy.org/');
-INSERT INTO vocabularies VALUES('http://www.w3.org/2001/XMLSchema#','xsd','2017-10-24 11:12:12',NULL,1,'XML Schema Definition Language (XSD) Datatypes','XML Schema: Datatypes is part 2 of the specification of the XML Schema language. It defines facilities for defining datatypes to be used in XML Schemas as well as other XML specifications. The datatype language, which is itself represented in XML, provides a superset of the capabilities found in XML document type definitions (DTDs) for specifying datatypes on elements and attributes.',NULL,'https://www.w3.org/TR/xmlschema11-2/');
-INSERT INTO vocabularies VALUES('http://purl.org/dc/elements/1.1/','dc','2017-10-24 11:12:12',NULL,1,'Dublin Core Metadata Element Set',NULL,NULL,NULL);
-INSERT INTO vocabularies VALUES('http://purl.org/dc/terms/','dcterms','2017-10-24 11:12:12',NULL,1,'DCMI Metadata Terms',NULL,NULL,NULL);
-INSERT INTO vocabularies VALUES('http://www.w3.org/1999/02/22-rdf-syntax-ns#','rdf','2017-10-24 11:12:12',NULL,1,'RDF Concepts Vocabulary (RDF)','This is the RDF Schema for the RDF vocabulary terms in the RDF Namespace, defined in RDF 1.1 Concepts.',NULL,NULL);
-INSERT INTO vocabularies VALUES('http://www.w3.org/2000/01/rdf-schema#','rdfs','2017-10-24 11:12:12',NULL,1,'RDF Schema Vocabulary (RDFS)',NULL,NULL,'http://www.w3.org/2000/01/rdf-schema-more');
-INSERT INTO vocabularies VALUES('http://www.openarchives.org/ore/terms/','ore','2017-10-24 11:12:12',NULL,0,'OAI ORE Terms Vocabulary','The set of terms provided by the OAI ORE initiative',NULL,'http://www.openarchives.org/ore/toc');
-INSERT INTO vocabularies VALUES('http://www.w3.org/2004/02/skos/core#','skos','2017-10-24 11:12:12',NULL,0,'SKOS Vocabulary','An RDF vocabulary for describing the basic structure and content of concept schemes such as thesauri, classification schemes, subject heading lists, taxonomies, ''folksonomies'', other types of controlled vocabulary, and also concept schemes embedded in glossaries and terminologies.',NULL,'http://www.w3.org/TR/skos-reference/');
-INSERT INTO vocabularies VALUES('http://www.europeana.eu/schemas/edm/','edm','2017-10-24 11:12:12',NULL,0,'Europeana Data Model (EDM) Vocabulary','The Europeana Data Model (EDM) is aimed at being an integration medium for collecting, connecting and enriching the descriptions provided by Europeana data providers. The RDF vocabulary for http://www.europeana.eu/schemas/edm/ defines the elements introduced by EDM (as opposed to the ones EDM re-uses from other namespaces).',NULL,'http://europeanalabs.eu/wiki/EDMPrototypingTask11');
+INSERT INTO vocabularies VALUES('https://tropy.org/v1/tropy#','tropy','2017-10-24 14:01:04',NULL,1,'Tropy Vocabulary','The RDF vocabulary for https://tropy.org/v1/tropy defines the core elements used by the Tropy application and Tropy templates.',NULL,'https://tropy.org/');
+INSERT INTO vocabularies VALUES('http://www.w3.org/2001/XMLSchema#','xsd','2017-10-24 14:01:04',NULL,1,'XML Schema Definition Language (XSD) Datatypes','XML Schema: Datatypes is part 2 of the specification of the XML Schema language. It defines facilities for defining datatypes to be used in XML Schemas as well as other XML specifications. The datatype language, which is itself represented in XML, provides a superset of the capabilities found in XML document type definitions (DTDs) for specifying datatypes on elements and attributes.',NULL,'https://www.w3.org/TR/xmlschema11-2/');
+INSERT INTO vocabularies VALUES('http://purl.org/dc/elements/1.1/','dc','2017-10-24 14:01:04',NULL,1,'Dublin Core Metadata Element Set',NULL,NULL,NULL);
+INSERT INTO vocabularies VALUES('http://purl.org/dc/terms/','dcterms','2017-10-24 14:01:04',NULL,1,'DCMI Metadata Terms',NULL,NULL,NULL);
+INSERT INTO vocabularies VALUES('http://www.w3.org/1999/02/22-rdf-syntax-ns#','rdf','2017-10-24 14:01:04',NULL,1,'RDF Concepts Vocabulary (RDF)','This is the RDF Schema for the RDF vocabulary terms in the RDF Namespace, defined in RDF 1.1 Concepts.',NULL,NULL);
+INSERT INTO vocabularies VALUES('http://www.w3.org/2000/01/rdf-schema#','rdfs','2017-10-24 14:01:04',NULL,1,'RDF Schema Vocabulary (RDFS)',NULL,NULL,'http://www.w3.org/2000/01/rdf-schema-more');
+INSERT INTO vocabularies VALUES('http://www.openarchives.org/ore/terms/','ore','2017-10-24 14:01:04',NULL,1,'OAI ORE Terms Vocabulary','The set of terms provided by the OAI ORE initiative',NULL,'http://www.openarchives.org/ore/toc');
+INSERT INTO vocabularies VALUES('http://www.w3.org/2004/02/skos/core#','skos','2017-10-24 14:01:04',NULL,1,'SKOS Vocabulary','An RDF vocabulary for describing the basic structure and content of concept schemes such as thesauri, classification schemes, subject heading lists, taxonomies, ''folksonomies'', other types of controlled vocabulary, and also concept schemes embedded in glossaries and terminologies.',NULL,'http://www.w3.org/TR/skos-reference/');
+INSERT INTO vocabularies VALUES('http://www.europeana.eu/schemas/edm/','edm','2017-10-24 14:01:04',NULL,1,'Europeana Data Model (EDM) Vocabulary','The Europeana Data Model (EDM) is aimed at being an integration medium for collecting, connecting and enriching the descriptions provided by Europeana data providers. The RDF vocabulary for http://www.europeana.eu/schemas/edm/ defines the elements introduced by EDM (as opposed to the ones EDM re-uses from other namespaces).',NULL,'http://europeanalabs.eu/wiki/EDMPrototypingTask11');
 CREATE TABLE properties (
   property_id     TEXT NOT NULL PRIMARY KEY,
   vocabulary_id   TEXT NOT NULL REFERENCES vocabularies ON DELETE CASCADE,
@@ -627,11 +627,11 @@ CREATE TABLE templates (
   ))
   CHECK (name != '')
 );
-INSERT INTO templates VALUES('https://tropy.org/v1/templates/generic','https://tropy.org/v1/tropy#Item','Tropy Generic','General template to fit a generic archival object','RRCHNM',1,'2017-10-24 11:12:12','2017-10-24 11:12:12','1.0.0');
-INSERT INTO templates VALUES('https:/tropy.org/v1/templates/correspondence','https://tropy.org/v1/tropy#Item','Tropy Correspondence','Template meant to focus on correspondence','RRCHNM',1,'2017-10-24 11:12:12','2017-10-24 11:12:12','1.0.0');
-INSERT INTO templates VALUES('https:/tropy.org/v1/templates/dc','https://tropy.org/v1/tropy#Item','Dublin Core','Generic template based on the Dublic Core Metadata Element Set','RRCHNM',1,'2017-10-24 11:12:12','2017-10-24 11:12:12','1.0.0');
-INSERT INTO templates VALUES('https://tropy.org/v1/templates/photo','https://tropy.org/v1/tropy#Photo','Tropy Photo',NULL,NULL,1,'2017-10-24 11:12:12','2017-10-24 11:12:12','1.0.0');
-INSERT INTO templates VALUES('https://tropy.org/v1/templates/selection','https://tropy.org/v1/tropy#Selection','Tropy Photo Selection',NULL,NULL,1,'2017-10-24 11:12:12','2017-10-24 11:12:12','1.0.0');
+INSERT INTO templates VALUES('https://tropy.org/v1/templates/generic','https://tropy.org/v1/tropy#Item','Tropy Generic','General template to fit a generic archival object','RRCHNM',1,'2017-10-24 14:01:04','2017-10-24 14:01:04','1.0.0');
+INSERT INTO templates VALUES('https:/tropy.org/v1/templates/correspondence','https://tropy.org/v1/tropy#Item','Tropy Correspondence','Template meant to focus on correspondence','RRCHNM',1,'2017-10-24 14:01:04','2017-10-24 14:01:04','1.0.0');
+INSERT INTO templates VALUES('https:/tropy.org/v1/templates/dc','https://tropy.org/v1/tropy#Item','Dublin Core','Generic template based on the Dublic Core Metadata Element Set','RRCHNM',1,'2017-10-24 14:01:04','2017-10-24 14:01:04','1.0.0');
+INSERT INTO templates VALUES('https://tropy.org/v1/templates/photo','https://tropy.org/v1/tropy#Photo','Tropy Photo',NULL,NULL,1,'2017-10-24 14:01:04','2017-10-24 14:01:04','1.0.0');
+INSERT INTO templates VALUES('https://tropy.org/v1/templates/selection','https://tropy.org/v1/tropy#Selection','Tropy Photo Selection',NULL,NULL,1,'2017-10-24 14:01:04','2017-10-24 14:01:04','1.0.0');
 CREATE TABLE domains (
   domain_id     INTEGER   PRIMARY KEY,
   template_id   TEXT      NOT NULL REFERENCES templates ON DELETE CASCADE,
