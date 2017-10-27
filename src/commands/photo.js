@@ -148,12 +148,12 @@ class Create extends ImportCommand {
 
         fail(error, this.action.type)
       }
-
-      yield put(act.item.photos.add({ id: item, photos }, { idx }))
-
-      this.undo = act.photo.delete({ item, photos })
-      this.redo = act.photo.restore({ item, photos }, { idx })
     }
+
+    yield put(act.item.photos.add({ id: item, photos }, { idx }))
+
+    this.undo = act.photo.delete({ item, photos })
+    this.redo = act.photo.restore({ item, photos }, { idx })
 
     return photos
   }
