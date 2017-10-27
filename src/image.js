@@ -127,11 +127,8 @@ class Image {
 
           const buffer = Buffer.concat(chunks)
 
-          // do not extract exif from png
-          let exifFn = (this.mimetype !== 'image/png') ? exif : () => ({})
-
           Promise
-            .all([exifFn(buffer), NI(buffer), stat(this.path)])
+            .all([exif(buffer, this.mimetype), NI(buffer), stat(this.path)])
 
             .then(([data, original, file]) =>
               assign(this, original.getSize(), { exif: data, original, file }))
