@@ -24,6 +24,7 @@ class VocabPane extends PureComponent {
                 vocab={vocab}
                 onClassSave={this.props.onClassSave}
                 onDelete={this.props.onDelete}
+                onExport={this.props.onExport}
                 onOpenLink={this.props.onOpenLink}
                 onPropsSave={this.props.onPropsSave}
                 onSave={this.props.onSave}/>)}
@@ -44,6 +45,7 @@ class VocabPane extends PureComponent {
     vocab: array.isRequired,
     onClassSave: func.isRequired,
     onDelete: func.isRequired,
+    onExport: func.isRequired,
     onImport: func.isRequired,
     onOpenLink: func.isRequired,
     onPropsSave: func.isRequired,

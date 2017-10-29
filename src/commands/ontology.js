@@ -111,6 +111,19 @@ class VocabLoad extends Command {
   }
 }
 
+class VocabExport extends Command {
+  static get action() { return VOCAB.EXPORT }
+
+  *exec() {
+    const { db } = this.options
+    const { payload } = this.action
+
+    // TODO
+
+    return payload
+  }
+}
+
 class VocabSave extends Command {
   static get action() { return VOCAB.SAVE }
 
@@ -491,6 +504,7 @@ module.exports = {
   TemplateDelete,
   TemplateSave,
   VocabDelete,
+  VocabExport,
   VocabLoad,
   VocabRestore,
   VocabSave

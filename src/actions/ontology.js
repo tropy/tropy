@@ -42,6 +42,14 @@ module.exports = {
       }
     },
 
+    export(payload, meta = {}) {
+      return {
+        type: VOCAB.EXPORT,
+        payload: array(payload),
+        meta: { cmd: 'ontology', ...meta }
+      }
+    },
+
     restore(payload, meta = {}) {
       return {
         type: VOCAB.RESTORE,

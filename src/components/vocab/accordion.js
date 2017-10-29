@@ -5,8 +5,8 @@ const { FormattedMessage } = require('react-intl')
 const { Accordion } = require('../accordion')
 const { FormField, FormLink, FormText } = require('../form')
 const { ResourceList } = require('../resource')
-const { IconButton } = require('../button')
-const { IconBook16, IconBookLock, IconTrash } = require('../icons')
+const { IconButton, ButtonGroup } = require('../button')
+const { IconBook16, IconBookLock, IconTrash, IconExport } = require('../icons')
 const { arrayOf, func, object, shape, string } = require('prop-types')
 
 
@@ -28,6 +28,9 @@ class VocabAccordion extends Accordion {
     this.props.onSave({ id: this.props.vocab.id, ...data })
   }
 
+  handleExport = () => {
+    this.props.onExport(this.props.vocab.id)
+  }
 
   renderHeader() {
     return super.renderHeader(
@@ -50,6 +53,15 @@ class VocabAccordion extends Accordion {
     return super.renderBody(
       <div>
         <header className="vocab-header">
+          <div className="col-9 flex-row center">
+            <ButtonGroup>
+              <IconButton
+                icon={<IconExport/>}
+                title="prefs.vocab.export"
+                onClick={this.handleExport}/>
+            </ButtonGroup>
+          </div>
+
           <FormLink
             id="vocab.id"
             isCompact
@@ -121,6 +133,7 @@ class VocabAccordion extends Accordion {
     }).isRequired,
     onClassSave: func.isRequired,
     onDelete: func.isRequired,
+    onExport: func.isRequired,
     onOpenLink: func.isRequired,
     onPropsSave: func.isRequired,
     onSave: func.isRequired

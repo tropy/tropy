@@ -98,6 +98,7 @@ class PrefsContainer extends PureComponent {
             vocab={this.props.vocab}
             onClassSave={this.props.onClassSave}
             onDelete={this.props.onVocabDelete}
+            onExport={this.props.onVocabExport}
             onImport={this.props.onOntologyImport}
             onOpenLink={this.props.onOpenLink}
             onPropsSave={this.props.onPropsSave}
@@ -121,6 +122,7 @@ class PrefsContainer extends PureComponent {
     onPropsSave: func.isRequired,
     onSettingsUpdate: func.isRequired,
     onVocabDelete: func.isRequired,
+    onVocabExport: func.isRequired,
     onVocabSave: func.isRequired,
     onOntologyImport: func.isRequired
   }
@@ -170,6 +172,10 @@ module.exports = {
 
       onVocabDelete(...args) {
         dispatch(actions.ontology.vocab.delete(...args))
+      },
+
+      onVocabExport(...args) {
+        dispatch(actions.ontology.vocab.export(...args))
       },
 
       onVocabSave(...args) {
