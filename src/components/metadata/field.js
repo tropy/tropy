@@ -57,14 +57,12 @@ class MetadataField extends PureComponent {
     else this.handleChange(this.props.text, !isCommitUnchanged)
   }
 
-  handleKeyDown = (event, text, hasChanged) => {
+  handleKeyDown = (event, input) => {
     if (event.key === 'Tab') {
       event.preventDefault()
       event.stopPropagation()
 
-      if (hasChanged) {
-        this.handleChange(text)
-      }
+      if (input.hasChanged) input.commit(true)
 
       if (event.shiftKey) this.props.onPrev()
       else this.props.onNext()

@@ -79,14 +79,12 @@ class ItemTableCell extends PureComponent {
     }
   })
 
-  handleKeyDown = (event, text, hasChanged) => {
+  handleKeyDown = (event, input) => {
     if (event.key === 'Tab') {
       event.preventDefault()
       event.stopPropagation()
 
-      if (hasChanged) {
-        this.handleChange(text)
-      }
+      if (input.hasChanged) input.commit(true)
 
       this.edit(event.shiftKey ?
         this.props.prevColumn :
