@@ -1,13 +1,19 @@
 'use strict'
 
 const { ACTIVITY } = require('../constants')
+const { pick } = require('../common/util')
 
 module.exports = {
   done(action, result, meta) {
+    const error = result instanceof Error
+    const payload = !error ?
+      result :
+      pick(result, ['code', 'message', 'stack', 'type'])
+
     return {
       type: action.type,
-      payload: result,
-      error: result instanceof Error,
+      payload,
+      error,
       meta: {
         ipc: action.meta.ipc,
         idx: action.meta.idx,

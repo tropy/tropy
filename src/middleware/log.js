@@ -1,6 +1,6 @@
 'use strict'
 
-const { debug, warn, log } = require('../common/log')
+const { warn, log } = require('../common/log')
 const { gray } = require('colors/safe')
 const ms = require('ms')
 
@@ -17,8 +17,7 @@ module.exports = {
 
       switch (true) {
         case !!error:
-          warn(`${format(type, meta)} failed: ${payload.message}`)
-          debug(payload.message, payload.stack)
+          warn(`${type} failed: ${payload.message}`, { error: payload, meta })
           break
         default:
           log(meta.log || 'verbose', format(type, meta))
