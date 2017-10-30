@@ -139,9 +139,9 @@ class Image {
     })
   }
 
-  async resize(...args) {
-    return resize(this.original || await NI(this.path), ...args)
-  }
+  resize = async (...args) =>
+    resize(this.original || await NI(this.path), ...args)
+
 }
 
 function resize(image, size) {

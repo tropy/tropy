@@ -53,8 +53,12 @@ class Consolidate extends ImportCommand {
           }
 
           if (image != null) {
-            if (meta.force || (image.checksum !== photo.checksum)) {
-              yield* this.createThumbnails(photo.id, image)
+            hasChanged = (image.checksum !== photo.checksum)
+
+            if (meta.force || hasChanged) {
+              yield* this.createThumbnails(photo.id, image, {
+                overwrite: hasChanged
+              })
 
               const data = { id: photo.id, ...image.toJSON() }
 

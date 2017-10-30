@@ -6,21 +6,28 @@ const { Command } = require('./command')
 const { imagePath } = require('../common/cache')
 const mod = require('../models')
 const act = require('../actions')
-const { warn, debug } = require('../common/log')
+const { warn, verbose } = require('../common/log')
 const { prompt } = require('../dialog')
 
 
 class ImportCommand extends Command {
-  *createThumbnails(id, image) {
+  *createThumbnails(id, image, { overwrite = true, quality = 100 } = {}) {
     try {
+      const { cache } = this.options
+
       for (let size of [48, 512]) {
-        const thumb = yield call([image, image.resize], size)
-        yield call(this.options.cache.save,
-          imagePath(id, size), thumb.toJPEG(100))
+        const path = imagePath(id, size)
+
+        if (overwrite || !(yield call(cache.exists, path))) {
+          const thumb = yield call(image.resize, size)
+          yield call(this.options.cache.save, path, thumb.toJPEG(quality))
+
+        } else {
+          verbose(`Skipping ${size}px thumbnail for #${id}: already exists`)
+        }
       }
     } catch (error) {
-      warn(`Failed to create thumbnail: ${error.message}`)
-      debug(error.stack)
+      warn(`Failed to create thumbnail: ${error.message}`, { error })
     }
   }
 
