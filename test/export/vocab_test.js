@@ -1,7 +1,7 @@
 'use strict'
 
 describe('exported vocab has', () => {
-  const N3 = require('N3')
+  const N3 = require('n3')
   const { toN3 } = __require('export/vocab')
   const { vocab, classes, props, datatypes } = require('../fixtures/export')
 
