@@ -51,6 +51,7 @@ module.exports = {
   },
 
   VANN: {
-    preferredNamespacePrefix: 'http://purl.org/vocab/vann/preferredNamespacePrefix'
+    preferredNamespacePrefix: 'http://purl.org/vocab/vann/preferredNamespacePrefix',
+    preferredNamespaceUri: 'http://purl.org/vocab/vann/preferredNamespaceUri'
   }
 }

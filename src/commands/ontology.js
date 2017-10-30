@@ -13,8 +13,10 @@ const act = require('../actions')
 const mod = require('../models')
 const sanitize = require('sanitize-filename')
 const { join } = require('path')
-const { keys } = Object
+const { keys, values } = Object
 const dialog = require('../dialog')
+const { writeFileAsync: write } = require('fs')
+const { toN3 } = require('../export/vocab')
 
 
 class Import extends Command {
@@ -115,10 +117,21 @@ class VocabExport extends Command {
   static get action() { return VOCAB.EXPORT }
 
   *exec() {
-    const { db } = this.options
     const { payload } = this.action
+    const vocab = yield select(state => pick(state.ontology.vocab, payload))
 
-    // TODO
+    const path = yield call(dialog.save.vocab)
+    if (!path) return
+
+    const data = yield call(toN3, values(vocab)[0])
+
+    try {
+      yield call(async () => { write(path, await data) })
+    } catch (error) {
+      warn(`Failed to export "${vocab.id}": ${error.message}`)
+      verbose(error.stack)
+      dialog.fail(error, this.action.type)
+    }
 
     return payload
   }
