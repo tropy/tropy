@@ -65,7 +65,17 @@ const vocab = {
   description: 'Description',
   prefix: 'vocab',
   seeAlso: 'http://example.com/seeAlso',
-  title: 'Test Vocabulary'
+  title: 'Test Vocabulary',
+  classes: ['http://example.com/class']
+}
+
+const classes = {
+  'http://example.com/class': {
+    comment: 'comment',
+    description: null,
+    id: 'http://example.com/class',
+    label: 'My Class'
+  }
 }
 
 module.exports = {
@@ -74,5 +84,6 @@ module.exports = {
   metadata,
   props,
   photos,
-  vocab
+  vocab,
+  classes
 }

@@ -3,9 +3,9 @@
 describe('exported vocab', () => {
   const N3 = require('N3')
   const { toN3 } = __require('export/vocab')
-  const { vocab } = require('../fixtures/export')
+  const { vocab, classes } = require('../fixtures/export')
 
-  const output = toN3(vocab)
+  const output = toN3(vocab, classes)
   const parser = N3.Parser({ format: 'N3' })
   const store = N3.Store()
 
@@ -15,7 +15,7 @@ describe('exported vocab', () => {
     expect(v).to.have.deep.members([
       {
         graph: '',
-        object: 'Description',
+        object: '"Description"',
         predicate: 'http://purl.org/dc/elements/1.1/description',
         subject: 'http://example.com/vocab'
       },
@@ -39,7 +39,7 @@ describe('exported vocab', () => {
       },
       {
         graph: '',
-        object: 'vocab',
+        object: '"vocab"',
         predicate: 'http://purl.org/vocab/vann/preferredNamespacePrefix',
         subject: 'http://example.com/vocab',
       },
@@ -50,5 +50,31 @@ describe('exported vocab', () => {
         subject: 'http://example.com/vocab',
       }])
   })
+
+  it('has classes', async () => {
+    store.addTriples(parser.parse(await output))
+    const c = store.getTriplesByIRI('http://example.com/class')
+    expect(c).to.deep.have.members([
+      {
+        subject: 'http://example.com/class',
+        predicate: 'http://www.w3.org/2000/01/rdf-schema#label',
+        object: '"My Class"@en',
+        graph: ''
+      },
+      {
+        subject: 'http://example.com/class',
+        predicate: 'http://www.w3.org/2000/01/rdf-schema#comment',
+        object: '"comment"@en',
+        graph: ''
+      },
+      {
+        subject: 'http://example.com/class',
+        predicate: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+        object: 'http://www.w3.org/2000/01/rdf-schema#Class',
+        graph: ''
+      }
+    ])
+  })
+
 
 })
