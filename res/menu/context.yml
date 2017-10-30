@@ -103,6 +103,8 @@ linux:
   photo: &photo
     - label: 'Delete Photo'
       command: 'app:delete-photo'
+    - label: 'Duplicate Photo'
+      command: 'app:duplicate-photo'
     - label: 'Move Photo to new Item'
       command: 'app:explode-photo'
     - label: 'Show Photo in Folder…'

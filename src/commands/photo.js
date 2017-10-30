@@ -1,5 +1,6 @@
 'use strict'
 
+const assert = require('assert')
 const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
@@ -188,6 +189,59 @@ class Delete extends Command {
   }
 }
 
+class Duplicate extends ImportCommand {
+  static get action() { return PHOTO.DUPLICATE }
+
+  *exec() {
+    const { db } = this.options
+    const { payload, meta } = this.action
+
+    let { item, photos } = payload
+    assert(!blank(photos), 'missing photos')
+
+    const [idx, originals, data] = yield select(state => [
+      meta.idx || [state.items[item].photos.indexOf(photos[0]) + 1],
+      pluck(state.photos, photos),
+      pluck(state.metadata, photos)
+    ])
+
+    const total = originals.length
+    photos = []
+
+    for (let i = 0; i < total; ++i) {
+      const { template, path } = originals[i]
+
+      try {
+        const image = yield call(Image.read, path)
+
+        const photo = yield call(db.transaction, tx =>
+          mod.photo.create(tx, template, { item, image, data: data[i] }))
+
+        yield put(act.metadata.load([photo.id]))
+
+        yield all([
+          put(act.photo.insert(photo, { idx: [idx[0] + photos.length] })),
+          put(act.activity.update(this.action, { total, progress: i + 1 }))
+        ])
+
+        photos.push(photo.id)
+        yield* this.createThumbnails(photo.id, image)
+
+      } catch (error) {
+        warn(`Failed to duplicate "${path}": ${error.message}`, { error })
+        fail(error, this.action.type)
+      }
+    }
+
+    yield put(act.item.photos.add({ id: item, photos }, { idx }))
+
+    this.undo = act.photo.delete({ item, photos })
+    this.redo = act.photo.restore({ item, photos }, { idx })
+
+    return photos
+  }
+}
+
 class Load extends Command {
   static get action() { return PHOTO.LOAD }
 
@@ -315,6 +369,7 @@ module.exports = {
   Consolidate,
   Create,
   Delete,
+  Duplicate,
   Load,
   Move,
   Order,

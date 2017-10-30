@@ -362,12 +362,14 @@ class Tropy extends EventEmitter {
 
     this.on('app:rename-photo', (_, { target }) =>
       this.dispatch(act.edit.start({ photo: target.id })))
-
     this.on('app:delete-photo', (_, { target }) =>
       this.dispatch(act.photo.delete({
         item: target.item, photos: [target.id]
       })))
-
+    this.on('app:duplicate-photo', (_, { target }) =>
+      this.dispatch(act.photo.duplicate({
+        item: target.item, photos: [target.id]
+      })))
     this.on('app:consolidate-photo-library', () =>
       this.dispatch(act.photo.consolidate(null, { force: true })))
 
