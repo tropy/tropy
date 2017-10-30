@@ -133,8 +133,9 @@ class Create extends ImportCommand {
         yield* this.handleDuplicate(image)
 
         photo = yield call(db.transaction, tx =>
-          mod.photo.create(tx, template.id, { item, image, data })
-        )
+          mod.photo.create(tx, template.id, {
+            item, image, data, position: idx[0] + i + 1
+          }))
 
         yield put(act.metadata.load([photo.id]))
 
@@ -194,19 +195,20 @@ class Duplicate extends ImportCommand {
 
   *exec() {
     const { db } = this.options
-    const { payload, meta } = this.action
+    const { payload } = this.action
+    const { item } = payload
 
-    let { item, photos } = payload
-    assert(!blank(photos), 'missing photos')
+    assert(!blank(payload.photos), 'missing photos')
 
-    const [idx, originals, data] = yield select(state => [
-      meta.idx || [state.items[item].photos.indexOf(photos[0]) + 1],
-      pluck(state.photos, photos),
-      pluck(state.metadata, photos)
+    const [order, originals, data] = yield select(state => [
+      state.items[item].photos,
+      pluck(state.photos, payload.photos),
+      pluck(state.metadata, payload.photos)
     ])
 
+    const idx = [order.indexOf(payload.photos[0]) + 1]
     const total = originals.length
-    photos = []
+    const photos = []
 
     for (let i = 0; i < total; ++i) {
       const { template, path } = originals[i]
@@ -233,6 +235,7 @@ class Duplicate extends ImportCommand {
       }
     }
 
+    yield call(mod.photo.order, db, item, splice(order, idx[0], 0, ...photos))
     yield put(act.item.photos.add({ id: item, photos }, { idx }))
 
     this.undo = act.photo.delete({ item, photos })
