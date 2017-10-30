@@ -12,7 +12,7 @@ const { DuplicateError } = require('../common/error')
 const { info, warn, verbose } = require('../common/log')
 const { blank, pick, pluck, splice } = require('../common/util')
 const { getPhotoTemplate, getTemplateValues } = require('../selectors')
-const { keys } = Object
+const { keys, values } = Object
 
 
 class Consolidate extends ImportCommand {
@@ -23,8 +23,10 @@ class Consolidate extends ImportCommand {
     const { payload, meta } = this.action
     const consolidated = []
 
-    if (blank(payload)) return consolidated
-    const photos = yield select(state => pluck(state.photos, payload))
+    const photos = yield select(state =>
+      blank(payload) ?
+        values(state.photos) :
+        pluck(state.photos, payload))
 
     for (let i = 0, total = photos.length; i < total; ++i) {
       const photo = photos[i]

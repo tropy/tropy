@@ -368,8 +368,8 @@ class Tropy extends EventEmitter {
         item: target.item, photos: [target.id]
       })))
 
-    this.on('app:consolidate-item', (_, { target }) =>
-      this.dispatch(act.photo.consolidate(target.photos, { force: true })))
+    this.on('app:consolidate-photo-library', () =>
+      this.dispatch(act.photo.consolidate(null, { force: true })))
 
     this.on('app:consolidate-photo', (_, { target }) =>
       this.dispatch(act.photo.consolidate([target.id], {
