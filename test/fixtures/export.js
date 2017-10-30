@@ -60,10 +60,19 @@ const photos = {
   12: { path: '/another', selections: [21] }
 }
 
+const vocab = {
+  id: 'http://example.com/vocab',
+  description: 'Description',
+  prefix: 'vocab',
+  seeAlso: 'http://example.com/seeAlso',
+  title: 'Test Vocabulary'
+}
+
 module.exports = {
   template,
   items,
   metadata,
   props,
-  photos
+  photos,
+  vocab
 }

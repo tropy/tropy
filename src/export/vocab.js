@@ -14,8 +14,6 @@ const prefixes = {
 }
 
 function toN3(vocab) {
-  console.log(vocab)
-
   return new Promise((resolve, reject) => {
     if (vocab.prefix) {
       prefixes[vocab.prefix] = vocab.id
