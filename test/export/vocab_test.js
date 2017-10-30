@@ -3,9 +3,9 @@
 describe('exported vocab', () => {
   const N3 = require('N3')
   const { toN3 } = __require('export/vocab')
-  const { vocab, classes } = require('../fixtures/export')
+  const { vocab, classes, props } = require('../fixtures/export')
 
-  const output = toN3(vocab, classes)
+  const output = toN3(vocab, classes, props)
   const parser = N3.Parser({ format: 'N3' })
   const store = N3.Store()
 
@@ -13,6 +13,12 @@ describe('exported vocab', () => {
     store.addTriples(parser.parse(await output))
     const v = store.getTriplesByIRI('http://example.com/vocab')
     expect(v).to.have.deep.members([
+      {
+        graph: '',
+        object: 'http://www.w3.org/2002/07/owl#Ontology',
+        predicate: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+        subject: 'http://example.com/vocab',
+      },
       {
         graph: '',
         object: '"Description"',
@@ -42,19 +48,13 @@ describe('exported vocab', () => {
         object: '"vocab"',
         predicate: 'http://purl.org/vocab/vann/preferredNamespacePrefix',
         subject: 'http://example.com/vocab',
-      },
-      {
-        graph: '',
-        object: 'http://www.w3.org/2002/07/owl#Ontology',
-        predicate: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-        subject: 'http://example.com/vocab',
       }])
   })
 
   it('has classes', async () => {
     store.addTriples(parser.parse(await output))
     const c = store.getTriplesByIRI('http://example.com/class')
-    expect(c).to.deep.have.members([
+    expect(c).to.have.deep.members([
       {
         subject: 'http://example.com/class',
         predicate: 'http://www.w3.org/2000/01/rdf-schema#label',
@@ -76,5 +76,23 @@ describe('exported vocab', () => {
     ])
   })
 
+  it('has properties', async () => {
+    store.addTriples(parser.parse(await output))
+    const c = store.getTriplesByIRI('http://example.com/photo-property')
+    expect(c).to.have.deep.members([
+      {
+        subject: 'http://example.com/photo-property',
+        predicate: 'http://www.w3.org/2000/01/rdf-schema#label',
+        object: '"hello world"@en',
+        graph: ''
+      },
+      {
+        subject: 'http://example.com/photo-property',
+        predicate: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+        object: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property',
+        graph: ''
+      }
+    ])
+  })
 
 })

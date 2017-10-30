@@ -51,8 +51,11 @@ const metadata = {
 
 const props = {
   'http://example.com/custom-property': { label: 'Non-template Property' },
-  'http://example.com/photo-property': { label: 'hello world' },
-  'http://example.com/selection-property': { label: 'select prop' }
+  'http://example.com/photo-property': {
+    id: 'http://example.com/photo-property',
+    label: 'hello world'
+  },
+  'http://example.com/selection-property': { label: 'select prop' },
 }
 
 const photos = {
@@ -66,7 +69,8 @@ const vocab = {
   prefix: 'vocab',
   seeAlso: 'http://example.com/seeAlso',
   title: 'Test Vocabulary',
-  classes: ['http://example.com/class']
+  classes: ['http://example.com/class'],
+  properties: ['http://example.com/photo-property']
 }
 
 const classes = {

@@ -118,15 +118,16 @@ class VocabExport extends Command {
 
   *exec() {
     const { payload } = this.action
-    const [ vocab, classes ] = yield select(state => [
+    const [vocab, classes, props] = yield select(state => [
       pick(state.ontology.vocab, payload),
-      state.ontology.class
+      state.ontology.class,
+      state.ontology.props
     ])
 
     const path = yield call(dialog.save.vocab)
     if (!path) return
 
-    const data = yield call(toN3, values(vocab)[0], classes)
+    const data = yield call(toN3, values(vocab)[0], classes, props)
 
     try {
       yield call(async () => { write(path, await data) })

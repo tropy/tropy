@@ -13,7 +13,7 @@ const prefixes = {
   dc: 'http://purl.org/dc/elements/1.1/'
 }
 
-function toN3(vocab, classes) {
+function toN3(vocab, classes, props) {
   // use Promise because `writer.end` expects a callback
   return new Promise((resolve, reject) => {
     if (vocab.prefix) {
@@ -31,13 +31,23 @@ function toN3(vocab, classes) {
     writer.addTriple(vocab.id, DC.description, l(vocab.description))
 
     // classes
-    for (let classId of vocab.classes) {
+    for (let classId of vocab.classes || []) {
       const c = classes[classId]
       c.id && writer.addTriple(c.id, RDF.type, RDFS.Class)
       c.vocabulary && writer.addTriple(c.id, RDFS.isDefinedBy, c.vocabulary)
       c.comment && writer.addTriple(c.id, RDFS.comment, l(c.comment, 'en'))
       c.label && writer.addTriple(c.id, RDFS.label, l(c.label, 'en'))
       c.description && writer.addTriple(c.id, DC.description, l(c.description))
+    }
+
+    // properties
+    for (let propId of vocab.properties || []) {
+      const p = props[propId]
+      p.id && writer.addTriple(p.id, RDF.type, RDF.Property)
+      p.vocabulary && writer.addTriple(p.id, RDFS.isDefinedBy, p.vocabulary)
+      p.comment && writer.addTriple(p.id, RDFS.comment, l(p.comment, 'en'))
+      p.label && writer.addTriple(p.id, RDFS.label, l(p.label, 'en'))
+      p.description && writer.addTriple(p.id, DC.description, l(p.description))
     }
 
     // settle the promise
