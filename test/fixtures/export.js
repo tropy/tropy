@@ -70,7 +70,8 @@ const vocab = {
   seeAlso: 'http://example.com/seeAlso',
   title: 'Test Vocabulary',
   classes: ['http://example.com/class'],
-  properties: ['http://example.com/photo-property']
+  properties: ['http://example.com/photo-property'],
+  datatypes: ['http://example.com/type']
 }
 
 const classes = {
@@ -82,6 +83,13 @@ const classes = {
   }
 }
 
+const datatypes = {
+  'http://example.com/type': {
+    id: 'http://example.com/type',
+    comment: 'a custom datatype'
+  }
+}
+
 module.exports = {
   template,
   items,
@@ -89,5 +97,6 @@ module.exports = {
   props,
   photos,
   vocab,
-  classes
+  classes,
+  datatypes
 }

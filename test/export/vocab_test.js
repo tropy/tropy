@@ -1,15 +1,15 @@
 'use strict'
 
-describe('exported vocab', () => {
+describe('exported vocab has', () => {
   const N3 = require('N3')
   const { toN3 } = __require('export/vocab')
-  const { vocab, classes, props } = require('../fixtures/export')
+  const { vocab, classes, props, datatypes } = require('../fixtures/export')
 
-  const output = toN3(vocab, classes, props)
+  const output = toN3(vocab, classes, props, datatypes)
   const parser = N3.Parser({ format: 'N3' })
   const store = N3.Store()
 
-  it('has own metadata', async () => {
+  it('own metadata', async () => {
     store.addTriples(parser.parse(await output))
     const v = store.getTriplesByIRI('http://example.com/vocab')
     expect(v).to.have.deep.members([
@@ -51,7 +51,7 @@ describe('exported vocab', () => {
       }])
   })
 
-  it('has classes', async () => {
+  it('classes', async () => {
     store.addTriples(parser.parse(await output))
     const c = store.getTriplesByIRI('http://example.com/class')
     expect(c).to.have.deep.members([
@@ -76,7 +76,7 @@ describe('exported vocab', () => {
     ])
   })
 
-  it('has properties', async () => {
+  it('properties', async () => {
     store.addTriples(parser.parse(await output))
     const c = store.getTriplesByIRI('http://example.com/photo-property')
     expect(c).to.have.deep.members([
@@ -90,6 +90,25 @@ describe('exported vocab', () => {
         subject: 'http://example.com/photo-property',
         predicate: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
         object: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property',
+        graph: ''
+      }
+    ])
+  })
+
+  it('datatypes', async () => {
+    store.addTriples(parser.parse(await output))
+    const c = store.getTriplesByIRI('http://example.com/type')
+
+    expect(c).to.have.deep.members([
+      {
+        subject: 'http://example.com/type',
+        predicate: 'http://www.w3.org/2000/01/rdf-schema#comment',
+        object: '"a custom datatype"@en',
+        graph: ''
+      }, {
+        subject: 'http://example.com/type',
+        predicate: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+        object: 'http://www.w3.org/2000/01/rdf-schema#Datatype',
         graph: ''
       }
     ])

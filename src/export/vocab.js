@@ -13,7 +13,7 @@ const prefixes = {
   dc: 'http://purl.org/dc/elements/1.1/'
 }
 
-function toN3(vocab, classes, props) {
+function toN3(vocab, classes, props, datatypes) {
   // use Promise because `writer.end` expects a callback
   return new Promise((resolve, reject) => {
     if (vocab.prefix) {
@@ -38,6 +38,16 @@ function toN3(vocab, classes, props) {
       c.comment && writer.addTriple(c.id, RDFS.comment, l(c.comment, 'en'))
       c.label && writer.addTriple(c.id, RDFS.label, l(c.label, 'en'))
       c.description && writer.addTriple(c.id, DC.description, l(c.description))
+    }
+
+    // datatypes
+    for (let typeId of vocab.datatypes || []) {
+      const d = datatypes[typeId]
+      d.id && writer.addTriple(d.id, RDF.type, RDFS.Datatype)
+      d.vocabulary && writer.addTriple(d.id, RDFS.isDefinedBy, d.vocabulary)
+      d.comment && writer.addTriple(d.id, RDFS.comment, l(d.comment, 'en'))
+      d.label && writer.addTriple(d.id, RDFS.label, l(d.label, 'en'))
+      d.description && writer.addTriple(d.id, DC.description, l(d.description))
     }
 
     // properties
