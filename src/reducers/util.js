@@ -56,6 +56,8 @@ const util = {
 
   nested: {
     add(name, state = {}, payload, { idx } = {}) {
+      if (isArray(idx)) idx = idx[0]
+
       return into({ ...state }, map(id => ({
         [id]: {
           ...state[id],

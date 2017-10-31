@@ -258,6 +258,7 @@ en:
     photo:
       create: Import Photo
       delete: Delete Photo
+      duplicate: Duplicate Photo
       move: Moving Photo
       order: Sort Photos
       restore: Restore Photo
@@ -345,6 +346,11 @@ en:
           other {Importing photos …}
         }
       delete: Deleting photo …
+      duplicate: >
+        {hasProgressBar, select,
+          true {Duplicating photos {progress, number} of {total, number} …}
+          other {Duplicating photos …}
+        }
       load: Loading photos …
       move: Moving photos …
       order: Sorting photos …

@@ -9,7 +9,7 @@ const flash  = require('../actions/flash')
 const MIN = 1000 * 60
 
 class Updater {
-  constructor(app, timeout = 30 * MIN) {
+  constructor(app, timeout = 90 * MIN) {
     this.isSupported = !linux && app.isBuild && ARGS.autoUpdates
 
     this.app = app

@@ -128,7 +128,7 @@ class ItemPanel extends PureComponent {
         </Panel>
 
         <PhotoPanel {...props}
-          isDisabled={isDisabled || hasMultipleItems}
+          isDisabled={isDisabled || !item || hasMultipleItems}
           isItemOpen={isItemOpen}
           edit={edit}
           expanded={expanded}
@@ -149,7 +149,7 @@ class ItemPanel extends PureComponent {
           onZoomChange={this.handleZoomChange}/>
 
         <NotePanel {...props}
-          isDisabled={isDisabled || !photo || hasMultipleItems}
+          isDisabled={isDisabled || !photo || !item || hasMultipleItems}
           isItemOpen={isItemOpen}
           item={item && item.id}
           keymap={keymap.NoteList}

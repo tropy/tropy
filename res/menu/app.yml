@@ -31,9 +31,12 @@ linux:
             command: 'app:clear-recent-projects'
       - type: 'separator'
       - &import
-        label: 'Import Photos…'
+        label: 'Import Photos …'
         command: 'app:import-photos'
         accelerator: 'CmdOrCtrl+Shift+I'
+      - &consolidate
+        label: 'Consolidate Photo Library'
+        command: 'app:consolidate-photo-library'
       - type: 'separator'
       - label: 'Close'
         accelerator: 'CmdOrCtrl+W'
@@ -189,6 +192,7 @@ darwin:
       - *recent
       - type: 'separator'
       - *import
+      - *consolidate
       - type: 'separator'
       - label: 'Close'
         accelerator: 'Command+W'

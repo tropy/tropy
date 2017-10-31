@@ -85,8 +85,6 @@ linux:
           checked: true
           enabled: false
         - type: separator
-    - label: 'Consolidate Item'
-      command: 'app:consolidate-item'
     - label: 'Delete Item'
       command: 'app:delete-item'
   item-bulk: &item-bulk
@@ -94,8 +92,6 @@ linux:
       command: 'app:merge-item'
     - label: 'Export Selected Items …'
       command: 'app:export-item'
-    - label: 'Consolidate Selected Items'
-      command: 'app:consolidate-item'
     - label: 'Delete Selected Items'
       command: 'app:delete-item'
   item-list: &item-list
@@ -107,6 +103,8 @@ linux:
   photo: &photo
     - label: 'Delete Photo'
       command: 'app:delete-photo'
+    - label: 'Duplicate Photo'
+      command: 'app:duplicate-photo'
     - label: 'Move Photo to new Item'
       command: 'app:explode-photo'
     - label: 'Show Photo in Folder…'

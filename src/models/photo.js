@@ -9,6 +9,7 @@ const metadata = require('./metadata')
 const bb = require('bluebird')
 const { assign } = Object
 const subject = require('./subject')
+const { blank } = require('../common/util')
 
 const COLUMNS = [
   'checksum',
@@ -32,7 +33,7 @@ const skel = (id, selections = [], notes = []) => ({
 
 
 module.exports = {
-  async create(db, template, { item, image, data }) {
+  async create(db, template, { item, image, data, position }) {
     const {
       path, checksum, mimetype, width, height, orientation, size
     } = image
@@ -53,9 +54,10 @@ module.exports = {
             size,
             checksum,
             mimetype,
-            orientation
-          ) VALUES (?,?,?,?,?,?,?)`,
-        [id, item, path, size, checksum, mimetype, orientation]),
+            orientation,
+            position
+          ) VALUES (?,?,?,?,?,?,?,?)`,
+        [id, item, path, size, checksum, mimetype, orientation, position]),
 
       metadata.update(db, {
         ids: [id],
@@ -177,7 +179,7 @@ module.exports = {
   },
 
   async order(db, item, photos, offset = 0) {
-    if (photos.length) {
+    if (!blank(photos)) {
       return db.run(`
         UPDATE photos
           SET position = CASE id
@@ -190,7 +192,7 @@ module.exports = {
   },
 
   async merge(db, item, photos, offset = 0) {
-    if (photos.length) {
+    if (!blank(photos)) {
       return db.run(`
         UPDATE photos
           SET item_id = ?, position = CASE id

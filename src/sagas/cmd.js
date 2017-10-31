@@ -2,7 +2,7 @@
 
 const { exec } = require('../commands')
 const { fail } = require('../dialog')
-const { warn, verbose } = require('../common/log')
+const { warn } = require('../common/log')
 const { put } = require('redux-saga/effects')
 const { activity, history } = require('../actions')
 
@@ -24,8 +24,7 @@ module.exports = {
       if (!cmd.isInteractive && cmd.duration > TOO_LONG) warn(`SLOW: ${type}`)
 
     } catch (error) {
-      warn(`${action.type} unexpectedly failed in *exec: ${error.message}`)
-      verbose(error.stack)
+      warn(`${action.type} failed in *exec: ${error.message}`, { error })
     }
   }
 }

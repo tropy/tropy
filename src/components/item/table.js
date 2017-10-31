@@ -9,8 +9,31 @@ const { ItemTableHead } = require('./table-head')
 const cx = require('classnames')
 const { noop } = require('../../common/util')
 const { ROW } = require('../../constants/sass')
+const { match } = require('../../keymap')
+const { refine } = require('../../common/util')
+
 
 class ItemTable extends ItemIterator {
+  constructor(props) {
+    super(props)
+
+    refine(this, 'handleKeyDown', ([event]) => {
+      if (event.isPropagationStopped()) return
+
+      switch (match(this.props.keymap, event)) {
+        case 'edit':
+          this.edit(this.current())
+          break
+        default:
+          return
+      }
+
+      event.preventDefault()
+      event.stopPropagation()
+      event.nativeEvent.stopImmediatePropagation()
+    })
+  }
+
   componentDidUpdate() {
     if (this.props.edit != null) {
       for (let id in this.props.edit) {
@@ -34,6 +57,13 @@ class ItemTable extends ItemIterator {
     return ROW.HEIGHT
   }
 
+  edit(item) {
+    const { property } = this.props.columns[0]
+    this.props.onEdit({
+      column: { [item.id]: property.id }
+    })
+  }
+
   handleChange = (...args) => {
     this.props.onMetadataSave(...args)
     this.container.focus()
@@ -43,14 +73,6 @@ class ItemTable extends ItemIterator {
     this.props.onEditCancel(...args)
     this.container.focus()
   }
-
-  edit(item) {
-    const { property } = this.props.columns[0]
-    this.props.onEdit({
-      column: { [item.id]: property.id }
-    })
-  }
-
 
   renderTableBody() {
     const { columns, data, edit } = this.props

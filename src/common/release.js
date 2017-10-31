@@ -23,5 +23,7 @@ module.exports = {
     name: (channel === 'stable') ? name : `${name}-${channel}`
   },
 
-  feed: `https://tropy.org/update/${channel}/${platform}/${version}`
+  feed: (platform === 'win32') ?
+    `https://tropy.org/update/${channel}/${platform}` :
+    `https://tropy.org/update/${channel}/${platform}/${version}`
 }

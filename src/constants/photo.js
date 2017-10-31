@@ -5,6 +5,7 @@ module.exports = {
   CONTRACT: 'photo.contract',
   CREATE: 'photo.create',
   DELETE: 'photo.delete',
+  DUPLICATE: 'photo.duplicate',
   EXPAND: 'photo.expand',
   INSERT: 'photo.insert',
   LOAD: 'photo.load',

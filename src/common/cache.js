@@ -4,6 +4,7 @@ require('./promisify')
 
 const { join, resolve } = require('path')
 const { mkdirAsync: mkdir, writeFileAsync: write } = require('fs')
+const { statAsync: stat } = require('fs')
 
 
 class Cache {
@@ -21,9 +22,11 @@ class Cache {
     return this
   }
 
-  save = (name, data) => (
+  save = (name, data) =>
     write(this.expand(name), data)
-  )
+
+  exists = (name) =>
+    stat(name).then(() => true, () => false)
 
   expand(...args) {
     return join(this.root, ...args)

@@ -151,9 +151,6 @@ class ItemIterator extends Iterator {
       case 'copy':
         this.handleItemCopy(this.props.selection)
         break
-      case 'edit':
-        this.edit(this.current())
-        break
       default:
         return
     }

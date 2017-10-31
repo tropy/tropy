@@ -30,7 +30,7 @@
     {
       "property": "http://purl.org/dc/elements/1.1/date",
       "label": null,
-      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "datatype": "https://tropy.org/v1/tropy#date",
       "hint": "ISO format",
       "isRequired": false,
       "isConstant": false,

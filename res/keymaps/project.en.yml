@@ -8,9 +8,11 @@ linux: &linux
   Esper: &Esper
     zoomIn:
       - CmdOrCtrl-+
+      - CmdOrCtrl-=
       - Shift-CmdOrCtrl-+
     zoomOut:
       - CmdOrCtrl+-
+      - Shift+CmdOrCtrl+_
       - Shift+CmdOrCtrl+-
     up: ArrowUp
     down: ArrowDown

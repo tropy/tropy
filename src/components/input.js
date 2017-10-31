@@ -112,10 +112,7 @@ class BufferedInput extends PureComponent {
 
   handleKeyDown = (event) => {
     if (this.props.onKeyDown != null) {
-      const { value } = this.state
-      const { hasChanged } = this
-
-      if (this.props.onKeyDown(event, value, hasChanged)) {
+      if (this.props.onKeyDown(event, this)) {
         return
       }
     }

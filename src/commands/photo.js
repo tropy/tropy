@@ -1,5 +1,6 @@
 'use strict'
 
+const assert = require('assert')
 const { all, call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
@@ -12,7 +13,7 @@ const { DuplicateError } = require('../common/error')
 const { info, warn, verbose } = require('../common/log')
 const { blank, pick, pluck, splice } = require('../common/util')
 const { getPhotoTemplate, getTemplateValues } = require('../selectors')
-const { keys } = Object
+const { keys, values } = Object
 
 
 class Consolidate extends ImportCommand {
@@ -23,8 +24,10 @@ class Consolidate extends ImportCommand {
     const { payload, meta } = this.action
     const consolidated = []
 
-    if (blank(payload)) return consolidated
-    const photos = yield select(state => pluck(state.photos, payload))
+    const photos = yield select(state =>
+      blank(payload) ?
+        values(state.photos) :
+        pluck(state.photos, payload))
 
     for (let i = 0, total = photos.length; i < total; ++i) {
       const photo = photos[i]
@@ -51,8 +54,12 @@ class Consolidate extends ImportCommand {
           }
 
           if (image != null) {
-            if (meta.force || (image.checksum !== photo.checksum)) {
-              yield* this.createThumbnails(photo.id, image)
+            hasChanged = (image.checksum !== photo.checksum)
+
+            if (meta.force || hasChanged) {
+              yield* this.createThumbnails(photo.id, image, {
+                overwrite: hasChanged
+              })
 
               const data = { id: photo.id, ...image.toJSON() }
 
@@ -126,8 +133,9 @@ class Create extends ImportCommand {
         yield* this.handleDuplicate(image)
 
         photo = yield call(db.transaction, tx =>
-          mod.photo.create(tx, template.id, { item, image, data })
-        )
+          mod.photo.create(tx, template.id, {
+            item, image, data, position: idx[0] + i + 1
+          }))
 
         yield put(act.metadata.load([photo.id]))
 
@@ -148,12 +156,12 @@ class Create extends ImportCommand {
 
         fail(error, this.action.type)
       }
-
-      yield put(act.item.photos.add({ id: item, photos }, { idx }))
-
-      this.undo = act.photo.delete({ item, photos })
-      this.redo = act.photo.restore({ item, photos }, { idx })
     }
+
+    yield put(act.item.photos.add({ id: item, photos }, { idx }))
+
+    this.undo = act.photo.delete({ item, photos })
+    this.redo = act.photo.restore({ item, photos }, { idx })
 
     return photos
   }
@@ -179,6 +187,61 @@ class Delete extends Command {
     yield put(act.item.photos.remove({ id: item, photos }))
 
     this.undo = act.photo.restore({ item, photos }, { idx })
+  }
+}
+
+class Duplicate extends ImportCommand {
+  static get action() { return PHOTO.DUPLICATE }
+
+  *exec() {
+    const { db } = this.options
+    const { payload } = this.action
+    const { item } = payload
+
+    assert(!blank(payload.photos), 'missing photos')
+
+    const [order, originals, data] = yield select(state => [
+      state.items[item].photos,
+      pluck(state.photos, payload.photos),
+      pluck(state.metadata, payload.photos)
+    ])
+
+    const idx = [order.indexOf(payload.photos[0]) + 1]
+    const total = originals.length
+    const photos = []
+
+    for (let i = 0; i < total; ++i) {
+      const { template, path } = originals[i]
+
+      try {
+        const image = yield call(Image.read, path)
+
+        const photo = yield call(db.transaction, tx =>
+          mod.photo.create(tx, template, { item, image, data: data[i] }))
+
+        yield put(act.metadata.load([photo.id]))
+
+        yield all([
+          put(act.photo.insert(photo, { idx: [idx[0] + photos.length] })),
+          put(act.activity.update(this.action, { total, progress: i + 1 }))
+        ])
+
+        photos.push(photo.id)
+        yield* this.createThumbnails(photo.id, image)
+
+      } catch (error) {
+        warn(`Failed to duplicate "${path}": ${error.message}`, { error })
+        fail(error, this.action.type)
+      }
+    }
+
+    yield call(mod.photo.order, db, item, splice(order, idx[0], 0, ...photos))
+    yield put(act.item.photos.add({ id: item, photos }, { idx }))
+
+    this.undo = act.photo.delete({ item, photos })
+    this.redo = act.photo.restore({ item, photos }, { idx })
+
+    return photos
   }
 }
 
@@ -309,6 +372,7 @@ module.exports = {
   Consolidate,
   Create,
   Delete,
+  Duplicate,
   Load,
   Move,
   Order,
