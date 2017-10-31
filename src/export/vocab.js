@@ -5,12 +5,11 @@ const { DC, RDF, RDFS, OWL, VANN } = require('../constants')
 const { createLiteral: literal } = N3.Util
 
 const prefixes = {
-  // prefixes could be overwritten by user
-  owl: 'http://www.w3.org/2002/07/owl#',
-  vann: 'http://purl.org/vocab/vann/',
-  rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-  rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
-  dc: 'http://purl.org/dc/elements/1.1/'
+  owl: OWL.ns,
+  vann: VANN.ns,
+  rdf: RDF.ns,
+  rdfs: RDFS.ns,
+  dc: DC.ns
 }
 
 const translated = (str) => literal(str, ARGS.locale)
