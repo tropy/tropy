@@ -105,7 +105,7 @@ linux:
       command: 'app:delete-photo'
     - label: 'Duplicate Photo'
       command: 'app:duplicate-photo'
-    - label: 'Move Photo to new Item'
+    - label: 'Move Photo to New Item'
       command: 'app:explode-photo'
     - label: 'Show Photo in Folder…'
       command: 'app:show-in-folder'
