@@ -19,6 +19,7 @@ const mime = resolve(res, 'icons', 'mime')
 const IGNORE = [
   /.DS_Store/,
   /.babelrc/,
+  /.editorconfig/,
   /.eslintrc/,
   /.gitignore/,
   /.nvmrc/,
