@@ -20,6 +20,20 @@ class VocabAccordion extends Accordion {
     return <IconBook16/>
   }
 
+  get toolbar() {
+    return (
+      <div className="col-9 flex-row center">
+        <ButtonGroup>
+          <IconButton
+            icon={<IconExport/>}
+            title="prefs.vocab.export"
+            isDisabled={this.isProtected}
+            onClick={this.handleExport}/>
+        </ButtonGroup>
+      </div>
+    )
+  }
+
   handleDelete = () => {
     this.props.onDelete(this.props.vocab.id)
   }
@@ -53,15 +67,7 @@ class VocabAccordion extends Accordion {
     return super.renderBody(
       <div>
         <header className="vocab-header">
-          <div className="col-9 flex-row center">
-            <ButtonGroup>
-              <IconButton
-                icon={<IconExport/>}
-                title="prefs.vocab.export"
-                onClick={this.handleExport}/>
-            </ButtonGroup>
-          </div>
-
+          {this.toolbar}
           <FormLink
             id="vocab.id"
             isCompact
