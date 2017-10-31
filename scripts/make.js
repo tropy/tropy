@@ -111,8 +111,12 @@ function template(path, content) {
 target.clean = () => {
   test.clean()
   rm('-rf', join(home, 'lib'))
-  rm('-rf', join(home, 'dist'))
   rm('-f', join(home, 'npm-debug.log'))
+}
+
+target.distclean = () => {
+  target.clean()
+  rm('-rf', join(home, 'dist'))
 }
 
 target.rules = () =>
