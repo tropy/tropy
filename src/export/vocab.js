@@ -2,7 +2,7 @@
 
 const N3 = require('n3')
 const { DC, RDF, RDFS, OWL, VANN } = require('../constants')
-const { createLiteral: l } = N3.Util
+const { createLiteral: literal } = N3.Util
 
 const prefixes = {
   // prefixes could be overwritten by user
@@ -12,6 +12,8 @@ const prefixes = {
   rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
   dc: 'http://purl.org/dc/elements/1.1/'
 }
+
+const translated = (str) => literal(str, ARGS.locale)
 
 function addTriples(writer, property, collection, type) {
   for (let id of property || []) {
@@ -23,13 +25,13 @@ function addTriples(writer, property, collection, type) {
       writer.addTriple(x.id, RDFS.isDefinedBy, x.vocabulary)
     }
     if (x.comment) {
-      writer.addTriple(x.id, RDFS.comment, l(x.comment, 'en'))
+      writer.addTriple(x.id, RDFS.comment, translated(x.comment))
     }
     if (x.label) {
-      writer.addTriple(x.id, RDFS.label, l(x.label, 'en'))
+      writer.addTriple(x.id, RDFS.label, translated(x.label))
     }
     if (x.description) {
-      writer.addTriple(x.id, DC.description, l(x.description))
+      writer.addTriple(x.id, DC.description, literal(x.description))
     }
   }
 }
@@ -45,11 +47,12 @@ function toN3(vocab, classes, props, datatypes) {
     writer.addTriple(vocab.id, RDF.type, OWL.Ontology)
 
     // own properties
-    writer.addTriple(vocab.id, VANN.preferredNamespacePrefix, l(vocab.prefix))
+    writer.addTriple(
+      vocab.id, VANN.preferredNamespacePrefix, literal(vocab.prefix))
     writer.addTriple(vocab.id, VANN.preferredNamespaceUri, vocab.id)
     writer.addTriple(vocab.id, RDFS.seeAlso, vocab.seeAlso)
-    writer.addTriple(vocab.id, DC.title, l(vocab.title, 'en'))
-    writer.addTriple(vocab.id, DC.description, l(vocab.description))
+    writer.addTriple(vocab.id, DC.title, translated(vocab.title))
+    writer.addTriple(vocab.id, DC.description, literal(vocab.description))
 
     addTriples(writer, vocab.classes, classes, RDFS.Class)
     addTriples(writer, vocab.datatypes, datatypes, RDFS.Datatype)
