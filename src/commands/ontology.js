@@ -6,14 +6,14 @@ const { ONTOLOGY } = require('../constants')
 const { VOCAB, PROPS, CLASS, LABEL, TEMPLATE } = ONTOLOGY
 const { Ontology, Template } = require('../common/ontology')
 const { verbose, warn } = require('../common/log')
-const { get, pick } = require('../common/util')
+const { get, pick, pluck } = require('../common/util')
 const { all, call, select } = require('redux-saga/effects')
 const { getTemplateField, getTemplateFields } = require('../selectors')
 const act = require('../actions')
 const mod = require('../models')
 const sanitize = require('sanitize-filename')
 const { join } = require('path')
-const { keys, values } = Object
+const { keys } = Object
 const dialog = require('../dialog')
 const { writeFileAsync: write } = require('fs')
 const { toN3 } = require('../export/vocab')
@@ -120,7 +120,7 @@ class VocabExport extends Command {
     const { payload } = this.action
     const [vocab, classes, props, types] =
           yield select(state => [
-            values(pick(state.ontology.vocab, payload)),
+            pluck(state.ontology.vocab, payload),
             state.ontology.class,
             state.ontology.props,
             state.ontology.type
@@ -134,8 +134,7 @@ class VocabExport extends Command {
     try {
       yield call(async () => { write(path, await data) })
     } catch (error) {
-      warn(`Failed to export "${vocab.id}": ${error.message}`)
-      verbose(error.stack)
+      warn(`Failed to export "${vocab.id}": ${error.message}`, { error })
       dialog.fail(error, this.action.type)
     }
 
