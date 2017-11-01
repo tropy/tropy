@@ -99,6 +99,10 @@ const dom = {
     return node.dispatchEvent(new Event(...args))
   },
 
+  classes(node, ...args) {
+    return node.classList.add(...args)
+  },
+
   toggle(node, ...args) {
     return node.classList.toggle(...args)
   },
