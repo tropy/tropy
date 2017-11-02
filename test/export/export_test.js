@@ -3,6 +3,7 @@
 describe('export', () => {
   const { groupedByTemplate } = __require('export')
   const f = require('../fixtures/export')
+
   const { keys } = Object
 
   const resources = [
