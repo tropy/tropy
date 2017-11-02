@@ -8,7 +8,8 @@ describe('AppMenu', () => {
 
   before(() => {
     menu = new AppMenu({
-      state: { recent: [] },
+      defaults: { locale: 'en' },
+      state: { recent: [], locale: 'en' },
       history: {},
       updater: {}
     })

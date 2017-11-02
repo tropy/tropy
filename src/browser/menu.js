@@ -29,6 +29,16 @@ class Menu {
     this.app = app
   }
 
+  async load(name) {
+    const { defaults, state } = this.app
+
+    this.template = (
+      await res.Menu.openWithFallback(defaults.locale, state.locale, name)
+    ).template
+
+    return this
+  }
+
   find(ids, menu = this.menu) {
     const [id, ...tail] = ids
     const item = menu.items.find(x => x.id === id)
@@ -207,8 +217,11 @@ class Menu {
 
 class AppMenu extends Menu {
   async load(name = 'app') {
-    this.template = (await res.Menu.open(name)).template
-    return this.reload()
+    try {
+      return (await super.load(name))
+    } finally {
+      this.reload()
+    }
   }
 
   reload() {
@@ -234,13 +247,12 @@ const separate = transformer(
 )
 
 class ContextMenu extends Menu {
-
   static scopes = {
     global: ['history']
   }
 
-  async load(name = 'context') {
-    return (this.template = (await res.Menu.open(name)).template), this
+  load(name = 'context') {
+    return super.load(name)
   }
 
   prepare(template, settings) {

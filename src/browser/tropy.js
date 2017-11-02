@@ -627,8 +627,12 @@ class Tropy extends EventEmitter {
     }
   }
 
+  get defaults() {
+    return Tropy.defaults
+  }
+
   get dict() {
-    return this.strings.dict[this.state.locale]
+    return this.strings.dict
   }
 
   get history() {
