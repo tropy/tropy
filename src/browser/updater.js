@@ -66,7 +66,7 @@ class Updater {
   }
 
   check = () => {
-    if (this.isSupported) {
+    if (this.isSupported && this.canCheck) {
       autoUpdater.checkForUpdates()
     }
   }
