@@ -17,7 +17,8 @@ const PROP = {
 
 const { newProperties } = require('./utils')
 
-function makeContext(items, photos, metadata, template, props) {
+function makeContext(template, items, resources) {
+  const [props, metadata, photos] = resources
   const flatten = (acc, ps) => acc.concat(ps)
   let result = {
     //'@version': '1.1',
@@ -83,8 +84,9 @@ function addInfo(target, ids, key, state, fn = x => x.name) {
   return target
 }
 
-function renderItem(
-  item, photos, metadata, template, props, lists, tags, notes) {
+function renderItem(item, template, resources) {
+  const [props, metadata, photos, lists, tags, notes] = resources
+
   // the item starts with a photo property, it may not be overwritten
   let result = { '@type': ITEM, 'photo': [] }
 
@@ -137,27 +139,25 @@ function renderItem(
   return result
 }
 
-function makeDocument(
-  items, photos, metadata, template, props, lists, tags, notes) {
+
+function makeDocument(template, items, resources) {
   const result = {
     'template': template.id,
     '@graph': []
   }
   for (const item of items) {
-    const rendered = renderItem(
-      item, photos, metadata, template, props, lists, tags, notes)
+    const rendered = renderItem(item, template, resources)
     result['@graph'].push(rendered)
   }
   return result
 }
 
-async function groupedByTemplate(resources, props = {}) {
+async function groupedByTemplate(templateItems, resources) {
   const results = []
-  for (const resource of resources) {
-    const { items, metadata, template, photos, lists, tags, notes } = resource
-    const context = makeContext(items, photos, metadata, template, props)
-    const document = makeDocument(
-      items, photos, metadata, template, props, lists, tags, notes)
+  for (const ti of templateItems) {
+    const { template, items } = ti
+    const context = makeContext(template, items, resources)
+    const document = makeDocument(template, items, resources)
     document['@context'] = context
     results.push(await jsonld.compact(document, context))
   }

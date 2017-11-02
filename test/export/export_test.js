@@ -2,15 +2,15 @@
 
 describe('export', () => {
   const { groupedByTemplate } = __require('export')
-  const { template, items, metadata, props, photos, lists, tags, notes } =
-        require('../fixtures/export')
+  const f = require('../fixtures/export')
+
   const { keys } = Object
 
   const resources = [
-    { template, items, metadata, photos, lists, tags, notes }
-  ]
+    f.props, f.metadata, f.photos, f.lists, f.tags, f.notes, f.selections]
 
-  const ld = groupedByTemplate(resources, props)
+  const ld = groupedByTemplate(
+    [{ template: f.template, items: f.items }], resources)
 
   it('has item.template', async () => {
     const data = (await ld)[0]

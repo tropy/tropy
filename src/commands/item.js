@@ -439,7 +439,7 @@ class Export extends Command {
 
       if (!path) return
 
-      const [resources, props] = yield select(state => {
+      const [templateItems, ...resources] = yield select(state => {
         const itms = pick(state.items, ids)
         const templateIDs = Object.values(itms).map(itm => itm.template)
         const templates = pick(state.ontology.template, templateIDs)
@@ -459,17 +459,14 @@ class Export extends Command {
           results.push({
             template,
             items: Object.values(itms).filter(i => i.template === t),
-            metadata: state.metadata,
-            photos: state.photos,
-            lists: state.lists,
-            tags: state.tags,
-            notes: state.notes
           })
         }
-        return [results, state.ontology.props]
+        const needed = [
+          'metadata', 'photos', 'lists', 'tags', 'notes', 'selections']
+        return [results, state.ontology.props, ...pluck(state, needed)]
       })
 
-      const results = yield call(groupedByTemplate, resources, props)
+      const results = yield call(groupedByTemplate, templateItems, resources)
 
       const data = JSON.stringify(results, null, 2)
 
