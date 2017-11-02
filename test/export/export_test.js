@@ -2,12 +2,12 @@
 
 describe('export', () => {
   const { groupedByTemplate } = __require('export')
-  const { template, items, metadata, props, photos, lists, tags } =
+  const { template, items, metadata, props, photos, lists, tags, notes } =
         require('../fixtures/export')
   const { keys } = Object
 
   const resources = [
-    { template, items, metadata, photos, lists, tags }
+    { template, items, metadata, photos, lists, tags, notes }
   ]
 
   const ld = groupedByTemplate(resources, props)
@@ -87,7 +87,7 @@ describe('export', () => {
     })
   })
 
-  describe('item has auxiliary property', () => {
+  describe('item has auxiliary property:', () => {
     it('list', async () => {
       const data = (await ld)[0]['@graph']
       expect(data[0]).to.not.have.property('list')
@@ -98,6 +98,15 @@ describe('export', () => {
       const data = (await ld)[0]['@graph']
       expect(data[0]).to.not.have.property('tag')
       expect(data[1]['tag']).to.eql('mytag')
+    })
+  })
+
+  describe('photo has auxiliary property', () => {
+    it('note', async () => {
+      const item1 = (await ld)[0]['@graph'][0]
+      expect(item1.photo[0]).to.not.have.property('note')
+      expect(item1.photo[1]['note']['text']).to.eql('photo note')
+      expect(item1.photo[1]['note']['doc']).to.eql('{"foo":"bar"}')
     })
   })
 })

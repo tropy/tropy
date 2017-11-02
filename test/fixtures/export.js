@@ -14,8 +14,17 @@ const template = {
 }
 
 const items = [
-  { id: 1, template: 'https://tropy.org/v1/tropy#test-template', photos: [11, 12] },
-  { id: 2, template: 'https://tropy.org/v1/tropy#test-template', lists: [1], tags: [1] }
+  {
+    id: 1,
+    template: 'https://tropy.org/v1/tropy#test-template',
+    photos: [11, 12]
+  },
+  {
+    id: 2,
+    template: 'https://tropy.org/v1/tropy#test-template',
+    lists: [1],
+    tags: [1]
+  }
 ]
 
 const metadata = {
@@ -61,7 +70,7 @@ const props = {
 
 const photos = {
   11: { id: 11, path: '/path' },
-  12: { path: '/another', selections: [21] }
+  12: { id: 12, path: '/another', selections: [21], notes: [1] }
 }
 
 const vocab = {
@@ -99,6 +108,11 @@ const tags = {
   1: { name: 'mytag' }
 }
 
+const notes = {
+  1: { text: 'photo note', state: { doc: { foo: 'bar' } } },
+  2: { text: 'selection note' }
+}
+
 module.exports = {
   template,
   items,
@@ -109,5 +123,6 @@ module.exports = {
   classes,
   datatypes,
   lists,
-  tags
+  tags,
+  notes
 }

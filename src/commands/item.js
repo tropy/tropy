@@ -462,7 +462,8 @@ class Export extends Command {
             metadata: state.metadata,
             photos: state.photos,
             lists: state.lists,
-            tags: state.tags
+            tags: state.tags,
+            notes: state.notes
           })
         }
         return [results, state.ontology.props]

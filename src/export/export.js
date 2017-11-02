@@ -12,7 +12,8 @@ const PROP = {
   TEMPLATE: `${TR}template`,
   ITEM: `${TR}item`,
   PHOTO: `${TR}photo`,
-  SELECTION: `${TR}selection`
+  SELECTION: `${TR}selection`,
+  NOTE: `${TR}note`
 }
 
 const { newProperties } = require('./utils')
@@ -31,6 +32,10 @@ function makeContext(items, photos, metadata, template, props) {
       '@container': '@list',
       '@context': {
         path: 'http://schema.org/image',
+        note: {
+          '@container': '@list',
+          '@id': PROP.NOTE
+        },
         selection: {
           '@id': PROP.SELECTION,
           '@container': '@list',
@@ -64,7 +69,8 @@ function makeContext(items, photos, metadata, template, props) {
   return result
 }
 
-function renderItem(item, photos, metadata, template, props, lists, tags) {
+function renderItem(
+  item, photos, metadata, template, props, lists, tags, notes) {
   // the item starts with a photo property, it may not be overwritten
   let result = { '@type': ITEM, 'photo': [] }
 
@@ -94,10 +100,21 @@ function renderItem(item, photos, metadata, template, props, lists, tags) {
     let photo = {
       '@type': PHOTO,
       'path': p.path,
-      'selection': []
+      'selection': [],
     }
 
     photo = newProperties(metadata[p.id], photo, false, props, template)
+
+    // add photo notes info
+    if (p.notes && p.notes.length) {
+      photo.note = values(pick(notes, p.notes)).map(n => ({
+        text: n.text,
+        doc: JSON.stringify(n.state.doc)
+      }))
+      if (photo.note.length === 1) {
+        photo.note = photo.note[0]
+      }
+    }
 
     // add selection metadata
     if (p.selections) {
@@ -126,13 +143,15 @@ function renderItem(item, photos, metadata, template, props, lists, tags) {
   return result
 }
 
-function makeDocument(items, photos, metadata, template, props, lists, tags) {
+function makeDocument(
+  items, photos, metadata, template, props, lists, tags, notes) {
   const result = {
     'template': template.id,
     '@graph': []
   }
   for (const item of items) {
-    const rendered = renderItem(item, photos, metadata, template, props, lists, tags)
+    const rendered = renderItem(
+      item, photos, metadata, template, props, lists, tags, notes)
     result['@graph'].push(rendered)
   }
   return result
@@ -141,10 +160,10 @@ function makeDocument(items, photos, metadata, template, props, lists, tags) {
 async function groupedByTemplate(resources, props = {}) {
   const results = []
   for (const resource of resources) {
-    const { items, metadata, template, photos, lists, tags } = resource
+    const { items, metadata, template, photos, lists, tags, notes } = resource
     const context = makeContext(items, photos, metadata, template, props)
     const document = makeDocument(
-      items, photos, metadata, template, props, lists, tags)
+      items, photos, metadata, template, props, lists, tags, notes)
     document['@context'] = context
     results.push(await jsonld.compact(document, context))
   }
