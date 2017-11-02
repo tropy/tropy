@@ -140,7 +140,7 @@ function renderItem(item, template, resources) {
     let photo = {
       '@type': PHOTO,
       'path': p.path,
-      'selection': [],
+      'selection': []
     }
 
     photo = newProperties(metadata[p.id], photo, false, props, template)
