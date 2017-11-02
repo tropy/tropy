@@ -1,9 +1,8 @@
 'use strict'
 
-const { values } = Object
 const { promises: jsonld } = require('jsonld')
 
-const { pick } = require('../common/util')
+const { pluck } = require('../common/util')
 const { ITEM, PHOTO, SELECTION } = require('../constants/type')
 
 const TR = 'https://tropy.org/v1/tropy#'
@@ -46,21 +45,21 @@ function makeContext(items, photos, metadata, template, props) {
   }
 
   // fill context up with item metadata fields
-  const metadataOfItems = values(pick(metadata, items.map(i => i.id)))
+  const metadataOfItems = pluck(metadata, items.map(i => i.id))
   result = newProperties(metadataOfItems, result, true, props, template)
 
   // add Photo metadata fields to context from all selected photos
   const photoIDs = items.map(i => i.photos).reduce(flatten, [])
-  const metadataOfPhotos = values(pick(metadata, photoIDs))
+  const metadataOfPhotos = pluck(metadata, photoIDs)
   const photoContext = result['photo']['@context']
   const newPhotoProperties = newProperties(
     metadataOfPhotos, photoContext, true, props, template)
   result['photo']['@context'] = newPhotoProperties
 
   // add Selection metadata fields to context from all selections metadata
-  const selectionIDs = values(pick(photos, photoIDs))
+  const selectionIDs = pluck(photos, photoIDs)
         .map(p => p.selections).reduce(flatten, [])
-  const metadataOfSelections = values(pick(metadata, selectionIDs))
+  const metadataOfSelections = pluck(metadata, selectionIDs)
   const newSelectionProperties = newProperties(
     metadataOfSelections, {}, true, props, template)
   result['photo']['@context']['selection']['@context'] =
@@ -69,26 +68,28 @@ function makeContext(items, photos, metadata, template, props) {
   return result
 }
 
+function addInfo(target, ids, key, state, fn = x => x.name) {
+  if (ids && ids.length) {
+    // extract relevant data from related subjects
+    target[key] = pluck(state, ids).map(fn)
+    if (target[key].length === 1) {
+      // extract single item from list
+      target[key] = target[key][0]
+    } else if (target[key].length === 0) {
+      // remove empty lists
+      delete target[key]
+    }
+  }
+  return target
+}
+
 function renderItem(
   item, photos, metadata, template, props, lists, tags, notes) {
   // the item starts with a photo property, it may not be overwritten
   let result = { '@type': ITEM, 'photo': [] }
 
-  // add item list info
-  if (item.lists && item.lists.length) {
-    result.list = values(pick(lists, item.lists)).map(l => l.name)
-    if (result.list.length === 1) {
-      result.list = result.list[0]
-    }
-  }
-
-  // add item tags info
-  if (item.tags && item.tags.length) {
-    result.tag = values(pick(tags, item.tags)).map(t => t.name)
-    if (result.tag.length === 1) {
-      result.tag = result.tag[0]
-    }
-  }
+  result = addInfo(result, item.lists, 'list', lists)
+  result = addInfo(result, item.tags, 'tag', tags)
 
   // add item metadata
   result = newProperties(metadata[item.id], result, false, props, template)
@@ -100,21 +101,15 @@ function renderItem(
     let photo = {
       '@type': PHOTO,
       'path': p.path,
-      'selection': [],
+      'selection': []
     }
 
     photo = newProperties(metadata[p.id], photo, false, props, template)
 
-    // add photo notes info
-    if (p.notes && p.notes.length) {
-      photo.note = values(pick(notes, p.notes)).map(n => ({
-        text: n.text,
-        doc: JSON.stringify(n.state.doc)
-      }))
-      if (photo.note.length === 1) {
-        photo.note = photo.note[0]
-      }
-    }
+    photo = addInfo(photo, p.notes, 'note', notes, note => ({
+      text: note.text,
+      doc: JSON.stringify(note.state.doc)
+    }))
 
     // add selection metadata
     if (p.selections) {
@@ -126,7 +121,6 @@ function renderItem(
           props,
           template))
     }
-
     // clear property if there are no selections
     if (!photo.selection.length) {
       delete photo.selection
