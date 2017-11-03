@@ -8,5 +8,6 @@ module.exports = {
   SELECTION: 'https://tropy.org/v1/tropy#Selection',
 
   // These identify the exported JSON-LD entities
-  LIST: 'https://tropy.org/v1/tropy#List'
+  LIST: 'https://tropy.org/v1/tropy#List',
+  NOTE: 'https://tropy.org/v1/tropy#Note'
 }

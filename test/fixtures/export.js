@@ -110,7 +110,11 @@ const tags = {
 
 const notes = {
   1: { text: 'photo note', state: { doc: { foo: 'bar' } } },
-  2: { text: 'selection note' }
+  2: { text: 'selection note', state: {} }
+}
+
+const selections = {
+  21: { x: 10, y: 20, width: 30, height: 40, notes: [2] }
 }
 
 module.exports = {
@@ -124,5 +128,6 @@ module.exports = {
   datatypes,
   lists,
   tags,
-  notes
+  notes,
+  selections
 }

@@ -2,8 +2,8 @@
 
 const { promises: jsonld } = require('jsonld')
 
-const { pluck } = require('../common/util')
-const { ITEM, PHOTO, SELECTION } = require('../constants/type')
+const { pick, pluck } = require('../common/util')
+const { ITEM, PHOTO, SELECTION, NOTE } = require('../constants/type')
 
 const TR = 'https://tropy.org/v1/tropy#'
 
@@ -84,6 +84,43 @@ function addInfo(target, ids, key, state, fn = x => x.name) {
   return target
 }
 
+function makeNote(note) {
+  return {
+    '@type': NOTE,
+    'text': note.text,
+    'doc': JSON.stringify(note.state.doc),
+    'language': note.language
+  }
+}
+
+function addSelections(template, photo, ids, resources) {
+  const selProps = ['x', 'y', 'width', 'height', 'angle', 'mirror', 'template']
+  const [props, metadata,,,, notes, selections] = resources
+
+  if (ids) {
+    photo.selection = ids.map(sID => {
+      let selection = { '@type': SELECTION }
+      const original = selections[sID]
+      // add selection properties
+      Object.assign(selection, pick(original, selProps))
+
+      // add selection notes
+      selection = addInfo(selection, original.notes, 'note', notes, makeNote)
+
+      // add selection metadata
+      selection = newProperties(
+        metadata[sID], selection, false, props, template)
+      return selection
+    })
+  }
+  // clear property if there are no selections
+  if (!photo.selection.length) {
+    delete photo.selection
+  }
+
+  return photo
+}
+
 function renderItem(item, template, resources) {
   const [props, metadata, photos, lists, tags, notes] = resources
 
@@ -108,25 +145,9 @@ function renderItem(item, template, resources) {
 
     photo = newProperties(metadata[p.id], photo, false, props, template)
 
-    photo = addInfo(photo, p.notes, 'note', notes, note => ({
-      text: note.text,
-      doc: JSON.stringify(note.state.doc)
-    }))
+    photo = addInfo(photo, p.notes, 'note', notes, makeNote)
 
-    // add selection metadata
-    if (p.selections) {
-      photo.selection = p.selections.map(sID =>
-        newProperties(
-          metadata[sID],
-          { '@type': SELECTION },
-          false,
-          props,
-          template))
-    }
-    // clear property if there are no selections
-    if (!photo.selection.length) {
-      delete photo.selection
-    }
+    photo = addSelections(template, photo, p.selections, resources)
 
     return photo
   })

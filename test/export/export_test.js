@@ -81,13 +81,11 @@ describe('export', () => {
 
   it('has photo->selection metadata', async () => {
     const data = (await ld)[0]['@graph'][0]['photo'][1]['selection']
-    expect(data).to.eql({
-      '@type': 'Selection',
-      'selectProp': 'selection property'
-    })
+    expect(data).to.have.property('@type', 'Selection')
+    expect(data).to.have.property('selectProp', 'selection property')
   })
 
-  describe('item has auxiliary property:', () => {
+  describe('item has', () => {
     it('list', async () => {
       const data = (await ld)[0]['@graph']
       expect(data[0]).to.not.have.property('list')
@@ -101,12 +99,26 @@ describe('export', () => {
     })
   })
 
-  describe('photo has auxiliary property', () => {
+  describe('photo has', () => {
     it('note', async () => {
       const item1 = (await ld)[0]['@graph'][0]
       expect(item1.photo[0]).to.not.have.property('note')
       expect(item1.photo[1]['note']['text']).to.eql('photo note')
       expect(item1.photo[1]['note']['doc']).to.eql('{"foo":"bar"}')
+    })
+  })
+
+  describe('selection has', async () => {
+    const s = (await ld)[0]['@graph'][0]['photo'][1]['selection']
+    it('coordinates', () => {
+      expect(s).to.have.property('x', 10)
+      expect(s).to.have.property('y', 20)
+      expect(s).to.have.property('width', 30)
+      expect(s).to.have.property('height', 40)
+    })
+    it('note', () => {
+      expect(s['note']['text']).to.eql('selection note')
+      expect(s['note']['doc']).to.be.undefined
     })
   })
 })
