@@ -88,7 +88,9 @@ module.exports = {
             event.preventDefault()
           }
         } catch (error) {
-          warn(`win#${win.id} attempted to navigate to ${url}`, { error })
+          warn(`win#${win.id} attempted to navigate to ${url}`, {
+            stack: error.stack
+          })
           event.preventDefault()
         }
       })

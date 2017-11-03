@@ -10,7 +10,7 @@ const act = require('../actions')
 const { PHOTO } = require('../constants')
 const { Image } = require('../image')
 const { DuplicateError } = require('../common/error')
-const { info, warn, verbose } = require('../common/log')
+const { warn } = require('../common/log')
 const { blank, pick, pluck, splice } = require('../common/util')
 const { getPhotoTemplate, getTemplateValues } = require('../selectors')
 const { keys, values } = Object
@@ -37,7 +37,7 @@ class Consolidate extends ImportCommand {
 
         if (meta.force || hasChanged) {
           if (error != null) {
-            info(`failed to open photo ${photo.id}`, { error })
+            warn(`failed to open photo ${photo.id}`, { stack: error.stack })
 
             // TODO Figure out where it is!
 
@@ -85,7 +85,10 @@ class Consolidate extends ImportCommand {
           }
         }
       } catch (error) {
-        warn(`Failed to consolidate photo ${photo.id}`, { error })
+        warn(`Failed to consolidate photo ${photo.id}`, {
+          stack: error.stack
+        })
+
         fail(error, this.action.type)
       }
 
@@ -151,8 +154,9 @@ class Create extends ImportCommand {
       } catch (error) {
         if (error instanceof DuplicateError) continue
 
-        warn(`Failed to import "${file}": ${error.message}`)
-        verbose(error.stack)
+        warn(`Failed to import "${file}": ${error.message}`, {
+          stack: error.stack
+        })
 
         fail(error, this.action.type)
       }
@@ -230,7 +234,10 @@ class Duplicate extends ImportCommand {
         yield* this.createThumbnails(photo.id, image)
 
       } catch (error) {
-        warn(`Failed to duplicate "${path}": ${error.message}`, { error })
+        warn(`Failed to duplicate "${path}": ${error.message}`, {
+          stack: error.stack
+        })
+
         fail(error, this.action.type)
       }
     }

@@ -38,7 +38,9 @@ class Updater {
       })
 
     } catch (error) {
-      warn(`failed to setup auto updater: ${error.message}`, { error })
+      warn(`failed to setup auto updater: ${error.message}`, {
+        stack: error.stack
+      })
       this.isSupported = false
     }
   }
@@ -81,7 +83,10 @@ class Updater {
     this.isChecking = false
     this.isUpdateAvailable = false
     this.isUpdateReady = false
-    warn(`Failed to fetch update: ${error.message}`, { error })
+
+    warn(`Failed to fetch update: ${error.message}`, {
+      stack: error.stack
+    })
   }
 
   onCheckingForUpdate = () =>{

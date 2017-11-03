@@ -27,7 +27,9 @@ class ImportCommand extends Command {
         }
       }
     } catch (error) {
-      warn(`Failed to create thumbnail: ${error.message}`, { error })
+      warn(`Failed to create thumbnail: ${error.message}`, {
+        stack: error.stack
+      })
     }
   }
 

@@ -33,7 +33,10 @@ class Image {
         status.hasChanged = (status.image.checksum !== checksum)
       }
     } catch (error) {
-      debug(`image check failed for ${path}: ${error.message}`, { error })
+      debug(`image check failed for ${path}: ${error.message}`, {
+        stack: error.stack
+      })
+
       status.hasChanged = true
       status.image = null
       status.error = error
