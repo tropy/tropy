@@ -2,7 +2,6 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { arrayOf, func, number, object, shape, string } = require('prop-types')
 const { connect } = require('react-redux')
 const { TagList } = require('./list')
 const { TagAdder } = require('./adder')
@@ -11,6 +10,9 @@ const { seq, map, filter, compose } = require('transducers.js')
 const { TABS } = require('../../constants')
 const { match } = require('../../keymap')
 const { on, off } = require('../../dom')
+const {
+  arrayOf, bool, func, number, object, shape, string
+} = require('prop-types')
 
 const {
   getAllTags,
@@ -127,6 +129,7 @@ class TagPanel extends PureComponent {
           onContextMenu={this.handleContextMenu}/>
         <TagAdder
           ref={this.setAdder}
+          isDisabled={this.props.isDisabled}
           tags={this.props.allTags}
           count={this.props.items.length}
           onAdd={this.handleTagAdd}
@@ -141,6 +144,7 @@ class TagPanel extends PureComponent {
   static propTypes = {
     allTags: arrayOf(object).isRequired,
     edit: object,
+    isDisabled: bool,
     items: arrayOf(object).isRequired,
     keymap: object.isRequired,
     tags: arrayOf(shape({
