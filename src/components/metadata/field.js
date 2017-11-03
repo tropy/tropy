@@ -81,7 +81,7 @@ class MetadataField extends PureComponent {
             value={this.props.text}
             display={auto(this.props.text, this.props.type)}
             placeholder={this.props.placeholder}
-            isEditing={this.props.isEditing}
+            isActive={this.props.isEditing}
             isRequired={this.props.isRequired}
             onCancel={this.handleCancel}
             onChange={this.handleChange}

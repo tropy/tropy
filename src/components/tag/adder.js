@@ -48,8 +48,8 @@ class TagAdder extends PureComponent {
         <Editable
           ref={this.setEditable}
           autofocus={false}
+          isActive
           isDisabled={this.props.isDisabled}
-          isEditing
           tabIndex={-1}
           type="text"
           value=""

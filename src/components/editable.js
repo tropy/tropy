@@ -32,27 +32,36 @@ class Editable extends PureComponent {
   }
 
   render() {
-    const { isEditing, isDisabled, value, display, ...props } = this.props
+    const {
+      isActive,
+      isDisabled,
+      value,
+      display,
+      ...props
+    } = this.props
 
-    if (!isEditing || isDisabled) {
+    if (!isActive || isDisabled) {
       return (<div className={cx(this.classes)}>{display || value}</div>)
     }
 
     delete props.onChange
 
     return (
-      <BufferedInput {...props}
-        ref={this.setInput}
-        className={cx({ ...this.classes, 'editable-control': true })}
-        value={value || ''}
-        onCommit={this.handleCommit}/>
+      <div className={cx(this.classes)}>
+        <BufferedInput {...props}
+          ref={this.setInput}
+          className="editable-control"
+          isDisabled={isDisabled}
+          value={value || ''}
+          onCommit={this.handleCommit}/>
+      </div>
     )
   }
 
   static propTypes = {
     autofocus: bool,
+    isActive: bool,
     isDisabled: bool,
-    isEditing: bool,
     resize: bool,
     value: oneOfType([string, number]),
     display: string,
