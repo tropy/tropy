@@ -39,7 +39,7 @@ class BufferedInput extends PureComponent {
   }
 
   setInput = (input) => {
-    if (input && this.props.autofocus) {
+    if (input != null && this.props.autofocus) {
       input.focus()
       input.select()
     }
@@ -48,7 +48,7 @@ class BufferedInput extends PureComponent {
   }
 
   focus = () => {
-    if (this.input) this.input.focus()
+    if (this.input != null) this.input.focus()
   }
 
   reset = () => {
