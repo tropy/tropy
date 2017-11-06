@@ -104,7 +104,7 @@ describe('export', () => {
       const item1 = (await ld)[0]['@graph'][0]
       expect(item1.photo[0]).to.not.have.property('note')
       expect(item1.photo[1]['note']['text']).to.eql('photo note')
-      expect(item1.photo[1]['note']['doc']).to.eql('{"foo":"bar"}')
+      expect(item1.photo[1]['note']['html']).to.eql('<p>photo note</p>')
     })
   })
 

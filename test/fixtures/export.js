@@ -109,7 +109,21 @@ const tags = {
 }
 
 const notes = {
-  1: { text: 'photo note', state: { doc: { foo: 'bar' } } },
+  1: {
+    text: 'photo note',
+    state: {
+      doc: {
+        type: 'doc',
+        content: [{
+          type: 'paragraph',
+          content: [{
+            type: 'text',
+            text: 'photo note'
+          }]
+        }]
+      }
+    }
+  },
   2: { text: 'selection note', state: {} }
 }
 
