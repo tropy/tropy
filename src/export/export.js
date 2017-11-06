@@ -3,7 +3,8 @@
 const { promises: jsonld } = require('jsonld')
 
 const { pick, pluck } = require('../common/util')
-const { ITEM, PHOTO, SELECTION, NOTE } = require('../constants/type')
+const { ITEM, PHOTO, SELECTION } = require('../constants/type')
+const makeNote = require('./note')
 
 const TR = 'https://tropy.org/v1/tropy#'
 
@@ -82,15 +83,6 @@ function addInfo(target, ids, key, state, fn = x => x.name) {
     }
   }
   return target
-}
-
-function makeNote(note) {
-  return {
-    '@type': NOTE,
-    'text': note.text,
-    'doc': JSON.stringify(note.state.doc),
-    'language': note.language
-  }
 }
 
 function addSelections(template, photo, ids, resources) {
