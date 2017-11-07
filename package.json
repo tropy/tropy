@@ -55,7 +55,7 @@
     "devtron": "^1.0.0",
     "electron": "=1.6.15",
     "electron-devtools-installer": "^2.2.1",
-    "electron-mocha": "^4.0.3",
+    "electron-mocha": "^5.0.0",
     "electron-packager": "^9.1.0",
     "electron-winstaller": "^2.6.3",
     "enzyme": "^3.1.0",
