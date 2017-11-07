@@ -372,9 +372,9 @@ en:
       strikethrough: Strikethrough
       subscript: Subscript
       superscript: Superscript
-      blockquote: Toggle Quote
-      ol: Toggle Numbered List
-      ul: Toggle Bulleted List
+      blockquote: Insert Blockquote
+      ol: Insert Numbered List
+      ul: Insert Bulleted List
       link: Insert Link
       left: Align Left
       center: Center
