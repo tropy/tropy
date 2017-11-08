@@ -6,7 +6,7 @@ const { ItemTableCell } = require('./table-cell')
 const { get, pick } = require('../../common/util')
 const { DC } = require('../../constants')
 const cx = require('classnames')
-const { arrayOf, object } = require('prop-types')
+const { arrayOf, object, bool } = require('prop-types')
 
 const CellProps = Object.keys(ItemTableCell.propTypes)
 
@@ -49,6 +49,16 @@ class ItemTableRow extends ItemIterable {
         onClick={this.handleClick}
         onDoubleClick={this.handleOpen}
         onContextMenu={this.handleContextMenu}>
+        {this.props.showPositionColumn &&
+          <ItemTableCell {...pick(props, CellProps)}
+            key="position"
+            property={{ id: 'position' }}
+            data={data}
+            width={5}
+            nextColumn="http://purl.org/dc/elements/1.1/title"
+            prevColumn="http://purl.org/dc/elements/1.1/type"
+            isMainColumn={false}
+            getSelection={this.props.getSelection}/>}
         {this.mapColumns(({ column, isMainColumn, next, prev }) =>
           <ItemTableCell {...pick(props, CellProps)}
             key={column.property.id}
@@ -71,7 +81,8 @@ class ItemTableRow extends ItemIterable {
     ...ItemIterable.propTypes,
     edit: object,
     data: object.isRequired,
-    columns: arrayOf(object).isRequired
+    columns: arrayOf(object).isRequired,
+    showPositionColumn: bool
   }
 
   static defaultProps = {

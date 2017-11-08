@@ -92,6 +92,15 @@ class ItemTableHead extends PureComponent {
       <table className="table-head">
         <thead>
           <tr>
+            {this.props.showPositionColumn &&
+              <ItemTableHeadCell
+                key="position"
+                id="position"
+                label=""
+                width={5}
+                isActive={this.isActive('position')}
+                isAscending={this.isAscending}
+                onClick={onSort}/>}
             {columns.map(({ width, property }) =>
               <ItemTableHeadCell
                 key={property.id}
@@ -112,6 +121,8 @@ class ItemTableHead extends PureComponent {
       property: object.isRequired,
       width: number.isRequired
     })).isRequired,
+
+    showPositionColumn: bool,
 
     sort: shape({
       asc: bool.isRequired,

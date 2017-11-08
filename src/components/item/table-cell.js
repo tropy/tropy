@@ -111,7 +111,11 @@ class ItemTableCell extends PureComponent {
 
     return (
       <td
-        className={cx({ metadata: true, [type]: true })}
+        className={cx({
+          'metadata': true,
+          [type]: true,
+          'main-column': isMainColumn
+        })}
         style={this.style}
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>

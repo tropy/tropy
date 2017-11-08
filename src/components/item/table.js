@@ -99,6 +99,7 @@ class ItemTable extends ItemIterator {
                     item={item}
                     data={data[item.id]}
                     columns={columns}
+                    showPositionColumn={this.showPositionColumn}
                     edit={edit}
                     onCancel={this.handleEditCancel}
                     onChange={this.handleChange}
@@ -116,6 +117,7 @@ class ItemTable extends ItemIterator {
       <div className="item table">
         <ItemTableHead
           columns={this.props.columns}
+          showPositionColumn={this.showPositionColumn}
           sort={this.props.sort}
           onSort={this.props.onSort}/>
         {this.renderTableBody()}

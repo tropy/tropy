@@ -208,7 +208,7 @@
   }
 
   .metadata {
-    &:first-child {
+    &.main-column {
       padding-left:
         $default-padding-horizontal
         + $thumbnail-size

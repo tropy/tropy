@@ -249,6 +249,10 @@ class ItemIterator extends Iterator {
     )
   }
 
+  get showPositionColumn() {
+    return !!this.props.list
+  }
+
   static propTypes = {
     items: arrayOf(shape({
       id: number.isRequired
