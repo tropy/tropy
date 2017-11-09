@@ -23,6 +23,7 @@ en:
     Sidebar: &Sidebar
       next: ArrowDown
       prev: ArrowUp
+      clear: Escape
     ItemIterator: &ItemIterator
       up:
         - ArrowUp

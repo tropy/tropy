@@ -182,6 +182,9 @@ class ProjectSidebar extends PureComponent {
       case 'next':
         this.next()
         break
+      case 'clear':
+        this.handleSelect()
+        break
       default:
         return
     }
