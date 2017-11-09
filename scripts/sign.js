@@ -55,22 +55,32 @@ target.darwin = (args = []) => {
   check(identity, 'missing identity')
 
   let app
+  let cnt
 
   for (let target of targets) {
     app = join(target, `${qualified.product}.app`)
+    cnt = join(app, 'Contents')
     check(test('-d', app), `app not found: ${app}`)
 
     say(`signing ${relative(dir, app)} with ${identity}...`)
 
-    for (let file of find(`"${app}" -perm +111 -type f`)) {
+    for (let file of find(`"${join(cnt, 'Resources')}" -perm +111 -type f`)) {
       sign(file)
     }
 
-    for (let file of find(`"${join(app, 'Contents')}" -name "*.framework"`)) {
+    for (let file of find(`"${join(cnt, 'Frameworks')}" -perm +111 -type f`)) {
       sign(file)
     }
 
-    for (let file of find(`"${join(app, 'Contents')}" -name "*.app"`)) {
+    for (let file of find(`"${join(cnt, 'MacOS')}" -perm +111 -type f`)) {
+      sign(file)
+    }
+
+    for (let file of find(`"${cnt}" -name "*.framework"`)) {
+      sign(file)
+    }
+
+    for (let file of find(`"${cnt}" -name "*.app"`)) {
       sign(file)
     }
 
