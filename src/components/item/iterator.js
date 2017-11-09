@@ -249,7 +249,7 @@ class ItemIterator extends Iterator {
     )
   }
 
-  get showPositionColumn() {
+  get hasPositionColumn() {
     return !!this.props.list
   }
 

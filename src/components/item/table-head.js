@@ -92,7 +92,7 @@ class ItemTableHead extends PureComponent {
       <table className="table-head">
         <thead>
           <tr>
-            {this.props.showPositionColumn &&
+            {this.props.hasPositionColumn &&
               <ItemTableHeadCell
                 key="position"
                 id="position"
@@ -122,7 +122,7 @@ class ItemTableHead extends PureComponent {
       width: number.isRequired
     })).isRequired,
 
-    showPositionColumn: bool,
+    hasPositionColumn: bool,
 
     sort: shape({
       asc: bool.isRequired,

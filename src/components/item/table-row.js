@@ -49,7 +49,7 @@ class ItemTableRow extends ItemIterable {
         onClick={this.handleClick}
         onDoubleClick={this.handleOpen}
         onContextMenu={this.handleContextMenu}>
-        {this.props.showPositionColumn &&
+        {this.props.hasPositionColumn &&
           <ItemTableCell {...pick(props, CellProps)}
             property={{ id: 'position' }}
             width={5}
@@ -77,7 +77,7 @@ class ItemTableRow extends ItemIterable {
     edit: object,
     data: object.isRequired,
     columns: arrayOf(object).isRequired,
-    showPositionColumn: bool
+    hasPositionColumn: bool
   }
 
   static defaultProps = {
