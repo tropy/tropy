@@ -51,9 +51,8 @@ class ItemTableRow extends ItemIterable {
         onContextMenu={this.handleContextMenu}>
         {this.props.hasPositionColumn &&
           <ItemTableCell {...pick(props, CellProps)}
-            property={{ id: 'position' }}
-            width={5}
-            getSelection={this.props.getSelection}/>}
+            property={{ id: PositionColumn.id }}
+            width={PositionColumn.width}/>}
         {this.mapColumns(({ column, isMainColumn, next, prev }) =>
           <ItemTableCell {...pick(props, CellProps)}
             key={column.property.id}

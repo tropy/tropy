@@ -8,7 +8,7 @@ const { IconChevron7 } = require('../icons')
 const {
   arrayOf, bool, func, number, object, oneOf, shape, string
 } = require('prop-types')
-
+const { PositionColumn } = require('./position-column')
 
 class ItemTableHeadCell extends PureComponent {
   get classes() {
@@ -94,10 +94,9 @@ class ItemTableHead extends PureComponent {
           <tr>
             {this.props.hasPositionColumn &&
               <ItemTableHeadCell
-                key="position"
-                id="position"
-                label=""
-                width={5}
+                id={PositionColumn.id}
+                label={PositionColumn.label}
+                width={PositionColumn.width}
                 isActive={this.isActive('position')}
                 isAscending={this.isAscending}
                 onClick={onSort}/>}
