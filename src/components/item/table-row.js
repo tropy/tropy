@@ -4,7 +4,7 @@ const React = require('react')
 const { ItemIterable } = require('./iterable')
 const { ItemTableCell } = require('./table-cell')
 const { get, pick } = require('../../common/util')
-const { DC } = require('../../constants')
+const { DC, COLUMNS: { PositionColumn } } = require('../../constants')
 const cx = require('classnames')
 const { arrayOf, object, bool } = require('prop-types')
 

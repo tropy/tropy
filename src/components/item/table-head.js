@@ -5,10 +5,10 @@ const { PureComponent } = React
 const cx = require('classnames')
 const { getLabel } = require('../../common/ontology')
 const { IconChevron7 } = require('../icons')
+const { COLUMNS: { PositionColumn } } = require('../../constants')
 const {
   arrayOf, bool, func, number, object, oneOf, shape, string
 } = require('prop-types')
-const { PositionColumn } = require('./position-column')
 
 class ItemTableHeadCell extends PureComponent {
   get classes() {
