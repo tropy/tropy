@@ -55,8 +55,6 @@ class ItemTableRow extends ItemIterable {
             property={{ id: 'position' }}
             data={data}
             width={5}
-            nextColumn="http://purl.org/dc/elements/1.1/title"
-            prevColumn="http://purl.org/dc/elements/1.1/type"
             isMainColumn={false}
             getSelection={this.props.getSelection}/>}
         {this.mapColumns(({ column, isMainColumn, next, prev }) =>

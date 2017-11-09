@@ -86,10 +86,11 @@ class ItemTableCell extends PureComponent {
 
       if (input.hasChanged) input.commit(true)
 
-      this.edit(event.shiftKey ?
+      const next = event.shiftKey ?
         this.props.prevColumn :
-        this.props.nextColumn )
+        this.props.nextColumn
 
+      if (next != null) this.edit(next)
     }
   }
 
@@ -156,8 +157,8 @@ class ItemTableCell extends PureComponent {
       type: string,
     }),
 
-    nextColumn: string.isRequired,
-    prevColumn: string.isRequired,
+    nextColumn: string,
+    prevColumn: string,
 
     item: shape({
       id: number.isRequired,
