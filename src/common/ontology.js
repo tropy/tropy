@@ -74,6 +74,10 @@ class Ontology extends Resource {
     return new Ontology(await Ontology.parse(stream(path)), name)
   }
 
+  static expand(name) {
+    return join(this.base, `${name}${this.ext}`)
+  }
+
   static CLASSES = [
     RDFS.Class,
     OWL.Class
