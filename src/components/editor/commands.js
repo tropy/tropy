@@ -10,6 +10,23 @@ const {
   sinkListItem
 } = require('prosemirror-schema-list')
 
+// adopted from cmd.toggleMark.
+// toggleMark on an existing link would lead to unexpected behavior of
+// the link being deleted.
+const addMark = (markType, attrs) => (state, dispatch) => {
+  let { $cursor, ranges } = state.selection
+  if ($cursor) {
+    dispatch(state.tr.addStoredMark(markType.create(attrs)))
+  } else {
+    const tr = state.tr
+    for (let i = 0; i < ranges.length; i++) {
+      let { $from, $to } = ranges[i]
+      tr.addMark($from.pos, $to.pos, markType.create(attrs))
+    }
+    dispatch(tr.scrollIntoView())
+  }
+  return true
+}
 
 module.exports = (schema) => {
   const list = {
@@ -32,7 +49,7 @@ module.exports = (schema) => {
     ...marks,
 
     // some marks, i.e. 'link', accept attributes ({ href, title })
-    link: (attrs) => cmd.toggleMark(schema.marks.link, attrs),
+    link: (attrs) => addMark(schema.marks.link, attrs),
 
     undo,
     redo,
