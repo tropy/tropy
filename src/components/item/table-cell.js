@@ -7,6 +7,7 @@ const { Editable } = require('../editable')
 const { TagColors } = require('../colors')
 const { createClickHandler } = require('../util')
 const { testFocusChange } = require('../../dom')
+const { get } = require('../../common/util')
 const { isMeta } = require('../../keymap')
 const { auto } = require('../../format')
 const cx = require('classnames')
@@ -35,17 +36,11 @@ class ItemTableCell extends PureComponent {
   }
 
   get value() {
-    const { data, property } = this.props
-
-    return data[property.id] ?
-      data[property.id].text : null
+    return get(this.props.data, [this.props.id, 'text'])
   }
 
   get type() {
-    const { data, property } = this.props
-
-    return data[property.id] ?
-      data[property.id].type : TYPE.TEXT
+    return get(this.props.data, [this.props.id, 'type'], TYPE.TEXT)
   }
 
   get canEdit() {
@@ -64,7 +59,7 @@ class ItemTableCell extends PureComponent {
     this.props.onChange({
       id: this.props.item.id,
       data: {
-        [this.props.property.id]: { text, type: this.type }
+        [this.props.id]: { text, type: this.type }
       }
     })
   }
@@ -90,7 +85,7 @@ class ItemTableCell extends PureComponent {
     ),
 
     onSingleClick: () => {
-      if (this.canEdit) this.edit(this.props.property.id)
+      if (this.canEdit) this.edit(this.props.id)
     }
   })
 
@@ -158,16 +153,12 @@ class ItemTableCell extends PureComponent {
   }
 
   static propTypes = {
+    id: string.isRequired,
     isEditing: bool,
     isDisabled: bool,
     isSelected: bool,
     isMainColumn: bool,
     isReadOnly: bool,
-
-    property: shape({
-      id: string.isRequired,
-      type: string,
-    }),
 
     nextColumn: string,
     prevColumn: string,
