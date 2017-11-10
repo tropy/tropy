@@ -7,7 +7,6 @@ const { Editable } = require('../editable')
 const { TagColors } = require('../colors')
 const { createClickHandler } = require('../util')
 const { testFocusChange } = require('../../dom')
-const { get } = require('../../common/util')
 const { isMeta } = require('../../keymap')
 const { auto } = require('../../format')
 const cx = require('classnames')
@@ -35,14 +34,6 @@ class ItemTableCell extends PureComponent {
     }
   }
 
-  get value() {
-    return get(this.props.data, [this.props.id, 'text'])
-  }
-
-  get type() {
-    return get(this.props.data, [this.props.id, 'type'], TYPE.TEXT)
-  }
-
   get canEdit() {
     return !(
       this.props.isReadOnly || this.props.isDisabled || this.props.isEditing
@@ -59,7 +50,7 @@ class ItemTableCell extends PureComponent {
     this.props.onChange({
       id: this.props.item.id,
       data: {
-        [this.props.id]: { text, type: this.type }
+        [this.props.id]: { text, type: this.props.type }
       }
     })
   }
@@ -104,22 +95,26 @@ class ItemTableCell extends PureComponent {
     }
   }
 
+  renderCoverImage() {
+    return this.props.isMainColumn && (
+      <CoverImage
+        item={this.props.item}
+        cache={this.props.cache}
+        photos={this.props.photos}
+        size={this.props.size}
+        onError={this.props.onPhotoError}/>
+    )
+  }
+
+  renderTagColors() {
+    return this.props.isMainColumn && (
+      <TagColors
+        selection={this.props.item.tags}
+        tags={this.props.tags}/>
+    )
+  }
+
   render() {
-    const {
-      item,
-      cache,
-      photos,
-      size,
-      tags,
-      isEditing,
-      isDisabled,
-      isMainColumn,
-      onCancel,
-      onPhotoError
-    } = this.props
-
-    const { type, value } = this
-
     return (
       <td
         className={cx(this.classes)}
@@ -127,66 +122,53 @@ class ItemTableCell extends PureComponent {
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>
         <div className="flex-row center">
-          {isMainColumn &&
-            <CoverImage
-              item={item}
-              cache={cache}
-              photos={photos}
-              size={size}
-              onError={onPhotoError}/>}
+          {this.renderCoverImage()}
           <Editable
-            value={value}
-            display={auto(value, type)}
+            value={this.props.value}
+            display={auto(this.props.value, this.props.type)}
+            isEditing={this.props.isEditing}
+            isDisabled={this.props.isDisabled || this.props.isReadOnly}
             resize
-            isEditing={isEditing}
-            isDisabled={isDisabled}
-            onCancel={onCancel}
+            onCancel={this.props.onCancel}
             onChange={this.handleChange}
             onKeyDown={this.handleKeyDown}/>
-          {isMainColumn &&
-            <TagColors
-              selection={item.tags}
-              tags={tags}/>}
+          {this.renderTagColors()}
         </div>
       </td>
     )
   }
 
   static propTypes = {
+    cache: string,
     id: string.isRequired,
-    isEditing: bool,
     isDisabled: bool,
-    isSelected: bool,
+    isEditing: bool,
     isMainColumn: bool,
     isReadOnly: bool,
-
-    nextColumn: string,
-    prevColumn: string,
-
+    isSelected: bool,
     item: shape({
       id: number.isRequired,
       cover: number,
       photos: arrayOf(number)
     }).isRequired,
-
-    data: object.isRequired,
+    nextColumn: string,
     photos: object,
+    prevColumn: string,
+    size: number,
     tags: object,
-
-    cache: string.isRequired,
+    type: string.isRequired,
+    value: string,
     width: number.isRequired,
-    size: number.isRequired,
-
     getSelection: func.isRequired,
     onCancel: func.isRequired,
     onChange: func.isRequired,
     onEdit: func.isRequired,
-    onPhotoError: func.isRequired
+    onPhotoError: func
   }
 
   static defaultProps = {
-    data: {},
-    size: 48
+    size: 48,
+    type: TYPE.TEXT
   }
 }
 

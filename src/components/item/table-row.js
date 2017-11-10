@@ -4,42 +4,50 @@ const React = require('react')
 const { ItemIterable } = require('./iterable')
 const { BlankTableCell, ItemTableCell } = require('./table-cell')
 const { get, pick } = require('../../common/util')
-const { DC, COLUMNS: { PositionColumn } } = require('../../constants')
+const { COLUMNS: { PositionColumn }, TYPE } = require('../../constants')
 const cx = require('classnames')
 const { arrayOf, object, bool } = require('prop-types')
 
-const CellProps = Object.keys(ItemTableCell.propTypes)
 
 class ItemTableRow extends ItemIterable {
-  isMainColumn(id) {
-    return DC.title === id
-  }
-
   isEditing = (id) => {
     return get(this.props.edit, [this.props.item.id]) === id
   }
 
-  mapColumns(fn) {
-    const { columns } = this.props
-    const mapped = new Array(columns.length)
+  mapColumns(fn, columns = this.props.columns) {
+    const cells = []
 
     for (let i = 0, ii = columns.length; i < ii; ++i) {
       const column = columns[i]
-      const isMainColumn = this.isMainColumn(column.property.id)
+      const next = columns[(i + 1) % ii]
+      const prev = columns[(ii + i - 1) % ii]
+      const { property, width } = column
+      const isMainColumn = (i === 0)
 
-      mapped.push(fn({
-        column,
+      const props = {
+        key: property.id,
+        id: property.id,
+        width,
         isMainColumn,
-        next: columns[(i + 1) % ii],
-        prev: columns[(ii + i - 1) % ii]
-      }))
+        isEditing: this.isEditing(property.id),
+        nextColumn: next.property.id,
+        prevColumn: prev.property.id,
+        type: get(this.props.data, [property.id, 'type']),
+        value: get(this.props.data, [property.id, 'text'])
+      }
+
+      if (isMainColumn) {
+        pick(this.props, MainCellProps, props)
+      }
+
+      cells.push(fn(props))
     }
 
-    return mapped
+    return cells
   }
 
   render() {
-    const { data, photos, tags, isSelected, ...props } = this.props
+    const cellProps = pick(this.props, CellProps)
 
     return this.connect(
       <tr
@@ -50,23 +58,13 @@ class ItemTableRow extends ItemIterable {
         onDoubleClick={this.handleOpen}
         onContextMenu={this.handleContextMenu}>
         {this.props.hasPositionColumn &&
-          <ItemTableCell {...pick(props, CellProps)}
+          <ItemTableCell {...cellProps}
+            isReadOnly
             id={PositionColumn.id}
+            type={TYPE.NUMBER}
             width={PositionColumn.width}/>}
-        {this.mapColumns(({ column, isMainColumn, next, prev }) =>
-          <ItemTableCell {...pick(props, CellProps)}
-            key={column.property.id}
-            id={column.property.id}
-            data={data}
-            width={column.width}
-            tags={isMainColumn ? tags : null}
-            photos={isMainColumn ? photos : null}
-            isEditing={this.isEditing(column.property.id)}
-            isMainColumn={isMainColumn}
-            isSelected={isSelected}
-            nextColumn={next.property.id}
-            prevColumn={prev.property.id}
-            getSelection={this.props.getSelection}/>)}
+        {this.mapColumns(props =>
+          <ItemTableCell {...cellProps} {...props}/>)}
         <BlankTableCell/>
       </tr>
     )
@@ -85,6 +83,24 @@ class ItemTableRow extends ItemIterable {
     data: {}
   }
 }
+
+const MainCellProps = [
+  'photos',
+  'tags',
+  'cache',
+  'size',
+  'onPhotoError'
+]
+
+const CellProps = [
+  'isDisabled',
+  'isSelected',
+  'item',
+  'getSelection',
+  'onCancel',
+  'onChange',
+  'onEdit'
+]
 
 
 module.exports = {
