@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { ItemIterable } = require('./iterable')
-const { ItemTableCell } = require('./table-cell')
+const { BlankTableCell, ItemTableCell } = require('./table-cell')
 const { get, pick } = require('../../common/util')
 const { DC, COLUMNS: { PositionColumn } } = require('../../constants')
 const cx = require('classnames')
@@ -67,6 +67,7 @@ class ItemTableRow extends ItemIterable {
             nextColumn={next.property.id}
             prevColumn={prev.property.id}
             getSelection={this.props.getSelection}/>)}
+        <BlankTableCell/>
       </tr>
     )
   }

@@ -16,6 +16,10 @@ const {
 } = require('prop-types')
 
 
+const BlankTableCell = () => (
+  <td className="blank"/>
+)
+
 class ItemTableCell extends PureComponent {
   get classes() {
     return ['metadata', {
@@ -197,5 +201,6 @@ class ItemTableCell extends PureComponent {
 
 
 module.exports = {
+  BlankTableCell,
   ItemTableCell
 }

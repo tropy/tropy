@@ -10,6 +10,10 @@ const {
   arrayOf, bool, func, number, object, oneOf, shape, string
 } = require('prop-types')
 
+const BlankTableHeadCell = () => (
+  <th className="blank"/>
+)
+
 class ItemTableHeadCell extends PureComponent {
   get classes() {
     return {
@@ -109,6 +113,7 @@ class ItemTableHead extends PureComponent {
                 isActive={this.isActive(property.id)}
                 isAscending={this.isAscending}
                 onClick={onSort}/>)}
+            <BlankTableHeadCell/>
           </tr>
         </thead>
       </table>
