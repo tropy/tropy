@@ -17,6 +17,13 @@ const {
 
 
 class ItemTableCell extends PureComponent {
+  get classes() {
+    return ['metadata', {
+      'main-column': this.props.isMainColumn,
+      'read-only': this.props.isReadOnly
+    }]
+  }
+
   get style() {
     return {
       width: `${this.props.width}%`
@@ -35,6 +42,12 @@ class ItemTableCell extends PureComponent {
 
     return data[property.id] ?
       data[property.id].type : TYPE.TEXT
+  }
+
+  get canEdit() {
+    return !(
+      this.props.isReadOnly || this.props.isDisabled || this.props.isEditing
+    )
   }
 
   edit(property) {
@@ -73,9 +86,7 @@ class ItemTableCell extends PureComponent {
     ),
 
     onSingleClick: () => {
-      if (!this.props.isEditing) {
-        this.edit(this.props.property.id)
-      }
+      if (this.canEdit) this.edit(this.props.property.id)
     }
   })
 
@@ -112,7 +123,7 @@ class ItemTableCell extends PureComponent {
 
     return (
       <td
-        className={cx('metadata', { 'main-column': isMainColumn })}
+        className={cx(this.classes)}
         style={this.style}
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>
@@ -147,6 +158,7 @@ class ItemTableCell extends PureComponent {
     isDisabled: bool,
     isSelected: bool,
     isMainColumn: bool,
+    isReadOnly: bool,
 
     property: shape({
       id: string.isRequired,
