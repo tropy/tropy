@@ -189,6 +189,11 @@ const GRID = {
   PADDING: 12
 }
 
+const FONTSIZE = {
+  SMALL: 12,
+  BASE: 13,
+  LARGE: 16
+}
 
 module.exports =  {
   ABOUT,
@@ -207,5 +212,6 @@ module.exports =  {
   WINDOW,
   WIZARD,
   NOTE,
-  NOTEPAD
+  NOTEPAD,
+  FONTSIZE
 }
