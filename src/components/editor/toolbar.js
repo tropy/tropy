@@ -19,7 +19,7 @@ const {
   //  IconAlignLeft,
   //  IconAlignCenter,
   //  IconAlignRight,
-  //  IconLink,
+  IconLink,
   IconBulletList,
   IconNumberedList,
   IconSink,
@@ -42,13 +42,15 @@ class EditorToolbar extends PureComponent {
       'ol',
       'ul',
       'liftListItem',
-      'sinkListItem'
+      'sinkListItem',
     ]) {
       this[action] = () => this.props.onCommand(action)
     }
 
     this.state = {
-      marks: this.getActiveMarks(props.state)
+      marks: this.getActiveMarks(props.state),
+      editingLink: false,
+      linkTarget: ''
     }
   }
 
@@ -78,8 +80,26 @@ class EditorToolbar extends PureComponent {
       state.doc.rangeHasMark(from, to, type)
   }
 
+  activateLink = () => {
+    this.setState({ editingLink: true })
+  }
+
+  linkConfirm = () => {
+    this.props.onCommand('link', { href: this.state.linkTarget })
+    this.setState({
+      editingLink: false,
+      linkTarget: ''
+    })
+  }
+
   get isLinkActive() {
-    return false
+    // TODO check if we have link in our selection
+    // true if: selectedLink || editingLink
+    return this.state.editingLink
+  }
+
+  handleLinkChange = (e) => {
+    this.setState({ linkTarget: e.target.value })
   }
 
   renderMarkButton(name, icon) {
@@ -156,13 +176,13 @@ class EditorToolbar extends PureComponent {
                 icon={<IconLift/>}
                 onMouseDown={this.liftListItem}/>
             </ToolGroup>
-            {/*<ToolGroup>
+            <ToolGroup>
               <IconButton
-                isDisabled
                 canHaveFocus={false}
                 title="editor.commands.link"
-                icon={<IconLink/>}/>
-            </ToolGroup>*/}
+                icon={<IconLink/>}
+                onMouseDown={this.activateLink}/>
+            </ToolGroup>
           </div>
         </ToolbarContext>
         <ToolbarContext isActive={this.isLinkActive}>
@@ -171,10 +191,13 @@ class EditorToolbar extends PureComponent {
               className="form-control link-target"
               type="text"
               tabIndex={-1}
-              value={''}
+              value={this.state.linkTarget}
+              onChange={this.handleLinkChange}
               placeholder="Link target"/>
 
-            <span className="btn btn-primary">OK</span>
+            <span
+              className="btn btn-primary"
+              onMouseDown={this.linkConfirm}>OK</span>
           </span>
         </ToolbarContext>
       </Toolbar>
