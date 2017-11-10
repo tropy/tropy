@@ -1,0 +1,7 @@
+//
+// Rem helper
+// --------------------------------------------------
+
+@function rem($length) {
+  @return $length / const("FONTSIZE.BASE") * 1rem;
+}

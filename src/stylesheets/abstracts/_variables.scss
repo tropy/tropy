@@ -15,16 +15,16 @@ $sans-serif-fonts: (
 $font-family-sans-serif: unquote(map-get($sans-serif-fonts, $platform));
 $font-family-base:       $font-family-sans-serif;
 
-$font-size-small: 12px;
-$font-size-base:  13px;
-$font-size-large: 16px;
+$font-size-small: #{const("FONTSIZE.SMALL")}px;
+$font-size-base:  #{const("FONTSIZE.BASE")}px;
+$font-size-large: #{const("FONTSIZE.LARGE")}px;
 
 // Heads up: Do not trust the computed value in the dev tools,
 // check the actual height of the rendered element.
 // Must result in an even value (20px) for proper alignment of editables.
 $line-height-base:     1.539;
 
-$line-height-computed: floor(($font-size-base * $line-height-base));
+$line-height-computed: floor((const("FONTSIZE.BASE") * $line-height-base)) * 1px;
 $line-height-large:    26px;
 
 $link-hover-decoration: underline;
