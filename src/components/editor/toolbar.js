@@ -49,7 +49,7 @@ class EditorToolbar extends PureComponent {
 
     this.state = {
       marks: this.getActiveMarks(props.state),
-      editingLink: false,
+      isLinkActive: false,
       linkTarget: ''
     }
   }
@@ -80,22 +80,16 @@ class EditorToolbar extends PureComponent {
       state.doc.rangeHasMark(from, to, type)
   }
 
-  activateLink = () => {
-    this.setState({ editingLink: true })
+  enableLinkToolbar = () => {
+    this.setState({ isLinkActive: true })
   }
 
   linkConfirm = () => {
     this.props.onCommand('link', { href: this.state.linkTarget })
     this.setState({
-      editingLink: false,
+      isLinkActive: false,
       linkTarget: ''
     })
-  }
-
-  get isLinkActive() {
-    // TODO check if we have link in our selection
-    // true if: selectedLink || editingLink
-    return this.state.editingLink
   }
 
   handleLinkChange = (e) => {
@@ -116,7 +110,7 @@ class EditorToolbar extends PureComponent {
   render() {
     return (
       <Toolbar isDraggable={false}>
-        <ToolbarContext isActive={!this.isLinkActive}>
+        <ToolbarContext isActive={!this.state.isLinkActive}>
           <div className="toolbar-left">
             <ToolGroup>
               {this.renderMarkButton('bold', <IconB/>)}
@@ -181,11 +175,11 @@ class EditorToolbar extends PureComponent {
                 canHaveFocus={false}
                 title="editor.commands.link"
                 icon={<IconLink/>}
-                onMouseDown={this.activateLink}/>
+                onMouseDown={this.enableLinkToolbar}/>
             </ToolGroup>
           </div>
         </ToolbarContext>
-        <ToolbarContext isActive={this.isLinkActive}>
+        <ToolbarContext isActive={this.state.isLinkActive}>
           <span className="toolbar-left form-inline">
             <input
               className="form-control link-target"
