@@ -59,8 +59,9 @@ class Editor extends PureComponent {
     this.view.focus()
   }
 
-  exec(command) {
-    return (commands[command] || noop)(
+  exec(command, attrs) {
+    const cmd = attrs ? commands[command](attrs) : commands[command]
+    return (cmd || noop)(
       this.view.state, this.view.dispatch, this.view
     )
   }
@@ -79,8 +80,8 @@ class Editor extends PureComponent {
     }
   }
 
-  handleCommand = (command) => {
-    if (this.exec(command)) {
+  handleCommand = (command, attrs) => {
+    if (this.exec(command, attrs)) {
       if (!this.state.hasViewFocus) this.focus()
     }
   }

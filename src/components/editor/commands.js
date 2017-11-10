@@ -31,6 +31,9 @@ module.exports = (schema) => {
     ...list,
     ...marks,
 
+    // some marks, i.e. 'link', accept attributes ({ href, title })
+    link: (attrs) => cmd.toggleMark(schema.marks.link, attrs),
+
     undo,
     redo,
 
