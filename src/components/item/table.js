@@ -53,6 +53,12 @@ class ItemTable extends ItemIterator {
     return 1
   }
 
+  getPosition(index) {
+    return (this.props.sort.asc) ?
+      index + 1 :
+      this.props.items.length - index
+  }
+
   getRowHeight() {
     return ROW.HEIGHT
   }
@@ -93,12 +99,13 @@ class ItemTable extends ItemIterator {
           <div className="runway click-catcher" style={{ height }}>
             <table className="viewport" style={{ transform }}>
               <tbody>
-                {this.mapIterableRange(({ item, ...props }) =>
+                {this.mapIterableRange(({ item, index, ...props }) =>
                   <ItemTableRow {...props}
                     key={item.id}
                     item={item}
                     data={data[item.id]}
                     columns={columns}
+                    position={this.getPosition(index)}
                     hasPositionColumn={this.hasPositionColumn}
                     edit={edit}
                     onCancel={this.handleEditCancel}

@@ -12,7 +12,7 @@ const { auto } = require('../../format')
 const cx = require('classnames')
 const { TYPE } = require('../../constants')
 const {
-  arrayOf, bool, func, number, object, shape, string
+  arrayOf, bool, func, number, object, oneOfType, shape, string
 } = require('prop-types')
 
 
@@ -157,7 +157,7 @@ class ItemTableCell extends PureComponent {
     size: number,
     tags: object,
     type: string.isRequired,
-    value: string,
+    value: oneOfType([string, number]),
     width: number.isRequired,
     getSelection: func.isRequired,
     onCancel: func.isRequired,

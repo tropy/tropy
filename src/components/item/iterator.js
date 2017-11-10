@@ -221,6 +221,7 @@ class ItemIterator extends Iterator {
   getIterableProps(item, index) {
     return {
       item,
+      index,
       cache: this.props.cache,
       photos: this.props.photos,
       tags: this.props.tags,
