@@ -96,6 +96,12 @@ class EditorToolbar extends PureComponent {
     this.setState({ linkTarget: e.target.value })
   }
 
+  linkKeyUp = (e) => {
+    if (e.key === 'Enter') {
+      this.linkConfirm()
+    }
+  }
+
   renderMarkButton(name, icon) {
     return (
       <IconButton
@@ -187,6 +193,7 @@ class EditorToolbar extends PureComponent {
               tabIndex={-1}
               value={this.state.linkTarget}
               onChange={this.handleLinkChange}
+              onKeyUp={this.linkKeyUp}
               placeholder="Link target"/>
 
             <span
