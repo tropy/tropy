@@ -80,8 +80,15 @@ class EditorToolbar extends PureComponent {
       state.doc.rangeHasMark(from, to, type)
   }
 
+  setInput = (input) => {
+    this.linkInput = input
+  }
+
   enableLinkToolbar = () => {
     this.setState({ isLinkActive: true })
+
+    let delay = 250 // needs to be slower than $toolbar-context-transition
+    setTimeout(() => this.linkInput.focus(), delay)
   }
 
   linkConfirm = () => {
@@ -188,6 +195,7 @@ class EditorToolbar extends PureComponent {
         <ToolbarContext isActive={this.state.isLinkActive}>
           <span className="toolbar-left form-inline">
             <input
+              ref={this.setInput}
               className="form-control link-target"
               type="text"
               tabIndex={-1}
