@@ -118,11 +118,6 @@ class EditorToolbar extends PureComponent {
     }
   }
 
-  canUseLinkButton = () => {
-    // button is disabled when nothing is selected
-    return !this.props.state.selection.$cursor
-  }
-
   renderMarkButton(name, icon) {
     return (
       <IconButton
@@ -199,7 +194,7 @@ class EditorToolbar extends PureComponent {
             </ToolGroup>
             <ToolGroup>
               <IconButton
-                isDisabled={!this.canUseLinkButton()}
+                isDisabled={this.props.state.selection.$cursor}
                 canHaveFocus={false}
                 title="editor.commands.link"
                 icon={<IconLink/>}
