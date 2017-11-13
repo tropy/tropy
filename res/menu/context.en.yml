@@ -30,7 +30,7 @@ en:
       - label: 'New Tag'
         command: 'app:create-tag'
     tag: &tag
-      - label: 'Change Color'
+      - label: 'Tag Color'
         submenu:
           - label: 'None'
             color: null
@@ -61,7 +61,9 @@ en:
         command: 'app:rename-tag'
       - label: 'Delete Tag'
         command: 'app:delete-tag'
-    item-tag: *tag
+    item-tag: &item-tag
+      - label: 'Remove Tag From Items'
+        command: 'app:delete-item-tag'
     notes: &notes
       []
     note: &note
@@ -152,7 +154,7 @@ en:
     list: *list
     tags: *tags
     tag: *tag
-    item-tag: *tag
+    item-tag: *item-tag
     notes: *notes
     note: *note
     items: *items
@@ -175,7 +177,7 @@ en:
     list: *list
     tags: *tags
     tag: *tag
-    item-tag: *tag
+    item-tag: *item-tag
     notes: *notes
     note: *note
     items: *items
