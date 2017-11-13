@@ -4,6 +4,7 @@ const React = require('react')
 const { PureComponent } = require('react')
 const { bool, func, instanceOf } = require('prop-types')
 const { EditorState } = require('prosemirror-state')
+const { injectIntl, intlShape } = require('react-intl')
 
 const { ToolbarContext } = require('../toolbar')
 const { BufferedInput } = require('../input')
@@ -15,7 +16,8 @@ class LinkToolbar extends PureComponent {
     super(props)
 
     this.state = {
-      url: ''
+      url: '',
+      hasBeenCreated: false
     }
   }
 
@@ -24,9 +26,14 @@ class LinkToolbar extends PureComponent {
   }
 
   handleCommit = () => {
+    if (!this.state.hasBeenCreated) {
+      this.props.action(this.state.url) // dispatch the toggleMark command
+    }
+    this.setState({ url: '' }) // clear input
     this.props.onCommit() // hides the toolbar
-    this.props.action(this.state.url) // dispatch the toggleMark command
   }
+
+  t = (id) => this.props.intl.formatMessage({ id })
 
   render() {
     return (
@@ -34,9 +41,8 @@ class LinkToolbar extends PureComponent {
         <span className="toolbar-left form-inline">
           <BufferedInput
             className="form-control link-target"
-            tabIndex={-1}
-            value={this.state.linkTarget}
-            placeholder="Link target"
+            value={this.state.url}
+            placeholder={this.t('editor.commands.link.placeholder')}
             onCancel={this.props.onCommit}
             onChange={this.handleChange}
             onCommit={this.handleCommit}/>
@@ -49,15 +55,16 @@ class LinkToolbar extends PureComponent {
   }
 
   static propTypes = {
-    isActive: bool,
+    isActive: bool.isRequired,
     onCommit: func.isRequired,
-    action: func.isRequired
+    action: func.isRequired,
+    intl: intlShape.isRequired
   }
 }
 
 class LinkButton extends PureComponent {
   handleClick = () => {
-    // if selection already has a link - remove it
+    // if selection already has a link - remove it straight away
     // otherwise, show link toolbar
     return this.props.mark ? this.props.action() : this.props.callback()
   }
@@ -67,7 +74,7 @@ class LinkButton extends PureComponent {
       <IconButton
         isDisabled={!!this.props.state.selection.$cursor}
         canHaveFocus={false}
-        title="editor.commands.link"
+        title="editor.commands.link.button"
         icon={<IconLink/>}
         onClick={this.handleClick}
         isActive={this.props.mark}/>
@@ -76,13 +83,13 @@ class LinkButton extends PureComponent {
 
   static propTypes = {
     state: instanceOf(EditorState).isRequired,
-    mark: bool,
+    mark: bool.isRequired,
     callback: func.isRequired,
     action: func.isRequired
   }
 }
 
 module.exports = {
-  LinkToolbar,
+  LinkToolbar: injectIntl(LinkToolbar),
   LinkButton
 }

@@ -91,17 +91,15 @@ class EditorToolbar extends PureComponent {
     )
   }
 
-  toggleLinkToolbar = () => {
-    this.setState({ isLinkActive: !this.state.isLinkActive })
+  turnLinkToolbar = isLinkActive => {
+    return () => this.setState({ isLinkActive })
   }
 
-  toggleLink = (target) => {
+  toggleLink = target => {
+    console.log('toggle')
     this.props.onCommand('link', {
       href: target,
       title: target,
-    })
-    this.setState({
-      isLinkActive: false,
     })
   }
 
@@ -172,16 +170,15 @@ class EditorToolbar extends PureComponent {
               <LinkButton
                 state={this.props.state}
                 mark={this.state.marks.link}
-                callback={this.toggleLinkToolbar}
+                callback={this.turnLinkToolbar(true)}
                 action={this.toggleLink} />
             </ToolGroup>
           </div>
         </ToolbarContext>
-        {this.state.isLinkActive &&
-          <LinkToolbar
-            isActive={this.state.isLinkActive}
-            onCommit={this.toggleLinkToolbar}
-            action={this.toggleLink} />}
+        <LinkToolbar
+          isActive={this.state.isLinkActive}
+          onCommit={this.turnLinkToolbar(false)}
+          action={this.toggleLink} />
       </Toolbar>
     )
   }

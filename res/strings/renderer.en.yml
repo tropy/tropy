@@ -380,7 +380,9 @@ en:
       blockquote: Insert Blockquote
       ol: Insert Numbered List
       ul: Insert Bulleted List
-      link: Insert Link
+      link:
+        button: Insert Link
+        placeholder: Link target
       left: Align Left
       center: Center
       right: Align Right
