@@ -92,7 +92,10 @@ class EditorToolbar extends PureComponent {
   }
 
   linkConfirm = () => {
-    this.props.onCommand('link', { href: this.state.linkTarget })
+    this.props.onCommand('link', {
+      href: this.state.linkTarget,
+      title: this.state.linkTarget,
+    })
     this.setState({
       isLinkActive: false,
       linkTarget: ''
