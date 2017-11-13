@@ -15,9 +15,9 @@ $sans-serif-fonts: (
 $font-family-sans-serif: unquote(map-get($sans-serif-fonts, $platform));
 $font-family-base:       $font-family-sans-serif;
 
-$font-size-small: #{const("FONTSIZE.SMALL")}px;
-$font-size-base:  #{const("FONTSIZE.BASE")}px;
-$font-size-large: #{const("FONTSIZE.LARGE")}px;
+$font-size-small: const("FONTSIZE.SMALL") * 1px;
+$font-size-base:  const("FONTSIZE.BASE") * 1px;
+$font-size-large: const("FONTSIZE.LARGE") * 1px;
 
 // Heads up: Do not trust the computed value in the dev tools,
 // check the actual height of the rendered element.
@@ -161,7 +161,7 @@ $window-controls-margin: 4px;
 // Sidebar
 // --------------------------------------------------
 
-$activity-height: #{const("ACTIVITY.HEIGHT")}px;
+$activity-height: const("ACTIVITY.HEIGHT") * 1px;
 $activity-transition-duration:        0.125s;
 $activity-transition-timing-function: ease-out;
 
@@ -175,14 +175,14 @@ $item-table-header-height: $line-height-large;
 // Panel
 // --------------------------------------------------
 
-$panel-header-height: #{const("PANEL.HEADER_HEIGHT")}px;
-$panel-body-min-height: 100px - #{const("PANEL.HEADER_HEIGHT")}px - 4px;
+$panel-header-height: const("PANEL.HEADER_HEIGHT") * 1px;
+$panel-body-min-height: 100px - (const("PANEL.HEADER_HEIGHT") * 1px) - 4px;
 
 
 // Tabs
 // --------------------------------------------------
 
-$tabs-height: #{const("PANEL.HEADER_HEIGHT")}px;
+$tabs-height: const("PANEL.HEADER_HEIGHT") * 1px;
 $tabs-padding-horizontal: $space-md;
 $tabs-compact-padding-horizontal: $space-xs;
 
@@ -257,7 +257,7 @@ $progress-value-border-radius: $progress-bar-height / 2;
 // Notepad
 // --------------------------------------------------
 
-$notepad-min-height: #{const("NOTEPAD.MIN_HEIGHT")}px;
+$notepad-min-height: const("NOTEPAD.MIN_HEIGHT") * 1px;
 
 
 // Editor

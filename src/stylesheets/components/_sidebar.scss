@@ -102,7 +102,8 @@
       display: flex;
       min-width: 0; // Fix truncation
 
-      .editable {
+      .editable,
+      span {
         @include css-truncation;
       }
     }
