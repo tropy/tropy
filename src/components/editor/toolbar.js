@@ -85,6 +85,7 @@ class EditorToolbar extends PureComponent {
   }
 
   enableLinkToolbar = () => {
+    if (!this.canUseLinkButton()) return
     this.setState({ isLinkActive: true })
 
     let delay = 250 // needs to be slower than $toolbar-context-transition
@@ -110,6 +111,11 @@ class EditorToolbar extends PureComponent {
     if (e.key === 'Enter') {
       this.linkConfirm()
     }
+  }
+
+  canUseLinkButton = () => {
+    // button is disabled when nothing is selected
+    return !this.props.state.selection.$cursor
   }
 
   renderMarkButton(name, icon) {
@@ -188,10 +194,11 @@ class EditorToolbar extends PureComponent {
             </ToolGroup>
             <ToolGroup>
               <IconButton
+                isDisabled={!this.canUseLinkButton()}
                 canHaveFocus={false}
                 title="editor.commands.link"
                 icon={<IconLink/>}
-                onMouseDown={this.enableLinkToolbar}/>
+                onClick={this.enableLinkToolbar}/>
             </ToolGroup>
           </div>
         </ToolbarContext>
