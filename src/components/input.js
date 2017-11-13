@@ -2,9 +2,13 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { bool, func, number, oneOf, oneOfType, string } = require('prop-types')
 const { noop } = require('../common/util')
 const { AutoResizer } = require('./auto-resizer')
+const { Popup } = require('./popup')
+const { OptionList } = require('./option')
+const {
+  array, bool, func, number, oneOf, oneOfType, string
+} = require('prop-types')
 
 
 class BufferedInput extends PureComponent {
@@ -36,6 +40,10 @@ class BufferedInput extends PureComponent {
 
   get hasChanged() {
     return this.state.value !== this.props.value
+  }
+
+  get hasCompletions() {
+    return this.props.completions.length > 0
   }
 
   setInput = (input) => {
@@ -130,6 +138,15 @@ class BufferedInput extends PureComponent {
     event.nativeEvent.stopImmediatePropagation()
   }
 
+  renderCompletions() {
+    return this.hasCompletions && (
+      <Popup>
+        <OptionList
+          query={this.state.value}
+          values={this.props.completions}/>
+      </Popup>
+    )
+  }
 
   renderInput() {
     const input = (
@@ -159,12 +176,14 @@ class BufferedInput extends PureComponent {
     return (
       <div className="input">
         {this.renderInput()}
+        {this.renderCompletions()}
       </div>
     )
   }
 
   static propTypes = {
     autofocus: bool,
+    completions: array.isRequired,
     className: string,
     delay: number.isRequired,
     id: string,
@@ -185,6 +204,7 @@ class BufferedInput extends PureComponent {
   }
 
   static defaultProps = {
+    completions: [],
     delay: 100,
     tabIndex: -1,
     type: 'text',

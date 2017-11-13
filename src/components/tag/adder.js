@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { injectIntl, intlShape } = require('react-intl')
-const { Editable } = require('../editable')
+const { BufferedInput } = require('../input')
 const { blank } = require('../../common/util')
 const { arrayOf, bool, func, number, shape, string } = require('prop-types')
 
@@ -15,7 +15,7 @@ class TagAdder extends PureComponent {
   }
 
   focus() {
-    this.editable.focus()
+    this.input.focus()
   }
 
   handleBlur = (event) => {
@@ -35,20 +35,19 @@ class TagAdder extends PureComponent {
       this.props.onCreate({ name })
     }
 
-    this.editable.input.reset()
+    this.input.reset()
   }
 
-  setEditable = (editable) => {
-    this.editable = editable
+  setInput = (input) => {
+    this.input = input
   }
 
   render() {
     return (
       <div className="add-tag-container">
-        <Editable
-          ref={this.setEditable}
-          autofocus={false}
-          isActive
+        <BufferedInput
+          ref={this.setInput}
+          completions={this.props.tags}
           isDisabled={this.props.isDisabled}
           tabIndex={-1}
           type="text"
@@ -57,7 +56,7 @@ class TagAdder extends PureComponent {
           onBlur={this.handleBlur}
           onFocus={this.props.onFocus}
           onCancel={this.props.onCancel}
-          onChange={this.handleChange}/>
+          onCommit={this.handleChange}/>
       </div>
     )
   }
