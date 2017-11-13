@@ -85,7 +85,12 @@ class EditorToolbar extends PureComponent {
   }
 
   enableLinkToolbar = () => {
-    if (!this.canUseLinkButton()) return
+    // if selection already has a link - remove it
+    if (this.state.marks.link) {
+      this.linkConfirm()
+      return
+    }
+
     this.setState({ isLinkActive: true })
 
     let delay = 250 // needs to be slower than $toolbar-context-transition
@@ -198,7 +203,8 @@ class EditorToolbar extends PureComponent {
                 canHaveFocus={false}
                 title="editor.commands.link"
                 icon={<IconLink/>}
-                onClick={this.enableLinkToolbar}/>
+                onClick={this.enableLinkToolbar}
+                isActive={this.state.marks.link}/>
             </ToolGroup>
           </div>
         </ToolbarContext>
