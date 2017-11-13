@@ -7,6 +7,8 @@ const { func, instanceOf } = PropTypes
 const { Toolbar, ToolbarContext, ToolGroup } = require('../toolbar')
 const { IconButton } = require('../button')
 const { EditorState } = require('prosemirror-state')
+const { LinkToolbar, LinkButton } = require('./link')
+
 
 const {
   IconB,
@@ -19,7 +21,6 @@ const {
   //  IconAlignLeft,
   //  IconAlignCenter,
   //  IconAlignRight,
-  IconLink,
   IconBulletList,
   IconNumberedList,
   IconSink,
@@ -50,7 +51,6 @@ class EditorToolbar extends PureComponent {
     this.state = {
       marks: this.getActiveMarks(props.state),
       isLinkActive: false,
-      linkTarget: ''
     }
   }
 
@@ -76,46 +76,8 @@ class EditorToolbar extends PureComponent {
     const { from, $from, to, empty } = state.selection
 
     return (empty) ?
-      !!type.isInSet(state.storedMarks || $from.marks()) :
-      state.doc.rangeHasMark(from, to, type)
-  }
-
-  setInput = (input) => {
-    this.linkInput = input
-  }
-
-  enableLinkToolbar = () => {
-    // if selection already has a link - remove it
-    if (this.state.marks.link) {
-      this.linkConfirm()
-      return
-    }
-
-    this.setState({ isLinkActive: true })
-
-    let delay = 250 // needs to be slower than $toolbar-context-transition
-    setTimeout(() => this.linkInput.focus(), delay)
-  }
-
-  linkConfirm = () => {
-    this.props.onCommand('link', {
-      href: this.state.linkTarget,
-      title: this.state.linkTarget,
-    })
-    this.setState({
-      isLinkActive: false,
-      linkTarget: ''
-    })
-  }
-
-  handleLinkChange = (e) => {
-    this.setState({ linkTarget: e.target.value })
-  }
-
-  linkKeyUp = (e) => {
-    if (e.key === 'Enter') {
-      this.linkConfirm()
-    }
+           !!type.isInSet(state.storedMarks || $from.marks()) :
+           state.doc.rangeHasMark(from, to, type)
   }
 
   renderMarkButton(name, icon) {
@@ -127,6 +89,20 @@ class EditorToolbar extends PureComponent {
         title={`editor.commands.${name}`}
         onMouseDown={this[name]}/>
     )
+  }
+
+  toggleLinkToolbar = () => {
+    this.setState({ isLinkActive: !this.state.isLinkActive })
+  }
+
+  toggleLink = (target) => {
+    this.props.onCommand('link', {
+      href: target,
+      title: target,
+    })
+    this.setState({
+      isLinkActive: false,
+    })
   }
 
   render() {
@@ -193,33 +169,19 @@ class EditorToolbar extends PureComponent {
                 onMouseDown={this.liftListItem}/>
             </ToolGroup>
             <ToolGroup>
-              <IconButton
-                isDisabled={this.props.state.selection.$cursor}
-                canHaveFocus={false}
-                title="editor.commands.link"
-                icon={<IconLink/>}
-                onClick={this.enableLinkToolbar}
-                isActive={this.state.marks.link}/>
+              <LinkButton
+                state={this.props.state}
+                mark={this.state.marks.link}
+                callback={this.toggleLinkToolbar}
+                action={this.toggleLink} />
             </ToolGroup>
           </div>
         </ToolbarContext>
-        <ToolbarContext isActive={this.state.isLinkActive}>
-          <span className="toolbar-left form-inline">
-            <input
-              ref={this.setInput}
-              className="form-control link-target"
-              type="text"
-              tabIndex={-1}
-              value={this.state.linkTarget}
-              onChange={this.handleLinkChange}
-              onKeyUp={this.linkKeyUp}
-              placeholder="Link target"/>
-
-            <span
-              className="btn btn-primary"
-              onMouseDown={this.linkConfirm}>OK</span>
-          </span>
-        </ToolbarContext>
+        {this.state.isLinkActive &&
+          <LinkToolbar
+            isActive={this.state.isLinkActive}
+            onCommit={this.toggleLinkToolbar}
+            action={this.toggleLink} />}
       </Toolbar>
     )
   }
