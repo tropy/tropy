@@ -131,7 +131,7 @@ class BufferedInput extends PureComponent {
   }
 
 
-  render() {
+  renderInput() {
     const input = (
       <input
         id={this.props.id}
@@ -153,6 +153,14 @@ class BufferedInput extends PureComponent {
     return (this.props.resize) ?
       <AutoResizer content={this.state.value}>{input}</AutoResizer> :
       input
+  }
+
+  render() {
+    return (
+      <div className="input">
+        {this.renderInput()}
+      </div>
+    )
   }
 
   static propTypes = {
