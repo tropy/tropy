@@ -149,7 +149,7 @@
 
     .nested-tab-focus.has-active & {
       background: $add-tag-default-bg;
-      border-color: $add-tag-border-color;
+      border-color: $input-border;
     }
 
     &::-webkit-input-placeholder {
