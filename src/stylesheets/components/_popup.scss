@@ -1,0 +1,6 @@
+#popup-root {
+  .popup {
+    position: absolute;
+    z-index: $zindex-popup;
+  }
+}
