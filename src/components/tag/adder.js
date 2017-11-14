@@ -52,6 +52,7 @@ class TagAdder extends PureComponent {
           tabIndex={-1}
           type="text"
           value=""
+          className="form-control"
           placeholder={this.placeholder}
           onBlur={this.handleBlur}
           onFocus={this.props.onFocus}
