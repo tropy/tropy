@@ -56,7 +56,7 @@ class BufferedInput extends PureComponent {
       return {
         left,
         top: bottom,
-        width: width + 2 * INPUT.SHADOW_WIDTH
+        width: width + 2 * INPUT.FOCUS_SHADOW_WIDTH
       }
     }
   }
