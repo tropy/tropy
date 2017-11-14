@@ -47,13 +47,13 @@ class TagAdder extends PureComponent {
       <div className="add-tag-container">
         <BufferedInput
           ref={this.setInput}
+          className="form-control"
           completions={this.props.tags}
           isDisabled={this.props.isDisabled}
+          placeholder={this.placeholder}
           tabIndex={-1}
           type="text"
           value=""
-          className="form-control"
-          placeholder={this.placeholder}
           onBlur={this.handleBlur}
           onFocus={this.props.onFocus}
           onCancel={this.props.onCancel}
