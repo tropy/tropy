@@ -10,5 +10,12 @@
 
   .popup {
     position: absolute;
+    background: $popup-bg;
+    border: 3px solid $input-color-focus;
+    border-top: 0;
+    margin: -3px -2px -2px;
+    padding-top: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
   }
 }
