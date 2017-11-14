@@ -6,6 +6,7 @@ const { noop } = require('../common/util')
 const { AutoResizer } = require('./auto-resizer')
 const { Popup } = require('./popup')
 const { OptionList } = require('./option')
+const { bounds } = require('../dom')
 const {
   array, bool, func, number, oneOf, oneOfType, string
 } = require('prop-types')
@@ -16,7 +17,8 @@ class BufferedInput extends PureComponent {
     super(props)
 
     this.state = {
-      value: props.value
+      value: props.value,
+      hasFocus: false
     }
   }
 
@@ -44,6 +46,16 @@ class BufferedInput extends PureComponent {
 
   get hasCompletions() {
     return this.props.completions.length > 0
+  }
+
+  getPosition() {
+    if (this.input != null) {
+      const { bottom, left, width } = bounds(this.input)
+
+      return {
+        top: bottom, left, width
+      }
+    }
   }
 
   setInput = (input) => {
@@ -102,6 +114,8 @@ class BufferedInput extends PureComponent {
   }
 
   handleBlur = (event) => {
+    this.setState({ hasFocus: false })
+
     const cancel = this.props.onBlur(event)
     if (this.hasBeenCancelled || this.hasBeenCommitted) return
 
@@ -113,6 +127,8 @@ class BufferedInput extends PureComponent {
   }
 
   handleFocus = (event) => {
+    this.setState({ hasFocus: true })
+
     this.hasBeenCancelled = false
     this.hasBeenCommitted = false
     this.props.onFocus(event)
@@ -139,8 +155,8 @@ class BufferedInput extends PureComponent {
   }
 
   renderCompletions() {
-    return this.hasCompletions && (
-      <Popup>
+    return this.hasCompletions && this.state.hasFocus && (
+      <Popup position={this.getPosition()}>
         <OptionList
           query={this.state.value}
           values={this.props.completions}/>

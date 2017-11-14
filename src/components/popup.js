@@ -38,9 +38,8 @@ class Popup extends Component {
     className: string,
     position: shape({
       top: number,
-      right: number,
-      bottom: number,
-      left: number
+      left: number,
+      width: number
     })
   }
 }
