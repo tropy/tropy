@@ -96,7 +96,6 @@ class EditorToolbar extends PureComponent {
   }
 
   toggleLink = target => {
-    console.log('toggle')
     this.props.onCommand('link', {
       href: target,
       title: target,
@@ -177,7 +176,7 @@ class EditorToolbar extends PureComponent {
         </ToolbarContext>
         <LinkToolbar
           isActive={this.state.isLinkActive}
-          onCommit={this.turnLinkToolbar(false)}
+          cancel={this.turnLinkToolbar(false)}
           action={this.toggleLink} />
       </Toolbar>
     )

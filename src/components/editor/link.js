@@ -7,7 +7,6 @@ const { EditorState } = require('prosemirror-state')
 const { injectIntl, intlShape } = require('react-intl')
 
 const { ToolbarContext } = require('../toolbar')
-const { BufferedInput } = require('../input')
 const { IconButton } = require('../button')
 const { IconLink } = require('../icons')
 
@@ -16,36 +15,57 @@ class LinkToolbar extends PureComponent {
     super(props)
 
     this.state = {
-      url: '',
-      hasBeenCreated: false
+      value: ''
     }
   }
 
-  handleChange = (url) => {
-    this.setState({ url })
+  setInput = (input) => {
+    this.input = input
+  }
+
+  handleChange = (e) => {
+    this.setState({ value: e.target.value })
   }
 
   handleCommit = () => {
-    if (!this.state.hasBeenCreated) {
-      this.props.action(this.state.url) // dispatch the toggleMark command
+    this.props.action(this.state.value) // dispatch the toggleMark command
+    this.cancel()
+  }
+
+  cancel = () => {
+    // hide the toolbar
+    this.setState({ value: '' })
+    this.props.cancel()
+  }
+
+  handleKeyUp = (event) => {
+    switch (event.key) {
+      case 'Escape':
+        this.cancel()
+        break
+      case 'Enter':
+        this.handleCommit()
+        break
     }
-    this.setState({ url: '' }) // clear input
-    this.props.onCommit() // hides the toolbar
+
+    event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
   }
 
   t = (id) => this.props.intl.formatMessage({ id })
 
   render() {
     return (
-      <ToolbarContext isActive={this.props.isActive}>
+      <ToolbarContext
+        isActive={this.props.isActive}>
         <span className="toolbar-left form-inline">
-          <BufferedInput
+          <input
+            ref={this.setInput}
             className="form-control link-target"
-            value={this.state.url}
             placeholder={this.t('editor.commands.link.placeholder')}
-            onCancel={this.props.onCommit}
-            onChange={this.handleChange}
-            onCommit={this.handleCommit}/>
+            onKeyUp={this.handleKeyUp}
+            value={this.state.value}
+            onChange={this.handleChange} />
           <span
             className="btn btn-primary"
             onClick={this.handleCommit}>OK</span>
@@ -56,7 +76,7 @@ class LinkToolbar extends PureComponent {
 
   static propTypes = {
     isActive: bool.isRequired,
-    onCommit: func.isRequired,
+    cancel: func.isRequired,
     action: func.isRequired,
     intl: intlShape.isRequired
   }
