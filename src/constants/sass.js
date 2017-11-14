@@ -169,6 +169,10 @@ const ESPER = {
   }
 }
 
+const INPUT = {
+  SHADOW_WIDTH: 2
+}
+
 const WIZARD = {
   WIDTH: 456,
   HEIGHT: 580
@@ -201,6 +205,7 @@ module.exports =  {
   ESPER,
   GRID,
   ICON,
+  INPUT,
   ITEM,
   PANEL,
   PHOTO,

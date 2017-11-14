@@ -7,6 +7,7 @@ const { AutoResizer } = require('./auto-resizer')
 const { Popup } = require('./popup')
 const { OptionList } = require('./option')
 const { bounds } = require('../dom')
+const { INPUT } = require('../constants/sass')
 const {
   array, bool, func, number, oneOf, oneOfType, string
 } = require('prop-types')
@@ -53,7 +54,9 @@ class BufferedInput extends PureComponent {
       const { bottom, left, width } = bounds(this.input)
 
       return {
-        top: bottom, left, width
+        left,
+        top: bottom,
+        width: width + 2 * INPUT.SHADOW_WIDTH
       }
     }
   }
