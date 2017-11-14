@@ -15,12 +15,20 @@ class Editable extends PureComponent {
     }
   }
 
+  get content() {
+    return this.props.display || this.props.value
+  }
+
+  get isActive() {
+    return this.props.isActive && !this.props.isDisabled
+  }
+
   setInput = (input) => {
     this.input = input
   }
 
   focus = () => {
-    if (this.input) this.input.focus()
+    if (this.input != null) this.input.focus()
   }
 
   handleCommit = (value, hasChanged) => {
@@ -31,42 +39,58 @@ class Editable extends PureComponent {
     }
   }
 
+  renderContent() {
+    return (
+      <div className="truncate">{this.content}</div>
+    )
+  }
+
+  renderInput() {
+    return (
+      <BufferedInput
+        ref={this.setInput}
+        autofocus={this.props.autofocus}
+        className="editable-control"
+        isRequired={this.props.isRequired}
+        placeholder={this.props.placeholder}
+        tabIndex={this.props.tabIndex}
+        type={this.props.type}
+        resize={this.props.resize}
+        value={this.props.value || ''}
+        onBlur={this.props.onBlur}
+        onCancel={this.props.onCancel}
+        onCommit={this.handleCommit}
+        onFocus={this.props.onFocus}
+        onKeyDown={this.props.onKeyDown}/>
+    )
+  }
+
   render() {
-    const {
-      isActive,
-      isDisabled,
-      value,
-      display,
-      ...props
-    } = this.props
-
-    if (!isActive || isDisabled) {
-      return (<div className={cx(this.classes)}>{display || value}</div>)
-    }
-
-    delete props.onChange
-
     return (
       <div className={cx(this.classes)}>
-        <BufferedInput {...props}
-          ref={this.setInput}
-          className="editable-control"
-          isDisabled={isDisabled}
-          value={value || ''}
-          onCommit={this.handleCommit}/>
+        {this.isActive ?
+          this.renderInput() :
+          this.renderContent()}
       </div>
     )
   }
 
   static propTypes = {
     autofocus: bool,
+    display: string,
     isActive: bool,
     isDisabled: bool,
+    isRequired: bool,
+    placeholder: string,
     resize: bool,
+    tabIndex: number,
+    type: string,
     value: oneOfType([string, number]),
-    display: string,
+    onBlur: func,
     onCancel: func.isRequired,
-    onChange: func.isRequired
+    onChange: func.isRequired,
+    onFocus: func,
+    onKeyDown: func,
   }
 
   static defaultProps = {
