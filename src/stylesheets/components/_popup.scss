@@ -11,11 +11,11 @@
   .popup {
     position: absolute;
     background: $popup-bg;
-    border: 3px solid $input-color-focus;
+    border: (1px + $popup-focus-shadow-width) solid $input-color-focus;
     border-top: 0;
-    margin: -3px -2px -2px;
-    padding-top: 5px;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+    margin: (-1px - $popup-focus-shadow-width) (-$popup-focus-shadow-width) 0;
+    padding-top: $input-border-radius-small - 1px;
+    border-bottom-left-radius: $input-border-radius-small + $popup-focus-shadow-width;
+    border-bottom-right-radius: $input-border-radius-small + $popup-focus-shadow-width;
   }
 }

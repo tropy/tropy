@@ -3,7 +3,10 @@
 // --------------------------------------------------
 
 .option-list {
+  padding-bottom: $space-xs;
+
   .option {
     padding: 0 8px;
+    line-height: $line-height-large;
   }
 }

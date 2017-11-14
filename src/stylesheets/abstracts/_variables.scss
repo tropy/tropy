@@ -298,6 +298,12 @@ $add-tag-transition:                0.3s ease;
 $clear-button-size: 14px;
 
 
+// Popup
+// --------------------------------------------------
+
+$popup-focus-shadow-width: const("INPUT.FOCUS_SHADOW_WIDTH") * 1px;
+
+
 // Debug
 // --------------------------------------------------
 
