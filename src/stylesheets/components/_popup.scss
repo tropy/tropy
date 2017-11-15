@@ -9,6 +9,8 @@
   z-index: $zindex-popup;
 
   .popup {
+    height: initial;
+    padding: initial;
     position: absolute;
     background: $popup-bg;
     border: (1px + $popup-focus-shadow-width) solid $input-color-focus;
