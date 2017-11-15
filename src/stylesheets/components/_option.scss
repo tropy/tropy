@@ -5,6 +5,7 @@
 .option-list {
   display: flex;
   flex-direction: column;
+  margin-bottom: $space-min;
 
   .scroll-container {
     position: relative;
@@ -25,5 +26,9 @@
     contain: content;
     padding: 0 8px;
     line-height: $line-height-large;
+
+    &:hover {
+      background: $option-hover-bg;
+    }
   }
 }
