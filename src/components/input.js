@@ -7,6 +7,7 @@ const { AutoResizer } = require('./auto-resizer')
 const { Popup } = require('./popup')
 const { OptionList } = require('./option')
 const { bounds } = require('../dom')
+const { blank } = require('../common/util')
 const { INPUT } = require('../constants/sass')
 const {
   array, bool, func, number, oneOf, oneOfType, string
@@ -33,12 +34,8 @@ class Input extends PureComponent {
     this.clearResetTimeout()
   }
 
-  get isBlank() {
-    return this.state.value == null || this.state.value === ''
-  }
-
   get isValid() {
-    return !this.props.isRequired || !this.isBlank
+    return !this.props.isRequired || !blank(this.state.value)
   }
 
   get hasChanged() {
