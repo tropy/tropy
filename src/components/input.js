@@ -13,7 +13,7 @@ const {
 } = require('prop-types')
 
 
-class BufferedInput extends PureComponent {
+class Input extends PureComponent {
   constructor(props) {
     super(props)
 
@@ -236,5 +236,5 @@ class BufferedInput extends PureComponent {
 }
 
 module.exports = {
-  BufferedInput
+  Input
 }

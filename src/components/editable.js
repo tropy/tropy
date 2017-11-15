@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { bool, func, number, oneOfType, string } = require('prop-types')
-const { BufferedInput } = require('./input')
+const { Input } = require('./input')
 const cx = require('classnames')
 
 
@@ -47,7 +47,7 @@ class Editable extends PureComponent {
 
   renderInput() {
     return (
-      <BufferedInput
+      <Input
         ref={this.setInput}
         autofocus={this.props.autofocus}
         className="editable-control"

@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { FormattedMessage } = require('react-intl')
-const { BufferedInput } = require('./input')
+const { Input } = require('./input')
 const cx = require('classnames')
 const {
   arrayOf, bool, func, node, oneOf, number, string
@@ -127,7 +127,7 @@ class FormField extends PureComponent {
         id={this.props.id}
         size={this.props.size}
         isCompact={this.props.isCompact}>
-        <BufferedInput
+        <Input
           ref={this.setInput}
           id={this.props.id}
           className="form-control"

@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { injectIntl, intlShape } = require('react-intl')
-const { BufferedInput } = require('../input')
+const { Input } = require('../input')
 const { blank } = require('../../common/util')
 const { arrayOf, bool, func, number, shape, string } = require('prop-types')
 
@@ -45,7 +45,7 @@ class TagAdder extends PureComponent {
   render() {
     return (
       <div className="add-tag-container">
-        <BufferedInput
+        <Input
           ref={this.setInput}
           className="form-control"
           completions={this.props.tags}
