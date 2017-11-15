@@ -1,5 +1,6 @@
 'use strict'
 
+const { shell } = require('electron')
 const React = require('react')
 const { Component } = React
 const { func, bool, instanceOf, number } = require('prop-types')
@@ -14,6 +15,7 @@ class ProseMirror extends Component {
       ...this.getEditorProps(),
       dispatchTransaction: this.handleChange,
       handleKeyDown: this.handleKeyDown,
+      handleClickOn: this.handleClickOn,
       handleDOMEvents: {
         focus: this.handleFocus,
         blur: this.handleBlur
@@ -64,6 +66,18 @@ class ProseMirror extends Component {
 
   handleKeyDown = (...args) => {
     return (this.props.isDisabled) ? false : this.props.onKeyDown(...args)
+  }
+
+  handleClickOn = (view, pos, node, nodePos, event, direct) => {
+    if (direct && event.altKey) {
+      const targetNode = node.nodeAt(pos - nodePos - 1)
+      let href
+      for (let mark of targetNode.marks) {
+        href = mark.attrs && mark.attrs.href
+        if (href) break
+      }
+      href && shell.openExternal(href)
+    }
   }
 
   handleFocus = (...args) => {
