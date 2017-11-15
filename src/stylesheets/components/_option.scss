@@ -4,7 +4,7 @@
 
 .option-list {
   display: flex;
-  flex: 1 1 0;
+  flex-direction: column;
 
   .scroll-container {
     position: relative;
