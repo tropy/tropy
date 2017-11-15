@@ -3,7 +3,7 @@
 const React = require('react')
 const { Component } = React
 const { createPortal } = require('react-dom')
-const { node, number, shape, string } = require('prop-types')
+const { node, number, oneOf, shape, string } = require('prop-types')
 const { $, append, classes, element, remove } = require('../dom')
 const cx = require('classnames')
 
@@ -26,7 +26,7 @@ class Popup extends Component {
   render() {
     return createPortal((
       <div
-        className={cx('popup', this.props.className)}
+        className={cx('popup', this.props.anchor, this.props.className)}
         style={this.props.position}>
         {this.props.children}
       </div>
@@ -34,6 +34,7 @@ class Popup extends Component {
   }
 
   static propTypes = {
+    anchor: oneOf(['top', 'right', 'bottom', 'left', 'float']),
     children: node.isRequired,
     className: string,
     position: shape({
@@ -41,6 +42,10 @@ class Popup extends Component {
       left: number,
       width: number
     })
+  }
+
+  static defaultProps = {
+    anchor: 'float'
   }
 }
 

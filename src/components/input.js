@@ -156,7 +156,9 @@ class Input extends PureComponent {
 
   renderCompletions() {
     return this.hasCompletions && this.state.hasFocus && (
-      <Popup position={this.getPosition()}>
+      <Popup
+        anchor="top"
+        position={this.getPosition()}>
         <OptionList
           query={this.state.value}
           values={this.props.completions}/>
