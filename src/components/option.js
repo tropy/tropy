@@ -38,12 +38,13 @@ class OptionList extends Iterator {
 
     return (
       <div className="option-list" style={{ height: this.height }}>
-        <div className="scroll-container" ref={this.setContainer}/>
-        <div className="runway" style={{ height }}>
-          <ul className="viewport" style={{ transform }}>
-            {this.mapIterableRange(({ id, name }) =>
-              <Option key={id} value={name}/>)}
-          </ul>
+        <div className="scroll-container" ref={this.setContainer}>
+          <div className="runway" style={{ height }}>
+            <ul className="viewport" style={{ transform }}>
+              {this.mapIterableRange(({ id, name }) =>
+                <Option key={id} value={name}/>)}
+            </ul>
+          </div>
         </div>
       </div>
     )
