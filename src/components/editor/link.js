@@ -19,15 +19,15 @@ class LinkToolbar extends PureComponent {
     }
   }
 
-  setInput = (input) => {
-    this.input = input
-  }
-
   handleChange = (e) => {
     this.setState({ value: e.target.value })
   }
 
   handleCommit = () => {
+    if (!this.isValid()) {
+      return
+    }
+
     this.props.action(this.state.value) // dispatch the toggleMark command
     this.cancel()
   }
@@ -54,13 +54,16 @@ class LinkToolbar extends PureComponent {
 
   t = (id) => this.props.intl.formatMessage({ id })
 
+  isValid = () => {
+    return this.state.value.length
+  }
+
   render() {
     return (
       <ToolbarContext
         isActive={this.props.isActive}>
         <span className="toolbar-left form-inline">
           <input
-            ref={this.setInput}
             className="form-control link-target"
             placeholder={this.t('editor.commands.link.placeholder')}
             onKeyUp={this.handleKeyUp}
@@ -68,6 +71,7 @@ class LinkToolbar extends PureComponent {
             onChange={this.handleChange} />
           <span
             className="btn btn-primary"
+            disabled={!this.isValid()}
             onClick={this.handleCommit}>OK</span>
         </span>
       </ToolbarContext>
