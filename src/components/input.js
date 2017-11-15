@@ -73,8 +73,7 @@ class Input extends PureComponent {
       return {
         left,
         top: bottom,
-        width: width + 2 * INPUT.FOCUS_SHADOW_WIDTH,
-        height: min(3, this.state.completions.length) * INPUT.COMPLETION_HEIGHT
+        width: width + 2 * INPUT.FOCUS_SHADOW_WIDTH
       }
     }
   }
@@ -176,8 +175,10 @@ class Input extends PureComponent {
   }
 
   renderCompletions() {
-    if (!this.hasCompletions || !this.state.hasFocus) return null
+    if (!this.hasCompletions || this.state.hasFocus) return null
     const position = this.getCompletionsPosition()
+    const height = min(3, this.state.completions.length) *
+      INPUT.COMPLETION_HEIGHT
 
     return (
       <Popup
@@ -185,7 +186,7 @@ class Input extends PureComponent {
         className={this.props.className}
         position={position}>
         <OptionList
-          height={position.height}
+          height={height}
           rowHeight={INPUT.COMPLETION_HEIGHT}
           values={this.state.completions}/>
       </Popup>

@@ -37,7 +37,7 @@ class OptionList extends Iterator {
     const transform = `translate3d(0,${offset}px,0)`
 
     return (
-      <div className="option-list">
+      <div className="option-list" style={{ height: this.height }}>
         <div className="scroll-container" ref={this.setContainer}/>
         <div className="runway" style={{ height }}>
           <ul className="viewport" style={{ transform }}>
