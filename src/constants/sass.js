@@ -171,7 +171,7 @@ const ESPER = {
 
 const INPUT = {
   FOCUS_SHADOW_WIDTH: 2,
-  COMPLETION_HEIGHT: 30
+  COMPLETION_HEIGHT: 26
 }
 
 const WIZARD = {
