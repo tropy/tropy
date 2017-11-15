@@ -38,6 +38,8 @@ class Iterator extends PureComponent {
       this.ro = new ResizeObserver(([e]) => {
         this.handleResize(e.contentRect)
       })
+    } else {
+      this.update()
     }
 
     this.observe(this.container)

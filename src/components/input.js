@@ -56,7 +56,7 @@ class Input extends PureComponent {
   }
 
   get hasCompletions() {
-    return this.state.completions.length > 0
+    return this.input != null && this.state.completions.length > 0
   }
 
   getNextState({ value, completions = this.props.completions }) {

@@ -50,6 +50,7 @@ class OptionList extends Iterator {
   }
 
   static propTypes = {
+    height: number.isRequired,
     rowHeight: number.isRequired,
     values: array.isRequired
   }
