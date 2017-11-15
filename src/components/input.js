@@ -175,7 +175,7 @@ class Input extends PureComponent {
   }
 
   renderCompletions() {
-    if (!this.hasCompletions || this.state.hasFocus) return null
+    if (!this.hasCompletions || !this.state.hasFocus) return null
     const position = this.getCompletionsPosition()
     const height = min(3, this.state.completions.length) *
       INPUT.COMPLETION_HEIGHT
