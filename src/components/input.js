@@ -158,6 +158,7 @@ class Input extends PureComponent {
     return this.hasCompletions && this.state.hasFocus && (
       <Popup
         anchor="top"
+        className={this.props.className}
         position={this.getPosition()}>
         <OptionList
           query={this.state.value}
@@ -192,7 +193,7 @@ class Input extends PureComponent {
 
   render() {
     return (
-      <div className="input">
+      <div className="input-group">
         {this.renderInput()}
         {this.renderCompletions()}
       </div>
