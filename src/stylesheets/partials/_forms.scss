@@ -59,9 +59,12 @@ fieldset {
   }
 }
 
+.input-group {
+  display: flex;
+}
+
 .form-control {
-  display: block;
-  width: 100%;
+  flex: 1 1 auto;
   height: $input-height-base;
   padding: 0 $padding-base-horizontal;
   font-family: inherit;
