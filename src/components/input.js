@@ -8,26 +8,39 @@ const { Popup } = require('./popup')
 const { OptionList } = require('./option')
 const { bounds } = require('../dom')
 const { blank } = require('../common/util')
+const { min } = Math
 const { INPUT } = require('../constants/sass')
 const {
   array, bool, func, number, oneOf, oneOfType, string
 } = require('prop-types')
 
 
+function getMatchingOptions(values, query) {
+  if (blank(query) || blank(values)) return values
+  query = query.trim().toLowerCase()
+
+  return values.reduce((options, value) => {
+    if (value.name.toLowerCase().includes(query)) {
+      options.push(value)
+    }
+
+    return options
+
+  }, [])
+}
+
 class Input extends PureComponent {
   constructor(props) {
     super(props)
-
-    this.state = {
-      value: props.value,
-      hasFocus: false
-    }
+    this.state = this.getNextState(props)
   }
 
-  componentWillReceiveProps({ value }) {
-    this.hasBeenCommitted = false
-    this.hasBeenCancelled = false
-    this.setState({ value })
+  componentWillReceiveProps(props) {
+    if (props !== this.props) {
+      this.hasBeenCommitted = false
+      this.hasBeenCancelled = false
+      this.setState(this.getNextState(props))
+    }
   }
 
   componentWillUnmount() {
@@ -43,17 +56,25 @@ class Input extends PureComponent {
   }
 
   get hasCompletions() {
-    return this.props.completions.length > 0
+    return this.state.completions.length > 0
   }
 
-  getPosition() {
+  getNextState({ value, completions = this.props.completions }) {
+    return {
+      value,
+      completions: getMatchingOptions(completions, value)
+    }
+  }
+
+  getCompletionsPosition() {
     if (this.input != null) {
       const { bottom, left, width } = bounds(this.input)
 
       return {
         left,
         top: bottom,
-        width: width + 2 * INPUT.FOCUS_SHADOW_WIDTH
+        width: width + 2 * INPUT.FOCUS_SHADOW_WIDTH,
+        height: min(3, this.state.completions.length) * INPUT.COMPLETION_HEIGHT
       }
     }
   }
@@ -74,7 +95,7 @@ class Input extends PureComponent {
   reset = () => {
     this.hasBeenCommitted = false
     this.hasBeenCancelled = false
-    this.setState({ value: this.props.value })
+    this.setState(this.getNextState(this.props))
     this.clearResetTimeout()
   }
 
@@ -109,7 +130,7 @@ class Input extends PureComponent {
   }
 
   handleChange = (event) => {
-    this.setState({ value: event.target.value })
+    this.setState(this.getNextState({ value: event.target.value }))
     this.props.onChange(event.target.value)
   }
 
@@ -155,14 +176,18 @@ class Input extends PureComponent {
   }
 
   renderCompletions() {
-    return this.hasCompletions && this.state.hasFocus && (
+    if (!this.hasCompletions || !this.state.hasFocus) return null
+    const position = this.getCompletionsPosition()
+
+    return (
       <Popup
         anchor="top"
         className={this.props.className}
-        position={this.getPosition()}>
+        position={position}>
         <OptionList
-          query={this.state.value}
-          values={this.props.completions}/>
+          height={position.height}
+          rowHeight={INPUT.COMPLETION_HEIGHT}
+          values={this.state.completions}/>
       </Popup>
     )
   }

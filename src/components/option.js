@@ -1,9 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { Component } = React
-const { blank } = require('../common/util')
-const { array, string } = require('prop-types')
+const { Iterator } = require('./iterator')
+const { array, number, string } = require('prop-types')
 
 const Option = ({ value }) => (
   <li className="option">{value}</li>
@@ -13,43 +12,45 @@ Option.propTypes = {
   value: string.isRequired
 }
 
-class OptionList extends Component {
-  constructor(props) {
-    super(props)
-    this.state = this.getStateFromProps(props)
+class OptionList extends Iterator {
+  get height() {
+    return this.props.height
   }
 
-  componentWillReceiveProps(props) {
-    if (props !== this.props) {
-      this.setState(this.getStateFromProps(props))
-    }
+  getIterables() {
+    return this.props.values
   }
 
-  getStateFromProps(props = this.props) {
-    return {
-      values: this.filter(props)
-    }
+  getColumns() {
+    return 1
   }
 
-  filter({ values, query }) {
-    if (blank(query)) return values
-    query = query.trim().toLowerCase()
-    return values.filter(value => value.name.toLowerCase().includes(query))
+  getRowHeight() {
+    return this.props.rowHeight
   }
+
+  handleFocus = false
+  handleResize = false
 
   render() {
+    const { offset, height } = this.state
+    const transform = `translate3d(0,${offset}px,0)`
+
     return (
-      <ul className="option-list">
-        {this.state.values.map(({ id, name }) =>
-          <Option
-            key={id}
-            value={name}/>)}
-      </ul>
+      <div className="option-list">
+        <div className="scroll-container" ref={this.setContainer}/>
+        <div className="runway" style={{ height }}>
+          <ul className="viewport" style={{ transform }}>
+            {this.mapIterableRange(({ id, name }) =>
+              <Option key={id} value={name}/>)}
+          </ul>
+        </div>
+      </div>
     )
   }
 
   static propTypes = {
-    query: string,
+    rowHeight: number.isRequired,
     values: array.isRequired
   }
 }

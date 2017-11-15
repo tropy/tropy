@@ -40,8 +40,9 @@ class Popup extends Component {
     position: shape({
       top: number,
       left: number,
-      width: number
-    })
+      width: number.isRequired,
+      height: number.isRequired
+    }).isRequired
   }
 
   static defaultProps = {
