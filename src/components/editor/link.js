@@ -58,12 +58,27 @@ class LinkToolbar extends PureComponent {
     return this.state.value.length
   }
 
+  setInput = (input) => {
+    this.input = input
+  }
+
+  componentWillReceiveProps(props) {
+    // must be slower than $toolbar-context-transition
+    const focusDelay = 250
+    // when toolbar becomes active, focus on input
+    if (!this.props.isActive && props.isActive) {
+      // delay needed because of the way the toolbars slide out
+      setTimeout(() => this.input.focus(), focusDelay)
+    }
+  }
+
   render() {
     return (
       <ToolbarContext
         isActive={this.props.isActive}>
         <span className="toolbar-left form-inline">
           <input
+            ref={this.setInput}
             className="form-control link-target"
             placeholder={this.t('editor.commands.link.placeholder')}
             onKeyUp={this.handleKeyUp}
