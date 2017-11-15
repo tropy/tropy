@@ -13,11 +13,16 @@
     padding: initial;
     position: absolute;
     background: $popup-bg;
+    margin: -$popup-focus-shadow-width;
     border: (1px + $popup-focus-shadow-width) solid $input-color-focus;
-    border-top: 0;
-    margin: (-1px - $popup-focus-shadow-width) (-$popup-focus-shadow-width) 0;
-    padding-top: $input-border-radius-small - 1px;
-    border-bottom-left-radius: $input-border-radius-small + $popup-focus-shadow-width;
-    border-bottom-right-radius: $input-border-radius-small + $popup-focus-shadow-width;
+    border-radius: $input-border-radius-small + $popup-focus-shadow-width;
+
+    &.top {
+      margin-top: (-1px - $popup-focus-shadow-width);
+      border-top: 0;
+      padding-top: $input-border-radius-small - 1px;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
   }
 }
