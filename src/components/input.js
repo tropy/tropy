@@ -100,7 +100,7 @@ class Input extends Component {
   }
 
   handleCompletion = (value) => {
-    this.setState({ value })
+    this.setState({ value }, this.commit)
     this.props.onChange(value)
   }
 
