@@ -98,6 +98,11 @@ en:
           invertScroll: Invert direction when scrolling in photos
           invertZoom: Invert direction when zooming in photos
           overlayToolbars: Automatically hide and show toolbars
+      zoomMode:
+        label: By default
+        option:
+          fit: Zoom photos to fit
+          fill: Zoom photos to fill
 
     project:
       label: Project

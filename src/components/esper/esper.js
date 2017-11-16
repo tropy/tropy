@@ -20,7 +20,7 @@ const {
 } = require('prop-types')
 
 const { TABS } = require('../../constants')
-const { TOOL, MODE } = require('../../constants/esper')
+const { TOOL } = require('../../constants/esper')
 
 const {
   ESPER: {
@@ -62,6 +62,7 @@ class Esper extends PureComponent {
     this.ro.disconnect()
     this.io.disconnect()
     this.persist.flush()
+    this.update.flush()
   }
 
   componentWillReceiveProps(props) {
@@ -614,7 +615,6 @@ class Esper extends PureComponent {
   static defaultProps = {
     maxZoom: MAX_ZOOM,
     minZoom: MIN_ZOOM,
-    mode: MODE.FIT,
     tabIndex: TABS.Esper,
     tool: TOOL.ARROW,
     zoom: 1

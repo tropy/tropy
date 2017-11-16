@@ -4,7 +4,6 @@ const { createSelector: memo } = require('reselect')
 const { getVisiblePhotos } = require('./photos')
 const { seq, compose, map, keep } = require('transducers.js')
 const { get } = require('../common/util')
-const BLANK = {}
 
 const rev = (a, b) => a < b ? 1 : b < a ? -1 : 0
 
@@ -12,7 +11,9 @@ const getActiveImageProps = memo(
   ({ ui }) => ui.image,
   ({ nav }) => nav.photo,
   ({ nav }) => nav.selection,
-  (image, photo, selection) => get(image, [selection || photo]) || BLANK
+  ({ settings }) => settings.zoomMode,
+  (image, photo, selection, mode) =>
+    get(image, [selection || photo]) || { mode }
 )
 
 const getExpandedPhotos = memo(
