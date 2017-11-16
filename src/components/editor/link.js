@@ -40,6 +40,7 @@ class LinkToolbar extends PureComponent {
 
   handleKeyUp = (event) => {
     switch (event.key) {
+      case 'Tab':
       case 'Escape':
         this.cancel()
         break
@@ -72,11 +73,23 @@ class LinkToolbar extends PureComponent {
     }
   }
 
+  onBlur = (event) => {
+    // this onBlur will not trigger when you switch to another application
+    const currentTarget = event.currentTarget
+    setTimeout(() => {
+      if (!currentTarget.contains(document.activeElement)) {
+        setTimeout(this.cancel, 250)
+      }
+    }, 0)
+  }
+
   render() {
     return (
       <ToolbarContext
         isActive={this.props.isActive}>
-        <span className="toolbar-left form-inline">
+        <span
+          onBlur={this.onBlur}
+          className="toolbar-left form-inline">
           <input
             ref={this.setInput}
             className="form-control link-target"
