@@ -39,7 +39,7 @@ class Completions extends Component {
     return {
       left,
       top: bottom,
-      width: width + 2 * INPUT.FOCUS_SHADOW_WIDTH,
+      width: width - 2 * INPUT.BORDER_WIDTH,
       height: OptionList.getHeight(completions.length)
     }
   }
