@@ -56,11 +56,11 @@ class OptionList extends Iterator {
         <div className="scroll-container" ref={this.setContainer}>
           <div className="runway" style={{ height }}>
             <ul className="viewport" style={{ transform }}>
-              {this.mapIterableRange(({ id, name }) =>
+              {this.mapIterableRange((value) =>
                 <Option
-                  key={id}
+                  key={value}
                   onClick={this.props.onSelect}
-                  value={name}/>)}
+                  value={value}/>)}
             </ul>
           </div>
         </div>

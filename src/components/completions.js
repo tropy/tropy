@@ -4,10 +4,13 @@ const React = require('react')
 const { Component } = React
 const { Popup } = require('./popup')
 const { OptionList } = require('./option')
-const { array, bool, func, instanceOf, number, string } = require('prop-types')
 const { blank } = require('../common/util')
 const { bounds } = require('../dom')
+const { startsWith } = require('../collate')
 const { INPUT } = require('../constants/sass')
+const {
+  arrayOf, bool, func, instanceOf, number, string
+} = require('prop-types')
 
 
 class Completions extends Component {
@@ -57,7 +60,7 @@ class Completions extends Component {
 
     return blank(query) ?
       completions :
-      completions.filter(value => match(query, value))
+      completions.filter(value => match(value, query))
   }
 
   render() {
@@ -75,7 +78,7 @@ class Completions extends Component {
 
   static propTypes = {
     className: string,
-    completions: array.isRequired,
+    completions: arrayOf(string).isRequired,
     input: instanceOf(HTMLElement).isRequired,
     isVisibleWhenBlank: bool,
     match: func.isRequired,
@@ -85,10 +88,7 @@ class Completions extends Component {
   }
 
   static defaultProps = {
-    match(query, value) {
-      const text = value.name.toLowerCase()
-      return text !== query && text.includes(query)
-    },
+    match: startsWith,
     minQueryLength: 0
   }
 }
