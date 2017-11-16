@@ -4,11 +4,10 @@ const React = require('react')
 const { Component } = React
 const { Popup } = require('./popup')
 const { OptionList } = require('./option')
-const { array, bool, func, instanceOf, string } = require('prop-types')
+const { array, bool, func, instanceOf, number, string } = require('prop-types')
 const { blank } = require('../common/util')
 const { bounds } = require('../dom')
 const { INPUT } = require('../constants/sass')
-
 
 
 class Completions extends Component {
@@ -49,7 +48,8 @@ class Completions extends Component {
   }
 
   get isVisible() {
-    return this.props.isVisibleWhenBlank || !this.isBlank
+    return (this.props.isVisibleWhenBlank || !this.isBlank) &&
+      this.props.minQueryLength <= this.props.query.length
   }
 
   filter({ completions, match, query } = this.props) {
@@ -79,6 +79,7 @@ class Completions extends Component {
     input: instanceOf(HTMLElement).isRequired,
     isVisibleWhenBlank: bool,
     match: func.isRequired,
+    minQueryLength: number.isRequired,
     onSelect: func.isRequired,
     query: string.isRequired
   }
@@ -87,7 +88,8 @@ class Completions extends Component {
     match(query, value) {
       const text = value.name.toLowerCase()
       return text !== query && text.includes(query)
-    }
+    },
+    minQueryLength: 0
   }
 }
 
