@@ -13,10 +13,6 @@ Option.propTypes = {
 }
 
 class OptionList extends Iterator {
-  get height() {
-    return this.props.height
-  }
-
   getIterables() {
     return this.props.values
   }
@@ -30,14 +26,13 @@ class OptionList extends Iterator {
   }
 
   handleFocus = false
-  handleResize = false
 
   render() {
     const { offset, height } = this.state
     const transform = `translate3d(0,${offset}px,0)`
 
     return (
-      <div className="option-list" style={{ height: this.height }}>
+      <div className="option-list">
         <div className="scroll-container" ref={this.setContainer}>
           <div className="runway" style={{ height }}>
             <ul className="viewport" style={{ transform }}>
@@ -51,7 +46,6 @@ class OptionList extends Iterator {
   }
 
   static propTypes = {
-    height: number.isRequired,
     rowHeight: number.isRequired,
     values: array.isRequired
   }

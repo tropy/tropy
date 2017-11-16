@@ -9,6 +9,8 @@
   z-index: $zindex-popup;
 
   .popup {
+    display: flex;
+    flex-direction: column;
     height: initial;
     padding: initial;
     position: absolute;

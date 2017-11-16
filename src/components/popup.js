@@ -40,7 +40,8 @@ class Popup extends Component {
     position: shape({
       top: number,
       left: number,
-      width: number
+      width: number,
+      height: number
     })
   }
 
