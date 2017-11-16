@@ -69,14 +69,14 @@ class ProseMirror extends Component {
   }
 
   handleClickOn = (view, pos, node, nodePos, event, direct) => {
-    if (direct && event.altKey) {
-      const targetNode = node.nodeAt(pos - nodePos - 1)
-      let href
-      for (let mark of targetNode.marks) {
-        href = mark.attrs && mark.attrs.href
-        if (href) break
+    if (!direct || !event.altKey) return
+    const targetNode = node.nodeAt(pos - nodePos - 1)
+    if (!targetNode) return
+    for (let mark of targetNode.marks) {
+      const href = mark.attrs && mark.attrs.href
+      if (href) {
+        return shell.openExternal(href)
       }
-      href && shell.openExternal(href)
     }
   }
 
