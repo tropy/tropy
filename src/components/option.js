@@ -1,19 +1,36 @@
 'use strict'
 
 const React = require('react')
+const { Component } = React
 const { Iterator } = require('./iterator')
-const { array, string } = require('prop-types')
+const { array, func, string } = require('prop-types')
 const { OPTION } = require('../constants/sass')
 const { min } = Math
 
 
-const Option = ({ value }) => (
-  <li className="option">{value}</li>
-)
+class Option extends Component {
+  handleMouseDown = (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+    this.props.onClick(this.props.value)
+  }
 
-Option.propTypes = {
-  value: string.isRequired
+  render() {
+    return (
+      <li
+        className="option"
+        onMouseDown={this.handleMouseDown}>
+        {this.props.value}
+      </li>
+    )
+  }
+
+  static propTypes = {
+    onClick: func.isRequired,
+    value: string.isRequired
+  }
 }
+
 
 class OptionList extends Iterator {
   getIterables() {
@@ -40,7 +57,10 @@ class OptionList extends Iterator {
           <div className="runway" style={{ height }}>
             <ul className="viewport" style={{ transform }}>
               {this.mapIterableRange(({ id, name }) =>
-                <Option key={id} value={name}/>)}
+                <Option
+                  key={id}
+                  onClick={this.props.onSelect}
+                  value={name}/>)}
             </ul>
           </div>
         </div>
@@ -49,6 +69,7 @@ class OptionList extends Iterator {
   }
 
   static propTypes = {
+    onSelect: func.isRequired,
     values: array.isRequired
   }
 

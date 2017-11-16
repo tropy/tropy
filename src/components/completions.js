@@ -67,6 +67,7 @@ class Completions extends Component {
         className={this.props.className}
         style={this.getPopupStyle()}>
         <OptionList
+          onSelect={this.props.onSelect}
           values={this.state.completions}/>
       </Popup>
     )
@@ -78,13 +79,14 @@ class Completions extends Component {
     input: instanceOf(HTMLElement).isRequired,
     isVisibleWhenBlank: bool,
     match: func.isRequired,
-    onSelect: func,
+    onSelect: func.isRequired,
     query: string.isRequired
   }
 
   static defaultProps = {
     match(query, value) {
-      return value.name.toLowerCase().includes(query)
+      const text = value.name.toLowerCase()
+      return text !== query && text.includes(query)
     }
   }
 }

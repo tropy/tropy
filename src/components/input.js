@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
+const { Component } = React
 const { noop } = require('../common/util')
 const { AutoResizer } = require('./auto-resizer')
 const { Completions } = require('./completions')
@@ -11,7 +11,7 @@ const {
 } = require('prop-types')
 
 
-class Input extends PureComponent {
+class Input extends Component {
   constructor(props) {
     super(props)
     this.state =  {
@@ -94,9 +94,14 @@ class Input extends PureComponent {
     }
   }
 
-  handleChange = (event) => {
-    this.setState({ value: event.target.value })
-    this.props.onChange(event.target.value)
+  handleChange = ({ target }) => {
+    this.setState({ value: target.value })
+    this.props.onChange(target.value)
+  }
+
+  handleCompletion = (value) => {
+    this.setState({ value })
+    this.props.onChange(value)
   }
 
   handleBlur = (event) => {
@@ -149,6 +154,7 @@ class Input extends PureComponent {
         className={className ? `${className}-completions` : null}
         completions={this.props.completions}
         input={this.input}
+        onSelect={this.handleCompletion}
         query={this.state.value}/>
     )
   }
