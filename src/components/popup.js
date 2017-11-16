@@ -27,7 +27,7 @@ class Popup extends Component {
     return createPortal((
       <div
         className={cx('popup', this.props.anchor, this.props.className)}
-        style={this.props.position}>
+        style={this.props.style}>
         {this.props.children}
       </div>
     ), this.dom)
@@ -37,7 +37,7 @@ class Popup extends Component {
     anchor: oneOf(['top', 'right', 'bottom', 'left', 'float']),
     children: node.isRequired,
     className: string,
-    position: shape({
+    style: shape({
       top: number,
       left: number,
       width: number,
