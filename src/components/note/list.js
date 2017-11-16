@@ -98,8 +98,8 @@ class NoteList extends Iterator {
   }
 
   render() {
-    const { offset, height } = this.state
-    const transform = `translate3d(0,${offset}px,0)`
+    const { height } = this.state
+    const { transform } = this
 
     return (
       <div className="note list">

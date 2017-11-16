@@ -165,6 +165,10 @@ class Iterator extends PureComponent {
     return this.getIterables().length
   }
 
+  get transform() {
+    return `translate3d(0,${this.state.offset}px,0)`
+  }
+
   get orientation() {
     return this.isVertical ? 'vertical' : 'horizontal'
   }
