@@ -9,6 +9,7 @@
   z-index: $zindex-popup;
 
   .popup {
+    box-sizing: content-box; // Calculated height = content height
     display: flex;
     flex-direction: column;
     position: absolute;

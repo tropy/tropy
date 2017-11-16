@@ -170,6 +170,7 @@ const ESPER = {
 }
 
 const INPUT = {
+  BORDER_WIDTH: 1,
   FOCUS_SHADOW_WIDTH: 2
 }
 
