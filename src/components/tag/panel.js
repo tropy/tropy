@@ -6,7 +6,6 @@ const { connect } = require('react-redux')
 const { TagList } = require('./list')
 const { TagAdder } = require('./adder')
 const { toId } = require('../../common/util')
-const { seq, map, filter, compose } = require('transducers.js')
 const { TABS } = require('../../constants')
 const { match } = require('../../keymap')
 const { on, off } = require('../../dom')
@@ -39,6 +38,16 @@ class TagPanel extends PureComponent {
     return this.isEmpty ? -1 : TABS.TagPanel
   }
 
+  getTaggedIds(tag, invert = false) {
+    return this.props.items.reduce((ids, item) => {
+      if (item.tags.includes(tag.id) !== invert) {
+        ids.push(item.id)
+      }
+
+      return ids
+    }, [])
+  }
+
   setContainer = (container) => {
     this.container = container
   }
@@ -66,18 +75,18 @@ class TagPanel extends PureComponent {
   }
 
   handleTagRemove = (tag) => {
-    const present = seq(this.props.items,
-      compose(filter(it => it.tags.includes(tag.id)), map(toId)))
+    const id = this.getTaggedIds(tag)
 
-    this.props.onItemTagRemove({ id: present, tags: [tag.id] })
+    if (id.length > 0) {
+      this.props.onItemTagRemove({ id, tags: [tag.id] })
+    }
   }
 
   handleTagAdd = (tag) => {
-    if (tag.mixed !== false) {
-      const missing = seq(this.props.items,
-        compose(filter(it => !it.tags.includes(tag.id)), map(toId)))
+    const id = this.getTaggedIds(tag, true)
 
-      this.props.onItemTagAdd({ id: missing, tags: [tag.id] })
+    if (id.length > 0) {
+      this.props.onItemTagAdd({ id, tags: [tag.id] })
     }
   }
 
