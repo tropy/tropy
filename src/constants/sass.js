@@ -170,8 +170,12 @@ const ESPER = {
 }
 
 const INPUT = {
-  FOCUS_SHADOW_WIDTH: 2,
-  COMPLETION_HEIGHT: 26
+  FOCUS_SHADOW_WIDTH: 2
+}
+
+const OPTION = {
+  HEIGHT: 26,
+  LIST_MARGIN: 4
 }
 
 const WIZARD = {
@@ -208,6 +212,7 @@ module.exports =  {
   ICON,
   INPUT,
   ITEM,
+  OPTION,
   PANEL,
   PHOTO,
   PREFS,

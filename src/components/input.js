@@ -8,7 +8,6 @@ const { Popup } = require('./popup')
 const { OptionList } = require('./option')
 const { bounds } = require('../dom')
 const { blank } = require('../common/util')
-const { min } = Math
 const { INPUT } = require('../constants/sass')
 const {
   array, bool, func, number, oneOf, oneOfType, string
@@ -74,7 +73,7 @@ class Input extends PureComponent {
         left,
         top: bottom,
         width: width + 2 * INPUT.FOCUS_SHADOW_WIDTH,
-        height: min(3, this.state.completions.length) * INPUT.COMPLETION_HEIGHT + 4
+        height: OptionList.getHeight(this.state.completions.length)
       }
     }
   }

@@ -2,7 +2,10 @@
 
 const React = require('react')
 const { Iterator } = require('./iterator')
-const { array, number, string } = require('prop-types')
+const { array, string } = require('prop-types')
+const { OPTION } = require('../constants/sass')
+const { min } = Math
+
 
 const Option = ({ value }) => (
   <li className="option">{value}</li>
@@ -22,14 +25,14 @@ class OptionList extends Iterator {
   }
 
   getRowHeight() {
-    return this.props.rowHeight
+    return OPTION.HEIGHT
   }
 
   handleFocus = false
 
   render() {
-    const { offset, height } = this.state
-    const transform = `translate3d(0,${offset}px,0)`
+    const { height } = this.state
+    const { transform } = this
 
     return (
       <div className="option-list">
@@ -46,8 +49,11 @@ class OptionList extends Iterator {
   }
 
   static propTypes = {
-    rowHeight: number.isRequired,
     values: array.isRequired
+  }
+
+  static getHeight(rows, minRows = 3) {
+    return (rows) ? min(rows, minRows) * OPTION.HEIGHT + OPTION.LIST_MARGIN : 0
   }
 }
 
