@@ -103,15 +103,19 @@ class LinkToolbar extends PureComponent {
 
 class LinkButton extends PureComponent {
   handleClick = () => {
+    if (this.isDisabled()) return
+
     // if selection already has a link - remove it straight away
     // otherwise, show link toolbar
     return this.props.mark ? this.props.action() : this.props.callback()
   }
 
+  isDisabled = () => !!this.props.state.selection.$cursor
+
   render() {
     return (
       <IconButton
-        isDisabled={!!this.props.state.selection.$cursor}
+        isDisabled={this.isDisabled()}
         canHaveFocus={false}
         title="editor.commands.link.button"
         icon={<IconLink/>}

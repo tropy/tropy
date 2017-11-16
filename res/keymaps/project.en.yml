@@ -119,6 +119,7 @@ en:
       underline: CmdOrCtrl+u
       liftListItem: CmdOrCtrl+[
       sinkListItem: CmdOrCtrl+]
+      addLink: CmdOrCtrl+l
       joinUp: Alt+ArrowUp
       joinDown: Alt+ArrowDown
       lift: CmdOrCtrl+ArrowLeft

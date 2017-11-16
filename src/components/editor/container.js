@@ -29,6 +29,10 @@ class Editor extends PureComponent {
     this.view = get(view, ['pm'])
   }
 
+  setToolbar = (toolbar) => {
+    this.toolbar = toolbar
+  }
+
   get classes() {
     return {
       'editor': true,
@@ -60,6 +64,12 @@ class Editor extends PureComponent {
   }
 
   exec(command, attrs) {
+    // TODO move me somplace sane.
+    // addLink is a somewhat special command that triggers our GUI,
+    // instead of being sent directly to PM
+    if (command === 'addLink') {
+      this.toolbar.linkButton.handleClick()
+    }
     const cmd = attrs ? commands[command](attrs) : commands[command]
     return (cmd || noop)(
       this.view.state, this.view.dispatch, this.view
@@ -109,6 +119,7 @@ class Editor extends PureComponent {
         {!isDisabled &&
           <EditorToolbar
             state={state}
+            ref={this.setToolbar}
             onCommand={this.handleCommand}/>
         }
 

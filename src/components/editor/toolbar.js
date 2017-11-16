@@ -102,6 +102,14 @@ class EditorToolbar extends PureComponent {
     })
   }
 
+  linkShortcut = () => {
+    this.state.isLinkActive ? this.toggleLink() : this.turnLinkToolbar(true)()
+  }
+
+  addLinkButton = (button) => {
+    this.linkButton = button
+  }
+
   render() {
     return (
       <Toolbar isDraggable={false}>
@@ -167,6 +175,7 @@ class EditorToolbar extends PureComponent {
             </ToolGroup>
             <ToolGroup>
               <LinkButton
+                ref={this.addLinkButton}
                 state={this.props.state}
                 mark={this.state.marks.link}
                 callback={this.turnLinkToolbar(true)}
