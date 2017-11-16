@@ -11,8 +11,6 @@
   .popup {
     display: flex;
     flex-direction: column;
-    height: initial;
-    padding: initial;
     position: absolute;
     background: $popup-bg;
     margin: -$popup-focus-shadow-width;
