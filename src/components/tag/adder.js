@@ -47,7 +47,7 @@ class TagAdder extends PureComponent {
         <Input
           ref={this.setInput}
           className="form-control"
-          completions={this.props.tags}
+          completions={this.props.completions}
           isDisabled={this.props.isDisabled}
           placeholder={this.placeholder}
           tabIndex={-1}
@@ -62,6 +62,7 @@ class TagAdder extends PureComponent {
 
   static propTypes = {
     count: number.isRequired,
+    completions: arrayOf(string).isRequired,
     intl: intlShape.isRequired,
     isDisabled: bool,
     tags: arrayOf(shape({

@@ -16,7 +16,8 @@ const {
 const {
   getAllTags,
   getItemTags,
-  getSelectedItems
+  getSelectedItems,
+  getTagCompletions
 } = require('../../selectors')
 
 
@@ -139,8 +140,9 @@ class TagPanel extends PureComponent {
         <TagAdder
           ref={this.setAdder}
           isDisabled={this.props.isDisabled}
-          tags={this.props.allTags}
+          completions={this.props.completions}
           count={this.props.items.length}
+          tags={this.props.allTags}
           onAdd={this.handleTagAdd}
           onBlur={this.handleBlur}
           onFocus={this.props.onActivate}
@@ -152,6 +154,7 @@ class TagPanel extends PureComponent {
 
   static propTypes = {
     allTags: arrayOf(object).isRequired,
+    completions: arrayOf(string).isRequired,
     edit: object,
     isDisabled: bool,
     items: arrayOf(object).isRequired,
@@ -178,6 +181,7 @@ module.exports = {
   TagPanel: connect(
     (state) => ({
       allTags: getAllTags(state),
+      completions: getTagCompletions(state),
       edit: state.edit.tabTag,
       items: getSelectedItems(state),
       tags: getItemTags(state)
