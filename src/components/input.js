@@ -179,11 +179,12 @@ class Input extends PureComponent {
     const position = this.getCompletionsPosition()
     const height = min(3, this.state.completions.length) *
       INPUT.COMPLETION_HEIGHT
+    const { className } = this.props
 
     return (
       <Popup
         anchor="top"
-        className={this.props.className}
+        className={className ? `${className}-popup` : null}
         position={position}>
         <OptionList
           height={height}
