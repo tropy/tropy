@@ -9,6 +9,9 @@ const {
   liftListItem,
   sinkListItem
 } = require('prosemirror-schema-list')
+const { TextSelection } = require('prosemirror-state')
+
+const { markExtend } = require('./link')
 
 module.exports = (schema) => {
   const list = {
@@ -62,6 +65,18 @@ module.exports = (schema) => {
       cmd.deleteSelection,
       cmd.joinForward
     ),
+
+    expandSelection: (state, dispatch, { markType }) => {
+      const range = markExtend(state.selection.$cursor, markType)
+      if (range) {
+        dispatch(
+          state
+            .tr
+            .setSelection(
+              TextSelection.create(state.doc, range.from, range.to))
+        ), true
+      }
+    },
 
     clearSelection: () => {
       const sel = getSelection()

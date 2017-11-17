@@ -62,6 +62,44 @@ class LinkToolbar extends PureComponent {
   }
 }
 
+function markExtend(cursor, markType) {
+  if (!cursor) return
+  let startIndex = cursor.index()
+  let endIndex = cursor.indexAfter()
+
+  const hasMark = (index) => {
+    // clicked outside edge of tag.
+    if (index === cursor.parent.childCount) {
+      index--
+    }
+    const result = cursor.parent.child(index).marks.filter(
+      mark => mark.type.name === markType)
+    return !!result.length
+  }
+
+  if (!hasMark(startIndex) && !hasMark(endIndex)) {
+    return
+  }
+  while (startIndex > 0 && hasMark(startIndex)) {
+    startIndex--
+  }
+  while ( endIndex < cursor.parent.childCount && hasMark(endIndex)) {
+    endIndex++
+  }
+
+  let startPos = cursor.start()
+  let endPos = startPos
+
+  for (let i = 0; i < endIndex; i++) {
+    let size = cursor.parent.child(i).nodeSize
+    if (i < startIndex) startPos += size
+    endPos += size
+  }
+
+  return { from: startPos, to: endPos }
+}
+
 module.exports = {
-  LinkToolbar: injectIntl(LinkToolbar)
+  LinkToolbar: injectIntl(LinkToolbar),
+  markExtend
 }
