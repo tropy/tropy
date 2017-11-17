@@ -381,7 +381,7 @@ en:
       ol: Insert Numbered List
       ul: Insert Bulleted List
       link:
-        button: Insert Link
+        button: Toggle Link
         target: Link target
         title: Link title
       left: Align Left
