@@ -33,8 +33,8 @@ class EditorToolbar extends PureComponent {
     super(props)
 
     this.state = {
+      context: 'default',
       marks: this.getActiveMarks(props.state),
-      isLinkActive: false,
     }
 
     this.cmd = {}
@@ -51,7 +51,7 @@ class EditorToolbar extends PureComponent {
       'ol',
       'ul',
       'liftListItem',
-      'sinkListItem',
+      'sinkListItem'
     ]) {
       this.cmd[action] = () => this.props.onCommand(action)
     }
@@ -63,6 +63,14 @@ class EditorToolbar extends PureComponent {
         marks: this.getActiveMarks(props.state)
       })
     }
+  }
+
+  get hasDefaultContext() {
+    return this.state.context === 'default'
+  }
+
+  get hasLinkContext() {
+    return this.state.context === 'link'
   }
 
   getActiveMarks(state = this.props.state) {
@@ -94,19 +102,16 @@ class EditorToolbar extends PureComponent {
     )
   }
 
-  turnLinkToolbar = isLinkActive => {
-    return () => this.setState({ isLinkActive })
+  setDefaultContext = () => {
+    this.setState({ context: 'default' })
   }
 
-  toggleLink = target => {
-    this.props.onCommand('link', {
-      href: target,
-      title: target,
-    })
+  setLinkContext = () => {
+    this.setState({ context: 'link' })
   }
 
-  linkShortcut = () => {
-    this.state.isLinkActive ? this.toggleLink() : this.turnLinkToolbar(true)()
+  handleToggleLink = (attrs) => {
+    this.props.onCommand('link', attrs)
   }
 
   addLinkButton = (button) => {
@@ -116,7 +121,7 @@ class EditorToolbar extends PureComponent {
   render() {
     return (
       <Toolbar isDraggable={false}>
-        <ToolbarContext isActive={!this.state.isLinkActive}>
+        <ToolbarContext isActive={this.hasDefaultContext}>
           <div className="toolbar-left">
             <ToolGroup>
               {this.renderMarkButton('bold', <IconB/>)}
@@ -181,15 +186,15 @@ class EditorToolbar extends PureComponent {
                 ref={this.addLinkButton}
                 state={this.props.state}
                 mark={this.state.marks.link}
-                callback={this.turnLinkToolbar(true)}
-                action={this.toggleLink} />
+                callback={this.setLinkContext}
+                action={this.handleToggleLink}/>
             </ToolGroup>
           </div>
         </ToolbarContext>
         <LinkToolbar
-          isActive={this.state.isLinkActive}
-          cancel={this.turnLinkToolbar(false)}
-          action={this.toggleLink} />
+          isActive={this.hasLinkContext}
+          onCancel={this.setDefaultContext}
+          onCommit={this.handleToggleLink}/>
       </Toolbar>
     )
   }

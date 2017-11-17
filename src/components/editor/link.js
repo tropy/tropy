@@ -28,14 +28,16 @@ class LinkToolbar extends PureComponent {
       return
     }
 
-    this.props.action(this.state.value) // dispatch the toggleMark command
+    this.props.onCommit({
+      href: this.state.value
+    })
     this.cancel()
   }
 
   cancel = () => {
     // hide the toolbar
     this.setState({ value: '' })
-    this.props.cancel()
+    this.props.onCancel()
   }
 
   handleKeyUp = (event) => {
@@ -53,9 +55,11 @@ class LinkToolbar extends PureComponent {
     event.nativeEvent.stopImmediatePropagation()
   }
 
-  t = (id) => this.props.intl.formatMessage({ id })
+  t(id) {
+    return this.props.intl.formatMessage({ id })
+  }
 
-  isValid = () => {
+  isValid() {
     return this.state.value.length
   }
 
@@ -85,8 +89,7 @@ class LinkToolbar extends PureComponent {
 
   render() {
     return (
-      <ToolbarContext
-        isActive={this.props.isActive}>
+      <ToolbarContext isActive={this.props.isActive}>
         <span
           onBlur={this.onBlur}
           className="toolbar-left form-inline">
@@ -108,31 +111,28 @@ class LinkToolbar extends PureComponent {
 
   static propTypes = {
     isActive: bool.isRequired,
-    cancel: func.isRequired,
-    action: func.isRequired,
+    onCancel: func.isRequired,
+    onCommit: func.isRequired,
     intl: intlShape.isRequired
   }
 }
 
 class LinkButton extends PureComponent {
   handleClick = () => {
-    if (this.isDisabled()) return
-
     // if selection already has a link - remove it straight away
     // otherwise, show link toolbar
     return this.props.mark ? this.props.action() : this.props.callback()
   }
 
-  isDisabled = () => !!this.props.state.selection.$cursor
+  //isDisabled = () => !!this.props.state.selection.$cursor
 
   render() {
     return (
       <IconButton
-        isDisabled={this.isDisabled()}
         noFocus
         title="editor.commands.link.button"
         icon={<IconLink/>}
-        onClick={this.handleClick}
+        onMouseDown={this.handleClick}
         isActive={this.props.mark}/>
     )
   }

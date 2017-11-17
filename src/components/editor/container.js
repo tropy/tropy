@@ -64,12 +64,6 @@ class Editor extends PureComponent {
   }
 
   exec(action, ...args) {
-    // TODO move me somplace sane.
-    // addLink is a somewhat special command that triggers our GUI,
-    // instead of being sent directly to PM
-    if (action === 'addLink') {
-      return this.toolbar.linkButton.handleClick()
-    }
     return (commands[action] || noop)(
       this.view.state, this.view.dispatch, ...args
     )
@@ -80,7 +74,16 @@ class Editor extends PureComponent {
   }
 
   handleKeyDown = (_, event) => {
-    return this.exec(match(this.props.keymap, event))
+    const action = match(this.props.keymap, event)
+
+    switch (action) {
+      case 'addLink':
+        return this.toolbar.setLinkContext(), true
+      case null:
+        break
+      default:
+        return this.exec(action)
+    }
   }
 
   handleFocus = (event) => {
