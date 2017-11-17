@@ -6,16 +6,17 @@ const { bool, func } = require('prop-types')
 const { injectIntl, intlShape } = require('react-intl')
 const { ToolbarContext, ToolbarLeft } = require('../toolbar')
 const { BufferedInput } = require('../input')
+const { ensure } = require('../../dom')
 
 
 class LinkToolbar extends PureComponent {
   componentWillReceiveProps(props) {
-    // must be slower than $toolbar-context-transition
-    const focusDelay = 250
-    // when toolbar becomes active, focus on input
     if (!this.props.isActive && props.isActive) {
-      // delay needed because of the way the toolbars slide out
-      setTimeout(() => this.input.focus(), focusDelay)
+      ensure(
+        this.container,
+        'transitionend',
+        this.input.focus,
+        850)
     }
   }
 
