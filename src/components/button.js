@@ -26,7 +26,7 @@ class IconButton extends PureComponent {
   }
 
   get node() {
-    return this.props.canHaveFocus ? 'button' : 'span'
+    return this.props.noFocus ? 'span' : 'button'
   }
 
   get title() {
@@ -39,7 +39,7 @@ class IconButton extends PureComponent {
 
   get attributes() {
     const {
-      canHaveFocus,
+      noFocus,
       isDisabled,
       tabIndex,
       onClick,
@@ -58,10 +58,10 @@ class IconButton extends PureComponent {
       attr.onMouseDown = onMouseDown
     }
 
-    if (canHaveFocus) {
-      attr.tabIndex = tabIndex
-    } else {
+    if (noFocus) {
       attr.onMouseDown = this.handleMouseDown
+    } else {
+      attr.tabIndex = tabIndex
     }
 
     return attr
@@ -77,19 +77,19 @@ class IconButton extends PureComponent {
   }
 
   static propTypes = {
-    canHaveFocus: bool,
     icon: element.isRequired,
     intl: intlShape.isRequired,
-    title: string,
     isActive: bool,
     isDisabled: bool,
+    noFocus: bool,
+    title: string,
     tabIndex: number,
     onClick: func,
     onMouseDown: func
   }
 
   static defaultProps = {
-    canHaveFocus: true,
+    noFocus: false,
     tabIndex: -1
   }
 }

@@ -129,7 +129,7 @@ class LinkButton extends PureComponent {
     return (
       <IconButton
         isDisabled={this.isDisabled()}
-        canHaveFocus={false}
+        noFocus
         title="editor.commands.link.button"
         icon={<IconLink/>}
         onClick={this.handleClick}

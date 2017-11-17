@@ -83,7 +83,7 @@ class EditorToolbar extends PureComponent {
   renderMarkButton(name, icon) {
     return (
       <IconButton
-        canHaveFocus={false}
+        noFocus
         icon={icon}
         isActive={this.state.marks[name]}
         title={`editor.commands.${name}`}
@@ -121,7 +121,7 @@ class EditorToolbar extends PureComponent {
               {this.renderMarkButton('underline', <IconU/>)}
               {this.renderMarkButton('strikethrough', <IconS/>)}
               <IconButton
-                canHaveFocus={false}
+                noFocus
                 icon={<IconQ/>}
                 title="editor.commands.blockquote"
                 onMouseDown={this.blockquote}/>
@@ -133,21 +133,21 @@ class EditorToolbar extends PureComponent {
             {/*<ToolGroup>
               <IconButton
                 isDisabled
-                canHaveFocus={false}
+                noFocus
                 icon={<IconAlignLeft/>}
                 isActive={false}
                 title="editor.commands.left"
                 onMouseDown={this.left}/>
               <IconButton
                 isDisabled
-                canHaveFocus={false}
+                noFocus
                 icon={<IconAlignCenter/>}
                 isActive={false}
                 title="editor.commands.center"
                 onMouseDown={this.center}/>
               <IconButton
                 isDisabled
-                canHaveFocus={false}
+                noFocus
                 icon={<IconAlignRight/>}
                 isActive={false}
                 title="editor.commands.right"
@@ -155,21 +155,21 @@ class EditorToolbar extends PureComponent {
             </ToolGroup>*/}
             <ToolGroup>
               <IconButton
-                canHaveFocus={false}
+                noFocus
                 icon={<IconBulletList/>}
                 title="editor.commands.ul"
                 onMouseDown={this.ul}/>
               <IconButton
-                canHaveFocus={false}
+                noFocus
                 icon={<IconNumberedList/>}
                 title="editor.commands.ol"
                 onMouseDown={this.ol}/>
               <IconButton
-                canHaveFocus={false}
+                noFocus
                 icon={<IconSink/>}
                 onMouseDown={this.sinkListItem}/>
               <IconButton
-                canHaveFocus={false}
+                noFocus
                 icon={<IconLift/>}
                 onMouseDown={this.liftListItem}/>
             </ToolGroup>

@@ -78,13 +78,13 @@ class EsperToolbar extends PureComponent {
         <ToolbarLeft>
           <ToolGroup>
             <IconButton
-              canHaveFocus={false}
+              noFocus
               icon={<IconArrow/>}
               isActive={this.isToolActive(TOOL.ARROW)}
               isDisabled={this.props.isDisabled}
               onClick={this.setArrowTool}/>
             <IconButton
-              canHaveFocus={false}
+              noFocus
               icon={<IconSelection/>}
               title="esper.tool.select"
               isActive={this.isToolActive(TOOL.SELECT)}
@@ -93,38 +93,38 @@ class EsperToolbar extends PureComponent {
           </ToolGroup>
           <ToolGroup>
             <IconButton
-              canHaveFocus={false}
+              noFocus
               icon={<IconRotate/>}
               title="esper.tool.rotate"
               isDisabled={this.props.isDisabled}
               onClick={this.handleRotate}/>
             <IconButton
-              canHaveFocus={false}
+              noFocus
               icon={<IconMirror/>}
               title="esper.tool.mirror"
               isDisabled={this.props.isDisabled}
               onClick={this.props.onMirrorChange}/>
             {/*<IconButton
-              canHaveFocus={false}
+              noFocus
               icon={<IconNut/>}
               isDisabled/>*/}
           </ToolGroup>
           <ToolGroup>
             <IconButton
-              canHaveFocus={false}
+              noFocus
               icon={<IconHand/>}
               title="esper.tool.pan"
               isActive={this.isToolActive(TOOL.PAN)}
               onClick={this.setPanTool}/>
             <IconButton
-              canHaveFocus={false}
+              noFocus
               icon={<IconFill/>}
               title="esper.mode.fill"
               isDisabled={this.props.isDisabled}
               isActive={this.isZoomToFill}
               onClick={this.setZoomToFill}/>
             <IconButton
-              canHaveFocus={false}
+              noFocus
               icon={<IconFit/>}
               title="esper.mode.fit"
               isDisabled={this.props.isDisabled}
@@ -133,7 +133,7 @@ class EsperToolbar extends PureComponent {
           </ToolGroup>
           <ToolGroup>
             <Slider
-              canHaveFocus={false}
+              noFocus
               value={this.props.zoom}
               min={this.props.minZoom}
               max={this.props.maxZoom}
