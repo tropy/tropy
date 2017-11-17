@@ -11,9 +11,8 @@ const getActiveImageProps = memo(
   ({ ui }) => ui.image,
   ({ nav }) => nav.photo,
   ({ nav }) => nav.selection,
-  ({ settings }) => settings.zoomMode,
-  (image, photo, selection, mode) =>
-    get(image, [selection || photo]) || { mode }
+  (image, photo, selection) =>
+    get(image, [selection || photo]) || {}
 )
 
 const getExpandedPhotos = memo(
