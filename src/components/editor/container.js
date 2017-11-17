@@ -77,13 +77,17 @@ class Editor extends PureComponent {
     const action = match(this.props.keymap, event)
 
     switch (action) {
-      case 'addLink':
-        return this.toolbar.setLinkContext(), true
       case null:
+        return
+      case 'addLink':
+        this.toolbar.setLinkContext()
         break
       default:
-        return this.exec(action)
+        if (!this.exec(action)) return
     }
+
+    event.stopPropagation()
+    return true
   }
 
   handleFocus = (event) => {
