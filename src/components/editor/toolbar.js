@@ -38,7 +38,6 @@ class EditorToolbar extends PureComponent {
     }
 
     this.cmd = {}
-    this.insert = {}
 
     for (const action of [
       'bold',
