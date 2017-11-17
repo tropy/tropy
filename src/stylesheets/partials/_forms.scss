@@ -64,6 +64,7 @@ fieldset {
 }
 
 .form-control {
+  display: block;
   flex: 1 1 auto;
   height: $input-height-base;
   padding: 0 $padding-base-horizontal;
