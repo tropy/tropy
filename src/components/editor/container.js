@@ -89,8 +89,8 @@ class Editor extends PureComponent {
     }
   }
 
-  handleCommand = (command, attrs) => {
-    if (this.exec(command, attrs)) {
+  handleCommand = (...args) => {
+    if (this.exec(...args)) {
       if (!this.state.hasViewFocus) this.focus()
     }
   }
