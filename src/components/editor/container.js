@@ -63,16 +63,15 @@ class Editor extends PureComponent {
     this.view.focus()
   }
 
-  exec(command, attrs) {
+  exec(action, ...args) {
     // TODO move me somplace sane.
     // addLink is a somewhat special command that triggers our GUI,
     // instead of being sent directly to PM
-    if (command === 'addLink') {
-      this.toolbar.linkButton.handleClick()
+    if (action === 'addLink') {
+      return this.toolbar.linkButton.handleClick()
     }
-    const cmd = attrs ? commands[command](attrs) : commands[command]
-    return (cmd || noop)(
-      this.view.state, this.view.dispatch, this.view
+    return (commands[action] || noop)(
+      this.view.state, this.view.dispatch, ...args
     )
   }
 

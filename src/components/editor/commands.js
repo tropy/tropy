@@ -22,16 +22,14 @@ module.exports = (schema) => {
   const marks = {}
 
   for (let name in schema.marks) {
-    marks[name] = cmd.toggleMark(schema.marks[name])
+    marks[name] = (state, dispatch, ...args) =>
+      cmd.toggleMark(schema.marks[name], ...args)(state, dispatch)
   }
 
   return {
     ...cmd,
     ...list,
     ...marks,
-
-    // some marks, e.g. 'link', accept attributes ({ href, title })
-    link: (attrs) => cmd.toggleMark(schema.marks.link, attrs),
 
     undo,
     redo,
