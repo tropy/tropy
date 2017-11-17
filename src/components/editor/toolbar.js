@@ -2,12 +2,11 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { func, instanceOf } = PropTypes
+const { func, instanceOf } = require('prop-types')
 const { Toolbar, ToolbarContext, ToolGroup } = require('../toolbar')
 const { IconButton } = require('../button')
 const { EditorState } = require('prosemirror-state')
-const { LinkToolbar, LinkButton } = require('./link')
+const { LinkToolbar } = require('./link')
 
 
 const {
@@ -24,7 +23,8 @@ const {
   IconBulletList,
   IconNumberedList,
   IconSink,
-  IconLift
+  IconLift,
+  IconLink
 } = require('../icons')
 
 
@@ -110,12 +110,14 @@ class EditorToolbar extends PureComponent {
     this.setState({ context: 'link' })
   }
 
-  handleToggleLink = (attrs) => {
+  handleLinkToggle = (attrs) => {
     this.props.onCommand('link', attrs)
+    this.setDefaultContext()
   }
 
-  addLinkButton = (button) => {
-    this.linkButton = button
+  handleLinkButtonClick = () => {
+    if (this.state.marks.link) this.handleLinkToggle()
+    else this.setLinkContext()
   }
 
   render() {
@@ -182,19 +184,19 @@ class EditorToolbar extends PureComponent {
                 onMouseDown={this.cmd.liftListItem}/>
             </ToolGroup>
             <ToolGroup>
-              <LinkButton
-                ref={this.addLinkButton}
-                state={this.props.state}
-                mark={this.state.marks.link}
-                callback={this.setLinkContext}
-                action={this.handleToggleLink}/>
+              <IconButton
+                noFocus
+                isActive={this.state.marks.link}
+                title="editor.commands.link.button"
+                icon={<IconLink/>}
+                onMouseDown={this.handleLinkButtonClick}/>
             </ToolGroup>
           </div>
         </ToolbarContext>
         <LinkToolbar
           isActive={this.hasLinkContext}
           onCancel={this.setDefaultContext}
-          onCommit={this.handleToggleLink}/>
+          onCommit={this.handleLinkToggle}/>
       </Toolbar>
     )
   }

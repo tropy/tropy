@@ -382,7 +382,8 @@ en:
       ul: Insert Bulleted List
       link:
         button: Insert Link
-        placeholder: Link target
+        target: Link target
+        title: Link title
       left: Align Left
       center: Center
       right: Align Right
