@@ -18,11 +18,10 @@ ButtonGroup.propTypes = {
 
 class IconButton extends PureComponent {
   get classes() {
-    return {
-      'btn': true,
-      'btn-icon': true,
-      'active': this.props.isActive
-    }
+    return ['btn', 'btn-icon', {
+      active: this.props.isActive,
+      disabled: this.props.isDisabled
+    }]
   }
 
   get node() {
@@ -38,30 +37,19 @@ class IconButton extends PureComponent {
   }
 
   get attributes() {
-    const {
-      noFocus,
-      isDisabled,
-      tabIndex,
-      onClick,
-      onMouseDown
-    } = this.props
-
-
     const attr = {
-      className: cx(this.classes),
-      disabled: isDisabled,
+      className: cx(...this.classes),
+      disabled: !this.props.noFocus && this.props.isDisabled,
       title: this.title
     }
 
-    if (!isDisabled) {
-      attr.onClick = onClick
-      attr.onMouseDown = onMouseDown
-    }
-
-    if (noFocus) {
+    if (this.props.noFocus) {
       attr.onMouseDown = this.handleMouseDown
+
     } else {
-      attr.tabIndex = tabIndex
+      attr.onClick = this.props.onClick
+      attr.onMouseDown = this.props.onMouseDown
+      attr.tabIndex = this.props.tabIndex
     }
 
     return attr
@@ -69,7 +57,10 @@ class IconButton extends PureComponent {
 
   handleMouseDown = (event) => {
     event.preventDefault()
-    if (this.props.onMouseDown) this.props.onMouseDown(event)
+
+    if (!this.props.isDisabled && this.props.onMouseDown) {
+      this.props.onMouseDown(event)
+    }
   }
 
   render() {
