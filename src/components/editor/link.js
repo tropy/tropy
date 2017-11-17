@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = require('react')
 const { bool, func } = require('prop-types')
 const { injectIntl, intlShape } = require('react-intl')
-const { ToolbarContext } = require('../toolbar')
+const { ToolbarContext, ToolbarLeft } = require('../toolbar')
 const { BufferedInput } = require('../input')
 
 
@@ -31,14 +31,20 @@ class LinkToolbar extends PureComponent {
     this.props.onCommit({ href })
   }
 
+  setContainer = (container) => {
+    this.container = container
+  }
+
   setInput = (input) => {
     this.input = input
   }
 
   render() {
     return (
-      <ToolbarContext isActive={this.props.isActive}>
-        <span className="toolbar-left form-inline">
+      <ToolbarContext
+        dom={this.setContainer}
+        isActive={this.props.isActive}>
+        <ToolbarLeft className="form-inline">
           <BufferedInput
             ref={this.setInput}
             className="form-control link-target"
@@ -49,7 +55,7 @@ class LinkToolbar extends PureComponent {
             onBlur={this.handleBlur}
             onCancel={this.props.onCancel}
             onCommit={this.handleTargetChange}/>
-        </span>
+        </ToolbarLeft>
       </ToolbarContext>
     )
   }
