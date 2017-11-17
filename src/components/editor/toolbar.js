@@ -32,7 +32,15 @@ class EditorToolbar extends PureComponent {
   constructor(props) {
     super(props)
 
-    for (let action of [
+    this.state = {
+      marks: this.getActiveMarks(props.state),
+      isLinkActive: false,
+    }
+
+    this.cmd = {}
+    this.insert = {}
+
+    for (const action of [
       'bold',
       'italic',
       'underline',
@@ -45,12 +53,7 @@ class EditorToolbar extends PureComponent {
       'liftListItem',
       'sinkListItem',
     ]) {
-      this[action] = () => this.props.onCommand(action)
-    }
-
-    this.state = {
-      marks: this.getActiveMarks(props.state),
-      isLinkActive: false,
+      this.cmd[action] = () => this.props.onCommand(action)
     }
   }
 
@@ -76,8 +79,8 @@ class EditorToolbar extends PureComponent {
     const { from, $from, to, empty } = state.selection
 
     return (empty) ?
-           !!type.isInSet(state.storedMarks || $from.marks()) :
-           state.doc.rangeHasMark(from, to, type)
+      !!type.isInSet(state.storedMarks || $from.marks()) :
+      state.doc.rangeHasMark(from, to, type)
   }
 
   renderMarkButton(name, icon) {
@@ -87,7 +90,7 @@ class EditorToolbar extends PureComponent {
         icon={icon}
         isActive={this.state.marks[name]}
         title={`editor.commands.${name}`}
-        onMouseDown={this[name]}/>
+        onMouseDown={this.cmd[name]}/>
     )
   }
 
@@ -124,7 +127,7 @@ class EditorToolbar extends PureComponent {
                 noFocus
                 icon={<IconQ/>}
                 title="editor.commands.blockquote"
-                onMouseDown={this.blockquote}/>
+                onMouseDown={this.cmd.blockquote}/>
             </ToolGroup>
             <ToolGroup>
               {this.renderMarkButton('superscript', <IconSup/>)}
@@ -137,41 +140,41 @@ class EditorToolbar extends PureComponent {
                 icon={<IconAlignLeft/>}
                 isActive={false}
                 title="editor.commands.left"
-                onMouseDown={this.left}/>
+                onMouseDown={this.cmd.left}/>
               <IconButton
                 isDisabled
                 noFocus
                 icon={<IconAlignCenter/>}
                 isActive={false}
                 title="editor.commands.center"
-                onMouseDown={this.center}/>
+                onMouseDown={this.cmd.center}/>
               <IconButton
                 isDisabled
                 noFocus
                 icon={<IconAlignRight/>}
                 isActive={false}
                 title="editor.commands.right"
-                onMouseDown={this.right}/>
+                onMouseDown={this.cmd.right}/>
             </ToolGroup>*/}
             <ToolGroup>
               <IconButton
                 noFocus
                 icon={<IconBulletList/>}
                 title="editor.commands.ul"
-                onMouseDown={this.ul}/>
+                onMouseDown={this.cmd.ul}/>
               <IconButton
                 noFocus
                 icon={<IconNumberedList/>}
                 title="editor.commands.ol"
-                onMouseDown={this.ol}/>
+                onMouseDown={this.cmd.ol}/>
               <IconButton
                 noFocus
                 icon={<IconSink/>}
-                onMouseDown={this.sinkListItem}/>
+                onMouseDown={this.cmd.sinkListItem}/>
               <IconButton
                 noFocus
                 icon={<IconLift/>}
-                onMouseDown={this.liftListItem}/>
+                onMouseDown={this.cmd.liftListItem}/>
             </ToolGroup>
             <ToolGroup>
               <LinkButton
