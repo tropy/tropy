@@ -103,12 +103,6 @@ $default-padding-horizontal: 12px !default;
     text-decoration: none;
   }
 
-  div {
-    &.editable {
-      height: 100%; // For empty fields
-    }
-  }
-
   .icon {
     flex: 0 0 auto;
     margin-left: $space-xs;
