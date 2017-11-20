@@ -110,9 +110,12 @@ class EditorToolbar extends PureComponent {
   }
 
   handleLinkToggle = (attrs) => {
-    // TODO expand selection to include full link (only when deleting?)
-    this.props.onCommand('expandSelection', { markType: 'link' })
-    this.props.onCommand('link', attrs)
+    // expand selection to include full link (only when deleting)
+    if (this.state.marks.link) {
+      this.props.onCommand('removeLink')
+    } else {
+      this.props.onCommand('link', attrs)
+    }
     this.setDefaultContext()
   }
 

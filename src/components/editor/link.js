@@ -69,18 +69,19 @@ class LinkToolbar extends PureComponent {
   }
 }
 
-function markExtend(cursor, markType) {
-  if (!cursor) return
-  let startIndex = cursor.index()
-  let endIndex = cursor.indexAfter()
+function markExtend(selection, markType) {
+  if (!selection) return
+  const pos = selection.$cursor || selection.$anchor
+  let startIndex = pos.index()
+  let endIndex = pos.indexAfter()
 
   const hasMark = (index) => {
     // clicked outside edge of tag.
-    if (index === cursor.parent.childCount) {
+    if (index === pos.parent.childCount) {
       index--
     }
-    const result = cursor.parent.child(index).marks.filter(
-      mark => mark.type.name === markType)
+    const result = pos.parent.child(index).marks.filter(
+      mark => mark.type.name === markType.name)
     return !!result.length
   }
 
@@ -90,15 +91,15 @@ function markExtend(cursor, markType) {
   while (startIndex > 0 && hasMark(startIndex)) {
     startIndex--
   }
-  while ( endIndex < cursor.parent.childCount && hasMark(endIndex)) {
+  while ( endIndex < pos.parent.childCount && hasMark(endIndex)) {
     endIndex++
   }
 
-  let startPos = cursor.start()
+  let startPos = pos.start()
   let endPos = startPos
 
   for (let i = 0; i < endIndex; i++) {
-    let size = cursor.parent.child(i).nodeSize
+    let size = pos.parent.child(i).nodeSize
     if (i < startIndex) startPos += size
     endPos += size
   }
