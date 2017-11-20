@@ -213,10 +213,13 @@ module.exports =  {
   ABOUT,
   ACTIVITY,
   ESPER,
+  FONTSIZE,
   GRID,
   ICON,
   INPUT,
   ITEM,
+  NOTE,
+  NOTEPAD,
   OPTION,
   PANEL,
   PHOTO,
@@ -227,8 +230,5 @@ module.exports =  {
   SIDEBAR,
   TILE,
   WINDOW,
-  WIZARD,
-  NOTE,
-  NOTEPAD,
-  FONTSIZE
+  WIZARD
 }
