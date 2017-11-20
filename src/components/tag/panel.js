@@ -61,8 +61,8 @@ class TagPanel extends PureComponent {
     this.container.focus()
   }
 
-  handleCancel = (isForced) => {
-    if (isForced) this.container.focus()
+  handleCancel = (hasChanged) => {
+    if (!hasChanged) this.container.focus()
   }
 
   handleTabFocus = () => {

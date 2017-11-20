@@ -86,9 +86,11 @@ class Input extends Component {
   }
 
   cancel(force) {
+    const { hasChanged } = this
+
     this.reset()
     this.hasBeenCancelled = true
-    this.props.onCancel(false, force)
+    this.props.onCancel(hasChanged, force)
   }
 
   clearResetTimeout() {

@@ -52,9 +52,9 @@ class MetadataField extends PureComponent {
     }, hasChanged)
   }
 
-  handleCancel = (isCommitUnchanged, hasBeenForced) => {
+  handleCancel = (hasChanged, hasBeenForced) => {
     if (hasBeenForced) this.props.onEditCancel()
-    else this.handleChange(this.props.text, !isCommitUnchanged)
+    else this.handleChange(this.props.text, hasChanged)
   }
 
   handleKeyDown = (event, input) => {
