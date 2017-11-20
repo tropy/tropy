@@ -73,12 +73,19 @@ class Completions extends Component {
 
   next() {
     const next = (this.ol != null) ? this.ol.next() : null
-    if (next != null) this.setState({ active: next.id })
+
+    if (next != null) {
+      this.setState({ active: next.id })
+      this.ol.scrollIntoView(next, false)
+    }
   }
 
   prev() {
     const prev = (this.ol != null) ? this.ol.prev() : null
-    if (prev != null) this.setState({ active: prev.id })
+    if (prev != null) {
+      this.setState({ active: prev.id })
+      this.ol.scrollIntoView(prev, false)
+    }
   }
 
   setOptionList = (ol) => {
