@@ -170,12 +170,17 @@ const ESPER = {
 }
 
 const INPUT = {
-  BORDER_WIDTH: 1
+  BORDER_WIDTH: 1,
+  FOCUS_SHADOW_WIDTH: 2
 }
 
 const OPTION = {
   HEIGHT: 26,
   LIST_MARGIN: 4
+}
+
+const POPUP = {
+  PADDING: 2
 }
 
 const WIZARD = {
