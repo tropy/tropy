@@ -5,7 +5,7 @@ const { Component } = React
 const { noop } = require('../common/util')
 const { AutoResizer } = require('./auto-resizer')
 const { Completions } = require('./completions')
-const { blank } = require('../common/util')
+const { blank, get } = require('../common/util')
 const {
   array, bool, func, number, oneOf, oneOfType, string
 } = require('prop-types')
@@ -131,36 +131,52 @@ class Input extends Component {
 
   handleKeyDown = (event) => {
     if (this.props.onKeyDown != null) {
-      if (this.props.onKeyDown(event, this)) return // abort
+      if (this.props.onKeyDown(event, this)) return
     }
 
+    // TODO Some Editables (e.g., in ItemTable expect active Inputs
+    // to swallow all key presses; ideally, they should remove their
+    // own key bindings while an Input is active.
     event.stopPropagation()
+
+    if (!this.handleCompletionsKeyDown(event)) {
+      switch (event.key) {
+        case 'Escape':
+          this.cancel(true)
+          break
+        case 'Enter':
+          this.commit(true)
+          break
+        default:
+          return
+      }
+    }
+
+    // Prevent default and global bindings if we handled the key!
+    event.preventDefault()
     event.nativeEvent.stopImmediatePropagation()
+  }
+
+  handleCompletionsKeyDown(event) {
+    const { completions } = this
+    if (completions == null) return false
 
     switch (event.key) {
-      case 'Escape':
-        this.cancel(true)
-        break
       case 'Enter':
-        if (this.completions != null && this.completions.isActive) {
-          this.handleCompletion(this.completions.state.active)
-        } else {
-          this.commit(true)
-        }
+        if (completions.state.active == null) return false
+        this.handleCompletion(completions.state.active)
         break
       case 'ArrowDown':
-        if (this.completions == null) return
-        else this.completions.next()
+        completions.next()
         break
       case 'ArrowUp':
-        if (this.completions == null) return
-        else this.completions.prev()
+        completions.prev()
         break
       default:
-        return
+        return false
     }
 
-    event.preventDefault()
+    return true
   }
 
   renderCompletions() {

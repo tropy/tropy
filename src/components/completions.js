@@ -47,10 +47,6 @@ class Completions extends Component {
     }
   }
 
-  get isActive() {
-    return this.state.active != null
-  }
-
   get isBlank() {
     return this.state.options.length === 0
   }
