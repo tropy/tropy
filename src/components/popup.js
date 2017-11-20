@@ -3,9 +3,10 @@
 const React = require('react')
 const { Component } = React
 const { createPortal } = require('react-dom')
-const { node, number, oneOf, shape, string } = require('prop-types')
-const { $, append, classes, element, remove } = require('../dom')
+const { func, node, number, oneOf, shape, string } = require('prop-types')
+const { $, append, classes, element, on, off, remove } = require('../dom')
 const cx = require('classnames')
+const throttle = require('lodash.throttle')
 
 
 class Popup extends Component {
@@ -17,11 +18,17 @@ class Popup extends Component {
 
   componentDidMount() {
     append(this.dom, $('#popup-root'))
+    on(window, 'resize', this.handleResize)
   }
 
   componentWillUnmount() {
     remove(this.dom)
+    off(window, 'resize', this.handleResize)
   }
+
+  handleResize = throttle(() => {
+    if (this.props.onResize) this.props.onResize()
+  }, 25)
 
   render() {
     return createPortal((
@@ -37,6 +44,7 @@ class Popup extends Component {
     anchor: oneOf(['top', 'right', 'bottom', 'left', 'float']),
     children: node.isRequired,
     className: string,
+    onResize: func,
     style: shape({
       top: number,
       left: number,

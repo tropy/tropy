@@ -89,6 +89,10 @@ class Completions extends Component {
     if (scrollIntoView) this.ol.scrollIntoView({ id }, false)
   }
 
+  handleResize = () => {
+    this.forceUpdate()
+  }
+
   setOptionList = (ol) => {
     this.ol = ol
   }
@@ -101,7 +105,8 @@ class Completions extends Component {
       <Popup
         anchor={anchor}
         className={this.props.className}
-        style={style}>
+        style={style}
+        onResize={this.handleResize}>
         <OptionList
           ref={this.setOptionList}
           onHover={this.handleActivate}
