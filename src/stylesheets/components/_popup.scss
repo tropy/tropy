@@ -17,12 +17,17 @@
     border: ($input-border-width + $popup-focus-shadow-width) solid $input-color-focus;
     border-radius: $input-border-radius-small + $popup-focus-shadow-width;
 
+    @each $alignment in "top", "bottom" {
+      &.#{$alignment} {
+        border-#{$alignment}: 0;
+        padding-#{$alignment}: $popup-padding;
+        border-#{$alignment}-left-radius: 0;
+        border-#{$alignment}-right-radius: 0;
+      }
+    }
+
     &.top {
       margin-top: (-$input-border-width - $popup-focus-shadow-width);
-      border-top: 0;
-      padding-top: $input-border-radius-small - $input-border-width;
-      border-top-left-radius: 0;
-      border-top-right-radius: 0;
 
       .option-list {
         margin-bottom: $option-list-margin;
@@ -31,10 +36,6 @@
 
     &.bottom {
       margin-top: ($input-border-width + $popup-focus-shadow-width);
-      border-bottom: 0;
-      padding-bottom: $input-border-radius-small - $input-border-width;
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
 
       .option-list {
         margin-top: $option-list-margin;
