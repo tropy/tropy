@@ -28,10 +28,6 @@
     padding: 0 8px;
     line-height: $line-height-large;
 
-    &:hover {
-      background: $option-hover-bg;
-    }
-
     &.active {
       background: $option-active-bg;
     }
