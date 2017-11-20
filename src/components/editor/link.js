@@ -5,7 +5,7 @@ const { PureComponent } = require('react')
 const { bool, func } = require('prop-types')
 const { injectIntl, intlShape } = require('react-intl')
 const { ToolbarContext, ToolbarLeft } = require('../toolbar')
-const { BufferedInput } = require('../input')
+const { Input } = require('../input')
 const { ensure } = require('../../dom')
 
 
@@ -46,7 +46,7 @@ class LinkToolbar extends PureComponent {
         dom={this.setContainer}
         isActive={this.props.isActive}>
         <ToolbarLeft className="form-inline">
-          <BufferedInput
+          <Input
             ref={this.setInput}
             className="form-control link-target"
             isDisabled={!this.props.isActive}
