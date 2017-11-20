@@ -114,6 +114,7 @@ class Updater {
     this.isUpdateReady = true
     this.isChecking = false
     this.app.broadcast('dispatch', flash.show(release))
+    this.stop()
   }
 }
 
