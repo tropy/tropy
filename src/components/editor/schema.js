@@ -15,10 +15,11 @@ const {
 } = basic.nodes
 
 const {
-  link,
   em,
   strong
 } = basic.marks
+
+const link = { ...basic.marks.link, inclusive: true }
 
 const nodes = {
   doc,
@@ -45,6 +46,8 @@ const nodes = {
     content: 'paragraph block*'
   }
 }
+
+
 
 const marks = {
   link,
