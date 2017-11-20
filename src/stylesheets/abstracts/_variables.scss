@@ -134,6 +134,7 @@ $input-height-base: $space-lg + 2 * $shim;
 $input-height-large: ($space-xl + $space-xs);
 $input-border-radius-small: $border-radius-small;
 $checkbox-size: 14px;
+$input-border-width: const("INPUT.BORDER_WIDTH") * 1px;
 
 
 // Z-index master list
@@ -301,7 +302,14 @@ $clear-button-size: 14px;
 // Popup
 // --------------------------------------------------
 
-$popup-focus-shadow-width: 2px;
+$popup-focus-shadow-width: const("INPUT.FOCUS_SHADOW_WIDTH") * 1px;
+$popup-padding: const("POPUP.PADDING");
+
+
+// Option
+// --------------------------------------------------
+
+$option-list-margin: const("OPTION.LIST_MARGIN") * 1px;
 
 
 // Debug
