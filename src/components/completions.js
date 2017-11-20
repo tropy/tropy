@@ -75,21 +75,19 @@ class Completions extends Component {
     }, [])
   }
 
-  next() {
+  next = () => {
     const next = (this.ol != null) ? this.ol.next() : null
-
-    if (next != null) {
-      this.setState({ active: next.id })
-      this.ol.scrollIntoView(next, false)
-    }
+    if (next != null) this.handleActivate(next.id, null, true)
   }
 
-  prev() {
+  prev = () => {
     const prev = (this.ol != null) ? this.ol.prev() : null
-    if (prev != null) {
-      this.setState({ active: prev.id })
-      this.ol.scrollIntoView(prev, false)
-    }
+    if (prev != null) this.handleActivate(prev.id, null, true)
+  }
+
+  handleActivate = (id, _, scrollIntoView) => {
+    this.setState({ active: id })
+    if (scrollIntoView) this.ol.scrollIntoView({ id }, false)
   }
 
   setOptionList = (ol) => {
@@ -107,6 +105,7 @@ class Completions extends Component {
         style={style}>
         <OptionList
           ref={this.setOptionList}
+          onHover={this.handleActivate}
           onSelect={this.props.onSelect}
           selection={this.state.active}
           values={this.state.options}/>
@@ -128,7 +127,7 @@ class Completions extends Component {
 
   static defaultProps = {
     match: startsWith,
-    maxRows: 5,
+    maxRows: 3,
     minQueryLength: 0
   }
 }

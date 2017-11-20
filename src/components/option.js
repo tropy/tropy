@@ -13,13 +13,18 @@ class Option extends Component {
   handleMouseDown = (event) => {
     event.preventDefault()
     event.stopPropagation()
-    this.props.onClick(this.props.id)
+    this.props.onClick(this.props.id, this.props.value)
+  }
+
+  handleMouseMove = (event) => {
+    this.props.onHover(event, this.props.isSelected, this.props.id, this.props.value)
   }
 
   render() {
     return (
       <li
         className={cx('option', { active: this.props.isSelected })}
+        onMouseMove={this.handleMouseMove}
         onMouseDown={this.handleMouseDown}>
         {this.props.value}
       </li>
@@ -30,16 +35,13 @@ class Option extends Component {
     id: oneOfType([number, string]).isRequired,
     isSelected: bool,
     onClick: func.isRequired,
+    onHover: func.isRequired,
     value: string.isRequired
   }
 }
 
 
 class OptionList extends Iterator {
-  head() {
-    return this.props.selection
-  }
-
   getIterables() {
     return this.props.values
   }
@@ -52,11 +54,31 @@ class OptionList extends Iterator {
     return OPTION.HEIGHT
   }
 
+  hasMoved({ clientX, clientY }) {
+    try {
+      return (clientX !== this.lastX || clientY !== this.lastY)
+    } finally {
+      this.lastX = clientX
+      this.lastY = clientY
+    }
+  }
+
+  head() {
+    return this.props.selection
+  }
+
+
   isSelected(option) {
     return this.props.selection != null && this.props.selection === option.id
   }
 
   handleFocus = false
+
+  handleHover = (event, isSelected, ...args) => {
+    if (this.hasMoved(event) && !isSelected) {
+      this.props.onHover(...args)
+    }
+  }
 
   render() {
     const { height } = this.state
@@ -73,6 +95,7 @@ class OptionList extends Iterator {
                   id={option.id}
                   isSelected={this.isSelected(option)}
                   onClick={this.props.onSelect}
+                  onHover={this.handleHover}
                   value={option.value}/>)}
             </ul>
           </div>
@@ -83,6 +106,7 @@ class OptionList extends Iterator {
 
   static propTypes = {
     selection: oneOfType([number, string]),
+    onHover: func.isRequired,
     onSelect: func.isRequired,
     values: array.isRequired
   }
