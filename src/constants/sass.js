@@ -220,6 +220,7 @@ module.exports =  {
   OPTION,
   PANEL,
   PHOTO,
+  POPUP,
   PREFS,
   ROW,
   SCROLLBAR,
