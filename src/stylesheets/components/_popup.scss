@@ -16,7 +16,6 @@
     margin: -$popup-focus-shadow-width;
     border: ($input-border-width + $popup-focus-shadow-width) solid $input-color-focus;
     border-radius: $input-border-radius-small + $popup-focus-shadow-width;
-    background: red;
 
     &.top {
       margin-top: (-$input-border-width - $popup-focus-shadow-width);
@@ -36,7 +35,6 @@
       padding-bottom: $input-border-radius-small - $input-border-width;
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
-      background: green;
 
       .option-list {
         margin-top: $option-list-margin;
