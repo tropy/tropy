@@ -5,7 +5,6 @@ const { PureComponent } = React
 const { injectIntl, intlShape } = require('react-intl')
 const { Input } = require('../input')
 const { blank } = require('../../common/util')
-const { equals } = require('../../collate')
 const { arrayOf, bool, func, number, shape, string } = require('prop-types')
 
 
@@ -26,7 +25,9 @@ class TagAdder extends PureComponent {
 
   handleChange = (name) => {
     if (blank(name)) return this.props.onCancel()
-    const tag = this.props.tags.find(t => equals(name, t.name))
+
+    const query = name.trim().toLowerCase()
+    const tag = this.props.tags.find(t => query === t.name.toLowerCase())
 
     if (tag) {
       this.props.onAdd(tag)
