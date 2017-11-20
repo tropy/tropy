@@ -88,7 +88,8 @@ class OptionList extends Iterator {
   }
 
   static getHeight(rows, maxRows) {
-    return (rows) ? min(rows, maxRows || rows) * OPTION.HEIGHT + OPTION.LIST_MARGIN : 0
+    return (rows) ?
+      min(rows, maxRows || rows) * OPTION.HEIGHT + OPTION.LIST_MARGIN : 0
   }
 }
 
