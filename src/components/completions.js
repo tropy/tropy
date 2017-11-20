@@ -32,18 +32,22 @@ class Completions extends Component {
     }
   }
 
-  getPopupStyle() {
-    const { input } = this.props
-    if (!input) return
+  getPopupBounds() {
+    if (this.props.input == null) return
 
-    const { options } = this.state
-    const { bottom, left, width } = bounds(input)
+    const { top, bottom, left, width } = bounds(this.props.input)
+    const rows = this.state.options.length
+
+    const HEIGHT = document.documentElement.clientHeight
+    const height = OptionList.getHeight(rows, this.props.maxRows)
+    const anchor = (bottom + height <= HEIGHT) ? 'top' : 'bottom'
 
     return {
+      anchor,
+      top: (anchor === 'top') ? bottom : top - height,
       left,
-      top: bottom,
-      width: width - 2 * INPUT.BORDER_WIDTH,
-      height: OptionList.getHeight(options.length)
+      height,
+      width: width - 2 * INPUT.BORDER_WIDTH
     }
   }
 
@@ -93,11 +97,14 @@ class Completions extends Component {
   }
 
   render() {
-    return this.isVisible && (
+    if (!this.isVisible) return null
+    const { anchor, ...style } = this.getPopupBounds()
+
+    return (
       <Popup
-        anchor="top"
+        anchor={anchor}
         className={this.props.className}
-        style={this.getPopupStyle()}>
+        style={style}>
         <OptionList
           ref={this.setOptionList}
           onSelect={this.props.onSelect}
@@ -113,6 +120,7 @@ class Completions extends Component {
     input: instanceOf(HTMLElement).isRequired,
     isVisibleWhenBlank: bool,
     match: func.isRequired,
+    maxRows: number.isRequired,
     minQueryLength: number.isRequired,
     onSelect: func.isRequired,
     query: string.isRequired
@@ -120,6 +128,7 @@ class Completions extends Component {
 
   static defaultProps = {
     match: startsWith,
+    maxRows: 5,
     minQueryLength: 0
   }
 }
