@@ -2,20 +2,22 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { arrayOf, func, number, object, shape, string } = require('prop-types')
 const { connect } = require('react-redux')
 const { TagList } = require('./list')
 const { TagAdder } = require('./adder')
 const { toId } = require('../../common/util')
-const { seq, map, filter, compose } = require('transducers.js')
 const { TABS } = require('../../constants')
 const { match } = require('../../keymap')
 const { on, off } = require('../../dom')
+const {
+  arrayOf, bool, func, number, object, shape, string
+} = require('prop-types')
 
 const {
   getAllTags,
   getItemTags,
-  getSelectedItems
+  getSelectedItems,
+  getTagCompletions
 } = require('../../selectors')
 
 
@@ -37,6 +39,16 @@ class TagPanel extends PureComponent {
     return this.isEmpty ? -1 : TABS.TagPanel
   }
 
+  getTaggedIds(tag, invert = false) {
+    return this.props.items.reduce((ids, item) => {
+      if (item.tags.includes(tag.id) !== invert) {
+        ids.push(item.id)
+      }
+
+      return ids
+    }, [])
+  }
+
   setContainer = (container) => {
     this.container = container
   }
@@ -49,8 +61,8 @@ class TagPanel extends PureComponent {
     this.container.focus()
   }
 
-  handleCancel = (isForced) => {
-    if (isForced) this.container.focus()
+  handleCancel = (hasChanged) => {
+    if (!hasChanged) this.container.focus()
   }
 
   handleTabFocus = () => {
@@ -64,18 +76,18 @@ class TagPanel extends PureComponent {
   }
 
   handleTagRemove = (tag) => {
-    const present = seq(this.props.items,
-      compose(filter(it => it.tags.includes(tag.id)), map(toId)))
+    const id = this.getTaggedIds(tag)
 
-    this.props.onItemTagRemove({ id: present, tags: [tag.id] })
+    if (id.length > 0) {
+      this.props.onItemTagRemove({ id, tags: [tag.id] })
+    }
   }
 
   handleTagAdd = (tag) => {
-    if (tag.mixed !== false) {
-      const missing = seq(this.props.items,
-        compose(filter(it => !it.tags.includes(tag.id)), map(toId)))
+    const id = this.getTaggedIds(tag, true)
 
-      this.props.onItemTagAdd({ id: missing, tags: [tag.id] })
+    if (id.length > 0) {
+      this.props.onItemTagAdd({ id, tags: [tag.id] })
     }
   }
 
@@ -127,8 +139,10 @@ class TagPanel extends PureComponent {
           onContextMenu={this.handleContextMenu}/>
         <TagAdder
           ref={this.setAdder}
-          tags={this.props.allTags}
+          isDisabled={this.props.isDisabled}
+          completions={this.props.completions}
           count={this.props.items.length}
+          tags={this.props.allTags}
           onAdd={this.handleTagAdd}
           onBlur={this.handleBlur}
           onFocus={this.props.onActivate}
@@ -140,7 +154,9 @@ class TagPanel extends PureComponent {
 
   static propTypes = {
     allTags: arrayOf(object).isRequired,
+    completions: arrayOf(string).isRequired,
     edit: object,
+    isDisabled: bool,
     items: arrayOf(object).isRequired,
     keymap: object.isRequired,
     tags: arrayOf(shape({
@@ -165,6 +181,7 @@ module.exports = {
   TagPanel: connect(
     (state) => ({
       allTags: getAllTags(state),
+      completions: getTagCompletions(state),
       edit: state.edit.tabTag,
       items: getSelectedItems(state),
       tags: getItemTags(state)

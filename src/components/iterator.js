@@ -34,16 +34,24 @@ class Iterator extends PureComponent {
   }
 
   componentDidMount() {
-    this.ro = new ResizeObserver(([e]) => {
-      this.handleResize(e.contentRect)
-    })
+    if (this.handleResize) {
+      this.ro = new ResizeObserver(([e]) => {
+        this.handleResize(e.contentRect)
+      })
+    } else {
+      this.update()
+    }
+
     this.observe(this.container)
   }
 
   componentWillUnmount() {
     this.unobserve(this.container)
-    this.ro.disconnect()
-    this.ro = null
+
+    if (this.ro != null) {
+      this.ro.disconnect()
+      this.ro = null
+    }
   }
 
   componentWillReceiveProps(props) {
@@ -55,21 +63,33 @@ class Iterator extends PureComponent {
 
   observe(container) {
     if (container != null) {
-      on(container, 'tab:focus', this.handleFocus)
-      on(container, 'scroll', this.handleScroll, {
-        capture: true, passive: true
-      })
+      if (this.handleFocus) {
+        on(container, 'tab:focus', this.handleFocus)
+      }
 
-      this.ro.observe(container)
+      if (this.handleScroll) {
+        on(container, 'scroll', this.handleScroll, {
+          capture: true, passive: true
+        })
+      }
+
+      if (this.ro != null) {
+        this.ro.observe(container)
+      }
     }
   }
 
   unobserve(container) {
     if (container != null) {
-      off(container, 'tab:focus', this.handleFocus)
-      off(container, 'scroll', this.handleScroll, {
-        capture: true, passive: true
-      })
+      if (this.handleFocus) {
+        off(container, 'tab:focus', this.handleFocus)
+      }
+
+      if (this.handleScroll) {
+        off(container, 'scroll', this.handleScroll, {
+          capture: true, passive: true
+        })
+      }
 
       if (this.ro != null) {
         this.ro.unobserve(container)
@@ -117,6 +137,14 @@ class Iterator extends PureComponent {
     }
   }
 
+  get width() {
+    return this.viewport.width
+  }
+
+  get height() {
+    return this.viewport.height
+  }
+
   get isVertical() {
     return this.state.cols === 1
   }
@@ -135,6 +163,10 @@ class Iterator extends PureComponent {
 
   get size() {
     return this.getIterables().length
+  }
+
+  get transform() {
+    return `translate3d(0,${this.state.offset}px,0)`
   }
 
   get orientation() {
@@ -166,7 +198,7 @@ class Iterator extends PureComponent {
   }
 
   getColumns(size = this.props.size) {
-    return floor(this.viewport.width / this.getTileSize(size)) || 1
+    return floor(this.width / this.getTileSize(size)) || 1
   }
 
   getIterables() {
@@ -192,7 +224,7 @@ class Iterator extends PureComponent {
   }
 
   getViewportRows(size = this.props.size) {
-    return ceil(this.viewport.height / this.getRowHeight(size))
+    return ceil(this.height / this.getRowHeight(size))
   }
 
   getTileSize(size = this.props.size) {
@@ -208,6 +240,10 @@ class Iterator extends PureComponent {
     return {
       from, size, to: min(from + size, this.size)
     }
+  }
+
+  getIterableProps(item) {
+    return item
   }
 
   mapIterableRange(fn, range = this.getIterableRange()) {
@@ -279,15 +315,15 @@ class Iterator extends PureComponent {
   }
 
   scrollPageUp() {
-    this.scrollBy(-this.viewport.height)
+    this.scrollBy(-this.height)
   }
 
   scrollPageDown() {
-    this.scrollBy(this.viewport.height)
+    this.scrollBy(this.height)
   }
 
   scrollToEnd() {
-    this.scroll(this.state.height - this.viewport.height)
+    this.scroll(this.state.height - this.height)
   }
 
   scrollIntoView(item = this.current(), force = true) {
@@ -295,7 +331,7 @@ class Iterator extends PureComponent {
     if (idx === -1) return
 
     const { cols, rowHeight } = this.state
-    const { height } = this.viewport
+    const { height } = this
     const top = this.container.scrollTop
 
     let offset = floor(idx / cols) * rowHeight
@@ -357,7 +393,7 @@ class Iterator extends PureComponent {
   static propTypes = {
     isDisabled: bool,
     overscan: number.isRequired,
-    size: number.isRequired
+    size: number
   }
 
   static defaultProps = {

@@ -2,6 +2,11 @@
 // Editable
 // --------------------------------------------------
 
+.editable {
+  flex: 1 1 auto;
+  min-width: 0; // Fix truncation
+}
+
 .editable-control {
   flex: 1 1 auto;
   font: {

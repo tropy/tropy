@@ -134,6 +134,7 @@ $input-height-base: $space-lg + 2 * $shim;
 $input-height-large: ($space-xl + $space-xs);
 $input-border-radius-small: $border-radius-small;
 $checkbox-size: 14px;
+$input-border-width: const("INPUT.BORDER_WIDTH") * 1px;
 
 
 // Z-index master list
@@ -147,7 +148,8 @@ $zindex-esper-header:    1030;
 $zindex-drop-target:     1040;
 $zindex-drag-layer:      1050;
 $zindex-flash:           1060;
-$zindex-window-controls: 1070;
+$zindex-popup:           1070;
+$zindex-window-controls: 1080;
 
 
 // Darwin window controls
@@ -295,6 +297,19 @@ $add-tag-transition:                0.3s ease;
 // --------------------------------------------------
 
 $clear-button-size: 14px;
+
+
+// Popup
+// --------------------------------------------------
+
+$popup-focus-shadow-width: const("INPUT.FOCUS_SHADOW_WIDTH") * 1px;
+$popup-padding: const("POPUP.PADDING");
+
+
+// Option
+// --------------------------------------------------
+
+$option-list-margin: const("OPTION.LIST_MARGIN") * 1px;
 
 
 // Debug

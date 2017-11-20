@@ -169,6 +169,20 @@ const ESPER = {
   }
 }
 
+const INPUT = {
+  BORDER_WIDTH: 1,
+  FOCUS_SHADOW_WIDTH: 2
+}
+
+const OPTION = {
+  HEIGHT: 26,
+  LIST_MARGIN: 4
+}
+
+const POPUP = {
+  PADDING: 2
+}
+
 const WIZARD = {
   WIDTH: 456,
   HEIGHT: 580
@@ -199,19 +213,22 @@ module.exports =  {
   ABOUT,
   ACTIVITY,
   ESPER,
+  FONTSIZE,
   GRID,
   ICON,
+  INPUT,
   ITEM,
+  NOTE,
+  NOTEPAD,
+  OPTION,
   PANEL,
   PHOTO,
+  POPUP,
   PREFS,
   ROW,
   SCROLLBAR,
   SIDEBAR,
   TILE,
   WINDOW,
-  WIZARD,
-  NOTE,
-  NOTEPAD,
-  FONTSIZE
+  WIZARD
 }

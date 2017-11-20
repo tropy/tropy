@@ -2,9 +2,10 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { arrayOf, func, number, shape, string } = require('prop-types')
 const { injectIntl, intlShape } = require('react-intl')
-const { Editable } = require('../editable')
+const { Input } = require('../input')
+const { blank } = require('../../common/util')
+const { arrayOf, bool, func, number, shape, string } = require('prop-types')
 
 
 class TagAdder extends PureComponent {
@@ -14,20 +15,7 @@ class TagAdder extends PureComponent {
   }
 
   focus() {
-    this.editable.focus()
-  }
-
-  handleChange = (name) => {
-    const pat = new RegExp(`^${name}$`, 'i')
-    const tag = this.props.tags.find(t => pat.test(t.name))
-
-    if (tag) {
-      this.props.onAdd(tag)
-    } else {
-      this.props.onCreate({ name })
-    }
-
-    this.editable.input.reset()
+    this.input.focus()
   }
 
   handleBlur = (event) => {
@@ -35,33 +23,49 @@ class TagAdder extends PureComponent {
     return true // cancel on blur
   }
 
-  setEditable = (editable) => {
-    this.editable = editable
+  handleChange = (name) => {
+    if (blank(name)) return this.props.onCancel()
+
+    const query = name.trim().toLowerCase()
+    const tag = this.props.tags.find(t => query === t.name.toLowerCase())
+
+    if (tag) {
+      this.props.onAdd(tag)
+    } else {
+      this.props.onCreate({ name })
+    }
+
+    this.input.reset()
+  }
+
+  setInput = (input) => {
+    this.input = input
   }
 
   render() {
     return (
       <div className="add-tag-container">
-        <Editable
-          ref={this.setEditable}
-          isEditing
-          isRequired
-          autofocus={false}
-          tabIndex={-1}
-          type="text"
-          value={''}
+        <Input
+          ref={this.setInput}
+          className="form-control"
+          completions={this.props.completions}
+          isDisabled={this.props.isDisabled}
           placeholder={this.placeholder}
+          tabIndex={-1}
+          value=""
           onBlur={this.handleBlur}
           onFocus={this.props.onFocus}
           onCancel={this.props.onCancel}
-          onChange={this.handleChange}/>
+          onCommit={this.handleChange}/>
       </div>
     )
   }
 
   static propTypes = {
     count: number.isRequired,
+    completions: arrayOf(string).isRequired,
     intl: intlShape.isRequired,
+    isDisabled: bool,
     tags: arrayOf(shape({
       id: number.isRequired,
       name: string.isRequired

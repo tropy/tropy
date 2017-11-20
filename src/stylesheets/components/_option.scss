@@ -1,0 +1,34 @@
+//
+// Option list
+// --------------------------------------------------
+
+.option-list {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+
+  .scroll-container {
+    position: relative;
+    z-index: 0;
+  }
+
+  .runway {
+    contain: strict;
+  }
+
+  .viewport {
+    contain: content;
+    will-change: transform;
+  }
+
+  .option {
+    position: relative;
+    contain: content;
+    padding: 0 8px;
+    line-height: $line-height-large;
+
+    &.active {
+      background: $option-active-bg;
+    }
+  }
+}

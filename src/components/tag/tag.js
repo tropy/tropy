@@ -85,7 +85,7 @@ class Tag extends PureComponent {
             value={tag.name}
             isRequired
             resize
-            isEditing={isEditing}
+            isActive={isEditing}
             onCancel={onEditCancel}
             onChange={this.handleChange}/>
         </div>

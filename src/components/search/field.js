@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { bool, func, string } = require('prop-types')
 const { IconSearch, IconXSmall } = require('../icons')
 const { IconButton } = require('../button')
-const { BufferedInput } = require('../input')
+const { Input } = require('../input')
 const { TABS } = require('../../constants')
 const debounce = require('lodash.debounce')
 
@@ -34,7 +34,7 @@ class SearchField extends PureComponent {
     return (
       <div className="search">
         <IconSearch/>
-        <BufferedInput
+        <Input
           className="search-input form-control"
           isDisabled={isDisabled}
           tabIndex={TABS.SearchField}
