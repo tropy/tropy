@@ -27,7 +27,8 @@ class Completions extends Component {
 
   getStateFromProps(props = this.props) {
     return {
-      completions: this.filter(props)
+      active: null,
+      options: this.filter(props)
     }
   }
 
@@ -35,19 +36,23 @@ class Completions extends Component {
     const { input } = this.props
     if (!input) return
 
-    const { completions } = this.state
+    const { options } = this.state
     const { bottom, left, width } = bounds(input)
 
     return {
       left,
       top: bottom,
       width: width - 2 * INPUT.BORDER_WIDTH,
-      height: OptionList.getHeight(completions.length)
+      height: OptionList.getHeight(options.length)
     }
   }
 
+  get isActive() {
+    return this.state.active != null
+  }
+
   get isBlank() {
-    return this.state.completions.length === 0
+    return this.state.options.length === 0
   }
 
   get isVisible() {
@@ -57,10 +62,31 @@ class Completions extends Component {
 
   filter({ completions, match, query } = this.props) {
     query = query.trim().toLowerCase()
+    const matchAll = blank(query)
 
-    return blank(query) ?
-      completions :
-      completions.filter(value => match(value, query))
+    // TODO add options.idx for cached look-ups!
+
+    return completions.reduce((options, value) => {
+      if (matchAll || match(value, query)) {
+        options.push({ id: value, value })
+      }
+
+      return options
+    }, [])
+  }
+
+  next() {
+    const next = (this.ol != null) ? this.ol.next() : null
+    if (next != null) this.setState({ active: next.id })
+  }
+
+  prev() {
+    const prev = (this.ol != null) ? this.ol.prev() : null
+    if (prev != null) this.setState({ active: prev.id })
+  }
+
+  setOptionList = (ol) => {
+    this.ol = ol
   }
 
   render() {
@@ -70,8 +96,10 @@ class Completions extends Component {
         className={this.props.className}
         style={this.getPopupStyle()}>
         <OptionList
+          ref={this.setOptionList}
           onSelect={this.props.onSelect}
-          values={this.state.completions}/>
+          selection={this.state.active}
+          values={this.state.options}/>
       </Popup>
     )
   }

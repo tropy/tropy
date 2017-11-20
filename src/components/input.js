@@ -44,6 +44,10 @@ class Input extends Component {
     return this.state.hasFocus && this.props.completions.length > 0
   }
 
+  setCompletions = (completions) => {
+    this.completions = completions
+  }
+
   setInput = (input) => {
     if (input != null && this.props.autofocus) {
       input.focus()
@@ -127,22 +131,36 @@ class Input extends Component {
 
   handleKeyDown = (event) => {
     if (this.props.onKeyDown != null) {
-      if (this.props.onKeyDown(event, this)) {
-        return
-      }
+      if (this.props.onKeyDown(event, this)) return // abort
     }
+
+    event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
 
     switch (event.key) {
       case 'Escape':
         this.cancel(true)
         break
       case 'Enter':
-        this.commit(true)
+        if (this.completions != null && this.completions.isActive) {
+          this.handleCompletion(this.completions.state.active)
+        } else {
+          this.commit(true)
+        }
         break
+      case 'ArrowDown':
+        if (this.completions == null) return
+        else this.completions.next()
+        break
+      case 'ArrowUp':
+        if (this.completions == null) return
+        else this.completions.prev()
+        break
+      default:
+        return
     }
 
-    event.stopPropagation()
-    event.nativeEvent.stopImmediatePropagation()
+    event.preventDefault()
   }
 
   renderCompletions() {
@@ -151,6 +169,7 @@ class Input extends Component {
 
     return (
       <Completions
+        ref={this.setCompletions}
         className={className ? `${className}-completions` : null}
         completions={this.props.completions}
         input={this.input}

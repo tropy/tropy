@@ -3,22 +3,23 @@
 const React = require('react')
 const { Component } = React
 const { Iterator } = require('./iterator')
-const { array, func, string } = require('prop-types')
 const { OPTION } = require('../constants/sass')
 const { min } = Math
+const cx = require('classnames')
+const { array, bool, func, number, oneOfType, string } = require('prop-types')
 
 
 class Option extends Component {
   handleMouseDown = (event) => {
     event.preventDefault()
     event.stopPropagation()
-    this.props.onClick(this.props.value)
+    this.props.onClick(this.props.id)
   }
 
   render() {
     return (
       <li
-        className="option"
+        className={cx('option', { active: this.props.isSelected })}
         onMouseDown={this.handleMouseDown}>
         {this.props.value}
       </li>
@@ -26,6 +27,8 @@ class Option extends Component {
   }
 
   static propTypes = {
+    id: oneOfType([number, string]).isRequired,
+    isSelected: bool,
     onClick: func.isRequired,
     value: string.isRequired
   }
@@ -33,6 +36,10 @@ class Option extends Component {
 
 
 class OptionList extends Iterator {
+  head() {
+    return this.props.selection
+  }
+
   getIterables() {
     return this.props.values
   }
@@ -43,6 +50,10 @@ class OptionList extends Iterator {
 
   getRowHeight() {
     return OPTION.HEIGHT
+  }
+
+  isSelected(option) {
+    return this.props.selection != null && this.props.selection === option.id
   }
 
   handleFocus = false
@@ -56,11 +67,13 @@ class OptionList extends Iterator {
         <div className="scroll-container" ref={this.setContainer}>
           <div className="runway" style={{ height }}>
             <ul className="viewport" style={{ transform }}>
-              {this.mapIterableRange((value) =>
+              {this.mapIterableRange(option =>
                 <Option
-                  key={value}
+                  key={option.id}
+                  id={option.id}
+                  isSelected={this.isSelected(option)}
                   onClick={this.props.onSelect}
-                  value={value}/>)}
+                  value={option.value}/>)}
             </ul>
           </div>
         </div>
@@ -69,6 +82,7 @@ class OptionList extends Iterator {
   }
 
   static propTypes = {
+    selection: oneOfType([number, string]),
     onSelect: func.isRequired,
     values: array.isRequired
   }
