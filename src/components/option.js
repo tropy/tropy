@@ -17,7 +17,9 @@ class Option extends Component {
   }
 
   handleMouseMove = (event) => {
-    this.props.onHover(event, this.props.isSelected, this.props.id, this.props.value)
+    this.props.onHover(
+      event, this.props.isSelected, this.props.id, this.props.value
+    )
   }
 
   render() {
