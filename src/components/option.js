@@ -111,9 +111,8 @@ class OptionList extends Iterator {
     values: array.isRequired
   }
 
-  static getHeight(rows, maxRows) {
-    return (rows) ?
-      min(rows, maxRows || rows) * OPTION.HEIGHT + OPTION.LIST_MARGIN : 0
+  static getHeight(rows, maxRows = rows) {
+    return (rows) ? min(rows, maxRows) * OPTION.HEIGHT + OPTION.LIST_MARGIN : 0
   }
 }
 
