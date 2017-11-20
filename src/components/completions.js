@@ -5,9 +5,9 @@ const { Component } = React
 const { Popup } = require('./popup')
 const { OptionList } = require('./option')
 const { blank } = require('../common/util')
-const { bounds } = require('../dom')
+const { bounds, viewport } = require('../dom')
 const { startsWith } = require('../collate')
-const { INPUT } = require('../constants/sass')
+const { INPUT, POPUP } = require('../constants/sass')
 const {
   arrayOf, bool, func, instanceOf, number, string
 } = require('prop-types')
@@ -38,16 +38,15 @@ class Completions extends Component {
     const { top, bottom, left, width } = bounds(this.props.input)
     const rows = this.state.options.length
 
-    const HEIGHT = document.documentElement.clientHeight
-    const height = OptionList.getHeight(rows, this.props.maxRows)
-    const anchor = (bottom + height <= HEIGHT) ? 'top' : 'bottom'
+    const height = OptionList.getHeight(rows, this.props.maxRows) + PAD.height
+    const anchor = (bottom + height <= viewport().height) ? 'top' : 'bottom'
 
     return {
       anchor,
       top: (anchor === 'top') ? bottom : top - height,
       left,
       height,
-      width: width - 2 * INPUT.BORDER_WIDTH
+      width: width + PAD.width
     }
   }
 
@@ -131,6 +130,14 @@ class Completions extends Component {
     minQueryLength: 0
   }
 }
+
+const PAD = {
+  height: POPUP.PADDING
+    + INPUT.FOCUS_SHADOW_WIDTH
+    + INPUT.BORDER_WIDTH,
+  width: 2 * INPUT.FOCUS_SHADOW_WIDTH
+}
+
 
 module.exports = {
   Completions
