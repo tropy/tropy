@@ -20,12 +20,6 @@ const markExtend = (selection, markType) => {
   if (!hasMark(startIndex) && !hasMark(endIndex)) {
     return
   }
-  while (startIndex > 0 && hasMark(startIndex)) {
-    startIndex--
-  }
-  while ( endIndex < pos.parent.childCount && hasMark(endIndex)) {
-    endIndex++
-  }
 
   let startPos = pos.start()
   let endPos = startPos
