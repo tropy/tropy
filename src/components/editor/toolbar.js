@@ -114,7 +114,7 @@ class EditorToolbar extends PureComponent {
     if (this.state.marks.link) {
       this.props.onCommand('removeLink')
     } else {
-      this.props.onCommand('link', attrs)
+      this.props.onCommand('insertLink', attrs)
     }
     this.setDefaultContext()
   }

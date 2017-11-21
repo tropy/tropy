@@ -114,6 +114,18 @@ module.exports = (schema) => {
       cmd.joinForward
     ),
 
+    insertLink: (state, dispatch, attrs) => {
+      const url = attrs.href
+      const from = state.selection.$cursor.pos
+      const to = from + url.length
+      const mark = schema.marks.link.create(attrs)
+      dispatch(
+        state
+          .tr
+          .insertText(url, from) // insert link target as text
+          .addMark(from, to, mark)
+      )
+    },
     removeLink: expandAndRemoveMark(schema.marks.link),
 
     clearSelection: () => {
