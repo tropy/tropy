@@ -13,7 +13,8 @@ const { TextSelection } = require('prosemirror-state')
 
 const markExtend = (selection, markType) => {
   if (!selection) return
-  const pos = selection.$cursor || selection.$anchor
+  const { $cursor, $anchor } = selection
+  const pos = $cursor || $anchor
   let startIndex = pos.index()
   let endIndex = pos.indexAfter()
 

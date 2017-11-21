@@ -16,10 +16,9 @@ const {
 
 const {
   em,
-  strong
+  strong,
+  link
 } = basic.marks
-
-const link = { ...basic.marks.link, inclusive: true }
 
 const nodes = {
   doc,
