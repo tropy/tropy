@@ -80,7 +80,7 @@ class Editor extends PureComponent {
       case null:
         return
       case 'addLink':
-        this.toolbar.setLinkContext()
+        this.toolbar.handleLinkButtonClick()
         break
       default:
         if (!this.exec(action)) return
