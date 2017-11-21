@@ -5,7 +5,9 @@
 .editor {
   &.is-blurred {
     .toolbar-context {
-      opacity: 0.6;
+      &.default {
+        opacity: 0.6;
+      }
     }
   }
 
