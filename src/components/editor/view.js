@@ -6,6 +6,7 @@ const { Component } = React
 const { func, bool, instanceOf, number } = require('prop-types')
 const { EditorView } = require('prosemirror-view')
 const { EditorState } = require('prosemirror-state')
+const { darwin } = require('../../common/os')
 
 
 class ProseMirror extends Component {
@@ -69,7 +70,9 @@ class ProseMirror extends Component {
   }
 
   handleClickOn = (view, pos, node, nodePos, event, direct) => {
-    if (!direct || !event.altKey) return
+    // open a link in system browser with cmd-click on mac or ctrl-click elsewhere
+    const modifier = darwin ? 'metaKey' : 'ctrlKey'
+    if (!direct || !event[modifier]) return
     const targetNode = node.nodeAt(pos - nodePos - 1)
     if (!targetNode) return
     for (let mark of targetNode.marks) {
