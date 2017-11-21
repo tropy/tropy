@@ -19,6 +19,26 @@
     background-color: $editor-text-selection-bg;
   }
 
+  a {
+    cursor: auto;
+
+    .darwin.meta-key &,
+    .win32.ctrl-key &,
+    .linux.ctrl-key & {
+      cursor: pointer;
+    }
+
+    &:hover {
+      text-decoration: none;
+
+      .darwin.meta-key &,
+      .win32.ctrl-key &,
+      .linux.ctrl-key & {
+        text-decoration: underline;
+      }
+    }
+  }
+
   strong {
     font-weight: bold;
   }
