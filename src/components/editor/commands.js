@@ -116,15 +116,20 @@ module.exports = (schema) => {
 
     insertLink: (state, dispatch, attrs) => {
       const url = attrs.href
-      const from = state.selection.$cursor.pos
-      const to = from + url.length
-      const mark = schema.marks.link.create(attrs)
+      const { $cursor, ranges } = state.selection
+      let from, to
+      const tr = state.tr
+      if ($cursor) {
+        // insert link target as text, only if no text is selected
+        from = $cursor.pos
+        to = from + url.length
+        tr.insertText(url, from)
+      } else {
+        from = ranges[0].$from.pos
+        to = ranges[0].$to.pos
+      }
       dispatch(
-        state
-          .tr
-          .insertText(url, from) // insert link target as text
-          .addMark(from, to, mark)
-      )
+        tr.addMark(from, to, schema.marks.link.create(attrs)))
     },
     removeLink: expandAndRemoveMark(schema.marks.link),
 
