@@ -55,7 +55,9 @@ class AppPrefs extends PureComponent {
             options={this.props.themes}
             onChange={this.handleThemeChange}/>
           <hr/>
-          <FormElement id="prefs.app.ui.label">
+          <FormElement
+            id="prefs.app.ui.label"
+            isCompact>
             <Toggle
               id="prefs.app.ui.option.invertScroll"
               name="invertScroll"
