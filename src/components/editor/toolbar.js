@@ -127,7 +127,9 @@ class EditorToolbar extends PureComponent {
   render() {
     return (
       <Toolbar isDraggable={false}>
-        <ToolbarContext isActive={this.hasDefaultContext}>
+        <ToolbarContext
+          className="default"
+          isActive={this.hasDefaultContext}>
           <div className="toolbar-left">
             <ToolGroup>
               {this.renderMarkButton('bold', <IconB/>)}
