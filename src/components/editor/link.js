@@ -43,6 +43,7 @@ class LinkToolbar extends PureComponent {
   render() {
     return (
       <ToolbarContext
+        className="link"
         dom={this.setContainer}
         isActive={this.props.isActive}>
         <ToolbarLeft className="form-inline">

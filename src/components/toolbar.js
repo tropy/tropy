@@ -6,16 +6,17 @@ const { bool, func, node, string } = require('prop-types')
 const cx = require('classnames')
 
 
-const ToolbarContext = ({ children, dom, isActive }) => (
+const ToolbarContext = ({ children, className, dom, isActive }) => (
   <div
     ref={dom}
-    className={cx('toolbar-context', { active: isActive })}>
+    className={cx('toolbar-context', { active: isActive }, className)}>
     {children}
   </div>
 )
 
 ToolbarContext.propTypes = {
   children: node,
+  className: string,
   isActive: bool,
   dom: func
 }
