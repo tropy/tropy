@@ -45,6 +45,7 @@ class IconButton extends PureComponent {
 
     if (this.props.noFocus) {
       attr.onMouseDown = this.handleMouseDown
+      attr.onClick = this.handleClick
 
     } else {
       attr.onClick = this.props.onClick
@@ -53,6 +54,14 @@ class IconButton extends PureComponent {
     }
 
     return attr
+  }
+
+  handleClick = (event) => {
+    event.preventDefault()
+
+    if (!this.props.isDisabled && this.props.onClick) {
+      this.props.onClick(event)
+    }
   }
 
   handleMouseDown = (event) => {
