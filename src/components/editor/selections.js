@@ -2,35 +2,40 @@
 
 const markExtend = (selection, markType) => {
   if (!selection) return
-  const { $cursor, $anchor } = selection
-  const pos = $cursor || $anchor
-  let startIndex = pos.index()
-  let endIndex = pos.indexAfter()
 
-  const hasMark = (index) => {
-    // clicked outside edge of tag.
-    if (index === pos.parent.childCount) {
-      index--
+  const hasMark = (pos, index) =>
+    markType.isInSet(pos.parent.child(index).marks)
+
+  const calculate = (pos) => {
+    let startIndex = pos.index()
+    let endIndex = pos.indexAfter()
+
+    if (startIndex === pos.parent.childCount) {
+      startIndex--
     }
-    const result = pos.parent.child(index).marks.filter(
-      mark => mark.type.name === markType.name)
-    return !!result.length
+    while (startIndex > 0 && hasMark(pos, startIndex)) {
+      startIndex--
+    }
+    while (endIndex < pos.parent.childCount && hasMark(pos, endIndex)) {
+      endIndex++
+    }
+
+    let startPos = pos.start()
+    let endPos = startPos
+
+    for (let i = 0; i < endIndex; i++) {
+      let size = pos.parent.child(i).nodeSize
+      if (i <= startIndex) startPos += size
+      endPos += size
+    }
+
+    return { from: startPos, to: endPos }
   }
 
-  if (!hasMark(startIndex) && !hasMark(endIndex)) {
-    return
+  return {
+    from: calculate(selection.$from).from,
+    to: calculate(selection.$to).to
   }
-
-  let startPos = pos.start()
-  let endPos = startPos
-
-  for (let i = 0; i < endIndex; i++) {
-    let size = pos.parent.child(i).nodeSize
-    if (i < startIndex) startPos += size
-    endPos += size
-  }
-
-  return { from: startPos, to: endPos }
 }
 
 module.exports = {
