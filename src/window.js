@@ -40,6 +40,9 @@ class Window extends EventEmitter {
     this.handleTabFocus()
     this.handleIpcEvents()
     this.handleEditorCommands()
+    this.handleModifierKeys()
+
+    toggle(document.body, process.platform, true)
 
     const { aqua, frameless } = this.state
 
@@ -162,7 +165,7 @@ class Window extends EventEmitter {
 
 
   handleTabFocus() {
-    on(document.body, 'keydown', event => {
+    on(document, 'keydown', event => {
       if (event.key === 'Tab' && !event.defaultPrevented) {
         const onTabFocus = ({ target }) => {
           try {
@@ -213,6 +216,21 @@ class Window extends EventEmitter {
       event.preventDefault()
       event.stopImmediatePropagation()
     })
+  }
+
+  handleModifierKeys() {
+    on(document, 'keydown', event => {
+      toggle(document.body, 'meta-key', event.metaKey)
+      toggle(document.body, 'ctrl-key', event.ctrlKey)
+    }, { passive: true, capture: true })
+
+    on(document, 'keyup', up, { passive: true, capture: true })
+    on(window, 'blur', up, { passive: true })
+
+    function up(event) {
+      toggle(document.body, 'meta-key', event.metaKey === true)
+      toggle(document.body, 'ctrl-key', event.ctrlKey === true)
+    }
   }
 
   createWindowControls() {

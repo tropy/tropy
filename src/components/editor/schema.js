@@ -15,9 +15,9 @@ const {
 } = basic.nodes
 
 const {
-  link,
   em,
-  strong
+  strong,
+  link
 } = basic.marks
 
 const nodes = {
@@ -45,6 +45,8 @@ const nodes = {
     content: 'paragraph block*'
   }
 }
+
+
 
 const marks = {
   link,

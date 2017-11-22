@@ -18,15 +18,14 @@ ButtonGroup.propTypes = {
 
 class IconButton extends PureComponent {
   get classes() {
-    return {
-      'btn': true,
-      'btn-icon': true,
-      'active': this.props.isActive
-    }
+    return ['btn', 'btn-icon', {
+      active: this.props.isActive,
+      disabled: this.props.isDisabled
+    }]
   }
 
   get node() {
-    return this.props.canHaveFocus ? 'button' : 'span'
+    return this.props.noFocus ? 'span' : 'button'
   }
 
   get title() {
@@ -38,38 +37,39 @@ class IconButton extends PureComponent {
   }
 
   get attributes() {
-    const {
-      canHaveFocus,
-      isDisabled,
-      tabIndex,
-      onClick,
-      onMouseDown
-    } = this.props
-
-
     const attr = {
-      className: cx(this.classes),
-      disabled: isDisabled,
+      className: cx(...this.classes),
+      disabled: !this.props.noFocus && this.props.isDisabled,
       title: this.title
     }
 
-    if (!isDisabled) {
-      attr.onClick = onClick
-      attr.onMouseDown = onMouseDown
-    }
-
-    if (canHaveFocus) {
-      attr.tabIndex = tabIndex
-    } else {
+    if (this.props.noFocus) {
       attr.onMouseDown = this.handleMouseDown
+      attr.onClick = this.handleClick
+
+    } else {
+      attr.onClick = this.props.onClick
+      attr.onMouseDown = this.props.onMouseDown
+      attr.tabIndex = this.props.tabIndex
     }
 
     return attr
   }
 
+  handleClick = (event) => {
+    event.preventDefault()
+
+    if (!this.props.isDisabled && this.props.onClick) {
+      this.props.onClick(event)
+    }
+  }
+
   handleMouseDown = (event) => {
     event.preventDefault()
-    if (this.props.onMouseDown) this.props.onMouseDown(event)
+
+    if (!this.props.isDisabled && this.props.onMouseDown) {
+      this.props.onMouseDown(event)
+    }
   }
 
   render() {
@@ -77,19 +77,19 @@ class IconButton extends PureComponent {
   }
 
   static propTypes = {
-    canHaveFocus: bool,
     icon: element.isRequired,
     intl: intlShape.isRequired,
-    title: string,
     isActive: bool,
     isDisabled: bool,
+    noFocus: bool,
+    title: string,
     tabIndex: number,
     onClick: func,
     onMouseDown: func
   }
 
   static defaultProps = {
-    canHaveFocus: true,
+    noFocus: false,
     tabIndex: -1
   }
 }
