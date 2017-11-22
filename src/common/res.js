@@ -1,9 +1,9 @@
 'use strict'
 
-const { resolve } = require('./promisify')
+require('./promisify')
 const { join } = require('path')
 const { readFileAsync: read } = require('fs')
-const { flatten } = require('./util')
+const { get, flatten } = require('./util')
 const yaml = require('js-yaml')
 
 
@@ -20,17 +20,25 @@ class Resource {
     return yaml.safeLoad(data)
   }
 
-  static async open(name, ...args) {
-    return new this(this.parse(await read(this.expand(name))), ...args)
+  static async open(locale, name, ...args) {
+    return new this(
+      this.parse(await read(this.expand(name, locale))),
+      locale,
+      ...args
+    )
   }
 
-  static openWithFallback(fallback, name, ...args) {
-    return resolve(this.open(name, ...args))
-      .catch({ code: 'ENOENT' }, () => this.open(fallback, ...args))
+  static async openWithFallback(fallback, locale, ...args) {
+    try {
+      return (await this.open(locale, ...args))
+    } catch (error) {
+      if (error.code !== 'ENOENT' || fallback === locale) throw error
+      return this.open(fallback, ...args)
+    }
   }
 
-  static expand(name) {
-    return join(this.base, `${name}${this.ext}`)
+  static expand(name, locale = 'en') {
+    return join(this.base, `${name}.${locale.slice(0, 2)}${this.ext}`)
   }
 }
 
@@ -40,9 +48,10 @@ class Menu extends Resource {
     return join(super.base, 'menu')
   }
 
-  constructor(data = {}) {
+  constructor(data, locale = 'en') {
     super()
-    this.template = data[process.platform]
+    this.template = get(data, [locale, process.platform], {})
+    this.locale = locale
   }
 }
 
@@ -53,21 +62,17 @@ class Strings extends Resource {
   }
 
   static open(locale, ...args) {
-    return super.open(locale, locale, ...args)
+    return super.open(locale, process.type, ...args)
   }
 
-  static expand(locale) {
-    return super.expand(`${process.type}.${String(locale).slice(0, 2)}`)
-  }
-
-  constructor(dict = {}, locale = 'en') {
+  constructor(dict, locale = 'en') {
     super()
-    this.dict = dict
+    this.dict = get(dict, [locale], {})
     this.locale = locale
   }
 
   flatten() {
-    return flatten(this.dict[this.locale])
+    return flatten(this.dict)
   }
 }
 
@@ -77,13 +82,9 @@ class KeyMap extends Resource {
     return join(super.base, 'keymaps')
   }
 
-  static open(locale, name, ...args) {
-    return super.open(`${name}.${locale}`, locale, ...args)
-  }
-
-  constructor(data = {}, locale = 'en') {
+  constructor(data, locale = 'en') {
     super()
-    this.map = data[process.platform]
+    this.map = get(data, [locale, process.platform], {})
     this.locale = locale
   }
 }

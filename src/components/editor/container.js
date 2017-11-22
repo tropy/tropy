@@ -29,6 +29,10 @@ class Editor extends PureComponent {
     this.view = get(view, ['pm'])
   }
 
+  setToolbar = (toolbar) => {
+    this.toolbar = toolbar
+  }
+
   get classes() {
     return {
       'editor': true,
@@ -59,9 +63,9 @@ class Editor extends PureComponent {
     this.view.focus()
   }
 
-  exec(command) {
-    return (commands[command] || noop)(
-      this.view.state, this.view.dispatch, this.view
+  exec(action, ...args) {
+    return (commands[action] || noop)(
+      this.view.state, this.view.dispatch, ...args
     )
   }
 
@@ -70,7 +74,20 @@ class Editor extends PureComponent {
   }
 
   handleKeyDown = (_, event) => {
-    return this.exec(match(this.props.keymap, event))
+    const action = match(this.props.keymap, event)
+
+    switch (action) {
+      case null:
+        return
+      case 'addLink':
+        this.toolbar.handleLinkButtonClick()
+        break
+      default:
+        if (!this.exec(action)) return
+    }
+
+    event.stopPropagation()
+    return true
   }
 
   handleFocus = (event) => {
@@ -79,8 +96,8 @@ class Editor extends PureComponent {
     }
   }
 
-  handleCommand = (command) => {
-    if (this.exec(command)) {
+  handleCommand = (...args) => {
+    if (this.exec(...args)) {
       if (!this.state.hasViewFocus) this.focus()
     }
   }
@@ -108,6 +125,7 @@ class Editor extends PureComponent {
         {!isDisabled &&
           <EditorToolbar
             state={state}
+            ref={this.setToolbar}
             onCommand={this.handleCommand}/>
         }
 

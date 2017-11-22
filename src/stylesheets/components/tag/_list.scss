@@ -138,14 +138,9 @@
   flex: 0 0 auto;
   padding: ($space-min + $space-min / 2) $default-padding-horizontal 2px;
 
-  .editable-control {
-    width: 100%;
-    height: $input-height-base;
+  .form-control {
     background: $add-tag-default-bg;
     cursor: default;
-    border: 1px solid $add-tag-border-color; // Reset to form-control, tweak border color for panel bg
-    margin: 0; // Reset to form-control
-    padding: 0 $padding-base-horizontal; // Reset to form-control
 
     .nested-tab-focus & {
       background: $add-tag-nested-focus-bg;
@@ -154,9 +149,7 @@
 
     .nested-tab-focus.has-active & {
       background: $add-tag-default-bg;
-      border-color: $add-tag-border-color;
-
-      @include form-control-focus; // sass-lint:disable-line mixins-before-declarations
+      border-color: $input-border;
     }
 
     &::-webkit-input-placeholder {

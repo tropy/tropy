@@ -5,6 +5,7 @@ const { PureComponent } = React
 const { array, arrayOf, bool, func, shape, string } = require('prop-types')
 const { TemplateSelect } = require('../template/select')
 const { ipcRenderer: ipc } = require('electron')
+const { ESPER } = require('../../constants')
 
 const {
   FormElement,
@@ -54,7 +55,9 @@ class AppPrefs extends PureComponent {
             options={this.props.themes}
             onChange={this.handleThemeChange}/>
           <hr/>
-          <FormElement id="prefs.app.ui.label">
+          <FormElement
+            id="prefs.app.ui.label"
+            isCompact>
             <Toggle
               id="prefs.app.ui.option.invertScroll"
               name="invertScroll"
@@ -71,6 +74,12 @@ class AppPrefs extends PureComponent {
               value={this.props.settings.overlayToolbars}
               onChange={this.props.onSettingsUpdate}/>
           </FormElement>
+          <FormToggleGroup
+            id="prefs.app.zoomMode"
+            name="zoomMode"
+            value={this.props.settings.zoomMode}
+            options={this.props.zoomModes}
+            onChange={this.props.onSettingsUpdate}/>
           <hr/>
           <FormToggle
             id="prefs.app.debug"
@@ -91,12 +100,14 @@ class AppPrefs extends PureComponent {
     }).isRequired,
     themes: arrayOf(string).isRequired,
     dupOptions: arrayOf(string).isRequired,
+    zoomModes: arrayOf(string).isRequired,
     onSettingsUpdate: func.isRequired
   }
 
   static defaultProps = {
     themes: ['light', 'dark'],
-    dupOptions: ['skip', 'import', 'prompt']
+    dupOptions: ['skip', 'import', 'prompt'],
+    zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL]
   }
 }
 

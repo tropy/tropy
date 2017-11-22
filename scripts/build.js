@@ -97,7 +97,7 @@ target.all = async (args = []) => {
         ProductName: qualified.product
       },
       asar: {
-        unpack: '**/{*.node,lib/stylesheets/**/*,res/icons/mime/*.ico}',
+        unpack: '**/{*.node,lib/stylesheets/**/*,res/icons/mime/*.ico,res/menu/*,res/strings/*,res/keymaps/*}',
       }
 
     })

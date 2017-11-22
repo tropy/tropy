@@ -1,6 +1,6 @@
 'use strict'
 
-const { SETTINGS, ITEM } = require('../constants')
+const { SETTINGS, ITEM, ESPER } = require('../constants')
 
 const defaults = {
   debug: ARGS.debug,
@@ -9,7 +9,8 @@ const defaults = {
   theme: ARGS.theme,
   overlayToolbars: ARGS.frameless,
   invertScroll: true,
-  invertZoom: false
+  invertZoom: false,
+  zoomMode: ESPER.MODE.FIT
 }
 
 module.exports = {

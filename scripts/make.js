@@ -80,6 +80,7 @@ target.window = ([name]) => {
 </head>
 <body id="${name}" tabindex="-1">
   <main></main>
+  <div id="popup-root"></div>
 </body>
 </html>`)
 
@@ -111,8 +112,12 @@ function template(path, content) {
 target.clean = () => {
   test.clean()
   rm('-rf', join(home, 'lib'))
-  rm('-rf', join(home, 'dist'))
   rm('-f', join(home, 'npm-debug.log'))
+}
+
+target.distclean = () => {
+  target.clean()
+  rm('-rf', join(home, 'dist'))
 }
 
 target.rules = () =>

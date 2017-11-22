@@ -25,7 +25,9 @@ const consolidator = {
       }
 
     } catch (error) {
-      warn(`unexpected error in consolidate: ${error.message}`, { error })
+      warn(`unexpected error in consolidate: ${error.message}`, {
+        stack: error.stack
+      })
     }
   },
 

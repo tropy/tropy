@@ -78,8 +78,8 @@ class ItemTable extends ItemIterator {
     const { columns, data, edit } = this.props
     const onEdit = this.props.selection.length === 1 ? this.props.onEdit : noop
 
-    const { offset, height } = this.state
-    const transform = `translate3d(0,${offset}px,0)`
+    const { height } = this.state
+    const { transform } = this
 
     return this.connect(
       <div

@@ -37,8 +37,19 @@ const getItemTags = memo(
   }
 )
 
+const getTagCompletions = memo(
+  getAllTags,
+  getItemTags,
+
+  (tags, itemTags) => seq(tags,
+    compose(
+      filter(tag => !itemTags.find(t => !t.mixed && t.id === tag.id)),
+      map(tag => tag.name)))
+)
+
 
 module.exports = {
   getAllTags,
-  getItemTags
+  getItemTags,
+  getTagCompletions
 }

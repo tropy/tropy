@@ -1,11 +1,7 @@
-@function asset-url($type, $path) {
-  @return url(unquote("../../../static/#{$type}/#{$path}"));
-}
+//
+// Functions
+// --------------------------------------------------
 
-@function image-url($path) {
-  @return asset-url("images", $path);
-}
-
-@function font-url($path) {
-  @return asset-url("fonts", $path);
-}
+@import
+  "functions/asset-urls",
+  "functions/rem";

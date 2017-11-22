@@ -58,8 +58,8 @@ class ItemGrid extends ItemIterator {
   render() {
     if (this.props.isEmpty) return this.renderNoItems()
 
-    const { cols, offset, height } = this.state
-    const transform = `translate3d(0,${offset}px,0)`
+    const { cols, height } = this.state
+    const { transform } = this
     const gridTemplateColumns = `repeat(${cols}, ${cols}fr)`
 
     return this.connect(

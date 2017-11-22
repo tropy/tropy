@@ -1,10 +1,12 @@
 'use strict'
 
+const { shell } = require('electron')
 const React = require('react')
 const { Component } = React
 const { func, bool, instanceOf, number } = require('prop-types')
 const { EditorView } = require('prosemirror-view')
 const { EditorState } = require('prosemirror-state')
+const { darwin } = require('../../common/os')
 
 
 class ProseMirror extends Component {
@@ -14,6 +16,7 @@ class ProseMirror extends Component {
       ...this.getEditorProps(),
       dispatchTransaction: this.handleChange,
       handleKeyDown: this.handleKeyDown,
+      handleClickOn: this.handleClickOn,
       handleDOMEvents: {
         focus: this.handleFocus,
         blur: this.handleBlur
@@ -64,6 +67,20 @@ class ProseMirror extends Component {
 
   handleKeyDown = (...args) => {
     return (this.props.isDisabled) ? false : this.props.onKeyDown(...args)
+  }
+
+  handleClickOn = (view, pos, node, nodePos, event, direct) => {
+    // open a link in system browser with cmd-click on mac or ctrl-click elsewhere
+    const modifier = darwin ? 'metaKey' : 'ctrlKey'
+    if (!direct || !event[modifier]) return
+    const targetNode = node.nodeAt(pos - nodePos - 1)
+    if (!targetNode) return
+    for (let mark of targetNode.marks) {
+      const href = mark.attrs && mark.attrs.href
+      if (href) {
+        return shell.openExternal(href)
+      }
+    }
   }
 
   handleFocus = (...args) => {

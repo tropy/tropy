@@ -99,6 +99,10 @@ const dom = {
     return node.dispatchEvent(new Event(...args))
   },
 
+  classes(node, ...args) {
+    return node.classList.add(...args)
+  },
+
   toggle(node, ...args) {
     return node.classList.toggle(...args)
   },
@@ -187,6 +191,13 @@ const dom = {
     return {
       start: onDragStart,
       stop: onDragStop
+    }
+  },
+
+  viewport() {
+    return {
+      width: document.documentElement.clientWidth,
+      height: document.documentElement.clientHeight
     }
   }
 }

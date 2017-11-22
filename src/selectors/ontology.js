@@ -85,7 +85,7 @@ const getTemplateField = memo(
 
 const getItemTemplate = memo(
   ({ ontology }) => ontology.template,
-  ({ settings }) => settings.itemTemplate,
+  ({ settings }) => settings.template,
   (template, id) => template[id] || template[ITEM.TEMPLATE]
 )
 

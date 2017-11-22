@@ -401,11 +401,10 @@ class Tropy extends EventEmitter {
     this.on('app:save-tag', (_, tag) =>
       this.dispatch(act.tag.save(tag)))
 
-    this.on('app:remove-tag', (_, { target }) =>
+    this.on('app:delete-item-tag', (_, { target }) =>
       this.dispatch(act.item.tags.delete({
         id: target.items, tags: [target.id]
       })))
-
     this.on('app:delete-tag', (_, { target }) =>
       this.dispatch(act.tag.delete(target.id)))
 
@@ -627,8 +626,12 @@ class Tropy extends EventEmitter {
     }
   }
 
+  get defaults() {
+    return Tropy.defaults
+  }
+
   get dict() {
-    return this.strings.dict[this.state.locale]
+    return this.strings.dict
   }
 
   get history() {

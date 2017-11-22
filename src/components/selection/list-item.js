@@ -73,7 +73,7 @@ class SelectionListItem extends SelectionIterable {
             display={title || 'Selection'}
             value={title}
             resize
-            isEditing={this.props.isEditing}
+            isActive={this.props.isEditing}
             isDisabled={this.props.isDisabled}
             onCancel={this.props.onEditCancel}
             onChange={this.handleChange}/>

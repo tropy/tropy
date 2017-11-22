@@ -1,0 +1,15 @@
+//
+// Asset URLs
+// --------------------------------------------------
+
+@function asset-url($type, $path) {
+  @return url(unquote("../../../static/#{$type}/#{$path}"));
+}
+
+@function image-url($path) {
+  @return asset-url("images", $path);
+}
+
+@function font-url($path) {
+  @return asset-url("fonts", $path);
+}

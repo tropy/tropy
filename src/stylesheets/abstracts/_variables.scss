@@ -15,16 +15,16 @@ $sans-serif-fonts: (
 $font-family-sans-serif: unquote(map-get($sans-serif-fonts, $platform));
 $font-family-base:       $font-family-sans-serif;
 
-$font-size-small: 12px;
-$font-size-base:  13px;
-$font-size-large: 16px;
+$font-size-small: const("FONTSIZE.SMALL") * 1px;
+$font-size-base:  const("FONTSIZE.BASE") * 1px;
+$font-size-large: const("FONTSIZE.LARGE") * 1px;
 
 // Heads up: Do not trust the computed value in the dev tools,
 // check the actual height of the rendered element.
 // Must result in an even value (20px) for proper alignment of editables.
 $line-height-base:     1.539;
 
-$line-height-computed: floor(($font-size-base * $line-height-base));
+$line-height-computed: floor((const("FONTSIZE.BASE") * $line-height-base)) * 1px;
 $line-height-large:    26px;
 
 $link-hover-decoration: underline;
@@ -134,6 +134,7 @@ $input-height-base: $space-lg + 2 * $shim;
 $input-height-large: ($space-xl + $space-xs);
 $input-border-radius-small: $border-radius-small;
 $checkbox-size: 14px;
+$input-border-width: const("INPUT.BORDER_WIDTH") * 1px;
 
 
 // Z-index master list
@@ -147,7 +148,8 @@ $zindex-esper-header:    1030;
 $zindex-drop-target:     1040;
 $zindex-drag-layer:      1050;
 $zindex-flash:           1060;
-$zindex-window-controls: 1070;
+$zindex-popup:           1070;
+$zindex-window-controls: 1080;
 
 
 // Darwin window controls
@@ -161,7 +163,7 @@ $window-controls-margin: 4px;
 // Sidebar
 // --------------------------------------------------
 
-$activity-height: #{const("ACTIVITY.HEIGHT")}px;
+$activity-height: const("ACTIVITY.HEIGHT") * 1px;
 $activity-transition-duration:        0.125s;
 $activity-transition-timing-function: ease-out;
 
@@ -175,14 +177,14 @@ $item-table-header-height: $line-height-large;
 // Panel
 // --------------------------------------------------
 
-$panel-header-height: #{const("PANEL.HEADER_HEIGHT")}px;
-$panel-body-min-height: 100px - #{const("PANEL.HEADER_HEIGHT")}px - 4px;
+$panel-header-height: const("PANEL.HEADER_HEIGHT") * 1px;
+$panel-body-min-height: 100px - (const("PANEL.HEADER_HEIGHT") * 1px) - 4px;
 
 
 // Tabs
 // --------------------------------------------------
 
-$tabs-height: #{const("PANEL.HEADER_HEIGHT")}px;
+$tabs-height: const("PANEL.HEADER_HEIGHT") * 1px;
 $tabs-padding-horizontal: $space-md;
 $tabs-compact-padding-horizontal: $space-xs;
 
@@ -257,7 +259,7 @@ $progress-value-border-radius: $progress-bar-height / 2;
 // Notepad
 // --------------------------------------------------
 
-$notepad-min-height: #{const("NOTEPAD.MIN_HEIGHT")}px;
+$notepad-min-height: const("NOTEPAD.MIN_HEIGHT") * 1px;
 
 
 // Editor
@@ -295,6 +297,19 @@ $add-tag-transition:                0.3s ease;
 // --------------------------------------------------
 
 $clear-button-size: 14px;
+
+
+// Popup
+// --------------------------------------------------
+
+$popup-focus-shadow-width: const("INPUT.FOCUS_SHADOW_WIDTH") * 1px;
+$popup-padding: const("POPUP.PADDING");
+
+
+// Option
+// --------------------------------------------------
+
+$option-list-margin: const("OPTION.LIST_MARGIN") * 1px;
 
 
 // Debug
