@@ -30,7 +30,8 @@ class ItemView extends PureComponent {
 
   componentWillReceiveProps(props) {
     if (props.note !== this.props.note) {
-      this.handleNoteUpdate(props.note)
+      if (props.note == null) this.handleNoteReset()
+      else this.handleNoteUpdate(props.note)
     }
   }
 
@@ -87,27 +88,40 @@ class ItemView extends PureComponent {
     }
   }
 
+  handleNoteReset() {
+    this.handleNoteDelete()
+    this.setState({ note: getNoteTemplate() })
+  }
+
   handleNoteUpdate(note) {
-    if (note == null) {
-      this.handleNoteDelete()
-      this.setState({ note: getNoteTemplate() })
+    const { id, modified, created } = this.state.note
+
+    if (id == null) {
+      // When updating a note which was saved for the first
+      // time, we just merge the id.
+      if (created != null && created === note.created) {
+        note = { ...this.state.note, id: note.id }
+      }
 
     } else {
-      const { id, created } = this.state.note
 
-      // On initial save, just merge id into current state.
-      if (id == null && created != null && created === note.created) {
-        return this.setState({
-          note: { ...this.state.note, id: note.id }
-        })
-      }
+      // When updating the current note we keep the current
+      // editor state in favor of the serialized state coming
+      // back from the store; otherwise we lose unserializable
+      // state such as the editor's undo/redo history.
+      if (id === note.id) {
+        if (modified >= note.modified) {
+          note = { ...note, state: this.state.note.state }
+        }
 
-      if (id != null && id !== note.id) {
+      // When the loading a new note, check if the old note
+      // should be deleted.
+      } else {
         this.handleNoteDelete()
       }
-
-      this.setState({ note })
     }
+
+    this.setState({ note })
   }
 
   handleNoteDelete(note = this.state.note) {
@@ -129,6 +143,7 @@ class ItemView extends PureComponent {
 
   handleNoteChange = (note, changed, blank) => {
     if (note.id != null) {
+      note.modified = new Date()
       if (blank) this.handleNoteSave.cancel()
       else this.handleNoteSave(note, { changed })
 
