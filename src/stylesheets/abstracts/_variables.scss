@@ -303,7 +303,7 @@ $clear-button-size: 14px;
 // --------------------------------------------------
 
 $popup-focus-shadow-width: const("INPUT.FOCUS_SHADOW_WIDTH") * 1px;
-$popup-padding: const("POPUP.PADDING");
+$popup-padding: const("POPUP.PADDING") * 1px;
 
 
 // Option
