@@ -7,15 +7,15 @@ const { IconSearch, IconXSmall } = require('../icons')
 const { IconButton } = require('../button')
 const { Input } = require('../input')
 const { TABS } = require('../../constants')
+const { blank } = require('../../common/util')
 const debounce = require('lodash.debounce')
 
 
 class SearchField extends PureComponent {
-
   handleCancel = () => {
     this.handleChange.cancel()
 
-    if (this.props.query !== '') {
+    if (!blank(this.props.query)) {
       this.props.onSearch('')
     }
   }
@@ -29,23 +29,22 @@ class SearchField extends PureComponent {
   }
 
   render() {
-    const { query, isDisabled } = this.props
-
     return (
       <div className="search">
         <IconSearch/>
         <Input
           className="search-input form-control"
-          isDisabled={isDisabled}
+          isDisabled={this.props.isDisabled}
           tabIndex={TABS.SearchField}
-          value={query}
+          value={this.props.query}
           placeholder="Search"
           onCancel={this.handleCancel}
           onChange={this.handleChange}
           onCommit={this.handleCommit}/>
-        <IconButton
-          icon={<IconXSmall/>}
-          onClick={this.handleCancel}/>
+        {!blank(this.props.query) &&
+          <IconButton
+            icon={<IconXSmall/>}
+            onClick={this.handleCancel}/>}
       </div>
     )
   }
