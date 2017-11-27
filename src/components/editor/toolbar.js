@@ -17,9 +17,9 @@ const {
   IconQ,
   IconSup,
   IconSub,
-  //  IconAlignLeft,
-  //  IconAlignCenter,
-  //  IconAlignRight,
+  IconAlignLeft,
+  IconAlignCenter,
+  IconAlignRight,
   IconBulletList,
   IconNumberedList,
   IconSink,
@@ -146,7 +146,7 @@ class EditorToolbar extends PureComponent {
               {this.renderMarkButton('superscript', <IconSup/>)}
               {this.renderMarkButton('subscript', <IconSub/>)}
             </ToolGroup>
-            {/*<ToolGroup>
+            <ToolGroup>
               <IconButton
                 isDisabled
                 noFocus
@@ -168,7 +168,7 @@ class EditorToolbar extends PureComponent {
                 isActive={false}
                 title="editor.commands.right"
                 onMouseDown={this.cmd.right}/>
-            </ToolGroup>*/}
+            </ToolGroup>
             <ToolGroup>
               <IconButton
                 noFocus
