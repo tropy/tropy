@@ -62,8 +62,14 @@ en:
       - label: 'Delete Tag'
         command: 'app:delete-tag'
     item-tag: &item-tag
-      - label: 'Remove Tag From Items'
+      - label: 'Remove Tag From This Item'
         command: 'app:delete-item-tag'
+        visible: false
+        condition: 'hasSingleItem'
+      - label: 'Remove Tag From These Items'
+        command: 'app:delete-item-tag'
+        visible: false
+        condition: 'hasMultipleItems'
     notes: &notes
       []
     note: &note

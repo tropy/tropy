@@ -16,6 +16,14 @@ function withWindow(cmd, fn) {
 const CHECK = {
   hasMultiplePhotos(_, e) {
     return e && e.target && e.target.photos && e.target.photos.length > 1
+  },
+
+  hasMultipleItems(_, e) {
+    return e && e.target && e.target.items && e.target.items.length > 1
+  },
+
+  hasSingleItem(...args) {
+    return !CHECK.hasMultipleItems(...args)
   }
 }
 
@@ -91,6 +99,7 @@ class Menu {
 
       if (item.condition) {
         item.enabled = check(item, ...params)
+        if (item.visible === false) item.visible = item.enabled
       }
 
       if ('color' in item) {
@@ -300,7 +309,7 @@ class ContextMenu extends Menu {
   scopes['item-bulk-list'] = [...scopes.items, 'item-bulk-list', 'item-bulk']
   scopes['item-deleted'] = [...scopes.global, 'item-deleted']
   scopes['item-bulk-deleted'] = [...scopes.global, 'item-bulk-deleted']
-  scopes['item-tag'] = [...scopes.global, 'tag', 'item-tag']
+  scopes['item-tag'] = [...scopes.global, 'item-tag']
 }
 
 module.exports = {
