@@ -37,17 +37,17 @@ const orderedListRule = (nodeType) =>
 const bulletListRule = (nodeType) =>
   wrappingInputRule(/^\s*([-+*])\s$/, nodeType)
 
-let pseudoSelection = new Plugin({
-  props: {
-    decorations(state) {
-      return DecorationSet.create(state.doc, [
-        Decoration.inline(state.selection.from, state.selection.to, {
-          class: 'pseudo-selection',
-        })
-      ])
+const pseudoSelection = ({ className = 'pseudo-selection' } = {}) =>
+  new Plugin({
+    props: {
+      decorations: ({ doc, selection }) =>
+        DecorationSet.create(doc, [
+          Decoration.inline(selection.from, selection.to, {
+            class: className
+          })
+        ])
     }
-  }
-})
+  })
 
 module.exports = (schema) => {
   const rules = [
@@ -76,6 +76,6 @@ module.exports = (schema) => {
     gapCursor(),
     history(),
     inputRules({ rules }),
-    pseudoSelection
+    pseudoSelection()
   ]
 }
