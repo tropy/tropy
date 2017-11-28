@@ -329,12 +329,12 @@ $progress-cancel-color: var(--shade-1);
 $progress-cancel-bg:    var(--shade-6);
 
 // Editor
-$editor-toolbar-border:    var(--shade-2);
-$editor-btn-hover-bg:      var(--shade-1);
-$editor-btn-active-color:  var(--shade-7);
-$editor-btn-active-bg:     var(--shade-2);
-$editor-text-selection-bg: $text-selection-bg;
-$editor-placeholder-color: var(--shade-5);
+$editor-toolbar-border:      var(--shade-2);
+$editor-btn-hover-bg:        var(--shade-1);
+$editor-btn-active-color:    var(--shade-7);
+$editor-btn-active-bg:       var(--shade-2);
+$editor-placeholder-color:   var(--shade-5);
+$editor-pseudo-selection-bg: var(--shade-3);
 
 $blockquote-border-color: var(--shade-2);
 $selected-node-color:     var(--brand-primary-tint-40);

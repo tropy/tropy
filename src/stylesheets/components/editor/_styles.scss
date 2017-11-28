@@ -15,15 +15,9 @@
     margin: 0;
   }
 
-  &.ProseMirror-focused {
-    ::selection {
-      background-color: $editor-text-selection-bg;
-    }
-  }
-
   &:not(.ProseMirror-focused) {
     .pseudo-selection {
-      background-color: $editor-text-selection-bg;
+      background-color: $editor-pseudo-selection-bg;
     }
   }
 
