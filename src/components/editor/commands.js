@@ -40,14 +40,11 @@ const alignCmd = (direction) =>
     dispatch(tr)
   }
 
-const chainAllCommands = (...commands) =>
-  (state, dispatch, view) => {
-    let result = false
-    for (let i = 0; i < commands.length; i++) {
-      if (commands[i](state, dispatch, view)) result = true
-    }
-    return result
-  }
+const aligns = {
+  left: alignCmd('left'),
+  right: alignCmd('right'),
+  center: alignCmd('center'),
+}
 
 module.exports = (schema) => {
   const list = {
@@ -58,15 +55,11 @@ module.exports = (schema) => {
     sinkListItem: sinkListItem(schema.nodes.list_item),
   }
 
-  const marks = {}, aligns = {}
+  const marks = {}
 
   for (let name in schema.marks) {
     marks[name] = (state, dispatch, ...args) =>
       cmd.toggleMark(schema.marks[name], ...args)(state, dispatch)
-  }
-
-  for (let direction of ['left', 'center', 'right']) {
-    aligns[direction] = alignCmd(direction)
   }
 
   return {
@@ -80,12 +73,25 @@ module.exports = (schema) => {
 
     blockquote: cmd.wrapIn(schema.nodes.blockquote),
 
-    break: cmd.chainCommands(
-      list.splitListItem,
-      cmd.createParagraphNear,
-      cmd.liftEmptyBlock,
-      cmd.splitBlockKeepMarks
-    ),
+    break: (state, dispatch) =>
+      cmd.chainCommands(
+        list.splitListItem,
+        cmd.createParagraphNear,
+        cmd.liftEmptyBlock,
+        cmd.splitBlockKeepMarks,
+      )(state, dispatch && (tr => {
+        const { pos, parentOffset } = state.selection.$cursor
+        const prev = state.doc.resolve(pos - parentOffset)
+        if (prev && prev.parent) {
+          const direction = prev.parent.attrs.align
+          if (direction && direction !== 'left') {
+            const prevMarks = state.doc.resolve(pos).marks()
+            tr.setNodeMarkup(pos + 1, null, { align: direction })
+            tr.ensureMarks(prevMarks)
+          }
+        }
+        dispatch(tr)
+      })),
 
     br: (state, dispatch) => (
       dispatch(
