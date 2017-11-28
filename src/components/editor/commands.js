@@ -24,16 +24,20 @@ const expandAndRemoveMark = (markType) =>
         .removeMark(range.from, range.to, markType))
   }
 
+
 const alignCmd = (direction) =>
   (state, dispatch) => {
-    if (!state.selection.$cursor) return // TODO support selections
-    let pos = state.selection.$cursor.pos
-        - state.selection.$cursor.parentOffset
-        - 1
-    dispatch(
-      state
-        .tr
-        .setNodeMarkup(pos, null, { align: direction }))
+    let tr = state.tr
+    state.doc.nodesBetween(
+      state.selection.from,
+      state.selection.to,
+      (node, pos) => {
+        // align nodes that support alignment
+        if (node.type.attrs.align) {
+          tr.setNodeMarkup(pos, null, { align: direction })
+        }
+      })
+    dispatch(tr)
   }
 
 module.exports = (schema) => {
