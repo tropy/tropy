@@ -50,7 +50,10 @@ class EditorToolbar extends PureComponent {
       'ol',
       'ul',
       'liftListItem',
-      'sinkListItem'
+      'sinkListItem',
+      'left',
+      'center',
+      'right'
     ]) {
       this.cmd[action] = () => this.props.onCommand(action)
     }
@@ -148,21 +151,18 @@ class EditorToolbar extends PureComponent {
             </ToolGroup>
             <ToolGroup>
               <IconButton
-                isDisabled
                 noFocus
                 icon={<IconAlignLeft/>}
                 isActive={false}
                 title="editor.commands.left"
                 onMouseDown={this.cmd.left}/>
               <IconButton
-                isDisabled
                 noFocus
                 icon={<IconAlignCenter/>}
                 isActive={false}
                 title="editor.commands.center"
                 onMouseDown={this.cmd.center}/>
               <IconButton
-                isDisabled
                 noFocus
                 icon={<IconAlignRight/>}
                 isActive={false}

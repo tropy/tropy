@@ -24,6 +24,18 @@ const expandAndRemoveMark = (markType) =>
         .removeMark(range.from, range.to, markType))
   }
 
+const alignCmd = (direction) =>
+  (state, dispatch) => {
+    if (!state.selection.$cursor) return // TODO support selections
+    let pos = state.selection.$cursor.pos
+        - state.selection.$cursor.parentOffset
+        - 1
+    dispatch(
+      state
+        .tr
+        .setNodeMarkup(pos, null, { align: direction }))
+  }
+
 module.exports = (schema) => {
   const list = {
     ol: wrapInList(schema.nodes.ordered_list),
@@ -33,17 +45,22 @@ module.exports = (schema) => {
     sinkListItem: sinkListItem(schema.nodes.list_item),
   }
 
-  const marks = {}
+  const marks = {}, aligns = {}
 
   for (let name in schema.marks) {
     marks[name] = (state, dispatch, ...args) =>
       cmd.toggleMark(schema.marks[name], ...args)(state, dispatch)
   }
 
+  for (let direction of ['left', 'center', 'right']) {
+    aligns[direction] = alignCmd(direction)
+  }
+
   return {
     ...cmd,
     ...list,
     ...marks,
+    ...aligns,
 
     undo,
     redo,
