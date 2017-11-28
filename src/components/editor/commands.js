@@ -40,6 +40,15 @@ const alignCmd = (direction) =>
     dispatch(tr)
   }
 
+const chainAllCommands = (...commands) =>
+  (state, dispatch, view) => {
+    let result = false
+    for (let i = 0; i < commands.length; i++) {
+      if (commands[i](state, dispatch, view)) result = true
+    }
+    return result
+  }
+
 module.exports = (schema) => {
   const list = {
     ol: wrapInList(schema.nodes.ordered_list),
