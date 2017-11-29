@@ -78,15 +78,16 @@
   }
 
   li {
-    @each $alignment in center, right {
-      &[style*="#{$alignment}"] {
-        text-align: $alignment;
-        list-style-position: inside;
-      }
-    }
+    display: block;
 
     p {
-      display: inline;
+      display: list-item;
+
+      @each $alignment in center, right {
+        &[style*="#{$alignment}"] {
+          list-style-position: inside;
+        }
+      }
     }
   }
 
@@ -100,18 +101,6 @@
   sub {
     line-height: 1;
     font-size: $sup-and-sub-font-size;
-  }
-
-  .align-left {
-    text-align: left;
-  }
-
-  .align-center {
-    text-align: center;
-  }
-
-  .align-right {
-    text-align: right;
   }
 
   &-selectednode {
