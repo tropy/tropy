@@ -33,6 +33,7 @@ class EditorToolbar extends PureComponent {
     super(props)
 
     this.state = {
+      alignments: this.getActiveAlignment(props.state),
       context: 'default',
       marks: this.getActiveMarks(props.state),
     }
@@ -62,6 +63,7 @@ class EditorToolbar extends PureComponent {
   componentWillReceiveProps(props) {
     if (props.state !== this.props.state) {
       this.setState({
+        alignments: this.getActiveAlignment(props.state),
         marks: this.getActiveMarks(props.state)
       })
     }
@@ -85,6 +87,25 @@ class EditorToolbar extends PureComponent {
     return res
   }
 
+  getActiveAlignment(state = this.props.state) {
+    let res = {
+      left: false,
+      right: false,
+      center: false
+    }
+
+    state.doc.nodesBetween(
+      state.selection.from,
+      state.selection.to,
+      (node) => {
+        if (node.type.attrs.align) {
+          res[node.attrs.align] = true
+        }
+      })
+
+    return res
+  }
+
   isMarkActive(type, state = this.props.state) {
     const { from, $from, to, empty } = state.selection
 
@@ -93,16 +114,22 @@ class EditorToolbar extends PureComponent {
       state.doc.rangeHasMark(from, to, type)
   }
 
-  renderMarkButton(name, icon) {
+  renderActiveButton(name, icon, collection) {
     return (
       <IconButton
         noFocus
         icon={icon}
-        isActive={this.state.marks[name]}
+        isActive={this.state[collection][name]}
         title={`editor.commands.${name}`}
         onMouseDown={this.cmd[name]}/>
     )
   }
+
+  renderMarkButton = (name, icon) =>
+    this.renderActiveButton(name, icon, 'marks')
+
+  renderAlignButton = (name, icon) =>
+    this.renderActiveButton(name, icon, 'alignments')
 
   setDefaultContext = () => {
     this.setState({ context: 'default' })
@@ -150,24 +177,9 @@ class EditorToolbar extends PureComponent {
               {this.renderMarkButton('subscript', <IconSub/>)}
             </ToolGroup>
             <ToolGroup>
-              <IconButton
-                noFocus
-                icon={<IconAlignLeft/>}
-                isActive={false}
-                title="editor.commands.left"
-                onMouseDown={this.cmd.left}/>
-              <IconButton
-                noFocus
-                icon={<IconAlignCenter/>}
-                isActive={false}
-                title="editor.commands.center"
-                onMouseDown={this.cmd.center}/>
-              <IconButton
-                noFocus
-                icon={<IconAlignRight/>}
-                isActive={false}
-                title="editor.commands.right"
-                onMouseDown={this.cmd.right}/>
+              {this.renderAlignButton('left', <IconAlignLeft/>)}
+              {this.renderAlignButton('center', <IconAlignCenter/>)}
+              {this.renderAlignButton('right', <IconAlignRight/>)}
             </ToolGroup>
             <ToolGroup>
               <IconButton
