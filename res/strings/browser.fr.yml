@@ -1,0 +1,24 @@
+fr:
+  dialogs:
+    crashed:
+      buttons:
+        - Fermer la fenêtre
+        - Relancer
+        - Garder Tropy ouvert
+      message: Tropy a planté
+      detail: Merci de reporter cet incident à https://github.com/tropy/tropy
+    unresponsive:
+      buttons:
+        - Fermer
+        - Continuer d'attendre
+      message: Tropy ne répond plus
+      detail: >
+        Tropy ne répond plus.
+        Voulez-vous forcer sa fermeture ou bien continuer d'attendre?
+  windows:
+    prefs:
+      title: Préférences
+    wizard:
+      title: Bienvenu.e dans Tropy
+    about:
+      title: À propos de Tropy
