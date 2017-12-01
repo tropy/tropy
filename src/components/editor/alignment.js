@@ -24,22 +24,19 @@ const alignCommands = {
   center: buildAlignCmd('center'),
 }
 
+
 // Maintain alignment and marks by appending the `align` attribute to newly created paragraphs
 // (based on `align` attribute value of the preceding node).
 // Supports both lists and regular markup.
-const keepAlignment = (state, dispatch) => (tr => {
+// nodeOffset is how far ahead from the current position to insert the alignment attributes.
+const keepAlignment = (state, dispatch, nodeOffset) => (tr => {
   const { pos, parentOffset } = state.selection.$cursor
   const prev = state.doc.resolve(pos - parentOffset)
   if (prev && prev.parent) {
     const direction = prev.parent.attrs.align
     const prevMarks = state.doc.resolve(pos).marks()
     if (direction && direction !== 'left') {
-      let offset = 1
-      // if we are within a list, the target node is further away
-      if (prev.node(prev.depth - 1).type.name === 'list_item') {
-        offset += 2
-      }
-      tr.setNodeMarkup(pos + offset, null, { align: direction })
+      tr.setNodeMarkup(pos + nodeOffset, null, { align: direction })
     }
     tr.ensureMarks(prevMarks)
   }
@@ -49,11 +46,11 @@ const keepAlignment = (state, dispatch) => (tr => {
 const splitListItemKeepAlignment = (listItemType) => {
   const splitCmd = splitListItem(listItemType)
   return (state, dispatch) =>
-    splitCmd(state, dispatch && keepAlignment(state, dispatch))
+    splitCmd(state, dispatch && keepAlignment(state, dispatch, 3))
 }
 
 const splitBlockKeepAlignment = (state, dispatch) =>
-  splitBlockKeepMarks(state, dispatch && keepAlignment(state, dispatch))
+  splitBlockKeepMarks(state, dispatch && keepAlignment(state, dispatch, 1))
 
 module.exports = {
   alignCommands,
