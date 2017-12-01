@@ -381,6 +381,7 @@ en:
       bold: Bold
       italic: Italic
       underline: Underline
+      overline: Overline
       strikethrough: Strikethrough
       subscript: Subscript
       superscript: Superscript

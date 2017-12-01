@@ -44,6 +44,7 @@ class EditorToolbar extends PureComponent {
       'bold',
       'italic',
       'underline',
+      'overline',
       'strikethrough',
       'subscript',
       'superscript',
@@ -169,6 +170,7 @@ class EditorToolbar extends PureComponent {
               {this.renderMarkButton('bold', <IconB/>)}
               {this.renderMarkButton('italic', <IconI/>)}
               {this.renderMarkButton('underline', <IconU/>)}
+              {this.renderMarkButton('overline', <IconU/>)}
               {this.renderMarkButton('strikethrough', <IconS/>)}
               <IconButton
                 noFocus

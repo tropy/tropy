@@ -64,44 +64,31 @@ const nodes = {
   }
 }
 
+const textDecoMark = (markValue) => ({
+  attrs: {
+    style: {
+      default: `text-decoration: ${markValue}`
+    }
+  },
+
+  parseDOM: [{
+    style: 'text-decoration',
+    getAttrs(value) { return value === markValue }
+  }],
+
+  toDOM(node) {
+    return ['span', node.attrs]
+  }
+})
+
 const marks = {
   link,
   italic: em,
   bold: strong,
 
-  underline: {
-    attrs: {
-      style: {
-        default: 'text-decoration: underline'
-      }
-    },
-
-    parseDOM: [{
-      style: 'text-decoration',
-      getAttrs(value) { return value === 'underline' }
-    }],
-
-    toDOM(node) {
-      return ['span', node.attrs]
-    }
-  },
-
-  strikethrough: {
-    attrs: {
-      style: {
-        default: 'text-decoration: line-through'
-      }
-    },
-
-    parseDOM: [{
-      style: 'text-decoration',
-      getAttrs(value) { return value === 'line-through' && null }
-    }],
-
-    toDOM(node) {
-      return ['span', node.attrs]
-    }
-  },
+  underline: textDecoMark('underline'),
+  overline: textDecoMark('overline'),
+  strikethrough: textDecoMark('line-through'),
 
   superscript: {
     excludes: 'subscript',

@@ -117,6 +117,7 @@ en:
       bold: CmdOrCtrl+b
       italic: CmdOrCtrl+i
       underline: CmdOrCtrl+u
+      overline: CmdOrCtrl+o
       liftListItem: CmdOrCtrl+[
       sinkListItem: CmdOrCtrl+]
       addLink: CmdOrCtrl+l
