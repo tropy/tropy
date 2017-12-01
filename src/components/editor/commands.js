@@ -5,7 +5,6 @@ const { undo, redo } = require('prosemirror-history')
 const { undoInputRule } = require('prosemirror-inputrules')
 const {
   wrapInList,
-  splitListItem,
   liftListItem,
   sinkListItem
 } = require('prosemirror-schema-list')
@@ -29,7 +28,6 @@ module.exports = (schema) => {
   const list = {
     ol: wrapInList(schema.nodes.ordered_list),
     ul: wrapInList(schema.nodes.bullet_list),
-    splitListItem: splitListItem(schema.nodes.list_item),
     liftListItem: liftListItem(schema.nodes.list_item),
     sinkListItem: sinkListItem(schema.nodes.list_item),
   }
