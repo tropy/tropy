@@ -11,7 +11,7 @@ const {
 } = require('prosemirror-schema-list')
 const { TextSelection } = require('prosemirror-state')
 const { markExtend } = require('./selections')
-const { aligns, keepAlignment } = require('./alignment')
+const align = require('./alignment')
 
 
 const expandAndRemoveMark = (markType) =>
@@ -45,20 +45,19 @@ module.exports = (schema) => {
     ...cmd,
     ...list,
     ...marks,
-    ...aligns,
+    ...align.alignCommands,
 
     undo,
     redo,
 
     blockquote: cmd.wrapIn(schema.nodes.blockquote),
 
-    break: (state, dispatch) =>
-      cmd.chainCommands(
-        list.splitListItem,
-        cmd.createParagraphNear,
-        cmd.liftEmptyBlock,
-        cmd.splitBlockKeepMarks,
-      )(state, dispatch && keepAlignment(state, dispatch)),
+    break: cmd.chainCommands(
+      align.splitListItemKeepAlignment(schema.nodes.list_item),
+      cmd.createParagraphNear,
+      cmd.liftEmptyBlock,
+      align.splitBlockKeepAlignment
+    ),
 
     br: (state, dispatch) => (
       dispatch(
