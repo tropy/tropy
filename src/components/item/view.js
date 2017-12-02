@@ -141,14 +141,14 @@ class ItemView extends PureComponent {
     this.props.onNoteSave(note, meta)
   }, NOTE.AUTOSAVE_DELAY)
 
-  handleNoteChange = (note, changed, blank) => {
+  handleNoteChange = (note, changed, isBlank) => {
     if (note.id != null) {
       note.modified = new Date()
-      if (blank) this.handleNoteSave.cancel()
+      if (isBlank) this.handleNoteSave.cancel()
       else this.handleNoteSave(note, { changed })
 
     } else {
-      if (note.created == null && !blank) {
+      if (note.created == null && !isBlank) {
         note.created = Date.now()
         note.photo = this.props.photo.id
         note.selection = this.props.activeSelection
