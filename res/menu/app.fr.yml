@@ -32,7 +32,7 @@ fr:
               command: 'app:clear-recent-projects'
         - type: 'separator'
         - &import
-          label: 'Importer des photos …'
+          label: 'Importer des photos…'
           command: 'app:import-photos'
           accelerator: 'CmdOrCtrl+Shift+I'
         - &consolidate
@@ -79,7 +79,7 @@ fr:
           role: 'selectall'
         - type: 'separator'
         - &preferences
-          label: 'Préférences …'
+          label: 'Préférences…'
           accelerator: 'Shift+Control+S'
           command: 'app:open-preferences'
     - &view
@@ -153,17 +153,17 @@ fr:
         - type: 'separator'
         - &updaterCheck
           id: 'updater-check'
-          label: 'Recherche des mises à jour en cours …'
+          label: 'Recherche des mises à jour en cours…'
           command: 'app:check-for-updates'
           enabled: false
         - &updaterIsChecking
           id: 'updater-is-checking'
-          label: 'Obtention des mises à jour en cours …'
+          label: 'Obtention des mises à jour en cours…'
           enabled: false
           visible: false
         - &updaterInstall
           id: 'updater-install'
-          label: 'Installer les mises à jour …'
+          label: 'Installer les mises à jour…'
           command: 'app:install-updates'
           enabled: false
           visible: false
@@ -174,7 +174,7 @@ fr:
         - label: 'A propos de %name'
           command: 'app:about'
         - type: 'separator'
-        - label: 'Préférences …'
+        - label: 'Préférences…'
           accelerator: 'Command+,'
           command: 'app:open-preferences'
         - type: 'separator'
