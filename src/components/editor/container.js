@@ -62,7 +62,7 @@ class Editor extends Component {
   }
 
   focus = () => {
-    this.view.focus()
+    if (this.view != null) this.view.dom.focus()
   }
 
   exec(action, ...args) {
