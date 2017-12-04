@@ -2,15 +2,11 @@
 
 const cmd  = require('prosemirror-commands')
 const { undo, redo } = require('prosemirror-history')
+const { list } = require('./list')
 const { undoInputRule } = require('prosemirror-inputrules')
-const {
-  wrapInList,
-  liftListItem,
-  sinkListItem
-} = require('prosemirror-schema-list')
 const { TextSelection } = require('prosemirror-state')
 const { markExtend } = require('./selections')
-const align = require('./alignment')
+const { alignment } = require('./alignment')
 
 
 const expandAndRemoveMark = (markType) =>
@@ -30,13 +26,7 @@ const expandAndRemoveMark = (markType) =>
   }
 
 module.exports = (schema) => {
-  const list = {
-    ol: wrapInList(schema.nodes.ordered_list),
-    ul: wrapInList(schema.nodes.bullet_list),
-    liftListItem: liftListItem(schema.nodes.list_item),
-    sinkListItem: sinkListItem(schema.nodes.list_item),
-  }
-
+  const align = alignment(schema)
   const marks = {}
 
   for (let name in schema.marks) {
@@ -46,9 +36,12 @@ module.exports = (schema) => {
 
   return {
     ...cmd,
-    ...list,
+    ...list(schema),
     ...marks,
-    ...align.alignCommands,
+
+    left: align.left,
+    right: align.right,
+    center: align.center,
 
     undo,
     redo,
@@ -56,10 +49,10 @@ module.exports = (schema) => {
     blockquote: cmd.wrapIn(schema.nodes.blockquote),
 
     break: cmd.chainCommands(
-      align.splitListItemKeepAlignment(schema.nodes.list_item),
+      align.splitListItem,
       cmd.createParagraphNear,
       cmd.liftEmptyBlock,
-      align.splitBlockKeepAlignment
+      align.splitBlock
     ),
 
     br(state, dispatch) {

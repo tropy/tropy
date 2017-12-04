@@ -33,7 +33,7 @@ class EditorToolbar extends PureComponent {
     super(props)
 
     this.state = {
-      alignments: this.getActiveAlignment(props.state),
+      align: this.getActiveAlignment(props.state),
       context: 'default',
       marks: this.getActiveMarks(props.state),
     }
@@ -63,7 +63,7 @@ class EditorToolbar extends PureComponent {
   componentWillReceiveProps(props) {
     if (props.state !== this.props.state) {
       this.setState({
-        alignments: this.getActiveAlignment(props.state),
+        align: this.getActiveAlignment(props.state),
         marks: this.getActiveMarks(props.state)
       })
     }
@@ -78,32 +78,28 @@ class EditorToolbar extends PureComponent {
   }
 
   getActiveMarks(state = this.props.state) {
-    let res = {}, mark
+    const marks = {}
 
-    for (mark in state.schema.marks) {
-      res[mark] = this.isMarkActive(state.schema.marks[mark], state)
+    for (const mark in state.schema.marks) {
+      marks[mark] = this.isMarkActive(state.schema.marks[mark], state)
     }
 
-    return res
+    return marks
   }
 
   getActiveAlignment(state = this.props.state) {
-    let res = {
-      left: false,
-      right: false,
-      center: false
-    }
+    const align = { left: false, right: false, center: false }
 
     state.doc.nodesBetween(
       state.selection.from,
       state.selection.to,
       (node) => {
         if (node.type.attrs.align) {
-          res[node.attrs.align] = true
+          align[node.attrs.align] = true
         }
       })
 
-    return res
+    return align
   }
 
   isMarkActive(type, state = this.props.state) {
@@ -114,22 +110,30 @@ class EditorToolbar extends PureComponent {
       state.doc.rangeHasMark(from, to, type)
   }
 
-  renderActiveButton(name, icon, collection) {
+  renderButton(name, props) {
     return (
       <IconButton
+        {...props}
         noFocus
-        icon={icon}
-        isActive={this.state[collection][name]}
         title={`editor.commands.${name}`}
         onMouseDown={this.cmd[name]}/>
     )
   }
 
-  renderMarkButton = (name, icon) =>
-    this.renderActiveButton(name, icon, 'marks')
+  renderMarkButton(name, icon) {
+    return this.renderButton(name, {
+      icon,
+      isActive: this.state.marks[name]
+    })
+  }
 
-  renderAlignButton = (name, icon) =>
-    this.renderActiveButton(name, icon, 'alignments')
+
+  renderAlignButton(name, icon) {
+    return this.renderButton(name, {
+      icon,
+      isActive: this.state.align[name]
+    })
+  }
 
   setDefaultContext = () => {
     this.setState({ context: 'default' })

@@ -3,26 +3,27 @@
 const { splitListItem } = require('prosemirror-schema-list')
 const { splitBlockKeepMarks }  = require('prosemirror-commands')
 
-const buildAlignCmd = (direction) =>
+const align = (direction) =>
   (state, dispatch) => {
     let tr = state.tr
+    let changes = false
+
     state.doc.nodesBetween(
       state.selection.from,
       state.selection.to,
       (node, pos) => {
         // align nodes that support alignment
         if (node.type.attrs.align) {
+          changes = true
           tr.setNodeMarkup(pos, null, { align: direction })
         }
       })
-    dispatch(tr)
-  }
 
-const alignCommands = {
-  left: buildAlignCmd('left'),
-  right: buildAlignCmd('right'),
-  center: buildAlignCmd('center'),
-}
+    if (!changes) return false
+    if (dispatch) dispatch(tr)
+
+    return true
+  }
 
 
 // Maintain alignment and marks by appending the `align` attribute to newly created paragraphs
@@ -53,7 +54,13 @@ const splitBlockKeepAlignment = (state, dispatch) =>
   splitBlockKeepMarks(state, dispatch && keepAlignment(state, dispatch, 1))
 
 module.exports = {
-  alignCommands,
-  splitListItemKeepAlignment,
-  splitBlockKeepAlignment
+  alignment(schema) {
+    return {
+      left: align('left'),
+      center: align('center'),
+      right: align('right'),
+      splitBlock: splitBlockKeepAlignment,
+      splitListItem: splitListItemKeepAlignment(schema.nodes.list_item)
+    }
+  }
 }
