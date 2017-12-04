@@ -5,12 +5,12 @@ const { undo, redo } = require('prosemirror-history')
 const { undoInputRule } = require('prosemirror-inputrules')
 const {
   wrapInList,
-  splitListItem,
   liftListItem,
   sinkListItem
 } = require('prosemirror-schema-list')
 const { TextSelection } = require('prosemirror-state')
 const { markExtend } = require('./selections')
+const align = require('./alignment')
 
 
 const expandAndRemoveMark = (markType) =>
@@ -33,7 +33,6 @@ module.exports = (schema) => {
   const list = {
     ol: wrapInList(schema.nodes.ordered_list),
     ul: wrapInList(schema.nodes.bullet_list),
-    splitListItem: splitListItem(schema.nodes.list_item),
     liftListItem: liftListItem(schema.nodes.list_item),
     sinkListItem: sinkListItem(schema.nodes.list_item),
   }
@@ -49,6 +48,7 @@ module.exports = (schema) => {
     ...cmd,
     ...list,
     ...marks,
+    ...align.alignCommands,
 
     undo,
     redo,
@@ -56,10 +56,10 @@ module.exports = (schema) => {
     blockquote: cmd.wrapIn(schema.nodes.blockquote),
 
     break: cmd.chainCommands(
-      list.splitListItem,
+      align.splitListItemKeepAlignment(schema.nodes.list_item),
       cmd.createParagraphNear,
       cmd.liftEmptyBlock,
-      cmd.splitBlockKeepMarks
+      align.splitBlockKeepAlignment
     ),
 
     br(state, dispatch) {

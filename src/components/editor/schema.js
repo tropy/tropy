@@ -20,9 +20,27 @@ const {
   link
 } = basic.marks
 
+const alignAttrs = (align) => {
+  if (align === 'left') return {} // don't render default styles
+  return {
+    style: `text-align:${align}`
+  }
+}
+
+const align = (nodeSpec, tag) => ({
+  ...nodeSpec,
+  attrs: {
+    ...nodeSpec.attrs,
+    align: { default: 'left' },
+  },
+  toDOM: (node) => {
+    return [tag, alignAttrs(node.attrs.align), 0]
+  }
+})
+
 const nodes = {
   doc,
-  paragraph,
+  paragraph: align(paragraph, 'p'),
   blockquote,
   text,
   hard_break,
@@ -45,8 +63,6 @@ const nodes = {
     content: 'paragraph block*'
   }
 }
-
-
 
 const marks = {
   link,
