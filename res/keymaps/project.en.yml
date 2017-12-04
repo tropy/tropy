@@ -120,9 +120,9 @@ en:
       liftListItem: CmdOrCtrl+[
       sinkListItem: CmdOrCtrl+]
       addLink: CmdOrCtrl+l
-      joinUp: Alt+ArrowUp
-      joinDown: Alt+ArrowDown
-      lift: CmdOrCtrl+ArrowLeft
+      joinUp: Shift+Alt+ArrowUp
+      joinDown: Shift+Alt+ArrowDown
+      lift: Shift+CmdOrCtrl+ArrowLeft
       selectAll: CmdOrCtrl+a
       clearSelection: Escape
       blockquote: CmdOrCtrl+Shift+>
