@@ -38,9 +38,9 @@ fr:
     note:
       title: >
         {count, plural,
-          =0 {No Notes}
-          one {1 Note}
-          other {# Notes}}
+          =0 {Pas de note}
+          one {1 note}
+          other {# notes}}
       create: Ajouter une note
   about:
       version: Version {version}
