@@ -13,6 +13,7 @@ module.exports = {
   ITEM: require('./item'),
   KEYMAP: require('./keymap'),
   LIST: require('./list'),
+  LOCALE: require('./locale'),
   METADATA: require('./metadata'),
   NAV: require('./nav'),
   NOTE: require('./note'),

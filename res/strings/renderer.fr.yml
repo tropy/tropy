@@ -18,7 +18,7 @@ fr:
       item: >
         {count, plural,
           =0 {}
-          one {objet}
+          one {Objet}
           other {# objets}}
       selection: Sélection
     tags:
@@ -106,8 +106,8 @@ fr:
 
     project:
       label: Projet
-    template: Modèle de saisie 
-      label: Modèles de saisie 
+    template:
+      label: Modèles de saisie
       new: Nouveau modèle de saisie…
       create: Créer
       select: Modèle de saisie
@@ -216,7 +216,7 @@ fr:
         cancel: Passer
         ok: Importer tout de même
     filter:
-      templates:Modèle de saisie Tropy
+      templates: Modèle de saisie Tropy
       images: Images
       projects: Projets Tropy
       rdf: Lexiques de métadonnées RDF

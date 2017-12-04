@@ -38,10 +38,10 @@ class Menu {
   }
 
   async load(name) {
-    const { defaults, state } = this.app
+    const { defaultLocale, state } = this.app
 
     this.template = (
-      await res.Menu.openWithFallback(defaults.locale, state.locale, name)
+      await res.Menu.openWithFallback(defaultLocale, state.locale, name)
     ).template
 
     return this
@@ -228,6 +228,8 @@ class AppMenu extends Menu {
   async load(name = 'app') {
     try {
       return (await super.load(name))
+    } catch (error) {
+      throw error
     } finally {
       this.reload()
     }
@@ -236,8 +238,10 @@ class AppMenu extends Menu {
   reload() {
     const old = this.menu
 
-    this.menu = this.build(this.template)
-    this.update()
+    if (this.template != null) {
+      this.menu = this.build(this.template)
+      this.update()
+    }
 
     if (old != null) {
       old.destroy()

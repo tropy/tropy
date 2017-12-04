@@ -5,6 +5,7 @@ const { join } = require('path')
 const { readFileAsync: read } = require('fs')
 const { get, flatten } = require('./util')
 const yaml = require('js-yaml')
+const { debug } = require('./log')
 
 
 class Resource {
@@ -21,11 +22,10 @@ class Resource {
   }
 
   static async open(locale, name, ...args) {
-    return new this(
-      this.parse(await read(this.expand(name, locale))),
-      locale,
-      ...args
-    )
+    const res = this.expand(name, locale)
+    debug(`open resource ${res}`)
+
+    return new this(this.parse(await read(res)), locale, ...args)
   }
 
   static async openWithFallback(fallback, locale, ...args) {

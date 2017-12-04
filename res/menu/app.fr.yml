@@ -89,14 +89,9 @@ fr:
           role: 'togglefullscreen'
         - label: 'Cacher la barre de menu'
           command: 'app:toggle-menu-bar'
-
-*****************************************************************************************************************************************
-
         - label: 'Cacher la barre latérale'
           command: 'app:toggle-sidebar'
           enabled: false
-
-*****************************************************************************************************************************************
 
     - &win
       label: 'Fenêtre'
@@ -138,9 +133,9 @@ fr:
     - &help
       label: 'Aide'
       submenu:
-        - label: 'Guide d'utilisation'
+        - label: "Guide d'utilisation"
           command: 'app:open-docs'
-        - label: 'Forum d'aide'
+        - label: "Forum d'aide"
           command: 'app:open-forums'
         - type: 'separator'
         - label: 'Licence'
@@ -230,9 +225,9 @@ fr:
     - label: 'Aide'
       role: 'help'
       submenu:
-        - label: 'Guide d'utilisation'
+        - label: "Guide d'utilisation"
           command: 'app:open-docs'
-        - label: 'Forum d'aide'
+        - label: "Forum d'aide"
           command: 'app:open-forums'
         - type: 'separator'
         - label: 'Licence du programme'
@@ -261,5 +256,5 @@ fr:
         - *preferences
     - *view
     - *win
-- *dev
+    - *dev
     - *help

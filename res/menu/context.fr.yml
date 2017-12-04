@@ -62,7 +62,7 @@ fr:
       - label: 'Supprimer le marqueur'
         command: 'app:delete-tag'
     item-tag: &item-tag
-      - label: 'Enlever le marqueur de l'objet'
+      - label: "Enlever le marqueur de l'objet"
         command: 'app:delete-item-tag'
     notes: &notes
       []
@@ -73,10 +73,10 @@ fr:
       - label: 'Nouvel objet'
         command: 'app:create-item'
     item: &item
-      - label: 'Exploser l'objet'
+      - label: "Exploser l'objet"
         command: 'app:explode-item'
         condition: 'hasMultiplePhotos'
-      - label: 'Exporter l'objet…'
+      - label: Exporter l'objet…
         command: 'app:export-item'
       - label: 'Ajouter une photo…'
         command: 'app:create-item-photo'
@@ -88,7 +88,7 @@ fr:
             checked: true
             enabled: false
           - type: separator
-      - label: 'Supprimer l'objet'
+      - label: Supprimer l'objet
         command: 'app:delete-item'
     item-bulk: &item-bulk
       - label: 'Fusionner les objets sélectionnés'
@@ -98,7 +98,7 @@ fr:
       - label: 'Supprimer les objets sélectionnés'
         command: 'app:delete-item'
     item-list: &item-list
-      - label: 'Enlever l'objet de la liste'
+      - label: "Enlever l'objet de la liste"
         command: 'app:list-item-remove'
     item-bulk-list: &item-bulk-list
       - label: 'Enlever les objets sélectionnés de la liste'
@@ -125,9 +125,9 @@ fr:
         command: 'app:save-selection'
         enabled: false
     item-deleted: &item-deleted
-      - label: 'Restaurer l'objet'
+      - label: Restaurer l'objet
         command: 'app:restore-item'
-      - label: 'Supprimer définitivement l'objet'
+      - label: Supprimer définitivement l'objet
         command: 'app:destroy-item'
     item-bulk-deleted: &item-bulk-deleted
       - label: 'Restaurer les objets sélectionnés'
@@ -189,5 +189,5 @@ fr:
     item-bulk-deleted: *item-bulk-deleted
     trash: *trash
     photo: *photo
-selection: *selection
+    selection: *selection
     dev: *dev

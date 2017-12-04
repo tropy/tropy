@@ -31,7 +31,7 @@ const { darwin } = require('../common/os')
 const { version } = require('../common/release')
 
 const {
-  FLASH, HISTORY, TAG, PROJECT, CONTEXT, SASS
+  FLASH, HISTORY, TAG, PROJECT, CONTEXT, SASS, LOCALE
 } = require('../constants')
 
 const WIN = SASS.WINDOW
@@ -48,7 +48,6 @@ class Tropy extends EventEmitter {
   static defaults = {
     frameless: darwin,
     debug: false,
-    locale: 'en', // app.getLocale() || 'en',
     theme: 'light',
     recent: [],
     updater: true,
@@ -273,7 +272,7 @@ class Tropy extends EventEmitter {
         this.ctx.load(),
         this.cache.init(),
         Strings
-          .openWithFallback(Tropy.defaults.locale, this.state.locale)
+          .openWithFallback(LOCALE.default, this.state.locale)
           .then(strings => this.strings = strings)
       ]))
 
@@ -284,7 +283,7 @@ class Tropy extends EventEmitter {
   }
 
   migrate(state) {
-    state.locale = 'en'
+    state.locale = state.locale || this.defaultLocale
     state.version = this.version
     state.uuid = state.uuid || uuid()
 
@@ -626,8 +625,8 @@ class Tropy extends EventEmitter {
     }
   }
 
-  get defaults() {
-    return Tropy.defaults
+  get defaultLocale() {
+    return LOCALE[app.getLocale()] || LOCALE.default
   }
 
   get dict() {
