@@ -12,7 +12,7 @@ function sort(locale = ARGS.locale) {
   return sort[locale]
 }
 
-function search(locale) {
+function search(locale = ARGS.locale) {
   if (!(locale in search)) {
     search[locale] = new Intl.Collator(locale, {
       numeric: true,
