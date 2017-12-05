@@ -90,7 +90,7 @@ en:
         locale: Locale
         locales:
           en: English
-          fr: French
+          fr: Français
       template: Default Template
       debug: Enable Developer Mode
       dup:

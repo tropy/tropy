@@ -89,8 +89,8 @@ fr:
       locale:
         locale: Langue
         locales:
-          en: Anglais
-          fr: Fraçais
+          en: English
+          fr: Français
       template: Modèle de saisie par défaut
       debug: Autoriser le mode développeur
       dup:
