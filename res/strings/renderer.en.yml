@@ -11,6 +11,8 @@ en:
         =0 {No items in this view}
         one {1 item in this view}
         other {# items in this view}}
+    search:
+      placeholder: Search
   panel:
     metadata:
       tab: Metadata

@@ -2,6 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
+const { injectIntl, intlShape } = require('react-intl')
 const { bool, func, string } = require('prop-types')
 const { IconSearch, IconXSmall } = require('../icons')
 const { IconButton } = require('../button')
@@ -12,6 +13,10 @@ const debounce = require('lodash.debounce')
 
 
 class SearchField extends PureComponent {
+  get placeholder() {
+    return this.props.intl.formatMessage({ id: 'toolbar.search.placeholder' })
+  }
+
   handleCancel = () => {
     this.handleChange.cancel()
 
@@ -37,7 +42,7 @@ class SearchField extends PureComponent {
           isDisabled={this.props.isDisabled}
           tabIndex={TABS.SearchField}
           value={this.props.query}
-          placeholder="Search"
+          placeholder={this.placeholder}
           onCancel={this.handleCancel}
           onChange={this.handleChange}
           onCommit={this.handleCommit}/>
@@ -50,6 +55,7 @@ class SearchField extends PureComponent {
   }
 
   static propTypes = {
+    intl: intlShape,
     isDisabled: bool,
     query: string.isRequired,
     onSearch: func.isRequired
@@ -57,5 +63,5 @@ class SearchField extends PureComponent {
 }
 
 module.exports = {
-  SearchField
+  SearchField: injectIntl(SearchField)
 }

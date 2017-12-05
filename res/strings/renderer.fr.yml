@@ -11,6 +11,8 @@ fr:
         =0 {Pas d'objet dans cette vue}
         one {1 objet dans cette vue}
         other {# objets dans cette vue}}
+    search:
+      placeholder: Recherche
   panel:
     metadata:
       tab: Métadonnées
