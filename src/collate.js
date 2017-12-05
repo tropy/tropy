@@ -21,7 +21,7 @@ function search(locale = ARGS.locale) {
     })
   }
 
-  return sort[locale]
+  return search[locale]
 }
 
 
