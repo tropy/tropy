@@ -1,7 +1,7 @@
 'use strict'
 
 const { assign } = Object
-const { once } = require('./common/util')
+const { blank, once } = require('./common/util')
 const everything = () => true
 
 const dom = {
@@ -154,6 +154,10 @@ const dom = {
 
   isInput(node) {
     return node.tagName === 'INPUT'
+  },
+
+  isLink(node) {
+    return node.tagName === 'A' && !blank(node.href)
   },
 
   createDragHandler({ handleDrag, handleDragStop }) {

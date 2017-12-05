@@ -7,6 +7,7 @@ const { func, bool, instanceOf, number } = require('prop-types')
 const { EditorView } = require('prosemirror-view')
 const { EditorState } = require('prosemirror-state')
 const { isMeta } = require('../../keymap')
+const { isLink } = require('../../dom')
 
 
 class ProseMirror extends Component {
@@ -16,7 +17,7 @@ class ProseMirror extends Component {
       ...this.getEditorProps(),
       dispatchTransaction: this.handleChange,
       handleKeyDown: this.handleKeyDown,
-      handleClickOn: this.handleClickOn,
+      handleClick: this.handleViewClick,
       handleDOMEvents: {
         focus: this.handleFocus,
         blur: this.handleBlur
@@ -71,16 +72,18 @@ class ProseMirror extends Component {
     return (this.props.isDisabled) ? false : this.props.onKeyDown(...args)
   }
 
-  handleClickOn = (view, pos, node, nodePos, event, direct) => {
-    // open a link in system browser with cmd-click on mac or ctrl-click elsewhere
-    if (!direct || !isMeta(event)) return
-    const targetNode = node.nodeAt(pos - nodePos - 1)
-    if (!targetNode) return
-    for (let mark of targetNode.marks) {
-      const href = mark.attrs && mark.attrs.href
-      if (href) {
-        return shell.openExternal(href)
-      }
+  handleViewClick = (view, pos, event) => {
+    if (!view.editable) this.pm.dom.focus()
+    return isMeta(event) // disable PM's block select
+  }
+
+  handleContainerClick = (event) => {
+    const meta = isMeta(event)
+    const { target } = event
+
+    if (target != null && isLink(target)) {
+      event.preventDefault()
+      if (meta) shell.openExternal(target.href)
     }
   }
 
@@ -94,7 +97,10 @@ class ProseMirror extends Component {
 
   render() {
     return (
-      <div ref={this.setContainer} className="prose-mirror-container"/>
+      <div
+        ref={this.setContainer}
+        className="prose-mirror-container"
+        onClick={this.handleClick}/>
     )
   }
 
