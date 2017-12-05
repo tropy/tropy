@@ -112,6 +112,10 @@ class Window extends EventEmitter {
       .on('theme', (_, theme) => {
         this.style(theme, true)
       })
+      .on('locale', (_, locale) => {
+        args.update({ locale })
+        this.emit('settings.update', { locale })
+      })
       .on('debug', (_, debug) => {
         args.update({ debug })
         this.emit('settings.update', { debug })

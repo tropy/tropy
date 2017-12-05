@@ -268,12 +268,8 @@ class Tropy extends EventEmitter {
       .then(state => this.migrate(state))
 
       .tap(() => all([
-        this.menu.load(),
-        this.ctx.load(),
+        this.load(),
         this.cache.init(),
-        Strings
-          .openWithFallback(LOCALE.default, this.state.locale)
-          .then(strings => this.strings = strings)
       ]))
 
       .tap(state => state.updater && this.updater.start())
@@ -282,8 +278,18 @@ class Tropy extends EventEmitter {
       .tap(() => verbose('app state restored'))
   }
 
+  load() {
+    return all([
+      this.menu.load(),
+      this.ctx.load(),
+      Strings
+        .openWithFallback(LOCALE.default, this.state.locale)
+        .then(strings => this.strings = strings)
+    ])
+  }
+
   migrate(state) {
-    state.locale = state.locale || this.defaultLocale
+    state.locale = this.getLocale(state.locale)
     state.version = this.version
     state.uuid = state.uuid || uuid()
 
@@ -432,6 +438,14 @@ class Tropy extends EventEmitter {
       verbose(`switching to "${theme}" theme...`)
       this.state.theme = theme
       this.broadcast('theme', theme)
+      this.emit('app:reload-menu')
+    })
+
+    this.on('app:switch-locale', async (_, locale) => {
+      verbose(`switching to "${locale}" locale...`)
+      this.state.locale = locale
+      await this.load()
+      this.broadcast('locale', locale)
       this.emit('app:reload-menu')
     })
 
@@ -625,8 +639,12 @@ class Tropy extends EventEmitter {
     }
   }
 
+  getLocale(locale) {
+    return LOCALE[locale || app.getLocale()] || LOCALE.default
+  }
+
   get defaultLocale() {
-    return LOCALE[app.getLocale()] || LOCALE.default
+    return this.getLocale()
   }
 
   get dict() {

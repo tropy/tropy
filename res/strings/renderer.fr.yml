@@ -86,6 +86,11 @@ fr:
         themes:
           light: Lumineux
           dark: Sombre
+      locale:
+        locale: Langue
+        locales:
+          en: Anglais
+          fr: Fraçais
       template: Modèle de saisie par défaut
       debug: Autoriser le mode développeur
       dup:

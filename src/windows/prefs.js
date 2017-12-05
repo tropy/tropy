@@ -36,6 +36,9 @@ win.on('app.redo', () => {
 })
 win.on('settings.update', (settings) => {
   store.dispatch(act.settings.update(settings))
+  if (settings.locale) {
+    store.dispatch(act.intl.load({ locale: settings.locale }))
+  }
 })
 
 win.unloaders.push(dialog.stop)

@@ -86,6 +86,11 @@ en:
         themes:
           light: Light
           dark: Dark
+      locale:
+        locale: Locale
+        locales:
+          en: English
+          fr: French
       template: Default Template
       debug: Enable Developer Mode
       dup:

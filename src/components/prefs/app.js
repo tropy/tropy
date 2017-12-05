@@ -25,6 +25,10 @@ class AppPrefs extends PureComponent {
     ipc.send('cmd', 'app:switch-theme', theme, theme)
   }
 
+  handleLocaleChange = ({ locale }) => {
+    ipc.send('cmd', 'app:switch-locale', locale, locale)
+  }
+
   handleTemplateChange = (template) => {
     this.props.onSettingsUpdate({ template: template.id })
   }
@@ -54,6 +58,14 @@ class AppPrefs extends PureComponent {
             value={this.props.settings.theme}
             options={this.props.themes}
             onChange={this.handleThemeChange}/>
+          <hr/>
+          <FormSelect
+            id="prefs.app.locale.locale"
+            name="locale"
+            isRequired
+            value={this.props.settings.locale}
+            options={this.props.locales}
+            onChange={this.handleLocaleChange}/>
           <hr/>
           <FormElement
             id="prefs.app.ui.label"
@@ -96,8 +108,10 @@ class AppPrefs extends PureComponent {
     templates: array.isRequired,
     settings: shape({
       debug: bool.isRequired,
+      locale: string.isRequired,
       theme: string.isRequired,
     }).isRequired,
+    locales: arrayOf(string).isRequired,
     themes: arrayOf(string).isRequired,
     dupOptions: arrayOf(string).isRequired,
     zoomModes: arrayOf(string).isRequired,
@@ -106,6 +120,7 @@ class AppPrefs extends PureComponent {
 
   static defaultProps = {
     themes: ['light', 'dark'],
+    locales: ['en', 'fr'],
     dupOptions: ['skip', 'import', 'prompt'],
     zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL]
   }
