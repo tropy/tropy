@@ -83,7 +83,7 @@
     "bluebird": "^3.5.1",
     "classnames": "^2.2.5",
     "colors": "^1.1.2",
-    "edtf": "^2.2.2",
+    "edtf": "^2.2.3",
     "exif-reader": "github:inukshuk/exif-reader#patched",
     "generic-pool": "^3.2.0",
     "js-yaml": "^3.10.0",
