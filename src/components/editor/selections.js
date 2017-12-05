@@ -1,24 +1,20 @@
 'use strict'
 
-const markExtend = (selection, markType) => {
-  if (!selection) return
-  const { $cursor, $anchor } = selection
-  const pos = $cursor || $anchor
+const hasMark = (pos, index, markType) =>
+      markType.isInSet(pos.parent.child(index).marks)
+
+const calculate = (pos, markType) => {
   let startIndex = pos.index()
   let endIndex = pos.indexAfter()
 
-  const hasMark = (index) => {
-    // clicked outside edge of tag.
-    if (index === pos.parent.childCount) {
-      index--
-    }
-    const result = pos.parent.child(index).marks.filter(
-      mark => mark.type.name === markType.name)
-    return !!result.length
+  if (startIndex === pos.parent.childCount) {
+    startIndex--
   }
-
-  if (!hasMark(startIndex) && !hasMark(endIndex)) {
-    return
+  while (startIndex > 0 && hasMark(pos, startIndex, markType)) {
+    startIndex--
+  }
+  while (endIndex < pos.parent.childCount && hasMark(pos, endIndex, markType)) {
+    endIndex++
   }
 
   let startPos = pos.start()
@@ -26,11 +22,20 @@ const markExtend = (selection, markType) => {
 
   for (let i = 0; i < endIndex; i++) {
     let size = pos.parent.child(i).nodeSize
-    if (i < startIndex) startPos += size
+    if (i <= startIndex) startPos += size
     endPos += size
   }
 
   return { from: startPos, to: endPos }
+}
+
+const markExtend = (selection, markType) => {
+  if (!selection) return
+
+  return {
+    from: calculate(selection.$from, markType).from,
+    to: calculate(selection.$to, markType).to
+  }
 }
 
 module.exports = {

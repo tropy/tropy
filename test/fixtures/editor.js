@@ -1,6 +1,6 @@
 'use strict'
 
-const { EditorState, TextSelection } = require('prosemirror-state')
+const { EditorState } = require('prosemirror-state')
 const { doc, p } = require('prosemirror-test-builder')
 const { schema } = __require('components/editor/schema')
 
@@ -21,12 +21,9 @@ state = state.apply(
     offset + url.length,
     schema.marks.link.create({ href: url })))
 
-// select 'www'
-state = state.apply(
-  state.tr.setSelection(
-    TextSelection.create(state.doc, offset + 7, offset + 10)))
-
 module.exports = {
   state,
-  url
+  url,
+  offset,
+  www: { from: offset + 7, to: offset + 10 } // helper for selection the url
 }
