@@ -381,6 +381,7 @@ fr:
       bold: Gras
       italic: Italique
       underline: Souligné
+      overline: Surligné
       strikethrough: Barré
       subscript: Indice
       superscript: Exposant
