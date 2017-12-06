@@ -22,19 +22,19 @@
 
 tropy:Item a rdfs:Class ;
   rdfs:subClassOf rdfs:Resource ;
-  rdfs:label "Item"@en ;
+  rdfs:label "Item"@en , "Objet"@fr , "Objekt"@de ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A Tropy item contains metadata and photos."@en .
 
 tropy:Photo a rdfs:Class ;
   rdfs:subClassOf rdfs:Resource ;
-  rdfs:label "Photo"@en ;
+  rdfs:label "Photo"@en , "Photo"@fr , "Foto"@de ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A photo."@en .
 
 tropy:Selection a rdfs:Class ;
   rdfs:subClassOf rdfs:Resource ;
-  rdfs:label "Selection"@en ;
+  rdfs:label "Selection"@en "Sélection"@fr , "Ausschnitt"@de ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A selection within a photo."@en .
 
@@ -95,30 +95,30 @@ tropy:selection a rdf:Property ;
 	rdfs:comment "A Tropy photo selection."@en .
 
 tropy:box a rdf:Property ;
-	rdfs:label "Box"@en ;
+	rdfs:label "Box"@en , "Carton"@fr , "Box"@de ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:domain tropy:Item , tropy:Photo, tropy:Selection ;
-	rdfs:comment "A unit of archival organization."@en .
+	rdfs:comment "A unit of archival organization."@en , "Une unité d'archivage."@fr .
 
 tropy:folder a rdf:Property ;
-	rdfs:label "Folder"@en ;
+	rdfs:label "Folder"@en , "Dossier"@fr , "Ordner"@de ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:subPropertyOf tropy:box ;
   rdfs:domain tropy:Item , tropy:Photo, tropy:Selection ;
-	rdfs:comment "A unit of archival organization, usually within a box."@en .
+	rdfs:comment "A unit of archival organization, usually within a box."@en , "Une unité d'archivage, généralement contenue dans un carton."@fr .
 
 tropy:piece a rdf:Property ;
-	rdfs:label "Piece"@en ;
+	rdfs:label "Piece"@en , "Pièce"@fr ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:subPropertyOf tropy:folder ;
   rdfs:domain tropy:Item , tropy:Photo, tropy:Selection ;
-	rdfs:comment "A unit of archival organization, usually within a folder."@en .
+	rdfs:comment "A unit of archival organization, usually within a folder."@en , "Une unité d'archivage, généralement contenue dans un dossier."@fr .
 
 tropy:collection a rdf:Property ;
-	rdfs:label "Collection"@en ;
+	rdfs:label "Collection"@en , "Collection"@fr ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:domain tropy:Item , tropy:Photo, tropy:Selection ;
-	rdfs:comment "A unit of archival organizations."@en .
+	rdfs:comment "A unit of archival organizations."@en , "Un ensemble d'unités d'archivage."@fr .
 
 
 tropy:name a rdf:Property ;
