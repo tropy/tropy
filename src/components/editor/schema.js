@@ -20,9 +20,6 @@ const {
   link
 } = basic.marks
 
-const textAlign = (node) =>
-  (node.attrs.align === 'left') ?
-    {} : { style: `text-align: ${node.attrs.align}` }
 
 const align = (nodeSpec, tag) => ({
   ...nodeSpec,
@@ -30,7 +27,13 @@ const align = (nodeSpec, tag) => ({
     ...nodeSpec.attrs,
     align: { default: 'left' },
   },
-  toDOM: (node) => ([tag, textAlign(node), 0])
+  toDOM: (node) => ([
+    tag,
+    (node.attrs.align === 'left') ?  {} : {
+      style: `text-align: ${node.attrs.align}`
+    },
+    0
+  ])
 })
 
 const nodes = {
