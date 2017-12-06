@@ -26,15 +26,21 @@ tropy:Item a rdfs:Class ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A Tropy item contains metadata and photos."@en .
 
-tropy:Photo a rdfs:Class ;
+tropy:Image a rdfs:Class ;
   rdfs:subClassOf rdfs:Resource ;
-  rdfs:label "Photo"@en , "Photo"@fr , "Foto"@de ;
+  rdfs:label "Image"@en ;
+  rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:comment "An image (photo or selection)."@en .
+
+tropy:Photo a rdfs:Class ;
+  rdfs:subClassOf tropy:Image ;
+  rdfs:label "Photo"@en ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A photo."@en .
 
 tropy:Selection a rdfs:Class ;
-  rdfs:subClassOf rdfs:Resource ;
-  rdfs:label "Selection"@en "Sélection"@fr , "Ausschnitt"@de ;
+  rdfs:subClassOf rdfs:Image ;
+  rdfs:label "Selection"@en ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A selection within a photo."@en .
 
@@ -55,6 +61,18 @@ tropy:Field a rdfs:Class ;
   rdfs:label "Template Field"@en ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A Tropy template field."@en .
+
+tropy:List a rdfs:Class ;
+  rdfs:subClassOf rdfs:Resource ;
+  rdfs:label "List"@en ;
+  rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:comment "A list of Tropy items."@en .
+
+tropy:Tag a rdfs:Class ;
+  rdfs:subClassOf rdfs:Resource ;
+  rdfs:label "Tag"@en ;
+  rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:comment "A tag or label."@en .
 
 
 # Data Types
@@ -93,6 +111,29 @@ tropy:selection a rdf:Property ;
   rdfs:domain tropy:Photo ;
   rdfs:range tropy:Selection ;
 	rdfs:comment "A Tropy photo selection."@en .
+
+tropy:list a rdf:Property ;
+	rdfs:label "List"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Item ;
+  rdfs:range tropy:List ;
+	rdfs:comment "A list containing the item."@en .
+
+tropy:tag a rdf:Property ;
+	rdfs:label "Tag"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Item ;
+  rdfs:range tropy:Tag ;
+	rdfs:comment "A tag applied to the item."@en .
+
+
+tropy:note a rdf:Property ;
+	rdfs:label "Note"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Item , tropy:Photo , tropy:Selection ;
+  rdfs:range tropy:Note ;
+	rdfs:comment "A rich-text note."@en .
+
 
 tropy:box a rdf:Property ;
 	rdfs:label "Box"@en , "Carton"@fr , "Box"@de ;
