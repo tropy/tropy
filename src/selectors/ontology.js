@@ -27,9 +27,9 @@ const getVocabs = memo(
     [],
     map(kv => ({
       ...kv[1],
-      classes: kv[1].classes.map(id => klass[id]),
-      datatypes: kv[1].datatypes.map(id => types[id]),
-      properties: kv[1].properties.map(id => props[id])
+      classes: kv[1].classes.map(id => klass[id] || { id }),
+      datatypes: kv[1].datatypes.map(id => types[id] || { id }),
+      properties: kv[1].properties.map(id => props[id] || { id })
     })),
     vocab
   )
