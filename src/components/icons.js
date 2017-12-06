@@ -408,6 +408,14 @@ i('Nut', (
   </svg>
 ))
 
+i('O', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M8,3.8a2.788,2.788,0,0,1,3,2.75v3.9A2.788,2.788,0,0,1,8,13.2a2.788,2.788,0,0,1-3-2.75V6.55A2.788,2.788,0,0,1,8,3.8ZM8,2A4.793,4.793,0,0,0,3,6.75v3.5A4.793,4.793,0,0,0,8,15a4.793,4.793,0,0,0,5-4.75V6.75A4.793,4.793,0,0,0,8,2Zm7-1V0H1V1Z"/>
+    </g>
+  </svg>
+))
+
 i('Photo', (
   <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="currentColor">
