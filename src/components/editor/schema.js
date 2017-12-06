@@ -20,12 +20,9 @@ const {
   link
 } = basic.marks
 
-const alignAttrs = (align) => {
-  if (align === 'left') return {} // don't render default styles
-  return {
-    style: `text-align:${align}`
-  }
-}
+const textAlign = (node) =>
+  (node.attrs.align === 'left') ?
+    {} : { style: `text-align: ${node.attrs.align}` }
 
 const align = (nodeSpec, tag) => ({
   ...nodeSpec,
@@ -33,9 +30,7 @@ const align = (nodeSpec, tag) => ({
     ...nodeSpec.attrs,
     align: { default: 'left' },
   },
-  toDOM: (node) => {
-    return [tag, alignAttrs(node.attrs.align), 0]
-  }
+  toDOM: (node) => ([tag, textAlign(node), 0])
 })
 
 const nodes = {
@@ -51,34 +46,28 @@ const nodes = {
     content: 'list_item+',
     group: 'block'
   },
-
   bullet_list: {
     ...list.bulletList,
     content: 'list_item+',
     group: 'block'
   },
-
   list_item: {
     ...list.listItem,
     content: 'paragraph block*'
   }
 }
 
-const textDecoMark = (markValue) => ({
+const textDecoMark = (deco) => ({
   attrs: {
     style: {
-      default: `text-decoration: ${markValue}`
+      default: `text-decoration: ${deco}`
     }
   },
-
   parseDOM: [{
     style: 'text-decoration',
-    getAttrs(value) { return value === markValue }
+    getAttrs: (value) => (value === deco)
   }],
-
-  toDOM(node) {
-    return ['span', node.attrs]
-  }
+  toDOM: (node) => (['span', node.attrs])
 })
 
 const marks = {
@@ -96,13 +85,10 @@ const marks = {
       { tag: 'sup' },
       {
         tag: 'span',
-        getAttrs(node) { return node.style.verticalAlign === 'super' && null }
+        getAttrs: (node) => (node.style.verticalAlign === 'super')
       }
     ],
-
-    toDOM() {
-      return ['sup']
-    }
+    toDOM: () => (['sup'])
   },
 
   subscript: {
@@ -111,13 +97,10 @@ const marks = {
       { tag: 'sup' },
       {
         tag: 'span',
-        getAttrs(node) { return node.style.verticalAlign === 'sub' && null }
+        getAttrs: (node) => (node.style.verticalAlign === 'sub')
       }
     ],
-
-    toDOM() {
-      return ['sub']
-    }
+    toDOM: () => (['sub'])
   }
 }
 
