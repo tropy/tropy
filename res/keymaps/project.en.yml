@@ -1,7 +1,9 @@
 en:
   linux: &linux
     global: &global
-      back: Escape
+      back:
+        - Escape
+        - CmdOrCtrl+ArrowLeft
       nextItem: Alt+ArrowDown
       prevItem: Alt+ArrowUp
       nextPhoto: Alt+ArrowRight
