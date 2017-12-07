@@ -395,6 +395,8 @@ en:
       left: Align Left
       center: Center
       right: Align Right
+      sinkListItem: Sink list item
+      liftListItem: Lift list item
 
   error:
     project:

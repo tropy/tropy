@@ -202,10 +202,12 @@ class EditorToolbar extends PureComponent {
               <IconButton
                 noFocus
                 icon={<IconSink/>}
+                title="editor.commands.sinkListItem"
                 onMouseDown={this.cmd.sinkListItem}/>
               <IconButton
                 noFocus
                 icon={<IconLift/>}
+                title="editor.commands.liftListItem"
                 onMouseDown={this.cmd.liftListItem}/>
             </ToolGroup>
             <ToolGroup>
