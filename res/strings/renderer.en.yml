@@ -37,6 +37,7 @@ en:
           one {1 Photo}
           other {# Photos}}
       create: Add Photos
+      selection: Selection
     note:
       title: >
         {count, plural,
