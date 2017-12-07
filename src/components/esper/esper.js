@@ -466,6 +466,9 @@ class Esper extends PureComponent {
         case 'zoomToFill':
           this.handleModeChange(MODE.FILL)
           break
+        case 'rotateLeft':
+          this.handleRotationChange(-90)
+          break
         case 'up':
           this.move({ y: PAN_STEP_SIZE * this.state.zoom })
           break

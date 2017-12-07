@@ -26,6 +26,8 @@ en:
       left: ArrowLeft
       right: ArrowRight
       quicktool: Space
+      rotateLeft: CmdOrCtrl+]
+      rotateRight: CmdOrCtrl+[
     Sidebar: &Sidebar
       next: ArrowDown
       prev: ArrowUp
