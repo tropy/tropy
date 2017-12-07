@@ -15,6 +15,10 @@ en:
         - CmdOrCtrl+-
         - Shift+CmdOrCtrl+_
         - Shift+CmdOrCtrl+-
+      zoomToFit:
+        - CmdOrCtrl+0
+      zoomToFill:
+        - CmdOrCtrl+9
       up: ArrowUp
       down: ArrowDown
       left: ArrowLeft
