@@ -15,8 +15,10 @@ en:
               accelerator: 'CmdOrCtrl+Shift+N'
             - label: 'List'
               command: 'app:create-list'
+              accelerator: 'CmdOrCtrl+Shift+L'
             - label: 'Tag'
               command: 'app:create-tag'
+              accelerator: 'CmdOrCtrl+Shift+T'
         - type: 'separator'
         - &open
           label: 'Open'
