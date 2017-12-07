@@ -2,6 +2,7 @@
   "@context": {
     "@version": "1.1",
     "@vocab": "https://tropy.org/v1/tropy#",
+    "name": "http://purl.org/dc/elements/1.1/title",
     "creator": "http://purl.org/dc/elements/1.1/creator",
     "description": "http://purl.org/dc/elements/1.1/description",
     "seeAlso": "http://www.w3.org/2000/01/rdf-schema#seeAlso",

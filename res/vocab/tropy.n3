@@ -66,7 +66,7 @@ tropy:date a rdfs:Datatype ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "An EDTF date or date range."@en .
 
-tropy:names a rdfs:Datatype ;
+tropy:name a rdfs:Datatype ;
 	rdfs:label "Name"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A personal name."@en .
@@ -120,14 +120,6 @@ tropy:collection a rdf:Property ;
   rdfs:domain tropy:Item , tropy:Photo, tropy:Selection ;
 	rdfs:comment "A unit of archival organizations."@en , "Un ensemble d'unités d'archivage."@fr .
 
-
-tropy:name a rdf:Property ;
-  rdfs:label "Name"@en ;
-  rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
-  rdfs:subPropertyOf dc:title ;
-  rdfs:domain tropy:Item , tropy:Photo, tropy:Selection , tropy:Template ;
-  rdfs:range rdfs:Literal ;
-  rdfs:comment "A unique name."@en .
 
 tropy:template-type a rdf:Property ;
   rdfs:label "Type"@en ;
