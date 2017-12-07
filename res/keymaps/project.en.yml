@@ -54,6 +54,7 @@ en:
       pageUp: PageUp
       pageDown: PageDown
       copy: Ctrl+c
+      merge: Ctrl+Shift+M
     PhotoIterator: &PhotoIterator
       up: ArrowUp
       down: ArrowDown
@@ -164,6 +165,7 @@ en:
         - Backspace
         - Delete
       copy: Cmd+c
+      merge: Cmd+Shift+M
       all: Cmd+a
       home: Home
       end: End
