@@ -17,7 +17,7 @@ REPLACE INTO labels VALUES ('https://tropy.org/v1/tropy#box', 'fr', "Carton");
 REPLACE INTO labels VALUES ('https://tropy.org/v1/tropy#folder', 'fr', "Dossier");
 REPLACE INTO labels VALUES ('https://tropy.org/v1/tropy#piece', 'fr', "Pièce");
 REPLACE INTO labels VALUES ('https://tropy.org/v1/tropy#collection', 'fr', "Collection");
-REPLACE INTO labels VALUES ('https://tropy.org/v1/tropy#type', 'fr', "Type");
+REPLACE INTO labels VALUES ('https://tropy.org/v1/tropy#template-type', 'fr', "Type");
 REPLACE INTO labels VALUES ('https://tropy.org/v1/tropy#domain', 'fr', "Domaine");
 REPLACE INTO labels VALUES ('https://tropy.org/v1/tropy#field', 'fr', "Champ");
 REPLACE INTO labels VALUES ('https://tropy.org/v1/tropy#property', 'fr', "Propriété");

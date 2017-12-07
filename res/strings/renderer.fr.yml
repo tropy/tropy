@@ -1,15 +1,18 @@
 fr:
   sidebar:
     lists: Listes
-    tags: Mots-clés
+    tags: Tags
     imports: Dernière importation
     trash: Objets supprimés
   toolbar:
     import: Importer des photos
     items: >
-      {count, plural,
+        {count, plural,
+
         =0 {Pas d'objet dans cette vue}
+
         one {1 objet dans cette vue}
+
         other {# objets dans cette vue}}
     search:
       placeholder: Recherche
@@ -18,57 +21,68 @@ fr:
       tab: Métadonnées
       photo: Photo
       item: >
-        {count, plural,
+          {count, plural,
+
           =0 {}
+
           one {Objet}
+
           other {# objets}}
       selection: Sélection
     tags:
-      tab: Mots-clés
+      tab: Tags
       add: >
-        {count, plural,
-          =0 {Ajouter un mot-clé}
-          one {Ajouter 1 mot-clé à 1 objet}
-          other {Ajouter 1 mot-clé à # objets}}
+          {count, plural,
+
+          =0 {Ajouter un tag}
+
+          one {Ajouter un tag à 1 objet}
+
+          other {Ajouter un tag à # objets}}
     photo:
       title: >
-        {count, plural,
+          {count, plural,
+
           =0 {Pas de photo}
+
           one {1 photo}
+
           other {# photos}}
       create: Ajouter des photos
     note:
       title: >
-        {count, plural,
+          {count, plural,
+
           =0 {Pas de note}
+
           one {1 note}
+
           other {# notes}}
       create: Ajouter une note
   about:
-      version: Version {version}
-      rrchnm:
-        title: Roy Rosenzweig Center for History and New Media
-        url: https://rrchnm.org
-      cds:
-        title: Corporation for Digital Scholarship
-        url: http://digitalscholar.org
-      text: À propos
-        Tropy a été conçu par le {rrchnm}, une équipe qui développe
-        des ressources pour l'enseignement de l'histoire, les expositions
-        numérique et les programmes en open-source.
-      trademark: Tropy est une marque de la {cds}.
-      release:
-        title: Notes de version
-        url: https://github.com/tropy/tropy/releases/tag/{version}
-      license:
-        title: Informations sur la licence
-        url: https://tropy.org/license
-      credits:
-        title: Crédits
-        url: https://tropy.org/credits
+    version: Version {version}
+    rrchnm:
+      title: Roy Rosenzweig Center for History and New Media
+      url: https://rrchnm.org
+    cds:
+      title: Corporation for Digital Scholarship
+      url: http://digitalscholar.org
+    text: >
+        Tropy est conçu par le {rrchnm}, une équipe qui crée des ressources pour l'enseignement
+        de l'histoire, des expositions numériques, et des logiciels libres et open-source.
+    trademark: Tropy est une marque de la {cds}.
+    release:
+      title: Notes de version
+      url: https://github.com/tropy/tropy/releases/tag/{version}
+    license:
+      title: Informations sur la licence
+      url: https://tropy.org/license
+    credits:
+      title: Crédits
+      url: https://tropy.org/credits
   project:
     none: Faire glisser ici un fichier de projet ou créer un {newProject}
-    empty: Pour commencer, faites glisser vos photos dans Tropy
+    empty: Pour commencer, faire glisser vos photos dans Tropy
     new: Nouveau projet
   wizard:
     project:
@@ -110,7 +124,6 @@ fr:
         option:
           fit: Zoom pleine hauteur
           fill: Zoom pleine largeur
-
     project:
       label: Projet
     template:
@@ -127,36 +140,46 @@ fr:
     vocab:
       label: Schémas
       classes: >
-        {count, plural,
-          =0 {Aucune classe de données}
-          one {# classe de données}
-          other {# classes de données}
-        }
-      datatypes: >
-        {count, plural,
-          =0 {Aucun type de données} one {# type de données}
-          other {# types de données}
-        }
-      properties: >
-        {count, plural,
-          =0 {Aucune propriété}
-          one {# propriété}
-          other {# propriétés}
-        }
+          {count, plural,
 
+          =0 {Aucune classe de données}
+
+          one {# classe de données}
+
+          other {# classes de données}
+
+          }
+      datatypes: >
+          {count, plural,
+
+          =0 {Aucun type de données} one {# type de données}
+
+          other {# types de données}
+
+          }
+      properties: >
+          {count, plural,
+
+          =0 {Aucune propriété}
+
+          one {# propriété}
+
+          other {# propriétés}
+
+          }
   item:
-    created: Date d'ajout
-    modified: Modifié le
+    created: Création
+    modified: Modifié
   photo:
     file: Fichier
     size: Taille
     type: Type
-    created: Date d'ajout
-    modified: Modifié le
+    created: Création
+    modified: Modifié
   selection:
     size: Taille
-    created: Date d'ajout
-    modified: Modifié le
+    created: Création
+    modified: Modifié
   esper:
     tool:
       pan: Outil panoramique
@@ -169,7 +192,6 @@ fr:
       zoom: Zoom
   notepad:
     placeholder: Ajoutez vos notes ici…
-
   template:
     id: URI
     name: Nom
@@ -177,9 +199,9 @@ fr:
     creator: Créateur
     description: Description
     types:
-      "https://tropy.org/v1/tropy#Item": Modèle de saisie pour un objet
-      "https://tropy.org/v1/tropy#Photo": Modèle de saisie pour une photo
-      "https://tropy.org/v1/tropy#Selection": Modèle de saisie pour une sélection de photos
+      https://tropy.org/v1/tropy#Item: Modèle de saisie pour un objet
+      https://tropy.org/v1/tropy#Photo: Modèle de saisie pour une photo
+      https://tropy.org/v1/tropy#Selection: Modèle de saisie pour une sélection de photos
     field:
       property: Propriété
       label: Label
@@ -188,7 +210,6 @@ fr:
       hint: Indice
       value: Valeur par défaut
       isConstant: En lecture seule
-
   vocab:
     id: URI
     prefix: Prefix
@@ -206,19 +227,17 @@ fr:
     label: Label
     description: Description
     comment: Commentaire
-
   dialog:
     prompt:
-      ok: Oui
       cancel: Annuler
       item:
         destroy: >
-          Êtes-vous sûr.e de vouloir effacer définitivement ces objets ?
-          Cette action ne peut pas être annulée.
+            Êtes-vous sûr.e de vouloir effacer définitivement ces objets ? Cette action
+            ne peut pas être annulée.
       dup:
         message: >
-          Cette photo existe déjà dans votre projet.
-          Voulez-vous vraiment l'importer de nouveau?
+            Cette photo existe déjà dans votre projet. Voulez-vous vraiment l'importer
+            de nouveau?
         checkbox: Se souvenir de mon choix
         cancel: Passer
         ok: Importer tout de même
@@ -228,7 +247,6 @@ fr:
       projects: Projets Tropy
       rdf: Schémas RDF
       jsonld: JSON-LD
-
   action:
     project:
       save: Sauvegarder le projet
@@ -254,9 +272,9 @@ fr:
       restore: Restaurer des objets
       save: Sauvegarder l'objet
       tag:
-        create: Mot-clé
-        toggle: Mot-clé
-        clear: Enlever les mots-clés
+        create: Tag
+        toggle: Tag
+        clear: Enlever les tags
     metadata:
       save: Sauvegarder les métadonnées
     ontology:
@@ -282,17 +300,16 @@ fr:
       restore: Restaurer une note
       save: Save Note
     tag:
-      create: Créer un mot-clé
-      delete: Supprimer un mot-clé
-      restore: Créer un mot-clé
-      save: Sauvegarder un mot-clé
+      create: Créer un tag
+      delete: Supprimer un tag
+      restore: Créer un tag
+      save: Sauvegarder un tag
     selection:
       create: Créer une sélection
       delete: Supprimer la sélection
       restore: Créer une sélection
       save: Sauvegarder la sélection
       order: Trier les sélections
-
   activity:
     project:
       save: Sauvegarde en cours…
@@ -309,11 +326,11 @@ fr:
       restore: Restauration de la liste en cours…
       save: Sauvegarde de la liste en cours…
     tag:
-      create: Création d'un mot-clé…
-      delete: Suppression d'un mot-clé…
-      load: Chargement des mots-clés…
-      restore: Restauration des mots-clés…
-      save: Sauvegarde des mots-clés…
+      create: Création d'un tag…
+      delete: Suppression d'un tag…
+      load: Chargement des tags…
+      restore: Restauration des tags…
+      save: Sauvegarde des tags…
     item:
       create: Création d'un objet…
       delete: Suppression d'un objet…
@@ -322,10 +339,13 @@ fr:
       export: Exportation de l'objet en cours…
       implode: Restauration de l'objet en cours…
       import: >
-        {hasProgressBar, select,
+          {hasProgressBar, select,
+
           true {{progress, number} objets importés sur {total, number}…}
+
           other {Importation des objets en cours…}
-        }
+
+          }
       load: Chargement des objets en cours…
       merge: Fusion des objets en cours…
       restore: Restauration de l'objet en cours…
@@ -333,7 +353,7 @@ fr:
       tag:
         create: Marquage de l'objet en cours…
         toggle: Marquage de l'objet en cours…
-        clear: Nettoyage des mots-clés des objets en cours…
+        clear: Nettoyage des tags des objets en cours…
     metadata:
       load: Chargement des métadonnées…
       save: Sauvegarde des métadonnées…
@@ -348,21 +368,30 @@ fr:
         import: Importation des modèles de saisie…
     photo:
       consolidate: >
-        {hasProgressBar, select,
+          {hasProgressBar, select,
+
           true {Regroupement de {progress, number} photos sur {total, number}…}
+
           other {Regroupement des photos…}
-        }
+
+          }
       create: >
-        {hasProgressBar, select,
+          {hasProgressBar, select,
+
           true {Importation de {progress, number} photos sur {total, number}…}
+
           other {Importation des photos…}
-        }
+
+          }
       delete: Suppression de la photo…
       duplicate: >
-        {hasProgressBar, select,
+          {hasProgressBar, select,
+
           true {Duplication de {progress, number} photos sur {total, number}…}
+
           other {Duplication des photos…}
-        }
+
+          }
       load: Chargement des photos…
       move: Déplacement des photos…
       order: Tri des photos en cours…
@@ -381,21 +410,20 @@ fr:
       bold: Gras
       italic: Italique
       underline: Souligné
-      overline: Suligné
+      overline: Trait suscrit
       strikethrough: Barré
       subscript: Indice
       superscript: Exposant
       blockquote: Insérer un bloc de citation
-      ol: Insertion d'une liste numérotée
-      ul: Insertion d'une liste à puces
+      ol: Numérotation
+      ul: Puces
       link:
         button: Insérer un lien
         target: Cible du lien
         title: Titre du lien
-      left: Aligné à gauche
-      center: Centré
-      right: Aligné à droite
-
+      left: Aligner à gauche
+      center: Centrer
+      right: Aligner à droite
   error:
     project:
       created: Echec de la création du projet.
@@ -403,8 +431,8 @@ fr:
       merge: Echec de la fusion des objets.
       import: Echec de l'importation des objets.
       tag:
-        save: Echec de la sauvegarde du mot-clé.
-        create: Echec du marquage de l'objet. Chaque mot-clé est unique pour un même objet.
+        save: Echec de la sauvegarde du tag.
+        create: Echec du marquage de l'objet. Chaque tag est unique pour un même objet.
     list:
       save: Echec de la sauvegarde de la liste.
       item:
@@ -422,11 +450,10 @@ fr:
         field:
           add: Echec de l'adjonction du champ dans le modèle de saisie.
           remove: Echec de la suppression du champ du modèle de saisie.
-
   flash:
     update:
       ready:
         message: >
-          Tropy {version} est prêt à être installé.
-          Voulez-vous l'installer et redémarrer?
-        confirm: Redémarrer maintenant
+            Tropy {version} est prêt à être installé. Voulez-vous l'installer et le
+            relancer?
+        confirm: Relancer maintenant

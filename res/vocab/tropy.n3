@@ -11,8 +11,8 @@
 	vann:preferredNamespacePrefix "tropy" ;
 	vann:preferredNamespaceUri "https://tropy.org/v1/tropy#" ;
   rdfs:seeAlso <https://tropy.org/> ;
-	dc:title "Tropy Vocabulary"@en ;
-	dc:description "The RDF vocabulary for https://tropy.org/v1/tropy defines the core elements used by the Tropy application and Tropy templates."@en ;
+	dc:title "Tropy Vocabulary"@en , "Lexique de métadonnées Tropy"@fr ;
+	dc:description "The RDF vocabulary for https://tropy.org/v1/tropy defines the core elements used by the Tropy application and Tropy templates."@en , "Le lexiques de métadonnées RDF https://tropy.org/v1/tropy définit les éléments structurels utilisés par Tropy, en particulier dans les modèles de saisie Tropy."@fr ;
 	dc:issued "2017-05-09"^^xsd:date ;
 	dc:publisher "Roy Rosenzweig Center for History and New Media, George Mason University"@en .
 
@@ -122,12 +122,12 @@ tropy:collection a rdf:Property ;
 
 
 tropy:template-type a rdf:Property ;
-  rdfs:label "Type"@en ;
+  rdfs:label "Type"@en , "Type"@fr ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:subPropertyOf dc:type ;
   rdfs:domain tropy:Template ;
   rdfs:range rdfs:Class ;
-  rdfs:comment "The type of object, in Tropy, which the template describes."@en .
+  rdfs:comment "The type of object, in Tropy, which the template describes."@en , "Le type d'élément décrit dans Tropy par le modèle de saisie: objet, photo, etc."@en .
 
 tropy:domain a rdf:Property ;
   rdfs:label "Domain"@en ;
