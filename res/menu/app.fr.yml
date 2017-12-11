@@ -99,10 +99,10 @@ fr:
           submenu:
             - label: 'Agrandir'
               command: 'app:zoom-in'
-            - label: 'Dézoomer'
+            - label: 'Réduire'
               command: 'app:zoom-out'
             - type: 'separator'
-            - label: 'Réinitialiser'
+            - label: 'Taille réelle'
               command: 'app:zoom-reset'
     - &win
       label: 'Fenêtre'

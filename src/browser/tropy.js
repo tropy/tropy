@@ -41,7 +41,7 @@ const PREFS = SASS.PREFS
 const H = new WeakMap()
 const T = new WeakMap()
 
-const ZOOM = { STEP: 0.25, MAX: 3, MIN: 0.5 }
+const ZOOM = { STEP: 0.25, MAX: 2, MIN: 0.75 }
 
 
 class Tropy extends EventEmitter {
