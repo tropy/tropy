@@ -89,7 +89,7 @@ fr:
     project:
       title: Créer un nouveau projet
       submit: Créer un projet
-      name: Nom
+      name: Titre
       save_as: Changer le nom du fichier ou sa localisation
       change: Changer
   prefs:
@@ -425,6 +425,8 @@ fr:
       left: Aligner à gauche
       center: Centrer
       right: Aligner à droite
+      sinkListItem: Augmenter le retrait
+      liftListItem: Réduire le retrait
   error:
     project:
       created: Echec de la création du projet.
