@@ -32,11 +32,6 @@ module.exports = require('yargs')
     describe: 'Set the device scale factor'
   })
 
-  .option('zoom', {
-    type: 'number',
-    describe: 'Set the zoom factor'
-  })
-
   .option('auto-updates', {
     type: 'boolean',
     describe: 'Automatically check for updates',

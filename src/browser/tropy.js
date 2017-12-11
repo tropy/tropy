@@ -38,7 +38,6 @@ const WIN = SASS.WINDOW
 const WIZ = SASS.WIZARD
 const ABT = SASS.ABOUT
 const PREFS = SASS.PREFS
-const ZOOM = ARGS.zoom || 1
 
 const H = new WeakMap()
 const T = new WeakMap()
@@ -51,7 +50,8 @@ class Tropy extends EventEmitter {
     theme: 'light',
     recent: [],
     updater: true,
-    win: {}
+    win: {},
+    zoom: 1.0
   }
 
   constructor() {
@@ -109,11 +109,11 @@ class Tropy extends EventEmitter {
       this.win = open('project', { file, ...this.hash }, {
         width: WIN.WIDTH,
         height: WIN.HEIGHT,
-        minWidth: WIN.MIN_WIDTH * ZOOM,
-        minHeight: WIN.MIN_HEIGHT * ZOOM,
+        minWidth: WIN.MIN_WIDTH * this.state.zoom,
+        minHeight: WIN.MIN_HEIGHT * this.state.zoom,
         darkTheme: (this.state.theme === 'dark'),
         frame: !this.hash.frameless
-      })
+      }, this.state.zoom)
 
       this.win
         .on('unresponsive', async () => {
@@ -191,8 +191,8 @@ class Tropy extends EventEmitter {
 
     this.about = open('about', this.hash, {
       title: this.dict.windows.about.title,
-      width: ABT.WIDTH * ZOOM,
-      height: ABT.HEIGHT * ZOOM,
+      width: ABT.WIDTH * this.state.zoom,
+      height: ABT.HEIGHT * this.state.zoom,
       parent: darwin ? null : this.win,
       modal: !darwin && !!this.win,
       autoHideMenuBar: true,
@@ -202,7 +202,7 @@ class Tropy extends EventEmitter {
       fullscreenable: false,
       darkTheme: (this.state.theme === 'dark'),
       frame: !this.hash.frameless
-    })
+    }, this.state.zoom)
       .once('closed', () => { this.about = undefined })
 
     return this
@@ -214,8 +214,8 @@ class Tropy extends EventEmitter {
 
     this.wiz = open('wizard', this.hash, {
       title: this.dict.windows.wizard.title,
-      width: WIZ.WIDTH * ZOOM,
-      height: WIZ.HEIGHT * ZOOM,
+      width: WIZ.WIDTH * this.state.zoom,
+      height: WIZ.HEIGHT * this.state.zoom,
       parent: darwin ? null : this.win,
       modal: !darwin && !!this.win,
       autoHideMenuBar: true,
@@ -224,8 +224,8 @@ class Tropy extends EventEmitter {
       maximizable: false,
       fullscreenable: false,
       darkTheme: (this.state.theme === 'dark'),
-      frame: !this.hash.frameless
-    })
+      frame: !this.hash.frameless,
+    }, this.state.zoom)
       .once('closed', () => { this.wiz = undefined })
 
     return this
@@ -236,8 +236,8 @@ class Tropy extends EventEmitter {
 
     this.prefs = open('prefs', this.hash, {
       title: this.dict.windows.prefs.title,
-      width: PREFS.WIDTH * ZOOM,
-      height: PREFS.HEIGHT * ZOOM,
+      width: PREFS.WIDTH * this.state.zoom,
+      height: PREFS.HEIGHT * this.state.zoom,
       parent: darwin ? null : this.win,
       modal: !darwin && !!this.win,
       autoHideMenuBar: true,
@@ -248,7 +248,7 @@ class Tropy extends EventEmitter {
       darkTheme: (this.state.theme === 'dark'),
       frame: !this.hash.frameless,
       titleBarStyle: 'hidden'
-    })
+    }, this.state.zoom)
       .once('closed', () => {
         this.prefs = undefined
         this.dispatch(act.ontology.load(), this.win)
