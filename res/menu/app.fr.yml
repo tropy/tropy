@@ -1,174 +1,175 @@
-en:
+fr:
   linux:
     - &file
-      label: '&File'
+      label: 'Fichier'
       id: 'file'
       submenu:
         - &new
-          label: 'New'
+          label: 'Nouveau'
           submenu:
-            - label: 'Project'
+            - label: 'Projet'
               command: 'app:create-project'
               accelerator: 'CmdOrCtrl+Shift+P'
-            - label: 'Item'
+            - label: 'Objet'
               command: 'app:create-item'
               accelerator: 'CmdOrCtrl+Shift+N'
-            - label: 'List'
+            - label: 'Liste'
               command: 'app:create-list'
+              accelerator: 'CmdOrCtrl+Shift+L'
             - label: 'Tag'
               command: 'app:create-tag'
+              accelerator: 'CmdOrCtrl+Shift+T'
         - type: 'separator'
         - &open
-          label: 'Open'
+          label: 'Ouvrir'
           accelerator: 'CmdOrCtrl+O'
           command: 'app:open-dialog'
         - &recent
-          label: 'Recent Projects'
+          label: 'Projets récents'
           id: 'recent'
           enabled: false
           submenu:
             - type: 'separator'
-            - label: 'Clear List'
+            - label: 'Vider la liste'
               command: 'app:clear-recent-projects'
         - type: 'separator'
         - &import
-          label: 'Import Photos …'
+          label: 'Importer des photos…'
           command: 'app:import-photos'
           accelerator: 'CmdOrCtrl+Shift+I'
         - &consolidate
-          label: 'Consolidate Photo Library'
+          label: 'Regrouper la bibliothèque de photos'
           command: 'app:consolidate-photo-library'
         - type: 'separator'
-        - label: 'Close'
+        - label: 'Fermer'
           accelerator: 'CmdOrCtrl+W'
           role: 'close'
         - type: 'separator'
-        - label: 'Quit'
+        - label: 'Quitter'
           accelerator: 'CmdOrCtrl+Q'
           role: 'quit'
     - &edit
-      label: '&Edit'
+      label: 'Edition'
       submenu:
         - &undo
           id: 'undo'
-          label: '&Undo'
+          label: 'Annuler'
           accelerator: 'CmdOrCtrl+Z'
           command: 'app:undo'
           enabled: false
         - &redo
-          id: 'redo'
-          label: '&Redo'
+          id: '&Redo'
+          label: 'Rétablir'
           accelerator: 'Shift+CmdOrCtrl+Z'
           command: 'app:redo'
           enabled: false
         - type: 'separator'
         - &cut
-          label: 'Cu&t'
+          label: 'Couper'
           accelerator: 'CmdOrCtrl+X'
           role: 'cut'
         - &copy
-          label: '&Copy'
+          label: 'Copier'
           accelerator: 'CmdOrCtrl+C'
           role: 'copy'
         - &paste
-          label: '&Paste'
+          label: 'Coller'
           accelerator: 'CmdOrCtrl+V'
           role: 'paste'
         - &all
-          label: 'Select All'
+          label: 'Tout sélectionner'
           role: 'selectall'
         - type: 'separator'
         - &preferences
-          label: 'Prefere&nces …'
+          label: 'Préférences…'
           accelerator: 'Shift+Control+S'
           command: 'app:open-preferences'
     - &view
-      label: '&View'
+      label: 'Affichage'
       submenu:
-        - label: 'Toggle &Full Screen'
+        - label: 'Basculer en plein écran'
           role: 'togglefullscreen'
-        - label: 'Toggle Hide &Menu Bar'
+        - label: 'Cacher la barre de menu'
           command: 'app:toggle-menu-bar'
-        - label: 'Hide &Sidebar'
+        - label: 'Cacher la barre latérale'
           command: 'app:toggle-sidebar'
           enabled: false
-          visible: false
         - type: 'separator'
         - label: 'Zoom'
           submenu:
-            - label: 'Zoom In'
+            - label: 'Agrandir'
               command: 'app:zoom-in'
-            - label: 'Zoom Out'
+            - label: 'Réduire'
               command: 'app:zoom-out'
             - type: 'separator'
-            - label: 'Reset'
+            - label: 'Taille réelle'
               command: 'app:zoom-reset'
     - &win
-      label: 'Window'
+      label: 'Fenêtre'
       submenu:
-        - label: 'Minimize'
+        - label: 'Réduire'
           accelerator: 'CmdOrCtrl+M'
           role: 'minimize'
     - &dev
-      label: 'Developer'
+      label: 'Développeur'
       id: 'dev'
       submenu:
-        - label: '&Reload'
+        - label: 'Rafraîchir'
           accelerator: 'CmdOrCtrl+R'
           command: 'win:reload'
-        - label: 'Reload &Styles'
+        - label: 'Rafraîchir les &styles'
           accelerator: 'CmdOrCtrl+S'
           command: 'win:refresh'
-        - label: 'Toggle &Developer Tools'
+        - label: 'Afficher les outils de développement'
           accelerator: 'CmdOrCtrl+D'
           role: 'toggledevtools'
-        - label: 'Toggle Performance Tools'
+        - label: 'Afficher les outils de performance'
           command: 'win:toggle-perf-tools'
         - type: 'separator'
-        - label: 'Reset Ontology Database'
+        - label: 'Remettre à zéro la base de données des ontologies'
           command: 'app:reset-ontology-db'
-        - label: 'Close Project'
+        - label: 'Fermer le projet'
           command: 'app:close-project'
         - type: 'separator'
-        - label: 'Theme'
+        - label: 'Thème'
           id: 'theme'
           submenu:
-            - label: 'Light'
+            - label: 'Lumineux'
               id: 'light'
               type: 'checkbox'
-            - label: 'Dark'
+            - label: 'Sombre'
               id: 'dark'
               type: 'checkbox'
 
     - &help
-      label: 'Help'
+      label: 'Aide'
       submenu:
-        - label: 'User Guide'
+        - label: "Guide d'utilisation"
           command: 'app:open-docs'
-        - label: 'Support Forums'
+        - label: "Forum d'aide"
           command: 'app:open-forums'
         - type: 'separator'
-        - label: 'Software &License'
+        - label: 'Licence'
           command: 'app:open-license'
-        - label: 'Show Log Files'
+        - label: 'Afficher les fichiers de Log'
           command: 'app:open-logs'
         - type: 'separator'
-        - label: 'About %name'
+        - label: 'A propos de %name'
           command: 'app:about'
         - type: 'separator'
         - &updaterCheck
           id: 'updater-check'
-          label: 'Check for Updates …'
+          label: 'Recherche des mises à jour en cours…'
           command: 'app:check-for-updates'
           enabled: false
         - &updaterIsChecking
           id: 'updater-is-checking'
-          label: 'Fetching Latest Updates …'
+          label: 'Obtention des mises à jour en cours…'
           enabled: false
           visible: false
         - &updaterInstall
           id: 'updater-install'
-          label: 'Install Updates …'
+          label: 'Installer les mises à jour…'
           command: 'app:install-updates'
           enabled: false
           visible: false
@@ -176,27 +177,27 @@ en:
   darwin:
     - label: '%name'
       submenu:
-        - label: 'About %name'
+        - label: 'A propos de %name'
           command: 'app:about'
         - type: 'separator'
-        - label: 'Preferences …'
+        - label: 'Préférences…'
           accelerator: 'Command+,'
           command: 'app:open-preferences'
         - type: 'separator'
-        - label: 'Hide %name'
+        - label: 'Masquer %name'
           accelerator: 'Command+H'
           role: 'hide'
-        - label: 'Hide Others'
+        - label: 'Masquer les autres programmes'
           accelerator: 'Command+Shift+H'
           role: 'hideothers'
-        - label: 'Show All'
+        - label: 'Tout montrer'
           role: 'unhide'
         - type: 'separator'
-        - label: 'Quit'
+        - label: 'Quitter'
           accelerator: 'Command+Q'
           role: 'quit'
 
-    - label: 'File'
+    - label: 'Fichier'
       submenu:
         - *new
         - type: 'separator'
@@ -206,10 +207,10 @@ en:
         - *import
         - *consolidate
         - type: 'separator'
-        - label: 'Close'
+        - label: 'Fermer'
           accelerator: 'Command+W'
           role: 'close'
-    - label: 'Edit'
+    - label: 'Edition'
       submenu:
         - *undo
         - *redo
@@ -219,30 +220,30 @@ en:
         - *paste
         - *all
     - *view
-    - label: 'Window'
+    - label: 'Fenêtre'
       role: 'window'
       submenu:
-        - label: 'Minimize'
+        - label: 'Réduire'
           accelerator: 'CmdOrCtrl+M'
           role: 'minimize'
-        - label: 'Close'
+        - label: 'Fermer'
           accelerator: 'CmdOrCtrl+W'
           role: 'close'
         - type: 'separator'
-        - label: 'Bring All to Front'
+        - label: 'Mettre au premier plan'
           role: 'front'
     - *dev
-    - label: 'Help'
+    - label: 'Aide'
       role: 'help'
       submenu:
-        - label: 'User Guide'
+        - label: "Guide d'utilisation"
           command: 'app:open-docs'
-        - label: 'Support Forums'
+        - label: "Forum d'aide"
           command: 'app:open-forums'
         - type: 'separator'
-        - label: 'Software License'
+        - label: 'Licence du programme'
           command: 'app:open-license'
-        - label: 'Show Log Files'
+        - label: 'Afficher les logs'
           command: 'app:open-logs'
         - type: 'separator'
         - *updaterCheck
@@ -251,12 +252,12 @@ en:
 
   win32:
     - *file
-    - label: '&Edit'
+    - label: 'Edition'
       submenu:
         - *undo
         - id: 'redo'
-          label: '&Redo'
-          accelerator: 'Control+Y'
+          label: 'Rétablir'
+          accelerator: 'Control+Shift+Z'
           command: 'app:redo'
           enabled: false
         - type: 'separator'

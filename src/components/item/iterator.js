@@ -106,8 +106,14 @@ class ItemIterator extends Iterator {
   }
 
   handleItemCopy(items) {
-    if (!this.props.isDisabled && items != null && items.length > 0) {
+    if (!(this.props.isDisabled || blank(items))) {
       this.props.onItemExport(items, { target: ':clipboard:' })
+    }
+  }
+
+  handleItemMerge(items) {
+    if (!(this.props.isDisabled || blank(items))) {
+      this.props.onItemMerge(items)
     }
   }
 
@@ -150,6 +156,9 @@ class ItemIterator extends Iterator {
         break
       case 'copy':
         this.handleItemCopy(this.props.selection)
+        break
+      case 'merge':
+        this.handleItemMerge(this.props.selection)
         break
       default:
         return

@@ -1,155 +1,149 @@
-en:
+fr:
   linux:
     history: &history
       - id: 'undo'
-        label: 'Undo'
+        label: 'Annuler'
         command: 'app:undo'
         enabled: false
       - id: 'redo'
-        label: 'Redo'
+        label: 'Rétablir'
         command: 'app:redo'
         enabled: false
     sidebar: &sidebar
-      - label: 'Hide Sidebar'
+      - label: 'Cacher la barre latérale'
         command: 'app:hide-sidebar'
         enabled: false
     project: &project
-      - label: 'Rename Project'
+      - label: 'Renommer le projet'
         command: 'app:rename-project'
-      - label: 'Show Project File…'
+      - label: 'Montrer le fichier de projet dans son répertoire…'
         command: 'app:show-in-folder'
     lists: &lists
-      - label: 'New List'
+      - label: 'Nouvelle liste'
         command: 'app:create-list'
     list: &list
-      - label: 'Rename List'
+      - label: 'Renommer la liste'
         command: 'app:rename-list'
-      - label: 'Delete List'
+      - label: 'Supprimer la liste'
         command: 'app:delete-list'
     tags: &tags
-      - label: 'New Tag'
+      - label: 'Nouveau marqueur'
         command: 'app:create-tag'
     tag: &tag
-      - label: 'Tag Color'
+      - label: 'Couleur du marqueur'
         submenu:
-          - label: 'None'
+          - label: 'Aucune'
             color: null
             type: checkbox
           - type: separator
-          - label: 'Red'
+          - label: 'Rouge'
             color: 'red'
             type: checkbox
           - label: 'Orange'
             color: 'orange'
             type: checkbox
-          - label: 'Yellow'
+          - label: 'Jaune'
             color: 'yellow'
             type: checkbox
-          - label: 'Green'
+          - label: 'Vert'
             color: 'green'
             type: checkbox
-          - label: 'Blue'
+          - label: 'Bleu'
             color: 'blue'
             type: checkbox
-          - label: 'Purple'
+          - label: 'Violet'
             color: 'purple'
             type: checkbox
-          - label: 'Gray'
+          - label: 'Gris'
             color: 'gray'
             type: checkbox
-      - label: 'Rename Tag'
+      - label: 'Renommer le marqueur'
         command: 'app:rename-tag'
-      - label: 'Delete Tag'
+      - label: 'Supprimer le marqueur'
         command: 'app:delete-tag'
     item-tag: &item-tag
-      - label: 'Remove Tag From This Item'
+      - label: "Enlever le marqueur de l'objet"
         command: 'app:delete-item-tag'
-        visible: false
-        condition: 'hasSingleItem'
-      - label: 'Remove Tag From These Items'
-        command: 'app:delete-item-tag'
-        visible: false
-        condition: 'hasMultipleItems'
     notes: &notes
       []
     note: &note
-      - label: 'Delete Note'
+      - label: 'Supprimer la note'
         command: 'app:delete-note'
     items: &items
-      - label: 'New Item'
+      - label: 'Nouvel objet'
         command: 'app:create-item'
     item: &item
-      - label: 'Explode Item'
+      - label: "Exploser l'objet"
         command: 'app:explode-item'
         condition: 'hasMultiplePhotos'
-      - label: 'Export Item …'
+      - label: Exporter l'objet…
         command: 'app:export-item'
-      - label: 'Add Photo …'
+      - label: 'Ajouter une photo…'
         command: 'app:create-item-photo'
-      - label: 'Tags'
+      - label: 'Marqueurs'
         id: 'tag'
         submenu:
-          - label: 'None'
+          - label: 'Aucun'
             type: checkbox
             checked: true
             enabled: false
           - type: separator
-      - label: 'Delete Item'
+      - label: Supprimer l'objet
         command: 'app:delete-item'
     item-bulk: &item-bulk
-      - label: 'Merge Selected Items'
+      - label: 'Fusionner les objets sélectionnés'
         command: 'app:merge-item'
-      - label: 'Export Selected Items …'
+      - label: 'Exporter les objets sélectionnés…'
         command: 'app:export-item'
-      - label: 'Delete Selected Items'
+      - label: 'Supprimer les objets sélectionnés'
         command: 'app:delete-item'
     item-list: &item-list
-      - label: 'Remove Item From List'
+      - label: "Enlever l'objet de la liste"
         command: 'app:list-item-remove'
     item-bulk-list: &item-bulk-list
-      - label: 'Remove Selected Items From List'
+      - label: 'Enlever les objets sélectionnés de la liste'
         command: 'app:list-item-remove'
     photo: &photo
-      - label: 'Delete Photo'
+      - label: 'Supprimer la photo'
         command: 'app:delete-photo'
-      - label: 'Duplicate Photo'
+      - label: 'Dupliquer la photo'
         command: 'app:duplicate-photo'
-      - label: 'Move Photo to New Item'
+      - label: 'Déplacer la photo vers un nouvel objet'
         command: 'app:explode-photo'
-      - label: 'Show Photo in Folder…'
+      - label: 'Montrer la photo dans son répertoire…'
         command: 'app:show-in-folder'
-      - label: 'Use Photo as Cover Image'
+      - label: 'Utiliser la photo comme image de couverture'
         command: 'app:update-cover-image'
         enabled: false
         visible: false
-      - label: 'Consolidate Photo'
+      - label: 'Regrouper les photos'
         command: 'app:consolidate-photo'
     selection: &selection
-      - label: 'Delete Selection'
+      - label: 'Supprimer la sélection'
         command: 'app:delete-selection'
-      - label: 'Save Selection as Image …'
+      - label: 'Sauvegarder la sélection comme une image…'
         command: 'app:save-selection'
         enabled: false
     item-deleted: &item-deleted
-      - label: 'Restore Item'
+      - label: Restaurer l'objet
         command: 'app:restore-item'
-      - label: 'Permanently Delete Item'
+      - label: Supprimer définitivement l'objet
         command: 'app:destroy-item'
     item-bulk-deleted: &item-bulk-deleted
-      - label: 'Restore Selected Items'
+      - label: 'Restaurer les objets sélectionnés'
         command: 'app:restore-item'
-      - label: 'Permanently Delete Selected Items'
+      - label: 'Supprimer définitivement les objets sélectionnés'
         command: 'app:destroy-item'
     trash: &trash
-      - label: 'Permanently Delete Items'
+      - label: 'Supprimer définitivement les objets'
         command: 'app:destroy-item'
     dev: &dev
-      - label: 'Reload'
+      - label: 'Recharger'
         command: 'win:reload'
-      - label: 'Reload Styles'
+      - label: 'Recharger les styles'
         command: 'win:refresh'
       - type: 'separator'
-      - label: 'Inspect'
+      - label: 'Inspecter'
         command: 'app:inspect'
 
   darwin:

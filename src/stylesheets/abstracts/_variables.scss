@@ -276,7 +276,7 @@ $blockquote-border:           3px;
 $blockquote-padding:          1em;
 $editor-hr-border:            2px;
 $sup-and-sub-font-size:       1em * 2 / 3;
-$link-target-width:           200px;
+$link-target-width:           400px;
 $prose-mirror-padding-top:    70px; // ~ 2 blank lines
 $prose-mirror-padding-bottom: 40px; // ~ blank line
 
@@ -303,7 +303,7 @@ $clear-button-size: 14px;
 // --------------------------------------------------
 
 $popup-focus-shadow-width: const("INPUT.FOCUS_SHADOW_WIDTH") * 1px;
-$popup-padding: const("POPUP.PADDING");
+$popup-padding: const("POPUP.PADDING") * 1px;
 
 
 // Option

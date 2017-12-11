@@ -53,14 +53,14 @@ class Save extends Command {
   *exec() {
     const { db } = this.options
     const { payload, meta } = this.action
-    const { id, state, text } = payload
+    const { id, state, text, modified } = payload
 
     const original = yield select(({ notes }) => notes[id])
-    const data = { id, state, text }
+    const data = { id, state, text, modified }
 
     yield call(mod.note.save, db, {
       id, state, text: meta.changed ? text : undefined
-    })
+    },  modified)
 
     yield put(act.note.update(data))
 

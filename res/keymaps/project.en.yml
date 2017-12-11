@@ -1,7 +1,9 @@
 en:
   linux: &linux
     global: &global
-      back: Escape
+      back:
+        - Escape
+        - CmdOrCtrl+ArrowLeft
       nextItem: Alt+ArrowDown
       prevItem: Alt+ArrowUp
       nextPhoto: Alt+ArrowRight
@@ -15,11 +17,21 @@ en:
         - CmdOrCtrl+-
         - Shift+CmdOrCtrl+_
         - Shift+CmdOrCtrl+-
+      zoomToFit:
+        - CmdOrCtrl+0
+      zoomToFill:
+        - CmdOrCtrl+9
       up: ArrowUp
       down: ArrowDown
       left: ArrowLeft
       right: ArrowRight
       quicktool: Space
+      rotate:
+        - CmdOrCtrl+]
+        - CmdOrCtrl+Shift+]
+        - CmdOrCtrl+Alt+]
+        - r
+        - l
     Sidebar: &Sidebar
       next: ArrowDown
       prev: ArrowUp
@@ -54,6 +66,7 @@ en:
       pageUp: PageUp
       pageDown: PageDown
       copy: Ctrl+c
+      merge: Ctrl+Shift+M
     PhotoIterator: &PhotoIterator
       up: ArrowUp
       down: ArrowDown
@@ -117,12 +130,13 @@ en:
       bold: CmdOrCtrl+b
       italic: CmdOrCtrl+i
       underline: CmdOrCtrl+u
+      overline: CmdOrCtrl+o
       liftListItem: CmdOrCtrl+[
       sinkListItem: CmdOrCtrl+]
       addLink: CmdOrCtrl+l
-      joinUp: Alt+ArrowUp
-      joinDown: Alt+ArrowDown
-      lift: CmdOrCtrl+ArrowLeft
+      joinUp: Shift+Alt+ArrowUp
+      joinDown: Shift+Alt+ArrowDown
+      lift: Shift+CmdOrCtrl+ArrowLeft
       selectAll: CmdOrCtrl+a
       clearSelection: Escape
       blockquote: CmdOrCtrl+Shift+>
@@ -163,6 +177,7 @@ en:
         - Backspace
         - Delete
       copy: Cmd+c
+      merge: Cmd+Shift+M
       all: Cmd+a
       home: Home
       end: End

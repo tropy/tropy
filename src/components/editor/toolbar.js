@@ -13,13 +13,14 @@ const {
   IconB,
   IconI,
   IconU,
+  IconO,
   IconS,
   IconQ,
   IconSup,
   IconSub,
-  //  IconAlignLeft,
-  //  IconAlignCenter,
-  //  IconAlignRight,
+  IconAlignLeft,
+  IconAlignCenter,
+  IconAlignRight,
   IconBulletList,
   IconNumberedList,
   IconSink,
@@ -33,6 +34,7 @@ class EditorToolbar extends PureComponent {
     super(props)
 
     this.state = {
+      align: this.getActiveAlignment(props.state),
       context: 'default',
       marks: this.getActiveMarks(props.state),
     }
@@ -43,6 +45,7 @@ class EditorToolbar extends PureComponent {
       'bold',
       'italic',
       'underline',
+      'overline',
       'strikethrough',
       'subscript',
       'superscript',
@@ -50,7 +53,10 @@ class EditorToolbar extends PureComponent {
       'ol',
       'ul',
       'liftListItem',
-      'sinkListItem'
+      'sinkListItem',
+      'left',
+      'center',
+      'right'
     ]) {
       this.cmd[action] = () => this.props.onCommand(action)
     }
@@ -59,6 +65,7 @@ class EditorToolbar extends PureComponent {
   componentWillReceiveProps(props) {
     if (props.state !== this.props.state) {
       this.setState({
+        align: this.getActiveAlignment(props.state),
         marks: this.getActiveMarks(props.state)
       })
     }
@@ -73,13 +80,28 @@ class EditorToolbar extends PureComponent {
   }
 
   getActiveMarks(state = this.props.state) {
-    let res = {}, mark
+    const marks = {}
 
-    for (mark in state.schema.marks) {
-      res[mark] = this.isMarkActive(state.schema.marks[mark], state)
+    for (const mark in state.schema.marks) {
+      marks[mark] = this.isMarkActive(state.schema.marks[mark], state)
     }
 
-    return res
+    return marks
+  }
+
+  getActiveAlignment(state = this.props.state) {
+    const align = { left: false, right: false, center: false }
+
+    state.doc.nodesBetween(
+      state.selection.from,
+      state.selection.to,
+      (node) => {
+        if (node.type.attrs.align) {
+          align[node.attrs.align] = true
+        }
+      })
+
+    return align
   }
 
   isMarkActive(type, state = this.props.state) {
@@ -90,15 +112,29 @@ class EditorToolbar extends PureComponent {
       state.doc.rangeHasMark(from, to, type)
   }
 
-  renderMarkButton(name, icon) {
+  renderButton(name, props) {
     return (
       <IconButton
+        {...props}
         noFocus
-        icon={icon}
-        isActive={this.state.marks[name]}
         title={`editor.commands.${name}`}
         onMouseDown={this.cmd[name]}/>
     )
+  }
+
+  renderMarkButton(name, icon) {
+    return this.renderButton(name, {
+      icon,
+      isActive: this.state.marks[name]
+    })
+  }
+
+
+  renderAlignButton(name, icon) {
+    return this.renderButton(name, {
+      icon,
+      isActive: this.state.align[name]
+    })
   }
 
   setDefaultContext = () => {
@@ -135,6 +171,7 @@ class EditorToolbar extends PureComponent {
               {this.renderMarkButton('bold', <IconB/>)}
               {this.renderMarkButton('italic', <IconI/>)}
               {this.renderMarkButton('underline', <IconU/>)}
+              {this.renderMarkButton('overline', <IconO/>)}
               {this.renderMarkButton('strikethrough', <IconS/>)}
               <IconButton
                 noFocus
@@ -146,29 +183,11 @@ class EditorToolbar extends PureComponent {
               {this.renderMarkButton('superscript', <IconSup/>)}
               {this.renderMarkButton('subscript', <IconSub/>)}
             </ToolGroup>
-            {/*<ToolGroup>
-              <IconButton
-                isDisabled
-                noFocus
-                icon={<IconAlignLeft/>}
-                isActive={false}
-                title="editor.commands.left"
-                onMouseDown={this.cmd.left}/>
-              <IconButton
-                isDisabled
-                noFocus
-                icon={<IconAlignCenter/>}
-                isActive={false}
-                title="editor.commands.center"
-                onMouseDown={this.cmd.center}/>
-              <IconButton
-                isDisabled
-                noFocus
-                icon={<IconAlignRight/>}
-                isActive={false}
-                title="editor.commands.right"
-                onMouseDown={this.cmd.right}/>
-            </ToolGroup>*/}
+            <ToolGroup>
+              {this.renderAlignButton('left', <IconAlignLeft/>)}
+              {this.renderAlignButton('center', <IconAlignCenter/>)}
+              {this.renderAlignButton('right', <IconAlignRight/>)}
+            </ToolGroup>
             <ToolGroup>
               <IconButton
                 noFocus
@@ -183,10 +202,12 @@ class EditorToolbar extends PureComponent {
               <IconButton
                 noFocus
                 icon={<IconSink/>}
+                title="editor.commands.sinkListItem"
                 onMouseDown={this.cmd.sinkListItem}/>
               <IconButton
                 noFocus
                 icon={<IconLift/>}
+                title="editor.commands.liftListItem"
                 onMouseDown={this.cmd.liftListItem}/>
             </ToolGroup>
             <ToolGroup>

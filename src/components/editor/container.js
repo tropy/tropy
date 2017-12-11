@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
+const { Component } = React
 const { func, bool, object, number, string } = require('prop-types')
 const { EditorToolbar } = require('./toolbar')
 const { EditorState } = require('prosemirror-state')
@@ -15,10 +15,12 @@ const cx = require('classnames')
 const { get, noop } = require('../../common/util')
 
 
-class Editor extends PureComponent {
+class Editor extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      hasViewFocus: false
+    }
   }
 
   setContainer = (container) => {
@@ -60,7 +62,7 @@ class Editor extends PureComponent {
   }
 
   focus = () => {
-    this.view.focus()
+    if (this.view != null) this.view.dom.focus()
   }
 
   exec(action, ...args) {
@@ -113,6 +115,7 @@ class Editor extends PureComponent {
 
   render() {
     const { isDisabled, placeholder, tabIndex } = this.props
+    const { hasViewFocus } = this.state
     const state = this.getEditorState()
     const showPlaceholder = placeholder != null && this.isBlank(state.doc)
 
@@ -135,6 +138,7 @@ class Editor extends PureComponent {
             ref={this.setView}
             state={state}
             isDisabled={isDisabled}
+            isEditable={hasViewFocus}
             tabIndex={tabIndex}
             onFocus={this.handleViewFocus}
             onBlur={this.handleViewBlur}

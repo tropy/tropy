@@ -6,7 +6,8 @@ const { Component } = React
 const { func, bool, instanceOf, number } = require('prop-types')
 const { EditorView } = require('prosemirror-view')
 const { EditorState } = require('prosemirror-state')
-const { darwin } = require('../../common/os')
+const { isMeta } = require('../../keymap')
+const { isLink } = require('../../dom')
 
 
 class ProseMirror extends Component {
@@ -16,7 +17,7 @@ class ProseMirror extends Component {
       ...this.getEditorProps(),
       dispatchTransaction: this.handleChange,
       handleKeyDown: this.handleKeyDown,
-      handleClickOn: this.handleClickOn,
+      handleClick: this.handleViewClick,
       handleDOMEvents: {
         focus: this.handleFocus,
         blur: this.handleBlur
@@ -29,28 +30,30 @@ class ProseMirror extends Component {
   }
 
   shouldComponentUpdate(props) {
-    const { state, isDisabled, tabIndex } = props
+    const { state, isDisabled, isEditable, tabIndex } = props
     const wasDisabled = this.props.isDisabled
+    const wasEditable = this.props.isEditable
 
     if (
       isDisabled !== wasDisabled ||
+      isEditable !== wasEditable ||
       tabIndex !== this.props.tabIndex
     ) {
       this.pm.setProps(this.getEditorProps(props))
     }
 
-    if (!isDisabled && state !== this.pm.state) {
-      this.pm.updateState(props.state)
+    if (state != null && state !== this.pm.state) {
+      this.pm.updateState(state)
     }
 
     return false
   }
 
   getEditorProps(props = this.props) {
-    const { isDisabled, tabIndex } = props
+    const { isDisabled, isEditable, tabIndex } = props
 
     return {
-      editable: () => !isDisabled,
+      editable: () => !isDisabled && isEditable,
       attributes: {
         tabIndex: isDisabled ? -1 : tabIndex
       }
@@ -69,17 +72,18 @@ class ProseMirror extends Component {
     return (this.props.isDisabled) ? false : this.props.onKeyDown(...args)
   }
 
-  handleClickOn = (view, pos, node, nodePos, event, direct) => {
-    // open a link in system browser with cmd-click on mac or ctrl-click elsewhere
-    const modifier = darwin ? 'metaKey' : 'ctrlKey'
-    if (!direct || !event[modifier]) return
-    const targetNode = node.nodeAt(pos - nodePos - 1)
-    if (!targetNode) return
-    for (let mark of targetNode.marks) {
-      const href = mark.attrs && mark.attrs.href
-      if (href) {
-        return shell.openExternal(href)
-      }
+  handleViewClick = (view, pos, event) => {
+    if (!view.editable) this.pm.dom.focus()
+    return isMeta(event) // disable PM's block select
+  }
+
+  handleContainerClick = (event) => {
+    const meta = isMeta(event)
+    const { target } = event
+
+    if (target != null && isLink(target)) {
+      event.preventDefault()
+      if (meta) shell.openExternal(target.href)
     }
   }
 
@@ -88,18 +92,21 @@ class ProseMirror extends Component {
   }
 
   handleBlur = (...args) => {
-    getSelection().removeAllRanges()
     this.props.onBlur(...args)
   }
 
   render() {
     return (
-      <div ref={this.setContainer} className="prose-mirror-container"/>
+      <div
+        ref={this.setContainer}
+        className="prose-mirror-container"
+        onClick={this.handleClick}/>
     )
   }
 
   static propTypes = {
     isDisabled: bool,
+    isEditable: bool.isRequired,
     state: instanceOf(EditorState),
     tabIndex: number.isRequired,
     onBlur: func.isRequired,

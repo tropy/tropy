@@ -4,6 +4,7 @@
 const React = require('react')
 const { SelectionIterable } = require('./iterable')
 const { Editable } = require('../editable')
+const { injectIntl, intlShape } = require('react-intl')
 const { createClickHandler } = require('../util')
 const { testFocusChange } = require('../../dom')
 const cx = require('classnames')
@@ -14,6 +15,12 @@ const { bool, func, object, string } = require('prop-types')
 class SelectionListItem extends SelectionIterable {
   get isDraggable() {
     return !this.props.isEditing && super.isDraggable
+  }
+
+  get placeholder() {
+    return this.props.intl.formatMessage({
+      id: 'panel.photo.selection'
+    })
   }
 
   get title() {
@@ -70,7 +77,7 @@ class SelectionListItem extends SelectionIterable {
         {this.renderThumbnail()}
         <div className="title">
           <Editable
-            display={title || 'Selection'}
+            display={title || this.placeholder}
             value={title}
             resize
             isActive={this.props.isEditing}
@@ -84,6 +91,7 @@ class SelectionListItem extends SelectionIterable {
 
   static propTypes = {
     ...SelectionIterable.propTypes,
+    intl: intlShape.isRequired,
     title: string.isRequired,
     data: object.isRequired,
     isEditing: bool.isRequired,
@@ -94,5 +102,5 @@ class SelectionListItem extends SelectionIterable {
 }
 
 module.exports = {
-  SelectionListItem: SelectionListItem.withDragAndDrop()
+  SelectionListItem: injectIntl(SelectionListItem.withDragAndDrop())
 }

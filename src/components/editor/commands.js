@@ -2,37 +2,31 @@
 
 const cmd  = require('prosemirror-commands')
 const { undo, redo } = require('prosemirror-history')
+const { list } = require('./list')
 const { undoInputRule } = require('prosemirror-inputrules')
-const {
-  wrapInList,
-  splitListItem,
-  liftListItem,
-  sinkListItem
-} = require('prosemirror-schema-list')
 const { TextSelection } = require('prosemirror-state')
 const { markExtend } = require('./selections')
+const { alignment } = require('./alignment')
 
 
 const expandAndRemoveMark = (markType) =>
   (state, dispatch) => {
     const range = markExtend(state.selection, markType)
-    if (!range) return
-    dispatch(
-      state
-        .tr
-        .setSelection(TextSelection.create(state.doc, range.from, range.to))
-        .removeMark(range.from, range.to, markType))
+    if (!range) return false
+
+    if (dispatch) {
+      dispatch(
+        state
+          .tr
+          .setSelection(TextSelection.create(state.doc, range.from, range.to))
+          .removeMark(range.from, range.to, markType))
+    }
+
+    return true
   }
 
 module.exports = (schema) => {
-  const list = {
-    ol: wrapInList(schema.nodes.ordered_list),
-    ul: wrapInList(schema.nodes.bullet_list),
-    splitListItem: splitListItem(schema.nodes.list_item),
-    liftListItem: liftListItem(schema.nodes.list_item),
-    sinkListItem: sinkListItem(schema.nodes.list_item),
-  }
-
+  const align = alignment(schema)
   const marks = {}
 
   for (let name in schema.marks) {
@@ -42,8 +36,12 @@ module.exports = (schema) => {
 
   return {
     ...cmd,
-    ...list,
+    ...list(schema),
     ...marks,
+
+    left: align.left,
+    right: align.right,
+    center: align.center,
 
     undo,
     redo,
@@ -51,20 +49,23 @@ module.exports = (schema) => {
     blockquote: cmd.wrapIn(schema.nodes.blockquote),
 
     break: cmd.chainCommands(
-      list.splitListItem,
+      align.splitListItem,
       cmd.createParagraphNear,
       cmd.liftEmptyBlock,
-      cmd.splitBlockKeepMarks
+      align.splitBlock
     ),
 
-    br: (state, dispatch) => (
-      dispatch(
-        state
-          .tr
-          .replaceSelectionWith(schema.nodes.hard_break.create())
-          .scrollIntoView()
-      ), true
-    ),
+    br(state, dispatch) {
+      if (dispatch) {
+        dispatch(
+          state
+            .tr
+            .replaceSelectionWith(schema.nodes.hard_break.create())
+            .scrollIntoView()
+        )
+      }
+      return true
+    },
 
     backspace: cmd.chainCommands(
       undoInputRule,
@@ -77,26 +78,32 @@ module.exports = (schema) => {
       cmd.joinForward
     ),
 
-    insertLink: (state, dispatch, attrs) => {
-      const url = attrs.href
+    insertLink(state, dispatch, attrs) {
+      const { href } = attrs.href
       const { $cursor, ranges } = state.selection
+      const { tr } = state
       let from, to
-      const tr = state.tr
+
+      // Insert link target as text, if no text is selected
       if ($cursor) {
-        // insert link target as text, only if no text is selected
         from = $cursor.pos
-        to = from + url.length
-        tr.insertText(url, from)
+        to = from + href.length
+        tr.insertText(href, from)
       } else {
         from = ranges[0].$from.pos
         to = ranges[0].$to.pos
       }
-      dispatch(
-        tr.addMark(from, to, schema.marks.link.create(attrs)))
+
+      if (dispatch) {
+        dispatch(tr.addMark(from, to, schema.marks.link.create(attrs)))
+      }
+
+      return true
     },
+
     removeLink: expandAndRemoveMark(schema.marks.link),
 
-    clearSelection: () => {
+    clearSelection() {
       const sel = getSelection()
       if (!sel.isCollapsed) sel.collapseToStart()
 
