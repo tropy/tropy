@@ -94,7 +94,16 @@ fr:
         - label: 'Cacher la barre latérale'
           command: 'app:toggle-sidebar'
           enabled: false
-
+        - type: 'separator'
+        - label: 'Zoom'
+          submenu:
+            - label: 'Agrandir'
+              command: 'app:zoom-in'
+            - label: 'Dézoomer'
+              command: 'app:zoom-out'
+            - type: 'separator'
+            - label: 'Réinitialiser'
+              command: 'app:zoom-reset'
     - &win
       label: 'Fenêtre'
       submenu:
