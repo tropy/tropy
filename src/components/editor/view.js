@@ -100,7 +100,7 @@ class ProseMirror extends Component {
       <div
         ref={this.setContainer}
         className="prose-mirror-container"
-        onClick={this.handleClick}/>
+        onClick={this.handleContainerClick}/>
     )
   }
 
