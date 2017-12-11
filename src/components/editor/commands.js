@@ -79,7 +79,7 @@ module.exports = (schema) => {
     ),
 
     insertLink(state, dispatch, attrs) {
-      const { href } = attrs.href
+      const { href } = attrs
       const { $cursor, ranges } = state.selection
       const { tr } = state
       let from, to
