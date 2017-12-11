@@ -85,7 +85,7 @@ fr:
           accelerator: 'Shift+Control+S'
           command: 'app:open-preferences'
     - &view
-      label: 'Affichage'
+      label: 'Présentation'
       submenu:
         - label: 'Basculer en plein écran'
           role: 'togglefullscreen'
