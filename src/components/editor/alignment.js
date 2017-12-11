@@ -31,7 +31,8 @@ const align = (direction) =>
 // Supports both lists and regular markup.
 // nodeOffset is how far ahead from the current position to insert the alignment attributes.
 const keepAlignment = (state, dispatch, nodeOffset) => (tr => {
-  const { pos, parentOffset } = state.selection.$cursor
+  const cursor = state.selection.$cursor || state.selection.$from
+  const { pos, parentOffset } = cursor
   const prev = state.doc.resolve(pos - parentOffset)
   if (prev && prev.parent) {
     const direction = prev.parent.attrs.align
