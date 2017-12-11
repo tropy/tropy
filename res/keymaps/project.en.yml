@@ -3,7 +3,6 @@ en:
     global: &global
       back:
         - Escape
-        - CmdOrCtrl+ArrowLeft
       nextItem: Alt+ArrowDown
       prevItem: Alt+ArrowUp
       nextPhoto: Alt+ArrowRight
