@@ -69,7 +69,7 @@ const props = {
 }
 
 const photos = {
-  11: { id: 11, path: '/path' },
+  11: { id: 11, path: '/path', width: 30, height: 40 },
   12: { id: 12, path: '/another', selections: [21], notes: [1] }
 }
 

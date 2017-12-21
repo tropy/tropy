@@ -60,12 +60,11 @@ describe('export', () => {
   it('has photo metadata', async () => {
     const data = (await ld)[0]['@graph'][0]
     expect(keys(data.photo).length).to.eql(2)
-    expect(data.photo[0]).to.eql({
-      '@type': 'Photo',
-      'path': '/path',
-      'helloWorld': 'photo property',
-      'nonTemplateProperty': 'custom property'
-    })
+    const photo = data.photo[0]
+    expect(photo).to.have.property('@type', 'Photo')
+    expect(photo).to.have.property('path', '/path')
+    expect(photo).to.have.property('helloWorld', 'photo property')
+    expect(photo).to.have.property('nonTemplateProperty', 'custom property')
   })
 
   it('has photo->selection @context', async () => {
@@ -106,6 +105,15 @@ describe('export', () => {
       expect(item1.photo[1]['note']['text']).to.eql('photo note')
       expect(item1.photo[1]['note']['html']).to.eql('<p>photo note</p>')
     })
+
+    it('width, etc.', async () => {
+      const item1 = (await ld)[0]['@graph'][0]
+      expect(item1.photo[1]).to.not.have.property('width')
+      const photo = item1.photo[0]
+      expect(photo).to.have.property('width', 30)
+      expect(photo).to.have.property('height', 40)
+    })
+
   })
 
   describe('selection has', async () => {

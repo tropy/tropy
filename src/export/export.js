@@ -7,13 +7,37 @@ const { ITEM, PHOTO, SELECTION } = require('../constants/type')
 const makeNote = require('./note')
 
 const TR = 'https://tropy.org/v1/tropy#'
+const IFFF = 'http://iiif.io/api/image/2#'
 
 const PROP = {
   TEMPLATE: `${TR}template`,
   ITEM: `${TR}item`,
   PHOTO: `${TR}photo`,
   SELECTION: `${TR}selection`,
-  NOTE: `${TR}note`
+  NOTE: `${TR}note`,
+  WIDTH: `${IFFF}width`,
+  HEIGHT: `${IFFF}height`,
+}
+
+const EXPORT_PROPERTIES = {
+  SELECTION: [
+    'angle',
+    'height',
+    'mirror',
+    'width',
+    'x',
+    'y',
+  ],
+  PHOTO: [
+    'angle',
+    'checksum',
+    'height',
+    'mimetype',
+    'mirror',
+    'orientation',
+    'size',
+    'width',
+  ]
 }
 
 const { newProperties } = require('./utils')
@@ -41,7 +65,9 @@ function makeContext(template, items, resources) {
           '@id': PROP.SELECTION,
           '@container': '@list',
           '@context': {}
-        }
+        },
+        width: PROP.WIDTH,
+        height: PROP.HEIGHT
       }
     }
   }
@@ -86,7 +112,6 @@ function addInfo(target, ids, key, state, fn = x => x.name) {
 }
 
 function addSelections(template, photo, ids, resources) {
-  const selProps = ['x', 'y', 'width', 'height', 'angle', 'mirror', 'template']
   const [props, metadata,,,, notes, selections] = resources
 
   if (ids) {
@@ -94,7 +119,7 @@ function addSelections(template, photo, ids, resources) {
       let selection = { '@type': SELECTION }
       const original = selections[sID]
       // add selection properties
-      Object.assign(selection, pick(original, selProps))
+      Object.assign(selection, pick(original, EXPORT_PROPERTIES.SELECTION))
 
       // add selection notes
       selection = addInfo(selection, original.notes, 'note', notes, makeNote)
@@ -140,7 +165,8 @@ function renderItem(item, template, resources) {
     let photo = {
       '@type': PHOTO,
       'path': p.path,
-      'selection': []
+      'selection': [],
+      ...pick(p, EXPORT_PROPERTIES.PHOTO)
     }
 
     photo = newProperties(metadata[p.id], photo, false, props, template)
