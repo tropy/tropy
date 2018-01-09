@@ -247,8 +247,7 @@ class Tropy extends EventEmitter {
       maximizable: false,
       fullscreenable: false,
       darkTheme: (this.state.theme === 'dark'),
-      frame: !this.hash.frameless,
-      titleBarStyle: 'hidden'
+      frame: !this.hash.frameless
     }, this.state.zoom)
       .once('closed', () => {
         this.prefs = undefined
