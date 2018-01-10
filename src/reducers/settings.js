@@ -1,6 +1,7 @@
 'use strict'
 
 const { SETTINGS, ITEM, ESPER } = require('../constants')
+const { darwin } = require('../common/os')
 
 const defaults = {
   debug: ARGS.debug,
@@ -10,7 +11,7 @@ const defaults = {
   theme: ARGS.theme,
   overlayToolbars: ARGS.frameless,
   invertScroll: true,
-  invertZoom: false,
+  invertZoom: darwin,
   zoomMode: ESPER.MODE.FIT
 }
 
