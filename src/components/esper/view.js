@@ -8,12 +8,10 @@ const css = require('../../css')
 const { restrict } = require('../../common/util')
 const { rad } = require('../../common/math')
 const PIXI = require('pixi.js/dist/pixi.js')
-const { Sprite, Rectangle } = PIXI
 const { TextureCache, skipHello } = PIXI.utils
-const { Selection, SelectionLayer, SelectionOverlay } = require('./selection')
+const { constrain, Picture } = require('./picture')
+const { Selection  } = require('./selection')
 const TWEEN = require('@tweenjs/tween.js')
-const { Tween } = TWEEN
-const { Cubic } = TWEEN.Easing
 const { TOOL } = require('../../constants/esper')
 
 const {
@@ -96,7 +94,7 @@ class EsperView extends Component {
     this.pixi.stop()
   }
 
-  get bounds() {
+  get screen() {
     return this.pixi.screen
   }
 
@@ -106,6 +104,10 @@ class EsperView extends Component {
 
   get isDragging() {
     return this.drag.current != null
+  }
+
+  getInnerBounds(scale) {
+    return this.image.getInnerBounds(this.screen, scale)
   }
 
   isDoubleClick(time = Date.now(), threshold = 350) {
@@ -126,18 +128,10 @@ class EsperView extends Component {
     this.image = null
 
     if (props.src != null) {
-      this.image = new Sprite()
-      this.image.anchor.set(0.5)
-
-      this.image.selections = new SelectionLayer(props)
-      this.image.addChild(this.image.selections)
-
-      this.image.overlay = new SelectionOverlay(props)
-      this.image.addChild(this.image.overlay)
+      this.image = new Picture(props)
 
       try {
-        this.image.texture = await this.load(props.src, this.image)
-
+        this.image.bg.texture = await this.load(props.src)
         this.image.interactive = true
         this.image.on('mousedown', this.handleMouseDown)
 
@@ -148,13 +142,12 @@ class EsperView extends Component {
       this.rotate(props)
       const { mirror, x, y, zoom } = props
 
-      this.setScaleMode(this.image.texture, zoom)
+      this.setScaleMode(this.image.bg.texture, zoom)
       this.image.scale.x = mirror ? -zoom : zoom
       this.image.scale.y = zoom
 
       this.image.position.set(x, y)
-      constrain(this.image.position, this.image, null, this.bounds)
-
+      this.image.constrain(this.screen)
       this.image.cursor = props.tool
 
       this.pixi.stage.addChildAt(this.image, 0)
@@ -166,15 +159,15 @@ class EsperView extends Component {
     if (this.image == null) return
 
     const { angle, mirror, x, y, zoom } = props
-    const { position, scale, texture } = this.image
+    const { position, scale } = this.image
 
-    this.setScaleMode(texture, zoom)
+    this.setScaleMode(this.image.bg.texture, zoom)
 
     const zx = mirror ? -1 : 1
-    const next = constrain({ x, y, zoom }, this.image, zoom, this.bounds)
+    const next = constrain({ x, y, zoom }, this.getInnerBounds(zoom))
 
     // TODO fixate, change pivot and rotate after move and scale!
-    this.image.scale.x = this.image.scale.y * zx
+    this.image.scale.x = scale.y * zx
     this.image.rotation = rad(angle)
 
     this
@@ -232,15 +225,15 @@ class EsperView extends Component {
 
     if (this.image == null || zoom == null) return
 
-    constrain(this.image.position, this.image, zoom, { width, height })
-    this.setScaleMode(this.image.texture, zoom)
+    this.image.constrain({ width, height }, zoom)
+    this.setScaleMode(this.image.bg.texture, zoom)
     this.image.scale.set(mirror ? -zoom : zoom, zoom)
     this.persist()
   }
 
   move({ x, y }, duration = 0) {
     const { position } = this.image
-    const next = constrain({ x, y }, this.image, null, this.bounds)
+    const next = constrain({ x, y }, this.getInnerBounds())
 
     if (equal(position, next)) return
 
@@ -252,14 +245,14 @@ class EsperView extends Component {
   }
 
   scale({ mirror, zoom }, duration = 0, { x, y } = {}) {
-    const { scale, position, texture } = this.image
-    const viewport = this.bounds
+    const { scale, position, bg } = this.image
+    const { screen } = this
 
     const zx = mirror ? -1 : 1
     const dz = zoom / scale.y
 
-    x = x == null ? viewport.width / 2 : x
-    y = y == null ? viewport.height / 2 : y
+    x = x == null ? screen.width / 2 : x
+    y = y == null ? screen.height / 2 : y
 
     const dx = (x - position.x)
     const dy = (y - position.y)
@@ -268,9 +261,9 @@ class EsperView extends Component {
       x: position.x + dx - dx * dz,
       y: position.y + dy - dy * dz,
       zoom
-    }, this.image, zoom, viewport)
+    }, this.getInnerBounds())
 
-    this.setScaleMode(texture, zoom)
+    this.setScaleMode(bg.texture, zoom)
 
     this
       .animate({
@@ -307,24 +300,20 @@ class EsperView extends Component {
     }
   }
 
-  fadeOut(sprite, duration = FADE_DURATION) {
-    if (sprite == null) return
+  fadeOut(thing, duration = FADE_DURATION) {
+    if (thing == null) return
+    thing.interactive = false
 
-    sprite.interactive = false
+    if (!this.isStarted) return thing.destroy()
 
-    if (!this.isStarted) {
-      sprite.destroy({ children: true })
-      return
-    }
-
-    this.animate(sprite, null, () => void sprite.destroy({ children: true }))
+    this.animate(thing, null, () => thing.destroy())
       .to({ alpha: 0 }, duration)
       .start()
   }
 
   animate(thing, scope, done) {
-    const tween = new Tween(thing, this.tweens)
-      .easing(Cubic.InOut)
+    const tween = new TWEEN.Tween(thing, this.tweens)
+      .easing(TWEEN.Easing.Cubic.InOut)
 
     if (scope != null) {
       tween
@@ -435,8 +424,8 @@ class EsperView extends Component {
     const selection = data.getLocalPosition(target)
 
     selection.offset = {
-      x: target.texture.orig.width / 2,
-      y: target.texture.orig.height / 2
+      x: target.bg.texture.orig.width / 2,
+      y: target.bg.texture.orig.height / 2
     }
 
     selection.x += selection.offset.x
@@ -452,7 +441,7 @@ class EsperView extends Component {
         mov: data.getLocalPosition(target.parent)
       },
       selection,
-      limit: getMovementBounds(target, null, this.bounds)
+      limit: this.getInnerBounds()
     }
   }
 
@@ -567,43 +556,6 @@ class EsperView extends Component {
   }
 }
 
-
-function isVertical(angle) {
-  if (angle > Math.PI * 0.25 && angle < Math.PI * 0.75) return true
-  if (angle > Math.PI * 1.25 && angle < Math.PI * 1.75) return true
-  return false
-}
-
-function getSpriteBounds(sprite, scale) {
-  let { x, y, width, height, rotation, texture } = sprite
-
-  if (scale != null) {
-    width = texture.orig.width * scale
-    height = texture.orig.height * scale
-  }
-
-  return isVertical(rotation) ?
-    new Rectangle(x, y, height, width) :
-    new Rectangle(x, y, width, height)
-}
-
-function getMovementBounds(sprite, scale, viewport) {
-  const { width, height } = getSpriteBounds(sprite, scale)
-
-  const dx = Math.max(0, width - viewport.width)
-  const dy = Math.max(0, height - viewport.height)
-
-  return new Rectangle(
-    (viewport.width - dx) / 2, (viewport.height - dy) / 2, dx, dy
-  )
-}
-
-function constrain(point, ...args) {
-  const limit = getMovementBounds(...args)
-  point.x = restrict(point.x, limit.left, limit.right)
-  point.y = restrict(point.y, limit.top, limit.bottom)
-  return point
-}
 
 function coords(e) {
   return {

@@ -160,7 +160,7 @@ class Esper extends PureComponent {
   getStateFromProps(props) {
     const state = this.getEmptyState(props)
     const { photo, selection } = props
-    const screen = this.view.bounds
+    const { screen } = this.view
 
     if (photo != null && !photo.pending) {
       assign(state, {
@@ -200,7 +200,7 @@ class Esper extends PureComponent {
   }
 
   getZoomBounds(
-    screen = this.view.bounds,
+    screen = this.view.screen,
     state = this.state,
     props = this.props
   ) {
@@ -278,8 +278,8 @@ class Esper extends PureComponent {
     () => this.resize(this.bounds)
 
   resize = throttle(({ width, height }) => {
-    width = round(width || this.view.bounds.width)
-    height = round(height || this.view.bounds.height)
+    width = round(width || this.view.screen.width)
+    height = round(height || this.view.screen.height)
 
     const { minZoom, zoom, zoomToFill } = this.getZoomBounds({ width, height })
 
@@ -320,7 +320,7 @@ class Esper extends PureComponent {
       height: this.props.photo.height
     }
 
-    assign(state, this.getZoomBounds(this.view.bounds, state))
+    assign(state, this.getZoomBounds(this.view.screen, state))
 
     this.setState(state)
 
