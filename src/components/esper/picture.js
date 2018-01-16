@@ -2,6 +2,7 @@
 
 const PIXI = require('pixi.js/dist/pixi.js')
 const { Container, Sprite, Rectangle } = PIXI
+const { ColorMatrixFilter } = PIXI.filters
 const { SelectionLayer, SelectionOverlay } = require('./selection')
 const { restrict } = require('../../common/util')
 const { deg, isHorizontal } = require('../../common/math')
@@ -17,6 +18,7 @@ class Picture extends Container {
     this.pivot.set(width / 2, height / 2)
 
     this.bg = new Sprite()
+    this.bg.filters = [new ColorMatrixFilter()]
     this.addChild(this.bg)
 
     this.selections = new SelectionLayer()
@@ -57,6 +59,14 @@ class Picture extends Container {
     return new Rectangle(
       (screen.width - dx) / 2, (screen.height - dy) / 2, dx, dy
     )
+  }
+
+  contrast(...args) {
+    this.bg.filters[0].contrast(...args)
+  }
+
+  brightness(...args) {
+    this.bg.filters[0].brightness(...args)
   }
 
   constrain(screen, scale) {
