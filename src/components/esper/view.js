@@ -421,16 +421,6 @@ class EsperView extends Component {
 
     target.cursor = `${this.props.tool}-active`
 
-    const selection = data.getLocalPosition(target)
-
-    selection.offset = {
-      x: target.bg.texture.orig.width / 2,
-      y: target.bg.texture.orig.height / 2
-    }
-
-    selection.x += selection.offset.x
-    selection.y += selection.offset.y
-
     this.drag.start()
     this.drag.current = {
       data,
@@ -440,7 +430,7 @@ class EsperView extends Component {
         pos: { x: target.x, y: target.y },
         mov: data.getLocalPosition(target.parent)
       },
-      selection,
+      selection: data.getLocalPosition(target),
       limit: this.getInnerBounds()
     }
   }
@@ -504,8 +494,8 @@ class EsperView extends Component {
     const { data, target } = this.drag.current
     const { selection } = this.drag.current
     const { x, y } = data.getLocalPosition(target)
-    selection.width = (x + selection.offset.x) - selection.x
-    selection.height = (y + selection.offset.y) - selection.y
+    selection.width = x - selection.x
+    selection.height = y - selection.y
   }
 
   handleSelectStop(wasCancelled) {
