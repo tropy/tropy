@@ -106,8 +106,8 @@ class EsperView extends Component {
     return this.drag.current != null
   }
 
-  getInnerBounds(scale) {
-    return this.image.getInnerBounds(this.screen, scale)
+  getInnerBounds(...args) {
+    return this.image.getInnerBounds(this.screen, ...args)
   }
 
   isDoubleClick(time = Date.now(), threshold = 350) {
@@ -261,7 +261,7 @@ class EsperView extends Component {
       x: position.x + dx - dx * dz,
       y: position.y + dy - dy * dz,
       zoom
-    }, this.getInnerBounds())
+    }, this.getInnerBounds(zoom))
 
     this.setScaleMode(bg.texture, zoom)
 

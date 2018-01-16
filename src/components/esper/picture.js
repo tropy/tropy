@@ -8,20 +8,21 @@ const { deg, isHorizontal } = require('../../common/math')
 
 
 class Picture extends Container {
-  constructor(props) {
+  constructor({ width, height }) {
     super()
 
-    this.WIDTH = props.width
-    this.HEIGHT = props.height
+    this.WIDTH = width
+    this.HEIGHT = height
+
+    this.pivot.set(width / 2, height / 2)
 
     this.bg = new Sprite()
-    this.bg.anchor.set(0.5)
     this.addChild(this.bg)
 
-    this.selections = new SelectionLayer(props)
+    this.selections = new SelectionLayer()
     this.addChild(this.selections)
 
-    this.overlay = new SelectionOverlay(props)
+    this.overlay = new SelectionOverlay({ width, height })
     this.addChild(this.overlay)
   }
 
@@ -29,15 +30,15 @@ class Picture extends Container {
     return isHorizontal(deg(this.rotation))
   }
 
-  getWidth(scale) {
-    return (scale == null) ? this.bg.width : this.WIDTH * scale
+  getWidth(scale = this.scale.y) {
+    return this.WIDTH * scale
   }
 
-  getHeight(scale) {
-    return (scale == null) ? this.bg.height : this.HEIGHT * scale
+  getHeight(scale = this.scale.y) {
+    return this.HEIGHT * scale
   }
 
-  getBounds(scale) {
+  getBounds(scale = this.scale.y) {
     const { x, y } = this
     const width = this.getWidth(scale)
     const height = this.getHeight(scale)
@@ -47,7 +48,7 @@ class Picture extends Container {
       new Rectangle(x, y, height, width)
   }
 
-  getInnerBounds(screen, scale) {
+  getInnerBounds(screen, scale = this.scale.y) {
     const { width, height } = this.getBounds(scale)
 
     const dx = Math.max(0, width - screen.width)
