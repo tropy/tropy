@@ -4,6 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { EsperView } = require('./view')
 const { EsperToolbar } = require('./toolbar')
+const { EsperPanel } = require('./panel')
 const { get, restrict, shallow } = require('../../common/util')
 const { isHorizontal, rotate, round } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
@@ -579,6 +580,9 @@ class Esper extends PureComponent {
             onRotationChange={this.handleRotationChange}
             onZoomChange={this.handleZoomChange}/>
         </EsperHeader>
+        <EsperPanel
+          isDisabled={false}
+          isHidden={false}/>
         <EsperView
           ref={this.setView}
           selection={this.props.selection}
