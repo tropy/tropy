@@ -117,7 +117,7 @@ class Esper extends PureComponent {
 
   get classes() {
     return ['esper', this.state.tool, {
-      'overlay-toolbar': this.props.hasOverlayToolbar
+      'overlay-mode': this.props.hasOverlayToolbar
     }]
   }
 
@@ -580,22 +580,24 @@ class Esper extends PureComponent {
             onRotationChange={this.handleRotationChange}
             onZoomChange={this.handleZoomChange}/>
         </EsperHeader>
-        <EsperPanel
-          isDisabled={false}
-          isHidden={false}/>
-        <EsperView
-          ref={this.setView}
-          selection={this.props.selection}
-          selections={this.props.selections}
-          tool={tool}
-          onChange={this.handleViewChange}
-          onSelectionActivate={this.handleSelectionActivate}
-          onSelectionCreate={this.handleSelectionCreate}
-          onDoubleClick={this.handleDoubleClick}
-          onPhotoError={this.props.onPhotoError}
-          onWheel={this.handleWheel}
-          onZoomIn={this.handleZoomIn}
-          onZoomOut={this.handleZoomOut}/>
+        <div className="esper-container">
+          <EsperView
+            ref={this.setView}
+            selection={this.props.selection}
+            selections={this.props.selections}
+            tool={tool}
+            onChange={this.handleViewChange}
+            onSelectionActivate={this.handleSelectionActivate}
+            onSelectionCreate={this.handleSelectionCreate}
+            onDoubleClick={this.handleDoubleClick}
+            onPhotoError={this.props.onPhotoError}
+            onWheel={this.handleWheel}
+            onZoomIn={this.handleZoomIn}
+            onZoomOut={this.handleZoomOut}/>
+          <EsperPanel
+            isDisabled={false}
+            isHidden={false}/>
+        </div>
       </section>
     )
   }

@@ -4,7 +4,7 @@
 // Esper
 // --------------------------------------------------
 
-.esper {
+section.esper { // sass-lint:disable-line no-qualifying-elements
   flex: 1 1 0;
   background: $esper-bg;
   display: flex;
@@ -31,7 +31,7 @@
     padding-top: 0;
     height: $toolbar-height;
     margin: 0;
-    box-shadow: 0 1px 0 $esper-toolbar-shadow;
+    box-shadow: 0 1px 0 $esper-shadow;
     background: $esper-toolbar-solid-bg;
 
     .frameless & {
@@ -75,6 +75,12 @@
     }
   }
 
+  .esper-container {
+    flex: 1 1 0;
+    display: flex;
+    position: relative;
+  }
+
   .esper-view {
     flex: 1 1 0;
     position: relative;
@@ -84,7 +90,7 @@
     }
   }
 
-  &.overlay-toolbar {
+  &.overlay-mode {
     .esper-header {
       position: absolute;
       left: 0;
@@ -97,7 +103,7 @@
     }
 
     .toolbar {
-      background: $esper-toolbar-overlay-bg;
+      background: $esper-overlay-bg;
       // Causes flickering on macOS. See #101
       // backdrop-filter: blur($esper-toolbar-blur-radius);
       box-shadow: none;
