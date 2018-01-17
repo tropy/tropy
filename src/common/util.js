@@ -270,6 +270,7 @@ const util = {
         let type = typeof value
 
         switch (true) {
+          case type === 'boolean':
           case type === 'number':
           case type === 'string':
           case type === 'undefined':
