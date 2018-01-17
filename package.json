@@ -74,7 +74,7 @@
     "react-test-renderer": "^16.2.0",
     "sass-lint": "^1.12.1",
     "shelljs": "^0.7.8",
-    "sinon": "^4.1.4",
+    "sinon": "^4.1.6",
     "sinon-chai": "^2.14.0",
     "sqleton": "^1.2.4"
   },
@@ -83,7 +83,7 @@
     "bluebird": "^3.5.1",
     "classnames": "^2.2.5",
     "colors": "^1.1.2",
-    "edtf": "^2.2.3",
+    "edtf": "^2.3.0",
     "exif-reader": "github:inukshuk/exif-reader#patched",
     "generic-pool": "^3.4.0",
     "js-yaml": "^3.10.0",
@@ -120,11 +120,11 @@
     "sqlite3": "^3.1.13",
     "string.prototype.padstart": "^3.0.0",
     "transducers.js": "^0.3.2",
-    "uuid": "^3.1.0",
+    "uuid": "^3.2.1",
     "winreg": "^1.2.4",
     "winston": "^2.4.0",
     "write-file-atomic": "^2.3.0",
-    "yargs": "^10.1.1"
+    "yargs": "^10.1.2"
   },
   "yargs": {
     "short-option-groups": false
