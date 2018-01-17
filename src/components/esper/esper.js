@@ -148,9 +148,10 @@ class Esper extends PureComponent {
       minZoom: props.minZoom,
       angle: 0,
       mirror: false,
+      brightness: 1,
+      contrast: 0,
       width: 0,
       height: 0,
-      aspect: 0,
       src: null,
       x: props.x,
       y: props.y,
@@ -391,6 +392,15 @@ class Esper extends PureComponent {
     this.props.onChange({ esper: { panel } })
   }
 
+  handleColorChange = ({
+    brightness = this.state.brightness,
+    contrast = this.state.contrast
+  }) => {
+    this.setState({ brightness, contrast })
+    this.view.filter({ brightness, contrast })
+    //this.persist()
+  }
+
   handleWheel = ({ x, y, dy, dx, ctrl }) => {
     if (ctrl) {
       const mw = this.props.invertZoom ? -1 : 1
@@ -601,8 +611,11 @@ class Esper extends PureComponent {
             onZoomIn={this.handleZoomIn}
             onZoomOut={this.handleZoomOut}/>
           <EsperPanel
+            brightness={this.state.brightness}
+            contrast={this.state.contrast}
             isDisabled={isDisabled}
-            isVisible={this.props.isPanelVisible}/>
+            isVisible={this.props.isPanelVisible}
+            onColorChange={this.handleColorChange}/>
         </div>
       </section>
     )

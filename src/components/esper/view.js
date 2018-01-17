@@ -300,6 +300,11 @@ class EsperView extends Component {
     }
   }
 
+  filter({ brightness, contrast }) {
+    this.image.brightness(brightness)
+    this.image.contrast(contrast, true)
+  }
+
   fadeOut(thing, duration = FADE_DURATION) {
     if (thing == null) return
     thing.interactive = false
