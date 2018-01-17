@@ -126,6 +126,8 @@ class VocabExport extends Command {
             state.ontology.type
           ])
 
+    this.isInteractive = true
+
     const path = yield call(dialog.save.vocab)
     if (!path) return
 
