@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { Toolbar, ToolbarLeft, ToolGroup } = require('../toolbar')
+const { Toolbar, ToolbarLeft, ToolbarRight, ToolGroup } = require('../toolbar')
 const { IconButton } = require('../button')
 const { Slider } = require('../slider')
 const { arrayOf, bool, func, number, string } = require('prop-types')
@@ -108,11 +108,6 @@ class EsperToolbar extends PureComponent {
               title="esper.tool.mirror"
               isDisabled={this.props.isDisabled}
               onClick={this.props.onMirrorChange}/>
-            <IconButton
-              noFocus
-              icon={<IconSliders/>}
-              isActive={this.props.isPanelVisible}
-              onClick={this.handlePanelToggle}/>
           </ToolGroup>
           <ToolGroup>
             <IconButton
@@ -152,6 +147,15 @@ class EsperToolbar extends PureComponent {
               onChange={this.handleZoomChange}/>
           </ToolGroup>
         </ToolbarLeft>
+        <ToolbarRight>
+          <ToolGroup>
+            <IconButton
+              noFocus
+              icon={<IconSliders/>}
+              isActive={this.props.isPanelVisible}
+              onClick={this.handlePanelToggle}/>
+          </ToolGroup>
+        </ToolbarRight>
       </Toolbar>
     )
   }

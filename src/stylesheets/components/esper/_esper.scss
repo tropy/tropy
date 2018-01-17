@@ -27,7 +27,6 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
   .toolbar {
     position: absolute; // Let the toolbar overflow the header
     width: 100%;
-    box-sizing: content-box;
     padding-top: 0;
     height: $toolbar-height;
     margin: 0;
