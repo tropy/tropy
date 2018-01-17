@@ -400,14 +400,6 @@ i('NumberedList', (
   </svg>
 ))
 
-i('Nut', (
-  <svg width="16" height="16">
-    <g className="line" fill="currentColor">
-      <path d="M12,1.072H4L0,8l4,6.928h8L16,8Zm-.577,12.856H4.577L1.155,8,4.577,2.072h6.845L14.845,8ZM8,5a3,3,0,1,0,3,3A3,3,0,0,0,8,5Zm0,5a2,2,0,1,1,2-2A2,2,0,0,1,8,10Z"/>
-    </g>
-  </svg>
-))
-
 i('O', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
@@ -501,6 +493,14 @@ i('Sink', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
       <path d="M7,1H8V16H7Zm7,1H9V3h5ZM9,12h7V11H9ZM9,5V6h7V5Zm5,3H9V9h5ZM9,15h5V14H9ZM3,6.707,4.293,8H0V9H4.293L3,10.293,3.707,11l2.5-2.5L3.707,6Z"/>
+    </g>
+  </svg>
+))
+
+i('Sliders', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M12.95,4a2.5,2.5,0,0,0-4.9,0H0V5H8.05a2.5,2.5,0,0,0,4.9,0H16V4ZM10.5,6A1.5,1.5,0,1,1,12,4.5,1.5,1.5,0,0,1,10.5,6Zm-5,3a2.5,2.5,0,0,0-2.45,2H0v1H3.05a2.5,2.5,0,0,0,4.9,0H16V11H7.95A2.5,2.5,0,0,0,5.5,9Zm0,4A1.5,1.5,0,1,1,7,11.5,1.5,1.5,0,0,1,5.5,13Z"/>
     </g>
   </svg>
 ))

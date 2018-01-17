@@ -21,8 +21,8 @@ const {
   IconArrow,
   IconSelection,
   IconRotate,
-  // IconNut,
   IconHand,
+  IconSliders,
   IconMirror,
   IconMinusCircle,
   IconPlusCircle,
@@ -104,10 +104,10 @@ class EsperToolbar extends PureComponent {
               title="esper.tool.mirror"
               isDisabled={this.props.isDisabled}
               onClick={this.props.onMirrorChange}/>
-            {/*<IconButton
+            <IconButton
               noFocus
-              icon={<IconNut/>}
-              isDisabled/>*/}
+              icon={<IconSliders/>}
+              isDisabled/>
           </ToolGroup>
           <ToolGroup>
             <IconButton
