@@ -39,16 +39,16 @@ class VocabAccordion extends Accordion {
         <h1 className="panel-heading">
           {this.props.vocab.title}
         </h1>
-        {!this.props.vocab.isProtected &&
         <ButtonGroup>
           <IconButton
             icon={<IconExport/>}
             title="prefs.vocab.export"
             onClick={this.handleExport}/>
-          <IconButton
-            icon={<IconTrash/>}
-            onClick={this.handleDelete}/>
-        </ButtonGroup>}
+          {!this.props.vocab.isProtected &&
+            <IconButton
+              icon={<IconTrash/>}
+              onClick={this.handleDelete}/>}
+        </ButtonGroup>
       </div>
     )
   }
