@@ -41,11 +41,10 @@ class Slider extends PureComponent {
   }
 
   get classes() {
-    return {
-      slider: true,
-      [`slider-${this.props.size}`]: true,
-      disabled: this.isDisabled
-    }
+    return ['slider', `slider-${this.props.size}`, {
+      disabled: this.isDisabled,
+      origin: this.props.origin != null
+    }]
   }
 
   getNextStep() {
