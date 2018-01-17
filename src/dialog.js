@@ -167,6 +167,15 @@ save.items = (options) => save({
   ...options
 })
 
+save.vocab = (options) => save({
+  filters: [{
+    name: t('dialog.filter.rdf'),
+    extensions: ['n3']
+  }],
+  properties: ['createDirectory'],
+  ...options
+})
+
 
 module.exports = {
   fail,

@@ -127,6 +127,7 @@ en:
         export: Export
     vocab:
       label: Vocabularies
+      export: Export
       classes: >
         {count, plural,
           =0 {No Classes}
