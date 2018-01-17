@@ -63,6 +63,12 @@
   border-right: ($slider-handle-size / 2) solid transparent;
   margin-left: -($slider-handle-size / 2);
   position: absolute;
+
+  .slider.origin & {
+    border-left: ($slider-track-height / 2) solid transparent;
+    border-right: ($slider-track-height / 2) solid transparent;
+    margin-left: -($slider-track-height / 2);
+  }
 }
 
 .slider-handle {
