@@ -28,8 +28,8 @@ class Slider extends PureComponent {
     }
   }
 
-  get offset() {
-    return this.state.value - this.props.min
+  get origin() {
+    return (this.props.origin != null) ? this.props.origin : this.props.min
   }
 
   get delta() {
@@ -160,8 +160,15 @@ class Slider extends PureComponent {
   }
 
   render() {
-    const { offset, delta, isDisabled } = this
-    const percentage = `${100 * offset / delta}%`
+    const { origin, delta, isDisabled } = this
+
+    const abs = this.state.value - this.props.min
+    const off = origin - this.props.min
+    const adj = abs - off
+
+    const offset = pct((adj < 0 ? off + adj : off) / delta)
+    const position = pct(abs / delta)
+    const width = pct(Math.abs(adj) / delta)
 
     return (
       <div className={cx(this.classes)}>
@@ -172,11 +179,11 @@ class Slider extends PureComponent {
           onDrag={this.handleDrag}
           onDragStart={this.handleDragStart}>
           <div ref={this.setTrack} className="slider-track">
-            <div className="slider-range" style={{ width: percentage }}/>
+            <div className="slider-range" style={{ width, left: offset }}/>
             <div
               className="slider-handle"
               tabIndex={this.props.tabIndex}
-              style={{ left: percentage }}>
+              style={{ left: position }}>
               {this.renderCurrentValue()}
             </div>
           </div>
@@ -193,6 +200,7 @@ class Slider extends PureComponent {
     maxIcon: element,
     min: number.isRequired,
     minIcon: element,
+    origin: number,
     precision: number.isRequired,
     showCurrentValue: bool.isRequired,
     size: oneOf(['sm', 'md', 'lg']).isRequired,
@@ -212,6 +220,8 @@ class Slider extends PureComponent {
     tabIndex: -1
   }
 }
+
+const pct = (value) => `${100 * value}%`
 
 module.exports = {
   Slider
