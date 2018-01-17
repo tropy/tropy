@@ -3,22 +3,25 @@
 const React = require('react')
 const { Component } = React
 const { bool } = require('prop-types')
+const cx = require('classnames')
 
 
 class EsperPanel extends Component {
   get classes() {
-    return ['esper', super.classes]
+    return ['esper', 'panel', {
+      show: this.props.isVisible
+    }]
   }
 
   render() {
     return (
-      <div className="esper panel"/>
+      <div className={cx(this.classes)}/>
     )
   }
 
   static propTypes = {
     isDisabled: bool,
-    isHidden: bool
+    isVisible: bool
   }
 }
 

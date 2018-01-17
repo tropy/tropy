@@ -387,6 +387,10 @@ class Esper extends PureComponent {
     this.props.onChange({ esper: { tool } })
   }
 
+  handlePanelChange = (panel) => {
+    this.props.onChange({ esper: { panel } })
+  }
+
   handleWheel = ({ x, y, dy, dx, ctrl }) => {
     if (ctrl) {
       const mw = this.props.invertZoom ? -1 : 1
@@ -569,6 +573,7 @@ class Esper extends PureComponent {
           <EsperToolbar
             isDisabled={isDisabled}
             isSelectionActive={isSelectionActive}
+            isPanelVisible={this.props.isPanelVisible}
             mode={this.state.mode}
             tool={tool}
             zoom={this.state.zoom}
@@ -576,6 +581,7 @@ class Esper extends PureComponent {
             maxZoom={this.props.maxZoom}
             onMirrorChange={this.handleMirrorChange}
             onModeChange={this.handleModeChange}
+            onPanelChange={this.handlePanelChange}
             onToolChange={this.handleToolChange}
             onRotationChange={this.handleRotationChange}
             onZoomChange={this.handleZoomChange}/>
@@ -595,8 +601,8 @@ class Esper extends PureComponent {
             onZoomIn={this.handleZoomIn}
             onZoomOut={this.handleZoomOut}/>
           <EsperPanel
-            isDisabled={false}
-            isHidden={false}/>
+            isDisabled={isDisabled}
+            isVisible={this.props.isPanelVisible}/>
         </div>
       </section>
     )
@@ -608,6 +614,7 @@ class Esper extends PureComponent {
     invertZoom: bool.isRequired,
     isDisabled: bool,
     isItemOpen: bool.isRequired,
+    isPanelVisible: bool.isRequired,
     keymap: object.isRequired,
     maxZoom: number.isRequired,
     minZoom: number.isRequired,
