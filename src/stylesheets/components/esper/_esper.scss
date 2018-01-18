@@ -13,8 +13,19 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
   overflow: hidden;
 
   &:not(:focus) {
-    .toolbar-left {
+    .toolbar-left,
+    .esper.panel > * { // todo
       opacity: 0.6;
+    }
+  }
+
+  &:not(.overlay-mode) {
+    .slider-handle {
+      background-color: $esper-slider-handle-bg;
+    }
+
+    .slider-value {
+      color: $esper-slider-value-color;
     }
   }
 
@@ -63,14 +74,6 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
     .slider {
       margin-top: 0;
       height: $toolbar-height;
-    }
-
-    .slider-handle {
-      background-color: $esper-slider-handle-bg;
-    }
-
-    .slider-value {
-      color: $esper-slider-value-color;
     }
   }
 
@@ -151,23 +154,6 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
         & + .tool-group {
           margin-left: $space-lg;
         }
-      }
-
-      .slider-track {
-        background: $esper-toolbar-overlay-slider-track-bg;
-      }
-
-      .slider-range {
-        background: $esper-toolbar-overlay-slider-range-bg;
-      }
-
-      .slider-handle {
-        background-color: $esper-toolbar-overlay-slider-handle-bg;
-        border-color: $esper-toolbar-overlay-slider-handle-border;
-      }
-
-      .slider-value {
-        color: $esper-toolbar-overlay-slider-value-color;
       }
     }
   }

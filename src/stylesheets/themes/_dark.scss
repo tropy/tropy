@@ -297,11 +297,17 @@ $btn-primary-active-bg: var(--brand-primary-darken-2);
 $btn-icon-bg:           var(--transparent);
 
 // Slider
-$slider-track-bg:      var(--shade-5);
-$slider-range-bg:      var(--shade-6);
-$slider-handle-bg:     var(--shade-7);
-$slider-handle-border: var(--transparent);
-$slider-value-color:   var(--shade-8);
+$slider-track-bg:              var(--shade-5);
+$slider-overlay-track-bg:      var(--shade-10-20);
+$slider-range-bg:              var(--shade-6);
+$slider-overlay-range-bg:      var(--shade-10-darken-14);
+$slider-handle-bg:             var(--shade-7);
+$slider-overlay-handle-bg:     var(--shade-10-darken-14);
+$slider-handle-border:         var(--transparent);
+$slider-overlay-handle-border: var(--transparent);
+$slider-value-color:           var(--shade-8);
+$slider-overlay-value-color:   var(--shade-10-darken-14);
+$slider-overlay-icon-color:    var(--shade-10-darken-14);
 
 // Esper
 $esper-bg:                                   var(--shade-1);
@@ -315,11 +321,6 @@ $esper-overlay-bg:                           var(--shade-0-60);
 $esper-toolbar-overlay-btn-active-color:     var(--shade-10-darken-4);
 $esper-toolbar-overlay-icon-color:           var(--shade-10-darken-14);
 $esper-toolbar-overlay-btn-active-bg:        var(--shade-10-20);
-$esper-toolbar-overlay-slider-track-bg:      var(--shade-10-20);
-$esper-toolbar-overlay-slider-range-bg:      var(--shade-10-darken-14);
-$esper-toolbar-overlay-slider-handle-bg:     var(--shade-10-darken-14);
-$esper-toolbar-overlay-slider-handle-border: var(--transparent);
-$esper-toolbar-overlay-slider-value-color:   var(--shade-10-darken-14);
 
 // Drag preview
 $drag-preview-opacity:           0.64;

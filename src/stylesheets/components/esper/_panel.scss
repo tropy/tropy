@@ -6,7 +6,7 @@
   flex: 0 0 $esper-panel-width;
   box-shadow: -1px 0 0 $esper-shadow;
   background: $esper-bg;
-  padding: 0 $default-padding-horizontal;
+  padding: $space-md $default-padding-horizontal 0; // todo
   display: none;
 
   &.show {
