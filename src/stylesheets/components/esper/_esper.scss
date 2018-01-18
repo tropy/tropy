@@ -114,7 +114,7 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
         transition: transform $esper-toolbar-transition-in-hover;
       }
 
-      @at-root #{selector-replace(&, ".esper", ".esper:focus")} {
+      @at-root #{selector-replace(&, ".esper", ".esper.tab-focus")} {
         transform: translate3d(0, 0, 0);
         transition: transform $esper-toolbar-transition-in-focus;
       }
