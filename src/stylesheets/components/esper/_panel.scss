@@ -7,10 +7,19 @@
   box-shadow: -1px 0 0 $esper-shadow;
   background: $esper-bg;
   padding: $space-md $default-padding-horizontal 0; // todo
-  display: none;
+  margin-right: -$esper-panel-width;
+  transition: margin-right $esper-toolbar-transition-in-focus;
 
   &.show {
-    display: block;
+    margin-right: 0;
+
+    .overlay-mode & {
+      margin-right: -$esper-panel-width;
+    }
+
+    .overlay-mode:hover & {
+      margin-right: 0;
+    }
   }
 
   .overlay-mode & {
