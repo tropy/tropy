@@ -5,6 +5,12 @@ const { Component } = React
 const { Slider } = require('../slider')
 const { bool, func, number } = require('prop-types')
 const cx = require('classnames')
+const {
+  IconContrastMin,
+  IconContrastMax,
+  IconSunSmall,
+  IconSunLarge
+} = require('../icons')
 
 
 class EsperPanel extends Component {
@@ -34,7 +40,9 @@ class EsperPanel extends Component {
           precision={100}
           isDisabled={this.props.isDisabled}
           tabIndex={null}
-          onChange={this.handleBrightnessChange}/>
+          onChange={this.handleBrightnessChange}
+          minIcon={<IconSunSmall/>}
+          maxIcon={<IconSunLarge/>}/>
         <Slider
           noFocus
           value={0}
@@ -44,7 +52,9 @@ class EsperPanel extends Component {
           precision={100}
           isDisabled={this.props.isDisabled}
           tabIndex={null}
-          onChange={this.handleContrastChange}/>
+          onChange={this.handleContrastChange}
+          minIcon={<IconContrastMin/>}
+          maxIcon={<IconContrastMax/>}/>
       </div>
     )
   }
