@@ -9,6 +9,7 @@ const { get, restrict, shallow } = require('../../common/util')
 const { isHorizontal, rotate, round } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
 const { darwin } = require('../../common/os')
+const { on, off } = require('../../dom')
 const { match } = require('../../keymap')
 const { assign } = Object
 const debounce = require('lodash.debounce')
@@ -57,6 +58,10 @@ class Esper extends PureComponent {
     }, { threshold: [0] })
 
     this.io.observe(this.view.container)
+
+    if (this.container != null) {
+      on(this.container, 'tab:focus', this.handleTabFocus)
+    }
   }
 
   componentWillUnmount() {
@@ -64,6 +69,10 @@ class Esper extends PureComponent {
     this.io.disconnect()
     this.persist.flush()
     this.update.flush()
+
+    if (this.container != null) {
+      off(this.container, 'tab:focus', this.handleTabFocus)
+    }
   }
 
   componentWillReceiveProps(props) {
@@ -117,7 +126,8 @@ class Esper extends PureComponent {
 
   get classes() {
     return ['esper', this.state.tool, {
-      'overlay-mode': this.props.hasOverlayToolbar
+      'overlay-mode': this.props.hasOverlayToolbar,
+      'tab-focus': this.state.hasTabFocus
     }]
   }
 
@@ -566,6 +576,14 @@ class Esper extends PureComponent {
     }
   }
 
+  handleTabFocus = () => {
+    this.setState({ hasTabFocus: true })
+  }
+
+  handleBlur = () => {
+    this.setState({ hasTabFocus: false })
+  }
+
 
   render() {
     const { isDisabled, isSelectionActive, tabIndex } = this
@@ -576,6 +594,7 @@ class Esper extends PureComponent {
         ref={this.setContainer}
         tabIndex={tabIndex}
         className={cx(this.classes)}
+        onBlur={this.handleBlur}
         onMouseDown={this.handleMouseDown}
         onKeyDown={this.handleKeyDown}
         onKeyUp={this.handleKeyUp}>
