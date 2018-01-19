@@ -32,6 +32,10 @@ class Picture extends Container {
     return isHorizontal(deg(this.rotation))
   }
 
+  get colors() {
+    return this.bg.filters[0]
+  }
+
   getWidth(scale = this.scale.y) {
     return this.WIDTH * scale
   }
@@ -59,14 +63,6 @@ class Picture extends Container {
     return new Rectangle(
       (screen.width - dx) / 2, (screen.height - dy) / 2, dx, dy
     )
-  }
-
-  contrast(...args) {
-    this.bg.filters[0].contrast(...args)
-  }
-
-  brightness(...args) {
-    this.bg.filters[0].brightness(...args)
   }
 
   constrain(screen, scale) {

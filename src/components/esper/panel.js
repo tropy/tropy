@@ -28,12 +28,25 @@ class EsperPanel extends Component {
     this.props.onColorChange({ contrast })
   }
 
+  handleHueChange = (hue) => {
+    this.props.onColorChange({ hue })
+  }
+
+  handleSaturationChange = (saturation) => {
+    this.props.onColorChange({ saturation })
+  }
+
+  handleLightnessChange = (lightness) => {
+    this.props.onColorChange({ lightness })
+  }
+
+
   render() {
     return (
       <div className={cx(this.classes)}>
         <Slider
           noFocus
-          value={1}
+          value={this.props.brightness}
           min={0}
           max={2}
           origin={1}
@@ -45,7 +58,7 @@ class EsperPanel extends Component {
           maxIcon={<IconSunLarge/>}/>
         <Slider
           noFocus
-          value={0}
+          value={this.props.contrast}
           min={-1}
           max={1}
           origin={0}
@@ -55,6 +68,35 @@ class EsperPanel extends Component {
           onChange={this.handleContrastChange}
           minIcon={<IconContrastMin/>}
           maxIcon={<IconContrastMax/>}/>
+
+        <Slider
+          noFocus
+          value={this.props.hue}
+          min={-180}
+          max={180}
+          origin={0}
+          isDisabled={this.props.isDisabled}
+          tabIndex={null}
+          onChange={this.handleHueChange}/>
+        <Slider
+          noFocus
+          value={this.props.saturation}
+          min={-1}
+          max={1}
+          origin={0}
+          isDisabled={this.props.isDisabled}
+          tabIndex={null}
+          onChange={this.handleSaturationChange}/>
+        <Slider
+          noFocus
+          value={this.props.lightness}
+          min={0}
+          max={2}
+          origin={1}
+          precision={100}
+          isDisabled={this.props.isDisabled}
+          tabIndex={null}
+          onChange={this.handleLightnessChange}/>
       </div>
     )
   }
@@ -62,6 +104,9 @@ class EsperPanel extends Component {
   static propTypes = {
     brightness: number.isRequired,
     contrast: number.isRequired,
+    hue: number.isRequired,
+    saturation: number.isRequired,
+    lightness: number.isRequired,
     isDisabled: bool,
     isVisible: bool,
     onColorChange: func.isRequired

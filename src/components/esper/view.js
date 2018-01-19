@@ -300,9 +300,17 @@ class EsperView extends Component {
     }
   }
 
-  filter({ brightness, contrast }) {
-    this.image.brightness(brightness)
-    this.image.contrast(contrast, true)
+  filter({ hue, saturation, lightness }) {
+    const { colors } = this.image
+
+    ///colors.reset()
+    ///colors.brightness(brightness, true)
+    ///colors.contrast(contrast, true)
+
+    colors.reset()
+    colors.brightness(lightness, true)
+    colors.hue((360 + hue) % 360, true)
+    colors.saturate(saturation, true)
   }
 
   fadeOut(thing, duration = FADE_DURATION) {
