@@ -75,15 +75,14 @@ class EsperPanel extends Component {
           min={-180}
           max={180}
           origin={0}
-          precision={1}
           isDisabled={this.props.isDisabled}
           tabIndex={null}
           onChange={this.handleHueChange}/>
         <Slider
           noFocus
           value={this.props.saturation}
-          min={-10}
-          max={10}
+          min={-5}
+          max={5}
           origin={0}
           precision={10}
           isDisabled={this.props.isDisabled}
