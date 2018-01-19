@@ -310,12 +310,7 @@ class EsperView extends Component {
     colors.reset()
     colors.brightness(lightness, true)
     colors.hue((360 + hue) % 360, true)
-
-    if (saturation < 0) {
-      colors.desaturate(-saturation, true)
-    } else {
-      colors.saturate(saturation, true)
-    }
+    colors.saturate(saturation, true)
   }
 
   fadeOut(thing, duration = FADE_DURATION) {
