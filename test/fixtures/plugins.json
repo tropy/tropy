@@ -1,0 +1,7 @@
+[{
+  "plugin": "tropy-plugin",
+  "label": "Plugin Name",
+  "config": {
+    "specific": "to plugin"
+  }
+}]
