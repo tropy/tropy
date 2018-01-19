@@ -2,6 +2,7 @@
 
 const { app } = require('electron')
 const { join } = require('path')
+const { uniq } = require('./common/util')
 
 
 class Plugins {
@@ -18,6 +19,10 @@ class Plugins {
     } catch (err) {
       throw Error(`Plugin config file "${cfgFile}" not valid`)
     }
+  }
+
+  get packages() {
+    return uniq(this.config.map(p => p.plugin))
   }
 }
 

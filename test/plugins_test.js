@@ -4,9 +4,9 @@ const { join } = require('path')
 const Plugins = __require('plugins')
 
 describe('Plugins', () => {
+  const plugins = new Plugins(join(__dirname, 'fixtures'))
 
   it('valid config matches', () => {
-    const plugins = new Plugins(join(__dirname, 'fixtures'))
     expect(plugins.config).to.eql([
       {
         plugin: 'tropy-plugin',
@@ -23,4 +23,7 @@ describe('Plugins', () => {
       .to.throw(/^Plugin config file .*? not valid$/)
   })
 
+  it('list package names', () => {
+    expect(plugins.packages).to.eql(['tropy-plugin'])
+  })
 })
