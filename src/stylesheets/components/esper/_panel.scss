@@ -8,7 +8,7 @@
   background: $esper-bg;
   padding: $space-md $default-padding-horizontal 0; // todo
   margin-right: -$esper-panel-width;
-  transition: margin-right $esper-toolbar-transition-in-focus;
+  transition: margin-right 0.3s ease;
 
   &.show {
     margin-right: 0;
@@ -19,6 +19,7 @@
 
     .overlay-mode:hover & {
       margin-right: 0;
+      transition: margin-right 0.3s 0.7s ease;
     }
   }
 
