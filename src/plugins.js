@@ -2,24 +2,26 @@
 
 const { app } = require('electron')
 const { join } = require('path')
-const { uniq } = require('./common/util')
-// const { warn } = require('./common/log')
+const { warn } = require('./common/log')
+const { uniq, pluck } = require('./common/util')
 
 class Plugins {
-  constructor(root = app.getPath('userData'), config) {
+  constructor(root = app && app.getPath('userData'), config) {
     this.root = root
 
-    this.config = config || this._loadConfig()
+    this.config = config || this._loadConfig() || []
     this.instances = []
   }
 
   _loadConfig() {
     // attempt to load the config file
-    const cfgFile = join(this.root, 'plugins.json')
+    var cfgFile
     try {
+      cfgFile = join(this.root, 'plugins.json')
       return require(cfgFile)
-    } catch (err) {
-      throw Error(`Plugin config file "${cfgFile}" not valid`)
+    } catch (error) {
+      warn(`Plugin config file "${cfgFile}" not valid: ` +
+           error.message)
     }
   }
 
@@ -44,6 +46,7 @@ class Plugins {
     for (let i = 0; i < this.config.length; i++) {
       var pluginPackage
       var hooks
+      var instance
       const params = this.config[i]
       const pluginName = params.plugin
       try {
@@ -51,13 +54,15 @@ class Plugins {
         pluginPackage = require(path)
         const packageJson = require(join(path, 'package.json'))
         hooks = packageJson.hooks || {}
-      } catch (err) {
-        throw Error(`Plugin package "${pluginName}" can not be loaded`)
+        instance = this.contract(pluginPackage, params.config)
+      } catch (error) {
+        warn(`Plugin package "${pluginName}" can not be loaded: ` +
+             error.message)
       }
-      this.instances.push({
-        plugin: pluginName,
+      instance && this.instances.push({
+        pluginName,
         params,
-        instance: this.contract(pluginPackage, params.config),
+        instance,
         hooks
       })
     }

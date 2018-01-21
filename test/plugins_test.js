@@ -18,9 +18,9 @@ describe('Plugins', () => {
     })
   })
 
-  it('invalid config throws error', () => {
-    expect(() => { new Plugins('invalid') })
-      .to.throw(/^Plugin config file .*? not valid$/)
+  it('invalid config does not throw error', () => {
+    // just warns
+    expect(() => { new Plugins('invalid') }).to.not.throw()
   })
 
   it('list package names', () => {
@@ -32,8 +32,7 @@ describe('Plugins', () => {
       plugin: 'foo',
     }]
     const plugins = new Plugins(root, cfg)
-    expect(() => plugins.initialize())
-      .to.throw(/^Plugin package "foo" can not be loaded$/)
+    expect(() => plugins.initialize()).to.not.throw()
     expect(plugins.instances).to.eql([])
   })
 
