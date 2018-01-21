@@ -4,4 +4,9 @@
   "config": {
     "specific": "to plugin"
   }
+},
+{
+  "plugin": "tropy-plugin",
+  "label": "Another Plugin",
+  "config": {}
 }]
