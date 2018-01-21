@@ -341,8 +341,8 @@ class Tropy extends EventEmitter {
     this.on('app:explode-photo', (_, { target }) =>
       this.dispatch(act.item.explode({ id: target.item, photos: [target.id] })))
 
-    this.on('app:export-item', (_, { target }) =>
-      this.dispatch(act.item.export(target.id)))
+    this.on('app:export-item', (_, { target, plugin }) =>
+      this.dispatch(act.item.export(target.id, { plugin })))
 
     this.on('app:restore-item', (_, { target }) =>
       this.dispatch(act.item.restore(target.id)))

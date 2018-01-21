@@ -78,6 +78,9 @@ fr:
         condition: 'hasMultiplePhotos'
       - label: Exporter l'objet…
         command: 'app:export-item'
+        submenu:
+            - label: 'JSON-LD'
+              command: 'app:export-item'
       - label: 'Ajouter une photo…'
         command: 'app:create-item-photo'
       - label: 'Marqueurs'
@@ -95,6 +98,9 @@ fr:
         command: 'app:merge-item'
       - label: 'Exporter les objets sélectionnés…'
         command: 'app:export-item'
+        submenu:
+          - label: 'JSON-LD'
+            command: 'app:export-item'
       - label: 'Supprimer les objets sélectionnés'
         command: 'app:delete-item'
     item-list: &item-list

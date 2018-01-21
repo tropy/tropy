@@ -428,16 +428,16 @@ class Export extends Command {
   static get action() { return ITEM.EXPORT }
 
   *exec() {
-    let path = this.action.meta.target
+    let { target } = this.action.meta
     const ids = this.action.payload
 
     try {
-      if (!path) {
+      if (!target) {
         this.isInteractive = true
-        path = yield call(save.items, {})
+        target = yield call(save.items, {})
       }
 
-      if (!path) return
+      if (!target) return
 
       const [templateItems, ...resources] = yield select(state => {
         const itms = pick(state.items, ids)
@@ -470,13 +470,13 @@ class Export extends Command {
 
       const data = JSON.stringify(results, null, 2)
 
-      if (path === ':clipboard:') {
+      if (target === ':clipboard:') {
         yield call(clipboard.writeText, data)
       } else {
-        yield cps(write, path, data)
+        yield cps(write, target, data)
       }
     } catch (error) {
-      warn(`Failed to export items to ${path}: ${error.message}`)
+      warn(`Failed to export items to ${target}: ${error.message}`)
       verbose(error.stack)
 
       fail(error, this.action.type)
