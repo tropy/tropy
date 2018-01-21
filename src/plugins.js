@@ -41,18 +41,22 @@ class Plugins {
     // and store it in `this.instances`
     for (let i = 0; i < this.config.length; i++) {
       var pluginPackage
+      var hooks
       const params = this.config[i]
       const pluginName = params.plugin
       try {
         const path = join(this.root, 'node_modules', pluginName)
         pluginPackage = require(path)
+        const packageJson = require(join(path, 'package.json'))
+        hooks = packageJson.hooks || {}
       } catch (err) {
         throw Error(`Plugin package "${pluginName}" can not be loaded`)
       }
       this.instances.push({
         plugin: pluginName,
         params,
-        instance: this.contract(pluginPackage, params.config)
+        instance: this.contract(pluginPackage, params.config),
+        hooks
       })
     }
   }

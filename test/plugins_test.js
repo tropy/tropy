@@ -5,11 +5,11 @@ const Plugins = __require('plugins')
 
 describe('Plugins', () => {
   const root = join(__dirname, 'fixtures')
+  const basic = new Plugins(root)
 
   it('valid config matches', () => {
-    const plugins = new Plugins(root)
-    expect(plugins.config.length).to.eql(2)
-    expect(plugins.config[0]).to.eql({
+    expect(basic.config.length).to.eql(2)
+    expect(basic.config[0]).to.eql({
       plugin: 'tropy-plugin',
       label: 'Plugin Name',
       config: {
@@ -24,8 +24,7 @@ describe('Plugins', () => {
   })
 
   it('list package names', () => {
-    const plugins = new Plugins(root)
-    expect(plugins.packages).to.eql(['tropy-plugin'])
+    expect(basic.packages).to.eql(['tropy-plugin'])
   })
 
   it('initialize with bad plugins', () => {
@@ -39,9 +38,18 @@ describe('Plugins', () => {
   })
 
   it('initialize with default plugins', () => {
-    const plugins = new Plugins(root)
-    expect(() => plugins.initialize()).to.not.throw()
-    expect(plugins.instances.length).to.eql(2)
+    expect(() => basic.initialize()).to.not.throw()
+    expect(basic.instances.length).to.eql(2)
+  })
+
+  it('hooks can be read', () => {
+    const hooks = {
+      'tropy-hook': 'plugin-function',
+      'export': 'export'
+    }
+    expect(basic.instances[0].hooks).to.eql(hooks)
+    expect(basic.instances[1].hooks).to.eql(hooks)
+    expect(basic.instances[2]).to.be.undefined
   })
 
 })
