@@ -52,4 +52,17 @@ describe('Plugins', () => {
     expect(basic.instances[2]).to.be.undefined
   })
 
+  it('handlers', () => {
+    it('normal case', () => {
+      expect(basic.handlers('export').map(r => r.label))
+        .to.be.eql(['Plugin Name', 'Another Plugin'])
+    })
+    it('exists but is not a function', () => {
+      expect(basic.handlers('tropy-hook')).to.be.eql([])
+    })
+    it('not registered', () => {
+      expect(basic.handlers('unknown')).to.be.eql([])
+    })
+  })
+
 })

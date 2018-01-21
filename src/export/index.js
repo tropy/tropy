@@ -2,6 +2,8 @@
 
 const { plugins } = require('../plugins')
 
+const handlers = plugins.handlers('export')
+
 module.exports = {
   ...require('./export'),
 
@@ -9,9 +11,12 @@ module.exports = {
     const { target } = params[0]
     item.submenu = [
       ...item.submenu,
-      ...plugins.map(plugin => ({
-        label: plugin.label,
-        click: responder('app:export-item', { target, plugin })
+      ...handlers.map(handler => ({
+        label: handler.label,
+        click: responder('app:export-item', {
+          target,
+          plugin: handler.fn
+        })
       }))
     ]
     return item

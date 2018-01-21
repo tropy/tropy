@@ -62,6 +62,23 @@ class Plugins {
       })
     }
   }
+
+  handlers(action) {
+    // traverse the existing instances, and find the ones that have
+    // registered a handeler for the given action
+    return this.instances.reduce((res, instance) => {
+      const fnNames = pluck(instance.hooks, [action])
+      if (fnNames.length) {
+        const fnName = fnNames[0]
+        const fn = instance.instance[fnName]
+        if (typeof fn === 'function') {
+          const { label } = instance.params
+          res.push({ label, fn })
+        }
+      }
+      return res
+    }, [])
+  }
 }
 
 var instance
