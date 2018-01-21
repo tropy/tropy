@@ -22,6 +22,7 @@ const { Strings } = require('../common/res')
 const Storage = require('./storage')
 const Updater = require('./updater')
 const dialog = require('./dialog')
+const { plugins } = require('../plugins')
 
 const { defineProperty: prop } = Object
 const act = require('../actions')
@@ -77,6 +78,9 @@ class Tropy extends EventEmitter {
     prop(this, 'home', {
       value: resolve(__dirname, '..', '..')
     })
+
+    prop(this, 'plugins', { value: plugins })
+    this.plugins.initialize()
   }
 
   open(file) {

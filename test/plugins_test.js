@@ -1,7 +1,7 @@
 'use strict'
 
 const { join } = require('path')
-const Plugins = __require('plugins')
+const { Plugins } = __require('plugins')
 
 describe('Plugins', () => {
   const root = join(__dirname, 'fixtures')

@@ -5,11 +5,6 @@ const { join } = require('path')
 const { uniq } = require('./common/util')
 // const { warn } = require('./common/log')
 
-const context = {
-  FormData,
-  fetch
-}
-
 class Plugins {
   constructor(root = app.getPath('userData'), config) {
     this.root = root
@@ -28,8 +23,15 @@ class Plugins {
     }
   }
 
+  get context() {
+    return {
+      FormData: window.FormData,
+      fetch: window.fetch
+    }
+  }
+
   contract(Plugin, config) {
-    return new Plugin(config, context)
+    return new Plugin(config, this.context)
   }
 
   get packages() {
@@ -62,4 +64,13 @@ class Plugins {
   }
 }
 
-module.exports = Plugins
+var instance
+
+module.exports = {
+  Plugins,
+
+  get plugins() {
+    if (!instance) instance = new Plugins()
+    return instance
+  }
+}

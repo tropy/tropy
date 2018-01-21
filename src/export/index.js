@@ -1,11 +1,6 @@
 'use strict'
 
-const plugins = [
-  {
-    label: 'Omeka',
-    target: 'omeka'
-  }
-]
+const { plugins } = require('../plugins')
 
 module.exports = {
   ...require('./export'),
