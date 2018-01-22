@@ -6,9 +6,10 @@
   flex: 0 0 $esper-panel-width;
   box-shadow: -1px 0 0 $esper-shadow;
   background: $esper-bg;
-  padding: $space-md $default-padding-horizontal 0; // todo
+  padding: 19px $default-padding-horizontal 0; // todo
   margin-right: -$esper-panel-width;
   transition: margin-right 0.3s ease;
+  overflow-y: auto;
 
   &.show {
     margin-right: 0;
@@ -33,7 +34,31 @@
     box-shadow: inset 0 1px 0 $esper-shadow;
   }
 
+  .flex-row,
   .slider {
-    width: 100%;
+    flex: 0 0 auto;
+  }
+
+  .flex-row {
+    justify-content: space-between;
+    margin-bottom: -3px; // Same as baseline to x-height for 20px line-height
+
+    .icon {
+      margin-right: $space-xs;
+
+      .overlay-mode & {
+        color: $esper-toolbar-overlay-icon-color;
+      }
+    }
+
+    .title {
+      margin-right: auto;
+      color: $esper-panel-title-color;
+    }
+  }
+
+  .slider {
+    width: calc(100% + 2px);
+    margin-bottom: 7px; // 24px
   }
 }

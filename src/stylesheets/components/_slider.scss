@@ -82,9 +82,10 @@
   }
 
   .slider.origin & {
-    border-left: ($slider-track-height / 2) solid transparent;
-    border-right: ($slider-track-height / 2) solid transparent;
-    margin-left: -($slider-track-height / 2);
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    margin-left: 0;
   }
 }
 

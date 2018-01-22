@@ -1,4 +1,4 @@
-// sass-lint:disable no-color-literals
+d// sass-lint:disable no-color-literals
 
 //
 // Esper
@@ -125,7 +125,7 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
 
       .btn-icon {
         .icon {
-          color: $esper-toolbar-overlay-icon-color;
+          color: $esper-overlay-icon-color;
         }
 
         &:active {
@@ -135,7 +135,7 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
 
           &[disabled] {
             .icon {
-              color: $esper-toolbar-overlay-icon-color;
+              color: $esper-overlay-icon-color;
             }
           }
         }

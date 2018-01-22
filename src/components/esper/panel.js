@@ -6,6 +6,12 @@ const { Slider } = require('../slider')
 const { bool, func, number } = require('prop-types')
 const cx = require('classnames')
 const { FormattedMessage } = require('react-intl')
+const {
+  IconSun,
+  IconContrast,
+  IconHue,
+  IconDrop
+} = require('../icons')
 
 
 class EsperPanel extends Component {
@@ -38,18 +44,15 @@ class EsperPanel extends Component {
   render() {
     return (
       <div className={cx(this.classes)}>
-        <FormattedMessage id="esper.panel.gamma"/>
-        <Slider
-          noFocus
-          value={this.props.gamma}
-          min={0}
-          max={2}
-          origin={1}
-          precision={100}
-          isDisabled={this.props.isDisabled}
-          tabIndex={null}
-          onChange={this.handleGammaChange}/>
-        <FormattedMessage id="esper.panel.brightness"/>
+        <div className="flex-row center">
+          <IconSun />
+          <div className="title">
+            <FormattedMessage id="esper.panel.brightness"/>
+          </div>
+          <div className="value">
+            0
+          </div>
+        </div>
         <Slider
           noFocus
           value={this.props.brightness}
@@ -60,7 +63,15 @@ class EsperPanel extends Component {
           isDisabled={this.props.isDisabled}
           tabIndex={null}
           onChange={this.handleBrightnessChange}/>
-        <FormattedMessage id="esper.panel.contrast"/>
+        <div className="flex-row center">
+          <IconContrast />
+          <div className="title">
+            <FormattedMessage id="esper.panel.contrast"/>
+          </div>
+          <div className="value">
+            0
+          </div>
+        </div>
         <Slider
           noFocus
           value={this.props.contrast}
@@ -71,7 +82,15 @@ class EsperPanel extends Component {
           isDisabled={this.props.isDisabled}
           tabIndex={null}
           onChange={this.handleContrastChange}/>
-        <FormattedMessage id="esper.panel.hue"/>
+        <div className="flex-row center">
+          <IconHue />
+          <div className="title">
+            <FormattedMessage id="esper.panel.hue"/>
+          </div>
+          <div className="value">
+            0
+          </div>
+        </div>
         <Slider
           noFocus
           value={this.props.hue}
@@ -82,7 +101,15 @@ class EsperPanel extends Component {
           isDisabled={this.props.isDisabled}
           tabIndex={null}
           onChange={this.handleHueChange}/>
-        <FormattedMessage id="esper.panel.saturation"/>
+        <div className="flex-row center">
+          <IconDrop />
+          <div className="title">
+            <FormattedMessage id="esper.panel.saturation"/>
+          </div>
+          <div className="value">
+            0
+          </div>
+        </div>
         <Slider
           noFocus
           value={this.props.saturation}
