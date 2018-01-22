@@ -5,8 +5,11 @@
 .slider {
   display: flex;
   align-items: center;
-  width: $slider-width;
+  width: $slider-width + 2px; // Work around containment
   height: $slider-height;
+  margin-left: -1px;
+  margin-right: -1px;
+  padding: 0 1px;
   contain: strict;
 
   .draggable {
@@ -131,7 +134,7 @@
 
 // Small slider
 .slider-sm {
-  width: $slider-width-sm;
+  width: $slider-width-sm + 2px; // Work around containment
 
   .slider-track {
     border-left-width: ($slider-handle-size-sm / 2);
