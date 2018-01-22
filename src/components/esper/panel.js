@@ -5,12 +5,7 @@ const { Component } = React
 const { Slider } = require('../slider')
 const { bool, func, number } = require('prop-types')
 const cx = require('classnames')
-const {
-  IconContrastMin,
-  IconContrastMax,
-  IconSunSmall,
-  IconSunLarge
-} = require('../icons')
+const { FormattedMessage } = require('react-intl')
 
 
 class EsperPanel extends Component {
@@ -43,6 +38,7 @@ class EsperPanel extends Component {
   render() {
     return (
       <div className={cx(this.classes)}>
+        <FormattedMessage id="esper.panel.gamma"/>
         <Slider
           noFocus
           value={this.props.gamma}
@@ -53,6 +49,7 @@ class EsperPanel extends Component {
           isDisabled={this.props.isDisabled}
           tabIndex={null}
           onChange={this.handleGammaChange}/>
+        <FormattedMessage id="esper.panel.brightness"/>
         <Slider
           noFocus
           value={this.props.brightness}
@@ -62,9 +59,8 @@ class EsperPanel extends Component {
           precision={100}
           isDisabled={this.props.isDisabled}
           tabIndex={null}
-          onChange={this.handleBrightnessChange}
-          minIcon={<IconSunSmall/>}
-          maxIcon={<IconSunLarge/>}/>
+          onChange={this.handleBrightnessChange}/>
+        <FormattedMessage id="esper.panel.contrast"/>
         <Slider
           noFocus
           value={this.props.contrast}
@@ -74,9 +70,8 @@ class EsperPanel extends Component {
           precision={100}
           isDisabled={this.props.isDisabled}
           tabIndex={null}
-          onChange={this.handleContrastChange}
-          minIcon={<IconContrastMin/>}
-          maxIcon={<IconContrastMax/>}/>
+          onChange={this.handleContrastChange}/>
+        <FormattedMessage id="esper.panel.hue"/>
         <Slider
           noFocus
           value={this.props.hue}
@@ -87,6 +82,7 @@ class EsperPanel extends Component {
           isDisabled={this.props.isDisabled}
           tabIndex={null}
           onChange={this.handleHueChange}/>
+        <FormattedMessage id="esper.panel.saturation"/>
         <Slider
           noFocus
           value={this.props.saturation}

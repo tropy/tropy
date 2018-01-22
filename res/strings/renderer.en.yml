@@ -169,6 +169,11 @@ en:
       fill: Fill
       fit: Fit
       zoom: Zoom
+    panel:
+      brightness: Brightness
+      contrast: Contrast
+      hue: Hue
+      saturation: Saturation
   notepad:
     placeholder: Add your notes here …
 

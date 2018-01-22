@@ -11,6 +11,7 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  contain: strict;
 
   &:not(:focus) {
     .toolbar-left,
