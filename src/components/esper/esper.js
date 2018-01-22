@@ -158,10 +158,10 @@ class Esper extends PureComponent {
       minZoom: props.minZoom,
       angle: 0,
       mirror: false,
-      brightness: 1,
-      contrast: 1,
+      brightness: 0,
+      contrast: 0,
       hue: 0,
-      saturation: 1,
+      saturation: 0,
       width: 0,
       height: 0,
       src: null,
@@ -641,7 +641,7 @@ class Esper extends PureComponent {
             gamma={this.state.gamma}
             isDisabled={isDisabled}
             isVisible={this.props.isPanelVisible}
-            onColorChange={this.handleColorChange}/>
+            onChange={this.handleColorChange}/>
         </div>
       </section>
     )

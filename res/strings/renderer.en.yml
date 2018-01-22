@@ -170,10 +170,18 @@ en:
       fit: Fit
       zoom: Zoom
     panel:
-      brightness: Brightness
-      contrast: Contrast
-      hue: Hue
-      saturation: Saturation
+      brightness:
+        label: Brightness
+        value: "{value, number}"
+      contrast:
+        label: Contrast
+        value: "{value, number}"
+      hue:
+        label: Hue
+        value: "{value, number}°"
+      saturation:
+        label: Saturation
+        value: "{value, number}"
   notepad:
     placeholder: Add your notes here …
 

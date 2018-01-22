@@ -1,11 +1,12 @@
 'use strict'
 
 const React = require('react')
-const { Component } = React
+const { PureComponent } = React
 const { Slider } = require('../slider')
-const { bool, func, number } = require('prop-types')
+const { bool, element, func, number, string } = require('prop-types')
 const cx = require('classnames')
 const { FormattedMessage } = require('react-intl')
+
 const {
   IconSun,
   IconContrast,
@@ -14,104 +15,99 @@ const {
 } = require('../icons')
 
 
-class EsperPanel extends Component {
+class ColorSlider extends PureComponent {
+  handleChange = (value) => {
+    this.props.onChange({ [this.props.type]: value })
+  }
+
+  renderLabel() {
+    return (
+      <div className="flex-row center">
+        {this.props.icon}
+        <div className="title">
+          <FormattedMessage
+            id={`esper.panel.${this.props.type}.label`}/>
+        </div>
+        <div className="value">
+          <FormattedMessage
+            id={`esper.panel.${this.props.type}.value`}
+            values={{ value: this.props.value }}/>
+        </div>
+      </div>
+    )
+  }
+
+  render() {
+    return (
+      <div className="color-slider">
+        {this.renderLabel()}
+        <Slider
+          isDisabled={this.props.isDisabled}
+          max={this.props.max}
+          min={this.props.min}
+          noFocus
+          origin={this.props.origin}
+          tabIndex={null}
+          value={this.props.value} onChange={this.handleChange}/>
+      </div>
+    )
+  }
+
+  static propTypes = {
+    icon: element.isRequired,
+    isDisabled: bool,
+    max: number.isRequired,
+    min: number.isRequired,
+    type: string.isRequired,
+    onChange: func.isRequired,
+    origin: number,
+    value: number.isRequired
+  }
+
+  static defaultProps = {
+    max: 100,
+    min: -100,
+    origin: 0
+  }
+}
+
+
+class EsperPanel extends PureComponent {
   get classes() {
     return ['esper', 'panel', {
       show: this.props.isVisible
     }]
   }
 
-  handleBrightnessChange = (brightness) => {
-    this.props.onColorChange({ brightness })
-  }
-
-  handleContrastChange = (contrast) => {
-    this.props.onColorChange({ contrast })
-  }
-
-  handleHueChange = (hue) => {
-    this.props.onColorChange({ hue })
-  }
-
-  handleSaturationChange = (saturation) => {
-    this.props.onColorChange({ saturation })
-  }
-
   render() {
     return (
       <div className={cx(this.classes)}>
-        <div className="flex-row center">
-          <IconSun />
-          <div className="title">
-            <FormattedMessage id="esper.panel.brightness"/>
-          </div>
-          <div className="value">
-            0
-          </div>
-        </div>
-        <Slider
-          noFocus
+        <ColorSlider
+          icon={<IconSun/>}
+          isDisabled={this.props.isDisabled}
+          type="brightness"
           value={this.props.brightness}
-          min={-100}
-          max={100}
-          origin={0}
+          onChange={this.props.onChange}/>
+        <ColorSlider
+          icon={<IconContrast/>}
           isDisabled={this.props.isDisabled}
-          tabIndex={null}
-          onChange={this.handleBrightnessChange}/>
-        <div className="flex-row center">
-          <IconContrast />
-          <div className="title">
-            <FormattedMessage id="esper.panel.contrast"/>
-          </div>
-          <div className="value">
-            0
-          </div>
-        </div>
-        <Slider
-          noFocus
+          type="contrast"
           value={this.props.contrast}
-          min={-100}
-          max={100}
-          origin={0}
+          onChange={this.props.onChange}/>
+        <ColorSlider
+          icon={<IconHue/>}
           isDisabled={this.props.isDisabled}
-          tabIndex={null}
-          onChange={this.handleContrastChange}/>
-        <div className="flex-row center">
-          <IconHue />
-          <div className="title">
-            <FormattedMessage id="esper.panel.hue"/>
-          </div>
-          <div className="value">
-            0
-          </div>
-        </div>
-        <Slider
-          noFocus
-          value={this.props.hue}
           min={-180}
           max={180}
-          origin={0}
+          type="hue"
+          value={this.props.hue}
+          onChange={this.props.onChange}/>
+        <ColorSlider
+          icon={<IconDrop/>}
           isDisabled={this.props.isDisabled}
-          tabIndex={null}
-          onChange={this.handleHueChange}/>
-        <div className="flex-row center">
-          <IconDrop />
-          <div className="title">
-            <FormattedMessage id="esper.panel.saturation"/>
-          </div>
-          <div className="value">
-            0
-          </div>
-        </div>
-        <Slider
-          noFocus
+          type="saturation"
           value={this.props.saturation}
-          min={-100}
-          max={100}
-          origin={0}
-          isDisabled={this.props.isDisabled}
-          tabIndex={null}
-          onChange={this.handleSaturationChange}/>
+          onChange={this.props.onChange}/>
       </div>
     )
   }
@@ -123,10 +119,12 @@ class EsperPanel extends Component {
     saturation: number.isRequired,
     isDisabled: bool,
     isVisible: bool,
-    onColorChange: func.isRequired
+    onChange: func.isRequired,
+    onRevert: func
   }
 }
 
 module.exports = {
-  EsperPanel
+  EsperPanel,
+  ColorSlider
 }
