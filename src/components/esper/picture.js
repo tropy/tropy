@@ -38,7 +38,7 @@ class Picture extends Container {
     return isHorizontal(deg(this.rotation))
   }
 
-  get adjustment() {
+  get adjust() {
     return this.bg.filters[0]
   }
 
@@ -75,12 +75,39 @@ class Picture extends Container {
     )
   }
 
+  brightness(value = 0) {
+    if (value >= 0) {
+      this.adjust.brightness = 1 + value / 100
+      this.adjust.gamma = 1
+    } else {
+      this.adjust.brightness = 1
+      this.adjust.gamma = 1 + value / 100
+    }
+
+    return this
+  }
+
+  contrast(value = 0) {
+    this.adjust.contrast = 1 + value / 100
+    return this
+  }
+
   constrain(screen, scale) {
     constrain(this.position, this.getInnerBounds(screen, scale))
   }
 
   destroy() {
     super.destroy({ children: true })
+  }
+
+  hue(value = 0) {
+    this.colors.hue((360 + value) % 360, false)
+    return this
+  }
+
+  saturation(value = 0) {
+    this.adjust.saturation = 1 + value / 100
+    return this
   }
 }
 

@@ -52,10 +52,9 @@ class EsperPanel extends Component {
         <Slider
           noFocus
           value={this.props.brightness}
-          min={0}
-          max={2}
-          origin={1}
-          precision={100}
+          min={-100}
+          max={100}
+          origin={0}
           isDisabled={this.props.isDisabled}
           tabIndex={null}
           onChange={this.handleBrightnessChange}/>
@@ -71,10 +70,9 @@ class EsperPanel extends Component {
         <Slider
           noFocus
           value={this.props.contrast}
-          min={0}
-          max={2}
-          origin={1}
-          precision={100}
+          min={-100}
+          max={100}
+          origin={0}
           isDisabled={this.props.isDisabled}
           tabIndex={null}
           onChange={this.handleContrastChange}/>
@@ -93,7 +91,6 @@ class EsperPanel extends Component {
           min={-180}
           max={180}
           origin={0}
-          precision={10}
           isDisabled={this.props.isDisabled}
           tabIndex={null}
           onChange={this.handleHueChange}/>
@@ -109,10 +106,9 @@ class EsperPanel extends Component {
         <Slider
           noFocus
           value={this.props.saturation}
-          min={0}
-          max={2}
-          origin={1}
-          precision={10}
+          min={-100}
+          max={100}
+          origin={0}
           isDisabled={this.props.isDisabled}
           tabIndex={null}
           onChange={this.handleSaturationChange}/>

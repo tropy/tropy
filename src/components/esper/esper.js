@@ -404,15 +404,15 @@ class Esper extends PureComponent {
     this.props.onChange({ esper: { panel } })
   }
 
-  handleColorChange = ({
-    brightness = this.state.brightness,
-    contrast = this.state.contrast,
-    hue = this.state.hue,
-    saturation = this.state.saturation,
-  }) => {
-    this.setState({ brightness, contrast, hue, saturation })
-    this.view.filter({ brightness, contrast, hue, saturation })
+  handleColorChange = (opts) => {
+    this.setState(opts)
     //this.persist()
+    //
+    if (this.view.image != null) {
+      for (const prop in opts) {
+        this.view.image[prop](opts[prop])
+      }
+    }
   }
 
   handleWheel = ({ x, y, dy, dx, ctrl }) => {
