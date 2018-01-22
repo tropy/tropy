@@ -60,7 +60,7 @@ class EsperPanel extends Component {
           noFocus
           value={this.props.contrast}
           min={-1}
-          max={1}
+          max={9}
           origin={0}
           precision={100}
           isDisabled={this.props.isDisabled}
