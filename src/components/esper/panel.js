@@ -36,14 +36,23 @@ class EsperPanel extends Component {
     this.props.onColorChange({ saturation })
   }
 
-  handleLightnessChange = (lightness) => {
-    this.props.onColorChange({ lightness })
+  handleGammaChange = (gamma) => {
+    this.props.onColorChange({ gamma })
   }
-
 
   render() {
     return (
       <div className={cx(this.classes)}>
+        <Slider
+          noFocus
+          value={this.props.gamma}
+          min={0}
+          max={2}
+          origin={1}
+          precision={100}
+          isDisabled={this.props.isDisabled}
+          tabIndex={null}
+          onChange={this.handleGammaChange}/>
         <Slider
           noFocus
           value={this.props.brightness}
@@ -59,16 +68,15 @@ class EsperPanel extends Component {
         <Slider
           noFocus
           value={this.props.contrast}
-          min={-1}
-          max={9}
-          origin={0}
+          min={0}
+          max={2}
+          origin={1}
           precision={100}
           isDisabled={this.props.isDisabled}
           tabIndex={null}
           onChange={this.handleContrastChange}
           minIcon={<IconContrastMin/>}
           maxIcon={<IconContrastMax/>}/>
-
         <Slider
           noFocus
           value={this.props.hue}
@@ -82,23 +90,13 @@ class EsperPanel extends Component {
         <Slider
           noFocus
           value={this.props.saturation}
-          min={-1}
-          max={1}
-          origin={0}
+          min={0}
+          max={2}
+          origin={1}
           precision={10}
           isDisabled={this.props.isDisabled}
           tabIndex={null}
           onChange={this.handleSaturationChange}/>
-        <Slider
-          noFocus
-          value={this.props.lightness}
-          min={0}
-          max={2}
-          origin={1}
-          precision={100}
-          isDisabled={this.props.isDisabled}
-          tabIndex={null}
-          onChange={this.handleLightnessChange}/>
       </div>
     )
   }
@@ -108,7 +106,7 @@ class EsperPanel extends Component {
     contrast: number.isRequired,
     hue: number.isRequired,
     saturation: number.isRequired,
-    lightness: number.isRequired,
+    gamma: number.isRequired,
     isDisabled: bool,
     isVisible: bool,
     onColorChange: func.isRequired

@@ -159,10 +159,10 @@ class Esper extends PureComponent {
       angle: 0,
       mirror: false,
       brightness: 1,
-      contrast: 0,
+      contrast: 1,
       hue: 0,
-      saturation: 0,
-      lightness: 1,
+      saturation: 1,
+      gamma: 1,
       width: 0,
       height: 0,
       src: null,
@@ -410,10 +410,10 @@ class Esper extends PureComponent {
     contrast = this.state.contrast,
     hue = this.state.hue,
     saturation = this.state.saturation,
-    lightness = this.state.lightness
+    gamma = this.state.gamma
   }) => {
-    this.setState({ brightness, contrast, hue, saturation, lightness })
-    this.view.filter({ brightness, contrast, hue, saturation, lightness })
+    this.setState({ brightness, contrast, hue, saturation, gamma })
+    this.view.filter({ brightness, contrast, hue, saturation, gamma })
     //this.persist()
   }
 
@@ -640,7 +640,7 @@ class Esper extends PureComponent {
             contrast={this.state.contrast}
             hue={this.state.hue}
             saturation={this.state.saturation}
-            lightness={this.state.lightness}
+            gamma={this.state.gamma}
             isDisabled={isDisabled}
             isVisible={this.props.isPanelVisible}
             onColorChange={this.handleColorChange}/>
