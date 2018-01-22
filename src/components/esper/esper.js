@@ -162,7 +162,6 @@ class Esper extends PureComponent {
       contrast: 1,
       hue: 0,
       saturation: 1,
-      gamma: 1,
       width: 0,
       height: 0,
       src: null,
@@ -410,10 +409,9 @@ class Esper extends PureComponent {
     contrast = this.state.contrast,
     hue = this.state.hue,
     saturation = this.state.saturation,
-    gamma = this.state.gamma
   }) => {
-    this.setState({ brightness, contrast, hue, saturation, gamma })
-    this.view.filter({ brightness, contrast, hue, saturation, gamma })
+    this.setState({ brightness, contrast, hue, saturation })
+    this.view.filter({ brightness, contrast, hue, saturation })
     //this.persist()
   }
 

@@ -37,10 +37,6 @@ class EsperPanel extends Component {
     this.props.onColorChange({ saturation })
   }
 
-  handleGammaChange = (gamma) => {
-    this.props.onColorChange({ gamma })
-  }
-
   render() {
     return (
       <div className={cx(this.classes)}>
@@ -129,7 +125,6 @@ class EsperPanel extends Component {
     contrast: number.isRequired,
     hue: number.isRequired,
     saturation: number.isRequired,
-    gamma: number.isRequired,
     isDisabled: bool,
     isVisible: bool,
     onColorChange: func.isRequired

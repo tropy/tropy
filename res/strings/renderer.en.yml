@@ -172,7 +172,6 @@ en:
     panel:
       brightness: Brightness
       contrast: Contrast
-      gamma: Gamma
       hue: Hue
       saturation: Saturation
   notepad:

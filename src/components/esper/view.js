@@ -300,12 +300,11 @@ class EsperView extends Component {
     }
   }
 
-  filter({ brightness, contrast, gamma, hue, saturation }) {
+  filter({ brightness, contrast, hue, saturation }) {
     const { adjustment, colors } = this.image
 
     adjustment.brightness = brightness
     adjustment.contrast = contrast
-    adjustment.gamma = gamma
     adjustment.saturation = saturation
     colors.hue((360 + hue) % 360, false)
   }
