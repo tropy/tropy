@@ -4,7 +4,6 @@ const React = require('react')
 const { PureComponent } = React
 const { Slider } = require('../slider')
 const { bool, element, func, number, string } = require('prop-types')
-const cx = require('classnames')
 const { FormattedMessage } = require('react-intl')
 
 const {
