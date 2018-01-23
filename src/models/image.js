@@ -4,7 +4,14 @@ const assert = require('assert')
 const subject = require('./subject')
 
 const COLUMNS = [
-  'width', 'height', 'angle', 'mirror'
+  'width',
+  'height',
+  'angle',
+  'mirror',
+  'brightness',
+  'contrast',
+  'hue',
+  'saturation'
 ]
 
 module.exports = {

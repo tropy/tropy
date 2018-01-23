@@ -21,6 +21,10 @@ const mod = {
               height,
               angle,
               mirror,
+              brightness,
+              contrast,
+              hue,
+              saturation,
               template,
               datetime(created, "localtime") AS created,
               datetime(modified, "localtime") AS modified
