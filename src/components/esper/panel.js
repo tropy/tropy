@@ -38,7 +38,7 @@ class ColorSlider extends PureComponent {
 
   render() {
     return (
-      <div className="color-slider">
+      <li className="adjustment color-slider">
         {this.renderLabel()}
         <Slider
           isDisabled={this.props.isDisabled}
@@ -48,7 +48,7 @@ class ColorSlider extends PureComponent {
           origin={this.props.origin}
           tabIndex={null}
           value={this.props.value} onChange={this.handleChange}/>
-      </div>
+      </li>
     )
   }
 
@@ -73,32 +73,34 @@ class ColorSlider extends PureComponent {
 
 const EsperPanel = (props) => (
   <div className="esper panel">
-    <ColorSlider
-      icon={<IconSun/>}
-      isDisabled={props.isDisabled}
-      type="brightness"
-      value={props.brightness}
-      onChange={props.onChange}/>
-    <ColorSlider
-      icon={<IconContrast/>}
-      isDisabled={props.isDisabled}
-      type="contrast"
-      value={props.contrast}
-      onChange={props.onChange}/>
-    <ColorSlider
-      icon={<IconHue/>}
-      isDisabled={props.isDisabled}
-      min={-180}
-      max={180}
-      type="hue"
-      value={props.hue}
-      onChange={props.onChange}/>
-    <ColorSlider
-      icon={<IconDrop/>}
-      isDisabled={props.isDisabled}
-      type="saturation"
-      value={props.saturation}
-      onChange={props.onChange}/>
+    <ul className="adjustments">
+      <ColorSlider
+        icon={<IconSun/>}
+        isDisabled={props.isDisabled}
+        type="brightness"
+        value={props.brightness}
+        onChange={props.onChange}/>
+      <ColorSlider
+        icon={<IconContrast/>}
+        isDisabled={props.isDisabled}
+        type="contrast"
+        value={props.contrast}
+        onChange={props.onChange}/>
+      <ColorSlider
+        icon={<IconHue/>}
+        isDisabled={props.isDisabled}
+        min={-180}
+        max={180}
+        type="hue"
+        value={props.hue}
+        onChange={props.onChange}/>
+      <ColorSlider
+        icon={<IconDrop/>}
+        isDisabled={props.isDisabled}
+        type="saturation"
+        value={props.saturation}
+        onChange={props.onChange}/>
+    </ul>
   </div>
 )
 

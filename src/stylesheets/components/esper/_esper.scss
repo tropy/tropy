@@ -113,16 +113,6 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
       transform: translate3d(0, -100%, 0);
       transition: transform $esper-toolbar-transition-out;
 
-      @at-root #{selector-replace(&, ".esper", ".esper:hover")} {
-        transform: translate3d(0, 0, 0);
-        transition: transform $esper-toolbar-transition-in-hover;
-      }
-
-      @at-root #{selector-replace(&, ".esper", ".esper.tab-focus")} {
-        transform: translate3d(0, 0, 0);
-        transition: transform $esper-toolbar-transition-in-focus;
-      }
-
       .btn-icon {
         .icon {
           color: $esper-overlay-icon-color;
@@ -157,7 +147,23 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
         }
       }
     }
+
+    &:hover {
+      .toolbar {
+        transform: translate3d(0, 0, 0);
+        transition: transform $esper-toolbar-transition-in-hover;
+      }
+    }
+
+    &.tab-focus,
+    &.panel-visible {
+      .toolbar {
+        transform: translate3d(0, 0, 0);
+        transition: transform $esper-toolbar-transition-in-focus;
+      }
+    }
   }
+
 
   @each $key, $val in $esper-cursor {
     &.#{$key} {

@@ -12,17 +12,8 @@
   transition: margin-right 0.3s ease;
   overflow-y: auto;
 
-  &.show {
+  .panel-visible & {
     margin-right: 0;
-
-    .overlay-mode & {
-      margin-right: -$esper-panel-width;
-    }
-
-    .overlay-mode:hover & {
-      margin-right: 0;
-      transition: margin-right 0.3s 0.7s ease;
-    }
   }
 
   .overlay-mode & {
