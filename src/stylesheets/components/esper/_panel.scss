@@ -4,6 +4,7 @@
 
 .esper.panel {
   flex: 0 0 $esper-panel-width;
+  display: block;
   box-shadow: -1px 0 0 $esper-shadow;
   background: $esper-bg;
   padding: 19px $default-padding-horizontal 0; // todo
@@ -34,14 +35,10 @@
     box-shadow: inset 0 1px 0 $esper-shadow;
   }
 
-  .flex-row,
-  .slider {
-    flex: 0 0 auto;
-  }
-
-  .flex-row {
-    justify-content: space-between;
-    margin-bottom: -3px; // Same as baseline to x-height for 20px line-height
+  .adjustment {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
 
     .icon {
       margin-right: $space-xs;

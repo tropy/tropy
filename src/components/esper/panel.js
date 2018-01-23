@@ -44,82 +44,84 @@ class EsperPanel extends Component {
   render() {
     return (
       <div className={cx(this.classes)}>
-        <div className="flex-row center">
-          <IconSun />
-          <div className="title">
-            <FormattedMessage id="esper.panel.brightness"/>
-          </div>
-          <div className="value">
-            0
-          </div>
-        </div>
-        <Slider
-          noFocus
-          value={this.props.brightness}
-          min={0}
-          max={2}
-          origin={1}
-          precision={100}
-          isDisabled={this.props.isDisabled}
-          tabIndex={null}
-          onChange={this.handleBrightnessChange}/>
-        <div className="flex-row center">
-          <IconContrast />
-          <div className="title">
-            <FormattedMessage id="esper.panel.contrast"/>
-          </div>
-          <div className="value">
-            0
-          </div>
-        </div>
-        <Slider
-          noFocus
-          value={this.props.contrast}
-          min={0}
-          max={2}
-          origin={1}
-          precision={100}
-          isDisabled={this.props.isDisabled}
-          tabIndex={null}
-          onChange={this.handleContrastChange}/>
-        <div className="flex-row center">
-          <IconHue />
-          <div className="title">
-            <FormattedMessage id="esper.panel.hue"/>
-          </div>
-          <div className="value">
-            0
-          </div>
-        </div>
-        <Slider
-          noFocus
-          value={this.props.hue}
-          min={-180}
-          max={180}
-          origin={0}
-          precision={10}
-          isDisabled={this.props.isDisabled}
-          tabIndex={null}
-          onChange={this.handleHueChange}/>
-        <div className="flex-row center">
-          <IconDrop />
-          <div className="title">
-            <FormattedMessage id="esper.panel.saturation"/>
-          </div>
-          <div className="value">
-            0
-          </div>
-        </div>
-        <Slider
-          noFocus
-          value={this.props.saturation}
-          min={0}
-          max={2}
-          origin={1}
-          precision={10}
-          isDisabled={this.props.isDisabled}
-          tabIndex={null}
-          onChange={this.handleSaturationChange}/>
+        <ul className="adjustments">
+          <li className="adjustment">
+            <IconSun />
+            <div className="title">
+              <FormattedMessage id="esper.panel.brightness"/>
+            </div>
+            <div className="value">
+              0
+            </div>
+            <Slider
+              noFocus
+              value={this.props.brightness}
+              min={0}
+              max={2}
+              origin={1}
+              precision={100}
+              isDisabled={this.props.isDisabled}
+              tabIndex={null}
+              onChange={this.handleBrightnessChange}/>
+          </li>
+          <li className="adjustment">
+            <IconContrast />
+            <div className="title">
+              <FormattedMessage id="esper.panel.contrast"/>
+            </div>
+            <div className="value">
+              0
+            </div>
+            <Slider
+              noFocus
+              value={this.props.contrast}
+              min={0}
+              max={2}
+              origin={1}
+              precision={100}
+              isDisabled={this.props.isDisabled}
+              tabIndex={null}
+              onChange={this.handleContrastChange}/>
+          </li>
+          <li className="adjustment">
+            <IconHue />
+            <div className="title">
+              <FormattedMessage id="esper.panel.hue"/>
+            </div>
+            <div className="value">
+              0
+            </div>
+            <Slider
+              noFocus
+              value={this.props.hue}
+              min={-180}
+              max={180}
+              origin={0}
+              precision={10}
+              isDisabled={this.props.isDisabled}
+              tabIndex={null}
+              onChange={this.handleHueChange}/>
+          </li>
+          <li className="adjustment">
+            <IconDrop />
+            <div className="title">
+              <FormattedMessage id="esper.panel.saturation"/>
+            </div>
+            <div className="value">
+              0
+            </div>
+            <Slider
+              noFocus
+              value={this.props.saturation}
+              min={0}
+              max={2}
+              origin={1}
+              precision={10}
+              isDisabled={this.props.isDisabled}
+              tabIndex={null}
+              onChange={this.handleSaturationChange}/>
+          </li>
+        </ul>
       </div>
     )
   }
