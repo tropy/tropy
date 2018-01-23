@@ -334,6 +334,34 @@ class Esper extends PureComponent {
     this.handleZoomChange({ zoom: this.state.zoom + by }, animate)
   }
 
+  handleRevertToOriginal = () => {
+    const { photo } = this.props
+    if (photo == null) return
+
+    const state = {
+      angle: 0,
+      brightness: 0,
+      contrast: 0,
+      hue: 0,
+      mirror: false,
+      saturation: 0,
+      width: photo.width,
+      height: photo.height,
+      zoom: this.state.zoom
+    }
+
+    assign(state, this.getOrientationState(state, photo.orientation))
+    assign(state, this.getZoomBounds(this.view.screen, state))
+
+    this.setState(state)
+
+    this.view.rotate(state, ROTATE_DURATION)
+    this.view.scale(state, ROTATE_DURATION)
+    this.view.adjust(state)
+
+    this.persist()
+  }
+
   handleRotationChange = (by) => {
     const state = {
       ...this.state,
@@ -644,7 +672,8 @@ class Esper extends PureComponent {
             saturation={this.state.saturation}
             gamma={this.state.gamma}
             isDisabled={isDisabled}
-            onChange={this.handleColorChange}/>
+            onChange={this.handleColorChange}
+            onRevert={this.handleRevertToOriginal}/>
         </div>
       </section>
     )

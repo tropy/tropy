@@ -101,6 +101,9 @@ const EsperPanel = (props) => (
         value={props.saturation}
         onChange={props.onChange}/>
     </ul>
+    <div className="btn revert" onClick={props.onRevert}>
+      <FormattedMessage id="esper.panel.revert"/>
+    </div>
   </div>
 )
 
@@ -111,7 +114,7 @@ EsperPanel.propTypes = {
   saturation: number.isRequired,
   isDisabled: bool,
   onChange: func.isRequired,
-  onRevert: func
+  onRevert: func.isRequired
 }
 
 module.exports = {

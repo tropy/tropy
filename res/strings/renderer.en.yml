@@ -170,6 +170,7 @@ en:
       fit: Fit
       zoom: Zoom
     panel:
+      revert: Revert to Original
       brightness:
         label: Brightness
         value: "{value, number}"
