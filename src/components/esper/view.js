@@ -139,6 +139,7 @@ class EsperView extends Component {
         this.props.onPhotoError(props.photo)
       }
 
+      this.adjust(props)
       this.rotate(props)
       const { mirror, x, y, zoom } = props
 
@@ -298,6 +299,14 @@ class EsperView extends Component {
     } else {
       this.image.rotation = rad(angle)
     }
+  }
+
+  adjust({ brightness, contrast, hue, saturation }) {
+    this.image
+      .brightness(brightness)
+      .contrast(contrast)
+      .hue(hue)
+      .saturation(saturation)
   }
 
   fadeOut(thing, duration = FADE_DURATION) {

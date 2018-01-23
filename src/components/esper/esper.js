@@ -178,12 +178,18 @@ class Esper extends PureComponent {
     const { screen } = this.view
 
     if (photo != null && !photo.pending) {
+      const image = selection || photo
+
       assign(state, {
         photo: photo.id,
         src: `${photo.protocol}://${photo.path}`,
         width: photo.width,
-        height: photo.height
-      }, this.getOrientationState(selection || photo, photo.orientation))
+        height: photo.height,
+        brightness: image.brightness,
+        contrast: image.contrast,
+        hue: image.hue,
+        saturation: image.saturation
+      }, this.getOrientationState(image, photo.orientation))
     }
 
     if (state.x == null || state.mode !== 'zoom') {
@@ -263,9 +269,10 @@ class Esper extends PureComponent {
   getPhotoState() {
     const id = this.getActiveImageId()
     const { angle, mirror } = this.getRelativeRotation()
+    const { brightness, contrast, hue, saturation } = this.state
 
     return (id == null) ? null : {
-      id, data: { angle, mirror }
+      id, data: { angle, brightness, contrast, hue, mirror, saturation }
     }
   }
 
@@ -406,14 +413,10 @@ class Esper extends PureComponent {
   }
 
   handleColorChange = (opts) => {
-    this.setState(opts)
-    //this.persist()
-    //
-    if (this.view.image != null) {
-      for (const prop in opts) {
-        this.view.image[prop](opts[prop])
-      }
-    }
+    this.setState(opts, () => {
+      this.view.adjust(this.state)
+      this.persist()
+    })
   }
 
   handleWheel = ({ x, y, dy, dx, ctrl }) => {
