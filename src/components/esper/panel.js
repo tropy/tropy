@@ -72,56 +72,45 @@ class ColorSlider extends PureComponent {
 }
 
 
-class EsperPanel extends PureComponent {
-  get classes() {
-    return ['esper', 'panel', {
-      show: this.props.isVisible
-    }]
-  }
+const EsperPanel = (props) => (
+  <div className="esper panel">
+    <ColorSlider
+      icon={<IconSun/>}
+      isDisabled={props.isDisabled}
+      type="brightness"
+      value={props.brightness}
+      onChange={props.onChange}/>
+    <ColorSlider
+      icon={<IconContrast/>}
+      isDisabled={props.isDisabled}
+      type="contrast"
+      value={props.contrast}
+      onChange={props.onChange}/>
+    <ColorSlider
+      icon={<IconHue/>}
+      isDisabled={props.isDisabled}
+      min={-180}
+      max={180}
+      type="hue"
+      value={props.hue}
+      onChange={props.onChange}/>
+    <ColorSlider
+      icon={<IconDrop/>}
+      isDisabled={props.isDisabled}
+      type="saturation"
+      value={props.saturation}
+      onChange={props.onChange}/>
+  </div>
+)
 
-  render() {
-    return (
-      <div className={cx(this.classes)}>
-        <ColorSlider
-          icon={<IconSun/>}
-          isDisabled={this.props.isDisabled}
-          type="brightness"
-          value={this.props.brightness}
-          onChange={this.props.onChange}/>
-        <ColorSlider
-          icon={<IconContrast/>}
-          isDisabled={this.props.isDisabled}
-          type="contrast"
-          value={this.props.contrast}
-          onChange={this.props.onChange}/>
-        <ColorSlider
-          icon={<IconHue/>}
-          isDisabled={this.props.isDisabled}
-          min={-180}
-          max={180}
-          type="hue"
-          value={this.props.hue}
-          onChange={this.props.onChange}/>
-        <ColorSlider
-          icon={<IconDrop/>}
-          isDisabled={this.props.isDisabled}
-          type="saturation"
-          value={this.props.saturation}
-          onChange={this.props.onChange}/>
-      </div>
-    )
-  }
-
-  static propTypes = {
-    brightness: number.isRequired,
-    contrast: number.isRequired,
-    hue: number.isRequired,
-    saturation: number.isRequired,
-    isDisabled: bool,
-    isVisible: bool,
-    onChange: func.isRequired,
-    onRevert: func
-  }
+EsperPanel.propTypes = {
+  brightness: number.isRequired,
+  contrast: number.isRequired,
+  hue: number.isRequired,
+  saturation: number.isRequired,
+  isDisabled: bool,
+  onChange: func.isRequired,
+  onRevert: func
 }
 
 module.exports = {

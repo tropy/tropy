@@ -127,6 +127,7 @@ class Esper extends PureComponent {
   get classes() {
     return ['esper', this.state.tool, {
       'overlay-mode': this.props.hasOverlayToolbar,
+      'panel-visible': this.props.isPanelVisible,
       'tab-focus': this.state.hasTabFocus
     }]
   }
@@ -640,7 +641,6 @@ class Esper extends PureComponent {
             saturation={this.state.saturation}
             gamma={this.state.gamma}
             isDisabled={isDisabled}
-            isVisible={this.props.isPanelVisible}
             onChange={this.handleColorChange}/>
         </div>
       </section>
