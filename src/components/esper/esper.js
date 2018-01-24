@@ -99,14 +99,21 @@ class Esper extends PureComponent {
   }
 
   shouldViewReset(props, state) {
-    if (state.src !== this.state.src) return true
-    if (get(props.photo, ['id']) !== get(this.props.photo, ['id'])) return true
-    return false
+    return (state.src !== this.state.src) ||
+      (get(props.photo, ['id']) !== get(this.props.photo, ['id']))
   }
 
-  shouldViewSync(props) {
-    if (props.selection !== this.props.selection) return true
-    return false
+  shouldViewSync(props, state) {
+    return (props.selection !== this.props.selection) ||
+      !shallow(state, this.state, [
+        'angle',
+        'brightness',
+        'contrast',
+        'hue',
+        'mirror',
+        'negative',
+        'saturation'
+      ])
   }
 
   shouldToolReset(props) {
