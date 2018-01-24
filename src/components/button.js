@@ -19,13 +19,26 @@ ButtonGroup.propTypes = {
 class Button extends PureComponent {
   get classes() {
     return ['btn', 'btn-icon', {
-      active: this.props.isActive,
-      disabled: this.props.isDisabled
+      'active': this.props.isActive,
+      'btn-active': this.hasIcon,
+      'disabled': this.props.isDisabled
     }]
   }
 
   get node() {
     return this.props.noFocus ? 'span' : 'button'
+  }
+
+  get hasIcon() {
+    return this.props.icon != null
+  }
+
+  get text() {
+    const { intl, text } = this.props
+
+    return text ?
+      intl.formatMessage({ id: text }) :
+      null
   }
 
   get title() {
@@ -73,16 +86,17 @@ class Button extends PureComponent {
   }
 
   render() {
-    return create(this.node, this.attributes, this.props.icon)
+    return create(this.node, this.attributes, this.props.icon, this.text)
   }
 
   static propTypes = {
-    icon: element.isRequired,
+    icon: element,
     intl: intlShape.isRequired,
     isActive: bool,
     isDisabled: bool,
     noFocus: bool,
     title: string,
+    text: string,
     tabIndex: number,
     onClick: func,
     onMouseDown: func
