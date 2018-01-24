@@ -75,7 +75,6 @@ class Slider extends PureComponent {
     return Math.max(steps[i], min)
   }
 
-
   set(value, reason) {
     value = restrict(value, this.props.min, this.props.max)
     this.setState({ value })
@@ -113,10 +112,34 @@ class Slider extends PureComponent {
     this.set(this.getNextStep(), 'button')
   }, 100)
 
+  handleKeyDown = (event) => {
+    const { value, precision, tabIndex } = this.props
+    if (tabIndex == null) return
+
+    switch (event.key) {
+      case 'ArrowDown':
+      case 'ArrowLeft':
+        this.set(value - 1 / precision, 'key')
+        break
+      case 'ArrowUp':
+      case 'ArrowRight':
+        this.set(value + 1 / precision, 'key')
+        break
+      case 'Escape':
+        this.set(this.origin, 'key')
+        break
+      default:
+        return
+    }
+
+    event.preventDefault()
+    event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
+  }
+
   setTrack = (track) => {
     this.track = track
   }
-
 
   renderMinButton() {
     const { min, minIcon } = this.props
@@ -182,6 +205,7 @@ class Slider extends PureComponent {
             <div
               className="slider-handle"
               tabIndex={this.props.tabIndex}
+              onKeyDown={this.handleKeyDown}
               style={{ left: position }}>
               {this.renderCurrentValue()}
             </div>

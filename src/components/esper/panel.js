@@ -46,7 +46,7 @@ class ColorSlider extends PureComponent {
           min={this.props.min}
           noFocus
           origin={this.props.origin}
-          tabIndex={null}
+          tabIndex={-1}
           value={this.props.value} onChange={this.handleChange}/>
       </li>
     )
