@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { IconButton } = require('./button')
+const { Button } = require('./button')
 const { Draggable } = require('./draggable')
 const { bounds, borders } = require('../dom')
 const { restrict } = require('../common/util')
@@ -147,7 +147,7 @@ class Slider extends PureComponent {
 
     if (minIcon) {
       return (
-        <IconButton
+        <Button
           noFocus={this.props.noFocus}
           icon={this.props.minIcon}
           isActive={value === min}
@@ -163,7 +163,7 @@ class Slider extends PureComponent {
 
     if (maxIcon) {
       return (
-        <IconButton
+        <Button
           noFocus={this.props.noFocus}
           icon={this.props.maxIcon}
           isActive={value === max}

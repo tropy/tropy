@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { Toolbar, ToolbarLeft, ToolbarRight, ToolGroup } = require('../toolbar')
-const { IconButton } = require('../button')
+const { Button } = require('../button')
 const { Slider } = require('../slider')
 const { arrayOf, bool, func, number, string } = require('prop-types')
 const throttle = require('lodash.throttle')
@@ -81,13 +81,13 @@ class EsperToolbar extends PureComponent {
       <Toolbar isDraggable={false}>
         <ToolbarLeft>
           <ToolGroup>
-            <IconButton
+            <Button
               noFocus
               icon={<IconArrow/>}
               isActive={this.isToolActive(TOOL.ARROW)}
               isDisabled={this.props.isDisabled}
               onClick={this.setArrowTool}/>
-            <IconButton
+            <Button
               noFocus
               icon={<IconSelection/>}
               title="esper.tool.select"
@@ -96,13 +96,13 @@ class EsperToolbar extends PureComponent {
               onClick={this.setSelectTool}/>
           </ToolGroup>
           <ToolGroup>
-            <IconButton
+            <Button
               noFocus
               icon={<IconRotate/>}
               title="esper.tool.rotate"
               isDisabled={this.props.isDisabled}
               onClick={this.handleRotate}/>
-            <IconButton
+            <Button
               noFocus
               icon={<IconMirror/>}
               title="esper.tool.mirror"
@@ -110,20 +110,20 @@ class EsperToolbar extends PureComponent {
               onClick={this.props.onMirrorChange}/>
           </ToolGroup>
           <ToolGroup>
-            <IconButton
+            <Button
               noFocus
               icon={<IconHand/>}
               title="esper.tool.pan"
               isActive={this.isToolActive(TOOL.PAN)}
               onClick={this.setPanTool}/>
-            <IconButton
+            <Button
               noFocus
               icon={<IconFill/>}
               title="esper.mode.fill"
               isDisabled={this.props.isDisabled}
               isActive={this.isZoomToFill}
               onClick={this.setZoomToFill}/>
-            <IconButton
+            <Button
               noFocus
               icon={<IconFit/>}
               title="esper.mode.fit"
@@ -149,7 +149,7 @@ class EsperToolbar extends PureComponent {
         </ToolbarLeft>
         <ToolbarRight>
           <ToolGroup>
-            <IconButton
+            <Button
               noFocus
               icon={<IconSliders/>}
               isActive={this.props.isPanelVisible}

@@ -6,7 +6,7 @@ const PropTypes = require('prop-types')
 const { FormattedMessage } = require('react-intl')
 const { Toolbar, ToolGroup } = require('../toolbar')
 const { Slider } = require('../slider')
-const { IconButton } = require('../button')
+const { Button } = require('../button')
 const { number, bool, func } = PropTypes
 
 const {
@@ -44,7 +44,7 @@ class PhotoToolbar extends PureComponent {
           {
             hasCreateButton &&
               <ToolGroup>
-                <IconButton
+                <Button
                   icon={<IconPlus/>}
                   isDisabled={!this.props.canCreate}
                   title="panel.photo.create"

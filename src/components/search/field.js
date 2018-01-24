@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { injectIntl, intlShape } = require('react-intl')
 const { bool, func, string } = require('prop-types')
 const { IconSearch, IconXSmall } = require('../icons')
-const { IconButton } = require('../button')
+const { Button } = require('../button')
 const { Input } = require('../input')
 const { TABS } = require('../../constants')
 const { blank } = require('../../common/util')
@@ -47,7 +47,7 @@ class SearchField extends PureComponent {
           onChange={this.handleChange}
           onCommit={this.handleCommit}/>
         {!blank(this.props.query) &&
-          <IconButton
+          <Button
             icon={<IconXSmall/>}
             onClick={this.handleCancel}/>}
       </div>

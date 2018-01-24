@@ -16,7 +16,7 @@ ButtonGroup.propTypes = {
   children: node
 }
 
-class IconButton extends PureComponent {
+class Button extends PureComponent {
   get classes() {
     return ['btn', 'btn-icon', {
       active: this.props.isActive,
@@ -97,5 +97,5 @@ class IconButton extends PureComponent {
 
 module.exports = {
   ButtonGroup,
-  IconButton: injectIntl(IconButton)
+  Button: injectIntl(Button)
 }
