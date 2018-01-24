@@ -133,7 +133,6 @@ class EsperToolbar extends PureComponent {
           </ToolGroup>
           <ToolGroup>
             <Slider
-              noFocus
               value={this.props.zoom}
               min={this.props.minZoom}
               max={this.props.maxZoom}
@@ -143,7 +142,6 @@ class EsperToolbar extends PureComponent {
               minIcon={<IconMinusCircle/>}
               maxIcon={<IconPlusCircle/>}
               isDisabled={this.props.isDisabled}
-              tabIndex={null}
               onChange={this.handleZoomChange}/>
           </ToolGroup>
         </ToolbarLeft>

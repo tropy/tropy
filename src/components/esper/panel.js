@@ -46,7 +46,6 @@ class ColorSlider extends PureComponent {
           isDisabled={this.props.isDisabled}
           max={this.props.max}
           min={this.props.min}
-          noFocus
           origin={this.props.origin}
           tabIndex={-1}
           value={this.props.value} onChange={this.handleChange}/>

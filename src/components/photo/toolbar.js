@@ -2,12 +2,11 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const { FormattedMessage } = require('react-intl')
 const { Toolbar, ToolGroup } = require('../toolbar')
 const { Slider } = require('../slider')
 const { Button } = require('../button')
-const { number, bool, func } = PropTypes
+const { number, bool, func } = require('prop-types')
 
 const {
   IconPhoto, IconPlus, IconListSmall, IconGridSmall

@@ -250,7 +250,7 @@ class Slider extends PureComponent {
     showCurrentValue: false,
     size: 'md',
     steps: [],
-    tabIndex: -1
+    tabIndex: null
   }
 }
 
