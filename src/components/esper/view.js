@@ -163,6 +163,7 @@ class EsperView extends Component {
     const { position, scale } = this.image
 
     this.setScaleMode(this.image.bg.texture, zoom)
+    this.adjust(props)
 
     const zx = mirror ? -1 : 1
     const next = constrain({ x, y, zoom }, this.getInnerBounds(zoom))
