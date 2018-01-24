@@ -170,6 +170,7 @@ en:
       fit: Fit
       zoom: Zoom
     panel:
+      negative: Is negative image?
       revert: Revert to Original
       brightness:
         label: Brightness

@@ -5,6 +5,7 @@ const { PureComponent } = React
 const { Slider } = require('../slider')
 const { bool, element, func, number, string } = require('prop-types')
 const { FormattedMessage } = require('react-intl')
+const { FormToggle } = require('../form')
 
 const {
   IconSun,
@@ -100,6 +101,14 @@ const EsperPanel = (props) => (
         type="saturation"
         value={props.saturation}
         onChange={props.onChange}/>
+      <li>
+        <FormToggle
+          id="esper.panel.negative"
+          name="negative"
+          isDisabled={props.isDisabled}
+          value={props.negative}
+          onChange={props.onChange}/>
+      </li>
     </ul>
     <div className="btn revert" onClick={props.onRevert}>
       <FormattedMessage id="esper.panel.revert"/>
@@ -111,6 +120,7 @@ EsperPanel.propTypes = {
   brightness: number.isRequired,
   contrast: number.isRequired,
   hue: number.isRequired,
+  negative: bool.isRequired,
   saturation: number.isRequired,
   isDisabled: bool,
   onChange: func.isRequired,

@@ -162,6 +162,7 @@ class Esper extends PureComponent {
       brightness: 0,
       contrast: 0,
       hue: 0,
+      negative: false,
       saturation: 0,
       width: 0,
       height: 0,
@@ -188,6 +189,7 @@ class Esper extends PureComponent {
         brightness: image.brightness,
         contrast: image.contrast,
         hue: image.hue,
+        negative: image.negative,
         saturation: image.saturation
       }, this.getOrientationState(image, photo.orientation))
     }
@@ -269,10 +271,13 @@ class Esper extends PureComponent {
   getPhotoState() {
     const id = this.getActiveImageId()
     const { angle, mirror } = this.getRelativeRotation()
-    const { brightness, contrast, hue, saturation } = this.state
+    const { brightness, contrast, hue, negative, saturation } = this.state
 
     return (id == null) ? null : {
-      id, data: { angle, brightness, contrast, hue, mirror, saturation }
+      id,
+      data: {
+        angle, brightness, contrast, hue, mirror, negative, saturation
+      }
     }
   }
 
@@ -343,6 +348,7 @@ class Esper extends PureComponent {
       brightness: 0,
       contrast: 0,
       hue: 0,
+      negative: false,
       mirror: false,
       saturation: 0,
       width: photo.width,
@@ -669,6 +675,7 @@ class Esper extends PureComponent {
             brightness={this.state.brightness}
             contrast={this.state.contrast}
             hue={this.state.hue}
+            negative={this.state.negative}
             saturation={this.state.saturation}
             gamma={this.state.gamma}
             isDisabled={isDisabled}

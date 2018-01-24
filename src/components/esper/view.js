@@ -302,11 +302,12 @@ class EsperView extends Component {
     }
   }
 
-  adjust({ brightness, contrast, hue, saturation }) {
+  adjust({ brightness, contrast, hue, negative, saturation }) {
     this.image
       .brightness(brightness)
       .contrast(contrast)
       .hue(hue)
+      .negative(negative)
       .saturation(saturation)
   }
 

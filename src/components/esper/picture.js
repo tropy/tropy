@@ -105,6 +105,11 @@ class Picture extends Container {
     return this
   }
 
+  negative(negative = false) {
+    if (negative) this.colors.negative(true)
+    return this
+  }
+
   saturation(value = 0) {
     this.adjust.saturation = 1 + value / 100
     return this
