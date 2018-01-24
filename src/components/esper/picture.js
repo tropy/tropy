@@ -8,6 +8,12 @@ const { SelectionLayer, SelectionOverlay } = require('./selection')
 const { restrict } = require('../../common/util')
 const { deg, isHorizontal } = require('../../common/math')
 
+const NEGATIVE = [
+  -1,  0,  0, 0, 1,
+   0, -1,  0, 0, 1,
+   0,  0, -1, 0, 1,
+   0,  0,  0, 1, 0]
+
 
 class Picture extends Container {
   constructor({ width, height }) {
@@ -105,8 +111,14 @@ class Picture extends Container {
     return this
   }
 
+  // Subtle: apply after hue, if you need both!
   negative(negative = false) {
-    if (negative) this.colors.negative(true)
+    if (negative) {
+      // this.colors.negative()
+      this.colors.matrix =
+        this.colors._multiply([], this.colors.matrix, NEGATIVE)
+    }
+
     return this
   }
 
