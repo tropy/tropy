@@ -2,10 +2,11 @@
 
 const React = require('react')
 const { PureComponent, createElement: create } = React
-const PropTypes = require('prop-types')
-const { bool, element, func, node, number, string } = PropTypes
 const { injectIntl, intlShape } = require('react-intl')
 const cx = require('classnames')
+const {
+  bool, element, func, node, number, oneOf, string
+} = require('prop-types')
 
 
 const ButtonGroup = ({ children }) => (
@@ -18,9 +19,12 @@ ButtonGroup.propTypes = {
 
 class Button extends PureComponent {
   get classes() {
-    return ['btn', {
+    return ['btn', this.props.size, {
       'active': this.props.isActive,
+      'btn-block': this.props.isBlock,
+      'btn-default': this.props.isDefault,
       'btn-icon': this.props.icon != null,
+      'btn-primary': this.props.isPrimary,
       'disabled': this.props.isDisabled
     }]
   }
@@ -89,8 +93,12 @@ class Button extends PureComponent {
     icon: element,
     intl: intlShape.isRequired,
     isActive: bool,
+    isBlock: bool,
+    isDefault: bool,
     isDisabled: bool,
+    isPrimary: bool,
     noFocus: bool,
+    size: oneOf(['sm', 'md', 'lg']),
     title: string,
     text: string,
     tabIndex: number,
