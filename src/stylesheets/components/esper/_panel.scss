@@ -4,13 +4,10 @@
 
 .esper.panel {
   flex: 0 0 $esper-panel-width;
-  display: block;
   box-shadow: -1px 0 0 $esper-shadow;
   background: $esper-bg;
-  padding: 19px $default-padding-horizontal 0; // todo
   margin-right: -$esper-panel-width;
   transition: margin-right 0.3s ease;
-  overflow-y: auto;
 
   .panel-visible & {
     margin-right: 0;
@@ -26,10 +23,16 @@
     box-shadow: inset 0 1px 0 $esper-shadow;
   }
 
+  .adjustments {
+    flex: 1 1 0;
+    overflow: scroll;
+    padding: 19px $default-padding-horizontal 0; // todo
+  }
+
   .adjustment {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+    .flex-row {
+      margin-bottom: -3px;
+    }
 
     .icon {
       margin-right: $space-xs;
@@ -48,5 +51,12 @@
   .slider {
     width: calc(100% + 2px);
     margin-bottom: 7px; // 24px
+  }
+
+  .btn-default {
+    background-color: transparent;
+    border-color: $esper-shadow;
+    margin: 6px $default-padding-horizontal;
+    width: calc(100% - #{2 * $default-padding-horizontal});
   }
 }

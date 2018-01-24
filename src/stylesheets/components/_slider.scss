@@ -87,6 +87,10 @@
     border-right: 0;
     margin-left: 0;
   }
+
+  .slider:focus & {
+    background-color: $slider-focus-bg;
+  }
 }
 
 .slider-handle {
@@ -104,6 +108,11 @@
   .overlay-mode & {
     background-color: $slider-overlay-handle-bg;
     border-color: $slider-overlay-handle-border;
+  }
+
+  .slider:focus & {
+    background-color: $slider-focus-bg;
+    border-color: transparent;
   }
 }
 

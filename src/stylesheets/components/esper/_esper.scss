@@ -13,7 +13,7 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
   overflow: hidden;
   contain: strict;
 
-  &:not(:focus) {
+  &:not(:focus):not(.nested-focus) {
     .toolbar-left,
     .esper.panel > * { // todo
       opacity: 0.6;
@@ -27,6 +27,17 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
 
     .slider-value {
       color: $esper-slider-value-color;
+    }
+  }
+
+  .slider:focus {
+    .slider-handle {
+      background-color: $slider-focus-bg;
+      border-color: transparent;
+    }
+
+    .slider-range {
+      background-color: $slider-focus-bg;
     }
   }
 
