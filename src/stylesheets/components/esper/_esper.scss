@@ -13,7 +13,7 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
   overflow: hidden;
   contain: strict;
 
-  &:not(:focus) {
+  &:not(:focus):not(.nested-focus) {
     .toolbar-left,
     .esper.panel > * { // todo
       opacity: 0.6;
