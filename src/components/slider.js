@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { Button } = require('./button')
 const { Draggable } = require('./draggable')
 const { bounds, borders } = require('../dom')
-const { restrict } = require('../common/util')
+const { noop, restrict } = require('../common/util')
 const { round } = require('../common/math')
 const { arrayOf, bool, element, func, number, oneOf } = require('prop-types')
 const cx = require('classnames')
@@ -75,6 +75,10 @@ class Slider extends PureComponent {
     return Math.max(steps[i], min)
   }
 
+  setTrack = (track) => {
+    this.track = track
+  }
+
   set(value, reason) {
     value = restrict(value, this.props.min, this.props.max)
     this.setState({ value })
@@ -114,17 +118,23 @@ class Slider extends PureComponent {
 
   handleKeyDown = (event) => {
     const { value, precision, tabIndex } = this.props
+
     if (tabIndex == null) return
 
     switch (event.key) {
       case 'ArrowDown':
+        this.set(this.getPrevStep(), 'key')
+        break
       case 'ArrowLeft':
         this.set(value - 1 / precision, 'key')
         break
       case 'ArrowUp':
+        this.set(this.getNextStep(), 'key')
+        break
       case 'ArrowRight':
         this.set(value + 1 / precision, 'key')
         break
+      case 'Space':
       case 'Escape':
         this.set(this.origin, 'key')
         break
@@ -137,10 +147,6 @@ class Slider extends PureComponent {
     event.nativeEvent.stopImmediatePropagation()
   }
 
-  setTrack = (track) => {
-    this.track = track
-  }
-
   renderMinButton() {
     const { min, minIcon } = this.props
     const { value } = this.state
@@ -148,7 +154,7 @@ class Slider extends PureComponent {
     if (minIcon) {
       return (
         <Button
-          noFocus={this.props.noFocus}
+          noFocus
           icon={this.props.minIcon}
           isActive={value === min}
           isDisabled={this.isDisabled}
@@ -164,7 +170,7 @@ class Slider extends PureComponent {
     if (maxIcon) {
       return (
         <Button
-          noFocus={this.props.noFocus}
+          noFocus
           icon={this.props.maxIcon}
           isActive={value === max}
           isDisabled={this.isDisabled}
@@ -193,7 +199,12 @@ class Slider extends PureComponent {
     const width = pct(Math.abs(adj) / delta)
 
     return (
-      <div className={cx(this.classes)}>
+      <div
+        className={cx(this.classes)}
+        tabIndex={this.props.tabIndex}
+        onBlur={this.props.onBlur}
+        onFocus={this.props.onFocus}
+        onKeyDown={this.handleKeyDown}>
         {this.renderMinButton()}
         <Draggable
           delay={15}
@@ -204,8 +215,6 @@ class Slider extends PureComponent {
             <div className="slider-range" style={{ width, left: offset }}/>
             <div
               className="slider-handle"
-              tabIndex={this.props.tabIndex}
-              onKeyDown={this.handleKeyDown}
               style={{ left: position }}>
               {this.renderCurrentValue()}
             </div>
@@ -217,7 +226,6 @@ class Slider extends PureComponent {
   }
 
   static propTypes = {
-    noFocus: bool,
     isDisabled: bool,
     max: number.isRequired,
     maxIcon: element,
@@ -230,7 +238,9 @@ class Slider extends PureComponent {
     steps: arrayOf(number).isRequired,
     tabIndex: number,
     value: number.isRequired,
-    onChange: func.isRequired
+    onBlur: func,
+    onChange: func.isRequired,
+    onFocus: func
   }
 
   static defaultProps = {
