@@ -110,6 +110,7 @@ module.exports = {
             datetime(modified, "localtime") AS modified,
             angle,
             mirror,
+            negative,
             brightness,
             contrast,
             hue,
@@ -127,10 +128,11 @@ module.exports = {
             JOIN photos USING (id)${
           ids != null ? ` WHERE id IN (${ids})` : ''
         }`,
-        ({ id, created, modified, mirror, ...data }) => {
+        ({ id, created, modified, mirror, negative, ...data }) => {
           data.created = new Date(created)
           data.modified = new Date(modified)
           data.mirror = !!mirror
+          data.negative = !!negative
 
           if (id in photos) assign(photos[id], data)
           else photos[id] = assign(skel(id), data)

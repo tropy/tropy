@@ -8,6 +8,7 @@ const COLUMNS = [
   'height',
   'angle',
   'mirror',
+  'negative',
   'brightness',
   'contrast',
   'hue',
