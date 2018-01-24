@@ -128,7 +128,8 @@ class Esper extends PureComponent {
     return ['esper', this.state.tool, {
       'overlay-mode': this.props.hasOverlayToolbar,
       'panel-visible': this.props.isPanelVisible,
-      'tab-focus': this.state.hasTabFocus
+      'tab-focus': this.state.hasTabFocus,
+      'nested-focus': this.state.hasNestedFocus
     }]
   }
 
@@ -298,6 +299,14 @@ class Esper extends PureComponent {
 
   setView = (view) => {
     this.view = view
+  }
+
+  handleNestedBlur = () => {
+    this.setState({ hasNestedFocus: false })
+  }
+
+  handleNestedFocus = () => {
+    this.setState({ hasNestedFocus: true })
   }
 
   handleResize = (darwin || window.devicePixelRatio === 1) ?
@@ -679,6 +688,9 @@ class Esper extends PureComponent {
             saturation={this.state.saturation}
             gamma={this.state.gamma}
             isDisabled={isDisabled}
+            isVisible={this.props.isPanelVisible}
+            onBlur={this.handleNestedBlur}
+            onFocus={this.handleNestedFocus}
             onChange={this.handleColorChange}
             onRevert={this.handleRevertToOriginal}/>
         </div>

@@ -7,6 +7,7 @@ const { Button, ButtonGroup } = require('../button')
 const { bool, element, func, number, string } = require('prop-types')
 const { FormattedMessage } = require('react-intl')
 const { FormToggle } = require('../form')
+const { TABS } = require('../../constants')
 
 const {
   IconSun,
@@ -19,6 +20,10 @@ const {
 class ColorSlider extends PureComponent {
   handleChange = (value) => {
     this.props.onChange({ [this.props.type]: value })
+  }
+
+  get tabIndex() {
+    return this.props.isDisabled ? null : this.props.tabIndex
   }
 
   renderLabel() {
@@ -47,8 +52,11 @@ class ColorSlider extends PureComponent {
           max={this.props.max}
           min={this.props.min}
           origin={this.props.origin}
-          tabIndex={-1}
-          value={this.props.value} onChange={this.handleChange}/>
+          tabIndex={this.tabIndex}
+          value={this.props.value}
+          onBlur={this.props.onBlur}
+          onFocus={this.props.onFocus}
+          onChange={this.handleChange}/>
       </li>
     )
   }
@@ -58,8 +66,11 @@ class ColorSlider extends PureComponent {
     isDisabled: bool,
     max: number.isRequired,
     min: number.isRequired,
+    tabIndex: number,
     type: string.isRequired,
+    onBlur: func,
     onChange: func.isRequired,
+    onFocus: func,
     origin: number,
     value: number.isRequired
   }
@@ -77,36 +88,51 @@ const EsperPanel = (props) => (
     <ul className="adjustments">
       <ColorSlider
         icon={<IconSun/>}
-        isDisabled={props.isDisabled}
+        isDisabled={props.isDisabled || !props.isVisible}
+        tabIndex={TABS.EsperPanel}
         type="brightness"
         value={props.brightness}
+        onBlur={props.onBlur}
+        onFocus={props.onFocus}
         onChange={props.onChange}/>
       <ColorSlider
         icon={<IconContrast/>}
-        isDisabled={props.isDisabled}
+        isDisabled={props.isDisabled || !props.isVisible}
+        tabIndex={TABS.EsperPanel}
         type="contrast"
         value={props.contrast}
+        onBlur={props.onBlur}
+        onFocus={props.onFocus}
         onChange={props.onChange}/>
       <ColorSlider
         icon={<IconHue/>}
-        isDisabled={props.isDisabled}
+        isDisabled={props.isDisabled || !props.isVisible}
+        tabIndex={TABS.EsperPanel}
         min={-180}
         max={180}
         type="hue"
         value={props.hue}
+        onBlur={props.onBlur}
+        onFocus={props.onFocus}
         onChange={props.onChange}/>
       <ColorSlider
         icon={<IconDrop/>}
-        isDisabled={props.isDisabled}
+        isDisabled={props.isDisabled || !props.isVisible}
+        tabIndex={TABS.EsperPanel}
         type="saturation"
         value={props.saturation}
+        onBlur={props.onBlur}
+        onFocus={props.onFocus}
         onChange={props.onChange}/>
       <li>
         <FormToggle
           id="esper.panel.negative"
           name="negative"
-          isDisabled={props.isDisabled}
+          isDisabled={props.isDisabled || !props.isVisible}
+          tabIndex={TABS.EsperPanel}
           value={props.negative}
+          onBlur={props.onBlur}
+          onFocus={props.onFocus}
           onChange={props.onChange}/>
       </li>
     </ul>
@@ -125,8 +151,11 @@ EsperPanel.propTypes = {
   hue: number.isRequired,
   negative: bool.isRequired,
   saturation: number.isRequired,
-  isDisabled: bool,
+  isDisabled: bool.isRequired,
+  isVisible: bool.isRequired,
+  onBlur: func,
   onChange: func.isRequired,
+  onFocus: func,
   onRevert: func.isRequired
 }
 
