@@ -9,10 +9,8 @@ const { restrict } = require('../../common/util')
 const { deg, isHorizontal } = require('../../common/math')
 
 const NEGATIVE = [
-  -1,  0,  0, 0, 1,
-   0, -1,  0, 0, 1,
-   0,  0, -1, 0, 1,
-   0,  0,  0, 1, 0]
+  -1, 0, 0, 0, 1, 0, -1,  0, 0, 1, 0, 0, -1, 0, 1, 0, 0,  0, 1, 0
+]
 
 
 class Picture extends Container {
