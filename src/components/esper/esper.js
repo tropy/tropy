@@ -451,7 +451,7 @@ class Esper extends PureComponent {
     this.props.onChange({ esper: { tool } })
   }
 
-  handlePanelChange = (panel) => {
+  handlePanelChange = (panel = !this.props.isPanelVisible) => {
     this.props.onChange({ esper: { panel } })
   }
 
@@ -556,6 +556,9 @@ class Esper extends PureComponent {
           break
         case 'right':
           this.move({ x: -PAN_STEP_SIZE * this.state.zoom })
+          break
+        case 'panel':
+          this.handlePanelChange()
           break
         case 'quicktool':
           this.setState({ quicktool: TOOL.PAN })
