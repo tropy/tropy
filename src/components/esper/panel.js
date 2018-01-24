@@ -3,6 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { Slider } = require('../slider')
+const { Button, ButtonGroup } = require('../button')
 const { bool, element, func, number, string } = require('prop-types')
 const { FormattedMessage } = require('react-intl')
 const { FormToggle } = require('../form')
@@ -110,9 +111,12 @@ const EsperPanel = (props) => (
           onChange={props.onChange}/>
       </li>
     </ul>
-    <div className="btn revert" onClick={props.onRevert}>
-      <FormattedMessage id="esper.panel.revert"/>
-    </div>
+    <ButtonGroup>
+      <Button
+        noFocus
+        text="esper.panel.revert"
+        onClick={props.onRevert}/>
+    </ButtonGroup>
   </div>
 )
 
