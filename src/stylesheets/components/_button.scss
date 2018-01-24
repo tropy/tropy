@@ -13,6 +13,7 @@
   border-radius: $border-radius-small;
   padding: ($padding-base-vertical + 1px) $padding-base-horizontal;
   display: inline-block; // For span as btn
+  text-align: center;
 
   &[disabled] {
     opacity: $btn-disabled-opacity;

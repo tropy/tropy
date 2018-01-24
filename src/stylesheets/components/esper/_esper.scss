@@ -30,6 +30,17 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
     }
   }
 
+  .slider:focus {
+    .slider-handle {
+      background-color: $slider-focus-bg;
+      border-color: transparent;
+    }
+
+    .slider-range {
+      background-color: $slider-focus-bg;
+    }
+  }
+
   .esper-header {
     position: relative;
     z-index: $zindex-esper-header;
