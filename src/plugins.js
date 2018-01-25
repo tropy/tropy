@@ -2,7 +2,7 @@
 
 const { app } = require('electron')
 const { join } = require('path')
-const { warn, verbose } = require('./common/log')
+const { warn, verbose, logger } = require('./common/log')
 const { uniq, pluck } = require('./common/util')
 
 class Plugins {
@@ -28,8 +28,9 @@ class Plugins {
     if (typeof FormData !== 'undefined') {
       // when running in the browser process
       return {
-        FormData: FormData,
-        fetch: fetch
+        fetch,
+        FormData,
+        logger
       }
     } else return {}
   }
