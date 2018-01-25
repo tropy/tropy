@@ -419,6 +419,14 @@ class Tropy extends EventEmitter {
     this.on('app:delete-note', (_, { target }) =>
       this.dispatch(act.note.delete(target)))
 
+    this.on('app:wrap-lines', (_, { target }) =>
+      this.dispatch(act.ui.update({
+        note: { [target.id]: { wrap: !target.wrap } }
+      })))
+
+    this.on('app:writing-mode', (_, { id, mode }) =>
+      this.dispatch(act.ui.update({ note: { [id]: { mode  } } })))
+
     this.on('app:toggle-menu-bar', win => {
       if (win.isMenuBarAutoHide()) {
         win.setAutoHideMenuBar(false)

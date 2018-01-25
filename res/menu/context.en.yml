@@ -77,16 +77,18 @@ en:
         command: 'app:delete-note'
     notepad: &notepad
       - label: 'Writing Mode'
+        id: 'writing-mode'
         submenu:
           - label: 'Horizontal'
             type: checkbox
-            checked: true
-            command: 'app:writing-mode-horizontal'
+            checked: false
+            mode: 'horizontal'
           - label: 'Vertical (Right to Left)'
             type: checkbox
             checked: false
-            command: 'app:writing-mode-vertical-rl'
+            mode: 'vertical-rl'
       - label: 'Wrap Lines'
+        id: 'wrap-lines'
         type: checkbox
         checked: true
         command: 'app:wrap-lines'
