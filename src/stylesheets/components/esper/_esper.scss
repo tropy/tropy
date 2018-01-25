@@ -41,6 +41,18 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
     }
   }
 
+  &.overlay-mode {
+    .slider:focus {
+      .slider-handle {
+        background-color: $slider-overlay-focus-bg;
+      }
+
+      .slider-range {
+        background-color: $slider-overlay-focus-bg;
+      }
+    }
+  }
+
   .esper-header {
     position: relative;
     z-index: $zindex-esper-header;

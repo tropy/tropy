@@ -90,6 +90,10 @@
 
   .slider:focus & {
     background-color: $slider-focus-bg;
+
+    .overlay-mode & {
+      background-color: $slider-overlay-focus-bg;
+    }
   }
 }
 
