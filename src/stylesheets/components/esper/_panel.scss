@@ -46,11 +46,15 @@
       margin-right: auto;
       color: $esper-panel-title-color;
     }
-  }
 
-  .slider {
-    width: calc(100% + 2px);
-    margin-bottom: 7px; // 24px
+    .slider {
+      width: calc(100% + 2px);
+      margin-bottom: 7px; // 24px
+    }
+
+    .checkbox {
+      padding: 0;
+    }
   }
 
   .btn-default {

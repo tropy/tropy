@@ -124,7 +124,7 @@ const EsperPanel = (props) => (
         onBlur={props.onBlur}
         onFocus={props.onFocus}
         onChange={props.onChange}/>
-      <li>
+      <li className="adjustment">
         <FormToggle
           id="esper.panel.negative"
           name="negative"
