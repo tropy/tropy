@@ -178,8 +178,8 @@ fieldset {
         background: $input-bg-readonly;
         border-color: $input-border;
 
-        &:before,
-        &:after {
+        &::before,
+        &::after {
           background: $checkbox-checked-bg;
         }
       }
@@ -199,9 +199,42 @@ fieldset {
           background: $fieldset-input-bg-readonly;
           border-color: $fieldset-input-border;
 
-          &:before,
-          &:after {
+          &::before,
+          &::after {
             background: $checkbox-checked-bg;
+          }
+        }
+      }
+    }
+
+    .overlay-mode & {
+      background: $input-overlay-bg;
+      border-color: transparent;
+
+      &:active {
+        background: $checkbox-overlay-checked-bg;
+      }
+
+      &[disabled] {
+        background: $input-overlay-bg-readonly;
+        border-color: $input-overlay-bg;
+      }
+
+      &:checked {
+        background: $checkbox-overlay-checked-bg;
+
+        &:active {
+          background: $checkbox-overlay-checked-active-bg;
+          border-color: $checkbox-overlay-checked-active-border;
+        }
+
+        &[disabled] {
+          background: $input-overlay-bg-readonly;
+          border-color: $input-overlay-bg;
+
+          &::before,
+          &::after {
+            background: $checkbox-overlay-checked-bg;
           }
         }
       }
@@ -215,9 +248,19 @@ fieldset {
       border-color: $input-color-focus;
       box-shadow: 0 0 0 2px $input-color-focus;
 
+      .overlay-mode & {
+        border-color: $input-overlay-focus-color;
+        box-shadow: 0 0 0 2px $input-overlay-focus-color;
+      }
+
       &:checked {
         border-color: $input-color-focus;
         box-shadow: 0 0 0 2px $input-color-focus;
+
+        .overlay-mode & {
+          border-color: $input-overlay-focus-color;
+          box-shadow: 0 0 0 2px $input-overlay-focus-color;
+        }
       }
     }
   }

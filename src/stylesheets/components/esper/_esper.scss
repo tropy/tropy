@@ -41,15 +41,18 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
     }
   }
 
-  &.overlay-mode {
-    .slider:focus {
-      .slider-handle {
-        background-color: $slider-overlay-focus-bg;
-      }
+  .esper-container {
+    flex: 1 1 0;
+    display: flex;
+    position: relative;
+  }
 
-      .slider-range {
-        background-color: $slider-overlay-focus-bg;
-      }
+  .esper-view {
+    flex: 1 1 0;
+    position: relative;
+
+    canvas {
+      position: absolute;
     }
   }
 
@@ -98,21 +101,6 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
     .slider {
       margin-top: 0;
       height: $toolbar-height;
-    }
-  }
-
-  .esper-container {
-    flex: 1 1 0;
-    display: flex;
-    position: relative;
-  }
-
-  .esper-view {
-    flex: 1 1 0;
-    position: relative;
-
-    canvas {
-      position: absolute;
     }
   }
 
@@ -183,6 +171,16 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
       .toolbar {
         transform: translate3d(0, 0, 0);
         transition: transform $esper-toolbar-transition-in-focus;
+      }
+    }
+
+    .slider:focus {
+      .slider-handle {
+        background-color: $slider-overlay-focus-bg;
+      }
+
+      .slider-range {
+        background-color: $slider-overlay-focus-bg;
       }
     }
   }
