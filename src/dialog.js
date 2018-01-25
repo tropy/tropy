@@ -114,7 +114,7 @@ prompt.dup = (file, options) =>
 open.images = (options) => open({
   filters: [{
     name: t('dialog.filter.images'),
-    extensions: ['jpg', 'jpeg', 'png']
+    extensions: ['jpg', 'jpeg', 'png', 'svg']
   }],
   properties: ['openFile', 'multiSelections'],
   ...options
