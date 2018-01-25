@@ -2,13 +2,12 @@
 
 const { app } = require('electron')
 const { join } = require('path')
-const { warn } = require('./common/log')
+const { warn, verbose } = require('./common/log')
 const { uniq, pluck } = require('./common/util')
 
 class Plugins {
-  constructor(root = app && app.getPath('userData'), config) {
-    this.root = root
-
+  constructor(root, config) {
+    this.root = root || ARGS.home || app.getPath('userData')
     this.config = config || this._loadConfig() || []
     this.instances = []
   }
@@ -26,10 +25,13 @@ class Plugins {
   }
 
   get context() {
-    return {
-      FormData: window.FormData,
-      fetch: window.fetch
-    }
+    if (typeof FormData !== 'undefined') {
+      // when running in the browser process
+      return {
+        FormData: FormData,
+        fetch: fetch
+      }
+    } else return {}
   }
 
   contract(Plugin, config) {
@@ -63,7 +65,8 @@ class Plugins {
         pluginName,
         params,
         instance,
-        hooks
+        hooks,
+        instanceNumber: this.instances.length
       })
     }
   }
@@ -73,16 +76,22 @@ class Plugins {
     // registered a handeler for the given action
     return this.instances.reduce((res, instance) => {
       const fnNames = pluck(instance.hooks, [action])
+      const { instanceNumber } = instance
+      const { label } = instance.params
       if (fnNames.length) {
         const fnName = fnNames[0]
         const fn = instance.instance[fnName]
         if (typeof fn === 'function') {
-          const { label } = instance.params
-          res.push({ label, fn })
+          res.push({ label, fnName, instanceNumber })
         }
       }
       return res
     }, [])
+  }
+
+  getFn({ instanceNumber, fnName }) {
+    const plugin = this.instances[instanceNumber].instance
+    return plugin[fnName].bind(plugin)
   }
 }
 
@@ -92,7 +101,12 @@ module.exports = {
   Plugins,
 
   get plugins() {
-    if (!instance) instance = new Plugins()
+    if (!instance) {
+      instance = new Plugins()
+      instance.initialize()
+    }
+    const count = instance.instances.length
+    verbose(`Plugins(root=${instance.root}, count=${count})`)
     return instance
   }
 }

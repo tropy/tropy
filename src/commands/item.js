@@ -20,6 +20,7 @@ const { isArray } = Array
 const { writeFile: write } = require('fs')
 const { win } = require('../window')
 const { groupedByTemplate } = require('../export')
+const { plugins } = require('../plugins')
 
 const {
   getItemTemplate,
@@ -428,8 +429,9 @@ class Export extends Command {
   static get action() { return ITEM.EXPORT }
 
   *exec() {
-    let { target } = this.action.meta
+    let { target, plugin } = this.action.meta
     const ids = this.action.payload
+    if (plugin) target = ':plugin:'
 
     try {
       if (!target) {
@@ -467,13 +469,18 @@ class Export extends Command {
       })
 
       const results = yield call(groupedByTemplate, templateItems, resources)
+      const asString = JSON.stringify(results, null, 2)
 
-      const data = JSON.stringify(results, null, 2)
-
-      if (target === ':clipboard:') {
-        yield call(clipboard.writeText, data)
-      } else {
-        yield cps(write, target, data)
+      switch (target) {
+        case ':clipboard:':
+          yield call(clipboard.writeText, asString)
+          break
+        case ':plugin:':
+          plugin.fn = plugins.getFn(plugin)
+          yield plugin.fn(results)
+          break
+        default:
+          yield cps(write, target, asString)
       }
     } catch (error) {
       warn(`Failed to export items to ${target}: ${error.message}`)
