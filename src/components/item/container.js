@@ -14,6 +14,7 @@ const {
 
 const {
   getActiveImageProps,
+  getActiveNoteProps,
   getActiveSelection,
   getPhotoSelections
 } = require('../../selectors')
@@ -67,7 +68,7 @@ class ItemContainer extends PureComponent {
             onSelect={this.props.onPhotoSelect}
             onSelectionCreate={this.props.onSelectionCreate}/>
         </BufferedResizable>
-        <NotePad
+        <NotePad {...this.props.notepad}
           ref={this.setNotePad}
           note={this.props.note}
           isDisabled={this.props.isDisabled || !this.props.photo}
@@ -91,6 +92,7 @@ class ItemContainer extends PureComponent {
     isOpen: bool.isRequired,
     keymap: object.isRequired,
     note: object,
+    notepad: object.isRequired,
     photo: object,
     selection: object,
     selections: arrayOf(object).isRequired,
@@ -112,6 +114,7 @@ module.exports = {
     state => ({
       esper: state.ui.esper,
       image: getActiveImageProps(state),
+      notepad: getActiveNoteProps(state),
       keymap: state.keymap,
       selection: getActiveSelection(state),
       selections: getPhotoSelections(state),

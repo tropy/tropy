@@ -5,6 +5,7 @@ const { PureComponent } = React
 const { bool, func, number, object, shape, string } = require('prop-types')
 const { Editor } = require('../editor')
 const { TABS } = require('../../constants')
+const cx = require('classnames')
 
 
 class NotePad extends PureComponent {
@@ -31,8 +32,11 @@ class NotePad extends PureComponent {
   }
 
   handleContextMenu = (event) => {
-    if (!this.props.isDisabled) {
+    if (!this.props.isDisabled && this.props.note.id != null) {
       this.props.onContextMenu(event, 'notepad', {
+        id: this.props.note.id,
+        mode: this.props.mode,
+        wrap: this.props.wrap
       })
     }
   }
@@ -43,11 +47,11 @@ class NotePad extends PureComponent {
   }
 
   render() {
-    const { note, keymap, tabIndex } = this.props
+    const { mode, note, keymap, tabIndex, wrap } = this.props
 
     return (
       <section
-        className="note pad"
+        className={cx('note', 'pad', mode, { 'no-wrap': !wrap })}
         onContextMenu={this.handleContextMenu}>
         <Editor
           ref={this.setEditor}
@@ -67,9 +71,12 @@ class NotePad extends PureComponent {
     isItemOpen: bool,
     keymap: object.isRequired,
     note: shape({
+      id: number,
       state: object,
       text: string.isRequried
     }).isRequired,
+    mode: string.isRequired,
+    wrap: bool.isRequired,
     tabIndex: number.isRequired,
     onChange: func.isRequired,
     onCommit: func.isRequired,
@@ -77,7 +84,9 @@ class NotePad extends PureComponent {
   }
 
   static defaultProps = {
-    tabIndex: TABS.NotePad
+    mode: 'horizontal',
+    tabIndex: TABS.NotePad,
+    wrap: true
   }
 }
 

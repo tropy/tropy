@@ -81,7 +81,7 @@ en:
           - label: 'Horizontal'
             type: checkbox
             checked: true
-            command: 'app:writing-mode-horizontal-tb'
+            command: 'app:writing-mode-horizontal'
           - label: 'Vertical (Right to Left)'
             type: checkbox
             checked: false
