@@ -179,33 +179,69 @@ const isValidImage = (file) => ([
   'image/svg+xml'
 ].includes(file.type))
 
-async function toImage(buffer, mimetype) {
-  let img
 
+const toImage = (src, mimetype) => {
   switch (mimetype) {
     case 'image/svg+xml':
-      // TODO convert to bitmap
-      break
+      return SVG2NI(src)
     default:
-      img = await NI(buffer)
+      return NI(src)
   }
-
-  return img
 }
 
-const NI = (src) => (
+const load = (src) =>
+  new Promise((resolve, reject) => {
+    const img = new window.Image()
+    img.onload = () => resolve(img)
+    img.onerror = reject
+    img.src = src
+  })
+
+const SVG2NI = (src) =>
+  new Promise((resolve, reject) => {
+    const svg = new Blob([src.toString('utf-8')], { type: 'image/svg+xml' })
+    const url = URL.createObjectURL(svg)
+
+    load(url)
+      .then(img => {
+        try {
+          const canvas = document.createElement('canvas')
+
+          canvas.width = img.naturalWidth
+          canvas.height = img.naturalHeight
+          canvas
+            .getContext('2d')
+            .drawImage(img, 0, 0)
+
+          resolve(
+            nativeImage.createFromDataURL(canvas.toDataURL())
+          )
+        } catch (error) {
+          reject(error)
+        } finally {
+          URL.revokeObjectURL(url)
+        }
+
+      })
+      .catch(reason => {
+        URL.revokeObjectURL(url)
+        reject(reason)
+      })
+  })
+
+const NI = (src) =>
   new Promise((resolve) => {
     resolve(typeof src === 'string' ?
       nativeImage.createFromPath(src) :
       nativeImage.createFromBuffer(src))
   })
-)
 
-function magic(b) {
-  if (b != null || b.length > 24) {
-    if (isJPG(b)) return 'image/jpeg'
-    if (isPNG(b)) return 'image/png'
-    if (isSVG(b)) return 'image/svg+xml'
+
+const magic = (buffer) => {
+  if (buffer != null || buffer.length > 24) {
+    if (isJPG(buffer)) return 'image/jpeg'
+    if (isPNG(buffer)) return 'image/png'
+    if (isSVG(buffer)) return 'image/svg+xml'
   }
 }
 
