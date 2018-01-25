@@ -75,6 +75,21 @@ en:
     note: &note
       - label: 'Delete Note'
         command: 'app:delete-note'
+    notepad: &notepad
+      - label: 'Writing Mode'
+        submenu:
+          - label: 'Horizontal'
+            type: checkbox
+            checked: true
+            command: 'app:writing-mode-horizontal-tb'
+          - label: 'Vertical (Right to Left)'
+            type: checkbox
+            checked: false
+            command: 'app:writing-mode-vertical-rl'
+      - label: 'Wrap Lines'
+        type: checkbox
+        checked: true
+        command: 'app:wrap-lines'
     items: &items
       - label: 'New Item'
         command: 'app:create-item'
@@ -163,6 +178,7 @@ en:
     item-tag: *item-tag
     notes: *notes
     note: *note
+    notepad: *notepad
     items: *items
     item: *item
     item-bulk: *item-bulk
@@ -186,6 +202,7 @@ en:
     item-tag: *item-tag
     notes: *notes
     note: *note
+    notepad: *notepad
     items: *items
     item: *item
     item-bulk: *item-bulk

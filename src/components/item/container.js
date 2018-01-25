@@ -74,7 +74,8 @@ class ItemContainer extends PureComponent {
           isItemOpen={this.props.isOpen}
           keymap={this.props.keymap.NotePad}
           onChange={this.props.onNoteChange}
-          onCommit={this.props.onNoteCommit}/>
+          onCommit={this.props.onNoteCommit}
+          onContextMenu={this.props.onContextMenu}/>
       </div>
     )
   }
@@ -94,6 +95,7 @@ class ItemContainer extends PureComponent {
     selection: object,
     selections: arrayOf(object).isRequired,
     settings: object.isRequired,
+    onContextMenu: func.isRequired,
     onNoteChange: func.isRequired,
     onNoteCommit: func.isRequired,
     onPhotoError: func.isRequired,
