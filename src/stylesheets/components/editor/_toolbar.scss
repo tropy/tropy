@@ -6,6 +6,10 @@
   &.is-blurred {
     .toolbar-context {
       opacity: 0.6;
+
+      &.link {
+        opacity: initial;
+      }
     }
   }
 

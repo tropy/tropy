@@ -23,36 +23,36 @@ const Storage = require('./storage')
 const Updater = require('./updater')
 const dialog = require('./dialog')
 
-const release = require('../common/release')
-
 const { defineProperty: prop } = Object
 const act = require('../actions')
 const { darwin } = require('../common/os')
-const { version } = require('../common/release')
+const { channel, product, version } = require('../common/release')
+const { restrict } = require('../common/util')
 
 const {
-  FLASH, HISTORY, TAG, PROJECT, CONTEXT, SASS
+  FLASH, HISTORY, TAG, PROJECT, CONTEXT, SASS, LOCALE
 } = require('../constants')
 
 const WIN = SASS.PROJECT
 const WIZ = SASS.WIZARD
 const ABT = SASS.ABOUT
 const PREFS = SASS.PREFS
-const ZOOM = ARGS.zoom || 1
 
 const H = new WeakMap()
 const T = new WeakMap()
+
+const ZOOM = { STEP: 0.25, MAX: 2, MIN: 0.75 }
 
 
 class Tropy extends EventEmitter {
   static defaults = {
     frameless: darwin,
     debug: false,
-    locale: 'en', // app.getLocale() || 'en',
     theme: 'light',
     recent: [],
     updater: true,
-    win: {}
+    win: {},
+    zoom: 1.0
   }
 
   constructor() {
@@ -110,11 +110,11 @@ class Tropy extends EventEmitter {
       this.win = open('project', { file, ...this.hash }, {
         width: WIN.WIDTH,
         height: WIN.HEIGHT,
-        minWidth: WIN.MIN_WIDTH * ZOOM,
-        minHeight: WIN.MIN_HEIGHT * ZOOM,
+        minWidth: WIN.MIN_WIDTH * this.state.zoom,
+        minHeight: WIN.MIN_HEIGHT * this.state.zoom,
         darkTheme: (this.state.theme === 'dark'),
         frame: !this.hash.frameless
-      })
+      }, this.state.zoom)
 
       this.win
         .on('unresponsive', async () => {
@@ -192,8 +192,8 @@ class Tropy extends EventEmitter {
 
     this.about = open('about', this.hash, {
       title: this.dict.windows.about.title,
-      width: ABT.WIDTH * ZOOM,
-      height: ABT.HEIGHT * ZOOM,
+      width: ABT.WIDTH * this.state.zoom,
+      height: ABT.HEIGHT * this.state.zoom,
       parent: darwin ? null : this.win,
       modal: !darwin && !!this.win,
       autoHideMenuBar: true,
@@ -203,7 +203,7 @@ class Tropy extends EventEmitter {
       fullscreenable: false,
       darkTheme: (this.state.theme === 'dark'),
       frame: !this.hash.frameless
-    })
+    }, this.state.zoom)
       .once('closed', () => { this.about = undefined })
 
     return this
@@ -215,8 +215,8 @@ class Tropy extends EventEmitter {
 
     this.wiz = open('wizard', this.hash, {
       title: this.dict.windows.wizard.title,
-      width: WIZ.WIDTH * ZOOM,
-      height: WIZ.HEIGHT * ZOOM,
+      width: WIZ.WIDTH * this.state.zoom,
+      height: WIZ.HEIGHT * this.state.zoom,
       parent: darwin ? null : this.win,
       modal: !darwin && !!this.win,
       autoHideMenuBar: true,
@@ -225,8 +225,8 @@ class Tropy extends EventEmitter {
       maximizable: false,
       fullscreenable: false,
       darkTheme: (this.state.theme === 'dark'),
-      frame: !this.hash.frameless
-    })
+      frame: !this.hash.frameless,
+    }, this.state.zoom)
       .once('closed', () => { this.wiz = undefined })
 
     return this
@@ -237,8 +237,8 @@ class Tropy extends EventEmitter {
 
     this.prefs = open('prefs', this.hash, {
       title: this.dict.windows.prefs.title,
-      width: PREFS.WIDTH * ZOOM,
-      height: PREFS.HEIGHT * ZOOM,
+      width: PREFS.WIDTH * this.state.zoom,
+      height: PREFS.HEIGHT * this.state.zoom,
       parent: darwin ? null : this.win,
       modal: !darwin && !!this.win,
       autoHideMenuBar: true,
@@ -247,9 +247,8 @@ class Tropy extends EventEmitter {
       maximizable: false,
       fullscreenable: false,
       darkTheme: (this.state.theme === 'dark'),
-      frame: !this.hash.frameless,
-      titleBarStyle: 'hidden'
-    })
+      frame: !this.hash.frameless
+    }, this.state.zoom)
       .once('closed', () => {
         this.prefs = undefined
         this.dispatch(act.ontology.load(), this.win)
@@ -269,12 +268,8 @@ class Tropy extends EventEmitter {
       .then(state => this.migrate(state))
 
       .tap(() => all([
-        this.menu.load(),
-        this.ctx.load(),
+        this.load(),
         this.cache.init(),
-        Strings
-          .openWithFallback(Tropy.defaults.locale, this.state.locale)
-          .then(strings => this.strings = strings)
       ]))
 
       .tap(state => state.updater && this.updater.start())
@@ -283,8 +278,18 @@ class Tropy extends EventEmitter {
       .tap(() => verbose('app state restored'))
   }
 
+  load() {
+    return all([
+      this.menu.load(),
+      this.ctx.load(),
+      Strings
+        .openWithFallback(LOCALE.default, this.state.locale)
+        .then(strings => this.strings = strings)
+    ])
+  }
+
   migrate(state) {
-    state.locale = 'en'
+    state.locale = this.getLocale(state.locale)
     state.version = this.version
     state.uuid = state.uuid || uuid()
 
@@ -401,11 +406,10 @@ class Tropy extends EventEmitter {
     this.on('app:save-tag', (_, tag) =>
       this.dispatch(act.tag.save(tag)))
 
-    this.on('app:remove-tag', (_, { target }) =>
+    this.on('app:delete-item-tag', (_, { target }) =>
       this.dispatch(act.item.tags.delete({
         id: target.items, tags: [target.id]
       })))
-
     this.on('app:delete-tag', (_, { target }) =>
       this.dispatch(act.tag.delete(target.id)))
 
@@ -434,6 +438,14 @@ class Tropy extends EventEmitter {
       verbose(`switching to "${theme}" theme...`)
       this.state.theme = theme
       this.broadcast('theme', theme)
+      this.emit('app:reload-menu')
+    })
+
+    this.on('app:switch-locale', async (_, locale) => {
+      verbose(`switching to "${locale}" locale...`)
+      this.state.locale = locale
+      await this.load()
+      this.broadcast('locale', locale)
       this.emit('app:reload-menu')
     })
 
@@ -526,6 +538,18 @@ class Tropy extends EventEmitter {
         })
     })
 
+    this.on('app:zoom-in', () => {
+      this.zoom(this.state.zoom + ZOOM.STEP)
+    })
+
+    this.on('app:zoom-out', () => {
+      this.zoom(this.state.zoom - ZOOM.STEP)
+    })
+
+    this.on('app:zoom-reset', () => {
+      this.zoom(1.0)
+    })
+
     let quit = false
     let winId
 
@@ -614,6 +638,13 @@ class Tropy extends EventEmitter {
     }
   }
 
+  zoom(factor) {
+    this.state.zoom = restrict(factor, ZOOM.MIN, ZOOM.MAX)
+
+    for (const win of BrowserWindow.getAllWindows()) {
+      win.webContents.setZoomFactor(this.state.zoom)
+    }
+  }
 
   dispatch(action, win = BrowserWindow.getFocusedWindow()) {
     if (win != null) {
@@ -622,13 +653,17 @@ class Tropy extends EventEmitter {
   }
 
   broadcast(...args) {
-    for (let win of BrowserWindow.getAllWindows()) {
+    for (const win of BrowserWindow.getAllWindows()) {
       win.webContents.send(...args)
     }
   }
 
-  get defaults() {
-    return Tropy.defaults
+  getLocale(locale) {
+    return LOCALE[locale || app.getLocale()] || LOCALE.default
+  }
+
+  get defaultLocale() {
+    return this.getLocale()
   }
 
   get dict() {
@@ -644,11 +679,11 @@ class Tropy extends EventEmitter {
   }
 
   get name() {
-    return release.product
+    return product
   }
 
   get dev() {
-    return release.channel === 'dev' || ARGS.environment === 'development'
+    return channel === 'dev' || ARGS.environment === 'development'
   }
 
   get isBuild() {
@@ -660,7 +695,7 @@ class Tropy extends EventEmitter {
   }
 
   get version() {
-    return release.version
+    return version
   }
 }
 

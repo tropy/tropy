@@ -1,0 +1,45 @@
+//
+// Popup
+// --------------------------------------------------
+
+#popup-root {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: $zindex-popup;
+
+  .popup {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    background: $popup-bg;
+    margin: -$popup-focus-shadow-width;
+    border: ($input-border-width + $popup-focus-shadow-width) solid $input-color-focus;
+    border-radius: $input-border-radius-small + $popup-focus-shadow-width;
+
+    @each $alignment in "top", "bottom" {
+      &.#{$alignment} {
+        border-#{$alignment}: 0;
+        padding-#{$alignment}: $popup-padding;
+        border-#{$alignment}-left-radius: 0;
+        border-#{$alignment}-right-radius: 0;
+      }
+    }
+
+    &.top {
+      margin-top: (-$input-border-width - $popup-focus-shadow-width);
+
+      .option-list {
+        margin-bottom: $option-list-margin;
+      }
+    }
+
+    &.bottom {
+      margin-top: ($input-border-width + $popup-focus-shadow-width);
+
+      .option-list {
+        margin-top: $option-list-margin;
+      }
+    }
+  }
+}

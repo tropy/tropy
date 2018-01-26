@@ -144,9 +144,7 @@ const ontology = {
   props: {
     async load(db, ...args) {
       const props = {}
-      const cond = [
-        '(language = ? OR language IS NULL)', 'deleted is NULL'
-      ]
+      const cond = ['deleted is NULL']
 
       if (args.length > 0) {
         cond.push(`vocabulary_id IN (${list(args, quote)})`)
@@ -161,7 +159,7 @@ const ontology = {
           label
           FROM properties p
             JOIN vocabularies v USING (vocabulary_id)
-            LEFT JOIN labels ON (property_id = id)
+            LEFT JOIN labels ON (property_id = id AND language = ?)
           WHERE ${cond.join(' AND ')}`, [ARGS.locale],
         (data) => {
           props[data.id] = data
@@ -198,9 +196,7 @@ const ontology = {
   class: {
     async load(db, ...args) {
       const classes = {}
-      const cond = [
-        '(language = ? OR language IS NULL)', 'deleted is NULL'
-      ]
+      const cond = ['deleted is NULL']
 
       if (args.length > 0) {
         cond.push(`vocabulary_id IN (${list(args, quote)})`)
@@ -215,7 +211,7 @@ const ontology = {
           label
           FROM classes c
             JOIN vocabularies v USING (vocabulary_id)
-            LEFT JOIN labels ON (class_id = id)
+            LEFT JOIN labels ON (class_id = id AND language = ?)
           WHERE ${cond.join(' AND ')}`, [ARGS.locale],
         (data) => {
           classes[data.id] = data
@@ -248,9 +244,7 @@ const ontology = {
   type: {
     async load(db, ...args) {
       const types = {}
-      const cond = [
-        '(language = ? OR language IS NULL)', 'deleted is NULL'
-      ]
+      const cond = ['deleted is NULL']
 
       if (args.length > 0) {
         cond.push(`vocabulary_id IN (${list(args, quote)})`)
@@ -265,7 +259,7 @@ const ontology = {
           label
           FROM datatypes dt
             JOIN vocabularies v USING (vocabulary_id)
-            LEFT OUTER JOIN labels ON (datatype_id = id)
+            LEFT OUTER JOIN labels ON (datatype_id = id AND language = ?)
           WHERE ${cond.join(' AND ')}`, [ARGS.locale],
         (data) => {
           types[data.id] = data
@@ -351,7 +345,7 @@ const ontology = {
         }),
         db.each(`
           SELECT
-              field_id AS id,
+              f.field_id AS id,
               template_id AS tpl,
               property_id AS property,
               label,
@@ -360,12 +354,11 @@ const ontology = {
               hint,
               value,
               constant AS isConstant
-            FROM fields
-              LEFT OUTER JOIN field_labels USING (field_id)
-            WHERE (language IS NULL OR language = ?)${
-              cons == null ? '' : ` AND ${cons}`
-            }
-            ORDER BY position, field_id`, ARGS.locale,
+            FROM fields f
+              LEFT OUTER JOIN field_labels l
+                ON (f.field_id = l.field_id AND language = ?)
+            ${cons == null ? '' : `WHERE ${cons}`}
+            ORDER BY position, f.field_id`, ARGS.locale,
           ({ tpl, isRequired, isConstant, ...data }) => {
             temps[tpl].fields.push({
               ...data,

@@ -15,14 +15,30 @@ const {
 } = basic.nodes
 
 const {
-  link,
   em,
-  strong
+  strong,
+  link
 } = basic.marks
+
+
+const align = (nodeSpec, tag) => ({
+  ...nodeSpec,
+  attrs: {
+    ...nodeSpec.attrs,
+    align: { default: 'left' },
+  },
+  toDOM: (node) => ([
+    tag,
+    (node.attrs.align === 'left') ?  {} : {
+      style: `text-align: ${node.attrs.align}`
+    },
+    0
+  ])
+})
 
 const nodes = {
   doc,
-  paragraph,
+  paragraph: align(paragraph, 'p'),
   blockquote,
   text,
   hard_break,
@@ -33,57 +49,38 @@ const nodes = {
     content: 'list_item+',
     group: 'block'
   },
-
   bullet_list: {
     ...list.bulletList,
     content: 'list_item+',
     group: 'block'
   },
-
   list_item: {
     ...list.listItem,
     content: 'paragraph block*'
   }
 }
 
+const textDecoMark = (deco) => ({
+  attrs: {
+    style: {
+      default: `text-decoration: ${deco}`
+    }
+  },
+  parseDOM: [{
+    style: 'text-decoration',
+    getAttrs: (value) => (value === deco)
+  }],
+  toDOM: (node) => (['span', node.attrs])
+})
+
 const marks = {
   link,
   italic: em,
   bold: strong,
 
-  underline: {
-    attrs: {
-      style: {
-        default: 'text-decoration: underline'
-      }
-    },
-
-    parseDOM: [{
-      style: 'text-decoration',
-      getAttrs(value) { return value === 'underline' }
-    }],
-
-    toDOM(node) {
-      return ['span', node.attrs]
-    }
-  },
-
-  strikethrough: {
-    attrs: {
-      style: {
-        default: 'text-decoration: line-through'
-      }
-    },
-
-    parseDOM: [{
-      style: 'text-decoration',
-      getAttrs(value) { return value === 'line-through' && null }
-    }],
-
-    toDOM(node) {
-      return ['span', node.attrs]
-    }
-  },
+  underline: textDecoMark('underline'),
+  overline: textDecoMark('overline'),
+  strikethrough: textDecoMark('line-through'),
 
   superscript: {
     excludes: 'subscript',
@@ -91,13 +88,10 @@ const marks = {
       { tag: 'sup' },
       {
         tag: 'span',
-        getAttrs(node) { return node.style.verticalAlign === 'super' && null }
+        getAttrs: (node) => (node.style.verticalAlign === 'super')
       }
     ],
-
-    toDOM() {
-      return ['sup']
-    }
+    toDOM: () => (['sup'])
   },
 
   subscript: {
@@ -106,13 +100,10 @@ const marks = {
       { tag: 'sup' },
       {
         tag: 'span',
-        getAttrs(node) { return node.style.verticalAlign === 'sub' && null }
+        getAttrs: (node) => (node.style.verticalAlign === 'sub')
       }
     ],
-
-    toDOM() {
-      return ['sub']
-    }
+    toDOM: () => (['sub'])
   }
 }
 

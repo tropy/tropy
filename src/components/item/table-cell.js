@@ -124,11 +124,11 @@ class ItemTableCell extends PureComponent {
         <div className="flex-row center">
           {this.renderCoverImage()}
           <Editable
-            value={this.props.value}
             display={auto(this.props.value, this.props.type)}
-            isEditing={this.props.isEditing}
+            isActive={this.props.isEditing}
             isDisabled={this.props.isDisabled || this.props.isReadOnly}
             resize
+            value={this.props.value}
             onCancel={this.props.onCancel}
             onChange={this.handleChange}
             onKeyDown={this.handleKeyDown}/>

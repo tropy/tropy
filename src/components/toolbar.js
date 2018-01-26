@@ -2,17 +2,23 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { node, bool, func } = require('prop-types')
+const { bool, func, node, string } = require('prop-types')
 const cx = require('classnames')
 
 
-const ToolbarContext = ({ children, isActive: active }) => (
-  <div className={cx({ 'toolbar-context': true, active })}>{children}</div>
+const ToolbarContext = ({ children, className, dom, isActive }) => (
+  <div
+    ref={dom}
+    className={cx('toolbar-context', { active: isActive }, className)}>
+    {children}
+  </div>
 )
 
 ToolbarContext.propTypes = {
   children: node,
-  isActive: bool
+  className: string,
+  isActive: bool,
+  dom: func
 }
 
 
@@ -24,20 +30,22 @@ ToolGroup.propTypes = {
   children: node
 }
 
-const ToolbarLeft = ({ children }) => (
-  <div className="toolbar-left">{children}</div>
+const ToolbarLeft = ({ children, className }) => (
+  <div className={cx('toolbar-left', className)}>{children}</div>
 )
 
 ToolbarLeft.propTypes = {
-  children: node
+  children: node,
+  className: string
 }
 
-const ToolbarRight = ({ children }) => (
-  <div className="toolbar-right">{children}</div>
+const ToolbarRight = ({ children, className }) => (
+  <div className={cx('toolbar-right', className)}>{children}</div>
 )
 
 ToolbarRight.propTypes = {
-  children: node
+  children: node,
+  className: string
 }
 
 

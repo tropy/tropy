@@ -73,7 +73,6 @@ $default-padding-horizontal: 12px !default;
   }
 
   label,
-  .editable,
   .static {
     @include css-truncation;
   }
@@ -102,16 +101,6 @@ $default-padding-horizontal: 12px !default;
   a {
     color: inherit;
     text-decoration: none;
-  }
-
-  .editable {
-    flex: 1 1 auto;
-  }
-
-  div {
-    &.editable {
-      height: 100%; // For empty fields
-    }
   }
 
   .icon {

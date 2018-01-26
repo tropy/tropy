@@ -187,6 +187,20 @@ const ESPER = {
   }
 }
 
+const INPUT = {
+  BORDER_WIDTH: 1,
+  FOCUS_SHADOW_WIDTH: 2
+}
+
+const OPTION = {
+  HEIGHT: 26,
+  LIST_MARGIN: 4
+}
+
+const POPUP = {
+  PADDING: 2
+}
+
 const PREFS = {
   WIDTH: 600,
   HEIGHT: 580
@@ -206,11 +220,14 @@ module.exports =  {
   FONTSIZE,
   GRID,
   ICON,
+  INPUT,
   ITEM,
   NOTE,
   NOTEPAD,
+  OPTION,
   PANEL,
   PHOTO,
+  POPUP,
   PREFS,
   PROJECT,
   ROW,

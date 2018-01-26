@@ -32,7 +32,7 @@ class CoverImage extends PureComponent {
 
   getPhotoProps() {
     return pick(get(this.props.photos, [this.cover]), [
-      'angle', 'mirror', 'orientation', 'broken'
+      'angle', 'mirror', 'mimetype', 'orientation', 'broken'
     ])
   }
 
@@ -43,6 +43,7 @@ class CoverImage extends PureComponent {
         <Thumbnail {...pick(this.props, ThumbProps)}
           id={this.cover}
           {...this.getPhotoProps()}
+          onLoad={this.props.onLoad}
           onError={this.props.onError}/>
         {this.hasTags &&
           <TagColors

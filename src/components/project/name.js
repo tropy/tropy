@@ -29,7 +29,7 @@ class ProjectName extends PureComponent {
             value={this.props.name}
             isRequired
             resize
-            isEditing={this.props.isEditing}
+            isActive={this.props.isEditing}
             onCancel={this.props.onEditCancel}
             onChange={this.props.onChange}/>
         </div>

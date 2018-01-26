@@ -258,7 +258,6 @@ $add-tag-default-bg:                $panel-bg;
 $add-tag-focus-bg:                  var(--shade-0);
 $add-tag-nested-focus-bg:           var(--shade-1-darken-4);
 $add-tag-placeholder-color-default: $text-color;
-$add-tag-border-color:              var(--shade-3);
 $add-tag-nested-focus-border-color: var(--shade-3-darken-4);
 $icon-tag-color:                    var(--shade-1);
 $icon-tag-nested-focus-color:       var(--shade-1-darken-4);
@@ -330,12 +329,12 @@ $progress-cancel-color: var(--shade-1);
 $progress-cancel-bg:    var(--shade-6);
 
 // Editor
-$editor-toolbar-border:    var(--shade-2);
-$editor-btn-hover-bg:      var(--shade-1);
-$editor-btn-active-color:  var(--shade-7);
-$editor-btn-active-bg:     var(--shade-2);
-$editor-text-selection-bg: $text-selection-bg;
-$editor-placeholder-color: var(--shade-5);
+$editor-toolbar-border:      var(--shade-2);
+$editor-btn-hover-bg:        var(--shade-1);
+$editor-btn-active-color:    var(--shade-7);
+$editor-btn-active-bg:       var(--shade-2);
+$editor-placeholder-color:   var(--shade-5);
+$editor-pseudo-selection-bg: var(--shade-3);
 
 $blockquote-border-color: var(--shade-2);
 $selected-node-color:     var(--brand-primary-tint-40);
@@ -367,3 +366,10 @@ $flash-shadow-color:     var(--brand-primary-30);
 
 // Search
 $clear-search-color: var(--shade-0);
+
+// Popup
+$popup-bg:           var(--shade-0);
+$popup-border-color: $input-color-focus;
+
+// Option list
+$option-active-bg: var(--shade-2);

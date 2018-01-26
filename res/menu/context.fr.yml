@@ -1,0 +1,193 @@
+fr:
+  linux:
+    history: &history
+      - id: 'undo'
+        label: 'Annuler'
+        command: 'app:undo'
+        enabled: false
+      - id: 'redo'
+        label: 'Rétablir'
+        command: 'app:redo'
+        enabled: false
+    sidebar: &sidebar
+      - label: 'Cacher la barre latérale'
+        command: 'app:hide-sidebar'
+        enabled: false
+    project: &project
+      - label: 'Renommer le projet'
+        command: 'app:rename-project'
+      - label: 'Montrer le fichier de projet dans son répertoire…'
+        command: 'app:show-in-folder'
+    lists: &lists
+      - label: 'Nouvelle liste'
+        command: 'app:create-list'
+    list: &list
+      - label: 'Renommer la liste'
+        command: 'app:rename-list'
+      - label: 'Supprimer la liste'
+        command: 'app:delete-list'
+    tags: &tags
+      - label: 'Nouveau marqueur'
+        command: 'app:create-tag'
+    tag: &tag
+      - label: 'Couleur du marqueur'
+        submenu:
+          - label: 'Aucune'
+            color: null
+            type: checkbox
+          - type: separator
+          - label: 'Rouge'
+            color: 'red'
+            type: checkbox
+          - label: 'Orange'
+            color: 'orange'
+            type: checkbox
+          - label: 'Jaune'
+            color: 'yellow'
+            type: checkbox
+          - label: 'Vert'
+            color: 'green'
+            type: checkbox
+          - label: 'Bleu'
+            color: 'blue'
+            type: checkbox
+          - label: 'Violet'
+            color: 'purple'
+            type: checkbox
+          - label: 'Gris'
+            color: 'gray'
+            type: checkbox
+      - label: 'Renommer le marqueur'
+        command: 'app:rename-tag'
+      - label: 'Supprimer le marqueur'
+        command: 'app:delete-tag'
+    item-tag: &item-tag
+      - label: "Enlever le marqueur de l'objet"
+        command: 'app:delete-item-tag'
+    notes: &notes
+      []
+    note: &note
+      - label: 'Supprimer la note'
+        command: 'app:delete-note'
+    items: &items
+      - label: 'Nouvel objet'
+        command: 'app:create-item'
+    item: &item
+      - label: "Exploser l'objet"
+        command: 'app:explode-item'
+        condition: 'hasMultiplePhotos'
+      - label: Exporter l'objet…
+        command: 'app:export-item'
+      - label: 'Ajouter une photo…'
+        command: 'app:create-item-photo'
+      - label: 'Marqueurs'
+        id: 'tag'
+        submenu:
+          - label: 'Aucun'
+            type: checkbox
+            checked: true
+            enabled: false
+          - type: separator
+      - label: Supprimer l'objet
+        command: 'app:delete-item'
+    item-bulk: &item-bulk
+      - label: 'Fusionner les objets sélectionnés'
+        command: 'app:merge-item'
+      - label: 'Exporter les objets sélectionnés…'
+        command: 'app:export-item'
+      - label: 'Supprimer les objets sélectionnés'
+        command: 'app:delete-item'
+    item-list: &item-list
+      - label: "Enlever l'objet de la liste"
+        command: 'app:list-item-remove'
+    item-bulk-list: &item-bulk-list
+      - label: 'Enlever les objets sélectionnés de la liste'
+        command: 'app:list-item-remove'
+    photo: &photo
+      - label: 'Supprimer la photo'
+        command: 'app:delete-photo'
+      - label: 'Dupliquer la photo'
+        command: 'app:duplicate-photo'
+      - label: 'Déplacer la photo vers un nouvel objet'
+        command: 'app:explode-photo'
+      - label: 'Montrer la photo dans son répertoire…'
+        command: 'app:show-in-folder'
+      - label: 'Utiliser la photo comme image de couverture'
+        command: 'app:update-cover-image'
+        enabled: false
+        visible: false
+      - label: 'Regrouper les photos'
+        command: 'app:consolidate-photo'
+    selection: &selection
+      - label: 'Supprimer la sélection'
+        command: 'app:delete-selection'
+      - label: 'Sauvegarder la sélection comme une image…'
+        command: 'app:save-selection'
+        enabled: false
+    item-deleted: &item-deleted
+      - label: Restaurer l'objet
+        command: 'app:restore-item'
+      - label: Supprimer définitivement l'objet
+        command: 'app:destroy-item'
+    item-bulk-deleted: &item-bulk-deleted
+      - label: 'Restaurer les objets sélectionnés'
+        command: 'app:restore-item'
+      - label: 'Supprimer définitivement les objets sélectionnés'
+        command: 'app:destroy-item'
+    trash: &trash
+      - label: 'Supprimer définitivement les objets'
+        command: 'app:destroy-item'
+    dev: &dev
+      - label: 'Recharger'
+        command: 'win:reload'
+      - label: 'Recharger les styles'
+        command: 'win:refresh'
+      - type: 'separator'
+      - label: 'Inspecter'
+        command: 'app:inspect'
+
+  darwin:
+    history: *history
+    sidebar: *sidebar
+    project: *project
+    lists: *lists
+    list: *list
+    tags: *tags
+    tag: *tag
+    item-tag: *item-tag
+    notes: *notes
+    note: *note
+    items: *items
+    item: *item
+    item-bulk: *item-bulk
+    item-list: *item-list
+    item-bulk-list: *item-bulk-list
+    item-deleted: *item-deleted
+    item-bulk-deleted: *item-bulk-deleted
+    trash: *trash
+    photo: *photo
+    selection: *selection
+    dev: *dev
+
+  win32:
+    history: *history
+    sidebar: *sidebar
+    project: *project
+    lists: *lists
+    list: *list
+    tags: *tags
+    tag: *tag
+    item-tag: *item-tag
+    notes: *notes
+    note: *note
+    items: *items
+    item: *item
+    item-bulk: *item-bulk
+    item-list: *item-list
+    item-bulk-list: *item-bulk-list
+    item-deleted: *item-deleted
+    item-bulk-deleted: *item-bulk-deleted
+    trash: *trash
+    photo: *photo
+    selection: *selection
+    dev: *dev

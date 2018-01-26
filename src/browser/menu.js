@@ -16,6 +16,14 @@ function withWindow(cmd, fn) {
 const CHECK = {
   hasMultiplePhotos(_, e) {
     return e && e.target && e.target.photos && e.target.photos.length > 1
+  },
+
+  hasMultipleItems(_, e) {
+    return e && e.target && e.target.items && e.target.items.length > 1
+  },
+
+  hasSingleItem(...args) {
+    return !CHECK.hasMultipleItems(...args)
   }
 }
 
@@ -30,10 +38,10 @@ class Menu {
   }
 
   async load(name) {
-    const { defaults, state } = this.app
+    const { defaultLocale, state } = this.app
 
     this.template = (
-      await res.Menu.openWithFallback(defaults.locale, state.locale, name)
+      await res.Menu.openWithFallback(defaultLocale, state.locale, name)
     ).template
 
     return this
@@ -91,6 +99,7 @@ class Menu {
 
       if (item.condition) {
         item.enabled = check(item, ...params)
+        if (item.visible === false) item.visible = item.enabled
       }
 
       if ('color' in item) {
@@ -219,6 +228,8 @@ class AppMenu extends Menu {
   async load(name = 'app') {
     try {
       return (await super.load(name))
+    } catch (error) {
+      throw error
     } finally {
       this.reload()
     }
@@ -227,8 +238,10 @@ class AppMenu extends Menu {
   reload() {
     const old = this.menu
 
-    this.menu = this.build(this.template)
-    this.update()
+    if (this.template != null) {
+      this.menu = this.build(this.template)
+      this.update()
+    }
 
     if (old != null) {
       old.destroy()

@@ -15,8 +15,30 @@
     margin: 0;
   }
 
-  ::selection {
-    background-color: $editor-text-selection-bg;
+  &:not(.ProseMirror-focused) {
+    .pseudo-selection {
+      background-color: $editor-pseudo-selection-bg;
+    }
+  }
+
+  a {
+    cursor: text;
+
+    .darwin.meta-key &,
+    .win32.ctrl-key &,
+    .linux.ctrl-key & {
+      cursor: pointer;
+    }
+
+    &:hover {
+      text-decoration: none;
+
+      .darwin.meta-key &,
+      .win32.ctrl-key &,
+      .linux.ctrl-key & {
+        text-decoration: underline;
+      }
+    }
   }
 
   strong {
@@ -58,15 +80,16 @@
   }
 
   li {
-    @each $alignment in center, right {
-      &[style*="#{$alignment}"] {
-        text-align: $alignment;
-        list-style-position: inside;
-      }
-    }
+    display: block;
 
     p {
-      display: inline;
+      display: list-item;
+
+      @each $alignment in center, right {
+        &[style*="#{$alignment}"] {
+          list-style-position: inside;
+        }
+      }
     }
   }
 
@@ -80,18 +103,6 @@
   sub {
     line-height: 1;
     font-size: $sup-and-sub-font-size;
-  }
-
-  .align-left {
-    text-align: left;
-  }
-
-  .align-center {
-    text-align: center;
-  }
-
-  .align-right {
-    text-align: right;
   }
 
   &-selectednode {

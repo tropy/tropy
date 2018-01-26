@@ -15,7 +15,6 @@ const DEFAULTS = {
   frame: true,
   useContentSize: true,
   webPreferences: {
-    zoomFactor: global.ARGS.zoom || 1,
     preload: join(__dirname, '..', 'bootstrap.js'),
     experimentalFeatures: true
   }
@@ -43,8 +42,12 @@ function hasOverlayScrollBars() {
 
 module.exports = {
 
-  open(file, data = {}, options = {}) {
-    options = { ...DEFAULTS, ...options }
+  open(file, data = {}, options = {}, zoom = 1) {
+    options = {
+      ...DEFAULTS,
+      ...options,
+      webPreferences: { ...DEFAULTS.webPreferences, ...options.webPreferences }
+    }
 
     switch (process.platform) {
       case 'linux':
@@ -75,6 +78,7 @@ module.exports = {
       })
 
       .on('did-finish-load', () => {
+        win.webContents.setZoomFactor(zoom)
         win.webContents.setVisualZoomLevelLimits(1, 1)
       })
 

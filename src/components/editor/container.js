@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
+const { Component } = React
 const { func, bool, object, number, string } = require('prop-types')
 const { EditorToolbar } = require('./toolbar')
 const { EditorState } = require('prosemirror-state')
@@ -15,10 +15,12 @@ const cx = require('classnames')
 const { get, noop } = require('../../common/util')
 
 
-class Editor extends PureComponent {
+class Editor extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      hasViewFocus: false
+    }
   }
 
   setContainer = (container) => {
@@ -27,6 +29,10 @@ class Editor extends PureComponent {
 
   setView = (view) => {
     this.view = get(view, ['pm'])
+  }
+
+  setToolbar = (toolbar) => {
+    this.toolbar = toolbar
   }
 
   get classes() {
@@ -56,12 +62,12 @@ class Editor extends PureComponent {
   }
 
   focus = () => {
-    this.view.focus()
+    if (this.view != null) this.view.dom.focus()
   }
 
-  exec(command) {
-    return (commands[command] || noop)(
-      this.view.state, this.view.dispatch, this.view
+  exec(action, ...args) {
+    return (commands[action] || noop)(
+      this.view.state, this.view.dispatch, ...args
     )
   }
 
@@ -70,7 +76,20 @@ class Editor extends PureComponent {
   }
 
   handleKeyDown = (_, event) => {
-    return this.exec(match(this.props.keymap, event))
+    const action = match(this.props.keymap, event)
+
+    switch (action) {
+      case null:
+        return
+      case 'addLink':
+        this.toolbar.handleLinkButtonClick()
+        break
+      default:
+        if (!this.exec(action)) return
+    }
+
+    event.stopPropagation()
+    return true
   }
 
   handleFocus = (event) => {
@@ -79,8 +98,8 @@ class Editor extends PureComponent {
     }
   }
 
-  handleCommand = (command) => {
-    if (this.exec(command)) {
+  handleCommand = (...args) => {
+    if (this.exec(...args)) {
       if (!this.state.hasViewFocus) this.focus()
     }
   }
@@ -96,6 +115,7 @@ class Editor extends PureComponent {
 
   render() {
     const { isDisabled, placeholder, tabIndex } = this.props
+    const { hasViewFocus } = this.state
     const state = this.getEditorState()
     const showPlaceholder = placeholder != null && this.isBlank(state.doc)
 
@@ -108,6 +128,7 @@ class Editor extends PureComponent {
         {!isDisabled &&
           <EditorToolbar
             state={state}
+            ref={this.setToolbar}
             onCommand={this.handleCommand}/>
         }
 
@@ -117,6 +138,7 @@ class Editor extends PureComponent {
             ref={this.setView}
             state={state}
             isDisabled={isDisabled}
+            isEditable={hasViewFocus}
             tabIndex={tabIndex}
             onFocus={this.handleViewFocus}
             onBlur={this.handleViewBlur}

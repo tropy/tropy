@@ -39,11 +39,6 @@
     &.number {
       text-align: right;
     }
-
-    .editable {
-      @include css-truncation;
-      flex: 1 1 auto;
-    }
   }
 
   .metadata-head {

@@ -72,7 +72,9 @@ function renderItem(item, photos, metadata, template, props) {
   result = newProperties(metadata[item.id], result, false, props, template)
 
   // add photo metadata
-  result.photo = values(pick(photos, item.photos)).map(p => {
+  result.photo = item.photos.map(photoID => {
+    const p = photos[photoID]
+
     let photo = {
       '@type': PHOTO,
       'path': p.path,

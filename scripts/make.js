@@ -80,6 +80,7 @@ target.window = ([name]) => {
 </head>
 <body id="${name}" tabindex="-1">
   <main></main>
+  <div id="popup-root"></div>
 </body>
 </html>`)
 

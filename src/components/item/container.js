@@ -50,6 +50,7 @@ class ItemContainer extends PureComponent {
           onChange={this.handleEsperResize}
           min={256}>
           <Esper {...this.props.image}
+            mode={this.props.image.mode || this.props.settings.zoomMode}
             hasOverlayToolbar={this.props.settings.overlayToolbars}
             invertScroll={this.props.settings.invertScroll}
             invertZoom={this.props.settings.invertZoom}

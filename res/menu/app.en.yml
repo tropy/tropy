@@ -15,8 +15,10 @@ en:
               accelerator: 'CmdOrCtrl+Shift+N'
             - label: 'List'
               command: 'app:create-list'
+              accelerator: 'CmdOrCtrl+Shift+L'
             - label: 'Tag'
               command: 'app:create-tag'
+              accelerator: 'CmdOrCtrl+Shift+A'
         - type: 'separator'
         - &open
           label: 'Open'
@@ -92,6 +94,17 @@ en:
         - label: 'Hide &Sidebar'
           command: 'app:toggle-sidebar'
           enabled: false
+          visible: false
+        - type: 'separator'
+        - label: 'Zoom'
+          submenu:
+            - label: 'Zoom In'
+              command: 'app:zoom-in'
+            - label: 'Zoom Out'
+              command: 'app:zoom-out'
+            - type: 'separator'
+            - label: 'Reset'
+              command: 'app:zoom-reset'
     - &win
       label: 'Window'
       submenu:

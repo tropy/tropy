@@ -62,6 +62,7 @@ class Esper extends PureComponent {
     this.ro.disconnect()
     this.io.disconnect()
     this.persist.flush()
+    this.update.flush()
   }
 
   componentWillReceiveProps(props) {
@@ -231,24 +232,24 @@ class Esper extends PureComponent {
   }
 
   getImageState() {
-    const { mode, x, y, zoom } = this.state
-    const id = this.getActiveImageId()
+    const { x, y, zoom } = this.state
+    return this.wrapImageState({
+      x: round(x),
+      y: round(y),
+      zoom
+    })
+  }
 
-    return id == null ? null : {
-      [id]: {
-        mode,
-        x: round(x),
-        y: round(y),
-        zoom
-      }
-    }
+  wrapImageState(state) {
+    const id = this.getActiveImageId()
+    return (id == null) ? null : { [id]: state }
   }
 
   getPhotoState() {
     const id = this.getActiveImageId()
     const { angle, mirror } = this.getRelativeRotation()
 
-    return id == null ? null : {
+    return (id == null) ? null : {
       id, data: { angle, mirror }
     }
   }
@@ -331,11 +332,14 @@ class Esper extends PureComponent {
 
   handleZoomChange = ({ x, y, zoom }, animate) => {
     zoom = restrict(zoom, this.state.minZoom, this.props.maxZoom)
+    const mode = MODE.ZOOM
 
-    this.setState({ zoom, mode: 'zoom' })
+    this.setState({ zoom, mode })
     this.view.scale({
       zoom, mirror: this.state.mirror
     }, animate ? ZOOM_DURATION : 0, { x, y })
+
+    this.props.onChange({ image: this.wrapImageState({ mode }) })
   }
 
   handlePositionChange(position, animate) {
@@ -364,16 +368,18 @@ class Esper extends PureComponent {
     let { minZoom, mirror, zoom, zoomToFill  } = this.state
 
     switch (mode) {
-      case 'fill':
+      case MODE.FILL:
         zoom = zoomToFill
         break
-      case 'fit':
+      case MODE.FIT:
         zoom = minZoom
         break
     }
 
     this.setState({ zoom, mode })
     this.view.scale({ zoom, mirror }, ZOOM_DURATION)
+
+    this.props.onChange({ image: this.wrapImageState({ mode }) })
   }
 
   handleToolChange = (tool) => {
@@ -453,6 +459,15 @@ class Esper extends PureComponent {
           break
         case 'zoomOut':
           this.handleZoomOut()
+          break
+        case 'zoomToFit':
+          this.handleModeChange(MODE.FIT)
+          break
+        case 'zoomToFill':
+          this.handleModeChange(MODE.FILL)
+          break
+        case 'rotate':
+          this.handleRotationChange(-90)
           break
         case 'up':
           this.move({ y: PAN_STEP_SIZE * this.state.zoom })
@@ -614,7 +629,6 @@ class Esper extends PureComponent {
   static defaultProps = {
     maxZoom: MAX_ZOOM,
     minZoom: MIN_ZOOM,
-    mode: MODE.FIT,
     tabIndex: TABS.Esper,
     tool: TOOL.ARROW,
     zoom: 1
