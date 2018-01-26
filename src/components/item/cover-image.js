@@ -43,6 +43,7 @@ class CoverImage extends PureComponent {
         <Thumbnail {...pick(this.props, ThumbProps)}
           id={this.cover}
           {...this.getPhotoProps()}
+          onLoad={this.props.onLoad}
           onError={this.props.onError}/>
         {this.hasTags &&
           <TagColors
