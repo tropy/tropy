@@ -213,13 +213,16 @@ class Menu {
 
           break
         }
-
-        case 'wrap-lines': {
+        case 'line-wrap': {
           const { target } = params[0]
           item.checked = !!target.wrap
           break
         }
-
+        case 'line-numbers': {
+          const { target } = params[0]
+          item.checked = !!target.numbers
+          break
+        }
         case 'writing-mode': {
           const { target } = params[0]
           item.submenu = item.submenu.map(li => ({

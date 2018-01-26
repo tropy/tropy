@@ -9,6 +9,13 @@ const cx = require('classnames')
 
 
 class NotePad extends PureComponent {
+  get classes() {
+    return ['note', 'pad', this.props.mode, {
+      'no-wrap': !this.props.wrap,
+      'numbers': this.props.numbers
+    }]
+  }
+
   get isDisabled() {
     return !this.props.isItemOpen || this.props.isDisabled
   }
@@ -36,6 +43,7 @@ class NotePad extends PureComponent {
       this.props.onContextMenu(event, 'notepad', {
         id: this.props.note.id,
         mode: this.props.mode,
+        numbers: this.props.numbers,
         wrap: this.props.wrap
       })
     }
@@ -47,19 +55,17 @@ class NotePad extends PureComponent {
   }
 
   render() {
-    const { mode, note, keymap, tabIndex, wrap } = this.props
-
     return (
       <section
-        className={cx('note', 'pad', mode, { 'no-wrap': !wrap })}
+        className={cx(this.classes)}
         onContextMenu={this.handleContextMenu}>
         <Editor
           ref={this.setEditor}
-          state={note.state}
-          keymap={keymap}
+          state={this.props.note.state}
+          keymap={this.props.keymap}
           placeholder="notepad.placeholder"
           isDisabled={this.isDisabled}
-          tabIndex={tabIndex}
+          tabIndex={this.props.tabIndex}
           onBlur={this.handleEditorBlur}
           onChange={this.handleChange}/>
       </section>
@@ -76,6 +82,7 @@ class NotePad extends PureComponent {
       text: string.isRequried
     }).isRequired,
     mode: string.isRequired,
+    numbers: bool.isRequired,
     wrap: bool.isRequired,
     tabIndex: number.isRequired,
     onChange: func.isRequired,
@@ -85,6 +92,7 @@ class NotePad extends PureComponent {
 
   static defaultProps = {
     mode: 'horizontal',
+    numbers: false,
     tabIndex: TABS.NotePad,
     wrap: true
   }
