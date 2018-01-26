@@ -103,6 +103,7 @@ class PhotoIterable extends PureComponent {
         angle={this.props.photo.angle}
         broken={this.props.photo.broken}
         mirror={this.props.photo.mirror}
+        mimetype={this.props.photo.mimetype}
         orientation={this.props.photo.orientation}
         cache={this.props.cache}
         size={this.props.size}

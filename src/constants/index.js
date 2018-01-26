@@ -15,6 +15,7 @@ module.exports = {
   LIST: require('./list'),
   LOCALE: require('./locale'),
   METADATA: require('./metadata'),
+  MIME: require('./mime'),
   NAV: require('./nav'),
   NOTE: require('./note'),
   ONTOLOGY: require('./ontology'),
