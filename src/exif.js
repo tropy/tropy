@@ -2,16 +2,17 @@
 
 const parse = require('exif-reader')
 const { debug, verbose } = require('./common/log')
+const MIME = require('./constants/mime')
 
 
 module.exports = {
-  exif(buffer, mimetype = 'image/jpeg') {
+  exif(buffer, mimetype = MIME.JPG) {
     return new Promise((resolve) => {
       let data = {}
 
       try {
         switch (mimetype) {
-          case 'image/jpeg':
+          case MIME.JPG:
             var offset = 0
 
             while (offset < buffer.length) {

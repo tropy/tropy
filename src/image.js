@@ -9,6 +9,7 @@ const { exif } = require('./exif')
 const { nativeImage } = require('electron')
 const { assign } = Object
 const { warn, debug } = require('./common/log')
+const MIME = require('./constants/mime')
 
 
 class Image {
@@ -173,16 +174,13 @@ function resize(image, size) {
   return image
 }
 
-const isValidImage = (file) => ([
-  'image/jpeg',
-  'image/png',
-  'image/svg+xml'
-].includes(file.type))
+const isValidImage = (file) =>
+  [MIME.JPG, MIME.PNG, MIME.SVG].includes(file.type)
 
 
 const toImage = (src, mimetype) => {
   switch (mimetype) {
-    case 'image/svg+xml':
+    case MIME.SVG:
       return SVG2NI(src)
     default:
       return NI(src)
@@ -199,7 +197,7 @@ const load = (src) =>
 
 const SVG2NI = (src) =>
   new Promise((resolve, reject) => {
-    const svg = new Blob([src.toString('utf-8')], { type: 'image/svg+xml' })
+    const svg = new Blob([src.toString('utf-8')], { type: MIME.SVG })
     const url = URL.createObjectURL(svg)
 
     load(url)
@@ -239,9 +237,9 @@ const NI = (src) =>
 
 const magic = (buffer) => {
   if (buffer != null || buffer.length > 24) {
-    if (isJPG(buffer)) return 'image/jpeg'
-    if (isPNG(buffer)) return 'image/png'
-    if (isSVG(buffer)) return 'image/svg+xml'
+    if (isJPG(buffer)) return MIME.JPG
+    if (isPNG(buffer)) return MIME.PNG
+    if (isSVG(buffer)) return MIME.SVG
   }
 }
 

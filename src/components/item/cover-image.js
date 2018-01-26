@@ -32,7 +32,7 @@ class CoverImage extends PureComponent {
 
   getPhotoProps() {
     return pick(get(this.props.photos, [this.cover]), [
-      'angle', 'mirror', 'orientation', 'broken'
+      'angle', 'mirror', 'mimetype', 'orientation', 'broken'
     ])
   }
 

@@ -16,9 +16,15 @@ class Thumbnail extends PureComponent {
   }
 
   get src() {
-    const { cache, id, size } = this.props
+    const { cache, id, mimetype, size } = this.props
     if (id == null) return null
-    const url = imageURL(cache, id, size > ICON.SIZE ? ICON.MAX : ICON.SIZE)
+
+    const url = imageURL(
+      cache,
+      id,
+      size > ICON.SIZE ? ICON.MAX : ICON.SIZE,
+      mimetype)
+
     return (this.hasBeenFixed) ? `${url}?fixed=true` : url
   }
 
@@ -63,6 +69,7 @@ class Thumbnail extends PureComponent {
     broken: bool,
     cache: string.isRequired,
     id: number,
+    mimetype: string,
     mirror: bool,
     orientation: number,
     size: number.isRequired,
