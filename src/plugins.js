@@ -4,6 +4,8 @@ const { app } = require('electron')
 const { join } = require('path')
 const { warn, verbose, logger } = require('./common/log')
 const { uniq, pluck } = require('./common/util')
+const { promises: jsonld } = require('jsonld')
+
 
 class Plugins {
   constructor(root, config) {
@@ -30,7 +32,8 @@ class Plugins {
       return {
         fetch,
         FormData,
-        logger
+        logger,
+        jsonld
       }
     } else return {}
   }
