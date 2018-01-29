@@ -330,8 +330,8 @@ $esper-bg:                               var(--shade-1);
 $esper-overlay-color:                    var(--shade-10-darken-14);
 $esper-toolbar-solid-bg:                 var(--transparent);
 $esper-shadow:                           var(--shade-1-darken-10);
-$esper-btn-active-color:                 var(--shade-9);
-$esper-btn-active-bg:                    var(--shade-5);
+$esper-btn-icon-active-color:            var(--shade-9);
+$esper-btn-icon-active-bg:               var(--shade-5);
 $esper-slider-handle-bg:                 $slider-handle-bg;
 $esper-slider-value-color:               var(--shade-7);
 $esper-overlay-bg:                       var(--shade-0-60);
@@ -346,6 +346,9 @@ $esper-checkbox-disabled-bg:             var(--shade-5-50);
 $esper-checkbox-disabled-border:         var(--shade-5-50);
 $esper-checkbox-checked-active-bg:       var(--shade-7-darken-5);
 $esper-checkbox-checked-active-border:   var(--shade-7-darken-5);
+$esper-btn-default-bg:                   var(--shade-3);
+$esper-btn-default-border:               var(--transparent);
+$esper-btn-default-active-bg:            var(--shade-2);
 
 // Drag preview
 $drag-preview-opacity:           0.64;

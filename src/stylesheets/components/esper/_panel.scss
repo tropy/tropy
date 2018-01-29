@@ -56,11 +56,9 @@
     }
   }
 
-  .btn-default {
-    background-color: transparent;
-    border-color: $esper-shadow;
-    margin: 6px $default-padding-horizontal;
-    width: calc(100% - #{2 * $default-padding-horizontal});
+  .revert-btn-container {
+    flex: 0 0 auto;
+    padding: 6px $default-padding-horizontal;
   }
 
   .esper:not(.overlay-mode) & {
@@ -99,6 +97,19 @@
             }
           }
         }
+      }
+    }
+
+    .btn-default {
+      background-color: $esper-btn-default-bg;
+      border-color: $esper-btn-default-border;
+
+      &:active {
+        background-color: $esper-btn-default-active-bg;
+      }
+
+      &[disabled] {
+        background-color: $esper-btn-default-bg;
       }
     }
   }

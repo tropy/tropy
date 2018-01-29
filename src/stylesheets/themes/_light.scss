@@ -55,7 +55,7 @@ $shade-10: #000; // Black
   #{--shade-1-darken-8}:   darken($shade-1, 8%); // 12% Vocab property bg
   #{--shade-1-darken-14}:  darken($shade-1, 14%); // 18% Vocab property input border
   #{--shade-1-darken-18}:  darken($shade-1, 18%); // 22% Vocab property input border
-  #{--shade-2}:             $shade-2;
+  #{--shade-2}:            $shade-2;
   #{--shade-2-lighten-4}:  lighten($shade-2, 4%); // Esper slider handle bg
   #{--shade-2-darken-4}:   darken($shade-2, 4%); // Esper checkbox diabled bg
   #{--shade-2-darken-10}:  darken($shade-2, 10%); // Esper panel checkbox border
@@ -294,7 +294,7 @@ $wizard-link-color:    $link-color;
 // Button
 $btn-default-color:     var(--shade-9);
 $btn-default-bg:        var(--shade-0);
-$btn-default-border:    var(--shade-2);
+$btn-default-border:    var(--shade-3);
 $btn-default-active-bg: var(--shade-1);
 $btn-primary-color:     var(--shade-0);
 $btn-primary-bg:        var(--brand-primary);
@@ -321,8 +321,8 @@ $esper-bg:                               var(--shade-2);
 $esper-overlay-color:                    var(--shade-9);
 $esper-toolbar-solid-bg:                 var(--shade-1);
 $esper-shadow:                           var(--shade-10-10);
-$esper-btn-active-color:                 var(--shade-7);
-$esper-btn-active-bg:                    var(--shade-4);
+$esper-btn-icon-active-color:            var(--shade-7);
+$esper-btn-icon-active-bg:               var(--shade-4);
 $esper-slider-handle-bg:                 var(--shade-2-lighten-4);
 $esper-slider-value-color:               var(--shade-6);
 $esper-overlay-bg:                       var(--shade-0-60);
@@ -337,6 +337,9 @@ $esper-checkbox-disabled-bg:             var(--shade-2-darken-4);
 $esper-checkbox-disabled-border:         $esper-input-border;
 $esper-checkbox-checked-active-bg:       $checkbox-checked-active-bg;
 $esper-checkbox-checked-active-border:   $checkbox-checked-active-border;
+$esper-btn-default-bg:                   $esper-bg;
+$esper-btn-default-border:               var(--shade-2-darken-10);
+$esper-btn-default-active-bg:            var(--shade-2-darken-4);
 
 // Drag preview
 $drag-preview-opacity:           0.8;

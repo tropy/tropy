@@ -25,10 +25,10 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
     .tool-group {
       > .btn-icon {
         &.active {
-          background: $esper-btn-active-bg;
+          background: $esper-btn-icon-active-bg;
 
           .icon {
-             color: $esper-btn-active-color;
+             color: $esper-btn-icon-active-color;
           }
 
         }

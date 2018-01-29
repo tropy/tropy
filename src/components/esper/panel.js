@@ -136,11 +136,14 @@ const EsperPanel = (props) => (
           onChange={props.onChange}/>
       </li>
     </ul>
-    <Button
-      noFocus
-      isDefault
-      text="esper.panel.revert"
-      onClick={props.onRevert}/>
+    <div className="revert-btn-container">
+      <Button
+        noFocus
+        isDefault
+        isBlock
+        text="esper.panel.revert"
+        onClick={props.onRevert}/>
+    </div>
   </div>
 )
 
