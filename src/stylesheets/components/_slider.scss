@@ -22,14 +22,14 @@
   .btn {
     flex: 0 0 auto;
 
-    &:active {
-      .icon {
-        color: $icon-active-color;
-      }
-    }
-
     &.active {
       opacity: $btn-disabled-opacity;
+
+      &:active {
+        .icon {
+          color: $icon-color;
+        }
+      }
     }
 
     .overlay-mode & {
