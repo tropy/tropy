@@ -78,7 +78,7 @@
 
         &[disabled] {
           background: $esper-checkbox-disabled-bg;
-          border-color: $esper-input-border;
+          border-color: $esper-checkbox-disabled-border;
         }
 
         &:checked {
@@ -92,7 +92,7 @@
 
           &[disabled] {
             background: $esper-checkbox-disabled-bg;
-            border-color: $esper-input-border;
+            border-color: $esper-checkbox-disabled-border;
 
             &::before,
             &::after {

@@ -222,7 +222,7 @@ fieldset {
 
       &[disabled] {
         background: $input-overlay-bg-readonly;
-        border-color: $input-overlay-bg;
+        border-color: $checkbox-overlay-disabled-border;
       }
 
       &:checked {
@@ -230,12 +230,12 @@ fieldset {
 
         &:active {
           background: $checkbox-overlay-checked-active-bg;
-          border-color: $checkbox-overlay-checked-active-border;
+          border-color: transparent;
         }
 
         &[disabled] {
           background: $input-overlay-bg-readonly;
-          border-color: $input-overlay-bg;
+          border-color: $checkbox-overlay-disabled-border;
 
           &::before,
           &::after {
