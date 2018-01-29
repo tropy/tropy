@@ -140,8 +140,10 @@ module.exports = mod.item = {
     const dir = sort.asc ? 'ASC' : 'DESC'
     const params = { $list: list }
     query = query.trim()
+
     const hasTags = tags.length > 0
     const hasQuery = query.length > 0
+    const byPosition = sort.column === 'position'
 
     if (hasQuery) {
       params.$query = prefix(query)
@@ -151,14 +153,20 @@ module.exports = mod.item = {
       params.$tags = tags.length
     }
 
+    if (!byPosition) {
+      params.$sort = sort.column
+    }
+
     const doTagsIntersect = true
 
     return search(db, `
-      SELECT DISTINCT id, added
-        FROM list_items
-          ${hasTags ? 'JOIN taggings USING (id)' : ''}
-          LEFT OUTER JOIN items USING (id)
-          LEFT OUTER JOIN trash USING (id)
+      ${byPosition ? '' : `WITH ${SORT}`}
+        SELECT DISTINCT id, added
+          FROM list_items
+            ${byPosition ? '' : 'LEFT OUTER JOIN sort USING (id)'}
+            ${hasTags ? 'JOIN taggings USING (id)' : ''}
+            LEFT OUTER JOIN items USING (id)
+            LEFT OUTER JOIN trash USING (id)
           WHERE
             list_id = $list AND list_items.deleted IS NULL AND
             ${hasQuery ? `id IN (${SEARCH}) AND` : ''}
@@ -166,7 +174,7 @@ module.exports = mod.item = {
             trash.deleted IS NULL
           ${hasTags && doTagsIntersect ?
             'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
-          ORDER BY added ${dir}, id ${dir}`,
+          ORDER BY ${byPosition ? 'added' : 'sort.text'} ${dir}, id ${dir}`,
       params)
   },
 
