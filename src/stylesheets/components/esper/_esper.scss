@@ -63,6 +63,8 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
   }
 
   &.overlay-mode {
+    color: $esper-overlay-color;
+
     .esper-header {
       position: absolute;
       left: 0;

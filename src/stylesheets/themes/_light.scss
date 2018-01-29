@@ -318,6 +318,7 @@ $slider-overlay-focus-bg:      var(--brand-primary);
 
 // Esper
 $esper-bg:                               var(--shade-2);
+$esper-overlay-color:                    var(--shade-9);
 $esper-toolbar-solid-bg:                 var(--shade-1);
 $esper-shadow:                           var(--shade-10-10);
 $esper-btn-active-color:                 var(--shade-7);
@@ -328,7 +329,6 @@ $esper-overlay-bg:                       var(--shade-0-60);
 $esper-toolbar-overlay-btn-active-color: var(--shade-0);
 $esper-toolbar-overlay-btn-active-bg:    var(--shade-10-60);
 $esper-overlay-icon-color:               var(--shade-7);
-$esper-panel-title-color:                var(--shade-8);
 $esper-checkbox-bg:                      $input-bg;
 $esper-input-border:                     var(--shade-2-darken-10);
 $esper-checkbox-checked-bg:              $checkbox-checked-bg;
