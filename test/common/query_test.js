@@ -68,5 +68,15 @@ describe('Query Builder', () => {
       expect(q.params).to.eql({ $a: 1, $c: 'foo' })
     })
 
+    it('join', () => {
+      expect(
+        select('a')
+        .from('b')
+        .join('c', { using: 'a' })
+        .join('d', { outer: true })
+        .query
+      ).to.eql('SELECT a FROM b JOIN c USING (a) LEFT OUTER JOIN d')
+    })
+
   })
 })
