@@ -1,6 +1,6 @@
 'use strict'
 
-const { app } = require('electron')
+const { app, nativeImage } = require('electron')
 const { join } = require('path')
 const { warn, verbose, logger } = require('./common/log')
 const { uniq, pluck } = require('./common/util')
@@ -33,7 +33,8 @@ class Plugins {
         fetch,
         FormData,
         logger,
-        jsonld
+        jsonld,
+        nativeImage
       }
     } else return {}
   }
