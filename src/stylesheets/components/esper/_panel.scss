@@ -63,4 +63,44 @@
     margin: 6px $default-padding-horizontal;
     width: calc(100% - #{2 * $default-padding-horizontal});
   }
+
+  .esper:not(.overlay-mode) & {
+    .checkbox,
+    .radio {
+      [type] {
+        background: $esper-checkbox-bg;
+        border: 1px solid $esper-input-border;
+
+        &:active {
+          background: $esper-checkbox-checked-bg;
+          border-color: $esper-checkbox-checked-border;
+        }
+
+        &[disabled] {
+          background: $esper-checkbox-disabled-bg;
+          border-color: $esper-input-border;
+        }
+
+        &:checked {
+          background: $esper-checkbox-checked-bg;
+          border-color: $esper-checkbox-checked-border;
+
+          &:active {
+            background: $esper-checkbox-checked-active-bg;
+            border-color: $esper-checkbox-checked-active-border;
+          }
+
+          &[disabled] {
+            background: $esper-checkbox-disabled-bg;
+            border-color: $esper-input-border;
+
+            &::before,
+            &::after {
+              background: $esper-checkbox-checked-bg;
+            }
+          }
+        }
+      }
+    }
+  }
 }

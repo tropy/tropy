@@ -163,6 +163,11 @@ fieldset {
     &[disabled] {
       background: $input-bg-readonly;
       border-color: $input-border;
+
+      // Soften labels of disabled checkboxes/radios
+      & + span {
+        opacity: 0.5;
+      }
     }
 
     &:checked {

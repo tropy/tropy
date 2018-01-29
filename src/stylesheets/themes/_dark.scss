@@ -75,12 +75,14 @@ $shade-10: #fff; // White
   #{--shade-6-lighten-2}:  lighten($shade-6, 2%);
   #{--shade-6-lighten-5}:  lighten($shade-6, 5%);
   #{--shade-7}:            $shade-7;
+  #{--shade-7-darken-5}:   darken($shade-7, 5%);
   #{--shade-7-50}:         rgba($shade-7, 0.5);
   #{--shade-8}:            $shade-8;
   #{--shade-8-darken-5}:   darken($shade-8, 5%);
   #{--shade-9}:            $shade-9;
   #{--shade-10}:           $shade-10;
   #{--shade-10-5}:         rgba($shade-10, 0.05);
+  #{--shade-10-10}:        rgba($shade-10, 0.1);
   #{--shade-10-20}:        rgba($shade-10, 0.2);
   #{--shade-10-50}:        rgba($shade-10, 0.5);
   #{--shade-10-darken-4}:  darken($shade-10, 4%);
@@ -323,18 +325,25 @@ $slider-focus-bg:              var(--brand-primary);
 $slider-overlay-focus-bg:      var(--brand-primary-overlay);
 
 // Esper
-$esper-bg:                                   var(--shade-1);
-$esper-toolbar-solid-bg:                     var(--transparent);
-$esper-shadow:                               var(--shade-1-darken-10);
-$esper-btn-active-color:                     var(--shade-9);
-$esper-btn-active-bg:                        var(--shade-5);
-$esper-slider-handle-bg:                     $slider-handle-bg;
-$esper-slider-value-color:                   var(--shade-7);
-$esper-overlay-bg:                           var(--shade-0-60);
-$esper-toolbar-overlay-btn-active-color:     var(--shade-10-darken-4);
-$esper-toolbar-overlay-btn-active-bg:        var(--shade-10-20);
-$esper-overlay-icon-color:                   var(--shade-10-darken-14);
-$esper-panel-title-color:                    var(--shade-8);
+$esper-bg:                               var(--shade-1);
+$esper-toolbar-solid-bg:                 var(--transparent);
+$esper-shadow:                           var(--shade-1-darken-10);
+$esper-btn-active-color:                 var(--shade-9);
+$esper-btn-active-bg:                    var(--shade-5);
+$esper-slider-handle-bg:                 $slider-handle-bg;
+$esper-slider-value-color:               var(--shade-7);
+$esper-overlay-bg:                       var(--shade-0-60);
+$esper-toolbar-overlay-btn-active-color: var(--shade-10-darken-4);
+$esper-toolbar-overlay-btn-active-bg:    var(--shade-10-20);
+$esper-overlay-icon-color:               var(--shade-10-darken-14);
+$esper-panel-title-color:                var(--shade-8);
+$esper-checkbox-bg:                      var(--shade-10-20);
+$esper-input-border:                     var(--transparent);
+$esper-checkbox-checked-bg:              var(--shade-7);
+$esper-checkbox-checked-border:          var(--shade-7);
+$esper-checkbox-disabled-bg:             var(--shade-10-10);
+$esper-checkbox-checked-active-bg:       var(--shade-7-darken-5);
+$esper-checkbox-checked-active-border:   var(--shade-7-darken-5);
 
 // Drag preview
 $drag-preview-opacity:           0.64;
