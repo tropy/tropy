@@ -85,6 +85,7 @@ $shade-10: #fff; // White
   #{--shade-10-5}:         rgba($shade-10, 0.05);
   #{--shade-10-10}:        rgba($shade-10, 0.1);
   #{--shade-10-20}:        rgba($shade-10, 0.2);
+  #{--shade-10-16}:        rgba($shade-10, 0.16);
   #{--shade-10-50}:        rgba($shade-10, 0.5);
   #{--shade-10-darken-4}:  darken($shade-10, 4%);
   #{--shade-10-darken-14}: darken($shade-10, 14%);
@@ -301,14 +302,16 @@ $wizard-heading-color: var(--shade-8);
 $wizard-link-color:    $link-color;
 
 // Button
-$btn-default-color:     var(--shade-9);
-$btn-default-bg:        var(--shade-3);
-$btn-default-border:    var(--shade-1);
-$btn-default-active-bg: var(--shade-2);
-$btn-primary-color:     var(--brand-primary-light);
-$btn-primary-bg:        var(--brand-primary);
-$btn-primary-active-bg: var(--brand-primary-darken-2);
-$btn-icon-bg:           var(--transparent);
+$btn-default-color:             var(--shade-9);
+$btn-default-bg:                var(--shade-3);
+$btn-default-overlay-bg:        var(--shade-10-20);
+$btn-default-border:            var(--shade-1);
+$btn-default-active-bg:         var(--shade-2);
+$btn-default-overlay-active-bg: var(--shade-10-16);
+$btn-primary-color:             var(--brand-primary-light);
+$btn-primary-bg:                var(--brand-primary);
+$btn-primary-active-bg:         var(--brand-primary-darken-2);
+$btn-icon-bg:                   var(--transparent);
 
 // Slider
 $slider-track-bg:              var(--shade-5);

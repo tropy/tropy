@@ -49,6 +49,19 @@
   &:active {
     background: $btn-default-active-bg;
   }
+
+  .overlay-mode & {
+    background: $btn-default-overlay-bg;
+    border-color: transparent;
+
+    &:active {
+      background: $btn-default-overlay-active-bg;
+    }
+
+    &[disabled] {
+      background: $btn-default-overlay-bg;
+    }
+  }
 }
 
 .btn-primary {
