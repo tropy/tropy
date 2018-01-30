@@ -64,7 +64,7 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
             color: $icon-active-color;
           }
 
-          &[disabled] {
+          &.disabled {
             .icon {
               color: $esper-overlay-icon-color;
             }

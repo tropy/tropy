@@ -35,7 +35,8 @@
       &:hover {
         background: $editor-btn-hover-bg;
 
-        &[disabled] {
+        &[disabled],
+        &.disabled {
           background: $btn-icon-bg;
         }
       }
