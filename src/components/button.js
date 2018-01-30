@@ -4,6 +4,7 @@ const React = require('react')
 const { PureComponent, createElement: create } = React
 const { injectIntl, intlShape } = require('react-intl')
 const cx = require('classnames')
+const { on, off } = require('../dom')
 const {
   bool, element, func, node, number, oneOf, string
 } = require('prop-types')
@@ -18,6 +19,21 @@ ButtonGroup.propTypes = {
 }
 
 class Button extends PureComponent {
+  constructor(props) {
+    super(props)
+    this.state = {
+      hasTabFocus: false
+    }
+  }
+
+  componentDidMount() {
+    on(this.container, 'tab:focus', this.handleTabFocus)
+  }
+
+  componentWillUnmount() {
+    off(this.container, 'tab:focus', this.handleTabFocus)
+  }
+
   get classes() {
     return ['btn', this.props.size, {
       'active': this.props.isActive,
@@ -25,7 +41,8 @@ class Button extends PureComponent {
       'btn-default': this.props.isDefault,
       'btn-icon': this.props.icon != null,
       'btn-primary': this.props.isPrimary,
-      'disabled': this.props.isDisabled
+      'disabled': this.props.isDisabled,
+      'tab-focus': this.state.hasTabFocus
     }]
   }
 
@@ -53,6 +70,8 @@ class Button extends PureComponent {
     const attr = {
       className: cx(...this.classes),
       disabled: !this.props.noFocus && this.props.isDisabled,
+      onBlur: this.handleBlur,
+      ref: this.setContainer,
       title: this.title
     }
 
@@ -67,6 +86,18 @@ class Button extends PureComponent {
     }
 
     return attr
+  }
+
+  setContainer = (container) => {
+    this.container = container
+  }
+
+  handleTabFocus = () => {
+    this.setState({ hasTabFocus: true })
+  }
+
+  handleBlur = () => {
+    this.setState({ hasTabFocus: false })
   }
 
   handleClick = (event) => {

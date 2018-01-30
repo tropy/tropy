@@ -138,9 +138,10 @@ const EsperPanel = (props) => (
     </ul>
     <div className="revert-btn-container">
       <Button
-        noFocus
-        isDefault
         isBlock
+        isDefault
+        isDisabled={props.isDisabled || !props.isVisible}
+        tabIndex={TABS.EsperPanel}
         text="esper.panel.revert"
         onClick={props.onRevert}/>
     </div>
