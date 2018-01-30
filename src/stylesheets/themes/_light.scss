@@ -189,8 +189,9 @@ $stack-line-tint-color:   var(--shade-0);
 $stack-line-tint-opacity: 0.5;
 
 // Scrollbar
-$scrollbar-bg: var(--transparent);
-$scrollbar-color: var(--shade-4);
+$scrollbar-bg:            var(--transparent);
+$scrollbar-color:         var(--shade-4);
+$scrollbar-overlay-color: var(--shade-10-20);
 
 // List states
 $list-focus-color:       var(--shade-0);
