@@ -1,15 +1,14 @@
 'use strict'
 
-const { join } = require('path')
 const { Plugins } = __require('common/plugins')
+const config = require('../fixtures/plugins')
 
 describe('Plugins', () => {
-  const root = join(__dirname, '..', 'fixtures')
-  const basic = new Plugins(root)
+  const basic = new Plugins(config)
 
   it('valid config matches', () => {
-    expect(basic.config.length).to.eql(2)
-    expect(basic.config[0]).to.eql({
+    expect(basic.plugins.length).to.eql(2)
+    expect(basic.plugins[0]).to.eql({
       plugin: 'tropy-plugin',
       label: 'Plugin Name',
       config: {
@@ -20,7 +19,10 @@ describe('Plugins', () => {
 
   it('invalid config does not throw error', () => {
     // just warns
-    expect(() => { new Plugins('invalid') }).to.not.throw()
+    const p = new Plugins()
+    expect(() => p.initialize()).to.not.throw()
+    expect(p.plugins.length).to.eql(0)
+    expect(p.handlers('foo').length).to.eql(0)
   })
 
   it('list package names', () => {
@@ -28,10 +30,13 @@ describe('Plugins', () => {
   })
 
   it('initialize with bad plugins', () => {
-    const cfg = [{
-      plugin: 'foo',
-    }]
-    const plugins = new Plugins(root, cfg)
+    const cfg = {
+      ...config,
+      plugins: [{
+        plugin: 'foo',
+      }]
+    }
+    const plugins = new Plugins(cfg)
     expect(() => plugins.initialize()).to.not.throw()
     expect(plugins.instances).to.eql([])
   })

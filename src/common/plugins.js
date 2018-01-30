@@ -6,24 +6,11 @@ const { warn, verbose, logger } = require('./log')
 const { uniq, pluck } = require('./util')
 const { promises: jsonld } = require('jsonld')
 
-
 class Plugins {
-  constructor(root, config) {
-    this.root = root || ARGS.home || app.getPath('userData')
-    this.config = config || this.loadConfig() || []
+  constructor(config = {}) {
+    this.root = config.root
+    this.plugins = config.plugins || []
     this.instances = []
-  }
-
-  loadConfig() {
-    // attempt to load the config file
-    var cfgFile
-    try {
-      cfgFile = join(this.root, 'plugins.json')
-      return require(cfgFile)
-    } catch (error) {
-      warn(`Plugin config file "${cfgFile}" not valid: ` +
-           error.message)
-    }
   }
 
   get context() {
@@ -44,20 +31,20 @@ class Plugins {
   }
 
   get packages() {
-    return uniq(this.config.map(p => p.plugin))
+    return uniq(this.plugins.map(p => p.plugin))
   }
 
   initialize() {
-    // for each instance in `this.config`, require their package
+    // for each instance in `this.plugins`, require their package
     // and store it in `this.instances`
-    for (let i = 0; i < this.config.length; i++) {
+    for (let i = 0; i < this.plugins.length; i++) {
       var pluginPackage
       var hooks
       var instance
-      const params = this.config[i]
+      const params = this.plugins[i]
       const pluginName = params.plugin
       try {
-        const path = join(this.root, 'node_modules', pluginName)
+        const path = join(this.root, pluginName)
         pluginPackage = require(path)
         const packageJson = require(join(path, 'package.json'))
         hooks = packageJson.hooks || {}
@@ -110,7 +97,14 @@ module.exports = {
 
   get plugins() {
     if (!instance) {
-      instance = new Plugins()
+      let config
+      try {
+        const path = join(ARGS.home || app.getPath('userData'), 'plugins.json')
+        config = require(path)
+      } catch (e) {
+        config = {}
+      }
+      instance = new Plugins(config)
       instance.initialize()
     }
     return instance
