@@ -10,6 +10,7 @@
 .ProseMirror {
   font-size: $editor-font-size;
   line-height: $editor-line-height;
+  word-break: break-word; // For vertical writing mode (break-word or break-all?)
 
   * {
     margin: 0;
@@ -116,5 +117,14 @@
         border: $editor-outline-width solid $selected-node-color;
       }
     }
+  }
+
+  .horizontal & {
+    writing-mode: horizontal-tb;
+  }
+
+  .vertical-rl & {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
   }
 }
