@@ -1,6 +1,6 @@
 'use strict'
 
-const { entries } = Object
+const { assign, entries } = Object
 const { isArray } = Array
 const { copy, pluck } = require('./util')
 
@@ -27,6 +27,26 @@ class Query {
 
   toString() {
     return this.query
+  }
+}
+
+class Union extends Query {
+  constructor(...args) {
+    super()
+    this.params = {}
+    this.set = []
+    this.push(...args)
+  }
+
+  get query() {
+    this.set.join(' UNION ')
+  }
+
+  push(...args) {
+    for (const { query, params } of args) {
+      this.set.push(query)
+      this.params = { ...this.params, ...params }
+    }
   }
 }
 
@@ -134,6 +154,12 @@ class Select extends Query {
               cmp = this.isNegated ? 'NOT IN' : 'IN'
               break
 
+            case (rhs instanceof Query):
+              assign(params, rhs.params)
+              rhs = rhs.query
+              cmp = this.isNegated ? 'NOT IN' : 'IN'
+              break
+
             default:
               params[`$${lhs}`] = rhs
               rhs = `$${lhs}`
@@ -229,7 +255,8 @@ class Select extends Query {
 module.exports = {
   Query,
   Select,
+  Union,
 
   select(...args) { return new Select(...args) },
-  union(...args) { return args.join(' UNION ') }
+  union(...args) { return new Union(...args) }
 }
