@@ -20,7 +20,7 @@ const { isArray } = Array
 const { writeFile: write } = require('fs')
 const { win } = require('../window')
 const { groupedByTemplate } = require('../export')
-const { plugins } = require('../plugins')
+const { plugins } = require('../common/plugins')
 
 const {
   getItemTemplate,

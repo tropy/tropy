@@ -2,8 +2,8 @@
 
 const { app, nativeImage } = require('electron')
 const { join } = require('path')
-const { warn, verbose, logger } = require('./common/log')
-const { uniq, pluck } = require('./common/util')
+const { warn, verbose, logger } = require('./log')
+const { uniq, pluck } = require('./util')
 const { promises: jsonld } = require('jsonld')
 
 

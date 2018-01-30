@@ -1,10 +1,10 @@
 'use strict'
 
 const { join } = require('path')
-const { Plugins } = __require('plugins')
+const { Plugins } = __require('common/plugins')
 
 describe('Plugins', () => {
-  const root = join(__dirname, 'fixtures')
+  const root = join(__dirname, '..', 'fixtures')
   const basic = new Plugins(root)
 
   it('valid config matches', () => {

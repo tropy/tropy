@@ -1,6 +1,6 @@
 'use strict'
 
-const { plugins } = require('../plugins')
+const { plugins } = require('../common/plugins')
 
 const handlers = plugins.handlers('export')
 
