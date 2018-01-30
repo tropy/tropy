@@ -5,6 +5,7 @@ const { PureComponent, createElement: create } = React
 const { injectIntl, intlShape } = require('react-intl')
 const cx = require('classnames')
 const { on, off } = require('../dom')
+const { noop } = require('../common/util')
 const {
   bool, element, func, node, number, oneOf, string
 } = require('prop-types')
@@ -71,6 +72,7 @@ class Button extends PureComponent {
       className: cx(...this.classes),
       disabled: !this.props.noFocus && this.props.isDisabled,
       onBlur: this.handleBlur,
+      onFocus: this.props.onFocus,
       ref: this.setContainer,
       title: this.title
     }
@@ -96,8 +98,9 @@ class Button extends PureComponent {
     this.setState({ hasTabFocus: true })
   }
 
-  handleBlur = () => {
+  handleBlur = (event) => {
     this.setState({ hasTabFocus: false })
+    this.props.onBlur(event)
   }
 
   handleClick = (event) => {
@@ -133,11 +136,15 @@ class Button extends PureComponent {
     title: string,
     text: string,
     tabIndex: number,
+    onBlur: func.isRequired,
+    onFocus: func.isRequired,
     onClick: func,
     onMouseDown: func
   }
 
   static defaultProps = {
+    onBlur: noop,
+    onFocus: noop,
     noFocus: false,
     tabIndex: -1
   }

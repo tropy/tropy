@@ -143,6 +143,8 @@ const EsperPanel = (props) => (
         isDisabled={props.isDisabled || !props.isVisible}
         tabIndex={TABS.EsperPanel}
         text="esper.panel.revert"
+        onBlur={props.onBlur}
+        onFocus={props.onFocus}
         onClick={props.onRevert}/>
     </div>
   </div>
