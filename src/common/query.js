@@ -2,9 +2,13 @@
 
 const { entries } = Object
 const { isArray } = Array
-const { pluck } = require('./util')
+const { copy, pluck } = require('./util')
 
 class Query {
+  dup() {
+    return copy(this, new this.constructor())
+  }
+
   get hasParams() {
     return this.params != null && Reflect.ownKeys(this.params).length > 0
   }
@@ -34,8 +38,9 @@ class Select extends Query {
   }
 
   reset() {
-    this.isNegated = false
     this.isDistinct = false
+    this.isNegated = false
+    this.isOuter = false
     this.params = {}
     this.cte = null
     this.col = {}
@@ -48,18 +53,19 @@ class Select extends Query {
   }
 
   get distinct() {
-    this.isDistinct = true
-    return this
+    return (this.isDistinct = true), this
   }
 
   get all() {
-    this.isDistinct = false
-    return this
+    return (this.isDistinct = false), this
   }
 
   get not() {
-    this.isNegated = true
-    return this
+    return (this.isNegated = true), this
+  }
+
+  get outer() {
+    return (this.isOuter = true), this
   }
 
   select(...columns) {
@@ -76,61 +82,73 @@ class Select extends Query {
   }
 
   from(...sources) {
-    this.src = [...this.src, ...sources]
+    this.src = [...this.src, ...sources.join(', ')]
     return this
   }
 
-  join(other, { outer, using } = {}) {
-    const join = outer ? 'LEFT OUTER JOIN' : 'JOIN'
-    const cond = using ? ` USING (${using})` : ''
-    this.src = [...this.src, `${join} ${other}${cond}`]
-    return this
+  join(other, { using, on } = {}) {
+    try {
+      let JOIN = this.isOuter ? 'LEFT OUTER JOIN' : 'JOIN'
+      let conditions = ''
+
+      switch (true) {
+        case (using != null):
+          conditions = ` USING (${using})`
+          break
+        case (on != null):
+          conditions = []
+          this.parse(on, { conditions })
+          conditions = ` ON (${conditions.join(' AND ')})`
+          break
+      }
+
+      this.src = [...this.src, `${JOIN} ${other}${conditions}`]
+      return this
+
+    } finally {
+      this.isOuter = false
+    }
   }
 
   where(conditions) {
+    return this.parse(conditions)
+  }
+
+  parse(input, { conditions = this.con, params = this.params } = {}) {
     try {
-      this.parse(conditions)
+      if (typeof input === 'string') {
+        conditions.push(input)
+      } else {
+        for (let lhs in input) {
+          let rhs = input[lhs]
+          let cmp
+
+          switch (true) {
+            case (rhs == null):
+              rhs = 'NULL'
+              cmp = this.isNegated ? 'IS NOT' : 'IS'
+              break
+
+            case (isArray(rhs)):
+              rhs = `(${rhs.join(', ')})`
+              cmp = this.isNegated ? 'NOT IN' : 'IN'
+              break
+
+            default:
+              params[`$${lhs}`] = rhs
+              rhs = `$${lhs}`
+              cmp = this.isNegated ? '!=' : '='
+          }
+
+          conditions.push(`${lhs} ${cmp} ${rhs}`)
+        }
+      }
+
       return this
+
     } finally {
       this.isNegated = false
     }
-  }
-
-  parse(input, {
-    conditions = this.con,
-    isNegated = this.isNegated,
-    params = this.params
-  } = {}) {
-    if (typeof input === 'string') {
-      conditions.push(input)
-
-    } else {
-      for (let lhs in input) {
-        let rhs = input[lhs]
-        let cmp
-
-        switch (true) {
-          case (rhs == null):
-            rhs = 'NULL'
-            cmp = isNegated ? 'IS NOT' : 'IS'
-            break
-
-          case (isArray(rhs)):
-            rhs = `(${rhs.join(', ')})`
-            cmp = isNegated ? 'NOT IN' : 'IN'
-            break
-
-          default:
-            params[`$${lhs}`] = rhs
-            rhs = `$${lhs}`
-            cmp = isNegated ? '!=' : '='
-        }
-
-        conditions.push(`${lhs} ${cmp} ${rhs}`)
-      }
-    }
-
-    return { conditions, params }
   }
 
   unless(...args) {
@@ -148,12 +166,7 @@ class Select extends Query {
   }
 
   having(input) {
-    try {
-      this.parse(input, { conditions: this.hav })
-      return this
-    } finally {
-      this.isNegated = false
-    }
+    return this.parse(input, { conditions: this.hav })
   }
 
   with(head, body) {

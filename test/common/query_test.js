@@ -73,9 +73,13 @@ describe('Query Builder', () => {
         select('a')
         .from('b')
         .join('c', { using: 'a' })
-        .join('d', { outer: true })
+        .outer.join('d')
         .query
       ).to.eql('SELECT a FROM b JOIN c USING (a) LEFT OUTER JOIN d')
+
+      let q = select('*').from('a').join('b', { on: { x: 23 } })
+      expect(q.query).to.eql('SELECT * FROM a JOIN b ON (x = $x)')
+      expect(q.params).to.have.property('$x', 23)
     })
 
   })
