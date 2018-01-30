@@ -10,11 +10,11 @@ const { promises: jsonld } = require('jsonld')
 class Plugins {
   constructor(root, config) {
     this.root = root || ARGS.home || app.getPath('userData')
-    this.config = config || this._loadConfig() || []
+    this.config = config || this.loadConfig() || []
     this.instances = []
   }
 
-  _loadConfig() {
+  loadConfig() {
     // attempt to load the config file
     var cfgFile
     try {
@@ -74,6 +74,9 @@ class Plugins {
         instanceNumber: this.instances.length
       })
     }
+
+    const count = this.instances.length
+    verbose(`Plugins(root=${this.root}, count=${count})`)
   }
 
   handlers(action) {
@@ -110,8 +113,6 @@ module.exports = {
       instance = new Plugins()
       instance.initialize()
     }
-    const count = instance.instances.length
-    verbose(`Plugins(root=${instance.root}, count=${count})`)
     return instance
   }
 }
