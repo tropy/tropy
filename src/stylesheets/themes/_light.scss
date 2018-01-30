@@ -137,6 +137,10 @@ $hr-border: var(--shade-3);
 // Partials
 // --------------------------------------------------
 
+// Forms & buttons
+$input-btn-focus-color: var(--brand-primary-tint-40);
+$input-btn-overlay-focus-color: var(--brand-primary);
+
 // Forms
 $input-color:                            var(--shade-9);
 $input-bg:                               var(--shade-0); // Transparent causes border/box-shadow issue
@@ -144,7 +148,6 @@ $input-overlay-bg:                       var(--shade-10-20);
 $input-bg-readonly:                      var(--shade-1-darken-4);
 $input-overlay-bg-readonly:              var(--shade-10-10);
 $input-border:                           var(--shade-3);
-$input-color-focus:                      var(--brand-primary-tint-40);
 $input-overlay-focus-color:              var(--brand-primary);
 $input-color-placeholder:                var(--shade-5);
 $fieldset-bg:                            var(--shade-1-darken-4);
@@ -400,7 +403,7 @@ $clear-search-color: var(--shade-0);
 
 // Popup
 $popup-bg:           var(--shade-0);
-$popup-border-color: $input-color-focus;
+$popup-border-color: $input-btn-focus-color;
 
 // Option list
 $option-active-bg: var(--shade-2);

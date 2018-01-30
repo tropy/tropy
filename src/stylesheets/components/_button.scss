@@ -14,8 +14,10 @@
   padding: ($padding-base-vertical + 1px) $padding-base-horizontal;
   display: inline-block; // For span as btn
   text-align: center;
+  transition: border-color $input-btn-transition, box-shadow $input-btn-transition;
 
-  &[disabled] {
+  &[disabled],
+  &.disabled {
     opacity: $btn-disabled-opacity;
   }
 
@@ -46,6 +48,8 @@
   background: $btn-default-bg;
   border: 1px solid $btn-default-border;
 
+  @include input-btn-focus(".tab-focus"); // sass-lint:disable-line mixins-before-declarations
+
   &:active {
     background: $btn-default-active-bg;
   }
@@ -54,11 +58,14 @@
     background: $btn-default-overlay-bg;
     border-color: transparent;
 
+    @include input-btn-focus(".tab-focus", $input-btn-overlay-focus-color); // sass-lint:disable-line mixins-before-declarations
+
     &:active {
       background: $btn-default-overlay-active-bg;
     }
 
-    &[disabled] {
+    &[disabled],
+    &.disabled {
       background: $btn-default-overlay-bg;
     }
   }
@@ -67,6 +74,8 @@
 .btn-primary {
   color: $btn-primary-color;
   background: $btn-primary-bg;
+
+  @include input-btn-focus(".tab-focus"); // sass-lint:disable-line mixins-before-declarations
 
   &:active {
     background: $btn-primary-active-bg;
@@ -88,7 +97,8 @@
       color: $icon-active-color;
     }
 
-    &[disabled] {
+    &[disabled],
+    &.disabled {
       .icon {
         color: $icon-color;
       }

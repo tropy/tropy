@@ -108,6 +108,7 @@
         background-color: $esper-btn-default-active-bg;
       }
 
+      &.disabled,
       &[disabled] {
         background-color: $esper-btn-default-bg;
       }

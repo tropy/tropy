@@ -51,7 +51,7 @@ $default-padding-horizontal: 12px !default;
       background-color: $template-select-bg;
       border-color: $template-select-border;
 
-      @include form-control-focus; // sass-lint:disable-line mixins-before-declarations
+      @include input-btn-focus; // sass-lint:disable-line mixins-before-declarations
     }
   }
 }
