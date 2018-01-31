@@ -118,13 +118,4 @@
       }
     }
   }
-
-  .horizontal & {
-    writing-mode: horizontal-tb;
-  }
-
-  .vertical-rl & {
-    writing-mode: vertical-rl;
-    text-orientation: upright;
-  }
 }

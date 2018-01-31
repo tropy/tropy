@@ -17,10 +17,19 @@
   //}
 
   .scroll-container {
-    overflow-y: scroll;
-    display: flex;
+    overflow: auto;
+    //display: flex;
     flex-direction: column;
     position: relative;
+
+    .horizontal & {
+      writing-mode: horizontal-tb;
+    }
+
+    .vertical-rl & {
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+    }
   }
 
   .placeholder {
@@ -45,12 +54,13 @@
 // ---
 
 .ProseMirror {
-  width: $editor-width;
-  margin: 0 auto;
-  max-width: $editor-max-width;
+  background: red; // sass-lint:disable-line no-color-keywords no-color-literals
+  //width: 100%;
+  //margin: 0 auto;
+  //max-width: $editor-max-width;
   //padding-top: $toolbar-height + 1px + $prose-mirror-padding-top;
-  padding-bottom: $prose-mirror-padding-bottom;
-  padding-top: $prose-mirror-padding-top;
+  //padding-bottom: $prose-mirror-padding-bottom;
+  //padding-top: $prose-mirror-padding-top;
 
   //.editor:hover & {
   //  padding-top: $prose-mirror-padding;
