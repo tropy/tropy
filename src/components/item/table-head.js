@@ -131,5 +131,6 @@ class ItemTableHead extends PureComponent {
 }
 
 module.exports = {
-  ItemTableHead
+  ItemTableHead,
+  BlankTableHeadCell
 }
