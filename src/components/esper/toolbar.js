@@ -150,6 +150,7 @@ class EsperToolbar extends PureComponent {
             <Button
               noFocus
               icon={<IconSliders/>}
+              title="esper.tool.edit"
               isActive={this.props.isPanelVisible}
               onClick={this.handlePanelToggle}/>
           </ToolGroup>
