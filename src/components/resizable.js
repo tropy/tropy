@@ -1,8 +1,8 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
-const { func, node, bool, number, oneOf } = require('prop-types')
+const { PureComponent, createElement: create } = React
+const { func, node, bool, number, oneOf, string } = require('prop-types')
 const { Draggable } = require('./draggable')
 const cx = require('classnames')
 const { bounds } = require('../dom')
@@ -30,10 +30,9 @@ const AXS = {
 
 class Resizable extends PureComponent {
   get classes() {
-    return {
-      resizable: true,
+    return ['resizable', {
       disabled: this.props.isDisabled
-    }
+    }]
   }
 
   get dimension() {
@@ -139,15 +138,11 @@ class Resizable extends PureComponent {
   }
 
   render() {
-    return (
-      <div
-        className={cx(this.classes)}
-        ref={this.setContainer}
-        style={this.style}>
-        {this.props.children}
-        {this.renderHandle()}
-      </div>
-    )
+    return create(this.props.node, {
+      className: cx(this.classes),
+      ref: this.setContainer,
+      style: this.style
+    }, this.props.children, this.renderHandle())
   }
 
   static propTypes = {
@@ -159,6 +154,7 @@ class Resizable extends PureComponent {
     value: number.isRequired,
     min: number.isRequired,
     max: number,
+    node: string.isRequired,
     onResize: func,
     onDrag: func,
     onDragStart: func,
@@ -166,7 +162,8 @@ class Resizable extends PureComponent {
   }
 
   static defaultProps = {
-    min: 0
+    min: 0,
+    node: 'div'
   }
 
 }
