@@ -271,7 +271,7 @@ class ItemIterator extends Iterator {
     sort: shape({
       asc: bool,
       column: string.isRequired,
-      type: oneOf(['property']).isRequired
+      context: oneOf(['metadata', 'list', 'item']).isRequired
     }).isRequired,
 
     isActive: bool,

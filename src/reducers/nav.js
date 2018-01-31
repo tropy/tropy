@@ -1,9 +1,6 @@
 'use strict'
 
-const {
-  NAV, ITEM, LIST, TAG, NOTE, PHOTO, PROJECT, DC
-} = require('../constants')
-
+const { NAV, ITEM, LIST, TAG, NOTE, PHOTO, PROJECT } = require('../constants')
 const { isSelected, select } = require('../selection')
 
 const init = {
@@ -11,7 +8,7 @@ const init = {
   items: [],
   query: '',
   tags: [],
-  sort: { type: 'property', column: DC.title, asc: true },
+  sort: {},
   lists: {}
 }
 
@@ -39,17 +36,11 @@ module.exports = {
       case NAV.SORT: {
         const { list, ...sort } = payload
 
-        if (list) {
-          return {
-            ...state,
-            lists: {
-              ...state.lists, [list]: { ...sort }
-            }
-          }
-
-        } else {
-          return {
-            ...state, sort: { ...sort }
+        return {
+          ...state,
+          sort: {
+            ...state.sort,
+            [list || 0]: sort
           }
         }
       }

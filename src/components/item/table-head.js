@@ -5,7 +5,7 @@ const { PureComponent } = React
 const cx = require('classnames')
 const { getLabel } = require('../../common/ontology')
 const { IconChevron7 } = require('../icons')
-const { COLUMNS: { PositionColumn } } = require('../../constants')
+const { COLUMNS: { PositionColumn }, TYPE } = require('../../constants')
 const {
   arrayOf, bool, func, number, object, oneOf, shape, string
 } = require('prop-types')
@@ -16,11 +16,9 @@ const BlankTableHeadCell = () => (
 
 class ItemTableHeadCell extends PureComponent {
   get classes() {
-    return {
-      'metadata-head': true,
-      [this.props.type]: true,
+    return ['metadata-head', this.props.type, {
       [this.direction]: this.props.isActive
-    }
+    }]
   }
 
   get style() {
@@ -34,12 +32,10 @@ class ItemTableHeadCell extends PureComponent {
   }
 
   handleClick = () => {
-    const { id, isActive, isAscending, onClick } = this.props
-
-    onClick({
-      type: 'property',
-      column: id,
-      asc: !isActive || !isAscending
+    this.props.onClick({
+      asc: !this.props.isActive || !this.props.isAscending,
+      column: this.props.id,
+      context: this.props.context
     })
   }
 
@@ -61,6 +57,7 @@ class ItemTableHeadCell extends PureComponent {
 
 
   static propTypes = {
+    context: string.isRequired,
     isActive: bool,
     isAscending: bool.isRequired,
     label: string.isRequired,
@@ -71,7 +68,7 @@ class ItemTableHeadCell extends PureComponent {
   }
 
   static defaultProps = {
-    type: 'text'
+    type: TYPE.TEXT
   }
 }
 
@@ -81,8 +78,8 @@ class ItemTableHead extends PureComponent {
     return this.props.sort.asc
   }
 
-  isActive(id) {
-    return (id === this.props.sort.column)
+  isActive(id, context = 'metadata') {
+    return (id === this.props.sort.column) && (context === this.props.sort.context)
   }
 
   getLabel(property) {
@@ -98,14 +95,17 @@ class ItemTableHead extends PureComponent {
           <tr>
             {this.props.hasPositionColumn &&
               <ItemTableHeadCell
+                context={PositionColumn.context}
                 id={PositionColumn.id}
                 label={PositionColumn.label}
                 width={PositionColumn.width}
-                isActive={this.isActive('position')}
+                isActive={this.isActive(PositionColumn.id, PositionColumn.context)}
                 isAscending={this.isAscending}
+                type={PositionColumn.type}
                 onClick={onSort}/>}
             {columns.map(({ width, property }) =>
               <ItemTableHeadCell
+                context="metadata"
                 key={property.id}
                 id={property.id}
                 label={this.getLabel(property)}
@@ -131,7 +131,7 @@ class ItemTableHead extends PureComponent {
     sort: shape({
       asc: bool.isRequired,
       column: string.isRequired,
-      type: oneOf(['property']).isRequired
+      context: oneOf(['metadata', 'list', 'item']).isRequired
     }).isRequired,
 
     onSort: func.isRequired
