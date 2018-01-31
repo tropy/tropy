@@ -422,11 +422,13 @@ const util = {
     return shortid.generate()
   },
 
-  shallow(a, b) {
+  shallow(a, b, props) {
     if (a === b) return true
     if (a == null || b == null) return false
 
-    for (let prop in a) {
+    if (util.blank(props)) props = keys(a)
+
+    for (let prop of props) {
       if (a[prop] !== b[prop]) return false
     }
 

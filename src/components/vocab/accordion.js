@@ -5,7 +5,7 @@ const { FormattedMessage } = require('react-intl')
 const { Accordion } = require('../accordion')
 const { FormField, FormLink, FormText } = require('../form')
 const { ResourceList } = require('../resource')
-const { IconButton, ButtonGroup } = require('../button')
+const { Button, ButtonGroup } = require('../button')
 const { IconBook16, IconBookLock, IconTrash, IconExport } = require('../icons')
 const { arrayOf, func, object, shape, string } = require('prop-types')
 
@@ -40,12 +40,12 @@ class VocabAccordion extends Accordion {
           {this.props.vocab.title}
         </h1>
         <ButtonGroup>
-          <IconButton
+          <Button
             icon={<IconExport/>}
             title="prefs.vocab.export"
             onClick={this.handleExport}/>
           {!this.props.vocab.isProtected &&
-            <IconButton
+            <Button
               icon={<IconTrash/>}
               onClick={this.handleDelete}/>}
         </ButtonGroup>

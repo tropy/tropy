@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { IconButton } = require('./button')
+const { Button } = require('./button')
 const { Draggable } = require('./draggable')
 const { bounds, borders } = require('../dom')
 const { restrict } = require('../common/util')
@@ -28,8 +28,8 @@ class Slider extends PureComponent {
     }
   }
 
-  get offset() {
-    return this.state.value - this.props.min
+  get origin() {
+    return (this.props.origin != null) ? this.props.origin : this.props.min
   }
 
   get delta() {
@@ -41,11 +41,10 @@ class Slider extends PureComponent {
   }
 
   get classes() {
-    return {
-      slider: true,
-      [`slider-${this.props.size}`]: true,
-      disabled: this.isDisabled
-    }
+    return ['slider', `slider-${this.props.size}`, {
+      disabled: this.isDisabled,
+      origin: this.props.origin != null
+    }]
   }
 
   getNextStep() {
@@ -76,6 +75,9 @@ class Slider extends PureComponent {
     return Math.max(steps[i], min)
   }
 
+  setTrack = (track) => {
+    this.track = track
+  }
 
   set(value, reason) {
     value = restrict(value, this.props.min, this.props.max)
@@ -114,10 +116,36 @@ class Slider extends PureComponent {
     this.set(this.getNextStep(), 'button')
   }, 100)
 
-  setTrack = (track) => {
-    this.track = track
-  }
+  handleKeyDown = (event) => {
+    const { value, precision, tabIndex } = this.props
 
+    if (tabIndex == null) return
+
+    switch (event.key) {
+      case 'ArrowDown':
+        this.set(this.getPrevStep(), 'key')
+        break
+      case 'ArrowLeft':
+        this.set(value - 1 / precision, 'key')
+        break
+      case 'ArrowUp':
+        this.set(this.getNextStep(), 'key')
+        break
+      case 'ArrowRight':
+        this.set(value + 1 / precision, 'key')
+        break
+      case 'Space':
+      case 'Escape':
+        this.set(this.origin, 'key')
+        break
+      default:
+        return
+    }
+
+    event.preventDefault()
+    event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
+  }
 
   renderMinButton() {
     const { min, minIcon } = this.props
@@ -125,8 +153,8 @@ class Slider extends PureComponent {
 
     if (minIcon) {
       return (
-        <IconButton
-          noFocus={this.props.noFocus}
+        <Button
+          noFocus
           icon={this.props.minIcon}
           isActive={value === min}
           isDisabled={this.isDisabled}
@@ -141,8 +169,8 @@ class Slider extends PureComponent {
 
     if (maxIcon) {
       return (
-        <IconButton
-          noFocus={this.props.noFocus}
+        <Button
+          noFocus
           icon={this.props.maxIcon}
           isActive={value === max}
           isDisabled={this.isDisabled}
@@ -160,11 +188,23 @@ class Slider extends PureComponent {
   }
 
   render() {
-    const { offset, delta, isDisabled } = this
-    const percentage = `${100 * offset / delta}%`
+    const { origin, delta, isDisabled } = this
+
+    const abs = this.state.value - this.props.min
+    const off = origin - this.props.min
+    const adj = abs - off
+
+    const offset = pct((adj < 0 ? off + adj : off) / delta)
+    const position = pct(abs / delta)
+    const width = pct(Math.abs(adj) / delta)
 
     return (
-      <div className={cx(this.classes)}>
+      <div
+        className={cx(this.classes)}
+        tabIndex={this.props.tabIndex}
+        onBlur={this.props.onBlur}
+        onFocus={this.props.onFocus}
+        onKeyDown={this.handleKeyDown}>
         {this.renderMinButton()}
         <Draggable
           delay={15}
@@ -172,11 +212,10 @@ class Slider extends PureComponent {
           onDrag={this.handleDrag}
           onDragStart={this.handleDragStart}>
           <div ref={this.setTrack} className="slider-track">
-            <div className="slider-range" style={{ width: percentage }}/>
+            <div className="slider-range" style={{ width, left: offset }}/>
             <div
               className="slider-handle"
-              tabIndex={this.props.tabIndex}
-              style={{ left: percentage }}>
+              style={{ left: position }}>
               {this.renderCurrentValue()}
             </div>
           </div>
@@ -187,19 +226,21 @@ class Slider extends PureComponent {
   }
 
   static propTypes = {
-    noFocus: bool,
     isDisabled: bool,
     max: number.isRequired,
     maxIcon: element,
     min: number.isRequired,
     minIcon: element,
+    origin: number,
     precision: number.isRequired,
     showCurrentValue: bool.isRequired,
     size: oneOf(['sm', 'md', 'lg']).isRequired,
     steps: arrayOf(number).isRequired,
     tabIndex: number,
     value: number.isRequired,
-    onChange: func.isRequired
+    onBlur: func,
+    onChange: func.isRequired,
+    onFocus: func
   }
 
   static defaultProps = {
@@ -209,9 +250,11 @@ class Slider extends PureComponent {
     showCurrentValue: false,
     size: 'md',
     steps: [],
-    tabIndex: -1
+    tabIndex: null
   }
 }
+
+const pct = (value) => `${100 * value}%`
 
 module.exports = {
   Slider

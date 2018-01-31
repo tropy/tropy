@@ -169,6 +169,21 @@ en:
       fill: Fill
       fit: Fit
       zoom: Zoom
+    panel:
+      negative: Invert colors
+      revert: Revert to Original
+      brightness:
+        label: Brightness
+        value: "{value, number}"
+      contrast:
+        label: Contrast
+        value: "{value, number}"
+      hue:
+        label: Hue
+        value: "{value, number}°"
+      saturation:
+        label: Saturation
+        value: "{value, number}"
   notepad:
     placeholder: Add your notes here …
 

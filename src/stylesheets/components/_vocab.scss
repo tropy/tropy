@@ -35,7 +35,7 @@
     background: $vocab-input-bg;
     border-color: $vocab-input-border;
 
-    @include form-control-focus; // sass-lint:disable-line mixins-before-declarations
+    @include input-btn-focus; // sass-lint:disable-line mixins-before-declarations
   }
 
   .resource {
@@ -54,7 +54,7 @@
       background: $property-input-bg;
       border-color: $property-input-border;
 
-      @include form-control-focus; // sass-lint:disable-line mixins-before-declarations
+      @include input-btn-focus; // sass-lint:disable-line mixins-before-declarations
     }
   }
 

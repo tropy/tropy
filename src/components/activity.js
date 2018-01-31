@@ -7,7 +7,7 @@ const { FormattedMessage } = require('react-intl')
 const cx = require('classnames')
 const { ACTIVITY } = require('../constants/sass')
 const { arrayOf, shape, string, number, func } = require('prop-types')
-const { IconButton } = require('./button')
+const { Button } = require('./button')
 
 
 const Activity = ({ type, progress, total, onCancel }) => {
@@ -18,7 +18,7 @@ const Activity = ({ type, progress, total, onCancel }) => {
 
   if (hasCancelButton) {
     CancelButton = (
-      <IconButton icon={<IconXSmall/>} onClick={onCancel}/>
+      <Button icon={<IconXSmall/>} onClick={onCancel}/>
     )
   }
 

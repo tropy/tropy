@@ -120,6 +120,11 @@ $mode-transition: 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 $grid-gutter-width: $space-xs;
 
 
+// Forms & Buttons
+// --------------------------------------------------
+
+$input-btn-transition: 0.15s ease;
+
 // Buttons
 // --------------------------------------------------
 
@@ -238,9 +243,10 @@ $slider-handle-size-sm: 10px;
 
 $esper-toolbar-transition-in-hover: 0.3s 0.4s ease;
 $esper-toolbar-transition-in-focus: 0.3s ease;
-$esper-toolbar-transition-out: 0.3s ease;
+$esper-toolbar-transition-out: 0.3s 0.3s ease;
 $esper-toolbar-blur-radius: if($platform == "linux", 2px, 20px);
 $esper-cursor: const("ESPER.CURSOR");
+$esper-panel-width: 240px;
 
 
 // Scrollbar

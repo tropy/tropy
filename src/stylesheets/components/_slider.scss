@@ -5,8 +5,11 @@
 .slider {
   display: flex;
   align-items: center;
-  width: $slider-width;
+  width: $slider-width + 2px; // Work around containment
   height: $slider-height;
+  margin-left: -1px;
+  margin-right: -1px;
+  padding: 0 1px;
   contain: strict;
 
   .draggable {
@@ -19,14 +22,20 @@
   .btn {
     flex: 0 0 auto;
 
-    &:active {
-      .icon {
-        color: $icon-color;
+    &.active {
+      opacity: $btn-disabled-opacity;
+
+      &:active {
+        .icon {
+          color: $icon-color;
+        }
       }
     }
 
-    &.active {
-      opacity: $btn-disabled-opacity;
+    .overlay-mode & {
+      .icon {
+        color: $slider-overlay-icon-color;
+      }
     }
   }
 }
@@ -52,6 +61,10 @@
   &:only-child {
     margin: 0;
   }
+
+  .overlay-mode & {
+    background: $slider-overlay-track-bg;
+  }
 }
 
 .slider-range {
@@ -62,6 +75,26 @@
   border-left: ($slider-handle-size / 2) solid transparent;
   border-right: ($slider-handle-size / 2) solid transparent;
   margin-left: -($slider-handle-size / 2);
+  position: absolute;
+
+  .overlay-mode & {
+    background: $slider-overlay-range-bg;
+  }
+
+  .slider.origin & {
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    margin-left: 0;
+  }
+
+  .slider:focus & {
+    background-color: $slider-focus-bg;
+
+    .overlay-mode & {
+      background-color: $slider-overlay-focus-bg;
+    }
+  }
 }
 
 .slider-handle {
@@ -75,6 +108,16 @@
   position: absolute;
   top: -($slider-handle-size / 2 + 1px - $slider-track-height / 2);
   margin-left: -($slider-handle-size / 2 + 1px);
+
+  .overlay-mode & {
+    background-color: $slider-overlay-handle-bg;
+    border-color: $slider-overlay-handle-border;
+  }
+
+  .slider:focus & {
+    background-color: $slider-focus-bg;
+    border-color: transparent;
+  }
 }
 
 .slider-value {
@@ -89,6 +132,10 @@
   color: $slider-value-color;
   opacity: 0;
   transition: opacity $slider-value-transition;
+
+  .overlay-mode & {
+    color: $slider-overlay-value-color;
+  }
 }
 
 .slider:hover,
@@ -101,7 +148,7 @@
 
 // Small slider
 .slider-sm {
-  width: $slider-width-sm;
+  width: $slider-width-sm + 2px; // Work around containment
 
   .slider-track {
     border-left-width: ($slider-handle-size-sm / 2);
