@@ -60,8 +60,11 @@ class Esper extends PureComponent {
     this.ro.observe(this.view.container)
 
     this.io = new IntersectionObserver(([e]) => {
-      requestIdleCallback(e.intersectionRatio > 0 ?
-        this.view.start : this.view.stop)
+      requestIdleCallback(
+        e.intersectionRatio > 0 ?
+          this.handleSlideIn :
+          this.handleSlideOut
+      )
     }, { threshold: [0] })
 
     this.io.observe(this.view.container)
@@ -144,7 +147,7 @@ class Esper extends PureComponent {
   }
 
   get isDisabled() {
-    return this.props.isDisabled || this.isEmpty
+    return this.props.isDisabled || this.isEmpty || !this.state.isVisible
   }
 
   get isSelectionActive() {
@@ -325,6 +328,16 @@ class Esper extends PureComponent {
 
   setView = (view) => {
     this.view = view
+  }
+
+  handleSlideIn = () => {
+    this.setState({ isVisible: true })
+    this.view.start()
+  }
+
+  handleSlideOut = () => {
+    this.setState({ isVisible: false })
+    this.view.stop()
   }
 
   handleNestedBlur = () => {
