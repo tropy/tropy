@@ -5,6 +5,7 @@ const PropTypes = require('prop-types')
 const { arrayOf, func, object } = PropTypes
 const { ItemIterator } = require('./iterator')
 const { ItemTableRow } = require('./table-row')
+const { ItemTableSpacer } = require('./table-spacer')
 const { ItemTableHead } = require('./table-head')
 const cx = require('classnames')
 const { noop } = require('../../common/util')
@@ -98,6 +99,9 @@ class ItemTable extends ItemIterator {
           onKeyDown={this.handleKeyDown}>
           <div className="runway click-catcher" style={{ height }}>
             <table className="viewport" style={{ transform }}>
+              <ItemTableSpacer
+                columns={columns}
+                hasPositionColumn={this.hasPositionColumn}/>
               <tbody>
                 {this.mapIterableRange(({ item, index, ...props }) =>
                   <ItemTableRow {...props}

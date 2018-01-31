@@ -1,3 +1,4 @@
+
 'use strict'
 
 const React = require('react')
@@ -21,13 +22,12 @@ class ItemTableRow extends ItemIterable {
       const column = columns[i]
       const next = columns[(i + 1) % ii]
       const prev = columns[(ii + i - 1) % ii]
-      const { property, width } = column
+      const { property } = column
       const isMainColumn = (i === 0)
 
       const props = {
         key: property.id,
         id: property.id,
-        width,
         isMainColumn,
         isEditing: this.isEditing(property.id),
         nextColumn: next.property.id,
@@ -62,8 +62,7 @@ class ItemTableRow extends ItemIterable {
             isReadOnly
             id={PositionColumn.id}
             type={TYPE.NUMBER}
-            value={this.props.position}
-            width={PositionColumn.width}/>}
+            value={this.props.position}/>}
         {this.mapColumns(props =>
           <ItemTableCell {...cellProps} {...props}/>)}
         <BlankTableCell/>

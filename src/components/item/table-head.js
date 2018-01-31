@@ -21,12 +21,6 @@ class ItemTableHeadCell extends PureComponent {
     }]
   }
 
-  get style() {
-    return {
-      width: `${this.props.width}%`
-    }
-  }
-
   get direction() {
     return this.props.isAscending ? 'ascending' : 'descending'
   }
@@ -40,11 +34,11 @@ class ItemTableHeadCell extends PureComponent {
   }
 
   render() {
-    const { label, isActive } = this.props
+    const { label, isActive, width } = this.props
 
     return (
       <th
-        style={this.style}
+        style={{ width }}
         className={cx(this.classes)}
         onClick={this.handleClick}>
         <div className="metadata-head-container">
@@ -78,8 +72,9 @@ class ItemTableHead extends PureComponent {
     return this.props.sort.asc
   }
 
-  isActive(id, context = 'metadata') {
-    return (id === this.props.sort.column) && (context === this.props.sort.context)
+  isActive({ id, context = 'metadata' }) {
+    return (id === this.props.sort.column) &&
+      (context === this.props.sort.context)
   }
 
   getLabel(property) {
@@ -99,7 +94,7 @@ class ItemTableHead extends PureComponent {
                 id={PositionColumn.id}
                 label={PositionColumn.label}
                 width={PositionColumn.width}
-                isActive={this.isActive(PositionColumn.id, PositionColumn.context)}
+                isActive={this.isActive(PositionColumn)}
                 isAscending={this.isAscending}
                 type={PositionColumn.type}
                 onClick={onSort}/>}
@@ -110,7 +105,7 @@ class ItemTableHead extends PureComponent {
                 id={property.id}
                 label={this.getLabel(property)}
                 width={width}
-                isActive={this.isActive(property.id)}
+                isActive={this.isActive(property)}
                 isAscending={this.isAscending}
                 onClick={onSort}/>)}
             <BlankTableHeadCell/>
@@ -125,15 +120,12 @@ class ItemTableHead extends PureComponent {
       property: object.isRequired,
       width: number.isRequired
     })).isRequired,
-
     hasPositionColumn: bool,
-
     sort: shape({
       asc: bool.isRequired,
       column: string.isRequired,
       context: oneOf(['metadata', 'list', 'item']).isRequired
     }).isRequired,
-
     onSort: func.isRequired
   }
 }

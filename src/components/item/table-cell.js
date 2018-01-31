@@ -28,12 +28,6 @@ class ItemTableCell extends PureComponent {
     }]
   }
 
-  get style() {
-    return {
-      width: `${this.props.width}%`
-    }
-  }
-
   get canEdit() {
     return !(
       this.props.isReadOnly || this.props.isDisabled || this.props.isEditing
@@ -118,7 +112,6 @@ class ItemTableCell extends PureComponent {
     return (
       <td
         className={cx(this.classes)}
-        style={this.style}
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>
         <div className="flex-row center">
@@ -158,7 +151,6 @@ class ItemTableCell extends PureComponent {
     tags: object,
     type: string.isRequired,
     value: oneOfType([string, number]),
-    width: number.isRequired,
     getSelection: func.isRequired,
     onCancel: func.isRequired,
     onChange: func.isRequired,

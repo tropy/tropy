@@ -11,7 +11,7 @@ const getColumns = memo(
     cols.map(column => ({
       type: TYPE.TEXT,
       ...column,
-      property: props[column.property] || {
+      property: props[column.id] || {
         id: column.property
       }
     }))

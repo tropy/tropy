@@ -8,7 +8,7 @@ module.exports = {
     context: 'list',
     id: 'added',
     label: '',
-    width: 5,
+    width: 40,
     type: TYPE.NUMBER
   }
 }
