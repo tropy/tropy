@@ -23,7 +23,8 @@ const items = [
     id: 2,
     template: 'https://tropy.org/v1/tropy#test-template',
     lists: [1],
-    tags: [1]
+    tags: [1],
+    photos: []
   }
 ]
 
