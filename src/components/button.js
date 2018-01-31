@@ -77,14 +77,16 @@ class Button extends PureComponent {
       title: this.title
     }
 
-    if (this.props.noFocus) {
-      attr.onMouseDown = this.handleMouseDown
-      attr.onClick = this.handleClick
+    if (!this.props.isDisabled) {
+      if (this.props.noFocus) {
+        attr.onMouseDown = this.handleMouseDown
+        attr.onClick = this.handleClick
 
-    } else {
-      attr.onClick = this.props.onClick
-      attr.onMouseDown = this.props.onMouseDown
-      attr.tabIndex = this.props.tabIndex
+      } else {
+        attr.onClick = this.props.onClick
+        attr.onMouseDown = this.props.onMouseDown
+        attr.tabIndex = this.props.tabIndex
+      }
     }
 
     return attr
