@@ -39,6 +39,13 @@ const {
   }
 } = require('../../constants/sass')
 
+const IMAGE_PARAMS = [
+  'brightness',
+  'contrast',
+  'hue',
+  'negative',
+  'saturation'
+]
 
 class Esper extends PureComponent {
   constructor(props) {
@@ -105,15 +112,7 @@ class Esper extends PureComponent {
 
   shouldViewSync(props, state) {
     return (props.selection !== this.props.selection) ||
-      !shallow(state, this.state, [
-        'angle',
-        'brightness',
-        'contrast',
-        'hue',
-        'mirror',
-        'negative',
-        'saturation'
-      ])
+      !shallow(state, this.state, ['angle', 'mirror', ...IMAGE_PARAMS])
   }
 
   shouldToolReset(props) {
@@ -165,19 +164,14 @@ class Esper extends PureComponent {
       mode: props.mode,
       zoom: props.zoom,
       minZoom: props.minZoom,
-      angle: 0,
-      mirror: false,
-      brightness: 0,
-      contrast: 0,
-      hue: 0,
-      negative: false,
-      saturation: 0,
       width: 0,
       height: 0,
       src: null,
       x: props.x,
       y: props.y,
-      tool: props.tool
+      tool: props.tool,
+      hasTransformations: false,
+      ...this.getOriginalPhotoState(props)
     }
   }
 
@@ -193,13 +187,20 @@ class Esper extends PureComponent {
         photo: photo.id,
         src: `${photo.protocol}://${photo.path}`,
         width: photo.width,
-        height: photo.height,
-        brightness: image.brightness,
-        contrast: image.contrast,
-        hue: image.hue,
-        negative: image.negative,
-        saturation: image.saturation
-      }, this.getOrientationState(image, photo.orientation))
+        height: photo.height
+      })
+
+      if (image.angle !== 0) {
+        state.hasTransformations = true
+        state.angle = (state.angle + image.angle) % 360
+      }
+
+      for (let prop of ['mirror', ...IMAGE_PARAMS]) {
+        if (state[prop] !== image[prop]) {
+          state.hasTransformations = true
+          state[prop] = image[prop]
+        }
+      }
     }
 
     if (state.x == null || state.mode !== 'zoom') {
@@ -296,6 +297,24 @@ class Esper extends PureComponent {
       .toJSON()
   }
 
+  getOriginalPhotoState({ photo } = this.props) {
+    const state = {
+      angle: 0,
+      brightness: 0,
+      contrast: 0,
+      hue: 0,
+      negative: false,
+      mirror: false,
+      saturation: 0
+    }
+
+    if (photo != null) {
+      assign(state, this.getOrientationState(state, photo.orientation))
+    }
+
+    return state
+  }
+
   getRelativeRotation(
     { angle, mirror } = this.state,
     orientation = this.props.photo.orientation
@@ -360,19 +379,12 @@ class Esper extends PureComponent {
     if (photo == null) return
 
     const state = {
-      angle: 0,
-      brightness: 0,
-      contrast: 0,
-      hue: 0,
-      negative: false,
-      mirror: false,
-      saturation: 0,
+      ...this.getOriginalPhotoState(),
       width: photo.width,
       height: photo.height,
       zoom: this.state.zoom
     }
 
-    assign(state, this.getOrientationState(state, photo.orientation))
     assign(state, this.getZoomBounds(this.view.screen, state))
 
     this.setState(state)
@@ -692,6 +704,7 @@ class Esper extends PureComponent {
             onZoomOut={this.handleZoomOut}/>
           <EsperPanel
             brightness={this.state.brightness}
+            canRevert={this.state.hasTransformations}
             contrast={this.state.contrast}
             hue={this.state.hue}
             negative={this.state.negative}

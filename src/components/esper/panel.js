@@ -140,7 +140,7 @@ const EsperPanel = (props) => (
       <Button
         isBlock
         isDefault
-        isDisabled={props.isDisabled || !props.isVisible}
+        isDisabled={!props.canRevert || props.isDisabled || !props.isVisible}
         tabIndex={TABS.EsperPanel}
         text="esper.panel.revert"
         onBlur={props.onBlur}
@@ -152,6 +152,7 @@ const EsperPanel = (props) => (
 
 EsperPanel.propTypes = {
   brightness: number.isRequired,
+  canRevert: bool.isRequired,
   contrast: number.isRequired,
   hue: number.isRequired,
   negative: bool.isRequired,
