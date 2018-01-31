@@ -79,6 +79,7 @@
     "sqleton": "^1.2.4"
   },
   "dependencies": {
+    "@pixi/filter-adjustment": "^2.5.0",
     "@tweenjs/tween.js": "^17.2.0",
     "bluebird": "^3.5.1",
     "classnames": "^2.2.5",

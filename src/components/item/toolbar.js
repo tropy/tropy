@@ -5,7 +5,7 @@ const { PureComponent } = React
 const PropTypes = require('prop-types')
 const { Toolbar, ToolGroup } = require('../toolbar')
 const { IconChevron16 } = require('../icons')
-const { IconButton } = require('../button')
+const { Button } = require('../button')
 const { MODE } = require('../../constants/project')
 const { bool, func } = PropTypes
 
@@ -22,7 +22,7 @@ class ItemToolbar extends PureComponent {
         <div className="toolbar-left">
           <ToolGroup>
             {this.props.isItemOpen &&
-              <IconButton
+              <Button
                 icon={<IconChevron16/>}
                 onClick={this.handleModeChange}/>}
           </ToolGroup>

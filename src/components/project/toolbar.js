@@ -8,7 +8,7 @@ const { Toolbar } = require('../toolbar')
 const { IconPlus, IconList, IconGrid } = require('../icons')
 const { Slider } = require('../slider')
 const { SearchField } = require('../search')
-const { IconButton } = require('../button')
+const { Button } = require('../button')
 
 
 class ProjectToolbar extends PureComponent {
@@ -43,7 +43,7 @@ class ProjectToolbar extends PureComponent {
               maxIcon={<IconGrid/>}/>
           </div>
           <div className="tool-group">
-            <IconButton
+            <Button
               icon={<IconPlus/>}
               isDisabled={isDisabled || !canCreateItems}
               title="toolbar.import"

@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { func, instanceOf } = require('prop-types')
 const { Toolbar, ToolbarContext, ToolGroup } = require('../toolbar')
-const { IconButton } = require('../button')
+const { Button } = require('../button')
 const { EditorState } = require('prosemirror-state')
 const { LinkToolbar } = require('./link')
 
@@ -114,7 +114,7 @@ class EditorToolbar extends PureComponent {
 
   renderButton(name, props) {
     return (
-      <IconButton
+      <Button
         {...props}
         noFocus
         title={`editor.commands.${name}`}
@@ -173,7 +173,7 @@ class EditorToolbar extends PureComponent {
               {this.renderMarkButton('underline', <IconU/>)}
               {this.renderMarkButton('overline', <IconO/>)}
               {this.renderMarkButton('strikethrough', <IconS/>)}
-              <IconButton
+              <Button
                 noFocus
                 icon={<IconQ/>}
                 title="editor.commands.blockquote"
@@ -189,29 +189,29 @@ class EditorToolbar extends PureComponent {
               {this.renderAlignButton('right', <IconAlignRight/>)}
             </ToolGroup>
             <ToolGroup>
-              <IconButton
+              <Button
                 noFocus
                 icon={<IconBulletList/>}
                 title="editor.commands.ul"
                 onMouseDown={this.cmd.ul}/>
-              <IconButton
+              <Button
                 noFocus
                 icon={<IconNumberedList/>}
                 title="editor.commands.ol"
                 onMouseDown={this.cmd.ol}/>
-              <IconButton
+              <Button
                 noFocus
                 icon={<IconSink/>}
                 title="editor.commands.sinkListItem"
                 onMouseDown={this.cmd.sinkListItem}/>
-              <IconButton
+              <Button
                 noFocus
                 icon={<IconLift/>}
                 title="editor.commands.liftListItem"
                 onMouseDown={this.cmd.liftListItem}/>
             </ToolGroup>
             <ToolGroup>
-              <IconButton
+              <Button
                 noFocus
                 isActive={this.state.marks.link}
                 title="editor.commands.link.button"

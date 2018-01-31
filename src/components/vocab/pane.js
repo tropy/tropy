@@ -6,7 +6,7 @@ const { PrefPane } = require('../prefs/pane')
 const { AccordionGroup } = require('../accordion')
 const { VocabAccordion } = require('./accordion')
 const { array, bool, func, string } = require('prop-types')
-const { IconButton } = require('../button')
+const { Button } = require('../button')
 const { IconPlus } = require('../icons')
 
 
@@ -31,7 +31,7 @@ class VocabPane extends PureComponent {
           </AccordionGroup>
         </div>
         <footer className="vocab-footer">
-          <IconButton
+          <Button
             icon={<IconPlus/>}
             onClick={this.props.onImport}/>
         </footer>

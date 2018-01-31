@@ -56,6 +56,7 @@ class ItemContainer extends PureComponent {
             invertZoom={this.props.settings.invertZoom}
             isDisabled={this.props.isDisabled}
             isItemOpen={this.props.isOpen}
+            isPanelVisible={this.props.esper.panel}
             keymap={this.props.keymap.Esper}
             photo={this.props.photo}
             selection={this.props.selection}
@@ -81,6 +82,7 @@ class ItemContainer extends PureComponent {
   static propTypes = {
     esper: shape({
       height: number.isRequired,
+      panel: bool.isRequired,
       tool: string.isRequired
     }).isRequired,
     image: object.isRequired,

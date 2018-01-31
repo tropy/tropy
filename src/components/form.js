@@ -256,8 +256,9 @@ class Toggle extends PureComponent {
     this.setState({ isTabFocus: true })
   }
 
-  handleBlur = () => {
+  handleBlur = (event) => {
     this.setState({ isTabFocus: false })
+    if (this.props.onBlur) this.props.onBlur(event)
   }
 
   handleChange = () => {
@@ -279,6 +280,7 @@ class Toggle extends PureComponent {
             disabled={this.props.isDisabled}
             tabIndex={this.props.tabIndex}
             onBlur={this.handleBlur}
+            onFocus={this.props.onFocus}
             onChange={this.handleChange}/>
           <FormattedMessage id={this.props.id}/>
         </label>
@@ -294,6 +296,8 @@ class Toggle extends PureComponent {
     tabIndex: number,
     type: oneOf(['checkbox', 'radio']).isRequired,
     value: bool,
+    onBlur: func,
+    onFocus: func,
     onChange: func.isRequired
   }
 

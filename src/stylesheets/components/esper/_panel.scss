@@ -1,0 +1,117 @@
+//
+// Esper panel
+// --------------------------------------------------
+
+.esper.panel {
+  flex: 0 0 $esper-panel-width;
+  box-shadow: -1px 0 0 $esper-shadow;
+  background: $esper-bg;
+  margin-right: -$esper-panel-width;
+  transition: margin-right 0.3s ease;
+
+  .panel-visible & {
+    margin-right: 0;
+  }
+
+  .overlay-mode & {
+    position: absolute;
+    top: $toolbar-height;
+    right: 0;
+    bottom: 0;
+    width: $esper-panel-width;
+    background: $esper-overlay-bg;
+    box-shadow: inset 0 1px 0 $esper-shadow;
+  }
+
+  .adjustments {
+    flex: 1 1 0;
+    overflow-y: scroll;
+    padding: 19px $default-padding-horizontal 0; // todo
+  }
+
+  .adjustment {
+    .flex-row {
+      margin-bottom: -3px;
+    }
+
+    .icon {
+      margin-right: $space-xs;
+
+      .overlay-mode & {
+        color: $esper-overlay-icon-color;
+      }
+    }
+
+    .title {
+      margin-right: auto;
+    }
+
+    .slider {
+      width: calc(100% + 2px);
+      margin-bottom: 7px; // 24px
+    }
+
+    .checkbox {
+      padding: 0;
+    }
+  }
+
+  .revert-btn-container {
+    flex: 0 0 auto;
+    padding: 6px $default-padding-horizontal;
+  }
+
+  .esper:not(.overlay-mode) & {
+    .checkbox,
+    .radio {
+      [type] {
+        background: $esper-checkbox-bg;
+        border: 1px solid $esper-input-border;
+
+        &:active {
+          background: $esper-checkbox-checked-bg;
+          border-color: $esper-checkbox-checked-border;
+        }
+
+        &[disabled] {
+          background: $esper-checkbox-disabled-bg;
+          border-color: $esper-checkbox-disabled-border;
+        }
+
+        &:checked {
+          background: $esper-checkbox-checked-bg;
+          border-color: $esper-checkbox-checked-border;
+
+          &:active {
+            background: $esper-checkbox-checked-active-bg;
+            border-color: $esper-checkbox-checked-active-border;
+          }
+
+          &[disabled] {
+            background: $esper-checkbox-disabled-bg;
+            border-color: $esper-checkbox-disabled-border;
+
+            &::before,
+            &::after {
+              background: $esper-checkbox-checked-bg;
+            }
+          }
+        }
+      }
+    }
+
+    .btn-default {
+      background-color: $esper-btn-default-bg;
+      border-color: $esper-btn-default-border;
+
+      &:active {
+        background-color: $esper-btn-default-active-bg;
+      }
+
+      &.disabled,
+      &[disabled] {
+        background-color: $esper-btn-default-bg;
+      }
+    }
+  }
+}
