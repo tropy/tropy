@@ -19,24 +19,29 @@ const PROP = {
   HEIGHT: `${IFFF}height`,
 }
 
+const EXPORT_MEDIA = [
+  'angle',
+  'brightness',
+  'contrast',
+  'height',
+  'hue',
+  'mirror',
+  'negative',
+  'saturation',
+  'width',
+]
 const EXPORT_PROPERTIES = {
   SELECTION: [
-    'angle',
-    'height',
-    'mirror',
-    'width',
     'x',
     'y',
+    ...EXPORT_MEDIA
   ],
   PHOTO: [
-    'angle',
     'checksum',
-    'height',
     'mimetype',
-    'mirror',
     'orientation',
     'size',
-    'width',
+    ...EXPORT_MEDIA
   ]
 }
 
