@@ -2,6 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
+const { Resizable } = require('../resizable')
 const cx = require('classnames')
 const { getLabel } = require('../../common/ontology')
 const { IconChevron7 } = require('../icons')
@@ -25,6 +26,10 @@ class ItemTableHeadCell extends PureComponent {
     return this.props.isAscending ? 'ascending' : 'descending'
   }
 
+  get isResizable() {
+    return this.props.onResize != null
+  }
+
   handleClick = () => {
     this.props.onClick({
       asc: !this.props.isActive || !this.props.isAscending,
@@ -33,19 +38,27 @@ class ItemTableHeadCell extends PureComponent {
     })
   }
 
-  render() {
-    const { label, isActive, width } = this.props
+  handleResize = () => {
+  }
 
+  render() {
     return (
-      <th
-        style={{ width }}
+      <Resizable
         className={cx(this.classes)}
-        onClick={this.handleClick}>
-        <div className="metadata-head-container">
-          <div className="label">{label}</div>
-          {isActive && <IconChevron7/>}
+        edge="right"
+        isDisabled={!this.isResizable}
+        max={480}
+        min={40}
+        node="th"
+        onResize={this.handleResize}
+        value={this.props.width}>
+        <div
+          className="metadata-head-container"
+          onClick={this.handleClick}>
+          <div className="label">{this.props.label}</div>
+          {this.props.isActive && <IconChevron7/>}
         </div>
-      </th>
+      </Resizable>
     )
   }
 
@@ -58,7 +71,8 @@ class ItemTableHeadCell extends PureComponent {
     type: string.isRequired,
     id: string.isRequired,
     width: number.isRequired,
-    onClick: func.isRequired
+    onClick: func.isRequired,
+    onResize: func
   }
 
   static defaultProps = {
@@ -81,9 +95,10 @@ class ItemTableHead extends PureComponent {
     return property.label || getLabel(property.id)
   }
 
-  render() {
-    const { columns, onSort } = this.props
+  handleResize = () => {
+  }
 
+  render() {
     return (
       <table className="table-head">
         <thead>
@@ -97,8 +112,8 @@ class ItemTableHead extends PureComponent {
                 isActive={this.isActive(PositionColumn)}
                 isAscending={this.isAscending}
                 type={PositionColumn.type}
-                onClick={onSort}/>}
-            {columns.map(({ width, property }) =>
+                onClick={this.props.onSort}/>}
+            {this.props.columns.map(({ width, property }) =>
               <ItemTableHeadCell
                 context="metadata"
                 key={property.id}
@@ -107,7 +122,8 @@ class ItemTableHead extends PureComponent {
                 width={width}
                 isActive={this.isActive(property)}
                 isAscending={this.isAscending}
-                onClick={onSort}/>)}
+                onClick={this.props.onSort}
+                onResize={this.handleResize}/>)}
             <BlankTableHeadCell/>
           </tr>
         </thead>

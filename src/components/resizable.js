@@ -30,7 +30,7 @@ const AXS = {
 
 class Resizable extends PureComponent {
   get classes() {
-    return ['resizable', {
+    return ['resizable', this.props.className, {
       disabled: this.props.isDisabled
     }]
   }
@@ -147,6 +147,7 @@ class Resizable extends PureComponent {
 
   static propTypes = {
     children: node,
+    className: string,
     edge: oneOf(keys(DIM)).isRequired,
     id: number,
     isDisabled: bool,
