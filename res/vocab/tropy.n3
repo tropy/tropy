@@ -162,12 +162,14 @@ tropy:orientation a rdf:Property ;
 tropy:width a rdf:Property ;
 	rdfs:label "Width"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  owl:sameAs exif:width ;
   rdfs:domain tropy:Photo , tropy:Selection ;
 	rdfs:comment "Image width in pixels."@en .
 
 tropy:height a rdf:Property ;
 	rdfs:label "Height"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  owl:sameAs exif:height ;
   rdfs:domain tropy:Photo , tropy:Selection ;
 	rdfs:comment "Image height in pixels."@en .
 
