@@ -34,13 +34,13 @@ tropy:Image a rdfs:Class ;
 
 tropy:Photo a rdfs:Class ;
   rdfs:subClassOf tropy:Image ;
-  rdfs:label "Photo"@en ;
+  rdfs:label "Photo"@en , "Photo"@fr , "Foto"@de ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A photo."@en .
 
 tropy:Selection a rdfs:Class ;
-  rdfs:subClassOf rdfs:Image ;
-  rdfs:label "Selection"@en ;
+  rdfs:subClassOf tropy:Image ;
+  rdfs:label "Selection"@en "Sélection"@fr , "Ausschnitt"@de ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A selection within a photo."@en .
 
@@ -126,7 +126,6 @@ tropy:tag a rdf:Property ;
   rdfs:range tropy:Tag ;
 	rdfs:comment "A tag applied to the item."@en .
 
-
 tropy:note a rdf:Property ;
 	rdfs:label "Note"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
@@ -134,6 +133,50 @@ tropy:note a rdf:Property ;
   rdfs:range tropy:Note ;
 	rdfs:comment "A rich-text note."@en .
 
+tropy:angle a rdf:Property ;
+	rdfs:label "Angle"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Rotation adjustment of an image."@en .
+
+tropy:brightness a rdf:Property ;
+	rdfs:label "Brightness"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Brightness adjustment of an image."@en .
+
+tropy:contrast a rdf:Property ;
+	rdfs:label "Contrast"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Contrast adjustment of an image."@en .
+
+tropy:hue a rdf:Property ;
+	rdfs:label "Hue"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Hue adjustment of an image."@en .
+
+tropy:mirror a rdf:Property ;
+	rdfs:label "Mirror"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Mirror adjustment of an image."@en .
+
+tropy:negative a rdf:Property ;
+	rdfs:label "Invert Colors"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Color inversion of an image."@en .
+
+tropy:saturation a rdf:Property ;
+	rdfs:label "Saturation"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Saturation adjustment of an image."@en .
+
+
+# Custom Metadata Properties
 
 tropy:box a rdf:Property ;
 	rdfs:label "Box"@en , "Carton"@fr , "Box"@de ;
@@ -161,6 +204,8 @@ tropy:collection a rdf:Property ;
   rdfs:domain tropy:Item , tropy:Photo, tropy:Selection ;
 	rdfs:comment "A unit of archival organizations."@en , "Un ensemble d'unités d'archivage."@fr .
 
+
+# Template Properties
 
 tropy:template-type a rdf:Property ;
   rdfs:label "Type"@en , "Type"@fr ;
