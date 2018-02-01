@@ -7,16 +7,13 @@ const { ITEM, PHOTO, SELECTION } = require('../constants/type')
 const makeNote = require('./note')
 
 const TR = 'https://tropy.org/v1/tropy#'
-const IFFF = 'http://iiif.io/api/image/2#'
 
 const PROP = {
   TEMPLATE: `${TR}template`,
   ITEM: `${TR}item`,
   PHOTO: `${TR}photo`,
   SELECTION: `${TR}selection`,
-  NOTE: `${TR}note`,
-  WIDTH: `${IFFF}width`,
-  HEIGHT: `${IFFF}height`,
+  NOTE: `${TR}note`
 }
 
 const EXPORT_MEDIA = [
@@ -70,9 +67,7 @@ function makeContext(template, items, resources) {
           '@id': PROP.SELECTION,
           '@container': '@list',
           '@context': {}
-        },
-        width: PROP.WIDTH,
-        height: PROP.HEIGHT
+        }
       }
     }
   }
