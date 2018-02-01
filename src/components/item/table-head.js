@@ -52,7 +52,7 @@ class ItemTableHeadCell extends PureComponent {
         onResize={this.handleResize}
         value={this.props.width}>
         <div
-          className="metadata-head-container"
+          className="th-container"
           onClick={this.handleClick}>
           <div className="label">{this.props.label}</div>
           {this.props.isActive && <IconChevron7/>}
