@@ -17,7 +17,7 @@
 
   th,
   td {
-    padding: 0 $space-xs 0 ($space-xs + 1px);
+    padding: 0 ($space-xs + 1px) 0 $space-xs;
     position: relative;
 
     &:last-child {
@@ -50,20 +50,22 @@
         bottom: 1px solid $item-table-header-border-color;
       }
       position: relative;
-      contain: none; // todo
+      contain: content; // Not clear why size shifts the content
 
       &:first-child {
         padding-left: $space-sm;
+      }
 
-        &::before {
+      &:last-child {
+        &::after {
           content: none;
         }
       }
 
-      &::before {
+      &::after {
         content: " ";
         position: absolute;
-        left: 0;
+        right: 0;
         top: 2px;
         bottom: 2px;
         width: 1px;
