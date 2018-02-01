@@ -1,6 +1,7 @@
 @prefix tropy: <https://tropy.org/v1/tropy#> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix exif:  <http://www.w3.org/2003/12/exif/ns#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -132,6 +133,67 @@ tropy:note a rdf:Property ;
   rdfs:domain tropy:Item , tropy:Photo , tropy:Selection ;
   rdfs:range tropy:Note ;
 	rdfs:comment "A rich-text note."@en .
+
+tropy:checksum a rdf:Property ;
+	rdfs:label "Checksum"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo ;
+	rdfs:comment "Checksum of original photo (MD5)."@en .
+
+tropy:path a rdf:Property ;
+	rdfs:label "Path"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo ;
+	rdfs:comment "Path to original photo."@en .
+
+tropy:mimetype a rdf:Property ;
+	rdfs:label "Mime-Type"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo ;
+	rdfs:comment "Mime-type of original photo."@en .
+
+tropy:orientation a rdf:Property ;
+	rdfs:label "Orientation"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  owl:sameAs exif:orientation ;
+  rdfs:domain tropy:Photo ;
+	rdfs:comment "EXIF orientation (angle and mirror) of original photo."@en .
+
+tropy:width a rdf:Property ;
+	rdfs:label "Width"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Image width in pixels."@en .
+
+tropy:height a rdf:Property ;
+	rdfs:label "Height"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Image height in pixels."@en .
+
+tropy:size a rdf:Property ;
+	rdfs:label "size"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo ;
+	rdfs:comment "Size of original photo in bytes."@en .
+
+tropy:x a rdf:Property ;
+	rdfs:label "X"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Selection ;
+	rdfs:comment "Origin X coordinate in original image."@en .
+
+tropy:y a rdf:Property ;
+	rdfs:label "Y"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Selection ;
+	rdfs:comment "Origin Y coordinate in original image."@en .
+
+tropy:height a rdf:Property ;
+	rdfs:label "Height"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Image height in pixels."@en .
 
 tropy:angle a rdf:Property ;
 	rdfs:label "Angle"@en ;
