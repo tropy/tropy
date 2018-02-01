@@ -15,8 +15,8 @@
     padding-right: 0;
   }
 
-  .metadata-head,
-  .metadata {
+  th,
+  td {
     padding: 0 $space-xs 0 ($space-xs + 1px);
     position: relative;
 
@@ -40,8 +40,7 @@
       width: calc(100% - #{$default-padding-horizontal});
     }
 
-    .metadata-head,
-    .blank {
+    th {
       display: table-cell; // Reset resizable
       text-align: justify;
       font-weight: 400;
@@ -79,7 +78,7 @@
           bottom: 0;
         }
 
-        & + .metadata-head {
+        & + th {
           &::before {
             top: 0;
             bottom: 0;
@@ -112,7 +111,7 @@
         }
       }
 
-      &-container {
+      .th-container {
         display: flex;
         width: 100%;
         height: 100%;
@@ -169,22 +168,15 @@
     will-change: transform;
   }
 
-  .table-spacer {
-    .spacer,
-    .blank {
-      padding: 0;
-    }
-  }
-
   .item {
     contain: layout size style;
 
-    .metadata {
+    td {
       height: $row-height;
     }
 
     &.active {
-      .metadata {
+      td {
         color: $items-active-color;
         background: $items-active-bg;
 
@@ -206,13 +198,13 @@
     }
 
     &.over {
-      .metadata {
+      td {
         @extend %drop-target;
       }
     }
   }
 
-  .metadata {
+  td {
     &.main-column {
       padding-left:
         $default-padding-horizontal
