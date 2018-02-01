@@ -14,16 +14,11 @@ class Plugins {
   }
 
   get context() {
-    if (typeof FormData !== 'undefined') {
-      // when running in the browser process
-      return {
-        fetch,
-        FormData,
-        logger,
-        jsonld,
-        nativeImage
-      }
-    } else return {}
+    return {
+      logger,
+      jsonld,
+      nativeImage
+    }
   }
 
   contract(Plugin, config) {
