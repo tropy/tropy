@@ -6,6 +6,7 @@ globals:
   expect: true
   sinon: true
   F: true
+  P: true
   __coverage__: true
   __src: true
   __require: true

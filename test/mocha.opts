@@ -7,3 +7,4 @@
 --require test/support/enzyme
 --require test/support/args
 --require test/support/fixtures
+--require test/support/plugins

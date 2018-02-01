@@ -4,6 +4,7 @@ const { Plugins } = __require('common/plugins')
 const config = require('../fixtures/plugins')
 
 describe('Plugins', () => {
+  before(P.copyFixtures)
   const basic = new Plugins(config)
 
   it('valid config matches', () => {
@@ -30,13 +31,13 @@ describe('Plugins', () => {
   })
 
   it('initialize with bad plugins', () => {
-    const cfg = {
-      ...config,
-      plugins: [{
-        plugin: 'foo',
-      }]
-    }
+    const cfg = [{
+      plugin: 'foo',
+      config: {}
+    }]
+
     const plugins = new Plugins(cfg)
+    plugins.initialize()
     expect(() => plugins.initialize()).to.not.throw()
     expect(plugins.instances).to.eql([])
   })
