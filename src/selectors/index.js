@@ -2,9 +2,9 @@
 
 module.exports = {
   ...require('./activity'),
-  ...require('./columns'),
   ...require('./items'),
   ...require('./metadata'),
+  ...require('./nav'),
   ...require('./notes'),
   ...require('./ontology'),
   ...require('./photos'),

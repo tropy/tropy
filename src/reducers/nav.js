@@ -1,7 +1,10 @@
 'use strict'
 
-const { NAV, ITEM, LIST, TAG, NOTE, PHOTO, PROJECT } = require('../constants')
 const { isSelected, select } = require('../selection')
+const { merge, omit } = require('../common/util')
+const {
+  DC, NAV, ITEM, LIST, TAG, NOTE, PHOTO, PROJECT
+} = require('../constants')
 
 const init = {
   mode: PROJECT.MODE.PROJECT,
@@ -9,17 +12,20 @@ const init = {
   query: '',
   tags: [],
   sort: {},
-  lists: {}
+  columns: [
+    { width: 250, id: DC.title },
+    { width: 100, id: DC.creator },
+    { width: 100, id: DC.date },
+    { width: 100, id: DC.type }
+  ],
 }
 
 module.exports = {
   // eslint-disable-next-line complexity
   nav(state = init, { type, payload, meta, error }) {
     switch (type) {
-
       case NAV.RESTORE:
-        return { ...init, ...payload }
-
+        return merge(init, payload)
       case NAV.UPDATE:
         return { ...state, ...payload }
 
@@ -45,10 +51,17 @@ module.exports = {
         }
       }
 
-      case LIST.REMOVE:
-        return state.list === payload ?
-          { ...state, list: null, items: [], photo: null } :
-          state
+      case LIST.REMOVE: {
+        const isCurrent = (state.list === payload)
+
+        return {
+          ...state,
+          list: isCurrent ? null : state.list,
+          items: isCurrent ? [] : state.items,
+          photo: isCurrent ? null : state.photo,
+          sort: omit(state.sort, payload)
+        }
+      }
 
       case ITEM.DELETE:
       case ITEM.RESTORE:

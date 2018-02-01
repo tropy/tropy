@@ -143,7 +143,7 @@ module.exports = mod.item = {
 
     const hasTags = tags.length > 0
     const hasQuery = query.length > 0
-    const byPosition = sort.context === 'list'
+    const byPosition = sort.property === 'added'
 
     if (hasQuery) {
       params.$query = prefix(query)

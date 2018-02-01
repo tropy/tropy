@@ -5,7 +5,7 @@ const React = require('react')
 const { ItemIterable } = require('./iterable')
 const { BlankTableCell, ItemTableCell } = require('./table-cell')
 const { get, pick } = require('../../common/util')
-const { COLUMNS: { PositionColumn }, TYPE } = require('../../constants')
+const { NAV } = require('../../constants')
 const cx = require('classnames')
 const { arrayOf, bool, number, object } = require('prop-types')
 
@@ -60,8 +60,8 @@ class ItemTableRow extends ItemIterable {
         {this.props.hasPositionColumn &&
           <ItemTableCell {...cellProps}
             isReadOnly
-            id={PositionColumn.id}
-            type={TYPE.NUMBER}
+            id={NAV.COLUMNS.POSITION.id}
+            type={NAV.COLUMNS.POSITION.type}
             value={this.props.position}/>}
         {this.mapColumns(props =>
           <ItemTableCell {...cellProps} {...props}/>)}

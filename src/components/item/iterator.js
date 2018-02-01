@@ -10,7 +10,7 @@ const { on, off } = require('../../dom')
 const { seq, compose, map, cat, keep } = require('transducers.js')
 
 const {
-  arrayOf, oneOf, shape, bool, func, number, object, string
+  arrayOf, shape, bool, func, number, object, string
 } = require('prop-types')
 
 
@@ -270,8 +270,7 @@ class ItemIterator extends Iterator {
 
     sort: shape({
       asc: bool,
-      column: string.isRequired,
-      context: oneOf(['metadata', 'list', 'item']).isRequired
+      column: string.isRequired
     }).isRequired,
 
     isActive: bool,

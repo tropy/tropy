@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { COLUMNS: { PositionColumn } } = require('../../constants')
+const { NAV } = require('../../constants')
 const { arrayOf, bool, number, object } = require('prop-types')
 const { BlankTableHeadCell } = require('./table-head')
 
@@ -21,7 +21,7 @@ class ItemTableSpacer extends PureComponent {
       <thead className="table-spacer">
         <tr>
           {this.props.hasPositionColumn &&
-            <SpacerCell width={PositionColumn.width}/>}
+            <SpacerCell width={NAV.COLUMNS.POSITION.width}/>}
           {this.props.columns.map(({ property, width }) =>
             <SpacerCell key={property.id} width={width}/>)}
           <BlankTableHeadCell/>
