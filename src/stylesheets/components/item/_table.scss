@@ -42,6 +42,7 @@
   }
 
   .metadata-head {
+    display: table-cell; // Reset resizable
     text-align: justify;
     font-weight: 400;
     height: $item-table-header-height;
@@ -50,6 +51,7 @@
       bottom: 1px solid $item-table-header-border-color;
     }
     position: relative;
+    contain: none; // todo
 
     &:first-child {
       padding-left: $space-sm;
