@@ -191,12 +191,6 @@ tropy:y a rdf:Property ;
   rdfs:domain tropy:Selection ;
 	rdfs:comment "Origin Y coordinate in original image."@en .
 
-tropy:height a rdf:Property ;
-	rdfs:label "Height"@en ;
-	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
-  rdfs:domain tropy:Photo , tropy:Selection ;
-	rdfs:comment "Image height in pixels."@en .
-
 tropy:angle a rdf:Property ;
 	rdfs:label "Angle"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
