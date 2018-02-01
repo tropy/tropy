@@ -407,6 +407,7 @@ class Esper extends PureComponent {
     this.view.adjust(state)
 
     this.persist()
+    this.container.focus()
   }
 
   handleRotationChange = (by) => {
