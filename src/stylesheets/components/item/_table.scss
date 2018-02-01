@@ -169,6 +169,13 @@
     will-change: transform;
   }
 
+  .table-spacer {
+    .spacer,
+    .blank {
+      padding: 0;
+    }
+  }
+
   .item {
     contain: layout size style;
 
