@@ -66,13 +66,15 @@
 }
 
 .ProseMirror {
+  //padding-top: $toolbar-height + 1px + $prose-mirror-padding-start
+
   .horizontal & {
-    padding-top: $toolbar-height + 1px + $prose-mirror-padding-start;
+    padding-top: $prose-mirror-padding-start;
     padding-bottom: $prose-mirror-padding-end;
   }
 
   .vertical-rl & {
-    padding-right: $toolbar-height + 1px + $prose-mirror-padding-start;
+    padding-right: $prose-mirror-padding-start;
     padding-left: $prose-mirror-padding-end;
   }
   //.editor:hover & {
