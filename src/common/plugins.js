@@ -15,6 +15,7 @@ class Plugins {
       join(this.root, 'node_modules'),
       this.root
     ]
+    this.isRenderer = process.type === 'renderer'
   }
 
   get context() {
@@ -56,18 +57,15 @@ class Plugins {
       const params = this.plugins[i]
 
       const result = this.loadPackage(params.package)
-      if (result) {
-        const { pkg, hooks } = result
-        const instance = this.contract(pkg, params.config)
+      if (!result) continue
 
-        instance && this.instances.push({
-          params,
-          instance,
-          hooks,
-          instanceNumber: this.instances.length
-        })
-      }
-
+      const { pkg, hooks } = result
+      this.instances.push({
+        params,
+        instance: this.isRenderer ? this.contract(pkg, params.config) : null,
+        hooks,
+        instanceNumber: this.instances.length
+      })
     }
     const count = this.instances.length
     verbose(`Plugins(root=${this.root}, count=${count})`)
@@ -75,15 +73,16 @@ class Plugins {
 
   handlers(action) {
     // traverse the existing instances, and find the ones that have
-    // registered a handeler for the given action
+    // registered a handler for the given action
     return this.instances.reduce((res, instance) => {
       const fnNames = pluck(instance.hooks, [action])
       const { instanceNumber } = instance
       const { label } = instance.params
+      const { instance: pluginInstance } = instance
       if (fnNames.length) {
         const fnName = fnNames[0]
-        const fn = instance.instance[fnName]
-        if (typeof fn === 'function') {
+        const fn = pluginInstance && pluginInstance[fnName]
+        if (typeof fn === 'function' || !this.isRenderer) {
           res.push({ label, fnName, instanceNumber })
         }
       }

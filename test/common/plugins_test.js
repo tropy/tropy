@@ -64,7 +64,11 @@ describe('Plugins', () => {
         .to.be.eql(['Plugin Name', 'Another Plugin'])
     })
     it('exists but is not a function', () => {
-      expect(basic.handlers('tropy-hook')).to.be.eql([])
+      if (process.type === 'renderer') {
+        expect(basic.handlers('tropy-hook')).to.be.eql([])
+      } else {
+        expect(basic.handlers('tropy-hook')).to.have.length(2)
+      }
     })
     it('not registered', () => {
       expect(basic.handlers('unknown')).to.be.eql([])
