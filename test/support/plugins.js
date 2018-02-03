@@ -27,8 +27,11 @@ const copyDir = (src, dest) => {
 
 global.P = {
   copyFixtures() {
-    const fixtures = resolve(__dirname, '..', 'fixtures')
-    const root = app.getPath('userData')
-    copyDir(resolve(fixtures, 'plugins'), resolve(root, 'plugins'))
+    if (app) {
+      const fixtures = resolve(__dirname, '..', 'fixtures')
+      const root = app.getPath('userData')
+      copyDir(resolve(fixtures, 'plugins'), resolve(root, 'plugins'))
+      console.log('copyFixtures')
+    }
   }
 }

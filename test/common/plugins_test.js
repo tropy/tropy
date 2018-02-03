@@ -1,16 +1,17 @@
 'use strict'
 
+const { resolve } = require('path')
 const { Plugins } = __require('common/plugins')
 const config = require('../fixtures/plugins')
 
 describe('Plugins', () => {
-  before(P.copyFixtures)
-  const basic = new Plugins(config)
+  const root = resolve(__dirname, '..', 'fixtures', 'plugins')
+  const basic = new Plugins(root, config)
 
   it('valid config matches', () => {
     expect(basic.plugins.length).to.eql(2)
     expect(basic.plugins[0]).to.eql({
-      plugin: 'tropy-plugin',
+      package: 'tropy-plugin',
       label: 'Plugin Name',
       config: {
         specific: 'to plugin'
@@ -20,7 +21,7 @@ describe('Plugins', () => {
 
   it('invalid config does not throw error', () => {
     // just warns
-    const p = new Plugins()
+    const p = new Plugins(root)
     expect(() => p.initialize()).to.not.throw()
     expect(p.plugins.length).to.eql(0)
     expect(p.handlers('foo').length).to.eql(0)
@@ -32,11 +33,11 @@ describe('Plugins', () => {
 
   it('initialize with bad plugins', () => {
     const cfg = [{
-      plugin: 'foo',
+      package: 'foo',
       config: {}
     }]
 
-    const plugins = new Plugins(cfg)
+    const plugins = new Plugins(root, cfg)
     plugins.initialize()
     expect(() => plugins.initialize()).to.not.throw()
     expect(plugins.instances).to.eql([])
@@ -57,7 +58,7 @@ describe('Plugins', () => {
     expect(basic.instances[2]).to.be.undefined
   })
 
-  it('handlers', () => {
+  describe('handlers', () => {
     it('normal case', () => {
       expect(basic.handlers('export').map(r => r.label))
         .to.be.eql(['Plugin Name', 'Another Plugin'])
@@ -70,4 +71,15 @@ describe('Plugins', () => {
     })
   })
 
+  describe('loadPackage', () => {
+    it('valid', () => {
+      const result = basic.loadPackage('tropy-plugin')
+      expect(result.hooks).to.have.all.keys('tropy-hook', 'export')
+      expect(result.pkg).to.be.a('function')
+    })
+    it('invalid', () => {
+      expect(basic.loadPackage('not-a-package'))
+        .to.be.undefined
+    })
+  })
 })

@@ -7,10 +7,14 @@ const { uniq, pluck } = require('./util')
 const { promises: jsonld } = require('jsonld')
 
 class Plugins {
-  constructor(config = {}) {
-    this.root = config.root
-    this.plugins = config.plugins || []
+  constructor(root, plugins = []) {
+    this.root = root
+    this.plugins = plugins
     this.instances = []
+    this.loadPaths = [
+      join(this.root, 'node_modules'),
+      this.root
+    ]
   }
 
   get context() {
@@ -26,37 +30,45 @@ class Plugins {
   }
 
   get packages() {
-    return uniq(this.plugins.map(p => p.plugin))
+    return uniq(this.plugins.map(p => p.package))
+  }
+
+  // try to load the package from one of the paths
+  loadPackage(name) {
+    let pkg, hooks
+    for (let i = 0; i < this.loadPaths.length; i++) {
+      const path = join(this.loadPaths[i], name)
+      try {
+        pkg = require(path)
+        hooks = require(join(path, 'package.json')).hooks || {}
+      } catch (error) {
+        continue
+      }
+      if (pkg) return { pkg, hooks }
+    }
+    warn(`Plugin package "${name}" can not be loaded`)
   }
 
   initialize() {
     // for each instance in `this.plugins`, require their package
     // and store it in `this.instances`
     for (let i = 0; i < this.plugins.length; i++) {
-      var pluginPackage
-      var hooks
-      var instance
       const params = this.plugins[i]
-      const pluginName = params.plugin
-      try {
-        const path = join(this.root, pluginName)
-        pluginPackage = require(path)
-        const packageJson = require(join(path, 'package.json'))
-        hooks = packageJson.hooks || {}
-        instance = this.contract(pluginPackage, params.config)
-      } catch (error) {
-        warn(`Plugin package "${pluginName}" can not be loaded: ` +
-             error.message)
-      }
-      instance && this.instances.push({
-        pluginName,
-        params,
-        instance,
-        hooks,
-        instanceNumber: this.instances.length
-      })
-    }
 
+      const result = this.loadPackage(params.package)
+      if (result) {
+        const { pkg, hooks } = result
+        const instance = this.contract(pkg, params.config)
+
+        instance && this.instances.push({
+          params,
+          instance,
+          hooks,
+          instanceNumber: this.instances.length
+        })
+      }
+
+    }
     const count = this.instances.length
     verbose(`Plugins(root=${this.root}, count=${count})`)
   }
@@ -92,14 +104,14 @@ module.exports = {
 
   get plugins() {
     if (!instance) {
+      const home = ARGS.home || app.getPath('userData')
       let config
       try {
-        const path = join(ARGS.home || app.getPath('userData'), 'plugins.json')
-        config = require(path)
+        config = require(join(home, 'plugins.json'))
       } catch (e) {
-        config = {}
+        config = []
       }
-      instance = new Plugins(config)
+      instance = new Plugins(join(home, 'plugins'), config)
       instance.initialize()
     }
     return instance

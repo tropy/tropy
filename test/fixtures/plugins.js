@@ -1,21 +1,16 @@
 'use strict'
 
-const { join } = require('path')
-
-module.exports = {
-  root: join(__dirname, 'plugins'),
-  plugins: [
-    {
-      plugin: 'tropy-plugin',
-      label: 'Plugin Name',
-      config: {
-        specific: 'to plugin'
-      }
-    },
-    {
-      plugin: 'tropy-plugin',
-      label: 'Another Plugin',
-      config: {}
+module.exports = [
+  {
+    package: 'tropy-plugin',
+    label: 'Plugin Name',
+    config: {
+      specific: 'to plugin'
     }
-  ]
-}
+  },
+  {
+    package: 'tropy-plugin',
+    label: 'Another Plugin',
+    config: {}
+  }
+]
