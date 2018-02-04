@@ -14,7 +14,7 @@ module.exports = {
     POSITION: {
       id: 'added',
       label: '',
-      width: 40,
+      width: 48,
       type: TYPE.NUMBER
     }
   }
