@@ -46,7 +46,6 @@ describe('export', () => {
   it('has photo @context', async () => {
     const data = (await ld)[0]['@context']['photo']['@context']
 
-    expect(data.path).to.equal('http://schema.org/image')
     expect(data.nonTemplateProperty).to.eql({
       '@id': 'http://example.com/custom-property',
       '@type': 'http://example.com/custom-property#type'
