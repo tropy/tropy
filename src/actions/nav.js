@@ -37,5 +37,15 @@ module.exports = {
       payload,
       meta: { search: true, ...meta }
     }
+  },
+
+  column: {
+    resize(payload, meta = {}) {
+      return {
+        type: NAV.COLUMN.RESIZE,
+        payload,
+        meta
+      }
+    }
   }
 }

@@ -1,7 +1,7 @@
 'use strict'
 
 const { isSelected, select } = require('../selection')
-const { merge, omit } = require('../common/util')
+const { merge, omit, splice } = require('../common/util')
 const {
   DC, NAV, ITEM, LIST, TAG, NOTE, PHOTO, PROJECT
 } = require('../constants')
@@ -150,6 +150,17 @@ module.exports = {
           photo: null,
           ...payload
         }
+
+      case NAV.COLUMN.RESIZE: {
+        const { column, width } = payload
+
+        return {
+          ...state,
+          columns: splice(state.columns, column, 1, {
+            ...state.columns[column], width
+          })
+        }
+      }
 
       default:
         return state

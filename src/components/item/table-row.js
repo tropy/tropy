@@ -60,8 +60,8 @@ class ItemTableRow extends ItemIterable {
         {this.props.hasPositionColumn &&
           <ItemTableCell {...cellProps}
             isReadOnly
-            id={NAV.COLUMNS.POSITION.id}
-            type={NAV.COLUMNS.POSITION.type}
+            id={NAV.COLUMN.POSITION.id}
+            type={NAV.COLUMN.POSITION.type}
             value={this.props.position}/>}
         {this.mapColumns(props =>
           <ItemTableCell {...cellProps} {...props}/>)}

@@ -102,8 +102,8 @@ class ItemTableHead extends PureComponent {
           <tr>
             {this.props.hasPositionColumn &&
               <ItemTableHeadCell
-                {...NAV.COLUMNS.POSITION}
-                isActive={this.isActive(NAV.COLUMNS.POSITION)}
+                {...NAV.COLUMN.POSITION}
+                isActive={this.isActive(NAV.COLUMN.POSITION)}
                 isAscending={this.isAscending}
                 onClick={this.props.onSort}/>}
             {this.props.columns.map(({ width, property }) =>

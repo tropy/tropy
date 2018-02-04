@@ -10,7 +10,8 @@ module.exports = {
   SORT: 'nav.sort',
   UPDATE: 'nav.update',
 
-  COLUMNS: {
+  COLUMN: {
+    RESIZE: 'nav.column.resize',
     POSITION: {
       id: 'added',
       label: '',
