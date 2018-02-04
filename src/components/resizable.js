@@ -40,7 +40,7 @@ class Resizable extends PureComponent {
   }
 
   get value() {
-    return this.props.value
+    return restrict(this.props.value, this.props.min, this.props.max)
   }
 
   get cssValue() {
@@ -77,14 +77,10 @@ class Resizable extends PureComponent {
       (event[AXS[edge]] - origin) * (isInverse ? -1 : 1), min, max
     )
 
-    if (isRelative) {
-      return {
-        absolute: value,
-        value: restrict(round(value / scale, 100), null, 100)
-      }
+    return (!isRelative) ? { value } : {
+      absolute: value,
+      value: restrict(round(value / scale, 100), null, 100)
     }
-
-    return { value }
   }
 
   setContainer = (container) => {
