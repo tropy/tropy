@@ -100,9 +100,12 @@ describe('export', () => {
   describe('photo has', () => {
     it('note', async () => {
       const item1 = (await ld)[0]['@graph'][0]
+      const { html, text } = item1.photo[1]['note']
       expect(item1.photo[0]).to.not.have.property('note')
-      expect(item1.photo[1]['note']['text']).to.eql('photo note')
-      expect(item1.photo[1]['note']['html']).to.eql('<p>photo note</p>')
+      expect(text['@value']).to.eql('photo note')
+      expect(text['@language']).to.eql('de')
+      expect(html['@value']).to.eql('<p>photo note</p>')
+      expect(html['@language']).to.eql('de')
     })
 
     it('width, etc.', async () => {
@@ -123,7 +126,8 @@ describe('export', () => {
       expect(s).to.have.property('height', 40)
     })
     it('note', () => {
-      expect(s['note']['text']).to.eql('selection note')
+      expect(s['note']['text']['@value']).to.eql('selection note')
+      expect(s['note']['text']['@language']).to.eql('en')
       expect(s['note']['doc']).to.be.undefined
     })
   })
