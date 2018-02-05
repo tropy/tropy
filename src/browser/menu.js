@@ -5,7 +5,6 @@ const { basename } = require('path')
 const { warn, verbose } = require('../common/log')
 const { transduce, map, transformer } = require('transducers.js')
 const electron = require('electron')
-const { plugins } = require('../common/plugins')
 
 function withWindow(cmd, fn) {
   return (_, win) => {
@@ -183,7 +182,7 @@ class Menu {
         case 'export':
           item.submenu = [
             ...item.submenu,
-            ...plugins.handlers('export').map(plugin => ({
+            ...this.app.plugins.handlers('export').map(plugin => ({
               label: plugin.name,
               click: this.responder('app:export-item', {
                 target: params[0].target,

@@ -2,7 +2,7 @@
 
 const { writeFile } = require('fs')
 const { sync: mkdir } = require('mkdirp')
-const { app, nativeImage } = require('electron')
+const { nativeImage } = require('electron')
 const { join } = require('path')
 const { warn, verbose, logger } = require('./log')
 const { uniq, pluck } = require('./util')
@@ -93,33 +93,28 @@ class Plugins {
     const plugin = this.instances[instanceNumber].instance
     return plugin[fnName].bind(plugin)
   }
-}
 
-var instance
-
-module.exports = {
-  Plugins,
-
-  get plugins() {
-    if (!instance) {
-      const home = ARGS.home || app.getPath('userData')
-      const configFile = join(home, 'plugins.json')
-      let config
-      try {
-        mkdir(join(home, 'plugins'))
-        config = require(configFile)
-      } catch (e) {
-        config = []
-        // create a default config file if none exists
-        writeFile(configFile, '[]', writeErr => {
-          if (writeErr) {
-            warn(`Could not create plugins config file: ${configFile}`)
-          }
-        })
-      }
-      instance = new Plugins(join(home, 'plugins'), config)
-      instance.initialize()
+  static create(home) {
+    mkdir(join(home, 'plugins'))
+    const configFile = join(home, 'plugins.json')
+    let config
+    try {
+      config = require(configFile)
+    } catch (e) {
+      config = []
+      // create a default config file if none exists
+      writeFile(configFile, '[]', writeErr => {
+        if (writeErr) {
+          warn(`Could not create plugins config file: ${configFile}`)
+        }
+      })
     }
+    const instance = new Plugins(join(home, 'plugins'), config)
+    instance.initialize()
     return instance
   }
+}
+
+module.exports = {
+  Plugins
 }

@@ -28,6 +28,7 @@ const act = require('../actions')
 const { darwin } = require('../common/os')
 const { channel, product, version } = require('../common/release')
 const { restrict } = require('../common/util')
+const { Plugins } = require('../common/plugins')
 
 const {
   FLASH, HISTORY, TAG, PROJECT, CONTEXT, SASS, LOCALE
@@ -76,6 +77,10 @@ class Tropy extends EventEmitter {
 
     prop(this, 'home', {
       value: resolve(__dirname, '..', '..')
+    })
+
+    prop(this, 'plugins', {
+      value: Plugins.create(app.getPath('userData'))
     })
   }
 
