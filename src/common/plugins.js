@@ -43,7 +43,9 @@ class Plugins {
         pkg = require(path)
         hooks = require(join(path, 'package.json')).hooks || {}
       } catch (error) {
-        continue
+        if (error.code !== 'MODULE_NOT_FOUND') {
+          warn(`Plugin "${name}" loading error: ${error.message}`)
+        }
       }
       if (pkg) return { pkg, hooks }
     }
