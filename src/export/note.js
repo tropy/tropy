@@ -22,10 +22,10 @@ function toHTML(doc) {
 }
 
 function localize(val, lang) {
-  return {
+  return lang ? {
     '@value': val,
-    '@language': lang || 'en'
-  }
+    '@language': lang
+  } : val
 }
 
 module.exports = function (note) {

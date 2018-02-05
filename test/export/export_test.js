@@ -126,8 +126,7 @@ describe('export', () => {
       expect(s).to.have.property('height', 40)
     })
     it('note', () => {
-      expect(s['note']['text']['@value']).to.eql('selection note')
-      expect(s['note']['text']['@language']).to.eql('en')
+      expect(s['note']['text']).to.eql('selection note')
       expect(s['note']['doc']).to.be.undefined
     })
   })
