@@ -11,8 +11,8 @@ describe('Plugins', () => {
   it('valid config matches', () => {
     expect(basic.plugins.length).to.eql(2)
     expect(basic.plugins[0]).to.eql({
-      package: 'tropy-plugin',
-      label: 'Plugin Name',
+      plugin: 'tropy-plugin',
+      name: 'Plugin Name',
       config: {
         specific: 'to plugin'
       }
@@ -33,7 +33,7 @@ describe('Plugins', () => {
 
   it('initialize with bad plugins', () => {
     const cfg = [{
-      package: 'foo',
+      plugin: 'foo',
       config: {}
     }]
 
@@ -60,20 +60,20 @@ describe('Plugins', () => {
 
   describe('handlers', () => {
     it('normal case', () => {
-      expect(basic.handlers('export').map(r => r.label))
+      expect(basic.handlers('export').map(r => r.name))
         .to.be.eql(['Plugin Name', 'Another Plugin'])
     })
-    it('exists but is not a function', () => {
+    it('full result', () => {
       expect(basic.handlers('tropy-hook')).to.eql([
         {
           fnName: 'plugin-function',
           instanceNumber: 0,
-          label: 'Plugin Name'
+          name: 'Plugin Name'
         },
         {
           fnName: 'plugin-function',
           instanceNumber: 1,
-          label: 'Another Plugin'
+          name: 'Another Plugin'
         }
       ]
       )

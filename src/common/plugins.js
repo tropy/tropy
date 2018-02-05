@@ -30,7 +30,7 @@ class Plugins {
   }
 
   get packages() {
-    return uniq(this.plugins.map(p => p.package))
+    return uniq(this.plugins.map(p => p.plugin))
   }
 
   // try to load the package from one of the paths
@@ -57,7 +57,7 @@ class Plugins {
     for (let i = 0; i < this.plugins.length; i++) {
       const params = this.plugins[i]
 
-      const result = this.loadPackage(params.package)
+      const result = this.loadPackage(params.plugin)
       if (!result) continue
 
       const { pkg, hooks } = result
@@ -78,10 +78,10 @@ class Plugins {
     return this.instances.reduce((res, instance) => {
       const fnNames = pluck(instance.hooks, [action])
       const { instanceNumber } = instance
-      const { label } = instance.params
+      const { name } = instance.params
       if (fnNames.length) {
         const fnName = fnNames[0]
-        res.push({ label, fnName, instanceNumber })
+        res.push({ name, fnName, instanceNumber })
       }
       return res
     }, [])

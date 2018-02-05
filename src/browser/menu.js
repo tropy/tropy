@@ -184,7 +184,7 @@ class Menu {
           item.submenu = [
             ...item.submenu,
             ...plugins.handlers('export').map(plugin => ({
-              label: plugin.label,
+              label: plugin.name,
               click: this.responder('app:export-item', {
                 target: params[0].target,
                 plugin

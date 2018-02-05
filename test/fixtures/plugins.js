@@ -2,15 +2,15 @@
 
 module.exports = [
   {
-    package: 'tropy-plugin',
-    label: 'Plugin Name',
+    plugin: 'tropy-plugin',
+    name: 'Plugin Name',
     config: {
       specific: 'to plugin'
     }
   },
   {
-    package: 'tropy-plugin',
-    label: 'Another Plugin',
+    plugin: 'tropy-plugin',
+    name: 'Another Plugin',
     config: {}
   }
 ]
