@@ -2,11 +2,9 @@
 
 const { writeFile } = require('fs')
 const { sync: mkdir } = require('mkdirp')
-const { nativeImage } = require('electron')
 const { join } = require('path')
 const { warn, verbose, logger } = require('./log')
 const { uniq, pluck } = require('./util')
-const { promises: jsonld } = require('jsonld')
 
 class Plugins {
   constructor(root, plugins = []) {
@@ -21,9 +19,7 @@ class Plugins {
 
   get context() {
     return {
-      logger,
-      jsonld,
-      nativeImage
+      logger
     }
   }
 
