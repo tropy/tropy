@@ -425,6 +425,10 @@ module.exports = {
         dispatch(actions.edit.cancel())
       },
 
+      onColumnResize(...args) {
+        dispatch(actions.nav.column.resize(...args))
+      },
+
       onSelect(...args) {
         dispatch(actions.nav.select(...args))
       },

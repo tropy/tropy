@@ -37,11 +37,11 @@ class ItemTableHeadCell extends PureComponent {
     })
   }
 
-  handleChange = ({ value }) => {
+  handleResizeCommit = () => {
     this.props.onResize({
       column: this.props.position,
-      width: value
-    }, false)
+      width: this.props.width
+    }, true)
   }
 
   handleResize = ({ value }) => {
@@ -60,7 +60,7 @@ class ItemTableHeadCell extends PureComponent {
         max={480}
         min={40}
         node="th"
-        onChange={this.handleChange}
+        onDragStop={this.handleResizeCommit}
         onResize={this.handleResize}
         value={this.props.width}>
         <div

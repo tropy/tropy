@@ -114,7 +114,7 @@ class ItemTable extends ItemIterator {
     })
 
     if (doCommit) {
-      // todo
+      this.props.onColumnResize({ column, width })
     }
   }
 
@@ -185,6 +185,7 @@ class ItemTable extends ItemIterator {
     edit: object,
     data: object.isRequired,
     hasScrollbars: bool.isRequired,
+    onColumnResize: func.isRequired,
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,
     onMetadataSave: func.isRequired
