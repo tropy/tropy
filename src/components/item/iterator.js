@@ -259,8 +259,8 @@ class ItemIterator extends Iterator {
     )
   }
 
-  get hasPositionColumn() {
-    return !!this.props.list
+  hasPositionColumn(props = this.props) {
+    return !!props.list
   }
 
   static propTypes = {

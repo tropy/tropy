@@ -22,8 +22,8 @@ class ItemTableSpacer extends PureComponent {
         <tr>
           {this.props.hasPositionColumn &&
             <SpacerCell width={NAV.COLUMN.POSITION.width}/>}
-          {this.props.columns.map(({ property, width }) =>
-            <SpacerCell key={property.id} width={width}/>)}
+          {this.props.columns.map(({ property }, idx) =>
+            <SpacerCell key={property.id} width={this.props.colwidth[idx]}/>)}
           <BlankTableHeadCell/>
         </tr>
       </thead>
@@ -32,6 +32,7 @@ class ItemTableSpacer extends PureComponent {
 
   static propTypes = {
     columns: arrayOf(object).isRequired,
+    colwidth: arrayOf(number).isRequired,
     hasPositionColumn: bool
   }
 }

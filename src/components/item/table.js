@@ -1,22 +1,24 @@
 'use strict'
 
 const React = require('react')
-const PropTypes = require('prop-types')
-const { arrayOf, func, object } = PropTypes
+const { arrayOf, bool, func, object } = require('prop-types')
 const { ItemIterator } = require('./iterator')
 const { ItemTableRow } = require('./table-row')
 const { ItemTableSpacer } = require('./table-spacer')
 const { ItemTableHead } = require('./table-head')
 const cx = require('classnames')
 const { noop } = require('../../common/util')
-const { ROW } = require('../../constants/sass')
+const { NAV, SASS: { ROW, SCROLLBAR } } = require('../../constants')
 const { match } = require('../../keymap')
-const { refine } = require('../../common/util')
+const { refine, shallow, splice } = require('../../common/util')
+const { assign } = Object
 
 
 class ItemTable extends ItemIterator {
   constructor(props) {
     super(props)
+
+    assign(this.state, this.getColumnState(props))
 
     refine(this, 'handleKeyDown', ([event]) => {
       if (event.isPropagationStopped()) return
@@ -43,11 +45,36 @@ class ItemTable extends ItemIterator {
     }
   }
 
+  componentWillReceiveProps(props) {
+    super.componentWillReceiveProps(props)
+
+    if (!shallow(this.props, props, ['columns', 'list'])) {
+      this.setState(this.getColumnState(props))
+    }
+  }
+
   get classes() {
     return ['table-body', {
       'drop-target': !this.props.isDisabled,
       'over': this.props.isOver
     }]
+  }
+
+  getColumnState(props = this.props) {
+    let minWidth = 0
+    let colwidth = props.columns.map(c => ((minWidth += c.width), c.width))
+
+    if (this.hasPositionColumn(props)) {
+      minWidth += NAV.COLUMN.POSITION.width
+    }
+
+    if (this.props.hasScrollbars) {
+      minWidth += SCROLLBAR.WIDTH
+    }
+
+    return {
+      colwidth, minWidth
+    }
   }
 
   getColumns() {
@@ -81,16 +108,29 @@ class ItemTable extends ItemIterator {
     this.container.focus()
   }
 
+  handleColumnResize = ({ column, width }, doCommit) => {
+    this.setState({
+      colwidth: splice(this.state.colwidth, column, 1, width)
+    })
+
+    if (doCommit) {
+      // todo
+    }
+  }
+
   renderTableBody() {
     const { columns, data, edit } = this.props
     const onEdit = this.props.selection.length === 1 ? this.props.onEdit : noop
 
-    const { height } = this.state
+    const { colwidth, height, minWidth } = this.state
     const { transform } = this
+
+    const hasPositionColumn = this.hasPositionColumn()
 
     return this.connect(
       <div
         className={cx(this.classes)}
+        style={{ minWidth }}
         onClick={this.handleClickOutside}>
         <div
           className="scroll-container"
@@ -101,7 +141,8 @@ class ItemTable extends ItemIterator {
             <table className="viewport" style={{ transform }}>
               <ItemTableSpacer
                 columns={columns}
-                hasPositionColumn={this.hasPositionColumn}/>
+                colwidth={colwidth}
+                hasPositionColumn={hasPositionColumn}/>
               <tbody>
                 {this.mapIterableRange(({ item, index, ...props }) =>
                   <ItemTableRow {...props}
@@ -110,7 +151,7 @@ class ItemTable extends ItemIterator {
                     data={data[item.id]}
                     columns={columns}
                     position={this.getPosition(index)}
-                    hasPositionColumn={this.hasPositionColumn}
+                    hasPositionColumn={hasPositionColumn}
                     edit={edit}
                     onCancel={this.handleEditCancel}
                     onChange={this.handleChange}
@@ -128,8 +169,10 @@ class ItemTable extends ItemIterator {
       <div className="item table">
         <ItemTableHead
           columns={this.props.columns}
-          hasPositionColumn={this.hasPositionColumn}
+          colwidth={this.state.colwidth}
+          hasPositionColumn={this.hasPositionColumn()}
           sort={this.props.sort}
+          onResize={this.handleColumnResize}
           onSort={this.props.onSort}/>
         {this.renderTableBody()}
       </div>
@@ -141,6 +184,7 @@ class ItemTable extends ItemIterator {
     columns: arrayOf(object).isRequired,
     edit: object,
     data: object.isRequired,
+    hasScrollbars: bool.isRequired,
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,
     onMetadataSave: func.isRequired
@@ -148,7 +192,8 @@ class ItemTable extends ItemIterator {
 
   static defaultProps = {
     ...ItemIterator.defaultProps,
-    overscan: 2
+    overscan: 2,
+    hasScrollbars: ARGS.scrollbars
   }
 }
 

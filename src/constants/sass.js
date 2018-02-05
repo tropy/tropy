@@ -109,6 +109,10 @@ PANEL.MAX_WIDTH =
 
 PANEL.DEFAULT_WIDTH = PANEL.MIN_WIDTH
 
+const SCROLLBAR = {
+  WIDTH: 12
+}
+
 const SIDEBAR = {
   MIN_WIDTH: 150,
   MAX_WIDTH: 500,
@@ -231,6 +235,7 @@ module.exports =  {
   PREFS,
   PROJECT,
   ROW,
+  SCROLLBAR,
   SIDEBAR,
   TILE,
   WIZARD

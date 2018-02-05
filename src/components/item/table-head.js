@@ -27,7 +27,7 @@ class ItemTableHeadCell extends PureComponent {
   }
 
   get isResizable() {
-    return this.props.onResize != null
+    return this.props.onResize != null && this.props.position != null
   }
 
   handleClick = () => {
@@ -37,7 +37,18 @@ class ItemTableHeadCell extends PureComponent {
     })
   }
 
-  handleResize = () => {
+  handleChange = ({ value }) => {
+    this.props.onResize({
+      column: this.props.position,
+      width: value
+    }, false)
+  }
+
+  handleResize = ({ value }) => {
+    this.props.onResize({
+      column: this.props.position,
+      width: value
+    }, false)
   }
 
   render() {
@@ -49,6 +60,7 @@ class ItemTableHeadCell extends PureComponent {
         max={480}
         min={40}
         node="th"
+        onChange={this.handleChange}
         onResize={this.handleResize}
         value={this.props.width}>
         <div
@@ -66,6 +78,7 @@ class ItemTableHeadCell extends PureComponent {
     isActive: bool,
     isAscending: bool.isRequired,
     label: string.isRequired,
+    position: number,
     type: string.isRequired,
     id: string.isRequired,
     width: number.isRequired,
@@ -92,9 +105,6 @@ class ItemTableHead extends PureComponent {
     return property.label || getLabel(property.id)
   }
 
-  handleResize = () => {
-  }
-
   render() {
     return (
       <table className="table-head">
@@ -106,16 +116,17 @@ class ItemTableHead extends PureComponent {
                 isActive={this.isActive(NAV.COLUMN.POSITION)}
                 isAscending={this.isAscending}
                 onClick={this.props.onSort}/>}
-            {this.props.columns.map(({ width, property }) =>
+            {this.props.columns.map(({ property }, idx) =>
               <ItemTableHeadCell
                 key={property.id}
                 id={property.id}
+                position={idx}
                 label={this.getLabel(property)}
-                width={width}
+                width={this.props.colwidth[idx]}
                 isActive={this.isActive(property)}
                 isAscending={this.isAscending}
                 onClick={this.props.onSort}
-                onResize={this.handleResize}/>)}
+                onResize={this.props.onResize}/>)}
             <BlankTableHeadCell/>
           </tr>
         </thead>
@@ -128,11 +139,13 @@ class ItemTableHead extends PureComponent {
       property: object.isRequired,
       width: number.isRequired
     })).isRequired,
+    colwidth: arrayOf(number).isRequired,
     hasPositionColumn: bool,
     sort: shape({
       asc: bool.isRequired,
       column: string.isRequired,
     }).isRequired,
+    onResize: func.isRequired,
     onSort: func.isRequired
   }
 }
