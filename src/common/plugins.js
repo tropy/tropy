@@ -1,6 +1,7 @@
 'use strict'
 
 const { writeFile } = require('fs')
+const { sync: mkdir } = require('mkdirp')
 const { app, nativeImage } = require('electron')
 const { join } = require('path')
 const { warn, verbose, logger } = require('./log')
@@ -105,6 +106,7 @@ module.exports = {
       const configFile = join(home, 'plugins.json')
       let config
       try {
+        mkdir(join(home, 'plugins'))
         config = require(configFile)
       } catch (e) {
         config = []
