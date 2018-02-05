@@ -213,6 +213,26 @@ class Menu {
 
           break
         }
+        case 'line-wrap': {
+          const { target } = params[0]
+          item.checked = !!target.wrap
+          break
+        }
+        case 'line-numbers': {
+          const { target } = params[0]
+          item.checked = !!target.numbers
+          break
+        }
+        case 'writing-mode': {
+          const { target } = params[0]
+          item.submenu = item.submenu.map(li => ({
+            ...li,
+            checked: li.mode === target.mode,
+            click: this.responder('app:writing-mode', {
+              id: target.id, mode: li.mode
+            })
+          }))
+        }
       }
 
       if (item.submenu) {
@@ -308,6 +328,7 @@ class ContextMenu extends Menu {
   scopes.selection = [...scopes.photo, 'selection']
   scopes.notes = [...scopes.global]
   scopes.note = [...scopes.notes, 'note']
+  scopes.notepad = [...scopes.global, 'notepad']
   scopes['item-bulk'] = [...scopes.items, 'item-bulk']
   scopes['item-list'] = [...scopes.items, 'item-list', 'item']
   scopes['item-bulk-list'] = [...scopes.items, 'item-bulk-list', 'item-bulk']
