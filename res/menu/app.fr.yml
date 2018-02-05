@@ -157,6 +157,11 @@ fr:
         - label: 'A propos de %name'
           command: 'app:about'
         - type: 'separator'
+        - label: 'Afficher le configuration de Plugins'
+          command: 'app:open-plugins-config'
+        - label: 'Afficher les fichiers de Plugins'
+          command: 'app:open-plugins-folder'
+        - type: 'separator'
         - &updaterCheck
           id: 'updater-check'
           label: 'Recherche des mises à jour en cours…'
@@ -245,6 +250,11 @@ fr:
           command: 'app:open-license'
         - label: 'Afficher les logs'
           command: 'app:open-logs'
+        - type: 'separator'
+        - label: 'Afficher les configuration de Plugins'
+          command: 'app:open-plugins-config'
+        - label: 'Afficher les fichiers de Plugins'
+          command: 'app:open-plugins-folder'
         - type: 'separator'
         - *updaterCheck
         - *updaterIsChecking
