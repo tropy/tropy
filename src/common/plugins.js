@@ -1,5 +1,6 @@
 'use strict'
 
+const { writeFile } = require('fs')
 const { app, nativeImage } = require('electron')
 const { join } = require('path')
 const { warn, verbose, logger } = require('./log')
@@ -101,11 +102,18 @@ module.exports = {
   get plugins() {
     if (!instance) {
       const home = ARGS.home || app.getPath('userData')
+      const configFile = join(home, 'plugins.json')
       let config
       try {
-        config = require(join(home, 'plugins.json'))
+        config = require(configFile)
       } catch (e) {
         config = []
+        // create a default config file if none exists
+        writeFile(configFile, '[]', writeErr => {
+          if (writeErr) {
+            warn(`Could not create plugins config file: ${configFile}`)
+          }
+        })
       }
       instance = new Plugins(join(home, 'plugins'), config)
       instance.initialize()
