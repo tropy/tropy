@@ -18,8 +18,7 @@
 
   .scroll-container {
     overflow: auto;
-    //display: flex;
-    flex-direction: column;
+    display: flex;
     position: relative;
 
     .horizontal & {
@@ -59,7 +58,7 @@
 // TODO: Remove this styles when Chromium issue 290466 has been fixed,
 // move 'cursor: text' to .editor then.
 .prose-mirror-container {
-  flex: 1 1 0;
+  flex: 0 0 auto;
   cursor: text;
 
 // ---
@@ -69,10 +68,24 @@
     max-width: $editor-max-size;
   }
 
+  .horizontal.no-wrap & {
+    width: auto;
+    margin: 0;
+    max-width: none;
+    padding: 0 ((100% - $editor-size) / 2);
+  }
+
   .vertical-rl & {
-    margin: auto 0;
     height: $editor-size;
+    margin: auto 0;
     max-height: $editor-max-size;
+  }
+
+  .vertical-rl.no-wrap & {
+    height: auto;
+    margin: 0;
+    max-height: none;
+    padding: ((100% - $editor-size) / 2) 0;
   }
 }
 

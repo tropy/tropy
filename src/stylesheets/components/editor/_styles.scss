@@ -12,6 +12,10 @@
   line-height: $editor-line-height;
   word-break: break-word; // For vertical writing mode (break-word or break-all?)
 
+  .no-wrap & {
+    white-space: nowrap;
+  }
+
   * {
     margin: 0;
   }
