@@ -35,8 +35,9 @@
     }
   }
 
-  hr,
-  p {
+  p,
+  .line-break,
+  hr {
     .numbers.horizontal &,
     .numbers.vertical-rl & {
 
@@ -136,6 +137,20 @@
         &[style*="#{$alignment}"] {
           list-style-position: inside;
         }
+      }
+    }
+  }
+
+  .line-break {
+    .numbers.horizontal & {
+      &::before {
+        margin-top: $editor-line-height-computed;
+      }
+    }
+
+    .numbers.vertical-rl & {
+      &::before {
+        margin-right: $editor-line-height-computed;
       }
     }
   }
