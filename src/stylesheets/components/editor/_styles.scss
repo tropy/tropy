@@ -97,8 +97,15 @@
   }
 
   blockquote {
-    padding-left: $blockquote-padding;
-    border-left: $blockquote-border solid $blockquote-border-color;
+    .horizontal & {
+      padding-left: $blockquote-padding;
+      border-left: $blockquote-border solid $blockquote-border-color;
+    }
+
+    .vertical-rl & {
+      padding-top: $blockquote-padding;
+      border-top: $blockquote-border solid $blockquote-border-color;
+    }
   }
 
   ul,
@@ -157,8 +164,16 @@
 
   hr {
     border: 0;
-    border-top: $editor-hr-border solid $editor-hr-border-color;
-    margin: ($editor-line-height-computed / 2 - $editor-hr-border / 2) 0;
+
+    .horizontal & {
+      border-top: $editor-hr-border solid $editor-hr-border-color;
+      margin: ($editor-line-height-computed / 2 - $editor-hr-border / 2) 0;
+    }
+
+    .vertical-rl & {
+      border-right: $editor-hr-border solid $editor-hr-border-color;
+      margin: 0 ($editor-line-height-computed / 2 - $editor-hr-border / 2);
+    }
 
     .numbers.horizontal & {
       &::before {
