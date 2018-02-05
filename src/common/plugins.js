@@ -15,7 +15,6 @@ class Plugins {
       join(this.root, 'node_modules'),
       this.root
     ]
-    this.isRenderer = process.type === 'renderer'
   }
 
   get context() {
@@ -52,7 +51,7 @@ class Plugins {
     warn(`Plugin package "${name}" can not be loaded`)
   }
 
-  initialize() {
+  initialize(instantiate = process.type === 'renderer') {
     // for each instance in `this.plugins`, require their package
     // and store it in `this.instances`
     for (let i = 0; i < this.plugins.length; i++) {
@@ -64,7 +63,7 @@ class Plugins {
       const { pkg, hooks } = result
       this.instances.push({
         params,
-        instance: this.isRenderer ? this.contract(pkg, params.config) : null,
+        instance: instantiate ? this.contract(pkg, params.config) : null,
         hooks,
         instanceNumber: this.instances.length
       })
