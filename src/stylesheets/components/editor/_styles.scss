@@ -11,9 +11,18 @@
   font-size: $editor-font-size;
   line-height: $editor-line-height;
   word-break: break-word; // For vertical writing mode (break-word or break-all?)
+  counter-reset: line-numbers;
 
   .no-wrap & {
     white-space: nowrap;
+  }
+
+  .numbers.horizontal & {
+    padding-left: $space-xxl + $space-md;
+  }
+
+  .numbers.vertical-rl & {
+    padding-top: $space-xxl + $space-md;
   }
 
   * {
@@ -23,6 +32,38 @@
   &:not(.ProseMirror-focused) {
     .pseudo-selection {
       background-color: $editor-pseudo-selection-bg;
+    }
+  }
+
+  hr,
+  p {
+    .numbers.horizontal &,
+    .numbers.vertical-rl & {
+
+      &::before {
+        content: counter(line-numbers);
+        counter-increment: line-numbers;
+        position: absolute;
+        white-space: nowrap;
+        text-align: right;
+        color: $line-number-color;
+        user-select: none;
+      }
+    }
+
+    .numbers.horizontal & {
+      &::before {
+        left: 0;
+        width: $space-xxl;
+      }
+    }
+
+    .numbers.vertical-rl & {
+      &::before {
+        top: 0;
+        height: $space-xxl;
+        text-orientation: mixed;
+      }
     }
   }
 
@@ -86,6 +127,7 @@
 
   li {
     display: block;
+    position: static; // Allow for positioned line numbers
 
     p {
       display: list-item;
@@ -101,7 +143,13 @@
   hr {
     border: 0;
     border-top: $editor-hr-border solid $editor-hr-border-color;
-    margin: ($editor-line-height-computed / 2 - $editor-hr-border) 0;
+    margin: ($editor-line-height-computed / 2 - $editor-hr-border / 2) 0;
+
+    .numbers.horizontal & {
+      &::before {
+        margin-top: -($editor-line-height-computed + $editor-hr-border) / 2;
+      }
+    }
   }
 
   sup,
