@@ -17,14 +17,6 @@
     white-space: nowrap;
   }
 
-  .numbers.horizontal & {
-    padding-left: $space-xxl + $space-md;
-  }
-
-  .numbers.vertical-rl & {
-    padding-top: $space-xxl + $space-md;
-  }
-
   * {
     margin: 0;
   }
