@@ -80,13 +80,9 @@ class Plugins {
       const fnNames = pluck(instance.hooks, [action])
       const { instanceNumber } = instance
       const { label } = instance.params
-      const { instance: pluginInstance } = instance
       if (fnNames.length) {
         const fnName = fnNames[0]
-        const fn = pluginInstance && pluginInstance[fnName]
-        if (typeof fn === 'function' || !this.isRenderer) {
-          res.push({ label, fnName, instanceNumber })
-        }
+        res.push({ label, fnName, instanceNumber })
       }
       return res
     }, [])
