@@ -110,7 +110,13 @@
 
   ul,
   ol {
-    padding-left: $editor-list-padding;
+    .horizontal & {
+      padding-left: $editor-list-padding;
+    }
+
+    .vertical-rl & {
+      padding-top: $editor-list-padding;
+    }
   }
 
   ul {
@@ -130,7 +136,27 @@
   }
 
   ol {
-    list-style: decimal;
+    counter-reset: ol;
+
+    .horizontal & {
+      list-style: decimal;
+    }
+
+    .vertical-rl & {
+      list-style: none;
+
+      li {
+        &::before {
+          content: counter(ol) ".";
+          counter-increment: ol;
+          position: absolute;
+          top: 0;
+          height: 49px;
+          text-align: right;
+          text-orientation: mixed;
+        }
+      }
+    }
   }
 
   li {
