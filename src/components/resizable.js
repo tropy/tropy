@@ -29,9 +29,18 @@ const AXS = {
 
 
 class Resizable extends PureComponent {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      isResizing: false
+    }
+  }
+
   get classes() {
     return ['resizable', this.props.className, {
-      disabled: this.props.isDisabled
+      disabled: this.props.isDisabled,
+      resizing: this.state.isResizing
     }]
   }
 
@@ -97,6 +106,8 @@ class Resizable extends PureComponent {
       this.origin -= (value - this.getNewValue(event).value)
     }
 
+    this.setState({ isResizing: true })
+
     if (onDragStart) {
       return onDragStart(event, this)
     }
@@ -115,6 +126,8 @@ class Resizable extends PureComponent {
   handleDragStop = (event) => {
     this.scale = 1
     this.origin = 0
+
+    this.setState({ isResizing: false })
 
     if (this.props.onDragStop) {
       this.props.onDragStop(event, this)
@@ -174,9 +187,7 @@ class BufferedResizable extends Resizable {
   constructor(props) {
     super(props)
 
-    this.state = {
-      value: props.value
-    }
+    this.state.value = props.value
 
     refine(this, 'handleDragStop', () => {
       const { value, onChange } = this.props
