@@ -179,18 +179,23 @@ class Menu {
           }
           break
 
-        case 'export':
-          item.submenu = [
-            ...item.submenu,
-            ...this.app.plugins.handlers('export').map(plugin => ({
-              label: plugin.name,
-              click: this.responder('app:export-item', {
-                target: params[0].target,
-                plugin
-              })
-            }))
-          ]
+        case 'export': {
+          const plugins = this.app.plugins.available('export')
+          if (plugins.length > 0) {
+            item.submenu = [
+              ...item.submenu,
+              { type: 'separator' },
+              ...plugins.map(({ id, name }) => ({
+                label: name,
+                click: this.responder('app:export-item', {
+                  target: params[0].target,
+                  plugin: id
+                })
+              }))
+            ]
+          }
           break
+        }
 
         case 'tag': {
           const { target } = params[0]

@@ -18,6 +18,7 @@ const uuid = require('uuid/v1')
 
 const { AppMenu, ContextMenu } = require('./menu')
 const { Cache } = require('../common/cache')
+const { Plugins } = require('../common/plugins')
 const { Strings } = require('../common/res')
 const Storage = require('./storage')
 const Updater = require('./updater')
@@ -28,7 +29,6 @@ const act = require('../actions')
 const { darwin } = require('../common/os')
 const { channel, product, version } = require('../common/release')
 const { restrict } = require('../common/util')
-const { Plugins } = require('../common/plugins')
 
 const {
   FLASH, HISTORY, TAG, PROJECT, CONTEXT, SASS, LOCALE
@@ -80,7 +80,7 @@ class Tropy extends EventEmitter {
     })
 
     prop(this, 'plugins', {
-      value: Plugins.create(app.getPath('userData'))
+      value: new Plugins(join(app.getPath('userData'), 'plugins'))
     })
   }
 
@@ -275,8 +275,10 @@ class Tropy extends EventEmitter {
       .tap(() => all([
         this.load(),
         this.cache.init(),
+        this.plugins.init()
       ]))
 
+      .tap(() => this.plugins.scan().watch())
       .tap(state => state.updater && this.updater.start())
 
       .tap(() => this.emit('app:restored'))
@@ -563,6 +565,15 @@ class Tropy extends EventEmitter {
       this.zoom(1.0)
     })
 
+    this.plugins.on('did-update', () => {
+      this.broadcast('plugins-reload')
+      this.emit('app:reload-menu')
+    })
+
+    this.plugins.on('should-restart', () => {
+      // show flash
+    })
+
     let quit = false
     let winId
 
@@ -582,6 +593,7 @@ class Tropy extends EventEmitter {
 
     app.on('quit', () => {
       this.updater.stop()
+      this.plugins.stop()
       this.persist()
     })
 
@@ -642,6 +654,7 @@ class Tropy extends EventEmitter {
       home: app.getPath('userData'),
       documents: app.getPath('documents'),
       cache: this.cache.root,
+      plugins: this.plugins.root,
       frameless: this.state.frameless,
       theme: this.state.theme,
       locale: this.state.locale,

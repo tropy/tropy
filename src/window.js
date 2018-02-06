@@ -5,6 +5,7 @@ const { remote, ipcRenderer: ipc } = require('electron')
 const { basename, join, resolve } = require('path')
 const { existsSync: exists } = require('fs')
 const { EL_CAPITAN, darwin } = require('./common/os')
+const { Plugins } = require('./common/plugins')
 const { EventEmitter } = require('events')
 const args = require('./args')
 
@@ -30,12 +31,15 @@ class Window extends EventEmitter {
       aqua, frameless, scrollbars, theme
     }
 
+    this.plugins = new Plugins(ARGS.plugins)
     this.unloader = 'close'
     this.unloaders = []
     this.hasFinishedUnloading = false
   }
 
   init(done) {
+    this.plugins.reload().then(p => p.create())
+
     this.handleUnload()
     this.handleTabFocus()
     this.handleIpcEvents()
@@ -129,6 +133,9 @@ class Window extends EventEmitter {
       })
       .on('reload', () => {
         this.reload()
+      })
+      .on('plugins-reload', () => {
+        this.plugins.reload().then(p => p.create())
       })
       .on('toggle-perf-tools', () => {
         const { search, hash } = location

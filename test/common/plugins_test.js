@@ -1,97 +1,52 @@
 'use strict'
 
-const { resolve } = require('path')
-const { Plugins } = __require('common/plugins')
-const config = require('../fixtures/plugins')
-
 describe('Plugins', () => {
-  const root = resolve(__dirname, '..', 'fixtures', 'plugins')
-  const basic = new Plugins(root, config)
+  const { Plugins } = __require('common/plugins')
+
+  let basic
+
+  beforeEach(async () => {
+    basic = new Plugins(F.plugins().path)
+    await basic.init()
+  })
 
   it('valid config matches', () => {
-    expect(basic.plugins.length).to.eql(2)
-    expect(basic.plugins[0]).to.eql({
-      plugin: 'tropy-plugin',
-      name: 'Plugin Name',
-      config: {
-        specific: 'to plugin'
-      }
+    expect(basic.config.length).to.eql(2)
+    expect(basic.config[0]).to.have.keys(['plugin', 'name', 'options'])
+    expect(basic.config[1]).to.have.keys(['plugin'])
+  })
+
+  it('hooks can be scanned', () => {
+    basic.scan()
+    expect(basic.spec[0].hooks).to.have.property('sum', true)
+    expect(basic.spec[1].hooks).to.have.property('export', false)
+  })
+
+  describe('available()', () => {
+    beforeEach(() => basic.scan())
+
+    it('registered hooks', () => {
+      expect(basic.available('sum')).to.eql([
+        { id: '0', name: 'Plugin Name' },
+        { id: '1', name: 'tropy-plugin #1' }
+      ])
+    })
+
+    it('unknown hooks', () => {
+      expect(basic.available('export')).to.be.eql([])
     })
   })
 
-  it('invalid config does not throw error', () => {
-    // just warns
-    const p = new Plugins(root)
-    expect(() => p.initialize()).to.not.throw()
-    expect(p.plugins.length).to.eql(0)
-    expect(p.handlers('foo').length).to.eql(0)
+  it('create()', () => {
+    expect(basic.create().instances).to.have.keys('0', '1')
   })
 
-  it('list package names', () => {
-    expect(basic.packages).to.eql(['tropy-plugin'])
-  })
+  it('exec()', async () => {
+    basic.create()
+    const a = await basic.exec({ id: 0, action: 'sum' }, 40, 2)
+    const b = await basic.exec({ id: 1, action: 'sum' }, 40, 2)
 
-  it('initialize with bad plugins', () => {
-    const cfg = [{
-      plugin: 'foo',
-      config: {}
-    }]
-
-    const plugins = new Plugins(root, cfg)
-    plugins.initialize()
-    expect(() => plugins.initialize()).to.not.throw()
-    expect(plugins.instances).to.eql([])
-  })
-
-  it('initialize with default plugins', () => {
-    expect(() => basic.initialize()).to.not.throw()
-    expect(basic.instances.length).to.eql(2)
-  })
-
-  it('hooks can be read', () => {
-    const hooks = {
-      'tropy-hook': 'plugin-function',
-      'export': 'export'
-    }
-    expect(basic.instances[0].hooks).to.eql(hooks)
-    expect(basic.instances[1].hooks).to.eql(hooks)
-    expect(basic.instances[2]).to.be.undefined
-  })
-
-  describe('handlers', () => {
-    it('normal case', () => {
-      expect(basic.handlers('export').map(r => r.name))
-        .to.be.eql(['Plugin Name', 'Another Plugin'])
-    })
-    it('full result', () => {
-      expect(basic.handlers('tropy-hook')).to.eql([
-        {
-          fnName: 'plugin-function',
-          instanceNumber: 0,
-          name: 'Plugin Name'
-        },
-        {
-          fnName: 'plugin-function',
-          instanceNumber: 1,
-          name: 'Another Plugin'
-        }
-      ]
-      )
-    })
-    it('not registered', () => {
-      expect(basic.handlers('unknown')).to.be.eql([])
-    })
-  })
-
-  describe('loadPackage', () => {
-    it('valid', () => {
-      const result = basic.loadPackage('tropy-plugin')
-      expect(result.hooks).to.have.all.keys('tropy-hook', 'export')
-      expect(result.pkg).to.be.a('function')
-    })
-    it('invalid', () => {
-      expect(basic.loadPackage('not-a-package'))
-        .to.be.undefined
-    })
+    expect(a).to.eql(-42)
+    expect(b).to.eql(42)
   })
 })

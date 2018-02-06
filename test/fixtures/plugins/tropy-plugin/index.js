@@ -1,13 +1,13 @@
 'use strict'
 
 class Plugin {
-  constructor(config, context) {
-    this.config = config
+  constructor(options, context) {
+    this.options = options
     this.context = context
   }
 
-  async export() {
-    return 42
+  async sum(a, b) {
+    return (this.options.invert) ? -(a + b) : (a + b)
   }
 }
 

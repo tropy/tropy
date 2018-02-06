@@ -1,20 +1,30 @@
 'use strict'
 
-const { writeFile } = require('fs')
-const { sync: mkdir } = require('mkdirp')
+require('./promisify')
+
+const {
+  mkdirAsync: mkdir, readFileAsync: read, writeFileAsync: write
+} = require('fs')
+
+const { EventEmitter } = require('events')
 const { join } = require('path')
 const { warn, verbose, logger } = require('./log')
-const { uniq, pluck } = require('./util')
+const { pick } = require('./util')
+const { keys } = Object
 
-class Plugins {
-  constructor(root, plugins = []) {
+const load = async file => JSON.parse(await read(file))
+const save = (file, data) => write(file, JSON.stringify(data))
+
+
+class Plugins extends EventEmitter {
+  constructor(root) {
+    super()
     this.root = root
-    this.plugins = plugins
-    this.instances = []
-    this.loadPaths = [
-      join(this.root, 'node_modules'),
-      this.root
-    ]
+    this.reset()
+  }
+
+  get configFile() {
+    return join(this.root, 'config.json')
   }
 
   get context() {
@@ -23,91 +33,109 @@ class Plugins {
     }
   }
 
-  contract(Plugin, config) {
-    return new Plugin(config, this.context)
+  available(action) {
+    const handlers = []
+    for (const id in this.spec) {
+      const { hooks, name } = this.spec[id]
+      if (hooks[action]) {
+        handlers.push({
+          id,
+          name: this.config[id].name || `${name} #${id}`
+        })
+      }
+    }
+    return handlers
   }
 
-  get packages() {
-    return uniq(this.plugins.map(p => p.plugin))
+  contract(Plugin, options) {
+    return new Plugin(options || {}, this.context)
   }
 
-  // try to load the package from one of the paths
-  loadPackage(name) {
-    let pkg, hooks
-    for (let i = 0; i < this.loadPaths.length; i++) {
-      const path = join(this.loadPaths[i], name)
+  create() {
+    this.instances = this.config.reduce((acc, { plugin, options }, id) => {
       try {
-        pkg = require(path)
-        hooks = require(join(path, 'package.json')).hooks || {}
+        acc[id] = this.contract(this.require(plugin), options)
       } catch (error) {
-        if (error.code !== 'MODULE_NOT_FOUND') {
-          warn(`Plugin "${name}" loading error: ${error.message}`)
-        }
+        warn(`failed to create ${plugin} plugin`, { error })
       }
-      if (pkg) return { pkg, hooks }
-    }
-    warn(`Plugin package "${name}" can not be loaded`)
+      return acc
+    }, {})
+    verbose(`plugins created: ${keys(this.instances).length}`)
+    return this
   }
 
-  initialize(instantiate = process.type === 'renderer') {
-    // for each instance in `this.plugins`, require their package
-    // and store it in `this.instances`
-    for (let i = 0; i < this.plugins.length; i++) {
-      const params = this.plugins[i]
-
-      const result = this.loadPackage(params.plugin)
-      if (!result) continue
-
-      const { pkg, hooks } = result
-      this.instances.push({
-        params,
-        instance: instantiate ? this.contract(pkg, params.config) : null,
-        hooks,
-        instanceNumber: this.instances.length
-      })
-    }
-    const count = this.instances.length
-    verbose(`Plugins(root=${this.root}, count=${count})`)
+  async exec({ id, action }, ...args) {
+    return this.instances[id][action](...args)
   }
 
-  handlers(action) {
-    // traverse the existing instances, and find the ones that have
-    // registered a handler for the given action
-    return this.instances.reduce((res, instance) => {
-      const fnNames = pluck(instance.hooks, [action])
-      const { instanceNumber } = instance
-      const { name } = instance.params
-      if (fnNames.length) {
-        const fnName = fnNames[0]
-        res.push({ name, fnName, instanceNumber })
-      }
-      return res
-    }, [])
+  export(id, ...args) {
+    return this.exec({ id, action: 'export' }, ...args)
   }
 
-  getFn({ instanceNumber, fnName }) {
-    const plugin = this.instances[instanceNumber].instance
-    return plugin[fnName].bind(plugin)
-  }
-
-  static create(home) {
-    mkdir(join(home, 'plugins'))
-    const configFile = join(home, 'plugins.json')
-    let config
+  async init() {
     try {
-      config = require(configFile)
-    } catch (e) {
-      config = []
-      // create a default config file if none exists
-      writeFile(configFile, '[]', writeErr => {
-        if (writeErr) {
-          warn(`Could not create plugins config file: ${configFile}`)
-        }
-      })
+      await mkdir(this.root)
+    } catch (error) {
+      if (error.code !== 'EEXIST') throw error
     }
-    const instance = new Plugins(join(home, 'plugins'), config)
-    instance.initialize()
-    return instance
+    return this.reload(true)
+  }
+
+  async reload(autosave = false) {
+    try {
+      this.reset()
+      this.config = await load(this.configFile)
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error
+      if (autosave) await this.save()
+    }
+    this.emit('did-update')
+    return this
+  }
+
+  require(name, fallback = 'node_modules') {
+    try {
+      return require(join(this.root, name))
+    } catch (error) {
+      if (!fallback || error.code !== 'MODULE_NOT_FOUND') throw error
+      return this.require(join(fallback, name), false)
+    }
+  }
+
+  reset() {
+    this.config = []
+    this.spec = {}
+    this.instances = {}
+  }
+
+  save() {
+    return save(this.configFile, this.config)
+  }
+
+  scan() {
+    this.spec = this.config.reduce((acc, { plugin }, id) => {
+      try {
+        acc[id] = pick(this.require(join(plugin, 'package.json')), [
+          'hooks',
+          'name',
+          'version'
+        ])
+      } catch (error) {
+        warn(`failed to scan ${plugin} plugin`, { error })
+      }
+      return acc
+    }, {})
+    verbose(`plugins scanned: ${keys(this.spec).length}`)
+    return this
+  }
+
+  stop() {
+    this.removeAllListeners()
+    return this
+  }
+
+  watch() {
+    return this
   }
 }
 

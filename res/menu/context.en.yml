@@ -82,7 +82,7 @@ en:
       - label: 'Explode Item'
         command: 'app:explode-item'
         condition: 'hasMultiplePhotos'
-      - label: 'Export Item to …'
+      - label: 'Export Item'
         id: 'export'
         submenu:
           - label: 'JSON-LD'
@@ -102,7 +102,7 @@ en:
     item-bulk: &item-bulk
       - label: 'Merge Selected Items'
         command: 'app:merge-item'
-      - label: 'Export Selected Items to …'
+      - label: 'Export Selected Items'
         id: 'export'
         submenu:
           - label: 'JSON-LD'

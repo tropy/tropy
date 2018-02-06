@@ -20,7 +20,6 @@ const { isArray } = Array
 const { writeFile: write } = require('fs')
 const { win } = require('../window')
 const { groupedByTemplate } = require('../export')
-const { plugins } = require('../common/plugins')
 
 const {
   getItemTemplate,
@@ -476,8 +475,7 @@ class Export extends Command {
           yield call(clipboard.writeText, asString)
           break
         case ':plugin:':
-          plugin.fn = plugins.getFn(plugin)
-          yield plugin.fn(results)
+          yield win.plugins.export(plugin, results)
           break
         default:
           yield cps(write, target, asString)

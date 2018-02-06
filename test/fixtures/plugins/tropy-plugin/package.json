@@ -4,7 +4,7 @@
   "description": "Minimal Tropy plugin",
   "main": "index.js",
   "hooks": {
-    "tropy-hook": "plugin-function",
-    "export": "export"
+    "export": false,
+    "sum": true
   }
 }
