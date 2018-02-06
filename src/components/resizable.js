@@ -88,10 +88,14 @@ class Resizable extends PureComponent {
   }
 
   handleDragStart = (event) => {
-    const { edge, onDragStart } = this.props
+    const { edge, onDragStart, isRelative, value } = this.props
 
     this.scale = bounds(this.container.parentElement)[DIM[edge]] / 100
     this.origin = bounds(this.container)[OPP[edge]]
+
+    if (!isRelative) {
+      this.origin -= (value - this.getNewValue(event).value)
+    }
 
     if (onDragStart) {
       return onDragStart(event, this)
