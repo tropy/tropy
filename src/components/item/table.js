@@ -109,8 +109,11 @@ class ItemTable extends ItemIterator {
   }
 
   handleColumnResize = ({ column, width }, doCommit) => {
+    const prev = this.state.colwidth[column]
+
     this.setState({
-      colwidth: splice(this.state.colwidth, column, 1, width)
+      colwidth: splice(this.state.colwidth, column, 1, width),
+      minWidth: this.state.minWidth - prev + width
     })
 
     if (doCommit) {
