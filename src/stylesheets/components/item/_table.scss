@@ -18,7 +18,7 @@
 
   th,
   td {
-    padding: 0 ($space-xs + 1px) 0 $space-xs;
+    padding: 0 $space-xs 0 ($space-xs + 1px);
     position: relative;
 
     &:last-child {
@@ -55,25 +55,23 @@
 
       &:first-child {
         padding-left: $space-sm;
-      }
 
-      &:last-child {
-        &::after {
+        &::before {
           content: none;
         }
       }
 
-      &::after {
+      &::before {
         content: " ";
         position: absolute;
-        right: 0;
+        left: 0;
         top: 2px;
         bottom: 2px;
         width: 1px;
         background: $item-table-header-border-color;
       }
 
-      &:active:not(.resizing) {
+      &:active:not(.resizing):not(.blank) {
         background: $item-table-header-active-bg;
 
         &::before {
