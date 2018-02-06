@@ -16,6 +16,7 @@
   .main {
     display: flex;
     flex: 1 1 0;
+    min-width: 0; // Prevent horizontal scrollbar in project-view
   }
 }
 
@@ -126,6 +127,7 @@
 #items {
   display: flex;
   flex-direction: column;
+  min-width: 0; // Needed for horizontal scrollbar in .item.table
 
   .toolbar {
     padding: {

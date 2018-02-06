@@ -8,7 +8,8 @@
   flex-direction: column;
   padding: 0 $space-min;
   position: relative;
-  height: 100%;
+  height: 100%; // Prevent vertical scrollbar du to horizontal scrollbar
+  overflow-x: auto;
   contain: strict;
 
   .scrollbar-style-old-school & {
@@ -137,7 +138,7 @@
   .table-body {
     flex: 1 1 auto;
     position: relative;
-    height: 100%;
+    height: 100%; // Prevent vertical scrollbar due to horizontal scrollbar
     display: flex; // Prevent overflow
     contain: strict;
 
@@ -155,6 +156,7 @@
     padding-top: $space-min;
     position: relative;
     z-index: 0; // Fix stacking context (overlay toolbar covered by active item)
+    height: 100%; // Prevent vertical scrollbar du to horizontal scrollbar
   }
 
   .runway {
