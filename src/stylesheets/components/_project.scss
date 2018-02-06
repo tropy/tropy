@@ -130,10 +130,6 @@
   min-width: 0; // Needed for horizontal scrollbar in .item.table
   padding: 0 $space-min;
 
-  .scrollbar-style-old-school & {
-    padding-right: 0;
-  }
-
   .item-count {
     color: $item-count-color;
     white-space: nowrap;
