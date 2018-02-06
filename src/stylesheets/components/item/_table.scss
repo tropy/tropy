@@ -73,7 +73,7 @@
         background: $item-table-header-border-color;
       }
 
-      &:active {
+      &:active:not(.resizing) {
         background: $item-table-header-active-bg;
 
         &::before {
