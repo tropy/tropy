@@ -6,19 +6,14 @@
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  padding: 0 $space-min;
   position: relative;
   height: 100%; // Prevent vertical scrollbar du to horizontal scrollbar
   overflow-x: auto;
   contain: strict;
 
-  .scrollbar-style-old-school & {
-    padding-right: 0;
-  }
-
   th,
   td {
-    padding: 0 $space-xs 0 ($space-xs + 1px);
+    padding: 0 $space-xs;
     position: relative;
 
     &:last-child {
@@ -46,44 +41,44 @@
       text-align: justify;
       font-weight: 400;
       height: $item-table-header-height;
-       border: {
+      border: {
         top: 1px solid $item-table-header-border-color;
         bottom: 1px solid $item-table-header-border-color;
       }
       position: relative;
+      background-image:
+        linear-gradient(to right, transparent 1px, $body-bg 1px),
+        linear-gradient(
+          to bottom,
+          $body-bg 2px,
+          $item-table-header-border-color 2px,
+          $item-table-header-border-color ($item-table-header-height - 4px),
+          $body-bg ($item-table-header-height - 4px)
+        );
       contain: content; // Not clear why size shifts the content
 
       &:first-child {
         padding-left: $space-sm;
-
-        &::before {
-          content: none;
-        }
-      }
-
-      &::before {
-        content: " ";
-        position: absolute;
-        left: 0;
-        top: 2px;
-        bottom: 2px;
-        width: 1px;
-        background: $item-table-header-border-color;
+        background-image: none;
       }
 
       &:active:not(.resizing):not(.blank) {
-        background: $item-table-header-active-bg;
-
-        &::before {
-          top: 0;
-          bottom: 0;
-        }
+        background:
+          linear-gradient(
+            to right,
+            transparent 1px,
+            $item-table-header-active-bg 1px
+          )
+          $item-table-header-border-color;
 
         & + th {
-          &::before {
-            top: 0;
-            bottom: 0;
-          }
+          background:
+            linear-gradient(
+              to right,
+              transparent 1px,
+              $body-bg 1px
+            )
+            $item-table-header-border-color;
         }
       }
 
@@ -129,6 +124,11 @@
       .icon {
         display: none;
         margin: 0 -4px 0 -5px;
+      }
+
+      .resizable-handle-right {
+        width: $resizable-threshold / 2;
+        right: 0;
       }
     }
   }

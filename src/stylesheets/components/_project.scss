@@ -128,12 +128,10 @@
   display: flex;
   flex-direction: column;
   min-width: 0; // Needed for horizontal scrollbar in .item.table
+  padding: 0 $space-min;
 
-  .toolbar {
-    padding: {
-      left: $default-padding-horizontal;
-      right: ($default-padding-horizontal + $space-min);
-    }
+  .scrollbar-style-old-school & {
+    padding-right: 0;
   }
 
   .item-count {
