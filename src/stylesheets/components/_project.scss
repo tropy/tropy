@@ -129,6 +129,22 @@
   flex-direction: column;
   min-width: 0; // Needed for horizontal scrollbar in .item.table
   padding: 0 $space-min;
+  position: relative;
+
+  .scrollbar-style-old-school & {
+    padding-right: 0;
+  }
+
+  &::after {
+    content: " ";
+    position: absolute;
+    width: 4px;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: $brand-primary;
+    z-index: $zindex-draggable;
+  }
 
   .item-count {
     color: $item-count-color;
