@@ -525,11 +525,11 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:open-plugins-config', () => {
-      shell.showItemInFolder(join(app.getPath('userData'), 'plugins.json'))
+      shell.openItem(this.plugins.configFile)
     })
 
     this.on('app:open-plugins-folder', () => {
-      shell.showItemInFolder(join(app.getPath('userData'), 'plugins'))
+      shell.showItemInFolder(this.plugins.root)
     })
 
     this.on('app:reset-ontology-db', () => {

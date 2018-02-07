@@ -155,7 +155,7 @@ en:
         - label: 'Show Log Files'
           command: 'app:open-logs'
         - type: 'separator'
-        - label: 'Show Plugins Configuration'
+        - label: 'Edit Plugins Configuration'
           command: 'app:open-plugins-config'
         - label: 'Show Plugins Folder'
           command: 'app:open-plugins-folder'
