@@ -428,16 +428,17 @@ class Export extends Command {
   static get action() { return ITEM.EXPORT }
 
   *exec() {
-    let path = this.action.meta.target
+    let { target, plugin } = this.action.meta
     const ids = this.action.payload
+    if (plugin) target = ':plugin:'
 
     try {
-      if (!path) {
+      if (!target) {
         this.isInteractive = true
-        path = yield call(save.items, {})
+        target = yield call(save.items, {})
       }
 
-      if (!path) return
+      if (!target) return
 
       const [templateItems, ...resources] = yield select(state => {
         const itms = pick(state.items, ids)
@@ -467,16 +468,20 @@ class Export extends Command {
       })
 
       const results = yield call(groupedByTemplate, templateItems, resources)
+      const asString = JSON.stringify(results, null, 2)
 
-      const data = JSON.stringify(results, null, 2)
-
-      if (path === ':clipboard:') {
-        yield call(clipboard.writeText, data)
-      } else {
-        yield cps(write, path, data)
+      switch (target) {
+        case ':clipboard:':
+          yield call(clipboard.writeText, asString)
+          break
+        case ':plugin:':
+          yield win.plugins.export(plugin, results)
+          break
+        default:
+          yield cps(write, target, asString)
       }
     } catch (error) {
-      warn(`Failed to export items to ${path}: ${error.message}`)
+      warn(`Failed to export items to ${target}: ${error.message}`)
       verbose(error.stack)
 
       fail(error, this.action.type)

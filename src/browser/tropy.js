@@ -18,6 +18,7 @@ const uuid = require('uuid/v1')
 
 const { AppMenu, ContextMenu } = require('./menu')
 const { Cache } = require('../common/cache')
+const { Plugins } = require('../common/plugins')
 const { Strings } = require('../common/res')
 const Storage = require('./storage')
 const Updater = require('./updater')
@@ -76,6 +77,10 @@ class Tropy extends EventEmitter {
 
     prop(this, 'home', {
       value: resolve(__dirname, '..', '..')
+    })
+
+    prop(this, 'plugins', {
+      value: new Plugins(join(app.getPath('userData'), 'plugins'))
     })
   }
 
@@ -270,8 +275,10 @@ class Tropy extends EventEmitter {
       .tap(() => all([
         this.load(),
         this.cache.init(),
+        this.plugins.init()
       ]))
 
+      .tap(() => this.plugins.scan().watch())
       .tap(state => state.updater && this.updater.start())
 
       .tap(() => this.emit('app:restored'))
@@ -341,8 +348,8 @@ class Tropy extends EventEmitter {
     this.on('app:explode-photo', (_, { target }) =>
       this.dispatch(act.item.explode({ id: target.item, photos: [target.id] })))
 
-    this.on('app:export-item', (_, { target }) =>
-      this.dispatch(act.item.export(target.id)))
+    this.on('app:export-item', (_, { target, plugin }) =>
+      this.dispatch(act.item.export(target.id, { plugin })))
 
     this.on('app:restore-item', (_, { target }) =>
       this.dispatch(act.item.restore(target.id)))
@@ -525,7 +532,17 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:open-logs', () => {
-      shell.showItemInFolder(join(app.getPath('userData'), 'log'))
+      shell.openItem(join(app.getPath('userData'), 'log'))
+    })
+
+    this.on('app:open-plugins-config', () => {
+      shell.openItem(this.plugins.configFile)
+    })
+
+    this.on('app:open-plugins-folder', () => {
+      // this could be `shell.openItem(this.plugins.root)`
+      // when electron solves the lost-focus bug for folders
+      shell.showItemInFolder(this.plugins.configFile)
     })
 
     this.on('app:reset-ontology-db', () => {
@@ -561,6 +578,11 @@ class Tropy extends EventEmitter {
       this.zoom(1.0)
     })
 
+    this.plugins.on('config-change', () => {
+      this.broadcast('plugins-reload')
+      this.emit('app:reload-menu')
+    })
+
     let quit = false
     let winId
 
@@ -580,6 +602,7 @@ class Tropy extends EventEmitter {
 
     app.on('quit', () => {
       this.updater.stop()
+      this.plugins.stop()
       this.persist()
     })
 
@@ -640,6 +663,7 @@ class Tropy extends EventEmitter {
       home: app.getPath('userData'),
       documents: app.getPath('documents'),
       cache: this.cache.root,
+      plugins: this.plugins.root,
       frameless: this.state.frameless,
       theme: this.state.theme,
       locale: this.state.locale,

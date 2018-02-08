@@ -8,10 +8,10 @@ const LOGDIR = join(home, 'log')
 
 const { verbose } = require('./common/log')(LOGDIR)
 const { ready } = require('./dom')
-const { win } = require('./window')
 
 ready.then(() => {
   const READY = performance.now()
+  const { win } = require('./window')
 
   win.init(() => {
     requestIdleCallback(win.show, { timeout: 500 })

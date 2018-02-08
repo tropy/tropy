@@ -155,6 +155,11 @@ en:
         - label: 'Show Log Files'
           command: 'app:open-logs'
         - type: 'separator'
+        - label: 'Edit Plugins Configuration'
+          command: 'app:open-plugins-config'
+        - label: 'Show Plugins Folder'
+          command: 'app:open-plugins-folder'
+        - type: 'separator'
         - label: 'About %name'
           command: 'app:about'
         - type: 'separator'
@@ -246,6 +251,11 @@ en:
           command: 'app:open-license'
         - label: 'Show Log Files'
           command: 'app:open-logs'
+        - type: 'separator'
+        - label: 'Show Plugins Configuration'
+          command: 'app:open-plugins-config'
+        - label: 'Show Plugins Folder'
+          command: 'app:open-plugins-folder'
         - type: 'separator'
         - *updaterCheck
         - *updaterIsChecking

@@ -104,8 +104,11 @@ en:
       - label: 'Explode Item'
         command: 'app:explode-item'
         condition: 'hasMultiplePhotos'
-      - label: 'Export Item …'
-        command: 'app:export-item'
+      - label: 'Export Item'
+        id: 'export'
+        submenu:
+          - label: 'JSON-LD'
+            command: 'app:export-item'
       - label: 'Add Photo …'
         command: 'app:create-item-photo'
       - label: 'Tags'
@@ -121,8 +124,11 @@ en:
     item-bulk: &item-bulk
       - label: 'Merge Selected Items'
         command: 'app:merge-item'
-      - label: 'Export Selected Items …'
-        command: 'app:export-item'
+      - label: 'Export Selected Items'
+        id: 'export'
+        submenu:
+          - label: 'JSON-LD'
+            command: 'app:export-item'
       - label: 'Delete Selected Items'
         command: 'app:delete-item'
     item-list: &item-list
