@@ -203,6 +203,7 @@ class ItemView extends PureComponent {
           photo={photo}
           isDisabled={isTrashSelected}
           isOpen={isItemOpen}
+          onContextMenu={this.props.onContextMenu}
           onNoteChange={this.handleNoteChange}
           onNoteCommit={this.handleNoteCommit}
           onPhotoError={this.props.onPhotoError}

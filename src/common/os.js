@@ -1,12 +1,12 @@
 'use strict'
 
-const { release } = require('os')
-const { platform } = process
+const os = require('os')
+const { arch, platform } = process
 const { qualified } = require('./release')
 
 module.exports = {
   get EL_CAPITAN() {
-    return platform === 'darwin' && release() > '15'
+    return platform === 'darwin' && os.release() > '15'
   },
 
   get darwin() {
@@ -19,6 +19,10 @@ module.exports = {
 
   get win32() {
     return platform === 'win32'
+  },
+
+  get system() {
+    return `${os.type()} ${os.release()} (${arch})`
   },
 
   meta: platform === 'darwin' ?

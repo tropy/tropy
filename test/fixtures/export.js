@@ -112,6 +112,7 @@ const tags = {
 const notes = {
   1: {
     text: 'photo note',
+    language: 'de',
     state: {
       doc: {
         type: 'doc',

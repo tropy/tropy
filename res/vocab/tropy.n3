@@ -134,6 +134,18 @@ tropy:note a rdf:Property ;
   rdfs:range tropy:Note ;
 	rdfs:comment "A rich-text note."@en .
 
+tropy:text a rdf:Property ;
+	rdfs:label "Text"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Note ;
+	rdfs:comment "The note's plain text content."@en .
+
+tropy:html a rdf:Property ;
+	rdfs:label "Text"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Note ;
+	rdfs:comment "The note's rich-text content in HTML."@en .
+
 tropy:checksum a rdf:Property ;
 	rdfs:label "Checksum"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;

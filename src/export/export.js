@@ -58,7 +58,6 @@ function makeContext(template, items, resources) {
       '@id': PROP.PHOTO,
       '@container': '@list',
       '@context': {
-        path: 'http://schema.org/image',
         note: {
           '@container': '@list',
           '@id': PROP.NOTE

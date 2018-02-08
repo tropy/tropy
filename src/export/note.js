@@ -12,18 +12,27 @@ function toHTML(doc) {
   try {
     const node = schema.nodeFromJSON(doc)
     const docFragment = serializer.serializeFragment(node)
-    return Array.from(docFragment.children).map(x => x.outerHTML).join('')
+    return Array
+      .from(docFragment.children)
+      .map(x => x.outerHTML).join('')
   } catch (error) {
     warn('Could not convert note to html', { error, doc })
     return ''
   }
 }
 
+function localize(val, lang) {
+  return lang ? {
+    '@value': val,
+    '@language': lang
+  } : val
+}
+
 module.exports = function (note) {
+
   return {
     '@type': NOTE,
-    'text': note.text,
-    'html': toHTML(note.state.doc),
-    'language': note.language
+    'text': localize(note.text, note.language),
+    'html': localize(toHTML(note.state.doc), note.language)
   }
 }
