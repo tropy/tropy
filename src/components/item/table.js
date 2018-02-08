@@ -9,9 +9,11 @@ const { ItemTableHead } = require('./table-head')
 const cx = require('classnames')
 const { noop } = require('../../common/util')
 const { NAV, SASS: { ROW, SCROLLBAR } } = require('../../constants')
+const { on, off, maxScrollLeft } = require('../../dom')
 const { match } = require('../../keymap')
 const { refine, shallow, splice } = require('../../common/util')
 const { assign } = Object
+const throttle = require('lodash.throttle')
 
 
 class ItemTable extends ItemIterator {
@@ -37,6 +39,15 @@ class ItemTable extends ItemIterator {
     })
   }
 
+  componentWillUnmount() {
+    super.componentWillUnmount()
+    if (this.table) {
+      off(this.table, 'scroll', this.handleHorizontalScroll, {
+        capture: true, passive: true
+      })
+    }
+  }
+
   componentDidUpdate() {
     if (this.props.edit != null) {
       for (let id in this.props.edit) {
@@ -47,9 +58,11 @@ class ItemTable extends ItemIterator {
 
   componentWillReceiveProps(props) {
     super.componentWillReceiveProps(props)
-
     if (!shallow(this.props, props, ['columns', 'list'])) {
-      this.setState(this.getColumnState(props))
+      this.setState({
+        ...this.getColumnState(props),
+        hasMaxScrollLeft: this.hasMaxScrollLeft()
+      })
     }
   }
 
@@ -58,6 +71,13 @@ class ItemTable extends ItemIterator {
       'drop-target': !this.props.isDisabled,
       'over': this.props.isOver
     }]
+  }
+
+  update(props = this.props) {
+    super.update(props)
+    this.setState({
+      hasMaxScrollLeft: this.hasMaxScrollLeft()
+    })
   }
 
   getColumnState(props = this.props) {
@@ -91,6 +111,12 @@ class ItemTable extends ItemIterator {
     return ROW.HEIGHT
   }
 
+  hasMaxScrollLeft() {
+    return this.props.hasScrollbars &&
+      this.table != null &&
+      maxScrollLeft(this.table)
+  }
+
   edit(item) {
     const { property } = this.props.columns[0]
     this.props.onEdit({
@@ -118,6 +144,28 @@ class ItemTable extends ItemIterator {
 
     if (doCommit) {
       this.props.onColumnResize({ column, width })
+    }
+  }
+
+  handleHorizontalScroll = throttle(() => {
+    this.setState({
+      hasMaxScrollLeft: this.hasMaxScrollLeft()
+    })
+  }, 25)
+
+  setTable = (table) => {
+    if (this.table) {
+      off(this.table, 'scroll', this.handleHorizontalScroll, {
+        capture: true, passive: true
+      })
+    }
+
+    this.table = table
+
+    if (this.table) {
+      on(this.table, 'scroll', this.handleHorizontalScroll, {
+        capture: true, passive: true
+      })
     }
   }
 
@@ -169,7 +217,11 @@ class ItemTable extends ItemIterator {
 
   render() {
     return (this.props.isEmpty) ? this.renderNoItems() : (
-      <div className="item table">
+      <div
+        ref={this.setTable}
+        className={cx('item', 'table', {
+          'max-scroll-left': this.state.hasMaxScrollLeft
+        })}>
         <ItemTableHead
           columns={this.props.columns}
           colwidth={this.state.colwidth}
