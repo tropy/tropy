@@ -135,17 +135,6 @@
     padding-right: 0;
   }
 
-  &::after {
-    content: " ";
-    position: absolute;
-    width: 4px;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    background: $brand-primary;
-    z-index: $zindex-draggable;
-  }
-
   .item-count {
     color: $item-count-color;
     white-space: nowrap;
@@ -198,3 +187,19 @@
     }
   }
 }
+
+.fake-gap {
+  position: absolute;
+  width: 4px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: $body-bg;
+  z-index: $zindex-draggable;
+
+  .max-scroll-left + & {
+    display: none;
+  }
+}
+
+
