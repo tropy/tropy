@@ -57,8 +57,8 @@ class ItemTableHeadCell extends PureComponent {
         className={cx(this.classes)}
         edge="right"
         isDisabled={!this.isResizable}
-        max={480}
-        min={40}
+        max={this.props.maxWidth}
+        min={this.props.minWidth}
         node="th"
         onDragStop={this.handleDragStop}
         onResize={this.handleResize}
@@ -78,6 +78,8 @@ class ItemTableHeadCell extends PureComponent {
     isActive: bool,
     isAscending: bool.isRequired,
     label: string.isRequired,
+    maxWidth: number,
+    minWidth: number.isRequired,
     position: number,
     type: string.isRequired,
     id: string.isRequired,
@@ -87,6 +89,7 @@ class ItemTableHeadCell extends PureComponent {
   }
 
   static defaultProps = {
+    minWidth: 40,
     type: TYPE.TEXT
   }
 }
