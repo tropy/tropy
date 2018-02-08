@@ -51,6 +51,12 @@ class ProjectView extends Component {
     return this.props.onItemImport({ list: this.props.nav.list })
   }
 
+  handleSort = (sort) => {
+    this.props.onSort({
+      ...sort, list: this.props.nav.list || 0
+    })
+  }
+
   render() {
     const {
       canDrop,
@@ -117,7 +123,9 @@ class ProjectView extends Component {
               isDisabled={nav.trash}
               isOver={isOver && canDrop}
               onCreate={onItemCreate}
-              onSelect={onItemSelect}/>
+              onSelect={onItemSelect}
+              onSort={this.handleSort}/>
+            <div className="fake-gap"/>
           </section>
         </div>
       </div>
@@ -145,6 +153,7 @@ class ProjectView extends Component {
     onItemTagAdd: func.isRequired,
     onMaximize: func.isRequired,
     onSearch: func.isRequired,
+    onSort: func.isRequired,
     onUiUpdate: func.isRequired
   }
 }

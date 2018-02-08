@@ -261,8 +261,8 @@ const util = {
       keys(src).filter(key => !props.find(prop => prop == key)), into)
   },
 
-  merge(a, b) {
-    const res = Object.assign({}, a)
+  merge(a, b, into = {}) {
+    if (a !== into) Object.assign(into, a)
 
     for (let prop in b) {
       if (b.hasOwnProperty(prop)) {
@@ -275,25 +275,29 @@ const util = {
           case type === 'string':
           case type === 'undefined':
           case value == null:
-            res[prop] = value
+            into[prop] = value
             break
 
           case Array.isArray(value):
-            res[prop] = [...value]
+            into[prop] = [...value]
             break
 
           case value instanceof Date:
-            res[prop] = new Date(value)
+            into[prop] = new Date(value)
             break
 
           default:
-            res[prop] = util.merge(res[prop], value)
+            into[prop] = util.merge(into[prop], value)
             break
         }
       }
     }
 
-    return res
+    return into
+  },
+
+  copy(obj, into = {}) {
+    return util.merge(into, obj, into)
   },
 
   map(src, fn, into = {}) {

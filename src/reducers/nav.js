@@ -1,28 +1,31 @@
 'use strict'
 
-const {
-  NAV, ITEM, LIST, TAG, NOTE, PHOTO, PROJECT, DC
-} = require('../constants')
-
 const { isSelected, select } = require('../selection')
+const { merge, omit, splice } = require('../common/util')
+const {
+  DC, NAV, ITEM, LIST, TAG, NOTE, PHOTO, PROJECT
+} = require('../constants')
 
 const init = {
   mode: PROJECT.MODE.PROJECT,
   items: [],
   query: '',
   tags: [],
-  sort: { type: 'property', column: DC.title, asc: true },
-  lists: {}
+  sort: {},
+  columns: [
+    { width: 250, id: DC.title },
+    { width: 100, id: DC.creator },
+    { width: 100, id: DC.date },
+    { width: 100, id: DC.type }
+  ],
 }
 
 module.exports = {
   // eslint-disable-next-line complexity
   nav(state = init, { type, payload, meta, error }) {
     switch (type) {
-
       case NAV.RESTORE:
-        return { ...init, ...payload }
-
+        return merge(init, payload)
       case NAV.UPDATE:
         return { ...state, ...payload }
 
@@ -39,25 +42,26 @@ module.exports = {
       case NAV.SORT: {
         const { list, ...sort } = payload
 
-        if (list) {
-          return {
-            ...state,
-            lists: {
-              ...state.lists, [list]: { ...sort }
-            }
-          }
-
-        } else {
-          return {
-            ...state, sort: { ...sort }
+        return {
+          ...state,
+          sort: {
+            ...state.sort,
+            [list || 0]: sort
           }
         }
       }
 
-      case LIST.REMOVE:
-        return state.list === payload ?
-          { ...state, list: null, items: [], photo: null } :
-          state
+      case LIST.REMOVE: {
+        const isCurrent = (state.list === payload)
+
+        return {
+          ...state,
+          list: isCurrent ? null : state.list,
+          items: isCurrent ? [] : state.items,
+          photo: isCurrent ? null : state.photo,
+          sort: omit(state.sort, payload)
+        }
+      }
 
       case ITEM.DELETE:
       case ITEM.RESTORE:
@@ -146,6 +150,17 @@ module.exports = {
           photo: null,
           ...payload
         }
+
+      case NAV.COLUMN.RESIZE: {
+        const { column, width } = payload
+
+        return {
+          ...state,
+          columns: splice(state.columns, column, 1, {
+            ...state.columns[column], width
+          })
+        }
+      }
 
       default:
         return state

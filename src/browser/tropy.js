@@ -33,7 +33,7 @@ const {
   FLASH, HISTORY, TAG, PROJECT, CONTEXT, SASS, LOCALE
 } = require('../constants')
 
-const WIN = SASS.WINDOW
+const WIN = SASS.PROJECT
 const WIZ = SASS.WIZARD
 const ABT = SASS.ABOUT
 const PREFS = SASS.PREFS

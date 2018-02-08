@@ -43,6 +43,8 @@ const format = {
     switch (type) {
       case TYPE.DATE:
         return format.datetime(value)
+      case TYPE.NUMBER:
+        return format.number(value)
       default:
         return value
     }

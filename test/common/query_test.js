@@ -68,5 +68,19 @@ describe('Query Builder', () => {
       expect(q.params).to.eql({ $a: 1, $c: 'foo' })
     })
 
+    it('join', () => {
+      expect(
+        select('a')
+        .from('b')
+        .join('c', { using: 'a' })
+        .outer.join('d')
+        .query
+      ).to.eql('SELECT a FROM b JOIN c USING (a) LEFT OUTER JOIN d')
+
+      let q = select('*').from('a').join('b', { on: { x: 23 } })
+      expect(q.query).to.eql('SELECT * FROM a JOIN b ON (x = $x)')
+      expect(q.params).to.have.property('$x', 23)
+    })
+
   })
 })

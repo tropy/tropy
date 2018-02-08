@@ -1,10 +1,14 @@
 'use strict'
 
-const { entries } = Object
+const { assign, entries } = Object
 const { isArray } = Array
-const { pluck } = require('./util')
+const { copy, pluck } = require('./util')
 
 class Query {
+  dup() {
+    return copy(this, new this.constructor())
+  }
+
   get hasParams() {
     return this.params != null && Reflect.ownKeys(this.params).length > 0
   }
@@ -26,35 +30,62 @@ class Query {
   }
 }
 
+class Union extends Query {
+  constructor(...args) {
+    super()
+    this.params = {}
+    this.set = []
+    this.push(...args)
+  }
+
+  get query() {
+    this.set.join(' UNION ')
+  }
+
+  push(...args) {
+    for (const { query, params } of args) {
+      this.set.push(query)
+      this.params = { ...this.params, ...params }
+    }
+  }
+}
+
 class Select extends Query {
   constructor(...args) {
     super()
+    this.reset()
+    this.select(...args)
+  }
 
-    this.isNegated = false
+  reset() {
     this.isDistinct = false
+    this.isNegated = false
+    this.isOuter = false
     this.params = {}
-
+    this.cte = null
     this.col = {}
     this.src = []
     this.ord = []
     this.con = []
-
-    this.select(...args)
+    this.grp = []
+    this.hav = []
+    return this
   }
 
   get distinct() {
-    this.isDistinct = true
-    return this
+    return (this.isDistinct = true), this
   }
 
   get all() {
-    this.isDistinct = false
-    return this
+    return (this.isDistinct = false), this
   }
 
   get not() {
-    this.isNegated = true
-    return this
+    return (this.isNegated = true), this
+  }
+
+  get outer() {
+    return (this.isOuter = true), this
   }
 
   select(...columns) {
@@ -71,18 +102,45 @@ class Select extends Query {
   }
 
   from(...sources) {
-    this.src = [...this.src, ...sources]
+    this.src = [...this.src, ...sources.join(', ')]
     return this
   }
 
-  where(conditions) {
+  join(other, { using, on } = {}) {
     try {
-      if (typeof conditions === 'string') {
-        this.con.push(conditions)
+      let JOIN = this.isOuter ? 'LEFT OUTER JOIN' : 'JOIN'
+      let conditions = ''
 
+      switch (true) {
+        case (using != null):
+          conditions = ` USING (${using})`
+          break
+        case (on != null):
+          conditions = []
+          this.parse(on, { conditions })
+          conditions = ` ON (${conditions.join(' AND ')})`
+          break
+      }
+
+      this.src = [...this.src, `${JOIN} ${other}${conditions}`]
+      return this
+
+    } finally {
+      this.isOuter = false
+    }
+  }
+
+  where(conditions) {
+    return this.parse(conditions)
+  }
+
+  parse(input, { conditions = this.con, params = this.params } = {}) {
+    try {
+      if (typeof input === 'string') {
+        conditions.push(input)
       } else {
-        for (let lhs in conditions) {
-          let rhs = conditions[lhs]
+        for (let lhs in input) {
+          let rhs = input[lhs]
           let cmp
 
           switch (true) {
@@ -96,13 +154,19 @@ class Select extends Query {
               cmp = this.isNegated ? 'NOT IN' : 'IN'
               break
 
+            case (rhs instanceof Query):
+              assign(params, rhs.params)
+              rhs = rhs.query
+              cmp = this.isNegated ? 'NOT IN' : 'IN'
+              break
+
             default:
-              this.params[`$${lhs}`] = rhs
+              params[`$${lhs}`] = rhs
               rhs = `$${lhs}`
               cmp = this.isNegated ? '!=' : '='
           }
 
-          this.con.push(`${lhs} ${cmp} ${rhs}`)
+          conditions.push(`${lhs} ${cmp} ${rhs}`)
         }
       }
 
@@ -122,13 +186,30 @@ class Select extends Query {
     return this
   }
 
+  group(...by) {
+    this.grp = [...this.grp, ...by]
+    return this
+  }
+
+  having(input) {
+    return this.parse(input, { conditions: this.hav })
+  }
+
   with(head, body) {
     this.cte = { head, body }
     return this
   }
 
   get query() {
-    return pluck(this, ['WITH', 'SELECT', 'FROM', 'WHERE', 'ORDER']).join(' ')
+    return pluck(this, [
+      'WITH',
+      'SELECT',
+      'FROM',
+      'WHERE',
+      'GROUP_BY',
+      'HAVING',
+      'ORDER'
+    ]).join(' ')
   }
 
   get WITH() {
@@ -155,6 +236,16 @@ class Select extends Query {
       undefined : `WHERE ${this.con.join(' AND ')}`
   }
 
+  get GROUP_BY() {
+    return (this.grp.length === 0) ?
+      undefined : `GROUP BY ${this.grp.join(', ')}`
+  }
+
+  get HAVING() {
+    return (this.hav.length === 0) ?
+      undefined : `HAVING ${this.hav.join(' AND ')}`
+  }
+
   get ORDER() {
     return (this.ord.length === 0) ?
       undefined : `ORDER BY ${this.ord.join(', ')}`
@@ -164,7 +255,8 @@ class Select extends Query {
 module.exports = {
   Query,
   Select,
+  Union,
 
   select(...args) { return new Select(...args) },
-  union(...args) { return args.join(' UNION ') }
+  union(...args) { return new Union(...args) }
 }

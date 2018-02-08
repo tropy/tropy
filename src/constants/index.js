@@ -3,7 +3,6 @@
 module.exports = {
   ACTIVITY: require('./activity'),
   CONTEXT: require('./context'),
-  COLUMNS: require('./columns'),
   DND: require('./dnd'),
   EDIT: require('./edit'),
   FLASH: require('./flash'),

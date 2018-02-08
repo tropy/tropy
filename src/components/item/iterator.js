@@ -10,7 +10,7 @@ const { on, off } = require('../../dom')
 const { seq, compose, map, cat, keep } = require('transducers.js')
 
 const {
-  arrayOf, oneOf, shape, bool, func, number, object, string
+  arrayOf, shape, bool, func, number, object, string
 } = require('prop-types')
 
 
@@ -230,6 +230,7 @@ class ItemIterator extends Iterator {
   getIterableProps(item, index) {
     return {
       item,
+      index,
       cache: this.props.cache,
       photos: this.props.photos,
       tags: this.props.tags,
@@ -258,6 +259,10 @@ class ItemIterator extends Iterator {
     )
   }
 
+  hasPositionColumn(props = this.props) {
+    return !!props.list
+  }
+
   static propTypes = {
     items: arrayOf(shape({
       id: number.isRequired
@@ -265,8 +270,7 @@ class ItemIterator extends Iterator {
 
     sort: shape({
       asc: bool,
-      column: string.isRequired,
-      type: oneOf(['property']).isRequired
+      column: string.isRequired
     }).isRequired,
 
     isActive: bool,

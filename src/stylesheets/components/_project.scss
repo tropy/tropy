@@ -16,6 +16,7 @@
   .main {
     display: flex;
     flex: 1 1 0;
+    min-width: 0; // Prevent horizontal scrollbar in project-view
   }
 }
 
@@ -126,12 +127,12 @@
 #items {
   display: flex;
   flex-direction: column;
+  min-width: 0; // Needed for horizontal scrollbar in .item.table
+  padding: 0 $space-min;
+  position: relative;
 
-  .toolbar {
-    padding: {
-      left: $default-padding-horizontal;
-      right: ($default-padding-horizontal + $space-min);
-    }
+  .scrollbar-style-old-school & {
+    padding-right: 0;
   }
 
   .item-count {
@@ -186,3 +187,23 @@
     }
   }
 }
+
+.fake-gap {
+  position: absolute;
+  width: 4px;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background: $body-bg;
+  z-index: $zindex-draggable;
+
+  body:not(.scrollbar-style-old-school) & {
+    display: none;
+  }
+
+  .max-scroll-left + & {
+    height: $toolbar-height;
+  }
+}
+
+
