@@ -1,6 +1,7 @@
 @prefix tropy: <https://tropy.org/v1/tropy#> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix exif:  <http://www.w3.org/2003/12/exif/ns#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -11,8 +12,8 @@
 	vann:preferredNamespacePrefix "tropy" ;
 	vann:preferredNamespaceUri "https://tropy.org/v1/tropy#" ;
   rdfs:seeAlso <https://tropy.org/> ;
-	dc:title "Tropy Vocabulary"@en ;
-	dc:description "The RDF vocabulary for https://tropy.org/v1/tropy defines the core elements used by the Tropy application and Tropy templates."@en ;
+	dc:title "Tropy Vocabulary"@en , "Lexique de métadonnées Tropy"@fr ;
+	dc:description "The RDF vocabulary for https://tropy.org/v1/tropy defines the core elements used by the Tropy application and Tropy templates."@en , "Le lexiques de métadonnées RDF https://tropy.org/v1/tropy définit les éléments structurels utilisés par Tropy, en particulier dans les modèles de saisie Tropy."@fr ;
 	dc:issued "2017-05-09"^^xsd:date ;
 	dc:publisher "Roy Rosenzweig Center for History and New Media, George Mason University"@en .
 
@@ -22,19 +23,25 @@
 
 tropy:Item a rdfs:Class ;
   rdfs:subClassOf rdfs:Resource ;
-  rdfs:label "Item"@en ;
+  rdfs:label "Item"@en , "Objet"@fr , "Objekt"@de ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A Tropy item contains metadata and photos."@en .
 
-tropy:Photo a rdfs:Class ;
+tropy:Image a rdfs:Class ;
   rdfs:subClassOf rdfs:Resource ;
-  rdfs:label "Photo"@en ;
+  rdfs:label "Image"@en ;
+  rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:comment "An image (photo or selection)."@en .
+
+tropy:Photo a rdfs:Class ;
+  rdfs:subClassOf tropy:Image ;
+  rdfs:label "Photo"@en , "Photo"@fr , "Foto"@de ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A photo."@en .
 
 tropy:Selection a rdfs:Class ;
-  rdfs:subClassOf rdfs:Resource ;
-  rdfs:label "Selection"@en ;
+  rdfs:subClassOf tropy:Image ;
+  rdfs:label "Selection"@en "Sélection"@fr , "Ausschnitt"@de ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A selection within a photo."@en .
 
@@ -55,6 +62,18 @@ tropy:Field a rdfs:Class ;
   rdfs:label "Template Field"@en ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A Tropy template field."@en .
+
+tropy:List a rdfs:Class ;
+  rdfs:subClassOf rdfs:Resource ;
+  rdfs:label "List"@en ;
+  rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:comment "A list of Tropy items."@en .
+
+tropy:Tag a rdfs:Class ;
+  rdfs:subClassOf rdfs:Resource ;
+  rdfs:label "Tag"@en ;
+  rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:comment "A tag or label."@en .
 
 
 # Data Types
@@ -94,43 +113,177 @@ tropy:selection a rdf:Property ;
   rdfs:range tropy:Selection ;
 	rdfs:comment "A Tropy photo selection."@en .
 
+tropy:list a rdf:Property ;
+	rdfs:label "List"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Item ;
+  rdfs:range tropy:List ;
+	rdfs:comment "A list containing the item."@en .
+
+tropy:tag a rdf:Property ;
+	rdfs:label "Tag"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Item ;
+  rdfs:range tropy:Tag ;
+	rdfs:comment "A tag applied to the item."@en .
+
+tropy:note a rdf:Property ;
+	rdfs:label "Note"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Item , tropy:Photo , tropy:Selection ;
+  rdfs:range tropy:Note ;
+	rdfs:comment "A rich-text note."@en .
+
+tropy:text a rdf:Property ;
+	rdfs:label "Text"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Note ;
+	rdfs:comment "The note's plain text content."@en .
+
+tropy:html a rdf:Property ;
+	rdfs:label "Text"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Note ;
+	rdfs:comment "The note's rich-text content in HTML."@en .
+
+tropy:checksum a rdf:Property ;
+	rdfs:label "Checksum"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo ;
+	rdfs:comment "Checksum of original photo (MD5)."@en .
+
+tropy:path a rdf:Property ;
+	rdfs:label "Path"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo ;
+	rdfs:comment "Path to original photo."@en .
+
+tropy:mimetype a rdf:Property ;
+	rdfs:label "Mime-Type"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo ;
+	rdfs:comment "Mime-type of original photo."@en .
+
+tropy:orientation a rdf:Property ;
+	rdfs:label "Orientation"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  owl:sameAs exif:orientation ;
+  rdfs:domain tropy:Photo ;
+	rdfs:comment "EXIF orientation (angle and mirror) of original photo."@en .
+
+tropy:width a rdf:Property ;
+	rdfs:label "Width"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  owl:sameAs exif:width ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Image width in pixels."@en .
+
+tropy:height a rdf:Property ;
+	rdfs:label "Height"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  owl:sameAs exif:height ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Image height in pixels."@en .
+
+tropy:size a rdf:Property ;
+	rdfs:label "size"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo ;
+	rdfs:comment "Size of original photo in bytes."@en .
+
+tropy:x a rdf:Property ;
+	rdfs:label "X"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Selection ;
+	rdfs:comment "Origin X coordinate in original image."@en .
+
+tropy:y a rdf:Property ;
+	rdfs:label "Y"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Selection ;
+	rdfs:comment "Origin Y coordinate in original image."@en .
+
+tropy:angle a rdf:Property ;
+	rdfs:label "Angle"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Rotation adjustment of an image."@en .
+
+tropy:brightness a rdf:Property ;
+	rdfs:label "Brightness"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Brightness adjustment of an image."@en .
+
+tropy:contrast a rdf:Property ;
+	rdfs:label "Contrast"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Contrast adjustment of an image."@en .
+
+tropy:hue a rdf:Property ;
+	rdfs:label "Hue"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Hue adjustment of an image."@en .
+
+tropy:mirror a rdf:Property ;
+	rdfs:label "Mirror"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Mirror adjustment of an image."@en .
+
+tropy:negative a rdf:Property ;
+	rdfs:label "Invert Colors"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Color inversion of an image."@en .
+
+tropy:saturation a rdf:Property ;
+	rdfs:label "Saturation"@en ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Photo , tropy:Selection ;
+	rdfs:comment "Saturation adjustment of an image."@en .
+
+
+# Custom Metadata Properties
+
 tropy:box a rdf:Property ;
-	rdfs:label "Box"@en ;
+	rdfs:label "Box"@en , "Carton"@fr , "Box"@de ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:domain tropy:Item , tropy:Photo, tropy:Selection ;
-	rdfs:comment "A unit of archival organization."@en .
+	rdfs:comment "A unit of archival organization."@en , "Une unité d'archivage."@fr .
 
 tropy:folder a rdf:Property ;
-	rdfs:label "Folder"@en ;
+	rdfs:label "Folder"@en , "Dossier"@fr , "Ordner"@de ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:subPropertyOf tropy:box ;
   rdfs:domain tropy:Item , tropy:Photo, tropy:Selection ;
-	rdfs:comment "A unit of archival organization, usually within a box."@en .
+	rdfs:comment "A unit of archival organization, usually within a box."@en , "Une unité d'archivage, généralement contenue dans un carton."@fr .
 
 tropy:piece a rdf:Property ;
-	rdfs:label "Piece"@en ;
+	rdfs:label "Piece"@en , "Pièce"@fr ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:subPropertyOf tropy:folder ;
   rdfs:domain tropy:Item , tropy:Photo, tropy:Selection ;
-	rdfs:comment "A unit of archival organization, usually within a folder."@en .
+	rdfs:comment "A unit of archival organization, usually within a folder."@en , "Une unité d'archivage, généralement contenue dans un dossier."@fr .
+
+tropy:collection a rdf:Property ;
+	rdfs:label "Collection"@en , "Collection"@fr ;
+	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
+  rdfs:domain tropy:Item , tropy:Photo, tropy:Selection ;
+	rdfs:comment "A unit of archival organizations."@en , "Un ensemble d'unités d'archivage."@fr .
 
 
-
-tropy:name a rdf:Property ;
-  rdfs:label "Name"@en ;
-  rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
-  rdfs:subPropertyOf dc:title ;
-  rdfs:domain tropy:Item , tropy:Photo, tropy:Selection , tropy:Template ;
-  rdfs:range rdfs:Literal ;
-  rdfs:comment "A unique name."@en .
+# Template Properties
 
 tropy:template-type a rdf:Property ;
-  rdfs:label "Type"@en ;
+  rdfs:label "Type"@en , "Type"@fr ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:subPropertyOf dc:type ;
   rdfs:domain tropy:Template ;
   rdfs:range rdfs:Class ;
-  rdfs:comment "The type of object, in Tropy, which the template describes."@en .
+  rdfs:comment "The type of object, in Tropy, which the template describes."@en , "Le type d'élément décrit dans Tropy par le modèle de saisie: objet, photo, etc."@en .
 
 tropy:domain a rdf:Property ;
   rdfs:label "Domain"@en ;

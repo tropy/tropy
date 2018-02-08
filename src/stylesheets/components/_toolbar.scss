@@ -28,15 +28,16 @@
     height: $toolbar-height;
     display: flex;
     justify-content: space-between;
-    transform: translate3d(0, 100%, 0);
+    transform: translate(0, 100%); // translate3d clips box-shadow
     transition: transform $toolbar-context-transition;
 
-    &.active {
-      transform: translate3d(0, 0, 0);
+    &.default,
+    &.has-active {
+      transform: translate(0, -100%);
     }
 
-    &.has-active {
-      transform: translate3d(0, -100%, 0);
+    &.active {
+      transform: translate(0, 0);
     }
   }
 

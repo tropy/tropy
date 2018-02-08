@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { TemplateSelect } = require('./select')
-const { ButtonGroup, IconButton } = require('../button')
+const { ButtonGroup, Button } = require('../button')
 const { FormGroup, Label } = require('../form')
 const { arrayOf, bool, func, shape, string } = require('prop-types')
 
@@ -36,26 +36,26 @@ class TemplateToolbar extends PureComponent {
             placeholder="prefs.template.new"
             onChange={this.props.onChange}/>
           <ButtonGroup>
-            <IconButton
+            <Button
               icon={<IconNew/>}
               title="prefs.template.tools.new"
               isDisabled={this.props.isPristine}
               onClick={this.props.onClear}/>
-            <IconButton
+            <Button
               icon={<IconCopy/>}
               title="prefs.template.tools.copy"
               isDisabled={this.props.isPristine}
               onClick={this.props.onCopy}/>
-            <IconButton
+            <Button
               icon={<IconTrash/>}
               title="prefs.template.tools.delete"
               isDisabled={this.props.isPristine || this.props.isProtected}
               onClick={this.props.onDelete}/>
-            <IconButton
+            <Button
               icon={<IconImport/>}
               title="prefs.template.tools.import"
               onClick={this.props.onImport}/>
-            <IconButton
+            <Button
               icon={<IconExport/>}
               title="prefs.template.tools.export"
               isDisabled={this.props.isPristine}

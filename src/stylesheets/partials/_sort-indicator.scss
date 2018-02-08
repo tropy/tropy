@@ -22,14 +22,6 @@
     }
   }
 
-  &.last {
-    .over > & {
-      &::after {
-        content: "";
-      }
-    }
-  }
-
   &.over {
     position: relative;
     z-index: 1;
@@ -81,3 +73,12 @@
   }
 }
 
+.photo {
+  &.last {
+    .over & {
+      &::after {
+        content: "";
+      }
+    }
+  }
+}

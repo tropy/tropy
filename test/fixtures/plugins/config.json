@@ -1,0 +1,12 @@
+[
+  {
+    "plugin": "tropy-plugin",
+    "name": "Plugin Name",
+    "options": {
+      "invert": true
+    }
+  },
+  {
+    "plugin": "tropy-plugin"
+  }
+]

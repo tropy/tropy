@@ -1,9 +1,9 @@
 {
   "@context": "https://tropy.org/v1/contexts/template.jsonld",
-  "@id": "https://tropy.org/v1/templates/archive-generic",
+  "@id": "https://tropy.org/v1/templates/generic",
   "@type": "https://tropy.org/v1/tropy#Template",
   "type": "https://tropy.org/v1/tropy#Item",
-  "name": "Archive Generic",
+  "name": "Tropy Generic",
   "version": "1.0.0",
   "domain": [],
   "creator": "RRCHNM",
@@ -30,7 +30,7 @@
     {
       "property": "http://purl.org/dc/elements/1.1/date",
       "label": null,
-      "datatype": "http://www.w3.org/2001/XMLSchema#string",
+      "datatype": "https://tropy.org/v1/tropy#date",
       "hint": "ISO format",
       "isRequired": false,
       "isConstant": false,
@@ -55,8 +55,8 @@
       "value": null
     },
     {
-      "property": "http://purl.org/dc/terms/source",
-      "label": "Collection",
+      "property": "https://tropy.org/v1/tropy#collection",
+      "label": null,
       "datatype": "http://www.w3.org/2001/XMLSchema#string",
       "hint": null,
       "isRequired": false,

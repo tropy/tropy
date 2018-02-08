@@ -7,7 +7,7 @@ const { FormattedMessage } = require('react-intl')
 const { array, func, object, string } = require('prop-types')
 const act = require('../actions')
 const { IconXLarge } = require('./icons')
-const { IconButton } = require('./button')
+const { Button } = require('./button')
 
 
 class FlashMessage extends PureComponent {
@@ -30,7 +30,7 @@ class FlashMessage extends PureComponent {
           <FormattedMessage id={`flash.${this.props.id}.confirm`}/>
         </button>
 
-        <IconButton icon={<IconXLarge/>} onClick={this.handleDismiss}/>
+        <Button icon={<IconXLarge/>} onClick={this.handleDismiss}/>
       </li>
     )
   }

@@ -12,29 +12,26 @@ const { auto } = require('../../format')
 const cx = require('classnames')
 const { TYPE } = require('../../constants')
 const {
-  arrayOf, bool, func, number, object, shape, string
+  arrayOf, bool, func, number, object, oneOfType, shape, string
 } = require('prop-types')
 
 
+const BlankTableCell = () => (
+  <td className="blank"/>
+)
+
 class ItemTableCell extends PureComponent {
-  get style() {
-    return {
-      width: `${this.props.width}%`
-    }
+  get classes() {
+    return ['metadata', {
+      'main-column': this.props.isMainColumn,
+      'read-only': this.props.isReadOnly
+    }]
   }
 
-  get value() {
-    const { data, property } = this.props
-
-    return data[property.id] ?
-      data[property.id].text : null
-  }
-
-  get type() {
-    const { data, property } = this.props
-
-    return data[property.id] ?
-      data[property.id].type : TYPE.TEXT
+  get canEdit() {
+    return !(
+      this.props.isReadOnly || this.props.isDisabled || this.props.isEditing
+    )
   }
 
   edit(property) {
@@ -47,7 +44,7 @@ class ItemTableCell extends PureComponent {
     this.props.onChange({
       id: this.props.item.id,
       data: {
-        [this.props.property.id]: { text, type: this.type }
+        [this.props.id]: { text, type: this.props.type }
       }
     })
   }
@@ -73,118 +70,102 @@ class ItemTableCell extends PureComponent {
     ),
 
     onSingleClick: () => {
-      if (!this.props.isEditing) {
-        this.edit(this.props.property.id)
-      }
+      if (this.canEdit) this.edit(this.props.id)
     }
   })
 
-  handleKeyDown = (event, text, hasChanged) => {
+  handleKeyDown = (event, input) => {
     if (event.key === 'Tab') {
       event.preventDefault()
       event.stopPropagation()
 
-      if (hasChanged) {
-        this.handleChange(text)
-      }
+      if (input.hasChanged) input.commit(true)
 
-      this.edit(event.shiftKey ?
+      const next = event.shiftKey ?
         this.props.prevColumn :
-        this.props.nextColumn )
+        this.props.nextColumn
 
+      if (next != null) this.edit(next)
     }
   }
 
+  renderCoverImage() {
+    return this.props.isMainColumn && (
+      <CoverImage
+        item={this.props.item}
+        cache={this.props.cache}
+        photos={this.props.photos}
+        size={this.props.size}
+        onError={this.props.onPhotoError}/>
+    )
+  }
+
+  renderTagColors() {
+    return this.props.isMainColumn && (
+      <TagColors
+        selection={this.props.item.tags}
+        tags={this.props.tags}/>
+    )
+  }
+
   render() {
-    const {
-      item,
-      cache,
-      photos,
-      size,
-      tags,
-      isEditing,
-      isDisabled,
-      isMainColumn,
-      onCancel,
-      onPhotoError
-    } = this.props
-
-    const { type, value } = this
-
     return (
       <td
-        className={cx({ metadata: true, [type]: true })}
-        style={this.style}
+        className={cx(this.classes)}
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>
         <div className="flex-row center">
-          {isMainColumn &&
-            <CoverImage
-              item={item}
-              cache={cache}
-              photos={photos}
-              size={size}
-              onError={onPhotoError}/>}
+          {this.renderCoverImage()}
           <Editable
-            value={value}
-            display={auto(value, type)}
+            display={auto(this.props.value, this.props.type)}
+            isActive={this.props.isEditing}
+            isDisabled={this.props.isDisabled || this.props.isReadOnly}
             resize
-            isEditing={isEditing}
-            isDisabled={isDisabled}
-            onCancel={onCancel}
+            value={this.props.value}
+            onCancel={this.props.onCancel}
             onChange={this.handleChange}
             onKeyDown={this.handleKeyDown}/>
-          {isMainColumn &&
-            <TagColors
-              selection={item.tags}
-              tags={tags}/>}
+          {this.renderTagColors()}
         </div>
       </td>
     )
   }
 
   static propTypes = {
-    isEditing: bool,
+    cache: string,
+    id: string.isRequired,
     isDisabled: bool,
-    isSelected: bool,
+    isEditing: bool,
     isMainColumn: bool,
-
-    property: shape({
-      id: string.isRequired,
-      type: string,
-    }),
-
-    nextColumn: string.isRequired,
-    prevColumn: string.isRequired,
-
+    isReadOnly: bool,
+    isSelected: bool,
     item: shape({
       id: number.isRequired,
       cover: number,
       photos: arrayOf(number)
     }).isRequired,
-
-    data: object.isRequired,
+    nextColumn: string,
     photos: object,
+    prevColumn: string,
+    size: number,
     tags: object,
-
-    cache: string.isRequired,
-    width: number.isRequired,
-    size: number.isRequired,
-
+    type: string.isRequired,
+    value: oneOfType([string, number]),
     getSelection: func.isRequired,
     onCancel: func.isRequired,
     onChange: func.isRequired,
     onEdit: func.isRequired,
-    onPhotoError: func.isRequired
+    onPhotoError: func
   }
 
   static defaultProps = {
-    data: {},
-    size: 48
+    size: 48,
+    type: TYPE.TEXT
   }
 }
 
 
 module.exports = {
+  BlankTableCell,
   ItemTableCell
 }

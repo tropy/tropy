@@ -220,11 +220,11 @@ const util = {
     return true
   },
 
-  pluck(src, props = [], into = []) {
+  pluck(src, props = [], into = [], expand = false) {
     return props.reduce((res, key) => {
       const value = src[key]
 
-      if (typeof value !== 'undefined' || src.hasOwnProperty(key)) {
+      if (expand || typeof value !== 'undefined' || src.hasOwnProperty(key)) {
         res.push(src[key])
       }
 
@@ -261,8 +261,8 @@ const util = {
       keys(src).filter(key => !props.find(prop => prop == key)), into)
   },
 
-  merge(a, b) {
-    const res = Object.assign({}, a)
+  merge(a, b, into = {}) {
+    if (a !== into) Object.assign(into, a)
 
     for (let prop in b) {
       if (b.hasOwnProperty(prop)) {
@@ -270,29 +270,34 @@ const util = {
         let type = typeof value
 
         switch (true) {
+          case type === 'boolean':
           case type === 'number':
           case type === 'string':
           case type === 'undefined':
           case value == null:
-            res[prop] = value
+            into[prop] = value
             break
 
           case Array.isArray(value):
-            res[prop] = [...value]
+            into[prop] = [...value]
             break
 
           case value instanceof Date:
-            res[prop] = new Date(value)
+            into[prop] = new Date(value)
             break
 
           default:
-            res[prop] = util.merge(res[prop], value)
+            into[prop] = util.merge(into[prop], value)
             break
         }
       }
     }
 
-    return res
+    return into
+  },
+
+  copy(obj, into = {}) {
+    return util.merge(into, obj, into)
   },
 
   map(src, fn, into = {}) {
@@ -417,11 +422,13 @@ const util = {
     return shortid.generate()
   },
 
-  shallow(a, b) {
+  shallow(a, b, props) {
     if (a === b) return true
     if (a == null || b == null) return false
 
-    for (let prop in a) {
+    if (util.blank(props)) props = keys(a)
+
+    for (let prop of props) {
       if (a[prop] !== b[prop]) return false
     }
 

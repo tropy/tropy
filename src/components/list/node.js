@@ -79,7 +79,7 @@ class ListNode extends PureComponent {
             value={list.name}
             isRequired
             resize
-            isEditing={isEditing}
+            isActive={isEditing}
             onCancel={onEditCancel}
             onChange={this.handleChange}/>
         </div>

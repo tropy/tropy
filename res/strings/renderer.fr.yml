@@ -1,0 +1,462 @@
+fr:
+  sidebar:
+    lists: Listes
+    tags: Tags
+    imports: Dernière importation
+    trash: Objets supprimés
+  toolbar:
+    import: Importer des photos
+    items: >
+        {count, plural,
+
+        =0 {Pas d'objet dans cette vue}
+
+        one {1 objet dans cette vue}
+
+        other {# objets dans cette vue}}
+    search:
+      placeholder: Recherche
+  panel:
+    metadata:
+      tab: Métadonnées
+      photo: Photo
+      item: >
+          {count, plural,
+
+          =0 {}
+
+          one {Objet}
+
+          other {# objets}}
+      selection: Sélection
+    tags:
+      tab: Tags
+      add: >
+          {count, plural,
+
+          =0 {Ajouter un tag}
+
+          one {Ajouter un tag à 1 objet}
+
+          other {Ajouter un tag à # objets}}
+    photo:
+      title: >
+          {count, plural,
+
+          =0 {Pas de photo}
+
+          one {1 photo}
+
+          other {# photos}}
+      create: Ajouter des photos
+      selection: Sélection
+    note:
+      title: >
+          {count, plural,
+
+          =0 {Pas de note}
+
+          one {1 note}
+
+          other {# notes}}
+      create: Ajouter une note
+  about:
+    version: Version {version}
+    rrchnm:
+      title: Roy Rosenzweig Center for History and New Media
+      url: https://rrchnm.org
+    cds:
+      title: Corporation for Digital Scholarship
+      url: http://digitalscholar.org
+    text: >
+        Tropy est conçu par le {rrchnm}, une équipe qui crée des ressources pour l'enseignement
+        de l'histoire, des expositions numériques, et des logiciels libres et open-source.
+    trademark: Tropy est une marque de la {cds}.
+    release:
+      title: Notes de version
+      url: https://github.com/tropy/tropy/releases/tag/{version}
+    license:
+      title: Informations sur la licence
+      url: https://tropy.org/license
+    credits:
+      title: Crédits
+      url: https://tropy.org/credits
+  project:
+    none: Faire glisser ici un fichier de projet ou créer un {newProject}
+    empty: Pour commencer, faire glisser vos photos dans Tropy
+    new: Nouveau projet
+  wizard:
+    project:
+      title: Créer un nouveau projet
+      submit: Créer un projet
+      name: Titre
+      save_as: Changer le nom du fichier ou sa localisation
+      change: Changer
+  prefs:
+    title: Tropy Préférences
+    app:
+      label: Globales
+      style:
+        theme: Thème
+        themes:
+          light: Lumineux
+          dark: Sombre
+      locale:
+        locale: Langue
+        locales:
+          en: English
+          fr: Français
+      template: Modèle de saisie par défaut
+      debug: Autoriser le mode développeur
+      dup:
+        label: Pendant l'importation
+        option:
+          skip: Passer les photos en double
+          import: Accepter les photos en double (duplication)
+          prompt: Me demander à chaque photo en double
+      ui:
+        label: Interface
+        option:
+          invertScroll: Inverser la direction lors du déroulement des photos
+          invertZoom: Inverser la direction lors de l'usage du zoom sur les photos
+          overlayToolbars: Montrer et cacher automatiquement les barres d'outils
+      zoomMode:
+        label: Par défaut
+        option:
+          fit: Zoom pleine hauteur
+          fill: Zoom pleine largeur
+    project:
+      label: Projet
+    template:
+      label: Modèles de saisie
+      new: Nouveau modèle de saisie…
+      create: Créer
+      select: Modèle de saisie
+      tools:
+        new: Nouveau
+        copy: Dupliquer
+        delete: Supprimer
+        import: Importer
+        export: Exporter
+    vocab:
+      label: Schémas
+      classes: >
+          {count, plural,
+
+          =0 {Aucune classe de données}
+
+          one {# classe de données}
+
+          other {# classes de données}
+
+          }
+      datatypes: >
+          {count, plural,
+
+          =0 {Aucun type de données} one {# type de données}
+
+          other {# types de données}
+
+          }
+      properties: >
+          {count, plural,
+
+          =0 {Aucune propriété}
+
+          one {# propriété}
+
+          other {# propriétés}
+
+          }
+  item:
+    created: Création
+    modified: Modifié
+  photo:
+    file: Fichier
+    size: Taille
+    type: Type
+    created: Création
+    modified: Modifié
+  selection:
+    size: Taille
+    created: Création
+    modified: Modifié
+  esper:
+    tool:
+      pan: Outil panoramique
+      select: Outil de sélection
+      rotate: Rotation
+      mirror: Miroir
+    mode:
+      fill: Pleine largeur
+      fit: Pleine hauteur
+      zoom: Zoom
+  notepad:
+    placeholder: Ajoutez vos notes ici…
+  template:
+    id: URI
+    name: Nom
+    type: Type
+    creator: Créateur
+    description: Description
+    types:
+      https://tropy.org/v1/tropy#Item: Modèle de saisie pour un objet
+      https://tropy.org/v1/tropy#Photo: Modèle de saisie pour une photo
+      https://tropy.org/v1/tropy#Selection: Modèle de saisie pour une sélection de photos
+    field:
+      property: Propriété
+      label: Label
+      datatype: Type de données
+      isRequired: Champ obligatoire
+      hint: Indice
+      value: Valeur par défaut
+      isConstant: En lecture seule
+  vocab:
+    id: URI
+    prefix: Prefix
+    title: Name
+    description: Description
+    properties: Propriétés
+    seeAlso: Voir également
+  property:
+    select: Sélectionner une propriété…
+  datatype:
+    select: Sélectionner un type de données…
+  resource:
+    select: Sélectionner une ressource…
+    id: URI
+    label: Label
+    description: Description
+    comment: Commentaire
+  dialog:
+    prompt:
+      cancel: Annuler
+      item:
+        destroy: >
+            Êtes-vous sûr.e de vouloir effacer définitivement ces objets ? Cette action
+            ne peut pas être annulée.
+      dup:
+        message: >
+            Cette photo existe déjà dans votre projet. Voulez-vous vraiment l'importer
+            de nouveau?
+        checkbox: Se souvenir de mon choix
+        cancel: Passer
+        ok: Importer tout de même
+    filter:
+      templates: Modèle de saisie Tropy
+      images: Images
+      projects: Projets Tropy
+      rdf: Schémas RDF
+      jsonld: JSON-LD
+  action:
+    project:
+      save: Sauvegarder le projet
+    list:
+      create: Créer une liste
+      delete: Supprimer la liste
+      item:
+        add: Ajouter des objets à la liste
+        merge: Fusionner les objets
+        remove: Enlever l'objet de la liste
+        restore: Ajouter un objet à la liste
+      order: Trier la liste
+      restore: Restaurer la liste
+      save: Sauvegarder la liste
+    item:
+      create: Créer des objets
+      delete: Supprimer des objets
+      explode: Dissocier l'objet
+      implode: Associer les objets
+      merge: Fusionner les objets
+      split: Eclater les objets
+      import: Importer des objets
+      restore: Restaurer des objets
+      save: Sauvegarder l'objet
+      tag:
+        create: Tag
+        toggle: Tag
+        clear: Enlever les tags
+    metadata:
+      save: Sauvegarder les métadonnées
+    ontology:
+      import: Importer des lexiques de métadonnées
+      vocab:
+        save: Sauvegarder le lexique de métadonnées
+      label:
+        save: Sauvegarder le label
+      template:
+        import: Importer un modèle de saisie
+    photo:
+      create: Importer une photo
+      delete: Supprimer une photo
+      duplicate: Dupliquer une photo
+      move: Déplacer une photo
+      order: Trier les photos
+      restore: Restaurer une photo
+      save: Sauvegarder les photos
+    note:
+      create: Créer une note
+      delete: Supprimer une note
+      order: Trier les notes
+      restore: Restaurer une note
+      save: Save Note
+    tag:
+      create: Créer un tag
+      delete: Supprimer un tag
+      restore: Créer un tag
+      save: Sauvegarder un tag
+    selection:
+      create: Créer une sélection
+      delete: Supprimer la sélection
+      restore: Créer une sélection
+      save: Sauvegarder la sélection
+      order: Trier les sélections
+  activity:
+    project:
+      save: Sauvegarde en cours…
+    list:
+      create: Liste en cours de création…
+      delete: Liste en cours de suppression…
+      item:
+        add: Objets en cours d'adjonction à la liste…
+        merge: Fusion des objets en cours…
+        remove: Retrait des objets de la liste en cours…
+        restore: Restauration des objets dans la liste en cours…
+      load: Chargement des listes…
+      order: Tri de la liste…
+      restore: Restauration de la liste en cours…
+      save: Sauvegarde de la liste en cours…
+    tag:
+      create: Création d'un tag…
+      delete: Suppression d'un tag…
+      load: Chargement des tags…
+      restore: Restauration des tags…
+      save: Sauvegarde des tags…
+    item:
+      create: Création d'un objet…
+      delete: Suppression d'un objet…
+      destroy: Suppression définitive des objets…
+      explode: Dissociation de l'objet en cours…
+      export: Exportation de l'objet en cours…
+      implode: Restauration de l'objet en cours…
+      import: >
+          {hasProgressBar, select,
+
+          true {{progress, number} objets importés sur {total, number}…}
+
+          other {Importation des objets en cours…}
+
+          }
+      load: Chargement des objets en cours…
+      merge: Fusion des objets en cours…
+      restore: Restauration de l'objet en cours…
+      save: Sauvegarde de l'objet en cours…
+      tag:
+        create: Marquage de l'objet en cours…
+        toggle: Marquage de l'objet en cours…
+        clear: Nettoyage des tags des objets en cours…
+    metadata:
+      load: Chargement des métadonnées…
+      save: Sauvegarde des métadonnées…
+    ontology:
+      load: Chargement de l'ontologie…
+      import: Importation des lexiques de métadonnées…
+      vocab:
+        save: Sauvegarde du lexique de métadonnées…
+      label:
+        save: Sauvegarde du label…
+      template:
+        import: Importation des modèles de saisie…
+    photo:
+      consolidate: >
+          {hasProgressBar, select,
+
+          true {Regroupement de {progress, number} photos sur {total, number}…}
+
+          other {Regroupement des photos…}
+
+          }
+      create: >
+          {hasProgressBar, select,
+
+          true {Importation de {progress, number} photos sur {total, number}…}
+
+          other {Importation des photos…}
+
+          }
+      delete: Suppression de la photo…
+      duplicate: >
+          {hasProgressBar, select,
+
+          true {Duplication de {progress, number} photos sur {total, number}…}
+
+          other {Duplication des photos…}
+
+          }
+      load: Chargement des photos…
+      move: Déplacement des photos…
+      order: Tri des photos en cours…
+      save: Sauvegarde de la photo…
+      restore: Restauration des photos…
+    note:
+      create: Creation note…
+      delete: Suppression de la note…
+      load: Chargement des notes…
+      order: Tri des notes en cours…
+      restore: Restauration des notes…
+    selection:
+      load: Chargement de la sélection de photos…
+  editor:
+    commands:
+      bold: Gras
+      italic: Italique
+      underline: Souligné
+      overline: Trait suscrit
+      strikethrough: Barré
+      subscript: Indice
+      superscript: Exposant
+      blockquote: Insérer un bloc de citation
+      ol: Numérotation
+      ul: Puces
+      link:
+        button: Insérer un lien
+        target: Cible du lien
+        title: Titre du lien
+      left: Aligner à gauche
+      center: Centrer
+      right: Aligner à droite
+      sinkListItem: Augmenter le retrait
+      liftListItem: Réduire le retrait
+  error:
+    project:
+      created: Echec de la création du projet.
+    item:
+      merge: Echec de la fusion des objets.
+      import: Echec de l'importation des objets.
+      tag:
+        save: Echec de la sauvegarde du tag.
+        create: Echec du marquage de l'objet. Chaque tag est unique pour un même objet.
+    list:
+      save: Echec de la sauvegarde de la liste.
+      item:
+        add: Echec de l'adjonction de l' (des) objet(s) à la liste.
+    photo:
+      consolidate: Echec du regroupement des photos.
+      create: Echec de l'importation de la (/des) photo(s).
+      save: Echec de la sauvegarde de la (/des) photo(s).
+    ontology:
+      import: Echec de l'importation du lexique.
+      vocab:
+        save: Echec de la sauvegarde du lexique. Le préfixe doit être unique.
+      template:
+        import: Echec de l'importation du modèle de saisie.
+        field:
+          add: Echec de l'adjonction du champ dans le modèle de saisie.
+          remove: Echec de la suppression du champ du modèle de saisie.
+  flash:
+    update:
+      ready:
+        message: >
+            Tropy {version} est prêt à être installé. Voulez-vous l'installer et le
+            relancer?
+        confirm: Relancer maintenant

@@ -1,0 +1,282 @@
+en:
+  linux:
+    - &file
+      label: '&File'
+      id: 'file'
+      submenu:
+        - &new
+          label: 'New'
+          submenu:
+            - label: 'Project'
+              command: 'app:create-project'
+              accelerator: 'CmdOrCtrl+Shift+P'
+            - label: 'Item'
+              command: 'app:create-item'
+              accelerator: 'CmdOrCtrl+Shift+N'
+            - label: 'List'
+              command: 'app:create-list'
+              accelerator: 'CmdOrCtrl+Shift+L'
+            - label: 'Tag'
+              command: 'app:create-tag'
+              accelerator: 'CmdOrCtrl+Shift+A'
+        - type: 'separator'
+        - &open
+          label: 'Open'
+          accelerator: 'CmdOrCtrl+O'
+          command: 'app:open-dialog'
+        - &recent
+          label: 'Recent Projects'
+          id: 'recent'
+          enabled: false
+          submenu:
+            - type: 'separator'
+            - label: 'Clear List'
+              command: 'app:clear-recent-projects'
+        - type: 'separator'
+        - &import
+          label: 'Import Photos …'
+          command: 'app:import-photos'
+          accelerator: 'CmdOrCtrl+Shift+I'
+        - &consolidate
+          label: 'Consolidate Photo Library'
+          command: 'app:consolidate-photo-library'
+        - type: 'separator'
+        - label: 'Close'
+          accelerator: 'CmdOrCtrl+W'
+          role: 'close'
+        - type: 'separator'
+        - label: 'Quit'
+          accelerator: 'CmdOrCtrl+Q'
+          role: 'quit'
+    - &edit
+      label: '&Edit'
+      submenu:
+        - &undo
+          id: 'undo'
+          label: '&Undo'
+          accelerator: 'CmdOrCtrl+Z'
+          command: 'app:undo'
+          enabled: false
+        - &redo
+          id: 'redo'
+          label: '&Redo'
+          accelerator: 'Shift+CmdOrCtrl+Z'
+          command: 'app:redo'
+          enabled: false
+        - type: 'separator'
+        - &cut
+          label: 'Cu&t'
+          accelerator: 'CmdOrCtrl+X'
+          role: 'cut'
+        - &copy
+          label: '&Copy'
+          accelerator: 'CmdOrCtrl+C'
+          role: 'copy'
+        - &paste
+          label: '&Paste'
+          accelerator: 'CmdOrCtrl+V'
+          role: 'paste'
+        - &all
+          label: 'Select All'
+          role: 'selectall'
+        - type: 'separator'
+        - &preferences
+          label: 'Prefere&nces …'
+          accelerator: 'Shift+Control+S'
+          command: 'app:open-preferences'
+    - &view
+      label: '&View'
+      submenu:
+        - label: 'Toggle &Full Screen'
+          role: 'togglefullscreen'
+        - label: 'Toggle Hide &Menu Bar'
+          command: 'app:toggle-menu-bar'
+        - label: 'Hide &Sidebar'
+          command: 'app:toggle-sidebar'
+          enabled: false
+          visible: false
+        - type: 'separator'
+        - label: 'Zoom'
+          submenu:
+            - label: 'Zoom In'
+              command: 'app:zoom-in'
+            - label: 'Zoom Out'
+              command: 'app:zoom-out'
+            - type: 'separator'
+            - label: 'Reset'
+              command: 'app:zoom-reset'
+    - &win
+      label: 'Window'
+      submenu:
+        - label: 'Minimize'
+          accelerator: 'CmdOrCtrl+M'
+          role: 'minimize'
+    - &dev
+      label: 'Developer'
+      id: 'dev'
+      submenu:
+        - label: '&Reload'
+          accelerator: 'CmdOrCtrl+R'
+          command: 'win:reload'
+        - label: 'Reload &Styles'
+          accelerator: 'CmdOrCtrl+S'
+          command: 'win:refresh'
+        - label: 'Toggle &Developer Tools'
+          accelerator: 'CmdOrCtrl+D'
+          role: 'toggledevtools'
+        - label: 'Toggle Performance Tools'
+          command: 'win:toggle-perf-tools'
+        - type: 'separator'
+        - label: 'Reset Ontology Database'
+          command: 'app:reset-ontology-db'
+        - label: 'Close Project'
+          command: 'app:close-project'
+        - type: 'separator'
+        - label: 'Theme'
+          id: 'theme'
+          submenu:
+            - label: 'Light'
+              id: 'light'
+              type: 'checkbox'
+            - label: 'Dark'
+              id: 'dark'
+              type: 'checkbox'
+
+    - &help
+      label: 'Help'
+      submenu:
+        - label: 'User Guide'
+          command: 'app:open-docs'
+        - label: 'Support Forums'
+          command: 'app:open-forums'
+        - type: 'separator'
+        - label: 'Software &License'
+          command: 'app:open-license'
+        - label: 'Show Log Files'
+          command: 'app:open-logs'
+        - type: 'separator'
+        - label: 'Edit Plugins Configuration'
+          command: 'app:open-plugins-config'
+        - label: 'Show Plugins Folder'
+          command: 'app:open-plugins-folder'
+        - type: 'separator'
+        - label: 'About %name'
+          command: 'app:about'
+        - type: 'separator'
+        - &updaterCheck
+          id: 'updater-check'
+          label: 'Check for Updates …'
+          command: 'app:check-for-updates'
+          enabled: false
+        - &updaterIsChecking
+          id: 'updater-is-checking'
+          label: 'Fetching Latest Updates …'
+          enabled: false
+          visible: false
+        - &updaterInstall
+          id: 'updater-install'
+          label: 'Install Updates …'
+          command: 'app:install-updates'
+          enabled: false
+          visible: false
+
+  darwin:
+    - label: '%name'
+      submenu:
+        - label: 'About %name'
+          command: 'app:about'
+        - type: 'separator'
+        - label: 'Preferences …'
+          accelerator: 'Command+,'
+          command: 'app:open-preferences'
+        - type: 'separator'
+        - label: 'Hide %name'
+          accelerator: 'Command+H'
+          role: 'hide'
+        - label: 'Hide Others'
+          accelerator: 'Command+Shift+H'
+          role: 'hideothers'
+        - label: 'Show All'
+          role: 'unhide'
+        - type: 'separator'
+        - label: 'Quit'
+          accelerator: 'Command+Q'
+          role: 'quit'
+
+    - label: 'File'
+      submenu:
+        - *new
+        - type: 'separator'
+        - *open
+        - *recent
+        - type: 'separator'
+        - *import
+        - *consolidate
+        - type: 'separator'
+        - label: 'Close'
+          accelerator: 'Command+W'
+          role: 'close'
+    - label: 'Edit'
+      submenu:
+        - *undo
+        - *redo
+        - type: 'separator'
+        - *cut
+        - *copy
+        - *paste
+        - *all
+    - *view
+    - label: 'Window'
+      role: 'window'
+      submenu:
+        - label: 'Minimize'
+          accelerator: 'CmdOrCtrl+M'
+          role: 'minimize'
+        - label: 'Close'
+          accelerator: 'CmdOrCtrl+W'
+          role: 'close'
+        - type: 'separator'
+        - label: 'Bring All to Front'
+          role: 'front'
+    - *dev
+    - label: 'Help'
+      role: 'help'
+      submenu:
+        - label: 'User Guide'
+          command: 'app:open-docs'
+        - label: 'Support Forums'
+          command: 'app:open-forums'
+        - type: 'separator'
+        - label: 'Software License'
+          command: 'app:open-license'
+        - label: 'Show Log Files'
+          command: 'app:open-logs'
+        - type: 'separator'
+        - label: 'Show Plugins Configuration'
+          command: 'app:open-plugins-config'
+        - label: 'Show Plugins Folder'
+          command: 'app:open-plugins-folder'
+        - type: 'separator'
+        - *updaterCheck
+        - *updaterIsChecking
+        - *updaterInstall
+
+  win32:
+    - *file
+    - label: '&Edit'
+      submenu:
+        - *undo
+        - id: 'redo'
+          label: '&Redo'
+          accelerator: 'Control+Y'
+          command: 'app:redo'
+          enabled: false
+        - type: 'separator'
+        - *cut
+        - *copy
+        - *paste
+        - *preferences
+    - *view
+    - *win
+    - *dev
+    - *help

@@ -5,6 +5,7 @@ const { PureComponent } = React
 const { array, arrayOf, bool, func, shape, string } = require('prop-types')
 const { TemplateSelect } = require('../template/select')
 const { ipcRenderer: ipc } = require('electron')
+const { ESPER } = require('../../constants')
 
 const {
   FormElement,
@@ -22,6 +23,10 @@ class AppPrefs extends PureComponent {
 
   handleThemeChange = ({ theme }) => {
     ipc.send('cmd', 'app:switch-theme', theme, theme)
+  }
+
+  handleLocaleChange = ({ locale }) => {
+    ipc.send('cmd', 'app:switch-locale', locale, locale)
   }
 
   handleTemplateChange = (template) => {
@@ -54,7 +59,17 @@ class AppPrefs extends PureComponent {
             options={this.props.themes}
             onChange={this.handleThemeChange}/>
           <hr/>
-          <FormElement id="prefs.app.ui.label">
+          <FormSelect
+            id="prefs.app.locale.locale"
+            name="locale"
+            isRequired
+            value={this.props.settings.locale}
+            options={this.props.locales}
+            onChange={this.handleLocaleChange}/>
+          <hr/>
+          <FormElement
+            id="prefs.app.ui.label"
+            isCompact>
             <Toggle
               id="prefs.app.ui.option.invertScroll"
               name="invertScroll"
@@ -71,6 +86,12 @@ class AppPrefs extends PureComponent {
               value={this.props.settings.overlayToolbars}
               onChange={this.props.onSettingsUpdate}/>
           </FormElement>
+          <FormToggleGroup
+            id="prefs.app.zoomMode"
+            name="zoomMode"
+            value={this.props.settings.zoomMode}
+            options={this.props.zoomModes}
+            onChange={this.props.onSettingsUpdate}/>
           <hr/>
           <FormToggle
             id="prefs.app.debug"
@@ -87,16 +108,21 @@ class AppPrefs extends PureComponent {
     templates: array.isRequired,
     settings: shape({
       debug: bool.isRequired,
+      locale: string.isRequired,
       theme: string.isRequired,
     }).isRequired,
+    locales: arrayOf(string).isRequired,
     themes: arrayOf(string).isRequired,
     dupOptions: arrayOf(string).isRequired,
+    zoomModes: arrayOf(string).isRequired,
     onSettingsUpdate: func.isRequired
   }
 
   static defaultProps = {
     themes: ['light', 'dark'],
-    dupOptions: ['skip', 'import', 'prompt']
+    locales: ['en', 'fr'],
+    dupOptions: ['skip', 'import', 'prompt'],
+    zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL]
   }
 }
 

@@ -4,10 +4,12 @@ const React = require('react')
 const { PureComponent } = React
 const { EsperView } = require('./view')
 const { EsperToolbar } = require('./toolbar')
+const { EsperPanel } = require('./panel')
 const { get, restrict, shallow } = require('../../common/util')
 const { isHorizontal, rotate, round } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
-const { win32 } = require('../../common/os')
+const { darwin } = require('../../common/os')
+const { on, off } = require('../../dom')
 const { match } = require('../../keymap')
 const { assign } = Object
 const debounce = require('lodash.debounce')
@@ -37,6 +39,13 @@ const {
   }
 } = require('../../constants/sass')
 
+const IMAGE_PARAMS = [
+  'brightness',
+  'contrast',
+  'hue',
+  'negative',
+  'saturation'
+]
 
 class Esper extends PureComponent {
   constructor(props) {
@@ -51,17 +60,29 @@ class Esper extends PureComponent {
     this.ro.observe(this.view.container)
 
     this.io = new IntersectionObserver(([e]) => {
-      requestIdleCallback(e.intersectionRatio > 0 ?
-        this.view.start : this.view.stop)
+      requestIdleCallback(
+        e.intersectionRatio > 0 ?
+          this.handleSlideIn :
+          this.handleSlideOut
+      )
     }, { threshold: [0] })
 
     this.io.observe(this.view.container)
+
+    if (this.container != null) {
+      on(this.container, 'tab:focus', this.handleTabFocus)
+    }
   }
 
   componentWillUnmount() {
     this.ro.disconnect()
     this.io.disconnect()
     this.persist.flush()
+    this.update.flush()
+
+    if (this.container != null) {
+      off(this.container, 'tab:focus', this.handleTabFocus)
+    }
   }
 
   componentWillReceiveProps(props) {
@@ -88,14 +109,13 @@ class Esper extends PureComponent {
   }
 
   shouldViewReset(props, state) {
-    if (state.src !== this.state.src) return true
-    if (get(props.photo, ['id']) !== get(this.props.photo, ['id'])) return true
-    return false
+    return (state.src !== this.state.src) ||
+      (get(props.photo, ['id']) !== get(this.props.photo, ['id']))
   }
 
-  shouldViewSync(props) {
-    if (props.selection !== this.props.selection) return true
-    return false
+  shouldViewSync(props, state) {
+    return (props.selection !== this.props.selection) ||
+      !shallow(state, this.state, ['angle', 'mirror', ...IMAGE_PARAMS])
   }
 
   shouldToolReset(props) {
@@ -104,7 +124,8 @@ class Esper extends PureComponent {
     return true
   }
 
-  // Hack: Windows ResizeObserver reports wrong dimensions
+  // Hack: Linux/Windows ResizeObserver reports wrong dimensions
+  // if scale factor is not 1
   get bounds() {
     return {
       width: this.view.container.clientWidth,
@@ -114,7 +135,10 @@ class Esper extends PureComponent {
 
   get classes() {
     return ['esper', this.state.tool, {
-      'overlay-toolbar': this.props.hasOverlayToolbar
+      'overlay-mode': this.props.hasOverlayToolbar,
+      'panel-visible': this.props.isPanelVisible,
+      'tab-focus': this.state.hasTabFocus,
+      'nested-focus': this.state.hasNestedFocus
     }]
   }
 
@@ -123,7 +147,7 @@ class Esper extends PureComponent {
   }
 
   get isDisabled() {
-    return this.props.isDisabled || this.isEmpty
+    return this.props.isDisabled || this.isEmpty || !this.state.isVisible
   }
 
   get isSelectionActive() {
@@ -143,30 +167,43 @@ class Esper extends PureComponent {
       mode: props.mode,
       zoom: props.zoom,
       minZoom: props.minZoom,
-      angle: 0,
-      mirror: false,
       width: 0,
       height: 0,
-      aspect: 0,
       src: null,
       x: props.x,
       y: props.y,
-      tool: props.tool
+      tool: props.tool,
+      hasTransformations: false,
+      ...this.getOriginalPhotoState(props)
     }
   }
 
   getStateFromProps(props) {
     const state = this.getEmptyState(props)
     const { photo, selection } = props
-    const screen = this.view.bounds
+    const { screen } = this.view
 
     if (photo != null && !photo.pending) {
+      const image = selection || photo
+
       assign(state, {
         photo: photo.id,
         src: `${photo.protocol}://${photo.path}`,
         width: photo.width,
         height: photo.height
-      }, this.getOrientationState(selection || photo, photo.orientation))
+      })
+
+      if (image.angle !== 0) {
+        state.hasTransformations = true
+        state.angle = (state.angle + image.angle) % 360
+      }
+
+      for (let prop of ['mirror', ...IMAGE_PARAMS]) {
+        if (state[prop] !== image[prop]) {
+          state.hasTransformations = true
+          state[prop] = image[prop]
+        }
+      }
     }
 
     if (state.x == null || state.mode !== 'zoom') {
@@ -198,7 +235,7 @@ class Esper extends PureComponent {
   }
 
   getZoomBounds(
-    screen = this.view.bounds,
+    screen = this.view.screen,
     state = this.state,
     props = this.props
   ) {
@@ -230,25 +267,29 @@ class Esper extends PureComponent {
   }
 
   getImageState() {
-    const { mode, x, y, zoom } = this.state
-    const id = this.getActiveImageId()
+    const { x, y, zoom } = this.state
+    return this.wrapImageState({
+      x: round(x),
+      y: round(y),
+      zoom
+    })
+  }
 
-    return id == null ? null : {
-      [id]: {
-        mode,
-        x: round(x),
-        y: round(y),
-        zoom
-      }
-    }
+  wrapImageState(state) {
+    const id = this.getActiveImageId()
+    return (id == null) ? null : { [id]: state }
   }
 
   getPhotoState() {
     const id = this.getActiveImageId()
     const { angle, mirror } = this.getRelativeRotation()
+    const { brightness, contrast, hue, negative, saturation } = this.state
 
-    return id == null ? null : {
-      id, data: { angle, mirror }
+    return (id == null) ? null : {
+      id,
+      data: {
+        angle, brightness, contrast, hue, mirror, negative, saturation
+      }
     }
   }
 
@@ -257,6 +298,24 @@ class Esper extends PureComponent {
       .fromExifOrientation(orientation)
       .add({ angle, mirror })
       .toJSON()
+  }
+
+  getOriginalPhotoState({ photo } = this.props) {
+    const state = {
+      angle: 0,
+      brightness: 0,
+      contrast: 0,
+      hue: 0,
+      negative: false,
+      mirror: false,
+      saturation: 0
+    }
+
+    if (photo != null) {
+      assign(state, this.getOrientationState(state, photo.orientation))
+    }
+
+    return state
   }
 
   getRelativeRotation(
@@ -271,13 +330,31 @@ class Esper extends PureComponent {
     this.view = view
   }
 
-  handleResize = (win32) ?
-    () => this.resize(this.bounds) :
-    (rect) => this.resize(rect)
+  handleSlideIn = () => {
+    this.setState({ isVisible: true })
+    this.view.start()
+  }
+
+  handleSlideOut = () => {
+    this.setState({ isVisible: false })
+    this.view.stop()
+  }
+
+  handleNestedBlur = () => {
+    this.setState({ hasNestedFocus: false })
+  }
+
+  handleNestedFocus = () => {
+    this.setState({ hasNestedFocus: true })
+  }
+
+  handleResize = (darwin || window.devicePixelRatio === 1) ?
+    (rect) => this.resize(rect) :
+    () => this.resize(this.bounds)
 
   resize = throttle(({ width, height }) => {
-    width = round(width || this.view.bounds.width)
-    height = round(height || this.view.bounds.height)
+    width = round(width || this.view.screen.width)
+    height = round(height || this.view.screen.height)
 
     const { minZoom, zoom, zoomToFill } = this.getZoomBounds({ width, height })
 
@@ -310,6 +387,29 @@ class Esper extends PureComponent {
     this.handleZoomChange({ zoom: this.state.zoom + by }, animate)
   }
 
+  handleRevertToOriginal = () => {
+    const { photo } = this.props
+    if (photo == null) return
+
+    const state = {
+      ...this.getOriginalPhotoState(),
+      width: photo.width,
+      height: photo.height,
+      zoom: this.state.zoom
+    }
+
+    assign(state, this.getZoomBounds(this.view.screen, state))
+
+    this.setState(state)
+
+    this.view.rotate(state, ROTATE_DURATION)
+    this.view.scale(state, ROTATE_DURATION)
+    this.view.adjust(state)
+
+    this.persist()
+    this.container.focus()
+  }
+
   handleRotationChange = (by) => {
     const state = {
       ...this.state,
@@ -318,7 +418,7 @@ class Esper extends PureComponent {
       height: this.props.photo.height
     }
 
-    assign(state, this.getZoomBounds(this.view.bounds, state))
+    assign(state, this.getZoomBounds(this.view.screen, state))
 
     this.setState(state)
 
@@ -330,11 +430,14 @@ class Esper extends PureComponent {
 
   handleZoomChange = ({ x, y, zoom }, animate) => {
     zoom = restrict(zoom, this.state.minZoom, this.props.maxZoom)
+    const mode = MODE.ZOOM
 
-    this.setState({ zoom, mode: 'zoom' })
+    this.setState({ zoom, mode })
     this.view.scale({
       zoom, mirror: this.state.mirror
     }, animate ? ZOOM_DURATION : 0, { x, y })
+
+    this.props.onChange({ image: this.wrapImageState({ mode }) })
   }
 
   handlePositionChange(position, animate) {
@@ -363,20 +466,33 @@ class Esper extends PureComponent {
     let { minZoom, mirror, zoom, zoomToFill  } = this.state
 
     switch (mode) {
-      case 'fill':
+      case MODE.FILL:
         zoom = zoomToFill
         break
-      case 'fit':
+      case MODE.FIT:
         zoom = minZoom
         break
     }
 
     this.setState({ zoom, mode })
     this.view.scale({ zoom, mirror }, ZOOM_DURATION)
+
+    this.props.onChange({ image: this.wrapImageState({ mode }) })
   }
 
   handleToolChange = (tool) => {
     this.props.onChange({ esper: { tool } })
+  }
+
+  handlePanelChange = (panel = !this.props.isPanelVisible) => {
+    this.props.onChange({ esper: { panel } })
+  }
+
+  handleColorChange = (opts) => {
+    this.setState(opts, () => {
+      this.view.adjust(this.state)
+      this.persist()
+    })
   }
 
   handleWheel = ({ x, y, dy, dx, ctrl }) => {
@@ -453,6 +569,15 @@ class Esper extends PureComponent {
         case 'zoomOut':
           this.handleZoomOut()
           break
+        case 'zoomToFit':
+          this.handleModeChange(MODE.FIT)
+          break
+        case 'zoomToFill':
+          this.handleModeChange(MODE.FILL)
+          break
+        case 'rotate':
+          this.handleRotationChange(-90)
+          break
         case 'up':
           this.move({ y: PAN_STEP_SIZE * this.state.zoom })
           break
@@ -464,6 +589,9 @@ class Esper extends PureComponent {
           break
         case 'right':
           this.move({ x: -PAN_STEP_SIZE * this.state.zoom })
+          break
+        case 'panel':
+          this.handlePanelChange()
           break
         case 'quicktool':
           this.setState({ quicktool: TOOL.PAN })
@@ -535,6 +663,14 @@ class Esper extends PureComponent {
     }
   }
 
+  handleTabFocus = () => {
+    this.setState({ hasTabFocus: true })
+  }
+
+  handleBlur = () => {
+    this.setState({ hasTabFocus: false })
+  }
+
 
   render() {
     const { isDisabled, isSelectionActive, tabIndex } = this
@@ -545,6 +681,7 @@ class Esper extends PureComponent {
         ref={this.setContainer}
         tabIndex={tabIndex}
         className={cx(this.classes)}
+        onBlur={this.handleBlur}
         onMouseDown={this.handleMouseDown}
         onKeyDown={this.handleKeyDown}
         onKeyUp={this.handleKeyUp}>
@@ -552,6 +689,7 @@ class Esper extends PureComponent {
           <EsperToolbar
             isDisabled={isDisabled}
             isSelectionActive={isSelectionActive}
+            isPanelVisible={this.props.isPanelVisible}
             mode={this.state.mode}
             tool={tool}
             zoom={this.state.zoom}
@@ -559,23 +697,40 @@ class Esper extends PureComponent {
             maxZoom={this.props.maxZoom}
             onMirrorChange={this.handleMirrorChange}
             onModeChange={this.handleModeChange}
+            onPanelChange={this.handlePanelChange}
             onToolChange={this.handleToolChange}
             onRotationChange={this.handleRotationChange}
             onZoomChange={this.handleZoomChange}/>
         </EsperHeader>
-        <EsperView
-          ref={this.setView}
-          selection={this.props.selection}
-          selections={this.props.selections}
-          tool={tool}
-          onChange={this.handleViewChange}
-          onSelectionActivate={this.handleSelectionActivate}
-          onSelectionCreate={this.handleSelectionCreate}
-          onDoubleClick={this.handleDoubleClick}
-          onPhotoError={this.props.onPhotoError}
-          onWheel={this.handleWheel}
-          onZoomIn={this.handleZoomIn}
-          onZoomOut={this.handleZoomOut}/>
+        <div className="esper-container">
+          <EsperView
+            ref={this.setView}
+            selection={this.props.selection}
+            selections={this.props.selections}
+            tool={tool}
+            onChange={this.handleViewChange}
+            onSelectionActivate={this.handleSelectionActivate}
+            onSelectionCreate={this.handleSelectionCreate}
+            onDoubleClick={this.handleDoubleClick}
+            onPhotoError={this.props.onPhotoError}
+            onWheel={this.handleWheel}
+            onZoomIn={this.handleZoomIn}
+            onZoomOut={this.handleZoomOut}/>
+          <EsperPanel
+            brightness={this.state.brightness}
+            canRevert={this.state.hasTransformations}
+            contrast={this.state.contrast}
+            hue={this.state.hue}
+            negative={this.state.negative}
+            saturation={this.state.saturation}
+            gamma={this.state.gamma}
+            isDisabled={isDisabled}
+            isVisible={this.props.isPanelVisible}
+            onBlur={this.handleNestedBlur}
+            onFocus={this.handleNestedFocus}
+            onChange={this.handleColorChange}
+            onRevert={this.handleRevertToOriginal}/>
+        </div>
       </section>
     )
   }
@@ -586,6 +741,7 @@ class Esper extends PureComponent {
     invertZoom: bool.isRequired,
     isDisabled: bool,
     isItemOpen: bool.isRequired,
+    isPanelVisible: bool.isRequired,
     keymap: object.isRequired,
     maxZoom: number.isRequired,
     minZoom: number.isRequired,
@@ -613,7 +769,6 @@ class Esper extends PureComponent {
   static defaultProps = {
     maxZoom: MAX_ZOOM,
     minZoom: MIN_ZOOM,
-    mode: MODE.FIT,
     tabIndex: TABS.Esper,
     tool: TOOL.ARROW,
     zoom: 1

@@ -12,7 +12,7 @@
 --
 
 -- Save the current migration number
-PRAGMA user_version=1710041315;
+PRAGMA user_version=1801241335;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -36,7 +36,7 @@ CREATE TABLE access (
 );
 CREATE TABLE subjects (
   id           INTEGER  PRIMARY KEY,
-  template     TEXT     NOT NULL DEFAULT 'https://tropy.org/v1/templates/item',
+  template     TEXT     NOT NULL DEFAULT 'https://tropy.org/v1/templates/generic',
   type         TEXT,
   created      NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modified     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -46,7 +46,7 @@ CREATE TABLE images (
   width   INTEGER  NOT NULL DEFAULT 0,
   height  INTEGER  NOT NULL DEFAULT 0,
   angle   NUMERIC  NOT NULL DEFAULT 0,
-  mirror  BOOLEAN  NOT NULL DEFAULT 0,
+  mirror  BOOLEAN  NOT NULL DEFAULT 0, brightness INTEGER NOT NULL DEFAULT 0, contrast INTEGER NOT NULL DEFAULT 0, hue INTEGER NOT NULL DEFAULT 0, saturation INTEGER NOT NULL DEFAULT 0, negative  BOOLEAN  NOT NULL DEFAULT 0,
 
   CHECK (angle >= 0 AND angle <= 360),
   CHECK (width >= 0 AND height >= 0)

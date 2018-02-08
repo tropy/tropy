@@ -10,7 +10,7 @@ const cx = require('classnames')
 const { testFocusChange } = require('../../dom')
 const { bool, func, object, string } = require('prop-types')
 const { IconSelection, IconChevron9, IconWarning } = require('../icons')
-const { IconButton } = require('../button')
+const { Button } = require('../button')
 
 
 class PhotoListItem extends PhotoIterable {
@@ -105,7 +105,7 @@ class PhotoListItem extends PhotoIterable {
 
   renderTwistyButton() {
     return this.props.isExpandable && (
-      <IconButton
+      <Button
         icon={<IconChevron9/>}
         onClick={this.handleTwistyButtonClick}/>
     )
@@ -135,7 +135,7 @@ class PhotoListItem extends PhotoIterable {
             <Editable
               value={this.title}
               resize
-              isEditing={isEditing}
+              isActive={isEditing}
               isDisabled={isDisabled}
               onCancel={onEditCancel}
               onChange={this.handleChange}/>

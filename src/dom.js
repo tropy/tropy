@@ -1,7 +1,7 @@
 'use strict'
 
 const { assign } = Object
-const { once } = require('./common/util')
+const { blank, once } = require('./common/util')
 const everything = () => true
 
 const dom = {
@@ -99,6 +99,10 @@ const dom = {
     return node.dispatchEvent(new Event(...args))
   },
 
+  classes(node, ...args) {
+    return node.classList.add(...args)
+  },
+
   toggle(node, ...args) {
     return node.classList.toggle(...args)
   },
@@ -109,6 +113,14 @@ const dom = {
 
   bounds(node) {
     return node.getBoundingClientRect()
+  },
+
+  scrollLeftMax(node) {
+    return node.scrollWidth - node.clientWidth
+  },
+
+  maxScrollLeft(node) {
+    return node.scrollLeft >= dom.scrollLeftMax(node)
   },
 
   style(node) {
@@ -152,6 +164,10 @@ const dom = {
     return node.tagName === 'INPUT'
   },
 
+  isLink(node) {
+    return node.tagName === 'A' && !blank(node.href)
+  },
+
   createDragHandler({ handleDrag, handleDragStop }) {
     function onKeyDown(event) {
       switch (event.key) {
@@ -187,6 +203,13 @@ const dom = {
     return {
       start: onDragStart,
       stop: onDragStop
+    }
+  },
+
+  viewport() {
+    return {
+      width: document.documentElement.clientWidth,
+      height: document.documentElement.clientHeight
     }
   }
 }

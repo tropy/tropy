@@ -4,6 +4,8 @@ require('./promisify')
 
 const { join, resolve } = require('path')
 const { mkdirAsync: mkdir, writeFileAsync: write } = require('fs')
+const { statAsync: stat } = require('fs')
+const MIME = require('../constants/mime')
 
 
 class Cache {
@@ -21,25 +23,38 @@ class Cache {
     return this
   }
 
-  save = (name, data) => (
+  save = (name, data) =>
     write(this.expand(name), data)
-  )
+
+  exists = (name) =>
+    stat(name).then(() => true, () => false)
 
   expand(...args) {
     return join(this.root, ...args)
   }
 }
 
-function imageURL(cache, ...args) {
-  return join(cache, imagePath(...args))
+function imageURL(cache, image, size, mimetype) {
+  return join(cache, imagePath(image, size, imageExt(mimetype)))
 }
 
 function imagePath(image, size, ext = '.jpg') {
   return `${image}_${size}${ext}`
 }
 
+function imageExt(mimetype) {
+  switch (mimetype) {
+    case MIME.SVG:
+    case MIME.PNG:
+      return '.png'
+    default:
+      return '.jpg'
+  }
+}
+
 module.exports = {
   Cache,
+  imageExt,
   imageURL,
   imagePath
 }

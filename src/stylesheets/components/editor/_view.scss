@@ -17,40 +17,129 @@
   //}
 
   .scroll-container {
-    overflow-y: scroll;
-    display: flex;
-    flex-direction: column;
+    overflow: auto;
     position: relative;
+
+    .horizontal & {
+      writing-mode: horizontal-tb;
+    }
+
+    .vertical-rl & {
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+    }
+
+    .no-wrap & {
+      display: flex;
+    }
   }
 
   .placeholder {
     position: absolute;
-    left: 50%;
-    top: $prose-mirror-padding-top;
-    width: $editor-width;
-    transform: translateX(-50%);
-    max-width: $editor-max-width;
     font-size: $editor-font-size;
     line-height: $editor-line-height;
     color: $editor-placeholder-color;
+
+    .horizontal & {
+      left: 50%;
+      top: $prose-mirror-padding-start;
+      width: $editor-size;
+      transform: translateX(-50%);
+      max-width: $editor-max-size;
+    }
+
+    .horizontal.numbers & {
+      padding-left: $space-xxl + $space-md;
+      max-width: $editor-max-size + $space-xxl + $space-md;
+    }
+
+    .horizontal.no-wrap & {
+      max-width: none;
+    }
+
+    .vertical-rl & {
+      top: 50%;
+      right: $prose-mirror-padding-start;
+      height: $editor-size;
+      transform: translateY(-50%);
+      max-height: $editor-max-size;
+    }
+
+    .vertical-rl.numbers & {
+      padding-top: $space-xxl + $space-md;
+      max-height: $editor-max-size + $space-xxl + $space-md;
+    }
+
+    .vertical-rl.no-wrap & {
+      max-height: none;
+    }
   }
 }
 
 // TODO: Remove this styles when Chromium issue 290466 has been fixed,
 // move 'cursor: text' to .editor then.
 .prose-mirror-container {
-  flex: 1 1 0;
   cursor: text;
-}
+  position: relative;
+
 // ---
+  .horizontal & {
+    width: $editor-size;
+    margin: 0 auto;
+    max-width: $editor-max-size;
+  }
+
+  .horizontal.numbers & {
+    max-width: $editor-max-size + $space-xxl + $space-md;
+  }
+
+  .horizontal.no-wrap & {
+    flex: 1 1 auto;
+    width: auto;
+    margin: 0;
+    max-width: none;
+    padding: 0 ((100% - $editor-size) / 2);
+  }
+
+  .vertical-rl & {
+    height: $editor-size;
+    margin: auto 0;
+    max-height: $editor-max-size;
+  }
+
+ .numbers.vertical-rl & {
+    max-height: $editor-max-size + $space-xxl + $space-md;
+  }
+
+  .vertical-rl.no-wrap & {
+    flex: 1 1 auto;
+    height: auto;
+    margin: 0;
+    max-height: none;
+    padding: ((100% - $editor-size) / 2) 0;
+  }
+}
 
 .ProseMirror {
-  width: $editor-width;
-  margin: auto;
-  max-width: $editor-max-width;
-  //padding-top: $toolbar-height + 1px + $prose-mirror-padding-top;
-  padding-bottom: $prose-mirror-padding-bottom;
-  padding-top: $prose-mirror-padding-top;
+  //padding-top: $toolbar-height + 1px + $prose-mirror-padding-start
+
+  .horizontal & {
+    padding-top: $prose-mirror-padding-start;
+    padding-bottom: $prose-mirror-padding-end;
+  }
+
+  .horizontal.numbers & {
+    padding-left: $space-xxl + $space-md;
+  }
+
+  .vertical-rl & {
+    padding-right: $prose-mirror-padding-start;
+    padding-left: $prose-mirror-padding-end;
+  }
+
+  .vertical-rl.numbers & {
+    padding-top: $space-xxl + $space-md;
+  }
 
   //.editor:hover & {
   //  padding-top: $prose-mirror-padding;

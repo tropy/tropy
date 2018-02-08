@@ -23,13 +23,13 @@ describe('Menu', () => {
 
   describe('.expand', () => {
     it('adds menu directory', () => {
-      expect(Menu.expand('main')).to.match(/menu.main\.yml/)
+      expect(Menu.expand('main')).to.match(/menu.main.en.yml/)
     })
   })
 
   describe('.open', () => {
     it('loads and parses the given menu', () => (
-      expect(Menu.open('app'))
+      expect(Menu.open('en', 'app'))
         .eventually.to.have.property('template')
         .and.not.be.empty
     ))
@@ -43,7 +43,7 @@ describe('Strings', () => {
 
   describe('.expand', () => {
     it('adds string directory', () => {
-      expect(Strings.expand('en')).to.match(/en\.yml/)
+      expect(Strings.expand('en')).to.end('en.yml')
     })
   })
 

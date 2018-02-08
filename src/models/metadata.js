@@ -2,7 +2,7 @@
 
 const { save } = require('./value')
 const { keys } = Object
-const { get, list, quote } = require('../common/util')
+const { blank, get, list, quote } = require('../common/util')
 
 
 const metadata = {
@@ -27,14 +27,17 @@ const metadata = {
 
   async update(db, { ids, data, timestamp }, replace = false) {
     const idList = list(ids)
+    const props = keys(data).filter(prop => (
+      prop !== 'id' && prop !== 'pending'
+    ))
 
     await db.run(`
       DELETE FROM metadata WHERE id IN (${idList})${
-        replace ? '' : ` AND property IN (${list(keys(data), quote)})`
+        replace ? '' : ` AND property IN (${list(props, quote)})`
       }`)
 
-    for (let prop in data) {
-      if (get(data, [prop, 'text']) == null) continue
+    for (const prop of props) {
+      if (blank(get(data, [prop, 'text']))) continue
 
       const value = await save(db, data[prop])
 

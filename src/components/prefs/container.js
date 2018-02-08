@@ -47,14 +47,14 @@ class PrefsContainer extends PureComponent {
                   isActive={this.isActive('app')}
                   onClick={this.toggle}/>
               </li>
-              <li>
+              {/*<li>
                 <PrefPaneToggle
                   name="project"
                   icon="IconMaze32"
                   isActive={this.isActive('project')}
                   isDisabled
                   onClick={this.toggle}/>
-              </li>
+              </li>*/}
               <li>
                 <PrefPaneToggle
                   name="template"
@@ -98,6 +98,7 @@ class PrefsContainer extends PureComponent {
             vocab={this.props.vocab}
             onClassSave={this.props.onClassSave}
             onDelete={this.props.onVocabDelete}
+            onExport={this.props.onVocabExport}
             onImport={this.props.onOntologyImport}
             onOpenLink={this.props.onOpenLink}
             onPropsSave={this.props.onPropsSave}
@@ -114,7 +115,6 @@ class PrefsContainer extends PureComponent {
     pane: string.isRequired,
     settings: object.isRequired,
     vocab: array.isRequired,
-    photoTemplates: array.isRequired,
     onClassSave: func.isRequired,
     onContextMenu: func.isRequired,
     onOpenLink: func.isRequired,
@@ -122,6 +122,7 @@ class PrefsContainer extends PureComponent {
     onPropsSave: func.isRequired,
     onSettingsUpdate: func.isRequired,
     onVocabDelete: func.isRequired,
+    onVocabExport: func.isRequired,
     onVocabSave: func.isRequired,
     onOntologyImport: func.isRequired
   }
@@ -171,6 +172,10 @@ module.exports = {
 
       onVocabDelete(...args) {
         dispatch(actions.ontology.vocab.delete(...args))
+      },
+
+      onVocabExport(...args) {
+        dispatch(actions.ontology.vocab.export(...args))
       },
 
       onVocabSave(...args) {

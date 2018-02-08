@@ -17,7 +17,7 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
   const { app }  = require('electron')
   const { extname, join } = require('path')
   const { qualified, version }  = require('../common/release')
-  const { linux, darwin } = require('../common/os')
+  const { linux, darwin, system } = require('../common/os')
 
   let USERDATA = opts.dir
   let LOGDIR
@@ -48,7 +48,7 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
     const { once } = require('../common/util')
     const { info, verbose } = require('../common/log')(LOGDIR)
 
-    info(`starting ${version}`)
+    info(`starting ${version}`, { system })
     let quit = false
 
     if (opts.environment !== 'test') {

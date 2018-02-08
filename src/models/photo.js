@@ -9,6 +9,7 @@ const metadata = require('./metadata')
 const bb = require('bluebird')
 const { assign } = Object
 const subject = require('./subject')
+const { blank } = require('../common/util')
 
 const COLUMNS = [
   'checksum',
@@ -32,7 +33,7 @@ const skel = (id, selections = [], notes = []) => ({
 
 
 module.exports = {
-  async create(db, template, { item, image, data }) {
+  async create(db, template, { item, image, data, position }) {
     const {
       path, checksum, mimetype, width, height, orientation, size
     } = image
@@ -53,9 +54,10 @@ module.exports = {
             size,
             checksum,
             mimetype,
-            orientation
-          ) VALUES (?,?,?,?,?,?,?)`,
-        [id, item, path, size, checksum, mimetype, orientation]),
+            orientation,
+            position
+          ) VALUES (?,?,?,?,?,?,?,?)`,
+        [id, item, path, size, checksum, mimetype, orientation, position]),
 
       metadata.update(db, {
         ids: [id],
@@ -108,6 +110,11 @@ module.exports = {
             datetime(modified, "localtime") AS modified,
             angle,
             mirror,
+            negative,
+            brightness,
+            contrast,
+            hue,
+            saturation,
             width,
             height,
             path,
@@ -121,10 +128,11 @@ module.exports = {
             JOIN photos USING (id)${
           ids != null ? ` WHERE id IN (${ids})` : ''
         }`,
-        ({ id, created, modified, mirror, ...data }) => {
+        ({ id, created, modified, mirror, negative, ...data }) => {
           data.created = new Date(created)
           data.modified = new Date(modified)
           data.mirror = !!mirror
+          data.negative = !!negative
 
           if (id in photos) assign(photos[id], data)
           else photos[id] = assign(skel(id), data)
@@ -177,7 +185,7 @@ module.exports = {
   },
 
   async order(db, item, photos, offset = 0) {
-    if (photos.length) {
+    if (!blank(photos)) {
       return db.run(`
         UPDATE photos
           SET position = CASE id
@@ -190,7 +198,7 @@ module.exports = {
   },
 
   async merge(db, item, photos, offset = 0) {
-    if (photos.length) {
+    if (!blank(photos)) {
       return db.run(`
         UPDATE photos
           SET item_id = ?, position = CASE id

@@ -5,6 +5,7 @@ const { remote, ipcRenderer: ipc } = require('electron')
 const { basename, join, resolve } = require('path')
 const { existsSync: exists } = require('fs')
 const { EL_CAPITAN, darwin } = require('./common/os')
+const { Plugins } = require('./common/plugins')
 const { EventEmitter } = require('events')
 const args = require('./args')
 
@@ -30,16 +31,22 @@ class Window extends EventEmitter {
       aqua, frameless, scrollbars, theme
     }
 
+    this.plugins = new Plugins(ARGS.plugins)
     this.unloader = 'close'
     this.unloaders = []
     this.hasFinishedUnloading = false
   }
 
   init(done) {
+    this.plugins.reload().then(p => p.create())
+
     this.handleUnload()
     this.handleTabFocus()
     this.handleIpcEvents()
     this.handleEditorCommands()
+    this.handleModifierKeys()
+
+    toggle(document.body, process.platform, true)
 
     const { aqua, frameless } = this.state
 
@@ -109,6 +116,10 @@ class Window extends EventEmitter {
       .on('theme', (_, theme) => {
         this.style(theme, true)
       })
+      .on('locale', (_, locale) => {
+        args.update({ locale })
+        this.emit('settings.update', { locale })
+      })
       .on('debug', (_, debug) => {
         args.update({ debug })
         this.emit('settings.update', { debug })
@@ -122,6 +133,9 @@ class Window extends EventEmitter {
       })
       .on('reload', () => {
         this.reload()
+      })
+      .on('plugins-reload', () => {
+        this.plugins.reload().then(p => p.create())
       })
       .on('toggle-perf-tools', () => {
         const { search, hash } = location
@@ -162,7 +176,7 @@ class Window extends EventEmitter {
 
 
   handleTabFocus() {
-    on(document.body, 'keydown', event => {
+    on(document, 'keydown', event => {
       if (event.key === 'Tab' && !event.defaultPrevented) {
         const onTabFocus = ({ target }) => {
           try {
@@ -213,6 +227,21 @@ class Window extends EventEmitter {
       event.preventDefault()
       event.stopImmediatePropagation()
     })
+  }
+
+  handleModifierKeys() {
+    on(document, 'keydown', event => {
+      toggle(document.body, 'meta-key', event.metaKey)
+      toggle(document.body, 'ctrl-key', event.ctrlKey)
+    }, { passive: true, capture: true })
+
+    on(document, 'keyup', up, { passive: true, capture: true })
+    on(window, 'blur', up, { passive: true })
+
+    function up(event) {
+      toggle(document.body, 'meta-key', event.metaKey === true)
+      toggle(document.body, 'ctrl-key', event.ctrlKey === true)
+    }
   }
 
   createWindowControls() {

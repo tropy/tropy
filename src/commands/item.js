@@ -7,7 +7,7 @@ const { DuplicateError } = require('../common/error')
 const { all, call, put, select, cps } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { ImportCommand } = require('./import')
-const { prompt, open, fail, save  } = require('../dialog')
+const { prompt, open, fail, save } = require('../dialog')
 const { Image } = require('../image')
 const { text } = require('../value')
 const act = require('../actions')
@@ -428,45 +428,60 @@ class Export extends Command {
   static get action() { return ITEM.EXPORT }
 
   *exec() {
-    let path = this.action.meta.target
+    let { target, plugin } = this.action.meta
     const ids = this.action.payload
+    if (plugin) target = ':plugin:'
 
     try {
-      if (!path) {
+      if (!target) {
         this.isInteractive = true
-        path = yield call(save.items, {})
+        target = yield call(save.items, {})
       }
 
-      if (!path) return
+      if (!target) return
 
-      const [resources, props] = yield select(state => {
+      const [templateItems, ...resources] = yield select(state => {
         const itms = pick(state.items, ids)
         const templateIDs = Object.values(itms).map(itm => itm.template)
         const templates = pick(state.ontology.template, templateIDs)
         let results = []
+
+        // check for missing templates
+        const isTrue = x => x === true
+        const hasTemplates = keys(state.ontology.template)
+        if (!templateIDs.map(t => hasTemplates.includes(t)).every(isTrue)) {
+          const notFound = templateIDs.filter(t => !hasTemplates.includes(t))[0]
+          throw new Error(`Template '${notFound}' not found.\n` +
+                          'Please create it though the preferences.')
+        }
+
         for (const t in templates) {
           const template = templates[t]
           results.push({
             template,
             items: Object.values(itms).filter(i => i.template === t),
-            metadata: state.metadata,
-            photos: state.photos
           })
         }
-        return [results, state.ontology.props]
+        const needed = [
+          'metadata', 'photos', 'lists', 'tags', 'notes', 'selections']
+        return [results, state.ontology.props, ...pluck(state, needed)]
       })
 
-      const results = yield call(groupedByTemplate, resources, props)
+      const results = yield call(groupedByTemplate, templateItems, resources)
+      const asString = JSON.stringify(results, null, 2)
 
-      const data = JSON.stringify(results, null, 2)
-
-      if (path === ':clipboard:') {
-        yield call(clipboard.writeText, data)
-      } else {
-        yield cps(write, path, data)
+      switch (target) {
+        case ':clipboard:':
+          yield call(clipboard.writeText, asString)
+          break
+        case ':plugin:':
+          yield win.plugins.export(plugin, results)
+          break
+        default:
+          yield cps(write, target, asString)
       }
     } catch (error) {
-      warn(`Failed to export items to ${path}: ${error.message}`)
+      warn(`Failed to export items to ${target}: ${error.message}`)
       verbose(error.stack)
 
       fail(error, this.action.type)

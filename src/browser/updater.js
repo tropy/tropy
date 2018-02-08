@@ -9,7 +9,7 @@ const flash  = require('../actions/flash')
 const MIN = 1000 * 60
 
 class Updater {
-  constructor(app, timeout = 30 * MIN) {
+  constructor(app, timeout = 90 * MIN) {
     this.isSupported = !linux && app.isBuild && ARGS.autoUpdates
 
     this.app = app
@@ -38,7 +38,9 @@ class Updater {
       })
 
     } catch (error) {
-      warn(`failed to setup auto updater: ${error.message}`, { error })
+      warn(`failed to setup auto updater: ${error.message}`, {
+        stack: error.stack
+      })
       this.isSupported = false
     }
   }
@@ -66,7 +68,7 @@ class Updater {
   }
 
   check = () => {
-    if (this.isSupported) {
+    if (this.isSupported && this.canCheck) {
       autoUpdater.checkForUpdates()
     }
   }
@@ -81,7 +83,10 @@ class Updater {
     this.isChecking = false
     this.isUpdateAvailable = false
     this.isUpdateReady = false
-    warn(`Failed to fetch update: ${error.message}`, { error })
+
+    warn(`Failed to fetch update: ${error.message}`, {
+      stack: error.stack
+    })
   }
 
   onCheckingForUpdate = () =>{
@@ -109,6 +114,7 @@ class Updater {
     this.isUpdateReady = true
     this.isChecking = false
     this.app.broadcast('dispatch', flash.show(release))
+    this.stop()
   }
 }
 

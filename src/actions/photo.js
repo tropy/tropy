@@ -34,6 +34,14 @@ module.exports = {
     }
   },
 
+  duplicate(payload, meta) {
+    return {
+      type: PHOTO.DUPLICATE,
+      payload,
+      meta: { cmd: 'project', history: 'add', ...meta }
+    }
+  },
+
   error(payload, meta = {}) {
     return module.exports.update(
       { id: payload, broken: true },

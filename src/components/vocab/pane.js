@@ -6,7 +6,7 @@ const { PrefPane } = require('../prefs/pane')
 const { AccordionGroup } = require('../accordion')
 const { VocabAccordion } = require('./accordion')
 const { array, bool, func, string } = require('prop-types')
-const { IconButton } = require('../button')
+const { Button } = require('../button')
 const { IconPlus } = require('../icons')
 
 
@@ -24,13 +24,14 @@ class VocabPane extends PureComponent {
                 vocab={vocab}
                 onClassSave={this.props.onClassSave}
                 onDelete={this.props.onDelete}
+                onExport={this.props.onExport}
                 onOpenLink={this.props.onOpenLink}
                 onPropsSave={this.props.onPropsSave}
                 onSave={this.props.onSave}/>)}
           </AccordionGroup>
         </div>
         <footer className="vocab-footer">
-          <IconButton
+          <Button
             icon={<IconPlus/>}
             onClick={this.props.onImport}/>
         </footer>
@@ -44,6 +45,7 @@ class VocabPane extends PureComponent {
     vocab: array.isRequired,
     onClassSave: func.isRequired,
     onDelete: func.isRequired,
+    onExport: func.isRequired,
     onImport: func.isRequired,
     onOpenLink: func.isRequired,
     onPropsSave: func.isRequired,

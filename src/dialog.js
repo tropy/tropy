@@ -114,7 +114,7 @@ prompt.dup = (file, options) =>
 open.images = (options) => open({
   filters: [{
     name: t('dialog.filter.images'),
-    extensions: ['jpg', 'jpeg']
+    extensions: ['jpg', 'jpeg', 'png', 'svg']
   }],
   properties: ['openFile', 'multiSelections'],
   ...options
@@ -162,6 +162,15 @@ save.items = (options) => save({
   filters: [{
     name: t('dialog.filter.jsonld'),
     extensions: ['json', 'jsonld']
+  }],
+  properties: ['createDirectory'],
+  ...options
+})
+
+save.vocab = (options) => save({
+  filters: [{
+    name: t('dialog.filter.rdf'),
+    extensions: ['n3']
   }],
   properties: ['createDirectory'],
   ...options

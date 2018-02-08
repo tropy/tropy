@@ -2,7 +2,7 @@
 
 const { eventChannel } = require('redux-saga')
 const { call, put, take } = require('redux-saga/effects')
-const { warn, debug } = require('../common/log')
+const { warn } = require('../common/log')
 const { fail } = require('../dialog')
 
 
@@ -20,8 +20,9 @@ function onErrorPut(action, times = 1) {
     const channel = yield call(ErrorChannel, db)
     const { error } = yield take(channel)
 
-    warn(`unexpected db error: ${error.message}`)
-    debug(error.stack)
+    warn(`unexpected db error: ${error.message}`, {
+      stack: error.stack
+    })
 
     yield call(fail, error, db.path)
     yield put(action(error))

@@ -1,12 +1,12 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
-const { func, node, bool, number, oneOf } = require('prop-types')
+const { PureComponent, createElement: create } = React
+const { func, node, bool, number, oneOf, string } = require('prop-types')
 const { Draggable } = require('./draggable')
 const cx = require('classnames')
 const { bounds } = require('../dom')
-const { noop, restrict, titlecase, refine } = require('../common/util')
+const { noop, restrict, refine } = require('../common/util')
 const { round } = require('../common/math')
 const { keys } = Object
 
@@ -29,11 +29,19 @@ const AXS = {
 
 
 class Resizable extends PureComponent {
-  get classes() {
-    return {
-      resizable: true,
-      disabled: this.props.isDisabled
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      isResizing: false
     }
+  }
+
+  get classes() {
+    return ['resizable', this.props.className, {
+      disabled: this.props.isDisabled,
+      resizing: this.state.isResizing
+    }]
   }
 
   get dimension() {
@@ -41,28 +49,12 @@ class Resizable extends PureComponent {
   }
 
   get value() {
-    return this.props.value
-  }
-
-  get cssValue() {
-    return `${this.value}${this.props.isRelative ? '%' : 'px'}`
-  }
-
-  get cssMin() {
-    return `${this.props.min}px`
-  }
-
-  get cssMax() {
-    return this.props.max ? `${this.props.max}px` : null
+    return restrict(this.props.value, this.props.min, this.props.max)
   }
 
   get style() {
-    const { cssValue, cssMin, cssMax, dimension } = this
-
     return {
-      [dimension]: cssValue,
-      [`min${titlecase(dimension)}`]: cssMin,
-      [`max${titlecase(dimension)}`]: cssMax
+      [this.dimension]: `${this.value}${this.props.isRelative ? '%' : 'px'}`
     }
   }
 
@@ -78,14 +70,10 @@ class Resizable extends PureComponent {
       (event[AXS[edge]] - origin) * (isInverse ? -1 : 1), min, max
     )
 
-    if (isRelative) {
-      return {
-        absolute: value,
-        value: restrict(round(value / scale, 100), null, 100)
-      }
+    return (!isRelative) ? { value } : {
+      absolute: value,
+      value: restrict(round(value / scale, 100), null, 100)
     }
-
-    return { value }
   }
 
   setContainer = (container) => {
@@ -93,10 +81,16 @@ class Resizable extends PureComponent {
   }
 
   handleDragStart = (event) => {
-    const { edge, onDragStart } = this.props
+    const { edge, onDragStart, isRelative, value } = this.props
 
     this.scale = bounds(this.container.parentElement)[DIM[edge]] / 100
     this.origin = bounds(this.container)[OPP[edge]]
+
+    if (!isRelative) {
+      this.origin -= (value - this.getNewValue(event).value)
+    }
+
+    this.setState({ isResizing: true })
 
     if (onDragStart) {
       return onDragStart(event, this)
@@ -116,6 +110,8 @@ class Resizable extends PureComponent {
   handleDragStop = (event) => {
     this.scale = 1
     this.origin = 0
+
+    this.setState({ isResizing: false })
 
     if (this.props.onDragStop) {
       this.props.onDragStop(event, this)
@@ -139,19 +135,16 @@ class Resizable extends PureComponent {
   }
 
   render() {
-    return (
-      <div
-        className={cx(this.classes)}
-        ref={this.setContainer}
-        style={this.style}>
-        {this.props.children}
-        {this.renderHandle()}
-      </div>
-    )
+    return create(this.props.node, {
+      className: cx(this.classes),
+      ref: this.setContainer,
+      style: this.style
+    }, this.props.children, this.renderHandle())
   }
 
   static propTypes = {
     children: node,
+    className: string,
     edge: oneOf(keys(DIM)).isRequired,
     id: number,
     isDisabled: bool,
@@ -159,6 +152,7 @@ class Resizable extends PureComponent {
     value: number.isRequired,
     min: number.isRequired,
     max: number,
+    node: string.isRequired,
     onResize: func,
     onDrag: func,
     onDragStart: func,
@@ -166,7 +160,8 @@ class Resizable extends PureComponent {
   }
 
   static defaultProps = {
-    min: 0
+    min: 0,
+    node: 'div'
   }
 
 }
@@ -176,9 +171,7 @@ class BufferedResizable extends Resizable {
   constructor(props) {
     super(props)
 
-    this.state = {
-      value: props.value
-    }
+    this.state.value = props.value
 
     refine(this, 'handleDragStop', () => {
       const { value, onChange } = this.props

@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { DragSource, DropTarget } = require('react-dnd')
 const { ResourceSelect } = require('../resource/select')
-const { IconButton } = require('../button')
+const { Button } = require('../button')
 const { FormField, FormGroup, FormToggle, Label } = require('../form')
 const { IconGrip, IconPlusCircle, IconMinusCircle } = require('../icons')
 const { DND } = require('../../constants')
@@ -64,7 +64,7 @@ class TemplateField extends PureComponent {
 
   renderInsertButton() {
     return !this.props.isDisabled && (
-      <IconButton
+      <Button
         icon={<IconPlusCircle/>}
         isDisabled={this.props.isTransient}
         onClick={this.handleInsert}/>
@@ -73,7 +73,7 @@ class TemplateField extends PureComponent {
 
   renderRemoveButton() {
     return !this.props.isDisabled && (
-      <IconButton
+      <Button
         icon={<IconMinusCircle/>}
         isDisabled={this.props.isTransient && this.props.isSingle}
         onClick={this.handleRemove}/>

@@ -4,7 +4,7 @@ const assert = require('assert')
 const { OPEN, CLOSE, CLOSED, MIGRATIONS } = require('../constants/project')
 const { Database } = require('../common/db')
 const { Cache } = require('../common/cache')
-const { warn, debug, verbose } = require('../common/log')
+const { warn, debug } = require('../common/log')
 const { ipc } = require('./ipc')
 const consolidator = require('./consolidator')
 const { history } = require('./history')
@@ -68,16 +68,14 @@ function *open(file) {
       yield call(close, db, project, access)
     }
   } catch (error) {
-    warn(`unexpected error in *open: ${error.message}`)
-    debug(error.stack)
-
+    warn(`unexpected error in *open: ${error.message}`, { stack: error.stack })
     yield call(fail, error, db.path)
 
   } finally {
     yield call(db.close)
     yield put(act.project.closed())
 
-    verbose('*open terminated')
+    debug('*open terminated')
   }
 }
 
@@ -87,7 +85,6 @@ function *setup(db, project) {
 
   yield all([
     call(storage.restore, 'nav', project.id),
-    call(storage.restore, 'columns', project.id),
     call(storage.restore, 'imports', project.id)
   ])
 
@@ -113,7 +110,6 @@ function *close(db, project, access) {
 
   yield all([
     call(storage.persist, 'nav', project.id),
-    call(storage.persist, 'columns', project.id),
     call(storage.persist, 'imports', project.id)
   ])
 
@@ -167,8 +163,7 @@ function *main() {
     }
 
   } catch (error) {
-    warn(`unexpected error in *main: ${error.message}`)
-    debug(error.stack)
+    warn(`unexpected error in *main: ${error.message}`, { stack: error.stack })
 
   } finally {
     yield all([
@@ -180,7 +175,7 @@ function *main() {
       if (bg != null && bg.isRunning()) return cancel(bg)
     }))
 
-    verbose('*main terminated')
+    debug('*main terminated')
   }
 }
 

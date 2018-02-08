@@ -19,7 +19,7 @@ fieldset {
     background: $fieldset-input-bg;
     border-color: $fieldset-input-border;
 
-    @include form-control-focus; // sass-lint:disable-line mixins-before-declarations
+    @include input-btn-focus; // sass-lint:disable-line mixins-before-declarations
 
     &[readonly],
     &[disabled] {
@@ -59,9 +59,14 @@ fieldset {
   }
 }
 
+.input-group {
+  display: flex;
+}
+
 .form-control {
-  display: block;
-  width: 100%;
+  flex: 1 1 auto; // Inside input-group
+  display: block; // Without input-group
+  width: 100%; // Without input-group
   height: $input-height-base;
   padding: 0 $padding-base-horizontal;
   font-family: inherit;
@@ -71,9 +76,9 @@ fieldset {
   border: 1px solid $input-border;
   border-radius: $input-border-radius-small;
   box-shadow: none;
-  transition: border-color ease 0.15s, box-shadow ease 0.15s;
+  transition: border-color $input-btn-transition, box-shadow $input-btn-transition;
 
-  @include form-control-focus;
+  @include input-btn-focus;
 
   &::-webkit-input-placeholder {
     color: $input-color-placeholder;
@@ -158,6 +163,11 @@ fieldset {
     &[disabled] {
       background: $input-bg-readonly;
       border-color: $input-border;
+
+      // Soften labels of disabled checkboxes/radios
+      & + span {
+        opacity: 0.5;
+      }
     }
 
     &:checked {
@@ -173,8 +183,8 @@ fieldset {
         background: $input-bg-readonly;
         border-color: $input-border;
 
-        &:before,
-        &:after {
+        &::before,
+        &::after {
           background: $checkbox-checked-bg;
         }
       }
@@ -194,9 +204,42 @@ fieldset {
           background: $fieldset-input-bg-readonly;
           border-color: $fieldset-input-border;
 
-          &:before,
-          &:after {
+          &::before,
+          &::after {
             background: $checkbox-checked-bg;
+          }
+        }
+      }
+    }
+
+    .overlay-mode & {
+      background: $input-overlay-bg;
+      border-color: transparent;
+
+      &:active {
+        background: $checkbox-overlay-checked-bg;
+      }
+
+      &[disabled] {
+        background: $input-overlay-bg-readonly;
+        border-color: $checkbox-overlay-disabled-border;
+      }
+
+      &:checked {
+        background: $checkbox-overlay-checked-bg;
+
+        &:active {
+          background: $checkbox-overlay-checked-active-bg;
+          border-color: transparent;
+        }
+
+        &[disabled] {
+          background: $input-overlay-bg-readonly;
+          border-color: $checkbox-overlay-disabled-border;
+
+          &::before,
+          &::after {
+            background: $checkbox-overlay-checked-bg;
           }
         }
       }
@@ -207,12 +250,22 @@ fieldset {
 @each $input in checkbox, radio {
   .#{$input}.tab {
     [type="#{$input}"] {
-      border-color: $input-color-focus;
-      box-shadow: 0 0 0 2px $input-color-focus;
+      border-color: $input-btn-focus-color !important; // sass-lint:disable-line no-important
+      box-shadow: 0 0 0 2px $input-btn-focus-color !important; // sass-lint:disable-line no-important
+
+      .overlay-mode & {
+        border-color: $input-overlay-focus-color !important; // sass-lint:disable-line no-important
+        box-shadow: 0 0 0 2px $input-overlay-focus-color !important; // sass-lint:disable-line no-important
+      }
 
       &:checked {
-        border-color: $input-color-focus;
-        box-shadow: 0 0 0 2px $input-color-focus;
+        border-color: $input-btn-focus-color !important; // sass-lint:disable-line no-important
+        box-shadow: 0 0 0 2px $input-btn-focus-color !important; // sass-lint:disable-line no-important
+
+        .overlay-mode & {
+          border-color: $input-overlay-focus-color !important; // sass-lint:disable-line no-important
+          box-shadow: 0 0 0 2px $input-overlay-focus-color !important; // sass-lint:disable-line no-important
+        }
       }
     }
   }

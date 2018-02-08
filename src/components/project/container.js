@@ -27,6 +27,7 @@ const {
   getSelectedItems,
   getSelectedPhoto,
   getSelectedNote,
+  getSortColumn,
   getVisibleItems,
   getVisibleNotes,
   getVisiblePhotos
@@ -310,11 +311,7 @@ class ProjectContainer extends Component {
     data: object.isRequired,
     columns: arrayOf(object),
     cache: string.isRequired,
-    sort: shape({
-      asc: bool,
-      column: string.isRequired,
-      type: oneOf(['property']).isRequired
-    }).isRequired,
+    sort: object.isRequired,
     tags: object.isRequired,
 
     isOver: bool,
@@ -392,7 +389,7 @@ module.exports = {
       properties: state.ontology.props,
       selection: getSelectedItems(state),
       selections: state.selections,
-      sort: state.nav.sort,
+      sort: getSortColumn(state),
       tags: state.tags,
       ui: state.ui
     }),
@@ -426,6 +423,10 @@ module.exports = {
       onProjectSave(...args) {
         dispatch(actions.project.save(...args))
         dispatch(actions.edit.cancel())
+      },
+
+      onColumnResize(...args) {
+        dispatch(actions.nav.column.resize(...args))
       },
 
       onSelect(...args) {

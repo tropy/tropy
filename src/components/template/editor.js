@@ -29,7 +29,7 @@ const TEMPLATE = {
 }
 
 const defaultId = () =>
-  `https:/tropy.org/v1/templates/id#${identify()}`
+  `https://tropy.org/v1/templates/id#${identify()}`
 
 const makeTemplate = (template = TEMPLATE) => ({
   id: template.id || defaultId(), ...template

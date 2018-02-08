@@ -10,13 +10,74 @@
 .ProseMirror {
   font-size: $editor-font-size;
   line-height: $editor-line-height;
+  word-break: break-word; // For vertical writing mode (break-word or break-all?)
+  counter-reset: line-numbers;
+
+  .no-wrap & {
+    white-space: nowrap;
+  }
 
   * {
     margin: 0;
   }
 
-  ::selection {
-    background-color: $editor-text-selection-bg;
+  &:not(.ProseMirror-focused) {
+    .pseudo-selection {
+      background-color: $editor-pseudo-selection-bg;
+    }
+  }
+
+  p,
+  .line-break,
+  hr {
+    .numbers.horizontal &,
+    .numbers.vertical-rl & {
+
+      &::before {
+        content: counter(line-numbers);
+        counter-increment: line-numbers;
+        position: absolute;
+        white-space: nowrap;
+        text-align: right;
+        color: $line-number-color;
+        user-select: none;
+      }
+    }
+
+    .numbers.horizontal & {
+      &::before {
+        left: 0;
+        width: $space-xxl;
+      }
+    }
+
+    .numbers.vertical-rl & {
+      &::before {
+        top: 0;
+        height: $space-xxl;
+        text-orientation: mixed;
+      }
+    }
+  }
+
+  a {
+    cursor: text;
+
+    .darwin.meta-key &,
+    .win32.ctrl-key &,
+    .linux.ctrl-key & {
+      cursor: pointer;
+    }
+
+    &:hover {
+      text-decoration: none;
+
+      .darwin.meta-key &,
+      .win32.ctrl-key &,
+      .linux.ctrl-key & {
+        text-decoration: underline;
+      }
+    }
   }
 
   strong {
@@ -28,13 +89,26 @@
   }
 
   blockquote {
-    padding-left: $blockquote-padding;
-    border-left: $blockquote-border solid $blockquote-border-color;
+    .horizontal & {
+      padding-left: $blockquote-padding;
+      border-left: $blockquote-border solid $blockquote-border-color;
+    }
+
+    .vertical-rl & {
+      padding-top: $blockquote-padding;
+      border-top: $blockquote-border solid $blockquote-border-color;
+    }
   }
 
   ul,
   ol {
-    padding-left: $editor-list-padding;
+    .horizontal & {
+      padding-left: $editor-list-padding;
+    }
+
+    .vertical-rl & {
+      padding-top: $editor-list-padding;
+    }
   }
 
   ul {
@@ -54,44 +128,82 @@
   }
 
   ol {
-    list-style: decimal;
+    counter-reset: ol;
+
+    .horizontal & {
+      list-style: decimal;
+    }
+
+    .vertical-rl & {
+      list-style: none;
+
+      li {
+        &::before {
+          content: counter(ol) ".";
+          counter-increment: ol;
+          position: absolute;
+          top: 0;
+          height: 49px;
+          text-align: right;
+          text-orientation: mixed;
+        }
+      }
+    }
   }
 
   li {
-    @each $alignment in center, right {
-      &[style*="#{$alignment}"] {
-        text-align: $alignment;
-        list-style-position: inside;
+    display: block;
+    position: static; // Allow for positioned line numbers
+
+    p {
+      display: list-item;
+
+      @each $alignment in center, right {
+        &[style*="#{$alignment}"] {
+          list-style-position: inside;
+        }
+      }
+    }
+  }
+
+  .line-break {
+    .numbers.horizontal & {
+      &::before {
+        margin-top: $editor-line-height-computed;
       }
     }
 
-    p {
-      display: inline;
+    .numbers.vertical-rl & {
+      &::before {
+        margin-right: $editor-line-height-computed;
+      }
     }
   }
 
   hr {
     border: 0;
-    border-top: $editor-hr-border solid $editor-hr-border-color;
-    margin: ($editor-line-height-computed / 2 - $editor-hr-border) 0;
+
+    .horizontal & {
+      border-top: $editor-hr-border solid $editor-hr-border-color;
+      margin: ($editor-line-height-computed / 2 - $editor-hr-border / 2) 0;
+    }
+
+    .vertical-rl & {
+      border-right: $editor-hr-border solid $editor-hr-border-color;
+      margin: 0 ($editor-line-height-computed / 2 - $editor-hr-border / 2);
+    }
+
+    .numbers.horizontal & {
+      &::before {
+        margin-top: -($editor-line-height-computed + $editor-hr-border) / 2;
+      }
+    }
   }
 
   sup,
   sub {
     line-height: 1;
     font-size: $sup-and-sub-font-size;
-  }
-
-  .align-left {
-    text-align: left;
-  }
-
-  .align-center {
-    text-align: center;
-  }
-
-  .align-right {
-    text-align: right;
   }
 
   &-selectednode {

@@ -2,7 +2,7 @@
 
 const { warn, verbose } = require('../common/log')
 const { call, put, select } = require('redux-saga/effects')
-const { get } = require('../common/util')
+const { getSortColumn } = require('../selectors')
 const mod = require('../models')
 const act = require('../actions')
 const ms = require('ms')
@@ -10,8 +10,13 @@ const ms = require('ms')
 module.exports = {
   *search(db) {
     try {
-      const { nav, imports } = yield select()
-      const { list, tags, trash, sort, lists, query } = nav
+      const { nav, imports, sort } = yield select(state => ({
+        nav: state.nav,
+        imports: state.imports,
+        sort: getSortColumn(state)
+      }))
+
+      const { list, tags, trash, query } = nav
 
       const START = Date.now()
 
@@ -28,12 +33,7 @@ module.exports = {
           break
 
         case (list != null):
-          result = yield call(mod.item.list, db, list, {
-            tags,
-            query,
-            sort: get(lists, [list, 'sort']) || sort
-          })
-
+          result = yield call(mod.item.list, db, list, { tags, query, sort })
           break
 
         default:

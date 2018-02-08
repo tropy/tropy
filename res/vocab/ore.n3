@@ -8,8 +8,8 @@
 @prefix rdfg: <http://www.w3.org/2004/03/trix/rdfg-1/> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 
-<http://www.openarchives.org/ore/terms/> dcterms:title "The OAI ORE terms vocabulary" ;
-	rdfs:label "The OAI ORE terms vocabulary" ;
+<http://www.openarchives.org/ore/terms/> dcterms:title "OAI ORE Terms Vocabulary" ;
+	rdfs:label "OAI ORE Terms Vocabulary" ;
 	rdfs:comment "The set of terms provided by the OAI ORE initiative" ;
 	dcterms:publisher _:node17168luiux2 .
 

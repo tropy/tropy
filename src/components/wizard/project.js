@@ -6,6 +6,7 @@ const { bool, func, string } = require('prop-types')
 const { FormattedMessage, intlShape, injectIntl } = require('react-intl')
 const { Step } = require('../steps')
 const cx = require('classnames')
+const { blank } = require('../../common/util')
 
 
 class ProjectStep extends PureComponent {
@@ -13,10 +14,10 @@ class ProjectStep extends PureComponent {
   handleNameKeyDown = (event) => {
     switch (event.key) {
       case 'Escape':
-        if (this.name !== '') this.props.onNameChange('')
+        if (!blank(this.props.name)) this.props.onNameChange('')
         break
       case 'Enter':
-        this.props.onComplete()
+        if (!blank(this.props.name)) this.props.onComplete()
         break
       default:
         return

@@ -35,7 +35,7 @@ class PhotoPanel extends Panel {
         maxZoom={PHOTO.ZOOM.length - 1}
         onZoomChange={this.props.onZoomChange}
         hasCreateButton
-        canCreate={!this.props.isDisabled}
+        canCreate={!this.props.isDisabled && !this.props.isClosed}
         isDisabled={this.props.isClosed || !this.props.photos.length}
         onCreate={this.props.onCreate}/>
     )

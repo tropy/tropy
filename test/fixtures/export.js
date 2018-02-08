@@ -14,7 +14,18 @@ const template = {
 }
 
 const items = [
-  { id: 1, template: 'https://tropy.org/v1/tropy#test-template', photos: [11, 12] }
+  {
+    id: 1,
+    template: 'https://tropy.org/v1/tropy#test-template',
+    photos: [11, 12]
+  },
+  {
+    id: 2,
+    template: 'https://tropy.org/v1/tropy#test-template',
+    lists: [1],
+    tags: [1],
+    photos: []
+  }
 ]
 
 const metadata = {
@@ -51,13 +62,75 @@ const metadata = {
 
 const props = {
   'http://example.com/custom-property': { label: 'Non-template Property' },
-  'http://example.com/photo-property': { label: 'hello world' },
-  'http://example.com/selection-property': { label: 'select prop' }
+  'http://example.com/photo-property': {
+    id: 'http://example.com/photo-property',
+    label: 'hello world'
+  },
+  'http://example.com/selection-property': { label: 'select prop' },
 }
 
 const photos = {
-  11: { id: 11, path: '/path' },
-  12: { path: '/another', selections: [21] }
+  11: { id: 11, path: '/path', width: 30, height: 40 },
+  12: { id: 12, path: '/another', selections: [21], notes: [1] }
+}
+
+const vocab = {
+  id: 'http://example.com/vocab',
+  description: 'Description',
+  prefix: 'vocab',
+  seeAlso: 'http://example.com/seeAlso',
+  title: 'Test Vocabulary',
+  classes: ['http://example.com/class'],
+  properties: ['http://example.com/photo-property'],
+  datatypes: ['http://example.com/type']
+}
+
+const classes = {
+  'http://example.com/class': {
+    comment: 'comment',
+    description: null,
+    id: 'http://example.com/class',
+    label: 'My Class'
+  }
+}
+
+const datatypes = {
+  'http://example.com/type': {
+    id: 'http://example.com/type',
+    comment: 'a custom datatype'
+  }
+}
+
+const lists = {
+  1: { name: 'list1' }
+}
+
+const tags = {
+  1: { name: 'mytag' }
+}
+
+const notes = {
+  1: {
+    text: 'photo note',
+    language: 'de',
+    state: {
+      doc: {
+        type: 'doc',
+        content: [{
+          type: 'paragraph',
+          content: [{
+            type: 'text',
+            text: 'photo note'
+          }]
+        }]
+      }
+    }
+  },
+  2: { text: 'selection note', state: {} }
+}
+
+const selections = {
+  21: { x: 10, y: 20, width: 30, height: 40, notes: [2] }
 }
 
 module.exports = {
@@ -65,5 +138,12 @@ module.exports = {
   items,
   metadata,
   props,
-  photos
+  photos,
+  vocab,
+  classes,
+  datatypes,
+  lists,
+  tags,
+  notes,
+  selections
 }

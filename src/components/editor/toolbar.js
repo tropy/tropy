@@ -2,28 +2,30 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { func, instanceOf } = PropTypes
+const { func, instanceOf } = require('prop-types')
 const { Toolbar, ToolbarContext, ToolGroup } = require('../toolbar')
-const { IconButton } = require('../button')
+const { Button } = require('../button')
 const { EditorState } = require('prosemirror-state')
+const { LinkToolbar } = require('./link')
+
 
 const {
   IconB,
   IconI,
   IconU,
+  IconO,
   IconS,
   IconQ,
   IconSup,
   IconSub,
-  //  IconAlignLeft,
-  //  IconAlignCenter,
-  //  IconAlignRight,
-  //  IconLink,
+  IconAlignLeft,
+  IconAlignCenter,
+  IconAlignRight,
   IconBulletList,
   IconNumberedList,
   IconSink,
-  IconLift
+  IconLift,
+  IconLink
 } = require('../icons')
 
 
@@ -31,10 +33,19 @@ class EditorToolbar extends PureComponent {
   constructor(props) {
     super(props)
 
-    for (let action of [
+    this.state = {
+      align: this.getActiveAlignment(props.state),
+      context: 'default',
+      marks: this.getActiveMarks(props.state),
+    }
+
+    this.cmd = {}
+
+    for (const action of [
       'bold',
       'italic',
       'underline',
+      'overline',
       'strikethrough',
       'subscript',
       'superscript',
@@ -42,32 +53,55 @@ class EditorToolbar extends PureComponent {
       'ol',
       'ul',
       'liftListItem',
-      'sinkListItem'
+      'sinkListItem',
+      'left',
+      'center',
+      'right'
     ]) {
-      this[action] = () => this.props.onCommand(action)
-    }
-
-    this.state = {
-      marks: this.getActiveMarks(props.state)
+      this.cmd[action] = () => this.props.onCommand(action)
     }
   }
 
   componentWillReceiveProps(props) {
     if (props.state !== this.props.state) {
       this.setState({
+        align: this.getActiveAlignment(props.state),
         marks: this.getActiveMarks(props.state)
       })
     }
   }
 
-  getActiveMarks(state = this.props.state) {
-    let res = {}, mark
+  get hasDefaultContext() {
+    return this.state.context === 'default'
+  }
 
-    for (mark in state.schema.marks) {
-      res[mark] = this.isMarkActive(state.schema.marks[mark], state)
+  get hasLinkContext() {
+    return this.state.context === 'link'
+  }
+
+  getActiveMarks(state = this.props.state) {
+    const marks = {}
+
+    for (const mark in state.schema.marks) {
+      marks[mark] = this.isMarkActive(state.schema.marks[mark], state)
     }
 
-    return res
+    return marks
+  }
+
+  getActiveAlignment(state = this.props.state) {
+    const align = { left: false, right: false, center: false }
+
+    state.doc.nodesBetween(
+      state.selection.from,
+      state.selection.to,
+      (node) => {
+        if (node.type.attrs.align) {
+          align[node.attrs.align] = true
+        }
+      })
+
+    return align
   }
 
   isMarkActive(type, state = this.props.state) {
@@ -78,105 +112,118 @@ class EditorToolbar extends PureComponent {
       state.doc.rangeHasMark(from, to, type)
   }
 
-  get isLinkActive() {
-    return false
+  renderButton(name, props) {
+    return (
+      <Button
+        {...props}
+        noFocus
+        title={`editor.commands.${name}`}
+        onMouseDown={this.cmd[name]}/>
+    )
   }
 
   renderMarkButton(name, icon) {
-    return (
-      <IconButton
-        canHaveFocus={false}
-        icon={icon}
-        isActive={this.state.marks[name]}
-        title={`editor.commands.${name}`}
-        onMouseDown={this[name]}/>
-    )
+    return this.renderButton(name, {
+      icon,
+      isActive: this.state.marks[name]
+    })
+  }
+
+
+  renderAlignButton(name, icon) {
+    return this.renderButton(name, {
+      icon,
+      isActive: this.state.align[name]
+    })
+  }
+
+  setDefaultContext = () => {
+    this.setState({ context: 'default' })
+  }
+
+  setLinkContext = () => {
+    this.setState({ context: 'link' })
+  }
+
+  handleLinkToggle = (attrs) => {
+    // expand selection to include full link (only when deleting)
+    if (this.state.marks.link) {
+      this.props.onCommand('removeLink')
+    } else {
+      this.props.onCommand('insertLink', attrs)
+    }
+    this.setDefaultContext()
+  }
+
+  handleLinkButtonClick = () => {
+    if (this.state.marks.link) this.handleLinkToggle()
+    else this.setLinkContext()
   }
 
   render() {
     return (
       <Toolbar isDraggable={false}>
-        <ToolbarContext isActive={!this.isLinkActive}>
+        <ToolbarContext
+          className="default"
+          isActive={this.hasDefaultContext}>
           <div className="toolbar-left">
             <ToolGroup>
               {this.renderMarkButton('bold', <IconB/>)}
               {this.renderMarkButton('italic', <IconI/>)}
               {this.renderMarkButton('underline', <IconU/>)}
+              {this.renderMarkButton('overline', <IconO/>)}
               {this.renderMarkButton('strikethrough', <IconS/>)}
-              <IconButton
-                canHaveFocus={false}
+              <Button
+                noFocus
                 icon={<IconQ/>}
                 title="editor.commands.blockquote"
-                onMouseDown={this.blockquote}/>
+                onMouseDown={this.cmd.blockquote}/>
             </ToolGroup>
             <ToolGroup>
               {this.renderMarkButton('superscript', <IconSup/>)}
               {this.renderMarkButton('subscript', <IconSub/>)}
             </ToolGroup>
-            {/*<ToolGroup>
-              <IconButton
-                isDisabled
-                canHaveFocus={false}
-                icon={<IconAlignLeft/>}
-                isActive={false}
-                title="editor.commands.left"
-                onMouseDown={this.left}/>
-              <IconButton
-                isDisabled
-                canHaveFocus={false}
-                icon={<IconAlignCenter/>}
-                isActive={false}
-                title="editor.commands.center"
-                onMouseDown={this.center}/>
-              <IconButton
-                isDisabled
-                canHaveFocus={false}
-                icon={<IconAlignRight/>}
-                isActive={false}
-                title="editor.commands.right"
-                onMouseDown={this.right}/>
-            </ToolGroup>*/}
             <ToolGroup>
-              <IconButton
-                canHaveFocus={false}
+              {this.renderAlignButton('left', <IconAlignLeft/>)}
+              {this.renderAlignButton('center', <IconAlignCenter/>)}
+              {this.renderAlignButton('right', <IconAlignRight/>)}
+            </ToolGroup>
+            <ToolGroup>
+              <Button
+                noFocus
                 icon={<IconBulletList/>}
                 title="editor.commands.ul"
-                onMouseDown={this.ul}/>
-              <IconButton
-                canHaveFocus={false}
+                onMouseDown={this.cmd.ul}/>
+              <Button
+                noFocus
                 icon={<IconNumberedList/>}
                 title="editor.commands.ol"
-                onMouseDown={this.ol}/>
-              <IconButton
-                canHaveFocus={false}
+                onMouseDown={this.cmd.ol}/>
+              <Button
+                noFocus
                 icon={<IconSink/>}
-                onMouseDown={this.sinkListItem}/>
-              <IconButton
-                canHaveFocus={false}
+                title="editor.commands.sinkListItem"
+                onMouseDown={this.cmd.sinkListItem}/>
+              <Button
+                noFocus
                 icon={<IconLift/>}
-                onMouseDown={this.liftListItem}/>
+                title="editor.commands.liftListItem"
+                onMouseDown={this.cmd.liftListItem}/>
             </ToolGroup>
-            {/*<ToolGroup>
-              <IconButton
-                isDisabled
-                canHaveFocus={false}
-                title="editor.commands.link"
-                icon={<IconLink/>}/>
-            </ToolGroup>*/}
+            <ToolGroup>
+              <Button
+                noFocus
+                isActive={this.state.marks.link}
+                title="editor.commands.link.button"
+                icon={<IconLink/>}
+                onMouseDown={this.handleLinkButtonClick}/>
+            </ToolGroup>
           </div>
         </ToolbarContext>
-        <ToolbarContext isActive={this.isLinkActive}>
-          <span className="toolbar-left form-inline">
-            <input
-              className="form-control link-target"
-              type="text"
-              tabIndex={-1}
-              value={''}
-              placeholder="Link target"/>
-
-            <span className="btn btn-primary">OK</span>
-          </span>
-        </ToolbarContext>
+        <LinkToolbar
+          isActive={this.hasLinkContext}
+          onCancel={this.setDefaultContext}
+          onCommit={this.handleLinkToggle}/>
       </Toolbar>
     )
   }

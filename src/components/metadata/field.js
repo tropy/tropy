@@ -52,19 +52,17 @@ class MetadataField extends PureComponent {
     }, hasChanged)
   }
 
-  handleCancel = (isCommitUnchanged, hasBeenForced) => {
+  handleCancel = (hasChanged, hasBeenForced) => {
     if (hasBeenForced) this.props.onEditCancel()
-    else this.handleChange(this.props.text, !isCommitUnchanged)
+    else this.handleChange(this.props.text, hasChanged)
   }
 
-  handleKeyDown = (event, text, hasChanged) => {
+  handleKeyDown = (event, input) => {
     if (event.key === 'Tab') {
       event.preventDefault()
       event.stopPropagation()
 
-      if (hasChanged) {
-        this.handleChange(text)
-      }
+      if (input.hasChanged) input.commit(true)
 
       if (event.shiftKey) this.props.onPrev()
       else this.props.onNext()
@@ -83,7 +81,7 @@ class MetadataField extends PureComponent {
             value={this.props.text}
             display={auto(this.props.text, this.props.type)}
             placeholder={this.props.placeholder}
-            isEditing={this.props.isEditing}
+            isActive={this.props.isEditing}
             isRequired={this.props.isRequired}
             onCancel={this.handleCancel}
             onChange={this.handleChange}

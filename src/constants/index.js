@@ -3,7 +3,6 @@
 module.exports = {
   ACTIVITY: require('./activity'),
   CONTEXT: require('./context'),
-  COLUMNS: require('./columns'),
   DND: require('./dnd'),
   EDIT: require('./edit'),
   FLASH: require('./flash'),
@@ -13,7 +12,9 @@ module.exports = {
   ITEM: require('./item'),
   KEYMAP: require('./keymap'),
   LIST: require('./list'),
+  LOCALE: require('./locale'),
   METADATA: require('./metadata'),
+  MIME: require('./mime'),
   NAV: require('./nav'),
   NOTE: require('./note'),
   ONTOLOGY: require('./ontology'),

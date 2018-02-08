@@ -3,6 +3,32 @@
 const { times } = require('../common/util')
 const { round } = Math
 
+const ACTIVITY = {
+  HEIGHT: 43
+}
+
+const ABOUT = {
+  WIDTH: 600,
+  HEIGHT: 300
+}
+
+const COLUMN = {
+  MIN: 48,
+  POSITION: 54
+
+}
+
+const FONTSIZE = {
+  SMALL: 12,
+  BASE: 13,
+  LARGE: 16
+}
+
+const GRID = {
+  SIZE: 12,
+  PADDING: 12
+}
+
 const ICON = {
   SIZE: 48,
   MAX: 512
@@ -83,10 +109,6 @@ PANEL.MAX_WIDTH =
 
 PANEL.DEFAULT_WIDTH = PANEL.MIN_WIDTH
 
-const ACTIVITY = {
-  HEIGHT: 43
-}
-
 const SCROLLBAR = {
   WIDTH: 12
 }
@@ -97,7 +119,7 @@ const SIDEBAR = {
   DEFAULT_WIDTH: 250
 }
 
-const WINDOW = {
+const PROJECT = {
   WIDTH: 1280,
   HEIGHT: 720,
   MIN_WIDTH: SIDEBAR.MIN_WIDTH + PANEL.MIN_WIDTH * 2,
@@ -113,7 +135,7 @@ const NOTE = {
 }
 
 const ESPER = {
-  MIN_HEIGHT: WINDOW.MIN_HEIGHT - NOTEPAD.MIN_HEIGHT,
+  MIN_HEIGHT: PROJECT.MIN_HEIGHT - NOTEPAD.MIN_HEIGHT,
   FADE_DURATION: 250,
   ROTATE_DURATION: 250,
   MAX_ZOOM: 4,
@@ -169,9 +191,18 @@ const ESPER = {
   }
 }
 
-const WIZARD = {
-  WIDTH: 456,
-  HEIGHT: 580
+const INPUT = {
+  BORDER_WIDTH: 1,
+  FOCUS_SHADOW_WIDTH: 2
+}
+
+const OPTION = {
+  HEIGHT: 26,
+  LIST_MARGIN: 4
+}
+
+const POPUP = {
+  PADDING: 2
 }
 
 const PREFS = {
@@ -179,33 +210,33 @@ const PREFS = {
   HEIGHT: 580
 }
 
-const ABOUT = {
-  WIDTH: 600,
-  HEIGHT: 300
-}
-
-const GRID = {
-  SIZE: 12,
-  PADDING: 12
+const WIZARD = {
+  WIDTH: 456,
+  HEIGHT: 580
 }
 
 
 module.exports =  {
   ABOUT,
   ACTIVITY,
+  COLUMN,
   ESPER,
+  FONTSIZE,
   GRID,
   ICON,
+  INPUT,
   ITEM,
+  NOTE,
+  NOTEPAD,
+  OPTION,
   PANEL,
   PHOTO,
+  POPUP,
   PREFS,
+  PROJECT,
   ROW,
   SCROLLBAR,
   SIDEBAR,
   TILE,
-  WINDOW,
-  WIZARD,
-  NOTE,
-  NOTEPAD
+  WIZARD
 }

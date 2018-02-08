@@ -16,6 +16,14 @@ function withWindow(cmd, fn) {
 const CHECK = {
   hasMultiplePhotos(_, e) {
     return e && e.target && e.target.photos && e.target.photos.length > 1
+  },
+
+  hasMultipleItems(_, e) {
+    return e && e.target && e.target.items && e.target.items.length > 1
+  },
+
+  hasSingleItem(...args) {
+    return !CHECK.hasMultipleItems(...args)
   }
 }
 
@@ -27,6 +35,16 @@ function check(item, event) {
 class Menu {
   constructor(app) {
     this.app = app
+  }
+
+  async load(name) {
+    const { defaultLocale, state } = this.app
+
+    this.template = (
+      await res.Menu.openWithFallback(defaultLocale, state.locale, name)
+    ).template
+
+    return this
   }
 
   find(ids, menu = this.menu) {
@@ -81,6 +99,7 @@ class Menu {
 
       if (item.condition) {
         item.enabled = check(item, ...params)
+        if (item.visible === false) item.visible = item.enabled
       }
 
       if ('color' in item) {
@@ -160,6 +179,24 @@ class Menu {
           }
           break
 
+        case 'export': {
+          const plugins = this.app.plugins.available('export')
+          if (plugins.length > 0) {
+            item.submenu = [
+              ...item.submenu,
+              { type: 'separator' },
+              ...plugins.map(({ id, name }) => ({
+                label: name,
+                click: this.responder('app:export-item', {
+                  target: params[0].target,
+                  plugin: id
+                })
+              }))
+            ]
+          }
+          break
+        }
+
         case 'tag': {
           const { target } = params[0]
 
@@ -194,6 +231,26 @@ class Menu {
 
           break
         }
+        case 'line-wrap': {
+          const { target } = params[0]
+          item.checked = !!target.wrap
+          break
+        }
+        case 'line-numbers': {
+          const { target } = params[0]
+          item.checked = !!target.numbers
+          break
+        }
+        case 'writing-mode': {
+          const { target } = params[0]
+          item.submenu = item.submenu.map(li => ({
+            ...li,
+            checked: li.mode === target.mode,
+            click: this.responder('app:writing-mode', {
+              id: target.id, mode: li.mode
+            })
+          }))
+        }
       }
 
       if (item.submenu) {
@@ -207,15 +264,22 @@ class Menu {
 
 class AppMenu extends Menu {
   async load(name = 'app') {
-    this.template = (await res.Menu.open(name)).template
-    return this.reload()
+    try {
+      return (await super.load(name))
+    } catch (error) {
+      throw error
+    } finally {
+      this.reload()
+    }
   }
 
   reload() {
     const old = this.menu
 
-    this.menu = this.build(this.template)
-    this.update()
+    if (this.template != null) {
+      this.menu = this.build(this.template)
+      this.update()
+    }
 
     if (old != null) {
       old.destroy()
@@ -234,13 +298,12 @@ const separate = transformer(
 )
 
 class ContextMenu extends Menu {
-
   static scopes = {
     global: ['history']
   }
 
-  async load(name = 'context') {
-    return (this.template = (await res.Menu.open(name)).template), this
+  load(name = 'context') {
+    return super.load(name)
   }
 
   prepare(template, settings) {
@@ -283,6 +346,7 @@ class ContextMenu extends Menu {
   scopes.selection = [...scopes.photo, 'selection']
   scopes.notes = [...scopes.global]
   scopes.note = [...scopes.notes, 'note']
+  scopes.notepad = [...scopes.global, 'notepad']
   scopes['item-bulk'] = [...scopes.items, 'item-bulk']
   scopes['item-list'] = [...scopes.items, 'item-list', 'item']
   scopes['item-bulk-list'] = [...scopes.items, 'item-bulk-list', 'item-bulk']

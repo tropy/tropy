@@ -5,7 +5,7 @@ const { createReadStream: stream } = require('fs')
 const { any, empty, get, pick, titlecase } = require('./util')
 const { Resource } = require('./res')
 const N3 = require('n3')
-const { RDF, RDFS, DC, DCT, SKOS, OWL, VANN } = require('../constants')
+const { RDF, RDFS, DC, TERMS, SKOS, OWL, VANN } = require('../constants')
 const { TEMPLATE } = require('../constants/ontology')
 const { readFileAsync: read, writeFileAsync: write } = require('fs')
 
@@ -72,6 +72,10 @@ class Ontology extends Resource {
       [Ontology.expand(input), input] : [input, basename(input, extname(input))]
 
     return new Ontology(await Ontology.parse(stream(path)), name)
+  }
+
+  static expand(name) {
+    return join(this.base, `${name}${this.ext}`)
   }
 
   static CLASSES = [
@@ -168,12 +172,12 @@ class Ontology extends Resource {
       data = this.getData(id.slice(0, id.length - 1))
     }
 
-    title = get(any(data, DC.title, DCT.title), [0, '@value'], title)
+    title = get(any(data, DC.title, TERMS.title), [0, '@value'], title)
     prefix = get(data, [VANN.preferredNamespacePrefix, 0, '@value'], prefix)
 
     const seeAlso = get(data, [RDFS.seeAlso, 0, '@id'])
     const description = getValue(
-      any(data, DC.description, DCT.description, RDFS.comment)
+      any(data, DC.description, TERMS.description, RDFS.comment)
     )
 
     return {
@@ -212,7 +216,7 @@ function info(data) {
   return {
     comment: getValue(data, RDFS.comment),
     description: getValue(
-      any(data, SKOS.defintion, DC.description, DCT.description)
+      any(data, SKOS.defintion, DC.description, TERMS.description)
     )
   }
 }

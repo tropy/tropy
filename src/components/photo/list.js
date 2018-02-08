@@ -157,8 +157,8 @@ class PhotoList extends PhotoIterator {
 
   render() {
     const { data, edit, onBlur, onChange } = this.props
-    const { offset, height } = this.state
-    const transform = `translate3d(0,${offset}px,0)`
+    const { height } = this.state
+    const { transform } = this
 
     return this.connect(
       <div className={cx(this.classes)}>

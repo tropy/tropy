@@ -14,6 +14,7 @@ const {
 
 const {
   getActiveImageProps,
+  getActiveNoteProps,
   getActiveSelection,
   getPhotoSelections
 } = require('../../selectors')
@@ -50,11 +51,13 @@ class ItemContainer extends PureComponent {
           onChange={this.handleEsperResize}
           min={256}>
           <Esper {...this.props.image}
+            mode={this.props.image.mode || this.props.settings.zoomMode}
             hasOverlayToolbar={this.props.settings.overlayToolbars}
             invertScroll={this.props.settings.invertScroll}
             invertZoom={this.props.settings.invertZoom}
             isDisabled={this.props.isDisabled}
             isItemOpen={this.props.isOpen}
+            isPanelVisible={this.props.esper.panel}
             keymap={this.props.keymap.Esper}
             photo={this.props.photo}
             selection={this.props.selection}
@@ -65,14 +68,15 @@ class ItemContainer extends PureComponent {
             onSelect={this.props.onPhotoSelect}
             onSelectionCreate={this.props.onSelectionCreate}/>
         </BufferedResizable>
-        <NotePad
+        <NotePad {...this.props.notepad}
           ref={this.setNotePad}
           note={this.props.note}
           isDisabled={this.props.isDisabled || !this.props.photo}
           isItemOpen={this.props.isOpen}
           keymap={this.props.keymap.NotePad}
           onChange={this.props.onNoteChange}
-          onCommit={this.props.onNoteCommit}/>
+          onCommit={this.props.onNoteCommit}
+          onContextMenu={this.props.onContextMenu}/>
       </div>
     )
   }
@@ -80,6 +84,7 @@ class ItemContainer extends PureComponent {
   static propTypes = {
     esper: shape({
       height: number.isRequired,
+      panel: bool.isRequired,
       tool: string.isRequired
     }).isRequired,
     image: object.isRequired,
@@ -87,10 +92,12 @@ class ItemContainer extends PureComponent {
     isOpen: bool.isRequired,
     keymap: object.isRequired,
     note: object,
+    notepad: object.isRequired,
     photo: object,
     selection: object,
     selections: arrayOf(object).isRequired,
     settings: object.isRequired,
+    onContextMenu: func.isRequired,
     onNoteChange: func.isRequired,
     onNoteCommit: func.isRequired,
     onPhotoError: func.isRequired,
@@ -107,6 +114,7 @@ module.exports = {
     state => ({
       esper: state.ui.esper,
       image: getActiveImageProps(state),
+      notepad: getActiveNoteProps(state),
       keymap: state.keymap,
       selection: getActiveSelection(state),
       selections: getPhotoSelections(state),

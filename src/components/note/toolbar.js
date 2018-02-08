@@ -4,7 +4,7 @@ const React = require('react')
 const { FormattedMessage } = require('react-intl')
 const { Toolbar, ToolbarLeft, ToolbarRight, ToolGroup } = require('../toolbar')
 const { IconNote, IconPlus } = require('../icons')
-const { IconButton } = require('../button')
+const { Button } = require('../button')
 const { bool, func, number } = require('prop-types')
 
 
@@ -21,7 +21,7 @@ const NoteToolbar = ({ hasCreateButton, isDisabled, notes, onCreate }) => (
     <ToolbarRight>
       {hasCreateButton &&
         <ToolGroup>
-          <IconButton
+          <Button
             icon={<IconPlus/>}
             isDisabled={isDisabled}
             title="panel.note.create"

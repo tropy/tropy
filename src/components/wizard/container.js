@@ -10,15 +10,24 @@ const { ProjectStep } = require('./project')
 const { join } = require('path')
 const actions = require('../../actions')
 const sanitize = require('sanitize-filename')
-
+const { blank } = require('../../common/util')
+const { existsSync: exists } = require('fs')
 
 class WizardContainer extends PureComponent {
   get hasDefaultFilename() {
     return this.props.project.file === this.getDefaultFilename()
   }
 
-  getDefaultFilename(name = this.props.project.name) {
-    return name ? join(this.props.userData, sanitize(`${name}.tpy`)) : ''
+  getDefaultFilename(name = this.props.project.name, count = 0) {
+    if (blank(name)) return ''
+
+    const file = join(
+      this.props.userData,
+      sanitize(`${name}${count > 0 ? count : ''}.tpy`))
+
+    return exists(file) ?
+      this.getDefaultFilename(name, count + 1) :
+      file
   }
 
   handleProjectComplete = () => {

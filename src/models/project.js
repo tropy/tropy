@@ -1,5 +1,6 @@
 'use strict'
 
+const assert = require('assert')
 const uuid = require('uuid/v4')
 const { all } = require('bluebird')
 const { PROJECT } = require('../constants')
@@ -24,6 +25,7 @@ module.exports = {
           WHERE deleted IS NULL`)
     ])
 
+    assert(project != null, 'no project found')
     project.items = items.total
 
     return project
