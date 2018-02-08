@@ -532,7 +532,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:open-logs', () => {
-      shell.showItemInFolder(join(app.getPath('userData'), 'log'))
+      shell.openItem(join(app.getPath('userData'), 'log'))
     })
 
     this.on('app:open-plugins-config', () => {
@@ -540,7 +540,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:open-plugins-folder', () => {
-      shell.showItemInFolder(this.plugins.root)
+      shell.openItem(this.plugins.root)
     })
 
     this.on('app:reset-ontology-db', () => {
