@@ -6,7 +6,7 @@ const { func, node, bool, number, oneOf, string } = require('prop-types')
 const { Draggable } = require('./draggable')
 const cx = require('classnames')
 const { bounds } = require('../dom')
-const { noop, restrict, titlecase, refine } = require('../common/util')
+const { noop, restrict, refine } = require('../common/util')
 const { round } = require('../common/math')
 const { keys } = Object
 
