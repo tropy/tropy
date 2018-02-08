@@ -193,12 +193,16 @@
   width: 4px;
   top: 0;
   right: 0;
-  bottom: 0;
+  height: 100%;
   background: $body-bg;
   z-index: $zindex-draggable;
 
-  .max-scroll-left + & {
+  body:not(.scrollbar-style-old-school) & {
     display: none;
+  }
+
+  .max-scroll-left + & {
+    height: $toolbar-height;
   }
 }
 
