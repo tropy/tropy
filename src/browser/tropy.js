@@ -540,7 +540,9 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:open-plugins-folder', () => {
-      shell.openItem(this.plugins.root)
+      // this could be `shell.openItem(this.plugins.root)`
+      // when electron solves the lost-focus bug for folders
+      shell.showItemInFolder(this.plugins.configFile)
     })
 
     this.on('app:reset-ontology-db', () => {
