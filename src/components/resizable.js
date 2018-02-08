@@ -52,25 +52,9 @@ class Resizable extends PureComponent {
     return restrict(this.props.value, this.props.min, this.props.max)
   }
 
-  get cssValue() {
-    return `${this.value}${this.props.isRelative ? '%' : 'px'}`
-  }
-
-  get cssMin() {
-    return `${this.props.min}px`
-  }
-
-  get cssMax() {
-    return this.props.max ? `${this.props.max}px` : null
-  }
-
   get style() {
-    const { cssValue, cssMin, cssMax, dimension } = this
-
     return {
-      [dimension]: cssValue,
-      [`min${titlecase(dimension)}`]: cssMin,
-      [`max${titlecase(dimension)}`]: cssMax
+      [this.dimension]: `${this.value}${this.props.isRelative ? '%' : 'px'}`
     }
   }
 
