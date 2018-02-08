@@ -11,6 +11,9 @@ const {
   arrayOf, bool, func, number, object, shape, string
 } = require('prop-types')
 
+const MIN_WIDTH = 40
+const MIN_WIDTH_MAIN = 100
+
 const BlankTableHeadCell = () => (
   <th className="blank"/>
 )
@@ -89,7 +92,7 @@ class ItemTableHeadCell extends PureComponent {
   }
 
   static defaultProps = {
-    minWidth: 40,
+    minWidth: MIN_WIDTH,
     type: TYPE.TEXT
   }
 }
@@ -126,6 +129,7 @@ class ItemTableHead extends PureComponent {
                 position={idx}
                 label={this.getLabel(property)}
                 width={this.props.colwidth[idx]}
+                minWidth={idx === 0 ? MIN_WIDTH_MAIN : MIN_WIDTH}
                 isActive={this.isActive(property)}
                 isAscending={this.isAscending}
                 onClick={this.props.onSort}
