@@ -71,6 +71,10 @@
           )
           $item-table-header-border-color;
 
+        &:first-child {
+          background: $item-table-header-active-bg;
+        }
+
         & + th {
           background:
             linear-gradient(
