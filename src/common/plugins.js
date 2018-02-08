@@ -3,7 +3,7 @@
 require('./promisify')
 
 const {
-  mkdirAsync: mkdir, readFileAsync: read, writeFileAsync: write
+  mkdirAsync: mkdir, readFileAsync: read, writeFileAsync: write, watch
 } = require('fs')
 
 const { EventEmitter } = require('events')
@@ -11,6 +11,7 @@ const { join } = require('path')
 const { warn, verbose, logger } = require('./log')
 const { pick } = require('./util')
 const { keys } = Object
+const debounce = require('lodash.debounce')
 
 const load = async file => JSON.parse(await read(file))
 const save = (file, data) => write(file, JSON.stringify(data))
@@ -56,7 +57,7 @@ class Plugins extends EventEmitter {
       try {
         acc[id] = this.contract(this.require(plugin), options)
       } catch (error) {
-        warn(`failed to create ${plugin} plugin`, { error })
+        warn(`failed to create ${plugin} plugin: ${error.message}`)
       }
       return acc
     }, {})
@@ -72,6 +73,12 @@ class Plugins extends EventEmitter {
     return this.exec({ id, action: 'export' }, ...args)
   }
 
+  handleConfigFileChange = debounce(async () => {
+    await this.reload()
+    this.scan()
+    this.emit('config-change')
+  }, 100)
+
   async init() {
     try {
       await mkdir(this.root)
@@ -86,10 +93,12 @@ class Plugins extends EventEmitter {
       this.reset()
       this.config = await load(this.configFile)
     } catch (error) {
-      if (error.code !== 'ENOENT') throw error
-      if (autosave) await this.save()
+      if (error.code !== 'ENOENT') {
+        warn(`failed to load plugin config: ${error.message}`)
+      } else {
+        if (autosave) await this.save()
+      }
     }
-    this.emit('did-update')
     return this
   }
 
@@ -121,7 +130,7 @@ class Plugins extends EventEmitter {
           'version'
         ])
       } catch (error) {
-        warn(`failed to scan ${plugin} plugin`, { error })
+        warn(`failed to scan ${plugin} plugin: ${error.message}`)
       }
       return acc
     }, {})
@@ -131,10 +140,15 @@ class Plugins extends EventEmitter {
 
   stop() {
     this.removeAllListeners()
+    if (this.cfw != null) {
+      this.cfw.close()
+      this.cfw = null
+    }
     return this
   }
 
   watch() {
+    this.cfw = watch(this.configFile, this.handleConfigFileChange)
     return this
   }
 }
