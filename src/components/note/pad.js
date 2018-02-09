@@ -10,7 +10,7 @@ const cx = require('classnames')
 
 class NotePad extends PureComponent {
   get classes() {
-    return ['note', 'pad', this.props.mode, {
+    return ['note-pad', this.props.mode, {
       'no-wrap': !this.props.wrap,
       'numbers': this.props.numbers
     }]

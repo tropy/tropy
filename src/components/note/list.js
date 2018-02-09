@@ -102,7 +102,7 @@ class NoteList extends Iterator {
     const { transform } = this
 
     return (
-      <div className="note list">
+      <div className="note-list">
         <div
           className="scroll-container"
           ref={this.setContainer}

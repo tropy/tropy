@@ -28,7 +28,7 @@ class About extends PureComponent {
 
   render() {
     return (
-      <div className="about view">
+      <div className="about-view">
         {this.renderToolbar()}
         <figure className="app-icon"/>
         <div className="flex-row center">
