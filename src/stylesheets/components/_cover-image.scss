@@ -6,7 +6,7 @@
   box-sizing: content-box;
   position: relative;
 
-  .tag.colors {
+  .tag-colors {
     position: absolute;
     right: $space-min;
     bottom: $space-min;
@@ -55,7 +55,7 @@
   }
 }
 
-.item.grid {
+.item-grid {
   .stack-lines {
     background: $stack-bg;
 
@@ -142,7 +142,7 @@
   }
 }
 
-.item.table {
+.item-table {
   .cover-image {
     position: absolute;
     left: $default-padding-horizontal;

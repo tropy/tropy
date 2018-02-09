@@ -61,7 +61,7 @@
     }
   }
 
-  .item.grid & {
+  .item-grid & {
     &.over {
       .tile-state {
         border: 3px solid $drop-target-color;

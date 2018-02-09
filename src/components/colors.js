@@ -39,7 +39,7 @@ class TagColors extends PureComponent {
     const colors = this.getColors()
 
     return (colors.length === 0) ? null : (
-      <div className="tag colors">
+      <div className="tag-colors">
         {colors.map((color, idx) =>
           <Circle key={color} color={color} isCrescent={idx > 0}/>)}
       </div>
