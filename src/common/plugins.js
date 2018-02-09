@@ -106,7 +106,7 @@ class Plugins extends EventEmitter {
     try {
       return require(join(this.root, name))
     } catch (error) {
-      if (!fallback || error.code !== 'MODULE_NOT_FOUND') throw error
+      if (!fallback || error.code !== 'ENOENT') throw error
       return this.require(join(fallback, name), false)
     }
   }
