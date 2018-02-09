@@ -5,6 +5,7 @@ require('./promisify')
 const {
   mkdirAsync: mkdir, readFileAsync: read, writeFileAsync: write, watch
 } = require('fs')
+const { resolve } = require('path')
 
 const { EventEmitter } = require('events')
 const { join } = require('path')
@@ -15,7 +16,25 @@ const debounce = require('lodash.debounce')
 
 const load = async file => JSON.parse(await read(file))
 const save = (file, data) => write(file, JSON.stringify(data))
-
+const tropyRequire = (name) => {
+  let paths = [
+    name,
+    resolve('node_modules', name),
+    resolve('../node_modules', name),
+    resolve(__dirname, '../../electron/node_modules', name),
+    resolve(__dirname, '../../electron.asar/node_modules', name),
+    resolve(__dirname, '../../app/node_modules', name),
+    resolve(__dirname, '../../app.asar/node_modules', name),
+  ]
+  for (let path of paths) {
+    let pkg
+    try {
+      pkg = require(path)
+    } catch (err) { continue }
+    return pkg
+  }
+  throw new Error(`Could not require package ${name}`)
+}
 
 class Plugins extends EventEmitter {
   constructor(root) {
@@ -30,7 +49,8 @@ class Plugins extends EventEmitter {
 
   get context() {
     return {
-      logger
+      logger,
+      require: tropyRequire
     }
   }
 
@@ -106,7 +126,7 @@ class Plugins extends EventEmitter {
     try {
       return require(join(this.root, name))
     } catch (error) {
-      if (!fallback || error.code !== 'ENOENT') throw error
+      if (!fallback || error.code !== 'MODULE_NOT_FOUND') throw error
       return this.require(join(fallback, name), false)
     }
   }
