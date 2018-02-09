@@ -84,7 +84,7 @@ class ColorSlider extends PureComponent {
 
 
 const EsperPanel = (props) => (
-  <div className="esper panel">
+  <div className="esper-panel">
     <ul className="adjustments">
       <ColorSlider
         icon={<IconSun/>}

@@ -2,7 +2,7 @@
 // Esper toolbar
 // --------------------------------------------------
 
-section.esper { // sass-lint:disable-line no-qualifying-elements
+.esper {
   .toolbar {
     position: absolute; // Let the toolbar overflow the header
     width: 100%;
