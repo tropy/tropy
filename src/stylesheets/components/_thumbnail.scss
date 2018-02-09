@@ -8,7 +8,7 @@
   contain: strict;
 
   .item-table &,
-  .photo.list & {
+  .photo-list & {
     width: $thumbnail-size;
     height: $thumbnail-size;
   }

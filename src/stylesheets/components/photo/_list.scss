@@ -2,7 +2,7 @@
 // Photo list
 // --------------------------------------------------
 
-.photo.list {
+.photo-list {
   flex: 1 1 0;
   display: flex;
   flex-direction: column;
@@ -32,8 +32,8 @@
         contain: strict;
 
         @at-root #{
-          selector-replace(&, ".photo.list",
-            ".photo.list .scroll-container:focus")
+          selector-replace(&, ".photo-list",
+            ".photo-list .scroll-container:focus")
         } {
           @extend %list-focus;
         }
@@ -96,8 +96,8 @@
         @extend %list-active;
 
         @at-root #{
-          selector-replace(&, ".photo.list",
-            ".photo.list .scroll-container:focus")
+          selector-replace(&, ".photo-list",
+            ".photo-list .scroll-container:focus")
         } {
           @extend %list-focus;
         }
