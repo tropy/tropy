@@ -41,7 +41,6 @@ class PhotoIterator extends Iterator {
     return {
       'drop-target': this.isSortable,
       'over': this.props.isOver,
-      'photo': true,
       [this.orientation]: true
     }
   }

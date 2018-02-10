@@ -2,7 +2,7 @@
 // Item table
 // --------------------------------------------------
 
-.item.table {
+.item-table {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
@@ -187,8 +187,8 @@
         background: $items-active-bg;
 
         @at-root #{
-          selector-replace(&, ".item.table",
-            ".item.table .scroll-container:focus")
+          selector-replace(&, ".item-table",
+            ".item-table .scroll-container:focus")
         } {
           color: $items-focus-color;
           background: $items-focus-bg;
@@ -219,7 +219,7 @@
     }
   }
 
-  .tag.colors {
+  .tag-colors {
     margin-left: $space-xs;
     flex: 0 0 auto;
 

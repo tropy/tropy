@@ -10,7 +10,7 @@ const { DC, SASS: { ROW } } = require('../../constants')
 
 class SelectionList extends SelectionIterator {
   get classes() {
-    return ['list', super.classes]
+    return ['selection-list', super.classes]
   }
 
   getColumns() {

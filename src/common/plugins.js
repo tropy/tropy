@@ -16,6 +16,8 @@ const debounce = require('lodash.debounce')
 const load = async file => JSON.parse(await read(file))
 const save = (file, data) => write(file, JSON.stringify(data))
 
+const proxyRequire = (mod) => require(mod)
+
 
 class Plugins extends EventEmitter {
   constructor(root) {
@@ -30,7 +32,8 @@ class Plugins extends EventEmitter {
 
   get context() {
     return {
-      logger
+      logger,
+      require: proxyRequire
     }
   }
 

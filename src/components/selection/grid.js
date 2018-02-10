@@ -25,7 +25,7 @@ class SelectionGrid extends SelectionIterator {
   }
 
   get classes() {
-    return [super.classes, 'grid']
+    return [super.classes, 'selection-grid']
   }
 
   get style() {

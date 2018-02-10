@@ -127,7 +127,7 @@
 #items {
   display: flex;
   flex-direction: column;
-  min-width: 0; // Needed for horizontal scrollbar in .item.table
+  min-width: 0; // Needed for horizontal scrollbar in .item-table
   padding: 0 $space-min;
   position: relative;
 
