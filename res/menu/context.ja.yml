@@ -1,5 +1,4 @@
-ja
-
+ja:
   linux:
     history: &history
       - id: 'undo'
