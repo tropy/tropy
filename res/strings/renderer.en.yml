@@ -92,6 +92,7 @@ en:
         locales:
           en: English
           fr: Français
+          ja: 日本語
       template: Default Template
       debug: Enable Developer Mode
       dup:

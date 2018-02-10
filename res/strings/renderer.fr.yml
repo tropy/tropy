@@ -106,6 +106,7 @@ fr:
         locales:
           en: English
           fr: Français
+          ja: 日本語
       template: Modèle de saisie par défaut
       debug: Autoriser le mode développeur
       dup:

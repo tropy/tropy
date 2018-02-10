@@ -103,8 +103,9 @@ ja:
       locale:
         locale: ローカル
         locales:
-          en: 英語
-          fr: フランス語
+          en: English
+          fr: Français
+          ja: 日本語
       template: デフォルトテンプレート
       debug: デベロッパーモード
       dup:
