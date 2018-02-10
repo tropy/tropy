@@ -12,8 +12,8 @@
 	vann:preferredNamespacePrefix "tropy" ;
 	vann:preferredNamespaceUri "https://tropy.org/v1/tropy#" ;
   rdfs:seeAlso <https://tropy.org/> ;
-	dc:title "Tropy Vocabulary"@en , "Lexique de métadonnées Tropy"@fr ;
-	dc:description "The RDF vocabulary for https://tropy.org/v1/tropy defines the core elements used by the Tropy application and Tropy templates."@en , "Le lexiques de métadonnées RDF https://tropy.org/v1/tropy définit les éléments structurels utilisés par Tropy, en particulier dans les modèles de saisie Tropy."@fr ;
+	dc:title "Tropy Vocabulary"@en , "Lexique de métadonnées Tropy"@fr , "Tropy語彙"@ja ;
+	dc:description "The RDF vocabulary for https://tropy.org/v1/tropy defines the core elements used by the Tropy application and Tropy templates."@en , "Le lexiques de métadonnées RDF https://tropy.org/v1/tropy définit les éléments structurels utilisés par Tropy, en particulier dans les modèles de saisie Tropy."@fr , "Tropyのアプリケーションおよびテンプレートで使用しているコア・エレメントは、https://tropy.org/v1/tropy のRDF語彙で定義されています。"@ja ;
 	dc:issued "2017-05-09"^^xsd:date ;
 	dc:publisher "Roy Rosenzweig Center for History and New Media, George Mason University"@en .
 
@@ -41,7 +41,7 @@ tropy:Photo a rdfs:Class ;
 
 tropy:Selection a rdfs:Class ;
   rdfs:subClassOf tropy:Image ;
-  rdfs:label "Selection"@en "Sélection"@fr , "Ausschnitt"@de ;
+  rdfs:label "Selection"@en , "Sélection"@fr , "Ausschnitt"@de ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A selection within a photo."@en .
 
