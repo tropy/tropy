@@ -1,162 +1,161 @@
-en:
+ja:
   linux:
     - &file
-      label: '&File'
+      label: ファイル
       id: 'file'
       submenu:
         - &new
-          label: 'New'
+          label: 新規作成
           submenu:
-            - label: 'Project'
+            - label: プロジェクト
               command: 'app:create-project'
               accelerator: 'CmdOrCtrl+Shift+P'
-            - label: 'Item'
+            - label: アイテム
               command: 'app:create-item'
               accelerator: 'CmdOrCtrl+Shift+N'
-            - label: 'List'
+            - label: リスト
               command: 'app:create-list'
               accelerator: 'CmdOrCtrl+Shift+L'
-            - label: 'Tag'
+            - label: タグ
               command: 'app:create-tag'
               accelerator: 'CmdOrCtrl+Shift+A'
         - type: 'separator'
         - &open
-          label: 'Open'
+          label: ファイルを開く
           accelerator: 'CmdOrCtrl+O'
           command: 'app:open-dialog'
         - &recent
-          label: 'Recent Projects'
+          label: 最近のプロジェクト
           id: 'recent'
           enabled: false
           submenu:
             - type: 'separator'
-            - label: 'Clear List'
+            - label: リストを消す
               command: 'app:clear-recent-projects'
         - type: 'separator'
         - &import
-          label: 'Import Photos …'
+          label: 写真をインポートする
           command: 'app:import-photos'
           accelerator: 'CmdOrCtrl+Shift+I'
         - &consolidate
-          label: 'Consolidate Photo Library'
+          label: 写真ライブラリをまとめる
           command: 'app:consolidate-photo-library'
         - type: 'separator'
-        - label: 'Close'
+        - label: 閉じる
           accelerator: 'CmdOrCtrl+W'
           role: 'close'
         - type: 'separator'
-        - label: 'Quit'
+        - label: 終了
           accelerator: 'CmdOrCtrl+Q'
           role: 'quit'
     - &edit
-      label: '&Edit'
+      label: '編集'
       submenu:
         - &undo
           id: 'undo'
-          label: '&Undo'
+          label: 元に戻す
           accelerator: 'CmdOrCtrl+Z'
           command: 'app:undo'
           enabled: false
         - &redo
           id: 'redo'
-          label: '&Redo'
+          label: 'やり直す'
           accelerator: 'Shift+CmdOrCtrl+Z'
           command: 'app:redo'
           enabled: false
         - type: 'separator'
         - &cut
-          label: 'Cu&t'
+          label: 切り取り
           accelerator: 'CmdOrCtrl+X'
           role: 'cut'
         - &copy
-          label: '&Copy'
+          label: 'コピー'
           accelerator: 'CmdOrCtrl+C'
           role: 'copy'
         - &paste
-          label: '&Paste'
+          label: '貼り付け'
           accelerator: 'CmdOrCtrl+V'
           role: 'paste'
         - &all
-          label: 'Select All'
+          label: 全選択
           role: 'selectall'
         - type: 'separator'
         - &preferences
-          label: 'Prefere&nces …'
+          label: 設定
           accelerator: 'Shift+Control+S'
           command: 'app:open-preferences'
     - &view
-      label: '&View'
+      label: '表示'
       submenu:
-        - label: 'Toggle &Full Screen'
+        - label: 全画面表示にする
           role: 'togglefullscreen'
-        - label: 'Toggle Hide &Menu Bar'
+        - label: メニューバーを非表示
           command: 'app:toggle-menu-bar'
-        - label: 'Hide &Sidebar'
+        - label: サイドバーを非表示
           command: 'app:toggle-sidebar'
           enabled: false
           visible: false
         - type: 'separator'
-        - label: 'Zoom'
+        - label: ズーム
           submenu:
-            - label: 'Zoom In'
+            - label: ズームイン
               command: 'app:zoom-in'
-            - label: 'Zoom Out'
+            - label: ズームアウト
               command: 'app:zoom-out'
             - type: 'separator'
-            - label: 'Reset'
+            - label: リセット
               command: 'app:zoom-reset'
     - &win
-      label: 'Window'
+      label: ウィンドウ
       submenu:
-        - label: 'Minimize'
+        - label: 最小化
           accelerator: 'CmdOrCtrl+M'
           role: 'minimize'
     - &dev
-      label: 'Developer'
+      label: 開発者向け
       id: 'dev'
       submenu:
-        - label: '&Reload'
+        - label: 'リロード'
           accelerator: 'CmdOrCtrl+R'
           command: 'win:reload'
-        - label: 'Reload &Styles'
+        - label: スタイルをリロード
           accelerator: 'CmdOrCtrl+S'
           command: 'win:refresh'
-        - label: 'Toggle &Developer Tools'
+        - label: 開発者向けツールに切り替え
           accelerator: 'CmdOrCtrl+D'
           role: 'toggledevtools'
-        - label: 'Toggle Performance Tools'
+        - label: パフォーマンスツールに切り替え
           command: 'win:toggle-perf-tools'
         - type: 'separator'
-        - label: 'Reset Ontology Database'
+        - label: オントロジーデータベースをリセット
           command: 'app:reset-ontology-db'
-        - label: 'Close Project'
+        - label: プロジェクトを閉じる
           command: 'app:close-project'
         - type: 'separator'
-        - label: 'Theme'
+        - label: テーマ
           id: 'theme'
           submenu:
-            - label: 'Light'
+            - label: ライト
               id: 'light'
               type: 'checkbox'
-            - label: 'Dark'
+            - label: ダーク
               id: 'dark'
               type: 'checkbox'
-
     - &help
-      label: 'Help'
+      label: ヘルプ
       submenu:
         - &docs
-          label: 'User Guide'
+          label: ユーザーガイド
           command: 'app:open-docs'
         - &forums
-          label: 'Support Forums'
+          label: サポートフォーラム
           command: 'app:open-forums'
         - type: 'separator'
         - &license
-          label: 'Software &License'
+          label: ソフトウェアライセンス
           command: 'app:open-license'
         - &logs
-          label: 'Show Log Files'
+          label: ログファイルを開く
           command: 'app:open-logs'
         - type: 'separator'
         - &pluginsConfig
@@ -166,50 +165,48 @@ en:
           label: 'Show Plugins Folder'
           command: 'app:open-plugins-folder'
         - type: 'separator'
-        - label: 'About %name'
+        - label: Tropyについて
           command: 'app:about'
         - type: 'separator'
         - &updaterCheck
           id: 'updater-check'
-          label: 'Check for Updates …'
+          label: アップデートの確認
           command: 'app:check-for-updates'
           enabled: false
         - &updaterIsChecking
           id: 'updater-is-checking'
-          label: 'Fetching Latest Updates …'
+          label: 最新アップデートの取得
           enabled: false
           visible: false
         - &updaterInstall
           id: 'updater-install'
-          label: 'Install Updates …'
+          label: アップデートをインストールする
           command: 'app:install-updates'
           enabled: false
           visible: false
-
   darwin:
     - label: '%name'
       submenu:
-        - label: 'About %name'
+        - label: '%nameについて'
           command: 'app:about'
         - type: 'separator'
-        - label: 'Preferences …'
+        - label: 設定
           accelerator: 'Command+,'
           command: 'app:open-preferences'
         - type: 'separator'
-        - label: 'Hide %name'
+        - label: '%nameを隠す'
           accelerator: 'Command+H'
           role: 'hide'
-        - label: 'Hide Others'
+        - label: その他を隠す
           accelerator: 'Command+Shift+H'
           role: 'hideothers'
-        - label: 'Show All'
+        - label: 全てを表示
           role: 'unhide'
         - type: 'separator'
-        - label: 'Quit'
+        - label: '%nameを終了する'
           accelerator: 'Command+Q'
           role: 'quit'
-
-    - label: 'File'
+    - label: ファイル
       submenu:
         - *new
         - type: 'separator'
@@ -219,10 +216,10 @@ en:
         - *import
         - *consolidate
         - type: 'separator'
-        - label: 'Close'
+        - label: プロジェクトを終了する
           accelerator: 'Command+W'
           role: 'close'
-    - label: 'Edit'
+    - label: 編集
       submenu:
         - *undo
         - *redo
@@ -232,20 +229,20 @@ en:
         - *paste
         - *all
     - *view
-    - label: 'Window'
+    - label: ウィンドウ
       role: 'window'
       submenu:
-        - label: 'Minimize'
+        - label: 最小化
           accelerator: 'CmdOrCtrl+M'
           role: 'minimize'
-        - label: 'Close'
+        - label: 閉じる
           accelerator: 'CmdOrCtrl+W'
           role: 'close'
         - type: 'separator'
-        - label: 'Bring All to Front'
+        - label: 全て全面に表示
           role: 'front'
     - *dev
-    - label: 'Help'
+    - label: ヘルプ
       role: 'help'
       submenu:
         - *docs
@@ -260,14 +257,13 @@ en:
         - *updaterCheck
         - *updaterIsChecking
         - *updaterInstall
-
   win32:
     - *file
-    - label: '&Edit'
+    - label: '編集'
       submenu:
         - *undo
         - id: 'redo'
-          label: '&Redo'
+          label: 'やり直す'
           accelerator: 'Control+Y'
           command: 'app:redo'
           enabled: false
