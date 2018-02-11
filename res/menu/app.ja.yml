@@ -1,278 +1,489 @@
 ja:
   linux:
-    - &file
-      label: ファイル
-      id: 'file'
+    - label: ファイル
+      id: file
       submenu:
-        - &new
-          label: 新規作成
+        - label: 新規作成
           submenu:
             - label: プロジェクト
               command: 'app:create-project'
-              accelerator: 'CmdOrCtrl+Shift+P'
+              accelerator: CmdOrCtrl+Shift+P
             - label: アイテム
               command: 'app:create-item'
-              accelerator: 'CmdOrCtrl+Shift+N'
+              accelerator: CmdOrCtrl+Shift+N
             - label: リスト
               command: 'app:create-list'
-              accelerator: 'CmdOrCtrl+Shift+L'
+              accelerator: CmdOrCtrl+Shift+L
             - label: タグ
               command: 'app:create-tag'
-              accelerator: 'CmdOrCtrl+Shift+A'
-        - type: 'separator'
-        - &open
-          label: ファイルを開く
-          accelerator: 'CmdOrCtrl+O'
+              accelerator: CmdOrCtrl+Shift+A
+        - type: separator
+        - label: 開く
+          accelerator: CmdOrCtrl+O
           command: 'app:open-dialog'
-        - &recent
-          label: 最近のプロジェクト
-          id: 'recent'
+        - label: 最近のプロジェクト
+          id: recent
           enabled: false
           submenu:
-            - type: 'separator'
-            - label: リストを消す
+            - type: separator
+            - label: 一覧を消す
               command: 'app:clear-recent-projects'
-        - type: 'separator'
-        - &import
-          label: 写真をインポートする
+        - type: separator
+        - label: 写真をインポートする
           command: 'app:import-photos'
-          accelerator: 'CmdOrCtrl+Shift+I'
-        - &consolidate
-          label: 写真ライブラリをまとめる
+          accelerator: CmdOrCtrl+Shift+I
+        - label: 写真をまとめる
           command: 'app:consolidate-photo-library'
-        - type: 'separator'
-        - label: 閉じる
-          accelerator: 'CmdOrCtrl+W'
-          role: 'close'
-        - type: 'separator'
-        - label: 終了
-          accelerator: 'CmdOrCtrl+Q'
-          role: 'quit'
-    - &edit
-      label: '編集'
+        - type: separator
+        - label: プロジェクトを終了する
+          accelerator: CmdOrCtrl+W
+          role: close
+        - type: separator
+        - label: Tropyを終了する
+          accelerator: CmdOrCtrl+Q
+          role: quit
+    - label: 編集
       submenu:
-        - &undo
-          id: 'undo'
+        - id: undo
           label: 元に戻す
-          accelerator: 'CmdOrCtrl+Z'
+          accelerator: CmdOrCtrl+Z
           command: 'app:undo'
           enabled: false
-        - &redo
-          id: 'redo'
-          label: 'やり直す'
-          accelerator: 'Shift+CmdOrCtrl+Z'
+        - id: redo
+          label: やり直す
+          accelerator: Shift+CmdOrCtrl+Z
           command: 'app:redo'
           enabled: false
-        - type: 'separator'
-        - &cut
-          label: 切り取り
-          accelerator: 'CmdOrCtrl+X'
-          role: 'cut'
-        - &copy
-          label: 'コピー'
-          accelerator: 'CmdOrCtrl+C'
-          role: 'copy'
-        - &paste
-          label: '貼り付け'
-          accelerator: 'CmdOrCtrl+V'
-          role: 'paste'
-        - &all
-          label: 全選択
-          role: 'selectall'
-        - type: 'separator'
-        - &preferences
-          label: 設定
-          accelerator: 'Shift+Control+S'
+        - type: separator
+        - label: 切り取る
+          accelerator: CmdOrCtrl+X
+          role: cut
+        - label: コピーする
+          accelerator: CmdOrCtrl+C
+          role: copy
+        - label: 貼り付ける
+          accelerator: CmdOrCtrl+V
+          role: paste
+        - label: 全選択
+          role: selectall
+        - type: separator
+        - label: 設定
+          accelerator: Shift+Control+S
           command: 'app:open-preferences'
-    - &view
-      label: '表示'
+    - label: 表示
       submenu:
         - label: 全画面表示にする
-          role: 'togglefullscreen'
-        - label: メニューバーを非表示
+          role: togglefullscreen
+        - label: メニューバーを隠す
           command: 'app:toggle-menu-bar'
-        - label: サイドバーを非表示
+        - label: サイドバーを非表示にする
           command: 'app:toggle-sidebar'
           enabled: false
           visible: false
-        - type: 'separator'
+        - type: separator
         - label: ズーム
           submenu:
             - label: ズームイン
               command: 'app:zoom-in'
             - label: ズームアウト
               command: 'app:zoom-out'
-            - type: 'separator'
+            - type: separator
             - label: リセット
               command: 'app:zoom-reset'
-    - &win
-      label: ウィンドウ
+    - label: ウィンドウ
       submenu:
         - label: 最小化
-          accelerator: 'CmdOrCtrl+M'
-          role: 'minimize'
-    - &dev
-      label: 開発者向け
-      id: 'dev'
+          accelerator: CmdOrCtrl+M
+          role: minimize
+    - label: 開発者向け
+      id: dev
       submenu:
-        - label: 'リロード'
-          accelerator: 'CmdOrCtrl+R'
+        - label: リロード
+          accelerator: CmdOrCtrl+R
           command: 'win:reload'
         - label: スタイルをリロード
-          accelerator: 'CmdOrCtrl+S'
+          accelerator: CmdOrCtrl+S
           command: 'win:refresh'
         - label: 開発者向けツールに切り替え
-          accelerator: 'CmdOrCtrl+D'
-          role: 'toggledevtools'
+          accelerator: CmdOrCtrl+D
+          role: toggledevtools
         - label: パフォーマンスツールに切り替え
           command: 'win:toggle-perf-tools'
-        - type: 'separator'
+        - type: separator
         - label: オントロジーデータベースをリセット
           command: 'app:reset-ontology-db'
         - label: プロジェクトを閉じる
           command: 'app:close-project'
-        - type: 'separator'
+        - type: separator
         - label: テーマ
-          id: 'theme'
+          id: theme
           submenu:
             - label: ライト
-              id: 'light'
-              type: 'checkbox'
+              id: light
+              type: checkbox
             - label: ダーク
-              id: 'dark'
-              type: 'checkbox'
-    - &help
-      label: ヘルプ
+              id: dark
+              type: checkbox
+    - label: ヘルプ
       submenu:
-        - &docs
-          label: ユーザーガイド
+        - label: ユーザーガイド
           command: 'app:open-docs'
-        - &forums
-          label: サポートフォーラム
+        - label: サポートフォーラム
           command: 'app:open-forums'
-        - type: 'separator'
-        - &license
-          label: ソフトウェアライセンス
+        - type: separator
+        - label: ソフトウェアライセンス
           command: 'app:open-license'
-        - &logs
-          label: ログファイルを開く
+        - label: ログファイルを開く
           command: 'app:open-logs'
-        - type: 'separator'
-        - &pluginsConfig
-          label: 'Edit Plugins Configuration'
+        - type: separator
+        - label: プラグインの設定を変更
           command: 'app:open-plugins-config'
-        - &plugins
-          label: 'Show Plugins Folder'
+        - label: プラグインフォルダを開く
           command: 'app:open-plugins-folder'
-        - type: 'separator'
+        - type: separator
         - label: Tropyについて
           command: 'app:about'
-        - type: 'separator'
-        - &updaterCheck
-          id: 'updater-check'
+        - type: separator
+        - id: updater-check
           label: アップデートの確認
           command: 'app:check-for-updates'
           enabled: false
-        - &updaterIsChecking
-          id: 'updater-is-checking'
+        - id: updater-is-checking
           label: 最新アップデートの取得
           enabled: false
           visible: false
-        - &updaterInstall
-          id: 'updater-install'
+        - id: updater-install
           label: アップデートをインストールする
           command: 'app:install-updates'
           enabled: false
           visible: false
   darwin:
-    - label: '%name'
+    - label: Tropy
       submenu:
-        - label: '%nameについて'
+        - label: Tropyについて
           command: 'app:about'
-        - type: 'separator'
+        - type: separator
         - label: 設定
           accelerator: 'Command+,'
           command: 'app:open-preferences'
-        - type: 'separator'
-        - label: '%nameを隠す'
-          accelerator: 'Command+H'
-          role: 'hide'
+        - type: separator
+        - label: Tropyを隠す
+          accelerator: Command+H
+          role: hide
         - label: その他を隠す
-          accelerator: 'Command+Shift+H'
-          role: 'hideothers'
+          accelerator: Command+Shift+H
+          role: hideothers
         - label: 全てを表示
-          role: 'unhide'
-        - type: 'separator'
-        - label: '%nameを終了する'
-          accelerator: 'Command+Q'
-          role: 'quit'
+          role: unhide
+        - type: separator
+        - label: Tropyを終了する
+          accelerator: Command+Q
+          role: quit
     - label: ファイル
       submenu:
-        - *new
-        - type: 'separator'
-        - *open
-        - *recent
-        - type: 'separator'
-        - *import
-        - *consolidate
-        - type: 'separator'
+        - label: 新規作成
+          submenu:
+            - label: プロジェクト
+              command: 'app:create-project'
+              accelerator: CmdOrCtrl+Shift+P
+            - label: アイテム
+              command: 'app:create-item'
+              accelerator: CmdOrCtrl+Shift+N
+            - label: リスト
+              command: 'app:create-list'
+              accelerator: CmdOrCtrl+Shift+L
+            - label: タグ
+              command: 'app:create-tag'
+              accelerator: CmdOrCtrl+Shift+A
+        - type: separator
+        - label: 開く
+          accelerator: CmdOrCtrl+O
+          command: 'app:open-dialog'
+        - label: 最近のプロジェクト
+          id: recent
+          enabled: false
+          submenu:
+            - type: separator
+            - label: 一覧を消す
+              command: 'app:clear-recent-projects'
+        - type: separator
+        - label: 写真をインポートする
+          command: 'app:import-photos'
+          accelerator: CmdOrCtrl+Shift+I
+        - label: 写真をまとめる
+          command: 'app:consolidate-photo-library'
+        - type: separator
         - label: プロジェクトを終了する
-          accelerator: 'Command+W'
-          role: 'close'
+          accelerator: Command+W
+          role: close
     - label: 編集
       submenu:
-        - *undo
-        - *redo
-        - type: 'separator'
-        - *cut
-        - *copy
-        - *paste
-        - *all
-    - *view
-    - label: ウィンドウ
-      role: 'window'
-      submenu:
-        - label: 最小化
-          accelerator: 'CmdOrCtrl+M'
-          role: 'minimize'
-        - label: 閉じる
-          accelerator: 'CmdOrCtrl+W'
-          role: 'close'
-        - type: 'separator'
-        - label: 全て全面に表示
-          role: 'front'
-    - *dev
-    - label: ヘルプ
-      role: 'help'
-      submenu:
-        - *docs
-        - *forums
-        - type: 'separator'
-        - *license
-        - *logs
-        - type: 'separator'
-        - *pluginsConfig
-        - *plugins
-        - type: 'separator'
-        - *updaterCheck
-        - *updaterIsChecking
-        - *updaterInstall
-  win32:
-    - *file
-    - label: '編集'
-      submenu:
-        - *undo
-        - id: 'redo'
-          label: 'やり直す'
-          accelerator: 'Control+Y'
+        - id: undo
+          label: 元に戻す
+          accelerator: CmdOrCtrl+Z
+          command: 'app:undo'
+          enabled: false
+        - id: redo
+          label: やり直す
+          accelerator: Shift+CmdOrCtrl+Z
           command: 'app:redo'
           enabled: false
-        - type: 'separator'
-        - *cut
-        - *copy
-        - *paste
-        - *preferences
-    - *view
-    - *win
-    - *dev
-    - *help
+        - type: separator
+        - label: 切り取る
+          accelerator: CmdOrCtrl+X
+          role: cut
+        - label: コピーする
+          accelerator: CmdOrCtrl+C
+          role: copy
+        - label: 貼り付ける
+          accelerator: CmdOrCtrl+V
+          role: paste
+        - label: 全選択
+          role: selectall
+    - label: 表示
+      submenu:
+        - label: 全画面表示にする
+          role: togglefullscreen
+        - label: メニューバーを隠す
+          command: 'app:toggle-menu-bar'
+        - label: サイドバーを非表示にする
+          command: 'app:toggle-sidebar'
+          enabled: false
+          visible: false
+        - type: separator
+        - label: ズーム
+          submenu:
+            - label: ズームイン
+              command: 'app:zoom-in'
+            - label: ズームアウト
+              command: 'app:zoom-out'
+            - type: separator
+            - label: リセット
+              command: 'app:zoom-reset'
+    - label: ウィンドウ
+      role: window
+      submenu:
+        - label: 最小化
+          accelerator: CmdOrCtrl+M
+          role: minimize
+        - label: 閉じる
+          accelerator: CmdOrCtrl+W
+          role: close
+        - type: separator
+        - label: 全て全面に表示
+          role: front
+    - label: 開発者向け
+      id: dev
+      submenu:
+        - label: リロード
+          accelerator: CmdOrCtrl+R
+          command: 'win:reload'
+        - label: スタイルをリロード
+          accelerator: CmdOrCtrl+S
+          command: 'win:refresh'
+        - label: 開発者向けツールに切り替え
+          accelerator: CmdOrCtrl+D
+          role: toggledevtools
+        - label: パフォーマンスツールに切り替え
+          command: 'win:toggle-perf-tools'
+        - type: separator
+        - label: オントロジーデータベースをリセット
+          command: 'app:reset-ontology-db'
+        - label: プロジェクトを閉じる
+          command: 'app:close-project'
+        - type: separator
+        - label: テーマ
+          id: theme
+          submenu:
+            - label: ライト
+              id: light
+              type: checkbox
+            - label: ダーク
+              id: dark
+              type: checkbox
+    - label: ヘルプ
+      role: help
+      submenu:
+        - label: ユーザーガイド
+          command: 'app:open-docs'
+        - label: サポートフォーラム
+          command: 'app:open-forums'
+        - type: separator
+        - label: ソフトウェアライセンス
+          command: 'app:open-license'
+        - label: ログファイルを開く
+          command: 'app:open-logs'
+        - type: separator
+        - label: プラグインの設定を変更
+          command: 'app:open-plugins-config'
+        - label: プラグインフォルダを開く
+          command: 'app:open-plugins-folder'
+        - type: separator
+        - id: updater-check
+          label: アップデートの確認
+          command: 'app:check-for-updates'
+          enabled: false
+        - id: updater-is-checking
+          label: 最新アップデートの取得
+          enabled: false
+          visible: false
+        - id: updater-install
+          label: アップデートをインストールする
+          command: 'app:install-updates'
+          enabled: false
+          visible: false
+  win32:
+    - label: ファイル
+      id: file
+      submenu:
+        - label: 新規作成
+          submenu:
+            - label: プロジェクト
+              command: 'app:create-project'
+              accelerator: CmdOrCtrl+Shift+P
+            - label: アイテム
+              command: 'app:create-item'
+              accelerator: CmdOrCtrl+Shift+N
+            - label: リスト
+              command: 'app:create-list'
+              accelerator: CmdOrCtrl+Shift+L
+            - label: タグ
+              command: 'app:create-tag'
+              accelerator: CmdOrCtrl+Shift+A
+        - type: separator
+        - label: 開く
+          accelerator: CmdOrCtrl+O
+          command: 'app:open-dialog'
+        - label: 最近のプロジェクト
+          id: recent
+          enabled: false
+          submenu:
+            - type: separator
+            - label: 一覧を消す
+              command: 'app:clear-recent-projects'
+        - type: separator
+        - label: 写真をインポートする
+          command: 'app:import-photos'
+          accelerator: CmdOrCtrl+Shift+I
+        - label: 写真をまとめる
+          command: 'app:consolidate-photo-library'
+        - type: separator
+        - label: プロジェクトを終了する
+          accelerator: CmdOrCtrl+W
+          role: close
+        - type: separator
+        - label: Tropyを終了する
+          accelerator: CmdOrCtrl+Q
+          role: quit
+    - label: 編集
+      submenu:
+        - id: undo
+          label: 元に戻す
+          accelerator: CmdOrCtrl+Z
+          command: 'app:undo'
+          enabled: false
+        - id: redo
+          label: やり直す
+          accelerator: Control+Y
+          command: 'app:redo'
+          enabled: false
+        - type: separator
+        - label: 切り取る
+          accelerator: CmdOrCtrl+X
+          role: cut
+        - label: コピーする
+          accelerator: CmdOrCtrl+C
+          role: copy
+        - label: 貼り付ける
+          accelerator: CmdOrCtrl+V
+          role: paste
+        - label: 設定
+          accelerator: Shift+Control+S
+          command: 'app:open-preferences'
+    - label: 表示
+      submenu:
+        - label: 全画面表示にする
+          role: togglefullscreen
+        - label: メニューバーを隠す
+          command: 'app:toggle-menu-bar'
+        - label: サイドバーを非表示にする
+          command: 'app:toggle-sidebar'
+          enabled: false
+          visible: false
+        - type: separator
+        - label: ズーム
+          submenu:
+            - label: ズームイン
+              command: 'app:zoom-in'
+            - label: ズームアウト
+              command: 'app:zoom-out'
+            - type: separator
+            - label: リセット
+              command: 'app:zoom-reset'
+    - label: ウィンドウ
+      submenu:
+        - label: 最小化
+          accelerator: CmdOrCtrl+M
+          role: minimize
+    - label: 開発者向け
+      id: dev
+      submenu:
+        - label: リロード
+          accelerator: CmdOrCtrl+R
+          command: 'win:reload'
+        - label: スタイルをリロード
+          accelerator: CmdOrCtrl+S
+          command: 'win:refresh'
+        - label: 開発者向けツールに切り替え
+          accelerator: CmdOrCtrl+D
+          role: toggledevtools
+        - label: パフォーマンスツールに切り替え
+          command: 'win:toggle-perf-tools'
+        - type: separator
+        - label: オントロジーデータベースをリセット
+          command: 'app:reset-ontology-db'
+        - label: プロジェクトを閉じる
+          command: 'app:close-project'
+        - type: separator
+        - label: テーマ
+          id: theme
+          submenu:
+            - label: ライト
+              id: light
+              type: checkbox
+            - label: ダーク
+              id: dark
+              type: checkbox
+    - label: ヘルプ
+      submenu:
+        - label: ユーザーガイド
+          command: 'app:open-docs'
+        - label: サポートフォーラム
+          command: 'app:open-forums'
+        - type: separator
+        - label: ソフトウェアライセンス
+          command: 'app:open-license'
+        - label: ログファイルを開く
+          command: 'app:open-logs'
+        - type: separator
+        - label: プラグインの設定を変更
+          command: 'app:open-plugins-config'
+        - label: プラグインフォルダを開く
+          command: 'app:open-plugins-folder'
+        - type: separator
+        - label: Tropyについて
+          command: 'app:about'
+        - type: separator
+        - id: updater-check
+          label: アップデートの確認
+          command: 'app:check-for-updates'
+          enabled: false
+        - id: updater-is-checking
+          label: 最新アップデートの取得
+          enabled: false
+          visible: false
+        - id: updater-install
+          label: アップデートをインストールする
+          command: 'app:install-updates'
+          enabled: false
+          visible: false

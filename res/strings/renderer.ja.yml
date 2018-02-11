@@ -19,7 +19,7 @@ ja:
   panel:
     metadata:
       tab: メタデータ
-      photo:  写真
+      photo: 写真
       item: >
           {count, plural,
 
@@ -61,25 +61,25 @@ ja:
           other {# Notes}}
       create: ノートを追加
   about:
-      version: バージョン {バージョン}
-      rrchnm:
-        title: ロイ・ローゼンツヴァイク歴史とニューディアセンター
-        url: https://rrchnm.org
-      cds:
-        title: デジタルスカラーシップコーポレーション
-        url: http://digitalscholar.org
-      text: >
+    version: バージョン {バージョン}
+    rrchnm:
+      title: ロイ・ローゼンツヴァイク歴史とニューディアセンター
+      url: https://rrchnm.org
+    cds:
+      title: デジタルスカラーシップコーポレーション
+      url: http://digitalscholar.org
+    text: >
         Tropyは、歴史教育リソースやデジタル展示、オープンソースソフトウェアを開発するチームである{rrchnm}によって設計されています。
-      trademark: Tropyは{cds}の商標です。
-      release:
-        title: ノートを公開する
-        url: https://github.com/tropy/tropy/releases/tag/{version}
-      license:
-        title: ライセンス情報
-        url: https://tropy.org/license
-      credits:
-        title: クレジット
-        url: https://tropy.org/credits
+    trademark: Tropyは{cds}の商標です。
+    release:
+      title: ノートを公開する
+      url: https://github.com/tropy/tropy/releases/tag/{version}
+    license:
+      title: ライセンス情報
+      url: https://tropy.org/license
+    credits:
+      title: クレジット
+      url: https://tropy.org/credits
   project:
     none: プロジェクトファイルをここにドロップするか、あるいは{newProject}を作成してください。
     empty: Tropyに写真をドロップして始めてください。
@@ -103,6 +103,7 @@ ja:
       locale:
         locale: ローカル
         locales:
+          de: Deutsch
           en: English
           fr: Français
           ja: 日本語
@@ -125,7 +126,6 @@ ja:
         option:
           fit: 写真をウインドウサイズで表示
           fill: 写真を全画面表示
-
     project:
       label: プロジェクト
     template:
@@ -189,29 +189,28 @@ ja:
       select: 選択ツール
       rotate: 回転させる
       mirror: 反転させる
-      edit: ''
+      edit: 写真を編集する
     mode:
       fill: 領域の幅に合わせる
       fit: 全体を表示する
       zoom: ズーム
     panel:
-      negative: ''
-      revert: ''
+      negative: 色を反転する
+      revert: 最初の状態に戻す
       brightness:
-        label: ''
-        value: ""
+        label: 明るさ
+        value: "{value, number}"
       contrast:
-        label: ''
-        value: ""
+        label: コントラスト
+        value: "{value, number}"
       hue:
-        label: ''
-        value: ""
+        label: 色調
+        value: "{value, number}°"
       saturation:
-        label: ''
-        value: ""
+        label: 彩度
+        value: "{value, number}"
   notepad:
     placeholder: ノートを入力してください
-
   template:
     id: URI
     name: 名前
@@ -219,9 +218,9 @@ ja:
     creator: 作成者
     description: 内容記述
     types:
-      "https://tropy.org/v1/tropy#Item": アイテムテンプレート
-      "https://tropy.org/v1/tropy#Photo": 写真テンプレート
-      "https://tropy.org/v1/tropy#Selection": 写真選択テンプレート
+      https://tropy.org/v1/tropy#Item: アイテムテンプレート
+      https://tropy.org/v1/tropy#Photo: 写真テンプレート
+      https://tropy.org/v1/tropy#Selection: 写真選択テンプレート
     field:
       property: プロパティ
       label: ラベル
@@ -230,7 +229,6 @@ ja:
       hint: ヒント
       value: 初期値
       isConstant: 読み取り専用
-
   vocab:
     id: URI
     prefix: プレフィックス
@@ -248,7 +246,6 @@ ja:
     label: ラベル
     description: 内容記述
     comment: コメント
-
   dialog:
     prompt:
       ok: Yes
@@ -268,7 +265,6 @@ ja:
       projects: Tropyプロジェクト
       rdf: RDF語彙
       jsonld: JSON-LD
-
   action:
     project:
       save: プロジェクトを保存
@@ -332,7 +328,6 @@ ja:
       restore: セレクションを作成する
       save: セレクションを保存する
       order: セレクションをソートする
-
   activity:
     project:
       save: 保存中
@@ -449,7 +444,6 @@ ja:
       right: 右揃え
       sinkListItem: インデントを増やす
       liftListItem: インデントを減らす
-
   error:
     project:
       created: プロジェクトの作成に失敗しました
@@ -476,7 +470,6 @@ ja:
         field:
           add: テンプレートへのフィールド追加に失敗しました
           remove: テンプレートからフィールドの除去に失敗しました
-
   flash:
     update:
       ready:

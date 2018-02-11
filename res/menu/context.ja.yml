@@ -1,143 +1,142 @@
 ja:
   linux:
-    history: &history
-      - id: 'undo'
+    history:
+      - id: undo
         label: 元に戻す
         command: 'app:undo'
         enabled: false
-      - id: 'redo'
+      - id: redo
         label: やり直す
         command: 'app:redo'
         enabled: false
-    sidebar: &sidebar
+    sidebar:
       - label: サイドバーを非表示
         command: 'app:hide-sidebar'
         enabled: false
-    project: &project
+    project:
       - label: プロジェクト名を変更
         command: 'app:rename-project'
       - label: プロジェクトファイルを開く
         command: 'app:show-in-folder'
-    lists: &lists
+    lists:
       - label: 新規リスト
         command: 'app:create-list'
-    list: &list
+    list:
       - label: リスト名を変更
         command: 'app:rename-list'
       - label: リストを削除
         command: 'app:delete-list'
-    tags: &tags
+    tags:
       - label: 新規タグ
         command: 'app:create-tag'
-    tag: &tag
-      - label: タグの色
+    tag:
+      - label: タグカラー
         submenu:
           - label: 色指定なし
             color: null
             type: checkbox
           - type: separator
           - label: レッド
-            color: 'red'
+            color: red
             type: checkbox
           - label: オレンジ
-            color: 'orange'
+            color: orange
             type: checkbox
           - label: イエロー
-            color: 'yellow'
+            color: yellow
             type: checkbox
           - label: グリーン
-            color: 'green'
+            color: green
             type: checkbox
           - label: ブルー
-            color: 'blue'
+            color: blue
             type: checkbox
           - label: パープル
-            color: 'purple'
+            color: purple
             type: checkbox
           - label: グレー
-            color: 'gray'
+            color: gray
             type: checkbox
       - label: タグを再設定
         command: 'app:rename-tag'
       - label: タグを削除
         command: 'app:delete-tag'
-    item-tag: &item-tag
+    item-tag:
       - label: このアイテムからタグを削除
         command: 'app:delete-item-tag'
         visible: false
-        condition: 'hasSingleItem'
+        condition: hasSingleItem
       - label: このアイテムからタグを削除
         command: 'app:delete-item-tag'
         visible: false
-        condition: 'hasMultipleItems'
-    notes: &notes
-      []
-    note: &note
+        condition: hasMultipleItems
+    notes: []
+    note:
       - label: ノートを削除
         command: 'app:delete-note'
-    notepad: &notepad
-      - label: 'Writing Mode'
-        id: 'writing-mode'
+    notepad:
+      - label: ライティングモード
+        id: writing-mode
         submenu:
-          - label: 'Horizontal'
+          - label: 横書き
             type: checkbox
             checked: false
-            mode: 'horizontal'
-          - label: 'Vertical (Right to Left)'
+            mode: horizontal
+          - label: 縦書き（右から左へ）
             type: checkbox
             checked: false
-            mode: 'vertical-rl'
-      - label: 'Show Line Numbers'
-        id: 'line-numbers'
+            mode: vertical-rl
+      - label: 行番号を表示
+        id: line-numbers
         type: checkbox
         checked: true
         command: 'app:toggle-line-numbers'
-      - label: 'Wrap Lines'
-        id: 'line-wrap'
+      - label: 行を包む
+        id: line-wrap
         type: checkbox
         checked: true
         command: 'app:toggle-line-wrap'
-    items: &items
+    items:
       - label: 新規アイテム
         command: 'app:create-item'
-    item: &item
+    item:
       - label: アイテムをエクスポート
         command: 'app:explode-item'
-        condition: 'hasMultiplePhotos'
+        condition: hasMultiplePhotos
       - label: アイテムをエクスポート
-        id: 'export'
+        id: export
         submenu:
-          - label: 'JSON-LD'
+          - label: JSON-LD
             command: 'app:export-item'
       - label: 写真を追加
         command: 'app:create-item-photo'
       - label: タグ
-        id: 'tag'
+        id: tag
         submenu:
-          - label: 指定なし
+          - label: 色指定なし
             type: checkbox
             checked: true
             enabled: false
           - type: separator
       - label: アイテムを削除
         command: 'app:delete-item'
-    item-bulk: &item-bulk
+    item-bulk:
       - label: 選択したアイテムを統合
         command: 'app:merge-item'
       - label: 選択したアイテムをエクスポート
-        id: 'export'
+        id: export
         submenu:
-          - label: 'JSON-LD'
+          - label: JSON-LD
             command: 'app:export-item'
       - label: 選択したアイテムを削除
         command: 'app:delete-item'
-    item-list: &item-list
+    item-list:
       - label: リストからアイテムを削除
         command: 'app:list-item-remove'
-    item-bulk-list: &item-bulk-list
+    item-bulk-list:
       - label: リストから選択したアイテムを削除
         command: 'app:list-item-remove'
-    photo: &photo
+    photo:
       - label: 写真を削除
         command: 'app:delete-photo'
       - label: 写真を複製する
@@ -152,76 +151,388 @@ ja:
         visible: false
       - label: 写真を整理
         command: 'app:consolidate-photo'
-    selection: &selection
+    selection:
       - label: 選択を削除
         command: 'app:delete-selection'
       - label: 選択したものをイメージとして保存
         command: 'app:save-selection'
         enabled: false
-    item-deleted: &item-deleted
+    item-deleted:
       - label: アイテムを復元する
         command: 'app:restore-item'
       - label: アイテムを完全に削除する
         command: 'app:destroy-item'
-    item-bulk-deleted: &item-bulk-deleted
+    item-bulk-deleted:
       - label: 選択したアイテムを復元
         command: 'app:restore-item'
       - label: 選択したアイテムを完全に削除する
         command: 'app:destroy-item'
-    trash: &trash
+    trash:
       - label: アイテムを完全に削除する
         command: 'app:destroy-item'
-    dev: &dev
+    dev:
       - label: リロード
         command: 'win:reload'
       - label: スタイルをリロード
         command: 'win:refresh'
-      - type: 'separator'
+      - type: separator
       - label: 調査
         command: 'app:inspect'
   darwin:
-    history: *history
-    sidebar: *sidebar
-    project: *project
-    lists: *lists
-    list: *list
-    tags: *tags
-    tag: *tag
-    item-tag: *item-tag
-    notes: *notes
-    note: *note
-    notepad: *notepad
-    items: *items
-    item: *item
-    item-bulk: *item-bulk
-    item-list: *item-list
-    item-bulk-list: *item-bulk-list
-    item-deleted: *item-deleted
-    item-bulk-deleted: *item-bulk-deleted
-    trash: *trash
-    photo: *photo
-    selection: *selection
-    dev: *dev
+    history:
+      - id: undo
+        label: 元に戻す
+        command: 'app:undo'
+        enabled: false
+      - id: redo
+        label: やり直す
+        command: 'app:redo'
+        enabled: false
+    sidebar:
+      - label: サイドバーを非表示
+        command: 'app:hide-sidebar'
+        enabled: false
+    project:
+      - label: プロジェクト名を変更
+        command: 'app:rename-project'
+      - label: プロジェクトファイルを開く
+        command: 'app:show-in-folder'
+    lists:
+      - label: 新規リスト
+        command: 'app:create-list'
+    list:
+      - label: リスト名を変更
+        command: 'app:rename-list'
+      - label: リストを削除
+        command: 'app:delete-list'
+    tags:
+      - label: 新規タグ
+        command: 'app:create-tag'
+    tag:
+      - label: タグカラー
+        submenu:
+          - label: 色指定なし
+            color: null
+            type: checkbox
+          - type: separator
+          - label: レッド
+            color: red
+            type: checkbox
+          - label: オレンジ
+            color: orange
+            type: checkbox
+          - label: イエロー
+            color: yellow
+            type: checkbox
+          - label: グリーン
+            color: green
+            type: checkbox
+          - label: ブルー
+            color: blue
+            type: checkbox
+          - label: パープル
+            color: purple
+            type: checkbox
+          - label: グレー
+            color: gray
+            type: checkbox
+      - label: タグを再設定
+        command: 'app:rename-tag'
+      - label: タグを削除
+        command: 'app:delete-tag'
+    item-tag:
+      - label: このアイテムからタグを削除
+        command: 'app:delete-item-tag'
+        visible: false
+        condition: hasSingleItem
+      - label: このアイテムからタグを削除
+        command: 'app:delete-item-tag'
+        visible: false
+        condition: hasMultipleItems
+    notes: {}
+    note:
+      - label: ノートを削除
+        command: 'app:delete-note'
+    notepad:
+      - label: ライティングモード
+        id: writing-mode
+        submenu:
+          - label: 横書き
+            type: checkbox
+            checked: false
+            mode: horizontal
+          - label: 縦書き（右から左へ）
+            type: checkbox
+            checked: false
+            mode: vertical-rl
+      - label: 行番号を表示
+        id: line-numbers
+        type: checkbox
+        checked: true
+        command: 'app:toggle-line-numbers'
+      - label: 行を包む
+        id: line-wrap
+        type: checkbox
+        checked: true
+        command: 'app:toggle-line-wrap'
+    items:
+      - label: 新規アイテム
+        command: 'app:create-item'
+    item:
+      - label: アイテムをエクスポート
+        command: 'app:explode-item'
+        condition: hasMultiplePhotos
+      - label: アイテムをエクスポート
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: 'app:export-item'
+      - label: 写真を追加
+        command: 'app:create-item-photo'
+      - label: タグ
+        id: tag
+        submenu:
+          - label: 色指定なし
+            type: checkbox
+            checked: true
+            enabled: false
+          - type: separator
+      - label: アイテムを削除
+        command: 'app:delete-item'
+    item-bulk:
+      - label: 選択したアイテムを統合
+        command: 'app:merge-item'
+      - label: 選択したアイテムをエクスポート
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: 'app:export-item'
+      - label: 選択したアイテムを削除
+        command: 'app:delete-item'
+    item-list:
+      - label: リストからアイテムを削除
+        command: 'app:list-item-remove'
+    item-bulk-list:
+      - label: リストから選択したアイテムを削除
+        command: 'app:list-item-remove'
+    item-deleted:
+      - label: アイテムを復元する
+        command: 'app:restore-item'
+      - label: アイテムを完全に削除する
+        command: 'app:destroy-item'
+    item-bulk-deleted:
+      - label: 選択したアイテムを復元
+        command: 'app:restore-item'
+      - label: 選択したアイテムを完全に削除する
+        command: 'app:destroy-item'
+    trash:
+      - label: アイテムを完全に削除する
+        command: 'app:destroy-item'
+    photo:
+      - label: 写真を削除
+        command: 'app:delete-photo'
+      - label: 写真を複製する
+        command: 'app:duplicate-photo'
+      - label: 写真を新規アイテムへ移動
+        command: 'app:explode-photo'
+      - label: フォルダ内の写真を表示
+        command: 'app:show-in-folder'
+      - label: 表紙画像として写真を利用
+        command: 'app:update-cover-image'
+        enabled: false
+        visible: false
+      - label: 写真を整理
+        command: 'app:consolidate-photo'
+    selection:
+      - label: 選択を削除
+        command: 'app:delete-selection'
+      - label: 選択したものをイメージとして保存
+        command: 'app:save-selection'
+        enabled: false
+    dev:
+      - label: リロード
+        command: 'win:reload'
+      - label: スタイルをリロード
+        command: 'win:refresh'
+      - type: separator
+      - label: 調査
+        command: 'app:inspect'
   win32:
-    history: *history
-    sidebar: *sidebar
-    project: *project
-    lists: *lists
-    list: *list
-    tags: *tags
-    tag: *tag
-    item-tag: *item-tag
-    notes: *notes
-    note: *note
-    notepad: *notepad
-    items: *items
-    item: *item
-    item-bulk: *item-bulk
-    item-list: *item-list
-    item-bulk-list: *item-bulk-list
-    item-deleted: *item-deleted
-    item-bulk-deleted: *item-bulk-deleted
-    trash: *trash
-    photo: *photo
-    selection: *selection
-    dev: *dev
+    history:
+      - id: undo
+        label: 元に戻す
+        command: 'app:undo'
+        enabled: false
+      - id: redo
+        label: やり直す
+        command: 'app:redo'
+        enabled: false
+    sidebar:
+      - label: サイドバーを非表示
+        command: 'app:hide-sidebar'
+        enabled: false
+    project:
+      - label: プロジェクト名を変更
+        command: 'app:rename-project'
+      - label: プロジェクトファイルを開く
+        command: 'app:show-in-folder'
+    lists:
+      - label: 新規リスト
+        command: 'app:create-list'
+    list:
+      - label: リスト名を変更
+        command: 'app:rename-list'
+      - label: リストを削除
+        command: 'app:delete-list'
+    tags:
+      - label: 新規タグ
+        command: 'app:create-tag'
+    tag:
+      - label: タグカラー
+        submenu:
+          - label: 色指定なし
+            color: null
+            type: checkbox
+          - type: separator
+          - label: レッド
+            color: red
+            type: checkbox
+          - label: オレンジ
+            color: orange
+            type: checkbox
+          - label: イエロー
+            color: yellow
+            type: checkbox
+          - label: グリーン
+            color: green
+            type: checkbox
+          - label: ブルー
+            color: blue
+            type: checkbox
+          - label: パープル
+            color: purple
+            type: checkbox
+          - label: グレー
+            color: gray
+            type: checkbox
+      - label: タグを再設定
+        command: 'app:rename-tag'
+      - label: タグを削除
+        command: 'app:delete-tag'
+    item-tag:
+      - label: このアイテムからタグを削除
+        command: 'app:delete-item-tag'
+        visible: false
+        condition: hasSingleItem
+      - label: このアイテムからタグを削除
+        command: 'app:delete-item-tag'
+        visible: false
+        condition: hasMultipleItems
+    notes: {}
+    note:
+      - label: ノートを削除
+        command: 'app:delete-note'
+    notepad:
+      - label: ライティングモード
+        id: writing-mode
+        submenu:
+          - label: 横書き
+            type: checkbox
+            checked: false
+            mode: horizontal
+          - label: 縦書き（右から左へ）
+            type: checkbox
+            checked: false
+            mode: vertical-rl
+      - label: 行番号を表示
+        id: line-numbers
+        type: checkbox
+        checked: true
+        command: 'app:toggle-line-numbers'
+      - label: 行を包む
+        id: line-wrap
+        type: checkbox
+        checked: true
+        command: 'app:toggle-line-wrap'
+    items:
+      - label: 新規アイテム
+        command: 'app:create-item'
+    item:
+      - label: アイテムをエクスポート
+        command: 'app:explode-item'
+        condition: hasMultiplePhotos
+      - label: アイテムをエクスポート
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: 'app:export-item'
+      - label: 写真を追加
+        command: 'app:create-item-photo'
+      - label: タグ
+        id: tag
+        submenu:
+          - label: 色指定なし
+            type: checkbox
+            checked: true
+            enabled: false
+          - type: separator
+      - label: アイテムを削除
+        command: 'app:delete-item'
+    item-bulk:
+      - label: 選択したアイテムを統合
+        command: 'app:merge-item'
+      - label: 選択したアイテムをエクスポート
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: 'app:export-item'
+      - label: 選択したアイテムを削除
+        command: 'app:delete-item'
+    item-list:
+      - label: リストからアイテムを削除
+        command: 'app:list-item-remove'
+    item-bulk-list:
+      - label: リストから選択したアイテムを削除
+        command: 'app:list-item-remove'
+    item-deleted:
+      - label: アイテムを復元する
+        command: 'app:restore-item'
+      - label: アイテムを完全に削除する
+        command: 'app:destroy-item'
+    item-bulk-deleted:
+      - label: 選択したアイテムを復元
+        command: 'app:restore-item'
+      - label: 選択したアイテムを完全に削除する
+        command: 'app:destroy-item'
+    trash:
+      - label: アイテムを完全に削除する
+        command: 'app:destroy-item'
+    photo:
+      - label: 写真を削除
+        command: 'app:delete-photo'
+      - label: 写真を複製する
+        command: 'app:duplicate-photo'
+      - label: 写真を新規アイテムへ移動
+        command: 'app:explode-photo'
+      - label: フォルダ内の写真を表示
+        command: 'app:show-in-folder'
+      - label: 表紙画像として写真を利用
+        command: 'app:update-cover-image'
+        enabled: false
+        visible: false
+      - label: 写真を整理
+        command: 'app:consolidate-photo'
+    selection:
+      - label: 選択を削除
+        command: 'app:delete-selection'
+      - label: 選択したものをイメージとして保存
+        command: 'app:save-selection'
+        enabled: false
+    dev:
+      - label: リロード
+        command: 'win:reload'
+      - label: スタイルをリロード
+        command: 'win:refresh'
+      - type: separator
+      - label: 調査
+        command: 'app:inspect'
