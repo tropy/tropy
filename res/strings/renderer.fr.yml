@@ -104,6 +104,7 @@ fr:
       locale:
         locale: Langue
         locales:
+          de: Deutsch
           en: English
           fr: Français
           ja: 日本語

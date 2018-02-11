@@ -90,6 +90,7 @@ en:
       locale:
         locale: Locale
         locales:
+          de: Deutsch
           en: English
           fr: Français
           ja: 日本語
