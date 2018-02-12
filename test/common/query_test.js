@@ -36,11 +36,11 @@ describe('Query Builder', () => {
     it('order', () => {
       expect(
         select('a', 'b')
-          .from('b')
+          .from('cd')
           .order('b')
           .order('a', 'DESC')
           .query
-      ).to.match(/SELECT a, b FROM b ORDER BY b, a DESC/)
+      ).to.match(/SELECT a, b FROM cd ORDER BY b, a DESC/)
     })
 
     it('null', () => {

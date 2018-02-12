@@ -102,7 +102,7 @@ class Select extends Query {
   }
 
   from(...sources) {
-    this.src = [...this.src, ...sources.join(', ')]
+    this.src = [...this.src, sources.join(', ')]
     return this
   }
 
