@@ -417,7 +417,6 @@ en:
       right: Align Right
       sinkListItem: Sink list item
       liftListItem: Lift list item
-
   error:
     project:
       created: Project creation failed.
@@ -428,6 +427,7 @@ en:
         save: Failed to save tag.
         create: Failed to tag item. Tags must be unique per item.
     list:
+      create: Failed to create list. List names must be unique.
       save: Failed to save list.
       item:
         add: Failed to add item(s) to list.
@@ -444,7 +444,8 @@ en:
         field:
           add: Failed to add field to template.
           remove: Failed to remove field from template.
-
+    tag:
+      create: Failed to create tag. Tag names must be unique.
   flash:
     update:
       ready:
