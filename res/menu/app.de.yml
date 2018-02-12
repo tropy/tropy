@@ -179,7 +179,7 @@ de:
         - label: Beenden
           accelerator: Command+Q
           role: quit
-    - label: Datei
+    - label: Ablage
       submenu:
         - label: Neu
           submenu:

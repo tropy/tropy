@@ -100,7 +100,7 @@ de:
       - label: Neues Objekt
         command: 'app:create-item'
     item:
-      - label: Objekt sprengen
+      - label: Objektfotos aufsplitten
         command: 'app:explode-item'
         condition: hasMultiplePhotos
       - label: Objekt exportieren
@@ -152,9 +152,9 @@ de:
       - label: Foto konsolidieren
         command: 'app:consolidate-photo'
     selection:
-      - label: Auswahl löschen
+      - label: Ausschnitt löschen
         command: 'app:delete-selection'
-      - label: Auswahl als Bild speichern …
+      - label: Ausschnitt als Bild speichern …
         command: 'app:save-selection'
         enabled: false
     item-deleted:
@@ -279,7 +279,7 @@ de:
       - label: Neues Objekt
         command: 'app:create-item'
     item:
-      - label: Objekt sprengen
+      - label: Objektfotos aufsplitten
         command: 'app:explode-item'
         condition: hasMultiplePhotos
       - label: Objekt exportieren
@@ -344,9 +344,9 @@ de:
       - label: Foto konsolidieren
         command: 'app:consolidate-photo'
     selection:
-      - label: Auswahl löschen
+      - label: Ausschnitt löschen
         command: 'app:delete-selection'
-      - label: Auswahl als Bild speichern …
+      - label: Ausschnitt als Bild speichern …
         command: 'app:save-selection'
         enabled: false
     dev:
@@ -458,7 +458,7 @@ de:
       - label: Neues Objekt
         command: 'app:create-item'
     item:
-      - label: Objekt sprengen
+      - label: Objektfotos aufsplitten
         command: 'app:explode-item'
         condition: hasMultiplePhotos
       - label: Objekt exportieren
@@ -523,9 +523,9 @@ de:
       - label: Foto konsolidieren
         command: 'app:consolidate-photo'
     selection:
-      - label: Auswahl löschen
+      - label: Ausschnitt löschen
         command: 'app:delete-selection'
-      - label: Auswahl als Bild speichern …
+      - label: Ausschnitt als Bild speichern …
         command: 'app:save-selection'
         enabled: false
     dev:

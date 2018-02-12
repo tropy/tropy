@@ -28,7 +28,7 @@ de:
           one {Objekt}
 
           other {# Objekte}}
-      selection: Auswahl
+      selection: Ausschnitt
     tags:
       tab: Tags
       add: >
@@ -49,7 +49,7 @@ de:
 
           other {# Fotos}}
       create: Fotos hinzufügen
-      selection: Auswahl
+      selection: Ausschnitt
     note:
       title: >
           {count, plural,
@@ -70,7 +70,7 @@ de:
       url: http://digitalscholar.org
     text: >
         Tropy wird vom {rrchnm} entwickelt, einem Team, das sich der Herstellung von
-        Mitteln zur Geschichtsvermittlung, digitalen Ausstellungen, und Open-Source
+        Mitteln zur Geschichtsvermittlung, digitaler Ausstellungen, und Open-Source
         Software verschrieben hat.
     trademark: Tropy ist eine geschützte Marke der {cds}.
     release:
@@ -98,7 +98,7 @@ de:
     app:
       label: Global
       style:
-        theme: Stil
+        theme: Style-Sheet
         themes:
           light: Hell
           dark: Dunkel
@@ -190,7 +190,7 @@ de:
   esper:
     tool:
       pan: Verschieben
-      select: Auswahl
+      select: Ausschneiden
       rotate: Drehen
       mirror: Spiegeln
       edit: Foto bearbeiten
@@ -224,7 +224,7 @@ de:
     types:
       https://tropy.org/v1/tropy#Item: Objektvorlage
       https://tropy.org/v1/tropy#Photo: Fotovorlage
-      https://tropy.org/v1/tropy#Selection: Auswahlvorlage
+      https://tropy.org/v1/tropy#Selection: Ausschnittvorlage
     field:
       property: Eigenschaft
       label: Bezeichnung
@@ -285,7 +285,7 @@ de:
     item:
       create: Objekte erstellen
       delete: Objekte löschen
-      explode: Objekt sprengen
+      explode: Objektfotos aufsplitten
       implode: Objekte zusammenfügen
       merge: Objekte zusammenfügen
       split: Objekte auftrennen
@@ -326,11 +326,11 @@ de:
       restore: Tag erstellen
       save: Tag speichern
     selection:
-      create: Auswahl erstellen
-      delete: Auswahl löschen
-      restore: Auswahl erstellen
-      save: Auswahl speichern
-      order: Auswahl sortieren
+      create: Ausschnitt erstellen
+      delete: Ausschnitt löschen
+      restore: Ausschnitt erstellen
+      save: Ausschnitt speichern
+      order: Ausschnitte sortieren
   activity:
     project:
       save: Speichern …
@@ -356,7 +356,7 @@ de:
       create: Objekt erstellen …
       delete: Objekt löschen …
       destroy: Objekte vollständig löschen …
-      explode: Objekt sprengen …
+      explode: Objektfotos aufsplitten …
       export: Objekt exportieren …
       implode: Objekt wiederherstellen
       import: >
@@ -425,7 +425,7 @@ de:
       order: Notizen sortieren …
       restore: Notizen wiederherstellen …
     selection:
-      load: Auswahlen löschen …
+      load: Ausschnitte laden …
   editor:
     commands:
       bold: Fett

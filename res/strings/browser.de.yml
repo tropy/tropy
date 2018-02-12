@@ -5,7 +5,7 @@ de:
       - Fenster schließen
       - Neu laden
       - Geöffnet lassen
-      message: Tropy ist abgestürzt
+      message: Tropy ist leider abgestürzt
       detail: Fehler melden auf https://github.com/tropy/tropy
     unresponsive:
       buttons:
@@ -13,7 +13,7 @@ de:
       - Warten
       message: Tropy reagiert nicht mehr
       detail: >
-          Tropy reagiert nicht mehr. Soll es geschlossen werden oder noch gewartet?
+          Tropy reagiert nicht mehr. Soll beendet oder noch gewartet werden?
   windows:
     prefs:
       title: Tropy Einstellungen
