@@ -14,14 +14,14 @@ de:
             - label: Liste
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-            - label: Stichwort
+            - label: Tag
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
         - type: separator
         - label: Öffnen
           accelerator: CmdOrCtrl+O
           command: 'app:open-dialog'
-        - label: Zuletzt geöffnet
+        - label: Benutzte Projekte
           id: recent
           enabled: false
           submenu:
@@ -35,11 +35,11 @@ de:
         - label: Fotos konsolidieren
           command: 'app:consolidate-photo-library'
         - type: separator
-        - label: Schließen
+        - label: Projekt schließen
           accelerator: CmdOrCtrl+W
           role: close
         - type: separator
-        - label: Beenden
+        - label: Tropy beenden
           accelerator: CmdOrCtrl+Q
           role: quit
     - label: Bearbeiten
@@ -61,16 +61,16 @@ de:
         - label: Kopieren
           accelerator: CmdOrCtrl+C
           role: copy
-        - label: Einfügen
+        - label: Einsetzen
           accelerator: CmdOrCtrl+V
           role: paste
         - label: Alles auswählen
           role: selectall
         - type: separator
-        - label: Einstellungen
+        - label: Einstellungen …
           accelerator: Shift+Control+S
           command: 'app:open-preferences'
-    - label: Ansicht
+    - label: Darstellung
       submenu:
         - label: Vollbildmodus
           role: togglefullscreen
@@ -101,21 +101,21 @@ de:
         - label: Neu laden
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
-        - label: Stile neu laden
+        - label: Style-Sheet neu laden
           accelerator: CmdOrCtrl+S
           command: 'win:refresh'
         - label: Entwicklerwerkzeuge einblenden
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Performance Werkzeuge
+        - label: Performance Werkzeuge aktivieren
           command: 'win:toggle-perf-tools'
         - type: separator
-        - label: Ontologie Datenbank rücksetzen
+        - label: Ontologie Datenbank wiederherstellen
           command: 'app:reset-ontology-db'
         - label: Projekt schließen
           command: 'app:close-project'
         - type: separator
-        - label: Stil
+        - label: Style-Sheet
           id: theme
           submenu:
             - label: Hell
@@ -136,9 +136,9 @@ de:
         - label: Logs anzeigen
           command: 'app:open-logs'
         - type: separator
-        - label: Plugin Konfiguration bearbeiten
+        - label: Plug-in Konfiguration bearbeiten
           command: 'app:open-plugins-config'
-        - label: Plugins Folder anzeigen
+        - label: Plug-ins Folder anzeigen
           command: 'app:open-plugins-folder'
         - type: separator
         - label: Über %name
@@ -199,7 +199,7 @@ de:
         - label: Öffnen
           accelerator: CmdOrCtrl+O
           command: 'app:open-dialog'
-        - label: Zuletzt geöffnet
+        - label: Benutzte Projekte
           id: recent
           enabled: false
           submenu:
@@ -235,12 +235,12 @@ de:
         - label: Kopieren
           accelerator: CmdOrCtrl+C
           role: copy
-        - label: Einfügen
+        - label: Einsetzen
           accelerator: CmdOrCtrl+V
           role: paste
         - label: Alles auswählen
           role: selectall
-    - label: Ansicht
+    - label: Darstellung
       submenu:
         - label: Vollbildmodus
           role: togglefullscreen
@@ -278,7 +278,7 @@ de:
         - label: Neu laden
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
-        - label: Stile neu laden
+        - label: Style-Sheet neu laden
           accelerator: CmdOrCtrl+S
           command: 'win:refresh'
         - label: Entwicklerwerkzeuge einblenden
@@ -314,7 +314,7 @@ de:
         - label: Logs anzeigen
           command: 'app:open-logs'
         - type: separator
-        - label: Plugin Konfiguration bearbeiten
+        - label: Plug-in Konfiguration bearbeiten
           command: 'app:open-plugins-config'
         - label: Plugins Folder anzeigen
           command: 'app:open-plugins-folder'
@@ -354,7 +354,7 @@ de:
         - label: Öffnen
           accelerator: CmdOrCtrl+O
           command: 'app:open-dialog'
-        - label: Zuletzt geöffnet
+        - label: Benutzte Projekte
           id: recent
           enabled: false
           submenu:
@@ -400,7 +400,7 @@ de:
         - label: Einstellungen
           accelerator: Shift+Control+S
           command: 'app:open-preferences'
-    - label: Ansicht
+    - label: Darstellung
       submenu:
         - label: Vollbildmodus
           role: togglefullscreen
@@ -431,7 +431,7 @@ de:
         - label: Neu laden
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
-        - label: Stile neu laden
+        - label: Style-Sheet neu laden
           accelerator: CmdOrCtrl+S
           command: 'win:refresh'
         - label: Entwicklerwerkzeuge einblenden
