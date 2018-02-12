@@ -2,6 +2,8 @@
 
 const { all } = require('bluebird')
 const { ROOT } = require('../constants/list')
+const { select } = require('../common/query')
+const { remove } = require('../common/util')
 
 function sort(children) {
   return children ?
@@ -78,12 +80,19 @@ module.exports = {
   },
 
   items: {
-    add(db, id, items) {
-      return db.run(`
-        INSERT INTO list_items (list_id, id) VALUES ${
-          items.map(item =>
-            `(${Number(id)}, ${Number(item)})`).join(',')
-          }`)
+    async add(db, id, items) {
+      const dupes = await db.all(
+        ...select('id').from('list_items').where({ list_id: id, id: items }))
+
+      items = remove(items, ...dupes.map(r => r.id))
+
+      const res = (items.length === 0) ? { changes: 0 } :
+        await db.run(`
+          INSERT INTO list_items (list_id, id) VALUES ${
+              items.map(it => `(${Number(id)}, ${it})`).join(',')
+            }`)
+
+      return { ...res, items }
     },
 
     remove(db, id, items) {

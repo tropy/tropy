@@ -140,12 +140,13 @@ class AddItems extends Command {
     const { db } = this.options
     const { id, items } = this.action.payload
 
-    yield call([db, db.transaction], tx => mod.items.add(tx, id, items))
+    const res = yield call([db, db.transaction], tx =>
+      mod.items.add(tx, id, items))
 
-    this.undo = actions.items.remove({ id, items })
-    this.redo = actions.items.restore({ id, items })
+    this.undo = actions.items.remove({ id, items: res.items })
+    this.redo = actions.items.restore({ id, items: res.items })
 
-    return { id, items }
+    return { id, items: res.items }
   }
 }
 
