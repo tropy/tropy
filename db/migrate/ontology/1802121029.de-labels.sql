@@ -76,7 +76,7 @@ REPLACE INTO labels VALUES ('http://purl.org/dc/terms/language', 'de', "Sprache"
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/license', 'de', "Lizenz");
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/mediator', 'de', "Mediator");
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/medium', 'de', "Medium");
-REPLACE INTO labels VALUES ('http://purl.org/dc/terms/modified', 'de', "Geändert");
+REPLACE INTO labels VALUES ('http://purl.org/dc/terms/modified', 'de', "Bearbeitet");
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/provenance', 'de', "Provenienz");
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/publisher', 'de', "Herausgeber");
 REPLACE INTO labels VALUES ('http://purl.org/dc/terms/references', 'de', "Referenzen");
