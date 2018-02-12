@@ -172,7 +172,6 @@ class ItemView extends PureComponent {
       photo,
       selections,
       onPanelDragStop,
-      isTrashSelected,
       ...props
     } = this.props
 
@@ -194,14 +193,14 @@ class ItemView extends PureComponent {
             keymap={keymap}
             selections={selections}
             isItemOpen={isItemOpen}
-            isDisabled={isTrashSelected}
+            isDisabled={false}
             onNoteCreate={this.handleNoteCreate}/>
         </Resizable>
         <ItemContainer
           ref={this.setNotePad}
           note={this.state.note}
           photo={photo}
-          isDisabled={isTrashSelected}
+          isDisabled={false}
           isOpen={isItemOpen}
           onContextMenu={this.props.onContextMenu}
           onNoteChange={this.handleNoteChange}
@@ -229,7 +228,6 @@ class ItemView extends PureComponent {
     mode: string.isRequired,
     selections: object.isRequired,
     isModeChanging: bool.isRequired,
-    isTrashSelected: bool.isRequired,
 
     onNoteCreate: func.isRequired,
     onNoteDelete: func.isRequired,
