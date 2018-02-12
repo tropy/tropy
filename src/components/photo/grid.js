@@ -15,7 +15,7 @@ class PhotoGrid extends PhotoIterator {
   get isGrid() { return true }
 
   get classes() {
-    return [super.classes, 'grid', {
+    return [super.classes, 'photo-grid', {
       'nested-tab-focus': this.state.hasNestedTabFocus,
       'has-nested-active': this.props.selection != null
     }]

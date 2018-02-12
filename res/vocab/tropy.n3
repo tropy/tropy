@@ -12,8 +12,8 @@
 	vann:preferredNamespacePrefix "tropy" ;
 	vann:preferredNamespaceUri "https://tropy.org/v1/tropy#" ;
   rdfs:seeAlso <https://tropy.org/> ;
-	dc:title "Tropy Vocabulary"@en , "Lexique de métadonnées Tropy"@fr ;
-	dc:description "The RDF vocabulary for https://tropy.org/v1/tropy defines the core elements used by the Tropy application and Tropy templates."@en , "Le lexiques de métadonnées RDF https://tropy.org/v1/tropy définit les éléments structurels utilisés par Tropy, en particulier dans les modèles de saisie Tropy."@fr ;
+	dc:title "Tropy Vocabulary"@en , "Lexique de métadonnées Tropy"@fr , "Tropy語彙"@ja ;
+	dc:description "The RDF vocabulary for https://tropy.org/v1/tropy defines the core elements used by the Tropy application and Tropy templates."@en , "Le lexiques de métadonnées RDF https://tropy.org/v1/tropy définit les éléments structurels utilisés par Tropy, en particulier dans les modèles de saisie Tropy."@fr , "Tropyのアプリケーションおよびテンプレートで使用しているコア・エレメントは、https://tropy.org/v1/tropy のRDF語彙で定義されています。"@ja ;
 	dc:issued "2017-05-09"^^xsd:date ;
 	dc:publisher "Roy Rosenzweig Center for History and New Media, George Mason University"@en .
 
@@ -41,31 +41,31 @@ tropy:Photo a rdfs:Class ;
 
 tropy:Selection a rdfs:Class ;
   rdfs:subClassOf tropy:Image ;
-  rdfs:label "Selection"@en "Sélection"@fr , "Ausschnitt"@de ;
+  rdfs:label "Selection"@en , "Sélection"@fr , "Ausschnitt"@de ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A selection within a photo."@en .
 
 tropy:Note a rdfs:Class ;
   rdfs:subClassOf rdfs:Resource ;
-  rdfs:label "Note"@en ;
+  rdfs:label "Note"@en , "Notiz"@de ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A note."@en .
 
 tropy:Template a rdfs:Class ;
   rdfs:subClassOf rdfs:Resource ;
-  rdfs:label "Template"@en ;
+  rdfs:label "Template"@en , "Vorlage"@de ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A Tropy template."@en .
 
 tropy:Field a rdfs:Class ;
   rdfs:subClassOf rdfs:Resource ;
-  rdfs:label "Template Field"@en ;
+  rdfs:label "Template Field"@en , "Feld"@de ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A Tropy template field."@en .
 
 tropy:List a rdfs:Class ;
   rdfs:subClassOf rdfs:Resource ;
-  rdfs:label "List"@en ;
+  rdfs:label "List"@en , "Liste"@de ;
   rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A list of Tropy items."@en .
 
@@ -81,12 +81,12 @@ tropy:Tag a rdfs:Class ;
 
 tropy:date a rdfs:Datatype ;
   owl:equivalentProperty <http://id.loc.gov/datatypes/edtf> ;
-	rdfs:label "Date"@en ;
+	rdfs:label "Date"@en , "Datum"@de ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "An EDTF date or date range."@en .
 
 tropy:name a rdfs:Datatype ;
-	rdfs:label "Name"@en ;
+	rdfs:label "Name"@en , "Name"@de ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:comment "A personal name."@en .
 
@@ -107,7 +107,7 @@ tropy:photo a rdf:Property ;
 	rdfs:comment "A Tropy photo."@en .
 
 tropy:selection a rdf:Property ;
-	rdfs:label "Photo Selection"@en ;
+	rdfs:label "Selection"@en ;
 	rdfs:isDefinedBy <https://tropy.org/v1/tropy#> ;
   rdfs:domain tropy:Photo ;
   rdfs:range tropy:Selection ;

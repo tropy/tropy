@@ -75,7 +75,8 @@
 
 .photo {
   &.last {
-    .over & {
+    .photo-list.over &,
+    .photo-grid.over & {
       &::after {
         content: "";
       }

@@ -543,13 +543,14 @@ class AddTag extends Command {
     const { payload } = this.action
 
     const [tag] = payload.tags
-    const values = payload.id.map(id => ({ id, tag }))
+    const id = payload.id
 
-    yield call(mod.item.tags.add, db, values)
+    const res = yield call(db.transaction, tx =>
+      mod.item.tags.add(tx, { id, tag }))
 
-    this.undo = act.item.tags.delete(payload)
+    this.undo = act.item.tags.delete({ id: res.id, tags: [tag] })
 
-    return payload
+    return { id: res.id, tags: [tag] }
   }
 }
 

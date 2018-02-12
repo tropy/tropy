@@ -4,7 +4,7 @@
 // Esper
 // --------------------------------------------------
 
-section.esper { // sass-lint:disable-line no-qualifying-elements
+.esper {
   flex: 1 1 0;
   background: $esper-bg;
   display: flex;
@@ -16,7 +16,7 @@ section.esper { // sass-lint:disable-line no-qualifying-elements
   &:not(:focus):not(.nested-focus) {
     .toolbar-left,
     .toolbar-right,
-    .esper.panel > * { // todo
+    .esper-panel > * { // todo
       opacity: 0.6;
     }
   }

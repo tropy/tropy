@@ -2,8 +2,9 @@
 
 const { all } = require('bluebird')
 const { assign } = Object
-const { array, list: lst, uniq } = require('../common/util')
+const { array, list: lst, remove, uniq } = require('../common/util')
 const { TEMPLATE } = require('../constants/item')
+const { select } = require('../common/query')
 
 const mod = {
   metadata: require('./metadata'),
@@ -366,14 +367,19 @@ module.exports = mod.item = {
   },
 
   tags: {
-    async add(db, values) {
-      if (values.length) {
-        return db.run(`
+    async add(db, { id, tag }) {
+      const dupes = await db.all(
+        ...select('id').from('taggings').where({ tag_id: tag, id }))
+
+      id = remove(id, ...dupes.map(r => r.id))
+
+      const res = (id.length === 0) ? { changes: 0 } :
+        await db.run(`
           INSERT INTO taggings (tag_id, id) VALUES ${
-            values.map(({ id, tag }) =>
-              `(${Number(tag)}, ${Number(id)})`).join(',')
-            }`)
-      }
+            id.map(i => `(${tag}, ${i})`).join(',')
+          }`)
+
+      return { ...res, id }
     },
 
     async clear(db, id) {

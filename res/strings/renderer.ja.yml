@@ -1,0 +1,477 @@
+ja:
+  sidebar:
+    lists: リスト
+    tags: タグ
+    imports: 最新のインポート
+    trash: アイテムを削除
+  toolbar:
+    import: 写真をインポート
+    items: >
+        {count, plural,
+
+        =0 {このビューにはアイテムがありません}
+
+        one {このビューには1つのアイテムがあります}
+
+        other {# のアイテムがあります}}
+    search:
+      placeholder: 検索
+  panel:
+    metadata:
+      tab: メタデータ
+      photo: 写真
+      item: >
+          {count, plural,
+
+          =0 {}
+
+          one {Item}
+
+          other {# Items}}
+      selection: セレクション
+    tags:
+      tab: タグ
+      add: >
+          {count, plural,
+
+          =0 {Add Tag}
+
+          one {Add Tag to 1 Item}
+
+          other {Add Tag to # Items}}
+    photo:
+      title: >
+          {count, plural,
+
+          =0 {No Photos}
+
+          one {1 Photo}
+
+          other {# Photos}}
+      create: 写真を追加する
+      selection: セレクション
+    note:
+      title: >
+          {count, plural,
+
+          =0 {No Notes}
+
+          one {1 Note}
+
+          other {# Notes}}
+      create: ノートを追加
+  about:
+    version: バージョン {バージョン}
+    rrchnm:
+      title: ロイ・ローゼンツヴァイク歴史とニューディアセンター
+      url: https://rrchnm.org
+    cds:
+      title: デジタルスカラーシップコーポレーション
+      url: http://digitalscholar.org
+    text: >
+        Tropyは、歴史教育リソースやデジタル展示、オープンソースソフトウェアを開発するチームである{rrchnm}によって設計されています。
+    trademark: Tropyは{cds}の商標です。
+    release:
+      title: ノートを公開する
+      url: https://github.com/tropy/tropy/releases/tag/{version}
+    license:
+      title: ライセンス情報
+      url: https://tropy.org/license
+    credits:
+      title: クレジット
+      url: https://tropy.org/credits
+  project:
+    none: プロジェクトファイルをここにドロップするか、あるいは{newProject}を作成してください。
+    empty: Tropyに写真をドロップして始めてください。
+    new: 新規プロジェクト
+  wizard:
+    project:
+      title: 新規プロジェクトを作成する
+      submit: プロジェクトを作成する
+      name: 名前
+      save_as: ファイル名と保存先を変更
+      change: 変更する
+  prefs:
+    title: Tropy設定
+    app:
+      label: グローバル
+      style:
+        theme: テーマ
+        themes:
+          light: ライト
+          dark: ダーク
+      locale:
+        locale: ローカル
+        locales:
+          de: Deutsch
+          en: English
+          fr: Français
+          ja: 日本語
+      template: デフォルトテンプレート
+      debug: デベロッパーモード
+      dup:
+        label: インポート中
+        option:
+          skip: 重複写真をスキップする
+          import: 重複写真を承認
+          prompt: いつでもお尋ねください
+      ui:
+        label: インターフェース
+        option:
+          invertScroll: 写真スクロールの向きを逆にする
+          invertZoom: 写真ズームの向きを逆にする
+          overlayToolbars: ツールバーを自動で表示・非表示にする
+      zoomMode:
+        label: デフォルト設定により
+        option:
+          fit: 写真をウインドウサイズで表示
+          fill: 写真を全画面表示
+    project:
+      label: プロジェクト
+    template:
+      label: テンプレート
+      new: 新規テンプレート
+      create: 作成
+      select: テンプレート
+      tools:
+        new: 新規
+        copy: 複製
+        delete: 削除
+        import: インポート
+        export: エクスポート
+    vocab:
+      label: 語彙
+      export: エクスポート
+      classes: >
+          {count, plural,
+
+          =0 {No Classes}
+
+          one {# Class}
+
+          other {# Classes}
+
+          }
+      datatypes: >
+          {count, plural,
+
+          =0 {No Datatypes} one {# Datatype}
+
+          other {# Datatypes}
+
+          }
+      properties: >
+          {count, plural,
+
+          =0 {No Properties}
+
+          one {# Property}
+
+          other {# Properties}
+
+          }
+  item:
+    created: 追加日付
+    modified: 修正
+  photo:
+    file: ファイル
+    size: サイズ
+    type: タイプ
+    created: 追加日付
+    modified: 修正
+  selection:
+    size: サイズ
+    created: 追加日付
+    modified: 修正
+  esper:
+    tool:
+      pan: パンツール
+      select: 選択ツール
+      rotate: 回転させる
+      mirror: 反転させる
+      edit: 写真を編集する
+    mode:
+      fill: 領域の幅に合わせる
+      fit: 全体を表示する
+      zoom: ズーム
+    panel:
+      negative: 色を反転する
+      revert: 最初の状態に戻す
+      brightness:
+        label: 明るさ
+        value: "{value, number}"
+      contrast:
+        label: コントラスト
+        value: "{value, number}"
+      hue:
+        label: 色調
+        value: "{value, number}°"
+      saturation:
+        label: 彩度
+        value: "{value, number}"
+  notepad:
+    placeholder: ノートを入力してください
+  template:
+    id: URI
+    name: 名前
+    type: タイプ
+    creator: 作成者
+    description: 内容記述
+    types:
+      https://tropy.org/v1/tropy#Item: アイテムテンプレート
+      https://tropy.org/v1/tropy#Photo: 写真テンプレート
+      https://tropy.org/v1/tropy#Selection: 写真選択テンプレート
+    field:
+      property: プロパティ
+      label: ラベル
+      datatype: データタイプ
+      isRequired: 必須項目
+      hint: ヒント
+      value: 初期値
+      isConstant: 読み取り専用
+  vocab:
+    id: URI
+    prefix: プレフィックス
+    title: 名前
+    description: 内容記述
+    properties: プロパティ
+    seeAlso: 参照
+  property:
+    select: プロパティを選択
+  datatype:
+    select: データタイプを選択
+  resource:
+    select: リソースを選択
+    id: URI
+    label: ラベル
+    description: 内容記述
+    comment: コメント
+  dialog:
+    prompt:
+      cancel: キャンセル
+      item:
+        destroy: >
+            アイテムを完全に削除しますか？削除後は元に戻せません。
+      dup:
+        message: >
+            この写真はすでにプロジェクトにあります。再度インポートしますか？
+        checkbox: この選択を記憶する
+        cancel: スキップ
+        ok: インポートする
+    filter:
+      templates: Tropyテンプレート
+      images: イメージ
+      projects: Tropyプロジェクト
+      rdf: RDF語彙
+      jsonld: JSON-LD
+  action:
+    project:
+      save: プロジェクトを保存
+    list:
+      create: リスト作成
+      delete: リストを削除
+      item:
+        add: リストにアイテムを追加する
+        merge: アイテムをまとめる
+        remove: リストからアイテムを削除
+        restore: リストにアイテムを追加する
+      order: リストをソートする
+      restore: リストを元に戻す
+      save: リストを保存する
+    item:
+      create: アイテムを作成する
+      delete: アイテムを削除する
+      explode: 個別のアイテムに分割する
+      implode: アイテムをまとめる
+      merge: アイテムをまとめる
+      split: アイテムを分ける
+      import: アイテムをインポートする
+      restore: アイテムを元に戻す
+      save: アイテムを保存する
+      tag:
+        create: タグ
+        toggle: タグ
+        clear: タグを削除する
+    metadata:
+      save: メタデータを保存する
+    ontology:
+      import: 語彙をインポートする
+      vocab:
+        save: 語彙を保存する
+      label:
+        save: ラベルを保存する
+      template:
+        import: テンプレートをインポートする
+    photo:
+      create: 写真をインポートする
+      delete: 写真を削除
+      duplicate: 写真を複製する
+      move: 写真を移動する
+      order: 写真をソートする
+      restore: 写真を元に戻す
+      save: 写真を保存する
+    note:
+      create: ノートを作成する
+      delete: ノートを削除
+      order: ノートをソートする
+      restore: ノートを元に戻す
+      save: ノートを保存する
+    tag:
+      create: タグを作成する
+      delete: タグを削除
+      restore: タグを作成する
+      save: タグを保存する
+    selection:
+      create: セレクションを作成する
+      delete: 選択を削除
+      restore: セレクションを作成する
+      save: セレクションを保存する
+      order: セレクションをソートする
+  activity:
+    project:
+      save: 保存中
+    list:
+      create: リストを作成中
+      delete: リストを削除中
+      item:
+        add: アイテムをリストに追加中
+        merge: アイテムを統合中
+        remove: リストからアイテムを取り除いています
+        restore: アイテムを元のリストへ復元しています
+      load: リストをロード中
+      order: リストをソート中
+      restore: リストを復元中
+      save: リストを保存中
+    tag:
+      create: タグを作成中
+      delete: タグを削除しています
+      load: タグをロード中
+      restore: タグを復元中
+      save: タグを保存中
+    item:
+      create: アイテムを作成中
+      delete: アイテムを削除しています
+      destroy: アイテムを完全に削除しています
+      explode: 個別のアイテムに分割中
+      export: アイテムをエクスポートしています
+      implode: アイテムを復元中
+      import: >
+          {hasProgressBar, select,
+
+          true {Importing items {progress, number} of {total, number} …}
+
+          other {Importing items …}
+
+          }
+      load: アイテムをロード中
+      merge: アイテムを統合中
+      restore: アイテムを復元中
+      save: アイテムを保存中
+      tag:
+        create: アイテムをタグ付け中
+        toggle: アイテムをタグ付け中
+        clear: アイテムタグを削除中
+    metadata:
+      load: メタデータをロード中
+      save: メタデータを保存中
+    ontology:
+      load: オントロジーをロード中
+      import: 語彙をインポート中
+      vocab:
+        save: 語彙を保存中
+      label:
+        save: ラベルを保存中
+      template:
+        import: テンプレートをインポート中
+    photo:
+      consolidate: >
+          {hasProgressBar, select,
+
+          true {Consolidating photos {progress, number} of {total, number} …}
+
+          other {Consolidating photos …}
+
+          }
+      create: >
+          {hasProgressBar, select,
+
+          true {Importing photos {progress, number} of {total, number} …}
+
+          other {Importing photos …}
+
+          }
+      delete: 写真を削除中
+      duplicate: >
+          {hasProgressBar, select,
+
+          true {Duplicating photos {progress, number} of {total, number} …}
+
+          other {Duplicating photos …}
+
+          }
+      load: 写真をロード中
+      move: 写真を移動中
+      order: 写真をソート中
+      save: 写真を保存中
+      restore: 写真を復元中
+    note:
+      create: ノートを作成中
+      delete: ノートを削除中
+      load: ノートをロード中
+      order: ノートをソート中
+      restore: ノートを復元中
+    selection:
+      load: フォト・セレクションをロード中
+  editor:
+    commands:
+      bold: 太字
+      italic: イタリック
+      underline: 下線
+      overline: 上線
+      strikethrough: 取り消し線
+      subscript: 下付き
+      superscript: 上付き
+      blockquote: 引用
+      ol: 段落番号
+      ul: 箇条書き
+      link:
+        button: リンクを挿入
+        target: リンクターゲット
+        title: リンクタイトル
+      left: 左揃え
+      center: 中央揃え
+      right: 右揃え
+      sinkListItem: インデントを増やす
+      liftListItem: インデントを減らす
+  error:
+    project:
+      created: プロジェクトの作成に失敗しました
+    item:
+      merge: アイテムの統合に失敗しました
+      import: アイテムのインポートに失敗しました
+      tag:
+        save: タグの保存に失敗しました
+        create: アイテムのタグ付けに失敗しました。タグは一つのアイテムに一意のものにしてください。
+    list:
+      save: リストの保存に失敗しました
+      item:
+        add: リストへのアイテム追加に失敗しました
+    photo:
+      consolidate: 写真の統合に失敗しました
+      create: 写真のインポートに失敗しました
+      save: 写真の保存に失敗しました
+    ontology:
+      import: 語彙のインポートに失敗しました
+      vocab:
+        save: 語彙の保存に失敗しました。プレフィックスは一意のものにしてください。
+      template:
+        import: テンプレートのインポートに失敗しました
+        field:
+          add: テンプレートへのフィールド追加に失敗しました
+          remove: テンプレートからフィールドの除去に失敗しました
+  flash:
+    update:
+      ready:
+        message: >
+            Tropy {version}のインストール準備が完了しました。すぐにインストールし、再起動しますか？
+        confirm: すぐに再起動する

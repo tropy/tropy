@@ -12,7 +12,7 @@ const { get } = require('../../common/util')
 
 class PhotoList extends PhotoIterator {
   get classes() {
-    return ['list', super.classes]
+    return ['photo-list', super.classes]
   }
 
   getColumns() {

@@ -7,8 +7,8 @@
   box-sizing: content-box;
   contain: strict;
 
-  .item.table &,
-  .photo.list & {
+  .item-table &,
+  .photo-list & {
     width: $thumbnail-size;
     height: $thumbnail-size;
   }

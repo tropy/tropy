@@ -145,19 +145,25 @@ en:
     - &help
       label: 'Help'
       submenu:
-        - label: 'User Guide'
+        - &docs
+          label: 'User Guide'
           command: 'app:open-docs'
-        - label: 'Support Forums'
+        - &forums
+          label: 'Support Forums'
           command: 'app:open-forums'
         - type: 'separator'
-        - label: 'Software &License'
+        - &license
+          label: 'Software &License'
           command: 'app:open-license'
-        - label: 'Show Log Files'
+        - &logs
+          label: 'Show Log Files'
           command: 'app:open-logs'
         - type: 'separator'
-        - label: 'Edit Plugins Configuration'
+        - &pluginsConfig
+          label: 'Edit Plugins Configuration'
           command: 'app:open-plugins-config'
-        - label: 'Show Plugins Folder'
+        - &plugins
+          label: 'Show Plugins Folder'
           command: 'app:open-plugins-folder'
         - type: 'separator'
         - label: 'About %name'
@@ -242,20 +248,14 @@ en:
     - label: 'Help'
       role: 'help'
       submenu:
-        - label: 'User Guide'
-          command: 'app:open-docs'
-        - label: 'Support Forums'
-          command: 'app:open-forums'
+        - *docs
+        - *forums
         - type: 'separator'
-        - label: 'Software License'
-          command: 'app:open-license'
-        - label: 'Show Log Files'
-          command: 'app:open-logs'
+        - *license
+        - *logs
         - type: 'separator'
-        - label: 'Show Plugins Configuration'
-          command: 'app:open-plugins-config'
-        - label: 'Show Plugins Folder'
-          command: 'app:open-plugins-folder'
+        - *pluginsConfig
+        - *plugins
         - type: 'separator'
         - *updaterCheck
         - *updaterIsChecking
