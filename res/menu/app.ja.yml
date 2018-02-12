@@ -18,7 +18,7 @@ ja:
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
         - type: separator
-        - label: 開く
+        - label: ファイルを開く
           accelerator: CmdOrCtrl+O
           command: 'app:open-dialog'
         - label: 最近のプロジェクト
@@ -26,20 +26,20 @@ ja:
           enabled: false
           submenu:
             - type: separator
-            - label: 一覧を消す
+            - label: リストを消す
               command: 'app:clear-recent-projects'
         - type: separator
         - label: 写真をインポートする
           command: 'app:import-photos'
           accelerator: CmdOrCtrl+Shift+I
-        - label: 写真をまとめる
+        - label: 写真ライブラリをまとめる
           command: 'app:consolidate-photo-library'
         - type: separator
-        - label: プロジェクトを終了する
+        - label: 閉じる
           accelerator: CmdOrCtrl+W
           role: close
         - type: separator
-        - label: Tropyを終了する
+        - label: 終了
           accelerator: CmdOrCtrl+Q
           role: quit
     - label: 編集
@@ -55,13 +55,13 @@ ja:
           command: 'app:redo'
           enabled: false
         - type: separator
-        - label: 切り取る
+        - label: 切り取り
           accelerator: CmdOrCtrl+X
           role: cut
-        - label: コピーする
+        - label: コピー
           accelerator: CmdOrCtrl+C
           role: copy
-        - label: 貼り付ける
+        - label: 貼り付け
           accelerator: CmdOrCtrl+V
           role: paste
         - label: 全選択
@@ -74,9 +74,9 @@ ja:
       submenu:
         - label: 全画面表示にする
           role: togglefullscreen
-        - label: メニューバーを隠す
+        - label: メニューバーを非表示
           command: 'app:toggle-menu-bar'
-        - label: サイドバーを非表示にする
+        - label: サイドバーを非表示
           command: 'app:toggle-sidebar'
           enabled: false
           visible: false
@@ -314,7 +314,7 @@ ja:
         - label: ログファイルを開く
           command: 'app:open-logs'
         - type: separator
-        - label: プラグインの設定を変更
+        - label: プラグインの設定を開く
           command: 'app:open-plugins-config'
         - label: プラグインフォルダを開く
           command: 'app:open-plugins-folder'

@@ -232,6 +232,8 @@ en:
       ok: Yes
       cancel: Cancel
       item:
+        ok: Delete
+        cancel: Cancel
         destroy: >
           Are your sure you want to permanently delete items?
           This action cannot be undone.

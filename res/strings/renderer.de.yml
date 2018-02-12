@@ -457,6 +457,7 @@ de:
         save: Tag konnte nicht gespeichert werden.
         create: Objekt konnte nicht getaggt werden.
     list:
+      create: Liste konnte nicht erstellt werden. Listennamen müssen eindeutig sein.
       save: Liste konnte nicht gespeichert werden.
       item:
         add: Objekt(e) konnten nicht zur Liste hinzugefügt werden.
@@ -473,6 +474,8 @@ de:
         field:
           add: Feld konnte nicht zur Vorlage hinzugefügt werden.
           remove: Feld konnte nicht von Vorlage entfernt werden.
+    tag:
+      create: Tag konnte nicht erstellt werden. Tagnamen müssen eindeutig sein.
   flash:
     update:
       ready:

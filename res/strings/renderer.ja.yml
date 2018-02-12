@@ -9,11 +9,11 @@ ja:
     items: >
         {count, plural,
 
-        =0 {No items in this view}
+        =0 {このビューにはアイテムがありません}
 
-        one {1 item in this view}
+        one {このビューには1つのアイテムがあります}
 
-        other {# items in this view}}
+        other {# のアイテムがあります}}
     search:
       placeholder: 検索
   panel:
@@ -248,7 +248,6 @@ ja:
     comment: コメント
   dialog:
     prompt:
-      ok: Yes
       cancel: キャンセル
       item:
         destroy: >
@@ -282,7 +281,7 @@ ja:
     item:
       create: アイテムを作成する
       delete: アイテムを削除する
-      explode: アイテムをエクスポート
+      explode: 個別のアイテムに分割する
       implode: アイテムをまとめる
       merge: アイテムをまとめる
       split: アイテムを分ける
@@ -353,7 +352,7 @@ ja:
       create: アイテムを作成中
       delete: アイテムを削除しています
       destroy: アイテムを完全に削除しています
-      explode: アイテムをエクスポート中
+      explode: 個別のアイテムに分割中
       export: アイテムをエクスポートしています
       implode: アイテムを復元中
       import: >

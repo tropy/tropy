@@ -30,7 +30,7 @@ ja:
       - label: 新規タグ
         command: 'app:create-tag'
     tag:
-      - label: タグカラー
+      - label: タグの色
         submenu:
           - label: 色指定なし
             color: null
@@ -91,7 +91,7 @@ ja:
         type: checkbox
         checked: true
         command: 'app:toggle-line-numbers'
-      - label: 行を包む
+      - label: 行をまとめる
         id: line-wrap
         type: checkbox
         checked: true
@@ -100,7 +100,7 @@ ja:
       - label: 新規アイテム
         command: 'app:create-item'
     item:
-      - label: アイテムをエクスポート
+      - label: 個別のアイテムに分割する
         command: 'app:explode-item'
         condition: hasMultiplePhotos
       - label: アイテムをエクスポート
@@ -113,7 +113,7 @@ ja:
       - label: タグ
         id: tag
         submenu:
-          - label: 色指定なし
+          - label: 指定なし
             type: checkbox
             checked: true
             enabled: false
@@ -270,7 +270,7 @@ ja:
         type: checkbox
         checked: true
         command: 'app:toggle-line-numbers'
-      - label: 行を包む
+      - label: 行をまとめる
         id: line-wrap
         type: checkbox
         checked: true
@@ -279,7 +279,7 @@ ja:
       - label: 新規アイテム
         command: 'app:create-item'
     item:
-      - label: アイテムをエクスポート
+      - label: 個別のアイテムに分割する
         command: 'app:explode-item'
         condition: hasMultiplePhotos
       - label: アイテムをエクスポート
@@ -458,7 +458,7 @@ ja:
       - label: 新規アイテム
         command: 'app:create-item'
     item:
-      - label: アイテムをエクスポート
+      - label: 個別のアイテムに分割する
         command: 'app:explode-item'
         condition: hasMultiplePhotos
       - label: アイテムをエクスポート
