@@ -30,11 +30,7 @@ class Create extends Command {
 
     const tag = yield call(db.transaction, async tx => {
       const tg = await mod.tag.create(tx, data)
-
-      if (hasItems) {
-        await mod.item.tags.add(tx, items.map(id => ({ id, tag: tg.id })))
-      }
-
+      if (hasItems) await mod.item.tags.add(tx, { id: items, tag: tg.id })
       return tg
     })
 
