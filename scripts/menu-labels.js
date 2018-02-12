@@ -2,7 +2,7 @@
 
 require('shelljs/make')
 
-const { rules, say, warn } = require('./util')('make')
+const { rules, say } = require('./util')('make')
 const { join } = require('path')
 const { readFileSync: read, writeFileSync: write } = require('fs')
 const { isArray } = Array
