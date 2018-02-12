@@ -81,9 +81,10 @@ target.import = (args = []) => {
 
     say(`importing ${locale} labels into ${name} menu...`)
     const labels = load(join(home, file))[locale]
-    const menu = open(name).en
+    const menu = yaml.safeLoad(yaml.safeDump(open(name).en, { noRefs: true }))
     translate(menu, labels)
     save({ [locale]: menu }, name, locale)
+    rm(join(home, file))
   }
 }
 
