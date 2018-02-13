@@ -586,13 +586,9 @@ class Tropy extends EventEmitter {
       this.zoom(1.0)
     })
 
-    this.plugins.on('config-change', () => {
+    this.plugins.on('change', () => {
       this.broadcast('plugins-reload')
       this.emit('app:reload-menu')
-    })
-
-    this.plugins.on('plugin-change', () => {
-      this.plugins.reload()
     })
 
     let quit = false
