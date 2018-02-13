@@ -540,7 +540,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:install-plugin', async () => {
-      const plugins = await dialog.show('file', null, {
+      const plugins = await dialog.show('file', this.win, {
         defaultPath: app.getPath('downloads'),
         filters: [{ name: 'Tropy Plugins', extensions: Plugins.ext }],
         properties: ['openFile']
