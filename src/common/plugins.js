@@ -177,7 +177,9 @@ class Plugins extends EventEmitter {
 
   watch() {
     if (this.cfw != null) this.cfw.close()
-    this.cfw = watch(this.configFile, this.handleConfigFileChange)
+    this.cfw = watch(this.root, (_, file) => {
+      if (file === 'config.json') this.handleConfigFileChange()
+    })
     return this
   }
 
