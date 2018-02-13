@@ -7,7 +7,7 @@ const {
 } = require('fs')
 
 const { EventEmitter } = require('events')
-const { basename, extname, join } = require('path')
+const { basename, join } = require('path')
 const { warn, verbose, logger } = require('./log')
 const { pick } = require('./util')
 const { keys } = Object
@@ -56,8 +56,8 @@ class Plugins extends EventEmitter {
     return new Plugin(options || {}, this.context)
   }
 
-  create() {
-    this.instances = this.config.reduce((acc, { plugin, options }, id) => {
+  create(config = this) {
+    return config.reduce((acc, { plugin, options }, id) => {
       try {
         acc[id] = this.contract(this.require(plugin), options)
       } catch (error) {
@@ -65,8 +65,6 @@ class Plugins extends EventEmitter {
       }
       return acc
     }, {})
-    verbose(`plugins created: ${keys(this.instances).length}`)
-    return this
   }
 
   async exec({ id, action }, ...args) {
@@ -79,7 +77,6 @@ class Plugins extends EventEmitter {
 
   handleConfigFileChange = debounce(async () => {
     await this.reload()
-    this.scan()
     this.emit('change', { type: 'config' })
   }, 100)
 
@@ -92,16 +89,24 @@ class Plugins extends EventEmitter {
     return this.reload(true)
   }
 
-  async install(plugin) {
+  async install(input) {
     try {
-      await decompress(plugin, this.root)
+      const plugin = Plugins.basename(input)
+      await decompress(input, join(this.root, plugin), { strip: 1 })
+      const spec = this.scan([{ plugin }])[0] || {}
       await this.reload()
-      this.scan()
-      this.emit('change', { type: 'plugin', plugin })
-      verbose(`installed plugin ${basename(plugin, extname(plugin))}`)
+      this.emit('change', { type: 'plugin', plugin, spec })
+      verbose(`installed plugin ${spec.name || plugin} ${spec.version}`)
     } catch (error) {
       warn(`failed to install plugin: ${error.message}`)
     }
+    return this
+  }
+
+  async recreate() {
+    await this.reload()
+    this.instances = this.create()
+    verbose(`plugins loaded: ${keys(this.instances).length}`)
     return this
   }
 
@@ -116,6 +121,10 @@ class Plugins extends EventEmitter {
         if (autosave) await this.save()
       }
     }
+
+    this.spec = this.scan()
+    verbose(`plugins scanned: ${keys(this.spec).length}`)
+
     return this
   }
 
@@ -138,8 +147,8 @@ class Plugins extends EventEmitter {
     return save(this.configFile, this.config)
   }
 
-  scan() {
-    this.spec = this.config.reduce((acc, { plugin }, id) => {
+  scan(config = this.config) {
+    return config.reduce((acc, { plugin }, id) => {
       try {
         acc[id] = pick(this.require(join(plugin, 'package.json')), [
           'hooks',
@@ -151,8 +160,6 @@ class Plugins extends EventEmitter {
       }
       return acc
     }, {})
-    verbose(`plugins scanned: ${keys(this.spec).length}`)
-    return this
   }
 
   stop() {
@@ -170,6 +177,12 @@ class Plugins extends EventEmitter {
   }
 
   static ext = ['tar', 'tar.bz2', 'tar.gz', 'zip']
+
+  static basename(input) {
+    return basename(input)
+      .replace(/\.(tar\.(bz2|gz)|zip)$/, '')
+      .replace(/-\d+(\.\d+)*$/, '')
+  }
 }
 
 module.exports = {

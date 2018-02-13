@@ -278,7 +278,7 @@ class Tropy extends EventEmitter {
         this.plugins.init()
       ]))
 
-      .tap(() => this.plugins.scan().watch())
+      .tap(() => this.plugins.watch())
       .tap(state => state.updater && this.updater.start())
 
       .tap(() => this.emit('app:restored'))
