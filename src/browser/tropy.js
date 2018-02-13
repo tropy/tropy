@@ -278,7 +278,7 @@ class Tropy extends EventEmitter {
         this.plugins.init()
       ]))
 
-      .tap(() => this.plugins.scan().watch())
+      .tap(() => this.plugins.watch())
       .tap(state => state.updater && this.updater.start())
 
       .tap(() => this.emit('app:restored'))
@@ -539,6 +539,16 @@ class Tropy extends EventEmitter {
       shell.openItem(this.plugins.configFile)
     })
 
+    this.on('app:install-plugin', async () => {
+      const plugins = await dialog.show('file', this.win, {
+        defaultPath: app.getPath('downloads'),
+        filters: [{ name: 'Tropy Plugins', extensions: Plugins.ext }],
+        properties: ['openFile']
+      })
+
+      if (plugins != null) await this.plugins.install(...plugins)
+    })
+
     this.on('app:open-plugins-folder', () => {
       shell.showItemInFolder(this.plugins.configFile)
     })
@@ -576,7 +586,7 @@ class Tropy extends EventEmitter {
       this.zoom(1.0)
     })
 
-    this.plugins.on('config-change', () => {
+    this.plugins.on('change', () => {
       this.broadcast('plugins-reload')
       this.emit('app:reload-menu')
     })
