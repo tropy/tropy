@@ -82,7 +82,8 @@ class ItemTable extends ItemIterator {
 
   getColumnState(props = this.props) {
     let minWidth = 0
-    let colwidth = props.columns.map(c => ((minWidth += c.width), c.width))
+    let columns = props.columns
+    let colwidth = columns.map(c => ((minWidth += c.width), c.width))
 
     if (this.hasPositionColumn(props)) {
       minWidth += NAV.COLUMN.POSITION.width
@@ -93,7 +94,9 @@ class ItemTable extends ItemIterator {
     }
 
     return {
-      colwidth, minWidth
+      columns,
+      colwidth,
+      minWidth
     }
   }
 
@@ -118,7 +121,7 @@ class ItemTable extends ItemIterator {
   }
 
   edit(item) {
-    const { property } = this.props.columns[0]
+    const { property } = this.state.columns[0]
     this.props.onEdit({
       column: { [item.id]: property.id }
     })
@@ -170,10 +173,10 @@ class ItemTable extends ItemIterator {
   }
 
   renderTableBody() {
-    const { columns, data, edit } = this.props
+    const { data, edit } = this.props
     const onEdit = this.props.selection.length === 1 ? this.props.onEdit : noop
 
-    const { colwidth, height, minWidth } = this.state
+    const { columns, colwidth, height, minWidth } = this.state
     const { transform } = this
 
     const hasPositionColumn = this.hasPositionColumn()
@@ -223,7 +226,7 @@ class ItemTable extends ItemIterator {
           'max-scroll-left': this.state.hasMaxScrollLeft
         })}>
         <ItemTableHead
-          columns={this.props.columns}
+          columns={this.state.columns}
           colwidth={this.state.colwidth}
           hasPositionColumn={this.hasPositionColumn()}
           sort={this.props.sort}
