@@ -2,9 +2,9 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const { ListNode } = require('./node')
 const { get, move } = require('../../common/util')
+const { arrayOf, func, number, object, shape } = require('prop-types')
 
 
 class ListTree extends PureComponent {
@@ -89,22 +89,20 @@ class ListTree extends PureComponent {
   }
 
   static propTypes = {
-    parent: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      children: PropTypes.arrayOf(PropTypes.number).isRequired
+    parent: shape({
+      id: number.isRequired,
+      children: arrayOf(number).isRequired
     }).isRequired,
-
-    lists: PropTypes.object.isRequired,
-    edit: PropTypes.object,
-    selection: PropTypes.number,
-
-    onClick: PropTypes.func.isRequired,
-    onEditCancel: PropTypes.func.isRequired,
-    onDropFiles: PropTypes.func.isRequired,
-    onDropItems: PropTypes.func.isRequired,
-    onListSave: PropTypes.func.isRequired,
-    onSort: PropTypes.func.isRequired,
-    onContextMenu: PropTypes.func.isRequired
+    lists: object.isRequired,
+    edit: object,
+    selection: number,
+    onClick: func.isRequired,
+    onEditCancel: func.isRequired,
+    onDropFiles: func.isRequired,
+    onDropItems: func.isRequired,
+    onListSave: func.isRequired,
+    onSort: func.isRequired,
+    onContextMenu: func.isRequired
   }
 }
 
