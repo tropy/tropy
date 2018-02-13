@@ -76,17 +76,17 @@ class Plugins extends EventEmitter {
   }
 
   handleConfigFileChange = debounce(async () => {
-    await this.reload()
+    await this.rescan()
     this.emit('change', { type: 'config' })
   }, 100)
 
-  async init() {
+  async init(autosave = true) {
     try {
       await mkdir(this.root)
     } catch (error) {
       if (error.code !== 'EEXIST') throw error
     }
-    return this.reload(true)
+    return this.rescan(autosave)
   }
 
   async install(input) {
@@ -122,9 +122,13 @@ class Plugins extends EventEmitter {
       }
     }
 
+    return this
+  }
+
+  async rescan(autosave = false) {
+    await this.reload(autosave)
     this.spec = this.scan()
     verbose(`plugins scanned: ${keys(this.spec).length}`)
-
     return this
   }
 

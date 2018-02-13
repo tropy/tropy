@@ -17,14 +17,11 @@ describe('Plugins', () => {
   })
 
   it('hooks can be scanned', () => {
-    plugins.scan()
     expect(plugins.spec[0].hooks).to.have.property('sum', true)
     expect(plugins.spec[1].hooks).to.have.property('export', false)
   })
 
   describe('available()', () => {
-    beforeEach(() => plugins.scan())
-
     it('registered hooks', () => {
       expect(plugins.available('sum')).to.eql([
         { id: '0', name: 'Plugin Name' },
@@ -38,11 +35,11 @@ describe('Plugins', () => {
   })
 
   it('create()', () => {
-    expect(plugins.create().instances).to.have.keys('0', '1')
+    expect(plugins.create()).to.have.keys('0', '1')
   })
 
   it('exec()', async () => {
-    plugins.create()
+    await plugins.recreate()
     const a = await plugins.exec({ id: 0, action: 'sum' }, 40, 2)
     const b = await plugins.exec({ id: 1, action: 'sum' }, 40, 2)
 
