@@ -56,7 +56,7 @@ class Plugins extends EventEmitter {
     return new Plugin(options || {}, this.context)
   }
 
-  create(config = this) {
+  create(config = this.config) {
     return config.reduce((acc, { plugin, options }, id) => {
       try {
         acc[id] = this.contract(this.require(plugin), options)
