@@ -11,7 +11,7 @@ const { noop } = require('../../common/util')
 const { NAV, SASS: { ROW, SCROLLBAR } } = require('../../constants')
 const { on, off, maxScrollLeft } = require('../../dom')
 const { match } = require('../../keymap')
-const { refine, shallow, splice } = require('../../common/util')
+const { move, refine, shallow, splice } = require('../../common/util')
 const { assign } = Object
 const throttle = require('lodash.throttle')
 
@@ -137,6 +137,26 @@ class ItemTable extends ItemIterator {
     this.container.focus()
   }
 
+  handleColumnOrderStart = () => {
+    this._columns = this.state.columns
+  }
+
+  handleColumnOrderStop = () => {
+  }
+
+  handleColumnOrderReset = () => {
+    this.setState({ columns: this._columns })
+  }
+
+  handleColumnOrder = (from, to, offset = 0) => {
+    const a = this.state.columns.find(c => c.id === from)
+    const b = this.state.columns.find(c => c.id === to)
+
+    this.setState({
+      columns: move(this.state.columns, a, b, offset)
+    })
+  }
+
   handleColumnResize = ({ column, width }, doCommit) => {
     const prev = this.state.colwidth[column]
 
@@ -230,6 +250,10 @@ class ItemTable extends ItemIterator {
           colwidth={this.state.colwidth}
           hasPositionColumn={this.hasPositionColumn()}
           sort={this.props.sort}
+          onOrder={this.handleColumnOrder}
+          onOrderReset={this.handleColumnOrderReset}
+          onOrderStart={this.handleColumnOrderStart}
+          onOrderStop={this.handleColumnOrderStop}
           onResize={this.handleColumnResize}
           onSort={this.props.onSort}/>
         {this.renderTableBody()}
