@@ -176,6 +176,7 @@ class Plugins extends EventEmitter {
   }
 
   watch() {
+    if (this.cfw != null) this.cfw.close()
     this.cfw = watch(this.configFile, this.handleConfigFileChange)
     return this
   }
