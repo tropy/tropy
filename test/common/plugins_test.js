@@ -39,7 +39,7 @@ describe('Plugins', () => {
   })
 
   it('exec()', async () => {
-    await plugins.recreate()
+    await plugins.reloadAndCreate()
     const a = await plugins.exec({ id: 0, action: 'sum' }, 40, 2)
     const b = await plugins.exec({ id: 1, action: 'sum' }, 40, 2)
 

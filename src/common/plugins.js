@@ -76,7 +76,7 @@ class Plugins extends EventEmitter {
   }
 
   handleConfigFileChange = debounce(async () => {
-    await this.rescan()
+    await this.reloadAndScan()
     this.emit('change', { type: 'config' })
   }, 100)
 
@@ -86,7 +86,7 @@ class Plugins extends EventEmitter {
     } catch (error) {
       if (error.code !== 'EEXIST') throw error
     }
-    return this.rescan(autosave)
+    return this.reloadAndScan(autosave)
   }
 
   async install(input) {
@@ -94,19 +94,12 @@ class Plugins extends EventEmitter {
       const plugin = Plugins.basename(input)
       await decompress(input, join(this.root, plugin), { strip: 1 })
       const spec = this.scan([{ plugin }])[0] || {}
-      await this.reload()
+      await this.reloadAndScan()
       this.emit('change', { type: 'plugin', plugin, spec })
       verbose(`installed plugin ${spec.name || plugin} ${spec.version}`)
     } catch (error) {
       warn(`failed to install plugin: ${error.message}`)
     }
-    return this
-  }
-
-  async recreate() {
-    await this.reload()
-    this.instances = this.create()
-    verbose(`plugins loaded: ${keys(this.instances).length}`)
     return this
   }
 
@@ -125,7 +118,14 @@ class Plugins extends EventEmitter {
     return this
   }
 
-  async rescan(autosave = false) {
+  async reloadAndCreate() {
+    await this.reload()
+    this.instances = this.create()
+    verbose(`plugins loaded: ${keys(this.instances).length}`)
+    return this
+  }
+
+  async reloadAndScan(autosave = false) {
     await this.reload(autosave)
     this.spec = this.scan()
     verbose(`plugins scanned: ${keys(this.spec).length}`)
