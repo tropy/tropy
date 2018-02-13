@@ -532,7 +532,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:open-logs', () => {
-      shell.openItem(join(app.getPath('userData'), 'log'))
+      shell.showItemInFolder(join(app.getPath('userData'), 'log', 'main.log'))
     })
 
     this.on('app:open-plugins-config', () => {
@@ -540,8 +540,6 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:open-plugins-folder', () => {
-      // this could be `shell.openItem(this.plugins.root)`
-      // when electron solves the lost-focus bug for folders
       shell.showItemInFolder(this.plugins.configFile)
     })
 
