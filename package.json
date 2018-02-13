@@ -84,6 +84,7 @@
     "bluebird": "^3.5.1",
     "classnames": "^2.2.5",
     "colors": "^1.1.2",
+    "decompress": "^4.2.0",
     "edtf": "^2.3.0",
     "exif-reader": "github:inukshuk/exif-reader#patched",
     "generic-pool": "^3.4.1",
