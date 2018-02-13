@@ -539,6 +539,16 @@ class Tropy extends EventEmitter {
       shell.openItem(this.plugins.configFile)
     })
 
+    this.on('app:install-plugin', async () => {
+      const plugins = await dialog.show('file', null, {
+        defaultPath: app.getPath('downloads'),
+        filters: [{ name: 'Tropy Plugins', extensions: Plugins.ext }],
+        properties: ['openFile']
+      })
+
+      if (plugins != null) await this.plugins.install(...plugins)
+    })
+
     this.on('app:open-plugins-folder', () => {
       shell.showItemInFolder(this.plugins.configFile)
     })
@@ -579,6 +589,10 @@ class Tropy extends EventEmitter {
     this.plugins.on('config-change', () => {
       this.broadcast('plugins-reload')
       this.emit('app:reload-menu')
+    })
+
+    this.plugins.on('plugin-change', () => {
+      this.plugins.reload()
     })
 
     let quit = false

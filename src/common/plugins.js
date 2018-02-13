@@ -7,7 +7,7 @@ const {
 } = require('fs')
 
 const { EventEmitter } = require('events')
-const { join } = require('path')
+const { basename, extname, join } = require('path')
 const { warn, verbose, logger } = require('./log')
 const { pick } = require('./util')
 const { keys } = Object
@@ -16,6 +16,7 @@ const debounce = require('lodash.debounce')
 const load = async file => JSON.parse(await read(file))
 const save = (file, data) => write(file, JSON.stringify(data))
 
+const decompress = (...args) => require('decompress')(...args)
 const proxyRequire = (mod) => require(mod)
 
 
@@ -79,7 +80,7 @@ class Plugins extends EventEmitter {
   handleConfigFileChange = debounce(async () => {
     await this.reload()
     this.scan()
-    this.emit('config-change')
+    this.emit('change', { type: 'config' })
   }, 100)
 
   async init() {
@@ -89,6 +90,19 @@ class Plugins extends EventEmitter {
       if (error.code !== 'EEXIST') throw error
     }
     return this.reload(true)
+  }
+
+  async install(plugin) {
+    try {
+      await decompress(plugin, this.root)
+      await this.reload()
+      this.scan()
+      this.emit('change', { type: 'plugin', plugin })
+      verbose(`installed plugin ${basename(plugin, extname(plugin))}`)
+    } catch (error) {
+      warn(`failed to install plugin: ${error.message}`)
+    }
+    return this
   }
 
   async reload(autosave = false) {
@@ -154,6 +168,8 @@ class Plugins extends EventEmitter {
     this.cfw = watch(this.configFile, this.handleConfigFileChange)
     return this
   }
+
+  static ext = ['tar', 'tar.bz2', 'tar.gz', 'zip']
 }
 
 module.exports = {
