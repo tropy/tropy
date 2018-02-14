@@ -433,6 +433,14 @@ const util = {
     }
 
     return true
+  },
+
+  groupBy(xs, key) {
+    return xs.reduce((res, x) => {
+      res[x[key]] = res[x[key]] || []
+      res[x[key]].push(x)
+      return res
+    }, {})
   }
 }
 

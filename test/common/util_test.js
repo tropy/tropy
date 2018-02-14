@@ -322,4 +322,16 @@ describe('util', () => {
     expect(camelcase('Foo Bar')).to.eql('fooBar')
     expect(camelcase('one two three')).to.eql('oneTwoThree')
   })
+
+  describe('.groupBy', () => {
+    const { groupBy } = util
+    expect(groupBy([])).to.eql({})
+    expect(groupBy([], 'foo')).to.eql({})
+    expect(groupBy([{ foo: 42 }], 'foo'))
+      .to.eql({ 42: [{ foo: 42 }] })
+    expect(groupBy([{ foo: 42 }], 'bar'))
+      .to.eql({ undefined: [{ foo: 42 }] })
+    expect(groupBy([{ foo: 42 }, { foo: 43 }], 'foo'))
+      .to.eql({ 42: [{ foo: 42 }], 43: [{ foo: 43 }] })
+  })
 })
