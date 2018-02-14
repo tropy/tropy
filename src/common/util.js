@@ -435,11 +435,10 @@ const util = {
     return true
   },
 
-  groupBy(xs, key, replacement = undefined) {
+  groupBy(xs, key) {
     return xs.reduce((res, x) => {
-      const val = x[key] || replacement
-      res[val] = res[val] || []
-      res[val].push(x)
+      res[x[key]] = res[x[key]] || []
+      res[x[key]].push(x)
       return res
     }, {})
   }

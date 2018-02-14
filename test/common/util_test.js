@@ -333,10 +333,5 @@ describe('util', () => {
       .to.eql({ undefined: [{ foo: 42 }] })
     expect(groupBy([{ foo: 42 }, { foo: 43 }], 'foo'))
       .to.eql({ 42: [{ foo: 42 }], 43: [{ foo: 43 }] })
-
-    it('replacement', () => {
-      expect(groupBy([{ foo: 42 }], 'bar', 'baz'))
-        .to.eql({ baz: [{ foo: 42 }] })
-    })
   })
 })
