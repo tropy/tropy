@@ -16,11 +16,6 @@
     padding: 0;
     position: relative;
 
-    .th-container,
-    .td-container {
-      padding: 0 $space-xs 0 ($space-xs + 1px);
-    }
-
     &:last-child {
       .th-container,
       .td-container {
@@ -53,6 +48,7 @@
         top: 1px solid $item-table-header-border-color;
         bottom: 1px solid $item-table-header-border-color;
       }
+      padding-right: $space-min; // Prevent overlap of th-container and resize handle
       position: relative;
       background-image:
         linear-gradient(to right, transparent 1px, $body-bg 1px),
@@ -135,6 +131,7 @@
         height: 100%;
         justify-content: space-between;
         align-items: center;
+        padding: 0 $space-min 0 ($space-xs + 1px);
       }
 
       .label {
@@ -199,6 +196,10 @@
       height: $row-height;
     }
 
+    .td-container {
+      padding: 0 $space-xs 0 ($space-xs + 1px);
+    }
+
     &.active {
       td {
         color: $items-active-color;
@@ -226,14 +227,14 @@
         @extend %drop-target;
       }
     }
-  }
 
-  .main-column {
-    .td-container {
-      padding-left:
-        $default-padding-horizontal
-        + $thumbnail-size
-        + $padding-base-horizontal;
+    .main-column {
+      .td-container {
+        padding-left:
+          $default-padding-horizontal
+          + $thumbnail-size
+          + $padding-base-horizontal;
+      }
     }
   }
 
