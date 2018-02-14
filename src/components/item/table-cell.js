@@ -114,7 +114,7 @@ class ItemTableCell extends PureComponent {
         className={cx(this.classes)}
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>
-        <div className="flex-row center">
+        <div className="flex-row center td-container">
           {this.renderCoverImage()}
           <Editable
             display={auto(this.props.value, this.props.type)}

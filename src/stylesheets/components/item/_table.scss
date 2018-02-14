@@ -13,11 +13,19 @@
 
   th,
   td {
-    padding: 0 $space-xs;
+    padding: 0;
     position: relative;
 
+    .th-container,
+    .td-container {
+      padding: 0 $space-xs 0 ($space-xs + 1px);
+    }
+
     &:last-child {
-      padding-right: $space-sm;
+      .th-container,
+      .td-container {
+        padding-right: $space-sm;
+      }
     }
 
     &.number {
@@ -58,8 +66,11 @@
       contain: content; // Not clear why size shifts the content
 
       &:first-child {
-        padding-left: $space-sm;
         background-image: none;
+
+        .th-container {
+          padding-left: $space-sm;
+        }
       }
 
       &:active:not(.resizing):not(.blank) {
@@ -89,6 +100,7 @@
       &.number {
         .label {
           padding-left: $space-min;
+          padding-right: 0;
         }
 
         .icon {
@@ -210,8 +222,8 @@
     }
   }
 
-  td {
-    &.main-column {
+  .main-column {
+    .td-container {
       padding-left:
         $default-padding-horizontal
         + $thumbnail-size
