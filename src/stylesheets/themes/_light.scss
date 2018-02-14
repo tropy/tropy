@@ -48,7 +48,7 @@ $shade-10: #000; // Black
 :root {
   #{--transparent}:        $transparent;
   #{--shade-0}:            $shade-0;
-  #{--shade-0-60}:         rgba($shade-0, 0.6);
+  #{--shade-0-80}:         rgba($shade-0, 0.8);
   #{--shade-0-40}:         rgba($shade-0, 0.4);
   #{--shade-1}:            $shade-1;
   #{--shade-1-darken-4}:   darken($shade-1, 4%); // 8% Fieldset bg
@@ -332,7 +332,7 @@ $esper-btn-icon-active-color:            var(--shade-7);
 $esper-btn-icon-active-bg:               var(--shade-4);
 $esper-slider-handle-bg:                 var(--shade-2-lighten-4);
 $esper-slider-value-color:               var(--shade-6);
-$esper-overlay-bg:                       var(--shade-0-60);
+$esper-overlay-bg:                       var(--shade-0-80);
 $esper-toolbar-overlay-btn-active-color: var(--shade-0);
 $esper-toolbar-overlay-btn-active-bg:    var(--shade-10-60);
 $esper-overlay-icon-color:               var(--shade-7);
