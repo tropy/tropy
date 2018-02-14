@@ -73,7 +73,7 @@
         }
       }
 
-      &:active:not(.resizing):not(.blank) {
+      &:active:not(.resizing):not(.blank):not(.dragging) {
         background:
           linear-gradient(
             to right,
@@ -120,6 +120,12 @@
       &.descending {
         .icon {
           transform: scaleY(-1);
+        }
+      }
+
+      &.dragging {
+        .th-container {
+          visibility: hidden;
         }
       }
 
