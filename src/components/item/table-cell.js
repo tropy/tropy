@@ -22,7 +22,7 @@ const BlankTableCell = () => (
 
 class ItemTableCell extends PureComponent {
   get classes() {
-    return ['metadata', {
+    return ['metadata', this.props.type, {
       'main-column': this.props.isMainColumn,
       'read-only': this.props.isReadOnly
     }]

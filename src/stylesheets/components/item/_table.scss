@@ -23,7 +23,7 @@
       }
     }
 
-    &.number {
+    &.http\:\/\/www\.w3\.org\/2001\/XMLSchema\#integer {
       text-align: right;
     }
   }
@@ -93,7 +93,7 @@
         }
       }
 
-      &.number {
+      &.http\:\/\/www\.w3\.org\/2001\/XMLSchema\#integer {
         .label {
           padding-left: $space-min;
           padding-right: 0;
