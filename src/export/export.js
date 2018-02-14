@@ -6,9 +6,6 @@ const { pick, pluck } = require('../common/util')
 const { ITEM, PHOTO, SELECTION } = require('../constants/type')
 const makeNote = require('./note')
 
-const DUMMY_TEMPLATE = {
-  id: 'dummy'
-}
 const TR = 'https://tropy.org/v1/tropy#'
 
 const PROP = {
@@ -196,8 +193,8 @@ async function groupedByTemplate(templateItems, resources) {
   const results = []
   for (const templateID in templateItems) {
     const { items, template } = templateItems[templateID]
-    const context = makeContext(template || DUMMY_TEMPLATE, items, resources)
-    const document = makeDocument(template || DUMMY_TEMPLATE, items, resources)
+    const context = makeContext(template, items, resources)
+    const document = makeDocument(template, items, resources)
     document['@context'] = context
     results.push(await jsonld.compact(document, context))
   }

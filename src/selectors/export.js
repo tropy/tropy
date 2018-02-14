@@ -19,7 +19,7 @@ const exportSelector = (ids) => memo(
     return [
       entries(groupBy(values(items), 'template')).reduce((res, [t, items]) => {
         res[t] = {
-          template: templates[t],
+          template: templates[t] || { id: t },
           items
         }
         return res
