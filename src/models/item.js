@@ -306,7 +306,7 @@ module.exports = mod.item = {
 
     await all([
       mod.photo.merge(db, item.id, photos, item.photos.length),
-      mod.item.tags.add(db, tags.map(tag => ({ id: item.id, tag }))),
+      mod.item.tags.set(db, tags.map(tag => ({ id: item.id, tag }))),
       mod.item.lists.merge(db, item.id, ids, lists),
       mod.metadata.update(db, { ids: [item.id], data }),
       mod.item.delete(db, ids, 'auto')
@@ -380,6 +380,15 @@ module.exports = mod.item = {
           }`)
 
       return { ...res, id }
+    },
+
+    async set(db, values) {
+      if (values.length) {
+        return db.run(`
+          INSERT INTO taggings (tag_id, id) VALUES ${
+            values.map(({ tag, id }) => `(${tag}, ${id})`).join(',')
+          }`)
+      }
     },
 
     async clear(db, id) {
