@@ -506,7 +506,7 @@ class ToggleTags extends Command {
     }
 
     if (added.length) {
-      yield call(mod.item.tags.set, db, { tag, id: added.map(tag => ({ id, tag })))
+      yield call(mod.item.tags.set, db, added.map(tag => ({ id, tag })))
       yield put(act.item.tags.insert({ id, tags: added }))
     }
 
