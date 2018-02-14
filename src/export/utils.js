@@ -7,7 +7,7 @@ const { entries, values } = Object
 function propertyLabel(property, props, template) {
   var label, field
   try {
-    if (template) {
+    if (template && template.fields) {
       field = template.fields.find(f => f.property === property)
       label = field && field.label
     }
