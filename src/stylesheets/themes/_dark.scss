@@ -59,7 +59,7 @@ $shade-10: #fff; // White
   #{--transparent}:        $transparent;
   #{--shade-0}:            $shade-0;
   #{--shade-0-20}:         rgba($shade-0, 0.2);
-  #{--shade-0-60}:         rgba($shade-0, 0.6);
+  #{--shade-0-80}:         rgba($shade-0, 0.8);
   #{--shade-1}:            $shade-1;
   #{--shade-1-lighten-2}:  lighten($shade-1, 2%);
   #{--shade-1-lighten-4}:  lighten($shade-1, 4%);
@@ -341,7 +341,7 @@ $esper-btn-icon-active-color:            var(--shade-9);
 $esper-btn-icon-active-bg:               var(--shade-5);
 $esper-slider-handle-bg:                 $slider-handle-bg;
 $esper-slider-value-color:               var(--shade-7);
-$esper-overlay-bg:                       var(--shade-0-60);
+$esper-overlay-bg:                       var(--shade-0-80);
 $esper-toolbar-overlay-btn-active-color: var(--shade-10-darken-4);
 $esper-toolbar-overlay-btn-active-bg:    var(--shade-10-20);
 $esper-overlay-icon-color:               var(--shade-10-darken-14);
