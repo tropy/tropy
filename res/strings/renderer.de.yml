@@ -2,7 +2,7 @@ de:
   sidebar:
     lists: Listen
     tags: Tags
-    imports: Zuletzt Importiert
+    imports: Zuletzt importiert
     trash: Gelöscht
   toolbar:
     import: Fotos importieren
@@ -69,9 +69,8 @@ de:
       title: Corporation for Digital Scholarship
       url: http://digitalscholar.org
     text: >
-        Tropy wird vom {rrchnm} entwickelt, einem Team, das sich der Herstellung von
-        Mitteln zur Geschichtsvermittlung, digitaler Ausstellungen, und Open-Source
-        Software verschrieben hat.
+        Tropy wird vom {rrchnm} erstellt, einem Team, das Ressourcen zur Geschichtsvermittlung,
+        digitale Ausstellungen und Open-Source-Software entwickelt.
     trademark: Tropy ist eine geschützte Marke der {cds}.
     release:
       title: Versionshinweise
@@ -83,8 +82,8 @@ de:
       title: Credits
       url: https://tropy.org/credits
   project:
-    none: Eine Projektdatei hierher ziehen oder ein {newProject} erstellen
-    empty: Fotos ins Tropy Fenster ziehen und los geht's!
+    none: Ziehen Sie eine Projektdatei hierher oder erstellen Sie ein {newProject}
+    empty: Fotos ins Tropy Fenster ziehen und los geht’s!
     new: neues Projekt
   wizard:
     project:
@@ -94,11 +93,11 @@ de:
       save_as: Datei und Verzeichnis anpassen
       change: Anpassen
   prefs:
-    title: Tropy Einstellungen
+    title: Voreinstellungen
     app:
       label: Global
       style:
-        theme: Style-Sheet
+        theme: Erscheinungsbild
         themes:
           light: Hell
           dark: Dunkel
@@ -115,10 +114,10 @@ de:
         label: Beim Importieren
         option:
           skip: Zuvor importiere Fotos überspringen
-          import: Zuvor importierte Fotos nochmal importieren
-          prompt: Jedes mal nachfragen
+          import: Zuvor importierte Fotos nochmals importieren
+          prompt: Jedes Mal nachfragen
       ui:
-        label: Interface
+        label: Benutzeroberfläche
         option:
           invertScroll: Richtung beim Scrollen in Fotos umkehren
           invertZoom: Richtung beim Zoomen in Fotos umkehren
@@ -126,13 +125,13 @@ de:
       zoomMode:
         label: Standardmäßig
         option:
-          fit: Fotos einpassen
-          fill: Fotos an die Fensterbreite anpassen
+          fit: Format mit Fotos füllen
+          fill: Fotos an das Format anpassen
     project:
       label: Projekt
     template:
       label: Vorlagen
-      new: Neue Vorlage
+      new: Neue Vorlage …
       create: Erstellen
       select: Vorlage
       tools:
@@ -142,7 +141,7 @@ de:
         import: Importieren
         export: Exportieren
     vocab:
-      label: Vokabular
+      label: Vokabulare
       export: Exportieren
       classes: >
           {count, plural,
@@ -190,12 +189,12 @@ de:
   esper:
     tool:
       pan: Verschieben
-      select: Ausschneiden
+      select: Ausschnitt-Werkzeug
       rotate: Drehen
       mirror: Spiegeln
       edit: Foto bearbeiten
     mode:
-      fill: Anpassen
+      fill: Füllen
       fit: Einpassen
       zoom: Zoom
     panel:
@@ -211,7 +210,7 @@ de:
         label: Farbton
         value: "{value, number}°"
       saturation:
-        label: Farbsättigung
+        label: Sättigung
         value: "{value, number}"
   notepad:
     placeholder: Notizen hier eintragen …
@@ -254,19 +253,21 @@ de:
     prompt:
       cancel: Abbrechen
       item:
+        ok: Löschen
+        cancel: Abbrechen
         destroy: >
             Objekte vollständig löschen? Dies kann nicht mehr rückgängig gemacht werden.
       dup:
         message: >
-            Dieses Foto ist bereits im Projekt vorhanen. Sicher nochmal importieren?
-        checkbox: In Zukunft merken
+            Dieses Foto ist bereits im Projekt vorhanden. Nochmals importieren?
+        checkbox: Auswahl merken
         cancel: Überspringen
-        ok: Nochmal importieren
+        ok: Nochmals importieren
     filter:
-      templates: Tropy Vorlagen
+      templates: Tropy-Vorlagen
       images: Bilder
-      projects: Tropy Projekte
-      rdf: RDF Vokabular
+      projects: Tropy-Projekte
+      rdf: RDF-Vokabular
       jsonld: JSON-LD
   action:
     project:
@@ -293,8 +294,8 @@ de:
       restore: Objekte wiederherstellen
       save: Objekte speichern
       tag:
-        create: Stichwort
-        toggle: Stichwort
+        create: Tag
+        toggle: Tag
         clear: Tags entfernen
     metadata:
       save: Metadaten speichern
@@ -356,7 +357,7 @@ de:
       create: Objekt erstellen …
       delete: Objekt löschen …
       destroy: Objekte vollständig löschen …
-      explode: Objektfotos aufsplitten …
+      explode: Objekt zerteilen …
       export: Objekt exportieren …
       implode: Objekt wiederherstellen
       import: >
@@ -368,13 +369,13 @@ de:
 
           }
       load: Objekte laden …
-      merge: Objekte zusammenfügen …
+      merge: Objekte zusammenführen …
       restore: Objekt wiederherstellen …
       save: Objekte speichern …
       tag:
         create: Objekt taggen
         toggle: Objekt taggen …
-        clear: Objekttags entfernen …
+        clear: Objekt-Tags entfernen …
     metadata:
       load: Metadaten laden …
       save: Metadaten speichern …
@@ -391,7 +392,7 @@ de:
       consolidate: >
           {hasProgressBar, select,
 
-          true {Foto {progress, number} von {total, number} konsolidiern …}
+          true {Foto {progress, number} von {total, number} konsolidieren …}
 
           other {Fotos konsolidieren …}
 
@@ -439,7 +440,7 @@ de:
       ol: Nummerierte Liste einfügen
       ul: Liste einfügen
       link:
-        button: Link umschalten
+        button: Link
         target: Ziel des Links
         title: Titel des Links
       left: Links
@@ -475,10 +476,10 @@ de:
           add: Feld konnte nicht zur Vorlage hinzugefügt werden.
           remove: Feld konnte nicht von Vorlage entfernt werden.
     tag:
-      create: Tag konnte nicht erstellt werden. Tagnamen müssen eindeutig sein.
+      create: Tag konnte nicht erstellt werden. Tag-Namen müssen eindeutig sein.
   flash:
     update:
       ready:
         message: >
             Tropy {version} kann installiert werden. Jetzt installieren und neustarten?
-        confirm: Neustarten
+        confirm: Jetzt neu starten
