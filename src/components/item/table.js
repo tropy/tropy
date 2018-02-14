@@ -11,7 +11,7 @@ const { noop } = require('../../common/util')
 const { NAV, SASS: { ROW, SCROLLBAR } } = require('../../constants')
 const { on, off, maxScrollLeft } = require('../../dom')
 const { match } = require('../../keymap')
-const { move, refine, shallow, splice } = require('../../common/util')
+const { moveById, refine, shallow, splice } = require('../../common/util')
 const { assign } = Object
 const throttle = require('lodash.throttle')
 
@@ -148,13 +148,10 @@ class ItemTable extends ItemIterator {
     this.setState({ columns: this._columns })
   }
 
-  handleColumnOrder = (from, to, offset = 0) => {
-    const a = this.state.columns.find(c => c.id === from)
-    const b = this.state.columns.find(c => c.id === to)
-
-    this.setState({
-      columns: move(this.state.columns, a, b, offset)
-    })
+  handleColumnOrder = (from, to, offset) => {
+    const columns = moveById(this.state.columns, from, to, offset)
+    const colwidth = columns.map(c => c.width)
+    this.setState({ columns, colwidth })
   }
 
   handleColumnResize = ({ column, width }, doCommit) => {

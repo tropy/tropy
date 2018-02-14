@@ -148,6 +148,18 @@ describe('util', () => {
     })
   })
 
+  describe('.moveById', () => {
+    const { moveById } = util
+
+    describe('with offset 0', () => {
+      it('moves a in front of b', () => {
+        expect(
+          moveById([{ id: 1 }, { id: 2 }, { id: 3 }], 3, 2, 0)
+        ).to.eql([{ id: 1 }, { id: 3 }, { id: 2 }])
+      })
+    })
+  })
+
   describe('.swap', () => {
     const { swap } = util
 

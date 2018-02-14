@@ -8,6 +8,8 @@ const cx = require('classnames')
 const { IconChevron7 } = require('../icons')
 const { DND, TYPE } = require('../../constants')
 const { bool, func, number, string } = require('prop-types')
+const { bounds } = require('../../dom')
+const { round } = Math
 
 const MIN_WIDTH = 40
 
@@ -36,12 +38,14 @@ class ItemTableHeadCell extends PureComponent {
     return this.props.onResize != null && this.props.position != null
   }
 
-  connectDragSource(element) {
-    return this.isDragAndDropEnabled ? this.props.ds(element) : element
+  setContainer = (container) => {
+    this.container = container
   }
 
-  connectDropTarget(element) {
-    return this.isDragAndDropEnabled ? this.props.dt(element) : element
+  connect(element) {
+    return this.isDragAndDropEnabled ?
+      this.props.dt(this.props.ds(element)) :
+      element
   }
 
   handleClick = () => {
@@ -77,13 +81,14 @@ class ItemTableHeadCell extends PureComponent {
         onDragStop={this.handleDragStop}
         onResize={this.handleResize}
         value={this.props.width}>
-        {this.connectDropTarget(this.connectDragSource(
+        {this.connect(
           <div
             className="th-container"
-            onClick={this.handleClick}>
+            onClick={this.handleClick}
+            ref={this.setContainer}>
             <div className="label">{this.props.label}</div>
             {this.props.isActive && <IconChevron7/>}
-          </div>))}
+          </div>)}
       </Resizable>
     )
   }
@@ -120,9 +125,8 @@ class ItemTableHeadCell extends PureComponent {
 const DragSourceSpec = {
   beginDrag: ({ id, onOrderStart }) => (onOrderStart(), { id }),
 
-  endDrag: ({ id, onOrderStop, onOrderReset }, monitor) => {
-    if (monitor.didDrop()) onOrderStop(id)
-    else onOrderReset(id)
+  endDrag: (props, monitor) => {
+    props[`onOrder${monitor.didDrop() ? 'Stop' : 'Reset'}`]()
   }
 }
 
@@ -132,11 +136,14 @@ const DragSourceCollect = (connect, monitor) => ({
 })
 
 const DropTargetSpec = {
-  hover: ({ id, onOrder }, monitor) => {
+  hover: ({ id, onOrder }, monitor, { container }) => {
     const item = monitor.getItem()
     if (item.id === id) return
 
-    onOrder(item.id, id)
+    const { left, width } = bounds(container)
+    const offset = round((monitor.getClientOffset().x - left) / width)
+
+    onOrder(item.id, id, offset)
   },
 
   drop: ({ id }) => ({ id })

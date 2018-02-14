@@ -140,6 +140,17 @@ const util = {
     return res
   },
 
+  moveById(array, aId, bId, offset = 0) {
+    let a, b
+    for (let x of array) {
+      if (a == null && aId === x.id) a = x
+      else if (b == null && bId === x.id) b = x
+      if (a != null && b != null) break
+    }
+
+    return util.move(array, a, b, offset)
+  },
+
   swap(array, from, to) {
     to = util.restrict(to, 0, array.length - 1)
 
