@@ -24,7 +24,8 @@ const { groupedByTemplate } = require('../export')
 const {
   getItemTemplate,
   getPhotoTemplate,
-  getTemplateValues
+  getTemplateValues,
+  exportSelector,
 } = require('../selectors')
 
 
@@ -440,32 +441,7 @@ class Export extends Command {
 
       if (!target) return
 
-      const [templateItems, ...resources] = yield select(state => {
-        const itms = pick(state.items, ids)
-        const templateIDs = Object.values(itms).map(itm => itm.template)
-        const templates = pick(state.ontology.template, templateIDs)
-        let results = []
-
-        // check for missing templates
-        const isTrue = x => x === true
-        const hasTemplates = keys(state.ontology.template)
-        if (!templateIDs.map(t => hasTemplates.includes(t)).every(isTrue)) {
-          const notFound = templateIDs.filter(t => !hasTemplates.includes(t))[0]
-          throw new Error(`Template '${notFound}' not found.\n` +
-                          'Please create it though the preferences.')
-        }
-
-        for (const t in templates) {
-          const template = templates[t]
-          results.push({
-            template,
-            items: Object.values(itms).filter(i => i.template === t),
-          })
-        }
-        const needed = [
-          'metadata', 'photos', 'lists', 'tags', 'notes', 'selections']
-        return [results, state.ontology.props, ...pluck(state, needed)]
-      })
+      const [templateItems, ...resources] = yield select(exportSelector(ids))
 
       const results = yield call(groupedByTemplate, templateItems, resources)
       const asString = JSON.stringify(results, null, 2)
