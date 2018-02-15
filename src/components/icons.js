@@ -530,7 +530,7 @@ i('Sliders', (
 ))
 
 i('Spin', (
-  <svg width="16" height="16">
+  <svg width="16" height="16" viewBox="0 0 16 16">
     <g className="line" fill="none" stroke="currentColor">
       <path strokeWidth="1.5" d="M8,15c-3.866,0-7-3.134-7-7s3.134-7,7-7s7,3.134,7,7"/>
     </g>

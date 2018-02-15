@@ -145,16 +145,17 @@ $input-border-width: const("INPUT.BORDER_WIDTH") * 1px;
 // Z-index master list
 // --------------------------------------------------
 
-$zindex-resizable:       1000;
-$zindex-project:         1010;
-$zindex-item:            1020;
-$zindex-draggable:       1030;
-$zindex-esper-header:    1030;
-$zindex-drop-target:     1040;
-$zindex-drag-layer:      1050;
-$zindex-flash:           1060;
-$zindex-popup:           1070;
-$zindex-window-controls: 1080;
+$zindex-resizable:        1000;
+$zindex-project:          1010;
+$zindex-item:             1020;
+$zindex-draggable:        1030;
+$zindex-esper-header:     1030;
+$zindex-drop-target:      1040;
+$zindex-drag-layer:       1050;
+$zindex-flash:            1060;
+$zindex-popup:            1070;
+$zindex-closing-backdrop: 1080;
+$zindex-window-controls:  1090;
 
 
 // Darwin window controls

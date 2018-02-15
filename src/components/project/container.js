@@ -18,6 +18,7 @@ const { values } = Object
 const actions = require('../../actions')
 const debounce = require('lodash.debounce')
 const { match } = require('../../keymap')
+const { IconSpin } = require('../icons')
 
 const {
   getActivities,
@@ -275,6 +276,9 @@ class ProjectContainer extends Component {
           photos={photos}
           tags={props.tags}
           onPhotoError={props.onPhotoError}/>
+        <div className="closing-backdrop">
+          <IconSpin/>
+        </div>
       </div>
     )
   }

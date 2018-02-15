@@ -66,6 +66,7 @@ $shade-10: #fff; // White
   #{--shade-1-darken-10}:  darken($shade-1, 10%);
   #{--shade-2}:            $shade-2;
   #{--shade-3}:            $shade-3;
+  #{--shade-3-60}:         rgba($shade-3, 0.6);
   #{--shade-4}:            $shade-4;
   #{--shade-4-lighten-2}:  lighten($shade-4, 2%);
   #{--shade-4-lighten-4}:  lighten($shade-4, 4%);
@@ -127,10 +128,10 @@ $tag-colors: (
 // Scaffolding
 // --------------------------------------------------
 
-$body-bg:         var(--shade-3);
-$text-color:      var(--shade-9);
-$soft-text-color: var(--shade-8);
-
+$body-bg:                  var(--shade-3);
+$text-color:               var(--shade-9);
+$soft-text-color:          var(--shade-8);
+$project-closing-backdrop: var(--shade-3-60);
 
 // Typography
 // --------------------------------------------------
