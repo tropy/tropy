@@ -191,26 +191,26 @@ fr:
       select: Outil de sélection
       rotate: Rotation
       mirror: Miroir
-      edit: ''
+      edit: Modifier la photo
     mode:
       fill: Pleine largeur
       fit: Pleine hauteur
       zoom: Zoom
     panel:
-      negative: ''
-      revert: ''
+      negative: Inverser les couleurs
+      revert: Réinitialiser les ajustements
       brightness:
-        label: ''
-        value: ""
+        label: Luminosité
+        value: "{value, number}"
       contrast:
-        label: ''
-        value: ""
+        label: Contraste
+        value: "{value, number}"
       hue:
-        label: ''
-        value: ""
+        label: Teinte
+        value: "{value, number}°"
       saturation:
-        label: ''
-        value: ""
+        label: Saturation
+        value: "{value, number}"
   notepad:
     placeholder: Ajoutez vos notes ici…
 
@@ -465,7 +465,7 @@ fr:
         save: Echec de la sauvegarde du tag.
         create: Echec du marquage de l'objet. Chaque tag est unique pour un même objet.
     list:
-      create: ''
+      create: 'Failed to save list.'
       save: Echec de la sauvegarde de la liste.
       item:
         add: Echec de l'adjonction de l' (des) objet(s) à la liste.
@@ -483,7 +483,7 @@ fr:
           add: Echec de l'adjonction du champ dans le modèle de saisie.
           remove: Echec de la suppression du champ du modèle de saisie.
     tag:
-      create: ''
+      create: 'Failed to save tag.'
   flash:
     update:
       ready:
