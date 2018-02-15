@@ -74,7 +74,7 @@ function *open(file) {
     yield call(fail, error, db.path)
 
   } finally {
-    yield call(delay, 30000)
+    yield call(db.close)
     yield put(act.project.closed())
 
     debug('*open terminated')
