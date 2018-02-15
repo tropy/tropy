@@ -158,7 +158,7 @@ class Window extends EventEmitter {
 
       this.isUnloading = true
 
-      toggle(document.body, 'closing', true)
+      toggle(document.body, 'quitting', true)
 
       each(this.unloaders, unload => {
         let res = unload()
