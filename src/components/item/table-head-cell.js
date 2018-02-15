@@ -9,6 +9,7 @@ const { IconChevron7 } = require('../icons')
 const { DND, TYPE } = require('../../constants')
 const { bool, func, number, string } = require('prop-types')
 const { bounds } = require('../../dom')
+const { blank } = require('../../common/util')
 const { round } = Math
 
 const MIN_WIDTH = 40
@@ -20,6 +21,7 @@ const BlankTableHeadCell = () => (
 class ItemTableHeadCell extends PureComponent {
   get classes() {
     return ['metadata-head', this.props.type, {
+      blank: blank(this.props.label),
       dragging: this.props.isDragging,
       over: this.props.isOver,
       [this.direction]: this.props.isActive
