@@ -4,7 +4,7 @@
 
 $panel-separator-color: #ddd !default;
 
-.note.list {
+.note-list {
   flex: 1 1 0;
   display: flex;
   flex-direction: column;
@@ -49,7 +49,7 @@ $panel-separator-color: #ddd !default;
       background: $note-list-active-bg;
 
       @at-root #{
-        selector-replace(&, ".note.list", ".note.list .scroll-container:focus")
+        selector-replace(&, ".note-list", ".note-list .scroll-container:focus")
       } {
         color: $note-list-focus-color;
         background: $note-list-focus-bg;
@@ -64,8 +64,8 @@ $panel-separator-color: #ddd !default;
         padding-top: ($note-padding-top - 1px);
 
         @at-root #{
-          selector-replace(&, ".note.list",
-          ".note.list .scroll-container:focus")
+          selector-replace(&, ".note-list",
+          ".note-list .scroll-container:focus")
         } {
           border-top-color: $note-list-focus-bg;
         }

@@ -24,6 +24,8 @@ en:
       down: ArrowDown
       left: ArrowLeft
       right: ArrowRight
+      panel:
+        - p
       quicktool: Space
       rotate:
         - CmdOrCtrl+]

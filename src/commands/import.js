@@ -3,7 +3,7 @@
 const { DuplicateError } = require('../common/error')
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-const { imagePath } = require('../common/cache')
+const { imagePath, imageExt } = require('../common/cache')
 const mod = require('../models')
 const act = require('../actions')
 const { warn, verbose } = require('../common/log')
@@ -14,13 +14,18 @@ class ImportCommand extends Command {
   *createThumbnails(id, image, { overwrite = true, quality = 100 } = {}) {
     try {
       const { cache } = this.options
+      const ext = imageExt(image.mimetype)
 
       for (let size of [48, 512]) {
-        const path = imagePath(id, size)
+        const path = imagePath(id, size, ext)
 
         if (overwrite || !(yield call(cache.exists, path))) {
-          const thumb = yield call(image.resize, size)
-          yield call(this.options.cache.save, path, thumb.toJPEG(quality))
+          const dup = yield call(image.resize, size)
+          const out = (ext === '.png') ?
+            dup.toPNG() :
+            dup.toJPEG(quality)
+
+          yield call(this.options.cache.save, path, out)
 
         } else {
           verbose(`Skipping ${size}px thumbnail for #${id}: already exists`)

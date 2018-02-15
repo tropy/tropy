@@ -2,11 +2,13 @@
 
 module.exports = {
   RDF: {
+    ns: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     Property: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property',
     type: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
   },
 
   RDFS: {
+    ns: 'http://www.w3.org/2000/01/rdf-schema#',
     Class: 'http://www.w3.org/2000/01/rdf-schema#Class',
     comment: 'http://www.w3.org/2000/01/rdf-schema#comment',
     Datatype: 'http://www.w3.org/2000/01/rdf-schema#Datatype',
@@ -18,6 +20,7 @@ module.exports = {
   },
 
   OWL: {
+    ns: 'http://www.w3.org/2002/07/owl#',
     Class: 'http://www.w3.org/2002/07/owl#Class',
     DatatypeProperty: 'http://www.w3.org/2002/07/owl#DatatypeProerty',
     FunctionalProperty: 'http://www.w3.org/2002/07/owl#FunctionalProperty',
@@ -29,6 +32,7 @@ module.exports = {
   },
 
   DC: {
+    ns: 'http://purl.org/dc/elements/1.1/',
     creator: 'http://purl.org/dc/elements/1.1/creator',
     date: 'http://purl.org/dc/elements/1.1/date',
     description: 'http://purl.org/dc/elements/1.1/description',
@@ -51,6 +55,8 @@ module.exports = {
   },
 
   VANN: {
-    preferredNamespacePrefix: 'http://purl.org/vocab/vann/preferredNamespacePrefix'
+    ns: 'http://purl.org/vocab/vann/',
+    preferredNamespacePrefix: 'http://purl.org/vocab/vann/preferredNamespacePrefix',
+    preferredNamespaceUri: 'http://purl.org/vocab/vann/preferredNamespaceUri'
   }
 }

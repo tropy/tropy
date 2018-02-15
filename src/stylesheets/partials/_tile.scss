@@ -61,7 +61,7 @@
     }
   }
 
-  .item.grid & {
+  .item-grid & {
     &.over {
       .tile-state {
         border: 3px solid $drop-target-color;
@@ -93,11 +93,11 @@
     border: $pointer-height solid transparent;
     border-bottom: $pointer-height solid $tile-expansion-bg;
 
-    .photo.grid.nested-tab-focus & {
+    .photo-grid.nested-tab-focus & {
       border-bottom-color: $tile-expansion-focus-bg;
     }
 
-    .photo.grid.has-nested-active & {
+    .photo-grid.has-nested-active & {
       border-bottom-color: $tile-expansion-bg;
     }
   }
@@ -109,11 +109,11 @@
   margin: $space-sm (-$default-padding-horizontal); // Todo
   padding: $space-sm 0; // Todo
 
-  .photo.grid.nested-tab-focus & {
+  .photo-grid.nested-tab-focus & {
     background: $tile-expansion-focus-bg;
   }
 
-  .photo.grid.nested-tab-focus.has-nested-active & {
+  .photo-grid.nested-tab-focus.has-nested-active & {
     background: $tile-expansion-bg;
   }
 }

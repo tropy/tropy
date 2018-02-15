@@ -1,0 +1,485 @@
+de:
+  sidebar:
+    lists: Listen
+    tags: Tags
+    imports: Zuletzt importiert
+    trash: Gelöscht
+  toolbar:
+    import: Fotos importieren
+    items: >
+        {count, plural,
+
+        =0 {Keine Objekte in dieser Ansicht}
+
+        one {1 Objekt in dieser Ansicht}
+
+        other {# Objekte in dieser Ansicht}}
+    search:
+      placeholder: Suche
+  panel:
+    metadata:
+      tab: Metadaten
+      photo: Foto
+      item: >
+          {count, plural,
+
+          =0 {}
+
+          one {Objekt}
+
+          other {# Objekte}}
+      selection: Ausschnitt
+    tags:
+      tab: Tags
+      add: >
+          {count, plural,
+
+          =0 {Tag hinzufügen}
+
+          one {Tag zu Objekt hinzufügen}
+
+          other {Tag zu # Objekten hinzufügen}}
+    photo:
+      title: >
+          {count, plural,
+
+          =0 {Keine Fotos}
+
+          one {1 Foto}
+
+          other {# Fotos}}
+      create: Fotos hinzufügen
+      selection: Ausschnitt
+    note:
+      title: >
+          {count, plural,
+
+          =0 {Keine Notizen}
+
+          one {1 Notiz}
+
+          other {# Notizen}}
+      create: Notiz hinzufügen
+  about:
+    version: Version {version}
+    rrchnm:
+      title: Roy Rosenzweig Center for History and New Media
+      url: https://rrchnm.org
+    cds:
+      title: Corporation for Digital Scholarship
+      url: http://digitalscholar.org
+    text: >
+        Tropy wird vom {rrchnm} erstellt, einem Team, das Ressourcen zur Geschichtsvermittlung,
+        digitale Ausstellungen und Open-Source-Software entwickelt.
+    trademark: Tropy ist eine geschützte Marke der {cds}.
+    release:
+      title: Versionshinweise
+      url: https://github.com/tropy/tropy/releases/tag/{version}
+    license:
+      title: Lizenzinformationen
+      url: https://tropy.org/license
+    credits:
+      title: Credits
+      url: https://tropy.org/credits
+  project:
+    none: Ziehen Sie eine Projektdatei hierher oder erstellen Sie ein {newProject}
+    empty: Fotos ins Tropy Fenster ziehen und los geht’s!
+    new: neues Projekt
+  wizard:
+    project:
+      title: Neues Projekt erstellen
+      submit: Projekt erstellen
+      name: Projektname
+      save_as: Datei und Verzeichnis anpassen
+      change: Anpassen
+  prefs:
+    title: Voreinstellungen
+    app:
+      label: Global
+      style:
+        theme: Erscheinungsbild
+        themes:
+          light: Hell
+          dark: Dunkel
+      locale:
+        locale: Sprache
+        locales:
+          de: Deutsch
+          en: English
+          fr: Français
+          ja: 日本語
+      template: Standardvorlage
+      debug: Entwicklermodus aktivieren
+      dup:
+        label: Beim Importieren
+        option:
+          skip: Zuvor importiere Fotos überspringen
+          import: Zuvor importierte Fotos nochmals importieren
+          prompt: Jedes Mal nachfragen
+      ui:
+        label: Benutzeroberfläche
+        option:
+          invertScroll: Richtung beim Scrollen in Fotos umkehren
+          invertZoom: Richtung beim Zoomen in Fotos umkehren
+          overlayToolbars: Werkzeugleisten automatisch ein- und ausblenden
+      zoomMode:
+        label: Standardmäßig
+        option:
+          fit: Format mit Fotos füllen
+          fill: Fotos an das Format anpassen
+    project:
+      label: Projekt
+    template:
+      label: Vorlagen
+      new: Neue Vorlage …
+      create: Erstellen
+      select: Vorlage
+      tools:
+        new: Neu
+        copy: Duplizieren
+        delete: Löschen
+        import: Importieren
+        export: Exportieren
+    vocab:
+      label: Vokabulare
+      export: Exportieren
+      classes: >
+          {count, plural,
+
+          =0 {Keine Klassen}
+
+          one {# Klasse}
+
+          other {# Klassen}
+
+          }
+      datatypes: >
+          {count, plural,
+
+          =0 {Keine Datentypen}
+
+          one {# Datentyp}
+
+          other {# Datentypen}
+
+          }
+      properties: >
+          {count, plural,
+
+          =0 {Keine Eigenschaft}
+
+          one {# Eigenschaft}
+
+          other {# Eigenschaften}
+
+          }
+  item:
+    created: Hinzugefügt
+    modified: Bearbeitet
+  photo:
+    file: Datei
+    size: Größe
+    type: Typ
+    created: Hinzugefügt
+    modified: Bearbeitet
+  selection:
+    size: Größe
+    created: Hinzugefügt
+    modified: Bearbeitet
+  esper:
+    tool:
+      pan: Verschieben
+      select: Ausschnitt-Werkzeug
+      rotate: Drehen
+      mirror: Spiegeln
+      edit: Foto bearbeiten
+    mode:
+      fill: Füllen
+      fit: Einpassen
+      zoom: Zoom
+    panel:
+      negative: Farben invertieren
+      revert: Originalzustand
+      brightness:
+        label: Helligkeit
+        value: "{value, number}"
+      contrast:
+        label: Kontrast
+        value: "{value, number}"
+      hue:
+        label: Farbton
+        value: "{value, number}°"
+      saturation:
+        label: Sättigung
+        value: "{value, number}"
+  notepad:
+    placeholder: Notizen hier eintragen …
+  template:
+    id: URI
+    name: Name
+    type: Typ
+    creator: Autor
+    description: Beschreibung
+    types:
+      https://tropy.org/v1/tropy#Item: Objektvorlage
+      https://tropy.org/v1/tropy#Photo: Fotovorlage
+      https://tropy.org/v1/tropy#Selection: Ausschnittvorlage
+    field:
+      property: Eigenschaft
+      label: Bezeichnung
+      datatype: Datentyp
+      isRequired: Ist ein Pflichtfeld
+      hint: Hinweis
+      value: Standardwert
+      isConstant: Ist schreibgeschützt
+  vocab:
+    id: URI
+    prefix: Präfix
+    title: Name
+    description: Beschreibung
+    properties: Eigenschaften
+    seeAlso: Siehe
+  property:
+    select: Eigenschaft auswählen …
+  datatype:
+    select: Datentyp auswählen …
+  resource:
+    select: Ressource auswählen …
+    id: URI
+    label: Bezeichnung
+    description: Beschreibung
+    comment: Kommentar
+  dialog:
+    prompt:
+      cancel: Abbrechen
+      item:
+        ok: Löschen
+        cancel: Abbrechen
+        destroy: >
+            Objekte vollständig löschen? Dies kann nicht mehr rückgängig gemacht werden.
+      dup:
+        message: >
+            Dieses Foto ist bereits im Projekt vorhanden. Nochmals importieren?
+        checkbox: Auswahl merken
+        cancel: Überspringen
+        ok: Nochmals importieren
+    filter:
+      templates: Tropy-Vorlagen
+      images: Bilder
+      projects: Tropy-Projekte
+      rdf: RDF-Vokabular
+      jsonld: JSON-LD
+  action:
+    project:
+      save: Projekt speichern
+    list:
+      create: Liste erstellen
+      delete: Liste löschen
+      item:
+        add: Objekte zu Liste hinzufügen
+        merge: Objekte zusammenfügen
+        remove: Objekt aus Liste entfernen
+        restore: Objekt zu Liste hinzufügen
+      order: Liste sortieren
+      restore: Liste wiederherstellen
+      save: Liste speichern
+    item:
+      create: Objekte erstellen
+      delete: Objekte löschen
+      explode: Objektfotos aufsplitten
+      implode: Objekte zusammenfügen
+      merge: Objekte zusammenfügen
+      split: Objekte auftrennen
+      import: Objekte importieren
+      restore: Objekte wiederherstellen
+      save: Objekte speichern
+      tag:
+        create: Tag
+        toggle: Tag
+        clear: Tags entfernen
+    metadata:
+      save: Metadaten speichern
+    ontology:
+      import: Vokabular importieren
+      vocab:
+        save: Vokabular speichern
+      label:
+        save: Bezeichnung speichern
+      template:
+        import: Vorlage importieren
+    photo:
+      create: Foto importieren
+      delete: Foto löschen
+      duplicate: Foto duplizieren
+      move: Foto verschieben
+      order: Foto sortieren
+      restore: Foto wiederherstellen
+      save: Foto speichern
+    note:
+      create: Notiz erstellen
+      delete: Notiz löschen
+      order: Notiz sortieren
+      restore: Notiz wiederherstellen
+      save: Notiz speichern
+    tag:
+      create: Tag erstellen
+      delete: Tag löschen
+      restore: Tag erstellen
+      save: Tag speichern
+    selection:
+      create: Ausschnitt erstellen
+      delete: Ausschnitt löschen
+      restore: Ausschnitt erstellen
+      save: Ausschnitt speichern
+      order: Ausschnitte sortieren
+  activity:
+    project:
+      save: Speichern …
+    list:
+      create: Liste erstellen …
+      delete: Liste löschen …
+      item:
+        add: Objekte zu Liste hinzufügen …
+        merge: Objekte zusammenfügen …
+        remove: Objekte von Liste entfernen …
+        restore: Objekte wiederherstellen …
+      load: Listen laden …
+      order: Liste sortieren …
+      restore: Liste wiederherstellen …
+      save: Liste speichern …
+    tag:
+      create: Tag erstellen …
+      delete: Tag löschen …
+      load: Tags laden …
+      restore: Tags wiederherstellen …
+      save: Tags speichern …
+    item:
+      create: Objekt erstellen …
+      delete: Objekt löschen …
+      destroy: Objekte vollständig löschen …
+      explode: Objekt zerteilen …
+      export: Objekt exportieren …
+      implode: Objekt wiederherstellen
+      import: >
+          {hasProgressBar, select,
+
+          true {Objekt {progress, number} von {total, number} importieren …}
+
+          other {Objekte importieren …}
+
+          }
+      load: Objekte laden …
+      merge: Objekte zusammenführen …
+      restore: Objekt wiederherstellen …
+      save: Objekte speichern …
+      tag:
+        create: Objekt taggen
+        toggle: Objekt taggen …
+        clear: Objekt-Tags entfernen …
+    metadata:
+      load: Metadaten laden …
+      save: Metadaten speichern …
+    ontology:
+      load: Ontologie laden …
+      import: Vokabular importieren …
+      vocab:
+        save: Vokabular speichern …
+      label:
+        save: Bezeichnung speichern …
+      template:
+        import: Vorlagen importieren …
+    photo:
+      consolidate: >
+          {hasProgressBar, select,
+
+          true {Foto {progress, number} von {total, number} konsolidieren …}
+
+          other {Fotos konsolidieren …}
+
+          }
+      create: >
+          {hasProgressBar, select,
+
+          true {Fotos {progress, number} von {total, number} importieren …}
+
+          other {Fotos importieren …}
+
+          }
+      delete: Foto löschen …
+      duplicate: >
+          {hasProgressBar, select,
+
+          true {Foto {progress, number} von {total, number} duplizieren …}
+
+          other {Fotos duplizieren …}
+
+          }
+      load: Fotos laden …
+      move: Fotos verschieben …
+      order: Fotos sortieren …
+      save: Fotos speichern …
+      restore: Fotos wiederherstellen …
+    note:
+      create: Notiz erstellen …
+      delete: Notiz löschen …
+      load: Notizen laden …
+      order: Notizen sortieren …
+      restore: Notizen wiederherstellen …
+    selection:
+      load: Ausschnitte laden …
+  editor:
+    commands:
+      bold: Fett
+      italic: Kursiv
+      underline: Unterstreichen
+      overline: Überstreichen
+      strikethrough: Durchstreichen
+      subscript: Tiefstellen
+      superscript: Hochstellen
+      blockquote: Zitatblock einfügen
+      ol: Nummerierte Liste einfügen
+      ul: Liste einfügen
+      link:
+        button: Link
+        target: Ziel des Links
+        title: Titel des Links
+      left: Links
+      center: Zentriert
+      right: Rechts
+      sinkListItem: Eine Ebene tiefer
+      liftListItem: Eine Ebene höher
+  error:
+    project:
+      created: Projekt konnte nicht erstellt werden.
+    item:
+      merge: Objekte konnten nicht zusammengefügt werden.
+      import: Objekt konnte nicht importiert werden.
+      tag:
+        save: Tag konnte nicht gespeichert werden.
+        create: Objekt konnte nicht getaggt werden.
+    list:
+      create: Liste konnte nicht erstellt werden. Listennamen müssen eindeutig sein.
+      save: Liste konnte nicht gespeichert werden.
+      item:
+        add: Objekt(e) konnten nicht zur Liste hinzugefügt werden.
+    photo:
+      consolidate: Fotos konnten nicht konsolidiert werden.
+      create: Foto konnte nicht importiert werden.
+      save: Foto konnte nicht gespeichert werden.
+    ontology:
+      import: Vokabular konnte nicht importiert werden.
+      vocab:
+        save: Vokabular konnte nicht gespeichert werden.
+      template:
+        import: Vorlage konnte nicht importiert werden.
+        field:
+          add: Feld konnte nicht zur Vorlage hinzugefügt werden.
+          remove: Feld konnte nicht von Vorlage entfernt werden.
+    tag:
+      create: Tag konnte nicht erstellt werden. Tag-Namen müssen eindeutig sein.
+  flash:
+    update:
+      ready:
+        message: >
+            Tropy {version} kann installiert werden. Jetzt installieren und neustarten?
+        confirm: Jetzt neu starten

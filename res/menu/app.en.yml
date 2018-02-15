@@ -15,8 +15,10 @@ en:
               accelerator: 'CmdOrCtrl+Shift+N'
             - label: 'List'
               command: 'app:create-list'
+              accelerator: 'CmdOrCtrl+Shift+L'
             - label: 'Tag'
               command: 'app:create-tag'
+              accelerator: 'CmdOrCtrl+Shift+A'
         - type: 'separator'
         - &open
           label: 'Open'
@@ -85,16 +87,14 @@ en:
     - &view
       label: '&View'
       submenu:
-        - label: 'Toggle &Full Screen'
+        - &fullscreen
+          label: 'Toggle &Full Screen'
           role: 'togglefullscreen'
         - label: 'Toggle Hide &Menu Bar'
           command: 'app:toggle-menu-bar'
-        - label: 'Hide &Sidebar'
-          command: 'app:toggle-sidebar'
-          enabled: false
-          visible: false
         - type: 'separator'
-        - label: 'Zoom'
+        - &zoom
+          label: 'Zoom'
           submenu:
             - label: 'Zoom In'
               command: 'app:zoom-in'
@@ -139,19 +139,32 @@ en:
             - label: 'Dark'
               id: 'dark'
               type: 'checkbox'
-
     - &help
       label: 'Help'
       submenu:
-        - label: 'User Guide'
+        - &docs
+          label: 'User Guide'
           command: 'app:open-docs'
-        - label: 'Support Forums'
+        - &forums
+          label: 'Support Forums'
           command: 'app:open-forums'
         - type: 'separator'
-        - label: 'Software &License'
+        - &license
+          label: 'Software &License'
           command: 'app:open-license'
-        - label: 'Show Log Files'
+        - &logs
+          label: 'Show Log Files'
           command: 'app:open-logs'
+        - type: 'separator'
+        - &pluginsConfig
+          label: 'Edit Plugins Configuration'
+          command: 'app:open-plugins-config'
+        - &pluginsConfig
+          label: 'Install Plugin …'
+          command: 'app:install-plugin'
+        - &plugins
+          label: 'Show Plugins Folder'
+          command: 'app:open-plugins-folder'
         - type: 'separator'
         - label: 'About %name'
           command: 'app:about'
@@ -172,7 +185,6 @@ en:
           command: 'app:install-updates'
           enabled: false
           visible: false
-
   darwin:
     - label: '%name'
       submenu:
@@ -195,7 +207,6 @@ en:
         - label: 'Quit'
           accelerator: 'Command+Q'
           role: 'quit'
-
     - label: 'File'
       submenu:
         - *new
@@ -218,7 +229,11 @@ en:
         - *copy
         - *paste
         - *all
-    - *view
+    - label: 'View'
+      submenu:
+        - *fullscreen
+        - type: 'separator'
+        - *zoom
     - label: 'Window'
       role: 'window'
       submenu:
@@ -235,15 +250,14 @@ en:
     - label: 'Help'
       role: 'help'
       submenu:
-        - label: 'User Guide'
-          command: 'app:open-docs'
-        - label: 'Support Forums'
-          command: 'app:open-forums'
+        - *docs
+        - *forums
         - type: 'separator'
-        - label: 'Software License'
-          command: 'app:open-license'
-        - label: 'Show Log Files'
-          command: 'app:open-logs'
+        - *license
+        - *logs
+        - type: 'separator'
+        - *pluginsConfig
+        - *plugins
         - type: 'separator'
         - *updaterCheck
         - *updaterIsChecking

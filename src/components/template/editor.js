@@ -116,7 +116,7 @@ class TemplateEditor extends PureComponent {
 
     return (
       <div className="scroll-container">
-        <div className="template editor form-horizontal">
+        <div className="template-editor form-horizontal">
           <header className="template-header">
             <TemplateToolbar
               selected={this.state.id}

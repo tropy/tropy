@@ -2,7 +2,7 @@
 // Item view
 // --------------------------------------------------
 
-.item.view {
+.item-view {
   position: absolute;
   left: 0;
   top: 0;
@@ -47,4 +47,5 @@
   display: flex;
   flex-direction: column;
   padding-left: $space-min;
+  min-width: 0; // Needed to get horizontal scrollbars in the editor’s scroll-container
 }

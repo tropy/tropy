@@ -5,7 +5,7 @@ const { PhotoIterable } = require('./iterable')
 const { createClickHandler } = require('../util')
 const cx = require('classnames')
 const { IconSelectionOverlay, IconWarningOverlay } = require('../icons')
-const { IconButton } = require('../button')
+const { Button } = require('../button')
 
 
 class PhotoTile extends PhotoIterable {
@@ -43,7 +43,7 @@ class PhotoTile extends PhotoIterable {
           <div className="icon-container">
             {this.props.photo.broken && <IconWarningOverlay/>}
             {this.props.isExpandable &&
-              <IconButton
+              <Button
                 icon={<IconSelectionOverlay/>}
                 onClick={this.handleExpansionToggle}/>}
           </div>

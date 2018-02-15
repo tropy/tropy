@@ -1,0 +1,538 @@
+de:
+  linux:
+    history:
+      - id: undo
+        label: Widerrufen
+        command: 'app:undo'
+        enabled: false
+      - id: redo
+        label: Wiederholen
+        command: 'app:redo'
+        enabled: false
+    sidebar:
+      - label: Seitenleiste ausblenden
+        command: 'app:hide-sidebar'
+        enabled: false
+    project:
+      - label: Projekt umbennen
+        command: 'app:rename-project'
+      - label: Projektdatei anzeigen …
+        command: 'app:show-in-folder'
+    lists:
+      - label: Neue Liste
+        command: 'app:create-list'
+    list:
+      - label: Liste umbenennen
+        command: 'app:rename-list'
+      - label: Liste löschen
+        command: 'app:delete-list'
+    tags:
+      - label: Neues Tag
+        command: 'app:create-tag'
+    tag:
+      - label: Tag-Farbe
+        submenu:
+          - label: Keine
+            color: null
+            type: checkbox
+          - type: separator
+          - label: Rot
+            color: red
+            type: checkbox
+          - label: Orange
+            color: orange
+            type: checkbox
+          - label: Gelb
+            color: yellow
+            type: checkbox
+          - label: Grün
+            color: green
+            type: checkbox
+          - label: Blau
+            color: blue
+            type: checkbox
+          - label: Violett
+            color: purple
+            type: checkbox
+          - label: Grau
+            color: gray
+            type: checkbox
+      - label: Tag umbenennen
+        command: 'app:rename-tag'
+      - label: Tag löschen
+        command: 'app:delete-tag'
+    item-tag:
+      - label: Tag von diesem Objekt entfernen
+        command: 'app:delete-item-tag'
+        visible: false
+        condition: hasSingleItem
+      - label: Tag von diesen Objekten entfernen
+        command: 'app:delete-item-tag'
+        visible: false
+        condition: hasMultipleItems
+    notes: []
+    note:
+      - label: Notiz löschen
+        command: 'app:delete-note'
+    notepad:
+      - label: Eingabemodus
+        id: writing-mode
+        submenu:
+          - label: Horizontal
+            type: checkbox
+            checked: false
+            mode: horizontal
+          - label: Vertikal (rechts-links)
+            type: checkbox
+            checked: false
+            mode: vertical-rl
+      - label: Zeilennummern einblenden
+        id: line-numbers
+        type: checkbox
+        checked: true
+        command: 'app:toggle-line-numbers'
+      - label: Zeilenumbruch
+        id: line-wrap
+        type: checkbox
+        checked: true
+        command: 'app:toggle-line-wrap'
+    items:
+      - label: Neues Objekt
+        command: 'app:create-item'
+    item:
+      - label: Objekt zerteilen
+        command: 'app:explode-item'
+        condition: hasMultiplePhotos
+      - label: Objekt exportieren
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: 'app:export-item'
+      - label: Foto hinzufügen …
+        command: 'app:create-item-photo'
+      - label: Tags
+        id: tag
+        submenu:
+          - label: Keine
+            type: checkbox
+            checked: true
+            enabled: false
+          - type: separator
+      - label: Objekt löschen
+        command: 'app:delete-item'
+    item-bulk:
+      - label: Ausgewählte Objekte zusammenfügen
+        command: 'app:merge-item'
+      - label: Ausgewählte Objekte exportieren
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: 'app:export-item'
+      - label: Ausgewählte Objekte löschen
+        command: 'app:delete-item'
+    item-list:
+      - label: Objekt aus Liste entfernen
+        command: 'app:list-item-remove'
+    item-bulk-list:
+      - label: Ausgewählte Objekte aus Liste entfernen
+        command: 'app:list-item-remove'
+    photo:
+      - label: Foto löschen
+        command: 'app:delete-photo'
+      - label: Foto duplizieren
+        command: 'app:duplicate-photo'
+      - label: Foto in neues Objekt verschieben
+        command: 'app:explode-photo'
+      - label: Original Foto in Ordner anzeigen …
+        command: 'app:show-in-folder'
+      - label: Foto als Titelbild verwenden
+        command: 'app:update-cover-image'
+        enabled: false
+        visible: false
+      - label: Foto konsolidieren
+        command: 'app:consolidate-photo'
+    selection:
+      - label: Ausschnitt löschen
+        command: 'app:delete-selection'
+      - label: Ausschnitt als Bild speichern …
+        command: 'app:save-selection'
+        enabled: false
+    item-deleted:
+      - label: Objekt wiederherstellen
+        command: 'app:restore-item'
+      - label: Objekt vollständig löschen
+        command: 'app:destroy-item'
+    item-bulk-deleted:
+      - label: Ausgewählte Objekte wiederherstellen
+        command: 'app:restore-item'
+      - label: Ausgewählte Objekte vollständig löschen
+        command: 'app:destroy-item'
+    trash:
+      - label: Objekte vollständig löschen
+        command: 'app:destroy-item'
+    dev:
+      - label: Neu laden
+        command: 'win:reload'
+      - label: Stile neu laden
+        command: 'win:refresh'
+      - type: separator
+      - label: Untersuchen
+        command: 'app:inspect'
+  darwin:
+    history:
+      - id: undo
+        label: Widerrufen
+        command: 'app:undo'
+        enabled: false
+      - id: redo
+        label: Wiederholen
+        command: 'app:redo'
+        enabled: false
+    sidebar:
+      - label: Seitenleiste ausblenden
+        command: 'app:hide-sidebar'
+        enabled: false
+    project:
+      - label: Projekt umbennen
+        command: 'app:rename-project'
+      - label: Projektdatei anzeigen …
+        command: 'app:show-in-folder'
+    lists:
+      - label: Neue Liste
+        command: 'app:create-list'
+    list:
+      - label: Liste umbenennen
+        command: 'app:rename-list'
+      - label: Liste löschen
+        command: 'app:delete-list'
+    tags:
+      - label: Neues Tag
+        command: 'app:create-tag'
+    tag:
+      - label: Tag-Farbe
+        submenu:
+          - label: Keine
+            color: null
+            type: checkbox
+          - type: separator
+          - label: Rot
+            color: red
+            type: checkbox
+          - label: Orange
+            color: orange
+            type: checkbox
+          - label: Gelb
+            color: yellow
+            type: checkbox
+          - label: Grün
+            color: green
+            type: checkbox
+          - label: Blau
+            color: blue
+            type: checkbox
+          - label: Violett
+            color: purple
+            type: checkbox
+          - label: Grau
+            color: gray
+            type: checkbox
+      - label: Tag umbenennen
+        command: 'app:rename-tag'
+      - label: Tag löschen
+        command: 'app:delete-tag'
+    item-tag:
+      - label: Tag von diesem Objekt entfernen
+        command: 'app:delete-item-tag'
+        visible: false
+        condition: hasSingleItem
+      - label: Tag von diesen Objekten entfernen
+        command: 'app:delete-item-tag'
+        visible: false
+        condition: hasMultipleItems
+    notes: {}
+    note:
+      - label: Notiz löschen
+        command: 'app:delete-note'
+    notepad:
+      - label: Eingabemodus
+        id: writing-mode
+        submenu:
+          - label: Horizontal
+            type: checkbox
+            checked: false
+            mode: horizontal
+          - label: Vertikal (rechts-links)
+            type: checkbox
+            checked: false
+            mode: vertical-rl
+      - label: Zeilennummern einblenden
+        id: line-numbers
+        type: checkbox
+        checked: true
+        command: 'app:toggle-line-numbers'
+      - label: Zeilenumbruch
+        id: line-wrap
+        type: checkbox
+        checked: true
+        command: 'app:toggle-line-wrap'
+    items:
+      - label: Neues Objekt
+        command: 'app:create-item'
+    item:
+      - label: Objekt zerteilen
+        command: 'app:explode-item'
+        condition: hasMultiplePhotos
+      - label: Objekt exportieren
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: 'app:export-item'
+      - label: Foto hinzufügen …
+        command: 'app:create-item-photo'
+      - label: Tags
+        id: tag
+        submenu:
+          - label: Keine
+            type: checkbox
+            checked: true
+            enabled: false
+          - type: separator
+      - label: Objekt löschen
+        command: 'app:delete-item'
+    item-bulk:
+      - label: Ausgewählte Objekte zusammenfügen
+        command: 'app:merge-item'
+      - label: Ausgewählte Objekte exportieren
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: 'app:export-item'
+      - label: Ausgewählte Objekte löschen
+        command: 'app:delete-item'
+    item-list:
+      - label: Objekt aus Liste entfernen
+        command: 'app:list-item-remove'
+    item-bulk-list:
+      - label: Ausgewählte Objekte aus Liste entfernen
+        command: 'app:list-item-remove'
+    item-deleted:
+      - label: Objet wiederherstellen
+        command: 'app:restore-item'
+      - label: Objekt permanent löschen
+        command: 'app:destroy-item'
+    item-bulk-deleted:
+      - label: Ausgewählte Objekte wiederherstellen
+        command: 'app:restore-item'
+      - label: Ausgewählte Objekte permanent löschen
+        command: 'app:destroy-item'
+    trash:
+      - label: Objekte vollständig löschen
+        command: 'app:destroy-item'
+    photo:
+      - label: Foto löschen
+        command: 'app:delete-photo'
+      - label: Foto duplizieren
+        command: 'app:duplicate-photo'
+      - label: Foto in neues Objekt verschieben
+        command: 'app:explode-photo'
+      - label: In Finder anzeigen
+        command: 'app:show-in-folder'
+      - label: Foto als Signaturbild verwenden
+        command: 'app:update-cover-image'
+        enabled: false
+        visible: false
+      - label: Foto konsolidieren
+        command: 'app:consolidate-photo'
+    selection:
+      - label: Ausschnitt löschen
+        command: 'app:delete-selection'
+      - label: Ausschnitt als Bild speichern …
+        command: 'app:save-selection'
+        enabled: false
+    dev:
+      - label: Neu laden
+        command: 'win:reload'
+      - label: Stile neu laden
+        command: 'win:refresh'
+      - type: separator
+      - label: Inspizieren
+        command: 'app:inspect'
+  win32:
+    history:
+      - id: undo
+        label: Widerrufen
+        command: 'app:undo'
+        enabled: false
+      - id: redo
+        label: Wiederholen
+        command: 'app:redo'
+        enabled: false
+    sidebar:
+      - label: Seitenleiste ausblenden
+        command: 'app:hide-sidebar'
+        enabled: false
+    project:
+      - label: Projekt umbennen
+        command: 'app:rename-project'
+      - label: Projektdatei anzeigen …
+        command: 'app:show-in-folder'
+    lists:
+      - label: Neue Liste
+        command: 'app:create-list'
+    list:
+      - label: Liste umbenennen
+        command: 'app:rename-list'
+      - label: Liste löschen
+        command: 'app:delete-list'
+    tags:
+      - label: Neuer Tag
+        command: 'app:create-tag'
+    tag:
+      - label: Tagfarbe
+        submenu:
+          - label: Keine
+            color: null
+            type: checkbox
+          - type: separator
+          - label: Rot
+            color: red
+            type: checkbox
+          - label: Orange
+            color: orange
+            type: checkbox
+          - label: Gelb
+            color: yellow
+            type: checkbox
+          - label: Grün
+            color: green
+            type: checkbox
+          - label: Blau
+            color: blue
+            type: checkbox
+          - label: Violett
+            color: purple
+            type: checkbox
+          - label: Grau
+            color: gray
+            type: checkbox
+      - label: Tag umbenennen
+        command: 'app:rename-tag'
+      - label: Tag löschen
+        command: 'app:delete-tag'
+    item-tag:
+      - label: Tag von diesem Objekt entfernen
+        command: 'app:delete-item-tag'
+        visible: false
+        condition: hasSingleItem
+      - label: Tag von diesen Objekten entfernen
+        command: 'app:delete-item-tag'
+        visible: false
+        condition: hasMultipleItems
+    notes: {}
+    note:
+      - label: Notiz löschen
+        command: 'app:delete-note'
+    notepad:
+      - label: Eingabemodus
+        id: writing-mode
+        submenu:
+          - label: Horizontal
+            type: checkbox
+            checked: false
+            mode: horizontal
+          - label: Vertikal (rechts-links)
+            type: checkbox
+            checked: false
+            mode: vertical-rl
+      - label: Zeilennummern einblenden
+        id: line-numbers
+        type: checkbox
+        checked: true
+        command: 'app:toggle-line-numbers'
+      - label: Zeilenumbruch
+        id: line-wrap
+        type: checkbox
+        checked: true
+        command: 'app:toggle-line-wrap'
+    items:
+      - label: Neues Objekt
+        command: 'app:create-item'
+    item:
+      - label: Objektfotos aufsplitten
+        command: 'app:explode-item'
+        condition: hasMultiplePhotos
+      - label: Objekt exportieren
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: 'app:export-item'
+      - label: Foto hinzufügen …
+        command: 'app:create-item-photo'
+      - label: Tags
+        id: tag
+        submenu:
+          - label: Keine
+            type: checkbox
+            checked: true
+            enabled: false
+          - type: separator
+      - label: Objekt löschen
+        command: 'app:delete-item'
+    item-bulk:
+      - label: Ausgewählte Objekte zusammenfügen
+        command: 'app:merge-item'
+      - label: Ausgewählte Objekte exportieren
+        id: export
+        submenu:
+          - label: JSON-LD
+            command: 'app:export-item'
+      - label: Ausgewählte Objekte löschen
+        command: 'app:delete-item'
+    item-list:
+      - label: Objekt aus Liste entfernen
+        command: 'app:list-item-remove'
+    item-bulk-list:
+      - label: Ausgewählte Objekte aus Liste entfernen
+        command: 'app:list-item-remove'
+    item-deleted:
+      - label: Objet wiederherstellen
+        command: 'app:restore-item'
+      - label: Objekt permanent löschen
+        command: 'app:destroy-item'
+    item-bulk-deleted:
+      - label: Ausgewählte Objekte wiederherstellen
+        command: 'app:restore-item'
+      - label: Ausgewählte Objekte permanent löschen
+        command: 'app:destroy-item'
+    trash:
+      - label: Objekte vollständig löschen
+        command: 'app:destroy-item'
+    photo:
+      - label: Foto löschen
+        command: 'app:delete-photo'
+      - label: Foto duplizieren
+        command: 'app:duplicate-photo'
+      - label: Foto in neues Objekt verschieben
+        command: 'app:explode-photo'
+      - label: Original Foto in Order anzeigen …
+        command: 'app:show-in-folder'
+      - label: Foto als Signaturbild verwenden
+        command: 'app:update-cover-image'
+        enabled: false
+        visible: false
+      - label: Foto konsolidieren
+        command: 'app:consolidate-photo'
+    selection:
+      - label: Ausschnitt löschen
+        command: 'app:delete-selection'
+      - label: Ausschnitt als Bild speichern …
+        command: 'app:save-selection'
+        enabled: false
+    dev:
+      - label: Neu laden
+        command: 'win:reload'
+      - label: Stile neu laden
+        command: 'win:refresh'
+      - type: separator
+      - label: Inspizieren
+        command: 'app:inspect'

@@ -18,6 +18,7 @@ const uuid = require('uuid/v1')
 
 const { AppMenu, ContextMenu } = require('./menu')
 const { Cache } = require('../common/cache')
+const { Plugins } = require('../common/plugins')
 const { Strings } = require('../common/res')
 const Storage = require('./storage')
 const Updater = require('./updater')
@@ -33,7 +34,7 @@ const {
   FLASH, HISTORY, TAG, PROJECT, CONTEXT, SASS, LOCALE
 } = require('../constants')
 
-const WIN = SASS.WINDOW
+const WIN = SASS.PROJECT
 const WIZ = SASS.WIZARD
 const ABT = SASS.ABOUT
 const PREFS = SASS.PREFS
@@ -76,6 +77,10 @@ class Tropy extends EventEmitter {
 
     prop(this, 'home', {
       value: resolve(__dirname, '..', '..')
+    })
+
+    prop(this, 'plugins', {
+      value: new Plugins(join(app.getPath('userData'), 'plugins'))
     })
   }
 
@@ -247,8 +252,7 @@ class Tropy extends EventEmitter {
       maximizable: false,
       fullscreenable: false,
       darkTheme: (this.state.theme === 'dark'),
-      frame: !this.hash.frameless,
-      titleBarStyle: 'hidden'
+      frame: !this.hash.frameless
     }, this.state.zoom)
       .once('closed', () => {
         this.prefs = undefined
@@ -271,8 +275,10 @@ class Tropy extends EventEmitter {
       .tap(() => all([
         this.load(),
         this.cache.init(),
+        this.plugins.init()
       ]))
 
+      .tap(() => this.plugins.watch())
       .tap(state => state.updater && this.updater.start())
 
       .tap(() => this.emit('app:restored'))
@@ -342,8 +348,8 @@ class Tropy extends EventEmitter {
     this.on('app:explode-photo', (_, { target }) =>
       this.dispatch(act.item.explode({ id: target.item, photos: [target.id] })))
 
-    this.on('app:export-item', (_, { target }) =>
-      this.dispatch(act.item.export(target.id)))
+    this.on('app:export-item', (_, { target, plugin }) =>
+      this.dispatch(act.item.export(target.id, { plugin })))
 
     this.on('app:restore-item', (_, { target }) =>
       this.dispatch(act.item.restore(target.id)))
@@ -419,6 +425,17 @@ class Tropy extends EventEmitter {
 
     this.on('app:delete-note', (_, { target }) =>
       this.dispatch(act.note.delete(target)))
+
+    this.on('app:toggle-line-wrap', (_, { target }) =>
+      this.dispatch(act.ui.update({
+        note: { [target.id]: { wrap: !target.wrap } }
+      })))
+    this.on('app:toggle-line-numbers', (_, { target }) =>
+      this.dispatch(act.ui.update({
+        note: { [target.id]: { numbers: !target.numbers } }
+      })))
+    this.on('app:writing-mode', (_, { id, mode }) =>
+      this.dispatch(act.ui.update({ note: { [id]: { mode  } } })))
 
     this.on('app:toggle-menu-bar', win => {
       if (win.isMenuBarAutoHide()) {
@@ -515,7 +532,25 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:open-logs', () => {
-      shell.showItemInFolder(join(app.getPath('userData'), 'log'))
+      shell.showItemInFolder(join(app.getPath('userData'), 'log', 'main.log'))
+    })
+
+    this.on('app:open-plugins-config', () => {
+      shell.openItem(this.plugins.configFile)
+    })
+
+    this.on('app:install-plugin', async () => {
+      const plugins = await dialog.show('file', this.win, {
+        defaultPath: app.getPath('downloads'),
+        filters: [{ name: 'Tropy Plugins', extensions: Plugins.ext }],
+        properties: ['openFile']
+      })
+
+      if (plugins != null) await this.plugins.install(...plugins)
+    })
+
+    this.on('app:open-plugins-folder', () => {
+      shell.showItemInFolder(this.plugins.configFile)
     })
 
     this.on('app:reset-ontology-db', () => {
@@ -551,6 +586,11 @@ class Tropy extends EventEmitter {
       this.zoom(1.0)
     })
 
+    this.plugins.on('change', () => {
+      this.broadcast('plugins-reload')
+      this.emit('app:reload-menu')
+    })
+
     let quit = false
     let winId
 
@@ -570,6 +610,7 @@ class Tropy extends EventEmitter {
 
     app.on('quit', () => {
       this.updater.stop()
+      this.plugins.stop()
       this.persist()
     })
 
@@ -630,6 +671,7 @@ class Tropy extends EventEmitter {
       home: app.getPath('userData'),
       documents: app.getPath('documents'),
       cache: this.cache.root,
+      plugins: this.plugins.root,
       frameless: this.state.frameless,
       theme: this.state.theme,
       locale: this.state.locale,

@@ -33,7 +33,14 @@ const getExpandedPhotos = memo(
   }
 )
 
+const getActiveNoteProps = memo(
+  ({ ui }) => ui.note,
+  ({ nav }) => nav.note,
+  (note, id) => note[id] || {}
+)
+
 module.exports = {
   getActiveImageProps,
+  getActiveNoteProps,
   getExpandedPhotos
 }

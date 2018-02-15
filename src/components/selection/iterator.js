@@ -13,7 +13,6 @@ class SelectionIterator extends Iterator {
     return {
       'drop-target': this.isSortable,
       'over': this.props.isOver,
-      'selection': true,
       [this.orientation]: true
     }
   }

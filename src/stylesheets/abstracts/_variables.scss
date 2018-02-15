@@ -120,6 +120,11 @@ $mode-transition: 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 $grid-gutter-width: $space-xs;
 
 
+// Forms & Buttons
+// --------------------------------------------------
+
+$input-btn-transition: 0.15s ease;
+
 // Buttons
 // --------------------------------------------------
 
@@ -140,16 +145,17 @@ $input-border-width: const("INPUT.BORDER_WIDTH") * 1px;
 // Z-index master list
 // --------------------------------------------------
 
-$zindex-resizable:       1000;
-$zindex-project:         1010;
-$zindex-item:            1020;
-$zindex-draggable:       1030;
-$zindex-esper-header:    1030;
-$zindex-drop-target:     1040;
-$zindex-drag-layer:      1050;
-$zindex-flash:           1060;
-$zindex-popup:           1070;
-$zindex-window-controls: 1080;
+$zindex-resizable:        1000;
+$zindex-project:          1010;
+$zindex-item:             1020;
+$zindex-draggable:        1030;
+$zindex-esper-header:     1030;
+$zindex-drop-target:      1040;
+$zindex-drag-layer:       1050;
+$zindex-flash:            1060;
+$zindex-popup:            1070;
+$zindex-closing-backdrop: 1080;
+$zindex-window-controls:  1090;
 
 
 // Darwin window controls
@@ -238,9 +244,10 @@ $slider-handle-size-sm: 10px;
 
 $esper-toolbar-transition-in-hover: 0.3s 0.4s ease;
 $esper-toolbar-transition-in-focus: 0.3s ease;
-$esper-toolbar-transition-out: 0.3s ease;
+$esper-toolbar-transition-out: 0.3s 0.3s ease;
 $esper-toolbar-blur-radius: if($platform == "linux", 2px, 20px);
 $esper-cursor: const("ESPER.CURSOR");
+$esper-panel-width: 240px;
 
 
 // Scrollbar
@@ -265,8 +272,8 @@ $notepad-min-height: const("NOTEPAD.MIN_HEIGHT") * 1px;
 // Editor
 // --------------------------------------------------
 
-$editor-width:                80%;
-$editor-max-width:            700px;
+$editor-size:                 80%;
+$editor-max-size:             700px;
 $editor-font-size:            18px;
 $editor-line-height:          1.66667;
 $editor-line-height-computed: floor($editor-font-size * $editor-line-height);
@@ -277,8 +284,8 @@ $blockquote-padding:          1em;
 $editor-hr-border:            2px;
 $sup-and-sub-font-size:       1em * 2 / 3;
 $link-target-width:           400px;
-$prose-mirror-padding-top:    70px; // ~ 2 blank lines
-$prose-mirror-padding-bottom: 40px; // ~ blank line
+$prose-mirror-padding-start:  70px; // ~ 2 blank lines
+$prose-mirror-padding-end:    40px; // ~ blank line
 
 
 // Toolbar

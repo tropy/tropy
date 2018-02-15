@@ -41,8 +41,15 @@ const nodes = {
   paragraph: align(paragraph, 'p'),
   blockquote,
   text,
-  hard_break,
   horizontal_rule,
+
+  hard_break: {
+    ...hard_break,
+    parseDOM: [{ tag: 'br' }, { tag: 'span.line-break' }],
+    toDOM: () => ([
+      'span', { class: 'line-break' }, ['br']
+    ])
+  },
 
   ordered_list: {
     ...list.orderedList,

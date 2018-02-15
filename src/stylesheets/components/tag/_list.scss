@@ -2,7 +2,7 @@
 // Tag list
 // --------------------------------------------------
 
-.tag.list {
+.tag-list {
   .icon-tag {
     &:not([class*="color"]) {
       .color {
@@ -167,8 +167,8 @@
     &:focus {
       cursor: auto;
       background: $add-tag-focus-bg;
-      border-color: $input-color-focus; // Reset to form-control
-      box-shadow: 0 0 0 2px $input-color-focus, 0 0 0 2px $panel-bg;
+      border-color: $input-btn-focus-color; // Reset to form-control
+      box-shadow: 0 0 0 2px $input-btn-focus-color, 0 0 0 2px $panel-bg;
 
       &::-webkit-input-placeholder {
         left: 0;

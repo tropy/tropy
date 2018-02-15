@@ -62,7 +62,7 @@ class TagList extends PureComponent {
     } = this.props
 
     return (
-      <ol className="tag list">
+      <ol className="tag-list">
         {tags.map(tag =>
           <Tag
             key={tag.id}

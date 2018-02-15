@@ -26,7 +26,7 @@ class ProjectTags extends PureComponent {
     const hasNewTag = (edit != null && edit.id == null)
 
     return hasNewTag && (
-      <ol className="tag list">
+      <ol className="tag-list">
         <Tag
           tag={edit}
           isEditing

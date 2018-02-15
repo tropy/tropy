@@ -18,6 +18,7 @@ const { values } = Object
 const actions = require('../../actions')
 const debounce = require('lodash.debounce')
 const { match } = require('../../keymap')
+const { IconSpin } = require('../icons')
 
 const {
   getActivities,
@@ -27,6 +28,7 @@ const {
   getSelectedItems,
   getSelectedPhoto,
   getSelectedNote,
+  getSortColumn,
   getVisibleItems,
   getVisibleNotes,
   getVisiblePhotos
@@ -43,6 +45,7 @@ class ProjectContainer extends Component {
 
     this.state = {
       isClosed: props.project.closed != null,
+      isClosing: this.isClosing(props),
       mode: props.nav.mode,
       offset: props.ui.panel.width,
       willModeChange: false,
@@ -75,10 +78,10 @@ class ProjectContainer extends Component {
 
   get classes() {
     const { isOver, canDrop, nav } = this.props
-    const { mode, willModeChange, isModeChanging } = this.state
+    const { isClosing, mode, willModeChange, isModeChanging } = this.state
 
-    return {
-      project: true,
+    return ['project', {
+      closing: isClosing,
       empty: this.isEmpty,
       over: isOver && canDrop,
       [`${mode}-mode`]: true,
@@ -86,7 +89,11 @@ class ProjectContainer extends Component {
       [`${mode}-mode-leave-active`]: isModeChanging,
       [`${nav.mode}-mode-enter`]: willModeChange,
       [`${nav.mode}-mode-enter-active`]: isModeChanging
-    }
+    }]
+  }
+
+  isClosing({ project } = this.props) {
+    return project.closing && project.id != null
   }
 
   get isEmpty() {
@@ -121,8 +128,11 @@ class ProjectContainer extends Component {
   }
 
   projectWillChange = debounce(project => {
-    this.setState({ isClosed: (project.closed != null) })
-  }, 500, { leading: false })
+    this.setState({
+      isClosing: this.isClosing({ project }),
+      isClosed: (project.closed != null)
+    })
+  }, 750, { leading: false })
 
   isMainView = (event) => {
     return event.target.parentNode === this.container
@@ -231,7 +241,7 @@ class ProjectContainer extends Component {
           nav={nav}
           items={items}
           data={data}
-          isActive={this.state.mode === MODE.PROJECT}
+          isActive={this.state.mode === MODE.PROJECT && !this.isClosing()}
           isEmpty={this.isEmpty}
           columns={columns}
           hasLastImport={hasLastImport}
@@ -256,6 +266,7 @@ class ProjectContainer extends Component {
           mode={this.state.mode}
           isModeChanging={this.state.isModeChanging}
           isTrashSelected={!!nav.trash}
+          isProjectClosing={this.isClosing()}
           onPanelResize={this.handlePanelResize}
           onPanelDragStop={this.handlePanelDragStop}
           onMetadataSave={this.handleMetadataSave}/>
@@ -265,6 +276,9 @@ class ProjectContainer extends Component {
           photos={photos}
           tags={props.tags}
           onPhotoError={props.onPhotoError}/>
+        <div className="closing-backdrop">
+          <IconSpin/>
+        </div>
       </div>
     )
   }
@@ -310,11 +324,7 @@ class ProjectContainer extends Component {
     data: object.isRequired,
     columns: arrayOf(object),
     cache: string.isRequired,
-    sort: shape({
-      asc: bool,
-      column: string.isRequired,
-      type: oneOf(['property']).isRequired
-    }).isRequired,
+    sort: object.isRequired,
     tags: object.isRequired,
 
     isOver: bool,
@@ -392,7 +402,7 @@ module.exports = {
       properties: state.ontology.props,
       selection: getSelectedItems(state),
       selections: state.selections,
-      sort: state.nav.sort,
+      sort: getSortColumn(state),
       tags: state.tags,
       ui: state.ui
     }),
@@ -426,6 +436,10 @@ module.exports = {
       onProjectSave(...args) {
         dispatch(actions.project.save(...args))
         dispatch(actions.edit.cancel())
+      },
+
+      onColumnResize(...args) {
+        dispatch(actions.nav.column.resize(...args))
       },
 
       onSelect(...args) {

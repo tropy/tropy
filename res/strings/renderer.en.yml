@@ -90,8 +90,10 @@ en:
       locale:
         locale: Locale
         locales:
+          de: Deutsch
           en: English
           fr: Français
+          ja: 日本語
       template: Default Template
       debug: Enable Developer Mode
       dup:
@@ -127,6 +129,7 @@ en:
         export: Export
     vocab:
       label: Vocabularies
+      export: Export
       classes: >
         {count, plural,
           =0 {No Classes}
@@ -164,10 +167,26 @@ en:
       select: Selection Tool
       rotate: Rotate
       mirror: Mirror
+      edit: Edit Photo
     mode:
       fill: Fill
       fit: Fit
       zoom: Zoom
+    panel:
+      negative: Invert colors
+      revert: Revert to Original
+      brightness:
+        label: Brightness
+        value: "{value, number}"
+      contrast:
+        label: Contrast
+        value: "{value, number}"
+      hue:
+        label: Hue
+        value: "{value, number}°"
+      saturation:
+        label: Saturation
+        value: "{value, number}"
   notepad:
     placeholder: Add your notes here …
 
@@ -213,6 +232,8 @@ en:
       ok: Yes
       cancel: Cancel
       item:
+        ok: Delete
+        cancel: Cancel
         destroy: >
           Are your sure you want to permanently delete items?
           This action cannot be undone.
@@ -398,7 +419,6 @@ en:
       right: Align Right
       sinkListItem: Sink list item
       liftListItem: Lift list item
-
   error:
     project:
       created: Project creation failed.
@@ -409,6 +429,7 @@ en:
         save: Failed to save tag.
         create: Failed to tag item. Tags must be unique per item.
     list:
+      create: Failed to create list. List names must be unique.
       save: Failed to save list.
       item:
         add: Failed to add item(s) to list.
@@ -425,7 +446,8 @@ en:
         field:
           add: Failed to add field to template.
           remove: Failed to remove field from template.
-
+    tag:
+      create: Failed to create tag. Tag names must be unique.
   flash:
     update:
       ready:

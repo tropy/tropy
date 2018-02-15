@@ -6,8 +6,8 @@ const { ONTOLOGY } = require('../constants')
 const { VOCAB, PROPS, CLASS, LABEL, TEMPLATE } = ONTOLOGY
 const { Ontology, Template } = require('../common/ontology')
 const { verbose, warn } = require('../common/log')
-const { get, pick } = require('../common/util')
-const { all, call, select } = require('redux-saga/effects')
+const { get, pick, pluck } = require('../common/util')
+const { all, call, select, cps } = require('redux-saga/effects')
 const { getTemplateField, getTemplateFields } = require('../selectors')
 const act = require('../actions')
 const mod = require('../models')
@@ -15,6 +15,8 @@ const sanitize = require('sanitize-filename')
 const { join } = require('path')
 const { keys } = Object
 const dialog = require('../dialog')
+const { writeFile: write } = require('fs')
+const { toN3 } = require('../export/vocab')
 
 
 class Import extends Command {
@@ -108,6 +110,32 @@ class VocabLoad extends Command {
 
   *exec() {
     return yield call(mod.ontology.vocab.load, this.options.db)
+  }
+}
+
+class VocabExport extends Command {
+  static get action() { return VOCAB.EXPORT }
+
+  *exec() {
+    const { payload } = this.action
+    const [vocab, classes, props, types] =
+          yield select(state => [
+            pluck(state.ontology.vocab, payload),
+            state.ontology.class,
+            state.ontology.props,
+            state.ontology.type
+          ])
+
+    this.isInteractive = true
+
+    const path = yield call(dialog.save.vocab)
+    if (!path) return
+
+    const data = yield call(toN3, vocab[0], classes, props, types)
+
+    yield cps(write, path, data)
+
+    return payload
   }
 }
 
@@ -491,6 +519,7 @@ module.exports = {
   TemplateDelete,
   TemplateSave,
   VocabDelete,
+  VocabExport,
   VocabLoad,
   VocabRestore,
   VocabSave

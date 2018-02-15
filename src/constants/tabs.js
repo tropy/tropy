@@ -12,5 +12,6 @@ module.exports = {
   SelectionGrid: 26,
   NoteList: 30,
   Esper: 40,
+  EsperPanel: 41,
   NotePad: 45
 }

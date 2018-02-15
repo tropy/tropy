@@ -1,0 +1,97 @@
+// sass-lint:disable no-color-literals
+
+//
+// Esper
+// --------------------------------------------------
+
+.esper {
+  flex: 1 1 0;
+  background: $esper-bg;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  contain: strict;
+
+  &:not(:focus):not(.nested-focus) {
+    .toolbar-left,
+    .toolbar-right,
+    .esper-panel > * { // todo
+      opacity: 0.6;
+    }
+  }
+
+  &:not(.overlay-mode) {
+    .slider-handle {
+      background-color: $esper-slider-handle-bg;
+    }
+
+    .slider-value {
+      color: $esper-slider-value-color;
+    }
+  }
+
+  .slider:focus {
+    .slider-handle {
+      background-color: $slider-focus-bg;
+      border-color: transparent;
+    }
+
+    .slider-range {
+      background-color: $slider-focus-bg;
+    }
+  }
+
+  .esper-container {
+    flex: 1 1 0;
+    display: flex;
+    position: relative;
+  }
+
+  .esper-view {
+    flex: 1 1 0;
+    position: relative;
+
+    canvas {
+      position: absolute;
+    }
+  }
+
+  .esper-header {
+    position: relative;
+    z-index: $zindex-esper-header;
+    height: $toolbar-height;
+  }
+
+  &.overlay-mode {
+    color: $esper-overlay-color;
+
+    .esper-header {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+    }
+
+    .slider:focus {
+      .slider-handle {
+        background-color: $slider-overlay-focus-bg;
+      }
+
+      .slider-range {
+        background-color: $slider-overlay-focus-bg;
+      }
+    }
+  }
+
+  @each $key, $val in $esper-cursor {
+    &.#{$key} {
+      .esper-view {
+        cursor: -webkit-image-set(
+          image-url("esper/#{map-get($val, 'default')}@1x.svg") 1x,
+          image-url("esper/#{map-get($val, 'default')}@2x.svg") 2x
+        ) map-get($val, "x") map-get($val, "y"), default;
+      }
+    }
+  }
+}

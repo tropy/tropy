@@ -115,6 +115,14 @@ const dom = {
     return node.getBoundingClientRect()
   },
 
+  scrollLeftMax(node) {
+    return node.scrollWidth - node.clientWidth
+  },
+
+  maxScrollLeft(node) {
+    return node.scrollLeft >= dom.scrollLeftMax(node)
+  },
+
   style(node) {
     return getComputedStyle(node)
   },

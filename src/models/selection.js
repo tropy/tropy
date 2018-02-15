@@ -21,6 +21,11 @@ const mod = {
               height,
               angle,
               mirror,
+              negative,
+              brightness,
+              contrast,
+              hue,
+              saturation,
               template,
               datetime(created, "localtime") AS created,
               datetime(modified, "localtime") AS modified
@@ -29,10 +34,11 @@ const mod = {
               JOIN selections USING (id)${
           (ids != null) ? ` WHERE id IN (${list(ids)})` : ''
         }`,
-        ({ id, created, modified, mirror, ...data }) => {
+        ({ id, created, modified, mirror, negative, ...data }) => {
           data.created = new Date(created)
           data.modified = new Date(modified)
           data.mirror = !!mirror
+          data.negative = !!negative
 
           if (id in selections) assign(selections[id], data)
           else selections[id] = assign({ id, notes: [] }, data)

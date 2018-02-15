@@ -7,9 +7,8 @@ const { COLOR, TOOL } = require('../../constants/esper')
 
 
 class SelectionLayer extends Container {
-  constructor(props) {
+  constructor() {
     super()
-    this.pivot.set(props.width / 2, props.height / 2)
     this.on('mousemove', this.handleMouseMove)
     this.visible = false
   }
@@ -142,7 +141,6 @@ class SelectionOverlay extends Graphics {
   constructor({ width, height }) {
     super()
 
-    this.pivot.set(width / 2, height / 2)
     this.beginFill(...COLOR.mask.fill)
     this.drawRect(0, 0, width, height)
 

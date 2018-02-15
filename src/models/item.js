@@ -2,8 +2,9 @@
 
 const { all } = require('bluebird')
 const { assign } = Object
-const { array, list: lst, uniq } = require('../common/util')
+const { array, list: lst, remove, uniq } = require('../common/util')
 const { TEMPLATE } = require('../constants/item')
+const { select } = require('../common/query')
 
 const mod = {
   metadata: require('./metadata'),
@@ -140,8 +141,10 @@ module.exports = mod.item = {
     const dir = sort.asc ? 'ASC' : 'DESC'
     const params = { $list: list }
     query = query.trim()
+
     const hasTags = tags.length > 0
     const hasQuery = query.length > 0
+    const byPosition = sort.property === 'added'
 
     if (hasQuery) {
       params.$query = prefix(query)
@@ -151,14 +154,20 @@ module.exports = mod.item = {
       params.$tags = tags.length
     }
 
+    if (!byPosition) {
+      params.$sort = sort.column
+    }
+
     const doTagsIntersect = true
 
     return search(db, `
-      SELECT DISTINCT id, added
-        FROM list_items
-          ${hasTags ? 'JOIN taggings USING (id)' : ''}
-          LEFT OUTER JOIN items USING (id)
-          LEFT OUTER JOIN trash USING (id)
+      ${byPosition ? '' : `WITH ${SORT}`}
+        SELECT DISTINCT id, added
+          FROM list_items
+            ${byPosition ? '' : 'LEFT OUTER JOIN sort USING (id)'}
+            ${hasTags ? 'JOIN taggings USING (id)' : ''}
+            LEFT OUTER JOIN items USING (id)
+            LEFT OUTER JOIN trash USING (id)
           WHERE
             list_id = $list AND list_items.deleted IS NULL AND
             ${hasQuery ? `id IN (${SEARCH}) AND` : ''}
@@ -166,7 +175,7 @@ module.exports = mod.item = {
             trash.deleted IS NULL
           ${hasTags && doTagsIntersect ?
             'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
-          ORDER BY added ${dir}, id ${dir}`,
+          ORDER BY ${byPosition ? 'added' : 'sort.text'} ${dir}, id ${dir}`,
       params)
   },
 
@@ -297,7 +306,7 @@ module.exports = mod.item = {
 
     await all([
       mod.photo.merge(db, item.id, photos, item.photos.length),
-      mod.item.tags.add(db, tags.map(tag => ({ id: item.id, tag }))),
+      mod.item.tags.set(db, tags.map(tag => ({ id: item.id, tag }))),
       mod.item.lists.merge(db, item.id, ids, lists),
       mod.metadata.update(db, { ids: [item.id], data }),
       mod.item.delete(db, ids, 'auto')
@@ -358,13 +367,27 @@ module.exports = mod.item = {
   },
 
   tags: {
-    async add(db, values) {
+    async add(db, { id, tag }) {
+      const dupes = await db.all(
+        ...select('id').from('taggings').where({ tag_id: tag, id }))
+
+      id = remove(id, ...dupes.map(r => r.id))
+
+      const res = (id.length === 0) ? { changes: 0 } :
+        await db.run(`
+          INSERT INTO taggings (tag_id, id) VALUES ${
+            id.map(i => `(${tag}, ${i})`).join(',')
+          }`)
+
+      return { ...res, id }
+    },
+
+    async set(db, values) {
       if (values.length) {
         return db.run(`
           INSERT INTO taggings (tag_id, id) VALUES ${
-            values.map(({ id, tag }) =>
-              `(${Number(tag)}, ${Number(id)})`).join(',')
-            }`)
+            values.map(({ tag, id }) => `(${tag}, ${id})`).join(',')
+          }`)
       }
     },
 

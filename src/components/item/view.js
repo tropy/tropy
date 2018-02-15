@@ -172,6 +172,7 @@ class ItemView extends PureComponent {
       photo,
       selections,
       onPanelDragStop,
+      isProjectClosing,
       isTrashSelected,
       ...props
     } = this.props
@@ -179,7 +180,7 @@ class ItemView extends PureComponent {
     const { isItemOpen } = this
 
     return (
-      <section className="item view" style={this.style}>
+      <section className="item-view" style={this.style}>
         <Resizable
           edge={isItemOpen ? 'right' : 'left'}
           value={offset}
@@ -194,15 +195,16 @@ class ItemView extends PureComponent {
             keymap={keymap}
             selections={selections}
             isItemOpen={isItemOpen}
-            isDisabled={isTrashSelected}
+            isDisabled={isTrashSelected || isProjectClosing}
             onNoteCreate={this.handleNoteCreate}/>
         </Resizable>
         <ItemContainer
           ref={this.setNotePad}
           note={this.state.note}
           photo={photo}
-          isDisabled={isTrashSelected}
+          isDisabled={isTrashSelected || isProjectClosing}
           isOpen={isItemOpen}
+          onContextMenu={this.props.onContextMenu}
           onNoteChange={this.handleNoteChange}
           onNoteCommit={this.handleNoteCommit}
           onPhotoError={this.props.onPhotoError}
@@ -229,6 +231,7 @@ class ItemView extends PureComponent {
     selections: object.isRequired,
     isModeChanging: bool.isRequired,
     isTrashSelected: bool.isRequired,
+    isProjectClosing: bool.isRequired,
 
     onNoteCreate: func.isRequired,
     onNoteDelete: func.isRequired,

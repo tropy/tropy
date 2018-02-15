@@ -75,6 +75,28 @@ en:
     note: &note
       - label: 'Delete Note'
         command: 'app:delete-note'
+    notepad: &notepad
+      - label: 'Writing Mode'
+        id: 'writing-mode'
+        submenu:
+          - label: 'Horizontal'
+            type: checkbox
+            checked: false
+            mode: 'horizontal'
+          - label: 'Vertical (Right to Left)'
+            type: checkbox
+            checked: false
+            mode: 'vertical-rl'
+      - label: 'Show Line Numbers'
+        id: 'line-numbers'
+        type: checkbox
+        checked: true
+        command: 'app:toggle-line-numbers'
+      - label: 'Wrap Lines'
+        id: 'line-wrap'
+        type: checkbox
+        checked: true
+        command: 'app:toggle-line-wrap'
     items: &items
       - label: 'New Item'
         command: 'app:create-item'
@@ -82,8 +104,11 @@ en:
       - label: 'Explode Item'
         command: 'app:explode-item'
         condition: 'hasMultiplePhotos'
-      - label: 'Export Item …'
-        command: 'app:export-item'
+      - label: 'Export Item'
+        id: 'export'
+        submenu:
+          - label: 'JSON-LD'
+            command: 'app:export-item'
       - label: 'Add Photo …'
         command: 'app:create-item-photo'
       - label: 'Tags'
@@ -99,8 +124,11 @@ en:
     item-bulk: &item-bulk
       - label: 'Merge Selected Items'
         command: 'app:merge-item'
-      - label: 'Export Selected Items …'
-        command: 'app:export-item'
+      - label: 'Export Selected Items'
+        id: 'export'
+        submenu:
+          - label: 'JSON-LD'
+            command: 'app:export-item'
       - label: 'Delete Selected Items'
         command: 'app:delete-item'
     item-list: &item-list
@@ -163,6 +191,7 @@ en:
     item-tag: *item-tag
     notes: *notes
     note: *note
+    notepad: *notepad
     items: *items
     item: *item
     item-bulk: *item-bulk
@@ -186,6 +215,7 @@ en:
     item-tag: *item-tag
     notes: *notes
     note: *note
+    notepad: *notepad
     items: *items
     item: *item
     item-bulk: *item-bulk

@@ -9,5 +9,11 @@ global.F = {
     return {
       path: join(ROOT, 'images', name)
     }
+  },
+
+  plugins(...args) {
+    return {
+      path: join(ROOT, 'plugins', ...args)
+    }
   }
 }

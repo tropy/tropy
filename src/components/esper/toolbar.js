@@ -2,8 +2,8 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { Toolbar, ToolbarLeft, ToolGroup } = require('../toolbar')
-const { IconButton } = require('../button')
+const { Toolbar, ToolbarLeft, ToolbarRight, ToolGroup } = require('../toolbar')
+const { Button } = require('../button')
 const { Slider } = require('../slider')
 const { arrayOf, bool, func, number, string } = require('prop-types')
 const throttle = require('lodash.throttle')
@@ -21,8 +21,8 @@ const {
   IconArrow,
   IconSelection,
   IconRotate,
-  // IconNut,
   IconHand,
+  IconSliders,
   IconMirror,
   IconMinusCircle,
   IconPlusCircle,
@@ -42,6 +42,10 @@ class EsperToolbar extends PureComponent {
 
   isToolActive(tool) {
     return this.props.tool === tool
+  }
+
+  handlePanelToggle = () => {
+    this.props.onPanelChange(!this.props.isPanelVisible)
   }
 
   handleRotate = () => {
@@ -77,13 +81,13 @@ class EsperToolbar extends PureComponent {
       <Toolbar isDraggable={false}>
         <ToolbarLeft>
           <ToolGroup>
-            <IconButton
+            <Button
               noFocus
               icon={<IconArrow/>}
               isActive={this.isToolActive(TOOL.ARROW)}
               isDisabled={this.props.isDisabled}
               onClick={this.setArrowTool}/>
-            <IconButton
+            <Button
               noFocus
               icon={<IconSelection/>}
               title="esper.tool.select"
@@ -92,38 +96,34 @@ class EsperToolbar extends PureComponent {
               onClick={this.setSelectTool}/>
           </ToolGroup>
           <ToolGroup>
-            <IconButton
+            <Button
               noFocus
               icon={<IconRotate/>}
               title="esper.tool.rotate"
               isDisabled={this.props.isDisabled}
               onClick={this.handleRotate}/>
-            <IconButton
+            <Button
               noFocus
               icon={<IconMirror/>}
               title="esper.tool.mirror"
               isDisabled={this.props.isDisabled}
               onClick={this.props.onMirrorChange}/>
-            {/*<IconButton
-              noFocus
-              icon={<IconNut/>}
-              isDisabled/>*/}
           </ToolGroup>
           <ToolGroup>
-            <IconButton
+            <Button
               noFocus
               icon={<IconHand/>}
               title="esper.tool.pan"
               isActive={this.isToolActive(TOOL.PAN)}
               onClick={this.setPanTool}/>
-            <IconButton
+            <Button
               noFocus
               icon={<IconFill/>}
               title="esper.mode.fill"
               isDisabled={this.props.isDisabled}
               isActive={this.isZoomToFill}
               onClick={this.setZoomToFill}/>
-            <IconButton
+            <Button
               noFocus
               icon={<IconFit/>}
               title="esper.mode.fit"
@@ -133,7 +133,6 @@ class EsperToolbar extends PureComponent {
           </ToolGroup>
           <ToolGroup>
             <Slider
-              noFocus
               value={this.props.zoom}
               min={this.props.minZoom}
               max={this.props.maxZoom}
@@ -143,10 +142,19 @@ class EsperToolbar extends PureComponent {
               minIcon={<IconMinusCircle/>}
               maxIcon={<IconPlusCircle/>}
               isDisabled={this.props.isDisabled}
-              tabIndex={null}
               onChange={this.handleZoomChange}/>
           </ToolGroup>
         </ToolbarLeft>
+        <ToolbarRight>
+          <ToolGroup>
+            <Button
+              noFocus
+              icon={<IconSliders/>}
+              title="esper.tool.edit"
+              isActive={this.props.isPanelVisible}
+              onClick={this.handlePanelToggle}/>
+          </ToolGroup>
+        </ToolbarRight>
       </Toolbar>
     )
   }
@@ -154,6 +162,7 @@ class EsperToolbar extends PureComponent {
   static propTypes = {
     isDisabled: bool.isRequired,
     isSelectionActive: bool.isRequired,
+    isPanelVisible: bool.isRequired,
     mode: string.isRequired,
     tool: string.isRequired,
     zoom: number.isRequired,
@@ -163,6 +172,7 @@ class EsperToolbar extends PureComponent {
     maxZoom: number.isRequired,
     onMirrorChange: func.isRequired,
     onModeChange: func.isRequired,
+    onPanelChange: func.isRequired,
     onToolChange: func.isRequired,
     onRotationChange: func.isRequired,
     onZoomChange: func.isRequired

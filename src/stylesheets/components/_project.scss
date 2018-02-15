@@ -16,6 +16,33 @@
   .main {
     display: flex;
     flex: 1 1 0;
+    min-width: 0; // Prevent horizontal scrollbar in project-view
+  }
+
+  .closing-backdrop {
+    position: absolute;
+    z-index: $zindex-closing-backdrop;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: $project-closing-backdrop;
+    display: none;
+    justify-content: center;
+    align-items: center;
+
+    .icon-spin {
+      svg {
+        width: $space-xl;
+        height: $space-xl;
+      }
+    }
+  }
+
+  &.closing {
+    .closing-backdrop {
+      display: flex;
+    }
   }
 }
 
@@ -126,12 +153,12 @@
 #items {
   display: flex;
   flex-direction: column;
+  min-width: 0; // Needed for horizontal scrollbar in .item-table
+  padding: 0 $space-min;
+  position: relative;
 
-  .toolbar {
-    padding: {
-      left: $default-padding-horizontal;
-      right: ($default-padding-horizontal + $space-min);
-    }
+  .scrollbar-style-old-school & {
+    padding-right: 0;
   }
 
   .item-count {
@@ -186,3 +213,23 @@
     }
   }
 }
+
+.fake-gap {
+  position: absolute;
+  width: 4px;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background: $body-bg;
+  z-index: $zindex-draggable;
+
+  body:not(.scrollbar-style-old-school) & {
+    display: none;
+  }
+
+  .max-scroll-left + & {
+    height: $toolbar-height;
+  }
+}
+
+

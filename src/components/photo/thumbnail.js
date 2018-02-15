@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
+const { Component } = React
 const { IconPhoto } = require('../icons')
 const { imageURL } = require('../../common/cache')
 const { pick } = require('../../common/util')
@@ -10,23 +10,56 @@ const { ICON } = require('../../constants/sass')
 const { Rotation } = require('../../common/iiif')
 
 
-class Thumbnail extends PureComponent {
+class Thumbnail extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      src: this.getSource(props),
+      rot: this.getRotation(props),
+      hasBeenFixed: false,
+      hasFinishedLoading: false
+    }
+  }
+
   componentWillReceiveProps(props) {
-    this.hasBeenFixed = (this.props.broken && !props.broken)
+    const src = this.getSource(props)
+    const rot = this.getRotation(props)
+
+    const hasImageChanged = src !== this.state.src
+
+    const hasBeenFixed =
+      !hasImageChanged && (this.props.broken && !props.broken)
+
+    const hasFinishedLoading =
+      !(hasImageChanged || hasBeenFixed) || this.state.hasFinishedLoading
+
+    this.setState({
+      src, rot, hasBeenFixed, hasFinishedLoading
+    })
   }
 
-  get src() {
-    const { cache, id, size } = this.props
+  getSource(props = this.props) {
+    const { cache, id, mimetype, size } = props
     if (id == null) return null
-    const url = imageURL(cache, id, size > ICON.SIZE ? ICON.MAX : ICON.SIZE)
-    return (this.hasBeenFixed) ? `${url}?fixed=true` : url
+
+    return (id == null) ?
+      null :
+      imageURL(cache, id, size > ICON.SIZE ? ICON.MAX : ICON.SIZE, mimetype)
   }
 
-  get rotation() {
+  getRotation(props = this.props) {
     return Rotation
-      .fromExifOrientation(this.props.orientation)
-      .add(this.props)
+      .fromExifOrientation(props.orientation)
+      .add(props)
       .format('x')
+  }
+
+  get hasFallbackIcon() {
+    return this.props.broken || !this.state.hasFinishedLoading
+  }
+
+  handleLoad = () => {
+    this.setState({ hasFinishedLoading: true })
   }
 
   handleError = () => {
@@ -36,11 +69,12 @@ class Thumbnail extends PureComponent {
   }
 
   renderImage() {
-    const { src, rotation } = this
+    const { hasBeenFixed, rot, src } = this.state
     return src && (
       <img
-        className={`iiif rot-${rotation}`}
-        src={src}
+        className={`iiif rot-${rot}`}
+        src={hasBeenFixed ? `${src}?fixed=true` : src}
+        onLoad={this.handleLoad}
         onError={this.handleError}/>
     )
   }
@@ -52,7 +86,7 @@ class Thumbnail extends PureComponent {
 
     return (
       <figure {...listeners} className="thumbnail">
-        <IconPhoto/>
+        {this.hasFallbackIcon && <IconPhoto/>}
         {this.renderImage()}
       </figure>
     )
@@ -63,6 +97,7 @@ class Thumbnail extends PureComponent {
     broken: bool,
     cache: string.isRequired,
     id: number,
+    mimetype: string,
     mirror: bool,
     orientation: number,
     size: number.isRequired,
