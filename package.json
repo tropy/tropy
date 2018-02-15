@@ -85,7 +85,7 @@
     "classnames": "^2.2.5",
     "colors": "^1.1.2",
     "decompress": "^4.2.0",
-    "edtf": "^2.3.0",
+    "edtf": "^2.3.2",
     "exif-reader": "github:inukshuk/exif-reader#patched",
     "generic-pool": "^3.4.1",
     "js-yaml": "^3.10.0",
