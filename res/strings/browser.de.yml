@@ -9,14 +9,15 @@ de:
       detail: Fehler melden auf https://github.com/tropy/tropy
     unresponsive:
       buttons:
-      - Schließen
+      - Beenden
       - Warten
       message: Tropy reagiert nicht mehr
       detail: >
-          Tropy reagiert nicht mehr. Soll beendet oder noch gewartet werden?
+          Tropy reagiert nicht mehr. Soll es beendet werden oder möchten Sie noch
+          warten?
   windows:
     prefs:
-      title: Tropy Einstellungen
+      title: Voreinstellungen
     wizard:
       title: Willkommen bei Tropy
     about:

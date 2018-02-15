@@ -76,10 +76,6 @@ ja:
           role: togglefullscreen
         - label: メニューバーを非表示
           command: 'app:toggle-menu-bar'
-        - label: サイドバーを非表示
-          command: 'app:toggle-sidebar'
-          enabled: false
-          visible: false
         - type: separator
         - label: ズーム
           submenu:
@@ -138,6 +134,8 @@ ja:
         - type: separator
         - label: プラグインの設定を変更
           command: 'app:open-plugins-config'
+        - label: プラグインをインストール
+          command: 'app:install-plugin'
         - label: プラグインフォルダを開く
           command: 'app:open-plugins-folder'
         - type: separator
@@ -153,7 +151,7 @@ ja:
           enabled: false
           visible: false
         - id: updater-install
-          label: アップデートをインストールする
+          label: アップデートをインストール
           command: 'app:install-updates'
           enabled: false
           visible: false
@@ -244,12 +242,6 @@ ja:
       submenu:
         - label: 全画面表示にする
           role: togglefullscreen
-        - label: メニューバーを隠す
-          command: 'app:toggle-menu-bar'
-        - label: サイドバーを非表示にする
-          command: 'app:toggle-sidebar'
-          enabled: false
-          visible: false
         - type: separator
         - label: ズーム
           submenu:
@@ -314,8 +306,8 @@ ja:
         - label: ログファイルを開く
           command: 'app:open-logs'
         - type: separator
-        - label: プラグインの設定を開く
-          command: 'app:open-plugins-config'
+        - label: プラグインをインストール
+          command: 'app:install-plugin'
         - label: プラグインフォルダを開く
           command: 'app:open-plugins-folder'
         - type: separator
@@ -328,7 +320,7 @@ ja:
           enabled: false
           visible: false
         - id: updater-install
-          label: アップデートをインストールする
+          label: アップデートをインストール
           command: 'app:install-updates'
           enabled: false
           visible: false
@@ -406,10 +398,6 @@ ja:
           role: togglefullscreen
         - label: メニューバーを隠す
           command: 'app:toggle-menu-bar'
-        - label: サイドバーを非表示にする
-          command: 'app:toggle-sidebar'
-          enabled: false
-          visible: false
         - type: separator
         - label: ズーム
           submenu:
@@ -468,6 +456,8 @@ ja:
         - type: separator
         - label: プラグインの設定を変更
           command: 'app:open-plugins-config'
+        - label: プラグインをインストール
+          command: 'app:install-plugin'
         - label: プラグインフォルダを開く
           command: 'app:open-plugins-folder'
         - type: separator
@@ -483,7 +473,7 @@ ja:
           enabled: false
           visible: false
         - id: updater-install
-          label: アップデートをインストールする
+          label: アップデートをインストール
           command: 'app:install-updates'
           enabled: false
           visible: false

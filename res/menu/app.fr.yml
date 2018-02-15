@@ -1,281 +1,479 @@
 fr:
   linux:
-    - &file
-      label: 'Fichier'
-      id: 'file'
+    - label: Fichier
+      id: file
       submenu:
-        - &new
-          label: 'Nouveau'
+        - label: Nouveau
           submenu:
-            - label: 'Projet'
+            - label: Projet
               command: 'app:create-project'
-              accelerator: 'CmdOrCtrl+Shift+P'
-            - label: 'Objet'
+              accelerator: CmdOrCtrl+Shift+P
+            - label: Objet
               command: 'app:create-item'
-              accelerator: 'CmdOrCtrl+Shift+N'
-            - label: 'Liste'
+              accelerator: CmdOrCtrl+Shift+N
+            - label: Liste
               command: 'app:create-list'
-              accelerator: 'CmdOrCtrl+Shift+L'
-            - label: 'Tag'
+              accelerator: CmdOrCtrl+Shift+L
+            - label: Tag
               command: 'app:create-tag'
-              accelerator: 'CmdOrCtrl+Shift+T'
-        - type: 'separator'
-        - &open
-          label: 'Ouvrir'
-          accelerator: 'CmdOrCtrl+O'
+              accelerator: CmdOrCtrl+Shift+A
+        - type: separator
+        - label: Ouvrir
+          accelerator: CmdOrCtrl+O
           command: 'app:open-dialog'
-        - &recent
-          label: 'Projets récents'
-          id: 'recent'
+        - label: Projets récents
+          id: recent
           enabled: false
           submenu:
-            - type: 'separator'
-            - label: 'Vider la liste'
+            - type: separator
+            - label: Vider la liste
               command: 'app:clear-recent-projects'
-        - type: 'separator'
-        - &import
-          label: 'Importer des photos…'
+        - type: separator
+        - label: Importer des photos…
           command: 'app:import-photos'
-          accelerator: 'CmdOrCtrl+Shift+I'
-        - &consolidate
-          label: 'Regrouper la bibliothèque de photos'
+          accelerator: CmdOrCtrl+Shift+I
+        - label: Regrouper la bibliothèque de photos
           command: 'app:consolidate-photo-library'
-        - type: 'separator'
-        - label: 'Fermer'
-          accelerator: 'CmdOrCtrl+W'
-          role: 'close'
-        - type: 'separator'
-        - label: 'Quitter'
-          accelerator: 'CmdOrCtrl+Q'
-          role: 'quit'
-    - &edit
-      label: 'Edition'
+        - type: separator
+        - label: Fermer
+          accelerator: CmdOrCtrl+W
+          role: close
+        - type: separator
+        - label: Quitter
+          accelerator: CmdOrCtrl+Q
+          role: quit
+    - label: Édition
       submenu:
-        - &undo
-          id: 'undo'
-          label: 'Annuler'
-          accelerator: 'CmdOrCtrl+Z'
+        - id: undo
+          label: Annuler
+          accelerator: CmdOrCtrl+Z
           command: 'app:undo'
           enabled: false
-        - &redo
-          id: '&Redo'
-          label: 'Rétablir'
-          accelerator: 'Shift+CmdOrCtrl+Z'
+        - id: redo
+          label: Rétablir
+          accelerator: Shift+CmdOrCtrl+Z
           command: 'app:redo'
           enabled: false
-        - type: 'separator'
-        - &cut
-          label: 'Couper'
-          accelerator: 'CmdOrCtrl+X'
-          role: 'cut'
-        - &copy
-          label: 'Copier'
-          accelerator: 'CmdOrCtrl+C'
-          role: 'copy'
-        - &paste
-          label: 'Coller'
-          accelerator: 'CmdOrCtrl+V'
-          role: 'paste'
-        - &all
-          label: 'Tout sélectionner'
-          role: 'selectall'
-        - type: 'separator'
-        - &preferences
-          label: 'Préférences…'
-          accelerator: 'Shift+Control+S'
+        - type: separator
+        - label: Couper
+          accelerator: CmdOrCtrl+X
+          role: cut
+        - label: Copier
+          accelerator: CmdOrCtrl+C
+          role: copy
+        - label: Coller
+          accelerator: CmdOrCtrl+V
+          role: paste
+        - label: Tout sélectionner
+          role: selectall
+        - type: separator
+        - label: Préférences…
+          accelerator: Shift+Control+S
           command: 'app:open-preferences'
-    - &view
-      label: 'Présentation'
+    - label: Affichage
       submenu:
-        - label: 'Basculer en plein écran'
-          role: 'togglefullscreen'
-        - label: 'Cacher la barre de menu'
+        - label: Basculer en plein écran
+          role: togglefullscreen
+        - label: Cacher la barre de menu
           command: 'app:toggle-menu-bar'
-        - label: 'Cacher la barre latérale'
-          command: 'app:toggle-sidebar'
-          enabled: false
-        - type: 'separator'
-        - label: 'Zoom'
+        - type: separator
+        - label: Zoom
           submenu:
-            - label: 'Agrandir'
+            - label: Agrandir
               command: 'app:zoom-in'
-            - label: 'Réduire'
+            - label: Réduire
               command: 'app:zoom-out'
-            - type: 'separator'
-            - label: 'Taille réelle'
+            - type: separator
+            - label: Taille réelle
               command: 'app:zoom-reset'
-    - &win
-      label: 'Fenêtre'
+    - label: Fenêtre
       submenu:
-        - label: 'Réduire'
-          accelerator: 'CmdOrCtrl+M'
-          role: 'minimize'
-    - &dev
-      label: 'Développeur'
-      id: 'dev'
+        - label: Réduire
+          accelerator: CmdOrCtrl+M
+          role: minimize
+    - label: Développeur
+      id: dev
       submenu:
-        - label: 'Rafraîchir'
-          accelerator: 'CmdOrCtrl+R'
+        - label: Rafraîchir
+          accelerator: CmdOrCtrl+R
           command: 'win:reload'
-        - label: 'Rafraîchir les &styles'
-          accelerator: 'CmdOrCtrl+S'
+        - label: Rafraîchir les &styles
+          accelerator: CmdOrCtrl+S
           command: 'win:refresh'
-        - label: 'Afficher les outils de développement'
-          accelerator: 'CmdOrCtrl+D'
-          role: 'toggledevtools'
-        - label: 'Afficher les outils de performance'
+        - label: Afficher les outils de développement
+          accelerator: CmdOrCtrl+D
+          role: toggledevtools
+        - label: Afficher les outils de performance
           command: 'win:toggle-perf-tools'
-        - type: 'separator'
-        - label: 'Remettre à zéro la base de données des ontologies'
+        - type: separator
+        - label: Remettre à zéro la base de données des ontologies
           command: 'app:reset-ontology-db'
-        - label: 'Fermer le projet'
+        - label: Fermer le projet
           command: 'app:close-project'
-        - type: 'separator'
-        - label: 'Thème'
-          id: 'theme'
+        - type: separator
+        - label: Thème
+          id: theme
           submenu:
-            - label: 'Lumineux'
-              id: 'light'
-              type: 'checkbox'
-            - label: 'Sombre'
-              id: 'dark'
-              type: 'checkbox'
-
-    - &help
-      label: 'Aide'
+            - label: Lumineux
+              id: light
+              type: checkbox
+            - label: Sombre
+              id: dark
+              type: checkbox
+    - label: Aide
       submenu:
-        - label: "Guide d'utilisation"
+        - label: Guide d'utilisation
           command: 'app:open-docs'
-        - label: "Forum d'aide"
+        - label: Forum d'aide
           command: 'app:open-forums'
-        - type: 'separator'
-        - label: 'Licence'
+        - type: separator
+        - label: Licence
           command: 'app:open-license'
-        - label: 'Afficher les fichiers de Log'
+        - label: Afficher les fichiers de Log
           command: 'app:open-logs'
-        - type: 'separator'
-        - label: 'A propos de %name'
-          command: 'app:about'
-        - type: 'separator'
-        - label: 'Afficher le configuration de Plugins'
+        - type: separator
+        - label: Afficher le configuration de Plugins
           command: 'app:open-plugins-config'
-        - label: 'Afficher les fichiers de Plugins'
+        - label: Install Plugin …
+          command: 'app:install-plugin'
+        - label: Afficher les fichiers de Plugins
           command: 'app:open-plugins-folder'
-        - type: 'separator'
-        - &updaterCheck
-          id: 'updater-check'
-          label: 'Recherche des mises à jour en cours…'
+        - type: separator
+        - label: À propos de %name
+          command: 'app:about'
+        - type: separator
+        - id: updater-check
+          label: Recherche des mises à jour en cours…
           command: 'app:check-for-updates'
           enabled: false
-        - &updaterIsChecking
-          id: 'updater-is-checking'
-          label: 'Obtention des mises à jour en cours…'
+        - id: updater-is-checking
+          label: Obtention des mises à jour en cours…
           enabled: false
           visible: false
-        - &updaterInstall
-          id: 'updater-install'
-          label: 'Installer les mises à jour…'
+        - id: updater-install
+          label: Installer les mises à jour…
           command: 'app:install-updates'
           enabled: false
           visible: false
-
   darwin:
     - label: '%name'
       submenu:
-        - label: 'A propos de %name'
+        - label: À propos de %name
           command: 'app:about'
-        - type: 'separator'
-        - label: 'Préférences…'
+        - type: separator
+        - label: Préférences…
           accelerator: 'Command+,'
           command: 'app:open-preferences'
-        - type: 'separator'
-        - label: 'Masquer %name'
-          accelerator: 'Command+H'
-          role: 'hide'
-        - label: 'Masquer les autres programmes'
-          accelerator: 'Command+Shift+H'
-          role: 'hideothers'
-        - label: 'Tout montrer'
-          role: 'unhide'
-        - type: 'separator'
-        - label: 'Quitter'
-          accelerator: 'Command+Q'
-          role: 'quit'
-
-    - label: 'Fichier'
+        - type: separator
+        - label: Masquer %name
+          accelerator: Command+H
+          role: hide
+        - label: Masquer les autres programmes
+          accelerator: Command+Shift+H
+          role: hideothers
+        - label: Tout montrer
+          role: unhide
+        - type: separator
+        - label: Quitter
+          accelerator: Command+Q
+          role: quit
+    - label: Fichier
       submenu:
-        - *new
-        - type: 'separator'
-        - *open
-        - *recent
-        - type: 'separator'
-        - *import
-        - *consolidate
-        - type: 'separator'
-        - label: 'Fermer'
-          accelerator: 'Command+W'
-          role: 'close'
-    - label: 'Edition'
+        - label: Nouveau
+          submenu:
+            - label: Projet
+              command: 'app:create-project'
+              accelerator: CmdOrCtrl+Shift+P
+            - label: Objet
+              command: 'app:create-item'
+              accelerator: CmdOrCtrl+Shift+N
+            - label: Liste
+              command: 'app:create-list'
+              accelerator: CmdOrCtrl+Shift+L
+            - label: Tag
+              command: 'app:create-tag'
+              accelerator: CmdOrCtrl+Shift+A
+        - type: separator
+        - label: Ouvrir
+          accelerator: CmdOrCtrl+O
+          command: 'app:open-dialog'
+        - label: Projets récents
+          id: recent
+          enabled: false
+          submenu:
+            - type: separator
+            - label: Vider la liste
+              command: 'app:clear-recent-projects'
+        - type: separator
+        - label: Importer des photos…
+          command: 'app:import-photos'
+          accelerator: CmdOrCtrl+Shift+I
+        - label: Regrouper la bibliothèque de photos
+          command: 'app:consolidate-photo-library'
+        - type: separator
+        - label: Fermer
+          accelerator: Command+W
+          role: close
+    - label: Édition
       submenu:
-        - *undo
-        - *redo
-        - type: 'separator'
-        - *cut
-        - *copy
-        - *paste
-        - *all
-    - *view
-    - label: 'Fenêtre'
-      role: 'window'
-      submenu:
-        - label: 'Réduire'
-          accelerator: 'CmdOrCtrl+M'
-          role: 'minimize'
-        - label: 'Fermer'
-          accelerator: 'CmdOrCtrl+W'
-          role: 'close'
-        - type: 'separator'
-        - label: 'Mettre au premier plan'
-          role: 'front'
-    - *dev
-    - label: 'Aide'
-      role: 'help'
-      submenu:
-        - label: "Guide d'utilisation"
-          command: 'app:open-docs'
-        - label: "Forum d'aide"
-          command: 'app:open-forums'
-        - type: 'separator'
-        - label: 'Licence du programme'
-          command: 'app:open-license'
-        - label: 'Afficher les logs'
-          command: 'app:open-logs'
-        - type: 'separator'
-        - label: 'Afficher les configuration de Plugins'
-          command: 'app:open-plugins-config'
-        - label: 'Afficher les fichiers de Plugins'
-          command: 'app:open-plugins-folder'
-        - type: 'separator'
-        - *updaterCheck
-        - *updaterIsChecking
-        - *updaterInstall
-
-  win32:
-    - *file
-    - label: 'Edition'
-      submenu:
-        - *undo
-        - id: 'redo'
-          label: 'Rétablir'
-          accelerator: 'Control+Shift+Z'
+        - id: undo
+          label: Annuler
+          accelerator: CmdOrCtrl+Z
+          command: 'app:undo'
+          enabled: false
+        - id: redo
+          label: Rétablir
+          accelerator: Shift+CmdOrCtrl+Z
           command: 'app:redo'
           enabled: false
-        - type: 'separator'
-        - *cut
-        - *copy
-        - *paste
-        - *preferences
-    - *view
-    - *win
-    - *dev
-    - *help
+        - type: separator
+        - label: Couper
+          accelerator: CmdOrCtrl+X
+          role: cut
+        - label: Copier
+          accelerator: CmdOrCtrl+C
+          role: copy
+        - label: Coller
+          accelerator: CmdOrCtrl+V
+          role: paste
+        - label: Tout sélectionner
+          role: selectall
+    - label: Affichage
+      submenu:
+        - label: Basculer en plein écran
+          role: togglefullscreen
+        - type: separator
+        - label: Zoom
+          submenu:
+            - label: Agrandir
+              command: 'app:zoom-in'
+            - label: Réduire
+              command: 'app:zoom-out'
+            - type: separator
+            - label: Taille réelle
+              command: 'app:zoom-reset'
+    - label: Fenêtre
+      role: window
+      submenu:
+        - label: Réduire
+          accelerator: CmdOrCtrl+M
+          role: minimize
+        - label: Fermer
+          accelerator: CmdOrCtrl+W
+          role: close
+        - type: separator
+        - label: Mettre au premier plan
+          role: front
+    - label: Développeur
+      id: dev
+      submenu:
+        - label: Rafraîchir
+          accelerator: CmdOrCtrl+R
+          command: 'win:reload'
+        - label: Rafraîchir les &styles
+          accelerator: CmdOrCtrl+S
+          command: 'win:refresh'
+        - label: Afficher les outils de développement
+          accelerator: CmdOrCtrl+D
+          role: toggledevtools
+        - label: Afficher les outils de performance
+          command: 'win:toggle-perf-tools'
+        - type: separator
+        - label: Remettre à zéro la base de données des ontologies
+          command: 'app:reset-ontology-db'
+        - label: Fermer le projet
+          command: 'app:close-project'
+        - type: separator
+        - label: Thème
+          id: theme
+          submenu:
+            - label: Lumineux
+              id: light
+              type: checkbox
+            - label: Sombre
+              id: dark
+              type: checkbox
+    - label: Aide
+      role: help
+      submenu:
+        - label: Guide d'utilisation
+          command: 'app:open-docs'
+        - label: Forum d'aide
+          command: 'app:open-forums'
+        - type: separator
+        - label: Licence
+          command: 'app:open-license'
+        - label: Afficher les logs
+          command: 'app:open-logs'
+        - type: separator
+        - label: Install Plugin …
+          command: 'app:install-plugin'
+        - label: Afficher les fichiers de Plugins
+          command: 'app:open-plugins-folder'
+        - type: separator
+        - id: updater-check
+          label: Recherche des mises à jour en cours…
+          command: 'app:check-for-updates'
+          enabled: false
+        - id: updater-is-checking
+          label: Obtention des mises à jour en cours…
+          enabled: false
+          visible: false
+        - id: updater-install
+          label: Installer les mises à jour…
+          command: 'app:install-updates'
+          enabled: false
+          visible: false
+  win32:
+    - label: Fichier
+      id: file
+      submenu:
+        - label: Nouveau
+          submenu:
+            - label: Projet
+              command: 'app:create-project'
+              accelerator: CmdOrCtrl+Shift+P
+            - label: Objet
+              command: 'app:create-item'
+              accelerator: CmdOrCtrl+Shift+N
+            - label: Liste
+              command: 'app:create-list'
+              accelerator: CmdOrCtrl+Shift+L
+            - label: Tag
+              command: 'app:create-tag'
+              accelerator: CmdOrCtrl+Shift+A
+        - type: separator
+        - label: Ouvrir
+          accelerator: CmdOrCtrl+O
+          command: 'app:open-dialog'
+        - label: Projets récents
+          id: recent
+          enabled: false
+          submenu:
+            - type: separator
+            - label: Vider la liste
+              command: 'app:clear-recent-projects'
+        - type: separator
+        - label: Importer des photos…
+          command: 'app:import-photos'
+          accelerator: CmdOrCtrl+Shift+I
+        - label: Regrouper la bibliothèque de photos
+          command: 'app:consolidate-photo-library'
+        - type: separator
+        - label: Fermer
+          accelerator: CmdOrCtrl+W
+          role: close
+        - type: separator
+        - label: Quitter
+          accelerator: CmdOrCtrl+Q
+          role: quit
+    - label: Édition
+      submenu:
+        - id: undo
+          label: Annuler
+          accelerator: CmdOrCtrl+Z
+          command: 'app:undo'
+          enabled: false
+        - id: redo
+          label: Rétablir
+          accelerator: Control+Y
+          command: 'app:redo'
+          enabled: false
+        - type: separator
+        - label: Couper
+          accelerator: CmdOrCtrl+X
+          role: cut
+        - label: Copier
+          accelerator: CmdOrCtrl+C
+          role: copy
+        - label: Coller
+          accelerator: CmdOrCtrl+V
+          role: paste
+        - label: Préférences…
+          accelerator: Shift+Control+S
+          command: 'app:open-preferences'
+    - label: Affichage
+      submenu:
+        - label: Basculer en plein écran
+          role: togglefullscreen
+        - label: Cacher la barre de menu
+          command: 'app:toggle-menu-bar'
+        - type: separator
+        - label: Zoom
+          submenu:
+            - label: Agrandir
+              command: 'app:zoom-in'
+            - label: Réduire
+              command: 'app:zoom-out'
+            - type: separator
+            - label: Taille réelle
+              command: 'app:zoom-reset'
+    - label: Fenêtre
+      submenu:
+        - label: Réduire
+          accelerator: CmdOrCtrl+M
+          role: minimize
+    - label: Développeur
+      id: dev
+      submenu:
+        - label: Rafraîchir
+          accelerator: CmdOrCtrl+R
+          command: 'win:reload'
+        - label: Rafraîchir les &styles
+          accelerator: CmdOrCtrl+S
+          command: 'win:refresh'
+        - label: Afficher les outils de développement
+          accelerator: CmdOrCtrl+D
+          role: toggledevtools
+        - label: Afficher les outils de performance
+          command: 'win:toggle-perf-tools'
+        - type: separator
+        - label: Remettre à zéro la base de données des ontologies
+          command: 'app:reset-ontology-db'
+        - label: Fermer le projet
+          command: 'app:close-project'
+        - type: separator
+        - label: Thème
+          id: theme
+          submenu:
+            - label: Lumineux
+              id: light
+              type: checkbox
+            - label: Sombre
+              id: dark
+              type: checkbox
+    - label: Aide
+      submenu:
+        - label: Guide d'utilisation
+          command: 'app:open-docs'
+        - label: Forum d'aide
+          command: 'app:open-forums'
+        - type: separator
+        - label: Licence
+          command: 'app:open-license'
+        - label: Afficher les fichiers de Log
+          command: 'app:open-logs'
+        - type: separator
+        - label: Afficher le configuration de Plugins
+          command: 'app:open-plugins-config'
+        - label: Install Plugin …
+          command: 'app:install-plugin'
+        - label: Afficher les fichiers de Plugins
+          command: 'app:open-plugins-folder'
+        - type: separator
+        - label: À propos de %name
+          command: 'app:about'
+        - type: separator
+        - id: updater-check
+          label: Recherche des mises à jour en cours…
+          command: 'app:check-for-updates'
+          enabled: false
+        - id: updater-is-checking
+          label: Obtention des mises à jour en cours…
+          enabled: false
+          visible: false
+        - id: updater-install
+          label: Installer les mises à jour…
+          command: 'app:install-updates'
+          enabled: false
+          visible: false

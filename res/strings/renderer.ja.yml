@@ -25,40 +25,40 @@ ja:
 
           =0 {}
 
-          one {Item}
+          one {アイテム}
 
-          other {# Items}}
+          other {# アイテム}}
       selection: セレクション
     tags:
       tab: タグ
       add: >
           {count, plural,
 
-          =0 {Add Tag}
+          =0 {タグを付与する}
 
-          one {Add Tag to 1 Item}
+          one {1つのアイテムにタグを付与する}
 
-          other {Add Tag to # Items}}
+          other {#のアイテムにタグを付与する}}
     photo:
       title: >
           {count, plural,
 
-          =0 {No Photos}
+          =0 {写真がありません}
 
-          one {1 Photo}
+          one {1つの写真}
 
-          other {# Photos}}
+          other {# の写真}}
       create: 写真を追加する
       selection: セレクション
     note:
       title: >
           {count, plural,
 
-          =0 {No Notes}
+          =0 {ノートがありません}
 
-          one {1 Note}
+          one {1つのノート}
 
-          other {# Notes}}
+          other {# のノート}}
       create: ノートを追加
   about:
     version: バージョン {バージョン}
@@ -69,7 +69,7 @@ ja:
       title: デジタルスカラーシップコーポレーション
       url: http://digitalscholar.org
     text: >
-        Tropyは、歴史教育リソースやデジタル展示、オープンソースソフトウェアを開発するチームである{rrchnm}によって設計されています。
+        Tropyは、歴史教育リソースやデジタル展示、オープンソースソフトウェアの開発チームである{rrchnm}によって作成されています。
     trademark: Tropyは{cds}の商標です。
     release:
       title: ノートを公開する
@@ -145,29 +145,29 @@ ja:
       classes: >
           {count, plural,
 
-          =0 {No Classes}
+          =0 {クラスがありません}
 
-          one {# Class}
+          one {# のクラス}
 
-          other {# Classes}
+          other {# のクラス}
 
           }
       datatypes: >
           {count, plural,
 
-          =0 {No Datatypes} one {# Datatype}
+          =0 {データタイプがありません} one {# つのデータタイプ}
 
-          other {# Datatypes}
+          other {# のデータタイプ}
 
           }
       properties: >
           {count, plural,
 
-          =0 {No Properties}
+          =0 {プロパティがありません}
 
-          one {# Property}
+          one {# つのプロパティ}
 
-          other {# Properties}
+          other {# のプロパティ}
 
           }
   item:
@@ -250,6 +250,8 @@ ja:
     prompt:
       cancel: キャンセル
       item:
+        ok: 削除
+        cancel: キャンセル
         destroy: >
             アイテムを完全に削除しますか？削除後は元に戻せません。
       dup:
@@ -453,6 +455,7 @@ ja:
         save: タグの保存に失敗しました
         create: アイテムのタグ付けに失敗しました。タグは一つのアイテムに一意のものにしてください。
     list:
+      create: リスト作成に失敗しました。リスト名は一意のものにしてください。
       save: リストの保存に失敗しました
       item:
         add: リストへのアイテム追加に失敗しました
@@ -469,9 +472,11 @@ ja:
         field:
           add: テンプレートへのフィールド追加に失敗しました
           remove: テンプレートからフィールドの除去に失敗しました
+    tag:
+      create: タグの作成に失敗しました。タグ名は一意のものにしてください。
   flash:
     update:
       ready:
         message: >
-            Tropy {version}のインストール準備が完了しました。すぐにインストールし、再起動しますか？
+            Tropy{version}のインストール準備が完了しました。すぐにインストールし、再起動しますか？
         confirm: すぐに再起動する

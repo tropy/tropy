@@ -35,7 +35,7 @@ de:
         - label: Fotos konsolidieren
           command: 'app:consolidate-photo-library'
         - type: separator
-        - label: Projekt schließen
+        - label: Schließen
           accelerator: CmdOrCtrl+W
           role: close
         - type: separator
@@ -61,25 +61,21 @@ de:
         - label: Kopieren
           accelerator: CmdOrCtrl+C
           role: copy
-        - label: Einsetzen
+        - label: Einfügen
           accelerator: CmdOrCtrl+V
           role: paste
         - label: Alles auswählen
           role: selectall
         - type: separator
-        - label: Einstellungen …
+        - label: Voreinstellungen …
           accelerator: Shift+Control+S
           command: 'app:open-preferences'
-    - label: Darstellung
+    - label: Ansicht
       submenu:
         - label: Vollbildmodus
           role: togglefullscreen
         - label: Menüleiste ausblenden
           command: 'app:toggle-menu-bar'
-        - label: Seitenleiste ausblenden
-          command: 'app:toggle-sidebar'
-          enabled: false
-          visible: false
         - type: separator
         - label: Zoom
           submenu:
@@ -101,21 +97,21 @@ de:
         - label: Neu laden
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
-        - label: Style-Sheet neu laden
+        - label: Stile neu laden
           accelerator: CmdOrCtrl+S
           command: 'win:refresh'
         - label: Entwicklerwerkzeuge einblenden
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Performance Werkzeuge aktivieren
+        - label: Performance-Werkzeuge aktivieren
           command: 'win:toggle-perf-tools'
         - type: separator
-        - label: Ontologie Datenbank wiederherstellen
+        - label: Ontologie-Datenbank wiederherstellen
           command: 'app:reset-ontology-db'
         - label: Projekt schließen
           command: 'app:close-project'
         - type: separator
-        - label: Style-Sheet
+        - label: Erscheinungsbild
           id: theme
           submenu:
             - label: Hell
@@ -126,9 +122,9 @@ de:
               type: checkbox
     - label: Hilfe
       submenu:
-        - label: Benutzeranleitung
+        - label: Benutzerhandbuch
           command: 'app:open-docs'
-        - label: Tropy Forums
+        - label: Support-Forum
           command: 'app:open-forums'
         - type: separator
         - label: Softwarelizenz
@@ -136,9 +132,11 @@ de:
         - label: Logs anzeigen
           command: 'app:open-logs'
         - type: separator
-        - label: Plug-in Konfiguration bearbeiten
+        - label: Plugin-Konfiguration bearbeiten
           command: 'app:open-plugins-config'
-        - label: Plug-ins Folder anzeigen
+        - label: Plugin installieren …
+          command: 'app:install-plugin'
+        - label: Plugins-Ordner anzeigen
           command: 'app:open-plugins-folder'
         - type: separator
         - label: Über %name
@@ -163,23 +161,23 @@ de:
         - label: Über %name
           command: 'app:about'
         - type: separator
-        - label: Einstellungen
+        - label: Voreinstellungen …
           accelerator: 'Command+,'
           command: 'app:open-preferences'
         - type: separator
         - label: '%name verstecken'
           accelerator: Command+H
           role: hide
-        - label: Andere verstecken
+        - label: Andere ausblenden
           accelerator: Command+Shift+H
           role: hideothers
-        - label: Alle nach vorne bringen
+        - label: Alle einblenden
           role: unhide
         - type: separator
         - label: Beenden
           accelerator: Command+Q
           role: quit
-    - label: Ablage
+    - label: Datei
       submenu:
         - label: Neu
           submenu:
@@ -192,7 +190,7 @@ de:
             - label: Liste
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-            - label: Stichwort
+            - label: Tag
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
         - type: separator
@@ -235,21 +233,15 @@ de:
         - label: Kopieren
           accelerator: CmdOrCtrl+C
           role: copy
-        - label: Einsetzen
+        - label: Einfügen
           accelerator: CmdOrCtrl+V
           role: paste
         - label: Alles auswählen
           role: selectall
-    - label: Darstellung
+    - label: Ansicht
       submenu:
         - label: Vollbildmodus
           role: togglefullscreen
-        - label: Menüleiste ausblenden
-          command: 'app:toggle-menu-bar'
-        - label: Seitenleiste ausblenden
-          command: 'app:toggle-sidebar'
-          enabled: false
-          visible: false
         - type: separator
         - label: Zoom
           submenu:
@@ -278,21 +270,21 @@ de:
         - label: Neu laden
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
-        - label: Style-Sheet neu laden
+        - label: Stile neu laden
           accelerator: CmdOrCtrl+S
           command: 'win:refresh'
         - label: Entwicklerwerkzeuge einblenden
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Performance Werkzeuge
+        - label: Performance-Werkzeuge
           command: 'win:toggle-perf-tools'
         - type: separator
-        - label: Ontologie Datenbank rücksetzen
+        - label: Ontologie-Datenbank rücksetzen
           command: 'app:reset-ontology-db'
-        - label: Projekt schließen
+        - label: Schließen
           command: 'app:close-project'
         - type: separator
-        - label: Stil
+        - label: Erscheinungsbild
           id: theme
           submenu:
             - label: Hell
@@ -304,9 +296,9 @@ de:
     - label: Hilfe
       role: help
       submenu:
-        - label: Benutzeranleitung
+        - label: Benutzerhandbuch
           command: 'app:open-docs'
-        - label: Tropy Forums
+        - label: Support-Forum
           command: 'app:open-forums'
         - type: separator
         - label: Softwarelizenz
@@ -314,9 +306,9 @@ de:
         - label: Logs anzeigen
           command: 'app:open-logs'
         - type: separator
-        - label: Plug-in Konfiguration bearbeiten
-          command: 'app:open-plugins-config'
-        - label: Plugins Folder anzeigen
+        - label: Plugin installieren …
+          command: 'app:install-plugin'
+        - label: Plugins-Ordner anzeigen
           command: 'app:open-plugins-folder'
         - type: separator
         - id: updater-check
@@ -347,7 +339,7 @@ de:
             - label: Liste
               command: 'app:create-list'
               accelerator: CmdOrCtrl+Shift+L
-            - label: Stichwort
+            - label: Tag
               command: 'app:create-tag'
               accelerator: CmdOrCtrl+Shift+A
         - type: separator
@@ -397,19 +389,15 @@ de:
         - label: Einfügen
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Einstellungen
+        - label: Voreinstellungen …
           accelerator: Shift+Control+S
           command: 'app:open-preferences'
-    - label: Darstellung
+    - label: Ansicht
       submenu:
         - label: Vollbildmodus
           role: togglefullscreen
         - label: Menüleiste ausblenden
           command: 'app:toggle-menu-bar'
-        - label: Seitenleiste ausblenden
-          command: 'app:toggle-sidebar'
-          enabled: false
-          visible: false
         - type: separator
         - label: Zoom
           submenu:
@@ -431,21 +419,21 @@ de:
         - label: Neu laden
           accelerator: CmdOrCtrl+R
           command: 'win:reload'
-        - label: Style-Sheet neu laden
+        - label: Stile neu laden
           accelerator: CmdOrCtrl+S
           command: 'win:refresh'
         - label: Entwicklerwerkzeuge einblenden
           accelerator: CmdOrCtrl+D
           role: toggledevtools
-        - label: Performance Werkzeuge
+        - label: Performance-Werkzeuge
           command: 'win:toggle-perf-tools'
         - type: separator
-        - label: Ontologie Datenbank rücksetzen
+        - label: Ontologie-Datenbank rücksetzen
           command: 'app:reset-ontology-db'
-        - label: Projekt schließen
+        - label: Schließen
           command: 'app:close-project'
         - type: separator
-        - label: Stil
+        - label: Erscheinungsbild
           id: theme
           submenu:
             - label: Hell
@@ -456,9 +444,9 @@ de:
               type: checkbox
     - label: Hilfe
       submenu:
-        - label: Benutzeranleitung
+        - label: Benutzerhandbuch
           command: 'app:open-docs'
-        - label: Tropy Forums
+        - label: Support-Forum
           command: 'app:open-forums'
         - type: separator
         - label: Softwarelizenz
@@ -466,9 +454,11 @@ de:
         - label: Logs anzeigen
           command: 'app:open-logs'
         - type: separator
-        - label: Plugin Konfiguration bearbeiten
+        - label: Plugin-Konfiguration bearbeiten
           command: 'app:open-plugins-config'
-        - label: Plugins Folder anzeigen
+        - label: Plugin installieren …
+          command: 'app:install-plugin'
+        - label: Plugins-Ordner anzeigen
           command: 'app:open-plugins-folder'
         - type: separator
         - label: Über %name

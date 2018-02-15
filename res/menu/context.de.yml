@@ -27,10 +27,10 @@ de:
       - label: Liste löschen
         command: 'app:delete-list'
     tags:
-      - label: Neuer Tag
+      - label: Neues Tag
         command: 'app:create-tag'
     tag:
-      - label: Tagfarbe
+      - label: Tag-Farbe
         submenu:
           - label: Keine
             color: null
@@ -62,7 +62,7 @@ de:
       - label: Tag löschen
         command: 'app:delete-tag'
     item-tag:
-      - label: Tag von diesem entfernen
+      - label: Tag von diesem Objekt entfernen
         command: 'app:delete-item-tag'
         visible: false
         condition: hasSingleItem
@@ -75,7 +75,7 @@ de:
       - label: Notiz löschen
         command: 'app:delete-note'
     notepad:
-      - label: Textmodus
+      - label: Eingabemodus
         id: writing-mode
         submenu:
           - label: Horizontal
@@ -100,7 +100,7 @@ de:
       - label: Neues Objekt
         command: 'app:create-item'
     item:
-      - label: Objektfotos aufsplitten
+      - label: Objekt zerteilen
         command: 'app:explode-item'
         condition: hasMultiplePhotos
       - label: Objekt exportieren
@@ -143,9 +143,9 @@ de:
         command: 'app:duplicate-photo'
       - label: Foto in neues Objekt verschieben
         command: 'app:explode-photo'
-      - label: Original Foto in Order anzeigen …
+      - label: Original Foto in Ordner anzeigen …
         command: 'app:show-in-folder'
-      - label: Foto als Signaturbild verwenden
+      - label: Foto als Titelbild verwenden
         command: 'app:update-cover-image'
         enabled: false
         visible: false
@@ -158,14 +158,14 @@ de:
         command: 'app:save-selection'
         enabled: false
     item-deleted:
-      - label: Objet wiederherstellen
+      - label: Objekt wiederherstellen
         command: 'app:restore-item'
-      - label: Objekt permanent löschen
+      - label: Objekt vollständig löschen
         command: 'app:destroy-item'
     item-bulk-deleted:
       - label: Ausgewählte Objekte wiederherstellen
         command: 'app:restore-item'
-      - label: Ausgewählte Objekte permanent löschen
+      - label: Ausgewählte Objekte vollständig löschen
         command: 'app:destroy-item'
     trash:
       - label: Objekte vollständig löschen
@@ -176,7 +176,7 @@ de:
       - label: Stile neu laden
         command: 'win:refresh'
       - type: separator
-      - label: Inspizieren
+      - label: Untersuchen
         command: 'app:inspect'
   darwin:
     history:
@@ -206,10 +206,10 @@ de:
       - label: Liste löschen
         command: 'app:delete-list'
     tags:
-      - label: Neuer Tag
+      - label: Neues Tag
         command: 'app:create-tag'
     tag:
-      - label: Tagfarbe
+      - label: Tag-Farbe
         submenu:
           - label: Keine
             color: null
@@ -241,7 +241,7 @@ de:
       - label: Tag löschen
         command: 'app:delete-tag'
     item-tag:
-      - label: Tag von diesem entfernen
+      - label: Tag von diesem Objekt entfernen
         command: 'app:delete-item-tag'
         visible: false
         condition: hasSingleItem
@@ -254,7 +254,7 @@ de:
       - label: Notiz löschen
         command: 'app:delete-note'
     notepad:
-      - label: Textmodus
+      - label: Eingabemodus
         id: writing-mode
         submenu:
           - label: Horizontal
@@ -279,7 +279,7 @@ de:
       - label: Neues Objekt
         command: 'app:create-item'
     item:
-      - label: Objektfotos aufsplitten
+      - label: Objekt zerteilen
         command: 'app:explode-item'
         condition: hasMultiplePhotos
       - label: Objekt exportieren
@@ -335,7 +335,7 @@ de:
         command: 'app:duplicate-photo'
       - label: Foto in neues Objekt verschieben
         command: 'app:explode-photo'
-      - label: Original Foto in Order anzeigen …
+      - label: In Finder anzeigen
         command: 'app:show-in-folder'
       - label: Foto als Signaturbild verwenden
         command: 'app:update-cover-image'
@@ -420,7 +420,7 @@ de:
       - label: Tag löschen
         command: 'app:delete-tag'
     item-tag:
-      - label: Tag von diesem entfernen
+      - label: Tag von diesem Objekt entfernen
         command: 'app:delete-item-tag'
         visible: false
         condition: hasSingleItem
@@ -433,7 +433,7 @@ de:
       - label: Notiz löschen
         command: 'app:delete-note'
     notepad:
-      - label: Textmodus
+      - label: Eingabemodus
         id: writing-mode
         submenu:
           - label: Horizontal

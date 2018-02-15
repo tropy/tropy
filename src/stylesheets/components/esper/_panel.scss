@@ -4,6 +4,8 @@
 
 .esper-panel {
   flex: 0 0 $esper-panel-width;
+  display: flex;
+  flex-direction: column;
   box-shadow: -1px 0 0 $esper-shadow;
   background: $esper-bg;
   margin-right: -$esper-panel-width;

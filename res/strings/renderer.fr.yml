@@ -19,7 +19,7 @@ fr:
   panel:
     metadata:
       tab: Métadonnées
-      photo: Photo
+      photo:  Photo
       item: >
           {count, plural,
 
@@ -61,26 +61,26 @@ fr:
           other {# notes}}
       create: Ajouter une note
   about:
-    version: Version {version}
-    rrchnm:
-      title: Roy Rosenzweig Center for History and New Media
-      url: https://rrchnm.org
-    cds:
-      title: Corporation for Digital Scholarship
-      url: http://digitalscholar.org
-    text: >
+      version: Version {version}
+      rrchnm:
+        title: Roy Rosenzweig Center for History and New Media
+        url: https://rrchnm.org
+      cds:
+        title: Corporation for Digital Scholarship
+        url: http://digitalscholar.org
+      text: >
         Tropy est conçu par le {rrchnm}, une équipe qui crée des ressources pour l'enseignement
         de l'histoire, des expositions numériques, et des logiciels libres et open-source.
-    trademark: Tropy est une marque de la {cds}.
-    release:
-      title: Notes de version
-      url: https://github.com/tropy/tropy/releases/tag/{version}
-    license:
-      title: Informations sur la licence
-      url: https://tropy.org/license
-    credits:
-      title: Crédits
-      url: https://tropy.org/credits
+      trademark: Tropy est une marque de la {cds}.
+      release:
+        title: Notes de version
+        url: https://github.com/tropy/tropy/releases/tag/{version}
+      license:
+        title: Informations sur la licence
+        url: https://tropy.org/license
+      credits:
+        title: Crédits
+        url: https://tropy.org/credits
   project:
     none: Faire glisser ici un fichier de projet ou créer un {newProject}
     empty: Pour commencer, faire glisser vos photos dans Tropy
@@ -127,6 +127,7 @@ fr:
         option:
           fit: Zoom pleine hauteur
           fill: Zoom pleine largeur
+
     project:
       label: Projet
     template:
@@ -142,6 +143,7 @@ fr:
         export: Exporter
     vocab:
       label: Schémas
+      export: Exporter
       classes: >
           {count, plural,
 
@@ -189,12 +191,29 @@ fr:
       select: Outil de sélection
       rotate: Rotation
       mirror: Miroir
+      edit: Modifier la photo
     mode:
       fill: Pleine largeur
       fit: Pleine hauteur
       zoom: Zoom
+    panel:
+      negative: Inverser les couleurs
+      revert: Réinitialiser les ajustements
+      brightness:
+        label: Luminosité
+        value: "{value, number}"
+      contrast:
+        label: Contraste
+        value: "{value, number}"
+      hue:
+        label: Teinte
+        value: "{value, number}°"
+      saturation:
+        label: Saturation
+        value: "{value, number}"
   notepad:
     placeholder: Ajoutez vos notes ici…
+
   template:
     id: URI
     name: Nom
@@ -202,9 +221,9 @@ fr:
     creator: Créateur
     description: Description
     types:
-      https://tropy.org/v1/tropy#Item: Modèle de saisie pour un objet
-      https://tropy.org/v1/tropy#Photo: Modèle de saisie pour une photo
-      https://tropy.org/v1/tropy#Selection: Modèle de saisie pour une sélection de photos
+      "https://tropy.org/v1/tropy#Item": Modèle de saisie pour un objet
+      "https://tropy.org/v1/tropy#Photo": Modèle de saisie pour une photo
+      "https://tropy.org/v1/tropy#Selection": Modèle de saisie pour une sélection de photos
     field:
       property: Propriété
       label: Label
@@ -213,6 +232,7 @@ fr:
       hint: Indice
       value: Valeur par défaut
       isConstant: En lecture seule
+
   vocab:
     id: URI
     prefix: Prefix
@@ -230,10 +250,14 @@ fr:
     label: Label
     description: Description
     comment: Commentaire
+
   dialog:
     prompt:
+      ok: Yes
       cancel: Annuler
       item:
+        ok: Supprimer
+        cancel: Annuler
         destroy: >
             Êtes-vous sûr.e de vouloir effacer définitivement ces objets ? Cette action
             ne peut pas être annulée.
@@ -250,6 +274,7 @@ fr:
       projects: Projets Tropy
       rdf: Schémas RDF
       jsonld: JSON-LD
+
   action:
     project:
       save: Sauvegarder le projet
@@ -313,6 +338,7 @@ fr:
       restore: Créer une sélection
       save: Sauvegarder la sélection
       order: Trier les sélections
+
   activity:
     project:
       save: Sauvegarde en cours…
@@ -439,6 +465,7 @@ fr:
         save: Echec de la sauvegarde du tag.
         create: Echec du marquage de l'objet. Chaque tag est unique pour un même objet.
     list:
+      create: 'Failed to save list.'
       save: Echec de la sauvegarde de la liste.
       item:
         add: Echec de l'adjonction de l' (des) objet(s) à la liste.
@@ -455,6 +482,8 @@ fr:
         field:
           add: Echec de l'adjonction du champ dans le modèle de saisie.
           remove: Echec de la suppression du champ du modèle de saisie.
+    tag:
+      create: 'Failed to save tag.'
   flash:
     update:
       ready:

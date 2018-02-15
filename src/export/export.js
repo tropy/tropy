@@ -191,8 +191,8 @@ function makeDocument(template, items, resources) {
 
 async function groupedByTemplate(templateItems, resources) {
   const results = []
-  for (const ti of templateItems) {
-    const { template, items } = ti
+  for (const templateID in templateItems) {
+    const { items, template } = templateItems[templateID]
     const context = makeContext(template, items, resources)
     const document = makeDocument(template, items, resources)
     document['@context'] = context

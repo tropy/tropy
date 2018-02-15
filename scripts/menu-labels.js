@@ -72,7 +72,7 @@ target.import = (args = []) => {
 
   for (const file of ls(home)) {
     const m = file.match(
-      /^for_(use|translation)_tropy_(\w+)-menuyml_(\w{2}).yml$/)
+      /^for_(use|translation)_tropy_(\w+)-menu_(\w{2}).yml$/)
 
     if (m == null) continue
 

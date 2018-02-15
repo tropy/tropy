@@ -38,7 +38,7 @@ class Window extends EventEmitter {
   }
 
   init(done) {
-    this.plugins.reload().then(p => p.create())
+    this.plugins.reloadAndCreate()
 
     this.handleUnload()
     this.handleTabFocus()
@@ -135,7 +135,7 @@ class Window extends EventEmitter {
         this.reload()
       })
       .on('plugins-reload', () => {
-        this.plugins.reload().then(p => p.create())
+        this.plugins.reloadAndCreate()
       })
       .on('toggle-perf-tools', () => {
         const { search, hash } = location
@@ -158,7 +158,7 @@ class Window extends EventEmitter {
 
       this.isUnloading = true
 
-      toggle(document.body, 'closing', true)
+      toggle(document.body, 'quitting', true)
 
       each(this.unloaders, unload => {
         let res = unload()

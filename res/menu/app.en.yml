@@ -87,16 +87,14 @@ en:
     - &view
       label: '&View'
       submenu:
-        - label: 'Toggle &Full Screen'
+        - &fullscreen
+          label: 'Toggle &Full Screen'
           role: 'togglefullscreen'
         - label: 'Toggle Hide &Menu Bar'
           command: 'app:toggle-menu-bar'
-        - label: 'Hide &Sidebar'
-          command: 'app:toggle-sidebar'
-          enabled: false
-          visible: false
         - type: 'separator'
-        - label: 'Zoom'
+        - &zoom
+          label: 'Zoom'
           submenu:
             - label: 'Zoom In'
               command: 'app:zoom-in'
@@ -141,7 +139,6 @@ en:
             - label: 'Dark'
               id: 'dark'
               type: 'checkbox'
-
     - &help
       label: 'Help'
       submenu:
@@ -162,6 +159,9 @@ en:
         - &pluginsConfig
           label: 'Edit Plugins Configuration'
           command: 'app:open-plugins-config'
+        - &pluginsConfig
+          label: 'Install Plugin …'
+          command: 'app:install-plugin'
         - &plugins
           label: 'Show Plugins Folder'
           command: 'app:open-plugins-folder'
@@ -185,7 +185,6 @@ en:
           command: 'app:install-updates'
           enabled: false
           visible: false
-
   darwin:
     - label: '%name'
       submenu:
@@ -208,7 +207,6 @@ en:
         - label: 'Quit'
           accelerator: 'Command+Q'
           role: 'quit'
-
     - label: 'File'
       submenu:
         - *new
@@ -231,7 +229,11 @@ en:
         - *copy
         - *paste
         - *all
-    - *view
+    - label: 'View'
+      submenu:
+        - *fullscreen
+        - type: 'separator'
+        - *zoom
     - label: 'Window'
       role: 'window'
       submenu:
