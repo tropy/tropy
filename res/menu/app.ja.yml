@@ -134,7 +134,7 @@ ja:
         - type: separator
         - label: プラグインの設定を変更
           command: 'app:open-plugins-config'
-        - label: Install Plugin …
+        - label: プラグインをインストール
           command: 'app:install-plugin'
         - label: プラグインフォルダを開く
           command: 'app:open-plugins-folder'
@@ -151,7 +151,7 @@ ja:
           enabled: false
           visible: false
         - id: updater-install
-          label: アップデートをインストールする
+          label: アップデートをインストール
           command: 'app:install-updates'
           enabled: false
           visible: false
@@ -306,7 +306,7 @@ ja:
         - label: ログファイルを開く
           command: 'app:open-logs'
         - type: separator
-        - label: Install Plugin …
+        - label: プラグインをインストール
           command: 'app:install-plugin'
         - label: プラグインフォルダを開く
           command: 'app:open-plugins-folder'
@@ -320,7 +320,7 @@ ja:
           enabled: false
           visible: false
         - id: updater-install
-          label: アップデートをインストールする
+          label: アップデートをインストール
           command: 'app:install-updates'
           enabled: false
           visible: false
@@ -456,7 +456,7 @@ ja:
         - type: separator
         - label: プラグインの設定を変更
           command: 'app:open-plugins-config'
-        - label: Install Plugin …
+        - label: プラグインをインストール
           command: 'app:install-plugin'
         - label: プラグインフォルダを開く
           command: 'app:open-plugins-folder'
@@ -473,7 +473,7 @@ ja:
           enabled: false
           visible: false
         - id: updater-install
-          label: アップデートをインストールする
+          label: アップデートをインストール
           command: 'app:install-updates'
           enabled: false
           visible: false
