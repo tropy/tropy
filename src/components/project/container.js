@@ -44,6 +44,7 @@ class ProjectContainer extends Component {
 
     this.state = {
       isClosed: props.project.closed != null,
+      isClosing: props.project.closing,
       mode: props.nav.mode,
       offset: props.ui.panel.width,
       willModeChange: false,
@@ -76,10 +77,10 @@ class ProjectContainer extends Component {
 
   get classes() {
     const { isOver, canDrop, nav } = this.props
-    const { mode, willModeChange, isModeChanging } = this.state
+    const { isClosing, mode, willModeChange, isModeChanging } = this.state
 
-    return {
-      project: true,
+    return ['project', {
+      closing: isClosing,
       empty: this.isEmpty,
       over: isOver && canDrop,
       [`${mode}-mode`]: true,
@@ -87,7 +88,7 @@ class ProjectContainer extends Component {
       [`${mode}-mode-leave-active`]: isModeChanging,
       [`${nav.mode}-mode-enter`]: willModeChange,
       [`${nav.mode}-mode-enter-active`]: isModeChanging
-    }
+    }]
   }
 
   get isEmpty() {
@@ -122,8 +123,11 @@ class ProjectContainer extends Component {
   }
 
   projectWillChange = debounce(project => {
-    this.setState({ isClosed: (project.closed != null) })
-  }, 500, { leading: false })
+    this.setState({
+      isClosing: project.closing,
+      isClosed: (project.closed != null)
+    })
+  }, 750, { leading: false })
 
   isMainView = (event) => {
     return event.target.parentNode === this.container

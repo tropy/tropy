@@ -33,6 +33,8 @@ const command = ({ error, meta }) =>
 
 const onErrorClose = onErrorPut(act.project.close)
 
+const FORCE_SHUTDOWN_DELAY = 60000
+
 
 function *open(file) {
   try {
@@ -149,7 +151,7 @@ function *main() {
         yield cancel(task)
         yield race({
           closed: take(CLOSED),
-          timeout: call(delay, 8000)
+          timeout: call(delay, FORCE_SHUTDOWN_DELAY)
         })
 
         task = null
