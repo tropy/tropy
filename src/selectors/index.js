@@ -2,6 +2,7 @@
 
 module.exports = {
   ...require('./activity'),
+  ...require('./export'),
   ...require('./items'),
   ...require('./metadata'),
   ...require('./nav'),
