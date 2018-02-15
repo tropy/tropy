@@ -198,6 +198,12 @@
         margin-top: -($editor-line-height-computed + $editor-hr-border) / 2;
       }
     }
+
+    .numbers.vertical-rl & {
+      &::before {
+        margin-right: -($editor-line-height-computed + $editor-hr-border) / 2;
+      }
+    }
   }
 
   sup,
