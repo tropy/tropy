@@ -91,6 +91,10 @@ class ProjectContainer extends Component {
     }]
   }
 
+  get isClosing() {
+    return !!this.props.project.closing
+  }
+
   get isEmpty() {
     return this.props.project.id != null &&
       this.props.project.items === 0
@@ -236,7 +240,7 @@ class ProjectContainer extends Component {
           nav={nav}
           items={items}
           data={data}
-          isActive={this.state.mode === MODE.PROJECT}
+          isActive={this.state.mode === MODE.PROJECT && !this.isClosing}
           isEmpty={this.isEmpty}
           columns={columns}
           hasLastImport={hasLastImport}
@@ -261,6 +265,7 @@ class ProjectContainer extends Component {
           mode={this.state.mode}
           isModeChanging={this.state.isModeChanging}
           isTrashSelected={!!nav.trash}
+          isProjectClosing={this.isClosing}
           onPanelResize={this.handlePanelResize}
           onPanelDragStop={this.handlePanelDragStop}
           onMetadataSave={this.handleMetadataSave}/>
