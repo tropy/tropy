@@ -435,11 +435,11 @@ const util = {
     return true
   },
 
-  groupBy(xs, key) {
-    return xs.reduce((res, x) => {
-      res[x[key]] = res[x[key]] || []
-      res[x[key]].push(x)
-      return res
+  groupBy(array, key) {
+    return array.reduce((acc, obj) => {
+      acc[obj[key]] = acc[obj[key]] || []
+      acc[obj[key]].push(obj)
+      return acc
     }, {})
   }
 }

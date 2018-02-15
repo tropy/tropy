@@ -4,7 +4,7 @@ const { createSelector: memo } = require('reselect')
 const { pick, groupBy } = require('../common/util')
 const { values, entries } = Object
 
-const exportSelector = (ids) => memo(
+const getGroupedItems = (ids) => memo(
   ({ items }) => pick(items, ids),
   ({ ontology }) => ontology.props,
   ({ ontology }) => ontology.template,
@@ -36,5 +36,5 @@ const exportSelector = (ids) => memo(
 )
 
 module.exports = {
-  exportSelector
+  getGroupedItems
 }

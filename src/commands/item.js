@@ -22,10 +22,10 @@ const { win } = require('../window')
 const { groupedByTemplate } = require('../export')
 
 const {
+  getGroupedItems,
   getItemTemplate,
   getPhotoTemplate,
   getTemplateValues,
-  exportSelector,
 } = require('../selectors')
 
 
@@ -441,7 +441,7 @@ class Export extends Command {
 
       if (!target) return
 
-      const [templateItems, ...resources] = yield select(exportSelector(ids))
+      const [templateItems, ...resources] = yield select(getGroupedItems(ids))
 
       const results = yield call(groupedByTemplate, templateItems, resources)
       const asString = JSON.stringify(results, null, 2)
