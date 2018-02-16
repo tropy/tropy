@@ -157,7 +157,7 @@ module.exports = {
         return {
           ...state,
           columns: state.columns.reduce((cols, c) =>
-            ((cols[order[c.id]] = c), c), [])
+            ((cols[order[c.id]] = c), cols), [])
         }
       }
 
