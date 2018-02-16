@@ -38,6 +38,12 @@ module.exports = require('yargs')
     default: true
   })
 
+  .option('ignore-gpu-blacklist', {
+    type: 'boolean',
+    describe: 'Do not blacklist certain GPUs known to cause issues',
+    default: false
+  })
+
   .option('debug', {
     type: 'boolean',
     describe: 'Set debug flag',
