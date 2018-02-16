@@ -17,7 +17,7 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
   const { app }  = require('electron')
   const { extname, join } = require('path')
   const { qualified, version }  = require('../common/release')
-  const { linux, darwin, system } = require('../common/os')
+  const { linux, darwin, win32, system } = require('../common/os')
 
   let USERDATA = opts.dir
   let LOGDIR
@@ -64,6 +64,10 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
     } else {
 
       app.commandLine.appendSwitch('js-flags', '--datetime_format_to_parts')
+
+      if (win32) {
+        app.commandLine.appendSwitch('ignore-gpu-blacklist')
+      }
 
       if (opts.scale) {
         app.commandLine.appendSwitch('force-device-scale-factor', opts.scale)
