@@ -151,6 +151,16 @@ module.exports = {
           ...payload
         }
 
+      case NAV.COLUMN.ORDER: {
+        const { order } = payload
+
+        return {
+          ...state,
+          columns: state.columns.reduce((cols, c) =>
+            ((cols[order[c.id]] = c), c), [])
+        }
+      }
+
       case NAV.COLUMN.RESIZE: {
         const { column, width } = payload
 

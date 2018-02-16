@@ -40,6 +40,14 @@ module.exports = {
   },
 
   column: {
+    order(payload, meta = {}) {
+      return {
+        type: NAV.COLUMN.ORDER,
+        payload,
+        meta
+      }
+    },
+
     resize(payload, meta = {}) {
       return {
         type: NAV.COLUMN.RESIZE,

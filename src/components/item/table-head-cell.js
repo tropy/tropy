@@ -57,7 +57,7 @@ class ItemTableHeadCell extends PureComponent {
     })
   }
 
-  handleDragStop = () => {
+  handleResizeStop = () => {
     this.props.onResize({
       column: this.props.position,
       width: this.props.width
@@ -80,7 +80,7 @@ class ItemTableHeadCell extends PureComponent {
         max={this.props.maxWidth}
         min={this.props.minWidth}
         node="th"
-        onDragStop={this.handleDragStop}
+        onDragStop={this.handleResizeStop}
         onResize={this.handleResize}
         value={this.props.width}>
         {this.connect(
@@ -128,7 +128,8 @@ const DragSourceSpec = {
   beginDrag: ({ id, onOrderStart }) => (onOrderStart(), { id }),
 
   endDrag: (props, monitor) => {
-    props[`onOrder${monitor.didDrop() ? 'Stop' : 'Reset'}`]()
+    if (monitor.didDrop()) props.onOrderStop()
+    else props.onOrderReset()
   }
 }
 

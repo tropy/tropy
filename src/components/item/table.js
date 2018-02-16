@@ -143,6 +143,10 @@ class ItemTable extends ItemIterator {
 
   handleColumnOrderStop = () => {
     this.oc = null
+    this.props.onColumnOrder({
+      order: this.state.columns.reduce((ord, col, idx) =>
+        ((ord[col.id] = idx), ord), {})
+    })
   }
 
   handleColumnOrderReset = () => {
@@ -266,6 +270,7 @@ class ItemTable extends ItemIterator {
     edit: object,
     data: object.isRequired,
     hasScrollbars: bool.isRequired,
+    onColumnOrder: func.isRequired,
     onColumnResize: func.isRequired,
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,
