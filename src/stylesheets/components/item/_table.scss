@@ -48,7 +48,7 @@
         top: 1px solid $item-table-header-border-color;
         bottom: 1px solid $item-table-header-border-color;
       }
-      padding-right: $space-min; // Prevent overlap of th-container and resize handle
+      padding: 0 $space-min; // Prevent overlap of th-container and resize handle
       position: relative;
       background-image:
         linear-gradient(to right, transparent 1px, $body-bg 1px),
@@ -59,7 +59,7 @@
           $item-table-header-border-color ($item-table-header-height - 4px),
           $body-bg ($item-table-header-height - 4px)
         );
-      contain: content; // Not clear why size shifts the content
+      contain: layout style; // Not clear why size shifts the content
 
       &:first-child {
         background-image: none;
@@ -131,7 +131,7 @@
         height: 100%;
         justify-content: space-between;
         align-items: center;
-        padding: 0 $space-min 0 ($space-xs + 1px);
+        padding: 0 $space-min 0 ($space-min + 1px);
       }
 
       .label {
@@ -143,11 +143,6 @@
       .icon {
         display: none;
         margin: 0 -4px 0 -5px;
-      }
-
-      .resizable-handle-right {
-        width: $resizable-threshold / 2;
-        right: 0;
       }
     }
   }
