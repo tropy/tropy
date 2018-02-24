@@ -104,7 +104,7 @@ const marks = {
   subscript: {
     excludes: 'superscript',
     parseDOM: [
-      { tag: 'sup' },
+      { tag: 'sub' },
       {
         tag: 'span',
         getAttrs: (node) => (node.style.verticalAlign === 'sub')
