@@ -76,6 +76,7 @@ target.window = ([name]) => {
 `<!DOCTYPE html>
 <html>
 <head>
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';">
   <script>require("../lib/windows/${name}.js")</script>
 </head>
 <body id="${name}" tabindex="-1">
