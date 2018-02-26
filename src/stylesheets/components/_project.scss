@@ -223,7 +223,8 @@
   background: $body-bg;
   z-index: $zindex-draggable;
 
-  body:not(.scrollbar-style-old-school) & {
+  body:not(.scrollbar-style-old-school) &,
+  .item-grid + & {
     display: none;
   }
 
