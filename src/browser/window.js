@@ -103,6 +103,10 @@ module.exports = {
       win.on(event, () => { win.webContents.send('win', event) })
     }
 
+    win.on('page-title-updated', (event) => {
+      event.preventDefault()
+    })
+
     win.loadURL(format({
       protocol: 'file',
       pathname: join(ROOT, `${file}.html`),
