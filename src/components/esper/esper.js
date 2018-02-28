@@ -332,12 +332,13 @@ class Esper extends PureComponent {
 
   handleSlideIn = () => {
     this.setState({ isVisible: true })
-    this.view.start()
+    //this.view.start()
   }
 
   handleSlideOut = () => {
     this.setState({ isVisible: false })
     this.view.stop()
+    this.view.stop.flush()
   }
 
   handleNestedBlur = () => {
