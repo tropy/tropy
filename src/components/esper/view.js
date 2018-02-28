@@ -70,15 +70,8 @@ class EsperView extends Component {
 
   componentWillReceiveProps(props) {
     if (this.image != null) {
-      if (this.props.selection !== props.selection) {
-        this.image.overlay.sync(props)
-        this.image.selections.sync(props)
-
-      } else if (this.props.selections !== props.selections ||
-        this.props.tool !== props.tool) {
-        this.image.selections.sync(props)
-      }
-
+      this.image.overlay.sync(props)
+      this.image.selections.sync(props)
       this.image.cursor = props.tool
       this.pixi.render()
     }
@@ -219,7 +212,6 @@ class EsperView extends Component {
       }
     }
   }
-
 
   resize({ width, height, zoom, mirror }) {
     width = Math.round(width)

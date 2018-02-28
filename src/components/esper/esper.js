@@ -72,6 +72,10 @@ class Esper extends PureComponent {
     if (this.container != null) {
       on(this.container, 'tab:focus', this.handleTabFocus)
     }
+
+    this.setState(this.getStateFromProps(), () => {
+      this.view.reset(this.state)
+    })
   }
 
   componentWillUnmount() {
@@ -178,7 +182,7 @@ class Esper extends PureComponent {
     }
   }
 
-  getStateFromProps(props) {
+  getStateFromProps(props = this.props) {
     const state = this.getEmptyState(props)
     const { photo, selection } = props
     const { screen } = this.view
