@@ -181,7 +181,7 @@ class EsperView extends Component {
         x: position.x,
         y: position.y,
         zoom: scale.y
-      }, 'sync', this.persist)
+      }, 'sync', { complete: this.persist })
       .to(next, duration * 0.67)
       .onUpdate(m => {
         this.image.scale.x = m.zoom * zx
@@ -244,7 +244,7 @@ class EsperView extends Component {
     if (equal(position, next)) return
 
     this
-      .animate(position, 'move', this.persist)
+      .animate(position, 'move', { complete: this.persist })
       .to(next, duration)
       .start()
   }
@@ -275,7 +275,7 @@ class EsperView extends Component {
         x: position.x,
         y: position.y,
         zoom: scale.y
-      }, 'zoom', this.persist)
+      }, 'zoom', { complete: this.persist })
       .to(next, duration)
       .onUpdate(m => {
         this.image.scale.x = m.zoom * zx
@@ -294,8 +294,12 @@ class EsperView extends Component {
       // Always rotate counter-clockwise!
       const tmp = (tgt > cur) ? cur - (2 * Math.PI - tgt) : tgt
 
-      this
-        .animate(this.image, 'rotate', () => this.image.rotation = tgt)
+      this.animate(this.image, 'rotate', {
+        done: () => {
+          this.image.rotation = tgt
+          this.persist()
+        }
+      })
         .to({ rotation: tmp }, duration)
         .start()
 
@@ -320,34 +324,35 @@ class EsperView extends Component {
     thing.interactive = false
     // if (!this.isStarted) return thing.destroy()
     this
-      .animate(thing, null, () => thing.destroy())
+      .animate(thing, null, { done: () => thing.destroy() })
       .to({ alpha: 0 }, duration)
       .start()
   }
 
-  animate(thing, scope, done) {
-    const handleStart = () => {
-      if (scope != null) {
-        const current = this.tweens[scope]
-        if (current) current.stop()
-        this.tweens[scope] = tween
-      }
-    }
-
-    const handleStop = () => {
-      if (scope != null) this.tweens[scope] = null
-      if (typeof done === 'function') done()
-      this.stop()
-    }
-
+  animate(thing, scope, { stop, complete, done } = {}) {
     const tween = new TWEEN.Tween(thing, this.tweens)
       .easing(TWEEN.Easing.Cubic.InOut)
-      .onStart(handleStart)
-      .onStop(handleStop)
-      .onComplete(handleStop)
+      .onStart(() => {
+        if (scope != null) {
+          const current = this.tweens[scope]
+          if (current) current.stop()
+          this.tweens[scope] = tween
+        }
+      })
+      .onStop(() => {
+        if (scope != null) this.tweens[scope] = null
+        if (typeof stop === 'function') stop()
+        if (typeof done === 'function') done()
+        this.stop()
+      })
+      .onComplete(() => {
+        if (scope != null) this.tweens[scope] = null
+        if (typeof complete === 'function') complete()
+        if (typeof done === 'function') done()
+        this.stop()
+      })
 
     this.start()
-
     return tween
   }
 

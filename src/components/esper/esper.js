@@ -368,7 +368,6 @@ class Esper extends PureComponent {
 
   persist = debounce(() => {
     this.props.onChange({
-      image: this.getImageState(),
       [this.isSelectionActive ? 'selection' : 'photo']: this.getPhotoState()
     })
   }, 650)
@@ -421,12 +420,11 @@ class Esper extends PureComponent {
 
     assign(state, this.getZoomBounds(this.view.screen, state))
 
-    this.setState(state)
-
-    this.view.rotate(state, ROTATE_DURATION)
-    this.view.scale(state, ROTATE_DURATION)
-
-    this.persist()
+    this.setState(state, () => {
+      this.view.rotate(state, ROTATE_DURATION)
+      this.view.scale(state, ROTATE_DURATION)
+      this.persist()
+    })
   }
 
   handleZoomChange = ({ x, y, zoom }, animate) => {
@@ -459,7 +457,6 @@ class Esper extends PureComponent {
 
     this.view.scale({ zoom, mirror })
     this.view.rotate({ angle })
-
     this.persist()
   }
 
