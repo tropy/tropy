@@ -14,6 +14,7 @@ ready.then(() => {
   const { win } = require('./window')
 
   win.init(() => {
+    win.show()
     requestIdleCallback(win.show, { timeout: 500 })
 
     const DONE = performance.now()
@@ -29,16 +30,6 @@ global.eval = function () {
   throw new Error('use of eval() is prohibited')
 }
 
-if (dev) {
-  if (process.platform !== 'linux') {
-    const { remote } = require('electron')
-
-    Object.defineProperties(process, {
-      stdout: { value: remote.process.stdout },
-      stderr: { value: remote.process.stderr }
-    })
-  }
-
-} else {
+if (!dev) {
   global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {}
 }
