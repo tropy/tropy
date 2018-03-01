@@ -58,7 +58,7 @@ module.exports = {
         options.disableAutoHideCursor = true
         if (!options.frame && EL_CAPITAN) {
           options.frame = true
-          options.titleBarStyle = options.titleBarStyle || 'hidden-inset'
+          options.titleBarStyle = options.titleBarStyle || 'hiddenInset'
         }
 
         data.aqua = AQUA[
