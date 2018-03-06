@@ -69,6 +69,13 @@ class PrefsContainer extends PureComponent {
                   isActive={this.isActive('vocab')}
                   onClick={this.toggle}/>
               </li>
+              <li>
+                <PrefPaneToggle
+                  name="plugins"
+                  icon="IconMaze32"
+                  isActive={this.isActive('plugins')}
+                  onClick={this.toggle}/>
+              </li>
             </ul>
           </nav>
         </header>
@@ -81,7 +88,6 @@ class PrefsContainer extends PureComponent {
               settings={this.props.settings}
               onSettingsUpdate={this.props.onSettingsUpdate}/>
           </PrefPane>
-
 
           <PrefPane
             name="project"
@@ -103,6 +109,12 @@ class PrefsContainer extends PureComponent {
             onOpenLink={this.props.onOpenLink}
             onPropsSave={this.props.onPropsSave}
             onSave={this.props.onVocabSave}/>
+
+          <PrefPane
+            name="template"
+            isActive={this.isActive('plugins')}>
+            Hello
+          </PrefPane>
         </div>
       </div>
     )
