@@ -63,8 +63,8 @@ class Resizable extends PureComponent {
   }
 
   getNewValue(event) {
-    const { edge, min, max, isRelative } = this.props
-    const { isInverse, origin, scale } = this
+    const { edge, min, isRelative } = this.props
+    const { isInverse, origin, scale, max } = this
 
     const value = restrict(
       (event[AXS[edge]] - origin) * (isInverse ? -1 : 1), min, max
@@ -81,9 +81,11 @@ class Resizable extends PureComponent {
   }
 
   handleDragStart = (event) => {
-    const { edge, onDragStart, isRelative, value } = this.props
+    const { edge, onDragStart, isRelative, value, margin, max } = this.props
+    const dist = bounds(this.container.parentElement)[DIM[edge]]
 
-    this.scale = bounds(this.container.parentElement)[DIM[edge]] / 100
+    this.max = margin ? restrict(dist - margin, this.props.min) : max
+    this.scale = dist / 100
     this.origin = bounds(this.container)[OPP[edge]]
 
     if (!isRelative) {
@@ -152,6 +154,7 @@ class Resizable extends PureComponent {
     value: number.isRequired,
     min: number.isRequired,
     max: number,
+    margin: number,
     node: string.isRequired,
     onResize: func,
     onDrag: func,
