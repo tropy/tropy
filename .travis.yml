@@ -25,7 +25,7 @@ matrix:
           packages:
             - g++
       env:
-        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"-7
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
     - os: osx
       osx_image: xcode8.3
       compiler: clang
