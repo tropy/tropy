@@ -463,7 +463,7 @@ class Tropy extends EventEmitter {
       verbose(`switching to "${locale}" locale...`)
       this.state.locale = locale
       await this.load()
-      this.broadcast('locale', locale)
+      this.updateWindowLocale()
       this.emit('app:reload-menu')
     })
 
@@ -687,6 +687,14 @@ class Tropy extends EventEmitter {
     for (const win of BrowserWindow.getAllWindows()) {
       win.webContents.setZoomFactor(this.state.zoom)
     }
+  }
+
+  updateWindowLocale() {
+    const { dict, about, prefs, wiz } = this
+    if (about != null) about.setTitle(dict.windows.about.title)
+    if (prefs != null) prefs.setTitle(dict.windows.prefs.title)
+    if (wiz != null) wiz.setTitle(dict.windows.wizard.title)
+    this.broadcast('locale', this.state.locale)
   }
 
   dispatch(action, win = BrowserWindow.getFocusedWindow()) {

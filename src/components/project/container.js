@@ -93,7 +93,7 @@ class ProjectContainer extends Component {
   }
 
   isClosing({ project } = this.props) {
-    return project.closing && project.id != null
+    return !!(project.closing && project.id != null)
   }
 
   get isEmpty() {

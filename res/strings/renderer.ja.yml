@@ -61,7 +61,7 @@ ja:
           other {# のノート}}
       create: ノートを追加
   about:
-    version: バージョン {バージョン}
+    version: バージョン {version}
     rrchnm:
       title: ロイ・ローゼンツヴァイク歴史とニューディアセンター
       url: https://rrchnm.org

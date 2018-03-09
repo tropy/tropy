@@ -65,6 +65,10 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
 
       app.commandLine.appendSwitch('js-flags', '--datetime_format_to_parts')
 
+      if (opts.ignoreGpuBlacklist) {
+        app.commandLine.appendSwitch('ignore-gpu-blacklist')
+      }
+
       if (opts.scale) {
         app.commandLine.appendSwitch('force-device-scale-factor', opts.scale)
       }

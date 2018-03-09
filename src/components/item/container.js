@@ -49,6 +49,7 @@ class ItemContainer extends PureComponent {
           value={this.props.esper.height}
           isRelative
           onChange={this.handleEsperResize}
+          margin={38}
           min={256}>
           <Esper {...this.props.image}
             mode={this.props.image.mode || this.props.settings.zoomMode}

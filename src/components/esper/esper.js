@@ -72,6 +72,10 @@ class Esper extends PureComponent {
     if (this.container != null) {
       on(this.container, 'tab:focus', this.handleTabFocus)
     }
+
+    this.setState(this.getStateFromProps(), () => {
+      this.view.reset(this.state)
+    })
   }
 
   componentWillUnmount() {
@@ -178,7 +182,7 @@ class Esper extends PureComponent {
     }
   }
 
-  getStateFromProps(props) {
+  getStateFromProps(props = this.props) {
     const state = this.getEmptyState(props)
     const { photo, selection } = props
     const { screen } = this.view
@@ -332,12 +336,13 @@ class Esper extends PureComponent {
 
   handleSlideIn = () => {
     this.setState({ isVisible: true })
-    this.view.start()
+    //this.view.start()
   }
 
   handleSlideOut = () => {
     this.setState({ isVisible: false })
     this.view.stop()
+    this.view.stop.flush()
   }
 
   handleNestedBlur = () => {
@@ -367,7 +372,6 @@ class Esper extends PureComponent {
 
   persist = debounce(() => {
     this.props.onChange({
-      image: this.getImageState(),
       [this.isSelectionActive ? 'selection' : 'photo']: this.getPhotoState()
     })
   }, 650)
@@ -420,12 +424,11 @@ class Esper extends PureComponent {
 
     assign(state, this.getZoomBounds(this.view.screen, state))
 
-    this.setState(state)
-
-    this.view.rotate(state, ROTATE_DURATION)
-    this.view.scale(state, ROTATE_DURATION)
-
-    this.persist()
+    this.setState(state, () => {
+      this.view.rotate(state, ROTATE_DURATION)
+      this.view.scale(state, ROTATE_DURATION)
+      this.persist()
+    })
   }
 
   handleZoomChange = ({ x, y, zoom }, animate) => {
@@ -458,7 +461,6 @@ class Esper extends PureComponent {
 
     this.view.scale({ zoom, mirror })
     this.view.rotate({ angle })
-
     this.persist()
   }
 

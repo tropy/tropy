@@ -13,6 +13,7 @@ const { constrain, Picture } = require('./picture')
 const { Selection  } = require('./selection')
 const TWEEN = require('@tweenjs/tween.js')
 const { TOOL } = require('../../constants/esper')
+const debounce = require('lodash.debounce')
 
 const {
   ESPER: {
@@ -69,16 +70,10 @@ class EsperView extends Component {
 
   componentWillReceiveProps(props) {
     if (this.image != null) {
-      if (this.props.selection !== props.selection) {
-        this.image.overlay.sync(props)
-        this.image.selections.sync(props)
-
-      } else if (this.props.selections !== props.selections ||
-        this.props.tool !== props.tool) {
-        this.image.selections.sync(props)
-      }
-
+      this.image.overlay.sync(props)
+      this.image.selections.sync(props)
       this.image.cursor = props.tool
+      this.pixi.render()
     }
   }
 
@@ -87,12 +82,13 @@ class EsperView extends Component {
   }
 
   start = () => {
+    this.stop.cancel()
     this.pixi.start()
   }
 
-  stop = () => {
+  stop = debounce(() => {
     this.pixi.stop()
-  }
+  }, 2000)
 
   get screen() {
     return this.pixi.screen
@@ -153,6 +149,7 @@ class EsperView extends Component {
 
       this.pixi.stage.addChildAt(this.image, 0)
       this.persist()
+      this.pixi.render()
     }
   }
 
@@ -177,7 +174,7 @@ class EsperView extends Component {
         x: position.x,
         y: position.y,
         zoom: scale.y
-      }, 'sync')
+      }, 'sync', { complete: this.persist })
       .to(next, duration * 0.67)
       .onUpdate(m => {
         this.image.scale.x = m.zoom * zx
@@ -185,7 +182,6 @@ class EsperView extends Component {
         this.image.x = m.x
         this.image.y = m.y
       })
-      .onComplete(this.persist)
       .start()
   }
 
@@ -217,7 +213,6 @@ class EsperView extends Component {
     }
   }
 
-
   resize({ width, height, zoom, mirror }) {
     width = Math.round(width)
     height = Math.round(height)
@@ -231,6 +226,7 @@ class EsperView extends Component {
     this.setScaleMode(this.image.bg.texture, zoom)
     this.image.scale.set(mirror ? -zoom : zoom, zoom)
     this.persist()
+    this.pixi.render()
   }
 
   move({ x, y }, duration = 0) {
@@ -240,9 +236,8 @@ class EsperView extends Component {
     if (equal(position, next)) return
 
     this
-      .animate(position, 'move')
+      .animate(position, 'move', { complete: this.persist })
       .to(next, duration)
-      .onComplete(this.persist)
       .start()
   }
 
@@ -272,7 +267,7 @@ class EsperView extends Component {
         x: position.x,
         y: position.y,
         zoom: scale.y
-      }, 'zoom')
+      }, 'zoom', { complete: this.persist })
       .to(next, duration)
       .onUpdate(m => {
         this.image.scale.x = m.zoom * zx
@@ -280,7 +275,6 @@ class EsperView extends Component {
         this.image.x = m.x
         this.image.y = m.y
       })
-      .onComplete(this.persist)
       .start()
   }
 
@@ -292,13 +286,18 @@ class EsperView extends Component {
       // Always rotate counter-clockwise!
       const tmp = (tgt > cur) ? cur - (2 * Math.PI - tgt) : tgt
 
-      this.animate(this.image, 'rotate')
+      this.animate(this.image, 'rotate', {
+        done: () => {
+          this.image.rotation = tgt
+          this.persist()
+        }
+      })
         .to({ rotation: tmp }, duration)
-        .onComplete(() => { this.image.rotation = tgt })
         .start()
 
     } else {
       this.image.rotation = rad(angle)
+      this.pixi.render()
     }
   }
 
@@ -309,40 +308,43 @@ class EsperView extends Component {
       .hue(hue)
       .negative(negative)
       .saturation(saturation)
+    this.pixi.render()
   }
 
   fadeOut(thing, duration = FADE_DURATION) {
     if (thing == null) return
     thing.interactive = false
-
-    if (!this.isStarted) return thing.destroy()
-
-    this.animate(thing, null, () => thing.destroy())
+    // if (!this.isStarted) return thing.destroy()
+    this
+      .animate(thing, null, { done: () => thing.destroy() })
       .to({ alpha: 0 }, duration)
       .start()
   }
 
-  animate(thing, scope, done) {
+  animate(thing, scope, { stop, complete, done } = {}) {
     const tween = new TWEEN.Tween(thing, this.tweens)
       .easing(TWEEN.Easing.Cubic.InOut)
-
-    if (scope != null) {
-      tween
-        .onStart(() => {
+      .onStart(() => {
+        if (scope != null) {
           const current = this.tweens[scope]
           if (current) current.stop()
-
           this.tweens[scope] = tween
-        })
-        .onComplete(() => this.tweens[scope] = null)
-    }
+        }
+      })
+      .onStop(() => {
+        if (scope != null) this.tweens[scope] = null
+        if (typeof stop === 'function') stop()
+        if (typeof done === 'function') done()
+        this.stop()
+      })
+      .onComplete(() => {
+        if (scope != null) this.tweens[scope] = null
+        if (typeof complete === 'function') complete()
+        if (typeof done === 'function') done()
+        this.stop()
+      })
 
-    if (typeof done === 'function') {
-      tween
-        .onComplete(done)
-        .onStop(done)
-    }
-
+    this.start()
     return tween
   }
 
@@ -414,6 +416,8 @@ class EsperView extends Component {
   handleWheel = (e) => {
     e.stopPropagation()
     this.props.onWheel(coords(e))
+    this.start()
+    this.stop()
   }
 
   handleMouseDown = (event) => {
@@ -421,6 +425,8 @@ class EsperView extends Component {
 
     if (this.isDragging) this.drag.stop()
     if (!data.isPrimary) return
+
+    this.start()
 
     if (target instanceof Selection) {
       return this.props.onSelectionActivate(target.data)
@@ -471,6 +477,7 @@ class EsperView extends Component {
 
     } finally {
       this.drag.current = undefined
+      this.stop()
     }
   }
 
