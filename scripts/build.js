@@ -46,6 +46,7 @@ const IGNORE = [
   /^\/test/,
   /^\/tmp/,
   /node_modules.\.bin/,
+  /node_modules.rdf-canonize.build.Release.urdna2015\.node/,
   /appveyor\.yml/
 ]
 
