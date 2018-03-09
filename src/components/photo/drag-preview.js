@@ -21,8 +21,7 @@ class PhotoDragPreview extends PureComponent {
   }
 
   render() {
-    const { cache, size } = this.props
-    const { id, angle, broken, mirror, orientation } = this.item
+    const { id, angle, broken, mimetype, mirror, orientation } = this.item
 
     return (
       <div className={cx(this.classes)}>
@@ -30,10 +29,11 @@ class PhotoDragPreview extends PureComponent {
           id={id}
           angle={angle}
           broken={broken}
+          mimetype={mimetype}
           mirror={mirror}
           orientation={orientation}
-          size={size}
-          cache={cache}/>
+          size={this.props.size}
+          cache={this.props.cache}/>
         {this.count > 1 &&
           <div className="badge">{this.count}</div>
         }
