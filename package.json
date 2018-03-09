@@ -89,7 +89,7 @@
     "exif-reader": "github:inukshuk/exif-reader#patched",
     "generic-pool": "^3.4.2",
     "js-yaml": "^3.11.0",
-    "jsonld": "^0.4.12",
+    "jsonld": "^1.0.0",
     "lodash.debounce": "^4.0.7",
     "lodash.throttle": "^4.1.1",
     "mkdirp": "^0.5.1",

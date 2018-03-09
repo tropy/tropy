@@ -48,7 +48,7 @@ function makeContext(template, items, resources) {
   const [props, metadata, photos] = resources
   const flatten = (acc, ps) => acc.concat(ps)
   let result = {
-    //'@version': '1.1',
+    '@version': 1.1,
     '@vocab': TR,
     'template': {
       '@id': PROP.TEMPLATE,
