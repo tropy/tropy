@@ -24,14 +24,14 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++
-      env:
-        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
     - os: osx
       osx_image: xcode8.3
       compiler: clang
 
 before_install:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
+      export CC=gcc-7
+      export CXX=g++-7
       export DISPLAY=:99.0;
       Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
     fi
