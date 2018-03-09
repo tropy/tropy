@@ -23,7 +23,11 @@ all([
   ready
 ])
   .then(() => {
-    render(<Main store={store}><PrefsContainer/></Main>, $('main'))
+    render(
+      <Main store={store}>
+        <PrefsContainer plugins={win.plugins}/>
+      </Main>,
+      $('main'))
   })
 
 dialog.start(store)

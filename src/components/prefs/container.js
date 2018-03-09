@@ -114,7 +114,8 @@ class PrefsContainer extends PureComponent {
           <PrefPane
             name="template"
             isActive={this.isActive('plugins')}>
-            <Plugins/>
+            <Plugins
+              plugins={this.props.plugins}/>
           </PrefPane>
         </div>
       </div>
@@ -128,6 +129,7 @@ class PrefsContainer extends PureComponent {
     pane: string.isRequired,
     settings: object.isRequired,
     vocab: array.isRequired,
+    plugins: object.isRequired,
     onClassSave: func.isRequired,
     onContextMenu: func.isRequired,
     onOpenLink: func.isRequired,

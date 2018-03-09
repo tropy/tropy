@@ -2,6 +2,8 @@
 
 const React = require('react')
 const { Component } = React
+const { object } = require('prop-types')
+
 
 class Plugins extends Component {
   constructor(props) {
@@ -15,6 +17,10 @@ class Plugins extends Component {
         Hello
       </div>
     )
+  }
+
+  static propTypes = {
+    plugins: object.isRequired
   }
 }
 
