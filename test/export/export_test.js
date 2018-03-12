@@ -78,7 +78,7 @@ describe('export', () => {
   })
 
   it('has photo->selection metadata', async () => {
-    const data = (await ld)[0]['@graph'][0]['photo'][1]['selection']
+    const data = (await ld)[0]['@graph'][0]['photo'][1]['selection'][0]
     expect(data).to.have.property('@type', 'Selection')
     expect(data).to.have.property('selectProp', 'selection property')
   })
@@ -100,7 +100,8 @@ describe('export', () => {
   describe('photo has', () => {
     it('note', async () => {
       const item1 = (await ld)[0]['@graph'][0]
-      const { html, text } = item1.photo[1]['note']
+      const { html, text } = item1.photo[1]['note'][0]
+
       expect(item1.photo[0]).to.not.have.property('note')
       expect(text['@value']).to.eql('photo note')
       expect(text['@language']).to.eql('de')
@@ -118,7 +119,7 @@ describe('export', () => {
   })
 
   describe('selection has', async () => {
-    const s = (await ld)[0]['@graph'][0]['photo'][1]['selection']
+    const s = (await ld)[0]['@graph'][0]['photo'][1]['selection'][0]
     it('coordinates', () => {
       expect(s).to.have.property('x', 10)
       expect(s).to.have.property('y', 20)
@@ -126,8 +127,9 @@ describe('export', () => {
       expect(s).to.have.property('height', 40)
     })
     it('note', () => {
-      expect(s['note']['text']).to.eql('selection note')
-      expect(s['note']['doc']).to.be.undefined
+      const note = s.note[0]
+      expect(note['text']).to.eql('selection note')
+      expect(note['doc']).to.be.undefined
     })
   })
 

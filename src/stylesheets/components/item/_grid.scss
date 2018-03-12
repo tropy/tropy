@@ -5,13 +5,11 @@
 .item-grid {
   flex: 1 1 0;
   border-top: 1px solid $item-table-header-border-color;
-  margin: 0 $space-min;
   position: relative;
   display: flex; // Prevent overflow
   flex-direction: column; // Strech scroll-container
 
   .scrollbar-style-old-school & {
-    margin-right: 0;
     border-top-color: transparent;
 
     &::before {

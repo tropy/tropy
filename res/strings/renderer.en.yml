@@ -423,6 +423,7 @@ en:
     project:
       created: Project creation failed.
     item:
+      export: Failed to export items.
       merge: Failed to merge items.
       import: Failed to import item.
       tag:
