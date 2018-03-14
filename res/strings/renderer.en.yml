@@ -458,3 +458,8 @@ en:
           Tropy {version} is ready to be installed.
           Do you want to install and restart now?
         confirm: Restart Now
+
+  plugin:
+    name: Name
+    plugin: Plugin
+    options: Options

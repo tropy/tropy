@@ -29,7 +29,7 @@ class Plugins extends Component {
             (config, idx) =>
               <PluginAccordion
                 config={config}
-                key={idx} />)}
+                key={idx}/>)}
         </AccordionGroup>
       </div>
     )

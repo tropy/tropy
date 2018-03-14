@@ -6,4 +6,13 @@
   .panel {
     background-color: $vocab-panel-bg;
   }
+
+  .panel-body {
+    padding: $space-sm $default-padding-horizontal;
+  }
+
+  .plugins-header {
+    margin-bottom: $space-sm;
+    padding: 0 $space-xs;
+  }
 }
