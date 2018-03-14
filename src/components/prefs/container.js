@@ -112,7 +112,7 @@ class PrefsContainer extends PureComponent {
             onSave={this.props.onVocabSave}/>
 
           <PrefPane
-            name="template"
+            name="plugins"
             isActive={this.isActive('plugins')}>
             <Plugins
               plugins={this.props.plugins}/>
