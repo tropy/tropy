@@ -11,13 +11,15 @@ class Plugins extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      config: props.plugins.config
+      config: props.plugins.config,
+      spec: props.plugins.spec
     }
   }
 
   componentWillReceiveProps(props) {
     this.setState({
-      config: props.plugins.config
+      config: props.plugins.config,
+      spec: props.plugins.spec
     })
   }
 
@@ -29,6 +31,7 @@ class Plugins extends Component {
             (config, idx) =>
               <PluginAccordion
                 config={config}
+                options={this.state.spec[idx].options}
                 key={idx}/>)}
         </AccordionGroup>
       </div>

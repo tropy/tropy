@@ -1,6 +1,7 @@
 'use strict'
 
 const React = require('react')
+const { object, arrayOf, shape, string, bool } = require('prop-types')
 const { Accordion } = require('../accordion')
 const { IconBook16 } = require('../icons')
 const { FormField, FormText } = require('../form')
@@ -34,17 +35,31 @@ class PluginAccordion extends Accordion {
             isCompact
             name="name"
             value={config.name}
-            size={8}
             tabIndex={null}
             onChange={this.handleChange}/>
           <FormText
             id="plugin.plugin"
             isCompact
-            size={8}
             value={config.plugin}/>
         </header>
       </div>
     )
+  }
+
+  static propTypes = {
+    config: object.isRequired,
+    options: arrayOf(shape({
+      field: string.isRequired,
+      required: bool,
+      hint: string,
+      type: string,
+      label: string
+    }))
+  }
+
+  static defaultProps = {
+    ...Accordion.defaultProps,
+    options: []
   }
 }
 
