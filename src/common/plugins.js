@@ -114,12 +114,12 @@ class Plugins extends EventEmitter {
         if (autosave) await this.save()
       }
     }
-
     return this
   }
 
-  async reloadAndCreate() {
+  async reloadScanCreate() {
     await this.reload()
+    this.spec = this.scan()
     this.instances = this.create()
     verbose(`plugins loaded: ${keys(this.instances).length}`)
     return this
@@ -156,6 +156,7 @@ class Plugins extends EventEmitter {
       try {
         acc[id] = pick(this.require(join(plugin, 'package.json')), [
           'hooks',
+          'options',
           'name',
           'version'
         ])
