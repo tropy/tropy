@@ -44,14 +44,17 @@ class Label extends PureComponent {
       <label
         className={cx('control-label', `col-${this.props.size}`)}
         htmlFor={this.props.id}>
-        <FormattedMessage id={this.props.id}/>
+        <FormattedMessage
+          defaultMessage={this.props.default}
+          id={this.props.id}/>
       </label>
     )
   }
 
   static propTypes = {
     id: string.isRequired,
-    size: number.isRequired
+    size: number.isRequired,
+    default: string
   }
 
   static defaultProps = {
@@ -61,7 +64,7 @@ class Label extends PureComponent {
 
 class FormElement extends PureComponent {
   get hasLabel() {
-    return this.props.id != null
+    return this.props.label || this.props.id != null
   }
 
   get offset() {
@@ -73,7 +76,11 @@ class FormElement extends PureComponent {
 
     return (
       <FormGroup isCompact={this.props.isCompact}>
-        {hasLabel && <Label id={this.props.id} size={offset}/>}
+        {hasLabel &&
+          <Label
+            id={this.props.id}
+            size={offset}
+            default={this.props.label}/>}
         <div className={
           cx(`col-${this.props.size}`, { [`col-offset-${offset}`]: !hasLabel })
         }>
@@ -86,6 +93,7 @@ class FormElement extends PureComponent {
   static propTypes = {
     children: node,
     id: string,
+    label: string,
     isCompact: bool,
     size: number.isRequired
   }
@@ -126,6 +134,7 @@ class FormField extends PureComponent {
       <FormElement
         id={this.props.id}
         size={this.props.size}
+        label={this.props.label}
         isCompact={this.props.isCompact}>
         <Input
           ref={this.setInput}
@@ -152,6 +161,7 @@ class FormField extends PureComponent {
     isDisabled: bool,
     isReadOnly: bool,
     isRequired: bool,
+    label: string,
     name: string.isRequired,
     placeholder: string,
     size: number.isRequired,
@@ -282,7 +292,9 @@ class Toggle extends PureComponent {
             onBlur={this.handleBlur}
             onFocus={this.props.onFocus}
             onChange={this.handleChange}/>
-          <FormattedMessage id={this.props.id}/>
+          <FormattedMessage
+            defaultMessage={this.props.label}
+            id={this.props.id}/>
         </label>
       </div>
     )
@@ -294,6 +306,7 @@ class Toggle extends PureComponent {
     isDisabled: bool,
     name: string.isRequired,
     tabIndex: number,
+    label: string,
     type: oneOf(['checkbox', 'radio']).isRequired,
     value: bool,
     onBlur: func,
@@ -328,7 +341,8 @@ class FormToggle extends PureComponent {
   static propTypes = {
     ...Toggle.propTypes,
     size: number.isRequired,
-    isCompact: bool
+    isCompact: bool,
+    label: string
   }
 
   static defaultProps = {
