@@ -1,16 +1,53 @@
 'use strict'
 
 const React = require('react')
-const { object, arrayOf, shape, string, bool } = require('prop-types')
+const { object, arrayOf, shape, string, bool, oneOf } = require('prop-types')
 const { Accordion } = require('../accordion')
 const { IconBook16 } = require('../icons')
-const { FormField, FormText } = require('../form')
-
+const { FormField, FormText, FormToggle } = require('../form')
+const { get } = require('../../common/util')
 
 class PluginAccordion extends Accordion {
   handleChange = (data) => {
     console.log(data)
     /* this.props.onSave({ id: this.props.vocab.id, ...data })*/
+  }
+
+  renderField(config, option, idx) {
+    switch (option.type) {
+      case 'string':
+        return (
+          <FormField
+            key={idx}
+            id={option.field}
+            isCompact
+            size={8}
+            name={option.field}
+            label={option.label}
+            value={get(config, option.field)}/>)
+      case 'number':
+        return (
+          <FormField
+            key={idx}
+            id={option.field}
+            isCompact
+            name={option.field}
+            label={option.label}
+            value={get(config, option.field)}/>)
+      case 'bool':
+        return (
+          <FormToggle
+            key={idx}
+            id={option.field}
+            isCompact
+            size={8}
+            name={option.field}
+            label={option.label}
+            value={get(config, option.field)}
+            onChange={this.handleChange}/>)
+      default:
+        return
+    }
   }
 
   renderHeader() {
@@ -25,7 +62,7 @@ class PluginAccordion extends Accordion {
   }
 
   renderBody() {
-    const { config } = this.props
+    const { config, options } = this.props
 
     return super.renderBody(
       <div>
@@ -42,6 +79,11 @@ class PluginAccordion extends Accordion {
             isCompact
             value={config.plugin}/>
         </header>
+        {options.length > 0 &&
+        <fieldset>
+          {options.map((option, idx) =>
+            this.renderField(config, option, idx))}
+        </fieldset>}
       </div>
     )
   }
@@ -52,8 +94,8 @@ class PluginAccordion extends Accordion {
       field: string.isRequired,
       required: bool,
       hint: string,
-      type: string,
-      label: string
+      type: oneOf(['string', 'bool', 'number']).isRequired,
+      label: string.isRequired
     }))
   }
 

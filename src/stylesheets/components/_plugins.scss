@@ -15,4 +15,9 @@
     margin-bottom: $space-sm;
     padding: 0 $space-xs;
   }
+
+  fieldset {
+    background: $property-bg;
+    padding: 5px $space-xs;
+  }
 }
