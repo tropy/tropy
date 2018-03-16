@@ -62,7 +62,7 @@ class PluginAccordion extends Accordion {
   }
 
   renderBody() {
-    const { config, options } = this.props
+    const { config, options, version } = this.props
 
     return super.renderBody(
       <div>
@@ -77,7 +77,7 @@ class PluginAccordion extends Accordion {
           <FormText
             id="plugin.plugin"
             isCompact
-            value={config.plugin}/>
+            value={config.plugin + ' ' + version}/>
         </header>
         {options.length > 0 &&
         <fieldset>
@@ -90,6 +90,7 @@ class PluginAccordion extends Accordion {
 
   static propTypes = {
     config: object.isRequired,
+    version: string,
     options: arrayOf(shape({
       field: string.isRequired,
       required: bool,
@@ -101,7 +102,8 @@ class PluginAccordion extends Accordion {
 
   static defaultProps = {
     ...Accordion.defaultProps,
-    options: []
+    options: [],
+    version: ''
   }
 }
 

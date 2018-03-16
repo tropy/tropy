@@ -28,11 +28,12 @@ class Plugins extends Component {
       <div className="scroll-container">
         <AccordionGroup className="form-horizontal">
           {this.state.config.map(
-            (config, idx) =>
-              <PluginAccordion
-                config={config}
-                options={this.state.spec[idx].options}
-                key={idx}/>)}
+             (config, idx) =>
+               <PluginAccordion
+                 config={config}
+                 version={this.state.spec[idx].version}
+                 options={this.state.spec[idx].options}
+                 key={idx}/>)}
         </AccordionGroup>
       </div>
     )
