@@ -1,7 +1,9 @@
 'use strict'
 
 const React = require('react')
-const { object, arrayOf, shape, string, bool, oneOf } = require('prop-types')
+const {
+  arrayOf, bool, number, object, oneOf, oneOfType, shape, string
+} = require('prop-types')
 const { Accordion } = require('../accordion')
 const { IconBook16 } = require('../icons')
 const { FormField, FormText, FormToggle } = require('../form')
@@ -13,40 +15,44 @@ class PluginAccordion extends Accordion {
     /* this.props.onSave({ id: this.props.vocab.id, ...data })*/
   }
 
+  getValue({ field, default: defaultValue }) {
+    const { options } = this.props.config
+    return get(options, field) || defaultValue
+  }
+
   renderField(config, option, idx) {
+    const { field, label } = option
     switch (option.type) {
       case 'string':
         return (
           <FormField
             key={idx}
-            id={option.field}
+            id={field}
             isCompact
             size={8}
-            name={option.field}
-            label={option.label}
-            value={get(config, option.field)}/>)
+            name={field}
+            label={label}
+            value={this.getValue(option)}/>)
       case 'number':
         return (
           <FormField
             key={idx}
-            id={option.field}
+            id={field}
             isCompact
-            name={option.field}
-            label={option.label}
-            value={get(config, option.field)}/>)
+            name={field}
+            label={label}
+            value={this.getValue(option).toString()}/>)
       case 'bool':
         return (
           <FormToggle
             key={idx}
-            id={option.field}
+            id={field}
             isCompact
             size={8}
-            name={option.field}
-            label={option.label}
-            value={get(config, option.field)}
+            name={field}
+            label={label}
+            value={this.getValue(option)}
             onChange={this.handleChange}/>)
-      default:
-        return
     }
   }
 
@@ -94,6 +100,7 @@ class PluginAccordion extends Accordion {
     options: arrayOf(shape({
       field: string.isRequired,
       required: bool,
+      default: oneOfType([string, bool, number]),
       hint: string,
       type: oneOf(['string', 'bool', 'number']).isRequired,
       label: string.isRequired
