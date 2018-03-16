@@ -19,5 +19,11 @@
   fieldset {
     background: $property-bg;
     padding: 5px $space-xs;
+
+    label[title] {
+      // possibly highlight labels that have a title
+      /* text-decoration-line: underline; */
+      /* text-decoration-style: dotted; */
+    }
   }
 }

@@ -21,38 +21,36 @@ class PluginAccordion extends Accordion {
   }
 
   renderField(config, option, idx) {
-    const { field, label } = option
+    const { field, label, hint } = option
     switch (option.type) {
-      case 'string':
-        return (
-          <FormField
-            key={idx}
-            id={field}
-            isCompact
-            size={8}
-            name={field}
-            label={label}
-            value={this.getValue(option)}/>)
       case 'number':
         return (
           <FormField
-            key={idx}
             id={field}
-            isCompact
-            name={field}
             label={label}
+            title={hint}
+            key={idx}
+            name={field}
             value={this.getValue(option).toString()}/>)
       case 'bool':
         return (
           <FormToggle
-            key={idx}
             id={field}
-            isCompact
-            size={8}
-            name={field}
             label={label}
+            title={hint}
+            key={idx}
+            name={field}
             value={this.getValue(option)}
             onChange={this.handleChange}/>)
+      default: // 'string' implied
+        return (
+          <FormField
+            id={field}
+            label={label}
+            title={hint}
+            key={idx}
+            name={field}
+            value={this.getValue(option)}/>)
     }
   }
 
@@ -102,7 +100,7 @@ class PluginAccordion extends Accordion {
       required: bool,
       default: oneOfType([string, bool, number]),
       hint: string,
-      type: oneOf(['string', 'bool', 'number']).isRequired,
+      type: oneOf(['string', 'bool', 'number']),
       label: string.isRequired
     }))
   }

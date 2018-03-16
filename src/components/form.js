@@ -43,6 +43,7 @@ class Label extends PureComponent {
     return (
       <label
         className={cx('control-label', `col-${this.props.size}`)}
+        title={this.props.title}
         htmlFor={this.props.id}>
         <FormattedMessage
           defaultMessage={this.props.default}
@@ -54,6 +55,7 @@ class Label extends PureComponent {
   static propTypes = {
     id: string.isRequired,
     size: number.isRequired,
+    title: string,
     default: string
   }
 
@@ -80,6 +82,7 @@ class FormElement extends PureComponent {
           <Label
             id={this.props.id}
             size={offset}
+            title={this.props.title}
             default={this.props.label}/>}
         <div className={
           cx(`col-${this.props.size}`, { [`col-offset-${offset}`]: !hasLabel })
@@ -93,6 +96,7 @@ class FormElement extends PureComponent {
   static propTypes = {
     children: node,
     id: string,
+    title: string,
     label: string,
     isCompact: bool,
     size: number.isRequired
@@ -135,6 +139,7 @@ class FormField extends PureComponent {
         id={this.props.id}
         size={this.props.size}
         label={this.props.label}
+        title={this.props.title}
         isCompact={this.props.isCompact}>
         <Input
           ref={this.setInput}
@@ -166,6 +171,7 @@ class FormField extends PureComponent {
     placeholder: string,
     size: number.isRequired,
     tabIndex: number,
+    title: string,
     value: string,
     onBlur: func.isRequired,
     onChange: func.isRequired,
