@@ -2,22 +2,26 @@
 
 const React = require('react')
 const {
-  arrayOf, bool, number, object, oneOf, oneOfType, shape, string
+  arrayOf, bool, func, number, object, oneOf, oneOfType, shape, string
 } = require('prop-types')
 const { Accordion } = require('../accordion')
 const { IconBook16 } = require('../icons')
 const { FormField, FormText, FormToggle } = require('../form')
-const { get } = require('../../common/util')
+const { get, set } = require('../../common/util')
 
 class PluginAccordion extends Accordion {
-  handleChange = (data) => {
-    console.log(data)
-    /* this.props.onSave({ id: this.props.vocab.id, ...data })*/
-  }
-
   getValue({ field, default: defaultValue }) {
     const { options } = this.props.config
     return get(options, field) || defaultValue
+  }
+
+  handleChange = (data) => {
+    let config = this.props.config
+    for (const field in data) {
+      set(config, field, data[field])
+    }
+    this.props.onChange(this.props.index, config)
+    this.forceUpdate()
   }
 
   renderField(config, option, idx) {
@@ -30,7 +34,8 @@ class PluginAccordion extends Accordion {
             label={label}
             title={hint}
             key={idx}
-            name={field}
+            name={'options.' + field}
+            onChange={this.handleChange}
             value={this.getValue(option).toString()}/>)
       case 'bool':
         return (
@@ -39,7 +44,7 @@ class PluginAccordion extends Accordion {
             label={label}
             title={hint}
             key={idx}
-            name={field}
+            name={'options.' + field}
             value={this.getValue(option)}
             onChange={this.handleChange}/>)
       default: // 'string' implied
@@ -49,7 +54,8 @@ class PluginAccordion extends Accordion {
             label={label}
             title={hint}
             key={idx}
-            name={field}
+            name={'options.' + field}
+            onChange={this.handleChange}
             value={this.getValue(option)}/>)
     }
   }
@@ -95,6 +101,8 @@ class PluginAccordion extends Accordion {
   static propTypes = {
     config: object.isRequired,
     version: string,
+    onChange: func.isRequired,
+    index: number,
     options: arrayOf(shape({
       field: string.isRequired,
       required: bool,

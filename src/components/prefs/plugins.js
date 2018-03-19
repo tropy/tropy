@@ -23,6 +23,12 @@ class Plugins extends Component {
     })
   }
 
+  onChange = (index, data) => {
+    let { config } = this.state
+    config[index] = data
+    this.setState({ config })
+  }
+
   render() {
     return (
       <div className="scroll-container">
@@ -33,6 +39,8 @@ class Plugins extends Component {
                  config={config}
                  version={this.state.spec[idx].version}
                  options={this.state.spec[idx].options}
+                 onChange={this.onChange}
+                 index={idx}
                  key={idx}/>)}
         </AccordionGroup>
       </div>
