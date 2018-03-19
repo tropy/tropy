@@ -76,7 +76,7 @@
     "shelljs": "^0.8.1",
     "sinon": "^4.4.6",
     "sinon-chai": "^3.0.0",
-    "sqleton": "^1.2.4"
+    "sqleton": "^1.3.0"
   },
   "dependencies": {
     "@pixi/filter-adjustment": "^2.5.0",
