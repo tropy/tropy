@@ -12,7 +12,8 @@ const { get, set } = require('../../common/util')
 class PluginAccordion extends Accordion {
   getValue({ field, default: defaultValue }) {
     const { options } = this.props.config
-    return get(options, field) || defaultValue
+    const value = get(options, field)
+    return typeof value !== 'undefined' ? value : defaultValue
   }
 
   handleChange = (data) => {
