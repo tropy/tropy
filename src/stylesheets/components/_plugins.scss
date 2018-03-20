@@ -26,4 +26,9 @@
       /* text-decoration-style: dotted; */
     }
   }
+
+  .plugins-footer {
+    flex: 0 0 auto;
+    padding: $space-xs ($space-lg + $space-sm - $btn-icon-padding);
+  }
 }

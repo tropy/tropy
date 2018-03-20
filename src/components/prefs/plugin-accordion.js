@@ -6,7 +6,7 @@ const {
 } = require('prop-types')
 const { Accordion } = require('../accordion')
 const { IconBook16 } = require('../icons')
-const { FormField, FormText, FormToggle } = require('../form')
+const { FormField, FormToggle, FormSelect } = require('../form')
 const { get, set } = require('../../common/util')
 
 class PluginAccordion extends Accordion {
@@ -72,23 +72,34 @@ class PluginAccordion extends Accordion {
     )
   }
 
+  value = () => {
+    return this.props.config.plugin || ''
+  }
+
+  optLabel(option) {
+    return option
+  }
+
   renderBody() {
-    const { config, options, version } = this.props
+    const { config, options } = this.props
 
     return super.renderBody(
       <div>
         <header className="plugins-header">
           <FormField
             id="plugin.name"
-            isCompact
             name="name"
             value={config.name}
             tabIndex={null}
             onChange={this.handleChange}/>
-          <FormText
+          <FormSelect
             id="plugin.plugin"
-            isCompact
-            value={config.plugin + ' ' + version}/>
+            name="plugin"
+            optLabel={this.optLabel}
+            options={this.props.pluginOptions}
+            onChange={this.handleChange}
+            isDisabled={!!config.plugin}
+            value={this.value()}/>
         </header>
         {options.length > 0 &&
         <fieldset>
@@ -111,7 +122,8 @@ class PluginAccordion extends Accordion {
       hint: string,
       type: oneOf(['string', 'bool', 'number']),
       label: string.isRequired
-    }))
+    })),
+    pluginOptions: arrayOf(string)
   }
 
   static defaultProps = {

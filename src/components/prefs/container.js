@@ -9,7 +9,7 @@ const { TemplateEditor } = require('../template')
 const { VocabPane } = require('../vocab')
 const { PrefPane, PrefPaneToggle } = require('./pane')
 const { AppPrefs } = require('./app')
-const { Plugins } = require('./plugins')
+const { PluginsPane } = require('./plugins')
 const actions = require('../../actions')
 
 const {
@@ -111,12 +111,10 @@ class PrefsContainer extends PureComponent {
             onPropsSave={this.props.onPropsSave}
             onSave={this.props.onVocabSave}/>
 
-          <PrefPane
+          <PluginsPane
             name="plugins"
-            isActive={this.isActive('plugins')}>
-            <Plugins
-              plugins={this.props.plugins}/>
-          </PrefPane>
+            plugins={this.props.plugins}
+            isActive={this.isActive('plugins')}/>
         </div>
       </div>
     )
