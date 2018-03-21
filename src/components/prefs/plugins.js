@@ -11,8 +11,6 @@ const { PluginAccordion } = require('./plugin-accordion')
 const { values } = Object
 const { uniq } = require('../../common/util')
 
-
-
 class PluginsPane extends Component {
   constructor(props) {
     super(props)
@@ -42,6 +40,11 @@ class PluginsPane extends Component {
     this.setState({
       config: this.state.config.concat({})
     })
+    this.accordion.setState({ open: this.state.config.length })
+  }
+
+  setAccordion = (accordion) => {
+    this.accordion = accordion
   }
 
   render() {
@@ -50,7 +53,9 @@ class PluginsPane extends Component {
         name={this.props.name}
         isActive={this.props.isActive}>
         <div className="scroll-container">
-          <AccordionGroup className="form-horizontal">
+          <AccordionGroup
+            ref={this.setAccordion}
+            className="form-horizontal">
             {this.state.config.map(
               (config, idx) => {
                 let spec = this.props.plugins.spec[idx] || {}
