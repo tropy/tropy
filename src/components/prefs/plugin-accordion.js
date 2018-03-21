@@ -27,40 +27,25 @@ class PluginAccordion extends Accordion {
 
   renderField(config, option, idx) {
     const { field, label, hint } = option
+    const common = {
+      id: field,
+      label,
+      title: hint,
+      key: idx,
+      tabIndex: idx,
+      name: `options.${field}`,
+      onChange: this.handleChange,
+      value: this.getValue(option)
+    }
     switch (option.type) {
       case 'number':
         return (
-          <FormField
-            id={field}
-            label={label}
-            title={hint}
-            key={idx}
-            tabIndex={idx}
-            name={'options.' + field}
-            onChange={this.handleChange}
+          <FormField {...common}
             value={this.getValue(option).toString()}/>)
       case 'bool':
-        return (
-          <FormToggle
-            id={field}
-            label={label}
-            title={hint}
-            key={idx}
-            tabIndex={idx}
-            name={'options.' + field}
-            value={this.getValue(option)}
-            onChange={this.handleChange}/>)
+        return <FormToggle {...common}/>
       default: // 'string' implied
-        return (
-          <FormField
-            id={field}
-            label={label}
-            title={hint}
-            key={idx}
-            tabIndex={idx}
-            name={'options.' + field}
-            onChange={this.handleChange}
-            value={this.getValue(option)}/>)
+        return <FormField {...common}/>
     }
   }
 
