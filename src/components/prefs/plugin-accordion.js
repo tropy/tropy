@@ -35,6 +35,7 @@ class PluginAccordion extends Accordion {
             label={label}
             title={hint}
             key={idx}
+            tabIndex={idx}
             name={'options.' + field}
             onChange={this.handleChange}
             value={this.getValue(option).toString()}/>)
@@ -45,6 +46,7 @@ class PluginAccordion extends Accordion {
             label={label}
             title={hint}
             key={idx}
+            tabIndex={idx}
             name={'options.' + field}
             value={this.getValue(option)}
             onChange={this.handleChange}/>)
@@ -55,6 +57,7 @@ class PluginAccordion extends Accordion {
             label={label}
             title={hint}
             key={idx}
+            tabIndex={idx}
             name={'options.' + field}
             onChange={this.handleChange}
             value={this.getValue(option)}/>)
