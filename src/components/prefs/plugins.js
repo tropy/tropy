@@ -37,10 +37,16 @@ class PluginsPane extends Component {
     this.props.onChange(config)
   }
 
+  onDelete = (index) => {
+    let { config } = this.state
+    config.splice(index, 1)
+    this.setState({ config })
+  }
+
   addPlugin = () => {
-    this.setState({
-      config: this.state.config.concat({})
-    })
+    let { config } = this.state
+    config.concat({})
+    this.setState({ config })
     this.accordion.setState({ open: this.state.config.length })
   }
 
@@ -67,6 +73,7 @@ class PluginsPane extends Component {
                     version={version}
                     options={options}
                     onChange={this.onChange}
+                    onDelete={this.onDelete}
                     pluginOptions={this.pluginOptions}
                     index={idx}
                     key={idx}/>)

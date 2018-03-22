@@ -5,7 +5,8 @@ const {
   arrayOf, bool, func, number, object, oneOf, oneOfType, shape, string
 } = require('prop-types')
 const { Accordion } = require('../accordion')
-const { IconBook16 } = require('../icons')
+const { IconBook16, IconTrash } = require('../icons')
+const { Button, ButtonGroup } = require('../button')
 const { FormField, FormToggle, FormSelect } = require('../form')
 const { get, set } = require('../../common/util')
 
@@ -24,6 +25,8 @@ class PluginAccordion extends Accordion {
     this.props.onChange(this.props.index, config)
     this.forceUpdate()
   }
+
+  handleDelete = () => this.props.onDelete(this.props.index)
 
   renderField(config, option, idx) {
     const { field, label, hint } = option
@@ -56,6 +59,12 @@ class PluginAccordion extends Accordion {
         <h1 className="panel-heading">
           {this.props.config.name}
         </h1>
+        {this.props.isOpen &&
+          <ButtonGroup>
+            <Button
+              icon={<IconTrash/>}
+              onClick={this.handleDelete}/>
+          </ButtonGroup>}
       </div>
     )
   }
@@ -102,6 +111,7 @@ class PluginAccordion extends Accordion {
     config: object.isRequired,
     version: string,
     onChange: func.isRequired,
+    onDelete: func.isRequired,
     index: number,
     options: arrayOf(shape({
       field: string.isRequired,
