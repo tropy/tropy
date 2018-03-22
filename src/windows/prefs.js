@@ -17,6 +17,9 @@ const tasks = store.saga.run(main)
 
 const { locale } = ARGS
 
+let pluginsConfig
+const pluginsChange = (config) => pluginsConfig = config
+
 all([
   store.dispatch(act.intl.load({ locale })),
   store.dispatch(act.keymap.load({ name: 'project', locale })),
@@ -25,7 +28,9 @@ all([
   .then(() => {
     render(
       <Main store={store}>
-        <PrefsContainer plugins={win.plugins}/>
+        <PrefsContainer
+          onPluginsChange={pluginsChange}
+          plugins={win.plugins}/>
       </Main>,
       $('main'))
   })
@@ -49,7 +54,7 @@ win.unloaders.push(dialog.stop)
 win.unloaders.push(() => (
   store.dispatch(act.prefs.close()), tasks.done
 ))
-
+win.unloaders.push(() => win.plugins.save(pluginsConfig))
 
 if (ARGS.dev || ARGS.debug) {
   Object.defineProperty(window, 'store', { get: () => store })

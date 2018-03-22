@@ -5,7 +5,7 @@ const { Component } = React
 const { PrefPane } = require('../prefs/pane')
 const { Button } = require('../button')
 const { IconPlus } = require('../icons')
-const { bool, object, string } = require('prop-types')
+const { bool, func, object, string } = require('prop-types')
 const { AccordionGroup } = require('../accordion')
 const { PluginAccordion } = require('./plugin-accordion')
 const { values } = Object
@@ -34,6 +34,7 @@ class PluginsPane extends Component {
     let { config } = this.state
     config[index] = data
     this.setState({ config })
+    this.props.onChange(config)
   }
 
   addPlugin = () => {
@@ -86,6 +87,7 @@ class PluginsPane extends Component {
     isActive: bool,
     name: string.isRequired,
     plugins: object.isRequired,
+    onChange: func.isRequired
   }
 }
 

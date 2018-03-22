@@ -14,7 +14,7 @@ const { keys } = Object
 const debounce = require('lodash.debounce')
 
 const load = async file => JSON.parse(await read(file))
-const save = (file, data) => write(file, JSON.stringify(data))
+const save = (file, data) => write(file, JSON.stringify(data, null, 2))
 
 const decompress = (...args) => require('decompress')(...args)
 const proxyRequire = (mod) => require(mod)
@@ -147,8 +147,8 @@ class Plugins extends EventEmitter {
     this.instances = {}
   }
 
-  save() {
-    return save(this.configFile, this.config)
+  save(config = this.config) {
+    return save(this.configFile, config)
   }
 
   scan(config = this.config) {

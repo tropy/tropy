@@ -114,6 +114,7 @@ class PrefsContainer extends PureComponent {
           <PluginsPane
             name="plugins"
             plugins={this.props.plugins}
+            onChange={this.props.onPluginsChange}
             isActive={this.isActive('plugins')}/>
         </div>
       </div>
@@ -137,7 +138,8 @@ class PrefsContainer extends PureComponent {
     onVocabDelete: func.isRequired,
     onVocabExport: func.isRequired,
     onVocabSave: func.isRequired,
-    onOntologyImport: func.isRequired
+    onOntologyImport: func.isRequired,
+    onPluginsChange: func.isRequired
   }
 
   static defaultProps = {
