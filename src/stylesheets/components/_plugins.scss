@@ -16,14 +16,21 @@
     padding: 0 $space-xs;
   }
 
+  .panel-header .disabled {
+    .panel-heading::after {
+      /* just an example of highlighting a disabled plugin */
+      content: ' [Disabled]';
+    }
+  }
+
   fieldset {
     background: $property-bg;
     padding: 5px $space-xs;
 
     label[title] {
-      // possibly highlight labels that have a title
-      /* text-decoration-line: underline; */
-      /* text-decoration-style: dotted; */
+      /* possibly highlight labels that have a title
+      text-decoration-line: underline;
+      text-decoration-style: dotted; */
     }
   }
 

@@ -42,7 +42,8 @@ class Plugins extends EventEmitter {
     const handlers = []
     for (const id in this.spec) {
       const { hooks, name } = this.spec[id]
-      if (hooks[action]) {
+      const { enabled } = this.config[id]
+      if (enabled && hooks[action]) {
         handlers.push({
           id,
           name: this.config[id].name || `${name} #${id}`
@@ -107,6 +108,9 @@ class Plugins extends EventEmitter {
     try {
       this.reset()
       this.config = await load(this.configFile)
+      this.config.forEach(config => {
+        config.enabled = !(config.enabled === false)
+      })
     } catch (error) {
       if (error.code !== 'ENOENT') {
         warn(`failed to load plugin config: ${error.message}`)

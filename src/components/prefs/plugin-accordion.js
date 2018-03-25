@@ -4,8 +4,9 @@ const React = require('react')
 const {
   arrayOf, bool, func, number, object, oneOf, oneOfType, shape, string
 } = require('prop-types')
+const cx = require('classnames')
 const { Accordion } = require('../accordion')
-const { IconBook16, IconTrash } = require('../icons')
+const { IconBook16, IconTrash, IconO } = require('../icons')
 const { Button, ButtonGroup } = require('../button')
 const { FormField, FormToggle, FormSelect } = require('../form')
 const { get, set } = require('../../common/util')
@@ -27,6 +28,10 @@ class PluginAccordion extends Accordion {
   }
 
   handleDelete = () => this.props.onDelete(this.props.index)
+
+  toggleEnabled = () => {
+    this.handleChange({ enabled: !this.props.config.enabled })
+  }
 
   renderField(config, option, idx) {
     const { field, label, hint } = option
@@ -52,9 +57,19 @@ class PluginAccordion extends Accordion {
     }
   }
 
+  get headerClasses() {
+    return {
+      'flex-row': true,
+      'center': true,
+      'panel-header-container': true,
+      'disabled': !this.props.config.enabled
+    }
+  }
+
   renderHeader() {
+    const { enabled } = this.props.config
     return super.renderHeader(
-      <div className="flex-row center panel-header-container">
+      <div className={cx(this.headerClasses)}>
         <IconBook16/>
         <h1 className="panel-heading">
           {this.props.config.name}
@@ -64,6 +79,11 @@ class PluginAccordion extends Accordion {
             <Button
               icon={<IconTrash/>}
               onClick={this.handleDelete}/>
+            <Button
+              icon={<IconO/>}
+              title={'prefs.plugins.' + (enabled ? 'disable' : 'enable')}
+              isActive={!enabled}
+              onClick={this.toggleEnabled}/>
           </ButtonGroup>}
       </div>
     )
@@ -81,7 +101,7 @@ class PluginAccordion extends Accordion {
     const { config, options } = this.props
 
     return super.renderBody(
-      <div>
+      <div className={cx({ disabled: !config.enabled })}>
         <header className="plugins-header">
           <FormField
             id="plugin.name"

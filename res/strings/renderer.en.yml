@@ -149,6 +149,8 @@ en:
         }
     plugins:
       label: Plugins
+      enable: Enable Plugin
+      disable: Disable Plugin
 
   item:
     created: Date Added
