@@ -45,7 +45,10 @@ class PluginsPane extends Component {
 
   addPlugin = () => {
     let { config } = this.state
-    config.concat({})
+    config = config.concat({
+      enabled: true,
+      options: {}
+    })
     this.setState({ config })
     this.accordion.setState({ open: this.state.config.length })
   }

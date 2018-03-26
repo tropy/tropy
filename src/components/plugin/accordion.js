@@ -93,8 +93,8 @@ class PluginAccordion extends Accordion {
     return this.props.config.plugin || ''
   }
 
-  optLabel(option) {
-    return option
+  optLabel = (option) => {
+    return option + ' ' + this.props.version
   }
 
   renderBody() {
