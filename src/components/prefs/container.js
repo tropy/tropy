@@ -9,7 +9,7 @@ const { TemplateEditor } = require('../template')
 const { VocabPane } = require('../vocab')
 const { PrefPane, PrefPaneToggle } = require('./pane')
 const { AppPrefs } = require('./app')
-const { PluginsPane } = require('./plugins')
+const { PluginsPane } = require('../plugin')
 const actions = require('../../actions')
 
 const {

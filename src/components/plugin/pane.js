@@ -7,7 +7,7 @@ const { Button } = require('../button')
 const { IconPlus } = require('../icons')
 const { bool, func, object, string } = require('prop-types')
 const { AccordionGroup } = require('../accordion')
-const { PluginAccordion } = require('./plugin-accordion')
+const { PluginAccordion } = require('./accordion')
 const { values } = Object
 const { uniq } = require('../../common/util')
 
