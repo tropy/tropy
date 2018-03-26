@@ -205,13 +205,14 @@ const util = {
   },
 
   set(src, path, value) {
-    if (typeof path == 'string') {
+    if (typeof path === 'string') {
       return util.set(src, path.split('.'), value)
-    } else if (path.length === 1 && value !== undefined) {
+    } else if (path.length === 1) {
       return src[path[0]] = value
     } else if (path.length === 0) {
       return src
     } else {
+      if (!src.hasOwnProperty(path[0])) src[path[0]] = {}
       return util.set(src[path[0]], path.slice(1), value)
     }
   },
