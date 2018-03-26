@@ -73,8 +73,8 @@ class PluginsPane extends Component {
                 return (
                   <PluginAccordion
                     config={config}
-                    version={version}
-                    options={options}
+                    version={config.plugin && version}
+                    options={config.plugin && options}
                     onChange={this.onChange}
                     onDelete={this.onDelete}
                     pluginOptions={this.pluginOptions}
