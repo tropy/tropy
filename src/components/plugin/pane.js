@@ -34,6 +34,7 @@ class PluginsPane extends Component {
     let { config } = this.state
     config[index] = data
     this.setState({ config })
+    this.newPlugin = data.plugin
     this.props.onChange(config)
   }
 
@@ -69,6 +70,10 @@ class PluginsPane extends Component {
               (config, idx) => {
                 let spec = this.props.plugins.spec[idx] || {}
                 let { version, options } = spec
+                if (!options && this.newPlugin) {
+                  options = values(this.props.plugins.spec)
+                    .find(s => s.name === this.newPlugin).options
+                }
                 return (
                   <PluginAccordion
                     config={config}
