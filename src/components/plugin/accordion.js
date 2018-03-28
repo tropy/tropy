@@ -23,6 +23,7 @@ class PluginAccordion extends Accordion {
     for (const field in data) {
       set(config, field, data[field])
     }
+    if (config.disabled === false) delete config.disabled
     this.props.onChange(this.props.index, config)
     this.forceUpdate()
   }
@@ -30,7 +31,7 @@ class PluginAccordion extends Accordion {
   handleDelete = () => this.props.onDelete(this.props.index)
 
   toggleEnabled = () => {
-    this.handleChange({ enabled: !this.props.config.enabled })
+    this.handleChange({ disabled: !this.props.config.disabled })
   }
 
   renderField(config, option, idx) {
@@ -62,12 +63,12 @@ class PluginAccordion extends Accordion {
       'flex-row': true,
       'center': true,
       'panel-header-container': true,
-      'disabled': !this.props.config.enabled
+      'disabled': this.props.config.disabled
     }
   }
 
   renderHeader() {
-    const { enabled } = this.props.config
+    const { disabled } = this.props.config
     return super.renderHeader(
       <div className={cx(this.headerClasses)}>
         <IconBook16/>
@@ -81,8 +82,8 @@ class PluginAccordion extends Accordion {
               onClick={this.handleDelete}/>
             <Button
               icon={<IconO/>}
-              title={'prefs.plugins.' + (enabled ? 'disable' : 'enable')}
-              isActive={!enabled}
+              title={'prefs.plugins.' + (disabled ? 'enable' : 'disable')}
+              isActive={disabled}
               onClick={this.toggleEnabled}/>
           </ButtonGroup>}
       </div>
@@ -101,7 +102,7 @@ class PluginAccordion extends Accordion {
     const { config, options } = this.props
 
     return super.renderBody(
-      <div className={cx({ disabled: !config.enabled })}>
+      <div className={cx({ disabled: config.disabled })}>
         <header className="plugins-header">
           <FormField
             id="plugin.name"

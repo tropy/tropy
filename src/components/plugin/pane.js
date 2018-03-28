@@ -46,7 +46,6 @@ class PluginsPane extends Component {
   addPlugin = () => {
     let { config } = this.state
     config = config.concat({
-      enabled: true,
       options: {}
     })
     this.setState({ config })
