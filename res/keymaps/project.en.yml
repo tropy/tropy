@@ -132,6 +132,9 @@ en:
       italic: CmdOrCtrl+i
       underline: CmdOrCtrl+u
       overline: CmdOrCtrl+o
+      subscript: Shift+CmdOrCtrl+B
+      superscript: Shift+CmdOrCtrl+P
+      strikethrough: Shift+CmdOrCtrl+T
       liftListItem: CmdOrCtrl+[
       sinkListItem: CmdOrCtrl+]
       addLink: CmdOrCtrl+l
