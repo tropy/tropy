@@ -401,7 +401,11 @@ class EsperView extends Component {
     this.pixi.renderer.resolution = dppx
     this.pixi.renderer.rootRenderTarget.resolution = dppx
     this.pixi.renderer.plugins.interaction.resolution = dppx
-    this.image.handleResolutionChange(dppx)
+
+    if (this.image != null) {
+      this.image.handleResolutionChange(dppx)
+    }
+
     this.resize(bounds(this.container))
   }
 
