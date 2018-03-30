@@ -4,7 +4,6 @@ const React = require('react')
 const { Component } = React
 const { PrefPane } = require('../prefs/pane')
 const { Button } = require('../button')
-const { IconPlus } = require('../icons')
 const { bool, func, object, string } = require('prop-types')
 const { AccordionGroup } = require('../accordion')
 const { PluginAccordion } = require('./accordion')
@@ -90,7 +89,8 @@ class PluginsPane extends Component {
         </div>
         <footer className="plugins-footer">
           <Button
-            icon={<IconPlus/>}
+            isDefault
+            text="prefs.plugins.install"
             onClick={this.addPlugin}/>
         </footer>
       </PrefPane>

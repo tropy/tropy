@@ -151,6 +151,7 @@ en:
       label: Plugins
       enable: Enable Plugin
       disable: Disable Plugin
+      install: Install Plugin
 
   item:
     created: Date Added
