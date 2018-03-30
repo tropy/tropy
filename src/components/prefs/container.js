@@ -73,7 +73,7 @@ class PrefsContainer extends PureComponent {
               <li>
                 <PrefPaneToggle
                   name="plugins"
-                  icon="IconMaze32"
+                  icon="IconPlugin"
                   isActive={this.isActive('plugins')}
                   onClick={this.toggle}/>
               </li>
