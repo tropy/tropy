@@ -390,20 +390,36 @@ class EsperView extends Component {
       y: this.image.y,
       zoom: this.image.scale.y
     })
+
+    if (this.shouldResolutionChange(this.image.scale.y)) {
+      this.handleResolutionChange()
+    }
   }
 
   setContainer = (container) => {
     this.container = container
   }
 
+  // On low-res screens, we render at 2x resolution
+  // when zooming out to improve quality. See #218
+  shouldResolutionChange(scale) {
+    let dppx = devicePixelRatio
+    let res = this.pixi.renderer.resolution
+    return (dppx === 1) && (scale < 1 ? res === 1 : res === 2)
+  }
+
   handleResolutionChange = () => {
-    const dppx = devicePixelRatio
+    let dppx = devicePixelRatio
+    let { image } = this
+
+    if (dppx === 1 && image != null && image.scale.y < 1) dppx = 2
+
     this.pixi.renderer.resolution = dppx
     this.pixi.renderer.rootRenderTarget.resolution = dppx
     this.pixi.renderer.plugins.interaction.resolution = dppx
 
-    if (this.image != null) {
-      this.image.handleResolutionChange(dppx)
+    if (image != null) {
+      image.handleResolutionChange(dppx)
     }
 
     this.resize(bounds(this.container))
