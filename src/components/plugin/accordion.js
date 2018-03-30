@@ -52,6 +52,7 @@ class PluginAccordion extends Accordion {
           <FormField {...common}
             value={this.getValue(option).toString()}/>)
       case 'bool':
+      case 'boolean':
         return <FormToggle {...common}/>
       default: // 'string' implied
         return <FormField {...common}/>
@@ -139,7 +140,7 @@ class PluginAccordion extends Accordion {
       required: bool,
       default: oneOfType([string, bool, number]),
       hint: string,
-      type: oneOf(['string', 'bool', 'number']),
+      type: oneOf(['string', 'bool', 'boolean', 'number']),
       label: string.isRequired
     })),
     pluginOptions: arrayOf(string)
