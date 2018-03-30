@@ -16,9 +16,10 @@ describe('Plugins', () => {
     expect(plugins.config[1]).to.have.keys(['plugin'])
   })
 
-  it('hooks can be scanned', () => {
-    expect(plugins.spec[0].hooks).to.have.property('sum', true)
-    expect(plugins.spec[1].hooks).to.have.property('export', false)
+  it('hooks can be scanned', async () => {
+    expect(plugins.spec['tropy-omeka'].hooks).to.have.property('export', true)
+    expect(plugins.spec['tropy-plugin'].hooks).to.have.property('export', false)
+    expect(plugins.spec['tropy-plugin'].hooks).to.have.property('sum', true)
   })
 
   describe('available()', () => {
@@ -49,7 +50,7 @@ describe('Plugins', () => {
 
   it('scanDirs()', async () => {
     expect(await plugins.scanDirs()).to.eql([
-      'node_modules/tropy-omeka',
+      'tropy-omeka',
       'tropy-plugin'
     ])
   })

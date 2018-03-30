@@ -43,15 +43,20 @@ class Plugins extends EventEmitter {
     }
   }
 
+  supportsHook(plugin, action) {
+    const { hooks } = this.spec[plugin]
+    return hooks && !!hooks[action]
+  }
+
   available(action) {
     const handlers = []
-    for (const id in this.spec) {
-      const { hooks, name } = this.spec[id]
-      const { disabled } = this.config[id]
-      if (!disabled && hooks[action]) {
+    for (const id in this.config) {
+      const { plugin, name, disabled } = this.config[id]
+      if (!this.supportsHook(plugin, action)) continue
+      if (!disabled) {
         handlers.push({
           id,
-          name: this.config[id].name || `${name} #${id}`
+          name: name || `${plugin} #${id}`
         })
       }
     }
@@ -99,7 +104,7 @@ class Plugins extends EventEmitter {
     try {
       const plugin = Plugins.basename(input)
       await decompress(input, join(this.root, plugin), { strip: 1 })
-      const spec = this.scan([{ plugin }])[0] || {}
+      const spec = (await this.scan([plugin]))[plugin] || {}
       await this.reloadAndScan()
       this.emit('change', { type: 'plugin', plugin, spec })
       verbose(`installed plugin ${spec.name || plugin} ${spec.version}`)
@@ -125,7 +130,7 @@ class Plugins extends EventEmitter {
 
   async reloadScanCreate() {
     await this.reload()
-    this.spec = this.scan()
+    this.spec = await this.scan()
     this.instances = this.create()
     verbose(`plugins loaded: ${keys(this.instances).length}`)
     return this
@@ -133,7 +138,7 @@ class Plugins extends EventEmitter {
 
   async reloadAndScan(autosave = false) {
     await this.reload(autosave)
-    this.spec = this.scan()
+    this.spec = await this.scan()
     verbose(`plugins scanned: ${keys(this.spec).length}`)
     return this
   }
@@ -164,7 +169,7 @@ class Plugins extends EventEmitter {
       dependencies = require(join(this.root, 'package.json')).dependencies
     } finally {
       keys(dependencies)
-        .forEach(pkg => packages.push(`node_modules/${pkg}`))
+        .forEach(pkg => packages.push(pkg))
     }
 
     await readdir(this.root)
@@ -177,17 +182,19 @@ class Plugins extends EventEmitter {
     return uniq(packages)
   }
 
-  scan(config = this.config) {
-    return config.reduce((acc, { plugin }, id) => {
+  async scan(dirs) {
+    if (!dirs) dirs = await this.scanDirs()
+    return dirs.reduce((acc, dir) => {
       try {
-        acc[id] = pick(this.require(join(plugin, 'package.json')), [
+        let pkg = pick(this.require(join(dir, 'package.json')), [
           'hooks',
           'options',
           'name',
           'version'
         ])
+        acc[pkg.name] = pkg
       } catch (error) {
-        warn(`failed to scan ${plugin} plugin: ${error.message}`)
+        warn(`failed to scan '${dir}' plugin: ${error.message}`)
       }
       return acc
     }, {})
