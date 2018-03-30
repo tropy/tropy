@@ -3,13 +3,18 @@
 require('./promisify')
 
 const {
-  mkdirAsync: mkdir, readFileAsync: read, writeFileAsync: write, watch
+  mkdirAsync: mkdir,
+  readFileAsync: read,
+  writeFileAsync: write,
+  readdirAsync: readdir,
+  statAsync: stat,
+  watch
 } = require('fs')
 
 const { EventEmitter } = require('events')
 const { basename, join } = require('path')
 const { warn, verbose, logger } = require('./log')
-const { pick } = require('./util')
+const { pick, uniq } = require('./util')
 const { keys } = Object
 const debounce = require('lodash.debounce')
 
@@ -150,6 +155,26 @@ class Plugins extends EventEmitter {
 
   save(config = this.config) {
     return save(this.configFile, config)
+  }
+
+  async scanDirs() {
+    let packages = []
+    let dependencies = {}
+    try {
+      dependencies = require(join(this.root, 'package.json')).dependencies
+    } finally {
+      keys(dependencies)
+        .forEach(pkg => packages.push(`node_modules/${pkg}`))
+    }
+
+    await readdir(this.root)
+      .each(async (dir) => {
+        let stats = await stat(join(this.root, dir))
+        if (dir === 'node_modules') return
+        if (!stats.isDirectory()) return
+        packages.push(dir)
+      })
+    return uniq(packages)
   }
 
   scan(config = this.config) {
