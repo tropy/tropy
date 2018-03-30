@@ -18,8 +18,8 @@
 
   .panel-header .disabled {
     .panel-heading::after {
-      /* just an example of highlighting a disabled plugin */
-      content: ' [Disabled]';
+      // just an example of highlighting a disabled plugin
+      content: " [Disabled]";
     }
   }
 
@@ -27,11 +27,11 @@
     background: $property-bg;
     padding: 5px $space-xs;
 
-    label[title] {
-      /* possibly highlight labels that have a title
-      text-decoration-line: underline;
-      text-decoration-style: dotted; */
-    }
+    //label[title] {
+      // possibly highlight labels that have a title
+      // text-decoration-line: underline;
+      // text-decoration-style: dotted;
+    //}
   }
 
   .plugins-footer {
