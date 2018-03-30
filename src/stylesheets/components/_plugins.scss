@@ -36,6 +36,12 @@
 
   .plugins-footer {
     flex: 0 0 auto;
-    padding: $space-xs ($space-lg + $space-sm - $btn-icon-padding);
+    display: flex;
+    justify-content: center;
+    padding: $space-lg;
+
+    .btn + .btn {
+      margin-left: $space-xs;
+    }
   }
 }
