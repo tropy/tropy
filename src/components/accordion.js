@@ -23,7 +23,7 @@ class Accordion extends PureComponent {
     return (
       <header
         className="panel-header"
-        onDoubleClick={this.props.canToggle ? this.handleToggle : null}>
+        onClick={this.props.canToggle ? this.handleToggle : null}>
         {header}
       </header>
     )
@@ -82,7 +82,7 @@ class AccordionGroup extends PureComponent {
 
   render() {
     return (
-      <div className={cx('panel-group', this.props.className)}>
+      <div className={cx('panel-group accordion', this.props.className)}>
         {Children.map(this.props.children, (acc, id) =>
           clone(acc, {
             id,
