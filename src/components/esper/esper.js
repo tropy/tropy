@@ -508,8 +508,8 @@ class Esper extends PureComponent {
       const mw = this.props.invertScroll ? -1 : 1
 
       this.handlePositionChange({
-        x: this.view.image.x + (dx * mw),
-        y: this.view.image.y + (dy * mw)
+        x: this.view.image.x + Math.round(dx * mw),
+        y: this.view.image.y + Math.round(dy * mw)
       })
     }
   }

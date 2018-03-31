@@ -39,7 +39,7 @@ class Import extends Command {
       let file = files[i]
 
       try {
-        let data = (yield call(Ontology.open, file, false)).toJSON()
+        let data = (yield call(Ontology.open, file, false)).toJSON(ARGS.locale)
 
         yield call(db.transaction, async tx => {
           for (let id in data) {

@@ -12,7 +12,7 @@
 --
 
 -- Save the current migration number
-PRAGMA user_version=1801241335;
+PRAGMA user_version=1803301510;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
