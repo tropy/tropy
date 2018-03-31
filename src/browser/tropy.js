@@ -52,6 +52,7 @@ class Tropy extends EventEmitter {
     theme: 'light',
     recent: [],
     updater: true,
+    webgl: true,
     win: {},
     zoom: 1.0
   }
@@ -677,7 +678,8 @@ class Tropy extends EventEmitter {
       locale: this.state.locale,
       uuid: this.state.uuid,
       update: this.updater.release,
-      version
+      version,
+      webgl: this.state.webgl
     }
   }
 

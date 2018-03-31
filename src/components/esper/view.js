@@ -34,6 +34,7 @@ class EsperView extends Component {
 
     this.pixi = new PIXI.Application({
       antialias: false,
+      forceCanvas: !ARGS.webgl,
       roundPixels: false,
       resolution: devicePixelRatio,
       transparent: true,
@@ -415,8 +416,11 @@ class EsperView extends Component {
     if (dppx === 1 && image != null && image.scale.y < 1) dppx = 2
 
     this.pixi.renderer.resolution = dppx
-    this.pixi.renderer.rootRenderTarget.resolution = dppx
     this.pixi.renderer.plugins.interaction.resolution = dppx
+
+    if (this.pixi.renderer.rootRenderTarget) {
+      this.pixi.renderer.rootRenderTarget.resolution = dppx
+    }
 
     if (image != null) {
       image.handleResolutionChange(dppx)
