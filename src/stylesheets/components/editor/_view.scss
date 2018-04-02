@@ -17,6 +17,7 @@
   //}
 
   .scroll-container {
+    display: flex; // Stretch prose-mirror-container
     overflow: auto;
     position: relative;
 
