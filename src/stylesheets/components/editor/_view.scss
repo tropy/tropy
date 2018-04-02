@@ -37,15 +37,18 @@
 
   .placeholder {
     position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
     font-size: $editor-font-size;
     line-height: $editor-line-height;
     color: $editor-placeholder-color;
 
     .horizontal & {
-      left: 50%;
       top: $prose-mirror-padding-start;
       width: $editor-size;
-      transform: translateX(-50%);
       max-width: $editor-max-size;
     }
 
@@ -59,10 +62,8 @@
     }
 
     .vertical-rl & {
-      top: 50%;
       right: $prose-mirror-padding-start;
       height: $editor-size;
-      transform: translateY(-50%);
       max-height: $editor-max-size;
     }
 
