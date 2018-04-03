@@ -56,6 +56,11 @@ class PluginsPane extends Component {
     this.accordion = accordion
   }
 
+  configs = (name) => {
+    return this.props.plugins.config
+      .filter(c => c.plugin === name)
+  }
+
   render() {
     return (
       <PrefPane
@@ -75,6 +80,7 @@ class PluginsPane extends Component {
                      version={spec.version}
                      hooks={spec.hooks}
                      options={spec.options}
+                     configs={this.configs(spec.name)}
                      key={idx}/>)
                })
             }

@@ -149,10 +149,10 @@ en:
         }
     plugins:
       label: Plugins
-      enable: Enable Plugin
-      disable: Disable Plugin
+      enable: Enable
+      disable: Disable
       install: Install Plugin
-
+      uninstall: Uninstall
   item:
     created: Date Added
     modified: Modified

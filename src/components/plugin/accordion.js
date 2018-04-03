@@ -6,30 +6,27 @@ const {
 } = require('prop-types')
 const cx = require('classnames')
 const { Accordion } = require('../accordion')
+const { Button } = require('../button')
+const { set } = require('../../common/util')
+const { PluginInstance } = require('./instance')
+
 
 class PluginAccordion extends Accordion {
-  /* getValue({ field, default: defaultValue }) {
-   *   const { options } = this.props.config
-   *   const value = get(options, field)
-   *   return typeof value !== 'undefined' ? value : defaultValue
-   * }
+  handleDelete = () => this.props.onDelete(this.props.index)
 
-   * handleChange = (data) => {
-   *   let config = this.props.config
-   *   for (const field in data) {
-   *     set(config, field, data[field])
-   *   }
-   *   if (config.disabled === false) delete config.disabled
-   *   this.props.onChange(this.props.index, config)
-   *   this.forceUpdate()
-   * }
+  handleChange = (data) => {
+    let config = this.props.config
+    for (const field in data) {
+      set(config, field, data[field])
+    }
+    if (config.disabled === false) delete config.disabled
+    this.props.onChange(this.props.index, config)
+    this.forceUpdate()
+  }
 
-   * handleDelete = () => this.props.onDelete(this.props.index)
-
-   * toggleEnabled = () => {
-   *   this.handleChange({ disabled: !this.props.config.disabled })
-   * }
-  */
+  toggleEnabled = () => {
+    this.handleChange({ disabled: !this.props.config.disabled })
+  }
 
   get headerClasses() {
     return {
@@ -37,7 +34,12 @@ class PluginAccordion extends Accordion {
     }
   }
 
+  get isDisabled() {
+    return this.props.configs.length === 0
+  }
+
   renderHeader() {
+    const { isDisabled } = this
     return super.renderHeader(
       <div className={cx(this.headerClasses)}>
         <h1 className="panel-heading">
@@ -45,12 +47,37 @@ class PluginAccordion extends Accordion {
           <span className="version">{this.props.version}</span>
         </h1>
         <div className="description">{this.props.description}</div>
+        <div className="controls">
+          <Button
+            isDefault
+            text="prefs.plugins.uninstall"
+            onClick={this.handleDelete}/>
+          <Button
+            isDefault
+            text={'prefs.plugins.' + (isDisabled ? 'enable' : 'disable')}
+            isActive={isDisabled}
+            onClick={this.toggleEnabled}/>
+        </div>
       </div>
     )
   }
 
   renderBody() {
-    return super.renderBody(<div>Hello</div>)
+    return super.renderBody(
+      <div>
+        <hr/>
+        {this.props.configs.map(
+        (config, idx) =>
+          <PluginInstance
+            key={idx}
+            plugin={config.plugin} />
+        )}
+      </div>
+    )
+  }
+
+  handleToggle = () => {
+    this.props.onToggle(this, true)
   }
 
   static propTypes = {
@@ -58,6 +85,7 @@ class PluginAccordion extends Accordion {
     label: string,
     version: string,
     description: string,
+    configs: arrayOf(object),
     options: arrayOf(shape({
       field: string.isRequired,
       required: bool,
