@@ -263,12 +263,6 @@ $progress-bar-height: $space-min;
 $progress-value-border-radius: $progress-bar-height / 2;
 
 
-// Notepad
-// --------------------------------------------------
-
-$notepad-min-height: const("NOTEPAD.MIN_HEIGHT") * 1px;
-
-
 // Editor
 // --------------------------------------------------
 
@@ -284,8 +278,7 @@ $blockquote-padding:          1em;
 $editor-hr-border:            2px;
 $sup-and-sub-font-size:       1em * 2 / 3;
 $link-target-width:           400px;
-$prose-mirror-padding-start:  70px; // ~ 2 blank lines
-$prose-mirror-padding-end:    40px; // ~ blank line
+$editor-padding:              48px;
 
 
 // Toolbar

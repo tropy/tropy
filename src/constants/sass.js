@@ -130,6 +130,10 @@ const NOTEPAD = {
   MIN_HEIGHT: 100
 }
 
+const EDITOR = {
+  MAX_PADDING: 48
+}
+
 const NOTE = {
   ROW_HEIGHT: 60
 }
@@ -220,6 +224,7 @@ module.exports =  {
   ABOUT,
   ACTIVITY,
   COLUMN,
+  EDITOR,
   ESPER,
   FONTSIZE,
   GRID,
