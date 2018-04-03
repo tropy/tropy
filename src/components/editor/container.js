@@ -106,7 +106,7 @@ class Editor extends Component {
   }
 
   handleResize = ({ width, height }) => {
-    const dim = (this.props.mode === 'vertical') ? width : height
+    const dim = (this.props.mode !== 'horizontal') ? width : height
     this.container.style.setProperty(
       '--editor-padding',
       `${restrict(Math.round(dim / 10), 0, EDITOR.MAX_PADDING)}px`
