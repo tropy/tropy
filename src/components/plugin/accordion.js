@@ -70,6 +70,10 @@ class PluginAccordion extends Accordion {
         (config, idx) =>
           <PluginInstance
             key={idx}
+            index={idx + 1}
+            guiOptions={this.props.options}
+            name={config.name}
+            options={config.options}
             plugin={config.plugin} />
         )}
       </div>
