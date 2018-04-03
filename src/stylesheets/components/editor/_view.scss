@@ -5,6 +5,8 @@
 // --------------------------------------------------
 
 .editor {
+  --editor-padding: 48px;
+
   flex: 1 1 0;
   display: flex;
   flex-direction: column;
@@ -47,7 +49,7 @@
     color: $editor-placeholder-color;
 
     .horizontal & {
-      top: $prose-mirror-padding-start;
+      top: var(--editor-padding);
       width: $editor-size;
       max-width: $editor-max-size;
     }
@@ -62,7 +64,7 @@
     }
 
     .vertical-rl & {
-      right: $prose-mirror-padding-start;
+      right: var(--editor-padding);
       height: $editor-size;
       max-height: $editor-max-size;
     }
@@ -126,8 +128,9 @@
   //padding-top: $toolbar-height + 1px + $prose-mirror-padding-start
 
   .horizontal & {
-    padding-top: $prose-mirror-padding-start;
-    padding-bottom: $prose-mirror-padding-end;
+
+    padding-top: var(--editor-padding);
+    padding-bottom: var(--editor-padding);
   }
 
   .horizontal.numbers & {
@@ -135,8 +138,8 @@
   }
 
   .vertical-rl & {
-    padding-right: $prose-mirror-padding-start;
-    padding-left: $prose-mirror-padding-end;
+    padding-right: var(--editor-padding);
+    padding-left: var(--editor-padding);
   }
 
   .vertical-rl.numbers & {
