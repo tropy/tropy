@@ -3,9 +3,23 @@
 // --------------------------------------------------
 
 .plugins {
+  .panel-heading {
+    font-size: $font-size-large;
+
+    .version {
+      margin-left: 5px;
+      font-size: $font-size-base;
+    }
+  }
+
   .panel {
     background-color: $vocab-panel-bg;
+
+    .panel-header {
+      flex: 0 0 60px;
+    }
   }
+
 
   .panel-body {
     padding: $space-sm $default-padding-horizontal;

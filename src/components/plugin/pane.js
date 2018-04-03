@@ -65,25 +65,18 @@ class PluginsPane extends Component {
           <AccordionGroup
             ref={this.setAccordion}
             className="form-horizontal">
-            {this.state.config.map(
-              (config, idx) => {
-                let spec = this.props.plugins.spec[idx] || {}
-                let { version, options } = spec
-                if (!options && this.newPlugin) {
-                  options = values(this.props.plugins.spec)
-                    .find(s => s.name === this.newPlugin).options
-                }
-                return (
-                  <PluginAccordion
-                    config={config}
-                    version={config.plugin && version}
-                    options={config.plugin && options}
-                    onChange={this.onChange}
-                    onDelete={this.onDelete}
-                    pluginOptions={this.pluginOptions}
-                    index={idx}
-                    key={idx}/>)
-              })
+            {values(this.props.plugins.spec).map(
+               (spec, idx) => {
+                 return (
+                   <PluginAccordion
+                     name={spec.name}
+                     label={spec.label}
+                     description={spec.description}
+                     version={spec.version}
+                     hooks={spec.hooks}
+                     options={spec.options}
+                     key={idx}/>)
+               })
             }
           </AccordionGroup>
         </div>

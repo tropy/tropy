@@ -187,9 +187,11 @@ class Plugins extends EventEmitter {
     return dirs.reduce((acc, dir) => {
       try {
         let pkg = pick(this.require(join(dir, 'package.json')), [
+          'description',
           'hooks',
-          'options',
+          'label',
           'name',
+          'options',
           'version'
         ])
         acc[pkg.name] = pkg
