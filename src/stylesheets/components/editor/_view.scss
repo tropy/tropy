@@ -5,7 +5,7 @@
 // --------------------------------------------------
 
 .editor {
-  --editor-padding: 48px;
+  --editor-padding: #{$editor-padding};
 
   flex: 1 1 0;
   display: flex;
@@ -128,7 +128,6 @@
   //padding-top: $toolbar-height + 1px + $prose-mirror-padding-start
 
   .horizontal & {
-
     padding-top: var(--editor-padding);
     padding-bottom: var(--editor-padding);
   }
