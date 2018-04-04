@@ -38,6 +38,13 @@ class PluginAccordion extends Accordion {
     return this.props.configs.length === 0
   }
 
+  get classes() {
+    return {
+      ...super.classes,
+      enabled: !this.isDisabled
+    }
+  }
+
   renderHeader() {
     const { isDisabled } = this
     return super.renderHeader(
