@@ -12,7 +12,10 @@ const { PluginInstance } = require('./instance')
 
 
 class PluginAccordion extends Accordion {
-  handleDelete = () => this.props.onDelete(this.props.index)
+  handleUninstall = (event) =>  {
+    this.props.onUninstall(this.props.plugin)
+    event.stopPropagation()
+  }
 
   handleChange = (data) => {
     let config = this.props.config
@@ -24,8 +27,8 @@ class PluginAccordion extends Accordion {
     this.forceUpdate()
   }
 
-  toggleEnabled = () => {
-    this.handleChange({ disabled: !this.props.config.disabled })
+  toggleEnabled = (event) => {
+    event.stopPropagation()
   }
 
   get headerClasses() {
@@ -63,7 +66,7 @@ class PluginAccordion extends Accordion {
           <Button
             isDefault
             text="prefs.plugins.uninstall"
-            onClick={this.handleDelete}/>
+            onClick={this.handleUninstall}/>
         </ButtonGroup>
       </div>
     )
@@ -91,10 +94,6 @@ class PluginAccordion extends Accordion {
     )
   }
 
-  handleToggle = () => {
-    this.props.onToggle(this, true)
-  }
-
   static propTypes = {
     name: string.isRequired,
     label: string,
@@ -102,6 +101,7 @@ class PluginAccordion extends Accordion {
     description: string,
     onDelete: func.isRequired,
     onInsert: func.isRequired,
+    onUninstall: func.isRequired,
     configs: arrayOf(object),
     options: arrayOf(shape({
       field: string.isRequired,
