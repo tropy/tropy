@@ -45,9 +45,6 @@ class PluginsPane extends Component {
     this.setState({ config })
   }
 
-  onUninstall = (plugin) => {
-  }
-
   idx = (plugin, index) => {
     let cfg = this.state.config
       .filter(c => c.plugin === plugin)[index]
@@ -101,7 +98,7 @@ class PluginsPane extends Component {
                      onChange={this.onChange}
                      onDelete={this.onDelete}
                      onInsert={this.onInsert}
-                     onUninstall={this.onUninstall}
+                     onUninstall={this.props.plugins.uninstall}
                      key={idx}/>)
                })
             }
