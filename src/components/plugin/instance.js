@@ -6,7 +6,7 @@ const {
   arrayOf, bool, func, number, oneOf, object, oneOfType, shape, string
 } = require('prop-types')
 const { FormField, FormToggle } = require('../form')
-const { get } = require('../../common/util')
+const { get, set } = require('../../common/util')
 const { IconPlusCircle, IconMinusCircle } = require('../icons')
 const { Button } = require('../button')
 
@@ -54,6 +54,15 @@ class PluginInstance extends PureComponent {
     this.props.onDelete(this.props.plugin, this.props.index)
   }
 
+  handleChange = (data) => {
+    let { config, index, plugin } = this.props
+    for (const field in data) {
+      set(config, field, data[field])
+    }
+    this.props.onChange(plugin, index, config)
+    this.forceUpdate()
+  }
+
   render() {
     return (
       <li className="plugin-instance">
@@ -84,8 +93,10 @@ class PluginInstance extends PureComponent {
     name: string,
     index: number,
     options: object,
+    config: object,
     onDelete: func.isRequired,
     onInsert: func.isRequired,
+    onChange: func.isRequired,
     guiOptions: arrayOf(shape({
       field: string.isRequired,
       required: bool,

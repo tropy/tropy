@@ -7,7 +7,6 @@ const {
 const cx = require('classnames')
 const { Accordion } = require('../accordion')
 const { Button, ButtonGroup } = require('../button')
-const { set } = require('../../common/util')
 const { PluginInstance } = require('./instance')
 
 
@@ -15,16 +14,6 @@ class PluginAccordion extends Accordion {
   handleUninstall = (event) =>  {
     this.props.onUninstall(this.props.plugin)
     event.stopPropagation()
-  }
-
-  handleChange = (data) => {
-    let config = this.props.config
-    for (const field in data) {
-      set(config, field, data[field])
-    }
-    if (config.disabled === false) delete config.disabled
-    this.props.onChange(this.props.index, config)
-    this.forceUpdate()
   }
 
   toggleEnabled = (event) => {
@@ -102,8 +91,10 @@ class PluginAccordion extends Accordion {
                  key={idx}
                  index={idx}
                  guiOptions={this.props.options}
+                 config={config}
                  name={config.name}
                  options={config.options}
+                 onChange={this.props.onChange}
                  onDelete={this.props.onDelete}
                  onInsert={this.props.onInsert}
                  plugin={config.plugin} />
