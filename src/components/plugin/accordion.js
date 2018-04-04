@@ -28,6 +28,21 @@ class PluginAccordion extends Accordion {
   }
 
   toggleEnabled = (event) => {
+    let disabled = this.isDisabled
+    this.props.configs.map((config, idx) => {
+      let newConfig = config
+      if (disabled) {
+        delete newConfig.disabled
+      } else {
+        newConfig.disabled = true
+      }
+      this.props.onChange(this.props.name, idx, newConfig)
+    })
+
+    if (disabled && !this.configs.length) {
+      this.props.onInsert(this.props.name, -1)
+    }
+
     event.stopPropagation()
   }
 
@@ -37,8 +52,12 @@ class PluginAccordion extends Accordion {
     }
   }
 
+  get configs() {
+    return this.props.configs.filter(c => !c.disabled)
+  }
+
   get isDisabled() {
-    return this.props.configs.length === 0
+    return !this.configs.length
   }
 
   get classes() {
@@ -77,7 +96,7 @@ class PluginAccordion extends Accordion {
       <div>
         <hr/>
         <ul>
-          {this.props.configs.map(
+          {this.configs.map(
              (config, idx) =>
                <PluginInstance
                  key={idx}
@@ -99,6 +118,7 @@ class PluginAccordion extends Accordion {
     label: string,
     version: string,
     description: string,
+    onChange: func.isRequired,
     onDelete: func.isRequired,
     onInsert: func.isRequired,
     onUninstall: func.isRequired,

@@ -29,11 +29,10 @@ class PluginsPane extends Component {
           .map(s => s.name)))
   }
 
-  onChange = (index, data) => {
+  onChange = (plugin, index, newConfig) => {
     let { config } = this.state
-    config[index] = data
+    config[this.idx(plugin, index)] = newConfig
     this.setState({ config })
-    this.newPlugin = data.plugin
     this.props.onChange(config)
   }
 
@@ -99,6 +98,7 @@ class PluginsPane extends Component {
                      hooks={spec.hooks}
                      options={spec.options}
                      configs={this.configs(spec.name)}
+                     onChange={this.onChange}
                      onDelete={this.onDelete}
                      onInsert={this.onInsert}
                      onUninstall={this.onUninstall}
