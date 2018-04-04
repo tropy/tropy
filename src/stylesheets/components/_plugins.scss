@@ -36,17 +36,39 @@
     }
   }
 
-  fieldset {
-    background: $property-bg;
-    padding: 5px $space-xs;
-    margin: 5px 0;
+  li.plugin-instance {
+    display: flex;
+    align-items: center;
+    margin-bottom: $space-min;
+    position: relative;
 
-    // possibly highlight labels that have a title
-    // label[title] {
-    //   text-decoration-line: underline;
-    //   text-decoration-style: dotted;
-    // }
+    fieldset {
+      background: $property-bg;
+      padding: 5px $space-xs;
+      margin: 5px 6px 5px 0;
+      flex: 1 1 auto;
+
+      // possibly highlight labels that have a title
+      // label[title] {
+      //   text-decoration-line: underline;
+      //   text-decoration-style: dotted;
+      // }
+    }
+
+    .btn-group {
+      flex: 0 0 auto;
+      width: 2 * ($space-md + $space-min);
+    }
+
+    .btn-icon {
+      flex: 0 0 auto;
+      padding: {
+        left: 2px;
+        right: 2px;
+      }
+    }
   }
+
 
   .plugins-footer {
     flex: 0 0 auto;

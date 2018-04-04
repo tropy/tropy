@@ -66,16 +66,18 @@ class PluginAccordion extends Accordion {
     return super.renderBody(
       <div>
         <hr/>
-        {this.props.configs.map(
-        (config, idx) =>
-          <PluginInstance
-            key={idx}
-            index={idx + 1}
-            guiOptions={this.props.options}
-            name={config.name}
-            options={config.options}
-            plugin={config.plugin} />
-        )}
+        <ul>
+          {this.props.configs.map(
+          (config, idx) =>
+            <PluginInstance
+              key={idx}
+              index={idx + 1}
+              guiOptions={this.props.options}
+              name={config.name}
+              options={config.options}
+              plugin={config.plugin} />
+          )}
+        </ul>
       </div>
     )
   }

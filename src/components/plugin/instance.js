@@ -7,6 +7,9 @@ const {
 } = require('prop-types')
 const { FormField, FormToggle } = require('../form')
 const { get } = require('../../common/util')
+const { IconPlusCircle, IconMinusCircle } = require('../icons')
+const { Button } = require('../button')
+
 
 class PluginInstance extends PureComponent {
   getValue({ field, default: defaultValue }) {
@@ -43,18 +46,35 @@ class PluginInstance extends PureComponent {
     return this.props.index * 100
   }
 
+  handleInsert = () => {
+  }
+
+  handleRemove = () => {
+  }
+
   render() {
     return (
-      <fieldset>
-        <FormField
-          id="plugin.name"
-          name="name"
-          value={this.props.name}
-          tabIndex={this.idx}
-          onChange={this.handleChange}/>
-        {this.props.guiOptions.map((option, idx) =>
-          this.renderField(option, this.idx + idx + 1))}
-      </fieldset>)
+      <li className="plugin-instance">
+        <fieldset>
+          <FormField
+            id="plugin.name"
+            name="name"
+            value={this.props.name}
+            tabIndex={this.idx}
+            onChange={this.handleChange}/>
+          {this.props.guiOptions.map((option, idx) =>
+            this.renderField(option, this.idx + idx + 1))}
+        </fieldset>
+        <div className="btn-group">
+          <Button
+            icon={<IconPlusCircle/>}
+            onClick={this.handleInsert}/>
+          <Button
+            icon={<IconMinusCircle/>}
+            onClick={this.handleRemove}/>
+        </div>
+      </li>
+    )
   }
 
   static propTypes = {
