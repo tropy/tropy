@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = require('react')
 const {
-  arrayOf, bool, number, oneOf, object, oneOfType, shape, string
+  arrayOf, bool, func, number, oneOf, object, oneOfType, shape, string
 } = require('prop-types')
 const { FormField, FormToggle } = require('../form')
 const { get } = require('../../common/util')
@@ -43,13 +43,15 @@ class PluginInstance extends PureComponent {
   }
 
   get idx() {
-    return this.props.index * 100
+    return (this.props.index + 1) * 100
   }
 
   handleInsert = () => {
+    this.props.onInsert(this.props.plugin, this.props.index)
   }
 
   handleRemove = () => {
+    this.props.onDelete(this.props.plugin, this.props.index)
   }
 
   render() {
@@ -82,6 +84,8 @@ class PluginInstance extends PureComponent {
     name: string,
     index: number,
     options: object,
+    onDelete: func.isRequired,
+    onInsert: func.isRequired,
     guiOptions: arrayOf(shape({
       field: string.isRequired,
       required: bool,

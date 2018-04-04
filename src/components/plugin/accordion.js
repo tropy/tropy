@@ -2,11 +2,11 @@
 
 const React = require('react')
 const {
-  arrayOf, bool, number, object, oneOf, oneOfType, shape, string
+  arrayOf, bool, func, number, object, oneOf, oneOfType, shape, string
 } = require('prop-types')
 const cx = require('classnames')
 const { Accordion } = require('../accordion')
-const { Button } = require('../button')
+const { Button, ButtonGroup } = require('../button')
 const { set } = require('../../common/util')
 const { PluginInstance } = require('./instance')
 
@@ -47,7 +47,7 @@ class PluginAccordion extends Accordion {
           <span className="version">{this.props.version}</span>
         </h1>
         <div className="description">{this.props.description}</div>
-        <div className="controls">
+        <ButtonGroup>
           <Button
             isDefault
             text={'prefs.plugins.' + (isDisabled ? 'enable' : 'disable')}
@@ -57,7 +57,7 @@ class PluginAccordion extends Accordion {
             isDefault
             text="prefs.plugins.uninstall"
             onClick={this.handleDelete}/>
-        </div>
+        </ButtonGroup>
       </div>
     )
   }
@@ -68,14 +68,16 @@ class PluginAccordion extends Accordion {
         <hr/>
         <ul>
           {this.props.configs.map(
-          (config, idx) =>
-            <PluginInstance
-              key={idx}
-              index={idx + 1}
-              guiOptions={this.props.options}
-              name={config.name}
-              options={config.options}
-              plugin={config.plugin} />
+             (config, idx) =>
+               <PluginInstance
+                 key={idx}
+                 index={idx}
+                 guiOptions={this.props.options}
+                 name={config.name}
+                 options={config.options}
+                 onDelete={this.props.onDelete}
+                 onInsert={this.props.onInsert}
+                 plugin={config.plugin} />
           )}
         </ul>
       </div>
@@ -91,6 +93,8 @@ class PluginAccordion extends Accordion {
     label: string,
     version: string,
     description: string,
+    onDelete: func.isRequired,
+    onInsert: func.isRequired,
     configs: arrayOf(object),
     options: arrayOf(shape({
       field: string.isRequired,

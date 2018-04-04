@@ -37,9 +37,24 @@ class PluginsPane extends Component {
     this.props.onChange(config)
   }
 
-  onDelete = (index) => {
+  onInsert = (plugin, index) => {
     let { config } = this.state
-    config.splice(index, 1)
+    config.splice(this.idx(plugin, index) + 1, 0, {
+      plugin,
+      options: {}
+    })
+    this.setState({ config })
+  }
+
+  idx = (plugin, index) => {
+    let cfg = this.state.config
+      .filter(c => c.plugin === plugin)[index]
+    return this.state.config.findIndex(c => c === cfg)
+  }
+
+  onDelete = (plugin, index) => {
+    let { config } = this.state
+    config.splice(this.idx(plugin, index), 1)
     this.setState({ config })
   }
 
@@ -81,6 +96,8 @@ class PluginsPane extends Component {
                      hooks={spec.hooks}
                      options={spec.options}
                      configs={this.configs(spec.name)}
+                     onDelete={this.onDelete}
+                     onInsert={this.onInsert}
                      key={idx}/>)
                })
             }
