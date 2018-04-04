@@ -67,11 +67,11 @@ class PluginInstance extends PureComponent {
         </fieldset>
         <div className="btn-group">
           <Button
-            icon={<IconPlusCircle/>}
-            onClick={this.handleInsert}/>
-          <Button
             icon={<IconMinusCircle/>}
             onClick={this.handleRemove}/>
+          <Button
+            icon={<IconPlusCircle/>}
+            onClick={this.handleInsert}/>
         </div>
       </li>
     )

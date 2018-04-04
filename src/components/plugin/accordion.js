@@ -50,13 +50,13 @@ class PluginAccordion extends Accordion {
         <div className="controls">
           <Button
             isDefault
-            text="prefs.plugins.uninstall"
-            onClick={this.handleDelete}/>
-          <Button
-            isDefault
             text={'prefs.plugins.' + (isDisabled ? 'enable' : 'disable')}
             isActive={isDisabled}
             onClick={this.toggleEnabled}/>
+          <Button
+            isDefault
+            text="prefs.plugins.uninstall"
+            onClick={this.handleDelete}/>
         </div>
       </div>
     )
