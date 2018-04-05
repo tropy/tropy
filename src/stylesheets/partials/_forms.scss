@@ -9,9 +9,10 @@
 }
 
 fieldset {
+  flex: 1 1 auto;
   border: 0;
   margin: 0;
-  padding: 0;
+  padding: 5px $space-xs;
   background: $fieldset-bg;
   border-radius: $border-radius-small;
 

@@ -9,13 +9,14 @@
     }
 
     .panel-header-container {
-      padding-top: $space-sm; // check
-      padding-bottom: $space-sm; // check
+      padding-top: $space-sm + 2px; // 20px to x-height
+      padding-bottom: $space-sm;
     }
 
     .panel-heading {
       font-size: $h1-font-size;
       line-height: $headings-line-height;
+      margin-bottom: 1px;
 
       .version {
         font-size: $font-size-base;
@@ -24,6 +25,10 @@
 
     .description {
       margin: 0;
+    }
+
+    .flex-row {
+      margin-top: $space-sm - 5px;
     }
 
     .panel-body {
@@ -63,9 +68,16 @@
     }
 
     fieldset {
-      flex: 1 1 auto;
+      margin-right: 6px;
       background: $plugin-instance-bg;
-      padding: 5px $space-xs;
+    }
+
+    .btn-icon {
+      flex: 0 0 auto;
+      padding: {
+        left: 2px;
+        right: 2px;
+      }
     }
   }
 
