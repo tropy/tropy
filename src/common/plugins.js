@@ -168,9 +168,11 @@ class Plugins extends EventEmitter {
 
   async scanDirs() {
     let packages = []
-    let dependencies = {}
+    let dependencies
     try {
       dependencies = require(join(this.root, 'package.json')).dependencies
+    } catch (err) {
+      dependencies = {}
     } finally {
       keys(dependencies)
         .forEach(pkg => packages.push(pkg))
