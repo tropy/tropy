@@ -12,7 +12,7 @@ const { injectIntl, intlShape } = require('react-intl')
 
 class PluginAccordion extends Accordion {
   handleUninstall = (event) =>  {
-    this.props.onUninstall(this.props.plugin)
+    this.props.onUninstall(this.props.name)
     event.stopPropagation()
   }
 

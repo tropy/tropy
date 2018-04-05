@@ -11,8 +11,9 @@ const {
   watch
 } = require('fs')
 
+const { shell } = require('electron')
 const { EventEmitter } = require('events')
-const { basename, join } = require('path')
+const { basename, join, resolve } = require('path')
 const { warn, verbose, logger } = require('./log')
 const { pick, uniq } = require('./util')
 const { keys } = Object
@@ -114,8 +115,17 @@ class Plugins extends EventEmitter {
     return this
   }
 
-  async uninstall() {
-    // TODO
+  async uninstall(plugin) {
+    const dir = resolve(join(this.root, plugin))
+    try {
+      const stats = await stat(dir)
+      if (!stats.isDirectory()) return
+    } catch (err) { return }
+    if (shell.moveItemToTrash(dir)) {
+      await this.reloadAndScan()
+    } else {
+      warn(`failed to uninstall plugin: ${plugin}`)
+    }
   }
 
   async reload(autosave = false) {

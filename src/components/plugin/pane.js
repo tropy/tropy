@@ -13,13 +13,15 @@ class PluginsPane extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      config: props.plugins.config
+      config: props.plugins.config,
+      spec: props.plugins.spec
     }
   }
 
   componentWillReceiveProps(props) {
     this.setState({
-      config: props.plugins.config
+      config: props.plugins.config,
+      spec: props.plugins.spec
     })
   }
 
@@ -60,6 +62,13 @@ class PluginsPane extends Component {
     this.accordion.setState({ open: this.state.config.length })
   }
 
+  onUninstall = (plugin) => {
+    this.props.plugins.uninstall(plugin)
+      .then(() => this.setState({
+        spec: this.props.plugins.spec
+      }))
+  }
+
   setAccordion = (accordion) => {
     this.accordion = accordion
   }
@@ -78,7 +87,7 @@ class PluginsPane extends Component {
           <AccordionGroup
             ref={this.setAccordion}
             className="form-horizontal">
-            {values(this.props.plugins.spec).map(
+            {values(this.state.spec).map(
                (spec, idx) => {
                  return (
                    <PluginAccordion
@@ -93,7 +102,7 @@ class PluginsPane extends Component {
                      onChange={this.onChange}
                      onDelete={this.onDelete}
                      onInsert={this.onInsert}
-                     onUninstall={this.props.plugins.uninstall}
+                     onUninstall={this.onUninstall}
                      key={idx}/>)
                })
             }
