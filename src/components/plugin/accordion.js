@@ -46,7 +46,7 @@ class PluginAccordion extends Accordion {
   get classes() {
     return {
       ...super.classes,
-      enabled: !this.isDisabled
+      disabled: this.isDisabled
     }
   }
 
@@ -99,7 +99,6 @@ class PluginAccordion extends Accordion {
   renderBody() {
     return super.renderBody(
       <div>
-        <hr/>
         <ul>
           {this.configs.map(
              (config, idx) =>

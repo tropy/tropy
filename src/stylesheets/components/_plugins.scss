@@ -3,77 +3,20 @@
 // --------------------------------------------------
 
 .plugins {
-  .panel-heading {
-    font-size: $font-size-large;
-
-    .version {
-      margin-left: 5px;
-      font-size: $font-size-base;
-    }
-  }
-
   .panel {
-    background-color: $vocab-panel-bg;
-
-    &.enabled {
-      // sass-lint:disable no-color-literals
-      border-left: 2px solid #0a0;
+    .panel-heading {
+      font-size: $h1-font-size;
+      line-height: $headings-line-height;
     }
 
-    .panel-header {
-      flex: 0 0 80px;
-    }
-  }
-
-  .panel-body {
-    padding: $space-sm $default-padding-horizontal;
-  }
-
-  .plugins-header {
-    margin-bottom: $space-sm;
-    padding: 0 $space-xs;
-  }
-
-  .panel-header .disabled {
-    .panel-heading::after {
-      // just an example of highlighting a disabled plugin
-      content: " [Disabled]";
-    }
-  }
-
-  .plugin-instance {
-    display: flex;
-    align-items: center;
-    margin-bottom: $space-min;
-    position: relative;
-
-    fieldset {
-      background: $property-bg;
-      padding: 5px $space-xs;
-      margin: 5px 6px 5px 0;
-      flex: 1 1 auto;
-
-      // possibly highlight labels that have a title
-      // label[title] {
-      //   text-decoration-line: underline;
-      //   text-decoration-style: dotted;
-      // }
-    }
-
-    .btn-group {
-      flex: 0 0 auto;
-      width: 2 * ($space-md + $space-min);
-    }
-
-    .btn-icon {
-      flex: 0 0 auto;
-      padding: {
-        left: 2px;
-        right: 2px;
+    &.disabled {
+      .panel-header-container {
+        > *:not(.btn-group) {
+          opacity: 0.5;
+        }
       }
     }
   }
-
 
   .plugins-footer {
     flex: 0 0 auto;

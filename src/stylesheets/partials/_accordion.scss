@@ -1,0 +1,14 @@
+//
+// Accordion
+// --------------------------------------------------
+
+.accordion {
+  .panel {
+    background-color: $accordion-bg;
+
+    .panel-header {
+      flex: 1 1 auto;
+      contain: none; // todo
+    }
+  }
+}
