@@ -39,6 +39,7 @@ class PluginsPane extends Component {
       options: {}
     })
     this.setState({ config })
+    this.props.onChange(config)
   }
 
   idx = (plugin, index) => {
@@ -51,6 +52,7 @@ class PluginsPane extends Component {
     let { config } = this.state
     config.splice(this.idx(plugin, index), 1)
     this.setState({ config })
+    this.props.onChange(config)
   }
 
   addPlugin = () => {
@@ -98,6 +100,7 @@ class PluginsPane extends Component {
                      hooks={spec.hooks}
                      options={spec.options}
                      repository={spec.repository}
+                     source={spec.source}
                      configs={this.configs(spec.name)}
                      onChange={this.onChange}
                      onDelete={this.onDelete}

@@ -12,6 +12,9 @@ const { injectIntl, intlShape } = require('react-intl')
 
 class PluginAccordion extends Accordion {
   handleUninstall = (event) =>  {
+    this.props.configs.map((config, idx) => {
+      this.props.onDelete(this.props.name, idx)
+    })
     this.props.onUninstall(this.props.name)
     event.stopPropagation()
   }
@@ -61,6 +64,10 @@ class PluginAccordion extends Accordion {
       .replace(/^bitbucket:/, 'https://bitbucket.org/')
   }
 
+  get canUninstall() {
+    return this.props.source === 'directory'
+  }
+
   renderLink(id, url, ...options) {
     const { intl } = this.props
     const title = intl.formatMessage(
@@ -89,10 +96,11 @@ class PluginAccordion extends Accordion {
               text={'prefs.plugins.' + (isDisabled ? 'enable' : 'disable')}
               isActive={isDisabled}
               onClick={this.toggleEnabled}/>
-            <Button
-              isDefault
-              text="prefs.plugins.uninstall"
-              onClick={this.handleUninstall}/>
+            {this.canUninstall &&
+              <Button
+                isDefault
+                text="prefs.plugins.uninstall"
+                onClick={this.handleUninstall}/>}
           </ButtonGroup>
         </div>
       </div>
@@ -125,6 +133,7 @@ class PluginAccordion extends Accordion {
     label: string,
     version: string,
     description: string,
+    source: string.isRequired,
     repository: oneOfType([string, object]),
     onChange: func.isRequired,
     onDelete: func.isRequired,
