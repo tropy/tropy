@@ -169,8 +169,8 @@ class TemplateField extends PureComponent {
           </fieldset>
         )}
         <div className="btn-group">
-          {this.renderInsertButton()}
           {this.renderRemoveButton()}
+          {this.renderInsertButton()}
         </div>
       </li>
     )
