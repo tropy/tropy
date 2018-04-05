@@ -206,7 +206,8 @@ $list-active-bg:         var(--shade-3);
 $list-active-icon-color: var(--shade-7);
 
 // Accordion
-$accordion-bg: var(--shade-1-darken-4);
+$accordion-bg:           var(--shade-1-darken-4);
+$accordion-border-color: var(--shade-3-darken-4);
 
 
 // Components
@@ -393,6 +394,10 @@ $vocab-link-color:      var(--brand-primary-dark);
 $property-bg:           var(--shade-1-darken-8);
 $property-input-bg:     var(--shade-0);
 $property-input-border: var(--shade-1-darken-18);
+
+// Plugins
+$plugin-instance-bg: var(--shade-1-darken-8);
+
 
 // Colors
 $colors-focus-border-table: var(--shade-0);

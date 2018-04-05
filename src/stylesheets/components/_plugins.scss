@@ -4,17 +4,68 @@
 
 .plugins {
   .panel {
+    .panel-header {
+      display: block; // Not flex
+    }
+
+    .panel-header-container {
+      padding-top: $space-sm; // check
+      padding-bottom: $space-sm; // check
+    }
+
     .panel-heading {
       font-size: $h1-font-size;
       line-height: $headings-line-height;
+
+      .version {
+        font-size: $font-size-base;
+      }
+    }
+
+    .description {
+      margin: 0;
+    }
+
+    .panel-body {
+      padding: ($space-lg + 1px) $default-padding-horizontal $space-lg;
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: $default-padding-horizontal;
+        right: $default-padding-horizontal;
+        top: 0;
+        height: 1px;
+        background-color: $accordion-border-color;
+      }
     }
 
     &.disabled {
-      .panel-header-container {
-        > *:not(.btn-group) {
-          opacity: 0.5;
-        }
+      .panel-body {
+        display: none;
       }
+
+      .panel-heading,
+      .description,
+      a {
+        opacity: 0.5;
+      }
+    }
+  }
+
+  .plugin-instance {
+    display: flex;
+    align-items: center;
+    margin-bottom: $space-min;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    fieldset {
+      flex: 1 1 auto;
+      background: $plugin-instance-bg;
+      padding: 5px $space-xs;
     }
   }
 

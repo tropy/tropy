@@ -5,10 +5,11 @@
 .accordion {
   .panel {
     background-color: $accordion-bg;
+    border-radius: $accordion-border-radius;
 
     .panel-header {
       flex: 1 1 auto;
-      contain: none; // todo
+      contain: content;
     }
   }
 }

@@ -77,21 +77,24 @@ class PluginAccordion extends Accordion {
       <div className="panel-header-container">
         <h1 className="panel-heading">
           {this.props.label || this.props.name}
-          <span className="version">{this.props.version}</span>
+          {' '}
+          <small className="version">{this.props.version}</small>
         </h1>
-        <div className="description">{this.props.description}</div>
-        {this.repoLink && this.renderLink('repository', this.repoLink)}
-        <ButtonGroup>
-          <Button
-            isDefault
-            text={'prefs.plugins.' + (isDisabled ? 'enable' : 'disable')}
-            isActive={isDisabled}
-            onClick={this.toggleEnabled}/>
-          <Button
-            isDefault
-            text="prefs.plugins.uninstall"
-            onClick={this.handleUninstall}/>
-        </ButtonGroup>
+        <p className="description">{this.props.description}</p>
+        <div className="flex-row justify-content-between center">
+          {this.repoLink && this.renderLink('repository', this.repoLink)}
+          <ButtonGroup>
+            <Button
+              isDefault
+              text={'prefs.plugins.' + (isDisabled ? 'enable' : 'disable')}
+              isActive={isDisabled}
+              onClick={this.toggleEnabled}/>
+            <Button
+              isDefault
+              text="prefs.plugins.uninstall"
+              onClick={this.handleUninstall}/>
+          </ButtonGroup>
+        </div>
       </div>
     )
   }
