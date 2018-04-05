@@ -195,6 +195,7 @@ class Plugins extends EventEmitter {
           'label',
           'name',
           'options',
+          'repository',
           'version'
         ])
         acc[pkg.name] = pkg

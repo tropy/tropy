@@ -94,6 +94,7 @@ class PluginsPane extends Component {
                      version={spec.version}
                      hooks={spec.hooks}
                      options={spec.options}
+                     repository={spec.repository}
                      configs={this.configs(spec.name)}
                      onChange={this.onChange}
                      onDelete={this.onDelete}

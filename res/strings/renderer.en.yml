@@ -153,6 +153,7 @@ en:
       disable: Disable
       install: Install Plugin
       uninstall: Uninstall
+      repository: Repository
   item:
     created: Date Added
     modified: Modified

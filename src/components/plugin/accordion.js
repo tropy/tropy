@@ -5,9 +5,11 @@ const {
   arrayOf, bool, func, number, object, oneOf, oneOfType, shape, string
 } = require('prop-types')
 const cx = require('classnames')
+const { shell } = require('electron')
 const { Accordion } = require('../accordion')
 const { Button, ButtonGroup } = require('../button')
 const { PluginInstance } = require('./instance')
+const { injectIntl } = require('react-intl')
 
 
 class PluginAccordion extends Accordion {
@@ -56,6 +58,27 @@ class PluginAccordion extends Accordion {
     }
   }
 
+  get repoLink() {
+    let repo = this.props.repository
+    if (typeof repo === 'object' && repo.url) return repo.url
+    if (typeof repo !== 'string') return
+    if (repo.startsWith('http')) return repo
+    return repo
+      .replace(/^github:/, 'https://github.com/')
+      .replace(/^gitlab:/, 'https://gitlab.com/')
+      .replace(/^bitbucket:/, 'https://bitbucket.org/')
+  }
+
+  renderLink(id, url, ...options) {
+    const { intl } = this.props
+    const title = intl.formatMessage(
+      { id: `prefs.plugins.${id}` }, ...options)
+    return (
+      // eslint-disable-next-line react/jsx-no-bind
+      <a onClick={() => shell.openExternal(url)}>{title}</a>
+    )
+  }
+
   renderHeader() {
     const { isDisabled } = this
     return super.renderHeader(
@@ -65,6 +88,7 @@ class PluginAccordion extends Accordion {
           <span className="version">{this.props.version}</span>
         </h1>
         <div className="description">{this.props.description}</div>
+        {this.repoLink && this.renderLink('repository', this.repoLink)}
         <ButtonGroup>
           <Button
             isDefault
@@ -109,6 +133,7 @@ class PluginAccordion extends Accordion {
     label: string,
     version: string,
     description: string,
+    repository: oneOfType([string, object]),
     onChange: func.isRequired,
     onDelete: func.isRequired,
     onInsert: func.isRequired,
@@ -133,5 +158,5 @@ class PluginAccordion extends Accordion {
 }
 
 module.exports = {
-  PluginAccordion
+  PluginAccordion: injectIntl(PluginAccordion)
 }
