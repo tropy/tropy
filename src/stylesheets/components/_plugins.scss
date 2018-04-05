@@ -64,8 +64,17 @@
 
     fieldset {
       flex: 1 1 auto;
-      background: $plugin-instance-bg;
       padding: 5px $space-xs;
+      margin-right: 6px;
+      background: $plugin-instance-bg;
+    }
+
+    .btn-icon {
+      flex: 0 0 auto;
+      padding: {
+        left: 2px;
+        right: 2px;
+      }
     }
   }
 
