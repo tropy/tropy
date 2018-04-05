@@ -188,6 +188,10 @@ $item-table-header-height: $line-height-large;
 $panel-header-height: const("PANEL.HEADER_HEIGHT") * 1px;
 $panel-body-min-height: 100px - (const("PANEL.HEADER_HEIGHT") * 1px) - 4px;
 
+// Accordion
+// --------------------------------------------------
+
+$accordion-border-radius: $border-radius-small;
 
 // Tabs
 // --------------------------------------------------
