@@ -158,11 +158,16 @@ class Plugins extends EventEmitter {
   }
 
   require(name, fallback = 'node_modules') {
+    let pkg
     try {
-      return require(join(this.root, name))
+      pkg = require(join(this.root, name))
+      pkg.source = 'directory'
+      return pkg
     } catch (error) {
       if (!fallback || error.code !== 'MODULE_NOT_FOUND') throw error
-      return this.require(join(fallback, name), false)
+      pkg = this.require(join(fallback, name), false)
+      pkg.source = 'npm'
+      return pkg
     }
   }
 
@@ -209,6 +214,7 @@ class Plugins extends EventEmitter {
           'name',
           'options',
           'repository',
+          'source',
           'version'
         ])
         acc[pkg.name] = pkg
