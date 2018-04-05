@@ -98,24 +98,22 @@ class PluginAccordion extends Accordion {
 
   renderBody() {
     return super.renderBody(
-      <div>
-        <ul>
-          {this.configs.map(
-             (config, idx) =>
-               <PluginInstance
-                 key={idx}
-                 index={idx}
-                 guiOptions={this.props.options}
-                 config={config}
-                 name={config.name}
-                 options={config.options}
-                 onChange={this.props.onChange}
-                 onDelete={this.props.onDelete}
-                 onInsert={this.props.onInsert}
-                 plugin={config.plugin} />
-          )}
-        </ul>
-      </div>
+      <ul>
+        {this.configs.map(
+           (config, idx) =>
+             <PluginInstance
+               key={idx}
+               index={idx}
+               guiOptions={this.props.options}
+               config={config}
+               name={config.name}
+               options={config.options}
+               onChange={this.props.onChange}
+               onDelete={this.props.onDelete}
+               onInsert={this.props.onInsert}
+               plugin={config.plugin} />
+        )}
+      </ul>
     )
   }
 
