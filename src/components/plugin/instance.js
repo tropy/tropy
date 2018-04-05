@@ -26,7 +26,8 @@ class PluginInstance extends PureComponent {
       tabIndex: idx,
       name: `options.${field}`,
       onChange: this.handleChange,
-      value: this.getValue(option)
+      value: this.getValue(option),
+      isCompact: true
     }
     switch (option.type) {
       case 'number':
@@ -71,7 +72,8 @@ class PluginInstance extends PureComponent {
             name="name"
             value={this.props.name}
             tabIndex={this.idx}
-            onChange={this.handleChange}/>
+            onChange={this.handleChange}
+            isCompact/>
           {this.props.guiOptions.map((option, idx) =>
             this.renderField(option, this.idx + idx + 1))}
         </fieldset>
