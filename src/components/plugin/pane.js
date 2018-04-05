@@ -7,7 +7,7 @@ const { Button } = require('../button')
 const { bool, func, object, string } = require('prop-types')
 const { AccordionGroup } = require('../accordion')
 const { PluginAccordion } = require('./accordion')
-const { values } = Object
+const { keys, values } = Object
 
 class PluginsPane extends Component {
   constructor(props) {
@@ -30,6 +30,13 @@ class PluginsPane extends Component {
     config[this.idx(plugin, index)] = newConfig
     this.setState({ config })
     this.props.onChange(config)
+    this.ensureOpen(plugin)
+  }
+
+  ensureOpen = (plugin) => {
+    this.accordion.setState({
+      open: keys(this.state.spec).indexOf(plugin)
+    })
   }
 
   onInsert = (plugin, index) => {
@@ -40,6 +47,7 @@ class PluginsPane extends Component {
     })
     this.setState({ config })
     this.props.onChange(config)
+    this.ensureOpen(plugin)
   }
 
   idx = (plugin, index) => {
