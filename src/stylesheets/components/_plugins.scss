@@ -16,6 +16,7 @@
     background-color: $vocab-panel-bg;
 
     &.enabled {
+      // sass-lint:disable no-color-literals
       border-left: 2px solid #0a0;
     }
 
@@ -40,7 +41,7 @@
     }
   }
 
-  li.plugin-instance {
+  .plugin-instance {
     display: flex;
     align-items: center;
     margin-bottom: $space-min;

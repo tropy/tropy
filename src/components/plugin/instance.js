@@ -8,8 +8,7 @@ const {
 const { FormField, FormToggle } = require('../form')
 const { get, set } = require('../../common/util')
 const { IconPlusCircle, IconMinusCircle } = require('../icons')
-const { Button } = require('../button')
-
+const { Button, ButtonGroup } = require('../button')
 
 class PluginInstance extends PureComponent {
   getValue({ field, default: defaultValue }) {
@@ -76,14 +75,14 @@ class PluginInstance extends PureComponent {
           {this.props.guiOptions.map((option, idx) =>
             this.renderField(option, this.idx + idx + 1))}
         </fieldset>
-        <div className="btn-group">
+        <ButtonGroup>
           <Button
             icon={<IconMinusCircle/>}
             onClick={this.handleRemove}/>
           <Button
             icon={<IconPlusCircle/>}
             onClick={this.handleInsert}/>
-        </div>
+        </ButtonGroup>
       </li>
     )
   }

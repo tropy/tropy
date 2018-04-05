@@ -8,7 +8,6 @@ const { bool, func, object, string } = require('prop-types')
 const { AccordionGroup } = require('../accordion')
 const { PluginAccordion } = require('./accordion')
 const { values } = Object
-const { uniq } = require('../../common/util')
 
 class PluginsPane extends Component {
   constructor(props) {
@@ -22,11 +21,6 @@ class PluginsPane extends Component {
     this.setState({
       config: props.plugins.config
     })
-    this.pluginOptions = ['']
-      .concat(
-        uniq(
-          values(this.props.plugins.spec)
-          .map(s => s.name)))
   }
 
   onChange = (plugin, index, newConfig) => {

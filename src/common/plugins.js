@@ -114,7 +114,8 @@ class Plugins extends EventEmitter {
     return this
   }
 
-  async uninstall(plugin) {
+  async uninstall() {
+    // TODO
   }
 
   async reload(autosave = false) {

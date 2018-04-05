@@ -4,13 +4,11 @@ const React = require('react')
 const {
   arrayOf, bool, func, number, object, oneOf, oneOfType, shape, string
 } = require('prop-types')
-const cx = require('classnames')
 const { shell } = require('electron')
 const { Accordion } = require('../accordion')
 const { Button, ButtonGroup } = require('../button')
 const { PluginInstance } = require('./instance')
 const { injectIntl } = require('react-intl')
-
 
 class PluginAccordion extends Accordion {
   handleUninstall = (event) =>  {
@@ -35,12 +33,6 @@ class PluginAccordion extends Accordion {
     }
 
     event.stopPropagation()
-  }
-
-  get headerClasses() {
-    return {
-      'panel-header-container': true,
-    }
   }
 
   get configs() {
@@ -82,7 +74,7 @@ class PluginAccordion extends Accordion {
   renderHeader() {
     const { isDisabled } = this
     return super.renderHeader(
-      <div className={cx(this.headerClasses)}>
+      <div className="panel-header-container">
         <h1 className="panel-heading">
           {this.props.label || this.props.name}
           <span className="version">{this.props.version}</span>
