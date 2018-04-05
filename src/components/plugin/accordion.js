@@ -8,7 +8,7 @@ const { shell } = require('electron')
 const { Accordion } = require('../accordion')
 const { Button, ButtonGroup } = require('../button')
 const { PluginInstance } = require('./instance')
-const { injectIntl } = require('react-intl')
+const { injectIntl, intlShape } = require('react-intl')
 
 class PluginAccordion extends Accordion {
   handleUninstall = (event) =>  {
@@ -136,7 +136,8 @@ class PluginAccordion extends Accordion {
       type: oneOf(['string', 'bool', 'boolean', 'number']),
       label: string.isRequired
     })),
-    hooks: object
+    hooks: object,
+    intl: intlShape.isRequired
   }
   static defaultProps = {
     ...Accordion.defaultProps,
