@@ -154,6 +154,7 @@ en:
       install: Install Plugin
       uninstall: Uninstall
       repository: Repository
+      noinfo: No information available
   item:
     created: Date Added
     modified: Modified
