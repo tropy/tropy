@@ -55,6 +55,7 @@ $shade-10: #000; // Black
   #{--shade-1-darken-4}:   darken($shade-1, 4%); // 8% Fieldset bg
   #{--shade-1-darken-8}:   darken($shade-1, 8%); // 12% Vocab property bg
   #{--shade-1-darken-14}:  darken($shade-1, 14%); // 18% Vocab property input border
+  #{--shade-1-darken-12}:  darken($shade-1, 12%);
   #{--shade-1-darken-18}:  darken($shade-1, 18%); // 22% Vocab property input border
   #{--shade-2}:            $shade-2;
   #{--shade-2-lighten-4}:  lighten($shade-2, 4%); // Esper slider handle bg
@@ -167,6 +168,14 @@ $checkbox-overlay-checked-active-bg:     var(--shade-10-65);
 $checkbox-checked-active-border:         var(--shade-6-lighten-8);
 $checkbox-overlay-checked-active-border: var(--shade-7-darken-5);
 $tick-color:                             var(--shade-0);
+
+// Level 2
+$level-2-border:      var(--shade-1-darken-14);
+$level-2-fieldset-bg: var(--shade-1-darken-8);
+
+// Level 3
+$level-3-border:            var(--shade-1-darken-18);
+$level-3-input-bg-readonly: var(--shade-1-darken-12);
 
 // Badge
 $badge-color: var(--shade-0);

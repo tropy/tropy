@@ -4,6 +4,8 @@
 
 .plugins {
   .panel {
+    @extend %form-shading-level-2;
+
     .panel-header {
       display: block; // Not flex
     }
@@ -78,8 +80,8 @@
     }
 
     fieldset {
+      @extend %form-shading-level-3;
       margin-right: 6px;
-      background: $plugin-instance-bg;
     }
 
     .btn-icon {

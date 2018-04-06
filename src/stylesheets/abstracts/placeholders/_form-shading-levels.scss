@@ -1,0 +1,55 @@
+//
+// Form shading levels
+// --------------------------------------------------
+
+%form-shading-level-2 {
+  .btn-default {
+    border-color: $level-2-border;
+  }
+
+  fieldset {
+    background-color: $level-2-fieldset-bg;
+  }
+}
+
+%form-shading-level-3 {
+  .form-control {
+    border-color: $level-3-border;
+
+    @include input-btn-focus; // sass-lint:disable-line mixins-before-declarations
+  }
+
+  .checkbox,
+  .readio {
+    [type] {
+      border-color: $level-3-border;
+
+      &:active {
+        border-color: $checkbox-checked-border;
+      }
+
+      &[disabled] {
+        background-color: $level-3-input-bg-readonly;
+        border-color: $level-3-border;
+      }
+
+      &:checked {
+        border-color: $checkbox-checked-border;
+
+        &:active {
+          border-color: $checkbox-checked-active-border;
+        }
+
+        &[disabled] {
+          background-color: $level-3-input-bg-readonly;
+          border-color: $level-3-border;
+
+          &::before,
+          &::after {
+            background: $checkbox-checked-bg;
+          }
+        }
+      }
+    }
+  }
+}
