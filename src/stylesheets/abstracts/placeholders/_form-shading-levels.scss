@@ -15,6 +15,7 @@
 %form-shading-level-3 {
   .form-control {
     border-color: $level-3-border;
+    background-color: $level-3-bg;
 
     @include input-btn-focus; // sass-lint:disable-line mixins-before-declarations
   }
@@ -22,9 +23,11 @@
   .checkbox,
   .readio {
     [type] {
+      background-color: $level-3-bg;
       border-color: $level-3-border;
 
       &:active {
+        background-color: $checkbox-checked-bg;
         border-color: $checkbox-checked-border;
       }
 
@@ -34,9 +37,11 @@
       }
 
       &:checked {
+        background-color: $checkbox-checked-bg;
         border-color: $checkbox-checked-border;
 
         &:active {
+          background-color: $checkbox-checked-active-bg;
           border-color: $checkbox-checked-active-border;
         }
 
