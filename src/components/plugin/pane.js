@@ -2,6 +2,7 @@
 
 const React = require('react')
 const { Component } = React
+const { ipcRenderer: ipc } = require('electron')
 const { PrefPane } = require('../prefs/pane')
 const { Button } = require('../button')
 const { bool, func, object, string } = require('prop-types')
@@ -63,14 +64,7 @@ class PluginsPane extends Component {
     this.props.onChange(config)
   }
 
-  addPlugin = () => {
-    let { config } = this.state
-    config = config.concat({
-      options: {}
-    })
-    this.setState({ config })
-    this.accordion.setState({ open: this.state.config.length })
-  }
+  installPlugin = () => ipc.send('cmd', 'app:install-plugin')
 
   onUninstall = (plugin) => {
     this.props.plugins.uninstall(plugin)
@@ -97,7 +91,7 @@ class PluginsPane extends Component {
           <AccordionGroup
             ref={this.setAccordion}
             className="form-horizontal">
-            {values(this.state.spec).map(
+            {values(this.props.plugins.spec).map(
                (spec, idx) => {
                  return (
                    <PluginAccordion
@@ -123,7 +117,7 @@ class PluginsPane extends Component {
           <Button
             isDefault
             text="prefs.plugins.install"
-            onClick={this.addPlugin}/>
+            onClick={this.installPlugin}/>
         </footer>
       </PrefPane>
     )
