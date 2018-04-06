@@ -82,10 +82,13 @@ class PluginAccordion extends Accordion {
     const { intl } = this.props
     const title = intl.formatMessage(
       { id: `prefs.plugins.${id}` }, ...options)
+    const linkClick = (event) => {
+      event.stopPropagation()
+      shell.openExternal(url)
+    }
     return (
       // eslint-disable-next-line react/jsx-no-bind
-      <a onClick={() => shell.openExternal(url)}>{title}</a>
-    )
+      <a onClick={linkClick}>{title}</a>)
   }
 
   get renderNoinfo() {
