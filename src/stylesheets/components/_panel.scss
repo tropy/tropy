@@ -41,8 +41,11 @@
   }
 
   .panel-heading {
-    @include css-truncation;
     flex: 1 1 auto;
+
+    &.truncate {
+      @include css-truncation;
+    }
   }
 
   .panel-body {

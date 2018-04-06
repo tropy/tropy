@@ -22,6 +22,19 @@
   "../base/type";
 
 
+// Partials
+// --------------------------------------------------
+
+@import
+  "../partials/window-controls",
+  "../partials/window-draggable",
+  "../partials/scrollbar",
+  "../partials/grid",
+  "../partials/flex",
+  "../partials/forms",
+  "../partials/scroll-container";
+
+
 // Components
 // --------------------------------------------------
 
@@ -38,17 +51,3 @@
   "../components/panel",
   "../components/accordion",
   "../components/flash";
-
-
-// Partials
-// --------------------------------------------------
-
-@import
-  "../partials/window-controls",
-  "../partials/window-draggable",
-  "../partials/scrollbar",
-  "../partials/grid",
-  "../partials/flex",
-  "../partials/forms",
-  "../partials/scroll-container";
-
