@@ -9,14 +9,20 @@ const { Accordion } = require('../accordion')
 const { Button, ButtonGroup } = require('../button')
 const { PluginInstance } = require('./instance')
 const { injectIntl, intlShape } = require('react-intl')
+const { uninstallPrompt } = require('./dialog')
+
 
 class PluginAccordion extends Accordion {
-  handleUninstall = (event) =>  {
+  handleUninstall = async (event) =>  {
+    event.stopPropagation()
+
+    const { cancel } = await uninstallPrompt(this.label)
+    if (cancel) return
+
     this.props.configs.map((config, idx) => {
       this.props.onDelete(this.props.name, idx)
     })
     this.props.onUninstall(this.props.name)
-    event.stopPropagation()
   }
 
   toggleEnabled = (event) => {
@@ -68,6 +74,10 @@ class PluginAccordion extends Accordion {
     return this.props.source === 'directory'
   }
 
+  get label() {
+    return this.props.label || this.props.name
+  }
+
   renderLink(id, url, ...options) {
     const { intl } = this.props
     const title = intl.formatMessage(
@@ -89,7 +99,7 @@ class PluginAccordion extends Accordion {
     return super.renderHeader(
       <div className="panel-header-container">
         <h1 className="panel-heading">
-          {this.props.label || this.props.name}
+          {this.label}
           {' '}
           <small className="version">{this.props.version}</small>
         </h1>

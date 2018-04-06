@@ -154,6 +154,12 @@ en:
       install: Install Plugin
       uninstall: Uninstall
       repository: Repository
+      noinfo: No information available.
+      prompt:
+        cancel: Cancel
+        message: >
+          This will permanently delete the plugin and it's configuration.
+
   item:
     created: Date Added
     modified: Modified
