@@ -23,12 +23,21 @@
       }
     }
 
-    .description {
+    p {
       margin: 0;
+    }
+
+    .no-info {
+      font-style: italic;
+      color: $no-info-color;
     }
 
     .flex-row {
       margin-top: $space-sm - 5px;
+
+      .btn-group {
+        margin-left: auto;
+      }
     }
 
     .panel-body {
@@ -52,7 +61,8 @@
 
       .panel-heading,
       .description,
-      a {
+      a,
+      .no-info {
         opacity: 0.5;
       }
     }
