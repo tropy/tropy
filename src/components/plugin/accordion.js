@@ -91,7 +91,7 @@ class PluginAccordion extends Accordion {
   get renderNoinfo() {
     const { intl } = this.props
     const text = intl.formatMessage({ id: 'prefs.plugins.noinfo' })
-    return <p className="noinfo">{text}</p>
+    return <p className="no-info">{text}</p>
   }
 
   renderHeader() {
@@ -104,7 +104,7 @@ class PluginAccordion extends Accordion {
           <small className="version">{this.props.version}</small>
         </h1>
         <p className="description">{this.props.description}</p>
-        <div className="flex-row justify-content-between center">
+        <div className="flex-row center">
           {this.repoLink && this.renderLink('repository', this.repoLink)}
           {!this.repoLink && this.renderNoinfo}
           <ButtonGroup>
