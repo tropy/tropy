@@ -155,6 +155,7 @@ en:
       uninstall: Uninstall
       repository: Repository
       noinfo: No information available.
+      homepage: Homepage
       prompt:
         cancel: Cancel
         message: >

@@ -98,6 +98,7 @@ class PluginsPane extends Component {
                      name={spec.name}
                      label={spec.label}
                      description={spec.description}
+                     homepage={spec.homepage}
                      version={spec.version}
                      hooks={spec.hooks}
                      options={spec.options}

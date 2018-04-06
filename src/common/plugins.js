@@ -209,6 +209,7 @@ class Plugins extends EventEmitter {
       try {
         let pkg = pick(this.require(join(dir, 'package.json')), [
           'description',
+          'homepage',
           'hooks',
           'label',
           'name',

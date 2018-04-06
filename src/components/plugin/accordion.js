@@ -91,10 +91,20 @@ class PluginAccordion extends Accordion {
       <a onClick={linkClick}>{title}</a>)
   }
 
+  get renderLinks() {
+    const { homepage } = this.props
+    if (homepage) return this.renderLink('homepage', homepage)
+    if (this.repoLink) return this.renderLink('repository', this.repoLink)
+  }
+
   get renderNoinfo() {
     const { intl } = this.props
     const text = intl.formatMessage({ id: 'prefs.plugins.noinfo' })
     return <p className="no-info">{text}</p>
+  }
+
+  get hasLink() {
+    return this.props.homepage || this.repoLink
   }
 
   renderHeader() {
@@ -108,8 +118,7 @@ class PluginAccordion extends Accordion {
         </h1>
         <p className="description">{this.props.description}</p>
         <div className="flex-row center">
-          {this.repoLink && this.renderLink('repository', this.repoLink)}
-          {!this.repoLink && this.renderNoinfo}
+          {this.hasLink ? this.renderLinks : this.renderNoinfo}
           <ButtonGroup>
             <Button
               isDefault
@@ -153,6 +162,7 @@ class PluginAccordion extends Accordion {
     label: string,
     version: string,
     description: string,
+    homepage: string,
     source: string.isRequired,
     repository: oneOfType([string, object]),
     onChange: func.isRequired,
