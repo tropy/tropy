@@ -10,6 +10,7 @@ const { Button, ButtonGroup } = require('../button')
 const { PluginInstance } = require('./instance')
 const { injectIntl, intlShape } = require('react-intl')
 const { uninstallPrompt } = require('./dialog')
+const { keys } = Object
 
 
 class PluginAccordion extends Accordion {
@@ -78,6 +79,11 @@ class PluginAccordion extends Accordion {
     return this.props.label || this.props.name
   }
 
+  renderHook(hook) {
+    const { formatMessage: t } = this.props.intl
+    return <li key={hook}>{t({ id: `prefs.plugins.hooks.${hook}` })}</li>
+  }
+
   renderLink(id, url, ...options) {
     const { intl } = this.props
     const title = intl.formatMessage(
@@ -117,6 +123,9 @@ class PluginAccordion extends Accordion {
           <small className="version">{this.props.version}</small>
         </h1>
         <p className="description">{this.props.description}</p>
+        <ul className="hooks">
+          {keys(this.props.hooks).map(h => this.renderHook(h))}
+        </ul>
         <div className="flex-row center">
           {this.hasLink ? this.renderLinks : this.renderNoinfo}
           <ButtonGroup>

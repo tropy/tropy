@@ -156,6 +156,8 @@ en:
       repository: Repository
       noinfo: No information available.
       homepage: Homepage
+      hooks:
+        export: Export
       prompt:
         cancel: Cancel
         message: >
