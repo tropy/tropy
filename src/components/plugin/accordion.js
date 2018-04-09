@@ -9,7 +9,7 @@ const { Accordion } = require('../accordion')
 const { Button, ButtonGroup } = require('../button')
 const { PluginInstance } = require('./instance')
 const { injectIntl, intlShape } = require('react-intl')
-const { uninstallPrompt } = require('./dialog')
+const { pluginUninstall } = require('../../dialog').prompt
 const { keys } = Object
 
 
@@ -17,7 +17,7 @@ class PluginAccordion extends Accordion {
   handleUninstall = async (event) =>  {
     event.stopPropagation()
 
-    const { cancel } = await uninstallPrompt(this.label)
+    const { cancel } = await pluginUninstall(this.label)
     if (cancel) return
 
     this.props.configs.map((config, idx) => {
