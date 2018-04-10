@@ -158,6 +158,7 @@ en:
       homepage: Homepage
       hooks:
         export: Export
+        import: Import
       prompt:
         cancel: Cancel
         message: >

@@ -77,6 +77,7 @@ $shade-10: #000; // Black
   #{--shade-8}:            $shade-8;
   #{--shade-9}:            $shade-9;
   #{--shade-10}:           $shade-10;
+  #{--shade-10-4}:         rgba($shade-10, 0.04);
   #{--shade-10-10}:        rgba($shade-10, 0.1);
   #{--shade-10-20}:        rgba($shade-10, 0.2);
   #{--shade-10-24}:        rgba($shade-10, 0.24);
@@ -408,6 +409,8 @@ $property-input-border: var(--shade-1-darken-18);
 // Plugins
 $plugin-instance-bg: var(--shade-1-darken-8);
 $no-info-color:      var(--shade-5-darken-4);
+$hook-color:         var(--shade-6);
+$hook-bg:            var(--shade-10-4);
 
 // Colors
 $colors-focus-border-table: var(--shade-0);

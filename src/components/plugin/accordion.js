@@ -117,15 +117,17 @@ class PluginAccordion extends Accordion {
     const { isDisabled } = this
     return super.renderHeader(
       <div className="panel-header-container">
+        <ul className="hooks">
+          {keys(this.props.hooks).map(h => this.renderHook(h))}
+        </ul>
         <h1 className="panel-heading">
           {this.label}
           {' '}
           <small className="version">{this.props.version}</small>
         </h1>
-        <p className="description">{this.props.description}</p>
-        <ul className="hooks">
-          {keys(this.props.hooks).map(h => this.renderHook(h))}
-        </ul>
+        <p className="description">
+          {this.props.description}
+        </p>
         <div className="flex-row center">
           {this.hasLink ? this.renderLinks : this.renderNoinfo}
           <ButtonGroup>
