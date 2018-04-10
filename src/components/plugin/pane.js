@@ -66,13 +66,6 @@ class PluginsPane extends Component {
 
   installPlugin = () => ipc.send('cmd', 'app:install-plugin')
 
-  onUninstall = (plugin) => {
-    this.props.plugins.uninstall(plugin)
-      .then(() => this.setState({
-        spec: this.props.plugins.spec
-      }))
-  }
-
   setAccordion = (accordion) => {
     this.accordion = accordion
   }
@@ -108,7 +101,7 @@ class PluginsPane extends Component {
                      onChange={this.onChange}
                      onDelete={this.onDelete}
                      onInsert={this.onInsert}
-                     onUninstall={this.onUninstall}
+                     onUninstall={this.props.onPluginUninstall}
                      key={idx}/>)
                })
             }
@@ -128,7 +121,8 @@ class PluginsPane extends Component {
     isActive: bool,
     name: string.isRequired,
     plugins: object.isRequired,
-    onChange: func.isRequired
+    onChange: func.isRequired,
+    onPluginUninstall: func.isRequired
   }
 }
 

@@ -9,20 +9,12 @@ const { Accordion } = require('../accordion')
 const { Button, ButtonGroup } = require('../button')
 const { PluginInstance } = require('./instance')
 const { injectIntl, intlShape } = require('react-intl')
-const { pluginUninstall } = require('../../dialog').prompt
 const { keys } = Object
 
 
 class PluginAccordion extends Accordion {
-  handleUninstall = async (event) =>  {
+  handleUninstall = (event) =>  {
     event.stopPropagation()
-
-    const { cancel } = await pluginUninstall(this.label)
-    if (cancel) return
-
-    this.props.configs.map((config, idx) => {
-      this.props.onDelete(this.props.name, idx)
-    })
     this.props.onUninstall(this.props.name)
   }
 
@@ -177,7 +169,6 @@ class PluginAccordion extends Accordion {
     onChange: func.isRequired,
     onDelete: func.isRequired,
     onInsert: func.isRequired,
-    onUninstall: func.isRequired,
     configs: arrayOf(object),
     options: arrayOf(shape({
       field: string.isRequired,
@@ -188,7 +179,8 @@ class PluginAccordion extends Accordion {
       label: string.isRequired
     })),
     hooks: object,
-    intl: intlShape.isRequired
+    intl: intlShape.isRequired,
+    onUninstall: func.isRequired
   }
   static defaultProps = {
     ...Accordion.defaultProps,
