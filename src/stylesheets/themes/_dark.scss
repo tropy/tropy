@@ -84,6 +84,7 @@ $shade-10: #fff; // White
   #{--shade-8-darken-5}:   darken($shade-8, 5%);
   #{--shade-9}:            $shade-9;
   #{--shade-10}:           $shade-10;
+  #{--shade-10-2}:         rgba($shade-10, 0.02);
   #{--shade-10-5}:         rgba($shade-10, 0.05);
   #{--shade-10-10}:        rgba($shade-10, 0.1);
   #{--shade-10-20}:        rgba($shade-10, 0.2);
@@ -415,6 +416,8 @@ $property-input-border: var(--shade-1-lighten-4);
 // Plugins
 $plugin-instance-bg: var(--shade-4-lighten-4);
 $no-info-color:      var(--shade-6-lighten-2);
+$hook-color:         var(--shade-7);
+$hook-bg:            var(--shade-10-2);
 
 // Colors
 $colors-focus-border-table: var(--brand-primary-light);

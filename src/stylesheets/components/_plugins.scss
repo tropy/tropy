@@ -18,7 +18,7 @@
     .panel-heading {
       font-size: $h1-font-size;
       line-height: $headings-line-height;
-      margin-bottom: 1px;
+      margin-bottom: 2px;
 
       .version {
         font-size: $font-size-base;
@@ -39,6 +39,23 @@
 
       .btn-group {
         margin-left: auto;
+      }
+    }
+
+    .hooks {
+      display: inline-flex;
+      float: right;
+      margin-top: -1px;
+      // Remove when first plugin with a hook other than export is available
+      display: none;
+
+      li {
+        font-size: 11px;
+        color: $hook-color;
+        background-color: $hook-bg;
+        padding: 1px 5px;
+        border-radius: $border-radius-small;
+        margin-left: $space-min / 2;
       }
     }
 
@@ -64,7 +81,8 @@
       .panel-heading,
       .description,
       a,
-      .no-info {
+      .no-info,
+      .hooks {
         opacity: 0.5;
       }
     }
