@@ -122,7 +122,7 @@ class Plugins extends EventEmitter {
       if (!stats.isDirectory()) return
     } catch (err) { return }
     if (shell.moveItemToTrash(dir)) {
-      await this.reloadAndScan()
+      this.save(this.config.filter(c => c.plugin !== plugin))
     } else {
       warn(`failed to uninstall plugin: ${plugin}`)
     }
