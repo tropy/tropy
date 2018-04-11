@@ -109,7 +109,9 @@ class Plugins extends EventEmitter {
   async install(input) {
     try {
       const plugin = Plugins.basename(input)
-      await decompress(input, join(this.root, plugin), { strip: 1 })
+      const dest = join(this.root, plugin)
+      await this.uninstall(plugin, { clean: false })
+      await decompress(input, dest, { strip: 1 })
       const spec = (await this.scan([plugin]))[plugin] || {}
       await this.reloadAndScan()
       this.notify({ type: 'install', plugin })
@@ -120,13 +122,14 @@ class Plugins extends EventEmitter {
     return this
   }
 
-  async uninstall(plugin) {
+  async uninstall(plugin, options = { clean: true }) {
     const dir = resolve(join(this.root, plugin))
     try {
       const stats = await stat(dir)
       if (!stats.isDirectory()) return
     } catch (err) { return }
     if (shell.moveItemToTrash(dir)) {
+      if (!options.clean) return
       this.config = this.config.filter(c => c.plugin !== plugin)
       delete this.spec[plugin]
       this.save()
