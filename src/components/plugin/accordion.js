@@ -15,7 +15,8 @@ const { keys } = Object
 class PluginAccordion extends Accordion {
   handleUninstall = (event) =>  {
     event.stopPropagation()
-    this.props.onUninstall(this.props.plugins, this.props.name)
+    const { plugins, name } = this.props
+    this.props.onUninstall({ plugins, name })
   }
 
   toggleEnabled = (event) => {
