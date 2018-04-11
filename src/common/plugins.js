@@ -89,8 +89,13 @@ class Plugins extends EventEmitter {
 
   handleConfigFileChange = debounce(async () => {
     await this.reloadAndScan()
-    this.emit('change', { type: 'config' })
+    this.notify()
   }, 100)
+
+  notify(options = { type: 'config' }) {
+    const { spec, config } = this
+    this.emit('change', { ...options, spec, config })
+  }
 
   async init(autosave = true) {
     try {
@@ -107,7 +112,7 @@ class Plugins extends EventEmitter {
       await decompress(input, join(this.root, plugin), { strip: 1 })
       const spec = (await this.scan([plugin]))[plugin] || {}
       await this.reloadAndScan()
-      this.emit('change', { type: 'plugin', plugin, spec })
+      this.notify({ type: 'install', plugin })
       verbose(`installed plugin ${spec.name || plugin} ${spec.version}`)
     } catch (error) {
       warn(`failed to install plugin: ${error.message}`)
@@ -122,7 +127,10 @@ class Plugins extends EventEmitter {
       if (!stats.isDirectory()) return
     } catch (err) { return }
     if (shell.moveItemToTrash(dir)) {
-      this.save(this.config.filter(c => c.plugin !== plugin))
+      this.config = this.config.filter(c => c.plugin !== plugin)
+      delete this.spec[plugin]
+      this.save()
+      this.notify({ type: 'uninstall', plugin })
     } else {
       warn(`failed to uninstall plugin: ${plugin}`)
     }

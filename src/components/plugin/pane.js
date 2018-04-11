@@ -10,6 +10,7 @@ const { AccordionGroup } = require('../accordion')
 const { PluginAccordion } = require('./accordion')
 const { keys, values } = Object
 
+
 class PluginsPane extends Component {
   constructor(props) {
     super(props)
@@ -19,12 +20,20 @@ class PluginsPane extends Component {
     }
   }
 
-  componentWillReceiveProps(props) {
-    this.setState({
-      config: props.plugins.config,
-      spec: props.plugins.spec
-    })
+  componentDidMount() {
+    this.props.plugins.on('change', this.refresh)
   }
+
+  componentWillUnmount() {
+    this.props.plugins.removeListener('change', this.refresh)
+  }
+
+  componentWillReceiveProps(props) {
+    const { spec, config } = props.plugins
+    this.refresh({ spec, config })
+  }
+
+  refresh = ({ spec, config }) => this.setState({ spec, config })
 
   onChange = (plugin, index, newConfig) => {
     let { config } = this.state
@@ -84,7 +93,7 @@ class PluginsPane extends Component {
           <AccordionGroup
             ref={this.setAccordion}
             className="form-horizontal">
-            {values(this.props.plugins.spec).map(
+            {values(this.state.spec).map(
                (spec, idx) => {
                  return (
                    <PluginAccordion
