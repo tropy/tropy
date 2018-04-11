@@ -111,6 +111,7 @@ class PluginsPane extends Component {
                      onDelete={this.onDelete}
                      onInsert={this.onInsert}
                      onUninstall={this.props.onPluginUninstall}
+                     plugins={this.props.plugins}
                      key={idx}/>)
                })
             }

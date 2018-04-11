@@ -2,17 +2,12 @@
 
 const { prompt } = require('../dialog')
 
-var plugins
-if (process.type !== 'browser') {
-  plugins = require('../window').win.plugins
-}
-
 module.exports = {
-  uninstall(payload) {
+  uninstall(plugins, plugin) {
     return async function () {
-      const { cancel } = await prompt.pluginUninstall(payload)
+      const { cancel } = await prompt.pluginUninstall(plugin)
       if (cancel) return
-      plugins.uninstall(payload)
+      plugins.uninstall(plugin)
     }
   }
 }
