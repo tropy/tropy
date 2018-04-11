@@ -4,7 +4,6 @@ const React = require('react')
 const {
   arrayOf, bool, func, number, object, oneOf, oneOfType, shape, string
 } = require('prop-types')
-const { shell } = require('electron')
 const { Accordion } = require('../accordion')
 const { Button, ButtonGroup } = require('../button')
 const { PluginInstance } = require('./instance')
@@ -83,7 +82,7 @@ class PluginAccordion extends Accordion {
       { id: `prefs.plugins.${id}` }, ...options)
     const linkClick = (event) => {
       event.stopPropagation()
-      shell.openExternal(url)
+      this.props.onOpenLink(url)
     }
     return (
       // eslint-disable-next-line react/jsx-no-bind

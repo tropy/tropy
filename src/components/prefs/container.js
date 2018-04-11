@@ -116,6 +116,7 @@ class PrefsContainer extends PureComponent {
             plugins={this.props.plugins}
             onChange={this.props.onPluginsChange}
             onPluginUninstall={this.props.onPluginUninstall}
+            onOpenLink={this.props.onOpenLink}
             isActive={this.isActive('plugins')}/>
         </div>
       </div>

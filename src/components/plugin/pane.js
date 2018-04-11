@@ -111,6 +111,7 @@ class PluginsPane extends Component {
                      onDelete={this.onDelete}
                      onInsert={this.onInsert}
                      onUninstall={this.props.onPluginUninstall}
+                     onOpenLink={this.props.onOpenLink}
                      plugins={this.props.plugins}
                      key={idx}/>)
                })
@@ -132,7 +133,8 @@ class PluginsPane extends Component {
     name: string.isRequired,
     plugins: object.isRequired,
     onChange: func.isRequired,
-    onPluginUninstall: func.isRequired
+    onPluginUninstall: func.isRequired,
+    onOpenLink: func.isRequired
   }
 }
 
