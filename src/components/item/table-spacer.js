@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { NAV } = require('../../constants')
 const { arrayOf, bool, number, object } = require('prop-types')
-const { BlankTableHeadCell } = require('./table-head')
+const { BlankTableHeadCell } = require('./table-head-cell')
 
 const SpacerCell = ({ width }) => (
   <th className="spacer" style={{ width }}/>

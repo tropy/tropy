@@ -13,14 +13,17 @@
 
   th,
   td {
-    padding: 0 $space-xs;
+    padding: 0;
     position: relative;
 
     &:last-child {
-      padding-right: $space-sm;
+      .th-container,
+      .td-container {
+        padding-right: $space-sm;
+      }
     }
 
-    &.number {
+    &[class*="integer"] {
       text-align: right;
     }
   }
@@ -45,6 +48,7 @@
         top: 1px solid $item-table-header-border-color;
         bottom: 1px solid $item-table-header-border-color;
       }
+      padding: 0 $space-min; // Prevent overlap of th-container and resize handle
       position: relative;
       background-image:
         linear-gradient(to right, transparent 1px, $body-bg 1px),
@@ -55,14 +59,17 @@
           $item-table-header-border-color ($item-table-header-height - 4px),
           $body-bg ($item-table-header-height - 4px)
         );
-      contain: content; // Not clear why size shifts the content
+      contain: layout style; // Not clear why size shifts the content
 
       &:first-child {
-        padding-left: $space-sm;
         background-image: none;
+
+        .th-container {
+          padding-left: $space-sm;
+        }
       }
 
-      &:active:not(.resizing):not(.blank) {
+      &:active:not(.resizing):not(.blank):not(.dragging) {
         background:
           linear-gradient(
             to right,
@@ -86,9 +93,10 @@
         }
       }
 
-      &.number {
+      &[class*="integer"] {
         .label {
           padding-left: $space-min;
+          padding-right: 0;
         }
 
         .icon {
@@ -111,12 +119,19 @@
         }
       }
 
+      &.dragging {
+        .th-container {
+          visibility: hidden;
+        }
+      }
+
       .th-container {
         display: flex;
         width: 100%;
         height: 100%;
         justify-content: space-between;
         align-items: center;
+        padding: 0 $space-min 0 ($space-min + 1px);
       }
 
       .label {
@@ -128,11 +143,6 @@
       .icon {
         display: none;
         margin: 0 -4px 0 -5px;
-      }
-
-      .resizable-handle-right {
-        width: $resizable-threshold / 2;
-        right: 0;
       }
     }
   }
@@ -181,6 +191,10 @@
       height: $row-height;
     }
 
+    .td-container {
+      padding: 0 $space-xs 0 ($space-xs + 1px);
+    }
+
     &.active {
       td {
         color: $items-active-color;
@@ -208,14 +222,14 @@
         @extend %drop-target;
       }
     }
-  }
 
-  td {
-    &.main-column {
-      padding-left:
-        $default-padding-horizontal
-        + $thumbnail-size
-        + $padding-base-horizontal;
+    .main-column {
+      .td-container {
+        padding-left:
+          $default-padding-horizontal
+          + $thumbnail-size
+          + $padding-base-horizontal;
+      }
     }
   }
 

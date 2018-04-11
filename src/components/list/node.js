@@ -2,7 +2,6 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const { Editable } = require('../editable')
 const { IconFolder } = require('../icons')
 const { DragSource, DropTarget } = require('react-dnd')
@@ -12,18 +11,17 @@ const { bounds } = require('../../dom')
 const { isValidImage } = require('../../image')
 const cx = require('classnames')
 const { noop } = require('../../common/util')
+const { bool, func, number, shape, string } = require('prop-types')
 
 
 class ListNode extends PureComponent {
-
   get classes() {
-    return {
-      'list': true,
+    return ['list', {
       'drop-target': this.props.isSortable,
       'active': this.props.isSelected,
       'dragging': this.props.isDragging,
       'over': this.isOver
-    }
+    }]
   }
 
   get isOver() {
@@ -89,33 +87,33 @@ class ListNode extends PureComponent {
 
 
   static propTypes = {
-    list: PropTypes.shape({
-      id: PropTypes.number,
-      parent: PropTypes.number,
-      name: PropTypes.string
+    list: shape({
+      id: number,
+      parent: number,
+      name: string
     }),
 
-    isSelected: PropTypes.bool,
-    isEditing: PropTypes.bool,
-    isSortable: PropTypes.bool,
+    isSelected: bool,
+    isEditing: bool,
+    isSortable: bool,
 
-    isDragging: PropTypes.bool,
-    isOver: PropTypes.bool,
-    canDrop: PropTypes.bool,
+    isDragging: bool,
+    isOver: bool,
+    canDrop: bool,
 
-    ds: PropTypes.func.isRequired,
-    dt: PropTypes.func.isRequired,
-    dtType: PropTypes.string,
+    ds: func.isRequired,
+    dt: func.isRequired,
+    dtType: string,
 
-    onClick: PropTypes.func.isRequired,
-    onEditCancel: PropTypes.func,
-    onContextMenu: PropTypes.func,
-    onDropItems: PropTypes.func,
-    onDropFiles: PropTypes.func,
-    onSave: PropTypes.func,
-    onSort: PropTypes.func,
-    onSortPreview: PropTypes.func,
-    onSortReset: PropTypes.func
+    onClick: func.isRequired,
+    onEditCancel: func,
+    onContextMenu: func,
+    onDropItems: func,
+    onDropFiles: func,
+    onSave: func,
+    onSort: func,
+    onSortPreview: func,
+    onSortReset: func
   }
 
   static defaultProps = {

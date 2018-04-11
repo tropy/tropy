@@ -22,7 +22,7 @@ const BlankTableCell = () => (
 
 class ItemTableCell extends PureComponent {
   get classes() {
-    return ['metadata', {
+    return ['metadata', this.props.type, {
       'main-column': this.props.isMainColumn,
       'read-only': this.props.isReadOnly
     }]
@@ -114,7 +114,7 @@ class ItemTableCell extends PureComponent {
         className={cx(this.classes)}
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>
-        <div className="flex-row center">
+        <div className="flex-row center td-container">
           {this.renderCoverImage()}
           <Editable
             display={auto(this.props.value, this.props.type)}
