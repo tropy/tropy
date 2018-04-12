@@ -7,20 +7,27 @@ const { noop, pick } = require('../common/util')
 const { func, bool, string, number, object, node } = require('prop-types')
 const cx = require('classnames')
 
+const DRAG = { START: 1, ACTIVE: 2, NONE: 3 }
+
 class Draggable extends PureComponent {
   componentWillUnmount() {
     this.drag.stop()
   }
 
   handleMouseDown = (event) => {
-    if (this.isDragging) this.drag.stop()
-    if (this.props.isDisabled || event.button !== 0) return
+    if (this.dragstate > DRAG.NONE) this.drag.stop()
+    if (event.button !== 0) return
+
+    if (this.props.isDisabled) {
+      this.props.onClick(event)
+      return
+    }
 
     if (this.props.onDragStart) {
       if (this.props.onDragStart(event)) return
     }
 
-    this.isDragging = true
+    this.dragstate = DRAG.START
     this.drag.start()
 
     const { pageX, pageY } = event
@@ -30,15 +37,28 @@ class Draggable extends PureComponent {
   }
 
   handleDrag = (event) => {
+    this.dragstate = DRAG.ACTIVE
     this.clear()
     this.props.onDrag(event)
   }
 
-  handleDragStop = (event) => {
-    this.clear()
-    if (!this.isDragging) return
-    this.isDragging = false
-    this.props.onDragStop(event)
+  handleDragStop = (event, hasBeenCancelled) => {
+    try {
+      switch (this.dragstate) {
+        case DRAG.START:
+          if (!hasBeenCancelled) {
+            this.props.onClick(event)
+          }
+          this.props.onDragStop(event, true)
+          break
+        case DRAG.ACTIVE:
+          this.props.onDragStop(event, hasBeenCancelled)
+          break
+      }
+    } finally {
+      this.clear()
+      this.dragstate = DRAG.NONE
+    }
   }
 
   drag = createDragHandler({
@@ -64,17 +84,19 @@ class Draggable extends PureComponent {
   static propTypes = {
     children: node,
     className: string,
-    delay: number,
+    delay: number.isRequired,
     isDisabled: bool,
     style: object,
     tabIndex: number,
-    onDrag: func,
-    onDragStart: func,
-    onDragStop: func
+    onClick: func.isRequired,
+    onDrag: func.isRequired,
+    onDragStart: func.isRequired,
+    onDragStop: func.isRequired
   }
 
   static defaultProps = {
     delay: 250,
+    onClick: noop,
     onDrag: noop,
     onDragStop: noop
   }
