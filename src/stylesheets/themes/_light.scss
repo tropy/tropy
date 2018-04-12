@@ -155,9 +155,6 @@ $input-border:                           var(--shade-3);
 $input-overlay-focus-color:              var(--brand-primary);
 $input-color-placeholder:                var(--shade-5);
 $fieldset-bg:                            var(--shade-1-darken-4);
-$fieldset-input-border:                  var(--shade-1-darken-14);
-$fieldset-input-bg:                      var(--shade-0);
-$fieldset-input-bg-readonly:             var(--shade-1-darken-8);
 $checkbox-bg:                            var(--shade-0);
 $checkbox-overlay-disabled-border:       var(--shade-10-10);
 $checkbox-checked-bg:                    var(--shade-6-lighten-13);
@@ -171,8 +168,10 @@ $checkbox-overlay-checked-active-border: var(--shade-7-darken-5);
 $tick-color:                             var(--shade-0);
 
 // Level 2
-$level-2-border:      var(--shade-1-darken-14);
-$level-2-fieldset-bg: var(--shade-1-darken-8);
+$level-2-border:            var(--shade-1-darken-14);
+$level-2-bg:                $input-bg;
+$level-2-input-bg-readonly: var(--shade-1-darken-8);
+$level-2-fieldset-bg:       var(--shade-1-darken-8);
 
 // Level 3
 $level-3-border:            var(--shade-1-darken-18);
@@ -399,12 +398,7 @@ $prefs-header-border: var(--shade-3);
 // Vocab
 $vocab-panel-bg:        var(--shade-1-darken-4);
 $vocab-label-color:     var(--shade-6);
-$vocab-input-bg:        var(--shade-0);
-$vocab-input-border:    var(--shade-1-darken-14);
 $vocab-link-color:      var(--brand-primary-dark);
-$property-bg:           var(--shade-1-darken-8);
-$property-input-bg:     var(--shade-0);
-$property-input-border: var(--shade-1-darken-18);
 
 // Plugins
 $plugin-instance-bg: var(--shade-1-darken-8);

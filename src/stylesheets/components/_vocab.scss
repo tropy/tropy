@@ -3,6 +3,8 @@
 // --------------------------------------------------
 
 .vocab {
+  @extend %form-shading-level-2;
+
   a {
     color: $vocab-link-color;
   }
@@ -31,29 +33,13 @@
     color: $vocab-label-color;
   }
 
-  .form-control {
-    background: $vocab-input-bg;
-    border-color: $vocab-input-border;
-
-    @include input-btn-focus; // sass-lint:disable-line mixins-before-declarations
-  }
-
   .resource {
+    @extend %form-shading-level-3;
+
     margin-bottom: $space-min;
 
     &:last-child {
       margin-bottom: 0;
-    }
-
-    fieldset {
-      background: $property-bg;
-    }
-
-    .form-control {
-      background: $property-input-bg;
-      border-color: $property-input-border;
-
-      @include input-btn-focus; // sass-lint:disable-line mixins-before-declarations
     }
   }
 
