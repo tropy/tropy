@@ -3,12 +3,19 @@
 // --------------------------------------------------
 
 %form-shading-level-2 {
-  .btn-default {
-    border-color: $level-2-border;
-  }
-
   fieldset {
     background-color: $level-2-fieldset-bg;
+  }
+
+  .form-control {
+    border-color: $level-2-border;
+    background-color: $level-2-bg;
+
+    @include input-btn-focus; // sass-lint:disable-line mixins-before-declarations
+  }
+
+  .btn-default {
+    border-color: $level-2-border;
   }
 }
 
