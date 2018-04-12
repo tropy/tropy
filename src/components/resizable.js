@@ -144,7 +144,7 @@ class Resizable extends PureComponent {
         onDragStart={this.handleDragStart}
         onDrag={this.handleDrag}
         onDragStop={this.handleDragStop}
-        classes={cx([
+        className={cx([
           `resizable-handle-${DIR[edge]}`,
           `resizable-handle-${edge}`
         ])}/>

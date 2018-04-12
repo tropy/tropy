@@ -2,14 +2,10 @@
 
 const React = require('react')
 const { PureComponent } = React
-const cx = require('classnames')
 const { createDragHandler } = require('../dom')
 const { noop, pick } = require('../common/util')
-
-const {
-  array, func, bool, string, number, object, oneOfType, node
-} = require('prop-types')
-
+const { func, bool, string, number, object, node } = require('prop-types')
+const cx = require('classnames')
 
 class Draggable extends PureComponent {
   componentWillUnmount() {
@@ -18,7 +14,7 @@ class Draggable extends PureComponent {
 
   handleMouseDown = (event) => {
     if (this.isDragging) this.drag.stop()
-    if (event.button !== 0) return
+    if (this.props.isDisabled || event.button !== 0) return
 
     if (this.props.onDragStart) {
       if (this.props.onDragStart(event)) return
@@ -50,27 +46,24 @@ class Draggable extends PureComponent {
     handleDragStop: this.handleDragStop
   })
 
-
   clear() {
     if (this.delay) clearTimeout(this.delay)
     this.delay = null
   }
 
   render() {
-    const { children, classes, isDisabled, ...props } = this.props
-
     return (
-      <div {...pick(props, ['tabIndex', 'style'])}
-        className={cx(classes)}
-        onMouseDown={isDisabled ? null : this.handleMouseDown}>
-        {children}
+      <div {...pick(this.props, ['tabIndex', 'style'])}
+        className={cx('draggable', this.props.className)}
+        onMouseDown={this.handleMouseDown}>
+        {this.props.children}
       </div>
     )
   }
 
   static propTypes = {
     children: node,
-    classes: oneOfType([string, array, object]),
+    className: string,
     delay: number,
     isDisabled: bool,
     style: object,
@@ -81,7 +74,6 @@ class Draggable extends PureComponent {
   }
 
   static defaultProps = {
-    classes: 'draggable',
     delay: 250,
     onDrag: noop,
     onDragStop: noop
