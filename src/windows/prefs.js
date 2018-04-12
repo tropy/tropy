@@ -29,8 +29,7 @@ all([
     render(
       <Main store={store}>
         <PrefsContainer
-          onPluginsChange={pluginsChange}
-          plugins={win.plugins}/>
+          onPluginsChange={pluginsChange} />
       </Main>,
       $('main'))
   })

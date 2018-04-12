@@ -11,6 +11,7 @@ const { PrefPane, PrefPaneToggle } = require('./pane')
 const { AppPrefs } = require('./app')
 const { PluginsPane } = require('../plugin')
 const actions = require('../../actions')
+const { win } = require('../../window')
 
 const {
   getItemTemplates,
@@ -146,7 +147,8 @@ class PrefsContainer extends PureComponent {
   }
 
   static defaultProps = {
-    isFrameless: ARGS.frameless
+    isFrameless: ARGS.frameless,
+    plugins: win.plugins
   }
 }
 
