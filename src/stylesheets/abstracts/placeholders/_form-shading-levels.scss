@@ -12,6 +12,49 @@
     background-color: $level-2-bg;
 
     @include input-btn-focus; // sass-lint:disable-line mixins-before-declarations
+
+    &[readonly],
+    &[disabled] {
+      background: $level-2-input-bg-readonly;
+    }
+  }
+
+  .checkbox,
+  .radio {
+    [type] {
+      background-color: $level-2-bg;
+      border-color: $level-2-border;
+
+      &:active {
+        background-color: $checkbox-checked-bg;
+        border-color: $checkbox-checked-border;
+      }
+
+      &[disabled] {
+        background-color: $level-2-input-bg-readonly;
+        border-color: $level-2-border;
+      }
+
+      &:checked {
+        background-color: $checkbox-checked-bg;
+        border-color: $checkbox-checked-border;
+
+        &:active {
+          background-color: $checkbox-checked-active-bg;
+          border-color: $checkbox-checked-active-border;
+        }
+
+        &[disabled] {
+          background-color: $level-2-input-bg-readonly;
+          border-color: $level-2-border;
+
+          &::before,
+          &::after {
+            background: $checkbox-checked-bg;
+          }
+        }
+      }
+    }
   }
 
   .btn-default {

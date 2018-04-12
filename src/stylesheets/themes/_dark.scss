@@ -179,9 +179,10 @@ $checkbox-overlay-checked-active-border: var(--shade-10-darken-19);
 $tick-color:                             var(--shade-4);
 
 // Level 2
-$level-2-border:      var(--shade-1-lighten-2);
-$level-2-bg:          var(--shade-4);
-$level-2-fieldset-bg: var(--shade-4-lighten-4);
+$level-2-border:            var(--shade-1-lighten-2);
+$level-2-bg:                var(--shade-4);
+$level-2-input-bg-readonly: var(--shade-4-lighten-4);
+$level-2-fieldset-bg:       var(--shade-4-lighten-4);
 
 // Level 3
 $level-3-border:            var(--shade-1-lighten-4);

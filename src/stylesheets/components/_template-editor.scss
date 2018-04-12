@@ -40,6 +40,8 @@
     position: relative;
 
     fieldset {
+      @extend %form-shading-level-2;
+
       margin-right: 6px;
     }
 
