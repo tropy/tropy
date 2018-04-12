@@ -28,12 +28,14 @@ class PluginsPane extends Component {
     this.props.plugins.removeListener('change', this.refresh)
   }
 
-  componentWillReceiveProps(props) {
-    const { spec, config } = props.plugins
-    this.refresh({ spec, config })
+  componentWillReceiveProps() {
+    this.refresh()
   }
 
-  refresh = ({ spec, config }) => this.setState({ spec, config })
+  refresh = () => {
+    const { spec, conf } = this.props.plugins
+    this.setState({ spec, conf })
+  }
 
   onChange = (plugin, index, newConfig) => {
     let { config } = this.state
