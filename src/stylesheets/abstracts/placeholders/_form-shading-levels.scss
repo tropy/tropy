@@ -68,6 +68,11 @@
     background-color: $level-3-bg;
 
     @include input-btn-focus; // sass-lint:disable-line mixins-before-declarations
+
+    &[readonly],
+    &[disabled] {
+      background: $level-3-input-bg-readonly;
+    }
   }
 
   .checkbox,
