@@ -148,7 +148,8 @@ class PrefsContainer extends PureComponent {
 
   static defaultProps = {
     isFrameless: ARGS.frameless,
-    plugins: win.plugins
+    plugins: win.plugins,
+    onPluginsChange: win.handlePluginsChange
   }
 }
 

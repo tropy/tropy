@@ -39,6 +39,14 @@ class Window extends EventEmitter {
 
   init(done) {
     this.plugins.reloadScanCreate()
+      .then(plugins => {
+        this.pluginsInitialConfig = plugins.config
+        this.pluginsConfig = plugins.config
+      })
+    this.unloaders.push(() => {
+      if (this.pluginsInitialConfig === this.pluginsConfig) return
+      this.plugins.save(this.pluginsConfig)
+    })
 
     this.handleUnload()
     this.handleTabFocus()
@@ -243,6 +251,10 @@ class Window extends EventEmitter {
       toggle(document.body, 'meta-key', event.metaKey === true)
       toggle(document.body, 'ctrl-key', event.ctrlKey === true)
     }
+  }
+
+  handlePluginsChange = (newConfig) => {
+    this.pluginsConfig = newConfig
   }
 
   createWindowControls() {

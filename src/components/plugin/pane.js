@@ -33,8 +33,10 @@ class PluginsPane extends Component {
   }
 
   refresh = (props = this.props) => {
-    const { spec, config } = props.plugins
-    this.setState({ spec, config })
+    this.setState({
+      spec: { ...props.plugins.spec },
+      config: [...props.plugins.config],
+    })
   }
 
   onChange = (plugin, index, newConfig) => {
