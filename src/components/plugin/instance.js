@@ -12,7 +12,7 @@ const { Button, ButtonGroup } = require('../button')
 
 class PluginInstance extends PureComponent {
   getValue({ field, default: defaultValue }) {
-    const value = get(this.props.options, field)
+    const value = get(this.props.config.options, field)
     return typeof value !== 'undefined' ? value : defaultValue
   }
 
@@ -47,19 +47,19 @@ class PluginInstance extends PureComponent {
   }
 
   handleInsert = () => {
-    this.props.onInsert(this.props.plugin, this.props.index)
+    this.props.onInsert(this.props.config.plugin, this.props.index)
   }
 
   handleRemove = () => {
-    this.props.onDelete(this.props.plugin, this.props.index)
+    this.props.onDelete(this.props.config.plugin, this.props.index)
   }
 
   handleChange = (data) => {
-    let { config, index, plugin } = this.props
+    let { config, index } = this.props
     for (const field in data) {
       set(config, field, data[field])
     }
-    this.props.onChange(plugin, index, config)
+    this.props.onChange(this.props.config.plugin, index, config)
     this.forceUpdate()
   }
 
@@ -70,7 +70,7 @@ class PluginInstance extends PureComponent {
           <FormField
             id="plugin.name"
             name="name"
-            value={this.props.name}
+            value={this.props.config.name}
             tabIndex={this.idx}
             onChange={this.handleChange}
             isCompact/>
@@ -90,10 +90,7 @@ class PluginInstance extends PureComponent {
   }
 
   static propTypes = {
-    plugin: string,
-    name: string,
     index: number,
-    options: object,
     config: object,
     onDelete: func.isRequired,
     onInsert: func.isRequired,
@@ -109,9 +106,11 @@ class PluginInstance extends PureComponent {
   }
 
   static defaultProps = {
-    name: '',
     guiOptions: [],
-    options: {}
+    config: {
+      name: '',
+      options: {},
+    }
   }
 }
 

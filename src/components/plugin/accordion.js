@@ -1,9 +1,7 @@
 'use strict'
 
 const React = require('react')
-const {
-  arrayOf, bool, func, number, object, oneOf, oneOfType, shape, string
-} = require('prop-types')
+const { arrayOf, func, object } = require('prop-types')
 const { Accordion } = require('../accordion')
 const { Button, ButtonGroup } = require('../button')
 const { PluginInstance } = require('./instance')
@@ -14,12 +12,14 @@ const { keys } = Object
 class PluginAccordion extends Accordion {
   handleUninstall = (event) =>  {
     event.stopPropagation()
-    const { plugins, name } = this.props
+    const { name } = this.props.spec
+    const { plugins } = this.props
     this.props.onUninstall({ plugins, name })
   }
 
   toggleEnabled = (event) => {
     let disabled = this.isDisabled
+    const { name } = this.props.spec
     this.props.configs.map((config, idx) => {
       let newConfig = config
       if (disabled) {
@@ -27,11 +27,11 @@ class PluginAccordion extends Accordion {
       } else {
         newConfig.disabled = true
       }
-      this.props.onChange(this.props.name, idx, newConfig)
+      this.props.onChange(name, idx, newConfig)
     })
 
     if (disabled && !this.configs.length) {
-      this.props.onInsert(this.props.name, -1)
+      this.props.onInsert(name, -1)
     }
 
     event.stopPropagation()
@@ -53,7 +53,7 @@ class PluginAccordion extends Accordion {
   }
 
   get repoLink() {
-    let repo = this.props.repository
+    let repo = this.props.spec.repository
     if (typeof repo === 'object' && repo.url) return repo.url
     if (typeof repo !== 'string') return
     if (repo.startsWith('http')) return repo
@@ -64,11 +64,11 @@ class PluginAccordion extends Accordion {
   }
 
   get canUninstall() {
-    return this.props.source === 'directory'
+    return this.props.spec.source === 'directory'
   }
 
   get label() {
-    return this.props.label || this.props.name
+    return this.props.spec.label || this.props.spec.name
   }
 
   renderHook(hook) {
@@ -90,7 +90,7 @@ class PluginAccordion extends Accordion {
   }
 
   get renderLinks() {
-    const { homepage } = this.props
+    const { homepage } = this.props.spec
     if (homepage) return this.renderLink('homepage', homepage)
     if (this.repoLink) return this.renderLink('repository', this.repoLink)
   }
@@ -102,7 +102,7 @@ class PluginAccordion extends Accordion {
   }
 
   get hasLink() {
-    return this.props.homepage || this.repoLink
+    return this.props.spec.homepage || this.repoLink
   }
 
   renderHeader() {
@@ -110,15 +110,15 @@ class PluginAccordion extends Accordion {
     return super.renderHeader(
       <div className="panel-header-container">
         <ul className="hooks">
-          {keys(this.props.hooks).map(h => this.renderHook(h))}
+          {keys(this.props.spec.hooks).map(h => this.renderHook(h))}
         </ul>
         <h1 className="panel-heading">
           {this.label}
           {' '}
-          <small className="version">{this.props.version}</small>
+          <small className="version">{this.props.spec.version}</small>
         </h1>
         <p className="description">
-          {this.props.description}
+          {this.props.spec.description}
         </p>
         <div className="flex-row center">
           {this.hasLink ? this.renderLinks : this.renderNoinfo}
@@ -147,40 +147,22 @@ class PluginAccordion extends Accordion {
              <PluginInstance
                key={idx}
                index={idx}
-               guiOptions={this.props.options}
                config={config}
-               name={config.name}
-               options={config.options}
+               guiOptions={this.props.spec.options}
                onChange={this.props.onChange}
                onDelete={this.props.onDelete}
-               onInsert={this.props.onInsert}
-               plugin={config.plugin} />
+               onInsert={this.props.onInsert} />
         )}
       </ul>
     )
   }
 
   static propTypes = {
-    name: string.isRequired,
-    label: string,
-    version: string,
-    description: string,
-    homepage: string,
-    source: string.isRequired,
-    repository: oneOfType([string, object]),
+    spec: object.isRequired,
     onChange: func.isRequired,
     onDelete: func.isRequired,
     onInsert: func.isRequired,
     configs: arrayOf(object),
-    options: arrayOf(shape({
-      field: string.isRequired,
-      required: bool,
-      default: oneOfType([string, bool, number]),
-      hint: string,
-      type: oneOf(['string', 'bool', 'boolean', 'number']),
-      label: string.isRequired
-    })),
-    hooks: object,
     plugins: object.isRequired,
     intl: intlShape.isRequired,
     onUninstall: func.isRequired

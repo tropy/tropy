@@ -101,15 +101,7 @@ class PluginsPane extends Component {
                (spec, idx) => {
                  return (
                    <PluginAccordion
-                     name={spec.name}
-                     label={spec.label}
-                     description={spec.description}
-                     homepage={spec.homepage}
-                     version={spec.version}
-                     hooks={spec.hooks}
-                     options={spec.options}
-                     repository={spec.repository}
-                     source={spec.source}
+                     spec={spec}
                      configs={this.configs(spec.name)}
                      onChange={this.onChange}
                      onDelete={this.onDelete}
