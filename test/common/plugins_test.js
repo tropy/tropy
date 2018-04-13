@@ -36,11 +36,11 @@ describe('Plugins', () => {
   })
 
   it('create()', () => {
-    expect(plugins.create()).to.have.keys('0', '1')
+    expect(plugins.create().instances).to.have.keys('0', '1')
   })
 
   it('exec()', async () => {
-    await plugins.reloadScanCreate()
+    (await plugins.reload()).create()
     const a = await plugins.exec({ id: 0, action: 'sum' }, 40, 2)
     const b = await plugins.exec({ id: 1, action: 'sum' }, 40, 2)
 

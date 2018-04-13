@@ -69,7 +69,7 @@ class Plugins extends EventEmitter {
   }
 
   create(config = this.config) {
-    return config.reduce((acc, { plugin, options }, id) => {
+    this.instances = config.reduce((acc, { plugin, options }, id) => {
       try {
         acc[id] = this.contract(this.require(plugin), options)
       } catch (error) {
@@ -77,6 +77,8 @@ class Plugins extends EventEmitter {
       }
       return acc
     }, {})
+    verbose(`plugins loaded: ${keys(this.instances).length}`)
+    return this
   }
 
   async exec({ id, action }, ...args) {
@@ -88,7 +90,7 @@ class Plugins extends EventEmitter {
   }
 
   handleConfigFileChange = debounce(async () => {
-    await this.reloadAndScan()
+    await this.reload()
     this.emit('change')
   }, 100)
 
@@ -98,7 +100,7 @@ class Plugins extends EventEmitter {
     } catch (error) {
       if (error.code !== 'EEXIST') throw error
     }
-    return this.reloadAndScan(autosave)
+    return this.reload(autosave)
   }
 
   async install(input) {
@@ -108,7 +110,7 @@ class Plugins extends EventEmitter {
       await this.uninstall(plugin, { clean: false })
       await decompress(input, dest, { strip: 1 })
       const spec = (await this.scan([plugin]))[plugin] || {}
-      await this.reloadAndScan()
+      await this.reload()
       this.emit('change')
       verbose(`installed plugin ${spec.name || plugin} ${spec.version}`)
     } catch (error) {
@@ -145,19 +147,6 @@ class Plugins extends EventEmitter {
         if (autosave) await this.save()
       }
     }
-    return this
-  }
-
-  async reloadScanCreate() {
-    await this.reload()
-    this.spec = await this.scan()
-    this.instances = this.create()
-    verbose(`plugins loaded: ${keys(this.instances).length}`)
-    return this
-  }
-
-  async reloadAndScan(autosave = false) {
-    await this.reload(autosave)
     this.spec = await this.scan()
     verbose(`plugins scanned: ${keys(this.spec).length}`)
     return this

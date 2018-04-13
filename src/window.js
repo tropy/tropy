@@ -38,7 +38,8 @@ class Window extends EventEmitter {
   }
 
   init(done) {
-    this.plugins.reloadScanCreate()
+    this.plugins.reload()
+      .then(plugins => plugins.create())
       .then(plugins => {
         this.pluginsInitialConfig = plugins.config
         this.pluginsConfig = plugins.config
@@ -143,7 +144,7 @@ class Window extends EventEmitter {
         this.reload()
       })
       .on('plugins-reload', async () => {
-        await this.plugins.reloadScanCreate()
+        (await this.plugins.reload()).create()
         this.plugins.emit('change')
       })
       .on('toggle-perf-tools', () => {
