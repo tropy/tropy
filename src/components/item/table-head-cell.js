@@ -2,15 +2,13 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { DragSource, DropTarget } = require('react-dnd')
+const { Draggable } = require('../draggable')
 const { Resizable } = require('../resizable')
 const cx = require('classnames')
 const { IconChevron7 } = require('../icons')
-const { DND, TYPE } = require('../../constants')
+const { TYPE } = require('../../constants')
 const { bool, func, number, string } = require('prop-types')
-const { bounds } = require('../../dom')
-const { blank } = require('../../common/util')
-const { round } = Math
+const { blank, noop } = require('../../common/util')
 
 const MIN_WIDTH = 40
 
@@ -23,7 +21,6 @@ class ItemTableHeadCell extends PureComponent {
     return ['metadata-head', this.props.type, {
       blank: blank(this.props.label),
       dragging: this.props.isDragging,
-      over: this.props.isOver,
       [this.direction]: this.props.isActive
     }]
   }
@@ -32,22 +29,8 @@ class ItemTableHeadCell extends PureComponent {
     return this.props.isAscending ? 'ascending' : 'descending'
   }
 
-  get isDragAndDropEnabled() {
-    return !this.props.isFixedColumn && this.props.onOrder != null
-  }
-
   get isResizable() {
     return this.props.onResize != null && this.props.position != null
-  }
-
-  setContainer = (container) => {
-    this.container = container
-  }
-
-  connect(element) {
-    return this.isDragAndDropEnabled ?
-      this.props.dt(this.props.ds(element)) :
-      element
   }
 
   handleClick = () => {
@@ -55,6 +38,22 @@ class ItemTableHeadCell extends PureComponent {
       asc: !this.props.isActive || !this.props.isAscending,
       column: this.props.id
     })
+  }
+
+  handleDragStart = () => {
+    this.props.onOrderStart()
+  }
+
+  handleDrag = (event) => {
+    this.props.onOrder(this.props.id, event)
+  }
+
+  handleDragStop = (event, hasBeenCancelled) => {
+    if (hasBeenCancelled) {
+      this.props.onOrderReset()
+    } else {
+      this.props.onOrderStop()
+    }
   }
 
   handleResizeStop = () => {
@@ -83,14 +82,16 @@ class ItemTableHeadCell extends PureComponent {
         onDragStop={this.handleResizeStop}
         onResize={this.handleResize}
         value={this.props.width}>
-        {this.connect(
-          <div
-            className="th-container"
-            onClick={this.handleClick}
-            ref={this.setContainer}>
-            <div className="label">{this.props.label}</div>
-            {this.props.isActive && <IconChevron7/>}
-          </div>)}
+        <Draggable
+          className="th-container"
+          isDisabled={this.props.isFixedColumn}
+          onClick={this.handleClick}
+          onDragStart={this.handleDragStart}
+          onDrag={this.handleDrag}
+          onDragStop={this.handleDragStop}>
+          <div className="label">{this.props.label}</div>
+          {this.props.isActive && <IconChevron7/>}
+        </Draggable>
       </Resizable>
     )
   }
@@ -102,8 +103,6 @@ class ItemTableHeadCell extends PureComponent {
     isFixedColumn: bool,
     isOver: bool,
     label: string.isRequired,
-    ds: func.isRequired,
-    dt: func.isRequired,
     maxWidth: number,
     minWidth: number.isRequired,
     position: number,
@@ -113,54 +112,19 @@ class ItemTableHeadCell extends PureComponent {
     onClick: func.isRequired,
     onOrder: func,
     onOrderReset: func,
-    onOrderStart: func,
+    onOrderStart: func.isRequired,
     onOrderStop: func,
     onResize: func
   }
 
   static defaultProps = {
     minWidth: MIN_WIDTH,
+    onOrderStart: noop,
     type: TYPE.TEXT
   }
 }
 
-const DragSourceSpec = {
-  beginDrag: ({ id, onOrderStart }) => (onOrderStart(), { id }),
-
-  endDrag: (props, monitor) => {
-    if (monitor.didDrop()) props.onOrderStop()
-    else props.onOrderReset()
-  }
-}
-
-const DragSourceCollect = (connect, monitor) => ({
-  ds: connect.dragSource(),
-  isDragging: monitor.isDragging()
-})
-
-const DropTargetSpec = {
-  hover: ({ id, onOrder }, monitor, { container }) => {
-    const item = monitor.getItem()
-    if (item.id === id) return
-
-    const { left, width } = bounds(container)
-    const offset = round((monitor.getClientOffset().x - left) / width)
-
-    onOrder(item.id, id, offset)
-  },
-
-  drop: ({ id }) => ({ id })
-}
-
-const DropTargetCollect = (connect, monitor) => ({
-  dt: connect.dropTarget(),
-  isOver: monitor.isOver()
-})
-
 module.exports = {
   BlankTableHeadCell,
-  ItemTableHeadCell:
-    DragSource(DND.COLUMN, DragSourceSpec, DragSourceCollect)(
-      DropTarget(DND.COLUMN, DropTargetSpec, DropTargetCollect)(
-        ItemTableHeadCell))
+  ItemTableHeadCell
 }

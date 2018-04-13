@@ -11,7 +11,7 @@ const { noop } = require('../../common/util')
 const { NAV, SASS: { ROW, SCROLLBAR } } = require('../../constants')
 const { on, off, maxScrollLeft } = require('../../dom')
 const { match } = require('../../keymap')
-const { moveById, pick, refine, shallow, splice } = require('../../common/util')
+const { refine, shallow, splice } = require('../../common/util')
 const { assign } = Object
 const throttle = require('lodash.throttle')
 
@@ -138,11 +138,13 @@ class ItemTable extends ItemIterator {
   }
 
   handleColumnOrderStart = () => {
-    this.oc = pick(this.state, ['columns', 'colwidth'])
+    const { columns, colwidth } = this.state
+    this.oc = { columns, colwidth, dragging: null }
   }
 
   handleColumnOrderStop = () => {
     this.oc = null
+    this.setState({ dragging: null })
     this.props.onColumnOrder({
       order: this.state.columns.reduce((ord, col, idx) =>
         ((ord[col.id] = idx), ord), {})
@@ -154,10 +156,13 @@ class ItemTable extends ItemIterator {
     this.oc = null
   }
 
-  handleColumnOrder = (from, to, offset) => {
-    const columns = moveById(this.state.columns, from, to, offset)
-    const colwidth = columns.map(c => c.width)
-    this.setState({ columns, colwidth })
+  handleColumnOrder = (dragging) => {
+    if (this.state.dragging !== dragging) {
+      this.setState({ dragging })
+    }
+    //const columns = moveById(this.state.columns, from, to, offset)
+    //const colwidth = columns.map(c => c.width)
+    //this.setState({ columns, colwidth })
   }
 
   handleColumnResize = ({ column, width }, doCommit) => {
@@ -224,12 +229,13 @@ class ItemTable extends ItemIterator {
                 {this.mapIterableRange(({ item, index, ...props }) =>
                   <ItemTableRow {...props}
                     key={item.id}
-                    item={item}
-                    data={data[item.id]}
                     columns={columns}
-                    position={this.getPosition(index)}
-                    hasPositionColumn={hasPositionColumn}
+                    data={data[item.id]}
+                    dragging={this.state.dragging}
                     edit={edit}
+                    hasPositionColumn={hasPositionColumn}
+                    item={item}
+                    position={this.getPosition(index)}
                     onCancel={this.handleEditCancel}
                     onChange={this.handleChange}
                     onEdit={onEdit}/>)}
@@ -251,6 +257,7 @@ class ItemTable extends ItemIterator {
         <ItemTableHead
           columns={this.state.columns}
           colwidth={this.state.colwidth}
+          dragging={this.state.dragging}
           hasPositionColumn={this.hasPositionColumn()}
           sort={this.props.sort}
           onOrder={this.handleColumnOrder}

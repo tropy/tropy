@@ -23,6 +23,7 @@ const BlankTableCell = () => (
 class ItemTableCell extends PureComponent {
   get classes() {
     return ['metadata', this.props.type, {
+      'dragging': this.props.isDragging,
       'main-column': this.props.isMainColumn,
       'read-only': this.props.isReadOnly
     }]
@@ -135,6 +136,7 @@ class ItemTableCell extends PureComponent {
     cache: string,
     id: string.isRequired,
     isDisabled: bool,
+    isDragging: bool,
     isEditing: bool,
     isMainColumn: bool,
     isReadOnly: bool,

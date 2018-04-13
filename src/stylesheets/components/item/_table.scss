@@ -121,7 +121,7 @@
 
       &.dragging {
         .th-container {
-          visibility: hidden;
+          opacity: 0.33;
         }
       }
 
@@ -189,6 +189,10 @@
 
     td {
       height: $row-height;
+
+      &.dragging {
+        opacity: 0.33;
+      }
     }
 
     .td-container {

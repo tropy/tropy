@@ -7,8 +7,7 @@ const { BlankTableCell, ItemTableCell } = require('./table-cell')
 const { get, pick } = require('../../common/util')
 const { NAV } = require('../../constants')
 const cx = require('classnames')
-const { arrayOf, bool, number, object } = require('prop-types')
-
+const { arrayOf, bool, number, object, string } = require('prop-types')
 
 class ItemTableRow extends ItemIterable {
   isEditing = (id) => {
@@ -28,8 +27,9 @@ class ItemTableRow extends ItemIterable {
       const props = {
         key: property.id,
         id: property.id,
-        isMainColumn,
+        isDragging: this.props.dragging === property.id,
         isEditing: this.isEditing(property.id),
+        isMainColumn,
         nextColumn: next.property.id,
         prevColumn: prev.property.id,
         type: get(this.props.data, [property.id, 'type']),
@@ -74,6 +74,7 @@ class ItemTableRow extends ItemIterable {
     ...ItemIterable.propTypes,
     edit: object,
     data: object.isRequired,
+    dragging: string,
     columns: arrayOf(object).isRequired,
     hasPositionColumn: bool,
     position: number.isRequired
