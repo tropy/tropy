@@ -48,7 +48,7 @@ class PluginsPane extends Component {
   }
 
   ensureOpen = (plugin) => {
-    this.accordion.setState({
+    this.accordionGroup.setState({
       open: keys(this.state.spec).indexOf(plugin)
     })
   }
@@ -79,8 +79,8 @@ class PluginsPane extends Component {
 
   installPlugin = () => ipc.send('cmd', 'app:install-plugin')
 
-  setAccordion = (accordion) => {
-    this.accordion = accordion
+  setAccordionGroup = (accordionGroup) => {
+    this.accordionGroup = accordionGroup
   }
 
   configs = (name) => {
@@ -95,7 +95,7 @@ class PluginsPane extends Component {
         isActive={this.props.isActive}>
         <div className="scroll-container">
           <AccordionGroup
-            ref={this.setAccordion}
+            ref={this.setAccordionGroup}
             className="form-horizontal">
             {values(this.state.spec).map(
                (spec, idx) => {
