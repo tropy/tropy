@@ -149,17 +149,20 @@ class ItemTable extends ItemIterator {
       order: this.state.columns.reduce((ord, col, idx) =>
         ((ord[col.id] = idx), ord), {})
     })
+    this.table.style.setProperty('--col-offset', `${0}px`)
   }
 
   handleColumnOrderReset = () => {
     this.setState(this.oc)
     this.oc = null
+    this.table.style.setProperty('--col-offset', `${0}px`)
   }
 
   handleColumnOrder = (dragging) => {
     if (this.state.dragging !== dragging) {
       this.setState({ dragging })
     }
+    this.table.style.setProperty('--col-offset', `${10}px`)
     //const columns = moveById(this.state.columns, from, to, offset)
     //const colwidth = columns.map(c => c.width)
     //this.setState({ columns, colwidth })

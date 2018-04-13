@@ -120,9 +120,8 @@
       }
 
       &.dragging {
-        .th-container {
-          opacity: 0.33;
-        }
+        opacity: 0.33;
+        transform: translateX(var(--col-offset));
       }
 
       .th-container {
@@ -192,6 +191,7 @@
 
       &.dragging {
         opacity: 0.33;
+        transform: translateX(var(--col-offset));
       }
     }
 
