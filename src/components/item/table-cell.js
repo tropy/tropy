@@ -25,6 +25,7 @@ class ItemTableCell extends PureComponent {
     return ['metadata', this.props.type, {
       'dragging': this.props.isDragging,
       'main-column': this.props.isMainColumn,
+      'moving': this.props.isMoving,
       'read-only': this.props.isReadOnly
     }]
   }
@@ -139,6 +140,7 @@ class ItemTableCell extends PureComponent {
     isDragging: bool,
     isEditing: bool,
     isMainColumn: bool,
+    isMoving: bool,
     isReadOnly: bool,
     isSelected: bool,
     item: shape({

@@ -21,6 +21,7 @@ class ItemTableHeadCell extends PureComponent {
     return ['metadata-head', this.props.type, {
       blank: blank(this.props.label),
       dragging: this.props.isDragging,
+      moving: this.props.isMoving,
       [this.direction]: this.props.isActive
     }]
   }
@@ -40,12 +41,12 @@ class ItemTableHeadCell extends PureComponent {
     })
   }
 
-  handleDragStart = () => {
-    this.props.onOrderStart()
+  handleDragStart = (event) => {
+    this.props.onOrderStart(this.props.position, event)
   }
 
   handleDrag = (event) => {
-    this.props.onOrder(this.props.id, event)
+    this.props.onOrder(event)
   }
 
   handleDragStop = (event, hasBeenCancelled) => {
@@ -101,6 +102,7 @@ class ItemTableHeadCell extends PureComponent {
     isAscending: bool.isRequired,
     isDragging: bool,
     isFixedColumn: bool,
+    isMoving: bool,
     isOver: bool,
     label: string.isRequired,
     maxWidth: number,

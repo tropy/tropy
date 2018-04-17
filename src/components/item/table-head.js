@@ -22,6 +22,15 @@ class ItemTableHead extends PureComponent {
     return (id === this.props.sort.column)
   }
 
+  isDragging(idx) {
+    return idx === this.props.drag
+  }
+
+  isMoving(idx) {
+    return (idx >= this.props.drop && idx < this.props.drag) ||
+      (idx <= this.props.drop && idx > this.props.drag)
+  }
+
   getLabel(property) {
     return property.label || getLabel(property.id)
   }
@@ -50,7 +59,8 @@ class ItemTableHead extends PureComponent {
                 minWidth={idx === 0 ? MIN_WIDTH_MAIN : MIN_WIDTH}
                 isActive={this.isActive(property)}
                 isAscending={this.isAscending}
-                isDragging={this.props.dragging === property.id}
+                isDragging={this.isDragging(idx)}
+                isMoving={this.isMoving(idx)}
                 isFixedColumn={isFixedColumn}
                 onClick={this.props.onSort}
                 onOrder={this.props.onOrder}
@@ -71,12 +81,13 @@ class ItemTableHead extends PureComponent {
       width: number.isRequired
     })).isRequired,
     colwidth: arrayOf(number).isRequired,
-    dragging: string,
+    drag: number,
     hasPositionColumn: bool,
     sort: shape({
       asc: bool.isRequired,
       column: string.isRequired,
     }).isRequired,
+    drop: number,
     onOrder: func.isRequired,
     onOrderReset: func.isRequired,
     onOrderStart: func.isRequired,

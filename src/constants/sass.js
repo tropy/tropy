@@ -40,7 +40,8 @@ const TILE = {
 }
 
 const ROW = {
-  HEIGHT: 30
+  HEIGHT: 30,
+  PADDING: 5 + 4
 }
 
 const ITEM = {

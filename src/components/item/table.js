@@ -9,9 +9,9 @@ const { ItemTableHead } = require('./table-head')
 const cx = require('classnames')
 const { noop } = require('../../common/util')
 const { NAV, SASS: { ROW, SCROLLBAR } } = require('../../constants')
-const { on, off, maxScrollLeft } = require('../../dom')
+const { bounds, on, off, maxScrollLeft } = require('../../dom')
 const { match } = require('../../keymap')
-const { refine, shallow, splice } = require('../../common/util')
+const { refine, restrict, shallow, splice, warp } = require('../../common/util')
 const { assign } = Object
 const throttle = require('lodash.throttle')
 
@@ -137,35 +137,71 @@ class ItemTable extends ItemIterator {
     this.container.focus()
   }
 
-  handleColumnOrderStart = () => {
-    const { columns, colwidth } = this.state
-    this.oc = { columns, colwidth, dragging: null }
+  getOffsetInTable(x, { offset, min, max } = this.dragstate) {
+    return restrict(x - offset - bounds(this.table).left, min, max)
+  }
+
+  setColumnOffset(offset = 0, column = 'drag') {
+    this.table.style.setProperty(`--${column}-offset`, `${offset}px`)
+  }
+
+  getMaxColumnOffset(idx) {
+    let max = this.state.minWidth - this.state.colwidth[idx]
+    return (this.props.hasScrollbars) ? max - SCROLLBAR.WIDTH : max
+  }
+
+  handleColumnOrderStart = (idx, event) => {
+    this.handleColumnOrderReset()
+    let min = this.hasPositionColumn() ? NAV.COLUMN.POSITION.width : 0
+    let max = this.getMaxColumnOffset(idx)
+    let offset = event.nativeEvent.offsetX + ROW.PADDING
+    let origin = this.getOffsetInTable(event.clientX, { min, max, offset })
+    this.dragstate = { max, min, idx, offset, origin }
   }
 
   handleColumnOrderStop = () => {
-    this.oc = null
-    this.setState({ dragging: null })
+    let { drag, drop } = this.state
+    let columns = warp(this.state.columns, drag, drop)
+    this.setState({ columns })
+    this.handleColumnOrderReset()
     this.props.onColumnOrder({
-      order: this.state.columns.reduce((ord, col, idx) =>
-        ((ord[col.id] = idx), ord), {})
+      order: columns.reduce((ord, col, idx) => ((ord[col.id] = idx), ord), {})
     })
-    this.table.style.setProperty('--col-offset', `${0}px`)
   }
 
   handleColumnOrderReset = () => {
-    this.setState(this.oc)
-    this.oc = null
-    this.table.style.setProperty('--col-offset', `${0}px`)
+    this.setState({ drag: null, drop: null })
+    this.setColumnOffset(0)
+    this.setColumnOffset(0, 'drop')
+    this.dragstate = null
   }
 
-  handleColumnOrder = (dragging) => {
-    if (this.state.dragging !== dragging) {
-      this.setState({ dragging })
+  handleColumnOrder = (event) => {
+    let { idx, origin } = this.dragstate
+    let { colwidth } = this.state
+    let offset = this.getOffsetInTable(event.clientX)
+    let delta = offset - origin
+    let tgt = idx
+    let mov = delta
+
+    if (delta > 0) {
+      while (tgt < colwidth.length - 1 && colwidth[tgt + 1] / 2 < mov) {
+        tgt += 1
+        mov -= colwidth[tgt]
+      }
+    } else {
+      mov = -mov
+      while (tgt > 0 && colwidth[tgt - 1] / 2 < mov) {
+        tgt -= 1
+        mov -= colwidth[tgt]
+      }
     }
-    this.table.style.setProperty('--col-offset', `${10}px`)
-    //const columns = moveById(this.state.columns, from, to, offset)
-    //const colwidth = columns.map(c => c.width)
-    //this.setState({ columns, colwidth })
+
+    this.setState({ drag: idx, drop: tgt })
+    this.setColumnOffset(delta)
+    this.setColumnOffset(
+      (tgt === idx) ? 0 : (tgt < idx) ? colwidth[idx] : -colwidth[idx], 'drop'
+    )
   }
 
   handleColumnResize = ({ column, width }, doCommit) => {
@@ -234,7 +270,8 @@ class ItemTable extends ItemIterator {
                     key={item.id}
                     columns={columns}
                     data={data[item.id]}
-                    dragging={this.state.dragging}
+                    drag={this.state.drag}
+                    drop={this.state.drop}
                     edit={edit}
                     hasPositionColumn={hasPositionColumn}
                     item={item}
@@ -255,12 +292,14 @@ class ItemTable extends ItemIterator {
       <div
         ref={this.setTable}
         className={cx('item-table', {
+          'dragging-column': this.state.drag != null,
           'max-scroll-left': this.state.hasMaxScrollLeft
         })}>
         <ItemTableHead
           columns={this.state.columns}
           colwidth={this.state.colwidth}
-          dragging={this.state.dragging}
+          drag={this.state.drag}
+          drop={this.state.drop}
           hasPositionColumn={this.hasPositionColumn()}
           sort={this.props.sort}
           onOrder={this.handleColumnOrder}

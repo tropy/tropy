@@ -140,21 +140,16 @@ const util = {
     return res
   },
 
-  moveById(array, aId, bId, offset = 0) {
-    let a, b
-    for (let x of array) {
-      if (a == null && aId === x.id) a = x
-      else if (b == null && bId === x.id) b = x
-      if (a != null && b != null) break
-    }
-
-    return util.move(array, a, b, offset)
+  warp(array, idx, at) {
+    at = util.restrict(at, 0, array.length - 1)
+    if (idx === at || idx == null) return array
+    return util.insert(util.splice(array, idx, 1), at, array[idx])
   },
 
   swap(array, from, to) {
     to = util.restrict(to, 0, array.length - 1)
 
-    if (from === to) return array
+    if (from === to || from == null) return array
     if (from > to) return util.swap(array, to, from)
 
     let head = array.slice(0, from)
