@@ -40,7 +40,7 @@ class ItemTableHead extends PureComponent {
 
     return (
       <table className="table-head">
-        <thead>
+        <tbody>
           <tr>
             {this.props.hasPositionColumn &&
               <ItemTableHeadCell
@@ -70,7 +70,7 @@ class ItemTableHead extends PureComponent {
                 onResize={this.props.onResize}/>)}
             <BlankTableHeadCell/>
           </tr>
-        </thead>
+        </tbody>
       </table>
     )
   }
