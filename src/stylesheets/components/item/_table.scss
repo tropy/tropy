@@ -15,6 +15,7 @@
   td {
     padding: 0;
     position: relative;
+    transition: transform $column-transition;
 
     &:last-child {
       .th-container,
@@ -26,12 +27,22 @@
     &[class*="integer"] {
       text-align: right;
     }
+
+    &.dragging {
+      z-index: $zindex-drag-layer;
+      transform: translateX(var(--drag-offset));
+      transition: none;
+
+      > * {
+        opacity: 0.5;
+      }
+    }
   }
 
   .table-head {
     width: 100%;
     table-layout: fixed;
-    border-collapse: separate;
+    border-collapse: collapse;
     border-spacing: 0;
     color: $item-table-header-color;
 
@@ -39,15 +50,18 @@
       width: calc(100% - #{$default-padding-horizontal});
     }
 
+    tr {
+      border: {
+        top: 1px solid $item-table-header-border-color;
+        bottom: 1px solid $item-table-header-border-color;
+      }
+    }
+
     th {
       display: table-cell; // Reset resizable
       text-align: justify;
       font-weight: 400;
       height: $item-table-header-height;
-      border: {
-        top: 1px solid $item-table-header-border-color;
-        bottom: 1px solid $item-table-header-border-color;
-      }
       padding: 0 $space-min; // Prevent overlap of th-container and resize handle
       position: relative;
       background-image:
@@ -119,13 +133,28 @@
         }
       }
 
-      &.dragging {
-        opacity: 0.33;
-        transform: translateX(var(--drag-offset));
-      }
-
       &.moving {
         transform: translateX(var(--drop-offset));
+      }
+
+      &.dragging {
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          top: calc(100% + 1px);
+          width: 1px;
+          height: 4000px;
+          background: $item-table-column-border-color;
+        }
+
+        &::before {
+          left: 0;
+        }
+
+        &::after {
+          right: -1px;
+        }
       }
 
       .th-container {
@@ -193,11 +222,6 @@
     td {
       height: $row-height;
 
-      &.dragging {
-        opacity: 0.33;
-        transform: translateX(var(--drag-offset));
-      }
-
       &.moving {
         transform: translateX(var(--drop-offset));
       }
@@ -208,9 +232,10 @@
     }
 
     &.active {
+      background: $items-active-bg;
+
       td {
         color: $items-active-color;
-        background: $items-active-bg;
 
         @at-root #{
           selector-replace(&, ".item-table",

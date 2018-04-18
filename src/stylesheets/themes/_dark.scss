@@ -242,6 +242,7 @@ $item-table-header-color:        var(--shade-8);
 $item-table-header-sort-color:   var(--shade-9);
 $item-table-header-active-bg:    var(--shade-2);
 $item-table-header-border-color: var(--shade-1);
+$item-table-column-border-color: $item-table-header-border-color;
 $items-odd-bg:                   var(--shade-4);
 $items-focus-color:              var(--brand-primary-light);
 $items-focus-bg:                 var(--brand-primary);
