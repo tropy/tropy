@@ -32,8 +32,10 @@ class Draggable extends PureComponent {
 
     const { pageX, pageY, clientX } = event
 
-    this.delay = setTimeout(() =>
-      void this.handleDrag({ pageX, pageY, clientX }), this.props.delay)
+    if (this.props.delay > 0) {
+      this.delay = setTimeout(() =>
+        void this.handleDrag({ pageX, pageY, clientX }), this.props.delay)
+    }
   }
 
   handleDrag = (event) => {
