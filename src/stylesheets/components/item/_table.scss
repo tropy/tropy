@@ -11,11 +11,23 @@
   overflow-x: auto;
   contain: strict;
 
+
+  &.dragging-column {
+    th,
+    td {
+      transition: transform $column-transition;
+
+      &.dragging {
+        transition: none;
+      }
+    }
+  }
+
   th,
   td {
     padding: 0;
     position: relative;
-    transition: transform $column-transition;
+
 
     &:last-child {
       .th-container,
@@ -31,7 +43,6 @@
     &.dragging {
       z-index: $zindex-drag-layer;
       transform: translateX(var(--drag-offset));
-      transition: none;
 
       > * {
         opacity: 0.5;
