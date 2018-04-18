@@ -39,7 +39,7 @@ class PluginsPane extends Component {
     })
   }
 
-  onChange = (plugin, index, newConfig) => {
+  handleChange = (plugin, index, newConfig) => {
     let { config } = this.state
     config[this.idx(plugin, index)] = newConfig
     this.setState({ config })
@@ -53,7 +53,7 @@ class PluginsPane extends Component {
     })
   }
 
-  onInsert = (plugin, index) => {
+  handleInsert = (plugin, index) => {
     let { config } = this.state
     config.splice(this.idx(plugin, index) + 1, 0, {
       plugin,
@@ -70,7 +70,7 @@ class PluginsPane extends Component {
     return this.state.config.findIndex(c => c === cfg)
   }
 
-  onDelete = (plugin, index) => {
+  handleDelete = (plugin, index) => {
     let { config } = this.state
     config.splice(this.idx(plugin, index), 1)
     this.setState({ config })
@@ -103,9 +103,9 @@ class PluginsPane extends Component {
                    <PluginAccordion
                      spec={spec}
                      configs={this.configs(spec.name)}
-                     onChange={this.onChange}
-                     onDelete={this.onDelete}
-                     onInsert={this.onInsert}
+                     onChange={this.handleChange}
+                     onDelete={this.handleDelete}
+                     onInsert={this.handleInsert}
                      onUninstall={this.props.onPluginUninstall}
                      onOpenLink={this.props.onOpenLink}
                      plugins={this.props.plugins}
