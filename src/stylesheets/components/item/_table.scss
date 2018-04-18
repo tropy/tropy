@@ -45,23 +45,20 @@
     border-collapse: collapse;
     border-spacing: 0;
     color: $item-table-header-color;
+    height: $item-table-header-height;
+    border: {
+      top: 1px solid $item-table-header-border-color;
+      bottom: 1px solid $item-table-header-border-color;
+    }
 
     .scrollbar-style-old-school & {
       width: calc(100% - #{$default-padding-horizontal});
-    }
-
-    tr {
-      border: {
-        top: 1px solid $item-table-header-border-color;
-        bottom: 1px solid $item-table-header-border-color;
-      }
     }
 
     th {
       display: table-cell; // Reset resizable
       text-align: justify;
       font-weight: 400;
-      height: $item-table-header-height;
       padding: 0 $space-min; // Prevent overlap of th-container and resize handle
       position: relative;
       background-image:
