@@ -17,15 +17,17 @@ const { bool, func, number, shape, string } = require('prop-types')
 class ListNode extends PureComponent {
   get classes() {
     return ['list', {
-      'drop-target': this.props.isSortable,
       'active': this.props.isSelected,
       'dragging': this.props.isDragging,
+      'drop-target': this.props.isSortable,
+      'holding': this.props.isHolding,
       'over': this.isOver
     }]
   }
 
   get isOver() {
-    return this.props.isOver && this.props.canDrop &&
+    return this.props.isOver &&
+      this.props.canDrop &&
       this.props.dtType !== DND.LIST
   }
 
@@ -57,7 +59,6 @@ class ListNode extends PureComponent {
   connect(element) {
     if (this.props.isSortable) element = this.props.dt(element)
     if (this.isDraggable) element = this.props.ds(element)
-
     return element
   }
 
@@ -87,19 +88,18 @@ class ListNode extends PureComponent {
 
 
   static propTypes = {
+    canDrop: bool,
+    isDragging: bool,
+    isEditing: bool,
+    isHolding: bool,
+    isOver: bool,
+    isSelected: bool,
+    isSortable: bool,
     list: shape({
       id: number,
       parent: number,
       name: string
     }),
-
-    isSelected: bool,
-    isEditing: bool,
-    isSortable: bool,
-
-    isDragging: bool,
-    isOver: bool,
-    canDrop: bool,
 
     ds: func.isRequired,
     dt: func.isRequired,

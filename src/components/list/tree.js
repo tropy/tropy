@@ -10,7 +10,6 @@ const { arrayOf, func, number, object, shape } = require('prop-types')
 class ListTree extends PureComponent {
   constructor(props) {
     super(props)
-
     this.state = {
       order: get(props, 'parent.children') || []
     }
@@ -77,6 +76,7 @@ class ListTree extends PureComponent {
               list={lists[id] || { id }}
               isSelected={this.isSelected(id)}
               isEditing={this.isEditing(id)}
+              isHolding={this.props.hold[id]}
               isSortable
               onSave={onListSave}
               onSortPreview={this.handleSortPreview}
@@ -94,6 +94,7 @@ class ListTree extends PureComponent {
       children: arrayOf(number).isRequired
     }).isRequired,
     lists: object.isRequired,
+    hold: object.isRequired,
     edit: object,
     selection: number,
     onClick: func.isRequired,

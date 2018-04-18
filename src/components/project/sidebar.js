@@ -2,8 +2,6 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { bool, shape, string, object, arrayOf, func, number } = PropTypes
 const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')
 const { ActivityPane } = require('../activity')
@@ -15,10 +13,12 @@ const { TABS, LIST } = require('../../constants')
 const { has } = require('../../common/util')
 const { match } = require('../../keymap')
 const { testFocusChange } = require('../../dom')
+const {
+  bool, shape, string, object, arrayOf, func, number
+} = require('prop-types')
 
 
 class ProjectSidebar extends PureComponent {
-
   get isEditing() {
     return has(this.props.edit, 'project')
   }
@@ -210,6 +210,7 @@ class ProjectSidebar extends PureComponent {
       edit,
       hasLastImport,
       hasToolbar,
+      hold,
       isSelected,
       isLastImportSelected,
       isTrashSelected,
@@ -265,6 +266,7 @@ class ProjectSidebar extends PureComponent {
                   parent={root}
                   lists={lists}
                   edit={edit.list}
+                  hold={hold}
                   selection={selectedList}
                   onContextMenu={onContextMenu}
                   onDropFiles={onItemImport}
@@ -315,6 +317,7 @@ class ProjectSidebar extends PureComponent {
     isTrashSelected: bool,
     hasLastImport: bool.isRequired,
     hasToolbar: bool,
+    hold: object.isRequired,
 
     project: shape({
       file: string,
