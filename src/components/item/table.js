@@ -106,7 +106,10 @@ class ItemTable extends ItemIterator {
   }
 
   getOffsetInTable(x, { offset, min, max } = this.dragstate) {
-    return restrict(x - offset - bounds(this.table).left, min, max)
+    return restrict(
+      x - offset - bounds(this.table).left + this.table.scrollLeft,
+      min,
+      max)
   }
 
   getPosition(index) {
