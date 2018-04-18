@@ -12,18 +12,6 @@
   overflow-y: hidden; // Prevent horizontal scrollbar due to column borders
   contain: strict;
 
-
-  &.dragging-column {
-    th,
-    td {
-      transition: transform $column-transition;
-
-      &.dragging {
-        transition: none;
-      }
-    }
-  }
-
   th,
   td {
     padding: 0;
@@ -47,6 +35,17 @@
 
       > * {
         opacity: 0.5;
+      }
+    }
+  }
+
+  &.dragging-column {
+    th,
+    td {
+      transition: transform $column-transition;
+
+      &.dragging {
+        transition: none;
       }
     }
   }
