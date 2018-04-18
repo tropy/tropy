@@ -134,26 +134,6 @@
         transform: translateX(var(--drop-offset));
       }
 
-      &.dragging {
-        &::before,
-        &::after {
-          content: "";
-          position: absolute;
-          top: calc(100% + 1px);
-          width: 1px;
-          height: 4000px;
-          background: $item-table-column-border-color;
-        }
-
-        &::before {
-          left: 0;
-        }
-
-        &::after {
-          right: -1px;
-        }
-      }
-
       .th-container {
         display: flex;
         width: 100%;
@@ -221,6 +201,26 @@
 
       &.moving {
         transform: translateX(var(--drop-offset));
+      }
+
+      &.dragging {
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          width: 1px;
+          height: 100%;
+          background: $item-table-column-border-color;
+        }
+
+        &::before {
+          left: 0;
+        }
+
+        &::after {
+          right: -1px;
+        }
       }
     }
 
