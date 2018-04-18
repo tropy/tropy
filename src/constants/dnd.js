@@ -1,7 +1,6 @@
 'use strict'
 
 module.exports = {
-  COLUMN: 'column',
   ITEMS: 'items',
   LIST: 'list',
   PHOTO: 'photo',
