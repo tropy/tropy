@@ -9,9 +9,6 @@ const {
   arrayOf, bool, func, number, object, shape, string
 } = require('prop-types')
 
-const MIN_WIDTH = 40
-const MIN_WIDTH_MAIN = 100
-
 
 class ItemTableHead extends PureComponent {
   get isAscending() {
@@ -56,7 +53,7 @@ class ItemTableHead extends PureComponent {
                 position={idx}
                 label={this.getLabel(property)}
                 width={this.props.colwidth[idx]}
-                minWidth={idx === 0 ? MIN_WIDTH_MAIN : MIN_WIDTH}
+                minWidth={this.props[idx === 0 ? 'minWidthMain' : 'minWidth']}
                 isActive={this.isActive(property)}
                 isAscending={this.isAscending}
                 isDragging={this.isDragging(idx)}
@@ -88,12 +85,19 @@ class ItemTableHead extends PureComponent {
       column: string.isRequired,
     }).isRequired,
     drop: number,
+    minWidth: number.isRequired,
+    minWidthMain: number.isRequired,
     onOrder: func.isRequired,
     onOrderReset: func.isRequired,
     onOrderStart: func.isRequired,
     onOrderStop: func.isRequired,
     onResize: func.isRequired,
     onSort: func.isRequired
+  }
+
+  static defaultProps = {
+    minWidth: 40,
+    minWidthMain: 100
   }
 }
 

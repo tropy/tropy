@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { arrayOf, bool, func, object } = require('prop-types')
+const { arrayOf, bool, func, number, object } = require('prop-types')
 const { ItemIterator } = require('./iterator')
 const { ItemTableRow } = require('./table-row')
 const { ItemTableSpacer } = require('./table-spacer')
@@ -83,7 +83,12 @@ class ItemTable extends ItemIterator {
   getColumnState(props = this.props) {
     let minWidth = 0
     let columns = props.columns
-    let colwidth = columns.map(c => ((minWidth += c.width), c.width))
+    let colwidth = columns.map((c, idx) => {
+      let min = idx > 0 ? props.minColWidth : props.minMainColWidth
+      let width = Math.max(c.width, min)
+      minWidth += width
+      return width
+    })
 
     if (this.hasPositionColumn(props)) {
       minWidth += NAV.COLUMN.POSITION.width
@@ -310,6 +315,8 @@ class ItemTable extends ItemIterator {
           drag={this.state.drag}
           drop={this.state.drop}
           hasPositionColumn={this.hasPositionColumn()}
+          minWidth={this.props.minColWidth}
+          minWidthMain={this.props.minMainColWidth}
           sort={this.props.sort}
           onOrder={this.handleColumnOrder}
           onOrderReset={this.handleColumnOrderReset}
@@ -328,6 +335,8 @@ class ItemTable extends ItemIterator {
     edit: object,
     data: object.isRequired,
     hasScrollbars: bool.isRequired,
+    minColWidth: number.isRequired,
+    minMainColWidth: number.isRequired,
     onColumnOrder: func.isRequired,
     onColumnResize: func.isRequired,
     onEdit: func.isRequired,
@@ -338,7 +347,9 @@ class ItemTable extends ItemIterator {
   static defaultProps = {
     ...ItemIterator.defaultProps,
     overscan: 2,
-    hasScrollbars: ARGS.scrollbars
+    hasScrollbars: ARGS.scrollbars,
+    minColWidth: 40,
+    minMainColWidth: 100
   }
 }
 
