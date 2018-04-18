@@ -160,8 +160,8 @@ class ItemTable extends ItemIterator {
     let columns = warp(this.state.columns, drag, drop)
     let colwidth = columns.map(c => c.width)
 
+    this.dragstate = {}
     this.setState({ columns, colwidth, drag: null, drop: null }, () => {
-      this.dragstate = null
       this.setColumnOffset(0)
       this.setColumnOffset(0, 'drop')
     })
@@ -173,9 +173,9 @@ class ItemTable extends ItemIterator {
 
   handleColumnOrderReset = () => {
     ensure(this.table, 'transitionend', () => {
-      this.dragstate = null
       this.setState({ drag: null, drop: null })
     }, 500)
+    this.dragstate = {}
     this.setColumnOffset(0)
     this.setColumnOffset(0, 'drop')
   }

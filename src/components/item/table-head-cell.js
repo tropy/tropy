@@ -85,7 +85,7 @@ class ItemTableHeadCell extends PureComponent {
         value={this.props.width}>
         <Draggable
           className="th-container"
-          delay={850}
+          delay={600}
           isDisabled={this.props.isFixedColumn}
           onClick={this.handleClick}
           onDragStart={this.handleDragStart}
