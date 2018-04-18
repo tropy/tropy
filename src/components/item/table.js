@@ -173,8 +173,9 @@ class ItemTable extends ItemIterator {
 
   handleColumnOrderReset = () => {
     ensure(this.table, 'transitionend', () => {
-      this.setState({ drag: null, drop: null })
-    }, 500)
+      this.setState({ drop: null })
+    }, 400)
+    this.setState({ drag: null })
     this.dragstate = {}
     this.setColumnOffset(0)
     this.setColumnOffset(0, 'drop')
@@ -300,7 +301,7 @@ class ItemTable extends ItemIterator {
       <div
         ref={this.setTable}
         className={cx('item-table', {
-          'dragging-column': this.state.drag != null,
+          'dragging-column': this.state.drop != null,
           'max-scroll-left': this.state.hasMaxScrollLeft
         })}>
         <ItemTableHead
