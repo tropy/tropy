@@ -152,6 +152,8 @@ class ItemTable extends ItemIterator {
 
   handleColumnOrderStop = () => {
     let { drag, drop } = this.state
+    if (drag === drop) return this.handleColumnOrderReset()
+
     let columns = warp(this.state.columns, drag, drop)
     let colwidth = columns.map(c => c.width)
 
