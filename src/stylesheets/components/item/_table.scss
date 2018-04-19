@@ -184,6 +184,12 @@
         display: none;
         margin: 0 -4px 0 -5px;
       }
+
+      &:nth-last-child(2) {
+        .resizable-handle-right {
+          right: 0;
+        }
+      }
     }
   }
 
