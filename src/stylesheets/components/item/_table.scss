@@ -240,10 +240,21 @@
     }
 
     &.active {
-      background: $items-active-bg;
+
+      // Fix 'gap' rendering bug
+      @at-root #{
+        selector-replace(&, ".item-table", ".item-table.dragging-column")
+      } {
+        background: $items-active-bg;
+
+        td {
+          background: transparent;
+        }
+      }
 
       td {
         color: $items-active-color;
+        background: $items-active-bg;
 
         @at-root #{
           selector-replace(&, ".item-table",
