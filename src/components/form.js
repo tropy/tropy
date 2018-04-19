@@ -39,15 +39,17 @@ class FormGroup extends PureComponent {
 
 
 class Label extends PureComponent {
+  get value() {
+    return this.props.value || <FormattedMessage id={this.props.id}/>
+  }
+
   render() {
     return (
       <label
         className={cx('control-label', `col-${this.props.size}`)}
         title={this.props.title}
         htmlFor={this.props.id}>
-        <FormattedMessage
-          defaultMessage={this.props.default}
-          id={this.props.id}/>
+        {this.value}
       </label>
     )
   }
@@ -56,7 +58,7 @@ class Label extends PureComponent {
     id: string.isRequired,
     size: number.isRequired,
     title: string,
-    default: string
+    value: string
   }
 
   static defaultProps = {
@@ -83,7 +85,7 @@ class FormElement extends PureComponent {
             id={this.props.id}
             size={offset}
             title={this.props.title}
-            default={this.props.label}/>}
+            value={this.props.label}/>}
         <div className={
           cx(`col-${this.props.size}`, { [`col-offset-${offset}`]: !hasLabel })
         }>
@@ -267,6 +269,10 @@ class Toggle extends PureComponent {
     ]
   }
 
+  get label() {
+    return this.props.label || <FormattedMessage id={this.props.id}/>
+  }
+
   setInput = (input) => {
     this.input = input
   }
@@ -301,9 +307,7 @@ class Toggle extends PureComponent {
             onBlur={this.handleBlur}
             onFocus={this.props.onFocus}
             onChange={this.handleChange}/>
-          <FormattedMessage
-            defaultMessage={this.props.label}
-            id={this.props.id}/>
+          {this.label}
         </label>
       </div>
     )
