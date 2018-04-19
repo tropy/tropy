@@ -40,14 +40,7 @@ class Window extends EventEmitter {
   init(done) {
     this.plugins.reload()
       .then(plugins => plugins.create())
-      .then(plugins => {
-        this.pluginsInitialConfig = plugins.config
-        this.pluginsConfig = plugins.config
-      })
-    this.unloaders.push(() => {
-      if (this.pluginsInitialConfig === this.pluginsConfig) return
-      this.plugins.save(this.pluginsConfig)
-    })
+    this.unloaders.push(this.plugins.flush)
 
     this.handleUnload()
     this.handleTabFocus()
@@ -144,8 +137,7 @@ class Window extends EventEmitter {
         this.reload()
       })
       .on('plugins-reload', async () => {
-        (await this.plugins.reload()).create()
-        this.plugins.emit('change')
+        (await this.plugins.reload()).create().emit('change')
       })
       .on('toggle-perf-tools', () => {
         const { search, hash } = location
@@ -252,10 +244,6 @@ class Window extends EventEmitter {
       toggle(document.body, 'meta-key', event.metaKey === true)
       toggle(document.body, 'ctrl-key', event.ctrlKey === true)
     }
-  }
-
-  handlePluginsChange = (newConfig) => {
-    this.pluginsConfig = newConfig
   }
 
   createWindowControls() {

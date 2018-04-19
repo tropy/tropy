@@ -12,9 +12,7 @@ const { keys } = Object
 class PluginAccordion extends Accordion {
   handleUninstall = (event) =>  {
     event.stopPropagation()
-    const { name } = this.props.spec
-    const { plugins } = this.props
-    this.props.onUninstall({ plugins, name })
+    this.props.onUninstall(this.props.spec.name)
   }
 
   toggleEnabled = (event) => {
@@ -163,7 +161,6 @@ class PluginAccordion extends Accordion {
     onDelete: func.isRequired,
     onInsert: func.isRequired,
     configs: arrayOf(object),
-    plugins: object.isRequired,
     intl: intlShape.isRequired,
     onUninstall: func.isRequired
   }

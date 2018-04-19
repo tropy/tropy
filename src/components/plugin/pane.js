@@ -5,19 +5,17 @@ const { Component } = React
 const { ipcRenderer: ipc } = require('electron')
 const { PrefPane } = require('../prefs/pane')
 const { Button } = require('../button')
-const { bool, func, object, string } = require('prop-types')
+const { array, bool, func, object, shape, string } = require('prop-types')
 const { AccordionGroup } = require('../accordion')
 const { PluginAccordion } = require('./accordion')
 const { keys, values } = Object
+const debounce = require('lodash.debounce')
 
 
 class PluginsPane extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      config: props.plugins.config,
-      spec: props.plugins.spec
-    }
+    this.state = this.getPluginConfigFromProps(props)
   }
 
   componentDidMount() {
@@ -25,31 +23,45 @@ class PluginsPane extends Component {
   }
 
   componentWillUnmount() {
+    this.persist.flush()
     this.props.plugins.removeListener('change', this.refresh)
   }
 
   componentWillReceiveProps(props) {
-    this.refresh(props)
+    if (props.plugins !== this.props.plugins) {
+      throw Error('plugins changed!') // TODO
+    }
   }
 
-  refresh = (props = this.props) => {
-    this.setState({
-      spec: { ...props.plugins.spec },
-      config: [...props.plugins.config],
-    })
+  getPluginConfigFromProps(props = this.props) {
+    return {
+      config: props.plugins.config.map(config => ({ ...config }))
+    }
+  }
+
+  refresh = () => {
+    this.setState(this.getPluginConfigFromProps())
+  }
+
+  persist = debounce(() => {
+    this.props.plugins.store(this.state.config)
+  }, 500)
+
+  handleUninstall = (name) => {
+    this.props.onUninstall({ name, plugins: this.props.plugins })
   }
 
   handleChange = (plugin, index, newConfig) => {
     let { config } = this.state
     config[this.idx(plugin, index)] = newConfig
     this.setState({ config })
-    this.props.onChange(config)
+    this.persist()
     this.ensureOpen(plugin)
   }
 
   ensureOpen = (plugin) => {
     this.accordionGroup.setState({
-      open: keys(this.state.spec).indexOf(plugin)
+      open: keys(this.props.plugins.spec).indexOf(plugin)
     })
   }
 
@@ -60,7 +72,7 @@ class PluginsPane extends Component {
       options: {}
     })
     this.setState({ config })
-    this.props.onChange(config)
+    this.persist()
     this.ensureOpen(plugin)
   }
 
@@ -74,7 +86,7 @@ class PluginsPane extends Component {
     let { config } = this.state
     config.splice(this.idx(plugin, index), 1)
     this.setState({ config })
-    this.props.onChange(config)
+    this.persist()
   }
 
   installPlugin = () => ipc.send('cmd', 'app:install-plugin')
@@ -97,7 +109,7 @@ class PluginsPane extends Component {
           <AccordionGroup
             ref={this.setAccordionGroup}
             className="form-horizontal">
-            {values(this.state.spec).map(
+            {values(this.props.plugins.spec).map(
                (spec, idx) => {
                  return (
                    <PluginAccordion
@@ -106,9 +118,8 @@ class PluginsPane extends Component {
                      onChange={this.handleChange}
                      onDelete={this.handleDelete}
                      onInsert={this.handleInsert}
-                     onUninstall={this.props.onPluginUninstall}
+                     onUninstall={this.handleUninstall}
                      onOpenLink={this.props.onOpenLink}
-                     plugins={this.props.plugins}
                      key={idx}/>)
                })
             }
@@ -127,9 +138,11 @@ class PluginsPane extends Component {
   static propTypes = {
     isActive: bool,
     name: string.isRequired,
-    plugins: object.isRequired,
-    onChange: func.isRequired,
-    onPluginUninstall: func.isRequired,
+    plugins: shape({
+      config: array.isReqired,
+      spec: object.isRequired
+    }).isRequired,
+    onUninstall: func.isRequired,
     onOpenLink: func.isRequired
   }
 }

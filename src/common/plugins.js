@@ -85,6 +85,13 @@ class Plugins extends EventEmitter {
     return this.exec({ id, action: 'export' }, ...args)
   }
 
+  flush = () => {
+    if (this.changes != null) { // TODO check if the config is different!
+      this.save(this.changes)
+      this.changes = null
+    }
+  }
+
   handleConfigFileChange = debounce(async () => {
     await this.reload()
     this.emit('change')
@@ -127,7 +134,6 @@ class Plugins extends EventEmitter {
     }
   }
 
-
   async reload(autosave = false) {
     try {
       this.reset()
@@ -159,6 +165,7 @@ class Plugins extends EventEmitter {
   }
 
   reset() {
+    this.changes = null
     this.config = []
     this.spec = {}
     this.instances = {}
@@ -195,6 +202,10 @@ class Plugins extends EventEmitter {
       this.cfw = null
     }
     return this
+  }
+
+  store(config) {
+    this.changes = config
   }
 
   supports(plugin, action) {

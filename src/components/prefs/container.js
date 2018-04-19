@@ -115,8 +115,7 @@ class PrefsContainer extends PureComponent {
           <PluginsPane
             name="plugins"
             plugins={this.props.plugins}
-            onChange={this.props.onPluginsChange}
-            onPluginUninstall={this.props.onPluginUninstall}
+            onUninstall={this.props.onPluginUninstall}
             onOpenLink={this.props.onOpenLink}
             isActive={this.isActive('plugins')}/>
         </div>
@@ -142,14 +141,12 @@ class PrefsContainer extends PureComponent {
     onVocabExport: func.isRequired,
     onVocabSave: func.isRequired,
     onOntologyImport: func.isRequired,
-    onPluginsChange: func.isRequired,
     onPluginUninstall: func.isRequired
   }
 
   static defaultProps = {
     isFrameless: ARGS.frameless,
-    plugins: win.plugins,
-    onPluginsChange: win.handlePluginsChange
+    plugins: win.plugins
   }
 }
 
