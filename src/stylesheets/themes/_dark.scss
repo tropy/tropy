@@ -66,6 +66,7 @@ $shade-10: #fff; // White
   #{--shade-1-darken-10}:  darken($shade-1, 10%);
   #{--shade-2}:            $shade-2;
   #{--shade-3}:            $shade-3;
+  #{--shade-3-50}:         rgba($shade-3, 0.5);
   #{--shade-3-60}:         rgba($shade-3, 0.6);
   #{--shade-4}:            $shade-4;
   #{--shade-4-lighten-2}:  lighten($shade-4, 2%);
@@ -240,6 +241,7 @@ $activity-border-color:     var(--shade-1);
 // Items
 $item-table-header-color:        var(--shade-8);
 $item-table-header-sort-color:   var(--shade-9);
+$item-table-header-bg:           var(--shade-3-50);
 $item-table-header-active-bg:    var(--shade-2);
 $item-table-header-border-color: var(--shade-1);
 $item-table-column-border-color: $item-table-header-border-color;

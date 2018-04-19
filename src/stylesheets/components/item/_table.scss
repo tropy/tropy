@@ -17,7 +17,6 @@
     padding: 0;
     position: relative;
 
-
     &:last-child {
       .th-container,
       .td-container {
@@ -29,13 +28,8 @@
       text-align: right;
     }
 
-    &.dragging {
-      z-index: $zindex-drag-layer;
-      transform: translateX(var(--drag-offset));
-
-      > * {
-        opacity: 0.5;
-      }
+    > *:not(.th-container) {
+      transition: opacity $column-transition;
     }
   }
 
@@ -45,8 +39,26 @@
       transition: transform $column-transition;
 
       &.dragging {
-        transition: none;
+        z-index: $zindex-drag-layer;
+        transform: translateX(var(--drag-offset));
+
+        &,
+        > * {
+          transition: none;
+        }
+
+        > *:not(.th-container) {
+          opacity: 0.5;
+        }
       }
+    }
+
+    .table-head {
+      overflow: visible;
+    }
+
+    .resizable-handle-col {
+      display: none;
     }
   }
 
@@ -61,6 +73,7 @@
       top: 1px solid $item-table-header-border-color;
       bottom: 1px solid $item-table-header-border-color;
     }
+    overflow: hidden;
 
     .scrollbar-style-old-school & {
       width: calc(100% - #{$default-padding-horizontal});
@@ -72,46 +85,42 @@
       font-weight: 400;
       padding: 0 $space-min; // Prevent overlap of th-container and resize handle
       position: relative;
-      background-image:
-        linear-gradient(to right, transparent 1px, $body-bg 1px),
-        linear-gradient(
-          to bottom,
-          $body-bg 2px,
-          $item-table-header-border-color 2px,
-          $item-table-header-border-color ($item-table-header-height - 4px),
-          $body-bg ($item-table-header-height - 4px)
-        );
+      background-color: $item-table-header-bg;
       contain: layout style; // Not clear why size shifts the content
 
-      &:first-child {
-        background-image: none;
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        bottom: 2px;
+        width: 1px;
+        background-color: $item-table-header-border-color;
+      }
 
-        .th-container {
-          padding-left: $space-sm;
+      &::before {
+        left: 0;
+      }
+
+      &::after {
+        background-color: transparent;
+        right: 0;
+        box-shadow: 1px 0 $item-table-header-border-color;
+      }
+
+      &:last-child {
+        &::after {
+          content: none;
         }
       }
 
-      &:active:not(.resizing):not(.blank):not(.dragging) {
-        background:
-          linear-gradient(
-            to right,
-            transparent 1px,
-            $item-table-header-active-bg 1px
-          )
-          $item-table-header-border-color;
-
-        &:first-child {
-          background: $item-table-header-active-bg;
+      &:first-child {
+        &::before {
+          content: none;
         }
 
-        & + th {
-          background:
-            linear-gradient(
-              to right,
-              transparent 1px,
-              $body-bg 1px
-            )
-            $item-table-header-border-color;
+        .th-container {
+          padding-left: $space-sm;
         }
       }
 
@@ -141,11 +150,34 @@
         }
       }
 
+      &:active:not(.resizing):not(.blank):not(.dragging) {
+        background-color: $item-table-header-active-bg;
+
+        &::before,
+        &::after {
+          top: 0;
+          bottom: 0;
+        }
+
+        &:first-child {
+          background: $item-table-header-active-bg;
+        }
+      }
+
       &.moving {
         transform: translateX(var(--drop-offset));
+        z-index: $zindex-drop-target;
       }
 
       &.dragging {
+        background-image:
+          linear-gradient(
+            to right,
+            $item-table-header-border-color 1px,
+            $item-table-header-bg 1px
+          );
+        box-shadow: 1px 0 $item-table-header-border-color;
+
         &::before,
         &::after {
           content: "";
@@ -162,6 +194,7 @@
 
         &::after {
           right: -1px;
+          box-shadow: none;
         }
       }
 
@@ -183,12 +216,6 @@
       .icon {
         display: none;
         margin: 0 -4px 0 -5px;
-      }
-
-      &:nth-last-child(2) {
-        .resizable-handle-right {
-          right: 0;
-        }
       }
     }
   }
