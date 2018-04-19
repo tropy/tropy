@@ -111,15 +111,17 @@ prompt.dup = (file, options) =>
     ...options
   })
 
-prompt.pluginUninstall = (label, options) =>
-  prompt(label, {
-    buttons: ['prefs.plugins.uninstall', 'prefs.plugins.prompt.cancel'],
-    defaultId: 1,
-    cancelId: 1,
-    detail: 'prefs.plugins.prompt.message',
-    type: 'warning',
-    ...options
-  })
+prompt.plugin = {
+  uninstall: (label, options) =>
+    prompt(label, {
+      buttons: ['prefs.plugins.uninstall', 'prefs.plugins.prompt.cancel'],
+      defaultId: 1,
+      cancelId: 1,
+      detail: 'prefs.plugins.prompt.message',
+      type: 'warning',
+      ...options
+    })
+}
 
 open.images = (options) => open({
   filters: [{

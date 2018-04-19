@@ -1,15 +1,13 @@
 'use strict'
 
-const { prompt } = require('../dialog')
+const dialog = require('../dialog')
 
 module.exports = {
-  uninstall({ plugins, name }, meta = { prompt: true }) {
+  uninstall({ plugins, name }, { prompt = true } = {}) {
     return async function () {
-      if (meta.prompt) {
-        const { cancel } = await prompt.pluginUninstall(name)
-        if (cancel) return
+      if (!(prompt && (await dialog.prompt.plugin.uninstall(name)).cancel)) {
+        await plugins.uninstall(name)
       }
-      plugins.uninstall(name)
     }
   }
 }
