@@ -13,9 +13,9 @@ const {
 
 const { shell } = require('electron')
 const { EventEmitter } = require('events')
-const { basename, join, resolve } = require('path')
+const { basename, join } = require('path')
 const { warn, verbose, logger } = require('./log')
-const { pick, uniq } = require('./util')
+const { omit, pick, uniq } = require('./util')
 const { keys } = Object
 const debounce = require('lodash.debounce')
 
@@ -107,7 +107,7 @@ class Plugins extends EventEmitter {
     try {
       const plugin = Plugins.basename(input)
       const dest = join(this.root, plugin)
-      await this.uninstall(plugin, { clean: false })
+      await this.uninstall(plugin, { prune: false })
       await decompress(input, dest, { strip: 1 })
       const spec = (await this.scan([plugin]))[plugin] || {}
       await this.reload()
@@ -119,21 +119,25 @@ class Plugins extends EventEmitter {
     return this
   }
 
-  async uninstall(plugin, options = { clean: true }) {
-    const dir = resolve(join(this.root, plugin))
+  async uninstall(plugin, { prune = true } = {}) {
     try {
-      const stats = await stat(dir)
-      if (!stats.isDirectory()) return
-    } catch (err) { return }
-    if (shell.moveItemToTrash(dir)) {
-      if (!options.clean) return
-      this.config = this.config.filter(c => c.plugin !== plugin)
-      delete this.spec[plugin]
-      this.save()
-      this.emit('change')
-    } else {
-      warn(`failed to uninstall plugin: ${plugin}`)
+      const dir = join(this.root, plugin)
+      if (!(await stat(dir).isDirectory)) {
+        throw new Error('not a plugin directory')
+      }
+      if (!shell.moveItemToTrash(dir)) {
+        throw new Error('failed to move directory to trash')
+      }
+      if (prune) {
+        this.config = this.config.filter(c => c.plugin !== plugin)
+        this.spec = omit(this.spec, [plugin])
+        this.save()
+        this.emit('change')
+      }
+    } catch (error) {
+      warn(`failed to uninstall plugin "${plugin}": ${error.message}`)
     }
+    return this
   }
 
   async reload(autosave = false) {
