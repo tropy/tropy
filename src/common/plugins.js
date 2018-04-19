@@ -25,6 +25,17 @@ const save = (file, data) => write(file, JSON.stringify(data, null, 2))
 const decompress = (...args) => require('decompress')(...args)
 const proxyRequire = (mod) => require(mod)
 
+const subdirs = root => readdir(root).filter(async (dir) =>
+      dir !== 'node_modules' && (await stat(join(root, dir))).isDirectory())
+
+const deps = async pkg => {
+  try {
+    return keys((await load(pkg)).dependencies)
+  } catch (_) {
+    return []
+  }
+}
+
 
 class Plugins extends EventEmitter {
   constructor(root) {
@@ -169,30 +180,15 @@ class Plugins extends EventEmitter {
     return save(this.configFile, config)
   }
 
-  async scanDirs() {
-    let packages = []
-    let dependencies
-    try {
-      dependencies = require(join(this.root, 'package.json')).dependencies
-    } catch (err) {
-      dependencies = {}
-    } finally {
-      keys(dependencies)
-        .forEach(pkg => packages.push(pkg))
-    }
-
-    await readdir(this.root)
-      .each(async (dir) => {
-        let stats = await stat(join(this.root, dir))
-        if (dir === 'node_modules') return
-        if (!stats.isDirectory()) return
-        packages.push(dir)
-      })
-    return uniq(packages)
+  async list() {
+    return uniq([
+      ...(await deps(join(this.root, 'package.json'))),
+      ...(await subdirs(this.root))
+    ])
   }
 
   async scan(dirs) {
-    if (!dirs) dirs = await this.scanDirs()
+    if (!dirs) dirs = await this.list()
     return dirs.reduce((acc, dir) => {
       try {
         let pkg = pick(this.require(join(dir, 'package.json')), [

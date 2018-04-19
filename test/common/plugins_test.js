@@ -48,8 +48,8 @@ describe('Plugins', () => {
     expect(b).to.eql(42)
   })
 
-  it('scanDirs()', async () => {
-    expect(await plugins.scanDirs()).to.eql([
+  it('list()', async () => {
+    expect(await plugins.list()).to.eql([
       'tropy-omeka',
       'tropy-plugin'
     ])
