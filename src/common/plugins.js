@@ -15,7 +15,7 @@ const { shell } = require('electron')
 const { EventEmitter } = require('events')
 const { basename, join } = require('path')
 const { warn, verbose, logger } = require('./log')
-const { omit, pick, uniq } = require('./util')
+const { get, omit, pick, uniq } = require('./util')
 const { keys } = Object
 const debounce = require('lodash.debounce')
 
@@ -44,34 +44,23 @@ class Plugins extends EventEmitter {
     }
   }
 
-  supportsHook(plugin, action) {
-    const { hooks } = this.spec[plugin]
-    return hooks && !!hooks[action]
+  supports(plugin, action) {
+    return !!get(this.spec, [plugin, 'hooks', action])
   }
 
   available(action) {
-    const handlers = []
-    for (const id in this.config) {
-      const { plugin, name, disabled } = this.config[id]
-      if (!this.supportsHook(plugin, action)) continue
-      if (!disabled) {
-        handlers.push({
-          id,
-          name: name || `${plugin} #${id}`
-        })
+    return this.config.reduce((acc, { plugin, name, disabled }, id) => {
+      if (!disabled && this.supports(plugin, action)) {
+        acc.push({ id: `${id}`, name: name || `${plugin} #${id}` })
       }
-    }
-    return handlers
-  }
-
-  contract(Plugin, options) {
-    return new Plugin(options || {}, this.context)
+      return acc
+    }, [])
   }
 
   create(config = this.config) {
     this.instances = config.reduce((acc, { plugin, options }, id) => {
       try {
-        acc[id] = this.contract(this.require(plugin), options)
+        acc[id] = new (this.require(plugin))(options || {}, this.context)
       } catch (error) {
         warn(`failed to create ${plugin} plugin: ${error.message}`)
       }
