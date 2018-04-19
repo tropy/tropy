@@ -82,7 +82,7 @@ class AccordionGroup extends PureComponent {
 
   render() {
     return (
-      <div className={cx('panel-group accordion', this.props.className)}>
+      <div className={cx('panel-group', 'accordion', this.props.className)}>
         {Children.map(this.props.children, (acc, id) =>
           clone(acc, {
             id,
