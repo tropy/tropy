@@ -217,9 +217,7 @@ class FormSelect extends PureComponent {
           disabled={this.props.isDisabled}
           onChange={this.handleChange}>
           {this.props.options.map((opt) =>
-            <option key={opt} value={opt}>
-              {(this.props.optLabel || this.optLabel)(opt)}
-            </option>)}
+            <option key={opt} value={opt}>{this.optLabel(opt)}</option>)}
         </select>
       </FormElement>
     )
@@ -235,8 +233,7 @@ class FormSelect extends PureComponent {
     size: number.isRequired,
     tabIndex: number,
     value: string.isRequired,
-    onChange: func.isRequired,
-    optLabel: func
+    onChange: func.isRequired
   }
 
   static defaultProps = {
