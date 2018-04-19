@@ -55,10 +55,6 @@ class Plugins extends EventEmitter {
     }
   }
 
-  supports(plugin, action) {
-    return !!get(this.spec, [plugin, 'hooks', action])
-  }
-
   available(action) {
     return this.config.reduce((acc, { plugin, name, disabled }, id) => {
       if (!disabled && this.supports(plugin, action)) {
@@ -119,28 +115,18 @@ class Plugins extends EventEmitter {
     return this
   }
 
-  async uninstall(plugin, { prune = true } = {}) {
+  async list() {
     try {
-      const dir = join(this.root, plugin)
-      if (!((await stat(dir)).isDirectory())) {
-        throw new Error('not a plugin directory')
-      }
-      if (!shell.moveItemToTrash(dir)) {
-        throw new Error('failed to move directory to trash')
-      }
-      if (prune) {
-        this.config = this.config.filter(c => c.plugin !== plugin)
-        this.spec = omit(this.spec, [plugin])
-        this.save()
-        this.emit('change')
-      }
+      return uniq([
+        ...(await deps(join(this.root, 'package.json'))),
+        ...(await subdirs(this.root))
+      ])
     } catch (error) {
-      if (error.code !== 'ENOENT') {
-        warn(`failed to uninstall plugin "${plugin}": ${error.message}`)
-      }
+      warn(`failed to list plugins: ${error.message}`)
+      return []
     }
-    return this
   }
+
 
   async reload(autosave = false) {
     try {
@@ -182,18 +168,6 @@ class Plugins extends EventEmitter {
     return save(this.configFile, config)
   }
 
-  async list() {
-    try {
-      return uniq([
-        ...(await deps(join(this.root, 'package.json'))),
-        ...(await subdirs(this.root))
-      ])
-    } catch (error) {
-      warn(`failed to list plugins: ${error.message}`)
-      return []
-    }
-  }
-
   async scan(plugins) {
     return (plugins || await this.list()).reduce((acc, name) => {
       try {
@@ -219,6 +193,33 @@ class Plugins extends EventEmitter {
     if (this.cfw != null) {
       this.cfw.close()
       this.cfw = null
+    }
+    return this
+  }
+
+  supports(plugin, action) {
+    return !!get(this.spec, [plugin, 'hooks', action])
+  }
+
+  async uninstall(plugin, { prune = true } = {}) {
+    try {
+      const dir = join(this.root, plugin)
+      if (!((await stat(dir)).isDirectory())) {
+        throw new Error('not a plugin directory')
+      }
+      if (!shell.moveItemToTrash(dir)) {
+        throw new Error('failed to move directory to trash')
+      }
+      if (prune) {
+        this.config = this.config.filter(c => c.plugin !== plugin)
+        this.spec = omit(this.spec, [plugin])
+        this.save()
+        this.emit('change')
+      }
+    } catch (error) {
+      if (error.code !== 'ENOENT') {
+        warn(`failed to uninstall plugin "${plugin}": ${error.message}`)
+      }
     }
     return this
   }
