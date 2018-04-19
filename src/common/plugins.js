@@ -122,7 +122,7 @@ class Plugins extends EventEmitter {
   async uninstall(plugin, { prune = true } = {}) {
     try {
       const dir = join(this.root, plugin)
-      if (!(await stat(dir).isDirectory)) {
+      if (!((await stat(dir)).isDirectory())) {
         throw new Error('not a plugin directory')
       }
       if (!shell.moveItemToTrash(dir)) {
