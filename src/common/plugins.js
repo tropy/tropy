@@ -135,7 +135,9 @@ class Plugins extends EventEmitter {
         this.emit('change')
       }
     } catch (error) {
-      warn(`failed to uninstall plugin "${plugin}": ${error.message}`)
+      if (error.code !== 'ENOENT') {
+        warn(`failed to uninstall plugin "${plugin}": ${error.message}`)
+      }
     }
     return this
   }
@@ -181,30 +183,32 @@ class Plugins extends EventEmitter {
   }
 
   async list() {
-    return uniq([
-      ...(await deps(join(this.root, 'package.json'))),
-      ...(await subdirs(this.root))
-    ])
+    try {
+      return uniq([
+        ...(await deps(join(this.root, 'package.json'))),
+        ...(await subdirs(this.root))
+      ])
+    } catch (error) {
+      warn(`failed to list plugins: ${error.message}`)
+      return []
+    }
   }
 
-  async scan(dirs) {
-    if (!dirs) dirs = await this.list()
-    return dirs.reduce((acc, dir) => {
+  async scan(plugins) {
+    return (plugins || await this.list()).reduce((acc, name) => {
       try {
-        let pkg = pick(this.require(join(dir, 'package.json')), [
+        acc[name] = pick(this.require(join(name, 'package.json')), [
           'description',
           'homepage',
           'hooks',
           'label',
-          'name',
           'options',
           'repository',
           'source',
           'version'
-        ])
-        acc[pkg.name] = pkg
+        ], { name })
       } catch (error) {
-        warn(`failed to scan '${dir}' plugin: ${error.message}`)
+        warn(`failed to scan '${name}' plugin: ${error.message}`)
       }
       return acc
     }, {})
