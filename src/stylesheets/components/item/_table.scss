@@ -61,7 +61,7 @@
   .table-head {
     width: 100%;
     table-layout: fixed;
-    border-collapse: collapse;
+    // border-collapse: collapse causes 'gap' rendering glitch on Linux
     border-spacing: 0;
     color: $item-table-header-color;
     height: $item-table-header-height;
