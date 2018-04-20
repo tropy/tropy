@@ -2,14 +2,12 @@
 
 const React = require('react')
 const { PureComponent } = React
-const cx = require('classnames')
 const { createDragHandler } = require('../dom')
 const { noop, pick } = require('../common/util')
+const { func, bool, string, number, object, node } = require('prop-types')
+const cx = require('classnames')
 
-const {
-  array, func, bool, string, number, object, oneOfType, node
-} = require('prop-types')
-
+const DRAG = { START: 1, ACTIVE: 2, NONE: 3 }
 
 class Draggable extends PureComponent {
   componentWillUnmount() {
@@ -17,32 +15,52 @@ class Draggable extends PureComponent {
   }
 
   handleMouseDown = (event) => {
-    if (this.isDragging) this.drag.stop()
+    if (this.dragstate > DRAG.NONE) this.drag.stop()
     if (event.button !== 0) return
+
+    if (this.props.isDisabled) {
+      this.props.onClick(event)
+      return
+    }
 
     if (this.props.onDragStart) {
       if (this.props.onDragStart(event)) return
     }
 
-    this.isDragging = true
+    this.dragstate = DRAG.START
     this.drag.start()
 
-    const { pageX, pageY } = event
+    const { pageX, pageY, clientX } = event
 
-    this.delay = setTimeout(() =>
-      void this.handleDrag({ pageX, pageY }), this.props.delay)
+    if (this.props.delay > 0) {
+      this.delay = setTimeout(() =>
+        void this.handleDrag({ pageX, pageY, clientX }), this.props.delay)
+    }
   }
 
   handleDrag = (event) => {
+    this.dragstate = DRAG.ACTIVE
     this.clear()
     this.props.onDrag(event)
   }
 
-  handleDragStop = (event) => {
-    this.clear()
-    if (!this.isDragging) return
-    this.isDragging = false
-    this.props.onDragStop(event)
+  handleDragStop = (event, hasBeenCancelled) => {
+    try {
+      switch (this.dragstate) {
+        case DRAG.START:
+          if (!hasBeenCancelled) {
+            this.props.onClick(event)
+          }
+          this.props.onDragStop(event, true)
+          break
+        case DRAG.ACTIVE:
+          this.props.onDragStop(event, hasBeenCancelled)
+          break
+      }
+    } finally {
+      this.clear()
+      this.dragstate = DRAG.NONE
+    }
   }
 
   drag = createDragHandler({
@@ -50,39 +68,37 @@ class Draggable extends PureComponent {
     handleDragStop: this.handleDragStop
   })
 
-
   clear() {
     if (this.delay) clearTimeout(this.delay)
     this.delay = null
   }
 
   render() {
-    const { children, classes, isDisabled, ...props } = this.props
-
     return (
-      <div {...pick(props, ['tabIndex', 'style'])}
-        className={cx(classes)}
-        onMouseDown={isDisabled ? null : this.handleMouseDown}>
-        {children}
+      <div {...pick(this.props, ['tabIndex', 'style'])}
+        className={cx('draggable', this.props.className)}
+        onMouseDown={this.handleMouseDown}>
+        {this.props.children}
       </div>
     )
   }
 
   static propTypes = {
     children: node,
-    classes: oneOfType([string, array, object]),
-    delay: number,
+    className: string,
+    delay: number.isRequired,
     isDisabled: bool,
     style: object,
     tabIndex: number,
-    onDrag: func,
-    onDragStart: func,
-    onDragStop: func
+    onClick: func.isRequired,
+    onDrag: func.isRequired,
+    onDragStart: func.isRequired,
+    onDragStop: func.isRequired
   }
 
   static defaultProps = {
-    classes: 'draggable',
     delay: 250,
+    onClick: noop,
     onDrag: noop,
     onDragStop: noop
   }

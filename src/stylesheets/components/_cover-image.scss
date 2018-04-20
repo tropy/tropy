@@ -145,8 +145,10 @@
 .item-table {
   .cover-image {
     position: absolute;
-    left: $default-padding-horizontal;
+    left: $space-xs;
     top: ($row-height - $thumbnail-size) / 2;
+
+
 
     .stack-lines {
       .line {
@@ -171,6 +173,12 @@
           }
         }
       }
+    }
+  }
+
+  td:first-child {
+    .cover-image {
+      left: $default-padding-horizontal;
     }
   }
 

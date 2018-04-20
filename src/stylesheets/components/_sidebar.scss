@@ -91,6 +91,24 @@
           }
         }
       }
+
+      &.holding:not(.active) {
+        .icon-folder {
+          position: relative;
+
+          &::after {
+            content: "";
+            box-sizing: border-box;
+            position: absolute;
+            right: -3px;
+            bottom: -1px;
+            width: 7px;
+            height: 7px;
+            background-color: $sidebar-bg;
+            border: 1px solid $icon-color;
+          }
+        }
+      }
     }
 
     .icon {

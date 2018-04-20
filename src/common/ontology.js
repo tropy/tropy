@@ -104,7 +104,7 @@ class Ontology extends Resource {
     this.name = name
   }
 
-  toJSON() {
+  toJSON(locale = 'en') {
     let json = {}
     let seq = 0
 
@@ -117,7 +117,7 @@ class Ontology extends Resource {
       if (empty(data)) return []
 
       let ns = isDefinedBy(id, data)
-      let vocab = json[ns] || this.getVocabulary(ns, prefix())
+      let vocab = json[ns] || this.getVocabulary(ns, prefix(), locale)
 
       if (vocab == null) return []
       if (json[ns] == null) json[ns] = vocab
@@ -142,7 +142,7 @@ class Ontology extends Resource {
       let range = get(data, [RDFS.range, 0, '@id'])
 
       vocab.properties.push({
-        id, data, vocabulary: vocab.id, domain, range, ...info(data)
+        id, data, vocabulary: vocab.id, domain, range, ...info(data, locale)
       })
     }
 
@@ -150,7 +150,7 @@ class Ontology extends Resource {
       let [vocab, data] = collect(id)
       if (vocab == null) continue
       vocab.classes.push({
-        id, data, vocabulary: vocab.id, ...info(data)
+        id, data, vocabulary: vocab.id, ...info(data, locale)
       })
     }
 
@@ -158,26 +158,26 @@ class Ontology extends Resource {
       let [vocab, data] = collect(id)
       if (vocab == null) continue
       vocab.datatypes.push({
-        id, data, vocabulary: vocab.id, ...info(data)
+        id, data, vocabulary: vocab.id, ...info(data, locale)
       })
     }
 
     return json
   }
 
-  getVocabulary(id, prefix, title = id) {
+  getVocabulary(id, prefix, title = id, locale = 'en') {
     let data = this.getData(id)
 
     if (empty(data) && (/[#/]$/).test(id)) {
       data = this.getData(id.slice(0, id.length - 1))
     }
 
-    title = get(any(data, DC.title, TERMS.title), [0, '@value'], title)
+    title = getValue(any(data, DC.title, TERMS.title), locale) || title
     prefix = get(data, [VANN.preferredNamespacePrefix, 0, '@value'], prefix)
 
     const seeAlso = get(data, [RDFS.seeAlso, 0, '@id'])
     const description = getValue(
-      any(data, DC.description, TERMS.description, RDFS.comment)
+      any(data, DC.description, TERMS.description, RDFS.comment), locale
     )
 
     return {
@@ -212,17 +212,25 @@ class Ontology extends Resource {
 }
 
 
-function info(data) {
+function info(data, locale = 'en') {
   return {
-    comment: getValue(data, RDFS.comment),
+    comment: getValue(any(data, RDFS.comment), locale),
     description: getValue(
-      any(data, SKOS.defintion, DC.description, TERMS.description)
+      any(data, SKOS.defintion, DC.description, TERMS.description), locale
     )
   }
 }
 
-function getValue(data, ...path) {
-  return get(data, [...path, 0, '@value'])
+function getValue(data, locale = 'en') {
+  if (data == null || data.length === 0) {
+    return null
+  }
+  for (let value of data) {
+    if (value['@language'] === locale) {
+      return value['@value']
+    }
+  }
+  return data[0]['@value']
 }
 
 function literal(value) {

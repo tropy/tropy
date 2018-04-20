@@ -1,6 +1,6 @@
 {
   "@context": "https://tropy.org/v1/contexts/template.jsonld",
-  "@id": "https:/tropy.org/v1/templates/correspondence",
+  "@id": "https://tropy.org/v1/templates/correspondence",
   "@type": "https://tropy.org/v1/tropy#Template",
   "type": "https://tropy.org/v1/tropy#Item",
   "name": "Tropy Correspondence",

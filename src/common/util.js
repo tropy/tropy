@@ -140,10 +140,16 @@ const util = {
     return res
   },
 
+  warp(array, idx, at) {
+    at = util.restrict(at, 0, array.length - 1)
+    if (idx === at || idx == null) return array
+    return util.insert(util.splice(array, idx, 1), at, array[idx])
+  },
+
   swap(array, from, to) {
     to = util.restrict(to, 0, array.length - 1)
 
-    if (from === to) return array
+    if (from === to || from == null) return array
     if (from > to) return util.swap(array, to, from)
 
     let head = array.slice(0, from)
