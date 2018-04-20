@@ -45,7 +45,6 @@ function onClosed(_, { id, payload, error }) {
 function show(type, options = {}) {
   return new Promise((resolve, reject) => {
     const id = seq.next().value
-
     ipc.send('dialog', { id, type, options })
     pending[id] = { resolve, reject }
   })
@@ -73,17 +72,18 @@ async function prompt(message, {
   checkbox,
   isChecked,
   detail,
+  prefix = '',
   ...options
 } = {}) {
   const { response, checked } = await show('message-box', {
     type: 'question',
-    buttons: buttons.map(id => t(id)),
-    message: t(message),
+    buttons: buttons.map(id => t(id, prefix)),
+    message: t(message, prefix),
     defaultId,
     cancelId,
-    checkboxLabel: (checkbox != null) ? t(checkbox) : undefined,
+    checkboxLabel: (checkbox != null) ? t(checkbox, prefix) : undefined,
     checkboxChecked: isChecked,
-    detail: t(detail),
+    detail: t(detail, prefix),
     ...options
   })
 
@@ -104,20 +104,18 @@ function open(options) {
 
 prompt.dup = (file, options) =>
   prompt(basename(file), {
-    buttons: ['dialog.prompt.dup.cancel', 'dialog.prompt.dup.ok'],
-    checkbox: 'dialog.prompt.dup.checkbox',
+    checkbox: 'checkbox',
     isChecked: false,
-    detail: 'dialog.prompt.dup.message',
+    detail: 'message',
+    prefix: 'dialog.prompt.dup.',
     ...options
   })
 
 prompt.plugin = {
   uninstall: (label, options) =>
     prompt(label, {
-      buttons: ['prefs.plugins.uninstall', 'prefs.plugins.prompt.cancel'],
-      defaultId: 1,
-      cancelId: 1,
-      detail: 'prefs.plugins.prompt.message',
+      detail: 'message',
+      prefix: 'dialog.prompt.plugin.uninstall.',
       type: 'warning',
       ...options
     })

@@ -153,16 +153,8 @@ en:
       disable: Disable
       install: Install Plugin
       uninstall: Uninstall
-      noInfo: No information available.
+      noInfo: Unknown author
       homepage: Homepage
-      hooks:
-        export: Export
-        import: Import
-      prompt:
-        cancel: Cancel
-        message: >
-          This will permanently delete the plugin and it's configuration.
-
   item:
     created: Date Added
     modified: Modified
@@ -242,16 +234,17 @@ en:
     description: Description
     comment: Comment
 
+  ok: Yes
+  cancel: Cancel
   dialog:
     prompt:
-      ok: Yes
-      cancel: Cancel
       item:
-        ok: Delete
-        cancel: Cancel
-        destroy: >
-          Are your sure you want to permanently delete items?
-          This action cannot be undone.
+        destroy:
+          ok: Delete
+          cancel: Cancel
+          message: >
+            Are your sure you want to permanently delete items?
+            This action cannot be undone.
       dup:
         message: >
           This photo already exists in your project. Are you sure
@@ -259,6 +252,13 @@ en:
         checkbox: Remember this choice
         cancel: Skip
         ok: Import Anyway
+      plugin:
+        uninstall:
+          ok: Delete
+          cancel: Cancel
+          message: >
+            Are you sure you want to delete the plugin?
+            This will permanently remove the plugin and its configuration.
     filter:
       templates: Tropy Templates
       images: Images
@@ -471,8 +471,10 @@ en:
           Tropy {version} is ready to be installed.
           Do you want to install and restart now?
         confirm: Restart Now
-
   plugin:
     name: Name
     plugin: Plugin
     options: Options
+    hooks:
+      export: Export
+      import: Import
