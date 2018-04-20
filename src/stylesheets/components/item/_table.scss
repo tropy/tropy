@@ -169,12 +169,6 @@
             content: "";
           }
         }
-
-        &:nth-child(2) {
-          &::before {
-            content: none;
-          }
-        }
       }
 
       &.dragging {
@@ -203,6 +197,14 @@
         &::after {
           right: -1px;
           box-shadow: none;
+        }
+
+        // Only hide the 2nd column separator in moving state
+        // when the first one is in dragging state
+        &:first-child + .moving {
+          &::before {
+            content: none;
+          }
         }
       }
 
