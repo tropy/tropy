@@ -283,6 +283,24 @@
       transition: opacity $column-transition;
     }
 
+    .main-column {
+      .td-container {
+        padding-left:
+          $padding-base-horizontal
+          + $thumbnail-size
+          + $padding-base-horizontal;
+      }
+
+      &:first-child {
+        .td-container {
+          padding-left:
+            $default-padding-horizontal
+            + $thumbnail-size
+            + $padding-base-horizontal;
+        }
+      }
+    }
+
     &.active {
 
       // Fix 'gap' rendering bug
@@ -320,15 +338,6 @@
     &.over {
       td {
         @extend %drop-target;
-      }
-    }
-
-    .main-column {
-      .td-container {
-        padding-left:
-          $default-padding-horizontal
-          + $thumbnail-size
-          + $padding-base-horizontal;
       }
     }
   }
