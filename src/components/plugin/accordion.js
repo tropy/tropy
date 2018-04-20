@@ -16,6 +16,11 @@ const NoInfo = () => (
 )
 
 class PluginAccordion extends Accordion {
+  handleHomepageClick = (event) => {
+    event.stopPropagation()
+    this.props.onOpenLink(this.props.spec.homepage)
+  }
+
   handleUninstall = (event) =>  {
     event.stopPropagation()
     this.props.onUninstall(this.props.spec.name)
@@ -45,13 +50,6 @@ class PluginAccordion extends Accordion {
     return this.props.configs.filter(c => !c.disabled)
   }
 
-  get isDisabled() {
-    return !this.configs.length
-  }
-
-  get isLocalPlugin() {
-    return this.props.spec.source === 'local'
-  }
 
   get classes() {
     return [super.classes, {
@@ -59,8 +57,19 @@ class PluginAccordion extends Accordion {
     }]
   }
 
-  get label() {
-    return this.props.spec.label || this.props.spec.name
+  get description() {
+    <p className="description">
+      {this.props.spec.description}
+    </p>
+  }
+
+  get heading() {
+    return (
+      <h1 className="panel-heading">
+        {`${this.props.spec.label || this.props.spec.name} `}
+        <small className="version">{this.props.spec.version}</small>
+      </h1>
+    )
   }
 
   get hooks() {
@@ -75,11 +84,6 @@ class PluginAccordion extends Accordion {
     )
   }
 
-  handleHomepageClick = (event) => {
-    event.stopPropagation()
-    this.props.onOpenLink(this.props.spec.homepage)
-  }
-
   get info() {
     return (this.props.spec.homepage == null) ? <NoInfo/> : (
       <div className="info">
@@ -90,32 +94,32 @@ class PluginAccordion extends Accordion {
     )
   }
 
+  get isDisabled() {
+    return !this.configs.length
+  }
+
+  get isLocalPlugin() {
+    return this.props.spec.source === 'local'
+  }
+
   renderHeader() {
-    const { isDisabled } = this
     return super.renderHeader(
       <div className="panel-header-container">
         {this.hooks}
-        <h1 className="panel-heading">
-          {this.label}
-          {' '}
-          <small className="version">{this.props.spec.version}</small>
-        </h1>
-        <p className="description">
-          {this.props.spec.description}
-        </p>
+        {this.heading}
+        {this.description}
         <div className="flex-row center">
           {this.info}
           <ButtonGroup>
             <Button
               isDefault
-              text={`prefs.plugins.${isDisabled ? 'enable' : 'disable'}`}
-              isActive={isDisabled}
+              text={`prefs.plugins.${this.isDisabled ? 'enable' : 'disable'}`}
               onClick={this.toggleEnabled}/>
-            <Button
-              isDefault
-              isDisabled={!this.isLocalPlugin}
-              text="prefs.plugins.uninstall"
-              onClick={this.handleUninstall}/>
+            {this.isLocalPlugin &&
+              <Button
+                isDefault
+                text="prefs.plugins.uninstall"
+                onClick={this.handleUninstall}/>}
           </ButtonGroup>
         </div>
       </div>
