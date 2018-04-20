@@ -20,18 +20,14 @@ class PluginsPane extends Component {
   }
 
   componentDidMount() {
+    // Subtle: we assume `plugins` is a Singleton, therefore
+    // it's safe to manage the listeneres in mount/unmount!
     this.props.plugins.on('change', this.refresh)
   }
 
   componentWillUnmount() {
     this.persist.flush()
     this.props.plugins.removeListener('change', this.refresh)
-  }
-
-  componentWillReceiveProps(props) {
-    if (props.plugins !== this.props.plugins) {
-      throw Error('plugins changed!') // TODO
-    }
   }
 
   getPluginConfigFromProps(props = this.props) {
