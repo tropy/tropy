@@ -10,6 +10,7 @@ const { AccordionGroup } = require('../accordion')
 const { PluginAccordion } = require('./accordion')
 const { keys, values } = Object
 const debounce = require('lodash.debounce')
+const { omit } = require('../../common/util')
 
 
 class PluginsPane extends Component {
@@ -54,8 +55,7 @@ class PluginsPane extends Component {
   handleChange = (plugin, index, newConfig) => {
     let { config } = this.state
     config[this.idx(plugin, index)] = newConfig
-    this.setState({ config })
-    this.persist()
+    this.setState({ config }, this.persist)
     this.ensureOpen(plugin)
   }
 
@@ -71,8 +71,7 @@ class PluginsPane extends Component {
       plugin,
       options: {}
     })
-    this.setState({ config })
-    this.persist()
+    this.setState({ config }, this.persist)
     this.ensureOpen(plugin)
   }
 
@@ -85,8 +84,23 @@ class PluginsPane extends Component {
   handleDelete = (plugin, index) => {
     let { config } = this.state
     config.splice(this.idx(plugin, index), 1)
+    this.setState({ config }, this.persist)
+  }
+
+  handleDisable = (name) => {
+    this.setState({
+      config: this.state.config.map(cfg =>
+        (cfg.plugin !== name) ? cfg : { ...cfg, disabled: true })
+    }, this.persist)
+  }
+
+  handleEnable = (name) => {
+    let k = 0
+    let config = this.state.config.map(cfg =>
+        (cfg.plugin !== name) ? cfg : (++k, omit(cfg, ['disabled'])))
+
+    if (k === 0) return this.handleInsert(name, -1)
     this.setState({ config })
-    this.persist()
   }
 
   handleInstall() {
@@ -97,9 +111,8 @@ class PluginsPane extends Component {
     this.accordionGroup = accordionGroup
   }
 
-  configs = (name) => {
-    return this.state.config
-      .filter(c => c.plugin === name)
+  getPluginInstances(name) {
+    return this.state.config.filter(c => c.plugin === name && !c.disabled)
   }
 
   render() {
@@ -115,10 +128,12 @@ class PluginsPane extends Component {
                (spec, idx) => {
                  return (
                    <PluginAccordion
+                     instances={this.getPluginInstances(spec.name)}
                      spec={spec}
-                     configs={this.configs(spec.name)}
                      onChange={this.handleChange}
                      onDelete={this.handleDelete}
+                     onDisable={this.handleDisable}
+                     onEnable={this.handleEnable}
                      onInsert={this.handleInsert}
                      onUninstall={this.handleUninstall}
                      onOpenLink={this.props.onOpenLink}

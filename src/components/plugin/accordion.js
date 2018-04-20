@@ -21,39 +21,21 @@ class PluginAccordion extends Accordion {
     this.props.onOpenLink(this.props.spec.homepage)
   }
 
+  handleToggleClick = (event) => {
+    event.stopPropagation()
+    this.props[
+      this.hasInstances ? 'onDisable' : 'onEnable'
+    ](this.props.spec.name)
+  }
+
   handleUninstall = (event) =>  {
     event.stopPropagation()
     this.props.onUninstall(this.props.spec.name)
   }
 
-  toggleEnabled = (event) => {
-    let disabled = this.isDisabled
-    const { name } = this.props.spec
-    this.props.configs.map((config, idx) => {
-      let newConfig = config
-      if (disabled) {
-        delete newConfig.disabled
-      } else {
-        newConfig.disabled = true
-      }
-      this.props.onChange(name, idx, newConfig)
-    })
-
-    if (disabled && !this.configs.length) {
-      this.props.onInsert(name, -1)
-    }
-
-    event.stopPropagation()
-  }
-
-  get configs() {
-    return this.props.configs.filter(c => !c.disabled)
-  }
-
-
   get classes() {
     return [super.classes, {
-      disabled: this.isDisabled
+      disabled: !this.hasInstances
     }]
   }
 
@@ -61,6 +43,10 @@ class PluginAccordion extends Accordion {
     <p className="description">
       {this.props.spec.description}
     </p>
+  }
+
+  get hasInstances() {
+    return this.props.instances.length > 0
   }
 
   get heading() {
@@ -94,10 +80,6 @@ class PluginAccordion extends Accordion {
     )
   }
 
-  get isDisabled() {
-    return !this.configs.length
-  }
-
   get isLocalPlugin() {
     return this.props.spec.source === 'local'
   }
@@ -113,8 +95,8 @@ class PluginAccordion extends Accordion {
           <ButtonGroup>
             <Button
               isDefault
-              text={`prefs.plugins.${this.isDisabled ? 'enable' : 'disable'}`}
-              onClick={this.toggleEnabled}/>
+              text={`prefs.plugins.${this.hasInstances ? 'disable' : 'enable'}`}
+              onClick={this.handleToggleClick}/>
             {this.isLocalPlugin &&
               <Button
                 isDefault
@@ -129,7 +111,7 @@ class PluginAccordion extends Accordion {
   renderBody() {
     return super.renderBody(
       <ul>
-        {this.configs.map(
+        {this.props.instances.map(
            (config, idx) =>
              <PluginInstance
                key={idx}
@@ -145,11 +127,13 @@ class PluginAccordion extends Accordion {
   }
 
   static propTypes = {
+    instances: arrayOf(object).isRequired,
     spec: object.isRequired,
     onChange: func.isRequired,
     onDelete: func.isRequired,
+    onDisable: func.isRequired,
+    onEnable: func.isRequired,
     onInsert: func.isRequired,
-    configs: arrayOf(object),
     onUninstall: func.isRequired
   }
 }
