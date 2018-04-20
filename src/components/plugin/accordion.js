@@ -5,9 +5,15 @@ const { arrayOf, func, object } = require('prop-types')
 const { Accordion } = require('../accordion')
 const { Button, ButtonGroup } = require('../button')
 const { PluginInstance } = require('./instance')
-const { injectIntl, intlShape } = require('react-intl')
+const { FormattedMessage, injectIntl, intlShape } = require('react-intl')
 const { keys } = Object
 
+
+const NoInfo = () => (
+  <div className="no-info">
+    <FormattedMessage id="prefs.plugins.noInfo"/>
+  </div>
+)
 
 class PluginAccordion extends Accordion {
   handleUninstall = (event) =>  {
@@ -43,26 +49,14 @@ class PluginAccordion extends Accordion {
     return !this.configs.length
   }
 
+  get isLocalPlugin() {
+    return this.props.spec.source === 'local'
+  }
+
   get classes() {
-    return {
-      ...super.classes,
+    return [super.classes, {
       disabled: this.isDisabled
-    }
-  }
-
-  get repoLink() {
-    let repo = this.props.spec.repository
-    if (typeof repo === 'object' && repo.url) return repo.url
-    if (typeof repo !== 'string') return
-    if (repo.startsWith('http')) return repo
-    return repo
-      .replace(/^github:/, 'https://github.com/')
-      .replace(/^gitlab:/, 'https://gitlab.com/')
-      .replace(/^bitbucket:/, 'https://bitbucket.org/')
-  }
-
-  get canUninstall() {
-    return this.props.spec.source === 'directory'
+    }]
   }
 
   get label() {
@@ -74,33 +68,19 @@ class PluginAccordion extends Accordion {
     return <li key={hook}>{t({ id: `prefs.plugins.hooks.${hook}` })}</li>
   }
 
-  renderLink(id, url, ...options) {
-    const { intl } = this.props
-    const title = intl.formatMessage(
-      { id: `prefs.plugins.${id}` }, ...options)
-    const linkClick = (event) => {
-      event.stopPropagation()
-      this.props.onOpenLink(url)
-    }
-    return (
-      // eslint-disable-next-line react/jsx-no-bind
-      <a onClick={linkClick}>{title}</a>)
+  handleHomepageClick = (event) => {
+    event.stopPropagation()
+    this.props.onOpenLink(this.props.spec.homepage)
   }
 
-  get renderLinks() {
-    const { homepage } = this.props.spec
-    if (homepage) return this.renderLink('homepage', homepage)
-    if (this.repoLink) return this.renderLink('repository', this.repoLink)
-  }
-
-  get renderNoinfo() {
-    const { intl } = this.props
-    const text = intl.formatMessage({ id: 'prefs.plugins.noinfo' })
-    return <p className="no-info">{text}</p>
-  }
-
-  get hasLink() {
-    return this.props.spec.homepage || this.repoLink
+  get info() {
+    return (this.props.spec.homepage == null) ? <NoInfo/> : (
+      <div className="info">
+        <a onClick={this.handleHomepageClick}>
+          <FormattedMessage id="prefs.plugins.homepage"/>
+        </a>
+      </div>
+    )
   }
 
   renderHeader() {
@@ -119,18 +99,18 @@ class PluginAccordion extends Accordion {
           {this.props.spec.description}
         </p>
         <div className="flex-row center">
-          {this.hasLink ? this.renderLinks : this.renderNoinfo}
+          {this.info}
           <ButtonGroup>
             <Button
               isDefault
-              text={'prefs.plugins.' + (isDisabled ? 'enable' : 'disable')}
+              text={`prefs.plugins.${isDisabled ? 'enable' : 'disable'}`}
               isActive={isDisabled}
               onClick={this.toggleEnabled}/>
-            {this.canUninstall &&
-              <Button
-                isDefault
-                text="prefs.plugins.uninstall"
-                onClick={this.handleUninstall}/>}
+            <Button
+              isDefault
+              isDisabled={!this.isLocalPlugin}
+              text="prefs.plugins.uninstall"
+              onClick={this.handleUninstall}/>
           </ButtonGroup>
         </div>
       </div>

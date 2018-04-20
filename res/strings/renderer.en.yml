@@ -153,8 +153,7 @@ en:
       disable: Disable
       install: Install Plugin
       uninstall: Uninstall
-      repository: Repository
-      noinfo: No information available.
+      noInfo: No information available.
       homepage: Homepage
       hooks:
         export: Export

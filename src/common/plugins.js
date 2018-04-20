@@ -15,7 +15,7 @@ const { shell } = require('electron')
 const { EventEmitter } = require('events')
 const { basename, join } = require('path')
 const { warn, verbose, logger } = require('./log')
-const { get, omit, pick, uniq } = require('./util')
+const { blank, get, omit, uniq } = require('./util')
 const { keys } = Object
 const debounce = require('lodash.debounce')
 
@@ -36,6 +36,17 @@ const deps = async pkg => {
   }
 }
 
+const homepage = pkg => {
+  if (!blank(pkg.homepage)) return pkg.homepage
+  if (blank(pkg.repository)) return null
+  if (pkg.repository.url) return pkg.repository.url
+  if (typeof pkg.repository !== 'string') return null
+  if (pkg.repository.startsWith('http')) return pkg.repository
+  return pkg.repository
+      .replace(/^github:/, 'https://github.com/')
+      .replace(/^gitlab:/, 'https://gitlab.com/')
+      .replace(/^bitbucket:/, 'https://bitbucket.org/')
+}
 
 class Plugins extends EventEmitter {
   constructor(root) {
@@ -154,7 +165,7 @@ class Plugins extends EventEmitter {
     let pkg
     try {
       pkg = require(join(this.root, name))
-      pkg.source = 'directory'
+      pkg.source = 'local'
       return pkg
     } catch (error) {
       if (!fallback || error.code !== 'MODULE_NOT_FOUND') throw error
@@ -178,16 +189,18 @@ class Plugins extends EventEmitter {
   async scan(plugins) {
     return (plugins || await this.list()).reduce((acc, name) => {
       try {
-        acc[name] = pick(this.require(join(name, 'package.json')), [
-          'description',
-          'homepage',
-          'hooks',
-          'label',
-          'options',
-          'repository',
-          'source',
-          'version'
-        ], { name })
+        let pkg = this.require(join(name, 'package.json'))
+        acc[name] = {
+          name,
+          description: pkg.description,
+          version: pkg.version,
+          options: pkg.options,
+          label: pkg.label || pkg.productName,
+          hooks: pkg.hooks,
+          source: pkg.source,
+          repository: pkg.repository,
+          homepage: homepage(pkg)
+        }
       } catch (error) {
         warn(`failed to scan '${name}' plugin: ${error.message}`)
       }

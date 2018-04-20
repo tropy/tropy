@@ -39,7 +39,7 @@ class Window extends EventEmitter {
 
   init(done) {
     this.plugins.reload()
-      .then(plugins => plugins.create())
+      .then(plugins => plugins.create().emit('change'))
     this.unloaders.push(this.plugins.flush)
 
     this.handleUnload()

@@ -89,7 +89,9 @@ class PluginsPane extends Component {
     this.persist()
   }
 
-  installPlugin = () => ipc.send('cmd', 'app:install-plugin')
+  handleInstall() {
+    ipc.send('cmd', 'app:install-plugin')
+  }
 
   setAccordionGroup = (accordionGroup) => {
     this.accordionGroup = accordionGroup
@@ -129,7 +131,7 @@ class PluginsPane extends Component {
           <Button
             isDefault
             text="prefs.plugins.install"
-            onClick={this.installPlugin}/>
+            onClick={this.handleInstall}/>
         </footer>
       </PrefPane>
     )
