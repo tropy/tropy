@@ -167,6 +167,18 @@
       &.moving {
         transform: translateX(var(--drop-offset));
         z-index: $zindex-drop-target;
+
+        &:first-child {
+          &::before {
+            content: "";
+          }
+        }
+
+        &:nth-child(2) {
+          &::before {
+            content: none;
+          }
+        }
       }
 
       &.dragging {
