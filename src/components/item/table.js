@@ -1,17 +1,17 @@
 'use strict'
 
 const React = require('react')
-const { arrayOf, bool, func, object } = require('prop-types')
+const { arrayOf, bool, func, number, object } = require('prop-types')
 const { ItemIterator } = require('./iterator')
 const { ItemTableRow } = require('./table-row')
 const { ItemTableSpacer } = require('./table-spacer')
 const { ItemTableHead } = require('./table-head')
 const cx = require('classnames')
 const { noop } = require('../../common/util')
-const { NAV, SASS: { ROW, SCROLLBAR } } = require('../../constants')
-const { on, off, maxScrollLeft } = require('../../dom')
+const { NAV, SASS: { COLUMN, ROW, SCROLLBAR } } = require('../../constants')
+const { bounds, ensure, on, off, maxScrollLeft } = require('../../dom')
 const { match } = require('../../keymap')
-const { refine, shallow, splice } = require('../../common/util')
+const { refine, restrict, shallow, splice, warp } = require('../../common/util')
 const { assign } = Object
 const throttle = require('lodash.throttle')
 
@@ -82,7 +82,13 @@ class ItemTable extends ItemIterator {
 
   getColumnState(props = this.props) {
     let minWidth = 0
-    let colwidth = props.columns.map(c => ((minWidth += c.width), c.width))
+    let columns = props.columns
+    let colwidth = columns.map((c, idx) => {
+      let min = idx > 0 ? props.minColWidth : props.minMainColWidth
+      let width = Math.max(c.width, min)
+      minWidth += width
+      return width
+    })
 
     if (this.hasPositionColumn(props)) {
       minWidth += NAV.COLUMN.POSITION.width
@@ -92,13 +98,33 @@ class ItemTable extends ItemIterator {
       minWidth += SCROLLBAR.WIDTH
     }
 
-    return {
-      colwidth, minWidth
-    }
+    return { columns, colwidth, minWidth }
   }
 
   getColumns() {
     return 1
+  }
+
+  getMaxColumnOffset(idx) {
+    let max = this.state.minWidth - this.state.colwidth[idx]
+    return (this.props.hasScrollbars) ? max - SCROLLBAR.WIDTH : max
+  }
+
+  getMinColumnOffset() {
+    return this.hasPositionColumn() ? NAV.COLUMN.POSITION.width : 0
+  }
+
+  getColumnPadding(idx = 0) {
+    return (idx === 0 && !this.hasPositionColumn()) ?
+      COLUMN.PADDING + COLUMN.FIRST :
+      COLUMN.PADDING
+  }
+
+  getOffsetInTable(x, { offset, min, max } = this.dragstate) {
+    return restrict(
+      x - offset - bounds(this.table).left + this.table.scrollLeft,
+      min,
+      max)
   }
 
   getPosition(index) {
@@ -118,7 +144,7 @@ class ItemTable extends ItemIterator {
   }
 
   edit(item) {
-    const { property } = this.props.columns[0]
+    const { property } = this.state.columns[0]
     this.props.onEdit({
       column: { [item.id]: property.id }
     })
@@ -132,6 +158,70 @@ class ItemTable extends ItemIterator {
   handleEditCancel = (...args) => {
     this.props.onEditCancel(...args)
     this.container.focus()
+  }
+
+  handleColumnOrderStart = (idx, event) => {
+    let min = this.getMinColumnOffset()
+    let max = this.getMaxColumnOffset(idx)
+    let offset = event.nativeEvent.offsetX + this.getColumnPadding(idx)
+    let origin = this.getOffsetInTable(event.clientX, { min, max, offset })
+    this.dragstate = { max, min, idx, offset, origin }
+  }
+
+  handleColumnOrderStop = () => {
+    let { drag, drop } = this.state
+    if (drag === drop) return this.handleColumnOrderReset()
+
+    let columns = warp(this.state.columns, drag, drop)
+    let colwidth = columns.map(c => c.width)
+
+    this.dragstate = {}
+    this.setState({ columns, colwidth, drag: null, drop: null }, () => {
+      this.setColumnOffset(0)
+      this.setColumnOffset(0, 'drop')
+    })
+
+    this.props.onColumnOrder({
+      order: columns.reduce((ord, col, idx) => ((ord[col.id] = idx), ord), {})
+    })
+  }
+
+  handleColumnOrderReset = () => {
+    ensure(this.table, 'transitionend', () => {
+      this.setState({ drop: null })
+    }, 400)
+    this.setState({ drag: null })
+    this.dragstate = {}
+    this.setColumnOffset(0)
+    this.setColumnOffset(0, 'drop')
+  }
+
+  handleColumnOrder = (event) => {
+    let { idx, origin } = this.dragstate
+    let { colwidth } = this.state
+    let offset = this.getOffsetInTable(event.clientX)
+    let delta = offset - origin
+    let tgt = idx
+    let mov = delta
+
+    if (delta > 0) {
+      while (tgt < colwidth.length - 1 && colwidth[tgt + 1] / 2 < mov) {
+        tgt += 1
+        mov -= colwidth[tgt]
+      }
+    } else {
+      mov = -mov
+      while (tgt > 0 && colwidth[tgt - 1] / 2 < mov) {
+        tgt -= 1
+        mov -= colwidth[tgt]
+      }
+    }
+
+    this.setState({ drag: idx, drop: tgt })
+    this.setColumnOffset(delta)
+    this.setColumnOffset(
+      (tgt === idx) ? 0 : (tgt < idx) ? colwidth[idx] : -colwidth[idx], 'drop'
+    )
   }
 
   handleColumnResize = ({ column, width }, doCommit) => {
@@ -153,6 +243,10 @@ class ItemTable extends ItemIterator {
     })
   }, 25)
 
+  setColumnOffset(offset = 0, column = 'drag') {
+    this.table.style.setProperty(`--${column}-offset`, `${offset}px`)
+  }
+
   setTable = (table) => {
     if (this.table) {
       off(this.table, 'scroll', this.handleHorizontalScroll, {
@@ -170,10 +264,10 @@ class ItemTable extends ItemIterator {
   }
 
   renderTableBody() {
-    const { columns, data, edit } = this.props
+    const { data, edit } = this.props
     const onEdit = this.props.selection.length === 1 ? this.props.onEdit : noop
 
-    const { colwidth, height, minWidth } = this.state
+    const { columns, colwidth, height, minWidth } = this.state
     const { transform } = this
 
     const hasPositionColumn = this.hasPositionColumn()
@@ -198,12 +292,14 @@ class ItemTable extends ItemIterator {
                 {this.mapIterableRange(({ item, index, ...props }) =>
                   <ItemTableRow {...props}
                     key={item.id}
-                    item={item}
-                    data={data[item.id]}
                     columns={columns}
-                    position={this.getPosition(index)}
-                    hasPositionColumn={hasPositionColumn}
+                    data={data[item.id]}
+                    drag={this.state.drag}
+                    drop={this.state.drop}
                     edit={edit}
+                    hasPositionColumn={hasPositionColumn}
+                    item={item}
+                    position={this.getPosition(index)}
                     onCancel={this.handleEditCancel}
                     onChange={this.handleChange}
                     onEdit={onEdit}/>)}
@@ -220,13 +316,22 @@ class ItemTable extends ItemIterator {
       <div
         ref={this.setTable}
         className={cx('item-table', {
+          'dragging-column': this.state.drop != null,
           'max-scroll-left': this.state.hasMaxScrollLeft
         })}>
         <ItemTableHead
-          columns={this.props.columns}
+          columns={this.state.columns}
           colwidth={this.state.colwidth}
+          drag={this.state.drag}
+          drop={this.state.drop}
           hasPositionColumn={this.hasPositionColumn()}
+          minWidth={this.props.minColWidth}
+          minWidthMain={this.props.minMainColWidth}
           sort={this.props.sort}
+          onOrder={this.handleColumnOrder}
+          onOrderReset={this.handleColumnOrderReset}
+          onOrderStart={this.handleColumnOrderStart}
+          onOrderStop={this.handleColumnOrderStop}
           onResize={this.handleColumnResize}
           onSort={this.props.onSort}/>
         {this.renderTableBody()}
@@ -240,6 +345,9 @@ class ItemTable extends ItemIterator {
     edit: object,
     data: object.isRequired,
     hasScrollbars: bool.isRequired,
+    minColWidth: number.isRequired,
+    minMainColWidth: number.isRequired,
+    onColumnOrder: func.isRequired,
     onColumnResize: func.isRequired,
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,
@@ -249,7 +357,9 @@ class ItemTable extends ItemIterator {
   static defaultProps = {
     ...ItemIterator.defaultProps,
     overscan: 2,
-    hasScrollbars: ARGS.scrollbars
+    hasScrollbars: ARGS.scrollbars,
+    minColWidth: 40,
+    minMainColWidth: 100
   }
 }
 

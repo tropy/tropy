@@ -22,8 +22,10 @@ const BlankTableCell = () => (
 
 class ItemTableCell extends PureComponent {
   get classes() {
-    return ['metadata', {
+    return ['metadata', this.props.type, {
+      'dragging': this.props.isDragging,
       'main-column': this.props.isMainColumn,
+      'moving': this.props.isMoving,
       'read-only': this.props.isReadOnly
     }]
   }
@@ -114,7 +116,7 @@ class ItemTableCell extends PureComponent {
         className={cx(this.classes)}
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>
-        <div className="flex-row center">
+        <div className="flex-row center td-container">
           {this.renderCoverImage()}
           <Editable
             display={auto(this.props.value, this.props.type)}
@@ -135,8 +137,10 @@ class ItemTableCell extends PureComponent {
     cache: string,
     id: string.isRequired,
     isDisabled: bool,
+    isDragging: bool,
     isEditing: bool,
     isMainColumn: bool,
+    isMoving: bool,
     isReadOnly: bool,
     isSelected: bool,
     item: shape({
