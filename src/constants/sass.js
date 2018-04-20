@@ -14,7 +14,9 @@ const ABOUT = {
 
 const COLUMN = {
   MIN: 48,
-  POSITION: 54
+  POSITION: 54,
+  PADDING: 5 + 4,
+  FIRST: 3
 
 }
 
@@ -40,8 +42,7 @@ const TILE = {
 }
 
 const ROW = {
-  HEIGHT: 30,
-  PADDING: 5 + 4
+  HEIGHT: 30
 }
 
 const ITEM = {

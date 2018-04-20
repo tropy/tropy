@@ -8,7 +8,7 @@ const { ItemTableSpacer } = require('./table-spacer')
 const { ItemTableHead } = require('./table-head')
 const cx = require('classnames')
 const { noop } = require('../../common/util')
-const { NAV, SASS: { ROW, SCROLLBAR } } = require('../../constants')
+const { NAV, SASS: { COLUMN, ROW, SCROLLBAR } } = require('../../constants')
 const { bounds, ensure, on, off, maxScrollLeft } = require('../../dom')
 const { match } = require('../../keymap')
 const { refine, restrict, shallow, splice, warp } = require('../../common/util')
@@ -110,6 +110,16 @@ class ItemTable extends ItemIterator {
     return (this.props.hasScrollbars) ? max - SCROLLBAR.WIDTH : max
   }
 
+  getMinColumnOffset() {
+    return this.hasPositionColumn() ? NAV.COLUMN.POSITION.width : 0
+  }
+
+  getColumnPadding(idx = 0) {
+    return (idx === 0 && !this.hasPositionColumn()) ?
+      COLUMN.PADDING + COLUMN.FIRST :
+      COLUMN.PADDING
+  }
+
   getOffsetInTable(x, { offset, min, max } = this.dragstate) {
     return restrict(
       x - offset - bounds(this.table).left + this.table.scrollLeft,
@@ -151,9 +161,9 @@ class ItemTable extends ItemIterator {
   }
 
   handleColumnOrderStart = (idx, event) => {
-    let min = this.hasPositionColumn() ? NAV.COLUMN.POSITION.width : 0
+    let min = this.getMinColumnOffset()
     let max = this.getMaxColumnOffset(idx)
-    let offset = event.nativeEvent.offsetX + ROW.PADDING
+    let offset = event.nativeEvent.offsetX + this.getColumnPadding(idx)
     let origin = this.getOffsetInTable(event.clientX, { min, max, offset })
     this.dragstate = { max, min, idx, offset, origin }
   }
