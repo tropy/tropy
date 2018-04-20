@@ -91,6 +91,18 @@
           }
         }
       }
+
+      &.holding:not(.active) {
+        .icon {
+          .line {
+            display: if($icon-style == "line", none, block);
+          }
+
+          .block {
+            display: if($icon-style == "line", block, none);
+          }
+        }
+      }
     }
 
     .icon {

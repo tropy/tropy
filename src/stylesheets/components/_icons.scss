@@ -8,15 +8,15 @@
 
   svg {
     display: block;
+  }
 
-    @if $icon-style == "line" {
-      .block {
-        display: none;
-      }
-    } @else {
-      .line {
-        display: none;
-      }
+  @if $icon-style == "line" {
+    .block {
+      display: none;
+    }
+  } @else {
+    .line {
+      display: none;
     }
   }
 }
