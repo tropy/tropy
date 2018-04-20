@@ -28,25 +28,6 @@ const proxyRequire = (mod) => require(mod)
 const subdirs = root => readdir(root).filter(async (dir) =>
       dir !== 'node_modules' && (await stat(join(root, dir))).isDirectory())
 
-const deps = async pkg => {
-  try {
-    return keys((await load(pkg)).dependencies)
-  } catch (_) {
-    return []
-  }
-}
-
-const homepage = pkg => {
-  if (!blank(pkg.homepage)) return pkg.homepage
-  if (blank(pkg.repository)) return null
-  if (pkg.repository.url) return pkg.repository.url
-  if (typeof pkg.repository !== 'string') return null
-  if (pkg.repository.startsWith('http')) return pkg.repository
-  return pkg.repository
-      .replace(/^github:/, 'https://github.com/')
-      .replace(/^gitlab:/, 'https://gitlab.com/')
-      .replace(/^bitbucket:/, 'https://bitbucket.org/')
-}
 
 class Plugins extends EventEmitter {
   constructor(root) {
@@ -196,7 +177,7 @@ class Plugins extends EventEmitter {
           version: pkg.version,
           options: pkg.options,
           label: pkg.label || pkg.productName,
-          hooks: pkg.hooks,
+          hooks: pkg.hooks || {},
           source: pkg.source,
           repository: pkg.repository,
           homepage: homepage(pkg)
@@ -263,6 +244,26 @@ class Plugins extends EventEmitter {
       .replace(/\.(tar\.(bz2|gz)|zip)$/, '')
       .replace(/-\d+(\.\d+)*$/, '')
   }
+}
+
+const deps = async pkg => {
+  try {
+    return keys((await load(pkg)).dependencies)
+  } catch (_) {
+    return []
+  }
+}
+
+const homepage = pkg => {
+  if (!blank(pkg.homepage)) return pkg.homepage
+  if (blank(pkg.repository)) return null
+  if (pkg.repository.url) return pkg.repository.url
+  if (typeof pkg.repository !== 'string') return null
+  if (pkg.repository.startsWith('http')) return pkg.repository
+  return pkg.repository
+      .replace(/^github:/, 'https://github.com/')
+      .replace(/^gitlab:/, 'https://gitlab.com/')
+      .replace(/^bitbucket:/, 'https://bitbucket.org/')
 }
 
 module.exports = {

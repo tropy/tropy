@@ -5,8 +5,8 @@ const { arrayOf, func, object } = require('prop-types')
 const { Accordion } = require('../accordion')
 const { Button, ButtonGroup } = require('../button')
 const { PluginInstance } = require('./instance')
-const { FormattedMessage, injectIntl, intlShape } = require('react-intl')
-const { keys } = Object
+const { FormattedMessage } = require('react-intl')
+const { entries } = Object
 
 
 const NoInfo = () => (
@@ -63,9 +63,16 @@ class PluginAccordion extends Accordion {
     return this.props.spec.label || this.props.spec.name
   }
 
-  renderHook(hook) {
-    const { formatMessage: t } = this.props.intl
-    return <li key={hook}>{t({ id: `prefs.plugins.hooks.${hook}` })}</li>
+  get hooks() {
+    return (
+      <ul className="hooks">
+        {entries(this.props.spec.hooks).map(hk => (
+          <li key={hk[0]} className={!hk[1] ? 'disabled' : null}>
+            <FormattedMessage id={`plugin.hooks.${hk[0]}`}/>
+          </li>
+        ))}
+      </ul>
+    )
   }
 
   handleHomepageClick = (event) => {
@@ -87,9 +94,7 @@ class PluginAccordion extends Accordion {
     const { isDisabled } = this
     return super.renderHeader(
       <div className="panel-header-container">
-        <ul className="hooks">
-          {keys(this.props.spec.hooks).map(h => this.renderHook(h))}
-        </ul>
+        {this.hooks}
         <h1 className="panel-heading">
           {this.label}
           {' '}
@@ -141,17 +146,10 @@ class PluginAccordion extends Accordion {
     onDelete: func.isRequired,
     onInsert: func.isRequired,
     configs: arrayOf(object),
-    intl: intlShape.isRequired,
     onUninstall: func.isRequired
-  }
-  static defaultProps = {
-    ...Accordion.defaultProps,
-    version: '',
-    options: [],
-    hooks: {}
   }
 }
 
 module.exports = {
-  PluginAccordion: injectIntl(PluginAccordion)
+  PluginAccordion
 }
