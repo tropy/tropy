@@ -27,10 +27,6 @@
     &[class*="integer"] {
       text-align: right;
     }
-
-    > *:not(.th-container) {
-      transition: opacity $column-transition;
-    }
   }
 
   &.dragging-column {
@@ -43,11 +39,11 @@
         transform: translateX(var(--drag-offset));
 
         &,
-        > * {
+        .td-container {
           transition: none;
         }
 
-        > *:not(.th-container) {
+        .td-container {
           opacity: 0.5;
         }
       }
@@ -173,12 +169,6 @@
             content: "";
           }
         }
-
-        &:nth-child(2) {
-          &::before {
-            content: none;
-          }
-        }
       }
 
       &.dragging {
@@ -207,6 +197,14 @@
         &::after {
           right: -1px;
           box-shadow: none;
+        }
+
+        // Only hide the 2nd column separator in moving state
+        // when the first one is in dragging state
+        &:first-child + .moving {
+          &::before {
+            content: none;
+          }
         }
       }
 
@@ -282,6 +280,7 @@
 
     .td-container {
       padding: 0 $space-xs 0 ($space-xs + 1px);
+      transition: opacity $column-transition;
     }
 
     &.active {
