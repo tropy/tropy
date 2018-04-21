@@ -8,7 +8,7 @@ const { Button } = require('../button')
 const { array, bool, func, object, shape, string } = require('prop-types')
 const { AccordionGroup } = require('../accordion')
 const { PluginAccordion } = require('./accordion')
-const { keys, values } = Object
+const { values } = Object
 const debounce = require('lodash.debounce')
 const { omit } = require('../../common/util')
 
@@ -52,13 +52,6 @@ class PluginsPane extends Component {
     let { config } = this.state
     config[this.idx(plugin, index)] = newConfig
     this.setState({ config }, this.persist)
-    this.ensureOpen(plugin)
-  }
-
-  ensureOpen = (plugin) => {
-    this.accordionGroup.setState({
-      open: keys(this.props.plugins.spec).indexOf(plugin)
-    })
   }
 
   handleInsert = (plugin, index) => {
@@ -68,7 +61,6 @@ class PluginsPane extends Component {
       options: {}
     })
     this.setState({ config }, this.persist)
-    this.ensureOpen(plugin)
   }
 
   idx = (plugin, index) => {
@@ -103,10 +95,6 @@ class PluginsPane extends Component {
     ipc.send('cmd', 'app:install-plugin')
   }
 
-  setAccordionGroup = (accordionGroup) => {
-    this.accordionGroup = accordionGroup
-  }
-
   getPluginInstances(name) {
     return this.state.config.filter(c => c.plugin === name && !c.disabled)
   }
@@ -118,7 +106,6 @@ class PluginsPane extends Component {
         isActive={this.props.isActive}>
         <div className="scroll-container">
           <AccordionGroup
-            ref={this.setAccordionGroup}
             className="form-horizontal">
             {values(this.props.plugins.spec).map(
                (spec, idx) => {

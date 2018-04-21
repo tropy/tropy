@@ -9,14 +9,25 @@ const { bool, func, node, number, string } = require('prop-types')
 
 class Accordion extends PureComponent {
   get classes() {
-    return {
-      panel: true,
+    return ['panel', {
       closed: !this.props.isOpen
+    }]
+  }
+
+  close = () => {
+    if (this.props.isOpen) {
+      this.props.onToggle(this, false)
     }
   }
 
   handleToggle = () => {
     this.props.onToggle(this, !this.props.isOpen)
+  }
+
+  open = () => {
+    if (!this.props.isOpen) {
+      this.props.onToggle(this, true)
+    }
   }
 
   renderHeader(header) {
@@ -50,9 +61,9 @@ class Accordion extends PureComponent {
     canToggle: bool,
     children: node,
     className: string,
-    id: number,
+    id: number.isRequired,
     isOpen: bool,
-    onToggle: func
+    onToggle: func.isRequired
   }
 
   static defaultProps = {
@@ -64,7 +75,6 @@ class Accordion extends PureComponent {
 class AccordionGroup extends PureComponent {
   constructor(props) {
     super(props)
-
     this.state = {
       open: null
     }

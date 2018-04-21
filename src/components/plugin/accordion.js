@@ -23,9 +23,13 @@ class PluginAccordion extends Accordion {
 
   handleToggleClick = (event) => {
     event.stopPropagation()
-    this.props[
-      this.hasInstances ? 'onDisable' : 'onEnable'
-    ](this.props.spec.name)
+    if (this.hasInstances) {
+      this.props.onDisable(this.props.spec.name)
+      this.close()
+    } else {
+      this.props.onEnable(this.props.spec.name)
+      this.open()
+    }
   }
 
   handleUninstall = (event) =>  {
