@@ -69,10 +69,10 @@ class PluginsPane extends Component {
     return this.state.config.findIndex(c => c === cfg)
   }
 
-  handleDelete = (plugin, index) => {
-    let { config } = this.state
-    config.splice(this.idx(plugin, index), 1)
-    this.setState({ config }, this.persist)
+  handleRemove = (instance) => {
+    this.setState({
+      config: this.state.config.filter(c => c !== instance)
+    }, this.persist)
   }
 
   handleDisable = (name) => {
@@ -114,10 +114,10 @@ class PluginsPane extends Component {
                      instances={this.getPluginInstances(spec.name)}
                      spec={spec}
                      onChange={this.handleChange}
-                     onDelete={this.handleDelete}
                      onDisable={this.handleDisable}
                      onEnable={this.handleEnable}
                      onInsert={this.handleInsert}
+                     onRemove={this.handleRemove}
                      onUninstall={this.handleUninstall}
                      onOpenLink={this.props.onOpenLink}
                      key={idx}/>)

@@ -44,9 +44,7 @@ class PluginAccordion extends Accordion {
   }
 
   get description() {
-    <p className="description">
-      {this.props.spec.description}
-    </p>
+    <p className="description">{this.props.spec.description}</p>
   }
 
   get hasInstances() {
@@ -122,8 +120,8 @@ class PluginAccordion extends Accordion {
             config={config}
             guiOptions={this.props.spec.options}
             onChange={this.props.onChange}
-            onDelete={this.props.onDelete}
-            onInsert={this.props.onInsert} />)}
+            onInsert={this.props.onInsert}
+            onRemove={this.props.onRemove}/>)}
       </ul>
     )
   }
@@ -132,10 +130,10 @@ class PluginAccordion extends Accordion {
     instances: arrayOf(object).isRequired,
     spec: object.isRequired,
     onChange: func.isRequired,
-    onDelete: func.isRequired,
     onDisable: func.isRequired,
     onEnable: func.isRequired,
     onInsert: func.isRequired,
+    onRemove: func.isRequired,
     onUninstall: func.isRequired
   }
 }

@@ -51,7 +51,7 @@ class PluginInstance extends PureComponent {
   }
 
   handleRemove = () => {
-    this.props.onDelete(this.props.config.plugin, this.props.index)
+    this.props.onRemove(this.props.config)
   }
 
   handleChange = (data) => {
@@ -91,8 +91,12 @@ class PluginInstance extends PureComponent {
 
   static propTypes = {
     index: number,
-    config: object,
-    onDelete: func.isRequired,
+    config: shape({
+      plugin: string.isRequired,
+      name: string,
+      options: object
+    }).isRequired,
+    onRemove: func.isRequired,
     onInsert: func.isRequired,
     onChange: func.isRequired,
     guiOptions: arrayOf(shape({
@@ -106,11 +110,7 @@ class PluginInstance extends PureComponent {
   }
 
   static defaultProps = {
-    guiOptions: [],
-    config: {
-      name: '',
-      options: {},
-    }
+    guiOptions: []
   }
 }
 
