@@ -15,14 +15,14 @@ class PluginInstance extends PureComponent {
     return get(this.props.config.options, field, defaultValue)
   }
 
-  renderField(option, idx) {
+  renderField(option) {
     const { field, label, hint } = option
     const common = {
       id: field,
       label,
       title: hint,
-      key: idx,
-      tabIndex: idx,
+      key: field,
+      tabIndex: 0,
       name: field,
       onChange: this.handleOptionsChange,
       value: this.getValue(option),
@@ -39,10 +39,6 @@ class PluginInstance extends PureComponent {
       default: // 'string' implied
         return <FormField {...common}/>
     }
-  }
-
-  get idx() {
-    return (this.props.index + 1) * 100
   }
 
   handleInsert = () => {
@@ -75,8 +71,8 @@ class PluginInstance extends PureComponent {
             tabIndex={0}
             onChange={this.handleNameChange}
             isCompact/>
-          {this.props.guiOptions.map((option, idx) =>
-            this.renderField(option, this.idx + idx + 1))}
+          {this.props.guiOptions.map((option) =>
+            this.renderField(option))}
         </fieldset>
         <ButtonGroup>
           <Button
