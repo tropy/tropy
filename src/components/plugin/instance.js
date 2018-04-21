@@ -47,7 +47,7 @@ class PluginInstance extends PureComponent {
   }
 
   handleInsert = () => {
-    this.props.onInsert(this.props.config.plugin, this.props.index)
+    this.props.onInsert(this.props.config.plugin, this.props.config)
   }
 
   handleRemove = () => {

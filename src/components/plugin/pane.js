@@ -10,7 +10,7 @@ const { AccordionGroup } = require('../accordion')
 const { PluginAccordion } = require('./accordion')
 const { values } = Object
 const debounce = require('lodash.debounce')
-const { omit } = require('../../common/util')
+const { insert, omit } = require('../../common/util')
 
 
 class PluginsPane extends Component {
@@ -54,13 +54,13 @@ class PluginsPane extends Component {
     this.setState({ config }, this.persist)
   }
 
-  handleInsert = (plugin, index) => {
-    let { config } = this.state
-    config.splice(this.idx(plugin, index) + 1, 0, {
-      plugin,
-      options: {}
-    })
-    this.setState({ config }, this.persist)
+  handleInsert = (name, after = null) => {
+    this.setState({
+      config: insert(
+        this.state.config,
+        this.state.config.indexOf(after) + 1,
+        { plugin: name, options: {} })
+    }, this.persist)
   }
 
   idx = (plugin, index) => {
@@ -69,9 +69,9 @@ class PluginsPane extends Component {
     return this.state.config.findIndex(c => c === cfg)
   }
 
-  handleRemove = (instance) => {
+  handleRemove = (plugin) => {
     this.setState({
-      config: this.state.config.filter(c => c !== instance)
+      config: this.state.config.filter(c => c !== plugin)
     }, this.persist)
   }
 
@@ -87,7 +87,7 @@ class PluginsPane extends Component {
     let config = this.state.config.map(cfg =>
         (cfg.plugin !== name) ? cfg : (++k, omit(cfg, ['disabled'])))
 
-    if (k === 0) return this.handleInsert(name, -1)
+    if (k === 0) return this.handleInsert(name)
     this.setState({ config }, this.persist)
   }
 
