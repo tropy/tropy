@@ -211,11 +211,6 @@ const util = {
   },
 
   set(src, path, value) {
-    if (arguments.length === 2) {
-      for (let key in path) src = util.set(src, key, path[key])
-      return src
-    }
-
     if (typeof path === 'string') {
       return util.set(src, path.split('.'), value)
     }

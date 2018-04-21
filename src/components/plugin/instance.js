@@ -5,42 +5,14 @@ const { PureComponent } = require('react')
 const {
   arrayOf, bool, func, number, oneOf, object, oneOfType, shape, string
 } = require('prop-types')
-const { FormField, FormToggle } = require('../form')
+const { PluginOption } = require('./option')
+const { FormField } = require('../form')
 const { get, set } = require('../../common/util')
 const { IconPlusCircle, IconMinusCircle } = require('../icons')
 const { Button, ButtonGroup } = require('../button')
 
+
 class PluginInstance extends PureComponent {
-  getValue({ field, default: defaultValue }) {
-    return get(this.props.config.options, field, defaultValue)
-  }
-
-  renderField(option) {
-    const { field, label, hint } = option
-    const common = {
-      id: field,
-      label,
-      title: hint,
-      key: field,
-      tabIndex: 0,
-      name: field,
-      onChange: this.handleOptionsChange,
-      value: this.getValue(option),
-      isCompact: true
-    }
-    switch (option.type) {
-      case 'number':
-        return (
-          <FormField {...common}
-            value={this.getValue(option).toString()}/>)
-      case 'bool':
-      case 'boolean':
-        return <FormToggle {...common}/>
-      default: // 'string' implied
-        return <FormField {...common}/>
-    }
-  }
-
   handleInsert = () => {
     this.props.onInsert(this.props.config.plugin, this.props.config)
   }
@@ -49,9 +21,9 @@ class PluginInstance extends PureComponent {
     this.props.onChange(this.props.config, data)
   }
 
-  handleOptionsChange = (data) => {
+  handleOptionsChange = (field, value) => {
     this.props.onChange(this.props.config, {
-      options: set(this.props.config.options, data)
+      options: set(this.props.config.options, field, value)
     })
   }
 
@@ -59,20 +31,24 @@ class PluginInstance extends PureComponent {
     this.props.onRemove(this.props.config)
   }
 
-
   render() {
+    const { config } = this.props
     return (
       <li className="plugin-instance">
         <fieldset>
           <FormField
             id="plugin.name"
             name="name"
-            value={this.props.config.name}
+            value={config.name}
             tabIndex={0}
             onChange={this.handleNameChange}
             isCompact/>
-          {this.props.guiOptions.map((option) =>
-            this.renderField(option))}
+          {this.props.guiOptions.map((spec) =>
+            <PluginOption
+              key={spec.field}
+              spec={spec}
+              value={get(config.options, spec.field, spec.default)}
+              onChange={this.handleOptionsChange}/>)}
         </fieldset>
         <ButtonGroup>
           <Button
