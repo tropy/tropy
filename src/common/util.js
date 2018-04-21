@@ -211,17 +211,21 @@ const util = {
   },
 
   set(src, path, value) {
+    if (arguments.length === 2) {
+      for (let key in path) src = util.set(src, key, path[key])
+      return src
+    }
+
     if (typeof path === 'string') {
       return util.set(src, path.split('.'), value)
-    } else if (path.length === 1) {
-      return { ...src, [path[0]]: value }
-    } else if (path.length === 0) {
-      return src
-    } else {
-      return {
-        ...src,
-        [path[0]]: util.set(src[path[0]] || {}, path.slice(1), value)
-      }
+    }
+
+    if (path.length === 0) return src
+    if (path.length === 1) return { ...src, [path[0]]: value }
+
+    return {
+      ...src,
+      [path[0]]: util.set(src[path[0]] || {}, path.slice(1), value)
     }
   },
 

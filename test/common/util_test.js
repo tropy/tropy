@@ -221,6 +221,10 @@ describe('util', () => {
       expect(set(obj, 'foo.bar.baz', 1))
         .to.eql({ foo: { bar: { baz: 1 } } })
     })
+    it('when passed a set of paths and values', () => {
+      expect(set({}, { 'a.b.c': 1, 'a.b.d': 1 }))
+        .to.eql({ a: { b: { c: 1, d: 1 } } })
+    })
   })
 
   describe('.has', () => {
