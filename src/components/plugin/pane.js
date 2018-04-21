@@ -88,7 +88,7 @@ class PluginsPane extends Component {
         (cfg.plugin !== name) ? cfg : (++k, omit(cfg, ['disabled'])))
 
     if (k === 0) return this.handleInsert(name, -1)
-    this.setState({ config })
+    this.setState({ config }, this.persist)
   }
 
   handleInstall() {
