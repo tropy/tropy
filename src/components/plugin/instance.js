@@ -2,14 +2,14 @@
 
 const React = require('react')
 const { PureComponent } = require('react')
-const {
-  arrayOf, bool, func, number, oneOf, object, oneOfType, shape, string
-} = require('prop-types')
 const { PluginOption } = require('./option')
 const { FormField } = require('../form')
 const { get, set } = require('../../common/util')
 const { IconPlusCircle, IconMinusCircle } = require('../icons')
 const { Button, ButtonGroup } = require('../button')
+const {
+  arrayOf, bool, func, number, object, oneOfType, shape, string
+} = require('prop-types')
 
 
 class PluginInstance extends PureComponent {
@@ -32,22 +32,21 @@ class PluginInstance extends PureComponent {
   }
 
   render() {
-    const { config } = this.props
     return (
       <li className="plugin-instance">
         <fieldset>
           <FormField
             id="plugin.name"
             name="name"
-            value={config.name}
+            value={this.props.config.name}
             tabIndex={0}
             onChange={this.handleNameChange}
             isCompact/>
-          {this.props.guiOptions.map((spec) =>
+          {this.props.specs.map((spec) =>
             <PluginOption
               key={spec.field}
               spec={spec}
-              value={get(config.options, spec.field, spec.default)}
+              value={get(this.props.config.options, spec.field, spec.default)}
               onChange={this.handleOptionsChange}/>)}
         </fieldset>
         <ButtonGroup>
@@ -63,7 +62,6 @@ class PluginInstance extends PureComponent {
   }
 
   static propTypes = {
-    index: number,
     config: shape({
       plugin: string.isRequired,
       name: string,
@@ -72,18 +70,14 @@ class PluginInstance extends PureComponent {
     onRemove: func.isRequired,
     onInsert: func.isRequired,
     onChange: func.isRequired,
-    guiOptions: arrayOf(shape({
+    specs: arrayOf(shape({
       field: string.isRequired,
-      required: bool,
-      default: oneOfType([string, bool, number]),
-      hint: string,
-      type: oneOf(['string', 'bool', 'boolean', 'number']),
-      label: string.isRequired
-    })),
+      default: oneOfType([string, bool, number])
+    })).isRequired,
   }
 
   static defaultProps = {
-    guiOptions: []
+    specs: []
   }
 }
 

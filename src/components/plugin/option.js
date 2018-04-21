@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { PureComponent } = require('react')
-const { func, shape, string } = require('prop-types')
+const { bool, func, shape, string } = require('prop-types')
 const { FormField, FormToggle } = require('../form')
 
 
@@ -16,7 +16,8 @@ class PluginOption extends PureComponent {
       name: this.props.spec.field,
       onChange: this.handleChange,
       value: this.value,
-      isCompact: true
+      isCompact: true,
+      isRequired: this.props.spec.required
     }
   }
 
@@ -55,7 +56,10 @@ class PluginOption extends PureComponent {
   static propTypes = {
     onChange: func.isRequired,
     spec: shape({
-      field: string.isRequired
+      field: string.isRequired,
+      hint: string,
+      label: string.isRequired,
+      required: bool
     }).isRequired,
     value: string
   }
