@@ -10,7 +10,7 @@ const { AccordionGroup } = require('../accordion')
 const { PluginAccordion } = require('./accordion')
 const { values } = Object
 const debounce = require('lodash.debounce')
-const { insert, omit } = require('../../common/util')
+const { insert, omit, splice } = require('../../common/util')
 
 
 class PluginsPane extends Component {
@@ -48,10 +48,12 @@ class PluginsPane extends Component {
     this.props.onUninstall({ name, plugins: this.props.plugins })
   }
 
-  handleChange = (plugin, index, newConfig) => {
+  handleChange = (plugin, changes) => {
     let { config } = this.state
-    config[this.idx(plugin, index)] = newConfig
-    this.setState({ config }, this.persist)
+    let idx = config.indexOf(plugin)
+    this.setState({
+      config: splice(config, idx, 1, { ...plugin, ...changes })
+    }, this.persist)
   }
 
   handleInsert = (name, after = null) => {
@@ -61,12 +63,6 @@ class PluginsPane extends Component {
         this.state.config.indexOf(after) + 1,
         { plugin: name, options: {} })
     }, this.persist)
-  }
-
-  idx = (plugin, index) => {
-    let cfg = this.state.config
-      .filter(c => c.plugin === plugin)[index]
-    return this.state.config.findIndex(c => c === cfg)
   }
 
   handleRemove = (plugin) => {

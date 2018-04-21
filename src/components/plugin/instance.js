@@ -12,8 +12,7 @@ const { Button, ButtonGroup } = require('../button')
 
 class PluginInstance extends PureComponent {
   getValue({ field, default: defaultValue }) {
-    const value = get(this.props.config.options, field)
-    return typeof value !== 'undefined' ? value : defaultValue
+    return get(this.props.config.options, field, defaultValue)
   }
 
   renderField(option, idx) {
@@ -24,8 +23,8 @@ class PluginInstance extends PureComponent {
       title: hint,
       key: idx,
       tabIndex: idx,
-      name: `options.${field}`,
-      onChange: this.handleChange,
+      name: field,
+      onChange: this.handleOptionsChange,
       value: this.getValue(option),
       isCompact: true
     }
@@ -50,18 +49,20 @@ class PluginInstance extends PureComponent {
     this.props.onInsert(this.props.config.plugin, this.props.config)
   }
 
+  handleNameChange = (data) => {
+    this.props.onChange(this.props.config, data)
+  }
+
+  handleOptionsChange = (data) => {
+    this.props.onChange(this.props.config, {
+      options: set(this.props.config.options, data)
+    })
+  }
+
   handleRemove = () => {
     this.props.onRemove(this.props.config)
   }
 
-  handleChange = (data) => {
-    let { config, index } = this.props
-    for (const field in data) {
-      set(config, field, data[field])
-    }
-    this.props.onChange(this.props.config.plugin, index, config)
-    this.forceUpdate()
-  }
 
   render() {
     return (
@@ -71,8 +72,8 @@ class PluginInstance extends PureComponent {
             id="plugin.name"
             name="name"
             value={this.props.config.name}
-            tabIndex={this.idx}
-            onChange={this.handleChange}
+            tabIndex={0}
+            onChange={this.handleNameChange}
             isCompact/>
           {this.props.guiOptions.map((option, idx) =>
             this.renderField(option, this.idx + idx + 1))}
