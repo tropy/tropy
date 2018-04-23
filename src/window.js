@@ -38,7 +38,9 @@ class Window extends EventEmitter {
   }
 
   init(done) {
-    this.plugins.reloadAndCreate()
+    this.plugins.reload()
+      .then(plugins => plugins.create().emit('change'))
+    this.unloaders.push(this.plugins.flush)
 
     this.handleUnload()
     this.handleTabFocus()
@@ -134,8 +136,8 @@ class Window extends EventEmitter {
       .on('reload', () => {
         this.reload()
       })
-      .on('plugins-reload', () => {
-        this.plugins.reloadAndCreate()
+      .on('plugins-reload', async () => {
+        (await this.plugins.reload()).create().emit('change')
       })
       .on('toggle-perf-tools', () => {
         const { search, hash } = location

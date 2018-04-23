@@ -210,6 +210,20 @@ const util = {
     return obj
   },
 
+  set(src, path, value) {
+    if (typeof path === 'string') {
+      return util.set(src, path.split('.'), value)
+    }
+
+    if (path.length === 0) return src
+    if (path.length === 1) return { ...src, [path[0]]: value }
+
+    return {
+      ...src,
+      [path[0]]: util.set(src[path[0]] || {}, path.slice(1), value)
+    }
+  },
+
   has(src, path) {
     if (src == null) return false
     if (!path || !path.length) return true
@@ -283,15 +297,12 @@ const util = {
           case value == null:
             into[prop] = value
             break
-
           case Array.isArray(value):
             into[prop] = [...value]
             break
-
           case value instanceof Date:
             into[prop] = new Date(value)
             break
-
           default:
             into[prop] = util.merge(into[prop], value)
             break

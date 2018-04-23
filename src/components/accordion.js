@@ -9,9 +9,14 @@ const { bool, func, node, number, string } = require('prop-types')
 
 class Accordion extends PureComponent {
   get classes() {
-    return {
-      panel: true,
+    return ['panel', {
       closed: !this.props.isOpen
+    }]
+  }
+
+  close = () => {
+    if (this.props.isOpen) {
+      this.props.onToggle(this, false)
     }
   }
 
@@ -19,11 +24,17 @@ class Accordion extends PureComponent {
     this.props.onToggle(this, !this.props.isOpen)
   }
 
+  open = () => {
+    if (!this.props.isOpen) {
+      this.props.onToggle(this, true)
+    }
+  }
+
   renderHeader(header) {
     return (
       <header
         className="panel-header"
-        onDoubleClick={this.props.canToggle ? this.handleToggle : null}>
+        onClick={this.props.canToggle ? this.handleToggle : null}>
         {header}
       </header>
     )
@@ -50,9 +61,9 @@ class Accordion extends PureComponent {
     canToggle: bool,
     children: node,
     className: string,
-    id: number,
+    id: number.isRequired,
     isOpen: bool,
-    onToggle: func
+    onToggle: func.isRequired
   }
 
   static defaultProps = {
@@ -64,7 +75,6 @@ class Accordion extends PureComponent {
 class AccordionGroup extends PureComponent {
   constructor(props) {
     super(props)
-
     this.state = {
       open: null
     }
@@ -82,7 +92,7 @@ class AccordionGroup extends PureComponent {
 
   render() {
     return (
-      <div className={cx('panel-group', this.props.className)}>
+      <div className={cx('panel-group', 'accordion', this.props.className)}>
         {Children.map(this.props.children, (acc, id) =>
           clone(acc, {
             id,

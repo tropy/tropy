@@ -198,6 +198,31 @@ describe('util', () => {
     })
   })
 
+  describe('.set', () => {
+    const { set } = util
+
+    it('on objects', () => {
+      expect(set({}, 'foo', 1)).to.eql({ foo: 1 })
+    })
+    it('on deep objects', () => {
+      expect(set({ foo: { bar: 42 } }, 'foo.bar', 1))
+        .to.eql({ foo: { bar: 1 } })
+    })
+    it('on deep objects, keep existing properties', () => {
+      expect(set({ baz: 2 }, 'foo.bar', 1))
+        .to.eql({ baz: 2, foo: { bar: 1 } })
+    })
+    it('on deep objects, 3 levels deep', () => {
+      expect(set({}, 'foo.bar.baz', 1))
+        .to.eql({ foo: { bar: { baz: 1 } } })
+    })
+    it('does not change the source object', () => {
+      let obj = Object.freeze({})
+      expect(set(obj, 'foo.bar.baz', 1))
+        .to.eql({ foo: { bar: { baz: 1 } } })
+    })
+  })
+
   describe('.has', () => {
     const { has } = util
 

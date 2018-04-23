@@ -9,7 +9,9 @@ const { TemplateEditor } = require('../template')
 const { VocabPane } = require('../vocab')
 const { PrefPane, PrefPaneToggle } = require('./pane')
 const { AppPrefs } = require('./app')
+const { PluginsPane } = require('../plugin')
 const actions = require('../../actions')
+const { win } = require('../../window')
 
 const {
   getItemTemplates,
@@ -69,6 +71,13 @@ class PrefsContainer extends PureComponent {
                   isActive={this.isActive('vocab')}
                   onClick={this.toggle}/>
               </li>
+              <li>
+                <PrefPaneToggle
+                  name="plugins"
+                  icon="IconPlugin"
+                  isActive={this.isActive('plugins')}
+                  onClick={this.toggle}/>
+              </li>
             </ul>
           </nav>
         </header>
@@ -81,7 +90,6 @@ class PrefsContainer extends PureComponent {
               settings={this.props.settings}
               onSettingsUpdate={this.props.onSettingsUpdate}/>
           </PrefPane>
-
 
           <PrefPane
             name="project"
@@ -103,6 +111,13 @@ class PrefsContainer extends PureComponent {
             onOpenLink={this.props.onOpenLink}
             onPropsSave={this.props.onPropsSave}
             onSave={this.props.onVocabSave}/>
+
+          <PluginsPane
+            name="plugins"
+            plugins={this.props.plugins}
+            onUninstall={this.props.onPluginUninstall}
+            onOpenLink={this.props.onOpenLink}
+            isActive={this.isActive('plugins')}/>
         </div>
       </div>
     )
@@ -115,6 +130,7 @@ class PrefsContainer extends PureComponent {
     pane: string.isRequired,
     settings: object.isRequired,
     vocab: array.isRequired,
+    plugins: object.isRequired,
     onClassSave: func.isRequired,
     onContextMenu: func.isRequired,
     onOpenLink: func.isRequired,
@@ -124,11 +140,13 @@ class PrefsContainer extends PureComponent {
     onVocabDelete: func.isRequired,
     onVocabExport: func.isRequired,
     onVocabSave: func.isRequired,
-    onOntologyImport: func.isRequired
+    onOntologyImport: func.isRequired,
+    onPluginUninstall: func.isRequired
   }
 
   static defaultProps = {
-    isFrameless: ARGS.frameless
+    isFrameless: ARGS.frameless,
+    plugins: win.plugins
   }
 }
 
@@ -184,6 +202,10 @@ module.exports = {
 
       onOntologyImport() {
         dispatch(actions.ontology.import())
+      },
+
+      onPluginUninstall(...args) {
+        dispatch(actions.plugin.uninstall(...args))
       }
     })
   )(PrefsContainer)

@@ -40,8 +40,8 @@
     position: relative;
 
     fieldset {
-      flex: 1 1 auto;
-      padding: 5px $space-xs;
+      @extend %form-shading-level-2;
+
       margin-right: 6px;
     }
 

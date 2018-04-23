@@ -36,7 +36,7 @@ class VocabAccordion extends Accordion {
     return super.renderHeader(
       <div className="flex-row center panel-header-container">
         {this.icon}
-        <h1 className="panel-heading">
+        <h1 className="panel-heading truncate">
           {this.props.vocab.title}
         </h1>
         <ButtonGroup>

@@ -29,9 +29,11 @@ $line-height-large:    26px;
 
 $link-hover-decoration: underline;
 
+$h1-font-size: 18px;
+
 $headings-font-family:    inherit;
 $headings-font-weight:    400;
-$headings-line-height:    inherit;
+$headings-line-height:    1.1;
 $headings-color:          inherit;
 
 
@@ -187,6 +189,10 @@ $column-transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 $panel-header-height: const("PANEL.HEADER_HEIGHT") * 1px;
 $panel-body-min-height: 100px - (const("PANEL.HEADER_HEIGHT") * 1px) - 4px;
 
+// Accordion
+// --------------------------------------------------
+
+$accordion-border-radius: $border-radius-small;
 
 // Tabs
 // --------------------------------------------------

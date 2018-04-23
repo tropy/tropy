@@ -47,6 +47,7 @@
   color: $btn-default-color;
   background: $btn-default-bg;
   border: 1px solid $btn-default-border;
+  padding: $padding-base-vertical $padding-base-horizontal;
 
   @include input-btn-focus(".tab-focus"); // sass-lint:disable-line mixins-before-declarations
 
