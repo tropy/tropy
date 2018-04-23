@@ -216,12 +216,13 @@ const util = {
     }
 
     if (path.length === 0) return src
-    if (path.length === 1) return { ...src, [path[0]]: value }
-
-    return {
-      ...src,
-      [path[0]]: util.set(src[path[0]] || {}, path.slice(1), value)
+    if (path.length === 1) {
+      return Object.assign({}, src, { [path[0]]: value })
     }
+
+    return Object.assign({}, src, {
+      [path[0]]: util.set(src[path[0]] || {}, path.slice(1), value)
+    })
   },
 
   has(src, path) {
