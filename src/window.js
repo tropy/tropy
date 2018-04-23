@@ -233,6 +233,7 @@ class Window extends EventEmitter {
 
   handleModifierKeys() {
     on(document, 'keydown', event => {
+      toggle(document.body, 'alt-key', event.altKey)
       toggle(document.body, 'meta-key', event.metaKey)
       toggle(document.body, 'ctrl-key', event.ctrlKey)
     }, { passive: true, capture: true })
@@ -241,6 +242,7 @@ class Window extends EventEmitter {
     on(window, 'blur', up, { passive: true })
 
     function up(event) {
+      toggle(document.body, 'alt-key', event.altKey === true)
       toggle(document.body, 'meta-key', event.metaKey === true)
       toggle(document.body, 'ctrl-key', event.ctrlKey === true)
     }
