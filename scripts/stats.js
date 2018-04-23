@@ -4,6 +4,8 @@ const fetch = require('node-fetch')
 const util = require('util')
 
 const VERSIONS = [
+  '1.1.3',
+  '1.1.2',
   '1.1.1',
   '1.1.0',
   '1.0.4',

@@ -15,6 +15,7 @@ const mod = require('../models')
 const { get, pluck, pick, remove } = require('../common/util')
 const { darwin } = require('../common/os')
 const { ITEM, DC } = require('../constants')
+const { MODE } = require('../constants/project')
 const { keys } = Object
 const { isArray } = Array
 const { writeFile: write } = require('fs')
@@ -66,6 +67,8 @@ class Import extends ImportCommand {
     }
 
     if (!files) return []
+
+    yield put(act.nav.update({ mode: MODE.PROJECT, query: '' }))
 
     const [itemp, ptemp] = yield all([
       select(getItemTemplate),
@@ -155,7 +158,9 @@ class Destroy extends Command {
     const { db } = this.options
     const ids = this.action.payload
 
-    const { cancel } = yield call(prompt, 'dialog.prompt.item.destroy')
+    const { cancel } = yield call(prompt, 'message', {
+      prefix: 'dialog.prompt.item.destroy.'
+    })
 
     this.init = performance.now()
     if (cancel) return

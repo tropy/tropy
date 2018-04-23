@@ -6,7 +6,7 @@ const { func, node, bool, number, oneOf, string } = require('prop-types')
 const { Draggable } = require('./draggable')
 const cx = require('classnames')
 const { bounds } = require('../dom')
-const { noop, restrict, refine } = require('../common/util')
+const { noop, restrict, refine, titlecase } = require('../common/util')
 const { round } = require('../common/math')
 const { keys } = Object
 
@@ -52,9 +52,24 @@ class Resizable extends PureComponent {
     return restrict(this.props.value, this.props.min, this.props.max)
   }
 
+  get cssValue() {
+    return `${this.value}${this.props.isRelative ? '%' : 'px'}`
+  }
+
+  get cssMin() {
+    return `${this.props.min}px`
+  }
+
+  get cssMax() {
+    return this.props.max ? `${this.props.max}px` : null
+  }
+
   get style() {
+    const { cssValue, cssMax, cssMin, dimension } = this
     return {
-      [this.dimension]: `${this.value}${this.props.isRelative ? '%' : 'px'}`
+      [dimension]: cssValue,
+      [`min${titlecase(dimension)}`]: cssMin,
+      [`max${titlecase(dimension)}`]: cssMax
     }
   }
 
@@ -129,7 +144,7 @@ class Resizable extends PureComponent {
         onDragStart={this.handleDragStart}
         onDrag={this.handleDrag}
         onDragStop={this.handleDragStop}
-        classes={cx([
+        className={cx([
           `resizable-handle-${DIR[edge]}`,
           `resizable-handle-${edge}`
         ])}/>

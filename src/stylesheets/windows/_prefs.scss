@@ -22,21 +22,6 @@
   "../base/type";
 
 
-// Components
-// --------------------------------------------------
-
-@import
-  "../components/titlebar",
-  "../components/icons",
-  "../components/button",
-  "../components/prefs",
-  "../components/template-editor",
-  "../components/vocab",
-  "../components/panel-group",
-  "../components/panel",
-  "../components/flash";
-
-
 // Partials
 // --------------------------------------------------
 
@@ -47,4 +32,23 @@
   "../partials/grid",
   "../partials/flex",
   "../partials/forms",
-  "../partials/scroll-container";
+  "../partials/scroll-container",
+  "../partials/badge";
+
+
+// Components
+// --------------------------------------------------
+
+@import
+  "../components/titlebar",
+  "../components/icons",
+  "../components/button",
+  "../components/button-group",
+  "../components/prefs",
+  "../components/template-editor",
+  "../components/vocab",
+  "../components/plugins",
+  "../components/panel-group",
+  "../components/panel",
+  "../components/accordion",
+  "../components/flash";

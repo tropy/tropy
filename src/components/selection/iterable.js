@@ -89,6 +89,7 @@ class SelectionIterable extends PureComponent {
       <Thumbnail {...props}
         id={this.props.photo.id}
         angle={this.props.selection.angle}
+        mimetype={this.props.photo.mimetype}
         mirror={this.props.selection.mirror}
         orientation={this.props.photo.orientation}
         cache={this.props.cache}

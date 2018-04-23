@@ -17,6 +17,7 @@ module.exports = {
   note: require('./note'),
   ontology: require('./ontology'),
   photo: require('./photo'),
+  plugin: require('./plugin'),
   prefs: require('./prefs'),
   project: require('./project'),
   properties: require('./properties'),

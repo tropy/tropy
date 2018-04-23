@@ -25,6 +25,7 @@ const {
   getCachePrefix,
   getColumns,
   getExpandedPhotos,
+  getListHold,
   getSelectedItems,
   getSelectedPhoto,
   getSelectedNote,
@@ -216,6 +217,7 @@ class ProjectContainer extends Component {
       data,
       dt,
       expanded,
+      hold,
       items,
       hasLastImport,
       nav,
@@ -239,6 +241,7 @@ class ProjectContainer extends Component {
         <ProjectView {...props}
           activities={activities}
           nav={nav}
+          hold={hold}
           items={items}
           data={data}
           isActive={this.state.mode === MODE.PROJECT && !this.isClosing()}
@@ -290,6 +293,7 @@ class ProjectContainer extends Component {
       file: string
     }).isRequired,
 
+    hold: object.isRequired,
     keymap: object.isRequired,
     items: arrayOf(
       shape({ id: number.isRequired })
@@ -387,6 +391,7 @@ module.exports = {
       data: state.metadata,
       edit: state.edit,
       expanded: getExpandedPhotos(state),
+      hold: getListHold(state),
       index: state.qr.index,
       items: getVisibleItems(state),
       keymap: state.keymap,
@@ -436,6 +441,10 @@ module.exports = {
       onProjectSave(...args) {
         dispatch(actions.project.save(...args))
         dispatch(actions.edit.cancel())
+      },
+
+      onColumnOrder(...args) {
+        dispatch(actions.nav.column.order(...args))
       },
 
       onColumnResize(...args) {

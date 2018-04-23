@@ -9,23 +9,12 @@
 }
 
 fieldset {
+  flex: 1 1 auto;
   border: 0;
   margin: 0;
-  padding: 0;
+  padding: 5px $space-xs;
   background: $fieldset-bg;
   border-radius: $border-radius-small;
-
-  .form-control {
-    background: $fieldset-input-bg;
-    border-color: $fieldset-input-border;
-
-    @include input-btn-focus; // sass-lint:disable-line mixins-before-declarations
-
-    &[readonly],
-    &[disabled] {
-      background: $fieldset-input-bg-readonly;
-    }
-  }
 }
 
 .form-group {
@@ -186,28 +175,6 @@ fieldset {
         &::before,
         &::after {
           background: $checkbox-checked-bg;
-        }
-      }
-    }
-
-    fieldset & {
-      background: $fieldset-input-bg;
-      border-color: $fieldset-input-border;
-
-      &[disabled] {
-        background: $fieldset-input-bg-readonly;
-        border-color: $fieldset-input-border;
-      }
-
-      &:checked {
-        &[disabled] {
-          background: $fieldset-input-bg-readonly;
-          border-color: $fieldset-input-border;
-
-          &::before,
-          &::after {
-            background: $checkbox-checked-bg;
-          }
         }
       }
     }

@@ -1,4 +1,3 @@
-
 'use strict'
 
 const React = require('react')
@@ -9,8 +8,16 @@ const { NAV } = require('../../constants')
 const cx = require('classnames')
 const { arrayOf, bool, number, object } = require('prop-types')
 
-
 class ItemTableRow extends ItemIterable {
+  isDragging(idx) {
+    return idx === this.props.drag
+  }
+
+  isMoving(idx) {
+    return (idx >= this.props.drop && idx < this.props.drag) ||
+      (idx <= this.props.drop && idx > this.props.drag)
+  }
+
   isEditing = (id) => {
     return get(this.props.edit, [this.props.item.id]) === id
   }
@@ -28,8 +35,10 @@ class ItemTableRow extends ItemIterable {
       const props = {
         key: property.id,
         id: property.id,
-        isMainColumn,
+        isDragging: this.isDragging(i),
         isEditing: this.isEditing(property.id),
+        isMainColumn,
+        isMoving: this.isMoving(i),
         nextColumn: next.property.id,
         prevColumn: prev.property.id,
         type: get(this.props.data, [property.id, 'type']),
@@ -72,9 +81,11 @@ class ItemTableRow extends ItemIterable {
 
   static propTypes = {
     ...ItemIterable.propTypes,
-    edit: object,
-    data: object.isRequired,
     columns: arrayOf(object).isRequired,
+    data: object.isRequired,
+    drag: number,
+    drop: number,
+    edit: object,
     hasPositionColumn: bool,
     position: number.isRequired
   }

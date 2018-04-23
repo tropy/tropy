@@ -12,7 +12,8 @@ const commands = require('./commands')(schema)
 const plugins = require('./plugins')(schema)
 const { match } = require('../../keymap')
 const cx = require('classnames')
-const { get, noop } = require('../../common/util')
+const { get, noop, restrict } = require('../../common/util')
+const { SASS: { EDITOR } } = require('../../constants')
 
 
 class Editor extends Component {
@@ -104,6 +105,14 @@ class Editor extends Component {
     }
   }
 
+  handleResize = ({ width, height }) => {
+    const dim = (this.props.mode !== 'horizontal') ? width : height
+    this.container.style.setProperty(
+      '--editor-padding',
+      `${restrict(Math.round(dim / 10), 0, EDITOR.MAX_PADDING)}px`
+    )
+  }
+
   handleViewFocus = () => {
     this.setState({ hasViewFocus: true })
   }
@@ -143,7 +152,8 @@ class Editor extends Component {
             onFocus={this.handleViewFocus}
             onBlur={this.handleViewBlur}
             onChange={this.handleChange}
-            onKeyDown={this.handleKeyDown}/>
+            onKeyDown={this.handleKeyDown}
+            onResize={this.handleResize}/>
         </div>
       </div>
     )
@@ -152,6 +162,7 @@ class Editor extends Component {
   static propTypes = {
     isDisabled: bool,
     keymap: object.isRequired,
+    mode: string.isRequired,
     onBlur: func.isRequired,
     onChange: func.isRequired,
     placeholder: string,
@@ -160,6 +171,7 @@ class Editor extends Component {
   }
 
   static defaultProps = {
+    mode: 'horizontal',
     tabIndex: -1
   }
 }

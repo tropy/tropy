@@ -30,6 +30,7 @@ class Picture extends Container {
       new ColorMatrixFilter()
     ]
 
+    this.handleResolutionChange()
 
     this.selections = new SelectionLayer()
     this.addChild(this.selections)
@@ -77,6 +78,12 @@ class Picture extends Container {
     return new Rectangle(
       (screen.width - dx) / 2, (screen.height - dy) / 2, dx, dy
     )
+  }
+
+  handleResolutionChange(dppx = devicePixelRatio) {
+    for (let filter of this.bg.filters) {
+      filter.resolution = dppx
+    }
   }
 
   brightness(value = 0) {

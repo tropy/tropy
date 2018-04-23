@@ -34,6 +34,8 @@ module.exports = {
 
         if (actual === type) return
         if (actual.prototype instanceof type) return
+        if (actual.WrappedComponent &&
+            actual.WrappedComponent.prototype instanceof type) return
 
         error = new Error(
           `${component} accepts only ${type.displayName || type.name} nodes as children.`

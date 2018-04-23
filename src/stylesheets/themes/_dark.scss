@@ -66,10 +66,12 @@ $shade-10: #fff; // White
   #{--shade-1-darken-10}:  darken($shade-1, 10%);
   #{--shade-2}:            $shade-2;
   #{--shade-3}:            $shade-3;
+  #{--shade-3-50}:         rgba($shade-3, 0.5);
   #{--shade-3-60}:         rgba($shade-3, 0.6);
   #{--shade-4}:            $shade-4;
   #{--shade-4-lighten-2}:  lighten($shade-4, 2%);
   #{--shade-4-lighten-4}:  lighten($shade-4, 4%);
+  #{--shade-4-lighten-6}:  lighten($shade-4, 6%);
   #{--shade-5}:            $shade-5;
   #{--shade-5-50}:         rgba($shade-5, 0.5);
   #{--shade-5-lighten-5}:  lighten($shade-5, 5%);
@@ -83,6 +85,7 @@ $shade-10: #fff; // White
   #{--shade-8-darken-5}:   darken($shade-8, 5%);
   #{--shade-9}:            $shade-9;
   #{--shade-10}:           $shade-10;
+  #{--shade-10-2}:         rgba($shade-10, 0.02);
   #{--shade-10-5}:         rgba($shade-10, 0.05);
   #{--shade-10-10}:        rgba($shade-10, 0.1);
   #{--shade-10-20}:        rgba($shade-10, 0.2);
@@ -162,9 +165,6 @@ $input-border:                           var(--shade-1);
 $input-overlay-focus-color:              var(--brand-primary-overlay);
 $input-color-placeholder:                var(--shade-6);
 $fieldset-bg:                            var(--shade-4-lighten-2);
-$fieldset-input-border:                  var(--shade-1-lighten-2);
-$fieldset-input-bg:                      var(--shade-4);
-$fieldset-input-bg-readonly:             var(--shade-4-lighten-4);
 $checkbox-bg:                            var(--shade-3);
 $checkbox-overlay-disabled-border:       var(--shade-10-10);
 $checkbox-checked-bg:                    var(--shade-8);
@@ -175,6 +175,17 @@ $checkbox-overlay-checked-active-bg:     var(--shade-10-darken-19);
 $checkbox-checked-active-border:         var(--shade-8-darken-5);
 $checkbox-overlay-checked-active-border: var(--shade-10-darken-19);
 $tick-color:                             var(--shade-4);
+
+// Level 2
+$level-2-border:            var(--shade-1-lighten-2);
+$level-2-bg:                var(--shade-4);
+$level-2-input-bg-readonly: var(--shade-4-lighten-4);
+$level-2-fieldset-bg:       var(--shade-4-lighten-4);
+
+// Level 3
+$level-3-border:            var(--shade-1-lighten-4);
+$level-3-bg:                var(--shade-4-lighten-2);
+$level-3-input-bg-readonly: var(--shade-4-lighten-6);
 
 // Badge
 $badge-color: var(--shade-10);
@@ -213,6 +224,9 @@ $list-active-color:      var(--shade-9);
 $list-active-bg:         var(--shade-5);
 $list-active-icon-color: var(--shade-8);
 
+// Accordion
+$accordion-bg:           var(--shade-4-lighten-2);
+$accordion-border-color: var(--shade-1);
 
 // Components
 // --------------------------------------------------
@@ -240,8 +254,10 @@ $activity-border-color:     var(--shade-1);
 // Items
 $item-table-header-color:        var(--shade-8);
 $item-table-header-sort-color:   var(--shade-9);
+$item-table-header-bg:           var(--shade-3-50);
 $item-table-header-active-bg:    var(--shade-2);
 $item-table-header-border-color: var(--shade-1);
+$item-table-column-border-color: $item-table-header-border-color;
 $items-odd-bg:                   var(--shade-4);
 $items-focus-color:              var(--brand-primary-light);
 $items-focus-bg:                 var(--brand-primary);
@@ -392,12 +408,13 @@ $prefs-header-border: var(--shade-1);
 // Vocab
 $vocab-panel-bg:        var(--shade-4-lighten-2);
 $vocab-label-color:     var(--shade-7);
-$vocab-input-bg:        var(--shade-4);
-$vocab-input-border:    var(--shade-1-lighten-2);
 $vocab-link-color:      var(--brand-primary-light-76);
-$property-bg:           var(--shade-4-lighten-4);
-$property-input-bg:     var(--shade-4-lighten-2);
-$property-input-border: var(--shade-1-lighten-4);
+
+// Plugins
+$plugin-instance-bg: var(--shade-4-lighten-4);
+$no-info-color:      var(--shade-6-lighten-2);
+$hook-color:         var(--shade-7);
+$hook-bg:            var(--shade-10-2);
 
 // Colors
 $colors-focus-border-table: var(--brand-primary-light);

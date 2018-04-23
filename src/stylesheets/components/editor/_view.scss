@@ -5,6 +5,8 @@
 // --------------------------------------------------
 
 .editor {
+  --editor-padding: #{$editor-padding};
+
   flex: 1 1 0;
   display: flex;
   flex-direction: column;
@@ -17,6 +19,7 @@
   //}
 
   .scroll-container {
+    display: flex; // Stretch prose-mirror-container
     overflow: auto;
     position: relative;
 
@@ -36,15 +39,18 @@
 
   .placeholder {
     position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
     font-size: $editor-font-size;
     line-height: $editor-line-height;
     color: $editor-placeholder-color;
 
     .horizontal & {
-      left: 50%;
-      top: $prose-mirror-padding-start;
+      top: var(--editor-padding);
       width: $editor-size;
-      transform: translateX(-50%);
       max-width: $editor-max-size;
     }
 
@@ -58,10 +64,8 @@
     }
 
     .vertical-rl & {
-      top: 50%;
-      right: $prose-mirror-padding-start;
+      right: var(--editor-padding);
       height: $editor-size;
-      transform: translateY(-50%);
       max-height: $editor-max-size;
     }
 
@@ -124,8 +128,8 @@
   //padding-top: $toolbar-height + 1px + $prose-mirror-padding-start
 
   .horizontal & {
-    padding-top: $prose-mirror-padding-start;
-    padding-bottom: $prose-mirror-padding-end;
+    padding-top: var(--editor-padding);
+    padding-bottom: var(--editor-padding);
   }
 
   .horizontal.numbers & {
@@ -133,8 +137,8 @@
   }
 
   .vertical-rl & {
-    padding-right: $prose-mirror-padding-start;
-    padding-left: $prose-mirror-padding-end;
+    padding-right: var(--editor-padding);
+    padding-left: var(--editor-padding);
   }
 
   .vertical-rl.numbers & {

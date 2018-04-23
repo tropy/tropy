@@ -48,13 +48,15 @@ $shade-10: #000; // Black
 :root {
   #{--transparent}:        $transparent;
   #{--shade-0}:            $shade-0;
+  #{--shade-0-40}:         rgba($shade-0, 0.4);
+  #{--shade-0-50}:         rgba($shade-0, 0.5);
   #{--shade-0-60}:         rgba($shade-0, 0.6);
   #{--shade-0-80}:         rgba($shade-0, 0.8);
-  #{--shade-0-40}:         rgba($shade-0, 0.4);
   #{--shade-1}:            $shade-1;
   #{--shade-1-darken-4}:   darken($shade-1, 4%); // 8% Fieldset bg
   #{--shade-1-darken-8}:   darken($shade-1, 8%); // 12% Vocab property bg
   #{--shade-1-darken-14}:  darken($shade-1, 14%); // 18% Vocab property input border
+  #{--shade-1-darken-12}:  darken($shade-1, 12%);
   #{--shade-1-darken-18}:  darken($shade-1, 18%); // 22% Vocab property input border
   #{--shade-2}:            $shade-2;
   #{--shade-2-lighten-4}:  lighten($shade-2, 4%); // Esper slider handle bg
@@ -76,6 +78,7 @@ $shade-10: #000; // Black
   #{--shade-8}:            $shade-8;
   #{--shade-9}:            $shade-9;
   #{--shade-10}:           $shade-10;
+  #{--shade-10-4}:         rgba($shade-10, 0.04);
   #{--shade-10-10}:        rgba($shade-10, 0.1);
   #{--shade-10-20}:        rgba($shade-10, 0.2);
   #{--shade-10-24}:        rgba($shade-10, 0.24);
@@ -153,9 +156,6 @@ $input-border:                           var(--shade-3);
 $input-overlay-focus-color:              var(--brand-primary);
 $input-color-placeholder:                var(--shade-5);
 $fieldset-bg:                            var(--shade-1-darken-4);
-$fieldset-input-border:                  var(--shade-1-darken-14);
-$fieldset-input-bg:                      var(--shade-0);
-$fieldset-input-bg-readonly:             var(--shade-1-darken-8);
 $checkbox-bg:                            var(--shade-0);
 $checkbox-overlay-disabled-border:       var(--shade-10-10);
 $checkbox-checked-bg:                    var(--shade-6-lighten-13);
@@ -167,6 +167,17 @@ $checkbox-overlay-checked-active-bg:     var(--shade-10-65);
 $checkbox-checked-active-border:         var(--shade-6-lighten-8);
 $checkbox-overlay-checked-active-border: var(--shade-7-darken-5);
 $tick-color:                             var(--shade-0);
+
+// Level 2
+$level-2-border:            var(--shade-1-darken-14);
+$level-2-bg:                $input-bg;
+$level-2-input-bg-readonly: var(--shade-1-darken-8);
+$level-2-fieldset-bg:       var(--shade-1-darken-8);
+
+// Level 3
+$level-3-border:            var(--shade-1-darken-18);
+$level-3-bg:                $input-bg;
+$level-3-input-bg-readonly: var(--shade-1-darken-12);
 
 // Badge
 $badge-color: var(--shade-0);
@@ -205,6 +216,10 @@ $list-active-color:      var(--shade-9);
 $list-active-bg:         var(--shade-3);
 $list-active-icon-color: var(--shade-7);
 
+// Accordion
+$accordion-bg:           var(--shade-1-darken-4);
+$accordion-border-color: var(--shade-3-darken-4);
+
 
 // Components
 // --------------------------------------------------
@@ -232,8 +247,10 @@ $activity-border-color:     var(--shade-3);
 // Items
 $item-table-header-color:        var(--shade-8);
 $item-table-header-sort-color:   var(--shade-9);
+$item-table-header-bg:           var(--shade-0-50);
 $item-table-header-active-bg:    var(--shade-1);
 $item-table-header-border-color: var(--shade-2);
+$item-table-column-border-color: var(--shade-10-10);
 $items-odd-bg:                   var(--shade-1);
 $items-focus-color:              var(--shade-0);
 $items-focus-bg:                 var(--brand-primary);
@@ -384,12 +401,13 @@ $prefs-header-border: var(--shade-3);
 // Vocab
 $vocab-panel-bg:        var(--shade-1-darken-4);
 $vocab-label-color:     var(--shade-6);
-$vocab-input-bg:        var(--shade-0);
-$vocab-input-border:    var(--shade-1-darken-14);
 $vocab-link-color:      var(--brand-primary-dark);
-$property-bg:           var(--shade-1-darken-8);
-$property-input-bg:     var(--shade-0);
-$property-input-border: var(--shade-1-darken-18);
+
+// Plugins
+$plugin-instance-bg: var(--shade-1-darken-8);
+$no-info-color:      var(--shade-5-darken-4);
+$hook-color:         var(--shade-6);
+$hook-bg:            var(--shade-10-4);
 
 // Colors
 $colors-focus-border-table: var(--shade-0);

@@ -34,7 +34,7 @@ en:
               command: 'app:clear-recent-projects'
         - type: 'separator'
         - &import
-          label: 'Import Photos …'
+          label: 'Import Photos…'
           command: 'app:import-photos'
           accelerator: 'CmdOrCtrl+Shift+I'
         - &consolidate
@@ -81,7 +81,7 @@ en:
           role: 'selectall'
         - type: 'separator'
         - &preferences
-          label: 'Prefere&nces …'
+          label: 'Prefere&nces…'
           accelerator: 'Shift+Control+S'
           command: 'app:open-preferences'
     - &view
@@ -160,7 +160,7 @@ en:
           label: 'Edit Plugins Configuration'
           command: 'app:open-plugins-config'
         - &pluginsConfig
-          label: 'Install Plugin …'
+          label: 'Install Plugin…'
           command: 'app:install-plugin'
         - &plugins
           label: 'Show Plugins Folder'
@@ -171,17 +171,17 @@ en:
         - type: 'separator'
         - &updaterCheck
           id: 'updater-check'
-          label: 'Check for Updates …'
+          label: 'Check for Updates…'
           command: 'app:check-for-updates'
           enabled: false
         - &updaterIsChecking
           id: 'updater-is-checking'
-          label: 'Fetching Latest Updates …'
+          label: 'Fetching Latest Updates…'
           enabled: false
           visible: false
         - &updaterInstall
           id: 'updater-install'
-          label: 'Install Updates …'
+          label: 'Install Updates…'
           command: 'app:install-updates'
           enabled: false
           visible: false
@@ -191,7 +191,7 @@ en:
         - label: 'About %name'
           command: 'app:about'
         - type: 'separator'
-        - label: 'Preferences …'
+        - label: 'Preferences…'
           accelerator: 'Command+,'
           command: 'app:open-preferences'
         - type: 'separator'
