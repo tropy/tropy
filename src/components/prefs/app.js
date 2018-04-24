@@ -22,11 +22,11 @@ class AppPrefs extends PureComponent {
   }
 
   handleThemeChange = ({ theme }) => {
-    ipc.send('cmd', 'app:switch-theme', theme, theme)
+    ipc.send('cmd', 'app:switch-theme', theme)
   }
 
   handleLocaleChange = ({ locale }) => {
-    ipc.send('cmd', 'app:switch-locale', locale, locale)
+    ipc.send('cmd', 'app:switch-locale', locale)
   }
 
   handleTemplateChange = (template) => {

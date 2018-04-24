@@ -540,8 +540,8 @@ class Tropy extends EventEmitter {
       shell.openItem(this.plugins.configFile)
     })
 
-    this.on('app:install-plugin', async () => {
-      const plugins = await dialog.show('file', this.win, {
+    this.on('app:install-plugin', async (win) => {
+      const plugins = await dialog.show('file', darwin ? null : win, {
         defaultPath: app.getPath('downloads'),
         filters: [{ name: 'Tropy Plugins', extensions: Plugins.ext }],
         properties: ['openFile']
@@ -629,7 +629,9 @@ class Tropy extends EventEmitter {
       })
     }
 
-    ipc.on('cmd', (_, command, ...params) => this.emit(command, ...params))
+    ipc.on('cmd', (_, command, ...params) => {
+      this.emit(command, BrowserWindow.getFocusedWindow(), ...params)
+    })
 
     ipc.on(PROJECT.OPENED, (_, project) => this.hasOpened(project))
     ipc.on(PROJECT.CREATE, () => this.showWizard())
