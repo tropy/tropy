@@ -137,7 +137,10 @@ class Window extends EventEmitter {
         this.reload()
       })
       .on('plugins-reload', async () => {
-        (await this.plugins.reload()).create().emit('change')
+        this.plugins.clearModuleCache()
+        await this.plugins.reload()
+        this.plugins.create()
+        this.plugins.emit('change')
       })
       .on('toggle-perf-tools', () => {
         const { search, hash } = location

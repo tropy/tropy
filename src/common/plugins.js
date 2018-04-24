@@ -56,6 +56,12 @@ class Plugins extends EventEmitter {
     }, [])
   }
 
+  clearModuleCache(root = this.root) {
+    for (let mod in require.cache) {
+      if (mod.startsWith(root)) delete require.cache[mod]
+    }
+  }
+
   create(config = this.config) {
     this.instances = config.reduce((acc, { plugin, options }, id) => {
       try {
@@ -147,13 +153,12 @@ class Plugins extends EventEmitter {
     try {
       pkg = require(join(this.root, name))
       pkg.source = 'local'
-      return pkg
     } catch (error) {
       if (!fallback || error.code !== 'MODULE_NOT_FOUND') throw error
       pkg = this.require(join(fallback, name), false)
       pkg.source = 'npm'
-      return pkg
     }
+    return pkg
   }
 
   reset() {
@@ -215,6 +220,7 @@ class Plugins extends EventEmitter {
       if (!shell.moveItemToTrash(dir)) {
         throw new Error('failed to move directory to trash')
       }
+      this.clearModuleCache(dir)
       if (prune) {
         this.config = this.config.filter(c => c.plugin !== plugin)
         this.spec = omit(this.spec, [plugin])
