@@ -10,6 +10,11 @@
     .panel-header {
       flex: 1 1 auto;
       contain: content;
+
+      &,
+      * {
+        cursor: pointer;
+      }
     }
   }
 }
