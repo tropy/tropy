@@ -21,6 +21,7 @@ class VocabPane extends PureComponent {
             {this.props.vocab.map(vocab =>
               <VocabAccordion
                 key={vocab.id}
+                id={vocab.id}
                 vocab={vocab}
                 onClassSave={this.props.onClassSave}
                 onDelete={this.props.onDelete}

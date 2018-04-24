@@ -126,6 +126,7 @@ class PluginAccordion extends Accordion {
   }
 
   static propTypes = {
+    ...Accordion.propTypes,
     instances: arrayOf(object).isRequired,
     spec: object.isRequired,
     onChange: func.isRequired,
