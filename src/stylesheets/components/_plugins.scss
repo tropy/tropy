@@ -4,7 +4,7 @@
 
 .plugins {
   .panel {
-    @extend %form-shading-level-2;
+    @include form-shading-level(2);
 
     .panel-header {
       display: block; // Not flex
@@ -98,7 +98,7 @@
     }
 
     fieldset {
-      @extend %form-shading-level-3;
+      @include form-shading-level(3);
       margin-right: 6px;
     }
 
