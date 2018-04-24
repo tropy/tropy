@@ -93,6 +93,12 @@ class AccordionGroup extends Component {
     off(this.container, 'tab:focus', this.handleTabFocus)
   }
 
+  componentWillReceiveProps(props) {
+    if (props.children !== this.props.children) {
+      this.setState({ active: null, open: null })
+    }
+  }
+
   get classes() {
     return ['panel-group', 'accordion', this.props.className, {
       'tab-focus': this.state.hasTabFocus
