@@ -629,8 +629,8 @@ class Tropy extends EventEmitter {
       })
     }
 
-    ipc.on('cmd', (_, command, ...params) => {
-      this.emit(command, BrowserWindow.getFocusedWindow(), ...params)
+    ipc.on('cmd', (event, command, ...params) => {
+      this.emit(command, BrowserWindow.fromWebContents(event.sender), ...params)
     })
 
     ipc.on(PROJECT.OPENED, (_, project) => this.hasOpened(project))
