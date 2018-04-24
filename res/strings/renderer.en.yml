@@ -154,7 +154,7 @@ en:
       install: Install Plugin
       uninstall: Uninstall
       noInfo: Unknown author
-      homepage: Homepage
+      homepage: More
   item:
     created: Date Added
     modified: Modified
