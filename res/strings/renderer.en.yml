@@ -81,7 +81,7 @@ en:
   prefs:
     title: Tropy Preferences
     app:
-      label: Global
+      label: Settings
       style:
         theme: Theme
         themes:
