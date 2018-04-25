@@ -83,6 +83,20 @@
     &.disabled {
       border-left-color: $plugin-disabled-indicator;
 
+      .panel-header {
+        &,
+        * {
+          cursor: default;
+        }
+
+        a {
+          &,
+          span {
+            cursor: pointer;
+          }
+        }
+      }
+
       .panel-body {
         display: none;
       }
