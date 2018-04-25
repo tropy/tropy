@@ -8,8 +8,8 @@ const { BrowserWindow, Menu: M } = require('electron')
 
 function withWindow(win, cmd, fn) {
   return (_, w) => {
-    if (!(w || win)) warn(`${cmd} called without window`)
-    else fn(w || win)
+    if (!(win || w)) warn(`${cmd} called without window`)
+    else fn(win || w)
   }
 }
 
@@ -62,7 +62,7 @@ class Menu {
 
     switch (prefix) {
       case 'app':
-        return (_, w) => this.app.emit(cmd, w || win, ...params)
+        return (_, w) => this.app.emit(cmd, win || w, ...params)
       case 'win':
         return withWindow(win, cmd, w => w.webContents.send(...action))
       case 'dispatch':
@@ -75,6 +75,7 @@ class Menu {
   }
 
   build(...args) {
+    verbose(`building menu for win ${args[1] && args[1].id}`)
     return M.buildFromTemplate(
       this.translate(...args)
         // Hiding of root items does not work at the moment.
