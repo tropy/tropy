@@ -6,10 +6,10 @@ const { warn, verbose } = require('../common/log')
 const { transduce, map, transformer } = require('transducers.js')
 const { BrowserWindow, Menu: M } = require('electron')
 
-function withWindow(cmd, fn) {
-  return (_, win) => {
-    if (!win) warn(`${cmd} called without window`)
-    else fn(win)
+function withWindow(win, cmd, fn) {
+  return (_, w) => {
+    if (!(w || win)) warn(`${cmd} called without window`)
+    else fn(w || win)
   }
 }
 
@@ -57,16 +57,16 @@ class Menu {
     return this.find(tail, item.submenu)
   }
 
-  responder(cmd, ...params) {
+  responder(cmd, win, ...params) {
     let [prefix, ...action] = cmd.split(':')
 
     switch (prefix) {
       case 'app':
-        return (_, win) => this.app.emit(cmd, win, ...params)
+        return (_, w) => this.app.emit(cmd, w || win, ...params)
       case 'win':
-        return withWindow(cmd, win => win.webContents.send(...action))
+        return withWindow(win, cmd, w => w.webContents.send(...action))
       case 'dispatch':
-        return withWindow(cmd, win => win.webContents.send('dispatch', {
+        return withWindow(win, cmd, w => w.webContents.send('dispatch', {
           type: action.join(':'), payload: params
         }))
       default:
@@ -89,7 +89,7 @@ class Menu {
       item = { ...item }
 
       if (item.command) {
-        item.click = this.responder(item.command, ...params)
+        item.click = this.responder(item.command, win, ...params)
       }
 
       if (item.label) {
@@ -110,7 +110,7 @@ class Menu {
         }
 
         item.checked = target.color === item.color
-        item.click = this.responder('app:save-tag', {
+        item.click = this.responder('app:save-tag', win, {
           id: target.id,
           color: item.color
         })
@@ -157,7 +157,7 @@ class Menu {
             ...theme,
             checked: (theme.id === this.app.state.theme),
             enabled: (theme.id !== this.app.state.theme),
-            click: this.responder('app:switch-theme', theme.id)
+            click: this.responder('app:switch-theme', win, theme.id)
           }))
           break
 
@@ -187,7 +187,7 @@ class Menu {
               { type: 'separator' },
               ...plugins.map(({ id, name }) => ({
                 label: name,
-                click: this.responder('app:export-item', {
+                click: this.responder('app:export-item', win, {
                   target: params[0].target,
                   plugin: id
                 })
@@ -211,7 +211,7 @@ class Menu {
                 type: 'checkbox',
                 label: tag.name,
                 checked: target.tags.includes(tag.id),
-                click: this.responder('app:toggle-item-tag', {
+                click: this.responder('app:toggle-item-tag', win, {
                   id: target.id,
                   tag: tag.id
                 })
@@ -223,7 +223,7 @@ class Menu {
                 ...item.submenu[0],
                 checked: false,
                 enabled: true,
-                click: this.responder('app:clear-item-tags', {
+                click: this.responder('app:clear-item-tags', win, {
                   id: target.id
                 })
               }
@@ -247,7 +247,7 @@ class Menu {
           item.submenu = item.submenu.map(li => ({
             ...li,
             checked: li.mode === target.mode,
-            click: this.responder('app:writing-mode', {
+            click: this.responder('app:writing-mode', win, {
               id: target.id, mode: li.mode
             })
           }))
