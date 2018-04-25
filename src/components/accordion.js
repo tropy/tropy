@@ -115,7 +115,9 @@ class AccordionGroup extends Component {
     if (active == null) return accordions[0].props.id
 
     let idx = accordions.findIndex(acc => active === acc.props.id)
-    return accordions[(idx < 0) ? 0 : (idx + k) % accordions.length].props.id
+    if (idx < 0) return accordions[0].props.id
+    idx = (idx + k + accordions.length) % accordions.length
+    return accordions[idx].props.id
   }
 
   getPrev(k = 1) {
