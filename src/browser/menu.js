@@ -4,7 +4,7 @@ const res = require('../common/res')
 const { basename } = require('path')
 const { warn, verbose } = require('../common/log')
 const { transduce, map, transformer } = require('transducers.js')
-const electron = require('electron')
+const { BrowserWindow, Menu: M } = require('electron')
 
 function withWindow(cmd, fn) {
   return (_, win) => {
@@ -75,7 +75,7 @@ class Menu {
   }
 
   build(...args) {
-    return electron.Menu.buildFromTemplate(
+    return M.buildFromTemplate(
       this.translate(...args)
         // Hiding of root items does not work at the moment.
         // See Electron #2895
@@ -83,7 +83,7 @@ class Menu {
     )
   }
 
-  translate(template, ...params) {
+  translate(template, win = BrowserWindow.getFocusedWindow(), ...params) {
     // eslint-disable-next-line complexity
     return template.map(item => {
       item = { ...item }
@@ -162,18 +162,18 @@ class Menu {
           break
 
         case 'undo':
-          if (this.app.history.past > 0) {
+          if (this.app.getHistory(win).past > 0) {
             item.enabled = true
-            // item.label = `${item.label} ${this.app.history.undo}`
+            // item.label = `${item.label} ${this.app.getHistory(win).undo}`
           } else {
             item.enabled = false
           }
           break
 
         case 'redo':
-          if (this.app.history.future > 0) {
+          if (this.app.getHistory(win).future > 0) {
             item.enabled = true
-            // item.label = `${item.label} ${this.app.history.redo}`
+            // item.label = `${item.label} ${this.app.getHistory(win).redo}`
           } else {
             item.enabled = false
           }
@@ -199,14 +199,15 @@ class Menu {
 
         case 'tag': {
           const { target } = params[0]
+          const tags = this.app.getTags(win)
 
-          if (!this.app.tags.length) {
+          if (!tags.length) {
             item.enabled = false
 
           } else {
             item.submenu = [
               ...item.submenu,
-              ...this.app.tags.map(tag => ({
+              ...tags.map(tag => ({
                 type: 'checkbox',
                 label: tag.name,
                 checked: target.tags.includes(tag.id),
@@ -254,7 +255,7 @@ class Menu {
       }
 
       if (item.submenu) {
-        item.submenu = this.translate(item.submenu, ...params)
+        item.submenu = this.translate(item.submenu, win, ...params)
       }
 
       return item
@@ -289,7 +290,7 @@ class AppMenu extends Menu {
   }
 
   update() {
-    return electron.Menu.setApplicationMenu(this.menu), this
+    return M.setApplicationMenu(this.menu), this
   }
 }
 
@@ -316,15 +317,16 @@ class ContextMenu extends Menu {
     ).slice(1)
   }
 
-  show({ scope, event }, win = this.app.win, options) {
+  show({ scope, event }, win, options) {
     try {
       this.build(
         this.prepare(this.template, ContextMenu.scopes[scope]),
+        win,
         event
       ).popup(win, { ...options, async: true })
 
     } catch (error) {
-      warn(`failed to show context-menu: ${error.message}`)
+      warn(`failed to show context-menu for scope ${scope}: ${error.message}`)
       verbose(error.stack)
     }
   }

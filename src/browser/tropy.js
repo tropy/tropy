@@ -491,7 +491,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:undo', () => {
-      if (this.history.past) {
+      if (this.getHistory().past) {
         this.dispatch({
           type: HISTORY.UNDO,
           meta: { ipc: HISTORY.CHANGED }
@@ -500,7 +500,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:redo', () => {
-      if (this.history.future) {
+      if (this.getHistory().future) {
         this.dispatch({
           type: HISTORY.REDO,
           meta: { ipc: HISTORY.CHANGED }
@@ -648,17 +648,17 @@ class Tropy extends EventEmitter {
     })
 
     ipc.on(HISTORY.CHANGED, (event, history) => {
-      H.set(BrowserWindow.fromWebContents(event.sender), history)
+      this.setHistory(history, BrowserWindow.fromWebContents(event.sender))
       this.emit('app:reload-menu')
     })
 
     ipc.on(TAG.CHANGED, (event, tags) => {
-      T.set(BrowserWindow.fromWebContents(event.sender), tags)
+      this.setTags(tags, BrowserWindow.fromWebContents(event.sender))
       this.emit('app:reload-menu')
     })
 
-    ipc.on(CONTEXT.SHOW, (_, event) => {
-      this.ctx.show(event)
+    ipc.on(CONTEXT.SHOW, (event, payload) => {
+      this.ctx.show(payload, BrowserWindow.fromWebContents(event.sender))
     })
 
     dialog.start()
@@ -717,20 +717,29 @@ class Tropy extends EventEmitter {
     return LOCALE[locale || app.getLocale()] || LOCALE.default
   }
 
+  getHistory(win = BrowserWindow.getFocusedWindow()) {
+    return H.get(win) || {}
+  }
+
+  setHistory(history, win = BrowserWindow.getFocusedWindow()) {
+    return H.set(win, history)
+  }
+
+  getTags(win = BrowserWindow.getFocusedWindow()) {
+    return T.get(win) || []
+  }
+
+  setTags(tags, win = BrowserWindow.getFocusedWindow()) {
+    return T.set(tags, win)
+  }
+
+
   get defaultLocale() {
     return this.getLocale()
   }
 
   get dict() {
     return this.strings.dict
-  }
-
-  get history() {
-    return H.get(BrowserWindow.getFocusedWindow()) || {}
-  }
-
-  get tags() {
-    return T.get(BrowserWindow.getFocusedWindow()) || []
   }
 
   get name() {
