@@ -8,8 +8,8 @@
   }
 
   .panel {
-    background-color: $vocab-panel-bg;
     @include form-shading-level(2);
+    background-color: $vocab-panel-bg;
 
     &.active {
       @at-root #{
