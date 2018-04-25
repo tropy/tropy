@@ -730,7 +730,7 @@ class Tropy extends EventEmitter {
   }
 
   setTags(tags, win = BrowserWindow.getFocusedWindow()) {
-    return T.set(tags, win)
+    return T.set(win, tags)
   }
 
 
