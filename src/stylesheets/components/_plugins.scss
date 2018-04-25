@@ -11,6 +11,7 @@
 
   .panel {
     @include form-shading-level(2);
+    border-left: 3px solid $plugin-indicator;
 
     .panel-header {
       display: block; // Not flex
@@ -80,6 +81,8 @@
     }
 
     &.disabled {
+      border-left-color: $plugin-indicator-disabled;
+
       .panel-body {
         display: none;
       }

@@ -13,6 +13,7 @@ $theme: "light";
 $blue:       #5c93e5;
 $blue-light: #cedef7;
 $red:        #e62e2e;
+$green:      #3abd57;
 
 $brand-primary:       $blue;
 $brand-primary-light: $blue-light;
@@ -25,6 +26,7 @@ $brand-primary-light: $blue-light;
   #{--brand-primary-dark}:     mix(#222, $brand-primary, 60%);
   #{--brand-primary-darken-4}: darken($brand-primary, 4%);
   #{--red}:                    $red;
+  #{--green}:                  $green;
 }
 
 
@@ -423,6 +425,8 @@ $hook-color:                 var(--shade-6);
 $hook-bg:                    var(--shade-10-4);
 $plugin-border-color:        var(--shade-3-darken-4);
 $plugin-active-border-color: var(--shade-3-darken-8);
+$plugin-indicator:           var(--green);
+$plugin-indicator-disabled:  var(--shade-3);
 
 // Colors
 $colors-focus-border-table: var(--shade-0);

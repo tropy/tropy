@@ -15,6 +15,7 @@ $blue-light: #cedef7;
 $blue-dark: #171b2e;
 $blue-overlay: #5c93e5;
 $red: #e62e2e;
+$green: #2e8c44; // 64% of the light theme green + 7% saturation
 
 $brand-primary: $blue;
 $brand-primary-dark: $blue-dark;
@@ -35,6 +36,7 @@ $brand-primary-overlay: $blue-overlay;
   #{--brand-primary-overlay}:    $brand-primary-overlay;
   #{--red}:                      $red;
   #{--red-64}:                   rgba($red, 0.64);
+  #{--green}:                    $green;
 }
 
 
@@ -424,12 +426,14 @@ $vocab-label-color:     var(--shade-7);
 $vocab-link-color:      var(--brand-primary-light-76);
 
 // Plugins
-$plugin-instance-bg:  var(--shade-4-lighten-4);
-$no-info-color:       var(--shade-6-lighten-2);
-$hook-color:          var(--shade-7);
-$hook-bg:             var(--shade-10-2);
-$plugin-border-color: var(--shade-1);
+$plugin-instance-bg:         var(--shade-4-lighten-4);
+$no-info-color:              var(--shade-6-lighten-2);
+$hook-color:                 var(--shade-7);
+$hook-bg:                    var(--shade-10-2);
+$plugin-border-color:        var(--shade-1);
 $plugin-active-border-color: var(--shade-1-lighten-2);
+$plugin-indicator:           var(--green);
+$plugin-indicator-disabled:  var(--shade-1);
 
 // Colors
 $colors-focus-border-table: var(--brand-primary-light);
