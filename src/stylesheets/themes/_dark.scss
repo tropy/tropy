@@ -426,14 +426,15 @@ $vocab-label-color:     var(--shade-7);
 $vocab-link-color:      var(--brand-primary-light-76);
 
 // Plugins
-$plugin-instance-bg:         var(--shade-4-lighten-4);
-$no-info-color:              var(--shade-6-lighten-2);
-$hook-color:                 var(--shade-7);
-$hook-bg:                    var(--shade-10-2);
-$plugin-border-color:        var(--shade-1);
-$plugin-active-border-color: var(--shade-1-lighten-2);
-$plugin-indicator:           var(--green);
-$plugin-indicator-disabled:  var(--shade-1);
+$plugin-instance-bg:               var(--shade-4-lighten-4);
+$no-info-color:                    var(--shade-6-lighten-2);
+$hook-color:                       var(--shade-7);
+$hook-bg:                          var(--shade-10-2);
+$plugin-border-color:              var(--shade-1);
+$plugin-active-border-color:       var(--shade-1-lighten-2);
+$plugin-indicator:                 var(--green);
+$plugin-disabled-indicator:        var(--shade-1);
+$plugin-active-disabled-indicator: var(--shade-1-lighten-2);
 
 // Colors
 $colors-focus-border-table: var(--brand-primary-light);
