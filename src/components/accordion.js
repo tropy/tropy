@@ -76,13 +76,10 @@ class Accordion extends Component {
 
 
 class AccordionGroup extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      active: null,
-      hasTabFocus: false,
-      open: null
-    }
+  state = {
+    active: null,
+    hasTabFocus: false,
+    open: []
   }
 
   componentDidMount() {
@@ -104,7 +101,7 @@ class AccordionGroup extends Component {
   }
 
   isOpen(id = this.state.open) {
-    return id != null && id === this.state.open
+    return id != null && this.state.open.includes(id)
   }
 
   getNext(k = 1) {
@@ -134,13 +131,19 @@ class AccordionGroup extends Component {
 
   close(id = this.state.open) {
     if (this.isOpen(id)) {
-      this.setState({ active: id, open: null })
+      this.setState({
+        active: id,
+        open: this.state.open.filter(x => x !== id)
+      })
     }
   }
 
   open(id = this.state.active) {
     if (!this.isOpen(id)) {
-      this.setState({ active: id, open: id })
+      this.setState({
+        active: id,
+        open: this.props.autoclose ? [id] : [...this.state.open, id]
+      })
     }
   }
 
@@ -222,6 +225,7 @@ class AccordionGroup extends Component {
   }
 
   static propTypes = {
+    autoclose: bool,
     children: only(Accordion),
     className: string,
     tabIndex: number
