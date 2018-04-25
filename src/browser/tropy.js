@@ -323,120 +323,129 @@ class Tropy extends EventEmitter {
       this.showWizard())
 
     this.on('app:close-project', () =>
-      this.win && this.dispatch(act.project.close('debug')))
+      this.dispatch(act.project.close(), this.win))
 
     this.on('app:import-photos', () =>
       this.import())
 
-    this.on('app:rename-project', () =>
-      this.dispatch(act.edit.start({ project: { name: true } })))
+    this.on('app:rename-project', (win) =>
+      this.dispatch(act.edit.start({ project: { name: true } }), win))
 
     this.on('app:show-in-folder', (_, { target }) =>
       shell.showItemInFolder(target.path))
 
     this.on('app:create-item', () =>
-      this.dispatch(act.item.create()))
+      this.dispatch(act.item.create(), this.win))
 
-    this.on('app:delete-item', (_, { target }) =>
-      this.dispatch(act.item.delete(target.id)))
+    this.on('app:delete-item', (win, { target }) =>
+      this.dispatch(act.item.delete(target.id), win))
 
-    this.on('app:merge-item', (_, { target }) =>
-      this.dispatch(act.item.merge(target.id)))
+    this.on('app:merge-item', (win, { target }) =>
+      this.dispatch(act.item.merge(target.id), win))
 
-    this.on('app:explode-item', (_, { target }) =>
-      this.dispatch(act.item.explode({ id: target.id })))
+    this.on('app:explode-item', (win, { target }) =>
+      this.dispatch(act.item.explode({ id: target.id }), win))
 
-    this.on('app:explode-photo', (_, { target }) =>
-      this.dispatch(act.item.explode({ id: target.item, photos: [target.id] })))
+    this.on('app:explode-photo', (win, { target }) => {
+      this.dispatch(
+        act.item.explode({ id: target.item, photos: [target.id] }),
+        win)
+    })
 
-    this.on('app:export-item', (_, { target, plugin }) =>
-      this.dispatch(act.item.export(target.id, { plugin })))
+    this.on('app:export-item', (win, { target, plugin }) =>
+      this.dispatch(act.item.export(target.id, { plugin }), win))
 
-    this.on('app:restore-item', (_, { target }) =>
-      this.dispatch(act.item.restore(target.id)))
+    this.on('app:restore-item', (win, { target }) => {
+      this.dispatch(act.item.restore(target.id))
+    })
 
-    this.on('app:destroy-item', (_, { target }) =>
-      this.dispatch(act.item.destroy(target.id)))
+    this.on('app:destroy-item', (win, { target }) => {
+      this.dispatch(act.item.destroy(target.id))
+    })
 
-    this.on('app:create-item-photo', (_, { target }) =>
-      this.dispatch(act.photo.create({ item: target.id })))
+    this.on('app:create-item-photo', (win, { target }) => {
+      this.dispatch(act.photo.create({ item: target.id }))
+    })
 
-    this.on('app:toggle-item-tag', (_, { id, tag }) =>
-      this.dispatch(act.item.tags.toggle({ id, tags: [tag] })))
+    this.on('app:toggle-item-tag', (win, { id, tag }) => {
+      this.dispatch(act.item.tags.toggle({ id, tags: [tag] }), win)
+    })
 
-    this.on('app:clear-item-tags', (_, { id }) =>
-      this.dispatch(act.item.tags.clear(id)))
+    this.on('app:clear-item-tags', (win, { id }) => {
+      this.dispatch(act.item.tags.clear(id))
+    })
 
-    this.on('app:list-item-remove', (_, { target }) =>
+    this.on('app:list-item-remove', (win, { target }) => {
       this.dispatch(act.list.items.remove({
         id: target.list,
         items: target.id
-      })))
+      }), win)
+    })
 
-    this.on('app:rename-photo', (_, { target }) =>
-      this.dispatch(act.edit.start({ photo: target.id })))
-    this.on('app:delete-photo', (_, { target }) =>
+    this.on('app:rename-photo', (win, { target }) =>
+      this.dispatch(act.edit.start({ photo: target.id }), win))
+    this.on('app:delete-photo', (win, { target }) =>
       this.dispatch(act.photo.delete({
         item: target.item, photos: [target.id]
-      })))
-    this.on('app:duplicate-photo', (_, { target }) =>
+      }), win))
+    this.on('app:duplicate-photo', (win, { target }) =>
       this.dispatch(act.photo.duplicate({
         item: target.item, photos: [target.id]
-      })))
+      }), win))
     this.on('app:consolidate-photo-library', () =>
-      this.dispatch(act.photo.consolidate(null, { force: true })))
+      this.dispatch(act.photo.consolidate(null, { force: true }), this.win))
 
-    this.on('app:consolidate-photo', (_, { target }) =>
+    this.on('app:consolidate-photo', (win, { target }) =>
       this.dispatch(act.photo.consolidate([target.id], {
         force: true, prompt: true
-      })))
+      }), win))
 
-    this.on('app:delete-selection', (_, { target }) =>
+    this.on('app:delete-selection', (win, { target }) =>
       this.dispatch(act.selection.delete({
         photo: target.id, selections: [target.selection]
-      })))
+      }), win))
 
     this.on('app:create-list', () =>
-      this.dispatch(act.list.new()))
+      this.dispatch(act.list.new(), this.win))
 
-    this.on('app:rename-list', (_, { target: id }) =>
-      this.dispatch(act.edit.start({ list: { id } })))
+    this.on('app:rename-list', (win, { target: id }) =>
+      this.dispatch(act.edit.start({ list: { id } }), win))
 
-    this.on('app:delete-list', (_, { target }) =>
-      this.dispatch(act.list.delete(target)))
+    this.on('app:delete-list', (win, { target }) =>
+      this.dispatch(act.list.delete(target), win))
 
     this.on('app:create-tag', () =>
-      this.dispatch(act.tag.new()))
+      this.dispatch(act.tag.new(), this.win))
 
-    this.on('app:rename-tag', (_, { target }) =>
-      this.dispatch(act.tag.edit(target)))
+    this.on('app:rename-tag', (win, { target }) =>
+      this.dispatch(act.tag.edit(target), win))
 
-    this.on('app:save-tag', (_, tag) =>
-      this.dispatch(act.tag.save(tag)))
+    this.on('app:save-tag', (win, tag) =>
+      this.dispatch(act.tag.save(tag), win))
 
-    this.on('app:delete-item-tag', (_, { target }) =>
+    this.on('app:delete-item-tag', (win, { target }) =>
       this.dispatch(act.item.tags.delete({
         id: target.items, tags: [target.id]
-      })))
-    this.on('app:delete-tag', (_, { target }) =>
-      this.dispatch(act.tag.delete(target.id)))
+      }), win))
+    this.on('app:delete-tag', (win, { target }) =>
+      this.dispatch(act.tag.delete(target.id), win))
 
-    this.on('app:create-note', (_, { target }) =>
-      this.dispatch(act.note.create(target)))
+    this.on('app:create-note', (win, { target }) =>
+      this.dispatch(act.note.create(target), win))
 
-    this.on('app:delete-note', (_, { target }) =>
-      this.dispatch(act.note.delete(target)))
+    this.on('app:delete-note', (win, { target }) =>
+      this.dispatch(act.note.delete(target), win))
 
-    this.on('app:toggle-line-wrap', (_, { target }) =>
+    this.on('app:toggle-line-wrap', (win, { target }) =>
       this.dispatch(act.ui.update({
         note: { [target.id]: { wrap: !target.wrap } }
-      })))
-    this.on('app:toggle-line-numbers', (_, { target }) =>
+      }), win))
+    this.on('app:toggle-line-numbers', (win, { target }) =>
       this.dispatch(act.ui.update({
         note: { [target.id]: { numbers: !target.numbers } }
-      })))
-    this.on('app:writing-mode', (_, { id, mode }) =>
-      this.dispatch(act.ui.update({ note: { [id]: { mode  } } })))
+      }), win))
+    this.on('app:writing-mode', (win, { id, mode }) =>
+      this.dispatch(act.ui.update({ note: { [id]: { mode  } } }), win))
 
     this.on('app:toggle-menu-bar', win => {
       if (win.isMenuBarAutoHide()) {
@@ -490,21 +499,21 @@ class Tropy extends EventEmitter {
       this.menu.reload()
     })
 
-    this.on('app:undo', () => {
-      if (this.getHistory().past) {
+    this.on('app:undo', (win) => {
+      if (this.getHistory(win || this.win).past) {
         this.dispatch({
           type: HISTORY.UNDO,
           meta: { ipc: HISTORY.CHANGED }
-        })
+        }, win || this.win)
       }
     })
 
-    this.on('app:redo', () => {
-      if (this.getHistory().future) {
+    this.on('app:redo', (win) => {
+      if (this.getHistory(win || this.win).future) {
         this.dispatch({
           type: HISTORY.REDO,
           meta: { ipc: HISTORY.CHANGED }
-        })
+        }, win || this.win)
       }
     })
 
