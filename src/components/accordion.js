@@ -9,8 +9,9 @@ const { bool, func, node, number, oneOfType, string } = require('prop-types')
 
 
 class Accordion extends Component {
-  componentDidUpdate(props) {
-    if (!props.isActive && this.props.isActive) {
+  componentDidUpdate({ isActive: wasActive, isOpen: wasOpen }) {
+    const { isActive, isOpen } = this.props
+    if (isActive && (!wasActive || isOpen && !wasOpen)) {
       if (!visible(this.container)) {
         this.container.scrollIntoView({ block: 'start' })
       }
