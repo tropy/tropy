@@ -1,15 +1,17 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent, Children, cloneElement: clone } = React
+const { Component, Children, cloneElement: clone } = React
 const { only } = require('./util')
 const cx = require('classnames')
-const { bool, func, node, number, string } = require('prop-types')
+const { on, off } = require('../dom')
+const { bool, func, node, number, oneOfType, string } = require('prop-types')
 
 
-class Accordion extends PureComponent {
+class Accordion extends Component {
   get classes() {
     return ['panel', {
+      active: this.props.isActive,
       closed: !this.props.isOpen
     }]
   }
@@ -61,9 +63,10 @@ class Accordion extends PureComponent {
     canToggle: bool,
     children: node,
     className: string,
-    id: number.isRequired,
+    id: oneOfType([number, string]).isRequired,
+    isActive: bool,
     isOpen: bool,
-    onToggle: func.isRequired
+    onToggle: func
   }
 
   static defaultProps = {
@@ -72,31 +75,146 @@ class Accordion extends PureComponent {
 }
 
 
-class AccordionGroup extends PureComponent {
+class AccordionGroup extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      active: null,
+      hasTabFocus: false,
       open: null
     }
   }
 
-  isOpen(id) {
-    return this.state.open === id
+  componentDidMount() {
+    on(this.container, 'tab:focus', this.handleTabFocus)
   }
 
-  handleToggle = (accordion, isOpen) => {
-    this.setState({
-      open: isOpen ? accordion.props.id : null
-    })
+  componentWillUnmount() {
+    off(this.container, 'tab:focus', this.handleTabFocus)
+  }
+
+  get classes() {
+    return ['panel-group', 'accordion', this.props.className, {
+      'tab-focus': this.state.hasTabFocus
+    }]
+  }
+
+  isActive(id = this.state.active) {
+    return id != null && id === this.state.active
+  }
+
+  isOpen(id = this.state.open) {
+    return id != null && id === this.state.open
+  }
+
+  getNext(k = 1) {
+    let accordions = Children.toArray(this.props.children)
+    let { active } = this.state
+
+    if (accordions.length === 0) return null
+    if (active == null) return accordions[0].props.id
+
+    let idx = accordions.findIndex(acc => active === acc.props.id)
+    if (idx < 0) return accordions[0].props.id
+    idx = (idx + k + accordions.length) % accordions.length
+    return accordions[idx].props.id
+  }
+
+  getPrev(k = 1) {
+    return this.getNext(-k)
+  }
+
+  next(k = 1) {
+    this.setState({ active: this.getNext(k) })
+  }
+
+  prev(k = 1) {
+    this.setState({ active: this.getPrev(k) })
+  }
+
+  close(id = this.state.open) {
+    if (this.isOpen(id)) {
+      this.setState({ active: id, open: null })
+    }
+  }
+
+  open(id = this.state.active) {
+    if (!this.isOpen(id)) {
+      this.setState({ active: id, open: id })
+    }
+  }
+
+  toggle(id = this.state.active) {
+    if (this.isOpen(id)) this.close(id)
+    else this.open(id)
+  }
+
+  handleBlur = () => {
+    this.setState({ hasTabFocus: false })
+  }
+
+  handleFocus = () => {
+    this.next(0)
+  }
+
+  handleTabFocus = () => {
+    this.setState({ hasTabFocus: true })
+  }
+
+  handleKeyDown = (event) => {
+    if (this.props.tabIndex == null) return
+
+    switch (event.key) {
+      case 'ArrowDown':
+        this.next()
+        break
+      case 'ArrowUp':
+        this.prev()
+        break
+      case 'ArrowRight':
+        if (event.target === this.container) this.open()
+        break
+      case ' ':
+      case 'Enter':
+        if (event.target === this.container) this.toggle()
+        break
+      case 'ArrowLeft':
+      case 'Escape':
+        if (event.target === this.container) this.close(this.state.active)
+        break
+      default:
+        return
+    }
+
+    this.handleTabFocus()
+
+    event.preventDefault()
+    event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
+  }
+
+  handleToggle = (accordion, shouldOpen) => {
+    if (shouldOpen) this.open(accordion.props.id)
+    else this.close(accordion.props.id)
+  }
+
+  setContainer = (container) => {
+    this.container = container
   }
 
   render() {
     return (
-      <div className={cx('panel-group', 'accordion', this.props.className)}>
-        {Children.map(this.props.children, (acc, id) =>
+      <div
+        className={cx(this.classes)}
+        onBlur={this.handleBlur}
+        onFocus={this.handleFocus}
+        onKeyDown={this.handleKeyDown}
+        tabIndex={this.props.tabIndex}
+        ref={this.setContainer}>
+        {Children.map(this.props.children, (acc) =>
           clone(acc, {
-            id,
-            isOpen: this.isOpen(id),
+            isActive: this.isActive(acc.props.id),
+            isOpen: this.isOpen(acc.props.id),
             onToggle: this.handleToggle
           }))}
       </div>
@@ -105,7 +223,8 @@ class AccordionGroup extends PureComponent {
 
   static propTypes = {
     children: only(Accordion),
-    className: string
+    className: string,
+    tabIndex: number
   }
 }
 

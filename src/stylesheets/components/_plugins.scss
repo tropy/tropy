@@ -3,8 +3,15 @@
 // --------------------------------------------------
 
 .plugins {
+  .panel-group {
+    .panel {
+      margin-bottom: $space-sm;
+    }
+  }
+
   .panel {
-    @extend %form-shading-level-2;
+    @include form-shading-level(2);
+    border-left: 3px solid $plugin-indicator;
 
     .panel-header {
       display: block; // Not flex
@@ -69,11 +76,13 @@
         right: $default-padding-horizontal;
         top: 0;
         height: 1px;
-        background-color: $accordion-border-color;
+        background-color: $plugin-border-color;
       }
     }
 
     &.disabled {
+      border-left-color: $plugin-disabled-indicator;
+
       .panel-body {
         display: none;
       }
@@ -86,27 +95,51 @@
         opacity: 0.5;
       }
     }
-  }
 
-  .plugin-instance {
-    display: flex;
-    align-items: center;
-    margin-bottom: $space-min;
+    .plugin-instance {
+      display: flex;
+      align-items: center;
+      margin-bottom: $space-min;
 
-    &:last-child {
-      margin-bottom: 0;
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      fieldset {
+        @include form-shading-level(3);
+        margin-right: 6px;
+      }
+
+      .btn-icon {
+        flex: 0 0 auto;
+        padding: {
+          left: 2px;
+          right: 2px;
+        }
+      }
     }
 
-    fieldset {
-      @extend %form-shading-level-3;
-      margin-right: 6px;
-    }
+    &.active {
+      @at-root #{
+        selector-replace(&, ".plugins", ".plugins .accordion.tab-focus")
+      } {
+        @include form-shading-level(3);
 
-    .btn-icon {
-      flex: 0 0 auto;
-      padding: {
-        left: 2px;
-        right: 2px;
+        &.disabled {
+          border-left-color: $plugin-active-disabled-indicator;
+        }
+
+        .panel-body {
+          &::before {
+            background-color: $plugin-active-border-color;
+          }
+        }
+
+        .plugin-instance {
+          fieldset {
+            @include form-shading-level(4);
+          }
+        }
       }
     }
   }

@@ -101,12 +101,12 @@ class PluginsPane extends Component {
         name={this.props.name}
         isActive={this.props.isActive}>
         <div className="scroll-container">
-          <AccordionGroup
-            className="form-horizontal">
+          <AccordionGroup className="form-horizontal" tabIndex={0}>
             {values(this.props.plugins.spec).map(
-               (spec, idx) => {
+               (spec) => {
                  return (
                    <PluginAccordion
+                     id={spec.name}
                      instances={this.getPluginInstances(spec.name)}
                      spec={spec}
                      onChange={this.handleChange}
@@ -116,7 +116,7 @@ class PluginsPane extends Component {
                      onRemove={this.handleRemove}
                      onUninstall={this.handleUninstall}
                      onOpenLink={this.props.onOpenLink}
-                     key={idx}/>)
+                     key={spec.name}/>)
                })
             }
           </AccordionGroup>

@@ -13,6 +13,7 @@ $theme: "light";
 $blue:       #5c93e5;
 $blue-light: #cedef7;
 $red:        #e62e2e;
+$green:      #3abd57;
 
 $brand-primary:       $blue;
 $brand-primary-light: $blue-light;
@@ -25,6 +26,7 @@ $brand-primary-light: $blue-light;
   #{--brand-primary-dark}:     mix(#222, $brand-primary, 60%);
   #{--brand-primary-darken-4}: darken($brand-primary, 4%);
   #{--red}:                    $red;
+  #{--green}:                  $green;
 }
 
 
@@ -57,15 +59,19 @@ $shade-10: #000; // Black
   #{--shade-1-darken-8}:   darken($shade-1, 8%); // 12% Vocab property bg
   #{--shade-1-darken-14}:  darken($shade-1, 14%); // 18% Vocab property input border
   #{--shade-1-darken-12}:  darken($shade-1, 12%);
+  #{--shade-1-darken-16}:  darken($shade-1, 16%);
   #{--shade-1-darken-18}:  darken($shade-1, 18%); // 22% Vocab property input border
+  #{--shade-1-darken-22}:  darken($shade-1, 22%);
   #{--shade-2}:            $shade-2;
   #{--shade-2-lighten-4}:  lighten($shade-2, 4%); // Esper slider handle bg
   #{--shade-2-darken-4}:   darken($shade-2, 4%); // Esper checkbox diabled bg
   #{--shade-2-darken-10}:  darken($shade-2, 10%); // Esper panel checkbox border
   #{--shade-3}:            $shade-3;
   #{--shade-3-darken-4}:   darken($shade-3, 4%);
+  #{--shade-3-darken-8}:   darken($shade-3, 8%);
   #{--shade-3-darken-5}:   darken($shade-3, 5%); // Thumbnail bg
   #{--shade-4}:            $shade-4;
+  #{--shade-4-darken-4}:   darken($shade-4, 4%);
   #{--shade-4-darken-14}:  darken($shade-4, 14%);
   #{--shade-5}:            $shade-5;
   #{--shade-5-darken-4}:   darken($shade-5, 4%);
@@ -168,16 +174,26 @@ $checkbox-checked-active-border:         var(--shade-6-lighten-8);
 $checkbox-overlay-checked-active-border: var(--shade-7-darken-5);
 $tick-color:                             var(--shade-0);
 
-// Level 2
-$level-2-border:            var(--shade-1-darken-14);
-$level-2-bg:                $input-bg;
-$level-2-input-bg-readonly: var(--shade-1-darken-8);
-$level-2-fieldset-bg:       var(--shade-1-darken-8);
+:root {
 
-// Level 3
-$level-3-border:            var(--shade-1-darken-18);
-$level-3-bg:                $input-bg;
-$level-3-input-bg-readonly: var(--shade-1-darken-12);
+  // Level 2
+  #{--level-2-border}:            var(--shade-1-darken-14);
+  #{--level-2-bg}:                $input-bg;
+  #{--level-2-input-bg-readonly}: var(--shade-1-darken-8);
+  #{--level-2-fieldset-bg}:       var(--shade-1-darken-8);
+
+  // Level 3
+  #{--level-3-border}:            var(--shade-1-darken-18);
+  #{--level-3-bg}:                $input-bg;
+  #{--level-3-input-bg-readonly}: var(--shade-1-darken-12);
+  #{--level-3-fieldset-bg}:       var(--shade-1-darken-12);
+
+  // Level 4
+  #{--level-4-border}:            var(--shade-1-darken-22);
+  #{--level-4-bg}:                $input-bg;
+  #{--level-4-input-bg-readonly}: var(--shade-1-darken-16);
+  #{--level-4-fieldset-bg}:       var(--shade-1-darken-16);
+}
 
 // Badge
 $badge-color: var(--shade-0);
@@ -218,7 +234,7 @@ $list-active-icon-color: var(--shade-7);
 
 // Accordion
 $accordion-bg:           var(--shade-1-darken-4);
-$accordion-border-color: var(--shade-3-darken-4);
+$accordion-active-bg:    var(--shade-1-darken-8);
 
 
 // Components
@@ -404,10 +420,15 @@ $vocab-label-color:     var(--shade-6);
 $vocab-link-color:      var(--brand-primary-dark);
 
 // Plugins
-$plugin-instance-bg: var(--shade-1-darken-8);
-$no-info-color:      var(--shade-5-darken-4);
-$hook-color:         var(--shade-6);
-$hook-bg:            var(--shade-10-4);
+$plugin-instance-bg:               var(--shade-1-darken-8);
+$no-info-color:                    var(--shade-5-darken-4);
+$hook-color:                       var(--shade-6);
+$hook-bg:                          var(--shade-10-4);
+$plugin-border-color:              var(--shade-3-darken-4);
+$plugin-active-border-color:       var(--shade-3-darken-8);
+$plugin-indicator:                 var(--green);
+$plugin-disabled-indicator:        var(--shade-4);
+$plugin-active-disabled-indicator: var(--shade-4-darken-4);
 
 // Colors
 $colors-focus-border-table: var(--shade-0);
