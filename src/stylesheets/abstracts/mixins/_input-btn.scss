@@ -66,5 +66,6 @@
 
   .btn-default {
     border-color: var(--level-#{$n}-border);
+    background-color: var(--level-#{$n}-bg);
   }
 }

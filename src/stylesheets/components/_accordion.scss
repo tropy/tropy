@@ -17,4 +17,12 @@
       }
     }
   }
+
+  &.tab-focus {
+    .panel {
+      &.active {
+        background: $accordion-active-bg;
+      }
+    }
+  }
 }

@@ -69,7 +69,7 @@
         right: $default-padding-horizontal;
         top: 0;
         height: 1px;
-        background-color: $accordion-border-color;
+        background-color: $plugin-border-color;
       }
     }
 
@@ -86,27 +86,47 @@
         opacity: 0.5;
       }
     }
-  }
 
-  .plugin-instance {
-    display: flex;
-    align-items: center;
-    margin-bottom: $space-min;
+    .plugin-instance {
+      display: flex;
+      align-items: center;
+      margin-bottom: $space-min;
 
-    &:last-child {
-      margin-bottom: 0;
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      fieldset {
+        @include form-shading-level(3);
+        margin-right: 6px;
+      }
+
+      .btn-icon {
+        flex: 0 0 auto;
+        padding: {
+          left: 2px;
+          right: 2px;
+        }
+      }
     }
 
-    fieldset {
-      @include form-shading-level(3);
-      margin-right: 6px;
-    }
+    &.active {
+      @at-root #{
+        selector-replace(&, ".plugins", ".plugins .accordion.tab-focus")
+      } {
+        @include form-shading-level(3);
 
-    .btn-icon {
-      flex: 0 0 auto;
-      padding: {
-        left: 2px;
-        right: 2px;
+        .panel-body {
+          &::before {
+            background-color: $plugin-active-border-color;
+          }
+        }
+
+        .plugin-instance {
+          fieldset {
+            @include form-shading-level(4);
+          }
+        }
       }
     }
   }

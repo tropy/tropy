@@ -66,6 +66,7 @@ $shade-10: #000; // Black
   #{--shade-2-darken-10}:  darken($shade-2, 10%); // Esper panel checkbox border
   #{--shade-3}:            $shade-3;
   #{--shade-3-darken-4}:   darken($shade-3, 4%);
+  #{--shade-3-darken-8}:   darken($shade-3, 8%);
   #{--shade-3-darken-5}:   darken($shade-3, 5%); // Thumbnail bg
   #{--shade-4}:            $shade-4;
   #{--shade-4-darken-14}:  darken($shade-4, 14%);
@@ -230,7 +231,7 @@ $list-active-icon-color: var(--shade-7);
 
 // Accordion
 $accordion-bg:           var(--shade-1-darken-4);
-$accordion-border-color: var(--shade-3-darken-4);
+$accordion-active-bg:    var(--shade-1-darken-8);
 
 
 // Components
@@ -416,10 +417,12 @@ $vocab-label-color:     var(--shade-6);
 $vocab-link-color:      var(--brand-primary-dark);
 
 // Plugins
-$plugin-instance-bg: var(--shade-1-darken-8);
-$no-info-color:      var(--shade-5-darken-4);
-$hook-color:         var(--shade-6);
-$hook-bg:            var(--shade-10-4);
+$plugin-instance-bg:         var(--shade-1-darken-8);
+$no-info-color:              var(--shade-5-darken-4);
+$hook-color:                 var(--shade-6);
+$hook-bg:                    var(--shade-10-4);
+$plugin-border-color:        var(--shade-3-darken-4);
+$plugin-active-border-color: var(--shade-3-darken-8);
 
 // Colors
 $colors-focus-border-table: var(--shade-0);

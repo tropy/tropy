@@ -63,6 +63,7 @@ $shade-10: #fff; // White
   #{--shade-1}:            $shade-1;
   #{--shade-1-lighten-2}:  lighten($shade-1, 2%);
   #{--shade-1-lighten-4}:  lighten($shade-1, 4%);
+  #{--shade-1-lighten-6}:  lighten($shade-1, 6%);
   #{--shade-1-darken-10}:  darken($shade-1, 10%);
   #{--shade-2}:            $shade-2;
   #{--shade-3}:            $shade-3;
@@ -72,6 +73,7 @@ $shade-10: #fff; // White
   #{--shade-4-lighten-2}:  lighten($shade-4, 2%);
   #{--shade-4-lighten-4}:  lighten($shade-4, 4%);
   #{--shade-4-lighten-6}:  lighten($shade-4, 6%);
+  #{--shade-4-lighten-8}:  lighten($shade-4, 8%);
   #{--shade-5}:            $shade-5;
   #{--shade-5-50}:         rgba($shade-5, 0.5);
   #{--shade-5-lighten-5}:  lighten($shade-5, 5%);
@@ -235,8 +237,9 @@ $list-active-bg:         var(--shade-5);
 $list-active-icon-color: var(--shade-8);
 
 // Accordion
-$accordion-bg:           var(--shade-4-lighten-2);
-$accordion-border-color: var(--shade-1);
+$accordion-bg:        var(--shade-4-lighten-2);
+$accordion-active-bg: var(--shade-4-lighten-4);
+
 
 // Components
 // --------------------------------------------------
@@ -421,10 +424,12 @@ $vocab-label-color:     var(--shade-7);
 $vocab-link-color:      var(--brand-primary-light-76);
 
 // Plugins
-$plugin-instance-bg: var(--shade-4-lighten-4);
-$no-info-color:      var(--shade-6-lighten-2);
-$hook-color:         var(--shade-7);
-$hook-bg:            var(--shade-10-2);
+$plugin-instance-bg:  var(--shade-4-lighten-4);
+$no-info-color:       var(--shade-6-lighten-2);
+$hook-color:          var(--shade-7);
+$hook-bg:             var(--shade-10-2);
+$plugin-border-color: var(--shade-1);
+$plugin-active-border-color: var(--shade-1-lighten-2);
 
 // Colors
 $colors-focus-border-table: var(--brand-primary-light);

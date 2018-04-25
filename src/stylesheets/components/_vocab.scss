@@ -3,14 +3,21 @@
 // --------------------------------------------------
 
 .vocab {
-  @include form-shading-level(2);
-
   a {
     color: $vocab-link-color;
   }
 
   .panel {
     background-color: $vocab-panel-bg;
+    @include form-shading-level(2);
+
+    &.active {
+      @at-root #{
+        selector-replace(&, ".vocab", ".vocab .tab-focus")
+      } {
+        @include form-shading-level(3);
+      }
+    }
   }
 
   .panel-body {
@@ -42,6 +49,12 @@
 
     fieldset {
       @include form-shading-level(3);
+
+      @at-root #{
+        selector-replace(&, ".vocab", ".vocab .tab-focus .panel.active")
+      } {
+        @include form-shading-level(4);
+      }
     }
   }
 
