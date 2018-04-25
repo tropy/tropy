@@ -4,11 +4,19 @@ const React = require('react')
 const { Component, Children, cloneElement: clone } = React
 const { only } = require('./util')
 const cx = require('classnames')
-const { on, off } = require('../dom')
+const { on, off, visible } = require('../dom')
 const { bool, func, node, number, oneOfType, string } = require('prop-types')
 
 
 class Accordion extends Component {
+  componentDidUpdate(props) {
+    if (!props.isActive && this.props.isActive) {
+      if (!visible(this.container)) {
+        this.container.scrollIntoView({ block: 'start' })
+      }
+    }
+  }
+
   get classes() {
     return ['panel', {
       active: this.props.isActive,
@@ -32,6 +40,10 @@ class Accordion extends Component {
     }
   }
 
+  setContainer = (container) => {
+    this.container = container
+  }
+
   renderHeader(header) {
     return (
       <header
@@ -52,7 +64,9 @@ class Accordion extends Component {
     const [header, ...body] = Children.toArray(this.props.children)
 
     return (
-      <section className={cx(this.classes, this.props.className)}>
+      <section
+        className={cx(this.classes, this.props.className)}
+        ref={this.setContainer}>
         {this.renderHeader(header)}
         {this.renderBody(body)}
       </section>
