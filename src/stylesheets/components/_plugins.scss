@@ -3,6 +3,12 @@
 // --------------------------------------------------
 
 .plugins {
+  .panel-group {
+    .panel {
+      margin-bottom: $space-sm;
+    }
+  }
+
   .panel {
     @include form-shading-level(2);
 
