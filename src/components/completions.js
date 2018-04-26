@@ -60,18 +60,21 @@ class Completions extends Component {
       this.props.minQueryLength <= this.props.query.length
   }
 
-  filter({ completions, match, option, query } = this.props) {
+  filter({ completions, match, query, toId, toText } = this.props) {
     query = query.trim().toLowerCase()
-    const matchAll = blank(query)
+    let matchAll = blank(query)
+    let options = []
+    options.idx = {}
 
-    // TODO add options.idx for cached look-ups!
-
-    return completions.reduce((options, value, idx) => {
+    completions.forEach((value, idx) => {
       if (matchAll || match(value, query)) {
-        options.push({ ...option(value), idx })
+        let id = toId(value)
+        options.idx[id] = options.length
+        options.push({ id, idx, value: toText(value) })
       }
-      return options
-    }, [])
+    })
+
+    return options
   }
 
   next = () => {
@@ -129,7 +132,6 @@ class Completions extends Component {
     match: func.isRequired,
     maxRows: number.isRequired,
     minQueryLength: number.isRequired,
-    option: func.isRequired,
     onSelect: func.isRequired,
     padding: shape({
       height: number.isRequired,
@@ -137,18 +139,21 @@ class Completions extends Component {
     }).isRequired,
     parent: instanceOf(HTMLElement).isRequired,
     query: string.isRequired,
-    selection: array
+    selection: array,
+    toId: func.isRequired,
+    toText: func.isRequired,
   }
 
   static defaultProps = {
     match: startsWith,
     maxRows: 10,
     minQueryLength: 0,
-    option: (value) => ({ id: value, value }),
     padding: {
       height: POPUP.PADDING + INPUT.FOCUS_SHADOW_WIDTH + INPUT.BORDER_WIDTH,
       width: 2 * INPUT.FOCUS_SHADOW_WIDTH
-    }
+    },
+    toId: (value) => (value.id || String(value)),
+    toText: (value) => (value.name || String(value))
   }
 }
 
