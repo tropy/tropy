@@ -9,7 +9,7 @@ const { bounds, viewport } = require('../dom')
 const { startsWith } = require('../collate')
 const { INPUT, POPUP } = require('../constants/sass')
 const {
-  arrayOf, bool, func, instanceOf, number, string
+  arrayOf, bool, func, instanceOf, number, shape, string
 } = require('prop-types')
 
 
@@ -33,13 +33,13 @@ class Completions extends Component {
   }
 
   getPopupBounds() {
-    const { input, maxRows } = this.props
+    const { input, maxRows, padding } = this.props
     if (input == null) return
 
     const { top, bottom, left, width } = bounds(input)
     const rows = this.state.options.length
 
-    const height = OptionList.getHeight(rows, { maxRows }) + PAD.height
+    const height = OptionList.getHeight(rows, { maxRows }) + padding.height
     const anchor = (bottom + height <= viewport().height) ? 'top' : 'bottom'
 
     return {
@@ -47,7 +47,7 @@ class Completions extends Component {
       top: (anchor === 'top') ? bottom : top - height,
       left,
       height,
-      width: width + PAD.width
+      width: width + padding.width
     }
   }
 
@@ -127,23 +127,23 @@ class Completions extends Component {
     maxRows: number.isRequired,
     minQueryLength: number.isRequired,
     onSelect: func.isRequired,
+    padding: shape({
+      height: number.isRequired,
+      width: number.isRequired
+    }).isRequired,
     query: string.isRequired
   }
 
   static defaultProps = {
     match: startsWith,
     maxRows: 10,
-    minQueryLength: 0
+    minQueryLength: 0,
+    padding: {
+      height: POPUP.PADDING + INPUT.FOCUS_SHADOW_WIDTH + INPUT.BORDER_WIDTH,
+      width: 2 * INPUT.FOCUS_SHADOW_WIDTH
+    }
   }
 }
-
-const PAD = {
-  height: POPUP.PADDING
-    + INPUT.FOCUS_SHADOW_WIDTH
-    + INPUT.BORDER_WIDTH,
-  width: 2 * INPUT.FOCUS_SHADOW_WIDTH
-}
-
 
 module.exports = {
   Completions
