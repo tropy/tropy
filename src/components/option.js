@@ -53,7 +53,7 @@ class OptionList extends Iterator {
   }
 
   getRowHeight() {
-    return OPTION.HEIGHT
+    return this.props.rowHeight
   }
 
   hasMoved({ clientX, clientY }) {
@@ -110,11 +110,17 @@ class OptionList extends Iterator {
     selection: oneOfType([number, string]),
     onHover: func.isRequired,
     onSelect: func.isRequired,
+    rowHeight: number.isRequired,
     values: array.isRequired
   }
 
-  static getHeight(rows, maxRows = rows) {
-    return (rows) ? min(rows, maxRows) * OPTION.HEIGHT + OPTION.LIST_MARGIN : 0
+  static defaultProps = {
+    ...Iterator.defaultProps,
+    rowHeight: OPTION.HEIGHT
+  }
+
+  static getHeight(rows, { maxRows = rows, rowHeight = OPTION.HEIGHT } = {}) {
+    return (rows) ? min(rows, maxRows) * rowHeight + OPTION.LIST_MARGIN : 0
   }
 }
 

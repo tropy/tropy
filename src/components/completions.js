@@ -33,12 +33,13 @@ class Completions extends Component {
   }
 
   getPopupBounds() {
-    if (this.props.input == null) return
+    const { input, maxRows } = this.props
+    if (input == null) return
 
-    const { top, bottom, left, width } = bounds(this.props.input)
+    const { top, bottom, left, width } = bounds(input)
     const rows = this.state.options.length
 
-    const height = OptionList.getHeight(rows, this.props.maxRows) + PAD.height
+    const height = OptionList.getHeight(rows, { maxRows }) + PAD.height
     const anchor = (bottom + height <= viewport().height) ? 'top' : 'bottom'
 
     return {
