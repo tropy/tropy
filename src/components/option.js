@@ -1,25 +1,26 @@
 'use strict'
 
 const React = require('react')
-const { Component } = React
+const { PureComponent } = React
 const { Iterator } = require('./iterator')
 const { OPTION } = require('../constants/sass')
 const { min } = Math
+const { blank } = require('../common/util')
 const cx = require('classnames')
-const { array, bool, func, number, oneOfType, string } = require('prop-types')
+const {
+  arrayOf, bool, func, node, number, shape, string
+} = require('prop-types')
 
 
-class Option extends Component {
+class Option extends PureComponent {
   handleMouseDown = (event) => {
     event.preventDefault()
     event.stopPropagation()
-    this.props.onClick(this.props.id, this.props.value)
+    this.props.onClick(this.props.option)
   }
 
   handleMouseMove = (event) => {
-    this.props.onHover(
-      event, this.props.isSelected, this.props.id, this.props.value
-    )
+    this.props.onHover(event, this.props.isSelected, this.props.option)
   }
 
   render() {
@@ -28,17 +29,19 @@ class Option extends Component {
         className={cx('option', { active: this.props.isSelected })}
         onMouseMove={this.handleMouseMove}
         onMouseDown={this.handleMouseDown}>
-        {this.props.value}
+        {this.props.option.value}
       </li>
     )
   }
 
   static propTypes = {
-    id: oneOfType([number, string]).isRequired,
     isSelected: bool,
     onClick: func.isRequired,
     onHover: func.isRequired,
-    value: string.isRequired
+    option: shape({
+      id: string.isRequired,
+      value: node.isRequired
+    }).isRequired
   }
 }
 
@@ -69,16 +72,15 @@ class OptionList extends Iterator {
     return this.props.selection
   }
 
-
-  isSelected(option) {
-    return this.props.selection != null && this.props.selection === option.id
+  isSelected({ id }) {
+    return id === this.props.selection && !blank(id)
   }
 
   handleFocus = false
 
-  handleHover = (event, isSelected, ...args) => {
+  handleHover = (event, isSelected, option) => {
     if (this.hasMoved(event) && !isSelected) {
-      this.props.onHover(...args)
+      this.props.onHover(option)
     }
   }
 
@@ -94,11 +96,10 @@ class OptionList extends Iterator {
               {this.mapIterableRange(option =>
                 <Option
                   key={option.id}
-                  id={option.id}
                   isSelected={this.isSelected(option)}
                   onClick={this.props.onSelect}
                   onHover={this.handleHover}
-                  value={option.value}/>)}
+                  option={option}/>)}
             </ul>
           </div>
         </div>
@@ -107,11 +108,14 @@ class OptionList extends Iterator {
   }
 
   static propTypes = {
-    selection: oneOfType([number, string]),
+    selection: string,
     onHover: func.isRequired,
     onSelect: func.isRequired,
     rowHeight: number.isRequired,
-    values: array.isRequired
+    values: arrayOf(shape({
+      id: string.isRequired,
+      value: node.isRequired
+    })).isRequired
   }
 
   static defaultProps = {

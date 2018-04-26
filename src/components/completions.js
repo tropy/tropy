@@ -9,7 +9,7 @@ const { bounds, viewport } = require('../dom')
 const { startsWith } = require('../collate')
 const { INPUT, POPUP } = require('../constants/sass')
 const {
-  arrayOf, bool, func, instanceOf, number, shape, string
+  array, bool, func, instanceOf, number, shape, string
 } = require('prop-types')
 
 
@@ -60,34 +60,37 @@ class Completions extends Component {
       this.props.minQueryLength <= this.props.query.length
   }
 
-  filter({ completions, match, query } = this.props) {
+  filter({ completions, match, option, query } = this.props) {
     query = query.trim().toLowerCase()
     const matchAll = blank(query)
 
     // TODO add options.idx for cached look-ups!
 
-    return completions.reduce((options, value) => {
+    return completions.reduce((options, value, idx) => {
       if (matchAll || match(value, query)) {
-        options.push({ id: value, value })
+        options.push({ ...option(value), idx })
       }
-
       return options
     }, [])
   }
 
   next = () => {
     const next = (this.ol != null) ? this.ol.next() : null
-    if (next != null) this.handleActivate(next.id, null, true)
+    if (next != null) this.handleActivate(next, true)
   }
 
   prev = () => {
     const prev = (this.ol != null) ? this.ol.prev() : null
-    if (prev != null) this.handleActivate(prev.id, null, true)
+    if (prev != null) this.handleActivate(prev, true)
   }
 
-  handleActivate = (id, _, scrollIntoView) => {
+  handleActivate = ({ id }, scrollIntoView) => {
     this.setState({ active: id })
     if (scrollIntoView) this.ol.scrollIntoView({ id }, false)
+  }
+
+  handleSelect = (option) => {
+    this.props.onSelect(this.props.completions[option.idx])
   }
 
   handleResize = () => {
@@ -111,7 +114,7 @@ class Completions extends Component {
         <OptionList
           ref={this.setOptionList}
           onHover={this.handleActivate}
-          onSelect={this.props.onSelect}
+          onSelect={this.handleSelect}
           selection={this.state.active}
           values={this.state.options}/>
       </Popup>
@@ -120,11 +123,12 @@ class Completions extends Component {
 
   static propTypes = {
     className: string,
-    completions: arrayOf(string).isRequired,
+    completions: array.isRequired,
     isVisibleWhenBlank: bool,
     match: func.isRequired,
     maxRows: number.isRequired,
     minQueryLength: number.isRequired,
+    option: func.isRequired,
     onSelect: func.isRequired,
     padding: shape({
       height: number.isRequired,
@@ -138,6 +142,7 @@ class Completions extends Component {
     match: startsWith,
     maxRows: 10,
     minQueryLength: 0,
+    option: (value) => ({ id: value, value }),
     padding: {
       height: POPUP.PADDING + INPUT.FOCUS_SHADOW_WIDTH + INPUT.BORDER_WIDTH,
       width: 2 * INPUT.FOCUS_SHADOW_WIDTH
