@@ -112,10 +112,11 @@ class Completions extends Component {
         style={style}
         onResize={this.handleResize}>
         <OptionList
-          ref={this.setOptionList}
-          onHover={this.handleActivate}
+          active={this.state.active}
+          onActivate={this.handleActivate}
           onSelect={this.handleSelect}
-          selection={this.state.active}
+          ref={this.setOptionList}
+          selection={this.props.selection}
           values={this.state.options}/>
       </Popup>
     )
@@ -135,7 +136,8 @@ class Completions extends Component {
       width: number.isRequired
     }).isRequired,
     parent: instanceOf(HTMLElement).isRequired,
-    query: string.isRequired
+    query: string.isRequired,
+    selection: array
   }
 
   static defaultProps = {
