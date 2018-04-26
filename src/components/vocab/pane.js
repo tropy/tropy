@@ -18,7 +18,6 @@ class VocabPane extends PureComponent {
         isActive={this.props.isActive}>
         <div className="scroll-container">
           <AccordionGroup
-            autoclose
             className="form-horizontal"
             tabIndex={0}>
             {this.props.vocab.map(vocab =>
