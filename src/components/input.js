@@ -190,9 +190,9 @@ class Input extends Component {
         ref={this.setCompletions}
         className={className ? `${className}-completions` : null}
         completions={this.props.completions}
-        input={this.input}
         minQueryLength={1}
         onSelect={this.handleCompletion}
+        parent={this.input}
         query={this.state.value}/>
     )
   }

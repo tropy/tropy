@@ -33,10 +33,10 @@ class Completions extends Component {
   }
 
   getPopupBounds() {
-    const { input, maxRows, padding } = this.props
-    if (input == null) return
+    const { parent, maxRows, padding } = this.props
+    if (parent == null) return
 
-    const { top, bottom, left, width } = bounds(input)
+    const { top, bottom, left, width } = bounds(parent)
     const rows = this.state.options.length
 
     const height = OptionList.getHeight(rows, { maxRows }) + padding.height
@@ -121,7 +121,6 @@ class Completions extends Component {
   static propTypes = {
     className: string,
     completions: arrayOf(string).isRequired,
-    input: instanceOf(HTMLElement).isRequired,
     isVisibleWhenBlank: bool,
     match: func.isRequired,
     maxRows: number.isRequired,
@@ -131,6 +130,7 @@ class Completions extends Component {
       height: number.isRequired,
       width: number.isRequired
     }).isRequired,
+    parent: instanceOf(HTMLElement).isRequired,
     query: string.isRequired
   }
 
