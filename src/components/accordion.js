@@ -4,11 +4,20 @@ const React = require('react')
 const { Component, Children, cloneElement: clone } = React
 const { only } = require('./util')
 const cx = require('classnames')
-const { on, off } = require('../dom')
+const { on, off, visible } = require('../dom')
 const { bool, func, node, number, oneOfType, string } = require('prop-types')
 
 
 class Accordion extends Component {
+  componentDidUpdate({ isActive: wasActive, isOpen: wasOpen }) {
+    const { isActive, isOpen } = this.props
+    if (isActive && (!wasActive || isOpen && !wasOpen)) {
+      if (!visible(this.container)) {
+        this.container.scrollIntoView({ block: 'start' })
+      }
+    }
+  }
+
   get classes() {
     return ['panel', {
       active: this.props.isActive,
@@ -32,6 +41,10 @@ class Accordion extends Component {
     }
   }
 
+  setContainer = (container) => {
+    this.container = container
+  }
+
   renderHeader(header) {
     return (
       <header
@@ -52,7 +65,9 @@ class Accordion extends Component {
     const [header, ...body] = Children.toArray(this.props.children)
 
     return (
-      <section className={cx(this.classes, this.props.className)}>
+      <section
+        className={cx(this.classes, this.props.className)}
+        ref={this.setContainer}>
         {this.renderHeader(header)}
         {this.renderBody(body)}
       </section>
@@ -76,13 +91,10 @@ class Accordion extends Component {
 
 
 class AccordionGroup extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      active: null,
-      hasTabFocus: false,
-      open: null
-    }
+  state = {
+    active: null,
+    hasTabFocus: false,
+    open: []
   }
 
   componentDidMount() {
@@ -104,7 +116,7 @@ class AccordionGroup extends Component {
   }
 
   isOpen(id = this.state.open) {
-    return id != null && id === this.state.open
+    return id != null && this.state.open.includes(id)
   }
 
   getNext(k = 1) {
@@ -134,13 +146,19 @@ class AccordionGroup extends Component {
 
   close(id = this.state.open) {
     if (this.isOpen(id)) {
-      this.setState({ active: id, open: null })
+      this.setState({
+        active: id,
+        open: this.state.open.filter(x => x !== id)
+      })
     }
   }
 
   open(id = this.state.active) {
     if (!this.isOpen(id)) {
-      this.setState({ active: id, open: id })
+      this.setState({
+        active: id,
+        open: this.props.autoclose ? [id] : [...this.state.open, id]
+      })
     }
   }
 
@@ -222,6 +240,7 @@ class AccordionGroup extends Component {
   }
 
   static propTypes = {
+    autoclose: bool,
     children: only(Accordion),
     className: string,
     tabIndex: number

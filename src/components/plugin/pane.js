@@ -101,7 +101,10 @@ class PluginsPane extends Component {
         name={this.props.name}
         isActive={this.props.isActive}>
         <div className="scroll-container">
-          <AccordionGroup className="form-horizontal" tabIndex={0}>
+          <AccordionGroup
+            autoclose
+            className="form-horizontal"
+            tabIndex={0}>
             {values(this.props.plugins.spec).map(
                (spec) => {
                  return (
