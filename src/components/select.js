@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { Component } = React
-const { noop } = require('../common/util')
+const { blank, noop } = require('../common/util')
 const { array, func, number, string } = require('prop-types')
 const cx = require('classnames')
 
@@ -12,6 +12,12 @@ class Select extends Component {
     this.state = this.getStateFromProps(props)
   }
 
+  componentDidUpdate(_, state) {
+    if (this.state.isInvalid  !== state.Invalid) {
+      this.props.onValidate(!this.state.isInvalid)
+    }
+  }
+
   componentWillReceiveProps(props) {
     if (props.value !== this.props.value ||
       props.options !== this.props.options) {
@@ -19,14 +25,21 @@ class Select extends Component {
     }
   }
 
-  getStateFromProps({ options, value } = this.props) {
+  getStateFromProps({ options, value: id } = this.props) {
+    let value = blank(id) ?
+      null :
+      options.find(opt => opt.id === id || opt === id)
+
     return {
-      value: value && options.find(opt => (opt.id === value || opt === value))
+      isInvalid: value == null && !blank(id),
+      value
     }
   }
 
   get classes() {
-    return ['select', this.props.className]
+    return ['select', this.props.className, {
+      invalid: this.state.isInvalid
+    }]
   }
 
   render() {
@@ -43,13 +56,15 @@ class Select extends Component {
     onBlur: func.isRequired,
     onChange: func.isRequired,
     onFocus: func.isRequired,
+    onValidate: func.isRequired,
     tabIndex: number,
     value: string.isRequired
   }
 
   static defaultProps = {
     onBlur: noop,
-    onFocus: noop
+    onFocus: noop,
+    onValidate: noop
   }
 }
 
