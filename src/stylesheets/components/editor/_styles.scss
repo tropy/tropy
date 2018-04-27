@@ -4,8 +4,8 @@
 // Editor styles
 // --------------------------------------------------
 
-@import "prosemirror-view/style/prosemirror";
-@import "prosemirror-gapcursor/style/gapcursor";
+@import "../../../node_modules/prosemirror-view/style/prosemirror.css";
+@import "../../../node_modules/prosemirror-gapcursor/style/gapcursor.css";
 
 .ProseMirror {
   font-size: $editor-font-size;
