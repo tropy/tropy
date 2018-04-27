@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { Component } = React
-const { blank, noop } = require('../common/util')
+const { blank, noop, shallow } = require('../common/util')
 const { array, func, number, string } = require('prop-types')
 const cx = require('classnames')
 
@@ -19,8 +19,7 @@ class Select extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (props.value !== this.props.value ||
-      props.options !== this.props.options) {
+    if (shallow(this.props, props, ['value', 'options'])) {
       this.setState(this.getStateFromProps(props))
     }
   }
