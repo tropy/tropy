@@ -3,6 +3,8 @@
 const React = require('react')
 const { Component } = React
 const { Completions } = require('./completions')
+const { IconXSmall } = require('./icons')
+const { Button } = require('./button')
 const { blank, noop, shallow } = require('../common/util')
 const { on, off } = require('../dom')
 const { array, bool, func, node, number, string } = require('prop-types')
@@ -54,8 +56,16 @@ class Select extends Component {
     }]
   }
 
+  get canClearValue() {
+    return !this.props.isRequired && this.props.value != null
+  }
+
   get tabIndex() {
     return this.state.isDisabled ? null : this.props.tabIndex
+  }
+
+  clear = () => {
+    this.props.onChange()
   }
 
   close() {
@@ -112,8 +122,8 @@ class Select extends Component {
     return
   }
 
-  handleMouseDown = () => {
-    this.open()
+  handleMouseDown = (event) => {
+    if (event.button === 0) this.open()
   }
 
   handleSelect = (value) => {
@@ -162,6 +172,12 @@ class Select extends Component {
     )
   }
 
+  renderClearButton() {
+    return (!this.canClearValue) ? null : (
+      <Button icon={<IconXSmall/>} onClick={this.clear}/>
+    )
+  }
+
   render() {
     return (
       <div
@@ -173,6 +189,7 @@ class Select extends Component {
         ref={this.setContainer}
         tabIndex={this.tabIndex}>
         {this.renderContent()}
+        {this.renderClearButton()}
         {this.renderCompletions()}
       </div>
     )
@@ -181,6 +198,7 @@ class Select extends Component {
   static propTypes = {
     className: string,
     isDisabled: bool,
+    isRequired: bool,
     options: array.isRequired,
     onBlur: func.isRequired,
     onChange: func.isRequired,
