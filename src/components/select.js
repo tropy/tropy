@@ -2,8 +2,10 @@
 
 const React = require('react')
 const { Component } = React
+const { Completions } = require('./completions')
 const { blank, noop, shallow } = require('../common/util')
-const { array, func, number, string } = require('prop-types')
+const { on, off } = require('../dom')
+const { array, bool, func, node, number, string } = require('prop-types')
 const cx = require('classnames')
 
 class Select extends Component {
@@ -19,51 +21,185 @@ class Select extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (shallow(this.props, props, ['value', 'options'])) {
+    if (!shallow(this.props, props, ['value', 'options'])) {
       this.setState(this.getStateFromProps(props))
     }
   }
 
-  getStateFromProps({ options, value: id } = this.props) {
+  componentWillUnmount() {
+    if (this.container != null) {
+      off(this.container, 'tab:focus', this.handleTabFocus)
+    }
+  }
+
+  getStateFromProps({ isDisabled, options, value: id, toId } = this.props) {
     let value = blank(id) ?
       null :
-      options.find(opt => opt.id === id || opt === id)
+      options.find(opt => toId(opt) === id)
 
     return {
+      isDisabled: isDisabled || options.length === 0,
       isInvalid: value == null && !blank(id),
+      isOpen: false,
+      query: '',
       value
     }
   }
 
   get classes() {
     return ['select', this.props.className, {
-      invalid: this.state.isInvalid
+      'disabled': this.state.isDisabled,
+      'invalid': this.state.isInvalid,
+      'tab-focus': this.state.hasTabFocus
     }]
+  }
+
+  get tabIndex() {
+    return this.state.isDisabled ? null : this.props.tabIndex
+  }
+
+  close() {
+    this.setState({ isOpen: false })
+  }
+
+  next() {
+    if (this.completions == null) this.open()
+    else this.completions.next()
+  }
+
+  open() {
+    if (!this.state.isDisabled) {
+      this.setState({ isOpen: true })
+    }
+  }
+
+  prev() {
+    if (this.completions == null) this.open()
+    else this.completions.prev()
+  }
+
+  handleBlur = () => {
+    this.close()
+    this.setState({ hasTabFocus: false })
+  }
+
+  handleFocus = () => {
+  }
+
+  handleKeyDown = (event) => {
+    switch (event.key) {
+      case 'ArrowDown':
+        this.next()
+        break
+      case 'ArrowUp':
+        this.prev()
+        break
+      case 'Enter':
+        if (this.completions != null) {
+          this.completions.select()
+        }
+        break
+      case 'Escape':
+        this.close()
+        break
+      default:
+        return
+    }
+
+    event.preventDefault()
+    event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
+    return
+  }
+
+  handleMouseDown = () => {
+    this.open()
+  }
+
+  handleSelect = (value) => {
+    this.close()
+    this.props.onChange(value)
+  }
+
+  handleTabFocus = () => {
+    this.setState({ hasTabFocus: true })
+  }
+
+  setContainer = (container) => {
+    if (container != null) {
+      on(container, 'tab:focus', this.handleTabFocus)
+    }
+    if (this.container != null) {
+      off(this.container, 'tab:focus', this.handleTabFocus)
+    }
+    this.container = container
+  }
+
+  setCompletions = (completions) => {
+    this.completions = completions
+  }
+
+  renderContent() {
+    return this.props.value == null ?
+      this.props.placeholder :
+      this.state.isInvalid ?
+        this.props.value :
+        (this.props.toValue || this.props.toText)(this.state.value)
+  }
+
+  renderCompletions() {
+    return (!this.state.isOpen) ? null : (
+      <Completions
+        className="select"
+        completions={this.props.options}
+        onSelect={this.handleSelect}
+        parent={this.container}
+        query={this.state.query}
+        ref={this.setCompletions}
+        selection={blank(this.props.value) ? [] : [this.props.value]}
+        toId={this.props.toId}
+        toText={this.props.toText}/>
+    )
   }
 
   render() {
     return (
-      <div className={cx(this.classes)}>
-        {this.props.value}
+      <div
+        className={cx(this.classes)}
+        onBlur={this.handleBlur}
+        onFocus={this.handleFocus}
+        onKeyDown={this.handleKeyDown}
+        onMouseDown={this.handleMouseDown}
+        ref={this.setContainer}
+        tabIndex={this.tabIndex}>
+        {this.renderContent()}
+        {this.renderCompletions()}
       </div>
     )
   }
 
   static propTypes = {
     className: string,
+    isDisabled: bool,
     options: array.isRequired,
     onBlur: func.isRequired,
     onChange: func.isRequired,
     onFocus: func.isRequired,
     onValidate: func.isRequired,
+    placeholder: node,
     tabIndex: number,
-    value: string.isRequired
+    toId: func.isRequired,
+    toText: func.isRequired,
+    toValue: func,
+    value: string
   }
 
   static defaultProps = {
     onBlur: noop,
     onFocus: noop,
-    onValidate: noop
+    onValidate: noop,
+    toId: (value) => (value.id || String(value)),
+    toText: (value) => (value.name || String(value))
   }
 }
 

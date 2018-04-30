@@ -27,7 +27,7 @@ class Completions extends Component {
 
   getStateFromProps(props = this.props) {
     return {
-      active: null,
+      active: props.selection[0],
       options: this.filter(props)
     }
   }
@@ -77,13 +77,19 @@ class Completions extends Component {
     return options
   }
 
-  next = () => {
-    const next = (this.ol != null) ? this.ol.next() : null
+  select() {
+    let idx = this.state.options.idx[this.state.active]
+    let active = this.props.completions[idx]
+    if (active != null) this.props.onSelect(active)
+  }
+
+  next(k = 1) {
+    let next = (this.ol != null) ? this.ol.next(k) : null
     if (next != null) this.handleActivate(next, true)
   }
 
-  prev = () => {
-    const prev = (this.ol != null) ? this.ol.prev() : null
+  prev(k = 1) {
+    let prev = (this.ol != null) ? this.ol.prev(k) : null
     if (prev != null) this.handleActivate(prev, true)
   }
 
@@ -139,7 +145,7 @@ class Completions extends Component {
     }).isRequired,
     parent: instanceOf(HTMLElement).isRequired,
     query: string.isRequired,
-    selection: array,
+    selection: array.isRequired,
     toId: func.isRequired,
     toText: func.isRequired,
   }
@@ -152,6 +158,7 @@ class Completions extends Component {
       height: POPUP.PADDING + INPUT.FOCUS_SHADOW_WIDTH + INPUT.BORDER_WIDTH,
       width: 2 * INPUT.FOCUS_SHADOW_WIDTH
     },
+    selection: [],
     toId: (value) => (value.id || String(value)),
     toText: (value) => (value.name || String(value))
   }
