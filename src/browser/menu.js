@@ -75,7 +75,6 @@ class Menu {
   }
 
   build(...args) {
-    verbose(`building menu for win ${args[1] && args[1].id}`)
     return M.buildFromTemplate(
       this.translate(...args)
         // Hiding of root items does not work at the moment.
