@@ -56,6 +56,14 @@ class Select extends Component {
     }]
   }
 
+  get content() {
+    return this.props.value == null ?
+      this.props.placeholder :
+      this.state.isInvalid ?
+        this.props.value :
+        (this.props.toValue || this.props.toText)(this.state.value)
+  }
+
   get canClearValue() {
     return !this.props.isRequired && this.props.value != null
   }
@@ -149,14 +157,6 @@ class Select extends Component {
     this.completions = completions
   }
 
-  renderContent() {
-    return this.props.value == null ?
-      this.props.placeholder :
-      this.state.isInvalid ?
-        this.props.value :
-        (this.props.toValue || this.props.toText)(this.state.value)
-  }
-
   renderCompletions() {
     return (!this.state.isOpen) ? null : (
       <Completions
@@ -188,7 +188,7 @@ class Select extends Component {
         onMouseDown={this.handleMouseDown}
         ref={this.setContainer}
         tabIndex={this.tabIndex}>
-        {this.renderContent()}
+        <div className="select-content">{this.content}</div>
         {this.renderClearButton()}
         {this.renderCompletions()}
       </div>
