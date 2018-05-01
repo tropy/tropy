@@ -10,6 +10,7 @@ const { on, off } = require('../dom')
 const { array, bool, func, node, number, string } = require('prop-types')
 const cx = require('classnames')
 
+
 class Select extends Component {
   constructor(props) {
     super(props)
@@ -23,27 +24,29 @@ class Select extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (!shallow(this.props, props, ['value', 'options'])) {
+    if (!shallow(this.props, props, ['isDisabled', 'options', 'value'])) {
       this.setState(this.getStateFromProps(props))
     }
   }
 
   componentWillUnmount() {
-    if (this.container != null) {
-      off(this.container, 'tab:focus', this.handleTabFocus)
+    if (this.input != null) {
+      off(this.input, 'tab:focus', this.handleTabFocus)
     }
   }
 
-  getStateFromProps({ isDisabled, options, value: id, toId } = this.props) {
-    let value = blank(id) ?
+  getStateFromProps({ isDisabled, options, toId, value: id } = this.props) {
+    let isBlank = blank(id)
+    let value = isBlank ?
       null :
       options.find(opt => toId(opt) === id)
 
     return {
       isDisabled: isDisabled || options.length === 0,
-      isInvalid: value == null && !blank(id),
+      isInvalid: value == null && !isBlank,
       isOpen: false,
       query: '',
+      selection: isBlank ? [] : [id],
       value
     }
   }
@@ -51,7 +54,9 @@ class Select extends Component {
   get classes() {
     return ['select', this.props.className, {
       'disabled': this.state.isDisabled,
+      'focus': this.state.hasFocus,
       'invalid': this.state.isInvalid,
+      'open': this.state.isOpen,
       'tab-focus': this.state.hasTabFocus
     }]
   }
@@ -68,8 +73,9 @@ class Select extends Component {
     return !this.props.isRequired && this.props.value != null
   }
 
-  get tabIndex() {
-    return this.state.isDisabled ? null : this.props.tabIndex
+  get isInputHidden() {
+    return !this.props.canFilterOptions ||
+      this.props.options.length < this.props.minFilterOptions
   }
 
   clear = () => {
@@ -96,12 +102,15 @@ class Select extends Component {
     else this.completions.prev()
   }
 
-  handleBlur = () => {
+  handleBlur = (event) => {
     this.close()
-    this.setState({ hasTabFocus: false })
+    this.setState({ hasFocus: false, hasTabFocus: false })
+    this.props.onBlur(event)
   }
 
-  handleFocus = () => {
+  handleFocus = (event) => {
+    this.setState({ hasFocus: true })
+    this.props.onFocus(event)
   }
 
   handleKeyDown = (event) => {
@@ -131,7 +140,17 @@ class Select extends Component {
   }
 
   handleMouseDown = (event) => {
-    if (event.button === 0) this.open()
+    if (event.button === 0) {
+      this.open()
+    }
+    if (this.input != null) {
+      this.input.focus()
+      event.preventDefault()
+    }
+  }
+
+  handleQueryChange = (event) => {
+    this.setState({ query: event.target.value })
   }
 
   handleSelect = (value) => {
@@ -144,12 +163,6 @@ class Select extends Component {
   }
 
   setContainer = (container) => {
-    if (container != null) {
-      on(container, 'tab:focus', this.handleTabFocus)
-    }
-    if (this.container != null) {
-      off(this.container, 'tab:focus', this.handleTabFocus)
-    }
     this.container = container
   }
 
@@ -157,48 +170,65 @@ class Select extends Component {
     this.completions = completions
   }
 
-  renderCompletions() {
-    return (!this.state.isOpen) ? null : (
-      <Completions
-        className="select"
-        completions={this.props.options}
-        onSelect={this.handleSelect}
-        parent={this.container}
-        query={this.state.query}
-        ref={this.setCompletions}
-        selection={blank(this.props.value) ? [] : [this.props.value]}
-        toId={this.props.toId}
-        toText={this.props.toText}/>
-    )
-  }
-
-  renderClearButton() {
-    return (!this.canClearValue) ? null : (
-      <Button icon={<IconXSmall/>} onClick={this.clear}/>
-    )
+  setInput = (input) => {
+    if (input != null) {
+      on(input, 'tab:focus', this.handleTabFocus)
+    }
+    if (this.input != null) {
+      off(this.input, 'tab:focus', this.handleTabFocus)
+    }
+    this.input = input
   }
 
   render() {
+    let { canClearValue, isInputHidden } = this
+
     return (
       <div
         className={cx(this.classes)}
-        onBlur={this.handleBlur}
-        onFocus={this.handleFocus}
-        onKeyDown={this.handleKeyDown}
         onMouseDown={this.handleMouseDown}
-        ref={this.setContainer}
-        tabIndex={this.tabIndex}>
-        <div className="select-content">{this.content}</div>
-        {this.renderClearButton()}
-        {this.renderCompletions()}
+        ref={this.setContainer}>
+        <span className="select-content">{this.content}</span>
+        <input
+          className="select-options-filter"
+          disabled={this.state.isDisabled}
+          onBlur={this.handleBlur}
+          onChange={isInputHidden ? null : this.handleQueryChange}
+          onFocus={this.handleFocus}
+          onKeyDown={this.handleKeyDown}
+          ref={this.setInput}
+          style={{ visibility: isInputHidden ? 'hidden' : 'visible' }}
+          tabIndex={this.props.tabIndex}
+          type="text"
+          value={this.state.query}/>
+        {canClearValue &&
+          <Button
+            className="select-clear-button"
+            icon={<IconXSmall/>}
+            onClick={this.clear}/>}
+        {this.state.isOpen &&
+          <Completions
+            className="select"
+            completions={this.props.options}
+            match={this.props.match}
+            onSelect={this.handleSelect}
+            parent={this.container}
+            query={this.state.query}
+            ref={this.setCompletions}
+            selection={this.state.selection}
+            toId={this.props.toId}
+            toText={this.props.toText}/>}
       </div>
     )
   }
 
   static propTypes = {
+    canFilterOptions: bool.isRequired,
     className: string,
     isDisabled: bool,
     isRequired: bool,
+    match: func,
+    minFilterOptions: number.isRequired,
     options: array.isRequired,
     onBlur: func.isRequired,
     onChange: func.isRequired,
@@ -213,6 +243,8 @@ class Select extends Component {
   }
 
   static defaultProps = {
+    canFilterOptions: true,
+    minFilterOptions: 0,
     onBlur: noop,
     onFocus: noop,
     onValidate: noop,
