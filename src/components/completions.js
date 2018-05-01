@@ -151,7 +151,7 @@ class Completions extends Component {
   }
 
   static defaultProps = {
-    match: startsWith,
+    match: (value, query) => startsWith(value.name || String(value), query),
     maxRows: 10,
     minQueryLength: 0,
     padding: {
