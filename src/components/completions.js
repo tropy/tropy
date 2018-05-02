@@ -2,6 +2,7 @@
 
 const React = require('react')
 const { Component } = React
+const { FormattedMessage } = require('react-intl')
 const { Popup } = require('./popup')
 const { OptionList } = require('./option')
 const { blank } = require('../common/util')
@@ -55,6 +56,10 @@ class Completions extends Component {
     return this.state.options.length === 0
   }
 
+  get isEmpty() {
+    return this.props.completions.length === 0
+  }
+
   get isVisible() {
     return (this.props.isVisibleWhenBlank || !this.isBlank) &&
       this.props.minQueryLength <= this.props.query.length
@@ -95,7 +100,7 @@ class Completions extends Component {
 
   handleActivate = ({ id }, scrollIntoView) => {
     this.setState({ active: id })
-    if (scrollIntoView) this.ol.scrollIntoView({ id }, false)
+    if (scrollIntoView && this.ol != null) this.ol.scrollIntoView({ id }, false)
   }
 
   handleSelect = (option) => {
@@ -110,6 +115,33 @@ class Completions extends Component {
     this.ol = ol
   }
 
+  renderCompletions() {
+    if (this.isEmpty) return this.renderNoCompletions()
+    if (this.isBlank) return this.renderNoMatches()
+
+    return (
+      <OptionList
+        active={this.state.active}
+        onActivate={this.handleActivate}
+        onSelect={this.handleSelect}
+        ref={this.setOptionList}
+        selection={this.props.selection}
+        values={this.state.options}/>
+    )
+  }
+
+  renderNoCompletions() {
+    return (
+      <FormattedMessage id="completions.empty"/>
+    )
+  }
+
+  renderNoMatches() {
+    return (
+      <FormattedMessage id="completions.noMatches"/>
+    )
+  }
+
   render() {
     if (!this.isVisible) return null
     const { anchor, ...style } = this.getPopupBounds()
@@ -120,13 +152,7 @@ class Completions extends Component {
         className={this.props.className}
         style={style}
         onResize={this.handleResize}>
-        <OptionList
-          active={this.state.active}
-          onActivate={this.handleActivate}
-          onSelect={this.handleSelect}
-          ref={this.setOptionList}
-          selection={this.props.selection}
-          values={this.state.options}/>
+        {this.renderCompletions()}
       </Popup>
     )
   }

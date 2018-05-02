@@ -196,7 +196,9 @@ en:
         value: "{value, number}"
   notepad:
     placeholder: Add your notes here …
-
+  completions:
+    empty: No options available
+    noMatches: No matches found
   template:
     id: URI
     name: Name
