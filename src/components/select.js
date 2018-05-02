@@ -83,7 +83,7 @@ class Select extends Component {
   }
 
   close() {
-    this.setState({ isOpen: false })
+    this.setState({ isOpen: false, query: '' })
   }
 
   next() {
@@ -150,7 +150,7 @@ class Select extends Component {
   }
 
   handleQueryChange = (event) => {
-    this.setState({ query: event.target.value })
+    this.setState({ isOpen: true, query: event.target.value })
   }
 
   handleSelect = (value) => {
@@ -210,6 +210,7 @@ class Select extends Component {
           <Completions
             className="select"
             completions={this.props.options}
+            isVisibleWhenBlank
             match={this.props.match}
             onSelect={this.handleSelect}
             parent={this.container}
