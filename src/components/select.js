@@ -192,6 +192,7 @@ class Select extends Component {
     return (
       <div
         className={cx(this.classes)}
+        id={this.props.id}
         onMouseDown={this.handleMouseDown}
         ref={this.setContainer}>
         <span className="select-content">{this.content}</span>
@@ -214,7 +215,7 @@ class Select extends Component {
             onClick={this.clear}/>}
         {this.state.isOpen &&
           <Completions
-            className="select"
+            className="select-options"
             completions={this.props.options}
             isVisibleWhenBlank
             match={this.props.match}
@@ -232,6 +233,7 @@ class Select extends Component {
   static propTypes = {
     canFilterOptions: bool.isRequired,
     className: string,
+    id: string,
     isDisabled: bool,
     isRequired: bool,
     match: func,
