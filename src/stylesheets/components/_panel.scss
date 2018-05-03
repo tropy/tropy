@@ -12,10 +12,6 @@
 
   &.nested-tab-focus {
     background-color: $panel-focus-bg;
-
-    &.has-active {
-      background-color: $panel-bg;
-    }
   }
 
   .panel-header {

@@ -117,23 +117,15 @@ class MetadataPanel extends PureComponent {
 
   handleTabFocus = () => {
     this.props.onFocus()
-    this.props.onDeactivate()
-  }
-
-  handleBlur = () => {
-    this.props.onBlur()
-    this.props.onDeactivate()
   }
 
   handleEditCancel = () => {
     this.props.onEditCancel()
-    this.props.onDeactivate()
     this.focus()
   }
 
   handleChange = (data) => {
     this.props.onMetadataSave(data)
-    this.props.onDeactivate()
     this.focus()
   }
 
@@ -168,7 +160,6 @@ class MetadataPanel extends PureComponent {
       itemFields,
       templates,
       isDisabled,
-      onActivate
     } = this.props
 
     return !this.isEmpty && (
@@ -183,8 +174,7 @@ class MetadataPanel extends PureComponent {
           selected={items[0].template}
           isDisabled={isDisabled}
           isRequired
-          onChange={this.handleTemplateChange}
-          onFocus={onActivate}/>
+          onChange={this.handleTemplateChange}/>
         <MetadataList
           ref={this.setItemFields}
           edit={this.props.edit}
@@ -258,7 +248,7 @@ class MetadataPanel extends PureComponent {
           className="scroll-container"
           ref={this.setContainer}
           tabIndex={this.tabIndex}
-          onBlur={this.handleBlur}
+          onBlur={this.props.onBlur}
           onKeyDown={this.handleKeyDown}>
           {this.renderItemFields()}
           {this.renderPhotoFields()}
@@ -302,9 +292,7 @@ class MetadataPanel extends PureComponent {
       property: object.isRequired
     })).isRequired,
 
-    onActivate: func.isRequired,
     onBlur: func.isRequired,
-    onDeactivate: func.isRequired,
     onEdit: func,
     onEditCancel: func,
     onFocus: func.isRequired,
