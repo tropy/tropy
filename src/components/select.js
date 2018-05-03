@@ -203,7 +203,7 @@ class Select extends Component {
           onFocus={this.handleFocus}
           onKeyDown={this.handleKeyDown}
           ref={this.setInput}
-          style={{ visibility: isInputHidden ? 'hidden' : 'visible' }}
+          style={{ opacity: isInputHidden ? 0 : 1 }}
           tabIndex={this.props.tabIndex}
           type="text"
           value={this.state.query}/>
@@ -252,7 +252,7 @@ class Select extends Component {
 
   static defaultProps = {
     canFilterOptions: true,
-    minFilterOptions: 0,
+    minFilterOptions: 5,
     onBlur: noop,
     onFocus: noop,
     onKeyDown: noop,
