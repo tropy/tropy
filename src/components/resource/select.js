@@ -3,7 +3,7 @@
 const React = require('react')
 const { PureComponent } = React
 const { Select } = require('../select')
-const { injectIntl, intlShape } = require('react-intl')
+const { FormattedMessage } = require('react-intl')
 const { startsWith } = require('../../collate')
 const { getLabel } = require('../../common/ontology')
 const { bool, array, func, number, string } = require('prop-types')
@@ -11,7 +11,7 @@ const { bool, array, func, number, string } = require('prop-types')
 class ResourceSelect extends PureComponent {
   get placeholder() {
     return this.props.placeholder != null &&
-      this.props.intl.formatMessage({ id: this.props.placeholder })
+      <FormattedMessage id={this.props.placeholder}/>
   }
 
   render() {
@@ -34,7 +34,6 @@ class ResourceSelect extends PureComponent {
   }
 
   static propTypes = {
-    intl: intlShape,
     isDisabled: bool,
     isRequired: bool,
     match: func.isRequired,
@@ -66,6 +65,6 @@ class ResourceSelect extends PureComponent {
 }
 
 module.exports = {
-  ResourceSelect: injectIntl(ResourceSelect)
+  ResourceSelect
 }
 

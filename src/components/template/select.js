@@ -3,14 +3,14 @@
 const React = require('react')
 const { PureComponent } = React
 const { Select } = require('../select')
-const { injectIntl, intlShape } = require('react-intl')
+const { FormattedMessage } = require('react-intl')
 const { startsWith } = require('../../collate')
 const { bool, array, func, number, string } = require('prop-types')
 
 class TemplateSelect extends PureComponent {
   get placeholder() {
     return this.props.placeholder != null &&
-      this.props.intl.formatMessage({ id: this.props.placeholder })
+      <FormattedMessage id={this.props.placeholder}/>
   }
 
   focus = () => {
@@ -40,7 +40,6 @@ class TemplateSelect extends PureComponent {
   }
 
   static propTypes = {
-    intl: intlShape,
     isDisabled: bool,
     isRequired: bool,
     match: func.isRequired,
@@ -62,5 +61,5 @@ class TemplateSelect extends PureComponent {
 }
 
 module.exports = {
-  TemplateSelect: injectIntl(TemplateSelect)
+  TemplateSelect
 }
