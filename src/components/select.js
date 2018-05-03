@@ -118,29 +118,31 @@ class Select extends Component {
   }
 
   handleKeyDown = (event) => {
-    switch (event.key) {
-      case 'ArrowDown':
-        this.next()
-        break
-      case 'ArrowUp':
-        this.prev()
-        break
-      case 'Enter':
-        if (this.completions != null) {
-          this.completions.select()
-        }
-        break
-      case 'Escape':
-        this.close()
-        break
-      default:
-        return
+    if (this.props.onKeyDown(event) !== true) {
+      switch (event.key) {
+        case 'ArrowDown':
+          this.next()
+          break
+        case 'ArrowUp':
+          this.prev()
+          break
+        case 'Enter':
+          if (this.completions != null) {
+            this.completions.select()
+          }
+          break
+        case 'Escape':
+          this.close()
+          break
+        default:
+          return false
+      }
     }
 
     event.preventDefault()
     event.stopPropagation()
     event.nativeEvent.stopImmediatePropagation()
-    return
+    return true
   }
 
   handleMouseDown = (event) => {
@@ -238,6 +240,7 @@ class Select extends Component {
     onBlur: func.isRequired,
     onChange: func.isRequired,
     onFocus: func.isRequired,
+    onKeyDown: func.isRequired,
     onValidate: func.isRequired,
     placeholder: node,
     tabIndex: number,
@@ -252,6 +255,7 @@ class Select extends Component {
     minFilterOptions: 0,
     onBlur: noop,
     onFocus: noop,
+    onKeyDown: noop,
     onValidate: noop,
     toId: (value) => (value.id || String(value)),
     toText: (value) => (value.name || String(value))
