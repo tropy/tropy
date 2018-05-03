@@ -39,6 +39,7 @@ class AppPrefs extends PureComponent {
         <div className="form-horizontal">
           <FormElement id="prefs.app.template">
             <TemplateSelect
+              isRequired
               templates={this.props.templates}
               selected={this.props.settings.template}
               onChange={this.handleTemplateChange}/>

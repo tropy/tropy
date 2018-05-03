@@ -79,13 +79,14 @@ fieldset {
     background: $input-bg-readonly;
   }
 
-  @at-root select#{&} {
-    -webkit-appearance: none;
+  @at-root .select#{&} {
     background-repeat: no-repeat;
     background-position: right $space-min center;
     background-image: if($theme == "light",
       image-url("project/icon-chevron7-light-theme.svg"),
       image-url("project/icon-chevron7-dark-theme.svg"));
+
+    @include input-btn-focus(".focus"); // sass-lint:disable-line mixins-before-declarations
   }
 }
 
