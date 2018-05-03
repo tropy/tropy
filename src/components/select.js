@@ -42,6 +42,7 @@ class Select extends Component {
       options.find(opt => toId(opt) === id)
 
     return {
+      isBlank,
       isDisabled: isDisabled || options.length === 0,
       isInvalid: value == null && !isBlank,
       isOpen: false,
@@ -62,7 +63,7 @@ class Select extends Component {
   }
 
   get content() {
-    return this.props.value == null ?
+    return this.state.isBlank ?
       this.props.placeholder :
       this.state.isInvalid ?
         this.props.value :
