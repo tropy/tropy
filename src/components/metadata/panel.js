@@ -182,6 +182,7 @@ class MetadataPanel extends PureComponent {
           templates={templates}
           selected={items[0].template}
           isDisabled={isDisabled}
+          isRequired
           onChange={this.handleTemplateChange}
           onFocus={onActivate}/>
         <MetadataList

@@ -32,7 +32,6 @@ class TemplateToolbar extends PureComponent {
           <TemplateSelect
             templates={this.props.templates}
             selected={this.props.selected}
-            isRequired={false}
             placeholder="prefs.template.new"
             onChange={this.props.onChange}/>
           <ButtonGroup>
