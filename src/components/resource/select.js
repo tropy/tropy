@@ -28,6 +28,7 @@ class ResourceSelect extends PureComponent {
         placeholder={this.placeholder}
         tabIndex={this.props.tabIndex}
         toText={this.props.toText}
+        toValue={this.props.toValue}
         value={this.props.value}/>
     )
   }
@@ -44,6 +45,7 @@ class ResourceSelect extends PureComponent {
     placeholder: string,
     tabIndex: number.isRequired,
     toText: func.isRequired,
+    toValue: func.isRequired,
     value: string
   }
 
@@ -53,7 +55,13 @@ class ResourceSelect extends PureComponent {
       startsWith(res.label, query) || res.id.includes(query)
     ),
     tabIndex: -1,
-    toText: (res) => res.label || getLabel(res.id)
+    toText: (res) => (
+      <span>
+        {res.label || getLabel(res.id)}
+        <small>{res.id}</small>
+      </span>
+    ),
+    toValue: (res) => res.label || getLabel(res.id)
   }
 }
 
