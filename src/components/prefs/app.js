@@ -40,8 +40,8 @@ class AppPrefs extends PureComponent {
           <FormElement id="prefs.app.template">
             <TemplateSelect
               isRequired
-              templates={this.props.templates}
-              selected={this.props.settings.template}
+              options={this.props.templates}
+              value={this.props.settings.template}
               onChange={this.handleTemplateChange}/>
           </FormElement>
           <hr/>

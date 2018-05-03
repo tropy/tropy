@@ -170,8 +170,8 @@ class MetadataPanel extends PureComponent {
             values={{ count: items.length }}/>
         </h5>
         <TemplateSelect
-          templates={templates}
-          selected={items[0].template}
+          options={templates}
+          value={items[0].template}
           isDisabled={isDisabled}
           isRequired
           onChange={this.handleTemplateChange}/>

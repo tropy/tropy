@@ -2,42 +2,33 @@
 
 const React = require('react')
 const { PureComponent } = React
+const { Select } = require('../select')
 const { injectIntl, intlShape } = require('react-intl')
+const { startsWith } = require('../../collate')
+const { getLabel } = require('../../common/ontology')
 const { bool, array, func, number, string } = require('prop-types')
 
 class ResourceSelect extends PureComponent {
-  get hasPlaceholder() {
-    return !this.props.isRequired && this.props.placeholder != null
-  }
-
   get placeholder() {
-    return this.props.intl.formatMessage({ id: this.props.placeholder })
-  }
-
-  handleChange = ({ target }) => {
-    this.props.onChange(
-      this.props.resources.find(p => p.id === target.value)
-    )
-  }
-
-  renderPlaceholder() {
-    return this.hasPlaceholder && <option>{this.placeholder}</option>
+    return this.props.placeholder != null &&
+      this.props.intl.formatMessage({ id: this.props.placeholder })
   }
 
   render() {
     return (
-      <select
-        tabIndex={this.props.tabIndex}
-        name="resource-select"
+      <Select
         className="resource-select form-control"
-        disabled={this.props.isDisabled}
-        required={this.props.isRequired}
-        value={this.props.selected}
-        onChange={this.handleChange}>
-        {this.renderPlaceholder()}
-        {this.props.resources.map(({ id }) =>
-          <option key={id} value={id}>{id}</option>)}
-      </select>
+        isDisabled={this.props.isDisabled}
+        isRequired={this.props.isRequired}
+        match={this.props.match}
+        onBlur={this.props.onBlur}
+        onChange={this.props.onChange}
+        onFocus={this.props.onFocus}
+        options={this.props.options}
+        placeholder={this.placeholder}
+        tabIndex={this.props.tabIndex}
+        toText={this.props.toText}
+        value={this.props.value}/>
     )
   }
 
@@ -45,16 +36,24 @@ class ResourceSelect extends PureComponent {
     intl: intlShape,
     isDisabled: bool,
     isRequired: bool,
+    match: func.isRequired,
+    onBlur: func,
+    onChange: func.isRequired,
+    onFocus: func,
+    options: array.isRequired,
     placeholder: string,
     tabIndex: number.isRequired,
-    resources: array.isRequired,
-    selected: string,
-    onChange: func.isRequired
+    toText: func.isRequired,
+    value: string
   }
 
   static defaultProps = {
-    isRequired: true,
-    tabIndex: -1
+    match: (res, query) => (
+      // TODO prefix search!
+      startsWith(res.label, query) || res.id.includes(query)
+    ),
+    tabIndex: -1,
+    toText: (res) => res.label || getLabel(res.id)
   }
 }
 

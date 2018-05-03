@@ -31,11 +31,11 @@ class TemplateSelect extends PureComponent {
         onBlur={this.props.onBlur}
         onChange={this.props.onChange}
         onFocus={this.props.onFocus}
-        options={this.props.templates}
+        options={this.props.options}
         placeholder={this.placeholder}
         ref={this.setContainer}
         tabIndex={this.props.tabIndex}
-        value={this.props.selected}/>
+        value={this.props.value}/>
     )
   }
 
@@ -44,13 +44,13 @@ class TemplateSelect extends PureComponent {
     isDisabled: bool,
     isRequired: bool,
     match: func.isRequired,
+    options: array.isRequired,
     onBlur: func,
     onChange: func.isRequired,
     onFocus: func,
     placeholder: string,
-    selected: string,
     tabIndex: number.isRequired,
-    templates: array.isRequired
+    value: string,
   }
 
   static defaultProps = {

@@ -30,8 +30,8 @@ class TemplateToolbar extends PureComponent {
           size={3}/>
         <div className="col-9 flex-row center">
           <TemplateSelect
-            templates={this.props.templates}
-            selected={this.props.selected}
+            options={this.props.templates}
+            value={this.props.selected}
             placeholder="prefs.template.new"
             onChange={this.props.onChange}/>
           <ButtonGroup>
