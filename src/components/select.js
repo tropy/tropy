@@ -86,6 +86,10 @@ class Select extends Component {
     this.setState({ isOpen: false, query: '' })
   }
 
+  focus = () => {
+    this.input && this.input.focus()
+  }
+
   next() {
     if (this.completions == null) this.open()
     else this.completions.next()
