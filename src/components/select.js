@@ -78,7 +78,7 @@ class Select extends Component {
       this.props.options.length < this.props.minFilterOptions
   }
 
-  clear = () => {
+  clear() {
     this.props.onChange()
   }
 
@@ -112,9 +112,18 @@ class Select extends Component {
     this.props.onBlur(event)
   }
 
+  handleClearButtonClick = (event) => {
+    if (event.button === 0) {
+      this.clear()
+      event.stopPropagation()
+    }
+  }
+
   handleFocus = (event) => {
-    this.setState({ hasFocus: true })
-    this.props.onFocus(event)
+    if (!this.state.hasFocus) {
+      this.setState({ hasFocus: true })
+      this.props.onFocus(event)
+    }
   }
 
   handleKeyDown = (event) => {
@@ -212,7 +221,7 @@ class Select extends Component {
           <Button
             className="select-clear-button"
             icon={<IconXSmall/>}
-            onClick={this.clear}/>}
+            onMouseDown={this.handleClearButtonClick}/>}
         {this.state.isOpen &&
           <Completions
             className="select-options"
