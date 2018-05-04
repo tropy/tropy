@@ -42,6 +42,7 @@ class AppPrefs extends PureComponent {
               isRequired
               options={this.props.templates}
               value={this.props.settings.template}
+              tabIndex={0}
               onChange={this.handleTemplateChange}/>
           </FormElement>
           <hr/>
@@ -66,6 +67,7 @@ class AppPrefs extends PureComponent {
             isRequired
             value={this.props.settings.locale}
             options={this.props.locales}
+            tabIndex={0}
             onChange={this.handleLocaleChange}/>
           <hr/>
           <FormElement
