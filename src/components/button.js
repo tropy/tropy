@@ -36,7 +36,7 @@ class Button extends PureComponent {
   }
 
   get classes() {
-    return ['btn', this.props.size, {
+    return ['btn', this.props.className, this.props.size, {
       'active': this.props.isActive,
       'btn-block': this.props.isBlock,
       'btn-default': this.props.isDefault,
@@ -126,6 +126,7 @@ class Button extends PureComponent {
   }
 
   static propTypes = {
+    className: string,
     icon: element,
     intl: intlShape.isRequired,
     isActive: bool,

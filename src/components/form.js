@@ -210,7 +210,6 @@ class FormSelect extends PureComponent {
         size={this.props.size}
         isCompact={this.props.isCompact}>
         <Select
-          className="form-control"
           id={this.props.id}
           isDisabled={this.props.isDisabled}
           isRequired={this.props.isRequired}

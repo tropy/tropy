@@ -17,7 +17,7 @@ class ResourceSelect extends PureComponent {
   render() {
     return (
       <Select
-        className="resource-select form-control"
+        className="resource-select"
         isDisabled={this.props.isDisabled}
         isRequired={this.props.isRequired}
         match={this.props.match}

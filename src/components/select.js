@@ -53,21 +53,13 @@ class Select extends Component {
   }
 
   get classes() {
-    return ['select', this.props.className, {
+    return ['select', 'form-control', this.props.className, {
       'disabled': this.state.isDisabled,
       'focus': this.state.hasFocus,
       'invalid': this.state.isInvalid,
       'open': this.state.isOpen,
       'tab-focus': this.state.hasTabFocus
     }]
-  }
-
-  get content() {
-    return this.state.isBlank ?
-      this.props.placeholder :
-      this.state.isInvalid ?
-        this.props.value :
-        (this.props.toValue || this.props.toText)(this.state.value)
   }
 
   get canClearValue() {
@@ -196,6 +188,27 @@ class Select extends Component {
     this.input = input
   }
 
+  renderContent() {
+    if (this.state.query.length > 0) {
+      return null
+    }
+
+    let classname
+    let content
+
+    if (this.state.isBlank) {
+      classname = 'placeholder'
+      content = this.props.placeholder
+    } else {
+      classname = 'value'
+      content = this.state.isInvalid ?
+          this.props.value :
+          (this.props.toValue || this.props.toText)(this.state.value)
+    }
+
+    return <span className={classname}>{content}</span>
+  }
+
   render() {
     let { canClearValue, isInputHidden } = this
 
@@ -205,9 +218,8 @@ class Select extends Component {
         id={this.props.id}
         onMouseDown={this.handleMouseDown}
         ref={this.setContainer}>
-        <span className="select-content">{this.content}</span>
         <input
-          className="select-options-filter"
+          className="query"
           disabled={this.state.isDisabled}
           onBlur={this.handleBlur}
           onChange={isInputHidden ? null : this.handleQueryChange}
@@ -218,17 +230,18 @@ class Select extends Component {
           tabIndex={this.props.tabIndex}
           type="text"
           value={this.state.query}/>
+        {this.renderContent()}
         {canClearValue &&
           <Button
-            className="select-clear-button"
+            className="clear"
             icon={<IconXSmall/>}
             onMouseDown={this.handleClearButtonClick}/>}
         {this.state.isOpen &&
           <Completions
-            className="select-options"
             completions={this.props.options}
             isVisibleWhenBlank
             match={this.props.match}
+            maxRows={this.props.maxRows}
             onSelect={this.handleSelect}
             parent={this.container}
             query={this.state.query}
@@ -247,6 +260,7 @@ class Select extends Component {
     isDisabled: bool,
     isRequired: bool,
     match: func,
+    maxRows: number,
     minFilterOptions: number.isRequired,
     options: array.isRequired,
     onBlur: func.isRequired,

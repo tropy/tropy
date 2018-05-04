@@ -24,7 +24,7 @@ class TemplateSelect extends PureComponent {
   render() {
     return (
       <Select
-        className="template-select form-control"
+        className="template-select"
         isDisabled={this.props.isDisabled}
         isRequired={this.props.isRequired}
         match={this.props.match}

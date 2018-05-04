@@ -69,17 +69,20 @@ fieldset {
 
   @include input-btn-focus;
 
-  &::-webkit-input-placeholder {
+  &::-webkit-input-placeholder,
+  .placeholder {
     color: $input-color-placeholder;
     user-select: none;
   }
 
   &[readonly],
-  &[disabled] {
+  &[disabled],
+  &.disabled {
     background: $input-bg-readonly;
   }
 
   @at-root .select#{&} {
+    position: relative;
     background-repeat: no-repeat;
     background-position: right $space-min center;
     background-image: if($theme == "light",
@@ -87,6 +90,24 @@ fieldset {
       image-url("project/icon-chevron7-dark-theme.svg"));
 
     @include input-btn-focus(".focus"); // sass-lint:disable-line mixins-before-declarations
+
+    .query {
+      background: transparent;
+      border: none;
+    }
+
+    .placeholder,
+    .value {
+      position: relative;
+      display: block;
+      margin-top: -$input-height-base + 8;
+    }
+
+    .clear {
+      position: absolute;
+      top: 0;
+      right: 2 * $space-min;
+    }
   }
 }
 
