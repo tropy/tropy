@@ -21,6 +21,7 @@ class ResourceSelect extends PureComponent {
         isDisabled={this.props.isDisabled}
         isRequired={this.props.isRequired}
         match={this.props.match}
+        maxRows={this.props.maxRows}
         onBlur={this.props.onBlur}
         onChange={this.props.onChange}
         onFocus={this.props.onFocus}
@@ -37,6 +38,7 @@ class ResourceSelect extends PureComponent {
     isDisabled: bool,
     isRequired: bool,
     match: func.isRequired,
+    maxRows: number,
     onBlur: func,
     onChange: func.isRequired,
     onFocus: func,
@@ -51,7 +53,7 @@ class ResourceSelect extends PureComponent {
   static defaultProps = {
     match: (res, query) => (
       // TODO prefix search!
-      startsWith(res.label, query) || res.id.includes(query)
+      (res.label && startsWith(res.label, query)) || res.id.includes(query)
     ),
     tabIndex: -1,
     toText: (res) => (

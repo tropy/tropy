@@ -97,6 +97,7 @@ class TemplateField extends PureComponent {
                 <ResourceSelect
                   options={this.props.properties}
                   value={this.props.field.property}
+                  maxRows={5}
                   isRequired={!this.props.isTransient}
                   isDisabled={this.props.isDisabled}
                   placeholder="property.select"
@@ -122,6 +123,7 @@ class TemplateField extends PureComponent {
                 <ResourceSelect
                   options={this.props.datatypes}
                   value={this.props.field.datatype}
+                  maxRows={5}
                   isRequired
                   isDisabled={!isEditable}
                   placeholder="datatype.select"
