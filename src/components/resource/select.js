@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { Select } = require('../select')
 const { FormattedMessage } = require('react-intl')
 const { startsWith } = require('../../collate')
-const { getLabel } = require('../../common/ontology')
+const { titlecase } = require('../../common/util')
 const { bool, array, func, number, string } = require('prop-types')
 
 class ResourceSelect extends PureComponent {
@@ -51,18 +51,25 @@ class ResourceSelect extends PureComponent {
   }
 
   static defaultProps = {
-    match: (res, query) => (
-      // TODO prefix search!
-      (res.label && startsWith(res.label, query)) || res.id.includes(query)
-    ),
+    match: (res, query) => {
+      let q = query.split(':', 2)
+      if (q.length > 1) {
+        return (q[0] === res.prefix) && (
+          (res.name && res.name.startsWith(q[1])) ||
+          (res.label && startsWith(res.label, q[1])))
+      }
+      return (res.prefix && res.prefix.startsWith(query)) ||
+        (res.name && res.name.startsWith(query)) ||
+        (res.label && startsWith(res.label, query))
+    },
     tabIndex: -1,
     toText: (res) => (
       <span>
-        {res.label || getLabel(res.id)}
-        <small>{res.id}</small>
+        {res.label || titlecase(res.name)}
+        <small>{res.prefix ? `${res.prefix}:${res.name}` : res.id}</small>
       </span>
     ),
-    toValue: (res) => res.label || getLabel(res.id)
+    toValue: (res) => res.label || titlecase(res.name)
   }
 }
 
