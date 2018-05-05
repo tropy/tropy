@@ -1,7 +1,5 @@
 'use strict'
 
-const { any } = require('./common/util')
-
 function sort(locale = ARGS.locale) {
   if (!(locale in sort)) {
     sort[locale] = new Intl.Collator(locale, {
@@ -31,7 +29,13 @@ module.exports = {
   },
 
   by(...keys) {
-    return (a, b) => sort().compare(any(a, keys), any(b, keys))
+    return (a, b, cmp = sort().compare) => {
+      for (let key of keys) {
+        let res = cmp(a[key], b[key])
+        if (0 !== res) return res
+      }
+      return 0
+    }
   },
 
   equals(a, b) {

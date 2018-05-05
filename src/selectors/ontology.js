@@ -5,17 +5,39 @@ const { entries, values } = Object
 const { by } = require('../collate')
 const { compose, filter, into, map } = require('transducers.js')
 const { blank, get } = require('../common/util')
+const { debug, warn } = require('../common/log')
 const { TYPE, ITEM, PHOTO } = require('../constants')
 const { value }  = require('../value')
 
+function expand(res, vocab) {
+  try {
+    return {
+      ...res,
+      name: res.id.slice(res.vocabulary.length),
+      prefix: vocab[res.vocabulary].prefix
+    }
+  } catch (error) {
+    warn(`failed to expand resource: ${error.message}`)
+    debug(error.stack)
+    return res
+  }
+}
+
+const getResourceList =
+  (res, vocab) =>
+    into([], map(kv => expand(kv[1], vocab)), res).sort(by('id', 'label'))
+
+
 const getPropertyList = memo(
   ({ ontology }) => ontology.props,
-  (props) => values(props).sort(by('id'))
+  ({ ontology }) => ontology.vocab,
+  getResourceList
 )
 
 const getDatatypeList = memo(
   ({ ontology }) => ontology.type,
-  (type) => values(type).sort(by('id'))
+  ({ ontology }) => ontology.vocab,
+  getResourceList
 )
 
 const getVocabs = memo(
