@@ -163,6 +163,12 @@ class Completions extends Component {
 
   render() {
     if (!this.isVisible) return null
+    const content = this.renderCompletions()
+
+    if (!this.props.popup) {
+      return <div className={this.props.className}>{content}</div>
+    }
+
     const { anchor, ...style } = this.getPopupBounds()
 
     return (
@@ -171,7 +177,7 @@ class Completions extends Component {
         className={this.props.className}
         style={style}
         onResize={this.handleResize}>
-        {this.renderCompletions()}
+        {content}
       </Popup>
     )
   }
@@ -190,6 +196,7 @@ class Completions extends Component {
       width: number.isRequired
     }).isRequired,
     parent: instanceOf(HTMLElement).isRequired,
+    popup: bool,
     query: string.isRequired,
     selection: array.isRequired,
     toId: func.isRequired,
@@ -204,6 +211,7 @@ class Completions extends Component {
       height: POPUP.PADDING + INPUT.FOCUS_SHADOW_WIDTH + INPUT.BORDER_WIDTH,
       width: 2 * INPUT.FOCUS_SHADOW_WIDTH
     },
+    popup: true,
     selection: [],
     toId: (value) => (value.id || String(value)),
     toText: (value) => (value.name || String(value))
