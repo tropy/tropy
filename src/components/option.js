@@ -55,8 +55,8 @@ class Option extends PureComponent {
 
 
 class OptionList extends Iterator {
-  getIterables() {
-    return this.props.values
+  getIterables(props = this.props) {
+    return props.values
   }
 
   getColumns() {

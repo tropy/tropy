@@ -66,7 +66,7 @@ class ResourceSelect extends PureComponent {
     toText: (res) => (
       <span>
         {res.label || titlecase(res.name)}
-        <small>{res.prefix ? `${res.prefix}:${res.name}` : res.id}</small>
+        {res.prefix ? `${res.prefix}:${res.name}` : res.id}
       </span>
     ),
     toValue: (res) => res.label || titlecase(res.name)
