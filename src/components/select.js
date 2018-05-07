@@ -72,7 +72,7 @@ class Select extends Component {
   }
 
   clear() {
-    this.props.onChange()
+    this.props.onChange(null, this.props.value != null)
   }
 
   close() {
@@ -163,7 +163,12 @@ class Select extends Component {
 
   handleSelect = (value) => {
     this.close()
-    this.props.onChange(value)
+    if (!blank(value)) {
+      this.props.onChange(
+        value,
+        this.props.value != null && this.props.value !== this.props.toId(value)
+      )
+    }
   }
 
   handleTabFocus = () => {
@@ -282,6 +287,7 @@ class Select extends Component {
     canFilterOptions: true,
     minFilterOptions: 5,
     onBlur: noop,
+    onChange: noop,
     onFocus: noop,
     onKeyDown: noop,
     onValidate: noop,

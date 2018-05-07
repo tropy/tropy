@@ -45,7 +45,7 @@ class TemplateSelect extends PureComponent {
     match: func.isRequired,
     options: array.isRequired,
     onBlur: func,
-    onChange: func.isRequired,
+    onChange: func,
     onFocus: func,
     placeholder: string,
     tabIndex: number.isRequired,

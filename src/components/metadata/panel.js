@@ -129,12 +129,14 @@ class MetadataPanel extends PureComponent {
     this.focus()
   }
 
-  handleTemplateChange = (template) => {
-    this.props.onItemSave({
-      id: this.props.items.map(it => it.id),
-      property: 'template',
-      value: template.id
-    })
+  handleTemplateChange = (template, hasChanged) => {
+    if (hasChanged || this.isBulk) {
+      this.props.onItemSave({
+        id: this.props.items.map(it => it.id),
+        property: 'template',
+        value: template.id
+      })
+    }
   }
 
   handleKeyDown = (event) => {
