@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
+const { Fragment, PureComponent } = React
 const { Select } = require('../select')
 const { FormattedMessage } = require('react-intl')
 const { startsWith } = require('../../collate')
@@ -64,10 +64,12 @@ class ResourceSelect extends PureComponent {
     },
     tabIndex: -1,
     toText: (res) => (
-      <span>
-        {res.label || titlecase(res.name)}
-        {res.prefix ? `${res.prefix}:${res.name}` : res.id}
-      </span>
+      <Fragment>
+        <span>{`${res.label || titlecase(res.name)} `}</span>
+        <span className="mute">
+          {res.prefix ? `${res.prefix}:${res.name}` : res.id}
+        </span>
+      </Fragment>
     ),
     toValue: (res) => res.label || titlecase(res.name)
   }

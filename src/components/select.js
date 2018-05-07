@@ -248,6 +248,7 @@ class Select extends Component {
             onMouseDown={this.handleClearButtonClick}/>}
         {this.state.isOpen &&
           <Completions
+            className={this.props.className}
             completions={this.props.options}
             hideSelection={this.props.hideSelection}
             isVisibleWhenBlank

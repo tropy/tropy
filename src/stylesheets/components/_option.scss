@@ -22,6 +22,7 @@
   }
 
   .option {
+    @include css-truncation;
     position: relative;
     contain: content;
     padding: 0 8px;
