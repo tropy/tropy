@@ -74,11 +74,11 @@ class ItemTable extends ItemIterator {
     }]
   }
 
-  update(props = this.props) {
-    super.update(props)
-    this.setState({
+  getStateFromProps(props = this.props) {
+    return {
+      ...super.getStateFromProps(props),
       hasMaxScrollLeft: this.hasMaxScrollLeft()
-    })
+    }
   }
 
   getColumnState(props = this.props) {
@@ -138,8 +138,8 @@ class ItemTable extends ItemIterator {
     return ROW.HEIGHT
   }
 
-  hasMaxScrollLeft() {
-    return this.props.hasScrollbars &&
+  hasMaxScrollLeft(props = this.props) {
+    return props.hasScrollbars &&
       this.table != null &&
       maxScrollLeft(this.table)
   }
