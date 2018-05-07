@@ -38,7 +38,7 @@ class Completions extends Component {
     if (parent == null) return
 
     const { top, bottom, left, width } = bounds(parent)
-    const rows = this.state.options.length
+    const rows = this.state.options.length || 1
 
     const height = OptionList.getHeight(rows, { maxRows }) + padding.height
     const anchor = (bottom + height <= viewport().height) ? 'top' : 'bottom'
