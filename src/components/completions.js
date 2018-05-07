@@ -98,13 +98,23 @@ class Completions extends Component {
   }
 
   next(k = 1) {
-    let next = (this.ol != null) ? this.ol.next(k) : null
-    if (next != null) this.handleActivate(next, true)
+    this.activate(this.ol && this.ol.next(k))
   }
 
   prev(k = 1) {
-    let prev = (this.ol != null) ? this.ol.prev(k) : null
-    if (prev != null) this.handleActivate(prev, true)
+    this.activate(this.ol && this.ol.prev(k))
+  }
+
+  first() {
+    this.activate(this.ol && this.ol.first())
+  }
+
+  last() {
+    this.activate(this.ol && this.ol.last())
+  }
+
+  activate(option, scrollIntoView = true) {
+    if (option != null) this.handleActivate(option, scrollIntoView)
   }
 
   handleActivate = ({ id }, scrollIntoView) => {

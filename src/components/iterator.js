@@ -287,6 +287,15 @@ class Iterator extends PureComponent {
     throw new Error('not implemented')
   }
 
+  first() {
+    return this.getIterables()[0]
+  }
+
+  last() {
+    const items = this.getIterables()
+    return items[items.length - 1]
+  }
+
   isSelected() {
     throw new Error('not implemented')
   }

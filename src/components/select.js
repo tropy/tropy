@@ -79,24 +79,19 @@ class Select extends Component {
     this.setState({ isOpen: false, query: '' })
   }
 
-  focus = () => {
-    this.input && this.input.focus()
+  delegate(cmd, ...args) {
+    if (this.completions == null) this.open()
+    else this.completions[cmd](...args)
   }
 
-  next() {
-    if (this.completions == null) this.open()
-    else this.completions.next()
+  focus = () => {
+    this.input && this.input.focus()
   }
 
   open() {
     if (!this.state.isDisabled) {
       this.setState({ isOpen: true })
     }
-  }
-
-  prev() {
-    if (this.completions == null) this.open()
-    else this.completions.prev()
   }
 
   handleBlur = (event) => {
@@ -123,15 +118,25 @@ class Select extends Component {
     if (this.props.onKeyDown(event) !== true) {
       switch (event.key) {
         case 'ArrowDown':
-          this.next()
+          this.delegate('next')
           break
         case 'ArrowUp':
-          this.prev()
+          this.delegate('prev')
           break
         case 'Enter':
-          if (this.completions != null) {
-            this.completions.select()
-          }
+          this.delegate('select')
+          break
+        case 'PageDown':
+          this.delegate('next', this.props.maxRows)
+          break
+        case 'PageUp':
+          this.delegate('prev', this.props.maxRows)
+          break
+        case 'Home':
+          this.delegate('first')
+          break
+        case 'End':
+          this.delegate('last')
           break
         case 'Escape':
           this.close()
