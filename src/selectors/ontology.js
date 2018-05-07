@@ -25,7 +25,8 @@ function expand(res, vocab) {
 
 const getResourceList =
   (res, vocab) =>
-    into([], map(kv => expand(kv[1], vocab)), res).sort(by('id', 'label'))
+    into([], map(kv => expand(kv[1], vocab)), res)
+      .sort(by('prefix', 'label', 'name'))
 
 
 const getPropertyList = memo(
