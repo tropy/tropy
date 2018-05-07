@@ -34,9 +34,14 @@ class Iterator extends PureComponent {
     }
   }
 
+  componentDidUpdate(props) {
+    if (props.size !== this.props.size) {
+      this.scrollIntoView(this.current(), false)
+    }
+  }
+
   componentWillUnmount() {
     this.unobserve(this.container)
-
     if (this.ro != null) {
       this.ro.disconnect()
       this.ro = null

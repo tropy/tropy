@@ -259,6 +259,12 @@ const util = {
       if (src.hasOwnProperty(prop)) return src[prop]
       if (typeof src[prop] !== 'undefined') return src[prop]
     }
+
+    if (props.length === 0) {
+      for (let prop in src) {
+        if (typeof src[prop] !== 'undefined') return src[prop]
+      }
+    }
   },
 
   pick(src, props = [], into = {}, expand = false) {

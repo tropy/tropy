@@ -11,9 +11,11 @@ const { noop } = require('../../common/util')
 const { NAV, SASS: { COLUMN, ROW, SCROLLBAR } } = require('../../constants')
 const { bounds, ensure, on, off, maxScrollLeft } = require('../../dom')
 const { match } = require('../../keymap')
-const { refine, restrict, shallow, splice, warp } = require('../../common/util')
 const { assign } = Object
 const throttle = require('lodash.throttle')
+const {
+  any, refine, restrict, shallow, splice, warp
+} = require('../../common/util')
 
 
 class ItemTable extends ItemIterator {
@@ -48,16 +50,15 @@ class ItemTable extends ItemIterator {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(...args) {
+    super.componentDidUpdate(...args)
     if (this.props.edit != null) {
-      for (let id in this.props.edit) {
-        this.scrollIntoView({ id: Number(id) }, false)
-      }
+      this.scrollIntoView({ id: Number(any(this.props.edit)) }, false)
     }
   }
 
-  componentWillReceiveProps(props) {
-    super.componentWillReceiveProps(props)
+  componentWillReceiveProps(props, ...args) {
+    super.componentWillReceiveProps(props, ...args)
     if (!shallow(this.props, props, ['columns', 'list'])) {
       this.setState({
         ...this.getColumnState(props),
