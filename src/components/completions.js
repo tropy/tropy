@@ -65,15 +65,24 @@ class Completions extends Component {
       this.props.minQueryLength <= this.props.query.length
   }
 
-  filter({ completions, match, query, toId, toText } = this.props) {
+  filter({
+    completions,
+    hideSelection,
+    match,
+    query,
+    selection,
+    toId,
+    toText
+  } = this.props) {
     query = query.trim().toLowerCase()
     let matchAll = blank(query)
     let options = []
     options.idx = {}
 
     completions.forEach((value, idx) => {
-      if (matchAll || match(value, query)) {
-        let id = toId(value)
+      let id = toId(value)
+      let isSelected = hideSelection && selection.includes(id)
+      if (!isSelected && (matchAll || match(value, query))) {
         options.idx[id] = options.length
         options.push({ id, idx, value: toText(value) })
       }
@@ -160,6 +169,7 @@ class Completions extends Component {
   static propTypes = {
     className: string,
     completions: array.isRequired,
+    hideSelection: bool,
     isVisibleWhenBlank: bool,
     match: func.isRequired,
     maxRows: number.isRequired,

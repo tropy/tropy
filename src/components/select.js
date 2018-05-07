@@ -239,6 +239,7 @@ class Select extends Component {
         {this.state.isOpen &&
           <Completions
             completions={this.props.options}
+            hideSelection={this.props.hideSelection}
             isVisibleWhenBlank
             match={this.props.match}
             maxRows={this.props.maxRows}
@@ -256,6 +257,7 @@ class Select extends Component {
   static propTypes = {
     canFilterOptions: bool.isRequired,
     className: string,
+    hideSelection: bool,
     id: string,
     isDisabled: bool,
     isRequired: bool,
