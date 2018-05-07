@@ -264,8 +264,10 @@ class Iterator extends PureComponent {
     const head = this.head()
     if (head == null) return items[0]
 
-    const idx = this.indexOf(head) + offset
-    return (idx >= 0 && idx < items.length) ? items[idx] : null
+    const idx = this.indexOf(head)
+    if (idx == null || idx < 0) return items[0]
+
+    return items[restrict(idx + offset, 0, items.length - 1)]
   }
 
   prev(offset = 1) {
