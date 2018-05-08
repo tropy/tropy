@@ -1,7 +1,7 @@
 'use strict'
 
 const { isSelected, select } = require('../selection')
-const { merge, omit, splice } = require('../common/util')
+const { merge, insert, omit, splice } = require('../common/util')
 const {
   DC, NAV, ITEM, LIST, TAG, NOTE, PHOTO, PROJECT
 } = require('../constants')
@@ -151,6 +151,16 @@ module.exports = {
           ...payload
         }
 
+      case NAV.COLUMN.INSERT:
+        return {
+          ...state,
+          columns: insert(state.columns, meta.idx, payload)
+        }
+      case NAV.COLUMN.REMOVE:
+        return {
+          ...state,
+          columns: state.columns.filter(col => col.id === payload.id)
+        }
       case NAV.COLUMN.ORDER: {
         const { order } = payload
 
@@ -160,7 +170,6 @@ module.exports = {
             ((cols[order[c.id]] = c), cols), [])
         }
       }
-
       case NAV.COLUMN.RESIZE: {
         const { column, width } = payload
 
