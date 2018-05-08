@@ -147,9 +147,8 @@ class ItemTable extends ItemIterator {
   }
 
   edit(item) {
-    const { property } = this.state.columns[0]
     this.props.onEdit({
-      column: { [item.id]: property.id }
+      column: { [item.id]: this.state.columns[0].id }
     })
   }
 
@@ -346,7 +345,7 @@ class ItemTable extends ItemIterator {
           columns={this.props.columns}
           onInsert={this.props.onColumnInsert}
           onRemove={this.props.onColumnRemove}
-          options={[]}/>
+          options={this.props.freeColumns}/>
       </Popup>
     )
   }
@@ -383,6 +382,7 @@ class ItemTable extends ItemIterator {
 
   static propTypes = {
     ...ItemIterator.propTypes,
+    freeColumns: arrayOf(object).isRequired,
     columns: arrayOf(object).isRequired,
     edit: object,
     data: object.isRequired,

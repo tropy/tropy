@@ -2,10 +2,10 @@
 
 const React = require('react')
 const { Component } = React
-const { Select } = require('./select')
+const { ResourceSelect } = require('./resource/select')
 const { IconXSmall } = require('./icons')
 const { Button } = require('./button')
-const { array, func, string } = require('prop-types')
+const { array, func, node, string } = require('prop-types')
 
 const autofocus = (component) => {
   if (component != null) component.focus()
@@ -29,7 +29,7 @@ class Column extends Component {
 
   static propTypes = {
     id: string.isRequired,
-    label: string.isRequired,
+    label: node.isRequired,
     onRemove: func.isRequired
   }
 }
@@ -47,15 +47,14 @@ class ColumnSelect extends Component {
             <Column
               id={col.id}
               key={col.id}
-              label={this.props.toText(col)}
+              label={ResourceSelect.defaultProps.toText(col)}
               onRemove={this.props.onRemove}/>)}
         </div>
-        <Select
+        <ResourceSelect
           isStatic
           onChange={this.handleSelect}
           options={this.props.options}
-          ref={autofocus}
-          toText={this.props.toText}/>
+          ref={autofocus}/>
       </div>
     )
   }
@@ -64,14 +63,8 @@ class ColumnSelect extends Component {
     columns: array.isRequired,
     options: array.isRequired,
     onInsert: func.isRequired,
-    onRemove: func.isRequired,
-    toText: func.isRequired
+    onRemove: func.isRequired
   }
-
-  static defaultProps = {
-    toText: column => column.label || column.id
-  }
-
 }
 
 module.exports = {

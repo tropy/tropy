@@ -29,20 +29,19 @@ class ItemTableRow extends ItemIterable {
       const column = columns[i]
       const next = columns[(i + 1) % ii]
       const prev = columns[(ii + i - 1) % ii]
-      const { property } = column
       const isMainColumn = (i === 0)
 
       const props = {
-        key: property.id,
-        id: property.id,
+        key: column.id,
+        id: column.id,
         isDragging: this.isDragging(i),
-        isEditing: this.isEditing(property.id),
+        isEditing: this.isEditing(column.id),
         isMainColumn,
         isMoving: this.isMoving(i),
-        nextColumn: next.property.id,
-        prevColumn: prev.property.id,
-        type: get(this.props.data, [property.id, 'type']),
-        value: get(this.props.data, [property.id, 'text'])
+        nextColumn: next.id,
+        prevColumn: prev.id,
+        type: get(this.props.data, [column.id, 'type']),
+        value: get(this.props.data, [column.id, 'text'])
       }
 
       if (isMainColumn) {

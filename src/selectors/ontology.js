@@ -5,23 +5,17 @@ const { entries, values } = Object
 const { by } = require('../collate')
 const { compose, filter, into, map } = require('transducers.js')
 const { blank, get } = require('../common/util')
-const { debug, warn } = require('../common/log')
 const { TYPE, ITEM, PHOTO } = require('../constants')
 const { value }  = require('../value')
 
-function expand(res, vocab) {
-  try {
-    return {
-      ...res,
-      name: res.id.slice(res.vocabulary.length),
-      prefix: vocab[res.vocabulary].prefix
-    }
-  } catch (error) {
-    warn(`failed to expand resource: ${error.message}`)
-    debug(error.stack)
-    return res
-  }
-}
+const strip = (id, vocab) =>
+  blank(vocab) ? id.split(/(#|\/)/).pop() : id.slice(vocab.length)
+
+const expand = (res, vocab) => ({
+  ...res,
+  name: strip(res.id, res.vocabulary),
+  prefix: get(vocab, [res.vocabulary, 'prefix'])
+})
 
 const getResourceList =
   (res, vocab) =>
@@ -151,6 +145,7 @@ const getActiveSelectionTemplate = memo(
 )
 
 module.exports = {
+  expand,
   getActiveItemTemplate,
   getActivePhotoTemplate,
   getActiveSelectionTemplate,

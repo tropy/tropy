@@ -3,11 +3,9 @@
 const React = require('react')
 const { PureComponent } = React
 const { BlankTableHeadCell, ItemTableHeadCell } = require('./table-head-cell')
-const { getLabel } = require('../../common/ontology')
+const { titlecase } = require('../../common/util')
 const { NAV } = require('../../constants')
-const {
-  arrayOf, bool, func, number, object, shape, string
-} = require('prop-types')
+const { arrayOf, bool, func, number, shape, string } = require('prop-types')
 
 
 class ItemTableHead extends PureComponent {
@@ -28,10 +26,6 @@ class ItemTableHead extends PureComponent {
       (idx <= this.props.drop && idx > this.props.drag)
   }
 
-  getLabel(property) {
-    return property.label || getLabel(property.id)
-  }
-
   render() {
     const isFixedColumn = 1 >= this.props.columns.length
 
@@ -48,15 +42,15 @@ class ItemTableHead extends PureComponent {
                 isAscending={this.isAscending}
                 isFixedColumn
                 onClick={this.props.onSort}/>}
-            {this.props.columns.map(({ property }, idx) =>
+            {this.props.columns.map((col, idx) =>
               <ItemTableHeadCell
-                key={property.id}
-                id={property.id}
+                key={col.id}
+                id={col.id}
                 position={idx}
-                label={this.getLabel(property)}
+                label={col.label || titlecase(col.name)}
                 width={this.props.colwidth[idx]}
                 minWidth={this.props[idx === 0 ? 'minWidthMain' : 'minWidth']}
-                isActive={this.isActive(property)}
+                isActive={this.isActive(col)}
                 isAscending={this.isAscending}
                 isDragging={this.isDragging(idx)}
                 isMoving={this.isMoving(idx)}
@@ -76,7 +70,9 @@ class ItemTableHead extends PureComponent {
 
   static propTypes = {
     columns: arrayOf(shape({
-      property: object.isRequired,
+      id: string.isRequired,
+      label: string,
+      name: string.isRequired,
       width: number.isRequired
     })).isRequired,
     colwidth: arrayOf(number).isRequired,

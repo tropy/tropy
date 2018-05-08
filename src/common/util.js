@@ -56,7 +56,7 @@ const util = {
   },
 
   insert(array, at, ...items) {
-    return util.splice(array, at == null ? array.length : 0, 0, ...items)
+    return util.splice(array, at, 0, ...items)
   },
 
   last(array) {

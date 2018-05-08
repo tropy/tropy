@@ -14,12 +14,21 @@ class ResourceSelect extends PureComponent {
       <FormattedMessage id={this.props.placeholder}/>
   }
 
+  focus = () => {
+    if (this.select != null) this.select.focus()
+  }
+
+  setSelect = (select) => {
+    this.select = select
+  }
+
   render() {
     return (
       <Select
         className="resource-select"
         isDisabled={this.props.isDisabled}
         isRequired={this.props.isRequired}
+        isStatic={this.props.isStatic}
         match={this.props.match}
         maxRows={this.props.maxRows}
         onBlur={this.props.onBlur}
@@ -27,6 +36,7 @@ class ResourceSelect extends PureComponent {
         onFocus={this.props.onFocus}
         options={this.props.options}
         placeholder={this.placeholder}
+        ref={this.setSelect}
         tabIndex={this.props.tabIndex}
         toText={this.props.toText}
         toValue={this.props.toValue}
@@ -37,6 +47,7 @@ class ResourceSelect extends PureComponent {
   static propTypes = {
     isDisabled: bool,
     isRequired: bool,
+    isStatic: bool,
     match: func.isRequired,
     maxRows: number,
     onBlur: func,
@@ -78,4 +89,3 @@ class ResourceSelect extends PureComponent {
 module.exports = {
   ResourceSelect
 }
-
