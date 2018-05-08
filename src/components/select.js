@@ -24,7 +24,12 @@ class Select extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (!shallow(this.props, props, ['isDisabled', 'options', 'value'])) {
+    if (!shallow(this.props, props, [
+      'isDisabled',
+      'isStatic',
+      'options',
+      'value'
+    ])) {
       this.setState(this.getStateFromProps(props))
     }
   }
@@ -35,7 +40,13 @@ class Select extends Component {
     }
   }
 
-  getStateFromProps({ isDisabled, options, toId, value: id } = this.props) {
+  getStateFromProps({
+    isDisabled,
+    isStatic: isOpen,
+    options,
+    toId,
+    value: id
+  } = this.props) {
     let isBlank = blank(id)
     let value = isBlank ?
       null :
@@ -45,7 +56,7 @@ class Select extends Component {
       isBlank,
       isDisabled: isDisabled || options.length === 0,
       isInvalid: value == null && !isBlank,
-      isOpen: false,
+      isOpen,
       query: '',
       selection: isBlank ? [] : [id],
       value
@@ -58,6 +69,7 @@ class Select extends Component {
       'focus': this.state.hasFocus,
       'invalid': this.state.isInvalid,
       'open': this.state.isOpen,
+      'static': this.props.isStatic,
       'tab-focus': this.state.hasTabFocus
     }]
   }
@@ -67,7 +79,7 @@ class Select extends Component {
   }
 
   get isInputHidden() {
-    return !this.props.canFilterOptions ||
+    return this.props.isInputHidden ||
       this.props.options.length < this.props.minFilterOptions
   }
 
@@ -76,7 +88,7 @@ class Select extends Component {
   }
 
   close() {
-    this.setState({ isOpen: false, query: '' })
+    this.setState({ isOpen: this.props.isStatic, query: '' })
   }
 
   delegate(cmd, ...args) {
@@ -266,12 +278,13 @@ class Select extends Component {
   }
 
   static propTypes = {
-    canFilterOptions: bool.isRequired,
     className: string,
     hideSelection: bool,
     id: string,
     isDisabled: bool,
+    isInputHidden: bool,
     isRequired: bool,
+    isStatic: bool,
     match: func,
     maxRows: number,
     minFilterOptions: number.isRequired,
@@ -290,7 +303,7 @@ class Select extends Component {
   }
 
   static defaultProps = {
-    canFilterOptions: true,
+    isStatic: false,
     minFilterOptions: 5,
     onBlur: noop,
     onChange: noop,
