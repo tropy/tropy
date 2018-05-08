@@ -91,6 +91,17 @@ class Select extends Component {
     this.setState({ isOpen: this.props.isStatic, query: '' })
   }
 
+  commit() {
+    if (this.completions != null) return this.completions.select()
+    if (this.state.isBlank) return this.open()
+
+    let { options, toId, value: id } = this.props
+    let value = options.find(opt => toId(opt) === id)
+
+    if (value == null) return this.open()
+    this.props.onChange(value, false)
+  }
+
   delegate(cmd, ...args) {
     if (this.completions == null) this.open()
     else this.completions[cmd](...args)
@@ -136,7 +147,7 @@ class Select extends Component {
           this.delegate('prev')
           break
         case 'Enter':
-          this.delegate('select')
+          this.commit()
           break
         case 'PageDown':
           this.delegate('next', this.props.maxRows)
