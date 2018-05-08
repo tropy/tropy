@@ -277,6 +277,7 @@ class Select extends Component {
             maxRows={this.props.maxRows}
             onSelect={this.handleSelect}
             parent={this.container}
+            popup={!this.props.isStatic}
             query={this.state.query}
             ref={this.setCompletions}
             selection={this.state.selection}

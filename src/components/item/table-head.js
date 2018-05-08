@@ -36,7 +36,9 @@ class ItemTableHead extends PureComponent {
     const isFixedColumn = 1 >= this.props.columns.length
 
     return (
-      <table className="table-head">
+      <table
+        className="table-head"
+        onContextMenu={this.props.onContextMenu}>
         <tbody>
           <tr>
             {this.props.hasPositionColumn &&
@@ -87,6 +89,7 @@ class ItemTableHead extends PureComponent {
     drop: number,
     minWidth: number.isRequired,
     minWidthMain: number.isRequired,
+    onContextMenu: func,
     onOrder: func.isRequired,
     onOrderReset: func.isRequired,
     onOrderStart: func.isRequired,

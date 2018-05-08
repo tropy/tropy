@@ -195,7 +195,7 @@ class Completions extends Component {
       height: number.isRequired,
       width: number.isRequired
     }).isRequired,
-    parent: instanceOf(HTMLElement).isRequired,
+    parent: instanceOf(HTMLElement),
     popup: bool,
     query: string.isRequired,
     selection: array.isRequired,

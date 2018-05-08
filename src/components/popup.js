@@ -18,14 +18,14 @@ class Popup extends Component {
   }
 
   componentDidMount() {
-    on(this.dom, 'click', this.handleClickOutside)
+    on(this.dom, 'mousedown', this.handleClickOutside)
     on(window, 'resize', this.handleResize)
     append(this.dom, $('#popup-root'))
   }
 
   componentWillUnmount() {
     remove(this.dom)
-    off(this.dom, 'click', this.handleClickOutside)
+    off(this.dom, 'mousedown', this.handleClickOutside)
     off(window, 'resize', this.handleResize)
   }
 

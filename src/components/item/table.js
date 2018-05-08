@@ -6,6 +6,8 @@ const { ItemIterator } = require('./iterator')
 const { ItemTableRow } = require('./table-row')
 const { ItemTableSpacer } = require('./table-spacer')
 const { ItemTableHead } = require('./table-head')
+const { Popup } = require('../popup')
+const { ColumnSelect } = require('../column-select')
 const cx = require('classnames')
 const { noop } = require('../../common/util')
 const { NAV, SASS: { COLUMN, ROW, SCROLLBAR } } = require('../../constants')
@@ -244,6 +246,27 @@ class ItemTable extends ItemIterator {
     })
   }, 25)
 
+  showColumnContextMenu = (event) => {
+    event.stopPropagation()
+    // let offset = this.getOffsetInTable(event.clientX)
+    this.setState({
+      hasColumnContextMenu: true,
+      popup: {
+        top: event.clientY,
+        left: event.clientX,
+        width: 200,
+        height: 300
+      }
+    })
+  }
+
+  hideColumnContextMenu = () => {
+    this.setState({
+      hasColumnContextMenu: false,
+      popup: null
+    })
+  }
+
   setColumnOffset(offset = 0, column = 'drag') {
     this.table.style.setProperty(`--${column}-offset`, `${offset}px`)
   }
@@ -312,6 +335,20 @@ class ItemTable extends ItemIterator {
     )
   }
 
+  renderColumnContextMenu() {
+    return this.state.hasColumnContextMenu && (
+      <Popup
+        className="column-context-menu"
+        onClickOutside={this.hideColumnContextMenu}
+        onResize={this.hideColumnContextMenu}
+        style={this.state.popup}>
+        <ColumnSelect
+          columns={this.props.columns}
+          options={[]}/>
+      </Popup>
+    )
+  }
+
   render() {
     return (this.props.isEmpty) ? this.renderNoItems() : (
       <div
@@ -329,6 +366,7 @@ class ItemTable extends ItemIterator {
           minWidth={this.props.minColWidth}
           minWidthMain={this.props.minMainColWidth}
           sort={this.props.sort}
+          onContextMenu={this.showColumnContextMenu}
           onOrder={this.handleColumnOrder}
           onOrderReset={this.handleColumnOrderReset}
           onOrderStart={this.handleColumnOrderStart}
@@ -336,6 +374,7 @@ class ItemTable extends ItemIterator {
           onResize={this.handleColumnResize}
           onSort={this.props.onSort}/>
         {this.renderTableBody()}
+        {this.renderColumnContextMenu()}
       </div>
     )
   }
