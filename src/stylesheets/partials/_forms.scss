@@ -99,13 +99,13 @@ fieldset {
     .placeholder,
     .value {
       position: relative;
-      display: block;
+      width: 100%;
       margin-top: -$input-height-base + 8;
     }
 
     .clear {
       position: absolute;
-      top: 0;
+      top: -3px;
       right: 2 * $space-min;
     }
   }

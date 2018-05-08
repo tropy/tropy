@@ -226,25 +226,28 @@ class Select extends Component {
       return null
     }
 
-    let classname
-    let content
-
     if (this.state.isBlank) {
-      classname = 'placeholder'
-      content = this.props.placeholder
-    } else {
-      classname = 'value'
-      content = this.state.isInvalid ?
-          this.props.value :
-          (this.props.toValue || this.props.toText)(this.state.value)
+      return (
+        <div className="placeholder">{this.props.placeholder}</div>
+      )
     }
 
-    return <span className={classname}>{content}</span>
+    return (
+      <div className="value">
+        {this.state.isInvalid ?
+          this.props.value :
+          (this.props.toValue || this.props.toText)(this.state.value)}
+        {this.canClearValue &&
+          <Button
+            className="clear"
+            icon={<IconXSmall/>}
+            onMouseDown={this.handleClearButtonClick}/>}
+      </div>
+    )
   }
 
   render() {
-    let { canClearValue, isInputHidden } = this
-
+    let { isInputHidden } = this
     return (
       <div
         className={cx(this.classes)}
@@ -264,11 +267,6 @@ class Select extends Component {
           type="text"
           value={this.state.query}/>
         {this.renderContent()}
-        {canClearValue &&
-          <Button
-            className="clear"
-            icon={<IconXSmall/>}
-            onMouseDown={this.handleClearButtonClick}/>}
         {this.state.isOpen &&
           <Completions
             className={this.props.className}
