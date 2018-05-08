@@ -36,7 +36,10 @@ class Column extends Component {
 
 
 class ColumnSelect extends Component {
-  handleSelect = () => {
+  handleSelect = (column) => {
+    if (column != null) {
+      this.props.onInsert({ id: column.id, width: 100 })
+    }
   }
 
   render() {
