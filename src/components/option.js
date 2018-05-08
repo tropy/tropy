@@ -23,7 +23,9 @@ class Option extends PureComponent {
   handleMouseDown = (event) => {
     event.preventDefault()
     event.stopPropagation()
-    this.props.onClick(this.props.option)
+    if (event.button === 0) {
+      this.props.onClick(this.props.option)
+    }
   }
 
   handleMouseMove = (event) => {

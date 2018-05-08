@@ -41,6 +41,7 @@ class Popup extends Component {
     return createPortal((
       <div
         className={cx('popup', this.props.anchor, this.props.className)}
+        onContextMenu={swallow}
         style={this.props.style}>
         {this.props.children}
       </div>
@@ -66,6 +67,10 @@ class Popup extends Component {
     onClickOutside: noop,
     onResize: noop
   }
+}
+
+function swallow(event) {
+  event.stopPropagation()
 }
 
 module.exports = {
