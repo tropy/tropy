@@ -42,8 +42,8 @@ class ColumnSelect extends Component {
   static propTypes = {
     columns: array.isRequired,
     options: array.isRequired,
-    onInsert: func,
-    onRemove: func
+    onInsert: func.isRequired,
+    onRemove: func.isRequired
   }
 }
 

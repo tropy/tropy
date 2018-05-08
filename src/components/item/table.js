@@ -344,6 +344,8 @@ class ItemTable extends ItemIterator {
         style={this.state.popup}>
         <ColumnSelect
           columns={this.props.columns}
+          onInsert={this.props.onColumnInsert}
+          onRemove={this.props.onColumnRemove}
           options={[]}/>
       </Popup>
     )
@@ -387,7 +389,9 @@ class ItemTable extends ItemIterator {
     hasScrollbars: bool.isRequired,
     minColWidth: number.isRequired,
     minMainColWidth: number.isRequired,
+    onColumnInsert: func.isRequired,
     onColumnOrder: func.isRequired,
+    onColumnRemove: func.isRequired,
     onColumnResize: func.isRequired,
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,

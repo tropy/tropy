@@ -443,6 +443,14 @@ module.exports = {
         dispatch(actions.edit.cancel())
       },
 
+      onColumnInsert(...args) {
+        dispatch(actions.nav.column.insert(...args))
+      },
+
+      onColumnRemove(...args) {
+        dispatch(actions.nav.column.remove(...args))
+      },
+
       onColumnOrder(...args) {
         dispatch(actions.nav.column.order(...args))
       },
