@@ -59,6 +59,10 @@ const util = {
     return util.splice(array, at, 0, ...items)
   },
 
+  last(array) {
+    return array[array.length - 1]
+  },
+
   remove(array, ...items) {
     return array.filter(it => items.indexOf(it) < 0)
   },

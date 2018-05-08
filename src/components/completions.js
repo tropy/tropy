@@ -5,7 +5,7 @@ const { Component } = React
 const { FormattedMessage } = require('react-intl')
 const { Popup } = require('./popup')
 const { OptionList } = require('./option')
-const { blank } = require('../common/util')
+const { blank, last } = require('../common/util')
 const { bounds, viewport } = require('../dom')
 const { startsWith } = require('../collate')
 const { INPUT, POPUP } = require('../constants/sass')
@@ -28,7 +28,7 @@ class Completions extends Component {
 
   getStateFromProps(props = this.props) {
     return {
-      active: props.selection[0],
+      active: last(props.selection),
       options: this.filter(props)
     }
   }
