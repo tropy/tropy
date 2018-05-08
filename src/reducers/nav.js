@@ -159,7 +159,7 @@ module.exports = {
       case NAV.COLUMN.REMOVE:
         return {
           ...state,
-          columns: state.columns.filter(col => col.id === payload.id)
+          columns: state.columns.filter(col => col.id !== payload.id)
         }
       case NAV.COLUMN.ORDER: {
         const { order } = payload

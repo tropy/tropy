@@ -3,38 +3,59 @@
 const React = require('react')
 const { Component } = React
 const { Select } = require('./select')
+const { IconXSmall } = require('./icons')
+const { Button } = require('./button')
 const { array, func, string } = require('prop-types')
 
 const autofocus = (component) => {
   if (component != null) component.focus()
 }
 
-const Column = ({ label, id }) => (
-  <div className="column">{label || id}</div>
-)
+class Column extends Component {
+  handleRemove = () => {
+    this.props.onRemove({ id: this.props.id })
+  }
 
-Column.propTypes = {
-  id: string.isRequired,
-  label: string
+  render() {
+    return (
+      <div className="column">
+        {this.props.label}
+        <Button
+          icon={<IconXSmall/>}
+          onMouseDown={this.handleRemove}/>
+      </div>
+    )
+  }
+
+  static propTypes = {
+    id: string.isRequired,
+    label: string.isRequired,
+    onRemove: func.isRequired
+  }
 }
 
+
 class ColumnSelect extends Component {
-  handleColumnSelect = () => {
+  handleSelect = () => {
   }
 
   render() {
     return (
       <div className="column-select">
-        <div className="current">
-          {this.props.columns.map(column =>
-            <Column key={column.id} {...column}/>)}
+        <div className="current-columns">
+          {this.props.columns.map(col =>
+            <Column
+              id={col.id}
+              key={col.id}
+              label={this.props.toText(col)}
+              onRemove={this.props.onRemove}/>)}
         </div>
         <Select
           isStatic
-          onChange={this.handleColumnSelect}
+          onChange={this.handleSelect}
           options={this.props.options}
           ref={autofocus}
-          toText={Column}/>
+          toText={this.props.toText}/>
       </div>
     )
   }
@@ -43,8 +64,14 @@ class ColumnSelect extends Component {
     columns: array.isRequired,
     options: array.isRequired,
     onInsert: func.isRequired,
-    onRemove: func.isRequired
+    onRemove: func.isRequired,
+    toText: func.isRequired
   }
+
+  static defaultProps = {
+    toText: column => column.label || column.id
+  }
+
 }
 
 module.exports = {
