@@ -11,7 +11,9 @@ module.exports = {
   UPDATE: 'nav.update',
 
   COLUMN: {
+    INSERT: 'nav.column.insert',
     ORDER: 'nav.column.order',
+    REMOVE: 'nav.column.remove',
     RESIZE: 'nav.column.resize',
     POSITION: {
       id: 'added',

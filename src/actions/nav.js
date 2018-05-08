@@ -40,9 +40,25 @@ module.exports = {
   },
 
   column: {
+    insert(payload, meta = {}) {
+      return {
+        type: NAV.COLUMN.INSERT,
+        payload,
+        meta
+      }
+    },
+
     order(payload, meta = {}) {
       return {
         type: NAV.COLUMN.ORDER,
+        payload,
+        meta
+      }
+    },
+
+    remove(payload, meta = {}) {
+      return {
+        type: NAV.COLUMN.REMOVE,
         payload,
         meta
       }
