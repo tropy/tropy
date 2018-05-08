@@ -5,6 +5,7 @@ const { Component } = React
 const { createPortal } = require('react-dom')
 const { func, node, number, oneOf, shape, string } = require('prop-types')
 const { $, append, classes, element, on, off, remove } = require('../dom')
+const { noop } = require('../common/util')
 const cx = require('classnames')
 const throttle = require('lodash.throttle')
 
@@ -17,18 +18,24 @@ class Popup extends Component {
   }
 
   componentDidMount() {
-    append(this.dom, $('#popup-root'))
+    on(this.dom, 'click', this.handleClickOutside)
     on(window, 'resize', this.handleResize)
+    append(this.dom, $('#popup-root'))
   }
 
   componentWillUnmount() {
     remove(this.dom)
+    off(this.dom, 'click', this.handleClickOutside)
     off(window, 'resize', this.handleResize)
   }
 
-  handleResize = throttle(() => {
-    if (this.props.onResize) this.props.onResize()
-  }, 25)
+  handleClickOutside = (event) => {
+    if (this.dom === event.target) {
+      this.props.onClickOutside(event)
+    }
+  }
+
+  handleResize = throttle(() => { this.props.onResize() }, 25)
 
   render() {
     return createPortal((
@@ -44,7 +51,8 @@ class Popup extends Component {
     anchor: oneOf(['top', 'right', 'bottom', 'left', 'float']),
     children: node.isRequired,
     className: string,
-    onResize: func,
+    onClickOutside: func.isRequired,
+    onResize: func.isRequired,
     style: shape({
       top: number,
       left: number,
@@ -54,7 +62,9 @@ class Popup extends Component {
   }
 
   static defaultProps = {
-    anchor: 'float'
+    anchor: 'float',
+    onClickOutside: noop,
+    onResize: noop
   }
 }
 
