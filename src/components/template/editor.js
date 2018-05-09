@@ -31,8 +31,8 @@ const TEMPLATE = {
 const defaultId = () =>
   `https://tropy.org/v1/templates/id#${identify()}`
 
-const makeTemplate = (template = TEMPLATE) => ({
-  id: template.id || defaultId(), ...template
+const makeTemplate = (template) => ({
+  id: (template || TEMPLATE).id || defaultId(), ...(template || TEMPLATE)
 })
 
 

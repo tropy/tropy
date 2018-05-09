@@ -24,8 +24,8 @@ class Value extends Component {
   render() {
     return (
       <div className="value">
-        {this.props.children}
-        {this.canClear &&
+        {this.props.label}
+        {this.props.hasClearButton &&
           <Button
             className="clear"
             icon={<IconXSmall/>}
@@ -35,8 +35,8 @@ class Value extends Component {
   }
 
   static propTypes = {
-    canClear: bool,
-    children: node.isRequired,
+    hasClearButton: bool,
+    label: node.isRequired,
     onClear: func.isRequired,
     value: oneOfType([string, object]).isRequired
   }
@@ -57,6 +57,7 @@ class Select extends Component {
   componentWillReceiveProps(props) {
     if (!shallow(this.props, props, [
       'isDisabled',
+      'isRequired',
       'isStatic',
       'options',
       'value'
@@ -73,6 +74,7 @@ class Select extends Component {
 
   getStateFromProps({
     isDisabled,
+    isRequired,
     isStatic: isOpen,
     options,
     toId,
@@ -97,6 +99,7 @@ class Select extends Component {
     }
 
     return {
+      canClearValue: !isRequired || isMulti && values.length > 1,
       isBlank,
       isDisabled: isDisabled || options.length === 0,
       isInvalid,
@@ -125,12 +128,7 @@ class Select extends Component {
       this.props.options.length < this.props.minFilterOptions
   }
 
-  canClearValue(value, idx = 0) {
-    return value != null && (idx > 0 || !this.props.isRequired)
-  }
-
-
-  clear(value) {
+  clear = (value) => {
     this.props.onRemove(value)
     this.props.onChange(null, true)
   }
@@ -278,15 +276,13 @@ class Select extends Component {
 
     return !this.props.isValueHidden && (
       <div className="values">
-        {this.state.values.map((value, idx) =>
-          <div key={value.id || value} className="value">
-            {(this.props.toValue || this.props.toText)(value)}
-            {this.canClearValue(value, idx) &&
-              <Button
-                className="clear"
-                icon={<IconXSmall/>}
-                onMouseDown={this.handleClearButtonClick}/>}
-          </div>)}
+        {this.state.values.map(value =>
+          <Value
+            hasClearButton={this.state.canClearValue}
+            key={value.id || value}
+            label={(this.props.toValue || this.props.toText)(value)}
+            onClear={this.clear}
+            value={value}/>)}
       </div>
     )
   }
