@@ -67,7 +67,7 @@ class Completions extends Component {
 
   filter({
     completions,
-    hideSelection,
+    isSelectionHidden,
     match,
     query,
     selection,
@@ -81,8 +81,8 @@ class Completions extends Component {
 
     completions.forEach((value, idx) => {
       let id = toId(value)
-      let isSelected = hideSelection && selection.includes(id)
-      if (!isSelected && (matchAll || match(value, query))) {
+      let isHidden = isSelectionHidden && selection.includes(id)
+      if (!isHidden && (matchAll || match(value, query))) {
         options.idx[id] = options.length
         options.push({ id, idx, value: toText(value) })
       }
@@ -185,7 +185,7 @@ class Completions extends Component {
   static propTypes = {
     className: string,
     completions: array.isRequired,
-    hideSelection: bool,
+    isSelectionHidden: bool,
     isVisibleWhenBlank: bool,
     match: func.isRequired,
     maxRows: number.isRequired,

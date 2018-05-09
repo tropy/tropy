@@ -232,7 +232,7 @@ class Select extends Component {
       )
     }
 
-    return (
+    return !this.props.isValueHidden && (
       <div className="value">
         {this.state.isInvalid ?
           this.props.value :
@@ -271,7 +271,7 @@ class Select extends Component {
           <Completions
             className={this.props.className}
             completions={this.props.options}
-            hideSelection={this.props.hideSelection}
+            isSelectionHidden={this.props.isSelectionHidden}
             isVisibleWhenBlank
             match={this.props.match}
             maxRows={this.props.maxRows}
@@ -289,12 +289,13 @@ class Select extends Component {
 
   static propTypes = {
     className: string,
-    hideSelection: bool,
     id: string,
     isDisabled: bool,
     isInputHidden: bool,
     isRequired: bool,
     isStatic: bool,
+    isSelectionHidden: bool,
+    isValueHidden: bool,
     match: func,
     maxRows: number,
     minFilterOptions: number.isRequired,
@@ -314,6 +315,8 @@ class Select extends Component {
 
   static defaultProps = {
     isStatic: false,
+    isSelectionHidden: false,
+    isValueHidden: false,
     minFilterOptions: 5,
     onBlur: noop,
     onChange: noop,
