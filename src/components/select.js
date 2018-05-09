@@ -9,9 +9,38 @@ const { blank, noop, shallow } = require('../common/util')
 const { on, off } = require('../dom')
 const cx = require('classnames')
 const {
-  array, arrayOf, bool, func, oneOfType, node, number, string
+  array, arrayOf, bool, func, object, oneOfType, node, number, string
 } = require('prop-types')
 
+
+class Value extends Component {
+  handleClearButtonClick = (event) => {
+    if (event.button === 0) {
+      this.props.onClear(this.props.value)
+      event.stopPropagation()
+    }
+  }
+
+  render() {
+    return (
+      <div className="value">
+        {this.props.children}
+        {this.canClear &&
+          <Button
+            className="clear"
+            icon={<IconXSmall/>}
+            onMouseDown={this.handleClearButtonClick}/>}
+      </div>
+    )
+  }
+
+  static propTypes = {
+    canClear: bool,
+    children: node.isRequired,
+    onClear: func.isRequired,
+    value: oneOfType([string, object]).isRequired
+  }
+}
 
 class Select extends Component {
   constructor(props) {
@@ -47,21 +76,35 @@ class Select extends Component {
     isStatic: isOpen,
     options,
     toId,
-    value: id
+    value
   } = this.props) {
-    let isBlank = blank(id)
-    let value = isBlank ?
-      null :
-      options.find(opt => toId(opt) === id)
+    let isBlank = blank(value)
+    let isMulti = Array.isArray(value)
+    let isInvalid = false
+    let values = []
+    let selection = isMulti ? value : [value]
+
+    if (!isBlank) {
+      for (let id of selection) {
+        let v = options.find(opt => toId(opt) === id)
+        if (v != null) {
+          values.push(v)
+        } else {
+          value.pus(id)
+          isInvalid = true
+        }
+      }
+    }
 
     return {
       isBlank,
       isDisabled: isDisabled || options.length === 0,
-      isInvalid: value == null && !isBlank,
+      isInvalid,
+      isMulti,
       isOpen,
       query: '',
-      selection: isBlank ? [] : [id],
-      value
+      selection,
+      values
     }
   }
 
@@ -70,14 +113,11 @@ class Select extends Component {
       'disabled': this.state.isDisabled,
       'focus': this.state.hasFocus,
       'invalid': this.state.isInvalid,
+      'multi': this.state.isMulti,
       'open': this.state.isOpen,
       'static': this.props.isStatic,
       'tab-focus': this.state.hasTabFocus
     }]
-  }
-
-  get canClearValue() {
-    return !this.props.isRequired && this.props.value != null
   }
 
   get isInputHidden() {
@@ -85,15 +125,14 @@ class Select extends Component {
       this.props.options.length < this.props.minFilterOptions
   }
 
-  isSelected(value) {
-    return !this.state.isBlank && this.props.value === this.props.toId(value)
+  canClearValue(value, idx = 0) {
+    return value != null && (idx > 0 || !this.props.isRequired)
   }
 
-  clear() {
-    if (this.props.value != null) {
-      this.props.onRemove(this.props.value)
-      this.props.onChange(null, true)
-    }
+
+  clear(value) {
+    this.props.onRemove(value)
+    this.props.onChange(null, true)
   }
 
   close() {
@@ -130,13 +169,6 @@ class Select extends Component {
     this.close()
     this.setState({ hasFocus: false, hasTabFocus: false })
     this.props.onBlur(event)
-  }
-
-  handleClearButtonClick = (event) => {
-    if (event.button === 0) {
-      this.clear()
-      event.stopPropagation()
-    }
   }
 
   handleFocus = (event) => {
@@ -201,14 +233,13 @@ class Select extends Component {
   handleSelect = (value) => {
     this.close()
     if (!blank(value)) {
-      if (this.isSelected(value)) {
+      if (this.state.values.includes(value)) {
         this.props.onRemove(value.id)
         this.props.onChange(value, false)
       } else {
         this.props.onInsert(value.id)
         this.props.onChange(value, true)
       }
-
     }
   }
 
@@ -246,56 +277,68 @@ class Select extends Component {
     }
 
     return !this.props.isValueHidden && (
-      <div className="value">
-        {this.state.isInvalid ?
-          this.props.value :
-          (this.props.toValue || this.props.toText)(this.state.value)}
-        {this.canClearValue &&
-          <Button
-            className="clear"
-            icon={<IconXSmall/>}
-            onMouseDown={this.handleClearButtonClick}/>}
+      <div className="values">
+        {this.state.values.map((value, idx) =>
+          <div key={value.id || value} className="value">
+            {(this.props.toValue || this.props.toText)(value)}
+            {this.canClearValue(value, idx) &&
+              <Button
+                className="clear"
+                icon={<IconXSmall/>}
+                onMouseDown={this.handleClearButtonClick}/>}
+          </div>)}
       </div>
     )
   }
 
-  render() {
+  renderInput() {
     let { isInputHidden } = this
+    return (
+      <input
+        className="query"
+        disabled={this.state.isDisabled}
+        onBlur={this.handleBlur}
+        onChange={isInputHidden ? null : this.handleQueryChange}
+        onFocus={this.handleFocus}
+        onKeyDown={this.handleKeyDown}
+        ref={this.setInput}
+        style={{ opacity: isInputHidden ? 0 : 1 }}
+        tabIndex={this.props.tabIndex}
+        type="text"
+        value={this.state.query}/>
+    )
+  }
+
+  renderCompletions() {
+    return this.state.isOpen && (
+      <Completions
+        className={this.props.className}
+        completions={this.props.options}
+        isSelectionHidden={this.props.isSelectionHidden}
+        isVisibleWhenBlank
+        match={this.props.match}
+        maxRows={this.props.maxRows}
+        onSelect={this.handleSelect}
+        parent={this.container}
+        popup={!this.props.isStatic}
+        query={this.state.query}
+        ref={this.setCompletions}
+        selection={this.state.selection}
+        toId={this.props.toId}
+        toText={this.props.toText}/>
+    )
+  }
+
+  render() {
     return (
       <div
         className={cx(this.classes)}
         id={this.props.id}
         onMouseDown={this.handleMouseDown}
         ref={this.setContainer}>
-        <input
-          className="query"
-          disabled={this.state.isDisabled}
-          onBlur={this.handleBlur}
-          onChange={isInputHidden ? null : this.handleQueryChange}
-          onFocus={this.handleFocus}
-          onKeyDown={this.handleKeyDown}
-          ref={this.setInput}
-          style={{ opacity: isInputHidden ? 0 : 1 }}
-          tabIndex={this.props.tabIndex}
-          type="text"
-          value={this.state.query}/>
+        {this.renderInput()}
         {this.renderContent()}
-        {this.state.isOpen &&
-          <Completions
-            className={this.props.className}
-            completions={this.props.options}
-            isSelectionHidden={this.props.isSelectionHidden}
-            isVisibleWhenBlank
-            match={this.props.match}
-            maxRows={this.props.maxRows}
-            onSelect={this.handleSelect}
-            parent={this.container}
-            popup={!this.props.isStatic}
-            query={this.state.query}
-            ref={this.setCompletions}
-            selection={this.state.selection}
-            toId={this.props.toId}
-            toText={this.props.toText}/>}
+        {this.renderCompletions()}
       </div>
     )
   }
