@@ -1,13 +1,13 @@
 'use strict'
 
 const React = require('react')
-const { arrayOf, bool, func, number, object } = require('prop-types')
+const { arrayOf, bool, func, number, object, shape } = require('prop-types')
 const { ItemIterator } = require('./iterator')
 const { ItemTableRow } = require('./table-row')
 const { ItemTableSpacer } = require('./table-spacer')
 const { ItemTableHead } = require('./table-head')
 const { Popup } = require('../popup')
-const { ColumnSelect } = require('../column-select')
+const { ResourceSelect } = require('../resource/select')
 const cx = require('classnames')
 const { noop } = require('../../common/util')
 const { NAV, SASS: { COLUMN, ROW, SCROLLBAR } } = require('../../constants')
@@ -19,6 +19,10 @@ const {
   any, refine, restrict, shallow, splice, warp
 } = require('../../common/util')
 
+
+const autofocus = (component) => {
+  if (component != null) component.focus()
+}
 
 class ItemTable extends ItemIterator {
   constructor(props) {
@@ -85,7 +89,7 @@ class ItemTable extends ItemIterator {
 
   getColumnState(props = this.props) {
     let minWidth = 0
-    let columns = props.columns
+    let columns = props.columns.active
     let colwidth = columns.map((c, idx) => {
       let min = idx > 0 ? props.minColWidth : props.minMainColWidth
       let width = Math.max(c.width, min)
@@ -266,6 +270,17 @@ class ItemTable extends ItemIterator {
     })
   }
 
+  handleColumnInsert = (column) => {
+    this.hideColumnContextMenu()
+    this.props.onColumnInsert({ id: column.id, width: 100 })
+  }
+
+  handleRemove = (column) => {
+    this.hideColumnContextMenu()
+    this.props.onColumnRemove({ id: column.id })
+  }
+
+
   setColumnOffset(offset = 0, column = 'drag') {
     this.table.style.setProperty(`--${column}-offset`, `${offset}px`)
   }
@@ -341,11 +356,15 @@ class ItemTable extends ItemIterator {
         onClickOutside={this.hideColumnContextMenu}
         onResize={this.hideColumnContextMenu}
         style={this.state.popup}>
-        <ColumnSelect
-          columns={this.props.columns}
-          onInsert={this.props.onColumnInsert}
-          onRemove={this.props.onColumnRemove}
-          options={this.props.freeColumns}/>
+        <ResourceSelect
+          className="column-select"
+          placeholder="Search"
+          isStatic
+          onInsert={this.handleColumnInsert}
+          onRemove={this.handleColumnRemove}
+          options={this.props.columns.available}
+          value={this.props.columns.active.map(col => col.id)}
+          ref={autofocus}/>
       </Popup>
     )
   }
@@ -382,8 +401,10 @@ class ItemTable extends ItemIterator {
 
   static propTypes = {
     ...ItemIterator.propTypes,
-    freeColumns: arrayOf(object).isRequired,
-    columns: arrayOf(object).isRequired,
+    columns: shape({
+      active: arrayOf(object).isRequired,
+      available: arrayOf(object).isRequired
+    }).isRequired,
     edit: object,
     data: object.isRequired,
     hasScrollbars: bool.isRequired,

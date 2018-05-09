@@ -27,6 +27,15 @@ const getFreeColumns = memo(
     props.filter(prop => !cols.find(col => col.id === prop.id))
 )
 
+const getAllColumns = memo(
+  getColumns,
+  getFreeColumns,
+  (active, free) => ({
+    active,
+    available: [...active, ...free]
+  })
+)
+
 const getSortColumn = memo(
   ({ nav }) => nav.sort,
   ({ nav }) => nav.list || 0,
@@ -36,6 +45,7 @@ const getSortColumn = memo(
 )
 
 module.exports = {
+  getAllColumns,
   getFreeColumns,
   getColumns,
   getSortColumn

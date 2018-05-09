@@ -23,8 +23,7 @@ const { IconSpin } = require('../icons')
 const {
   getActivities,
   getCachePrefix,
-  getFreeColumns,
-  getColumns,
+  getAllColumns,
   getExpandedPhotos,
   getListHold,
   getSelectedItems,
@@ -214,7 +213,6 @@ class ProjectContainer extends Component {
 
     const {
       activities,
-      freeColumns,
       columns,
       data,
       dt,
@@ -248,7 +246,6 @@ class ProjectContainer extends Component {
           data={data}
           isActive={this.state.mode === MODE.PROJECT && !this.isClosing()}
           isEmpty={this.isEmpty}
-          freeColumns={freeColumns}
           columns={columns}
           hasLastImport={hasLastImport}
           sidebar={ui.sidebar}
@@ -329,8 +326,7 @@ class ProjectContainer extends Component {
 
     ui: object.isRequired,
     data: object.isRequired,
-    freeColumns: arrayOf(object),
-    columns: arrayOf(object),
+    columns: object.isRequired,
     cache: string.isRequired,
     sort: object.isRequired,
     tags: object.isRequired,
@@ -391,8 +387,7 @@ module.exports = {
     state => ({
       activities: getActivities(state),
       cache: getCachePrefix(state),
-      freeColumns: getFreeColumns(state),
-      columns: getColumns(state),
+      columns: getAllColumns(state),
       data: state.metadata,
       edit: state.edit,
       expanded: getExpandedPhotos(state),
