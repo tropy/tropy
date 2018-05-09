@@ -358,8 +358,9 @@ class ItemTable extends ItemIterator {
         style={this.state.popup}>
         <ResourceSelect
           className="column-select"
-          placeholder="Search"
+          placeholder="select.column.placeholder"
           isStatic
+          isValueHidden
           onInsert={this.handleColumnInsert}
           onRemove={this.handleColumnRemove}
           options={this.props.columns.available}

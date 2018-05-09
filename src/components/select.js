@@ -268,13 +268,13 @@ class Select extends Component {
       return null
     }
 
-    if (this.state.isBlank) {
+    if (this.state.isBlank || this.props.isValueHidden) {
       return (
         <div className="placeholder">{this.props.placeholder}</div>
       )
     }
 
-    return !this.props.isValueHidden && (
+    return (
       <div className="values">
         {this.state.values.map(value =>
           <Value

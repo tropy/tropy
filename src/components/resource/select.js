@@ -6,7 +6,7 @@ const { Select } = require('../select')
 const { FormattedMessage } = require('react-intl')
 const { startsWith } = require('../../collate')
 const { titlecase } = require('../../common/util')
-const { bool, array, func, number, string } = require('prop-types')
+const { bool, array, func, number, oneOfType, string } = require('prop-types')
 
 class ResourceSelect extends PureComponent {
   get placeholder() {
@@ -29,11 +29,14 @@ class ResourceSelect extends PureComponent {
         isDisabled={this.props.isDisabled}
         isRequired={this.props.isRequired}
         isStatic={this.props.isStatic}
+        isValueHidden={this.props.isValueHidden}
         match={this.props.match}
         maxRows={this.props.maxRows}
         onBlur={this.props.onBlur}
         onChange={this.props.onChange}
         onFocus={this.props.onFocus}
+        onInsert={this.props.onInsert}
+        onRemove={this.props.onRemove}
         options={this.props.options}
         placeholder={this.placeholder}
         ref={this.setSelect}
@@ -48,17 +51,20 @@ class ResourceSelect extends PureComponent {
     isDisabled: bool,
     isRequired: bool,
     isStatic: bool,
+    isValueHidden: bool,
     match: func.isRequired,
     maxRows: number,
     onBlur: func,
-    onChange: func.isRequired,
+    onChange: func,
     onFocus: func,
+    onInsert: func,
+    onRemove: func,
     options: array.isRequired,
     placeholder: string,
     tabIndex: number.isRequired,
     toText: func.isRequired,
     toValue: func.isRequired,
-    value: string
+    value: oneOfType([string, array])
   }
 
   static defaultProps = {

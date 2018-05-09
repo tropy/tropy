@@ -199,6 +199,9 @@ en:
   completions:
     empty: No options available
     noMatches: No matches found
+  select:
+    column:
+      placeholder: Search
   template:
     id: URI
     name: Name
