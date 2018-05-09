@@ -7,8 +7,10 @@ const { IconXSmall } = require('./icons')
 const { Button } = require('./button')
 const { blank, noop, shallow } = require('../common/util')
 const { on, off } = require('../dom')
-const { array, bool, func, node, number, string } = require('prop-types')
 const cx = require('classnames')
+const {
+  array, arrayOf, bool, func, oneOfType, node, number, string
+} = require('prop-types')
 
 
 class Select extends Component {
@@ -83,8 +85,15 @@ class Select extends Component {
       this.props.options.length < this.props.minFilterOptions
   }
 
+  isSelected(value) {
+    return !this.state.isBlank && this.props.value === this.props.toId(value)
+  }
+
   clear() {
-    this.props.onChange(null, this.props.value != null)
+    if (this.props.value != null) {
+      this.props.onRemove(this.props.value)
+      this.props.onChange(null, true)
+    }
   }
 
   close() {
@@ -192,10 +201,14 @@ class Select extends Component {
   handleSelect = (value) => {
     this.close()
     if (!blank(value)) {
-      this.props.onChange(
-        value,
-        this.props.value != null && this.props.value !== this.props.toId(value)
-      )
+      if (this.isSelected(value)) {
+        this.props.onRemove(value.id)
+        this.props.onChange(value, false)
+      } else {
+        this.props.onInsert(value.id)
+        this.props.onChange(value, true)
+      }
+
     }
   }
 
@@ -303,14 +316,16 @@ class Select extends Component {
     onBlur: func.isRequired,
     onChange: func.isRequired,
     onFocus: func.isRequired,
+    onInsert: func.isRequired,
     onKeyDown: func.isRequired,
+    onRemove: func.isRequired,
     onValidate: func.isRequired,
     placeholder: node,
     tabIndex: number,
     toId: func.isRequired,
     toText: func.isRequired,
     toValue: func,
-    value: string
+    value: oneOfType([string, arrayOf(string)])
   }
 
   static defaultProps = {
@@ -321,7 +336,9 @@ class Select extends Component {
     onBlur: noop,
     onChange: noop,
     onFocus: noop,
+    onInsert: noop,
     onKeyDown: noop,
+    onRemove: noop,
     onValidate: noop,
     toId: (value) => (value.id || String(value)),
     toText: (value) => (value.name || String(value))
