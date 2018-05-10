@@ -36,6 +36,10 @@ $default-padding-horizontal: 12px !default;
     margin-bottom: (($metadata-line-height - 10px) / 2);
     background-color: $template-select-bg; // 'Transparent' causes border/box-shadow issue
 
+    &.focus {
+      background-color: $input-bg;
+    }
+
     .scrollbar-style-old-school & {
       width: calc(100% - 2 * #{$default-padding-horizontal}
         + #{$scrollbar-size} / 3);
