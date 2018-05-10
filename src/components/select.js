@@ -24,7 +24,9 @@ class Value extends Component {
   render() {
     return (
       <div className="value">
-        {this.props.label}
+        <div className="truncate">
+          {this.props.label}
+        </div>
         {this.props.hasClearButton &&
           <Button
             className="clear"
@@ -270,7 +272,11 @@ class Select extends Component {
 
     if (this.state.isBlank || this.props.isValueHidden) {
       return (
-        <div className="placeholder">{this.props.placeholder}</div>
+        <div className="placeholder">
+          <div className="truncate">
+            {this.props.placeholder}
+          </div>
+        </div>
       )
     }
 

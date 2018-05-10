@@ -2,17 +2,20 @@
 // Select
 // --------------------------------------------------
 
-.select {
+.form-control.select {
   background-repeat: no-repeat;
   background-position: right $space-min center;
   background-image: if($theme == "light",
     image-url("project/icon-chevron7-light-theme.svg"),
     image-url("project/icon-chevron7-dark-theme.svg"));
+  padding-right: $space-md;
+  min-width: 0; // Fix truncation
   position: relative;
 
   @include input-btn-focus(".focus"); // sass-lint:disable-line mixins-before-declarations
 
-  .value {
+  .value,
+  .placeholder {
     display: flex;
     align-items: center;
     height: $input-height-base - 2px;
@@ -21,7 +24,7 @@
   .query {
     background-color: transparent;
     border: 0;
-    padding: 0 $padding-base-horizontal;
+    padding: inherit;
     font-family: inherit;
     font-size: $font-size-base;
     position: absolute;
