@@ -11,6 +11,7 @@
   padding-right: $space-md;
   min-width: 0; // Fix truncation
   position: relative;
+  transition: none; // todo
 
   @include input-btn-focus(".focus"); // sass-lint:disable-line mixins-before-declarations
 
