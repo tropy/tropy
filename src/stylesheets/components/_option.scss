@@ -1,3 +1,4 @@
+
 //
 // Option list
 // --------------------------------------------------
@@ -20,16 +21,20 @@
     contain: content;
     will-change: transform;
   }
+}
 
-  .option {
-    @include css-truncation;
-    position: relative;
-    contain: content;
-    padding: 0 8px;
-    line-height: $line-height-large;
+.option {
+  @include css-truncation;
+  position: relative;
+  contain: content;
+  padding: 0 8px;
+  line-height: $line-height-large;
 
-    &.active {
-      background: $option-active-bg;
-    }
+  &.active {
+    background: $option-active-bg;
+  }
+
+  &.no-matches {
+    color: $option-no-matches-color;
   }
 }

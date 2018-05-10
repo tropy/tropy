@@ -157,7 +157,9 @@ class Completions extends Component {
 
   renderNoMatches() {
     return (
-      <FormattedMessage id="completions.noMatches"/>
+      <div className="option no-matches">
+        <FormattedMessage id="completions.noMatches"/>
+      </div>
     )
   }
 
