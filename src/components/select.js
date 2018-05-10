@@ -332,8 +332,8 @@ class Select extends Component {
         id={this.props.id}
         onMouseDown={this.handleMouseDown}
         ref={this.setContainer}>
-        {this.renderInput()}
         {this.renderContent()}
+        {this.renderInput()}
         {this.renderCompletions()}
       </div>
     )
