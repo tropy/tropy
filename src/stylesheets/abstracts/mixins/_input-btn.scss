@@ -21,8 +21,9 @@
     @include input-btn-focus; // sass-lint:disable-line mixins-before-declarations
 
     &[readonly],
-    &[disabled] {
-      background: var(--level-#{$n}-input-bg-readonly);
+    &[disabled],
+    &.disabled {
+      background-color: var(--level-#{$n}-input-bg-readonly);
     }
   }
 

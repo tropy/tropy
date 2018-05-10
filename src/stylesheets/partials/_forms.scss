@@ -78,7 +78,7 @@ fieldset {
   &[readonly],
   &[disabled],
   &.disabled {
-    background: $input-bg-readonly;
+    background-color: $input-bg-readonly;
   }
 }
 
