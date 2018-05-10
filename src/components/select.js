@@ -92,7 +92,7 @@ class Select extends Component {
         if (v != null) {
           values.push(v)
         } else {
-          value.pus(id)
+          values.push(id)
           isInvalid = true
         }
       }
