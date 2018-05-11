@@ -121,6 +121,7 @@ class Select extends Component {
       'invalid': this.state.isInvalid,
       'multi': this.state.isMulti,
       'open': this.state.isOpen,
+      'single': !this.state.isMulti,
       'static': this.props.isStatic,
       'tab-focus': this.state.hasTabFocus
     }]
