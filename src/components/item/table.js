@@ -367,7 +367,6 @@ class ItemTable extends ItemIterator {
       <Popup
         autofocus
         className="column-context-menu"
-        onClickOutside={this.hideColumnContextMenu}
         onResize={this.hideColumnContextMenu}
         style={this.state.columnContextMenu.style}>
         <ResourceSelect
