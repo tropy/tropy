@@ -9,6 +9,7 @@ const { blank, last } = require('../common/util')
 const { bounds, viewport } = require('../dom')
 const { startsWith } = require('../collate')
 const { INPUT, POPUP } = require('../constants/sass')
+const cx = require('classnames')
 const {
   array, bool, func, instanceOf, number, shape, string
 } = require('prop-types')
@@ -57,13 +58,11 @@ class Completions extends Component {
   }
 
   getPopupBounds() {
-    const { parent, maxRows, padding } = this.props
+    const { parent, padding } = this.props
     if (parent == null) return
 
     const { top, bottom, left, width } = bounds(parent)
-    const rows = this.state.options.length || 1
-
-    const height = OptionList.getHeight(rows, { maxRows }) + padding.height
+    const height = this.getOptionsHeight() + padding.height
     const anchor = (bottom + height <= viewport().height) ? 'top' : 'bottom'
 
     return {
@@ -73,6 +72,10 @@ class Completions extends Component {
       height,
       width: width + padding.width
     }
+  }
+
+  getOptionsHeight(rows = this.state.options.length) {
+    return OptionList.getHeight(rows || 1, { maxRows: this.props.maxRows })
   }
 
   get isBlank() {
@@ -169,11 +172,17 @@ class Completions extends Component {
     const content = this.renderCompletions()
 
     if (!this.props.popup) {
-      return <div className={this.props.className}>{content}</div>
+      const height = this.getOptionsHeight()
+      return (
+        <div
+          className={cx('option-container', this.props.className)}
+          style={{ height }}>
+          {content}
+        </div>
+      )
     }
 
     const { anchor, ...style } = this.getPopupBounds()
-
     return (
       <Popup
         anchor={anchor}

@@ -6,18 +6,24 @@ const { ItemIterator } = require('./iterator')
 const { ItemTableRow } = require('./table-row')
 const { ItemTableSpacer } = require('./table-spacer')
 const { ItemTableHead } = require('./table-head')
+const { OptionList } = require('../option')
 const { Popup } = require('../popup')
 const { ResourceSelect } = require('../resource/select')
 const cx = require('classnames')
 const { noop } = require('../../common/util')
-const { NAV, SASS: { COLUMN, ROW, SCROLLBAR } } = require('../../constants')
 const { bounds, ensure, on, off, maxScrollLeft } = require('../../dom')
 const { match } = require('../../keymap')
 const { assign } = Object
 const throttle = require('lodash.throttle')
+
 const {
   any, refine, restrict, shallow, splice, warp
 } = require('../../common/util')
+
+const {
+  NAV,
+  SASS: { COLUMN, PANEL, ROW, SCROLLBAR }
+} = require('../../constants')
 
 
 const autofocus = (component) => {
@@ -251,23 +257,22 @@ class ItemTable extends ItemIterator {
 
   showColumnContextMenu = (event) => {
     event.stopPropagation()
+    let { width, height } = this.props.columnContextMenu
     // let offset = this.getOffsetInTable(event.clientX)
     this.setState({
-      hasColumnContextMenu: true,
-      popup: {
-        top: event.clientY,
-        left: event.clientX,
-        width: 200,
-        height: 300
+      columnContextMenu: {
+        style: {
+          top: event.clientY,
+          left: event.clientX,
+          width,
+          height
+        }
       }
     })
   }
 
   hideColumnContextMenu = () => {
-    this.setState({
-      hasColumnContextMenu: false,
-      popup: null
-    })
+    this.setState({ columnContextMenu: null })
   }
 
   handleColumnInsert = (column) => {
@@ -350,18 +355,19 @@ class ItemTable extends ItemIterator {
   }
 
   renderColumnContextMenu() {
-    return this.state.hasColumnContextMenu && (
+    return this.state.columnContextMenu != null && (
       <Popup
         className="column-context-menu"
         onClickOutside={this.hideColumnContextMenu}
         onResize={this.hideColumnContextMenu}
-        style={this.state.popup}>
+        style={this.state.columnContextMenu.style}>
         <ResourceSelect
           className="column-select"
           placeholder="select.column.placeholder"
           hideClearButton
           isStatic
           isValueHidden
+          maxRows={this.props.columnContextMenu.rows}
           onInsert={this.handleColumnInsert}
           onRemove={this.handleColumnRemove}
           options={this.props.columns.available}
@@ -407,6 +413,10 @@ class ItemTable extends ItemIterator {
       active: arrayOf(object).isRequired,
       available: arrayOf(object).isRequired
     }).isRequired,
+    columnContextMenu: shape({
+      width: number.isRequired,
+      height: number.isRequired
+    }).isRequired,
     edit: object,
     data: object.isRequired,
     hasScrollbars: bool.isRequired,
@@ -426,7 +436,12 @@ class ItemTable extends ItemIterator {
     overscan: 2,
     hasScrollbars: ARGS.scrollbars,
     minColWidth: 40,
-    minMainColWidth: 100
+    minMainColWidth: 100,
+    columnContextMenu: {
+      rows: 12,
+      width: PANEL.MIN_WIDTH,
+      height: OptionList.getHeight(13)
+    }
   }
 }
 

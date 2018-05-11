@@ -3,6 +3,11 @@
 // Option list
 // --------------------------------------------------
 
+.option-container {
+  display: flex;
+  flex-direction: column;
+}
+
 .option-list {
   display: flex;
   flex: 1 1 0;
