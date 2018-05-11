@@ -329,7 +329,9 @@ class Select extends Component {
   renderCompletions() {
     return this.state.isOpen && (
       <Completions
-        className={this.props.className}
+        className={cx(this.props.className, {
+          invalid: this.state.isInvalid
+        })}
         completions={this.props.options}
         isSelectionHidden={this.props.isSelectionHidden}
         isVisibleWhenBlank
