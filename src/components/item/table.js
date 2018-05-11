@@ -26,10 +26,6 @@ const {
 } = require('../../constants')
 
 
-const autofocus = (component) => {
-  if (component != null) component.focus()
-}
-
 class ItemTable extends ItemIterator {
   constructor(props) {
     super(props)
@@ -369,6 +365,7 @@ class ItemTable extends ItemIterator {
   renderColumnContextMenu() {
     return this.state.columnContextMenu != null && (
       <Popup
+        autofocus
         className="column-context-menu"
         onClickOutside={this.hideColumnContextMenu}
         onResize={this.hideColumnContextMenu}
@@ -384,8 +381,7 @@ class ItemTable extends ItemIterator {
           onInsert={this.handleColumnInsert}
           onRemove={this.handleColumnRemove}
           options={this.props.columns.available}
-          value={this.props.columns.active.map(col => col.id)}
-          ref={autofocus}/>
+          value={this.props.columns.active.map(col => col.id)}/>
       </Popup>
     )
   }

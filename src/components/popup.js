@@ -3,7 +3,7 @@
 const React = require('react')
 const { Component } = React
 const { createPortal } = require('react-dom')
-const { func, node, number, oneOf, shape, string } = require('prop-types')
+const { bool, func, node, number, oneOf, shape, string } = require('prop-types')
 const { $, append, classes, element, on, off, remove } = require('../dom')
 const { noop } = require('../common/util')
 const cx = require('classnames')
@@ -21,6 +21,11 @@ class Popup extends Component {
     on(this.dom, 'mousedown', this.handleClickOutside)
     on(window, 'resize', this.handleResize)
     append(this.dom, $('#popup-root'))
+
+    if (this.props.autofocus) {
+      let e = $('[tabindex]', this.dom)
+      if (e != null) e.focus()
+    }
   }
 
   componentWillUnmount() {
@@ -50,6 +55,7 @@ class Popup extends Component {
 
   static propTypes = {
     anchor: oneOf(['top', 'right', 'bottom', 'left', 'float']),
+    autofocus: bool,
     children: node.isRequired,
     className: string,
     onClickOutside: func.isRequired,
