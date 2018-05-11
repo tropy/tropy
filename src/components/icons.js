@@ -596,6 +596,14 @@ i('XSmall', (
   </svg>
 ))
 
+i('XMedium', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <polygon points="12.95 3.757 12.243 3.05 8 7.293 3.757 3.05 3.05 3.757 7.293 8 3.05 12.243 3.757 12.95 8 8.707 12.243 12.95 12.95 12.243 8.707 8 12.95 3.757"/>
+    </g>
+  </svg>
+))
+
 i('XLarge', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">

@@ -8,12 +8,16 @@
   background-image: if($theme == "light",
     image-url("project/icon-chevron7-light-theme.svg"),
     image-url("project/icon-chevron7-dark-theme.svg"));
-  padding-right: $space-md;
+  padding-right: $space-lg;
   min-width: 0; // Fix truncation
   position: relative;
   transition: none; // todo
 
   @include input-btn-focus(".focus"); // sass-lint:disable-line mixins-before-declarations
+
+  &.can-clear {
+    background-image: none;
+  }
 
   .value,
   .placeholder {
@@ -34,5 +38,18 @@
     top: 0;
     width: 100%;
     height: 100%;
+  }
+
+  .global-clear {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: $input-height-base - 2px;
+    height: $input-height-base - 2px;
+    padding: $btn-icon-padding - 1px;
+
+    .icon {
+      color: inherit;
+    }
   }
 }

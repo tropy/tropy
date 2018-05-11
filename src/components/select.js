@@ -3,7 +3,7 @@
 const React = require('react')
 const { Component } = React
 const { Completions } = require('./completions')
-const { IconXSmall } = require('./icons')
+const { IconXSmall, IconXMedium } = require('./icons')
 const { Button } = require('./button')
 const { blank, last, noop, shallow } = require('../common/util')
 const { on, off } = require('../dom')
@@ -320,8 +320,8 @@ class Select extends Component {
   renderClearButton() {
     return !this.props.hideClearButton && this.state.canClearValue && (
       <Button
-        className="clear"
-        icon={<IconXSmall/>}
+        className="global-clear"
+        icon={<IconXMedium/>}
         onMouseDown={this.clear}/>
     )
   }
