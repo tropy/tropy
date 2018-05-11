@@ -91,10 +91,14 @@ class Completions extends Component {
     return options
   }
 
-  select() {
+  get active() {
     let idx = this.state.options.idx[this.state.active]
-    let active = this.props.completions[idx]
-    if (active != null) this.props.onSelect(active)
+    return (idx == null) ? null : this.state.options[idx]
+  }
+
+  select() {
+    let { active } = this
+    if (active != null) this.props.onSelect(this.props.completions[active.idx])
   }
 
   next(k = 1) {
