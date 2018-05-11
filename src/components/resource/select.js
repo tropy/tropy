@@ -25,7 +25,8 @@ class ResourceSelect extends PureComponent {
   render() {
     return (
       <Select
-        className="resource-select"
+        className={this.props.className}
+        hideClearButton={this.props.hideClearButton}
         isDisabled={this.props.isDisabled}
         isRequired={this.props.isRequired}
         isStatic={this.props.isStatic}
@@ -48,6 +49,8 @@ class ResourceSelect extends PureComponent {
   }
 
   static propTypes = {
+    className: string.isRequired,
+    hideClearButton: bool,
     isDisabled: bool,
     isRequired: bool,
     isStatic: bool,
@@ -68,6 +71,7 @@ class ResourceSelect extends PureComponent {
   }
 
   static defaultProps = {
+    className: 'resource-select',
     match: (res, query) => {
       let q = query.split(':', 2)
       if (q.length > 1) {

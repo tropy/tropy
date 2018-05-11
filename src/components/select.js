@@ -5,7 +5,7 @@ const { Component } = React
 const { Completions } = require('./completions')
 const { IconXSmall } = require('./icons')
 const { Button } = require('./button')
-const { blank, noop, shallow } = require('../common/util')
+const { blank, last, noop, shallow } = require('../common/util')
 const { on, off } = require('../dom')
 const cx = require('classnames')
 const {
@@ -101,7 +101,7 @@ class Select extends Component {
     }
 
     return {
-      canClearValue: !isRequired || isMulti && values.length > 1,
+      canClearValue: !isBlank && (!isRequired || isMulti && values.length > 1),
       isBlank,
       isDisabled: isDisabled || options.length === 0,
       isInvalid,
@@ -131,8 +131,9 @@ class Select extends Component {
   }
 
   clear = (value) => {
-    this.props.onRemove(value)
-    this.props.onChange(null, true)
+    if (value != null) this.props.onRemove(value)
+    else this.props.onClear()
+    this.props.onChange(null, !this.state.isBlank)
   }
 
   close() {
@@ -142,11 +143,8 @@ class Select extends Component {
   commit() {
     if (this.completions != null) return this.completions.select()
     if (this.state.isBlank) return this.open()
-
-    let { options, toId, value: id } = this.props
-    let value = options.find(opt => toId(opt) === id)
-
-    if (value == null) return this.open()
+    let value = last(this.state.values)
+    if (value == null || value.id == null) return this.open()
     this.props.onChange(value, false)
   }
 
@@ -204,6 +202,12 @@ class Select extends Component {
           break
         case 'Escape':
           this.close()
+          break
+        case 'Backspace':
+          if (this.state.query.length !== 0 || !this.state.canClearValue) {
+            return false
+          }
+          this.clear(last(this.state.values))
           break
         default:
           return false
@@ -284,7 +288,7 @@ class Select extends Component {
       <div className="values">
         {this.state.values.map(value =>
           <Value
-            hasClearButton={this.state.canClearValue}
+            hasClearButton={this.state.isMulti && this.state.canClearValue}
             key={value.id || value}
             label={(this.props.toValue || this.props.toText)(value)}
             onClear={this.clear}
@@ -308,6 +312,15 @@ class Select extends Component {
         tabIndex={this.props.tabIndex}
         type="text"
         value={this.state.query}/>
+    )
+  }
+
+  renderClearButton() {
+    return !this.props.hideClearButton && this.state.canClearValue && (
+      <Button
+        className="clear"
+        icon={<IconXSmall/>}
+        onMouseDown={this.clear}/>
     )
   }
 
@@ -340,6 +353,7 @@ class Select extends Component {
         ref={this.setContainer}>
         {this.renderContent()}
         {this.renderInput()}
+        {this.renderClearButton()}
         {this.renderCompletions()}
       </div>
     )
@@ -347,6 +361,7 @@ class Select extends Component {
 
   static propTypes = {
     className: string,
+    hideClearButton: bool,
     id: string,
     isDisabled: bool,
     isInputHidden: bool,
@@ -360,6 +375,7 @@ class Select extends Component {
     options: array.isRequired,
     onBlur: func.isRequired,
     onChange: func.isRequired,
+    onClear: func.isRequired,
     onFocus: func.isRequired,
     onInsert: func.isRequired,
     onKeyDown: func.isRequired,
@@ -374,12 +390,14 @@ class Select extends Component {
   }
 
   static defaultProps = {
+    hideClearButton: false,
     isStatic: false,
     isSelectionHidden: false,
     isValueHidden: false,
     minFilterOptions: 5,
     onBlur: noop,
     onChange: noop,
+    onClear: noop,
     onFocus: noop,
     onInsert: noop,
     onKeyDown: noop,

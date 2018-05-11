@@ -359,6 +359,7 @@ class ItemTable extends ItemIterator {
         <ResourceSelect
           className="column-select"
           placeholder="select.column.placeholder"
+          hideClearButton
           isStatic
           isValueHidden
           onInsert={this.handleColumnInsert}
