@@ -289,14 +289,12 @@ class ItemTable extends ItemIterator {
   }
 
   handleColumnInsert = (id) => {
-    this.hideColumnContextMenu()
     let { idx } = this.state.columnContextMenu
     let { minMainColWidth: width } = this.props
     this.props.onColumnInsert({ id, width }, { idx })
   }
 
   handleColumnRemove = (id) => {
-    this.hideColumnContextMenu()
     this.props.onColumnRemove({ id })
   }
 
@@ -382,6 +380,7 @@ class ItemTable extends ItemIterator {
           isStatic
           isValueHidden
           maxRows={this.props.columnContextMenu.rows}
+          onClose={this.hideColumnContextMenu}
           onInsert={this.handleColumnInsert}
           onRemove={this.handleColumnRemove}
           options={this.props.columns.available}

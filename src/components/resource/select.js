@@ -35,8 +35,10 @@ class ResourceSelect extends PureComponent {
         maxRows={this.props.maxRows}
         onBlur={this.props.onBlur}
         onChange={this.props.onChange}
+        onClose={this.props.onClose}
         onFocus={this.props.onFocus}
         onInsert={this.props.onInsert}
+        onOpen={this.props.onOpen}
         onRemove={this.props.onRemove}
         options={this.props.options}
         placeholder={this.placeholder}
@@ -59,8 +61,10 @@ class ResourceSelect extends PureComponent {
     maxRows: number,
     onBlur: func,
     onChange: func,
+    onClose: func,
     onFocus: func,
     onInsert: func,
+    onOpen: func,
     onRemove: func,
     options: array.isRequired,
     placeholder: string,

@@ -133,13 +133,17 @@ class Select extends Component {
   }
 
   clear = (value) => {
-    if (value != null) this.props.onRemove(this.props.toId(value))
-    else this.props.onClear()
-    this.props.onChange(null, !this.state.isBlank)
+    if (this.state.canClearValue) {
+      if (value != null) this.props.onRemove(this.props.toId(value))
+      else this.props.onClear()
+      this.props.onChange(null, !this.state.isBlank)
+      this.close()
+    }
   }
 
   close() {
     this.setState({ isOpen: this.props.isStatic, query: '' })
+    this.props.onClose()
   }
 
   commit() {
@@ -162,13 +166,14 @@ class Select extends Component {
   open() {
     if (!this.state.isDisabled) {
       this.setState({ isOpen: true })
+      this.props.onOpen()
     }
   }
 
   handleBlur = (event) => {
-    this.close()
     this.setState({ hasFocus: false, hasTabFocus: false })
     this.props.onBlur(event)
+    this.close()
   }
 
   handleFocus = (event) => {
@@ -237,7 +242,6 @@ class Select extends Component {
   }
 
   handleSelect = (value) => {
-    this.close()
     if (!blank(value)) {
       let id = this.props.toId(value)
       if (this.state.values.includes(value)) {
@@ -247,6 +251,7 @@ class Select extends Component {
         this.props.onInsert(id)
         this.props.onChange(value, true)
       }
+      this.close()
     }
   }
 
@@ -381,8 +386,10 @@ class Select extends Component {
     onBlur: func.isRequired,
     onChange: func.isRequired,
     onClear: func.isRequired,
+    onClose: func.isRequired,
     onFocus: func.isRequired,
     onInsert: func.isRequired,
+    onOpen: func.isRequired,
     onKeyDown: func.isRequired,
     onRemove: func.isRequired,
     onValidate: func.isRequired,
@@ -403,8 +410,10 @@ class Select extends Component {
     onBlur: noop,
     onChange: noop,
     onClear: noop,
+    onClose: noop,
     onFocus: noop,
     onInsert: noop,
+    onOpen: noop,
     onKeyDown: noop,
     onRemove: noop,
     onValidate: noop,

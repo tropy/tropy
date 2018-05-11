@@ -30,7 +30,9 @@ class TemplateSelect extends PureComponent {
         match={this.props.match}
         onBlur={this.props.onBlur}
         onChange={this.props.onChange}
+        onClose={this.props.onClose}
         onFocus={this.props.onFocus}
+        onOpen={this.props.onOpen}
         options={this.props.options}
         placeholder={this.placeholder}
         ref={this.setContainer}
@@ -46,7 +48,9 @@ class TemplateSelect extends PureComponent {
     options: array.isRequired,
     onBlur: func,
     onChange: func,
+    onClose: func,
     onFocus: func,
+    onOpen: func,
     placeholder: string,
     tabIndex: number.isRequired,
     value: string,
