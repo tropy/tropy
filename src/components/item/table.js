@@ -275,14 +275,14 @@ class ItemTable extends ItemIterator {
     this.setState({ columnContextMenu: null })
   }
 
-  handleColumnInsert = (column) => {
+  handleColumnInsert = (id) => {
     this.hideColumnContextMenu()
-    this.props.onColumnInsert({ id: column.id, width: 100 })
+    this.props.onColumnInsert({ id, width: this.props.minMainColWidth })
   }
 
-  handleRemove = (column) => {
+  handleColumnRemove = (id) => {
     this.hideColumnContextMenu()
-    this.props.onColumnRemove({ id: column.id })
+    this.props.onColumnRemove({ id })
   }
 
 

@@ -133,7 +133,7 @@ class Select extends Component {
   }
 
   clear = (value) => {
-    if (value != null) this.props.onRemove(value)
+    if (value != null) this.props.onRemove(this.props.toId(value))
     else this.props.onClear()
     this.props.onChange(null, !this.state.isBlank)
   }
@@ -239,11 +239,12 @@ class Select extends Component {
   handleSelect = (value) => {
     this.close()
     if (!blank(value)) {
+      let id = this.props.toId(value)
       if (this.state.values.includes(value)) {
-        this.props.onRemove(value.id)
+        this.props.onRemove(id)
         this.props.onChange(value, false)
       } else {
-        this.props.onInsert(value.id)
+        this.props.onInsert(id)
         this.props.onChange(value, true)
       }
     }
