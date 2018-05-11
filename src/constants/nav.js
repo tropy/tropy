@@ -15,11 +15,23 @@ module.exports = {
     ORDER: 'nav.column.order',
     REMOVE: 'nav.column.remove',
     RESIZE: 'nav.column.resize',
+
+    CREATED: {
+      id: 'item.created',
+      protected: true,
+      type: TYPE.DATE
+    },
+    MODIFIED: {
+      id: 'item.modified',
+      protected: true,
+      type: TYPE.DATE
+    },
     POSITION: {
       id: 'added',
       label: '',
-      width: 60,
-      type: TYPE.NUMBER
+      protected: true,
+      type: TYPE.NUMBER,
+      width: 60
     }
   }
 }

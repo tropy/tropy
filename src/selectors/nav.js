@@ -1,30 +1,50 @@
 'use strict'
 
 const { createSelector: memo } = require('reselect')
-const { DC, TYPE } = require('../constants')
+const { DC, NAV: { COLUMN }, TYPE } = require('../constants')
 const ontology = require('./ontology')
+const { values } = Object
 
 const DEFAULT_SORT = { column: DC.title, asc: true }
 const DEFAULT_LIST_SORT =  { column: 'added', asc: true }
+
+const SPECIAL_COLUMNS = [
+  COLUMN.CREATED,
+  COLUMN.MODIFIED
+]
+
 
 const expand = (col, { label, name, prefix }) => ({
   type: TYPE.TEXT, ...col, label, name, prefix
 })
 
+const getSpecialColumns = memo(
+  ({ intl }) => intl.messages, (msg) =>
+    SPECIAL_COLUMNS.reduce((spc, col) => (
+      (spc[col.id] = { ...col, label: msg[col.id] || col.id }), spc
+    ), {})
+)
+
+
 const getColumns = memo(
   ({ nav }) => nav.columns,
   ({ ontology }) => ontology.props,
   ({ ontology }) => ontology.vocab,
-  (cols, props, vocab) =>
-    cols.map(col =>
+  getSpecialColumns,
+  (cols, props, vocab, spc) =>
+    cols.map(col => col.id in spc ?
+      ({ ...spc[col.id], ...col }) :
       expand(col, ontology.expand(props[col.id] || { id: col.id }, vocab)))
 )
 
 const getFreeColumns = memo(
   ({ nav }) => nav.columns,
   ontology.getPropertyList,
-  (cols, props) =>
-    props.filter(prop => !cols.find(col => col.id === prop.id))
+  getSpecialColumns,
+  (cols, props, spc) => [
+    ...values(spc).filter(({ id }) => !cols.find(col => col.id === id)),
+    ...props.filter(prop => !cols.find(col => col.id === prop.id))
+  ]
 )
 
 const getAllColumns = memo(

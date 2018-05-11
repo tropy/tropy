@@ -47,7 +47,7 @@ class ItemTableHead extends PureComponent {
                 key={col.id}
                 id={col.id}
                 position={idx}
-                label={col.label || titlecase(col.name)}
+                label={col.label || titlecase(col.name || col.id)}
                 width={this.props.colwidth[idx]}
                 minWidth={this.props[idx === 0 ? 'minWidthMain' : 'minWidth']}
                 isActive={this.isActive(col)}
@@ -72,7 +72,7 @@ class ItemTableHead extends PureComponent {
     columns: arrayOf(shape({
       id: string.isRequired,
       label: string,
-      name: string.isRequired,
+      name: string,
       width: number.isRequired
     })).isRequired,
     colwidth: arrayOf(number).isRequired,
