@@ -133,7 +133,7 @@ class ItemTable extends ItemIterator {
       COLUMN.PADDING
   }
 
-  getOffsetInTable(x, { offset, min, max } = this.dragstate) {
+  getOffsetInTable(x, { offset = 0, min, max } = this.dragstate) {
     return restrict(
       x - offset - bounds(this.table).left + this.table.scrollLeft,
       min,
@@ -257,10 +257,23 @@ class ItemTable extends ItemIterator {
 
   showColumnContextMenu = (event) => {
     event.stopPropagation()
+
     let { width, height } = this.props.columnContextMenu
-    // let offset = this.getOffsetInTable(event.clientX)
+    let { colwidth } = this.state
+
+    let min = this.getMinColumnOffset()
+    let idx = 0
+    let n = this.getOffsetInTable(event.clientX, { min })
+    let k = 0
+
+    while (idx < colwidth.length && k < n) {
+      k += colwidth[idx]
+      if (k - colwidth[idx] / 2 <= n) ++idx
+    }
+
     this.setState({
       columnContextMenu: {
+        idx,
         style: {
           top: event.clientY,
           left: event.clientX,
@@ -277,14 +290,15 @@ class ItemTable extends ItemIterator {
 
   handleColumnInsert = (id) => {
     this.hideColumnContextMenu()
-    this.props.onColumnInsert({ id, width: this.props.minMainColWidth })
+    let { idx } = this.state.columnContextMenu
+    let { minMainColWidth: width } = this.props
+    this.props.onColumnInsert({ id, width }, { idx })
   }
 
   handleColumnRemove = (id) => {
     this.hideColumnContextMenu()
     this.props.onColumnRemove({ id })
   }
-
 
   setColumnOffset(offset = 0, column = 'drag') {
     this.table.style.setProperty(`--${column}-offset`, `${offset}px`)
