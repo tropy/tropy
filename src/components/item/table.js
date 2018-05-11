@@ -174,9 +174,8 @@ class ItemTable extends ItemIterator {
 
   handleColumnOrderStart = (idx, event) => {
     let min = this.getMinColumnOffset()
-    let max = this.getMaxColumnOffset(idx)
     let offset = event.nativeEvent.offsetX + this.getColumnPadding(idx)
-    let origin = this.getOffsetInTable(event.clientX, { min, max, offset })
+    let origin = this.getOffsetInTable(event.clientX, { min, offset })
     this.dragstate = { max, min, idx, offset, origin }
   }
 
