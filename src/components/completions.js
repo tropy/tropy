@@ -26,10 +26,33 @@ class Completions extends Component {
     }
   }
 
-  getStateFromProps(props = this.props) {
+  getStateFromProps({
+    completions,
+    isSelectionHidden,
+    match,
+    query,
+    selection,
+    toId,
+    toText
+  } = this.props) {
+    query = query.trim().toLowerCase()
+    let matchAll = blank(query)
+    let options = []
+    let active = matchAll ? last(selection) : null
+    options.idx = {}
+
+    completions.forEach((value, idx) => {
+      let id = toId(value)
+      let isHidden = isSelectionHidden && selection.includes(id)
+      if (!isHidden && (matchAll || match(value, query))) {
+        options.idx[id] = options.length
+        options.push({ id, idx, value: toText(value) })
+      }
+    })
+
     return {
-      active: last(props.selection),
-      options: this.filter(props)
+      active: active || options.length > 0 ? options[0].id : null,
+      options
     }
   }
 
@@ -63,32 +86,6 @@ class Completions extends Component {
   get isVisible() {
     return (this.props.isVisibleWhenBlank || !this.isBlank) &&
       this.props.minQueryLength <= this.props.query.length
-  }
-
-  filter({
-    completions,
-    isSelectionHidden,
-    match,
-    query,
-    selection,
-    toId,
-    toText
-  } = this.props) {
-    query = query.trim().toLowerCase()
-    let matchAll = blank(query)
-    let options = []
-    options.idx = {}
-
-    completions.forEach((value, idx) => {
-      let id = toId(value)
-      let isHidden = isSelectionHidden && selection.includes(id)
-      if (!isHidden && (matchAll || match(value, query))) {
-        options.idx[id] = options.length
-        options.push({ id, idx, value: toText(value) })
-      }
-    })
-
-    return options
   }
 
   get active() {
