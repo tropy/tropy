@@ -3,17 +3,9 @@
 // --------------------------------------------------
 
 .select {
-  background-repeat: no-repeat;
-  background-position: right $space-min center;
-  background-image: if($theme == "light",
-    image-url("project/icon-chevron7-light-theme.svg"),
-    image-url("project/icon-chevron7-dark-theme.svg"));
-  padding-right: $space-lg;
   min-width: 0; // Fix truncation
   position: relative;
   transition: none; // todo
-
-  @include input-btn-focus(".focus"); // sass-lint:disable-line mixins-before-declarations
 
   &.can-clear {
     background-image: none;
@@ -39,11 +31,8 @@
     padding: inherit;
     font-family: inherit;
     font-size: $font-size-base;
-    position: absolute;
-    left: 0;
-    top: 0;
     width: 100%;
-    height: 100%;
+    height: $input-height-base - 2px;
   }
 
   .global-clear {
@@ -56,6 +45,43 @@
 
     .icon {
       color: inherit;
+    }
+  }
+
+  &.single {
+    background-repeat: no-repeat;
+    background-position: right $space-min center;
+    background-image: if($theme == "light",
+      image-url("project/icon-chevron7-light-theme.svg"),
+      image-url("project/icon-chevron7-dark-theme.svg"));
+    padding-right: $space-lg;
+
+    @include input-btn-focus(".focus"); // sass-lint:disable-line mixins-before-declarations
+
+    .query {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+  }
+
+  &.multi {
+    .placeholder,
+    .query {
+      padding: 0 $padding-base-horizontal;
+    }
+
+    .placeholder {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+    }
+
+    .option {
+      &.selected + :not(.selected) {
+        border-top: 1px solid $option-separator-color;
+      }
     }
   }
 }
