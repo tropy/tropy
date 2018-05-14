@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { Component } = React
+const { Fragment, Component } = React
 const { ResourceSelect } = require('../resource/select')
 const { Popup } = require('../popup')
 const { OptionList } = require('../option')
@@ -78,7 +78,18 @@ const ColumnSelect = (props) => (
     isRequired
     isStatic
     isValueHidden
+    toText={Column}
     {...props}/>
+)
+
+const Column = (col, isSelected) => (
+  <Fragment>
+    {isSelected && <span>x</span>}
+    <span>{col.label}</span>
+    <span className="mute">
+      {col.prefix ? `${col.prefix}:${col.name}` : col.id}
+    </span>
+  </Fragment>
 )
 
 module.exports = {

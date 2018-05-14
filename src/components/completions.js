@@ -55,10 +55,11 @@ class Completions extends Component {
 
     completions.forEach((value, idx) => {
       let id = toId(value)
-      let isHidden = isSelectionHidden && selection.includes(id)
+      let isSelected = selection.includes(id)
+      let isHidden = isSelectionHidden && isSelected
       if (!isHidden && (matchAll || match(value, query))) {
         options.idx[id] = options.length
-        options.push({ id, idx, value: toText(value) })
+        options.push({ id, idx, value: toText(value, isSelected) })
       }
     })
 
