@@ -233,8 +233,8 @@ class Select extends Component {
       this.open()
     }
     if (this.input != null) {
-      this.input.focus()
       event.preventDefault()
+      this.input.focus()
     }
   }
 
