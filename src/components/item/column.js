@@ -7,6 +7,7 @@ const { Popup } = require('../popup')
 const { OptionList } = require('../option')
 const { arrayOf, func, number, object, string } = require('prop-types')
 const { PANEL } = require('../../constants/sass')
+const { IconTick } = require('../icons')
 
 class ColumnContextMenu extends Component {
   constructor(props) {
@@ -84,7 +85,7 @@ const ColumnSelect = (props) => (
 
 const Column = (col, isSelected) => (
   <Fragment>
-    {isSelected && <span>x</span>}
+    {isSelected && <IconTick/>}
     <span>{col.label}</span>
     <span className="mute">
       {col.prefix ? `${col.prefix}:${col.name}` : col.id}

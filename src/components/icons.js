@@ -568,6 +568,14 @@ i('Tag', (
   </svg>
 ))
 
+i('Tick', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M7,13a1,1,0,0,1-.8-.4l-3-4A1,1,0,1,1,4.8,7.4l2.152,2.87,5.216-7.825a1,1,0,0,1,1.664,1.11l-6,9a1,1,0,0,1-.8.445Z"/>
+    </g>
+  </svg>
+))
+
 i('Trash', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
