@@ -200,7 +200,8 @@ const INPUT = {
 
 const OPTION = {
   HEIGHT: 26,
-  LIST_MARGIN: 4
+  LIST_MARGIN: 4,
+  SEPARATOR_HEIGHT: 18
 }
 
 const POPUP = {

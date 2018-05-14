@@ -31,7 +31,7 @@ class Completions extends Component {
     if (state.options.length !== this.state.options.length) {
       if (this.props.onResize != null) {
         this.props.onResize({
-          height: this.getOptionsHeight(),
+          isSelectionVisible: this.state.isSelectionVisible,
           rows: this.state.options.length
         })
       }
@@ -51,6 +51,7 @@ class Completions extends Component {
     let matchAll = blank(query)
     let options = []
     let active = matchAll ? last(selection) : null
+    let isSelectionVisible = false
     options.idx = {}
 
     completions.forEach((value, idx) => {
@@ -58,6 +59,7 @@ class Completions extends Component {
       let isSelected = selection.includes(id)
       let isHidden = isSelectionHidden && isSelected
       if (!isHidden && (matchAll || match(value, query))) {
+        isSelectionVisible = isSelectionVisible || isSelected
         options.idx[id] = options.length
         options.push({ id, idx, value: toText(value, isSelected) })
       }
@@ -65,6 +67,7 @@ class Completions extends Component {
 
     return {
       active: active || options.length > 0 ? options[0].id : null,
+      isSelectionVisible,
       options
     }
   }

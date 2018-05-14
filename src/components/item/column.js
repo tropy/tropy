@@ -6,13 +6,16 @@ const { ResourceSelect } = require('../resource/select')
 const { Popup } = require('../popup')
 const { OptionList } = require('../option')
 const { arrayOf, func, number, object, string } = require('prop-types')
-const { PANEL } = require('../../constants/sass')
+const { INPUT, OPTION, PANEL } = require('../../constants/sass')
 
 class ColumnContextMenu extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      height: props.height
+      height: getColumnSelectHeight(props.options.length, {
+        hasSepartor: props.value.length > 0,
+        maxRows: props.maxRows
+      })
     }
   }
 
@@ -25,9 +28,12 @@ class ColumnContextMenu extends Component {
     }
   }
 
-  handleResize = ({ rows }) => {
+  handleResize = ({ isSelectionVisible, rows }) => {
     this.setState({
-      height: OptionList.getHeight(rows + 1, this.props)
+      height: getColumnSelectHeight(rows, {
+        hasSeparator: isSelectionVisible,
+        maxRows: this.props.maxRows
+      })
     })
   }
 
@@ -65,10 +71,17 @@ class ColumnContextMenu extends Component {
 
   static defaultProps = {
     height: OptionList.getHeight(13),
-    maxRows: 12,
+    maxRows: 10,
     width: PANEL.MIN_WIDTH
   }
 }
+
+function getColumnSelectHeight(rows, { maxRows, hasSeparator }) {
+  let height = INPUT.FOCUS_SHADOW_WIDTH * 2
+  if (hasSeparator) height += OPTION.SEPARATOR_HEIGHT
+  return height + OptionList.getHeight((rows || 1) + 1, { maxRows })
+}
+
 
 const ColumnSelect = (props) => (
   <ResourceSelect
