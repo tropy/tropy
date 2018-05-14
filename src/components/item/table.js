@@ -7,8 +7,7 @@ const { ItemTableRow } = require('./table-row')
 const { ItemTableSpacer } = require('./table-spacer')
 const { ItemTableHead } = require('./table-head')
 const { OptionList } = require('../option')
-const { Popup } = require('../popup')
-const { ResourceSelect } = require('../resource/select')
+const { ColumnContextMenu } = require('./column')
 const cx = require('classnames')
 const { noop } = require('../../common/util')
 const { bounds, ensure, on, off, maxScrollLeft } = require('../../dom')
@@ -364,25 +363,13 @@ class ItemTable extends ItemIterator {
 
   renderColumnContextMenu() {
     return this.state.columnContextMenu != null && (
-      <Popup
-        autofocus
-        className="column-context-menu"
-        onResize={this.hideColumnContextMenu}
-        style={this.state.columnContextMenu.style}>
-        <ResourceSelect
-          className="column-select"
-          placeholder="select.column.placeholder"
-          hideClearButton
-          isRequired
-          isStatic
-          isValueHidden
-          maxRows={this.props.columnContextMenu.rows}
-          onClose={this.hideColumnContextMenu}
-          onInsert={this.handleColumnInsert}
-          onRemove={this.handleColumnRemove}
-          options={this.props.columns.available}
-          value={this.props.columns.active.map(col => col.id)}/>
-      </Popup>
+      <ColumnContextMenu
+        columns={this.props.columns}
+        maxRows={this.props.columnContextMenu.rows}
+        onInsert={this.handleColumnInsert}
+        onRemove={this.handleColumnRemove}
+        onClose={this.hideColumnContextMenu}
+        style={this.state.columnContextMenu.style}/>
     )
   }
 
