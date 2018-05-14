@@ -245,7 +245,7 @@ class Select extends Component {
     if (!blank(value)) {
       let id = this.props.toId(value)
       if (this.state.values.includes(value)) {
-        this.props.onRemove(id)
+        if (this.state.canClearValue) this.props.onRemove(id)
         this.props.onChange(value, false)
       } else {
         this.props.onInsert(id)

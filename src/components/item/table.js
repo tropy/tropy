@@ -373,6 +373,7 @@ class ItemTable extends ItemIterator {
           className="column-select"
           placeholder="select.column.placeholder"
           hideClearButton
+          isRequired
           isStatic
           isValueHidden
           maxRows={this.props.columnContextMenu.rows}
