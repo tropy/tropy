@@ -199,6 +199,7 @@ class Completions extends Component {
         anchor={anchor}
         className={this.props.className}
         style={style}
+        onClickOutside={this.props.onClickOutside}
         onResize={this.handleResize}>
         {content}
       </Popup>
@@ -213,6 +214,7 @@ class Completions extends Component {
     match: func.isRequired,
     maxRows: number.isRequired,
     minQueryLength: number.isRequired,
+    onClickOutside: func,
     onResize: func,
     onSelect: func.isRequired,
     padding: shape({

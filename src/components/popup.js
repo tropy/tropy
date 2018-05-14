@@ -9,7 +9,6 @@ const { noop } = require('../common/util')
 const cx = require('classnames')
 const throttle = require('lodash.throttle')
 
-
 class Popup extends Component {
   constructor(props) {
     super(props)
@@ -18,7 +17,10 @@ class Popup extends Component {
   }
 
   componentDidMount() {
-    on(this.dom, 'mousedown', this.handleClickOutside)
+    on(document, 'mousedown', this.handleClick, { capture: true })
+    on(document, 'mouseup', this.handleClick, { capture: true })
+    on(document, 'click', this.handleClick, { capture: true })
+    on(document, 'contextmenu', this.handleContextMenu, { capture: true })
     on(window, 'resize', this.handleResize)
     append(this.dom, $('#popup-root'))
 
@@ -30,14 +32,33 @@ class Popup extends Component {
 
   componentWillUnmount() {
     remove(this.dom)
-    off(this.dom, 'mousedown', this.handleClickOutside)
+    off(document, 'mousedown', this.handleClick, { capture: true })
+    off(document, 'mouseup', this.handleClick, { capture: true })
+    off(document, 'click', this.handleClick, { capture: true })
+    off(document, 'contextmenu', this.handleContextMenu, { capture: true })
     off(window, 'resize', this.handleResize)
   }
 
-  handleClickOutside = (event) => {
-    if (this.dom === event.target) {
+  handleClick= (event) => {
+    if (this.props.onClickOutside != null && !this.isInside(event)) {
+      event.stopPropagation()
+      event.preventDefault()
+      if (event.type === 'click') {
+        this.props.onClickOutside(event)
+      }
+    }
+  }
+
+  handleContextMenu = (event) => {
+    event.stopPropagation()
+    event.preventDefault()
+    if (this.props.onClickOutside != null && !this.isInside(event)) {
       this.props.onClickOutside(event)
     }
+  }
+
+  isInside({ target, path }) {
+    return target === document.activeElement || path.includes(this.dom)
   }
 
   handleResize = throttle(() => { this.props.onResize() }, 25)
@@ -46,7 +67,6 @@ class Popup extends Component {
     return createPortal((
       <div
         className={cx('popup', this.props.anchor, this.props.className)}
-        onContextMenu={swallow}
         style={this.props.style}>
         {this.props.children}
       </div>
@@ -58,7 +78,7 @@ class Popup extends Component {
     autofocus: bool,
     children: node.isRequired,
     className: string,
-    onClickOutside: func.isRequired,
+    onClickOutside: func,
     onResize: func.isRequired,
     style: shape({
       top: number,
@@ -70,13 +90,8 @@ class Popup extends Component {
 
   static defaultProps = {
     anchor: 'float',
-    onClickOutside: noop,
     onResize: noop
   }
-}
-
-function swallow(event) {
-  event.stopPropagation()
 }
 
 module.exports = {

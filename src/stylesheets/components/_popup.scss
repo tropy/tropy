@@ -8,16 +8,6 @@
   top: 0;
   z-index: $zindex-popup;
 
-  &:not(:empty) {
-    right: 0;
-    bottom: 0;
-  }
-
-  .popup-container {
-    width: 100%;
-    height: 100%;
-  }
-
   .popup {
     display: flex;
     flex-direction: column;

@@ -43,6 +43,7 @@ class ColumnContextMenu extends Component {
       <Popup
         autofocus
         className="column-context-menu"
+        onClickOutside={this.props.onClose}
         onResize={this.props.onClose}
         style={this.style}>
         <ColumnSelect

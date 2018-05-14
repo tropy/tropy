@@ -85,7 +85,7 @@ class Input extends Component {
     }
   }
 
-  cancel(force) {
+  cancel = (force) => {
     const { hasChanged } = this
 
     this.reset()
@@ -191,6 +191,7 @@ class Input extends Component {
         className={className ? `${className}-completions` : null}
         completions={this.props.completions}
         minQueryLength={1}
+        onClickOutside={this.cancel}
         onSelect={this.handleCompletion}
         parent={this.input}
         query={this.state.value}/>

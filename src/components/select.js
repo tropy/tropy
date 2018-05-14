@@ -142,7 +142,7 @@ class Select extends Component {
     }
   }
 
-  close() {
+  close = () => {
     this.setState({ isOpen: this.props.isStatic, query: '' })
     this.props.onClose()
   }
@@ -233,7 +233,6 @@ class Select extends Component {
       this.open()
     }
     if (this.input != null) {
-      event.preventDefault()
       this.input.focus()
     }
   }
@@ -344,6 +343,7 @@ class Select extends Component {
         isVisibleWhenBlank
         match={this.props.match}
         maxRows={this.props.maxRows}
+        onClickOutside={this.close}
         onResize={this.props.onResize}
         onSelect={this.handleSelect}
         parent={this.container}
