@@ -6,7 +6,6 @@ const { ItemIterator } = require('./iterator')
 const { ItemTableRow } = require('./table-row')
 const { ItemTableSpacer } = require('./table-spacer')
 const { ItemTableHead } = require('./table-head')
-const { OptionList } = require('../option')
 const { ColumnContextMenu } = require('./column')
 const cx = require('classnames')
 const { noop } = require('../../common/util')
@@ -21,7 +20,7 @@ const {
 
 const {
   NAV,
-  SASS: { COLUMN, PANEL, ROW, SCROLLBAR }
+  SASS: { COLUMN, ROW, SCROLLBAR }
 } = require('../../constants')
 
 
@@ -253,7 +252,6 @@ class ItemTable extends ItemIterator {
   showColumnContextMenu = (event) => {
     event.stopPropagation()
 
-    let { width, height } = this.props.columnContextMenu
     let { colwidth } = this.state
 
     let min = this.getMinColumnOffset()
@@ -269,12 +267,8 @@ class ItemTable extends ItemIterator {
     this.setState({
       columnContextMenu: {
         idx,
-        style: {
-          top: event.clientY,
-          left: event.clientX,
-          width,
-          height
-        }
+        left: event.clientX,
+        top: event.clientY
       }
     })
   }
@@ -364,12 +358,11 @@ class ItemTable extends ItemIterator {
   renderColumnContextMenu() {
     return this.state.columnContextMenu != null && (
       <ColumnContextMenu
+        {...this.state.columnContextMenu}
         columns={this.props.columns}
-        maxRows={this.props.columnContextMenu.rows}
         onInsert={this.handleColumnInsert}
         onRemove={this.handleColumnRemove}
-        onClose={this.hideColumnContextMenu}
-        style={this.state.columnContextMenu.style}/>
+        onClose={this.hideColumnContextMenu}/>
     )
   }
 
@@ -409,10 +402,6 @@ class ItemTable extends ItemIterator {
       active: arrayOf(object).isRequired,
       available: arrayOf(object).isRequired
     }).isRequired,
-    columnContextMenu: shape({
-      width: number.isRequired,
-      height: number.isRequired
-    }).isRequired,
     edit: object,
     data: object.isRequired,
     hasScrollbars: bool.isRequired,
@@ -432,12 +421,7 @@ class ItemTable extends ItemIterator {
     overscan: 2,
     hasScrollbars: ARGS.scrollbars,
     minColWidth: 40,
-    minMainColWidth: 100,
-    columnContextMenu: {
-      rows: 12,
-      width: PANEL.MIN_WIDTH,
-      height: OptionList.getHeight(13)
-    }
+    minMainColWidth: 100
   }
 }
 

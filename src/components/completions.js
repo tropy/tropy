@@ -27,6 +27,16 @@ class Completions extends Component {
     }
   }
 
+  componentDidUpdate(_, state) {
+    if (state.options.length !== this.state.options.length) {
+      if (this.props.onResize != null) {
+        this.props.onResize({
+          height: this.getOptionsHeight()
+        })
+      }
+    }
+  }
+
   getStateFromProps({
     completions,
     isSelectionHidden,
@@ -202,6 +212,7 @@ class Completions extends Component {
     match: func.isRequired,
     maxRows: number.isRequired,
     minQueryLength: number.isRequired,
+    onResize: func,
     onSelect: func.isRequired,
     padding: shape({
       height: number.isRequired,

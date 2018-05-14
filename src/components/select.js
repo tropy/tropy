@@ -344,6 +344,7 @@ class Select extends Component {
         isVisibleWhenBlank
         match={this.props.match}
         maxRows={this.props.maxRows}
+        onResize={this.props.onResize}
         onSelect={this.handleSelect}
         parent={this.container}
         popup={!this.props.isStatic}
@@ -393,6 +394,7 @@ class Select extends Component {
     onOpen: func.isRequired,
     onKeyDown: func.isRequired,
     onRemove: func.isRequired,
+    onResize: func,
     onValidate: func.isRequired,
     placeholder: node,
     tabIndex: number,
