@@ -7,10 +7,6 @@
   position: relative;
   transition: none; // todo
 
-  &.can-clear {
-    background-image: none;
-  }
-
   &.invalid {
     border-color: $input-btn-invalid-color;
 
@@ -62,6 +58,10 @@
     padding-right: $space-lg;
 
     @include input-btn-focus(".focus"); // sass-lint:disable-line mixins-before-declarations
+
+    &.can-clear {
+      background-image: none;
+    }
 
     .query {
       position: absolute;
