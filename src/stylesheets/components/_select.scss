@@ -78,10 +78,33 @@
       width: 100%;
     }
 
+    .option-list {
+      margin-bottom: $option-list-margin;
+    }
+
     .option {
-      &.selected + :not(.selected) {
-        border-top: 1px solid $option-separator-color;
+      display: flex;
+      align-items: center;
+      padding-left: $padding-base-horizontal + $space-md;
+
+      &.selected {
+        padding-left: $padding-base-horizontal;
       }
     }
+
+    .no-matches {
+      padding-left: $padding-base-horizontal;
+    }
+
+    .icon-tick {
+      color: inherit;
+      margin-left: -4px;
+      margin-right: 4px;
+    }
+
+    .mute {
+      margin-left: $space-min;
+    }
+
   }
 }
