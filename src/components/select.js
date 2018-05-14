@@ -114,7 +114,7 @@ class Select extends Component {
   }
 
   get classes() {
-    return ['select', 'form-control', this.props.className, {
+    return ['select', this.props.className, {
       'can-clear': !this.props.hideClearButton && this.state.canClearValue,
       'disabled': this.state.isDisabled,
       'focus': this.state.hasFocus,
@@ -123,7 +123,8 @@ class Select extends Component {
       'open': this.state.isOpen,
       'single': !this.state.isMulti,
       'static': this.props.isStatic,
-      'tab-focus': this.state.hasTabFocus
+      'tab-focus': this.state.hasTabFocus,
+      'form-control': !this.props.isStatic
     }]
   }
 

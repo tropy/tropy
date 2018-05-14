@@ -2,6 +2,12 @@
 // Forms
 // --------------------------------------------------
 
+::-webkit-input-placeholder,
+.placeholder {
+  color: $input-color-placeholder;
+  user-select: none;
+}
+
 .form-inline {
   > * + * {
     margin-left: $space-min;
@@ -68,12 +74,6 @@ fieldset {
   transition: border-color $input-btn-transition, box-shadow $input-btn-transition;
 
   @include input-btn-focus;
-
-  &::-webkit-input-placeholder,
-  .placeholder {
-    color: $input-color-placeholder;
-    user-select: none;
-  }
 
   &[readonly],
   &[disabled],
