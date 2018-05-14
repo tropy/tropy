@@ -4,16 +4,16 @@ const React = require('react')
 const { Fragment, Component } = React
 const { ResourceSelect } = require('../resource/select')
 const { Popup } = require('../popup')
-const { OptionList } = require('../option')
 const { arrayOf, func, number, object, string } = require('prop-types')
-const { INPUT, PANEL } = require('../../constants/sass')
+const { INPUT, OPTION, PANEL } = require('../../constants/sass')
 const { IconTick } = require('../icons')
+const { min } = Math
 
 class ColumnContextMenu extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      height: getColumnSelectHeight(props.options.length, props)
+      height: this.getColumnSelectHeight(props.options.length, props)
     }
   }
 
@@ -26,9 +26,15 @@ class ColumnContextMenu extends Component {
     }
   }
 
+  getColumnSelectHeight(rows, { maxRows } = this.props) {
+    return INPUT.FOCUS_SHADOW_WIDTH * 2 +
+      OPTION.HEIGHT * ((min(rows || 1, maxRows)) + 1) +
+      OPTION.LIST_MARGIN
+  }
+
   handleResize = ({ rows }) => {
     this.setState({
-      height: getColumnSelectHeight(rows, this.props)
+      height: this.getColumnSelectHeight(rows, this.props)
     })
   }
 
@@ -52,7 +58,6 @@ class ColumnContextMenu extends Component {
   }
 
   static propTypes = {
-    height: number.isRequired,
     left: number.isRequired,
     maxRows: number.isRequired,
     onClose: func.isRequired,
@@ -65,18 +70,10 @@ class ColumnContextMenu extends Component {
   }
 
   static defaultProps = {
-    height: OptionList.getHeight(13),
     maxRows: 10,
     width: PANEL.MIN_WIDTH
   }
 }
-
-function getColumnSelectHeight(rows, { maxRows }) {
-  return INPUT.FOCUS_SHADOW_WIDTH * 2 +
-    OptionList.getHeight(1) +
-    OptionList.getHeight((rows || 1), { maxRows })
-}
-
 
 const ColumnSelect = (props) => (
   <ResourceSelect
