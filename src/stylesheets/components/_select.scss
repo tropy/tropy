@@ -33,6 +33,11 @@
     font-size: $font-size-base;
     width: 100%;
     height: $input-height-base - 2px;
+    cursor: default;
+
+    &.live {
+      cursor: auto;
+    }
   }
 
   .global-clear {
@@ -105,6 +110,5 @@
     .mute {
       margin-left: $space-min;
     }
-
   }
 }

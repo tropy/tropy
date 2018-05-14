@@ -310,7 +310,7 @@ class Select extends Component {
     let { isInputHidden } = this
     return (
       <input
-        className="query"
+        className={cx('query', { live: this.state.isOpen && !isInputHidden })}
         disabled={this.state.isDisabled}
         onBlur={this.handleBlur}
         onChange={isInputHidden ? null : this.handleQueryChange}
