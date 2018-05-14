@@ -5,20 +5,30 @@ const { Component } = React
 const { ResourceSelect } = require('../resource/select')
 const { Popup } = require('../popup')
 const { OptionList } = require('../option')
-const { arrayOf, func, number, object, shape } = require('prop-types')
+const { arrayOf, func, number, object, string } = require('prop-types')
 const { PANEL } = require('../../constants/sass')
 
 class ColumnContextMenu extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      height: props.height
+    }
+  }
+
   get style() {
     return {
       left: this.props.left,
-      height: this.props.height,
+      height: this.state.height,
       top: this.props.top,
       width: this.props.width
     }
   }
 
-  handleResize = () => {
+  handleResize = ({ rows }) => {
+    this.setState({
+      height: OptionList.getHeight(rows + 1, this.props)
+    })
   }
 
   render() {
@@ -34,24 +44,22 @@ class ColumnContextMenu extends Component {
           onInsert={this.props.onInsert}
           onRemove={this.props.onRemove}
           onResize={this.handleResize}
-          options={this.props.columns.available}
-          value={this.props.columns.active.map(col => col.id)}/>
+          options={this.props.options}
+          value={this.props.value}/>
       </Popup>
     )
   }
 
   static propTypes = {
-    columns: shape({
-      active: arrayOf(object).isRequired,
-      available: arrayOf(object).isRequired
-    }).isRequired,
     height: number.isRequired,
     left: number.isRequired,
     maxRows: number.isRequired,
     onClose: func.isRequired,
     onInsert: func.isRequired,
     onRemove: func.isRequired,
+    options: arrayOf(object).isRequired,
     top: number.isRequired,
+    value: arrayOf(string).isRequired,
     width: number
   }
 

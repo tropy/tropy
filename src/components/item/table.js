@@ -268,7 +268,8 @@ class ItemTable extends ItemIterator {
       columnContextMenu: {
         idx,
         left: event.clientX,
-        top: event.clientY
+        top: event.clientY,
+        value: this.props.columns.active.map(col => col.id)
       }
     })
   }
@@ -359,10 +360,10 @@ class ItemTable extends ItemIterator {
     return this.state.columnContextMenu != null && (
       <ColumnContextMenu
         {...this.state.columnContextMenu}
-        columns={this.props.columns}
         onInsert={this.handleColumnInsert}
         onRemove={this.handleColumnRemove}
-        onClose={this.hideColumnContextMenu}/>
+        onClose={this.hideColumnContextMenu}
+        options={this.props.columns.available}/>
     )
   }
 

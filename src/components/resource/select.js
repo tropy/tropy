@@ -6,7 +6,7 @@ const { Select } = require('../select')
 const { FormattedMessage } = require('react-intl')
 const { startsWith } = require('../../collate')
 const { titlecase } = require('../../common/util')
-const { bool, array, func, number, oneOfType, string } = require('prop-types')
+const { func, number, string } = require('prop-types')
 
 class ResourceSelect extends PureComponent {
   get placeholder() {
@@ -24,54 +24,19 @@ class ResourceSelect extends PureComponent {
 
   render() {
     return (
-      <Select
-        className={this.props.className}
-        hideClearButton={this.props.hideClearButton}
-        isDisabled={this.props.isDisabled}
-        isRequired={this.props.isRequired}
-        isStatic={this.props.isStatic}
-        isValueHidden={this.props.isValueHidden}
-        match={this.props.match}
-        maxRows={this.props.maxRows}
-        onBlur={this.props.onBlur}
-        onChange={this.props.onChange}
-        onClose={this.props.onClose}
-        onFocus={this.props.onFocus}
-        onInsert={this.props.onInsert}
-        onOpen={this.props.onOpen}
-        onRemove={this.props.onRemove}
-        options={this.props.options}
+      <Select {...this.props}
         placeholder={this.placeholder}
-        ref={this.setSelect}
-        tabIndex={this.props.tabIndex}
-        toText={this.props.toText}
-        toValue={this.props.toValue}
-        value={this.props.value}/>
+        ref={this.setSelect}/>
     )
   }
 
   static propTypes = {
     className: string.isRequired,
-    hideClearButton: bool,
-    isDisabled: bool,
-    isRequired: bool,
-    isStatic: bool,
-    isValueHidden: bool,
     match: func.isRequired,
-    maxRows: number,
-    onBlur: func,
-    onChange: func,
-    onClose: func,
-    onFocus: func,
-    onInsert: func,
-    onOpen: func,
-    onRemove: func,
-    options: array.isRequired,
     placeholder: string,
     tabIndex: number.isRequired,
     toText: func.isRequired,
-    toValue: func.isRequired,
-    value: oneOfType([string, array])
+    toValue: func.isRequired
   }
 
   static defaultProps = {

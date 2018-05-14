@@ -31,7 +31,8 @@ class Completions extends Component {
     if (state.options.length !== this.state.options.length) {
       if (this.props.onResize != null) {
         this.props.onResize({
-          height: this.getOptionsHeight()
+          height: this.getOptionsHeight(),
+          rows: this.state.options.length
         })
       }
     }
