@@ -89,13 +89,10 @@ class Tropy extends EventEmitter {
     if (!file) {
       if (this.win) return this.win.show(), this
 
-      while (this.state.recent.length) {
-        const recent = this.state.recent.shift()
-
-        if (exists(recent)) {
-          file = recent
-          break
-        }
+      for (let recent of this.state.recent) {
+        if (!exists(recent)) continue
+        file = recent
+        break
       }
 
       if (!file) return this.showWizard()
@@ -173,8 +170,10 @@ class Tropy extends EventEmitter {
     if (this.wiz) this.wiz.close()
     if (this.prefs) this.prefs.close()
 
-    this.state.recent = into([file],
-        compose(remove(f => f === file), take(9)), this.state.recent)
+    this.state.recent = into(
+      [file],
+      compose(remove(f => f === file), take(9)),
+      this.state.recent)
 
     // if (darwin) this.win.setRepresentedFilename(file)
     if (name) this.win.setTitle(name)
