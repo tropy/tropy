@@ -13,16 +13,14 @@ const { bounds, ensure, on, off, maxScrollLeft } = require('../../dom')
 const { match } = require('../../keymap')
 const { assign } = Object
 const throttle = require('lodash.throttle')
-
-const {
-  any, refine, restrict, shallow, splice, warp
-} = require('../../common/util')
+const { refine, restrict, shallow, splice, warp } = require('../../common/util')
 
 const {
   NAV,
   SASS: { COLUMN, ROW, SCROLLBAR }
 } = require('../../constants')
 
+const any = (src) => { for (let key in src) return key }
 
 class ItemTable extends ItemIterator {
   constructor(props) {
