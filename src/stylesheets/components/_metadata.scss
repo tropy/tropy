@@ -40,6 +40,13 @@ $default-padding-horizontal: 12px !default;
       background-color: $input-bg;
     }
 
+    &.mixed {
+      color: $metadata-field-mixed-color;
+      background-image: if($theme == "light",
+        image-url("project/icon-chevron7-mixed-light-theme.svg"),
+        image-url("project/icon-chevron7-mixed-dark-theme.svg"));
+    }
+
     .scrollbar-style-old-school & {
       width: calc(100% - 2 * #{$default-padding-horizontal}
         + #{$scrollbar-size} / 3);
