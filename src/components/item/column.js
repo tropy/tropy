@@ -91,8 +91,8 @@ const ColumnSelect = (props) => (
 const Column = (col, isSelected) => (
   <Fragment>
     {isSelected && <IconTick/>}
-    <span>{col.label}</span>
-    <span className="mute">
+    <span className="truncate">{col.label}</span>
+    <span className="mute truncate">
       {col.prefix ? `${col.prefix}:${col.name}` : col.id}
     </span>
   </Fragment>

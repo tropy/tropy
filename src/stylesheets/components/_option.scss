@@ -1,4 +1,3 @@
-
 //
 // Option list
 // --------------------------------------------------
@@ -30,10 +29,12 @@
 
 .option {
   @include css-truncation;
-  position: relative;
-  contain: content;
+  display: flex;
+  vertical-align: center;
   padding: 0 8px;
   line-height: $line-height-large;
+  position: relative;
+  contain: content;
 
   &.active {
     background: $option-active-bg;
@@ -41,5 +42,14 @@
 
   &.no-matches {
     color: $option-no-matches-color;
+  }
+
+  .truncate {
+    flex: 0 1 auto;
+
+    & + .truncate {
+      flex: 0 10000 auto;
+      margin-left: $space-min;
+    }
   }
 }

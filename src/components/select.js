@@ -422,7 +422,11 @@ class Select extends Component {
     onRemove: noop,
     onValidate: noop,
     toId: (value) => (value.id || String(value)),
-    toText: (value) => (value.name || String(value))
+    toText: (value) => (
+      <span className="truncate">
+        { value.name || String(value) }
+      </span>
+    )
   }
 }
 
