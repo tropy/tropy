@@ -545,22 +545,22 @@ class Tropy extends EventEmitter {
       shell.showItemInFolder(join(app.getPath('userData'), 'log', 'main.log'))
     })
 
-    this.on('app:open-plugins-config', () => {
-      shell.openItem(this.plugins.configFile)
+    this.on('app:open-user-data', () => {
+      shell.showItemInFolder(join(app.getPath('userData'), 'state.json'))
+    })
+
+    this.on('app:open-plugins-folder', () => {
+      shell.showItemInFolder(this.plugins.configFile)
     })
 
     this.on('app:install-plugin', async (win) => {
       const plugins = await dialog.show('file', darwin ? null : win, {
         defaultPath: app.getPath('downloads'),
-        filters: [{ name: 'Tropy Plugins', extensions: Plugins.ext }],
+        filters: [{ name: 'Tropy Plugin', extensions: Plugins.ext }],
         properties: ['openFile']
       })
 
       if (plugins != null) await this.plugins.install(...plugins)
-    })
-
-    this.on('app:open-plugins-folder', () => {
-      shell.showItemInFolder(this.plugins.configFile)
     })
 
     this.on('app:reset-ontology-db', () => {

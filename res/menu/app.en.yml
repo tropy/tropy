@@ -148,26 +148,19 @@ en:
         - &forums
           label: 'Support Forums'
           command: 'app:open-forums'
-        - type: 'separator'
         - &license
           label: 'Software &License'
           command: 'app:open-license'
+        - type: 'separator'
         - &logs
           label: 'Show Log Files'
           command: 'app:open-logs'
-        - type: 'separator'
-        - &pluginsConfig
-          label: 'Edit Plugins Configuration'
-          command: 'app:open-plugins-config'
-        - &pluginsConfig
-          label: 'Install Plugin…'
-          command: 'app:install-plugin'
         - &plugins
           label: 'Show Plugins Folder'
           command: 'app:open-plugins-folder'
-        - type: 'separator'
-        - label: 'About %name'
-          command: 'app:about'
+        - &userData
+          label: 'Show User-Data Folder'
+          command: 'app:open-user-data'
         - type: 'separator'
         - &updaterCheck
           id: 'updater-check'
@@ -185,6 +178,9 @@ en:
           command: 'app:install-updates'
           enabled: false
           visible: false
+        - type: 'separator'
+        - label: 'About %name'
+          command: 'app:about'
   darwin:
     - label: '%name'
       submenu:
@@ -252,12 +248,11 @@ en:
       submenu:
         - *docs
         - *forums
-        - type: 'separator'
         - *license
-        - *logs
         - type: 'separator'
-        - *pluginsConfig
+        - *logs
         - *plugins
+        - *userData
         - type: 'separator'
         - *updaterCheck
         - *updaterIsChecking
