@@ -147,6 +147,7 @@ module.exports = mod.item = {
       params)
   },
 
+  // eslint-disable-next-line complexity
   async list(db, list, { tags, sort, query }) {
     const dir = sort.asc ? 'ASC' : 'DESC'
     const params = { $list: list }
