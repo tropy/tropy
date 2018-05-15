@@ -111,4 +111,21 @@
       margin-left: $space-min;
     }
   }
+
+  &.column-select,
+  &.resource-select {
+    .option {
+      display: flex;
+      align-items: center;
+
+      .truncate {
+        flex: 0 1 auto;
+
+        & + .truncate {
+          flex: 0 10000 auto;
+          margin-left: $space-min;
+        }
+      }
+    }
+  }
 }
