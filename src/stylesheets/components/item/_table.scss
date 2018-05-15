@@ -70,6 +70,7 @@
       bottom: 1px solid $item-table-header-border-color;
     }
     overflow: hidden;
+    box-sizing: content-box; // Fix #261
 
     .scrollbar-style-old-school & {
       width: calc(100% - #{$default-padding-horizontal});
