@@ -4,15 +4,14 @@ describe('dom', () => {
   const dom = __require('dom')
 
   describe('.css', () => {
-    it('creates a style node', function () {
+    it('creates a style node', () => {
       expect(dom.css()).to.be.instanceof(HTMLStyleElement)
     })
   })
 
   describe('.stylesheet', () => {
-    it('creates a link node', function () {
+    it('creates a link node', () => {
       let link = dom.stylesheet('theme.css')
-
       expect(link).to.be.instanceof(HTMLLinkElement)
       expect(link.getAttribute('href')).to.eql('theme.css')
     })

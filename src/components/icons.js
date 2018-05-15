@@ -568,6 +568,14 @@ i('Tag', (
   </svg>
 ))
 
+i('Tick', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M7,14a1,1,0,0,1-.8-.4l-3-4A1,1,0,1,1,4.8,8.4l2.152,2.87,5.216-7.825a1,1,0,0,1,1.664,1.11l-6,9a1,1,0,0,1-.8.445Z"/>
+    </g>
+  </svg>
+))
+
 i('Trash', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
@@ -592,6 +600,14 @@ i('XSmall', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
       <polygon points="11.536 10.828 8.707 8 11.536 5.172 10.828 4.464 8 7.293 5.172 4.464 4.464 5.172 7.293 8 4.464 10.828 5.172 11.536 8 8.707 10.828 11.536 11.536 10.828"/>
+    </g>
+  </svg>
+))
+
+i('XMedium', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <polygon points="12.95 3.757 12.243 3.05 8 7.293 3.757 3.05 3.05 3.757 7.293 8 3.05 12.243 3.757 12.95 8 8.707 12.243 12.95 12.95 12.243 8.707 8 12.95 3.757"/>
     </g>
   </svg>
 ))

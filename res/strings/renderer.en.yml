@@ -196,7 +196,12 @@ en:
         value: "{value, number}"
   notepad:
     placeholder: Add your notes here …
-
+  completions:
+    empty: No options available
+    noMatches: No matches found
+  select:
+    column:
+      placeholder: Search
   template:
     id: URI
     name: Name

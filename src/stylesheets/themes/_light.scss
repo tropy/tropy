@@ -130,6 +130,7 @@ $tag-colors: (
 $body-bg:                  var(--shade-0);
 $text-color:               var(--shade-9);
 $soft-text-color:          var(--shade-8);
+$muted-text-color:         var(--shade-6);
 $project-closing-backdrop: var(--shade-0-60);
 
 
@@ -150,6 +151,7 @@ $hr-border: var(--shade-3);
 
 // Forms & buttons
 $input-btn-focus-color: var(--brand-primary-tint-40);
+$input-btn-invalid-color: var(--red);
 $input-btn-overlay-focus-color: var(--brand-primary);
 
 // Forms
@@ -448,4 +450,6 @@ $popup-bg:           var(--shade-0);
 $popup-border-color: $input-btn-focus-color;
 
 // Option list
-$option-active-bg: var(--shade-2);
+$option-active-bg:        var(--shade-1);
+$option-no-matches-color: var(--shade-5);
+$option-separator-color:  var(--shade-2);

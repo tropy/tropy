@@ -15,39 +15,33 @@ const EMPTY = []
 class Iterator extends PureComponent {
   constructor(props) {
     super(props)
-
-    this.state = {
-      cols: 1,
-      height: 0,
-      maxOffset: 0,
-      offset: 0,
-      overscan: 0,
-      rowHeight: 0,
-      rows: 0,
-      viewportRows: 0
-    }
-
-    this.viewport = {
-      width: 0,
-      height: 0
-    }
+    this.viewport = { widht: 0, height: 0 }
+    this.state = this.getStateFromProps()
   }
 
   componentDidMount() {
-    if (this.handleResize) {
+    if (this.container != null) {
+      this.update(this.props, () => {
+        this.resize(this.bounds)
+        this.scrollIntoView(this.current(), false)
+      })
+
       this.ro = new ResizeObserver(([e]) => {
         this.handleResize(e.contentRect)
       })
-    } else {
-      this.update()
-    }
 
-    this.observe(this.container)
+      this.observe(this.container)
+    }
+  }
+
+  componentDidUpdate(props) {
+    if (props.size !== this.props.size) {
+      this.scrollIntoView(this.current(), false)
+    }
   }
 
   componentWillUnmount() {
     this.unobserve(this.container)
-
     if (this.ro != null) {
       this.ro.disconnect()
       this.ro = null
@@ -58,6 +52,33 @@ class Iterator extends PureComponent {
     if (this.props.size !== props.size ||
       this.getIterables(props).length !== this.size) {
       this.update(props)
+    }
+  }
+
+  getStateFromProps(props = this.props) {
+    const cols = this.getColumns(props.size)
+    const rowHeight = this.getRowHeight(props.size)
+    const rows = this.getRows({ cols }, props)
+    const viewportRows = this.getViewportRows(props.size)
+    const height = rows * rowHeight
+    const overscan = ceil(viewportRows * props.overscan)
+
+    let maxOffset = height - (overscan * rowHeight)
+    maxOffset = max(maxOffset - (maxOffset % rowHeight), 0)
+
+    const offset = this.getOffset({
+      overscan, maxOffset, rowHeight, viewportRows
+    })
+
+    return {
+      cols,
+      height,
+      maxOffset,
+      offset,
+      overscan,
+      rowHeight,
+      rows,
+      viewportRows
     }
   }
 
@@ -103,31 +124,8 @@ class Iterator extends PureComponent {
     if (this.ro != null) this.observe(container)
   }
 
-  update(props = this.props) {
-    const cols = this.getColumns(props.size)
-    const rowHeight = this.getRowHeight(props.size)
-    const rows = this.getRows({ cols }, props)
-    const viewportRows = this.getViewportRows(props.size)
-    const height = rows * rowHeight
-    const overscan = ceil(viewportRows * props.overscan)
-
-    let maxOffset = height - (overscan * rowHeight)
-    maxOffset = max(maxOffset - (maxOffset % rowHeight), 0)
-
-    const offset = this.getOffset({
-      overscan, maxOffset, rowHeight, viewportRows
-    })
-
-    this.setState({
-      cols,
-      height,
-      maxOffset,
-      overscan,
-      offset,
-      rowHeight,
-      rows,
-      viewportRows
-    })
+  update(props = this.props, ...args) {
+    this.setState(this.getStateFromProps(props), ...args)
   }
 
   get bounds() {
@@ -271,8 +269,10 @@ class Iterator extends PureComponent {
     const head = this.head()
     if (head == null) return items[0]
 
-    const idx = this.indexOf(head) + offset
-    return (idx >= 0 && idx < items.length) ? items[idx] : null
+    const idx = this.indexOf(head)
+    if (idx == null || idx < 0) return items[0]
+
+    return items[restrict(idx + offset, 0, items.length - 1)]
   }
 
   prev(offset = 1) {
@@ -285,6 +285,15 @@ class Iterator extends PureComponent {
 
   head() {
     throw new Error('not implemented')
+  }
+
+  first() {
+    return this.getIterables()[0]
+  }
+
+  last() {
+    const items = this.getIterables()
+    return items[items.length - 1]
   }
 
   isSelected() {
@@ -307,11 +316,15 @@ class Iterator extends PureComponent {
   }
 
   scroll(offset = 0) {
-    this.container.scrollTop = offset
+    if (this.container != null) {
+      this.container.scrollTop = offset
+    }
   }
 
   scrollBy(offset) {
-    this.scroll(this.container.scrollTop + offset)
+    if (this.container != null) {
+      this.scroll(this.container.scrollTop + offset)
+    }
   }
 
   scrollPageUp() {
@@ -327,6 +340,7 @@ class Iterator extends PureComponent {
   }
 
   scrollIntoView(item = this.current(), force = true) {
+    if (item == null || this.container == null) return
     const idx = this.indexOf(item.id)
     if (idx === -1) return
 

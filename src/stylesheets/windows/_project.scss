@@ -23,6 +23,24 @@
   "../base/utilities";
 
 
+// Partials
+// --------------------------------------------------
+
+@import
+  "../partials/window-controls",
+  "../partials/window-draggable",
+  "../partials/forms",
+  "../partials/badge",
+  "../partials/tile",
+  "../partials/sort-indicator",
+  "../partials/debug",
+  "../partials/scroll-container",
+  "../partials/tab-pane",
+  "../partials/scrollbar",
+  "../partials/flex",
+  "../partials/orientation";
+
+
 // Components
 // --------------------------------------------------
 
@@ -47,6 +65,7 @@
   "../components/auto-resizer",
   "../components/flash",
   "../components/option",
+  "../components/select",
 
   "../components/project",
 
@@ -74,22 +93,3 @@
   "../components/editor/styles",
 
   "../components/popup";
-
-
-
-// Partials
-// --------------------------------------------------
-
-@import
-  "../partials/window-controls",
-  "../partials/window-draggable",
-  "../partials/forms",
-  "../partials/badge",
-  "../partials/tile",
-  "../partials/sort-indicator",
-  "../partials/debug",
-  "../partials/scroll-container",
-  "../partials/tab-pane",
-  "../partials/scrollbar",
-  "../partials/flex",
-  "../partials/orientation";

@@ -36,6 +36,17 @@ $default-padding-horizontal: 12px !default;
     margin-bottom: (($metadata-line-height - 10px) / 2);
     background-color: $template-select-bg; // 'Transparent' causes border/box-shadow issue
 
+    &.focus {
+      background-color: $input-bg;
+    }
+
+    &.mixed {
+      color: $metadata-field-mixed-color;
+      background-image: if($theme == "light",
+        image-url("project/icon-chevron7-mixed-light-theme.svg"),
+        image-url("project/icon-chevron7-mixed-dark-theme.svg"));
+    }
+
     .scrollbar-style-old-school & {
       width: calc(100% - 2 * #{$default-padding-horizontal}
         + #{$scrollbar-size} / 3);
@@ -45,13 +56,6 @@ $default-padding-horizontal: 12px !default;
     .nested-tab-focus & {
       background-color: $template-select-nested-focus-bg;
       border-color: $template-select-nested-focus-border;
-    }
-
-    .nested-tab-focus.has-active & {
-      background-color: $template-select-bg;
-      border-color: $template-select-border;
-
-      @include input-btn-focus; // sass-lint:disable-line mixins-before-declarations
     }
   }
 }

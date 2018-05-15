@@ -24,6 +24,7 @@ const {
   getPhotoFields,
   getSelectionFields,
   getSelectedItems,
+  getSelectedItemTemplate,
   getSelectedPhoto
 } = require('../../selectors')
 
@@ -117,32 +118,26 @@ class MetadataPanel extends PureComponent {
 
   handleTabFocus = () => {
     this.props.onFocus()
-    this.props.onDeactivate()
-  }
-
-  handleBlur = () => {
-    this.props.onBlur()
-    this.props.onDeactivate()
   }
 
   handleEditCancel = () => {
     this.props.onEditCancel()
-    this.props.onDeactivate()
     this.focus()
   }
 
   handleChange = (data) => {
     this.props.onMetadataSave(data)
-    this.props.onDeactivate()
     this.focus()
   }
 
-  handleTemplateChange = (template) => {
-    this.props.onItemSave({
-      id: this.props.items.map(it => it.id),
-      property: 'template',
-      value: template.id
-    })
+  handleTemplateChange = (template, hasChanged) => {
+    if (hasChanged || this.isBulk) {
+      this.props.onItemSave({
+        id: this.props.items.map(it => it.id),
+        property: 'template',
+        value: template.id
+      })
+    }
   }
 
   handleKeyDown = (event) => {
@@ -166,9 +161,9 @@ class MetadataPanel extends PureComponent {
     const {
       items,
       itemFields,
+      template,
       templates,
       isDisabled,
-      onActivate
     } = this.props
 
     return !this.isEmpty && (
@@ -179,11 +174,12 @@ class MetadataPanel extends PureComponent {
             values={{ count: items.length }}/>
         </h5>
         <TemplateSelect
-          templates={templates}
-          selected={items[0].template}
+          options={templates}
+          value={template.id}
           isDisabled={isDisabled}
-          onChange={this.handleTemplateChange}
-          onFocus={onActivate}/>
+          isMixed={template.mixed}
+          isRequired
+          onChange={this.handleTemplateChange}/>
         <MetadataList
           ref={this.setItemFields}
           edit={this.props.edit}
@@ -257,7 +253,7 @@ class MetadataPanel extends PureComponent {
           className="scroll-container"
           ref={this.setContainer}
           tabIndex={this.tabIndex}
-          onBlur={this.handleBlur}
+          onBlur={this.props.onBlur}
           onKeyDown={this.handleKeyDown}>
           {this.renderItemFields()}
           {this.renderPhotoFields()}
@@ -290,6 +286,10 @@ class MetadataPanel extends PureComponent {
     })).isRequired,
 
     keymap: object.isRequired,
+    template: shape({
+      id: string,
+      mixed: bool
+    }).isRequired,
     templates: arrayOf(object).isRequired,
 
     selection: shape({
@@ -301,9 +301,7 @@ class MetadataPanel extends PureComponent {
       property: object.isRequired
     })).isRequired,
 
-    onActivate: func.isRequired,
     onBlur: func.isRequired,
-    onDeactivate: func.isRequired,
     onEdit: func,
     onEditCancel: func,
     onFocus: func.isRequired,
@@ -321,6 +319,7 @@ module.exports = {
       itemFields: getItemFields(state),
       photo: getSelectedPhoto(state),
       photoFields: getPhotoFields(state),
+      template: getSelectedItemTemplate(state),
       templates: getItemTemplates(state),
       selection: getActiveSelection(state),
       selectionFields: getSelectionFields(state)

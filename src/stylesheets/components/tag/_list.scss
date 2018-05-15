@@ -11,10 +11,6 @@
         .nested-tab-focus & {
           color: $icon-tag-nested-focus-color;
         }
-
-        .nested-tab-focus.has-active & {
-          color: $icon-tag-color;
-        }
       }
 
       .border {
@@ -22,10 +18,6 @@
 
         .nested-tab-focus & {
           color: $icon-tag-nested-focus-border;
-        }
-
-        .nested-tab-focus.has-active & {
-          color: $icon-tag-border;
         }
       }
     }
@@ -145,11 +137,6 @@
     .nested-tab-focus & {
       background: $add-tag-nested-focus-bg;
       border-color: $add-tag-nested-focus-border-color;
-    }
-
-    .nested-tab-focus.has-active & {
-      background: $add-tag-default-bg;
-      border-color: $input-border;
     }
 
     &::-webkit-input-placeholder {

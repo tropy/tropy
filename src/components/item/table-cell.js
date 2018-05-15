@@ -12,7 +12,7 @@ const { auto } = require('../../format')
 const cx = require('classnames')
 const { TYPE } = require('../../constants')
 const {
-  arrayOf, bool, func, number, object, oneOfType, shape, string
+  arrayOf, bool, func, instanceOf, number, object, oneOfType, shape, string
 } = require('prop-types')
 
 
@@ -111,6 +111,7 @@ class ItemTableCell extends PureComponent {
   }
 
   render() {
+    let isDisabled = this.props.isDisabled || this.props.isReadOnly
     return (
       <td
         className={cx(this.classes)}
@@ -121,9 +122,9 @@ class ItemTableCell extends PureComponent {
           <Editable
             display={auto(this.props.value, this.props.type)}
             isActive={this.props.isEditing}
-            isDisabled={this.props.isDisabled || this.props.isReadOnly}
+            isDisabled={isDisabled}
             resize
-            value={this.props.value}
+            value={isDisabled ? null : this.props.value}
             onCancel={this.props.onCancel}
             onChange={this.handleChange}
             onKeyDown={this.handleKeyDown}/>
@@ -154,7 +155,7 @@ class ItemTableCell extends PureComponent {
     size: number,
     tags: object,
     type: string.isRequired,
-    value: oneOfType([string, number]),
+    value: oneOfType([string, number, instanceOf(Date)]),
     getSelection: func.isRequired,
     onCancel: func.isRequired,
     onChange: func.isRequired,

@@ -1,20 +1,26 @@
 'use strict'
 
 const React = require('react')
-const { arrayOf, bool, func, number, object } = require('prop-types')
+const { arrayOf, bool, func, number, object, shape } = require('prop-types')
 const { ItemIterator } = require('./iterator')
 const { ItemTableRow } = require('./table-row')
 const { ItemTableSpacer } = require('./table-spacer')
 const { ItemTableHead } = require('./table-head')
+const { ColumnContextMenu } = require('./column')
 const cx = require('classnames')
 const { noop } = require('../../common/util')
-const { NAV, SASS: { COLUMN, ROW, SCROLLBAR } } = require('../../constants')
 const { bounds, ensure, on, off, maxScrollLeft } = require('../../dom')
 const { match } = require('../../keymap')
-const { refine, restrict, shallow, splice, warp } = require('../../common/util')
 const { assign } = Object
 const throttle = require('lodash.throttle')
+const { refine, restrict, shallow, splice, warp } = require('../../common/util')
 
+const {
+  NAV,
+  SASS: { COLUMN, ROW, SCROLLBAR }
+} = require('../../constants')
+
+const any = (src) => { for (let key in src) return key }
 
 class ItemTable extends ItemIterator {
   constructor(props) {
@@ -48,16 +54,15 @@ class ItemTable extends ItemIterator {
     }
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(...args) {
+    super.componentDidUpdate(...args)
     if (this.props.edit != null) {
-      for (let id in this.props.edit) {
-        this.scrollIntoView({ id: Number(id) }, false)
-      }
+      this.scrollIntoView({ id: Number(any(this.props.edit)) }, false)
     }
   }
 
-  componentWillReceiveProps(props) {
-    super.componentWillReceiveProps(props)
+  componentWillReceiveProps(props, ...args) {
+    super.componentWillReceiveProps(props, ...args)
     if (!shallow(this.props, props, ['columns', 'list'])) {
       this.setState({
         ...this.getColumnState(props),
@@ -73,16 +78,16 @@ class ItemTable extends ItemIterator {
     }]
   }
 
-  update(props = this.props) {
-    super.update(props)
-    this.setState({
+  getStateFromProps(props = this.props) {
+    return {
+      ...super.getStateFromProps(props),
       hasMaxScrollLeft: this.hasMaxScrollLeft()
-    })
+    }
   }
 
   getColumnState(props = this.props) {
     let minWidth = 0
-    let columns = props.columns
+    let columns = props.columns.active
     let colwidth = columns.map((c, idx) => {
       let min = idx > 0 ? props.minColWidth : props.minMainColWidth
       let width = Math.max(c.width, min)
@@ -120,7 +125,7 @@ class ItemTable extends ItemIterator {
       COLUMN.PADDING
   }
 
-  getOffsetInTable(x, { offset, min, max } = this.dragstate) {
+  getOffsetInTable(x, { offset = 0, min, max } = this.dragstate) {
     return restrict(
       x - offset - bounds(this.table).left + this.table.scrollLeft,
       min,
@@ -137,16 +142,15 @@ class ItemTable extends ItemIterator {
     return ROW.HEIGHT
   }
 
-  hasMaxScrollLeft() {
-    return this.props.hasScrollbars &&
+  hasMaxScrollLeft(props = this.props) {
+    return props.hasScrollbars &&
       this.table != null &&
       maxScrollLeft(this.table)
   }
 
   edit(item) {
-    const { property } = this.state.columns[0]
     this.props.onEdit({
-      column: { [item.id]: property.id }
+      column: { [item.id]: this.state.columns[0].id }
     })
   }
 
@@ -243,6 +247,45 @@ class ItemTable extends ItemIterator {
     })
   }, 25)
 
+  showColumnContextMenu = (event) => {
+    event.stopPropagation()
+
+    let { colwidth } = this.state
+
+    let min = this.getMinColumnOffset()
+    let idx = 0
+    let n = this.getOffsetInTable(event.clientX, { min })
+    let k = 0
+
+    while (idx < colwidth.length && k < n) {
+      k += colwidth[idx]
+      if (k - colwidth[idx] / 2 <= n) ++idx
+    }
+
+    this.setState({
+      columnContextMenu: {
+        idx,
+        left: event.clientX,
+        top: event.clientY,
+        value: this.props.columns.active.map(col => col.id)
+      }
+    })
+  }
+
+  hideColumnContextMenu = () => {
+    this.setState({ columnContextMenu: null })
+  }
+
+  handleColumnInsert = (id) => {
+    let { idx } = this.state.columnContextMenu
+    let { minMainColWidth: width } = this.props
+    this.props.onColumnInsert({ id, width }, { idx })
+  }
+
+  handleColumnRemove = (id) => {
+    this.props.onColumnRemove({ id })
+  }
+
   setColumnOffset(offset = 0, column = 'drag') {
     this.table.style.setProperty(`--${column}-offset`, `${offset}px`)
   }
@@ -311,6 +354,17 @@ class ItemTable extends ItemIterator {
     )
   }
 
+  renderColumnContextMenu() {
+    return this.state.columnContextMenu != null && (
+      <ColumnContextMenu
+        {...this.state.columnContextMenu}
+        onInsert={this.handleColumnInsert}
+        onRemove={this.handleColumnRemove}
+        onClose={this.hideColumnContextMenu}
+        options={this.props.columns.available}/>
+    )
+  }
+
   render() {
     return (this.props.isEmpty) ? this.renderNoItems() : (
       <div
@@ -328,6 +382,7 @@ class ItemTable extends ItemIterator {
           minWidth={this.props.minColWidth}
           minWidthMain={this.props.minMainColWidth}
           sort={this.props.sort}
+          onContextMenu={this.showColumnContextMenu}
           onOrder={this.handleColumnOrder}
           onOrderReset={this.handleColumnOrderReset}
           onOrderStart={this.handleColumnOrderStart}
@@ -335,19 +390,25 @@ class ItemTable extends ItemIterator {
           onResize={this.handleColumnResize}
           onSort={this.props.onSort}/>
         {this.renderTableBody()}
+        {this.renderColumnContextMenu()}
       </div>
     )
   }
 
   static propTypes = {
     ...ItemIterator.propTypes,
-    columns: arrayOf(object).isRequired,
+    columns: shape({
+      active: arrayOf(object).isRequired,
+      available: arrayOf(object).isRequired
+    }).isRequired,
     edit: object,
     data: object.isRequired,
     hasScrollbars: bool.isRequired,
     minColWidth: number.isRequired,
     minMainColWidth: number.isRequired,
+    onColumnInsert: func.isRequired,
     onColumnOrder: func.isRequired,
+    onColumnRemove: func.isRequired,
     onColumnResize: func.isRequired,
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,

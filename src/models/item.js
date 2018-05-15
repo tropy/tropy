@@ -16,6 +16,8 @@ const skel = (id, lists = [], photos = [], tags = []) => ({
   id, lists, photos, tags
 })
 
+const isItemSort = (id) => (/^item\./).test(id)
+
 const SEARCH = `
   SELECT item_id AS id
     FROM fts_notes n
@@ -57,29 +59,29 @@ async function search(db, query, params) {
 module.exports = mod.item = {
   all(db, { trash, tags, sort, query }) {
     const dir = sort.asc ? 'ASC' : 'DESC'
-    const params = { $sort: sort.column }
+    const params = {}
 
     query = query.trim()
 
+    const byItem = isItemSort(sort.column)
     const hasTags = tags.length > 0
     const hasQuery = query.length > 0
 
-    if (hasQuery) {
-      params.$query = prefix(query)
-    }
+    if (!byItem) params.$sort = sort.column
+    if (hasQuery) params.$query = prefix(query)
+    if (hasTags) params.$tags = tags.length
 
-    if (hasTags) {
-      params.$tags = tags.length
-    }
-
+    const order = byItem ? sort.column.slice(5) : 'sort.text'
     const doTagsIntersect = true
 
     return search(db, `
-      WITH ${SORT}
+      ${byItem ? '' : `WITH ${SORT}`}
         SELECT DISTINCT id
           FROM items
             ${hasTags ? 'JOIN taggings USING (id)' : ''}
-            LEFT OUTER JOIN sort USING (id)
+            ${byItem ?
+              'JOIN subjects USING (id)' :
+              'LEFT OUTER JOIN sort USING (id)'}
             LEFT OUTER JOIN trash USING (id)
           WHERE
             ${hasTags ? `tag_id IN (${lst(tags)}) AND` : ''}
@@ -87,45 +89,53 @@ module.exports = mod.item = {
             deleted ${trash ? 'NOT' : 'IS'} NULL
           ${hasTags && doTagsIntersect ?
             'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
-          ORDER BY sort.text ${dir}, id ${dir}`,
+          ORDER BY ${order} ${dir}, id ${dir}`,
       params)
   },
 
   async find(db, { ids, query, sort }) {
     const dir = sort.asc ? 'ASC' : 'DESC'
-    const params = { $sort: sort.column }
+    const params = {}
     query = query.trim()
+
+    const byItem = isItemSort(sort.column)
     const hasQuery = query.length > 0
 
-    if (hasQuery) {
-      params.$query = prefix(query)
-    }
+    if (!byItem) params.$sort = sort.column
+    if (hasQuery) params.$query = prefix(query)
+
+    const order = byItem ? sort.column.slice(5) : 'sort.text'
 
     return search(db, `
-      WITH ${SORT}
+      ${byItem ? '' : `WITH ${SORT}`}
         SELECT DISTINCT id
           FROM items
-            LEFT OUTER JOIN sort USING (id)
+            ${byItem ?
+              'JOIN subjects USING' :
+              'LEFT OUTER JOIN sort USING (id)'}
             LEFT OUTER JOIN trash USING (id)
           WHERE
             id IN (${lst(ids)}) AND deleted IS NULL
             ${hasQuery ? `AND id IN (${SEARCH})` : ''}
-          ORDER BY sort.text ${dir}, id ${dir}`,
+          ORDER BY ${order} ${dir}, id ${dir}`,
       params)
   },
 
   async trash(db, { sort, query }) {
     const dir = sort.asc ? 'ASC' : 'DESC'
-    const params = { $sort: sort.column }
+    const params = {}
     query = query.trim()
+
+    const byItem = isItemSort(sort.column)
     const hasQuery = query.length > 0
 
-    if (hasQuery) {
-      params.$query = prefix(query)
-    }
+    if (!byItem) params.$sort = sort.column
+    if (hasQuery) params.$query = prefix(query)
+
+    const order = byItem ? sort.column.slice(5) : 'sort.text'
 
     return search(db, `
-      WITH ${SORT}
+      ${byItem ? '' : `WITH ${SORT}`}
         SELECT DISTINCT id
           FROM items
             JOIN trash USING (id)
@@ -133,10 +143,11 @@ module.exports = mod.item = {
           WHERE
             ${hasQuery ? `id IN (${SEARCH}) AND` : ''}
             reason = 'user'
-          ORDER BY sort.text ${dir}, id ${dir}`,
+          ORDER BY ${order} ${dir}, id ${dir}`,
       params)
   },
 
+  // eslint-disable-next-line complexity
   async list(db, list, { tags, sort, query }) {
     const dir = sort.asc ? 'ASC' : 'DESC'
     const params = { $list: list }
@@ -144,27 +155,25 @@ module.exports = mod.item = {
 
     const hasTags = tags.length > 0
     const hasQuery = query.length > 0
-    const byPosition = sort.property === 'added'
+    const byItem = isItemSort(sort.column)
+    const byPosition = !byItem && sort.property === 'added'
+    const byProperty = byItem || byItem
 
-    if (hasQuery) {
-      params.$query = prefix(query)
-    }
-
-    if (hasTags) {
-      params.$tags = tags.length
-    }
-
-    if (!byPosition) {
-      params.$sort = sort.column
-    }
+    if (hasQuery) params.$query = prefix(query)
+    if (hasTags) params.$tags = tags.length
+    if (!byProperty) params.$sort = sort.column
 
     const doTagsIntersect = true
+    const order =
+      byPosition ? 'added' : byItem ? sort.column.slice(5) : 'sort.text'
 
     return search(db, `
-      ${byPosition ? '' : `WITH ${SORT}`}
+      ${byProperty ? '' : `WITH ${SORT}`}
         SELECT DISTINCT id, added
           FROM list_items
-            ${byPosition ? '' : 'LEFT OUTER JOIN sort USING (id)'}
+            ${byProperty ?
+              'JOIN subjects USING (id)' :
+              'LEFT OUTER JOIN sort USING (id)'}
             ${hasTags ? 'JOIN taggings USING (id)' : ''}
             LEFT OUTER JOIN items USING (id)
             LEFT OUTER JOIN trash USING (id)
@@ -175,7 +184,7 @@ module.exports = mod.item = {
             trash.deleted IS NULL
           ${hasTags && doTagsIntersect ?
             'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
-          ORDER BY ${byPosition ? 'added' : 'sort.text'} ${dir}, id ${dir}`,
+          ORDER BY ${order} ${dir}, id ${dir}`,
       params)
   },
 

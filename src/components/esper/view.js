@@ -62,6 +62,7 @@ class EsperView extends Component {
   }
 
   componentWillUnmount() {
+    this.stop.flush()
     this.tweens.removeAll()
     this.pixi.destroy(true)
     this.m.removeListener(this.handleResolutionChange)

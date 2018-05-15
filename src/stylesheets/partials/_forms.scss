@@ -2,6 +2,12 @@
 // Forms
 // --------------------------------------------------
 
+::-webkit-input-placeholder,
+.placeholder {
+  color: $input-color-placeholder;
+  user-select: none;
+}
+
 .form-inline {
   > * + * {
     margin-left: $space-min;
@@ -61,7 +67,7 @@ fieldset {
   font-family: inherit;
   font-size: $font-size-base;
   color: $input-color;
-  background: $input-bg;
+  background-color: $input-bg;
   border: 1px solid $input-border;
   border-radius: $input-border-radius-small;
   box-shadow: none;
@@ -69,23 +75,10 @@ fieldset {
 
   @include input-btn-focus;
 
-  &::-webkit-input-placeholder {
-    color: $input-color-placeholder;
-    user-select: none;
-  }
-
   &[readonly],
-  &[disabled] {
-    background: $input-bg-readonly;
-  }
-
-  @at-root select#{&} {
-    -webkit-appearance: none;
-    background-repeat: no-repeat;
-    background-position: right $space-min center;
-    background-image: if($theme == "light",
-      image-url("project/icon-chevron7-light-theme.svg"),
-      image-url("project/icon-chevron7-dark-theme.svg"));
+  &[disabled],
+  &.disabled {
+    background-color: $input-bg-readonly;
   }
 }
 

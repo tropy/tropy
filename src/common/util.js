@@ -59,6 +59,10 @@ const util = {
     return util.splice(array, at, 0, ...items)
   },
 
+  last(array) {
+    return array[array.length - 1]
+  },
+
   remove(array, ...items) {
     return array.filter(it => items.indexOf(it) < 0)
   },
@@ -258,6 +262,12 @@ const util = {
     for (let prop of props) {
       if (src.hasOwnProperty(prop)) return src[prop]
       if (typeof src[prop] !== 'undefined') return src[prop]
+    }
+
+    if (props.length === 0) {
+      for (let prop in src) {
+        if (typeof src[prop] !== 'undefined') return src[prop]
+      }
     }
   },
 

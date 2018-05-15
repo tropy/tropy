@@ -23,7 +23,7 @@ const { IconSpin } = require('../icons')
 const {
   getActivities,
   getCachePrefix,
-  getColumns,
+  getAllColumns,
   getExpandedPhotos,
   getListHold,
   getSelectedItems,
@@ -326,7 +326,7 @@ class ProjectContainer extends Component {
 
     ui: object.isRequired,
     data: object.isRequired,
-    columns: arrayOf(object),
+    columns: object.isRequired,
     cache: string.isRequired,
     sort: object.isRequired,
     tags: object.isRequired,
@@ -387,7 +387,7 @@ module.exports = {
     state => ({
       activities: getActivities(state),
       cache: getCachePrefix(state),
-      columns: getColumns(state),
+      columns: getAllColumns(state),
       data: state.metadata,
       edit: state.edit,
       expanded: getExpandedPhotos(state),
@@ -441,6 +441,14 @@ module.exports = {
       onProjectSave(...args) {
         dispatch(actions.project.save(...args))
         dispatch(actions.edit.cancel())
+      },
+
+      onColumnInsert(...args) {
+        dispatch(actions.nav.column.insert(...args))
+      },
+
+      onColumnRemove(...args) {
+        dispatch(actions.nav.column.remove(...args))
       },
 
       onColumnOrder(...args) {

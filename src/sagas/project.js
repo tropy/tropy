@@ -76,6 +76,7 @@ function *open(file) {
   } finally {
     yield call(db.close)
     yield put(act.project.closed())
+    yield cancel()
 
     debug('*open terminated')
   }

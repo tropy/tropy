@@ -8,14 +8,31 @@ const { blank, get } = require('../common/util')
 const { TYPE, ITEM, PHOTO } = require('../constants')
 const { value }  = require('../value')
 
+const strip = (id, vocab) =>
+  blank(vocab) ? id.split(/(#|\/)/).pop() : id.slice(vocab.length)
+
+const expand = (res, vocab) => ({
+  ...res,
+  name: strip(res.id, res.vocabulary),
+  prefix: get(vocab, [res.vocabulary, 'prefix'])
+})
+
+const getResourceList =
+  (res, vocab) =>
+    into([], map(kv => expand(kv[1], vocab)), res)
+      .sort(by('prefix', 'label', 'name'))
+
+
 const getPropertyList = memo(
   ({ ontology }) => ontology.props,
-  (props) => values(props).sort(by('id'))
+  ({ ontology }) => ontology.vocab,
+  getResourceList
 )
 
 const getDatatypeList = memo(
   ({ ontology }) => ontology.type,
-  (type) => values(type).sort(by('id'))
+  ({ ontology }) => ontology.vocab,
+  getResourceList
 )
 
 const getVocabs = memo(
@@ -128,6 +145,7 @@ const getActiveSelectionTemplate = memo(
 )
 
 module.exports = {
+  expand,
   getActiveItemTemplate,
   getActivePhotoTemplate,
   getActiveSelectionTemplate,
