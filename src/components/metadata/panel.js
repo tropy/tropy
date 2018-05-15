@@ -24,6 +24,7 @@ const {
   getPhotoFields,
   getSelectionFields,
   getSelectedItems,
+  getSelectedItemTemplate,
   getSelectedPhoto
 } = require('../../selectors')
 
@@ -160,6 +161,7 @@ class MetadataPanel extends PureComponent {
     const {
       items,
       itemFields,
+      template,
       templates,
       isDisabled,
     } = this.props
@@ -173,8 +175,9 @@ class MetadataPanel extends PureComponent {
         </h5>
         <TemplateSelect
           options={templates}
-          value={items[0].template}
+          value={template.id}
           isDisabled={isDisabled}
+          isMixed={template.mixed}
           isRequired
           onChange={this.handleTemplateChange}/>
         <MetadataList
@@ -283,6 +286,10 @@ class MetadataPanel extends PureComponent {
     })).isRequired,
 
     keymap: object.isRequired,
+    template: shape({
+      id: string,
+      mixed: bool
+    }).isRequired,
     templates: arrayOf(object).isRequired,
 
     selection: shape({
@@ -312,6 +319,7 @@ module.exports = {
       itemFields: getItemFields(state),
       photo: getSelectedPhoto(state),
       photoFields: getPhotoFields(state),
+      template: getSelectedItemTemplate(state),
       templates: getItemTemplates(state),
       selection: getActiveSelection(state),
       selectionFields: getSelectionFields(state)

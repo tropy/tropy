@@ -6,6 +6,7 @@ const { Select } = require('../select')
 const { FormattedMessage } = require('react-intl')
 const { startsWith } = require('../../collate')
 const { bool, array, func, number, string } = require('prop-types')
+const cx = require('classnames')
 
 class TemplateSelect extends PureComponent {
   get placeholder() {
@@ -22,38 +23,21 @@ class TemplateSelect extends PureComponent {
   }
 
   render() {
+    let { isMixed, ...props } = this.props
     return (
-      <Select
-        className="template-select"
-        isDisabled={this.props.isDisabled}
-        isRequired={this.props.isRequired}
-        match={this.props.match}
-        onBlur={this.props.onBlur}
-        onChange={this.props.onChange}
-        onClose={this.props.onClose}
-        onFocus={this.props.onFocus}
-        onOpen={this.props.onOpen}
-        options={this.props.options}
+      <Select {...props}
+        className={cx('template-select', { mixed: isMixed })}
         placeholder={this.placeholder}
-        ref={this.setContainer}
-        tabIndex={this.props.tabIndex}
-        value={this.props.value}/>
+        ref={this.setContainer}/>
     )
   }
 
   static propTypes = {
-    isDisabled: bool,
-    isRequired: bool,
+    isMixed: bool,
     match: func.isRequired,
     options: array.isRequired,
-    onBlur: func,
-    onChange: func,
-    onClose: func,
-    onFocus: func,
-    onOpen: func,
     placeholder: string,
-    tabIndex: number.isRequired,
-    value: string,
+    tabIndex: number.isRequired
   }
 
   static defaultProps = {
