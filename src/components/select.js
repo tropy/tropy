@@ -24,9 +24,7 @@ class Value extends Component {
   render() {
     return (
       <div className="value">
-        <div className="truncate">
-          {this.props.label}
-        </div>
+        {this.props.label}
         {this.props.hasClearButton &&
           <Button
             className="clear"

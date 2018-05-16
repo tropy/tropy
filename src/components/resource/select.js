@@ -56,7 +56,7 @@ class ResourceSelect extends PureComponent {
     toText: (res) => (
       <Fragment>
         <span className="truncate">
-          {`${res.label || titlecase(res.name)} `}
+          {res.label || titlecase(res.name)}
         </span>
         <span className="mute truncate">
           {res.prefix ? `${res.prefix}:${res.name}` : res.id}

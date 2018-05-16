@@ -21,6 +21,7 @@ fieldset {
   padding: 5px $space-xs;
   background: $fieldset-bg;
   border-radius: $border-radius-small;
+  min-width: 0; // Fix truncation
 }
 
 .form-group {

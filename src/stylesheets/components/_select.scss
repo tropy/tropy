@@ -13,11 +13,22 @@
     @include input-btn-focus(".focus", $input-btn-invalid-color); // sass-lint:disable-line mixins-before-declarations
   }
 
+  .truncate {
+    flex: 0 1 auto;
+
+    & + .truncate {
+      flex: 0 10000 auto; // Truncate second element first
+      margin-left: $space-min;
+    }
+  }
+
   .value,
   .placeholder {
-    display: flex;
-    align-items: center;
-    height: $input-height-base - 2px;
+    line-height: $input-height-base - 2px;
+  }
+
+  .value {
+    @include css-truncation;
   }
 
   .query {
@@ -112,20 +123,15 @@
     }
   }
 
+  // Use flexbox only in more complex value/option layouts and let
+  // value/option handle the truncation for text nodes and spans
   &.column-select,
   &.resource-select {
+    .value,
     .option {
       display: flex;
       align-items: center;
-
-      .truncate {
-        flex: 0 1 auto;
-
-        & + .truncate {
-          flex: 0 10000 auto;
-          margin-left: $space-min;
-        }
-      }
+      height: $input-height-base - 2px;
     }
   }
 }

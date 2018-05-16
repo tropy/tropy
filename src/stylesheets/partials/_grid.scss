@@ -6,6 +6,7 @@
   .col-#{$i} {
     flex: 0 0 (100% / (12 / $i));
     padding: 0 ($grid-gutter-width / 2);
+    min-width: 0; // Fix truncation
   }
 
   .col-offset-#{$i} {
