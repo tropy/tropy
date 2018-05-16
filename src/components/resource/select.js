@@ -1,64 +1,70 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
-const { injectIntl, intlShape } = require('react-intl')
-const { bool, array, func, number, string } = require('prop-types')
+const { Fragment, PureComponent } = React
+const { Select } = require('../select')
+const { FormattedMessage } = require('react-intl')
+const { startsWith } = require('../../collate')
+const { titlecase } = require('../../common/util')
+const { func, number, string } = require('prop-types')
 
 class ResourceSelect extends PureComponent {
-  get hasPlaceholder() {
-    return !this.props.isRequired && this.props.placeholder != null
-  }
-
   get placeholder() {
-    return this.props.intl.formatMessage({ id: this.props.placeholder })
+    return this.props.placeholder != null &&
+      <FormattedMessage id={this.props.placeholder}/>
   }
 
-  handleChange = ({ target }) => {
-    this.props.onChange(
-      this.props.resources.find(p => p.id === target.value)
-    )
+  focus = () => {
+    if (this.select != null) this.select.focus()
   }
 
-  renderPlaceholder() {
-    return this.hasPlaceholder && <option>{this.placeholder}</option>
+  setSelect = (select) => {
+    this.select = select
   }
 
   render() {
     return (
-      <select
-        tabIndex={this.props.tabIndex}
-        name="resource-select"
-        className="resource-select form-control"
-        disabled={this.props.isDisabled}
-        required={this.props.isRequired}
-        value={this.props.selected}
-        onChange={this.handleChange}>
-        {this.renderPlaceholder()}
-        {this.props.resources.map(({ id }) =>
-          <option key={id} value={id}>{id}</option>)}
-      </select>
+      <Select {...this.props}
+        placeholder={this.placeholder}
+        ref={this.setSelect}/>
     )
   }
 
   static propTypes = {
-    intl: intlShape,
-    isDisabled: bool,
-    isRequired: bool,
+    className: string.isRequired,
+    match: func.isRequired,
     placeholder: string,
     tabIndex: number.isRequired,
-    resources: array.isRequired,
-    selected: string,
-    onChange: func.isRequired
+    toText: func.isRequired
   }
 
   static defaultProps = {
-    isRequired: true,
-    tabIndex: -1
+    className: 'resource-select',
+    match: (res, query) => {
+      let q = query.split(':', 2)
+      if (q.length > 1) {
+        return (q[0] === res.prefix) && (
+          (res.name && res.name.startsWith(q[1])) ||
+          (res.label && startsWith(res.label, q[1])))
+      }
+      return (res.prefix && res.prefix.startsWith(query)) ||
+        (res.name && res.name.startsWith(query)) ||
+        (res.label && startsWith(res.label, query))
+    },
+    tabIndex: -1,
+    toText: (res) => (
+      <Fragment>
+        <span className="truncate">
+          {res.label || titlecase(res.name)}
+        </span>
+        <span className="mute truncate">
+          {res.prefix ? `${res.prefix}:${res.name}` : res.id}
+        </span>
+      </Fragment>
+    )
   }
 }
 
 module.exports = {
-  ResourceSelect: injectIntl(ResourceSelect)
+  ResourceSelect
 }
-

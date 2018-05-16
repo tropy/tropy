@@ -17,6 +17,10 @@
     border: ($input-border-width + $popup-focus-shadow-width) solid $input-btn-focus-color;
     border-radius: $input-border-radius-small + $popup-focus-shadow-width;
 
+    &.invalid {
+      border-color: $input-btn-invalid-color;
+    }
+
     @each $alignment in "top", "bottom" {
       &.#{$alignment} {
         border-#{$alignment}: 0;

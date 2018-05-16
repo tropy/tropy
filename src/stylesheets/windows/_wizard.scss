@@ -21,6 +21,15 @@
   "../base/type";
 
 
+// Partials
+// --------------------------------------------------
+
+@import
+  "../partials/window-controls",
+  "../partials/window-draggable",
+  "../partials/forms";
+
+
 // Components
 // --------------------------------------------------
 
@@ -29,12 +38,3 @@
   "../components/button",
   "../components/flash",
   "../components/wizard";
-
-
-// Partials
-// --------------------------------------------------
-
-@import
-  "../partials/window-controls",
-  "../partials/window-draggable",
-  "../partials/forms";

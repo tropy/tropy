@@ -3,14 +3,21 @@
 // --------------------------------------------------
 
 .vocab {
-  @extend %form-shading-level-2;
-
   a {
     color: $vocab-link-color;
   }
 
   .panel {
+    @include form-shading-level(2);
     background-color: $vocab-panel-bg;
+
+    &.active {
+      @at-root #{
+        selector-replace(&, ".vocab", ".vocab .tab-focus")
+      } {
+        @include form-shading-level(3);
+      }
+    }
   }
 
   .panel-body {
@@ -34,12 +41,20 @@
   }
 
   .resource {
-    @extend %form-shading-level-3;
-
     margin-bottom: $space-min;
 
     &:last-child {
       margin-bottom: 0;
+    }
+
+    fieldset {
+      @include form-shading-level(3);
+
+      @at-root #{
+        selector-replace(&, ".vocab", ".vocab .tab-focus .panel.active")
+      } {
+        @include form-shading-level(4);
+      }
     }
   }
 

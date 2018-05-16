@@ -8,3 +8,65 @@
     box-shadow: 0 0 0 2px $color !important; // sass-lint:disable-line no-important
   }
 }
+
+@mixin form-shading-level($n) {
+  fieldset {
+    background-color: var(--level-#{$n}-fieldset-bg);
+  }
+
+  .form-control {
+    border-color: var(--level-#{$n}-border);
+    background-color: var(--level-#{$n}-bg);
+
+    @include input-btn-focus; // sass-lint:disable-line mixins-before-declarations
+
+    &[readonly],
+    &[disabled],
+    &.disabled {
+      background-color: var(--level-#{$n}-input-bg-readonly);
+    }
+  }
+
+  .checkbox,
+  .radio {
+    [type] {
+      background-color: var(--level-#{$n}-bg);
+      border-color: var(--level-#{$n}-border);
+
+      &:active {
+        background-color: $checkbox-checked-bg;
+        border-color: $checkbox-checked-border;
+      }
+
+      &[disabled] {
+        background-color: var(--level-#{$n}-input-bg-readonly);
+        border-color: var(--level-#{$n}-border);
+      }
+
+      &:checked {
+        background-color: $checkbox-checked-bg;
+        border-color: $checkbox-checked-border;
+
+        &:active {
+          background-color: $checkbox-checked-active-bg;
+          border-color: $checkbox-checked-active-border;
+        }
+
+        &[disabled] {
+          background-color: var(--level-#{$n}-input-bg-readonly);
+          border-color: var(--level-#{$n}-border);
+
+          &::before,
+          &::after {
+            background: $checkbox-checked-bg;
+          }
+        }
+      }
+    }
+  }
+
+  .btn-default {
+    border-color: var(--level-#{$n}-border);
+    background-color: var(--level-#{$n}-bg);
+  }
+}

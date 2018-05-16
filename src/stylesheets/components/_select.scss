@@ -1,0 +1,136 @@
+//
+// Select
+// --------------------------------------------------
+
+.select {
+  min-width: 0; // Fix truncation
+  position: relative;
+  transition: none; // todo
+
+  &.invalid {
+    border-color: $input-btn-invalid-color;
+
+    @include input-btn-focus(".focus", $input-btn-invalid-color); // sass-lint:disable-line mixins-before-declarations
+  }
+
+  .value,
+  .placeholder {
+    line-height: $input-height-base - 2px;
+  }
+
+  .value {
+    @include css-truncation;
+  }
+
+  .query {
+    color: inherit;
+    background-color: transparent;
+    border: 0;
+    padding: inherit;
+    font-family: inherit;
+    font-size: $font-size-base;
+    width: 100%;
+    height: $input-height-base - 2px;
+    cursor: default;
+
+    &.live {
+      cursor: auto;
+    }
+  }
+
+  .global-clear {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: $input-height-base - 2px;
+    height: $input-height-base - 2px;
+    padding: $btn-icon-padding - 1px;
+
+    .icon {
+      color: inherit;
+    }
+  }
+
+  &.single {
+    background-repeat: no-repeat;
+    background-position: right $space-min center;
+    background-image: if($theme == "light",
+      image-url("project/icon-chevron7-light-theme.svg"),
+      image-url("project/icon-chevron7-dark-theme.svg"));
+    padding-right: $space-lg;
+
+    @include input-btn-focus(".focus"); // sass-lint:disable-line mixins-before-declarations
+
+    &.can-clear {
+      background-image: none;
+    }
+
+    .query {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+  }
+
+  &.multi {
+    .placeholder,
+    .query {
+      padding: 0 $padding-base-horizontal;
+    }
+
+    .placeholder {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+    }
+
+    .option-list {
+      margin-bottom: $option-list-margin;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      padding-left: $padding-base-horizontal + $space-md;
+
+      &.selected {
+        padding-left: $padding-base-horizontal;
+      }
+    }
+
+    .no-matches {
+      padding-left: $padding-base-horizontal;
+    }
+
+    .icon-tick {
+      color: inherit;
+      margin-left: -4px;
+      margin-right: 4px;
+    }
+
+    .mute {
+      margin-left: $space-min;
+    }
+  }
+}
+
+// Use flexbox only in more complex value/option layouts and let
+// value/option handle the truncation for text nodes and spans
+.column-select,
+.resource-select {
+  .value,
+  .option {
+    display: flex;
+    align-items: center;
+  }
+
+  .truncate {
+    flex: 0 1 auto;
+
+    & + .truncate {
+      flex: 0 10000 auto; // Truncate second element first
+      margin-left: $space-min;
+    }
+  }
+}

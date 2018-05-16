@@ -81,7 +81,7 @@ en:
   prefs:
     title: Tropy Preferences
     app:
-      label: Global
+      label: Settings
       style:
         theme: Theme
         themes:
@@ -154,7 +154,7 @@ en:
       install: Install Plugin
       uninstall: Uninstall
       noInfo: Unknown author
-      homepage: Homepage
+      homepage: More
   item:
     created: Date Added
     modified: Modified
@@ -196,7 +196,12 @@ en:
         value: "{value, number}"
   notepad:
     placeholder: Add your notes here …
-
+  completions:
+    empty: No options available
+    noMatches: No matches found
+  select:
+    column:
+      placeholder: Search
   template:
     id: URI
     name: Name

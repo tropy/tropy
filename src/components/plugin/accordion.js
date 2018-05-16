@@ -113,9 +113,9 @@ class PluginAccordion extends Accordion {
   renderBody() {
     return super.renderBody(
       <ul>
-        {this.props.instances.map((config) =>
+        {this.props.instances.map((config, idx) =>
           <PluginInstance
-            key={config.plugin}
+            key={idx}
             config={config}
             specs={this.props.spec.options}
             onChange={this.props.onChange}
@@ -126,6 +126,7 @@ class PluginAccordion extends Accordion {
   }
 
   static propTypes = {
+    ...Accordion.propTypes,
     instances: arrayOf(object).isRequired,
     spec: object.isRequired,
     onChange: func.isRequired,

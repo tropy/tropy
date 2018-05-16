@@ -2,6 +2,11 @@
 // Option list
 // --------------------------------------------------
 
+.option-container {
+  display: flex;
+  flex-direction: column;
+}
+
 .option-list {
   display: flex;
   flex: 1 1 0;
@@ -20,15 +25,20 @@
     contain: content;
     will-change: transform;
   }
+}
 
-  .option {
-    position: relative;
-    contain: content;
-    padding: 0 8px;
-    line-height: $line-height-large;
+.option {
+  @include css-truncation;
+  padding: 0 8px;
+  line-height: $line-height-large;
+  position: relative;
+  contain: content;
 
-    &.active {
-      background: $option-active-bg;
-    }
+  &.active {
+    background: $option-active-bg;
+  }
+
+  &.no-matches {
+    color: $option-no-matches-color;
   }
 }

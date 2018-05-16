@@ -3,11 +3,11 @@
 const React = require('react')
 const { Component } = React
 const { createPortal } = require('react-dom')
-const { func, node, number, oneOf, shape, string } = require('prop-types')
+const { bool, func, node, number, oneOf, shape, string } = require('prop-types')
 const { $, append, classes, element, on, off, remove } = require('../dom')
+const { noop } = require('../common/util')
 const cx = require('classnames')
 const throttle = require('lodash.throttle')
-
 
 class Popup extends Component {
   constructor(props) {
@@ -17,18 +17,51 @@ class Popup extends Component {
   }
 
   componentDidMount() {
-    append(this.dom, $('#popup-root'))
+    on(document, 'mousedown', this.handleClick, { capture: true })
+    on(document, 'mouseup', this.handleClick, { capture: true })
+    on(document, 'click', this.handleClick, { capture: true })
+    on(document, 'contextmenu', this.handleContextMenu, { capture: true })
     on(window, 'resize', this.handleResize)
+    append(this.dom, $('#popup-root'))
+
+    if (this.props.autofocus) {
+      let e = $('[tabindex]', this.dom)
+      if (e != null) e.focus()
+    }
   }
 
   componentWillUnmount() {
     remove(this.dom)
+    off(document, 'mousedown', this.handleClick, { capture: true })
+    off(document, 'mouseup', this.handleClick, { capture: true })
+    off(document, 'click', this.handleClick, { capture: true })
+    off(document, 'contextmenu', this.handleContextMenu, { capture: true })
     off(window, 'resize', this.handleResize)
   }
 
-  handleResize = throttle(() => {
-    if (this.props.onResize) this.props.onResize()
-  }, 25)
+  handleClick= (event) => {
+    if (this.props.onClickOutside != null && !this.isInside(event)) {
+      event.stopPropagation()
+      event.preventDefault()
+      if (event.type === 'click') {
+        this.props.onClickOutside(event)
+      }
+    }
+  }
+
+  handleContextMenu = (event) => {
+    event.stopPropagation()
+    event.preventDefault()
+    if (this.props.onClickOutside != null && !this.isInside(event)) {
+      this.props.onClickOutside(event)
+    }
+  }
+
+  isInside({ target, path }) {
+    return target === document.activeElement || path.includes(this.dom)
+  }
+
+  handleResize = throttle(() => { this.props.onResize() }, 25)
 
   render() {
     return createPortal((
@@ -42,9 +75,11 @@ class Popup extends Component {
 
   static propTypes = {
     anchor: oneOf(['top', 'right', 'bottom', 'left', 'float']),
+    autofocus: bool,
     children: node.isRequired,
     className: string,
-    onResize: func,
+    onClickOutside: func,
+    onResize: func.isRequired,
     style: shape({
       top: number,
       left: number,
@@ -54,7 +89,8 @@ class Popup extends Component {
   }
 
   static defaultProps = {
-    anchor: 'float'
+    anchor: 'float',
+    onResize: noop
   }
 }
 

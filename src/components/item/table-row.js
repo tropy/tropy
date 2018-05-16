@@ -18,31 +18,47 @@ class ItemTableRow extends ItemIterable {
       (idx <= this.props.drop && idx > this.props.drag)
   }
 
+  isItemColumn(id) {
+    let idx = id.search(/^item\./)
+    return -1 === idx ? false : id.slice(5)
+  }
+
   isEditing = (id) => {
     return get(this.props.edit, [this.props.item.id]) === id
   }
 
   mapColumns(fn, columns = this.props.columns) {
     const cells = []
+    const { data, item } = this.props
 
     for (let i = 0, ii = columns.length; i < ii; ++i) {
-      const column = columns[i]
-      const next = columns[(i + 1) % ii]
-      const prev = columns[(ii + i - 1) % ii]
-      const { property } = column
-      const isMainColumn = (i === 0)
+      let column = columns[i]
+      let next = columns[(i + 1) % ii]
+      let prev = columns[(ii + i - 1) % ii]
+      let isMainColumn = (i === 0)
+      let isItemColumn = this.isItemColumn(column.id)
+      let type, value
+
+      if (isItemColumn) {
+        type = column.type
+        value = item[isItemColumn]
+      } else {
+        type = get(data, [column.id, 'type'])
+        value = get(data, [column.id, 'text'])
+      }
 
       const props = {
-        key: property.id,
-        id: property.id,
+        key: column.id,
+        id: column.id,
         isDragging: this.isDragging(i),
-        isEditing: this.isEditing(property.id),
+        isEditing: this.isEditing(column.id),
         isMainColumn,
         isMoving: this.isMoving(i),
-        nextColumn: next.property.id,
-        prevColumn: prev.property.id,
-        type: get(this.props.data, [property.id, 'type']),
-        value: get(this.props.data, [property.id, 'text'])
+        isReadOnly: !!column.protected,
+        nextColumn: next.id,
+        prevColumn: prev.id,
+        type,
+        value
       }
 
       if (isMainColumn) {

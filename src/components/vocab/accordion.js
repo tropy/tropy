@@ -119,6 +119,7 @@ class VocabAccordion extends Accordion {
   }
 
   static propTypes = {
+    ...Accordion.propTypes,
     vocab: shape({
       id: string.isRequired,
       prefix: string,

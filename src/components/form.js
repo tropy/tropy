@@ -4,6 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { FormattedMessage } = require('react-intl')
 const { Input } = require('./input')
+const { Select } = require('./select')
 const cx = require('classnames')
 const {
   arrayOf, bool, func, node, oneOf, number, string
@@ -196,9 +197,9 @@ class FormSelect extends PureComponent {
     })
   )
 
-  handleChange = (event) => {
+  handleChange = (opt) => {
     this.props.onChange({
-      [this.props.name]: event.target.value
+      [this.props.name]: opt
     })
   }
 
@@ -208,17 +209,16 @@ class FormSelect extends PureComponent {
         id={this.props.id}
         size={this.props.size}
         isCompact={this.props.isCompact}>
-        <select
+        <Select
           id={this.props.id}
-          className="form-control"
-          name={this.props.name}
+          isDisabled={this.props.isDisabled}
+          isRequired={this.props.isRequired}
+          onChange={this.handleChange}
+          options={this.props.options}
+          placeholder={this.props.placeholder}
           tabIndex={this.props.tabIndex}
-          value={this.props.value}
-          disabled={this.props.isDisabled}
-          onChange={this.handleChange}>
-          {this.props.options.map((opt) =>
-            <option key={opt} value={opt}>{this.optLabel(opt)}</option>)}
-        </select>
+          toText={this.optLabel}
+          value={this.props.value}/>
       </FormElement>
     )
   }
@@ -228,8 +228,10 @@ class FormSelect extends PureComponent {
     intl: intlShape,
     isCompact: bool,
     isDisabled: bool,
+    isRequired: bool,
     name: string.isRequired,
     options: arrayOf(string).isRequired,
+    placeholder: node,
     size: number.isRequired,
     tabIndex: number,
     value: string.isRequired,

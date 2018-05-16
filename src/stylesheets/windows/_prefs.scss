@@ -19,7 +19,8 @@
 @import
   "../base/reset",
   "../base/base",
-  "../base/type";
+  "../base/type",
+  "../base/utilities";
 
 
 // Partials
@@ -51,4 +52,7 @@
   "../components/panel-group",
   "../components/panel",
   "../components/accordion",
-  "../components/flash";
+  "../components/flash",
+  "../components/option",
+  "../components/select",
+  "../components/popup";

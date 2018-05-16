@@ -2,6 +2,7 @@
 
 const { createSelector: memo } = require('reselect')
 const { pluck } = require('./util')
+const EMPTY = {}
 
 const getItems = ({ items }) => items
 
@@ -20,9 +21,19 @@ const getListHold = memo(
     return hold
   }, {})
 )
+
+const getSelectedItemTemplate = memo(
+  getSelectedItems,
+  ([item, ...items]) => (item == null) ? EMPTY : {
+    id: item.template,
+    mixed: items.find(it => it.template !== item.template) != null
+  }
+)
+
 module.exports = {
   getItems,
   getListHold,
   getSelectedItems,
+  getSelectedItemTemplate,
   getVisibleItems
 }
