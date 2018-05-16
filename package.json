@@ -56,7 +56,7 @@
     "electron": "1.6.16",
     "electron-devtools-installer": "^2.2.4",
     "electron-mocha": "^6.0.2",
-    "electron-packager": "^12.0.2",
+    "electron-packager": "^11.2.0",
     "electron-winstaller": "^2.6.4",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
