@@ -35,8 +35,7 @@ class ResourceSelect extends PureComponent {
     match: func.isRequired,
     placeholder: string,
     tabIndex: number.isRequired,
-    toText: func.isRequired,
-    toValue: func.isRequired
+    toText: func.isRequired
   }
 
   static defaultProps = {
