@@ -81,7 +81,7 @@ class Completions extends Component {
       anchor,
       clip: {
         top: round(top),
-        bottom: round(top),
+        bottom: round(bottom),
         left: round(left),
         right: round(right)
       },
