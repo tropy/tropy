@@ -24,6 +24,7 @@ class Popup extends Component {
     this.root.style.clipPath = this.dom.style.clipPath = this.getClipPath()
     append(this.dom, this.root)
     if (this.props.autofocus) this.focus()
+    document.body.style.pointerEvents = 'none'
   }
 
   componentWillUnmount() {
@@ -32,6 +33,7 @@ class Popup extends Component {
     off(this.dom, 'contextmenu', this.handleContextMenu)
     off(window, 'resize', this.handleResize)
     this.root.style.clipPath = null
+    document.body.style.pointerEvents = null
   }
 
   getClipPath({ clip } = this.props) {
