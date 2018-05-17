@@ -10,6 +10,7 @@ const { bounds, viewport } = require('../dom')
 const { startsWith } = require('../collate')
 const { INPUT, POPUP } = require('../constants/sass')
 const cx = require('classnames')
+const { round } = Math
 const {
   array, bool, func, instanceOf, number, shape, string
 } = require('prop-types')
@@ -78,11 +79,16 @@ class Completions extends Component {
 
     return {
       anchor,
-      clip: { top, bottom, left, right },
-      top: (anchor === 'top') ? bottom : top - height,
-      left,
-      height,
-      width: width + padding.width
+      clip: {
+        top: round(top),
+        bottom: round(top),
+        left: round(left),
+        right: round(right)
+      },
+      top: round((anchor === 'top') ? bottom : top - height),
+      left: round(left),
+      height: round(height),
+      width: round(width + padding.width)
     }
   }
 
