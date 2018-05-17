@@ -6,7 +6,7 @@ const { FormattedMessage } = require('react-intl')
 const { Popup } = require('./popup')
 const { OptionList } = require('./option')
 const { blank, last } = require('../common/util')
-const { translate, rounded } = require('../common/math')
+const { translate } = require('../common/math')
 const { bounds, viewport } = require('../dom')
 const { startsWith } = require('../collate')
 const cx = require('classnames')
@@ -79,7 +79,7 @@ class Completions extends Component {
   getPopupBounds() {
     if (this.props.parent == null) return
 
-    let bnd = rounded(bounds(this.props.parent))
+    let bnd = bounds(this.props.parent)
     let height = this.getOptionsHeight() + PADDING + MARGIN
 
     let [anchor, clip] = (bnd.bottom + height <= viewport().height) ?

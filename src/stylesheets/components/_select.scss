@@ -10,6 +10,7 @@
   .value,
   .placeholder {
     line-height: $input-height-base - 2px;
+    pointer-events: none;
   }
 
   .value {
