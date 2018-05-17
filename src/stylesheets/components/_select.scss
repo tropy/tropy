@@ -26,7 +26,6 @@
     width: 100%;
     height: $input-height-base - 2px;
     cursor: default;
-    pointer-events: auto; // Reset
 
     &.live {
       cursor: auto;
