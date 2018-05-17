@@ -72,12 +72,13 @@ class Completions extends Component {
     const { parent, padding } = this.props
     if (parent == null) return
 
-    const { top, bottom, left, width } = bounds(parent)
+    const { top, bottom, left, right, width } = bounds(parent)
     const height = this.getOptionsHeight() + padding.height
     const anchor = (bottom + height <= viewport().height) ? 'top' : 'bottom'
 
     return {
       anchor,
+      clip: { top, bottom, left, right },
       top: (anchor === 'top') ? bottom : top - height,
       left,
       height,
@@ -193,11 +194,12 @@ class Completions extends Component {
       )
     }
 
-    const { anchor, ...style } = this.getPopupBounds()
+    const { anchor, clip, ...style } = this.getPopupBounds()
     return (
       <Popup
         anchor={anchor}
         className={this.props.className}
+        clip={clip}
         style={style}
         onClickOutside={this.props.onClickOutside}
         onResize={this.handleResize}>

@@ -227,9 +227,12 @@ class Select extends Component {
   }
 
   handleMouseDown = (event) => {
-    if (event.button === 0) {
-      if (!this.state.isOpen) this.open()
-      else if (this.state.query.length === 0) this.close()
+    if (event.button === 0 && !this.props.isStatic) {
+      if (!this.state.isOpen) {
+        this.open()
+      } else if (this.state.query.length === 0) {
+        this.close()
+      }
     }
     if (this.input != null) {
       this.input.focus()
