@@ -164,6 +164,7 @@ class Select extends Component {
 
   open() {
     if (!this.state.isDisabled) {
+      this.shouldPopupFadeIn = !this.state.hasFocus
       this.setState({ isOpen: true })
       this.props.onOpen()
     }
@@ -335,27 +336,32 @@ class Select extends Component {
   }
 
   renderCompletions() {
-    return this.state.isOpen && (
-      <Completions
-        className={cx(this.props.className, {
-          invalid: this.state.isInvalid
-        })}
-        completions={this.props.options}
-        isSelectionHidden={this.props.isSelectionHidden}
-        isVisibleWhenBlank
-        match={this.props.match}
-        maxRows={this.props.maxRows}
-        onClickOutside={this.close}
-        onResize={this.props.onResize}
-        onSelect={this.handleSelect}
-        parent={this.container}
-        popup={!this.props.isStatic}
-        query={this.state.query}
-        ref={this.setCompletions}
-        selection={this.state.selection}
-        toId={this.props.toId}
-        toText={this.props.toText}/>
-    )
+    try {
+      return this.state.isOpen && (
+        <Completions
+          className={cx(this.props.className, {
+            invalid: this.state.isInvalid
+          })}
+          completions={this.props.options}
+          fadeIn={this.shouldPopupFadeIn}
+          isSelectionHidden={this.props.isSelectionHidden}
+          isVisibleWhenBlank
+          match={this.props.match}
+          maxRows={this.props.maxRows}
+          onClickOutside={this.close}
+          onResize={this.props.onResize}
+          onSelect={this.handleSelect}
+          parent={this.container}
+          popup={!this.props.isStatic}
+          query={this.state.query}
+          ref={this.setCompletions}
+          selection={this.state.selection}
+          toId={this.props.toId}
+          toText={this.props.toText}/>
+      )
+    } finally {
+      this.shouldPopupFadeIn = false
+    }
   }
 
   render() {

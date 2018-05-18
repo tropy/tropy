@@ -21,7 +21,7 @@ class Popup extends Component {
     on(this.dom, 'mousedown', this.handleClick)
     on(this.dom, 'contextmenu', this.handleContextMenu)
     on(window, 'resize', this.handleResize)
-    this.root.style.clipPath = this.dom.style.clipPath = this.getClipPath()
+    this.clip()
     append(this.dom, this.root)
     if (this.props.autofocus) this.focus()
     document.body.style.pointerEvents = 'none'
@@ -32,30 +32,36 @@ class Popup extends Component {
     off(this.dom, 'mousedown', this.handleClick)
     off(this.dom, 'contextmenu', this.handleContextMenu)
     off(window, 'resize', this.handleResize)
-    this.root.style.clipPath = null
+    this.clip(null)
     document.body.style.pointerEvents = null
+  }
+
+  get classes() {
+    return ['popup', this.props.anchor, this.props.className, {
+      'fade-in': this.props.fadeIn
+    }]
+  }
+
+  clip(path = this.getClipPath()) {
+    this.root.style.clipPath = this.dom.style.clipPath = path
+  }
+
+  focus() {
+    let e = $('[tabindex]', this.dom)
+    if (e != null) e.focus()
   }
 
   getClipPath({ clip } = this.props) {
     return (clip == null) ?
       null :
       `polygon(${[
-        '100% 100%',
-        '100% 0px',
-        '0px 0px',
-        '0px 100%',
-        '100% 100%',
+        '100% 100%, 100% 0px, 0px 0px, 0px 100%, 100% 100%',
         `${clip.right}px ${clip.bottom}px`,
         `${clip.left}px ${clip.bottom}px`,
         `${clip.left}px ${clip.top}px`,
         `${clip.right}px ${clip.top}px`,
         `${clip.right}px ${clip.bottom}px`
       ].join(', ')})`
-  }
-
-  focus() {
-    let e = $('[tabindex]', this.dom)
-    if (e != null) e.focus()
   }
 
   handleClick = (event) => {
@@ -84,9 +90,7 @@ class Popup extends Component {
 
   render() {
     return createPortal((
-      <div
-        className={cx('popup', this.props.anchor, this.props.className)}
-        style={this.props.style}>
+      <div className={cx(this.classes)} style={this.props.style}>
         {this.props.children}
       </div>
     ), this.dom)
@@ -101,6 +105,7 @@ class Popup extends Component {
       right: number.isRequired
     }),
     autofocus: bool,
+    fadeIn: bool,
     children: node.isRequired,
     className: string,
     onClickOutside: func.isRequired,

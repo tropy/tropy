@@ -210,6 +210,7 @@ class Completions extends Component {
         anchor={anchor}
         className={this.props.className}
         clip={clip}
+        fadeIn={this.props.fadeIn}
         style={style}
         onClickOutside={this.props.onClickOutside}
         onResize={this.handleResize}>
@@ -221,6 +222,7 @@ class Completions extends Component {
   static propTypes = {
     className: string,
     completions: array.isRequired,
+    fadeIn: bool,
     isSelectionHidden: bool,
     isVisibleWhenBlank: bool,
     match: func.isRequired,
