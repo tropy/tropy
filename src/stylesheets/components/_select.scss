@@ -10,7 +10,6 @@
   .value,
   .placeholder {
     line-height: $input-height-base - 2px;
-    pointer-events: none;
   }
 
   .value {
@@ -27,6 +26,7 @@
     width: 100%;
     height: $input-height-base - 2px;
     cursor: default;
+    position: relative;
 
     &.live {
       cursor: auto;
