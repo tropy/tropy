@@ -2,6 +2,18 @@
 // Popup
 // --------------------------------------------------
 
+@keyframes popup-fade-in {
+  0% {
+    border-color: $input-border;
+    box-shadow: none;
+  }
+
+  100% {
+    border-color: $input-btn-focus-color;
+    box-shadow: 0 0 0 2px $input-btn-focus-color;
+  }
+}
+
 #popup-root {
   position: absolute;
   left: 0;
@@ -24,9 +36,13 @@
     flex-direction: column;
     position: absolute;
     background: $popup-bg;
-    margin: -$popup-focus-shadow-width;
-    border: ($input-border-width + $popup-focus-shadow-width) solid $input-btn-focus-color;
-    border-radius: $input-border-radius-small + $popup-focus-shadow-width;
+    border: $input-border-width solid $input-btn-focus-color;
+    box-shadow: 0 0 0 $popup-focus-shadow-width $input-btn-focus-color;
+    border-radius: $input-border-radius-small;
+
+    &.fade-in {
+      animation: popup-fade-in $input-btn-transition both;
+    }
 
     &.invalid {
       border-color: $input-btn-invalid-color;
@@ -43,6 +59,8 @@
 
     &.top {
       margin-top: (-$input-border-width - $popup-focus-shadow-width);
+      clip-path: inset(#{$popup-focus-shadow-width (-$popup-focus-shadow-width)
+        (-$popup-focus-shadow-width) (-$popup-focus-shadow-width)});
 
       .option-list {
         margin-bottom: $option-list-margin;
@@ -51,6 +69,8 @@
 
     &.bottom {
       margin-top: ($input-border-width + $popup-focus-shadow-width);
+      clip-path: inset(#{(-$popup-focus-shadow-width) (-$popup-focus-shadow-width)
+        $popup-focus-shadow-width (-$popup-focus-shadow-width)});
 
       .option-list {
         margin-top: $option-list-margin;
