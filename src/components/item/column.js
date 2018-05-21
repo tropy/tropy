@@ -48,6 +48,7 @@ class ColumnContextMenu extends Component {
         style={this.style}>
         <ColumnSelect
           maxRows={this.props.maxRows}
+          onClose={this.props.onClose}
           onInsert={this.props.onInsert}
           onRemove={this.props.onRemove}
           onResize={this.handleResize}

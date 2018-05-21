@@ -6,7 +6,7 @@ const { FormattedMessage } = require('react-intl')
 const { Popup } = require('./popup')
 const { OptionList } = require('./option')
 const { blank, last } = require('../common/util')
-const { translate } = require('../common/math')
+const { rounded, translate } = require('../common/math')
 const { bounds, viewport } = require('../dom')
 const { startsWith } = require('../collate')
 const cx = require('classnames')
@@ -83,16 +83,16 @@ class Completions extends Component {
     let height = this.getOptionsHeight() + PADDING + MARGIN
 
     let [anchor, clip] = (bnd.bottom + height <= viewport().height) ?
-      ['top', translate(bnd, { bottom: -MARGIN })] :
-      ['bottom', translate(bnd, { top: MARGIN })]
+      ['top', translate(rounded(bnd), { bottom: -MARGIN })] :
+      ['bottom', translate(rounded(bnd), { top: MARGIN })]
 
     return {
       anchor,
       clip,
-      top: (anchor === 'top') ? bnd.bottom : bnd.top - height,
-      left: bnd.left,
       height,
-      width: bnd.width + 2 * FOCUS_SHADOW_WIDTH
+      left: bnd.left,
+      top: Math.round((anchor === 'top') ? bnd.bottom : bnd.top - height),
+      width: bnd.width
     }
   }
 
