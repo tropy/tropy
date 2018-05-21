@@ -211,7 +211,9 @@ class Select extends Component {
           this.close()
           break
         case 'Backspace':
-          if (this.state.query.length !== 0 || !this.state.canClearValue) {
+          if (!this.props.canClearByBackspace ||
+            this.state.query.length !== 0 ||
+            !this.state.canClearValue) {
             return false
           }
           this.clear(last(this.state.values))
@@ -380,6 +382,7 @@ class Select extends Component {
   }
 
   static propTypes = {
+    canClearByBackspace: bool,
     className: string,
     hideClearButton: bool,
     id: string,
@@ -413,6 +416,7 @@ class Select extends Component {
   }
 
   static defaultProps = {
+    canClearByBackspace: true,
     hideClearButton: false,
     isStatic: false,
     isSelectionHidden: false,

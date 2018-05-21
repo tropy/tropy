@@ -78,6 +78,7 @@ class ColumnContextMenu extends Component {
 
 const ColumnSelect = (props) => (
   <ResourceSelect
+    canClearByBackspace={false}
     className="column-select"
     placeholder="select.column.placeholder"
     hideClearButton
