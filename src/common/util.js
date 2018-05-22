@@ -82,6 +82,11 @@ const util = {
     return into
   },
 
+  homogenize(fn, memo = new Set()) {
+    let test = x => memo.has(x) ? false : !!memo.add(x)
+    return fn(test, memo)
+  },
+
   compact(array) {
     return array.filter(util.exist)
   },

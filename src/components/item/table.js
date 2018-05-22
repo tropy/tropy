@@ -252,6 +252,7 @@ class ItemTable extends ItemIterator {
 
     let { colwidth } = this.state
 
+    let opt = (event.altKey || event.shiftKey) ? 'all' : 'common'
     let min = this.getMinColumnOffset()
     let idx = 0
     let n = this.getOffsetInTable(event.clientX, { min })
@@ -266,6 +267,7 @@ class ItemTable extends ItemIterator {
       columnContextMenu: {
         idx,
         left: event.clientX,
+        options: this.props.columns[opt],
         top: event.clientY,
         value: this.props.columns.active.map(col => col.id)
       }
@@ -360,8 +362,7 @@ class ItemTable extends ItemIterator {
         {...this.state.columnContextMenu}
         onInsert={this.handleColumnInsert}
         onRemove={this.handleColumnRemove}
-        onClose={this.hideColumnContextMenu}
-        options={this.props.columns.available}/>
+        onClose={this.hideColumnContextMenu}/>
     )
   }
 
@@ -399,7 +400,8 @@ class ItemTable extends ItemIterator {
     ...ItemIterator.propTypes,
     columns: shape({
       active: arrayOf(object).isRequired,
-      available: arrayOf(object).isRequired
+      all: arrayOf(object).isRequired,
+      common: arrayOf(object).isRequired
     }).isRequired,
     edit: object,
     data: object.isRequired,
