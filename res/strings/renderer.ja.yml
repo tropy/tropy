@@ -94,7 +94,7 @@ ja:
   prefs:
     title: Tropy設定
     app:
-      label: グローバル
+      label: 設定
       style:
         theme: テーマ
         themes:
@@ -170,6 +170,14 @@ ja:
           other {# のプロパティ}
 
           }
+    plugins:
+      label: プラグイン
+      enable: 有効にする
+      disable: 無効にする
+      install: プラグインをインストール
+      uninstall: アンインストール
+      noInfo: 作者不明
+      homepage: More
   item:
     created: 追加日付
     modified: 修正
@@ -211,6 +219,12 @@ ja:
         value: "{value, number}"
   notepad:
     placeholder: ノートを入力してください
+  completions:
+    empty: 利用可能なオプションはありません
+    noMatches: 一致が見つかりませんでした
+  select:
+    column:
+      placeholder: 検索
   template:
     id: URI
     name: 名前
@@ -246,20 +260,28 @@ ja:
     label: ラベル
     description: 内容記述
     comment: コメント
+  ok: はい
+  cancel: キャンセル
   dialog:
     prompt:
-      cancel: キャンセル
       item:
-        ok: 削除
-        cancel: キャンセル
-        destroy: >
-            アイテムを完全に削除しますか？削除後は元に戻せません。
+        destroy:
+          ok: 削除
+          cancel: キャンセル
+          message: >
+              アイテムを完全に削除しますか？削除後は元に戻せません。
       dup:
         message: >
             この写真はすでにプロジェクトにあります。再度インポートしますか？
         checkbox: この選択を記憶する
         cancel: スキップ
         ok: インポートする
+      plugin:
+        uninstall:
+          ok: 削除
+          cancel: キャンセル
+          message: >
+              このプラグインを本当に削除してよろしいでしょうか？この操作によって、このプラグインとその設定は完全に削除されます。
     filter:
       templates: Tropyテンプレート
       images: イメージ
@@ -449,6 +471,7 @@ ja:
     project:
       created: プロジェクトの作成に失敗しました
     item:
+      export: アイテムのエクスポートに失敗しました
       merge: アイテムの統合に失敗しました
       import: アイテムのインポートに失敗しました
       tag:
@@ -480,3 +503,10 @@ ja:
         message: >
             Tropy{version}のインストール準備が完了しました。すぐにインストールし、再起動しますか？
         confirm: すぐに再起動する
+  plugin:
+    name: 名前
+    plugin: プラグイン
+    options: オプション
+    hooks:
+      export: エクスポート
+      import: インポート
