@@ -80,7 +80,7 @@ class Completions extends Component {
     if (this.props.parent == null) return
 
     let bnd = bounds(this.props.parent)
-    let height = this.getOptionsHeight() + PADDING + MARGIN
+    let height = this.getOptionsHeight() + PADDING + BORDER_WIDTH
 
     let [anchor, clip] = (bnd.bottom + height <= viewport().height) ?
       ['top', translate(bnd, { bottom: -MARGIN })] :
