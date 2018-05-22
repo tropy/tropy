@@ -71,7 +71,7 @@ class Completions extends Component {
     })
 
     return {
-      active: active || options.length > 0 ? options[0].id : null,
+      active: active || (options.length > 0 ? options[0].id : null),
       options
     }
   }
