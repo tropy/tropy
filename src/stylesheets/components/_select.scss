@@ -90,6 +90,11 @@
 
       &.selected {
         padding-left: $padding-base-horizontal;
+        background-color: transparent;
+
+        &.active {
+          background-color: $option-active-bg;
+        }
       }
     }
 
