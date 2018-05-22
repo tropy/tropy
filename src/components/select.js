@@ -176,6 +176,12 @@ class Select extends Component {
     this.close()
   }
 
+  handleContextMenu = (event) => {
+    if (this.state.isOpen) {
+      event.stopPropagation()
+    }
+  }
+
   handleFocus = (event) => {
     if (!this.state.hasFocus) {
       this.setState({ hasFocus: true })
@@ -231,11 +237,8 @@ class Select extends Component {
 
   handleMouseDown = (event) => {
     if (event.button === 0 && !this.props.isStatic) {
-      if (!this.state.isOpen) {
-        this.open()
-      } else if (this.state.query.length === 0) {
-        this.close()
-      }
+      if (!this.state.isOpen) this.open()
+      else if (this.state.query.length === 0) this.close()
     }
     if (this.input != null) {
       this.input.focus()
@@ -371,6 +374,7 @@ class Select extends Component {
       <div
         className={cx(this.classes)}
         id={this.props.id}
+        onContextMenu={this.handleContextMenu}
         onMouseDown={this.handleMouseDown}
         ref={this.setContainer}>
         {this.renderContent()}
