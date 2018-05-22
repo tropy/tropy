@@ -59,7 +59,7 @@
 
     &.top {
       margin-top: (-$input-border-width - $popup-focus-shadow-width);
-      clip-path: inset(#{$popup-focus-shadow-width (-$popup-focus-shadow-width)
+      clip-path: inset(#{0 (-$popup-focus-shadow-width)
         (-$popup-focus-shadow-width) (-$popup-focus-shadow-width)});
 
       .option-list {
@@ -70,7 +70,7 @@
     &.bottom {
       margin-top: ($input-border-width + $popup-focus-shadow-width);
       clip-path: inset(#{(-$popup-focus-shadow-width) (-$popup-focus-shadow-width)
-        $popup-focus-shadow-width (-$popup-focus-shadow-width)});
+        0 (-$popup-focus-shadow-width)});
 
       .option-list {
         margin-top: $option-list-margin;
