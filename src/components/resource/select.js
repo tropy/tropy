@@ -40,17 +40,7 @@ class ResourceSelect extends PureComponent {
 
   static defaultProps = {
     className: 'resource-select',
-    match: (res, query) => {
-      let q = query.split(':', 2)
-      if (q.length > 1) {
-        return (q[0] === res.prefix) && (
-          (res.name && res.name.startsWith(q[1])) ||
-          (res.label && startsWith(res.label, q[1])))
-      }
-      return (res.prefix && res.prefix.startsWith(query)) ||
-        (res.name && res.name.startsWith(query)) ||
-        (res.label && startsWith(res.label, query))
-    },
+    match: (res, query) => match(res, ...query.split(':', 2).reverse()),
     tabIndex: -1,
     toText: (res) => (
       <Fragment>
@@ -63,6 +53,17 @@ class ResourceSelect extends PureComponent {
       </Fragment>
     )
   }
+}
+
+
+function match(res, query, prefix) {
+  return (prefix != null) ?
+    (prefix === res.prefix) && m(query, res.name, res.label) :
+    m(query, res.prefix, res.name, res.label)
+}
+
+function m(q, ...ss) {
+  for (let s of ss) { if (s != null && startsWith(s, q)) return true }
 }
 
 module.exports = {
