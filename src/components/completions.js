@@ -57,7 +57,7 @@ class Completions extends Component {
     query = query.trim().toLowerCase()
     let matchAll = blank(query)
     let options = []
-    let active = matchAll ? last(selection) : null
+    let active = (matchAll && !isSelectionHidden) ? last(selection) : null
     options.idx = {}
 
     completions.forEach((value, idx) => {
