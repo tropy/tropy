@@ -35,7 +35,11 @@
   contain: content;
 
   &.active {
-    background: $option-active-bg;
+    background-color: $option-active-bg;
+  }
+
+  &.selected {
+    background-color: $option-selected-bg;
   }
 
   &.no-matches {
