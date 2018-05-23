@@ -179,22 +179,25 @@ $tick-color:                             var(--shade-0);
 :root {
 
   // Level 2
-  #{--level-2-border}:            var(--shade-1-darken-14);
-  #{--level-2-bg}:                $input-bg;
-  #{--level-2-input-bg-readonly}: var(--shade-1-darken-8);
-  #{--level-2-fieldset-bg}:       var(--shade-1-darken-8);
+  #{--level-2-border}:                var(--shade-1-darken-14);
+  #{--level-2-bg}:                    $input-bg;
+  #{--level-2-input-bg-readonly}:     var(--shade-1-darken-8);
+  #{--level-2-fieldset-bg}:           var(--shade-1-darken-8);
+  #{--level-2-btn-default-active-bg}: var(--shade-1);
 
   // Level 3
-  #{--level-3-border}:            var(--shade-1-darken-18);
-  #{--level-3-bg}:                $input-bg;
-  #{--level-3-input-bg-readonly}: var(--shade-1-darken-12);
-  #{--level-3-fieldset-bg}:       var(--shade-1-darken-12);
+  #{--level-3-border}:                var(--shade-1-darken-18);
+  #{--level-3-bg}:                    $input-bg;
+  #{--level-3-input-bg-readonly}:     var(--shade-1-darken-12);
+  #{--level-3-fieldset-bg}:           var(--shade-1-darken-12);
+  #{--level-3-btn-default-active-bg}: var(--shade-1);
 
   // Level 4
-  #{--level-4-border}:            var(--shade-1-darken-22);
-  #{--level-4-bg}:                $input-bg;
-  #{--level-4-input-bg-readonly}: var(--shade-1-darken-16);
-  #{--level-4-fieldset-bg}:       var(--shade-1-darken-16);
+  #{--level-4-border}:                var(--shade-1-darken-22);
+  #{--level-4-bg}:                    $input-bg;
+  #{--level-4-input-bg-readonly}:     var(--shade-1-darken-16);
+  #{--level-4-fieldset-bg}:           var(--shade-1-darken-16);
+  #{--level-4-btn-default-active-bg}: var(--shade-1);
 }
 
 // Badge
@@ -451,5 +454,6 @@ $popup-border-color: $input-btn-focus-color;
 
 // Option list
 $option-active-bg:        var(--shade-1);
+$option-selected-bg:      var(--shade-2);
 $option-no-matches-color: var(--shade-5);
 $option-separator-color:  var(--shade-2);

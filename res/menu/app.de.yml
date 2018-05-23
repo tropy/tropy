@@ -126,21 +126,15 @@ de:
           command: 'app:open-docs'
         - label: Support-Forum
           command: 'app:open-forums'
-        - type: separator
         - label: Softwarelizenz
           command: 'app:open-license'
+        - type: separator
         - label: Logs anzeigen
           command: 'app:open-logs'
-        - type: separator
-        - label: Plugin-Konfiguration bearbeiten
-          command: 'app:open-plugins-config'
-        - label: Plugin installieren …
-          command: 'app:install-plugin'
         - label: Plugins-Ordner anzeigen
           command: 'app:open-plugins-folder'
-        - type: separator
-        - label: Über %name
-          command: 'app:about'
+        - label: User-Data Ordner anzeigen
+          command: 'app:open-user-data'
         - type: separator
         - id: updater-check
           label: Nach Updates suchen …
@@ -155,6 +149,9 @@ de:
           command: 'app:install-updates'
           enabled: false
           visible: false
+        - type: separator
+        - label: Über %name
+          command: 'app:about'
   darwin:
     - label: '%name'
       submenu:
@@ -300,16 +297,15 @@ de:
           command: 'app:open-docs'
         - label: Support-Forum
           command: 'app:open-forums'
-        - type: separator
         - label: Softwarelizenz
           command: 'app:open-license'
+        - type: separator
         - label: Logs anzeigen
           command: 'app:open-logs'
-        - type: separator
-        - label: Plugin installieren …
-          command: 'app:install-plugin'
         - label: Plugins-Ordner anzeigen
           command: 'app:open-plugins-folder'
+        - label: User-Data Ordner anzeigen
+          command: 'app:open-user-data'
         - type: separator
         - id: updater-check
           label: Nach Updates suchen …
@@ -448,21 +444,15 @@ de:
           command: 'app:open-docs'
         - label: Support-Forum
           command: 'app:open-forums'
-        - type: separator
         - label: Softwarelizenz
           command: 'app:open-license'
+        - type: separator
         - label: Logs anzeigen
           command: 'app:open-logs'
-        - type: separator
-        - label: Plugin-Konfiguration bearbeiten
-          command: 'app:open-plugins-config'
-        - label: Plugin installieren …
-          command: 'app:install-plugin'
         - label: Plugins-Ordner anzeigen
           command: 'app:open-plugins-folder'
-        - type: separator
-        - label: Über %name
-          command: 'app:about'
+        - label: User-Data Ordner anzeigen
+          command: 'app:open-user-data'
         - type: separator
         - id: updater-check
           label: Nach Updates suchen …
@@ -477,3 +467,6 @@ de:
           command: 'app:install-updates'
           enabled: false
           visible: false
+        - type: separator
+        - label: Über %name
+          command: 'app:about'

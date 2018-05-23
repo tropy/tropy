@@ -2,8 +2,13 @@
 
 const { createSelector: memo } = require('reselect')
 const { DC, NAV: { COLUMN }, TYPE } = require('../constants')
-const ontology = require('./ontology')
 const { values } = Object
+
+const {
+  expand,
+  getItemTemplateProperties,
+  getPropertyList
+} = require('./ontology')
 
 const DEFAULT_SORT = { column: DC.title, asc: true }
 const DEFAULT_LIST_SORT =  { column: 'added', asc: true }
@@ -13,8 +18,7 @@ const SPECIAL_COLUMNS = [
   COLUMN.MODIFIED
 ]
 
-
-const expand = (col, { label, name, prefix }) => ({
+const merge = (col, { label, name, prefix }) => ({
   type: TYPE.TEXT, ...col, label, name, prefix
 })
 
@@ -34,12 +38,22 @@ const getColumns = memo(
   (cols, props, vocab, spc) =>
     cols.map(col => col.id in spc ?
       ({ ...spc[col.id], ...col }) :
-      expand(col, ontology.expand(props[col.id] || { id: col.id }, vocab)))
+      merge(col, expand(props[col.id] || { id: col.id }, vocab)))
 )
 
-const getFreeColumns = memo(
+const getAllFreeColumns = memo(
   ({ nav }) => nav.columns,
-  ontology.getPropertyList,
+  getPropertyList,
+  getSpecialColumns,
+  (cols, props, spc) => [
+    ...values(spc).filter(({ id }) => !cols.find(col => col.id === id)),
+    ...props.filter(prop => !cols.find(col => col.id === prop.id))
+  ]
+)
+
+const getCommonFreeColumns = memo(
+  ({ nav }) => nav.columns,
+  getItemTemplateProperties,
   getSpecialColumns,
   (cols, props, spc) => [
     ...values(spc).filter(({ id }) => !cols.find(col => col.id === id)),
@@ -49,10 +63,12 @@ const getFreeColumns = memo(
 
 const getAllColumns = memo(
   getColumns,
-  getFreeColumns,
-  (active, free) => ({
+  getAllFreeColumns,
+  getCommonFreeColumns,
+  (active, all, common) => ({
     active,
-    available: [...active, ...free]
+    all: [...active, ...all],
+    common: [...active, ...common]
   })
 )
 
@@ -66,7 +82,6 @@ const getSortColumn = memo(
 
 module.exports = {
   getAllColumns,
-  getFreeColumns,
   getColumns,
   getSortColumn
 }

@@ -8,6 +8,10 @@
   user-select: none;
 }
 
+input {
+  pointer-events: auto; // Reset
+}
+
 .form-inline {
   > * + * {
     margin-left: $space-min;

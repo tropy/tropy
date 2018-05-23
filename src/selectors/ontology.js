@@ -3,8 +3,8 @@
 const { createSelector: memo } = require('reselect')
 const { entries, values } = Object
 const { by } = require('../collate')
-const { compose, filter, into, map } = require('transducers.js')
-const { blank, get } = require('../common/util')
+const { cat, compose, filter, into, map } = require('transducers.js')
+const { blank, get, homogenize } = require('../common/util')
 const { TYPE, ITEM, PHOTO } = require('../constants')
 const { value }  = require('../value')
 
@@ -83,6 +83,26 @@ const getTemplatesByType = (type) => memo(
   ).sort(by('name', 'id'))
 )
 
+const getItemTemplates = getTemplatesByType(TYPE.ITEM)
+const getPhotoTemplates = getTemplatesByType(TYPE.PHOTO)
+
+const getItemTemplateProperties = memo(
+  getItemTemplates,
+  ({ ontology }) => ontology.props,
+  ({ ontology }) => ontology.vocab,
+  (templates, props, vocab) =>
+    homogenize(isUniq => into(
+      [],
+      compose(
+        map(tmp => tmp.fields),
+        cat,
+        filter(fld => isUniq(fld.property)),
+        map(fld => expand(props[fld.property] || { id: fld.property }, vocab))
+      ),
+      templates
+    )).sort(by('prefix', 'label', 'name'))
+)
+
 const getTemplateList = memo(
   ({ ontology }) => ontology.template,
   (templates) => values(templates).sort(by('name', 'id'))
@@ -151,10 +171,11 @@ module.exports = {
   getActiveSelectionTemplate,
   getAllTemplates,
   getDatatypeList,
-  getItemTemplates: getTemplatesByType(TYPE.ITEM),
   getItemTemplate,
-  getPhotoTemplates: getTemplatesByType(TYPE.PHOTO),
+  getItemTemplateProperties,
+  getItemTemplates,
   getPhotoTemplate,
+  getPhotoTemplates,
   getPropertyList,
   getTemplateField,
   getTemplateFields,

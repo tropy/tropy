@@ -29,10 +29,10 @@ fr:
             - label: Vider la liste
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: Importer des photos…
+        - label: Importer des photos …
           command: 'app:import-photos'
           accelerator: CmdOrCtrl+Shift+I
-        - label: Regrouper la bibliothèque de photos
+        - label: Regrouper la photothèque
           command: 'app:consolidate-photo-library'
         - type: separator
         - label: Fermer
@@ -67,7 +67,7 @@ fr:
         - label: Tout sélectionner
           role: selectall
         - type: separator
-        - label: Préférences…
+        - label: Préférences ...
           accelerator: Shift+Control+S
           command: 'app:open-preferences'
     - label: Affichage
@@ -126,42 +126,39 @@ fr:
           command: 'app:open-docs'
         - label: Forum d'aide
           command: 'app:open-forums'
-        - type: separator
         - label: Licence
           command: 'app:open-license'
-        - label: Afficher les fichiers de Log
+        - type: separator
+        - label: Afficher les fichiers de log
           command: 'app:open-logs'
-        - type: separator
-        - label: Afficher le configuration de Plugins
-          command: 'app:open-plugins-config'
-        - label: Install Plugin …
-          command: 'app:install-plugin'
-        - label: Afficher les fichiers de Plugins
+        - label: Afficher les fichiers des plugins
           command: 'app:open-plugins-folder'
-        - type: separator
-        - label: À propos de %name
-          command: 'app:about'
+        - label: Show User-Data Folder
+          command: 'app:open-user-data'
         - type: separator
         - id: updater-check
-          label: Recherche des mises à jour en cours…
+          label: Afficher les fichiers des plugins
           command: 'app:check-for-updates'
           enabled: false
         - id: updater-is-checking
-          label: Obtention des mises à jour en cours…
+          label: Obtention des mises à jour en cours …
           enabled: false
           visible: false
         - id: updater-install
-          label: Installer les mises à jour…
+          label: Installer les mises à jour …
           command: 'app:install-updates'
           enabled: false
           visible: false
+        - type: separator
+        - label: À propos de %name
+          command: 'app:about'
   darwin:
     - label: '%name'
       submenu:
         - label: À propos de %name
           command: 'app:about'
         - type: separator
-        - label: Préférences…
+        - label: Préférences ...
           accelerator: 'Command+,'
           command: 'app:open-preferences'
         - type: separator
@@ -205,10 +202,10 @@ fr:
             - label: Vider la liste
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: Importer des photos…
+        - label: Importer des photos …
           command: 'app:import-photos'
           accelerator: CmdOrCtrl+Shift+I
-        - label: Regrouper la bibliothèque de photos
+        - label: Regrouper la photothèque
           command: 'app:consolidate-photo-library'
         - type: separator
         - label: Fermer
@@ -300,27 +297,26 @@ fr:
           command: 'app:open-docs'
         - label: Forum d'aide
           command: 'app:open-forums'
-        - type: separator
         - label: Licence
           command: 'app:open-license'
+        - type: separator
         - label: Afficher les logs
           command: 'app:open-logs'
-        - type: separator
-        - label: Install Plugin …
-          command: 'app:install-plugin'
-        - label: Afficher les fichiers de Plugins
+        - label: Afficher les fichiers des plugins
           command: 'app:open-plugins-folder'
+        - label: Show User-Data Folder
+          command: 'app:open-user-data'
         - type: separator
         - id: updater-check
-          label: Recherche des mises à jour en cours…
+          label: Afficher les fichiers des plugins
           command: 'app:check-for-updates'
           enabled: false
         - id: updater-is-checking
-          label: Obtention des mises à jour en cours…
+          label: Obtention des mises à jour en cours …
           enabled: false
           visible: false
         - id: updater-install
-          label: Installer les mises à jour…
+          label: Installer les mises à jour …
           command: 'app:install-updates'
           enabled: false
           visible: false
@@ -354,10 +350,10 @@ fr:
             - label: Vider la liste
               command: 'app:clear-recent-projects'
         - type: separator
-        - label: Importer des photos…
+        - label: Importer des photos …
           command: 'app:import-photos'
           accelerator: CmdOrCtrl+Shift+I
-        - label: Regrouper la bibliothèque de photos
+        - label: Regrouper la photothèque
           command: 'app:consolidate-photo-library'
         - type: separator
         - label: Fermer
@@ -389,7 +385,7 @@ fr:
         - label: Coller
           accelerator: CmdOrCtrl+V
           role: paste
-        - label: Préférences…
+        - label: Préférences ...
           accelerator: Shift+Control+S
           command: 'app:open-preferences'
     - label: Affichage
@@ -448,32 +444,29 @@ fr:
           command: 'app:open-docs'
         - label: Forum d'aide
           command: 'app:open-forums'
-        - type: separator
         - label: Licence
           command: 'app:open-license'
-        - label: Afficher les fichiers de Log
+        - type: separator
+        - label: Afficher les fichiers de log
           command: 'app:open-logs'
-        - type: separator
-        - label: Afficher le configuration de Plugins
-          command: 'app:open-plugins-config'
-        - label: Install Plugin …
-          command: 'app:install-plugin'
-        - label: Afficher les fichiers de Plugins
+        - label: Afficher les fichiers des plugins
           command: 'app:open-plugins-folder'
-        - type: separator
-        - label: À propos de %name
-          command: 'app:about'
+        - label: Show User-Data Folder
+          command: 'app:open-user-data'
         - type: separator
         - id: updater-check
-          label: Recherche des mises à jour en cours…
+          label: Afficher les fichiers des plugins
           command: 'app:check-for-updates'
           enabled: false
         - id: updater-is-checking
-          label: Obtention des mises à jour en cours…
+          label: Obtention des mises à jour en cours …
           enabled: false
           visible: false
         - id: updater-install
-          label: Installer les mises à jour…
+          label: Installer les mises à jour …
           command: 'app:install-updates'
           enabled: false
           visible: false
+        - type: separator
+        - label: À propos de %name
+          command: 'app:about'

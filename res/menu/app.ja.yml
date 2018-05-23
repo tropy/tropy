@@ -126,21 +126,15 @@ ja:
           command: 'app:open-docs'
         - label: サポートフォーラム
           command: 'app:open-forums'
-        - type: separator
         - label: ソフトウェアライセンス
           command: 'app:open-license'
+        - type: separator
         - label: ログファイルを開く
           command: 'app:open-logs'
-        - type: separator
-        - label: プラグインの設定を変更
-          command: 'app:open-plugins-config'
-        - label: プラグインをインストール
-          command: 'app:install-plugin'
         - label: プラグインフォルダを開く
           command: 'app:open-plugins-folder'
-        - type: separator
-        - label: Tropyについて
-          command: 'app:about'
+        - label: ユーザーデータフォルダーを表示
+          command: 'app:open-user-data'
         - type: separator
         - id: updater-check
           label: アップデートの確認
@@ -151,10 +145,13 @@ ja:
           enabled: false
           visible: false
         - id: updater-install
-          label: アップデートをインストール
+          label: アップデートをインストールする
           command: 'app:install-updates'
           enabled: false
           visible: false
+        - type: separator
+        - label: Tropyについて
+          command: 'app:about'
   darwin:
     - label: Tropy
       submenu:
@@ -300,16 +297,15 @@ ja:
           command: 'app:open-docs'
         - label: サポートフォーラム
           command: 'app:open-forums'
-        - type: separator
         - label: ソフトウェアライセンス
           command: 'app:open-license'
+        - type: separator
         - label: ログファイルを開く
           command: 'app:open-logs'
-        - type: separator
-        - label: プラグインをインストール
-          command: 'app:install-plugin'
         - label: プラグインフォルダを開く
           command: 'app:open-plugins-folder'
+        - label: ユーザーデータフォルダーを表示
+          command: 'app:open-user-data'
         - type: separator
         - id: updater-check
           label: アップデートの確認
@@ -320,7 +316,7 @@ ja:
           enabled: false
           visible: false
         - id: updater-install
-          label: アップデートをインストール
+          label: アップデートをインストールする
           command: 'app:install-updates'
           enabled: false
           visible: false
@@ -448,21 +444,15 @@ ja:
           command: 'app:open-docs'
         - label: サポートフォーラム
           command: 'app:open-forums'
-        - type: separator
         - label: ソフトウェアライセンス
           command: 'app:open-license'
+        - type: separator
         - label: ログファイルを開く
           command: 'app:open-logs'
-        - type: separator
-        - label: プラグインの設定を変更
-          command: 'app:open-plugins-config'
-        - label: プラグインをインストール
-          command: 'app:install-plugin'
         - label: プラグインフォルダを開く
           command: 'app:open-plugins-folder'
-        - type: separator
-        - label: Tropyについて
-          command: 'app:about'
+        - label: ユーザーデータフォルダーを表示
+          command: 'app:open-user-data'
         - type: separator
         - id: updater-check
           label: アップデートの確認
@@ -473,7 +463,10 @@ ja:
           enabled: false
           visible: false
         - id: updater-install
-          label: アップデートをインストール
+          label: アップデートをインストールする
           command: 'app:install-updates'
           enabled: false
           visible: false
+        - type: separator
+        - label: Tropyについて
+          command: 'app:about'

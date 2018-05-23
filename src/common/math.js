@@ -17,6 +17,21 @@ const math = {
     return Math.round(value * precision) / precision
   },
 
+  rounded(src) {
+    let res = {}
+    for (let key in src) res[key] = ~~src[key]
+    return res
+  },
+
+  translate(a, { top = 0, bottom = 0, left = 0, right = 0 }) {
+    return {
+      top: a.top + top,
+      bottom: a.bottom + bottom,
+      left: a.left + left,
+      right: a.right + right
+    }
+  },
+
   rotate(deg, by) {
     return (360 + ((deg + by) % 360)) % 360
   }

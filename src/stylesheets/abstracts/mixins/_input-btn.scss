@@ -68,5 +68,9 @@
   .btn-default {
     border-color: var(--level-#{$n}-border);
     background-color: var(--level-#{$n}-bg);
+
+    &:active {
+      background-color: var(--level-#{$n}-btn-default-active-bg);
+    }
   }
 }

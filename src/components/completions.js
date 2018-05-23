@@ -6,13 +6,21 @@ const { FormattedMessage } = require('react-intl')
 const { Popup } = require('./popup')
 const { OptionList } = require('./option')
 const { blank, last } = require('../common/util')
+const { translate } = require('../common/math')
 const { bounds, viewport } = require('../dom')
 const { startsWith } = require('../collate')
-const { INPUT, POPUP } = require('../constants/sass')
 const cx = require('classnames')
+
 const {
-  array, bool, func, instanceOf, number, shape, string
+  array, bool, func, instanceOf, number, string
 } = require('prop-types')
+
+const {
+  INPUT: { BORDER_WIDTH, FOCUS_SHADOW_WIDTH },
+  POPUP: { PADDING }
+} = require('../constants/sass')
+
+const MARGIN = BORDER_WIDTH + FOCUS_SHADOW_WIDTH
 
 
 class Completions extends Component {
@@ -49,7 +57,7 @@ class Completions extends Component {
     query = query.trim().toLowerCase()
     let matchAll = blank(query)
     let options = []
-    let active = matchAll ? last(selection) : null
+    let active = (matchAll && !isSelectionHidden) ? last(selection) : null
     options.idx = {}
 
     completions.forEach((value, idx) => {
@@ -63,25 +71,28 @@ class Completions extends Component {
     })
 
     return {
-      active: active || options.length > 0 ? options[0].id : null,
+      active: active || (options.length > 0 ? options[0].id : null),
       options
     }
   }
 
   getPopupBounds() {
-    const { parent, padding } = this.props
-    if (parent == null) return
+    if (this.props.parent == null) return
 
-    const { top, bottom, left, width } = bounds(parent)
-    const height = this.getOptionsHeight() + padding.height
-    const anchor = (bottom + height <= viewport().height) ? 'top' : 'bottom'
+    let bnd = bounds(this.props.parent)
+    let height = this.getOptionsHeight() + PADDING + BORDER_WIDTH
+
+    let [anchor, clip] = (bnd.bottom + height <= viewport().height) ?
+      ['top', translate(bnd, { bottom: -MARGIN })] :
+      ['bottom', translate(bnd, { top: MARGIN })]
 
     return {
       anchor,
-      top: (anchor === 'top') ? bottom : top - height,
-      left,
+      clip,
       height,
-      width: width + padding.width
+      left: bnd.left,
+      top: Math.round((anchor === 'top') ? bnd.bottom : bnd.top - height),
+      width: bnd.width
     }
   }
 
@@ -193,11 +204,13 @@ class Completions extends Component {
       )
     }
 
-    const { anchor, ...style } = this.getPopupBounds()
+    const { anchor, clip, ...style } = this.getPopupBounds()
     return (
       <Popup
         anchor={anchor}
         className={this.props.className}
+        clip={clip}
+        fadeIn={this.props.fadeIn}
         style={style}
         onClickOutside={this.props.onClickOutside}
         onResize={this.handleResize}>
@@ -209,6 +222,7 @@ class Completions extends Component {
   static propTypes = {
     className: string,
     completions: array.isRequired,
+    fadeIn: bool,
     isSelectionHidden: bool,
     isVisibleWhenBlank: bool,
     match: func.isRequired,
@@ -217,10 +231,6 @@ class Completions extends Component {
     onClickOutside: func,
     onResize: func,
     onSelect: func.isRequired,
-    padding: shape({
-      height: number.isRequired,
-      width: number.isRequired
-    }).isRequired,
     parent: instanceOf(HTMLElement),
     popup: bool,
     query: string.isRequired,
@@ -233,10 +243,6 @@ class Completions extends Component {
     match: (value, query) => startsWith(value.name || String(value), query),
     maxRows: 10,
     minQueryLength: 0,
-    padding: {
-      height: POPUP.PADDING + INPUT.FOCUS_SHADOW_WIDTH + INPUT.BORDER_WIDTH,
-      width: 2 * INPUT.FOCUS_SHADOW_WIDTH
-    },
     popup: true,
     selection: [],
     toId: (value) => (value.id || String(value)),

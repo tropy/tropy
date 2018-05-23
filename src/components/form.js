@@ -213,6 +213,7 @@ class FormSelect extends PureComponent {
           id={this.props.id}
           isDisabled={this.props.isDisabled}
           isRequired={this.props.isRequired}
+          isSelectionHidden={this.props.isSelectionHidden}
           onChange={this.handleChange}
           options={this.props.options}
           placeholder={this.props.placeholder}
@@ -229,6 +230,7 @@ class FormSelect extends PureComponent {
     isCompact: bool,
     isDisabled: bool,
     isRequired: bool,
+    isSelectionHidden: bool,
     name: string.isRequired,
     options: arrayOf(string).isRequired,
     placeholder: node,

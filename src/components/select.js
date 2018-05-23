@@ -164,6 +164,7 @@ class Select extends Component {
 
   open() {
     if (!this.state.isDisabled) {
+      this.shouldPopupFadeIn = !this.state.hasFocus
       this.setState({ isOpen: true })
       this.props.onOpen()
     }
@@ -173,6 +174,12 @@ class Select extends Component {
     this.setState({ hasFocus: false, hasTabFocus: false })
     this.props.onBlur(event)
     this.close()
+  }
+
+  handleContextMenu = (event) => {
+    if (this.state.isOpen) {
+      event.stopPropagation()
+    }
   }
 
   handleFocus = (event) => {
@@ -210,7 +217,9 @@ class Select extends Component {
           this.close()
           break
         case 'Backspace':
-          if (this.state.query.length !== 0 || !this.state.canClearValue) {
+          if (!this.props.canClearByBackspace ||
+            this.state.query.length !== 0 ||
+            !this.state.canClearValue) {
             return false
           }
           this.clear(last(this.state.values))
@@ -227,7 +236,7 @@ class Select extends Component {
   }
 
   handleMouseDown = (event) => {
-    if (event.button === 0) {
+    if (event.button === 0 && !this.props.isStatic) {
       if (!this.state.isOpen) this.open()
       else if (this.state.query.length === 0) this.close()
     }
@@ -332,27 +341,32 @@ class Select extends Component {
   }
 
   renderCompletions() {
-    return this.state.isOpen && (
-      <Completions
-        className={cx(this.props.className, {
-          invalid: this.state.isInvalid
-        })}
-        completions={this.props.options}
-        isSelectionHidden={this.props.isSelectionHidden}
-        isVisibleWhenBlank
-        match={this.props.match}
-        maxRows={this.props.maxRows}
-        onClickOutside={this.close}
-        onResize={this.props.onResize}
-        onSelect={this.handleSelect}
-        parent={this.container}
-        popup={!this.props.isStatic}
-        query={this.state.query}
-        ref={this.setCompletions}
-        selection={this.state.selection}
-        toId={this.props.toId}
-        toText={this.props.toText}/>
-    )
+    try {
+      return this.state.isOpen && (
+        <Completions
+          className={cx(this.props.className, {
+            invalid: this.state.isInvalid
+          })}
+          completions={this.props.options}
+          fadeIn={this.shouldPopupFadeIn}
+          isSelectionHidden={this.props.isSelectionHidden}
+          isVisibleWhenBlank
+          match={this.props.match}
+          maxRows={this.props.maxRows}
+          onClickOutside={this.close}
+          onResize={this.props.onResize}
+          onSelect={this.handleSelect}
+          parent={this.container}
+          popup={!this.props.isStatic}
+          query={this.state.query}
+          ref={this.setCompletions}
+          selection={this.state.selection}
+          toId={this.props.toId}
+          toText={this.props.toText}/>
+      )
+    } finally {
+      this.shouldPopupFadeIn = false
+    }
   }
 
   render() {
@@ -360,6 +374,7 @@ class Select extends Component {
       <div
         className={cx(this.classes)}
         id={this.props.id}
+        onContextMenu={this.handleContextMenu}
         onMouseDown={this.handleMouseDown}
         ref={this.setContainer}>
         {this.renderContent()}
@@ -371,6 +386,7 @@ class Select extends Component {
   }
 
   static propTypes = {
+    canClearByBackspace: bool,
     className: string,
     hideClearButton: bool,
     id: string,
@@ -404,6 +420,7 @@ class Select extends Component {
   }
 
   static defaultProps = {
+    canClearByBackspace: true,
     hideClearButton: false,
     isStatic: false,
     isSelectionHidden: false,

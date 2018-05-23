@@ -5,13 +5,6 @@
 .select {
   min-width: 0; // Fix truncation
   position: relative;
-  transition: none; // todo
-
-  &.invalid {
-    border-color: $input-btn-invalid-color;
-
-    @include input-btn-focus(".focus", $input-btn-invalid-color); // sass-lint:disable-line mixins-before-declarations
-  }
 
   .value,
   .placeholder {
@@ -32,6 +25,7 @@
     width: 100%;
     height: $input-height-base - 2px;
     cursor: default;
+    position: relative;
 
     &.live {
       cursor: auto;
@@ -96,6 +90,11 @@
 
       &.selected {
         padding-left: $padding-base-horizontal;
+        background-color: transparent;
+
+        &.active {
+          background-color: $option-active-bg;
+        }
       }
     }
 
@@ -112,6 +111,13 @@
     .mute {
       margin-left: $space-min;
     }
+  }
+
+  // Has to be at the end to override the single select default focus
+  &.invalid {
+    border-color: $input-btn-invalid-color;
+
+    @include input-btn-focus(".focus", $input-btn-invalid-color); // sass-lint:disable-line mixins-before-declarations
   }
 }
 

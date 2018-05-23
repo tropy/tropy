@@ -5,7 +5,7 @@ const { Fragment, Component } = React
 const { ResourceSelect } = require('../resource/select')
 const { Popup } = require('../popup')
 const { arrayOf, func, number, object, string } = require('prop-types')
-const { INPUT, OPTION, PANEL } = require('../../constants/sass')
+const { OPTION, PANEL } = require('../../constants/sass')
 const { IconTick } = require('../icons')
 const { min } = Math
 
@@ -27,8 +27,7 @@ class ColumnContextMenu extends Component {
   }
 
   getColumnSelectHeight(rows, { maxRows } = this.props) {
-    return INPUT.FOCUS_SHADOW_WIDTH * 2 +
-      OPTION.HEIGHT * ((min(rows || 1, maxRows)) + 1) +
+    return OPTION.HEIGHT * ((min(rows || 1, maxRows)) + 1) +
       OPTION.LIST_MARGIN
   }
 
@@ -78,6 +77,7 @@ class ColumnContextMenu extends Component {
 
 const ColumnSelect = (props) => (
   <ResourceSelect
+    canClearByBackspace={false}
     className="column-select"
     placeholder="select.column.placeholder"
     hideClearButton
