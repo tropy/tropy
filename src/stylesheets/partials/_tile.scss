@@ -41,7 +41,7 @@
   &.selection {
     &.active {
       .tile-state {
-        .selection.grid:focus & {
+        .selection-grid:focus & {
           border-color: $tile-focus-color;
         }
       }
