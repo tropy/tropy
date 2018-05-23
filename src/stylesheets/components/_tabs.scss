@@ -32,10 +32,6 @@
       .nested-tab-focus & {
         background: $tab-nested-focus-bg;
       }
-
-      .nested-tab-focus.has-active & {
-        background: $tab-bg;
-      }
     }
   }
 

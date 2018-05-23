@@ -63,6 +63,7 @@ class NotePad extends PureComponent {
           ref={this.setEditor}
           state={this.props.note.state}
           keymap={this.props.keymap}
+          mode={this.props.mode}
           placeholder="notepad.placeholder"
           isDisabled={this.isDisabled}
           tabIndex={this.props.tabIndex}

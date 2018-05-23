@@ -4,12 +4,12 @@ const res = require('../common/res')
 const { basename } = require('path')
 const { warn, verbose } = require('../common/log')
 const { transduce, map, transformer } = require('transducers.js')
-const electron = require('electron')
+const { BrowserWindow, Menu: M } = require('electron')
 
-function withWindow(cmd, fn) {
-  return (_, win) => {
-    if (!win) warn(`${cmd} called without window`)
-    else fn(win)
+function withWindow(win, cmd, fn) {
+  return (_, w) => {
+    if (!(win || w)) warn(`${cmd} called without window`)
+    else fn(win || w)
   }
 }
 
@@ -57,16 +57,16 @@ class Menu {
     return this.find(tail, item.submenu)
   }
 
-  responder(cmd, ...params) {
+  responder(cmd, win, ...params) {
     let [prefix, ...action] = cmd.split(':')
 
     switch (prefix) {
       case 'app':
-        return (_, win) => this.app.emit(cmd, win, ...params)
+        return (_, w) => this.app.emit(cmd, win || w, ...params)
       case 'win':
-        return withWindow(cmd, win => win.webContents.send(...action))
+        return withWindow(win, cmd, w => w.webContents.send(...action))
       case 'dispatch':
-        return withWindow(cmd, win => win.webContents.send('dispatch', {
+        return withWindow(win, cmd, w => w.webContents.send('dispatch', {
           type: action.join(':'), payload: params
         }))
       default:
@@ -75,7 +75,7 @@ class Menu {
   }
 
   build(...args) {
-    return electron.Menu.buildFromTemplate(
+    return M.buildFromTemplate(
       this.translate(...args)
         // Hiding of root items does not work at the moment.
         // See Electron #2895
@@ -83,13 +83,13 @@ class Menu {
     )
   }
 
-  translate(template, ...params) {
+  translate(template, win = BrowserWindow.getFocusedWindow(), ...params) {
     // eslint-disable-next-line complexity
     return template.map(item => {
       item = { ...item }
 
       if (item.command) {
-        item.click = this.responder(item.command, ...params)
+        item.click = this.responder(item.command, win, ...params)
       }
 
       if (item.label) {
@@ -110,7 +110,7 @@ class Menu {
         }
 
         item.checked = target.color === item.color
-        item.click = this.responder('app:save-tag', {
+        item.click = this.responder('app:save-tag', win, {
           id: target.id,
           color: item.color
         })
@@ -157,23 +157,23 @@ class Menu {
             ...theme,
             checked: (theme.id === this.app.state.theme),
             enabled: (theme.id !== this.app.state.theme),
-            click: this.responder('app:switch-theme', theme.id)
+            click: this.responder('app:switch-theme', win, theme.id)
           }))
           break
 
         case 'undo':
-          if (this.app.history.past > 0) {
+          if (this.app.getHistory(win).past > 0) {
             item.enabled = true
-            // item.label = `${item.label} ${this.app.history.undo}`
+            // item.label = `${item.label} ${this.app.getHistory(win).undo}`
           } else {
             item.enabled = false
           }
           break
 
         case 'redo':
-          if (this.app.history.future > 0) {
+          if (this.app.getHistory(win).future > 0) {
             item.enabled = true
-            // item.label = `${item.label} ${this.app.history.redo}`
+            // item.label = `${item.label} ${this.app.getHistory(win).redo}`
           } else {
             item.enabled = false
           }
@@ -187,7 +187,7 @@ class Menu {
               { type: 'separator' },
               ...plugins.map(({ id, name }) => ({
                 label: name,
-                click: this.responder('app:export-item', {
+                click: this.responder('app:export-item', win, {
                   target: params[0].target,
                   plugin: id
                 })
@@ -199,18 +199,19 @@ class Menu {
 
         case 'tag': {
           const { target } = params[0]
+          const tags = this.app.getTags(win)
 
-          if (!this.app.tags.length) {
+          if (!tags.length) {
             item.enabled = false
 
           } else {
             item.submenu = [
               ...item.submenu,
-              ...this.app.tags.map(tag => ({
+              ...tags.map(tag => ({
                 type: 'checkbox',
                 label: tag.name,
                 checked: target.tags.includes(tag.id),
-                click: this.responder('app:toggle-item-tag', {
+                click: this.responder('app:toggle-item-tag', win, {
                   id: target.id,
                   tag: tag.id
                 })
@@ -222,7 +223,7 @@ class Menu {
                 ...item.submenu[0],
                 checked: false,
                 enabled: true,
-                click: this.responder('app:clear-item-tags', {
+                click: this.responder('app:clear-item-tags', win, {
                   id: target.id
                 })
               }
@@ -246,7 +247,7 @@ class Menu {
           item.submenu = item.submenu.map(li => ({
             ...li,
             checked: li.mode === target.mode,
-            click: this.responder('app:writing-mode', {
+            click: this.responder('app:writing-mode', win, {
               id: target.id, mode: li.mode
             })
           }))
@@ -254,7 +255,7 @@ class Menu {
       }
 
       if (item.submenu) {
-        item.submenu = this.translate(item.submenu, ...params)
+        item.submenu = this.translate(item.submenu, win, ...params)
       }
 
       return item
@@ -289,7 +290,7 @@ class AppMenu extends Menu {
   }
 
   update() {
-    return electron.Menu.setApplicationMenu(this.menu), this
+    return M.setApplicationMenu(this.menu), this
   }
 }
 
@@ -316,15 +317,16 @@ class ContextMenu extends Menu {
     ).slice(1)
   }
 
-  show({ scope, event }, win = this.app.win, options) {
+  show({ scope, event }, win, options) {
     try {
       this.build(
         this.prepare(this.template, ContextMenu.scopes[scope]),
+        win,
         event
       ).popup(win, { ...options, async: true })
 
     } catch (error) {
-      warn(`failed to show context-menu: ${error.message}`)
+      warn(`failed to show context-menu for scope ${scope}: ${error.message}`)
       verbose(error.stack)
     }
   }

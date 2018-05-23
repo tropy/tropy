@@ -62,7 +62,7 @@ rules:
   quotes: [2, 'single', 'avoid-escape']
   radix: 2
   react/display-name: 0
-  react/no-deprecated: 2
+  react/no-deprecated: 1
   react/jsx-boolean-value: 2
   react/jsx-closing-bracket-location: [2, 'after-props']
   react/jsx-curly-spacing: [2, 'never']

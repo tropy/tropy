@@ -7,30 +7,70 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  height: 100%; // Prevent vertical scrollbar du to horizontal scrollbar
+  height: 100%; // Prevent vertical scrollbar due to horizontal scrollbar
   overflow-x: auto;
+  overflow-y: hidden; // Prevent horizontal scrollbar due to column borders
   contain: strict;
 
   th,
   td {
-    padding: 0 $space-xs;
+    padding: 0;
     position: relative;
 
     &:last-child {
-      padding-right: $space-sm;
+      .th-container,
+      .td-container {
+        padding-right: $space-sm;
+      }
     }
 
-    &.number {
+    &[class*="integer"] {
       text-align: right;
+    }
+  }
+
+  &.dragging-column {
+    th,
+    td {
+      transition: transform $column-transition;
+
+      &.dragging {
+        z-index: $zindex-drag-layer;
+        transform: translateX(var(--drag-offset));
+
+        &,
+        .td-container {
+          transition: none;
+        }
+
+        .td-container {
+          opacity: 0.5;
+        }
+      }
+    }
+
+    .table-head {
+      overflow: visible;
+    }
+
+    .resizable-handle-col {
+      display: none;
     }
   }
 
   .table-head {
     width: 100%;
     table-layout: fixed;
-    border-collapse: separate;
+    // border-collapse: collapse causes 'gap' rendering glitch on Linux
     border-spacing: 0;
     color: $item-table-header-color;
+    height: $item-table-header-height;
+    border: {
+      top: 1px solid $item-table-header-border-color;
+      bottom: 1px solid $item-table-header-border-color;
+    }
+    overflow: hidden;
+    box-sizing: content-box; // Fix #261
 
     .scrollbar-style-old-school & {
       width: calc(100% - #{$default-padding-horizontal});
@@ -40,55 +80,54 @@
       display: table-cell; // Reset resizable
       text-align: justify;
       font-weight: 400;
-      height: $item-table-header-height;
-      border: {
-        top: 1px solid $item-table-header-border-color;
-        bottom: 1px solid $item-table-header-border-color;
-      }
+      padding: 0 $space-min; // Prevent overlap of th-container and resize handle
       position: relative;
-      background-image:
-        linear-gradient(to right, transparent 1px, $body-bg 1px),
-        linear-gradient(
-          to bottom,
-          $body-bg 2px,
-          $item-table-header-border-color 2px,
-          $item-table-header-border-color ($item-table-header-height - 4px),
-          $body-bg ($item-table-header-height - 4px)
-        );
-      contain: content; // Not clear why size shifts the content
+      background-color: $item-table-header-bg;
+      contain: layout style; // Not clear why size shifts the content
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        bottom: 2px;
+        width: 1px;
+        background-color: $item-table-header-border-color;
+      }
+
+      &::before {
+        left: 0;
+      }
+
+      &::after {
+        background-color: transparent;
+        right: 0;
+        box-shadow: 1px 0 $item-table-header-border-color;
+      }
+
+      &:last-child {
+        background-color: transparent;
+
+        &::before,
+        &::after {
+          content: none;
+        }
+      }
 
       &:first-child {
-        padding-left: $space-sm;
-        background-image: none;
-      }
-
-      &:active:not(.resizing):not(.blank) {
-        background:
-          linear-gradient(
-            to right,
-            transparent 1px,
-            $item-table-header-active-bg 1px
-          )
-          $item-table-header-border-color;
-
-        &:first-child {
-          background: $item-table-header-active-bg;
+        &::before {
+          content: none;
         }
 
-        & + th {
-          background:
-            linear-gradient(
-              to right,
-              transparent 1px,
-              $body-bg 1px
-            )
-            $item-table-header-border-color;
+        .th-container {
+          padding-left: $space-xs;
         }
       }
 
-      &.number {
+      &[class*="integer"] {
         .label {
           padding-left: $space-min;
+          padding-right: 0;
         }
 
         .icon {
@@ -111,12 +150,75 @@
         }
       }
 
+      &:active:not(.resizing):not(.blank):not(.dragging) {
+        background-color: $item-table-header-active-bg;
+
+        &::before,
+        &::after {
+          top: 0;
+          bottom: 0;
+        }
+
+        &:first-child {
+          background: $item-table-header-active-bg;
+        }
+      }
+
+      &.moving {
+        transform: translateX(var(--drop-offset));
+        z-index: $zindex-drop-target;
+
+        &:first-child {
+          &::before {
+            content: "";
+          }
+        }
+      }
+
+      &.dragging {
+        background-image:
+          linear-gradient(
+            to right,
+            $item-table-header-border-color 1px,
+            $item-table-header-bg 1px
+          );
+        box-shadow: 1px 0 $item-table-header-border-color;
+
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+          top: calc(100% + 1px);
+          width: 1px;
+          height: 4000px;
+          background: $item-table-column-border-color;
+        }
+
+        &::before {
+          left: 0;
+        }
+
+        &::after {
+          right: -1px;
+          box-shadow: none;
+        }
+
+        // Only hide the 2nd column separator in moving state
+        // when the first one is in dragging state
+        &:first-child + .moving {
+          &::before {
+            content: none;
+          }
+        }
+      }
+
       .th-container {
         display: flex;
         width: 100%;
         height: 100%;
         justify-content: space-between;
         align-items: center;
+        padding: 0 $space-min 0 ($space-min + 1px);
       }
 
       .label {
@@ -128,11 +230,6 @@
       .icon {
         display: none;
         margin: 0 -4px 0 -5px;
-      }
-
-      .resizable-handle-right {
-        width: $resizable-threshold / 2;
-        right: 0;
       }
     }
   }
@@ -179,9 +276,48 @@
 
     td {
       height: $row-height;
+
+      &.moving {
+        transform: translateX(var(--drop-offset));
+      }
+    }
+
+    .td-container {
+      padding: 0 $space-xs 0 ($space-xs + 1px);
+      transition: opacity $column-transition;
+    }
+
+    .main-column {
+      .td-container {
+        padding-left:
+          $padding-base-horizontal
+          + $thumbnail-size
+          + $padding-base-horizontal;
+      }
+
+      &:first-child {
+        .td-container {
+          padding-left:
+            $default-padding-horizontal
+            + $thumbnail-size
+            + $padding-base-horizontal;
+        }
+      }
     }
 
     &.active {
+
+      // Fix 'gap' rendering bug
+      @at-root #{
+        selector-replace(&, ".item-table", ".item-table.dragging-column")
+      } {
+        background: $items-active-bg;
+
+        td {
+          background: transparent;
+        }
+      }
+
       td {
         color: $items-active-color;
         background: $items-active-bg;
@@ -207,15 +343,6 @@
       td {
         @extend %drop-target;
       }
-    }
-  }
-
-  td {
-    &.main-column {
-      padding-left:
-        $default-padding-horizontal
-        + $thumbnail-size
-        + $padding-base-horizontal;
     }
   }
 

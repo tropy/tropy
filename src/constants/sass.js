@@ -14,7 +14,9 @@ const ABOUT = {
 
 const COLUMN = {
   MIN: 48,
-  POSITION: 54
+  POSITION: 54,
+  PADDING: 5 + 4,
+  FIRST: 3
 
 }
 
@@ -126,8 +128,8 @@ const PROJECT = {
   MIN_HEIGHT: PANEL.MIN_HEIGHT * 3 + PANEL.TOOLBAR + PANEL.HEADER_MARGIN
 }
 
-const NOTEPAD = {
-  MIN_HEIGHT: 100
+const EDITOR = {
+  MAX_PADDING: 48
 }
 
 const NOTE = {
@@ -135,7 +137,7 @@ const NOTE = {
 }
 
 const ESPER = {
-  MIN_HEIGHT: PROJECT.MIN_HEIGHT - NOTEPAD.MIN_HEIGHT,
+  MIN_HEIGHT: PROJECT.MIN_HEIGHT / 2,
   FADE_DURATION: 250,
   ROTATE_DURATION: 250,
   MAX_ZOOM: 4,
@@ -220,6 +222,7 @@ module.exports =  {
   ABOUT,
   ACTIVITY,
   COLUMN,
+  EDITOR,
   ESPER,
   FONTSIZE,
   GRID,
@@ -227,7 +230,6 @@ module.exports =  {
   INPUT,
   ITEM,
   NOTE,
-  NOTEPAD,
   OPTION,
   PANEL,
   PHOTO,

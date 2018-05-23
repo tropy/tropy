@@ -12,7 +12,7 @@ const { auto } = require('../../format')
 const cx = require('classnames')
 const { TYPE } = require('../../constants')
 const {
-  arrayOf, bool, func, number, object, oneOfType, shape, string
+  arrayOf, bool, func, instanceOf, number, object, oneOfType, shape, string
 } = require('prop-types')
 
 
@@ -22,8 +22,10 @@ const BlankTableCell = () => (
 
 class ItemTableCell extends PureComponent {
   get classes() {
-    return ['metadata', {
+    return ['metadata', this.props.type, {
+      'dragging': this.props.isDragging,
       'main-column': this.props.isMainColumn,
+      'moving': this.props.isMoving,
       'read-only': this.props.isReadOnly
     }]
   }
@@ -109,19 +111,20 @@ class ItemTableCell extends PureComponent {
   }
 
   render() {
+    let isDisabled = this.props.isDisabled || this.props.isReadOnly
     return (
       <td
         className={cx(this.classes)}
         onClick={this.handleClick}
         onMouseDown={this.handleMouseDown}>
-        <div className="flex-row center">
+        <div className="flex-row center td-container">
           {this.renderCoverImage()}
           <Editable
             display={auto(this.props.value, this.props.type)}
             isActive={this.props.isEditing}
-            isDisabled={this.props.isDisabled || this.props.isReadOnly}
+            isDisabled={isDisabled}
             resize
-            value={this.props.value}
+            value={isDisabled ? null : this.props.value}
             onCancel={this.props.onCancel}
             onChange={this.handleChange}
             onKeyDown={this.handleKeyDown}/>
@@ -135,8 +138,10 @@ class ItemTableCell extends PureComponent {
     cache: string,
     id: string.isRequired,
     isDisabled: bool,
+    isDragging: bool,
     isEditing: bool,
     isMainColumn: bool,
+    isMoving: bool,
     isReadOnly: bool,
     isSelected: bool,
     item: shape({
@@ -150,7 +155,7 @@ class ItemTableCell extends PureComponent {
     size: number,
     tags: object,
     type: string.isRequired,
-    value: oneOfType([string, number]),
+    value: oneOfType([string, number, instanceOf(Date)]),
     getSelection: func.isRequired,
     onCancel: func.isRequired,
     onChange: func.isRequired,

@@ -19,11 +19,11 @@
   }
 
   .panel {
-    padding-bottom: $space-min;
+    margin-bottom: $space-min;
   }
 
   > .panel:last-child,
   .resizable:last-child .panel {
-    padding-bottom: 0;
+    margin-bottom: 0;
   }
 }

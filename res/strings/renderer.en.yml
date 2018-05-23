@@ -81,7 +81,7 @@ en:
   prefs:
     title: Tropy Preferences
     app:
-      label: Global
+      label: Settings
       style:
         theme: Theme
         themes:
@@ -147,7 +147,14 @@ en:
           one {# Property}
           other {# Properties}
         }
-
+    plugins:
+      label: Plugins
+      enable: Enable
+      disable: Disable
+      install: Install Plugin
+      uninstall: Uninstall
+      noInfo: Unknown author
+      homepage: More
   item:
     created: Date Added
     modified: Modified
@@ -189,7 +196,12 @@ en:
         value: "{value, number}"
   notepad:
     placeholder: Add your notes here …
-
+  completions:
+    empty: No options available
+    noMatches: No matches found
+  select:
+    column:
+      placeholder: Search
   template:
     id: URI
     name: Name
@@ -227,16 +239,17 @@ en:
     description: Description
     comment: Comment
 
+  ok: Yes
+  cancel: Cancel
   dialog:
     prompt:
-      ok: Yes
-      cancel: Cancel
       item:
-        ok: Delete
-        cancel: Cancel
-        destroy: >
-          Are your sure you want to permanently delete items?
-          This action cannot be undone.
+        destroy:
+          ok: Delete
+          cancel: Cancel
+          message: >
+            Are your sure you want to permanently delete items?
+            This action cannot be undone.
       dup:
         message: >
           This photo already exists in your project. Are you sure
@@ -244,6 +257,13 @@ en:
         checkbox: Remember this choice
         cancel: Skip
         ok: Import Anyway
+      plugin:
+        uninstall:
+          ok: Delete
+          cancel: Cancel
+          message: >
+            Are you sure you want to delete the plugin?
+            This will permanently remove the plugin and its configuration.
     filter:
       templates: Tropy Templates
       images: Images
@@ -456,3 +476,10 @@ en:
           Tropy {version} is ready to be installed.
           Do you want to install and restart now?
         confirm: Restart Now
+  plugin:
+    name: Name
+    plugin: Plugin
+    options: Options
+    hooks:
+      export: Export
+      import: Import

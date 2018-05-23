@@ -8,6 +8,8 @@ const { EditorView } = require('prosemirror-view')
 const { EditorState } = require('prosemirror-state')
 const { isMeta } = require('../../keymap')
 const { isLink } = require('../../dom')
+const { darwin } = require('../../common/os')
+const throttle = require('lodash.throttle')
 
 
 class ProseMirror extends Component {
@@ -23,9 +25,15 @@ class ProseMirror extends Component {
         blur: this.handleBlur
       }
     })
+
+    this.ro = new ResizeObserver(([e]) => {
+      this.handleResize(e.contentRect)
+    })
+    this.ro.observe(this.container)
   }
 
   componentWillUnmount() {
+    this.ro.disconnect()
     this.pm.destroy()
   }
 
@@ -47,6 +55,13 @@ class ProseMirror extends Component {
     }
 
     return false
+  }
+
+  get bounds() {
+    return {
+      width: this.container.clientWidth,
+      height: this.container.clientHeight
+    }
   }
 
   getEditorProps(props = this.props) {
@@ -95,6 +110,14 @@ class ProseMirror extends Component {
     this.props.onBlur(...args)
   }
 
+  handleResize = (darwin || devicePixelRatio === 1) ?
+    (rect) => this.resize(rect) :
+    () => this.resize(this.bounds)
+
+  resize = throttle(({ width, height }) => {
+    this.props.onResize({ width, height })
+  }, 50)
+
   render() {
     return (
       <div
@@ -112,7 +135,8 @@ class ProseMirror extends Component {
     onBlur: func.isRequired,
     onChange: func.isRequired,
     onFocus: func.isRequired,
-    onKeyDown: func.isRequired
+    onKeyDown: func.isRequired,
+    onResize: func.isRequired
   }
 }
 

@@ -211,6 +211,11 @@ const dom = {
       width: document.documentElement.clientWidth,
       height: document.documentElement.clientHeight
     }
+  },
+
+  visible(node) {
+    let offset = node.offsetTop - node.offsetParent.scrollTop
+    return offset > 0 && offset < node.offsetParent.offsetHeight
   }
 }
 

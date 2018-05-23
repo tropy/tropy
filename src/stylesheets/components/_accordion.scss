@@ -1,0 +1,28 @@
+//
+// Accordion
+// --------------------------------------------------
+
+.accordion {
+  .panel {
+    background-color: $accordion-bg;
+    border-radius: $accordion-border-radius;
+
+    .panel-header {
+      flex: 1 1 auto;
+      contain: content;
+
+      &,
+      * {
+        cursor: pointer;
+      }
+    }
+  }
+
+  &.tab-focus {
+    .panel {
+      &.active {
+        background: $accordion-active-bg;
+      }
+    }
+  }
+}

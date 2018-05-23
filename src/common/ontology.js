@@ -117,7 +117,7 @@ class Ontology extends Resource {
       if (empty(data)) return []
 
       let ns = isDefinedBy(id, data)
-      let vocab = json[ns] || this.getVocabulary(ns, prefix(), locale)
+      let vocab = json[ns] || this.getVocabulary(ns, prefix(), { locale })
 
       if (vocab == null) return []
       if (json[ns] == null) json[ns] = vocab
@@ -165,7 +165,7 @@ class Ontology extends Resource {
     return json
   }
 
-  getVocabulary(id, prefix, title = id, locale = 'en') {
+  getVocabulary(id, prefix, { title = id, locale = 'en' } = {}) {
     let data = this.getData(id)
 
     if (empty(data) && (/[#/]$/).test(id)) {

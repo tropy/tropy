@@ -2,7 +2,6 @@
 
 const React = require('react')
 const { PureComponent } = React
-const PropTypes = require('prop-types')
 const { Editable } = require('../editable')
 const { IconFolder } = require('../icons')
 const { DragSource, DropTarget } = require('react-dnd')
@@ -12,22 +11,23 @@ const { bounds } = require('../../dom')
 const { isValidImage } = require('../../image')
 const cx = require('classnames')
 const { noop } = require('../../common/util')
+const { bool, func, number, shape, string } = require('prop-types')
 
 
 class ListNode extends PureComponent {
-
   get classes() {
-    return {
-      'list': true,
-      'drop-target': this.props.isSortable,
+    return ['list', {
       'active': this.props.isSelected,
       'dragging': this.props.isDragging,
+      'drop-target': this.props.isSortable,
+      'holding': this.props.isHolding,
       'over': this.isOver
-    }
+    }]
   }
 
   get isOver() {
-    return this.props.isOver && this.props.canDrop &&
+    return this.props.isOver &&
+      this.props.canDrop &&
       this.props.dtType !== DND.LIST
   }
 
@@ -59,7 +59,6 @@ class ListNode extends PureComponent {
   connect(element) {
     if (this.props.isSortable) element = this.props.dt(element)
     if (this.isDraggable) element = this.props.ds(element)
-
     return element
   }
 
@@ -89,33 +88,32 @@ class ListNode extends PureComponent {
 
 
   static propTypes = {
-    list: PropTypes.shape({
-      id: PropTypes.number,
-      parent: PropTypes.number,
-      name: PropTypes.string
+    canDrop: bool,
+    isDragging: bool,
+    isEditing: bool,
+    isHolding: bool,
+    isOver: bool,
+    isSelected: bool,
+    isSortable: bool,
+    list: shape({
+      id: number,
+      parent: number,
+      name: string
     }),
 
-    isSelected: PropTypes.bool,
-    isEditing: PropTypes.bool,
-    isSortable: PropTypes.bool,
+    ds: func.isRequired,
+    dt: func.isRequired,
+    dtType: string,
 
-    isDragging: PropTypes.bool,
-    isOver: PropTypes.bool,
-    canDrop: PropTypes.bool,
-
-    ds: PropTypes.func.isRequired,
-    dt: PropTypes.func.isRequired,
-    dtType: PropTypes.string,
-
-    onClick: PropTypes.func.isRequired,
-    onEditCancel: PropTypes.func,
-    onContextMenu: PropTypes.func,
-    onDropItems: PropTypes.func,
-    onDropFiles: PropTypes.func,
-    onSave: PropTypes.func,
-    onSort: PropTypes.func,
-    onSortPreview: PropTypes.func,
-    onSortReset: PropTypes.func
+    onClick: func.isRequired,
+    onEditCancel: func,
+    onContextMenu: func,
+    onDropItems: func,
+    onDropFiles: func,
+    onSave: func,
+    onSort: func,
+    onSortPreview: func,
+    onSortReset: func
   }
 
   static defaultProps = {

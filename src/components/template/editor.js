@@ -31,8 +31,8 @@ const TEMPLATE = {
 const defaultId = () =>
   `https://tropy.org/v1/templates/id#${identify()}`
 
-const makeTemplate = (template = TEMPLATE) => ({
-  id: template.id || defaultId(), ...template
+const makeTemplate = (template) => ({
+  id: (template || TEMPLATE).id || defaultId(), ...(template || TEMPLATE)
 })
 
 
@@ -119,7 +119,7 @@ class TemplateEditor extends PureComponent {
         <div className="template-editor form-horizontal">
           <header className="template-header">
             <TemplateToolbar
-              selected={this.state.id}
+              selected={isPristine ? null : this.state.id}
               templates={this.props.templates}
               isProtected={this.state.isProtected}
               isPristine={this.isPristine}
@@ -158,6 +158,7 @@ class TemplateEditor extends PureComponent {
               tabIndex={0}
               isCompact
               isDisabled={this.state.isProtected || !isPristine}
+              isRequired
               onChange={this.handleTemplateUpdate}
               size={9}/>
             <FormField

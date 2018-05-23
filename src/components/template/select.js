@@ -2,62 +2,52 @@
 
 const React = require('react')
 const { PureComponent } = React
-const { injectIntl, intlShape } = require('react-intl')
+const { Select } = require('../select')
+const { FormattedMessage } = require('react-intl')
+const { startsWith } = require('../../collate')
 const { bool, array, func, number, string } = require('prop-types')
+const cx = require('classnames')
 
 class TemplateSelect extends PureComponent {
-  get hasPlaceholder() {
-    return !this.props.isRequired && this.props.placeholder != null
-  }
-
   get placeholder() {
-    return this.props.intl.formatMessage({ id: this.props.placeholder })
+    return this.props.placeholder != null &&
+      <FormattedMessage id={this.props.placeholder}/>
   }
 
-  handleChange = ({ target }) => {
-    this.props.onChange(
-      this.props.templates.find(t => t.id === target.value)
-    )
+  focus = () => {
+    if (this.select != null) this.select.focus()
   }
 
-  renderPlaceholder() {
-    return this.hasPlaceholder && <option>{this.placeholder}</option>
+  setSelect = (select) => {
+    this.select = select
   }
 
   render() {
+    let { isMixed, ...props } = this.props
     return (
-      <select
-        tabIndex={this.props.tabIndex}
-        name="template-select"
-        className="template-select form-control"
-        required={this.props.isRequired}
-        disabled={this.props.isDisabled}
-        value={this.props.selected}
-        onChange={this.handleChange}>
-        {this.renderPlaceholder()}
-        {this.props.templates.map(({ id, name }) =>
-          <option key={id} value={id}>{name || id}</option>)}
-      </select>
+      <Select {...props}
+        className={cx('template-select', { mixed: isMixed })}
+        placeholder={this.placeholder}
+        ref={this.setContainer}/>
     )
   }
 
   static propTypes = {
-    intl: intlShape,
-    isDisabled: bool,
-    isRequired: bool,
+    isMixed: bool,
+    match: func.isRequired,
+    options: array.isRequired,
     placeholder: string,
-    tabIndex: number.isRequired,
-    templates: array.isRequired,
-    selected: string,
-    onChange: func.isRequired
+    tabIndex: number.isRequired
   }
 
   static defaultProps = {
-    isRequired: true,
+    match: (template, query) => (
+      startsWith(template.name, query) || template.id.includes(query)
+    ),
     tabIndex: -1
   }
 }
 
 module.exports = {
-  TemplateSelect: injectIntl(TemplateSelect)
+  TemplateSelect
 }

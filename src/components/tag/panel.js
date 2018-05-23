@@ -27,8 +27,10 @@ class TagPanel extends PureComponent {
   }
 
   componentWillUnmount() {
-    off(this.container, 'tab:focus', this.handleTabFocus)
     this.props.onBlur()
+    if (this.container != null) {
+      off(this.container, 'tab:focus', this.handleTabFocus)
+    }
   }
 
   get isEmpty() {
@@ -67,12 +69,6 @@ class TagPanel extends PureComponent {
 
   handleTabFocus = () => {
     this.props.onFocus()
-    this.props.onDeactivate()
-  }
-
-  handleBlur = () => {
-    this.props.onBlur()
-    this.props.onDeactivate()
   }
 
   handleTagRemove = (tag) => {
@@ -125,7 +121,7 @@ class TagPanel extends PureComponent {
         ref={this.setContainer}
         className="tab-pane"
         tabIndex={this.tabIndex}
-        onBlur={this.handleBlur}
+        onBlur={this.props.onBlur}
         onKeyDown={this.handleKeyDown}>
         <TagList
           edit={this.props.edit}
@@ -144,8 +140,7 @@ class TagPanel extends PureComponent {
           count={this.props.items.length}
           tags={this.props.allTags}
           onAdd={this.handleTagAdd}
-          onBlur={this.handleBlur}
-          onFocus={this.props.onActivate}
+          onBlur={this.props.onBlur}
           onCancel={this.handleCancel}
           onCreate={this.handleTagCreate}/>
       </div>
@@ -164,8 +159,6 @@ class TagPanel extends PureComponent {
       name: string.isRequired
     })).isRequired,
 
-    onActivate: func.isRequired,
-    onDeactivate: func.isRequired,
     onBlur: func.isRequired,
     onFocus: func.isRequired,
     onContextMenu: func.isRequired,

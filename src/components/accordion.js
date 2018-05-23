@@ -1,17 +1,33 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent, Children, cloneElement: clone } = React
+const { Component, Children, cloneElement: clone } = React
 const { only } = require('./util')
 const cx = require('classnames')
-const { bool, func, node, number, string } = require('prop-types')
+const { on, off, visible } = require('../dom')
+const { bool, func, node, number, oneOfType, string } = require('prop-types')
 
 
-class Accordion extends PureComponent {
+class Accordion extends Component {
+  componentDidUpdate({ isActive: wasActive, isOpen: wasOpen }) {
+    const { isActive, isOpen } = this.props
+    if (isActive && (!wasActive || isOpen && !wasOpen)) {
+      if (!visible(this.container)) {
+        this.container.scrollIntoView({ block: 'start' })
+      }
+    }
+  }
+
   get classes() {
-    return {
-      panel: true,
+    return ['panel', {
+      active: this.props.isActive,
       closed: !this.props.isOpen
+    }]
+  }
+
+  close = () => {
+    if (this.props.isOpen) {
+      this.props.onToggle(this, false)
     }
   }
 
@@ -19,11 +35,21 @@ class Accordion extends PureComponent {
     this.props.onToggle(this, !this.props.isOpen)
   }
 
+  open = () => {
+    if (!this.props.isOpen) {
+      this.props.onToggle(this, true)
+    }
+  }
+
+  setContainer = (container) => {
+    this.container = container
+  }
+
   renderHeader(header) {
     return (
       <header
         className="panel-header"
-        onDoubleClick={this.props.canToggle ? this.handleToggle : null}>
+        onClick={this.props.canToggle ? this.handleToggle : null}>
         {header}
       </header>
     )
@@ -39,7 +65,9 @@ class Accordion extends PureComponent {
     const [header, ...body] = Children.toArray(this.props.children)
 
     return (
-      <section className={cx(this.classes, this.props.className)}>
+      <section
+        className={cx(this.classes, this.props.className)}
+        ref={this.setContainer}>
         {this.renderHeader(header)}
         {this.renderBody(body)}
       </section>
@@ -50,7 +78,8 @@ class Accordion extends PureComponent {
     canToggle: bool,
     children: node,
     className: string,
-    id: number,
+    id: oneOfType([number, string]).isRequired,
+    isActive: bool,
     isOpen: bool,
     onToggle: func
   }
@@ -61,32 +90,149 @@ class Accordion extends PureComponent {
 }
 
 
-class AccordionGroup extends PureComponent {
-  constructor(props) {
-    super(props)
+class AccordionGroup extends Component {
+  state = {
+    active: null,
+    hasTabFocus: false,
+    open: []
+  }
 
-    this.state = {
-      open: null
+  componentDidMount() {
+    on(this.container, 'tab:focus', this.handleTabFocus)
+  }
+
+  componentWillUnmount() {
+    off(this.container, 'tab:focus', this.handleTabFocus)
+  }
+
+  get classes() {
+    return ['panel-group', 'accordion', this.props.className, {
+      'tab-focus': this.state.hasTabFocus
+    }]
+  }
+
+  isActive(id = this.state.active) {
+    return id != null && id === this.state.active
+  }
+
+  isOpen(id = this.state.open) {
+    return id != null && this.state.open.includes(id)
+  }
+
+  getNext(k = 1) {
+    let accordions = Children.toArray(this.props.children)
+    let { active } = this.state
+
+    if (accordions.length === 0) return null
+    if (active == null) return accordions[0].props.id
+
+    let idx = accordions.findIndex(acc => active === acc.props.id)
+    if (idx < 0) return accordions[0].props.id
+    idx = (idx + k + accordions.length) % accordions.length
+    return accordions[idx].props.id
+  }
+
+  getPrev(k = 1) {
+    return this.getNext(-k)
+  }
+
+  next(k = 1) {
+    this.setState({ active: this.getNext(k) })
+  }
+
+  prev(k = 1) {
+    this.setState({ active: this.getPrev(k) })
+  }
+
+  close(id = this.state.open) {
+    if (this.isOpen(id)) {
+      this.setState({
+        active: id,
+        open: this.state.open.filter(x => x !== id)
+      })
     }
   }
 
-  isOpen(id) {
-    return this.state.open === id
+  open(id = this.state.active) {
+    if (!this.isOpen(id)) {
+      this.setState({
+        active: id,
+        open: this.props.autoclose ? [id] : [...this.state.open, id]
+      })
+    }
   }
 
-  handleToggle = (accordion, isOpen) => {
-    this.setState({
-      open: isOpen ? accordion.props.id : null
-    })
+  toggle(id = this.state.active) {
+    if (this.isOpen(id)) this.close(id)
+    else this.open(id)
+  }
+
+  handleBlur = () => {
+    this.setState({ hasTabFocus: false })
+  }
+
+  handleFocus = () => {
+    this.next(0)
+  }
+
+  handleTabFocus = () => {
+    this.setState({ hasTabFocus: true })
+  }
+
+  handleKeyDown = (event) => {
+    if (this.props.tabIndex == null) return
+
+    switch (event.key) {
+      case 'ArrowDown':
+        this.next()
+        break
+      case 'ArrowUp':
+        this.prev()
+        break
+      case 'ArrowRight':
+        if (event.target === this.container) this.open()
+        break
+      case ' ':
+      case 'Enter':
+        if (event.target === this.container) this.toggle()
+        break
+      case 'ArrowLeft':
+      case 'Escape':
+        if (event.target === this.container) this.close(this.state.active)
+        break
+      default:
+        return
+    }
+
+    this.handleTabFocus()
+
+    event.preventDefault()
+    event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
+  }
+
+  handleToggle = (accordion, shouldOpen) => {
+    if (shouldOpen) this.open(accordion.props.id)
+    else this.close(accordion.props.id)
+  }
+
+  setContainer = (container) => {
+    this.container = container
   }
 
   render() {
     return (
-      <div className={cx('panel-group', this.props.className)}>
-        {Children.map(this.props.children, (acc, id) =>
+      <div
+        className={cx(this.classes)}
+        onBlur={this.handleBlur}
+        onFocus={this.handleFocus}
+        onKeyDown={this.handleKeyDown}
+        tabIndex={this.props.tabIndex}
+        ref={this.setContainer}>
+        {Children.map(this.props.children, (acc) =>
           clone(acc, {
-            id,
-            isOpen: this.isOpen(id),
+            isActive: this.isActive(acc.props.id),
+            isOpen: this.isOpen(acc.props.id),
             onToggle: this.handleToggle
           }))}
       </div>
@@ -94,8 +240,10 @@ class AccordionGroup extends PureComponent {
   }
 
   static propTypes = {
+    autoclose: bool,
     children: only(Accordion),
-    className: string
+    className: string,
+    tabIndex: number
   }
 }
 

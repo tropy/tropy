@@ -1,0 +1,171 @@
+//
+// Plugins
+// --------------------------------------------------
+
+.plugins {
+  .panel-group {
+    .panel {
+      margin-bottom: $space-sm;
+    }
+  }
+
+  .panel {
+    @include form-shading-level(2);
+    border-left: 3px solid $plugin-indicator;
+
+    .panel-header {
+      display: block; // Not flex
+    }
+
+    .panel-header-container {
+      padding-top: $space-sm + 2px; // 20px to x-height
+      padding-bottom: $space-sm;
+    }
+
+    .panel-heading {
+      font-size: $h1-font-size;
+      line-height: $headings-line-height;
+      margin-bottom: 2px;
+
+      .version {
+        font-size: $font-size-base;
+      }
+    }
+
+    p {
+      margin: 0;
+    }
+
+    .no-info {
+      font-style: italic;
+      color: $no-info-color;
+    }
+
+    .flex-row {
+      margin-top: $space-sm - 5px;
+
+      .btn-group {
+        margin-left: auto;
+      }
+    }
+
+    .hooks {
+      display: inline-flex;
+      float: right;
+      margin-top: -1px;
+      // Remove when first plugin with a hook other than export is available
+      display: none;
+
+      li {
+        font-size: 11px;
+        color: $hook-color;
+        background-color: $hook-bg;
+        padding: 1px 5px;
+        border-radius: $border-radius-small;
+        margin-left: $space-min / 2;
+      }
+    }
+
+    .panel-body {
+      padding: ($space-lg + 1px) $default-padding-horizontal $space-lg;
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: $default-padding-horizontal;
+        right: $default-padding-horizontal;
+        top: 0;
+        height: 1px;
+        background-color: $plugin-border-color;
+      }
+    }
+
+    &.disabled {
+      border-left-color: $plugin-disabled-indicator;
+
+      .panel-header {
+        &,
+        * {
+          cursor: default;
+        }
+
+        a {
+          &,
+          span {
+            cursor: pointer;
+          }
+        }
+      }
+
+      .panel-body {
+        display: none;
+      }
+
+      .panel-heading,
+      .description,
+      a,
+      .no-info,
+      .hooks {
+        opacity: 0.5;
+      }
+    }
+
+    .plugin-instance {
+      display: flex;
+      align-items: center;
+      margin-bottom: $space-min;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      fieldset {
+        @include form-shading-level(3);
+        margin-right: 6px;
+      }
+
+      .btn-icon {
+        flex: 0 0 auto;
+        padding: {
+          left: 2px;
+          right: 2px;
+        }
+      }
+    }
+
+    &.active {
+      @at-root #{
+        selector-replace(&, ".plugins", ".plugins .accordion.tab-focus")
+      } {
+        @include form-shading-level(3);
+
+        &.disabled {
+          border-left-color: $plugin-active-disabled-indicator;
+        }
+
+        .panel-body {
+          &::before {
+            background-color: $plugin-active-border-color;
+          }
+        }
+
+        .plugin-instance {
+          fieldset {
+            @include form-shading-level(4);
+          }
+        }
+      }
+    }
+  }
+
+  .plugins-footer {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+    padding: $space-lg;
+
+    .btn + .btn {
+      margin-left: $space-xs;
+    }
+  }
+}

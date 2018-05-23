@@ -62,6 +62,7 @@ class EsperView extends Component {
   }
 
   componentWillUnmount() {
+    this.stop.flush()
     this.tweens.removeAll()
     this.pixi.destroy(true)
     this.m.removeListener(this.handleResolutionChange)
@@ -352,6 +353,8 @@ class EsperView extends Component {
 
   load(url) {
     return new Promise((resolve, reject) => {
+      url = url.replace(/#/g, '%23')
+
       if (TextureCache[url]) {
         return resolve(TextureCache[url])
       }

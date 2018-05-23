@@ -17,10 +17,13 @@ class VocabPane extends PureComponent {
         name={this.props.name}
         isActive={this.props.isActive}>
         <div className="scroll-container">
-          <AccordionGroup className="form-horizontal">
+          <AccordionGroup
+            className="form-horizontal"
+            tabIndex={0}>
             {this.props.vocab.map(vocab =>
               <VocabAccordion
                 key={vocab.id}
+                id={vocab.id}
                 vocab={vocab}
                 onClassSave={this.props.onClassSave}
                 onDelete={this.props.onDelete}

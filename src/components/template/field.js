@@ -16,10 +16,9 @@ const { round } = Math
 
 class TemplateField extends PureComponent {
   get classes() {
-    return {
-      'template-field': true,
-      'dragging': this.props.isDragging
-    }
+    return ['template-field', {
+      dragging: this.props.isDragging
+    }]
   }
 
   get isDragAndDropEnabled() {
@@ -96,8 +95,9 @@ class TemplateField extends PureComponent {
                 size={3}/>
               <div className="col-9">
                 <ResourceSelect
-                  resources={this.props.properties}
-                  selected={this.props.field.property}
+                  options={this.props.properties}
+                  value={this.props.field.property}
+                  maxRows={5}
                   isRequired={!this.props.isTransient}
                   isDisabled={this.props.isDisabled}
                   placeholder="property.select"
@@ -121,8 +121,9 @@ class TemplateField extends PureComponent {
                 size={3}/>
               <div className="col-9">
                 <ResourceSelect
-                  resources={this.props.datatypes}
-                  selected={this.props.field.datatype}
+                  options={this.props.datatypes}
+                  value={this.props.field.datatype}
+                  maxRows={5}
                   isRequired
                   isDisabled={!isEditable}
                   placeholder="datatype.select"
@@ -169,8 +170,8 @@ class TemplateField extends PureComponent {
           </fieldset>
         )}
         <div className="btn-group">
-          {this.renderInsertButton()}
           {this.renderRemoveButton()}
+          {this.renderInsertButton()}
         </div>
       </li>
     )

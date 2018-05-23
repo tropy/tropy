@@ -23,8 +23,9 @@ const { IconSpin } = require('../icons')
 const {
   getActivities,
   getCachePrefix,
-  getColumns,
+  getAllColumns,
   getExpandedPhotos,
+  getListHold,
   getSelectedItems,
   getSelectedPhoto,
   getSelectedNote,
@@ -216,6 +217,7 @@ class ProjectContainer extends Component {
       data,
       dt,
       expanded,
+      hold,
       items,
       hasLastImport,
       nav,
@@ -239,6 +241,7 @@ class ProjectContainer extends Component {
         <ProjectView {...props}
           activities={activities}
           nav={nav}
+          hold={hold}
           items={items}
           data={data}
           isActive={this.state.mode === MODE.PROJECT && !this.isClosing()}
@@ -290,6 +293,7 @@ class ProjectContainer extends Component {
       file: string
     }).isRequired,
 
+    hold: object.isRequired,
     keymap: object.isRequired,
     items: arrayOf(
       shape({ id: number.isRequired })
@@ -322,7 +326,7 @@ class ProjectContainer extends Component {
 
     ui: object.isRequired,
     data: object.isRequired,
-    columns: arrayOf(object),
+    columns: object.isRequired,
     cache: string.isRequired,
     sort: object.isRequired,
     tags: object.isRequired,
@@ -383,10 +387,11 @@ module.exports = {
     state => ({
       activities: getActivities(state),
       cache: getCachePrefix(state),
-      columns: getColumns(state),
+      columns: getAllColumns(state),
       data: state.metadata,
       edit: state.edit,
       expanded: getExpandedPhotos(state),
+      hold: getListHold(state),
       index: state.qr.index,
       items: getVisibleItems(state),
       keymap: state.keymap,
@@ -436,6 +441,18 @@ module.exports = {
       onProjectSave(...args) {
         dispatch(actions.project.save(...args))
         dispatch(actions.edit.cancel())
+      },
+
+      onColumnInsert(...args) {
+        dispatch(actions.nav.column.insert(...args))
+      },
+
+      onColumnRemove(...args) {
+        dispatch(actions.nav.column.remove(...args))
+      },
+
+      onColumnOrder(...args) {
+        dispatch(actions.nav.column.order(...args))
       },
 
       onColumnResize(...args) {

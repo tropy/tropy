@@ -59,6 +59,10 @@ const util = {
     return util.splice(array, at, 0, ...items)
   },
 
+  last(array) {
+    return array[array.length - 1]
+  },
+
   remove(array, ...items) {
     return array.filter(it => items.indexOf(it) < 0)
   },
@@ -76,6 +80,11 @@ const util = {
     }
 
     return into
+  },
+
+  homogenize(fn, memo = new Set()) {
+    let test = x => memo.has(x) ? false : !!memo.add(x)
+    return fn(test, memo)
   },
 
   compact(array) {
@@ -140,10 +149,16 @@ const util = {
     return res
   },
 
+  warp(array, idx, at) {
+    at = util.restrict(at, 0, array.length - 1)
+    if (idx === at || idx == null) return array
+    return util.insert(util.splice(array, idx, 1), at, array[idx])
+  },
+
   swap(array, from, to) {
     to = util.restrict(to, 0, array.length - 1)
 
-    if (from === to) return array
+    if (from === to || from == null) return array
     if (from > to) return util.swap(array, to, from)
 
     let head = array.slice(0, from)
@@ -202,6 +217,21 @@ const util = {
     }
 
     return obj
+  },
+
+  set(src, path, value) {
+    if (typeof path === 'string') {
+      return util.set(src, path.split('.'), value)
+    }
+
+    if (path.length === 0) return src
+    if (path.length === 1) {
+      return Object.assign({}, src, { [path[0]]: value })
+    }
+
+    return Object.assign({}, src, {
+      [path[0]]: util.set(src[path[0]] || {}, path.slice(1), value)
+    })
   },
 
   has(src, path) {
@@ -277,15 +307,12 @@ const util = {
           case value == null:
             into[prop] = value
             break
-
           case Array.isArray(value):
             into[prop] = [...value]
             break
-
           case value instanceof Date:
             into[prop] = new Date(value)
             break
-
           default:
             into[prop] = util.merge(into[prop], value)
             break

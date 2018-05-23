@@ -38,7 +38,9 @@ class Window extends EventEmitter {
   }
 
   init(done) {
-    this.plugins.reloadAndCreate()
+    this.plugins.reload()
+      .then(plugins => plugins.create().emit('change'))
+    this.unloaders.push(this.plugins.flush)
 
     this.handleUnload()
     this.handleTabFocus()
@@ -134,8 +136,11 @@ class Window extends EventEmitter {
       .on('reload', () => {
         this.reload()
       })
-      .on('plugins-reload', () => {
-        this.plugins.reloadAndCreate()
+      .on('plugins-reload', async () => {
+        this.plugins.clearModuleCache()
+        await this.plugins.reload()
+        this.plugins.create()
+        this.plugins.emit('change')
       })
       .on('toggle-perf-tools', () => {
         const { search, hash } = location
@@ -231,6 +236,7 @@ class Window extends EventEmitter {
 
   handleModifierKeys() {
     on(document, 'keydown', event => {
+      toggle(document.body, 'alt-key', event.altKey)
       toggle(document.body, 'meta-key', event.metaKey)
       toggle(document.body, 'ctrl-key', event.ctrlKey)
     }, { passive: true, capture: true })
@@ -239,6 +245,7 @@ class Window extends EventEmitter {
     on(window, 'blur', up, { passive: true })
 
     function up(event) {
+      toggle(document.body, 'alt-key', event.altKey === true)
       toggle(document.body, 'meta-key', event.metaKey === true)
       toggle(document.body, 'ctrl-key', event.ctrlKey === true)
     }

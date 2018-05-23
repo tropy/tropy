@@ -95,7 +95,7 @@ de:
   prefs:
     title: Voreinstellungen
     app:
-      label: Global
+      label: Einstellungen
       style:
         theme: Erscheinungsbild
         themes:
@@ -173,6 +173,14 @@ de:
           other {# Eigenschaften}
 
           }
+    plugins:
+      label: Plugins
+      enable: Aktivieren
+      disable: Deaktivieren
+      install: Plugin Installieren
+      uninstall: Deinstallieren
+      noInfo: Autor anonym
+      homepage: Mehr
   item:
     created: Hinzugefügt
     modified: Bearbeitet
@@ -214,6 +222,12 @@ de:
         value: "{value, number}"
   notepad:
     placeholder: Notizen hier eintragen …
+  completions:
+    empty: Keine Optionen vorhanden
+    noMatches: Keine passenden Optionen gefunden
+  select:
+    column:
+      placeholder: Suche
   template:
     id: URI
     name: Name
@@ -249,20 +263,30 @@ de:
     label: Bezeichnung
     description: Beschreibung
     comment: Kommentar
+  ok: OK
+  cancel: Abbrechen
   dialog:
     prompt:
-      cancel: Abbrechen
       item:
-        ok: Löschen
-        cancel: Abbrechen
-        destroy: >
-            Objekte vollständig löschen? Dies kann nicht mehr rückgängig gemacht werden.
+        destroy:
+          ok: Löschen
+          cancel: Abbrechen
+          message: >
+              Objekte vollständig löschen? Dies kann nicht mehr rückgängig gemacht
+              werden.
       dup:
         message: >
             Dieses Foto ist bereits im Projekt vorhanden. Nochmals importieren?
         checkbox: Auswahl merken
         cancel: Überspringen
         ok: Nochmals importieren
+      plugin:
+        uninstall:
+          ok: Löschen
+          cancel: Abbrechen
+          message: >
+              Diesen Plugin samt Konfiguration vollständig entfernen? Dies kann nicht
+              mehr rückgängig gemacht werden.
     filter:
       templates: Tropy-Vorlagen
       images: Bilder
@@ -452,6 +476,7 @@ de:
     project:
       created: Projekt konnte nicht erstellt werden.
     item:
+      export: Objekte konnten nicht exportiert werden.
       merge: Objekte konnten nicht zusammengefügt werden.
       import: Objekt konnte nicht importiert werden.
       tag:
@@ -483,3 +508,10 @@ de:
         message: >
             Tropy {version} kann installiert werden. Jetzt installieren und neustarten?
         confirm: Jetzt neu starten
+  plugin:
+    name: Projektname
+    plugin: Plugin
+    options: Optionen
+    hooks:
+      export: Exportieren
+      import: Importieren

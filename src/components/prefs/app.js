@@ -22,11 +22,11 @@ class AppPrefs extends PureComponent {
   }
 
   handleThemeChange = ({ theme }) => {
-    ipc.send('cmd', 'app:switch-theme', theme, theme)
+    ipc.send('cmd', 'app:switch-theme', theme)
   }
 
   handleLocaleChange = ({ locale }) => {
-    ipc.send('cmd', 'app:switch-locale', locale, locale)
+    ipc.send('cmd', 'app:switch-locale', locale)
   }
 
   handleTemplateChange = (template) => {
@@ -39,8 +39,10 @@ class AppPrefs extends PureComponent {
         <div className="form-horizontal">
           <FormElement id="prefs.app.template">
             <TemplateSelect
-              templates={this.props.templates}
-              selected={this.props.settings.template}
+              isRequired
+              options={this.props.templates}
+              value={this.props.settings.template}
+              tabIndex={0}
               onChange={this.handleTemplateChange}/>
           </FormElement>
           <hr/>
@@ -55,6 +57,7 @@ class AppPrefs extends PureComponent {
             id="prefs.app.style.theme"
             name="theme"
             isRequired
+            isSelectionHidden
             value={this.props.settings.theme}
             options={this.props.themes}
             onChange={this.handleThemeChange}/>
@@ -63,8 +66,10 @@ class AppPrefs extends PureComponent {
             id="prefs.app.locale.locale"
             name="locale"
             isRequired
+            isSelectionHidden
             value={this.props.settings.locale}
             options={this.props.locales}
+            tabIndex={0}
             onChange={this.handleLocaleChange}/>
           <hr/>
           <FormElement

@@ -10,7 +10,7 @@ describe('AppMenu', () => {
     menu = new AppMenu({
       defaults: { locale: 'en' },
       state: { recent: [], locale: 'en' },
-      history: {},
+      getHistory: () => ({}),
       updater: {}
     })
   })

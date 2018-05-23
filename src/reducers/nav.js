@@ -1,7 +1,7 @@
 'use strict'
 
 const { isSelected, select } = require('../selection')
-const { merge, omit, splice } = require('../common/util')
+const { merge, insert, omit, splice } = require('../common/util')
 const {
   DC, NAV, ITEM, LIST, TAG, NOTE, PHOTO, PROJECT
 } = require('../constants')
@@ -16,7 +16,8 @@ const init = {
     { width: 250, id: DC.title },
     { width: 100, id: DC.creator },
     { width: 100, id: DC.date },
-    { width: 100, id: DC.type }
+    { width: 100, id: DC.type },
+    { width: 190, id: NAV.COLUMN.CREATED.id }
   ],
 }
 
@@ -151,6 +152,25 @@ module.exports = {
           ...payload
         }
 
+      case NAV.COLUMN.INSERT:
+        return {
+          ...state,
+          columns: insert(state.columns, meta.idx, payload)
+        }
+      case NAV.COLUMN.REMOVE:
+        return {
+          ...state,
+          columns: state.columns.filter(col => col.id !== payload.id)
+        }
+      case NAV.COLUMN.ORDER: {
+        const { order } = payload
+
+        return {
+          ...state,
+          columns: state.columns.reduce((cols, c) =>
+            ((cols[order[c.id]] = c), cols), [])
+        }
+      }
       case NAV.COLUMN.RESIZE: {
         const { column, width } = payload
 

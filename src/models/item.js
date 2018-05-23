@@ -2,8 +2,8 @@
 
 const { all } = require('bluebird')
 const { assign } = Object
-const { array, list: lst, remove, uniq } = require('../common/util')
-const { TEMPLATE } = require('../constants/item')
+const { array, blank, list: lst, remove, uniq } = require('../common/util')
+const { ITEM: { TEMPLATE }, NAV: { COLUMN } } = require('../constants')
 const { select } = require('../common/query')
 
 const mod = {
@@ -32,14 +32,44 @@ const SEARCH = `
     WHERE fts_metadata MATCH $query`
 
 const SORT = `
-  sort(id, text) AS (
+  WITH sort(id, text) AS (
     SELECT id, text
     FROM metadata JOIN metadata_values USING (value_id)
     WHERE property = $sort)`
 
+const ORDER = {
+  [COLUMN.CREATED.id]: 'subjects.created',
+  [COLUMN.MODIFIED.id]: 'subjects.modified',
+  [COLUMN.POSITION.id]: 'list_items.added'
+}
+
 const prefix = (query) =>
   (!(/[*+'"]/).test(query)) ? query + '*' : query
 
+function prep({ query, sort, tags }, params = {}) {
+  if (!(sort.column in ORDER)) {
+    params.$sort = sort.column
+  }
+
+  if (query != null) {
+    query = query.trim()
+    if (query.length > 0) {
+      params.$query = prefix(query)
+    }
+  }
+
+  if (!blank(tags)) {
+    if (tags.length > 0) {
+      params.$tags = tags.length
+    }
+  }
+
+  return {
+    dir: sort.asc ? 'ASC' : 'DESC',
+    order: ORDER[sort.column] || 'sort.text',
+    params
+  }
+}
 
 async function search(db, query, params) {
   const items = []
@@ -55,127 +85,79 @@ async function search(db, query, params) {
 
 
 module.exports = mod.item = {
-  all(db, { trash, tags, sort, query }) {
-    const dir = sort.asc ? 'ASC' : 'DESC'
-    const params = { $sort: sort.column }
-
-    query = query.trim()
-
-    const hasTags = tags.length > 0
-    const hasQuery = query.length > 0
-
-    if (hasQuery) {
-      params.$query = prefix(query)
-    }
-
-    if (hasTags) {
-      params.$tags = tags.length
-    }
-
-    const doTagsIntersect = true
-
+  all(db, { trash, ...options }) {
+    let { dir, order, params } = prep(options)
     return search(db, `
-      WITH ${SORT}
-        SELECT DISTINCT id
-          FROM items
-            ${hasTags ? 'JOIN taggings USING (id)' : ''}
-            LEFT OUTER JOIN sort USING (id)
-            LEFT OUTER JOIN trash USING (id)
-          WHERE
-            ${hasTags ? `tag_id IN (${lst(tags)}) AND` : ''}
-            ${hasQuery ? `id IN (${SEARCH}) AND` : ''}
-            deleted ${trash ? 'NOT' : 'IS'} NULL
-          ${hasTags && doTagsIntersect ?
-            'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
-          ORDER BY sort.text ${dir}, id ${dir}`,
+      ${params.$sort ? SORT : ''}
+      SELECT DISTINCT id
+        FROM items
+          ${params.$tags ? 'JOIN taggings USING (id)' : ''}
+          ${params.$sort ?
+            'LEFT OUTER JOIN sort USING (id)' :
+            'JOIN subjects USING (id)'}
+          LEFT OUTER JOIN trash USING (id)
+        WHERE
+          ${params.$tags ? `tag_id IN (${lst(options.tags)}) AND` : ''}
+          ${params.$query ? `id IN (${SEARCH}) AND` : ''}
+          deleted ${trash ? 'NOT' : 'IS'} NULL
+        ${params.$tags ? 'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
+        ORDER BY ${order} ${dir}, id ${dir}`,
       params)
   },
 
-  async find(db, { ids, query, sort }) {
-    const dir = sort.asc ? 'ASC' : 'DESC'
-    const params = { $sort: sort.column }
-    query = query.trim()
-    const hasQuery = query.length > 0
-
-    if (hasQuery) {
-      params.$query = prefix(query)
-    }
-
+  async find(db, { ids, ...options }) {
+    let { dir, order, params } = prep(options)
     return search(db, `
-      WITH ${SORT}
-        SELECT DISTINCT id
-          FROM items
-            LEFT OUTER JOIN sort USING (id)
-            LEFT OUTER JOIN trash USING (id)
-          WHERE
-            id IN (${lst(ids)}) AND deleted IS NULL
-            ${hasQuery ? `AND id IN (${SEARCH})` : ''}
-          ORDER BY sort.text ${dir}, id ${dir}`,
+      ${params.$sort ? SORT : ''}
+      SELECT DISTINCT id
+        FROM items
+          ${params.$sort ?
+            'LEFT OUTER JOIN sort USING (id)' :
+            'JOIN subjects USING (id)'}
+          LEFT OUTER JOIN trash USING (id)
+        WHERE
+          id IN (${lst(ids)}) AND deleted IS NULL
+          ${params.$query ? `AND id IN (${SEARCH})` : ''}
+        ORDER BY ${order} ${dir}, id ${dir}`,
       params)
   },
 
-  async trash(db, { sort, query }) {
-    const dir = sort.asc ? 'ASC' : 'DESC'
-    const params = { $sort: sort.column }
-    query = query.trim()
-    const hasQuery = query.length > 0
-
-    if (hasQuery) {
-      params.$query = prefix(query)
-    }
-
+  async trash(db, options) {
+    let { dir, order, params } = prep(options)
     return search(db, `
-      WITH ${SORT}
-        SELECT DISTINCT id
-          FROM items
-            JOIN trash USING (id)
-            LEFT OUTER JOIN sort USING (id)
-          WHERE
-            ${hasQuery ? `id IN (${SEARCH}) AND` : ''}
-            reason = 'user'
-          ORDER BY sort.text ${dir}, id ${dir}`,
+      ${params.$sort ? SORT : ''}
+      SELECT DISTINCT id
+        FROM items
+          JOIN trash USING (id)
+          ${params.$sort ?
+            'LEFT OUTER JOIN sort USING (id)' :
+            'JOIN subjects USING (id)'}
+        WHERE
+          ${params.$query ? `id IN (${SEARCH}) AND` : ''}
+          reason = 'user'
+        ORDER BY ${order} ${dir}, id ${dir}`,
       params)
   },
 
-  async list(db, list, { tags, sort, query }) {
-    const dir = sort.asc ? 'ASC' : 'DESC'
-    const params = { $list: list }
-    query = query.trim()
-
-    const hasTags = tags.length > 0
-    const hasQuery = query.length > 0
-    const byPosition = sort.property === 'added'
-
-    if (hasQuery) {
-      params.$query = prefix(query)
-    }
-
-    if (hasTags) {
-      params.$tags = tags.length
-    }
-
-    if (!byPosition) {
-      params.$sort = sort.column
-    }
-
-    const doTagsIntersect = true
-
+  async list(db, list, options) {
+    let { dir, order, params } = prep(options, { $list: list })
     return search(db, `
-      ${byPosition ? '' : `WITH ${SORT}`}
-        SELECT DISTINCT id, added
-          FROM list_items
-            ${byPosition ? '' : 'LEFT OUTER JOIN sort USING (id)'}
-            ${hasTags ? 'JOIN taggings USING (id)' : ''}
-            LEFT OUTER JOIN items USING (id)
-            LEFT OUTER JOIN trash USING (id)
-          WHERE
-            list_id = $list AND list_items.deleted IS NULL AND
-            ${hasQuery ? `id IN (${SEARCH}) AND` : ''}
-            ${hasTags ? `tag_id IN (${lst(tags)}) AND` : ''}
-            trash.deleted IS NULL
-          ${hasTags && doTagsIntersect ?
-            'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
-          ORDER BY ${byPosition ? 'added' : 'sort.text'} ${dir}, id ${dir}`,
+      ${params.$sort ? SORT : ''}
+      SELECT DISTINCT id, added
+        FROM list_items
+          ${params.$sort ?
+            'LEFT OUTER JOIN sort USING (id)' :
+            'JOIN subjects USING (id)'}
+          ${params.$tags ? 'JOIN taggings USING (id)' : ''}
+          LEFT OUTER JOIN items USING (id)
+          LEFT OUTER JOIN trash USING (id)
+        WHERE
+          list_id = $list AND list_items.deleted IS NULL AND
+          ${params.$query ? `id IN (${SEARCH}) AND` : ''}
+          ${params.$tags ? `tag_id IN (${lst(options.tags)}) AND` : ''}
+          trash.deleted IS NULL
+        ${params.$tags ? 'GROUP BY id HAVING COUNT(tag_id) = $tags' : ''}
+        ORDER BY ${order} ${dir}, id ${dir}`,
       params)
   },
 

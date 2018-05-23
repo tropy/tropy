@@ -8,15 +8,10 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  background-clip: content-box;
   contain: content;
 
   &.nested-tab-focus {
     background-color: $panel-focus-bg;
-
-    &.has-active {
-      background-color: $panel-bg;
-    }
   }
 
   .panel-header {
@@ -42,8 +37,11 @@
   }
 
   .panel-heading {
-    @include css-truncation;
     flex: 1 1 auto;
+
+    &.truncate {
+      @include css-truncation;
+    }
   }
 
   .panel-body {

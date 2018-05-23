@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { injectIntl, intlShape } = require('react-intl')
 const { Input } = require('../input')
-const { blank } = require('../../common/util')
+const { blank, noop } = require('../../common/util')
 const { arrayOf, bool, func, number, shape, string } = require('prop-types')
 
 
@@ -75,6 +75,10 @@ class TagAdder extends PureComponent {
     onCancel: func.isRequired,
     onFocus: func.isRequired,
     onCreate: func.isRequired
+  }
+
+  static defaultProps = {
+    onFocus: noop
   }
 }
 

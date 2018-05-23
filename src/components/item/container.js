@@ -7,6 +7,7 @@ const { BufferedResizable } = require('../resizable')
 const { Esper } = require('../esper')
 const { NotePad } = require('../note')
 const act = require('../../actions')
+const { SASS: { ESPER } } = require('../../constants')
 
 const {
   arrayOf, bool, func, number, object, shape, string
@@ -50,7 +51,7 @@ class ItemContainer extends PureComponent {
           isRelative
           onChange={this.handleEsperResize}
           margin={38}
-          min={256}>
+          min={ESPER.MIN_HEIGHT}>
           <Esper {...this.props.image}
             mode={this.props.image.mode || this.props.settings.zoomMode}
             hasOverlayToolbar={this.props.settings.overlayToolbars}

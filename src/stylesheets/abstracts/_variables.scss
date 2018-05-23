@@ -29,9 +29,11 @@ $line-height-large:    26px;
 
 $link-hover-decoration: underline;
 
+$h1-font-size: 18px;
+
 $headings-font-family:    inherit;
 $headings-font-weight:    400;
-$headings-line-height:    inherit;
+$headings-line-height:    1.1;
 $headings-color:          inherit;
 
 
@@ -178,6 +180,7 @@ $activity-transition-timing-function: ease-out;
 // --------------------------------------------------
 
 $item-table-header-height: $line-height-large;
+$column-transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 
 
 // Panel
@@ -185,6 +188,12 @@ $item-table-header-height: $line-height-large;
 
 $panel-header-height: const("PANEL.HEADER_HEIGHT") * 1px;
 $panel-body-min-height: 100px - (const("PANEL.HEADER_HEIGHT") * 1px) - 4px;
+
+
+// Accordion
+// --------------------------------------------------
+
+$accordion-border-radius: $border-radius-small;
 
 
 // Tabs
@@ -263,19 +272,13 @@ $progress-bar-height: $space-min;
 $progress-value-border-radius: $progress-bar-height / 2;
 
 
-// Notepad
-// --------------------------------------------------
-
-$notepad-min-height: const("NOTEPAD.MIN_HEIGHT") * 1px;
-
-
 // Editor
 // --------------------------------------------------
 
 $editor-size:                 80%;
 $editor-max-size:             700px;
 $editor-font-size:            18px;
-$editor-line-height:          1.66667;
+$editor-line-height:          1.6;
 $editor-line-height-computed: floor($editor-font-size * $editor-line-height);
 $editor-list-padding:         3 * $editor-font-size;
 $editor-outline-width:        2px;
@@ -284,8 +287,7 @@ $blockquote-padding:          1em;
 $editor-hr-border:            2px;
 $sup-and-sub-font-size:       1em * 2 / 3;
 $link-target-width:           400px;
-$prose-mirror-padding-start:  70px; // ~ 2 blank lines
-$prose-mirror-padding-end:    40px; // ~ blank line
+$editor-padding:              48px;
 
 
 // Toolbar

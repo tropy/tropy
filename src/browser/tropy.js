@@ -89,13 +89,10 @@ class Tropy extends EventEmitter {
     if (!file) {
       if (this.win) return this.win.show(), this
 
-      while (this.state.recent.length) {
-        const recent = this.state.recent.shift()
-
-        if (exists(recent)) {
-          file = recent
-          break
-        }
+      for (let recent of this.state.recent) {
+        if (!exists(recent)) continue
+        file = recent
+        break
       }
 
       if (!file) return this.showWizard()
@@ -173,8 +170,10 @@ class Tropy extends EventEmitter {
     if (this.wiz) this.wiz.close()
     if (this.prefs) this.prefs.close()
 
-    this.state.recent = into([file],
-        compose(remove(f => f === file), take(9)), this.state.recent)
+    this.state.recent = into(
+      [file],
+      compose(remove(f => f === file), take(9)),
+      this.state.recent)
 
     // if (darwin) this.win.setRepresentedFilename(file)
     if (name) this.win.setTitle(name)
@@ -323,120 +322,129 @@ class Tropy extends EventEmitter {
       this.showWizard())
 
     this.on('app:close-project', () =>
-      this.win && this.dispatch(act.project.close('debug')))
+      this.dispatch(act.project.close(), this.win))
 
     this.on('app:import-photos', () =>
       this.import())
 
-    this.on('app:rename-project', () =>
-      this.dispatch(act.edit.start({ project: { name: true } })))
+    this.on('app:rename-project', (win) =>
+      this.dispatch(act.edit.start({ project: { name: true } }), win))
 
     this.on('app:show-in-folder', (_, { target }) =>
       shell.showItemInFolder(target.path))
 
     this.on('app:create-item', () =>
-      this.dispatch(act.item.create()))
+      this.dispatch(act.item.create(), this.win))
 
-    this.on('app:delete-item', (_, { target }) =>
-      this.dispatch(act.item.delete(target.id)))
+    this.on('app:delete-item', (win, { target }) =>
+      this.dispatch(act.item.delete(target.id), win))
 
-    this.on('app:merge-item', (_, { target }) =>
-      this.dispatch(act.item.merge(target.id)))
+    this.on('app:merge-item', (win, { target }) =>
+      this.dispatch(act.item.merge(target.id), win))
 
-    this.on('app:explode-item', (_, { target }) =>
-      this.dispatch(act.item.explode({ id: target.id })))
+    this.on('app:explode-item', (win, { target }) =>
+      this.dispatch(act.item.explode({ id: target.id }), win))
 
-    this.on('app:explode-photo', (_, { target }) =>
-      this.dispatch(act.item.explode({ id: target.item, photos: [target.id] })))
+    this.on('app:explode-photo', (win, { target }) => {
+      this.dispatch(
+        act.item.explode({ id: target.item, photos: [target.id] }),
+        win)
+    })
 
-    this.on('app:export-item', (_, { target, plugin }) =>
-      this.dispatch(act.item.export(target.id, { plugin })))
+    this.on('app:export-item', (win, { target, plugin }) =>
+      this.dispatch(act.item.export(target.id, { plugin }), win))
 
-    this.on('app:restore-item', (_, { target }) =>
-      this.dispatch(act.item.restore(target.id)))
+    this.on('app:restore-item', (win, { target }) => {
+      this.dispatch(act.item.restore(target.id))
+    })
 
-    this.on('app:destroy-item', (_, { target }) =>
-      this.dispatch(act.item.destroy(target.id)))
+    this.on('app:destroy-item', (win, { target }) => {
+      this.dispatch(act.item.destroy(target.id))
+    })
 
-    this.on('app:create-item-photo', (_, { target }) =>
-      this.dispatch(act.photo.create({ item: target.id })))
+    this.on('app:create-item-photo', (win, { target }) => {
+      this.dispatch(act.photo.create({ item: target.id }))
+    })
 
-    this.on('app:toggle-item-tag', (_, { id, tag }) =>
-      this.dispatch(act.item.tags.toggle({ id, tags: [tag] })))
+    this.on('app:toggle-item-tag', (win, { id, tag }) => {
+      this.dispatch(act.item.tags.toggle({ id, tags: [tag] }), win)
+    })
 
-    this.on('app:clear-item-tags', (_, { id }) =>
-      this.dispatch(act.item.tags.clear(id)))
+    this.on('app:clear-item-tags', (win, { id }) => {
+      this.dispatch(act.item.tags.clear(id))
+    })
 
-    this.on('app:list-item-remove', (_, { target }) =>
+    this.on('app:list-item-remove', (win, { target }) => {
       this.dispatch(act.list.items.remove({
         id: target.list,
         items: target.id
-      })))
+      }), win)
+    })
 
-    this.on('app:rename-photo', (_, { target }) =>
-      this.dispatch(act.edit.start({ photo: target.id })))
-    this.on('app:delete-photo', (_, { target }) =>
+    this.on('app:rename-photo', (win, { target }) =>
+      this.dispatch(act.edit.start({ photo: target.id }), win))
+    this.on('app:delete-photo', (win, { target }) =>
       this.dispatch(act.photo.delete({
         item: target.item, photos: [target.id]
-      })))
-    this.on('app:duplicate-photo', (_, { target }) =>
+      }), win))
+    this.on('app:duplicate-photo', (win, { target }) =>
       this.dispatch(act.photo.duplicate({
         item: target.item, photos: [target.id]
-      })))
+      }), win))
     this.on('app:consolidate-photo-library', () =>
-      this.dispatch(act.photo.consolidate(null, { force: true })))
+      this.dispatch(act.photo.consolidate(null, { force: true }), this.win))
 
-    this.on('app:consolidate-photo', (_, { target }) =>
+    this.on('app:consolidate-photo', (win, { target }) =>
       this.dispatch(act.photo.consolidate([target.id], {
         force: true, prompt: true
-      })))
+      }), win))
 
-    this.on('app:delete-selection', (_, { target }) =>
+    this.on('app:delete-selection', (win, { target }) =>
       this.dispatch(act.selection.delete({
         photo: target.id, selections: [target.selection]
-      })))
+      }), win))
 
     this.on('app:create-list', () =>
-      this.dispatch(act.list.new()))
+      this.dispatch(act.list.new(), this.win))
 
-    this.on('app:rename-list', (_, { target: id }) =>
-      this.dispatch(act.edit.start({ list: { id } })))
+    this.on('app:rename-list', (win, { target: id }) =>
+      this.dispatch(act.edit.start({ list: { id } }), win))
 
-    this.on('app:delete-list', (_, { target }) =>
-      this.dispatch(act.list.delete(target)))
+    this.on('app:delete-list', (win, { target }) =>
+      this.dispatch(act.list.delete(target), win))
 
     this.on('app:create-tag', () =>
-      this.dispatch(act.tag.new()))
+      this.dispatch(act.tag.new(), this.win))
 
-    this.on('app:rename-tag', (_, { target }) =>
-      this.dispatch(act.tag.edit(target)))
+    this.on('app:rename-tag', (win, { target }) =>
+      this.dispatch(act.tag.edit(target), win))
 
-    this.on('app:save-tag', (_, tag) =>
-      this.dispatch(act.tag.save(tag)))
+    this.on('app:save-tag', (win, tag) =>
+      this.dispatch(act.tag.save(tag), win))
 
-    this.on('app:delete-item-tag', (_, { target }) =>
+    this.on('app:delete-item-tag', (win, { target }) =>
       this.dispatch(act.item.tags.delete({
         id: target.items, tags: [target.id]
-      })))
-    this.on('app:delete-tag', (_, { target }) =>
-      this.dispatch(act.tag.delete(target.id)))
+      }), win))
+    this.on('app:delete-tag', (win, { target }) =>
+      this.dispatch(act.tag.delete(target.id), win))
 
-    this.on('app:create-note', (_, { target }) =>
-      this.dispatch(act.note.create(target)))
+    this.on('app:create-note', (win, { target }) =>
+      this.dispatch(act.note.create(target), win))
 
-    this.on('app:delete-note', (_, { target }) =>
-      this.dispatch(act.note.delete(target)))
+    this.on('app:delete-note', (win, { target }) =>
+      this.dispatch(act.note.delete(target), win))
 
-    this.on('app:toggle-line-wrap', (_, { target }) =>
+    this.on('app:toggle-line-wrap', (win, { target }) =>
       this.dispatch(act.ui.update({
         note: { [target.id]: { wrap: !target.wrap } }
-      })))
-    this.on('app:toggle-line-numbers', (_, { target }) =>
+      }), win))
+    this.on('app:toggle-line-numbers', (win, { target }) =>
       this.dispatch(act.ui.update({
         note: { [target.id]: { numbers: !target.numbers } }
-      })))
-    this.on('app:writing-mode', (_, { id, mode }) =>
-      this.dispatch(act.ui.update({ note: { [id]: { mode  } } })))
+      }), win))
+    this.on('app:writing-mode', (win, { id, mode }) =>
+      this.dispatch(act.ui.update({ note: { [id]: { mode  } } }), win))
 
     this.on('app:toggle-menu-bar', win => {
       if (win.isMenuBarAutoHide()) {
@@ -490,21 +498,21 @@ class Tropy extends EventEmitter {
       this.menu.reload()
     })
 
-    this.on('app:undo', () => {
-      if (this.history.past) {
+    this.on('app:undo', (win) => {
+      if (this.getHistory(win || this.win).past) {
         this.dispatch({
           type: HISTORY.UNDO,
           meta: { ipc: HISTORY.CHANGED }
-        })
+        }, win || this.win)
       }
     })
 
-    this.on('app:redo', () => {
-      if (this.history.future) {
+    this.on('app:redo', (win) => {
+      if (this.getHistory(win || this.win).future) {
         this.dispatch({
           type: HISTORY.REDO,
           meta: { ipc: HISTORY.CHANGED }
-        })
+        }, win || this.win)
       }
     })
 
@@ -536,22 +544,22 @@ class Tropy extends EventEmitter {
       shell.showItemInFolder(join(app.getPath('userData'), 'log', 'main.log'))
     })
 
-    this.on('app:open-plugins-config', () => {
-      shell.openItem(this.plugins.configFile)
-    })
-
-    this.on('app:install-plugin', async () => {
-      const plugins = await dialog.show('file', this.win, {
-        defaultPath: app.getPath('downloads'),
-        filters: [{ name: 'Tropy Plugins', extensions: Plugins.ext }],
-        properties: ['openFile']
-      })
-
-      if (plugins != null) await this.plugins.install(...plugins)
+    this.on('app:open-user-data', () => {
+      shell.showItemInFolder(join(app.getPath('userData'), 'state.json'))
     })
 
     this.on('app:open-plugins-folder', () => {
       shell.showItemInFolder(this.plugins.configFile)
+    })
+
+    this.on('app:install-plugin', async (win) => {
+      const plugins = await dialog.show('file', darwin ? null : win, {
+        defaultPath: app.getPath('downloads'),
+        filters: [{ name: 'Tropy Plugin', extensions: Plugins.ext }],
+        properties: ['openFile']
+      })
+
+      if (plugins != null) await this.plugins.install(...plugins)
     })
 
     this.on('app:reset-ontology-db', () => {
@@ -629,7 +637,9 @@ class Tropy extends EventEmitter {
       })
     }
 
-    ipc.on('cmd', (_, command, ...params) => this.emit(command, ...params))
+    ipc.on('cmd', (event, command, ...params) => {
+      this.emit(command, BrowserWindow.fromWebContents(event.sender), ...params)
+    })
 
     ipc.on(PROJECT.OPENED, (_, project) => this.hasOpened(project))
     ipc.on(PROJECT.CREATE, () => this.showWizard())
@@ -646,17 +656,17 @@ class Tropy extends EventEmitter {
     })
 
     ipc.on(HISTORY.CHANGED, (event, history) => {
-      H.set(BrowserWindow.fromWebContents(event.sender), history)
+      this.setHistory(history, BrowserWindow.fromWebContents(event.sender))
       this.emit('app:reload-menu')
     })
 
     ipc.on(TAG.CHANGED, (event, tags) => {
-      T.set(BrowserWindow.fromWebContents(event.sender), tags)
+      this.setTags(tags, BrowserWindow.fromWebContents(event.sender))
       this.emit('app:reload-menu')
     })
 
-    ipc.on(CONTEXT.SHOW, (_, event) => {
-      this.ctx.show(event)
+    ipc.on(CONTEXT.SHOW, (event, payload) => {
+      this.ctx.show(payload, BrowserWindow.fromWebContents(event.sender))
     })
 
     dialog.start()
@@ -715,20 +725,29 @@ class Tropy extends EventEmitter {
     return LOCALE[locale || app.getLocale()] || LOCALE.default
   }
 
+  getHistory(win = BrowserWindow.getFocusedWindow()) {
+    return H.get(win) || {}
+  }
+
+  setHistory(history, win = BrowserWindow.getFocusedWindow()) {
+    return H.set(win, history)
+  }
+
+  getTags(win = BrowserWindow.getFocusedWindow()) {
+    return T.get(win) || []
+  }
+
+  setTags(tags, win = BrowserWindow.getFocusedWindow()) {
+    return T.set(win, tags)
+  }
+
+
   get defaultLocale() {
     return this.getLocale()
   }
 
   get dict() {
     return this.strings.dict
-  }
-
-  get history() {
-    return H.get(BrowserWindow.getFocusedWindow()) || {}
-  }
-
-  get tags() {
-    return T.get(BrowserWindow.getFocusedWindow()) || []
   }
 
   get name() {
