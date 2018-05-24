@@ -2,15 +2,22 @@
 // Popup
 // --------------------------------------------------
 
-@keyframes popup-fade-in {
-  0% {
-    border-color: $input-border;
-    box-shadow: none;
-  }
+$popup-focus-animations: (
+  popup-fade-in: $input-btn-focus-color,
+  popup-invalid-fade-in: $input-btn-invalid-color
+);
 
-  100% {
-    border-color: $input-btn-focus-color;
-    box-shadow: 0 0 0 2px $input-btn-focus-color;
+@each $name, $color in $popup-focus-animations {
+  @keyframes #{$name} {
+    0% {
+      border-color: $input-border;
+      box-shadow: none;
+    }
+
+    100% {
+      border-color: $color;
+      box-shadow: 0 0 0 2px $color;
+    }
   }
 }
 
@@ -40,12 +47,16 @@
     box-shadow: 0 0 0 $popup-focus-shadow-width $input-btn-focus-color;
     border-radius: $input-border-radius-small;
 
-    &.fade-in {
-      animation: popup-fade-in $input-btn-transition both;
+    &.invalid {
+      @include input-btn-focus("", $input-btn-invalid-color); // sass-lint:disable-line mixins-before-declarations
     }
 
-    &.invalid {
-      border-color: $input-btn-invalid-color;
+    &.fade-in {
+      animation: popup-fade-in $input-btn-transition both;
+
+      &.invalid {
+        animation: popup-invalid-fade-in $input-btn-transition both;
+      }
     }
 
     @each $alignment in "top", "bottom" {

@@ -157,6 +157,7 @@ class PhotoGrid extends PhotoIterator {
 
     event.preventDefault()
     event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
   }
 
   handleNestedTabFocus = () => {
