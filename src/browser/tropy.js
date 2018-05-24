@@ -574,7 +574,7 @@ class Tropy extends EventEmitter {
       dialog
         .show('file', win, {
           ...options,
-          defaultPath: app.getPath('userData'),
+          defaultPath: app.getPath('documents'),
           filters: [{ name: 'Tropy Projects', extensions: ['tpy'] }],
           properties: ['openFile']
 
@@ -681,6 +681,7 @@ class Tropy extends EventEmitter {
       dev: this.dev,
       home: app.getPath('userData'),
       documents: app.getPath('documents'),
+      pictures: app.getPath('pictures'),
       cache: this.cache.root,
       plugins: this.plugins.root,
       frameless: this.state.frameless,
