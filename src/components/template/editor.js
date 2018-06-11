@@ -65,7 +65,14 @@ class TemplateEditor extends PureComponent {
       description: this.state.description,
       fields: this.state.fields.map((f, idx) => ({
         id: -(idx + 1),
-        ...pick(f, ['property', 'datatype', 'isRequired', 'hint', 'constant'])
+        ...pick(f, [
+          'property',
+          'label',
+          'datatype',
+          'isRequired',
+          'hint',
+          'constant'
+        ])
       }))
     }))
   }
