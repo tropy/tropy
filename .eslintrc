@@ -70,7 +70,7 @@ rules:
   react/jsx-indent-props: [2, 2]
   react/jsx-indent: [2, 2]
   react/jsx-key: 2
-  react/jsx-no-bind: 2
+  react/jsx-no-bind: 0
   react/jsx-pascal-case: 2
   react/jsx-wrap-multilines: [2, { 'arrow': false }]
   react/prefer-es6-class: 2
