@@ -190,11 +190,13 @@ class Input extends Component {
         ref={this.setCompletions}
         className={className ? `${className}-completions` : null}
         completions={this.props.completions}
+        isSelectionHidden
         minQueryLength={1}
         onClickOutside={this.cancel}
         onSelect={this.handleCompletion}
         parent={this.input}
-        query={this.state.value}/>
+        query={this.state.value}
+        selection={[this.state.value]}/>
     )
   }
 
