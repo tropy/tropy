@@ -162,7 +162,8 @@ const getMetadataCompletions = memo(
     seq(metadata, compose(
       map(([, data]) => data),
       cat,
-      filter(([id, value]) => id !== 'id' && value.type === datatype),
+      filter(([id, value]) =>
+        id !== 'id' && value.type === datatype && !!(value.text)),
       map(([, value]) => comp.add(value.text))))
 
     return [...comp].sort(compare)
