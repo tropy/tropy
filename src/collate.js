@@ -42,7 +42,11 @@ module.exports = {
     return 0 === search().compare(a, b)
   },
 
-  startsWith(string, term) {
-    return 0 === search().compare(string.slice(0, term.length), term)
+  startsWith(string, term, separator) {
+    let cmp = search().compare
+    for (let word of string.split(separator)) {
+      if (0 === cmp(word.slice(0, term.length), term)) return true
+    }
+    return false
   }
 }
