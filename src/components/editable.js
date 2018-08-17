@@ -4,6 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { bool, func, number, oneOfType, string } = require('prop-types')
 const { Input } = require('./input')
+const { noop } = require('../common/util')
 const cx = require('classnames')
 
 
@@ -51,6 +52,7 @@ class Editable extends PureComponent {
         ref={this.setInput}
         autofocus={this.props.autofocus}
         className="editable-control"
+        completions={this.props.getCompletions(window.state)}
         isRequired={this.props.isRequired}
         placeholder={this.props.placeholder}
         tabIndex={this.props.tabIndex}
@@ -77,6 +79,7 @@ class Editable extends PureComponent {
 
   static propTypes = {
     autofocus: bool,
+    getCompletions: func.isRequired,
     display: string,
     isActive: bool,
     isDisabled: bool,
@@ -94,7 +97,8 @@ class Editable extends PureComponent {
   }
 
   static defaultProps = {
-    autofocus: true
+    autofocus: true,
+    getCompletions: noop
   }
 }
 

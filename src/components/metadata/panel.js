@@ -19,12 +19,12 @@ const {
 
 const {
   getActiveSelection,
-  getItemTemplates,
   getItemFields,
+  getItemTemplates,
   getPhotoFields,
-  getSelectionFields,
-  getSelectedItems,
   getSelectedItemTemplate,
+  getSelectedItems,
+  getSelectionFields,
   getSelectedPhoto
 } = require('../../selectors')
 

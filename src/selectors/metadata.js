@@ -2,10 +2,14 @@
 
 const { createSelector: memo } = require('reselect')
 const { pluck } = require('./util')
+const { get } = require('../common/util')
 const { equal } = require('../value')
+const { compare } = require('../collate')
 const {
   cat, compose, filter, keep, map, seq, transduce, transformer
 } = require('transducers.js')
+
+const { TYPE } = require('../constants')
 
 const {
   getActiveItemTemplate,
@@ -138,11 +142,39 @@ const getSelectionFields = memo(
     getMetadataFields(null, { template, data, props })
 )
 
+const any = (src) => { for (let key in src) return key }
+
+const getActiveDatatype = memo(
+  getMetadata,
+  ({ edit }) =>
+    ('field' in edit) ? any(edit.field) : null,
+  ({ edit }) =>
+    ('field' in edit) ? edit.field[any(edit.field)] : null,
+  (metadata, prop, id) =>
+    get(metadata, [id, prop, 'type'], TYPE.TEXT)
+)
+
+const getMetadataCompletions = memo(
+  getMetadata, getActiveDatatype,
+  (metadata, datatype) => {
+    let comp = new Set()
+
+    seq(metadata, compose(
+      map(([, data]) => data),
+      cat,
+      filter(([id, value]) => id !== 'id' && value.type === datatype),
+      map(([, value]) => comp.add(value.text))))
+
+    return [...comp].sort(compare)
+  }
+)
+
 module.exports = {
   getItemMetadata,
   getItemFields,
   getPhotoFields,
   getSelectionFields,
   getMetadataFields,
+  getMetadataCompletions,
   getVisibleMetadata
 }

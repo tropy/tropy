@@ -9,6 +9,7 @@ const { getLabel } = require('../../common/ontology')
 const { IconLock, IconWarningSm } = require('../icons')
 const cx = require('classnames')
 const { TYPE } = require('../../constants')
+const { getMetadataCompletions } = require('../../selectors')
 const { auto } = require('../../format')
 const { bool, func, number, oneOfType, shape, string } = require('prop-types')
 
@@ -79,6 +80,7 @@ class MetadataField extends PureComponent {
         <div className="value" onClick={this.handleClick}>
           <Editable
             value={this.props.text}
+            getCompletions={getMetadataCompletions}
             display={auto(this.props.text, this.props.type)}
             placeholder={this.props.placeholder}
             isActive={this.props.isEditing}
