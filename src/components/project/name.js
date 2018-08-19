@@ -64,7 +64,7 @@ const spec = {
   },
 
   canDrop(_, monitor) {
-    return !!monitor.getItem().files.find(isValidImage)
+    return !!monitor.getItem().types.find(type => isValidImage({ type }))
   }
 }
 
