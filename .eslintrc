@@ -15,11 +15,16 @@ parserOptions:
   sourceType: script
   ecmaFeatures:
     modules: false
+    jsx: true
 
 env:
   es6: true
   node: true
   browser: true
+
+settings:
+  react:
+    version: 16.2.0
 
 globals:
   ResizeObserver: true
