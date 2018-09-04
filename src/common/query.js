@@ -39,7 +39,7 @@ class Union extends Query {
   }
 
   get query() {
-    this.set.join(' UNION ')
+    return this.set.join(' UNION ')
   }
 
   push(...args) {
