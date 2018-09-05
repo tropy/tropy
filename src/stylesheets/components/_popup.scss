@@ -87,5 +87,47 @@ $popup-focus-animations: (
         margin-top: $option-list-margin;
       }
     }
+
+    &.editable-control-completions {
+      border: ($input-border-width + $popup-focus-shadow-width) solid $editable-border-color;
+      box-shadow: none;
+      background-clip: padding-box;
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        width: ($input-border-width + $popup-focus-shadow-width);
+        height: ($input-border-width + $popup-focus-shadow-width);
+        background-color: $panel-bg;
+        box-shadow: inset 0 0 0 ($input-border-width + $popup-focus-shadow-width) $editable-border-color;
+      }
+
+      &::before {
+        left: -3px;
+      }
+
+      &::after {
+        right: -3px;
+      }
+
+      &.top {
+        border-top: 0;
+
+        &::before,
+        &::after {
+          top: 0;
+        }
+      }
+
+      &.bottom {
+        border-bottom: 0;
+
+        &::before,
+        &::after {
+          bottom: 0;
+        }
+      }
+    }
   }
 }
