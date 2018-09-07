@@ -48,7 +48,7 @@ class ResourceSelect extends PureComponent {
           {res.label || titlecase(res.name)}
         </span>
         <span className="mute truncate">
-          {res.prefix ? `${res.prefix}:${res.name}` : res.id}
+          {(res.prefix && res.name) ? `${res.prefix}:${res.name}` : res.id}
         </span>
       </Fragment>
     )
