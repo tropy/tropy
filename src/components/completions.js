@@ -74,7 +74,7 @@ class Completions extends Component {
       }
     })
 
-    if (active == null && !isAdvisory && options.length > 0) {
+    if (!active && !isAdvisory && options.length > 0) {
       active = options[0].id
     }
 

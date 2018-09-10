@@ -84,7 +84,7 @@ class Select extends Component {
     let isMulti = Array.isArray(value)
     let isInvalid = false
     let values = []
-    let selection = isMulti ? value : [value]
+    let selection = isMulti ? value : isBlank ? [] : [value]
 
     if (!isBlank) {
       for (let id of selection) {
