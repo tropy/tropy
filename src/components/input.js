@@ -190,6 +190,7 @@ class Input extends Component {
         ref={this.setCompletions}
         className={className ? `${className}-completions` : null}
         completions={this.props.completions}
+        isAdvisory
         isSelectionHidden
         minQueryLength={1}
         onClickOutside={this.cancel}

@@ -47,6 +47,7 @@ class Completions extends Component {
 
   getStateFromProps({
     completions,
+    isAdvisory,
     isSelectionHidden,
     match,
     query,
@@ -70,10 +71,11 @@ class Completions extends Component {
       }
     })
 
-    return {
-      active: active || (options.length > 0 ? options[0].id : null),
-      options
+    if (active == null && !isAdvisory && options.length > 0) {
+      active = options[0].id
     }
+
+    return { active, options }
   }
 
   getPopupBounds() {
@@ -98,6 +100,10 @@ class Completions extends Component {
 
   getOptionsHeight(rows = this.state.options.length) {
     return OptionList.getHeight(rows || 1, { maxRows: this.props.maxRows })
+  }
+
+  get isActive() {
+    return this.state.active != null
   }
 
   get isBlank() {
@@ -141,6 +147,7 @@ class Completions extends Component {
 
   activate(option, scrollIntoView = true) {
     if (option != null) this.handleActivate(option, scrollIntoView)
+    else if (this.props.isAdvisory) this.setState({ active: null })
   }
 
   handleActivate = ({ id }, scrollIntoView) => {
@@ -170,6 +177,7 @@ class Completions extends Component {
         onActivate={this.handleActivate}
         onSelect={this.handleSelect}
         ref={this.setOptionList}
+        restrict={this.props.isAdvisory ? 'null' : 'wrap'}
         selection={this.props.selection}
         values={this.state.options}/>
     )
@@ -223,6 +231,7 @@ class Completions extends Component {
     className: string,
     completions: array.isRequired,
     fadeIn: bool,
+    isAdvisory: bool,
     isSelectionHidden: bool,
     isVisibleWhenBlank: bool,
     match: func.isRequired,
