@@ -285,10 +285,14 @@ class Iterator extends PureComponent {
     if (!items.length) return null
 
     const head = this.head()
-    if (head == null) return items[0]
+    if (head == null) {
+      return (offset > 0) ? items[0] : items[items.length - 1]
+    }
 
     const idx = this.indexOf(head)
-    if (idx == null || idx < 0) return items[0]
+    if (idx == null || idx < 0) {
+      return (offset > 0) ? items[0] : items[items.length - 1]
+    }
 
     return this.getIterableAt(idx + offset, items)
   }
