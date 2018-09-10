@@ -164,16 +164,16 @@ class Input extends Component {
     if (completions == null) return false
 
     switch (event.key) {
-      case 'Enter':
-        if (completions.state.active == null) return false
-        this.handleCompletion(completions.state.active)
-        break
       case 'ArrowDown':
         opt = completions.next()
         break
       case 'ArrowUp':
         opt = completions.prev()
         break
+      case 'Enter':
+        if (completions.state.active == null) return false
+        this.handleCompletion(completions.state.active)
+        return true
       default:
         return false
     }
