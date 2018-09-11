@@ -22,6 +22,18 @@ function search(locale = ARGS.locale) {
   return search[locale]
 }
 
+function match(string, term, at = /^\w/gm) {
+  let cmp = search().compare
+  let m
+
+  while ((m = at.exec(string)) != null) {
+    if (0 === cmp(string.slice(m.index, m.index + term.length), term)) {
+      return [m.index, m.index + term.length]
+    }
+  }
+
+  return null
+}
 
 module.exports = {
   compare(a, b) {
@@ -42,11 +54,9 @@ module.exports = {
     return 0 === search().compare(a, b)
   },
 
-  startsWith(string, term, separator) {
-    let cmp = search().compare
-    for (let word of string.split(separator)) {
-      if (0 === cmp(word.slice(0, term.length), term)) return true
-    }
-    return false
+  match,
+
+  startsWith(...args) {
+    return match(...args) != null
   }
 }
