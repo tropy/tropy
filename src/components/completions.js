@@ -23,7 +23,7 @@ const {
 const MARGIN = BORDER_WIDTH + FOCUS_SHADOW_WIDTH
 
 function highlight(text, matchData) {
-  return (!Array.isArray(matchData)) ? string : (
+  return (!Array.isArray(matchData)) ? text : (
     <Fragment>
       {text.slice(0, matchData[0])}
       <strong>{text.slice(...matchData)}</strong>
@@ -267,22 +267,23 @@ class Completions extends Component {
   }
 
   static defaultProps = {
-    match: (value, query) => (
-      collate.match(value.name || String(value), query)
-    ),
+    match(value, query) {
+      return collate.match(value.name || String(value), query)
+    },
     maxRows: 10,
     minQueryLength: 0,
     popup: true,
     selection: [],
-    toId: (value) => (
-      (value.id || String(value))
-    ),
-    toText: (value, _, m) => (
-      highlight(value.name || String(value), m)
-    )
+    toId(value) {
+      return (value.id || String(value))
+    },
+    toText(value, _, m) {
+      return highlight(value.name || String(value), m)
+    }
   }
 }
 
 module.exports = {
-  Completions
+  Completions,
+  highlight
 }

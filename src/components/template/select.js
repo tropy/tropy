@@ -4,7 +4,7 @@ const React = require('react')
 const { PureComponent } = React
 const { Select } = require('../select')
 const { FormattedMessage } = require('react-intl')
-const { startsWith } = require('../../collate')
+const collate = require('../../collate')
 const { bool, array, func, number, string } = require('prop-types')
 const cx = require('classnames')
 
@@ -41,9 +41,10 @@ class TemplateSelect extends PureComponent {
   }
 
   static defaultProps = {
-    match: (template, query) => (
-      startsWith(template.name, query) || template.id.includes(query)
-    ),
+    ...Select.defaultProps,
+    match(tpl, query) {
+      return collate.match(tpl.name, query, /\b\w/g)
+    },
     tabIndex: -1
   }
 }

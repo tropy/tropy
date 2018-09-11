@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { Fragment, Component } = React
-const { ResourceSelect } = require('../resource/select')
+const { ResourceSelect, hl, shortId } = require('../resource/select')
 const { Popup } = require('../popup')
 const { arrayOf, func, number, object, string } = require('prop-types')
 const { OPTION, PANEL } = require('../../constants/sass')
@@ -88,12 +88,12 @@ const ColumnSelect = (props) => (
     {...props}/>
 )
 
-const Column = (col, isSelected) => (
+const Column = (col, isSelected, mData) => (
   <Fragment>
     {isSelected && <IconTick/>}
-    <span className="truncate">{col.label}</span>
+    <span className="truncate">{hl(col.label, mData, 'label')}</span>
     <span className="mute truncate">
-      {col.prefix ? `${col.prefix}:${col.name}` : col.id}
+      {col.prefix ? shortId(col, mData) : col.id}
     </span>
   </Fragment>
 )
