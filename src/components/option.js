@@ -38,7 +38,7 @@ class Option extends PureComponent {
         className={cx(this.classes)}
         onMouseMove={this.handleMouseMove}
         onMouseDown={this.handleMouseDown}>
-        {this.props.option.value}
+        {this.props.option.text}
       </li>
     )
   }
@@ -50,7 +50,7 @@ class Option extends PureComponent {
     onHover: func.isRequired,
     option: shape({
       id: string.isRequired,
-      value: node.isRequired
+      text: node.isRequired
     }).isRequired
   }
 }
@@ -130,7 +130,7 @@ class OptionList extends Iterator {
     selection: arrayOf(string).isRequired,
     values: arrayOf(shape({
       id: string.isRequired,
-      value: node.isRequired
+      text: node.isRequired
     })).isRequired
   }
 

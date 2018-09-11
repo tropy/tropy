@@ -196,6 +196,7 @@ class Input extends Component {
         completions={this.props.completions}
         isAdvisory
         isExactMatchHidden
+        match={this.props.match}
         minQueryLength={1}
         onClickOutside={this.cancel}
         onSelect={this.handleCompletion}
@@ -246,6 +247,7 @@ class Input extends Component {
     isDisabled: bool,
     isReadOnly: bool,
     isRequired: bool,
+    match: func.isRequired,
     placeholder: string,
     resize: bool,
     tabIndex: number,
@@ -262,6 +264,7 @@ class Input extends Component {
   static defaultProps = {
     completions: [],
     delay: 100,
+    match: Completions.defaultProps.match,
     tabIndex: -1,
     type: 'text',
     onBlur: noop,

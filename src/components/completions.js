@@ -1,14 +1,14 @@
 'use strict'
 
 const React = require('react')
-const { Component } = React
+const { Component, Fragment } = React
 const { FormattedMessage } = require('react-intl')
 const { Popup } = require('./popup')
 const { OptionList } = require('./option')
 const { blank, last, shallow } = require('../common/util')
 const { translate } = require('../common/math')
 const { bounds, viewport } = require('../dom')
-const { startsWith } = require('../collate')
+const collate = require('../collate')
 const cx = require('classnames')
 
 const {
@@ -21,6 +21,16 @@ const {
 } = require('../constants/sass')
 
 const MARGIN = BORDER_WIDTH + FOCUS_SHADOW_WIDTH
+
+function highlight(text, matchData) {
+  return (!Array.isArray(matchData)) ? string : (
+    <Fragment>
+      {text.slice(0, matchData[0])}
+      <strong>{text.slice(...matchData)}</strong>
+      {text.slice(matchData[1])}
+    </Fragment>
+  )
+}
 
 
 class Completions extends Component {
@@ -68,9 +78,12 @@ class Completions extends Component {
       let isHidden = (isSelectionHidden && isSelected) ||
         (isExactMatchHidden && id === query)
 
-      if (!isHidden && (matchAll || match(value, q))) {
-        options.idx[id] = options.length
-        options.push({ id, idx, value: toText(value, isSelected) })
+      if (!isHidden) {
+        let m = matchAll || match(value, q)
+        if (m != null && m !== false) {
+          options.idx[id] = options.length
+          options.push({ id, idx, value, text: toText(value, isSelected, m) })
+        }
       }
     })
 
@@ -254,13 +267,19 @@ class Completions extends Component {
   }
 
   static defaultProps = {
-    match: (value, query) => startsWith(value.name || String(value), query),
+    match: (value, query) => (
+      collate.match(value.name || String(value), query)
+    ),
     maxRows: 10,
     minQueryLength: 0,
     popup: true,
     selection: [],
-    toId: (value) => (value.id || String(value)),
-    toText: (value) => (value.name || String(value))
+    toId: (value) => (
+      (value.id || String(value))
+    ),
+    toText: (value, _, m) => (
+      highlight(value.name || String(value), m)
+    )
   }
 }
 
