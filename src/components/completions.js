@@ -12,7 +12,7 @@ const collate = require('../collate')
 const cx = require('classnames')
 
 const {
-  array, bool, func, instanceOf, number, string
+  array, arrayOf, bool, func, instanceOf, number, string
 } = require('prop-types')
 
 const {
@@ -22,14 +22,19 @@ const {
 
 const MARGIN = BORDER_WIDTH + FOCUS_SHADOW_WIDTH
 
-function highlight(text, matchData) {
-  return (!Array.isArray(matchData)) ? text : (
+const Highlight = ({ text, matchData }) => (
+  (!Array.isArray(matchData)) ? text : (
     <Fragment>
       {text.slice(0, matchData[0])}
       <strong>{text.slice(...matchData)}</strong>
       {text.slice(matchData[1])}
     </Fragment>
   )
+)
+
+Highlight.propTypes = {
+  text: string.isRequired,
+  matchData: arrayOf(number)
 }
 
 
@@ -277,13 +282,12 @@ class Completions extends Component {
     toId(value) {
       return (value.id || String(value))
     },
-    toText(value, _, m) {
-      return highlight(value.name || String(value), m)
-    }
+    toText: (value, _, m) =>
+      <Highlight text={value.name || String(value)} matchData={m}/>
   }
 }
 
 module.exports = {
   Completions,
-  highlight
+  Highlight
 }

@@ -3,11 +3,11 @@
 const React = require('react')
 const { Fragment, PureComponent } = React
 const { Select } = require('../select')
+const { Highlight } = require('../completions')
 const { FormattedMessage } = require('react-intl')
 const collate = require('../../collate')
-const { highlight } = require('../completions')
 const { titlecase } = require('../../common/util')
-const { func, number, string } = require('prop-types')
+const { array, func, number, shape, string } = require('prop-types')
 
 class ResourceSelect extends PureComponent {
   get placeholder() {
@@ -49,15 +49,8 @@ class ResourceSelect extends PureComponent {
     toText(res, _, mData) {
       return (
         <Fragment>
-          <span className="truncate">
-            {
-              hl(res.label, mData, 'label') ||
-                hl(titlecase(res.name), mData, 'name')
-            }
-          </span>
-          <span className="mute truncate">
-            {(res.prefix && res.name) ? shortId(res, mData) : res.id}
-          </span>
+          <Label resource={res} matchData={mData}/>
+          <Id resource={res} matchData={mData}/>
         </Fragment>
       )
     }
@@ -65,19 +58,49 @@ class ResourceSelect extends PureComponent {
 }
 
 
-function shortId(res, mData) {
-  return (
-    <Fragment>
-      {hl(res.prefix, mData, 'prefix')}
-      {':'}
-      {hl(res.name, mData, 'name')}
-    </Fragment>
-  )
+const Label = ({ resource, matchData }) => (
+  <span className="truncate">
+    {
+      hl(resource.label, matchData, 'label') ||
+        hl(titlecase(resource.name), matchData, 'name')
+    }
+  </span>
+)
+
+Label.propTypes = {
+  resource: shape({
+    name: string,
+    label: string
+  }).isRequired,
+  matchData: array
 }
 
-function hl(txt, mData, which) {
-  return highlight(txt, mData && mData.which === which ? mData : null)
+
+const Id = ({ resource, matchData }) => (
+  <span className="mute truncate">
+    {(!resource.prefix || !resource.name) ? resource.id : (
+      <Fragment>
+        {hl(resource.prefix, matchData, 'prefix')}
+        {':'}
+        {hl(resource.name, matchData, 'name')}
+      </Fragment>
+    )}
+  </span>
+)
+
+Id.propTypes = {
+  resource: shape({
+    id: string.isRequired,
+    name: string,
+    prefix: string
+  }).isRequired,
+  matchData: array
 }
+
+const hl = (text, mData, which) =>
+  <Highlight
+    text={text}
+    matchData={mData && mData.which === which ? mData : null}/>
 
 function match(res, query, prefix) {
   if (prefix != null) {
@@ -99,7 +122,7 @@ function m(res, query, prop, at = /^\w/g) {
 }
 
 module.exports = {
+  Id,
+  Label,
   ResourceSelect,
-  hl,
-  shortId
 }
