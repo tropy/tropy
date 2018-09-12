@@ -12,7 +12,7 @@ const collate = require('../collate')
 const cx = require('classnames')
 
 const {
-  array, arrayOf, bool, func, instanceOf, number, string
+  array, arrayOf, bool, func, instanceOf, number, oneOfType, string
 } = require('prop-types')
 
 const {
@@ -34,7 +34,10 @@ const Highlight = ({ text, matchData }) => (
 
 Highlight.propTypes = {
   text: string.isRequired,
-  matchData: arrayOf(number)
+  matchData: oneOfType([
+    arrayOf(number),
+    bool
+  ])
 }
 
 
@@ -87,7 +90,9 @@ class Completions extends Component {
         let m = matchAll || match(value, q)
         if (m != null && m !== false) {
           options.idx[id] = options.length
-          options.push({ id, idx, value, text: toText(value, isSelected, m) })
+          options.push({
+            id, idx, value, text: toText(value, { isSelected, matchData: m })
+          })
         }
       }
     })
@@ -282,8 +287,8 @@ class Completions extends Component {
     toId(value) {
       return (value.id || String(value))
     },
-    toText: (value, _, m) =>
-      <Highlight text={value.name || String(value)} matchData={m}/>
+    toText: (value, { matchData } = {}) =>
+      <Highlight text={value.name || String(value)} matchData={matchData}/>
   }
 }
 
