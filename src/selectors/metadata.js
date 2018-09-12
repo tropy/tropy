@@ -144,26 +144,33 @@ const getSelectionFields = memo(
 
 const any = (src) => { for (let key in src) return key }
 
+const getActiveProperty =
+  ({ edit }) => ('field' in edit) ? any(edit.field) : null
+
+const getActiveId =
+  ({ edit }) => ('field' in edit) ? edit.field[any(edit.field)] : null
+
 const getActiveDatatype = memo(
-  getMetadata,
-  ({ edit }) =>
-    ('field' in edit) ? any(edit.field) : null,
-  ({ edit }) =>
-    ('field' in edit) ? edit.field[any(edit.field)] : null,
+  getMetadata, getActiveProperty, getActiveId,
   (metadata, prop, id) =>
     get(metadata, [id, prop, 'type'], TYPE.TEXT)
 )
 
+const makeCompletionFilter = (prop, datatype, perField = true) =>
+  perField ?
+    ([id, value]) => id === prop && !!(value.text) && value.type === datatype :
+    ([id, value]) => id !== 'id' && !!(value.text) && value.type === datatype
+
 const getMetadataCompletions = memo(
-  getMetadata, getActiveDatatype,
-  (metadata, datatype) => {
+  getMetadata, getActiveProperty, getActiveDatatype,
+  (metadata, prop, datatype) => {
+    if (prop == null) return []
     let comp = new Set()
 
     seq(metadata, compose(
       map(([, data]) => data),
       cat,
-      filter(([id, value]) =>
-        id !== 'id' && value.type === datatype && !!(value.text)),
+      filter(makeCompletionFilter(prop, datatype)),
       map(([, value]) => comp.add(value.text))))
 
     return [...comp].sort(compare)
