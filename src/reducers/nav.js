@@ -53,14 +53,15 @@ module.exports = {
       }
 
       case LIST.REMOVE: {
-        const isCurrent = (state.list === payload)
+        const id = payload
+        const isCurrent = (state.list === id)
 
         return {
           ...state,
           list: isCurrent ? null : state.list,
           items: isCurrent ? [] : state.items,
           photo: isCurrent ? null : state.photo,
-          sort: omit(state.sort, payload)
+          sort: omit(state.sort, [id])
         }
       }
 

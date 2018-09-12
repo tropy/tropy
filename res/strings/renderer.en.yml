@@ -57,7 +57,7 @@ en:
         Tropy is designed by the {rrchnm}, a team that develops
         historical teaching resources, digital exhibits, and
         open-source software.
-      trademark: Tropy is a trademark of the {cds}.
+      trademark: The Tropy name is a registered trademark of the {cds}.
       release:
         title: Release Notes
         url: https://github.com/tropy/tropy/releases/tag/{version}

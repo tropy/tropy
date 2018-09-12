@@ -126,6 +126,7 @@ open.images = (options) => open({
     name: t('dialog.filter.images'),
     extensions: ['jpg', 'jpeg', 'png', 'svg']
   }],
+  defaultPath: ARGS.pictures,
   properties: ['openFile', 'multiSelections'],
   ...options
 })
@@ -135,6 +136,7 @@ open.vocab = (options) => open({
     name: t('dialog.filter.rdf'),
     extensions: ['n3', 'ttl']
   }],
+  defaultPath: ARGS.documents,
   properties: ['openFile', 'multiSelections'],
   ...options
 })
@@ -144,6 +146,7 @@ open.templates = (options) => open({
     name: t('dialog.filter.templates'),
     extensions: ['ttp']
   }],
+  defaultPath: ARGS.documents,
   properties: ['openFile', 'multiSelections'],
   ...options
 })
@@ -154,6 +157,7 @@ save.project = (options) => save({
     name: t('dialog.filter.projects'),
     extensions: ['tpy']
   }],
+  defaultPath: ARGS.documents,
   properties: ['createDirectory'],
   ...options
 })

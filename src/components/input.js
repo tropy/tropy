@@ -5,7 +5,7 @@ const { Component } = React
 const { noop } = require('../common/util')
 const { AutoResizer } = require('./auto-resizer')
 const { Completions } = require('./completions')
-const { blank } = require('../common/util')
+const { blank, get } = require('../common/util')
 const {
   array, bool, func, number, oneOf, oneOfType, string
 } = require('prop-types')
@@ -16,15 +16,14 @@ class Input extends Component {
     super(props)
     this.state =  {
       value: props.value,
+      query: '',
       hasFocus: false
     }
   }
 
   componentWillReceiveProps({ value }) {
     if (value !== this.props.value) {
-      this.hasBeenCommitted = false
-      this.hasBeenCancelled = false
-      this.setState({ value })
+      this.reset(value)
     }
   }
 
@@ -61,10 +60,10 @@ class Input extends Component {
     if (this.input != null) this.input.focus()
   }
 
-  reset = () => {
+  reset = (value = this.props.value) => {
     this.hasBeenCommitted = false
     this.hasBeenCancelled = false
-    this.setState({ value: this.props.value })
+    this.setState({ value, query: '' })
     this.clearResetTimeout()
   }
 
@@ -101,7 +100,7 @@ class Input extends Component {
   }
 
   handleChange = ({ target }) => {
-    this.setState({ value: target.value })
+    this.setState({ value: target.value, query: target.value })
     this.props.onChange(target.value)
   }
 
@@ -160,23 +159,28 @@ class Input extends Component {
   }
 
   handleCompletionsKeyDown(event) {
-    const { completions } = this
+    let opt = null
+    let { completions } = this
     if (completions == null) return false
 
     switch (event.key) {
+      case 'ArrowDown':
+        opt = completions.next()
+        break
+      case 'ArrowUp':
+        opt = completions.prev()
+        break
       case 'Enter':
         if (completions.state.active == null) return false
         this.handleCompletion(completions.state.active)
-        break
-      case 'ArrowDown':
-        completions.next()
-        break
-      case 'ArrowUp':
-        completions.prev()
-        break
+        return true
       default:
         return false
     }
+
+    this.setState({
+      value: get(opt, ['value'], this.state.query)
+    })
 
     return true
   }
@@ -190,11 +194,14 @@ class Input extends Component {
         ref={this.setCompletions}
         className={className ? `${className}-completions` : null}
         completions={this.props.completions}
+        isAdvisory
+        isExactMatchHidden
+        match={this.props.match}
         minQueryLength={1}
         onClickOutside={this.cancel}
         onSelect={this.handleCompletion}
         parent={this.input}
-        query={this.state.value}/>
+        query={this.state.query}/>
     )
   }
 
@@ -240,6 +247,7 @@ class Input extends Component {
     isDisabled: bool,
     isReadOnly: bool,
     isRequired: bool,
+    match: func.isRequired,
     placeholder: string,
     resize: bool,
     tabIndex: number,
@@ -256,6 +264,7 @@ class Input extends Component {
   static defaultProps = {
     completions: [],
     delay: 100,
+    match: Completions.defaultProps.match,
     tabIndex: -1,
     type: 'text',
     onBlur: noop,

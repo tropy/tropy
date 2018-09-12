@@ -7,7 +7,7 @@ const { adjacent, restrict } = require('../common/util')
 const { darwin } = require('../common/os')
 const { has, on, off } = require('../dom')
 const { ceil, floor, max, min, round } = Math
-const { bool, number } = require('prop-types')
+const { bool, number, oneOf } = require('prop-types')
 const throttle = require('lodash.throttle')
 const EMPTY = []
 
@@ -203,6 +203,24 @@ class Iterator extends PureComponent {
     return EMPTY
   }
 
+  getIterableAt(idx, items = this.getIterables(), mode = this.props.restrict) {
+    if (idx < 0 || idx >= items.length) {
+      switch (mode) {
+        case 'none':
+          return null
+        case 'wrap':
+          idx = idx % items.length
+          if (idx < 0) idx = items.length + idx
+          break
+        default:
+          idx = idx < 0 ? 0 : items.length - 1
+          break
+      }
+    }
+
+    return items[idx]
+  }
+
   getOffset({ overscan, maxOffset, rowHeight, viewportRows } = this.state) {
     if (this.container == null) return 0
 
@@ -267,12 +285,16 @@ class Iterator extends PureComponent {
     if (!items.length) return null
 
     const head = this.head()
-    if (head == null) return items[0]
+    if (head == null) {
+      return (offset < 0) ? items[items.length - 1] : items[0]
+    }
 
     const idx = this.indexOf(head)
-    if (idx == null || idx < 0) return items[0]
+    if (idx == null || idx < 0) {
+      return (offset > 0) ? items[0] : items[items.length - 1]
+    }
 
-    return items[restrict(idx + offset, 0, items.length - 1)]
+    return this.getIterableAt(idx + offset, items)
   }
 
   prev(offset = 1) {
@@ -407,11 +429,13 @@ class Iterator extends PureComponent {
   static propTypes = {
     isDisabled: bool,
     overscan: number.isRequired,
+    restrict: oneOf(['bounds', 'wrap', 'none']).isRequired,
     size: number
   }
 
   static defaultProps = {
-    overscan: 2
+    overscan: 2,
+    restrict: 'bounds'
   }
 }
 

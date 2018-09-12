@@ -3,12 +3,12 @@
 const assert = require('assert')
 const uuid = require('uuid/v4')
 const { all } = require('bluebird')
+const { info } = require('../common/log')
 const { PROJECT } = require('../constants')
 
 module.exports = {
-  async create(db, { name, id }) {
-    id = id || uuid()
-
+  async create(db, { name, id = uuid() }) {
+    info(`creating project "${name}" #${id}`)
     await db.read(PROJECT.SCHEMA)
     await db.run(
       'INSERT INTO project (project_id, name) VALUES (?,?)', id, name
