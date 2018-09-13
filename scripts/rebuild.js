@@ -20,6 +20,7 @@ const CONFIG = [
 
 target.all = (args) => {
   target.sqlite3(args)
+  target.jsonld()
 }
 
 target.headers = () => {
@@ -49,6 +50,10 @@ target.sqlite3 = (force) => {
 target.inspector = () => {
   rebuild('v8-debug', { params: '--build-from-source' })
   rebuild('v8-profiler', { params: '--build-from-source' })
+}
+
+target.jsonld = () => {
+  rm('-f', join(mods, 'rdf-canonize', 'build', 'Release', 'urdna2015.node'))
 }
 
 
