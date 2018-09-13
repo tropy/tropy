@@ -2,7 +2,7 @@
 
 require('shelljs/make')
 
-const babel = require('babel-core')
+const babel = require('@babel/core')
 const sass = require('node-sass')
 const { Glob } = require('glob')
 const { join, resolve, relative, dirname } = require('path')
