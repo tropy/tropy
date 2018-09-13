@@ -14,7 +14,7 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
   process.env.NODE_ENV = opts.environment
   global.ARGS = opts
 
-  const { app }  = require('electron')
+  const { app, session }  = require('electron')
   const { extname, join } = require('path')
   const { qualified, version }  = require('../common/release')
   const { linux, darwin, system } = require('../common/os')
@@ -41,7 +41,6 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
     app.setPath('userData', USERDATA)
     LOGDIR = join(USERDATA, 'log')
   }
-
 
   if (!require('./squirrel')()) {
     const { all }  = require('bluebird')
@@ -103,6 +102,20 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
         once(tropy, 'app:restored')
 
       ]).then(() => {
+        session.defaultSession.webRequest.onHeadersReceived((res, cb) => {
+          cb({
+            responseHeaders: {
+              ...res.responseHeaders,
+              'Content-Security-Policy': [
+                "default-src 'none'",
+                "base-uri 'none'",
+                "form-action 'none'",
+                "frame-ancestors 'none'"
+              ].join('; ')
+            }
+          })
+        })
+
         READY = Date.now()
         info('ready after %sms', READY - START)
         tropy.open(...opts._)
