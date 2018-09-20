@@ -82,6 +82,8 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
             break
           case '.jpg':
           case '.jpeg':
+          case '.png':
+          case '.svg':
             if (READY && tropy.win) {
               event.preventDefault()
               tropy.import([file])
