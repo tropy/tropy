@@ -164,7 +164,7 @@ const DropTargetSpec = {
 
     switch (type) {
       case NativeTypes.FILE:
-        return !!item.files.find(isValidImage)
+        return !!item.types.find(t => isValidImage({ type: t }))
 
       default:
         return true

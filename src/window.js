@@ -70,6 +70,7 @@ class Window extends EventEmitter {
     }
 
     this.style(this.state.theme, false, done)
+    require(`./windows/${this.type}`)
   }
 
   show = () => {

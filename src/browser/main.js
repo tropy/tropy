@@ -14,7 +14,7 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
   process.env.NODE_ENV = opts.environment
   global.ARGS = opts
 
-  const { app }  = require('electron')
+  const { app, session }  = require('electron')
   const { extname, join } = require('path')
   const { qualified, version }  = require('../common/release')
   const { linux, darwin, system } = require('../common/os')
@@ -42,77 +42,87 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
     LOGDIR = join(USERDATA, 'log')
   }
 
-
   if (!require('./squirrel')()) {
     const { all }  = require('bluebird')
     const { once } = require('../common/util')
     const { info, verbose } = require('../common/log')(LOGDIR)
 
-    info(`starting ${version}`, { system })
-    let quit = false
-
     if (opts.environment !== 'test') {
-      quit = app.makeSingleInstance((argv) => {
-        tropy.open(...args.parse(argv.slice(1))._)
+      if (!app.requestSingleInstanceLock()) {
+        verbose('other instance detected, exiting...')
+        app.exit(0)
+      }
+    }
+
+    info(`starting ${version}`, { system })
+
+    if (opts.ignoreGpuBlacklist) {
+      app.commandLine.appendSwitch('ignore-gpu-blacklist')
+    }
+
+    if (opts.scale) {
+      app.commandLine.appendSwitch('force-device-scale-factor', opts.scale)
+    }
+
+    verbose(`started in ${opts.env} mode`)
+    verbose(`using ${app.getPath('userData')}`)
+
+    var tropy = new (require('./tropy'))()
+
+    tropy.listen()
+    tropy.restore()
+
+    if (darwin) {
+      app.on('open-file', (event, file) => {
+        switch (extname(file)) {
+          case '.tpy':
+            event.preventDefault()
+            if (!READY) opts._ = [file]
+            else tropy.open(file)
+            break
+          case '.jpg':
+          case '.jpeg':
+          case '.png':
+          case '.svg':
+            if (READY && tropy.win) {
+              event.preventDefault()
+              tropy.import([file])
+            }
+            break
+        }
       })
     }
 
-    if (quit) {
-      verbose('other instance detected, exiting...')
-      app.exit(0)
+    all([
+      once(app, 'ready'),
+      once(tropy, 'app:restored')
 
-    } else {
-
-      app.commandLine.appendSwitch('js-flags', '--datetime_format_to_parts')
-
-      if (opts.ignoreGpuBlacklist) {
-        app.commandLine.appendSwitch('ignore-gpu-blacklist')
-      }
-
-      if (opts.scale) {
-        app.commandLine.appendSwitch('force-device-scale-factor', opts.scale)
-      }
-
-      verbose(`started in ${opts.env} mode`)
-      verbose(`using ${app.getPath('userData')}`)
-
-      var tropy = new (require('./tropy'))()
-
-      tropy.listen()
-      tropy.restore()
-
-      if (darwin) {
-        app.on('open-file', (event, file) => {
-          switch (extname(file)) {
-            case '.tpy':
-              event.preventDefault()
-              if (!READY) opts._ = [file]
-              else tropy.open(file)
-              break
-            case '.jpg':
-            case '.jpeg':
-              if (READY && tropy.win) {
-                event.preventDefault()
-                tropy.import([file])
-              }
-              break
+    ]).then(() => {
+      session.defaultSession.webRequest.onHeadersReceived((res, cb) => {
+        cb({
+          responseHeaders: {
+            ...res.responseHeaders,
+            'Content-Security-Policy': [
+              "default-src 'none'",
+              "base-uri 'none'",
+              "form-action 'none'",
+              "frame-ancestors 'none'"
+            ].join('; ')
           }
         })
-      }
-
-      all([
-        once(app, 'ready'),
-        once(tropy, 'app:restored')
-
-      ]).then(() => {
-        READY = Date.now()
-        info('ready after %sms', READY - START)
-        tropy.open(...opts._)
       })
 
-      app.on('quit', (_, code) => {
-        verbose(`quit with exit code ${code}`)
-      })
-    }
+      READY = Date.now()
+      info('ready after %sms', READY - START)
+      tropy.open(...opts._)
+    })
+
+    app.on('second-instance', (_, argv) => {
+      tropy.open(...args.parse(argv.slice(1))._)
+    })
+
+    app.on('quit', (_, code) => {
+      verbose(`quit with exit code ${code}`)
+    })
   }
 }
