@@ -324,6 +324,7 @@ class Select extends Component {
         onFocus={this.handleFocus}
         onKeyDown={this.handleKeyDown}
         ref={this.setInput}
+        readOnly={isInputHidden}
         style={{ opacity: isInputHidden ? 0 : 1 }}
         tabIndex={this.props.tabIndex}
         type="text"
