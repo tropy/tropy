@@ -8,7 +8,6 @@ const { EditorView } = require('prosemirror-view')
 const { EditorState } = require('prosemirror-state')
 const { isMeta } = require('../../keymap')
 const { isLink } = require('../../dom')
-const { darwin } = require('../../common/os')
 const throttle = require('lodash.throttle')
 
 
@@ -110,13 +109,13 @@ class ProseMirror extends Component {
     this.props.onBlur(...args)
   }
 
-  handleResize = (darwin || devicePixelRatio === 1) ?
-    (rect) => this.resize(rect) :
-    () => this.resize(this.bounds)
-
-  resize = throttle(({ width, height }) => {
-    this.props.onResize({ width, height })
+  handleResize = throttle((rect) => {
+    this.resize(rect)
   }, 50)
+
+  resize = ({ width, height }) => {
+    this.props.onResize({ width, height })
+  }
 
   render() {
     return (

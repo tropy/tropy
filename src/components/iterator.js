@@ -4,7 +4,6 @@ const React = require('react')
 const { PureComponent } = React
 const { TABS, SASS: { TILE } } = require('../constants')
 const { adjacent, restrict } = require('../common/util')
-const { darwin } = require('../common/os')
 const { has, on, off } = require('../dom')
 const { ceil, floor, max, min, round } = Math
 const { bool, number, oneOf } = require('prop-types')
@@ -394,10 +393,9 @@ class Iterator extends PureComponent {
     }
   }
 
-  handleResize = throttle((darwin || window.devicePixelRatio === 1 ?
-    (rect) => this.resize(rect) :
-    () => this.resize(this.bounds)
-  ), 15)
+  handleResize = throttle((rect) => {
+    this.resize(rect)
+  }, 15)
 
   resize(viewport) {
     this.viewport = viewport
