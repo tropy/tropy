@@ -19,8 +19,8 @@ platform:
   - x86
 
 cache:
-  - node_modules -> package.json
-  - '%APPDATA%\npm-cache'
+  #- node_modules -> package.json
+  #- '%APPDATA%\npm-cache' -> package.json
 
 install:
   - ps: Install-Product node $env:nodejs_version $env:platform
