@@ -8,7 +8,6 @@ const { EsperPanel } = require('./panel')
 const { get, restrict, shallow } = require('../../common/util')
 const { isHorizontal, rotate, round } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
-const { darwin } = require('../../common/os')
 const { on, off } = require('../../dom')
 const { match } = require('../../keymap')
 const { assign } = Object
@@ -126,15 +125,6 @@ class Esper extends PureComponent {
     if (props.selection == null) return false
     if (props.tool !== TOOL.SELECT) return false
     return true
-  }
-
-  // Hack: Linux/Windows ResizeObserver reports wrong dimensions
-  // if scale factor is not 1
-  get bounds() {
-    return {
-      width: this.view.container.clientWidth,
-      height: this.view.container.clientHeight
-    }
   }
 
   get classes() {
@@ -353,11 +343,11 @@ class Esper extends PureComponent {
     this.setState({ hasNestedFocus: true })
   }
 
-  handleResize = (darwin || window.devicePixelRatio === 1) ?
-    (rect) => this.resize(rect) :
-    () => this.resize(this.bounds)
+  handleResize = throttle((rect) => {
+    this.resize(rect)
+  }, 50)
 
-  resize = throttle(({ width, height }) => {
+  resize = ({ width, height }) => {
     width = round(width || this.view.screen.width)
     height = round(height || this.view.screen.height)
 
@@ -368,7 +358,7 @@ class Esper extends PureComponent {
     })
 
     this.setState({ minZoom, zoom, zoomToFill })
-  }, 50)
+  }
 
   persist = debounce(() => {
     this.props.onChange({
