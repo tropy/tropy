@@ -3,6 +3,7 @@
 const assert = require('assert')
 const uuid = require('uuid/v4')
 const { all } = require('bluebird')
+const { update } = require('../common/query')
 const { info } = require('../common/log')
 const { PROJECT } = require('../constants')
 
@@ -31,10 +32,9 @@ module.exports = {
     return project
   },
 
-  save(db, { id, name }) {
+  save(db, { id, ...props }) {
     return db.run(
-      'UPDATE project SET name = ? WHERE project_id = ?',
-      name, id
+      ...update('project').set(props).where({ project_id: id })
     )
   }
 }
