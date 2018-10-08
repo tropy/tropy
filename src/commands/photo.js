@@ -258,9 +258,10 @@ class Load extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
+    const { project } = yield select()
 
     const photos = yield call(db.seq, conn =>
-      mod.photo.load(conn, payload))
+      mod.photo.load(conn, payload, project))
 
     return photos
   }

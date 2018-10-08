@@ -1,6 +1,7 @@
 'use strict'
 
 const assert = require('assert')
+const { isAbsolute, resolve } = require('path')
 const { TEMPLATE } = require('../constants/photo')
 const { DC } = require('../constants')
 const { all } = require('bluebird')
@@ -96,7 +97,7 @@ module.exports = {
     }
   },
 
-  async load(db, ids) {
+  async load(db, ids, { base } = {}) {
     const photos = {}
     if (ids != null) ids = ids.join(',')
 
@@ -128,11 +129,12 @@ module.exports = {
             JOIN photos USING (id)${
           ids != null ? ` WHERE id IN (${ids})` : ''
         }`,
-        ({ id, created, modified, mirror, negative, ...data }) => {
+        ({ id, created, modified, mirror, negative, path, ...data }) => {
           data.created = new Date(created)
           data.modified = new Date(modified)
           data.mirror = !!mirror
           data.negative = !!negative
+          data.path = (isAbsolute(path) || !base) ? path : resolve(base, path)
 
           if (id in photos) assign(photos[id], data)
           else photos[id] = assign(skel(id), data)
