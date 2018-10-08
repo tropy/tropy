@@ -81,6 +81,32 @@ describe('Query Builder', () => {
       expect(q.query).to.eql('SELECT * FROM a JOIN b ON (x = $x)')
       expect(q.params).to.have.property('$x', 23)
     })
+  })
 
+  describe('Update', () => {
+    const { update } = query
+
+    it('simple', () =>
+      expect(
+        update('project')
+          .set({ name: 'Tropy' })
+          .query
+      ).to.eql('UPDATE project SET name = $new_name'))
+
+    it('conditional', () => {
+      let q = update('project').set({ name: 'new' }).where({ name: 'old' })
+
+      expect(q.query)
+        .to.eql('UPDATE project SET name = $new_name WHERE name = $name')
+      expect(q.params)
+        .to.eql({ $name: 'old', $new_name: 'new' })
+    })
+
+    it('multiple', () =>
+      expect(
+        update('project')
+          .set({ name: 'Tropy', base: 'project' })
+          .query
+      ).to.eql('UPDATE project SET name = $new_name, base = $new_base'))
   })
 })
