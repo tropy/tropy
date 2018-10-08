@@ -1,6 +1,7 @@
 'use strict'
 
 const assert = require('assert')
+const { dirname } = require('path')
 const uuid = require('uuid/v4')
 const { all } = require('bluebird')
 const { update } = require('../common/query')
@@ -19,7 +20,7 @@ module.exports = {
   async load(db) {
     const [project, items] = await all([
       db.get(`
-        SELECT project_id AS id, name FROM project LIMIT 1`),
+        SELECT project_id AS id, name, base FROM project LIMIT 1`),
       db.get(`
         SELECT COUNT (id) AS total
           FROM items LEFT OUTER JOIN trash USING (id)
@@ -27,6 +28,17 @@ module.exports = {
     ])
 
     assert(project != null, 'no project found')
+
+    switch (project.base) {
+      case 'project':
+        project.base = dirname(db.path)
+        break
+      case 'documents':
+      case 'pictures':
+        project.base = ARGS[project.base]
+        break
+    }
+
     project.items = items.total
 
     return project
