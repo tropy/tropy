@@ -71,7 +71,11 @@ class ConditionalQuery extends Query {
     return this.parse(conditions)
   }
 
-  parse(input, { conditions = this.con, params = this.params, prefix = '' } = {}) {
+  parse(input, {
+    conditions = this.con,
+    params = this.params,
+    prefix = ''
+  } = {}) {
     try {
       if (typeof input === 'string') {
         conditions.push(input)
