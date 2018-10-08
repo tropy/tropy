@@ -10,7 +10,7 @@ const { keys } = Object
 
 
 class Create extends Command {
-  static get action() { return SELECTION.CREATE }
+  static get ACTION() { return SELECTION.CREATE }
 
   *exec() {
     const { db } = this.options
@@ -36,7 +36,7 @@ class Create extends Command {
 }
 
 class Delete extends Command {
-  static get action() { return SELECTION.DELETE }
+  static get ACTION() { return SELECTION.DELETE }
 
   *exec() {
     const { db } = this.options
@@ -60,7 +60,7 @@ class Delete extends Command {
 }
 
 class Load extends Command {
-  static get action() { return SELECTION.LOAD }
+  static get ACTION() { return SELECTION.LOAD }
 
   *exec() {
     const { db } = this.options
@@ -74,7 +74,7 @@ class Load extends Command {
 }
 
 class Order extends Command {
-  static get action() { return SELECTION.ORDER }
+  static get ACTION() { return SELECTION.ORDER }
 
   *exec() {
     const { db } = this.options
@@ -91,7 +91,7 @@ class Order extends Command {
 }
 
 class Restore extends Command {
-  static get action() { return SELECTION.RESTORE }
+  static get ACTION() { return SELECTION.RESTORE }
 
   *exec() {
     const { db } = this.options
@@ -118,7 +118,7 @@ class Restore extends Command {
 }
 
 class Save extends Command {
-  static get action() { return SELECTION.SAVE }
+  static get ACTION() { return SELECTION.SAVE }
 
   *exec() {
     const { db } = this.options

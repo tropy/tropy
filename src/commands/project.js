@@ -8,7 +8,7 @@ const { save } = require('../models/project')
 
 
 class Save extends Command {
-  static get action() { return SAVE }
+  static get ACTION() { return SAVE }
 
   *exec() {
     const { payload } = this.action

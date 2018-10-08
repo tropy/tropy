@@ -13,7 +13,7 @@ const mod = require('../models/list')
 
 
 class Load extends Command {
-  static get action() { return LOAD }
+  static get ACTION() { return LOAD }
 
   *exec() {
     const { db } = this.options
@@ -23,7 +23,7 @@ class Load extends Command {
 
 
 class Create extends Command {
-  static get action() { return CREATE }
+  static get ACTION() { return CREATE }
 
   *exec() {
     const { payload } = this.action
@@ -45,7 +45,7 @@ class Create extends Command {
 }
 
 class Save extends Command {
-  static get action() { return SAVE }
+  static get ACTION() { return SAVE }
 
   *exec() {
     const { payload } = this.action
@@ -68,7 +68,7 @@ class Save extends Command {
 
 
 class Delete extends Command {
-  static get action() { return DELETE }
+  static get ACTION() { return DELETE }
 
   *exec() {
     const { payload: id } = this.action
@@ -96,7 +96,7 @@ class Delete extends Command {
 
 
 class Restore extends Command {
-  static get action() { return RESTORE }
+  static get ACTION() { return RESTORE }
 
   *exec() {
     const { db } = this.options
@@ -118,7 +118,7 @@ class Restore extends Command {
 }
 
 class Order extends Command {
-  static get action() { return ORDER }
+  static get ACTION() { return ORDER }
 
   *exec() {
     const { db } = this.options
@@ -134,7 +134,7 @@ class Order extends Command {
 }
 
 class AddItems extends Command {
-  static get action() { return ITEM.ADD }
+  static get ACTION() { return ITEM.ADD }
 
   *exec() {
     const { db } = this.options
@@ -151,7 +151,7 @@ class AddItems extends Command {
 }
 
 class RemoveItems extends Command {
-  static get action() { return ITEM.REMOVE }
+  static get ACTION() { return ITEM.REMOVE }
 
   *exec() {
     const { db } = this.options
@@ -166,7 +166,7 @@ class RemoveItems extends Command {
 }
 
 class RestoreItems extends Command {
-  static get action() { return ITEM.RESTORE }
+  static get ACTION() { return ITEM.RESTORE }
 
   *exec() {
     const { db } = this.options

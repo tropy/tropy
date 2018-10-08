@@ -20,7 +20,7 @@ const { toN3 } = require('../export/vocab')
 
 
 class Import extends Command {
-  static get action() { return ONTOLOGY.IMPORT }
+  static get ACTION() { return ONTOLOGY.IMPORT }
 
   *exec() {
     const { db } = this.options
@@ -88,7 +88,7 @@ class Import extends Command {
 }
 
 class Load extends Command {
-  static get action() { return ONTOLOGY.LOAD }
+  static get ACTION() { return ONTOLOGY.LOAD }
 
   *exec() {
     const { db } = this.options
@@ -106,7 +106,7 @@ class Load extends Command {
 }
 
 class VocabLoad extends Command {
-  static get action() { return VOCAB.LOAD }
+  static get ACTION() { return VOCAB.LOAD }
 
   *exec() {
     return yield call(mod.ontology.vocab.load, this.options.db)
@@ -114,7 +114,7 @@ class VocabLoad extends Command {
 }
 
 class VocabExport extends Command {
-  static get action() { return VOCAB.EXPORT }
+  static get ACTION() { return VOCAB.EXPORT }
 
   *exec() {
     const { payload } = this.action
@@ -140,7 +140,7 @@ class VocabExport extends Command {
 }
 
 class VocabSave extends Command {
-  static get action() { return VOCAB.SAVE }
+  static get ACTION() { return VOCAB.SAVE }
 
   *exec() {
     const { db } = this.options
@@ -159,7 +159,7 @@ class VocabSave extends Command {
 }
 
 class VocabDelete extends Command {
-  static get action() { return VOCAB.DELETE }
+  static get ACTION() { return VOCAB.DELETE }
 
   *exec() {
     const { db } = this.options
@@ -176,7 +176,7 @@ class VocabDelete extends Command {
 }
 
 class VocabRestore extends Command {
-  static get action() { return VOCAB.RESTORE }
+  static get ACTION() { return VOCAB.RESTORE }
 
   *exec() {
     const { db } = this.options
@@ -192,7 +192,7 @@ class VocabRestore extends Command {
 }
 
 class PropsLoad extends Command {
-  static get action() { return PROPS.LOAD }
+  static get ACTION() { return PROPS.LOAD }
 
   *exec() {
     return yield call(mod.ontology.props.load, this.options.db)
@@ -200,7 +200,7 @@ class PropsLoad extends Command {
 }
 
 class ClassLoad extends Command {
-  static get action() { return CLASS.LOAD }
+  static get ACTION() { return CLASS.LOAD }
 
   *exec() {
     return yield call(mod.ontology.class.load, this.options.db)
@@ -208,7 +208,7 @@ class ClassLoad extends Command {
 }
 
 class LabelSave extends Command {
-  static get action() { return LABEL.SAVE }
+  static get ACTION() { return LABEL.SAVE }
 
   *exec() {
     const { db } = this.options
@@ -229,7 +229,7 @@ class LabelSave extends Command {
 }
 
 class TemplateImport extends Command {
-  static get action() { return TEMPLATE.IMPORT }
+  static get ACTION() { return TEMPLATE.IMPORT }
 
   *exec() {
     const { db } = this.options
@@ -291,7 +291,7 @@ class TemplateImport extends Command {
 }
 
 class TemplateExport extends Command {
-  static get action() { return TEMPLATE.EXPORT }
+  static get ACTION() { return TEMPLATE.EXPORT }
 
   *exec() {
     let { id, path } = this.action.payload
@@ -324,7 +324,7 @@ class TemplateExport extends Command {
 }
 
 class TemplateCreate extends Command {
-  static get action() { return TEMPLATE.CREATE }
+  static get ACTION() { return TEMPLATE.CREATE }
 
   *exec() {
     const { db } = this.options
@@ -378,7 +378,7 @@ async function createTemplate(db, data, meta) {
 
 
 class TemplateSave extends Command {
-  static get action() { return TEMPLATE.SAVE }
+  static get ACTION() { return TEMPLATE.SAVE }
 
   *exec() {
     const { db } = this.options
@@ -396,7 +396,7 @@ class TemplateSave extends Command {
 
 
 class TemplateDelete extends Command {
-  static get action() { return TEMPLATE.DELETE }
+  static get ACTION() { return TEMPLATE.DELETE }
 
   *exec() {
     const { db } = this.options
@@ -414,7 +414,7 @@ class TemplateDelete extends Command {
 
 
 class TemplateFieldAdd extends Command {
-  static get action() { return TEMPLATE.FIELD.ADD }
+  static get ACTION() { return TEMPLATE.FIELD.ADD }
 
   *exec() {
     const { db } = this.options
@@ -435,7 +435,7 @@ class TemplateFieldAdd extends Command {
 }
 
 class TemplateFieldRemove extends Command {
-  static get action() { return TEMPLATE.FIELD.REMOVE }
+  static get ACTION() { return TEMPLATE.FIELD.REMOVE }
 
   *exec() {
     const { db } = this.options
@@ -456,7 +456,7 @@ class TemplateFieldRemove extends Command {
 }
 
 class TemplateFieldSave extends Command {
-  static get action() { return TEMPLATE.FIELD.SAVE }
+  static get ACTION() { return TEMPLATE.FIELD.SAVE }
 
   *exec() {
     const { db } = this.options
@@ -483,7 +483,7 @@ class TemplateFieldSave extends Command {
 }
 
 class TemplateFieldOrder extends Command {
-  static get action() { return TEMPLATE.FIELD.ORDER }
+  static get ACTION() { return TEMPLATE.FIELD.ORDER }
 
   *exec() {
     const { db } = this.options

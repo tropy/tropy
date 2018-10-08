@@ -17,7 +17,7 @@ const { keys, values } = Object
 
 
 class Consolidate extends ImportCommand {
-  static get action() { return PHOTO.CONSOLIDATE }
+  static get ACTION() { return PHOTO.CONSOLIDATE }
 
   *exec() {
     const { db } = this.options
@@ -101,7 +101,7 @@ class Consolidate extends ImportCommand {
 
 
 class Create extends ImportCommand {
-  static get action() { return PHOTO.CREATE }
+  static get ACTION() { return PHOTO.CREATE }
 
   *exec() {
     const { db } = this.options
@@ -172,7 +172,7 @@ class Create extends ImportCommand {
 }
 
 class Delete extends Command {
-  static get action() { return PHOTO.DELETE }
+  static get ACTION() { return PHOTO.DELETE }
 
   *exec() {
     const { db } = this.options
@@ -195,7 +195,7 @@ class Delete extends Command {
 }
 
 class Duplicate extends ImportCommand {
-  static get action() { return PHOTO.DUPLICATE }
+  static get ACTION() { return PHOTO.DUPLICATE }
 
   *exec() {
     const { db } = this.options
@@ -253,7 +253,7 @@ class Duplicate extends ImportCommand {
 }
 
 class Load extends Command {
-  static get action() { return PHOTO.LOAD }
+  static get ACTION() { return PHOTO.LOAD }
 
   *exec() {
     const { db } = this.options
@@ -267,7 +267,7 @@ class Load extends Command {
 }
 
 class Move extends Command {
-  static get action() { return PHOTO.MOVE }
+  static get ACTION() { return PHOTO.MOVE }
 
   *exec() {
     const { db } = this.options
@@ -310,7 +310,7 @@ class Move extends Command {
 }
 
 class Order extends Command {
-  static get action() { return PHOTO.ORDER }
+  static get ACTION() { return PHOTO.ORDER }
 
   *exec() {
     const { db } = this.options
@@ -326,7 +326,7 @@ class Order extends Command {
 }
 
 class Save extends Command {
-  static get action() { return PHOTO.SAVE }
+  static get ACTION() { return PHOTO.SAVE }
 
   *exec() {
     const { db } = this.options
@@ -350,7 +350,7 @@ class Save extends Command {
 }
 
 class Restore extends Command {
-  static get action() { return PHOTO.RESTORE }
+  static get ACTION() { return PHOTO.RESTORE }
 
   *exec() {
     const { db } = this.options
