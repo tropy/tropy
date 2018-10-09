@@ -64,7 +64,7 @@ module.exports = {
       })
     ])
 
-    return (await module.exports.load(db, [id]))[id]
+    return (await module.exports.load(db, [id], { base }))[id]
   },
 
   async save(db, { id, timestamp, ...data }, { base } = {}) {
