@@ -12,7 +12,7 @@
 --
 
 -- Save the current migration number
-PRAGMA user_version=1803301510;
+PRAGMA user_version=1810082056;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -20,7 +20,7 @@ BEGIN TRANSACTION;
 CREATE TABLE project (
   project_id  TEXT     NOT NULL PRIMARY KEY,
   name        TEXT     NOT NULL,
-  created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created     NUMERIC  NOT NULL DEFAULT CURRENT_TIMESTAMP, base TEXT,
 
   CHECK (project_id != ''),
   CHECK (name != '')
