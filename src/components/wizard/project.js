@@ -1,23 +1,35 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
+const { Component } = React
 const { bool, func, string } = require('prop-types')
 const { FormattedMessage, intlShape, injectIntl } = require('react-intl')
 const { Step } = require('../steps')
+const { Button } = require('../button')
+const { FormElement, FormGroup } = require('../form')
 const cx = require('classnames')
-const { blank } = require('../../common/util')
 
 
-class ProjectStep extends PureComponent {
+const ProjectName = injectIntl(class extends Component {
+  get isBlank() {
+    return !this.props.value
+  }
 
-  handleNameKeyDown = (event) => {
+  get placeholder() {
+    return this.props.intl.formatMessage({ id: 'wizard.project.name' })
+  }
+
+  handleChange = (event) => {
+    this.props.onChange(event.target.value)
+  }
+
+  handleKeyDown = (event) => {
     switch (event.key) {
       case 'Escape':
-        if (!blank(this.props.name)) this.props.onNameChange('')
+        if (!this.isBlank) this.props.onChange('')
         break
       case 'Enter':
-        if (!blank(this.props.name)) this.props.onComplete()
+        if (!this.isBlank) this.props.onCommit()
         break
       default:
         return
@@ -26,83 +38,92 @@ class ProjectStep extends PureComponent {
     event.stopPropagation()
   }
 
-  handleNameChange = (event) => {
-    this.props.onNameChange(event.target.value)
-  }
-
-  renderName() {
-    return (
-      <div className="form-group compact">
-        <input
-          className="form-control input-lg"
-          value={this.props.name}
-          type="text"
-          autoFocus
-          placeholder={
-            this.props.intl.formatMessage({ id: 'wizard.project.name' })
-          }
-          onChange={this.handleNameChange}
-          onKeyDown={this.handleNameKeyDown}/>
-      </div>
-    )
-  }
-
-  renderFile() {
-    return (
-      <div className={cx('form-group', 'save-as', {
-        custom: !this.props.hasDefaultFilename
-      })}>
-        <div className="save-as-link-container">
-          <a
-            className="save-as-link"
-            onClick={this.props.onFileChange}>
-            <FormattedMessage id="wizard.project.save_as"/>
-          </a>
-        </div>
-        <div className="save-as-controls">
-          <input
-            className="form-control input-lg"
-            value={this.props.file}
-            type="text"
-            readOnly/>
-          <button
-            className="btn btn-default btn-lg"
-            onClick={this.props.onFileChange}>
-            <FormattedMessage id="wizard.project.change"/>
-          </button>
-        </div>
-      </div>
-    )
-  }
-
   render() {
     return (
-      <Step>
-        <div className="tropy-icon"/>
-        <h1><FormattedMessage id="wizard.project.title"/></h1>
-        {this.renderName()}
-        {this.renderFile()}
-        <button
-          className="btn btn-primary btn-lg btn-block"
-          onClick={this.props.onComplete}
-          disabled={!this.props.file}>
-          <FormattedMessage id="wizard.project.submit"/>
-        </button>
-      </Step>
+      <FormElement isCompact>
+        <input
+          className="form-control input-lg"
+          value={this.props.value}
+          type="text"
+          autoFocus
+          placeholder={this.placeholder}
+          onChange={this.handleChange}
+          onKeyDown={this.handleKeyDown}/>
+      </FormElement>
     )
   }
 
   static propTypes = {
-    hasDefaultFilename: bool,
     intl: intlShape.isRequired,
-    name: string.isRequired,
-    file: string.isRequired,
-    onNameChange: func.isRequired,
-    onFileChange: func.isRequired,
-    onComplete: func.isRequired
+    onChange: func.isRequired,
+    onCommit: func.isRequired,
+    value: string.isRequired
   }
+})
+
+
+const ProjectFile = ({ value, isCustom, onChange }) => (
+  <FormGroup className={cx('save-as', { custom: isCustom })}>
+    <div className="save-as-link-container">
+      <a
+        className="save-as-link"
+        onClick={onChange}>
+        <FormattedMessage id="wizard.project.save_as"/>
+      </a>
+    </div>
+    <div className="save-as-controls">
+      <input
+        className="form-control input-lg"
+        readOnly
+        type="text"
+        value={value}/>
+      <Button
+        size="lg"
+        text="wizard.project.change"
+        onClick={onChange}/>
+    </div>
+  </FormGroup>
+)
+
+ProjectFile.propTypes = {
+  isCustom: bool,
+  onChange: func.isRequired,
+  value: string.isRequired
+}
+
+
+const ProjectStep = (props) => (
+  <Step>
+    <div className="tropy-icon"/>
+    <h1><FormattedMessage id="wizard.project.title"/></h1>
+    <ProjectName
+      value={props.name}
+      onChange={props.onNameChange}
+      onCommit={props.onComplete}/>
+    <ProjectFile
+      value={props.file}
+      isCustom={!props.hasDefaultFilename}
+      onChange={props.onFileChange}/>
+    <Button
+      isBlock
+      isDefault
+      isDisabled={!props.file}
+      isPrimary
+      onClick={props.onComplete}
+      size="lg"
+      text="wizard.project.submit"/>
+  </Step>
+)
+
+ProjectStep.propTypes = {
+  hasDefaultFilename: bool,
+  name: string.isRequired,
+  file: string.isRequired,
+  onNameChange: func.isRequired,
+  onFileChange: func.isRequired,
+  onComplete: func.isRequired
 }
 
 module.exports = {
-  ProjectStep: injectIntl(ProjectStep)
+  ProjectStep
 }
