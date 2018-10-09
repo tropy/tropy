@@ -68,6 +68,8 @@ module.exports = {
   },
 
   async save(db, { id, timestamp, ...data }, { base } = {}) {
+    data = pick(data, COLUMNS)
+
     assert(id != null, 'missing photo id')
     if (empty(data)) return
 
@@ -75,9 +77,7 @@ module.exports = {
       data.path = relative(base, data.path)
     }
 
-    await db.run(
-      ...update('photos').set(pick(data, COLUMNS)).where({ id })
-    )
+    await db.run(...update('photos').set(data).where({ id }))
 
     if (timestamp != null) {
       await subject.touch(db, { id, timestamp })
