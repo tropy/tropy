@@ -156,7 +156,7 @@ const getActiveDatatype = memo(
     get(metadata, [id, prop, 'type'], TYPE.TEXT)
 )
 
-const makeCompletionFilter = (prop, datatype, perField = true) =>
+const makeCompletionFilter = (prop, datatype, perField = false) =>
   perField ?
     ([id, value]) => id === prop && !!(value.text) && value.type === datatype :
     ([id, value]) => id !== 'id' && !!(value.text) && value.type === datatype
