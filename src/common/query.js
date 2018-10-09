@@ -106,6 +106,7 @@ class ConditionalQuery extends Query {
 
   parse(input, {
     conditions = this.con,
+    filters = {},
     params = this.params,
     prefix = ''
   } = {}) {
@@ -140,7 +141,9 @@ class ConditionalQuery extends Query {
               cmp = this.isNegated ? '!=' : '='
           }
 
-          conditions.push(`${lhs} ${cmp} ${rhs}`)
+          conditions.push(`${lhs} ${cmp} ${
+            (lhs in filters) ? filters[lhs](rhs) : rhs
+          }`)
         }
       }
 
@@ -313,8 +316,12 @@ class Update extends ConditionalQuery {
     return this
   }
 
-  set(assignments) {
-    return this.parse(assignments, { conditions: this.asg, prefix: 'new_' })
+  set(assignments, opts = {}) {
+    return this.parse(assignments, {
+      conditions: this.asg,
+      prefix: 'new_',
+      ...opts
+    })
   }
 
   get query() {

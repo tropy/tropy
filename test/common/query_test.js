@@ -108,6 +108,13 @@ describe('Query Builder', () => {
           .set({ name: 'Tropy', base: 'project' })
           .query
       ).to.eql('UPDATE project SET name = $new_name, base = $new_base'))
+
+    it('filtered', () =>
+      expect(
+        update('project')
+          .set({ name: 'Tropy' }, { filters: { name: x => `lower(${x})` } })
+          .query
+      ).to.eql('UPDATE project SET name = lower($new_name)'))
   })
 
   describe('Insert', () => {
