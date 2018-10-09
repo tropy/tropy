@@ -6,7 +6,7 @@ const { bool, func, string } = require('prop-types')
 const { FormattedMessage, intlShape, injectIntl } = require('react-intl')
 const { Step } = require('../steps')
 const { Button } = require('../button')
-const { FormElement, FormGroup } = require('../form')
+const { FormElement, FormGroup, FormToggle } = require('../form')
 const cx = require('classnames')
 
 
@@ -62,12 +62,12 @@ const ProjectName = injectIntl(class extends Component {
 })
 
 
-const ProjectFile = ({ value, isCustom, onChange }) => (
+const ProjectFile = ({ value, isCustom, onClick }) => (
   <FormGroup className={cx('save-as', { custom: isCustom })}>
     <div className="save-as-link-container">
       <a
         className="save-as-link"
-        onClick={onChange}>
+        onClick={onClick}>
         <FormattedMessage id="wizard.project.save_as"/>
       </a>
     </div>
@@ -80,17 +80,16 @@ const ProjectFile = ({ value, isCustom, onChange }) => (
       <Button
         size="lg"
         text="wizard.project.change"
-        onClick={onChange}/>
+        onClick={onClick}/>
     </div>
   </FormGroup>
 )
 
 ProjectFile.propTypes = {
+  onClick: func.isRequired,
   isCustom: bool,
-  onChange: func.isRequired,
   value: string.isRequired
 }
-
 
 const ProjectStep = (props) => (
   <Step>
@@ -103,7 +102,12 @@ const ProjectStep = (props) => (
     <ProjectFile
       value={props.file}
       isCustom={!props.hasDefaultFilename}
-      onChange={props.onFileChange}/>
+      onClick={props.onFileSelect}/>
+    <FormToggle
+      id="wizard.project.base"
+      name="base"
+      onChange={props.onBaseChange}
+      value={props.base != null}/>
     <Button
       isBlock
       isDefault
@@ -116,11 +120,13 @@ const ProjectStep = (props) => (
 )
 
 ProjectStep.propTypes = {
+  base: string,
   hasDefaultFilename: bool,
   name: string.isRequired,
   file: string.isRequired,
+  onBaseChange: func.isRequired,
   onNameChange: func.isRequired,
-  onFileChange: func.isRequired,
+  onFileSelect: func.isRequired,
   onComplete: func.isRequired
 }
 

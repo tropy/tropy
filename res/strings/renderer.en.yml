@@ -78,6 +78,7 @@ en:
       name: Name
       save_as: Change file name and location
       change: Change
+      base: Store photos relative to project
   prefs:
     title: Tropy Preferences
     app:

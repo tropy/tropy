@@ -21,12 +21,12 @@ module.exports = {
   complete(payload, meta = {}) {
     return async () => {
       try {
-        let { file, name } = payload
+        let { file, name, base } = payload
         info(`creating new project ${name} in ${file}`)
 
         if (meta.truncate) await rm(file)
 
-        file = await Database.create(file, create, { name })
+        file = await Database.create(file, create, { name, base })
         ipc.send(PROJECT.CREATED, { file })
 
       } catch (error) {
