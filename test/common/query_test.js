@@ -109,4 +109,17 @@ describe('Query Builder', () => {
           .query
       ).to.eql('UPDATE project SET name = $new_name, base = $new_base'))
   })
+
+  describe('Insert', () => {
+    const { into } = query
+
+    it('simple', () =>
+      expect([
+        ...into('photos').insert({ id: 23, mimetype: 'image/jpeg' })
+      ]).to.eql([
+        'INSERT INTO photos (id, mimetype) VALUES (?,?)', [23, 'image/jpeg']
+      ]))
+
+
+  })
 })

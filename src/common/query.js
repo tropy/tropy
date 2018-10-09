@@ -15,7 +15,6 @@ class Query {
 
   *[Symbol.iterator]() {
     yield this.toString()
-
     if (this.hasParams) {
       yield this.params
     }
@@ -27,6 +26,40 @@ class Query {
 
   toString() {
     return this.query
+  }
+}
+
+class Insert extends Query {
+  constructor(table) {
+    super()
+    this.table = table
+    this.columns = []
+    this.values = []
+  }
+
+  *[Symbol.iterator]() {
+    yield this.query
+    yield this.values
+  }
+
+  insert(input) {
+    for (let col in input) {
+      this.columns.push(col)
+      this.values.push(input[col])
+    }
+    return this
+  }
+
+  get query() {
+    return [this.INSERT, this.VALUES].join(' ')
+  }
+
+  get INSERT() {
+    return `INSERT INTO ${this.table} (${this.columns.join(', ')})`
+  }
+
+  get VALUES() {
+    return `VALUES (${this.values.map(() => '?').join(',')})`
   }
 }
 
@@ -298,11 +331,13 @@ class Update extends ConditionalQuery {
 }
 
 module.exports = {
+  Insert,
   Query,
   Select,
   Union,
   Update,
 
+  into(...args) { return new Insert(...args) },
   select(...args) { return new Select(...args) },
   union(...args) { return new Union(...args) },
   update(...args) { return new Update(...args) }
