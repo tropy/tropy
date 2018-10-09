@@ -33,6 +33,7 @@ module.exports = {
       case 'project':
         project.base = dirname(db.path)
         break
+      case 'user':
       case 'documents':
       case 'pictures':
         project.base = ARGS[project.base]
