@@ -1,7 +1,7 @@
 'use strict'
 
 const assert = require('assert')
-const { isAbsolute, resolve } = require('path')
+const { isAbsolute, relative, resolve } = require('path')
 const { TEMPLATE } = require('../constants/photo')
 const { DC } = require('../constants')
 const { all } = require('bluebird')
@@ -10,7 +10,8 @@ const metadata = require('./metadata')
 const bb = require('bluebird')
 const { assign } = Object
 const subject = require('./subject')
-const { blank } = require('../common/util')
+const { into, update } = require('../common/query')
+const { blank, empty, pick } = require('../common/util')
 
 const COLUMNS = [
   'checksum',
@@ -20,45 +21,38 @@ const COLUMNS = [
   'size'
 ]
 
-const VALUES = {
-  consolidated: (column) => (`datetime($${column})`),
-  default: (column) => `$${column}`
-}
-
-const filter = (column) =>
-  (VALUES[column] || VALUES.default)(column)
-
 const skel = (id, selections = [], notes = []) => ({
   id, selections, notes
 })
 
 
 module.exports = {
-  async create(db, template, { item, image, data, position }) {
-    const {
+  async create(db, { base, template }, { item, image, data, position }) {
+    let {
       path, checksum, mimetype, width, height, orientation, size
     } = image
 
-    const { id } = await db.run(`
-      INSERT INTO subjects (template) VALUES (?)`, template || TEMPLATE)
+    let { id } = await db.run(
+      ...into('subjects').insert({ template: template || TEMPLATE })
+    )
 
-    await db.run(`
-      INSERT INTO images (id, width, height) VALUES (?,?,?)`,
-      [id, width, height])
+    if (base != null) {
+      path = relative(base, path)
+    }
+
+    await db.run(...into('images').insert({ id, width, height }))
 
     await all([
-      db.run(`
-        INSERT INTO photos (
-            id,
-            item_id,
-            path,
-            size,
-            checksum,
-            mimetype,
-            orientation,
-            position
-          ) VALUES (?,?,?,?,?,?,?,?)`,
-        [id, item, path, size, checksum, mimetype, orientation, position]),
+      db.run(...into('photos').insert({
+        id,
+        item_id: item,
+        path,
+        size,
+        checksum,
+        mimetype,
+        orientation,
+        position
+      })),
 
       metadata.update(db, {
         ids: [id],
@@ -73,24 +67,17 @@ module.exports = {
     return (await module.exports.load(db, [id]))[id]
   },
 
-  async save(db, { id, timestamp, ...data }) {
-    const assignments = []
-    const params = { $id: id }
+  async save(db, { id, timestamp, ...data }, { base } = {}) {
+    assert(id != null, 'missing photo id')
+    if (empty(data)) return
 
-    for (let column of COLUMNS) {
-      if (column in data) {
-        assignments.push(`${column} = ${filter(column)}`)
-        params[`$${column}`] = data[column]
-      }
+    if (base != null && data.path != null) {
+      data.path = relative(base, data.path)
     }
 
-    assert(id != null, 'missing photo id')
-    if (assignments.length === 0) return
-
-    await db.run(`
-      UPDATE photos
-        SET ${assignments.join(', ')}
-        WHERE id = $id`, params)
+    await db.run(
+      ...update('photos').set(pick(data, COLUMNS)).where({ id })
+    )
 
     if (timestamp != null) {
       await subject.touch(db, { id, timestamp })
