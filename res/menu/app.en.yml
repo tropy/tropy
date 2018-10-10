@@ -127,6 +127,8 @@ en:
         - type: 'separator'
         - label: 'Reset Ontology Database'
           command: 'app:reset-ontology-db'
+        - label: 'Rebase Project'
+          command: 'app:rebase-project'
         - label: 'Close Project'
           command: 'app:close-project'
         - type: 'separator'
