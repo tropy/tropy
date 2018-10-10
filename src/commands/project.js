@@ -1,6 +1,7 @@
 'use strict'
 
 const { call, put, select } = require('redux-saga/effects')
+const { dirname } = require('path')
 const { Command } = require('./command')
 const { PROJECT } = require('../constants')
 const { pick } = require('../common/util')
@@ -13,17 +14,17 @@ class Rebase extends Command {
 
   *exec() {
     let { db, id } = this.options
-    let oldBase = yield select(state => state.project.base)
+    let { project } = yield select()
 
-    let base = oldBase === 'project' ? null : 'project'
+    // Temporary: only toggle between absolute and project-relative!
+    let base = (project.base) ? null : dirname(project.file)
 
     yield call(db.transaction, async tx => {
-      await mod.project.save(tx, { id, base })
-      await mod.photo.rebase(tx, base, oldBase)
+      await mod.project.save(tx, { id, base: (base) ? 'project' : null })
+      await mod.photo.rebase(tx, base, project.base)
     })
 
     yield put(act.project.update({ base }))
-
     this.undo = act.project.rebase()
   }
 }
@@ -35,12 +36,10 @@ class Save extends Command {
     let { payload } = this.action
     let { db, id } = this.options
 
-    this.original = yield select(state =>
+    let original = yield select(state =>
       pick(state.project, Object.keys(payload)))
 
-    let doRebase = ('base' in payload && payload.base !== this.original.base)
-
-    yield put(act.project.update(payload))
+    let doRebase = ('base' in payload && payload.base !== original.base)
 
     yield call(db.transaction, async tx => {
       await mod.project.save(tx, { id, ...payload })
@@ -50,13 +49,8 @@ class Save extends Command {
       }
     })
 
-    this.undo = act.project.save({ name: this.original.name })
-  }
-
-  *abort() {
-    if (this.original) {
-      yield put(act.project.update(this.original))
-    }
+    yield put(act.project.update(payload))
+    this.undo = act.project.save(original)
   }
 }
 
