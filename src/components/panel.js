@@ -7,7 +7,6 @@ const { Resizable } = require('./resizable')
 const cx = require('classnames')
 const { bounds } = require('../dom')
 const { restrict } = require('../common/util')
-const { darwin } = require('../common/os')
 const { PANEL } = require('../constants/sass')
 const { remap } = require('../common/util')
 const { round } = require('../common/math')
@@ -218,10 +217,9 @@ class PanelGroup extends PureComponent {
   }
 
 
-  handleResize = throttle((darwin || window.devicePixelRatio === 1 ?
-    (height) => this.update(height) :
-    () => this.update(this.container.clientHeight)
-  ), 15)
+  handleResize = throttle((height) => {
+    this.update(height)
+  }, 15)
 
   update(height) {
     this.setState(this.getLayout(this.props, height))

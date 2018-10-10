@@ -10,7 +10,7 @@ const act = require('../actions')
 
 
 class Load extends Command {
-  static get action() { return TAG.LOAD }
+  static get ACTION() { return TAG.LOAD }
 
   *exec() {
     return (yield call(mod.tag.load, this.options.db, this.action.payload))
@@ -19,7 +19,7 @@ class Load extends Command {
 
 
 class Create extends Command {
-  static get action() { return TAG.CREATE }
+  static get ACTION() { return TAG.CREATE }
 
   *exec() {
     const { db } = this.options
@@ -45,7 +45,7 @@ class Create extends Command {
 }
 
 class Save extends Command {
-  static get action() { return TAG.SAVE }
+  static get ACTION() { return TAG.SAVE }
 
   *exec() {
     const { db } = this.options
@@ -69,7 +69,7 @@ class Save extends Command {
 
 
 class Delete extends Command {
-  static get action() { return TAG.DELETE }
+  static get ACTION() { return TAG.DELETE }
 
   *exec() {
     const { db } = this.options

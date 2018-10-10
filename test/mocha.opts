@@ -1,6 +1,6 @@
 --reporter dot
 --recursive
---require babel-core/register
+--require @babel/register
 --require test/support/mode
 --require test/support/src
 --require test/support/chai

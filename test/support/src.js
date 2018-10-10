@@ -3,9 +3,7 @@
 const { resolve, join } = require('path')
 
 if (!global.__src) {
-  global.__src = process.env.COVERAGE ?
-    resolve(__dirname, '..', '..', 'lib') :
-    resolve(__dirname, '..', '..', 'src')
+  global.__src = resolve(__dirname, '..', '..', 'src')
 }
 
 global.__require = function (mod) {

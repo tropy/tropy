@@ -1,7 +1,7 @@
 'use strict'
 
 const { seq, map } = require('transducers.js')
-const handles = map(([, cmd]) => [cmd.action, cmd])
+const handles = map(([, cmd]) => [cmd.ACTION, cmd])
 
 module.exports = {
 

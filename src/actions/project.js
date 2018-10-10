@@ -38,7 +38,19 @@ module.exports = {
     }
   },
 
-  save(payload, meta) {
+  rebase(payload = {}, meta = {}) {
+    return {
+      type: PROJECT.REBASE,
+      payload,
+      meta: {
+        cmd: 'project',
+        history: 'add',
+        ...meta
+      }
+    }
+  },
+
+  save(payload, meta = {}) {
     return {
       type: PROJECT.SAVE,
       payload,
@@ -50,11 +62,11 @@ module.exports = {
     }
   },
 
-  update(payload, meta) {
+  update(payload, meta = {}) {
     return {
       type: PROJECT.UPDATE,
       payload,
-      meta: { ipc: true, ...meta }
+      meta: { ipc: !!payload.name, ...meta }
     }
   }
 
