@@ -107,6 +107,7 @@ class ConditionalQuery extends Query {
   parse(input, {
     conditions = this.con,
     filters = {},
+    forAssignment = false,
     params = this.params,
     prefix = ''
   } = {}) {
@@ -121,7 +122,7 @@ class ConditionalQuery extends Query {
           switch (true) {
             case (rhs == null):
               rhs = 'NULL'
-              cmp = this.isNegated ? 'IS NOT' : 'IS'
+              cmp = forAssignment ? '=' : this.isNegated ? 'IS NOT' : 'IS'
               break
 
             case (isArray(rhs)):
@@ -318,6 +319,7 @@ class Update extends ConditionalQuery {
 
   set(assignments, opts = {}) {
     return this.parse(assignments, {
+      forAssignment: true,
       conditions: this.asg,
       prefix: 'new_',
       ...opts

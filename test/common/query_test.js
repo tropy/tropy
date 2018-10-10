@@ -93,6 +93,13 @@ describe('Query Builder', () => {
           .query
       ).to.eql('UPDATE project SET name = $new_name'))
 
+    it('null', () =>
+      expect(
+        update('project')
+          .set({ base: null })
+          .query
+      ).to.eql('UPDATE project SET base = NULL'))
+
     it('conditional', () => {
       let q = update('project').set({ name: 'new' }).where({ name: 'old' })
 
@@ -126,7 +133,5 @@ describe('Query Builder', () => {
       ]).to.eql([
         'INSERT INTO photos (id, mimetype) VALUES (?,?)', [23, 'image/jpeg']
       ]))
-
-
   })
 })
