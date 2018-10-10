@@ -20,17 +20,17 @@ class Consolidate extends ImportCommand {
   static get ACTION() { return PHOTO.CONSOLIDATE }
 
   *exec() {
-    const { db } = this.options
-    const { payload, meta } = this.action
-    const consolidated = []
+    let { db } = this.options
+    let { payload, meta } = this.action
+    let consolidated = []
 
-    const photos = yield select(state =>
-      blank(payload) ?
-        values(state.photos) :
-        pluck(state.photos, payload))
+    let [project, photos] = yield select(state => [
+      state.project,
+      blank(payload) ? values(state.photos) : pluck(state.photos, payload)
+    ])
 
     for (let i = 0, total = photos.length; i < total; ++i) {
-      const photo = photos[i]
+      let photo = photos[i]
 
       try {
         let { image, hasChanged, error } = yield call(Image.check, photo, meta)
@@ -63,7 +63,7 @@ class Consolidate extends ImportCommand {
 
               const data = { id: photo.id, ...image.toJSON() }
 
-              yield call(mod.photo.save, db, data)
+              yield call(mod.photo.save, db, data, project)
               yield put(act.photo.update({
                 broken: false,
                 consolidated: new Date(),
@@ -104,11 +104,11 @@ class Create extends ImportCommand {
   static get ACTION() { return PHOTO.CREATE }
 
   *exec() {
-    const { db } = this.options
+    let { db } = this.options
     let { item, files } = this.action.payload
     let { idx } = this.action.meta
 
-    const photos = []
+    let photos = []
 
     if (idx == null) {
       idx = [yield select(state => state.items[item].photos.length)]
@@ -121,8 +121,12 @@ class Create extends ImportCommand {
 
     if (!files) return []
 
-    const template = yield select(getPhotoTemplate)
-    const data = getTemplateValues(template)
+    let [base, template] = yield select(state => [
+      state.project.base,
+      getPhotoTemplate(state)
+    ])
+
+    let data = getTemplateValues(template)
 
     for (let i = 0, total = files.length; i < total; ++i) {
       let file
@@ -136,7 +140,7 @@ class Create extends ImportCommand {
         yield* this.handleDuplicate(image)
 
         photo = yield call(db.transaction, tx =>
-          mod.photo.create(tx, template.id, {
+          mod.photo.create(tx, { base, template: template.id }, {
             item, image, data, position: idx[0] + i + 1
           }))
 
@@ -198,30 +202,35 @@ class Duplicate extends ImportCommand {
   static get ACTION() { return PHOTO.DUPLICATE }
 
   *exec() {
-    const { db } = this.options
-    const { payload } = this.action
-    const { item } = payload
+    let { db } = this.options
+    let { payload } = this.action
+    let { item } = payload
 
     assert(!blank(payload.photos), 'missing photos')
 
-    const [order, originals, data] = yield select(state => [
+    let [base, order, originals, data] = yield select(state => [
+      state.project.base,
       state.items[item].photos,
       pluck(state.photos, payload.photos),
       pluck(state.metadata, payload.photos)
     ])
 
-    const idx = [order.indexOf(payload.photos[0]) + 1]
-    const total = originals.length
-    const photos = []
+    let idx = [order.indexOf(payload.photos[0]) + 1]
+    let total = originals.length
+    let photos = []
 
     for (let i = 0; i < total; ++i) {
       const { template, path } = originals[i]
 
       try {
-        const image = yield call(Image.read, path)
+        let image = yield call(Image.read, path)
 
-        const photo = yield call(db.transaction, tx =>
-          mod.photo.create(tx, template, { item, image, data: data[i] }))
+        let photo = yield call(db.transaction, tx =>
+          mod.photo.create(tx, { base, template }, {
+            item,
+            image,
+            data: data[i]
+          }))
 
         yield put(act.metadata.load([photo.id]))
 
@@ -258,9 +267,10 @@ class Load extends Command {
   *exec() {
     const { db } = this.options
     const { payload } = this.action
+    const { project } = yield select()
 
     const photos = yield call(db.seq, conn =>
-      mod.photo.load(conn, payload))
+      mod.photo.load(conn, payload, project))
 
     return photos
   }
@@ -329,17 +339,19 @@ class Save extends Command {
   static get ACTION() { return PHOTO.SAVE }
 
   *exec() {
-    const { db } = this.options
-    const { payload, meta } = this.action
-    const { id, data } = payload
+    let { db } = this.options
+    let { payload, meta } = this.action
+    let { id, data } = payload
 
-    const original = yield select(state =>
-      pick(state.photos[id], keys(data)))
+    let [original, project] = yield select(state => [
+      pick(state.photos[id], keys(data)),
+      state.project.base
+    ])
 
     const params = { id, timestamp: meta.now, ...data }
 
     yield call(db.transaction, async tx => {
-      await mod.photo.save(tx, params)
+      await mod.photo.save(tx, params, project)
       await mod.image.save(tx, params)
     })
 

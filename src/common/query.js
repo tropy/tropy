@@ -15,7 +15,6 @@ class Query {
 
   *[Symbol.iterator]() {
     yield this.toString()
-
     if (this.hasParams) {
       yield this.params
     }
@@ -27,6 +26,40 @@ class Query {
 
   toString() {
     return this.query
+  }
+}
+
+class Insert extends Query {
+  constructor(table) {
+    super()
+    this.table = table
+    this.columns = []
+    this.values = []
+  }
+
+  *[Symbol.iterator]() {
+    yield this.query
+    yield this.values
+  }
+
+  insert(input) {
+    for (let col in input) {
+      this.columns.push(col)
+      this.values.push(input[col])
+    }
+    return this
+  }
+
+  get query() {
+    return [this.INSERT, this.VALUES].join(' ')
+  }
+
+  get INSERT() {
+    return `INSERT INTO ${this.table} (${this.columns.join(', ')})`
+  }
+
+  get VALUES() {
+    return `VALUES (${this.values.map(() => '?').join(',')})`
   }
 }
 
@@ -50,23 +83,102 @@ class Union extends Query {
   }
 }
 
-class Select extends Query {
-  constructor(...args) {
+class ConditionalQuery extends Query {
+  constructor() {
     super()
     this.reset()
+  }
+
+  reset() {
+    this.isNegated = false
+    this.params = {}
+    this.con = []
+    return this
+  }
+
+  get not() {
+    return (this.isNegated = true), this
+  }
+
+  where(conditions) {
+    return this.parse(conditions)
+  }
+
+  parse(input, {
+    conditions = this.con,
+    filters = {},
+    forAssignment = false,
+    params = this.params,
+    prefix = ''
+  } = {}) {
+    try {
+      if (typeof input === 'string') {
+        conditions.push(input)
+      } else {
+        for (let lhs in input) {
+          let rhs = input[lhs]
+          let cmp
+
+          switch (true) {
+            case (rhs == null):
+              rhs = 'NULL'
+              cmp = forAssignment ? '=' : this.isNegated ? 'IS NOT' : 'IS'
+              break
+
+            case (isArray(rhs)):
+              rhs = `(${rhs.join(', ')})`
+              cmp = this.isNegated ? 'NOT IN' : 'IN'
+              break
+
+            case (rhs instanceof Query):
+              assign(params, rhs.params)
+              rhs = rhs.query
+              cmp = this.isNegated ? 'NOT IN' : 'IN'
+              break
+
+            default:
+              params[`$${prefix}${lhs}`] = rhs
+              rhs = `$${prefix}${lhs}`
+              cmp = this.isNegated ? '!=' : '='
+          }
+
+          conditions.push(`${lhs} ${cmp} ${
+            (lhs in filters) ? filters[lhs](rhs) : rhs
+          }`)
+        }
+      }
+
+      return this
+
+    } finally {
+      this.isNegated = false
+    }
+  }
+
+  unless(...args) {
+    return this.not.where(...args)
+  }
+
+  get WHERE() {
+    return (this.con.length === 0) ?
+      undefined : `WHERE ${this.con.join(' AND ')}`
+  }
+}
+
+class Select extends ConditionalQuery {
+  constructor(...args) {
+    super()
     this.select(...args)
   }
 
   reset() {
+    super.reset()
     this.isDistinct = false
-    this.isNegated = false
     this.isOuter = false
-    this.params = {}
     this.cte = null
     this.col = {}
     this.src = []
     this.ord = []
-    this.con = []
     this.grp = []
     this.hav = []
     return this
@@ -78,10 +190,6 @@ class Select extends Query {
 
   get all() {
     return (this.isDistinct = false), this
-  }
-
-  get not() {
-    return (this.isNegated = true), this
   }
 
   get outer() {
@@ -128,57 +236,6 @@ class Select extends Query {
     } finally {
       this.isOuter = false
     }
-  }
-
-  where(conditions) {
-    return this.parse(conditions)
-  }
-
-  parse(input, { conditions = this.con, params = this.params } = {}) {
-    try {
-      if (typeof input === 'string') {
-        conditions.push(input)
-      } else {
-        for (let lhs in input) {
-          let rhs = input[lhs]
-          let cmp
-
-          switch (true) {
-            case (rhs == null):
-              rhs = 'NULL'
-              cmp = this.isNegated ? 'IS NOT' : 'IS'
-              break
-
-            case (isArray(rhs)):
-              rhs = `(${rhs.join(', ')})`
-              cmp = this.isNegated ? 'NOT IN' : 'IN'
-              break
-
-            case (rhs instanceof Query):
-              assign(params, rhs.params)
-              rhs = rhs.query
-              cmp = this.isNegated ? 'NOT IN' : 'IN'
-              break
-
-            default:
-              params[`$${lhs}`] = rhs
-              rhs = `$${lhs}`
-              cmp = this.isNegated ? '!=' : '='
-          }
-
-          conditions.push(`${lhs} ${cmp} ${rhs}`)
-        }
-      }
-
-      return this
-
-    } finally {
-      this.isNegated = false
-    }
-  }
-
-  unless(...args) {
-    return this.not.where(...args)
   }
 
   order(by, dir) {
@@ -231,11 +288,6 @@ class Select extends Query {
     return `FROM ${this.src.join(' ')}`
   }
 
-  get WHERE() {
-    return (this.con.length === 0) ?
-      undefined : `WHERE ${this.con.join(' AND ')}`
-  }
-
   get GROUP_BY() {
     return (this.grp.length === 0) ?
       undefined : `GROUP BY ${this.grp.join(', ')}`
@@ -252,11 +304,50 @@ class Select extends Query {
   }
 }
 
+
+class Update extends ConditionalQuery {
+  constructor(src) {
+    super()
+    this.src = src
+  }
+
+  reset() {
+    super.reset()
+    this.asg = []
+    return this
+  }
+
+  set(assignments, opts = {}) {
+    return this.parse(assignments, {
+      forAssignment: true,
+      conditions: this.asg,
+      prefix: 'new_',
+      ...opts
+    })
+  }
+
+  get query() {
+    return pluck(this, ['UPDATE', 'SET', 'WHERE']).join(' ')
+  }
+
+  get UPDATE() {
+    return `UPDATE ${this.src}`
+  }
+
+  get SET() {
+    return `SET ${this.asg.join(', ')}`
+  }
+}
+
 module.exports = {
+  Insert,
   Query,
   Select,
   Union,
+  Update,
 
+  into(...args) { return new Insert(...args) },
   select(...args) { return new Select(...args) },
-  union(...args) { return new Union(...args) }
+  union(...args) { return new Union(...args) },
+  update(...args) { return new Update(...args) }
 }

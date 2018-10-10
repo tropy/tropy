@@ -56,10 +56,10 @@ class Import extends ImportCommand {
   static get ACTION() { return ITEM.IMPORT }
 
   *exec() {
-    const { db } = this.options
+    let { db } = this.options
     let { files, list } = this.action.payload
 
-    const items = []
+    let items = []
 
     if (!files) {
       this.isInteractive = true
@@ -70,13 +70,14 @@ class Import extends ImportCommand {
 
     yield put(act.nav.update({ mode: MODE.PROJECT, query: '' }))
 
-    const [itemp, ptemp] = yield all([
-      select(getItemTemplate),
-      select(getPhotoTemplate)
+    let [base, itemp, ptemp] = yield select(state => [
+      state.project.base,
+      getItemTemplate(state),
+      getPhotoTemplate(state)
     ])
 
-    const defaultItemData = getTemplateValues(itemp)
-    const defaultPhotoData = getTemplateValues(ptemp)
+    let defaultItemData = getTemplateValues(itemp)
+    let defaultPhotoData = getTemplateValues(ptemp)
 
     for (let i = 0, total = files.length; i < total; ++i) {
       let file, image, item, photo
@@ -92,7 +93,7 @@ class Import extends ImportCommand {
             [DC.title]: text(image.title), ...defaultItemData
           })
 
-          photo = await mod.photo.create(tx, ptemp.id, {
+          photo = await mod.photo.create(tx, { base, template: ptemp.id }, {
             item: item.id, image, data: defaultPhotoData
           })
 

@@ -26,6 +26,7 @@ class PhotoInfo extends PureComponent {
     return (
       <ol className="photo-info metadata-fields">
         <StaticField
+          hint={this.props.photo.path}
           label="photo.file"
           value={this.file}
           onClick={this.handleFileClick}/>
