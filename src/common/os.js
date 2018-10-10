@@ -25,6 +25,10 @@ module.exports = {
     return `${os.type()} ${os.release()} (${arch})`
   },
 
+  normalize: platform === 'win32' ?
+    (path) => path :
+    (path) => path.replace(/\\/g, '/'),
+
   meta: platform === 'darwin' ?
     (event) => event.metaKey :
     (event) => event.ctrlKey,

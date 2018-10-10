@@ -1,7 +1,7 @@
 'use strict'
 
 const assert = require('assert')
-const { isAbsolute, relative, resolve } = require('path')
+const { relative, resolve } = require('path')
 const { TEMPLATE } = require('../constants/photo')
 const { DC } = require('../constants')
 const { all } = require('bluebird')
@@ -11,6 +11,7 @@ const bb = require('bluebird')
 const { assign } = Object
 const subject = require('./subject')
 const { into, select, update } = require('../common/query')
+const { normalize } = require('../common/os')
 const { blank, empty, pick } = require('../common/util')
 
 const COLUMNS = [
@@ -24,7 +25,6 @@ const COLUMNS = [
 const skel = (id, selections = [], notes = []) => ({
   id, selections, notes
 })
-
 
 module.exports = {
   async create(db, { base, template }, { item, image, data, position }) {
@@ -121,7 +121,7 @@ module.exports = {
           data.modified = new Date(modified)
           data.mirror = !!mirror
           data.negative = !!negative
-          data.path = (isAbsolute(path) || !base) ? path : resolve(base, path)
+          data.path = (base) ? resolve(base, normalize(path)) : path
 
           if (id in photos) assign(photos[id], data)
           else photos[id] = assign(skel(id), data)
@@ -235,7 +235,7 @@ module.exports = {
     let delta = []
 
     await db.each(select('id', 'path').from('photos').query, ({ id, path }) => {
-      let oldPath = oldBase ? resolve(oldBase, path) : path
+      let oldPath = oldBase ? resolve(oldBase, normalize(path)) : path
       let newPath = base ? relative(base, oldPath) : oldPath
       if (newPath !== path) {
         delta.push({ id, path: newPath })
