@@ -345,7 +345,7 @@ class Save extends Command {
 
     let [original, project] = yield select(state => [
       pick(state.photos[id], keys(data)),
-      state.project.base
+      state.project
     ])
 
     const params = { id, timestamp: meta.now, ...data }
