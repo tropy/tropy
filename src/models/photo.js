@@ -10,7 +10,7 @@ const metadata = require('./metadata')
 const bb = require('bluebird')
 const { assign } = Object
 const subject = require('./subject')
-const { into, update } = require('../common/query')
+const { into, select, update } = require('../common/query')
 const { blank, empty, pick } = require('../common/util')
 
 const COLUMNS = [
@@ -229,5 +229,21 @@ module.exports = {
           SELECT id FROM trash JOIN photos USING (id)
         )`
     )
+  },
+
+  async rebase(db, base, oldBase) {
+    let delta = []
+
+    await db.each(select('id', 'path').from('photos'), ({ id, path }) => {
+      let oldPath = oldBase ? resolve(oldBase, path) : path
+      let newPath = base ? relative(base, oldPath) : oldPath
+      if (newPath !== path) {
+        delta.push({ id, path: newPath })
+      }
+    })
+
+    await bb.map(delta, ({ id, path }) => db.run(
+      ...update('photos').set({ path }).where({ id })
+    ))
   }
 }
