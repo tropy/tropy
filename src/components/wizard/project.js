@@ -6,7 +6,7 @@ const { bool, func, string } = require('prop-types')
 const { FormattedMessage, intlShape, injectIntl } = require('react-intl')
 const { Step } = require('../steps')
 const { Button } = require('../button')
-const { FormElement, FormGroup, FormToggle } = require('../form')
+const { FormElement, FormGroup } = require('../form')
 const cx = require('classnames')
 
 
@@ -103,11 +103,6 @@ const ProjectStep = (props) => (
       value={props.file}
       isCustom={!props.hasDefaultFilename}
       onClick={props.onFileSelect}/>
-    <FormToggle
-      id="wizard.project.base"
-      name="base"
-      onChange={props.onBaseChange}
-      value={props.base != null}/>
     <Button
       isBlock
       isDefault
