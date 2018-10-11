@@ -4,12 +4,11 @@ const { LIST, EDIT } = require('../constants')
 const { array } = require('../common/util')
 
 module.exports = {
-
-  new(payload, meta) {
+  new(payload = {}, meta = {}) {
     return {
       type: EDIT.START,
       payload: {
-        list: { name: '', parent: LIST.ROOT, ...payload, }
+        list: { name: '', ...payload, parent: payload.parent || LIST.ROOT }
       },
       meta
     }

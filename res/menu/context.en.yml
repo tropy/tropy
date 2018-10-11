@@ -22,6 +22,8 @@ en:
       - label: 'New List'
         command: 'app:create-list'
     list: &list
+      - label: 'New Nested List'
+        command: 'app:create-nested-list'
       - label: 'Rename List'
         command: 'app:rename-list'
       - label: 'Delete List'
