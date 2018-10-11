@@ -335,11 +335,11 @@ class ContextMenu extends Menu {
 {
   const { scopes } = ContextMenu
 
-  scopes.sidebar = [...scopes.global, 'sidebar', 'lists', 'tags']
-  scopes.project = [...scopes.sidebar, 'project']
-  scopes.lists = [...scopes.sidebar, 'lists']
-  scopes.list = [...scopes.sidebar, 'list']
-  scopes.tags = [...scopes.sidebar, 'tags']
+  scopes.sidebar = [...scopes.global, 'project', 'lists', 'tags']
+  scopes.project = [...scopes.sidebar]
+  scopes.lists = [...scopes.sidebar]
+  scopes.list = [...scopes.global, 'project', 'lists', 'list', 'tags']
+  scopes.tags = [...scopes.sidebar]
   scopes.tag = [...scopes.sidebar, 'tag']
   scopes.items = [...scopes.global, 'items']
   scopes.item = [...scopes.items, 'item']
