@@ -1,38 +1,36 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
-const { ListNode } = require('./node')
+const lazy = require('./node')
 const { get, move } = require('../../common/util')
 const { arrayOf, func, number, object, shape } = require('prop-types')
 
 
-class ListTree extends PureComponent {
+class ListTree extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      order: get(props, 'parent.children') || []
+      order: get(props.parent, ['children'], [])
     }
   }
 
   get order() {
-    return get(this.props, 'parent.children') || []
+    return get(this.props.parent, ['children'], [])
   }
 
   componentWillReceiveProps(props) {
     this.setState({
-      order: get(props, 'parent.children') || []
+      order: get(props.parent, ['children'], [])
     })
   }
 
   isEditing(id) {
-    return get(this.props.edit, 'id') === id
+    return get(this.props.edit, ['id']) === id
   }
 
   isSelected(id) {
     return this.props.selection === id
   }
-
 
   handleSortPreview = (item, to, offset = 0) => {
     this.setState({
@@ -45,45 +43,36 @@ class ListTree extends PureComponent {
   }
 
   handleSort = () => {
-    const { parent, onSort } = this.props
-    onSort({ id: parent.id, children: this.state.order })
+    this.props.onSort({
+      id: this.props.parent.id,
+      children: this.state.order
+    })
   }
 
-  renderNewListNode() {
-    const { parent, onEditCancel, onListSave } = this.props
-    const list = this.props.edit
-
-    if (!list || list.parent !== parent.id) return null
-
-    return (
-      <ListNode
-        list={list}
-        isEditing
-        onEditCancel={onEditCancel}
-        onSave={onListSave}/>
-    )
+  hasNewListNode() {
+    return get(this.props.edit, 'parent') === this.props.parent.id
   }
 
   render() {
-    const { lists, onListSave, ...props } = this.props
-
     return (
       <ol className="list-tree sortable" ref={this.setContainer}>
-        {
-          this.state.order.map(id =>
-            <ListNode {...props}
-              key={id}
-              list={lists[id] || { id }}
-              isSelected={this.isSelected(id)}
-              isEditing={this.isEditing(id)}
-              isHolding={this.props.hold[id]}
-              isSortable
-              onSave={onListSave}
-              onSortPreview={this.handleSortPreview}
-              onSortReset={this.handleSortReset}
-              onSort={this.handleSort}/>)
-        }
-        {this.renderNewListNode()}
+        {this.state.order.map(id =>
+          <lazy.ListNode {...this.props}
+            key={id}
+            list={this.props.lists[id] || { id }}
+            isSelected={this.isSelected(id)}
+            isEditing={this.isEditing(id)}
+            isHolding={this.props.hold[id]}
+            isSortable
+            onSortPreview={this.handleSortPreview}
+            onSortReset={this.handleSortReset}
+            onSort={this.handleSort}/>)}
+        {this.hasNewListNode() &&
+          <lazy.ListNode
+            list={this.props.edit}
+            isEditing
+            onEditCancel={this.props.onEditCancel}
+            onListSave={this.props.onListSave}/>}
       </ol>
     )
   }
@@ -91,7 +80,7 @@ class ListTree extends PureComponent {
   static propTypes = {
     parent: shape({
       id: number.isRequired,
-      children: arrayOf(number).isRequired
+      children: arrayOf(number)
     }).isRequired,
     lists: object.isRequired,
     hold: object.isRequired,
@@ -107,6 +96,4 @@ class ListTree extends PureComponent {
   }
 }
 
-module.exports = {
-  ListTree
-}
+module.exports.ListTree = ListTree

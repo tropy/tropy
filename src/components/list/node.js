@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { Editable } = require('../editable')
 const { IconFolder } = require('../icons')
 const { DragSource, DropTarget } = require('react-dnd')
@@ -9,15 +8,18 @@ const { NativeTypes } = require('react-dnd-electron-backend')
 const { DND } = require('../../constants')
 const { bounds } = require('../../dom')
 const { isValidImage } = require('../../image')
+const lazy = require('./tree')
 const cx = require('classnames')
-const { noop } = require('../../common/util')
-const { bool, func, number, shape, string } = require('prop-types')
+const { has, noop, pick } = require('../../common/util')
+const { arrayOf, bool, func, number, shape, string } = require('prop-types')
 
 
-class ListNode extends PureComponent {
+class ListNode extends React.Component {
   get classes() {
     return ['list', {
       'active': this.props.isSelected,
+      'expandable': this.hasChildren,
+      'expanded': this.props.isExpanded,
       'dragging': this.props.isDragging,
       'drop-target': this.props.isSortable,
       'holding': this.props.isHolding,
@@ -31,16 +33,25 @@ class ListNode extends PureComponent {
       this.props.dtType !== DND.LIST
   }
 
+  get hasChildren() {
+    return has(this.props.list, ['children'])
+  }
+
   get isDraggable() {
     return !this.props.isEditing
   }
 
-  handleChange = (name) => {
-    const { list: { id, parent }, onSave } = this.props
-    onSave(id ? { id, name } : { parent, name })
+  getListTreeProps(props = this.props) {
+    return pick(props, Object.keys(lazy.ListTree.propTypes))
   }
 
-  handleClick = () => {
+  handleChange = (name) => {
+    let { id, parent } = this.props.list
+    this.props.onListSave(id ? { id, name } : { parent, name })
+  }
+
+  handleClick = (event) => {
+    event.stopPropagation()
     this.props.onClick(this.props.list)
   }
 
@@ -62,9 +73,8 @@ class ListNode extends PureComponent {
     return element
   }
 
-
   render() {
-    const { list, isEditing, onEditCancel } = this.props
+    let { list, isEditing, onEditCancel } = this.props
 
     return this.connect(
       <li
@@ -82,15 +92,17 @@ class ListNode extends PureComponent {
             onCancel={onEditCancel}
             onChange={this.handleChange}/>
         </div>
+        {this.hasChildren &&
+          <lazy.ListTree {...this.getListTreeProps()} parent={list}/>}
       </li>
     )
   }
-
 
   static propTypes = {
     canDrop: bool,
     isDragging: bool,
     isEditing: bool,
+    isExpanded: bool,
     isHolding: bool,
     isOver: bool,
     isSelected: bool,
@@ -98,28 +110,20 @@ class ListNode extends PureComponent {
     list: shape({
       id: number,
       parent: number,
-      name: string
+      name: string,
+      children: arrayOf(number)
     }),
 
     ds: func.isRequired,
     dt: func.isRequired,
     dtType: string,
-
-    onClick: func.isRequired,
-    onEditCancel: func,
-    onContextMenu: func,
-    onDropItems: func,
-    onDropFiles: func,
-    onSave: func,
-    onSort: func,
     onSortPreview: func,
-    onSortReset: func
+    onSortReset: func,
   }
 
   static defaultProps = {
     onClick: noop
   }
-
 }
 
 const DragSourceSpec = {
@@ -200,12 +204,9 @@ const DropTargetCollect = (connect, monitor) => ({
 })
 
 
-module.exports = {
-  ListNode:
-    DragSource(
-      DND.LIST, DragSourceSpec, DragSourceCollect)(
-        DropTarget(
-          [DND.LIST, DND.ITEMS, NativeTypes.FILE],
-          DropTargetSpec,
-          DropTargetCollect)(ListNode))
-}
+module.exports.ListNode =
+  DragSource(DND.LIST, DragSourceSpec, DragSourceCollect)(
+    DropTarget([
+      DND.LIST, DND.ITEMS, NativeTypes.FILE],
+        DropTargetSpec,
+        DropTargetCollect)(ListNode))
