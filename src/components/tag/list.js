@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const PropTypes = require('prop-types')
 const { arrayOf, bool, number, string, shape, object, func } = PropTypes
 const { Tag } = require('./tag')
@@ -9,7 +8,7 @@ const { get, noop } = require('../../common/util')
 const { match } = require('../../keymap')
 
 
-class TagList extends PureComponent {
+class TagList extends React.PureComponent {
 
   isEditing(tag) {
     return get(this.props.edit, ['id']) === tag.id
