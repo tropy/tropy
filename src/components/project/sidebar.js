@@ -226,16 +226,10 @@ class ProjectSidebar extends React.PureComponent {
 
   render() {
     const {
-      edit,
       project,
       onContextMenu,
       onEditCancel,
-      onItemImport,
-      onItemTagAdd,
-      onTagCreate,
-      onTagDelete,
-      onTagSave,
-      onTagSelect
+      onItemImport
     } = this.props
 
     let root = this.props.lists[this.props.root]
@@ -308,14 +302,12 @@ class ProjectSidebar extends React.PureComponent {
               <ProjectTags
                 keymap={this.props.keymap.TagList}
                 selection={this.props.tagSelection}
-                edit={edit.tag}
-                onEditCancel={onEditCancel}
-                onCreate={onTagCreate}
-                onDelete={onTagDelete}
-                onDropItems={onItemTagAdd}
-                onSave={onTagSave}
-                onSelect={onTagSelect}
-                onContextMenu={onContextMenu}/>
+                edit={this.props.edit.tag}
+                onEditCancel={this.props.onEditCancel}
+                onCreate={this.props.onTagCreate}
+                onDropItems={this.props.onItemTagAdd}
+                onSave={this.props.onTagSave}
+                onContextMenu={this.props.onContextMenu}/>
             </section>
 
           </SidebarBody>
@@ -339,7 +331,6 @@ class ProjectSidebar extends React.PureComponent {
     list: number,
     lists: object.isRequired,
     listwalk: arrayOf(number).isRequired,
-    onMaximize: func.isRequired,
     project: shape({
       file: string,
       name: string,
@@ -360,12 +351,12 @@ class ProjectSidebar extends React.PureComponent {
     onListItemsAdd: func.isRequired,
     onListMove: func.isRequired,
     onListSave: func.isRequired,
+    onMaximize: func.isRequired,
     onProjectEdit: func.isRequired,
     onProjectSave: func.isRequired,
     onResize: func.isRequired,
     onSelect: func.isRequired,
     onTagCreate: func.isRequired,
-    onTagDelete: func.isRequired,
     onTagSave: func.isRequired,
     onTagSelect: func.isRequired
   }

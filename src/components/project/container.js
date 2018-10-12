@@ -543,17 +543,9 @@ module.exports = {
         dispatch(actions.edit.cancel())
       },
 
-      onTagDelete(...args) {
-        dispatch(actions.tag.delete(...args))
-      },
-
       onTagSave(data, id) {
         dispatch(actions.tag.save({ ...data, id }))
         dispatch(actions.edit.cancel())
-      },
-
-      onTagSelect(...args) {
-        dispatch(actions.tag.select(...args))
       },
 
       onTemplateImport(files) {

@@ -1,14 +1,17 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { connect } = require('react-redux')
-const { arrayOf, func, number, object } = require('prop-types')
+const { arrayOf, func, number, object, string } = require('prop-types')
+const { FormattedMessage } = require('react-intl')
 const { TagList, Tag } = require('../tag')
 const { getAllTags } = require('../../selectors')
+const actions = require('../../actions')
 
-
-class ProjectTags extends PureComponent {
+class ProjectTags extends React.PureComponent {
+  get hasNewTag() {
+    return this.props.edit != null && this.props.edit.id == null
+  }
 
   handleContextMenu = (event, tag) => {
     this.props.onContextMenu(event, 'tag', {
@@ -21,46 +24,36 @@ class ProjectTags extends PureComponent {
     this.props.onDelete(tag.id)
   }
 
-  renderNewTag() {
-    const { edit, onCreate, onEditCancel } = this.props
-    const hasNewTag = (edit != null && edit.id == null)
-
-    return hasNewTag && (
-      <ol className="tag-list">
-        <Tag
-          tag={edit}
-          isEditing
-          onChange={onCreate}
-          onEditCancel={onEditCancel}/>
-      </ol>
-    )
-  }
-
   render() {
     return (
-      <nav className="project-tags">
-        <TagList
-          tags={this.props.tags}
-          keymap={this.props.keymap}
-          selection={this.props.selection}
-          edit={this.props.edit}
-          onCreate={this.props.onCreate}
-          onDropItems={this.props.onDropItems}
-          onEditCancel={this.props.onEditCancel}
-          onRemove={this.handleDelete}
-          onSave={this.props.onSave}
-          onSelect={this.props.onSelect}
-          onContextMenu={this.handleContextMenu}/>
-        {this.renderNewTag()}
-      </nav>
+      <section className="project-tags">
+        <h2><FormattedMessage id={this.props.title}/></h2>
+        <nav>
+          <TagList
+            tags={this.props.tags}
+            keymap={this.props.keymap}
+            selection={this.props.selection}
+            edit={this.props.edit}
+            onCreate={this.props.onCreate}
+            onDropItems={this.props.onDropItems}
+            onEditCancel={this.props.onEditCancel}
+            onRemove={this.handleDelete}
+            onSave={this.props.onSave}
+            onSelect={this.props.onSelect}
+            onContextMenu={this.handleContextMenu}/>
+          {this.hasNewTag &&
+            <NewTag
+              onChange={this.props.onCreate}
+              onEditCancel={this.props.onEditCancel}
+              tag={this.props.edit}/>}
+        </nav>
+      </section>
     )
   }
 
   static propTypes = {
     edit: object,
     keymap: object.isRequired,
-    selection: arrayOf(number).isRequired,
-    tags: arrayOf(object).isRequired,
     onContextMenu: func.isRequired,
     onCreate: func.isRequired,
     onDelete: func.isRequired,
@@ -68,13 +61,37 @@ class ProjectTags extends PureComponent {
     onEditCancel: func.isRequired,
     onSave: func.isRequired,
     onSelect: func.isRequired,
+    selection: arrayOf(number).isRequired,
+    tags: arrayOf(object).isRequired,
+    title: string.isRequired
+  }
+
+  static defaultProps = {
+    title: 'sidebar.tags'
   }
 }
 
-module.exports = {
-  ProjectTags: connect(
-    state => ({
-      tags: getAllTags(state)
-    })
-  )(ProjectTags)
-}
+const NewTag = (props) => (
+  <ol className="tag-list">
+    <Tag {...props} isEditing/>
+  </ol>
+)
+
+
+module.exports.ProjectTags = connect(
+  state => ({
+    keymap: state.keymap.TagList,
+    selection: state.nav.tags,
+    tags: getAllTags(state)
+  }),
+
+  dispatch => ({
+    onDelete(...args) {
+      dispatch(actions.tag.delete(...args))
+    },
+
+    onSelect(...args) {
+      dispatch(actions.tag.select(...args))
+    }
+  })
+)(ProjectTags)
