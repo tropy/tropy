@@ -2,30 +2,29 @@
 
 const React = require('react')
 const { injectIntl, intlShape } = require('react-intl')
-const { bool, func, string } = require('prop-types')
 const { IconSearch, IconXSmall } = require('../icons')
 const { Button } = require('../button')
 const { Input } = require('../input')
-const { TABS } = require('../../constants')
-const { blank } = require('../../common/util')
 const debounce = require('lodash.debounce')
+const { blank } = require('../../common/util')
+const { func, string } = require('prop-types')
 
 
-class SearchField extends React.PureComponent {
+class TagFilter extends React.Component {
   get placeholder() {
-    return this.props.intl.formatMessage({ id: 'toolbar.search.placeholder' })
+    return this.props.intl.formatMessage({ id: 'sidebar.tags.filter' })
   }
 
   handleCancel = () => {
     this.handleChange.cancel()
 
-    if (!blank(this.props.query)) {
-      this.props.onSearch('')
+    if (!blank(this.props.value)) {
+      this.props.onChange('')
     }
   }
 
-  handleChange = debounce(query => {
-    this.props.onSearch(query)
+  handleChange = debounce(filter => {
+    this.props.onChange(filter)
   }, 250)
 
   handleCommit = () => {
@@ -34,18 +33,16 @@ class SearchField extends React.PureComponent {
 
   render() {
     return (
-      <div className="search">
+      <div className="tag-filter">
         <IconSearch/>
         <Input
-          className="search-input form-control"
-          isDisabled={this.props.isDisabled}
-          tabIndex={TABS.SearchField}
-          value={this.props.query}
+          className="tag-filter-input form-control"
+          value={this.props.value}
           placeholder={this.placeholder}
           onCancel={this.handleCancel}
           onChange={this.handleChange}
           onCommit={this.handleCommit}/>
-        {!blank(this.props.query) &&
+        {!blank(this.props.value) &&
           <Button
             icon={<IconXSmall/>}
             onClick={this.handleCancel}/>}
@@ -55,12 +52,9 @@ class SearchField extends React.PureComponent {
 
   static propTypes = {
     intl: intlShape,
-    isDisabled: bool,
-    query: string.isRequired,
-    onSearch: func.isRequired
+    onChange: func.isRequired,
+    value: string.isRequired
   }
 }
 
-module.exports = {
-  SearchField: injectIntl(SearchField)
-}
+module.exports.TagFilter = injectIntl(TagFilter)

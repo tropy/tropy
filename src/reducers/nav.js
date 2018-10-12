@@ -17,6 +17,7 @@ const init = {
   ...reset,
   mode: PROJECT.MODE.PROJECT,
   query: '',
+  tagFilter: '',
   tags: [],
   sort: {},
   columns: [

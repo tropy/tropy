@@ -1,7 +1,9 @@
 en:
   sidebar:
     lists: Lists
-    tags: Tags
+    tags:
+      title: Tags
+      filter: Filter
     imports: Last Import
     trash: Deleted Items
   toolbar:
