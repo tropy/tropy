@@ -1,9 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { shape, number, string, bool, func } = PropTypes
+const { Highlight } = require('../completions')
 const { Editable } = require('../editable')
 const { IconTag, IconPlusCircles } = require('../icons')
 const { isMeta } = require('../../keymap')
@@ -13,16 +11,16 @@ const cx = require('classnames')
 const { DropTarget } = require('react-dnd')
 const { DND } = require('../../constants')
 const { pure } = require('../util')
+const { shape, number, string, bool, func } = require('prop-types')
 
 
-class Tag extends PureComponent {
+class Tag extends React.PureComponent {
   get classes() {
-    return {
-      tag: true,
+    return ['tag', {
       active: this.props.isSelected,
       mixed: !!this.props.tag.mixed,
       over: this.props.isOver,
-    }
+    }]
   }
 
   get color() {
@@ -69,7 +67,7 @@ class Tag extends PureComponent {
   }
 
   render() {
-    const { tag, isEditing, hasFocusIcon, onEditCancel } = this.props
+    let { tag, isEditing, hasFocusIcon, onEditCancel } = this.props
 
     return this.connect(
       <li
@@ -82,6 +80,8 @@ class Tag extends PureComponent {
         <IconTag className={this.color}/>
         <div className="name">
           <Editable
+            display={tag.matchData &&
+              <Highlight text={tag.name} matchData={tag.matchData}/>}
             value={tag.name}
             isRequired
             resize

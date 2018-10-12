@@ -20,7 +20,11 @@ const getProjectTags = memo(
   ({ nav }) => nav.tagFilter,
   (tags, filter) => (!filter) ?
     tags :
-    tags.filter(tag => match(tag.name, filter, /\b\w/g))
+    tags.reduce((ts, tag) => {
+      let m = match(tag.name, filter, /\b\w/g)
+      if (m) ts.push({ ...tag, matchData: m })
+      return ts
+    }, [])
 )
 
 const getItemTags = memo(

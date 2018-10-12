@@ -1,19 +1,17 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
-const { bool, func, number, oneOfType, string } = require('prop-types')
 const { Input } = require('./input')
 const { noop } = require('../common/util')
 const cx = require('classnames')
+const { bool, func, node, number, oneOfType, string } = require('prop-types')
 
 
-class Editable extends PureComponent {
+class Editable extends React.PureComponent {
   get classes() {
-    return {
-      editable: true,
+    return ['editable', {
       disabled: this.props.isDisabled
-    }
+    }]
   }
 
   get content() {
@@ -80,7 +78,7 @@ class Editable extends PureComponent {
   static propTypes = {
     autofocus: bool,
     getCompletions: func.isRequired,
-    display: string,
+    display: node,
     isActive: bool,
     isDisabled: bool,
     isRequired: bool,
