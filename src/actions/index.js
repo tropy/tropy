@@ -15,6 +15,7 @@ module.exports = {
   metadata: require('./metadata'),
   nav: require('./nav'),
   note: require('./note'),
+  notepad: require('./notepad'),
   ontology: require('./ontology'),
   photo: require('./photo'),
   plugin: require('./plugin'),

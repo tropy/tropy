@@ -13,6 +13,7 @@ module.exports = {
   ...require('./metadata'),
   ...require('./nav'),
   ...require('./notes'),
+  ...require('./notepad'),
   ...require('./ontology'),
   ...require('./photos'),
   ...require('./prefs'),

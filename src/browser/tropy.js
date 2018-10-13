@@ -439,17 +439,15 @@ class Tropy extends EventEmitter {
       this.dispatch(act.note.delete(target), win))
 
     this.on('app:toggle-line-wrap', (win, { target }) =>
-      this.dispatch(act.nav.update({
-        notepad: { [target.id]: { wrap: !target.wrap } }
+      this.dispatch(act.notepad.update({
+        [target.id]: { wrap: !target.wrap }
       }), win))
     this.on('app:toggle-line-numbers', (win, { target }) =>
-      this.dispatch(act.nav.update({
-        notepad: { [target.id]: { numbers: !target.numbers } }
+      this.dispatch(act.notepad.update({
+        [target.id]: { numbers: !target.numbers }
       }), win))
     this.on('app:writing-mode', (win, { id, mode }) =>
-      this.dispatch(act.nav.update({
-        notepad: { [id]: { mode  } }
-      }), win))
+      this.dispatch(act.notepad.update({ [id]: { mode  } }), win))
 
     this.on('app:toggle-menu-bar', win => {
       if (win.isMenuBarAutoHide()) {
