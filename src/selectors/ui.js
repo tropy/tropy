@@ -8,7 +8,7 @@ const { get } = require('../common/util')
 const rev = (a, b) => a < b ? 1 : b < a ? -1 : 0
 
 const getActiveImageProps = memo(
-  ({ ui }) => ui.image,
+  ({ nav }) => nav.image,
   ({ nav }) => nav.photo,
   ({ nav }) => nav.selection,
   (image, photo, selection) =>
@@ -34,7 +34,7 @@ const getExpandedPhotos = memo(
 )
 
 const getActiveNoteProps = memo(
-  ({ ui }) => ui.note,
+  ({ nav }) => nav.note,
   ({ nav }) => nav.note,
   (note, id) => note[id] || {}
 )

@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { connect } = require('react-redux')
 const { BufferedResizable } = require('../resizable')
 const { Esper } = require('../esper')
@@ -21,12 +20,12 @@ const {
 } = require('../../selectors')
 
 
-class ItemContainer extends PureComponent {
+class ItemContainer extends React.PureComponent {
   setNotePad = (notepad) => {
     this.notepad = notepad
   }
 
-  handleEsperChange = ({ photo, selection, ...ui }) => {
+  handleEsperChange = ({ photo, selection, image, ...ui }) => {
     this.props.onUiUpdate(ui)
 
     if (photo != null) {
@@ -35,6 +34,10 @@ class ItemContainer extends PureComponent {
 
     if (selection != null) {
       this.props.onSelectionSave(selection)
+    }
+
+    if (image != null) {
+      this.props.onViewSave(image)
     }
   }
 
@@ -138,6 +141,10 @@ module.exports = {
 
       onSelectionSave(...args) {
         dispatch(act.selection.save(...args))
+      },
+
+      onViewSave(image) {
+        dispatch(act.nav.update({ image }))
       }
     }), null, { withRef: true }
   )(ItemContainer)

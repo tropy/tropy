@@ -10,7 +10,6 @@ const init = {
     panel: false
   },
   note: {},
-  image: {},
   expand: {},
   panel: {
     slots: [

@@ -9,6 +9,7 @@ const {
 const init = {
   mode: PROJECT.MODE.PROJECT,
   items: [],
+  image: {},
   query: '',
   tags: [],
   sort: {},
@@ -28,7 +29,7 @@ module.exports = {
       case NAV.RESTORE:
         return merge(init, payload)
       case NAV.UPDATE:
-        return { ...state, ...payload }
+        return merge(state, payload)
 
       case NAV.SEARCH:
         return {
