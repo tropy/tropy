@@ -9,7 +9,6 @@ const {
 const init = {
   mode: PROJECT.MODE.PROJECT,
   items: [],
-  notepad: {},
   query: '',
   tags: [],
   sort: {},
