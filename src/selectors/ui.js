@@ -34,9 +34,9 @@ const getExpandedPhotos = memo(
 )
 
 const getActiveNoteProps = memo(
+  ({ nav }) => nav.notepad,
   ({ nav }) => nav.note,
-  ({ nav }) => nav.note,
-  (note, id) => note[id] || {}
+  (notepad, id) => notepad[id] || {}
 )
 
 module.exports = {

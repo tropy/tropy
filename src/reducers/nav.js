@@ -10,6 +10,7 @@ const init = {
   mode: PROJECT.MODE.PROJECT,
   items: [],
   image: {},
+  notepad: {},
   query: '',
   tags: [],
   sort: {},

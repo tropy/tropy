@@ -9,7 +9,6 @@ const init = {
     tool: ESPER.TOOL.PAN,
     panel: false
   },
-  note: {},
   expand: {},
   panel: {
     slots: [
