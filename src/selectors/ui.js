@@ -3,17 +3,8 @@
 const { createSelector: memo } = require('reselect')
 const { getVisiblePhotos } = require('./photos')
 const { seq, compose, map, keep } = require('transducers.js')
-const { get } = require('../common/util')
 
 const rev = (a, b) => a < b ? 1 : b < a ? -1 : 0
-
-const getActiveImageProps = memo(
-  ({ esper }) => esper.view,
-  ({ nav }) => nav.photo,
-  ({ nav }) => nav.selection,
-  (view, photo, selection) =>
-    get(view, [selection || photo]) || {}
-)
 
 const getExpandedPhotos = memo(
   ({ ui }) => ui.expand,
@@ -32,15 +23,6 @@ const getExpandedPhotos = memo(
     return expanded
   }
 )
-
-const getActiveNoteProps = memo(
-  ({ notepad }) => notepad,
-  ({ nav }) => nav.note,
-  (notepad, id) => notepad[id] || {}
-)
-
 module.exports = {
-  getActiveImageProps,
-  getActiveNoteProps,
   getExpandedPhotos
 }
