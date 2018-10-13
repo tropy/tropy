@@ -8,11 +8,11 @@ const { get } = require('../common/util')
 const rev = (a, b) => a < b ? 1 : b < a ? -1 : 0
 
 const getActiveImageProps = memo(
-  ({ nav }) => nav.image,
+  ({ esper }) => esper.view,
   ({ nav }) => nav.photo,
   ({ nav }) => nav.selection,
-  (image, photo, selection) =>
-    get(image, [selection || photo]) || {}
+  (view, photo, selection) =>
+    get(view, [selection || photo]) || {}
 )
 
 const getExpandedPhotos = memo(

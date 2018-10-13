@@ -25,17 +25,16 @@ class ItemContainer extends React.PureComponent {
     this.notepad = notepad
   }
 
-  handleEsperChange = ({ photo, selection, image, ...ui }) => {
-    this.props.onUiUpdate(ui)
-
+  handleEsperChange = ({ photo, selection, image, esper }) => {
+    if (esper != null) {
+      this.props.onUiUpdate({ esper })
+    }
     if (photo != null) {
       this.props.onPhotoSave(photo)
     }
-
     if (selection != null) {
       this.props.onSelectionSave(selection)
     }
-
     if (image != null) {
       this.props.onViewSave(image)
     }
@@ -143,8 +142,8 @@ module.exports = {
         dispatch(act.selection.save(...args))
       },
 
-      onViewSave(image) {
-        dispatch(act.nav.update({ image }))
+      onViewSave(view) {
+        dispatch(act.esper.update({ view }))
       }
     }), null, { withRef: true }
   )(ItemContainer)

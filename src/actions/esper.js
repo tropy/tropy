@@ -1,11 +1,11 @@
 'use strict'
 
-const { NOTEPAD } = require('../constants')
+const { ESPER } = require('../constants')
 
 module.exports = {
   restore(payload = {}, meta = {}) {
     return {
-      type: NOTEPAD.RESTORE,
+      type: ESPER.RESTORE,
       payload,
       meta
     }
@@ -13,9 +13,9 @@ module.exports = {
 
   update(payload = {}, meta = {}) {
     return {
-      type: NOTEPAD.UPDATE,
+      type: ESPER.UPDATE,
       payload,
-      meta: { throttle: true, ...meta }
+      meta: { throttle: true, log: 'silly', ...meta }
     }
   }
 }

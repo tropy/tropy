@@ -5,6 +5,7 @@ module.exports = {
   classes: require('./classes'),
   context: require('./context'),
   edit: require('./edit'),
+  esper: require('./esper'),
   flash: require('./flash'),
   history: require('./history'),
   imports: require('./imports'),
