@@ -25,6 +25,12 @@ module.exports = {
           ...state,
           expand: { ...state.expand, [payload]: true }
         }
+      case LIST.INSERT:
+        return {
+          ...state,
+          expand: { ...state.expand, [payload.parent]: true }
+        }
+
       default:
         return state
     }

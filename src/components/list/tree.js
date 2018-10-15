@@ -53,9 +53,9 @@ class ListTree extends React.Component {
     })
   }
 
-  hasNewListNode() {
-    let { edit, parent } = this.props
-    return edit && edit.id == null && edit.parent === parent.id
+  hasNewListNode(parent = this.props.parent.id) {
+    let { edit } = this.props
+    return edit && edit.id == null && edit.parent === parent
   }
 
   render() {
@@ -67,7 +67,7 @@ class ListTree extends React.Component {
             list={this.props.lists[id] || { id }}
             isSelected={this.isSelected(id)}
             isEditing={this.isEditing(id)}
-            isExpanded={this.isExpanded(id)}
+            isExpanded={this.isExpanded(id) || this.hasNewListNode(id)}
             isHolding={this.props.hold[id]}
             isSortable
             onSortPreview={this.handleSortPreview}
