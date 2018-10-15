@@ -50,7 +50,8 @@ class ListTree extends React.Component {
   }
 
   hasNewListNode() {
-    return get(this.props.edit, 'parent') === this.props.parent.id
+    let { edit, parent } = this.props
+    return edit && edit.id == null && edit.parent === parent.id
   }
 
   render() {
@@ -68,11 +69,10 @@ class ListTree extends React.Component {
             onSortReset={this.handleSortReset}
             onSort={this.handleSort}/>)}
         {this.hasNewListNode() &&
-          <lazy.ListNode
-            list={this.props.edit}
-            isEditing
-            onEditCancel={this.props.onEditCancel}
-            onListSave={this.props.onListSave}/>}
+          <lazy.NewListNode
+            parent={this.props.edit.parent}
+            onCancel={this.props.onEditCancel}
+            onSave={this.props.onListSave}/>}
       </ol>
     )
   }

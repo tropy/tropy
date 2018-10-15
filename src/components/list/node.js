@@ -14,6 +14,41 @@ const { has, noop, pick } = require('../../common/util')
 const { arrayOf, bool, func, number, shape, string } = require('prop-types')
 
 
+class NewListNode extends React.Component {
+  handleChange = (name) => {
+    this.props.onSave({ parent: this.props.parent, name })
+  }
+
+  render() {
+    return (
+      <li className="list new-list">
+        <IconFolder/>
+        <div className="name">
+          <Editable
+            isActive
+            isRequired
+            resize
+            value={this.props.name}
+            onCancel={this.props.onCancel}
+            onChange={this.handleChange}/>
+        </div>
+      </li>
+    )
+  }
+
+  static propTypes = {
+    parent: number.isRequired,
+    name: string.isRequired,
+    onCancel: func.isRequired,
+    onSave: func.isRequired
+  }
+
+  static defaultProps = {
+    name: ''
+  }
+}
+
+
 class ListNode extends React.Component {
   get classes() {
     return ['list', {
@@ -46,8 +81,7 @@ class ListNode extends React.Component {
   }
 
   handleChange = (name) => {
-    let { id, parent } = this.props.list
-    this.props.onListSave(id ? { id, name } : { parent, name })
+    this.props.onListSave({ id: this.props.list.id, name })
   }
 
   handleClick = (event) => {
@@ -203,6 +237,8 @@ const DropTargetCollect = (connect, monitor) => ({
   dtType: monitor.getItemType()
 })
 
+
+module.exports.NewListNode = NewListNode
 
 module.exports.ListNode =
   DragSource(DND.LIST, DragSourceSpec, DragSourceCollect)(
