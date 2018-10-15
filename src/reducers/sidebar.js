@@ -1,6 +1,6 @@
 'use strict'
 
-const { SIDEBAR } = require('../constants')
+const { LIST, SIDEBAR } = require('../constants')
 const { merge } = require('../common/util')
 
 const init = {
@@ -14,6 +14,17 @@ module.exports = {
         return merge(init, payload)
       case SIDEBAR.UPDATE:
         return merge(state, payload)
+
+      case LIST.COLLAPSE:
+        return {
+          ...state,
+          expand: { ...state.expand, [payload]: false }
+        }
+      case LIST.EXPAND:
+        return {
+          ...state,
+          expand: { ...state.expand, [payload]: true }
+        }
       default:
         return state
     }

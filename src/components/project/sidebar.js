@@ -264,6 +264,7 @@ class ProjectSidebar extends React.PureComponent {
                   parent={root}
                   lists={lists}
                   edit={edit.list}
+                  expand={this.props.expand}
                   hold={hold}
                   selection={selectedList}
                   onContextMenu={onContextMenu}
@@ -271,7 +272,9 @@ class ProjectSidebar extends React.PureComponent {
                   onDropItems={this.props.onListItemsAdd}
                   onClick={this.handleListClick}
                   onEditCancel={onEditCancel}
-                  onListSave={this.props.onListSave}
+                  onExpand={this.props.onListExpand}
+                  onCollapse={this.props.onListCollapse}
+                  onSave={this.props.onListSave}
                   onSort={this.props.onListSort}/>}
               <ol>
                 {hasLastImport &&
@@ -323,6 +326,7 @@ class ProjectSidebar extends React.PureComponent {
       items: number
     }).isRequired,
 
+    expand: object.isRequired,
     keymap: object.isRequired,
     activities: arrayOf(object).isRequired,
     edit: object.isRequired,
@@ -338,6 +342,8 @@ class ProjectSidebar extends React.PureComponent {
     onItemDelete: func.isRequired,
     onItemImport: func.isRequired,
     onItemTagAdd: func.isRequired,
+    onListCollapse: func.isRequired,
+    onListExpand: func.isRequired,
     onListItemsAdd: func.isRequired,
     onListSave: func.isRequired,
     onListSort: func.isRequired,
@@ -362,11 +368,20 @@ module.exports = {
   ProjectSidebar: connect(
     state => ({
       activities: getActivities(state),
+      expand: state.sidebar.expand,
       hasLastImport: state.imports.length > 0,
       lists: state.lists
     }),
 
     dispatch => ({
+      onListCollapse(...args) {
+        dispatch(actions.list.collapse(...args))
+      },
+
+      onListExpand(...args) {
+        dispatch(actions.list.expand(...args))
+      },
+
       onListItemsAdd({ list, items }) {
         dispatch(actions.list.items.add({
           id: list, items: items.map(item => item.id)

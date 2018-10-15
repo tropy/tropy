@@ -70,6 +70,23 @@ module.exports = {
     return { type: LIST.UPDATE, payload, meta }
   },
 
+  collapse(payload, meta = {}) {
+    return {
+      type: LIST.COLLAPSE,
+      payload,
+      meta
+    }
+  },
+
+  expand(payload, meta = {}) {
+    return {
+      type: LIST.EXPAND,
+      payload,
+      meta
+    }
+  },
+
+
   items: {
     add({ id, items }, meta) {
       return {

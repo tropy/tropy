@@ -18,6 +18,9 @@ module.exports = {
 
   ORDER: 'list.order',
 
+  COLLAPSE: 'list.collapse',
+  EXPAND: 'list.expand',
+
   ITEM: {
     ADD: 'list.item.add',
     REMOVE: 'list.item.remove',

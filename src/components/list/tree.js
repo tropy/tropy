@@ -28,6 +28,10 @@ class ListTree extends React.Component {
     return get(this.props.edit, ['id']) === id
   }
 
+  isExpanded(id) {
+    return this.props.expand[id]
+  }
+
   isSelected(id) {
     return this.props.selection === id
   }
@@ -63,6 +67,7 @@ class ListTree extends React.Component {
             list={this.props.lists[id] || { id }}
             isSelected={this.isSelected(id)}
             isEditing={this.isEditing(id)}
+            isExpanded={this.isExpanded(id)}
             isHolding={this.props.hold[id]}
             isSortable
             onSortPreview={this.handleSortPreview}
@@ -72,7 +77,7 @@ class ListTree extends React.Component {
           <lazy.NewListNode
             parent={this.props.edit.parent}
             onCancel={this.props.onEditCancel}
-            onSave={this.props.onListSave}/>}
+            onSave={this.props.onSave}/>}
       </ol>
     )
   }
@@ -85,14 +90,17 @@ class ListTree extends React.Component {
     lists: object.isRequired,
     hold: object.isRequired,
     edit: object,
+    expand: object.isRequired,
     selection: number,
     onClick: func.isRequired,
-    onEditCancel: func.isRequired,
+    onCollapse: func.isRequired,
+    onContextMenu: func.isRequired,
     onDropFiles: func.isRequired,
     onDropItems: func.isRequired,
-    onListSave: func.isRequired,
-    onSort: func.isRequired,
-    onContextMenu: func.isRequired
+    onEditCancel: func.isRequired,
+    onExpand: func.isRequired,
+    onSave: func.isRequired,
+    onSort: func.isRequired
   }
 }
 
