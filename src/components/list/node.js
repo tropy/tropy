@@ -4,7 +4,7 @@ const React = require('react')
 const { Editable } = require('../editable')
 const { IconFolder } = require('../icons')
 const { DragSource, DropTarget } = require('react-dnd')
-const { NativeTypes } = require('react-dnd-electron-backend')
+const { NativeTypes, getEmptyImage } = require('react-dnd-electron-backend')
 const { DND } = require('../../constants')
 const { bounds } = require('../../dom')
 const { isValidImage } = require('../../image')
@@ -50,6 +50,10 @@ class NewListNode extends React.Component {
 
 
 class ListNode extends React.Component {
+  componentDidMount() {
+    this.props.dp(getEmptyImage())
+  }
+
   get classes() {
     return ['list', {
       'active': this.props.isSelected,
@@ -149,6 +153,7 @@ class ListNode extends React.Component {
     }),
 
     ds: func.isRequired,
+    dp: func.isRequired,
     dt: func.isRequired,
     dtType: string,
     onSortPreview: func,
@@ -162,7 +167,7 @@ class ListNode extends React.Component {
 
 const DragSourceSpec = {
   beginDrag({ list }) {
-    return { id: list.id }
+    return { id: list.id, name: list.name }
   },
 
   endDrag({ onSort, onSortReset }, monitor) {
@@ -176,6 +181,7 @@ const DragSourceSpec = {
 
 const DragSourceCollect = (connect, monitor) => ({
   ds: connect.dragSource(),
+  dp: connect.dragPreview(),
   isDragging: monitor.isDragging()
 })
 
