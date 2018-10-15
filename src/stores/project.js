@@ -30,6 +30,7 @@ const {
   qr,
   selections,
   settings,
+  sidebar,
   tags,
   ui
 } = require('../reducers')
@@ -69,6 +70,7 @@ module.exports = {
       qr,
       selections,
       settings,
+      sidebar,
       tags,
       ui
     })

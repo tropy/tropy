@@ -27,6 +27,7 @@ module.exports = {
   SELECTION: require('./selection'),
   SETTINGS: require('./settings'),
   SHELL: require('./shell'),
+  SIDEBAR: require('./sidebar'),
   STORAGE: require('./storage'),
   TABS: require('./tabs'),
   TAG: require('./tag'),
