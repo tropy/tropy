@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
 const { IconMaze } = require('../icons')
@@ -11,7 +10,7 @@ const cx = require('classnames')
 const { bool, func, string } = require('prop-types')
 
 
-class ProjectName extends PureComponent {
+class ProjectName extends React.PureComponent {
   get classes() {
     return {
       'project-name': true,

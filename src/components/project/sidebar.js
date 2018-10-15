@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
+const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')
 const { ActivityPane } = require('../activity')
@@ -13,12 +13,18 @@ const { TABS, LIST } = require('../../constants')
 const { has } = require('../../common/util')
 const { match } = require('../../keymap')
 const { testFocusChange } = require('../../dom')
+const actions = require('../../actions')
+
 const {
   bool, shape, string, object, arrayOf, func, number
 } = require('prop-types')
 
+const {
+  getActivities
+} = require('../../selectors')
 
-class ProjectSidebar extends PureComponent {
+
+class ProjectSidebar extends React.PureComponent {
   get isEditing() {
     return has(this.props.edit, 'project')
   }
@@ -32,7 +38,7 @@ class ProjectSidebar extends PureComponent {
   }
 
   getRootList() {
-    return this.props.lists[LIST.ROOT]
+    return this.props.lists[this.props.root]
   }
 
   getFirstList() {
@@ -194,19 +200,12 @@ class ProjectSidebar extends PureComponent {
   }
 
 
-  showSidebarMenu = (event) => {
+  handleContextMenu = (event) => {
     this.props.onContextMenu(event, 'sidebar')
-  }
-
-  showProjectMenu = (event) => {
-    this.props.onContextMenu(
-      event, 'project', { path: this.props.project.file }
-    )
   }
 
   render() {
     const {
-      activities,
       edit,
       hasLastImport,
       hasToolbar,
@@ -223,10 +222,6 @@ class ProjectSidebar extends PureComponent {
       onEditCancel,
       onItemImport,
       onItemTagAdd,
-      onListItemsAdd,
-      onListSave,
-      onListSort,
-      onMaximize,
       onTagCreate,
       onTagDelete,
       onTagSave,
@@ -237,14 +232,17 @@ class ProjectSidebar extends PureComponent {
 
     return (
       <Sidebar>
-        {hasToolbar && <Toolbar onDoubleClick={onMaximize}/>}
-        <div className="sidebar-body" onContextMenu={this.showSidebarMenu}>
+        {hasToolbar &&
+          <Toolbar onDoubleClick={this.props.onMaximize}/>}
+        <div
+          className="sidebar-body"
+          onContextMenu={this.handleContextMenu}>
 
           <section
             tabIndex={this.tabIndex}
             onKeyDown={this.handleKeyDown}
             onMouseDown={this.handleMouseDown}>
-            <nav onContextMenu={this.showProjectMenu}>
+            <nav>
               <ol>
                 <ProjectName
                   name={project.name}
@@ -270,11 +268,11 @@ class ProjectSidebar extends PureComponent {
                   selection={selectedList}
                   onContextMenu={onContextMenu}
                   onDropFiles={onItemImport}
-                  onDropItems={onListItemsAdd}
+                  onDropItems={this.props.onListItemsAdd}
                   onClick={this.handleListClick}
                   onEditCancel={onEditCancel}
-                  onListSave={onListSave}
-                  onSort={onListSort}/>}
+                  onListSave={this.props.onListSave}
+                  onSort={this.props.onListSort}/>}
               <ol>
                 {hasLastImport &&
                   <LastImportListNode
@@ -305,7 +303,7 @@ class ProjectSidebar extends PureComponent {
           </section>
 
         </div>
-        <ActivityPane activities={activities}/>
+        <ActivityPane activities={this.props.activities}/>
       </Sidebar>
     )
   }
@@ -331,6 +329,7 @@ class ProjectSidebar extends PureComponent {
     lists: object.isRequired,
     selectedList: number,
     selectedTags: arrayOf(number).isRequired,
+    root: number.isRequired,
 
     onMaximize: func.isRequired,
     onEdit: func.isRequired,
@@ -351,7 +350,8 @@ class ProjectSidebar extends PureComponent {
   }
 
   static defaultProps = {
-    hasToolbar: ARGS.frameless
+    hasToolbar: ARGS.frameless,
+    root: LIST.ROOT
   }
 
   static props = Object.keys(ProjectSidebar.propTypes)
@@ -359,5 +359,28 @@ class ProjectSidebar extends PureComponent {
 
 
 module.exports = {
-  ProjectSidebar
+  ProjectSidebar: connect(
+    state => ({
+      activities: getActivities(state),
+      hasLastImport: state.imports.length > 0,
+      lists: state.lists
+    }),
+
+    dispatch => ({
+      onListItemsAdd({ list, items }) {
+        dispatch(actions.list.items.add({
+          id: list, items: items.map(item => item.id)
+        }))
+      },
+
+      onListSave(...args) {
+        dispatch(actions.list.save(...args))
+        dispatch(actions.edit.cancel())
+      },
+
+      onListSort(...args) {
+        dispatch(actions.list.order(...args))
+      }
+    })
+  )(ProjectSidebar)
 }
