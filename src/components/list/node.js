@@ -11,7 +11,7 @@ const { bounds } = require('../../dom')
 const { isValidImage } = require('../../image')
 const lazy = require('./tree')
 const cx = require('classnames')
-const { has, noop, pick } = require('../../common/util')
+const { noop } = require('../../common/util')
 
 const {
   arrayOf, bool, func, number, object, shape, string
@@ -25,16 +25,18 @@ class NewListNode extends React.Component {
 
   render() {
     return (
-      <li className="list new-list">
-        <IconFolder/>
-        <div className="name">
-          <Editable
-            isActive
-            isRequired
-            resize
-            value={this.props.name}
-            onCancel={this.props.onCancel}
-            onChange={this.handleChange}/>
+      <li className="list-node">
+        <div className="list new-list">
+          <IconFolder/>
+          <div className="name">
+            <Editable
+              isActive
+              isRequired
+              resize
+              value={this.props.name}
+              onCancel={this.props.onCancel}
+              onChange={this.handleChange}/>
+          </div>
         </div>
       </li>
     )
@@ -53,20 +55,17 @@ class NewListNode extends React.Component {
 }
 
 
-class ListNode extends React.Component {
+class ListNode extends React.PureComponent {
   componentDidMount() {
     this.props.dp(getEmptyImage())
   }
 
   get classes() {
-    return ['list', {
-      'active': this.props.isSelected,
-      'expandable': this.isExpandable,
-      'expanded': this.props.isExpanded,
-      'dragging': this.props.isDragging,
-      'drop-target': this.props.isSortable,
-      'holding': this.props.isHolding,
-      'over': this.isOver
+    return ['list-node', {
+      active: this.props.isSelected,
+      holding: this.props.isHolding,
+      expandable: this.isExpandable,
+      expanded: this.props.isExpanded
     }]
   }
 
@@ -76,55 +75,46 @@ class ListNode extends React.Component {
       this.props.dtType !== DND.LIST
   }
 
-  get hasChildren() {
-    return has(this.props.list, ['children'])
-  }
-
   get isExpandable() {
-    return this.hasChildren && this.props.list.children.length > 0
+    return this.props.list.children.length > 0
   }
 
   get isDraggable() {
     return !this.props.isEditing
   }
 
-  getListTreeProps(props = this.props) {
-    return pick(props, Object.keys(lazy.ListTree.propTypes))
-  }
-
   handleChange = (name) => {
     this.props.onSave({ id: this.props.list.id, name })
   }
 
-  handleClick = (event) => {
-    event.stopPropagation()
-    this.props.onClick(this.props.list)
+  handleClick = () => {
+    if (!this.props.isEditing) {
+      this.props.onClick(this.props.list)
+    }
   }
 
   handleContextMenu = (event) => {
-    if (!this.props.isSelected) {
-      this.props.onClick(this.props.list)
-    }
+    if (!this.props.isEditing) {
+      if (!this.props.isSelected) {
+        this.props.onClick(this.props.list)
+      }
 
-    this.props.onContextMenu(event, 'list', this.props.list.id)
+      this.props.onContextMenu(event, 'list', this.props.list.id)
+    }
   }
 
-  handleTwistyButtonClick = (event) => {
-    event.stopPropagation()
-
+  handleTwistyButtonClick = () => {
     if (this.props.isExpanded) this.collapse()
     else this.expand()
   }
-
 
   setContainer = (container) => {
     this.container = container
   }
 
   connect(element) {
-    if (this.props.isSortable) element = this.props.dt(element)
     if (this.isDraggable) element = this.props.ds(element)
-    return element
+    return this.props.dt(element)
   }
 
   collapse = () => {
@@ -135,31 +125,45 @@ class ListNode extends React.Component {
     this.props.onExpand(this.props.list.id)
   }
 
-  render() {
-    let { list, isEditing, onEditCancel } = this.props
-
+  renderNode() {
     return this.connect(
-      <li
-        className={cx(this.classes)}
+      <div
+        className={cx('drop-target', {
+          dragging: this.props.isDragging,
+          over: this.isOver
+        })}
         ref={this.setContainer}
-        onContextMenu={isEditing ? null : this.handleContextMenu}
-        onClick={isEditing ? null : this.handleClick}>
+        onContextMenu={this.handleContextMenu}
+        onClick={this.handleClick}>
         {this.isExpandable &&
-          <Button
-            icon={<IconChevron9/>}
-            onClick={this.handleTwistyButtonClick}/>}
+          <ListExpandButton onClick={
+              this.props.isExpanded ? this.collapse : this.expand
+          }/>}
         <IconFolder/>
         <div className="name">
           <Editable
-            value={list.name}
+            isActive={this.props.isEditing}
             isRequired
             resize
-            isActive={isEditing}
-            onCancel={onEditCancel}
+            value={this.props.list.name}
+            onCancel={this.props.onEditCancel}
             onChange={this.handleChange}/>
         </div>
-        {this.hasChildren && this.props.isExpanded &&
-          <lazy.ListTree {...this.getListTreeProps()} parent={list}/>}
+      </div>
+    )
+  }
+
+  renderSubTree(props = this.props) {
+    return props.isExpanded && (
+      <lazy.ListTree {...props} parent={props.list}/>
+    )
+  }
+
+  render() {
+    return (
+      <li className={cx(...this.classes)}>
+        {this.renderNode()}
+        {this.renderSubTree()}
       </li>
     )
   }
@@ -173,13 +177,12 @@ class ListNode extends React.Component {
     isHolding: bool,
     isOver: bool,
     isSelected: bool,
-    isSortable: bool,
     list: shape({
-      id: number,
-      parent: number,
-      name: string,
-      children: arrayOf(number)
-    }),
+      id: number.isRequired,
+      parent: number.isRequired,
+      name: string.isRequired,
+      children: arrayOf(number).isRequired
+    }).isRequired,
 
     ds: func.isRequired,
     dp: func.isRequired,
@@ -195,6 +198,10 @@ class ListNode extends React.Component {
     onClick: noop
   }
 }
+
+const ListExpandButton = (props) =>
+  <Button {...props} icon={<IconChevron9/>}/>
+
 
 const DragSourceSpec = {
   beginDrag({ list }) {

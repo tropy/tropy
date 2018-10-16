@@ -2,51 +2,34 @@
 
 const React = require('react')
 const lazy = require('./node')
-const { get, move } = require('../../common/util')
+const { get } = require('../../common/util')
 const { arrayOf, func, number, object, shape } = require('prop-types')
 
 
 class ListTree extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      order: [...props.parent.children]
-    }
-  }
-
-  componentWillReceiveProps(props) {
-    this.setState({
-      order: [...props.parent.children]
-    })
-  }
-
   isEditing(id) {
     return get(this.props.edit, ['id']) === id
   }
 
   isExpanded(id) {
-    return this.props.expand[id]
+    return this.props.expand[id] || this.hasNewListNode(id)
   }
 
   isSelected(id) {
     return this.props.selection === id
   }
 
-  handleSortPreview = (item, to, offset = 0) => {
-    this.setState({
-      order: move(this.state.order, item, to, offset)
-    })
+  handleSortPreview = () => {
   }
 
   handleSortReset = () => {
-    this.setState({ order: [...this.props.list.children] })
   }
 
   handleSort = () => {
-    this.props.onSort({
-      id: this.props.parent.id,
-      children: this.state.order
-    })
+    //this.props.onSort({
+    //  id: this.props.parent.id,
+    //  children: this.state.order
+    //})
   }
 
   hasNewListNode(parent = this.props.parent.id) {
@@ -54,18 +37,23 @@ class ListTree extends React.Component {
     return edit && edit.id == null && edit.parent === parent
   }
 
+  mapChildren(fn) {
+    return this.props.parent.children.map(id =>
+      (id in this.props.lists) && fn(this.props.lists[id])
+    )
+  }
+
   render() {
     return (
       <ol className="list-tree sortable" ref={this.setContainer}>
-        {this.state.order.map(id =>
+        {this.mapChildren(list =>
           <lazy.ListNode {...this.props}
-            key={id}
-            list={this.props.lists[id] || { id }}
-            isSelected={this.isSelected(id)}
-            isEditing={this.isEditing(id)}
-            isExpanded={this.isExpanded(id) || this.hasNewListNode(id)}
-            isHolding={this.props.hold[id]}
-            isSortable
+            key={list.id}
+            list={list}
+            isSelected={this.isSelected(list.id)}
+            isEditing={this.isEditing(list.id)}
+            isExpanded={this.isExpanded(list.id)}
+            isHolding={this.props.hold[list.id]}
             onSortPreview={this.handleSortPreview}
             onSortReset={this.handleSortReset}
             onSort={this.handleSort}/>)}
