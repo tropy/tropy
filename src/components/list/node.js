@@ -131,6 +131,12 @@ class ListNode extends React.PureComponent {
       element
   }
 
+  handleExpandButtonClick = (event) => {
+    event.stopPropagation()
+    if (this.props.isExpanded) this.collapse()
+    else this.expand()
+
+  }
   collapse = () => {
     this.props.onCollapse(this.props.list.id)
   }
@@ -149,9 +155,7 @@ class ListNode extends React.PureComponent {
         onContextMenu={this.handleContextMenu}
         onClick={this.handleClick}>
         {this.isExpandable &&
-          <ListExpandButton onClick={
-              this.props.isExpanded ? this.collapse : this.expand
-          }/>}
+          <ListExpandButton onClick={this.handleExpandButtonClick}/>}
         <IconFolder/>
         <div className="name">
           <Editable
