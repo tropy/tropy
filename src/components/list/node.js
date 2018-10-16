@@ -7,7 +7,7 @@ const { IconFolder, IconTriangle } = require('../icons')
 const { DragSource, DropTarget } = require('react-dnd')
 const { NativeTypes, getEmptyImage } = require('react-dnd-electron-backend')
 const { DND } = require('../../constants')
-//const { bounds } = require('../../dom')
+const { bounds } = require('../../dom')
 const { isValidImage } = require('../../image')
 const lazy = require('./tree')
 const cx = require('classnames')
@@ -56,6 +56,10 @@ class NewListNode extends React.Component {
 
 
 class ListNode extends React.PureComponent {
+  state = {
+    offset: null
+  }
+
   componentDidMount() {
     this.props.connectDragPreview(getEmptyImage())
   }
@@ -68,6 +72,11 @@ class ListNode extends React.PureComponent {
       expandable: this.isExpandable,
       expanded: this.props.isExpanded
     }]
+  }
+
+  get direction() {
+    return (this.state.offset == null) ?  null :
+      (this.state.offset > 0) ? 'after' : 'before'
   }
 
   get isOver() {
@@ -133,7 +142,9 @@ class ListNode extends React.PureComponent {
   renderNode() {
     return this.connectDropTarget(
       <div
-        className={cx('list-node-container', { over: this.isOver })}
+        className={cx('list-node-container', this.direction, {
+          over: this.isOver
+        })}
         ref={this.setContainer}
         onContextMenu={this.handleContextMenu}
         onClick={this.handleClick}>
@@ -219,25 +230,27 @@ const DragSourceCollect = (connect, monitor) => ({
 })
 
 const DropTargetSpec = {
-  //hover({ list, isDragging }, monitor, { container }) {
-  //  const type = monitor.getItemType()
-  //  const item = monitor.getItem()
+  hover(props, monitor, node) {
+    let type = monitor.getItemType()
+    //let item = monitor.getItem()
 
-  //  switch (type) {
-  //    case DND.LIST:
-  //      if (isDragging) break
+    switch (type) {
+      case DND.LIST: {
+        let { top, height } = bounds(node.container)
+        let { y } = monitor.getClientOffset()
+        let offset = (y - top) / height
 
-  //      var { top, height } = bounds(container)
-  //      var offset = Math.round((monitor.getClientOffset().y - top) / height)
-
-  //      //onSortPreview(item.id, list.id, offset)
-  //      break
-  //  }
-  //},
+        node.setState({
+          offset: offset < 0.33 ? 0 : offset > 0.67 ? 1 : null
+        })
+        break
+      }
+    }
+  },
 
   canDrop(props, monitor) {
-    const type = monitor.getItemType()
-    const item = monitor.getItem()
+    let type = monitor.getItemType()
+    let item = monitor.getItem()
 
     switch (type) {
       case NativeTypes.FILE:
@@ -247,26 +260,30 @@ const DropTargetSpec = {
     }
   },
 
-  drop({ list, onDropItems, onDropFiles }, monitor) {
-    const type = monitor.getItemType()
-    const item = monitor.getItem()
+  drop({ list, onDropItems, onDropFiles }, monitor, node) {
+    try {
+      let type = monitor.getItemType()
+      let item = monitor.getItem()
 
-    switch (type) {
-      case DND.LIST:
-        // move
-        break
-      case DND.ITEMS:
-        onDropItems({
-          list: list.id,
-          items: item.items
-        })
-        break
-      case NativeTypes.FILE:
-        onDropFiles({
-          list: list.id,
-          files: item.files.filter(isValidImage).map(file => file.path)
-        })
-        break
+      switch (type) {
+        case DND.LIST:
+          // move
+          break
+        case DND.ITEMS:
+          onDropItems({
+            list: list.id,
+            items: item.items
+          })
+          break
+        case NativeTypes.FILE:
+          onDropFiles({
+            list: list.id,
+            files: item.files.filter(isValidImage).map(file => file.path)
+          })
+          break
+      }
+    } finally {
+      node.setState({ offset: null })
     }
   }
 }
