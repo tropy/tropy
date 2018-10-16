@@ -26,7 +26,7 @@ class NewListNode extends React.Component {
   render() {
     return (
       <li className="list-node">
-        <div className="list new-list">
+        <div className="list new-list list-node-container">
           <IconFolder/>
           <div className="name">
             <Editable
