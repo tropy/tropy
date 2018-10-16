@@ -108,6 +108,7 @@
       }
 
       > .list-node-container {
+        // sass-lint:disable-block mixins-before-declarations
         display: flex;
         align-items: center;
         height: $line-height-large;
@@ -115,7 +116,7 @@
         position: relative;
 
         @include state("li.active", "li.over") {
-          @extend %list-active;
+          @extend %list-active; // sass-lint:disable-line space-around-operator
         }
 
         @include state("li.active") {
