@@ -133,7 +133,7 @@ class ListNode extends React.PureComponent {
   renderNode() {
     return this.connectDropTarget(
       <div
-        className={cx('drop-target', { over: this.isOver })}
+        className={cx('list-node-container', { over: this.isOver })}
         ref={this.setContainer}
         onContextMenu={this.handleContextMenu}
         onClick={this.handleClick}>
