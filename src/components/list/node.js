@@ -206,6 +206,7 @@ class ListNode extends React.PureComponent {
     onCollapse: func.isRequired,
     onExpand: func.isRequired,
     onMove: func.isRequired,
+    position: number.isRequired
   }
 
   static defaultProps = {
@@ -260,23 +261,33 @@ const DropTargetSpec = {
     }
   },
 
-  drop({ list, onDropItems, onDropFiles }, monitor, node) {
+  drop({ list, ...props }, monitor, node) {
     try {
       let type = monitor.getItemType()
       let item = monitor.getItem()
 
       switch (type) {
-        case DND.LIST:
-          // move
+        case DND.LIST: {
+          let { offset } = node.state
+          let nest = (offset == null || offset === 1 && props.isExpanded)
+          let meta = {
+            idx: nest ? 0 : props.position + offset
+          }
+
+          props.onMove({
+            list: item.id,
+            parent: nest ? list.id : list.parent
+          }, meta)
           break
+        }
         case DND.ITEMS:
-          onDropItems({
+          props.onDropItems({
             list: list.id,
             items: item.items
           })
           break
         case NativeTypes.FILE:
-          onDropFiles({
+          props.onDropFiles({
             list: list.id,
             files: item.files.filter(isValidImage).map(file => file.path)
           })

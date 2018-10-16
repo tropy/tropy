@@ -25,18 +25,20 @@ class ListTree extends React.Component {
   }
 
   mapChildren(fn) {
+    let idx = 0
     return this.props.parent.children.map(id =>
-      (id in this.props.lists) && fn(this.props.lists[id])
+      (id in this.props.lists) && fn(this.props.lists[id], idx++)
     )
   }
 
   render() {
     return (
       <ol className="list-tree" ref={this.setContainer}>
-        {this.mapChildren(list =>
+        {this.mapChildren((list, position) =>
           <lazy.ListNode {...this.props}
             key={list.id}
             list={list}
+            position={position}
             isSelected={this.isSelected(list.id)}
             isEditing={this.isEditing(list.id)}
             isExpanded={this.isExpanded(list.id)}
