@@ -7,7 +7,7 @@ const { IconFolder, IconChevron9 } = require('../icons')
 const { DragSource, DropTarget } = require('react-dnd')
 const { NativeTypes, getEmptyImage } = require('react-dnd-electron-backend')
 const { DND } = require('../../constants')
-const { bounds } = require('../../dom')
+//const { bounds } = require('../../dom')
 const { isValidImage } = require('../../image')
 const lazy = require('./tree')
 const cx = require('classnames')
@@ -57,12 +57,13 @@ class NewListNode extends React.Component {
 
 class ListNode extends React.PureComponent {
   componentDidMount() {
-    this.props.dp(getEmptyImage())
+    this.props.connectDragPreview(getEmptyImage())
   }
 
   get classes() {
     return ['list-node', {
       active: this.props.isSelected,
+      dragging: this.props.isDragging,
       holding: this.props.isHolding,
       expandable: this.isExpandable,
       expanded: this.props.isExpanded
@@ -70,17 +71,19 @@ class ListNode extends React.PureComponent {
   }
 
   get isOver() {
-    return this.props.isOver &&
-      this.props.canDrop &&
-      this.props.dtType !== DND.LIST
+    return this.props.isOver && this.props.canDrop
   }
 
   get isExpandable() {
     return this.props.list.children.length > 0
   }
 
-  get isDraggable() {
+  get isDragSource() {
     return !this.props.isEditing
+  }
+
+  get isDropTarget() {
+    return !(this.props.isDragging || this.props.isDraggingParent)
   }
 
   handleChange = (name) => {
@@ -103,18 +106,20 @@ class ListNode extends React.PureComponent {
     }
   }
 
-  handleTwistyButtonClick = () => {
-    if (this.props.isExpanded) this.collapse()
-    else this.expand()
-  }
-
   setContainer = (container) => {
     this.container = container
   }
 
-  connect(element) {
-    if (this.isDraggable) element = this.props.ds(element)
-    return this.props.dt(element)
+  connectDragSource(element) {
+    return (this.isDragSource) ?
+      this.props.connectDragSource(element) :
+      element
+  }
+
+  connectDropTarget(element) {
+    return (this.isDropTarget) ?
+      this.props.connectDropTarget(element) :
+      element
   }
 
   collapse = () => {
@@ -126,12 +131,9 @@ class ListNode extends React.PureComponent {
   }
 
   renderNode() {
-    return this.connect(
+    return this.connectDropTarget(
       <div
-        className={cx('drop-target', {
-          dragging: this.props.isDragging,
-          over: this.isOver
-        })}
+        className={cx('drop-target', { over: this.isOver })}
         ref={this.setContainer}
         onContextMenu={this.handleContextMenu}
         onClick={this.handleClick}>
@@ -155,12 +157,14 @@ class ListNode extends React.PureComponent {
 
   renderSubTree(props = this.props) {
     return props.isExpanded && (
-      <lazy.ListTree {...props} parent={props.list}/>
+      <lazy.ListTree {...props}
+        isDraggingParent={props.isDraggingParent || props.isDragging}
+        parent={props.list}/>
     )
   }
 
   render() {
-    return (
+    return this.props.connectDragSource(
       <li className={cx(...this.classes)}>
         {this.renderNode()}
         {this.renderSubTree()}
@@ -172,6 +176,7 @@ class ListNode extends React.PureComponent {
     canDrop: bool,
     expand: object.isRequired,
     isDragging: bool,
+    isDraggingParent: bool,
     isEditing: bool,
     isExpanded: bool,
     isHolding: bool,
@@ -184,14 +189,12 @@ class ListNode extends React.PureComponent {
       children: arrayOf(number).isRequired
     }).isRequired,
 
-    ds: func.isRequired,
-    dp: func.isRequired,
-    dt: func.isRequired,
-    dtType: string,
+    connectDragSource: func.isRequired,
+    connectDragPreview: func.isRequired,
+    connectDropTarget: func.isRequired,
     onCollapse: func.isRequired,
     onExpand: func.isRequired,
-    onSortPreview: func,
-    onSortReset: func,
+    onMove: func.isRequired,
   }
 
   static defaultProps = {
@@ -205,49 +208,40 @@ const ListExpandButton = (props) =>
 
 const DragSourceSpec = {
   beginDrag({ list }) {
-    return { id: list.id, name: list.name }
-  },
-
-  endDrag({ onSort, onSortReset }, monitor) {
-    if (monitor.didDrop()) {
-      onSort()
-    } else {
-      onSortReset()
-    }
+    return { ...list }
   }
 }
 
 const DragSourceCollect = (connect, monitor) => ({
-  ds: connect.dragSource(),
-  dp: connect.dragPreview(),
+  connectDragSource: connect.dragSource(),
+  connectDragPreview: connect.dragPreview(),
   isDragging: monitor.isDragging()
 })
 
 const DropTargetSpec = {
-  hover({ list, onSortPreview }, monitor, { container }) {
-    const type = monitor.getItemType()
-    const item = monitor.getItem()
+  //hover({ list, isDragging }, monitor, { container }) {
+  //  const type = monitor.getItemType()
+  //  const item = monitor.getItem()
 
-    switch (type) {
-      case DND.LIST:
-        if (item.id === list.id) break
+  //  switch (type) {
+  //    case DND.LIST:
+  //      if (isDragging) break
 
-        var { top, height } = bounds(container)
-        var offset = Math.round((monitor.getClientOffset().y - top) / height)
+  //      var { top, height } = bounds(container)
+  //      var offset = Math.round((monitor.getClientOffset().y - top) / height)
 
-        onSortPreview(item.id, list.id, offset)
-        break
-    }
-  },
+  //      //onSortPreview(item.id, list.id, offset)
+  //      break
+  //  }
+  //},
 
-  canDrop(_, monitor) {
+  canDrop(props, monitor) {
     const type = monitor.getItemType()
     const item = monitor.getItem()
 
     switch (type) {
       case NativeTypes.FILE:
         return !!item.types.find(t => isValidImage({ type: t }))
-
       default:
         return true
     }
@@ -258,12 +252,15 @@ const DropTargetSpec = {
     const item = monitor.getItem()
 
     switch (type) {
+      case DND.LIST:
+        // move
+        break
       case DND.ITEMS:
         onDropItems({
-          list: list.id, items: item.items
+          list: list.id,
+          items: item.items
         })
         break
-
       case NativeTypes.FILE:
         onDropFiles({
           list: list.id,
@@ -275,10 +272,9 @@ const DropTargetSpec = {
 }
 
 const DropTargetCollect = (connect, monitor) => ({
-  dt: connect.dropTarget(),
+  connectDropTarget: connect.dropTarget(),
   isOver: monitor.isOver(),
-  canDrop: monitor.canDrop(),
-  dtType: monitor.getItemType()
+  canDrop: monitor.canDrop()
 })
 
 

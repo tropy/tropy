@@ -266,8 +266,7 @@ class ProjectSidebar extends React.PureComponent {
                   onEditCancel={onEditCancel}
                   onExpand={this.props.onListExpand}
                   onCollapse={this.props.onListCollapse}
-                  onSave={this.props.onListSave}
-                  onSort={this.props.onListSort}/>}
+                  onMove={this.props.onListMove}/>}
               <ol>
                 {this.props.hasLastImport &&
                   <LastImportListNode
@@ -338,8 +337,8 @@ class ProjectSidebar extends React.PureComponent {
     onListCollapse: func.isRequired,
     onListExpand: func.isRequired,
     onListItemsAdd: func.isRequired,
+    onListMove: func.isRequired,
     onListSave: func.isRequired,
-    onListSort: func.isRequired,
     onTagCreate: func.isRequired,
     onTagDelete: func.isRequired,
     onTagSave: func.isRequired,
@@ -393,8 +392,8 @@ module.exports = {
         dispatch(actions.edit.cancel())
       },
 
-      onListSort(...args) {
-        dispatch(actions.list.order(...args))
+      onListMove(...args) {
+        dispatch(actions.list.move(...args))
       }
     })
   )(ProjectSidebar)

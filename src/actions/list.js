@@ -54,9 +54,9 @@ module.exports = {
     return { type: LIST.RESTORE, payload, meta: { cmd: 'project', ...meta } }
   },
 
-  order(payload, meta) {
+  move(payload, meta) {
     return {
-      type: LIST.ORDER,
+      type: LIST.MOVE,
       payload,
       meta: { cmd: 'project', history: 'add', ...meta }
     }

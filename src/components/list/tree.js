@@ -3,7 +3,7 @@
 const React = require('react')
 const lazy = require('./node')
 const { get } = require('../../common/util')
-const { arrayOf, func, number, object, shape } = require('prop-types')
+const { arrayOf, bool, func, number, object, shape } = require('prop-types')
 
 
 class ListTree extends React.Component {
@@ -19,19 +19,6 @@ class ListTree extends React.Component {
     return this.props.selection === id
   }
 
-  handleSortPreview = () => {
-  }
-
-  handleSortReset = () => {
-  }
-
-  handleSort = () => {
-    //this.props.onSort({
-    //  id: this.props.parent.id,
-    //  children: this.state.order
-    //})
-  }
-
   hasNewListNode(parent = this.props.parent.id) {
     let { edit } = this.props
     return edit && edit.id == null && edit.parent === parent
@@ -45,7 +32,7 @@ class ListTree extends React.Component {
 
   render() {
     return (
-      <ol className="list-tree sortable" ref={this.setContainer}>
+      <ol className="list-tree" ref={this.setContainer}>
         {this.mapChildren(list =>
           <lazy.ListNode {...this.props}
             key={list.id}
@@ -53,10 +40,7 @@ class ListTree extends React.Component {
             isSelected={this.isSelected(list.id)}
             isEditing={this.isEditing(list.id)}
             isExpanded={this.isExpanded(list.id)}
-            isHolding={this.props.hold[list.id]}
-            onSortPreview={this.handleSortPreview}
-            onSortReset={this.handleSortReset}
-            onSort={this.handleSort}/>)}
+            isHolding={this.props.hold[list.id]}/>)}
         {this.hasNewListNode() &&
           <lazy.NewListNode
             parent={this.props.edit.parent}
@@ -73,6 +57,7 @@ class ListTree extends React.Component {
     }).isRequired,
     lists: object.isRequired,
     hold: object.isRequired,
+    isDraggingParent: bool,
     edit: object,
     expand: object.isRequired,
     selection: number,
@@ -83,7 +68,7 @@ class ListTree extends React.Component {
     onDropItems: func.isRequired,
     onEditCancel: func.isRequired,
     onExpand: func.isRequired,
-    onSave: func.isRequired,
+    onMove: func.isRequired,
     onSort: func.isRequired
   }
 }

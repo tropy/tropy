@@ -3,17 +3,14 @@
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { splice } = require('../common/util')
-
-const {
-  CREATE, DELETE, LOAD, RESTORE, ORDER, SAVE, ITEM
-} = require('../constants/list')
+const { LIST } = require('../constants')
 
 const actions = require('../actions/list')
 const mod = require('../models/list')
 
 
 class Load extends Command {
-  static get ACTION() { return LOAD }
+  static get ACTION() { return LIST.LOAD }
 
   *exec() {
     const { db } = this.options
@@ -23,7 +20,7 @@ class Load extends Command {
 
 
 class Create extends Command {
-  static get ACTION() { return CREATE }
+  static get ACTION() { return LIST.CREATE }
 
   *exec() {
     const { payload } = this.action
@@ -45,7 +42,7 @@ class Create extends Command {
 }
 
 class Save extends Command {
-  static get ACTION() { return SAVE }
+  static get ACTION() { return LIST.SAVE }
 
   *exec() {
     const { payload } = this.action
@@ -68,7 +65,7 @@ class Save extends Command {
 
 
 class Delete extends Command {
-  static get ACTION() { return DELETE }
+  static get ACTION() { return LIST.DELETE }
 
   *exec() {
     const { payload: id } = this.action
@@ -96,7 +93,7 @@ class Delete extends Command {
 
 
 class Restore extends Command {
-  static get ACTION() { return RESTORE }
+  static get ACTION() { return LIST.RESTORE }
 
   *exec() {
     const { db } = this.options
@@ -117,24 +114,24 @@ class Restore extends Command {
   }
 }
 
-class Order extends Command {
-  static get ACTION() { return ORDER }
+class Move extends Command {
+  static get ACTION() { return LIST.MOVE }
 
   *exec() {
-    const { db } = this.options
-    const { id, children } = this.action.payload
+    //let { db } = this.options
+    //let { id, children } = this.action.payload
 
-    const original = yield select(state => state.lists[id].children)
+    //let original = yield select(state => state.lists[id].children)
 
-    yield call(mod.order, db, id, children)
-    yield put(actions.update({ id, children }))
+    //yield call(mod.order, db, id, children)
+    //yield put(actions.update({ id, children }))
 
-    this.undo = actions.order({ id, children: original })
+    //this.undo = actions.move({ id, children: original })
   }
 }
 
 class AddItems extends Command {
-  static get ACTION() { return ITEM.ADD }
+  static get ACTION() { return LIST.ITEM.ADD }
 
   *exec() {
     const { db } = this.options
@@ -151,7 +148,7 @@ class AddItems extends Command {
 }
 
 class RemoveItems extends Command {
-  static get ACTION() { return ITEM.REMOVE }
+  static get ACTION() { return LIST.ITEM.REMOVE }
 
   *exec() {
     const { db } = this.options
@@ -166,7 +163,7 @@ class RemoveItems extends Command {
 }
 
 class RestoreItems extends Command {
-  static get ACTION() { return ITEM.RESTORE }
+  static get ACTION() { return LIST.ITEM.RESTORE }
 
   *exec() {
     const { db } = this.options
@@ -187,7 +184,7 @@ module.exports = {
   Load,
   Restore,
   Save,
-  Order,
+  Move,
   AddItems,
   RemoveItems,
   RestoreItems
