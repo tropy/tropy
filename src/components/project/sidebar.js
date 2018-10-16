@@ -222,6 +222,8 @@ class ProjectSidebar extends React.PureComponent {
       onTagSelect
     } = this.props
 
+    let root = this.props.lists[this.props.root]
+
     return (
       <Sidebar>
         {this.props.hasToolbar &&
@@ -251,9 +253,9 @@ class ProjectSidebar extends React.PureComponent {
               <FormattedMessage id="sidebar.lists"/>
             </h3>
             <nav>
-              {!this.isListEmpty() &&
+              {root &&
                 <ListTree
-                  parent={this.props.lists[this.props.root]}
+                  parent={root}
                   lists={this.props.lists}
                   edit={this.props.edit.list}
                   expand={this.props.expand}
