@@ -44,10 +44,6 @@ class ProjectSidebar extends React.PureComponent {
     return (this.props.isActive) ? TABS.ProjectSidebar : null
   }
 
-  getRootList() {
-    return this.props.lists[this.props.root]
-  }
-
   getFirstList() {
     return this.props.listwalk[0]
   }
@@ -120,6 +116,18 @@ class ProjectSidebar extends React.PureComponent {
     }
   }
 
+  collapse() {
+    if (this.props.listSelection != null) {
+      this.props.onListCollapse(this.props.listSelection)
+    }
+  }
+
+  expand() {
+    if (this.props.listSelection != null) {
+      this.props.onListExpand(this.props.listSelection)
+    }
+  }
+
   handleSelect() {
     this.props.onSelect({ list: null, trash: null }, { throttle: true })
   }
@@ -182,6 +190,12 @@ class ProjectSidebar extends React.PureComponent {
       case 'clear':
         this.handleSelect()
         break
+      case 'expand':
+        this.expand()
+        break
+      case 'collapse':
+        this.collapse()
+        break
       default:
         return
     }
@@ -207,8 +221,6 @@ class ProjectSidebar extends React.PureComponent {
       onTagSave,
       onTagSelect
     } = this.props
-
-    let root = this.getRootList()
 
     return (
       <Sidebar>
@@ -239,9 +251,9 @@ class ProjectSidebar extends React.PureComponent {
               <FormattedMessage id="sidebar.lists"/>
             </h3>
             <nav>
-              {root &&
+              {!this.isListEmpty() &&
                 <ListTree
-                  parent={root}
+                  parent={this.props.lists[this.props.root]}
                   lists={this.props.lists}
                   edit={this.props.edit.list}
                   expand={this.props.expand}
@@ -347,7 +359,7 @@ class ProjectSidebar extends React.PureComponent {
 
 module.exports = {
   ProjectSidebar: connect(
-    (state, props) => ({
+    (state, { root }) => ({
       activities: getActivities(state),
       edit: state.edit,
       expand: state.sidebar.expand,
@@ -357,7 +369,7 @@ module.exports = {
       keymap: state.keymap,
       lists: state.lists,
       listSelection: state.nav.list,
-      listwalk: getListSubTree(state, props),
+      listwalk: getListSubTree(state, { root: root || LIST.ROOT }),
       tagSelection: state.nav.tags
     }),
 

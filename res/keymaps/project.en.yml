@@ -36,6 +36,8 @@ en:
     Sidebar: &Sidebar
       next: ArrowDown
       prev: ArrowUp
+      expand: ArrowRight
+      collapse: ArrowLeft
       clear: Escape
     ItemIterator: &ItemIterator
       up:
