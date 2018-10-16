@@ -46,6 +46,8 @@
 
   nav {
     li {
+      position: relative;
+
       &.over {
         @extend %drop-target;
         background: transparent; // Remove background from %list-active
@@ -105,26 +107,26 @@
         }
       }
 
-      .list-node-container {
+      > .list-node-container {
         display: flex;
         align-items: center;
         height: $line-height-large;
         padding-right: $default-padding-horizontal;
         position: relative;
-      }
 
-      &.active,
-      &.over {
-        > .list-node-container {
+        @include state("li.active", "li.over") {
           @extend %list-active;
         }
-      }
 
-      &.active {
-        > .list-node-container {
+        @include state("li.active") {
           @include state("#sidebar :focus") {
             @extend %list-focus; // sass-lint:disable-line space-around-operator
           }
+        }
+
+        &.over {
+          @extend %drop-target;
+          background: transparent; // Remove background from %list-active
         }
       }
     }
