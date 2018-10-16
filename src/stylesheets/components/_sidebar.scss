@@ -145,7 +145,7 @@
   }
 
   @for $i from 1 through $list-tree-max-levels {
-    $sel: if($i == 1, ".list-tree", selector-nest($sel, ".list-tree"));
+    $sel: if($i == 1, "ol", selector-nest($sel, "ol"));
 
     #{$sel} {
     	.list-node-container {

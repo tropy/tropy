@@ -22,15 +22,17 @@ class ProjectName extends React.PureComponent {
   render() {
     return this.props.dt(
       <li className={cx(this.classes)} onClick={this.props.onClick}>
-        <IconMaze/>
-        <div className="name">
-          <Editable
-            value={this.props.name}
-            isRequired
-            resize
-            isActive={this.props.isEditing}
-            onCancel={this.props.onEditCancel}
-            onChange={this.props.onChange}/>
+        <div className="list-node-container">
+          <IconMaze/>
+          <div className="name">
+            <Editable
+              value={this.props.name}
+              isRequired
+              resize
+              isActive={this.props.isEditing}
+              onCancel={this.props.onEditCancel}
+              onChange={this.props.onChange}/>
+          </div>
         </div>
       </li>
     )
