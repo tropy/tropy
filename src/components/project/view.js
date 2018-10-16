@@ -11,7 +11,7 @@ const { ProjectToolbar } = require('./toolbar')
 const { isValidImage } = require('../../image')
 const { pick, } = require('../../common/util')
 const { array, bool, func, object, number } = require('prop-types')
-const { ITEM, SIDEBAR } = require('../../constants/sass')
+const { LIST, SASS: { ITEM, SIDEBAR } } = require('../../constants')
 
 
 class ProjectView extends Component {
@@ -86,13 +86,7 @@ class ProjectView extends Component {
           max={SIDEBAR.MAX_WIDTH}
           onChange={this.handleSidebarResize}>
           <ProjectSidebar {...pick(props, ProjectSidebar.props)}
-            edit={edit}
-            keymap={keymap}
-            selectedList={nav.list}
-            selectedTags={nav.tags}
-            isSelected={!(nav.list || nav.trash || nav.imports)}
-            isLastImportSelected={nav.imports}
-            isTrashSelected={nav.trash}/>
+            root={LIST.ROOT}/>
         </BufferedResizable>
         <div className="main">
           <section id="items" style={this.style}>

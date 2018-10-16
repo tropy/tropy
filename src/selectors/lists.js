@@ -1,8 +1,7 @@
 'use strict'
 
-const {
-  createSelector: memo
-} = require('reselect')
+const { get } = require('../common/util')
+const { createSelector: memo } = require('reselect')
 
 function *flatten(children, lists, expand) {
   for (let id of children) {
@@ -14,11 +13,11 @@ function *flatten(children, lists, expand) {
 }
 
 const getListSubTree = memo(
-  ({ lists }, { root }) => lists[root],
+  ({ lists }, { root }) => get(lists, [root, 'children'], []),
   ({ lists }) => lists,
   ({ sidebar }) => sidebar.expand,
-  (root, lists, expand) => [
-    ...flatten(root.children, lists, expand)
+  (children, lists, expand) => [
+    ...flatten(children, lists, expand)
   ]
 )
 

@@ -10,7 +10,7 @@ const { ProjectTags } = require('./tags')
 const { Sidebar } = require('../sidebar')
 const { ProjectName } = require('./name')
 const { TABS, LIST } = require('../../constants')
-const { has } = require('../../common/util')
+const { has, last } = require('../../common/util')
 const { match } = require('../../keymap')
 const { testFocusChange } = require('../../dom')
 const actions = require('../../actions')
@@ -20,7 +20,8 @@ const {
 } = require('prop-types')
 
 const {
-  getActivities
+  getActivities,
+  getListSubTree
 } = require('../../selectors')
 
 
@@ -30,7 +31,13 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   get hasActiveFilters() {
-    return this.props.selectedTags.length > 0
+    return this.props.tagSelection.length > 0
+  }
+
+  get hasSelection() {
+    return this.props.listSelection != null ||
+      this.props.isTrashSelected ||
+      this.props.isLastImportSelected && this.props.hasLastImport
   }
 
   get tabIndex() {
@@ -42,13 +49,11 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   getFirstList() {
-    const root = this.getRootList()
-    return root && root.children[0]
+    return this.props.listwalk[0]
   }
 
   getLastList() {
-    const root = this.getRootList()
-    return root && root.children[root.children.length - 1]
+    return last(this.props.listwalk)
   }
 
   getNextList() {
@@ -60,44 +65,35 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   getListAt(offset = 1) {
-    const root = this.getRootList()
-    const list = this.props.selectedList
+    let list = this.props.listSelection
+    let walk = this.props.listwalk
 
-    if (!root || !list) return
-
-    const idx = root.children.indexOf(list)
-
+    let idx = walk.indexOf(list)
     if (idx < 0) return
 
-    return root.children[idx + offset]
+    return walk[idx + offset]
   }
 
   isListSelected(list) {
-    return list && list === this.props.selectedList
+    return list && list === this.props.listSelection
   }
 
   isListEmpty() {
-    const root = this.getRootList()
-    return root.children.length === 0
+    return this.props.listwalk.length === 0
   }
 
-
   next() {
-    const {
-      isSelected, isTrashSelected, hasLastImport, isLastImportSelected
-    } = this.props
-
     switch (true) {
-      case isTrashSelected:
+      case this.props.isTrashSelected:
         return
-      case isLastImportSelected:
+      case this.props.isLastImportSelected:
         return this.handleTrashSelect()
       case this.isListEmpty():
       case this.isListSelected(this.getLastList()):
-        return hasLastImport ?
+        return this.props.hasLastImport ?
           this.handleLastImportSelect() :
           this.handleTrashSelect()
-      case isSelected:
+      case !this.hasSelection:
         return this.handleListSelect(this.getFirstList())
       default:
         return this.handleListSelect(this.getNextList())
@@ -105,22 +101,18 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   prev() {
-    const {
-      isSelected, isTrashSelected, hasLastImport, isLastImportSelected
-    } = this.props
-
     switch (true) {
-      case isSelected:
+      case !this.hasSelection:
         return
-      case isTrashSelected && hasLastImport:
+      case this.props.isTrashSelected && this.props.hasLastImport:
         return this.handleLastImportSelect()
       case this.isListEmpty():
       case this.isListSelected(this.getFirstList()):
         return this.handleSelect()
-      case isLastImportSelected:
+      case this.props.isLastImportSelected:
         return this.handleListSelect(this.getLastList())
-      case isTrashSelected:
-        return hasLastImport ?
+      case this.props.isTrashSelected:
+        return this.props.hasLastImport ?
           this.handleLastImportSelect() :
           this.handleListSelect(this.getLastList())
       default:
@@ -132,13 +124,12 @@ class ProjectSidebar extends React.PureComponent {
     this.props.onSelect({ list: null, trash: null }, { throttle: true })
   }
 
-
   handleMouseDown = () => {
     this.hasFocusChanged = testFocusChange()
   }
 
   handleClick = () => {
-    if (!this.props.isSelected || this.hasActiveFilters) {
+    if (this.hasSelection || this.hasActiveFilters) {
       return this.handleSelect()
     }
 
@@ -199,7 +190,6 @@ class ProjectSidebar extends React.PureComponent {
     event.stopPropagation()
   }
 
-
   handleContextMenu = (event) => {
     this.props.onContextMenu(event, 'sidebar')
   }
@@ -207,17 +197,7 @@ class ProjectSidebar extends React.PureComponent {
   render() {
     const {
       edit,
-      hasLastImport,
-      hasToolbar,
-      hold,
-      isSelected,
-      isLastImportSelected,
-      isTrashSelected,
-      keymap,
-      lists,
       project,
-      selectedList,
-      selectedTags,
       onContextMenu,
       onEditCancel,
       onItemImport,
@@ -228,11 +208,11 @@ class ProjectSidebar extends React.PureComponent {
       onTagSelect
     } = this.props
 
-    const root = this.getRootList()
+    let root = this.getRootList()
 
     return (
       <Sidebar>
-        {hasToolbar &&
+        {this.props.hasToolbar &&
           <Toolbar onDoubleClick={this.props.onMaximize}/>}
         <div
           className="sidebar-body"
@@ -246,7 +226,7 @@ class ProjectSidebar extends React.PureComponent {
               <ol>
                 <ProjectName
                   name={project.name}
-                  isSelected={isSelected}
+                  isSelected={!this.hasSelection}
                   isEditing={this.isEditing}
                   onChange={this.handleChange}
                   onClick={this.handleClick}
@@ -262,11 +242,11 @@ class ProjectSidebar extends React.PureComponent {
               {root &&
                 <ListTree
                   parent={root}
-                  lists={lists}
-                  edit={edit.list}
+                  lists={this.props.lists}
+                  edit={this.props.edit.list}
                   expand={this.props.expand}
-                  hold={hold}
-                  selection={selectedList}
+                  hold={this.props.hold}
+                  selection={this.props.listSelection}
                   onContextMenu={onContextMenu}
                   onDropFiles={onItemImport}
                   onDropItems={this.props.onListItemsAdd}
@@ -277,12 +257,12 @@ class ProjectSidebar extends React.PureComponent {
                   onSave={this.props.onListSave}
                   onSort={this.props.onListSort}/>}
               <ol>
-                {hasLastImport &&
+                {this.props.hasLastImport &&
                   <LastImportListNode
-                    isSelected={isLastImportSelected}
+                    isSelected={this.props.isLastImportSelected}
                     onClick={this.handleLastImportSelect}/>}
                 <TrashListNode
-                  isSelected={isTrashSelected}
+                  isSelected={this.props.isTrashSelected}
                   onContextMenu={onContextMenu}
                   onDropItems={this.handleTrashDropItems}
                   onClick={this.handleTrashSelect}/>
@@ -293,8 +273,8 @@ class ProjectSidebar extends React.PureComponent {
           <section>
             <h2><FormattedMessage id="sidebar.tags"/></h2>
             <ProjectTags
-              keymap={keymap.TagList}
-              selection={selectedTags}
+              keymap={this.props.keymap.TagList}
+              selection={this.props.tagSelection}
               edit={edit.tag}
               onEditCancel={onEditCancel}
               onCreate={onTagCreate}
@@ -312,8 +292,8 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   static propTypes = {
+    hasSelection: bool,
     isActive: bool,
-    isSelected: bool,
     isLastImportSelected: bool,
     isTrashSelected: bool,
     hasLastImport: bool.isRequired,
@@ -331,9 +311,10 @@ class ProjectSidebar extends React.PureComponent {
     activities: arrayOf(object).isRequired,
     edit: object.isRequired,
     lists: object.isRequired,
-    selectedList: number,
-    selectedTags: arrayOf(number).isRequired,
+    listwalk: arrayOf(number).isRequired,
+    listSelection: number,
     root: number.isRequired,
+    tagSelection: arrayOf(number).isRequired,
 
     onMaximize: func.isRequired,
     onEdit: func.isRequired,
@@ -366,14 +347,21 @@ class ProjectSidebar extends React.PureComponent {
 
 module.exports = {
   ProjectSidebar: connect(
-    state => ({
+    (state, props) => ({
       activities: getActivities(state),
+      edit: state.edit,
       expand: state.sidebar.expand,
       hasLastImport: state.imports.length > 0,
-      lists: state.lists
+      isLastImportSelected: state.nav.imports,
+      isTrashSelected: state.nav.trash,
+      keymap: state.keymap,
+      lists: state.lists,
+      listSelection: state.nav.list,
+      listwalk: getListSubTree(state, props),
+      tagSelection: state.nav.tags
     }),
 
-    dispatch => ({
+    (dispatch) => ({
       onListCollapse(...args) {
         dispatch(actions.list.collapse(...args))
       },

@@ -10,17 +10,13 @@ class ListTree extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      order: get(props.parent, ['children'], [])
+      order: [...props.parent.children]
     }
-  }
-
-  get order() {
-    return get(this.props.parent, ['children'], [])
   }
 
   componentWillReceiveProps(props) {
     this.setState({
-      order: get(props.parent, ['children'], [])
+      order: [...props.parent.children]
     })
   }
 
@@ -43,7 +39,7 @@ class ListTree extends React.Component {
   }
 
   handleSortReset = () => {
-    this.setState({ order: this.order })
+    this.setState({ order: [...this.props.list.children] })
   }
 
   handleSort = () => {
@@ -85,7 +81,7 @@ class ListTree extends React.Component {
   static propTypes = {
     parent: shape({
       id: number.isRequired,
-      children: arrayOf(number)
+      children: arrayOf(number).isRequired
     }).isRequired,
     lists: object.isRequired,
     hold: object.isRequired,

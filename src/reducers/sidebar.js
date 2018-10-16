@@ -4,7 +4,7 @@ const { LIST, SIDEBAR } = require('../constants')
 const { merge } = require('../common/util')
 
 const init = {
-  expand: {}
+  expand: { 0: true }
 }
 
 module.exports = {
