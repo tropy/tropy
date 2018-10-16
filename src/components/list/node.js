@@ -3,7 +3,7 @@
 const React = require('react')
 const { Button } = require('../button')
 const { Editable } = require('../editable')
-const { IconFolder, IconChevron9 } = require('../icons')
+const { IconFolder, IconTriangle } = require('../icons')
 const { DragSource, DropTarget } = require('react-dnd')
 const { NativeTypes, getEmptyImage } = require('react-dnd-electron-backend')
 const { DND } = require('../../constants')
@@ -203,7 +203,7 @@ class ListNode extends React.PureComponent {
 }
 
 const ListExpandButton = (props) =>
-  <Button {...props} icon={<IconChevron9/>}/>
+  <Button {...props} icon={<IconTriangle/>}/>
 
 
 const DragSourceSpec = {

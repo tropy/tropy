@@ -25,11 +25,23 @@
   h2,
   h3 {
     color: $sidebar-headings-color;
-    padding: 0 $default-padding-horizontal;
+    padding: 0 $default-padding-horizontal 0 $list-tree-padding-left;
   }
 
   .icon {
     margin-right: $space-xs;
+  }
+
+  .btn-icon {
+    padding: 0;
+
+    .icon {
+      margin-right: 0;
+    }
+  }
+
+  .icon-triangle {
+    margin-left: -$space-md;
   }
 
   nav {
@@ -97,7 +109,7 @@
         display: flex;
         align-items: center;
         height: $line-height-large;
-        padding: 0 $default-padding-horizontal;
+        padding-right: $default-padding-horizontal;
         position: relative;
       }
 
@@ -129,6 +141,19 @@
       span {
         @include css-truncation;
       }
+    }
+  }
+
+  @for $i from 1 through $list-tree-max-levels {
+    $sel: if($i == 1, ".list-tree", selector-nest($sel, ".list-tree"));
+
+    #{$sel} {
+    	.list-node-container {
+    		padding-left:
+    			$list-tree-padding-left
+    				+ $list-tree-indent
+    				* ($i - 1);
+    	}
     }
   }
 }
