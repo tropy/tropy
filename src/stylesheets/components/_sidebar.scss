@@ -111,7 +111,7 @@
       &.active {
         > .list-node-container {
           @include state("#sidebar :focus") {
-            @extend %list-focus;
+            @extend %list-focus; // sass-lint:disable-line space-around-operator
           }
         }
       }
