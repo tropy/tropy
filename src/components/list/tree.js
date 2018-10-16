@@ -69,7 +69,7 @@ class ListTree extends React.Component {
     onEditCancel: func.isRequired,
     onExpand: func.isRequired,
     onMove: func.isRequired,
-    onSort: func.isRequired
+    onSave: func.isRequired
   }
 }
 

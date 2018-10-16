@@ -34,7 +34,7 @@ module.exports = {
       ...into('lists')
         .insert({ name, parent_list_id: parent, position }))
 
-    return { id, name, parent }
+    return { id, name, parent, children: [] }
   },
 
   remove(db, id) {

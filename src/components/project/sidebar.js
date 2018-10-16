@@ -268,7 +268,8 @@ class ProjectSidebar extends React.PureComponent {
                   onEditCancel={onEditCancel}
                   onExpand={this.props.onListExpand}
                   onCollapse={this.props.onListCollapse}
-                  onMove={this.props.onListMove}/>}
+                  onMove={this.props.onListMove}
+                  onSave={this.props.onListSave}/>}
               <ol>
                 {this.props.hasLastImport &&
                   <LastImportListNode
