@@ -5,11 +5,12 @@ const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')
 const { ActivityPane } = require('../activity')
+const { BufferedResizable } = require('../resizable')
 const { LastImportListNode, ListTree, TrashListNode } = require('../list')
 const { ProjectTags } = require('./tags')
 const { Sidebar } = require('../sidebar')
 const { ProjectName } = require('./name')
-const { TABS, LIST } = require('../../constants')
+const { TABS, LIST, SIDEBAR } = require('../../constants')
 const { has, last } = require('../../common/util')
 const { match } = require('../../keymap')
 const { testFocusChange } = require('../../dom')
@@ -225,83 +226,90 @@ class ProjectSidebar extends React.PureComponent {
     let root = this.props.lists[this.props.root]
 
     return (
-      <Sidebar>
-        {this.props.hasToolbar &&
-          <Toolbar onDoubleClick={this.props.onMaximize}/>}
-        <div
-          className="sidebar-body"
-          onContextMenu={this.handleContextMenu}>
+      <BufferedResizable
+        edge="right"
+        value={this.props.width}
+        min={SIDEBAR.MIN_WIDTH}
+        max={SIDEBAR.MAX_WIDTH}
+        onChange={this.props.onResize}>
+        <Sidebar>
+          {this.props.hasToolbar &&
+            <Toolbar onDoubleClick={this.props.onMaximize}/>}
+          <div
+            className="sidebar-body"
+            onContextMenu={this.handleContextMenu}>
 
-          <section
-            tabIndex={this.tabIndex}
-            onKeyDown={this.handleKeyDown}
-            onMouseDown={this.handleMouseDown}>
-            <nav>
-              <ol>
-                <ProjectName
-                  name={project.name}
-                  isSelected={!this.hasSelection}
-                  isEditing={this.isEditing}
-                  onChange={this.handleChange}
-                  onClick={this.handleClick}
-                  onEditCancel={onEditCancel}
-                  onDrop={onItemImport}/>
-              </ol>
-            </nav>
+            <section
+              tabIndex={this.tabIndex}
+              onKeyDown={this.handleKeyDown}
+              onMouseDown={this.handleMouseDown}>
+              <nav>
+                <ol>
+                  <ProjectName
+                    name={project.name}
+                    isSelected={!this.hasSelection}
+                    isEditing={this.isEditing}
+                    onChange={this.handleChange}
+                    onClick={this.handleClick}
+                    onEditCancel={onEditCancel}
+                    onDrop={onItemImport}/>
+                </ol>
+              </nav>
 
-            <h3>
-              <FormattedMessage id="sidebar.lists"/>
-            </h3>
-            <nav>
-              {root &&
-                <ListTree
-                  parent={root}
-                  lists={this.props.lists}
-                  edit={this.props.edit.list}
-                  expand={this.props.expand}
-                  hold={this.props.hold}
-                  selection={this.props.listSelection}
-                  onContextMenu={onContextMenu}
-                  onDropFiles={onItemImport}
-                  onDropItems={this.props.onListItemsAdd}
-                  onClick={this.handleListClick}
-                  onEditCancel={onEditCancel}
-                  onExpand={this.props.onListExpand}
-                  onCollapse={this.props.onListCollapse}
-                  onMove={this.props.onListMove}
-                  onSave={this.props.onListSave}/>}
-              <ol>
-                {this.props.hasLastImport &&
-                  <LastImportListNode
-                    isSelected={this.props.isLastImportSelected}
-                    onClick={this.handleLastImportSelect}/>}
-                <TrashListNode
-                  isSelected={this.props.isTrashSelected}
-                  onContextMenu={onContextMenu}
-                  onDropItems={this.handleTrashDropItems}
-                  onClick={this.handleTrashSelect}/>
-              </ol>
-            </nav>
-          </section>
+              <h3>
+                <FormattedMessage id="sidebar.lists"/>
+              </h3>
+              <nav>
+                {root &&
+                  <ListTree
+                    parent={root}
+                    lists={this.props.lists}
+                    edit={this.props.edit.list}
+                    expand={this.props.expand}
+                    hold={this.props.hold}
+                    selection={this.props.listSelection}
+                    onContextMenu={onContextMenu}
+                    onDropFiles={onItemImport}
+                    onDropItems={this.props.onListItemsAdd}
+                    onClick={this.handleListClick}
+                    onEditCancel={onEditCancel}
+                    onExpand={this.props.onListExpand}
+                    onCollapse={this.props.onListCollapse}
+                    onMove={this.props.onListMove}
+                    onSave={this.props.onListSave}/>}
+                <ol>
+                  {this.props.hasLastImport &&
+                    <LastImportListNode
+                      isSelected={this.props.isLastImportSelected}
+                      onClick={this.handleLastImportSelect}/>}
+                  <TrashListNode
+                    isSelected={this.props.isTrashSelected}
+                    onContextMenu={onContextMenu}
+                    onDropItems={this.handleTrashDropItems}
+                    onClick={this.handleTrashSelect}/>
+                </ol>
+              </nav>
+            </section>
 
-          <section>
-            <h2><FormattedMessage id="sidebar.tags"/></h2>
-            <ProjectTags
-              keymap={this.props.keymap.TagList}
-              selection={this.props.tagSelection}
-              edit={edit.tag}
-              onEditCancel={onEditCancel}
-              onCreate={onTagCreate}
-              onDelete={onTagDelete}
-              onDropItems={onItemTagAdd}
-              onSave={onTagSave}
-              onSelect={onTagSelect}
-              onContextMenu={onContextMenu}/>
-          </section>
+            <section>
+              <h2><FormattedMessage id="sidebar.tags"/></h2>
+              <ProjectTags
+                keymap={this.props.keymap.TagList}
+                selection={this.props.tagSelection}
+                edit={edit.tag}
+                onEditCancel={onEditCancel}
+                onCreate={onTagCreate}
+                onDelete={onTagDelete}
+                onDropItems={onItemTagAdd}
+                onSave={onTagSave}
+                onSelect={onTagSelect}
+                onContextMenu={onContextMenu}/>
+            </section>
 
-        </div>
-        <ActivityPane activities={this.props.activities}/>
-      </Sidebar>
+          </div>
+          <ActivityPane activities={this.props.activities}/>
+        </Sidebar>
+      </BufferedResizable>
     )
   }
 
@@ -329,6 +337,7 @@ class ProjectSidebar extends React.PureComponent {
     listSelection: number,
     root: number.isRequired,
     tagSelection: arrayOf(number).isRequired,
+    width: number.isRequired,
 
     onMaximize: func.isRequired,
     onEdit: func.isRequired,
@@ -347,7 +356,8 @@ class ProjectSidebar extends React.PureComponent {
     onTagSave: func.isRequired,
     onTagSelect: func.isRequired,
     onProjectSave: func.isRequired,
-    onSelect: func.isRequired
+    onSelect: func.isRequired,
+    onResize: func.isRequired
   }
 
   static defaultProps = {
@@ -372,7 +382,8 @@ module.exports = {
       lists: state.lists,
       listSelection: state.nav.list,
       listwalk: getListSubTree(state, { root: root || LIST.ROOT }),
-      tagSelection: state.nav.tags
+      tagSelection: state.nav.tags,
+      width: state.ui.sidebar.width
     }),
 
     (dispatch) => ({
@@ -397,6 +408,12 @@ module.exports = {
 
       onListMove(...args) {
         dispatch(actions.list.move(...args))
+      },
+
+      onResize(width) {
+        dispatch(actions.ui.update({
+          sidebar: { width: Math.round(width) }
+        }))
       }
     })
   )(ProjectSidebar)

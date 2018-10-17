@@ -243,7 +243,6 @@ class ProjectContainer extends Component {
           isActive={this.state.mode === MODE.PROJECT && !this.isClosing()}
           isEmpty={this.isEmpty}
           columns={columns}
-          sidebar={ui.sidebar}
           offset={this.state.offset}
           photos={photos}
           zoom={ui.zoom}
