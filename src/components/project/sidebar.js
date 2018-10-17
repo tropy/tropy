@@ -8,7 +8,7 @@ const { ActivityPane } = require('../activity')
 const { BufferedResizable } = require('../resizable')
 const { LastImportListNode, ListTree, TrashListNode } = require('../list')
 const { ProjectTags } = require('./tags')
-const { Sidebar } = require('../sidebar')
+const { Sidebar, SidebarBody } = require('../sidebar')
 const { ProjectName } = require('./name')
 const { TABS, LIST, SIDEBAR } = require('../../constants')
 const { has, last } = require('../../common/util')
@@ -236,10 +236,8 @@ class ProjectSidebar extends React.PureComponent {
         <Sidebar>
           {this.props.hasToolbar &&
             <Toolbar onDoubleClick={this.props.onMaximize}/>}
-          <div
-            className="sidebar-body"
-            onContextMenu={this.handleContextMenu}>
 
+          <SidebarBody onContextMenu={this.handleContextMenu}>
             <section
               tabIndex={this.tabIndex}
               onKeyDown={this.handleKeyDown}
@@ -257,9 +255,7 @@ class ProjectSidebar extends React.PureComponent {
                 </ol>
               </nav>
 
-              <h3>
-                <FormattedMessage id="sidebar.lists"/>
-              </h3>
+              <h3><FormattedMessage id="sidebar.lists"/></h3>
               <nav>
                 {root &&
                   <ListTree
@@ -307,7 +303,7 @@ class ProjectSidebar extends React.PureComponent {
                 onContextMenu={onContextMenu}/>
             </section>
 
-          </div>
+          </SidebarBody>
           <ActivityPane activities={this.props.activities}/>
         </Sidebar>
       </BufferedResizable>

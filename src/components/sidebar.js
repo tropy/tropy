@@ -11,6 +11,17 @@ Sidebar.propTypes = {
   children: node
 }
 
+const SidebarBody = ({ children, ...props }) => (
+  <div className="sidebar-body" {...props}>
+    {children}
+  </div>
+)
+
+SidebarBody.propTypes = {
+  children: node
+}
+
 module.exports = {
-  Sidebar
+  Sidebar,
+  SidebarBody
 }
