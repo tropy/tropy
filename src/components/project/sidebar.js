@@ -22,6 +22,7 @@ const {
 
 const {
   getActivities,
+  getListHold,
   getListSubTree
 } = require('../../selectors')
 
@@ -36,13 +37,13 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   get hasSelection() {
-    return this.props.listSelection != null ||
+    return this.props.list != null ||
       this.props.isTrashSelected ||
       this.props.isLastImportSelected && this.props.hasLastImport
   }
 
   get tabIndex() {
-    return (this.props.isActive) ? TABS.ProjectSidebar : null
+    return (this.props.isDisabled) ? null : TABS.ProjectSidebar
   }
 
   getFirstList() {
@@ -62,7 +63,7 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   getListAt(offset = 1) {
-    let list = this.props.listSelection
+    let list = this.props.list
     let walk = this.props.listwalk
 
     let idx = walk.indexOf(list)
@@ -72,7 +73,7 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   isListSelected(list) {
-    return list && list === this.props.listSelection
+    return list && list === this.props.list
   }
 
   isListEmpty() {
@@ -118,14 +119,14 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   collapse() {
-    if (this.props.listSelection != null) {
-      this.props.onListCollapse(this.props.listSelection)
+    if (this.props.list != null) {
+      this.props.onListCollapse(this.props.list)
     }
   }
 
   expand() {
-    if (this.props.listSelection != null) {
-      this.props.onListExpand(this.props.listSelection)
+    if (this.props.list != null) {
+      this.props.onListExpand(this.props.list)
     }
   }
 
@@ -267,7 +268,7 @@ class ProjectSidebar extends React.PureComponent {
                     edit={this.props.edit.list}
                     expand={this.props.expand}
                     hold={this.props.hold}
-                    selection={this.props.listSelection}
+                    selection={this.props.list}
                     onContextMenu={onContextMenu}
                     onDropFiles={onItemImport}
                     onDropItems={this.props.onListItemsAdd}
@@ -314,35 +315,31 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   static propTypes = {
-    hasSelection: bool,
-    isActive: bool,
-    isLastImportSelected: bool,
-    isTrashSelected: bool,
+    activities: arrayOf(object).isRequired,
+    edit: object.isRequired,
+    expand: object.isRequired,
     hasLastImport: bool.isRequired,
     hasToolbar: bool,
     hold: object.isRequired,
-
+    isDisabled: bool,
+    isLastImportSelected: bool,
+    isTrashSelected: bool,
+    keymap: object.isRequired,
+    list: number,
+    lists: object.isRequired,
+    listwalk: arrayOf(number).isRequired,
+    onMaximize: func.isRequired,
     project: shape({
       file: string,
       name: string,
       items: number
     }).isRequired,
-
-    expand: object.isRequired,
-    keymap: object.isRequired,
-    activities: arrayOf(object).isRequired,
-    edit: object.isRequired,
-    lists: object.isRequired,
-    listwalk: arrayOf(number).isRequired,
-    listSelection: number,
     root: number.isRequired,
     tagSelection: arrayOf(number).isRequired,
     width: number.isRequired,
-
-    onMaximize: func.isRequired,
+    onContextMenu: func.isRequired,
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,
-    onContextMenu: func.isRequired,
     onItemDelete: func.isRequired,
     onItemImport: func.isRequired,
     onItemTagAdd: func.isRequired,
@@ -351,13 +348,13 @@ class ProjectSidebar extends React.PureComponent {
     onListItemsAdd: func.isRequired,
     onListMove: func.isRequired,
     onListSave: func.isRequired,
+    onProjectSave: func.isRequired,
+    onResize: func.isRequired,
+    onSelect: func.isRequired,
     onTagCreate: func.isRequired,
     onTagDelete: func.isRequired,
     onTagSave: func.isRequired,
-    onTagSelect: func.isRequired,
-    onProjectSave: func.isRequired,
-    onSelect: func.isRequired,
-    onResize: func.isRequired
+    onTagSelect: func.isRequired
   }
 
   static defaultProps = {
@@ -373,15 +370,15 @@ module.exports = {
   ProjectSidebar: connect(
     (state, { root }) => ({
       activities: getActivities(state),
-      edit: state.edit,
       expand: state.sidebar.expand,
       hasLastImport: state.imports.length > 0,
+      hold: getListHold(state),
       isLastImportSelected: state.nav.imports,
       isTrashSelected: state.nav.trash,
-      keymap: state.keymap,
       lists: state.lists,
-      listSelection: state.nav.list,
+      list: state.nav.list,
       listwalk: getListSubTree(state, { root: root || LIST.ROOT }),
+      project: state.project,
       tagSelection: state.nav.tags,
       width: state.ui.sidebar.width
     }),
@@ -408,6 +405,11 @@ module.exports = {
 
       onListMove(...args) {
         dispatch(actions.list.move(...args))
+      },
+
+      onProjectSave(...args) {
+        dispatch(actions.project.save(...args))
+        dispatch(actions.edit.cancel())
       },
 
       onResize(width) {

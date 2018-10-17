@@ -54,6 +54,7 @@ class ProjectView extends Component {
 
   render() {
     const {
+      isActive,
       canDrop,
       edit,
       isOver,
@@ -63,18 +64,18 @@ class ProjectView extends Component {
       photos,
       tags,
       zoom,
+      onMaximize,
       onItemCreate,
       onItemSelect,
       onSearch,
-      ...props
     } = this.props
 
     const { size, maxZoom, ItemIterator, isEmpty } = this
 
     return (
       <div id="project-view">
-        <ProjectSidebar {...pick(props, ProjectSidebar.props)}
-          isActive={this.props.isActive}/>
+        <ProjectSidebar {...pick(this.props, ProjectSidebar.props)}
+          isDisabled={!isActive}/>
         <div className="main">
           <section id="items" style={this.style}>
             <header>
@@ -84,14 +85,14 @@ class ProjectView extends Component {
                 items={items.length}
                 maxZoom={maxZoom}
                 canCreateItems={!nav.trash}
-                isDisabled={!props.isActive}
+                isDisabled={!isActive}
                 onItemCreate={this.handleItemImport}
-                onDoubleClick={ARGS.frameless ? props.onMaximize : null}
+                onDoubleClick={ARGS.frameless ? onMaximize : null}
                 onSearch={onSearch}
                 onZoomChange={this.handleZoomChange}/>
             </header>
 
-            <ItemIterator {...pick(props, ItemIterator.getPropKeys())}
+            <ItemIterator {...pick(this.props, ItemIterator.getPropKeys())}
               items={items}
               isEmpty={isEmpty}
               photos={photos}
