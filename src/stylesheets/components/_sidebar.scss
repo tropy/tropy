@@ -28,22 +28,6 @@
     padding: 0 $default-padding-horizontal 0 $list-tree-padding-left;
   }
 
-  .icon {
-    margin-right: $space-xs;
-  }
-
-  .btn-icon {
-    padding: 0;
-
-    .icon {
-      margin-right: 0;
-    }
-  }
-
-  .icon-triangle {
-    margin-left: -$space-md;
-  }
-
   nav {
     li {
       position: relative;
@@ -129,11 +113,26 @@
           @extend %drop-target;
           background: transparent; // Remove background from %list-active
         }
+
+        .icon-triangle {
+          margin-right: 0;
+          transform: rotate(90deg);
+
+          @include state("li.expanded") {
+            transform: scaleY(-1);
+          }
+        }
       }
     }
 
     .icon {
       flex: 0 0 auto;
+      margin-right: $space-xs;
+    }
+
+    .btn-icon {
+      padding: 0;
+      margin-left: -$space-md;
     }
 
     .name {

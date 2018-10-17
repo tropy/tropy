@@ -590,7 +590,7 @@ i('Trash', (
 i('Triangle', (
   <svg width="16" height="16">
     <g fill="currentColor">
-      <polygon points="12.062 7.5 6 4 6 11 12.062 7.5"/>
+      <polygon points="8.5 3.938 5 10 12 10 8.5 3.938"/>
     </g>
   </svg>
 ))
