@@ -1,34 +1,60 @@
 'use strict'
 
 const { call, put, select } = require('redux-saga/effects')
+const { dirname } = require('path')
 const { Command } = require('./command')
-const actions = require('../actions/project')
-const { SAVE } = require('../constants/project')
-const { save } = require('../models/project')
+const { PROJECT } = require('../constants')
+const { pick } = require('../common/util')
+const act = require('../actions')
+const mod = require('../models')
 
 
-class Save extends Command {
-  static get action() { return SAVE }
+class Rebase extends Command {
+  static get ACTION() { return PROJECT.REBASE }
 
   *exec() {
-    const { payload } = this.action
-    const { db, id } = this.options
+    let { db, id } = this.options
+    let { project } = yield select()
 
-    this.original = (yield select()).project
+    // Temporary: only toggle between absolute and project-relative!
+    let base = (project.base) ? null : dirname(project.file)
 
-    yield put(actions.update(payload))
-    yield call(save, db, { id, ...payload })
+    yield call(db.transaction, async tx => {
+      await mod.project.save(tx, { id, base: (base) ? 'project' : null })
+      await mod.photo.rebase(tx, base, project.base)
+    })
 
-    this.undo = actions.save({ name: this.original.name })
+    yield put(act.project.update({ base }))
+    this.undo = act.project.rebase()
   }
+}
 
-  *abort() {
-    if (this.original) {
-      yield put(actions.update({ name: this.original.name }))
-    }
+class Save extends Command {
+  static get ACTION() { return PROJECT.SAVE }
+
+  *exec() {
+    let { payload } = this.action
+    let { db, id } = this.options
+
+    let original = yield select(state =>
+      pick(state.project, Object.keys(payload)))
+
+    let doRebase = ('base' in payload && payload.base !== original.base)
+
+    yield call(db.transaction, async tx => {
+      await mod.project.save(tx, { id, ...payload })
+
+      if (doRebase) {
+        await mod.photo.rebase(tx, payload.base, this.original.base)
+      }
+    })
+
+    yield put(act.project.update(payload))
+    this.undo = act.project.save(original)
   }
 }
 
 module.exports = {
+  Rebase,
   Save
 }

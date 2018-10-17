@@ -11,15 +11,20 @@ extends:
 parser: babel-eslint
 
 parserOptions:
-  ecmaVersion: 6
+  ecmaVersion: 2018
   sourceType: script
   ecmaFeatures:
     modules: false
+    jsx: true
 
 env:
   es6: true
   node: true
   browser: true
+
+settings:
+  react:
+    version: 16.2.0
 
 globals:
   ResizeObserver: true
@@ -70,7 +75,7 @@ rules:
   react/jsx-indent-props: [2, 2]
   react/jsx-indent: [2, 2]
   react/jsx-key: 2
-  react/jsx-no-bind: 2
+  react/jsx-no-bind: 0
   react/jsx-pascal-case: 2
   react/jsx-wrap-multilines: [2, { 'arrow': false }]
   react/prefer-es6-class: 2

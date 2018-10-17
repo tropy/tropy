@@ -324,6 +324,9 @@ class Tropy extends EventEmitter {
     this.on('app:close-project', () =>
       this.dispatch(act.project.close(), this.win))
 
+    this.on('app:rebase-project', () =>
+      this.dispatch(act.project.rebase(), this.win))
+
     this.on('app:import-photos', () =>
       this.import())
 
@@ -436,15 +439,15 @@ class Tropy extends EventEmitter {
       this.dispatch(act.note.delete(target), win))
 
     this.on('app:toggle-line-wrap', (win, { target }) =>
-      this.dispatch(act.ui.update({
-        note: { [target.id]: { wrap: !target.wrap } }
+      this.dispatch(act.notepad.update({
+        [target.id]: { wrap: !target.wrap }
       }), win))
     this.on('app:toggle-line-numbers', (win, { target }) =>
-      this.dispatch(act.ui.update({
-        note: { [target.id]: { numbers: !target.numbers } }
+      this.dispatch(act.notepad.update({
+        [target.id]: { numbers: !target.numbers }
       }), win))
     this.on('app:writing-mode', (win, { id, mode }) =>
-      this.dispatch(act.ui.update({ note: { [id]: { mode  } } }), win))
+      this.dispatch(act.notepad.update({ [id]: { mode  } }), win))
 
     this.on('app:toggle-menu-bar', win => {
       if (win.isMenuBarAutoHide()) {
@@ -574,7 +577,7 @@ class Tropy extends EventEmitter {
       dialog
         .show('file', win, {
           ...options,
-          defaultPath: app.getPath('userData'),
+          defaultPath: app.getPath('documents'),
           filters: [{ name: 'Tropy Projects', extensions: ['tpy'] }],
           properties: ['openFile']
 
@@ -680,7 +683,9 @@ class Tropy extends EventEmitter {
       debug: this.debug,
       dev: this.dev,
       home: app.getPath('userData'),
+      user: app.getPath('home'),
       documents: app.getPath('documents'),
+      pictures: app.getPath('pictures'),
       cache: this.cache.root,
       plugins: this.plugins.root,
       frameless: this.state.frameless,

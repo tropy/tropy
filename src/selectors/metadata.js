@@ -2,10 +2,14 @@
 
 const { createSelector: memo } = require('reselect')
 const { pluck } = require('./util')
+const { get } = require('../common/util')
 const { equal } = require('../value')
+const { compare } = require('../collate')
 const {
   cat, compose, filter, keep, map, seq, transduce, transformer
 } = require('transducers.js')
+
+const { TYPE } = require('../constants')
 
 const {
   getActiveItemTemplate,
@@ -138,11 +142,47 @@ const getSelectionFields = memo(
     getMetadataFields(null, { template, data, props })
 )
 
+const any = (src) => { for (let key in src) return key }
+
+const getActiveProperty =
+  ({ edit }) => ('field' in edit) ? any(edit.field) : null
+
+const getActiveId =
+  ({ edit }) => ('field' in edit) ? edit.field[any(edit.field)] : null
+
+const getActiveDatatype = memo(
+  getMetadata, getActiveProperty, getActiveId,
+  (metadata, prop, id) =>
+    get(metadata, [id, prop, 'type'], TYPE.TEXT)
+)
+
+const makeCompletionFilter = (prop, datatype, perField = false) =>
+  perField ?
+    ([id, value]) => id === prop && !!(value.text) && value.type === datatype :
+    ([id, value]) => id !== 'id' && !!(value.text) && value.type === datatype
+
+const getMetadataCompletions = memo(
+  getMetadata, getActiveProperty, getActiveDatatype,
+  (metadata, prop, datatype) => {
+    if (prop == null) return []
+    let comp = new Set()
+
+    seq(metadata, compose(
+      map(([, data]) => data),
+      cat,
+      filter(makeCompletionFilter(prop, datatype)),
+      map(([, value]) => comp.add(value.text))))
+
+    return [...comp].sort(compare)
+  }
+)
+
 module.exports = {
   getItemMetadata,
   getItemFields,
   getPhotoFields,
   getSelectionFields,
   getMetadataFields,
+  getMetadataCompletions,
   getVisibleMetadata
 }

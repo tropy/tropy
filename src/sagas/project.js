@@ -88,6 +88,8 @@ function *setup(db, project) {
 
   yield all([
     call(storage.restore, 'nav', project.id),
+    call(storage.restore, 'notepad', project.id),
+    call(storage.restore, 'esper', project.id),
     call(storage.restore, 'imports', project.id)
   ])
 
@@ -113,6 +115,8 @@ function *close(db, project, access) {
 
   yield all([
     call(storage.persist, 'nav', project.id),
+    call(storage.persist, 'notepad', project.id),
+    call(storage.persist, 'esper', project.id),
     call(storage.persist, 'imports', project.id)
   ])
 

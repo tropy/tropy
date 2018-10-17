@@ -17,6 +17,7 @@ module.exports = {
   MIME: require('./mime'),
   NAV: require('./nav'),
   NOTE: require('./note'),
+  NOTEPAD: require('./notepad'),
   ONTOLOGY: require('./ontology'),
   PHOTO: require('./photo'),
   PREFS: require('./prefs'),

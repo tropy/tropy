@@ -44,7 +44,9 @@ class PluginAccordion extends Accordion {
   }
 
   get description() {
-    <p className="description">{this.props.spec.description}</p>
+    return (
+      <p className="description">{this.props.spec.description}</p>
+    )
   }
 
   get hasInstances() {

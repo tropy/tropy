@@ -108,7 +108,7 @@ target.darwin = () => {
     let zip = `${name}-${version}-darwin.zip`
 
     cd(src)
-    exec(`7z a ../${zip} ${qualified.product}.app`)
+    exec(`7z a ../${zip} "${qualified.product}.app"`)
     cd('-')
   }
 }

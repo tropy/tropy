@@ -3,6 +3,7 @@
 module.exports = {
   ...require('./activity'),
   ...require('./edit'),
+  ...require('./esper'),
   ...require('./flash'),
   ...require('./history'),
   ...require('./import'),
@@ -13,6 +14,7 @@ module.exports = {
   ...require('./metadata'),
   ...require('./nav'),
   ...require('./notes'),
+  ...require('./notepad'),
   ...require('./ontology'),
   ...require('./photos'),
   ...require('./prefs'),

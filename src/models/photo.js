@@ -1,6 +1,7 @@
 'use strict'
 
 const assert = require('assert')
+const { relative, resolve } = require('path')
 const { TEMPLATE } = require('../constants/photo')
 const { DC } = require('../constants')
 const { all } = require('bluebird')
@@ -9,7 +10,9 @@ const metadata = require('./metadata')
 const bb = require('bluebird')
 const { assign } = Object
 const subject = require('./subject')
-const { blank } = require('../common/util')
+const { into, select, update } = require('../common/query')
+const { normalize } = require('../common/os')
+const { blank, empty, pick } = require('../common/util')
 
 const COLUMNS = [
   'checksum',
@@ -19,45 +22,37 @@ const COLUMNS = [
   'size'
 ]
 
-const VALUES = {
-  consolidated: (column) => (`datetime($${column})`),
-  default: (column) => `$${column}`
-}
-
-const filter = (column) =>
-  (VALUES[column] || VALUES.default)(column)
-
 const skel = (id, selections = [], notes = []) => ({
   id, selections, notes
 })
 
-
 module.exports = {
-  async create(db, template, { item, image, data, position }) {
-    const {
+  async create(db, { base, template }, { item, image, data, position }) {
+    let {
       path, checksum, mimetype, width, height, orientation, size
     } = image
 
-    const { id } = await db.run(`
-      INSERT INTO subjects (template) VALUES (?)`, template || TEMPLATE)
+    let { id } = await db.run(
+      ...into('subjects').insert({ template: template || TEMPLATE })
+    )
 
-    await db.run(`
-      INSERT INTO images (id, width, height) VALUES (?,?,?)`,
-      [id, width, height])
+    if (base != null) {
+      path = relative(base, path)
+    }
+
+    await db.run(...into('images').insert({ id, width, height }))
 
     await all([
-      db.run(`
-        INSERT INTO photos (
-            id,
-            item_id,
-            path,
-            size,
-            checksum,
-            mimetype,
-            orientation,
-            position
-          ) VALUES (?,?,?,?,?,?,?,?)`,
-        [id, item, path, size, checksum, mimetype, orientation, position]),
+      db.run(...into('photos').insert({
+        id,
+        item_id: item,
+        path,
+        size,
+        checksum,
+        mimetype,
+        orientation,
+        position
+      })),
 
       metadata.update(db, {
         ids: [id],
@@ -69,34 +64,27 @@ module.exports = {
       })
     ])
 
-    return (await module.exports.load(db, [id]))[id]
+    return (await module.exports.load(db, [id], { base }))[id]
   },
 
-  async save(db, { id, timestamp, ...data }) {
-    const assignments = []
-    const params = { $id: id }
-
-    for (let column of COLUMNS) {
-      if (column in data) {
-        assignments.push(`${column} = ${filter(column)}`)
-        params[`$${column}`] = data[column]
-      }
-    }
+  async save(db, { id, timestamp, ...data }, { base } = {}) {
+    data = pick(data, COLUMNS)
 
     assert(id != null, 'missing photo id')
-    if (assignments.length === 0) return
+    if (empty(data)) return
 
-    await db.run(`
-      UPDATE photos
-        SET ${assignments.join(', ')}
-        WHERE id = $id`, params)
+    if (base != null && data.path != null) {
+      data.path = relative(base, data.path)
+    }
+
+    await db.run(...update('photos').set(data).where({ id }))
 
     if (timestamp != null) {
       await subject.touch(db, { id, timestamp })
     }
   },
 
-  async load(db, ids) {
+  async load(db, ids, { base } = {}) {
     const photos = {}
     if (ids != null) ids = ids.join(',')
 
@@ -128,11 +116,12 @@ module.exports = {
             JOIN photos USING (id)${
           ids != null ? ` WHERE id IN (${ids})` : ''
         }`,
-        ({ id, created, modified, mirror, negative, ...data }) => {
+        ({ id, created, modified, mirror, negative, path, ...data }) => {
           data.created = new Date(created)
           data.modified = new Date(modified)
           data.mirror = !!mirror
           data.negative = !!negative
+          data.path = (base) ? resolve(base, normalize(path)) : path
 
           if (id in photos) assign(photos[id], data)
           else photos[id] = assign(skel(id), data)
@@ -240,5 +229,21 @@ module.exports = {
           SELECT id FROM trash JOIN photos USING (id)
         )`
     )
+  },
+
+  async rebase(db, base, oldBase) {
+    let delta = []
+
+    await db.each(select('id', 'path').from('photos').query, ({ id, path }) => {
+      let oldPath = oldBase ? resolve(oldBase, normalize(path)) : path
+      let newPath = base ? relative(base, oldPath) : oldPath
+      if (newPath !== path) {
+        delta.push({ id, path: newPath })
+      }
+    })
+
+    await bb.map(delta, ({ id, path }) => db.run(
+      ...update('photos').set({ path }).where({ id })
+    ))
   }
 }

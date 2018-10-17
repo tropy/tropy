@@ -350,30 +350,36 @@ class ProjectContainer extends Component {
 
 
 const DropTargetSpec = {
-  drop({ onProjectOpen, onTemplateImport }, monitor) {
-    const files = monitor.getItem().files.map(f => f.path)
+  drop({ onProjectOpen, onTemplateImport, project }, monitor) {
+    let files = monitor.getItem().files.map(f => f.path)
 
     switch (extname(files[0])) {
       case '.tpy':
-        onProjectOpen(files[0])
+        files = files.slice(0, 1)
+        if (files[0] !== project.file) {
+          onProjectOpen(files[0])
+        }
         break
       case '.ttp':
-        onTemplateImport(files.filter(f => f.endsWith('.ttp')))
+        files = files.filter(f => f.endsWith('.ttp'))
+        onTemplateImport(files)
         break
+      default:
+        files = []
     }
 
     return { files }
   },
 
   canDrop({ project }, monitor) {
-    const { files } = monitor.getItem()
+    const { types } = monitor.getItem()
 
-    if (files.length < 1) return false
+    if (types.length < 1) return false
 
-    switch (extname(files[0].path)) {
-      case '.tpy':
-        return project.closed || files[0].path !== project.file
-      case '.ttp':
+    switch (types[0]) {
+      case 'application-vnd.tropy.tpy':
+        return project.closed //|| files[0].path !== project.file
+      case 'application-vnd.tropy.ttp':
         return true
       default:
         return false

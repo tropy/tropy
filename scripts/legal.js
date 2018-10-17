@@ -58,6 +58,6 @@ function consolidate(licenses) {
 function escapeHTML(text) {
   if (!text) return
   return text
-    .replace('<', '&lt;')
-    .replace('>', '&gt;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
 }

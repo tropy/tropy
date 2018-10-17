@@ -85,6 +85,9 @@ class Editor extends Component {
       case 'addLink':
         this.toolbar.handleLinkButtonClick()
         break
+      case 'lift':
+        if (this.exec('liftListItem')) break
+        // eslint-disable-next-line no-fallthrough
       default:
         if (!this.exec(action)) return
     }

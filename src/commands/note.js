@@ -9,7 +9,7 @@ const { getSelectableNoteId } = require('../selectors')
 
 
 class Load extends Command {
-  static get action() { return NOTE.LOAD }
+  static get ACTION() { return NOTE.LOAD }
 
   *exec() {
     const { db } = this.options
@@ -22,7 +22,7 @@ class Load extends Command {
 }
 
 class Create extends Command {
-  static get action() { return NOTE.CREATE }
+  static get ACTION() { return NOTE.CREATE }
 
   *exec() {
     const { db } = this.options
@@ -48,7 +48,7 @@ class Create extends Command {
 }
 
 class Save extends Command {
-  static get action() { return NOTE.SAVE }
+  static get ACTION() { return NOTE.SAVE }
 
   *exec() {
     const { db } = this.options
@@ -75,7 +75,7 @@ class Save extends Command {
 }
 
 class Delete extends Command {
-  static get action() { return NOTE.DELETE }
+  static get ACTION() { return NOTE.DELETE }
 
   *exec() {
     const { db } = this.options
@@ -104,7 +104,7 @@ class Delete extends Command {
 }
 
 class Restore extends Command {
-  static get action() { return NOTE.RESTORE }
+  static get ACTION() { return NOTE.RESTORE }
 
   *exec() {
     const { db } = this.options

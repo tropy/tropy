@@ -243,11 +243,11 @@ class Plugins extends EventEmitter {
     return this
   }
 
-  static ext = ['tar', 'tar.bz2', 'tar.gz', 'zip']
+  static ext = ['tar', 'tar.bz2', 'tar.gz', 'tgz', 'zip']
 
   static basename(input) {
     return basename(input)
-      .replace(/\.(tar\.(bz2|gz)|zip)$/, '')
+      .replace(/\.(tar\.(bz2|gz)|tgz|zip)$/, '')
       .replace(/-\d+(\.\d+)*$/, '')
   }
 }

@@ -2,12 +2,16 @@
 
 const React = require('react')
 const { Fragment, Component } = React
-const { ResourceSelect } = require('../resource/select')
+const { Id, Label, ResourceSelect } = require('../resource/select')
 const { Popup } = require('../popup')
-const { arrayOf, func, number, object, string } = require('prop-types')
 const { OPTION, PANEL } = require('../../constants/sass')
 const { IconTick } = require('../icons')
 const { min } = Math
+
+const {
+  arrayOf, bool, func, number, object, oneOfType, string
+} = require('prop-types')
+
 
 class ColumnContextMenu extends Component {
   constructor(props) {
@@ -84,19 +88,26 @@ const ColumnSelect = (props) => (
     isRequired
     isStatic
     isValueHidden
-    toText={Column}
+    toText={toColumn}
     {...props}/>
 )
 
-const Column = (col, isSelected) => (
+const toColumn = (value, props) =>
+  <Column column={value} {...props}/>
+
+const Column = ({ column, isSelected, matchData }) => (
   <Fragment>
     {isSelected && <IconTick/>}
-    <span className="truncate">{col.label}</span>
-    <span className="mute truncate">
-      {col.prefix ? `${col.prefix}:${col.name}` : col.id}
-    </span>
+    <Label resource={column} matchData={matchData}/>
+    <Id resource={column} matchData={matchData}/>
   </Fragment>
 )
+
+Column.propTypes = {
+  column: object.isRequired,
+  isSelected: bool,
+  matchData: oneOfType([bool, object])
+}
 
 module.exports = {
   ColumnContextMenu,

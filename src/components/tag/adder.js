@@ -6,6 +6,7 @@ const { injectIntl, intlShape } = require('react-intl')
 const { Input } = require('../input')
 const { blank, noop } = require('../../common/util')
 const { arrayOf, bool, func, number, shape, string } = require('prop-types')
+const collate = require('../../collate')
 
 
 class TagAdder extends PureComponent {
@@ -50,6 +51,7 @@ class TagAdder extends PureComponent {
           className="form-control"
           completions={this.props.completions}
           isDisabled={this.props.isDisabled}
+          match={this.props.match}
           placeholder={this.placeholder}
           tabIndex={-1}
           value=""
@@ -66,6 +68,7 @@ class TagAdder extends PureComponent {
     completions: arrayOf(string).isRequired,
     intl: intlShape.isRequired,
     isDisabled: bool,
+    match: func.isRequired,
     tags: arrayOf(shape({
       id: number.isRequired,
       name: string.isRequired
@@ -78,6 +81,9 @@ class TagAdder extends PureComponent {
   }
 
   static defaultProps = {
+    match: (value, query) => (
+      collate.match(value.name || String(value), query, /\b\w/g)
+    ),
     onFocus: noop
   }
 }

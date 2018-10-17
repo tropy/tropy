@@ -245,7 +245,7 @@ function literal(value) {
 }
 
 function isDefinedBy(id, data) {
-  return get(data, [RDFS.isDefinedBy, '@id'], namespace(id))
+  return get(data, [RDFS.isDefinedBy, 0, '@id'], namespace(id))
 }
 
 function namespace(id) {
@@ -253,7 +253,7 @@ function namespace(id) {
 }
 
 function getLabel(id) {
-  return titlecase(split(id)[1])
+  return titlecase(split(id)[1]) || id
 }
 
 function split(id) {

@@ -12,18 +12,19 @@ os: unstable
 
 environment:
   ELECTRON_NO_ATTACH_CONSOLE: true
-  nodejs_version: 7.9
+  nodejs_version: 10
 
 platform:
   - x64
   - x86
 
 cache:
-  - node_modules -> package.json
-  - '%APPDATA%\npm-cache'
+  #- node_modules -> package.json
+  #- '%APPDATA%\npm-cache' -> package.json
 
 install:
   - ps: Install-Product node $env:nodejs_version $env:platform
+  - chcp 65001
   - node --version
   - npm --version
   - npm install --no-optional --no-color --no-progress

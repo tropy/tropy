@@ -84,7 +84,7 @@ class Select extends Component {
     let isMulti = Array.isArray(value)
     let isInvalid = false
     let values = []
-    let selection = isMulti ? value : [value]
+    let selection = isMulti ? value : isBlank ? [] : [value]
 
     if (!isBlank) {
       for (let id of selection) {
@@ -324,6 +324,7 @@ class Select extends Component {
         onFocus={this.handleFocus}
         onKeyDown={this.handleKeyDown}
         ref={this.setInput}
+        readOnly={isInputHidden}
         style={{ opacity: isInputHidden ? 0 : 1 }}
         tabIndex={this.props.tabIndex}
         type="text"
@@ -436,8 +437,8 @@ class Select extends Component {
     onKeyDown: noop,
     onRemove: noop,
     onValidate: noop,
-    toId: (value) => (value.id || String(value)),
-    toText: (value) => (value.name || String(value))
+    toId: Completions.defaultProps.toId,
+    toText: Completions.defaultProps.toText
   }
 }
 

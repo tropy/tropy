@@ -10,7 +10,7 @@ const { keys } = Object
 
 
 class Load extends Command {
-  static get action() { return LOAD }
+  static get ACTION() { return LOAD }
 
   *exec() {
     const { db } = this.options
@@ -21,7 +21,7 @@ class Load extends Command {
 }
 
 class Restore extends Command {
-  static get action() { return RESTORE }
+  static get ACTION() { return RESTORE }
 
   *exec() {
     const { db } = this.options
@@ -61,7 +61,7 @@ class Restore extends Command {
 }
 
 class Save extends Command {
-  static get action() { return SAVE }
+  static get ACTION() { return SAVE }
 
   *exec() {
     const { db } = this.options

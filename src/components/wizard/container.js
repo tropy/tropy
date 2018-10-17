@@ -30,19 +30,23 @@ class WizardContainer extends PureComponent {
       file
   }
 
-  handleProjectComplete = () => {
+  handleComplete = () => {
     this.props.onComplete(this.props.project, { truncate: true })
   }
 
-  handleProjectChange = (name) => {
+  handleNameChange = (name) => {
     this.props.onProjectUpdate({
       name,
       file: this.getDefaultFilename(name)
     })
   }
 
-  handleProjectSave = () => {
-    this.props.onProjectSave(
+  handleBaseChange = ({ base }) => {
+    this.props.onProjectUpdate({ base: base ? 'project' : null })
+  }
+
+  handleFileSelect = () => {
+    this.props.onProjectSaveAs(
       this.props.project.file || this.props.userData
     )
   }
@@ -54,9 +58,10 @@ class WizardContainer extends PureComponent {
         <Steps>
           <ProjectStep {...this.props.project}
             hasDefaultFilename={this.hasDefaultFilename}
-            onNameChange={this.handleProjectChange}
-            onFileChange={this.handleProjectSave}
-            onComplete={this.handleProjectComplete}/>
+            onBaseChange={this.handleBaseChange}
+            onNameChange={this.handleNameChange}
+            onFileSelect={this.handleFileSelect}
+            onComplete={this.handleComplete}/>
         </Steps>
       </div>
     )
@@ -64,12 +69,13 @@ class WizardContainer extends PureComponent {
 
   static propTypes = {
     project: shape({
-      name: string.isRequired,
-      file: string.isRequired
+      base: string,
+      file: string.isRequired,
+      name: string.isRequired
     }).isRequired,
     userData: string.isRequired,
     onComplete: func.isRequired,
-    onProjectSave: func.isRequired,
+    onProjectSaveAs: func.isRequired,
     onProjectUpdate: func.isRequired
   }
 }
@@ -87,7 +93,7 @@ module.exports = {
         dispatch(actions.wizard.project.update(...args))
       },
 
-      onProjectSave(...args) {
+      onProjectSaveAs(...args) {
         dispatch(actions.wizard.project.save(...args))
       },
 

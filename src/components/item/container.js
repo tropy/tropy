@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { connect } = require('react-redux')
 const { BufferedResizable } = require('../resizable')
 const { Esper } = require('../esper')
@@ -14,27 +13,30 @@ const {
 } = require('prop-types')
 
 const {
-  getActiveImageProps,
-  getActiveNoteProps,
+  getEsperViewState,
+  getNotePadState,
   getActiveSelection,
   getPhotoSelections
 } = require('../../selectors')
 
 
-class ItemContainer extends PureComponent {
+class ItemContainer extends React.PureComponent {
   setNotePad = (notepad) => {
     this.notepad = notepad
   }
 
-  handleEsperChange = ({ photo, selection, ...ui }) => {
-    this.props.onUiUpdate(ui)
-
+  handleEsperChange = ({ photo, selection, image, esper }) => {
+    if (esper != null) {
+      this.props.onUiUpdate({ esper })
+    }
     if (photo != null) {
       this.props.onPhotoSave(photo)
     }
-
     if (selection != null) {
       this.props.onSelectionSave(selection)
+    }
+    if (image != null) {
+      this.props.onEsperChange({ view: image })
     }
   }
 
@@ -52,8 +54,8 @@ class ItemContainer extends PureComponent {
           onChange={this.handleEsperResize}
           margin={38}
           min={ESPER.MIN_HEIGHT}>
-          <Esper {...this.props.image}
-            mode={this.props.image.mode || this.props.settings.zoomMode}
+          <Esper {...this.props.view}
+            mode={this.props.view.mode || this.props.settings.zoomMode}
             hasOverlayToolbar={this.props.settings.overlayToolbars}
             invertScroll={this.props.settings.invertScroll}
             invertZoom={this.props.settings.invertZoom}
@@ -89,7 +91,7 @@ class ItemContainer extends PureComponent {
       panel: bool.isRequired,
       tool: string.isRequired
     }).isRequired,
-    image: object.isRequired,
+    view: object.isRequired,
     isDisabled: bool.isRequired,
     isOpen: bool.isRequired,
     keymap: object.isRequired,
@@ -100,6 +102,7 @@ class ItemContainer extends PureComponent {
     selections: arrayOf(object).isRequired,
     settings: object.isRequired,
     onContextMenu: func.isRequired,
+    onEsperChange: func.isRequired,
     onNoteChange: func.isRequired,
     onNoteCommit: func.isRequired,
     onPhotoError: func.isRequired,
@@ -115,8 +118,8 @@ module.exports = {
   ItemContainer: connect(
     state => ({
       esper: state.ui.esper,
-      image: getActiveImageProps(state),
-      notepad: getActiveNoteProps(state),
+      view: getEsperViewState(state),
+      notepad: getNotePadState(state),
       keymap: state.keymap,
       selection: getActiveSelection(state),
       selections: getPhotoSelections(state),
@@ -138,6 +141,10 @@ module.exports = {
 
       onSelectionSave(...args) {
         dispatch(act.selection.save(...args))
+      },
+
+      onEsperChange(...args) {
+        dispatch(act.esper.update(...args))
       }
     }), null, { withRef: true }
   )(ItemContainer)

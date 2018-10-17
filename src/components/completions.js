@@ -1,18 +1,18 @@
 'use strict'
 
 const React = require('react')
-const { Component } = React
+const { Component, Fragment } = React
 const { FormattedMessage } = require('react-intl')
 const { Popup } = require('./popup')
 const { OptionList } = require('./option')
-const { blank, last } = require('../common/util')
+const { blank, last, shallow } = require('../common/util')
 const { translate } = require('../common/math')
 const { bounds, viewport } = require('../dom')
-const { startsWith } = require('../collate')
+const collate = require('../collate')
 const cx = require('classnames')
 
 const {
-  array, bool, func, instanceOf, number, string
+  array, arrayOf, bool, func, instanceOf, number, oneOfType, string
 } = require('prop-types')
 
 const {
@@ -22,6 +22,24 @@ const {
 
 const MARGIN = BORDER_WIDTH + FOCUS_SHADOW_WIDTH
 
+const Highlight = ({ text, matchData }) => (
+  (!Array.isArray(matchData)) ? text : (
+    <Fragment>
+      {text.slice(0, matchData[0])}
+      <strong>{text.slice(...matchData)}</strong>
+      {text.slice(matchData[1])}
+    </Fragment>
+  )
+)
+
+Highlight.propTypes = {
+  text: string.isRequired,
+  matchData: oneOfType([
+    arrayOf(number),
+    bool
+  ])
+}
+
 
 class Completions extends Component {
   constructor(props) {
@@ -30,7 +48,7 @@ class Completions extends Component {
   }
 
   componentWillReceiveProps(props) {
-    if (this.props !== props) {
+    if (!shallow(props, this.props)) {
       this.setState(this.getStateFromProps(props))
     }
   }
@@ -47,6 +65,8 @@ class Completions extends Component {
 
   getStateFromProps({
     completions,
+    isAdvisory,
+    isExactMatchHidden,
     isSelectionHidden,
     match,
     query,
@@ -54,8 +74,8 @@ class Completions extends Component {
     toId,
     toText
   } = this.props) {
-    query = query.trim().toLowerCase()
-    let matchAll = blank(query)
+    let q = query.trim().toLowerCase()
+    let matchAll = blank(q)
     let options = []
     let active = (matchAll && !isSelectionHidden) ? last(selection) : null
     options.idx = {}
@@ -63,17 +83,25 @@ class Completions extends Component {
     completions.forEach((value, idx) => {
       let id = toId(value)
       let isSelected = selection.includes(id)
-      let isHidden = isSelectionHidden && isSelected
-      if (!isHidden && (matchAll || match(value, query))) {
-        options.idx[id] = options.length
-        options.push({ id, idx, value: toText(value, isSelected) })
+      let isHidden = (isSelectionHidden && isSelected) ||
+        (isExactMatchHidden && id === query)
+
+      if (!isHidden) {
+        let m = matchAll || match(value, q)
+        if (m != null && m !== false) {
+          options.idx[id] = options.length
+          options.push({
+            id, idx, value, text: toText(value, { isSelected, matchData: m })
+          })
+        }
       }
     })
 
-    return {
-      active: active || (options.length > 0 ? options[0].id : null),
-      options
+    if (!active && !isAdvisory && options.length > 0) {
+      active = options[0].id
     }
+
+    return { active, options }
   }
 
   getPopupBounds() {
@@ -100,6 +128,10 @@ class Completions extends Component {
     return OptionList.getHeight(rows || 1, { maxRows: this.props.maxRows })
   }
 
+  get isActive() {
+    return this.state.active != null
+  }
+
   get isBlank() {
     return this.state.options.length === 0
   }
@@ -124,23 +156,25 @@ class Completions extends Component {
   }
 
   next(k = 1) {
-    this.activate(this.ol && this.ol.next(k))
+    return this.activate(this.ol && this.ol.next(k))
   }
 
   prev(k = 1) {
-    this.activate(this.ol && this.ol.prev(k))
+    return this.activate(this.ol && this.ol.prev(k))
   }
 
   first() {
-    this.activate(this.ol && this.ol.first())
+    return this.activate(this.ol && this.ol.first())
   }
 
   last() {
-    this.activate(this.ol && this.ol.last())
+    return this.activate(this.ol && this.ol.last())
   }
 
   activate(option, scrollIntoView = true) {
     if (option != null) this.handleActivate(option, scrollIntoView)
+    else if (this.props.isAdvisory) this.setState({ active: null })
+    return option
   }
 
   handleActivate = ({ id }, scrollIntoView) => {
@@ -170,6 +204,7 @@ class Completions extends Component {
         onActivate={this.handleActivate}
         onSelect={this.handleSelect}
         ref={this.setOptionList}
+        restrict={this.props.isAdvisory ? 'none' : 'wrap'}
         selection={this.props.selection}
         values={this.state.options}/>
     )
@@ -223,6 +258,8 @@ class Completions extends Component {
     className: string,
     completions: array.isRequired,
     fadeIn: bool,
+    isAdvisory: bool,
+    isExactMatchHidden: bool,
     isSelectionHidden: bool,
     isVisibleWhenBlank: bool,
     match: func.isRequired,
@@ -240,16 +277,22 @@ class Completions extends Component {
   }
 
   static defaultProps = {
-    match: (value, query) => startsWith(value.name || String(value), query),
+    match(value, query) {
+      return collate.match(value.name || String(value), query)
+    },
     maxRows: 10,
     minQueryLength: 0,
     popup: true,
     selection: [],
-    toId: (value) => (value.id || String(value)),
-    toText: (value) => (value.name || String(value))
+    toId(value) {
+      return (value.id || String(value))
+    },
+    toText: (value, { matchData } = {}) =>
+      <Highlight text={value.name || String(value)} matchData={matchData}/>
   }
 }
 
 module.exports = {
-  Completions
+  Completions,
+  Highlight
 }

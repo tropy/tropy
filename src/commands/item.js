@@ -31,7 +31,7 @@ const {
 
 
 class Create extends Command {
-  static get action() { return ITEM.CREATE }
+  static get ACTION() { return ITEM.CREATE }
 
   *exec() {
     const { db } = this.options
@@ -53,13 +53,13 @@ class Create extends Command {
 }
 
 class Import extends ImportCommand {
-  static get action() { return ITEM.IMPORT }
+  static get ACTION() { return ITEM.IMPORT }
 
   *exec() {
-    const { db } = this.options
+    let { db } = this.options
     let { files, list } = this.action.payload
 
-    const items = []
+    let items = []
 
     if (!files) {
       this.isInteractive = true
@@ -70,13 +70,14 @@ class Import extends ImportCommand {
 
     yield put(act.nav.update({ mode: MODE.PROJECT, query: '' }))
 
-    const [itemp, ptemp] = yield all([
-      select(getItemTemplate),
-      select(getPhotoTemplate)
+    let [base, itemp, ptemp] = yield select(state => [
+      state.project.base,
+      getItemTemplate(state),
+      getPhotoTemplate(state)
     ])
 
-    const defaultItemData = getTemplateValues(itemp)
-    const defaultPhotoData = getTemplateValues(ptemp)
+    let defaultItemData = getTemplateValues(itemp)
+    let defaultPhotoData = getTemplateValues(ptemp)
 
     for (let i = 0, total = files.length; i < total; ++i) {
       let file, image, item, photo
@@ -92,7 +93,7 @@ class Import extends ImportCommand {
             [DC.title]: text(image.title), ...defaultItemData
           })
 
-          photo = await mod.photo.create(tx, ptemp.id, {
+          photo = await mod.photo.create(tx, { base, template: ptemp.id }, {
             item: item.id, image, data: defaultPhotoData
           })
 
@@ -136,7 +137,7 @@ class Import extends ImportCommand {
 }
 
 class Delete extends Command {
-  static get action() { return ITEM.DELETE }
+  static get ACTION() { return ITEM.DELETE }
 
   *exec() {
     const { db } = this.options
@@ -152,7 +153,7 @@ class Delete extends Command {
 }
 
 class Destroy extends Command {
-  static get action() { return ITEM.DESTROY }
+  static get ACTION() { return ITEM.DESTROY }
 
   *exec() {
     const { db } = this.options
@@ -182,7 +183,7 @@ class Destroy extends Command {
 }
 
 class Load extends Command {
-  static get action() { return ITEM.LOAD }
+  static get ACTION() { return ITEM.LOAD }
 
   *exec() {
     const { db } = this.options
@@ -197,7 +198,7 @@ class Load extends Command {
 
 
 class Restore extends Command {
-  static get action() { return ITEM.RESTORE }
+  static get ACTION() { return ITEM.RESTORE }
 
   *exec() {
     const { db } = this.options
@@ -213,7 +214,7 @@ class Restore extends Command {
 }
 
 class Save extends Command {
-  static get action() { return ITEM.SAVE }
+  static get ACTION() { return ITEM.SAVE }
 
   *exec() {
     const { db } = this.options
@@ -287,7 +288,7 @@ class Save extends Command {
 }
 
 class Merge extends Command {
-  static get action() { return ITEM.MERGE }
+  static get ACTION() { return ITEM.MERGE }
 
   *exec() {
     const { db } = this.options
@@ -321,7 +322,7 @@ class Merge extends Command {
 }
 
 class Split extends Command {
-  static get action() { return ITEM.SPLIT }
+  static get ACTION() { return ITEM.SPLIT }
 
   *exec() {
     const { db } = this.options
@@ -340,7 +341,7 @@ class Split extends Command {
 }
 
 class Explode extends Command {
-  static get action() { return ITEM.EXPLODE }
+  static get ACTION() { return ITEM.EXPLODE }
 
   *exec() {
     const { db } = this.options
@@ -410,7 +411,7 @@ class Explode extends Command {
 }
 
 class Implode extends Command {
-  static get action() { return ITEM.IMPLODE }
+  static get ACTION() { return ITEM.IMPLODE }
 
   *exec() {
     const { db } = this.options
@@ -431,7 +432,7 @@ class Implode extends Command {
 }
 
 class Export extends Command {
-  static get action() { return ITEM.EXPORT }
+  static get ACTION() { return ITEM.EXPORT }
 
   *exec() {
     let { target, plugin } = this.action.meta
@@ -471,7 +472,7 @@ class Export extends Command {
 }
 
 class ToggleTags extends Command {
-  static get action() { return ITEM.TAG.TOGGLE }
+  static get ACTION() { return ITEM.TAG.TOGGLE }
 
   *exec() {
     const { db } = this.options
@@ -501,7 +502,7 @@ class ToggleTags extends Command {
 }
 
 class Preview extends Command {
-  static get action() { return ITEM.PREVIEW }
+  static get ACTION() { return ITEM.PREVIEW }
 
   *exec() {
     if (!darwin) return
@@ -517,7 +518,7 @@ class Preview extends Command {
 }
 
 class AddTag extends Command {
-  static get action() { return ITEM.TAG.CREATE }
+  static get ACTION() { return ITEM.TAG.CREATE }
 
   *exec() {
     const { db } = this.options
@@ -536,7 +537,7 @@ class AddTag extends Command {
 }
 
 class RemoveTag extends Command {
-  static get action() { return ITEM.TAG.DELETE }
+  static get ACTION() { return ITEM.TAG.DELETE }
 
   *exec() {
     const { db } = this.options
@@ -552,7 +553,7 @@ class RemoveTag extends Command {
 
 
 class ClearTags extends Command {
-  static get action() { return ITEM.TAG.CLEAR }
+  static get ACTION() { return ITEM.TAG.CLEAR }
 
   *exec() {
     const { db } = this.options

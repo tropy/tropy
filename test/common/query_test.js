@@ -81,6 +81,57 @@ describe('Query Builder', () => {
       expect(q.query).to.eql('SELECT * FROM a JOIN b ON (x = $x)')
       expect(q.params).to.have.property('$x', 23)
     })
+  })
 
+  describe('Update', () => {
+    const { update } = query
+
+    it('simple', () =>
+      expect(
+        update('project')
+          .set({ name: 'Tropy' })
+          .query
+      ).to.eql('UPDATE project SET name = $new_name'))
+
+    it('null', () =>
+      expect(
+        update('project')
+          .set({ base: null })
+          .query
+      ).to.eql('UPDATE project SET base = NULL'))
+
+    it('conditional', () => {
+      let q = update('project').set({ name: 'new' }).where({ name: 'old' })
+
+      expect(q.query)
+        .to.eql('UPDATE project SET name = $new_name WHERE name = $name')
+      expect(q.params)
+        .to.eql({ $name: 'old', $new_name: 'new' })
+    })
+
+    it('multiple', () =>
+      expect(
+        update('project')
+          .set({ name: 'Tropy', base: 'project' })
+          .query
+      ).to.eql('UPDATE project SET name = $new_name, base = $new_base'))
+
+    it('filtered', () =>
+      expect(
+        update('project')
+          .set({ name: 'Tropy' }, { filters: { name: x => `lower(${x})` } })
+          .query
+      ).to.eql('UPDATE project SET name = lower($new_name)'))
+  })
+
+  describe('Insert', () => {
+    const { into } = query
+
+    it('simple', () =>
+      expect([
+        ...into('photos').insert({ id: 23, mimetype: 'image/jpeg' })
+      ]).to.eql([
+        'INSERT INTO photos (id, mimetype) VALUES (?,?)', [23, 'image/jpeg']
+      ]))
   })
 })

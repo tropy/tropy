@@ -1,6 +1,6 @@
 'use strict'
 
-const { BrowserWindow, systemPreferences: pref } = require('electron')
+const { BrowserWindow, systemPreferences: prefs } = require('electron')
 const { join } = require('path')
 const { format, parse } = require('url')
 const { darwin, EL_CAPITAN } = require('../common/os')
@@ -37,7 +37,7 @@ const AQUA = {
 
 function hasOverlayScrollBars() {
   return darwin &&
-    'WhenScrolling' === pref.getUserDefault('AppleShowScrollBars', 'string')
+    'WhenScrolling' === prefs.getUserDefault('AppleShowScrollBars', 'string')
 }
 
 module.exports = {
@@ -58,11 +58,11 @@ module.exports = {
         options.disableAutoHideCursor = true
         if (!options.frame && EL_CAPITAN) {
           options.frame = true
-          options.titleBarStyle = options.titleBarStyle || 'hidden-inset'
+          options.titleBarStyle = options.titleBarStyle || 'hiddenInset'
         }
 
         data.aqua = AQUA[
-          pref.getUserDefault('AppleAquaColorVariant', 'integer')
+          prefs.getUserDefault('AppleAquaColorVariant', 'integer')
         ]
 
         break

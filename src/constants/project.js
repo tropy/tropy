@@ -9,6 +9,7 @@ module.exports = {
   CREATED: 'project.created',
   OPEN: 'project.open',
   OPENED: 'project.opened',
+  REBASE: 'project.rebase',
   SAVE: 'project.save',
   UPDATE: 'project.update',
 
