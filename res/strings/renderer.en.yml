@@ -450,6 +450,7 @@ en:
         save: Failed to save tag.
         create: Failed to tag item. Tags must be unique per item.
     list:
+      load: Failed to load lists.
       create: Failed to create list. List names must be unique.
       save: Failed to save list.
       item:

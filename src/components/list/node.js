@@ -273,14 +273,14 @@ const DropTargetSpec = {
       switch (type) {
         case DND.LIST: {
           let { offset } = node.state
-          let nest = (offset == null || offset === 1 && props.isExpanded)
+          let into = (offset == null || offset === 1 && props.isExpanded)
           let meta = {
-            idx: nest ? 0 : props.position + offset
+            idx: into ? 0 : props.position + offset
           }
 
           props.onMove({
-            list: item.id,
-            parent: nest ? list.id : list.parent
+            id: item.id,
+            parent: into ? list.id : list.parent
           }, meta)
           break
         }

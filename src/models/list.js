@@ -3,7 +3,7 @@
 const { all } = require('bluebird')
 const { ROOT } = require('../constants/list')
 const { into, select, update } = require('../common/query')
-const { remove } = require('../common/util')
+const { pick, remove } = require('../common/util')
 
 module.exports = {
   async all(db) {
@@ -60,10 +60,10 @@ module.exports = {
     ]))
   },
 
-  save(db, { id, name }) {
+  save(db, { id, ...data }) {
     return db.run(
       ...update('lists')
-        .set({ name })
+        .set(pick(data, ['name', 'parent_list_id']))
         .set('modified = datetime("now")')
         .where({ list_id: id }))
   },

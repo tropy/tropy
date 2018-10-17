@@ -2,7 +2,7 @@
 
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-const { splice } = require('../common/util')
+const { pluck, splice, warp } = require('../common/util')
 const { LIST } = require('../constants')
 
 const actions = require('../actions/list')
@@ -78,7 +78,7 @@ class Delete extends Command {
     const idx = parent.children.indexOf(id)
     const cid = splice(parent.children, idx, 1)
 
-    yield call([db, db.transaction], async tx => {
+    yield call(db.transaction, async tx => {
       await mod.remove(tx, id)
       await mod.order(tx, parent.id, cid)
     })
@@ -103,7 +103,7 @@ class Restore extends Command {
     const { children } = yield select(state => state.lists[list.parent])
     const cid = splice(children, idx, 0, list.id)
 
-    yield call([db, db.transaction], async tx => {
+    yield call(db.transaction, async tx => {
       await mod.restore(tx, list.id, list.parent)
       await mod.order(tx, list.parent, cid)
     })
@@ -118,15 +118,43 @@ class Move extends Command {
   static get ACTION() { return LIST.MOVE }
 
   *exec() {
-    //let { db } = this.options
-    //let { id, children } = this.action.payload
+    let { db } = this.options
+    let list = this.action.payload
+    let to = this.action.meta.idx
+    let idx
 
-    //let original = yield select(state => state.lists[id].children)
+    let [original, parent] = yield select(state =>
+      pluck(state.lists, [list.id, list.parent]))
 
-    //yield call(mod.order, db, id, children)
-    //yield put(actions.update({ id, children }))
+    if (parent.id === original.parent) {
+      idx = parent.children.indexOf(list.id)
+      let children = warp(parent.children, idx, to)
 
-    //this.undo = actions.move({ id, children: original })
+      yield call(mod.order, db, parent.id, children)
+      yield put(actions.update({ id: parent.id, children }))
+
+    } else {
+      let oldParent = yield select(state => state.lists[original.parent])
+      idx = oldParent.children.indexOf(list.id)
+
+      let oldChildren = splice(oldParent.children, idx, 1)
+      let children = splice(parent.children, to, 0, list.id)
+
+      yield call(db.transaction, async tx => {
+        await mod.save(tx, { id: list.id, parent_list_id: parent.id })
+        await mod.order(tx, parent.id, children)
+        await mod.order(tx, oldParent.id, oldChildren)
+      })
+
+      yield put(actions.update([
+        { id: oldParent.id, children: oldChildren },
+        { id: list.id, parent: parent.id },
+        { id: parent.id, children }
+      ]))
+    }
+
+    this.undo = actions.move({ id: list.id, parent: original.parent }, { idx })
+    return list
   }
 }
 
@@ -137,7 +165,7 @@ class AddItems extends Command {
     const { db } = this.options
     const { id, items } = this.action.payload
 
-    const res = yield call([db, db.transaction], tx =>
+    const res = yield call(db.transaction, tx =>
       mod.items.add(tx, id, items))
 
     this.undo = actions.items.remove({ id, items: res.items })

@@ -8,7 +8,7 @@ const init = {
 }
 
 module.exports = {
-  sidebar(state = init, { type, payload }) {
+  sidebar(state = init, { type, payload, meta }) {
     switch (type) {
       case SIDEBAR.RESTORE:
         return merge(init, payload)
@@ -27,6 +27,11 @@ module.exports = {
         }
       case LIST.INSERT:
         return {
+          ...state,
+          expand: { ...state.expand, [payload.parent]: true }
+        }
+      case LIST.MOVE:
+        return (meta.done || state.expand[payload.parent]) ? state : {
           ...state,
           expand: { ...state.expand, [payload.parent]: true }
         }
