@@ -53,15 +53,23 @@ module.exports = {
       }
 
       case LIST.REMOVE: {
-        const id = payload
-        const isCurrent = (state.list === id)
-
-        return {
+        return (state.list !== payload) ? state : {
           ...state,
-          list: isCurrent ? null : state.list,
-          items: isCurrent ? [] : state.items,
-          photo: isCurrent ? null : state.photo,
-          sort: omit(state.sort, [id])
+          list: null,
+          items: [],
+          photo: null,
+          selection: null,
+          note: null
+        }
+      }
+      case LIST.COLLAPSE: {
+        return !meta.select ? state : {
+          ...state,
+          list: payload,
+          items: [],
+          photo: null,
+          selection: null,
+          note: null
         }
       }
 

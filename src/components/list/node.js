@@ -91,6 +91,14 @@ class ListNode extends React.PureComponent {
     return !(this.props.isDragging || this.props.isDraggingParent)
   }
 
+  isChildNodeSelected() {
+    let { list, lists, selection, isSelected } = this.props
+    if (!selection || isSelected) return false
+    let p = lists[selection].parent
+    while (p && p !== list.id) p = lists[p].parent
+    return p === list.id
+  }
+
   handleChange = (name) => {
     this.props.onSave({ id: this.props.list.id, name })
   }
@@ -132,7 +140,9 @@ class ListNode extends React.PureComponent {
 
   }
   collapse = () => {
-    this.props.onCollapse(this.props.list.id)
+    this.props.onCollapse(this.props.list.id, {
+      select: this.isChildNodeSelected()
+    })
   }
 
   expand = () => {

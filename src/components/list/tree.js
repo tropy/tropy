@@ -65,14 +65,7 @@ class ListTree extends React.Component {
       children: arrayOf(number).isRequired
     }).isRequired,
     selection: number,
-    onClick: func.isRequired,
-    onCollapse: func.isRequired,
-    onContextMenu: func.isRequired,
-    onDropFiles: func.isRequired,
-    onDropItems: func.isRequired,
     onEditCancel: func.isRequired,
-    onExpand: func.isRequired,
-    onMove: func.isRequired,
     onSave: func.isRequired
   }
 
