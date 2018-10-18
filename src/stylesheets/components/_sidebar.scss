@@ -38,17 +38,6 @@
       }
 
       &.dragging {
-        background: transparent;
-
-        @at-root #{selector-replace(&, "#sidebar", "#sidebar :focus")} {
-          background: transparent;
-        }
-
-        .icon,
-        .name {
-          visibility: hidden;
-        }
-
         &::before,
         &::after {
           position: absolute;

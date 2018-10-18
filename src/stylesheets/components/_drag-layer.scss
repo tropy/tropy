@@ -17,6 +17,16 @@
   position: absolute; // Collapse width
   transform: translate(-50%, -50%);
 
+  &.list {
+    display: flex;
+    align-items: center;
+    height: $line-height-large;
+
+    .icon {
+      margin-right: $space-xs;
+    }
+  }
+
   .thumbnail {
     opacity: $drag-preview-thumbnail-opacity;
     width: $drag-preview-size;
