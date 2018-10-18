@@ -112,3 +112,45 @@
     }
   }
 }
+
+@for $i from 1 through $list-tree-max-levels {
+  $sel: if($i == 1, "ol", selector-nest($sel, "ol"));
+
+  #{$sel} {
+  	.list-node-container {
+    	&.before,
+    	&.after {
+      	&::before,
+      	&::after {
+          @if ($i == 1) {
+            left: 0;
+          }
+
+          @if ($i == 2) {
+            left: $list-tree-padding-left;
+          }
+
+          @if ($i > 2) {
+            left: $list-tree-padding-left + $list-tree-indent * ($i - 2);
+          }
+      	}
+    	}
+  	}
+
+  	.expandable {
+    	> .list-node-container {
+      	&.after {
+        	&::after {
+            @if ($i == 1) {
+              left: $list-tree-padding-left;
+            }
+
+            @if ($i > 1) {
+              left: $list-tree-padding-left + $list-tree-indent * ($i - 1);
+            }
+          }
+      	}
+    	}
+  	}
+  }
+}
