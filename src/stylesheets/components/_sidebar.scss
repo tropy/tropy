@@ -57,7 +57,6 @@
 
         &.over:not(.before):not(.after) {
           @extend %drop-target;
-          background: transparent; // Remove background from %list-active
         }
 
         .icon-triangle {
