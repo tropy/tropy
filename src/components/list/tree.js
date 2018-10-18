@@ -11,38 +11,39 @@ class ListTree extends React.Component {
     return get(this.props.edit, ['id']) === id
   }
 
-  isExpanded(id) {
-    return this.props.expand[id] || this.hasNewListNode(id)
-  }
-
-  isSelected(id) {
-    return this.props.selection === id
-  }
-
   hasNewListNode(parent = this.props.parent.id) {
     let { edit } = this.props
     return edit && edit.id == null && edit.parent === parent
   }
 
-  mapChildren(fn) {
+  mapChildren(fn, props = this.props) {
     let idx = 0
-    return this.props.parent.children.map(id =>
-      (id in this.props.lists) && fn(this.props.lists[id], idx++)
-    )
+    return props.parent.children.map(id => {
+      if (id in props.lists) {
+        let list = props.lists[id]
+        let hasNewListNode = this.hasNewListNode(id)
+        let isExpandable = hasNewListNode || list.children.length > 0
+        let isExpanded = hasNewListNode || props.expand[id]
+
+        return fn(id, {
+          ...props,
+          list,
+          isSelected: props.selection === id,
+          isExpandable,
+          isExpanded: isExpandable && isExpanded,
+          isEditing: this.isEditing(id),
+          isHolding: props.hold[id],
+          position: idx++
+        })
+      }
+    })
   }
 
   render() {
     return (
       <ol className="list-tree" ref={this.setContainer}>
-        {this.mapChildren((list, position) =>
-          <lazy.ListNode {...this.props}
-            key={list.id}
-            list={list}
-            position={position}
-            isSelected={this.isSelected(list.id)}
-            isEditing={this.isEditing(list.id)}
-            isExpanded={this.isExpanded(list.id)}
-            isHolding={this.props.hold[list.id]}/>)}
+        {this.mapChildren((key, props) =>
+          <lazy.ListNode {...props} key={key}/>)}
         {this.hasNewListNode() &&
           <lazy.NewListNode
             parent={this.props.edit.parent}
@@ -53,15 +54,16 @@ class ListTree extends React.Component {
   }
 
   static propTypes = {
+    depth: number.isRequired,
+    edit: object,
+    expand: object.isRequired,
+    hold: object.isRequired,
+    isDraggingParent: bool,
+    lists: object.isRequired,
     parent: shape({
       id: number.isRequired,
       children: arrayOf(number).isRequired
     }).isRequired,
-    lists: object.isRequired,
-    hold: object.isRequired,
-    isDraggingParent: bool,
-    edit: object,
-    expand: object.isRequired,
     selection: number,
     onClick: func.isRequired,
     onCollapse: func.isRequired,

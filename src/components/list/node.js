@@ -69,7 +69,7 @@ class ListNode extends React.PureComponent {
       active: this.props.isSelected,
       dragging: this.props.isDragging,
       holding: this.props.isHolding,
-      expandable: this.isExpandable,
+      expandable: this.props.isExpandable,
       expanded: this.props.isExpanded
     }]
   }
@@ -81,10 +81,6 @@ class ListNode extends React.PureComponent {
 
   get isOver() {
     return this.props.isOver && this.props.canDrop
-  }
-
-  get isExpandable() {
-    return this.props.list.children.length > 0
   }
 
   get isDragSource() {
@@ -152,7 +148,7 @@ class ListNode extends React.PureComponent {
         ref={this.setContainer}
         onContextMenu={this.handleContextMenu}
         onClick={this.handleClick}>
-        {this.isExpandable &&
+        {this.props.isExpandable &&
           <ListExpandButton onClick={this.handleExpandButtonClick}/>}
         <IconFolder/>
         <div className="name">
@@ -191,6 +187,7 @@ class ListNode extends React.PureComponent {
     isDragging: bool,
     isDraggingParent: bool,
     isEditing: bool,
+    isExpandable: bool,
     isExpanded: bool,
     isHolding: bool,
     isOver: bool,
