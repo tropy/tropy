@@ -53,7 +53,7 @@
       image-url("project/icon-chevron7-dark-theme.svg"));
     padding-right: $space-lg;
 
-    @include input-btn-focus(".focus"); // sass-lint:disable-line mixins-before-declarations
+    @include input-btn-focus(".focus");
 
     &.can-clear {
       background-image: none;
@@ -117,7 +117,7 @@
   &.invalid {
     border-color: $input-btn-invalid-color;
 
-    @include input-btn-focus(".focus", $input-btn-invalid-color); // sass-lint:disable-line mixins-before-declarations
+    @include input-btn-focus(".focus", $input-btn-invalid-color);
   }
 }
 
