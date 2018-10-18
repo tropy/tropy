@@ -1,7 +1,7 @@
 'use strict'
 
 const { isSelected, select } = require('../selection')
-const { merge, insert, omit, splice } = require('../common/util')
+const { merge, insert, splice } = require('../common/util')
 const {
   DC, NAV, ITEM, LIST, TAG, NOTE, PHOTO, PROJECT
 } = require('../constants')
