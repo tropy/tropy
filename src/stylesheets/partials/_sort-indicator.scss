@@ -7,7 +7,7 @@
   &::before,
   &::after {
     position: absolute;
-    outline: 1px solid $photo-sort-indicator;
+    outline: 1px solid $sort-indicator;
   }
 
   &.before {
@@ -80,6 +80,35 @@
       &::after {
         content: "";
       }
+    }
+  }
+}
+
+.list-node-container {
+  &.before,
+  &.after {
+    z-index: 1;
+
+    &::before,
+    &::after {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      outline: 1px solid $sort-indicator;
+    }
+  }
+
+  &.before {
+    &::before {
+      content: "";
+      top: 0;
+    }
+  }
+
+  &.after {
+    &::after {
+      content: "";
+      top: 100%;
     }
   }
 }

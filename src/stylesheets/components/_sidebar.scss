@@ -37,31 +37,6 @@
         background: transparent; // Remove background from %list-active
       }
 
-      &.dragging {
-        &::before,
-        &::after {
-          position: absolute;
-          left: 0;
-          width: 100%;
-          height: $line-height-large;
-        }
-
-        &:first-child {
-          &::before {
-            content: "";
-            bottom: 100%;
-          }
-        }
-
-        &:last-child {
-          &::after {
-            content: "";
-            top: 100%;
-            z-index: 1;
-          }
-        }
-      }
-
       > .list-node-container {
         // sass-lint:disable-block mixins-before-declarations
         display: flex;
@@ -80,7 +55,7 @@
           }
         }
 
-        &.over {
+        &.over:not(.before):not(.after) {
           @extend %drop-target;
           background: transparent; // Remove background from %list-active
         }
