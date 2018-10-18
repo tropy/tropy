@@ -167,6 +167,7 @@ class ListNode extends React.PureComponent {
   renderSubTree(props = this.props) {
     return props.isExpanded && (
       <lazy.ListTree {...props}
+        depth={1 + props.depth}
         isDraggingParent={props.isDraggingParent || props.isDragging}
         parent={props.list}/>
     )
@@ -183,6 +184,7 @@ class ListNode extends React.PureComponent {
 
   static propTypes = {
     canDrop: bool,
+    depth: number.isRequired,
     expand: object.isRequired,
     isDragging: bool,
     isDraggingParent: bool,
@@ -209,6 +211,7 @@ class ListNode extends React.PureComponent {
   }
 
   static defaultProps = {
+    depth: 1,
     onClick: noop
   }
 }

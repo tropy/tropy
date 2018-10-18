@@ -75,6 +75,10 @@ class ListTree extends React.Component {
     onMove: func.isRequired,
     onSave: func.isRequired
   }
+
+  static defaultProps = {
+    depth: 1
+  }
 }
 
 module.exports.ListTree = ListTree
