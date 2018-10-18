@@ -119,16 +119,14 @@ class ListNode extends React.PureComponent {
     this.container = container
   }
 
-  connectDragSource(element) {
-    return (this.isDragSource) ?
-      this.props.connectDragSource(element) :
-      element
-  }
-
-  connectDropTarget(element) {
-    return (this.isDropTarget) ?
-      this.props.connectDropTarget(element) :
-      element
+  connect(element) {
+    if (this.isDragSource) {
+      element = this.props.connectDragSource(element)
+    }
+    if (this.isDropTarget) {
+      element = this.props.connectDropTarget(element)
+    }
+    return element
   }
 
   handleExpandButtonClick = (event) => {
@@ -146,7 +144,7 @@ class ListNode extends React.PureComponent {
   }
 
   renderNode() {
-    return this.connectDropTarget(
+    return this.connect(
       <div
         className={cx('list-node-container', this.direction, {
           over: this.isOver
@@ -179,7 +177,7 @@ class ListNode extends React.PureComponent {
   }
 
   render() {
-    return this.props.connectDragSource(
+    return (
       <li className={cx(...this.classes)}>
         {this.renderNode()}
         {this.renderSubTree()}
