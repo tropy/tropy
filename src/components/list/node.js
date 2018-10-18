@@ -227,7 +227,7 @@ class ListNode extends React.PureComponent {
 }
 
 const ListExpandButton = (props) =>
-  <Button {...props} icon={<IconTriangle/>}/>
+  <Button {...props} noFocus icon={<IconTriangle/>}/>
 
 
 const DragSourceSpec = {
