@@ -8,6 +8,7 @@ const { ActivityPane } = require('../activity')
 const { BufferedResizable } = require('../resizable')
 const { LastImportListNode, ListTree, TrashListNode } = require('../list')
 const { ProjectTags } = require('./tags')
+const { TagFilter } = require('../tag')
 const { Sidebar, SidebarBody } = require('../sidebar')
 const { ProjectName } = require('./name')
 const { TABS, LIST, SASS: { SIDEBAR } } = require('../../constants')
@@ -23,7 +24,8 @@ const {
 const {
   getActivities,
   getListHold,
-  getListSubTree
+  getListSubTree,
+  getProjectTags
 } = require('../../selectors')
 
 
@@ -78,6 +80,11 @@ class ProjectSidebar extends React.PureComponent {
 
   isListEmpty() {
     return this.props.listwalk.length === 0
+  }
+
+  get isTagFilterVisible() {
+    return this.props.filter ||
+      this.props.tags.length > this.props.minFilter
   }
 
   next() {
@@ -284,15 +291,22 @@ class ProjectSidebar extends React.PureComponent {
             </section>
 
             <section>
-              <h2><FormattedMessage id="sidebar.tags"/></h2>
+              <h2><FormattedMessage id="sidebar.tags.title"/></h2>
+              {this.isTagFilterVisible &&
+                <TagFilter
+                  value={this.props.filter}
+                  onChange={this.props.onTagFilter}/>}
               <ProjectTags
+                edit={this.props.edit.tag}
                 keymap={this.props.keymap.TagList}
                 selection={this.props.tagSelection}
-                edit={this.props.edit.tag}
+                tags={this.props.tags}
                 onEditCancel={this.props.onEditCancel}
                 onCreate={this.props.onTagCreate}
+                onDelete={this.props.onTagDelete}
                 onDropItems={this.props.onItemTagAdd}
                 onSave={this.props.onTagSave}
+                onSelect={this.props.onTagSelect}
                 onContextMenu={this.props.onContextMenu}/>
             </section>
 
@@ -307,6 +321,7 @@ class ProjectSidebar extends React.PureComponent {
     activities: arrayOf(object).isRequired,
     edit: object.isRequired,
     expand: object.isRequired,
+    filter: string.isRequired,
     hasLastImport: bool.isRequired,
     hasToolbar: bool,
     hold: object.isRequired,
@@ -317,6 +332,7 @@ class ProjectSidebar extends React.PureComponent {
     list: number,
     lists: object.isRequired,
     listwalk: arrayOf(number).isRequired,
+    minFilter: number.isRequired,
     project: shape({
       file: string,
       name: string,
@@ -324,6 +340,7 @@ class ProjectSidebar extends React.PureComponent {
     }).isRequired,
     root: number.isRequired,
     tagSelection: arrayOf(number).isRequired,
+    tags: arrayOf(object).isRequired,
     width: number.isRequired,
     onContextMenu: func.isRequired,
     onEdit: func.isRequired,
@@ -341,12 +358,15 @@ class ProjectSidebar extends React.PureComponent {
     onResize: func.isRequired,
     onSelect: func.isRequired,
     onTagCreate: func.isRequired,
+    onTagDelete: func.isRequired,
+    onTagFilter: func.isRequired,
     onTagSave: func.isRequired,
     onTagSelect: func.isRequired
   }
 
   static defaultProps = {
     hasToolbar: ARGS.frameless,
+    minFilter: 6,
     root: LIST.ROOT
   }
 
@@ -359,6 +379,7 @@ module.exports = {
     (state, { root }) => ({
       activities: getActivities(state),
       expand: state.sidebar.expand,
+      filter: state.nav.tagFilter,
       hasLastImport: state.imports.length > 0,
       hold: getListHold(state),
       isLastImportSelected: state.nav.imports,
@@ -368,6 +389,7 @@ module.exports = {
       listwalk: getListSubTree(state, { root: root || LIST.ROOT }),
       project: state.project,
       tagSelection: state.nav.tags,
+      tags: getProjectTags(state),
       width: state.ui.sidebar.width
     }),
 
@@ -404,6 +426,18 @@ module.exports = {
         dispatch(actions.ui.update({
           sidebar: { width: Math.round(width) }
         }))
+      },
+
+      onTagDelete(...args) {
+        dispatch(actions.tag.delete(...args))
+      },
+
+      onTagFilter(tagFilter) {
+        dispatch(actions.nav.update({ tagFilter }))
+      },
+
+      onTagSelect(...args) {
+        dispatch(actions.tag.select(...args))
       }
     })
   )(ProjectSidebar)

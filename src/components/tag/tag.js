@@ -14,6 +14,34 @@ const { pure } = require('../util')
 const { shape, number, string, bool, func } = require('prop-types')
 
 
+const NewTag = (props) => (
+  <ol className="tag-list">
+    <li className="tag" tabIndex={-1}>
+      <IconTag/>
+      <div className="name">
+        <Editable
+          value={props.name}
+          isRequired
+          resize
+          isActive
+          onCancel={props.onCancel}
+          onChange={(name) => props.onCreate({ name })}/>
+      </div>
+    </li>
+  </ol>
+)
+
+NewTag.propTypes = {
+  name: string.isRequired,
+  onCreate: func.isRequired,
+  onCancel: func.isRequired
+}
+
+NewTag.defaultProps = {
+  name: ''
+}
+
+
 class Tag extends React.PureComponent {
   get classes() {
     return ['tag', {
@@ -134,6 +162,7 @@ const DropTargetCollect = (connect, monitor) => ({
 
 
 module.exports = {
+  NewTag,
   Tag: pure(
     DropTarget(DND.ITEMS, DropTargetSpec, DropTargetCollect)(Tag)
   )
