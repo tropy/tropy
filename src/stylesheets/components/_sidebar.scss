@@ -91,6 +91,7 @@
     .icon-truncate {
       display: flex;
       align-items: center;
+      height: $line-height-large; // Prevent clipped holding indicator
       overflow: hidden;
 
       &.folder {
