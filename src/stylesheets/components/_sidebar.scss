@@ -42,7 +42,8 @@
         display: flex;
         align-items: center;
         height: $line-height-large;
-        padding-right: $default-padding-horizontal;
+        border-right: $default-padding-horizontal solid transparent; // Use border to truncate folder icons
+        overflow: hidden;
         position: relative;
 
         @include state("li.active", "li.over") {
