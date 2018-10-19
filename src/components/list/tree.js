@@ -70,7 +70,7 @@ class ListTree extends React.Component {
   }
 
   static defaultProps = {
-    depth: 1
+    depth: 0
   }
 }
 

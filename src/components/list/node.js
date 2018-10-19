@@ -225,7 +225,7 @@ class ListNode extends React.PureComponent {
   }
 
   static defaultProps = {
-    depth: 1,
+    depth: 0,
     onClick: noop
   }
 }
@@ -235,8 +235,14 @@ const ListExpandButton = (props) =>
 
 
 const DragSourceSpec = {
-  beginDrag({ list }) {
-    return { ...list }
+  beginDrag({ list, depth }, _, node) {
+    return {
+      ...list,
+      padding: 16 + 12 * depth,
+      bounds: bounds(
+        node.getDecoratedComponentInstance().container
+      )
+    }
   }
 }
 
