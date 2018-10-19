@@ -42,8 +42,7 @@
         display: flex;
         align-items: center;
         height: $line-height-large;
-        border-right: $default-padding-horizontal solid transparent; // Use border to truncate folder icons
-        overflow: hidden;
+        padding-right: $default-padding-horizontal;
         position: relative;
 
         @include state("li.active", "li.over") {
@@ -89,6 +88,16 @@
       }
     }
 
+    .icon-truncate {
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+
+      &.folder {
+        flex: 0 10000 auto;
+      }
+    }
+
     .icon {
       flex: 0 0 auto;
       margin-right: $space-xs;
@@ -100,7 +109,7 @@
     }
 
     .name {
-      flex: 1 1 auto;
+      flex: 1 100000000 auto;
       display: flex;
       min-width: 0; // Fix truncation
 

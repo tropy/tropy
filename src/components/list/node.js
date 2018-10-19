@@ -27,7 +27,9 @@ class NewListNode extends React.Component {
     return (
       <li className="list-node">
         <div className="list new-list list-node-container">
-          <IconFolder/>
+          <div className="icon-truncate">
+            <IconFolder/>
+          </div>
           <div className="name">
             <Editable
               isActive
@@ -160,7 +162,9 @@ class ListNode extends React.PureComponent {
         onClick={this.handleClick}>
         {this.props.isExpandable &&
           <ListExpandButton onClick={this.handleExpandButtonClick}/>}
-        <IconFolder/>
+        <div className="icon-truncate">
+          <IconFolder/>
+        </div>
         <div className="name">
           <Editable
             isActive={this.props.isEditing}
