@@ -11,12 +11,14 @@ const { bounds } = require('../../dom')
 const { isValidImage } = require('../../image')
 const lazy = require('./tree')
 const cx = require('classnames')
-const { noop } = require('../../common/util')
+const { noop, restrict } = require('../../common/util')
 
 const {
   arrayOf, bool, func, number, object, shape, string
 } = require('prop-types')
 
+const PADDING = 16
+const INDENT = 12
 
 class NewListNode extends React.Component {
   handleChange = (name) => {
@@ -59,6 +61,7 @@ class NewListNode extends React.Component {
 
 class ListNode extends React.PureComponent {
   state = {
+    depth: null,
     offset: null
   }
 
@@ -70,9 +73,9 @@ class ListNode extends React.PureComponent {
     return ['list-node', {
       active: this.props.isSelected,
       dragging: this.props.isDragging,
-      holding: this.props.isHolding,
       expandable: this.props.isExpandable,
-      expanded: this.props.isExpanded
+      expanded: this.props.isExpanded,
+      holding: this.props.isHolding
     }]
   }
 
@@ -91,6 +94,28 @@ class ListNode extends React.PureComponent {
 
   get isDropTarget() {
     return !(this.props.isDragging || this.props.isDraggingParent)
+  }
+
+  getDropPosition({ depth, offset } = this.state, props = this.props) {
+    if (offset == null || offset === 1 && props.isExpanded) {
+      return {
+        parent: props.list.id,
+        idx: 0
+      }
+    }
+
+    if (props.isLast && offset === 1 && depth < props.depth) {
+      return {
+        parent: props.parent.parent,
+        idx: props.parentPosition + 1
+
+      }
+    }
+
+    return {
+      parent: props.list.parent,
+      idx: props.position + offset
+    }
   }
 
   isChildNodeSelected() {
@@ -161,7 +186,10 @@ class ListNode extends React.PureComponent {
         onContextMenu={this.handleContextMenu}
         onClick={this.handleClick}>
         {this.props.isExpandable &&
-          <ListExpandButton onClick={this.handleExpandButtonClick}/>}
+          <Button
+            icon={<IconTriangle/>}
+            noFocus
+            onClick={this.handleExpandButtonClick}/>}
         <div className="icon-truncate">
           <IconFolder/>
         </div>
@@ -183,7 +211,8 @@ class ListNode extends React.PureComponent {
       <lazy.ListTree {...props}
         depth={1 + props.depth}
         isDraggingParent={props.isDraggingParent || props.isDragging}
-        parent={props.list}/>
+        parent={props.list}
+        parentPosition={props.position}/>
     )
   }
 
@@ -206,6 +235,7 @@ class ListNode extends React.PureComponent {
     isExpandable: bool,
     isExpanded: bool,
     isHolding: bool,
+    isLast: bool,
     isOver: bool,
     isSelected: bool,
     list: shape({
@@ -214,31 +244,30 @@ class ListNode extends React.PureComponent {
       name: string.isRequired,
       children: arrayOf(number).isRequired
     }).isRequired,
+    position: number.isRequired,
+    parentPosition: number.isRequired,
 
     connectDragSource: func.isRequired,
     connectDragPreview: func.isRequired,
     connectDropTarget: func.isRequired,
     onCollapse: func.isRequired,
     onExpand: func.isRequired,
-    onMove: func.isRequired,
-    position: number.isRequired
+    onMove: func.isRequired
   }
 
   static defaultProps = {
     depth: 0,
-    onClick: noop
+    onClick: noop,
+    position: 0,
+    parentPosition: 0
   }
 }
-
-const ListExpandButton = (props) =>
-  <Button {...props} noFocus icon={<IconTriangle/>}/>
-
 
 const DragSourceSpec = {
   beginDrag({ list, depth }, _, node) {
     return {
       ...list,
-      padding: 16 + 12 * depth,
+      padding: PADDING + INDENT * depth,
       bounds: bounds(
         node.getDecoratedComponentInstance().container
       )
@@ -253,17 +282,18 @@ const DragSourceCollect = (connect, monitor) => ({
 })
 
 const DropTargetSpec = {
-  hover(props, monitor, node) {
+  hover({ depth }, monitor, node) {
     let type = monitor.getItemType()
     //let item = monitor.getItem()
 
     switch (type) {
       case DND.LIST: {
-        let { top, height } = bounds(node.container)
-        let { y } = monitor.getClientOffset()
+        let { left, top, height } = bounds(node.container)
+        let { x, y } = monitor.getClientOffset()
         let offset = (y - top) / height
 
         node.setState({
+          depth: restrict(Math.round((x - left - PADDING) / INDENT), 0, depth),
           offset: offset < 0.33 ? 0 : offset > 0.67 ? 1 : null
         })
         break
@@ -290,16 +320,8 @@ const DropTargetSpec = {
 
       switch (type) {
         case DND.LIST: {
-          let { offset } = node.state
-          let into = (offset == null || offset === 1 && props.isExpanded)
-          let meta = {
-            idx: into ? 0 : props.position + offset
-          }
-
-          props.onMove({
-            id: item.id,
-            parent: into ? list.id : list.parent
-          }, meta)
+          let { parent, idx } = node.getDropPosition()
+          props.onMove({ id: item.id, parent }, { idx })
           break
         }
         case DND.ITEMS:
@@ -316,7 +338,7 @@ const DropTargetSpec = {
           break
       }
     } finally {
-      node.setState({ offset: null })
+      node.setState({ detph: null, offset: null })
     }
   }
 }

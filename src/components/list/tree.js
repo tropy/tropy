@@ -17,8 +17,7 @@ class ListTree extends React.Component {
   }
 
   mapChildren(fn, props = this.props) {
-    let idx = 0
-    return props.parent.children.map(id => {
+    return props.parent.children.map((id, idx, all) => {
       if (id in props.lists) {
         let list = props.lists[id]
         let hasNewListNode = this.hasNewListNode(id)
@@ -33,7 +32,8 @@ class ListTree extends React.Component {
           isExpanded: isExpandable && isExpanded,
           isEditing: this.isEditing(id),
           isHolding: props.hold[id],
-          position: idx++
+          isLast: idx === all.length - 1,
+          position: idx
         })
       }
     })
