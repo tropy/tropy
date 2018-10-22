@@ -81,7 +81,9 @@ class ListNode extends React.PureComponent {
 
   get direction() {
     return (!this.props.isOver || this.state.offset == null) ?  null :
-      (this.state.offset > 0) ? 'after' : 'before'
+      (this.state.offset < 1) ? 'before' :
+      (this.props.isLast && this.state.depth < this.props.depth) ?
+        ['after', 'depth-1'] : 'after'
   }
 
   get isOver() {
