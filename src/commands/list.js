@@ -2,18 +2,15 @@
 
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-const { splice } = require('../common/util')
-
-const {
-  CREATE, DELETE, LOAD, RESTORE, ORDER, SAVE, ITEM
-} = require('../constants/list')
+const { pluck, splice, warp } = require('../common/util')
+const { LIST } = require('../constants')
 
 const actions = require('../actions/list')
 const mod = require('../models/list')
 
 
 class Load extends Command {
-  static get ACTION() { return LOAD }
+  static get ACTION() { return LIST.LOAD }
 
   *exec() {
     const { db } = this.options
@@ -23,7 +20,7 @@ class Load extends Command {
 
 
 class Create extends Command {
-  static get ACTION() { return CREATE }
+  static get ACTION() { return LIST.CREATE }
 
   *exec() {
     const { payload } = this.action
@@ -45,7 +42,7 @@ class Create extends Command {
 }
 
 class Save extends Command {
-  static get ACTION() { return SAVE }
+  static get ACTION() { return LIST.SAVE }
 
   *exec() {
     const { payload } = this.action
@@ -68,7 +65,7 @@ class Save extends Command {
 
 
 class Delete extends Command {
-  static get ACTION() { return DELETE }
+  static get ACTION() { return LIST.DELETE }
 
   *exec() {
     const { payload: id } = this.action
@@ -81,7 +78,7 @@ class Delete extends Command {
     const idx = parent.children.indexOf(id)
     const cid = splice(parent.children, idx, 1)
 
-    yield call([db, db.transaction], async tx => {
+    yield call(db.transaction, async tx => {
       await mod.remove(tx, id)
       await mod.order(tx, parent.id, cid)
     })
@@ -96,7 +93,7 @@ class Delete extends Command {
 
 
 class Restore extends Command {
-  static get ACTION() { return RESTORE }
+  static get ACTION() { return LIST.RESTORE }
 
   *exec() {
     const { db } = this.options
@@ -106,7 +103,7 @@ class Restore extends Command {
     const { children } = yield select(state => state.lists[list.parent])
     const cid = splice(children, idx, 0, list.id)
 
-    yield call([db, db.transaction], async tx => {
+    yield call(db.transaction, async tx => {
       await mod.restore(tx, list.id, list.parent)
       await mod.order(tx, list.parent, cid)
     })
@@ -117,30 +114,58 @@ class Restore extends Command {
   }
 }
 
-class Order extends Command {
-  static get ACTION() { return ORDER }
+class Move extends Command {
+  static get ACTION() { return LIST.MOVE }
 
   *exec() {
-    const { db } = this.options
-    const { id, children } = this.action.payload
+    let { db } = this.options
+    let list = this.action.payload
+    let to = this.action.meta.idx
+    let idx
 
-    const original = yield select(state => state.lists[id].children)
+    let [original, parent] = yield select(state =>
+      pluck(state.lists, [list.id, list.parent]))
 
-    yield call(mod.order, db, id, children)
-    yield put(actions.update({ id, children }))
+    if (parent.id === original.parent) {
+      idx = parent.children.indexOf(list.id)
+      let children = warp(parent.children, idx, to)
 
-    this.undo = actions.order({ id, children: original })
+      yield call(mod.order, db, parent.id, children)
+      yield put(actions.update({ id: parent.id, children }))
+
+    } else {
+      let oldParent = yield select(state => state.lists[original.parent])
+      idx = oldParent.children.indexOf(list.id)
+
+      let oldChildren = splice(oldParent.children, idx, 1)
+      let children = splice(parent.children, to, 0, list.id)
+
+      yield call(db.transaction, async tx => {
+        await mod.save(tx, { id: list.id, parent_list_id: parent.id })
+        await mod.order(tx, parent.id, children)
+        await mod.order(tx, oldParent.id, oldChildren)
+      })
+
+      yield put(actions.update([
+        { id: oldParent.id, children: oldChildren },
+        { id: list.id, parent: parent.id },
+        { id: parent.id, children }
+      ]))
+    }
+
+    this.undo = actions.move({ id: list.id, parent: original.parent }, { idx })
+    return list
   }
 }
 
 class AddItems extends Command {
-  static get ACTION() { return ITEM.ADD }
+  static get ACTION() { return LIST.ITEM.ADD }
 
   *exec() {
     const { db } = this.options
     const { id, items } = this.action.payload
 
-    const res = yield call([db, db.transaction], tx =>
+    const res = yield call(db.transaction, tx =>
       mod.items.add(tx, id, items))
 
     this.undo = actions.items.remove({ id, items: res.items })
@@ -151,7 +176,7 @@ class AddItems extends Command {
 }
 
 class RemoveItems extends Command {
-  static get ACTION() { return ITEM.REMOVE }
+  static get ACTION() { return LIST.ITEM.REMOVE }
 
   *exec() {
     const { db } = this.options
@@ -166,7 +191,7 @@ class RemoveItems extends Command {
 }
 
 class RestoreItems extends Command {
-  static get ACTION() { return ITEM.RESTORE }
+  static get ACTION() { return LIST.ITEM.RESTORE }
 
   *exec() {
     const { db } = this.options
@@ -187,7 +212,7 @@ module.exports = {
   Load,
   Restore,
   Save,
-  Order,
+  Move,
   AddItems,
   RemoveItems,
   RestoreItems

@@ -4,12 +4,11 @@ const { LIST, EDIT } = require('../constants')
 const { array } = require('../common/util')
 
 module.exports = {
-
-  new(payload, meta) {
+  new(payload = {}, meta = {}) {
     return {
       type: EDIT.START,
       payload: {
-        list: { name: '', parent: LIST.ROOT, ...payload, }
+        list: { name: '', ...payload, parent: payload.parent || LIST.ROOT }
       },
       meta
     }
@@ -55,9 +54,9 @@ module.exports = {
     return { type: LIST.RESTORE, payload, meta: { cmd: 'project', ...meta } }
   },
 
-  order(payload, meta) {
+  move(payload, meta) {
     return {
-      type: LIST.ORDER,
+      type: LIST.MOVE,
       payload,
       meta: { cmd: 'project', history: 'add', ...meta }
     }
@@ -70,6 +69,23 @@ module.exports = {
   update(payload, meta) {
     return { type: LIST.UPDATE, payload, meta }
   },
+
+  collapse(payload, meta = {}) {
+    return {
+      type: LIST.COLLAPSE,
+      payload,
+      meta
+    }
+  },
+
+  expand(payload, meta = {}) {
+    return {
+      type: LIST.EXPAND,
+      payload,
+      meta
+    }
+  },
+
 
   items: {
     add({ id, items }, meta) {

@@ -24,6 +24,13 @@
   }
 
   #sidebar & {
+    .tag {
+      display: flex;
+      align-items: center;
+      height: $line-height-large;
+      padding: 0 $default-padding-horizontal 0 $list-tree-padding-left;
+    }
+
     .active {
       background: $tag-list-active-bg;
 

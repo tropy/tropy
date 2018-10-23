@@ -48,7 +48,7 @@ $popup-focus-animations: (
     border-radius: $input-border-radius-small;
 
     &.invalid {
-      @include input-btn-focus("", $input-btn-invalid-color); // sass-lint:disable-line mixins-before-declarations
+      @include input-btn-focus("", $input-btn-invalid-color);
     }
 
     &.fade-in {

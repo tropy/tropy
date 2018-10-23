@@ -1,15 +1,14 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { Thumbnail } = require('./thumbnail')
 const cx = require('classnames')
 const { arrayOf, func, number, shape, string } = require('prop-types')
 
 
-class PhotoDragPreview extends PureComponent {
+class PhotoDragPreview extends React.PureComponent {
   get classes() {
-    return ['photo', 'drag-preview', { multiple: this.count > 1 }]
+    return ['photo', 'drag-preview', 'center', { multiple: this.count > 1 }]
   }
 
   get item() {

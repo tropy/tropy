@@ -162,6 +162,7 @@ $zindex-window-controls:  1090;
 
 // Darwin window controls
 // --------------------------------------------------
+
 $window-controls-width: 60px;
 $window-controls-offset-x: 9px;
 $window-controls-offset-y: 9px;
@@ -171,9 +172,12 @@ $window-controls-margin: 4px;
 // Sidebar
 // --------------------------------------------------
 
-$activity-height: const("ACTIVITY.HEIGHT") * 1px;
+$activity-height:                     const("ACTIVITY.HEIGHT") * 1px;
 $activity-transition-duration:        0.125s;
 $activity-transition-timing-function: ease-out;
+$list-tree-padding-left:              $space-md;
+$list-tree-indent:                    $space-sm;
+$list-tree-max-levels:                100;
 
 
 // Table view

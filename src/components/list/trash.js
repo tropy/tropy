@@ -30,9 +30,11 @@ class TrashListNode extends PureComponent {
         className={cx(this.classes)}
         onContextMenu={this.handleContextMenu}
         onClick={isSelected ? null : onClick}>
-        <IconTrash/>
-        <div className="name">
-          <FormattedMessage id="sidebar.trash"/>
+        <div className="list-node-container">
+          <IconTrash/>
+          <div className="name">
+            <FormattedMessage id="sidebar.trash"/>
+          </div>
         </div>
       </li>
     )

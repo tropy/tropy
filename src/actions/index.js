@@ -27,6 +27,7 @@ module.exports = {
   settings: require('./settings'),
   selection: require('./selection'),
   shell: require('./shell'),
+  sidebar: require('./sidebar'),
   storage: require('./storage'),
   tag: require('./tag'),
   ui: require('./ui'),
