@@ -49,7 +49,7 @@
   border: 1px solid $btn-default-border;
   padding: $padding-base-vertical $padding-base-horizontal;
 
-  @include input-btn-focus(".tab-focus"); // sass-lint:disable-line mixins-before-declarations
+  @include input-btn-focus(".tab-focus");
 
   &:active {
     background: $btn-default-active-bg;
@@ -59,7 +59,7 @@
     background: $btn-default-overlay-bg;
     border-color: transparent;
 
-    @include input-btn-focus(".tab-focus", $input-btn-overlay-focus-color); // sass-lint:disable-line mixins-before-declarations
+    @include input-btn-focus(".tab-focus", $input-btn-overlay-focus-color);
 
     &:active {
       background: $btn-default-overlay-active-bg;
@@ -76,7 +76,7 @@
   color: $btn-primary-color;
   background: $btn-primary-bg;
 
-  @include input-btn-focus(".tab-focus"); // sass-lint:disable-line mixins-before-declarations
+  @include input-btn-focus(".tab-focus");
 
   &:active {
     background: $btn-primary-active-bg;

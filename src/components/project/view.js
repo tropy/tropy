@@ -4,14 +4,13 @@ const React = require('react')
 const { Component } = React
 const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
-const { BufferedResizable } = require('../resizable')
 const { ItemGrid, ItemTable } = require('../item')
 const { ProjectSidebar } = require('./sidebar')
 const { ProjectToolbar } = require('./toolbar')
 const { isValidImage } = require('../../image')
 const { pick, } = require('../../common/util')
 const { array, bool, func, object, number } = require('prop-types')
-const { ITEM, SIDEBAR } = require('../../constants/sass')
+const { ITEM } = require('../../constants/sass')
 
 
 class ProjectView extends Component {
@@ -39,10 +38,6 @@ class ProjectView extends Component {
     }
   }
 
-  handleSidebarResize = (width) => {
-    this.props.onUiUpdate({ sidebar: { width: Math.round(width) } })
-  }
-
   handleZoomChange = (zoom) => {
     this.props.onUiUpdate({ zoom })
   }
@@ -59,6 +54,7 @@ class ProjectView extends Component {
 
   render() {
     const {
+      isActive,
       canDrop,
       edit,
       isOver,
@@ -66,34 +62,20 @@ class ProjectView extends Component {
       keymap,
       nav,
       photos,
-      sidebar,
       tags,
       zoom,
+      onMaximize,
       onItemCreate,
       onItemSelect,
       onSearch,
-      ...props
     } = this.props
 
     const { size, maxZoom, ItemIterator, isEmpty } = this
 
     return (
       <div id="project-view">
-        <BufferedResizable
-          edge="right"
-          value={sidebar.width}
-          min={SIDEBAR.MIN_WIDTH}
-          max={SIDEBAR.MAX_WIDTH}
-          onChange={this.handleSidebarResize}>
-          <ProjectSidebar {...pick(props, ProjectSidebar.props)}
-            edit={edit}
-            keymap={keymap}
-            selectedList={nav.list}
-            selectedTags={nav.tags}
-            isSelected={!(nav.list || nav.trash || nav.imports)}
-            isLastImportSelected={nav.imports}
-            isTrashSelected={nav.trash}/>
-        </BufferedResizable>
+        <ProjectSidebar {...pick(this.props, ProjectSidebar.props)}
+          isDisabled={!isActive}/>
         <div className="main">
           <section id="items" style={this.style}>
             <header>
@@ -103,14 +85,14 @@ class ProjectView extends Component {
                 items={items.length}
                 maxZoom={maxZoom}
                 canCreateItems={!nav.trash}
-                isDisabled={!props.isActive}
+                isDisabled={!isActive}
                 onItemCreate={this.handleItemImport}
-                onDoubleClick={ARGS.frameless ? props.onMaximize : null}
+                onDoubleClick={ARGS.frameless ? onMaximize : null}
                 onSearch={onSearch}
                 onZoomChange={this.handleZoomChange}/>
             </header>
 
-            <ItemIterator {...pick(props, ItemIterator.getPropKeys())}
+            <ItemIterator {...pick(this.props, ItemIterator.getPropKeys())}
               items={items}
               isEmpty={isEmpty}
               photos={photos}
@@ -143,7 +125,6 @@ class ProjectView extends Component {
     nav: object.isRequired,
     offset: number.isRequired,
     photos: object.isRequired,
-    sidebar: object.isRequired,
     tags: object.isRequired,
     dt: func.isRequired,
     zoom: number.isRequired,

@@ -11,9 +11,11 @@ const LastImportListNode = ({ isSelected, onClick }) => (
   <li
     className={cx({ active: isSelected })}
     onClick={isSelected ? null : onClick}>
-    <IconClock/>
-    <div className="name">
-      <FormattedMessage id="sidebar.imports"/>
+    <div className="list-node-container">
+      <IconClock/>
+      <div className="name">
+        <FormattedMessage id="sidebar.imports"/>
+      </div>
     </div>
   </li>
 )

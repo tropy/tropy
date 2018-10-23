@@ -30,11 +30,15 @@ const util = {
   },
 
   update(state, payload, meta = {}) {
-    return {
-      ...state,
-      [payload.id]: meta.replace ?
-        payload : { ...state[payload.id], ...payload }
+    if (!isArray(payload)) payload = [payload]
+    for (let data of payload) {
+      state = {
+        ...state,
+        [data.id]: meta.replace ?
+          data : { ...state[data.id], ...data }
+      }
     }
+    return state
   },
 
   touch(state, payload, meta, error) {

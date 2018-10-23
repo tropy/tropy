@@ -587,6 +587,14 @@ i('Trash', (
   </svg>
 ))
 
+i('Triangle', (
+  <svg width="16" height="16">
+    <g fill="currentColor">
+      <polygon points="8.5 3.938 5 10 12 10 8.5 3.938"/>
+    </g>
+  </svg>
+))
+
 i('U', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">

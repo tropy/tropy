@@ -7,7 +7,7 @@
   &::before,
   &::after {
     position: absolute;
-    outline: 1px solid $photo-sort-indicator;
+    outline: 1px solid $sort-indicator;
   }
 
   &.before {
@@ -81,5 +81,82 @@
         content: "";
       }
     }
+  }
+}
+
+.list-node-container {
+  &.before,
+  &.after {
+    z-index: 1;
+
+    &::before,
+    &::after {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      outline: 1px solid $sort-indicator;
+    }
+  }
+
+  &.before {
+    &::before {
+      content: "";
+      top: 0;
+    }
+  }
+
+  &.after {
+    &::after {
+      content: "";
+      top: 100%;
+    }
+
+    &.depth-1 {
+      &::after {
+        margin-left: -$list-tree-indent;
+      }
+    }
+  }
+}
+
+@for $i from 1 through $list-tree-max-levels {
+  $sel: if($i == 1, "ol", selector-nest($sel, "ol"));
+
+  #{$sel} {
+  	.list-node-container {
+    	&.before,
+    	&.after {
+      	&::before,
+      	&::after {
+          @if ($i == 1) {
+            left: 0;
+          }
+
+          @if ($i == 2) {
+            left: $list-tree-padding-left;
+          }
+
+          @if ($i > 2) {
+            left: $list-tree-padding-left + $list-tree-indent * ($i - 2);
+          }
+      	}
+    	}
+  	}
+
+  	.expanded {
+    	> .list-node-container {
+      	&.after {
+        	&::after {
+            @if ($i == 1) {
+              left: $list-tree-padding-left;
+            }
+
+            @if ($i > 1) {
+              left: $list-tree-padding-left + $list-tree-indent * ($i - 1);
+            }
+          }
+      	}
+    	}
+  	}
   }
 }

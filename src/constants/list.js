@@ -3,20 +3,18 @@
 module.exports = {
   ROOT: 0,
 
+  COLLAPSE: 'list.collapse',
   CREATE: 'list.create',
   DELETE: 'list.delete',
-  RESTORE: 'list.restore',
-  PRUNE: 'list.prune',
-
+  EXPAND: 'list.expand',
   INSERT: 'list.insert',
+  LOAD: 'list.load',
+  MOVE: 'list.move',
+  PRUNE: 'list.prune',
   REMOVE: 'list.remove',
-
+  RESTORE: 'list.restore',
   SAVE: 'list.save',
   UPDATE: 'list.update',
-
-  LOAD: 'list.load',
-
-  ORDER: 'list.order',
 
   ITEM: {
     ADD: 'list.item.add',

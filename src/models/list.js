@@ -2,54 +2,53 @@
 
 const { all } = require('bluebird')
 const { ROOT } = require('../constants/list')
-const { select } = require('../common/query')
-const { remove } = require('../common/util')
-
-function sort(children) {
-  return children ?
-    children
-    .split(/,/)
-    .reduce((res, nxt) => {
-      const [pos, id] = nxt.split(/:/).map(Number)
-      res[pos - 1] = id // TODO ensure positions are unique!
-      return res
-    }, []) : []
-
-}
+const { into, select, update } = require('../common/query')
+const { pick, remove } = require('../common/util')
 
 module.exports = {
-
   async all(db) {
-    const lists = {}
+    let lists = {}
 
-    await db.each(`
-      SELECT l1.list_id AS id, l1.name, l1.parent_list_id AS parent,
-        group_concat(l2.position || ':' || l2.list_id) AS children
-      FROM lists l1 LEFT OUTER JOIN lists l2 ON l2.parent_list_id = l1.list_id
-      GROUP BY l1.list_id`,
-      ({ id, children, ...list }) => {
-        lists[id] = { id, children: sort(children), ...list }
+    await db.each(
+      ...select({ id: 'list_id', parent: 'parent_list_id' }, 'name')
+        .from('lists')
+        .order('parent, position'),
+      ({ id, parent, name }) => {
+        lists[id] = {
+          id, parent, name, children: [], ...lists[id]
+        }
+
+        if (parent != null) {
+          if (!(parent in lists)) {
+            lists[parent] = { id: parent, children: [] }
+          }
+          lists[parent].children.push(id)
+        }
       })
 
     return lists
   },
 
   async create(db, { name, parent, position }) {
-    const { id } = await db.run(
-      'INSERT INTO lists (name, parent_list_id, position) VALUES (?, ?, ?)',
-      name, parent, position)
+    let { id } = await db.run(
+      ...into('lists')
+        .insert({ name, parent_list_id: parent, position }))
 
-    return { id, name, parent }
+    return { id, name, parent, children: [] }
   },
 
   remove(db, id) {
     return db.run(
-      'UPDATE lists SET parent_list_id = NULL WHERE list_id = ?', id)
+      ...update('lists')
+        .set({ parent_list_id: null })
+        .where({ list_id: id }))
   },
 
   restore(db, id, parent) {
     return db.run(
-      'UPDATE lists SET parent_list_id = ? WHERE list_id = ?', parent, id)
+      ...update('lists')
+        .set({ parent_list_id: parent })
+        .where({ list_id: id }))
   },
 
   prune(db) {
@@ -61,10 +60,12 @@ module.exports = {
     ]))
   },
 
-  save(db, { id, name }) {
+  save(db, { id, ...data }) {
     return db.run(
-      'UPDATE lists SET name = ?, modified = datetime("now") WHERE list_id = ?',
-      name, id)
+      ...update('lists')
+        .set(pick(data, ['name', 'parent_list_id']))
+        .set('modified = datetime("now")')
+        .where({ list_id: id }))
   },
 
   order(db, parent, order) {
@@ -96,15 +97,17 @@ module.exports = {
     },
 
     remove(db, id, items) {
-      return db.run(`
-        UPDATE list_items SET deleted = datetime("now")
-          WHERE list_id = ? AND id IN (${items.map(Number).join(',')})`, id)
+      return db.run(
+        ...update('list_items')
+          .set('deleted = datetime("now")')
+          .where({ list_id: id, id: items.map(Number) }))
     },
 
     restore(db, id, items) {
-      return db.run(`
-        UPDATE list_items SET deleted = NULL
-          WHERE list_id = ? AND id IN (${items.map(Number).join(',')})`, id)
+      return db.run(
+        ...update('list_items')
+          .set({ deleted: null })
+          .where({ list_id: id, id: items.map(Number) }))
     }
   }
 }

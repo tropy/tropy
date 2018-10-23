@@ -1,48 +1,57 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
+const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')
 const { ActivityPane } = require('../activity')
+const { BufferedResizable } = require('../resizable')
 const { LastImportListNode, ListTree, TrashListNode } = require('../list')
 const { ProjectTags } = require('./tags')
-const { Sidebar } = require('../sidebar')
+const { Sidebar, SidebarBody } = require('../sidebar')
 const { ProjectName } = require('./name')
-const { TABS, LIST } = require('../../constants')
-const { has } = require('../../common/util')
+const { TABS, LIST, SASS: { SIDEBAR } } = require('../../constants')
+const { has, last } = require('../../common/util')
 const { match } = require('../../keymap')
 const { testFocusChange } = require('../../dom')
+const actions = require('../../actions')
+
 const {
   bool, shape, string, object, arrayOf, func, number
 } = require('prop-types')
 
+const {
+  getActivities,
+  getListHold,
+  getListSubTree
+} = require('../../selectors')
 
-class ProjectSidebar extends PureComponent {
+
+class ProjectSidebar extends React.PureComponent {
   get isEditing() {
     return has(this.props.edit, 'project')
   }
 
   get hasActiveFilters() {
-    return this.props.selectedTags.length > 0
+    return this.props.tagSelection.length > 0
+  }
+
+  get hasSelection() {
+    return this.props.list != null ||
+      this.props.isTrashSelected ||
+      this.props.isLastImportSelected && this.props.hasLastImport
   }
 
   get tabIndex() {
-    return (this.props.isActive) ? TABS.ProjectSidebar : null
-  }
-
-  getRootList() {
-    return this.props.lists[LIST.ROOT]
+    return (this.props.isDisabled) ? null : TABS.ProjectSidebar
   }
 
   getFirstList() {
-    const root = this.getRootList()
-    return root && root.children[0]
+    return this.props.listwalk[0]
   }
 
   getLastList() {
-    const root = this.getRootList()
-    return root && root.children[root.children.length - 1]
+    return last(this.props.listwalk)
   }
 
   getNextList() {
@@ -54,44 +63,35 @@ class ProjectSidebar extends PureComponent {
   }
 
   getListAt(offset = 1) {
-    const root = this.getRootList()
-    const list = this.props.selectedList
+    let list = this.props.list
+    let walk = this.props.listwalk
 
-    if (!root || !list) return
-
-    const idx = root.children.indexOf(list)
-
+    let idx = walk.indexOf(list)
     if (idx < 0) return
 
-    return root.children[idx + offset]
+    return walk[idx + offset]
   }
 
   isListSelected(list) {
-    return list && list === this.props.selectedList
+    return list && list === this.props.list
   }
 
   isListEmpty() {
-    const root = this.getRootList()
-    return root.children.length === 0
+    return this.props.listwalk.length === 0
   }
 
-
   next() {
-    const {
-      isSelected, isTrashSelected, hasLastImport, isLastImportSelected
-    } = this.props
-
     switch (true) {
-      case isTrashSelected:
+      case this.props.isTrashSelected:
         return
-      case isLastImportSelected:
+      case this.props.isLastImportSelected:
         return this.handleTrashSelect()
       case this.isListEmpty():
       case this.isListSelected(this.getLastList()):
-        return hasLastImport ?
+        return this.props.hasLastImport ?
           this.handleLastImportSelect() :
           this.handleTrashSelect()
-      case isSelected:
+      case !this.hasSelection:
         return this.handleListSelect(this.getFirstList())
       default:
         return this.handleListSelect(this.getNextList())
@@ -99,22 +99,18 @@ class ProjectSidebar extends PureComponent {
   }
 
   prev() {
-    const {
-      isSelected, isTrashSelected, hasLastImport, isLastImportSelected
-    } = this.props
-
     switch (true) {
-      case isSelected:
+      case !this.hasSelection:
         return
-      case isTrashSelected && hasLastImport:
+      case this.props.isTrashSelected && this.props.hasLastImport:
         return this.handleLastImportSelect()
       case this.isListEmpty():
       case this.isListSelected(this.getFirstList()):
         return this.handleSelect()
-      case isLastImportSelected:
+      case this.props.isLastImportSelected:
         return this.handleListSelect(this.getLastList())
-      case isTrashSelected:
-        return hasLastImport ?
+      case this.props.isTrashSelected:
+        return this.props.hasLastImport ?
           this.handleLastImportSelect() :
           this.handleListSelect(this.getLastList())
       default:
@@ -122,17 +118,28 @@ class ProjectSidebar extends PureComponent {
     }
   }
 
+  collapse() {
+    if (this.props.list != null) {
+      this.props.onListCollapse(this.props.list)
+    }
+  }
+
+  expand() {
+    if (this.props.list != null) {
+      this.props.onListExpand(this.props.list)
+    }
+  }
+
   handleSelect() {
     this.props.onSelect({ list: null, trash: null }, { throttle: true })
   }
-
 
   handleMouseDown = () => {
     this.hasFocusChanged = testFocusChange()
   }
 
   handleClick = () => {
-    if (!this.props.isSelected || this.hasActiveFilters) {
+    if (this.hasSelection || this.hasActiveFilters) {
       return this.handleSelect()
     }
 
@@ -185,6 +192,12 @@ class ProjectSidebar extends PureComponent {
       case 'clear':
         this.handleSelect()
         break
+      case 'expand':
+        this.expand()
+        break
+      case 'collapse':
+        this.collapse()
+        break
       default:
         return
     }
@@ -193,165 +206,156 @@ class ProjectSidebar extends PureComponent {
     event.stopPropagation()
   }
 
-
-  showSidebarMenu = (event) => {
+  handleContextMenu = (event) => {
     this.props.onContextMenu(event, 'sidebar')
-  }
-
-  showProjectMenu = (event) => {
-    this.props.onContextMenu(
-      event, 'project', { path: this.props.project.file }
-    )
   }
 
   render() {
     const {
-      activities,
       edit,
-      hasLastImport,
-      hasToolbar,
-      hold,
-      isSelected,
-      isLastImportSelected,
-      isTrashSelected,
-      keymap,
-      lists,
       project,
-      selectedList,
-      selectedTags,
       onContextMenu,
       onEditCancel,
       onItemImport,
       onItemTagAdd,
-      onListItemsAdd,
-      onListSave,
-      onListSort,
-      onMaximize,
       onTagCreate,
       onTagDelete,
       onTagSave,
       onTagSelect
     } = this.props
 
-    const root = this.getRootList()
+    let root = this.props.lists[this.props.root]
 
     return (
-      <Sidebar>
-        {hasToolbar && <Toolbar onDoubleClick={onMaximize}/>}
-        <div className="sidebar-body" onContextMenu={this.showSidebarMenu}>
+      <BufferedResizable
+        edge="right"
+        value={this.props.width}
+        min={SIDEBAR.MIN_WIDTH}
+        max={SIDEBAR.MAX_WIDTH}
+        onChange={this.props.onResize}>
+        <Sidebar>
+          {this.props.hasToolbar &&
+            <Toolbar onDoubleClick={this.props.onMaximize}/>}
 
-          <section
-            tabIndex={this.tabIndex}
-            onKeyDown={this.handleKeyDown}
-            onMouseDown={this.handleMouseDown}>
-            <nav onContextMenu={this.showProjectMenu}>
-              <ol>
-                <ProjectName
-                  name={project.name}
-                  isSelected={isSelected}
-                  isEditing={this.isEditing}
-                  onChange={this.handleChange}
-                  onClick={this.handleClick}
-                  onEditCancel={onEditCancel}
-                  onDrop={onItemImport}/>
-              </ol>
-            </nav>
+          <SidebarBody onContextMenu={this.handleContextMenu}>
+            <section
+              tabIndex={this.tabIndex}
+              onKeyDown={this.handleKeyDown}
+              onMouseDown={this.handleMouseDown}>
+              <nav>
+                <ol>
+                  <ProjectName
+                    name={project.name}
+                    isSelected={!this.hasSelection}
+                    isEditing={this.isEditing}
+                    onChange={this.handleChange}
+                    onClick={this.handleClick}
+                    onEditCancel={onEditCancel}
+                    onDrop={onItemImport}/>
+                </ol>
+              </nav>
 
-            <h3>
-              <FormattedMessage id="sidebar.lists"/>
-            </h3>
-            <nav>
-              {root &&
-                <ListTree
-                  parent={root}
-                  lists={lists}
-                  edit={edit.list}
-                  hold={hold}
-                  selection={selectedList}
-                  onContextMenu={onContextMenu}
-                  onDropFiles={onItemImport}
-                  onDropItems={onListItemsAdd}
-                  onClick={this.handleListClick}
-                  onEditCancel={onEditCancel}
-                  onListSave={onListSave}
-                  onSort={onListSort}/>}
-              <ol>
-                {hasLastImport &&
-                  <LastImportListNode
-                    isSelected={isLastImportSelected}
-                    onClick={this.handleLastImportSelect}/>}
-                <TrashListNode
-                  isSelected={isTrashSelected}
-                  onContextMenu={onContextMenu}
-                  onDropItems={this.handleTrashDropItems}
-                  onClick={this.handleTrashSelect}/>
-              </ol>
-            </nav>
-          </section>
+              <h3><FormattedMessage id="sidebar.lists"/></h3>
+              <nav>
+                {root &&
+                  <ListTree
+                    parent={root}
+                    lists={this.props.lists}
+                    edit={this.props.edit.list}
+                    expand={this.props.expand}
+                    hold={this.props.hold}
+                    selection={this.props.list}
+                    onContextMenu={onContextMenu}
+                    onDropFiles={onItemImport}
+                    onDropItems={this.props.onListItemsAdd}
+                    onClick={this.handleListClick}
+                    onEditCancel={onEditCancel}
+                    onExpand={this.props.onListExpand}
+                    onCollapse={this.props.onListCollapse}
+                    onMove={this.props.onListMove}
+                    onSave={this.props.onListSave}/>}
+                <ol>
+                  {this.props.hasLastImport &&
+                    <LastImportListNode
+                      isSelected={this.props.isLastImportSelected}
+                      onClick={this.handleLastImportSelect}/>}
+                  <TrashListNode
+                    isSelected={this.props.isTrashSelected}
+                    onContextMenu={onContextMenu}
+                    onDropItems={this.handleTrashDropItems}
+                    onClick={this.handleTrashSelect}/>
+                </ol>
+              </nav>
+            </section>
 
-          <section>
-            <h2><FormattedMessage id="sidebar.tags"/></h2>
-            <ProjectTags
-              keymap={keymap.TagList}
-              selection={selectedTags}
-              edit={edit.tag}
-              onEditCancel={onEditCancel}
-              onCreate={onTagCreate}
-              onDelete={onTagDelete}
-              onDropItems={onItemTagAdd}
-              onSave={onTagSave}
-              onSelect={onTagSelect}
-              onContextMenu={onContextMenu}/>
-          </section>
+            <section>
+              <h2><FormattedMessage id="sidebar.tags"/></h2>
+              <ProjectTags
+                keymap={this.props.keymap.TagList}
+                selection={this.props.tagSelection}
+                edit={edit.tag}
+                onEditCancel={onEditCancel}
+                onCreate={onTagCreate}
+                onDelete={onTagDelete}
+                onDropItems={onItemTagAdd}
+                onSave={onTagSave}
+                onSelect={onTagSelect}
+                onContextMenu={onContextMenu}/>
+            </section>
 
-        </div>
-        <ActivityPane activities={activities}/>
-      </Sidebar>
+          </SidebarBody>
+          <ActivityPane activities={this.props.activities}/>
+        </Sidebar>
+      </BufferedResizable>
     )
   }
 
   static propTypes = {
-    isActive: bool,
-    isSelected: bool,
-    isLastImportSelected: bool,
-    isTrashSelected: bool,
+    activities: arrayOf(object).isRequired,
+    edit: object.isRequired,
+    expand: object.isRequired,
     hasLastImport: bool.isRequired,
     hasToolbar: bool,
     hold: object.isRequired,
-
+    isDisabled: bool,
+    isLastImportSelected: bool,
+    isTrashSelected: bool,
+    keymap: object.isRequired,
+    list: number,
+    lists: object.isRequired,
+    listwalk: arrayOf(number).isRequired,
+    onMaximize: func.isRequired,
     project: shape({
       file: string,
       name: string,
       items: number
     }).isRequired,
-
-    keymap: object.isRequired,
-    activities: arrayOf(object).isRequired,
-    edit: object.isRequired,
-    lists: object.isRequired,
-    selectedList: number,
-    selectedTags: arrayOf(number).isRequired,
-
-    onMaximize: func.isRequired,
+    root: number.isRequired,
+    tagSelection: arrayOf(number).isRequired,
+    width: number.isRequired,
+    onContextMenu: func.isRequired,
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,
-    onContextMenu: func.isRequired,
     onItemDelete: func.isRequired,
     onItemImport: func.isRequired,
     onItemTagAdd: func.isRequired,
+    onListCollapse: func.isRequired,
+    onListExpand: func.isRequired,
     onListItemsAdd: func.isRequired,
+    onListMove: func.isRequired,
     onListSave: func.isRequired,
-    onListSort: func.isRequired,
+    onProjectSave: func.isRequired,
+    onResize: func.isRequired,
+    onSelect: func.isRequired,
     onTagCreate: func.isRequired,
     onTagDelete: func.isRequired,
     onTagSave: func.isRequired,
-    onTagSelect: func.isRequired,
-    onProjectSave: func.isRequired,
-    onSelect: func.isRequired
+    onTagSelect: func.isRequired
   }
 
   static defaultProps = {
-    hasToolbar: ARGS.frameless
+    hasToolbar: ARGS.frameless,
+    root: LIST.ROOT
   }
 
   static props = Object.keys(ProjectSidebar.propTypes)
@@ -359,5 +363,56 @@ class ProjectSidebar extends PureComponent {
 
 
 module.exports = {
-  ProjectSidebar
+  ProjectSidebar: connect(
+    (state, { root }) => ({
+      activities: getActivities(state),
+      expand: state.sidebar.expand,
+      hasLastImport: state.imports.length > 0,
+      hold: getListHold(state),
+      isLastImportSelected: state.nav.imports,
+      isTrashSelected: state.nav.trash,
+      lists: state.lists,
+      list: state.nav.list,
+      listwalk: getListSubTree(state, { root: root || LIST.ROOT }),
+      project: state.project,
+      tagSelection: state.nav.tags,
+      width: state.ui.sidebar.width
+    }),
+
+    (dispatch) => ({
+      onListCollapse(...args) {
+        dispatch(actions.list.collapse(...args))
+      },
+
+      onListExpand(...args) {
+        dispatch(actions.list.expand(...args))
+      },
+
+      onListItemsAdd({ list, items }) {
+        dispatch(actions.list.items.add({
+          id: list, items: items.map(item => item.id)
+        }))
+      },
+
+      onListSave(...args) {
+        dispatch(actions.list.save(...args))
+        dispatch(actions.edit.cancel())
+      },
+
+      onListMove(...args) {
+        dispatch(actions.list.move(...args))
+      },
+
+      onProjectSave(...args) {
+        dispatch(actions.project.save(...args))
+        dispatch(actions.edit.cancel())
+      },
+
+      onResize(width) {
+        dispatch(actions.ui.update({
+          sidebar: { width: Math.round(width) }
+        }))
+      }
+    })
+  )(ProjectSidebar)
 }

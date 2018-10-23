@@ -21,11 +21,9 @@ const { match } = require('../../keymap')
 const { IconSpin } = require('../icons')
 
 const {
-  getActivities,
   getCachePrefix,
   getAllColumns,
   getExpandedPhotos,
-  getListHold,
   getSelectedItems,
   getSelectedPhoto,
   getSelectedNote,
@@ -212,14 +210,11 @@ class ProjectContainer extends Component {
     if (this.state.isClosed) return this.renderNoProject()
 
     const {
-      activities,
       columns,
       data,
       dt,
       expanded,
-      hold,
       items,
-      hasLastImport,
       nav,
       note,
       notes,
@@ -239,16 +234,12 @@ class ProjectContainer extends Component {
         onContextMenu={this.handleContextMenu}>
 
         <ProjectView {...props}
-          activities={activities}
           nav={nav}
-          hold={hold}
           items={items}
           data={data}
           isActive={this.state.mode === MODE.PROJECT && !this.isClosing()}
           isEmpty={this.isEmpty}
           columns={columns}
-          hasLastImport={hasLastImport}
-          sidebar={ui.sidebar}
           offset={this.state.offset}
           photos={photos}
           zoom={ui.zoom}
@@ -293,7 +284,6 @@ class ProjectContainer extends Component {
       file: string
     }).isRequired,
 
-    hold: object.isRequired,
     keymap: object.isRequired,
     items: arrayOf(
       shape({ id: number.isRequired })
@@ -315,11 +305,6 @@ class ProjectContainer extends Component {
       shape({ id: number.isRequired })
     ),
 
-    activities: arrayOf(
-      shape({ id: number.isRequired })
-    ),
-
-    hasLastImport: bool,
     nav: shape({
       mode: oneOf(values(MODE)).isRequired
     }).isRequired,
@@ -391,18 +376,14 @@ const DropTargetSpec = {
 module.exports = {
   ProjectContainer: connect(
     state => ({
-      activities: getActivities(state),
       cache: getCachePrefix(state),
       columns: getAllColumns(state),
       data: state.metadata,
       edit: state.edit,
       expanded: getExpandedPhotos(state),
-      hold: getListHold(state),
       index: state.qr.index,
       items: getVisibleItems(state),
       keymap: state.keymap,
-      hasLastImport: state.imports.length > 0,
-      lists: state.lists,
       nav: state.nav,
       note: getSelectedNote(state),
       notes: getVisibleNotes(state),
@@ -442,11 +423,6 @@ module.exports = {
 
       onProjectOpen(path) {
         dispatch(actions.project.open(path))
-      },
-
-      onProjectSave(...args) {
-        dispatch(actions.project.save(...args))
-        dispatch(actions.edit.cancel())
       },
 
       onColumnInsert(...args) {
@@ -560,21 +536,6 @@ module.exports = {
 
       onPhotoError(...args) {
         dispatch(actions.photo.error(...args))
-      },
-
-      onListSave(...args) {
-        dispatch(actions.list.save(...args))
-        dispatch(actions.edit.cancel())
-      },
-
-      onListSort(...args) {
-        dispatch(actions.list.order(...args))
-      },
-
-      onListItemsAdd({ list, items }) {
-        dispatch(actions.list.items.add({
-          id: list, items: items.map(item => item.id)
-        }))
       },
 
       onTagCreate(data) {

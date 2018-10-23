@@ -1,16 +1,27 @@
 'use strict'
 
 const React = require('react')
-const PropTypes = require('prop-types')
+const { node } = require('prop-types')
 
 const Sidebar = ({ children }) => (
   <header id="sidebar">{children}</header>
 )
 
 Sidebar.propTypes = {
-  children: PropTypes.node
+  children: node
+}
+
+const SidebarBody = ({ children, ...props }) => (
+  <div className="sidebar-body" {...props}>
+    {children}
+  </div>
+)
+
+SidebarBody.propTypes = {
+  children: node
 }
 
 module.exports = {
-  Sidebar
+  Sidebar,
+  SidebarBody
 }

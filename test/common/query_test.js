@@ -100,6 +100,14 @@ describe('Query Builder', () => {
           .query
       ).to.eql('UPDATE project SET base = NULL'))
 
+    it('set strings', () =>
+      expect(
+        update('project')
+          .set({ base: null })
+          .set('modified = datetime("now")')
+          .query
+      ).to.eql('UPDATE project SET base = NULL, modified = datetime("now")'))
+
     it('conditional', () => {
       let q = update('project').set({ name: 'new' }).where({ name: 'old' })
 
@@ -115,6 +123,16 @@ describe('Query Builder', () => {
           .set({ name: 'Tropy', base: 'project' })
           .query
       ).to.eql('UPDATE project SET name = $new_name, base = $new_base'))
+
+    it('lists', () =>
+      expect(
+        update('list_items')
+          .set('mod = datetime("now")')
+          .where({ id: [1, 2, 3] })
+          .query
+      ).to.eql(
+        'UPDATE list_items SET mod = datetime("now") WHERE id IN (1, 2, 3)'
+      ))
 
     it('filtered', () =>
       expect(

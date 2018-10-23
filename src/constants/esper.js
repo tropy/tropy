@@ -1,6 +1,10 @@
 'use strict'
 
 module.exports = {
+  RESTORE: 'esper.restore',
+  UPDATE: 'esper.update',
+
+
   MODE: {
     FIT: 'fit',
     FILL: 'fill',

@@ -18,7 +18,7 @@
     border-color: var(--level-#{$n}-border);
     background-color: var(--level-#{$n}-bg);
 
-    @include input-btn-focus; // sass-lint:disable-line mixins-before-declarations
+    @include input-btn-focus;
 
     &[readonly],
     &[disabled],
