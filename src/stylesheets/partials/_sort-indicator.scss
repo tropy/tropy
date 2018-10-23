@@ -110,6 +110,12 @@
       content: "";
       top: 100%;
     }
+
+    &.depth-1 {
+      &::after {
+        margin-left: -$list-tree-indent;
+      }
+    }
   }
 }
 
