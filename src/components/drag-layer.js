@@ -11,27 +11,42 @@ const { bool, number, object, shape, string } = require('prop-types')
 
 
 class DragLayer extends React.Component {
-  get offset() {
-    let { offset, start, item } = this.props
+  get position() {
+    let { position, item } = this.props
     let x = 0
     let y = 0
 
-    if (offset) {
-      x = offset.x
-      y = offset.y
+    if (position) {
+      x = position.x
+      y = position.y
 
-      if (item.bounds) {
-        x -= start.x - (item.bounds.x + item.bounds.width / 2)
-        y -= start.y - (item.bounds.y + item.bounds.height / 2)
+      switch (item.position) {
+        case 'relative': {
+          let { offset } = this
+          x -= offset.x
+          y -= offset.y
+          break
+        }
       }
     }
+
     return { x, y }
   }
 
-  get style() {
-    let { offset } = this
+  get offset() {
+    let origin = this.props.initialSourceClientOffset
+    let cursor = this.props.initialClientOffset
+
     return {
-      transform: `translate(${offset.x}px, ${offset.y}px)`
+      x: cursor.x - origin.x,
+      y: cursor.y - origin.y
+    }
+  }
+
+  get style() {
+    let { x, y } = this.position
+    return {
+      transform: `translate(${x}px, ${y}px)`
     }
   }
 
@@ -67,7 +82,7 @@ class DragLayer extends React.Component {
     cache: string.isRequired,
     isDragging: bool,
     item: object,
-    offset: shape({
+    position: shape({
       x: number.isRequired,
       y: number.isRequired
     }),
@@ -84,8 +99,9 @@ module.exports = {
   DragLayer: ReactDnD.DragLayer((monitor) => ({
     item: monitor.getItem(),
     type: monitor.getItemType(),
-    start: monitor.getInitialClientOffset(),
-    offset: monitor.getClientOffset(),
+    initialClientOffset: monitor.getInitialClientOffset(),
+    initialSourceClientOffset: monitor.getInitialSourceClientOffset(),
+    position: monitor.getClientOffset(),
     isDragging: monitor.isDragging()
   }))(DragLayer)
 }

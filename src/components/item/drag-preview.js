@@ -1,18 +1,15 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { CoverImage } = require('./cover-image')
 const cx = require('classnames')
 const { arrayOf, string, func, shape, number, object } =  require('prop-types')
 
-class ItemDragPreview extends PureComponent {
+class ItemDragPreview extends React.PureComponent {
   get classes() {
-    return {
-      'item': true,
-      'drag-preview': true,
-      'multiple': this.count > 1
-    }
+    return ['item', 'drag-preview', 'center', {
+      multiple: this.count > 1
+    }]
   }
 
   get item() {
@@ -27,7 +24,7 @@ class ItemDragPreview extends PureComponent {
     const { cache, photos, size, tags, onPhotoError } = this.props
 
     return (
-      <div className={cx(this.classes)}>
+      <div className={cx(...this.classes)}>
         <CoverImage
           cache={cache}
           photos={photos}
@@ -40,7 +37,6 @@ class ItemDragPreview extends PureComponent {
         }
       </div>
     )
-
   }
 
   static propTypes = {

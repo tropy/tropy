@@ -266,13 +266,11 @@ class ListNode extends React.PureComponent {
 }
 
 const DragSourceSpec = {
-  beginDrag({ list, depth }, _, node) {
+  beginDrag({ list, depth }) {
     return {
       ...list,
       padding: PADDING + INDENT * depth,
-      bounds: bounds(
-        node.getDecoratedComponentInstance().container
-      )
+      position: 'relative'
     }
   }
 }

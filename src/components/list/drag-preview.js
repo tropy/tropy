@@ -8,8 +8,7 @@ const { number, shape, string } = require('prop-types')
 class ListDragPreview extends React.PureComponent {
   get style() {
     return {
-      paddingLeft: this.props.list.padding,
-      width: this.props.list.bounds.width
+      paddingLeft: this.props.list.padding
     }
   }
 
@@ -27,10 +26,7 @@ class ListDragPreview extends React.PureComponent {
   static propTypes = {
     list: shape({
       name: string.isRequired,
-      padding: number.isRequired,
-      bounds: shape({
-        width: number.isRequired
-      }).isRequired
+      padding: number.isRequired
     }).isRequired
   }
 }
