@@ -16,7 +16,7 @@ const DEFAULTS = {
   useContentSize: true,
   webPreferences: {
     preload: join(__dirname, '..', 'bootstrap.js'),
-    experimentalFeatures: true
+    experimentalFeatures: false
   }
 }
 
