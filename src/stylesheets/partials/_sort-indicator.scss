@@ -129,15 +129,15 @@
       	&::before,
       	&::after {
           @if ($i == 1) {
-            left: 0;
+            left: $list-tree-padding-left + 1px;
           }
 
           @if ($i == 2) {
-            left: $list-tree-padding-left;
+            left: $list-tree-padding-left + $list-tree-indent + 1px;
           }
 
           @if ($i > 2) {
-            left: $list-tree-padding-left + $list-tree-indent * ($i - 2);
+            left: $list-tree-padding-left + $list-tree-indent * ($i - 1) + 1px;
           }
       	}
     	}
@@ -148,11 +148,11 @@
       	&.after {
         	&::after {
             @if ($i == 1) {
-              left: $list-tree-padding-left;
+              left: $list-tree-padding-left + $list-tree-indent + 1px;
             }
 
             @if ($i > 1) {
-              left: $list-tree-padding-left + $list-tree-indent * ($i - 1);
+              left: $list-tree-padding-left + $list-tree-indent * $i + 1px;
             }
           }
       	}
