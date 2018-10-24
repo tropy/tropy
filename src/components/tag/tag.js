@@ -15,20 +15,18 @@ const { shape, number, string, bool, func } = require('prop-types')
 
 
 const NewTag = (props) => (
-  <ol className="tag-list">
-    <li className="tag" tabIndex={-1}>
-      <IconTag/>
-      <div className="name">
-        <Editable
-          value={props.name}
-          isRequired
-          resize
-          isActive
-          onCancel={props.onCancel}
-          onChange={(name) => props.onCreate({ name })}/>
-      </div>
-    </li>
-  </ol>
+  <li className="tag" tabIndex={-1}>
+    <IconTag/>
+    <div className="name">
+      <Editable
+        value={props.name}
+        isRequired
+        resize
+        isActive
+        onCancel={props.onCancel}
+        onChange={(name) => props.onCreate({ name })}/>
+    </div>
+  </li>
 )
 
 NewTag.propTypes = {

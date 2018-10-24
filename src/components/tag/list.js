@@ -1,14 +1,19 @@
 'use strict'
 
 const React = require('react')
-const PropTypes = require('prop-types')
-const { arrayOf, bool, number, string, shape, object, func } = PropTypes
-const { Tag } = require('./tag')
+const { NewTag, Tag } = require('./tag')
 const { get, noop } = require('../../common/util')
 const { match } = require('../../keymap')
+const {
+  arrayOf, bool, number, string, shape, object, func
+} = require('prop-types')
 
 
 class TagList extends React.PureComponent {
+  get hasNewTag() {
+    return this.props.onCreate != null &&
+      this.props.edit != null && this.props.edit.id == null
+  }
 
   isEditing(tag) {
     return get(this.props.edit, ['id']) === tag.id
@@ -18,15 +23,12 @@ class TagList extends React.PureComponent {
     return this.props.selection.includes(tag.id)
   }
 
-
   handleContextMenu = (event, tag) => {
-    const { selection, onSelect, onContextMenu } = this.props
-
-    if (!this.isSelected(tag) || selection.length > 1) {
-      onSelect(tag.id, { mod: 'replace' })
+    if (!this.isSelected(tag) || this.props.selection.length > 1) {
+      this.props.onSelect(tag.id, { mod: 'replace' })
     }
 
-    onContextMenu(event, tag)
+    this.props.onContextMenu(event, tag)
   }
 
   handleKeyDown = (event, tag) => {
@@ -50,54 +52,49 @@ class TagList extends React.PureComponent {
   }
 
   render() {
-    const {
-      tags,
-      hasFocusIcon,
-      onCommit,
-      onDropItems,
-      onEditCancel,
-      onSelect,
-      onSave
-    } = this.props
-
     return (
       <ol className="tag-list">
-        {tags.map(tag =>
+        {this.props.tags.map(tag =>
           <Tag
             key={tag.id}
             tag={tag}
-            hasFocusIcon={hasFocusIcon}
+            hasFocusIcon={this.props.hasFocusIcon}
             isEditing={this.isEditing(tag)}
             isSelected={this.isSelected(tag)}
-            onChange={onSave}
-            onDropItems={onDropItems}
-            onEditCancel={onEditCancel}
-            onFocusClick={onCommit}
+            onChange={this.props.onSave}
+            onDropItems={this.props.onDropItems}
+            onEditCancel={this.props.onEditCancel}
+            onFocusClick={this.props.onCommit}
             onKeyDown={this.handleKeyDown}
-            onSelect={onSelect}
+            onSelect={this.props.onSelect}
             onContextMenu={this.handleContextMenu}/>)}
+        {this.hasNewTag &&
+          <NewTag
+            onCreate={this.props.onCreate}
+            onCancel={this.props.onEditCancel}
+            name={this.props.edit.name}/>}
       </ol>
     )
   }
 
   static propTypes = {
+    edit: object,
+    hasFocusIcon: bool,
+    keymap: object.isRequired,
+    selection: arrayOf(number).isRequired,
     tags: arrayOf(shape({
       id: number.isRequired,
       name: string.isRequired
     })).isRequired,
 
-    hasFocusIcon: bool,
-    selection: arrayOf(number).isRequired,
-    keymap: object.isRequired,
-    edit: object,
-
     onCommit: func.isRequired,
+    onContextMenu: func.isRequired,
+    onCreate: func,
     onDropItems: func,
     onEditCancel: func.isRequired,
     onRemove: func.isRequired,
-    onSelect: func.isRequired,
     onSave: func.isRequired,
-    onContextMenu: func.isRequired
+    onSelect: func.isRequired
   }
 
   static defaultProps = {

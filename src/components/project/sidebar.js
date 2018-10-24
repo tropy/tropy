@@ -7,8 +7,7 @@ const { Toolbar } = require('../toolbar')
 const { ActivityPane } = require('../activity')
 const { BufferedResizable } = require('../resizable')
 const { LastImportListNode, ListTree, TrashListNode } = require('../list')
-const { ProjectTags } = require('./tags')
-const { TagFilter } = require('../tag')
+const { TagFilter, TagList } = require('../tag')
 const { Sidebar, SidebarBody } = require('../sidebar')
 const { ProjectName } = require('./name')
 const { TABS, LIST, SASS: { SIDEBAR } } = require('../../constants')
@@ -217,14 +216,14 @@ class ProjectSidebar extends React.PureComponent {
     this.props.onContextMenu(event, 'sidebar')
   }
 
-  render() {
-    const {
-      project,
-      onContextMenu,
-      onEditCancel,
-      onItemImport
-    } = this.props
+  handleTagContextMenu = (event, tag) => {
+    this.props.onContextMenu(event, 'tag', {
+      id: tag.id,
+      color: tag.color
+    })
+  }
 
+  render() {
     let root = this.props.lists[this.props.root]
 
     return (
@@ -246,13 +245,13 @@ class ProjectSidebar extends React.PureComponent {
               <nav>
                 <ol>
                   <ProjectName
-                    name={project.name}
+                    name={this.props.project.name}
                     isSelected={!this.hasSelection}
                     isEditing={this.isEditing}
                     onChange={this.handleChange}
                     onClick={this.handleClick}
-                    onEditCancel={onEditCancel}
-                    onDrop={onItemImport}/>
+                    onEditCancel={this.props.onEditCancel}
+                    onDrop={this.props.onItemImport}/>
                 </ol>
               </nav>
 
@@ -267,11 +266,11 @@ class ProjectSidebar extends React.PureComponent {
                     hold={this.props.hold}
                     isExpanded
                     selection={this.props.list}
-                    onContextMenu={onContextMenu}
-                    onDropFiles={onItemImport}
+                    onContextMenu={this.props.onContextMenu}
+                    onDropFiles={this.props.onItemImport}
                     onDropItems={this.props.onListItemsAdd}
                     onClick={this.handleListClick}
-                    onEditCancel={onEditCancel}
+                    onEditCancel={this.props.onEditCancel}
                     onExpand={this.props.onListExpand}
                     onCollapse={this.props.onListCollapse}
                     onMove={this.props.onListMove}
@@ -283,7 +282,7 @@ class ProjectSidebar extends React.PureComponent {
                       onClick={this.handleLastImportSelect}/>}
                   <TrashListNode
                     isSelected={this.props.isTrashSelected}
-                    onContextMenu={onContextMenu}
+                    onContextMenu={this.props.onContextMenu}
                     onDropItems={this.handleTrashDropItems}
                     onClick={this.handleTrashSelect}/>
                 </ol>
@@ -296,21 +295,23 @@ class ProjectSidebar extends React.PureComponent {
                 <TagFilter
                   value={this.props.filter}
                   onChange={this.props.onTagFilter}/>}
-              <ProjectTags
-                edit={this.props.edit.tag}
-                keymap={this.props.keymap.TagList}
-                selection={this.props.tagSelection}
-                tags={this.props.tags}
-                onEditCancel={this.props.onEditCancel}
-                onCreate={this.props.onTagCreate}
-                onDelete={this.props.onTagDelete}
-                onDropItems={this.props.onItemTagAdd}
-                onSave={this.props.onTagSave}
-                onSelect={this.props.onTagSelect}
-                onContextMenu={this.props.onContextMenu}/>
+              <nav>
+                <TagList
+                  edit={this.props.edit.tag}
+                  keymap={this.props.keymap.TagList}
+                  selection={this.props.tagSelection}
+                  tags={this.props.tags}
+                  onContextMenu={this.handleTagContextMenu}
+                  onCreate={this.props.onTagCreate}
+                  onDropItems={this.props.onItemTagAdd}
+                  onEditCancel={this.props.onEditCancel}
+                  onRemove={this.props.onTagDelete}
+                  onSave={this.props.onTagSave}
+                  onSelect={this.props.onTagSelect}/>
+              </nav>
             </section>
-
           </SidebarBody>
+
           <ActivityPane activities={this.props.activities}/>
         </Sidebar>
       </BufferedResizable>
