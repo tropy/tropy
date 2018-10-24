@@ -86,6 +86,10 @@ class ProjectSidebar extends React.PureComponent {
       this.props.tags.length > this.props.minFilter
   }
 
+  get hasNoMatchingTags() {
+    return this.props.filter && this.props.tags.length === 0
+  }
+
   next() {
     switch (true) {
       case this.props.isTrashSelected:
@@ -296,6 +300,8 @@ class ProjectSidebar extends React.PureComponent {
                   value={this.props.filter}
                   onChange={this.props.onTagFilter}/>}
               <nav>
+                {this.hasNoMatchingTags &&
+                  <FormattedMessage id="sidebar.tags.none"/>}
                 <TagList
                   edit={this.props.edit.tag}
                   keymap={this.props.keymap.TagList}

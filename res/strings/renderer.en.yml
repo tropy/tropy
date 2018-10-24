@@ -4,6 +4,7 @@ en:
     tags:
       title: Tags
       filter: Filter
+      none: No tags to display
     imports: Last Import
     trash: Deleted Items
   toolbar:
