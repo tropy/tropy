@@ -285,7 +285,6 @@ const DragSourceCollect = (connect, monitor) => ({
 const DropTargetSpec = {
   hover({ depth }, monitor, node) {
     let type = monitor.getItemType()
-    //let item = monitor.getItem()
 
     switch (type) {
       case DND.LIST: {
@@ -299,6 +298,10 @@ const DropTargetSpec = {
         })
         break
       }
+      default:
+        if (node.state.offset != null) {
+          node.setState({ detph: null, offset: null })
+        }
     }
   },
 
