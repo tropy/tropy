@@ -111,6 +111,7 @@
     "react-dom": "^16.5.2",
     "react-intl": "^2.7.1",
     "react-redux": "^5.0.7",
+    "react-transition-group": "^2.5.0",
     "redux": "^4.0.1",
     "redux-saga": "^0.16.2",
     "redux-thunk": "^2.3.0",
