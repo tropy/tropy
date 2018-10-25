@@ -6,9 +6,16 @@ const {
   DC, NAV, ITEM, LIST, TAG, NOTE, PHOTO, PROJECT
 } = require('../constants')
 
-const init = {
-  mode: PROJECT.MODE.PROJECT,
+const reset = {
   items: [],
+  photo: null,
+  selection: null,
+  note: null
+}
+
+const init = {
+  ...reset,
+  mode: PROJECT.MODE.PROJECT,
   query: '',
   tags: [],
   sort: {},
@@ -33,10 +40,7 @@ module.exports = {
       case NAV.SEARCH:
         return {
           ...state,
-          items: [],
-          photo: null,
-          selection: null,
-          note: null,
+          ...reset,
           ...payload
         }
 
@@ -55,21 +59,21 @@ module.exports = {
       case LIST.REMOVE: {
         return (state.list !== payload) ? state : {
           ...state,
-          list: null,
-          items: [],
-          photo: null,
-          selection: null,
-          note: null
+          ...reset,
+          list: null
         }
       }
       case LIST.COLLAPSE: {
         return !meta.select ? state : {
           ...state,
-          list: payload,
-          items: [],
-          photo: null,
-          selection: null,
-          note: null
+          ...reset,
+          list: payload
+        }
+      }
+      case LIST.ITEM.REMOVE: {
+        return meta.done ? state : {
+          ...state,
+          ...reset
         }
       }
 
@@ -79,10 +83,7 @@ module.exports = {
         return meta.done || !isSelected(state.items, payload) ?
           state : {
             ...state,
-            items: [],
-            photo: null,
-            selection: null,
-            note: null
+            ...reset
           }
 
       case ITEM.SELECT:
@@ -118,8 +119,7 @@ module.exports = {
       case TAG.SELECT:
         return {
           ...state,
-          photo: null,
-          items: [],
+          ...reset,
           trash: null,
           imports: null,
           tags: select(state.tags, [payload], meta.mod)
@@ -146,18 +146,17 @@ module.exports = {
       case ITEM.PHOTO.REMOVE:
         return isSelected(state.items, payload.id) &&
           payload.photos.includes(state.photo) ?
-          { ...state, photo: null } : state
+          { ...state, photo: null, selection: null, note: null } : state
 
 
       case NAV.SELECT:
         return {
           ...state,
-          items: [],
-          tags: [],
+          ...reset,
+          list: null,
           trash: null,
           imports: null,
-          list: null,
-          photo: null,
+          tags: [],
           ...payload
         }
 
