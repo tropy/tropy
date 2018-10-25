@@ -2,6 +2,7 @@
 
 const React = require('react')
 const lazy = require('./node')
+const { Fade } = require('../fx')
 const { get } = require('../../common/util')
 const { arrayOf, bool, func, number, object, shape } = require('prop-types')
 
@@ -43,12 +44,15 @@ class ListTree extends React.Component {
     return (
       <ol className="list-tree" ref={this.setContainer}>
         {this.mapChildren((key, props) =>
-          <lazy.ListNode {...props} key={key}/>)}
-        {this.hasNewListNode() &&
+          <Fade in={this.props.isExpanded} key={key}>
+            <lazy.ListNode {...props}/>
+          </Fade>)}
+        <Fade in={this.hasNewListNode()}>
           <lazy.NewListNode
-            parent={this.props.edit.parent}
+            parent={get(this.props.edit, ['parent'])}
             onCancel={this.props.onEditCancel}
-            onSave={this.props.onSave}/>}
+            onSave={this.props.onSave}/>
+        </Fade>
       </ol>
     )
   }
@@ -59,6 +63,7 @@ class ListTree extends React.Component {
     expand: object.isRequired,
     hold: object.isRequired,
     isDraggingParent: bool,
+    isExpanded: bool,
     lists: object.isRequired,
     parent: shape({
       id: number.isRequired,

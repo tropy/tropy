@@ -6,7 +6,7 @@ const { Editable } = require('../editable')
 const { IconFolder, IconTriangle } = require('../icons')
 const { DragSource, DropTarget } = require('react-dnd')
 const { NativeTypes, getEmptyImage } = require('react-dnd-electron-backend')
-const { DND } = require('../../constants')
+const { DND, LIST } = require('../../constants')
 const { bounds } = require('../../dom')
 const { isValidImage } = require('../../image')
 const lazy = require('./tree')
@@ -54,7 +54,8 @@ class NewListNode extends React.Component {
   }
 
   static defaultProps = {
-    name: ''
+    name: '',
+    parent: LIST.ROOT
   }
 }
 
@@ -210,7 +211,7 @@ class ListNode extends React.PureComponent {
   }
 
   renderSubTree(props = this.props) {
-    return props.isExpanded && (
+    return (
       <lazy.ListTree {...props}
         depth={1 + props.depth}
         isDraggingParent={props.isDraggingParent || props.isDragging}
