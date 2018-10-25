@@ -7,7 +7,7 @@ const { bool, func, node, number, string } = require('prop-types')
 
 const onTransitionEnd = (element, done) => {
   on(element, 'transitionend', event => {
-    if (event.target.parentNode === element) done()
+    if (event.target === element) done()
   })
 }
 
