@@ -47,6 +47,7 @@ const IGNORE = [
   /^\/tmp/,
   /node_modules.\.bin/,
   /node_modules.rdf-canonize.build.Release.urdna2015\.node/,
+  /node_modules.prosemirror-model.dist.index\.js\.map/,
   /appveyor\.yml/
 ]
 
