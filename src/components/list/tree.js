@@ -2,18 +2,19 @@
 
 const React = require('react')
 const lazy = require('./node')
+const { Fade } = require('../fx')
 const { get } = require('../../common/util')
 const { arrayOf, bool, func, number, object, shape } = require('prop-types')
 
 
 class ListTree extends React.Component {
-  isEditing(id) {
-    return get(this.props.edit, ['id']) === id
-  }
-
   hasNewListNode(parent = this.props.parent.id) {
     let { edit } = this.props
     return edit && edit.id == null && edit.parent === parent
+  }
+
+  isEditing(id) {
+    return get(this.props.edit, ['id']) === id
   }
 
   mapChildren(fn, props = this.props) {
@@ -23,6 +24,13 @@ class ListTree extends React.Component {
         let hasNewListNode = this.hasNewListNode(id)
         let isExpandable = hasNewListNode || list.children.length > 0
         let isExpanded = hasNewListNode || props.expand[id]
+        let isLast = (idx === all.length - 1)
+
+        let walk = props.walk.slice(props.walk.indexOf(id) + 1)
+
+        if (!isLast) {
+          walk = walk.slice(0, walk.indexOf(all[idx + 1]))
+        }
 
         return fn(id, {
           ...props,
@@ -32,8 +40,9 @@ class ListTree extends React.Component {
           isExpanded: isExpandable && isExpanded,
           isEditing: this.isEditing(id),
           isHolding: props.hold[id],
-          isLast: idx === all.length - 1,
-          position: idx
+          isLast,
+          position: idx,
+          walk
         })
       }
     })
@@ -43,12 +52,13 @@ class ListTree extends React.Component {
     return (
       <ol className="list-tree" ref={this.setContainer}>
         {this.mapChildren((key, props) =>
-          <lazy.ListNode {...props} key={key}/>)}
-        {this.hasNewListNode() &&
+          <lazy.ListNode key={key} {...props}/>)}
+        <Fade in={this.hasNewListNode()} exit={false}>
           <lazy.NewListNode
-            parent={this.props.edit.parent}
+            parent={get(this.props.edit, ['parent'])}
             onCancel={this.props.onEditCancel}
-            onSave={this.props.onSave}/>}
+            onSave={this.props.onSave}/>
+        </Fade>
       </ol>
     )
   }
@@ -59,12 +69,14 @@ class ListTree extends React.Component {
     expand: object.isRequired,
     hold: object.isRequired,
     isDraggingParent: bool,
+    isExpanded: bool,
     lists: object.isRequired,
     parent: shape({
       id: number.isRequired,
       children: arrayOf(number).isRequired
     }).isRequired,
     selection: number,
+    walk: arrayOf(number).isRequired,
     onEditCancel: func.isRequired,
     onSave: func.isRequired
   }

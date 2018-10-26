@@ -3,10 +3,11 @@
 const React = require('react')
 const { Button } = require('../button')
 const { Editable } = require('../editable')
+const { Collapse } = require('../fx')
 const { IconFolder, IconTriangle } = require('../icons')
 const { DragSource, DropTarget } = require('react-dnd')
 const { NativeTypes, getEmptyImage } = require('react-dnd-electron-backend')
-const { DND } = require('../../constants')
+const { DND, LIST, SASS } = require('../../constants')
 const { bounds } = require('../../dom')
 const { isValidImage } = require('../../image')
 const lazy = require('./tree')
@@ -17,8 +18,8 @@ const {
   arrayOf, bool, func, number, object, shape, string
 } = require('prop-types')
 
-const PADDING = 16
-const INDENT = 12
+const { INDENT, PADDING, HEIGHT } = SASS.LIST
+
 
 class NewListNode extends React.Component {
   handleChange = (name) => {
@@ -54,7 +55,8 @@ class NewListNode extends React.Component {
   }
 
   static defaultProps = {
-    name: ''
+    name: '',
+    parent: LIST.ROOT
   }
 }
 
@@ -179,7 +181,7 @@ class ListNode extends React.PureComponent {
     this.props.onExpand(this.props.list.id)
   }
 
-  renderNode() {
+  renderNodeContainer() {
     return this.connect(
       <div
         className={cx('list-node-container', this.direction, {
@@ -209,21 +211,20 @@ class ListNode extends React.PureComponent {
     )
   }
 
-  renderSubTree(props = this.props) {
-    return props.isExpanded && (
-      <lazy.ListTree {...props}
-        depth={1 + props.depth}
-        isDraggingParent={props.isDraggingParent || props.isDragging}
-        parent={props.list}
-        parentPosition={props.position}/>
-    )
-  }
-
   render() {
     return (
       <li className={cx(...this.classes)}>
-        {this.renderNode()}
-        {this.renderSubTree()}
+        {this.renderNodeContainer()}
+        <Collapse
+          in={this.props.isExpanded}
+          height={this.props.walk.length * HEIGHT}>
+          <lazy.ListTree {...this.props}
+            depth={1 + this.props.depth}
+            isDraggingParent={
+              this.props.isDraggingParent || this.props.isDragging}
+            parent={this.props.list}
+            parentPosition={this.props.position}/>
+        </Collapse>
       </li>
     )
   }
