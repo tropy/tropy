@@ -8,42 +8,49 @@ const { arrayOf, bool, func, number, object, shape } = require('prop-types')
 
 
 class ListTree extends React.Component {
-  isEditing(id) {
-    return get(this.props.edit, ['id']) === id
-  }
-
   hasNewListNode(parent = this.props.parent.id) {
     let { edit } = this.props
     return edit && edit.id == null && edit.parent === parent
   }
 
-  mapChildren(fn, props = this.props) {
-    return props.isExpanded &&
-      props.parent.children.map((id, idx, all) => {
-        if (id in props.lists) {
-          let list = props.lists[id]
-          let hasNewListNode = this.hasNewListNode(id)
-          let isExpandable = hasNewListNode || list.children.length > 0
-          let isExpanded = hasNewListNode || props.expand[id]
+  isEditing(id) {
+    return get(this.props.edit, ['id']) === id
+  }
 
-          return fn(id, {
-            ...props,
-            list,
-            isSelected: props.selection === id,
-            isExpandable,
-            isExpanded: isExpandable && isExpanded,
-            isEditing: this.isEditing(id),
-            isHolding: props.hold[id],
-            isLast: idx === all.length - 1,
-            position: idx
-          })
+  mapChildren(fn, props = this.props) {
+    return props.parent.children.map((id, idx, all) => {
+      if (id in props.lists) {
+        let list = props.lists[id]
+        let hasNewListNode = this.hasNewListNode(id)
+        let isExpandable = hasNewListNode || list.children.length > 0
+        let isExpanded = hasNewListNode || props.expand[id]
+        let isLast = (idx === all.length - 1)
+
+        let walk = props.walk.slice(props.walk.indexOf(id) + 1)
+
+        if (!isLast) {
+          walk = walk.slice(0, walk.indexOf(all[idx + 1]))
         }
-      })
+
+        return fn(id, {
+          ...props,
+          list,
+          isSelected: props.selection === id,
+          isExpandable,
+          isExpanded: isExpandable && isExpanded,
+          isEditing: this.isEditing(id),
+          isHolding: props.hold[id],
+          isLast,
+          position: idx,
+          walk
+        })
+      }
+    })
   }
 
   render() {
     return (
-      <ol className="list-tree" ref={this.setContainer} >
+      <ol className="list-tree" ref={this.setContainer}>
         {this.mapChildren((key, props) =>
           <lazy.ListNode key={key} {...props}/>)}
         <Fade in={this.hasNewListNode()} exit={false}>
@@ -69,6 +76,7 @@ class ListTree extends React.Component {
       children: arrayOf(number).isRequired
     }).isRequired,
     selection: number,
+    walk: arrayOf(number).isRequired,
     onEditCancel: func.isRequired,
     onSave: func.isRequired
   }

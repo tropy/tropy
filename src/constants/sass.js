@@ -217,6 +217,12 @@ const WIZARD = {
   HEIGHT: 580
 }
 
+const LIST = {
+  HEIGHT: 26,
+  INDENT: 12,
+  PADDING: 16
+}
+
 
 module.exports =  {
   ABOUT,
@@ -229,6 +235,7 @@ module.exports =  {
   ICON,
   INPUT,
   ITEM,
+  LIST,
   NOTE,
   OPTION,
   PANEL,
