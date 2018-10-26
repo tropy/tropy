@@ -18,36 +18,35 @@ class ListTree extends React.Component {
   }
 
   mapChildren(fn, props = this.props) {
-    return props.parent.children.map((id, idx, all) => {
-      if (id in props.lists) {
-        let list = props.lists[id]
-        let hasNewListNode = this.hasNewListNode(id)
-        let isExpandable = hasNewListNode || list.children.length > 0
-        let isExpanded = hasNewListNode || props.expand[id]
+    return props.isExpanded &&
+      props.parent.children.map((id, idx, all) => {
+        if (id in props.lists) {
+          let list = props.lists[id]
+          let hasNewListNode = this.hasNewListNode(id)
+          let isExpandable = hasNewListNode || list.children.length > 0
+          let isExpanded = hasNewListNode || props.expand[id]
 
-        return fn(id, {
-          ...props,
-          list,
-          isSelected: props.selection === id,
-          isExpandable,
-          isExpanded: isExpandable && isExpanded,
-          isEditing: this.isEditing(id),
-          isHolding: props.hold[id],
-          isLast: idx === all.length - 1,
-          position: idx
-        })
-      }
-    })
+          return fn(id, {
+            ...props,
+            list,
+            isSelected: props.selection === id,
+            isExpandable,
+            isExpanded: isExpandable && isExpanded,
+            isEditing: this.isEditing(id),
+            isHolding: props.hold[id],
+            isLast: idx === all.length - 1,
+            position: idx
+          })
+        }
+      })
   }
 
   render() {
     return (
-      <ol className="list-tree" ref={this.setContainer}>
+      <ol className="list-tree" ref={this.setContainer} >
         {this.mapChildren((key, props) =>
-          <Fade in={this.props.isExpanded} key={key}>
-            <lazy.ListNode {...props}/>
-          </Fade>)}
-        <Fade in={this.hasNewListNode()}>
+          <lazy.ListNode key={key} {...props}/>)}
+        <Fade in={this.hasNewListNode()} exit={false}>
           <lazy.NewListNode
             parent={get(this.props.edit, ['parent'])}
             onCancel={this.props.onEditCancel}

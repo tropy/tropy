@@ -1,9 +1,13 @@
 'use strict'
 
 const React = require('react')
-const { CSSTransition } = require('react-transition-group')
 const { on } = require('../dom')
-const { bool, func, node, number, string } = require('prop-types')
+
+const {
+  CSSTransition,
+  Transition,
+  TransitionGroup
+} = require('react-transition-group')
 
 const onTransitionEnd = (element, done) => {
   on(element, 'transitionend', event => {
@@ -11,27 +15,20 @@ const onTransitionEnd = (element, done) => {
   })
 }
 
-const Fade = ({ children, persist, ...props }) => (
-  <CSSTransition unmountOnExit={!persist} {...props}>
-    {children}
-  </CSSTransition>
+const Fade = (props) => (
+  <CSSTransition
+    addEndListener={onTransitionEnd}
+    classNames="fade"
+    mountOnEnter={false}
+    timeout={1000}
+    unmountOnExit
+    {...props}/>
 )
 
-Fade.propTypes = {
-  addEndListener: func.isRequired,
-  children: node.isRequired,
-  classNames: string.isRequired,
-  persist: bool,
-  timeout: number.isRequired
-}
-
-Fade.defaultProps = {
-  addEndListener: onTransitionEnd,
-  classNames: 'fade',
-  timeout: 1000
-}
-
 module.exports = {
+  CSSTransition,
+  Transition,
+  TransitionGroup,
   onTransitionEnd,
   Fade
 }
