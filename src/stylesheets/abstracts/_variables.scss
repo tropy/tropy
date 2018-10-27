@@ -25,7 +25,7 @@ $font-size-large: const("FONTSIZE.LARGE") * 1px;
 $line-height-base:     1.539;
 
 $line-height-computed: floor((const("FONTSIZE.BASE") * $line-height-base)) * 1px;
-$line-height-large:    26px;
+$line-height-large:    const("LIST.HEIGHT") * 1px;
 
 $link-hover-decoration: underline;
 
@@ -177,8 +177,8 @@ $window-controls-margin: 4px;
 $activity-height:                     const("ACTIVITY.HEIGHT") * 1px;
 $activity-transition-duration:        0.125s;
 $activity-transition-timing-function: ease-out;
-$list-tree-padding-left:              $space-md;
-$list-tree-indent:                    $space-sm;
+$list-tree-padding-left:              const("LIST.PADDING") * 1px;
+$list-tree-indent:                    const("LIST.INDENT") * 1px;
 $list-tree-max-levels:                100;
 
 
