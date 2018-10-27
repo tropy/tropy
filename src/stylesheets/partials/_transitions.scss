@@ -1,0 +1,37 @@
+.fade {
+  &-enter {
+    opacity: 0;
+
+    &-active {
+      opacity: 1;
+      transition: $fade-transition;
+    }
+  }
+
+  &-exit {
+    opacity: 1;
+
+    &-active {
+      opacity: 0;
+      transition: $fade-transition;
+    }
+  }
+}
+
+.collapse {
+  &-enter {
+    overflow-y: hidden;
+
+    &-active {
+      transition: $collapse-transition;
+    }
+  }
+
+  &-exit {
+    overflow-y: hidden;
+
+    &-active {
+      transition: $collapse-transition;
+    }
+  }
+}
