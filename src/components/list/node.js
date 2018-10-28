@@ -215,9 +215,7 @@ class ListNode extends React.PureComponent {
     return (
       <li className={cx(...this.classes)}>
         {this.renderNodeContainer()}
-        <Collapse
-          in={this.props.isExpanded}
-          height={this.props.walk.length * HEIGHT}>
+        <Collapse in={this.props.isExpanded}>
           <lazy.ListTree {...this.props}
             depth={1 + this.props.depth}
             isDraggingParent={

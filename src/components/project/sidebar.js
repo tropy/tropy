@@ -266,7 +266,6 @@ class ProjectSidebar extends React.PureComponent {
                     hold={this.props.hold}
                     isExpanded
                     selection={this.props.list}
-                    walk={this.props.listwalk}
                     onContextMenu={onContextMenu}
                     onDropFiles={onItemImport}
                     onDropItems={this.props.onListItemsAdd}

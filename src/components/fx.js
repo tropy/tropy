@@ -1,7 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { number } = require('prop-types')
+const { element, number, oneOf } = require('prop-types')
 const { on, bounds } = require('../dom')
 
 const {
@@ -27,35 +27,39 @@ const Fade = (props) => (
 )
 
 class Collapse extends React.Component {
+  getValue(node) {
+    return this.props.value ?
+      this.props.value :
+      bounds(node.firstElementChild || node)[this.props.dimension]
+  }
+
   willCollapse = (node) => {
-    node.style.height = `${
-      this.props.height > 0 ?  this.props.height : bounds(node).height
-    }px`
+    node.style[this.props.dimension] = `${this.getValue(node)}px`
   }
 
   collapse = (node) => {
-    node.style.height = '0px'
+    node.style[this.props.dimension] = '0px'
   }
 
   didCollapse = (node) => {
-    node.style.height = null
+    node.style[this.props.dimension] = null
   }
 
   willExpand = (node) => {
-    node.style.height = '0px'
+    node.style[this.props.dimension] = '0px'
   }
 
   expand = (node) => {
-    node.style.height = `${this.props.height}px`
+    node.style[this.props.dimension] = `${this.getValue(node)}px`
   }
 
   didExpand = (node) => {
-    node.style.height = null
+    node.style[this.props.dimension] = null
   }
 
   render() {
     // eslint-disable-next-line no-unused-vars
-    let { height, ...props } = this.props
+    let { children, dimension, value, ...props } = this.props
 
     return (
       <CSSTransition
@@ -70,12 +74,22 @@ class Collapse extends React.Component {
         onExit={this.willCollapse}
         onExiting={this.collapse}
         onExited={this.didCollapse}
-        {...props}/>
+        {...props}>
+        <div className={`collapse-${dimension}`}>
+          {children}
+        </div>
+      </CSSTransition>
     )
   }
 
   static propTypes = {
-    height: number
+    children: element.isRequired,
+    dimension: oneOf(['height', 'width']),
+    value: number,
+  }
+
+  static defaultProps = {
+    dimension: 'height'
   }
 }
 

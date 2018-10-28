@@ -115,7 +115,8 @@ $row-height: $thumbnail-size + 6px;
 
 $mode-transition: 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 $fade-transition: opacity 0.25s ease-in-out;
-$collapse-transition: height 0.25s ease;
+$collapse-height-transition: height 0.25s ease;
+$collapse-width-transition: width 0.25s ease;
 
 
 // Grid

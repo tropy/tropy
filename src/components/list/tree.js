@@ -26,12 +26,6 @@ class ListTree extends React.Component {
         let isExpanded = hasNewListNode || props.expand[id]
         let isLast = (idx === all.length - 1)
 
-        let walk = props.walk.slice(props.walk.indexOf(id) + 1)
-
-        if (!isLast) {
-          walk = walk.slice(0, walk.indexOf(all[idx + 1]))
-        }
-
         return fn(id, {
           ...props,
           list,
@@ -41,8 +35,7 @@ class ListTree extends React.Component {
           isEditing: this.isEditing(id),
           isHolding: props.hold[id],
           isLast,
-          position: idx,
-          walk
+          position: idx
         })
       }
     })
@@ -76,7 +69,6 @@ class ListTree extends React.Component {
       children: arrayOf(number).isRequired
     }).isRequired,
     selection: number,
-    walk: arrayOf(number).isRequired,
     onEditCancel: func.isRequired,
     onSave: func.isRequired
   }

@@ -18,20 +18,25 @@
   }
 }
 
-.collapse {
-  &-enter {
-    overflow-y: hidden;
+.collapse-enter,
+.collapse-exit {
+  overflow: hidden;
+}
 
-    &-active {
-      transition: $collapse-transition;
-    }
+.collapse-enter-active {
+  &.collapse-height {
+    transition: $collapse-height-transition;
   }
+  &.collapse-width {
+    transition: $collapse-width-transition;
+  }
+}
 
-  &-exit {
-    overflow-y: hidden;
-
-    &-active {
-      transition: $collapse-transition;
-    }
+.collapse-exit-active {
+  &.collapse-height {
+    transition: $collapse-height-transition;
+  }
+  &.collapse-width {
+    transition: $collapse-width-transition;
   }
 }
