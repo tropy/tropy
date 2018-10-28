@@ -18,7 +18,7 @@ const {
   arrayOf, bool, func, number, object, shape, string
 } = require('prop-types')
 
-const { INDENT, PADDING, HEIGHT } = SASS.LIST
+const { INDENT, PADDING } = SASS.LIST
 
 
 class NewListNode extends React.Component {
