@@ -4,6 +4,9 @@ const React = require('react')
 const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')
+const { IconSearch } = require('../icons')
+const { Button } = require('../button')
+const { Collapse } = require('../fx')
 const { ActivityPane } = require('../activity')
 const { BufferedResizable } = require('../resizable')
 const { LastImportListNode, ListTree, TrashListNode } = require('../list')
@@ -15,6 +18,7 @@ const { has, last } = require('../../common/util')
 const { match } = require('../../keymap')
 const { testFocusChange } = require('../../dom')
 const actions = require('../../actions')
+const cx = require('classnames')
 
 const {
   bool, shape, string, object, arrayOf, func, number
@@ -29,11 +33,11 @@ const {
 
 
 class ProjectSidebar extends React.PureComponent {
-  get isEditing() {
-    return has(this.props.edit, 'project')
+  state = {
+    isTagFilterVisible: false
   }
 
-  get hasActiveFilters() {
+  get hasActiveTags() {
     return this.props.tagSelection.length > 0
   }
 
@@ -41,6 +45,22 @@ class ProjectSidebar extends React.PureComponent {
     return this.props.list != null ||
       this.props.isTrashSelected ||
       this.props.isLastImportSelected && this.props.hasLastImport
+  }
+
+  get hasTagFilter() {
+    return this.props.tags.length > this.props.minFilter || !!this.props.filter
+  }
+
+  get hasNoMatchingTags() {
+    return this.props.filter && this.props.tags.length === 0
+  }
+
+  get isEditing() {
+    return has(this.props.edit, 'project')
+  }
+
+  get isTagFilterVisible() {
+    return this.state.isTagFilterVisible || !!this.props.filter
   }
 
   get tabIndex() {
@@ -79,15 +99,6 @@ class ProjectSidebar extends React.PureComponent {
 
   isListEmpty() {
     return this.props.listwalk.length === 0
-  }
-
-  get isTagFilterVisible() {
-    return this.props.filter ||
-      this.props.tags.length > this.props.minFilter
-  }
-
-  get hasNoMatchingTags() {
-    return this.props.filter && this.props.tags.length === 0
   }
 
   next() {
@@ -149,7 +160,7 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   handleClick = () => {
-    if (this.hasSelection || this.hasActiveFilters) {
+    if (this.hasSelection || this.hasActiveTags) {
       return this.handleSelect()
     }
 
@@ -185,7 +196,7 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   handleListSelect = (list) => {
-    if (list && (!this.isListSelected(list) || this.hasActiveFilters)) {
+    if (list && (!this.isListSelected(list) || this.hasActiveTags)) {
       this.props.onSelect({ list }, { throttle: true })
       return true
     }
@@ -227,8 +238,13 @@ class ProjectSidebar extends React.PureComponent {
     })
   }
 
+  handleTagFilterShow = () => {
+    this.setState({ isTagFilterVisible: true })
+  }
+
   render() {
     let root = this.props.lists[this.props.root]
+    let { isTagFilterVisible } = this
 
     return (
       <BufferedResizable
@@ -293,12 +309,21 @@ class ProjectSidebar extends React.PureComponent {
               </nav>
             </section>
 
-            <section>
-              <h2><FormattedMessage id="sidebar.tags.title"/></h2>
-              {this.isTagFilterVisible &&
+            <section className={cx({
+              'has-tag-filter': this.hasTagFilter,
+              'tag-filter-visible': isTagFilterVisible
+            })}>
+              <h2>
+                <FormattedMessage id="sidebar.tags.title"/>
+                <Button
+                  icon={<IconSearch/>}
+                  onClick={this.handleTagFilterShow}/>
+              </h2>
+              <Collapse in={isTagFilterVisible}>
                 <TagFilter
                   value={this.props.filter}
-                  onChange={this.props.onTagFilter}/>}
+                  onChange={this.props.onTagFilter}/>
+              </Collapse>
               <nav>
                 {this.hasNoMatchingTags &&
                   <FormattedMessage id="sidebar.tags.none"/>}

@@ -2,7 +2,7 @@
 
 const React = require('react')
 const { injectIntl, intlShape } = require('react-intl')
-const { IconSearch, IconXSmall } = require('../icons')
+const { IconXSmall } = require('../icons')
 const { Button } = require('../button')
 const { Input } = require('../input')
 const debounce = require('lodash.debounce')
@@ -34,7 +34,6 @@ class TagFilter extends React.Component {
   render() {
     return (
       <div className="tag-filter">
-        <IconSearch/>
         <Input
           className="tag-filter-input form-control"
           value={this.props.value}
