@@ -162,10 +162,10 @@ class AddItems extends Command {
   static get ACTION() { return LIST.ITEM.ADD }
 
   *exec() {
-    const { db } = this.options
-    const { id, items } = this.action.payload
+    let { db } = this.options
+    let { id, items } = this.action.payload
 
-    const res = yield call(db.transaction, tx =>
+    let res = yield call(db.transaction, tx =>
       mod.items.add(tx, id, items))
 
     this.undo = actions.items.remove({ id, items: res.items })
@@ -179,8 +179,8 @@ class RemoveItems extends Command {
   static get ACTION() { return LIST.ITEM.REMOVE }
 
   *exec() {
-    const { db } = this.options
-    const { id, items } = this.action.payload
+    let { db } = this.options
+    let { id, items } = this.action.payload
 
     yield call(mod.items.remove, db, id, items)
 
@@ -194,8 +194,8 @@ class RestoreItems extends Command {
   static get ACTION() { return LIST.ITEM.RESTORE }
 
   *exec() {
-    const { db } = this.options
-    const { id, items } = this.action.payload
+    let { db } = this.options
+    let { id, items } = this.action.payload
 
     yield call(mod.items.restore, db, id, items)
 
