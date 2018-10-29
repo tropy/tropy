@@ -26,7 +26,7 @@ target.lint = (...args) => {
 }
 
 target['lint:js'] = (bail) => {
-  const { code } = exec(`${eslint} --color src test static scripts`)
+  const { code } = exec(`${eslint} --color src test scripts`)
   if (bail && code) process.exit(code)
   return code
 }
