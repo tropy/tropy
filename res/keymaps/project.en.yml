@@ -39,6 +39,7 @@ en:
       expand: ArrowRight
       collapse: ArrowLeft
       clear: Escape
+      edit: F2
     ItemIterator: &ItemIterator
       up:
         - ArrowUp
@@ -164,7 +165,13 @@ en:
   darwin:
     global: *global
     Esper: *Esper
-    Sidebar: *Sidebar
+    Sidebar: &Sidebar
+      next: ArrowDown
+      prev: ArrowUp
+      expand: ArrowRight
+      collapse: ArrowLeft
+      clear: Escape
+      edit: Enter
     ItemIterator:
       up:
         - ArrowUp
