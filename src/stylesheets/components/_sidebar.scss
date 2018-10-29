@@ -37,7 +37,7 @@
       margin-right: -$btn-icon-padding;
       display: none;
 
-      @include state("#sidebar .has-tag-filter:hover") {
+      @include state("#sidebar .has-tag-filter:hover:not(.tag-filter-visible)") {
         display: block;
       }
     }
