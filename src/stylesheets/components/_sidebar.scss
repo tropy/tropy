@@ -166,4 +166,14 @@
     	}
     }
   }
+
+  .tag-filter {
+    padding: $space-min $default-padding-horizontal $space-min $list-tree-padding-left;
+  }
+
+  .no-tags {
+    padding-left: $list-tree-padding-left;
+    padding-right: $default-padding-horizontal;
+    color: $no-tags-color;
+  }
 }

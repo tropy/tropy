@@ -326,7 +326,9 @@ class ProjectSidebar extends React.PureComponent {
               </Collapse>
               <nav>
                 {this.hasNoMatchingTags &&
-                  <FormattedMessage id="sidebar.tags.none"/>}
+                  <div className="no-tags">
+                    <FormattedMessage id="sidebar.tags.none"/>
+                  </div>}
                 <TagList
                   edit={this.props.edit.tag}
                   keymap={this.props.keymap.TagList}

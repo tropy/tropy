@@ -8,7 +8,7 @@ files:
 rules:
   # Extends
   extends-before-mixins: 2
-  extends-before-declarations: 2
+  extends-before-declarations: 0
   placeholder-in-extend: 2
 
   # Mixins

@@ -34,17 +34,19 @@ class TagFilter extends React.Component {
   render() {
     return (
       <div className="tag-filter">
-        <Input
-          className="tag-filter-input form-control"
-          value={this.props.value}
-          placeholder={this.placeholder}
-          onCancel={this.handleCancel}
-          onChange={this.handleChange}
-          onCommit={this.handleCommit}/>
-        {!blank(this.props.value) &&
-          <Button
-            icon={<IconXSmall/>}
-            onClick={this.handleCancel}/>}
+        <div className="tag-filter-container">
+          <Input
+            className="tag-filter-input form-control"
+            value={this.props.value}
+            placeholder={this.placeholder}
+            onCancel={this.handleCancel}
+            onChange={this.handleChange}
+            onCommit={this.handleCommit}/>
+          {!blank(this.props.value) &&
+            <Button
+              icon={<IconXSmall/>}
+              onClick={this.handleCancel}/>}
+        </div>
       </div>
     )
   }

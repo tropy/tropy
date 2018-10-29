@@ -1,0 +1,11 @@
+//
+// Tag filter
+// --------------------------------------------------
+
+.tag-filter {
+  .tag-filter-container {
+    position: relative;
+  }
+
+  @extend %input-clear-button;
+}
