@@ -11,12 +11,12 @@ const cx = require('classnames')
 class Editable extends PureComponent {
   componentDidUpdate({ isActive: wasActive }) {
     if (wasActive && !this.props.isActive) {
-      this.returnPrevFocus()
+      this.restorePrevFocus()
     }
   }
 
   componentWillUnmount() {
-    this.returnPrevFocus()
+    this.restorePrevFocus()
   }
 
   get classes() {
@@ -48,7 +48,7 @@ class Editable extends PureComponent {
         return this.props.onBlur(event)
       }
     } finally {
-      this.returnPrevFocus()
+      this.restorePrevFocus()
     }
   }
 
@@ -65,7 +65,7 @@ class Editable extends PureComponent {
         return this.props.onCancel(...args)
       }
     } finally {
-      this.returnPrevFocus()
+      this.restorePrevFocus()
     }
   }
 
@@ -77,11 +77,11 @@ class Editable extends PureComponent {
         this.props.onCancel(true)
       }
     } finally {
-      this.returnPrevFocus()
+      this.restorePrevFocus()
     }
   }
 
-  returnPrevFocus() {
+  restorePrevFocus() {
     if (this.prevFocus != null) {
       this.prevFocus.focus()
       this.prevFocus = null
@@ -108,7 +108,7 @@ class Editable extends PureComponent {
         resize={this.props.resize}
         value={this.props.value || ''}
         onBlur={this.handleBlur}
-        onCancel={this.props.onCancel}
+        onCancel={this.handleCancel}
         onCommit={this.handleCommit}
         onFocus={this.handleFocus}
         onKeyDown={this.props.onKeyDown}/>

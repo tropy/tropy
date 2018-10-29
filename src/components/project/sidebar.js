@@ -254,7 +254,6 @@ class ProjectSidebar extends React.PureComponent {
           <SidebarBody onContextMenu={this.handleContextMenu}>
             <section
               tabIndex={this.tabIndex}
-              onBlur={this.handleBlur}
               onKeyDown={this.handleKeyDown}
               onMouseDown={this.handleMouseDown}>
               <nav>
