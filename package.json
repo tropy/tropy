@@ -31,6 +31,7 @@
     "compile": "node scripts/compile",
     "console": "electron --interactive",
     "debug": "node scripts/make test -- --debug",
+    "devtools:install": "electron ./scripts/devtools ./tmp",
     "lint": "node scripts/make lint || true",
     "make": "node scripts/make",
     "prestart": "node scripts/compile",
