@@ -24,8 +24,23 @@
 
   h2,
   h3 {
+    display: flex;
+    justify-content: space-between;
     color: $sidebar-headings-color;
     padding: 0 $default-padding-horizontal 0 $list-tree-padding-left;
+
+    span {
+      @include css-truncation;
+    }
+
+    .btn-icon {
+      margin-right: -$btn-icon-padding;
+      display: none;
+
+      @include state("#sidebar .has-tag-filter:hover") {
+        display: block;
+      }
+    }
   }
 
   nav {
