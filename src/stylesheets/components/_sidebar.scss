@@ -62,10 +62,9 @@
         .icon-triangle {
           margin-right: 0;
           transform: rotate(90deg);
-          transition: transform 0.25s ease;
 
           @include state("li.expanded") {
-            transform: rotate(180deg);
+            transform: scaleY(-1);
           }
         }
 
