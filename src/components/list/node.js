@@ -12,7 +12,7 @@ const { bounds } = require('../../dom')
 const { isValidImage } = require('../../image')
 const lazy = require('./tree')
 const cx = require('classnames')
-const { noop, restrict } = require('../../common/util')
+const { last, noop, restrict } = require('../../common/util')
 
 const {
   arrayOf, bool, func, number, object, shape, string
@@ -108,6 +108,7 @@ class ListNode extends React.PureComponent {
     for (; depth > 0 && list.parent != null; --depth) {
       prev = list.id
       list = lists[list.parent]
+      if (last(list.children) !== prev) break
     }
 
     return {
