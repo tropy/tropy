@@ -4,7 +4,7 @@ const React = require('react')
 const { Button } = require('../button')
 const { Editable } = require('../editable')
 const { Collapse } = require('../fx')
-const { IconFolder, IconTriangle } = require('../icons')
+const { IconFolder, IconGhost, IconTriangle } = require('../icons')
 const { DragSource, DropTarget } = require('react-dnd')
 const { NativeTypes, getEmptyImage } = require('react-dnd-electron-backend')
 const { DND, LIST, SASS } = require('../../constants')
@@ -91,7 +91,7 @@ class ListNode extends React.PureComponent {
 
   get icon() {
     return (this.props.depth > 0 && this.props.isHalloween) ?
-      <IconFolder/> : <IconFolder/>
+      <IconGhost/> : <IconFolder/>
   }
 
   get isOver() {
