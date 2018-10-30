@@ -4,9 +4,6 @@ const React = require('react')
 const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
 const { Toolbar } = require('../toolbar')
-const { IconSearch } = require('../icons')
-const { Button } = require('../button')
-const { Collapse } = require('../fx')
 const { ActivityPane } = require('../activity')
 const { BufferedResizable } = require('../resizable')
 const { LastImportListNode, ListTree, TrashListNode } = require('../list')
@@ -33,10 +30,6 @@ const {
 
 
 class ProjectSidebar extends React.PureComponent {
-  state = {
-    isTagFilterVisible: false
-  }
-
   get hasActiveTags() {
     return this.props.tagSelection.length > 0
   }
@@ -57,10 +50,6 @@ class ProjectSidebar extends React.PureComponent {
 
   get isEditing() {
     return has(this.props.edit, 'project')
-  }
-
-  get isTagFilterVisible() {
-    return this.state.isTagFilterVisible || !!this.props.filter
   }
 
   get tabIndex() {
@@ -238,13 +227,8 @@ class ProjectSidebar extends React.PureComponent {
     })
   }
 
-  handleTagFilterShow = () => {
-    this.setState({ isTagFilterVisible: true })
-  }
-
   render() {
     let root = this.props.lists[this.props.root]
-    let { isTagFilterVisible } = this
 
     return (
       <BufferedResizable
@@ -310,20 +294,15 @@ class ProjectSidebar extends React.PureComponent {
             </section>
 
             <section className={cx({
-              'has-tag-filter': this.hasTagFilter,
-              'tag-filter-visible': isTagFilterVisible
+              'has-tag-filter': this.hasTagFilter
             })}>
               <h2>
                 <FormattedMessage id="sidebar.tags.title"/>
-                <Button
-                  icon={<IconSearch/>}
-                  onClick={this.handleTagFilterShow}/>
-              </h2>
-              <Collapse in={isTagFilterVisible}>
                 <TagFilter
                   value={this.props.filter}
                   onChange={this.props.onTagFilter}/>
-              </Collapse>
+              </h2>
+
               <nav>
                 {this.hasNoMatchingTags &&
                   <div className="no-tags">
