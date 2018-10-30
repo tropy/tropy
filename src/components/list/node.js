@@ -86,7 +86,7 @@ class ListNode extends React.PureComponent {
     return (!props.isOver || state.offset == null) ?  null :
       (state.offset < 1) ? 'before' :
       (props.isLast && !props.isExpanded && state.depth < props.depth) ?
-        ['after', 'depth-1'] : 'after'
+        ['after', `depth-${props.depth - state.depth}`] : 'after'
   }
 
   get isOver() {
@@ -101,6 +101,23 @@ class ListNode extends React.PureComponent {
     return !(this.props.isDragging || this.props.isDraggingParent)
   }
 
+  getDropOutsidePosition(depth = 1) {
+    let { lists, list } = this.props
+    let prev
+
+    for (; depth > 0 && list.parent != null; --depth) {
+      prev = list.id
+      list = lists[list.parent]
+    }
+
+    return {
+      parent: list.id,
+      idx: (prev == null) ?
+        list.children.length :
+        list.children.indexOf(prev) + 1
+    }
+  }
+
   getDropPosition({ depth, offset } = this.state, props = this.props) {
     if (offset == null || offset === 1 && props.isExpanded) {
       return {
@@ -110,11 +127,7 @@ class ListNode extends React.PureComponent {
     }
 
     if (props.isLast && offset === 1 && depth < props.depth) {
-      return {
-        parent: props.parent.parent,
-        idx: props.parentPosition + 1
-
-      }
+      return this.getDropOutsidePosition(1 + props.depth - depth)
     }
 
     return {

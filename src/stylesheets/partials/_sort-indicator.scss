@@ -110,12 +110,6 @@
       content: "";
       top: 100%;
     }
-
-    &.depth-1 {
-      &::after {
-        margin-left: -$list-tree-indent;
-      }
-    }
   }
 }
 
@@ -158,5 +152,15 @@
       	}
     	}
   	}
+  }
+
+  .list-node-container {
+    &.after {
+      &.depth-#{$i} {
+        &::after {
+          margin-left: -1 * $i * $list-tree-indent;
+        }
+      }
+    }
   }
 }
