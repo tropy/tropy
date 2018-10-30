@@ -234,8 +234,7 @@ class ListNode extends React.PureComponent {
             depth={1 + this.props.depth}
             isDraggingParent={
               this.props.isDraggingParent || this.props.isDragging}
-            parent={this.props.list}
-            parentPosition={this.props.position}/>
+            parent={this.props.list}/>
         </Collapse>
       </li>
     )
@@ -261,7 +260,6 @@ class ListNode extends React.PureComponent {
       children: arrayOf(number).isRequired
     }).isRequired,
     position: number.isRequired,
-    parentPosition: number.isRequired,
 
     connectDragSource: func.isRequired,
     connectDragPreview: func.isRequired,
@@ -274,8 +272,7 @@ class ListNode extends React.PureComponent {
   static defaultProps = {
     depth: 0,
     onClick: noop,
-    position: 0,
-    parentPosition: 0
+    position: 0
   }
 }
 
