@@ -89,6 +89,11 @@ class ListNode extends React.PureComponent {
         ['after', `depth-${props.depth - this.getDropDepth()}`] : 'after'
   }
 
+  get icon() {
+    return (this.props.depth > 0 && this.props.isHalloween) ?
+      <IconFolder/> : <IconFolder/>
+  }
+
   get isOver() {
     return this.props.isOver && this.props.canDrop
   }
@@ -217,9 +222,7 @@ class ListNode extends React.PureComponent {
             icon={<IconTriangle/>}
             noFocus
             onClick={this.handleExpandButtonClick}/>}
-        <div className="icon-truncate">
-          <IconFolder/>
-        </div>
+        <div className="icon-truncate">{this.icon}</div>
         <div className="name">
           <Editable
             isActive={this.props.isEditing}
@@ -259,6 +262,7 @@ class ListNode extends React.PureComponent {
     isEditing: bool,
     isExpandable: bool,
     isExpanded: bool,
+    isHalloween: bool,
     isHolding: bool,
     isLast: bool,
     isOver: bool,
@@ -283,7 +287,8 @@ class ListNode extends React.PureComponent {
   static defaultProps = {
     depth: 0,
     onClick: noop,
-    position: 0
+    position: 0,
+    isHalloween: ((d) => d.getMonth() === 9 && d.getDate() === 31)(new Date())
   }
 }
 
