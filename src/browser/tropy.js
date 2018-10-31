@@ -333,6 +333,12 @@ class Tropy extends EventEmitter {
     this.on('app:rename-project', (win) =>
       this.dispatch(act.edit.start({ project: { name: true } }), win))
 
+    this.on('app:show-project-file', () => {
+      if (this.state.recent.length > 0) {
+        shell.showItemInFolder(this.state.recent[0])
+      }
+    })
+
     this.on('app:show-in-folder', (_, { target }) =>
       shell.showItemInFolder(target.path))
 

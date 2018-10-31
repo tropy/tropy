@@ -17,7 +17,7 @@ en:
       - label: 'Rename Project'
         command: 'app:rename-project'
       - label: 'Show Project File…'
-        command: 'app:show-in-folder'
+        command: 'app:show-project-file'
     lists: &lists
       - label: 'New List'
         command: 'app:create-list'
