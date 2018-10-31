@@ -417,7 +417,6 @@ module.exports = {
 
       onListSave(...args) {
         dispatch(actions.list.save(...args))
-        dispatch(actions.edit.cancel())
       },
 
       onListMove(...args) {
