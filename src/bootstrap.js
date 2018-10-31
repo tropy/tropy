@@ -14,7 +14,6 @@ ready.then(() => {
   const { win } = require('./window')
 
   win.init(() => {
-    win.show()
     requestIdleCallback(win.show, { timeout: 500 })
 
     const DONE = performance.now()
