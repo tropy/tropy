@@ -104,7 +104,7 @@
     "prosemirror-schema-basic": "^1.0.0",
     "prosemirror-schema-list": "^1.0.1",
     "prosemirror-state": "^1.2.2",
-    "prosemirror-view": "^1.6.4",
+    "prosemirror-view": "^1.6.5",
     "rdf-canonize": "^0.2.4",
     "react": "^16.6.0",
     "react-dnd": "^2.6.0",
