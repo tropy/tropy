@@ -4,7 +4,7 @@ const React = require('react')
 const { Button } = require('../button')
 const { Editable } = require('../editable')
 const { Collapse } = require('../fx')
-const { IconFolder, IconTriangle } = require('../icons')
+const { IconFolder, IconGhost, IconTriangle } = require('../icons')
 const { DragSource, DropTarget } = require('react-dnd')
 const { NativeTypes, getEmptyImage } = require('react-dnd-electron-backend')
 const { DND, LIST, SASS } = require('../../constants')
@@ -71,6 +71,11 @@ class ListNode extends React.PureComponent {
     this.props.connectDragPreview(getEmptyImage())
   }
 
+  componentWillMount() {
+    this.isHalloween = this.props.isHalloween &&
+      Math.round(Math.random() * this.props.depth) > (this.props.depth * 0.666)
+  }
+
   get classes() {
     return ['list-node', {
       active: this.props.isSelected,
@@ -87,6 +92,11 @@ class ListNode extends React.PureComponent {
       (state.offset < 1) ? 'before' :
       (props.isLast && !props.isExpanded && state.depth < props.depth) ?
         ['after', `depth-${props.depth - this.getDropDepth()}`] : 'after'
+  }
+
+  get icon() {
+    return (this.props.depth > 0 && this.isHalloween) ?
+      <IconGhost/> : <IconFolder/>
   }
 
   get isOver() {
@@ -217,9 +227,7 @@ class ListNode extends React.PureComponent {
             icon={<IconTriangle/>}
             noFocus
             onClick={this.handleExpandButtonClick}/>}
-        <div className="icon-truncate">
-          <IconFolder/>
-        </div>
+        <div className="icon-truncate">{this.icon}</div>
         <div className="name">
           <Editable
             isActive={this.props.isEditing}
@@ -259,6 +267,7 @@ class ListNode extends React.PureComponent {
     isEditing: bool,
     isExpandable: bool,
     isExpanded: bool,
+    isHalloween: bool,
     isHolding: bool,
     isLast: bool,
     isOver: bool,
@@ -283,7 +292,8 @@ class ListNode extends React.PureComponent {
   static defaultProps = {
     depth: 0,
     onClick: noop,
-    position: 0
+    position: 0,
+    isHalloween: ((d) => d.getMonth() === 9 && d.getDate() === 31)(new Date())
   }
 }
 
