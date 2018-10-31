@@ -92,7 +92,7 @@
     &::before,
     &::after {
       position: absolute;
-      left: 0;
+      right: 0;
       width: 100%;
       outline: 1px solid $sort-indicator;
     }
@@ -115,6 +115,8 @@
 
 @for $i from 1 through $list-tree-max-levels {
   $sel: if($i == 1, "ol", selector-nest($sel, "ol"));
+  $sel-not-last: if($i == 1, "ol > li:not(:last-child) > .collapse-height",
+    selector-nest($sel-not-last, "> ol > li:last-child"));
 
   #{$sel} {
   	.list-node-container {
@@ -123,15 +125,15 @@
       	&::before,
       	&::after {
           @if ($i == 1) {
-            left: $list-tree-padding-left + 1px;
+            right: -$list-tree-padding-left - 1px;
           }
 
           @if ($i == 2) {
-            left: $list-tree-padding-left + $list-tree-indent + 1px;
+            right: -$list-tree-padding-left - $list-tree-indent - 1px;
           }
 
           @if ($i > 2) {
-            left: $list-tree-padding-left + $list-tree-indent * ($i - 1) + 1px;
+            right: -$list-tree-padding-left - $list-tree-indent * ($i - 1) - 1px;
           }
       	}
     	}
@@ -142,11 +144,11 @@
       	&.after {
         	&::after {
             @if ($i == 1) {
-              left: $list-tree-padding-left + $list-tree-indent + 1px;
+              right: -$list-tree-padding-left - $list-tree-indent - 1px;
             }
 
             @if ($i > 1) {
-              left: $list-tree-padding-left + $list-tree-indent * $i + 1px;
+              right: -$list-tree-padding-left - $list-tree-indent * $i - 1px;
             }
           }
       	}
@@ -158,7 +160,17 @@
     &.after {
       &.depth-#{$i} {
         &::after {
-          margin-left: -1 * $i * $list-tree-indent;
+          width: calc(100% + #{$i * $list-tree-indent});
+        }
+      }
+    }
+  }
+
+  #{$sel-not-last} {
+    > .list-node-container {
+      &.after {
+        &::after {
+          max-width: calc(100% + #{$list-tree-indent * ($i - 1)});
         }
       }
     }
