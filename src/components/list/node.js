@@ -153,7 +153,7 @@ class ListNode extends React.PureComponent {
 
     return {
       parent: list.parent,
-      idx: (position < other.idx) ?
+      idx: (list.parent !== other.parent || position < other.idx) ?
         position + offset :
         position - 1 + offset
     }
