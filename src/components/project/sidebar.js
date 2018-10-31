@@ -130,6 +130,17 @@ class ProjectSidebar extends React.PureComponent {
     }
   }
 
+  edit() {
+    switch (true) {
+      case (!this.hasSelection):
+        this.props.onProjectEdit()
+        break
+      case (this.props.list != null):
+        this.props.onListEdit(this.props.list)
+        break
+    }
+  }
+
   handleSelect() {
     this.props.onSelect({ list: null, trash: null }, { throttle: true })
   }
@@ -198,6 +209,9 @@ class ProjectSidebar extends React.PureComponent {
       case 'collapse':
         this.collapse()
         break
+      case 'edit':
+        this.edit()
+        break
       default:
         return
     }
@@ -264,6 +278,7 @@ class ProjectSidebar extends React.PureComponent {
                     edit={this.props.edit.list}
                     expand={this.props.expand}
                     hold={this.props.hold}
+                    isExpanded
                     selection={this.props.list}
                     onContextMenu={onContextMenu}
                     onDropFiles={onItemImport}
@@ -340,10 +355,12 @@ class ProjectSidebar extends React.PureComponent {
     onItemImport: func.isRequired,
     onItemTagAdd: func.isRequired,
     onListCollapse: func.isRequired,
+    onListEdit: func.isRequired,
     onListExpand: func.isRequired,
     onListItemsAdd: func.isRequired,
     onListMove: func.isRequired,
     onListSave: func.isRequired,
+    onProjectEdit: func.isRequired,
     onProjectSave: func.isRequired,
     onResize: func.isRequired,
     onSelect: func.isRequired,
@@ -394,6 +411,10 @@ module.exports = {
         }))
       },
 
+      onListEdit(id) {
+        dispatch(actions.edit.start({ list: { id } }))
+      },
+
       onListSave(...args) {
         dispatch(actions.list.save(...args))
         dispatch(actions.edit.cancel())
@@ -401,6 +422,10 @@ module.exports = {
 
       onListMove(...args) {
         dispatch(actions.list.move(...args))
+      },
+
+      onProjectEdit() {
+        dispatch(actions.edit.start({ project: { name: true } }))
       },
 
       onProjectSave(...args) {

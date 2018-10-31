@@ -3,9 +3,10 @@
 const { all } = require('bluebird')
 const { ROOT } = require('../constants/list')
 const { into, select, update } = require('../common/query')
-const { pick, remove } = require('../common/util')
+const { pick, remove, toId } = require('../common/util')
+const mod = {}
 
-module.exports = {
+module.exports = mod.list = {
   async all(db) {
     let lists = {}
 
@@ -82,18 +83,29 @@ module.exports = {
 
   items: {
     async add(db, id, items) {
-      const dupes = await db.all(
-        ...select('id').from('list_items').where({ list_id: id, id: items }))
+      let dupes = await db.all(
+        ...select('id', 'deleted')
+          .from('list_items')
+          .where({ list_id: id, id: items }))
 
-      items = remove(items, ...dupes.map(r => r.id))
+      let restores = dupes.filter(r => r.deleted).map(toId)
+      if (restores.length > 0) {
+        await mod.list.items.restore(db, id, restores)
+      }
 
-      const res = (items.length === 0) ? { changes: 0 } :
+      items = remove(items, ...dupes.map(toId))
+
+      let res = (items.length === 0) ?
+        { changes: restores.length } :
         await db.run(`
           INSERT INTO list_items (list_id, id) VALUES ${
-              items.map(it => `(${Number(id)}, ${it})`).join(',')
+              items.map(it => `(${id}, ${it})`).join(',')
             }`)
 
-      return { ...res, items }
+      return {
+        ...res,
+        items: [...items, ...restores]
+      }
     },
 
     remove(db, id, items) {

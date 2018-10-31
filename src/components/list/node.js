@@ -3,22 +3,23 @@
 const React = require('react')
 const { Button } = require('../button')
 const { Editable } = require('../editable')
-const { IconFolder, IconTriangle } = require('../icons')
+const { Collapse } = require('../fx')
+const { IconFolder, IconGhost, IconTriangle } = require('../icons')
 const { DragSource, DropTarget } = require('react-dnd')
 const { NativeTypes, getEmptyImage } = require('react-dnd-electron-backend')
-const { DND } = require('../../constants')
+const { DND, LIST, SASS } = require('../../constants')
 const { bounds } = require('../../dom')
 const { isValidImage } = require('../../image')
 const lazy = require('./tree')
 const cx = require('classnames')
-const { noop, restrict } = require('../../common/util')
+const { last, noop, restrict } = require('../../common/util')
 
 const {
   arrayOf, bool, func, number, object, shape, string
 } = require('prop-types')
 
-const PADDING = 16
-const INDENT = 12
+const { INDENT, PADDING } = SASS.LIST
+
 
 class NewListNode extends React.Component {
   handleChange = (name) => {
@@ -54,7 +55,8 @@ class NewListNode extends React.Component {
   }
 
   static defaultProps = {
-    name: ''
+    name: '',
+    parent: LIST.ROOT
   }
 }
 
@@ -69,6 +71,11 @@ class ListNode extends React.PureComponent {
     this.props.connectDragPreview(getEmptyImage())
   }
 
+  componentWillMount() {
+    this.isHalloween = this.props.isHalloween &&
+      Math.round(Math.random() * this.props.depth) > (this.props.depth * 0.666)
+  }
+
   get classes() {
     return ['list-node', {
       active: this.props.isSelected,
@@ -80,10 +87,16 @@ class ListNode extends React.PureComponent {
   }
 
   get direction() {
-    return (!this.props.isOver || this.state.offset == null) ?  null :
-      (this.state.offset < 1) ? 'before' :
-      (this.props.isLast && this.state.depth < this.props.depth) ?
-        ['after', 'depth-1'] : 'after'
+    let { props, state } = this
+    return (!props.isOver || state.offset == null) ?  null :
+      (state.offset < 1) ? 'before' :
+      (props.isLast && !props.isExpanded && state.depth < props.depth) ?
+        ['after', `depth-${props.depth - this.getDropDepth()}`] : 'after'
+  }
+
+  get icon() {
+    return (this.props.depth > 0 && this.isHalloween) ?
+      <IconGhost/> : <IconFolder/>
   }
 
   get isOver() {
@@ -98,25 +111,47 @@ class ListNode extends React.PureComponent {
     return !(this.props.isDragging || this.props.isDraggingParent)
   }
 
-  getDropPosition({ depth, offset } = this.state, props = this.props) {
-    if (offset == null || offset === 1 && props.isExpanded) {
+  getDropDepth(depth = this.state.depth) {
+    return restrict(depth, this.props.minDropDepth, this.props.depth)
+  }
+
+  getDropOutsidePosition(depth = 1) {
+    let { lists, list } = this.props
+    let prev
+
+    for (; depth > 0 && list.parent != null; --depth) {
+      prev = list.id
+      list = lists[list.parent]
+      if (last(list.children) !== prev) break
+    }
+
+    return {
+      parent: list.id,
+      idx: (prev == null) ?
+        list.children.length :
+        list.children.indexOf(prev) + 1
+    }
+  }
+
+  getDropPosition() {
+    let { offset } = this.state
+    let { list, isExpanded, isLast, position } = this.props
+
+    if (offset == null || offset === 1 && isExpanded) {
       return {
-        parent: props.list.id,
+        parent: list.id,
         idx: 0
       }
     }
 
-    if (props.isLast && offset === 1 && depth < props.depth) {
-      return {
-        parent: props.parent.parent,
-        idx: props.parentPosition + 1
-
-      }
+    let depth = this.getDropDepth()
+    if (isLast && offset === 1 && depth < this.props.depth) {
+      return this.getDropOutsidePosition(1 + this.props.depth - depth)
     }
 
     return {
-      parent: props.list.parent,
-      idx: props.position + offset
+      parent: list.parent,
+      idx: position + offset
     }
   }
 
@@ -178,7 +213,7 @@ class ListNode extends React.PureComponent {
     this.props.onExpand(this.props.list.id)
   }
 
-  renderNode() {
+  renderNodeContainer() {
     return this.connect(
       <div
         className={cx('list-node-container', this.direction, {
@@ -192,9 +227,7 @@ class ListNode extends React.PureComponent {
             icon={<IconTriangle/>}
             noFocus
             onClick={this.handleExpandButtonClick}/>}
-        <div className="icon-truncate">
-          <IconFolder/>
-        </div>
+        <div className="icon-truncate">{this.icon}</div>
         <div className="name">
           <Editable
             isActive={this.props.isEditing}
@@ -208,21 +241,19 @@ class ListNode extends React.PureComponent {
     )
   }
 
-  renderSubTree(props = this.props) {
-    return props.isExpanded && (
-      <lazy.ListTree {...props}
-        depth={1 + props.depth}
-        isDraggingParent={props.isDraggingParent || props.isDragging}
-        parent={props.list}
-        parentPosition={props.position}/>
-    )
-  }
-
   render() {
     return (
       <li className={cx(...this.classes)}>
-        {this.renderNode()}
-        {this.renderSubTree()}
+        {this.renderNodeContainer()}
+        <Collapse in={this.props.isExpanded}>
+          <lazy.ListTree {...this.props}
+            depth={1 + this.props.depth}
+            minDropDepth={this.props.isLast ?
+                this.props.minDropDepth : this.props.depth}
+            isDraggingParent={
+              this.props.isDraggingParent || this.props.isDragging}
+            parent={this.props.list}/>
+        </Collapse>
       </li>
     )
   }
@@ -236,6 +267,7 @@ class ListNode extends React.PureComponent {
     isEditing: bool,
     isExpandable: bool,
     isExpanded: bool,
+    isHalloween: bool,
     isHolding: bool,
     isLast: bool,
     isOver: bool,
@@ -246,8 +278,8 @@ class ListNode extends React.PureComponent {
       name: string.isRequired,
       children: arrayOf(number).isRequired
     }).isRequired,
+    minDropDepth: number.isRequired,
     position: number.isRequired,
-    parentPosition: number.isRequired,
 
     connectDragSource: func.isRequired,
     connectDragPreview: func.isRequired,
@@ -261,7 +293,7 @@ class ListNode extends React.PureComponent {
     depth: 0,
     onClick: noop,
     position: 0,
-    parentPosition: 0
+    isHalloween: ((d) => d.getMonth() === 9 && d.getDate() === 31)(new Date())
   }
 }
 
@@ -284,7 +316,6 @@ const DragSourceCollect = (connect, monitor) => ({
 const DropTargetSpec = {
   hover({ depth }, monitor, node) {
     let type = monitor.getItemType()
-    //let item = monitor.getItem()
 
     switch (type) {
       case DND.LIST: {
@@ -298,6 +329,10 @@ const DropTargetSpec = {
         })
         break
       }
+      default:
+        if (node.state.offset != null) {
+          node.setState({ detph: null, offset: null })
+        }
     }
   },
 
