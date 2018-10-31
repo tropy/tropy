@@ -64,6 +64,7 @@ class ListTree extends React.Component {
     isDraggingParent: bool,
     isExpanded: bool,
     lists: object.isRequired,
+    minDropDepth: number.isRequired,
     parent: shape({
       id: number.isRequired,
       children: arrayOf(number).isRequired
@@ -74,7 +75,8 @@ class ListTree extends React.Component {
   }
 
   static defaultProps = {
-    depth: 0
+    depth: 0,
+    minDropDepth: 0
   }
 }
 

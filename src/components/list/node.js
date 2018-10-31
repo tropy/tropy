@@ -86,7 +86,7 @@ class ListNode extends React.PureComponent {
     return (!props.isOver || state.offset == null) ?  null :
       (state.offset < 1) ? 'before' :
       (props.isLast && !props.isExpanded && state.depth < props.depth) ?
-        ['after', `depth-${props.depth - state.depth}`] : 'after'
+        ['after', `depth-${props.depth - this.getDropDepth()}`] : 'after'
   }
 
   get isOver() {
@@ -99,6 +99,10 @@ class ListNode extends React.PureComponent {
 
   get isDropTarget() {
     return !(this.props.isDragging || this.props.isDraggingParent)
+  }
+
+  getDropDepth(depth = this.state.depth) {
+    return restrict(depth, this.props.minDropDepth, this.props.depth)
   }
 
   getDropOutsidePosition(depth = 1) {
@@ -119,21 +123,25 @@ class ListNode extends React.PureComponent {
     }
   }
 
-  getDropPosition({ depth, offset } = this.state, props = this.props) {
-    if (offset == null || offset === 1 && props.isExpanded) {
+  getDropPosition() {
+    let { offset } = this.state
+    let { list, isExpanded, isLast, position } = this.props
+
+    if (offset == null || offset === 1 && isExpanded) {
       return {
-        parent: props.list.id,
+        parent: list.id,
         idx: 0
       }
     }
 
-    if (props.isLast && offset === 1 && depth < props.depth) {
-      return this.getDropOutsidePosition(1 + props.depth - depth)
+    let depth = this.getDropDepth()
+    if (isLast && offset === 1 && depth < this.props.depth) {
+      return this.getDropOutsidePosition(1 + this.props.depth - depth)
     }
 
     return {
-      parent: props.list.parent,
-      idx: props.position + offset
+      parent: list.parent,
+      idx: position + offset
     }
   }
 
@@ -232,6 +240,8 @@ class ListNode extends React.PureComponent {
         <Collapse in={this.props.isExpanded}>
           <lazy.ListTree {...this.props}
             depth={1 + this.props.depth}
+            minDropDepth={this.props.isLast ?
+                this.props.minDropDepth : this.props.depth}
             isDraggingParent={
               this.props.isDraggingParent || this.props.isDragging}
             parent={this.props.list}/>
@@ -259,6 +269,7 @@ class ListNode extends React.PureComponent {
       name: string.isRequired,
       children: arrayOf(number).isRequired
     }).isRequired,
+    minDropDepth: number.isRequired,
     position: number.isRequired,
 
     connectDragSource: func.isRequired,
