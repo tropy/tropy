@@ -17,7 +17,7 @@ fr:
       - label: Renommer le projet
         command: 'app:rename-project'
       - label: Montrer le fichier de projet dans son répertoire…
-        command: 'app:show-in-folder'
+        command: 'app:show-project-file'
     lists:
       - label: Nouvelle liste
         command: 'app:create-list'
@@ -196,7 +196,7 @@ fr:
       - label: Renommer le projet
         command: 'app:rename-project'
       - label: Montrer le fichier de projet dans son répertoire…
-        command: 'app:show-in-folder'
+        command: 'app:show-project-file'
     lists:
       - label: Nouvelle liste
         command: 'app:create-list'
@@ -375,7 +375,7 @@ fr:
       - label: Renommer le projet
         command: 'app:rename-project'
       - label: Montrer le fichier de projet dans son répertoire…
-        command: 'app:show-in-folder'
+        command: 'app:show-project-file'
     lists:
       - label: Nouvelle liste
         command: 'app:create-list'

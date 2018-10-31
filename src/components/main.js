@@ -1,9 +1,8 @@
 'use strict'
 
+const React = require('react')
 const { Provider, connect } = require('react-redux')
 const ReactIntl = require('react-intl')
-const React = require('react')
-const { Component } = React
 const { element, object } = require('prop-types')
 const { DragDropContext } = require('react-dnd')
 const ElectronBackend = require('react-dnd-electron-backend')
@@ -18,7 +17,7 @@ const IntlProvider = connect(state => {
 
 // Need component for React DnD
 // eslint-disable-next-line react/prefer-stateless-function
-class Main extends Component {
+class Main extends React.Component {
   render() {
     return (
       <ErrorBoundary>

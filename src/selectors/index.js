@@ -9,6 +9,7 @@ module.exports = {
   ...require('./nav'),
   ...require('./notes'),
   ...require('./notepad'),
+  ...require('./lists'),
   ...require('./ontology'),
   ...require('./photos'),
   ...require('./project'),

@@ -7,7 +7,7 @@
   &::before,
   &::after {
     position: absolute;
-    outline: 1px solid $photo-sort-indicator;
+    outline: 1px solid $sort-indicator;
   }
 
   &.before {
@@ -79,6 +79,99 @@
     .photo-grid.over & {
       &::after {
         content: "";
+      }
+    }
+  }
+}
+
+.list-node-container {
+  &.before,
+  &.after {
+    z-index: 1;
+
+    &::before,
+    &::after {
+      position: absolute;
+      right: 0;
+      width: 100%;
+      outline: 1px solid $sort-indicator;
+    }
+  }
+
+  &.before {
+    &::before {
+      content: "";
+      top: 0;
+    }
+  }
+
+  &.after {
+    &::after {
+      content: "";
+      top: 100%;
+    }
+  }
+}
+
+@for $i from 1 through $list-tree-max-levels {
+  $sel: if($i == 1, "ol", selector-nest($sel, "ol"));
+  $sel-not-last: if($i == 1, "ol > li:not(:last-child) > .collapse-height",
+    selector-nest($sel-not-last, "> ol > li:last-child"));
+
+  #{$sel} {
+  	.list-node-container {
+    	&.before,
+    	&.after {
+      	&::before,
+      	&::after {
+          @if ($i == 1) {
+            right: -$list-tree-padding-left - 1px;
+          }
+
+          @if ($i == 2) {
+            right: -$list-tree-padding-left - $list-tree-indent - 1px;
+          }
+
+          @if ($i > 2) {
+            right: -$list-tree-padding-left - $list-tree-indent * ($i - 1) - 1px;
+          }
+      	}
+    	}
+  	}
+
+  	.expanded {
+    	> .list-node-container {
+      	&.after {
+        	&::after {
+            @if ($i == 1) {
+              right: -$list-tree-padding-left - $list-tree-indent - 1px;
+            }
+
+            @if ($i > 1) {
+              right: -$list-tree-padding-left - $list-tree-indent * $i - 1px;
+            }
+          }
+      	}
+    	}
+  	}
+  }
+
+  .list-node-container {
+    &.after {
+      &.depth-#{$i} {
+        &::after {
+          width: calc(100% + #{$i * $list-tree-indent});
+        }
+      }
+    }
+  }
+
+  #{$sel-not-last} {
+    > .list-node-container {
+      &.after {
+        &::after {
+          max-width: calc(100% + #{$list-tree-indent * ($i - 1)});
+        }
       }
     }
   }

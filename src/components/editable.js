@@ -9,6 +9,16 @@ const cx = require('classnames')
 
 
 class Editable extends PureComponent {
+  componentDidUpdate({ isActive: wasActive }) {
+    if (wasActive && !this.props.isActive) {
+      this.restorePrevFocus()
+    }
+  }
+
+  componentWillUnmount() {
+    this.restorePrevFocus()
+  }
+
   get classes() {
     return {
       editable: true,
@@ -32,11 +42,49 @@ class Editable extends PureComponent {
     if (this.input != null) this.input.focus()
   }
 
+  handleBlur = (event) => {
+    try {
+      if (this.props.onBlur) {
+        return this.props.onBlur(event)
+      }
+    } finally {
+      this.restorePrevFocus()
+    }
+  }
+
+  handleFocus = (event) => {
+    this.prevFocus = event.relatedTarget
+    if (this.props.onFocus) {
+      return this.props.onFocus(event)
+    }
+  }
+
+  handleCancel = (...args) => {
+    try {
+      if (this.props.onCancel) {
+        return this.props.onCancel(...args)
+      }
+    } finally {
+      this.restorePrevFocus()
+    }
+  }
+
   handleCommit = (value, hasChanged) => {
-    if (hasChanged) {
-      this.props.onChange(value)
-    } else {
-      this.props.onCancel(true)
+    try {
+      if (hasChanged) {
+        this.props.onChange(value)
+      } else {
+        this.props.onCancel(true)
+      }
+    } finally {
+      this.restorePrevFocus()
+    }
+  }
+
+  restorePrevFocus() {
+    if (this.prevFocus != null) {
+      this.prevFocus.focus()
+      this.prevFocus = null
     }
   }
 
@@ -59,10 +107,10 @@ class Editable extends PureComponent {
         type={this.props.type}
         resize={this.props.resize}
         value={this.props.value || ''}
-        onBlur={this.props.onBlur}
-        onCancel={this.props.onCancel}
+        onBlur={this.handleBlur}
+        onCancel={this.handleCancel}
         onCommit={this.handleCommit}
-        onFocus={this.props.onFocus}
+        onFocus={this.handleFocus}
         onKeyDown={this.props.onKeyDown}/>
     )
   }

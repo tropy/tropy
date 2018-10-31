@@ -25,7 +25,7 @@ $font-size-large: const("FONTSIZE.LARGE") * 1px;
 $line-height-base:     1.539;
 
 $line-height-computed: floor((const("FONTSIZE.BASE") * $line-height-base)) * 1px;
-$line-height-large:    26px;
+$line-height-large:    const("LIST.HEIGHT") * 1px;
 
 $link-hover-decoration: underline;
 
@@ -110,10 +110,13 @@ $default-padding-horizontal: $space-sm;
 $row-height: $thumbnail-size + 6px;
 
 
-// Mode transition
+// Transitions
 // --------------------------------------------------
 
 $mode-transition: 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+$fade-transition: opacity 0.25s ease-in-out;
+$collapse-height-transition: height 0.25s ease;
+$collapse-width-transition: width 0.25s ease;
 
 
 // Grid
@@ -162,6 +165,7 @@ $zindex-window-controls:  1090;
 
 // Darwin window controls
 // --------------------------------------------------
+
 $window-controls-width: 60px;
 $window-controls-offset-x: 9px;
 $window-controls-offset-y: 9px;
@@ -171,9 +175,12 @@ $window-controls-margin: 4px;
 // Sidebar
 // --------------------------------------------------
 
-$activity-height: const("ACTIVITY.HEIGHT") * 1px;
+$activity-height:                     const("ACTIVITY.HEIGHT") * 1px;
 $activity-transition-duration:        0.125s;
 $activity-transition-timing-function: ease-out;
+$list-tree-padding-left:              const("LIST.PADDING") * 1px;
+$list-tree-indent:                    const("LIST.INDENT") * 1px;
+$list-tree-max-levels:                100;
 
 
 // Table view

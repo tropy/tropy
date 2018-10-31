@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
 const { IconMaze } = require('../icons')
@@ -11,7 +10,7 @@ const cx = require('classnames')
 const { bool, func, string } = require('prop-types')
 
 
-class ProjectName extends PureComponent {
+class ProjectName extends React.PureComponent {
   get classes() {
     return {
       'project-name': true,
@@ -23,15 +22,17 @@ class ProjectName extends PureComponent {
   render() {
     return this.props.dt(
       <li className={cx(this.classes)} onClick={this.props.onClick}>
-        <IconMaze/>
-        <div className="name">
-          <Editable
-            value={this.props.name}
-            isRequired
-            resize
-            isActive={this.props.isEditing}
-            onCancel={this.props.onEditCancel}
-            onChange={this.props.onChange}/>
+        <div className="list-node-container">
+          <IconMaze/>
+          <div className="name">
+            <Editable
+              value={this.props.name}
+              isRequired
+              resize
+              isActive={this.props.isEditing}
+              onCancel={this.props.onEditCancel}
+              onChange={this.props.onChange}/>
+          </div>
         </div>
       </li>
     )

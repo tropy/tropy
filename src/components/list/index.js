@@ -1,8 +1,8 @@
 'use strict'
 
 module.exports = {
+  ...require('./drag-preview'),
   ...require('./last-import'),
-  ...require('./node'),
   ...require('./trash'),
   ...require('./tree')
 }

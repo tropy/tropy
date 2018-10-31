@@ -22,6 +22,7 @@ module.exports = {
   ...require('./qr'),
   ...require('./selections'),
   ...require('./settings'),
+  ...require('./sidebar'),
   ...require('./tags'),
   ...require('./ui'),
   ...require('./wizard')
