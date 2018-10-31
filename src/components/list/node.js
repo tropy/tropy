@@ -71,6 +71,11 @@ class ListNode extends React.PureComponent {
     this.props.connectDragPreview(getEmptyImage())
   }
 
+  componentWillMount() {
+    this.isHalloween = this.props.isHalloween &&
+      Math.round(Math.random() * this.props.depth) > (this.props.depth * 0.666)
+  }
+
   get classes() {
     return ['list-node', {
       active: this.props.isSelected,
@@ -90,7 +95,7 @@ class ListNode extends React.PureComponent {
   }
 
   get icon() {
-    return (this.props.depth > 0 && this.props.isHalloween) ?
+    return (this.props.depth > 0 && this.isHalloween) ?
       <IconGhost/> : <IconFolder/>
   }
 
