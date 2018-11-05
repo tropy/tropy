@@ -216,6 +216,15 @@ const dom = {
   visible(node) {
     let offset = node.offsetTop - node.offsetParent.scrollTop
     return offset > 0 && offset < node.offsetParent.offsetHeight
+  },
+
+  loadImage(src) {
+    return new Promise((resolve, reject) => {
+      let img = new Image()
+      img.onload = () => resolve(img)
+      img.onerror = reject
+      img.src = src
+    })
   }
 }
 

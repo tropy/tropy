@@ -1,8 +1,8 @@
 'use strict'
 
 const parse = require('exif-reader')
-const { debug, verbose } = require('./common/log')
-const MIME = require('./constants/mime')
+const { debug, verbose } = require('../common/log')
+const MIME = require('../constants/mime')
 
 
 module.exports = {

@@ -6,10 +6,11 @@ const { basename, extname } = require('path')
 const { createReadStream, statAsync: stat } = require('fs')
 const { createHash } = require('crypto')
 const { exif } = require('./exif')
+const { createFromSVG, isSVG } = require('./svg')
 const { nativeImage } = require('electron')
 const { assign } = Object
-const { warn, debug } = require('./common/log')
-const MIME = require('./constants/mime')
+const { warn, debug } = require('../common/log')
+const MIME = require('../constants/mime')
 
 
 class Image {
@@ -23,10 +24,10 @@ class Image {
     created,
     checksum
   }, { force } = {}) {
-    const status = {}
+    let status = {}
 
     try {
-      const { mtime } = await stat(path)
+      let { mtime } = await stat(path)
       status.hasChanged = (mtime > (consolidated || created))
 
       if (force || created == null || status.hasChanged) {
@@ -106,11 +107,10 @@ class Image {
 
   read() {
     return new Promise((resolve, reject) => {
-
       this.hash = createHash('md5')
       this.mimetype = null
 
-      const chunks = []
+      let chunks = []
 
       createReadStream(this.path)
         .on('error', reject)
@@ -129,17 +129,17 @@ class Image {
             return reject(new Error('unsupported image'))
           }
 
-          const buffer = Buffer.concat(chunks)
+          let buffer = Buffer.concat(chunks)
 
           Promise
             .all([
               exif(buffer, this.mimetype),
-              toImage(buffer, this.mimetype),
+              createNativeImage(buffer, this.mimetype),
               stat(this.path)
             ])
 
-            .then(([data, original, file]) =>
-              assign(this, original.getSize(), { exif: data, original, file }))
+            .then(([data, native, file]) =>
+              assign(this, native.getSize(), { exif: data, native, file }))
 
             .then(resolve, reject)
 
@@ -147,8 +147,8 @@ class Image {
     })
   }
 
-  resize = async (...args) =>
-    resize(this.original || await NI(this.path), ...args)
+  resize = (...args) =>
+    resize(this.native || nativeImage.createFromPath(this.path), ...args)
 
 }
 
@@ -174,66 +174,15 @@ function resize(image, size) {
   return image
 }
 
-const isValidImage = (file) =>
-  [MIME.JPG, MIME.PNG, MIME.SVG].includes(file.type)
 
-
-const toImage = (src, mimetype) => {
+async function createNativeImage(data, mimetype) {
   switch (mimetype) {
     case MIME.SVG:
-      return SVG2NI(src)
+      return createFromSVG(data)
     default:
-      return NI(src)
+      return nativeImage.createFromBuffer(data)
   }
 }
-
-const load = (src) =>
-  new Promise((resolve, reject) => {
-    const img = new window.Image()
-    img.onload = () => resolve(img)
-    img.onerror = reject
-    img.src = src
-  })
-
-const SVG2NI = (src) =>
-  new Promise((resolve, reject) => {
-    const svg = new Blob([src.toString('utf-8')], { type: MIME.SVG })
-    const url = URL.createObjectURL(svg)
-
-    load(url)
-      .then(img => {
-        try {
-          const canvas = document.createElement('canvas')
-
-          canvas.width = img.naturalWidth
-          canvas.height = img.naturalHeight
-          canvas
-            .getContext('2d')
-            .drawImage(img, 0, 0)
-
-          resolve(
-            nativeImage.createFromDataURL(canvas.toDataURL())
-          )
-        } catch (error) {
-          reject(error)
-        } finally {
-          URL.revokeObjectURL(url)
-        }
-
-      })
-      .catch(reason => {
-        URL.revokeObjectURL(url)
-        reject(reason)
-      })
-  })
-
-const NI = (src) =>
-  new Promise((resolve) => {
-    resolve(typeof src === 'string' ?
-      nativeImage.createFromPath(src) :
-      nativeImage.createFromBuffer(src))
-  })
-
 
 const magic = (buffer) => {
   if (buffer != null || buffer.length > 24) {
@@ -251,24 +200,8 @@ const isPNG = (b) => (
   b.slice(0, 8).compare(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])) === 0
 )
 
-const isSVG = (b) => (
-  !isBinary(b) && SVG.test(b.toString().replace(CMT, ''))
-)
-
-// eslint-disable-next-line max-len
-const SVG = /^\s*(?:<\?xml[^>]*>\s*)?(?:<!doctype svg[^>]*\s*(?:<![^>]*>)*[^>]*>\s*)?<svg[^>]*>/i
-const CMT = /<!--([\s\S]*?)-->/g
-
-const isBinary = (b) => {
-  for (let i = 0; i < 24; ++i) {
-    if (b[i] === 65533 || b[i] <= 8) return true
-  }
-
-  return false
-}
 
 module.exports = {
-  Image,
-  resize,
-  isValidImage
+  Image
 }
+
