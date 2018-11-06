@@ -1,15 +1,16 @@
 'use strict'
 
-require('./common/promisify')
+require('../common/promisify')
 
 const { basename, extname } = require('path')
 const { createReadStream, statAsync: stat } = require('fs')
 const { createHash } = require('crypto')
 const { exif } = require('./exif')
-const { createFromSVG, isSVG } = require('./svg')
-const { nativeImage } = require('electron')
+const { isSVG } = require('./svg')
+const sharp = require('sharp')
 const { assign } = Object
 const { warn, debug } = require('../common/log')
+const { get, pick } = require('../common/util')
 const MIME = require('../constants/mime')
 
 
@@ -64,18 +65,28 @@ class Image {
   }
 
   get checksum() {
-    if (this.__digest == null) this.__digest = this.digest()
+    if (this.__digest == null) {
+      this.__digest = this.digest()
+    }
     return this.__digest
   }
 
   get orientation() {
-    return this.exif.Orientation || 1
+    return get(this.exif, ['Orientation'], 1)
+  }
+
+  get width() {
+    return get(this.meta, ['width'], 0)
+  }
+
+  get height() {
+    return get(this.meta, ['height'], 0)
   }
 
   get date() {
     try {
       // temporarily return as string until we add value types
-      return (this.exif.DateTimeOriginal || this.file.ctime).toISOString()
+      return get(this.exif, ['DateTimeOriginal'], this.ctime).toISOString()
 
     } catch (error) {
       warn(`failed to convert image date: ${error.message}`)
@@ -85,30 +96,28 @@ class Image {
     }
   }
 
-  get size() {
-    return this.file && this.file.size
+  get ctime() {
+    return get(this.file, ['ctime'])
   }
 
-  toJSON() {
-    return {
-      path: this.path,
-      checksum: this.checksum,
-      mimetype: this.mimetype,
-      width: this.width,
-      height: this.height,
-      orientation: this.orientation,
-      size: this.size
-    }
+  get size() {
+    return get(this.file, ['size'])
   }
 
   digest(encoding = 'hex') {
     return this.hash && this.hash.digest(encoding)
   }
 
+  open(page = this.page) {
+    return sharp(this.data || this.path, { density: 720, page })
+  }
+
   read() {
     return new Promise((resolve, reject) => {
       this.hash = createHash('md5')
       this.mimetype = null
+      this.page = 0
+      this.numPages = 0
 
       let chunks = []
 
@@ -125,74 +134,68 @@ class Image {
         })
 
         .on('end', () => {
-          if (!this.mimetype) {
-            return reject(new Error('unsupported image'))
+          let data = Buffer.concat(chunks)
+
+          switch (this.mimetype) {
+            case MIME.GIF:
+            case MIME.JPEG:
+            case MIME.PNG:
+            case MIME.SVG:
+              this.data = data
+              break
+            case MIME.TIFF:
+              this.data = data
+              break
+            default:
+              return reject(new Error('unsupported image'))
           }
 
-          let buffer = Buffer.concat(chunks)
-
           Promise
-            .all([
-              exif(buffer, this.mimetype),
-              createNativeImage(buffer, this.mimetype),
-              stat(this.path)
-            ])
+            .all([this.open().metadata(), stat(this.path)])
 
-            .then(([data, native, file]) =>
-              assign(this, native.getSize(), { exif: data, native, file }))
+            .then(([meta, file]) => assign(this, {
+              exif: exif(meta.exif),
+              file,
+              meta
+            }))
 
             .then(resolve, reject)
-
         })
     })
   }
 
-  resize = (...args) =>
-    resize(this.native || nativeImage.createFromPath(this.path), ...args)
+  resize(...args) {
+    return this.open().resize(...args)
+  }
 
-}
-
-function resize(image, size) {
-  let current = image.getSize()
-  let delta = current.width - current.height
-  let target = delta > 0 ? 'height' : 'width'
-
-  if (size >= current[target]) size = current[target]
-
-  image = image.resize({ [target]: size, quality: 'best' })
-
-  current = image.getSize()
-  delta = current.width - current.height
-
-  if (delta === 0) return image
-
-  let position = { x: 0, y: 0, width: size, height: size }
-  position[delta > 0 ? 'x' : 'y'] = ~~Math.abs(delta / 2)
-
-  image = image.crop(position)
-
-  return image
-}
-
-
-async function createNativeImage(data, mimetype) {
-  switch (mimetype) {
-    case MIME.SVG:
-      return createFromSVG(data)
-    default:
-      return nativeImage.createFromBuffer(data)
+  toJSON() {
+    return pick(this, [
+      'path',
+      'checksum',
+      'mimetype',
+      'width',
+      'height',
+      'orientation',
+      'size'
+    ])
   }
 }
 
+
 const magic = (buffer) => {
   if (buffer != null || buffer.length > 24) {
-    if (isJPG(buffer)) return MIME.JPG
+    if (isGIF(buffer)) return MIME.GIF
+    if (isJPEG(buffer)) return MIME.JPEG
     if (isPNG(buffer)) return MIME.PNG
     if (isSVG(buffer)) return MIME.SVG
   }
 }
 
-const isJPG = (b) => (
+const isGIF = (b) => (
+  b[0] === 0x47 && b[1] === 0x49 && b[2] === 0x46
+)
+
+const isJPEG = (b) => (
   b[0] === 0xFF && b[1] === 0xD8 && b[2] === 0xFF
 )
 
@@ -200,8 +203,6 @@ const isPNG = (b) => (
   b.slice(0, 8).compare(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])) === 0
 )
 
-
 module.exports = {
   Image
 }
-

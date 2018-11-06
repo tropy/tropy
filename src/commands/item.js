@@ -63,7 +63,7 @@ class Import extends ImportCommand {
 
     if (!files) {
       this.isInteractive = true
-      files = yield call(open.images)
+      files = yield call(open.items)
     }
 
     if (!files) return []
@@ -84,6 +84,7 @@ class Import extends ImportCommand {
 
       try {
         file = files[i]
+
         image = yield call(Image.read, file)
 
         yield* this.handleDuplicate(image)
@@ -118,7 +119,10 @@ class Import extends ImportCommand {
         items.push(item.id)
 
       } catch (error) {
-        if (error instanceof DuplicateError) continue
+        if (error instanceof DuplicateError) {
+          verbose(`Skipping duplicate "${file}"...`)
+          continue
+        }
 
         warn(`Failed to import "${file}": ${error.message}`)
         verbose(error.stack)

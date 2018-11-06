@@ -17,15 +17,22 @@ class ImportCommand extends Command {
       const ext = imageExt(image.mimetype)
 
       for (let size of [48, 512]) {
-        const path = imagePath(id, size, ext)
+        let path = imagePath(id, size, ext)
 
         if (overwrite || !(yield call(cache.exists, path))) {
-          const dup = yield call(image.resize, size)
-          const out = (ext === '.png') ?
-            dup.toPNG() :
-            dup.toJPEG(quality)
+          let dup = image.resize({
+            width: size,
+            height: size,
+            fit: 'cover',
+            position: 'center'
+          })
 
-          yield call(this.options.cache.save, path, out)
+          if (ext === '.png') dup.png()
+          else dup.jpeg({ quality })
+
+          let out = yield call([dup, dup.toBuffer])
+
+          yield call(cache.save, path, out)
 
         } else {
           verbose(`Skipping ${size}px thumbnail for #${id}: already exists`)

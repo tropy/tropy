@@ -2,12 +2,12 @@
 
 const MIME = require('../constants/mime')
 
-const isValidImage = (file) => [
-  MIME.JPG,
-  MIME.PNG,
-  MIME.SVG
-].includes(file.type)
+const VALID = Object.keys(MIME).reduce((valid, type) => (
+  (valid[type] = true), valid
+), {})
 
+
+const isValidImage = (file) => VALID[file.type]
 
 module.exports = {
   ...require('./image'),

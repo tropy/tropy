@@ -267,6 +267,7 @@ en:
     filter:
       templates: Tropy Templates
       images: Images
+      items: Images and Tropy Items
       projects: Tropy Projects
       rdf: RDF Vocabularies
       jsonld: JSON-LD
