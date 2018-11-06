@@ -16,6 +16,7 @@ const DEFAULTS = {
   useContentSize: true,
   webPreferences: {
     preload: join(__dirname, '..', 'bootstrap.js'),
+    defaultEncoding: 'UTF-8',
     experimentalFeatures: false
   }
 }
