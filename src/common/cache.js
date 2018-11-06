@@ -44,6 +44,7 @@ function imagePath(image, size, ext = '.jpg') {
 
 function imageExt(mimetype) {
   switch (mimetype) {
+    case MIME.GIF:
     case MIME.SVG:
     case MIME.PNG:
       return '.png'

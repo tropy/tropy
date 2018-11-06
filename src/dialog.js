@@ -121,10 +121,20 @@ prompt.plugin = {
     })
 }
 
+open.items = (options) => open({
+  filters: [{
+    name: t('dialog.filter.items'),
+    extensions: ['gif', 'jpg', 'jpeg', 'png', 'svg', 'json', 'jsonld']
+  }],
+  defaultPath: ARGS.pictures,
+  properties: ['openFile', 'multiSelections'],
+  ...options
+})
+
 open.images = (options) => open({
   filters: [{
     name: t('dialog.filter.images'),
-    extensions: ['jpg', 'jpeg', 'png', 'svg']
+    extensions: ['gif', 'jpg', 'jpeg', 'png', 'svg']
   }],
   defaultPath: ARGS.pictures,
   properties: ['openFile', 'multiSelections'],
