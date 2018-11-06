@@ -5,28 +5,19 @@ const { debug, verbose } = require('../common/log')
 const { blank } = require('../common/util')
 
 module.exports = {
-  exif(buffer, offset = 0) {
-    let data = {}
-
+  exif(buffer) {
     if (!blank(buffer)) {
       try {
-        while (offset < buffer.length) {
-          if (buffer[offset++] === 0xFF && buffer[offset++] === 0xE1) {
-            let meta = parse(buffer.slice(offset + 2))
-
-            data = ({
-              ...meta.gps, ...meta.exif, ...meta.image
-            })
-
-            break
-          }
+        let data = parse(buffer)
+        return {
+          ...data.gps,
+          ...data.exif,
+          ...data.image
         }
       } catch (error) {
         verbose(`EXIF extraction failed: ${error.message}`)
         debug(error.stack)
       }
     }
-
-    return data
   }
 }
