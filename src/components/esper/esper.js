@@ -1,11 +1,11 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { EsperView } = require('./view')
 const { EsperToolbar } = require('./toolbar')
 const { EsperPanel } = require('./panel')
 const { get, restrict, shallow } = require('../../common/util')
+const { imageURL } = require('../../common/cache')
 const { isHorizontal, rotate, round } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
 const { on, off } = require('../../dom')
@@ -20,7 +20,7 @@ const {
   arrayOf, bool, func, node, number, object, shape, string
 } = require('prop-types')
 
-const { TABS } = require('../../constants')
+const { TABS, MIME } = require('../../constants')
 const { TOOL, MODE } = require('../../constants/esper')
 
 const {
@@ -46,7 +46,7 @@ const IMAGE_PARAMS = [
   'saturation'
 ]
 
-class Esper extends PureComponent {
+class Esper extends React.PureComponent {
   constructor(props) {
     super(props)
     this.state = this.getEmptyState(props)
@@ -182,7 +182,7 @@ class Esper extends PureComponent {
 
       assign(state, {
         photo: photo.id,
-        src: `${photo.protocol}://${photo.path}`,
+        src: this.getSource(photo, props),
         width: photo.width,
         height: photo.height
       })
@@ -211,6 +211,15 @@ class Esper extends PureComponent {
     assign(state, this.getZoomBounds(screen, state, props))
 
     return state
+  }
+
+  getSource(photo, { cache } = this.props) {
+    switch (photo.mimetype) {
+      case MIME.TIFF:
+        return `file://${imageURL(cache, photo.id, 'full', photo.mimetype)}`
+      default:
+        return `${photo.protocol}://${photo.path}`
+    }
   }
 
 
@@ -728,6 +737,7 @@ class Esper extends PureComponent {
   }
 
   static propTypes = {
+    cache: string.isRequired,
     hasOverlayToolbar: bool,
     invertScroll: bool.isRequired,
     invertZoom: bool.isRequired,

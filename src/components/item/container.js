@@ -13,6 +13,7 @@ const {
 } = require('prop-types')
 
 const {
+  getCachePrefix,
   getEsperViewState,
   getNotePadState,
   getActiveSelection,
@@ -55,6 +56,7 @@ class ItemContainer extends React.PureComponent {
           margin={38}
           min={ESPER.MIN_HEIGHT}>
           <Esper {...this.props.view}
+            cache={this.props.cache}
             mode={this.props.view.mode || this.props.settings.zoomMode}
             hasOverlayToolbar={this.props.settings.overlayToolbars}
             invertScroll={this.props.settings.invertScroll}
@@ -86,6 +88,7 @@ class ItemContainer extends React.PureComponent {
   }
 
   static propTypes = {
+    cache: string.isRequired,
     esper: shape({
       height: number.isRequired,
       panel: bool.isRequired,
@@ -117,6 +120,7 @@ class ItemContainer extends React.PureComponent {
 module.exports = {
   ItemContainer: connect(
     state => ({
+      cache: getCachePrefix(state),
       esper: state.ui.esper,
       view: getEsperViewState(state),
       notepad: getNotePadState(state),

@@ -8,34 +8,36 @@ const mod = require('../models')
 const act = require('../actions')
 const { warn, verbose } = require('../common/log')
 const { prompt } = require('../dialog')
+const MIME = require('../constants/mime')
 
 
 class ImportCommand extends Command {
   *createThumbnails(id, image, { overwrite = true, quality = 100 } = {}) {
     try {
-      const { cache } = this.options
-      const ext = imageExt(image.mimetype)
+      let { cache } = this.options
+      let ext = imageExt(image.mimetype)
 
-      for (let size of [48, 512]) {
+      for (let size of SIZE.get(image.mimetype)) {
         let path = imagePath(id, size, ext)
 
         if (overwrite || !(yield call(cache.exists, path))) {
-          let dup = image.resize({
-            width: size,
-            height: size,
-            fit: 'cover',
-            position: 'center'
-          })
+          let dup = image.resize(SIZE[size])
 
-          if (ext === '.png') dup.png()
-          else dup.jpeg({ quality })
+          switch (ext) {
+            case '.png':
+              dup = dup.png()
+              break
+            case '.webp':
+              dup = dup.webp({ quality, lossless: true })
+              break
+            default:
+              dup = dup.jpeg({ quality })
+          }
 
-          let out = yield call([dup, dup.toBuffer])
-
-          yield call(cache.save, path, out)
+          yield call([dup, dup.toFile], cache.expand(path))
 
         } else {
-          verbose(`Skipping ${size}px thumbnail for #${id}: already exists`)
+          verbose(`Skipping ${size} thumbnail for #${id}: already exists`)
         }
       }
     } catch (error) {
@@ -87,6 +89,26 @@ class ImportCommand extends Command {
     }
   }
 }
+
+const SIZE = {
+  48: {
+    width: 48, height: 48, fit: 'cover', position: 'center'
+  },
+
+  512: {
+    width: 512, height: 512, fit: 'cover', position: 'center'
+  },
+
+  get(mimetype) {
+    switch (mimetype) {
+      case MIME.TIFF:
+        return [48, 512, 'full']
+      default:
+        return [48, 512]
+    }
+  }
+}
+
 
 
 module.exports = {

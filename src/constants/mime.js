@@ -7,5 +7,6 @@ module.exports = {
   PNG: 'image/png',
   SVG: 'image/svg+xml',
   TIF: 'image/tiff',
-  TIFF: 'image/tiff'
+  TIFF: 'image/tiff',
+  WEBP: 'image/webp'
 }

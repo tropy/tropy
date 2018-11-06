@@ -165,7 +165,9 @@ class Image {
   }
 
   resize(...args) {
-    return this.open().resize(...args)
+    return (args.length) ?
+      this.open().resize(...args) :
+      this.open()
   }
 
   toJSON() {
@@ -183,25 +185,29 @@ class Image {
 
 
 const magic = (buffer) => {
-  if (buffer != null || buffer.length > 24) {
-    if (isGIF(buffer)) return MIME.GIF
+  if (buffer != null) {
     if (isJPEG(buffer)) return MIME.JPEG
     if (isPNG(buffer)) return MIME.PNG
+    if (isTIFF(buffer)) return MIME.TIFF
+    if (isGIF(buffer)) return MIME.GIF
     if (isSVG(buffer)) return MIME.SVG
   }
 }
 
-const isGIF = (b) => (
-  b[0] === 0x47 && b[1] === 0x49 && b[2] === 0x46
-)
+const isGIF = (buffer) =>
+  check(buffer, [0x47, 0x49, 0x46])
 
-const isJPEG = (b) => (
-  b[0] === 0xFF && b[1] === 0xD8 && b[2] === 0xFF
-)
+const isJPEG = (buffer) =>
+  check(buffer, [0xFF, 0xD8, 0xFF])
 
-const isPNG = (b) => (
-  b.slice(0, 8).compare(Buffer.from([137, 80, 78, 71, 13, 10, 26, 10])) === 0
-)
+const isPNG = (buffer) =>
+  check(buffer, [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])
+
+const isTIFF = (buffer) =>
+  check(buffer, [0x49, 0x49, 42, 0]) || check(buffer, [0x4d, 0x4d, 0, 42])
+
+const check = (buffer, bytes) =>
+  buffer.slice(0, bytes.length).compare(Buffer.from(bytes)) === 0
 
 module.exports = {
   Image

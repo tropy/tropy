@@ -2,10 +2,9 @@
 
 const MIME = require('../constants/mime')
 
-const VALID = Object.keys(MIME).reduce((valid, type) => (
+const VALID = Object.values(MIME).reduce((valid, type) => (
   (valid[type] = true), valid
 ), {})
-
 
 const isValidImage = (file) => VALID[file.type]
 
