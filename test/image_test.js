@@ -39,19 +39,3 @@ describe('Image', () => {
     })
   })
 })
-
-describe('resize()', () => {
-  const { nativeImage } = require('electron')
-  const { resize } = __require('image')
-
-  let image
-
-  beforeEach(() => {
-    image = nativeImage.createFromPath(F.images('PA140105.JPG').path)
-  })
-
-  it('scales and crops the image as necessary', () => {
-    expect(resize(image, 48).getSize())
-      .to.eql({ width: 48, height: 48 })
-  })
-})
