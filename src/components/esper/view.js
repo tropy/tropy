@@ -198,7 +198,7 @@ class EsperView extends Component {
     if (texture == null) return
 
     const { baseTexture } = texture
-    const pixellate = (zoom > ZOOM_LINEAR_MAX)
+    const pixellate = (zoom === 1 || zoom > ZOOM_LINEAR_MAX)
     const scaleMode = pixellate ?
       PIXI.SCALE_MODES.NEAREST :
       PIXI.SCALE_MODES.LINEAR
