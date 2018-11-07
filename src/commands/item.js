@@ -80,13 +80,13 @@ class Import extends ImportCommand {
     let defaultPhotoData = getTemplateValues(ptemp)
 
     for (let i = 0, total = files.length; i < total; ++i) {
-      let file, image, item, photo
+      let file, image, item
+      let photos = []
 
       try {
         file = files[i]
 
-        image = yield call(Image.read, file)
-
+        image = yield call(Image.open, file)
         yield* this.handleDuplicate(image)
 
         yield call(db.transaction, async tx => {
@@ -94,25 +94,36 @@ class Import extends ImportCommand {
             [DC.title]: text(image.title), ...defaultItemData
           })
 
-          photo = await mod.photo.create(tx, { base, template: ptemp.id }, {
-            item: item.id, image, data: defaultPhotoData
-          })
+          while (!image.done) {
+            let photo = await mod.photo.create(tx,
+              { base, template: ptemp.id },
+              { item: item.id, image, data: defaultPhotoData })
 
-          if (list) {
-            await mod.list.items.add(tx, list, [item.id])
-            // item.lists.push(list)
+            if (list) {
+              await mod.list.items.add(tx, list, [item.id])
+              // item.lists.push(list)
+            }
+
+            item.photos.push(photo.id)
+            photos.push(photo)
+            image.next()
           }
-
-          item.photos.push(photo.id)
         })
 
-        yield* this.createThumbnails(photo.id, image)
+        image.rewind()
 
-        yield put(act.metadata.load([item.id, photo.id]))
+        while (!image.done) {
+          let photo = photos[image.page]
+
+          yield* this.createThumbnails(photo.id, image)
+          yield put(act.metadata.load([item.id, photo.id]))
+          yield put(act.photo.insert(photo))
+
+          image.next()
+        }
 
         yield all([
           put(act.item.insert(item)),
-          put(act.photo.insert(photo)),
           put(act.activity.update(this.action, { total, progress: i + 1 }))
         ])
 

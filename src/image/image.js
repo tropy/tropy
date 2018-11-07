@@ -8,6 +8,7 @@ const { createHash } = require('crypto')
 const { exif } = require('./exif')
 const { isSVG } = require('./svg')
 const sharp = require('sharp')
+const tiff = require('tiff')
 const { assign } = Object
 const { warn, debug } = require('../common/log')
 const { get, pick } = require('../common/util')
@@ -15,8 +16,8 @@ const MIME = require('../constants/mime')
 
 
 class Image {
-  static read(path) {
-    return (new Image(path)).read()
+  static open(path) {
+    return (new Image(path)).open()
   }
 
   static async check({
@@ -32,7 +33,7 @@ class Image {
       status.hasChanged = (mtime > (consolidated || created))
 
       if (force || created == null || status.hasChanged) {
-        status.image = await Image.read(path)
+        status.image = await Image.open(path)
         status.hasChanged = (status.image.checksum !== checksum)
       }
     } catch (error) {
@@ -72,25 +73,27 @@ class Image {
   }
 
   get orientation() {
-    return get(this.exif, ['Orientation'], 1)
+    return get(this.exif, [this.page, 'Orientation'], 1)
   }
 
   get channels() {
-    return get(this.meta, ['channels'])
+    return get(this.meta, [this.page, 'channels'])
   }
 
   get width() {
-    return get(this.meta, ['width'], 0)
+    return get(this.meta, [this.page, 'width'], 0)
   }
 
   get height() {
-    return get(this.meta, ['height'], 0)
+    return get(this.meta, [this.page, 'height'], 0)
   }
 
   get date() {
     try {
-      // temporarily return as string until we add value types
-      return get(this.exif, ['DateTimeOriginal'], this.ctime).toISOString()
+      // Temporarily return as string until we add value types.
+      return get(
+        this.exif, [this.page, 'DateTimeOriginal'], this.file.ctime
+      ).toISOString()
 
     } catch (error) {
       warn(`failed to convert image date: ${error.message}`)
@@ -100,28 +103,42 @@ class Image {
     }
   }
 
-  get ctime() {
-    return get(this.file, ['ctime'])
-  }
-
   get size() {
     return get(this.file, ['size'])
+  }
+
+  get done() {
+    return !(this.page < this.numPages)
   }
 
   digest(encoding = 'hex') {
     return this.hash && this.hash.digest(encoding)
   }
 
-  open(page = this.page) {
+  do(page = this.page) {
     return sharp(this.data || this.path, { page })
   }
 
-  read() {
+  *each(fn) {
+    for (let page = 0; page < this.numPages; ++page) {
+      yield fn(this.do(page), page, this.numPages)
+    }
+  }
+
+  next() {
+    return ++this.page
+  }
+
+  rewind() {
+    this.page = 0
+  }
+
+  open() {
     return new Promise((resolve, reject) => {
       this.hash = createHash('md5')
       this.mimetype = null
       this.page = 0
-      this.numPages = 0
+      this.numPages = 1
 
       let chunks = []
 
@@ -145,9 +162,11 @@ class Image {
             case MIME.JPEG:
             case MIME.PNG:
             case MIME.SVG:
+            case MIME.WEBP:
               this.data = data
               break
             case MIME.TIFF:
+              this.numPages = tiff.pageCount(data)
               this.data = data
               break
             default:
@@ -155,10 +174,13 @@ class Image {
           }
 
           Promise
-            .all([this.open().metadata(), stat(this.path)])
+            .all([
+              stat(this.path),
+              ...this.each(img => img.metadata())
+            ])
 
-            .then(([meta, file]) => assign(this, {
-              exif: exif(meta.exif),
+            .then(([file, ...meta]) => assign(this, {
+              exif: meta.map(m => exif(m.exif)),
               file,
               meta
             }))
@@ -170,8 +192,8 @@ class Image {
 
   resize(...args) {
     return (args.length) ?
-      this.open().resize(...args) :
-      this.open()
+      this.do().resize(...args) :
+      this.do()
   }
 
   toJSON() {
