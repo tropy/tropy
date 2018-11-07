@@ -25,13 +25,13 @@ class ImportCommand extends Command {
 
           switch (ext) {
             case '.png':
-              dup = dup.png()
+              dup.png()
               break
             case '.webp':
-              dup = dup.webp({ quality, lossless: true })
+              dup.webp({ quality, lossless: image.channels === 1 })
               break
             default:
-              dup = dup.jpeg({ quality })
+              dup.jpeg({ quality })
           }
 
           yield call([dup, dup.toFile], cache.expand(path))

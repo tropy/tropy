@@ -75,6 +75,10 @@ class Image {
     return get(this.exif, ['Orientation'], 1)
   }
 
+  get channels() {
+    return get(this.meta, ['channels'])
+  }
+
   get width() {
     return get(this.meta, ['width'], 0)
   }
@@ -109,7 +113,7 @@ class Image {
   }
 
   open(page = this.page) {
-    return sharp(this.data || this.path, { density: 720, page })
+    return sharp(this.data || this.path, { page })
   }
 
   read() {
