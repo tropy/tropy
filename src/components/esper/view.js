@@ -37,7 +37,7 @@ class EsperView extends Component {
       antialias: false,
       forceCanvas: !ARGS.webgl,
       roundPixels: false,
-      resolution: devicePixelRatio,
+      resolution: Math.round(devicePixelRatio),
       transparent: true,
       width,
       height
