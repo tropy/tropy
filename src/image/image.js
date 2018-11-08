@@ -134,6 +134,10 @@ class Image {
     this.page = 0
   }
 
+  isOpaque = async () => (
+    this.channels < 4 || (await this.do().stats()).isOpaque
+  )
+
   open(page = 0) {
     return new Promise((resolve, reject) => {
       this.hash = createHash('md5')

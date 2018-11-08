@@ -28,7 +28,10 @@ class ImportCommand extends Command {
               dup.png()
               break
             case '.webp':
-              dup.webp({ quality, lossless: image.channels === 1 })
+              dup.webp({
+                quality,
+                lossless: image.channels === 1 || !(yield call(image.isOpaque))
+              })
               break
             default:
               dup.jpeg({ quality })
