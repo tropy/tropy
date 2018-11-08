@@ -16,12 +16,13 @@ const MIME = require('../constants/mime')
 
 
 class Image {
-  static open(path) {
-    return (new Image(path)).open()
+  static open(path, page = 0) {
+    return (new Image(path)).open(page)
   }
 
   static async check({
     path,
+    page,
     consolidated,
     created,
     checksum
@@ -33,7 +34,7 @@ class Image {
       status.hasChanged = (mtime > (consolidated || created))
 
       if (force || created == null || status.hasChanged) {
-        status.image = await Image.open(path)
+        status.image = await Image.open(path, page)
         status.hasChanged = (status.image.checksum !== checksum)
       }
     } catch (error) {
@@ -133,7 +134,7 @@ class Image {
     this.page = 0
   }
 
-  open() {
+  open(page = 0) {
     return new Promise((resolve, reject) => {
       this.hash = createHash('md5')
       this.mimetype = null
@@ -173,6 +174,10 @@ class Image {
               return reject(new Error('unsupported image'))
           }
 
+          if (page && page < this.numPages) {
+            this.page = page
+          }
+
           Promise
             .all([
               stat(this.path),
@@ -198,6 +203,7 @@ class Image {
 
   toJSON() {
     return pick(this, [
+      'page',
       'path',
       'checksum',
       'mimetype',

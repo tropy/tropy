@@ -49,7 +49,7 @@ class Consolidate extends ImportCommand {
 
               image = (blank(paths)) ?
                 null :
-                yield call(Image.open, paths[0])
+                yield call(Image.open, paths[0], photo.page)
             }
           }
 
