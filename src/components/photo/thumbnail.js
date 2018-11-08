@@ -63,7 +63,7 @@ class Thumbnail extends Component {
   }
 
   handleError = () => {
-    if (this.props.onError != null) {
+    if (this.props.onError != null && !this.props.broken) {
       this.props.onError(this.props.id)
     }
   }
