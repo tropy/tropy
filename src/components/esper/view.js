@@ -23,6 +23,7 @@ const {
   }
 } = require('../../constants/sass')
 
+PIXI.settings.RETINA_PREFIX = /@2x!/
 
 class EsperView extends Component {
   componentDidMount() {
