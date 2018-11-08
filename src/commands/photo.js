@@ -128,33 +128,36 @@ class Create extends ImportCommand {
 
     let data = getTemplateValues(template)
 
-    for (let i = 0, total = files.length; i < total; ++i) {
-      let file
-      let image
-      let photo
+    for (let i = 0, total = files.length; i < files.length; ++i) {
+      let file, image
 
       try {
         file = files[i]
-        image = yield call(Image.open, file)
 
+        image = yield call(Image.open, file)
         yield* this.handleDuplicate(image)
 
-        photo = yield call(db.transaction, tx =>
-          mod.photo.create(tx, { base, template: template.id }, {
-            item, image, data, position: idx[0] + i + 1
-          }))
+        total += (image.numPages - 1)
 
-        yield put(act.metadata.load([photo.id]))
+        while (!image.done) {
+          let photo = yield call(db.transaction, tx =>
+            mod.photo.create(tx, { base, template: template.id }, {
+              item, image, data, position: idx[0] + i + 1
+            }))
 
-        yield all([
-          put(act.photo.insert(photo, { idx: [idx[0] + photos.length] })),
-          put(act.activity.update(this.action, { total, progress: i + 1 }))
-        ])
+          yield put(act.metadata.load([photo.id]))
 
-        photos.push(photo.id)
+          yield all([
+            put(act.photo.insert(photo, { idx: [idx[0] + photos.length] })),
+            put(act.activity.update(this.action, { total, progress: i + 1 }))
+          ])
 
-        yield* this.createThumbnails(photo.id, image)
+          photos.push(photo.id)
 
+          yield* this.createThumbnails(photo.id, image)
+
+          image.next()
+        }
       } catch (error) {
         if (error instanceof DuplicateError) continue
 
@@ -220,10 +223,10 @@ class Duplicate extends ImportCommand {
     let photos = []
 
     for (let i = 0; i < total; ++i) {
-      const { template, path } = originals[i]
+      const { template, path, page } = originals[i]
 
       try {
-        let image = yield call(Image.open, path)
+        let image = yield call(Image.open, path, page)
 
         let photo = yield call(db.transaction, tx =>
           mod.photo.create(tx, { base, template }, {
