@@ -7,6 +7,7 @@ const { AdjustmentFilter } = require('@pixi/filter-adjustment')
 const { SelectionLayer, SelectionOverlay } = require('./selection')
 const { restrict } = require('../../common/util')
 const { deg, isHorizontal } = require('../../common/math')
+const { floor, max } = Math
 
 const NEGATIVE = [
   -1, 0, 0, 1, 0, 0, -1,  0, 1, 0, 0, 0, -1, 1, 0, 0, 0,  0, 1, 0
@@ -72,8 +73,8 @@ class Picture extends Container {
   getInnerBounds(screen, scale = this.scale.y) {
     const { width, height } = this.getBounds(scale)
 
-    const dx = Math.max(0, width - screen.width)
-    const dy = Math.max(0, height - screen.height)
+    const dx = max(0, width - screen.width)
+    const dy = max(0, height - screen.height)
 
     return new Rectangle(
       (screen.width - dx) / 2, (screen.height - dy) / 2, dx, dy
@@ -134,8 +135,8 @@ class Picture extends Container {
 }
 
 function constrain(position, within) {
-  position.x = restrict(position.x, within.left, within.right)
-  position.y = restrict(position.y, within.top, within.bottom)
+  position.x = floor(restrict(position.x, within.left, within.right))
+  position.y = floor(restrict(position.y, within.top, within.bottom))
   return position
 }
 

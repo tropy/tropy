@@ -14,6 +14,7 @@ const { Selection  } = require('./selection')
 const TWEEN = require('@tweenjs/tween.js')
 const { TOOL } = require('../../constants/esper')
 const debounce = require('lodash.debounce')
+const { PI, floor, round } = Math
 
 const {
   ESPER: {
@@ -37,7 +38,7 @@ class EsperView extends Component {
       antialias: false,
       forceCanvas: !ARGS.webgl,
       roundPixels: false,
-      resolution: Math.round(devicePixelRatio),
+      resolution: round(devicePixelRatio),
       transparent: true,
       width,
       height
@@ -217,8 +218,8 @@ class EsperView extends Component {
   }
 
   resize({ width, height, zoom, mirror }) {
-    width = Math.round(width)
-    height = Math.round(height)
+    width = round(width)
+    height = round(height)
 
     this.pixi.renderer.resize(width, height)
     this.pixi.render()
@@ -287,7 +288,7 @@ class EsperView extends Component {
       const tgt = rad(angle)
 
       // Always rotate counter-clockwise!
-      const tmp = (tgt > cur) ? cur - (2 * Math.PI - tgt) : tgt
+      const tmp = (tgt > cur) ? cur - (2 * PI - tgt) : tgt
 
       this.animate(this.image, 'rotate', {
         done: () => {
@@ -529,8 +530,8 @@ class EsperView extends Component {
     const { pos, mov } = origin
     const { top, right, bottom, left } = limit
     const { x, y } = data.getLocalPosition(target.parent)
-    target.x = restrict(pos.x + (x - mov.x), left, right)
-    target.y = restrict(pos.y + (y - mov.y), top, bottom)
+    target.x = floor(restrict(pos.x + (x - mov.x), left, right))
+    target.y = floor(restrict(pos.y + (y - mov.y), top, bottom))
   }
 
   handlePanStop() {
@@ -562,10 +563,10 @@ class EsperView extends Component {
     }
 
     this.props.onSelectionCreate({
-      x: Math.round(x),
-      y: Math.round(y),
-      width: Math.round(width),
-      height: Math.round(height)
+      x: round(x),
+      y: round(y),
+      width: round(width),
+      height: round(height)
     })
   }
 

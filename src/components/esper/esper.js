@@ -14,7 +14,7 @@ const { assign } = Object
 const debounce = require('lodash.debounce')
 const throttle = require('lodash.throttle')
 const cx = require('classnames')
-const { min } = Math
+const { floor, min } = Math
 
 const {
   arrayOf, bool, func, node, number, object, shape, string
@@ -372,8 +372,8 @@ class Esper extends PureComponent {
 
   move({ x = 0, y = 0 }, animate) {
     this.handlePositionChange({
-      x: this.state.x + x,
-      y: this.state.y + y
+      x: this.state.x + floor(x),
+      y: this.state.y + floor(y)
     }, animate)
   }
 
@@ -498,8 +498,8 @@ class Esper extends PureComponent {
       const mw = this.props.invertScroll ? -1 : 1
 
       this.handlePositionChange({
-        x: this.view.image.x + Math.round(dx * mw),
-        y: this.view.image.y + Math.round(dy * mw)
+        x: this.view.image.x + floor(dx * mw),
+        y: this.view.image.y + floor(dy * mw)
       })
     }
   }
