@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { CoverImage } = require('./cover-image')
 const { Editable } = require('../editable')
 const { TagColors } = require('../colors')
@@ -20,7 +19,7 @@ const BlankTableCell = () => (
   <td className="blank"/>
 )
 
-class ItemTableCell extends PureComponent {
+class ItemTableCell extends React.PureComponent {
   get classes() {
     return ['metadata', this.props.type, {
       'dragging': this.props.isDragging,

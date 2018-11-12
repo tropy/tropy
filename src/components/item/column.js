@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { Fragment, Component } = React
 const { Id, Label, ResourceSelect } = require('../resource/select')
 const { Popup } = require('../popup')
 const { OPTION, PANEL } = require('../../constants/sass')
@@ -13,7 +12,7 @@ const {
 } = require('prop-types')
 
 
-class ColumnContextMenu extends Component {
+class ColumnContextMenu extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -96,11 +95,11 @@ const toColumn = (value, props) =>
   <Column column={value} {...props}/>
 
 const Column = ({ column, isSelected, matchData }) => (
-  <Fragment>
+  <>
     {isSelected && <IconTick/>}
     <Label resource={column} matchData={matchData}/>
     <Id resource={column} matchData={matchData}/>
-  </Fragment>
+  </>
 )
 
 Column.propTypes = {
