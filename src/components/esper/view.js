@@ -409,13 +409,13 @@ class EsperView extends Component {
   // On low-res screens, we render at 2x resolution
   // when zooming out to improve quality. See #218
   shouldResolutionChange(scale) {
-    let dppx = devicePixelRatio
+    let dppx = round(devicePixelRatio)
     let res = this.pixi.renderer.resolution
     return (dppx === 1) && (scale < 1 ? res === 1 : res === 2)
   }
 
   handleResolutionChange = () => {
-    let dppx = devicePixelRatio
+    let dppx = round(devicePixelRatio)
     let { image } = this
 
     if (dppx === 1 && image != null && image.scale.y < 1) dppx = 2
