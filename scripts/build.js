@@ -135,9 +135,12 @@ target.all = async (args = []) => {
       }
       case 'darwin': {
         say('fix unpacked symlinks...')
-        cp('-r',
-          join(dir, VIPS, '*'),
-          join(dst, 'Contents', 'Resources', 'app.asar.unpacked', VIPS))
+        cp('-r', join(dir, VIPS, '*'), join(dst,
+          `${qualified.product}.app`,
+          'Contents',
+          'Resources',
+          'app.asar.unpacked',
+          VIPS))
         break
       }
       case 'win32': {
