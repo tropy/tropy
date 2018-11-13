@@ -44,9 +44,6 @@ class EsperView extends Component {
       height
     })
 
-    this.m = matchMedia('(max-resolution: 1dppx)')
-    this.m.addListener(this.handleResolutionChange)
-
     this.pixi.loader.onError.add(this.handleLoadError)
     this.pixi.loader.onLoad.add(this.handleLoadProgress)
     this.pixi.ticker.add(this.update)
@@ -67,7 +64,6 @@ class EsperView extends Component {
     this.stop.flush()
     this.tweens.removeAll()
     this.pixi.destroy(true)
-    this.m.removeListener(this.handleResolutionChange)
     off(this.container, 'wheel', this.handleWheel, { passive: true })
     if (this.drag.current) this.drag.stop()
   }
@@ -414,7 +410,7 @@ class EsperView extends Component {
     return (dppx === 1) && (scale < 1 ? res === 1 : res === 2)
   }
 
-  handleResolutionChange = () => {
+  handleResolutionChange() {
     let dppx = round(devicePixelRatio)
     let { image } = this
 

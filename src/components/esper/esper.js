@@ -72,6 +72,9 @@ class Esper extends React.PureComponent {
       on(this.container, 'tab:focus', this.handleTabFocus)
     }
 
+    this.m = matchMedia('(max-resolution: 1dppx)')
+    this.m.addListener(this.handleResolutionChange)
+
     this.setState(this.getStateFromProps(), () => {
       this.view.reset(this.state)
     })
@@ -82,6 +85,7 @@ class Esper extends React.PureComponent {
     this.io.disconnect()
     this.persist.flush()
     this.update.flush()
+    this.m.removeListener(this.handleResolutionChange)
 
     if (this.container != null) {
       off(this.container, 'tab:focus', this.handleTabFocus)
@@ -157,10 +161,12 @@ class Esper extends React.PureComponent {
   }
 
   getEmptyState(props = this.props) {
+    let resolution = round(devicePixelRatio) || 1
+
     return {
       mode: props.mode,
       zoom: props.zoom,
-      minZoom: props.minZoom,
+      minZoom: props.minZoom / resolution,
       width: 0,
       height: 0,
       src: null,
@@ -168,6 +174,7 @@ class Esper extends React.PureComponent {
       y: props.y,
       tool: props.tool,
       hasTransformations: false,
+      resolution,
       ...this.getOriginalPhotoState(props)
     }
   }
@@ -222,18 +229,18 @@ class Esper extends React.PureComponent {
     }
   }
 
-
   getZoomToFill(screen, { width } = this.state, props = this.props) {
     return round(min(props.maxZoom, screen.width / width), ZOOM_PRECISION)
   }
 
   getZoomToFit(
     screen,
-    { width, height } = this.state,
+    { width, height, resolution } = this.state,
     { minZoom } = this.props
   ) {
     return round(
-      min(minZoom, min(screen.width / width, screen.height / height)
+      min(minZoom / resolution,
+        min(screen.width / width, screen.height / height)
     ), ZOOM_PRECISION)
   }
 
@@ -242,8 +249,8 @@ class Esper extends React.PureComponent {
     state = this.state,
     props = this.props
   ) {
-    let { angle, zoom, width, height } = state
-    let { minZoom } = props
+    let { angle, zoom, width, height, resolution } = state
+    let minZoom = props.minZoom / resolution
     let zoomToFill = minZoom
 
     if (width > 0 && height > 0) {
@@ -251,7 +258,7 @@ class Esper extends React.PureComponent {
         [width, height] = [height, width]
       }
 
-      minZoom = this.getZoomToFit(screen, { width, height }, props)
+      minZoom = this.getZoomToFit(screen, { width, height, resolution }, props)
       zoomToFill = this.getZoomToFill(screen, { width }, props)
 
       switch (state.mode) {
@@ -355,6 +362,12 @@ class Esper extends React.PureComponent {
   handleResize = throttle((rect) => {
     this.resize(rect)
   }, 50)
+
+  handleResolutionChange = () => {
+    this.setState(this.getStateFromProps(), () => {
+      this.view.handleResolutionChange()
+    })
+  }
 
   resize = ({ width, height }) => {
     width = round(width || this.view.screen.width)
@@ -693,6 +706,7 @@ class Esper extends React.PureComponent {
             isPanelVisible={this.props.isPanelVisible}
             mode={this.state.mode}
             tool={tool}
+            resolution={this.state.resolution}
             zoom={this.state.zoom}
             minZoom={this.state.minZoom}
             maxZoom={this.props.maxZoom}
