@@ -133,6 +133,13 @@ target.all = async (args = []) => {
 
         break
       }
+      case 'darwin': {
+        say('fix unpacked symlinks...')
+        cp('-r',
+          join(dir, VIPS, '*'),
+          join(dst, 'Contents', 'Resources', 'app.asar.unpacked', VIPS))
+        break
+      }
       case 'win32': {
         say(`renaming executable to ${qualified.name}.exe...`)
         rename(dst, `${qualified.product}.exe`, `${qualified.name}.exe`)
