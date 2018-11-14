@@ -161,7 +161,7 @@ class Esper extends React.PureComponent {
   }
 
   getEmptyState(props = this.props) {
-    let resolution = round(devicePixelRatio) || 1
+    let resolution = floor(devicePixelRatio) || 1
 
     return {
       mode: props.mode,
@@ -364,9 +364,7 @@ class Esper extends React.PureComponent {
   }, 50)
 
   handleResolutionChange = () => {
-    this.setState(this.getStateFromProps(), () => {
-      this.view.handleResolutionChange()
-    })
+    this.setState(this.getStateFromProps())
   }
 
   resize = ({ width, height }) => {
@@ -722,6 +720,7 @@ class Esper extends React.PureComponent {
             ref={this.setView}
             selection={this.props.selection}
             selections={this.props.selections}
+            resolution={this.state.resolution}
             tool={tool}
             onChange={this.handleViewChange}
             onSelectionActivate={this.handleSelectionActivate}
