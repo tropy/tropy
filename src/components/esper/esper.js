@@ -235,11 +235,11 @@ class Esper extends React.PureComponent {
 
   getZoomToFit(
     screen,
-    { width, height, resolution } = this.state,
+    { width, height } = this.state,
     { minZoom } = this.props
   ) {
     return round(
-      min(minZoom / resolution,
+      min(minZoom / this.state.resolution,
         min(screen.width / width, screen.height / height)
     ), ZOOM_PRECISION)
   }
@@ -258,7 +258,7 @@ class Esper extends React.PureComponent {
         [width, height] = [height, width]
       }
 
-      minZoom = this.getZoomToFit(screen, { width, height, resolution }, props)
+      minZoom = this.getZoomToFit(screen, { width, height }, props)
       zoomToFill = this.getZoomToFill(screen, { width }, props)
 
       switch (state.mode) {
@@ -371,7 +371,7 @@ class Esper extends React.PureComponent {
     width = round(width || this.view.screen.width)
     height = round(height || this.view.screen.height)
 
-    const { minZoom, zoom, zoomToFill } = this.getZoomBounds({ width, height })
+    let { minZoom, zoom, zoomToFill } = this.getZoomBounds({ width, height })
 
     this.view.resize({
       width, height, zoom, mirror: this.state.mirror
