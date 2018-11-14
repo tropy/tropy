@@ -201,7 +201,7 @@ class EsperView extends React.Component {
     if (texture == null) return
 
     const { baseTexture } = texture
-    const pixellate = (zoom > ZOOM_LINEAR_MAX)
+    const pixellate = (zoom > ZOOM_LINEAR_MAX) || (zoom === this.resolution)
     const scaleMode = pixellate ?
       PIXI.SCALE_MODES.NEAREST :
       PIXI.SCALE_MODES.LINEAR
