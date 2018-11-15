@@ -53,7 +53,10 @@ target.inspector = () => {
 }
 
 target.jsonld = () => {
-  rm('-f', join(mods, 'rdf-canonize', 'build', 'Release', 'urdna2015.node'))
+  say('jsonld ...remove native modules')
+  rm('-rf', join(mods, 'rdf-canonize', 'build'))
+  //rm('-rf', join(mods, 'rdf-canonize-native'))
+  //rm('-rf', join(mods, 'jsonld', 'node-modules', 'rdf-canonize-native'))
 }
 
 target.sharp = (force) => {
