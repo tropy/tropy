@@ -28,10 +28,7 @@ const skel = (id, selections = [], notes = []) => ({
 
 module.exports = {
   async create(db, { base, template }, { item, image, data, position }) {
-    let {
-      path, checksum, mimetype, width, height, orientation, size
-    } = image
-
+    let { path, width, height, ...meta } = image.toJSON()
     let { id } = await db.run(
       ...into('subjects').insert({ template: template || TEMPLATE })
     )
@@ -47,11 +44,8 @@ module.exports = {
         id,
         item_id: item,
         path,
-        size,
-        checksum,
-        mimetype,
-        orientation,
-        position
+        position,
+        ...meta
       })),
 
       metadata.update(db, {
@@ -106,6 +100,7 @@ module.exports = {
             width,
             height,
             path,
+            page,
             size,
             protocol,
             mimetype,

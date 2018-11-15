@@ -12,7 +12,7 @@
 --
 
 -- Save the current migration number
-PRAGMA user_version=1810082056;
+PRAGMA user_version=1811081017;
 
 -- Load sqlite3 .dump
 PRAGMA foreign_keys=OFF;
@@ -61,7 +61,7 @@ CREATE TABLE photos (
   mimetype     TEXT     NOT NULL,
   checksum     TEXT     NOT NULL,
   orientation  INTEGER  NOT NULL DEFAULT 1,
-  metadata     TEXT     NOT NULL DEFAULT '{}', size INTEGER NOT NULL DEFAULT 0,
+  metadata     TEXT     NOT NULL DEFAULT '{}', size INTEGER NOT NULL DEFAULT 0, page NOT NULL DEFAULT 0,
 
   CHECK (orientation > 0 AND orientation < 9)
 ) WITHOUT ROWID;
