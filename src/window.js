@@ -38,39 +38,46 @@ class Window extends EventEmitter {
   }
 
   init(done) {
-    this.plugins.reload()
-      .then(plugins => plugins.create().emit('change'))
-    this.unloaders.push(this.plugins.flush)
+    return Promise.all([
+      this.plugins.reload().then(p => p.create().emit('change')),
 
-    this.handleUnload()
-    this.handleTabFocus()
-    this.handleIpcEvents()
-    this.handleEditorCommands()
-    this.handleModifierKeys()
+      new Promise((resolve) => {
+        this.unloaders.push(this.plugins.flush)
 
-    toggle(document.body, process.platform, true)
+        this.handleUnload()
+        this.handleTabFocus()
+        this.handleIpcEvents()
+        this.handleEditorCommands()
+        this.handleModifierKeys()
 
-    const { aqua, frameless } = this.state
+        toggle(document.body, process.platform, true)
 
-    if (aqua) {
-      toggle(document.body, aqua, true)
-    }
+        let { aqua, frameless } = this.state
 
-    this.setScrollBarStyle()
+        if (aqua) {
+          toggle(document.body, aqua, true)
+        }
 
-    if (frameless) {
-      toggle(document.body, 'frameless', true)
+        this.setScrollBarStyle()
 
-      if (EL_CAPITAN) {
-        toggle(document.body, 'el-capitan', true)
+        if (frameless) {
+          toggle(document.body, 'frameless', true)
 
-      } else {
-        this.createWindowControls()
-      }
-    }
+          if (EL_CAPITAN) {
+            toggle(document.body, 'el-capitan', true)
 
-    this.style(this.state.theme, false, done)
-    require(`./windows/${this.type}`)
+          } else {
+            this.createWindowControls()
+          }
+        }
+
+        this.style(this.state.theme, false, () => {
+          if (typeof done === 'function') done()
+          resolve(this)
+        })
+        require(`./windows/${this.type}`)
+      })
+    ])
   }
 
   show = () => {
