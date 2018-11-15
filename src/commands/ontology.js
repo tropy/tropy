@@ -117,22 +117,18 @@ class VocabExport extends Command {
   static get ACTION() { return VOCAB.EXPORT }
 
   *exec() {
-    const { payload } = this.action
-    const [vocab, classes, props, types] =
-          yield select(state => [
-            pluck(state.ontology.vocab, payload),
-            state.ontology.class,
-            state.ontology.props,
-            state.ontology.type
-          ])
+    let { payload } = this.action
+    let [vocab, ontology] = yield select(state => [
+      pluck(state.ontology.vocab, payload),
+      state.ontology
+    ])
 
     this.isInteractive = true
 
-    const path = yield call(dialog.save.vocab)
+    let path = yield call(dialog.save.vocab)
     if (!path) return
 
-    const data = yield call(toN3, vocab[0], classes, props, types)
-
+    let data = yield call(toN3, vocab[0], ontology)
     yield cps(write, path, data)
 
     return payload
