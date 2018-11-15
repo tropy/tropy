@@ -123,12 +123,12 @@ class Tropy extends EventEmitter {
         .on('unresponsive', async () => {
           warn(`win#${this.win.id} has become unresponsive`)
 
-          const chosen = await dialog.show('message-box', this.win, {
+          let { response } = await dialog.show('message-box', this.win, {
             type: 'warning',
             ...this.dict.dialogs.unresponsive
           })
 
-          switch (chosen) {
+          switch (response) {
             case 0: return this.win.destroy()
           }
         })
@@ -143,14 +143,22 @@ class Tropy extends EventEmitter {
         .on('crashed', async () => {
           warn(`win#${this.win.id} contents crashed`)
 
-          const chosen = await dialog.show('message-box', this.win, {
+          let { response } = await dialog.show('message-box', this.win, {
             type: 'warning',
             ...this.dict.dialogs.crashed
           })
 
-          switch (chosen) {
-            case 0: return this.win.close()
-            case 1: return this.win.reload()
+          switch (response) {
+            case 0:
+              this.win.destroy()
+              break
+            case 1:
+              app.relaunch()
+              app.exit(0)
+              break
+            default:
+              this.win.show()
+              break
           }
         })
 
