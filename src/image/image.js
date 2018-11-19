@@ -227,6 +227,7 @@ const magic = (buffer) => {
     if (isTIFF(buffer)) return MIME.TIFF
     if (isGIF(buffer)) return MIME.GIF
     if (isSVG(buffer)) return MIME.SVG
+    if (isWebP(buffer)) return MIME.WEBP
   }
 }
 
@@ -241,6 +242,10 @@ const isPNG = (buffer) =>
 
 const isTIFF = (buffer) =>
   check(buffer, [0x49, 0x49, 42, 0]) || check(buffer, [0x4d, 0x4d, 0, 42])
+
+const isWebP = (buffer) =>
+  check(buffer, [0x52, 0x49, 0x46, 0x46]) &&
+    check(buffer.slice(8), [0x57, 0x45, 0x42, 0x50])
 
 const check = (buffer, bytes) =>
   buffer.slice(0, bytes.length).compare(Buffer.from(bytes)) === 0
