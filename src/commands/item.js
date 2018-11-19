@@ -9,7 +9,6 @@ const { Command } = require('./command')
 const { ImportCommand } = require('./import')
 const { prompt, open, fail, save } = require('../dialog')
 const { Image } = require('../image')
-const { text } = require('../value')
 const act = require('../actions')
 const mod = require('../models')
 const { get, pluck, pick, remove } = require('../common/util')
@@ -91,7 +90,10 @@ class Import extends ImportCommand {
 
         yield call(db.transaction, async tx => {
           item = await mod.item.create(tx, itemp.id, {
-            [DC.title]: text(image.title), ...defaultItemData
+            ...pick(image.data, [
+              DC.title, DC.creator, DC.rights, DC.description
+            ]),
+            ...defaultItemData
           })
 
           while (!image.done) {

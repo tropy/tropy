@@ -206,6 +206,17 @@ const dom = {
     }
   },
 
+  parse(string, type = 'text/html') {
+    let p = new DOMParser()
+    let doc = p.parseFromString(string, type)
+
+    if (doc.documentElement.nodeName === 'parsererror') {
+      throw new Error(doc.documentElement.textContent)
+    }
+
+    return doc
+  },
+
   viewport() {
     return {
       width: document.documentElement.clientWidth,

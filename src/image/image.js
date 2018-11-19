@@ -6,6 +6,7 @@ const { basename, extname } = require('path')
 const { createReadStream, statAsync: stat } = require('fs')
 const { createHash } = require('crypto')
 const { exif } = require('./exif')
+const { xmp } = require('./xmp')
 const { isSVG } = require('./svg')
 const sharp = require('sharp')
 const tiff = require('tiff')
@@ -13,6 +14,8 @@ const { assign } = Object
 const { warn, debug } = require('../common/log')
 const { get, pick } = require('../common/util')
 const MIME = require('../constants/mime')
+const { DC } = require('../constants/rdf')
+const { text, date } = require('../value')
 
 
 class Image {
@@ -89,6 +92,14 @@ class Image {
     return get(this.meta, [this.page, 'height'], 0)
   }
 
+  get data() {
+    return {
+      [DC.title]: text(this.title),
+      [DC.date]: date(this.date),
+      ...this.xmp[this.page]
+    }
+  }
+
   get date() {
     try {
       // Temporarily return as string until we add value types.
@@ -117,7 +128,7 @@ class Image {
   }
 
   do(page = this.page) {
-    return sharp(this.data || this.path, { page })
+    return sharp(this.buffer || this.path, { page })
   }
 
   *each(fn) {
@@ -160,7 +171,7 @@ class Image {
         })
 
         .on('end', () => {
-          let data = Buffer.concat(chunks)
+          let buffer = Buffer.concat(chunks)
 
           switch (this.mimetype) {
             case MIME.GIF:
@@ -168,11 +179,11 @@ class Image {
             case MIME.PNG:
             case MIME.SVG:
             case MIME.WEBP:
-              this.data = data
+              this.buffer = buffer
               break
             case MIME.TIFF:
-              this.numPages = tiff.pageCount(data)
-              this.data = data
+              this.numPages = tiff.pageCount(buffer)
+              this.buffer = buffer
               break
             default:
               return reject(new Error('unsupported image'))
@@ -191,7 +202,8 @@ class Image {
             .then(([file, ...meta]) => assign(this, {
               exif: meta.map(m => exif(m.exif)),
               file,
-              meta
+              meta,
+              xmp: meta.map(m => xmp(m.xmp))
             }))
 
             .then(resolve, reject)

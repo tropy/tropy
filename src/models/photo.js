@@ -3,9 +3,7 @@
 const assert = require('assert')
 const { relative, resolve } = require('path')
 const { TEMPLATE } = require('../constants/photo')
-const { DC } = require('../constants')
 const { all } = require('bluebird')
-const { text, date } = require('../value')
 const metadata = require('./metadata')
 const bb = require('bluebird')
 const { assign } = Object
@@ -13,6 +11,7 @@ const subject = require('./subject')
 const { into, select, update } = require('../common/query')
 const { normalize } = require('../common/os')
 const { blank, empty, pick } = require('../common/util')
+const { DC } = require('../constants/rdf')
 
 const COLUMNS = [
   'checksum',
@@ -50,11 +49,7 @@ module.exports = {
 
       metadata.update(db, {
         ids: [id],
-        data: {
-          [DC.title]: text(image.title),
-          [DC.date]: date(image.date),
-          ...data
-        }
+        data: { ...data, ...pick(image.data, [DC.title, DC.date]) }
       })
     ])
 

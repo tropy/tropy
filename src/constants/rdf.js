@@ -39,6 +39,7 @@ module.exports = {
     publisher: 'http://purl.org/dc/elements/1.1/publisher',
     rights: 'http://purl.org/dc/elements/1.1/rights',
     source: 'http://purl.org/dc/elements/1.1/source',
+    subject: 'http://purl.org/dc/elements/1.1/subject',
     title: 'http://purl.org/dc/elements/1.1/title',
     type: 'http://purl.org/dc/elements/1.1/type'
   },
