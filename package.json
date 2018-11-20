@@ -53,7 +53,7 @@
     "chai-as-promised": "^7.1.1",
     "chokidar": "^2.0.4",
     "devtron": "^1.0.0",
-    "electron": "^3.0.9",
+    "electron": "^3.0.10",
     "electron-devtools-installer": "^2.2.4",
     "electron-mocha": "^6.0.4",
     "electron-packager": "^12.2.0",
@@ -129,7 +129,7 @@
     "winreg": "^1.2.4",
     "winston": "^2.4.4",
     "write-file-atomic": "^2.3.0",
-    "yargs": "^12.0.4"
+    "yargs": "^12.0.5"
   },
   "yargs": {
     "short-option-groups": false
