@@ -16,7 +16,7 @@ const res = join(dir, 'res')
 const icons = resolve(res, 'icons', channel, 'tropy')
 const mime = resolve(res, 'icons', 'mime')
 
-const VIPS = join('node_modules', 'sharp', 'vendor', 'lib')
+const SHARP = join('node_modules', 'sharp', 'vendor', 'lib')
 
 const IGNORE = [
   /.DS_Store/,
@@ -52,7 +52,7 @@ const IGNORE = [
   /node_modules.rdf-canonize.build/,
   /node_modules.prosemirror-model.dist.index\.js\.map/,
   /node_modules.sharp.build.[^R]/,
-  /node_modules.sharp.build.Release.[^s]/,
+  /node_modules.sharp.build.Release.obj/,
   /appveyor\.yml/
 ]
 
@@ -104,7 +104,13 @@ target.all = async (args = []) => {
         ProductName: qualified.product
       },
       asar: {
-        unpack: '**/{*.node,lib/stylesheets/**/*,res/icons/mime/*.ico,res/menu/*,res/strings/*,res/keymaps/*,sharp/vendor/lib/**/*}',
+        unpack: `**/{${[
+          '*.{node,dll,dylib}',
+          'lib/stylesheets/**/*',
+          'res/icons/mime/*.ico',
+          'res/{menu,strings,keymaps}/*',
+          'sharp/{build/Release,vendor/lib}/*'
+        ].join(',')}}`,
       }
 
     })
@@ -115,8 +121,8 @@ target.all = async (args = []) => {
       case 'linux': {
         say('fix unpacked symlinks...')
         cp('-r',
-          join(dir, VIPS, '*'),
-          join(dst, 'resources', 'app.asar.unpacked', VIPS))
+          join(dir, SHARP, '*'),
+          join(dst, 'resources', 'app.asar.unpacked', SHARP))
 
         say(`renaming executable to ${qualified.name}...`)
         rename(dst, qualified.product, qualified.name)
@@ -135,12 +141,12 @@ target.all = async (args = []) => {
       }
       case 'darwin': {
         say('fix unpacked symlinks...')
-        cp('-r', join(dir, VIPS, '*'), join(dst,
+        cp('-r', join(dir, SHARP, '*'), join(dst,
           `${qualified.product}.app`,
           'Contents',
           'Resources',
           'app.asar.unpacked',
-          VIPS))
+          SHARP))
         break
       }
       case 'win32': {
