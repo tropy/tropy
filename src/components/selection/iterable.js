@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { Thumbnail } = require('../photo/thumbnail')
 const { DragSource, DropTarget } = require('react-dnd')
 const { getEmptyImage } = require('react-dnd-electron-backend')
@@ -11,13 +10,9 @@ const { bounds } = require('../../dom')
 const { DND } = require('../../constants')
 
 
-class SelectionIterable extends PureComponent {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      offset: null
-    }
+class SelectionIterable extends React.PureComponent {
+  state = {
+    offset: null
   }
 
   componentDidMount() {
@@ -87,13 +82,15 @@ class SelectionIterable extends PureComponent {
   renderThumbnail(props) {
     return (
       <Thumbnail {...props}
-        id={this.props.photo.id}
+        id={this.props.selection.id}
         angle={this.props.selection.angle}
+        broken={this.props.photo.broken}
         mimetype={this.props.photo.mimetype}
         mirror={this.props.selection.mirror}
         orientation={this.props.photo.orientation}
         cache={this.props.cache}
-        size={this.props.size}/>
+        size={this.props.size}
+        onError={this.props.onError}/>
     )
   }
 
@@ -123,6 +120,7 @@ class SelectionIterable extends PureComponent {
     size: number.isRequired,
     onContextMenu: func.isRequired,
     onDropSelection: func.isRequired,
+    onError: func.isRequired,
     onItemOpen: func.isRequired,
     onSelect: func.isRequired
   }

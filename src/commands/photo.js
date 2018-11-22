@@ -24,9 +24,10 @@ class Consolidate extends ImportCommand {
     let { payload, meta } = this.action
     let consolidated = []
 
-    let [project, photos] = yield select(state => [
+    let [project, photos, selections] = yield select(state => [
       state.project,
-      blank(payload) ? values(state.photos) : pluck(state.photos, payload)
+      blank(payload) ? values(state.photos) : pluck(state.photos, payload),
+      state.selections
     ])
 
     for (let i = 0, total = photos.length; i < total; ++i) {
@@ -61,7 +62,16 @@ class Consolidate extends ImportCommand {
                 overwrite: hasChanged
               })
 
-              const data = { id: photo.id, ...image.toJSON() }
+              for (let id of photo.selections) {
+                if (id in selections) {
+                  yield* this.createThumbnails(id, image, {
+                    overwrite: hasChanged,
+                    selection: selections[id]
+                  })
+                }
+              }
+
+              let data = { id: photo.id, ...image.toJSON() }
 
               yield call(mod.photo.save, db, data, project)
               yield put(act.photo.update({

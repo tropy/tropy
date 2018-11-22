@@ -211,10 +211,23 @@ class Image {
     })
   }
 
-  resize(...args) {
-    return (args.length) ?
-      this.do().resize(...args) :
-      this.do()
+  resize(size, selection) {
+    let image = this.do()
+
+    if (selection != null) {
+      image = image.extract({
+        left: selection.x,
+        top: selection.y,
+        width: selection.width,
+        height: selection.height
+      })
+    }
+
+    if (size) {
+      image = image.resize(size)
+    }
+
+    return image
   }
 
   toJSON() {
@@ -229,8 +242,38 @@ class Image {
       'size'
     ])
   }
+
+  variants(isSelection = false) {
+    let SIZE = isSelection ? Image.SELECTION_SIZE : Image.PHOTO_SIZE
+    let variants = [48, 512]
+
+    if (!isSelection) {
+      switch (this.mimetype) {
+        case MIME.TIFF:
+          variants.push('full')
+          break
+      }
+    }
+
+    return variants.map(name => ({ name, size: SIZE[name] }))
+  }
 }
 
+const transparent = { r: 0, g: 0, b: 0, alpha: 0 }
+
+Image.PHOTO_SIZE = {
+  48: { width: 48, height: 48, fit: 'cover', position: 'center' },
+  512: { width: 512, height: 512, fit: 'cover', position: 'center' }
+}
+
+Image.SELECTION_SIZE = {
+  48: {
+    width: 48, height: 48, fit: 'contain', background: transparent
+  },
+  512: {
+    width: 512, height: 512, fit: 'contain', background: transparent
+  }
+}
 
 const magic = (buffer) => {
   if (buffer != null) {
@@ -261,6 +304,7 @@ const isWebP = (buffer) =>
 
 const check = (buffer, bytes) =>
   buffer.slice(0, bytes.length).compare(Buffer.from(bytes)) === 0
+
 
 module.exports = {
   Image

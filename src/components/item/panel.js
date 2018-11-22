@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { ItemToolbar } = require('./toolbar')
 const { ItemTabHeader, ItemTabBody } = require('./tab')
 const { NotePanel } = require('../note')
@@ -16,7 +15,7 @@ const {
 } = require('prop-types')
 
 
-class ItemPanel extends PureComponent {
+class ItemPanel extends React.PureComponent {
   constructor(props) {
     super(props)
     this.state = {

@@ -1,6 +1,6 @@
 'use strict'
 
-const { $$, parse } = require('../dom')
+const { $, $$, parse } = require('../dom')
 const { debug, verbose } = require('../common/log')
 const { blank } = require('../common/util')
 const { text } = require('../value')
@@ -11,13 +11,14 @@ module.exports = {
       if (!blank(buffer)) {
         let input = strip(buffer).toString('utf-8')
         let doc = parse(input, 'application/xml')
+        let main = $('xmpmeta', doc)
         let data = {}
 
-        if (!(/^xmpmeta$/i).test(doc.documentElement.localName)) {
-          throw new Error('not an XMP meta document')
+        if (!main) {
+          throw new Error('no XMP meta node found')
         }
 
-        for (let prop of $$('Description > *', doc)) {
+        for (let prop of $$('Description > *', main)) {
           let values = Array
             .from($$('li', prop), li => li.textContent)
             .filter(v => !blank(v))

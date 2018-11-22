@@ -8,20 +8,23 @@ const mod = require('../models')
 const act = require('../actions')
 const { warn, verbose } = require('../common/log')
 const { prompt } = require('../dialog')
-const MIME = require('../constants/mime')
 
 
 class ImportCommand extends Command {
-  *createThumbnails(id, image, { overwrite = true, quality = 100 } = {}) {
+  *createThumbnails(id, image, {
+    overwrite = true,
+    quality = 100,
+    selection
+  } = {}) {
     try {
       let { cache } = this.options
       let ext = imageExt(image.mimetype)
 
-      for (let size of SIZE.get(image.mimetype)) {
-        let path = imagePath(id, size, ext)
+      for (let v of image.variants(selection != null)) {
+        let path = imagePath(id, v.name, ext)
 
         if (overwrite || !(yield call(cache.exists, path))) {
-          let dup = image.resize(SIZE[size])
+          let dup = image.resize(v.size, selection)
 
           switch (ext) {
             case '.png':
@@ -40,7 +43,7 @@ class ImportCommand extends Command {
           yield call([dup, dup.toFile], cache.expand(path))
 
         } else {
-          verbose(`Skipping ${size} thumbnail for #${id}: already exists`)
+          verbose(`Skipping ${v.name} thumbnail for #${id}: already exists`)
         }
       }
     } catch (error) {
@@ -93,24 +96,6 @@ class ImportCommand extends Command {
   }
 }
 
-const SIZE = {
-  48: {
-    width: 48, height: 48, fit: 'cover', position: 'center'
-  },
-
-  512: {
-    width: 512, height: 512, fit: 'cover', position: 'center'
-  },
-
-  get(mimetype) {
-    switch (mimetype) {
-      case MIME.TIFF:
-        return [48, 512, 'full']
-      default:
-        return [48, 512]
-    }
-  }
-}
 
 
 
