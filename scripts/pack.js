@@ -144,7 +144,7 @@ target.win32 = async (args = []) => {
     setupIcon: join(res, 'icons', channel, `${name}.ico`),
     iconUrl: join(res, 'icons', channel, `${name}.ico`),
     remoteReleases: repository.url,
-    noDelta: false,
+    noDelta: true,
     noMsi: true
   })
 }
