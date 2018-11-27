@@ -71,8 +71,8 @@ class TagList extends React.PureComponent {
             onContextMenu={this.handleContextMenu}/>)}
         {this.hasNewTag &&
           <NewTag
-            onChange={this.props.onCreate}
-            onEditCancel={this.props.onEditCancel}
+            onCreate={this.props.onCreate}
+            onCancel={this.props.onEditCancel}
             name={this.props.edit.name}/>}
       </ol>
     )
