@@ -36,22 +36,20 @@ class Cache {
   }
 
   path(...args) {
-    return Cache.path(this.root, ...args)
+    return Cache.path(...args)
   }
 
   url(...args) {
     return Cache.url(this.root, ...args)
   }
 
-  static url(...args) {
-    return `file://${Cache.path(...args)}`
+  static url(root, id, variant, mimetype) {
+    return `file://${
+      join(root, Cache.path(id, variant, Cache.extname(mimetype)))
+    }`
   }
 
-  static path(root, id, variant, mimetype) {
-    return join(root, Cache.filename(id, variant, Cache.extname(mimetype)))
-  }
-
-  static filename(id, variant, ext) {
+  static path(id, variant, ext) {
     return `${id}_${variant}${ext}`
   }
 
