@@ -1,9 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
-const PropTypes = require('prop-types')
-const { shape, number, string, bool, func } = PropTypes
 const { Editable } = require('../editable')
 const { IconTag, IconPlusCircles } = require('../icons')
 const { isMeta } = require('../../keymap')
@@ -13,21 +10,48 @@ const cx = require('classnames')
 const { DropTarget } = require('react-dnd')
 const { DND } = require('../../constants')
 const { pure } = require('../util')
+const { shape, number, string, bool, func } = require('prop-types')
 
 
-class Tag extends PureComponent {
+const NewTag = (props) => (
+  <li className="tag" tabIndex={-1}>
+    <IconTag/>
+    <div className="name">
+      <Editable
+        value={props.name}
+        isRequired
+        resize
+        isActive
+        onCancel={props.onCancel}
+        onChange={(name) => props.onCreate({ name })}/>
+    </div>
+  </li>
+)
+
+NewTag.propTypes = {
+  name: string.isRequired,
+  onCreate: func.isRequired,
+  onCancel: func.isRequired
+}
+
+NewTag.defaultProps = {
+  name: ''
+}
+
+
+class Tag extends React.PureComponent {
   get classes() {
-    return {
-      tag: true,
+    return ['tag', {
       active: this.props.isSelected,
       mixed: !!this.props.tag.mixed,
-      over: this.props.isOver,
-    }
+      over: this.props.isOver
+    }]
   }
 
   get color() {
-    const { tag } = this.props
-    return (tag.color) ? `color-${tag.color}` : null
+    return (this.props.tag.color) ?
+      `color-${this.props.tag.color}` :
+      null
   }
 
   get isDropTarget() {
@@ -43,9 +67,9 @@ class Tag extends PureComponent {
   }
 
   handleClick = (event) => {
-    const { tag, isSelected, onSelect, onFocusClick } = this.props
+    let { tag, isSelected, onSelect, onFocusClick } = this.props
 
-    const mod = isSelected ?
+    let mod = isSelected ?
       (isMeta(event) ? 'remove' : 'clear') :
       (isMeta(event) ? 'merge' : 'replace')
 
@@ -69,7 +93,7 @@ class Tag extends PureComponent {
   }
 
   render() {
-    const { tag, isEditing, hasFocusIcon, onEditCancel } = this.props
+    let { tag, isEditing, hasFocusIcon, onEditCancel } = this.props
 
     return this.connect(
       <li
@@ -134,6 +158,7 @@ const DropTargetCollect = (connect, monitor) => ({
 
 
 module.exports = {
+  NewTag,
   Tag: pure(
     DropTarget(DND.ITEMS, DropTargetSpec, DropTargetCollect)(Tag)
   )
