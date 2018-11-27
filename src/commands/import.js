@@ -3,7 +3,6 @@
 const { DuplicateError } = require('../common/error')
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-const { imagePath, imageExt } = require('../common/cache')
 const mod = require('../models')
 const act = require('../actions')
 const { warn, verbose } = require('../common/log')
@@ -18,10 +17,10 @@ class ImportCommand extends Command {
   } = {}) {
     try {
       let { cache } = this.options
-      let ext = imageExt(image.mimetype)
+      let ext = cache.extname(image.mimetype)
 
       for (let v of image.variants(selection != null)) {
-        let path = imagePath(id, v.name, ext)
+        let path = cache.path(id, v.name, ext)
 
         if (overwrite || !(yield call(cache.exists, path))) {
           let dup = image.resize(v.size, selection)

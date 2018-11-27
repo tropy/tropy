@@ -5,7 +5,7 @@ const { EsperView } = require('./view')
 const { EsperToolbar } = require('./toolbar')
 const { EsperPanel } = require('./panel')
 const { get, restrict, shallow } = require('../../common/util')
-const { imageURL } = require('../../common/cache')
+const { Cache } = require('../../common/cache')
 const { isHorizontal, rotate, round } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
 const { on, off } = require('../../dom')
@@ -223,7 +223,7 @@ class Esper extends React.PureComponent {
   getSource(photo, { cache } = this.props) {
     switch (photo.mimetype) {
       case MIME.TIFF:
-        return `file://${imageURL(cache, photo.id, 'full', photo.mimetype)}`
+        return Cache.url(cache, photo.id, 'full', photo.mimetype)
       default:
         return `${photo.protocol}://${photo.path}`
     }

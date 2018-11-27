@@ -3,7 +3,7 @@
 const React = require('react')
 const { Component } = React
 const { IconPhoto } = require('../icons')
-const { imageURL } = require('../../common/cache')
+const { Cache } = require('../../common/cache')
 const { pick } = require('../../common/util')
 const { bool, func, number, string } = require('prop-types')
 const { ICON } = require('../../constants/sass')
@@ -44,7 +44,7 @@ class Thumbnail extends Component {
 
     return (id == null) ?
       null :
-      imageURL(cache, id, size > ICON.SIZE ? ICON.MAX : ICON.SIZE, mimetype)
+      Cache.url(cache, id, size > ICON.SIZE ? ICON.MAX : ICON.SIZE, mimetype)
   }
 
   getRotation(props = this.props) {
