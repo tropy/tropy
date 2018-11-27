@@ -9,7 +9,7 @@ const { DragSource, DropTarget } = require('react-dnd')
 const { NativeTypes, getEmptyImage } = require('react-dnd-electron-backend')
 const { DND, LIST, SASS } = require('../../constants')
 const { bounds } = require('../../dom')
-const { isValidImage } = require('../../image')
+const { isImageSupported } = require('../../image')
 const lazy = require('./tree')
 const cx = require('classnames')
 const { last, noop, restrict } = require('../../common/util')
@@ -115,7 +115,7 @@ class ListNode extends React.PureComponent {
     return restrict(depth, this.props.minDropDepth, this.props.depth)
   }
 
-  getDropOutsidePosition(depth = 1) {
+  getDropOutsidePosition(depth = 1, other) {
     let { lists, list } = this.props
     let prev
 
@@ -125,15 +125,17 @@ class ListNode extends React.PureComponent {
       if (last(list.children) !== prev) break
     }
 
-    return {
-      parent: list.id,
-      idx: (prev == null) ?
-        list.children.length :
-        list.children.indexOf(prev) + 1
-    }
+    let idx = (prev == null) ?
+      list.children.length :
+      list.children.indexOf(prev) + 1
+
+    let pos = list.children.indexOf(other.id)
+    if (pos >= 0 && pos < idx) idx--
+
+    return { parent: list.id, idx }
   }
 
-  getDropPosition() {
+  getDropPosition(other) {
     let { offset } = this.state
     let { list, isExpanded, isLast, position } = this.props
 
@@ -146,12 +148,14 @@ class ListNode extends React.PureComponent {
 
     let depth = this.getDropDepth()
     if (isLast && offset === 1 && depth < this.props.depth) {
-      return this.getDropOutsidePosition(1 + this.props.depth - depth)
+      return this.getDropOutsidePosition(1 + this.props.depth - depth, other)
     }
 
     return {
       parent: list.parent,
-      idx: position + offset
+      idx: (list.parent !== other.parent || position < other.idx) ?
+        position + offset :
+        position - 1 + offset
     }
   }
 
@@ -298,9 +302,10 @@ class ListNode extends React.PureComponent {
 }
 
 const DragSourceSpec = {
-  beginDrag({ list, depth }) {
+  beginDrag({ list, depth, position }) {
     return {
       ...list,
+      idx: position,
       padding: PADDING + INDENT * depth,
       position: 'relative'
     }
@@ -342,7 +347,7 @@ const DropTargetSpec = {
 
     switch (type) {
       case NativeTypes.FILE:
-        return !!item.types.find(t => isValidImage({ type: t }))
+        return !!item.types.find(t => isImageSupported({ type: t }))
       default:
         return true
     }
@@ -355,7 +360,7 @@ const DropTargetSpec = {
 
       switch (type) {
         case DND.LIST: {
-          let { parent, idx } = node.getDropPosition()
+          let { parent, idx } = node.getDropPosition(item)
           props.onMove({ id: item.id, parent }, { idx })
           break
         }
@@ -368,7 +373,7 @@ const DropTargetSpec = {
         case NativeTypes.FILE:
           props.onDropFiles({
             list: list.id,
-            files: item.files.filter(isValidImage).map(file => file.path)
+            files: item.files.filter(isImageSupported).map(file => file.path)
           })
           break
       }

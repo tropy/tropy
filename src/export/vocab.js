@@ -1,10 +1,11 @@
 'use strict'
 
 const N3 = require('n3')
+const { blank } = require('../common/util')
 const { DC, RDF, RDFS, OWL, VANN } = require('../constants')
-const { createLiteral: literal } = N3.Util
+const { namedNode, literal } = N3.DataFactory
 
-const prefixes = {
+const PREFIXES = {
   owl: OWL.ns,
   vann: VANN.ns,
   rdf: RDF.ns,
@@ -12,58 +13,79 @@ const prefixes = {
   dc: DC.ns
 }
 
-const translated = (str) => literal(str, ARGS.locale)
+function addEach(out, ids, type, state) {
+  if (blank(ids)) return
 
-function addTriples(writer, property, collection, type) {
-  for (let id of property || []) {
-    const x = collection[id]
-    if (x.id) {
-      writer.addTriple(x.id, RDF.type, type)
+  for (let id of ids) {
+    let res = state[id]
+    if (res == null || !res.id) break
+
+    id = namedNode(res.id)
+    out.addQuad(id, namedNode(RDF.type), type)
+
+    if (res.vocabulary) {
+      out.addQuad(id,
+        namedNode(RDFS.isDefinedBy),
+        namedNode(res.vocabulary))
     }
-    if (x.vocabulary) {
-      writer.addTriple(x.id, RDFS.isDefinedBy, x.vocabulary)
+    if (res.comment) {
+      out.addQuad(id,
+        namedNode(RDFS.comment),
+        literal(res.comment, ARGS.locale))
     }
-    if (x.comment) {
-      writer.addTriple(x.id, RDFS.comment, translated(x.comment))
+    if (res.label) {
+      out.addQuad(id,
+        namedNode(RDFS.label),
+        literal(res.label, ARGS.locale))
     }
-    if (x.label) {
-      writer.addTriple(x.id, RDFS.label, translated(x.label))
-    }
-    if (x.description) {
-      writer.addTriple(x.id, DC.description, literal(x.description))
+    if (res.description) {
+      out.addQuad(id,
+        namedNode(DC.description),
+        literal(res.description, ARGS.locale))
     }
   }
 }
 
-function toN3(vocab, classes, props, datatypes) {
-  // use Promise because `writer.end` expects a callback
+function toN3(vocab, ontology, prefixes = {}) {
   return new Promise((resolve, reject) => {
     if (vocab.prefix) {
       prefixes[vocab.prefix] = vocab.id
     }
 
-    const writer = N3.Writer({ format: 'N3', prefixes })
-    writer.addTriple(vocab.id, RDF.type, OWL.Ontology)
+    let out = N3.Writer({ prefixes: { ...PREFIXES, ...prefixes } })
+    let id = namedNode(vocab.id)
 
-    // own properties
-    writer.addTriple(
-      vocab.id, VANN.preferredNamespacePrefix, literal(vocab.prefix))
-    writer.addTriple(vocab.id, VANN.preferredNamespaceUri, vocab.id)
-    writer.addTriple(vocab.id, RDFS.seeAlso, vocab.seeAlso)
-    writer.addTriple(vocab.id, DC.title, translated(vocab.title))
-    writer.addTriple(vocab.id, DC.description, literal(vocab.description))
+    out.addQuad(id,
+      namedNode(RDF.type),
+      namedNode(OWL.Ontology))
 
-    addTriples(writer, vocab.classes, classes, RDFS.Class)
-    addTriples(writer, vocab.datatypes, datatypes, RDFS.Datatype)
-    addTriples(writer, vocab.properties, props, RDF.Property)
+    out.addQuad(id,
+      namedNode(VANN.preferredNamespacePrefix),
+      literal(vocab.prefix))
 
-    // settle the promise
-    writer.end(function (error, result) {
-      if (error) {
-        reject(error)
-      } else {
-        resolve(result)
-      }
+    out.addQuad(id,
+      namedNode(VANN.preferredNamespaceUri),
+      id)
+
+    out.addQuad(id,
+      namedNode(RDFS.seeAlso),
+      namedNode(vocab.seeAlso))
+
+    out.addQuad(id,
+      namedNode(DC.title),
+      literal(vocab.title, ARGS.locale))
+
+    out.addQuad(id,
+      namedNode(DC.description),
+      literal(vocab.description, ARGS.locale))
+
+    addEach(out, vocab.classes, namedNode(RDFS.Class), ontology.class)
+    addEach(out, vocab.datatypes, namedNode(RDFS.Datatype), ontology.type)
+    addEach(out, vocab.properties, namedNode(RDF.Property), ontology.props)
+
+    out.end((error, result) => {
+      if (error) return reject(error)
+      else resolve(result)
     })
   })
 }

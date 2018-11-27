@@ -94,6 +94,7 @@ class PhotoListItem extends PhotoIterable {
         onContextMenu={this.props.onContextMenu}
         onEdit={this.props.onEdit}
         onEditCancel={this.props.onEditCancel}
+        onError={this.props.onError}
         onItemOpen={this.props.onItemOpen}
         onSelect={this.props.onSelect}
         onSort={this.props.onSelectionSort}

@@ -5,8 +5,6 @@ require('./promisify')
 const { join, resolve } = require('path')
 const { mkdirAsync: mkdir, writeFileAsync: write } = require('fs')
 const { statAsync: stat } = require('fs')
-const MIME = require('../constants/mime')
-
 
 class Cache {
   constructor(...args) {
@@ -32,29 +30,36 @@ class Cache {
   expand(...args) {
     return join(this.root, ...args)
   }
-}
 
-function imageURL(cache, image, size, mimetype) {
-  return join(cache, imagePath(image, size, imageExt(mimetype)))
-}
+  extname(...args) {
+    return Cache.extname(...args)
+  }
 
-function imagePath(image, size, ext = '.jpg') {
-  return `${image}_${size}${ext}`
-}
+  path(...args) {
+    return Cache.path(this.root, ...args)
+  }
 
-function imageExt(mimetype) {
-  switch (mimetype) {
-    case MIME.SVG:
-    case MIME.PNG:
-      return '.png'
-    default:
-      return '.jpg'
+  url(...args) {
+    return Cache.url(this.root, ...args)
+  }
+
+  static url(...args) {
+    return `file://${Cache.path(...args)}`
+  }
+
+  static path(root, id, variant, mimetype) {
+    return join(root, Cache.filename(id, variant, Cache.extname(mimetype)))
+  }
+
+  static filename(id, variant, ext) {
+    return `${id}_${variant}${ext}`
+  }
+
+  static extname() {
+    return '.webp'
   }
 }
 
 module.exports = {
-  Cache,
-  imageExt,
-  imageURL,
-  imagePath
+  Cache
 }

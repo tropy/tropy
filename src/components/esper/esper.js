@@ -1,11 +1,11 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { EsperView } = require('./view')
 const { EsperToolbar } = require('./toolbar')
 const { EsperPanel } = require('./panel')
 const { get, restrict, shallow } = require('../../common/util')
+const { Cache } = require('../../common/cache')
 const { isHorizontal, rotate, round } = require('../../common/math')
 const { Rotation } = require('../../common/iiif')
 const { on, off } = require('../../dom')
@@ -14,13 +14,13 @@ const { assign } = Object
 const debounce = require('lodash.debounce')
 const throttle = require('lodash.throttle')
 const cx = require('classnames')
-const { min } = Math
+const { floor, min } = Math
 
 const {
   arrayOf, bool, func, node, number, object, shape, string
 } = require('prop-types')
 
-const { TABS } = require('../../constants')
+const { TABS, MIME } = require('../../constants')
 const { TOOL, MODE } = require('../../constants/esper')
 
 const {
@@ -46,7 +46,7 @@ const IMAGE_PARAMS = [
   'saturation'
 ]
 
-class Esper extends PureComponent {
+class Esper extends React.PureComponent {
   constructor(props) {
     super(props)
     this.state = this.getEmptyState(props)
@@ -72,6 +72,9 @@ class Esper extends PureComponent {
       on(this.container, 'tab:focus', this.handleTabFocus)
     }
 
+    this.m = matchMedia('(max-resolution: 1dppx)')
+    this.m.addListener(this.handleResolutionChange)
+
     this.setState(this.getStateFromProps(), () => {
       this.view.reset(this.state)
     })
@@ -82,6 +85,7 @@ class Esper extends PureComponent {
     this.io.disconnect()
     this.persist.flush()
     this.update.flush()
+    this.m.removeListener(this.handleResolutionChange)
 
     if (this.container != null) {
       off(this.container, 'tab:focus', this.handleTabFocus)
@@ -157,10 +161,12 @@ class Esper extends PureComponent {
   }
 
   getEmptyState(props = this.props) {
+    let resolution = floor(devicePixelRatio) || 1
+
     return {
       mode: props.mode,
       zoom: props.zoom,
-      minZoom: props.minZoom,
+      minZoom: props.minZoom / resolution,
       width: 0,
       height: 0,
       src: null,
@@ -168,6 +174,7 @@ class Esper extends PureComponent {
       y: props.y,
       tool: props.tool,
       hasTransformations: false,
+      resolution,
       ...this.getOriginalPhotoState(props)
     }
   }
@@ -182,7 +189,7 @@ class Esper extends PureComponent {
 
       assign(state, {
         photo: photo.id,
-        src: `${photo.protocol}://${photo.path}`,
+        src: this.getSource(photo, props),
         width: photo.width,
         height: photo.height
       })
@@ -213,6 +220,14 @@ class Esper extends PureComponent {
     return state
   }
 
+  getSource(photo, { cache } = this.props) {
+    switch (photo.mimetype) {
+      case MIME.TIFF:
+        return Cache.url(cache, photo.id, 'full', photo.mimetype)
+      default:
+        return `${photo.protocol}://${photo.path}`
+    }
+  }
 
   getZoomToFill(screen, { width } = this.state, props = this.props) {
     return round(min(props.maxZoom, screen.width / width), ZOOM_PRECISION)
@@ -224,7 +239,8 @@ class Esper extends PureComponent {
     { minZoom } = this.props
   ) {
     return round(
-      min(minZoom, min(screen.width / width, screen.height / height)
+      min(minZoom / this.state.resolution,
+        min(screen.width / width, screen.height / height)
     ), ZOOM_PRECISION)
   }
 
@@ -233,8 +249,8 @@ class Esper extends PureComponent {
     state = this.state,
     props = this.props
   ) {
-    let { angle, zoom, width, height } = state
-    let { minZoom } = props
+    let { angle, zoom, width, height, resolution } = state
+    let minZoom = props.minZoom / resolution
     let zoomToFill = minZoom
 
     if (width > 0 && height > 0) {
@@ -347,11 +363,15 @@ class Esper extends PureComponent {
     this.resize(rect)
   }, 50)
 
+  handleResolutionChange = () => {
+    this.setState(this.getStateFromProps())
+  }
+
   resize = ({ width, height }) => {
     width = round(width || this.view.screen.width)
     height = round(height || this.view.screen.height)
 
-    const { minZoom, zoom, zoomToFill } = this.getZoomBounds({ width, height })
+    let { minZoom, zoom, zoomToFill } = this.getZoomBounds({ width, height })
 
     this.view.resize({
       width, height, zoom, mirror: this.state.mirror
@@ -372,8 +392,8 @@ class Esper extends PureComponent {
 
   move({ x = 0, y = 0 }, animate) {
     this.handlePositionChange({
-      x: this.state.x + x,
-      y: this.state.y + y
+      x: this.state.x + floor(x),
+      y: this.state.y + floor(y)
     }, animate)
   }
 
@@ -498,8 +518,8 @@ class Esper extends PureComponent {
       const mw = this.props.invertScroll ? -1 : 1
 
       this.handlePositionChange({
-        x: this.view.image.x + Math.round(dx * mw),
-        y: this.view.image.y + Math.round(dy * mw)
+        x: this.view.image.x + floor(dx * mw),
+        y: this.view.image.y + floor(dy * mw)
       })
     }
   }
@@ -684,6 +704,7 @@ class Esper extends PureComponent {
             isPanelVisible={this.props.isPanelVisible}
             mode={this.state.mode}
             tool={tool}
+            resolution={this.state.resolution}
             zoom={this.state.zoom}
             minZoom={this.state.minZoom}
             maxZoom={this.props.maxZoom}
@@ -699,6 +720,7 @@ class Esper extends PureComponent {
             ref={this.setView}
             selection={this.props.selection}
             selections={this.props.selections}
+            resolution={this.state.resolution}
             tool={tool}
             onChange={this.handleViewChange}
             onSelectionActivate={this.handleSelectionActivate}
@@ -728,6 +750,7 @@ class Esper extends PureComponent {
   }
 
   static propTypes = {
+    cache: string.isRequired,
     hasOverlayToolbar: bool,
     invertScroll: bool.isRequired,
     invertZoom: bool.isRequired,

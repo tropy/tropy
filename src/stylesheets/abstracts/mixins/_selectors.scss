@@ -5,21 +5,15 @@
 // State mixin
 @mixin state($states...) {
   @each $state in $states {
-    $selectors: $state;
+    $string: $state;
 
-    @each $token in " ", ">", "+", "~" {
-      $i: str-index($selectors, $token);
-
-      @while $i != null {
-        $first-part: str-slice($selectors, 1, ($i - 1));
-        $last-part: str-slice($selectors, ($i + 1));
-        $selectors: #{$first-part}#{$last-part};
-
-        $i: str-index($selectors, $token);
-      }
+    @each $token in ">", "+", "~" {
+      $string: str-replace($string, $token, " ");
     }
 
-    $selectors: simple-selectors($selectors);
+    $string: str-replace($string, "  ", " ");
+
+    $selectors: str-parse($string, " ");
 
     @each $sel in $selectors {
       @if str-index(#{&}, $sel) != null {

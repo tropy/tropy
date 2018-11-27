@@ -52,7 +52,11 @@ install:
 script:
   - node scripts/make lint -- true
   - node scripts/make compile
-  - node scripts/make cover
+  - if [[ $TRAVIS_OS_NAME = "linux" ]]; then
+      LD_PRELOAD=node_modules/sharp/vendor/lib/libz.so node scripts/make cover;
+    else
+      node scripts/make cover;
+    fi
 
 after_success:
   - if [[ $TRAVIS_OS_NAME = "linux" ]]; then

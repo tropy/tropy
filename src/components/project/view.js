@@ -7,7 +7,7 @@ const { NativeTypes } = require('react-dnd-electron-backend')
 const { ItemGrid, ItemTable } = require('../item')
 const { ProjectSidebar } = require('./sidebar')
 const { ProjectToolbar } = require('./toolbar')
-const { isValidImage } = require('../../image')
+const { isImageSupported } = require('../../image')
 const { pick, } = require('../../common/util')
 const { array, bool, func, object, number } = require('prop-types')
 const { ITEM } = require('../../constants/sass')
@@ -144,7 +144,7 @@ const spec = {
     const files = monitor
       .getItem()
       .files
-      .filter(isValidImage)
+      .filter(isImageSupported)
       .map(file => file.path)
 
     onItemImport({ files, list: nav.list })
@@ -152,7 +152,7 @@ const spec = {
   },
 
   canDrop(_, monitor) {
-    return !!monitor.getItem().types.find(type => isValidImage({ type }))
+    return !!monitor.getItem().types.find(type => isImageSupported({ type }))
   }
 }
 

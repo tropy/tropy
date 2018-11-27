@@ -17,10 +17,10 @@ const CONFIG = [
   `--target=${ELECTRON.join('.')}`
 ]
 
-
 target.all = (args) => {
   target.sqlite3(args)
   target.jsonld()
+  target.sharp(args)
 }
 
 target.headers = () => {
@@ -28,9 +28,9 @@ target.headers = () => {
 }
 
 target.sqlite3 = (force) => {
-  const mod = 'sqlite3'
+  let mod = 'sqlite3'
 
-  if (force || check(mod)) {
+  if (force || !test('-d', preGypBinding(mod))) {
     say(`${mod} ${force ? '(forced)' : ''}...`)
 
     say(`${mod} patching...`)
@@ -53,15 +53,31 @@ target.inspector = () => {
 }
 
 target.jsonld = () => {
-  rm('-f', join(mods, 'rdf-canonize', 'build', 'Release', 'urdna2015.node'))
+  say('jsonld ...remove native modules')
+  rm('-rf', join(mods, 'rdf-canonize', 'build'))
+  //rm('-rf', join(mods, 'rdf-canonize-native'))
+  //rm('-rf', join(mods, 'jsonld', 'node-modules', 'rdf-canonize-native'))
 }
 
+target.sharp = (force) => {
+  let mod = 'sharp'
 
-function check(mod) {
-  return !test('-d', join(binding(mod)))
+  if (force || !test('-d', buildFragments(mod))) {
+    rebuild('sharp', {
+      params: '--build-from-source'
+    })
+    say(`${mod} ...done`)
+
+  } else {
+    say(`${mod} ...skipped`)
+  }
 }
 
-function binding(mod, platform = process.platform, arch = process.arch) {
+function buildFragments(mod) {
+  return join(mods, mod, 'build', 'Release', 'obj.target')
+}
+
+function preGypBinding(mod, platform = process.platform, arch = process.arch) {
   return join(mods, mod, 'lib', 'binding', [
     'electron',
     `v${ELECTRON.slice(0, 2).join('.')}`,

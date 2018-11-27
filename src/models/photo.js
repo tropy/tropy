@@ -3,9 +3,7 @@
 const assert = require('assert')
 const { relative, resolve } = require('path')
 const { TEMPLATE } = require('../constants/photo')
-const { DC } = require('../constants')
 const { all } = require('bluebird')
-const { text, date } = require('../value')
 const metadata = require('./metadata')
 const bb = require('bluebird')
 const { assign } = Object
@@ -13,6 +11,7 @@ const subject = require('./subject')
 const { into, select, update } = require('../common/query')
 const { normalize } = require('../common/os')
 const { blank, empty, pick } = require('../common/util')
+const { DC } = require('../constants/rdf')
 
 const COLUMNS = [
   'checksum',
@@ -28,10 +27,7 @@ const skel = (id, selections = [], notes = []) => ({
 
 module.exports = {
   async create(db, { base, template }, { item, image, data, position }) {
-    let {
-      path, checksum, mimetype, width, height, orientation, size
-    } = image
-
+    let { path, width, height, ...meta } = image.toJSON()
     let { id } = await db.run(
       ...into('subjects').insert({ template: template || TEMPLATE })
     )
@@ -47,20 +43,13 @@ module.exports = {
         id,
         item_id: item,
         path,
-        size,
-        checksum,
-        mimetype,
-        orientation,
-        position
+        position,
+        ...meta
       })),
 
       metadata.update(db, {
         ids: [id],
-        data: {
-          [DC.title]: text(image.title),
-          [DC.date]: date(image.date),
-          ...data
-        }
+        data: { ...data, ...pick(image.data, [DC.title, DC.date]) }
       })
     ])
 
@@ -106,6 +95,7 @@ module.exports = {
             width,
             height,
             path,
+            page,
             size,
             protocol,
             mimetype,

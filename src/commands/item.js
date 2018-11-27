@@ -9,7 +9,6 @@ const { Command } = require('./command')
 const { ImportCommand } = require('./import')
 const { prompt, open, fail, save } = require('../dialog')
 const { Image } = require('../image')
-const { text } = require('../value')
 const act = require('../actions')
 const mod = require('../models')
 const { get, pluck, pick, remove } = require('../common/util')
@@ -63,7 +62,7 @@ class Import extends ImportCommand {
 
     if (!files) {
       this.isInteractive = true
-      files = yield call(open.images)
+      files = yield call(open.items)
     }
 
     if (!files) return []
@@ -80,45 +79,63 @@ class Import extends ImportCommand {
     let defaultPhotoData = getTemplateValues(ptemp)
 
     for (let i = 0, total = files.length; i < total; ++i) {
-      let file, image, item, photo
+      let file, image, item
+      let photos = []
 
       try {
         file = files[i]
-        image = yield call(Image.read, file)
 
+        image = yield call(Image.open, file)
         yield* this.handleDuplicate(image)
 
         yield call(db.transaction, async tx => {
           item = await mod.item.create(tx, itemp.id, {
-            [DC.title]: text(image.title), ...defaultItemData
+            ...pick(image.data, [
+              DC.title, DC.creator, DC.rights, DC.description
+            ]),
+            ...defaultItemData
           })
 
-          photo = await mod.photo.create(tx, { base, template: ptemp.id }, {
-            item: item.id, image, data: defaultPhotoData
-          })
+          while (!image.done) {
+            let photo = await mod.photo.create(tx,
+              { base, template: ptemp.id },
+              { item: item.id, image, data: defaultPhotoData })
 
-          if (list) {
-            await mod.list.items.add(tx, list, [item.id])
-            // item.lists.push(list)
+            if (list) {
+              await mod.list.items.add(tx, list, [item.id])
+              // item.lists.push(list)
+            }
+
+            item.photos.push(photo.id)
+            photos.push(photo)
+            image.next()
           }
-
-          item.photos.push(photo.id)
         })
 
-        yield* this.createThumbnails(photo.id, image)
+        image.rewind()
 
-        yield put(act.metadata.load([item.id, photo.id]))
+        while (!image.done) {
+          let photo = photos[image.page]
+
+          yield* this.createThumbnails(photo.id, image)
+          yield put(act.metadata.load([item.id, photo.id]))
+          yield put(act.photo.insert(photo))
+
+          image.next()
+        }
 
         yield all([
           put(act.item.insert(item)),
-          put(act.photo.insert(photo)),
           put(act.activity.update(this.action, { total, progress: i + 1 }))
         ])
 
         items.push(item.id)
 
       } catch (error) {
-        if (error instanceof DuplicateError) continue
+        if (error instanceof DuplicateError) {
+          verbose(`Skipping duplicate "${file}"...`)
+          continue
+        }
 
         warn(`Failed to import "${file}": ${error.message}`)
         verbose(error.stack)

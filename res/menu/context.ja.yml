@@ -17,7 +17,7 @@ ja:
       - label: プロジェクト名を変更
         command: 'app:rename-project'
       - label: プロジェクトファイルを開く
-        command: 'app:show-in-folder'
+        command: 'app:show-project-file'
     lists:
       - label: 新規リスト
         command: 'app:create-list'
@@ -196,7 +196,7 @@ ja:
       - label: プロジェクト名を変更
         command: 'app:rename-project'
       - label: プロジェクトファイルを開く
-        command: 'app:show-in-folder'
+        command: 'app:show-project-file'
     lists:
       - label: 新規リスト
         command: 'app:create-list'
@@ -375,7 +375,7 @@ ja:
       - label: プロジェクト名を変更
         command: 'app:rename-project'
       - label: プロジェクトファイルを開く
-        command: 'app:show-in-folder'
+        command: 'app:show-project-file'
     lists:
       - label: 新規リスト
         command: 'app:create-list'

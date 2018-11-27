@@ -1,35 +1,48 @@
 'use strict'
 
-const START = performance.now()
+try {
+  const START = performance.now()
 
-const { home, dev } = require('./args').parse()
-const { join } = require('path')
-const LOGDIR = join(home, 'log')
+  const { home, dev } = require('./args').parse()
+  const { join } = require('path')
+  const LOGDIR = join(home, 'log')
 
-const { verbose } = require('./common/log')(LOGDIR)
-const { ready } = require('./dom')
+  const { verbose, warn } = require('./common/log')(LOGDIR)
+  const { ready } = require('./dom')
 
-ready.then(() => {
-  const READY = performance.now()
   const { win } = require('./window')
+  verbose(`initializing ${win.type} window...`)
 
-  win.init(() => {
-    win.show()
-    requestIdleCallback(win.show, { timeout: 500 })
+  ready
+    .then(() => performance.now())
+    .then(READY =>
+      win.init(() => {
+        requestIdleCallback(win.show, { timeout: 500 })
 
-    const DONE = performance.now()
+        let DONE = performance.now()
 
-    verbose('%s ready after %dms (%dms)', win.type,
-      (DONE - START).toFixed(3),
-      (DONE - READY).toFixed(3))
-  })
-})
+        verbose('%s ready after %dms (%dms)', win.type,
+          (DONE - START).toFixed(3),
+          (DONE - READY).toFixed(3))
+      }))
+    .catch(error => {
+      warn(`failed initializing ${win.type}: ${error.message}`)
+      warn(error.stack)
 
-// eslint-disable-next-line
-global.eval = function () {
-  throw new Error('use of eval() is prohibited')
-}
+      if (!dev) {
+        win.current.close()
+      }
+    })
 
-if (!dev) {
-  global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {}
+  // eslint-disable-next-line
+  global.eval = function () {
+    throw new Error('use of eval() is prohibited')
+  }
+
+  if (!dev) {
+    global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {}
+  }
+
+} catch (error) {
+  process.stderr.write(`Uncaught error in bootstrap: ${error.message}\n`)
 }
