@@ -77,7 +77,7 @@ target.window = ([name]) => {
 <html>
 <head>
   <meta http-equiv="Content-Security-Policy" content="${[
-    "default-src 'none'",
+    "default-src 'unsafe-inline'",
     "base-uri 'none'",
     "form-action 'none'",
   ].join('; ')}">
