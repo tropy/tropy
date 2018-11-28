@@ -135,6 +135,7 @@ function *close(db, project, access) {
 function *main() {
   let task
   let aux
+  let crash
 
   try {
     aux = yield all([
@@ -173,6 +174,7 @@ function *main() {
 
   } catch (error) {
     warn(`unexpected error in *main: ${error.message}`, { stack: error.stack })
+    crash = error
 
   } finally {
     yield all([
@@ -185,6 +187,7 @@ function *main() {
     }))
 
     debug('*main terminated')
+    if (crash != null) process.crash()
   }
 }
 
