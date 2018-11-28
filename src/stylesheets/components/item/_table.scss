@@ -10,7 +10,7 @@
   height: 100%; // Prevent vertical scrollbar due to horizontal scrollbar
   overflow-x: auto;
   overflow-y: hidden; // Prevent horizontal scrollbar due to column borders
-  contain: strict;
+  contain: size style paint; // 'layout' breaks header width after column resize/reorder
 
   th,
   td {
