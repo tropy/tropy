@@ -1,10 +1,14 @@
 'use strict'
 
-require('./promisify')
-
-const { join, resolve } = require('path')
-const { mkdirAsync: mkdir, writeFileAsync: write } = require('fs')
-const { statAsync: stat } = require('fs')
+const bb = require('./promisify')
+const rm = bb.promisify(require('rimraf'))
+const { join, resolve, extname, basename } = require('path')
+const {
+  mkdirAsync: mkdir,
+  readdirAsync: readdir,
+  statAsync: stat,
+  writeFileAsync: write
+} = require('fs')
 
 class Cache {
   constructor(...args) {
@@ -35,8 +39,33 @@ class Cache {
     return Cache.extname(...args)
   }
 
+  list(opts = {}) {
+    return readdir(this.root, opts)
+  }
+
   path(...args) {
     return Cache.path(...args)
+  }
+
+  prune = async (state) => {
+    let check = (file, id, variant, ext) => (
+      ext !== '.webp' ||
+      !((id in state.photos || (id in state.selections))))
+
+    let files = await this.stale(check)
+
+    if (files.length ) {
+      for (let file of files) {
+        await rm(this.expand(file))
+      }
+    }
+
+    return files
+  }
+
+  async stale(check) {
+    return (await this.list())
+      .filter(file => check(file, ...Cache.split(file)))
   }
 
   url(...args) {
@@ -55,6 +84,11 @@ class Cache {
 
   static extname() {
     return '.webp'
+  }
+
+  static split(path) {
+    let ext = extname(path)
+    return [...basename(path, ext).split('_', 2), ext]
   }
 }
 

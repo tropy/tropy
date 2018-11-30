@@ -4,7 +4,7 @@ const assert = require('assert')
 const { OPEN, CLOSE, CLOSED, MIGRATIONS } = require('../constants/project')
 const { Database } = require('../common/db')
 const { Cache } = require('../common/cache')
-const { warn, debug } = require('../common/log')
+const { warn, info, debug } = require('../common/log')
 const { ipc } = require('./ipc')
 const consolidator = require('./consolidator')
 const { history } = require('./history')
@@ -20,7 +20,7 @@ const { onErrorPut } = require('./db')
 const args = require('../args')
 
 const {
-  all, fork, cancel, call, put, take, takeEvery: every, race
+  all, fork, cancel, call, put, take, takeEvery: every, race, select
 } = require('redux-saga/effects')
 
 const { delay } = require('redux-saga')
@@ -67,7 +67,7 @@ function *open(file) {
       }
 
     } finally {
-      yield call(close, db, project, access)
+      yield call(close, db, project, access, cache)
     }
   } catch (error) {
     warn(`unexpected error in *open: ${error.message}`, { stack: error.stack })
@@ -109,7 +109,7 @@ function *setup(db, project) {
 }
 
 
-function *close(db, project, access) {
+function *close(db, project, access, cache) {
   if (access != null && access.id > 0) {
     yield call(mod.access.close, db, access.id)
   }
@@ -122,6 +122,7 @@ function *close(db, project, access) {
     call(storage.persist, 'sidebar', project.id)
   ])
 
+  debug('pruning db...')
   yield call(mod.item.prune, db)
   yield call(mod.list.prune, db)
   yield call(mod.value.prune, db)
@@ -129,6 +130,16 @@ function *close(db, project, access) {
   yield call(mod.selection.prune, db)
   yield call(mod.note.prune, db)
   yield call(mod.access.prune, db)
+
+  debug('pruning cache...')
+  let state = yield select()
+  let files = yield call(cache.prune, state)
+
+  if (files.length) {
+    info(`${files.length} file(s) removed from cache`)
+  }
+
+  debug('*close terminated')
 }
 
 
