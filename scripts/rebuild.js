@@ -21,6 +21,7 @@ target.all = (args) => {
   target.sqlite3(args)
   target.jsonld()
   target.sharp(args)
+  target.idle()
 }
 
 target.headers = () => {
@@ -43,7 +44,7 @@ target.sqlite3 = (force) => {
     say(`${mod} ...done`)
 
   } else {
-    say(`${mod} ...skipped`)
+    say(`${mod} skipped`)
   }
 }
 
@@ -53,8 +54,8 @@ target.inspector = () => {
 }
 
 target.jsonld = () => {
-  say('jsonld ...remove native modules')
   rm('-rf', join(mods, 'rdf-canonize', 'build'))
+  say('rdf-canonize-native removed')
   //rm('-rf', join(mods, 'rdf-canonize-native'))
   //rm('-rf', join(mods, 'jsonld', 'node-modules', 'rdf-canonize-native'))
 }
@@ -63,13 +64,29 @@ target.sharp = (force) => {
   let mod = 'sharp'
 
   if (force || !test('-d', buildFragments(mod))) {
-    rebuild('sharp', {
+    rebuild(mod, {
       params: '--build-from-source'
     })
     say(`${mod} ...done`)
 
   } else {
-    say(`${mod} ...skipped`)
+    say(`${mod} skipped`)
+  }
+}
+
+target.idle = (force) => {
+  let mod = 'desktop-idle'
+  let version = ELECTRON.join('.')
+  let marker = join(mods, mod, '.tropy_rebuild')
+
+  if (force || !test('-f', marker) || cat(marker).trim() !== version) {
+    rebuild(mod, {
+      params: '--build-from-source'
+    })
+    version.to(marker)
+    say(`${mod} ...done`)
+  } else {
+    say(`${mod} skipped`)
   }
 }
 
@@ -87,8 +104,9 @@ function preGypBinding(mod, platform = process.platform, arch = process.arch) {
 }
 
 function rebuild(mod, opts = {}) {
+  say(mod)
   target.headers()
-  return exec(`npm rebuild ${mod} ${opts.params} ${CONFIG.join(' ')}`)
+  exec(`npm rebuild ${mod} ${opts.params} ${CONFIG.join(' ')}`)
 }
 
 function v(module) {
