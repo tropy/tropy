@@ -8,7 +8,7 @@
   flex-direction: column;
   box-shadow: -1px 0 0 $esper-shadow;
   background: $esper-bg;
-  margin-right: -$esper-panel-width;
+  margin-right: -$esper-panel-width - 1px; // Also hide box-shadow
   position: relative; // Must be over esper-view for a clean transition in solid mode
   transition: margin-right 0.3s ease;
 
