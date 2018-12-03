@@ -454,8 +454,8 @@ i('NotePadHidden', (
 i('NotePadRight', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">
-      <rect className="esper-bg" x="5.5" y="4.5" width="13" height="6" transform="translate(19.5 -4.5) rotate(90)"/>
-      <path d="M16,0H1V15H16ZM2,14V1H8V14Zm7,0V1h6V14Z"/>
+      <rect className="esper-bg"x="-1.5" y="4.5" width="13" height="6" transform="translate(-2.5 12.5) rotate(-90)"/>
+      <path d="M1,15H16V0H1ZM15,1V14H9V1ZM8,1V14H2V1Z"/>
     </g>
   </svg>
 ))
