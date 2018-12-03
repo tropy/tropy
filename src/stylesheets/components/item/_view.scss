@@ -49,9 +49,21 @@
   padding-left: $space-min;
   min-width: 0; // Needed to get horizontal scrollbars in the editor’s scroll-container
 
-  > .resizable {
-    // Temporary insurance to make sure the notepad is visible when upgrading to 1.1.2
-    // See #221
-    max-height: calc(100% - 38px);
+  .note-pad-bottom & {
+    > .resizable {
+      // Temporary insurance to make sure the notepad is visible when upgrading to 1.1.2
+      // See #221
+      max-height: calc(100% - 38px);
+    }
+  }
+
+  .note-pad-right & {
+    flex-direction: row;
+  }
+
+  .note-pad-full & {
+    > .resizable {
+      display: none;
+    }
   }
 }

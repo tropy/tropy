@@ -180,7 +180,7 @@ class ItemView extends PureComponent {
     const { isItemOpen } = this
 
     return (
-      <section className="item-view" style={this.style}>
+      <section className="item-view note-pad-bottom" style={this.style}>
         <Resizable
           edge={isItemOpen ? 'right' : 'left'}
           value={offset}
