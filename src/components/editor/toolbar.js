@@ -25,7 +25,11 @@ const {
   IconNumberedList,
   IconSink,
   IconLift,
-  IconLink
+  IconLink,
+  IconNotePadBottom,
+  IconNotePadFull,
+  IconNotePadHidden,
+  IconNotePadRight
 } = require('../icons')
 
 
@@ -217,6 +221,22 @@ class EditorToolbar extends PureComponent {
                 title="editor.commands.link.button"
                 icon={<IconLink/>}
                 onMouseDown={this.handleLinkButtonClick}/>
+            </ToolGroup>
+          </div>
+          <div className="toolbar-right">
+            <ToolGroup>
+              <Button
+                noFocus
+                icon={<IconNotePadHidden/>}/>
+              <Button
+                noFocus
+                icon={<IconNotePadFull/>}/>
+              <Button
+                noFocus
+                icon={<IconNotePadRight/>}/>
+              <Button
+                noFocus
+                icon={<IconNotePadBottom/>}/>
             </ToolGroup>
           </div>
         </ToolbarContext>

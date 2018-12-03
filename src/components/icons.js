@@ -424,6 +424,42 @@ i('Note', (
   </svg>
 ))
 
+i('NotePadBottom', (
+<svg width="16" height="16">
+  <g className="line" fill="currentColor">
+    <rect className="esper-bg" x="2" y="1" width="13" height="6"/>
+    <path d="M1,0V15H16V0ZM15,14H2V8H15Zm0-7H2V1H15Z"/>
+  </g>
+</svg>
+))
+
+i('NotePadFull', (
+<svg width="16" height="16">
+  <g className="line" fill="currentColor">
+    <path d="M15,1V14H2V1H15m1-1H1V15H16V0Z"/>
+  </g>
+</svg>
+))
+
+i('NotePadHidden', (
+<svg width="16" height="16">
+  <g className="line" fill="currentColor">
+    <rect className="esper-bg" x="2" y="1" width="13" height="13"/>
+    <path d="M15,1V14H2V1H15m1-1H1V15H16V0Z"/>
+  </g>
+</svg>
+))
+
+
+i('NotePadRight', (
+<svg width="16" height="16">
+  <g className="line" fill="currentColor">
+    <rect className="esper-bg" x="5.5" y="4.5" width="13" height="6" transform="translate(19.5 -4.5) rotate(90)"/>
+    <path d="M16,0H1V15H16ZM2,14V1H8V14Zm7,0V1h6V14Z"/>
+  </g>
+</svg>
+))
+
 i('NumberedList', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">

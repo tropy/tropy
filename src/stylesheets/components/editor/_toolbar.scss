@@ -14,7 +14,6 @@
   }
 
   .toolbar {
-    box-sizing: content-box;
     padding-top: 0;
     border-bottom: 1px solid $editor-toolbar-border;
     margin-bottom: 0; // Dev
@@ -23,6 +22,7 @@
     left: 0;
     top: 0;
     width: 100%;
+    height: $toolbar-height + 1px;
     //display: none;
 
     .tool-group {

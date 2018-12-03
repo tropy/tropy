@@ -72,6 +72,12 @@
   margin: -2px; // Special treat 20 x 20 arrow icon
 }
 
+.icon {
+  .esper-bg {
+    color: $icon-esper-bg;
+  }
+}
+
 .icon-container {
   flex: 0 0 auto;
   display: flex;
