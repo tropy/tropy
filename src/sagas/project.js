@@ -43,8 +43,8 @@ function *open(file) {
     yield fork(onErrorClose, db)
     yield call(db.migrate, MIGRATIONS)
 
-    const project = yield call(mod.project.load, db)
-    const access = yield call(mod.access.open, db)
+    let project = yield call(mod.project.load, db)
+    let access = yield call(mod.access.open, db)
 
     assert(project != null && project.id != null, 'invalid project')
 
@@ -53,16 +53,16 @@ function *open(file) {
       args.update({ file: db.path })
     }
 
-    const cache = new Cache(ARGS.cache, project.id)
-    yield call([cache, cache.init])
+    let cache = new Cache(ARGS.cache, project.id)
+    yield call(cache.init)
 
     yield put(act.project.opened({ file: db.path, ...project }))
 
     try {
-      yield fork(setup, db, project)
+      yield fork(setup, db, project, cache)
 
       while (true) {
-        const action = yield take(command)
+        let action = yield take(command)
         yield fork(exec, { db, id: project.id, cache }, action)
       }
 
@@ -83,7 +83,7 @@ function *open(file) {
 }
 
 
-function *setup(db, project) {
+function *setup(db, project, cache) {
   yield every(has('search'), search, db)
 
   yield all([
@@ -106,10 +106,15 @@ function *setup(db, project) {
   ])
 
   yield call(search, db)
+
+  // TODO when idle
+  info('clearing project cache...')
+  let state = yield select()
+  let files = yield call(cache.prune, state)
+  info(`cleared ${files.length} file(s) from cache...`)
 }
 
-
-function *close(db, project, access, cache) {
+function *close(db, project, access) {
   if (access != null && access.id > 0) {
     yield call(mod.access.close, db, access.id)
   }
@@ -130,14 +135,6 @@ function *close(db, project, access, cache) {
   yield call(mod.selection.prune, db)
   yield call(mod.note.prune, db)
   yield call(mod.access.prune, db)
-
-  debug('pruning cache...')
-  let state = yield select()
-  let files = yield call(cache.prune, state)
-
-  if (files.length) {
-    info(`${files.length} file(s) removed from cache`)
-  }
 
   debug('*close terminated')
 }
@@ -164,7 +161,7 @@ function *main() {
     ])
 
     while (true) {
-      const { type, payload, error } = yield take([OPEN, CLOSE])
+      let { type, payload, error } = yield take([OPEN, CLOSE])
 
       if (task != null && task.isRunning()) {
         yield cancel(task)

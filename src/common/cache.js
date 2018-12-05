@@ -15,7 +15,7 @@ class Cache {
     this.root = resolve(...args)
   }
 
-  async init() {
+  init = async () => {
     try {
       await mkdir(this.root)
     } catch (error) {
