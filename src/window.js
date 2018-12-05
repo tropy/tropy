@@ -18,8 +18,7 @@ const isCommand = darwin ?
   e => e.metaKey && !e.altKey && !e.ctrlKey :
   e => e.ctrlKey && !e.altKey && !e.metaKey
 
-const IDLE_SHORT = 30
-const IDLE_LONG = 120
+const IDLE_SHORT = 60
 
 class Window extends EventEmitter {
   constructor({ theme, frameless, scrollbars, aqua } = ARGS) {
@@ -54,7 +53,6 @@ class Window extends EventEmitter {
         this.handleModifierKeys()
 
         addIdleObserver(this.handleIdleEvents, IDLE_SHORT)
-        addIdleObserver(this.handleIdleEvents, IDLE_LONG)
 
         toggle(document.body, process.platform, true)
 

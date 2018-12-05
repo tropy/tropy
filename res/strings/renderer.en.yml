@@ -337,6 +337,8 @@ en:
       order: Sort Selections
 
   activity:
+    cache:
+      prune: Pruning project cache …
     project:
       save: Saving …
     list:

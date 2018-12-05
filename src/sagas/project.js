@@ -2,9 +2,10 @@
 
 const assert = require('assert')
 const { OPEN, CLOSE, CLOSED, MIGRATIONS } = require('../constants/project')
+const { IDLE } = require('../constants/idle')
 const { Database } = require('../common/db')
 const { Cache } = require('../common/cache')
-const { warn, info, debug } = require('../common/log')
+const { warn, debug } = require('../common/log')
 const { ipc } = require('./ipc')
 const consolidator = require('./consolidator')
 const { history } = require('./history')
@@ -20,7 +21,7 @@ const { onErrorPut } = require('./db')
 const args = require('../args')
 
 const {
-  all, fork, cancel, call, put, take, takeEvery: every, race, select
+  all, fork, cancel, call, put, take, takeEvery: every, race
 } = require('redux-saga/effects')
 
 const { delay } = require('redux-saga')
@@ -59,7 +60,7 @@ function *open(file) {
     yield put(act.project.opened({ file: db.path, ...project }))
 
     try {
-      yield fork(setup, db, project, cache)
+      yield fork(setup, db, project)
 
       while (true) {
         let action = yield take(command)
@@ -83,35 +84,41 @@ function *open(file) {
 }
 
 
-function *setup(db, project, cache) {
-  yield every(has('search'), search, db)
+function *setup(db, project) {
+  try {
+    yield every(has('search'), search, db)
 
-  yield all([
-    call(storage.restore, 'nav', project.id),
-    call(storage.restore, 'notepad', project.id),
-    call(storage.restore, 'esper', project.id),
-    call(storage.restore, 'imports', project.id),
-    call(storage.restore, 'sidebar', project.id)
-  ])
+    yield all([
+      call(storage.restore, 'nav', project.id),
+      call(storage.restore, 'notepad', project.id),
+      call(storage.restore, 'esper', project.id),
+      call(storage.restore, 'imports', project.id),
+      call(storage.restore, 'sidebar', project.id)
+    ])
 
-  yield all([
-    put(act.history.drop()),
-    put(act.list.load()),
-    put(act.tag.load()),
-    put(act.item.load()),
-    put(act.photo.load()),
-    put(act.metadata.load()),
-    put(act.selection.load()),
-    put(act.note.load())
-  ])
+    yield all([
+      put(act.history.drop()),
+      put(act.list.load()),
+      put(act.tag.load()),
+      put(act.item.load()),
+      put(act.photo.load()),
+      put(act.metadata.load()),
+      put(act.selection.load()),
+      put(act.note.load())
+    ])
 
-  yield call(search, db)
+    yield call(search, db)
 
-  // TODO when idle
-  info('clearing project cache...')
-  let state = yield select()
-  let files = yield call(cache.prune, state)
-  info(`cleared ${files.length} file(s) from cache...`)
+    yield take(IDLE)
+    yield put(act.cache.prune())
+
+  } catch (error) {
+    warn(`unexpected error in *setup: ${error.message}`, { stack: error.stack })
+    yield call(fail, error, db.path)
+
+  } finally {
+    debug('*setup terminated')
+  }
 }
 
 function *close(db, project, access) {
