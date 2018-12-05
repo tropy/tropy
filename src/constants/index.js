@@ -8,6 +8,7 @@ module.exports = {
   FLASH: require('./flash'),
   ESPER: require('./esper'),
   HISTORY: require('./history'),
+  IDLE: require('./idle'),
   IMPORTS: require('./import'),
   ITEM: require('./item'),
   KEYMAP: require('./keymap'),

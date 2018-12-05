@@ -22,20 +22,18 @@ class IOQ {
     return getIdleTime()
   }
 
-  add(observer, time) {
+  add(observe, time) {
     assert(time > this.precision, 'idle delay below precision')
-    assert(observer != null, 'missing idle observer')
-    assert(typeof observer.observe === 'function',
-      'missing idle observer callback')
+    assert(typeof observe === 'function', 'missing idle observer')
 
-    this.observers.push({ done: false, id: Date.now(), observer, time })
+    this.observers.push({ done: false, id: Date.now(), observe, time })
     this.observers.sort(byTime)
     return this
   }
 
-  remove(observer, time) {
+  remove(observe, time) {
     let idx = this.observers.findIndex(o =>
-      o.observer === observer && o.time === time)
+      o.observe === observe && o.time === time)
     if (idx >= 0) this.observers.splice(idx, 1)
     return this
   }
@@ -72,7 +70,7 @@ class IOQ {
 
   activate() {
     for (let obs of this.observers) {
-      if (obs.done) obs.observer.observe(this, 'active', 0)
+      if (obs.done) obs.observe(this, 'active', 0)
       obs.done = false
     }
   }
@@ -81,7 +79,7 @@ class IOQ {
     for (let obs of this.observers) {
       if (time < obs.time) break
       if (obs.done) continue
-      obs.observer.observe(this, 'idle', time)
+      obs.observe(this, 'idle', time)
       obs.done = true
     }
   }
