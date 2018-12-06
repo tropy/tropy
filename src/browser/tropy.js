@@ -332,6 +332,9 @@ class Tropy extends EventEmitter {
     this.on('app:close-project', () =>
       this.dispatch(act.project.close(), this.win))
 
+    this.on('app:prune-cache', () =>
+      this.dispatch(act.cache.prune(), this.win))
+
     this.on('app:rebase-project', () =>
       this.dispatch(act.project.rebase(), this.win))
 
