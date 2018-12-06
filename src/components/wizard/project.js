@@ -78,6 +78,7 @@ const ProjectFile = ({ value, isCustom, onClick }) => (
         type="text"
         value={value}/>
       <Button
+        isDefault
         size="lg"
         text="wizard.project.change"
         onClick={onClick}/>
@@ -105,7 +106,6 @@ const ProjectStep = (props) => (
       onClick={props.onFileSelect}/>
     <Button
       isBlock
-      isDefault
       isDisabled={!props.file}
       isPrimary
       onClick={props.onComplete}
