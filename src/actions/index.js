@@ -26,6 +26,7 @@ module.exports = {
   project: require('./project'),
   properties: require('./properties'),
   qr: require('./qr'),
+  recent: require('./recent'),
   settings: require('./settings'),
   selection: require('./selection'),
   shell: require('./shell'),

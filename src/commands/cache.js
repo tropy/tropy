@@ -10,11 +10,14 @@ class Prune extends Command {
 
   *exec() {
     let { cache } = this.options
-
-    info('clearing project cache...')
     let state = yield select()
-    let files = yield call(cache.prune, state)
-    info(`cleared ${files.length} file(s) from cache...`)
+    let files
+
+    if (state.photos && state.selections) {
+      info('clearing project cache...')
+      files = yield call(cache.prune, state)
+      info(`cleared ${files.length} file(s) from cache...`)
+    }
 
     return files
   }

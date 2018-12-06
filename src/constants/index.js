@@ -25,6 +25,7 @@ module.exports = {
   PREFS: require('./prefs'),
   PROJECT: require('./project'),
   QR: require('./qr'),
+  RECENT: require('./recent'),
   SASS: require('./sass'),
   SELECTION: require('./selection'),
   SETTINGS: require('./settings'),

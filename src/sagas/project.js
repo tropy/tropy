@@ -163,6 +163,7 @@ function *main() {
     ])
 
     yield all([
+      call(storage.restore, 'recent'),
       call(storage.restore, 'settings'),
       call(storage.restore, 'ui')
     ])
@@ -193,6 +194,7 @@ function *main() {
 
   } finally {
     yield all([
+      call(storage.persist, 'recent'),
       call(storage.persist, 'settings'),
       call(storage.persist, 'ui')
     ])
