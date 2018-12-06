@@ -732,7 +732,7 @@ class Tropy extends EventEmitter {
     this.broadcast('locale', state.locale)
   }
 
-  setTitle(title, win = BrowserWindow.getFocusedWindow()) {
+  setTitle(title, win) {
     if (win != null) {
       win.setTitle(this.hash.frameless ? '' : title)
     }
