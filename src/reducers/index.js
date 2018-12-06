@@ -20,6 +20,7 @@ module.exports = {
   ...require('./prefs'),
   ...require('./project'),
   ...require('./qr'),
+  ...require('./recent'),
   ...require('./selections'),
   ...require('./settings'),
   ...require('./sidebar'),
