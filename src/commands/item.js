@@ -203,10 +203,10 @@ class Load extends Command {
   static get ACTION() { return ITEM.LOAD }
 
   *exec() {
-    const { db } = this.options
-    const { payload } = this.action
+    let { db } = this.options
+    let { payload } = this.action
 
-    const items = yield call(db.seq, conn =>
+    let items = yield call(db.seq, conn =>
       mod.item.load(conn, payload))
 
     return items

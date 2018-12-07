@@ -9,14 +9,13 @@ const { STORAGE } = require('../constants')
 const PERSIST = action => get(action, ['meta', 'persist'])
 
 const storage = {
-
   *restore(name, ...args) {
-    const data = Storage.load(name, ...args)
+    let data = Storage.load(name, ...args)
     yield put(actions[name].restore(data))
   },
 
   *persist(name, ...args) {
-    const data = yield select(state => state[name])
+    let data = yield select(state => state[name])
     Storage.save(name, data, ...args)
   },
 

@@ -111,6 +111,7 @@ class Tropy extends EventEmitter {
       }
 
       this.win = open('project', { file, ...this.hash }, {
+        title: '',
         width: WIN.WIDTH,
         height: WIN.HEIGHT,
         minWidth: WIN.MIN_WIDTH * this.state.zoom,
@@ -184,7 +185,7 @@ class Tropy extends EventEmitter {
       this.state.recent)
 
     // if (darwin) this.win.setRepresentedFilename(file)
-    if (name) this.win.setTitle(name)
+    this.setTitle(name, this.win)
 
     switch (process.platform) {
       case 'darwin':
@@ -204,7 +205,7 @@ class Tropy extends EventEmitter {
     if (this.about) return this.about.show(), this
 
     this.about = open('about', this.hash, {
-      title: this.dict.windows.about.title,
+      title: this.hash.frameless ? '' : this.dict.windows.about.title,
       width: ABT.WIDTH * this.state.zoom,
       height: ABT.HEIGHT * this.state.zoom,
       parent: darwin ? null : this.win,
@@ -227,7 +228,7 @@ class Tropy extends EventEmitter {
     if (this.wiz) return this.wiz.show(), this
 
     this.wiz = open('wizard', this.hash, {
-      title: this.dict.windows.wizard.title,
+      title: this.hash.frameless ? '' : this.dict.windows.wizard.title,
       width: WIZ.WIDTH * this.state.zoom,
       height: WIZ.HEIGHT * this.state.zoom,
       parent: darwin ? null : this.win,
@@ -249,7 +250,7 @@ class Tropy extends EventEmitter {
     if (this.prefs) return this.prefs.show(), this
 
     this.prefs = open('prefs', this.hash, {
-      title: this.dict.windows.prefs.title,
+      title: this.hash.frameless ? '' : this.dict.windows.prefs.title,
       width: PREFS.WIDTH * this.state.zoom,
       height: PREFS.HEIGHT * this.state.zoom,
       parent: darwin ? null : this.win,
@@ -331,6 +332,9 @@ class Tropy extends EventEmitter {
 
     this.on('app:close-project', () =>
       this.dispatch(act.project.close(), this.win))
+
+    this.on('app:prune-cache', () =>
+      this.dispatch(act.cache.prune(), this.win))
 
     this.on('app:rebase-project', () =>
       this.dispatch(act.project.rebase(), this.win))
@@ -669,7 +673,7 @@ class Tropy extends EventEmitter {
     })
 
     ipc.on(PROJECT.UPDATE, (_, { name }) => {
-      if (name) this.win.setTitle(name)
+      this.setTitle(name, this.win)
     })
 
     ipc.on(HISTORY.CHANGED, (event, history) => {
@@ -721,11 +725,17 @@ class Tropy extends EventEmitter {
   }
 
   updateWindowLocale() {
-    const { dict, about, prefs, wiz } = this
-    if (about != null) about.setTitle(dict.windows.about.title)
-    if (prefs != null) prefs.setTitle(dict.windows.prefs.title)
-    if (wiz != null) wiz.setTitle(dict.windows.wizard.title)
-    this.broadcast('locale', this.state.locale)
+    let { dict, state, about, prefs, wiz } = this
+    this.setTitle(dict.windows.about.title, about)
+    this.setTitle(dict.windows.prefs.title, prefs)
+    this.setTitle(dict.windows.wizard.title, wiz)
+    this.broadcast('locale', state.locale)
+  }
+
+  setTitle(title, win) {
+    if (win != null) {
+      win.setTitle(this.hash.frameless ? '' : title)
+    }
   }
 
   dispatch(action, win = BrowserWindow.getFocusedWindow()) {

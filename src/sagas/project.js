@@ -2,6 +2,7 @@
 
 const assert = require('assert')
 const { OPEN, CLOSE, CLOSED, MIGRATIONS } = require('../constants/project')
+const { IDLE } = require('../constants/idle')
 const { Database } = require('../common/db')
 const { Cache } = require('../common/cache')
 const { warn, debug } = require('../common/log')
@@ -43,8 +44,8 @@ function *open(file) {
     yield fork(onErrorClose, db)
     yield call(db.migrate, MIGRATIONS)
 
-    const project = yield call(mod.project.load, db)
-    const access = yield call(mod.access.open, db)
+    let project = yield call(mod.project.load, db)
+    let access = yield call(mod.access.open, db)
 
     assert(project != null && project.id != null, 'invalid project')
 
@@ -53,8 +54,8 @@ function *open(file) {
       args.update({ file: db.path })
     }
 
-    const cache = new Cache(ARGS.cache, project.id)
-    yield call([cache, cache.init])
+    let cache = new Cache(ARGS.cache, project.id)
+    yield call(cache.init)
 
     yield put(act.project.opened({ file: db.path, ...project }))
 
@@ -62,12 +63,12 @@ function *open(file) {
       yield fork(setup, db, project)
 
       while (true) {
-        const action = yield take(command)
+        let action = yield take(command)
         yield fork(exec, { db, id: project.id, cache }, action)
       }
 
     } finally {
-      yield call(close, db, project, access)
+      yield call(close, db, project, access, cache)
     }
   } catch (error) {
     warn(`unexpected error in *open: ${error.message}`, { stack: error.stack })
@@ -84,30 +85,41 @@ function *open(file) {
 
 
 function *setup(db, project) {
-  yield every(has('search'), search, db)
+  try {
+    yield every(has('search'), search, db)
 
-  yield all([
-    call(storage.restore, 'nav', project.id),
-    call(storage.restore, 'notepad', project.id),
-    call(storage.restore, 'esper', project.id),
-    call(storage.restore, 'imports', project.id),
-    call(storage.restore, 'sidebar', project.id)
-  ])
+    yield all([
+      call(storage.restore, 'nav', project.id),
+      call(storage.restore, 'notepad', project.id),
+      call(storage.restore, 'esper', project.id),
+      call(storage.restore, 'imports', project.id),
+      call(storage.restore, 'sidebar', project.id)
+    ])
 
-  yield all([
-    put(act.history.drop()),
-    put(act.list.load()),
-    put(act.tag.load()),
-    put(act.item.load()),
-    put(act.photo.load()),
-    put(act.metadata.load()),
-    put(act.selection.load()),
-    put(act.note.load())
-  ])
+    yield all([
+      put(act.history.drop()),
+      put(act.list.load()),
+      put(act.tag.load()),
+      put(act.item.load()),
+      put(act.photo.load()),
+      put(act.metadata.load()),
+      put(act.selection.load()),
+      put(act.note.load())
+    ])
 
-  yield call(search, db)
+    yield call(search, db)
+
+    yield take(IDLE)
+    yield put(act.cache.prune())
+
+  } catch (error) {
+    warn(`unexpected error in *setup: ${error.message}`, { stack: error.stack })
+    yield call(fail, error, db.path)
+
+  } finally {
+    debug('*setup terminated')
+  }
 }
-
 
 function *close(db, project, access) {
   if (access != null && access.id > 0) {
@@ -122,6 +134,7 @@ function *close(db, project, access) {
     call(storage.persist, 'sidebar', project.id)
   ])
 
+  debug('pruning db...')
   yield call(mod.item.prune, db)
   yield call(mod.list.prune, db)
   yield call(mod.value.prune, db)
@@ -129,12 +142,15 @@ function *close(db, project, access) {
   yield call(mod.selection.prune, db)
   yield call(mod.note.prune, db)
   yield call(mod.access.prune, db)
+
+  debug('*close terminated')
 }
 
 
 function *main() {
   let task
   let aux
+  let crash
 
   try {
     aux = yield all([
@@ -147,12 +163,13 @@ function *main() {
     ])
 
     yield all([
+      call(storage.restore, 'recent'),
       call(storage.restore, 'settings'),
       call(storage.restore, 'ui')
     ])
 
     while (true) {
-      const { type, payload, error } = yield take([OPEN, CLOSE])
+      let { type, payload, error } = yield take([OPEN, CLOSE])
 
       if (task != null && task.isRunning()) {
         yield cancel(task)
@@ -173,9 +190,11 @@ function *main() {
 
   } catch (error) {
     warn(`unexpected error in *main: ${error.message}`, { stack: error.stack })
+    crash = error
 
   } finally {
     yield all([
+      call(storage.persist, 'recent'),
       call(storage.persist, 'settings'),
       call(storage.persist, 'ui')
     ])
@@ -185,6 +204,7 @@ function *main() {
     }))
 
     debug('*main terminated')
+    if (crash != null) process.crash()
   }
 }
 

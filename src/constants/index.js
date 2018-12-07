@@ -2,12 +2,14 @@
 
 module.exports = {
   ACTIVITY: require('./activity'),
+  CACHE: require('./cache'),
   CONTEXT: require('./context'),
   DND: require('./dnd'),
   EDIT: require('./edit'),
   FLASH: require('./flash'),
   ESPER: require('./esper'),
   HISTORY: require('./history'),
+  IDLE: require('./idle'),
   IMPORTS: require('./import'),
   ITEM: require('./item'),
   KEYMAP: require('./keymap'),
@@ -23,6 +25,7 @@ module.exports = {
   PREFS: require('./prefs'),
   PROJECT: require('./project'),
   QR: require('./qr'),
+  RECENT: require('./recent'),
   SASS: require('./sass'),
   SELECTION: require('./selection'),
   SETTINGS: require('./settings'),

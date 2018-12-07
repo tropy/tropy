@@ -150,6 +150,9 @@ target.all = async (args = []) => {
         break
       }
       case 'win32': {
+        say('removing duplicate DLLs...')
+        rm(join(dst, 'resources', 'app.asar.unpacked', SHARP, '*.dll'))
+
         say(`renaming executable to ${qualified.name}.exe...`)
         rename(dst, `${qualified.product}.exe`, `${qualified.name}.exe`)
       }

@@ -32,17 +32,6 @@
   }
 }
 
-.btn-lg {
-  font-size: $font-size-large;
-  height: $input-height-large;
-  padding: 0 $padding-large-horizontal;
-}
-
-.btn-block {
-  display: block;
-  width: 100%;
-}
-
 .btn-default {
   color: $btn-default-color;
   background: $btn-default-bg;
@@ -81,6 +70,17 @@
   &:active {
     background: $btn-primary-active-bg;
   }
+}
+
+.btn-lg {
+  font-size: $font-size-large;
+  height: $input-height-large;
+  padding: 0 $padding-large-horizontal;
+}
+
+.btn-block {
+  display: block;
+  width: 100%;
 }
 
 .btn-icon {

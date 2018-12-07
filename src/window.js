@@ -6,6 +6,7 @@ const { basename, join, resolve } = require('path')
 const { existsSync: exists } = require('fs')
 const { EL_CAPITAN, darwin } = require('./common/os')
 const { Plugins } = require('./common/plugins')
+const { addIdleObserver } = require('./common/idle')
 const { EventEmitter } = require('events')
 const args = require('./args')
 
@@ -17,6 +18,7 @@ const isCommand = darwin ?
   e => e.metaKey && !e.altKey && !e.ctrlKey :
   e => e.ctrlKey && !e.altKey && !e.metaKey
 
+const IDLE_SHORT = 60
 
 class Window extends EventEmitter {
   constructor({ theme, frameless, scrollbars, aqua } = ARGS) {
@@ -49,6 +51,8 @@ class Window extends EventEmitter {
         this.handleIpcEvents()
         this.handleEditorCommands()
         this.handleModifierKeys()
+
+        addIdleObserver(this.handleIdleEvents, IDLE_SHORT)
 
         toggle(document.body, process.platform, true)
 
@@ -159,6 +163,11 @@ class Window extends EventEmitter {
 
         this.reload()
       })
+  }
+
+  handleIdleEvents = (_, type, time) => {
+    this.emit('idle', { type, time })
+
   }
 
   handleUnload() {

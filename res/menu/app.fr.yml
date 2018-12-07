@@ -108,6 +108,8 @@ fr:
         - type: separator
         - label: Remettre à zéro la base de données des ontologies
           command: 'app:reset-ontology-db'
+        - label: 'Prune Project Cache'
+          command: 'app:prune-cache'
         - label: 'Rebase Project'
           command: 'app:rebase-project'
         - label: Fermer le projet
@@ -280,6 +282,8 @@ fr:
         - type: separator
         - label: Remettre à zéro la base de données des ontologies
           command: 'app:reset-ontology-db'
+        - label: 'Prune Project Cache'
+          command: 'app:prune-cache'
         - label: 'Rebase Project'
           command: 'app:rebase-project'
         - label: Fermer le projet
@@ -430,6 +434,8 @@ fr:
         - type: separator
         - label: Remettre à zéro la base de données des ontologies
           command: 'app:reset-ontology-db'
+        - label: 'Prune Project Cache'
+          command: 'app:prune-cache'
         - label: 'Rebase Project'
           command: 'app:rebase-project'
         - label: Fermer le projet

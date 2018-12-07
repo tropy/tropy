@@ -2,12 +2,14 @@
 
 module.exports = {
   activity: require('./activity'),
+  cache: require('./cache'),
   classes: require('./classes'),
   context: require('./context'),
   edit: require('./edit'),
   esper: require('./esper'),
   flash: require('./flash'),
   history: require('./history'),
+  idle: require('./idle'),
   imports: require('./imports'),
   intl: require('./intl'),
   item: require('./item'),
@@ -24,6 +26,7 @@ module.exports = {
   project: require('./project'),
   properties: require('./properties'),
   qr: require('./qr'),
+  recent: require('./recent'),
   settings: require('./settings'),
   selection: require('./selection'),
   shell: require('./shell'),

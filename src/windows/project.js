@@ -45,6 +45,9 @@ win.on('settings.update', (settings) => {
     store.dispatch(act.intl.load({ locale: settings.locale }))
   }
 })
+win.on('idle', ({ type, time }) => {
+  store.dispatch(act.idle[type](time))
+})
 
 win.unloaders.push(dialog.stop)
 win.unloaders.push(() => (
