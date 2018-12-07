@@ -127,7 +127,7 @@ en:
         - type: 'separator'
         - label: 'Reset Ontology Database'
           command: 'app:reset-ontology-db'
-        - label: 'Prune Project Caches'
+        - label: 'Optimize Project Caches'
           command: 'app:prune-cache'
         - label: 'Rebase Project'
           command: 'app:rebase-project'
