@@ -6,6 +6,10 @@ const { counter, get } = require('./common/util')
 const { warn } = require('./common/log')
 const { basename } = require('path')
 
+const IMAGE_EXTENSIONS = [
+  'gif', 'jpg', 'jpeg', 'png', 'svg', 'tif', 'tiff', 'webp'
+]
+
 let seq
 let pending
 let STORE
@@ -121,10 +125,20 @@ prompt.plugin = {
     })
 }
 
+open.items = (options) => open({
+  filters: [{
+    name: t('dialog.filter.items'),
+    extensions: [...IMAGE_EXTENSIONS, 'json', 'jsonld']
+  }],
+  defaultPath: ARGS.pictures,
+  properties: ['openFile', 'multiSelections'],
+  ...options
+})
+
 open.images = (options) => open({
   filters: [{
     name: t('dialog.filter.images'),
-    extensions: ['jpg', 'jpeg', 'png', 'svg']
+    extensions: IMAGE_EXTENSIONS
   }],
   defaultPath: ARGS.pictures,
   properties: ['openFile', 'multiSelections'],

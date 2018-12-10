@@ -1,8 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { Component } = React
-const { array, func, object, string } = require('prop-types')
+const { array, func, number, object, string } = require('prop-types')
 const { append, bounds, createDragHandler, on, off } = require('../../dom')
 const css = require('../../css')
 const { restrict } = require('../../common/util')
@@ -14,6 +13,7 @@ const { Selection  } = require('./selection')
 const TWEEN = require('@tweenjs/tween.js')
 const { TOOL } = require('../../constants/esper')
 const debounce = require('lodash.debounce')
+const { PI, floor, round } = Math
 
 const {
   ESPER: {
@@ -23,8 +23,9 @@ const {
   }
 } = require('../../constants/sass')
 
+PIXI.settings.RETINA_PREFIX = /@2x!/
 
-class EsperView extends Component {
+class EsperView extends React.Component {
   componentDidMount() {
     const { width, height } = bounds(this.container)
 
@@ -36,14 +37,11 @@ class EsperView extends Component {
       antialias: false,
       forceCanvas: !ARGS.webgl,
       roundPixels: false,
-      resolution: devicePixelRatio,
+      resolution: this.props.resolution,
       transparent: true,
       width,
       height
     })
-
-    this.m = matchMedia('(max-resolution: 1dppx)')
-    this.m.addListener(this.handleResolutionChange)
 
     this.pixi.loader.onError.add(this.handleLoadError)
     this.pixi.loader.onLoad.add(this.handleLoadProgress)
@@ -65,7 +63,6 @@ class EsperView extends Component {
     this.stop.flush()
     this.tweens.removeAll()
     this.pixi.destroy(true)
-    this.m.removeListener(this.handleResolutionChange)
     off(this.container, 'wheel', this.handleWheel, { passive: true })
     if (this.drag.current) this.drag.stop()
   }
@@ -76,6 +73,10 @@ class EsperView extends Component {
       this.image.selections.sync(props)
       this.image.cursor = props.tool
       this.pixi.render()
+    }
+
+    if (props.resolution !== this.resolution) {
+      this.handleResolutionChange(props.resolution)
     }
   }
 
@@ -91,6 +92,10 @@ class EsperView extends Component {
   stop = debounce(() => {
     this.pixi.stop()
   }, 2000)
+
+  get resolution() {
+    return this.pixi.renderer.resolution
+  }
 
   get screen() {
     return this.pixi.screen
@@ -195,9 +200,9 @@ class EsperView extends Component {
   setScaleMode(texture, zoom, renderer = this.pixi.renderer) {
     if (texture == null) return
 
-    const { baseTexture } = texture
-    const pixellate = (zoom > ZOOM_LINEAR_MAX)
-    const scaleMode = pixellate ?
+    let { baseTexture } = texture
+    let crisp = (zoom > ZOOM_LINEAR_MAX) || (zoom === 1)
+    let scaleMode = crisp ?
       PIXI.SCALE_MODES.NEAREST :
       PIXI.SCALE_MODES.LINEAR
 
@@ -206,18 +211,18 @@ class EsperView extends Component {
 
       // HACK: Updating scale mode dynamically is broken in Pixi v4.
       // See Pixi #4096.
-      const glTexture = baseTexture._glTextures[renderer.CONTEXT_UID]
+      let glTexture = baseTexture._glTextures[renderer.CONTEXT_UID]
 
       if (glTexture) {
         glTexture.bind()
-        glTexture[`enable${pixellate ? 'Nearest' : 'Linear'}Scaling`]()
+        glTexture[`enable${crisp ? 'Nearest' : 'Linear'}Scaling`]()
       }
     }
   }
 
   resize({ width, height, zoom, mirror }) {
-    width = Math.round(width)
-    height = Math.round(height)
+    width = round(width)
+    height = round(height)
 
     this.pixi.renderer.resize(width, height)
     this.pixi.render()
@@ -286,7 +291,7 @@ class EsperView extends Component {
       const tgt = rad(angle)
 
       // Always rotate counter-clockwise!
-      const tmp = (tgt > cur) ? cur - (2 * Math.PI - tgt) : tgt
+      const tmp = (tgt > cur) ? cur - (2 * PI - tgt) : tgt
 
       this.animate(this.image, 'rotate', {
         done: () => {
@@ -395,41 +400,36 @@ class EsperView extends Component {
       zoom: this.image.scale.y
     })
 
-    if (this.shouldResolutionChange(this.image.scale.y)) {
-      this.handleResolutionChange()
-    }
+    this.handleResolutionChange()
   }
 
   setContainer = (container) => {
     this.container = container
   }
 
-  // On low-res screens, we render at 2x resolution
-  // when zooming out to improve quality. See #218
-  shouldResolutionChange(scale) {
-    let dppx = devicePixelRatio
-    let res = this.pixi.renderer.resolution
-    return (dppx === 1) && (scale < 1 ? res === 1 : res === 2)
-  }
-
-  handleResolutionChange = () => {
-    let dppx = devicePixelRatio
+  handleResolutionChange(resolution = this.props.resolution) {
     let { image } = this
 
-    if (dppx === 1 && image != null && image.scale.y < 1) dppx = 2
-
-    this.pixi.renderer.resolution = dppx
-    this.pixi.renderer.plugins.interaction.resolution = dppx
-
-    if (this.pixi.renderer.rootRenderTarget) {
-      this.pixi.renderer.rootRenderTarget.resolution = dppx
+    // On low-res screens, we render at 2x resolution
+    // when zooming out to improve quality. See #218
+    if (resolution < 2 && image != null && image.scale.y < 1) {
+      resolution = 2
     }
 
-    if (image != null) {
-      image.handleResolutionChange(dppx)
-    }
+    if (resolution !== this.resolution) {
+      this.pixi.renderer.resolution = resolution
+      this.pixi.renderer.plugins.interaction.resolution = resolution
 
-    this.resize(bounds(this.container))
+      if (this.pixi.renderer.rootRenderTarget) {
+        this.pixi.renderer.rootRenderTarget.resolution = resolution
+      }
+
+      if (image != null) {
+        image.handleResolutionChange(resolution)
+      }
+
+      this.resize(bounds(this.container))
+    }
   }
 
   handleLoadProgress = () => {
@@ -528,8 +528,8 @@ class EsperView extends Component {
     const { pos, mov } = origin
     const { top, right, bottom, left } = limit
     const { x, y } = data.getLocalPosition(target.parent)
-    target.x = restrict(pos.x + (x - mov.x), left, right)
-    target.y = restrict(pos.y + (y - mov.y), top, bottom)
+    target.x = floor(restrict(pos.x + (x - mov.x), left, right))
+    target.y = floor(restrict(pos.y + (y - mov.y), top, bottom))
   }
 
   handlePanStop() {
@@ -561,10 +561,10 @@ class EsperView extends Component {
     }
 
     this.props.onSelectionCreate({
-      x: Math.round(x),
-      y: Math.round(y),
-      width: Math.round(width),
-      height: Math.round(height)
+      x: round(x),
+      y: round(y),
+      width: round(width),
+      height: round(height)
     })
   }
 
@@ -577,6 +577,7 @@ class EsperView extends Component {
   }
 
   static propTypes = {
+    resolution: number.isRequired,
     selection: object,
     selections: array.isRequired,
     tool: string.isRequired,

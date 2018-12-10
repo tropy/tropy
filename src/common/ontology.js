@@ -58,10 +58,9 @@ class Ontology extends Resource {
       const store = N3.Store()
 
       N3.Parser({ format: 'N3' })
-        .parse(is, (error, triple, prefixes) => {
+        .parse(is, (error, quad ) => {
           if (error) return reject(error)
-          if (triple) return store.addTriple(triple)
-          store.addPrefixes(prefixes)
+          if (quad) return store.addQuad(quad)
           resolve(store)
         })
     })
@@ -196,17 +195,20 @@ class Ontology extends Resource {
   getByType(...types) {
     const ids = []
 
-    this.store.forEachByIRI(({ subject, object }) => {
-      if (!N3.Util.isBlank(subject) && types.includes(object)) ids.push(subject)
+    this.store.forEach(({ subject, object }) => {
+      if (N3.Util.isNamedNode(subject) && N3.Util.isNamedNode(object) &&
+        types.includes(object.id)) {
+        ids.push(subject.id)
+      }
     }, null, RDF.type)
 
     return ids
   }
 
   getData(subject, into = {}) {
-    return this.store.getTriplesByIRI(subject)
-      .reduce((o, { predicate, object }) =>
-        ((o[predicate] = [...(o[predicate] || []), literal(object)]), o), into)
+    return this.store.getQuads(subject).reduce((o, { predicate, object }) =>
+      ((o[predicate.id] = [...(o[predicate.id] || []), literal(object)]), o),
+      into)
   }
 
 }
@@ -233,19 +235,20 @@ function getValue(data, locale = 'en') {
   return data[0]['@value']
 }
 
-function literal(value) {
-  return N3.Util.isLiteral(value) ? {
-    '@value': N3.Util.getLiteralValue(value),
-    '@type': N3.Util.getLiteralType(value),
-    '@language': N3.Util.getLiteralLanguage(value)
+function literal(data) {
+  return N3.Util.isLiteral(data) ? {
+    '@value': data.value,
+    '@type': data.datatype,
+    '@language': data.language
   } : {
-    '@id': value,
+    '@id': data,
     '@type': '@id'
   }
 }
 
 function isDefinedBy(id, data) {
-  return get(data, [RDFS.isDefinedBy, 0, '@id'], namespace(id))
+  let ns = get(data, [RDFS.isDefinedBy, 0, '@id'])
+  return (ns == null) ? namespace(id) : ns.id || ns
 }
 
 function namespace(id) {

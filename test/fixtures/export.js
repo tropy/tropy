@@ -145,5 +145,10 @@ module.exports = {
   lists,
   tags,
   notes,
-  selections
+  selections,
+  ontology: {
+    class: classes,
+    props,
+    type: datatypes
+  }
 }

@@ -39,6 +39,10 @@ class SelectionIterator extends Iterator {
     onSort({ photo: photo.id, selections: order })
   }
 
+  handleLoadError = () => {
+    this.props.onError(this.props.photo.id)
+  }
+
   select = (selection) => {
     if (selection != null && !this.props.isActive) {
       this.props.onSelect({
@@ -81,6 +85,7 @@ class SelectionIterator extends Iterator {
         photo: this.props.photo,
         onContextMenu: this.props.onContextMenu,
         onDropSelection: this.handleDropSelection,
+        onError: this.handleLoadError,
         onItemOpen: this.open,
         onSelect: this.select
       })
@@ -102,6 +107,7 @@ class SelectionIterator extends Iterator {
     cache: string.isRequired,
     size: number.isRequired,
     onContextMenu: func.isRequired,
+    onError: func.isRequired,
     onItemOpen: func.isRequired,
     onSelect: func.isRequired,
     onSort: func.isRequired

@@ -3,7 +3,6 @@
 const { DuplicateError } = require('../common/error')
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
-const { imagePath, imageExt } = require('../common/cache')
 const mod = require('../models')
 const act = require('../actions')
 const { warn, verbose } = require('../common/log')
@@ -11,24 +10,39 @@ const { prompt } = require('../dialog')
 
 
 class ImportCommand extends Command {
-  *createThumbnails(id, image, { overwrite = true, quality = 100 } = {}) {
+  *createThumbnails(id, image, {
+    overwrite = true,
+    quality = 100,
+    selection
+  } = {}) {
     try {
-      const { cache } = this.options
-      const ext = imageExt(image.mimetype)
+      let { cache } = this.options
+      let ext = cache.extname(image.mimetype)
 
-      for (let size of [48, 512]) {
-        const path = imagePath(id, size, ext)
+      for (let v of image.variants(selection != null)) {
+        let path = cache.path(id, v.name, ext)
 
-        if (overwrite || !(yield call(cache.exists, path))) {
-          const dup = yield call(image.resize, size)
-          const out = (ext === '.png') ?
-            dup.toPNG() :
-            dup.toJPEG(quality)
+        if (overwrite || !(yield call(cache.exists, path, false))) {
+          let dup = image.resize(v.size, selection)
 
-          yield call(this.options.cache.save, path, out)
+          switch (ext) {
+            case '.png':
+              dup.png()
+              break
+            case '.webp':
+              dup.webp({
+                quality,
+                lossless: image.channels === 1 || !(yield call(image.isOpaque))
+              })
+              break
+            default:
+              dup.jpeg({ quality })
+          }
+
+          yield call([dup, dup.toFile], cache.expand(path))
 
         } else {
-          verbose(`Skipping ${size}px thumbnail for #${id}: already exists`)
+          verbose(`Skipping ${v.name} thumbnail for #${id}: already exists`)
         }
       }
     } catch (error) {
@@ -80,6 +94,8 @@ class ImportCommand extends Command {
     }
   }
 }
+
+
 
 
 module.exports = {

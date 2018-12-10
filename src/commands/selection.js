@@ -2,6 +2,8 @@
 
 const { call, put, select } = require('redux-saga/effects')
 const { Command } = require('./command')
+const { ImportCommand } = require('./import')
+const { Image } = require('../image')
 const mod = require('../models')
 const act = require('../actions')
 const { SELECTION } = require('../constants')
@@ -9,27 +11,28 @@ const { pick, splice } = require('../common/util')
 const { keys } = Object
 
 
-class Create extends Command {
+class Create extends ImportCommand {
   static get ACTION() { return SELECTION.CREATE }
 
   *exec() {
-    const { db } = this.options
-    const { payload, meta } = this.action
+    let { db } = this.options
+    let { payload, meta } = this.action
 
-    const idx = (meta.idx != null) ? meta.idx : [
-      yield select(state => state.photos[payload.photo].selections.length)
-    ]
+    let photo = yield select(state => state.photos[payload.photo])
+    let image = yield call(Image.open, photo.path, photo.page)
+    let idx = (meta.idx != null) ? meta.idx : [photo.selections.length]
 
-    const selection = yield call(db.transaction, tx =>
+    let selection = yield call(db.transaction, tx =>
       mod.selection.create(tx, null, payload))
 
-    const photo = selection.photo
-    const selections = [selection.id]
+    let data = { selections: [selection.id] }
 
-    yield put(act.photo.selections.add({ id: photo, selections }, { idx }))
+    yield* this.createThumbnails(selection.id, image, { selection })
 
-    this.undo = act.selection.delete({ photo, selections }, { idx })
-    this.redo = act.selection.restore({ photo, selections }, { idx })
+    yield put(act.photo.selections.add({ id: photo.id, ...data }, { idx }))
+
+    this.undo = act.selection.delete({ photo: photo.id, ...data }, { idx })
+    this.redo = act.selection.restore({ photo: photo.id, ...data }, { idx })
 
     return selection
   }
@@ -39,9 +42,9 @@ class Delete extends Command {
   static get ACTION() { return SELECTION.DELETE }
 
   *exec() {
-    const { db } = this.options
-    const { payload } = this.action
-    const { photo, selections } = payload
+    let { db } = this.options
+    let { payload } = this.action
+    let { photo, selections } = payload
 
     let ord = yield select(({ photos }) => photos[photo].selections)
     let idx = selections.map(id => ord.indexOf(id))

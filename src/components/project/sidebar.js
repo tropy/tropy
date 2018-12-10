@@ -7,7 +7,7 @@ const { Toolbar } = require('../toolbar')
 const { ActivityPane } = require('../activity')
 const { BufferedResizable } = require('../resizable')
 const { LastImportListNode, ListTree, TrashListNode } = require('../list')
-const { ProjectTags } = require('./tags')
+const { TagList } = require('../tag')
 const { Sidebar, SidebarBody } = require('../sidebar')
 const { ProjectName } = require('./name')
 const { TABS, LIST, SASS: { SIDEBAR } } = require('../../constants')
@@ -22,6 +22,7 @@ const {
 
 const {
   getActivities,
+  getAllTags,
   getListHold,
   getListSubTree
 } = require('../../selectors')
@@ -32,7 +33,7 @@ class ProjectSidebar extends React.PureComponent {
     return has(this.props.edit, 'project')
   }
 
-  get hasActiveFilters() {
+  get hasActiveTags() {
     return this.props.tagSelection.length > 0
   }
 
@@ -150,7 +151,7 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   handleClick = () => {
-    if (this.hasSelection || this.hasActiveFilters) {
+    if (this.hasSelection || this.hasActiveTags) {
       return this.handleSelect()
     }
 
@@ -186,7 +187,7 @@ class ProjectSidebar extends React.PureComponent {
   }
 
   handleListSelect = (list) => {
-    if (list && (!this.isListSelected(list) || this.hasActiveFilters)) {
+    if (list && (!this.isListSelected(list) || this.hasActiveTags)) {
       this.props.onSelect({ list }, { throttle: true })
       return true
     }
@@ -224,20 +225,14 @@ class ProjectSidebar extends React.PureComponent {
     this.props.onContextMenu(event, 'sidebar')
   }
 
-  render() {
-    const {
-      edit,
-      project,
-      onContextMenu,
-      onEditCancel,
-      onItemImport,
-      onItemTagAdd,
-      onTagCreate,
-      onTagDelete,
-      onTagSave,
-      onTagSelect
-    } = this.props
+  handleTagContextMenu = (event, tag) => {
+    this.props.onContextMenu(event, 'tag', {
+      id: tag.id,
+      color: tag.color
+    })
+  }
 
+  render() {
     let root = this.props.lists[this.props.root]
 
     return (
@@ -259,13 +254,13 @@ class ProjectSidebar extends React.PureComponent {
               <nav>
                 <ol>
                   <ProjectName
-                    name={project.name}
+                    name={this.props.project.name}
                     isSelected={!this.hasSelection}
                     isEditing={this.isEditing}
                     onChange={this.handleChange}
                     onClick={this.handleClick}
-                    onEditCancel={onEditCancel}
-                    onDrop={onItemImport}/>
+                    onEditCancel={this.props.onEditCancel}
+                    onDrop={this.props.onItemImport}/>
                 </ol>
               </nav>
 
@@ -280,11 +275,11 @@ class ProjectSidebar extends React.PureComponent {
                     hold={this.props.hold}
                     isExpanded
                     selection={this.props.list}
-                    onContextMenu={onContextMenu}
-                    onDropFiles={onItemImport}
+                    onContextMenu={this.props.onContextMenu}
+                    onDropFiles={this.props.onItemImport}
                     onDropItems={this.props.onListItemsAdd}
                     onClick={this.handleListClick}
-                    onEditCancel={onEditCancel}
+                    onEditCancel={this.props.onEditCancel}
                     onExpand={this.props.onListExpand}
                     onCollapse={this.props.onListCollapse}
                     onMove={this.props.onListMove}
@@ -296,7 +291,7 @@ class ProjectSidebar extends React.PureComponent {
                       onClick={this.handleLastImportSelect}/>}
                   <TrashListNode
                     isSelected={this.props.isTrashSelected}
-                    onContextMenu={onContextMenu}
+                    onContextMenu={this.props.onContextMenu}
                     onDropItems={this.handleTrashDropItems}
                     onClick={this.handleTrashSelect}/>
                 </ol>
@@ -305,17 +300,20 @@ class ProjectSidebar extends React.PureComponent {
 
             <section>
               <h2><FormattedMessage id="sidebar.tags"/></h2>
-              <ProjectTags
-                keymap={this.props.keymap.TagList}
-                selection={this.props.tagSelection}
-                edit={edit.tag}
-                onEditCancel={onEditCancel}
-                onCreate={onTagCreate}
-                onDelete={onTagDelete}
-                onDropItems={onItemTagAdd}
-                onSave={onTagSave}
-                onSelect={onTagSelect}
-                onContextMenu={onContextMenu}/>
+              <nav>
+                <TagList
+                  edit={this.props.edit.tag}
+                  keymap={this.props.keymap.TagList}
+                  selection={this.props.tagSelection}
+                  tags={this.props.tags}
+                  onContextMenu={this.handleTagContextMenu}
+                  onCreate={this.props.onTagCreate}
+                  onDropItems={this.props.onItemTagAdd}
+                  onEditCancel={this.props.onEditCancel}
+                  onRemove={this.props.onTagDelete}
+                  onSave={this.props.onTagSave}
+                  onSelect={this.props.onTagSelect}/>
+              </nav>
             </section>
 
           </SidebarBody>
@@ -339,13 +337,13 @@ class ProjectSidebar extends React.PureComponent {
     list: number,
     lists: object.isRequired,
     listwalk: arrayOf(number).isRequired,
-    onMaximize: func.isRequired,
     project: shape({
       file: string,
       name: string,
       items: number
     }).isRequired,
     root: number.isRequired,
+    tags: arrayOf(object).isRequired,
     tagSelection: arrayOf(number).isRequired,
     width: number.isRequired,
     onContextMenu: func.isRequired,
@@ -360,6 +358,7 @@ class ProjectSidebar extends React.PureComponent {
     onListItemsAdd: func.isRequired,
     onListMove: func.isRequired,
     onListSave: func.isRequired,
+    onMaximize: func.isRequired,
     onProjectEdit: func.isRequired,
     onProjectSave: func.isRequired,
     onResize: func.isRequired,
@@ -392,6 +391,7 @@ module.exports = {
       list: state.nav.list,
       listwalk: getListSubTree(state, { root: root || LIST.ROOT }),
       project: state.project,
+      tags: getAllTags(state),
       tagSelection: state.nav.tags,
       width: state.ui.sidebar.width
     }),
@@ -436,6 +436,14 @@ module.exports = {
         dispatch(actions.ui.update({
           sidebar: { width: Math.round(width) }
         }))
+      },
+
+      onTagDelete(...args) {
+        dispatch(actions.tag.delete(...args))
+      },
+
+      onTagSelect(...args) {
+        dispatch(actions.tag.select(...args))
       }
     })
   )(ProjectSidebar)

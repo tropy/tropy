@@ -2,10 +2,15 @@
 
 require('./promisify')
 
-const { join, resolve } = require('path')
-const { mkdirAsync: mkdir, writeFileAsync: write } = require('fs')
-const { statAsync: stat } = require('fs')
-const MIME = require('../constants/mime')
+const { join, resolve, extname, basename } = require('path')
+const { format } = require('url')
+
+const {
+  mkdirAsync: mkdir,
+  readdirAsync: readdir,
+  statAsync: stat,
+  writeFileAsync: write
+} = require('fs')
 
 
 class Cache {
@@ -13,7 +18,11 @@ class Cache {
     this.root = resolve(...args)
   }
 
-  async init() {
+  get name() {
+    return basename(this.root)
+  }
+
+  init = async () => {
     try {
       await mkdir(this.root)
     } catch (error) {
@@ -26,35 +35,65 @@ class Cache {
   save = (name, data) =>
     write(this.expand(name), data)
 
-  exists = (name) =>
-    stat(name).then(() => true, () => false)
+  exists = (name = '', expand = true) =>
+    stat(expand ? this.expand(name) : name).then(() => true, () => false)
+
+  list = (opts = {}) =>
+    readdir(this.root, opts)
+
+  stats = async () => {
+    let stats = []
+    let files = await this.list()
+
+    for (let file of files) {
+      stats.push([
+        file,
+        await stat(this.expand(file))
+      ])
+    }
+
+    return stats
+  }
 
   expand(...args) {
     return join(this.root, ...args)
   }
-}
 
-function imageURL(cache, image, size, mimetype) {
-  return join(cache, imagePath(image, size, imageExt(mimetype)))
-}
 
-function imagePath(image, size, ext = '.jpg') {
-  return `${image}_${size}${ext}`
-}
+  extname(...args) {
+    return Cache.extname(...args)
+  }
 
-function imageExt(mimetype) {
-  switch (mimetype) {
-    case MIME.SVG:
-    case MIME.PNG:
-      return '.png'
-    default:
-      return '.jpg'
+  path(...args) {
+    return Cache.path(...args)
+  }
+
+  url(...args) {
+    return Cache.url(this.root, ...args)
+  }
+
+  static extname() {
+    return '.webp'
+  }
+
+  static path(id, variant, ext) {
+    return `${id}_${variant}${ext}`
+  }
+
+  static split(path) {
+    let ext = extname(path)
+    return [...basename(path, ext).split('_', 2), ext]
+  }
+
+  static url(root, id, variant, mimetype) {
+    return format({
+      protocol: 'file',
+      pathname: join(root,
+        Cache.path(id, variant, Cache.extname(mimetype)))
+    })
   }
 }
 
 module.exports = {
-  Cache,
-  imageExt,
-  imageURL,
-  imagePath
+  Cache
 }

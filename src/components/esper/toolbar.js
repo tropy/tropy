@@ -137,6 +137,7 @@ class EsperToolbar extends PureComponent {
               min={this.props.minZoom}
               max={this.props.maxZoom}
               precision={this.props.zoomPrecision}
+              resolution={this.props.resolution * 100}
               showCurrentValue
               steps={this.props.zoomSteps}
               minIcon={<IconMinusCircle/>}
@@ -164,6 +165,7 @@ class EsperToolbar extends PureComponent {
     isSelectionActive: bool.isRequired,
     isPanelVisible: bool.isRequired,
     mode: string.isRequired,
+    resolution: number.isRequired,
     tool: string.isRequired,
     zoom: number.isRequired,
     zoomPrecision: number.isRequired,

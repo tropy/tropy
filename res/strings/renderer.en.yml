@@ -267,6 +267,7 @@ en:
     filter:
       templates: Tropy Templates
       images: Images
+      items: Images and Tropy Items
       projects: Tropy Projects
       rdf: RDF Vocabularies
       jsonld: JSON-LD
@@ -336,6 +337,9 @@ en:
       order: Sort Selections
 
   activity:
+    cache:
+      prune: Optimizing project cache …
+      purge: Purging old caches …
     project:
       save: Saving …
     list:
@@ -365,7 +369,7 @@ en:
       implode: Restoring item …
       import: >
         {hasProgressBar, select,
-          true {Importing items {progress, number} of {total, number} …}
+          true {Importing item {progress, number} of {total, number} …}
           other {Importing items …}
         }
       load: Loading items …
@@ -391,18 +395,18 @@ en:
     photo:
       consolidate: >
         {hasProgressBar, select,
-          true {Consolidating photos {progress, number} of {total, number} …}
+          true {Consolidating photo {progress, number} of {total, number} …}
           other {Consolidating photos …}
         }
       create: >
         {hasProgressBar, select,
-          true {Importing photos {progress, number} of {total, number} …}
+          true {Importing photo {progress, number} of {total, number} …}
           other {Importing photos …}
         }
       delete: Deleting photo …
       duplicate: >
         {hasProgressBar, select,
-          true {Duplicating photos {progress, number} of {total, number} …}
+          true {Duplicating photo {progress, number} of {total, number} …}
           other {Duplicating photos …}
         }
       load: Loading photos …
@@ -440,6 +444,9 @@ en:
       sinkListItem: Sink list item
       liftListItem: Lift list item
   error:
+    cache:
+      prune: Failed to optimize project cache.
+      purge: Failed to remove old project caches.
     project:
       created: Project creation failed.
     item:

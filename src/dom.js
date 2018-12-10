@@ -206,6 +206,17 @@ const dom = {
     }
   },
 
+  parse(string, type = 'text/html') {
+    let p = new DOMParser()
+    let doc = p.parseFromString(string, type)
+
+    if (doc.documentElement.nodeName === 'parsererror') {
+      throw new Error(doc.documentElement.textContent)
+    }
+
+    return doc
+  },
+
   viewport() {
     return {
       width: document.documentElement.clientWidth,
@@ -216,6 +227,15 @@ const dom = {
   visible(node) {
     let offset = node.offsetTop - node.offsetParent.scrollTop
     return offset > 0 && offset < node.offsetParent.offsetHeight
+  },
+
+  loadImage(src) {
+    return new Promise((resolve, reject) => {
+      let img = new Image()
+      img.onload = () => resolve(img)
+      img.onerror = reject
+      img.src = src
+    })
   }
 }
 

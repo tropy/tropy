@@ -16,6 +16,8 @@ const res = join(dir, 'res')
 const icons = resolve(res, 'icons', channel, 'tropy')
 const mime = resolve(res, 'icons', 'mime')
 
+const SHARP = join('node_modules', 'sharp', 'vendor', 'lib')
+
 const IGNORE = [
   /.DS_Store/,
   /.babelrc.js/,
@@ -46,8 +48,11 @@ const IGNORE = [
   /^\/test/,
   /^\/tmp/,
   /node_modules.\.bin/,
-  /node_modules.rdf-canonize.build.Release.urdna2015\.node/,
+  /node_modules.sqlite3.build/,
+  /node_modules.rdf-canonize.build/,
   /node_modules.prosemirror-model.dist.index\.js\.map/,
+  /node_modules.sharp.build.[^R]/,
+  /node_modules.sharp.build.Release.obj/,
   /appveyor\.yml/
 ]
 
@@ -99,7 +104,13 @@ target.all = async (args = []) => {
         ProductName: qualified.product
       },
       asar: {
-        unpack: '**/{*.node,lib/stylesheets/**/*,res/icons/mime/*.ico,res/menu/*,res/strings/*,res/keymaps/*}',
+        unpack: `**/{${[
+          '*.{node,dll,dylib}',
+          'lib/stylesheets/**/*',
+          'res/icons/mime/*.ico',
+          'res/{menu,strings,keymaps}/*',
+          'sharp/{build/Release,vendor/lib}/*'
+        ].join(',')}}`,
       }
 
     })
@@ -108,6 +119,11 @@ target.all = async (args = []) => {
 
     switch (platform) {
       case 'linux': {
+        say('fix unpacked symlinks...')
+        cp('-r',
+          join(dir, SHARP, '*'),
+          join(dst, 'resources', 'app.asar.unpacked', SHARP))
+
         say(`renaming executable to ${qualified.name}...`)
         rename(dst, qualified.product, qualified.name)
 
@@ -123,7 +139,20 @@ target.all = async (args = []) => {
 
         break
       }
+      case 'darwin': {
+        say('fix unpacked symlinks...')
+        cp('-r', join(dir, SHARP, '*'), join(dst,
+          `${qualified.product}.app`,
+          'Contents',
+          'Resources',
+          'app.asar.unpacked',
+          SHARP))
+        break
+      }
       case 'win32': {
+        say('removing duplicate DLLs...')
+        rm(join(dst, 'resources', 'app.asar.unpacked', SHARP, '*.dll'))
+
         say(`renaming executable to ${qualified.name}.exe...`)
         rename(dst, `${qualified.product}.exe`, `${qualified.name}.exe`)
       }

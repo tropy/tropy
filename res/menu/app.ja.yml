@@ -108,7 +108,10 @@ ja:
         - type: separator
         - label: オントロジーデータベースをリセット
           command: 'app:reset-ontology-db'
-        - label: 'Rebase Project'
+        - label: Optimize Project Caches
+          command: 'app:optimize-cache'
+        - type: separator
+        - label: Rebase Project
           command: 'app:rebase-project'
         - label: プロジェクトを閉じる
           command: 'app:close-project'
@@ -280,7 +283,10 @@ ja:
         - type: separator
         - label: オントロジーデータベースをリセット
           command: 'app:reset-ontology-db'
-        - label: 'Rebase Project'
+        - label: Optimize Project Caches
+          command: 'app:optimize-cache'
+        - type: separator
+        - label: Rebase Project
           command: 'app:rebase-project'
         - label: プロジェクトを閉じる
           command: 'app:close-project'
@@ -430,7 +436,10 @@ ja:
         - type: separator
         - label: オントロジーデータベースをリセット
           command: 'app:reset-ontology-db'
-        - label: 'Rebase Project'
+        - label: Optimize Project Caches
+          command: 'app:optimize-cache'
+        - type: separator
+        - label: Rebase Project
           command: 'app:rebase-project'
         - label: プロジェクトを閉じる
           command: 'app:close-project'

@@ -9,7 +9,7 @@ const { DragSource, DropTarget } = require('react-dnd')
 const { NativeTypes, getEmptyImage } = require('react-dnd-electron-backend')
 const { DND, LIST, SASS } = require('../../constants')
 const { bounds } = require('../../dom')
-const { isValidImage } = require('../../image')
+const { isImageSupported } = require('../../image')
 const lazy = require('./tree')
 const cx = require('classnames')
 const { last, noop, restrict } = require('../../common/util')
@@ -153,7 +153,7 @@ class ListNode extends React.PureComponent {
 
     return {
       parent: list.parent,
-      idx: (position < other.idx) ?
+      idx: (list.parent !== other.parent || position < other.idx) ?
         position + offset :
         position - 1 + offset
     }
@@ -347,7 +347,7 @@ const DropTargetSpec = {
 
     switch (type) {
       case NativeTypes.FILE:
-        return !!item.types.find(t => isValidImage({ type: t }))
+        return !!item.types.find(t => isImageSupported({ type: t }))
       default:
         return true
     }
@@ -373,7 +373,7 @@ const DropTargetSpec = {
         case NativeTypes.FILE:
           props.onDropFiles({
             list: list.id,
-            files: item.files.filter(isValidImage).map(file => file.path)
+            files: item.files.filter(isImageSupported).map(file => file.path)
           })
           break
       }

@@ -6,13 +6,11 @@ const { getPhotosWithErrors } = require('../selectors')
 const act = require('../actions')
 const { warn } = require('../common/log')
 
+const needsConsolidation = ({ meta }) =>
+  !!meta.consolidate
 
 const consolidator = {
   DELAY: 1000,
-
-  needsConsolidation({ meta }) {
-    return meta.consolidate
-  },
 
   *consolidate() {
     try {
@@ -35,7 +33,7 @@ const consolidator = {
     let task
 
     while (true) {
-      yield take(consolidator.needsConsolidation)
+      yield take(needsConsolidation)
       if (task) {
         yield cancel(task)
       }

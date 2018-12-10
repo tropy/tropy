@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { func, shape, string } = require('prop-types')
 const { connect } = require('react-redux')
 const { Steps } = require('../steps')
@@ -13,7 +12,7 @@ const sanitize = require('sanitize-filename')
 const { blank } = require('../../common/util')
 const { existsSync: exists } = require('fs')
 
-class WizardContainer extends PureComponent {
+class WizardContainer extends React.PureComponent {
   get hasDefaultFilename() {
     return this.props.project.file === this.getDefaultFilename()
   }

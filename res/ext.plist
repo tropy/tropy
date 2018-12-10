@@ -42,14 +42,75 @@
 		</dict>
     <dict>
       <key>CFBundleTypeName</key>
-      <string>Image</string>
+      <string>JPEG</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
-      <key>LSHandlerRank</key>
-      <string>Alternate</string>
       <key>LSItemContentTypes</key>
       <array>
         <string>public.jpeg</string>
+      </array>
+    </dict>
+    <dict>
+      <key>CFBundleTypeName</key>
+      <string>PNG</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+      <key>LSItemContentTypes</key>
+      <array>
+        <string>public.png</string>
+      </array>
+    </dict>
+    <dict>
+      <key>CFBundleTypeName</key>
+      <string>TIFF</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+      <key>CFBundleMIMETypes</key>
+      <array>
+        <string>image/tiff</string>
+        <string>image/tif</string>
+      </array>
+      <key>CFBundleTypeExtensions</key>
+      <array>
+        <string>TIFF</string>
+        <string>TIF</string>
+        <string>tiff</string>
+        <string>tif</string>
+      </array>
+    </dict>
+    <dict>
+      <key>CFBundleTypeName</key>
+      <string>WebP</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+      <key>CFBundleMIMETypes</key>
+      <array>
+        <string>image/webp</string>
+      </array>
+      <key>CFBundleTypeExtensions</key>
+      <array>
+        <string>WEBP</string>
+        <string>webp</string>
+      </array>
+    </dict>
+    <dict>
+      <key>CFBundleTypeName</key>
+      <string>SVG</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+      <key>LSItemContentTypes</key>
+      <array>
+        <string>public.svg-image</string>
+      </array>
+    </dict>
+    <dict>
+      <key>CFBundleTypeName</key>
+      <string>GIF</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+      <key>LSItemContentTypes</key>
+      <array>
+        <string>com.compuserve.gif</string>
       </array>
     </dict>
     <dict>

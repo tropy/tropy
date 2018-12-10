@@ -8,7 +8,7 @@ const { Panel } = require('../panel')
 const { PhotoToolbar } = require('./toolbar')
 const { PhotoList } = require('./list')
 const { PhotoGrid } = require('./grid')
-const { isValidImage } = require('../../image')
+const { isImageSupported } = require('../../image')
 const { pick } = require('../../common/util')
 const { PHOTO } = require('../../constants/sass')
 const cx = require('classnames')
@@ -103,14 +103,14 @@ const spec = {
   drop({ onCreate }, monitor) {
     const files = monitor.getItem()
       .files
-      .filter(isValidImage)
+      .filter(isImageSupported)
       .map(file => file.path)
 
     return onCreate({ files })
   },
 
   canDrop(_, monitor) {
-    return !!monitor.getItem().types.find(type => isValidImage({ type }))
+    return !!monitor.getItem().types.find(type => isImageSupported({ type }))
   }
 }
 

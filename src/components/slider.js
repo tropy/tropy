@@ -182,7 +182,7 @@ class Slider extends PureComponent {
   renderCurrentValue() {
     return this.props.showCurrentValue && (
       <div className="slider-value">
-        {round(this.props.value * 100)}&thinsp;%
+        {round(this.props.value * this.props.resolution)}&thinsp;%
       </div>
     )
   }
@@ -233,6 +233,7 @@ class Slider extends PureComponent {
     minIcon: element,
     origin: number,
     precision: number.isRequired,
+    resolution: number.isRequired,
     showCurrentValue: bool.isRequired,
     size: oneOf(['sm', 'md', 'lg']).isRequired,
     steps: arrayOf(number).isRequired,
@@ -247,6 +248,7 @@ class Slider extends PureComponent {
     min: 0,
     max: 1,
     precision: 1,
+    resolution: 100,
     showCurrentValue: false,
     size: 'md',
     steps: [],

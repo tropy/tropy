@@ -5,7 +5,7 @@ const { DropTarget } = require('react-dnd')
 const { NativeTypes } = require('react-dnd-electron-backend')
 const { IconMaze } = require('../icons')
 const { Editable } = require('../editable')
-const { isValidImage } = require('../../image')
+const { isImageSupported } = require('../../image')
 const cx = require('classnames')
 const { bool, func, string } = require('prop-types')
 
@@ -58,14 +58,14 @@ const spec = {
     const { files } = monitor.getItem()
 
     const images = files
-      .filter(isValidImage)
+      .filter(isImageSupported)
       .map(file => file.path)
 
     return onDrop({ files: images }), { images }
   },
 
   canDrop(_, monitor) {
-    return !!monitor.getItem().types.find(type => isValidImage({ type }))
+    return !!monitor.getItem().types.find(type => isImageSupported({ type }))
   }
 }
 

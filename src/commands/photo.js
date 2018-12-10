@@ -24,9 +24,10 @@ class Consolidate extends ImportCommand {
     let { payload, meta } = this.action
     let consolidated = []
 
-    let [project, photos] = yield select(state => [
+    let [project, photos, selections] = yield select(state => [
       state.project,
-      blank(payload) ? values(state.photos) : pluck(state.photos, payload)
+      blank(payload) ? values(state.photos) : pluck(state.photos, payload),
+      state.selections
     ])
 
     for (let i = 0, total = photos.length; i < total; ++i) {
@@ -49,7 +50,7 @@ class Consolidate extends ImportCommand {
 
               image = (blank(paths)) ?
                 null :
-                yield call(Image.read, paths[0])
+                yield call(Image.open, paths[0], photo.page)
             }
           }
 
@@ -61,7 +62,16 @@ class Consolidate extends ImportCommand {
                 overwrite: hasChanged
               })
 
-              const data = { id: photo.id, ...image.toJSON() }
+              for (let id of photo.selections) {
+                if (id in selections) {
+                  yield* this.createThumbnails(id, image, {
+                    overwrite: hasChanged,
+                    selection: selections[id]
+                  })
+                }
+              }
+
+              let data = { id: photo.id, ...image.toJSON() }
 
               yield call(mod.photo.save, db, data, project)
               yield put(act.photo.update({
@@ -128,33 +138,36 @@ class Create extends ImportCommand {
 
     let data = getTemplateValues(template)
 
-    for (let i = 0, total = files.length; i < total; ++i) {
-      let file
-      let image
-      let photo
+    for (let i = 0, total = files.length; i < files.length; ++i) {
+      let file, image
 
       try {
         file = files[i]
-        image = yield call(Image.read, file)
 
+        image = yield call(Image.open, file)
         yield* this.handleDuplicate(image)
 
-        photo = yield call(db.transaction, tx =>
-          mod.photo.create(tx, { base, template: template.id }, {
-            item, image, data, position: idx[0] + i + 1
-          }))
+        total += (image.numPages - 1)
 
-        yield put(act.metadata.load([photo.id]))
+        while (!image.done) {
+          let photo = yield call(db.transaction, tx =>
+            mod.photo.create(tx, { base, template: template.id }, {
+              item, image, data, position: idx[0] + i + 1
+            }))
 
-        yield all([
-          put(act.photo.insert(photo, { idx: [idx[0] + photos.length] })),
-          put(act.activity.update(this.action, { total, progress: i + 1 }))
-        ])
+          yield put(act.metadata.load([photo.id]))
 
-        photos.push(photo.id)
+          yield all([
+            put(act.photo.insert(photo, { idx: [idx[0] + photos.length] })),
+            put(act.activity.update(this.action, { total, progress: i + 1 }))
+          ])
 
-        yield* this.createThumbnails(photo.id, image)
+          photos.push(photo.id)
 
+          yield* this.createThumbnails(photo.id, image)
+
+          image.next()
+        }
       } catch (error) {
         if (error instanceof DuplicateError) continue
 
@@ -220,10 +233,10 @@ class Duplicate extends ImportCommand {
     let photos = []
 
     for (let i = 0; i < total; ++i) {
-      const { template, path } = originals[i]
+      const { template, path, page } = originals[i]
 
       try {
-        let image = yield call(Image.read, path)
+        let image = yield call(Image.open, path, page)
 
         let photo = yield call(db.transaction, tx =>
           mod.photo.create(tx, { base, template }, {

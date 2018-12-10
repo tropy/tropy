@@ -1,0 +1,30 @@
+//
+// String functions
+// --------------------------------------------------
+
+@function str-replace($string, $token, $replace: "") {
+  $i: str-index($string, $token);
+
+  @while (str-index($string, $token) != null) {
+    $first-part: str-slice($string, 1, ($i - 1));
+    $last-part: str-slice($string, ($i + str-length($token)));
+    $string: str-slice($string, 1, ($i - 1)) + $replace + $last-part;
+
+    $i: str-index($string, $token);
+  }
+
+  @return $string;
+}
+
+@function str-parse($string, $token) {
+  $i: str-index($string, $token);
+
+  @if $i {
+    $first-part: str-slice($string, 1, ($i - 1));
+    $string: str-parse(str-slice($string, ($i + str-length($token))), $token);
+
+    @return join(simple-selectors($first-part), $string);
+  }
+
+  @return simple-selectors($string);
+}

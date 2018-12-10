@@ -6,6 +6,7 @@ const { basename, join, resolve } = require('path')
 const { existsSync: exists } = require('fs')
 const { EL_CAPITAN, darwin } = require('./common/os')
 const { Plugins } = require('./common/plugins')
+const { addIdleObserver } = require('./common/idle')
 const { EventEmitter } = require('events')
 const args = require('./args')
 
@@ -17,6 +18,7 @@ const isCommand = darwin ?
   e => e.metaKey && !e.altKey && !e.ctrlKey :
   e => e.ctrlKey && !e.altKey && !e.metaKey
 
+const IDLE_SHORT = 60
 
 class Window extends EventEmitter {
   constructor({ theme, frameless, scrollbars, aqua } = ARGS) {
@@ -38,39 +40,48 @@ class Window extends EventEmitter {
   }
 
   init(done) {
-    this.plugins.reload()
-      .then(plugins => plugins.create().emit('change'))
-    this.unloaders.push(this.plugins.flush)
+    return Promise.all([
+      this.plugins.reload().then(p => p.create().emit('change')),
 
-    this.handleUnload()
-    this.handleTabFocus()
-    this.handleIpcEvents()
-    this.handleEditorCommands()
-    this.handleModifierKeys()
+      new Promise((resolve) => {
+        this.unloaders.push(this.plugins.flush)
 
-    toggle(document.body, process.platform, true)
+        this.handleUnload()
+        this.handleTabFocus()
+        this.handleIpcEvents()
+        this.handleEditorCommands()
+        this.handleModifierKeys()
 
-    const { aqua, frameless } = this.state
+        addIdleObserver(this.handleIdleEvents, IDLE_SHORT)
 
-    if (aqua) {
-      toggle(document.body, aqua, true)
-    }
+        toggle(document.body, process.platform, true)
 
-    this.setScrollBarStyle()
+        let { aqua, frameless } = this.state
 
-    if (frameless) {
-      toggle(document.body, 'frameless', true)
+        if (aqua) {
+          toggle(document.body, aqua, true)
+        }
 
-      if (EL_CAPITAN) {
-        toggle(document.body, 'el-capitan', true)
+        this.setScrollBarStyle()
 
-      } else {
-        this.createWindowControls()
-      }
-    }
+        if (frameless) {
+          toggle(document.body, 'frameless', true)
 
-    this.style(this.state.theme, false, done)
-    require(`./windows/${this.type}`)
+          if (EL_CAPITAN) {
+            toggle(document.body, 'el-capitan', true)
+
+          } else {
+            this.createWindowControls()
+          }
+        }
+
+        this.style(this.state.theme, false, () => {
+          if (typeof done === 'function') done()
+          resolve(this)
+        })
+        require(`./windows/${this.type}`)
+      })
+    ])
   }
 
   show = () => {
@@ -152,6 +163,11 @@ class Window extends EventEmitter {
 
         this.reload()
       })
+  }
+
+  handleIdleEvents = (_, type, time) => {
+    this.emit('idle', { type, time })
+
   }
 
   handleUnload() {
