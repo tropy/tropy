@@ -22,7 +22,7 @@ class ImportCommand extends Command {
       for (let v of image.variants(selection != null)) {
         let path = cache.path(id, v.name, ext)
 
-        if (overwrite || !(yield call(cache.exists, path))) {
+        if (overwrite || !(yield call(cache.exists, path, false))) {
           let dup = image.resize(v.size, selection)
 
           switch (ext) {

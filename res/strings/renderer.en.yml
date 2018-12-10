@@ -339,6 +339,7 @@ en:
   activity:
     cache:
       prune: Optimizing project cache …
+      purge: Purging old caches …
     project:
       save: Saving …
     list:
@@ -443,6 +444,9 @@ en:
       sinkListItem: Sink list item
       liftListItem: Lift list item
   error:
+    cache:
+      prune: Failed to optimize project cache.
+      purge: Failed to remove old project caches.
     project:
       created: Project creation failed.
     item:

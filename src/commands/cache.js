@@ -1,53 +1,97 @@
 'use strict'
 
-const { call, cps, select } = require('redux-saga/effects')
+const assert = require('assert')
+const { call, select } = require('redux-saga/effects')
 const { Command } = require('./command')
 const { CACHE } = require('../constants')
-const { info } = require('../common/log')
+const { Cache } = require('../common/cache')
 const { rm } = require('../common/rm')
 const { get } = require('../common/util')
-const { readdir } = require('fs')
-const { join } = require('path')
+const { debug, info } = require('../common/log')
 
-const PAST = (new Date(2018, 11, 8)).getTime()
-
-const addMonths = (k = 0, d = new Date()) =>
-  new Date(d.getFullYear(), d.getMonth() + k, d.getDate())
 
 class Prune extends Command {
   static get ACTION() { return CACHE.PRUNE }
 
+  static check(file, state) {
+    let [id,, ext] = Cache.split(file)
+    return ext !== Cache.extname() ||
+      !((id in state.photos || (id in state.selections)))
+  }
+
   *exec() {
     let { cache } = this.options
+
     let state = yield select()
-    let files
+    let stale = []
 
-    if (state.photos && state.selections) {
-      info('clearing project cache...')
-      files = yield call(cache.prune, state)
-      info(`cleared ${files.length} file(s) from cache...`)
+    assert(state.photos != null && state.selections != null,
+     'cannot prune project cache without state')
+
+    info(`pruning cache ${cache.name}`)
+    let files = yield call(cache.list)
+
+    for (let file of files) {
+      if (!Prune.check(file, state)) continue
+
+      debug(`removing ${file}`)
+      yield call(rm, cache.expand(file))
+      stale.push(file)
     }
 
-    if (state.recent) {
-      info('checking for old project caches...')
-      let now = new Date()
-      let caches = yield cps(readdir, ARGS.cache)
-
-      for (let id of caches) {
-        let date = addMonths(6,
-          new Date(get(state.recent, [id, 'opened'], PAST)))
-
-        if (date < now) {
-          info(`removing old project cache ${id}...`)
-          yield call(rm, join(ARGS.cache, id))
-        }
-      }
+    if (stale.length) {
+      info(`cleared ${stale.length} file(s) from cache`)
     }
 
-    return files
+    return stale
   }
 }
 
+
+class Purge extends Command {
+  static get ACTION() { return CACHE.PURGE }
+
+  *exec() {
+    let AGE = 3 // months
+    let NOW = new Date()
+
+    let state = yield select()
+    let cache = new Cache(ARGS.cache)
+    let stale = []
+
+    let exists = yield call(cache.exists)
+
+    assert(exists, 'cache doese not exist')
+    assert(cache.name === 'cache', 'not a valid cache root')
+    assert(state.recent != null, 'cannot purge caches without state')
+
+    info(`purging cache ${cache.root}`)
+
+    let stats = yield call(cache.stats)
+
+    for (let [id, stat] of stats) {
+      if (!stat.isDirectory()) continue
+
+      let timestamp = get(state.recent, [id, 'opened'], stat.ctimeMs)
+      assert(timestamp > 0, 'invalid cache directory timestamp')
+
+      let date = addMonths(AGE, new Date(timestamp))
+      if (date > NOW) continue
+
+      info(`removing old project cache ${id}`)
+      yield call(rm, cache.expand(id))
+      stale.push(id)
+    }
+
+    return stale
+  }
+}
+
+const addMonths = (k = 0, d = new Date()) =>
+  new Date(d.getFullYear(), d.getMonth() + k, d.getDate())
+
+
 module.exports = {
-  Prune
+  Prune,
+  Purge
 }

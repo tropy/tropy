@@ -1,5 +1,6 @@
 'use strict'
 
 module.exports = {
-  PRUNE: 'cache.prune'
+  PRUNE: 'cache.prune',
+  PURGE: 'cache.purge'
 }

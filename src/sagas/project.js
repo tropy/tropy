@@ -111,6 +111,7 @@ function *setup(db, project) {
 
     yield take(IDLE)
     yield put(act.cache.prune())
+    yield put(act.cache.purge())
 
   } catch (error) {
     warn(`unexpected error in *setup: ${error.message}`, { stack: error.stack })
