@@ -109,8 +109,9 @@ de:
         - label: Ontologie-Datenbank wiederherstellen
           command: 'app:reset-ontology-db'
         - label: Projekt-Cache optimieren
-          command: 'app:prune-cache'
-        - label: Projekt migrieren
+          command: 'app:optimize-cache'
+        - type: separator
+        - label: Projekt portieren
           command: 'app:rebase-project'
         - label: Projekt schließen
           command: 'app:close-project'
@@ -283,10 +284,11 @@ de:
         - label: Ontologie-Datenbank rücksetzen
           command: 'app:reset-ontology-db'
         - label: Projekt-Cache optimieren
-          command: 'app:prune-cache'
-        - label: Projekt migrieren
+          command: 'app:optimize-cache'
+        - type: separator
+        - label: Projekt portieren
           command: 'app:rebase-project'
-        - label: Schließen
+        - label: Projekt schließen
           command: 'app:close-project'
         - type: separator
         - label: Erscheinungsbild
@@ -435,10 +437,11 @@ de:
         - label: Ontologie-Datenbank rücksetzen
           command: 'app:reset-ontology-db'
         - label: Projekt-Cache optimieren
-          command: 'app:prune-cache'
-        - label: Projekt migrieren
+          command: 'app:optimize-cache'
+        - type: separator
+        - label: Projekt portieren
           command: 'app:rebase-project'
-        - label: Schließen
+        - label: Projekt schließen
           command: 'app:close-project'
         - type: separator
         - label: Erscheinungsbild
