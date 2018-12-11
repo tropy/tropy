@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { Editable } = require('../editable')
 const { FormattedMessage } = require('react-intl')
 const { blank, pluck } = require('../../common/util')
@@ -14,7 +13,7 @@ const { auto } = require('../../format')
 const { bool, func, number, oneOfType, shape, string } = require('prop-types')
 
 
-class MetadataField extends PureComponent {
+class MetadataField extends React.PureComponent {
   get classes() {
     return ['metadata-field', {
       extra: this.props.isExtra,
@@ -130,7 +129,7 @@ class MetadataField extends PureComponent {
 }
 
 
-class StaticField extends PureComponent {
+class StaticField extends React.PureComponent {
   get classes() {
     return ['metadata-field', 'static', {
       clickable: this.props.onClick != null

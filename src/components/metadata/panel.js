@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
 const { MetadataList } = require('./list')
@@ -29,7 +28,7 @@ const {
 } = require('../../selectors')
 
 
-class MetadataPanel extends PureComponent {
+class MetadataPanel extends React.PureComponent {
   constructor(props) {
     super(props)
     this.fields = [null, null, null]
@@ -140,6 +139,18 @@ class MetadataPanel extends PureComponent {
     }
   }
 
+  handleItemContextMenu = (event) => {
+    this.props.onContextMenu(event, 'metadata')
+  }
+
+  handlePhotoContextMenu = (event) => {
+    this.props.onContextMenu(event, 'metadata')
+  }
+
+  handleSelectionContextMenu = (event) => {
+    this.props.onContextMenu(event, 'metadata')
+  }
+
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
       case 'up':
@@ -167,7 +178,7 @@ class MetadataPanel extends PureComponent {
     } = this.props
 
     return !this.isEmpty && (
-      <section>
+      <section onContextMenu={this.handleItemContextMenu}>
         <h5 className="metadata-heading">
           <FormattedMessage
             id="panel.metadata.item"
@@ -200,7 +211,7 @@ class MetadataPanel extends PureComponent {
     const { photo, photoFields, onOpenInFolder } = this.props
 
     return photo && !photo.pending && (
-      <section>
+      <section onContextMenu={this.handlePhotoContextMenu}>
         <h5 className="metadata-heading separator">
           <FormattedMessage id="panel.metadata.photo"/>
         </h5>
@@ -226,7 +237,7 @@ class MetadataPanel extends PureComponent {
     const { selection, selectionFields } = this.props
 
     return selection != null && !selection.pending && (
-      <section>
+      <section onContextMenu={this.handleSelectionContextMenu}>
         <h5 className="metadata-heading separator">
           <FormattedMessage id="panel.metadata.selection"/>
         </h5>
@@ -302,6 +313,7 @@ class MetadataPanel extends PureComponent {
     })).isRequired,
 
     onBlur: func.isRequired,
+    onContextMenu: func.isRequired,
     onEdit: func,
     onEditCancel: func,
     onFocus: func.isRequired,

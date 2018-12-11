@@ -1,14 +1,13 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { MetadataField } = require('./field')
 const { get } = require('../../common/util')
 const { isArray } = Array
 const { arrayOf, bool, func, object, shape, string } =  require('prop-types')
 
 
-class MetadataList extends PureComponent {
+class MetadataList extends React.PureComponent {
   constructor(props) {
     super(props)
     this.key = this.getEditKey(props)
