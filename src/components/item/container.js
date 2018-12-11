@@ -6,7 +6,8 @@ const { BufferedResizable } = require('../resizable')
 const { Esper } = require('../esper')
 const { NotePad } = require('../note')
 const act = require('../../actions')
-const { SASS: { ESPER } } = require('../../constants')
+const cx = require('classnames')
+const { SASS: { ESPER }, ESPER: { PLACEMENT } } = require('../../constants')
 
 const {
   arrayOf, bool, func, number, object, shape, string
@@ -22,6 +23,29 @@ const {
 
 
 class ItemContainer extends React.PureComponent {
+  get isResizable() {
+    return [PLACEMENT.TOP, PLACEMENT.LEFT].includes(this.props.esper.placement)
+  }
+
+  get dimension() {
+    return (this.props.esper.placement === PLACEMENT.LEFT) ? 'width' : 'height'
+  }
+
+  get orientation() {
+    return (this.props.esper.placement === PLACEMENT.LEFT) ? 'right' : 'bottom'
+  }
+
+  get size() {
+    switch (this.props.esper.placement) {
+      case PLACEMENT.TOP:
+        return this.props.esper.height
+      case PLACEMENT.LEFT:
+        return this.props.esper.width
+      default:
+        return 100
+    }
+  }
+
   setNotePad = (notepad) => {
     this.notepad = notepad
   }
@@ -41,16 +65,19 @@ class ItemContainer extends React.PureComponent {
     }
   }
 
-  handleEsperResize = (height) => {
-    this.props.onUiUpdate({ esper: { height } })
+  handleEsperResize = (value) => {
+    this.props.onUiUpdate({
+      esper: { [this.dimension]: value }
+    })
   }
 
   render() {
     return (
-      <div className="item-container">
+      <div className={cx('item-container', this.props.esper.placement)}>
         <BufferedResizable
-          edge="bottom"
-          value={this.props.esper.height}
+          edge={this.orientation}
+          value={this.size}
+          isDisabled={!this.isResizable}
           isRelative
           onChange={this.handleEsperResize}
           margin={38}
@@ -91,7 +118,9 @@ class ItemContainer extends React.PureComponent {
     cache: string.isRequired,
     esper: shape({
       height: number.isRequired,
+      width: number.isRequired,
       panel: bool.isRequired,
+      placement: string.isRequired,
       tool: string.isRequired
     }).isRequired,
     view: object.isRequired,

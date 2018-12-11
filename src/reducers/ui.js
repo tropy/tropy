@@ -3,9 +3,11 @@
 const { ESPER, ITEM, PHOTO, NOTE, UI, SASS } = require('../constants')
 const { merge, omit } = require('../common/util')
 
-const init = {
+const INIT = {
   esper: {
     height: 50,
+    width: 50,
+    placement: ESPER.PLACEMENT.TOP,
     tool: ESPER.TOOL.PAN,
     panel: false
   },
@@ -40,10 +42,10 @@ function expand(state, photo) {
 
 
 module.exports = {
-  ui(state = init, { type, payload }) {
+  ui(state = INIT, { type, payload }) {
     switch (type) {
       case UI.RESTORE:
-        return merge(init, payload)
+        return merge(INIT, payload)
       case UI.UPDATE:
         return merge(state, payload)
       case PHOTO.CONTRACT:

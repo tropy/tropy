@@ -11,6 +11,13 @@ module.exports = {
     ZOOM: 'zoom'
   },
 
+  PLACEMENT: {
+    FULL: 'note-pad-hidden',
+    HIDDEN: 'note-pad-full',
+    LEFT: 'note-pad-right',
+    TOP: 'note-pad-bottom'
+  },
+
   TOOL: {
     ARROW: 'arrow',
     PAN: 'pan',
