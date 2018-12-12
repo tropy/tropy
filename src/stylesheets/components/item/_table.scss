@@ -4,13 +4,13 @@
 
 .item-table {
   flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
+  // Do not use display: flex to stretch the table-head to the same width of the table-body (with horizontal overflow in item-table)
+  // Flexbox plus contain: strict (layout) also breaks the header width after column resize/order
   position: relative;
   height: 100%; // Prevent vertical scrollbar due to horizontal scrollbar
   overflow-x: auto;
   overflow-y: hidden; // Prevent horizontal scrollbar due to column borders
-  contain: size style paint; // 'layout' breaks header width after column resize/reorder
+  contain: strict;
 
   th,
   td {
@@ -59,7 +59,7 @@
   }
 
   .table-head {
-    width: 100%;
+    width: 100%; // If not in sync with the width of table-body, set the same min-width inline style as on table-body
     table-layout: fixed;
     // border-collapse: collapse causes 'gap' rendering glitch on Linux
     border-spacing: 0;
