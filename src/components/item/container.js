@@ -69,7 +69,7 @@ class ItemContainer extends React.PureComponent {
 
   render() {
     return (
-      <div className={cx('item-container', this.props.layout)}>
+      <div className={cx('item-container', this.props.settings.layout)}>
         <BufferedResizable
           edge={this.orientation}
           value={this.size}
