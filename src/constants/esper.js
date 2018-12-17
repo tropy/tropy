@@ -12,8 +12,6 @@ module.exports = {
   },
 
   PLACEMENT: {
-    FULL: 'note-pad-hidden',
-    HIDDEN: 'note-pad-full',
     LEFT: 'note-pad-right',
     TOP: 'note-pad-bottom'
   },

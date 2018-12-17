@@ -23,20 +23,16 @@ const {
 
 
 class ItemContainer extends React.PureComponent {
-  get isResizable() {
-    return [PLACEMENT.TOP, PLACEMENT.LEFT].includes(this.props.esper.placement)
-  }
-
   get dimension() {
-    return (this.props.esper.placement === PLACEMENT.LEFT) ? 'width' : 'height'
+    return (this.props.settings.layout === PLACEMENT.LEFT) ? 'width' : 'height'
   }
 
   get orientation() {
-    return (this.props.esper.placement === PLACEMENT.LEFT) ? 'right' : 'bottom'
+    return (this.props.settings.layout === PLACEMENT.LEFT) ? 'right' : 'bottom'
   }
 
   get size() {
-    switch (this.props.esper.placement) {
+    switch (this.props.settings.layout) {
       case PLACEMENT.TOP:
         return this.props.esper.height
       case PLACEMENT.LEFT:
@@ -73,14 +69,13 @@ class ItemContainer extends React.PureComponent {
 
   render() {
     return (
-      <div className={cx('item-container', this.props.esper.placement)}>
+      <div className={cx('item-container', this.props.layout)}>
         <BufferedResizable
           edge={this.orientation}
           value={this.size}
-          isDisabled={!this.isResizable}
           isRelative
           onChange={this.handleEsperResize}
-          margin={38}
+          margin={ESPER.MIN_HEIGHT}
           min={ESPER.MIN_HEIGHT}>
           <Esper {...this.props.view}
             cache={this.props.cache}
@@ -120,7 +115,6 @@ class ItemContainer extends React.PureComponent {
       height: number.isRequired,
       width: number.isRequired,
       panel: bool.isRequired,
-      placement: string.isRequired,
       tool: string.isRequired
     }).isRequired,
     view: object.isRequired,

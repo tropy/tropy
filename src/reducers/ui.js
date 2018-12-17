@@ -7,7 +7,6 @@ const INIT = {
   esper: {
     height: 50,
     width: 50,
-    placement: ESPER.PLACEMENT.TOP,
     tool: ESPER.TOOL.PAN,
     panel: false
   },
