@@ -49,7 +49,7 @@
   padding-left: $space-min;
   min-width: 0; // Needed to get horizontal scrollbars in the editor’s scroll-container
 
-  .note-pad-bottom & {
+  &.note-pad-bottom {
     > .resizable {
       // Temporary insurance to make sure the notepad is visible when upgrading to 1.1.2
       // See #221
@@ -57,13 +57,7 @@
     }
   }
 
-  .note-pad-right & {
+  &.note-pad-right {
     flex-direction: row;
-  }
-
-  .note-pad-full & {
-    > .resizable {
-      display: none;
-    }
   }
 }
