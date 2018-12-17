@@ -168,6 +168,16 @@ en:
         command: 'app:restore-item'
       - label: 'Permanently Delete Selected Items'
         command: 'app:destroy-item'
+    item-view: &item-view
+      - label: View Layout
+        id: 'item-view-layout'
+        submenu:
+        - label: 'Stacked'
+          id: 'note-pad-bottom'
+          type: checkbox
+        - label: 'Side by side'
+          id: 'note-pad-right'
+          type: checkbox
     trash: &trash
       - label: 'Permanently Delete Items'
         command: 'app:destroy-item'
@@ -199,6 +209,7 @@ en:
     item-bulk-list: *item-bulk-list
     item-deleted: *item-deleted
     item-bulk-deleted: *item-bulk-deleted
+    item-view: *item-view
     trash: *trash
     photo: *photo
     selection: *selection
@@ -223,6 +234,7 @@ en:
     item-bulk-list: *item-bulk-list
     item-deleted: *item-deleted
     item-bulk-deleted: *item-bulk-deleted
+    item-view: *item-view
     trash: *trash
     photo: *photo
     selection: *selection

@@ -46,6 +46,13 @@ class ItemContainer extends React.PureComponent {
     this.notepad = notepad
   }
 
+  handleContextMenu = (event, scope = 'item-view', opts = {}) => {
+    this.props.onContextMenu(event, scope, {
+      layout: this.props.settings.layout,
+      ...opts
+    })
+  }
+
   handleEsperChange = ({ photo, selection, image, esper }) => {
     if (esper != null) {
       this.props.onUiUpdate({ esper })
@@ -69,7 +76,9 @@ class ItemContainer extends React.PureComponent {
 
   render() {
     return (
-      <div className={cx('item-container', this.props.settings.layout)}>
+      <div
+        className={cx('item-container', this.props.settings.layout)}
+        onContextMenu={this.handleContextMenu}>
         <BufferedResizable
           edge={this.orientation}
           value={this.size}
@@ -91,6 +100,7 @@ class ItemContainer extends React.PureComponent {
             selection={this.props.selection}
             selections={this.props.selections}
             tool={this.props.esper.tool}
+            onContextMenu={this.handleContextMenu}
             onChange={this.handleEsperChange}
             onPhotoError={this.props.onPhotoError}
             onSelect={this.props.onPhotoSelect}
@@ -104,7 +114,7 @@ class ItemContainer extends React.PureComponent {
           keymap={this.props.keymap.NotePad}
           onChange={this.props.onNoteChange}
           onCommit={this.props.onNoteCommit}
-          onContextMenu={this.props.onContextMenu}/>
+          onContextMenu={this.handleContextMenu}/>
       </div>
     )
   }

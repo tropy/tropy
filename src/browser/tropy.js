@@ -469,6 +469,9 @@ class Tropy extends EventEmitter {
     this.on('app:writing-mode', (win, { id, mode }) =>
       this.dispatch(act.notepad.update({ [id]: { mode  } }), win))
 
+    this.on('app:settings-update', (win, payload) =>
+      this.dispatch(act.settings.update(payload), win))
+
     this.on('app:toggle-menu-bar', win => {
       if (win.isMenuBarAutoHide()) {
         win.setAutoHideMenuBar(false)

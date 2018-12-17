@@ -251,6 +251,18 @@ class Menu {
               id: target.id, mode: li.mode
             })
           }))
+          break
+        }
+        case 'item-view-layout': {
+          const { target } = params[0]
+          item.submenu = item.submenu.map(li => ({
+            ...li,
+            checked: li.id === target.layout,
+            click: this.responder('app:settings-update', win, {
+              layout: li.id
+            })
+          }))
+          break
         }
       }
 
@@ -347,13 +359,15 @@ class ContextMenu extends Menu {
   scopes.selection = [...scopes.photo, 'selection']
   scopes.notes = [...scopes.global]
   scopes.note = [...scopes.notes, 'note']
-  scopes.notepad = [...scopes.global, 'notepad']
   scopes['item-bulk'] = [...scopes.items, 'item-bulk']
   scopes['item-list'] = [...scopes.items, 'item-list', 'item']
   scopes['item-bulk-list'] = [...scopes.items, 'item-bulk-list', 'item-bulk']
   scopes['item-deleted'] = [...scopes.global, 'item-deleted']
   scopes['item-bulk-deleted'] = [...scopes.global, 'item-bulk-deleted']
   scopes['item-tag'] = [...scopes.global, 'item-tag']
+  scopes['item-view'] = [...scopes.global, 'item-view']
+  scopes.notepad = [...scopes['item-view'], 'notepad']
+  scopes.esper = [...scopes['item-view']]
 }
 
 module.exports = {
