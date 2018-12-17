@@ -42,7 +42,9 @@
 
 .frameless {
   .window-draggable {
-    .slider {
+    .btn,
+    .draggable,
+    .slider-value {
       -webkit-app-region: no-drag;
     }
   }
