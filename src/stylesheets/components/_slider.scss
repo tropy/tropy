@@ -17,6 +17,10 @@
     display: flex;
     align-items: center;
     height: $slider-handle-size + 2px;
+
+    .frameless .window-draggable & {
+      -webkit-app-region: no-drag;
+    }
   }
 
   .btn {
@@ -36,16 +40,6 @@
       .icon {
         color: $slider-overlay-icon-color;
       }
-    }
-  }
-}
-
-.frameless {
-  .window-draggable {
-    .btn,
-    .draggable,
-    .slider-value {
-      -webkit-app-region: no-drag;
     }
   }
 }
@@ -137,6 +131,10 @@
 
   .overlay-mode & {
     color: $slider-overlay-value-color;
+  }
+
+  .frameless .window-draggable & {
+    -webkit-app-region: no-drag;
   }
 }
 
