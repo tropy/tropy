@@ -7,7 +7,7 @@ const { Esper } = require('../esper')
 const { NotePad } = require('../note')
 const act = require('../../actions')
 const cx = require('classnames')
-const { SASS: { ESPER }, ESPER: { PLACEMENT } } = require('../../constants')
+const { SASS: { ESPER }, ITEM: { LAYOUT } } = require('../../constants')
 
 const {
   arrayOf, bool, func, number, object, shape, string
@@ -24,18 +24,20 @@ const {
 
 class ItemContainer extends React.PureComponent {
   get dimension() {
-    return (this.props.settings.layout === PLACEMENT.LEFT) ? 'width' : 'height'
+    return (this.props.settings.layout === LAYOUT.SIDE_BY_SIDE) ?
+      'width' : 'height'
   }
 
   get orientation() {
-    return (this.props.settings.layout === PLACEMENT.LEFT) ? 'right' : 'bottom'
+    return (this.props.settings.layout === LAYOUT.SIDE_BY_SIDE) ?
+      'right' : 'bottom'
   }
 
   get size() {
     switch (this.props.settings.layout) {
-      case PLACEMENT.TOP:
+      case LAYOUT.STACKED:
         return this.props.esper.height
-      case PLACEMENT.LEFT:
+      case LAYOUT.SIDE_BY_SIDE:
         return this.props.esper.width
       default:
         return 100

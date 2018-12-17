@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { array, arrayOf, bool, func, shape, string } = require('prop-types')
 const { TemplateSelect } = require('../template/select')
 const { ipcRenderer: ipc } = require('electron')
-const { ESPER } = require('../../constants')
+const { ESPER, ITEM } = require('../../constants')
 
 const {
   FormElement,
@@ -133,7 +133,7 @@ class AppPrefs extends PureComponent {
 
   static defaultProps = {
     themes: ['light', 'dark'],
-    layouts: [ESPER.PLACEMENT.TOP, ESPER.PLACEMENT.LEFT],
+    layouts: [ITEM.LAYOUT.STACKED, ITEM.LAYOUT.SIDE_BY_SIDE],
     locales: ['de', 'en', 'fr', 'ja'],
     dupOptions: ['skip', 'import', 'prompt'],
     zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL]

@@ -173,10 +173,10 @@ en:
         id: 'item-view-layout'
         submenu:
         - label: 'Stacked'
-          id: 'note-pad-bottom'
+          id: 'stacked'
           type: checkbox
         - label: 'Side by side'
-          id: 'note-pad-right'
+          id: 'side-by-side'
           type: checkbox
     trash: &trash
       - label: 'Permanently Delete Items'

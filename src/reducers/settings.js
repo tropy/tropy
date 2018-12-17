@@ -6,7 +6,7 @@ const { darwin } = require('../common/os')
 const defaults = {
   debug: ARGS.debug,
   dup: 'prompt',
-  layout: ESPER.PLACEMENT.TOP,
+  layout: ITEM.LAYOUT.STACKED,
   locale: ARGS.locale,
   template: ITEM.TEMPLATE,
   theme: ARGS.theme,
