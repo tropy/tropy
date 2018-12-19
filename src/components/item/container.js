@@ -28,11 +28,6 @@ class ItemContainer extends React.PureComponent {
       'width' : 'height'
   }
 
-  get orientation() {
-    return (this.props.settings.layout === LAYOUT.SIDE_BY_SIDE) ?
-      'right' : 'bottom'
-  }
-
   get size() {
     switch (this.props.settings.layout) {
       case LAYOUT.STACKED:
@@ -52,6 +47,12 @@ class ItemContainer extends React.PureComponent {
   get hasOverlayToolbars() {
     return this.props.settings.overlayToolbars &&
       this.props.settings.layout !== LAYOUT.SIDE_BY_SIDE
+  }
+
+  getResizableProps(layout = this.props.settings.layout) {
+    return layout === LAYOUT.SIDE_BY_SIDE ?
+      { edge: 'right', margin: ESPER.MIN_WIDTH, min: ESPER.MIN_WIDTH } :
+      { edge: 'bottom', margin: ESPER.MIN_HEIGHT, min: ESPER.MIN_HEIGHT }
   }
 
   setNotePad = (notepad) => {
@@ -92,12 +93,10 @@ class ItemContainer extends React.PureComponent {
         className={cx('item-container', this.props.settings.layout)}
         onContextMenu={this.handleContextMenu}>
         <BufferedResizable
-          edge={this.orientation}
-          value={this.size}
+          {...this.getResizableProps()}
           isRelative
-          onChange={this.handleEsperResize}
-          margin={ESPER.MIN_HEIGHT}
-          min={ESPER.MIN_HEIGHT}>
+          value={this.size}
+          onChange={this.handleEsperResize}>
           <Esper {...this.props.view}
             cache={this.props.cache}
             mode={this.props.view.mode || this.props.settings.zoomMode}
