@@ -1,14 +1,13 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { bool, func, number, object, shape, string } = require('prop-types')
 const { Editor } = require('../editor')
 const { TABS } = require('../../constants')
 const cx = require('classnames')
 
 
-class NotePad extends PureComponent {
+class NotePad extends React.PureComponent {
   get classes() {
     return ['note-pad', this.props.mode, {
       'no-wrap': !this.props.wrap,
@@ -66,6 +65,7 @@ class NotePad extends PureComponent {
           mode={this.props.mode}
           placeholder="notepad.placeholder"
           isDisabled={this.isDisabled}
+          isDraggable={this.isDraggable}
           tabIndex={this.props.tabIndex}
           onBlur={this.handleEditorBlur}
           onChange={this.handleChange}/>
@@ -75,6 +75,7 @@ class NotePad extends PureComponent {
 
   static propTypes = {
     isDisabled: bool,
+    isDraggable: bool,
     isItemOpen: bool,
     keymap: object.isRequired,
     note: shape({

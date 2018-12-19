@@ -44,6 +44,16 @@ class ItemContainer extends React.PureComponent {
     }
   }
 
+  get isNotePadDraggable() {
+    return ARGS.frameless &&
+      this.props.settings.layout === LAYOUT.SIDE_BY_SIDE
+  }
+
+  get hasOverlayToolbars() {
+    return this.props.settings.overlayToolbars &&
+      this.props.settings.layout !== LAYOUT.SIDE_BY_SIDE
+  }
+
   setNotePad = (notepad) => {
     this.notepad = notepad
   }
@@ -112,6 +122,7 @@ class ItemContainer extends React.PureComponent {
           ref={this.setNotePad}
           note={this.props.note}
           isDisabled={this.props.isDisabled || !this.props.photo}
+          isDraggable={this.isNotePadDraggable}
           isItemOpen={this.props.isOpen}
           keymap={this.props.keymap.NotePad}
           onChange={this.props.onNoteChange}
