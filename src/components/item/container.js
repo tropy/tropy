@@ -101,7 +101,7 @@ class ItemContainer extends React.PureComponent {
           <Esper {...this.props.view}
             cache={this.props.cache}
             mode={this.props.view.mode || this.props.settings.zoomMode}
-            hasOverlayToolbar={this.props.settings.overlayToolbars}
+            hasOverlayToolbar={this.hasOverlayToolbars}
             invertScroll={this.props.settings.invertScroll}
             invertZoom={this.props.settings.invertZoom}
             isDisabled={this.props.isDisabled}

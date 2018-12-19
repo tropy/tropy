@@ -65,7 +65,7 @@ class NotePad extends React.PureComponent {
           mode={this.props.mode}
           placeholder="notepad.placeholder"
           isDisabled={this.isDisabled}
-          isDraggable={this.isDraggable}
+          isDraggable={this.props.isDraggable}
           tabIndex={this.props.tabIndex}
           onBlur={this.handleEditorBlur}
           onChange={this.handleChange}/>
