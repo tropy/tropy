@@ -258,7 +258,7 @@ class Menu {
           item.submenu = item.submenu.map(li => ({
             ...li,
             checked: li.id === target.layout,
-            click: this.responder('app:settings-update', win, {
+            click: this.responder('app:settings-persist', win, {
               layout: li.id
             })
           }))
