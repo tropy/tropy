@@ -5,31 +5,28 @@
 .esper-panel {
   display: flex;
   flex-direction: column;
+  margin-right: -$esper-panel-width - 1px; // Also hide box-shadow
+  margin-bottom: -$esper-panel-height - 1px;
+  max-width: 100%;
+  max-height: 100%;
   background: $esper-bg;
   position: relative; // Must be over esper-view for a clean transition in solid mode
 
   .stacked & {
     flex: 0 0 $esper-panel-width;
-    margin-right: -$esper-panel-width - 1px; // Also hide box-shadow
     box-shadow: -1px 0 0 $esper-shadow;
     transition: margin-right 0.3s ease;
   }
 
   .side-by-side & {
     flex: 0 0 $esper-panel-height;
-    margin-bottom: -$esper-panel-height - 1px;
     box-shadow: 0 -1px 0 $esper-shadow;
     transition: margin-bottom 0.3s ease;
   }
 
   .panel-visible & {
-    .stacked & {
-      margin-right: 0;
-    }
-
-    .side-by-side & {
-      margin-bottom: 0;
-    }
+    margin-right: 0;
+    margin-bottom: 0;
   }
 
   .overlay-mode & {
