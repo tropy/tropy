@@ -57,16 +57,21 @@ module.exports = {
   },
 
   async save(db, { id, timestamp, ...data }, { base } = {}) {
-    data = pick(data, COLUMNS)
+    let photo = pick(data, COLUMNS)
+    let image = pick(data, ['width', 'height'])
 
     assert(id != null, 'missing photo id')
-    if (empty(data)) return
+    if (empty(photo)) return
 
-    if (base != null && data.path != null) {
-      data.path = relative(base, data.path)
+    if (base != null && photo.path != null) {
+      photo.path = relative(base, photo.path)
     }
 
-    await db.run(...update('photos').set(data).where({ id }))
+    await db.run(...update('photos').set(photo).where({ id }))
+
+    if (!empty(image)) {
+      await db.run(...update('images').set(image).where({ id }))
+    }
 
     if (timestamp != null) {
       await subject.touch(db, { id, timestamp })
