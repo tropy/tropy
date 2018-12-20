@@ -8,11 +8,7 @@
   flex-direction: column;
   contain: strict;
 
-  .note-pad-right & {
+  .side-by-side & {
     padding-left: $space-min;
-  }
-
-  .note-pad-hidden & {
-    display: none;
   }
 }
