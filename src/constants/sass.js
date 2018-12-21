@@ -161,7 +161,7 @@ const ESPER = {
       y: '1'
     },
     move: {
-      move: 'arrow',
+      default: 'arrow',
       active: 'arrow',
       x: '1',
       y: '1'
