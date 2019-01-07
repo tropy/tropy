@@ -16,8 +16,8 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
 
   const { app, session }  = require('electron')
   const { extname, join } = require('path')
-  const { qualified, version }  = require('../common/release')
-  const { linux, darwin, system } = require('../common/os')
+  const { qualified }  = require('../common/release')
+  const { linux, darwin } = require('../common/os')
 
   let USERDATA = opts.dir
   let LOGDIR
@@ -45,7 +45,7 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
   if (!require('./squirrel')()) {
     const { all }  = require('bluebird')
     const { once } = require('../common/util')
-    const { info, verbose } = require('../common/log')(LOGDIR)
+    const { info, verbose } = require('../common/log')(LOGDIR, opts)
 
     if (opts.environment !== 'test') {
       if (!app.requestSingleInstanceLock()) {
@@ -53,8 +53,6 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
         app.exit(0)
       }
     }
-
-    info(`starting ${version}`, { system })
 
     if (opts.ignoreGpuBlacklist) {
       app.commandLine.appendSwitch('ignore-gpu-blacklist')
@@ -64,7 +62,6 @@ if (process.env.TROPY_RUN_UNIT_TESTS === 'true') {
       app.commandLine.appendSwitch('force-device-scale-factor', opts.scale)
     }
 
-    verbose(`started in ${opts.env} mode`)
     verbose(`using ${app.getPath('userData')}`)
 
     var tropy = new (require('./tropy'))()
