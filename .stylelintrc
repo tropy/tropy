@@ -1,0 +1,2 @@
+# vi: set ft=yaml :
+extends: stylelint-config-standard
