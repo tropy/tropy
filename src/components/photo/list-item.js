@@ -6,6 +6,7 @@ const { createClickHandler } = require('../util')
 const { PhotoIterable } = require('./iterable')
 const { SelectionList } = require('../selection/list')
 const { get, pluck } = require('../../common/util')
+const { TEXT } = require('../../constants/type')
 const cx = require('classnames')
 const { testFocusChange } = require('../../dom')
 const { bool, func, object, string } = require('prop-types')
@@ -66,7 +67,7 @@ class PhotoListItem extends PhotoIterable {
     onChange({
       id: photo.id,
       data: {
-        [title]: { text, type: 'text' }
+        [title]: { text, type: TEXT }
       }
     })
   }
