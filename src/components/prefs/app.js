@@ -5,7 +5,7 @@ const { PureComponent } = React
 const { array, arrayOf, bool, func, shape, string } = require('prop-types')
 const { TemplateSelect } = require('../template/select')
 const { ipcRenderer: ipc } = require('electron')
-const { ESPER } = require('../../constants')
+const { ESPER, ITEM } = require('../../constants')
 
 const {
   FormElement,
@@ -97,6 +97,12 @@ class AppPrefs extends PureComponent {
             value={this.props.settings.zoomMode}
             options={this.props.zoomModes}
             onChange={this.props.onSettingsUpdate}/>
+          <FormToggleGroup
+            id="prefs.app.layout"
+            name="layout"
+            value={this.props.settings.layout}
+            options={this.props.layouts}
+            onChange={this.props.onSettingsUpdate}/>
           <hr/>
           <FormToggle
             id="prefs.app.debug"
@@ -113,9 +119,11 @@ class AppPrefs extends PureComponent {
     templates: array.isRequired,
     settings: shape({
       debug: bool.isRequired,
+      layout: string.isRequired,
       locale: string.isRequired,
       theme: string.isRequired,
     }).isRequired,
+    layouts: arrayOf(string).isRequired,
     locales: arrayOf(string).isRequired,
     themes: arrayOf(string).isRequired,
     dupOptions: arrayOf(string).isRequired,
@@ -125,6 +133,7 @@ class AppPrefs extends PureComponent {
 
   static defaultProps = {
     themes: ['light', 'dark'],
+    layouts: [ITEM.LAYOUT.STACKED, ITEM.LAYOUT.SIDE_BY_SIDE],
     locales: ['de', 'en', 'fr', 'ja'],
     dupOptions: ['skip', 'import', 'prompt'],
     zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL]

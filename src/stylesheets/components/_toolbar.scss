@@ -25,6 +25,8 @@
 
   .toolbar-context {
     position: absolute;
+    left: $default-padding-horizontal;
+    right: $default-padding-horizontal;
     height: $toolbar-height;
     display: flex;
     justify-content: space-between;

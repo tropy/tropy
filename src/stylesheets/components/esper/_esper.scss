@@ -46,6 +46,10 @@
     flex: 1 1 0;
     display: flex;
     position: relative;
+
+    .side-by-side & {
+      flex-direction: column;
+    }
   }
 
   .esper-view {

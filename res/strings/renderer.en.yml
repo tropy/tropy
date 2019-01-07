@@ -97,7 +97,7 @@ en:
       template: Default Template
       debug: Enable Developer Mode
       dup:
-        label: During Import
+        label: During import
         option:
           skip: Skip duplicate photos
           import: Accept duplicate photos
@@ -113,7 +113,11 @@ en:
         option:
           fit: Zoom photos to fit
           fill: Zoom photos to fill
-
+      layout:
+        label: Item View layout
+        option:
+          stacked: Stacked
+          side-by-side: Side by side
     project:
       label: Project
     template:
