@@ -342,18 +342,35 @@ class Split extends Command {
   static get ACTION() { return ITEM.SPLIT }
 
   *exec() {
-    const { db } = this.options
-    const { item, items, data, lists, tags } = this.action.payload
+    let { db } = this.options
+    let { item, items, data, lists, tags } = this.action.payload
+    let photos = this.getPhotoData(items)
 
     yield call(db.transaction, tx =>
       mod.item.split(tx, item.id, items, data, lists, tags))
 
-    yield put(act.metadata.insert({ id: item.id, ...data }))
+    yield all([
+      put(act.photo.update(photos)),
+      put(act.metadata.insert({ id: item.id, ...data }))
+    ])
 
     this.undo = act.item.merge([item.id, ...items.map(i => i.id)])
     this.meta = { inc: items.length }
 
     return item
+  }
+
+  getPhotoData(items) {
+    let photos = []
+    for (let item of items) {
+      for (let photo of item.photos) {
+        photos.push({
+          id: photo,
+          item: item.id
+        })
+      }
+    }
+    return photos
   }
 }
 
