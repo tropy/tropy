@@ -50,8 +50,7 @@ class ItemView extends PureComponent {
 
 
   setNotePad = (container) => {
-    this.notepad = container != null ?
-      container.getWrappedInstance().notepad : null
+    this.notepad = container != null ? container.notepad : null
   }
 
   handlePanelResize = ({ value }) => {

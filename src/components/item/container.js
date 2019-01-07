@@ -150,6 +150,6 @@ module.exports = {
       onEsperChange(...args) {
         dispatch(act.esper.update(...args))
       }
-    }), null, { withRef: true }
+    }), null, { forwardRef: true }
   )(ItemContainer)
 }
