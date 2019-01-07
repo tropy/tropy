@@ -9,6 +9,10 @@ const { ListDragPreview } = require('./list')
 const { DND } = require('../constants')
 const { bool, number, object, shape, string } = require('prop-types')
 
+const coords = shape({
+  x: number.isRequired,
+  y: number.isRequired
+})
 
 class DragLayer extends React.Component {
   get position() {
@@ -82,14 +86,9 @@ class DragLayer extends React.Component {
     cache: string.isRequired,
     isDragging: bool,
     item: object,
-    position: shape({
-      x: number.isRequired,
-      y: number.isRequired
-    }),
-    start: shape({
-      x: number.isRequired,
-      y: number.isRequired
-    }),
+    position: coords,
+    initialClientOffset: coords,
+    initialSourceClientOffset: coords,
     tags: object.isRequired,
     type: string,
   }
