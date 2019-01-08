@@ -29,6 +29,10 @@ class AppPrefs extends PureComponent {
     ipc.send('cmd', 'app:switch-locale', locale)
   }
 
+  handleLocalTimeChange = ({ localtime }) => {
+    this.props.onSettingsUpdate({ localtime })
+  }
+
   handleTemplateChange = (template) => {
     this.props.onSettingsUpdate({ template: template.id })
   }
@@ -52,6 +56,11 @@ class AppPrefs extends PureComponent {
             value={this.props.settings.dup}
             options={this.props.dupOptions}
             onChange={this.props.onSettingsUpdate}/>
+          <FormToggle
+            id="prefs.app.localtime"
+            name="localtime"
+            value={this.props.settings.localtime}
+            onChange={this.handleLocalTimeChange}/>
           <hr/>
           <FormSelect
             id="prefs.app.style.theme"

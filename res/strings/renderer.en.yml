@@ -96,6 +96,7 @@ en:
           ja: 日本語
       template: Default Template
       debug: Enable Developer Mode
+      localtime: Assume photo metadata use local timezone
       dup:
         label: During import
         option:

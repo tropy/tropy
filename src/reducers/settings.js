@@ -8,6 +8,7 @@ const defaults = {
   dup: 'prompt',
   layout: ITEM.LAYOUT.STACKED,
   locale: ARGS.locale,
+  localtime: false,
   template: ITEM.TEMPLATE,
   theme: ARGS.theme,
   overlayToolbars: ARGS.frameless,

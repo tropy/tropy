@@ -55,6 +55,7 @@ class Image {
 
   constructor(path) {
     this.path = path
+    this.tz = 0
   }
 
   get ext() {
@@ -102,10 +103,16 @@ class Image {
 
   get date() {
     try {
+      let time = get(this.exif, [this.page, 'DateTimeOriginal'])
+      let offset = get(this.exif, [this.page, 'TimezoneOffset'], this.tz)
+
+      if (time != null && offset) {
+        time = new Date(time)
+        time.setUTCMinutes(time.getUTCMinutes() + offset)
+      }
+
       // Temporarily return as string until we add value types.
-      return get(
-        this.exif, [this.page, 'DateTimeOriginal'], this.file.ctime
-      ).toISOString()
+      return (time || this.file.ctime).toISOString()
 
     } catch (error) {
       warn(`failed to convert image date: ${error.message}`)
@@ -228,6 +235,10 @@ class Image {
     }
 
     return image
+  }
+
+  setTimezoneOffset(local) {
+    this.tz = local ? (new Date().getTimezoneOffset()) : 0
   }
 
   toJSON() {

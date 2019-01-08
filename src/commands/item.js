@@ -69,8 +69,9 @@ class Import extends ImportCommand {
 
     yield put(act.nav.update({ mode: MODE.PROJECT, query: '' }))
 
-    let [base, itemp, ptemp] = yield select(state => [
+    let [base, localtime, itemp, ptemp] = yield select(state => [
       state.project.base,
+      state.settings.localtime,
       getItemTemplate(state),
       getPhotoTemplate(state)
     ])
@@ -86,6 +87,7 @@ class Import extends ImportCommand {
         file = files[i]
 
         image = yield call(Image.open, file)
+        image.setTimezoneOffset(localtime)
         yield* this.handleDuplicate(image)
 
         yield call(db.transaction, async tx => {

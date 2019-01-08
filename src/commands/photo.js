@@ -24,8 +24,9 @@ class Consolidate extends ImportCommand {
     let { payload, meta } = this.action
     let consolidated = []
 
-    let [project, photos, selections] = yield select(state => [
+    let [project, settings, photos, selections] = yield select(state => [
       state.project,
+      state.settings,
       blank(payload) ? values(state.photos) : pluck(state.photos, payload),
       state.selections
     ])
@@ -71,6 +72,7 @@ class Consolidate extends ImportCommand {
                 }
               }
 
+              image.setTimezoneOffset(settings.localtime)
               let data = { id: photo.id, ...image.toJSON() }
 
               yield call(mod.photo.save, db, data, project)
@@ -131,8 +133,9 @@ class Create extends ImportCommand {
 
     if (!files) return []
 
-    let [base, template] = yield select(state => [
+    let [base, localtime, template] = yield select(state => [
       state.project.base,
+      state.settings.localtime,
       getPhotoTemplate(state)
     ])
 
@@ -145,6 +148,7 @@ class Create extends ImportCommand {
         file = files[i]
 
         image = yield call(Image.open, file)
+        image.setTimezoneOffset(localtime)
         yield* this.handleDuplicate(image)
 
         total += (image.numPages - 1)
