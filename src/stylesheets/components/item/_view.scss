@@ -30,7 +30,8 @@
             - $window-controls-margin);
         }
 
-        .project-mode-enter-active & {
+        .project-mode-enter-active &,
+        .is-full-screen & {
           margin-left: 0;
         }
       }
