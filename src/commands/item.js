@@ -93,7 +93,7 @@ class Import extends ImportCommand {
         yield call(db.transaction, async tx => {
           item = await mod.item.create(tx, itemp.id, {
             ...pick(image.data, [
-              DC.title, DC.creator, DC.rights, DC.description
+              DC.title, DC.date, DC.creator, DC.rights, DC.description
             ]),
             ...defaultItemData
           })
