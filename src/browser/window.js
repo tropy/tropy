@@ -13,7 +13,6 @@ const ICON = join(__dirname, '..', '..', 'res', 'icons', channel, 'tropy')
 const DEFAULTS = {
   show: false,
   frame: true,
-  fullscreenWindowTitle: true,
   useContentSize: true,
   webPreferences: {
     contextIsolation: false,
@@ -74,7 +73,7 @@ module.exports = {
 
     data.scrollbars = !hasOverlayScrollBars()
 
-    let win = new BrowserWindow(options)
+    const win = new BrowserWindow(options)
 
     win.webContents
       .on('devtools-reload-page', () => {
@@ -110,13 +109,6 @@ module.exports = {
     win.on('page-title-updated', (event) => {
       event.preventDefault()
     })
-
-    // Hack: show a title in macOS full-screen!
-    if (!options.frame || options.titleBarStyle) {
-      win
-        .on('will-enter-full-screen', () => win.setTitle('Tropy'))
-        .on('will-leave-full-screen', () => win.setTitle(''))
-    }
 
     win.loadURL(format({
       protocol: 'file',
