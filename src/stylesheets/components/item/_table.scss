@@ -237,7 +237,7 @@
   .table-body {
     flex: 1 1 auto;
     position: relative;
-    height: 100%; // Prevent vertical scrollbar due to horizontal scrollbar
+    height: calc(100% - #{$item-table-header-height}); // Prevent vertical scrollbar due to horizontal scrollbar
     display: flex; // Prevent overflow
     contain: strict;
 
