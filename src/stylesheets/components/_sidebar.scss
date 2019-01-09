@@ -4,7 +4,7 @@
 // Sidebar
 // --------------------------------------------------
 
-#sidebar {
+.sidebar {
   background: $sidebar-bg;
   color: $sidebar-text-color;
   height: 100%;
@@ -56,7 +56,7 @@
         }
 
         @include state("li.active") {
-          @include state("#sidebar :focus") {
+          @include state(".sidebar :focus") {
             @extend %list-focus; // sass-lint:disable-line space-around-operator
           }
         }

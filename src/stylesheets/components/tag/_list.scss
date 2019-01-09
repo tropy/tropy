@@ -23,7 +23,8 @@
     }
   }
 
-  #sidebar & {
+  // stylelint-disable no-descending-specificity
+  .sidebar & {
     .tag {
       display: flex;
       align-items: center;
@@ -131,6 +132,7 @@
       }
     }
   }
+  /* stylelint-enable */
 }
 
 .add-tag-container {
@@ -140,11 +142,6 @@
   .form-control {
     background: $add-tag-default-bg;
     cursor: default;
-
-    .nested-tab-focus & {
-      background: $add-tag-nested-focus-bg;
-      border-color: $add-tag-nested-focus-border-color;
-    }
 
     &::-webkit-input-placeholder {
       color: $add-tag-placeholder-color-default;
@@ -156,6 +153,17 @@
         left $add-tag-transition,
         transform $add-tag-transition,
         color $add-tag-transition;
+
+      @include state(".form-control:focus") {
+        left: 0;
+        transform: translateX(0);
+        color: $input-color-placeholder;
+      }
+    }
+
+    .nested-tab-focus & {
+      background: $add-tag-nested-focus-bg;
+      border-color: $add-tag-nested-focus-border-color;
     }
 
     &:focus {
@@ -163,12 +171,6 @@
       background: $add-tag-focus-bg;
       border-color: $input-btn-focus-color; // Reset to form-control
       box-shadow: 0 0 0 2px $input-btn-focus-color, 0 0 0 2px $panel-bg;
-
-      &::-webkit-input-placeholder {
-        left: 0;
-        transform: translateX(0);
-        color: $input-color-placeholder;
-      }
     }
   }
 }
