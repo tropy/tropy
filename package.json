@@ -95,7 +95,7 @@
     "ms": "^2.1.1",
     "n3": "^1.0.3",
     "node-fetch": "^2.3.0",
-    "pixi.js": "^4.8.4",
+    "pixi.js": "^4.8.5",
     "prop-types": "^15.6.2",
     "prosemirror-commands": "^1.0.7",
     "prosemirror-gapcursor": "^1.0.3",
