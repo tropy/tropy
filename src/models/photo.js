@@ -116,7 +116,9 @@ module.exports = {
           data.modified = new Date(modified)
           data.mirror = !!mirror
           data.negative = !!negative
-          data.path = (base) ? resolve(base, normalize(path)) : path
+          data.path = (
+            (base) ? resolve(base, normalize(path)) : path
+          ).normalize()
 
           if (id in photos) assign(photos[id], data)
           else photos[id] = assign(skel(id), data)
