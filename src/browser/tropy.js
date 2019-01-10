@@ -351,6 +351,9 @@ class Tropy extends EventEmitter {
       }
     })
 
+    this.on('app:center-window', () =>
+      this.center())
+
     this.on('app:show-in-folder', (_, { target }) =>
       shell.showItemInFolder(target.path))
 
@@ -719,10 +722,16 @@ class Tropy extends EventEmitter {
     }
   }
 
+  center(windows = BrowserWindow.getAllWindows()) {
+    for (let win of windows) {
+      win.center()
+    }
+  }
+
   zoom(factor) {
     this.state.zoom = restrict(factor, ZOOM.MIN, ZOOM.MAX)
 
-    for (const win of BrowserWindow.getAllWindows()) {
+    for (let win of BrowserWindow.getAllWindows()) {
       win.webContents.setZoomFactor(this.state.zoom)
     }
   }

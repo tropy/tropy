@@ -109,6 +109,8 @@ en:
         - label: 'Minimize'
           accelerator: 'CmdOrCtrl+M'
           role: 'minimize'
+        - label: 'Move to Center'
+          command: 'app:center-window'
     - &dev
       label: 'Developer'
       id: 'dev'
