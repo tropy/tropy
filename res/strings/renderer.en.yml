@@ -87,6 +87,7 @@ en:
         themes:
           light: Light
           dark: Dark
+          system: Follow system preference
       locale:
         locale: Locale
         locales:

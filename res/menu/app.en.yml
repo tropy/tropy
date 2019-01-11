@@ -146,6 +146,9 @@ en:
             - label: 'Dark'
               id: 'dark'
               type: 'checkbox'
+            - label: 'Follow system preference'
+              id: 'system'
+              type: 'checkbox'
     - &help
       label: 'Help'
       submenu:
