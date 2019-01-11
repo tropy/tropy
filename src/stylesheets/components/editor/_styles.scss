@@ -1,6 +1,6 @@
-// sass-lint:disable class-name-format
+/* stylelint-disable no-descending-specificity */
 
-//
+
 // Editor styles
 // --------------------------------------------------
 
@@ -32,7 +32,6 @@
   hr {
     .numbers.horizontal &,
     .numbers.vertical-rl & {
-
       &::before {
         content: counter(line-numbers);
         counter-increment: line-numbers;
@@ -62,19 +61,14 @@
 
   a {
     cursor: text;
+    text-decoration: none;
 
     .darwin.meta-key &,
     .win32.ctrl-key &,
     .linux.ctrl-key & {
       cursor: pointer;
-    }
 
-    &:hover {
-      text-decoration: none;
-
-      .darwin.meta-key &,
-      .win32.ctrl-key &,
-      .linux.ctrl-key & {
+      @include state("a:hover") {
         text-decoration: underline;
       }
     }
