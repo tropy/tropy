@@ -246,6 +246,8 @@ en:
         - label: 'Minimize'
           accelerator: 'CmdOrCtrl+M'
           role: 'minimize'
+        - label: 'Move to Center'
+          command: 'app:center-window'
         - label: 'Close'
           accelerator: 'CmdOrCtrl+W'
           role: 'close'
