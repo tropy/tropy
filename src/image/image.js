@@ -78,7 +78,9 @@ class Image {
   }
 
   get orientation() {
-    return get(this.exif, [this.page, 'Orientation'], 1)
+    return Orientation(
+      get(this.exif, [this.page, 'Orientation'], 1)
+    )
   }
 
   get channels() {
@@ -285,6 +287,8 @@ Image.SELECTION_SIZE = {
     width: 512, height: 512, fit: 'contain', background: transparent
   }
 }
+
+const Orientation = (o) => (o > 0 && o < 9) ? o : 1
 
 const magic = (buffer) => {
   if (buffer != null) {
