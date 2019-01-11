@@ -49,7 +49,7 @@ class Tropy extends EventEmitter {
   static defaults = {
     frameless: darwin,
     debug: false,
-    theme: 'light',
+    theme: darwin ? 'system' : 'light',
     recent: [],
     updater: true,
     webgl: true,
@@ -278,6 +278,7 @@ class Tropy extends EventEmitter {
       .catch({ code: 'ENOENT' }, () => Tropy.defaults)
 
       .then(state => this.migrate(state))
+      .tap(state => this.state = state)
 
       .tap(() => all([
         this.load(),
@@ -287,6 +288,14 @@ class Tropy extends EventEmitter {
 
       .tap(() => this.plugins.watch())
       .tap(state => state.updater && this.updater.start())
+
+      .tap(state => {
+        if (darwin) {
+          pref.setAppLevelAppearance(
+            state.theme === 'system' ? null : state.theme
+          )
+        }
+      })
 
       .tap(() => this.emit('app:restored'))
       .tap(() => verbose('app state restored'))
@@ -306,9 +315,7 @@ class Tropy extends EventEmitter {
     state.locale = this.getLocale(state.locale)
     state.version = this.version
     state.uuid = state.uuid || uuid()
-
-    this.state = state
-    return this
+    return state
   }
 
   persist() {
@@ -489,10 +496,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:switch-theme', (_, theme) => {
-      verbose(`switching to "${theme}" theme...`)
-      this.state.theme = theme
-      this.broadcast('theme', theme)
-      this.emit('app:reload-menu')
+      this.setTheme(theme)
     })
 
     this.on('app:switch-locale', async (_, locale) => {
@@ -653,10 +657,12 @@ class Tropy extends EventEmitter {
     if (darwin) {
       app.on('activate', () => this.open())
 
-      const ids = [
+      let ids = [
         pref.subscribeNotification(
           'AppleShowScrollBarsSettingChanged', () =>
-            this.broadcast('scrollbars', !hasOverlayScrollBars()))
+            this.broadcast('scrollbars', !hasOverlayScrollBars())),
+        pref.subscribeNotification(
+          'AppleInterfaceThemeChangedNotification', () => this.setTheme())
       ]
 
       app.on('quit', () => {
@@ -704,6 +710,7 @@ class Tropy extends EventEmitter {
   get hash() {
     return {
       environment: ARGS.environment,
+      dark: pref.isDarkMode(),
       debug: this.debug,
       dev: this.dev,
       home: app.getPath('userData'),
@@ -742,6 +749,18 @@ class Tropy extends EventEmitter {
     this.setTitle(dict.windows.prefs.title, prefs)
     this.setTitle(dict.windows.wizard.title, wiz)
     this.broadcast('locale', state.locale)
+  }
+
+  setTheme(theme = this.state.theme) {
+    verbose(`switching to "${theme}" theme...`)
+    this.state.theme = theme
+
+    if (darwin) {
+      pref.setAppLevelAppearance(theme === 'system' ? null : theme)
+    }
+
+    this.broadcast('theme', theme, pref.isDarkMode())
+    this.emit('app:reload-menu')
   }
 
   setTitle(title, win) {

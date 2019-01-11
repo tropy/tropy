@@ -99,6 +99,7 @@ target.all = async (args = []) => {
         `${author.name}. All rights not expressly granted are reserved.`,
       extendInfo: join(res, 'ext.plist'),
       extraResource,
+      darwinDarkModeSupport: true,
       win32metadata: {
         CompanyName: author.name,
         ProductName: qualified.product

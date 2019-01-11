@@ -6,6 +6,7 @@ const { array, arrayOf, bool, func, shape, string } = require('prop-types')
 const { TemplateSelect } = require('../template/select')
 const { ipcRenderer: ipc } = require('electron')
 const { ESPER, ITEM } = require('../../constants')
+const { darwin } = require('../../common/os')
 
 const {
   FormElement,
@@ -147,6 +148,10 @@ class AppPrefs extends PureComponent {
     dupOptions: ['skip', 'import', 'prompt'],
     zoomModes: [ESPER.MODE.FIT, ESPER.MODE.FILL]
   }
+}
+
+if (darwin) {
+  AppPrefs.defaultProps.themes.push('system')
 }
 
 

@@ -146,6 +146,9 @@ en:
             - label: 'Dark'
               id: 'dark'
               type: 'checkbox'
+            - label: 'Follow system preference'
+              id: 'system'
+              type: 'checkbox'
     - &help
       label: 'Help'
       submenu:
@@ -243,6 +246,8 @@ en:
         - label: 'Minimize'
           accelerator: 'CmdOrCtrl+M'
           role: 'minimize'
+        - label: 'Move to Center'
+          command: 'app:center-window'
         - label: 'Close'
           accelerator: 'CmdOrCtrl+W'
           role: 'close'
