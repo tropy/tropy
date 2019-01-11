@@ -10,3 +10,4 @@ rules:
   selector-list-comma-newline-after: null
   max-empty-lines: null
   declaration-colon-space-after: always-single-line
+  unit-no-unknown: [true, { except: ["-webkit-image-set"] }]
