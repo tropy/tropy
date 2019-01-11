@@ -278,6 +278,7 @@ class Tropy extends EventEmitter {
       .catch({ code: 'ENOENT' }, () => Tropy.defaults)
 
       .then(state => this.migrate(state))
+      .tap(state => this.state = state)
 
       .tap(() => all([
         this.load(),
@@ -287,6 +288,14 @@ class Tropy extends EventEmitter {
 
       .tap(() => this.plugins.watch())
       .tap(state => state.updater && this.updater.start())
+
+      .tap(state => {
+        if (darwin) {
+          pref.setAppLevelAppearance(
+            state.theme === 'system' ? null : state.theme
+          )
+        }
+      })
 
       .tap(() => this.emit('app:restored'))
       .tap(() => verbose('app state restored'))
@@ -306,9 +315,7 @@ class Tropy extends EventEmitter {
     state.locale = this.getLocale(state.locale)
     state.version = this.version
     state.uuid = state.uuid || uuid()
-
-    this.state = state
-    return this
+    return state
   }
 
   persist() {
