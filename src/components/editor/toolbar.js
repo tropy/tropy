@@ -1,8 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
-const { func, instanceOf } = require('prop-types')
+const { bool, func, instanceOf } = require('prop-types')
 const { Toolbar, ToolbarContext, ToolGroup } = require('../toolbar')
 const { Button } = require('../button')
 const { EditorState } = require('prosemirror-state')
@@ -29,7 +28,7 @@ const {
 } = require('../icons')
 
 
-class EditorToolbar extends PureComponent {
+class EditorToolbar extends React.PureComponent {
   constructor(props) {
     super(props)
 
@@ -162,7 +161,7 @@ class EditorToolbar extends PureComponent {
 
   render() {
     return (
-      <Toolbar isDraggable={false}>
+      <Toolbar isDraggable={this.props.isDraggable}>
         <ToolbarContext
           className="default"
           isActive={this.hasDefaultContext}>
@@ -229,11 +228,9 @@ class EditorToolbar extends PureComponent {
   }
 
   static propTypes = {
+    isDraggable: bool,
     state: instanceOf(EditorState),
     onCommand: func.isRequired
-  }
-
-  static defaultProps = {
   }
 }
 

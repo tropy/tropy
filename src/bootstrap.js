@@ -3,11 +3,11 @@
 try {
   const START = performance.now()
 
-  const { home, dev } = require('./args').parse()
+  const opts = require('./args').parse()
   const { join } = require('path')
-  const LOGDIR = join(home, 'log')
+  const LOGDIR = join(opts.home, 'log')
 
-  const { verbose, warn } = require('./common/log')(LOGDIR)
+  const { verbose, warn } = require('./common/log')(LOGDIR, opts)
   const { ready } = require('./dom')
 
   const { win } = require('./window')
@@ -29,7 +29,7 @@ try {
       warn(`failed initializing ${win.type}: ${error.message}`)
       warn(error.stack)
 
-      if (!dev) {
+      if (!opts.dev) {
         win.current.close()
       }
     })
@@ -39,7 +39,7 @@ try {
     throw new Error('use of eval() is prohibited')
   }
 
-  if (!dev) {
+  if (!opts.dev) {
     global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {}
   }
 

@@ -121,23 +121,9 @@ const SIDEBAR = {
   DEFAULT_WIDTH: 250
 }
 
-const PROJECT = {
-  WIDTH: 1280,
-  HEIGHT: 720,
-  MIN_WIDTH: SIDEBAR.MIN_WIDTH + PANEL.MIN_WIDTH * 2,
-  MIN_HEIGHT: PANEL.MIN_HEIGHT * 3 + PANEL.TOOLBAR + PANEL.HEADER_MARGIN
-}
-
-const EDITOR = {
-  MAX_PADDING: 48
-}
-
-const NOTE = {
-  ROW_HEIGHT: 60
-}
-
 const ESPER = {
-  MIN_HEIGHT: PROJECT.MIN_HEIGHT / 2,
+  MIN_HEIGHT: 38,
+  MIN_WIDTH: 240,
   FADE_DURATION: 250,
   ROTATE_DURATION: 250,
   MAX_ZOOM: 4,
@@ -161,7 +147,7 @@ const ESPER = {
       y: '1'
     },
     move: {
-      move: 'arrow',
+      default: 'arrow',
       active: 'arrow',
       x: '1',
       y: '1'
@@ -191,6 +177,21 @@ const ESPER = {
       y: '8'
     }
   }
+}
+
+const PROJECT = {
+  WIDTH: 1280,
+  HEIGHT: 720,
+  MIN_WIDTH: PANEL.MIN_WIDTH + ESPER.MIN_WIDTH * 2,
+  MIN_HEIGHT: PANEL.MIN_HEIGHT * 3 + PANEL.TOOLBAR + PANEL.HEADER_MARGIN
+}
+
+const EDITOR = {
+  MAX_PADDING: 48
+}
+
+const NOTE = {
+  ROW_HEIGHT: 60
 }
 
 const INPUT = {

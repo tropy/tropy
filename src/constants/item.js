@@ -38,5 +38,10 @@ module.exports = {
     REMOVE: 'item.photo.remove'
   },
 
+  LAYOUT: {
+    STACKED: 'stacked',
+    SIDE_BY_SIDE: 'side-by-side'
+  },
+
   TEMPLATE: 'https://tropy.org/v1/templates/generic'
 }

@@ -7,4 +7,8 @@
   display: flex;
   flex-direction: column;
   contain: strict;
+
+  .side-by-side & {
+    padding-left: $space-min;
+  }
 }

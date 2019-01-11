@@ -9,5 +9,13 @@ module.exports = {
       payload,
       meta: { cmd: 'project', ...meta }
     }
+  },
+
+  purge(payload, meta = {}) {
+    return {
+      type: CACHE.PURGE,
+      payload,
+      meta: { cmd: 'project', ...meta }
+    }
   }
 }

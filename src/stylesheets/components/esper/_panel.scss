@@ -3,33 +3,60 @@
 // --------------------------------------------------
 
 .esper-panel {
-  flex: 0 0 $esper-panel-width;
   display: flex;
   flex-direction: column;
-  box-shadow: -1px 0 0 $esper-shadow;
+  margin-right: -$esper-panel-width - 1px; // Also hide box-shadow
+  margin-bottom: -$esper-panel-height - 1px;
+  max-width: 100%;
+  max-height: 100%;
   background: $esper-bg;
-  margin-right: -$esper-panel-width;
   position: relative; // Must be over esper-view for a clean transition in solid mode
-  transition: margin-right 0.3s ease;
+
+  .stacked & {
+    flex: 0 0 $esper-panel-width;
+    box-shadow: -1px 0 0 $esper-shadow;
+    transition: margin-right 0.3s ease;
+  }
+
+  .side-by-side & {
+    flex: 0 0 $esper-panel-height;
+    box-shadow: 0 -1px 0 $esper-shadow;
+    transition: margin-bottom 0.3s ease;
+  }
 
   .panel-visible & {
     margin-right: 0;
+    margin-bottom: 0;
   }
 
   .overlay-mode & {
     position: absolute;
-    top: $toolbar-height;
-    right: 0;
-    bottom: 0;
-    width: $esper-panel-width;
     background: $esper-overlay-bg;
-    box-shadow: inset 0 1px 0 $esper-shadow;
+
+    .stacked & {
+      top: $toolbar-height;
+      right: 0;
+      bottom: 0;
+      width: $esper-panel-width;
+      box-shadow: inset 0 1px 0 $esper-shadow;
+    }
+
+    .side-by-side & {
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: $esper-panel-height;
+      box-shadow: none;
+    }
   }
 
   .adjustments {
     flex: 1 1 0;
     overflow-y: scroll;
     padding: 19px $default-padding-horizontal 0; // todo
+    margin: auto;
+    width: 100%;
+    max-width: $esper-panel-max-size;
   }
 
   .adjustment {
@@ -62,6 +89,9 @@
   .revert-btn-container {
     flex: 0 0 auto;
     padding: 6px $default-padding-horizontal;
+    margin: auto;
+    width: 100%;
+    max-width: $esper-panel-max-size;
   }
 
   .esper:not(.overlay-mode) & {

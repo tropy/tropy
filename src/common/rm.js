@@ -1,6 +1,6 @@
 'use strict'
 
-const { promisify } = require('bluebird')
+const { promisify } = require('util')
 const rimraf = require('rimraf')
 
 module.exports = {

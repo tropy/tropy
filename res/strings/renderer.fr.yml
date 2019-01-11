@@ -71,7 +71,7 @@ fr:
     text: >
         Tropy est conçu par le {rrchnm}, une équipe qui crée des ressources pour l'enseignement
         de l'histoire, des expositions numériques, et des logiciels libres et open-source.
-    trademark: Tropy est une marque de la {cds}.
+    trademark: Tropy est une marque déposée de la {cds}.
     release:
       title: Notes de version
       url: https://github.com/tropy/tropy/releases/tag/{version}

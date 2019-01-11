@@ -12,12 +12,18 @@
   display: flex;
   flex-direction: column;
 
+  .toolbar {
+    .is-full-screen & {
+      display: none;
+    }
+  }
+
   .sidebar-body {
-    flex: 1 1 auto;
+    flex: 1 1 0;
     overflow-y: auto;
     padding-top: $space-xs;
 
-    .frameless & {
+    .frameless:not(.is-full-screen) & {
       padding-top: 0;
     }
   }

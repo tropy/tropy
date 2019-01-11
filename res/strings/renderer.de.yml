@@ -71,7 +71,7 @@ de:
     text: >
         Tropy wird vom {rrchnm} erstellt, einem Team, das Ressourcen zur Geschichtsvermittlung,
         digitale Ausstellungen und Open-Source-Software entwickelt.
-    trademark: Tropy ist eine geschützte Marke der {cds}.
+    trademark: Der Name Tropy ist eine geschützte Marke der {cds}.
     release:
       title: Versionshinweise
       url: https://github.com/tropy/tropy/releases/tag/{version}
@@ -290,6 +290,7 @@ de:
     filter:
       templates: Tropy-Vorlagen
       images: Bilder
+      items: Tropy Objekte
       projects: Tropy-Projekte
       rdf: RDF-Vokabular
       jsonld: JSON-LD
@@ -357,6 +358,8 @@ de:
       save: Ausschnitt speichern
       order: Ausschnitte sortieren
   activity:
+    cache:
+      prune: Projekt-Cache wird optimiert …
     project:
       save: Speichern …
     list:
@@ -483,7 +486,9 @@ de:
         save: Tag konnte nicht gespeichert werden.
         create: Objekt konnte nicht getaggt werden.
     list:
+      load: Listen konnten nicht geladen werden.
       create: Liste konnte nicht erstellt werden. Listennamen müssen eindeutig sein.
+      move: Liste konnte nicht verschoben werden. Listennamen müssen innerhalb einer Ebene eindeutig sein.
       save: Liste konnte nicht gespeichert werden.
       item:
         add: Objekt(e) konnten nicht zur Liste hinzugefügt werden.
