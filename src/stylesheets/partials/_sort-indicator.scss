@@ -1,4 +1,6 @@
-//
+/* stylelint-disable no-descending-specificity */
+
+
 // Sort indicator
 // --------------------------------------------------
 
@@ -34,18 +36,18 @@
       width: 100%;
     }
 
-    &:first-child {
-      &::before {
-        bottom: calc(100% - 1px);
-      }
-    }
-
     &::before {
       bottom: 100%;
     }
 
     &::after {
       top: 100%;
+    }
+
+    &:first-child {
+      &::before {
+        bottom: calc(100% - 1px);
+      }
     }
 
     &:last-child {
@@ -117,11 +119,11 @@
   $sel: if($i == 1, "ol", selector-nest($sel, "ol"));
 
   #{$sel} {
-  	.list-node-container {
-    	&.before,
-    	&.after {
-      	&::before,
-      	&::after {
+    .list-node-container {
+      &.before,
+      &.after {
+        &::before,
+        &::after {
           @if ($i == 1) {
             left: $list-tree-padding-left + 1px;
           }
@@ -133,14 +135,14 @@
           @if ($i > 2) {
             left: $list-tree-padding-left + $list-tree-indent * ($i - 1) + 1px;
           }
-      	}
-    	}
-  	}
+        }
+      }
+    }
 
-  	.expanded {
-    	> .list-node-container {
-      	&.after {
-        	&::after {
+    .expanded {
+      > .list-node-container {
+        &.after {
+          &::after {
             @if ($i == 1) {
               left: $list-tree-padding-left + $list-tree-indent + 1px;
             }
@@ -149,9 +151,9 @@
               left: $list-tree-padding-left + $list-tree-indent * $i + 1px;
             }
           }
-      	}
-    	}
-  	}
+        }
+      }
+    }
   }
 
   .list-node-container {
