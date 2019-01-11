@@ -1,4 +1,6 @@
-//
+/* stylelint-disable no-descending-specificity */
+
+
 // Scrollbar
 // --------------------------------------------------
 
@@ -23,17 +25,15 @@
         &:active {
           border-width: $space-min / 2;
         }
+
+        @include variant(".scrollbar-style-old-school .overlay-mode") {
+          background-color: $scrollbar-overlay-color;
+        }
       }
 
       &-corner {
         background: $scrollbar-bg;
       }
-    }
-  }
-
-  .overlay-mode {
-    ::-webkit-scrollbar-thumb {
-      background-color: $scrollbar-overlay-color;
     }
   }
 }
