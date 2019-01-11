@@ -150,7 +150,7 @@
   }
 }
 
-#items {
+.items {
   display: flex;
   flex-direction: column;
   min-width: 0; // Needed for horizontal scrollbar in .item-table
