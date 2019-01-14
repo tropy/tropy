@@ -7,7 +7,6 @@ rules:
   at-rule-empty-line-before: [null, { except: first-nested }]
   declaration-empty-line-before: null
   block-closing-brace-newline-after: null
-  selector-list-comma-newline-after: null
   declaration-colon-space-after: always-single-line
   unit-no-unknown: [true, { ignoreFunctions: ["-webkit-image-set"] }]
   selector-pseudo-element-no-unknown: [true, { ignorePseudoElements: ["-webkit"] }]
