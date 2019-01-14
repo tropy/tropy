@@ -1,4 +1,6 @@
-//
+/* stylelint-disable no-descending-specificity */
+
+
 // Slider
 // --------------------------------------------------
 
@@ -28,18 +30,8 @@
 
     &.active {
       opacity: $btn-disabled-opacity;
-
-      &:active {
-        .icon {
-          color: $icon-color;
-        }
-      }
-    }
-
-    .overlay-mode & {
-      .icon {
-        color: $slider-overlay-icon-color;
-      }
+      pointer-events: none; // Simpler than icon color reset
+      // Icon overlay colors are defined by the toolbar
     }
   }
 }
@@ -136,11 +128,9 @@
   .frameless .window-draggable & {
     -webkit-app-region: no-drag;
   }
-}
 
-.slider:hover,
-.slider-handle:active {
-  .slider-value {
+  .slider:hover &,
+  .slider-handle:active {
     opacity: 1;
   }
 }
