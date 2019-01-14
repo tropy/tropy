@@ -44,24 +44,25 @@
 
   .save-as {
     height: $input-height-large;
-
-    &.custom {
-      .save-as-link {
-        display: none;
-      }
-
-      .save-as-controls {
-        display: flex;
-      }
-    }
   }
 
   .save-as-link-container {
     margin-top: 11px;
   }
 
+  .save-as-link {
+    @include state(".custom .save-as-link") {
+      display: none;
+    }
+  }
+
+  /* stylelint-disable no-descending-specificity */
   .save-as-controls {
     display: none;
+
+    @include state(".custom .save-as-controls") {
+      display: flex;
+    }
 
     .form-control {
       flex: 1 1 0;
@@ -79,4 +80,5 @@
       cursor: not-allowed;
     }
   }
+  /* stylelint-enable */
 }
