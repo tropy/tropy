@@ -1,6 +1,4 @@
-// sass-lint:disable nesting-depth
-
-
+//
 // Sidebar
 // --------------------------------------------------
 
@@ -44,7 +42,6 @@
       }
 
       > .list-node-container {
-        // sass-lint:disable-block mixins-before-declarations
         display: flex;
         align-items: center;
         height: $line-height-large;
@@ -52,12 +49,12 @@
         position: relative;
 
         @include state("li.active", "li.over") {
-          @extend %list-active; // sass-lint:disable-line space-around-operator
+          @extend %list-active;
         }
 
         @include state("li.active") {
           @include state(".sidebar :focus") {
-            @extend %list-focus; // sass-lint:disable-line space-around-operator
+            @extend %list-focus;
           }
         }
 

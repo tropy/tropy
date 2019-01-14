@@ -217,21 +217,21 @@ fieldset {
 @each $input in checkbox, radio {
   .#{$input}.tab {
     [type="#{$input}"] {
-      border-color: $input-btn-focus-color !important; // sass-lint:disable-line no-important
-      box-shadow: 0 0 0 2px $input-btn-focus-color !important; // sass-lint:disable-line no-important
+      border-color: $input-btn-focus-color !important;
+      box-shadow: 0 0 0 2px $input-btn-focus-color !important;
 
       .overlay-mode & {
-        border-color: $input-overlay-focus-color !important; // sass-lint:disable-line no-important
-        box-shadow: 0 0 0 2px $input-overlay-focus-color !important; // sass-lint:disable-line no-important
+        border-color: $input-overlay-focus-color !important;
+        box-shadow: 0 0 0 2px $input-overlay-focus-color !important;
       }
 
       &:checked {
-        border-color: $input-btn-focus-color !important; // sass-lint:disable-line no-important
-        box-shadow: 0 0 0 2px $input-btn-focus-color !important; // sass-lint:disable-line no-important
+        border-color: $input-btn-focus-color !important;
+        box-shadow: 0 0 0 2px $input-btn-focus-color !important;
 
         .overlay-mode & {
-          border-color: $input-overlay-focus-color !important; // sass-lint:disable-line no-important
-          box-shadow: 0 0 0 2px $input-overlay-focus-color !important; // sass-lint:disable-line no-important
+          border-color: $input-overlay-focus-color !important;
+          box-shadow: 0 0 0 2px $input-overlay-focus-color !important;
         }
       }
     }
