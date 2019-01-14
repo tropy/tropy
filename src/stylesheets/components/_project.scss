@@ -223,13 +223,13 @@
   background: $body-bg;
   z-index: $zindex-draggable;
 
-  body:not(.scrollbar-style-old-school) &,
-  .item-grid + & {
-    display: none;
-  }
-
   .max-scroll-left + & {
     height: $toolbar-height;
+  }
+
+  .item-grid + &,
+  body:not(.scrollbar-style-old-school) & {
+    display: none;
   }
 }
 
