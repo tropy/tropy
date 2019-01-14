@@ -10,9 +10,7 @@ html {
   line-height: $line-height-base;
 }
 
-
 // Headings
-
 h1, h2, h3, h4, h5, h6,
 .h1, .h2, .h3, .h4, .h5, .h6 {
   font-family: $headings-font-family;
@@ -23,9 +21,7 @@ h1, h2, h3, h4, h5, h6,
   margin: 0;
 }
 
-
 // Links
-
 a {
   text-decoration: none;
   color: $link-color;
@@ -36,40 +32,30 @@ a {
   }
 }
 
-
 // Paragraphs
-
 p {
   margin: 1em 0;
 }
 
-
 // Lists
-
 ul, ol {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-
 // Text selection
-
 ::selection {
   color: $text-selection-color;
   background-color: $text-selection-bg;
 }
 
-
 // Alignment classes
-
 .text-right {
   text-align: right;
 }
 
-
 // Small text
-
 small {
   display: inline;
 }
@@ -78,9 +64,7 @@ small {
   color: $muted-text-color;
 }
 
-
 // Horizontal rule
-
 hr {
   border: none;
   border-top: 1px solid $hr-border;
