@@ -12,9 +12,9 @@ body {
 
   // Reset San Francisco
   .wizard,
-  #items .no-items,
   .no-project,
-  .about {
+  .about,
+  .items .no-items {
     h1 {
       font-family: system-ui, "HelveticaNeue-Thin", $font-family-base;
     }

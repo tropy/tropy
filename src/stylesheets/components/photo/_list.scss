@@ -26,50 +26,39 @@
     align-items: center;
     position: relative;
 
-    &.active {
-      .photo-container {
-        @extend %list-active;
-        contain: strict;
-
-        @at-root #{
-          selector-replace(&, ".photo-list",
-            ".photo-list .scroll-container:focus")
-        } {
-          @extend %list-focus;
-        }
-      }
-    }
-
-    &:not(.expandable) {
-      .photo-container {
-        padding-left: $default-padding-horizontal + $space-md + $space-min;
-      }
-    }
-
-    &.expanded {
-      .btn {
-        .icon {
-          transform: scaleY(-1);
-        }
-      }
-    }
-
     .photo-container {
       display: flex;
       align-items: center;
       padding: 0 $default-padding-horizontal;
       height: $row-height;
-    }
-  }
 
-  .btn {
-    flex: 0 0 auto;
-    padding: 0;
-    border-radius: 0;
-    margin-right: $space-min;
+      @include state(".photo:not(.expandable)") {
+        padding-left: $default-padding-horizontal + $space-md + $space-min;
+      }
 
-    .icon {
-      transform: rotate(90deg);
+      @include state(".photo.active") {
+        @extend %list-active;
+        contain: strict;
+
+        @include state(".photo-list .scroll-container:focus") {
+          @extend %list-focus;
+        }
+      }
+
+      .btn {
+        flex: 0 0 auto;
+        padding: 0;
+        border-radius: 0;
+        margin-right: $space-min;
+
+        .icon {
+          transform: rotate(90deg);
+
+          @include state(".photo.expanded") {
+            transform: scaleY(-1);
+          }
+        }
+      }
     }
   }
 
@@ -87,7 +76,10 @@
     .selection {
       display: flex;
       align-items: center;
-      padding-left: $default-padding-horizontal + $space-md + $space-sm
+      padding-left:
+        $default-padding-horizontal
+        + $space-md
+        + $space-sm
         + $space-min;
       padding-right: $default-padding-horizontal;
       height: $row-height;
@@ -95,10 +87,7 @@
       &.active {
         @extend %list-active;
 
-        @at-root #{
-          selector-replace(&, ".photo-list",
-            ".photo-list .scroll-container:focus")
-        } {
+        @include state(".photo-list .scroll-container:focus") {
           @extend %list-focus;
         }
       }

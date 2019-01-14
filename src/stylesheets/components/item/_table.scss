@@ -16,17 +16,6 @@
   td {
     padding: 0;
     position: relative;
-
-    &:last-child {
-      .th-container,
-      .td-container {
-        padding-right: $space-sm;
-      }
-    }
-
-    &[class*="integer"] {
-      text-align: right;
-    }
   }
 
   &.dragging-column {
@@ -37,20 +26,8 @@
       &.dragging {
         z-index: $zindex-drag-layer;
         transform: translateX(var(--drag-offset));
-
-        &,
-        .td-container {
-          transition: none;
-        }
-
-        .td-container {
-          opacity: 0.5;
-        }
+        transition: none;
       }
-    }
-
-    .table-head {
-      overflow: visible;
     }
 
     .resizable-handle-col {
@@ -74,6 +51,10 @@
 
     .scrollbar-style-old-school & {
       width: calc(100% - #{$default-padding-horizontal});
+    }
+
+    @include state(".item-table.dragging-column") {
+      overflow: visible;
     }
 
     th {
@@ -118,36 +99,11 @@
         &::before {
           content: none;
         }
-
-        .th-container {
-          padding-left: $space-xs;
-        }
-      }
-
-      &[class*="integer"] {
-        .label {
-          padding-left: $space-min;
-          padding-right: 0;
-        }
-
-        .icon {
-          order: -1;
-        }
       }
 
       &.ascending,
       &.descending {
         color: $item-table-header-sort-color;
-
-        .icon {
-          display: block;
-        }
-      }
-
-      &.descending {
-        .icon {
-          transform: scaleY(-1);
-        }
       }
 
       &:active:not(.resizing):not(.blank):not(.dragging) {
@@ -212,6 +168,10 @@
         }
       }
 
+      &[class*="integer"] {
+        text-align: right;
+      }
+
       .th-container {
         display: flex;
         width: 100%;
@@ -219,17 +179,38 @@
         justify-content: space-between;
         align-items: center;
         padding: 0 $space-min 0 ($space-min + 1px);
+
+        @include variant("th:first-child") {
+          padding-left: $space-xs;
+        }
       }
 
       .label {
         @include css-truncation;
         flex: 1 1 auto;
         padding-right: $space-min;
+
+        @include variant("th[class*='integer']") {
+          padding-left: $space-min;
+          padding-right: 0;
+        }
       }
 
       .icon {
         display: none;
         margin: 0 -4px 0 -5px;
+
+        @include state("th.ascending", "th.descending") {
+          display: block;
+        }
+
+        @include state("th.descending") {
+          transform: scaleY(-1);
+        }
+
+        @include variant("th[class*='integer']") {
+          order: -1;
+        }
       }
     }
   }
@@ -247,10 +228,14 @@
   }
 
   .scroll-container {
-    background-image: repeating-linear-gradient(to bottom,
-      $items-odd-bg $space-min, $items-odd-bg ($row-height + $space-min),
-      transparent ($row-height + $space-min),
-      transparent (2 * $row-height + $space-min));
+    background-image:
+      repeating-linear-gradient(
+        to bottom,
+        $items-odd-bg $space-min,
+        $items-odd-bg ($row-height + $space-min),
+        transparent ($row-height + $space-min),
+        transparent (2 * $row-height + $space-min)
+      );
     background-attachment: local;
     padding-top: $space-min;
     position: relative;
@@ -274,74 +259,73 @@
   .item {
     contain: layout size style;
 
+    &.active {
+
+      // Fix 'gap' rendering bug
+      @include state(".item-table.dragging-column") {
+        background: $items-active-bg;
+      }
+    }
+
     td {
       height: $row-height;
 
+      // Fix 'gap' rendering bug
+      @include state(".item-table.dragging-column") {
+        background: transparent;
+      }
+
+      @include state(".item.active") {
+        color: $items-active-color;
+        background: $items-active-bg;
+      }
+
+      @include state(".scroll-container:focus .item.active") {
+        color: $items-focus-color;
+        background: $items-focus-bg;
+
+        .icon-circle,
+        .icon-crescentcircle {
+          .border {
+            color: $colors-focus-border-table;
+          }
+        }
+      }
+
       &.moving {
         transform: translateX(var(--drop-offset));
+      }
+
+      @include state(".item.over") {
+        @extend %drop-target;
+      }
+
+      &[class*="integer"] {
+        text-align: right;
       }
     }
 
     .td-container {
       padding: 0 $space-xs 0 ($space-xs + 1px);
       transition: opacity $column-transition;
-    }
 
-    .main-column {
-      .td-container {
+      @include state(".dragging .td-container") {
+        opacity: 0.5;
+        transition: none;
+      }
+
+      @include variant(".main-column .td-container") {
         padding-left:
           $padding-base-horizontal
           + $thumbnail-size
           + $padding-base-horizontal;
       }
 
-      &:first-child {
-        .td-container {
-          padding-left:
-            $default-padding-horizontal
-            + $thumbnail-size
-            + $padding-base-horizontal;
-        }
-      }
-    }
-
-    &.active {
-
-      // Fix 'gap' rendering bug
-      @at-root #{
-        selector-replace(&, ".item-table", ".item-table.dragging-column")
-      } {
-        background: $items-active-bg;
-
-        td {
-          background: transparent;
-        }
-      }
-
-      td {
-        color: $items-active-color;
-        background: $items-active-bg;
-
-        @at-root #{
-          selector-replace(&, ".item-table",
-            ".item-table .scroll-container:focus")
-        } {
-          color: $items-focus-color;
-          background: $items-focus-bg;
-
-          .icon-circle,
-          .icon-crescentcircle {
-            .border {
-              color: $colors-focus-border-table;
-            }
-          }
-        }
-      }
-    }
-
-    &.over {
-      td {
-        @extend %drop-target;
+      @include variant(".main-column:first-child .td-container") {
+        padding-left:
+          $default-padding-horizontal
+          + $thumbnail-size
+          + $padding-base-horizontal;
       }
     }
   }

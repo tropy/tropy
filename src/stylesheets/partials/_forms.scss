@@ -1,3 +1,5 @@
+/* stylelint-disable no-descending-specificity */
+
 //
 // Forms
 // --------------------------------------------------
@@ -215,21 +217,21 @@ fieldset {
 @each $input in checkbox, radio {
   .#{$input}.tab {
     [type="#{$input}"] {
-      border-color: $input-btn-focus-color !important; // sass-lint:disable-line no-important
-      box-shadow: 0 0 0 2px $input-btn-focus-color !important; // sass-lint:disable-line no-important
+      border-color: $input-btn-focus-color !important;
+      box-shadow: 0 0 0 2px $input-btn-focus-color !important;
 
       .overlay-mode & {
-        border-color: $input-overlay-focus-color !important; // sass-lint:disable-line no-important
-        box-shadow: 0 0 0 2px $input-overlay-focus-color !important; // sass-lint:disable-line no-important
+        border-color: $input-overlay-focus-color !important;
+        box-shadow: 0 0 0 2px $input-overlay-focus-color !important;
       }
 
       &:checked {
-        border-color: $input-btn-focus-color !important; // sass-lint:disable-line no-important
-        box-shadow: 0 0 0 2px $input-btn-focus-color !important; // sass-lint:disable-line no-important
+        border-color: $input-btn-focus-color !important;
+        box-shadow: 0 0 0 2px $input-btn-focus-color !important;
 
         .overlay-mode & {
-          border-color: $input-overlay-focus-color !important; // sass-lint:disable-line no-important
-          box-shadow: 0 0 0 2px $input-overlay-focus-color !important; // sass-lint:disable-line no-important
+          border-color: $input-overlay-focus-color !important;
+          box-shadow: 0 0 0 2px $input-overlay-focus-color !important;
         }
       }
     }
@@ -241,8 +243,8 @@ fieldset {
     border-radius: $border-radius-small;
 
     &:checked {
-      &:before,
-      &:after {
+      &::before,
+      &::after {
         content: "";
         position: absolute;
         left: 4px;
@@ -253,12 +255,12 @@ fieldset {
         transform-origin: 1px 1px;
       }
 
-      &:before {
+      &::before {
         width: 5px;
         transform: translateX(-0.75px) rotate(-135deg) scaleY(0.75);
       }
 
-      &:after {
+      &::after {
         width: 10px;
         transform: translateX(-0.25px) rotate(-50.19deg) scaleY(0.75);
       }
@@ -271,7 +273,7 @@ fieldset {
     border-radius: 50%;
 
     &:checked {
-      &:before {
+      &::before {
         content: "";
         position: absolute;
         top: 3px;
