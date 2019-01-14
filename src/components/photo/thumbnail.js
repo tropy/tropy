@@ -11,7 +11,7 @@ const { Rotation } = require('../../common/iiif')
 class Thumbnail extends React.Component {
   state = {
     src: null,
-    rot: '0',
+    rotation: '0',
     hasBeenFixed: false,
     hasFinishedLoading: false,
     isBroken: false
@@ -19,7 +19,7 @@ class Thumbnail extends React.Component {
 
   static getDerivedStateFromProps(props, state) {
     let src = Thumbnail.getUrl(props)
-    let rot = Thumbnail.getRotation(props)
+    let rotation = Thumbnail.getRotation(props)
     let isBroken = props.broken
 
     let hasImageChanged = src !== state.src
@@ -31,7 +31,7 @@ class Thumbnail extends React.Component {
       (!(hasImageChanged || hasBeenFixed) || state.hasFinishedLoading)
 
     return {
-      src, rot, hasBeenFixed, hasFinishedLoading, isBroken
+      src, rotation, hasBeenFixed, hasFinishedLoading, isBroken
     }
   }
 
@@ -65,9 +65,6 @@ class Thumbnail extends React.Component {
     if (this.props.onError != null && !this.state.isBroken) {
       this.props.onError(this.props.id)
     }
-  }
-
-  renderImage() {
   }
 
   render() {
