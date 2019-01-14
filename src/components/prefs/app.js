@@ -54,6 +54,7 @@ class AppPrefs extends PureComponent {
           <FormToggleGroup
             id="prefs.app.dup"
             name="dup"
+            isCompact
             value={this.props.settings.dup}
             options={this.props.dupOptions}
             onChange={this.props.onSettingsUpdate}/>
@@ -104,6 +105,7 @@ class AppPrefs extends PureComponent {
           <FormToggleGroup
             id="prefs.app.zoomMode"
             name="zoomMode"
+            isCompact
             value={this.props.settings.zoomMode}
             options={this.props.zoomModes}
             onChange={this.props.onSettingsUpdate}/>
