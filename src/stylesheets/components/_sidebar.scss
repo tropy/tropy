@@ -149,12 +149,12 @@
     $sel: if($i == 1, "ol", selector-nest($sel, "ol"));
 
     #{$sel} {
-    	.list-node-container {
-    		padding-left:
-    			$list-tree-padding-left
-    				+ $list-tree-indent
-    				* ($i - 1);
-    	}
+      .list-node-container {
+        padding-left:
+          $list-tree-padding-left
+          + $list-tree-indent
+          * ($i - 1);
+      }
     }
   }
 }
