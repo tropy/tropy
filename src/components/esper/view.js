@@ -84,14 +84,15 @@ class EsperView extends React.Component {
     return false
   }
 
-  start = () => {
+  start = (stop = false) => {
     this.stop.cancel()
     this.pixi.start()
+    if (stop === true) this.stop()
   }
 
   stop = debounce(() => {
     this.pixi.stop()
-  }, 2000)
+  }, 5000)
 
   get resolution() {
     return this.pixi.renderer.resolution
@@ -233,7 +234,7 @@ class EsperView extends React.Component {
     this.setScaleMode(this.image.bg.texture, zoom)
     this.image.scale.set(mirror ? -zoom : zoom, zoom)
     this.persist()
-    this.pixi.render()
+    this.start(true)
   }
 
   move({ x, y }, duration = 0) {
@@ -444,8 +445,7 @@ class EsperView extends React.Component {
   handleWheel = (e) => {
     e.stopPropagation()
     this.props.onWheel(coords(e))
-    this.start()
-    this.stop()
+    this.start(true)
   }
 
   handleMouseDown = (event) => {
