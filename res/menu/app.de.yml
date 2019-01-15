@@ -91,6 +91,8 @@ de:
         - label: Minimieren
           accelerator: CmdOrCtrl+M
           role: minimize
+        - label: Zentrieren
+          command: 'app:center-window'
     - label: Entwickler
       id: dev
       submenu:
@@ -124,6 +126,9 @@ de:
               type: checkbox
             - label: Dunkel
               id: dark
+              type: checkbox
+            - label: Folge der Systemeinstellung
+              id: system
               type: checkbox
     - label: Hilfe
       submenu:
@@ -260,6 +265,8 @@ de:
         - label: Im Dock ablegen
           accelerator: CmdOrCtrl+M
           role: minimize
+        - label: Zentrieren
+          command: 'app:center-window'
         - label: Schließen
           accelerator: CmdOrCtrl+W
           role: close
@@ -299,6 +306,9 @@ de:
               type: checkbox
             - label: Dunkel
               id: dark
+              type: checkbox
+            - label: Folge der Systemeinstellung
+              id: system
               type: checkbox
     - label: Hilfe
       role: help
@@ -419,6 +429,8 @@ de:
         - label: Minimieren
           accelerator: CmdOrCtrl+M
           role: minimize
+        - label: Zentrieren
+          command: 'app:center-window'
     - label: Entwickler
       id: dev
       submenu:
@@ -452,6 +464,9 @@ de:
               type: checkbox
             - label: Dunkel
               id: dark
+              type: checkbox
+            - label: Folge der Systemeinstellung
+              id: system
               type: checkbox
     - label: Hilfe
       submenu:

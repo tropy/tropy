@@ -167,6 +167,16 @@ de:
         command: 'app:restore-item'
       - label: Ausgewählte Objekte vollständig löschen
         command: 'app:destroy-item'
+    item-view:
+      - label: Layout
+        id: item-view-layout
+        submenu:
+          - label: Übereinander
+            id: stacked
+            type: checkbox
+          - label: Nebeneinander
+            id: side-by-side
+            type: checkbox
     trash:
       - label: Objekte vollständig löschen
         command: 'app:destroy-item'
@@ -325,6 +335,16 @@ de:
         command: 'app:restore-item'
       - label: Ausgewählte Objekte permanent löschen
         command: 'app:destroy-item'
+    item-view:
+      - label: Layout
+        id: item-view-layout
+        submenu:
+          - label: Übereinander
+            id: stacked
+            type: checkbox
+          - label: Nebeneinander
+            id: side-by-side
+            type: checkbox
     trash:
       - label: Objekte vollständig löschen
         command: 'app:destroy-item'
@@ -504,6 +524,16 @@ de:
         command: 'app:restore-item'
       - label: Ausgewählte Objekte permanent löschen
         command: 'app:destroy-item'
+    item-view:
+      - label: Layout
+        id: item-view-layout
+        submenu:
+          - label: Übereinander
+            id: stacked
+            type: checkbox
+          - label: Nebeneinander
+            id: side-by-side
+            type: checkbox
     trash:
       - label: Objekte vollständig löschen
         command: 'app:destroy-item'

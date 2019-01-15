@@ -26,13 +26,13 @@ ja:
           enabled: false
           submenu:
             - type: separator
-            - label: リストを消す
+            - label: リストを削除
               command: 'app:clear-recent-projects'
         - type: separator
         - label: 写真をインポートする
           command: 'app:import-photos'
           accelerator: CmdOrCtrl+Shift+I
-        - label: 写真ライブラリをまとめる
+        - label: 写真ライブラリを統合
           command: 'app:consolidate-photo-library'
         - type: separator
         - label: 閉じる
@@ -91,6 +91,8 @@ ja:
         - label: 最小化
           accelerator: CmdOrCtrl+M
           role: minimize
+        - label: 画面中央に寄せる
+          command: 'app:center-window'
     - label: 開発者向け
       id: dev
       submenu:
@@ -108,10 +110,10 @@ ja:
         - type: separator
         - label: オントロジーデータベースをリセット
           command: 'app:reset-ontology-db'
-        - label: Optimize Project Caches
+        - label: プロジェクトのキャッシュを最適化
           command: 'app:optimize-cache'
         - type: separator
-        - label: Rebase Project
+        - label: プロジェクトをリベースする
           command: 'app:rebase-project'
         - label: プロジェクトを閉じる
           command: 'app:close-project'
@@ -124,6 +126,9 @@ ja:
               type: checkbox
             - label: ダーク
               id: dark
+              type: checkbox
+            - label: システム環境の設定を引き継ぐ
+              id: system
               type: checkbox
     - label: ヘルプ
       submenu:
@@ -138,7 +143,7 @@ ja:
           command: 'app:open-logs'
         - label: プラグインフォルダを開く
           command: 'app:open-plugins-folder'
-        - label: ユーザーデータフォルダーを表示
+        - label: ユーザーデータフォルダーを開く
           command: 'app:open-user-data'
         - type: separator
         - id: updater-check
@@ -146,7 +151,7 @@ ja:
           command: 'app:check-for-updates'
           enabled: false
         - id: updater-is-checking
-          label: 最新アップデートの取得
+          label: 最新アップデートを取得しています
           enabled: false
           visible: false
         - id: updater-install
@@ -204,13 +209,13 @@ ja:
           enabled: false
           submenu:
             - type: separator
-            - label: 一覧を消す
+            - label: リストを削除
               command: 'app:clear-recent-projects'
         - type: separator
         - label: 写真をインポートする
           command: 'app:import-photos'
           accelerator: CmdOrCtrl+Shift+I
-        - label: 写真をまとめる
+        - label: 写真ライブラリを統合
           command: 'app:consolidate-photo-library'
         - type: separator
         - label: プロジェクトを終了する
@@ -260,6 +265,8 @@ ja:
         - label: 最小化
           accelerator: CmdOrCtrl+M
           role: minimize
+        - label: 画面中央に寄せる
+          command: 'app:center-window'
         - label: 閉じる
           accelerator: CmdOrCtrl+W
           role: close
@@ -283,10 +290,10 @@ ja:
         - type: separator
         - label: オントロジーデータベースをリセット
           command: 'app:reset-ontology-db'
-        - label: Optimize Project Caches
+        - label: プロジェクトのキャッシュを最適化
           command: 'app:optimize-cache'
         - type: separator
-        - label: Rebase Project
+        - label: プロジェクトをリベースする
           command: 'app:rebase-project'
         - label: プロジェクトを閉じる
           command: 'app:close-project'
@@ -299,6 +306,9 @@ ja:
               type: checkbox
             - label: ダーク
               id: dark
+              type: checkbox
+            - label: システム環境の設定を引き継ぐ
+              id: system
               type: checkbox
     - label: ヘルプ
       role: help
@@ -314,7 +324,7 @@ ja:
           command: 'app:open-logs'
         - label: プラグインフォルダを開く
           command: 'app:open-plugins-folder'
-        - label: ユーザーデータフォルダーを表示
+        - label: ユーザーデータフォルダーを開く
           command: 'app:open-user-data'
         - type: separator
         - id: updater-check
@@ -322,7 +332,7 @@ ja:
           command: 'app:check-for-updates'
           enabled: false
         - id: updater-is-checking
-          label: 最新アップデートの取得
+          label: 最新アップデートを取得しています
           enabled: false
           visible: false
         - id: updater-install
@@ -357,13 +367,13 @@ ja:
           enabled: false
           submenu:
             - type: separator
-            - label: 一覧を消す
+            - label: リストを削除
               command: 'app:clear-recent-projects'
         - type: separator
         - label: 写真をインポートする
           command: 'app:import-photos'
           accelerator: CmdOrCtrl+Shift+I
-        - label: 写真をまとめる
+        - label: 写真ライブラリを統合
           command: 'app:consolidate-photo-library'
         - type: separator
         - label: プロジェクトを終了する
@@ -419,6 +429,8 @@ ja:
         - label: 最小化
           accelerator: CmdOrCtrl+M
           role: minimize
+        - label: 画面中央に寄せる
+          command: 'app:center-window'
     - label: 開発者向け
       id: dev
       submenu:
@@ -436,10 +448,10 @@ ja:
         - type: separator
         - label: オントロジーデータベースをリセット
           command: 'app:reset-ontology-db'
-        - label: Optimize Project Caches
+        - label: プロジェクトのキャッシュを最適化
           command: 'app:optimize-cache'
         - type: separator
-        - label: Rebase Project
+        - label: プロジェクトをリベースする
           command: 'app:rebase-project'
         - label: プロジェクトを閉じる
           command: 'app:close-project'
@@ -452,6 +464,9 @@ ja:
               type: checkbox
             - label: ダーク
               id: dark
+              type: checkbox
+            - label: システム環境の設定を引き継ぐ
+              id: system
               type: checkbox
     - label: ヘルプ
       submenu:
@@ -466,7 +481,7 @@ ja:
           command: 'app:open-logs'
         - label: プラグインフォルダを開く
           command: 'app:open-plugins-folder'
-        - label: ユーザーデータフォルダーを表示
+        - label: ユーザーデータフォルダーを開く
           command: 'app:open-user-data'
         - type: separator
         - id: updater-check
@@ -474,7 +489,7 @@ ja:
           command: 'app:check-for-updates'
           enabled: false
         - id: updater-is-checking
-          label: 最新アップデートの取得
+          label: 最新アップデートを取得しています
           enabled: false
           visible: false
         - id: updater-install

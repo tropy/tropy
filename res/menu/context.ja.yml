@@ -167,6 +167,16 @@ ja:
         command: 'app:restore-item'
       - label: 選択したアイテムを完全に削除する
         command: 'app:destroy-item'
+    item-view:
+      - label: レイアウト表示
+        id: item-view-layout
+        submenu:
+          - label: 上下に配置
+            id: stacked
+            type: checkbox
+          - label: 左右に配置
+            id: side-by-side
+            type: checkbox
     trash:
       - label: アイテムを完全に削除する
         command: 'app:destroy-item'
@@ -325,6 +335,16 @@ ja:
         command: 'app:restore-item'
       - label: 選択したアイテムを完全に削除する
         command: 'app:destroy-item'
+    item-view:
+      - label: レイアウト表示
+        id: item-view-layout
+        submenu:
+          - label: 上下に配置
+            id: stacked
+            type: checkbox
+          - label: 左右に配置
+            id: side-by-side
+            type: checkbox
     trash:
       - label: アイテムを完全に削除する
         command: 'app:destroy-item'
@@ -504,6 +524,16 @@ ja:
         command: 'app:restore-item'
       - label: 選択したアイテムを完全に削除する
         command: 'app:destroy-item'
+    item-view:
+      - label: レイアウト表示
+        id: item-view-layout
+        submenu:
+          - label: 上下に配置
+            id: stacked
+            type: checkbox
+          - label: 左右に配置
+            id: side-by-side
+            type: checkbox
     trash:
       - label: アイテムを完全に削除する
         command: 'app:destroy-item'
