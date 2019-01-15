@@ -45,14 +45,13 @@ class TagAdder extends PureComponent {
 
   render() {
     return (
-      <div className="add-tag-container">
+      <div className="add-tag-container" style={{ '--placeholder': '"Add Tag"' }}>
         <Input
           ref={this.setInput}
           className="form-control"
           completions={this.props.completions}
           isDisabled={this.props.isDisabled}
           match={this.props.match}
-          placeholder={this.placeholder}
           tabIndex={-1}
           value=""
           onBlur={this.handleBlur}
