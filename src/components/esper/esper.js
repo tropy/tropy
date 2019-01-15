@@ -342,7 +342,7 @@ class Esper extends React.PureComponent {
 
   handleSlideIn = () => {
     this.setState({ isVisible: true })
-    this.view.start(true)
+    this.view.resume()
   }
 
   handleSlideOut = () => {
@@ -681,12 +681,8 @@ class Esper extends React.PureComponent {
     }
   }
 
-  handleMouseEnter = () => {
-    this.view.start()
-  }
-
-  handleMouseLeave = () => {
-    this.view.stop()
+  handleMouseMove = () => {
+    this.view.resume()
   }
 
   handleTabFocus = () => {
@@ -710,8 +706,7 @@ class Esper extends React.PureComponent {
         onBlur={this.handleBlur}
         onContextMenu={this.handleContextMenu}
         onMouseDown={this.handleMouseDown}
-        onMouseEnter={this.handleMouseEnter}
-        onMouseLeave={this.handleMouseLeave}
+        onMouseMove={this.handleMouseMove}
         onKeyDown={this.handleKeyDown}
         onKeyUp={this.handleKeyUp}>
         <EsperHeader>

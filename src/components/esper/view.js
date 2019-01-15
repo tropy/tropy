@@ -84,15 +84,19 @@ class EsperView extends React.Component {
     return false
   }
 
-  start = (stop = false) => {
+  start = () => {
     this.stop.cancel()
     this.pixi.start()
-    if (stop === true) this.stop()
   }
 
   stop = debounce(() => {
     this.pixi.stop()
   }, 5000)
+
+  resume = () => {
+    this.start()
+    this.stop()
+  }
 
   get resolution() {
     return this.pixi.renderer.resolution
@@ -234,7 +238,7 @@ class EsperView extends React.Component {
     this.setScaleMode(this.image.bg.texture, zoom)
     this.image.scale.set(mirror ? -zoom : zoom, zoom)
     this.persist()
-    this.start(true)
+    this.resume()
   }
 
   move({ x, y }, duration = 0) {
@@ -343,16 +347,14 @@ class EsperView extends React.Component {
         if (scope != null) this.tweens[scope] = null
         if (typeof stop === 'function') stop()
         if (typeof done === 'function') done()
-        this.stop()
       })
       .onComplete(() => {
         if (scope != null) this.tweens[scope] = null
         if (typeof complete === 'function') complete()
         if (typeof done === 'function') done()
-        this.stop()
       })
 
-    this.start()
+    this.resume()
     return tween
   }
 
@@ -445,7 +447,7 @@ class EsperView extends React.Component {
   handleWheel = (e) => {
     e.stopPropagation()
     this.props.onWheel(coords(e))
-    this.start(true)
+    this.resume()
   }
 
   handleMouseDown = (event) => {
@@ -454,7 +456,7 @@ class EsperView extends React.Component {
     if (this.isDragging) this.drag.stop()
     if (!data.isPrimary) return
 
-    this.start()
+    this.resume()
 
     if (target instanceof Selection) {
       return this.props.onSelectionActivate(target.data)
@@ -505,7 +507,6 @@ class EsperView extends React.Component {
 
     } finally {
       this.drag.current = undefined
-      this.stop()
     }
   }
 
