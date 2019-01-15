@@ -101,6 +101,7 @@ fr:
         themes:
           light: Lumineux
           dark: Sombre
+          system: Suit les préférences système
       locale:
         locale: Langue
         locales:
@@ -110,8 +111,9 @@ fr:
           ja: 日本語
       template: Modèle de saisie par défaut
       debug: Autoriser le mode développeur
+      localtime: Présupposer que les métadonnées des images utilisent l'heure locale.
       dup:
-        label: Pendant l'importation
+        label: Durant l'import
         option:
           skip: Passer les photos en double
           import: Accepter les photos en double (duplication)
@@ -127,6 +129,11 @@ fr:
         option:
           fit: Zoom pleine hauteur
           fill: Zoom pleine largeur
+      layout:
+        label: Mode d'affichage d'objet
+        option:
+          stacked: Verticale
+          side-by-side: Côte à côte
     project:
       label: Projet
     template:
@@ -221,6 +228,7 @@ fr:
   notepad:
     placeholder: Ajoutez vos notes ici…
   completions:
+    empty: Aucune option disponible
     noMatches: Aucun résultat
   select:
     column:
@@ -282,9 +290,13 @@ fr:
         uninstall:
           ok: Supprimer
           cancel: Annuler
+          message: >
+              Souhaitez-vous vraiment supprimer ce plugin ? Le plugin et sa configuration
+              seront supprimés de manière irréversible.
     filter:
       templates: Modèle de saisie Tropy
       images: Images
+      items: Images et objets Tropy
       projects: Projets Tropy
       rdf: Schémas RDF
       jsonld: JSON-LD
@@ -352,6 +364,9 @@ fr:
       save: Sauvegarder la sélection
       order: Trier les sélections
   activity:
+    cache:
+      prune: Optimisation du cache du projet ...
+      purge: Purge de l'historique du cache ...
     project:
       save: Sauvegarde en cours…
     list:
@@ -468,6 +483,9 @@ fr:
       sinkListItem: Augmenter le retrait
       liftListItem: Réduire le retrait
   error:
+    cache:
+      prune: Échec de l'optimisation du cache du projet
+      purge: Échec de la suppression du cache des anciens projets
     project:
       created: Echec de la création du projet.
     item:
@@ -478,6 +496,9 @@ fr:
         save: Echec de la sauvegarde du tag.
         create: Echec du marquage de l'objet. Chaque tag est unique pour un même objet.
     list:
+      load: Échec du chargement des listes.
+      create: Création de liste impossible. Le nom des listes doit être unique.
+      move: Impossible de déplacer la liste. Le nom doit être unique au sein du niveau.
       save: Echec de la sauvegarde de la liste.
       item:
         add: Echec de l'adjonction de l' (des) objet(s) à la liste.
@@ -494,6 +515,8 @@ fr:
         field:
           add: Echec de l'adjonction du champ dans le modèle de saisie.
           remove: Echec de la suppression du champ du modèle de saisie.
+    tag:
+      create: Impossible de créer le mot-clé. Les mots-clés doivent être uniques.
   flash:
     update:
       ready:
