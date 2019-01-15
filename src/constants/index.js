@@ -21,6 +21,7 @@ module.exports = {
   NOTE: require('./note'),
   NOTEPAD: require('./notepad'),
   ONTOLOGY: require('./ontology'),
+  PANEL: require('./panel'),
   PHOTO: require('./photo'),
   PREFS: require('./prefs'),
   PROJECT: require('./project'),

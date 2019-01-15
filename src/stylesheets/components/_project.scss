@@ -150,7 +150,7 @@
   }
 }
 
-#items {
+.items {
   display: flex;
   flex-direction: column;
   min-width: 0; // Needed for horizontal scrollbar in .item-table
@@ -223,14 +223,12 @@
   background: $body-bg;
   z-index: $zindex-draggable;
 
-  body:not(.scrollbar-style-old-school) &,
-  .item-grid + & {
-    display: none;
-  }
-
   .max-scroll-left + & {
     height: $toolbar-height;
   }
+
+  .item-grid + &,
+  body:not(.scrollbar-style-old-school) & {
+    display: none;
+  }
 }
-
-

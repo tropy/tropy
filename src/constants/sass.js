@@ -158,7 +158,7 @@ const ESPER = {
       x: '9',
       y: '9'
     },
-    select: {
+    selection: {
       default: 'crosshairs',
       active: 'crosshairs',
       x: '7',

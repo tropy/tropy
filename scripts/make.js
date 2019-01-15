@@ -15,7 +15,7 @@ const home = resolve(__dirname, '..')
 const nbin = join(home, 'node_modules', '.bin')
 
 const eslint = join(nbin, 'eslint')
-const sasslint = join(nbin, 'sass-lint')
+const stylelint = join(nbin, 'stylelint')
 
 config.fatal = false
 config.silent = false
@@ -32,7 +32,7 @@ target['lint:js'] = (bail) => {
 }
 
 target['lint:css'] = (bail) => {
-  const { code } = exec(`${sasslint} --verbose`)
+  const { code } = exec(`${stylelint} "src/stylesheets/**/*.scss"`)
   if (bail && code) process.exit(code)
   return code
 }

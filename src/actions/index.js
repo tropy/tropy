@@ -20,6 +20,7 @@ module.exports = {
   note: require('./note'),
   notepad: require('./notepad'),
   ontology: require('./ontology'),
+  panel: require('./panel'),
   photo: require('./photo'),
   plugin: require('./plugin'),
   prefs: require('./prefs'),

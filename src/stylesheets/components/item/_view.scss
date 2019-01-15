@@ -24,10 +24,10 @@
       .toolbar-left {
         .item-mode &,
         .item-mode-enter-active & {
-          margin-left: (
+          margin-left:
             $window-controls-width
             + $window-controls-offset-x
-            - $window-controls-margin);
+            - $window-controls-margin;
         }
 
         .project-mode-enter-active &,

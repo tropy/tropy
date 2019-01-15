@@ -1,10 +1,8 @@
-// sass-lint:disable nesting-depth
-
-
+//
 // Sidebar
 // --------------------------------------------------
 
-#sidebar {
+.sidebar {
   background: $sidebar-bg;
   color: $sidebar-text-color;
   height: 100%;
@@ -44,7 +42,6 @@
       }
 
       > .list-node-container {
-        // sass-lint:disable-block mixins-before-declarations
         display: flex;
         align-items: center;
         height: $line-height-large;
@@ -52,12 +49,12 @@
         position: relative;
 
         @include state("li.active", "li.over") {
-          @extend %list-active; // sass-lint:disable-line space-around-operator
+          @extend %list-active;
         }
 
         @include state("li.active") {
-          @include state("#sidebar :focus") {
-            @extend %list-focus; // sass-lint:disable-line space-around-operator
+          @include state(".sidebar :focus") {
+            @extend %list-focus;
           }
         }
 
@@ -149,12 +146,12 @@
     $sel: if($i == 1, "ol", selector-nest($sel, "ol"));
 
     #{$sel} {
-    	.list-node-container {
-    		padding-left:
-    			$list-tree-padding-left
-    				+ $list-tree-indent
-    				* ($i - 1);
-    	}
+      .list-node-container {
+        padding-left:
+          $list-tree-padding-left
+          + $list-tree-indent
+          * ($i - 1);
+      }
     }
   }
 }

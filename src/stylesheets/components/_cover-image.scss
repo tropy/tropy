@@ -115,8 +115,8 @@
           @if ($size - $tile-thumbnail-size-min) < ($range / 2.25) {
             $tint-opacity:
               ($stack-line-tint-opacity
-                * (($size - $tile-thumbnail-size-min)
-                * 2.25 / $range));
+              * (($size - $tile-thumbnail-size-min)
+              * 2.25 / $range));
 
             $gap-opacity: (1 - ($size - $tile-thumbnail-size-min) * 2.25 / $range);
           }
@@ -147,8 +147,6 @@
     position: absolute;
     left: $space-xs;
     top: ($row-height - $thumbnail-size) / 2;
-
-
 
     .stack-lines {
       .line {
