@@ -145,19 +145,11 @@
 
     &::-webkit-input-placeholder {
       color: $add-tag-placeholder-color-default;
-      position: relative;
-      left: 50%;
-      transform: translateX(-50%);
-      max-width: max-content;
-      transition:
-        left $add-tag-transition,
-        transform $add-tag-transition,
-        color $add-tag-transition;
+      text-align: center;
 
       @include state(".form-control:focus") {
-        left: 0;
-        transform: translateX(0);
         color: $input-color-placeholder;
+        text-align: left;
       }
     }
 
