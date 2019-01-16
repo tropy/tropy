@@ -69,8 +69,9 @@ class Import extends ImportCommand {
 
     yield put(act.nav.update({ mode: MODE.PROJECT, query: '' }))
 
-    let [base, itemp, ptemp] = yield select(state => [
+    let [base, localtime, itemp, ptemp] = yield select(state => [
       state.project.base,
+      state.settings.localtime,
       getItemTemplate(state),
       getPhotoTemplate(state)
     ])
@@ -86,12 +87,13 @@ class Import extends ImportCommand {
         file = files[i]
 
         image = yield call(Image.open, file)
+        image.setTimezoneOffset(localtime)
         yield* this.handleDuplicate(image)
 
         yield call(db.transaction, async tx => {
           item = await mod.item.create(tx, itemp.id, {
             ...pick(image.data, [
-              DC.title, DC.creator, DC.rights, DC.description
+              DC.title, DC.date, DC.creator, DC.rights, DC.description
             ]),
             ...defaultItemData
           })
@@ -342,18 +344,35 @@ class Split extends Command {
   static get ACTION() { return ITEM.SPLIT }
 
   *exec() {
-    const { db } = this.options
-    const { item, items, data, lists, tags } = this.action.payload
+    let { db } = this.options
+    let { item, items, data, lists, tags } = this.action.payload
+    let photos = this.getPhotoData(items)
 
     yield call(db.transaction, tx =>
       mod.item.split(tx, item.id, items, data, lists, tags))
 
-    yield put(act.metadata.insert({ id: item.id, ...data }))
+    yield all([
+      put(act.photo.update(photos)),
+      put(act.metadata.insert({ id: item.id, ...data }))
+    ])
 
     this.undo = act.item.merge([item.id, ...items.map(i => i.id)])
     this.meta = { inc: items.length }
 
     return item
+  }
+
+  getPhotoData(items) {
+    let photos = []
+    for (let item of items) {
+      for (let photo of item.photos) {
+        photos.push({
+          id: photo,
+          item: item.id
+        })
+      }
+    }
+    return photos
   }
 }
 

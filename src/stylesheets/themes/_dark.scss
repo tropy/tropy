@@ -1,4 +1,4 @@
-// sass-lint:disable no-mergeable-selectors, no-color-literals
+// stylelint-disable
 
 
 // Dark theme
@@ -365,7 +365,6 @@ $slider-handle-border:         var(--transparent);
 $slider-overlay-handle-border: var(--transparent);
 $slider-value-color:           var(--shade-8);
 $slider-overlay-value-color:   var(--shade-10-darken-14);
-$slider-overlay-icon-color:    var(--shade-10-darken-14);
 $slider-focus-bg:              var(--brand-primary);
 $slider-overlay-focus-bg:      var(--brand-primary-overlay);
 

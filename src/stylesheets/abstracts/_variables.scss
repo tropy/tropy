@@ -1,4 +1,6 @@
-//
+// stylelint-disable
+
+
 // Variables
 // --------------------------------------------------
 
@@ -260,10 +262,12 @@ $slider-handle-size-sm: 10px;
 
 $esper-toolbar-transition-in-hover: 0.3s 0.4s ease;
 $esper-toolbar-transition-in-focus: 0.3s ease;
-$esper-toolbar-transition-out: 0.3s 0.3s ease;
-$esper-toolbar-blur-radius: 20px;
-$esper-cursor: const("ESPER.CURSOR");
-$esper-panel-width: 240px;
+$esper-toolbar-transition-out:      0.3s 0.3s ease;
+$esper-toolbar-blur-radius:         20px;
+$esper-cursor:                      const("ESPER.CURSOR");
+$esper-panel-width:                 240px;
+$esper-panel-height:                290px;
+$esper-panel-max-size:              506px; // 700 * 13 / 18
 
 
 // Scrollbar

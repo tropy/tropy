@@ -1,4 +1,4 @@
-// sass-lint:disable class-name-format
+/* stylelint-disable no-descending-specificity */
 
 //
 // Editor
@@ -86,7 +86,7 @@
   cursor: text;
   position: relative;
 
-// ---
+  // ---
   .horizontal & {
     width: $editor-size;
     margin: 0 auto;
@@ -111,7 +111,7 @@
     max-height: $editor-max-size;
   }
 
- .numbers.vertical-rl & {
+  .numbers.vertical-rl & {
     max-height: $editor-max-size + $space-xxl + $space-md;
   }
 

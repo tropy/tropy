@@ -49,7 +49,9 @@ const IGNORE = [
   /^\/tmp/,
   /node_modules.\.bin/,
   /node_modules.sqlite3.build/,
+  /node_modules.sqlite3.deps/,
   /node_modules.rdf-canonize.build/,
+  /node_modules.rdf-canonize-native/,
   /node_modules.prosemirror-model.dist.index\.js\.map/,
   /node_modules.sharp.build.[^R]/,
   /node_modules.sharp.build.Release.obj/,
@@ -99,6 +101,7 @@ target.all = async (args = []) => {
         `${author.name}. All rights not expressly granted are reserved.`,
       extendInfo: join(res, 'ext.plist'),
       extraResource,
+      darwinDarkModeSupport: true,
       win32metadata: {
         CompanyName: author.name,
         ProductName: qualified.product

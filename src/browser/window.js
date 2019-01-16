@@ -15,9 +15,11 @@ const DEFAULTS = {
   frame: true,
   useContentSize: true,
   webPreferences: {
-    preload: join(__dirname, '..', 'bootstrap.js'),
+    contextIsolation: false,
     defaultEncoding: 'UTF-8',
-    experimentalFeatures: false
+    experimentalFeatures: false,
+    nodeIntegration: true,
+    preload: join(__dirname, '..', 'bootstrap.js')
   }
 }
 

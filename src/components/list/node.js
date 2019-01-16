@@ -282,15 +282,21 @@ class ListNode extends React.PureComponent {
       name: string.isRequired,
       children: arrayOf(number).isRequired
     }).isRequired,
+    lists: object.isRequired,
     minDropDepth: number.isRequired,
     position: number.isRequired,
+    selection: number,
 
     connectDragSource: func.isRequired,
     connectDragPreview: func.isRequired,
     connectDropTarget: func.isRequired,
+    onClick: func.isRequired,
+    onContextMenu: func.isRequired,
     onCollapse: func.isRequired,
+    onEditCancel: func,
     onExpand: func.isRequired,
-    onMove: func.isRequired
+    onMove: func.isRequired,
+    onSave: func.isRequired
   }
 
   static defaultProps = {

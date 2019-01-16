@@ -87,6 +87,7 @@ en:
         themes:
           light: Light
           dark: Dark
+          system: Follow system preference
       locale:
         locale: Locale
         locales:
@@ -96,8 +97,9 @@ en:
           ja: 日本語
       template: Default Template
       debug: Enable Developer Mode
+      localtime: Assume photo metadata use local timezone
       dup:
-        label: During Import
+        label: During import
         option:
           skip: Skip duplicate photos
           import: Accept duplicate photos
@@ -113,7 +115,11 @@ en:
         option:
           fit: Zoom photos to fit
           fill: Zoom photos to fill
-
+      layout:
+        label: Item View layout
+        option:
+          stacked: Stacked
+          side-by-side: Side by side
     project:
       label: Project
     template:

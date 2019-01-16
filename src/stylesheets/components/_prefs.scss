@@ -76,5 +76,9 @@
     .scrollbar-style-old-school & {
       padding-right: ($space-lg - $scrollbar-size);
     }
+
+    @include variant(".app .scroll-container") {
+      padding-bottom: $space-lg;
+    }
   }
 }

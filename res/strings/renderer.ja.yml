@@ -3,7 +3,7 @@ ja:
     lists: リスト
     tags: タグ
     imports: 最新のインポート
-    trash: アイテムを削除
+    trash: 削除済みアイテム
   toolbar:
     import: 写真をインポート
     items: >
@@ -48,7 +48,7 @@ ja:
           one {1つの写真}
 
           other {# の写真}}
-      create: 写真を追加する
+      create: 写真を追加
       selection: セレクション
     note:
       title: >
@@ -72,7 +72,7 @@ ja:
         Tropyは、歴史教育リソースやデジタル展示、オープンソースソフトウェアの開発チームである{rrchnm}によって作成されています。
     trademark: Tropyは{cds}の商標です。
     release:
-      title: ノートを公開する
+      title: リリースノート
       url: https://github.com/tropy/tropy/releases/tag/{version}
     license:
       title: ライセンス情報
@@ -81,13 +81,13 @@ ja:
       title: クレジット
       url: https://tropy.org/credits
   project:
-    none: プロジェクトファイルをここにドロップするか、あるいは{newProject}を作成してください。
-    empty: Tropyに写真をドロップして始めてください。
+    none: プロジェクトファイルをここにドロップするか、あるいは{newProject}を作成してください
+    empty: Tropyに写真をドロップして始めてください
     new: 新規プロジェクト
   wizard:
     project:
-      title: 新規プロジェクトを作成する
-      submit: プロジェクトを作成する
+      title: 新規プロジェクトを作成
+      submit: プロジェクトを作成
       name: 名前
       save_as: ファイル名と保存先を変更
       change: 変更する
@@ -100,6 +100,7 @@ ja:
         themes:
           light: ライト
           dark: ダーク
+          system: システム環境の設定を引き継ぐ
       locale:
         locale: ローカル
         locales:
@@ -109,23 +110,29 @@ ja:
           ja: 日本語
       template: デフォルトテンプレート
       debug: デベロッパーモード
+      localtime: メタデータにローカルタイムを設定する
       dup:
-        label: インポート中
+        label: インポート時に
         option:
-          skip: 重複写真をスキップする
-          import: 重複写真を承認
-          prompt: いつでもお尋ねください
+          skip: 重複する写真をスキップ
+          import: 写真の重複を認める
+          prompt: 毎回確認する
       ui:
         label: インターフェース
         option:
-          invertScroll: 写真スクロールの向きを逆にする
-          invertZoom: 写真ズームの向きを逆にする
+          invertScroll: 写真スクロールの向きを反対にする
+          invertZoom: 写真ズームの向きを反対にする
           overlayToolbars: ツールバーを自動で表示・非表示にする
       zoomMode:
         label: デフォルト設定により
         option:
           fit: 写真をウインドウサイズで表示
           fill: 写真を全画面表示
+      layout:
+        label: アイテムレイアウト表示
+        option:
+          stacked: 上下に配置
+          side-by-side: 左右に配置
     project:
       label: プロジェクト
     template:
@@ -179,18 +186,18 @@ ja:
       noInfo: 作者不明
       homepage: More
   item:
-    created: 追加日付
-    modified: 修正
+    created: 登録日
+    modified: 更新日
   photo:
     file: ファイル
     size: サイズ
     type: タイプ
-    created: 追加日付
-    modified: 修正
+    created: 登録日
+    modified: 更新日
   selection:
     size: サイズ
-    created: 追加日付
-    modified: 修正
+    created: 登録日
+    modified: 更新日
   esper:
     tool:
       pan: パンツール
@@ -285,6 +292,7 @@ ja:
     filter:
       templates: Tropyテンプレート
       images: イメージ
+      items: 画像とTropyアイテム
       projects: Tropyプロジェクト
       rdf: RDF語彙
       jsonld: JSON-LD
@@ -296,7 +304,7 @@ ja:
       delete: リストを削除
       item:
         add: リストにアイテムを追加する
-        merge: アイテムをまとめる
+        merge: アイテムをマージする
         remove: リストからアイテムを削除
         restore: リストにアイテムを追加する
       order: リストをソートする
@@ -315,7 +323,7 @@ ja:
       tag:
         create: タグ
         toggle: タグ
-        clear: タグを削除する
+        clear: タグを削除
     metadata:
       save: メタデータを保存する
     ontology:
@@ -341,9 +349,9 @@ ja:
       restore: ノートを元に戻す
       save: ノートを保存する
     tag:
-      create: タグを作成する
+      create: タグを作成
       delete: タグを削除
-      restore: タグを作成する
+      restore: タグを作成
       save: タグを保存する
     selection:
       create: セレクションを作成する
@@ -352,33 +360,36 @@ ja:
       save: セレクションを保存する
       order: セレクションをソートする
   activity:
+    cache:
+      prune: プロジェクトのキャッシュを最適化しています
+      purge: 古いキャッシュを削除しています
     project:
       save: 保存中
     list:
       create: リストを作成中
       delete: リストを削除中
       item:
-        add: アイテムをリストに追加中
-        merge: アイテムを統合中
+        add: アイテムをリストに追加しています
+        merge: アイテムを統合しています
         remove: リストからアイテムを取り除いています
         restore: アイテムを元のリストへ復元しています
-      load: リストをロード中
-      order: リストをソート中
-      restore: リストを復元中
-      save: リストを保存中
+      load: リストをロードしています
+      order: リストをソートしています
+      restore: リストを復元しています
+      save: リストを保存しています
     tag:
-      create: タグを作成中
+      create: タグを作成しています
       delete: タグを削除しています
-      load: タグをロード中
-      restore: タグを復元中
-      save: タグを保存中
+      load: タグをロードしています
+      restore: タグを復元しています
+      save: タグを保存しています
     item:
-      create: アイテムを作成中
+      create: アイテムを作成しています
       delete: アイテムを削除しています
       destroy: アイテムを完全に削除しています
-      explode: 個別のアイテムに分割中
+      explode: 個々のアイテムに分割しています
       export: アイテムをエクスポートしています
-      implode: アイテムを復元中
+      implode: アイテムを復元しています
       import: >
           {hasProgressBar, select,
 
@@ -468,6 +479,9 @@ ja:
       sinkListItem: インデントを増やす
       liftListItem: インデントを減らす
   error:
+    cache:
+      prune: プロジェクトのキャッシュの最適化に失敗しました
+      purge: 古いプロジェクトのキャッシュの削除に失敗しました
     project:
       created: プロジェクトの作成に失敗しました
     item:
@@ -478,7 +492,9 @@ ja:
         save: タグの保存に失敗しました
         create: アイテムのタグ付けに失敗しました。タグは一つのアイテムに一意のものにしてください。
     list:
+      load: リストのロードに失敗しました
       create: リスト作成に失敗しました。リスト名は一意のものにしてください。
+      move: リストの移動に失敗しました。リスト名はレベル単位でユニークなものに設定する必要があります。
       save: リストの保存に失敗しました
       item:
         add: リストへのアイテム追加に失敗しました

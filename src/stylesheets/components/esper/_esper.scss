@@ -1,5 +1,3 @@
-// sass-lint:disable no-color-literals
-
 //
 // Esper
 // --------------------------------------------------
@@ -13,6 +11,7 @@
   overflow: hidden;
   contain: strict;
 
+  /* stylelint-disable no-descending-specificity */
   &:not(:focus):not(.nested-focus) {
     .toolbar-left,
     .toolbar-right,
@@ -30,6 +29,7 @@
       color: $esper-slider-value-color;
     }
   }
+  /* stylelint-enable */
 
   .slider:focus {
     .slider-handle {
@@ -46,6 +46,10 @@
     flex: 1 1 0;
     display: flex;
     position: relative;
+
+    .side-by-side & {
+      flex-direction: column;
+    }
   }
 
   .esper-view {
@@ -87,10 +91,13 @@
   @each $key, $val in $esper-cursor {
     &.#{$key} {
       .esper-view {
-        cursor: -webkit-image-set(
-          image-url("esper/#{map-get($val, 'default')}@1x.svg") 1x,
-          image-url("esper/#{map-get($val, 'default')}@2x.svg") 2x
-        ) map-get($val, "x") map-get($val, "y"), default;
+        cursor:
+          -webkit-image-set(
+            image-url("esper/#{map-get($val, 'default')}@1x.svg") 1x,
+            image-url("esper/#{map-get($val, 'default')}@2x.svg") 2x
+          )
+          map-get($val, "x") map-get($val, "y"),
+          default;
       }
     }
   }

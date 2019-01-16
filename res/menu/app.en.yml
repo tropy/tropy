@@ -109,6 +109,8 @@ en:
         - label: 'Minimize'
           accelerator: 'CmdOrCtrl+M'
           role: 'minimize'
+        - label: 'Move to Center'
+          command: 'app:center-window'
     - &dev
       label: 'Developer'
       id: 'dev'
@@ -143,6 +145,9 @@ en:
               type: 'checkbox'
             - label: 'Dark'
               id: 'dark'
+              type: 'checkbox'
+            - label: 'Follow system preference'
+              id: 'system'
               type: 'checkbox'
     - &help
       label: 'Help'
@@ -241,6 +246,8 @@ en:
         - label: 'Minimize'
           accelerator: 'CmdOrCtrl+M'
           role: 'minimize'
+        - label: 'Move to Center'
+          command: 'app:center-window'
         - label: 'Close'
           accelerator: 'CmdOrCtrl+W'
           role: 'close'

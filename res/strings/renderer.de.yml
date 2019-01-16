@@ -101,6 +101,7 @@ de:
         themes:
           light: Hell
           dark: Dunkel
+          system: Folge der Systemeinstellung
       locale:
         locale: Sprache
         locales:
@@ -110,6 +111,7 @@ de:
           ja: 日本語
       template: Standardvorlage
       debug: Entwicklermodus aktivieren
+      localtime: Foto-Metadaten nutzen lokale Zeitzone
       dup:
         label: Beim Importieren
         option:
@@ -127,6 +129,11 @@ de:
         option:
           fit: Format mit Fotos füllen
           fill: Fotos an das Format anpassen
+      layout:
+        label: Detailansicht-Layout
+        option:
+          stacked: Übereinander
+          side-by-side: Nebeneinander
     project:
       label: Projekt
     template:
@@ -360,6 +367,7 @@ de:
   activity:
     cache:
       prune: Projekt-Cache wird optimiert …
+      purge: Entferne alte Projekt-Caches …
     project:
       save: Speichern …
     list:
@@ -476,6 +484,9 @@ de:
       sinkListItem: Eine Ebene tiefer
       liftListItem: Eine Ebene höher
   error:
+    cache:
+      prune: Fehler beim Optimieren des Projekt-Caches.
+      purge: Fehler beim Entfernen alter Projekt-Caches.
     project:
       created: Projekt konnte nicht erstellt werden.
     item:

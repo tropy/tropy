@@ -54,10 +54,9 @@ target.inspector = () => {
 }
 
 target.jsonld = () => {
-  rm('-rf', join(mods, 'rdf-canonize', 'build'))
+  rm('-rf', join(mods, 'rdf-canonize-native'))
+  rm('-rf', join(mods, 'jsonld', 'node-modules', 'rdf-canonize-native'))
   say('rdf-canonize-native removed')
-  //rm('-rf', join(mods, 'rdf-canonize-native'))
-  //rm('-rf', join(mods, 'jsonld', 'node-modules', 'rdf-canonize-native'))
 }
 
 target.sharp = (force) => {

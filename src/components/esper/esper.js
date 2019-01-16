@@ -342,7 +342,7 @@ class Esper extends React.PureComponent {
 
   handleSlideIn = () => {
     this.setState({ isVisible: true })
-    //this.view.start()
+    this.view.resume()
   }
 
   handleSlideOut = () => {
@@ -669,10 +669,20 @@ class Esper extends React.PureComponent {
     this.container = container
   }
 
+  handleContextMenu = (event) => {
+    if (!this.isDisabled) {
+      this.props.onContextMenu(event, 'esper')
+    }
+  }
+
   handleMouseDown = () => {
     if (document.activeElement !== this.container) {
       this.container.focus()
     }
+  }
+
+  handleMouseMove = () => {
+    this.view.resume()
   }
 
   handleTabFocus = () => {
@@ -694,7 +704,9 @@ class Esper extends React.PureComponent {
         tabIndex={tabIndex}
         className={cx(this.classes)}
         onBlur={this.handleBlur}
+        onContextMenu={this.handleContextMenu}
         onMouseDown={this.handleMouseDown}
+        onMouseMove={this.handleMouseMove}
         onKeyDown={this.handleKeyDown}
         onKeyUp={this.handleKeyUp}>
         <EsperHeader>
@@ -761,6 +773,7 @@ class Esper extends React.PureComponent {
     maxZoom: number.isRequired,
     minZoom: number.isRequired,
     mode: string.isRequired,
+    onContextMenu: func.isRequired,
     onChange: func.isRequired,
     onPhotoError: func.isRequired,
     onSelect: func.isRequired,

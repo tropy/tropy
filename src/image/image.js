@@ -55,6 +55,7 @@ class Image {
 
   constructor(path) {
     this.path = path
+    this.tz = 0
   }
 
   get ext() {
@@ -77,7 +78,9 @@ class Image {
   }
 
   get orientation() {
-    return get(this.exif, [this.page, 'Orientation'], 1)
+    return Orientation(
+      get(this.exif, [this.page, 'Orientation'], 1)
+    )
   }
 
   get channels() {
@@ -102,10 +105,16 @@ class Image {
 
   get date() {
     try {
+      let time = get(this.exif, [this.page, 'DateTimeOriginal'])
+      let offset = get(this.exif, [this.page, 'TimezoneOffset'], this.tz)
+
+      if (time != null && offset) {
+        time = new Date(time)
+        time.setUTCMinutes(time.getUTCMinutes() + offset)
+      }
+
       // Temporarily return as string until we add value types.
-      return get(
-        this.exif, [this.page, 'DateTimeOriginal'], this.file.ctime
-      ).toISOString()
+      return (time || this.file.ctime).toISOString()
 
     } catch (error) {
       warn(`failed to convert image date: ${error.message}`)
@@ -230,6 +239,10 @@ class Image {
     return image
   }
 
+  setTimezoneOffset(local) {
+    this.tz = local ? (new Date().getTimezoneOffset()) : 0
+  }
+
   toJSON() {
     return pick(this, [
       'page',
@@ -274,6 +287,8 @@ Image.SELECTION_SIZE = {
     width: 512, height: 512, fit: 'contain', background: transparent
   }
 }
+
+const Orientation = (o) => (o > 0 && o < 9) ? o : 1
 
 const magic = (buffer) => {
   if (buffer != null) {

@@ -11,8 +11,12 @@ const collate = require('../../collate')
 
 class TagAdder extends PureComponent {
   get placeholder() {
-    const { count, intl } = this.props
-    return intl.formatMessage({ id: 'panel.tags.add' }, { count })
+    let { count, intl } = this.props
+    return {
+      '--placeholder': `"${
+        intl.formatMessage({ id: 'panel.tags.add' }, { count }).trim()
+      }"`
+    }
   }
 
   focus() {
@@ -45,14 +49,13 @@ class TagAdder extends PureComponent {
 
   render() {
     return (
-      <div className="add-tag-container">
+      <div className="add-tag-container" style={this.placeholder}>
         <Input
           ref={this.setInput}
           className="form-control"
           completions={this.props.completions}
           isDisabled={this.props.isDisabled}
           match={this.props.match}
-          placeholder={this.placeholder}
           tabIndex={-1}
           value=""
           onBlur={this.handleBlur}

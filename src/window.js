@@ -21,7 +21,7 @@ const isCommand = darwin ?
 const IDLE_SHORT = 60
 
 class Window extends EventEmitter {
-  constructor({ theme, frameless, scrollbars, aqua } = ARGS) {
+  constructor({ dark, theme, frameless, scrollbars, aqua } = ARGS) {
     if (Window.instance) {
       throw Error('Singleton Window constructor called multiple times')
     }
@@ -30,7 +30,7 @@ class Window extends EventEmitter {
     Window.instance = this
 
     this.state = {
-      aqua, frameless, scrollbars, theme
+      aqua, frameless, scrollbars, theme, dark
     }
 
     this.plugins = new Plugins(ARGS.plugins)
@@ -75,7 +75,7 @@ class Window extends EventEmitter {
           }
         }
 
-        this.style(this.state.theme, false, () => {
+        this.style(false, () => {
           if (typeof done === 'function') done()
           resolve(this)
         })
@@ -106,9 +106,14 @@ class Window extends EventEmitter {
     return basename(window.location.pathname, '.html')
   }
 
-  get stylesheets() {
-    const { theme } = this.state
+  get theme() {
+    return (this.state.theme !== 'system') ?
+      this.state.theme :
+      (this.state.dark ? 'dark' : 'light')
+  }
 
+  get stylesheets() {
+    let { theme } = this
     return [
       `../lib/stylesheets/${process.platform}/${this.type}-${theme}.css`,
       join(ARGS.home, 'style.css'),
@@ -127,8 +132,11 @@ class Window extends EventEmitter {
         this.toggle(state)
         this.emit(state)
       })
-      .on('theme', (_, theme) => {
-        this.style(theme, true)
+      .on('theme', (_, theme, dark) => {
+        args.update({ theme, dark })
+        this.state.theme = theme
+        this.state.dark = dark
+        this.style(true)
       })
       .on('locale', (_, locale) => {
         args.update({ locale })
@@ -140,10 +148,10 @@ class Window extends EventEmitter {
       })
       .on('scrollbars', (_, scrollbars) => {
         this.setScrollBarStyle(scrollbars)
-        this.style(false, true)
+        this.style(true)
       })
       .on('refresh', () => {
-        this.style(false, true)
+        this.style(true)
       })
       .on('reload', () => {
         this.reload()
@@ -306,12 +314,7 @@ class Window extends EventEmitter {
     this.current.reload()
   }
 
-  style(theme, prune = false, done) {
-    if (theme) {
-      this.state.theme = theme
-      args.update({ theme })
-    }
-
+  style(prune = false, done) {
     if (prune) {
       for (let css of $$('head > link[rel="stylesheet"]')) remove(css)
     }

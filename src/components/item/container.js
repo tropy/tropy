@@ -6,7 +6,8 @@ const { BufferedResizable } = require('../resizable')
 const { Esper } = require('../esper')
 const { NotePad } = require('../note')
 const act = require('../../actions')
-const { SASS: { ESPER } } = require('../../constants')
+const cx = require('classnames')
+const { SASS: { ESPER }, ITEM: { LAYOUT } } = require('../../constants')
 
 const {
   arrayOf, bool, func, number, object, shape, string
@@ -22,8 +23,47 @@ const {
 
 
 class ItemContainer extends React.PureComponent {
+  get dimension() {
+    return (this.props.settings.layout === LAYOUT.SIDE_BY_SIDE) ?
+      'width' : 'height'
+  }
+
+  get size() {
+    switch (this.props.settings.layout) {
+      case LAYOUT.STACKED:
+        return this.props.esper.height
+      case LAYOUT.SIDE_BY_SIDE:
+        return this.props.esper.width
+      default:
+        return 100
+    }
+  }
+
+  get isNotePadDraggable() {
+    return ARGS.frameless &&
+      this.props.settings.layout === LAYOUT.SIDE_BY_SIDE
+  }
+
+  get hasOverlayToolbars() {
+    return this.props.settings.overlayToolbars &&
+      this.props.settings.layout !== LAYOUT.SIDE_BY_SIDE
+  }
+
+  getResizableProps(layout = this.props.settings.layout) {
+    return layout === LAYOUT.SIDE_BY_SIDE ?
+      { edge: 'right', margin: ESPER.MIN_WIDTH, min: ESPER.MIN_WIDTH } :
+      { edge: 'bottom', margin: ESPER.MIN_HEIGHT, min: ESPER.MIN_HEIGHT }
+  }
+
   setNotePad = (notepad) => {
     this.notepad = notepad
+  }
+
+  handleContextMenu = (event, scope = 'item-view', opts = {}) => {
+    this.props.onContextMenu(event, scope, {
+      layout: this.props.settings.layout,
+      ...opts
+    })
   }
 
   handleEsperChange = ({ photo, selection, image, esper }) => {
@@ -41,24 +81,26 @@ class ItemContainer extends React.PureComponent {
     }
   }
 
-  handleEsperResize = (height) => {
-    this.props.onUiUpdate({ esper: { height } })
+  handleEsperResize = (value) => {
+    this.props.onUiUpdate({
+      esper: { [this.dimension]: value }
+    })
   }
 
   render() {
     return (
-      <div className="item-container">
+      <div
+        className={cx('item-container', this.props.settings.layout)}
+        onContextMenu={this.handleContextMenu}>
         <BufferedResizable
-          edge="bottom"
-          value={this.props.esper.height}
+          {...this.getResizableProps()}
           isRelative
-          onChange={this.handleEsperResize}
-          margin={38}
-          min={ESPER.MIN_HEIGHT}>
+          value={this.size}
+          onChange={this.handleEsperResize}>
           <Esper {...this.props.view}
             cache={this.props.cache}
             mode={this.props.view.mode || this.props.settings.zoomMode}
-            hasOverlayToolbar={this.props.settings.overlayToolbars}
+            hasOverlayToolbar={this.hasOverlayToolbars}
             invertScroll={this.props.settings.invertScroll}
             invertZoom={this.props.settings.invertZoom}
             isDisabled={this.props.isDisabled}
@@ -69,6 +111,7 @@ class ItemContainer extends React.PureComponent {
             selection={this.props.selection}
             selections={this.props.selections}
             tool={this.props.esper.tool}
+            onContextMenu={this.handleContextMenu}
             onChange={this.handleEsperChange}
             onPhotoError={this.props.onPhotoError}
             onSelect={this.props.onPhotoSelect}
@@ -78,11 +121,12 @@ class ItemContainer extends React.PureComponent {
           ref={this.setNotePad}
           note={this.props.note}
           isDisabled={this.props.isDisabled || !this.props.photo}
+          isDraggable={this.isNotePadDraggable}
           isItemOpen={this.props.isOpen}
           keymap={this.props.keymap.NotePad}
           onChange={this.props.onNoteChange}
           onCommit={this.props.onNoteCommit}
-          onContextMenu={this.props.onContextMenu}/>
+          onContextMenu={this.handleContextMenu}/>
       </div>
     )
   }
@@ -91,6 +135,7 @@ class ItemContainer extends React.PureComponent {
     cache: string.isRequired,
     esper: shape({
       height: number.isRequired,
+      width: number.isRequired,
       panel: bool.isRequired,
       tool: string.isRequired
     }).isRequired,
@@ -150,6 +195,6 @@ module.exports = {
       onEsperChange(...args) {
         dispatch(act.esper.update(...args))
       }
-    }), null, { withRef: true }
+    }), null, { forwardRef: true }
   )(ItemContainer)
 }

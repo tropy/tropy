@@ -1,3 +1,5 @@
+/* stylelint-disable no-descending-specificity */
+
 //
 // Select
 // --------------------------------------------------
@@ -48,9 +50,12 @@
   &.single {
     background-repeat: no-repeat;
     background-position: right $space-min center;
-    background-image: if($theme == "light",
-      image-url("project/icon-chevron7-light-theme.svg"),
-      image-url("project/icon-chevron7-dark-theme.svg"));
+    background-image:
+      if(
+        $theme == "light",
+        image-url("project/icon-chevron7-light-theme.svg"),
+        image-url("project/icon-chevron7-dark-theme.svg")
+      );
     padding-right: $space-lg;
 
     @include input-btn-focus(".focus");

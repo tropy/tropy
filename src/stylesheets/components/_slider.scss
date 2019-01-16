@@ -1,3 +1,5 @@
+/* stylelint-disable no-descending-specificity */
+
 //
 // Slider
 // --------------------------------------------------
@@ -17,6 +19,10 @@
     display: flex;
     align-items: center;
     height: $slider-handle-size + 2px;
+
+    .frameless .window-draggable & {
+      -webkit-app-region: no-drag;
+    }
   }
 
   .btn {
@@ -24,26 +30,8 @@
 
     &.active {
       opacity: $btn-disabled-opacity;
-
-      &:active {
-        .icon {
-          color: $icon-color;
-        }
-      }
-    }
-
-    .overlay-mode & {
-      .icon {
-        color: $slider-overlay-icon-color;
-      }
-    }
-  }
-}
-
-.frameless {
-  .window-draggable {
-    .slider {
-      -webkit-app-region: no-drag;
+      pointer-events: none; // Simpler than icon color reset
+      // Icon overlay colors are defined by the toolbar
     }
   }
 }
@@ -136,15 +124,16 @@
   .overlay-mode & {
     color: $slider-overlay-value-color;
   }
-}
 
-.slider:hover,
-.slider-handle:active {
-  .slider-value {
+  .frameless .window-draggable & {
+    -webkit-app-region: no-drag;
+  }
+
+  .slider:hover &,
+  .slider-handle:active {
     opacity: 1;
   }
 }
-
 
 // Small slider
 .slider-sm {

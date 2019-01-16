@@ -9,22 +9,6 @@
   width: $window-controls-width;
   z-index: $zindex-window-controls;
 
-  &:hover {
-    button {
-      background-position-y: -12px;
-    }
-
-    .maximize {
-      .is-maximized & {
-        background-position-y: -48px;
-
-        &:active {
-          background-position-y: -60px;
-        }
-      }
-    }
-  }
-
   button {
     width: 12px;
     height: 12px;
@@ -38,6 +22,10 @@
     margin: $window-controls-margin;
     vertical-align: top;
     padding: 0;
+
+    @include state(".window-controls:hover") {
+      background-position-y: -12px;
+    }
 
     &:active {
       background-position-y: -24px;
@@ -58,6 +46,16 @@
     .not-maximizable & {
       background-position-y: -36px;
     }
+
+    @include state(".window-controls:hover") {
+      .is-maximized & {
+        background-position-y: -48px;
+
+        &:active {
+          background-position-y: -60px;
+        }
+      }
+    }
   }
 
   @each $aqua in blue, graphite {
@@ -68,7 +66,8 @@
           background-image:
             -webkit-image-set(
               image-url("application-frame/#{$aqua}/#{$action}@1x.svg") 1x,
-              image-url("application-frame/#{$aqua}/#{$action}@2x.svg") 2x);
+              image-url("application-frame/#{$aqua}/#{$action}@2x.svg") 2x
+            );
         }
       }
     }

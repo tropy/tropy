@@ -1,11 +1,11 @@
 'use strict'
 
-const { SIDEBAR } = require('../constants')
+const { PANEL } = require('../constants')
 
 module.exports = {
   restore(payload = {}, meta = {}) {
     return {
-      type: SIDEBAR.RESTORE,
+      type: PANEL.RESTORE,
       payload,
       meta
     }
@@ -13,9 +13,9 @@ module.exports = {
 
   update(payload = {}, meta = {}) {
     return {
-      type: SIDEBAR.UPDATE,
+      type: PANEL.UPDATE,
       payload,
-      meta: { throttle: true, log: 'silly', ...meta }
+      meta
     }
   }
 }

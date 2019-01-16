@@ -49,7 +49,7 @@ class Tropy extends EventEmitter {
   static defaults = {
     frameless: darwin,
     debug: false,
-    theme: 'light',
+    theme: darwin ? 'system' : 'light',
     recent: [],
     updater: true,
     webgl: true,
@@ -134,9 +134,7 @@ class Tropy extends EventEmitter {
           }
         })
         .on('close', () => {
-          if (!this.win.isFullScreen()) {
-            this.state.win.bounds = this.win.getBounds()
-          }
+          this.state.win.bounds = this.win.getNormalBounds()
         })
         .on('closed', () => { this.win = undefined })
 
@@ -280,6 +278,7 @@ class Tropy extends EventEmitter {
       .catch({ code: 'ENOENT' }, () => Tropy.defaults)
 
       .then(state => this.migrate(state))
+      .tap(state => this.state = state)
 
       .tap(() => all([
         this.load(),
@@ -289,6 +288,14 @@ class Tropy extends EventEmitter {
 
       .tap(() => this.plugins.watch())
       .tap(state => state.updater && this.updater.start())
+
+      .tap(state => {
+        if (darwin) {
+          pref.setAppLevelAppearance(
+            state.theme === 'system' ? null : state.theme
+          )
+        }
+      })
 
       .tap(() => this.emit('app:restored'))
       .tap(() => verbose('app state restored'))
@@ -308,9 +315,7 @@ class Tropy extends EventEmitter {
     state.locale = this.getLocale(state.locale)
     state.version = this.version
     state.uuid = state.uuid || uuid()
-
-    this.state = state
-    return this
+    return state
   }
 
   persist() {
@@ -352,6 +357,9 @@ class Tropy extends EventEmitter {
         shell.showItemInFolder(this.state.recent[0])
       }
     })
+
+    this.on('app:center-window', () =>
+      this.center())
 
     this.on('app:show-in-folder', (_, { target }) =>
       shell.showItemInFolder(target.path))
@@ -469,6 +477,9 @@ class Tropy extends EventEmitter {
     this.on('app:writing-mode', (win, { id, mode }) =>
       this.dispatch(act.notepad.update({ [id]: { mode  } }), win))
 
+    this.on('app:settings-persist', (win, payload) =>
+      this.dispatch(act.settings.persist(payload), win))
+
     this.on('app:toggle-menu-bar', win => {
       if (win.isMenuBarAutoHide()) {
         win.setAutoHideMenuBar(false)
@@ -485,10 +496,7 @@ class Tropy extends EventEmitter {
     })
 
     this.on('app:switch-theme', (_, theme) => {
-      verbose(`switching to "${theme}" theme...`)
-      this.state.theme = theme
-      this.broadcast('theme', theme)
-      this.emit('app:reload-menu')
+      this.setTheme(theme)
     })
 
     this.on('app:switch-locale', async (_, locale) => {
@@ -649,10 +657,12 @@ class Tropy extends EventEmitter {
     if (darwin) {
       app.on('activate', () => this.open())
 
-      const ids = [
+      let ids = [
         pref.subscribeNotification(
           'AppleShowScrollBarsSettingChanged', () =>
-            this.broadcast('scrollbars', !hasOverlayScrollBars()))
+            this.broadcast('scrollbars', !hasOverlayScrollBars())),
+        pref.subscribeNotification(
+          'AppleInterfaceThemeChangedNotification', () => this.setTheme())
       ]
 
       app.on('quit', () => {
@@ -700,6 +710,7 @@ class Tropy extends EventEmitter {
   get hash() {
     return {
       environment: ARGS.environment,
+      dark: pref.isDarkMode(),
       debug: this.debug,
       dev: this.dev,
       home: app.getPath('userData'),
@@ -718,10 +729,16 @@ class Tropy extends EventEmitter {
     }
   }
 
+  center(windows = BrowserWindow.getAllWindows()) {
+    for (let win of windows) {
+      win.center()
+    }
+  }
+
   zoom(factor) {
     this.state.zoom = restrict(factor, ZOOM.MIN, ZOOM.MAX)
 
-    for (const win of BrowserWindow.getAllWindows()) {
+    for (let win of BrowserWindow.getAllWindows()) {
       win.webContents.setZoomFactor(this.state.zoom)
     }
   }
@@ -732,6 +749,18 @@ class Tropy extends EventEmitter {
     this.setTitle(dict.windows.prefs.title, prefs)
     this.setTitle(dict.windows.wizard.title, wiz)
     this.broadcast('locale', state.locale)
+  }
+
+  setTheme(theme = this.state.theme) {
+    verbose(`switching to "${theme}" theme...`)
+    this.state.theme = theme
+
+    if (darwin) {
+      pref.setAppLevelAppearance(theme === 'system' ? null : theme)
+    }
+
+    this.broadcast('theme', theme, pref.isDarkMode())
+    this.emit('app:reload-menu')
   }
 
   setTitle(title, win) {

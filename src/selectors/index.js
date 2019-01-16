@@ -11,9 +11,9 @@ module.exports = {
   ...require('./notepad'),
   ...require('./lists'),
   ...require('./ontology'),
+  ...require('./panel'),
   ...require('./photos'),
   ...require('./project'),
   ...require('./selections'),
-  ...require('./tags'),
-  ...require('./ui')
+  ...require('./tags')
 }

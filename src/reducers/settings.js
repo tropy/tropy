@@ -6,7 +6,9 @@ const { darwin } = require('../common/os')
 const defaults = {
   debug: ARGS.debug,
   dup: 'prompt',
+  layout: ITEM.LAYOUT.STACKED,
   locale: ARGS.locale,
+  localtime: true,
   template: ITEM.TEMPLATE,
   theme: ARGS.theme,
   overlayToolbars: ARGS.frameless,

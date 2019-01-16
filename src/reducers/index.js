@@ -16,6 +16,7 @@ module.exports = {
   ...require('./notes'),
   ...require('./notepad'),
   ...require('./ontology'),
+  ...require('./panel'),
   ...require('./photos'),
   ...require('./prefs'),
   ...require('./project'),

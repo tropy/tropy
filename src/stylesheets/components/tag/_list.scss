@@ -23,7 +23,8 @@
     }
   }
 
-  #sidebar & {
+  // stylelint-disable no-descending-specificity
+  .sidebar & {
     .tag {
       display: flex;
       align-items: center;
@@ -131,11 +132,38 @@
       }
     }
   }
+  /* stylelint-enable */
 }
 
 .add-tag-container {
   flex: 0 0 auto;
   padding: ($space-min + $space-min / 2) $default-padding-horizontal 2px;
+
+  .input-group {
+    position: relative;
+
+    &::before {
+      content: var(--placeholder);
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      line-height: $input-height-base;
+      pointer-events: none;
+      color: $add-tag-placeholder-color-default;
+
+      transition:
+        left $add-tag-transition,
+        transform $add-tag-transition,
+        color $add-tag-transition;
+
+      @include state(".input-group:focus-within") {
+        left: $padding-base-horizontal;
+        transform: translateX(0);
+        color: $input-color-placeholder;
+      }
+    }
+  }
 
   .form-control {
     background: $add-tag-default-bg;
@@ -146,29 +174,15 @@
       border-color: $add-tag-nested-focus-border-color;
     }
 
-    &::-webkit-input-placeholder {
-      color: $add-tag-placeholder-color-default;
-      position: relative;
-      left: 50%;
-      transform: translateX(-50%);
-      max-width: max-content;
-      transition:
-        left $add-tag-transition,
-        transform $add-tag-transition,
-        color $add-tag-transition;
-    }
-
     &:focus {
       cursor: auto;
       background: $add-tag-focus-bg;
       border-color: $input-btn-focus-color; // Reset to form-control
       box-shadow: 0 0 0 2px $input-btn-focus-color, 0 0 0 2px $panel-bg;
+    }
 
-      &::-webkit-input-placeholder {
-        left: 0;
-        transform: translateX(0);
-        color: $input-color-placeholder;
-      }
+    &:not([value=""]) {
+      position: relative;
     }
   }
 }

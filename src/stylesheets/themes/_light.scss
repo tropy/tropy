@@ -1,4 +1,4 @@
-// sass-lint:disable no-mergeable-selectors, no-color-literals
+// stylelint-disable
 
 
 // Light theme
@@ -90,6 +90,7 @@ $shade-10: #000; // Black
   #{--shade-10-24}:        rgba($shade-10, 0.24);
   #{--shade-10-60}:        rgba($shade-10, 0.6);
   #{--shade-10-65}:        rgba($shade-10, 0.65);
+  #{--shade-10-14}:        rgba($shade-10, 0.14);
 }
 
 
@@ -359,7 +360,6 @@ $slider-handle-border:         var(--shade-10-20);
 $slider-overlay-handle-border: var(--transparent);
 $slider-value-color:           var(--shade-8);
 $slider-overlay-value-color:   var(--shade-7);
-$slider-overlay-icon-color:    var(--shade-7);
 $slider-focus-bg:              var(--brand-primary);
 $slider-overlay-focus-bg:      var(--brand-primary);
 

@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { Component } = React
 const { func, bool, object, number, string } = require('prop-types')
 const { EditorToolbar } = require('./toolbar')
 const { EditorState } = require('prosemirror-state')
@@ -16,7 +15,7 @@ const { get, noop, restrict } = require('../../common/util')
 const { SASS: { EDITOR } } = require('../../constants')
 
 
-class Editor extends Component {
+class Editor extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -126,10 +125,10 @@ class Editor extends Component {
   }
 
   render() {
-    const { isDisabled, placeholder, tabIndex } = this.props
-    const { hasViewFocus } = this.state
-    const state = this.getEditorState()
-    const showPlaceholder = placeholder != null && this.isBlank(state.doc)
+    let { isDisabled, isDraggable, placeholder, tabIndex } = this.props
+    let { hasViewFocus } = this.state
+    let state = this.getEditorState()
+    let showPlaceholder = placeholder != null && this.isBlank(state.doc)
 
     return (
       <div
@@ -137,8 +136,9 @@ class Editor extends Component {
         className={cx(this.classes)}
         tabIndex={-1}
         onFocus={this.handleFocus}>
-        {!isDisabled &&
+        {(isDraggable || !isDisabled) &&
           <EditorToolbar
+            isDraggable={isDraggable}
             state={state}
             ref={this.setToolbar}
             onCommand={this.handleCommand}/>
@@ -164,6 +164,7 @@ class Editor extends Component {
 
   static propTypes = {
     isDisabled: bool,
+    isDraggable: bool,
     keymap: object.isRequired,
     mode: string.isRequired,
     onBlur: func.isRequired,
