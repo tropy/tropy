@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { Component } = React
 const { Completions } = require('./completions')
 const { IconXSmall, IconXMedium } = require('./icons')
 const { Button } = require('./button')
@@ -13,7 +12,7 @@ const {
 } = require('prop-types')
 
 
-class Value extends Component {
+class Value extends React.Component {
   handleClearButtonClick = (event) => {
     if (event.button === 0) {
       this.props.onClear(this.props.value)
@@ -42,7 +41,7 @@ class Value extends Component {
   }
 }
 
-class Select extends Component {
+class Select extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.getStateFromProps(props)
