@@ -58,16 +58,19 @@ class Menu {
   }
 
   responder(cmd, win, ...params) {
-    let [prefix, ...action] = cmd.split(':')
+    let [prefix, action] = cmd.split(':', 2)
 
     switch (prefix) {
       case 'app':
         return (_, w) => this.app.emit(cmd, win || w, ...params)
+      case 'ctx':
+        return withWindow(win, cmd, w =>
+          w.webContents.send('ctx', action, ...params))
       case 'win':
-        return withWindow(win, cmd, w => w.webContents.send(...action))
+        return withWindow(win, cmd, w => w.webContents.send(action, params))
       case 'dispatch':
         return withWindow(win, cmd, w => w.webContents.send('dispatch', {
-          type: action.join(':'), payload: params
+          type: action, payload: params
         }))
       default:
         warn(`no responder for menu command ${cmd}`)
