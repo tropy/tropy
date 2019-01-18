@@ -5,32 +5,39 @@ const { ResourceSelect } = require('./select')
 const { Popup } = require('../popup')
 const { OPTION, PANEL } = require('../../constants/sass')
 const { min } = Math
+const { viewport } = require('../../dom')
 const {
   arrayOf, func, number, object, oneOfType, string
 } = require('prop-types')
 
 
 class PopupSelect extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      height: this.getSelectHeight(props.options.length, props)
-    }
+  state = {}
+
+  static getDerivedStateFromProps(props) {
+    let { left, top, width } = props
+    let bounds = viewport()
+    let height = PopupSelect.getHeight(props.options.length, props)
+
+    if (left + width > bounds.width && left > width) left -= width
+    if (top + height > bounds.height && top > height) top -= height
+
+    return { top, left, height }
   }
 
-  getSelectHeight(rows, { maxRows } = this.props) {
+  static getHeight(rows, { maxRows }) {
     return OPTION.HEIGHT * ((min(rows || 1, maxRows)) + 1) + OPTION.LIST_MARGIN
   }
 
   handleResize = ({ rows }) => {
     this.setState({
-      height: this.getSelectHeight(rows, this.props)
+      height: PopupSelect.getHeight(rows, this.props)
     })
   }
 
   render() {
-    let { left, top, width, ...props } = this.props
-    let { height } = this.state
+    let { width, ...props } = this.props
+    let { left, top, height } = this.state
 
     return (
       <Popup
