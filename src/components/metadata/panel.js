@@ -5,6 +5,7 @@ const { connect } = require('react-redux')
 const { FormattedMessage } = require('react-intl')
 const { MetadataList } = require('./list')
 const { TemplateSelect } = require('../template/select')
+const { PopupSelect } = require('../resource/popup')
 const { PhotoInfo } = require('../photo/info')
 const { ItemInfo } = require('../item/info')
 const { SelectionInfo } = require('../selection/info')
@@ -21,6 +22,7 @@ const {
   getItemFields,
   getItemTemplates,
   getPhotoFields,
+  getPropertyList,
   getSelectedItemTemplate,
   getSelectedItems,
   getSelectionFields,
@@ -32,6 +34,9 @@ class MetadataPanel extends React.PureComponent {
   constructor(props) {
     super(props)
     this.fields = [null, null, null]
+    this.state = {
+      fieldsPopup: null
+    }
   }
 
   componentDidMount() {
@@ -140,7 +145,16 @@ class MetadataPanel extends React.PureComponent {
   }
 
   handleItemContextMenu = (event) => {
-    this.props.onContextMenu(event, 'metadata')
+    //this.props.onContextMenu(event, 'metadata')
+    event.stopPropagation()
+
+    this.setState({
+      fieldsPopup: {
+        left: event.clientX,
+        top: event.clientY,
+        value: this.props.itemFields.map(f => f.property.id)
+      }
+    })
   }
 
   handlePhotoContextMenu = (event) => {
@@ -149,6 +163,10 @@ class MetadataPanel extends React.PureComponent {
 
   handleSelectionContextMenu = (event) => {
     this.props.onContextMenu(event, 'metadata')
+  }
+
+  hideFieldsPopup = () => {
+    this.setState({ fieldsPopup: null })
   }
 
   handleKeyDown = (event) => {
@@ -257,6 +275,18 @@ class MetadataPanel extends React.PureComponent {
     )
   }
 
+  renderFieldsPopup() {
+    return this.state.fieldsPopup != null && (
+      <PopupSelect
+        {...this.state.fieldsPopup}
+        isSelectionHidden
+        options={this.props.fields}
+        onInsert={this.handleAddField}
+        onClose={this.hideFieldsPopup}
+        placeholder="panel.metadata.popup.placeholder"/>
+    )
+  }
+
   render() {
     return (
       <div className="metadata tab-pane">
@@ -269,6 +299,7 @@ class MetadataPanel extends React.PureComponent {
           {this.renderItemFields()}
           {this.renderPhotoFields()}
           {this.renderSelectionFields()}
+          {this.renderFieldsPopup()}
         </div>
       </div>
     )
@@ -278,6 +309,7 @@ class MetadataPanel extends React.PureComponent {
     isDisabled: bool,
 
     edit: object,
+    fields: arrayOf(object).isRequired,
     items: arrayOf(shape({
       id: number.isRequired,
       template: string.isRequired
@@ -327,6 +359,7 @@ module.exports = {
   MetadataPanel: connect(
     (state) => ({
       edit: state.edit.field,
+      fields: getPropertyList(state),
       items: getSelectedItems(state),
       itemFields: getItemFields(state),
       photo: getSelectedPhoto(state),
@@ -338,4 +371,3 @@ module.exports = {
     })
   )(MetadataPanel)
 }
-

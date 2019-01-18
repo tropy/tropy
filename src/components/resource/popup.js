@@ -5,7 +5,9 @@ const { ResourceSelect } = require('./select')
 const { Popup } = require('../popup')
 const { OPTION, PANEL } = require('../../constants/sass')
 const { min } = Math
-const { arrayOf, func, number, object, string } = require('prop-types')
+const {
+  arrayOf, func, number, object, oneOfType, string
+} = require('prop-types')
 
 
 class PopupSelect extends React.Component {
@@ -51,12 +53,12 @@ class PopupSelect extends React.Component {
   static propTypes = {
     left: number.isRequired,
     maxRows: number.isRequired,
-    onClose: func.isRequired,
-    onInsert: func.isRequired,
-    onRemove: func.isRequired,
+    onClose: func,
+    onInsert: func,
+    onRemove: func,
     options: arrayOf(object).isRequired,
     top: number.isRequired,
-    value: arrayOf(string).isRequired,
+    value: oneOfType([string, arrayOf(string)]),
     width: number
   }
 
