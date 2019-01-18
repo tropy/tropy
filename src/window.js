@@ -33,6 +33,7 @@ class Window extends EventEmitter {
       aqua, frameless, scrollbars, theme, dark
     }
 
+    this.pointer = {}
     this.plugins = new Plugins(ARGS.plugins)
     this.unloader = 'close'
     this.unloaders = []
@@ -51,6 +52,7 @@ class Window extends EventEmitter {
         this.handleIpcEvents()
         this.handleEditorCommands()
         this.handleModifierKeys()
+        this.handleMouseEnter()
 
         addIdleObserver(this.handleIdleEvents, IDLE_SHORT)
 
@@ -274,6 +276,13 @@ class Window extends EventEmitter {
       toggle(document.body, 'meta-key', event.metaKey === true)
       toggle(document.body, 'ctrl-key', event.ctrlKey === true)
     }
+  }
+
+  handleMouseEnter() {
+    on(document, 'mouseenter', event => {
+      this.pointer.x = event.clientX
+      this.pointer.y = event.clientY
+    }, { passive: true, capture: true })
   }
 
   createWindowControls() {
