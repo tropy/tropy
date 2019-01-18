@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { Component, Fragment } = React
 const { FormattedMessage } = require('react-intl')
 const { Popup } = require('./popup')
 const { OptionList } = require('./option')
@@ -24,11 +23,11 @@ const MARGIN = BORDER_WIDTH + FOCUS_SHADOW_WIDTH
 
 const Highlight = ({ text, matchData }) => (
   (!Array.isArray(matchData)) ? text : (
-    <Fragment>
+    <>
       {text.slice(0, matchData[0])}
       <strong>{text.slice(...matchData)}</strong>
       {text.slice(matchData[1])}
-    </Fragment>
+    </>
   )
 )
 
@@ -41,7 +40,7 @@ Highlight.propTypes = {
 }
 
 
-class Completions extends Component {
+class Completions extends React.Component {
   constructor(props) {
     super(props)
     this.state = this.getStateFromProps(props)
