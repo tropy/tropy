@@ -173,11 +173,20 @@ class Window extends EventEmitter {
 
         this.reload()
       })
+      .on('ctx', (_, action, detail) => {
+        // NB: delay triggering the event for the pointer
+        // position to be up-to-date!
+        setTimeout(() => {
+          emit(document, `ctx:${action}`, {
+            detail: { ...detail, ...this.pointer }
+          })
+        }, 15)
+
+      })
   }
 
   handleIdleEvents = (_, type, time) => {
     this.emit('idle', { type, time })
-
   }
 
   handleUnload() {
