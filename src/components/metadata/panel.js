@@ -12,6 +12,9 @@ const { SelectionInfo } = require('../selection/info')
 const { TABS } = require('../../constants')
 const { match } = require('../../keymap')
 const { on, off } = require('../../dom')
+const { get } = require('../../common/util')
+const { text } = require('../../value')
+const actions = require('../../actions')
 
 const {
   arrayOf, bool, func, number, object, shape, string
@@ -179,16 +182,24 @@ class MetadataPanel extends React.PureComponent {
     })
   }
 
+  getSubjectIds(type) {
+    if (type === 'item') {
+      return this.props.items.map(it => it.id)
+    } else {
+      return [get(this.props, [type, 'id'])]
+    }
+  }
+
   showFieldsPopup = ({ detail }) => {
-    let value = !detail.target ?
-      [] :
-      this.props.fields[detail.target.type].map(f => f.property.id)
+    let type = get(detail, ['target', 'type'], 'item')
+    let ids = this.getSubjectIds(type)
 
     this.setState({
       fieldsPopup: {
         left: detail.x,
         top: detail.y,
-        value
+        value: this.props.fields[type].map(f => f.property.id),
+        onInsert: (prop) => this.props.onMetadataInsert(ids, prop)
       }
     })
   }
@@ -301,7 +312,6 @@ class MetadataPanel extends React.PureComponent {
         {...this.state.fieldsPopup}
         isSelectionHidden
         options={this.props.fields.available}
-        onInsert={this.handleAddField}
         onClose={this.hideFieldsPopup}
         placeholder="panel.metadata.popup.placeholder"/>
     )
@@ -348,6 +358,7 @@ class MetadataPanel extends React.PureComponent {
     onEditCancel: func,
     onFocus: func.isRequired,
     onItemSave: func.isRequired,
+    onMetadataInsert: func.isRequired,
     onMetadataSave: func.isRequired,
     onOpenInFolder: func.isRequired
   }
@@ -367,7 +378,15 @@ module.exports = {
       photo: getSelectedPhoto(state),
       selection: getActiveSelection(state),
       template: getSelectedItemTemplate(state),
-      templates: getItemTemplates(state)
+      templates: getItemTemplates(state),
+    }),
+
+    (dispatch) => ({
+      onMetadataInsert(ids, prop) {
+        dispatch(actions.metadata.update({
+          ids, data: { [prop]: text('') }
+        }))
+      }
     })
   )(MetadataPanel)
 }
