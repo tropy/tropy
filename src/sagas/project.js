@@ -21,10 +21,8 @@ const { onErrorPut } = require('./db')
 const args = require('../args')
 
 const {
-  all, fork, cancel, call, put, take, takeEvery: every, race
+  all, fork, cancel, call, delay, put, take, takeEvery: every, race
 } = require('redux-saga/effects')
-
-const { delay } = require('redux-saga')
 
 const has = (condition) => (({ error, meta }) =>
   (!error && meta && (!meta.cmd || meta.done) && meta[condition]))
@@ -178,7 +176,7 @@ function *main() {
         yield cancel(task)
         yield race({
           closed: take(CLOSED),
-          timeout: call(delay, FORCE_SHUTDOWN_DELAY)
+          timeout: delay(FORCE_SHUTDOWN_DELAY)
         })
 
         task = null

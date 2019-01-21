@@ -1,7 +1,6 @@
 'use strict'
 
-const { delay } = require('redux-saga')
-const { call, cancel, fork, put, select, take } = require('redux-saga/effects')
+const { cancel, delay, fork, put, select, take } = require('redux-saga/effects')
 const { getPhotosWithErrors } = require('../selectors')
 const act = require('../actions')
 const { warn } = require('../common/log')
@@ -14,7 +13,7 @@ const consolidator = {
 
   *consolidate() {
     try {
-      yield call(delay, consolidator.DELAY)
+      yield delay(consolidator.DELAY)
 
       const photos = yield select(getPhotosWithErrors)
 
