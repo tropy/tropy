@@ -12,9 +12,12 @@ const {
 
 
 class PopupSelect extends React.Component {
-  state = {}
+  constructor(props) {
+    super(props)
+    this.state = PopupSelect.getInitialStateFromProps(props)
+  }
 
-  static getDerivedStateFromProps(props) {
+  static getInitialStateFromProps(props) {
     let { left, top, width } = props
     let bounds = viewport()
     let height = PopupSelect.getHeight(props.options.length, props)
