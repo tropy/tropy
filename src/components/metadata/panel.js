@@ -311,6 +311,7 @@ class MetadataPanel extends React.PureComponent {
       <PopupSelect
         {...this.state.fieldsPopup}
         isSelectionHidden
+        maxRows={6}
         options={this.props.fields.available}
         onClose={this.hideFieldsPopup}
         placeholder="panel.metadata.popup.placeholder"/>
