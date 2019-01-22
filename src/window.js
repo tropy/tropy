@@ -291,7 +291,7 @@ class Window extends EventEmitter {
     on(document, 'mouseenter', event => {
       this.pointer.x = event.clientX
       this.pointer.y = event.clientY
-    }, { passive: true, capture: true })
+    }, { passive: true, capture: false })
   }
 
   createWindowControls() {
