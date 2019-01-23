@@ -267,7 +267,7 @@ class Save extends Command {
         await mod.item.update(tx, ids, props, meta.now)
 
         if (hasData) {
-          await mod.metadata.update(tx, { ids, data })
+          await mod.metadata.update(tx, { id: ids, data })
         }
       })
 
@@ -292,7 +292,7 @@ class Save extends Command {
           if (data) {
             hasData = true
             changed.data[id] = data
-            await mod.metadata.update(tx, { ids: [id], data })
+            await mod.metadata.update(tx, { id, data })
           }
         }
       })

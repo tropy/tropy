@@ -3,14 +3,15 @@
 const { Command } = require('./command')
 const { call, put, select } = require('redux-saga/effects')
 const { pick } = require('../common/util')
+const { text } = require('../value')
 const mod = require('../models/metadata')
 const act = require('../actions/metadata')
-const { LOAD, RESTORE, SAVE } = require('../constants/metadata')
+const { METADATA } = require('../constants')
 const { keys } = Object
 
 
 class Load extends Command {
-  static get ACTION() { return LOAD }
+  static get ACTION() { return METADATA.LOAD }
 
   *exec() {
     const { db } = this.options
@@ -21,13 +22,13 @@ class Load extends Command {
 }
 
 class Restore extends Command {
-  static get ACTION() { return RESTORE }
+  static get ACTION() { return METADATA.RESTORE }
 
   *exec() {
-    const { db } = this.options
-    const { payload, meta } = this.action
+    let { db } = this.options
+    let { payload, meta } = this.action
 
-    const ids = keys(payload)
+    let ids = keys(payload)
     this.original = {}
 
     yield select(({ metadata }) => {
@@ -41,7 +42,7 @@ class Restore extends Command {
     yield call(db.transaction, async tx => {
       for (let id of ids) {
         await mod.update(tx, {
-          ids: [id],
+          id,
           data: payload[id],
           timestamp: meta.now
         })
@@ -61,17 +62,17 @@ class Restore extends Command {
 }
 
 class Save extends Command {
-  static get ACTION() { return SAVE }
+  static get ACTION() { return METADATA.SAVE }
 
   *exec() {
-    const { db } = this.options
-    const { payload, meta } = this.action
-    const { ids, data } = payload
+    let { db } = this.options
+    let { payload, meta } = this.action
+    let { ids, data } = payload
 
     this.original = {}
 
     yield select(({ metadata }) => {
-      const props = keys(data)
+      let props = keys(data)
 
       for (let id of ids) {
         this.original[id] = pick(metadata[id], props, {}, true)
@@ -82,7 +83,7 @@ class Save extends Command {
 
     yield call(db.transaction, tx =>
       mod.update(tx, {
-        ids,
+        id: ids,
         data,
         timestamp: meta.now
       }))
@@ -99,8 +100,50 @@ class Save extends Command {
   }
 }
 
+class Add extends Command {
+  static get ACTION() { return METADATA.ADD }
+
+  *exec() {
+    let { payload } = this.action
+    let { id, property, value } = payload
+
+    if (value == null) value = text('')
+
+    yield put(act.update({
+      ids: id, data: { [property]: value }
+    }))
+
+    this.undo = act.delete({ id, property })
+  }
+}
+
+class Delete extends Command {
+  static get ACTION() { return METADATA.DELETE }
+
+  *exec() {
+    let { db } = this.options
+    let { payload } = this.action
+    let { id, property } = payload
+
+    let original = {}
+
+    yield select(({ metadata }) => {
+      for (let x of id) {
+        original[x] = pick(metadata[x], [property], {}, true)
+      }
+    })
+
+    yield call(mod.remove, db, { id, property })
+    yield put(act.remove([id, property]))
+
+    this.undo = act.restore(original)
+  }
+}
+
 
 module.exports = {
+  Add,
+  Delete,
   Load,
   Restore,
   Save

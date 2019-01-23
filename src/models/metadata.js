@@ -2,12 +2,12 @@
 
 const { save } = require('./value')
 const { keys } = Object
-const { blank, get, list, quote } = require('../common/util')
-
+const { array, blank, get, list, quote } = require('../common/util')
+const { touch } = require('./subject')
 
 const metadata = {
   async load(db, ids) {
-    const data = {}
+    let data = {}
 
     await db.each(`
       SELECT id, property, text, datatype AS type
@@ -25,34 +25,40 @@ const metadata = {
     return data
   },
 
-  async update(db, { ids, data, timestamp }, replace = false) {
-    const idList = list(ids)
-    const props = keys(data).filter(prop => (
-      prop !== 'id' && prop !== 'pending'
-    ))
-
-    await db.run(`
-      DELETE FROM metadata WHERE id IN (${idList})${
-        replace ? '' : ` AND property IN (${list(props, quote)})`
+  async remove(db, { id, property }) {
+    return db.run(`
+      DELETE FROM metadata WHERE id IN (${list(array(id))})${
+        (property == null) ?
+          '' : ` AND property IN (${list(array(property), quote)})`
       }`)
+  },
 
-    for (const prop of props) {
-      if (blank(get(data, [prop, 'text']))) continue
+  async insert(db, { id, property, value, language = 'NULL' }) {
+    return db.run(`
+      INSERT INTO metadata (id, property, value_id, language)
+        VALUES ${
+          array(id).map(x =>
+            `(${[x, quote(property), value, language].join(',')})`
+          ).join(', ')
+        }`)
+  },
 
-      const value = await save(db, data[prop])
+  async update(db, { id, data, timestamp }, replace = false) {
+    let properties = keys(data).filter(p => (p !== 'id' && p !== 'pending'))
 
-      await db.run(`
-        INSERT INTO metadata (id, property, value_id, language)
-          VALUES ${ids.map(id =>
-            `(${[id, quote(prop), value, 'NULL'].join(',')})`).join(', ')}`)
+    await metadata.remove(db, {
+      id,
+      property: replace ? null : properties })
+
+    for (let property of properties) {
+      if (blank(get(data, [property, 'text']))) continue
+
+      let value = await save(db, data[property])
+      await metadata.insert(db, { id, property, value })
     }
 
     if (timestamp != null) {
-      await db.run(`
-        UPDATE subjects
-          SET modified = datetime(?)
-          WHERE id IN (${idList})`,
-        new Date(timestamp).toISOString())
+      await touch(db, { id, timestamp })
     }
   },
 

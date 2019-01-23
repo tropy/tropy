@@ -48,7 +48,7 @@ module.exports = {
       })),
 
       metadata.update(db, {
-        ids: [id],
+        id,
         data: { ...data, ...pick(image.data, [DC.title, DC.date]) }
       })
     ])
