@@ -151,6 +151,7 @@
       line-height: $input-height-base;
       pointer-events: none;
       color: $add-tag-placeholder-color-default;
+      mix-blend-mode: if($theme == "light", multiply, lighten);
 
       transition:
         left $add-tag-transition,
