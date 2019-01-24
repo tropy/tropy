@@ -70,6 +70,7 @@ class MetadataField extends React.PureComponent {
     if (event.key === 'Tab') {
       event.preventDefault()
       event.stopPropagation()
+      event.nativeEvent.stopImmediatePropagation()
 
       if (input.hasChanged) input.commit(true)
 
@@ -80,7 +81,7 @@ class MetadataField extends React.PureComponent {
 
 
   render() {
-    const { classes, details, label, isInvalid } = this
+    let { classes, details, label, isInvalid } = this
 
     return (
       <li

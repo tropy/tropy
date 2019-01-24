@@ -1,22 +1,15 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { bool, func, number, oneOfType, string } = require('prop-types')
 const { Input } = require('./input')
 const { noop } = require('../common/util')
 const cx = require('classnames')
 
 
-class Editable extends PureComponent {
-  componentDidUpdate({ isActive: wasActive }) {
-    if (wasActive && !this.props.isActive) {
-      this.restorePrevFocus()
-    }
-  }
-
+class Editable extends React.PureComponent {
   componentWillUnmount() {
-    this.restorePrevFocus()
+    this.prevFocus = null
   }
 
   get classes() {
@@ -74,7 +67,7 @@ class Editable extends PureComponent {
       if (hasChanged) {
         this.props.onChange(value)
       } else {
-        this.props.onCancel(true)
+        this.props.onCancel(false, hasChanged)
       }
     } finally {
       this.restorePrevFocus()
