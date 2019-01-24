@@ -19,7 +19,6 @@ const CONFIG = [
 
 target.all = (args) => {
   target.sqlite3(args)
-  target.jsonld()
   target.sharp(args)
   target.idle()
 }
@@ -51,12 +50,6 @@ target.sqlite3 = (force) => {
 target.inspector = () => {
   rebuild('v8-debug', { params: '--build-from-source' })
   rebuild('v8-profiler', { params: '--build-from-source' })
-}
-
-target.jsonld = () => {
-  rm('-rf', join(mods, 'rdf-canonize-native'))
-  rm('-rf', join(mods, 'jsonld', 'node-modules', 'rdf-canonize-native'))
-  say('rdf-canonize-native removed')
 }
 
 target.sharp = (force) => {
