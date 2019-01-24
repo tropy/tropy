@@ -90,7 +90,9 @@ class Editable extends PureComponent {
 
   renderContent() {
     return (
-      <div className="truncate">{this.content}</div>
+      <div className="truncate" title={this.props.title}>
+        {this.content}
+      </div>
     )
   }
 
@@ -135,6 +137,7 @@ class Editable extends PureComponent {
     placeholder: string,
     resize: bool,
     tabIndex: number,
+    title: string,
     type: string,
     value: oneOfType([string, number]),
     onBlur: func,

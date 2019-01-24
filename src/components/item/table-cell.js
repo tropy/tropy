@@ -35,6 +35,10 @@ class ItemTableCell extends React.PureComponent {
     )
   }
 
+  get title() {
+    return this.props.isMainColumn ? this.props.value : null
+  }
+
   edit(property) {
     this.props.onEdit({
       column: { [this.props.item.id]: property }
@@ -123,6 +127,7 @@ class ItemTableCell extends React.PureComponent {
             isActive={this.props.isEditing}
             isDisabled={isDisabled}
             resize
+            title={this.title}
             value={isDisabled ? null : this.props.value}
             onCancel={this.props.onCancel}
             onChange={this.handleChange}
