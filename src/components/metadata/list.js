@@ -109,6 +109,7 @@ class MetadataList extends React.PureComponent {
             property={property}
             text={value.text}
             type={value.type || type}
+            onContextMenu={this.props.onContextMenu}
             onChange={this.handleChange}
             onEdit={this.edit}
             onEditCancel={this.props.onEditCancel}
@@ -133,6 +134,7 @@ class MetadataList extends React.PureComponent {
     onBefore: func.isRequired,
     onEdit: func,
     onEditCancel: func,
+    onContextMenu: func,
     onChange: func.isRequired
   }
 }

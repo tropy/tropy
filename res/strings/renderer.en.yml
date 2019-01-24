@@ -24,7 +24,7 @@ en:
           other {# Items}}
       selection: Selection
       popup:
-        placeholder: Add extra field …
+        placeholder: Add new field …
     tags:
       tab: Tags
       add: >

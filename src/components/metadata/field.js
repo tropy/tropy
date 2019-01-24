@@ -3,7 +3,7 @@
 const React = require('react')
 const { Editable } = require('../editable')
 const { FormattedMessage } = require('react-intl')
-const { blank, pluck } = require('../../common/util')
+const { blank, noop, pluck } = require('../../common/util')
 const { getLabel } = require('../../common/ontology')
 const { IconLock, IconWarningSm } = require('../icons')
 const cx = require('classnames')
@@ -57,6 +57,15 @@ class MetadataField extends React.PureComponent {
     else this.handleChange(this.props.text, hasChanged)
   }
 
+  handleContextMenu = (event) => {
+    if (!this.props.isDisabled && !this.props.isReadOnly) {
+      this.props.onContextMenu(event, {
+        isExtra: this.props.isExtra,
+        property: this.property
+      })
+    }
+  }
+
   handleKeyDown = (event, input) => {
     if (event.key === 'Tab') {
       event.preventDefault()
@@ -74,7 +83,9 @@ class MetadataField extends React.PureComponent {
     const { classes, details, label, isInvalid } = this
 
     return (
-      <li className={cx(classes)}>
+      <li
+        className={cx(classes)}
+        onContextMenu={this.handleContextMenu}>
         <label title={details.join('\n\n')}>{label}</label>
         <div className="value" onClick={this.handleClick}>
           <Editable
@@ -119,12 +130,14 @@ class MetadataField extends React.PureComponent {
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,
     onChange: func.isRequired,
+    onContextMenu: func,
     onNext: func.isRequired,
     onPrev: func.isRequired
   }
 
   static defaultProps = {
-    type: TYPE.TEXT
+    type: TYPE.TEXT,
+    onContextMenu: noop
   }
 }
 
