@@ -178,9 +178,13 @@ en:
         - label: 'Side by side'
           id: 'side-by-side'
           type: checkbox
-    metadata: &metadata
-      - label: 'Add extra field …'
+    metadata-list: &metadata-list
+      - label: 'New Field …'
         command: 'ctx:add-extra-field'
+    metadata-field: &metadata-field
+      - label: 'Remove Field'
+        command: 'app:delete-field'
+        condition: 'isExtra'
     trash: &trash
       - label: 'Permanently Delete Items'
         command: 'app:destroy-item'
@@ -213,7 +217,8 @@ en:
     item-deleted: *item-deleted
     item-bulk-deleted: *item-bulk-deleted
     item-view: *item-view
-    metadata: *metadata
+    metadata-list: *metadata-list
+    metadata-field: *metadata-field
     trash: *trash
     photo: *photo
     selection: *selection
@@ -239,7 +244,8 @@ en:
     item-deleted: *item-deleted
     item-bulk-deleted: *item-bulk-deleted
     item-view: *item-view
-    metadata: *metadata
+    metadata-list: *metadata-list
+    metadata-field: *metadata-field
     trash: *trash
     photo: *photo
     selection: *selection

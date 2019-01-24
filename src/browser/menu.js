@@ -28,7 +28,9 @@ const CHECK = {
 }
 
 function check(item, event) {
-  return CHECK[item.condition] && CHECK[item.condition](item, event)
+  return (item.condition in CHECK) ?
+    CHECK[item.condition](item, event) :
+    event && event.target && !!event.target[item.condition]
 }
 
 
@@ -362,7 +364,8 @@ class ContextMenu extends Menu {
   scopes.selection = [...scopes.photo, 'selection']
   scopes.notes = [...scopes.global]
   scopes.note = [...scopes.notes, 'note']
-  scopes.metadata = [...scopes.global, 'metadata']
+  scopes['metadata-list'] = [...scopes.global, 'metadata-list']
+  scopes['metadata-field'] = [...scopes['metadata-list'], 'metadata-field']
   scopes['item-bulk'] = [...scopes.items, 'item-bulk']
   scopes['item-list'] = [...scopes.items, 'item-list', 'item']
   scopes['item-bulk-list'] = [...scopes.items, 'item-bulk-list', 'item-bulk']
