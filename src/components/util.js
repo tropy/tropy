@@ -5,7 +5,7 @@ const {
 } = require('react')
 
 const {
-  bool, number, object, shape, string
+  bool, number, shape, string
 } = require('prop-types')
 
 const { diff } = require('../common/util')
