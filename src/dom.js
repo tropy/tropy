@@ -95,8 +95,12 @@ const dom = {
     return cancel
   },
 
-  emit(node, ...args) {
-    return node.dispatchEvent(new Event(...args))
+  emit(node, type, data = {}) {
+    if (data.detail != null) {
+      return node.dispatchEvent(new CustomEvent(type, data))
+    } else {
+      return node.dispatchEvent(new Event(type, data))
+    }
   },
 
   classes(node, ...args) {

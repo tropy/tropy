@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { Component } = React
 const { createPortal } = require('react-dom')
 const { bool, func, node, number, oneOf, shape, string } = require('prop-types')
 const { $, append, classes, element, on, off, remove } = require('../dom')
@@ -9,7 +8,7 @@ const { noop } = require('../common/util')
 const cx = require('classnames')
 const throttle = require('lodash.throttle')
 
-class Popup extends Component {
+class Popup extends React.Component {
   constructor(props) {
     super(props)
     this.root = $('#popup-root')

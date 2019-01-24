@@ -85,11 +85,18 @@ const util = {
     update(state, payload, meta = {}) {
       if (!isArray(payload)) return util.merge(state, payload)
 
-      const [ids, data] = payload
+      let [ids, data] = payload
 
       return into({ ...state }, map(id => ({
         [id]: meta.replace ? data : { ...state[id], ...data }
       })), ids)
+    },
+
+    remove(state, payload) {
+      let [ids, props] = payload
+
+      return into({ ...state },
+        map(id => ({ [id]: omit(state[id], array(props)) })), ids)
     }
   },
 

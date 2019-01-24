@@ -7,8 +7,8 @@ function touch(db, { id, timestamp = Date.now() }) {
 }
 
 function update(db, { id, template, timestamp = Date.now() }) {
-  const assignments = ['modified = datetime(?)']
-  const params = [new Date(timestamp).toISOString()]
+  let assignments = ['modified = datetime(?)']
+  let params = [new Date(timestamp).toISOString()]
 
   if (!blank(template)) {
     assignments.push('template = ?')

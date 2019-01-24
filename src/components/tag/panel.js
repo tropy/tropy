@@ -177,6 +177,7 @@ module.exports = {
       completions: getTagCompletions(state),
       edit: state.edit.tabTag,
       items: getSelectedItems(state),
+      keymap: state.keymap.TagList,
       tags: getItemTags(state)
     })
   )(TagPanel)

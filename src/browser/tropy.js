@@ -430,6 +430,12 @@ class Tropy extends EventEmitter {
         force: true, prompt: true
       }), win))
 
+    this.on('app:delete-field', (win, { target }) =>
+      this.dispatch(act.metadata.delete({
+        id: target.id,
+        property: target.property
+      }), win))
+
     this.on('app:delete-selection', (win, { target }) =>
       this.dispatch(act.selection.delete({
         photo: target.id, selections: [target.selection]

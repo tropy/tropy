@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { Fragment, PureComponent } = React
 const { Select } = require('../select')
 const { Highlight } = require('../completions')
 const { FormattedMessage } = require('react-intl')
@@ -13,7 +12,7 @@ const {
 } = require('prop-types')
 
 
-class ResourceSelect extends PureComponent {
+class ResourceSelect extends React.PureComponent {
   get placeholder() {
     return this.props.placeholder != null &&
       <FormattedMessage id={this.props.placeholder}/>
@@ -51,10 +50,10 @@ class ResourceSelect extends PureComponent {
     ),
     tabIndex: -1,
     toText: (value, { matchData } = {}) => (
-      <Fragment>
+      <>
         <Label resource={value} matchData={matchData}/>
         <Id resource={value} matchData={matchData}/>
-      </Fragment>
+      </>
     )
   }
 }
@@ -84,7 +83,7 @@ Label.propTypes = {
 const Id = ({ resource, matchData }) => (
   <span className="mute truncate">
     {(!resource.prefix || !resource.name) ? resource.id : (
-      <Fragment>
+      <>
         <Highlight
           text={resource.prefix}
           matchData={matchData && matchData.prefix}/>
@@ -92,7 +91,7 @@ const Id = ({ resource, matchData }) => (
         <Highlight
           text={resource.name}
           matchData={matchData && matchData.name}/>
-      </Fragment>
+      </>
     )}
   </span>
 )

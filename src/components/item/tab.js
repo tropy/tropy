@@ -1,17 +1,16 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { FormattedMessage } = require('react-intl')
 const { Tab, Tabs } = require('../tabs')
 const { IconMetadata, IconHangtag } = require('../icons')
 const { MetadataPanel } = require('../metadata')
 const { TagPanel } = require('../tag')
 const { PANEL: { METADATA, TAGS } } = require('../../constants/ui')
-const { array, func, object, oneOf } = require('prop-types')
+const { array, func, oneOf } = require('prop-types')
 
 
-class ItemTabHeader extends PureComponent {
+class ItemTabHeader extends React.PureComponent {
   isActive(tab) {
     return this.props.tab === tab
   }
@@ -53,37 +52,25 @@ class ItemTabHeader extends PureComponent {
   }
 }
 
+const ItemTabBody = ({ items, setPanel, tab, ...props }) => {
+  if (items.length === 0) {
+    return null
+  }
 
-const ItemTabBody = ({ items, keymap, setPanel, tab, ...props }) => {
-  switch (true) {
-    case (items.length === 0):
-      return null
-    case (tab === METADATA):
-      return (
-        <MetadataPanel {...props}
-          ref={setPanel}
-          items={items}
-          keymap={keymap.MetadataList}/>
-      )
-    case (tab === TAGS):
-      return (
-        <TagPanel {...props}
-          ref={setPanel}
-          items={items}
-          keymap={keymap.TagList}/>
-      )
-    default:
-      return null
+  if (tab === METADATA) {
+    return <MetadataPanel {...props} ref={setPanel} items={items}/>
+  }
+
+  if (tab === TAGS) {
+    return <TagPanel {...props} ref={setPanel} items={items}/>
   }
 }
 
 ItemTabBody.propTypes = {
   items: array.isRequired,
-  keymap: object.isRequired,
   setPanel: func.isRequired,
   tab: oneOf([METADATA, TAGS]).isRequired
 }
-
 
 module.exports = {
   ItemTabHeader,
