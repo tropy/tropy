@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
-    "@babel/plugin-proposal-class-properties": "^7.2.3",
+    "@babel/plugin-proposal-class-properties": "^7.3.0",
     "@babel/plugin-syntax-object-rest-spread": "^7.2.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.0.0",
@@ -53,7 +53,7 @@
     "chai-as-promised": "^7.1.1",
     "chokidar": "^2.0.4",
     "devtron": "^1.0.0",
-    "electron": "^4.0.1",
+    "electron": "^4.0.2",
     "electron-devtools-installer": "^2.2.4",
     "electron-mocha": "^6.0.4",
     "electron-packager": "^13.0.1",
@@ -91,7 +91,7 @@
     "exif-reader": "github:inukshuk/exif-reader#patched",
     "generic-pool": "^3.5.0",
     "js-yaml": "^3.12.1",
-    "jsonld": "^1.4.0",
+    "jsonld": "^1.5.0",
     "lodash.debounce": "^4.0.7",
     "lodash.throttle": "^4.1.1",
     "mkdirp": "^0.5.1",
@@ -131,7 +131,7 @@
     "uuid": "^3.3.2",
     "winreg": "^1.2.4",
     "winston": "^2.4.4",
-    "write-file-atomic": "^2.3.0",
+    "write-file-atomic": "^2.4.2",
     "yargs": "^12.0.5"
   },
   "yargs": {
