@@ -27,52 +27,54 @@ class ItemTableRow extends ItemIterable {
     return get(this.props.edit, [this.props.item.id]) === id
   }
 
-  mapColumns(fn, columns = this.props.columns) {
-    const cells = []
-    const { data, item } = this.props
+  getNextColumn = (at = 0, dir = 1) => {
+    let { columns } = this.props
 
-    for (let i = 0, ii = columns.length; i < ii; ++i) {
-      let column = columns[i]
-      let next = columns[(i + 1) % ii]
-      let prev = columns[(ii + i - 1) % ii]
-      let isMainColumn = (i === 0)
-      let isItemColumn = this.isItemColumn(column.id)
-      let type, value
+    for (let k = 1, N = columns.length; k < N; ++k) {
+      let column = columns[(N + at + k * dir) % N]
+      if (column.protected) continue
+      return column.id
+    }
+  }
 
-      if (isItemColumn) {
-        type = column.type
-        value = item[isItemColumn]
-      } else {
-        type = get(data, [column.id, 'type'])
-        value = get(data, [column.id, 'text'])
-      }
+  getPrevColumn = (at = 0) => (
+    this.getNextColumn(at, -1)
+  )
 
-      const props = {
-        key: column.id,
-        id: column.id,
-        isDragging: this.isDragging(i),
-        isEditing: this.isEditing(column.id),
-        isMainColumn,
-        isMoving: this.isMoving(i),
-        isReadOnly: !!column.protected,
-        nextColumn: next.id,
-        prevColumn: prev.id,
-        type,
-        value
-      }
+  getColumnProps(column, idx) {
+    let isMainColumn = (idx === 0)
+    let isItemColumn = this.isItemColumn(column.id)
+    let type, value
 
-      if (isMainColumn) {
-        pick(this.props, MainCellProps, props)
-      }
-
-      cells.push(fn(props))
+    if (isItemColumn) {
+      type = column.type
+      value = this.props.item[isItemColumn]
+    } else {
+      type = get(this.props.data, [column.id, 'type'])
+      value = get(this.props.data, [column.id, 'text'])
     }
 
-    return cells
+    let props = {
+      id: column.id,
+      isDragging: this.isDragging(idx),
+      isEditing: this.isEditing(column.id),
+      isMainColumn,
+      isMoving: this.isMoving(idx),
+      isReadOnly: !!column.protected,
+      position: idx,
+      type,
+      value
+    }
+
+    if (isMainColumn) {
+      pick(this.props, MainCellProps, props)
+    }
+
+    return props
   }
 
   render() {
-    const cellProps = pick(this.props, CellProps)
+    let props = pick(this.props, CellProps)
 
     return this.connect(
       <tr
@@ -83,13 +85,18 @@ class ItemTableRow extends ItemIterable {
         onDoubleClick={this.handleOpen}
         onContextMenu={this.handleContextMenu}>
         {this.props.hasPositionColumn &&
-          <ItemTableCell {...cellProps}
+          <ItemTableCell {...props}
             isReadOnly
             id={NAV.COLUMN.POSITION.id}
             type={NAV.COLUMN.POSITION.type}
             value={this.props.position}/>}
-        {this.mapColumns(props =>
-          <ItemTableCell {...cellProps} {...props}/>)}
+        {this.props.columns.map((column, idx) =>
+          <ItemTableCell
+            key={column.id}
+            {...props}
+            {...this.getColumnProps(column, idx)}
+            getNextColumn={this.getNextColumn}
+            getPrevColumn={this.getPrevColumn}/>)}
         <BlankTableCell/>
       </tr>
     )

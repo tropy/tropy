@@ -83,12 +83,13 @@ class ItemTableCell extends React.PureComponent {
     if (event.key === 'Tab') {
       event.preventDefault()
       event.stopPropagation()
+      event.nativeEvent.stopImmediatePropagation()
 
       if (input.hasChanged) input.commit(true)
 
-      const next = event.shiftKey ?
-        this.props.prevColumn :
-        this.props.nextColumn
+      let next = event.shiftKey ?
+        this.props.getPrevColumn(this.props.position) :
+        this.props.getNextColumn(this.props.position)
 
       if (next != null) this.edit(next)
     }
@@ -153,14 +154,15 @@ class ItemTableCell extends React.PureComponent {
       cover: number,
       photos: arrayOf(number)
     }).isRequired,
-    nextColumn: string,
     photos: object,
-    prevColumn: string,
+    position: number.isRequired,
     size: number,
     tags: object,
     type: string.isRequired,
     value: oneOfType([string, number, instanceOf(Date)]),
     getSelection: func.isRequired,
+    getNextColumn: func.isRequired,
+    getPrevColumn: func.isRequired,
     onCancel: func.isRequired,
     onChange: func.isRequired,
     onEdit: func.isRequired,
