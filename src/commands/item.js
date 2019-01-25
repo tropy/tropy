@@ -84,6 +84,8 @@ class Import extends ImportCommand {
       let photos = []
 
       try {
+        yield put(act.activity.update(this.action, { total, progress: i + 1 }))
+
         file = files[i]
 
         image = yield call(Image.open, file)
@@ -126,11 +128,7 @@ class Import extends ImportCommand {
           image.next()
         }
 
-        yield all([
-          put(act.item.insert(item)),
-          put(act.activity.update(this.action, { total, progress: i + 1 }))
-        ])
-
+        yield put(act.item.insert(item))
         items.push(item.id)
 
       } catch (error) {
