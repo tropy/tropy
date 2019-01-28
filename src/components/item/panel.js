@@ -108,7 +108,6 @@ class ItemPanel extends React.PureComponent {
             tab={panel.tab}
             isDisabled={isDisabled}
             isItemOpen={isItemOpen}
-            keymap={keymap}
             setPanel={this.setPanel}
             onBlur={this.handleFirstPanelBlur}
             onFocus={this.handleFirstPanelFocus}/>
@@ -181,7 +180,6 @@ class ItemPanel extends React.PureComponent {
     onEditCancel: func,
     onItemOpen: func.isRequired,
     onItemPreview: func.isRequired,
-    onItemSave: func.isRequired,
     onItemTagAdd: func.isRequired,
     onItemTagRemove: func.isRequired,
     onMaximize: func.isRequired,

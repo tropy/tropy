@@ -4,6 +4,22 @@ const { array } = require('../common/util')
 const { METADATA } = require('../constants')
 
 module.exports = {
+  add(payload, meta) {
+    return {
+      type: METADATA.ADD,
+      payload,
+      meta: { cmd: 'project', history: 'add', ...meta }
+    }
+  },
+
+  delete(payload, meta) {
+    return {
+      type: METADATA.DELETE,
+      payload,
+      meta: { cmd: 'project', history: 'add', ...meta }
+    }
+  },
+
   insert(payload, meta = {}) {
     return {
       type: METADATA.INSERT,
@@ -31,6 +47,14 @@ module.exports = {
   replace(payload, meta) {
     return {
       type: METADATA.REPLACE,
+      payload,
+      meta
+    }
+  },
+
+  remove(payload, meta) {
+    return {
+      type: METADATA.REMOVE,
       payload,
       meta
     }

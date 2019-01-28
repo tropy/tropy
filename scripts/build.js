@@ -50,7 +50,6 @@ const IGNORE = [
   /node_modules.\.bin/,
   /node_modules.sqlite3.build/,
   /node_modules.sqlite3.deps/,
-  /node_modules.rdf-canonize.build/,
   /node_modules.prosemirror-model.dist.index\.js\.map/,
   /node_modules.sharp.build.[^R]/,
   /node_modules.sharp.build.Release.obj/,

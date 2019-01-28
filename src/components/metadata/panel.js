@@ -1,27 +1,29 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { connect } = require('react-redux')
-const { FormattedMessage } = require('react-intl')
 const { MetadataList } = require('./list')
+const { MetadataSection } = require('./section')
 const { TemplateSelect } = require('../template/select')
+const { PopupSelect } = require('../resource/popup')
 const { PhotoInfo } = require('../photo/info')
 const { ItemInfo } = require('../item/info')
 const { SelectionInfo } = require('../selection/info')
 const { TABS } = require('../../constants')
 const { match } = require('../../keymap')
 const { on, off } = require('../../dom')
+const { get } = require('../../common/util')
+const actions = require('../../actions')
 
-const {
-  arrayOf, bool, func, number, object, shape, string
-} = require('prop-types')
+const { shapes } = require('../util')
+const { arrayOf, bool, func, object, shape } = require('prop-types')
 
 const {
   getActiveSelection,
   getItemFields,
   getItemTemplates,
   getPhotoFields,
+  getPropertyList,
   getSelectedItemTemplate,
   getSelectedItems,
   getSelectionFields,
@@ -29,18 +31,23 @@ const {
 } = require('../../selectors')
 
 
-class MetadataPanel extends PureComponent {
+class MetadataPanel extends React.PureComponent {
   constructor(props) {
     super(props)
     this.fields = [null, null, null]
+    this.state = {
+      fieldPopup: null
+    }
   }
 
   componentDidMount() {
     on(this.container, 'tab:focus', this.handleTabFocus)
+    on(document, 'ctx:add-extra-field', this.showFieldPopup)
   }
 
   componentWillUnmount() {
     off(this.container, 'tab:focus', this.handleTabFocus)
+    off(document, 'ctx:add-extra-fields', this.showFieldPopup)
     this.props.onBlur()
   }
 
@@ -50,6 +57,14 @@ class MetadataPanel extends PureComponent {
 
   get isBulk() {
     return this.props.items.length > 1
+  }
+
+  get hasPhotoFields() {
+    return this.props.photo != null && !this.props.photo.pending
+  }
+
+  get hasSelectionFields() {
+    return this.props.selection != null && !this.props.selection.pending
   }
 
   get tabIndex() {
@@ -140,6 +155,50 @@ class MetadataPanel extends PureComponent {
     }
   }
 
+  handleItemContextMenu = (event, data = {}) => {
+    this.handleContextMenu(event, { ...data, type: 'item' })
+  }
+
+  handlePhotoContextMenu = (event, data = {}) => {
+    this.handleContextMenu(event, { ...data, type: 'photo' })
+  }
+
+  handleSelectionContextMenu = (event, data = {}) => {
+    this.handleContextMenu(event, { ...data, type: 'selection' })
+  }
+
+  handleContextMenu(event, data = {}) {
+    if (!this.props.isDisabled) {
+      let id = (data.type === 'item') ?
+        this.props.items.map(it => it.id) :
+        [get(this.props, [data.type, 'id'])]
+
+      let context = data.property ?
+        'metadata-field' : 'metadata-list'
+
+      this.props.onContextMenu(event, context, { ...data, id })
+    }
+  }
+
+  showFieldPopup = ({ detail }) => {
+    let { id, type } = detail.target
+
+    this.setState({
+      fieldPopup: {
+        left: detail.x,
+        top: detail.y,
+        value: this.props.fields[type].map(f => f.property.id),
+        onInsert: (property) => {
+          this.props.onMetadataAdd({ id, property })
+        }
+      }
+    })
+  }
+
+  hideFieldPopup = () => {
+    this.setState({ fieldPopup: null })
+  }
+
   handleKeyDown = (event) => {
     switch (match(this.props.keymap, event)) {
       case 'up':
@@ -158,91 +217,89 @@ class MetadataPanel extends PureComponent {
   }
 
   renderItemFields() {
-    const {
-      items,
-      itemFields,
-      template,
-      templates,
-      isDisabled,
-    } = this.props
-
     return !this.isEmpty && (
-      <section>
-        <h5 className="metadata-heading">
-          <FormattedMessage
-            id="panel.metadata.item"
-            values={{ count: items.length }}/>
-        </h5>
+      <MetadataSection
+        count={this.props.items.length}
+        onContextMenu={this.handleItemContextMenu}
+        title="panel.metadata.item">
         <TemplateSelect
-          options={templates}
-          value={template.id}
-          isDisabled={isDisabled}
-          isMixed={template.mixed}
+          options={this.props.templates}
+          value={this.props.template.id}
+          isDisabled={this.props.isDisabled}
+          isMixed={this.props.template.mixed}
           isRequired
           onChange={this.handleTemplateChange}/>
         <MetadataList
           ref={this.setItemFields}
           edit={this.props.edit}
-          fields={itemFields}
+          fields={this.props.fields.item}
           isDisabled={this.props.isDisabled}
           onEdit={this.props.onEdit}
           onEditCancel={this.handleEditCancel}
+          onContextMenu={this.handleItemContextMenu}
           onChange={this.handleChange}
           onAfter={this.handleAfterItemFields}
           onBefore={this.handleBeforeItemFields}/>
-        {!this.isBulk && <ItemInfo item={items[0]}/>}
-      </section>
+        {!this.isBulk &&
+          <ItemInfo item={this.props.items[0]}/>}
+      </MetadataSection>
     )
   }
 
   renderPhotoFields() {
-    if (this.isEmpty || this.isBulk) return null
-    const { photo, photoFields, onOpenInFolder } = this.props
-
-    return photo && !photo.pending && (
-      <section>
-        <h5 className="metadata-heading separator">
-          <FormattedMessage id="panel.metadata.photo"/>
-        </h5>
+    return this.hasPhotoFields && (
+      <MetadataSection
+        onContextMenu={this.handlePhotoContextMenu}
+        title="panel.metadata.photo">
         <MetadataList
           ref={this.setPhotoFields}
           edit={this.props.edit}
-          fields={photoFields}
+          fields={this.props.fields.photo}
           isDisabled={this.props.isDisabled}
           onEdit={this.props.onEdit}
           onEditCancel={this.handleEditCancel}
+          onContextMenu={this.handlePhotoContextMenu}
           onChange={this.handleChange}
           onAfter={this.handleAfterPhotoFields}
           onBefore={this.handleBeforePhotoFields}/>
         <PhotoInfo
-          photo={photo}
-          onOpenInFolder={onOpenInFolder}/>
-      </section>
+          photo={this.props.photo}
+          onOpenInFolder={this.props.onOpenInFolder}/>
+      </MetadataSection>
     )
   }
 
   renderSelectionFields() {
-    if (this.isEmpty || this.isBulk) return null
-    const { selection, selectionFields } = this.props
-
-    return selection != null && !selection.pending && (
-      <section>
-        <h5 className="metadata-heading separator">
-          <FormattedMessage id="panel.metadata.selection"/>
-        </h5>
+    return this.hasSelectionFields && (
+      <MetadataSection
+        onContextMenu={this.handleSelectionContextMenu}
+        title="panel.metadata.selection">
         <MetadataList
           ref={this.setSelectionFields}
           edit={this.props.edit}
-          fields={selectionFields}
+          fields={this.props.fields.selection}
           isDisabled={this.props.isDisabled}
           onEdit={this.props.onEdit}
           onEditCancel={this.handleEditCancel}
+          onContextMenu={this.handleSelectionContextMenu}
           onChange={this.handleChange}
           onAfter={this.handleAfterSelectionFields}
           onBefore={this.handleBeforeSelectionFields}/>
         <SelectionInfo
-          selection={selection}/>
-      </section>
+          selection={this.props.selection}/>
+      </MetadataSection>
+    )
+  }
+
+  renderFieldPopup() {
+    return this.state.fieldPopup != null && (
+      <PopupSelect
+        {...this.state.fieldPopup}
+        isSelectionHidden
+        maxRows={6}
+        options={this.props.fields.available}
+        onClose={this.hideFieldPopup}
+        placeholder="panel.metadata.popup.placeholder"/>
     )
   }
 
@@ -258,54 +315,37 @@ class MetadataPanel extends PureComponent {
           {this.renderItemFields()}
           {this.renderPhotoFields()}
           {this.renderSelectionFields()}
+          {this.renderFieldPopup()}
         </div>
       </div>
     )
   }
 
+
   static propTypes = {
-    isDisabled: bool,
-
     edit: object,
-    items: arrayOf(shape({
-      id: number.isRequired,
-      template: string.isRequired
-    })),
-    itemFields: arrayOf(shape({
-      isExtra: bool.isRequired,
-      property: object.isRequired
-    })).isRequired,
-
-    photo: shape({
-      id: number.isRequired,
-      template: string
-    }),
-    photoFields: arrayOf(shape({
-      isExtra: bool.isRequired,
-      property: object.isRequired
-    })).isRequired,
-
-    keymap: object.isRequired,
-    template: shape({
-      id: string,
-      mixed: bool
+    fields: shape({
+      available: arrayOf(object).isRequired,
+      item: arrayOf(shapes.field).isRequired,
+      photo: arrayOf(shapes.field).isRequired,
+      selection: arrayOf(shapes.field).isRequired,
     }).isRequired,
-    templates: arrayOf(object).isRequired,
-
-    selection: shape({
-      id: number.isRequired,
-      template: string
-    }),
-    selectionFields: arrayOf(shape({
-      isExtra: bool.isRequired,
-      property: object.isRequired
-    })).isRequired,
+    isDisabled: bool,
+    items: arrayOf(shapes.subject),
+    keymap: object.isRequired,
+    photo: shapes.subject,
+    selection: shapes.subject,
+    template: shapes.template,
+    templates: arrayOf(shapes.template).isRequired,
 
     onBlur: func.isRequired,
+    onContextMenu: func.isRequired,
     onEdit: func,
     onEditCancel: func,
     onFocus: func.isRequired,
     onItemSave: func.isRequired,
+    onMetadataAdd: func.isRequired,
+    onMetadataDelete: func.isRequired,
     onMetadataSave: func.isRequired,
     onOpenInFolder: func.isRequired
   }
@@ -315,15 +355,32 @@ module.exports = {
   MetadataPanel: connect(
     (state) => ({
       edit: state.edit.field,
+      fields: {
+        available: getPropertyList(state),
+        item: getItemFields(state),
+        photo: getPhotoFields(state),
+        selection: getSelectionFields(state)
+      },
+      keymap: state.keymap.MetadataList,
       items: getSelectedItems(state),
-      itemFields: getItemFields(state),
       photo: getSelectedPhoto(state),
-      photoFields: getPhotoFields(state),
-      template: getSelectedItemTemplate(state),
-      templates: getItemTemplates(state),
       selection: getActiveSelection(state),
-      selectionFields: getSelectionFields(state)
+      template: getSelectedItemTemplate(state),
+      templates: getItemTemplates(state)
+    }),
+
+    (dispatch) => ({
+      onItemSave(...args) {
+        dispatch(actions.item.save(...args))
+      },
+
+      onMetadataAdd(...args) {
+        dispatch(actions.metadata.add(...args))
+      },
+
+      onMetadataDelete(...args) {
+        dispatch(actions.metadata.delete(...args))
+      }
     })
   )(MetadataPanel)
 }
-

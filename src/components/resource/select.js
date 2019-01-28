@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { Fragment, PureComponent } = React
 const { Select } = require('../select')
 const { Highlight } = require('../completions')
 const { FormattedMessage } = require('react-intl')
@@ -13,7 +12,7 @@ const {
 } = require('prop-types')
 
 
-class ResourceSelect extends PureComponent {
+class ResourceSelect extends React.PureComponent {
   get placeholder() {
     return this.props.placeholder != null &&
       <FormattedMessage id={this.props.placeholder}/>
@@ -51,10 +50,10 @@ class ResourceSelect extends PureComponent {
     ),
     tabIndex: -1,
     toText: (value, { matchData } = {}) => (
-      <Fragment>
+      <>
         <Label resource={value} matchData={matchData}/>
         <Id resource={value} matchData={matchData}/>
-      </Fragment>
+      </>
     )
   }
 }
@@ -67,42 +66,45 @@ const Label = ({ resource, matchData }) => (
         text={resource.label}
         matchData={matchData && matchData.label}/> :
       <Highlight
-        text={titlecase(resource.name)}
+        text={
+          titlecase(resource.name || String(resource).split(/(#|\/)/).pop())
+        }
         matchData={matchData && matchData.name}/>}
   </span>
 )
 
 Label.propTypes = {
-  resource: shape({
+  resource: oneOfType([string, shape({
     name: string,
     label: string
-  }).isRequired,
+  })]).isRequired,
   matchData: oneOfType([bool, object])
 }
 
 
 const Id = ({ resource, matchData }) => (
   <span className="mute truncate">
-    {(!resource.prefix || !resource.name) ? resource.id : (
-      <Fragment>
-        <Highlight
-          text={resource.prefix}
-          matchData={matchData && matchData.prefix}/>
-        {':'}
-        <Highlight
-          text={resource.name}
-          matchData={matchData && matchData.name}/>
-      </Fragment>
-    )}
+    {(!resource.prefix || !resource.name) ?
+      (resource.id || String(resource)) : (
+        <>
+          <Highlight
+            text={resource.prefix}
+            matchData={matchData && matchData.prefix}/>
+          {':'}
+          <Highlight
+            text={resource.name}
+            matchData={matchData && matchData.name}/>
+        </>
+      )}
   </span>
 )
 
 Id.propTypes = {
-  resource: shape({
+  resource: oneOfType([string, shape({
     id: string.isRequired,
     name: string,
     prefix: string
-  }).isRequired,
+  })]).isRequired,
   matchData: oneOfType([bool, object])
 }
 

@@ -75,7 +75,7 @@ fr:
       - label: Supprimer la note
         command: 'app:delete-note'
     notepad:
-      - label: Writing Mode
+      - label: Mode écriture
         id: writing-mode
         submenu:
           - label: Horizontal
@@ -86,12 +86,12 @@ fr:
             type: checkbox
             checked: false
             mode: vertical-rl
-      - label: Show Line Numbers
+      - label: Afficher les numéros de ligne
         id: line-numbers
         type: checkbox
         checked: true
         command: 'app:toggle-line-numbers'
-      - label: Wrap Lines
+      - label: Retour à la ligne automatique
         id: line-wrap
         type: checkbox
         checked: true
@@ -167,6 +167,16 @@ fr:
         command: 'app:restore-item'
       - label: Supprimer définitivement les objets sélectionnés
         command: 'app:destroy-item'
+    item-view:
+      - label: View Layout
+        id: item-view-layout
+        submenu:
+          - label: Verticale
+            id: stacked
+            type: checkbox
+          - label: Côte à côte
+            id: side-by-side
+            type: checkbox
     trash:
       - label: Supprimer définitivement les objets
         command: 'app:destroy-item'
@@ -254,7 +264,7 @@ fr:
       - label: Supprimer la note
         command: 'app:delete-note'
     notepad:
-      - label: Writing Mode
+      - label: Mode écriture
         id: writing-mode
         submenu:
           - label: Horizontal
@@ -265,12 +275,12 @@ fr:
             type: checkbox
             checked: false
             mode: vertical-rl
-      - label: Show Line Numbers
+      - label: Afficher les numéros de ligne
         id: line-numbers
         type: checkbox
         checked: true
         command: 'app:toggle-line-numbers'
-      - label: Wrap Lines
+      - label: Retour à la ligne automatique
         id: line-wrap
         type: checkbox
         checked: true
@@ -325,6 +335,16 @@ fr:
         command: 'app:restore-item'
       - label: Supprimer définitivement les objets sélectionnés
         command: 'app:destroy-item'
+    item-view:
+      - label: View Layout
+        id: item-view-layout
+        submenu:
+          - label: Verticale
+            id: stacked
+            type: checkbox
+          - label: Côte à côte
+            id: side-by-side
+            type: checkbox
     trash:
       - label: Supprimer définitivement les objets
         command: 'app:destroy-item'
@@ -433,7 +453,7 @@ fr:
       - label: Supprimer la note
         command: 'app:delete-note'
     notepad:
-      - label: Writing Mode
+      - label: Mode écriture
         id: writing-mode
         submenu:
           - label: Horizontal
@@ -444,12 +464,12 @@ fr:
             type: checkbox
             checked: false
             mode: vertical-rl
-      - label: Show Line Numbers
+      - label: Afficher les numéros de ligne
         id: line-numbers
         type: checkbox
         checked: true
         command: 'app:toggle-line-numbers'
-      - label: Wrap Lines
+      - label: Retour à la ligne automatique
         id: line-wrap
         type: checkbox
         checked: true
@@ -504,6 +524,16 @@ fr:
         command: 'app:restore-item'
       - label: Supprimer définitivement les objets sélectionnés
         command: 'app:destroy-item'
+    item-view:
+      - label: View Layout
+        id: item-view-layout
+        submenu:
+          - label: Verticale
+            id: stacked
+            type: checkbox
+          - label: Côte à côte
+            id: side-by-side
+            type: checkbox
     trash:
       - label: Supprimer définitivement les objets
         command: 'app:destroy-item'

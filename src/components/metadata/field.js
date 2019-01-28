@@ -1,10 +1,9 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { Editable } = require('../editable')
 const { FormattedMessage } = require('react-intl')
-const { blank, pluck } = require('../../common/util')
+const { blank, noop, pluck } = require('../../common/util')
 const { getLabel } = require('../../common/ontology')
 const { IconLock, IconWarningSm } = require('../icons')
 const cx = require('classnames')
@@ -14,7 +13,7 @@ const { auto } = require('../../format')
 const { bool, func, number, oneOfType, shape, string } = require('prop-types')
 
 
-class MetadataField extends PureComponent {
+class MetadataField extends React.PureComponent {
   get classes() {
     return ['metadata-field', {
       extra: this.props.isExtra,
@@ -58,10 +57,20 @@ class MetadataField extends PureComponent {
     else this.handleChange(this.props.text, hasChanged)
   }
 
+  handleContextMenu = (event) => {
+    if (!this.props.isDisabled && !this.props.isReadOnly) {
+      this.props.onContextMenu(event, {
+        isExtra: this.props.isExtra,
+        property: this.property
+      })
+    }
+  }
+
   handleKeyDown = (event, input) => {
     if (event.key === 'Tab') {
       event.preventDefault()
       event.stopPropagation()
+      event.nativeEvent.stopImmediatePropagation()
 
       if (input.hasChanged) input.commit(true)
 
@@ -72,10 +81,12 @@ class MetadataField extends PureComponent {
 
 
   render() {
-    const { classes, details, label, isInvalid } = this
+    let { classes, details, label, isInvalid } = this
 
     return (
-      <li className={cx(classes)}>
+      <li
+        className={cx(classes)}
+        onContextMenu={this.handleContextMenu}>
         <label title={details.join('\n\n')}>{label}</label>
         <div className="value" onClick={this.handleClick}>
           <Editable
@@ -120,17 +131,19 @@ class MetadataField extends PureComponent {
     onEdit: func.isRequired,
     onEditCancel: func.isRequired,
     onChange: func.isRequired,
+    onContextMenu: func,
     onNext: func.isRequired,
     onPrev: func.isRequired
   }
 
   static defaultProps = {
-    type: TYPE.TEXT
+    type: TYPE.TEXT,
+    onContextMenu: noop
   }
 }
 
 
-class StaticField extends PureComponent {
+class StaticField extends React.PureComponent {
   get classes() {
     return ['metadata-field', 'static', {
       clickable: this.props.onClick != null

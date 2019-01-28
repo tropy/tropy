@@ -267,7 +267,7 @@ ja:
     label: ラベル
     description: 内容記述
     comment: コメント
-  ok: 削除
+  ok: はい
   cancel: キャンセル
   dialog:
     prompt:

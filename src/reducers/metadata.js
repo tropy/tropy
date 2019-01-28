@@ -18,9 +18,11 @@ module.exports = {
         return replace(state, payload)
       case METADATA.INSERT:
         return insert(state, payload)
+      case METADATA.REMOVE:
+        return bulk.remove(state, payload)
 
       case METADATA.UPDATE: {
-        const { ids, data } = payload
+        let { ids, data } = payload
 
         return (ids.length === 1) ?
           update(state, { ...data, id: ids[0] }, meta) :

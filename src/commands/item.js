@@ -84,6 +84,8 @@ class Import extends ImportCommand {
       let photos = []
 
       try {
+        yield put(act.activity.update(this.action, { total, progress: i + 1 }))
+
         file = files[i]
 
         image = yield call(Image.open, file)
@@ -93,7 +95,7 @@ class Import extends ImportCommand {
         yield call(db.transaction, async tx => {
           item = await mod.item.create(tx, itemp.id, {
             ...pick(image.data, [
-              DC.title, DC.date, DC.creator, DC.rights, DC.description
+              DC.title, DC.creator, DC.rights, DC.description
             ]),
             ...defaultItemData
           })
@@ -126,11 +128,7 @@ class Import extends ImportCommand {
           image.next()
         }
 
-        yield all([
-          put(act.item.insert(item)),
-          put(act.activity.update(this.action, { total, progress: i + 1 }))
-        ])
-
+        yield put(act.item.insert(item))
         items.push(item.id)
 
       } catch (error) {
@@ -267,7 +265,7 @@ class Save extends Command {
         await mod.item.update(tx, ids, props, meta.now)
 
         if (hasData) {
-          await mod.metadata.update(tx, { ids, data })
+          await mod.metadata.update(tx, { id: ids, data })
         }
       })
 
@@ -292,7 +290,7 @@ class Save extends Command {
           if (data) {
             hasData = true
             changed.data[id] = data
-            await mod.metadata.update(tx, { ids: [id], data })
+            await mod.metadata.update(tx, { id, data })
           }
         }
       })
