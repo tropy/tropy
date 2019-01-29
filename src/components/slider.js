@@ -6,9 +6,13 @@ const { Draggable } = require('./draggable')
 const { bounds, borders } = require('../dom')
 const { restrict } = require('../common/util')
 const { round } = require('../common/math')
-const { arrayOf, bool, element, func, number, oneOf } = require('prop-types')
 const cx = require('classnames')
 const throttle = require('lodash.throttle')
+const { KeyMap } = require('../keymap')
+
+const {
+  arrayOf, bool, element, func, instanceOf, number, oneOf
+} = require('prop-types')
 
 
 class Slider extends React.PureComponent {
@@ -104,25 +108,24 @@ class Slider extends React.PureComponent {
   }, 100)
 
   handleKeyDown = (event) => {
-    let { value, precision, tabIndex } = this.props
+    let { value, precision, keymap, tabIndex } = this.props
 
     if (tabIndex == null) return
 
-    switch (event.key) {
-      case 'ArrowDown':
+    switch (keymap.match(event)) {
+      case 'down':
         this.set(this.getPrevStep(), 'key')
         break
-      case 'ArrowLeft':
+      case 'left':
         this.set(value - 1 / precision, 'key')
         break
-      case 'ArrowUp':
+      case 'up':
         this.set(this.getNextStep(), 'key')
         break
-      case 'ArrowRight':
+      case 'right':
         this.set(value + 1 / precision, 'key')
         break
-      case 'Space':
-      case 'Escape':
+      case 'reset':
         this.set(this.origin, 'key')
         break
       default:
@@ -214,6 +217,7 @@ class Slider extends React.PureComponent {
 
   static propTypes = {
     isDisabled: bool,
+    keymap: instanceOf(KeyMap).isRequired,
     max: number.isRequired,
     maxIcon: element,
     min: number.isRequired,
@@ -239,7 +243,15 @@ class Slider extends React.PureComponent {
     showCurrentValue: false,
     size: 'md',
     steps: [],
-    tabIndex: null
+    tabIndex: null,
+
+    keymap: new KeyMap({
+      up: 'ArrowUp',
+      down: 'ArrowDown',
+      left: 'ArrowLeft',
+      right: 'ArrowRight',
+      reset: ['Space', 'Escape']
+    })
   }
 }
 
