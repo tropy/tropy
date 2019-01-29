@@ -40,7 +40,8 @@ class ProjectToolbar extends PureComponent {
               isDisabled={this.isEmpty || isDisabled}
               onChange={onZoomChange}
               minIcon={<IconList/>}
-              maxIcon={<IconGrid/>}/>
+              maxIcon={<IconGrid/>}
+              tabIndex={-1}/>
           </div>
           <div className="tool-group">
             <Button
