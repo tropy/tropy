@@ -28,7 +28,9 @@ const CHECK = {
 }
 
 function check(item, event) {
-  return CHECK[item.condition] && CHECK[item.condition](item, event)
+  return (item.condition in CHECK) ?
+    CHECK[item.condition](item, event) :
+    event && event.target && !!event.target[item.condition]
 }
 
 
@@ -58,16 +60,19 @@ class Menu {
   }
 
   responder(cmd, win, ...params) {
-    let [prefix, ...action] = cmd.split(':')
+    let [prefix, action] = cmd.split(':', 2)
 
     switch (prefix) {
       case 'app':
         return (_, w) => this.app.emit(cmd, win || w, ...params)
+      case 'ctx':
+        return withWindow(win, cmd, w =>
+          w.webContents.send('ctx', action, ...params))
       case 'win':
-        return withWindow(win, cmd, w => w.webContents.send(...action))
+        return withWindow(win, cmd, w => w.webContents.send(action, params))
       case 'dispatch':
         return withWindow(win, cmd, w => w.webContents.send('dispatch', {
-          type: action.join(':'), payload: params
+          type: action, payload: params
         }))
       default:
         warn(`no responder for menu command ${cmd}`)
@@ -359,6 +364,8 @@ class ContextMenu extends Menu {
   scopes.selection = [...scopes.photo, 'selection']
   scopes.notes = [...scopes.global]
   scopes.note = [...scopes.notes, 'note']
+  scopes['metadata-list'] = [...scopes.global, 'metadata-list']
+  scopes['metadata-field'] = [...scopes['metadata-list'], 'metadata-field']
   scopes['item-bulk'] = [...scopes.items, 'item-bulk']
   scopes['item-list'] = [...scopes.items, 'item-list', 'item']
   scopes['item-bulk-list'] = [...scopes.items, 'item-bulk-list', 'item-bulk']

@@ -33,7 +33,11 @@ const logger = new Logger({
 })
 
 
-function init(dir, { debug, environment } = {}) {
+function init(dir, {
+  debug,
+  environment,
+  locale
+} = {}) {
   logger.clear()
   if (debug) logger.level = 'debug'
 
@@ -61,7 +65,13 @@ function init(dir, { debug, environment } = {}) {
       break
   }
 
-  logger.info(`log.init ${version}`, { environment, system, version })
+  logger.info(`log.init ${version}`, {
+    dpx: global.devicePixelRatio,
+    environment,
+    locale,
+    system,
+    version
+  })
 
   return module.exports
 }

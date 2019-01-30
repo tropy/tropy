@@ -465,10 +465,6 @@ module.exports = {
         dispatch(actions.item.create())
       },
 
-      onItemSave(...args) {
-        dispatch(actions.item.save(...args))
-      },
-
       onItemImport(...args) {
         dispatch(actions.item.import(...args))
       },

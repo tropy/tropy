@@ -4,6 +4,10 @@ const {
   Children, PureComponent, createElement: create
 } = require('react')
 
+const {
+  bool, number, shape, string
+} = require('prop-types')
+
 const { diff } = require('../common/util')
 
 
@@ -87,10 +91,10 @@ module.exports = {
     console.log(`${name}: [${ds.join(', ')}] [${dp.join(', ')}]`)
   },
 
-  Shapes: {
+  shapes: {
     number(min, max, required = true) {
       return (props, name, component) => {
-        const value = props[name]
+        let value = props[name]
 
         if (required && value == null) {
           throw new Error(`Missing prop '${name}' for ${component}`)
@@ -102,6 +106,23 @@ module.exports = {
           )
         }
       }
-    }
+    },
+
+    field: shape({
+      isExtra: bool.isRequired,
+      property: shape({
+        id: string.isRequired
+      }).isRequired
+    }),
+
+    subject: shape({
+      id: number.isRequired,
+      template: string
+    }),
+
+    template: shape({
+      id: string.isRequired,
+      mixed: bool
+    })
   }
 }

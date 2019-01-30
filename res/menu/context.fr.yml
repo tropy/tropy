@@ -177,6 +177,13 @@ fr:
           - label: Côte à côte
             id: side-by-side
             type: checkbox
+    metadata-list:
+      - label: New Field …
+        command: 'ctx:add-extra-field'
+    metadata-field:
+      - label: Remove Field
+        command: 'app:delete-field'
+        condition: isExtra
     trash:
       - label: Supprimer définitivement les objets
         command: 'app:destroy-item'
@@ -345,6 +352,13 @@ fr:
           - label: Côte à côte
             id: side-by-side
             type: checkbox
+    metadata-list:
+      - label: New Field …
+        command: 'ctx:add-extra-field'
+    metadata-field:
+      - label: Remove Field
+        command: 'app:delete-field'
+        condition: isExtra
     trash:
       - label: Supprimer définitivement les objets
         command: 'app:destroy-item'
@@ -534,6 +548,13 @@ fr:
           - label: Côte à côte
             id: side-by-side
             type: checkbox
+    metadata-list:
+      - label: New Field …
+        command: 'ctx:add-extra-field'
+    metadata-field:
+      - label: Remove Field
+        command: 'app:delete-field'
+        condition: isExtra
     trash:
       - label: Supprimer définitivement les objets
         command: 'app:destroy-item'

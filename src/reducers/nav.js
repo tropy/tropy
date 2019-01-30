@@ -3,8 +3,10 @@
 const { isSelected, select } = require('../selection')
 const { merge, insert, splice } = require('../common/util')
 const {
-  DC, NAV, ITEM, LIST, TAG, NOTE, PHOTO, PROJECT
+  EDIT, DC, NAV, ITEM, LIST, TAG, NOTE, PHOTO, PROJECT
 } = require('../constants')
+
+const { MODE } = PROJECT
 
 const reset = {
   items: [],
@@ -15,7 +17,7 @@ const reset = {
 
 const init = {
   ...reset,
-  mode: PROJECT.MODE.PROJECT,
+  mode: MODE.PROJECT,
   query: '',
   tags: [],
   sort: {},
@@ -102,12 +104,21 @@ module.exports = {
 
         return {
           ...state,
-          mode: PROJECT.MODE.ITEM,
+          mode: MODE.ITEM,
           photo,
           selection,
           items: select(state.items, [id], 'replace')
         }
       }
+
+      case EDIT.START:
+        if (state.mode === MODE.PROJECT) return state
+        if (!payload.tag && !payload.list) return state
+
+        return {
+          ...state,
+          mode: MODE.PROJECT
+        }
 
       case TAG.DELETE:
         return (!meta.done || error || !isSelected(state.tags, payload)) ?
