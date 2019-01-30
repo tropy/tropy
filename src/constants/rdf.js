@@ -22,7 +22,7 @@ module.exports = {
   OWL: {
     ns: 'http://www.w3.org/2002/07/owl#',
     Class: 'http://www.w3.org/2002/07/owl#Class',
-    DatatypeProperty: 'http://www.w3.org/2002/07/owl#DatatypeProerty',
+    DatatypeProperty: 'http://www.w3.org/2002/07/owl#DatatypeProperty',
     FunctionalProperty: 'http://www.w3.org/2002/07/owl#FunctionalProperty',
     InverseFunctionalProperty: 'http://www.w3.org/2002/07/owl#InverseFunctionalProperty',
     ObjectProperty: 'http://www.w3.org/2002/07/owl#ObjectProperty',
