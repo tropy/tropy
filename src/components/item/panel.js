@@ -3,11 +3,12 @@
 const React = require('react')
 const { ItemToolbar } = require('./toolbar')
 const { ItemTabHeader, ItemTabBody } = require('./tab')
-const { NotePanel } = require('../note')
+const { NoteList, NoteToolbar } = require('../note')
 const { PanelGroup, Panel } = require('../panel')
 const { PhotoPanel } = require('../photo')
-const { get } = require('../../common/util')
+const { get, has } = require('../../common/util')
 const { keys } = Object
+const cx = require('classnames')
 
 const {
   array, bool, func, number, object, shape, string
@@ -15,6 +16,17 @@ const {
 
 
 class ItemPanel extends React.PureComponent {
+  handleNoteOpen = (note) => {
+    if (note != null && !this.props.isItemOpen) {
+      this.props.onItemOpen({
+        id: this.props.items[0].id,
+        photos: [this.props.photo.id],
+        notes: [note.id],
+        selection: note.selection
+      })
+    }
+  }
+
   handlePhotoCreate = (dropped) => {
     this.props.onPhotoCreate({
       item: get(this.props.items, [0, 'id']),
@@ -49,16 +61,12 @@ class ItemPanel extends React.PureComponent {
       expanded,
       activeSelection,
       keymap,
-      note,
-      notes,
       panel,
       photo,
       selections,
       isDisabled,
       isItemOpen,
       onItemPreview,
-      onNoteCreate,
-      onNoteSelect,
       onPhotoContract,
       onPhotoDelete,
       onPhotoError,
@@ -78,7 +86,7 @@ class ItemPanel extends React.PureComponent {
         onResize={this.handleResize}
         header={this.renderItemToolbar()}>
 
-        <Panel className="item">
+        <Panel className="item-panel">
           <ItemTabHeader
             tab={panel.tab}
             onChange={this.handleTabChange}/>
@@ -109,16 +117,23 @@ class ItemPanel extends React.PureComponent {
           onSelectionSort={onSelectionSort}
           onZoomChange={this.handleZoomChange}/>
 
-        <NotePanel {...props}
-          isDisabled={isDisabled || !photo || !item || hasMultipleItems}
-          isItemOpen={isItemOpen}
-          item={item && item.id}
-          keymap={keymap.NoteList}
-          photo={photo && photo.id}
-          notes={notes}
-          selection={note}
-          onCreate={onNoteCreate}
-          onSelect={onNoteSelect}/>
+        <Panel className={cx('note-panel', {
+          'has-active': has(this.props, ['note', 'id'])
+        })}>
+          <NoteToolbar
+            hasCreateButton
+            isDisabled={isDisabled || !photo || !item || hasMultipleItems}
+            notes={this.props.notes.length}
+            onCreate={this.props.onNoteCreate}/>
+          <NoteList
+            isDisabled={isDisabled || !photo || !item || hasMultipleItems}
+            keymap={this.props.keymap.NoteList}
+            notes={this.props.notes}
+            selection={this.props.note}
+            onContextMenu={this.props.onContextMenu}
+            onOpen={this.handleNoteOpen}
+            onSelect={this.props.onNoteSelect}/>
+        </Panel>
       </PanelGroup>
     )
   }
