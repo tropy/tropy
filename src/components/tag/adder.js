@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { injectIntl, intlShape } = require('react-intl')
 const { Input } = require('../input')
 const { blank, noop } = require('../../common/util')
@@ -9,7 +8,7 @@ const { arrayOf, bool, func, number, shape, string } = require('prop-types')
 const collate = require('../../collate')
 
 
-class TagAdder extends PureComponent {
+class TagAdder extends React.PureComponent {
   get placeholder() {
     let { count, intl } = this.props
     return {

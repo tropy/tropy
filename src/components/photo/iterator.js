@@ -184,7 +184,7 @@ class PhotoIterator extends Iterator {
 
   handleFocus = () => {
     // No auto-select, because that could change the active photo!
-    this.props.onFocus()
+    this.props.onTabFocus()
   }
 
   handleItemOpen = (photo) => {
@@ -295,7 +295,7 @@ class PhotoIterator extends Iterator {
     onDelete: func.isRequired,
     onExpand: func.isRequired,
     onError: func.isRequired,
-    onFocus: func.isRequired,
+    onTabFocus: func.isRequired,
     onItemOpen: func.isRequired,
     onItemPreview: func.isRequired,
     onSelect: func.isRequired,

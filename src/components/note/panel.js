@@ -10,6 +10,12 @@ const { has } = require('../../common/util')
 
 
 class NotePanel extends Panel {
+  get classes() {
+    return [...super.classes, 'note-panel', {
+      'has-active': has(this.props, ['selection', 'id'])
+    }]
+  }
+
   handleContextMenu = (event) => {
     const { item, photo, onContextMenu } = this.props
     onContextMenu(event, 'notes', { item, photo })
@@ -45,8 +51,6 @@ class NotePanel extends Panel {
         keymap={this.props.keymap}
         notes={this.props.notes}
         selection={this.props.selection}
-        onBlur={this.handleNestedBlur}
-        onTabFocus={this.handleNestedTabFocus}
         onContextMenu={this.props.onContextMenu}
         onOpen={this.handleOpen}
         onSelect={this.props.onSelect}/>
@@ -56,14 +60,10 @@ class NotePanel extends Panel {
   render() {
     const toolbar = this.renderToolbar()
     const content = this.renderContent()
-    const classes = {
-      'nested-tab-focus': this.state.hasNestedTabFocus,
-      'has-active': has(this.props, ['selection', 'id'])
-    }
 
     return (
       <section
-        className={cx('note-panel', 'panel', classes)}
+        className={cx(this.classes)}
         onContextMenu={this.handleContextMenu}>
         {this.renderHeader(toolbar)}
         {this.renderBody(content)}

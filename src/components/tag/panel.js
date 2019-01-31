@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { connect } = require('react-redux')
 const { TagList } = require('./list')
 const { TagAdder } = require('./adder')
@@ -21,15 +20,22 @@ const {
 } = require('../../selectors')
 
 
-class TagPanel extends PureComponent {
+class TagPanel extends React.PureComponent {
+  container = React.createRef()
+
   componentDidMount() {
-    on(this.container, 'tab:focus', this.handleTabFocus)
+    if (this.container.current) {
+      on(this.container.current, 'tab:focus', this.handleTabFocus)
+    }
   }
 
   componentWillUnmount() {
-    this.props.onBlur()
-    if (this.container != null) {
-      off(this.container, 'tab:focus', this.handleTabFocus)
+    if (this.props.onBlur) {
+      this.props.onBlur()
+    }
+
+    if (this.container.current) {
+      off(this.container.current, 'tab:focus', this.handleTabFocus)
     }
   }
 
@@ -51,24 +57,22 @@ class TagPanel extends PureComponent {
     }, [])
   }
 
-  setContainer = (container) => {
-    this.container = container
-  }
-
   setAdder = (adder) => {
     this.adder = (adder == null) ? null : adder.getWrappedInstance()
   }
 
   focus = () => {
-    this.container.focus()
+    this.container.current.focus()
   }
 
   handleCancel = (hasChanged) => {
-    if (!hasChanged) this.container.focus()
+    if (!hasChanged) this.container.current.focus()
   }
 
   handleTabFocus = () => {
-    this.props.onFocus()
+    if (this.props.onTabFocus) {
+      this.props.onTabFocus()
+    }
   }
 
   handleTagRemove = (tag) => {
@@ -118,7 +122,7 @@ class TagPanel extends PureComponent {
   render() {
     return (
       <div
-        ref={this.setContainer}
+        ref={this.container}
         className="tab-pane"
         tabIndex={this.tabIndex}
         onBlur={this.props.onBlur}
@@ -159,8 +163,8 @@ class TagPanel extends PureComponent {
       name: string.isRequired
     })).isRequired,
 
-    onBlur: func.isRequired,
-    onFocus: func.isRequired,
+    onBlur: func,
+    onTabFocus: func,
     onContextMenu: func.isRequired,
     onEditCancel: func.isRequired,
     onItemTagAdd: func.isRequired,

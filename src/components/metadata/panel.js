@@ -132,7 +132,7 @@ class MetadataPanel extends React.PureComponent {
   }
 
   handleTabFocus = () => {
-    this.props.onFocus()
+    this.props.onTabFocus()
   }
 
   handleEditCancel = () => {
@@ -342,7 +342,7 @@ class MetadataPanel extends React.PureComponent {
     onContextMenu: func.isRequired,
     onEdit: func,
     onEditCancel: func,
-    onFocus: func.isRequired,
+    onTabFocus: func.isRequired,
     onItemSave: func.isRequired,
     onMetadataAdd: func.isRequired,
     onMetadataDelete: func.isRequired,

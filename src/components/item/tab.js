@@ -52,23 +52,22 @@ class ItemTabHeader extends React.PureComponent {
   }
 }
 
-const ItemTabBody = ({ items, setPanel, tab, ...props }) => {
+const ItemTabBody = ({ items, tab, ...props }) => {
   if (items.length === 0) {
     return null
   }
 
   if (tab === METADATA) {
-    return <MetadataPanel {...props} ref={setPanel} items={items}/>
+    return <MetadataPanel {...props} items={items}/>
   }
 
   if (tab === TAGS) {
-    return <TagPanel {...props} ref={setPanel} items={items}/>
+    return <TagPanel {...props} items={items}/>
   }
 }
 
 ItemTabBody.propTypes = {
   items: array.isRequired,
-  setPanel: func.isRequired,
   tab: oneOf([METADATA, TAGS]).isRequired
 }
 

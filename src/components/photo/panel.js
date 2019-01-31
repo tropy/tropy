@@ -16,11 +16,9 @@ const cx = require('classnames')
 
 class PhotoPanel extends Panel {
   get classes() {
-    return {
-      ...super.classes,
-      'drop-target': !this.props.isDisabled,
-      'over': this.props.isOver && this.props.canDrop
-    }
+    return [...super.classes, 'photo-panel', {
+      'has-active': this.props.current != null
+    }]
   }
 
   connect(element) {
@@ -47,12 +45,10 @@ class PhotoPanel extends Panel {
     const props = {
       ...this.props,
       size: PHOTO.ZOOM[zoom],
-      onBlur: this.handleNestedBlur,
       onChange: onMetadataSave,
       onDelete,
       onDropImages: this.handleDropFiles,
-      onEdit,
-      onFocus: this.handleNestedTabFocus
+      onEdit
     }
 
     const PhotoIterator = zoom ? PhotoGrid : PhotoList
@@ -63,17 +59,17 @@ class PhotoPanel extends Panel {
   }
 
   render() {
-    const toolbar = this.renderToolbar()
-    const content = this.renderContent()
-    const classes = {
-      'nested-tab-focus': this.state.hasNestedTabFocus,
-      'has-active': this.props.current != null
+    let toolbar = this.renderToolbar()
+    let content = this.renderContent()
+    let classes = {
+      'drop-target': !this.props.isDisabled,
+      'over': this.props.isOver && this.props.canDrop
     }
 
-    return (
-      <section className={cx('photo-panel', 'panel', classes)}>
+    return this.connect(
+      <section className={cx(this.classes)}>
         {this.renderHeader(toolbar)}
-        {this.connect(this.renderBody(content))}
+        {this.renderBody(content, classes)}
       </section>
     )
   }

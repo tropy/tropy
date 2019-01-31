@@ -6,7 +6,6 @@ const { ItemTabHeader, ItemTabBody } = require('./tab')
 const { NotePanel } = require('../note')
 const { PanelGroup, Panel } = require('../panel')
 const { PhotoPanel } = require('../photo')
-const cx = require('classnames')
 const { get } = require('../../common/util')
 const { keys } = Object
 
@@ -16,17 +15,6 @@ const {
 
 
 class ItemPanel extends React.PureComponent {
-  constructor(props) {
-    super(props)
-    this.state = {
-      hasFirstPanelFocus: false
-    }
-  }
-
-  setPanel = (panel) => {
-    this.first = panel
-  }
-
   handlePhotoCreate = (dropped) => {
     this.props.onPhotoCreate({
       item: get(this.props.items, [0, 'id']),
@@ -44,14 +32,6 @@ class ItemPanel extends React.PureComponent {
 
   handleZoomChange = (zoom) => {
     this.props.onUiUpdate({ panel: { zoom } })
-  }
-
-  handleFirstPanelFocus = () => {
-    this.setState({ hasFirstPanelFocus: true })
-  }
-
-  handleFirstPanelBlur = () => {
-    this.setState({ hasFirstPanelFocus: false })
   }
 
   renderItemToolbar() {
@@ -98,19 +78,14 @@ class ItemPanel extends React.PureComponent {
         onResize={this.handleResize}
         header={this.renderItemToolbar()}>
 
-        <Panel className={cx('item', 'panel', {
-          'nested-tab-focus': this.state.hasFirstPanelFocus
-        })}>
+        <Panel className="item">
           <ItemTabHeader
             tab={panel.tab}
             onChange={this.handleTabChange}/>
           <ItemTabBody {...props}
             tab={panel.tab}
             isDisabled={isDisabled}
-            isItemOpen={isItemOpen}
-            setPanel={this.setPanel}
-            onBlur={this.handleFirstPanelBlur}
-            onFocus={this.handleFirstPanelFocus}/>
+            isItemOpen={isItemOpen}/>
         </Panel>
 
         <PhotoPanel {...props}

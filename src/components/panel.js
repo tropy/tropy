@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent, Children, cloneElement: clone } = React
 const { only } = require('./util')
 const { Resizable } = require('./resizable')
 const cx = require('classnames')
@@ -17,16 +16,15 @@ const {
 } = require('prop-types')
 
 
-class Panel extends PureComponent {
-  constructor(props) {
-    super(props)
-    this.state = {
-      hasNestedTabFocus: false
-    }
+class Panel extends React.PureComponent {
+  state = {
+    hasNestedTabFocus: false
   }
 
   get classes() {
-    return { 'panel-body': true }
+    return ['panel', this.props.className, {
+      'nested-tab-focus': this.state.hasNestedTabFocus
+    }]
   }
 
   handleNestedBlur = () => {
@@ -38,35 +36,37 @@ class Panel extends PureComponent {
   }
 
   handleToggle = () => {
-    this.props.onToggle(this, !this.props.isClosed)
+    if (this.props.canToggle) {
+      this.props.onToggle(this, !this.props.isClosed)
+    }
   }
 
-  renderHeader(header, props) {
-    const { isClosed, canToggle } = this.props
-
+  renderHeader(header) {
     return (
-      <header
-        className="panel-header"
-        {...props}
-        onDoubleClick={canToggle ? this.handleToggle : null}>
-        {clone(header, { isClosed })}
-      </header>
+      <PanelHeader onDoubleClick={this.handleToggle}>
+        {React.cloneElement(header, {
+          isClosed: this.props.isClosed
+        })}
+      </PanelHeader>
     )
   }
 
-  renderBody(body, props) {
+  renderBody(body, classes) {
     return !this.props.isClosed && (
-      <div {...props} className={cx(this.classes)}>
-        {body}
-      </div>
+      <PanelBody className={cx(classes)}>
+        {React.cloneElement(body, {
+          onBlur: this.handleNestedBlur,
+          onTabFocus: this.handleNestedTabFocus
+        })}
+      </PanelBody>
     )
   }
 
   render() {
-    const [header, ...body] = Children.toArray(this.props.children)
+    let [header, body] = React.Children.toArray(this.props.children)
 
     return (
-      <section className={this.props.className}>
+      <section className={cx(this.classes)}>
         {this.renderHeader(header)}
         {this.renderBody(body)}
       </section>
@@ -74,21 +74,44 @@ class Panel extends PureComponent {
   }
 
   static propTypes = {
-    className: string.isRequired,
+    className: string,
     children: node,
     id: number,
     isClosed: bool,
     canToggle: bool,
     onToggle: func
   }
+}
 
-  static defaultProps = {
-    className: 'panel'
-  }
+const PanelBody = (props) => (
+  <div className={cx('panel-body', props.className)}>
+    {props.children}
+  </div>
+)
+
+PanelBody.propTypes = {
+  children: node,
+  className: string
 }
 
 
-class PanelGroup extends PureComponent {
+const PanelHeader = (props) => (
+  <header
+    className="panel-header"
+    onDoubleClick={props.onDoubleClick}>
+    {props.children}
+  </header>
+)
+
+PanelHeader.propTypes = {
+  children: node,
+  onDoubleClick: func
+}
+
+
+
+
+class PanelGroup extends React.PureComponent {
   constructor(props) {
     super(props)
     this.state = { slots: [], height: 0 }
@@ -396,7 +419,7 @@ class PanelGroup extends PureComponent {
         onDragStart={this.handleDragStart}
         onDragStop={this.handleDragStop}>
 
-        {clone(panel, {
+        {React.cloneElement(panel, {
           isClosed,
           id,
           canToggle: isClosed || canClosePanel,
@@ -413,7 +436,7 @@ class PanelGroup extends PureComponent {
           {this.props.header}
         </header>
         <div className="panel-group-body" ref={this.setContainer}>
-          {Children.map(this.props.children, this.renderPanel)}
+          {React.Children.map(this.props.children, this.renderPanel)}
         </div>
       </div>
     )
@@ -446,5 +469,7 @@ function fixLayout(slots, surplus) {
 
 module.exports = {
   Panel,
-  PanelGroup
+  PanelBody,
+  PanelGroup,
+  PanelHeader
 }
