@@ -1,15 +1,14 @@
 'use strict'
 
 const React = require('react')
-const PropTypes = require('prop-types')
-const { bool, node, func } = PropTypes
+const { bool, node, func, string } = require('prop-types')
 const { only } = require('./util')
 const cx = require('classnames')
 
 
 const Tab = ({ children, isActive, isDisabled, onActivate }) => (
   <li
-    className={cx({ tab: true, active: isActive, disabled: isDisabled })}
+    className={cx('tab', { active: isActive, disabled: isDisabled })}
     onClick={isDisabled ? null : onActivate}>
     {children}
   </li>
@@ -25,7 +24,7 @@ Tab.propTypes = {
 
 const Tabs = ({ children, justified }) => (
   <nav>
-    <ul className={cx({ nav: true, tabs: true, justified })}>
+    <ul className={cx('nav', 'tabs', { justified })}>
       {children}
     </ul>
   </nav>
@@ -36,8 +35,21 @@ Tabs.propTypes = {
   children: only(Tab)
 }
 
+const TabPane = ({ active, children, className }) => (
+  <div className={cx('tab-pane', className)}>
+    {children(active)}
+  </div>
+)
+
+
+TabPane.propTypes = {
+  active: string,
+  children: func.isRequired,
+  className: string
+}
 
 module.exports = {
   Tab,
+  TabPane,
   Tabs
 }
