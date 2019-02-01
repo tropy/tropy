@@ -3,7 +3,9 @@
 const React = require('react')
 const { Iterator } = require('../iterator')
 const { DropTarget } = require('react-dnd')
+const { NativeTypes } = require('react-dnd-electron-backend')
 const { DND } = require('../../constants')
+const { isImageSupported } = require('../../image')
 const { move } = require('../../common/util')
 const { ceil, floor, min } = Math
 const { on, off } = require('../../dom')
@@ -39,8 +41,9 @@ class PhotoIterator extends Iterator {
 
   get classes() {
     return {
-      'drop-target': this.isSortable,
+      'drop-target': !this.isDisabled,
       'over': this.props.isOver,
+      'over-file': this.props.isOverFile,
       [this.orientation]: true
     }
   }
@@ -256,13 +259,13 @@ class PhotoIterator extends Iterator {
 
 
   connect(element) {
-    return this.isSortable ? this.props.dt(element) : element
+    return this.isDisabled ? element : this.props.dt(element)
   }
 
 
   static asDropTarget() {
     return DropTarget(
-        DND.PHOTO,
+        [DND.PHOTO, NativeTypes.FILE],
         DropTargetSpec,
         DropTargetCollect
       )(this)
@@ -283,15 +286,18 @@ class PhotoIterator extends Iterator {
     selections: object.isRequired,
     size: number.isRequired,
 
+    canCreate: bool,
     isItemOpen: bool,
     isDisabled: bool,
     isOver: bool,
+    isOverFile: bool,
 
     dt: func.isRequired,
 
     onBlur: func.isRequired,
     onContract: func.isRequired,
     onContextMenu: func.isRequired,
+    onCreate: func.isRequired,
     onDelete: func.isRequired,
     onExpand: func.isRequired,
     onError: func.isRequired,
@@ -305,22 +311,57 @@ class PhotoIterator extends Iterator {
 }
 
 const DropTargetSpec = {
-  drop({ photos }, monitor) {
+  drop({ photos, onCreate }, monitor) {
     if (monitor.didDrop()) return
 
-    const { id } = monitor.getItem()
-    const to = photos[photos.length - 1].id
+    switch (monitor.getItemType()) {
+      case DND.PHOTO: {
+        let { id } = monitor.getItem()
+        let to = photos[photos.length - 1].id
 
-    if (id !== to) {
-      return { id, to, offset: 1 }
+        if (id !== to)  {
+          return { id, to, offset: 1 }
+        }
+        break
+      }
+      case NativeTypes.FILE: {
+        let files = monitor.getItem()
+          .files
+          .filter(isImageSupported)
+          .map(file => file.path)
+
+        if (files.length) {
+          onCreate({ files })
+          return { files }
+        }
+        break
+      }
+    }
+  },
+
+  canDrop({ canCreate, photos }, monitor) {
+    switch (monitor.getItemType()) {
+      case DND.PHOTO:
+        return photos.length > 1
+      case NativeTypes.FILE:
+        return canCreate &&
+          !!monitor.getItem().types.find(type => isImageSupported({ type }))
+      default:
+        return false
     }
   }
 }
 
-const DropTargetCollect = (connect, monitor) => ({
-  dt: connect.dropTarget(),
-  isOver: monitor.isOver({ shallow: true })
-})
+const DropTargetCollect = (connect, monitor) => {
+  let isOver = monitor.isOver({ shallow: true }) && monitor.canDrop()
+  let type = monitor.getItemType()
+
+  return {
+    dt: connect.dropTarget(),
+    isOver: isOver && type === DND.PHOTO,
+    isOverFile: isOver && type === NativeTypes.FILE
+  }
+}
 
 
 module.exports = {
