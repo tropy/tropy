@@ -5,10 +5,11 @@ const { ItemToolbar } = require('./toolbar')
 const { ItemTabHeader, ItemTabBody } = require('./tab')
 const { NoteList, NoteToolbar } = require('../note')
 const { PanelGroup, Panel } = require('../panel')
-const { PhotoPanel } = require('../photo')
-const { get, has } = require('../../common/util')
+const { PhotoGrid, PhotoList, PhotoToolbar } = require('../photo')
+const { get, has, pick } = require('../../common/util')
 const { keys } = Object
 const cx = require('classnames')
+const { PHOTO } = require('../../constants/sass')
 
 const {
   array, bool, func, number, object, shape, string
@@ -46,79 +47,64 @@ class ItemPanel extends React.PureComponent {
     this.props.onUiUpdate({ panel: { zoom } })
   }
 
-  renderItemToolbar() {
-    return (
-      <ItemToolbar
-        isItemOpen={this.props.isItemOpen}
-        onMaximize={this.props.onMaximize}
-        onModeChange={this.props.onModeChange}/>
-    )
-  }
-
   render() {
-    const {
-      edit,
-      expanded,
-      activeSelection,
-      keymap,
-      panel,
-      photo,
-      selections,
-      isDisabled,
-      isItemOpen,
-      onItemPreview,
-      onPhotoContract,
-      onPhotoDelete,
-      onPhotoError,
-      onPhotoExpand,
-      onPhotoSelect,
-      onPhotoSort,
-      onSelectionSort,
-      ...props
-    } = this.props
+    let { isDisabled, photo, panel } = this.props
+    let PhotoIterator = panel.zoom ? PhotoGrid : PhotoList
 
-    const hasMultipleItems = this.props.items.length > 1
-    const item = hasMultipleItems ? null : this.props.items[0]
+    let hasMultipleItems = this.props.items.length > 1
+    let item = hasMultipleItems ? null : this.props.items[0]
 
     return (
       <PanelGroup
         slots={panel.slots}
         onResize={this.handleResize}
-        header={this.renderItemToolbar()}>
+        header={
+          <ItemToolbar
+            isItemOpen={this.props.isItemOpen}
+            onMaximize={this.props.onMaximize}
+            onModeChange={this.props.onModeChange}/>
+        }>
 
         <Panel className="item-panel">
           <ItemTabHeader
             tab={panel.tab}
             onChange={this.handleTabChange}/>
-          <ItemTabBody {...props}
-            tab={panel.tab}
-            isDisabled={isDisabled}
-            isItemOpen={isItemOpen}/>
+          <ItemTabBody {...this.props}
+            tab={panel.tab}/>
         </Panel>
 
-        <PhotoPanel {...props}
-          isDisabled={isDisabled || !item || hasMultipleItems}
-          isItemOpen={isItemOpen}
-          edit={edit}
-          expanded={expanded}
-          keymap={keymap}
-          zoom={panel.zoom}
-          current={photo && photo.id}
-          selection={activeSelection}
-          selections={selections}
-          onContract={onPhotoContract}
-          onCreate={this.handlePhotoCreate}
-          onDelete={onPhotoDelete}
-          onError={onPhotoError}
-          onExpand={onPhotoExpand}
-          onItemPreview={onItemPreview}
-          onSelect={onPhotoSelect}
-          onSort={onPhotoSort}
-          onSelectionSort={onSelectionSort}
-          onZoomChange={this.handleZoomChange}/>
+        <Panel className={cx('photo-panel', {
+          'has-active': has(photo, ['id'])
+        })}>
+          <PhotoToolbar
+            canCreate={isDisabled || !item || hasMultipleItems}
+            hasCreateButton
+            isDisabled={isDisabled || !item}
+            photos={this.props.photos.length}
+            zoom={panel.zoom}
+            onCreate={this.handlePhotoCreate}
+            onZoomChange={this.handleZoomChange}/>
+          <PhotoIterator
+            {...pick(this.props, PhotoIterator.getPropKeys())}
+            canCreate
+            current={get(photo, ['id'])}
+            isDisabled={isDisabled || !item || hasMultipleItems}
+            selection={this.props.activeSelection}
+            size={PHOTO.ZOOM[panel.zoom]}
+            onChange={this.props.onMetadataSave}
+            onContract={this.props.onPhotoContract}
+            onCreate={this.handlePhotoCreate}
+            onDelete={this.props.onPhotoDelete}
+            onError={this.props.onPhotoError}
+            onExpand={this.props.onPhotoExpand}
+            onSelect={this.props.onPhotoSelect}
+            onSelectionSort={this.props.onSelectionSort}
+            onSort={this.props.onPhotoSort}
+            onZoomChange={this.handleZoomChange}/>
+        </Panel>
 
         <Panel className={cx('note-panel', {
-          'has-active': has(this.props, ['note', 'id'])
+          'has-active': has(this.props.note, ['id'])
         })}>
           <NoteToolbar
             hasCreateButton

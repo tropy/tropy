@@ -5,6 +5,7 @@ const { FormattedMessage } = require('react-intl')
 const { Slider } = require('../slider')
 const { Button } = require('../button')
 const { number, bool, func } = require('prop-types')
+const { PHOTO } = require('../../constants/sass')
 
 const {
   Toolbar, ToolGroup, ToolbarLeft, ToolbarRight
@@ -44,7 +45,7 @@ const PhotoToolbar = (props) => (
           size="sm"
           minIcon={<IconListSmall/>}
           maxIcon={<IconGridSmall/>}
-          isDisabled={props.isDisabled}
+          isDisabled={props.isDisabled || props.photos === 0}
           tabIndex={-1}
           onChange={props.onZoomChange}/>
       </ToolGroup>
@@ -57,10 +58,15 @@ PhotoToolbar.propTypes = {
   hasCreateButton: bool,
   isDisabled: bool,
   maxZoom: number.isRequired,
-  photos: number.isRequired,
-  zoom: number.isRequired,
   onCreate: func.isRequired,
-  onZoomChange: func.isRequired
+  onZoomChange: func.isRequired,
+  photos: number.isRequired,
+  zoom: number.isRequired
+}
+
+PhotoToolbar.defaultProps = {
+  maxZoom: PHOTO.ZOOM.length - 1,
+  photos: 0
 }
 
 module.exports = {

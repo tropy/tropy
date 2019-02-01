@@ -6,7 +6,6 @@ module.exports = {
   ...require('./info'),
   ...require('./list'),
   ...require('./list-item'),
-  ...require('./panel'),
   ...require('./thumbnail'),
   ...require('./tile'),
   ...require('./toolbar')

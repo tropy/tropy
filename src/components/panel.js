@@ -45,7 +45,8 @@ class Panel extends React.PureComponent {
     return (
       <PanelHeader onDoubleClick={this.handleToggle}>
         {React.cloneElement(header, {
-          isClosed: this.props.isClosed
+          isClosed: this.props.isClosed,
+          isDisabled: this.props.isClosed || header.props.isDisabled
         })}
       </PanelHeader>
     )
