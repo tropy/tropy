@@ -4,7 +4,7 @@ const React = require('react')
 const { Editable } = require('../editable')
 const { IconTag, IconPlusCircles } = require('../icons')
 const { isMeta } = require('../../keymap')
-const { toId } = require('../../common/util')
+const { noop, toId } = require('../../common/util')
 const { hasFocus } = require('../../dom')
 const cx = require('classnames')
 const { DropTarget } = require('react-dnd')
@@ -93,7 +93,7 @@ class Tag extends React.PureComponent {
   }
 
   render() {
-    let { tag, isEditing, hasFocusIcon, onEditCancel } = this.props
+    let { tag, isEditing, hasFocusIcon } = this.props
 
     return this.connect(
       <li
@@ -110,7 +110,7 @@ class Tag extends React.PureComponent {
             isRequired
             resize
             isActive={isEditing}
-            onCancel={onEditCancel}
+            onCancel={this.props.onEditCancel}
             onChange={this.handleChange}/>
         </div>
         {hasFocusIcon && !isEditing &&
@@ -137,10 +137,14 @@ class Tag extends React.PureComponent {
     onChange: func.isRequired,
     onContextMenu: func,
     onDropItems: func,
-    onEditCancel: func.isRequired,
+    onEditCancel: func,
     onFocusClick: func,
     onKeyDown: func,
     onSelect: func
+  }
+
+  static defaultProps = {
+    onChange: noop
   }
 }
 

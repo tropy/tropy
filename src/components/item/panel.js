@@ -2,14 +2,19 @@
 
 const React = require('react')
 const { ItemToolbar } = require('./toolbar')
-const { ItemTabHeader, ItemTabBody } = require('./tab')
+const { TabNav, TabPane } = require('../tabs')
 const { NoteList, NoteToolbar } = require('../note')
 const { PanelGroup, Panel } = require('../panel')
 const { PhotoGrid, PhotoList, PhotoToolbar } = require('../photo')
+const { MetadataPanel } = require('../metadata')
+const { TagPanel } = require('../tag')
+const { IconMetadata, IconHangtag } = require('../icons')
 const { get, has, pick } = require('../../common/util')
 const { keys } = Object
 const cx = require('classnames')
+
 const { PHOTO } = require('../../constants/sass')
+const { PANEL } = require('../../constants/ui')
 
 const {
   array, bool, func, number, object, shape, string
@@ -17,6 +22,15 @@ const {
 
 
 class ItemPanelGroup extends React.PureComponent {
+  get toolbar() {
+    return (
+      <ItemToolbar
+        isItemOpen={this.props.isItemOpen}
+        onMaximize={this.props.onMaximize}
+        onModeChange={this.props.onModeChange}/>
+    )
+  }
+
   handleNoteOpen = (note) => {
     if (note != null && !this.props.isItemOpen) {
       this.props.onItemOpen({
@@ -57,21 +71,45 @@ class ItemPanelGroup extends React.PureComponent {
     return (
       <PanelGroup
         className="item-panel-group"
+        header={this.toolbar}
         slots={panel.slots}
-        onResize={this.handleResize}
-        header={
-          <ItemToolbar
-            isItemOpen={this.props.isItemOpen}
-            onMaximize={this.props.onMaximize}
-            onModeChange={this.props.onModeChange}/>
-        }>
+        onResize={this.handleResize}>
 
         <Panel className="item-panel">
-          <ItemTabHeader
-            tab={panel.tab}
+          <TabNav
+            active={panel.tab}
+            justified
+            tabs={this.props.tabs}
             onChange={this.handleTabChange}/>
-          <ItemTabBody {...this.props}
-            tab={panel.tab}/>
+          <TabPane active={panel.tab}>
+            {(tab, props) => {
+              if (this.props.items.length === 0) return null
+
+              switch (tab) {
+                case PANEL.METADATA:
+                  return (
+                    <MetadataPanel
+                      {...props}
+                      isDisabled={isDisabled}
+                      onContextMenu={this.props.onContextMenu}
+                      onEdit={this.props.onEdit}
+                      onEditCancel={this.props.onEditCancel}
+                      onMetadataSave={this.props.onMetadataSave}
+                      onOpenInFolder={this.props.onOpenInFolder}/>
+                  )
+                case PANEL.TAGS:
+                  return (
+                    <TagPanel
+                      {...props}
+                      isDisabled={isDisabled}
+                      onContextMenu={this.props.onContextMenu}
+                      onItemTagAdd={this.props.onItemTagAdd}
+                      onItemTagRemove={this.props.onItemTagRemove}
+                      onTagCreate={this.props.onTagCreate}/>
+                  )
+              }
+            }}
+          </TabPane>
         </Panel>
 
         <Panel className={cx('photo-panel', {
@@ -126,6 +164,7 @@ class ItemPanelGroup extends React.PureComponent {
   }
 
   static propTypes = {
+    tabs: array,
     cache: string.isRequired,
     data: object.isRequired,
     edit: object.isRequired,
@@ -176,6 +215,21 @@ class ItemPanelGroup extends React.PureComponent {
     onTagSave: func.isRequired,
     onSelectionSort: func.isRequired,
     onUiUpdate: func.isRequired
+  }
+
+  static defaultProps = {
+    tabs: [
+      {
+        name: PANEL.METADATA,
+        label: 'panel.metadata.tab',
+        icon: <IconMetadata/>
+      },
+      {
+        name: PANEL.TAGS,
+        label: 'panel.tags.tab',
+        icon: <IconHangtag/>
+      }
+    ]
   }
 
   static props = keys(ItemPanelGroup.propTypes)

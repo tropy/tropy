@@ -123,19 +123,15 @@ class TagPanel extends React.PureComponent {
     return (
       <div
         ref={this.container}
-        className="tab-pane"
+        className="tag-panel"
         tabIndex={this.tabIndex}
         onBlur={this.props.onBlur}
         onKeyDown={this.handleKeyDown}>
         <TagList
-          edit={this.props.edit}
           keymap={this.props.keymap}
           tags={this.props.tags}
           hasFocusIcon
-          onCommit={this.handleTagAdd}
-          onEditCancel={this.props.onEditCancel}
           onRemove={this.handleTagRemove}
-          onSave={this.props.onTagSave}
           onContextMenu={this.handleContextMenu}/>
         <TagAdder
           ref={this.setAdder}
@@ -166,11 +162,9 @@ class TagPanel extends React.PureComponent {
     onBlur: func,
     onTabFocus: func,
     onContextMenu: func.isRequired,
-    onEditCancel: func.isRequired,
     onItemTagAdd: func.isRequired,
     onItemTagRemove: func.isRequired,
-    onTagCreate: func.isRequired,
-    onTagSave: func.isRequired
+    onTagCreate: func.isRequired
   }
 }
 

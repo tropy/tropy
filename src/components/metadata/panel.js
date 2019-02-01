@@ -305,18 +305,16 @@ class MetadataPanel extends React.PureComponent {
 
   render() {
     return (
-      <div className="metadata tab-pane">
-        <div
-          className="scroll-container"
-          ref={this.setContainer}
-          tabIndex={this.tabIndex}
-          onBlur={this.props.onBlur}
-          onKeyDown={this.handleKeyDown}>
-          {this.renderItemFields()}
-          {this.renderPhotoFields()}
-          {this.renderSelectionFields()}
-          {this.renderFieldPopup()}
-        </div>
+      <div
+        className="metadata-panel scroll-container"
+        ref={this.setContainer}
+        tabIndex={this.tabIndex}
+        onBlur={this.props.onBlur}
+        onKeyDown={this.handleKeyDown}>
+        {this.renderItemFields()}
+        {this.renderPhotoFields()}
+        {this.renderSelectionFields()}
+        {this.renderFieldPopup()}
       </div>
     )
   }
@@ -361,8 +359,8 @@ module.exports = {
         photo: getPhotoFields(state),
         selection: getSelectionFields(state)
       },
-      keymap: state.keymap.MetadataList,
       items: getSelectedItems(state),
+      keymap: state.keymap.MetadataList,
       photo: getSelectedPhoto(state),
       selection: getActiveSelection(state),
       template: getSelectedItemTemplate(state),

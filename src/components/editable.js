@@ -142,7 +142,8 @@ class Editable extends React.PureComponent {
 
   static defaultProps = {
     autofocus: true,
-    getCompletions: noop
+    getCompletions: noop,
+    onCancel: noop
   }
 }
 
