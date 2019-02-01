@@ -16,7 +16,7 @@ const {
 } = require('prop-types')
 
 
-class ItemPanel extends React.PureComponent {
+class ItemPanelGroup extends React.PureComponent {
   handleNoteOpen = (note) => {
     if (note != null && !this.props.isItemOpen) {
       this.props.onItemOpen({
@@ -56,6 +56,7 @@ class ItemPanel extends React.PureComponent {
 
     return (
       <PanelGroup
+        className="item-panel-group"
         slots={panel.slots}
         onResize={this.handleResize}
         header={
@@ -177,9 +178,9 @@ class ItemPanel extends React.PureComponent {
     onUiUpdate: func.isRequired
   }
 
-  static props = keys(ItemPanel.propTypes)
+  static props = keys(ItemPanelGroup.propTypes)
 }
 
 module.exports = {
-  ItemPanel
+  ItemPanelGroup
 }

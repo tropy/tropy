@@ -1,8 +1,7 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
-const { ItemPanel } = require('./panel')
+const { ItemPanelGroup } = require('./panel')
 const { ItemContainer } = require('./container')
 const { Resizable } = require('../resizable')
 const { NOTE, PROJECT: { MODE }, SASS: { PANEL } } = require('../../constants')
@@ -19,7 +18,7 @@ function getNoteTemplate() {
 }
 
 
-class ItemView extends PureComponent {
+class ItemView extends React.PureComponent {
   constructor(props) {
     super(props)
 
@@ -187,7 +186,7 @@ class ItemView extends PureComponent {
           max={PANEL.MAX_WIDTH}
           onResize={this.handlePanelResize}
           onDragStop={onPanelDragStop}>
-          <ItemPanel {...pick(props, ItemPanel.props)}
+          <ItemPanelGroup {...pick(props, ItemPanelGroup.props)}
             panel={panel}
             photo={photo}
             note={this.state.note}
@@ -214,7 +213,7 @@ class ItemView extends PureComponent {
 
 
   static propTypes = {
-    ...ItemPanel.propTypes,
+    ...ItemPanelGroup.propTypes,
 
     items: arrayOf(
       shape({
