@@ -432,7 +432,7 @@ class PanelGroup extends React.PureComponent {
 
   render() {
     return (
-      <div className="panel-group">
+      <div className={cx('panel-group', this.props.className)}>
         <header className="panel-group-header">
           {this.props.header}
         </header>
@@ -446,13 +446,12 @@ class PanelGroup extends React.PureComponent {
 
   static propTypes = {
     children: only(Panel),
+    className: string,
     header: node,
-
     slots: arrayOf(shape({
       height: number.isRequired,
       isClosed: bool
     })).isRequired,
-
     onResize: func.isRequired
   }
 }
