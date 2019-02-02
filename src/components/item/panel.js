@@ -64,6 +64,22 @@ class ItemPanelGroup extends React.PureComponent {
     event.nativeEvent.stopImmediatePropagation()
   }
 
+  handleEditCancel = () => {
+    this.props.onEditCancel()
+    this.panel.current.focus()
+  }
+
+  handleMetadataSave = (...args) => {
+    this.props.onMetadataSave(...args)
+    this.panel.current.focus()
+  }
+
+  handleTagAddCancel = (hasChanged) => {
+    if (!hasChanged) {
+      this.panel.current.focus()
+    }
+  }
+
   handleNoteOpen = (note) => {
     if (note != null && !this.props.isItemOpen) {
       this.props.onItemOpen({
@@ -136,8 +152,8 @@ class ItemPanelGroup extends React.PureComponent {
                       isDisabled={isDisabled}
                       onContextMenu={this.props.onContextMenu}
                       onEdit={this.props.onEdit}
-                      onEditCancel={this.props.onEditCancel}
-                      onMetadataSave={this.props.onMetadataSave}
+                      onEditCancel={this.handleEditCancel}
+                      onMetadataSave={this.handleMetadataSave}
                       onOpenInFolder={this.props.onOpenInFolder}/>
                   )
                 case PANEL.TAGS:
@@ -146,6 +162,7 @@ class ItemPanelGroup extends React.PureComponent {
                       {...props}
                       ref={this.tab}
                       isDisabled={isDisabled}
+                      onCancel={this.handleTagAddCancel}
                       onContextMenu={this.props.onContextMenu}
                       onItemTagAdd={this.props.onItemTagAdd}
                       onItemTagRemove={this.props.onItemTagRemove}

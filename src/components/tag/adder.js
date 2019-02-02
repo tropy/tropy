@@ -9,6 +9,8 @@ const collate = require('../../collate')
 
 
 class TagAdder extends React.PureComponent {
+  input = React.createRef()
+
   get placeholder() {
     let { count, intl } = this.props
     return {
@@ -19,7 +21,7 @@ class TagAdder extends React.PureComponent {
   }
 
   focus() {
-    this.input.focus()
+    this.input.current.focus()
   }
 
   handleBlur = (event) => {
@@ -39,18 +41,14 @@ class TagAdder extends React.PureComponent {
       this.props.onCreate({ name })
     }
 
-    this.input.reset()
-  }
-
-  setInput = (input) => {
-    this.input = input
+    this.input.current.reset()
   }
 
   render() {
     return (
       <div className="add-tag-container" style={this.placeholder}>
         <Input
-          ref={this.setInput}
+          ref={this.input}
           className="form-control"
           completions={this.props.completions}
           isDisabled={this.props.isDisabled}

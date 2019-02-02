@@ -92,6 +92,7 @@ class TagPanel extends React.PureComponent {
           tags={this.props.allTags}
           onAdd={this.handleTagAdd}
           onBlur={this.props.onBlur}
+          onCancel={this.props.onCancel}
           onCreate={this.handleTagCreate}/>
       </div>
     )
@@ -111,6 +112,7 @@ class TagPanel extends React.PureComponent {
 
     onBlur: func,
     onTabFocus: func,
+    onCancel: func,
     onContextMenu: func.isRequired,
     onItemTagAdd: func.isRequired,
     onItemTagRemove: func.isRequired,
