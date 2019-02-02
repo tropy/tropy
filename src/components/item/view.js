@@ -168,7 +168,6 @@ class ItemView extends React.PureComponent {
       offset,
       panel,
       photo,
-      selections,
       onPanelDragStop,
       isProjectClosing,
       isTrashSelected,
@@ -191,7 +190,6 @@ class ItemView extends React.PureComponent {
             photo={photo}
             note={this.state.note}
             keymap={keymap}
-            selections={selections}
             isItemOpen={isItemOpen}
             isDisabled={isTrashSelected || isProjectClosing}
             onNoteCreate={this.handleNoteCreate}/>
@@ -205,7 +203,9 @@ class ItemView extends React.PureComponent {
           onContextMenu={this.props.onContextMenu}
           onNoteChange={this.handleNoteChange}
           onNoteCommit={this.handleNoteCommit}
+          onPhotoCreate={this.props.onPhotoCreate}
           onPhotoError={this.props.onPhotoError}
+          onPhotoSelect={this.props.onPhotoSelect}
           onUiUpdate={this.props.onUiUpdate}/>
       </section>
     )
@@ -226,7 +226,6 @@ class ItemView extends React.PureComponent {
     keymap: object.isRequired,
     offset: number.isRequired,
     mode: string.isRequired,
-    selections: object.isRequired,
     isModeChanging: bool.isRequired,
     isTrashSelected: bool.isRequired,
     isProjectClosing: bool.isRequired,

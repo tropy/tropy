@@ -5,15 +5,14 @@ const { ItemToolbar } = require('./toolbar')
 const { TabNav, TabPane } = require('../tabs')
 const { NoteList, NoteToolbar } = require('../note')
 const { PanelGroup, Panel } = require('../panel')
-const { PhotoGrid, PhotoList, PhotoToolbar } = require('../photo')
+const { PhotoPanel, PhotoToolbar } = require('../photo')
 const { MetadataPanel } = require('../metadata')
 const { TagPanel } = require('../tag')
 const { IconMetadata, IconHangtag } = require('../icons')
-const { get, has, pick } = require('../../common/util')
+const { get, has } = require('../../common/util')
 const { keys } = Object
 const cx = require('classnames')
 
-const { PHOTO } = require('../../constants/sass')
 const { PANEL } = require('../../constants/ui')
 
 const {
@@ -63,7 +62,6 @@ class ItemPanelGroup extends React.PureComponent {
 
   render() {
     let { isDisabled, photo, panel } = this.props
-    let PhotoIterator = panel.zoom ? PhotoGrid : PhotoList
 
     let hasMultipleItems = this.props.items.length > 1
     let item = hasMultipleItems ? null : this.props.items[0]
@@ -123,23 +121,21 @@ class ItemPanelGroup extends React.PureComponent {
             zoom={panel.zoom}
             onCreate={this.handlePhotoCreate}
             onZoomChange={this.handleZoomChange}/>
-          <PhotoIterator
-            {...pick(this.props, PhotoIterator.getPropKeys())}
+          <PhotoPanel
             canCreate
-            current={get(photo, ['id'])}
             isDisabled={isDisabled || !item || hasMultipleItems}
-            selection={this.props.activeSelection}
-            size={PHOTO.ZOOM[panel.zoom]}
+            isItemOpen={this.props.isItemOpen}
+            photos={this.props.photos}
+            zoom={panel.zoom}
+            onEdit={this.props.onEdit}
+            onEditCancel={this.props.onEditCancel}
+            onItemOpen={this.props.onItemOpen}
             onChange={this.props.onMetadataSave}
-            onContract={this.props.onPhotoContract}
+            onContextMenu={this.props.onContextMenu}
             onCreate={this.handlePhotoCreate}
-            onDelete={this.props.onPhotoDelete}
             onError={this.props.onPhotoError}
-            onExpand={this.props.onPhotoExpand}
-            onSelect={this.props.onPhotoSelect}
-            onSelectionSort={this.props.onSelectionSort}
-            onSort={this.props.onPhotoSort}
-            onZoomChange={this.handleZoomChange}/>
+            onItemPreview={this.props.onItemPreview}
+            onSelect={this.props.onPhotoSelect}/>
         </Panel>
 
         <Panel className={cx('note-panel', {
@@ -165,11 +161,6 @@ class ItemPanelGroup extends React.PureComponent {
 
   static propTypes = {
     tabs: array,
-    cache: string.isRequired,
-    data: object.isRequired,
-    edit: object.isRequired,
-    expanded: array.isRequired,
-    activeSelection: number,
     keymap: object.isRequired,
     isDisabled: bool.isRequired,
     isItemOpen: bool.isRequired,
@@ -177,7 +168,6 @@ class ItemPanelGroup extends React.PureComponent {
 
     note: object,
     notes: array.isRequired,
-    selections: object.isRequired,
 
     panel: shape({
       slots: array.isRequired,
@@ -204,16 +194,11 @@ class ItemPanelGroup extends React.PureComponent {
     onNoteCreate: func.isRequired,
     onNoteSelect: func.isRequired,
     onOpenInFolder: func.isRequired,
-    onPhotoContract: func.isRequired,
     onPhotoCreate: func.isRequired,
-    onPhotoDelete: func.isRequired,
     onPhotoError: func.isRequired,
-    onPhotoExpand: func.isRequired,
     onPhotoSelect: func.isRequired,
-    onPhotoSort: func.isRequired,
     onTagCreate: func.isRequired,
     onTagSave: func.isRequired,
-    onSelectionSort: func.isRequired,
     onUiUpdate: func.isRequired
   }
 

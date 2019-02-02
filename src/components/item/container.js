@@ -153,6 +153,7 @@ class ItemContainer extends React.PureComponent {
     onEsperChange: func.isRequired,
     onNoteChange: func.isRequired,
     onNoteCommit: func.isRequired,
+    onPhotoCreate: func.isRequired,
     onPhotoError: func.isRequired,
     onPhotoSave: func.isRequired,
     onPhotoSelect: func.isRequired,
@@ -178,10 +179,6 @@ module.exports = {
     dispatch => ({
       onPhotoSave(...args) {
         dispatch(act.photo.save(...args))
-      },
-
-      onPhotoSelect(...args) {
-        dispatch(act.photo.select(...args))
       },
 
       onSelectionCreate(...args) {
