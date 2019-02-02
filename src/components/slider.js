@@ -46,6 +46,10 @@ class Slider extends React.PureComponent {
     }]
   }
 
+  get tabIndex() {
+    return this.props.isDisabled ? null : this.props.tabIndex
+  }
+
   getNextStep() {
     let { max, steps } = this.props
     let { value } = this.props
@@ -191,7 +195,7 @@ class Slider extends React.PureComponent {
     return (
       <div
         className={cx(this.classes)}
-        tabIndex={this.props.tabIndex}
+        tabIndex={this.tabIndex}
         onBlur={this.props.onBlur}
         onFocus={this.props.onFocus}
         onKeyDown={this.handleKeyDown}>
