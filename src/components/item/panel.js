@@ -14,6 +14,7 @@ const { keys } = Object
 const cx = require('classnames')
 
 const { PANEL } = require('../../constants/ui')
+const { TABS } = require('../../constants')
 
 const {
   array, bool, func, number, object, shape, string
@@ -21,6 +22,9 @@ const {
 
 
 class ItemPanelGroup extends React.PureComponent {
+  panel = React.createRef()
+  tab = React.createRef()
+
   get toolbar() {
     return (
       <ItemToolbar
@@ -28,6 +32,36 @@ class ItemPanelGroup extends React.PureComponent {
         onMaximize={this.props.onMaximize}
         onModeChange={this.props.onModeChange}/>
     )
+  }
+
+  get keymap() {
+    return this.props.keymap.ItemPanel
+  }
+
+  handleKeyDown = (event) => {
+    switch (this.keymap.match(event)) {
+      case 'up':
+        if (this.tab.current) {
+          this.tab.current.prev()
+        }
+        break
+      case 'down':
+        if (this.tab.current) {
+          this.tab.current.next()
+        }
+        break
+      case 'left':
+      case 'right':
+        this.toggleTabs()
+        this.panel.current.focus()
+        break
+      default:
+        return
+    }
+
+    event.preventDefault()
+    event.stopPropagation()
+    event.nativeEvent.stopImmediatePropagation()
   }
 
   handleNoteOpen = (note) => {
@@ -60,12 +94,16 @@ class ItemPanelGroup extends React.PureComponent {
     this.props.onUiUpdate({ panel: { zoom } })
   }
 
+  toggleTabs = () => {
+    this.handleTabChange(
+      this.props.panel.tab === PANEL.METADATA ? PANEL.TAGS : PANEL.METADATA
+    )
+  }
+
   render() {
     let { isDisabled, photo, panel } = this.props
-
     let hasMultipleItems = this.props.items.length > 1
     let item = hasMultipleItems ? null : this.props.items[0]
-
     let canCreatePhoto = !(isDisabled || item == null || hasMultipleItems)
 
     return (
@@ -75,7 +113,11 @@ class ItemPanelGroup extends React.PureComponent {
         slots={panel.slots}
         onResize={this.handleResize}>
 
-        <Panel className="item-panel">
+        <Panel
+          className="item-panel"
+          ref={this.panel}
+          tabIndex={TABS.ItemPanel}
+          onKeyDown={this.handleKeyDown}>
           <TabNav
             active={panel.tab}
             justified
@@ -90,6 +132,7 @@ class ItemPanelGroup extends React.PureComponent {
                   return (
                     <MetadataPanel
                       {...props}
+                      ref={this.tab}
                       isDisabled={isDisabled}
                       onContextMenu={this.props.onContextMenu}
                       onEdit={this.props.onEdit}
@@ -101,6 +144,7 @@ class ItemPanelGroup extends React.PureComponent {
                   return (
                     <TagPanel
                       {...props}
+                      ref={this.tab}
                       isDisabled={isDisabled}
                       onContextMenu={this.props.onContextMenu}
                       onItemTagAdd={this.props.onItemTagAdd}

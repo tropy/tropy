@@ -9,8 +9,6 @@ const { PopupSelect } = require('../resource/popup')
 const { PhotoInfo } = require('../photo/info')
 const { ItemInfo } = require('../item/info')
 const { SelectionInfo } = require('../selection/info')
-const { TABS } = require('../../constants')
-const { match } = require('../../keymap')
 const { on, off } = require('../../dom')
 const { get } = require('../../common/util')
 const actions = require('../../actions')
@@ -32,23 +30,18 @@ const {
 
 
 class MetadataPanel extends React.PureComponent {
-  constructor(props) {
-    super(props)
-    this.fields = [null, null, null]
-    this.state = {
-      fieldPopup: null
-    }
+  fields = [null, null, null]
+
+  state = {
+    fieldPopup: null
   }
 
   componentDidMount() {
-    on(this.container, 'tab:focus', this.handleTabFocus)
     on(document, 'ctx:add-extra-field', this.showFieldPopup)
   }
 
   componentWillUnmount() {
-    off(this.container, 'tab:focus', this.handleTabFocus)
     off(document, 'ctx:add-extra-fields', this.showFieldPopup)
-    this.props.onBlur()
   }
 
   get isEmpty() {
@@ -67,15 +60,7 @@ class MetadataPanel extends React.PureComponent {
     return this.props.selection != null && !this.props.selection.pending
   }
 
-  get tabIndex() {
-    return this.isEmpty ? -1 : TABS.MetadataPanel
-  }
-
-  focus = () => {
-    this.container.focus()
-  }
-
-  next(i = 0) {
+  next = (i = 0) => {
     for (let ii = i + 3; i < ii; ++i) {
       let fields = this.fields[i % 3]
       let next = (fields != null) && fields.next()
@@ -83,16 +68,12 @@ class MetadataPanel extends React.PureComponent {
     }
   }
 
-  prev(i = 2) {
+  prev = (i = 2) => {
     for (let ii = i - 2; i >= ii; --i) {
       let fields = this.fields[i % 3]
       let prev = (fields != null) && fields.prev()
       if (prev) return fields.edit(prev.property.id)
     }
-  }
-
-  setContainer = (container) => {
-    this.container = container
   }
 
   setItemFields = (item) => {
@@ -129,20 +110,6 @@ class MetadataPanel extends React.PureComponent {
 
   handleBeforeSelectionFields = () => {
     this.prev(1)
-  }
-
-  handleTabFocus = () => {
-    this.props.onTabFocus()
-  }
-
-  handleEditCancel = () => {
-    this.props.onEditCancel()
-    this.focus()
-  }
-
-  handleChange = (data) => {
-    this.props.onMetadataSave(data)
-    this.focus()
   }
 
   handleTemplateChange = (template, hasChanged) => {
@@ -199,23 +166,6 @@ class MetadataPanel extends React.PureComponent {
     this.setState({ fieldPopup: null })
   }
 
-  handleKeyDown = (event) => {
-    switch (match(this.props.keymap, event)) {
-      case 'up':
-        this.prev()
-        break
-      case 'down':
-      case 'enter':
-        this.next()
-        break
-      default:
-        return
-    }
-
-    event.stopPropagation()
-    event.preventDefault()
-  }
-
   renderItemFields() {
     return !this.isEmpty && (
       <MetadataSection
@@ -235,9 +185,9 @@ class MetadataPanel extends React.PureComponent {
           fields={this.props.fields.item}
           isDisabled={this.props.isDisabled}
           onEdit={this.props.onEdit}
-          onEditCancel={this.handleEditCancel}
+          onEditCancel={this.props.onEditCancel}
           onContextMenu={this.handleItemContextMenu}
-          onChange={this.handleChange}
+          onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterItemFields}
           onBefore={this.handleBeforeItemFields}/>
         {!this.isBulk &&
@@ -257,9 +207,9 @@ class MetadataPanel extends React.PureComponent {
           fields={this.props.fields.photo}
           isDisabled={this.props.isDisabled}
           onEdit={this.props.onEdit}
-          onEditCancel={this.handleEditCancel}
+          onEditCancel={this.props.onEditCancel}
           onContextMenu={this.handlePhotoContextMenu}
-          onChange={this.handleChange}
+          onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterPhotoFields}
           onBefore={this.handleBeforePhotoFields}/>
         <PhotoInfo
@@ -280,9 +230,9 @@ class MetadataPanel extends React.PureComponent {
           fields={this.props.fields.selection}
           isDisabled={this.props.isDisabled}
           onEdit={this.props.onEdit}
-          onEditCancel={this.handleEditCancel}
+          onEditCancel={this.props.onEditCancel}
           onContextMenu={this.handleSelectionContextMenu}
-          onChange={this.handleChange}
+          onChange={this.props.onMetadataSave}
           onAfter={this.handleAfterSelectionFields}
           onBefore={this.handleBeforeSelectionFields}/>
         <SelectionInfo
@@ -305,12 +255,7 @@ class MetadataPanel extends React.PureComponent {
 
   render() {
     return (
-      <div
-        className="metadata-panel scroll-container"
-        ref={this.setContainer}
-        tabIndex={this.tabIndex}
-        onBlur={this.props.onBlur}
-        onKeyDown={this.handleKeyDown}>
+      <div className="metadata-panel scroll-container">
         {this.renderItemFields()}
         {this.renderPhotoFields()}
         {this.renderSelectionFields()}
@@ -330,17 +275,13 @@ class MetadataPanel extends React.PureComponent {
     }).isRequired,
     isDisabled: bool,
     items: arrayOf(shapes.subject),
-    keymap: object.isRequired,
     photo: shapes.subject,
     selection: shapes.subject,
     template: shapes.template,
     templates: arrayOf(shapes.template).isRequired,
-
-    onBlur: func.isRequired,
     onContextMenu: func.isRequired,
     onEdit: func,
     onEditCancel: func,
-    onTabFocus: func.isRequired,
     onItemSave: func.isRequired,
     onMetadataAdd: func.isRequired,
     onMetadataDelete: func.isRequired,
@@ -360,7 +301,6 @@ module.exports = {
         selection: getSelectionFields(state)
       },
       items: getSelectedItems(state),
-      keymap: state.keymap.MetadataList,
       photo: getSelectedPhoto(state),
       selection: getActiveSelection(state),
       template: getSelectedItemTemplate(state),
@@ -379,6 +319,6 @@ module.exports = {
       onMetadataDelete(...args) {
         dispatch(actions.metadata.delete(...args))
       }
-    })
+    }), null, { forwardRef: true }
   )(MetadataPanel)
 }

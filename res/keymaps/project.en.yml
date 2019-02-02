@@ -105,10 +105,17 @@ en:
       end: End
       pageUp: PageUp
       pageDown: PageDown
-    MetadataList: &MetadataList
+    ItemPanel: &ItemPanel
       up: ArrowUp
-      down: ArrowDown
-      enter: Enter
+      down:
+        - ArrowDown
+        - Enter
+      left:
+        - ArrowLeft
+        - Shift+Ctrl+Tab
+      right:
+        - ArrowRight
+        - Ctrl+Tab
     NoteList: &NoteList
       up: ArrowUp
       down: ArrowDown
@@ -234,7 +241,7 @@ en:
       end: End
       pageUp: PageUp
       pageDown: PageDown
-    MetadataList: *MetadataList
+    ItemPanel: *ItemPanel
     NoteList: *NoteList
     NotePad: *NotePad
     TagList: *TagList

@@ -86,6 +86,7 @@ class TagAdder extends React.PureComponent {
     match: (value, query) => (
       collate.match(value.name || String(value), query, /\b\w/g)
     ),
+    onCancel: noop,
     onFocus: noop
   }
 }

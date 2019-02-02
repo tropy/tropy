@@ -4,7 +4,7 @@ const React = require('react')
 const { only } = require('./util')
 const { Resizable } = require('./resizable')
 const cx = require('classnames')
-const { bounds } = require('../dom')
+const { bounds, off, on } = require('../dom')
 const { restrict } = require('../common/util')
 const { PANEL } = require('../constants/sass')
 const { remap } = require('../common/util')
@@ -17,22 +17,37 @@ const {
 
 
 class Panel extends React.PureComponent {
+  container = React.createRef()
+
   state = {
-    hasNestedTabFocus: false
+    hasTabFocus: false,
   }
+
+  componentDidMount() {
+    on(this.container.current, 'tab:focus', this.handleTabFocus)
+  }
+
+  componentWillUnmount() {
+    off(this.container.current, 'tab:focus', this.handleTabFocus)
+  }
+
 
   get classes() {
     return ['panel', this.props.className, {
-      'nested-tab-focus': this.state.hasNestedTabFocus
+      'nested-tab-focus': this.state.hasTabFocus,
     }]
   }
 
-  handleNestedBlur = () => {
-    this.setState({ hasNestedTabFocus: false })
+  focus() {
+    this.container.current.focus()
   }
 
-  handleNestedTabFocus = () => {
-    this.setState({ hasNestedTabFocus: true })
+  handleBlur = () => {
+    this.setState({ hasTabFocus: false })
+  }
+
+  handleTabFocus = () => {
+    this.setState({ hasTabFocus: true })
   }
 
   handleToggle = () => {
@@ -56,8 +71,8 @@ class Panel extends React.PureComponent {
     return !this.props.isClosed && (
       <PanelBody className={cx(classes)}>
         {React.cloneElement(body, {
-          onBlur: this.handleNestedBlur,
-          onTabFocus: this.handleNestedTabFocus
+          onBlur: this.handleBlur,
+          onTabFocus: this.handleTabFocus
         })}
       </PanelBody>
     )
@@ -67,7 +82,12 @@ class Panel extends React.PureComponent {
     let [header, body] = React.Children.toArray(this.props.children)
 
     return (
-      <section className={cx(this.classes)}>
+      <section
+        className={cx(this.classes)}
+        ref={this.container}
+        tabIndex={this.props.tabIndex}
+        onBlur={this.handleBlur}
+        onKeyDown={this.props.onKeyDown}>
         {this.renderHeader(header)}
         {this.renderBody(body)}
       </section>
@@ -80,6 +100,8 @@ class Panel extends React.PureComponent {
     id: number,
     isClosed: bool,
     canToggle: bool,
+    tabIndex: number,
+    onKeyDown: func,
     onToggle: func
   }
 }
