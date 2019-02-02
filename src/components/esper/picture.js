@@ -4,14 +4,25 @@ const PIXI = require('pixi.js/dist/pixi.js')
 const { Container, Sprite, Rectangle } = PIXI
 const { ColorMatrixFilter } = PIXI.filters
 const { AdjustmentFilter } = require('@pixi/filter-adjustment')
+const { ConvolutionFilter } = require('@pixi/filter-convolution')
 const { SelectionLayer, SelectionOverlay } = require('./selection')
 const { restrict } = require('../../common/util')
 const { deg, isHorizontal } = require('../../common/math')
 const { floor, max } = Math
 
 const NEGATIVE = [
-  -1, 0, 0, 1, 0, 0, -1,  0, 1, 0, 0, 0, -1, 1, 0, 0, 0,  0, 1, 0
+  -1, 0, 0, 1, 0, 0, -1, 0, 1, 0, 0, 0, -1, 1, 0, 0, 0, 0, 1, 0
 ]
+
+
+const CONVO = {
+  ID: [0, 0, 0, 0, 1, 0, 0, 0, 0],
+  EDGE1: [-1, -1, -1, -1, 8, -1, -1, -1, -1],
+  EDGE2: [0, 1, 0, 1, -4, 1, 0, 1, 0],
+  EDGE3: [1, -2, 1, -2, 4, -2, 1, -2, 1],
+  SHARPEN1: [0, -1, 0, -1, 5, -1, 0, -1, 0],
+  SHARPEN2: [-1, -1, -1, -1, 9, -1, -1, -1, -1]
+}
 
 
 class Picture extends Container {
@@ -28,7 +39,8 @@ class Picture extends Container {
 
     this.bg.filters = [
       new AdjustmentFilter(),
-      new ColorMatrixFilter()
+      new ColorMatrixFilter(),
+      new ConvolutionFilter(CONVO.EDGE2, width, height)
     ]
 
     this.handleResolutionChange()
@@ -50,6 +62,10 @@ class Picture extends Container {
 
   get colors() {
     return this.bg.filters[1]
+  }
+
+  get convo() {
+    return this.bg.filters[2]
   }
 
   getWidth(scale = this.scale.y) {
