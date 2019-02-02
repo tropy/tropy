@@ -383,7 +383,6 @@ module.exports = {
       photos: state.photos,
       visiblePhotos: getVisiblePhotos(state),
       project: state.project,
-      properties: state.ontology.props,
       selection: getSelectedItems(state),
       sort: getSortColumn(state),
       tags: state.tags,

@@ -162,27 +162,22 @@ class ItemPanelGroup extends React.PureComponent {
   }
 
   static propTypes = {
-    tabs: array,
-    keymap: object.isRequired,
     isDisabled: bool.isRequired,
     isItemOpen: bool.isRequired,
     items: array.isRequired,
-
+    keymap: object.isRequired,
     note: object,
     notes: array.isRequired,
-
     panel: shape({
       slots: array.isRequired,
       tab: string.isRequired,
       zoom: number.isRequired
     }).isRequired,
-
     photo: shape({
       id: number.isRequired
     }),
     photos: array.isRequired,
-    properties: object.isRequired,
-
+    tabs: array,
     onContextMenu: func.isRequired,
     onEdit: func.isRequired,
     onEditCancel: func,
