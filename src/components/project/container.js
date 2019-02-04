@@ -53,11 +53,13 @@ class ProjectContainer extends Component {
 
   componentDidMount() {
     on(document, 'keydown', this.handleKeyDown)
+    on(document, 'global:back', this.handleBackButton)
   }
 
   componentWillUnmount() {
     this.projectWillChange.cancel()
     off(document, 'keydown', this.handleKeyDown)
+    off(document, 'global:back', this.handleBackButton)
   }
 
   componentWillReceiveProps({ nav, project, ui }) {
@@ -136,6 +138,12 @@ class ProjectContainer extends Component {
     return event.target.parentNode === this.container
   }
 
+  handleBackButton = () => {
+    if (this.state.mode !== MODE.PROJECT) {
+      this.handleModeChange(MODE.PROJECT)
+    }
+  }
+
   handleContextMenu = (event) => {
     this.props.onContextMenu(event)
   }
@@ -167,9 +175,7 @@ class ProjectContainer extends Component {
   handleKeyDown = (event) => {
     switch (match(this.props.keymap.global, event)) {
       case 'back':
-        if (this.state.mode !== MODE.PROJECT) {
-          this.handleModeChange(MODE.PROJECT)
-        }
+        emit(document, 'global:back')
         break
       case 'nextItem':
         emit(document, 'global:next-item')

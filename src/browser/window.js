@@ -38,6 +38,11 @@ const AQUA = {
   6: 'graphite'
 }
 
+const APP_COMMANDS = {
+  'browser-backward': 'back',
+  'browser-forward': 'forward'
+}
+
 function hasOverlayScrollBars() {
   return darwin &&
     'WhenScrolling' === prefs.getUserDefault('AppleShowScrollBars', 'string')
@@ -105,6 +110,13 @@ module.exports = {
     for (let event of EVENTS) {
       win.on(event, () => { win.webContents.send('win', event) })
     }
+
+    win.on('app-command', (_, name) => {
+      warn(name)
+      if (name in APP_COMMANDS) {
+        win.webContents.send(`global:${APP_COMMANDS[name]}`)
+      }
+    })
 
     win.on('page-title-updated', (event) => {
       event.preventDefault()
