@@ -10,6 +10,7 @@ const { MetadataPanel } = require('../metadata')
 const { TagPanel } = require('../tag')
 const { IconMetadata, IconHangtag } = require('../icons')
 const { get, has } = require('../../common/util')
+const { on, off } = require('../../dom')
 const { keys } = Object
 const cx = require('classnames')
 
@@ -24,6 +25,16 @@ const {
 class ItemPanelGroup extends React.PureComponent {
   panel = React.createRef()
   tab = React.createRef()
+
+  componentDidMount() {
+    on(document, 'global:next-tab', this.toggleTabs)
+    on(document, 'global:prev-tab', this.toggleTabs)
+  }
+
+  componentWillUnmount() {
+    off(document, 'global:next-tab', this.toggleTabs)
+    off(document, 'global:prev-tab', this.toggleTabs)
+  }
 
   get toolbar() {
     return (

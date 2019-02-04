@@ -189,6 +189,12 @@ class ProjectContainer extends Component {
       case 'prevPhoto':
         emit(document, 'global:prev-photo')
         break
+      case 'nextTab':
+        emit(document, 'global:next-tab')
+        break
+      case 'prevTab':
+        emit(document, 'global:prev-tab')
+        break
       default:
         return
     }

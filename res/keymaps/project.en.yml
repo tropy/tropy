@@ -7,6 +7,8 @@ en:
       prevItem: Alt+ArrowUp
       nextPhoto: Alt+ArrowRight
       prevPhoto: Alt+ArrowLeft
+      nextTab: Ctrl+Tab
+      prevTab: Shift+Ctrl+Tab
     Esper: &Esper
       zoomIn:
         - CmdOrCtrl-+
@@ -109,7 +111,6 @@ en:
       up: ArrowUp
       down:
         - ArrowDown
-        - Enter
       left:
         - ArrowLeft
         - Shift+Ctrl+Tab
