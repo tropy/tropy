@@ -39,8 +39,8 @@ class Picture extends Container {
 
     this.bg.filters = [
       new AdjustmentFilter(),
-      new ColorMatrixFilter(),
-      new ConvolutionFilter(CONVO.EDGE2, width, height)
+      new ConvolutionFilter(CONVO.EDGE1, width, height),
+      new ColorMatrixFilter()
     ]
 
     this.handleResolutionChange()
@@ -61,11 +61,11 @@ class Picture extends Container {
   }
 
   get colors() {
-    return this.bg.filters[1]
+    return this.bg.filters[2]
   }
 
   get convo() {
-    return this.bg.filters[2]
+    return this.bg.filters[1]
   }
 
   getWidth(scale = this.scale.y) {
