@@ -202,6 +202,9 @@ en:
       saturation:
         label: Saturation
         value: "{value, number}"
+      sharpen:
+        label: Sharpen
+        value: "{value, number}"
   notepad:
     placeholder: Add your notes here …
   completions:

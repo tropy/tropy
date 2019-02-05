@@ -24,7 +24,7 @@ class UnsharpMaskFilter extends PIXI.Filter {
   }
 
   set intensity(intensity) {
-    this.uniforms.intensity = restrict(intensity / 10, 0, 10)
+    this.uniforms.intensity = restrict(intensity / 100, 0, 10)
   }
 
   get width() {

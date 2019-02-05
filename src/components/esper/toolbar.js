@@ -1,7 +1,6 @@
 'use strict'
 
 const React = require('react')
-const { PureComponent } = React
 const { Toolbar, ToolbarLeft, ToolbarRight, ToolGroup } = require('../toolbar')
 const { Button } = require('../button')
 const { Slider } = require('../slider')
@@ -31,7 +30,7 @@ const {
 } = require('../icons')
 
 
-class EsperToolbar extends PureComponent {
+class EsperToolbar extends React.PureComponent {
   get isZoomToFill() {
     return this.props.mode === MODE.FILL
   }
