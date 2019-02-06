@@ -521,6 +521,14 @@ i('SelectionOverlay', (
   </svg>
 ))
 
+i('Sharpen', (
+  <svg width="16" height="16">
+    <g className="line" fill="currentColor">
+      <path d="M14.5,15H1.5a.5.5,0,0,1-.447-.724l6.5-13a.521.521,0,0,1,.894,0l6.5,13A.5.5,0,0,1,14.5,15ZM2.309,14H13.691L8,2.618Z"/>
+    </g>
+  </svg>
+))
+
 i('Sink', (
   <svg width="16" height="16">
     <g className="line" fill="currentColor">

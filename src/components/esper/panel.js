@@ -12,7 +12,8 @@ const {
   IconSun,
   IconContrast,
   IconHue,
-  IconDrop
+  IconDrop,
+  IconSharpen
 } = require('../icons')
 
 
@@ -124,7 +125,7 @@ const EsperPanel = (props) => (
         onFocus={props.onFocus}
         onChange={props.onChange}/>
       <ColorSlider
-        icon={<IconHue/>}
+        icon={<IconSharpen/>}
         isDisabled={props.isDisabled || !props.isVisible}
         tabIndex={TABS.EsperPanel}
         type="sharpen"
