@@ -4,7 +4,7 @@ const PIXI = require('pixi.js/dist/pixi.js')
 const { Container, Sprite, Rectangle } = PIXI
 const { ColorMatrixFilter } = PIXI.filters
 const { AdjustmentFilter } = require('@pixi/filter-adjustment')
-const { UnsharpMaskFilter } = require('../../esper/filter/unsharp')
+const { SharpenFilter } = require('../../esper/filter')
 const { SelectionLayer, SelectionOverlay } = require('./selection')
 const { restrict } = require('../../common/util')
 const { deg, isHorizontal } = require('../../common/math')
@@ -29,8 +29,7 @@ class Picture extends Container {
 
     this.bg.filters = [
       new AdjustmentFilter(),
-      //new ConvolutionFilter(CONVO.BLUR, width, height),
-      new UnsharpMaskFilter(0, 0, width, height),
+      new SharpenFilter(0, 0, width, height),
       new ColorMatrixFilter()
     ]
 
@@ -53,10 +52,6 @@ class Picture extends Container {
 
   get colors() {
     return this.bg.filters[2]
-  }
-
-  get usmask() {
-    return this.bg.filters[1]
   }
 
   getWidth(scale = this.scale.y) {
@@ -141,7 +136,7 @@ class Picture extends Container {
   }
 
   sharpen(intensity = 0) {
-    this.usmask.intensity = intensity
+    this.bg.filters[1].intensity = intensity
     return this
   }
 }
