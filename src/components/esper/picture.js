@@ -29,7 +29,7 @@ class Picture extends Container {
 
     this.bg.filters = [
       new AdjustmentFilter(),
-      new SharpenFilter(0, 0, width, height),
+      new SharpenFilter(0, width, height),
       new ColorMatrixFilter()
     ]
 

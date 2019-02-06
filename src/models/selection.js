@@ -26,6 +26,7 @@ const mod = {
               contrast,
               hue,
               saturation,
+              sharpen,
               template,
               datetime(created, "localtime") AS created,
               datetime(modified, "localtime") AS modified

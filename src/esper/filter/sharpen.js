@@ -7,7 +7,7 @@ const frag = Shader.load('sharpen.frag')
 
 
 class SharpenFilter extends PIXI.Filter {
-  constructor(intensity = 10, width = 200, height = 200) {
+  constructor(intensity = 0, width = 200, height = 200) {
     super(undefined, frag)
     this.uniforms.size = new Float32Array(2)
     this.intensity = intensity
