@@ -30,7 +30,7 @@ class Picture extends Container {
     this.bg.filters = [
       new AdjustmentFilter(),
       //new ConvolutionFilter(CONVO.BLUR, width, height),
-      new UnsharpMaskFilter(0, width, height),
+      new UnsharpMaskFilter(0, 0, width, height),
       new ColorMatrixFilter()
     ]
 
