@@ -130,7 +130,7 @@ const EsperPanel = (props) => (
         tabIndex={TABS.EsperPanel}
         type="sharpen"
         min={0}
-        max={400}
+        max={200}
         origin={null}
         value={props.sharpen}
         onBlur={props.onBlur}
