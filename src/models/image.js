@@ -12,7 +12,8 @@ const COLUMNS = [
   'brightness',
   'contrast',
   'hue',
-  'saturation'
+  'saturation',
+  'sharpen'
 ]
 
 module.exports = {
