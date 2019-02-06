@@ -2,7 +2,7 @@
 
 require('./promisify')
 const { join } = require('path')
-const { readFileAsync: read } = require('fs')
+const { readFileAsync: read, readFileSync } = require('fs')
 const { get, flatten } = require('./util')
 const yaml = require('js-yaml')
 const { debug } = require('./log')
@@ -99,9 +99,21 @@ const Icons = {
   }
 }
 
+const Shader = {
+  get base() {
+    return join(__dirname, '..', '..', 'res', 'shader')
+  },
+
+  load(name) {
+    return readFileSync(join(Shader.base, name), 'utf-8')
+  }
+}
+
+
 module.exports = {
   Resource,
   Menu,
+  Shader,
   Strings,
   KeyMap,
   Icons
