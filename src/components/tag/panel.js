@@ -77,7 +77,7 @@ class TagPanel extends React.PureComponent {
 
   render() {
     return (
-      <div className="tag-panel">
+      <>
         <TagList
           keymap={this.props.keymap}
           tags={this.props.tags}
@@ -94,7 +94,7 @@ class TagPanel extends React.PureComponent {
           onBlur={this.props.onBlur}
           onCancel={this.props.onCancel}
           onCreate={this.handleTagCreate}/>
-      </div>
+      </>
     )
   }
 
